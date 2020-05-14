@@ -33,8 +33,19 @@ class MyVisitor(docutils.nodes.NodeVisitor):
 
 directives.register_directive("aws-meta", ASCMetaDirective)
 
+from docutils.core import publish_string
 
-def dump(input_rst):
+
+def dump_pretty(input_rst):
+    # How to print a reStructuredText node tree?
+    # https://stackoverflow.com/a/20914785/598057
+    print('dump_pretty:')
+    doc = parse_rst(input_rst)
+    print(doc.pformat())
+    # print(publish_string(input_rst))
+
+def dump_ast(input_rst):
+    print('dump_ast:')
     doc = parse_rst(input_rst)
     visitor = MyVisitor(doc)
     doc.walk(visitor)

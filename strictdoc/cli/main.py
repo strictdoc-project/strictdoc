@@ -1,4 +1,4 @@
-from strictdoc.backend.rst import dump_ast, dump_pretty
+from strictdoc.backend.rst import dump_ast, dump_pretty, dump_rst
 
 somerst = """
 AWESOME
@@ -6,6 +6,9 @@ AWESOME
 
 Friendly lists
 --------------
+
+Simple test
+Simple test
 
 .. aws-meta::
     :types: List
@@ -38,3 +41,4 @@ Resources
 
 dump_ast(somerst)
 dump_pretty(somerst)
+dump_rst(somerst)

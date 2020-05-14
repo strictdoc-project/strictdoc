@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from docutils import nodes
 from docutils.parsers.rst import Directive
 from docutils.parsers.rst import directives
@@ -37,7 +39,7 @@ class ASCMetaDirective(Directive):
     option_spec = categories_spec
 
     def run(self):
-        meta_information = {}
+        meta_information = OrderedDict()
 
         if not self.options:
             raise SystemExit(1)

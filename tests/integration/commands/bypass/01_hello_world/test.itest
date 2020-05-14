@@ -1,0 +1,4 @@
+RUN: %strictdoc | filecheck %s
+CHECK: Hello
+
+

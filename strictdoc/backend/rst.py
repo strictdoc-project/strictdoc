@@ -4,9 +4,16 @@ import docutils.utils
 import docutils.frontend
 
 from docutils.parsers.rst import directives
+from docutils.nodes import system_message
 
 from strictdoc.backend.meta import StdNodeDirective
 from strictdoc.backend.rst_writer import write_rst
+
+
+def observe(message):
+    # docutils.nodes.system_message
+    print((message.astext()))
+    exit(1)
 
 
 def parse_rst(text: str) -> docutils.nodes.document:
@@ -15,7 +22,10 @@ def parse_rst(text: str) -> docutils.nodes.document:
     settings = docutils.frontend.OptionParser(components=components).get_default_values()
 
     document = docutils.utils.new_document('<rst-doc>', settings=settings)
+    document.reporter.attach_observer(observe)
+
     parser.parse(text, document)
+
     return document
 
 

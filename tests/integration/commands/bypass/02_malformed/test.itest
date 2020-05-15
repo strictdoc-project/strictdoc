@@ -1,0 +1,4 @@
+RUN: %expect_exit 1 %strictdoc passthrough "%S/input.rst" --output-file=%S/Output/output.rst | filecheck "%s"
+CHECK: passthrough
+
+

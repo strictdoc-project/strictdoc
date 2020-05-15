@@ -4,7 +4,7 @@ import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 
-from strictdoc.backend.rst import dump_pretty, dump_rst
+from strictdoc.core.document import Document
 
 
 # for arg in sys.argv:
@@ -48,8 +48,10 @@ if not os.path.isfile(path_to_doc):
 with open(path_to_doc, 'r') as file:
     doc_content = file.read()
 
-dump_pretty(doc_content)
-rst_output = dump_rst(doc_content)
+document = Document.create_from_rst(doc_content)
+
+document.dump_pretty()
+rst_output = document.dump_rst()
 
 output_file = args.output_file
 if output_file:

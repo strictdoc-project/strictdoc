@@ -84,3 +84,6 @@ class StdNodeDirective(Directive):
             container.append(paragraph_node)
 
         return [container]
+
+
+directives.register_directive("std-node", StdNodeDirective)

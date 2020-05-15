@@ -34,7 +34,13 @@ process = subprocess.Popen(args,
                            stdout=subprocess.PIPE,
                            stderr=subprocess.STDOUT)
 
-stdout, _ = process.communicate(input=sys.stdin.buffer.read())
+# How do I check if stdin has some data?
+# https://stackoverflow.com/a/17735803/598057
+# TODO: This is not a good idea. What if stdin is being piped in from a file?
+# TODO: isatty() is telling you if stdin is coming in directly from a terminal,
+# TODO: not if there is more data to read from stdin – Lathan Jul 24 '15 at 21:35
+subprocess_input = sys.stdin.read() if not sys.stdin.isatty() else None
+stdout, _ = process.communicate(input=subprocess_input)
 
 unexpected_exit_code = process.returncode != expected_exit_code
 if unexpected_exit_code:

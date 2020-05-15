@@ -5,7 +5,7 @@ import docutils.frontend
 
 from docutils.parsers.rst import directives
 
-from strictdoc.backend.meta import ASCMetaDirective
+from strictdoc.backend.meta import StdNodeDirective
 from strictdoc.backend.rst_writer import write_rst
 
 
@@ -19,20 +19,7 @@ def parse_rst(text: str) -> docutils.nodes.document:
     return document
 
 
-class RSTDumpVisitor(docutils.nodes.NodeVisitor):
-    def visit_reference(self, node: docutils.nodes.reference) -> None:
-        """Called for "reference" nodes."""
-        print("REFERENCE")
-        print(node)
-
-    def unknown_visit(self, node: docutils.nodes.Node) -> None:
-        """Called for all other node types."""
-        print("unknown_visit:")
-        print(node)
-        pass
-
-
-directives.register_directive("aws-meta", ASCMetaDirective)
+directives.register_directive("std-node", StdNodeDirective)
 
 from docutils.core import publish_string
 
@@ -45,11 +32,6 @@ def dump_pretty(input_rst):
     print(doc.pformat())
     # print(publish_string(input_rst))
 
-def dump_ast(input_rst):
-    print('dump_ast:')
-    doc = parse_rst(input_rst)
-    visitor = RSTDumpVisitor(doc)
-    doc.walk(visitor)
 
 def dump_rst(input_rst):
     # How to print a reStructuredText node tree?
@@ -57,4 +39,7 @@ def dump_rst(input_rst):
     print('*** dump_rst: ***')
     doc = parse_rst(input_rst)
 
-    print(write_rst(doc))
+    rst = write_rst(doc)
+    print(rst)
+    return rst
+

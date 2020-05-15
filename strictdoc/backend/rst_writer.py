@@ -15,9 +15,9 @@ class RSTWriteVisitor(NodeVisitor):
 
     def unknown_visit(self, node: docutils.nodes.Node) -> None:
         """Called for all other node types."""
-        print("unknown_visit:")
+        # print("unknown_visit:")
         print(type(node))
-        # print(node.astext())
+        print(node.astext())
 
         if isinstance(node, docutils.nodes.document):
             return
@@ -28,7 +28,6 @@ class RSTWriteVisitor(NodeVisitor):
             return
 
         if isinstance(node, docutils.nodes.title):
-            # if isinstance(node, docutils.nodes.title):
             print("visit title: {}".format(node))
             text = node.astext()
             self.output.append(text)
@@ -43,7 +42,16 @@ class RSTWriteVisitor(NodeVisitor):
 
         if isinstance(node, docutils.nodes.paragraph):
             print("visit paragraph: {}".format(node))
-            self.output.append(node.astext())
+
+            if isinstance(node.parent, MetaInfoNode):
+                for child in node.children:
+                    lines = child.astext().splitlines()
+
+                    text = '\n'.join('    ' + line for line in lines)
+            else:
+                text = node.astext()
+
+            self.output.append(text)
             self.output.append('')
 
             return
@@ -54,7 +62,7 @@ class RSTWriteVisitor(NodeVisitor):
 
         if isinstance(node, MetaInfoNode):
             print("visit MetaInfoNode: {}".format(node))
-            self.output.append('.. aws-meta::')
+            self.output.append('.. std-node::')
 
             for field in node.meta_information:
                 values = ', '.join(node.meta_information[field])

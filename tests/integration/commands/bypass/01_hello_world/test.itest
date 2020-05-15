@@ -1,4 +1,5 @@
-RUN: %strictdoc | filecheck %s
-CHECK: Hello
+RUN: %strictdoc passthrough %S/input.rst --output-file=%S/Output/output.rst | filecheck %s
+RUN: diff %S/input.rst %S/Output/output.rst
+CHECK: passthrough
 
 

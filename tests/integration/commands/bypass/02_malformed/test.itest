@@ -1,4 +1,3 @@
 RUN: %expect_exit 1 %strictdoc passthrough "%S/input.rst" --output-file=%S/Output/output.rst | filecheck "%s"
 CHECK: passthrough
-
-
+CHECK: <rst-doc>:15: (WARNING/2) Explicit markup ends without a blank line; unexpected unindent.

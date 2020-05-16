@@ -1,12 +1,9 @@
+import docutils.frontend
 import docutils.nodes
 import docutils.parsers.rst
 import docutils.utils
-import docutils.frontend
+from docutils.nodes import NodeVisitor
 
-from docutils.parsers.rst import directives
-from docutils.nodes import system_message
-
-from strictdoc.backend.meta import StdNodeDirective
 from strictdoc.backend.rst_writer import write_rst
 
 
@@ -14,6 +11,35 @@ def observe(message):
     # docutils.nodes.system_message
     print((message.astext()))
     exit(1)
+
+
+class RSTReadVisitor(NodeVisitor):
+    lines = []
+
+    def unknown_visit(self, node: docutils.nodes.Node) -> None:
+        if isinstance(node, docutils.nodes.document):
+            return
+
+        if isinstance(node, docutils.nodes.section):
+            return
+
+        if isinstance(node, docutils.nodes.title):
+            text = node.astext()
+            self.lines.append(text)
+            return
+
+        if isinstance(node, docutils.nodes.paragraph):
+            text = node.astext()
+            self.lines.append(text)
+            return
+
+        return
+
+    def unknown_departure(self, node):
+        pass
+
+    def get_lines(self):
+        return self.lines
 
 
 class Document:
@@ -41,6 +67,13 @@ class Document:
         parser.parse(text, document)
 
         return document
+
+    def get_as_list(self):
+        visitor = RSTReadVisitor(self.rst_document)
+        self.rst_document.walkabout(visitor)
+
+        lines = visitor.get_lines()
+        return lines
 
     def dump_pretty(self):
         # How to print a reStructuredText node tree?

@@ -66,6 +66,11 @@ class CustomTableModel(QAbstractTableModel):
         print(value)
 
         self.input_lines[row] = value
+
+        # This ensures that the cells are resized if the new content is
+        # smaller/larger.
+        self.dataChanged.emit(index, index)
+
         return True
 
     def flags(self, index: PySide2.QtCore.QModelIndex) -> PySide2.QtCore.Qt.ItemFlags:

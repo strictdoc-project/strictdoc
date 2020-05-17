@@ -16,8 +16,10 @@ Backends
     :field1: value1
     :field2: value2
 
-    SOME CONTENT FOO1
-    SOME CONTENT FOO2
+    <div class="stanislav">
+    SOME <b>CONTENT</b> FOO1
+    <i>SOME CONTENT FOO2</i>
+    </div>
 
     SOME CONTENT BAR2
 

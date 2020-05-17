@@ -29,3 +29,8 @@ class DocumentItemDelegate(QStyledItemDelegate):
 
         if isinstance(editor, QLineEdit):
             editor.setText(text_value)
+
+    def setModelData(self, editor, model, index):
+        # TODO: Why this method if there is a working DocumentModel.setData?
+        super().setModelData(editor, model, index)
+

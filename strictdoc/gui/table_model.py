@@ -1,3 +1,7 @@
+import typing
+
+import PySide2
+
 from PySide2.QtCore import Qt, QAbstractTableModel, QModelIndex
 from PySide2.QtGui import QColor
 
@@ -41,10 +45,29 @@ class CustomTableModel(QAbstractTableModel):
             assert column == 0
             return self.input_lines[row]
         elif role == Qt.BackgroundRole:
-            return QColor(Qt.white)
-        elif role == Qt.ForegroundRole:
             return QColor(Qt.black)
+        elif role == Qt.ForegroundRole:
+            return QColor(Qt.white)
         elif role == Qt.TextAlignmentRole:
             return Qt.AlignLeft
 
         return None
+
+    def setData(self,
+                index: PySide2.QtCore.QModelIndex,
+                value: typing.Any,
+                role: int = ...) -> bool:
+        assert value
+        assert isinstance(value, str)
+
+        print("Model: setData:")
+        row = index.row()
+
+        print(value)
+
+        self.input_lines[row] = value
+        return True
+
+    def flags(self, index: PySide2.QtCore.QModelIndex) -> PySide2.QtCore.Qt.ItemFlags:
+        return super().flags(index) | Qt.ItemIsEditable
+

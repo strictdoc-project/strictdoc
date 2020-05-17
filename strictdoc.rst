@@ -1,11 +1,16 @@
-Header 1
-========
+StrictDoc
+=========
 
-Header 1.1
-----------
+High-level requirements
+-----------------------
 
-Paragraph string 1
-Paragraph string 2
+TODO
+
+Implementation Requirements
+---------------------------
+
+Backends
+~~~~~~~~
 
 .. std-node::
     :field1: value1
@@ -23,14 +28,3 @@ Paragraph string 2
     SOME CONTENT FOO3
 
     SOME CONTENT BAR4
-
-Header 1.2
-----------
-
-.. std-node::
-    :field5: value5
-    :field6: value6
-
-    SOME CONTENT FOO5
-
-    SOME CONTENT BAR6

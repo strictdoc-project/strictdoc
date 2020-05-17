@@ -47,7 +47,7 @@ class DocumentTableModel(QAbstractTableModel):
         elif role == Qt.BackgroundRole:
             return QColor(Qt.black)
         elif role == Qt.ForegroundRole:
-            return QColor(Qt.white)
+            return QColor(Qt.blue)
         elif role == Qt.TextAlignmentRole:
             return Qt.AlignLeft
 

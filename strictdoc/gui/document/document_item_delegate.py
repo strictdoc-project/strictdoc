@@ -1,10 +1,10 @@
 from PySide2.QtCore import Qt
-from PySide2.QtWidgets import (QLineEdit, QItemDelegate)
+from PySide2.QtWidgets import (QLineEdit, QStyledItemDelegate)
 
 
-class DocumentItemDelegate(QItemDelegate):
+class DocumentItemDelegate(QStyledItemDelegate):
     def __init__(self):
-        QItemDelegate.__init__(self)
+        QStyledItemDelegate.__init__(self)
 
     def createEditor(self, parent, option, index):
         if index.column() == 0:

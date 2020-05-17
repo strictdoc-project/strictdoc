@@ -6,7 +6,7 @@ from PySide2.QtCore import Qt, QAbstractTableModel, QModelIndex
 from PySide2.QtGui import QColor
 
 
-class CustomTableModel(QAbstractTableModel):
+class DocumentTableModel(QAbstractTableModel):
     input_lines = None
 
     def __init__(self, data=None):

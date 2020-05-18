@@ -20,8 +20,9 @@ class DocumentItemDelegate(QStyledItemDelegate):
 
         doc = QTextDocument()
 
-        doc.setDefaultStyleSheet("div { background-color: red; color: green; padding: 20px; margin: 10px;}")
-        doc.setHtml(options.text)
+        css = "body { margin-left: 10px; }"
+        doc.setDefaultStyleSheet(css)
+        doc.setHtml("<body>" + options.text + "</body>")
 
         options.text = ''
 
@@ -40,15 +41,17 @@ class DocumentItemDelegate(QStyledItemDelegate):
 
         painter.restore()
 
-    # def sizeHint(self, option, index):
-    #     options = QStyleOptionViewItem(option)
-    #     self.initStyleOption(options, index)
-    #
-    #     doc = QTextDocument()
-    #     doc.setHtml(options.text)
-    #     doc.setTextWidth(options.rect.width())
-    #
-    #     return QSize(100, 100)
+    def sizeHint(self, option, index):
+        options = QStyleOptionViewItem(option)
+        self.initStyleOption(options, index)
+
+        doc = QTextDocument()
+        doc.setHtml(options.text)
+        doc.setTextWidth(options.rect.width())
+
+        margin = 20
+
+        return QSize(options.rect.width(), int(doc.size().height()) + margin)
 
     def createEditor(self, parent, option, index):
         if index.column() == 0:

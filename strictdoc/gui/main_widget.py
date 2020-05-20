@@ -13,9 +13,13 @@ class Widget(QWidget):
         self.model = DocumentTableModel(data)
 
         # Creating a QTableView
+        table_delegate = DocumentItemDelegate()
         self.table_view = QTableView()
         self.table_view.setModel(self.model)
-        self.table_view.setItemDelegate(DocumentItemDelegate())
+        self.table_view.setItemDelegate(table_delegate)
+        # TODO: table_delegate retains table_view
+        # TODO: check if it causes any issues with reference cycles.
+        table_delegate.table_view = self.table_view
 
         # QTableView Headers
         self.horizontal_header = self.table_view.horizontalHeader()

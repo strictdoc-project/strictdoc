@@ -1,83 +1,143 @@
+import re
+
+import PySide2
 from PySide2.QtCore import Qt, QSize
-from PySide2.QtWidgets import (QLineEdit, QStyledItemDelegate, QStyleOptionViewItem, QApplication, QStyle)
-from PySide2.QtGui import (QTextDocument, QAbstractTextDocumentLayout)
+from PySide2.QtGui import (QAbstractTextDocumentLayout)
+from PySide2.QtWidgets import (QApplication,
+                               QStyledItemDelegate,
+                               QStyleOptionViewItem,
+                               QStyle)
+
+from strictdoc.gui.document.document_item_editor import DocumentItemEditor
+from strictdoc.gui.document.document_node import DocumentNode, DOCUMENT_MARGIN
+
+MAGIC_VALUE = 18
 
 
 class DocumentItemDelegate(QStyledItemDelegate):
+    table_view = None
+    current_editor = None
+    current_edited_index = None
+    document_nodes = {}
+
     def __init__(self):
         QStyledItemDelegate.__init__(self)
 
     # How to make a fast QTableView with HTML-formatted and clickable cells?
     # https://stackoverflow.com/a/44365155/598057
+    # How to make item view render rich (html) text in Qt
+    # https://stackoverflow.com/a/5443112/598057
     def paint(self, painter, option, index):
         options = QStyleOptionViewItem(option)
         self.initStyleOption(options, index)
+        print("paint: {} {} {}".format(index, options, options.text[0:6]))
 
-        if options.widget:
-            style = options.widget.style()
-        else:
-            style = QApplication.style()
+        style = options.widget.style() if options.widget else QApplication.style()
 
-        doc = QTextDocument()
-
-        css = "body { margin-left: 10px; }"
-        doc.setDefaultStyleSheet(css)
-        doc.setHtml("<body>" + options.text + "</body>")
+        assert index in self.document_nodes
+        document_node = self.document_nodes[index]
 
         options.text = ''
-
         style.drawControl(QStyle.CE_ItemViewItem, options, painter)
+
         ctx = QAbstractTextDocumentLayout.PaintContext()
 
-        textRect = style.subElementRect(QStyle.SE_ItemViewItemText, options)
+        text_rect = style.subElementRect(QStyle.SE_ItemViewItemText, options)
 
         painter.save()
 
-        painter.translate(textRect.topLeft())
-        painter.setClipRect(textRect.translated(-textRect.topLeft()))
-        painter.translate(0, 0.5*(options.rect.height() - doc.size().height()))
+        painter.translate(text_rect.topLeft())
+        painter.setClipRect(text_rect.translated(-text_rect.topLeft()))
+        # painter.translate(0, 0.5*(options.rect.height() - doc.size().height()))
 
-        doc.documentLayout().draw(painter, ctx)
+        document_node.get_document().documentLayout().draw(painter, ctx)
 
         painter.restore()
 
     def sizeHint(self, option, index):
+        print("--- sizeHint ---")
+        print("sizeHint/index: {} {}".format(index, option))
+        print("sizeHint/row/column: {} / {}".format(index.row(), index.column()))
+
         options = QStyleOptionViewItem(option)
         self.initStyleOption(options, index)
 
-        doc = QTextDocument()
-        doc.setHtml(options.text)
-        doc.setTextWidth(options.rect.width())
+        widget = options.widget
 
-        margin = 20
+        # TODO: This is ugly hack. Somehow the real streched cell's width has
+        # TODO: to be found.
+        estimated_width = widget.width() - MAGIC_VALUE
 
-        return QSize(options.rect.width(), int(doc.size().height()) + margin)
+        if index not in self.document_nodes:
+            self.document_nodes[index] = DocumentNode(options.text, estimated_width)
+        document_node = self.document_nodes[index]
+
+        # If this is an active cell, we make sure it is resized according to
+        # what's being edited.
+        if self.current_editor and index == self.current_edited_index:
+            clone = document_node.get_document_clone(self.current_editor.toPlainText())
+
+            size = QSize(int(clone.size().width()), int(clone.size().height()))
+            print("estimated clone size: {}".format(size))
+            return size
+
+        document_node.update_text(options.text)
+
+        doc = document_node.get_document()
+
+        size = QSize(int(doc.size().width()), int(doc.size().height()))
+        print("document_node doc size: {}".format(size))
+
+        return size
 
     def createEditor(self, parent, option, index):
-        if index.column() == 0:
-            lineedit = QLineEdit(parent)
-            return lineedit
-        assert 0
+        print("--- createEditor: parent: {}".format(parent))
+        assert index.column() == 0
+
+        textedit = DocumentItemEditor(parent)
+        textedit.document().setDocumentMargin(DOCUMENT_MARGIN)
+        textedit.setLineWrapMode(PySide2.QtWidgets.QTextEdit.LineWrapMode.WidgetWidth)
+        textedit.editingFinished.connect(self.text_finished)
+
+        self.current_editor = textedit
+        self.current_edited_index = index
+
+        return textedit
 
     def setEditorData(self, editor, index):
-        print("setEditorData")
-        # row = index.row()
-        # column = index.column()
+        assert isinstance(editor, DocumentItemEditor)
+
+        print("--- setEditorData")
         value = index.model().itemData(index)
-        # asdf
-        # resizeRowsToContents
-
-
-        print(type(value))
-        print(value)
-
         text_value = value[Qt.DisplayRole]
-        print("setting text value: {}".format(text_value))
 
-        if isinstance(editor, QLineEdit):
-            editor.setText(text_value)
+        editor.setPlainText(text_value)
+
+        self.table_view.resizeRowsToContents()
+        editor.textChanged.connect(self.text_changed)
 
     def setModelData(self, editor, model, index):
         # TODO: Why this method if there is a working DocumentModel.setData?
-        super().setModelData(editor, model, index)
+        # super().setModelData(editor, model, index)
 
+        stripped_text = re.sub(r'\n+', '\n', editor.toPlainText())
+        index.model().setData(index, stripped_text.strip(), Qt.EditRole)
+
+    def text_changed(self):
+        assert self.current_editor
+
+        document_node = self.document_nodes[self.current_edited_index]
+        document_node.update_text(self.current_editor.toPlainText())
+
+        size = self.current_editor.document().size().toSize()
+        self.current_editor.setFixedHeight(size.height())
+
+        # It is important that we notify table view to update the cells because
+        # here it seems to be the right (and only) place to do so.
+        self.table_view.resizeRowsToContents()
+
+    def text_finished(self):
+        self.current_editor = None
+        self.current_edited_index = None
+
+        self.table_view.resizeRowsToContents()

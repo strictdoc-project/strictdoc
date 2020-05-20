@@ -57,8 +57,9 @@ class DocumentTableModel(QAbstractTableModel):
                 index: PySide2.QtCore.QModelIndex,
                 value: typing.Any,
                 role: int = ...) -> bool:
-        assert value
         assert isinstance(value, str)
+
+        assert role == Qt.EditRole
 
         print("Model: setData:")
         row = index.row()

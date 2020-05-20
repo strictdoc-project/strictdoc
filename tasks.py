@@ -9,7 +9,18 @@ def formatted_command(string):
 
 
 @task
-def test(c):
+def test_unit(c):
+    cwd = os.getcwd()
+
+    command = formatted_command("""
+        pytest --capture=no
+    """)
+
+    print(command)
+    c.run("{}".format(command))
+
+@task
+def test_integration(c):
     cwd = os.getcwd()
 
     strictdoc_exec = 'python \\"{cwd}/strictdoc/cli/main.py\\"'.format(cwd=cwd)
@@ -23,7 +34,6 @@ def test(c):
 
     print(command)
     c.run("{}".format(command))
-
 
 @task
 def clean(c):

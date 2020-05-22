@@ -5,7 +5,7 @@ from PySide2.QtWidgets import QApplication
 
 from strictdoc.gui.main_widget import Widget
 from strictdoc.gui.main_window import MainWindow
-from strictdoc.core.document import Document
+from strictdoc.backend.rst_reader import RSTReader
 
 if __name__ == "__main__":
     options = argparse.ArgumentParser()
@@ -16,7 +16,7 @@ if __name__ == "__main__":
     with open(path_to_doc, 'r') as file:
         doc_content = file.read()
 
-    document = Document.create_from_rst(doc_content)
+    document = RSTReader.read_rst(doc_content)
 
     # document.dump_pretty()
     # rst_output = document.dump_rst()

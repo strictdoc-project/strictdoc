@@ -19,6 +19,7 @@ def test_unit(c):
     print(command)
     c.run("{}".format(command))
 
+
 @task
 def test_integration(c):
     cwd = os.getcwd()
@@ -34,6 +35,13 @@ def test_integration(c):
 
     print(command)
     c.run("{}".format(command))
+
+
+@task
+def test(c):
+    test_unit(c)
+    test_integration(c)
+
 
 @task
 def clean(c):

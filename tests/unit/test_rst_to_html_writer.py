@@ -1,6 +1,6 @@
 from strictdoc.backend.rst_to_html_writer import HTMLWriter
 
-from strictdoc.core.document import Document
+from strictdoc.backend.rst_reader import RSTReader
 
 
 def test_01_basic_test():
@@ -17,7 +17,7 @@ WORLD
 
     writer = HTMLWriter()
 
-    document = Document.create_from_rst(rst_content)
+    document = RSTReader.read_rst(rst_content)
 
     rst_document = document.rst_document
     html_lines = writer.write_fragment(rst_document.children)
@@ -34,7 +34,7 @@ def test_02_single_text_node():
 
     writer = HTMLWriter()
 
-    document = Document.create_from_rst(rst_content)
+    document = RSTReader.read_rst(rst_content)
 
     rst_document = document.rst_document
     html_lines = writer.write_fragment(rst_document.children)
@@ -55,7 +55,7 @@ HELLO3
 
     writer = HTMLWriter()
 
-    document = Document.create_from_rst(rst_content)
+    document = RSTReader.read_rst(rst_content)
 
     rst_document = document.rst_document
     html_lines = writer.write_fragment(rst_document.children)
@@ -76,7 +76,7 @@ def test_04_hyperlink():
 
     writer = HTMLWriter()
 
-    document = Document.create_from_rst(rst_content)
+    document = RSTReader.read_rst(rst_content)
 
     rst_document = document.rst_document
     html_lines = writer.write_fragment(rst_document.children)
@@ -108,7 +108,7 @@ WORLD
 
     writer = HTMLWriter()
 
-    document = Document.create_from_rst(rst_content)
+    document = RSTReader.read_rst(rst_content)
 
     rst_document = document.rst_document
     html_lines = writer.write_fragment(rst_document.children)

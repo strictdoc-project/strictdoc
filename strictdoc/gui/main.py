@@ -5,7 +5,7 @@ from PySide2.QtWidgets import QApplication
 
 from strictdoc.gui.main_widget import Widget
 from strictdoc.gui.main_window import MainWindow
-from strictdoc.backend.rst_reader import RSTReader
+from strictdoc.backend.rst.rst_reader import RSTReader
 
 if __name__ == "__main__":
     options = argparse.ArgumentParser()

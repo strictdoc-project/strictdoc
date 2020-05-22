@@ -1,6 +1,6 @@
-from strictdoc.backend.rst_to_html_writer import HTMLWriter
+from strictdoc.backend.rst.rst_to_html_writer import HTMLWriter
 
-from strictdoc.backend.rst_reader import RSTReader
+from strictdoc.backend.rst.rst_reader import RSTReader
 
 
 def test_01_basic_test():

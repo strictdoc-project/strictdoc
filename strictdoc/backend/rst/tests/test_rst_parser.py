@@ -1,6 +1,6 @@
 import docutils.nodes
 
-from strictdoc.backend.rst_parser import RSTParser
+from strictdoc.backend.rst.rst_parser import RSTParser
 
 
 def test_01_basic_test():

@@ -1,11 +1,7 @@
-import os
-
 from collections import OrderedDict
 
 from docutils import nodes
-from docutils.parsers.rst import Directive
-from docutils.parsers.rst import directives
-from docutils.statemachine import StringList
+from docutils.parsers.rst import Directive, directives
 
 supported_categories = [
     'field1',

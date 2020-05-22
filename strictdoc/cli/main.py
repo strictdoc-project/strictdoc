@@ -4,7 +4,7 @@ import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 
-from strictdoc.backend.rst_reader import RSTReader
+from strictdoc.backend.rst.rst_reader import RSTReader
 
 
 # for arg in sys.argv:

@@ -4,8 +4,8 @@ import docutils.parsers.rst
 import docutils.utils
 from docutils.nodes import NodeVisitor
 
-from strictdoc.backend.rst_parser import RSTParser
-from strictdoc.backend.rst_document import RSTDocument
+from strictdoc.backend.rst.rst_parser import RSTParser
+from strictdoc.backend.rst.rst_document import RSTDocument
 
 
 class RSTReadVisitor(NodeVisitor):

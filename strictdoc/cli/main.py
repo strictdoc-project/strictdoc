@@ -4,7 +4,7 @@ import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 
-from strictdoc.core.document import Document
+from strictdoc.backend.rst_reader import RSTReader
 
 
 # for arg in sys.argv:
@@ -48,7 +48,7 @@ if not os.path.isfile(path_to_doc):
 with open(path_to_doc, 'r') as file:
     doc_content = file.read()
 
-document = Document.create_from_rst(doc_content)
+document = RSTReader.read_rst(doc_content)
 
 document.dump_pretty()
 rst_output = document.dump_rst()

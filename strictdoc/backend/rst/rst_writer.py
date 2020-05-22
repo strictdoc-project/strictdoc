@@ -6,7 +6,7 @@
 import docutils
 from docutils.nodes import NodeVisitor
 
-from strictdoc.backend.meta import MetaInfoNode
+from strictdoc.backend.rst.meta import MetaInfoNode
 
 class RSTWriteVisitor(NodeVisitor):
     output = []
@@ -89,9 +89,9 @@ class RSTWriteVisitor(NodeVisitor):
         return '\n'.join(self.output)
 
 
-def write_rst(rstdoc):
-    visitor = RSTWriteVisitor(rstdoc)
-    rstdoc.walkabout(visitor)
+def write_rst(rst_document):
+    visitor = RSTWriteVisitor(rst_document)
+    rst_document.walkabout(visitor)
 
     return visitor.get_output()
 

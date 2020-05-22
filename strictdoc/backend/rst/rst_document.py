@@ -1,4 +1,4 @@
-from strictdoc.backend.rst_writer import write_rst
+from strictdoc.backend.rst.rst_writer import write_rst
 
 
 class RSTDocument:

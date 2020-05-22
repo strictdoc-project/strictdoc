@@ -1,7 +1,7 @@
 import docutils
 from docutils.nodes import NodeVisitor
 
-from strictdoc.backend.meta import MetaInfoNode
+from strictdoc.backend.rst.meta import MetaInfoNode
 
 
 class HTMLWriteVisitor(NodeVisitor):

@@ -2,6 +2,7 @@ import docutils
 from docutils.nodes import NodeVisitor
 
 from strictdoc.backend.rst.meta import MetaInfoNode
+from strictdoc.backend.rst.rst_constants import STRICTDOC_ATTR_LEVEL
 
 
 class HTMLWriteVisitor(NodeVisitor):
@@ -30,15 +31,20 @@ class HTMLWriteVisitor(NodeVisitor):
             return
 
         if isinstance(node, docutils.nodes.title):
+            assert isinstance(node.parent, docutils.nodes.section)
+            assert node.parent.hasattr(STRICTDOC_ATTR_LEVEL)
+
+            level = node.parent[STRICTDOC_ATTR_LEVEL]
+
             text = node.astext()
 
             self.output.append('')
 
-            if self.level == 1:
+            if level == 1:
                 self.output.append('<h1>{}</h1>'.format(text))
-            elif self.level == 2:
+            elif level == 2:
                 self.output.append('<h2>{}</h2>'.format(text))
-            elif self.level == 3:
+            elif level == 3:
                 self.output.append('<h3>{}</h3>'.format(text))
             return
 

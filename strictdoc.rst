@@ -1,6 +1,8 @@
 StrictDoc
 =========
 
+This is a documentation of StrictDoc written in StrictDoc.
+
 High-level requirements
 -----------------------
 

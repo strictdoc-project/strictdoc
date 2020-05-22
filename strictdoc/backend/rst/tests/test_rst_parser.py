@@ -22,3 +22,38 @@ WORLD
 
     rst_paragraph = rst_section.children[1]
     assert isinstance(rst_paragraph, docutils.nodes.paragraph)
+
+
+def test_02_only_test():
+    rst_content = """HELLO WORLD"""
+
+    document = RSTParser.parse_rst(rst_content)
+
+    print(document.pformat())
+
+    paragraph_node = document.children[0]
+    assert isinstance(paragraph_node, docutils.nodes.paragraph)
+
+    text_node = paragraph_node.children[0]
+    assert isinstance(text_node, docutils.nodes.Text)
+    assert text_node.astext(), "HELLO WORLD"
+
+
+def test_03_only_header():
+    rst_content = """HELLO
+=====
+"""
+
+    document = RSTParser.parse_rst(rst_content)
+
+    print(document.pformat())
+
+    section_node = document.children[0]
+    assert isinstance(section_node, docutils.nodes.section)
+
+    title_node = section_node.children[0]
+    assert isinstance(title_node, docutils.nodes.title)
+
+    text_node = title_node.children[0]
+    assert isinstance(text_node, docutils.nodes.Text)
+    assert text_node.astext(), "HELLO WORLD"

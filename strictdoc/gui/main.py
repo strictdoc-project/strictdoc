@@ -1,11 +1,13 @@
 import argparse
 import sys
 
-from PySide2.QtWidgets import QApplication
+from PySide2.QtWidgets import QApplication, QShortcut
+from PySide2.QtGui import QKeySequence
 
 from strictdoc.gui.main_widget import Widget
 from strictdoc.gui.main_window import MainWindow
 from strictdoc.backend.rst.rst_reader import RSTReader
+
 
 if __name__ == "__main__":
     options = argparse.ArgumentParser()
@@ -16,18 +18,19 @@ if __name__ == "__main__":
     with open(path_to_doc, 'r') as file:
         doc_content = file.read()
 
-    document = RSTReader.read_rst(doc_content)
-
-    # document.dump_pretty()
-    # rst_output = document.dump_rst()
-
-    data = document.get_as_list()
+    rst_document = RSTReader.read_rst(doc_content)
 
     # Qt Application
     app = QApplication(sys.argv)
 
-    widget = Widget(data)
+    widget = Widget(rst_document)
     window = MainWindow(widget)
     window.show()
+
+    def magic():
+        print("dump:")
+        print(rst_document.rst_document.pformat())
+
+    QShortcut(QKeySequence("Alt+Return"), window, magic)
 
     sys.exit(app.exec_())

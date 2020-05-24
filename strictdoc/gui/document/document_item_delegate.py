@@ -108,8 +108,8 @@ class DocumentItemDelegate(QStyledItemDelegate):
         assert isinstance(editor, DocumentItemEditor)
 
         print("--- setEditorData")
-        value = index.model().itemData(index)
-        text_value = value[Qt.DisplayRole]
+        text_value = index.model().get_item_as_rst(index)
+        print("textValue: {}".format(text_value))
 
         editor.setPlainText(text_value)
 
@@ -121,7 +121,7 @@ class DocumentItemDelegate(QStyledItemDelegate):
         # super().setModelData(editor, model, index)
 
         stripped_text = re.sub(r'\n+', '\n', editor.toPlainText())
-        index.model().setData(index, stripped_text.strip(), Qt.EditRole)
+        index.model().set_item_from_rst(index, stripped_text.strip())
 
     def text_changed(self):
         assert self.current_editor

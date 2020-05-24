@@ -12,8 +12,8 @@ WORLD
 
     lines = document.get_as_list()
 
-    assert lines[0] == 'HELLO'
-    assert lines[1] == 'WORLD'
+    assert lines[0].astext() == 'HELLO'
+    assert lines[1].astext() == 'WORLD'
 
 
 def test_02_nested_headers_additional_information_available():
@@ -33,10 +33,10 @@ WORLD
 
     lines = document.get_as_list()
 
-    assert lines[0] == 'HELLO1'
-    assert lines[1] == 'HELLO2'
-    assert lines[2] == 'HELLO3'
-    assert lines[3] == 'WORLD'
+    assert lines[0].astext() == 'HELLO1'
+    assert lines[1].astext() == 'HELLO2'
+    assert lines[2].astext() == 'HELLO3'
+    assert lines[3].astext() == 'WORLD'
 
     section_level_1 = document.rst_document.children[0]
     assert section_level_1['strictdoc_level'] == 1

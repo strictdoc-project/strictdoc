@@ -6,11 +6,11 @@ from strictdoc.gui.document.document_model import DocumentTableModel
 
 
 class Widget(QWidget):
-    def __init__(self, data):
+    def __init__(self, rst_document):
         QWidget.__init__(self)
 
         # Getting the Model
-        self.model = DocumentTableModel(data)
+        self.model = DocumentTableModel(rst_document)
 
         # Creating a QTableView
         table_delegate = DocumentItemDelegate()

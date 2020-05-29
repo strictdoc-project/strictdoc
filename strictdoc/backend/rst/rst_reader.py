@@ -14,7 +14,7 @@ class RSTReader:
     def read_rst(text: str) -> RSTDocument:
         rst_document = RSTParser.parse_rst(text)
 
-        visitor = RSTReadVisitor(rst_document)
+        visitor = RSTReadVisitor(rst_document, text)
         rst_document.walkabout(visitor)
 
         lines = visitor.get_lines()

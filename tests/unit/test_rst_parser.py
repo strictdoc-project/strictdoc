@@ -12,8 +12,6 @@ WORLD
 
     document = RSTParser.parse_rst(rst_content)
 
-    print(document.pformat())
-
     rst_section = document.children[0]
     assert isinstance(rst_section, docutils.nodes.section)
 
@@ -29,8 +27,6 @@ def test_02_only_test():
 
     document = RSTParser.parse_rst(rst_content)
 
-    print(document.pformat())
-
     paragraph_node = document.children[0]
     assert isinstance(paragraph_node, docutils.nodes.paragraph)
 
@@ -45,8 +41,6 @@ def test_03_only_header():
 """
 
     document = RSTParser.parse_rst(rst_content)
-
-    print(document.pformat())
 
     section_node = document.children[0]
     assert isinstance(section_node, docutils.nodes.section)

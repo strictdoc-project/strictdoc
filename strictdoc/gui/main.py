@@ -2,7 +2,7 @@ import argparse
 import sys
 
 from PySide2.QtWidgets import QApplication, QShortcut
-from PySide2.QtGui import QKeySequence
+from PySide2.QtGui import QKeySequence, QFont
 
 from strictdoc.gui.main_widget import Widget
 from strictdoc.gui.main_window import MainWindow
@@ -22,6 +22,10 @@ if __name__ == "__main__":
 
     # Qt Application
     app = QApplication(sys.argv)
+
+    font = QFont("Courier")
+    font.setStyleHint(QFont.Monospace)
+    QApplication.setFont(font)
 
     widget = Widget(rst_document)
     window = MainWindow(widget)

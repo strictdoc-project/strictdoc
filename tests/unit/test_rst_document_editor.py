@@ -61,11 +61,19 @@ Header-3-content-2
 
     new_rst_fragment = """Header-3-replacement-paragraph-text"""
 
-    expected_rst_content = """HELLO
-=====
+    expected_rst_content = """StrictDoc
+=========
 
-WORLD
------
+This is a documentation of StrictDoc written in StrictDoc.
+
+High-level requirements
+-----------------------
+
+Header-3-replacement-paragraph-text
+
+Header-3-content-1
+
+Header-3-content-2
 """
 
     rst_document = RSTReader.read_rst(rst_content)
@@ -77,12 +85,10 @@ WORLD
     assert header3_title.astext() == 'HEADER3'
 
     editor.replace_node(header3_title, new_rst_fragment)
-    # print(rst_document.rst_document.pformat())
-    #
-    # writer = RSTWriter()
-    #
-    # written_rst_content = writer.write_rst_document(rst_document.rst_document)
-    #
-    # assert written_rst_content == expected_rst_content
-    #
-    #
+    print(rst_document.rst_document.pformat())
+
+    writer = RSTWriter()
+
+    written_rst_content = writer.write_rst_document(rst_document.rst_document)
+
+    assert written_rst_content == expected_rst_content

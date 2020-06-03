@@ -46,6 +46,8 @@ class HTMLWriteVisitor(NodeVisitor):
                 self.output.append('<h2>{}</h2>'.format(text))
             elif level == 3:
                 self.output.append('<h3>{}</h3>'.format(text))
+            elif level == 4:
+                self.output.append('<h4>{}</h4>'.format(text))
             return
 
         if isinstance(node, docutils.nodes.paragraph):

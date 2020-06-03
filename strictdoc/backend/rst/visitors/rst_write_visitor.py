@@ -8,12 +8,9 @@ from strictdoc.backend.rst.rst_constants import STRICTDOC_ATTR_LEVEL
 class RSTWriteVisitor(NodeVisitor):
     output = []
 
-    level = 0
-
     def __init__(self, document):
         super(RSTWriteVisitor, self).__init__(document)
         self.output = []
-        self.level = 0
 
     def unknown_visit(self, node: docutils.nodes.Node) -> None:
         """Called for all other node types."""
@@ -25,7 +22,6 @@ class RSTWriteVisitor(NodeVisitor):
             return
 
         if isinstance(node, docutils.nodes.section):
-            self.level += 1
             print("visit section: {}".format(node))
             return
 
@@ -45,6 +41,8 @@ class RSTWriteVisitor(NodeVisitor):
                 self.output.append('-'.ljust(len(text), '-'))
             elif level == 3:
                 self.output.append('~'.ljust(len(text), '~'))
+            elif level == 4:
+                self.output.append('^'.ljust(len(text), '^'))
 
             self.output.append('')
 
@@ -88,9 +86,6 @@ class RSTWriteVisitor(NodeVisitor):
     def unknown_departure(self, node):
         if isinstance(node, docutils.nodes.section):
             print("departure section: {}".format(node))
-
-            self.level -= 1
-
             return
 
         return

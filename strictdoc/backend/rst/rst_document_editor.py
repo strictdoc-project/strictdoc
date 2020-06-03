@@ -24,7 +24,7 @@ class RSTDocumentEditor:
         new_fragment_rst_doc = RSTParser.parse_rst(new_rst_fragment)
         print(new_fragment_rst_doc)
 
-        visitor = RSTReadVisitor(new_fragment_rst_doc)
+        visitor = RSTReadVisitor(new_fragment_rst_doc, new_rst_fragment)
         new_fragment_rst_doc.walkabout(visitor)
 
         print("new_rst_fragment:\n{}".format(new_rst_fragment))

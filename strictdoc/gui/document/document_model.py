@@ -73,7 +73,7 @@ class DocumentTableModel(QAbstractTableModel):
                 index: PySide2.QtCore.QModelIndex,
                 value: typing.Any,
                 role: int = ...) -> bool:
-        assert 0, "should not reach here"
+        raise NotImplementedError
 
     def flags(self, index: PySide2.QtCore.QModelIndex) -> PySide2.QtCore.Qt.ItemFlags:
         return super().flags(index) | Qt.ItemIsEditable

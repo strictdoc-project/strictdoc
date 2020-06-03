@@ -22,6 +22,7 @@ class RSTReadVisitor(NodeVisitor):
         super(RSTReadVisitor, self).__init__(document)
         self.source_lines = source_text.split('\n') if source_text else None
         self.lines = []
+        document[STRICTDOC_ATTR_LEVEL] = 0
 
     def unknown_visit(self, node: docutils.nodes.Node) -> None:
         if isinstance(node, docutils.nodes.document):

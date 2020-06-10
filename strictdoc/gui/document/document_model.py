@@ -61,9 +61,9 @@ class DocumentTableModel(QAbstractTableModel):
 
             return self.html_writer.write_fragment(rst_node)
         elif role == Qt.BackgroundRole:
-            return QColor(Qt.black)
+            return QColor(Qt.white)
         elif role == Qt.ForegroundRole:
-            return QColor(Qt.blue)
+            return QColor(Qt.black)
         elif role == Qt.TextAlignmentRole:
             return Qt.AlignLeft
 

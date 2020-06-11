@@ -43,6 +43,8 @@ class RSTDocumentEditor:
         elif isinstance(node, docutils.nodes.paragraph):
             if isinstance(top_level_node, docutils.nodes.section):
                 self._replace_paragraph_with_section(node, top_level_node)
+            elif isinstance(top_level_node, docutils.nodes.paragraph):
+                node.replace_self(top_level_node)
             else:
                 raise NotImplementedError
         else:

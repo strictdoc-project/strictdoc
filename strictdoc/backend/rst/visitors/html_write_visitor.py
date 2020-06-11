@@ -6,15 +6,10 @@ from strictdoc.backend.rst.rst_constants import STRICTDOC_ATTR_LEVEL
 
 
 class HTMLWriteVisitor(NodeVisitor):
-    output = None
-
-    level = 0
-
     def __init__(self, document):
         super(HTMLWriteVisitor, self).__init__(document)
 
         self.output = []
-        self.level = 0
 
     def unknown_visit(self, node: docutils.nodes.Node) -> None:
         """Called for all other node types."""
@@ -27,7 +22,6 @@ class HTMLWriteVisitor(NodeVisitor):
             return
 
         if isinstance(node, docutils.nodes.section):
-            self.level += 1
             return
 
         if isinstance(node, docutils.nodes.title):
@@ -96,9 +90,6 @@ class HTMLWriteVisitor(NodeVisitor):
     def unknown_departure(self, node):
         if isinstance(node, docutils.nodes.section):
             print("departure section: {}".format(node))
-
-            self.level -= 1
-
             return
 
         return

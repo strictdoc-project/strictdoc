@@ -6,28 +6,30 @@ from strictdoc.backend.rst.rst_document_validator import RSTDocumentValidator
 from strictdoc.backend.rst.rst_node_finder import RSTNodeFinder
 from strictdoc.backend.rst.rst_parser import RSTParser
 from strictdoc.backend.rst.rst_reader import RSTReadVisitor
+from strictdoc.core.logger import Logger
 
 
 class RSTDocumentEditor:
+    logger = Logger("RSTDocumentEditor")
+
     def __init__(self, rst_document):
         assert rst_document
         self.rst_document = rst_document
         self.validator = RSTDocumentValidator()
 
     def replace_node(self, node, new_rst_fragment):
-        print("RSTDocumentEditor.replace_node:\nreplace node:\n{}\nwith:\n{}".format(node, new_rst_fragment))
+        self.logger.info("replace node:\n{}\nwith:\n{}".format(node, new_rst_fragment))
         assert isinstance(node, docutils.nodes.Node)
 
-        print("document before injection:")
-        print(self.rst_document.rst_document.pformat())
+        self.logger.info("document before injection:")
+        self.logger.info(self.rst_document.rst_document.pformat())
 
         new_fragment_rst_doc = RSTParser.parse_rst(new_rst_fragment)
-        print(new_fragment_rst_doc)
 
         visitor = RSTReadVisitor(new_fragment_rst_doc, new_rst_fragment)
         new_fragment_rst_doc.walkabout(visitor)
 
-        print("new_rst_fragment:\n{}".format(new_rst_fragment))
+        self.logger.info("new_rst_fragment:\n{}".format(new_rst_fragment))
         top_level_node = new_fragment_rst_doc.children[0]
         assert top_level_node
 
@@ -55,7 +57,7 @@ class RSTDocumentEditor:
         visitor = RSTReadVisitor(self.rst_document.rst_document)
         self.rst_document.rst_document.walkabout(visitor)
 
-        print(self.rst_document.rst_document.pformat())
+        self.logger.info(self.rst_document.rst_document.pformat())
 
         self.rst_document.lines = visitor.get_lines()
 

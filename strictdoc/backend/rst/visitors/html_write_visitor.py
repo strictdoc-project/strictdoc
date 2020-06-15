@@ -3,31 +3,24 @@ from docutils.nodes import NodeVisitor
 
 from strictdoc.backend.rst.meta import MetaInfoNode
 from strictdoc.backend.rst.rst_constants import STRICTDOC_ATTR_LEVEL
+from strictdoc.core.logger import Logger
 
 
 class HTMLWriteVisitor(NodeVisitor):
-    output = None
-
-    level = 0
+    logger = Logger("HTMLWriteVisitor")
 
     def __init__(self, document):
         super(HTMLWriteVisitor, self).__init__(document)
 
         self.output = []
-        self.level = 0
 
     def unknown_visit(self, node: docutils.nodes.Node) -> None:
-        """Called for all other node types."""
-        print("HTMLWriteVisitor.unknown_visit:")
-
-        print(type(node))
-        print(node.pformat())
+        self.logger.info(node.pformat())
 
         if isinstance(node, docutils.nodes.document):
             return
 
         if isinstance(node, docutils.nodes.section):
-            self.level += 1
             return
 
         if isinstance(node, docutils.nodes.title):
@@ -96,9 +89,6 @@ class HTMLWriteVisitor(NodeVisitor):
     def unknown_departure(self, node):
         if isinstance(node, docutils.nodes.section):
             print("departure section: {}".format(node))
-
-            self.level -= 1
-
             return
 
         return

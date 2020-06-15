@@ -10,7 +10,6 @@ from strictdoc.backend.rst.visitors.rst_write_visitor import RSTWriteVisitor
 class RSTWriter:
     @staticmethod
     def write_rst_document(rst_document):
-        print("RSTWriter.write_rst_document: {}".format(rst_document))
         visitor = RSTWriteVisitor(rst_document)
         rst_document.walkabout(visitor)
 
@@ -18,7 +17,6 @@ class RSTWriter:
 
     @staticmethod
     def write_rst_fragment(rst_fragment):
-        print("RSTWriter.write_rst_fragment: {}".format(rst_fragment))
         children = []
         if isinstance(rst_fragment, list):
             for node in rst_fragment:

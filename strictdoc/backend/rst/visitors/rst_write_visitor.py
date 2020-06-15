@@ -3,10 +3,11 @@ from docutils.nodes import NodeVisitor
 
 from strictdoc.backend.rst.meta import MetaInfoNode
 from strictdoc.backend.rst.rst_constants import STRICTDOC_ATTR_LEVEL
+from strictdoc.core.logger import Logger
 
 
 class RSTWriteVisitor(NodeVisitor):
-    output = []
+    logger = Logger("RSTWriteVisitor")
 
     def __init__(self, document):
         super(RSTWriteVisitor, self).__init__(document)
@@ -14,19 +15,15 @@ class RSTWriteVisitor(NodeVisitor):
 
     def unknown_visit(self, node: docutils.nodes.Node) -> None:
         """Called for all other node types."""
-        print("RSTWriteVisitor.unknown_visit:")
-        print(type(node))
-        print(node.astext())
+        self.logger.info(node.astext())
 
         if isinstance(node, docutils.nodes.document):
             return
 
         if isinstance(node, docutils.nodes.section):
-            print("visit section: {}".format(node))
             return
 
         if isinstance(node, docutils.nodes.title):
-            print("visit title: {}".format(node))
             assert isinstance(node.parent, docutils.nodes.section)
             assert node.parent.hasattr(STRICTDOC_ATTR_LEVEL)
 
@@ -49,8 +46,6 @@ class RSTWriteVisitor(NodeVisitor):
             return
 
         if isinstance(node, docutils.nodes.paragraph):
-            print("visit paragraph: {}".format(node))
-
             if isinstance(node.parent, MetaInfoNode):
                 for child in node.children:
                     lines = child.astext().splitlines()
@@ -65,11 +60,9 @@ class RSTWriteVisitor(NodeVisitor):
             return
 
         if isinstance(node, docutils.nodes.Text):
-            print("visit Text: {}".format(node))
             return
 
         if isinstance(node, MetaInfoNode):
-            print("visit MetaInfoNode: {}".format(node))
             self.output.append('.. std-node::')
 
             for field in node.meta_information:
@@ -85,7 +78,6 @@ class RSTWriteVisitor(NodeVisitor):
 
     def unknown_departure(self, node):
         if isinstance(node, docutils.nodes.section):
-            print("departure section: {}".format(node))
             return
 
         return

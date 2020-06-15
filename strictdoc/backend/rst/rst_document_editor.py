@@ -3,7 +3,7 @@ from docutils.nodes import Node
 
 from strictdoc.backend.rst.rst_constants import STRICTDOC_ATTR_LEVEL
 from strictdoc.backend.rst.rst_document_validator import RSTDocumentValidator
-from strictdoc.backend.rst.rst_node_finder import RSTNodeFinder
+from strictdoc.backend.rst.rst_node_finder import RSTNodeFinder, LEVEL_MAX
 from strictdoc.backend.rst.rst_parser import RSTParser
 from strictdoc.backend.rst.rst_reader import RSTReadVisitor
 from strictdoc.core.logger import Logger
@@ -21,8 +21,7 @@ class RSTDocumentEditor:
         self.logger.info("replace node:\n{}\nwith:\n{}".format(node, new_rst_fragment))
         assert isinstance(node, docutils.nodes.Node)
 
-        self.logger.info("document before injection:")
-        self.logger.info(self.rst_document.rst_document.pformat())
+        self.logger.info("document before injection:\n{}".format(self.rst_document.rst_document.pformat()))
 
         new_fragment_rst_doc = RSTParser.parse_rst(new_rst_fragment)
 
@@ -71,7 +70,7 @@ class RSTDocumentEditor:
 
         orphan_children = section_to_be_removed.children
 
-        (new_parent, injection_idx) = RSTNodeFinder.find_new_parent(section_to_be_removed, 10)
+        (new_parent, injection_idx) = RSTNodeFinder.find_new_parent(section_to_be_removed, LEVEL_MAX)
 
         section_to_be_removed.parent.remove(section_to_be_removed)
         if injection_idx != -1:

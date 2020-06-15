@@ -2,6 +2,7 @@ import docutils.nodes
 
 from strictdoc.backend.rst.rst_constants import STRICTDOC_ATTR_LEVEL
 
+LEVEL_MAX = 1000
 
 class RSTNodeFinder:
     @staticmethod
@@ -50,6 +51,8 @@ class RSTNodeFinder:
             else:
                 if isinstance(cursor, docutils.nodes.document):
                     return cursor, indexes[cursor]
+                if new_level == LEVEL_MAX and parent[STRICTDOC_ATTR_LEVEL] < new_level:
+                    return parent, index
 
                 cursor = cursor.parent
         return cursor, indexes[cursor]

@@ -57,8 +57,6 @@ class StdNodeDirective(Directive):
 
         current_paragraph_lines = []
         for line in self.content:
-            print("----- line: {}".format(line))
-
             if line == '':
                 node_text = nodes.Text('\n'.join(current_paragraph_lines))
                 current_paragraph_lines.clear()

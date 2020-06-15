@@ -30,7 +30,6 @@ class DocumentItemDelegate(QStyledItemDelegate):
     def paint(self, painter, option, index):
         options = QStyleOptionViewItem(option)
         self.initStyleOption(options, index)
-        print("paint: {} {} {}".format(index, options, options.text[0:6]))
 
         style = options.widget.style() if options.widget else QApplication.style()
 
@@ -55,10 +54,6 @@ class DocumentItemDelegate(QStyledItemDelegate):
         painter.restore()
 
     def sizeHint(self, option, index):
-        print("--- sizeHint ---")
-        print("sizeHint/index: {} {}".format(index, option))
-        print("sizeHint/row/column: {} / {}".format(index.row(), index.column()))
-
         options = QStyleOptionViewItem(option)
         self.initStyleOption(options, index)
 
@@ -78,7 +73,6 @@ class DocumentItemDelegate(QStyledItemDelegate):
             clone = document_node.get_document_clone(self.current_editor.toPlainText())
 
             size = QSize(int(clone.size().width()), int(clone.size().height()))
-            print("estimated clone size: {}".format(size))
             return size
 
         document_node.update_text(options.text)
@@ -86,12 +80,10 @@ class DocumentItemDelegate(QStyledItemDelegate):
         doc = document_node.get_document()
 
         size = QSize(int(doc.size().width()), int(doc.size().height()))
-        print("document_node doc size: {}".format(size))
 
         return size
 
     def createEditor(self, parent, option, index):
-        print("--- createEditor: parent: {}".format(parent))
         assert index.column() == 0
 
         textedit = DocumentItemEditor(parent)
@@ -107,9 +99,7 @@ class DocumentItemDelegate(QStyledItemDelegate):
     def setEditorData(self, editor, index):
         assert isinstance(editor, DocumentItemEditor)
 
-        print("--- setEditorData")
         text_value = index.model().get_item_as_rst(index)
-        print("textValue: {}".format(text_value))
 
         editor.setPlainText(text_value)
 

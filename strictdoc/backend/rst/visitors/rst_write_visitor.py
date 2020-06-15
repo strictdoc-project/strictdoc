@@ -65,11 +65,9 @@ class RSTWriteVisitor(NodeVisitor):
             return
 
         if isinstance(node, docutils.nodes.Text):
-            print("visit Text: {}".format(node))
             return
 
         if isinstance(node, MetaInfoNode):
-            print("visit MetaInfoNode: {}".format(node))
             self.output.append('.. std-node::')
 
             for field in node.meta_information:
@@ -85,7 +83,6 @@ class RSTWriteVisitor(NodeVisitor):
 
     def unknown_departure(self, node):
         if isinstance(node, docutils.nodes.section):
-            print("departure section: {}".format(node))
             return
 
         return

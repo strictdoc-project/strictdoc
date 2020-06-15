@@ -85,7 +85,6 @@ class DocumentTableModel(QAbstractTableModel):
             "row is {}, len is {}".format(row, len(self.input_lines))
 
         rst_node = self.input_lines[row]
-        print("rst_node: {}".format(rst_node))
 
         return self.rst_writer.write_rst_fragment(rst_node).strip()
 
@@ -94,9 +93,7 @@ class DocumentTableModel(QAbstractTableModel):
                           value: typing.Any) -> bool:
         assert isinstance(value, str)
 
-        print("Model: setData:")
         row = index.row()
-        print("current: {}".format(self.input_lines[row]))
 
         self.rst_document_editor.replace_node(self.input_lines[row], value)
 

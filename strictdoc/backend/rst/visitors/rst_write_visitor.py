@@ -63,7 +63,7 @@ class RSTWriteVisitor(NodeVisitor):
             return
 
         if isinstance(node, MetaInfoNode):
-            self.output.append('.. std-node::')
+            self.output.append('.. metadata::')
 
             for field in node.meta_information:
                 values = ', '.join(node.meta_information[field])

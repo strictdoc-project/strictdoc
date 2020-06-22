@@ -7,7 +7,7 @@ Header 1.1
 Paragraph string 1
 Paragraph string 2
 
-.. std-node::
+.. metadata::
     :field1: value1
     :field2: value2
 
@@ -16,7 +16,7 @@ SOME CONTENT FOO2
 
     SOME CONTENT BAR2
 
-.. std-node::
+.. metadata::
     :field3: value3
     :field4: value4
 
@@ -27,7 +27,7 @@ SOME CONTENT FOO2
 Header 1.2
 ----------
 
-.. std-node::
+.. metadata::
     :field5: value5
     :field6: value6
 

@@ -80,4 +80,4 @@ class StdNodeDirective(Directive):
         return [container]
 
 
-directives.register_directive("std-node", StdNodeDirective)
+directives.register_directive("metadata", StdNodeDirective)

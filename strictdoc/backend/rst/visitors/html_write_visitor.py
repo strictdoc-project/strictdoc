@@ -1,7 +1,7 @@
 import docutils
 from docutils.nodes import NodeVisitor
 
-from strictdoc.backend.rst.meta import MetaInfoNode
+from strictdoc.backend.rst.directives.metadata import MetaInfoNode
 from strictdoc.backend.rst.rst_constants import STRICTDOC_ATTR_LEVEL
 from strictdoc.core.logger import Logger
 

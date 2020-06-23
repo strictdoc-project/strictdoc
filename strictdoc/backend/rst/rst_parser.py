@@ -3,6 +3,13 @@ import docutils.parsers.rst
 import docutils.utils
 
 from docutils.nodes import document
+from docutils.parsers.rst import directives
+
+from strictdoc.backend.rst.directives.metadata import StdNodeDirective
+from strictdoc.backend.rst.directives.document_metadata import (
+    DocumentMetadataDirective
+)
+from strictdoc.backend.rst.rst_parser_shared_state import RSTParserSharedState
 
 
 def observe(message):
@@ -15,7 +22,12 @@ class RSTParser:
 
     @staticmethod
     def parse_rst(text: str) -> docutils.nodes.document:
-        parser = docutils.parsers.rst.Parser()
+        RSTParserSharedState.reset()
+
+        directives.register_directive("metadata", StdNodeDirective)
+        directives.register_directive("document-metadata", DocumentMetadataDirective)
+
+        parser = docutils.parsers.rst.Parser(rfc2822=False)
         components = (docutils.parsers.rst.Parser,)
         settings = docutils.frontend.OptionParser(components=components).get_default_values()
 

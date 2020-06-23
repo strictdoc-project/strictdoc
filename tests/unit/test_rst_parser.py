@@ -1,5 +1,9 @@
 import docutils.nodes
 
+from strictdoc.backend.rst.directives.metadata import MetaInfoNode
+from strictdoc.backend.rst.directives.document_metadata import (
+    DocumentMetadataNode
+)
 from strictdoc.backend.rst.rst_parser import RSTParser
 
 
@@ -51,3 +55,35 @@ def test_03_only_header():
     text_node = title_node.children[0]
     assert isinstance(text_node, docutils.nodes.Text)
     assert text_node.astext(), "HELLO WORLD"
+
+
+def test_04_parsing_document_metadata():
+    rst_content = """
+.. document-metadata::
+    :fields: 
+        - name=time_start, type=string
+        - name=time_end, type=string
+
+.. metadata::
+    :time_start: TIME START VALUE
+    :time_end: TIME END VALUE
+"""
+
+    document = RSTParser.parse_rst(rst_content)
+    print(document.pformat())
+    document_metadata_node = document.children[0]
+    assert isinstance(document_metadata_node, DocumentMetadataNode)
+
+    metadata_node = document.children[1]
+    assert isinstance(metadata_node, MetaInfoNode)
+
+    document_metadata = document_metadata_node.get_metadata()
+
+    assert document_metadata.fields[0]['name'] == 'time_start'
+    assert document_metadata.fields[1]['name'] == 'time_end'
+
+    metadata = metadata_node.get_meta_information()
+    assert metadata['time_start'] == 'TIME START VALUE'
+    assert metadata['time_end'] == 'TIME END VALUE'
+
+

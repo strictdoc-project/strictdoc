@@ -1,6 +1,7 @@
 import docutils
 from docutils.nodes import NodeVisitor
 
+from strictdoc.backend.rst.directives.document_metadata import DocumentMetadataNode
 from strictdoc.backend.rst.directives.metadata import MetaInfoNode
 from strictdoc.backend.rst.rst_constants import STRICTDOC_ATTR_LEVEL
 from strictdoc.core.logger import Logger
@@ -66,9 +67,21 @@ class RSTWriteVisitor(NodeVisitor):
             self.output.append('.. metadata::')
 
             for field in node.meta_information:
-                values = ', '.join(node.meta_information[field])
+                values = node.meta_information[field]
 
                 self.output.append('    :{}: {}'.format(field, values))
+
+            self.output.append('')
+
+            return
+
+        if isinstance(node, DocumentMetadataNode):
+            self.output.append('.. document-metadata::')
+
+            document_metadata = node.get_metadata()
+            self.output.append('    :fields:')
+            for field in document_metadata.fields:
+                self.output.append('        - name={}, type={}'.format(field['name'], field['type']))
 
             self.output.append('')
 

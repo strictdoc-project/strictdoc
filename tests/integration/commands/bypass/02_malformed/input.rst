@@ -1,3 +1,12 @@
+.. document-metadata::
+    :fields:
+        - name=field1, type=string
+        - name=field2, type=string
+        - name=field3, type=string
+        - name=field4, type=string
+        - name=field5, type=string
+        - name=field6, type=string
+
 Header 1
 ========
 

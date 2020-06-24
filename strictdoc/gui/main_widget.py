@@ -21,6 +21,8 @@ class Widget(QWidget):
         # TODO: table_delegate retains table_view
         # TODO: check if it causes any issues with reference cycles.
         table_delegate.table_view = self.table_view
+        self.table_view.verticalHeader().setVisible(False)
+        self.table_view.horizontalHeader().setVisible(False)
 
         # Styles
         self.table_view.setStyleSheet(STRICTDOC_QT_STYLES)

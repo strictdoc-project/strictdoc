@@ -5,6 +5,7 @@ from collections import OrderedDict
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 
+from strictdoc.backend.rst.rst_field_parser import RSTFieldParser
 from strictdoc.backend.rst.rst_parser_shared_state import RSTParserSharedState
 
 
@@ -42,6 +43,10 @@ class DocumentMetadataDirective(Directive):
         "fields": directives.unchanged_required
     }
 
+    def __init__(self, *args):
+        super(DocumentMetadataDirective, self).__init__(*args)
+        self.field_parser = RSTFieldParser()
+
     def run(self):
         meta_information = OrderedDict()
 
@@ -49,28 +54,10 @@ class DocumentMetadataDirective(Directive):
             raise RuntimeError("problem with options")
 
         assert 'fields' in self.options.keys()
-
         fields_raw = self.options.get("fields", '')
-        fields_components = fields_raw.split('\n')
-
-        pattern = re.compile("^\s+|\s*,\s*|\s+$")
-
         document_metadata = DocumentMetadata()
-        for fields_component in fields_components:
-            assert fields_component[0:2] == '- '
-            fields_component = fields_component[2:]
-
-            key_value_pairs = [x for x in pattern.split(fields_component) if x]
-
-            field_dict = {}
-
-            for key_value_pair in key_value_pairs:
-                key_value_components = key_value_pair.split('=')
-                assert len(key_value_components) == 2
-
-                field_dict[key_value_components[0]] = key_value_components[1]
-
-            document_metadata.fields.append(field_dict)
+        fields = self.field_parser.parse_dict_array(fields_raw)
+        document_metadata.fields.extend(fields)
 
         container = DocumentMetadataNode(document_metadata)
 

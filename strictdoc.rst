@@ -14,7 +14,7 @@ Implementation Requirements
 Backends
 ~~~~~~~~
 
-.. std-node::
+.. metadata::
     :field1: value1
     :field2: value2
 
@@ -25,7 +25,7 @@ Backends
 
     SOME CONTENT BAR2
 
-.. std-node::
+.. metadata::
     :field3: value3
     :field4: value4
 

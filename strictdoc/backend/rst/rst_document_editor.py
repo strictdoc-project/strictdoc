@@ -17,9 +17,9 @@ class RSTDocumentEditor:
         self.rst_document = rst_document
         self.validator = RSTDocumentValidator()
 
-    def replace_node(self, node, new_rst_fragment):
-        self.logger.info("replace node:\n{}\nwith:\n{}".format(node, new_rst_fragment))
-        assert isinstance(node, docutils.nodes.Node)
+    def replace_node(self, old_node, new_rst_fragment):
+        self.logger.info("replace node:\n{}\nwith:\n{}".format(old_node, new_rst_fragment))
+        assert isinstance(old_node, docutils.nodes.Node)
 
         self.logger.info("document before injection:\n{}".format(self.rst_document.rst_document.pformat()))
 
@@ -29,23 +29,23 @@ class RSTDocumentEditor:
         new_fragment_rst_doc.walkabout(visitor)
 
         self.logger.info("new_rst_fragment:\n{}".format(new_rst_fragment))
-        top_level_node = new_fragment_rst_doc.children[0]
-        assert top_level_node
+        new_node = new_fragment_rst_doc.children[0]
+        assert new_node
 
-        if isinstance(node, docutils.nodes.title):
-            if isinstance(top_level_node, docutils.nodes.paragraph):
-                assert isinstance(node.parent, docutils.nodes.section)
-                self._replace_section_with_paragraph(node,
-                                                     top_level_node)
-            elif isinstance(top_level_node, docutils.nodes.section):
-                self._replace_section_with_section(node, top_level_node)
+        if isinstance(old_node, docutils.nodes.title):
+            if isinstance(new_node, docutils.nodes.paragraph):
+                assert isinstance(old_node.parent, docutils.nodes.section)
+                self._replace_section_with_paragraph(old_node,
+                                                     new_node)
+            elif isinstance(new_node, docutils.nodes.section):
+                self._replace_section_with_section(old_node, new_node)
             else:
                 raise NotImplementedError
-        elif isinstance(node, docutils.nodes.paragraph):
-            if isinstance(top_level_node, docutils.nodes.section):
-                self._replace_paragraph_with_section(node, top_level_node)
-            elif isinstance(top_level_node, docutils.nodes.paragraph):
-                node.replace_self(top_level_node)
+        elif isinstance(old_node, docutils.nodes.paragraph):
+            if isinstance(new_node, docutils.nodes.section):
+                self._replace_paragraph_with_section(old_node, new_node)
+            elif isinstance(new_node, docutils.nodes.paragraph):
+                old_node.replace_self(new_node)
             else:
                 raise NotImplementedError
         else:

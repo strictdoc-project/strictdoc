@@ -1,21 +1,10 @@
 from collections import OrderedDict
 
 from docutils import nodes
-from docutils.parsers.rst import Directive, directives
+from docutils.parsers.rst import Directive
 
-supported_categories = [
-    'field1',
-    'field2',
-    'field3',
-    'field4',
-    'field5',
-    'field6',
-]
-
-categories_spec = OrderedDict()
-
-for category in supported_categories:
-    categories_spec[category] = directives.unchanged_required
+from strictdoc.backend.rst.directives.document_metadata import DocumentMetadataNode
+from strictdoc.backend.rst.rst_parser_shared_state import RSTParserSharedState
 
 
 class MetaInfoNode(nodes.General, nodes.Element):
@@ -33,25 +22,33 @@ class MetaInfoNode(nodes.General, nodes.Element):
 class StdNodeDirective(Directive):
     has_content = True
 
-    option_spec = categories_spec
+    option_spec = RSTParserSharedState.categories_spec
 
     def run(self):
         meta_information = OrderedDict()
 
         if not self.options:
-            raise SystemExit(1)
+            raise RuntimeError("problem with options")
+
+        document_metadata_node = self.state_machine.document.children[0]
+        assert isinstance(document_metadata_node, DocumentMetadataNode)
+
+        document_metadata = document_metadata_node.get_metadata()
 
         for option in self.option_spec:
             if option not in self.options.keys():
                 continue
 
-            if option not in meta_information:
-                meta_information[option] = []
+            if not document_metadata.has_field(option, 'string'):
+                raise RuntimeError("Wrong field: {}".format(option))
 
-            values = self.options.get(option, '').split(',')
-            values = [v.strip() for v in values]
+            # for array types
+            # if option not in meta_information:
+            #     meta_information[option] = []
+            # values = self.options.get(option, '').split(',')
+            value = self.options.get(option, '')
 
-            meta_information[option].extend(values)
+            meta_information[option] = value
 
         paragraph_nodes = []
 
@@ -78,6 +75,3 @@ class StdNodeDirective(Directive):
             container.append(paragraph_node)
 
         return [container]
-
-
-directives.register_directive("std-node", StdNodeDirective)

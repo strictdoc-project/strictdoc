@@ -3,6 +3,7 @@ from PySide2.QtWidgets import (QHBoxLayout, QHeaderView, QSizePolicy,
 
 from strictdoc.gui.document.document_item_delegate import DocumentItemDelegate
 from strictdoc.gui.document.document_model import DocumentTableModel
+from strictdoc.gui.styles import STRICTDOC_QT_STYLES
 
 
 class Widget(QWidget):
@@ -20,6 +21,9 @@ class Widget(QWidget):
         # TODO: table_delegate retains table_view
         # TODO: check if it causes any issues with reference cycles.
         table_delegate.table_view = self.table_view
+
+        # Styles
+        self.table_view.setStyleSheet(STRICTDOC_QT_STYLES)
 
         # QTableView Headers
         self.horizontal_header = self.table_view.horizontalHeader()

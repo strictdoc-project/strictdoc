@@ -6,7 +6,7 @@ from PySide2.QtGui import (QAbstractTextDocumentLayout)
 from PySide2.QtWidgets import (QApplication,
                                QStyledItemDelegate,
                                QStyleOptionViewItem,
-                               QStyle)
+                               QStyle, QAbstractScrollArea)
 
 from strictdoc.gui.document.document_item_editor import DocumentItemEditor
 from strictdoc.gui.document.document_node import DocumentNode, DOCUMENT_MARGIN
@@ -90,6 +90,7 @@ class DocumentItemDelegate(QStyledItemDelegate):
         textedit.document().setDocumentMargin(DOCUMENT_MARGIN)
         textedit.setLineWrapMode(PySide2.QtWidgets.QTextEdit.LineWrapMode.WidgetWidth)
         textedit.editingFinished.connect(self.text_finished)
+        textedit.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
         self.current_editor = textedit
         self.current_edited_index = index

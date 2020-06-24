@@ -6,7 +6,7 @@ from PySide2.QtGui import (QAbstractTextDocumentLayout)
 from PySide2.QtWidgets import (QApplication,
                                QStyledItemDelegate,
                                QStyleOptionViewItem,
-                               QStyle, QAbstractScrollArea)
+                               QStyle)
 
 from strictdoc.gui.document.document_item_editor import DocumentItemEditor
 from strictdoc.gui.document.document_node import DocumentNode, DOCUMENT_MARGIN
@@ -37,6 +37,16 @@ class DocumentItemDelegate(QStyledItemDelegate):
         document_node = self.document_nodes[index]
 
         options.text = ''
+
+        # We don't have selected state because we don't want any special bg color.
+        # https://stackoverflow.com/a/10957699/598057
+        options.state &= ~ QStyle.State_Selected
+        # BG can be set in a model or like as follows:
+        # https://stackoverflow.com/a/10220126/598057
+        # bg_color_value = 245
+        # bg_color = QColor(bg_color_value, bg_color_value, bg_color_value, 255)
+        # options.backgroundBrush = QBrush(bg_color)
+
         style.drawControl(QStyle.CE_ItemViewItem, options, painter)
 
         ctx = QAbstractTextDocumentLayout.PaintContext()

@@ -4,8 +4,8 @@ import PySide2
 from PySide2.QtCore import Qt, QAbstractTableModel, QModelIndex
 from PySide2.QtGui import QColor
 
-from strictdoc.backend.rst.rst_document_editor import RSTDocumentEditor
 from strictdoc.backend.rst.rst_document import RSTDocument
+from strictdoc.backend.rst.rst_document_editor import RSTDocumentEditor
 from strictdoc.backend.rst.rst_to_html_writer import HTMLWriter
 from strictdoc.backend.rst.rst_writer import RSTWriter
 

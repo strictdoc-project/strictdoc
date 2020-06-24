@@ -37,6 +37,16 @@ class DocumentItemDelegate(QStyledItemDelegate):
         document_node = self.document_nodes[index]
 
         options.text = ''
+
+        # We don't have selected state because we don't want any special bg color.
+        # https://stackoverflow.com/a/10957699/598057
+        options.state &= ~ QStyle.State_Selected
+        # BG can be set in a model or like as follows:
+        # https://stackoverflow.com/a/10220126/598057
+        # bg_color_value = 245
+        # bg_color = QColor(bg_color_value, bg_color_value, bg_color_value, 255)
+        # options.backgroundBrush = QBrush(bg_color)
+
         style.drawControl(QStyle.CE_ItemViewItem, options, painter)
 
         ctx = QAbstractTextDocumentLayout.PaintContext()
@@ -90,6 +100,7 @@ class DocumentItemDelegate(QStyledItemDelegate):
         textedit.document().setDocumentMargin(DOCUMENT_MARGIN)
         textedit.setLineWrapMode(PySide2.QtWidgets.QTextEdit.LineWrapMode.WidgetWidth)
         textedit.editingFinished.connect(self.text_finished)
+        textedit.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
         self.current_editor = textedit
         self.current_edited_index = index

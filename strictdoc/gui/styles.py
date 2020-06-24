@@ -1,24 +1,34 @@
 
 STRICTDOC_QT_STYLES = """
+* {
+    padding: 0px 0px;
+    margin: 0px 0px;
+    border: 0px;
+    background-color: 'white';
+    background: 'white';
+}
 QTableView {
     border: 1px solid '#cccccc';
     gridline-color: '#f0f0f0';
-    /* do not seem work */
-    color: 'green';
-    background: 'red';
+    background-color: '#cccccc';
 }
 QTableView::item {
-    /* do not seem work */
-    background: 'green';
-    border: 2px solid 'red';
+
 }
 QTableView:item:selected {
-    /* do not seem work */
-    background-color: 'green'; 
-    color: '#FFFFFF'
+
 }
 QTableView:item:selected:focus {
-    /* do not seem work */
-    background-color: 'green';
+
+}
+QScrollBar:vertical {
+    width: 8px;
+    background-color: '#ddd';
+}
+QScrollBar::handle:vertical {
+    background-color: 'gray';
+}
+QTextEdit {
+
 }
 """

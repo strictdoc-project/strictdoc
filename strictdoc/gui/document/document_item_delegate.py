@@ -114,7 +114,7 @@ class DocumentItemDelegate(QStyledItemDelegate):
 
         editor.setPlainText(text_value)
 
-        self.table_view.resizeRowsToContents()
+        self.table_view.resizeRowToContents(index.row())
         editor.textChanged.connect(self.text_changed)
 
     def setModelData(self, editor, model, index):

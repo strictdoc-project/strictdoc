@@ -69,11 +69,7 @@ class DocumentItemDelegate(QStyledItemDelegate):
         options = QStyleOptionViewItem(option)
         self.initStyleOption(options, index)
 
-        widget = options.widget
-
-        # TODO: This is ugly hack. Somehow the real streched cell's width has
-        # TODO: to be found.
-        estimated_width = widget.width() - MAGIC_VALUE
+        estimated_width = self.table_view.columnWidth(index.column())
 
         if index not in self.document_nodes:
             self.document_nodes[index] = DocumentNode(options.text, estimated_width)
@@ -87,7 +83,7 @@ class DocumentItemDelegate(QStyledItemDelegate):
             size = QSize(int(clone.size().width()), int(clone.size().height()))
             return size
 
-        document_node.update_text(options.text)
+        document_node.update_text(options.text, estimated_width)
 
         doc = document_node.get_document()
 

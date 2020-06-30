@@ -29,10 +29,11 @@ class Widget(QWidget):
 
         # QTableView Headers
         self.horizontal_header = self.table_view.horizontalHeader()
+
         self.vertical_header = self.table_view.verticalHeader()
-        self.horizontal_header.setSectionResizeMode(QHeaderView.ResizeToContents)
         self.vertical_header.setSectionResizeMode(QHeaderView.ResizeToContents)
 
+        self.horizontal_header.setSectionResizeMode(QHeaderView.Stretch)
         self.horizontal_header.setStretchLastSection(True)
 
         # QWidget Layout

@@ -2,7 +2,7 @@ import re
 
 import PySide2
 from PySide2.QtCore import Qt, QSize
-from PySide2.QtGui import (QAbstractTextDocumentLayout)
+from PySide2.QtGui import (QAbstractTextDocumentLayout, QColor, QBrush)
 from PySide2.QtWidgets import (QApplication,
                                QStyledItemDelegate,
                                QStyleOptionViewItem,
@@ -40,12 +40,14 @@ class DocumentItemDelegate(QStyledItemDelegate):
 
         # We don't have selected state because we don't want any special bg color.
         # https://stackoverflow.com/a/10957699/598057
-        options.state &= ~ QStyle.State_Selected
-        # BG can be set in a model or like as follows:
-        # https://stackoverflow.com/a/10220126/598057
-        # bg_color_value = 245
-        # bg_color = QColor(bg_color_value, bg_color_value, bg_color_value, 255)
-        # options.backgroundBrush = QBrush(bg_color)
+        if option.state & QStyle.State_Selected:
+            options.state &= ~ QStyle.State_Selected
+
+            # BG can be set in a model or like as follows:
+            # https://stackoverflow.com/a/10220126/598057
+            bg_color_value = 245
+            bg_color = QColor(bg_color_value, bg_color_value, bg_color_value, 255)
+            options.backgroundBrush = QBrush(bg_color)
 
         style.drawControl(QStyle.CE_ItemViewItem, options, painter)
 
@@ -114,7 +116,11 @@ class DocumentItemDelegate(QStyledItemDelegate):
 
         editor.setPlainText(text_value)
 
-        self.table_view.resizeRowsToContents()
+        document_node = self.document_nodes[index]
+        clone = document_node.get_document_clone(editor.toPlainText())
+        editor.setMinimumHeight(clone.size().height())
+
+        self.table_view.resizeRowToContents(index.row())
         editor.textChanged.connect(self.text_changed)
 
     def setModelData(self, editor, model, index):
@@ -130,8 +136,10 @@ class DocumentItemDelegate(QStyledItemDelegate):
         document_node = self.document_nodes[self.current_edited_index]
         document_node.update_text(self.current_editor.toPlainText())
 
-        size = self.current_editor.document().size().toSize()
-        self.current_editor.setFixedHeight(size.height())
+        # TODO: Getting document clones happens 3 times in this class.
+        # TODO: Would be great to find a way to optimize this.
+        clone = document_node.get_document_clone(self.current_editor.toPlainText())
+        self.current_editor.setMinimumHeight(clone.size().height())
 
         # It is important that we notify table view to update the cells because
         # here it seems to be the right (and only) place to do so.

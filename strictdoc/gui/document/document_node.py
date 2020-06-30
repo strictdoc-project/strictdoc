@@ -8,25 +8,30 @@ DOCUMENT_MARGIN = 20
 class DocumentNode:
     document = None
 
-    def __init__(self, text, width):
+    def __init__(self, text, estimated_width):
         css = "body { margin-left: 0px; }"
 
-        doc = QTextDocument()
+        document = QTextDocument()
 
-        doc.setDefaultStyleSheet(css)
-        doc.setDocumentMargin(DOCUMENT_MARGIN)
-        doc.setTextWidth(width)
+        document.setDefaultStyleSheet(css)
+        document.setDocumentMargin(DOCUMENT_MARGIN)
+        document.setTextWidth(estimated_width)
 
-        text_option = doc.defaultTextOption()
+        text_option = document.defaultTextOption()
         text_option.setWrapMode(PySide2.QtGui.QTextOption.WrapMode.WordWrap)
 
-        doc.setDefaultTextOption(text_option)
+        document.setDefaultTextOption(text_option)
 
-        self.document = doc
-        self.update_text(text)
+        self.document = document
+        self.update_text(text, estimated_width)
 
-    def update_text(self, new_text):
+    def update_text(self, new_text, estimated_width):
+        assert isinstance(new_text, str)
+        assert isinstance(estimated_width, int)
+        assert estimated_width > 0
+
         self.document.setHtml("<body>" + new_text + "</body>")
+        self.document.setTextWidth(estimated_width)
 
     def get_document(self):
         return self.document

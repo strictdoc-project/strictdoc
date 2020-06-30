@@ -1,12 +1,12 @@
 import re
 
 import PySide2
-from PySide2.QtCore import Qt, QSize
-from PySide2.QtGui import (QAbstractTextDocumentLayout, QColor, QBrush)
+from PySide2.QtCore import Qt, QSize, QEvent
+from PySide2.QtGui import (QAbstractTextDocumentLayout, QColor, QBrush, QCursor)
 from PySide2.QtWidgets import (QApplication,
                                QStyledItemDelegate,
                                QStyleOptionViewItem,
-                               QStyle)
+                               QStyle, QMenu, QAction)
 
 from strictdoc.gui.document.document_item_editor import DocumentItemEditor
 from strictdoc.gui.document.document_node import DocumentNode, DOCUMENT_MARGIN
@@ -146,3 +146,37 @@ class DocumentItemDelegate(QStyledItemDelegate):
         self.current_edited_index = None
 
         self.table_view.resizeRowsToContents()
+
+    def editorEvent(self, event, model, option, index):
+        if event.type() == QEvent.MouseButtonPress:
+            pos = self.table_view.mapFromGlobal(QCursor.pos())
+            row = self.table_view.indexAt(pos).row()
+            if event.button() == Qt.RightButton:
+                contextMenu = QMenu(self.table_view)
+
+                action_add_row_before = QAction("Insert node before",
+                                               self.table_view,
+                                               statusTip="FOO BAR",
+                                               triggered=self.foo)
+
+                action_add_row_after = QAction("Insert node after",
+                                               self.table_view,
+                                               statusTip="FOO BAR",
+                                               triggered=self.foo)
+
+                action_remove_row = QAction("Remove node",
+                                            self.table_view,
+                                            statusTip="FOO BAR",
+                                            triggered=self.foo)
+
+                contextMenu.addAction(action_add_row_before)
+                contextMenu.addAction(action_add_row_after)
+                contextMenu.addAction(action_remove_row)
+
+                contextMenu.exec_(QCursor.pos())
+
+            return True
+        return super().editorEvent(event, model, option, index)
+
+    def foo(self):
+        pass

@@ -31,4 +31,14 @@ QScrollBar::handle:vertical {
 QTextEdit {
 
 }
+
+/* Right Click Menu */
+QMenu:item {
+    background-color: '#eeeeee';
+    padding: 15px;
+    font-size: 12px;
+}
+QMenu:item:selected {
+    background-color: '#cccccc';
+}
 """

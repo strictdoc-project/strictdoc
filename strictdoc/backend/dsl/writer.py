@@ -22,6 +22,9 @@ class SDWriter:
             output += "\n"
             output += "LEVEL: "
             output += str(section.level)
+            output += "\n"
+            output += "TITLE: "
+            output += str(section.title)
 
             output += "\n"
 

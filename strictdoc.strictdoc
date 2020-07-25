@@ -1,11 +1,12 @@
-StrictDoc
-=========
+<DOCUMENT>
+NAME: StrictDoc
 
-This is a documentation of StrictDoc written in StrictDoc.
+<SECTION>
+LEVEL: 1
+TITLE: High-level requirements
 
-High-level requirements
------------------------
+<REQUIREMENT>
+STATEMENT: Requirement item should have an optional title
 
-Requirement item should have an optional title
-
-Requirement item should have an optional content body.
+<REQUIREMENT>
+STATEMENT: Requirement item should have an optional content body.

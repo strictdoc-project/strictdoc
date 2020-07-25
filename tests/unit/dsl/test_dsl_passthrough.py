@@ -6,10 +6,11 @@ from strictdoc.backend.dsl.writer import SDWriter
 def test_01_basic_test():
     input = """
 <DOCUMENT>
-NAME: TestDoc
+NAME: Test Doc
 
 <SECTION>
 LEVEL: 0
+TITLE: Test Section
 
 <REQUIREMENT>
 STATEMENT: System shall do X

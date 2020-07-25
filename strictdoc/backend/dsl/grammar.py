@@ -11,7 +11,8 @@ SectionOrRequirement:
 
 Section:
   '<SECTION>' 
-  'LEVEL:' level = INT 
+  'LEVEL:' level = INT
+  'TITLE:' title = /.*$/ 
   section_contents *= SectionOrRequirement
 ;
 

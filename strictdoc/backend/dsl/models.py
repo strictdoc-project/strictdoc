@@ -27,14 +27,15 @@ class ReqComment(object):
 
 
 class Section(object):
-    def __init__(self, parent, level, section_contents):
+    def __init__(self, parent, level, title, section_contents):
         self.parent = parent
         self.level = level
+        self.title = title
         self.section_contents = section_contents
 
     def __str__(self):
-        return "Section: <level: {}, section_contents: {}>".format(
-            self.level, self.section_contents
+        return "Section: <level: {}, title: {}, section_contents: {}>".format(
+            self.level, self.title, self.section_contents
         )
 
     def __repr__(self):

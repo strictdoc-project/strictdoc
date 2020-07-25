@@ -1,0 +1,12 @@
+[DOCUMENT]
+NAME: StrictDoc
+
+[SECTION]
+LEVEL: 1
+TITLE: High-level requirements
+
+[REQUIREMENT]
+STATEMENT: Requirement item should have an optional title
+
+[REQUIREMENT]
+STATEMENT: Requirement item should have an optional content body.

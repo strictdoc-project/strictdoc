@@ -1,6 +1,6 @@
 STRICTDOC_GRAMMAR = """
 Document:
-  '<DOCUMENT>' 
+  '[DOCUMENT]' 
   'NAME:' name = /.*$/
   sections *= SectionOrRequirement
 ;
@@ -10,14 +10,14 @@ SectionOrRequirement:
 ;
 
 Section:
-  '<SECTION>' 
+  '[SECTION]' 
   'LEVEL:' level = INT
   'TITLE:' title = /.*$/ 
   section_contents *= SectionOrRequirement
 ;
 
 Requirement:
-  '<REQUIREMENT>'
+  '[REQUIREMENT]'
 
   ('TITLE:' title = /.*$/)?
 

@@ -8,7 +8,7 @@ class SDWriter:
     def write(self, document):
         output = ""
 
-        output += "<DOCUMENT>"
+        output += "[DOCUMENT]"
         output += "\n"
 
         output += "NAME: "
@@ -18,7 +18,7 @@ class SDWriter:
         if len(document.sections) > 0:
             output += "\n"
         for section in document.sections:
-            output += "<SECTION>"
+            output += "[SECTION]"
             output += "\n"
             output += "LEVEL: "
             output += str(section.level)
@@ -31,7 +31,7 @@ class SDWriter:
             for section_content in section.section_contents:
                 output += "\n"
                 if isinstance(section_content, Requirement):
-                    output += "<REQUIREMENT>"
+                    output += "[REQUIREMENT]"
                     output += "\n"
 
                     if section_content.title:

@@ -3,25 +3,24 @@ from strictdoc.backend.dsl.reader import SDReader
 from strictdoc.backend.dsl.writer import SDWriter
 
 
-def test_01_basic_test():
+def test_100_basic_test():
     input = """
-<DOCUMENT>
+[DOCUMENT]
 NAME: Test Doc
 
-<SECTION>
+[SECTION]
 LEVEL: 0
 TITLE: Test Section
 
-<REQUIREMENT>
+[REQUIREMENT]
 STATEMENT: System shall do X
-BODY: >>> 
+BODY: >>>
 This is an optional body of the requirement.
 This is an optional body of the requirement.
 <<<
-
 COMMENT: This requirement is very important
 
-<REQUIREMENT>
+[REQUIREMENT]
 TITLE: Optional title B
 STATEMENT: System shall do Y
 COMMENT: This requirement is very important
@@ -36,4 +35,4 @@ COMMENT: This requirement is very important
     output = writer.write(document)
 
     print(output)
-    # assert input == output
+    assert input == output

@@ -18,12 +18,23 @@ Section:
 
 Requirement:
   '<REQUIREMENT>'
+
   ('TITLE:' title = /.*$/)?
+
   'STATEMENT:' statement = /.*$/
+
+  ('BODY:' 
+    body = Body
+  )?
+
   comments *= ReqComment
 ;
 
 ReqComment:
   'COMMENT:' comment = /.*$/
+;
+
+Body:
+    content = /(?ms)>>>(.*?)<<</
 ;
 """

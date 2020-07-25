@@ -43,6 +43,14 @@ class SDWriter:
                     output += section_content.statement
                     output += "\n"
 
+                    if section_content.body:
+                        output += "BODY: >>>"
+                        output += "\n"
+                        output += section_content.body.content
+                        output += "\n"
+                        output += "<<<"
+                        output += "\n"
+
                     for comment in section_content.comments:
                         output += "COMMENT: "
                         output += comment.comment

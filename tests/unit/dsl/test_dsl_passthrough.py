@@ -14,6 +14,12 @@ TITLE: Test Section
 
 <REQUIREMENT>
 STATEMENT: System shall do X
+BODY: >>> 
+This is an optional body of the requirement.
+This is an optional body of the requirement.
+<<<
+
+COMMENT: This requirement is very important
 
 <REQUIREMENT>
 TITLE: Optional title B
@@ -29,5 +35,5 @@ COMMENT: This requirement is very important
     writer = SDWriter()
     output = writer.write(document)
 
-    # print(output)
-    assert input == output
+    print(output)
+    # assert input == output

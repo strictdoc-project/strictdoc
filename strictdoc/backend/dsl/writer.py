@@ -11,6 +11,10 @@ class SDWriter:
         output += "<DOCUMENT>"
         output += "\n"
 
+        output += "NAME: "
+        output += document.name
+        output += "\n"
+
         if len(document.sections) > 0:
             output += "\n"
         for section in document.sections:

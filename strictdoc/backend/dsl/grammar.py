@@ -1,6 +1,8 @@
 STRICTDOC_GRAMMAR = """
 Document:
-  '<DOCUMENT>' sections *= SectionOrRequirement
+  '<DOCUMENT>' 
+  'NAME:' name = /.*$/
+  sections *= SectionOrRequirement
 ;
 
 SectionOrRequirement:

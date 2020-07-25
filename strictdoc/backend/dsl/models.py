@@ -1,10 +1,11 @@
 class Document(object):
-    def __init__(self, sections=[]):
+    def __init__(self, name, sections=[]):
+        self.name = name
         self.sections = sections
 
     def __str__(self):
-        return "Document: <contents: {}>".format(
-            self.sections
+        return "Document: <name: {}, contents: {}>".format(
+            self.name, self.sections
         )
 
     def __repr__(self):

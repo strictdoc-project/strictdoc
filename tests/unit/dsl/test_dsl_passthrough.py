@@ -6,6 +6,7 @@ from strictdoc.backend.dsl.writer import SDWriter
 def test_01_basic_test():
     input = """
 <DOCUMENT>
+NAME: TestDoc
 
 <SECTION>
 LEVEL: 0
@@ -27,5 +28,5 @@ COMMENT: This requirement is very important
     writer = SDWriter()
     output = writer.write(document)
 
-    print(output)
+    # print(output)
     assert input == output

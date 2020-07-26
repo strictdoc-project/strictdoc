@@ -43,11 +43,12 @@ class Section(object):
 
 
 class Requirement(object):
-    def __init__(self, parent, title, statement, body=[], comments=[]):
+    def __init__(self, parent, statement, references, title, body=[], comments=[]):
         assert parent
         assert statement
 
         self.parent = parent
+        self.references = references
         self.title = title
         self.statement = statement
         self.body = body
@@ -84,6 +85,21 @@ class Body(object):
     def __str__(self):
         return "Body: <{}>".format(
             self.content
+        )
+
+    def __repr__(self):
+        return self.__str__()
+
+
+class Reference(object):
+    def __init__(self, parent, file_type, path):
+        self.parent = parent
+        self.file_type = file_type
+        self.path = path.strip()
+
+    def __str__(self):
+        return "File: <{}>".format(
+            self.path
         )
 
     def __repr__(self):

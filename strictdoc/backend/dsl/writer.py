@@ -34,6 +34,18 @@ class SDWriter:
                     output += "[REQUIREMENT]"
                     output += "\n"
 
+                    if section_content.references:
+                        output += "REFS:"
+                        output += "\n"
+
+                        for reference in section_content.references:
+                            output += "- TYPE: "
+                            output += reference.file_type
+                            output += "\n"
+                            output += "  VALUE: "
+                            output += reference.path
+                            output += "\n"
+
                     if section_content.title:
                         output += "TITLE: "
                         output += section_content.title

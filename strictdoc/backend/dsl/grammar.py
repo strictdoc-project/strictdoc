@@ -19,6 +19,8 @@ Section:
 Requirement:
   '[REQUIREMENT]'
 
+  ('REFS:' references *= Reference)?
+
   ('TITLE:' title = /.*$/)?
 
   'STATEMENT:' statement = /.*$/
@@ -36,5 +38,10 @@ ReqComment:
 
 Body:
     content = /(?ms)>>>(.*?)<<</
+;
+
+Reference:
+  '-' 'TYPE:' file_type = "File"
+      'VALUE:' path = /.*$/
 ;
 """

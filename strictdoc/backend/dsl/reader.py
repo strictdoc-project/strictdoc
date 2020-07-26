@@ -1,9 +1,9 @@
 from textx import metamodel_from_str, get_children_of_type
 
 from strictdoc.backend.dsl.grammar import STRICTDOC_GRAMMAR
-from strictdoc.backend.dsl.models import Document, Requirement, ReqComment, Section, Body
+from strictdoc.backend.dsl.models import Document, Requirement, ReqComment, Section, Body, Reference
 
-DOCUMENT_MODELS = [Document, ReqComment, Section, Requirement, Body]
+DOCUMENT_MODELS = [Document, ReqComment, Section, Requirement, Body, Reference]
 
 
 class SDReader:

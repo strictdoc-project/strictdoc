@@ -13,6 +13,13 @@ LEVEL: 0
 TITLE: Test Section
 
 [REQUIREMENT]
+REFS:
+- TYPE: File
+  VALUE: /usr/local/bin/hexe
+- TYPE: File
+  VALUE: /usr/local/bin/hexe
+- TYPE: File
+  VALUE: /usr/local/bin/hexe
 STATEMENT: System shall do X
 BODY: >>>
 This is an optional body of the requirement.

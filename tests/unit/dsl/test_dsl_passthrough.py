@@ -28,6 +28,7 @@ This is an optional body of the requirement.
 COMMENT: This requirement is very important
 
 [REQUIREMENT]
+UID: REQ-001
 TITLE: Optional title B
 STATEMENT: System shall do Y
 COMMENT: This requirement is very important

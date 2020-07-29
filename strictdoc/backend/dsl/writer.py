@@ -34,6 +34,11 @@ class SDWriter:
                     output += "[REQUIREMENT]"
                     output += "\n"
 
+                    if section_content.uid:
+                        output += "UID: "
+                        output += section_content.uid
+                        output += "\n"
+
                     if section_content.references:
                         output += "REFS:"
                         output += "\n"

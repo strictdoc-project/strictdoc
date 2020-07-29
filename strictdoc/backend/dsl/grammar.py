@@ -19,6 +19,8 @@ Section:
 Requirement:
   '[REQUIREMENT]'
 
+  ('UID:' uid = /.*$/)?
+
   ('REFS:' references *= Reference)?
 
   ('TITLE:' title = /.*$/)?

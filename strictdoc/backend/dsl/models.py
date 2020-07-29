@@ -43,20 +43,21 @@ class Section(object):
 
 
 class Requirement(object):
-    def __init__(self, parent, statement, references, title, body=[], comments=[]):
+    def __init__(self, parent, statement, uid, references, title, body=[], comments=[]):
         assert parent
         assert statement
 
         self.parent = parent
         self.references = references
         self.title = title
+        self.uid = uid.strip()
         self.statement = statement
         self.body = body
         self.comments = comments
 
     def __str__(self):
-        return "Requirement: <title_or_none: {}, statement: {}, comments: {}>".format(
-            self.title, self.statement, self.comments
+        return "Requirement: <uid: {}, title_or_none: {}, statement: {}, comments: {}>".format(
+            self.uid, self.title, self.statement, self.comments
         )
 
     def __repr__(self):

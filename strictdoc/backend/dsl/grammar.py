@@ -21,6 +21,8 @@ Requirement:
 
   ('UID:' uid = /.*$/)?
 
+  ('STATUS:' status = RequirementStatus)?
+
   ('REFS:' references *= Reference)?
 
   ('TITLE:' title = /.*$/)?
@@ -33,6 +35,9 @@ Requirement:
 
   comments *= ReqComment
 ;
+
+RequirementStatus:
+  'Draft' | 'Active' | 'Deleted';
 
 ReqComment:
   'COMMENT:' comment = /.*$/

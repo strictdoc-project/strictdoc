@@ -39,6 +39,11 @@ class SDWriter:
                         output += section_content.uid
                         output += "\n"
 
+                    if section_content.status:
+                        output += "STATUS: "
+                        output += section_content.status
+                        output += "\n"
+
                     if section_content.references:
                         output += "REFS:"
                         output += "\n"

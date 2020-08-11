@@ -43,7 +43,7 @@ class Section(object):
 
 
 class Requirement(object):
-    def __init__(self, parent, statement, uid, references, title, body=[], comments=[]):
+    def __init__(self, parent, statement, uid, status, references, title, body=[], comments=[]):
         assert parent
         assert statement
 
@@ -51,6 +51,7 @@ class Requirement(object):
         self.references = references
         self.title = title
         self.uid = uid.strip()
+        self.status = status
         self.statement = statement
         self.body = body
         self.comments = comments

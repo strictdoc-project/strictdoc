@@ -15,3 +15,10 @@ class SDReader:
     def read(self, input):
         document = self.meta_model.model_from_str(input)
         return document
+
+    def read_from_file(self, file_path):
+        with open(file_path, 'r') as file:
+            sdoc_content = file.read()
+        sdoc = self.read(sdoc_content)
+        sdoc.assign_path(file_path)
+        return sdoc

@@ -2,6 +2,7 @@ class Document(object):
     def __init__(self, name, sections=[]):
         self.name = name
         self.sections = sections
+        self.path = "<No document path>"
 
     def __str__(self):
         return "Document: <name: {}, contents: {}>".format(
@@ -10,6 +11,10 @@ class Document(object):
 
     def __repr__(self):
         return self.__str__()
+
+    def assign_path(self, path):
+        assert isinstance(path, str)
+        self.path = path
 
 
 class ReqComment(object):
@@ -94,9 +99,9 @@ class Body(object):
 
 
 class Reference(object):
-    def __init__(self, parent, file_type, path):
+    def __init__(self, parent, ref_type, path):
         self.parent = parent
-        self.file_type = file_type
+        self.ref_type = ref_type
         self.path = path.strip()
 
     def __str__(self):

@@ -50,7 +50,7 @@ class SDWriter:
 
                         for reference in section_content.references:
                             output += "- TYPE: "
-                            output += reference.file_type
+                            output += reference.ref_type
                             output += "\n"
                             output += "  VALUE: "
                             output += reference.path

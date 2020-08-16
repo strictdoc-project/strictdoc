@@ -48,7 +48,11 @@ Body:
 ;
 
 Reference:
-  '-' 'TYPE:' file_type = "File"
+  '-' 'TYPE:' ref_type = ReferenceType
       'VALUE:' path = /.*$/
+;
+
+ReferenceType:
+  'File' | 'Parent'
 ;
 """

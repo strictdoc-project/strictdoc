@@ -69,6 +69,10 @@ class Requirement(object):
     def __repr__(self):
         return self.__str__()
 
+    @property
+    def is_requirement(self):
+        return True
+
 
 # class Body(object):
 #     def __init__(self, parent, body_content=[]):

@@ -19,6 +19,11 @@ class SDReader:
     def read_from_file(self, file_path):
         with open(file_path, 'r') as file:
             sdoc_content = file.read()
-        sdoc = self.read(sdoc_content)
-        sdoc.assign_path(file_path)
-        return sdoc
+
+        try:
+            sdoc = self.read(sdoc_content)
+            sdoc.assign_path(file_path)
+            return sdoc
+        except Exception as exc:
+            print("error: could not parse file: {}.\nException: {}".format(file_path, exc))
+            exit(1)

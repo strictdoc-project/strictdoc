@@ -33,6 +33,8 @@ STATUS: Draft
 TITLE: Optional title B
 STATEMENT: System shall do Y
 COMMENT: This requirement is very important
+
+[/SECTION]
 """.lstrip()
 
     reader = SDReader()

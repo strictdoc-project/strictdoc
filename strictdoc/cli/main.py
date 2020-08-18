@@ -6,7 +6,7 @@ import argparse
 
 from pathlib import Path
 
-from strictdoc.export.html.export import DocumentTreeHTMLExport
+from strictdoc.export.html.export import DocumentTreeHTMLExport, SingleDocumentHTMLExport
 from strictdoc.core.document_finder import DocumentFinder
 
 from strictdoc.backend.rst.rst_reader import RSTReader
@@ -95,5 +95,12 @@ if args.command == 'export':
     print("writing to file: {}".format(output_file))
     with open(output_file, 'w') as file:
         file.write(output)
+
+    for document in document_tree.document_list:
+        document_content = SingleDocumentHTMLExport.export(document)
+        document_out_file = "output/{}.html".format(document.name)
+        print("writing to file: {}".format(document_out_file))
+        with open(document_out_file, 'w') as file:
+            file.write(document_content)
 
     exit(0)

@@ -1,5 +1,7 @@
 import os
 
+from jinja2 import Template, Environment, PackageLoader, select_autoescape
+
 from strictdoc.backend.dsl.models import Requirement
 
 
@@ -53,91 +55,19 @@ class DocumentTreeHTMLExport:
 
 
 class SingleDocumentHTMLExport:
+    env = Environment(
+        loader=PackageLoader('strictdoc', 'export/html/templates'),
+        # autoescape=select_autoescape(['html', 'xml'])
+    )
+    env.globals.update(isinstance=isinstance)
+
     @staticmethod
     def export(document):
+        print("doc: {}, number of sections: {}".format(document.name, len(document.sections)))
         output = ""
 
-        output += "<h1>"
-        output += document.name
-        output += "</h1>"
+        template = SingleDocumentHTMLExport.env.get_template('single_document/document.jinja.html')
 
-        output += "\n"
-
-        if len(document.sections) > 0:
-            output += "\n"
-        for section in document.sections:
-            output += "<div>"
-            output += "\n"
-
-            output += "<h2>"
-            output += str(section.title)
-            output += "</h2>"
-            output += "\n"
-
-            for section_content in section.section_contents:
-                output += "\n"
-                if isinstance(section_content, Requirement):
-                    output += "<div>"
-                    output += "\n"
-
-                    if section_content.uid:
-                        output += "<h3>"
-                        output += section_content.uid
-
-                        if section_content.title:
-                            output += " "
-                            output += section_content.title
-                            output += "\n"
-
-                        output += "</h3>"
-                        output += "\n"
-
-                    if section_content.status:
-                        output += "<div>"
-                        output += section_content.status
-                        output += "</div>"
-                        output += "\n"
-
-                    if section_content.references:
-                        output += "<h5>Links:</h5>"
-                        output += "\n"
-
-                        for reference in section_content.references:
-                            output += "<div>"
-                            output += "\n"
-                            output += "- "
-                            output += reference.path
-                            output += " ("
-                            output += reference.ref_type
-                            output += ")"
-                            output += "</div>"
-                            output += "\n"
-
-                        output += "<br/>"
-
-                    output += "<div>"
-                    output += section_content.statement
-                    output += "</div>"
-                    output += "\n"
-
-                    if section_content.body:
-                        output += "<div>"
-                        output += "\n"
-                        output += section_content.body.content
-                        output += "\n"
-                        output += "</div>"
-                        output += "\n"
-
-                    if len(section_content.comments):
-                        output += "<br/>"
-
-                    for comment in section_content.comments:
-                        output += "<div>"
-                        output += "<b>Comment: </b>"
-                        output += comment.comment
-                        output += "</div>"
-                        output += "\n"
-
-                    output += "</div>"
+        output += template.render(document=document)
 
         return output

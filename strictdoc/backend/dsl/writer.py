@@ -78,4 +78,8 @@ class SDWriter:
                         output += comment.comment
                         output += "\n"
 
+            output += "\n"
+            output += "[/SECTION]"
+            output += "\n"
+
         return output

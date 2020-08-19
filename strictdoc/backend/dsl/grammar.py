@@ -10,10 +10,11 @@ SectionOrRequirement:
 ;
 
 Section:
-  '[SECTION]' 
+  '[SECTION]'
   'LEVEL:' level = INT
   'TITLE:' title = /.*$/ 
   section_contents *= SectionOrRequirement
+  '[/SECTION]'
 ;
 
 Requirement:

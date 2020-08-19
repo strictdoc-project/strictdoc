@@ -1,0 +1,20 @@
+<h1>{{document.name}}</h1>
+
+{%- for section_or_requirement in document.sections %}
+  {%- if section_or_requirement.is_requirement %}
+    {%- set requirement = section_or_requirement %}
+    {% include "single_document/requirement.jinja.html" %}
+    <br/>
+  {%- else %}
+    {%- set section = section_or_requirement %}
+    <h2>{{ section.title }}</h2>
+
+    {%- for section_or_requirement in section.section_contents %}
+      {%- if section_or_requirement.is_requirement %}
+        {%- set requirement = section_or_requirement %}
+        {% include "single_document/requirement.jinja.html" %}
+        <br/>
+      {%- endif %}
+    {%- endfor %}
+  {%- endif %}
+{%- endfor %}

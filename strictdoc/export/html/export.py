@@ -1,8 +1,10 @@
+import collections
 import os
 
 from jinja2 import Template, Environment, PackageLoader, select_autoescape
 
 from strictdoc.backend.dsl.models import Requirement
+from strictdoc.core.document_tree import FileTree
 
 
 def get_path_components(folder_path):
@@ -11,45 +13,45 @@ def get_path_components(folder_path):
 
 
 class DocumentTreeHTMLExport:
-    OFFSET = 12
+    OFFSET = 8
 
     @staticmethod
     def export(document_tree):
+        task_list = collections.deque([document_tree.file_tree])
+        artefact_list = []
+
+        while task_list:
+            file_tree_or_file = task_list.popleft()
+
+            if isinstance(file_tree_or_file, FileTree):
+                artefact_list.append(file_tree_or_file)
+                task_list.extendleft(file_tree_or_file.files)
+                task_list.extendleft(file_tree_or_file.subfolder_trees)
+            else:
+                artefact_list.append(file_tree_or_file)
+
         output = ""
 
         output += "<h1>Document tree</h1>"
 
         output += "<div>"
-        task_list = [document_tree.file_tree]
-        while task_list:
-            current_file_tree = task_list.pop(0)
-
-            folder_name = os.path.basename(os.path.normpath(current_file_tree.root_path))
-
-            output += "<div>"
-            output += "&nbsp;" * current_file_tree.level * DocumentTreeHTMLExport.OFFSET
-            output += "{}/".format(folder_name)
-            output += "</div>"
-
-            for doc_file in current_file_tree.files:
-                doc_full_path = os.path.join(current_file_tree.root_path, doc_file)
-
+        for folder_or_file in artefact_list:
+            if isinstance(folder_or_file, FileTree):
+                folder_name = folder_or_file.get_folder_name()
+                output += "<div>"
+                output += "&nbsp;" * folder_or_file.level * DocumentTreeHTMLExport.OFFSET
+                output += "{}/".format(folder_name)
+                output += "</div>"
+            else:
+                doc_full_path = folder_or_file.get_full_path()
                 document = document_tree.document_map[doc_full_path]
                 document_path = '{}.html'.format(document.name)
                 output += "<div>"
-                output += "&nbsp;" * (current_file_tree.level + 1) * DocumentTreeHTMLExport.OFFSET
+                output += "&nbsp;" * (folder_or_file.get_level()) * DocumentTreeHTMLExport.OFFSET
                 output += '<a href="{}">{}</a>'.format(document_path, document.name)
                 output += "</div>"
 
-            task_list.extend(current_file_tree.subfolder_trees)
-
         output += "</div>"
-
-        # for document in document_tree.document_list:
-        #     print("processing {}".format(document.name))
-        #     output += "<div>"
-        #     output += document.name
-        #     output += "</div>"
 
         return output
 

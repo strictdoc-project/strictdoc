@@ -35,7 +35,7 @@ class DocumentFinder:
             current_tree = task_list.pop(0)
 
             for doc_file in current_tree.files:
-                doc_full_path = os.path.join(current_tree.root_path, doc_file)
+                doc_full_path = doc_file.get_full_path()
 
                 document = reader.read_from_file(doc_full_path)
                 assert isinstance(document, Document)

@@ -83,7 +83,7 @@ if args.command == 'export':
     writer = DocumentTreeHTMLExport()
     output = writer.export(document_tree)
 
-    output_file = "output/export.html"
+    output_file = "output/index.html"
 
     Path("output").mkdir(parents=True, exist_ok=True)
 

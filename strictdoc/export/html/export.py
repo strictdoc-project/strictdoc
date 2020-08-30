@@ -35,10 +35,10 @@ class DocumentTreeHTMLExport:
                 doc_full_path = os.path.join(current_file_tree.root_path, doc_file)
 
                 document = document_tree.document_map[doc_full_path]
-
+                document_path = '{}.html'.format(document.name)
                 output += "<div>"
                 output += "&nbsp;" * (current_file_tree.level + 1) * DocumentTreeHTMLExport.OFFSET
-                output += document.name
+                output += '<a href="{}">{}</a>'.format(document_path, document.name)
                 output += "</div>"
 
             task_list.extend(current_file_tree.subfolder_trees)

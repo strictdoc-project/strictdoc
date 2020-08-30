@@ -1,9 +1,11 @@
+import functools
 import os
 import sys
 
 from strictdoc.backend.dsl.models import Document
 from strictdoc.backend.dsl.reader import SDReader
 from strictdoc.core.document_tree import FileTree, DocumentTree
+from strictdoc.helpers.sorting import alphanumeric_sort
 
 
 class DocumentFinder:
@@ -35,7 +37,7 @@ class DocumentFinder:
             current_tree = task_list.pop(0)
 
             for doc_file in current_tree.files:
-                doc_full_path = os.path.join(current_tree.root_path, doc_file)
+                doc_full_path = doc_file.get_full_path()
 
                 document = reader.read_from_file(doc_full_path)
                 assert isinstance(document, Document)
@@ -51,8 +53,10 @@ class DocumentFinder:
         root_tree = FileTree()
         file_tree_list = [root_tree]
         for root, dirs, files in os.walk(path_to_doc_root):
-            assert file_tree_list
             current_tree = file_tree_list.pop(0)
+            files.sort(key=alphanumeric_sort)
+            dirs.sort(key=alphanumeric_sort)
             current_tree.set(root, files, dirs)
             file_tree_list.extend(current_tree.subfolder_trees)
+
         return root_tree

@@ -23,15 +23,11 @@ class DocumentTreeHTMLExport:
         while task_list:
             file_tree_or_file = task_list.popleft()
 
+            artefact_list.append(file_tree_or_file)
+
             if isinstance(file_tree_or_file, FileTree):
-                artefact_list.append(file_tree_or_file)
-
-                for file in reversed(file_tree_or_file.files):
-                    task_list.appendleft(file)
-
+                task_list.extendleft(reversed(file_tree_or_file.files))
                 task_list.extendleft(reversed(file_tree_or_file.subfolder_trees))
-            else:
-                artefact_list.append(file_tree_or_file)
 
         output = ""
 

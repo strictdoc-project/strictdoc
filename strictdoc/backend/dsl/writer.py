@@ -15,9 +15,9 @@ class SDWriter:
         output += document.name
         output += "\n"
 
-        if len(document.sections) > 0:
+        if len(document.section_contents) > 0:
             output += "\n"
-        for section in document.sections:
+        for section in document.section_contents:
             output += "[SECTION]"
             output += "\n"
             output += "LEVEL: "

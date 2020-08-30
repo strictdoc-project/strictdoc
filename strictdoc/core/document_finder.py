@@ -54,7 +54,10 @@ class DocumentFinder:
         file_tree_list = [root_tree]
         for root, dirs, files in os.walk(path_to_doc_root):
             current_tree = file_tree_list.pop(0)
+
+            files = [f for f in files if f.endswith('.sdoc')]
             files.sort(key=alphanumeric_sort)
+
             dirs.sort(key=alphanumeric_sort)
             current_tree.set(root, files, dirs)
             file_tree_list.extend(current_tree.subfolder_trees)

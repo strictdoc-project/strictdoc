@@ -1,0 +1,40 @@
+[DOCUMENT]
+NAME: StrictDoc
+
+[SECTION]
+LEVEL: 1
+TITLE: Requirement item
+
+[REQUIREMENT]
+STATEMENT: Requirement item shall have a statement.
+
+[REQUIREMENT]
+STATEMENT: Requirement item might have an content body.
+
+[REQUIREMENT]
+STATEMENT: Requirement item might have an UID identifier.
+
+[REQUIREMENT]
+STATEMENT: Requirement item might have an title.
+
+[REQUIREMENT]
+STATEMENT: Requirement item might have one or more references.
+
+[REQUIREMENT]
+STATEMENT: Requirement item might have one or more comments.
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 1
+TITLE: HTML Export
+
+[REQUIREMENT]
+STATEMENT: StrictDoc shall export single document pages.
+
+[REQUIREMENT]
+STATEMENT: StrictDoc shall export traceability matrix.
+
+[/SECTION]
+
+

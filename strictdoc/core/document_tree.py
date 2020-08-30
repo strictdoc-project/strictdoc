@@ -15,6 +15,9 @@ class File(FileOrFolderEntry):
         self.level = level
         self.full_path = full_path
 
+    def __repr__(self):
+        return "File: {}".format(self.full_path)
+
     def get_full_path(self):
         return self.full_path
 
@@ -49,6 +52,7 @@ class FileTree(FileOrFolderEntry):
 
         self.root_path = root_path
         for file in files:
+            print("wtf: {}".format(file))
             full_file_path = os.path.join(self.root_path, file)
             self.files.append(File(self.level + 1, full_file_path))
 

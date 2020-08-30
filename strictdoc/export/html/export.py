@@ -25,8 +25,11 @@ class DocumentTreeHTMLExport:
 
             if isinstance(file_tree_or_file, FileTree):
                 artefact_list.append(file_tree_or_file)
-                task_list.extendleft(file_tree_or_file.files)
-                task_list.extendleft(file_tree_or_file.subfolder_trees)
+
+                for file in reversed(file_tree_or_file.files):
+                    task_list.appendleft(file)
+
+                task_list.extendleft(reversed(file_tree_or_file.subfolder_trees))
             else:
                 artefact_list.append(file_tree_or_file)
 
@@ -36,6 +39,7 @@ class DocumentTreeHTMLExport:
 
         output += "<div>"
         for folder_or_file in artefact_list:
+            print(folder_or_file)
             if isinstance(folder_or_file, FileTree):
                 folder_name = folder_or_file.get_folder_name()
                 output += "<div>"

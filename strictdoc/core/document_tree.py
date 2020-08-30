@@ -21,6 +21,9 @@ class File(FileOrFolderEntry):
     def get_level(self):
         return self.level
 
+    def get_file_name(self):
+        return os.path.basename(self.full_path)
+
 
 class FileTree(FileOrFolderEntry):
     def __init__(self, level=0):

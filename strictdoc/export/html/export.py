@@ -4,7 +4,7 @@ import os
 from jinja2 import Template, Environment, PackageLoader, select_autoescape
 
 from strictdoc.backend.dsl.models import Requirement
-from strictdoc.core.document_tree import FileTree
+from strictdoc.core.document_tree import FileTree, File
 
 
 def get_path_components(folder_path):
@@ -42,13 +42,13 @@ class DocumentTreeHTMLExport:
                 output += "&nbsp;" * folder_or_file.level * DocumentTreeHTMLExport.OFFSET
                 output += "{}/".format(folder_name)
                 output += "</div>"
-            else:
+            elif isinstance(folder_or_file, File):
                 doc_full_path = folder_or_file.get_full_path()
                 document = document_tree.document_map[doc_full_path]
                 document_path = '{}.html'.format(document.name)
                 output += "<div>"
                 output += "&nbsp;" * (folder_or_file.get_level()) * DocumentTreeHTMLExport.OFFSET
-                output += '<a href="{}">{}</a>'.format(document_path, document.name)
+                output += '{} ––> <a href="{}">{}</a>'.format(folder_or_file.get_file_name(), document_path, document.name)
                 output += "</div>"
 
         output += "</div>"

@@ -65,7 +65,7 @@ class SingleDocumentHTMLExport:
 
     @staticmethod
     def export(document):
-        print("doc: {}, number of sections: {}".format(document.name, len(document.sections)))
+        print("doc: {}, number of sections: {}".format(document.name, len(document.section_contents)))
         output = ""
 
         template = SingleDocumentHTMLExport.env.get_template('single_document/document.jinja.html')

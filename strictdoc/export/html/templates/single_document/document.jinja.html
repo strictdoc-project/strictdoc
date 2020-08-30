@@ -5,7 +5,19 @@
 <br/>
 <br/>
 
-{%- for section_or_requirement in document.sections %}
+
+{%- if document.ng_sections %}
+  <h2>Table of Contents</h2>
+  {%- for section in document.ng_toc_section_iterator() %}
+    <div>
+
+      {{ (section.level - 1) * 4 * '&nbsp;' }} {{ section.title }}
+
+    </div>
+  {%- endfor %}
+{%- endif %}
+
+{%- for section_or_requirement in document.ng_section_iterator() %}
   {%- if section_or_requirement.is_requirement %}
     {%- set requirement = section_or_requirement %}
     {% include "single_document/requirement.jinja.html" %}
@@ -13,13 +25,5 @@
   {%- else %}
     {%- set section = section_or_requirement %}
     <h2>{{ section.title }}</h2>
-
-    {%- for section_or_requirement in section.section_contents %}
-      {%- if section_or_requirement.is_requirement %}
-        {%- set requirement = section_or_requirement %}
-        {% include "single_document/requirement.jinja.html" %}
-        <br/>
-      {%- endif %}
-    {%- endfor %}
   {%- endif %}
 {%- endfor %}

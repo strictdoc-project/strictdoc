@@ -17,6 +17,7 @@ Section[noskipws]:
   section_contents *= SectionOrRequirement
   '\n'
   '[/SECTION]'
+  '\n'
 ;
 
 Requirement[noskipws]:

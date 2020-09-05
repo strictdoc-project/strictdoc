@@ -1,59 +1,71 @@
 STRICTDOC_GRAMMAR = """
-Document:
-  '[DOCUMENT]' 
-  'NAME:' name = /.*$/
+Document[noskipws]:
+  '[DOCUMENT]' '\n'
+  'NAME: ' name = /.*$/ '\n'
   section_contents *= SectionOrRequirement
 ;
 
-SectionOrRequirement:
-  Section | Requirement
+SectionOrRequirement[noskipws]:
+  '\n' (Section | Requirement)
 ;
 
-Section:
-  '[SECTION]'
-  'LEVEL:' level = INT
-  'TITLE:' title = /.*$/ 
+Section[noskipws]:
+  '[SECTION]' 
+  '\n'
+  'LEVEL: ' level = INT '\n'
+  'TITLE: ' title = /.*$/ '\n'
   section_contents *= SectionOrRequirement
+  '\n'
   '[/SECTION]'
 ;
 
-Requirement:
-  '[REQUIREMENT]'
+Requirement[noskipws]:
+  '[REQUIREMENT]' '\n'
 
-  ('UID:' uid = /.*$/)?
+  ('UID: ' uid = /.*$/ '\n')? 
 
-  ('STATUS:' status = RequirementStatus)?
+  ('STATUS: ' status = RequirementStatus '\n')?
 
-  ('REFS:' references *= Reference)?
+  ('TAGS: ' (tags = TagRegex) tags *= TagXs '\n')?
 
-  ('TITLE:' title = /.*$/)?
+  ('REFS:' '\n' references *= Reference)?
 
-  'STATEMENT:' statement = /.*$/
+  ('TITLE: ' title = /.*$/ '\n')?
 
-  ('BODY:' 
-    body = Body
+  'STATEMENT: ' statement = /.*$/ '\n'
+
+  ('BODY: ' 
+    body = Body '\n'
   )?
 
   comments *= ReqComment
 ;
 
-RequirementStatus:
-  'Draft' | 'Active' | 'Deleted';
-
-ReqComment:
-  'COMMENT:' comment = /.*$/
+TagRegex[noskipws]:
+  /\w+( *\w+)?/
 ;
 
-Body:
+TagXs[noskipws]:
+  /, /- TagRegex
+;
+
+RequirementStatus[noskipws]:
+  'Draft' | 'Active' | 'Deleted';
+
+ReqComment[noskipws]:
+  'COMMENT: ' comment = /.*$/ '\n'
+;
+
+Body[noskipws]:
     content = /(?ms)>>>(.*?)<<</
 ;
 
-Reference:
-  '-' 'TYPE:' ref_type = ReferenceType
-      'VALUE:' path = /.*$/
+Reference[noskipws]:
+  '- TYPE: ' ref_type = ReferenceType '\n'
+  '  VALUE: ' path = /.*$/ '\n'
 ;
 
-ReferenceType:
+ReferenceType[noskipws]:
   'File' | 'Parent'
 ;
 """

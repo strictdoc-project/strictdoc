@@ -44,6 +44,11 @@ class SDWriter:
                         output += section_content.status
                         output += "\n"
 
+                    if section_content.tags:
+                        output += "TAGS: "
+                        output += ', '.join(section_content.tags)
+                        output += '\n'
+
                     if section_content.references:
                         output += "REFS:"
                         output += "\n"

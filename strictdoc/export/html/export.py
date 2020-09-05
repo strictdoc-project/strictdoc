@@ -48,7 +48,7 @@ class DocumentTreeHTMLExport:
                 document_path = '{}.html'.format(document.name)
                 output += "<div>"
                 output += "&nbsp;" * (folder_or_file.get_level()) * DocumentTreeHTMLExport.OFFSET
-                output += '{} ––> <a href="{}">{}</a>'.format(folder_or_file.get_file_name(), document_path, document.name)
+                output += '{} (<a href="{}">{}</a>)'.format(folder_or_file.get_file_name(), document_path, document.name)
                 output += "</div>"
 
         output += "</div>"

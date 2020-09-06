@@ -1,16 +1,16 @@
+import argparse
 import os
 import sys
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
-
-import argparse
 
 from pathlib import Path
 
-from strictdoc.export.html.export import DocumentTreeHTMLExport, SingleDocumentHTMLExport
-from strictdoc.core.document_finder import DocumentFinder
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 from strictdoc.backend.rst.rst_reader import RSTReader
-
+from strictdoc.export.html.export import DocumentTreeHTMLExport, SingleDocumentHTMLExport, \
+    SingleDocumentTraceabilityHTMLExport
+from strictdoc.core.document_finder import DocumentFinder
+from strictdoc.core.traceability_index import TraceabilityIndex
 
 # for arg in sys.argv:
 #     if arg == '--help':
@@ -80,6 +80,8 @@ if args.command == 'export':
 
     document_tree = DocumentFinder.find_sdoc_content(path_to_single_file_or_doc_root)
 
+    traceability_index = TraceabilityIndex.create(document_tree)
+
     writer = DocumentTreeHTMLExport()
     output = writer.export(document_tree)
 
@@ -96,9 +98,20 @@ if args.command == 'export':
     with open(output_file, 'w') as file:
         file.write(output)
 
+    # Single Document pages
     for document in document_tree.document_list:
         document_content = SingleDocumentHTMLExport.export(document)
         document_out_file = "output/{}.html".format(document.name)
+        print("writing to file: {}".format(document_out_file))
+        with open(document_out_file, 'w') as file:
+            file.write(document_content)
+
+    # Single Document Traceability pages
+    for document in document_tree.document_list:
+        document_content = SingleDocumentTraceabilityHTMLExport.export(
+            document_tree, document, traceability_index
+        )
+        document_out_file = "output/{} - Traceability.html".format(document.name)
         print("writing to file: {}".format(document_out_file))
         with open(document_out_file, 'w') as file:
             file.write(document_content)

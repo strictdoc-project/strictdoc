@@ -1,0 +1,29 @@
+<div>
+  {%- if requirement.uid %}
+    <a href="{{ traceability_index.get_link(requirement) }}"><b>{{ requirement.uid }}</b></a>
+  {%- endif %}
+
+  {%- if requirement.title %}
+    <div>
+      {{ requirement.title }}
+    </div>
+  {%- endif %}
+
+  {%- if requirement.status %}
+    <div>
+      {{ requirement.status }}
+    </div>
+  {%- endif %}
+
+  {%- if requirement.statement %}
+    <div>
+      {{ requirement.statement }}
+    </div>
+  {%- endif %}
+
+  {%- if requirement.body %}
+<pre>
+{{ requirement.body.content }}
+</pre>
+  {%- endif %}
+</div>

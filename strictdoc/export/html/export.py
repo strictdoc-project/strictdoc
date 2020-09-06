@@ -73,3 +73,22 @@ class SingleDocumentHTMLExport:
         output += template.render(document=document)
 
         return output
+
+
+class SingleDocumentTraceabilityHTMLExport:
+    env = Environment(
+        loader=PackageLoader('strictdoc', 'export/html/templates'),
+        # autoescape=select_autoescape(['html', 'xml'])
+    )
+    env.globals.update(isinstance=isinstance)
+
+    @staticmethod
+    def export(document_tree, document, traceability_index):
+        print("doc: {}, number of sections: {}".format(document.name, len(document.section_contents)))
+        output = ""
+
+        template = SingleDocumentHTMLExport.env.get_template('single_document_traceability/document.jinja.html')
+
+        output += template.render(document=document, traceability_index=traceability_index)
+
+        return output

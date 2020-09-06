@@ -80,6 +80,10 @@ class Section(object):
     def __repr__(self):
         return self.__str__()
 
+    @property
+    def is_requirement(self):
+        return False
+
 
 class Requirement(object):
     def __init__(self,
@@ -98,7 +102,7 @@ class Requirement(object):
         self.uid = uid.strip()
         self.status = status
         self.tags = tags
-        self.references = references
+        self.references: [Reference] = references
         self.title = title
         self.statement = statement
         self.body = body
@@ -152,8 +156,8 @@ class Reference(object):
         self.path = path.strip()
 
     def __str__(self):
-        return "File: <{}>".format(
-            self.path
+        return "Reference: <ref_type = {}, path = {}>".format(
+            self.ref_type, self.path
         )
 
     def __repr__(self):

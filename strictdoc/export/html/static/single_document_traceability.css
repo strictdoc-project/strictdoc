@@ -3,6 +3,19 @@
   font-family: Georgia, serif;
 }
 
+body {
+  margin: 40px;
+}
+
+h1 {
+  text-align: left;
+}
+
+#toc {
+  margin: 20px 0px;
+  text-align: left;
+}
+
 #sections-and-requirements {
   display: flex;
   flex-direction: row;
@@ -13,14 +26,29 @@
   padding: 0px;
 }
 
+.table-row {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  //line-height: 0;
+  vertical-align: top;
+  background: #fff;
+  padding: 0px;
+  border: 1px dashed #ccc;
+  margin: -1px 0px 0px 0px;
+}
+
 .section-cell {
   display: inline-block;
   width: 100%;
   text-align: center;
+  background: #add8e6;
 }
 
 .cell {
   display: inline-block;
+
   width: 33.3%;
 }
 

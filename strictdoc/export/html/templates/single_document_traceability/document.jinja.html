@@ -13,24 +13,24 @@
   <a href="index.html">Back to Index</a>
 
   <br/>
-  <br/>
-
 
   {%- if document.ng_sections %}
-    <h2>Table of Contents</h2>
-    {%- for section in document.ng_toc_section_iterator() %}
-      <div>
+    <div id="toc">
+      <h2>Table of Contents</h2>
+      {%- for section in document.ng_toc_section_iterator() %}
+        <div>
 
-        {{ (section.level - 1) * 4 * '&nbsp;' }} <a href="#{{ string_to_anchor_id(section.title) }}">{{ section.title }}</a>
+          {{ (section.level - 1) * 4 * '&nbsp;' }} <a href="#{{ string_to_anchor_id(section.title) }}">{{ section.title }}</a>
 
-      </div>
-    {%- endfor %}
+        </div>
+      {%- endfor %}
+    </div>
   {%- endif %}
 
   <div id="sections-and-requirements">
   {%- for section_or_requirement in document.ng_section_iterator() %}
+    <div class="table-row">
     {%- if section_or_requirement.is_requirement %}
-
       <div class="cell">
         {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) %}
           <div class="cell-parent requirement-style">
@@ -53,13 +53,13 @@
           </div>
         {%- endfor %}
       </div>
-
     {%- else %}
       <div class="section-cell">
       {%- set section = section_or_requirement %}
       <h2 id="{{ string_to_anchor_id(section.title) }}">{{ section.title }}</h2>
       </div>
     {%- endif %}
+    </div>
   {%- endfor %}
   </div>
 </body>

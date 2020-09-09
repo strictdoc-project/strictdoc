@@ -31,30 +31,30 @@
   {%- for section_or_requirement in document.ng_section_iterator() %}
     <div class="table-row">
     {%- if section_or_requirement.is_requirement %}
-      <div class="cell">
+      <div class="cell cell-parent">
         {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) %}
-          <div class="cell-parent requirement-style">
+          <div class="requirement-style">
             {% include "single_document_traceability/requirement.jinja.html" %}
           </div>
         {%- endfor %}
       </div>
 
       {%- set requirement = section_or_requirement %}
-      <div class="cell" id="{{ requirement.uid }}">
-        <div class="cell-central requirement-style">
+      <div class="cell cell-central" id="{{ requirement.uid }}">
+        <div class="requirement-style">
           {% include "single_document_traceability/requirement.jinja.html" %}
         </div>
       </div>
 
-      <div class="cell">
+      <div class="cell cell-children">
         {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) %}
-          <div class="cell-children requirement-style">
+          <div class="requirement-style">
             {% include "single_document_traceability/requirement.jinja.html" %}
           </div>
         {%- endfor %}
       </div>
     {%- else %}
-      <div class="section-cell">
+      <div class="cell-section">
       {%- set section = section_or_requirement %}
       <h2 id="{{ string_to_anchor_id(section.title) }}">{{ section.title }}</h2>
       </div>

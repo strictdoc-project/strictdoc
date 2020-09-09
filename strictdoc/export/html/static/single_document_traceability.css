@@ -28,42 +28,52 @@ h1 {
 
 .table-row {
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  //line-height: 0;
-  vertical-align: top;
+  display: table;
   background: #fff;
   padding: 0px;
-  border: 1px dashed #ccc;
-  margin: -1px 0px 0px 0px;
+  margin: 0px 0px 0px 0px;
+  border: 1px solid black;
 }
 
-.section-cell {
+.cell-section {
   display: inline-block;
   width: 100%;
   text-align: center;
   background: #add8e6;
+  border: 2px solid #000;
+  margin: 0px 0px 0px 0px;
 }
 
 .cell {
-  display: inline-block;
-
-  width: 33.3%;
+  display: table-cell;
+  width: 33.33%;
+  border-left: 1px solid #ccc;
+  box-sizing: border-box;
+  margin: 0px 0px 0px 0px;
 }
 
 .cell-parent {
-
+  background-color: #fafafa;
 }
 
 .cell-central {
+  background-color: #fff;
+}
 
+.cell-children {
+  background-color: #fafafa;
 }
 
 .requirement-style {
-  margin: 8px;
+  margin: 0px;
   padding: 10px;
-  background: #eee;
+  border-bottom: 1px solid #ccc;
+  box-sizing: border-box;
+  margin: 0px 0px 0px 0px;
+}
+
+.requirement-style:last-child {
+  border: 0px;
 }
 
 .requirement-statement {

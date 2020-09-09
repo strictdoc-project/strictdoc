@@ -48,6 +48,12 @@ class TraceabilityIndex:
         assert isinstance(requirement, Requirement)
         assert isinstance(requirement.uid, str)
 
+        if not requirement.uid or len(requirement.uid) == 0:
+            return []
+
+        if not self.requirements_parents:
+            return []
+
         parent_requirements = []
         parent_references = self.requirements_parents[requirement.uid]['parents']
         for ref in parent_references:
@@ -62,6 +68,12 @@ class TraceabilityIndex:
     def get_children_requirements(self, requirement: Requirement):
         assert isinstance(requirement, Requirement)
         assert isinstance(requirement.uid, str)
+
+        if not requirement.uid or len(requirement.uid) == 0:
+            return []
+
+        if not self.requirements_parents:
+            return []
 
         children_requirements = self.requirements_parents[requirement.uid]['children']
         return children_requirements

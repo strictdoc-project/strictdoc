@@ -5,6 +5,7 @@ from jinja2 import Template, Environment, PackageLoader, select_autoescape
 
 from strictdoc.backend.dsl.models import Requirement
 from strictdoc.core.document_tree import FileTree, File
+from strictdoc.helpers.hyperlinks import string_to_anchor_id
 
 
 def get_path_components(folder_path):
@@ -95,6 +96,8 @@ class SingleDocumentTraceabilityHTMLExport:
 
         template = SingleDocumentHTMLExport.env.get_template('single_document_traceability/document.jinja.html')
 
-        output += template.render(document=document, traceability_index=traceability_index)
+        output += template.render(document=document,
+                                  traceability_index=traceability_index,
+                                  string_to_anchor_id=string_to_anchor_id)
 
         return output

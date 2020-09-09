@@ -17,22 +17,21 @@ h1 {
 }
 
 #sections-and-requirements {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  //line-height: 0;
-  vertical-align: top;
   background: #fff;
   padding: 0px;
 }
 
 .table-row {
   width: 100%;
-  display: table;
+  display: flex;
   background: #fff;
   padding: 0px;
   margin: 0px 0px 0px 0px;
   border: 1px solid black;
+}
+
+.table-row:last-child {
+  border-bottom: 2px solid #000;
 }
 
 .cell-section {
@@ -41,15 +40,14 @@ h1 {
   text-align: center;
   background: #add8e6;
   border: 2px solid #000;
-  margin: 0px 0px 0px 0px;
+  margin: 0px 0px -1px 0px;
 }
 
 .cell {
-  display: table-cell;
   width: 33.33%;
   border-left: 1px solid #ccc;
   box-sizing: border-box;
-  margin: 0px 0px 0px 0px;
+  margin: 0px 0px -1px 0px;
 }
 
 .cell-parent {

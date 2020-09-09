@@ -8,6 +8,11 @@
   background: #ccc;
   padding: 0px;
 }
+.section-cell {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+}
 .cell {
   display: inline-block;
   width: 33.3%;
@@ -42,7 +47,7 @@
   {%- for section in document.ng_toc_section_iterator() %}
     <div>
 
-      {{ (section.level - 1) * 4 * '&nbsp;' }} {{ section.title }}
+      {{ (section.level - 1) * 4 * '&nbsp;' }} <a href="#{{ string_to_anchor_id(section.title) }}">{{ section.title }}</a>
 
     </div>
   {%- endfor %}
@@ -76,8 +81,10 @@
     </div>
 
   {%- else %}
-<!--    {%- set section = section_or_requirement %}-->
-<!--    <h2>{{ section.title }}</h2>-->
+    <div class="section-cell">
+    {%- set section = section_or_requirement %}
+    <h2 id="{{ string_to_anchor_id(section.title) }}">{{ section.title }}</h2>
+    </div>
   {%- endif %}
 {%- endfor %}
 </div>

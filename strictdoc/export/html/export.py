@@ -5,6 +5,7 @@ from jinja2 import Template, Environment, PackageLoader, select_autoescape
 
 from strictdoc.backend.dsl.models import Requirement
 from strictdoc.core.document_tree import FileTree, File
+from strictdoc.helpers.hyperlinks import string_to_anchor_id
 
 
 def get_path_components(folder_path):
@@ -34,6 +35,8 @@ class DocumentTreeHTMLExport:
         output += "<h1>Document tree</h1>"
 
         output += "<div>"
+        def get_traceability_link(document):
+            return "{} - Traceability.html".format(document.name)
         for folder_or_file in artefact_list:
             print(folder_or_file)
             if isinstance(folder_or_file, FileTree):
@@ -48,7 +51,11 @@ class DocumentTreeHTMLExport:
                 document_path = '{}.html'.format(document.name)
                 output += "<div>"
                 output += "&nbsp;" * (folder_or_file.get_level()) * DocumentTreeHTMLExport.OFFSET
-                output += '{} (<a href="{}">{}</a>)'.format(folder_or_file.get_file_name(), document_path, document.name)
+                output += '{} (<a href="{}">{}</a>, <a href="{}">{} - Traceability</a>)'.format(
+                    folder_or_file.get_file_name(),
+                    document_path, document.name,
+                    get_traceability_link(document), document.name
+                )
                 output += "</div>"
 
         output += "</div>"
@@ -89,6 +96,8 @@ class SingleDocumentTraceabilityHTMLExport:
 
         template = SingleDocumentHTMLExport.env.get_template('single_document_traceability/document.jinja.html')
 
-        output += template.render(document=document, traceability_index=traceability_index)
+        output += template.render(document=document,
+                                  traceability_index=traceability_index,
+                                  string_to_anchor_id=string_to_anchor_id)
 
         return output

@@ -4,7 +4,10 @@ import sys
 
 from pathlib import Path
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
+from strictdoc.helpers.file_system import sync_dir
+
+ROOT_PATH = os.path.join(os.path.dirname(__file__), "..", "..")
+sys.path.append(ROOT_PATH)
 
 from strictdoc.backend.rst.rst_reader import RSTReader
 from strictdoc.export.html.export import DocumentTreeHTMLExport, SingleDocumentHTMLExport, \
@@ -116,4 +119,7 @@ if args.command == 'export':
         with open(document_out_file, 'w') as file:
             file.write(document_content)
 
+    static_files_src = os.path.join(ROOT_PATH, 'strictdoc/export/html/static')
+    static_files_dest = os.path.join(ROOT_PATH, 'output/static')
+    sync_dir(static_files_src, static_files_dest)
     exit(0)

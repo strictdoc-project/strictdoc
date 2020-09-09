@@ -1,90 +1,65 @@
-<style>
-#sections-and-requirements {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  //line-height: 0;
-  vertical-align: top;
-  background: #ccc;
-  padding: 0px;
-}
-.section-cell {
-  display: inline-block;
-  width: 100%;
-  text-align: center;
-}
-.cell {
-  display: inline-block;
-  width: 33.3%;
-<!--  vertical-align: top;-->
-  //line-height: 1.4;
-<!--  margin: 4px;-->
-<!--  padding: 16px;-->
-<!--  border: 1px solid red;-->
-<!--  box-sizing: border-box;-->
-}
-.cell-parent {
-}
-.cell-central {
-}
-.requirement-style {
-  margin: 12px;
-  padding: 4px;
-  background: white;
-}
-</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    <link rel="stylesheet" href="static/single_document_traceability.css" />
+    <title>{{document.name}} - Traceability</title>
+    {% endblock %}
+</head>
 
-<h1>{{document.name}} - Traceability</h1>
+<body>
+  <h1>{{document.name}} - Traceability</h1>
 
-<a href="index.html">Back to Index</a>
+  <a href="index.html">Back to Index</a>
 
-<br/>
-<br/>
+  <br/>
+  <br/>
 
 
-{%- if document.ng_sections %}
-  <h2>Table of Contents</h2>
-  {%- for section in document.ng_toc_section_iterator() %}
-    <div>
+  {%- if document.ng_sections %}
+    <h2>Table of Contents</h2>
+    {%- for section in document.ng_toc_section_iterator() %}
+      <div>
 
-      {{ (section.level - 1) * 4 * '&nbsp;' }} <a href="#{{ string_to_anchor_id(section.title) }}">{{ section.title }}</a>
+        {{ (section.level - 1) * 4 * '&nbsp;' }} <a href="#{{ string_to_anchor_id(section.title) }}">{{ section.title }}</a>
 
-    </div>
-  {%- endfor %}
-{%- endif %}
-
-<div id="sections-and-requirements">
-{%- for section_or_requirement in document.ng_section_iterator() %}
-  {%- if section_or_requirement.is_requirement %}
-
-    <div class="cell">
-      {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) %}
-        <div class="cell-parent requirement-style">
-          {% include "single_document_traceability/requirement.jinja.html" %}
-        </div>
-      {%- endfor %}
-    </div>
-
-    {%- set requirement = section_or_requirement %}
-    <div class="cell" id="{{ requirement.uid }}">
-      <div class="cell-central requirement-style">
-        {% include "single_document_traceability/requirement.jinja.html" %}
       </div>
-    </div>
+    {%- endfor %}
+  {%- endif %}
 
-    <div class="cell">
-      {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) %}
-        <div class="cell-children requirement-style">
+  <div id="sections-and-requirements">
+  {%- for section_or_requirement in document.ng_section_iterator() %}
+    {%- if section_or_requirement.is_requirement %}
+
+      <div class="cell">
+        {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) %}
+          <div class="cell-parent requirement-style">
+            {% include "single_document_traceability/requirement.jinja.html" %}
+          </div>
+        {%- endfor %}
+      </div>
+
+      {%- set requirement = section_or_requirement %}
+      <div class="cell" id="{{ requirement.uid }}">
+        <div class="cell-central requirement-style">
           {% include "single_document_traceability/requirement.jinja.html" %}
         </div>
-      {%- endfor %}
-    </div>
+      </div>
 
-  {%- else %}
-    <div class="section-cell">
-    {%- set section = section_or_requirement %}
-    <h2 id="{{ string_to_anchor_id(section.title) }}">{{ section.title }}</h2>
-    </div>
-  {%- endif %}
-{%- endfor %}
-</div>
+      <div class="cell">
+        {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) %}
+          <div class="cell-children requirement-style">
+            {% include "single_document_traceability/requirement.jinja.html" %}
+          </div>
+        {%- endfor %}
+      </div>
+
+    {%- else %}
+      <div class="section-cell">
+      {%- set section = section_or_requirement %}
+      <h2 id="{{ string_to_anchor_id(section.title) }}">{{ section.title }}</h2>
+      </div>
+    {%- endif %}
+  {%- endfor %}
+  </div>
+</body>

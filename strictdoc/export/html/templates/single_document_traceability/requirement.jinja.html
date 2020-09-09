@@ -1,12 +1,12 @@
 <div>
   {%- if requirement.uid %}
-    <a href="{{ traceability_index.get_link(requirement) }}"><b>{{ requirement.uid }}</b></a>
+    <a href="{{ traceability_index.get_link(requirement) }}">{{ requirement.uid }}</a>
   {%- endif %}
 
   {%- if requirement.title %}
-    <div>
+    <b>
       {{ requirement.title }}
-    </div>
+    </b>
   {%- endif %}
 
   {%- if requirement.status %}
@@ -25,5 +25,15 @@
 <pre>
 {{ requirement.body.content }}
 </pre>
+  {%- endif %}
+
+  {%- if requirement.tags %}
+    {%- for tag in requirement.tags %}
+      <span class="tag">
+
+        {{ tag }}
+
+      </span>
+    {%- endfor %}
   {%- endif %}
 </div>

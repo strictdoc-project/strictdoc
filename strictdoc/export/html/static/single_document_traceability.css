@@ -12,37 +12,40 @@
   background: #fff;
   padding: 0px;
 }
+
 .section-cell {
   display: inline-block;
   width: 100%;
   text-align: center;
 }
+
 .cell {
   display: inline-block;
   width: 33.3%;
-<!--  vertical-align: top;-->
-  //line-height: 1.4;
-<!--  margin: 4px;-->
-<!--  padding: 16px;-->
-<!--  border: 1px solid red;-->
-<!--  box-sizing: border-box;-->
 }
+
 .cell-parent {
 
 }
+
 .cell-central {
 
 }
+
 .requirement-style {
-  margin: 12px;
-  padding: 12px;
-  background: #dadada;
+  margin: 8px;
+  padding: 10px;
+  background: #eee;
+}
+
+.requirement-statement {
+  margin: 8px 0px;
 }
 
 .tag {
   background: #aaa;
   border-radius: 20px;
-  margin: 2px;
+  margin: 2px 0px;
   padding: 3px 10px;
   display: inline-block;
 }

@@ -3,6 +3,52 @@ NAME: StrictDoc
 
 [SECTION]
 LEVEL: 1
+TITLE: High-level Requirements
+
+[REQUIREMENT]
+UID: SDOC-001
+STATEMENT: StrictDoc shall enable requirements management.
+COMMENT: Under this requirement, StrictDoc shall enable work with requirements in a structured manner.
+
+[REQUIREMENT]
+STATEMENT: StrictDoc shall allow validation of requirement documents.
+
+[REQUIREMENT]
+STATEMENT: StrictDoc shall allow storage of requirements in a text format.
+
+[REQUIREMENT]
+STATEMENT: StrictDoc shall support linking requirements to each other.
+
+[REQUIREMENT]
+STATEMENT: StrictDoc shall support linking requirements to files.
+
+[REQUIREMENT]
+STATEMENT: StrictDoc shall generate traceability matrix.
+
+[REQUIREMENT]
+STATEMENT: StrictDoc shall provide means for visualization of requirement documents.
+
+[REQUIREMENT]
+STATEMENT: StrictDoc shall generate requirements coverage information.
+
+[REQUIREMENT]
+STATEMENT: StrictDoc shall provide a Graphical User Interface (GUI).
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 1
+TITLE: Data Model
+
+[REQUIREMENT]
+UID: SDOC-DM-001
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-001
+STATEMENT: StrictDoc's Data Model shall accommodate for maximum possible standard requirement document formats.
+
+[SECTION]
+LEVEL: 2
 TITLE: Requirement item
 
 [REQUIREMENT]
@@ -22,6 +68,27 @@ STATEMENT: Requirement item might have one or more references.
 
 [REQUIREMENT]
 STATEMENT: Requirement item might have one or more comments.
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 1
+TITLE: Requirements Document Format
+
+[REQUIREMENT]
+UID: SDOC-RDF-001
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-DM-001
+STATEMENT: StrictDoc RDF shall serve as a text-based implementation of the Strict Doc Data Model.
+
+[REQUIREMENT]
+STATEMENT: StrictDoc RDF shall provide a fixed grammar structure.
+
+[REQUIREMENT]
+STATEMENT: StrictDoc RDF shall enable type-safe parsing of requirement documents.
 
 [/SECTION]
 

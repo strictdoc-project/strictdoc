@@ -1,0 +1,89 @@
+* {
+  //font-family: "Lucida Console", Monaco, monospace;
+  font-family: Georgia, serif;
+}
+
+body {
+  margin: 40px;
+}
+
+h1 {
+  text-align: left;
+}
+
+#toc {
+  margin: 20px 0px;
+  text-align: left;
+}
+
+#sections-and-requirements {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  //line-height: 0;
+  vertical-align: top;
+  background: #fff;
+  padding: 0px;
+}
+
+.table-row {
+  width: 100%;
+  display: table;
+  background: #fff;
+  padding: 0px;
+  margin: 0px 0px 0px 0px;
+  border: 1px solid black;
+}
+
+.cell-section {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  background: #add8e6;
+  border: 2px solid #000;
+  margin: 0px 0px 0px 0px;
+}
+
+.cell {
+  display: table-cell;
+  width: 33.33%;
+  border-left: 1px solid #ccc;
+  box-sizing: border-box;
+  margin: 0px 0px 0px 0px;
+}
+
+.cell-parent {
+  background-color: #fafafa;
+}
+
+.cell-central {
+  background-color: #fff;
+}
+
+.cell-children {
+  background-color: #fafafa;
+}
+
+.requirement-style {
+  margin: 0px;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  box-sizing: border-box;
+  margin: 0px 0px 0px 0px;
+}
+
+.requirement-style:last-child {
+  border: 0px;
+}
+
+.requirement-statement {
+  margin: 8px 0px;
+}
+
+.tag {
+  background: #aaa;
+  border-radius: 20px;
+  margin: 2px 0px;
+  padding: 3px 10px;
+  display: inline-block;
+}

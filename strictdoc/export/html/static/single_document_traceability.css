@@ -78,6 +78,10 @@ h1 {
   margin: 8px 0px;
 }
 
+.comment {
+  margin: 10px 0px;
+}
+
 .tag {
   background: #aaa;
   border-radius: 20px;

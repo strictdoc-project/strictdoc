@@ -38,11 +38,48 @@ class TraceabilityIndex:
                         }
                     requirements_map[ref.path]['children'].append(requirement)
 
-        traceability_index = TraceabilityIndex(requirements_map)
+        # Now iterate over the requirements again to build an in-depth map of
+        # parents and children.
+        max_parent_depth, max_child_depth = 0, 0
+
+        requirements_child_depth_map = {}
+        for document in document_tree.document_list:
+            for section_or_requirement in document.ng_section_iterator():
+                if not section_or_requirement.is_requirement:
+                    continue
+
+                requirement: Requirement = section_or_requirement
+                if not requirement.uid:
+                    continue
+
+                if requirement.uid in requirements_child_depth_map:
+                    continue
+
+                parent_depth, child_depth = 0, 0
+
+                queue = requirements_map[requirement.uid]['children']
+                while True:
+                    if len(queue) == 0:
+                        break
+
+                    child_depth += 1
+                    deeper_queue = []
+                    for child in queue:
+                        deeper_queue.extend(requirements_map[child.uid]['children'])
+                    queue = deeper_queue
+                requirements_child_depth_map[requirement.uid] = child_depth
+                if max_child_depth < child_depth:
+                    max_child_depth = child_depth
+
+        print("child depth: {}".format(max_child_depth))
+        print("child depth: {}".format(requirements_child_depth_map))
+
+        traceability_index = TraceabilityIndex(requirements_map, max_child_depth)
         return traceability_index
 
-    def __init__(self, requirements_parents):
+    def __init__(self, requirements_parents, max_child_depth):
         self.requirements_parents = requirements_parents
+        self.max_child_depth = max_child_depth
 
     def get_parent_requirements(self, requirement: Requirement):
         assert isinstance(requirement, Requirement)

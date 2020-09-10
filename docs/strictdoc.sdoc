@@ -34,6 +34,9 @@ STATEMENT: StrictDoc shall generate requirements coverage information.
 [REQUIREMENT]
 STATEMENT: StrictDoc shall provide a Graphical User Interface (GUI).
 
+[REQUIREMENT]
+STATEMENT: StrictDoc shall always be free and open source software.
+
 [/SECTION]
 
 [SECTION]

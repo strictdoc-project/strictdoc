@@ -34,6 +34,9 @@ STATEMENT: StrictDoc shall generate requirements coverage information.
 [REQUIREMENT]
 STATEMENT: StrictDoc shall provide a Graphical User Interface (GUI).
 
+[REQUIREMENT]
+STATEMENT: StrictDoc shall always be free and open source software.
+
 [/SECTION]
 
 [SECTION]
@@ -46,6 +49,10 @@ REFS:
 - TYPE: Parent
   VALUE: SDOC-001
 STATEMENT: StrictDoc's Data Model shall accommodate for maximum possible standard requirement document formats.
+BODY: >>>
+Examples of standard requirements documents include but are not limited to:
+- ESA Statement of Work documents
+<<<
 
 [SECTION]
 LEVEL: 2

@@ -30,7 +30,10 @@ class DocumentTreeHTMLExport:
                 task_list.extendleft(reversed(file_tree_or_file.files))
                 task_list.extendleft(reversed(file_tree_or_file.subfolder_trees))
 
-        output = ""
+        output = '<html>'
+        output += '<head>'
+        output += '<link rel="stylesheet" href="static/global.css"/>'
+        output += '</head>'
 
         output += "<h1>Document tree</h1>"
 
@@ -59,6 +62,7 @@ class DocumentTreeHTMLExport:
                 output += "</div>"
 
         output += "</div>"
+        output += '</body>'
 
         return output
 

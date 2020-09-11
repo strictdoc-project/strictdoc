@@ -43,7 +43,7 @@ Requirement[noskipws]:
 ;
 
 TagRegex[noskipws]:
-  /\w+( *\w+)?/
+  /[\w\/-]+( *[\w\/-]+)*/
 ;
 
 TagXs[noskipws]:
@@ -54,11 +54,19 @@ RequirementStatus[noskipws]:
   'Draft' | 'Active' | 'Deleted';
 
 ReqComment[noskipws]:
-  'COMMENT: ' comment = /.*$/ '\n'
+  'COMMENT: ' (comment = SingleLineString | comment = MultiLineString) '\n'
 ;
 
 Body[noskipws]:
     content = /(?ms)>>>(.*?)<<</
+;
+
+SingleLineString:
+  /[^>]{3}.*$/
+;
+
+MultiLineString:
+  /(?ms)>>>\n(.*?)<<</
 ;
 
 Reference[noskipws]:

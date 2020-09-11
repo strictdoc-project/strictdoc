@@ -62,6 +62,10 @@ class ReqComment(object):
     def __repr__(self):
         return self.__str__()
 
+    def comment_by_paragraphs(self):
+        paragraphs = self.comment.split('\n\n')
+        return paragraphs
+
 
 class Section(object):
     def __init__(self, parent, level, title, section_contents):

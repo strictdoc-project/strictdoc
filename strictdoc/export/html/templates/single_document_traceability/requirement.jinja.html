@@ -30,9 +30,15 @@
   {%- if requirement.comments %}
     {%- for comment in requirement.comments %}
       <div class="comment">
+        <span class="comment-word">
+          Comment:
+        </span>
 
-        <b>Comment:</b> {{ comment.comment }}
-
+        {%- for comment_paragraph in comment.comment_by_paragraphs() %}
+          <div class="comment-paragraph">
+          {{ comment_paragraph }}
+          </div>
+        {%- endfor %}
       </div>
     {%- endfor %}
   {%- endif %}

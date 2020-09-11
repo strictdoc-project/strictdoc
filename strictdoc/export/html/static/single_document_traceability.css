@@ -16,6 +16,10 @@ h1 {
   text-align: left;
 }
 
+#tags-outline {
+  margin: 20px 0px;
+}
+
 #sections-and-requirements {
   background: #fff;
   padding: 0px;

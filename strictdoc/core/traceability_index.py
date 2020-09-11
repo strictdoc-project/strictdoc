@@ -1,13 +1,17 @@
 from strictdoc.backend.dsl.models import Requirement
 from strictdoc.core.document_tree import DocumentTree
+from strictdoc.helpers.sorting import alphanumeric_sort
 
 
 class TraceabilityIndex:
     @staticmethod
     def create(document_tree: DocumentTree):
         requirements_map = {}
-
+        tags_map = {}
         for document in document_tree.document_list:
+            if document.name not in tags_map:
+                tags_map[document.name] = {}
+
             for section_or_requirement in document.ng_section_iterator():
                 if not section_or_requirement.is_requirement:
                     continue
@@ -15,6 +19,12 @@ class TraceabilityIndex:
                 requirement: Requirement = section_or_requirement
                 if not requirement.uid:
                     continue
+
+                document_tags = tags_map[document.name]
+                for tag in requirement.tags:
+                    if tag not in document_tags:
+                        document_tags[tag] = 0
+                    document_tags[tag] += 1
 
                 if requirement.uid not in requirements_map:
                     requirements_map[requirement.uid] = {
@@ -74,11 +84,12 @@ class TraceabilityIndex:
         print("child depth: {}".format(max_child_depth))
         print("child depth: {}".format(requirements_child_depth_map))
 
-        traceability_index = TraceabilityIndex(requirements_map, max_child_depth)
+        traceability_index = TraceabilityIndex(requirements_map, tags_map, max_child_depth)
         return traceability_index
 
-    def __init__(self, requirements_parents, max_child_depth):
+    def __init__(self, requirements_parents, tags_map, max_child_depth):
         self.requirements_parents = requirements_parents
+        self.tags_map = tags_map
         self.max_child_depth = max_child_depth
 
     def get_parent_requirements(self, requirement: Requirement):
@@ -118,3 +129,16 @@ class TraceabilityIndex:
     def get_link(self, requirement):
         document = self.requirements_parents[requirement.uid]['document']
         return "{} - Traceability.html#{}".format(document.name, requirement.uid)
+
+    def has_tags(self, document):
+        return document.name in self.tags_map
+
+    def get_tags(self, document):
+        assert document.name in self.tags_map
+        tags_bag = self.tags_map[document.name]
+        if not tags_bag:
+            return []
+
+        tags = sorted(tags_bag.keys(), key=alphanumeric_sort)
+        for tag in tags:
+            yield tag, tags_bag[tag]

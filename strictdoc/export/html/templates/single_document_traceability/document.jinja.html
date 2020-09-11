@@ -27,6 +27,16 @@
     </div>
   {%- endif %}
 
+  {%- if traceability_index.has_tags(document) -%}
+    <div id="tags-outline">
+    {%- for tag in traceability_index.get_tags(document) %}
+      <span class="tag">
+        {{ tag[0] }} x {{ tag[1] }}
+      </span>
+    {%- endfor %}
+    </div>
+  {%- endif %}
+
   <div id="sections-and-requirements">
   {%- for section_or_requirement in document.ng_section_iterator() %}
     <div class="table-row">

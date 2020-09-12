@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    <link rel="stylesheet" href="static/global.css" />
+    <link rel="stylesheet" href="static/single_document_traceability_deep.css" />
+
+    <style>
+      :root {
+        --table-test-width: {{ (traceability_index.get_max_ref_depth(document) * 2 + 1) * 320 }}px;
+
+        --cell-border-width: 1px;
+
+        --main-border-color: #808080;
+        --cell-border-color: #808080;
+
+        --main-bg-color: #ffffff;
+        --cell-bg-color: #dddddd;
+
+        --primary-card-width: 300px;
+        --secondary-card-width: 300px;
+        --card-padding: 10px;
+
+        --cell-arrow-width: 20px;
+        --arrow-height: 2px;
+        --cell-arrow-color: #000000;
+
+        --main-row-bottom-gap: 20px;
+        --inner-row-bottom-gap: 10px;
+      }
+    </style>
+    <title>{{document.name}} - Deep Traceability</title>
+    {% endblock %}
+</head>
+
+<body>
+  <h1>{{document.name}} - Deep Traceability</h1>
+
+  <a href="index.html">Back to Index</a>
+
+  <br/>
+
+  {%- if document.ng_sections %}
+    <div id="toc">
+      <h2>Table of Contents</h2>
+      {%- for section in document.ng_toc_section_iterator() %}
+        <div>
+
+          {{ (section.level - 1) * 4 * '&nbsp;' }} <a href="#{{ string_to_anchor_id(section.title) }}">{{ section.title }}</a>
+
+        </div>
+      {%- endfor %}
+    </div>
+  {%- endif %}
+
+  {%- if traceability_index.has_tags(document) -%}
+    <div id="tags-outline">
+    {%- for tag in traceability_index.get_tags(document) %}
+      <span class="tag">
+        {{ tag[0] }} x {{ tag[1] }}
+      </span>
+    {%- endfor %}
+    </div>
+  {%- endif %}
+
+  <div class="table">
+  {%- for section_or_requirement in document.ng_section_iterator() %}
+    {%- if section_or_requirement.is_requirement %}
+      <div class="row-main">
+
+        <div class="column-left">
+          {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) %}
+            {% include "single_document_traceability_deep/recursive_cell_left.jinja.html" %}
+          {%- endfor %}
+        </div> <!-- //column-left -->
+
+        {%- set requirement = section_or_requirement %}
+        <div class="column-main">
+          <div class="cell-main" id="{{ requirement.uid }}">
+            {% include "single_document_traceability_deep/requirement.jinja.html" %}
+          </div>
+        </div> <!-- //column-main -->
+
+        <div class="column-right">
+
+          {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) %}
+            {% include "single_document_traceability_deep/recursive_cell_right.jinja.html" %}
+          {%- endfor %}
+
+        </div> <!-- //column-right -->
+
+      </div>
+    {%- endif %}
+  {%- endfor %}
+  </div>
+</body>

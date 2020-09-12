@@ -50,10 +50,12 @@ class TraceabilityIndex:
 
         # Now iterate over the requirements again to build an in-depth map of
         # parents and children.
-        max_parent_depth, max_child_depth = 0, 0
-
         requirements_child_depth_map = {}
+        requirements_parent_depth_map = {}
+        documents_ref_depth_map = {}
+
         for document in document_tree.document_list:
+            max_parent_depth, max_child_depth = 0, 0
             for section_or_requirement in document.ng_section_iterator():
                 if not section_or_requirement.is_requirement:
                     continue
@@ -62,35 +64,55 @@ class TraceabilityIndex:
                 if not requirement.uid:
                     continue
 
-                if requirement.uid in requirements_child_depth_map:
-                    continue
+                if requirement.uid not in requirements_child_depth_map:
+                    child_depth = 0
 
-                parent_depth, child_depth = 0, 0
+                    queue = requirements_map[requirement.uid]['children']
+                    while True:
+                        if len(queue) == 0:
+                            break
 
-                queue = requirements_map[requirement.uid]['children']
-                while True:
-                    if len(queue) == 0:
-                        break
+                        child_depth += 1
+                        deeper_queue = []
+                        for child in queue:
+                            deeper_queue.extend(requirements_map[child.uid]['children'])
+                        queue = deeper_queue
 
-                    child_depth += 1
-                    deeper_queue = []
-                    for child in queue:
-                        deeper_queue.extend(requirements_map[child.uid]['children'])
-                    queue = deeper_queue
-                requirements_child_depth_map[requirement.uid] = child_depth
-                if max_child_depth < child_depth:
-                    max_child_depth = child_depth
+                    requirements_child_depth_map[requirement.uid] = child_depth
+                    if max_child_depth < child_depth:
+                        max_child_depth = child_depth
 
+                if requirement.uid not in requirements_parent_depth_map:
+                    parent_depth = 0
+
+                    queue = requirements_map[requirement.uid]['parents']
+                    while True:
+                        if len(queue) == 0:
+                            break
+
+                        parent_depth += 1
+                        deeper_queue = []
+                        for parent in queue:
+                            deeper_queue.extend(requirements_map[parent.path]['parents'])
+                        queue = deeper_queue
+
+                    requirements_parent_depth_map[requirement.uid] = parent_depth
+                    if max_parent_depth < parent_depth:
+                        max_parent_depth = parent_depth
+
+            documents_ref_depth_map[document] = max(max_parent_depth, max_child_depth)
+
+        # TODO: Calculate max depth  per document
         print("child depth: {}".format(max_child_depth))
         print("child depth: {}".format(requirements_child_depth_map))
 
-        traceability_index = TraceabilityIndex(requirements_map, tags_map, max_child_depth)
+        traceability_index = TraceabilityIndex(requirements_map, tags_map, documents_ref_depth_map)
         return traceability_index
 
-    def __init__(self, requirements_parents, tags_map, max_child_depth):
+    def __init__(self, requirements_parents, tags_map, documents_ref_depth_map):
         self.requirements_parents = requirements_parents
         self.tags_map = tags_map
-        self.max_child_depth = max_child_depth
+        self.documents_ref_depth_map = documents_ref_depth_map
 
     def get_parent_requirements(self, requirement: Requirement):
         assert isinstance(requirement, Requirement)
@@ -113,6 +135,28 @@ class TraceabilityIndex:
             parent_requirements.append(self.requirements_parents[ref.path]['requirement'])
         return parent_requirements
 
+    def has_parent_requirements(self, requirement: Requirement):
+        assert isinstance(requirement, Requirement)
+        assert isinstance(requirement.uid, str)
+
+        if not requirement.uid or len(requirement.uid) == 0:
+            return []
+
+        if not self.requirements_parents:
+            return []
+
+        parent_requirements = []
+        parent_references = self.requirements_parents[requirement.uid]['parents']
+        for ref in parent_references:
+            if ref.path not in self.requirements_parents:
+                continue
+            if 'requirement' not in self.requirements_parents[ref.path]:
+                print(ref.path)
+                continue
+            parent_requirements.append(self.requirements_parents[ref.path]['requirement'])
+        # TODO: Optimize
+        return len(parent_requirements) > 0
+
     def get_children_requirements(self, requirement: Requirement):
         assert isinstance(requirement, Requirement)
         assert isinstance(requirement.uid, str)
@@ -126,9 +170,26 @@ class TraceabilityIndex:
         children_requirements = self.requirements_parents[requirement.uid]['children']
         return children_requirements
 
+    def has_children_requirements(self, requirement: Requirement):
+        assert isinstance(requirement, Requirement)
+        assert isinstance(requirement.uid, str)
+
+        if not requirement.uid or len(requirement.uid) == 0:
+            return []
+
+        if not self.requirements_parents:
+            return []
+
+        children_requirements = self.requirements_parents[requirement.uid]['children']
+        return len(children_requirements) > 0
+
     def get_link(self, requirement):
         document = self.requirements_parents[requirement.uid]['document']
         return "{} - Traceability.html#{}".format(document.name, requirement.uid)
+
+    def get_deep_link(self, requirement):
+        document = self.requirements_parents[requirement.uid]['document']
+        return "{} - Traceability Deep.html#{}".format(document.name, requirement.uid)
 
     def has_tags(self, document):
         return document.name in self.tags_map
@@ -142,3 +203,6 @@ class TraceabilityIndex:
         tags = sorted(tags_bag.keys(), key=alphanumeric_sort)
         for tag in tags:
             yield tag, tags_bag[tag]
+
+    def get_max_ref_depth(self, document):
+        return self.documents_ref_depth_map[document]

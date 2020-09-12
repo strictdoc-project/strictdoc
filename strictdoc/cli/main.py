@@ -119,6 +119,16 @@ if args.command == 'export':
         with open(document_out_file, 'w') as file:
             file.write(document_content)
 
+    # Single Document Deep Traceability pages
+    for document in document_tree.document_list:
+        document_content = SingleDocumentTraceabilityHTMLExport.export_deep(
+            document_tree, document, traceability_index
+        )
+        document_out_file = "output/{} - Traceability Deep.html".format(document.name)
+        print("writing to file: {}".format(document_out_file))
+        with open(document_out_file, 'w') as file:
+            file.write(document_content)
+
     static_files_src = os.path.join(ROOT_PATH, 'strictdoc/export/html/static')
     static_files_dest = os.path.join(ROOT_PATH, 'output/static')
     sync_dir(static_files_src, static_files_dest)

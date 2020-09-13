@@ -102,7 +102,6 @@ class TraceabilityIndex:
 
             documents_ref_depth_map[document] = max(max_parent_depth, max_child_depth)
 
-        # TODO: Calculate max depth  per document
         print("child depth: {}".format(max_child_depth))
         print("child depth: {}".format(requirements_child_depth_map))
 
@@ -140,22 +139,24 @@ class TraceabilityIndex:
         assert isinstance(requirement.uid, str)
 
         if not requirement.uid or len(requirement.uid) == 0:
-            return []
+            return False
 
-        if not self.requirements_parents:
-            return []
+        if len(self.requirements_parents) == 0:
+            return False
 
-        parent_requirements = []
         parent_references = self.requirements_parents[requirement.uid]['parents']
+        if not parent_references or len(parent_references) == 0:
+            return False
+
         for ref in parent_references:
             if ref.path not in self.requirements_parents:
                 continue
             if 'requirement' not in self.requirements_parents[ref.path]:
                 print(ref.path)
                 continue
-            parent_requirements.append(self.requirements_parents[ref.path]['requirement'])
-        # TODO: Optimize
-        return len(parent_requirements) > 0
+            return True
+
+        return False
 
     def get_children_requirements(self, requirement: Requirement):
         assert isinstance(requirement, Requirement)
@@ -175,10 +176,10 @@ class TraceabilityIndex:
         assert isinstance(requirement.uid, str)
 
         if not requirement.uid or len(requirement.uid) == 0:
-            return []
+            return False
 
         if not self.requirements_parents:
-            return []
+            return False
 
         children_requirements = self.requirements_parents[requirement.uid]['children']
         return len(children_requirements) > 0

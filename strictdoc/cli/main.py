@@ -4,8 +4,6 @@ import sys
 
 from pathlib import Path
 
-from strictdoc.helpers.file_system import sync_dir
-
 ROOT_PATH = os.path.join(os.path.dirname(__file__), "..", "..")
 sys.path.append(ROOT_PATH)
 
@@ -14,6 +12,7 @@ from strictdoc.export.html.export import DocumentTreeHTMLExport, SingleDocumentH
     SingleDocumentTraceabilityHTMLExport
 from strictdoc.core.document_finder import DocumentFinder
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.helpers.file_system import sync_dir
 
 # for arg in sys.argv:
 #     if arg == '--help':

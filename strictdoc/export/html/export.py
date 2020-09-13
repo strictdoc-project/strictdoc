@@ -40,6 +40,8 @@ class DocumentTreeHTMLExport:
         output += "<div>"
         def get_traceability_link(document):
             return "{} - Traceability.html".format(document.name)
+        def get_traceability_deep_link(document):
+            return "{} - Traceability Deep.html".format(document.name)
         for folder_or_file in artefact_list:
             print(folder_or_file)
             if isinstance(folder_or_file, FileTree):
@@ -54,10 +56,11 @@ class DocumentTreeHTMLExport:
                 document_path = '{}.html'.format(document.name)
                 output += "<div>"
                 output += "&nbsp;" * (folder_or_file.get_level()) * DocumentTreeHTMLExport.OFFSET
-                output += '{} (<a href="{}">{}</a>, <a href="{}">{} - Traceability</a>)'.format(
+                output += '{} (<a href="{}">{}</a>, <a href="{}">{} - Traceability</a>, <a href="{}">{}</a>)'.format(
                     folder_or_file.get_file_name(),
                     document_path, document.name,
-                    get_traceability_link(document), document.name
+                    get_traceability_link(document), document.name,
+                    get_traceability_deep_link(document), 'Traceability Deep'
                 )
                 output += "</div>"
 
@@ -99,6 +102,19 @@ class SingleDocumentTraceabilityHTMLExport:
         output = ""
 
         template = SingleDocumentHTMLExport.env.get_template('single_document_traceability/document.jinja.html')
+
+        output += template.render(document=document,
+                                  traceability_index=traceability_index,
+                                  string_to_anchor_id=string_to_anchor_id)
+
+        return output
+
+    @staticmethod
+    def export_deep(document_tree, document, traceability_index):
+        print("doc: {}, number of sections: {}".format(document.name, len(document.section_contents)))
+        output = ""
+
+        template = SingleDocumentHTMLExport.env.get_template('single_document_traceability_deep/document.jinja.html')
 
         output += template.render(document=document,
                                   traceability_index=traceability_index,

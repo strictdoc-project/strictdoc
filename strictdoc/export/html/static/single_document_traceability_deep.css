@@ -1,0 +1,139 @@
+/* VARIABLES */
+
+:root {
+  --table-test-width: 3520px;
+
+  --cell-border-width: 1px;
+
+  --main-border-color: #808080;
+  --cell-border-color: #808080;
+
+  --main-bg-color: #ffffff;
+  --cell-bg-color: #dddddd;
+
+  --primary-card-width: 300px;
+  --secondary-card-width: 300px;
+  --card-padding: 10px;
+
+  --cell-arrow-width: 20px;
+  --arrow-height: 2px;
+  --cell-arrow-color: #000000;
+
+  --main-row-bottom-gap: 20px;
+  --inner-row-bottom-gap: 10px;
+}
+
+/* BASE */
+
+* {
+  box-sizing: border-box;
+}
+
+ul, li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* MAIN */
+
+.table {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  margin: 0 auto; /* put on center */
+  width: var(--table-test-width); /* fix width */
+}
+
+.row-main {
+  display: flex;
+  margin-bottom: var(--main-row-bottom-gap);
+}
+
+.column-main {
+  border: var(--cell-border-width) solid var(--main-border-color);
+  background: var(--main-bg-color);
+  width: var(--primary-card-width);
+}
+
+.cell-main {
+  padding: var(--card-padding);
+  width: var(--primary-card-width);
+}
+
+.column-right {
+  justify-content: flex-start;
+  width: 50%;
+}
+
+.column-left {
+  justify-content: flex-end;
+  width: 50%;
+}
+
+/* RECURIVE */
+
+.row {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: var(--inner-row-bottom-gap);
+}
+
+.row:last-child {
+  margin-bottom: 0;
+}
+
+.column {
+  min-width: var(--secondary-card-width);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.column-left .row {
+  flex-direction: row-reverse;
+}
+
+.cell {
+  position: relative;
+  height: 100%;
+  width: var(--secondary-card-width);
+  padding: var(--card-padding);
+  background-color: var(--cell-bg-color);
+  border: var(--cell-border-width) solid var(--cell-border-color);
+}
+
+.column-right .cell {
+  margin-left: var(--cell-arrow-width);
+}
+
+.column-left .cell {
+  margin-right: var(--cell-arrow-width);
+}
+
+.cell::before,
+.cell::after {
+  content: '';
+  position: absolute;
+  display: block;
+  box-sizing: border-box;
+  top: 50%;
+  height: var(--arrow-height);
+  background-color: var(--cell-arrow-color);
+  width: calc(var(--cell-arrow-width) * 1.5);
+}
+
+.cell::before {
+  left: calc(var(--cell-arrow-width) * (-1.5) - 1px); /* width + 1px border */
+}
+
+.cell::after {
+  right: calc(var(--cell-arrow-width) * (-1.5) - 1px); /* width + 1px border */
+}
+
+/* .row:hover .cell {
+  box-shadow: 0 0 16px #808080;
+  transition: 0.3s all;
+} */

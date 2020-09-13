@@ -1,0 +1,16 @@
+<ul class="row">
+  <li class="column">
+    <div class="cell">
+      {% include "single_document_traceability_deep/requirement.jinja.html" %}
+    </div>
+  </li>
+
+  {%- if traceability_index.has_parent_requirements(requirement) %}
+    <li class="column">
+      {%- for requirement in traceability_index.get_parent_requirements(requirement) %}
+        {% include "single_document_traceability_deep/recursive_cell_left.jinja.html" %}
+      {%- endfor %}
+    </li>
+  {%- endif %}
+
+</ul>

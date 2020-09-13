@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="static/global.css" />
+    <link rel="stylesheet" href="static/document_tree.css" />
+    <title>Document Tree</title>
+</head>
+
+<style>
+#table {
+  display: table;
+  border-collapse: collapse;
+}
+.row {
+  display: table-row;
+}
+.cell {
+  display: table-cell;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+</style>
+
+<body>
+  <h1>Document Tree</h1>
+
+  <div id="table">
+
+    {%- for folder_or_file in artefact_list: -%}
+      <div class="row">
+        {%- if folder_or_file.is_folder(): %}
+          <div class="cell">
+            {{ "&nbsp;" * folder_or_file.level * 8 }} {{ folder_or_file.get_folder_name() }}/
+          </div>
+        {% else %}
+          <div class="cell">
+            {{ "&nbsp;" * folder_or_file.level * 8 }} {{ folder_or_file.get_file_name() }}
+          </div>
+
+          {%- set document_name = document_tree.get_document_name(folder_or_file.get_full_path()) %}
+          <div class="cell">
+            <a href="{{ document_name }}.html">{{ document_name }}</a>
+          </div>
+          <div class="cell">
+            <a href="{{ get_traceability_link(document_name) }}">Traceability</a>
+          </div>
+          <div class="cell">
+            <a href="{{ get_traceability_deep_link(document_name) }}">Deep Traceability</a>
+          </div>
+        {% endif %}
+      </div>
+    {%- endfor -%}
+  </div>
+</body>
+

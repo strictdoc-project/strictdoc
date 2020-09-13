@@ -13,8 +13,22 @@ def get_path_components(folder_path):
     return path.split(os.sep)
 
 
+def get_traceability_link(document_name):
+    return "{} - Traceability.html".format(document_name)
+
+
+def get_traceability_deep_link(document_name):
+    return "{} - Traceability Deep.html".format(document_name)
+
+
 class DocumentTreeHTMLExport:
     OFFSET = 8
+
+    env = Environment(
+        loader=PackageLoader('strictdoc', 'export/html/templates'),
+        # autoescape=select_autoescape(['html', 'xml'])
+    )
+    env.globals.update(isinstance=isinstance)
 
     @staticmethod
     def export(document_tree):
@@ -23,25 +37,23 @@ class DocumentTreeHTMLExport:
 
         while task_list:
             file_tree_or_file = task_list.popleft()
-
             artefact_list.append(file_tree_or_file)
-
             if isinstance(file_tree_or_file, FileTree):
                 task_list.extendleft(reversed(file_tree_or_file.files))
                 task_list.extendleft(reversed(file_tree_or_file.subfolder_trees))
 
-        output = '<html>'
-        output += '<head>'
-        output += '<link rel="stylesheet" href="static/global.css"/>'
-        output += '</head>'
+
+        template = SingleDocumentHTMLExport.env.get_template('document_tree/document_tree.jinja.html')
+        output = template.render(document_tree=document_tree,
+                                 artefact_list=artefact_list,
+                                 get_traceability_link=get_traceability_link,
+                                 get_traceability_deep_link=get_traceability_deep_link)
+
+        return output
 
         output += "<h1>Document tree</h1>"
 
         output += "<div>"
-        def get_traceability_link(document):
-            return "{} - Traceability.html".format(document.name)
-        def get_traceability_deep_link(document):
-            return "{} - Traceability Deep.html".format(document.name)
         for folder_or_file in artefact_list:
             print(folder_or_file)
             if isinstance(folder_or_file, FileTree):

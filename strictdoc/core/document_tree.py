@@ -8,6 +8,9 @@ class FileOrFolderEntry:
     def get_level(self):
         raise NotImplementedError
 
+    def is_folder(self):
+        raise NotImplementedError
+
 
 class File(FileOrFolderEntry):
     def __init__(self, level, full_path):
@@ -17,6 +20,9 @@ class File(FileOrFolderEntry):
 
     def __repr__(self):
         return "File: {}".format(self.full_path)
+
+    def is_folder(self):
+        return False
 
     def get_full_path(self):
         return self.full_path
@@ -37,6 +43,9 @@ class FileTree(FileOrFolderEntry):
 
     def __repr__(self):
         return "FileTree: {} files: {}".format(self.root_path, self.files)
+
+    def is_folder(self):
+        return True
 
     def get_full_path(self):
         return self.root_path
@@ -73,6 +82,10 @@ class DocumentTree:
         self.file_tree = file_tree
         self.document_list = document_list
         self.document_map = document_map
+
+    def get_document_name(self, doc_full_path):
+        document = self.document_map[doc_full_path]
+        return document.name
 
     def __repr__(self):
         return "DocumentTree: {} document_list: {}".format(self.file_tree, self.document_list)

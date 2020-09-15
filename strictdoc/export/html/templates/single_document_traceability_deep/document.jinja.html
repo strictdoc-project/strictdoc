@@ -96,3 +96,11 @@
   {%- endfor %}
   </div>
 </body>
+
+<script>
+  $(document).ready(function() {
+    // Quick and dirty scrolling to the middle of the document.
+    var table = $('.table').first();
+    window.scrollBy(table.outerWidth() / 2 - $(window).width() / 2, 0);
+  });
+</script>

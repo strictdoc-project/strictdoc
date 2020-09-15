@@ -33,7 +33,7 @@ Requirement[noskipws]:
 
   ('TITLE: ' title = /.*$/ '\n')?
 
-  'STATEMENT: ' statement = /.*$/ '\n'
+  ('STATEMENT: ' statement = /.*$/ '\n')?
 
   ('BODY: ' 
     body = Body '\n'

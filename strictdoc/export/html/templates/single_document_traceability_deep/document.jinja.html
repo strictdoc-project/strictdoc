@@ -4,6 +4,8 @@
     {% block head %}
     <link rel="stylesheet" href="static/global.css" />
     <link rel="stylesheet" href="static/single_document_traceability_deep.css" />
+    <script type="text/javascript" src="static/jquery.min.js"></script>
+    <script type="text/javascript" src="static/pan-with-space.js"></script>
 
     <style>
       :root {
@@ -94,3 +96,11 @@
   {%- endfor %}
   </div>
 </body>
+
+<script>
+  $(document).ready(function() {
+    // Quick and dirty scrolling to the middle of the document.
+    var table = $('.table').first();
+    window.scrollBy(table.outerWidth() / 2 - $(window).width() / 2, 0);
+  });
+</script>

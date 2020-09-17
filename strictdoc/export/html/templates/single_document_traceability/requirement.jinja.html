@@ -15,11 +15,13 @@
     </div>
   {%- endif %}
 
-  {%- if requirement.statement %}
-    <div class="requirement-statement">
-      {{ requirement.statement }}
-    </div>
-  {%- endif %}
+  {%- if requirement.statement or requirement.statement_multiline -%}
+    {%- for statement_block in requirement.statement_as_html_blocks() -%}
+      <div class="requirement-statement">
+        {{ statement_block }}
+      </div>
+    {%- endfor -%}
+  {%- endif -%}
 
   {%- if requirement.body %}
     <div>

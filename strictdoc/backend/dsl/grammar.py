@@ -33,11 +33,9 @@ Requirement[noskipws]:
 
   ('TITLE: ' title = /.*$/ '\n')?
 
-  ('STATEMENT: ' statement = /.*$/ '\n')?
+  ('STATEMENT: ' (statement = SingleLineString | statement_multiline = MultiLineString) '\n')?
 
-  ('BODY: ' 
-    body = Body '\n'
-  )?
+  ('BODY: ' body = MultiLineString '\n' )?
 
   comments *= ReqComment
 ;
@@ -57,16 +55,12 @@ ReqComment[noskipws]:
   'COMMENT: ' (comment = SingleLineString | comment = MultiLineString) '\n'
 ;
 
-Body[noskipws]:
-    content = /(?ms)>>>(.*?)<<</
-;
-
 SingleLineString:
   /[^>]{3}.*$/
 ;
 
 MultiLineString:
-  /(?ms)>>>\n(.*?)<<</
+  /(?ms)>>>\n(.*?)\n<<</
 ;
 
 Reference[noskipws]:

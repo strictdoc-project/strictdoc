@@ -3,6 +3,75 @@ from strictdoc.backend.dsl.reader import SDReader
 from strictdoc.backend.dsl.writer import SDWriter
 
 
+def test_030_multiline_statement():
+    input = """
+[DOCUMENT]
+NAME: Test Doc
+
+[SECTION]
+LEVEL: 0
+TITLE: Test Section
+
+[REQUIREMENT]
+STATEMENT: >>>
+This is a statement 1
+This is a statement 2
+This is a statement 3
+<<<
+
+[/SECTION]
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input == output
+
+    assert isinstance(document.section_contents[0].section_contents[0], Requirement)
+    requirement_1 = document.section_contents[0].section_contents[0]
+    assert requirement_1.statement_multiline == 'This is a statement 1\nThis is a statement 2\nThis is a statement 3'
+
+
+def test_032_multiline_body():
+    input = """
+[DOCUMENT]
+NAME: Test Doc
+
+[SECTION]
+LEVEL: 0
+TITLE: Test Section
+
+[REQUIREMENT]
+STATEMENT: Some statement
+BODY: >>>
+This is a body part 1
+This is a body part 2
+This is a body part 3
+<<<
+
+[/SECTION]
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input == output
+
+    assert isinstance(document.section_contents[0].section_contents[0], Requirement)
+    requirement_1 = document.section_contents[0].section_contents[0]
+    assert requirement_1.body == 'This is a body part 1\nThis is a body part 2\nThis is a body part 3'
+
+
 def test_100_basic_test():
     input = """
 [DOCUMENT]

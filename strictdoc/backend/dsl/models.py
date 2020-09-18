@@ -93,6 +93,7 @@ class Requirement(object):
     def __init__(self,
                  parent,
                  statement,
+                 statement_multiline,
                  uid,
                  status,
                  tags,
@@ -109,6 +110,7 @@ class Requirement(object):
         self.references: [Reference] = references
         self.title = title
         self.statement = statement
+        self.statement_multiline = statement_multiline
         self.body = body
         self.comments = comments
 

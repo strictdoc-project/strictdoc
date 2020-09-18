@@ -66,14 +66,24 @@ class SDWriter:
                         output += section_content.title
                         output += "\n"
 
-                    output += "STATEMENT: "
-                    output += section_content.statement
-                    output += "\n"
+                    if section_content.statement:
+                        output += "STATEMENT: "
+                        output += section_content.statement
+                        output += "\n"
+                    elif section_content.statement_multiline:
+                        output += "STATEMENT: >>>"
+                        output += "\n"
+                        output += section_content.statement_multiline
+                        output += "\n"
+                        output += "<<<"
+                        output += "\n"
+                    else:
+                        raise RuntimeError('Statement is missing')
 
                     if section_content.body:
                         output += "BODY: >>>"
                         output += "\n"
-                        output += section_content.body.content
+                        output += section_content.body
                         output += "\n"
                         output += "<<<"
                         output += "\n"

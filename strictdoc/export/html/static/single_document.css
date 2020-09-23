@@ -1,0 +1,21 @@
+.requirement-statement {
+  margin: 8px 0px;
+}
+
+.comment {
+  margin: 10px 0px;
+}
+
+.comment-word {
+  font-weight: bold;
+}
+
+.comment-paragraph {
+  margin: 10px 0px;
+  //background: blue;
+}
+
+.comment-word + .comment-paragraph {
+  display: inline;
+  //background: red;
+}

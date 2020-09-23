@@ -1,0 +1,12 @@
+#table {
+  display: table;
+  border-collapse: collapse;
+}
+.row {
+  display: table-row;
+}
+.cell {
+  display: table-cell;
+  border: 1px solid #ccc;
+  padding: 10px;
+}

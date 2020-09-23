@@ -126,6 +126,11 @@ class Requirement(object):
     def is_requirement(self):
         return True
 
+    def statement_as_html_blocks(self):
+        if self.statement:
+            return [self.statement]
+        elif self.statement_multiline:
+            return self.statement_multiline.split('\n\n')
 
 # class Body(object):
 #     def __init__(self, parent, body_content=[]):

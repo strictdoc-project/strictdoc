@@ -5,7 +5,7 @@
 
   {%- if requirement.title %}
     <div>
-      {{ requirement.title }}
+      <b>{{ requirement.title }}</b>
     </div>
   {%- endif %}
 
@@ -15,15 +15,34 @@
     </div>
   {%- endif %}
 
-  {%- if requirement.statement %}
-    <div>
-      {{ requirement.statement }}
-    </div>
-  {%- endif %}
+  {%- if requirement.statement or requirement.statement_multiline -%}
+    {%- for statement_block in requirement.statement_as_html_blocks() -%}
+      <div class="requirement-statement">
+        {{ statement_block }}
+      </div>
+    {%- endfor -%}
+  {%- endif -%}
 
   {%- if requirement.body %}
 <pre>
 {{ requirement.body }}
 </pre>
   {%- endif %}
+
+  {%- if requirement.comments %}
+    {%- for comment in requirement.comments %}
+      <div class="comment">
+        <span class="comment-word">
+          Comment:
+        </span>
+
+        {%- for comment_paragraph in comment.comment_by_paragraphs() %}
+          <div class="comment-paragraph">
+          {{ comment_paragraph }}
+          </div>
+        {%- endfor %}
+      </div>
+    {%- endfor %}
+  {%- endif %}
+
 </div>

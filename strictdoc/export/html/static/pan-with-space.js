@@ -12,7 +12,7 @@ $(window).keydown(function (e) {
   if (e.key === ' ' || e.key === 'Spacebar') {
     // ' ' is standard, 'Spacebar' was used by IE9 and Firefox < 37
     e.preventDefault();
-    console.log('Space pressed');
+    // console.log('Space pressed');
     state.spacePressed = true;
   }
 })
@@ -21,13 +21,17 @@ $(window).keyup(function (e) {
   if (e.key === ' ' || e.key === 'Spacebar') {
     // ' ' is standard, 'Spacebar' was used by IE9 and Firefox < 37
     e.preventDefault();
-    console.log('Space keyup');
+    //console.log('Space keyup');
     state.spacePressed = false;
   }
 })
 
 $(document).mousedown(function (e) {
-  console.log("mouse down");
+  // console.log("mouse down");
+
+  if (!state.spacePressed) {
+    return;
+  }
 
   // tell the browser we're handling this event
   e.preventDefault();
@@ -41,8 +45,13 @@ $(document).mousedown(function (e) {
 });
 
 $(document).mouseup(function (e) {
-  console.log("mouse up");
+  // console.log("mouse up");
   // tell the browser we're handling this event
+
+  if (!state.spacePressed) {
+    return;
+  }
+
   e.preventDefault();
   e.stopPropagation();
 
@@ -50,10 +59,14 @@ $(document).mouseup(function (e) {
 });
 
 $(document).mousemove(function (e) {
-  console.log("mouse move");
+  // console.log("mouse move");
 
   // only do this code if the mouse is being dragged
   if (!state.isDown){
+    return;
+  }
+
+  if (!state.spacePressed) {
     return;
   }
 
@@ -80,7 +93,7 @@ $(document).mousemove(function (e) {
 });
 
 $(document).mouseleave(function (e) {
-  console.log("mouse out");
+  // console.log("mouse out");
 
   // tell the browser we're handling this event
   e.preventDefault();

@@ -1,10 +1,9 @@
 import collections
 import os
 
-from jinja2 import Template, Environment, PackageLoader, select_autoescape
+from jinja2 import Environment, PackageLoader
 
-from strictdoc.backend.dsl.models import Requirement
-from strictdoc.core.document_tree import FileTree, File
+from strictdoc.core.document_tree import FileTree
 from strictdoc.helpers.hyperlinks import string_to_anchor_id
 
 
@@ -48,36 +47,6 @@ class DocumentTreeHTMLExport:
                                  artefact_list=artefact_list,
                                  get_traceability_link=get_traceability_link,
                                  get_traceability_deep_link=get_traceability_deep_link)
-
-        return output
-
-        output += "<h1>Document tree</h1>"
-
-        output += "<div>"
-        for folder_or_file in artefact_list:
-            print(folder_or_file)
-            if isinstance(folder_or_file, FileTree):
-                folder_name = folder_or_file.get_folder_name()
-                output += "<div>"
-                output += "&nbsp;" * folder_or_file.level * DocumentTreeHTMLExport.OFFSET
-                output += "{}/".format(folder_name)
-                output += "</div>"
-            elif isinstance(folder_or_file, File):
-                doc_full_path = folder_or_file.get_full_path()
-                document = document_tree.document_map[doc_full_path]
-                document_path = '{}.html'.format(document.name)
-                output += "<div>"
-                output += "&nbsp;" * (folder_or_file.get_level()) * DocumentTreeHTMLExport.OFFSET
-                output += '{} (<a href="{}">{}</a>, <a href="{}">{} - Traceability</a>, <a href="{}">{}</a>)'.format(
-                    folder_or_file.get_file_name(),
-                    document_path, document.name,
-                    get_traceability_link(document), document.name,
-                    get_traceability_deep_link(document), 'Traceability Deep'
-                )
-                output += "</div>"
-
-        output += "</div>"
-        output += '</body>'
 
         return output
 

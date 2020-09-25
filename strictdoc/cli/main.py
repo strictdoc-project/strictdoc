@@ -8,8 +8,11 @@ ROOT_PATH = os.path.join(os.path.dirname(__file__), "..", "..")
 sys.path.append(ROOT_PATH)
 
 from strictdoc.backend.rst.rst_reader import RSTReader
-from strictdoc.export.html.export import DocumentTreeHTMLExport, SingleDocumentHTMLExport, \
-    SingleDocumentTraceabilityHTMLExport
+from strictdoc.export.html.export \
+    import (DocumentTreeHTMLExport,
+            SingleDocumentHTMLExport,
+            SingleDocumentTraceabilityHTMLExport,
+            SingleDocumentTableHTMLExport)
 from strictdoc.core.document_finder import DocumentFinder
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.helpers.file_system import sync_dir
@@ -104,6 +107,16 @@ if args.command == 'export':
     for document in document_tree.document_list:
         document_content = SingleDocumentHTMLExport.export(document)
         document_out_file = "output/{}.html".format(document.name)
+        print("writing to file: {}".format(document_out_file))
+        with open(document_out_file, 'w') as file:
+            file.write(document_content)
+
+    # Single Document Table pages
+    for document in document_tree.document_list:
+        document_content = SingleDocumentTableHTMLExport.export(
+            document_tree, document, traceability_index
+        )
+        document_out_file = "output/{} - Table.html".format(document.name)
         print("writing to file: {}".format(document_out_file))
         with open(document_out_file, 'w') as file:
             file.write(document_content)

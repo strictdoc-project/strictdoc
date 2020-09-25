@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="static/global.css" />
+  <link rel="stylesheet" href="static/single_document_table.css" />
+  <title>{{document.name}} - Table</title>
+</head>
+
+<body>
+  <h1>{{document.name}} - Table</h1>
+
+  <a href="index.html">Back to Index</a>
+
+  <br/>
+
+  {%- if document.ng_sections %}
+    <div id="toc">
+      <h2>Table of Contents</h2>
+      {%- for section in document.ng_toc_section_iterator() %}
+        <div>
+
+          {{ (section.level - 1) * 4 * '&nbsp;' }} <a href="#{{ string_to_anchor_id(section.title) }}">{{ section.title }}</a>
+
+        </div>
+      {%- endfor %}
+    </div>
+  {%- endif %}
+
+  {%- if traceability_index.has_tags(document) -%}
+    <div id="tags-outline">
+    {%- for tag in traceability_index.get_tags(document) %}
+      <span class="tag">
+        {{ tag[0] }} x {{ tag[1] }}
+      </span>
+    {%- endfor %}
+    </div>
+  {%- endif %}
+
+  <div id="sections-and-requirements">
+  {%- for section_or_requirement in document.ng_section_iterator() %}
+    <div class="table-row">
+      {%- if section_or_requirement.is_requirement %}
+        {%- set requirement = section_or_requirement %}
+        {% include "single_document_table/requirement.jinja.html" %}
+      {%- else %}
+        <div class="cell-section">
+          {%- set section = section_or_requirement %}
+          <h2 id="{{ string_to_anchor_id(section.title) }}">{{ section.title }}</h2>
+        </div>
+      {%- endif %}
+    </div>
+  {%- endfor %}
+  </div>
+</body>

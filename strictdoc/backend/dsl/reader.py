@@ -1,9 +1,17 @@
 from textx import metamodel_from_str, get_children_of_type
 
 from strictdoc.backend.dsl.grammar import STRICTDOC_GRAMMAR
-from strictdoc.backend.dsl.models import Document, Requirement, ReqComment, Section, Body, Reference
+from strictdoc.backend.dsl.models import Document, Requirement, ReqComment, Section, Body, Reference, FreeText
 
-DOCUMENT_MODELS = [Document, ReqComment, Section, Requirement, Body, Reference]
+DOCUMENT_MODELS = [
+    Document,
+    ReqComment,
+    Section,
+    Requirement,
+    Body,
+    Reference,
+    FreeText
+]
 
 
 def section_obj_processor(section):

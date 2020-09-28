@@ -43,7 +43,7 @@
       {%- if section_or_requirement.is_requirement %}
         {%- set requirement = section_or_requirement %}
         {% include "single_document_table/requirement.jinja.html" %}
-      {%- else %}
+      {%- elif section_or_requirement.is_section %}
         <div class="cell-section">
           {%- set section = section_or_requirement %}
           <h2 id="{{ string_to_anchor_id(section.title) }}">{{ section.title }}</h2>

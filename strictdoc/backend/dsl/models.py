@@ -88,6 +88,10 @@ class Section(object):
     def is_requirement(self):
         return False
 
+    @property
+    def is_section(self):
+        return True
+
 
 class Requirement(object):
     def __init__(self,
@@ -125,6 +129,10 @@ class Requirement(object):
     @property
     def is_requirement(self):
         return True
+
+    @property
+    def is_section(self):
+        return False
 
     def statement_as_html_blocks(self):
         if self.statement:
@@ -173,3 +181,21 @@ class Reference(object):
 
     def __repr__(self):
         return self.__str__()
+
+
+class FreeText:
+    def __init__(self, parent, text):
+        self.parent = parent
+        self.text = text
+
+    @property
+    def is_requirement(self):
+        return False
+
+    @property
+    def is_section(self):
+        return False
+
+    @property
+    def is_free_text(self):
+        return True

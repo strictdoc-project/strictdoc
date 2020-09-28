@@ -6,7 +6,7 @@ Document[noskipws]:
 ;
 
 SectionOrRequirement[noskipws]:
-  '\n' (Section | Requirement)
+  '\n' (Section | Requirement | FreeText)
 ;
 
 Section[noskipws]:
@@ -70,5 +70,9 @@ Reference[noskipws]:
 
 ReferenceType[noskipws]:
   'File' | 'Parent'
+;
+
+FreeText[noskipws]:
+  text = /(?ms)\[FREETEXT\](.*?)\[\/FREETEXT\]/ '\n'
 ;
 """

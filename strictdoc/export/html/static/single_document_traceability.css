@@ -23,18 +23,19 @@ h1 {
   padding: 0px;
   margin: 0px 0px 0px 0px;
   border: 1px solid black;
+  border-bottom: 0;
 }
 
 .table-row:last-child {
-  border-bottom: 2px solid #000;
+  border-bottom: 1px solid #000;
 }
 
 .cell-section {
   display: inline-block;
-  width: 100%;
+  width: 33.33%;
   text-align: center;
-  background: #add8e6;
-  border: 2px solid #000;
+  //background: #add8e6;
+  ///border: 2px solid #000;
   margin: 0px 0px -1px 0px;
 }
 
@@ -42,7 +43,7 @@ h1 {
   width: 33.33%;
   border-left: 1px solid #ccc;
   box-sizing: border-box;
-  margin: 0px 0px -1px 0px;
+  margin: 0px 0px 0px 0px;
 }
 
 .cell-parent {

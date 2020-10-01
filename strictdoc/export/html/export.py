@@ -59,13 +59,14 @@ class SingleDocumentHTMLExport:
     env.globals.update(isinstance=isinstance)
 
     @staticmethod
-    def export(document):
+    def export(document_tree, document, traceability_index):
         print("doc: {}, number of sections: {}".format(document.name, len(document.section_contents)))
         output = ""
 
         template = SingleDocumentHTMLExport.env.get_template('single_document/document.jinja.html')
 
-        output += template.render(document=document)
+        output += template.render(document=document,
+                                  traceability_index=traceability_index)
 
         return output
 

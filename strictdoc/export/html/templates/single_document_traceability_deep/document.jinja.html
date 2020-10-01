@@ -42,13 +42,14 @@
 
   <br/>
 
+  {%- set document_iterator = traceability_index.get_document_iterator(document) -%}
   {%- if document.ng_sections %}
     <div id="toc">
       <h2>Table of Contents</h2>
-      {%- for section in document.ng_toc_section_iterator() %}
+      {%- for section, title in document_iterator.table_of_contents() -%}
         <div>
 
-          {{ (section.level - 1) * 4 * '&nbsp;' }} <a href="#{{ string_to_anchor_id(section.title) }}">{{ section.title }}</a>
+          {{ (section.ng_level - 1) * 4 * '&nbsp;' }} <a href="#{{ string_to_anchor_id(section.title) }}">{{ section.title }}</a>
 
         </div>
       {%- endfor %}
@@ -66,7 +67,7 @@
   {%- endif %}
 
   <div class="table">
-  {%- for section_or_requirement in document.ng_section_iterator() %}
+  {%- for section_or_requirement, title in document_iterator.all_content() %}
     {%- if section_or_requirement.is_requirement %}
       <div class="row-main">
 

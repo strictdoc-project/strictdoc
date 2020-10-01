@@ -14,14 +14,13 @@
 
   <br/>
 
+  {%- set document_iterator = traceability_index.get_document_iterator(document) -%}
   {%- if document.ng_sections %}
     <div id="toc">
       <h2>Table of Contents</h2>
-      {%- for section in document.ng_toc_section_iterator() %}
+      {%- for section, title in document_iterator.table_of_contents() -%}
         <div>
-
-          {{ (section.level - 1) * 8 * '&nbsp;' }} <a href="#{{ string_to_anchor_id(section.title) }}">{{ section.title }}</a>
-
+          {{ (section.ng_level - 1) * 8 * '&nbsp;' }} <a href="#{{ string_to_anchor_id(section.title) }}">{{ title }} {{ section.title if section.title else '(NO TITLE)' }}</a>
         </div>
       {%- endfor %}
     </div>
@@ -38,7 +37,7 @@
   {%- endif %}
 
   <div id="sections-and-requirements">
-  {%- for section_or_requirement in document.ng_section_iterator() %}
+  {%- for section_or_requirement, title in document_iterator.all_content() %}
     <div class="table-row">
     {%- if section_or_requirement.is_requirement %}
       <div class="cell cell-parent">
@@ -68,7 +67,7 @@
       </div>
       <div class="cell-section">
       {%- set section = section_or_requirement %}
-      <h2 id="{{ string_to_anchor_id(section.title) }}">{{ section.title }}</h2>
+      <h{{ section.ng_level }} id="{{ string_to_anchor_id(section.title) }}">{{title }} {{ section.title }}</h{{ section.ng_level }}>
       </div>
       <div class="cell cell-children">
       </div>

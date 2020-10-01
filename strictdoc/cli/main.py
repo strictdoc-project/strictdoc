@@ -105,7 +105,9 @@ if args.command == 'export':
 
     # Single Document pages
     for document in document_tree.document_list:
-        document_content = SingleDocumentHTMLExport.export(document)
+        document_content = SingleDocumentHTMLExport.export(document_tree,
+                                                           document,
+                                                           traceability_index)
         document_out_file = "output/{}.html".format(document.name)
         print("writing to file: {}".format(document_out_file))
         with open(document_out_file, 'w') as file:

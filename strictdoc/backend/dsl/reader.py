@@ -1,3 +1,5 @@
+import traceback
+
 from textx import metamodel_from_str, get_children_of_type
 
 from strictdoc.backend.dsl.grammar import STRICTDOC_GRAMMAR
@@ -42,6 +44,8 @@ def composite_requirement_obj_processor(composite_requirement):
             resolve_parents(composite_requirement)
         assert composite_requirement.parent.level
         composite_requirement.ng_level = composite_requirement.parent.level + 1
+
+        composite_requirement.parent.ng_sections.append(composite_requirement)
     elif isinstance(composite_requirement.parent, CompositeRequirement):
         assert composite_requirement.parent.ng_level
         composite_requirement.ng_level = composite_requirement.parent.ng_level + 1
@@ -57,6 +61,8 @@ def requirement_obj_processor(requirement):
         if not requirement.parent.ng_level:
             resolve_parents(requirement)
         requirement.ng_level = requirement.parent.ng_level + 1
+    elif isinstance(requirement.parent, Document):
+        requirement.ng_level = 1
     else:
         raise NotImplementedError
 
@@ -86,6 +92,9 @@ class SDReader:
             sdoc = self.read(sdoc_content)
             sdoc.assign_path(file_path)
             return sdoc
+        except NotImplementedError as exc:
+            traceback.print_exc()
+            exit(1)
         except Exception as exc:
-            print("error: could not parse file: {}.\nException: {}".format(file_path, exc))
+            print("error: could not parse file: {}.\n{}: {}".format(file_path, exc.__class__.__name__,  exc))
             exit(1)

@@ -1,6 +1,3 @@
-import collections
-
-
 class Document(object):
     def __init__(self, name, section_contents=[]):
         self.name = name
@@ -21,36 +18,6 @@ class Document(object):
     def assign_path(self, path):
         assert isinstance(path, str)
         self.path = path
-
-    def ng_toc_section_iterator(self):
-        task_list = collections.deque([self])
-
-        while True:
-            current = task_list.popleft()
-
-            task_list.extendleft(reversed(current.ng_sections))
-
-            if not task_list:
-                break
-
-            yield task_list[0]
-
-    def ng_section_iterator(self):
-        task_list = collections.deque([self])
-
-        while True:
-            current = task_list.popleft()
-
-            if isinstance(current, Section) or isinstance(current, Document):
-                task_list.extendleft(reversed(current.section_contents))
-
-            if isinstance(current, CompositeRequirement):
-                task_list.extendleft(reversed(current.requirements))
-
-            if not task_list:
-                break
-
-            yield task_list[0]
 
 
 class ReqComment(object):
@@ -128,8 +95,9 @@ class Requirement(object):
         self.ng_level = None
 
     def __str__(self):
-        return "{}: <uid: {}, title_or_none: {}, statement: {}, comments: {}>".format(
+        return "{}: <ng_level: {}, uid: {}, title_or_none: {}, statement: {}, comments: {}>".format(
             self.__class__.__name__,
+            self.ng_level,
             self.uid, self.title, self.statement, self.comments
         )
 
@@ -154,6 +122,7 @@ class Requirement(object):
 class CompositeRequirement(Requirement):
     def __init__(self, parent, **fields):
         super(CompositeRequirement, self).__init__(parent, **fields)
+        self.ng_sections = []
 
 
 # class Body(object):

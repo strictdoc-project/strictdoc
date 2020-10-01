@@ -15,19 +15,20 @@
 <br/>
 <br/>
 
+{%- set document_iterator = traceability_index.get_document_iterator(document) -%}
 
 {%- if document.ng_sections %}
   <h2>Table of Contents</h2>
-  {%- for section in document.ng_toc_section_iterator() %}
+  {%- for section, title in document_iterator.table_of_contents() %}
     <div>
 
-      {{ (section.level - 1) * 4 * '&nbsp;' }} {{ section.title }}
+      {{ (section.ng_level - 1) * 4 * '&nbsp;' }} {{ section.title }}
 
     </div>
   {%- endfor %}
 {%- endif %}
 
-{%- for section_or_requirement in document.ng_section_iterator() %}
+{%- for section_or_requirement in document_iterator.all_content() %}
   {%- if section_or_requirement.is_requirement %}
     {%- set requirement = section_or_requirement %}
     {% include "single_document/requirement.jinja.html" %}

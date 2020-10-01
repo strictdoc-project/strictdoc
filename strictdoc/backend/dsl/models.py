@@ -8,6 +8,7 @@ class Document(object):
         self.path = "<No document path>"
 
         self.ng_sections = []
+        self.ng_level = 0
 
     def __str__(self):
         return "Document: <name: {}, section_contents: {}>".format(
@@ -43,6 +44,9 @@ class Document(object):
             if isinstance(current, Section) or isinstance(current, Document):
                 task_list.extendleft(reversed(current.section_contents))
 
+            if isinstance(current, CompositeRequirement):
+                task_list.extendleft(reversed(current.requirements))
+
             if not task_list:
                 break
 
@@ -70,10 +74,11 @@ class ReqComment(object):
 class Section(object):
     def __init__(self, parent, level, title, section_contents):
         self.parent = parent
-        self.level = level
+        self.level = int(level)
         self.title = title
         self.section_contents = section_contents
 
+        self.ng_level = self.level
         self.ng_sections = []
 
     def __str__(self):
@@ -104,7 +109,8 @@ class Requirement(object):
                  references,
                  title,
                  body,
-                 comments):
+                 comments,
+                 requirements=None):
         assert parent
 
         self.parent = parent
@@ -117,9 +123,13 @@ class Requirement(object):
         self.statement_multiline = statement_multiline
         self.body = body
         self.comments = comments
+        self.requirements = requirements
+
+        self.ng_level = None
 
     def __str__(self):
-        return "Requirement: <uid: {}, title_or_none: {}, statement: {}, comments: {}>".format(
+        return "{}: <uid: {}, title_or_none: {}, statement: {}, comments: {}>".format(
+            self.__class__.__name__,
             self.uid, self.title, self.statement, self.comments
         )
 
@@ -139,6 +149,12 @@ class Requirement(object):
             return [self.statement]
         elif self.statement_multiline:
             return self.statement_multiline.split('\n\n')
+
+
+class CompositeRequirement(Requirement):
+    def __init__(self, parent, **fields):
+        super(CompositeRequirement, self).__init__(parent, **fields)
+
 
 # class Body(object):
 #     def __init__(self, parent, body_content=[]):

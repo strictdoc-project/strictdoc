@@ -1,28 +1,13 @@
-STRICTDOC_GRAMMAR = """
-Document[noskipws]:
-  '[DOCUMENT]' '\n'
-  'NAME: ' name = /.*$/ '\n'
-  section_contents *= SectionOrRequirement
-;
+import string
 
-SectionOrRequirement[noskipws]:
-  '\n' (Section | Requirement | FreeText)
-;
 
-Section[noskipws]:
-  '[SECTION]' 
-  '\n'
-  'LEVEL: ' level = INT '\n'
-  'TITLE: ' title = /.*$/ '\n'
-  section_contents *= SectionOrRequirement
-  '\n'
-  '[/SECTION]'
-  '\n'
-;
+# Strings with embedded variables in Python
+# https://stackoverflow.com/a/16553401/598057
+class RubyTemplate(string.Template):
+    delimiter = '#'
 
-Requirement[noskipws]:
-  '[REQUIREMENT]' '\n'
 
+REQUIREMENT_FIELDS = """
   ('UID: ' uid = /.*$/ '\n')? 
 
   ('STATUS: ' status = RequirementStatus '\n')?
@@ -38,6 +23,49 @@ Requirement[noskipws]:
   ('BODY: ' body = MultiLineString '\n' )?
 
   comments *= ReqComment
+"""
+
+STRICTDOC_GRAMMAR = RubyTemplate("""
+Document[noskipws]:
+  '[DOCUMENT]' '\n'
+  'NAME: ' name = /.*$/ '\n'
+  section_contents *= SectionOrRequirement
+;
+
+SectionOrRequirement[noskipws]:
+  '\n' (Section | Requirement | CompositeRequirement | FreeText)
+;
+
+Section[noskipws]:
+  '[SECTION]' 
+  '\n'
+  'LEVEL: ' level = /[1-6]/ '\n'
+  'TITLE: ' title = /.*$/ '\n'
+  section_contents *= SectionOrRequirement
+  '\n'
+  '[/SECTION]'
+  '\n'
+;
+
+SpaceThenRequirement[noskipws]:
+  '\n' (Requirement | CompositeRequirement)
+;
+
+Requirement[noskipws]:
+  '[REQUIREMENT]' '\n'
+
+  #{REQUIREMENT_FIELDS}
+;
+
+CompositeRequirement[noskipws]:
+  '[COMPOSITE-REQUIREMENT]' '\n'
+
+  #{REQUIREMENT_FIELDS}
+  
+  requirements += SpaceThenRequirement
+
+  '\n'
+  '[/COMPOSITE-REQUIREMENT]' '\n'
 ;
 
 TagRegex[noskipws]:
@@ -75,4 +103,4 @@ ReferenceType[noskipws]:
 FreeText[noskipws]:
   text = /(?ms)\[FREETEXT\](.*?)\[\/FREETEXT\]/ '\n'
 ;
-"""
+""").substitute(REQUIREMENT_FIELDS=REQUIREMENT_FIELDS)

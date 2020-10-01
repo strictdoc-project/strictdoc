@@ -1,4 +1,4 @@
-from strictdoc.backend.dsl.models import Document, Requirement
+from strictdoc.backend.dsl.models import Document, Requirement, CompositeRequirement
 from strictdoc.backend.dsl.reader import SDReader
 from strictdoc.backend.dsl.writer import SDWriter
 
@@ -9,7 +9,7 @@ def test_030_multiline_statement():
 NAME: Test Doc
 
 [SECTION]
-LEVEL: 0
+LEVEL: 1
 TITLE: Test Section
 
 [REQUIREMENT]
@@ -43,7 +43,7 @@ def test_032_multiline_body():
 NAME: Test Doc
 
 [SECTION]
-LEVEL: 0
+LEVEL: 1
 TITLE: Test Section
 
 [REQUIREMENT]
@@ -72,13 +72,123 @@ This is a body part 3
     assert requirement_1.body == 'This is a body part 1\nThis is a body part 2\nThis is a body part 3'
 
 
+def test_040_composite_requirement_1_level():
+    input = """
+[DOCUMENT]
+NAME: Test Doc
+
+[SECTION]
+LEVEL: 1
+TITLE: Test Section
+
+[COMPOSITE-REQUIREMENT]
+STATEMENT: Some parent requirement statement
+BODY: >>>
+This is a body part 1
+This is a body part 2
+This is a body part 3
+<<<
+
+[REQUIREMENT]
+STATEMENT: Some child requirement statement
+BODY: >>>
+This is a child body part 1
+This is a child body part 2
+This is a child body part 3
+<<<
+
+[/COMPOSITE-REQUIREMENT]
+
+[/SECTION]
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+    print(output)
+
+    assert input == output
+
+    assert isinstance(document.section_contents[0].section_contents[0],
+                      CompositeRequirement)
+    requirement_1 = document.section_contents[0].section_contents[0]
+    assert requirement_1.ng_level == 2
+    assert requirement_1.body == \
+           'This is a body part 1\nThis is a body part 2\nThis is a body part 3'
+
+
+def test_042_composite_requirement_2_level():
+    input = """
+[DOCUMENT]
+NAME: Test Doc
+
+[SECTION]
+LEVEL: 1
+TITLE: Test Section
+
+[COMPOSITE-REQUIREMENT]
+STATEMENT: 1.1 composite req statement
+BODY: >>>
+body composite 1.1
+<<<
+
+[COMPOSITE-REQUIREMENT]
+STATEMENT: 1.1.1 composite req statement
+BODY: >>>
+body composite 1.1.1
+<<<
+
+[REQUIREMENT]
+STATEMENT: 1.1.1.1 composite req statement
+BODY: >>>
+body 1.1.1.1
+<<<
+
+[/COMPOSITE-REQUIREMENT]
+
+[/COMPOSITE-REQUIREMENT]
+
+[/SECTION]
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+    print(output)
+
+    assert input == output
+
+    assert isinstance(document.section_contents[0].section_contents[0], CompositeRequirement)
+    requirement_1_1 = document.section_contents[0].section_contents[0]
+    assert requirement_1_1.ng_level == 2
+    assert requirement_1_1.body == 'body composite 1.1'
+
+    assert isinstance(document.section_contents[0].section_contents[0].requirements[0], CompositeRequirement)
+    requirement_1_1_1 = document.section_contents[0].section_contents[0].requirements[0]
+    assert requirement_1_1_1.ng_level == 3
+    assert requirement_1_1_1.body == 'body composite 1.1.1'
+
+    assert isinstance(document.section_contents[0].section_contents[0].requirements[0].requirements[0], Requirement)
+    requirement_1_1_1 = document.section_contents[0].section_contents[0].requirements[0].requirements[0]
+    assert requirement_1_1_1.ng_level == 4
+    assert requirement_1_1_1.body == 'body 1.1.1.1'
+
+
 def test_100_basic_test():
     input = """
 [DOCUMENT]
 NAME: Test Doc
 
 [SECTION]
-LEVEL: 0
+LEVEL: 1
 TITLE: Test Section
 
 [REQUIREMENT]

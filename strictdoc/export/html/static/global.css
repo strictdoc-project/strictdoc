@@ -1,6 +1,8 @@
 * {
   //font-family: "Lucida Console", Monaco, monospace;
   font-family: Georgia, serif;
+  margin: 0;
+  padding: 0;
 }
 
 body {

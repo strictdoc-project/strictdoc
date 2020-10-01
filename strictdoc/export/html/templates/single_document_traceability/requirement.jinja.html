@@ -4,9 +4,9 @@
   {%- endif %}
 
   {%- if requirement.title %}
-    <b>
-      {{ requirement.title }}
-    </b>
+    <h{{ requirement.ng_level }}>
+      {{title }} {{ requirement.title }}
+    </h{{ requirement.ng_level }}>
   {%- endif %}
 
   {%- if requirement.status %}

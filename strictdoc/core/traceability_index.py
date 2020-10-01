@@ -1,4 +1,5 @@
 from strictdoc.backend.dsl.models import Requirement
+from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.helpers.sorting import alphanumeric_sort
 
@@ -8,11 +9,15 @@ class TraceabilityIndex:
     def create(document_tree: DocumentTree):
         requirements_map = {}
         tags_map = {}
+        document_iterators = {}
         for document in document_tree.document_list:
+            document_iterator = DocumentCachingIterator(document)
+            document_iterators[document] = document_iterator
+
             if document.name not in tags_map:
                 tags_map[document.name] = {}
 
-            for section_or_requirement in document.ng_section_iterator():
+            for section_or_requirement, _ in document_iterator.all_content():
                 if not section_or_requirement.is_requirement:
                     continue
 
@@ -55,8 +60,9 @@ class TraceabilityIndex:
         documents_ref_depth_map = {}
 
         for document in document_tree.document_list:
+            document_iterator = document_iterators[document]
             max_parent_depth, max_child_depth = 0, 0
-            for section_or_requirement in document.ng_section_iterator():
+            for section_or_requirement, _ in document_iterator.all_content():
                 if not section_or_requirement.is_requirement:
                     continue
 
@@ -105,13 +111,26 @@ class TraceabilityIndex:
         print("child depth: {}".format(max_child_depth))
         print("child depth: {}".format(requirements_child_depth_map))
 
-        traceability_index = TraceabilityIndex(requirements_map, tags_map, documents_ref_depth_map)
+        traceability_index = TraceabilityIndex(
+            document_iterators,
+            requirements_map,
+            tags_map,
+            documents_ref_depth_map
+        )
         return traceability_index
 
-    def __init__(self, requirements_parents, tags_map, documents_ref_depth_map):
+    def __init__(self,
+                 document_iterators,
+                 requirements_parents,
+                 tags_map,
+                 documents_ref_depth_map):
+        self.document_iterators = document_iterators
         self.requirements_parents = requirements_parents
         self.tags_map = tags_map
         self.documents_ref_depth_map = documents_ref_depth_map
+
+    def get_document_iterator(self, document):
+        return self.document_iterators[document]
 
     def get_parent_requirements(self, requirement: Requirement):
         assert isinstance(requirement, Requirement)

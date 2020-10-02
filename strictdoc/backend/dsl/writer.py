@@ -1,6 +1,7 @@
 from enum import Enum
 
 from strictdoc.backend.dsl.models import Document, Requirement, ReqComment, Section, CompositeRequirement
+from strictdoc.core.document_iterator import DocumentCachingIterator
 
 
 class TAG(Enum):
@@ -14,6 +15,7 @@ class SDWriter:
         pass
 
     def write(self, document):
+        document_iterator = DocumentCachingIterator(document)
         output = ""
 
         output += "[DOCUMENT]"
@@ -26,7 +28,7 @@ class SDWriter:
         closing_tags = []
         current_level = 0
 
-        for content_node in document.ng_section_iterator():
+        for content_node, _ in document_iterator.all_content():
             print(content_node)
             if content_node.ng_level < current_level:
                 closing_tag = closing_tags.pop()

@@ -1,0 +1,10 @@
+{%- if document.ng_sections %}
+  <div id="toc">
+    <h2>Table of Contents</h2>
+    {%- for section, title in document_iterator.table_of_contents() -%}
+      <div>
+        {{ (section.ng_level - 1) * 8 * '&nbsp;' }} <a href="#{{ string_to_anchor_id(section.title) }}">{{ title }} {{ section.title if section.title else '(NO TITLE)' }}</a>
+      </div>
+    {%- endfor %}
+  </div>
+{%- endif %}

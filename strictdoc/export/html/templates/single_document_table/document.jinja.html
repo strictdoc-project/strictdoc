@@ -15,18 +15,7 @@
   <br/>
 
   {%- set document_iterator = traceability_index.get_document_iterator(document) -%}
-  {%- if document.ng_sections %}
-    <div id="toc">
-      <h2>Table of Contents</h2>
-      {%- for section, title in document_iterator.table_of_contents() -%}
-        <div>
-
-          {{ (section.ng_level - 1) * 4 * '&nbsp;' }} <a href="#{{ string_to_anchor_id(section.title) }}">{{ section.title }}</a>
-
-        </div>
-      {%- endfor %}
-    </div>
-  {%- endif %}
+  {% include "_shared/table_of_contents.jinja.html" %}
 
   {%- if traceability_index.has_tags(document) -%}
     <div id="tags-outline">
@@ -39,7 +28,7 @@
   {%- endif %}
 
   <div id="sections-and-requirements">
-  {%- for section_or_requirement in document_iterator.all_content() %}
+  {%- for section_or_requirement, title in document_iterator.all_content() %}
     <div class="table-row">
       {%- if section_or_requirement.is_requirement %}
         {%- set requirement = section_or_requirement %}
@@ -47,7 +36,7 @@
       {%- elif section_or_requirement.is_section %}
         <div class="cell-section">
           {%- set section = section_or_requirement %}
-          <h2 id="{{ string_to_anchor_id(section.title) }}">{{ section.title }}</h2>
+          <h2 id="{{ string_to_anchor_id(section.title) }}">{{title }} {{ section.title }}</h2>
         </div>
       {%- endif %}
     </div>

@@ -66,7 +66,8 @@ class SingleDocumentHTMLExport:
         template = SingleDocumentHTMLExport.env.get_template('single_document/document.jinja.html')
 
         output += template.render(document=document,
-                                  traceability_index=traceability_index)
+                                  traceability_index=traceability_index,
+                                  string_to_anchor_id=string_to_anchor_id)
 
         return output
 

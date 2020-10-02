@@ -17,16 +17,7 @@
 
 {%- set document_iterator = traceability_index.get_document_iterator(document) -%}
 
-{%- if document.ng_sections %}
-  <h2>Table of Contents</h2>
-  {%- for section, title in document_iterator.table_of_contents() %}
-    <div>
-
-      {{ (section.ng_level - 1) * 4 * '&nbsp;' }} {{ section.title }}
-
-    </div>
-  {%- endfor %}
-{%- endif %}
+{% include "_shared/table_of_contents.jinja.html" %}
 
 {%- for section_or_requirement in document_iterator.all_content() %}
   {%- if section_or_requirement.is_requirement %}

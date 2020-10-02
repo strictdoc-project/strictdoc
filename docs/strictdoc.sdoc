@@ -146,10 +146,15 @@ STATEMENT: StrictDoc shall export deep traceability document.
 
 [SECTION]
 LEVEL: 1
-TITLE: WIP
+TITLE: In works
 
 [REQUIREMENT]
+TITLE: Traceability page: CSS fixes
 STATEMENT: Traceability page: numeric titles for parent and children requirements.
+
+[REQUIREMENT]
+TITLE: Table page: CSS fixes
+STATEMENT: Table page: make columns be always of the same size while respecting min-max widths.
 
 [/SECTION]
 

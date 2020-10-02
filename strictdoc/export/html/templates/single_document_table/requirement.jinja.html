@@ -1,12 +1,14 @@
 <div class="cell cell-uid">
-  {%- if requirement.uid %}
-    <a href="{{ traceability_index.get_link(requirement) }}">{{ requirement.uid }}</a>
-  {%- endif %}
+  {{ title }}
 </div>
 
 <div class="cell cell-title">
   {%- if requirement.title %}
     {{ requirement.title }}
+  {%- endif %}
+  <br/>
+  {%- if requirement.uid %}
+    <small><a href="{{ traceability_index.get_link(requirement) }}">{{ requirement.uid }}</a></small>
   {%- endif %}
 </div>
 

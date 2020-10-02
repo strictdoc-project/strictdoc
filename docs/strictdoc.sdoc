@@ -6,35 +6,42 @@ LEVEL: 1
 TITLE: High-level Requirements
 
 [REQUIREMENT]
-UID: SDOC-001
+UID: SDOC-HIGH-REQS-MANAGEMENT
+TITLE: Requirements management
 STATEMENT: StrictDoc shall enable requirements management.
 COMMENT: Under this requirement, StrictDoc shall enable work with requirements in a structured manner.
 
 [REQUIREMENT]
+TITLE: Requirements validation
 STATEMENT: StrictDoc shall allow validation of requirement documents.
 
 [REQUIREMENT]
+TITLE: Requirements text format
 STATEMENT: StrictDoc shall allow storage of requirements in a text format.
 
 [REQUIREMENT]
+TITLE: Linking requirements
 STATEMENT: StrictDoc shall support linking requirements to each other.
 
 [REQUIREMENT]
+TITLE: Linking with implementation artefacts
 STATEMENT: StrictDoc shall support linking requirements to files.
 
 [REQUIREMENT]
-STATEMENT: StrictDoc shall generate traceability matrix.
+UID: SDOC-HIGH-REQS-TRACEABILITY
+TITLE: Traceability
+STATEMENT: StrictDoc shall support traceability of requirements.
 
 [REQUIREMENT]
+TITLE: Visualization
 STATEMENT: StrictDoc shall provide means for visualization of requirement documents.
 
 [REQUIREMENT]
+TITLE: Documentation coverage
 STATEMENT: StrictDoc shall generate requirements coverage information.
 
 [REQUIREMENT]
-STATEMENT: StrictDoc shall provide a Graphical User Interface (GUI).
-
-[REQUIREMENT]
+TITLE: Open Source software
 STATEMENT: StrictDoc shall always be free and open source software.
 
 [/SECTION]
@@ -47,7 +54,8 @@ TITLE: Data Model
 UID: SDOC-DM-001
 REFS:
 - TYPE: Parent
-  VALUE: SDOC-001
+  VALUE: SDOC-HIGH-REQS-MANAGEMENT
+TITLE: Modeling capability
 STATEMENT: StrictDoc's Data Model shall accommodate for maximum possible standard requirement document formats.
 BODY: >>>
 Examples of standard requirements documents include but are not limited to:
@@ -59,21 +67,27 @@ LEVEL: 2
 TITLE: Requirement item
 
 [REQUIREMENT]
+TITLE: Statement
 STATEMENT: Requirement item shall have a statement.
 
 [REQUIREMENT]
+TITLE: Content body
 STATEMENT: Requirement item might have an content body.
 
 [REQUIREMENT]
+TITLE: UID identifier
 STATEMENT: Requirement item might have an UID identifier.
 
 [REQUIREMENT]
+TITLE: Title
 STATEMENT: Requirement item might have an title.
 
 [REQUIREMENT]
+TITLE: References
 STATEMENT: Requirement item might have one or more references.
 
 [REQUIREMENT]
+TITLE: Comments
 STATEMENT: Requirement item might have one or more comments.
 
 [/SECTION]
@@ -89,12 +103,15 @@ UID: SDOC-RDF-001
 REFS:
 - TYPE: Parent
   VALUE: SDOC-DM-001
+TITLE: Primary text implementation
 STATEMENT: StrictDoc RDF shall serve as a text-based implementation of the Strict Doc Data Model.
 
 [REQUIREMENT]
+TITLE: Grammar
 STATEMENT: StrictDoc RDF shall provide a fixed grammar structure.
 
 [REQUIREMENT]
+TITLE: Type safety
 STATEMENT: StrictDoc RDF shall enable type-safe parsing of requirement documents.
 
 [/SECTION]
@@ -104,16 +121,45 @@ LEVEL: 1
 TITLE: HTML Export
 
 [REQUIREMENT]
-STATEMENT: StrictDoc shall export single document pages.
+TITLE: Single document: Normal form
+STATEMENT: StrictDoc shall export single document pages in a normal document-like form.
 
 [REQUIREMENT]
-STATEMENT: StrictDoc shall export traceability matrix.
+TITLE: Single document: Tabular form
+STATEMENT: StrictDoc shall export single document pages in a tabular form.
+
+[REQUIREMENT]
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-HIGH-REQS-TRACEABILITY
+TITLE: Single document: 1-level traceability
+STATEMENT: StrictDoc shall export 1-level traceability document.
+
+[REQUIREMENT]
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-HIGH-REQS-TRACEABILITY
+TITLE: Single document: Deep traceability
+STATEMENT: StrictDoc shall export deep traceability document.
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 1
+TITLE: WIP
+
+[REQUIREMENT]
+STATEMENT: Traceability page: numeric titles for parent and children requirements.
 
 [/SECTION]
 
 [SECTION]
 LEVEL: 1
 TITLE: Roadmap
+
+[REQUIREMENT]
+TITLE: Graphical User Interface (GUI)
+STATEMENT: StrictDoc shall provide a Graphical User Interface (GUI).
 
 [REQUIREMENT]
 TITLE: Option: Title: Automatic numeration

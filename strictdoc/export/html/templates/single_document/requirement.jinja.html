@@ -1,11 +1,15 @@
 <div>
-  {%- if requirement.uid %}
-    <b>{{ requirement.uid }}</b>
-  {%- endif %}
+  {%- if requirement.title -%}
+    <h{{ requirement.ng_level }}>{{ title }} {{ requirement.title }}</h{{ requirement.ng_level }}>
+  {%- endif -%}
 
-  {%- if requirement.title %}
+  {%- if requirement.uid %}
     <div>
-      <b>{{ requirement.title }}</b>
+      <small>
+        <i>
+          UID: {{ requirement.uid }}
+        </i>
+      </small>
     </div>
   {%- endif %}
 

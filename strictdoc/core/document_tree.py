@@ -61,7 +61,6 @@ class FileTree(FileOrFolderEntry):
 
         self.root_path = root_path
         for file in files:
-            print("wtf: {}".format(file))
             full_file_path = os.path.join(self.root_path, file)
             self.files.append(File(self.level + 1, full_file_path))
 

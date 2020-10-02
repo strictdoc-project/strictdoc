@@ -1,12 +1,14 @@
 <div>
-  {%- if requirement.uid %}
-    <a href="{{ traceability_index.get_link(requirement) }}">{{ requirement.uid }}</a>
-  {%- endif %}
-
   {%- if requirement.title %}
     <h{{ requirement.ng_level }}>
       {{title }} {{ requirement.title }}
     </h{{ requirement.ng_level }}>
+  {%- endif %}
+
+  {%- if requirement.uid %}
+    <small>
+      <a href="{{ traceability_index.get_link(requirement) }}">{{ requirement.uid }}</a>
+    </small>
   {%- endif %}
 
   {%- if requirement.status %}

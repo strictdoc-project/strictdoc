@@ -6,10 +6,11 @@
   {%- if requirement.title %}
     {{ requirement.title }}
   {%- endif %}
-  <br/>
+  <div>
   {%- if requirement.uid %}
     <small><a href="{{ traceability_index.get_link(requirement) }}">{{ requirement.uid }}</a></small>
   {%- endif %}
+  </div>
 </div>
 
 <div class="cell cell-text">

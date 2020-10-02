@@ -111,4 +111,20 @@ STATEMENT: StrictDoc shall export traceability matrix.
 
 [/SECTION]
 
+[SECTION]
+LEVEL: 1
+TITLE: Roadmap
 
+[REQUIREMENT]
+TITLE: Option: Title: Automatic numeration
+STATEMENT: StrictDoc shall support config option `numeric_titles`.
+
+[REQUIREMENT]
+TITLE: Option: Title: Display requirement titles
+STATEMENT: StrictDoc shall support config option `display_requirement_titles`.
+
+[REQUIREMENT]
+TITLE: Option: Title: Display requirement UID
+STATEMENT: StrictDoc shall support config option `display_requirement_uids`.
+
+[/SECTION]

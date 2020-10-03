@@ -24,6 +24,10 @@ TITLE: Graphical User Interface (GUI)
 STATEMENT: StrictDoc shall provide a Graphical User Interface (GUI).
 
 [REQUIREMENT]
+TITLE: Validation: Section Levels
+STATEMENT: Section levels must be nested.
+
+[REQUIREMENT]
 TITLE: Option: Title: Automatic numeration
 STATEMENT: StrictDoc shall support config option `numeric_titles`.
 

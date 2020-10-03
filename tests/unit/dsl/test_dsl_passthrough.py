@@ -3,6 +3,49 @@ from strictdoc.backend.dsl.reader import SDReader
 from strictdoc.backend.dsl.writer import SDWriter
 
 
+def test_010_multiple_sections():
+    input = """
+[DOCUMENT]
+NAME: Test Doc
+
+[SECTION]
+LEVEL: 1
+TITLE: Test Section
+
+[REQUIREMENT]
+STATEMENT: >>>
+This is a statement 1
+This is a statement 2
+This is a statement 3
+<<<
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 1
+TITLE: Test Section
+
+[REQUIREMENT]
+STATEMENT: >>>
+This is a statement 1
+This is a statement 2
+This is a statement 3
+<<<
+
+[/SECTION]
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+    print(output)
+
+    assert input == output
+
 def test_020_free_text():
     input = """
 [DOCUMENT]

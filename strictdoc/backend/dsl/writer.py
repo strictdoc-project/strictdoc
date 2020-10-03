@@ -26,34 +26,31 @@ class SDWriter:
         output += "\n"
 
         closing_tags = []
-        current_level = 0
-
         for content_node in document_iterator.all_content():
-            output += "\n"
-
             if isinstance(content_node, FreeText):
+                output += "\n"
                 output += self._print_free_text(content_node)
                 continue
 
-            if content_node.ng_level < current_level:
-                closing_tag = closing_tags.pop()
+            while len(closing_tags) > 0 and content_node.ng_level <= closing_tags[-1][1]:
+                closing_tag, level = closing_tags.pop()
                 output += self._print_closing_tag(closing_tag)
-            current_level = content_node.ng_level
+
+            output += "\n"
 
             if isinstance(content_node, Section):
                 output += self._print_section(content_node)
-                closing_tags.append(TAG.SECTION)
+                closing_tags.append((TAG.SECTION, content_node.ng_level))
             elif isinstance(content_node, Requirement):
                 if isinstance(content_node, CompositeRequirement):
-                    output += "[COMPOSITE-REQUIREMENT]"
-                    closing_tags.append(TAG.COMPOSITE_REQUIREMENT)
+                    output += "[COMPOSITE-REQUIREMENT]\n"
+                    closing_tags.append((TAG.COMPOSITE_REQUIREMENT, content_node.ng_level))
                 else:
-                    output += "[REQUIREMENT]"
+                    output += "[REQUIREMENT]\n"
 
-                output += "\n"
                 output += self._print_requirement_fields(content_node)
 
-        for closing_tag in reversed(closing_tags):
+        for closing_tag, level in reversed(closing_tags):
             output += self._print_closing_tag(closing_tag)
 
         return output

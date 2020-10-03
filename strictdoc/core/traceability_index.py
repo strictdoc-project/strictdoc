@@ -108,9 +108,6 @@ class TraceabilityIndex:
 
             documents_ref_depth_map[document] = max(max_parent_depth, max_child_depth)
 
-        print("child depth: {}".format(max_child_depth))
-        print("child depth: {}".format(requirements_child_depth_map))
-
         traceability_index = TraceabilityIndex(
             document_iterators,
             requirements_map,

@@ -75,7 +75,7 @@ class FileTree(FileOrFolderEntry):
 
 class DocumentTree:
     def __init__(self, file_tree, document_list, document_map):
-        assert isinstance(file_tree, FileTree)
+        assert isinstance(file_tree, list)
         assert isinstance(document_list, list)
         assert isinstance(document_map, dict)
         self.file_tree = file_tree

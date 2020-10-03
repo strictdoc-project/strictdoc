@@ -31,7 +31,7 @@ class DocumentTreeHTMLExport:
 
     @staticmethod
     def export(document_tree):
-        task_list = collections.deque([document_tree.file_tree])
+        task_list = collections.deque(document_tree.file_tree)
         artefact_list = []
 
         while task_list:

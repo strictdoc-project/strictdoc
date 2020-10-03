@@ -3,6 +3,28 @@ from strictdoc.backend.dsl.reader import SDReader
 from strictdoc.backend.dsl.writer import SDWriter
 
 
+def test_020_free_text():
+    input = """
+[DOCUMENT]
+NAME: Test Doc
+
+[FREETEXT]
+Hello world
+[/FREETEXT]
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+    print(output)
+
+    assert input == output
+
+
 def test_030_multiline_statement():
     input = """
 [DOCUMENT]

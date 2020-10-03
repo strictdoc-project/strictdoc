@@ -22,6 +22,8 @@ def test_unit(c):
 
 @task
 def test_integration(c):
+    clean(c)
+
     cwd = os.getcwd()
 
     strictdoc_exec = 'python \\"{cwd}/strictdoc/cli/main.py\\"'.format(cwd=cwd)
@@ -29,7 +31,8 @@ def test_integration(c):
     command = formatted_command("""
         lit
         --param STRICTDOC_EXEC="{strictdoc_exec}"
-        -v
+        -vv
+        --show-all
         {cwd}/tests/integration
     """).format(strictdoc_exec=strictdoc_exec, cwd=cwd)
 

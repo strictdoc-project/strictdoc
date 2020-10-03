@@ -7,7 +7,8 @@ from pathlib import Path
 ROOT_PATH = os.path.join(os.path.dirname(__file__), "..", "..")
 sys.path.append(ROOT_PATH)
 
-from strictdoc.backend.rst.rst_reader import RSTReader
+from strictdoc.backend.dsl.reader import SDReader
+from strictdoc.backend.dsl.writer import SDWriter
 from strictdoc.export.html.export \
     import (DocumentTreeHTMLExport,
             SingleDocumentHTMLExport,
@@ -52,20 +53,21 @@ args = parser.parse_args()
 print(args.command)
 
 if args.command == 'passthrough':
-    path_to_doc = args.input_file
+    paths_to_docs = args.input_file
+    if len(paths_to_docs) != 1:
+        sys.stdout.flush()
+        err = "passthrough command's input must be a single file".format(path_to_doc)
+        print(err)
+        exit(1)
+
+    path_to_doc = paths_to_docs[0]
     if not os.path.isfile(path_to_doc):
         sys.stdout.flush()
         err = "Could not open doc file '{}': No such file or directory".format(path_to_doc)
         print(err)
         exit(1)
 
-    with open(path_to_doc, 'r') as file:
-        doc_content = file.read()
-
-    document = RSTReader.read_rst(doc_content)
-
-    document.dump_pretty()
-    rst_output = document.dump_rst()
+    document = SDReader().read_from_file(path_to_doc)
 
     output_file = args.output_file
     if output_file:
@@ -74,9 +76,10 @@ if args.command == 'passthrough':
             print("not a directory: {}".format(output_file))
             exit(1)
 
-        print("writing to file: {}".format(output_file))
+        writer = SDWriter()
+        output = writer.write(document)
         with open(output_file, 'w') as file:
-            file.write(rst_output)
+            file.write(output)
 
         exit(0)
 

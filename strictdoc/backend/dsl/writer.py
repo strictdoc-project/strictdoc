@@ -149,7 +149,8 @@ class SDWriter:
         output = ''
         output += '[FREETEXT]'
         output += '\n'
-        output += free_text.text
+        output += free_text.text.rstrip()
+        output += '\n'
         output += '[/FREETEXT]'
         output += '\n'
         return output

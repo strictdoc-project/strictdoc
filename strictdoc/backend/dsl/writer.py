@@ -1,6 +1,6 @@
 from enum import Enum
 
-from strictdoc.backend.dsl.models import Document, Requirement, ReqComment, Section, CompositeRequirement
+from strictdoc.backend.dsl.models import Document, Requirement, ReqComment, Section, CompositeRequirement, FreeText
 from strictdoc.core.document_iterator import DocumentCachingIterator
 
 
@@ -28,14 +28,18 @@ class SDWriter:
         closing_tags = []
         current_level = 0
 
-        for content_node, _ in document_iterator.all_content():
-            print(content_node)
+        for content_node in document_iterator.all_content():
+            output += "\n"
+
+            if isinstance(content_node, FreeText):
+                output += self._print_free_text(content_node)
+                continue
+
             if content_node.ng_level < current_level:
                 closing_tag = closing_tags.pop()
                 output += self._print_closing_tag(closing_tag)
             current_level = content_node.ng_level
 
-            output += "\n"
             if isinstance(content_node, Section):
                 output += self._print_section(content_node)
                 closing_tags.append(TAG.SECTION)
@@ -141,4 +145,14 @@ class SDWriter:
             output += '\n'
             output += '[/COMPOSITE-REQUIREMENT]'
             output += '\n'
+        return output
+
+    def _print_free_text(self, free_text):
+        assert isinstance(free_text, FreeText)
+        output = ''
+        output += '[FREETEXT]'
+        output += '\n'
+        output += free_text.text
+        output += '[/FREETEXT]'
+        output += '\n'
         return output

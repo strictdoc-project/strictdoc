@@ -101,6 +101,6 @@ ReferenceType[noskipws]:
 ;
 
 FreeText[noskipws]:
-  text = /(?ms)\[FREETEXT\]\n(.*?)\[\/FREETEXT\]/ '\n'
+  text = /(?ms)\[FREETEXT\]\n(.*?)\n\[\/FREETEXT\]/ '\n'
 ;
 """).substitute(REQUIREMENT_FIELDS=REQUIREMENT_FIELDS)

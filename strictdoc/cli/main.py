@@ -1,11 +1,10 @@
 import argparse
 import os
 import sys
-
-from pathlib import Path
-
 ROOT_PATH = os.path.join(os.path.dirname(__file__), "..", "..")
 sys.path.append(ROOT_PATH)
+
+from pathlib import Path
 
 from strictdoc.backend.dsl.reader import SDReader
 from strictdoc.backend.dsl.writer import SDWriter
@@ -14,6 +13,7 @@ from strictdoc.export.html.export \
             SingleDocumentHTMLExport,
             SingleDocumentTraceabilityHTMLExport,
             SingleDocumentTableHTMLExport)
+from strictdoc.export.rst.export import SingleDocumentRSTExport
 from strictdoc.core.document_finder import DocumentFinder
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.helpers.file_system import sync_dir
@@ -107,6 +107,18 @@ if args.command == 'export':
     print("writing to file: {}".format(output_file))
     with open(output_file, 'w') as file:
         file.write(output)
+
+    # Single Document pages (RST)
+    Path("output/rst").mkdir(parents=True, exist_ok=True)
+    for document in document_tree.document_list:
+        document_content = SingleDocumentRSTExport.export(document_tree,
+                                                          document,
+                                                          traceability_index)
+
+        document_out_file = "output/rst/{}.rst".format(document.name)
+        print("writing to file: {}".format(document_out_file))
+        with open(document_out_file, 'w') as file:
+            file.write(document_content)
 
     # Single Document pages
     for document in document_tree.document_list:

@@ -28,7 +28,7 @@
   {%- endif %}
 
   <div id="sections-and-requirements">
-  {%- for section_or_requirement, title in document_iterator.all_content() %}
+  {%- for section_or_requirement in document_iterator.all_content() %}
     <div class="table-row">
     {%- if section_or_requirement.is_requirement %}
       <div class="cell cell-parent">
@@ -58,7 +58,7 @@
       </div>
       <div class="cell-section">
       {%- set section = section_or_requirement %}
-      <h{{ section.ng_level }} id="{{ string_to_anchor_id(section.title) }}">{{title }} {{ section.title }}</h{{ section.ng_level }}>
+      <h{{ section.ng_level }} id="{{ string_to_anchor_id(section.title) }}">{{ section.export_title }} {{ section.title }}</h{{ section.ng_level }}>
       </div>
       <div class="cell cell-children">
       </div>

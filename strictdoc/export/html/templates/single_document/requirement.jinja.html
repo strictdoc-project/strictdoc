@@ -1,6 +1,8 @@
 <div>
   {%- if requirement.title -%}
-    <h{{ requirement.ng_level }}>{{ title }} {{ requirement.title }}</h{{ requirement.ng_level }}>
+    <h{{ requirement.ng_level }}>
+      {{ requirement.export_title }} {{ requirement.title }}
+    </h{{ requirement.ng_level }}>
   {%- endif -%}
 
   {%- if requirement.uid %}

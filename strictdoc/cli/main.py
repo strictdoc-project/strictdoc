@@ -40,7 +40,7 @@ parser.add_argument('command', type=str, help='TODO', choices=[
     'passthrough', 'export'
 ])
 
-parser.add_argument('input_file', type=str, help='TODO')
+parser.add_argument('input_file', type=str, nargs='+', help='TODO')
 parser.add_argument('--output-file', type=str, help='TODO')
 # parser.add_argument('--strict-whitespace', action='store_true', help='TODO')
 # parser.add_argument('--match-full-lines', action='store_true', help='TODO')
@@ -82,6 +82,8 @@ if args.command == 'passthrough':
 
 if args.command == 'export':
     path_to_single_file_or_doc_root = args.input_file
+    if isinstance(path_to_single_file_or_doc_root, str):
+        path_to_single_file_or_doc_root = [path_to_single_file_or_doc_root]
 
     document_tree = DocumentFinder.find_sdoc_content(path_to_single_file_or_doc_root)
 

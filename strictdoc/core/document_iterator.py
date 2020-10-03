@@ -19,12 +19,12 @@ class DocumentCachingIterator:
             yield from self.toc_nodes_cache
             return
 
-        for node, title in self.all_content():
+        for node in self.all_content():
             if isinstance(node, FreeText):
                 continue
 
-            self.toc_nodes_cache.append((node, title))
-            yield (node, title)
+            self.toc_nodes_cache.append(node)
+            yield node
 
     def all_content(self):
         if len(self.nodes_cache) > 0:
@@ -36,6 +36,7 @@ class DocumentCachingIterator:
 
         task_list = collections.deque(document.section_contents)
 
+        title_string = None
         while True:
             if not task_list:
                 break
@@ -46,11 +47,11 @@ class DocumentCachingIterator:
                 isinstance(current, CompositeRequirement) or
                 isinstance(current, Requirement)):
                 level_counter.adjust(current.ng_level)
+                title_string = level_counter.get_string()
+                current.export_title = title_string
 
-            title_string = level_counter.get_string()
-
-            self.nodes_cache.append((current, title_string))
-            yield (current, title_string)
+            self.nodes_cache.append(current)
+            yield current
 
             if isinstance(current, Section):
                 task_list.extendleft(reversed(current.section_contents))

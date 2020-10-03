@@ -17,7 +17,7 @@ class TraceabilityIndex:
             if document.name not in tags_map:
                 tags_map[document.name] = {}
 
-            for section_or_requirement, _ in document_iterator.all_content():
+            for section_or_requirement in document_iterator.all_content():
                 if not section_or_requirement.is_requirement:
                     continue
 
@@ -62,7 +62,7 @@ class TraceabilityIndex:
         for document in document_tree.document_list:
             document_iterator = document_iterators[document]
             max_parent_depth, max_child_depth = 0, 0
-            for section_or_requirement, _ in document_iterator.all_content():
+            for section_or_requirement in document_iterator.all_content():
                 if not section_or_requirement.is_requirement:
                     continue
 

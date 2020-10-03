@@ -47,6 +47,7 @@ class Section(object):
 
         self.ng_level = self.level
         self.ng_sections = []
+        self.export_title = None
 
     def __str__(self):
         return "Section: <level: {}, title: {}, section_contents: {}>".format(
@@ -92,7 +93,10 @@ class Requirement(object):
         self.comments = comments
         self.requirements = requirements
 
+        # TODO: Is it worth to move this to dedicated Presenter* classes to
+        # keep this class textx-only?
         self.ng_level = None
+        self.export_title = None
 
     def __str__(self):
         return "{}: <ng_level: {}, uid: {}, title_or_none: {}, statement: {}, comments: {}>".format(
@@ -123,6 +127,7 @@ class CompositeRequirement(Requirement):
     def __init__(self, parent, **fields):
         super(CompositeRequirement, self).__init__(parent, **fields)
         self.ng_sections = []
+        self.export_title = None
 
 
 # class Body(object):

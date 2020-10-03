@@ -1,0 +1,38 @@
+[DOCUMENT]
+NAME: StrictDoc Roadmap
+
+[SECTION]
+LEVEL: 1
+TITLE: In works
+
+[REQUIREMENT]
+TITLE: Traceability page: CSS fixes
+STATEMENT: Traceability page: numeric titles for parent and children requirements.
+
+[REQUIREMENT]
+TITLE: Table page: CSS fixes
+STATEMENT: Table page: make columns be always of the same size while respecting min-max widths.
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 1
+TITLE: Roadmap
+
+[REQUIREMENT]
+TITLE: Graphical User Interface (GUI)
+STATEMENT: StrictDoc shall provide a Graphical User Interface (GUI).
+
+[REQUIREMENT]
+TITLE: Option: Title: Automatic numeration
+STATEMENT: StrictDoc shall support config option `numeric_titles`.
+
+[REQUIREMENT]
+TITLE: Option: Title: Display requirement titles
+STATEMENT: StrictDoc shall support config option `display_requirement_titles`.
+
+[REQUIREMENT]
+TITLE: Option: Title: Display requirement UID
+STATEMENT: StrictDoc shall support config option `display_requirement_uids`.
+
+[/SECTION]

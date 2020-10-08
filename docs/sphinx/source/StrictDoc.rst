@@ -13,6 +13,13 @@ StrictDoc shall enable requirements management.
 
 **Comment:** Under this requirement, StrictDoc shall enable work with requirements in a structured manner.
 
+Data model
+----------
+
+``[SDOC-HIGH-DATA-MODEL]``
+
+StrictDoc shall be based on a well-defined data model.
+
 Requirements validation
 -----------------------
 

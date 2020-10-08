@@ -12,6 +12,11 @@ STATEMENT: StrictDoc shall enable requirements management.
 COMMENT: Under this requirement, StrictDoc shall enable work with requirements in a structured manner.
 
 [REQUIREMENT]
+UID: SDOC-HIGH-DATA-MODEL
+TITLE: Data model
+STATEMENT: StrictDoc shall be based on a well-defined data model.
+
+[REQUIREMENT]
 TITLE: Requirements validation
 STATEMENT: StrictDoc shall allow validation of requirement documents.
 

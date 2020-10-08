@@ -6,6 +6,10 @@ LEVEL: 1
 TITLE: In works
 
 [REQUIREMENT]
+TITLE: Generated file names
+STATEMENT: Document name must be transformed into a valid file name.
+
+[REQUIREMENT]
 TITLE: Traceability page: CSS fixes
 STATEMENT: Traceability page: numeric titles for parent and children requirements.
 

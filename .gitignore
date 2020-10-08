@@ -1,5 +1,5 @@
 **/Output/**
 *.pyc
 *.script
-docs/generated
+**/build/
 

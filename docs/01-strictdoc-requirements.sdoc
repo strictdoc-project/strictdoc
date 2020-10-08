@@ -143,3 +143,13 @@ TITLE: Single document: Deep traceability
 STATEMENT: StrictDoc shall export deep traceability document.
 
 [/SECTION]
+
+[SECTION]
+LEVEL: 1
+TITLE: PDF Export
+
+[REQUIREMENT]
+TITLE: Sphinx documentation generator
+STATEMENT: StrictDoc shall support exporting documents to Sphinx/RST format.
+
+[/SECTION]

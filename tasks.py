@@ -9,6 +9,24 @@ def formatted_command(string):
 
 
 @task
+def sphinx(c):
+    c.run(formatted_command("""
+        python3 strictdoc/cli/main.py export docs
+    """))
+
+    c.run(formatted_command("""
+        cp -v output/rst/StrictDoc.rst docs/sphinx/source;
+        cp -v 'output/rst/StrictDoc Roadmap.rst' docs/sphinx/source
+    """))
+
+    c.run(formatted_command("""
+        cd docs/sphinx &&
+            make clean latexpdf &&
+            open build/latex/strictdoc.pdf
+    """))
+
+
+@task
 def test_unit(c):
     cwd = os.getcwd()
 
@@ -16,7 +34,6 @@ def test_unit(c):
         pytest --capture=no
     """)
 
-    print(command)
     c.run("{}".format(command))
 
 

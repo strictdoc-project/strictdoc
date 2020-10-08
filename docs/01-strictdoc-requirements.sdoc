@@ -12,6 +12,11 @@ STATEMENT: StrictDoc shall enable requirements management.
 COMMENT: Under this requirement, StrictDoc shall enable work with requirements in a structured manner.
 
 [REQUIREMENT]
+UID: SDOC-HIGH-DATA-MODEL
+TITLE: Data model
+STATEMENT: StrictDoc shall be based on a well-defined data model.
+
+[REQUIREMENT]
 TITLE: Requirements validation
 STATEMENT: StrictDoc shall allow validation of requirement documents.
 
@@ -141,5 +146,15 @@ REFS:
   VALUE: SDOC-HIGH-REQS-TRACEABILITY
 TITLE: Single document: Deep traceability
 STATEMENT: StrictDoc shall export deep traceability document.
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 1
+TITLE: PDF Export
+
+[REQUIREMENT]
+TITLE: Sphinx documentation generator
+STATEMENT: StrictDoc shall support exporting documents to Sphinx/RST format.
 
 [/SECTION]

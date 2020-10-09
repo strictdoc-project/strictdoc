@@ -62,7 +62,7 @@ latex_elements = {
     'extraclassoptions': 'openany,oneside',
     # The paper size ('letterpaper' or 'a4paper').
     'papersize': 'a4paper',
-    'pointsize': '10pt',
+    'pointsize': '14pt', # this seems to have no effect
 
     'releasename': "",
 
@@ -78,8 +78,18 @@ latex_elements = {
 
         \pagecolor [RGB]{255, 255, 255}
 
+        \usepackage{hyperref}
+        \hypersetup{
+            colorlinks=true
+            linkcolor=red,          % color of internal links (change box color with linkbordercolor)
+            citecolor=green,        % color of links to bibliography
+            filecolor=magenta,      % color of file links
+            urlcolor=cyan % This has an effect
+        }
+
         \usepackage{fontspec}
         % https://tex.stackexchange.com/a/449194/61966 
+        % https://tex.stackexchange.com/a/141697/61966
         \setmainfont[
             Ligatures=TeX,Scale=1.2
         ]{Helvetica Neue}
@@ -140,8 +150,8 @@ latex_elements = {
         'hmargin={0.7in,0.7in}, vmargin={1in,1in}, \
         verbatimwithframe=true, \
         TitleColor={rgb}{0,0,0}, \
-        InnerLinkColor={rgb}{0,0,1}, \
-        OuterLinkColor={rgb}{0,0,1}',
+        InnerLinkColor={rgb}{0.1,0.1,0.1}, \
+        OuterLinkColor={rgb}{1,0,0}',
 
     'tableofcontents': ' ',
 }

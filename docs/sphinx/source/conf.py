@@ -62,9 +62,9 @@ latex_elements = {
     'extraclassoptions': 'openany,oneside',
     # The paper size ('letterpaper' or 'a4paper').
     'papersize': 'a4paper',
-    'pointsize': '10pt',
+    'pointsize': '14pt', # this seems to have no effect
 
-    'releasename': "RELLLL",
+    'releasename': "",
 
     # Additional stuff for the LaTeX preamble.
     #
@@ -77,6 +77,25 @@ latex_elements = {
             \monthname[\THEMONTH], \THEYEAR}
 
         \pagecolor [RGB]{255, 255, 255}
+
+        \usepackage{hyperref}
+        \hypersetup{
+            colorlinks=true
+            linkcolor=red,          % color of internal links (change box color with linkbordercolor)
+            citecolor=green,        % color of links to bibliography
+            filecolor=magenta,      % color of file links
+            urlcolor=cyan % This has an effect
+        }
+
+        \usepackage{fontspec}
+        % https://tex.stackexchange.com/a/449194/61966 
+        % https://tex.stackexchange.com/a/141697/61966
+        \setmainfont[
+            Ligatures=TeX,Scale=1.2
+        ]{Helvetica Neue}
+        \linespread{1.5}
+
+        \newcommand{\tablecell}[1] {\Large{\texttt{#1}}}
     ''',
 
     'maketitle': r'''
@@ -84,31 +103,35 @@ latex_elements = {
 
         \begin{titlepage}   
             %% \centering
-            %% \centering
             \begin{flushright}
 
                 \vspace*{40mm} %%% * is used to give space from top
-                \textbf{\Huge {StrictDoc}}
-        
-                \vspace{0mm}
+
+                \Huge{\textbf{StrictDoc}}
+                
+                \Large{\textbf{Release: 0.0.1 (\MonthYearFormat\today)}}
+
+                \vspace{35mm}
+
+                \begin{tabular}{|l|l|}
+                \hline
+                \tablecell {Requirements and Specifications} & \tablecell {Documentation Control} \\ \hline
+                \tablecell {Traceability and Coverage} & \tablecell {Open source software} \\ \hline
+                \end{tabular}
+
                 %% \begin{figure}[!h]
                 %%     \centering
                 %%     \includegraphics[scale=0.5]{logo.jpg}
                 %% \end{figure}
-        
-                \vspace{3mm}
-        
-                \Large {Technical Documentation Control Software}
-        
-                \vspace{20mm}
-                
-                \textbf{ Release: 0.0.1 (\MonthYearFormat\today) }
-        
-                %% \vfill adds at the bottom
-                %% \vfill
-                %% \small {\href{https://github.com/stanislaw/strictdoc}{StrictDoc@GitHub}}
- 
             \end{flushright}
+
+            %% \vfill adds at the bottom
+            \vfill 
+
+            \centering
+
+            \Large \textbf{© 2020 \href{https://github.com/stanislaw/strictdoc}{StrictDoc Project}}
+
         \end{titlepage}
 
         \clearpage
@@ -127,9 +150,8 @@ latex_elements = {
         'hmargin={0.7in,0.7in}, vmargin={1in,1in}, \
         verbatimwithframe=true, \
         TitleColor={rgb}{0,0,0}, \
-        HeaderFamily=\\sffamily\\mdseries, \
-        InnerLinkColor={rgb}{0,0,1}, \
-        OuterLinkColor={rgb}{0,0,1}',
+        InnerLinkColor={rgb}{0.1,0.1,0.1}, \
+        OuterLinkColor={rgb}{1,0,0}',
 
     'tableofcontents': ' ',
 }

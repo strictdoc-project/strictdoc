@@ -64,7 +64,7 @@ latex_elements = {
     'papersize': 'a4paper',
     'pointsize': '10pt',
 
-    'releasename': "RELLLL",
+    'releasename': "",
 
     # Additional stuff for the LaTeX preamble.
     #
@@ -77,6 +77,13 @@ latex_elements = {
             \monthname[\THEMONTH], \THEYEAR}
 
         \pagecolor [RGB]{255, 255, 255}
+
+        \usepackage{fontspec}
+        % https://tex.stackexchange.com/a/449194/61966 
+        \setmainfont[
+            Ligatures=TeX,Scale=1.2
+        ]{Helvetica Neue}
+        \linespread{1.5}
 
         \newcommand{\tablecell}[1] {\Large{\texttt{#1}}}
     ''',
@@ -133,7 +140,6 @@ latex_elements = {
         'hmargin={0.7in,0.7in}, vmargin={1in,1in}, \
         verbatimwithframe=true, \
         TitleColor={rgb}{0,0,0}, \
-        HeaderFamily=\\sffamily\\mdseries, \
         InnerLinkColor={rgb}{0,0,1}, \
         OuterLinkColor={rgb}{0,0,1}',
 

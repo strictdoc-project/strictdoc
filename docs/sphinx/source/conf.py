@@ -111,7 +111,7 @@ latex_elements = {
                 
                 \Large{\textbf{Release: 0.0.1 (\MonthYearFormat\today)}}
 
-                \vspace{10mm}
+                \vspace{35mm}
 
                 \begin{tabular}{|l|l|}
                 \hline

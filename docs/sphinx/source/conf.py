@@ -77,6 +77,8 @@ latex_elements = {
             \monthname[\THEMONTH], \THEYEAR}
 
         \pagecolor [RGB]{255, 255, 255}
+
+        \newcommand{\tablecell}[1] {\Large{\texttt{#1}}}
     ''',
 
     'maketitle': r'''
@@ -84,31 +86,35 @@ latex_elements = {
 
         \begin{titlepage}   
             %% \centering
-            %% \centering
             \begin{flushright}
 
                 \vspace*{40mm} %%% * is used to give space from top
-                \textbf{\Huge {StrictDoc}}
-        
-                \vspace{0mm}
+
+                \Huge{\textbf{StrictDoc}}
+                
+                \Large{\textbf{Release: 0.0.1 (\MonthYearFormat\today)}}
+
+                \vspace{10mm}
+
+                \begin{tabular}{|l|l|}
+                \hline
+                \tablecell {Requirements and Specifications} & \tablecell {Documentation Control} \\ \hline
+                \tablecell {Traceability and Coverage} & \tablecell {Open source software} \\ \hline
+                \end{tabular}
+
                 %% \begin{figure}[!h]
                 %%     \centering
                 %%     \includegraphics[scale=0.5]{logo.jpg}
                 %% \end{figure}
-        
-                \vspace{3mm}
-        
-                \Large {Technical Documentation Control Software}
-        
-                \vspace{20mm}
-                
-                \textbf{ Release: 0.0.1 (\MonthYearFormat\today) }
-        
-                %% \vfill adds at the bottom
-                %% \vfill
-                %% \small {\href{https://github.com/stanislaw/strictdoc}{StrictDoc@GitHub}}
- 
             \end{flushright}
+
+            %% \vfill adds at the bottom
+            \vfill 
+
+            \centering
+
+            \Large \textbf{© 2020 \href{https://github.com/stanislaw/strictdoc}{StrictDoc Project}}
+
         \end{titlepage}
 
         \clearpage

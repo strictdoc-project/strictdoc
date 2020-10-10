@@ -4,6 +4,7 @@ import os
 from jinja2 import Environment, PackageLoader
 
 from strictdoc.core.document_tree import FileTree
+from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.helpers.hyperlinks import string_to_anchor_id
 
 
@@ -31,20 +32,11 @@ class DocumentTreeHTMLExport:
 
     @staticmethod
     def export(document_tree):
-        task_list = collections.deque(document_tree.file_tree)
-        artefact_list = []
-
-        while task_list:
-            file_tree_or_file = task_list.popleft()
-            artefact_list.append(file_tree_or_file)
-            if isinstance(file_tree_or_file, FileTree):
-                task_list.extendleft(reversed(file_tree_or_file.files))
-                task_list.extendleft(reversed(file_tree_or_file.subfolder_trees))
-
+        document_tree_iterator = DocumentTreeIterator(document_tree)
 
         template = SingleDocumentHTMLExport.env.get_template('document_tree/document_tree.jinja.html')
         output = template.render(document_tree=document_tree,
-                                 artefact_list=artefact_list,
+                                 artefact_list=document_tree_iterator.iterator(),
                                  get_traceability_link=get_traceability_link,
                                  get_traceability_deep_link=get_traceability_deep_link)
 

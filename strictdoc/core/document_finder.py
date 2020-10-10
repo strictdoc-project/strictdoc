@@ -55,17 +55,32 @@ class DocumentFinder:
         root_trees = []
 
         for path_to_doc_root in paths_to_files_or_docs:
-            root_tree = FileTree()
-            file_tree_list = [root_tree]
-            for root, dirs, files in os.walk(path_to_doc_root):
-                current_tree = file_tree_list.pop(0)
+            root_level = path_to_doc_root.count(os.sep)
+
+            tree_map = {path_to_doc_root: FileTree(path_to_doc_root, 0)}
+
+            for current_root_path, dirs, files in os.walk(path_to_doc_root, topdown=False):
+                current_root_path_level = current_root_path.count(os.sep) - root_level
+
+                if current_root_path not in tree_map:
+                    tree_map[current_root_path] = FileTree(current_root_path, current_root_path_level)
+                current_tree = tree_map[current_root_path]
+
+                current_tree.sort_subfolder_trees()
 
                 files = [f for f in files if f.endswith('.sdoc')]
-                files.sort(key=alphanumeric_sort)
+                if len(files) > 0:
+                    files.sort(key=alphanumeric_sort)
+                    current_tree.set(files)
 
-                dirs.sort(key=alphanumeric_sort)
-                current_tree.set(root, files, dirs)
-                file_tree_list.extend(current_tree.subfolder_trees)
-            root_trees.append(root_tree)
+                    if current_root_path == path_to_doc_root:
+                        continue
 
+                    current_parent_path = os.path.dirname(current_root_path)
+                    if current_parent_path not in tree_map:
+                        tree_map[current_parent_path] = FileTree(current_parent_path, current_root_path_level - 1)
+                    current_parent_tree = tree_map[current_parent_path]
+                    current_parent_tree.add_subfolder_tree(current_tree)
+
+            root_trees.append(tree_map[path_to_doc_root])
         return root_trees

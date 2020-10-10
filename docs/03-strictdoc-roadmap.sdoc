@@ -5,23 +5,58 @@ NAME: StrictDoc Roadmap
 LEVEL: 1
 TITLE: In works
 
-[REQUIREMENT]
-TITLE: Generated file names
-STATEMENT: Document name must be transformed into a valid file name.
+[SECTION]
+LEVEL: 2
+TITLE: CSS Work
 
 [REQUIREMENT]
-TITLE: Traceability page: CSS fixes
-STATEMENT: Traceability page: numeric titles for parent and children requirements.
+TITLE: Document page CSS: Proper markup
+STATEMENT: Document page: make it look like a document.
 
 [REQUIREMENT]
-TITLE: Table page: CSS fixes
+TITLE: Table page CSS: Proper table
 STATEMENT: Table page: make columns be always of the same size while respecting min-max widths.
+
+[REQUIREMENT]
+TITLE: Traceability page CSS: Proper middle column document
+STATEMENT: Traceability page CSS: Proper middle column document
+
+[REQUIREMENT]
+TITLE: Deep Traceability page CSS: Improvements
+STATEMENT: Deep Traceability page CSS: Improvements
+
+[/SECTION]
 
 [/SECTION]
 
 [SECTION]
 LEVEL: 1
 TITLE: Roadmap
+
+[REQUIREMENT]
+TITLE: Platform support
+STATEMENT: StrictDoc shall work on macOS, Linux, and Windows systems.
+
+[REQUIREMENT]
+TITLE: Custom fields
+STATEMENT: StrictDoc shall support customization of the default grammar with custom fields.
+COMMENT: Examples: RAIT compliance fields, ASIL level.
+
+[REQUIREMENT]
+TITLE: Filtering by tags
+STATEMENT: StrictDoc shall support filtering filtering by tags.
+
+[REQUIREMENT]
+TITLE: Generated file names
+STATEMENT: Document name must be transformed into a valid file name.
+
+[REQUIREMENT]
+TITLE: Linking with implementation artifacts
+STATEMENT: StrictDoc shall support linking requirements to files.
+
+[REQUIREMENT]
+TITLE: Documentation coverage
+STATEMENT: StrictDoc shall generate requirements coverage information.
 
 [REQUIREMENT]
 TITLE: Graphical User Interface (GUI)

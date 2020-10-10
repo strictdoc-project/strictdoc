@@ -4,23 +4,63 @@ $$$$$$$$$$$$$$$$$
 In works
 ========
 
+CSS Work
+--------
+
+Document page CSS: Proper markup
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Document page: make it look like a document.
+
+Table page CSS: Proper table
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Table page: make columns be always of the same size while respecting min-max widths.
+
+Traceability page CSS: Proper middle column document
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Traceability page CSS: Proper middle column document
+
+Deep Traceability page CSS: Improvements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Deep Traceability page CSS: Improvements
+
+Roadmap
+=======
+
+Platform support
+----------------
+
+StrictDoc shall work on macOS, Linux, and Windows systems.
+
+Custom fields
+-------------
+
+StrictDoc shall support customization of the default grammar with custom fields.
+
+**Comment:** Examples: RAIT compliance fields, ASIL level.
+
+Filtering by tags
+-----------------
+
+StrictDoc shall support filtering filtering by tags.
+
 Generated file names
 --------------------
 
 Document name must be transformed into a valid file name.
 
-Traceability page: CSS fixes
-----------------------------
+Linking with implementation artifacts
+-------------------------------------
 
-Traceability page: numeric titles for parent and children requirements.
+StrictDoc shall support linking requirements to files.
 
-Table page: CSS fixes
----------------------
+Documentation coverage
+----------------------
 
-Table page: make columns be always of the same size while respecting min-max widths.
-
-Roadmap
-=======
+StrictDoc shall generate requirements coverage information.
 
 Graphical User Interface (GUI)
 ------------------------------

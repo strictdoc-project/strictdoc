@@ -15,6 +15,15 @@ COMMENT: Under this requirement, StrictDoc shall enable work with requirements i
 UID: SDOC-HIGH-DATA-MODEL
 TITLE: Data model
 STATEMENT: StrictDoc shall be based on a well-defined data model.
+COMMENT: >>>
+StrictDoc is a result of multiple attempts to find a solution for working with
+text-based requirements:
+
+- Doorstop
+- StrictDoc, first generation: Markdown-based C++ program.
+- StrictDoc, second generation: RST/Sphinx-based Python program. Using Sphinx
+extensions to manage meta information.
+<<<
 
 [REQUIREMENT]
 TITLE: Requirements validation
@@ -22,15 +31,11 @@ STATEMENT: StrictDoc shall allow validation of requirement documents.
 
 [REQUIREMENT]
 TITLE: Requirements text format
-STATEMENT: StrictDoc shall allow storage of requirements in a text format.
+STATEMENT: StrictDoc shall allow storage of requirements in text form.
 
 [REQUIREMENT]
 TITLE: Linking requirements
 STATEMENT: StrictDoc shall support linking requirements to each other.
-
-[REQUIREMENT]
-TITLE: Linking with implementation artefacts
-STATEMENT: StrictDoc shall support linking requirements to files.
 
 [REQUIREMENT]
 UID: SDOC-HIGH-REQS-TRACEABILITY
@@ -40,10 +45,6 @@ STATEMENT: StrictDoc shall support traceability of requirements.
 [REQUIREMENT]
 TITLE: Visualization
 STATEMENT: StrictDoc shall provide means for visualization of requirement documents.
-
-[REQUIREMENT]
-TITLE: Documentation coverage
-STATEMENT: StrictDoc shall generate requirements coverage information.
 
 [REQUIREMENT]
 TITLE: Open Source software

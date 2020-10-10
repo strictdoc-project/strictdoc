@@ -20,6 +20,14 @@ Data model
 
 StrictDoc shall be based on a well-defined data model.
 
+**Comment:** StrictDoc is a result of multiple attempts to find a solution for working with
+text-based requirements:
+
+- Doorstop
+- StrictDoc, first generation: Markdown-based C++ program.
+- StrictDoc, second generation: RST/Sphinx-based Python program. Using Sphinx
+extensions to manage meta information.
+
 Requirements validation
 -----------------------
 
@@ -28,17 +36,12 @@ StrictDoc shall allow validation of requirement documents.
 Requirements text format
 ------------------------
 
-StrictDoc shall allow storage of requirements in a text format.
+StrictDoc shall allow storage of requirements in text form.
 
 Linking requirements
 --------------------
 
 StrictDoc shall support linking requirements to each other.
-
-Linking with implementation artefacts
--------------------------------------
-
-StrictDoc shall support linking requirements to files.
 
 Traceability
 ------------
@@ -51,11 +54,6 @@ Visualization
 -------------
 
 StrictDoc shall provide means for visualization of requirement documents.
-
-Documentation coverage
-----------------------
-
-StrictDoc shall generate requirements coverage information.
 
 Open Source software
 --------------------

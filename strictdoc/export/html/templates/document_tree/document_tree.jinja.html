@@ -25,7 +25,10 @@
 
           {%- set document_name = document_tree.get_document_name(folder_or_file.get_full_path()) %}
           <div class="cell">
-            <a href="{{ document_name }}.html">{{ document_name }}</a>
+            {{ document_name }}
+          </div>
+          <div class="cell">
+            <a href="{{ document_name }}.html">Document</a>
           </div>
           <div class="cell">
             <a href="{{ document_name }} - Table.html">Table</a>

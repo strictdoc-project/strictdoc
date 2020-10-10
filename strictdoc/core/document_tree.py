@@ -35,14 +35,16 @@ class File(FileOrFolderEntry):
 
 
 class FileTree(FileOrFolderEntry):
-    def __init__(self, level=0):
+    def __init__(self, root_path, level):
+        assert os.path.isdir(root_path)
+
+        self.root_path = root_path
         self.level = level
-        self.root_path = None
         self.files = []
         self.subfolder_trees = []
 
     def __repr__(self):
-        return "FileTree: {} files: {}".format(self.root_path, self.files)
+        return "FileTree: (root_path: {}, files: {})".format(self.root_path, self.files)
 
     def is_folder(self):
         return True
@@ -56,16 +58,17 @@ class FileTree(FileOrFolderEntry):
     def get_folder_name(self):
         return os.path.basename(os.path.normpath(self.root_path))
 
-    def set(self, root_path, files, subfolders):
-        assert os.path.isdir(root_path)
-
-        self.root_path = root_path
+    def set(self, files):
         for file in files:
             full_file_path = os.path.join(self.root_path, file)
             self.files.append(File(self.level + 1, full_file_path))
 
-        for _ in subfolders:
-            self.subfolder_trees.append(FileTree(self.level + 1))
+    def add_subfolder_tree(self, subfolder_tree):
+        assert isinstance(subfolder_tree, FileTree)
+        self.subfolder_trees.append(subfolder_tree)
+
+    def sort_subfolder_trees(self):
+        self.subfolder_trees.sort(key=lambda subfolder: subfolder.root_path)
 
     def dump(self):
         print(self)

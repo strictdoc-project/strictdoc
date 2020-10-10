@@ -29,17 +29,45 @@
 
   <div id="sections-and-requirements">
   {%- for section_or_requirement in document_iterator.all_content() %}
-    <div class="table-row">
-      {%- if section_or_requirement.is_requirement %}
-        {%- set requirement = section_or_requirement %}
-        {% include "single_document_table/requirement.jinja.html" %}
-      {%- elif section_or_requirement.is_section %}
-        <div class="cell-section">
-          {%- set section = section_or_requirement %}
-          <h2 id="{{ string_to_anchor_id(section.title) }}">{{ section.export_title }} {{ section.title }}</h2>
+      {%- if section_or_requirement.is_composite_requirement %}
+        <div class="table-row table-row-header">
+          <div class="cell cell-header">
+            <div class="wrapper-section">
+              {%- set section = section_or_requirement %}
+              <h2 id="{{ string_to_anchor_id(section.title) }}">{{ section.export_title }} {{ section.title }}</h2>
+            </div>
+          </div>
         </div>
+        {%- if not loop.last -%}
+          {%- if not loop.nextitem.is_section and not loop.nextitem.is_free_text -%}
+            {% include "single_document_table/table-fields.jinja.html" %}
+          {%- endif -%}
+        {%- endif -%}
+        <div class="table-row">
+          {%- set requirement = section_or_requirement %}
+          {% include "single_document_table/requirement.jinja.html" %}
+        </div>
+      {%- elif section_or_requirement.is_requirement %}
+        <div class="table-row">
+          {%- set requirement = section_or_requirement %}
+          {% include "single_document_table/requirement.jinja.html" %}
+        </div>
+      {%- elif section_or_requirement.is_section %}
+        <div class="table-row table-row-header">
+          <div class="cell cell-header">
+            <div class="wrapper-section">
+              {%- set section = section_or_requirement %}
+              <h2 id="{{ string_to_anchor_id(section.title) }}">{{ section.export_title }} {{ section.title }}</h2>
+            </div>
+          </div>
+        </div>
+
+        {%- if not loop.last -%}
+          {%- if not loop.nextitem.is_section and not loop.nextitem.is_free_text -%}
+            {% include "single_document_table/table-fields.jinja.html" %}
+          {%- endif -%}
+        {%- endif -%}
       {%- endif %}
-    </div>
   {%- endfor %}
   </div>
 </body>

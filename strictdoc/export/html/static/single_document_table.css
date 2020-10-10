@@ -12,61 +12,79 @@ h1 {
 }
 
 #sections-and-requirements {
+  display: table;
+  //table-layout: fixed;
+  border-collapse: collapse;
   min-width: 800px;
   padding: 0px;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .table-row {
   width: 100%;
-  display: flex;
+  display: table-row;
   padding: 0px;
-  margin: 0px 0px 0px 0px;
-  border: 0px solid #ccc;
+  border: 1px solid #ccc;
   box-sizing: border-box;
+}
+
+.table-row-header {
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  height: 100px;
 }
 
 .cell {
-  border-left: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  border-top: 0;
+  display: table-cell;
+  padding: 10px;
+  border: 1px solid #ccc;
   box-sizing: border-box;
   margin: 0px 0px 0px 0px;
 }
 
-.cell:last-child {
-  border-right: 1px solid #ccc;
+.cell-header {
+  position: relative;
+  left: 0;
+  top: 0;
+  border: 0;
 }
 
-.cell-section {
+.cell-field-name {
+  background: #eeeeee;
+}
+
+.wrapper-section {
+  height: 100px;
+  line-height: 100px;
+  padding-left: 10px;
   box-sizing: border-box;
-  grid-column-start: 1;
-  grid-column-end: 4;
-  border: 3px solid #000;
-  width: 100%;
-  text-align: center;
-  background: #add8e6;
-  margin: -1px 0px 0px 0px;
+  position: absolute;
+  z-index: -1;
+  width: 10000px;
+  //background: #add8e6;
+  //background: #eee;
+  left: 0;
+  top: 0;
+  text-align: left;
 }
 
 .cell-uid {
-  min-width: 80px;
+  text-align: left;
 }
 
 .cell-title {
   min-width: 5%;
-  width: 15%;
   max-width: 15%;
 }
 
 .cell-text {
   min-width: 20%;
-  width: 40%;
+  width: 50%;
 }
 
 .cell-tags {
-  min-width: 15%;
-  width: 15%;
+
 }
 
 .requirement-style:last-child {
@@ -86,13 +104,7 @@ h1 {
 }
 
 .comment-paragraph {
-  //margin: 10px 0px;
-  //background: blue;
-}
 
-.comment-word + .comment-paragraph {
-  //display: inline;
-  //background: red;
 }
 
 .tag {

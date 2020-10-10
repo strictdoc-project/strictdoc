@@ -116,6 +116,10 @@ class Requirement(object):
     def is_section(self):
         return False
 
+    @property
+    def is_composite_requirement(self):
+        return False
+
     def statement_as_html_blocks(self):
         if self.statement:
             return [self.statement]
@@ -129,6 +133,9 @@ class CompositeRequirement(Requirement):
         self.ng_sections = []
         self.export_title = None
 
+    @property
+    def is_composite_requirement(self):
+        return True
 
 # class Body(object):
 #     def __init__(self, parent, body_content=[]):

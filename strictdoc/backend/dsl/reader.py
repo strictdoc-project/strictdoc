@@ -66,6 +66,18 @@ def requirement_obj_processor(requirement):
     else:
         raise NotImplementedError
 
+def freetext_obj_processor(free_text):
+    if isinstance(free_text.parent, Section):
+        assert free_text.parent.level
+        free_text.ng_level = free_text.parent.level + 1
+    elif isinstance(free_text.parent, CompositeRequirement):
+        if not free_text.parent.ng_level:
+            resolve_parents(free_text)
+        free_text.ng_level = free_text.parent.ng_level + 1
+    elif isinstance(free_text.parent, Document):
+        free_text.ng_level = 1
+    else:
+        raise NotImplementedError
 
 class SDReader:
     def __init__(self):
@@ -75,7 +87,8 @@ class SDReader:
         obj_processors = {
             'Section': section_obj_processor,
             'CompositeRequirement': composite_requirement_obj_processor,
-            'Requirement': requirement_obj_processor
+            'Requirement': requirement_obj_processor,
+            'FreeText': freetext_obj_processor
         }
 
         self.meta_model.register_obj_processors(obj_processors)

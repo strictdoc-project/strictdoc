@@ -177,6 +177,7 @@ class FreeText:
     def __init__(self, parent, text):
         self.parent = parent
         self.text = text
+        self.ng_level = None
 
     @property
     def is_requirement(self):

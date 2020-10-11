@@ -116,6 +116,10 @@ class Requirement(object):
     def is_section(self):
         return False
 
+    @property
+    def is_composite_requirement(self):
+        return False
+
     def statement_as_html_blocks(self):
         if self.statement:
             return [self.statement]
@@ -129,6 +133,9 @@ class CompositeRequirement(Requirement):
         self.ng_sections = []
         self.export_title = None
 
+    @property
+    def is_composite_requirement(self):
+        return True
 
 # class Body(object):
 #     def __init__(self, parent, body_content=[]):
@@ -177,6 +184,7 @@ class FreeText:
     def __init__(self, parent, text):
         self.parent = parent
         self.text = text
+        self.ng_level = None
 
     @property
     def is_requirement(self):
@@ -189,3 +197,6 @@ class FreeText:
     @property
     def is_free_text(self):
         return True
+
+    def text_as_paragraphs(self):
+        return self.text.split('\n\n')

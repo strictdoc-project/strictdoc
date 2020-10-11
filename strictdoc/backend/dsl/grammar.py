@@ -62,7 +62,7 @@ CompositeRequirement[noskipws]:
 
   #{REQUIREMENT_FIELDS}
   
-  requirements += SpaceThenRequirement
+  requirements *= SpaceThenRequirement
 
   '\n'
   '[/COMPOSITE-REQUIREMENT]' '\n'

@@ -9,7 +9,6 @@ TITLE: High-level Requirements
 UID: SDOC-HIGH-REQS-MANAGEMENT
 TITLE: Requirements management
 STATEMENT: StrictDoc shall enable requirements management.
-COMMENT: Under this requirement, StrictDoc shall enable work with requirements in a structured manner.
 
 [REQUIREMENT]
 UID: SDOC-HIGH-DATA-MODEL

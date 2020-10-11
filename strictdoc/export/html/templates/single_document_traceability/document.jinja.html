@@ -57,8 +57,13 @@
       <div class="cell cell-parent">
       </div>
       <div class="cell-section">
-      {%- set section = section_or_requirement %}
-      <h{{ section.ng_level }} id="{{ string_to_anchor_id(section.title) }}">{{ section.export_title }} {{ section.title }}</h{{ section.ng_level }}>
+        {%- set section = section_or_requirement %}
+        <h{{ section.ng_level }}>
+          <span class="level">
+            {{ section.export_title }}
+          </span>
+          {{ section.title }}
+        </h{{ section.ng_level }}>
       </div>
       <div class="cell cell-children">
       </div>

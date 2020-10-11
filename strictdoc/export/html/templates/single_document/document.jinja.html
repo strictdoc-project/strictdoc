@@ -28,7 +28,13 @@
     <br/>
   {%- elif section_or_requirement.is_section %}
     {%- set section = section_or_requirement %}
-    <h2>{{ section.export_title }} {{ section.title }}</h2>
+
+    <h{{ section.ng_level }}>
+      <span class="level">
+        {{ section.export_title }}
+      </span>
+      {{ section.title }}
+    </h{{ section.ng_level }}>
   {%- elif section_or_requirement.is_free_text %}
     {%- set freetext = section_or_requirement %}
     {{ freetext.text }}

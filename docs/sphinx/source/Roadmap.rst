@@ -1,5 +1,5 @@
-StrictDoc Roadmap
-$$$$$$$$$$$$$$$$$
+Roadmap
+$$$$$$$
 
 In works
 ========
@@ -29,6 +29,16 @@ Deep Traceability page CSS: Improvements
 
 Roadmap
 =======
+
+RST support for text and code blocks
+------------------------------------
+
+StrictDoc shall support rendering text/code blocks into RST syntax.
+
+Markdown support for text and code blocks
+-----------------------------------------
+
+StrictDoc shall support rendering text/code blocks into RST syntax.
 
 Platform support
 ----------------
@@ -86,4 +96,9 @@ Option: Title: Display requirement UID
 --------------------------------------
 
 StrictDoc shall support config option `display_requirement_uids`.
+
+Advanced: Extraction of numeric values into separate table. Invariants calculation.
+-----------------------------------------------------------------------------------
+
+StrictDoc shall support calculating invariants that enforce numerical constraints.
 

@@ -10,5 +10,6 @@ Welcome to StrictDoc's documentation!
    :maxdepth: 6
    :caption: Contents:
 
-   StrictDoc
-   StrictDoc Roadmap
+   Introduction
+   Requirements
+   Roadmap

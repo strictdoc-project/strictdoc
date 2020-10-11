@@ -15,8 +15,9 @@ def sphinx(c):
     """))
 
     c.run(formatted_command("""
-        cp -v output/rst/StrictDoc.rst docs/sphinx/source;
-        cp -v 'output/rst/StrictDoc Roadmap.rst' docs/sphinx/source
+        cp -v output/rst/Introduction.rst docs/sphinx/source;
+        cp -v output/rst/Requirements.rst docs/sphinx/source;
+        cp -v output/rst/Roadmap.rst docs/sphinx/source
     """))
 
     c.run(formatted_command("""

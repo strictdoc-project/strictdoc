@@ -1,5 +1,5 @@
-StrictDoc
-$$$$$$$$$
+Requirements
+$$$$$$$$$$$$
 
 High-level Requirements
 =======================
@@ -10,8 +10,6 @@ Requirements management
 ``[SDOC-HIGH-REQS-MANAGEMENT]``
 
 StrictDoc shall enable requirements management.
-
-**Comment:** Under this requirement, StrictDoc shall enable work with requirements in a structured manner.
 
 Data model
 ----------

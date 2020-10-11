@@ -15,28 +15,28 @@
     {%- for folder_or_file in artefact_list: -%}
       <div class="row">
         {%- if folder_or_file.is_folder(): %}
-          <div class="cell">
-            {{ "&nbsp;" * folder_or_file.level * 8 }} {{ folder_or_file.get_folder_name() }}/
+          <div class="cell tree-folder tree-level-{{ folder_or_file.level }}">
+            {{ folder_or_file.get_folder_name() }}/
           </div>
         {% else %}
-          <div class="cell">
-            {{ "&nbsp;" * folder_or_file.level * 8 }} {{ folder_or_file.get_file_name() }}
+          <div class="cell tree-file tree-level-{{ folder_or_file.level }}">
+            {{ folder_or_file.get_file_name() }}
           </div>
 
           {%- set document_name = document_tree.get_document_name(folder_or_file.get_full_path()) %}
-          <div class="cell">
+          <div class="cell tree-file-name">
             {{ document_name }}
           </div>
-          <div class="cell">
+          <div class="cell tree-file-link">
             <a href="{{ document_name }}.html">Document</a>
           </div>
-          <div class="cell">
+          <div class="cell tree-file-link">
             <a href="{{ document_name }} - Table.html">Table</a>
           </div>
-          <div class="cell">
+          <div class="cell tree-file-link">
             <a href="{{ get_traceability_link(document_name) }}">Traceability</a>
           </div>
-          <div class="cell">
+          <div class="cell tree-file-link">
             <a href="{{ get_traceability_deep_link(document_name) }}">Deep Traceability</a>
           </div>
         {% endif %}

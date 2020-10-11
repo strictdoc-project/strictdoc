@@ -41,7 +41,14 @@
         <tr class="table-row table-row-header">
           <td colspan="4" class="cell">
             {%- set section = section_or_requirement %}
-            <h2 id="{{ string_to_anchor_id(section.title) }}">{{ section.export_title }} {{ section.title }}</h2>
+
+            <h{{ section.ng_level }}>
+              <span class="level">
+                {{ section.export_title }}
+              </span>
+              {{ section.title }}
+            </h{{ section.ng_level }}>
+
           </td>
         </tr>
         {%- if not loop.last -%}
@@ -62,7 +69,12 @@
         <tr class="table-row table-row-header">
           <td colspan="4" class="cell">
             {%- set section = section_or_requirement %}
-            <h2 id="{{ string_to_anchor_id(section.title) }}">{{ section.export_title }} {{ section.title }}</h2>
+            <h{{ section.ng_level }}>
+              <span class="level">
+                {{ section.export_title }}
+              </span>
+              {{ section.title }}
+            </h{{ section.ng_level }}>
           </td>
         </tr>
 

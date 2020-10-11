@@ -1,7 +1,10 @@
 <div>
   {%- if requirement.title %}
     <h{{ requirement.ng_level }}>
-      {{ requirement.export_title }} {{ requirement.title }}
+      <span class="level">
+        {{ requirement.export_title }}
+      </span>
+      {{ requirement.title }}
     </h{{ requirement.ng_level }}>
   {%- endif %}
 

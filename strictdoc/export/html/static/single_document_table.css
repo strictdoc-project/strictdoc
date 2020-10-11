@@ -12,7 +12,6 @@ h1 {
 }
 
 #sections-and-requirements {
-  display: table;
   //table-layout: fixed;
   border-collapse: collapse;
   min-width: 800px;
@@ -23,7 +22,6 @@ h1 {
 
 .table-row {
   width: 100%;
-  display: table-row;
   padding: 0px;
   border: 1px solid #ccc;
   box-sizing: border-box;
@@ -36,37 +34,14 @@ h1 {
 }
 
 .cell {
-  display: table-cell;
   padding: 10px;
   border: 1px solid #ccc;
   box-sizing: border-box;
   margin: 0px 0px 0px 0px;
 }
 
-.cell-header {
-  position: relative;
-  left: 0;
-  top: 0;
-  border: 0;
-}
-
 .cell-field-name {
   background: #eeeeee;
-}
-
-.wrapper-section {
-  height: 100px;
-  line-height: 100px;
-  padding-left: 10px;
-  box-sizing: border-box;
-  position: absolute;
-  z-index: -1;
-  width: 10000px;
-  //background: #add8e6;
-  //background: #eee;
-  left: 0;
-  top: 0;
-  text-align: left;
 }
 
 .cell-uid {
@@ -96,15 +71,25 @@ h1 {
 }
 
 .comment {
-  ///margin: 10px 0px;
+  margin-bottom: 10px;
+}
+
+.comment:last-child {
+  margin-bottom: 0px;
 }
 
 .comment-word {
   font-weight: bold;
+  margin-bottom: 10px;
 }
 
 .comment-paragraph {
+  margin-bottom: 15px;
 
+}
+
+.comment-paragraph:last-child {
+  margin-bottom: 0px;
 }
 
 .tag {
@@ -113,4 +98,12 @@ h1 {
   margin: 2px 0px;
   padding: 3px 10px;
   display: inline-block;
+}
+
+.text-paragraph {
+  margin-bottom: 15px;
+}
+
+.text-paragraph:last-child {
+  margin-bottom: 0px;
 }

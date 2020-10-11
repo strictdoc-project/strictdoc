@@ -1,8 +1,8 @@
-<div class="cell cell-uid">
+<td class="cell cell-uid">
   {{ requirement.export_title }}
-</div>
+</td>
 
-<div class="cell cell-title">
+<td class="cell cell-title">
   {%- if requirement.title %}
     {{ requirement.title }}
   {%- endif %}
@@ -11,9 +11,9 @@
     <small><a href="{{ traceability_index.get_link(requirement) }}">{{ requirement.uid }}</a></small>
   {%- endif %}
   </div>
-</div>
+</td>
 
-<div class="cell cell-text">
+<td class="cell cell-text">
   {%- if requirement.statement or requirement.statement_multiline -%}
     {%- for statement_block in requirement.statement_as_html_blocks() -%}
       <div class="requirement-statement">
@@ -27,15 +27,15 @@
       {{ requirement.body }}
     </div>
   {%- endif %}
-</div>
+</td>
 
-<div class="cell cell-text">
+<td class="cell cell-text">
   {%- if requirement.comments %}
     {%- for comment in requirement.comments %}
       <div class="comment">
-        <span class="comment-word">
+        <div class="comment-word">
           Comment:
-        </span>
+        </div>
 
         {%- for comment_paragraph in comment.comment_by_paragraphs() %}
           <div class="comment-paragraph">
@@ -45,4 +45,4 @@
       </div>
     {%- endfor %}
   {%- endif %}
-</div>
+</td>

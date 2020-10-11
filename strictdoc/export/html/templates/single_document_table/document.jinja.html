@@ -27,40 +27,44 @@
     </div>
   {%- endif %}
 
-  <div id="sections-and-requirements">
+  <table id="sections-and-requirements">
   {%- for section_or_requirement in document_iterator.all_content() %}
-      {%- if section_or_requirement.is_composite_requirement %}
-        <div class="table-row table-row-header">
-          <div class="cell cell-header">
-            <div class="wrapper-section">
-              {%- set section = section_or_requirement %}
-              <h2 id="{{ string_to_anchor_id(section.title) }}">{{ section.export_title }} {{ section.title }}</h2>
-            </div>
-          </div>
-        </div>
+      {%- if section_or_requirement.is_free_text %}
+        <tr class="table-row">
+          <td colspan="4" class="cell">
+            {%- for text_paragraph in section_or_requirement.text_as_paragraphs() -%}
+              <p class="text-paragraph">{{ text_paragraph }}</p>
+            {%- endfor -%}
+          </td>
+        </tr>
+      {%- elif section_or_requirement.is_composite_requirement %}
+        <tr class="table-row table-row-header">
+          <td colspan="4" class="cell">
+            {%- set section = section_or_requirement %}
+            <h2 id="{{ string_to_anchor_id(section.title) }}">{{ section.export_title }} {{ section.title }}</h2>
+          </td>
+        </tr>
         {%- if not loop.last -%}
           {%- if not loop.nextitem.is_section and not loop.nextitem.is_free_text -%}
             {% include "single_document_table/table-fields.jinja.html" %}
           {%- endif -%}
         {%- endif -%}
-        <div class="table-row">
+        <tr class="table-row">
           {%- set requirement = section_or_requirement %}
           {% include "single_document_table/requirement.jinja.html" %}
-        </div>
+        </tr>
       {%- elif section_or_requirement.is_requirement %}
-        <div class="table-row">
+        <tr class="table-row">
           {%- set requirement = section_or_requirement %}
           {% include "single_document_table/requirement.jinja.html" %}
-        </div>
+        </tr>
       {%- elif section_or_requirement.is_section %}
-        <div class="table-row table-row-header">
-          <div class="cell cell-header">
-            <div class="wrapper-section">
-              {%- set section = section_or_requirement %}
-              <h2 id="{{ string_to_anchor_id(section.title) }}">{{ section.export_title }} {{ section.title }}</h2>
-            </div>
-          </div>
-        </div>
+        <tr class="table-row table-row-header">
+          <td colspan="4" class="cell">
+            {%- set section = section_or_requirement %}
+            <h2 id="{{ string_to_anchor_id(section.title) }}">{{ section.export_title }} {{ section.title }}</h2>
+          </td>
+        </tr>
 
         {%- if not loop.last -%}
           {%- if not loop.nextitem.is_section and not loop.nextitem.is_free_text -%}
@@ -69,5 +73,5 @@
         {%- endif -%}
       {%- endif %}
   {%- endfor %}
-  </div>
+  </table>
 </body>

@@ -197,3 +197,6 @@ class FreeText:
     @property
     def is_free_text(self):
         return True
+
+    def text_as_paragraphs(self):
+        return self.text.split('\n\n')

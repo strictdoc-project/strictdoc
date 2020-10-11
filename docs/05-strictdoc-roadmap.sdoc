@@ -1,5 +1,5 @@
 [DOCUMENT]
-NAME: StrictDoc Roadmap
+NAME: Roadmap
 
 [SECTION]
 LEVEL: 1
@@ -32,6 +32,14 @@ STATEMENT: Deep Traceability page CSS: Improvements
 [SECTION]
 LEVEL: 1
 TITLE: Roadmap
+
+[REQUIREMENT]
+TITLE: RST support for text and code blocks
+STATEMENT: StrictDoc shall support rendering text/code blocks into RST syntax.
+
+[REQUIREMENT]
+TITLE: Markdown support for text and code blocks
+STATEMENT: StrictDoc shall support rendering text/code blocks into RST syntax.
 
 [REQUIREMENT]
 TITLE: Platform support

@@ -34,6 +34,10 @@ LEVEL: 1
 TITLE: Roadmap
 
 [REQUIREMENT]
+TITLE: Excel Export
+STATEMENT: Excel Export
+
+[REQUIREMENT]
 TITLE: RST support for text and code blocks
 STATEMENT: StrictDoc shall support rendering text/code blocks into RST syntax.
 

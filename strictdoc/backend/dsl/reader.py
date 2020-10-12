@@ -49,6 +49,8 @@ def composite_requirement_obj_processor(composite_requirement):
     elif isinstance(composite_requirement.parent, CompositeRequirement):
         assert composite_requirement.parent.ng_level
         composite_requirement.ng_level = composite_requirement.parent.ng_level + 1
+    elif isinstance(composite_requirement.parent, Document):
+        composite_requirement.ng_level = 1
     else:
         raise NotImplementedError
 

@@ -38,6 +38,14 @@ TITLE: Excel Export
 STATEMENT: Excel Export
 
 [REQUIREMENT]
+TITLE: PlantUML Export
+STATEMENT: PlantUML Export
+
+[REQUIREMENT]
+TITLE: PDF Export: Styles Upgrade
+STATEMENT: PDF Export: Styles Upgrade
+
+[REQUIREMENT]
 TITLE: RST support for text and code blocks
 STATEMENT: StrictDoc shall support rendering text/code blocks into RST syntax.
 

@@ -30,6 +30,21 @@ Deep Traceability page CSS: Improvements
 Roadmap
 =======
 
+Excel Export
+------------
+
+Excel Export
+
+PlantUML Export
+---------------
+
+PlantUML Export
+
+PDF Export: Styles Upgrade
+--------------------------
+
+PDF Export: Styles Upgrade
+
 RST support for text and code blocks
 ------------------------------------
 

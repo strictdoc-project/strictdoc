@@ -1,10 +1,33 @@
 {%- if document.ng_sections %}
   <div id="toc">
     <h2>Table of Contents</h2>
+
+    <ul>
     {%- for section in document_iterator.table_of_contents() -%}
-      <div>
+      <li>
         {{ (section.ng_level - 1) * 8 * '&nbsp;' }} <a href="#{{ string_to_anchor_id(section.title) }}">{{ section.export_title }} {{ section.title if section.title else '(NO TITLE)' }}</a>
-      </div>
+
+      {%- if not loop.last -%}
+        {%- if loop.nextitem.ng_level > section.ng_level -%}
+          <ul>
+        {%- elif loop.nextitem.ng_level < section.ng_level -%}
+            </li>
+          {%- for x in range(0, section.ng_level - loop.nextitem.ng_level) -%}
+            </ul>
+            </li>
+          {%- endfor -%}
+        {%- else -%}
+          </li>
+        {%- endif -%}
+      {%- else -%}
+        </li>
+        {%- for x in range(0, section.ng_level - 1) -%}
+            </ul>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
     {%- endfor %}
+
   </div>
 {%- endif %}

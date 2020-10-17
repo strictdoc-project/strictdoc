@@ -112,8 +112,8 @@ Option: Title: Display requirement UID
 
 StrictDoc shall support config option `display_requirement_uids`.
 
-Advanced: Extraction of numeric values into separate table. Invariants calculation.
------------------------------------------------------------------------------------
+Advanced: Facts table. Invariants calculation.
+----------------------------------------------
 
 StrictDoc shall support calculating invariants that enforce numerical constraints.
 

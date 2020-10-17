@@ -62,38 +62,79 @@ latex_elements = {
     'extraclassoptions': 'openany,oneside',
     # The paper size ('letterpaper' or 'a4paper').
     'papersize': 'a4paper',
-    'pointsize': '14pt', # this seems to have no effect
+    # 'pointsize': '14pt' # does not have any effect
 
     'releasename': "",
 
-    # Additional stuff for the LaTeX preamble.
-    #
+    'sphinxsetup': \
+        'hmargin={0.7in,0.7in}, vmargin={1in,1in}, \
+        verbatimwithframe=true, \
+        TitleColor={rgb}{0,0,0}, \
+        InnerLinkColor={rgb}{0.1,0.1,0.1}, \
+        OuterLinkColor={rgb}{1,0,0}',
+
+    # Roboto is also a good choice.
+    # sudo apt install fonts-roboto
+    'fontpkg': r'''
+        \setmainfont{DejaVu Sans}
+        \setsansfont{DejaVu Sans}
+        \setmonofont{DejaVu Sans Mono}
+    ''',
+
+    # Disable default Sphinx styles for the TOC.
+    'tableofcontents': ' ',
+
     'preamble': r'''
+        \usepackage{datetime}
+        \usepackage{hyperref}
+        \usepackage{fancyhdr}
+
         \setcounter{secnumdepth}{10}
         \setcounter{tocdepth}{10}
         
-        \usepackage{datetime}
         \newdateformat{MonthYearFormat}{%
             \monthname[\THEMONTH], \THEYEAR}
 
         \pagecolor [RGB]{255, 255, 255}
 
-        \usepackage{hyperref}
         \hypersetup{
-            colorlinks=true
-            linkcolor=red,          % color of internal links (change box color with linkbordercolor)
+            colorlinks=true,
+            linkcolor=[RGB]{35, 35, 35}, % color of internal links (change box color with linkbordercolor)
             citecolor=green,        % color of links to bibliography
             filecolor=magenta,      % color of file links
             urlcolor=cyan % This has an effect
         }
 
-        \usepackage{fontspec}
-        % https://tex.stackexchange.com/a/449194/61966 
-        % https://tex.stackexchange.com/a/141697/61966
-        \setmainfont[
-            Ligatures=TeX,Scale=1.2
-        ]{Helvetica Neue}
-        \linespread{1.5}
+        % "Since the first page of a chapter uses (by design) the plain style, you need to redefine this style:"
+        % https://tex.stackexchange.com/a/157006/61966
+        \fancypagestyle{plain}{
+            \fancyhf{}
+            \fancyhead[R]{
+                \textnormal{\nouppercase{StrictDoc}}
+                \textcolor{red}{\textbf{Draft}}
+                % trim: left top
+                % \vspace*{0.4cm}{\includegraphics[trim=-1cm 1.15cm 0 -0cm, scale=.35]{PTS_bow.png}}
+            }
+            \fancyfoot[R]{
+                \thepage
+            }
+            \renewcommand{\headrulewidth}{0.0pt}
+            \renewcommand{\footrulewidth}{1.0pt}
+        }
+
+        \fancypagestyle{normal}{
+            \fancyhf{}
+            \fancyhead[R]{
+                \textnormal{\nouppercase{StrictDoc}} 
+                \textcolor{red}{\textbf{Draft}}
+                % \vspace*{0.4cm}{\includegraphics[trim=-1cm 1.15cm 0cm 0cm, scale=.35]{PTS_bow.png}}
+            }
+            \fancyfoot[R]{
+                \thepage
+            }
+            \renewcommand{\headrulewidth}{1.0pt}
+            \renewcommand{\footrulewidth}{1.0pt}
+        }
 
         \newcommand{\tablecell}[1] {\Large{\texttt{#1}}}
     ''',
@@ -110,20 +151,38 @@ latex_elements = {
                 \Huge{\textbf{StrictDoc}}
                 
                 \Large{\textbf{Release: 0.0.1 (\MonthYearFormat\today)}}
+            \end{flushright}
 
+            \begin{flushright}
                 \vspace{35mm}
 
-                \begin{tabular}{|l|l|}
-                \hline
-                \tablecell {Requirements and Specifications} & \tablecell {Documentation Control} \\ \hline
-                \tablecell {Traceability and Coverage} & \tablecell {Open source software} \\ \hline
-                \end{tabular}
+                \bgroup
+                    \def\arraystretch{1.5}%  1 is the default, change whatever you need
+
+                    \begin{tabular}{|l|l|}
+                    \hline
+                    \tablecell {Requirements and Specifications} & \tablecell {Documentation Control} \\ \hline
+                    \tablecell {Traceability and Coverage} & \tablecell {Open source software} \\ \hline
+                    \end{tabular}
+                \egroup
 
                 %% \begin{figure}[!h]
                 %%     \centering
                 %%     \includegraphics[scale=0.5]{logo.jpg}
                 %% \end{figure}
             \end{flushright}
+
+            \vspace{40mm}
+
+            \begin{center}
+                \textcolor{red}{
+                    \textbf {
+                        \underline{
+                            \LARGE{This document is in a draft state!}
+                        }
+                    }
+                }
+            \end{center}
 
             %% \vfill adds at the bottom
             \vfill 
@@ -142,18 +201,7 @@ latex_elements = {
         %% \listoftables
         \clearpage
         \pagenumbering{arabic}
-        ''',
-    # Latex figure (float) alignment
-    #
-    # 'figure_align': 'htbp',
-    'sphinxsetup': \
-        'hmargin={0.7in,0.7in}, vmargin={1in,1in}, \
-        verbatimwithframe=true, \
-        TitleColor={rgb}{0,0,0}, \
-        InnerLinkColor={rgb}{0.1,0.1,0.1}, \
-        OuterLinkColor={rgb}{1,0,0}',
-
-    'tableofcontents': ' ',
+        '''
 }
 
 # -- Options for HTML output -------------------------------------------------

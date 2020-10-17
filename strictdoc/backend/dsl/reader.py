@@ -47,6 +47,8 @@ def composite_requirement_obj_processor(composite_requirement):
 
         composite_requirement.parent.ng_sections.append(composite_requirement)
     elif isinstance(composite_requirement.parent, CompositeRequirement):
+        if not composite_requirement.parent.ng_level:
+            resolve_parents(composite_requirement)
         assert composite_requirement.parent.ng_level
         composite_requirement.ng_level = composite_requirement.parent.ng_level + 1
     elif isinstance(composite_requirement.parent, Document):
@@ -112,4 +114,5 @@ class SDReader:
             exit(1)
         except Exception as exc:
             print("error: could not parse file: {}.\n{}: {}".format(file_path, exc.__class__.__name__,  exc))
+            traceback.print_exc()
             exit(1)

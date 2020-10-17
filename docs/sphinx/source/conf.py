@@ -88,6 +88,7 @@ latex_elements = {
         \usepackage{datetime}
         \usepackage{hyperref}
         \usepackage{fancyhdr}
+        \usepackage{makecell}
 
         \setcounter{secnumdepth}{10}
         \setcounter{tocdepth}{10}
@@ -136,60 +137,50 @@ latex_elements = {
             \renewcommand{\footrulewidth}{1.0pt}
         }
 
-        \newcommand{\tablecell}[1] {\Large{\texttt{#1}}}
+        \newcommand{\tablecell}[1] {{{#1}}}
     ''',
 
     'maketitle': r'''
         \pagenumbering{Roman} %%% to avoid page 1 conflict with actual page 1
 
         \begin{titlepage}   
-            %% \centering
-            \begin{flushright}
+            \vspace*{50mm} %%% * is used to give space from top
 
-                \vspace*{40mm} %%% * is used to give space from top
+            \begin{flushright}
 
                 \Huge{\textbf{StrictDoc}}
                 
-                \Large{\textbf{Release: 0.0.1 (\MonthYearFormat\today)}}
+                \Large{\textbf{Technical documentation control software}}
             \end{flushright}
+
+            \vspace{30mm}
 
             \begin{flushright}
-                \vspace{35mm}
-
                 \bgroup
                     \def\arraystretch{1.5}%  1 is the default, change whatever you need
-
                     \begin{tabular}{|l|l|}
                     \hline
-                    \tablecell {Requirements and Specifications} & \tablecell {Documentation Control} \\ \hline
-                    \tablecell {Traceability and Coverage} & \tablecell {Open source software} \\ \hline
+                    \textbf{{Project goal:}} & 
+                    \makecell[l]{ 
+                            Requirements management, Documentation Control
+                    } 
+                    \\ \hline
+                    \textbf{{Supported Documents:}} & \tablecell {Requirements document, Specification, Technical Manual} \\ \hline
+                    \textbf{{Export formats:}} & \tablecell {RST/Sphinx, HTML, PDF} \\ \hline
+                    \textbf{{License model:}} & \tablecell {Open source software, Apache 2 license} \\ \hline
+                    \textbf{{Project page:}} & \tablecell {https://github.com/stanislaw/strictdoc} \\ \hline
+                    \textbf{{Release date:}} & \tablecell {\MonthYearFormat\today} \\ \hline
+                    \textbf{{Version:}} & \tablecell {0.0.1} \\ \hline
                     \end{tabular}
                 \egroup
-
-                %% \begin{figure}[!h]
-                %%     \centering
-                %%     \includegraphics[scale=0.5]{logo.jpg}
-                %% \end{figure}
             \end{flushright}
-
-            \vspace{40mm}
-
-            \begin{center}
-                \textcolor{red}{
-                    \textbf {
-                        \underline{
-                            \LARGE{This document is in a draft state!}
-                        }
-                    }
-                }
-            \end{center}
 
             %% \vfill adds at the bottom
             \vfill 
 
-            \centering
-
-            \Large \textbf{© 2020 \href{https://github.com/stanislaw/strictdoc}{StrictDoc Project}}
+            \begin{center}
+                \Large{© 2020 StrictDoc Project}
+            \end{center}
 
         \end{titlepage}
 

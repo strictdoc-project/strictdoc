@@ -62,90 +62,10 @@ latex_elements = {
     'extraclassoptions': 'openany,oneside',
     # The paper size ('letterpaper' or 'a4paper').
     'papersize': 'a4paper',
-    'pointsize': '14pt', # this seems to have no effect
+    # 'pointsize': '14pt' # does not have any effect
 
     'releasename': "",
 
-    # Additional stuff for the LaTeX preamble.
-    #
-    'preamble': r'''
-        \setcounter{secnumdepth}{10}
-        \setcounter{tocdepth}{10}
-        
-        \usepackage{datetime}
-        \newdateformat{MonthYearFormat}{%
-            \monthname[\THEMONTH], \THEYEAR}
-
-        \pagecolor [RGB]{255, 255, 255}
-
-        \usepackage{hyperref}
-        \hypersetup{
-            colorlinks=true
-            linkcolor=red,          % color of internal links (change box color with linkbordercolor)
-            citecolor=green,        % color of links to bibliography
-            filecolor=magenta,      % color of file links
-            urlcolor=cyan % This has an effect
-        }
-
-        \usepackage{fontspec}
-        % https://tex.stackexchange.com/a/449194/61966 
-        % https://tex.stackexchange.com/a/141697/61966
-        \setmainfont[
-            Ligatures=TeX,Scale=1.2
-        ]{Helvetica Neue}
-        \linespread{1.5}
-
-        \newcommand{\tablecell}[1] {\Large{\texttt{#1}}}
-    ''',
-
-    'maketitle': r'''
-        \pagenumbering{Roman} %%% to avoid page 1 conflict with actual page 1
-
-        \begin{titlepage}   
-            %% \centering
-            \begin{flushright}
-
-                \vspace*{40mm} %%% * is used to give space from top
-
-                \Huge{\textbf{StrictDoc}}
-                
-                \Large{\textbf{Release: 0.0.1 (\MonthYearFormat\today)}}
-
-                \vspace{35mm}
-
-                \begin{tabular}{|l|l|}
-                \hline
-                \tablecell {Requirements and Specifications} & \tablecell {Documentation Control} \\ \hline
-                \tablecell {Traceability and Coverage} & \tablecell {Open source software} \\ \hline
-                \end{tabular}
-
-                %% \begin{figure}[!h]
-                %%     \centering
-                %%     \includegraphics[scale=0.5]{logo.jpg}
-                %% \end{figure}
-            \end{flushright}
-
-            %% \vfill adds at the bottom
-            \vfill 
-
-            \centering
-
-            \Large \textbf{© 2020 \href{https://github.com/stanislaw/strictdoc}{StrictDoc Project}}
-
-        \end{titlepage}
-
-        \clearpage
-        
-        \pagenumbering{roman}
-        \tableofcontents
-        %% \listoffigures
-        %% \listoftables
-        \clearpage
-        \pagenumbering{arabic}
-        ''',
-    # Latex figure (float) alignment
-    #
-    # 'figure_align': 'htbp',
     'sphinxsetup': \
         'hmargin={0.7in,0.7in}, vmargin={1in,1in}, \
         verbatimwithframe=true, \
@@ -153,7 +73,130 @@ latex_elements = {
         InnerLinkColor={rgb}{0.1,0.1,0.1}, \
         OuterLinkColor={rgb}{1,0,0}',
 
+    # Roboto is also a good choice.
+    # sudo apt install fonts-roboto
+    'fontpkg': r'''
+        \setmainfont{DejaVu Sans}
+        \setsansfont{DejaVu Sans}
+        \setmonofont{DejaVu Sans Mono}
+    ''',
+
+    # Disable default Sphinx styles for the TOC.
     'tableofcontents': ' ',
+
+    'preamble': r'''
+        \usepackage{datetime}
+        \usepackage{hyperref}
+        \usepackage{fancyhdr}
+        \usepackage{makecell}
+
+        \setcounter{secnumdepth}{10}
+        \setcounter{tocdepth}{10}
+        
+        \newdateformat{MonthYearFormat}{%
+            \monthname[\THEMONTH], \THEYEAR}
+
+        \pagecolor [RGB]{255, 255, 255}
+
+        \hypersetup{
+            colorlinks=true,
+            linkcolor=[RGB]{35, 35, 35}, % color of internal links (change box color with linkbordercolor)
+            citecolor=green,        % color of links to bibliography
+            filecolor=magenta,      % color of file links
+            urlcolor=cyan % This has an effect
+        }
+
+        \makeatletter
+            % "Since the first page of a chapter uses (by design) the plain style, you need to redefine this style:"
+            % https://tex.stackexchange.com/a/157006/61966
+            \fancypagestyle{plain}{
+                \fancyhf{}
+                \fancyhead[R]{
+                    \textnormal{\nouppercase{StrictDoc}}
+                    \textcolor{red}{\textbf{Draft}}
+                    % trim: left top
+                    % \vspace*{0.4cm}{\includegraphics[trim=-1cm 1.15cm 0 -0cm, scale=.35]{PTS_bow.png}}
+                }
+                \fancyfoot[R]{
+                    \thepage
+                }
+                \renewcommand{\headrulewidth}{0.0pt}
+                \renewcommand{\footrulewidth}{1.0pt}
+            }
+            \pagestyle{plain}
+            \fancypagestyle{normal}{
+                \fancyhf{}
+                \fancyhead[R]{
+                    \textnormal{\nouppercase{StrictDoc}}
+                    \textcolor{red}{\textbf{Draft}}
+                    % \vspace*{0.4cm}{\includegraphics[trim=-1cm 1.15cm 0cm 0cm, scale=.35]{PTS_bow.png}}
+                }
+                \fancyfoot[R]{
+                    \thepage
+                }
+                \renewcommand{\headrulewidth}{1.0pt}
+                \renewcommand{\footrulewidth}{1.0pt}
+            }
+        \makeatother
+
+        \newcommand{\tablecell}[1] {{{#1}}}
+    ''',
+
+    'maketitle': r'''
+        \pagenumbering{Roman} %%% to avoid page 1 conflict with actual page 1
+
+        \begin{titlepage}   
+            \vspace*{50mm} %%% * is used to give space from top
+
+            \begin{flushright}
+
+                \Huge{\textbf{StrictDoc}}
+                
+                \Large{\textbf{Technical documentation control software}}
+            \end{flushright}
+
+            \vspace{30mm}
+
+            \begin{flushright}
+                \bgroup
+                    \def\arraystretch{1.5}%  1 is the default, change whatever you need
+                    \begin{tabular}{|l|l|}
+                    \hline
+                    \textbf{{Project goal:}} & 
+                    \makecell[l]{ 
+                            Requirements management, Documentation Control
+                    } 
+                    \\ \hline
+                    \textbf{{Supported Documents:}} & \tablecell {Requirements document, Specification, Technical Manual} \\ \hline
+                    \textbf{{Export formats:}} & \tablecell {RST/Sphinx, HTML, PDF} \\ \hline
+                    \textbf{{License model:}} & \tablecell {Open source software, Apache 2 license} \\ \hline
+                    \textbf{{Project page:}} & \tablecell {https://github.com/stanislaw/strictdoc} \\ \hline
+                    \textbf{{Release date:}} & \tablecell {\MonthYearFormat\today} \\ \hline
+                    \textbf{{Version:}} & \tablecell {0.0.1} \\ \hline
+                    \end{tabular}
+                \egroup
+            \end{flushright}
+
+            %% \vfill adds at the bottom
+            \vfill 
+
+            \begin{center}
+                \Large{© 2020 StrictDoc Project}
+            \end{center}
+
+        \end{titlepage}
+
+        \clearpage
+
+        \pagenumbering{roman}
+        \pagestyle{plain}
+        \tableofcontents
+        %% \listoffigures
+        %% \listoftables
+        \clearpage
+        \pagestyle{normal}
+        \pagenumbering{arabic}
+        '''
 }
 
 # -- Options for HTML output -------------------------------------------------

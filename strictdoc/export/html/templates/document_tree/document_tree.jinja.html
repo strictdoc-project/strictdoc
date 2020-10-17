@@ -11,41 +11,64 @@
   <h1>Document Tree</h1>
 
   <div class="document-tree">
-    {%- for folder_or_file in artefact_list: -%}
-      {%- set last_class_or_none = '' -%}
-      {%- if loop.nextitem and loop.nextitem.level < folder_or_file.level -%}
-        {%- set last_class_or_none = 'last-in-level' -%}
-      {%- endif -%}
+    <div class="document-tree_table">
+      {%- for folder_or_file in artefact_list: -%}
+        {%- set last_class_or_none = '' -%}
+        {%- if loop.last or (loop.nextitem and loop.nextitem.level < folder_or_file.level) -%}
+          {%- set last_class_or_none = 'last-in-level' -%}
+        {%- endif -%}
 
-      <div class="row">
-        {%- if folder_or_file.is_folder(): %}
-          <div class="cell tree-folder tree-level-{{ folder_or_file.level }} {{last_class_or_none}}">
-            {{ folder_or_file.get_folder_name() }}/
-          </div>
-        {% else %}
-          <div class="cell tree-file tree-level-{{ folder_or_file.level }} {{last_class_or_none}}">
-            {{ folder_or_file.get_file_name() }}
-          </div>
+        <div class="document-tree_row">
+          {%- if folder_or_file.is_folder(): %}
+            <div class="document-tree_cell document-tree_level_{{ folder_or_file.level }} {{last_class_or_none}}">
+              {%- if folder_or_file.level > 0: %}
+                <i class="level-branch"></i>
+              {%- endif -%}
 
-          {%- set document_name = document_tree.get_document_name(folder_or_file.get_full_path()) %}
-          <div class="cell tree-file-name">
-            {{ document_name }}
-          </div>
-          <div class="cell tree-file-link">
-            <a href="{{ document_name }}.html">DOC</a>
-          </div>
-          <div class="cell tree-file-link">
-            <a href="{{ document_name }} - Table.html">TABLE</a>
-          </div>
-          <div class="cell tree-file-link">
-            <a href="{{ get_traceability_link(document_name) }}">TRACE</a>
-          </div>
-          <div class="cell tree-file-link">
-            <a href="{{ get_traceability_deep_link(document_name) }}">DEEP-TRACE</a>
-          </div>
-        {% endif %}
-      </div>
-    {%- endfor -%}
+              <span class="document-tree_folder">
+                {{ folder_or_file.get_folder_name() }}/
+              </span>
+            </div>
+          {% else %}
+            <div class="document-tree_cell document-tree_level_{{ folder_or_file.level }} {{last_class_or_none}}">
+              {%- if folder_or_file.level > 0: %}
+                <i class="level-branch"></i>
+              {%- endif -%}
+
+              <span class="document-tree_file">
+                {{ folder_or_file.get_file_name() }}
+              </span>
+            </div>
+
+            {%- set document_name = document_tree.get_document_name(folder_or_file.get_full_path()) %}
+            <div class="document-tree_cell">
+              <span class="document-tree_file-name">
+                {{ document_name }}
+              </span>
+            </div>
+            <div class="document-tree_cell">
+              <span class="document-tree_file-link">
+                <a href="{{ document_name }}.html">DOC</a>
+              </span>
+            </div>
+            <div class="document-tree_cell">
+              <span class="document-tree_file-link">
+                <a href="{{ document_name }} - Table.html">TABLE</a>
+              </span>
+            </div>
+            <div class="document-tree_cell">
+              <span class="document-tree_file-link">
+                <a href="{{ get_traceability_link(document_name) }}">TRACE</a>
+              </span>
+            </div>
+            <div class="document-tree_cell">
+              <span class="document-tree_file-link">
+                <a href="{{ get_traceability_deep_link(document_name) }}">DEEP-TRACE</a>
+              </span>
+            </div>
+          {% endif %}
+        </div>
+      {%- endfor -%}
+    </div>
   </div>
 </body>
-

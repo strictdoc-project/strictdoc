@@ -42,6 +42,7 @@ class RSTWriter:
             4: '^',
             5: '"',
             6: '#',
+            7: "'",
         }
         header_char = chars[level]
         output = ''

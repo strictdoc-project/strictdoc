@@ -91,7 +91,7 @@ latex_elements = {
         \usepackage{makecell}
 
         \setcounter{secnumdepth}{10}
-        \setcounter{tocdepth}{10}
+        \setcounter{tocdepth}{6}
         
         \newdateformat{MonthYearFormat}{%
             \monthname[\THEMONTH], \THEYEAR}
@@ -138,6 +138,48 @@ latex_elements = {
                 \renewcommand{\footrulewidth}{1.0pt}
             }
         \makeatother
+
+        \usepackage{eqparbox}
+        \usepackage{titletoc}
+
+        \titlecontents{chapter}
+                      [0em]
+                      {\vspace{.25\baselineskip}}
+                      {\eqparbox{ch}{\thecontentslabel}\hspace{0.2cm}}
+                      {}
+                      {\titlerule*[10pt]{$\cdot$}\contentspage}
+        
+        \titlecontents{section}
+                      [0.5cm]
+                      {\vspace{.25\baselineskip}}
+                      {\eqparbox{S}{\thecontentslabel}\hspace{0.2cm}}
+                      {}
+                      {\titlerule*[10pt]{$\cdot$}\contentspage}
+        
+        \titlecontents{subsection}
+                      [1cm]
+                      {\vspace{.25\baselineskip}}
+                      {\eqparbox{Ss}{\thecontentslabel}\hspace{0.2cm}}
+                      {}
+                      {\titlerule*[10pt]{$\cdot$}\contentspage}
+
+        \titlecontents{subsubsection}
+                      [1.5cm]{\vspace{.25\baselineskip}}
+                      {\eqparbox{Sss}{\thecontentslabel}\hspace{0.2cm}}
+                      {}
+                      {\titlerule*[10pt]{$\cdot$}\contentspage}
+        
+        \titlecontents{paragraph}
+                      [2cm]{\vspace{.25\baselineskip}}
+                      {\eqparbox{Sss}{\thecontentslabel}\hspace{0.2cm}}
+                      {}
+                      {\titlerule*[10pt]{$\cdot$}\contentspage}
+
+        \titlecontents{subparagraph}
+                      [2cm]{\vspace{.25\baselineskip}}
+                      {\eqparbox{Sss}{\thecontentslabel}\hspace{0.2cm}}
+                      {}
+                      {\titlerule*[10pt]{$\cdot$}\contentspage}
 
         \newcommand{\tablecell}[1] {{{#1}}}
     ''',

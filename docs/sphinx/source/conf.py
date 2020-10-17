@@ -106,36 +106,38 @@ latex_elements = {
             urlcolor=cyan % This has an effect
         }
 
-        % "Since the first page of a chapter uses (by design) the plain style, you need to redefine this style:"
-        % https://tex.stackexchange.com/a/157006/61966
-        \fancypagestyle{plain}{
-            \fancyhf{}
-            \fancyhead[R]{
-                \textnormal{\nouppercase{StrictDoc}}
-                \textcolor{red}{\textbf{Draft}}
-                % trim: left top
-                % \vspace*{0.4cm}{\includegraphics[trim=-1cm 1.15cm 0 -0cm, scale=.35]{PTS_bow.png}}
+        \makeatletter
+            % "Since the first page of a chapter uses (by design) the plain style, you need to redefine this style:"
+            % https://tex.stackexchange.com/a/157006/61966
+            \fancypagestyle{plain}{
+                \fancyhf{}
+                \fancyhead[R]{
+                    \textnormal{\nouppercase{StrictDoc}}
+                    \textcolor{red}{\textbf{Draft}}
+                    % trim: left top
+                    % \vspace*{0.4cm}{\includegraphics[trim=-1cm 1.15cm 0 -0cm, scale=.35]{PTS_bow.png}}
+                }
+                \fancyfoot[R]{
+                    \thepage
+                }
+                \renewcommand{\headrulewidth}{0.0pt}
+                \renewcommand{\footrulewidth}{1.0pt}
             }
-            \fancyfoot[R]{
-                \thepage
+            \pagestyle{plain}
+            \fancypagestyle{normal}{
+                \fancyhf{}
+                \fancyhead[R]{
+                    \textnormal{\nouppercase{StrictDoc}}
+                    \textcolor{red}{\textbf{Draft}}
+                    % \vspace*{0.4cm}{\includegraphics[trim=-1cm 1.15cm 0cm 0cm, scale=.35]{PTS_bow.png}}
+                }
+                \fancyfoot[R]{
+                    \thepage
+                }
+                \renewcommand{\headrulewidth}{1.0pt}
+                \renewcommand{\footrulewidth}{1.0pt}
             }
-            \renewcommand{\headrulewidth}{0.0pt}
-            \renewcommand{\footrulewidth}{1.0pt}
-        }
-
-        \fancypagestyle{normal}{
-            \fancyhf{}
-            \fancyhead[R]{
-                \textnormal{\nouppercase{StrictDoc}} 
-                \textcolor{red}{\textbf{Draft}}
-                % \vspace*{0.4cm}{\includegraphics[trim=-1cm 1.15cm 0cm 0cm, scale=.35]{PTS_bow.png}}
-            }
-            \fancyfoot[R]{
-                \thepage
-            }
-            \renewcommand{\headrulewidth}{1.0pt}
-            \renewcommand{\footrulewidth}{1.0pt}
-        }
+        \makeatother
 
         \newcommand{\tablecell}[1] {{{#1}}}
     ''',
@@ -185,12 +187,14 @@ latex_elements = {
         \end{titlepage}
 
         \clearpage
-        
+
         \pagenumbering{roman}
+        \pagestyle{plain}
         \tableofcontents
         %% \listoffigures
         %% \listoftables
         \clearpage
+        \pagestyle{normal}
         \pagenumbering{arabic}
         '''
 }

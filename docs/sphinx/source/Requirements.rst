@@ -72,6 +72,9 @@ StrictDoc's Data Model shall accommodate for maximum possible standard requireme
 Examples of standard requirements documents include but are not limited to:
 - ESA Statement of Work documents
 
+Section item
+------------
+
 Requirement item
 ----------------
 
@@ -104,6 +107,9 @@ Comments
 ~~~~~~~~
 
 Requirement item might have one or more comments.
+
+Composite Requirement item
+--------------------------
 
 Requirements Document Format
 ============================

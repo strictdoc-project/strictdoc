@@ -69,6 +69,12 @@ Examples of standard requirements documents include but are not limited to:
 
 [SECTION]
 LEVEL: 2
+TITLE: Section item
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 2
 TITLE: Requirement item
 
 [REQUIREMENT]
@@ -94,6 +100,12 @@ STATEMENT: Requirement item might have one or more references.
 [REQUIREMENT]
 TITLE: Comments
 STATEMENT: Requirement item might have one or more comments.
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 2
+TITLE: Composite Requirement item
 
 [/SECTION]
 

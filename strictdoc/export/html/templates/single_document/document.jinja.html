@@ -37,7 +37,7 @@
     </h{{ section.ng_level }}>
   {%- elif section_or_requirement.is_free_text %}
     {%- set freetext = section_or_requirement %}
-    {{ freetext.text }}
+    {{ renderer.render_text_fragment(freetext.text) }}
     <br/>
   {%- endif %}
 {%- endfor %}

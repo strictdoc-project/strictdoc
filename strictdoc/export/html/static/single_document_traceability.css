@@ -33,9 +33,6 @@ h1 {
 .cell-section {
   display: inline-block;
   width: 33.33%;
-  //text-align: center;
-  //background: #add8e6;
-  ///border: 2px solid #000;
   margin: 0px 0px -1px 0px;
 }
 
@@ -84,12 +81,10 @@ h1 {
 
 .comment-paragraph {
   margin: 10px 0px;
-  //background: blue;
 }
 
 .comment-word + .comment-paragraph {
   display: inline;
-  //background: red;
 }
 
 .tag {

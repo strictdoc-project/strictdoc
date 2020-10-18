@@ -12,10 +12,8 @@
 
 .comment-paragraph {
   margin: 10px 0px;
-  //background: blue;
 }
 
 .comment-word + .comment-paragraph {
   display: inline;
-  //background: red;
 }

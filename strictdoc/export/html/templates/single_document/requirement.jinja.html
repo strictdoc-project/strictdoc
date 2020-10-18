@@ -9,12 +9,8 @@
   {%- endif -%}
 
   {%- if requirement.uid %}
-    <div>
-      <small>
-        <i>
-          UID: {{ requirement.uid }}
-        </i>
-      </small>
+    <div class="requirement-uid">
+      UID: {{ requirement.uid }}
     </div>
   {%- endif %}
 
@@ -25,11 +21,9 @@
   {%- endif %}
 
   {%- if requirement.statement or requirement.statement_multiline -%}
-    {%- for statement_block in requirement.statement_as_html_blocks() -%}
-      <div class="requirement-statement">
-        {{ statement_block }}
-      </div>
-    {%- endfor -%}
+    <div class="requirement-statement">
+      {{ renderer.render_text_fragment(requirement.statement_or_multiline_statement()) }}
+    </div>
   {%- endif -%}
 
   {%- if requirement.body %}

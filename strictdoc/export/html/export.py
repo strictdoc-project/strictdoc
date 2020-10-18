@@ -1,10 +1,9 @@
-import collections
 import os
 
 from jinja2 import Environment, PackageLoader
 
-from strictdoc.core.document_tree import FileTree
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
+from strictdoc.export.html.renderer import SingleDocumentFragmentRenderer
 from strictdoc.helpers.hyperlinks import string_to_anchor_id
 
 
@@ -57,9 +56,11 @@ class SingleDocumentHTMLExport:
 
         template = SingleDocumentHTMLExport.env.get_template('single_document/document.jinja.html')
 
+        renderer = SingleDocumentFragmentRenderer()
         output += template.render(document=document,
                                   traceability_index=traceability_index,
-                                  string_to_anchor_id=string_to_anchor_id)
+                                  string_to_anchor_id=string_to_anchor_id,
+                                  renderer=renderer)
 
         return output
 

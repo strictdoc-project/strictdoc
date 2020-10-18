@@ -120,6 +120,13 @@ class Requirement(object):
     def is_composite_requirement(self):
         return False
 
+    def statement_or_multiline_statement(self):
+        if self.statement:
+            return self.statement
+        elif self.statement_multiline:
+            return self.statement_multiline
+        raise NotImplementedError
+
     def statement_as_html_blocks(self):
         if self.statement:
             return [self.statement]

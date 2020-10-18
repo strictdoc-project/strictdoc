@@ -25,7 +25,6 @@
   {%- if section_or_requirement.is_requirement %}
     {%- set requirement = section_or_requirement %}
     {% include "single_document/requirement.jinja.html" %}
-    <br/>
   {%- elif section_or_requirement.is_section %}
     {%- set section = section_or_requirement %}
 
@@ -40,7 +39,6 @@
   {%- elif section_or_requirement.is_free_text %}
     {%- set freetext = section_or_requirement %}
     {{ renderer.render_text_fragment(freetext.text) }}
-    <br/>
   {%- endif %}
 {%- endfor %}
 

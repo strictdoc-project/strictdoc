@@ -21,7 +21,7 @@ text-based requirements:
 - Doorstop
 - StrictDoc, first generation: Markdown-based C++ program.
 - StrictDoc, second generation: RST/Sphinx-based Python program. Using Sphinx
-extensions to manage meta information.
+  extensions to manage meta information.
 <<<
 
 [REQUIREMENT]
@@ -64,7 +64,9 @@ TITLE: Modeling capability
 STATEMENT: StrictDoc's Data Model shall accommodate for maximum possible standard requirement document formats.
 BODY: >>>
 Examples of standard requirements documents include but are not limited to:
-- ESA Statement of Work documents
+
+- Non-nested requirement lists split by categories
+  (e.g., Functional Requirements, Interface Requirements, Performance Requirements, etc.)
 <<<
 
 [SECTION]

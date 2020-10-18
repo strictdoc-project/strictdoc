@@ -7,7 +7,25 @@ TITLE: In works
 
 [SECTION]
 LEVEL: 2
-TITLE: CSS Work
+TITLE: PDF Export
+
+[REQUIREMENT]
+TITLE: PDF Export: TOC sections: bottom alignment.
+STATEMENT: Numbers do not align with titles.
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 2
+TITLE: HTML Export
+
+[REQUIREMENT]
+TITLE: RST support for text and code blocks
+STATEMENT: StrictDoc shall support rendering text/code blocks into RST syntax.
+
+[REQUIREMENT]
+TITLE: Left panel: Table of contents
+STATEMENT: Left panel: Table of contents.
 
 [REQUIREMENT]
 TITLE: Document page CSS: Proper markup
@@ -33,21 +51,54 @@ STATEMENT: Deep Traceability page CSS: Improvements
 LEVEL: 1
 TITLE: Roadmap
 
+[SECTION]
+LEVEL: 2
+TITLE: First public release
+
+[REQUIREMENT]
+TITLE: StrictDoc via CLI interface
+STATEMENT: StrictDoc shall support it use as a Python command-line application.
+COMMENT: >>>
+Such a use allows a more fine-grained access to the StrictDoc's modules, such
+as Grammar, Import, Export classes, etc.
+<<<
+
+[REQUIREMENT]
+TITLE: Document tree: Incremental generation
+STATEMENT: When exporting documentation tree, StrictDoc shall regenerate only changed documents and files.
+
+[REQUIREMENT]
+TITLE: Generated file names
+STATEMENT: Document name must be transformed into a valid file name.
+COMMENT: >>>
+Alternative: Simply use the original document file names.
+<<<
+
+[REQUIREMENT]
+TITLE: Validation: Uniqueness of UID identifiers in a document tree
+STATEMENT: StrictDoc shall ensure that each UID used in a document tree is unique.
+
+[/SECTION]
+
+[REQUIREMENT]
+TITLE: StrictDoc as library
+STATEMENT: StrictDoc shall support it use as a Python library.
+COMMENT: >>>
+Such a use allows a more fine-grained access to the StrictDoc's modules, such
+as Grammar, Import, Export classes, etc.
+<<<
+
 [REQUIREMENT]
 TITLE: Excel Export
-STATEMENT: Excel Export
+STATEMENT: StrictDoc shall support exporting documents to Excel format.
 
 [REQUIREMENT]
 TITLE: PlantUML Export
-STATEMENT: PlantUML Export
+STATEMENT: StrictDoc shall support exporting documents to ReqIF format.
 
 [REQUIREMENT]
-TITLE: PDF Export: Styles Upgrade
-STATEMENT: PDF Export: Styles Upgrade
-
-[REQUIREMENT]
-TITLE: RST support for text and code blocks
-STATEMENT: StrictDoc shall support rendering text/code blocks into RST syntax.
+TITLE: ReqIF Import/Export
+STATEMENT: StrictDoc shall support ReqIF format.
 
 [REQUIREMENT]
 TITLE: Markdown support for text and code blocks
@@ -60,15 +111,16 @@ STATEMENT: StrictDoc shall work on macOS, Linux, and Windows systems.
 [REQUIREMENT]
 TITLE: Custom fields
 STATEMENT: StrictDoc shall support customization of the default grammar with custom fields.
-COMMENT: Examples: RAIT compliance fields, ASIL level.
+COMMENT: >>>
+Examples:
+
+- RAIT compliance fields (Review of design, analysis, inspection, testing)
+- Automotive Safety Integrity Level level (ASIL).
+<<<
 
 [REQUIREMENT]
 TITLE: Filtering by tags
 STATEMENT: StrictDoc shall support filtering filtering by tags.
-
-[REQUIREMENT]
-TITLE: Generated file names
-STATEMENT: Document name must be transformed into a valid file name.
 
 [REQUIREMENT]
 TITLE: Linking with implementation artifacts
@@ -84,7 +136,12 @@ STATEMENT: StrictDoc shall provide a Graphical User Interface (GUI).
 
 [REQUIREMENT]
 TITLE: Validation: Section Levels
-STATEMENT: Section levels must be nested.
+STATEMENT: Section levels must be properly nested.
+
+[REQUIREMENT]
+TITLE: Validation: Valid HTML markup
+STATEMENT: StrictDoc's HTML export tests shall validate the generated HTML markup.
+COMMENT: First candidate: Table of contents and its nested ``<ul>/<li>`` items.
 
 [REQUIREMENT]
 TITLE: Option: Title: Automatic numeration

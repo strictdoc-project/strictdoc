@@ -41,11 +41,7 @@
           Comment:
         </span>
 
-        {%- for comment_paragraph in comment.comment_by_paragraphs() %}
-          <div class="comment-paragraph">
-          {{ comment_paragraph }}
-          </div>
-        {%- endfor %}
+        {{ renderer.render_text_fragment(comment.comment) }}
       </div>
     {%- endfor %}
   {%- endif %}

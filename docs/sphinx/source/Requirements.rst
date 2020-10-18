@@ -24,7 +24,7 @@ text-based requirements:
 - Doorstop
 - StrictDoc, first generation: Markdown-based C++ program.
 - StrictDoc, second generation: RST/Sphinx-based Python program. Using Sphinx
-extensions to manage meta information.
+  extensions to manage meta information.
 
 Requirements validation
 -----------------------
@@ -70,7 +70,9 @@ StrictDoc's Data Model shall accommodate for maximum possible standard requireme
 
 
 Examples of standard requirements documents include but are not limited to:
-- ESA Statement of Work documents
+
+- Non-nested requirement lists split by categories
+  (e.g., Functional Requirements, Interface Requirements, Performance Requirements, etc.)
 
 Section item
 ------------
@@ -92,6 +94,20 @@ UID identifier
 ~~~~~~~~~~~~~~
 
 Requirement item might have an UID identifier.
+
+UID identifier format
+^^^^^^^^^^^^^^^^^^^^^
+
+StrictDoc shall not impose any restrictions on the UID field format.
+
+**Comment:** Conventions used for requirement UIDs can be very different. And there seems to
+be no way to define a single rule.
+
+Some examples:
+
+- FUN-003
+- cES1008, cTBL6000.1 (NASA cFS)
+- Requirements without a number, e.g. SDOC-HIGH-DATA-MODEL (StrictDoc)
 
 Title
 ~~~~~

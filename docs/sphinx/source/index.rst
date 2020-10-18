@@ -11,5 +11,6 @@ Welcome to StrictDoc's documentation!
    :caption: Contents:
 
    Introduction
+   Getting started
    Requirements
    Roadmap

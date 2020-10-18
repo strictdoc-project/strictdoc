@@ -1,0 +1,14 @@
+[DOCUMENT]
+NAME: Getting started
+
+[SECTION]
+LEVEL: 1
+TITLE: PIP package
+
+[FREETEXT]
+.. code-block::
+
+    pip install strictdoc
+[/FREETEXT]
+
+[/SECTION]

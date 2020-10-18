@@ -1,4 +1,6 @@
-<div id="{{ string_to_anchor_id(requirement.title) }}">
+<div>
+  <span id="{{ string_to_anchor_id(requirement.title) }}"></span>
+
   {%- if requirement.title -%}
     <h{{ requirement.ng_level }}>
       <span class="section-number">

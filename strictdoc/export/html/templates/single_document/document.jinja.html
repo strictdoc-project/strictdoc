@@ -29,6 +29,8 @@
   {%- elif section_or_requirement.is_section %}
     {%- set section = section_or_requirement %}
 
+    <span id="{{ string_to_anchor_id(section_or_requirement.title) }}"></span>
+
     <h{{ section.ng_level }}>
       <span class="section-number">
         {{ section.export_title }}

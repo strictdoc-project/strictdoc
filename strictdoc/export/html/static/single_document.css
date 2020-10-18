@@ -6,14 +6,11 @@
   margin: 10px 0px;
 }
 
-.comment-word {
+.comment:last-child {
+  margin-bottom: 0px;
+}
+
+.comment p:first-child::before {
+  content: "Comment: ";
   font-weight: bold;
-}
-
-.comment-paragraph {
-  margin: 10px 0px;
-}
-
-.comment-word + .comment-paragraph {
-  display: inline;
 }

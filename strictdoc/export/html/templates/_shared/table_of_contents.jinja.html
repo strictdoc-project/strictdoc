@@ -1,8 +1,13 @@
 {%- if document.ng_sections %}
-  <div id="toc">
-    <h2>Table of Contents</h2>
+  <div class="toc_toggle"></div>
 
-    <ul>
+  <div class="toc_container">
+    <a class="link-back-to-index" href="index.html">Back to Index</a>
+
+    <div class="toc_header">Table of Contents</div>
+
+
+    <ul class="toc_list">
     {%- for section in document_iterator.table_of_contents() -%}
       <li>
         <a href="#{{ string_to_anchor_id(section.title) }}">

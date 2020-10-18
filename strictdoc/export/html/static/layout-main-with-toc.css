@@ -5,7 +5,15 @@ body {
 .section-number {
   font-size: 1em;
   padding-right: 0.25em;
-  /* opacity: 0.75; */
+}
+
+.link-back-to-index {
+  float: right;
+  color: #808080;
+}
+
+.link-back-to-index:hover {
+  color: #000;
 }
 
 /* layout-with-toc */

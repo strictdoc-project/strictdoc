@@ -5,7 +5,10 @@
     <ul>
     {%- for section in document_iterator.table_of_contents() -%}
       <li>
-        <a href="#{{ string_to_anchor_id(section.title) }}">{{ section.export_title }} {{ section.title if section.title else '(NO TITLE)' }}</a>
+        <a href="#{{ string_to_anchor_id(section.title) }}">
+          <span class="section-number">{{ section.export_title }}</span>
+          {{ section.title if section.title else '(NO TITLE)' }}
+        </a>
 
       {%- if not loop.last -%}
         {%- if loop.nextitem.ng_level > section.ng_level -%}

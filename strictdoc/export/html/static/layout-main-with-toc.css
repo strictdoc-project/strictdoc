@@ -9,30 +9,36 @@ body {
 
 .link-back-to-index {
   float: right;
-  color: #808080;
+  font-size: 14px;
+  color: var(--color-text-lighter);
 }
 
 .link-back-to-index:hover {
-  color: #000;
+  color: var(--color-text-main);
 }
 
 /* layout-with-toc */
 
 .layout-with-toc {
   --layout-transition: 0.5s;
-  --list-padding: 10px;
-  --font-size: 16px;
-  --panel-bg: #fafafa;
-  --panel-bg-hover: #fff;
 
-  --toc-width-index: 25;
+  --toc-list-padding: 10px;
+  --toc-font-size: 14px;
+  --toc-panel-bg: var(--color-bg-mac);
+  --toc-panel-bg-hover: var(--color-bg-main);
+  --toc-link-color: var(--color-text-lighter);
+  --toc-active-link-color: var(--color-text-main);
+
+  --toc-width-index: 22;
+
   --content-padding-index: 3;
 }
 
 /* aside.toc */
 
 .toc {
-  --toc-width: calc(var(--font-size) * var(--toc-width-index));
+
+  --toc-width: calc(var(--toc-font-size) * var(--toc-width-index));
 
   position: fixed;
   z-index: 10;
@@ -43,7 +49,7 @@ body {
 
 .toc_header {
   font-weight: bold;
-  padding-bottom: var(--font-size);
+  padding-bottom: var(--toc-font-size);
 }
 
 .toc_container {
@@ -52,9 +58,9 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: calc(var(--font-size) * 1.5);
-  padding-bottom: calc(var(--font-size) * 3);
-  background-color: var(--panel-bg);
+  padding: calc(var(--toc-font-size) * 1.5);
+  padding-bottom: calc(var(--toc-font-size) * 3);
+  background-color: var(--toc-panel-bg);
   overflow: auto;
 }
 
@@ -63,15 +69,15 @@ body {
   left: 100%;
   top: 0;
   bottom: 0;
-  padding: calc(var(--font-size) * 0.75);
+  padding: calc(var(--toc-font-size) * 0.75);
   text-align: center;
-  background-color: var(--panel-bg);
-  box-shadow: 0 0 var(--font-size) rgba(0,0,0,0.2);
+  background-color: var(--toc-panel-bg);
+  box-shadow: 0 0 var(--toc-font-size) rgba(0,0,0,0.2);
   cursor: pointer;
 }
 
 .toc_toggle:hover {
-  background-color: var(--panel-bg-hover);
+  background-color: var(--toc-panel-bg-hover);
 }
 
 .toc_toggle::before {
@@ -87,39 +93,55 @@ body {
 }
 
 .toc_list ul {
-  padding-left: var(--list-padding);
+  padding-left: var(--toc-list-padding);
 }
 
 .toc_list li {
-  padding-top: calc(var(--font-size) * 0.25);;
+  padding-top: calc(var(--toc-font-size) * 0.5);
+  font-size: var(--toc-font-size);
 }
 
 .toc_list a:link,
 .toc_list a:visited {
-  color: black;
+  color: var(--toc-link-color);
   text-decoration: none;
 }
 
 .toc_list a:hover {
-  color: brown;
+  color: var(--toc-active-link-color);
+  background-color: var(--toc-panel-bg-hover);
 }
 
-/* main.content */
+/* .content Layout */
 
 .content {
-  padding: calc(var(--font-size) * 3);
+  padding: calc(var(--toc-font-size) * 3);
   position: relative;
+}
+
+/* main.content typo-styles */
+
+main.content {
+  --font-size: 16px;
+  --line-height: calc(var(--font-size) * 1.6);
+
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+}
+
+main.content p {
+  margin-bottom: calc(var(--font-size) * 0.5);
 }
 
 /* open / close */
 
 .layout-with-toc {
-  padding-left: calc(var(--font-size) * var(--content-padding-index));
+  padding-left: calc(var(--toc-font-size) * var(--content-padding-index));
   transition: var(--layout-transition);
 }
 
 .layout-with-toc.open {
-  padding-left: calc(var(--font-size) * (var(--toc-width-index) + var(--content-padding-index)));
+  padding-left: calc(var(--toc-font-size) * (var(--toc-width-index) + var(--content-padding-index)));
   transition: var(--layout-transition);
 }
 

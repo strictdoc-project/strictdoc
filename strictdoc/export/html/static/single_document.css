@@ -1,9 +1,16 @@
-.requirement-statement {
-  margin: 8px 0px;
+.requirement-statement ul,
+.requirement-statement ol {
+  padding-left: 1.6em;
 }
 
 .comment {
   margin: 10px 0px;
+
+  color: var(--color-text-light);
+  font-size: .9em;
+  line-height: 1.4;
+  padding-left: 1em;
+  border-left: 4px double var(--code-border-color);
 }
 
 .comment:last-child {
@@ -15,25 +22,4 @@
   font-weight: bold;
 }
 
-/* main.content typo-styles */
 
-main.content {
-  --font-size: 16px;
-  --line-height: calc(var(--font-size) * 1.6);
-
-  font-size: var(--font-size);
-  line-height: var(--line-height);
-}
-
-main.content h1,
-main.content h2,
-main.content h3,
-main.content h4,
-main.content h5,
-main.content h6 {
-  margin: 1.5em 0 0.75em;
-}
-
-main.content p {
-  margin-bottom: calc(var(--font-size) * 0.5);
-}

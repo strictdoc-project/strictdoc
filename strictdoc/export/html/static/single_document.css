@@ -31,6 +31,12 @@ main.content {
   line-height: var(--line-height);
 }
 
+main.content h1.document-title,
+main.content .document-title {
+  margin-top: 0;
+  color: var(--color-text-main);
+}
+
 main.content h1,
 main.content h2,
 main.content h3,

@@ -55,3 +55,12 @@ pre.code {
   border: 1px solid var(--code-border-color);
   font-family: var(--code-font-family);
 }
+
+/* typo */
+
+h1 { font-size: 2em; }
+h2 { font-size: 1.6em; }
+h3 { font-size: 1.4em; }
+h4 { font-size: 1.2em; }
+h5 { font-size: 1em; }
+h6 { font-size: 1em; }

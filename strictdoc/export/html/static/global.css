@@ -15,32 +15,33 @@ div.document {
 /* general styles */
 
 :root {
-  --main-text-color: #000;
-  --main-bg-color: #fff;
+  --color-text-main: #000;
+  --color-text-lighter: #444;
+  --color-text-light: #808080;
 
-  --accent-color-l: #eff8ff;
-  --accent-color-m: #468cab;
-  --accent-color-d: #274466;
+  --color-bg-main: #fff;
+  --color-bg-mac: #F2F5F9;
 
-  --code-color: #444;
-  --code-bg-color: #F2F5F9;
+  --color-accent-light: #468cab;
+  --color-accent-dark: #274466;
+
   --code-border-color: #E5EAF1;
-
   --code-font-family: consolas,monaco,"Andale Mono",monospace;
   --code-font-size: .875em;
 }
 
 cite {
   position: relative;
+  color: var(--color-text-lighter);
   display: inline-block;
   padding: 0 5px;
   /* font: .75em/2 var(--code-font-family); */
   font-style: normal;
   font-family: var(--code-font-family);
   font-size: var(--code-font-size);
-  color: var(--code-color);
   white-space: nowrap;
-  background-color: var(--code-bg-color);
+  color: var(--color-text-lighter);
+  background-color: var(--color-bg-mac);
   border-radius: 4px;
 }
 
@@ -49,8 +50,8 @@ pre.code {
   margin: 20px 0;
   padding: 15px 15px 15px 20px;
   overflow: auto;
-  color: var(--code-color);
-  background-color: var(--code-bg-color);
+  color: var(--color-text-lighter);
+  background-color: var(--color-bg-mac);
   border: 1px solid var(--code-border-color);
   font-family: var(--code-font-family);
 }

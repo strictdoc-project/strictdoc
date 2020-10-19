@@ -57,6 +57,7 @@ pre.code {
 }
 
 /* typo */
+/* HEADERS */
 
 h1 { font-size: 2em; }
 h2 { font-size: 1.6em; }
@@ -87,4 +88,16 @@ h1.document-title,
   font-size: 2em;
   margin-top: 0;
   color: var(--color-text-main);
+}
+
+span.document-view-type {
+  display: inline-block;
+  position: relative;
+  text-transform: uppercase;
+  font-size: .5em;
+  line-height: 1;
+  padding: 6px 10px;
+  top: -6px;
+  background-color: var(--color-bg-mac);
+  color: var(--color-accent-dark);
 }

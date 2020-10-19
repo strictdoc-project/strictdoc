@@ -112,11 +112,25 @@ body {
   background-color: var(--toc-panel-bg-hover);
 }
 
-/* main.content */
+/* .content Layout */
 
 .content {
   padding: calc(var(--toc-font-size) * 3);
   position: relative;
+}
+
+/* main.content typo-styles */
+
+main.content {
+  --font-size: 16px;
+  --line-height: calc(var(--font-size) * 1.6);
+
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+}
+
+main.content p {
+  margin-bottom: calc(var(--font-size) * 0.5);
 }
 
 /* open / close */

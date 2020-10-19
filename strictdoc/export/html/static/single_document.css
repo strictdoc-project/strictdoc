@@ -1,9 +1,15 @@
 .requirement-statement {
-  margin: 8px 0px;
+  /* margin: 8px 0px; */
 }
 
 .comment {
   margin: 10px 0px;
+
+  color: var(--color-text-light);
+  font-size: .9em;
+  line-height: 1.4;
+  padding-left: 1em;
+  border-left: 4px double var(--code-border-color);
 }
 
 .comment:last-child {

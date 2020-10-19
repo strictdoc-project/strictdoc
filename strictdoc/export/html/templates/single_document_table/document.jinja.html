@@ -38,9 +38,7 @@
         {%- if section_or_requirement.is_free_text %}
           <tr class="table-row">
             <td colspan="4" class="cell">
-              {%- for text_paragraph in section_or_requirement.text_as_paragraphs() -%}
-                <p class="text-paragraph">{{ text_paragraph }}</p>
-              {%- endfor -%}
+              {{ renderer.render_text_fragment(section_or_requirement.text) }}
             </td>
           </tr>
         {%- elif section_or_requirement.is_composite_requirement %}

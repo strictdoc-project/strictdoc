@@ -20,6 +20,9 @@ def get_traceability_deep_link(document_name):
     return "{} - Traceability Deep.html".format(document_name)
 
 
+RENDERER = SingleDocumentFragmentRenderer()
+
+
 class DocumentTreeHTMLExport:
     OFFSET = 8
 
@@ -56,11 +59,10 @@ class SingleDocumentHTMLExport:
 
         template = SingleDocumentHTMLExport.env.get_template('single_document/document.jinja.html')
 
-        renderer = SingleDocumentFragmentRenderer()
         output += template.render(document=document,
                                   traceability_index=traceability_index,
                                   string_to_anchor_id=string_to_anchor_id,
-                                  renderer=renderer)
+                                  renderer=RENDERER)
 
         return output
 
@@ -81,7 +83,8 @@ class SingleDocumentTableHTMLExport:
 
         output += template.render(document=document,
                                   traceability_index=traceability_index,
-                                  string_to_anchor_id=string_to_anchor_id)
+                                  string_to_anchor_id=string_to_anchor_id,
+                                  renderer=RENDERER)
 
         return output
 

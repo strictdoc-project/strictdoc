@@ -11,3 +11,46 @@ body {
 div.document {
   display: contents;
 }
+
+/* general styles */
+
+:root {
+  --main-text-color: #000;
+  --main-bg-color: #fff;
+
+  --accent-color-l: #eff8ff;
+  --accent-color-m: #468cab;
+  --accent-color-d: #274466;
+
+  --code-color: #444;
+  --code-bg-color: #F2F5F9;
+  --code-border-color: #E5EAF1;
+
+  --code-font-family: consolas,monaco,"Andale Mono",monospace;
+  --code-font-size: .875em;
+}
+
+cite {
+  position: relative;
+  display: inline-block;
+  padding: 0 5px;
+  /* font: .75em/2 var(--code-font-family); */
+  font-style: normal;
+  font-family: var(--code-font-family);
+  font-size: var(--code-font-size);
+  color: var(--code-color);
+  white-space: nowrap;
+  background-color: var(--code-bg-color);
+  border-radius: 4px;
+}
+
+pre.code {
+  font-size: var(--code-font-size);
+  margin: 20px 0;
+  padding: 15px 15px 15px 20px;
+  overflow: auto;
+  color: var(--code-color);
+  background-color: var(--code-bg-color);
+  border: 1px solid var(--code-border-color);
+  font-family: var(--code-font-family);
+}

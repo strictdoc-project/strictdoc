@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-     <meta charset="UTF-8">
-    <link rel="stylesheet" href="static/global.css" />
-    <link rel="stylesheet" href="static/layout-main-with-toc.css" />
-    <link rel="stylesheet" href="static/single_document.css" />
-    <title>{{document.name}} - Traceability</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="static/global.css" />
+  <link rel="stylesheet" href="static/layout-main-with-toc.css" />
+  <link rel="stylesheet" href="static/single_document.css" />
+  <title>{{document.name}} - Traceability</title>
 </head>
 
 <body>
@@ -19,7 +19,7 @@
   </aside>
 
 <main class="content">
-<h1>{{document.name}}</h1>
+  <h1 class="document-title">{{document.name}}</h1>
 
 {%- for section_or_requirement in document_iterator.all_content() %}
   {%- if section_or_requirement.is_requirement %}
@@ -30,7 +30,7 @@
 
     <span id="{{ string_to_anchor_id(section_or_requirement.title) }}"></span>
 
-    <h{{ section.ng_level }}>
+    <h{{ section.ng_level }} class="section-title">
       <span class="section-number">
         {{ section.export_title }}
       </span>

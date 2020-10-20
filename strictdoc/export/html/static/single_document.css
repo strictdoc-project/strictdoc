@@ -1,25 +1,10 @@
-.requirement-statement ul,
-.requirement-statement ol {
-  padding-left: 1.6em;
-}
 
-.comment {
-  margin: 10px 0px;
-
-  color: var(--color-text-light);
-  font-size: .9em;
-  line-height: 1.4;
-  padding-left: 1em;
-  border-left: 4px double var(--code-border-color);
-}
-
-.comment:last-child {
-  margin-bottom: 0px;
-}
-
-.comment p:first-child::before {
+.requirement .comment p:first-child::before {
   content: "Comment: ";
   font-weight: bold;
 }
 
-
+.requirement .comment {
+  padding-left: 1em;
+  border-left: 4px double var(--code-border-color);
+}

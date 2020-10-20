@@ -28,6 +28,10 @@ div.document {
   --code-border-color: #E5EAF1;
   --code-font-family: consolas,monaco,"Andale Mono",monospace;
   --code-font-size: .875em;
+
+  --color-table-header: #000;
+  --color-table-header-bg: #eee;
+  --color-table-border: #ccc;
 }
 
 cite {
@@ -54,6 +58,23 @@ pre.code {
   background-color: var(--color-bg-mac);
   border: 1px solid var(--code-border-color);
   font-family: var(--code-font-family);
+}
+
+/* requirement elements */
+
+.requirement-statement ul,
+.requirement-statement ol {
+  padding-left: 1.6em;
+}
+
+.comment {
+  color: var(--color-text-lighter);
+  font-size: .9em;
+  line-height: 1.4;
+}
+
+.comment + .comment {
+  margin-top: 10px;
 }
 
 /* typo */

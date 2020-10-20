@@ -84,7 +84,9 @@
 
           {%- if not loop.last -%}
             {%- if not loop.nextitem.is_section and not loop.nextitem.is_free_text -%}
+            <tr class="document-table_requirement-headers">
               {% include "single_document_table/table-fields.jinja.html" %}
+            </tr>
             {%- endif -%}
           {%- endif -%}
         {%- endif %}

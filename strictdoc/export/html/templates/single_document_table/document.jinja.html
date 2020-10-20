@@ -21,8 +21,6 @@
   <main class="content">
     <h1 class="document-title">{{document.name}} <span class="document-view-type">Table</span></h1>
 
-<!-- mettta fix -->
-
     {%- if traceability_index.has_tags(document) -%}
       <div id="tags-outline">
       {%- for tag in traceability_index.get_tags(document) %}
@@ -33,17 +31,17 @@
       </div>
     {%- endif %}
 
-    <table id="sections-and-requirements">
+    <table class="document-table" id="sections-and-requirements">
     {%- for section_or_requirement in document_iterator.all_content() %}
         {%- if section_or_requirement.is_free_text %}
-          <tr class="table-row">
-            <td colspan="4" class="cell">
+          <tr class="document-table_text">
+            <td colspan="4">
               {{ renderer.render_text_fragment(section_or_requirement.text) }}
             </td>
           </tr>
         {%- elif section_or_requirement.is_composite_requirement %}
-          <tr class="table-row table-row-header">
-            <td colspan="4" class="cell">
+          <tr class="document-table_section-title">
+            <td colspan="4">
               {%- set section = section_or_requirement %}
 
               <h{{ section.ng_level }} class="section-title">
@@ -57,21 +55,23 @@
           </tr>
           {%- if not loop.last -%}
             {%- if not loop.nextitem.is_section and not loop.nextitem.is_free_text -%}
+            <tr class="document-table_requirement-headers">
               {% include "single_document_table/table-fields.jinja.html" %}
+            </tr>
             {%- endif -%}
           {%- endif -%}
-          <tr class="table-row">
+          <tr class="document-table_requirement">
             {%- set requirement = section_or_requirement %}
             {% include "single_document_table/requirement.jinja.html" %}
           </tr>
         {%- elif section_or_requirement.is_requirement %}
-          <tr class="table-row">
+          <tr class="document-table_requirement">
             {%- set requirement = section_or_requirement %}
             {% include "single_document_table/requirement.jinja.html" %}
           </tr>
         {%- elif section_or_requirement.is_section %}
-          <tr class="table-row table-row-header">
-            <td colspan="4" class="cell">
+          <tr class="document-table_section-title">
+            <td colspan="4">
               {%- set section = section_or_requirement %}
               <h{{ section.ng_level }} class="section-title">
                 <span class="level">

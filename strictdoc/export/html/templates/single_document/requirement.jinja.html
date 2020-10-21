@@ -24,7 +24,7 @@
 
   {%- if requirement.statement or requirement.statement_multiline -%}
     <div class="requirement-statement">
-      {{ renderer.render_text_fragment(requirement.statement_or_multiline_statement()) }}
+      {{ renderer.render_requirement_statement(requirement) }}
     </div>
   {%- endif -%}
 
@@ -37,7 +37,7 @@
   {%- if requirement.comments %}
     {%- for comment in requirement.comments %}
       <div class="comment">
-        {{ renderer.render_text_fragment(comment.comment) }}
+        {{ renderer.render_comment(comment) }}
       </div>
     {%- endfor %}
   {%- endif %}

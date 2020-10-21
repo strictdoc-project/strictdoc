@@ -2,6 +2,9 @@ import argparse
 import os
 import sys
 
+from strictdoc.export.html.generators.document import SingleDocumentHTMLExport
+from strictdoc.export.html.renderer import SingleDocumentFragmentRenderer
+
 ROOT_PATH = os.path.join(os.path.dirname(__file__), "..", "..")
 sys.path.append(ROOT_PATH)
 
@@ -10,10 +13,9 @@ from pathlib import Path
 from strictdoc.backend.dsl.reader import SDReader
 from strictdoc.backend.dsl.writer import SDWriter
 from strictdoc.export.html.export \
-    import (SingleDocumentHTMLExport,
-            SingleDocumentTraceabilityHTMLExport,
+    import (SingleDocumentTraceabilityHTMLExport,
             SingleDocumentTableHTMLExport)
-from strictdoc.export.html.generators.document_tree_generator import DocumentTreeHTMLGenerator
+from strictdoc.export.html.generators.document_tree import DocumentTreeHTMLGenerator
 from strictdoc.export.rst.export import SingleDocumentRSTExport
 from strictdoc.core.document_finder import DocumentFinder
 from strictdoc.core.traceability_index import TraceabilityIndex
@@ -85,6 +87,8 @@ if args.command == 'passthrough':
         exit(0)
 
 if args.command == 'export':
+    renderer = SingleDocumentFragmentRenderer()
+
     path_to_single_file_or_doc_root = args.input_file
     if isinstance(path_to_single_file_or_doc_root, str):
         path_to_single_file_or_doc_root = [path_to_single_file_or_doc_root]
@@ -125,7 +129,8 @@ if args.command == 'export':
     for document in document_tree.document_list:
         document_content = SingleDocumentHTMLExport.export(document_tree,
                                                            document,
-                                                           traceability_index)
+                                                           traceability_index,
+                                                           renderer)
         document_out_file = "output/{}.html".format(document.name)
         print("writing to file: {}".format(document_out_file))
         with open(document_out_file, 'w') as file:
@@ -134,7 +139,7 @@ if args.command == 'export':
     # Single Document Table pages
     for document in document_tree.document_list:
         document_content = SingleDocumentTableHTMLExport.export(
-            document_tree, document, traceability_index
+            document_tree, document, traceability_index, renderer
         )
         document_out_file = "output/{} - Table.html".format(document.name)
         print("writing to file: {}".format(document_out_file))
@@ -144,7 +149,7 @@ if args.command == 'export':
     # Single Document Traceability pages
     for document in document_tree.document_list:
         document_content = SingleDocumentTraceabilityHTMLExport.export(
-            document_tree, document, traceability_index
+            document_tree, document, traceability_index, renderer
         )
         document_out_file = "output/{} - Traceability.html".format(document.name)
         print("writing to file: {}".format(document_out_file))
@@ -154,7 +159,7 @@ if args.command == 'export':
     # Single Document Deep Traceability pages
     for document in document_tree.document_list:
         document_content = SingleDocumentTraceabilityHTMLExport.export_deep(
-            document_tree, document, traceability_index
+            document_tree, document, traceability_index, renderer
         )
         document_out_file = "output/{} - Traceability Deep.html".format(document.name)
         print("writing to file: {}".format(document_out_file))

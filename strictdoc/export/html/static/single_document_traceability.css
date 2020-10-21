@@ -26,6 +26,14 @@
   padding: 0px;
 }
 
+
+.view-traceability .free_text {
+  font-size: .9em;
+  padding: .5em 0.75em;
+  border: 1px dashed var(--color-table-border);
+  background-color: #fff;
+  position: relative;
+}
 .view-traceability_row {
   width: 100%;
   display: flex;

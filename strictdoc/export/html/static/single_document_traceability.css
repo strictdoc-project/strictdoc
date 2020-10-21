@@ -1,11 +1,18 @@
-h1 {
-  text-align: left;
+
+
+
+
+
+
+.requirement .comment p:first-child::before {
+  content: "Comment: ";
+  font-weight: bold;
 }
 
-#toc {
-  margin: 20px 0px;
-  text-align: left;
-}
+/* .requirement .comment {
+  padding-left: 1em;
+  border-left: 4px double var(--code-border-color);
+} */
 
 #tags-outline {
   margin: 20px 0px;
@@ -71,7 +78,7 @@ h1 {
   margin: 8px 0px;
 }
 
-.comment {
+/* .comment {
   margin: 10px 0px;
 }
 
@@ -85,7 +92,7 @@ h1 {
 
 .comment-word + .comment-paragraph {
   display: inline;
-}
+} */
 
 .tag {
   background: #aaa;

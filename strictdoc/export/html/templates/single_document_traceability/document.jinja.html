@@ -3,19 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="static/global.css" />
+  <link rel="stylesheet" href="static/layout-main-with-toc.css" />
   <link rel="stylesheet" href="static/single_document_traceability.css" />
   <title>{{document.name}} - Traceability</title>
 </head>
 
 <body>
-  <h1>{{document.name}} - Traceability</h1>
-
-  <a href="index.html">Back to Index</a>
-
-  <br/>
-
   {%- set document_iterator = traceability_index.get_document_iterator(document) -%}
-  {% include "_shared/table_of_contents.jinja.html" %}
+  <div class="layout-with-toc open">
+
+    <aside class="toc">
+      {% include "_shared/table_of_contents.jinja.html" %}
+    </aside>
+
+    <main class="content">
+      <h1>{{document.name}} <span class="document-view-type">Traceability</span></h1>
+
 
   {%- if traceability_index.has_tags(document) -%}
     <div id="tags-outline">
@@ -79,4 +82,7 @@
     </div>
   {%- endfor %}
   </div>
+
+</main>
+</div>
 </body>

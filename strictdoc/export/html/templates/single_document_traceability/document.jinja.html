@@ -36,24 +36,24 @@
     {%- if section_or_requirement.is_requirement %}
       <div class="cell cell-parent">
         {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) %}
-          <div class="requirement">
+
             {% include "single_document_traceability/requirement.jinja.html" %}
-          </div>
+
         {%- endfor %}
       </div>
 
       {%- set requirement = section_or_requirement %}
       <div class="cell cell-central" id="{{ requirement.uid }}">
-        <div class="requirement">
+
           {% include "single_document_traceability/requirement.jinja.html" %}
-        </div>
+
       </div>
 
       <div class="cell cell-children">
         {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) %}
-          <div class="requirement">
+
             {% include "single_document_traceability/requirement.jinja.html" %}
-          </div>
+
         {%- endfor %}
       </div>
     {%- elif section_or_requirement.is_section %}

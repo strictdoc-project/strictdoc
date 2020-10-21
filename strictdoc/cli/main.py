@@ -2,8 +2,6 @@ import argparse
 import os
 import sys
 
-from strictdoc.export.html.generators.document_tree_generator import DocumentTreeHTMLExport
-
 ROOT_PATH = os.path.join(os.path.dirname(__file__), "..", "..")
 sys.path.append(ROOT_PATH)
 
@@ -15,6 +13,7 @@ from strictdoc.export.html.export \
     import (SingleDocumentHTMLExport,
             SingleDocumentTraceabilityHTMLExport,
             SingleDocumentTableHTMLExport)
+from strictdoc.export.html.generators.document_tree_generator import DocumentTreeHTMLGenerator
 from strictdoc.export.rst.export import SingleDocumentRSTExport
 from strictdoc.core.document_finder import DocumentFinder
 from strictdoc.core.traceability_index import TraceabilityIndex
@@ -94,7 +93,7 @@ if args.command == 'export':
 
     traceability_index = TraceabilityIndex.create(document_tree)
 
-    writer = DocumentTreeHTMLExport()
+    writer = DocumentTreeHTMLGenerator()
     output = writer.export(document_tree)
 
     output_file = "output/index.html"

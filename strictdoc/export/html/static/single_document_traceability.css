@@ -24,9 +24,14 @@
 
 .view-traceability .requirement {
   padding: .5em 0.75em;
+  /* margin-top: .5em; */
   border: 1px solid var(--color-table-border);
   background-color: #fff;
   position: relative;
+}
+
+.view-traceability .requirement + .requirement {
+  margin-top: .25em;
 }
 
 .view-traceability .free_text {
@@ -35,14 +40,6 @@
   border: 1px dashed var(--color-table-border);
   background-color: #fff;
   position: relative;
-}
-
-.view-traceability .requirement {
-  margin-top: .5em;
-}
-
-.view-traceability .requirement + .requirement {
-  margin-top: .25em;
 }
 
 .view-traceability .requirement .comment p:first-child::before {
@@ -56,9 +53,11 @@
   position: relative;
 }
 
-.view-traceability .cell-central > .section-title {
-  border-top: 1px solid var(--color-table-border);
-  border-bottom: 1px solid var(--color-table-border);
+.view-traceability .section-title:only-child {
+  border: 1px solid var(--color-table-border);
+  width: 100%;
+  margin: 0;
+  padding: 0 0.75em;
 }
 
 .view-traceability .requirement .section-title {
@@ -67,43 +66,42 @@
 }
 
 .view-traceability h1 { font-size: 1.6em; }
-.view-traceability .requirement .section-title { font-size: 1.2em; }
+.view-traceability .requirement .section-title { font-size: 1.1em; }
 .view-traceability .requirement h1 { font-size: 1.4em; }
 
 .view-traceability_row {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  padding-bottom: 0.5em;
+  /* padding-bottom: 0.5em; */
   position: relative;
 }
 
-.view-traceability_row::before {
+/* .view-traceability_row::before {
   content: '';
   position: absolute;
   top: 0;
   bottom: 0;
   left: 50%;
   border-left: 1px dashed var(--color-table-border);
-}
+} */
 
 .view-traceability_cell {
   /* width: 33.33%; */
   width: 33%;
   box-sizing: border-box;
   display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-}
-
-.cell-parent {
-  background-color: #fafafa;
 }
 
 .cell-central {
-  background-color: #fff;
+  background-color: #fafafa;
+  padding: .5em 1em;
+  flex-flow: row nowrap;
 }
 
+.cell-parent,
 .cell-children {
-  background-color: #fafafa;
+  background-color: #fff;
+  padding: .5em 0;
+  flex-flow: column nowrap;
 }

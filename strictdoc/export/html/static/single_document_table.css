@@ -3,10 +3,6 @@
   margin: 20px 0px;
 }
 
-.requirement-statement {
-  margin: 8px 0px;
-}
-
 /* table */
 
 .document-table {
@@ -18,10 +14,19 @@
   /* overflow: hidden; */
 }
 
+.document-table .requirement-statement {
+  margin: 0px;
+}
+
+.document-table .requirement-statement p:first-child {
+  margin-top: 0;
+}
+
 .document-table tr,
 .document-table td {
   padding: 0;
   border: none;
+  vertical-align: top;
 }
 
 /* .document-table_section-title {} */

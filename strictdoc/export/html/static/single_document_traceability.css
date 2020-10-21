@@ -1,7 +1,3 @@
-.requirement .comment p:first-child::before {
-  content: "Comment: ";
-  font-weight: bold;
-}
 
 .requirement-statement {
   margin: 8px 0px;
@@ -26,6 +22,12 @@
   padding: 0px;
 }
 
+.view-traceability .requirement {
+  padding: .5em 0.75em;
+  border: 1px solid var(--color-table-border);
+  background-color: #fff;
+  position: relative;
+}
 
 .view-traceability .free_text {
   font-size: .9em;
@@ -34,16 +36,64 @@
   background-color: #fff;
   position: relative;
 }
+
+.view-traceability .requirement {
+  margin-top: .5em;
+}
+
+.view-traceability .requirement + .requirement {
+  margin-top: .25em;
+}
+
+.view-traceability .requirement .comment p:first-child::before {
+  content: "Comment: ";
+  font-weight: bold;
+}
+
+.view-traceability .section-title {
+  margin: 0.75rem 0 0.25rem;
+  background-color: #fff;
+  position: relative;
+}
+
+.view-traceability .cell-central > .section-title {
+  border-top: 1px solid var(--color-table-border);
+  border-bottom: 1px solid var(--color-table-border);
+}
+
+.view-traceability .requirement .section-title {
+  margin: 0 0 0.5rem;
+  line-height: 1.2;
+}
+
+.view-traceability h1 { font-size: 1.6em; }
+.view-traceability .requirement .section-title { font-size: 1.2em; }
+.view-traceability .requirement h1 { font-size: 1.4em; }
+
 .view-traceability_row {
   width: 100%;
   display: flex;
-  background: #fff;
+  justify-content: space-between;
+  padding-bottom: 0.5em;
+  position: relative;
+}
+
+.view-traceability_row::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  border-left: 1px dashed var(--color-table-border);
 }
 
 .view-traceability_cell {
-  width: 33.33%;
+  /* width: 33.33%; */
+  width: 33%;
   box-sizing: border-box;
-  margin: 0px 0px 0px 0px;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
 }
 
 .cell-parent {

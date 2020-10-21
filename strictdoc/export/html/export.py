@@ -23,28 +23,6 @@ def get_traceability_deep_link(document_name):
 RENDERER = SingleDocumentFragmentRenderer()
 
 
-class DocumentTreeHTMLExport:
-    OFFSET = 8
-
-    env = Environment(
-        loader=PackageLoader('strictdoc', 'export/html/templates'),
-        # autoescape=select_autoescape(['html', 'xml'])
-    )
-    env.globals.update(isinstance=isinstance)
-
-    @staticmethod
-    def export(document_tree):
-        document_tree_iterator = DocumentTreeIterator(document_tree)
-
-        template = SingleDocumentHTMLExport.env.get_template('document_tree/document_tree.jinja.html')
-        output = template.render(document_tree=document_tree,
-                                 artefact_list=document_tree_iterator.iterator(),
-                                 get_traceability_link=get_traceability_link,
-                                 get_traceability_deep_link=get_traceability_deep_link)
-
-        return output
-
-
 class SingleDocumentHTMLExport:
     env = Environment(
         loader=PackageLoader('strictdoc', 'export/html/templates'),

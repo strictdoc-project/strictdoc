@@ -1,6 +1,9 @@
 import argparse
 import os
 import sys
+
+from strictdoc.export.html.generators.document_tree_generator import DocumentTreeHTMLExport
+
 ROOT_PATH = os.path.join(os.path.dirname(__file__), "..", "..")
 sys.path.append(ROOT_PATH)
 
@@ -9,8 +12,7 @@ from pathlib import Path
 from strictdoc.backend.dsl.reader import SDReader
 from strictdoc.backend.dsl.writer import SDWriter
 from strictdoc.export.html.export \
-    import (DocumentTreeHTMLExport,
-            SingleDocumentHTMLExport,
+    import (SingleDocumentHTMLExport,
             SingleDocumentTraceabilityHTMLExport,
             SingleDocumentTableHTMLExport)
 from strictdoc.export.rst.export import SingleDocumentRSTExport

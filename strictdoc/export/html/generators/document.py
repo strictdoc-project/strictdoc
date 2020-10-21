@@ -3,7 +3,7 @@ from jinja2 import Environment, PackageLoader
 from strictdoc.helpers.hyperlinks import string_to_anchor_id
 
 
-class SingleDocumentHTMLExport:
+class DocumentHTMLGenerator:
     env = Environment(
         loader=PackageLoader('strictdoc', 'export/html/templates')
     )
@@ -14,7 +14,7 @@ class SingleDocumentHTMLExport:
         print("doc: {}, number of sections: {}".format(document.name, len(document.section_contents)))
         output = ""
 
-        template = SingleDocumentHTMLExport.env.get_template('single_document/document.jinja.html')
+        template = DocumentHTMLGenerator.env.get_template('single_document/document.jinja.html')
 
         output += template.render(document=document,
                                   traceability_index=traceability_index,

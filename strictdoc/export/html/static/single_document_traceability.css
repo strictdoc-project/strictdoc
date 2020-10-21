@@ -94,7 +94,7 @@
 }
 
 .cell-central {
-  background-color: #fafafa;
+  background-color: rgba(0,0,0,0.05);
   padding: .5em 1em;
   flex-flow: row nowrap;
 }

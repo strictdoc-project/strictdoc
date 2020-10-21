@@ -3,19 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="static/global.css" />
+  <link rel="stylesheet" href="static/layout-main-with-toc.css" />
   <link rel="stylesheet" href="static/single_document_traceability.css" />
   <title>{{document.name}} - Traceability</title>
 </head>
 
 <body>
-  <h1>{{document.name}} - Traceability</h1>
-
-  <a href="index.html">Back to Index</a>
-
-  <br/>
-
   {%- set document_iterator = traceability_index.get_document_iterator(document) -%}
-  {% include "_shared/table_of_contents.jinja.html" %}
+  <div class="layout-with-toc open">
+
+    <aside class="toc">
+      {% include "_shared/table_of_contents.jinja.html" %}
+    </aside>
+
+    <main class="content">
+      <h1>{{document.name}} <span class="document-view-type">Traceability</span></h1>
+
 
   {%- if traceability_index.has_tags(document) -%}
     <div id="tags-outline">
@@ -27,56 +30,61 @@
     </div>
   {%- endif %}
 
-  <div id="sections-and-requirements">
+  <div class="view-traceability" id="sections-and-requirements">
   {%- for section_or_requirement in document_iterator.all_content() %}
-    <div class="table-row">
+    <div class="view-traceability_row">
     {%- if section_or_requirement.is_requirement %}
-      <div class="cell cell-parent">
+      <div class="view-traceability_cell cell-parent">
         {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) %}
-          <div class="requirement-style">
+
             {% include "single_document_traceability/requirement.jinja.html" %}
-          </div>
+
         {%- endfor %}
       </div>
 
       {%- set requirement = section_or_requirement %}
-      <div class="cell cell-central" id="{{ requirement.uid }}">
-        <div class="requirement-style">
+      <div class="view-traceability_cell cell-central" id="{{ requirement.uid }}">
+
           {% include "single_document_traceability/requirement.jinja.html" %}
-        </div>
+
       </div>
 
-      <div class="cell cell-children">
+      <div class="view-traceability_cell cell-children">
         {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) %}
-          <div class="requirement-style">
+
             {% include "single_document_traceability/requirement.jinja.html" %}
-          </div>
+
         {%- endfor %}
       </div>
     {%- elif section_or_requirement.is_section %}
-      <div class="cell cell-parent">
+      <div class="view-traceability_cell cell-parent">
       </div>
-      <div class="cell-section">
+      <div class="view-traceability_cell cell-central">
         {%- set section = section_or_requirement %}
-        <h{{ section.ng_level }}>
+        <h{{ section.ng_level }} class="section-title">
           <span class="level">
             {{ section.export_title }}
           </span>
           {{ section.title }}
         </h{{ section.ng_level }}>
       </div>
-      <div class="cell cell-children">
+      <div class="view-traceability_cell cell-children">
       </div>
     {%- elif section_or_requirement.is_free_text %}
-      <div class="cell cell-parent">
+      <div class="view-traceability_cell cell-parent">
       </div>
-      <div class="cell cell-central">
+      <div class="view-traceability_cell cell-central">
+        <div class="free_text">
         {{ section_or_requirement.text }}
+        </div>
       </div>
-      <div class="cell cell-children">
+      <div class="view-traceability_cell cell-children">
       </div>
     {%- endif %}
     </div>
   {%- endfor %}
   </div>
+
+</main>
+</div>
 </body>

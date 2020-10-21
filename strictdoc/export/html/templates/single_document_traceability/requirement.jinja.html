@@ -1,6 +1,6 @@
-<div>
+<div class="requirement">
   {%- if requirement.title %}
-    <h{{ requirement.ng_level }}>
+    <h{{ requirement.ng_level }} class="section-title">
       <span class="level">
         {{ requirement.export_title }}
       </span>
@@ -37,14 +37,10 @@
   {%- if requirement.comments %}
     {%- for comment in requirement.comments %}
       <div class="comment">
-        <span class="comment-word">
-          Comment:
-        </span>
-
         {%- for comment_paragraph in comment.comment_by_paragraphs() %}
-          <div class="comment-paragraph">
+        <p>
           {{ comment_paragraph }}
-          </div>
+        </p>
         {%- endfor %}
       </div>
     {%- endfor %}

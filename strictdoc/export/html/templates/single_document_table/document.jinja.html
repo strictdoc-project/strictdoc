@@ -31,16 +31,16 @@
       </div>
     {%- endif %}
 
-    <table class="document-table" id="sections-and-requirements">
+    <table class="view-table" id="sections-and-requirements">
     {%- for section_or_requirement in document_iterator.all_content() %}
         {%- if section_or_requirement.is_free_text %}
-          <tr class="document-table_text">
+          <tr class="view-table_text">
             <td colspan="4">
               {{ renderer.render_text_fragment(section_or_requirement.text) }}
             </td>
           </tr>
         {%- elif section_or_requirement.is_composite_requirement %}
-          <tr class="document-table_section-title">
+          <tr class="view-table_section-title">
             <td colspan="4">
               {%- set section = section_or_requirement %}
 
@@ -55,22 +55,22 @@
           </tr>
           {%- if not loop.last -%}
             {%- if not loop.nextitem.is_section and not loop.nextitem.is_free_text -%}
-            <tr class="document-table_requirement-headers">
+            <tr class="view-table_requirement-headers">
               {% include "single_document_table/table-fields.jinja.html" %}
             </tr>
             {%- endif -%}
           {%- endif -%}
-          <tr class="document-table_requirement">
+          <tr class="view-table_requirement">
             {%- set requirement = section_or_requirement %}
             {% include "single_document_table/requirement.jinja.html" %}
           </tr>
         {%- elif section_or_requirement.is_requirement %}
-          <tr class="document-table_requirement">
+          <tr class="view-table_requirement">
             {%- set requirement = section_or_requirement %}
             {% include "single_document_table/requirement.jinja.html" %}
           </tr>
         {%- elif section_or_requirement.is_section %}
-          <tr class="document-table_section-title">
+          <tr class="view-table_section-title">
             <td colspan="4">
               {%- set section = section_or_requirement %}
               <h{{ section.ng_level }} class="section-title">
@@ -84,7 +84,7 @@
 
           {%- if not loop.last -%}
             {%- if not loop.nextitem.is_section and not loop.nextitem.is_free_text -%}
-            <tr class="document-table_requirement-headers">
+            <tr class="view-table_requirement-headers">
               {% include "single_document_table/table-fields.jinja.html" %}
             </tr>
             {%- endif -%}

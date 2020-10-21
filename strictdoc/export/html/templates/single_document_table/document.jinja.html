@@ -36,7 +36,7 @@
         {%- if section_or_requirement.is_free_text %}
           <tr class="view-table_text">
             <td colspan="4">
-              {{ renderer.render_text_fragment(section_or_requirement.text) }}
+              {{ renderer.render_free_text(section_or_requirement) }}
             </td>
           </tr>
         {%- elif section_or_requirement.is_composite_requirement %}

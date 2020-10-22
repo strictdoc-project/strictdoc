@@ -1,7 +1,7 @@
 Requirements
 $$$$$$$$$$$$
 
-High-level Requirements
+High-level requirements
 =======================
 
 Requirements management
@@ -41,6 +41,11 @@ Linking requirements
 
 StrictDoc shall support linking requirements to each other.
 
+Scalability
+-----------
+
+StrictDoc shall allow working with large documents and document trees containing at least 10000 requirement items.
+
 Traceability
 ------------
 
@@ -53,12 +58,22 @@ Visualization
 
 StrictDoc shall provide means for visualization of requirement documents.
 
-Open Source software
+Open source software
 --------------------
 
 StrictDoc shall always be free and open source software.
 
-Data Model
+Implementation requirements
+===========================
+
+Parallelization
+---------------
+
+``[SDOC-IMPL-PARAL]``
+
+StrictDoc's shall parallelize the time-consuming parts of the code.
+
+Data model
 ==========
 
 Modeling capability
@@ -127,8 +142,8 @@ Requirement item might have one or more comments.
 Composite Requirement item
 --------------------------
 
-Requirements Document Format
-============================
+Requirements document format (SDOC)
+===================================
 
 Primary text implementation
 ---------------------------
@@ -147,34 +162,37 @@ Type safety
 
 StrictDoc RDF shall enable type-safe parsing of requirement documents.
 
+Document Generators
+===================
+
 HTML Export
-===========
+-----------
 
 Single document: Normal form
-----------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 StrictDoc shall export single document pages in a normal document-like form.
 
 Single document: Tabular form
------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 StrictDoc shall export single document pages in a tabular form.
 
 Single document: 1-level traceability
--------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 StrictDoc shall export 1-level traceability document.
 
 Single document: Deep traceability
-----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 StrictDoc shall export deep traceability document.
 
 PDF Export
-==========
+----------
 
 Sphinx documentation generator
-------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 StrictDoc shall support exporting documents to Sphinx/RST format.
 

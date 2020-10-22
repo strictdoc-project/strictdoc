@@ -32,6 +32,9 @@ div.document {
   --color-table-header: #000;
   --color-table-header-bg: #eee;
   --color-table-border: #ccc;
+
+  --comment-color: #636669;
+  --comment-border-color: #838689;
 }
 
 cite {
@@ -68,7 +71,7 @@ pre.code {
 }
 
 .comment {
-  color: var(--color-text-lighter);
+  color: var(--comment-color);
   font-size: .9em;
   line-height: 1.4;
 }

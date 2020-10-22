@@ -105,3 +105,24 @@
   padding: .5em 0;
   flex-flow: column nowrap;
 }
+
+/* TODO: стили для линеек*/
+
+.cell::before, .cell::after {
+  content: '';
+  position: absolute;
+  display: block;
+  box-sizing: border-box;
+  top: 50%;
+  height: var(--arrow-height);
+  background-color: var(--cell-arrow-color);
+  width: calc(var(--cell-arrow-width) * 1.5);
+}
+
+.cell::after {
+  right: calc(var(--cell-arrow-width) * (-1.5) - 1px);
+}
+
+.cell::before {
+  left: calc(var(--cell-arrow-width) * (-1.5) - 1px);
+}

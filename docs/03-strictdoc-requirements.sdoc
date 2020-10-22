@@ -3,7 +3,7 @@ NAME: Requirements
 
 [SECTION]
 LEVEL: 1
-TITLE: High-level Requirements
+TITLE: High-level requirements
 
 [REQUIREMENT]
 UID: SDOC-HIGH-REQS-MANAGEMENT
@@ -37,6 +37,10 @@ TITLE: Linking requirements
 STATEMENT: StrictDoc shall support linking requirements to each other.
 
 [REQUIREMENT]
+TITLE: Scalability
+STATEMENT: StrictDoc shall allow working with large documents and document trees containing at least 10000 requirement items.
+
+[REQUIREMENT]
 UID: SDOC-HIGH-REQS-TRACEABILITY
 TITLE: Traceability
 STATEMENT: StrictDoc shall support traceability of requirements.
@@ -46,14 +50,25 @@ TITLE: Visualization
 STATEMENT: StrictDoc shall provide means for visualization of requirement documents.
 
 [REQUIREMENT]
-TITLE: Open Source software
+TITLE: Open source software
 STATEMENT: StrictDoc shall always be free and open source software.
 
 [/SECTION]
 
 [SECTION]
 LEVEL: 1
-TITLE: Data Model
+TITLE: Implementation requirements
+
+[REQUIREMENT]
+UID: SDOC-IMPL-PARAL
+TITLE: Parallelization
+STATEMENT: StrictDoc's shall parallelize the time-consuming parts of the code.
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 1
+TITLE: Data model
 
 [REQUIREMENT]
 UID: SDOC-DM-001
@@ -131,7 +146,7 @@ TITLE: Composite Requirement item
 
 [SECTION]
 LEVEL: 1
-TITLE: Requirements Document Format
+TITLE: Requirements document format (SDOC)
 
 [REQUIREMENT]
 UID: SDOC-RDF-001
@@ -153,6 +168,10 @@ STATEMENT: StrictDoc RDF shall enable type-safe parsing of requirement documents
 
 [SECTION]
 LEVEL: 1
+TITLE: Document Generators
+
+[SECTION]
+LEVEL: 2
 TITLE: HTML Export
 
 [REQUIREMENT]
@@ -180,11 +199,13 @@ STATEMENT: StrictDoc shall export deep traceability document.
 [/SECTION]
 
 [SECTION]
-LEVEL: 1
+LEVEL: 2
 TITLE: PDF Export
 
 [REQUIREMENT]
 TITLE: Sphinx documentation generator
 STATEMENT: StrictDoc shall support exporting documents to Sphinx/RST format.
+
+[/SECTION]
 
 [/SECTION]

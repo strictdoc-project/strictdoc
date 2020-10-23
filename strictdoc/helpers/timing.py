@@ -2,7 +2,7 @@ from functools import wraps
 from time import time
 
 
-def timing(name):
+def timing_decorator(name):
     def timing_internal(f):
         @wraps(f)
         def wrap(*args, **kw):

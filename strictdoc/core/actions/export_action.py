@@ -10,12 +10,14 @@ from strictdoc.export.html.generators.document_tree import DocumentTreeHTMLGener
 from strictdoc.export.html.renderer import SingleDocumentFragmentRenderer
 from strictdoc.export.rst.export import SingleDocumentRSTExport
 from strictdoc.helpers.file_system import sync_dir
+from strictdoc.helpers.timing import timing
 
 
 class ExportAction:
     def __init__(self, root_path):
         self.root_path = root_path
 
+    @timing('Export')
     def export(self, path_to_single_file_or_doc_root):
         renderer = SingleDocumentFragmentRenderer()
 

@@ -13,7 +13,7 @@ from strictdoc.export.html.generators.document_tree import DocumentTreeHTMLGener
 from strictdoc.export.html.renderer import SingleDocumentFragmentRenderer
 from strictdoc.export.rst.export import SingleDocumentRSTExport
 from strictdoc.helpers.file_system import sync_dir
-from strictdoc.helpers.timing import timing_decorator
+from strictdoc.helpers.timing import timing_decorator, measure_performance
 
 
 class ExportAction:
@@ -63,7 +63,7 @@ class ExportAction:
             document._tx_metamodel = None
             document._tx_peg_rule = None
 
-        export_binding = partial(self._export,
+        export_binding = partial(self._export_with_performance,
                                  document_tree=document_tree,
                                  traceability_index=traceability_index)
 
@@ -74,6 +74,10 @@ class ExportAction:
         static_files_src = os.path.join(self.root_path, 'strictdoc/export/html/static')
         static_files_dest = os.path.join(self.root_path, 'output/html/_static')
         sync_dir(static_files_src, static_files_dest)
+
+    def _export_with_performance(self, document, document_tree, traceability_index):
+        with measure_performance(document.name):
+            self._export(document, document_tree, traceability_index)
 
     def _export(self, document, document_tree, traceability_index):
         document_meta: DocumentMeta = document.meta

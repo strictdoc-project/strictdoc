@@ -1,3 +1,4 @@
+import contextlib
 from functools import wraps
 from time import time
 
@@ -13,3 +14,14 @@ def timing_decorator(name):
             return result
         return wrap
     return timing_internal
+
+
+@contextlib.contextmanager
+def measure_performance(title):
+    ts = time()
+    yield
+    te = time()
+
+    padded_name = '{name} '.format(name=title).ljust(60, '.')
+    padded_time = ' {:0.2f}'.format((te-ts)).rjust(6, '.')
+    print('Published: {}{}s'.format(padded_name, padded_time))

@@ -36,8 +36,6 @@ parser.add_argument('--output-file', type=str, help='TODO')
 
 args = parser.parse_args()
 
-print(args.command)
-
 if args.command == 'passthrough':
     paths_to_docs = args.input_file
     if len(paths_to_docs) != 1:

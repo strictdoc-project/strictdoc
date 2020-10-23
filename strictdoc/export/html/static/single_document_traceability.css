@@ -22,17 +22,39 @@
   padding: 0px;
 }
 
-.view-traceability .requirement {
-  padding: .5em 0.75em;
-  /* margin-top: .5em; */
-  border: 1px solid var(--color-table-border);
-  background-color: #fff;
+.view-traceability_row {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
   position: relative;
 }
 
-.view-traceability .requirement + .requirement {
-  margin-top: .25em;
+.view-traceability_cell {
+  width: 33.33%;
+  padding: .5em 0;
+  box-sizing: border-box;
+  display: flex;
+  overflow: hidden;
 }
+
+.cell-central {
+  /* background-color: rgba(0,0,0,0.05); */
+  /* flex-flow: row nowrap; */
+  flex-flow: column nowrap;
+}
+
+.cell-central .requirement {
+  height: 100%;
+}
+
+.cell-parent,
+.cell-children {
+  background-color: #fff;
+  flex-flow: column nowrap;
+}
+
+.cell-parent { padding-right: 1rem; }
+.cell-children { padding-left: 1rem; }
 
 .view-traceability .free_text {
   font-size: .9em;
@@ -40,11 +62,6 @@
   border: 1px dashed var(--color-table-border);
   background-color: #fff;
   position: relative;
-}
-
-.view-traceability .requirement .comment p:first-child::before {
-  content: "Comment: ";
-  font-weight: bold;
 }
 
 .view-traceability .section-title {
@@ -69,60 +86,40 @@
 .view-traceability .requirement .section-title { font-size: 1.1em; }
 .view-traceability .requirement h1 { font-size: 1.4em; }
 
-.view-traceability_row {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  /* padding-bottom: 0.5em; */
-  position: relative;
-}
-
-/* .view-traceability_row::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  border-left: 1px dashed var(--color-table-border);
-} */
-
-.view-traceability_cell {
-  /* width: 33.33%; */
-  width: 33%;
-  box-sizing: border-box;
-  display: flex;
-}
-
-.cell-central {
-  background-color: rgba(0,0,0,0.05);
-  padding: .5em 1em;
-  flex-flow: row nowrap;
-}
-
-.cell-parent,
-.cell-children {
+.view-traceability .requirement {
+  padding: .5em 0.75em;
+  border: 1px solid var(--color-table-border);
   background-color: #fff;
-  padding: .5em 0;
-  flex-flow: column nowrap;
+  position: relative;
+  /* height: 100%; */
 }
 
-/* TODO: стили для линеек*/
+.view-traceability .requirement + .requirement {
+  margin-top: .25em;
+}
 
-.cell::before, .cell::after {
+
+.view-traceability .requirement .comment p:first-child::before {
+  content: "Comment: ";
+  font-weight: bold;
+}
+
+.view-traceability .requirement::before,
+.view-traceability .requirement::after {
   content: '';
   position: absolute;
   display: block;
   box-sizing: border-box;
   top: 50%;
-  height: var(--arrow-height);
-  background-color: var(--cell-arrow-color);
-  width: calc(var(--cell-arrow-width) * 1.5);
+  height: 1px;
+  background-color: #000;
+  width: 30px;
 }
 
-.cell::after {
-  right: calc(var(--cell-arrow-width) * (-1.5) - 1px);
+.view-traceability .requirement::after {
+  right: -30px;
 }
 
-.cell::before {
-  left: calc(var(--cell-arrow-width) * (-1.5) - 1px);
+.view-traceability .requirement::before {
+  left: -30px;
 }

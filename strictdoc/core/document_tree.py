@@ -77,17 +77,20 @@ class FileTree(FileOrFolderEntry):
 
 
 class DocumentTree:
-    def __init__(self, file_tree, document_list, document_map):
+    def __init__(self,
+                 file_tree,
+                 document_list,
+                 map_docs_by_paths):
         assert isinstance(file_tree, list)
         assert isinstance(document_list, list)
-        assert isinstance(document_map, dict)
+        assert isinstance(map_docs_by_paths, dict)
         self.file_tree = file_tree
         self.document_list = document_list
-        self.document_map = document_map
-
-    def get_document_name(self, doc_full_path):
-        document = self.document_map[doc_full_path]
-        return document.name
+        self.map_docs_by_paths = map_docs_by_paths
 
     def __repr__(self):
         return "DocumentTree: {} document_list: {}".format(self.file_tree, self.document_list)
+
+    def get_document_by_path(self, doc_full_path):
+        document = self.map_docs_by_paths[doc_full_path]
+        return document

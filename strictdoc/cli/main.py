@@ -5,20 +5,8 @@ import sys
 ROOT_PATH = os.path.join(os.path.dirname(__file__), "..", "..")
 sys.path.append(ROOT_PATH)
 
-from pathlib import Path
-
-from strictdoc.backend.dsl.reader import SDReader
-from strictdoc.backend.dsl.writer import SDWriter
-from strictdoc.export.html.export \
-    import (SingleDocumentTraceabilityHTMLExport,
-            SingleDocumentTableHTMLExport)
-from strictdoc.export.html.generators.document import DocumentHTMLGenerator
-from strictdoc.export.html.generators.document_tree import DocumentTreeHTMLGenerator
-from strictdoc.export.html.renderer import SingleDocumentFragmentRenderer
-from strictdoc.export.rst.export import SingleDocumentRSTExport
-from strictdoc.core.document_finder import DocumentFinder
-from strictdoc.core.traceability_index import TraceabilityIndex
-from strictdoc.helpers.file_system import sync_dir
+from strictdoc.core.actions.export_action import ExportAction
+from strictdoc.core.actions.passthrough_action import PassthroughAction
 
 # for arg in sys.argv:
 #     if arg == '--help':
@@ -45,11 +33,7 @@ parser.add_argument('command', type=str, help='TODO', choices=[
 
 parser.add_argument('input_file', type=str, nargs='+', help='TODO')
 parser.add_argument('--output-file', type=str, help='TODO')
-# parser.add_argument('--strict-whitespace', action='store_true', help='TODO')
-# parser.add_argument('--match-full-lines', action='store_true', help='TODO')
-# parser.add_argument('--check-prefix', action='store', help='TODO')
-# parser.add_argument('--implicit-check-not', action='append', help='TODO')
-#
+
 args = parser.parse_args()
 
 print(args.command)
@@ -62,15 +46,6 @@ if args.command == 'passthrough':
         print(err)
         exit(1)
 
-    path_to_doc = paths_to_docs[0]
-    if not os.path.isfile(path_to_doc):
-        sys.stdout.flush()
-        err = "Could not open doc file '{}': No such file or directory".format(path_to_doc)
-        print(err)
-        exit(1)
-
-    document = SDReader().read_from_file(path_to_doc)
-
     output_file = args.output_file
     if output_file:
         output_dir = os.path.dirname(output_file)
@@ -78,94 +53,12 @@ if args.command == 'passthrough':
             print("not a directory: {}".format(output_file))
             exit(1)
 
-        writer = SDWriter()
-        output = writer.write(document)
-        with open(output_file, 'w') as file:
-            file.write(output)
+    passthrough_action = PassthroughAction()
+    passthrough_action.passthrough(paths_to_docs, output_file)
 
-        exit(0)
+elif args.command == 'export':
+    export_controller = ExportAction(ROOT_PATH)
+    export_controller.export(args.input_file)
 
-if args.command == 'export':
-    renderer = SingleDocumentFragmentRenderer()
-
-    path_to_single_file_or_doc_root = args.input_file
-    if isinstance(path_to_single_file_or_doc_root, str):
-        path_to_single_file_or_doc_root = [path_to_single_file_or_doc_root]
-
-    document_tree = DocumentFinder.find_sdoc_content(path_to_single_file_or_doc_root)
-
-    traceability_index = TraceabilityIndex.create(document_tree)
-
-    writer = DocumentTreeHTMLGenerator()
-    output = writer.export(document_tree)
-
-    output_file = "output/index.html"
-
-    Path("output").mkdir(parents=True, exist_ok=True)
-
-    output_dir = os.path.dirname(output_file)
-    if not os.path.isdir(output_dir):
-        print("not a directory: {}".format(output_file))
-        exit(1)
-
-    print("writing to file: {}".format(output_file))
-    with open(output_file, 'w') as file:
-        file.write(output)
-
-    # Single Document pages (RST)
-    Path("output/rst").mkdir(parents=True, exist_ok=True)
-    for document in document_tree.document_list:
-        document_content = SingleDocumentRSTExport.export(document_tree,
-                                                          document,
-                                                          traceability_index)
-
-        document_out_file = "output/rst/{}.rst".format(document.name)
-        print("writing to file: {}".format(document_out_file))
-        with open(document_out_file, 'w') as file:
-            file.write(document_content)
-
-    # Single Document pages
-    for document in document_tree.document_list:
-        document_content = DocumentHTMLGenerator.export(document_tree,
-                                                        document,
-                                                        traceability_index,
-                                                        renderer)
-        document_out_file = "output/{}.html".format(document.name)
-        print("writing to file: {}".format(document_out_file))
-        with open(document_out_file, 'w') as file:
-            file.write(document_content)
-
-    # Single Document Table pages
-    for document in document_tree.document_list:
-        document_content = SingleDocumentTableHTMLExport.export(
-            document_tree, document, traceability_index, renderer
-        )
-        document_out_file = "output/{} - Table.html".format(document.name)
-        print("writing to file: {}".format(document_out_file))
-        with open(document_out_file, 'w') as file:
-            file.write(document_content)
-
-    # Single Document Traceability pages
-    for document in document_tree.document_list:
-        document_content = SingleDocumentTraceabilityHTMLExport.export(
-            document_tree, document, traceability_index, renderer
-        )
-        document_out_file = "output/{} - Traceability.html".format(document.name)
-        print("writing to file: {}".format(document_out_file))
-        with open(document_out_file, 'w') as file:
-            file.write(document_content)
-
-    # Single Document Deep Traceability pages
-    for document in document_tree.document_list:
-        document_content = SingleDocumentTraceabilityHTMLExport.export_deep(
-            document_tree, document, traceability_index, renderer
-        )
-        document_out_file = "output/{} - Traceability Deep.html".format(document.name)
-        print("writing to file: {}".format(document_out_file))
-        with open(document_out_file, 'w') as file:
-            file.write(document_content)
-
-    static_files_src = os.path.join(ROOT_PATH, 'strictdoc/export/html/static')
-    static_files_dest = os.path.join(ROOT_PATH, 'output/static')
-    sync_dir(static_files_src, static_files_dest)
-    exit(0)
+else:
+    raise NotImplementedError

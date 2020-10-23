@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="static/global.css" />
-    <link rel="stylesheet" href="static/document_tree.css" />
+    <link rel="stylesheet" href="_static/global.css" />
+    <link rel="stylesheet" href="_static/document_tree.css" />
     <title>Document Tree</title>
 </head>
 
@@ -40,30 +40,30 @@
               </span>
             </div>
 
-            {%- set document_name = document_tree.get_document_name(folder_or_file.get_full_path()) %}
+            {%- set document = document_tree.get_document_by_path(folder_or_file.get_full_path()) %}
             <div class="document-tree_cell">
               <span class="document-tree_file-name">
-                {{ document_name }}
+                {{ document.name }}
               </span>
             </div>
             <div class="document-tree_cell">
               <span class="document-tree_file-link">
-                <a href="{{ document_name }}.html">DOC</a>
+                <a href="{{ document.meta.get_html_doc_link() }}">DOC</a>
               </span>
             </div>
             <div class="document-tree_cell">
               <span class="document-tree_file-link">
-                <a href="{{ document_name }} - Table.html">TABLE</a>
+                <a href="{{ document.meta.get_html_table_link() }}">TABLE</a>
               </span>
             </div>
             <div class="document-tree_cell">
               <span class="document-tree_file-link">
-                <a href="{{ get_traceability_link(document_name) }}">TRACE</a>
+                <a href="{{ document.meta.get_html_traceability_link() }}">TRACE</a>
               </span>
             </div>
             <div class="document-tree_cell">
               <span class="document-tree_file-link">
-                <a href="{{ get_traceability_deep_link(document_name) }}">DEEP-TRACE</a>
+                <a href="{{ document.meta.get_html_deep_traceability_link() }}">DEEP-TRACE</a>
               </span>
             </div>
           {% endif %}

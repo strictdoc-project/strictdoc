@@ -1,4 +1,5 @@
 import concurrent.futures
+import datetime
 import os
 from functools import partial
 from multiprocessing.pool import Pool
@@ -76,7 +77,23 @@ class ExportAction:
         sync_dir(static_files_src, static_files_dest)
 
     def _export_with_performance(self, document, document_tree, traceability_index):
-        with measure_performance(document.name):
+        document_meta: DocumentMeta = document.meta
+        full_output_path = os.path.join(self.root_path, document_meta.get_html_doc_path())
+
+        # If file exists we want to check its modification path in order to skip
+        # its generation in case it has not changed since the last generation.
+        if os.path.isfile(full_output_path):
+            sdoc_mtime_timestamp = (os.path.getmtime(document_meta.sdoc_full_path))
+            sdoc_mtime = datetime.datetime.fromtimestamp(sdoc_mtime_timestamp)
+
+            output_file_mtime_timestamp = (os.path.getmtime(full_output_path))
+            output_file_mtime = datetime.datetime.fromtimestamp(output_file_mtime_timestamp)
+
+            if sdoc_mtime < output_file_mtime:
+                with measure_performance('Skip: {}'.format(document.name)):
+                    return
+
+        with measure_performance('Published: {}'.format(document.name)):
             self._export(document, document_tree, traceability_index)
 
     def _export(self, document, document_tree, traceability_index):

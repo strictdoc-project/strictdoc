@@ -1,5 +1,7 @@
+import concurrent.futures
 import os
 from functools import partial
+from multiprocessing.pool import Pool
 from pathlib import Path
 
 from strictdoc.core.document_finder import DocumentFinder
@@ -11,14 +13,14 @@ from strictdoc.export.html.generators.document_tree import DocumentTreeHTMLGener
 from strictdoc.export.html.renderer import SingleDocumentFragmentRenderer
 from strictdoc.export.rst.export import SingleDocumentRSTExport
 from strictdoc.helpers.file_system import sync_dir
-from strictdoc.helpers.timing import timing
+from strictdoc.helpers.timing import timing_decorator, measure_performance
 
 
 class ExportAction:
     def __init__(self, root_path):
         self.root_path = root_path
 
-    @timing('Export')
+    @timing_decorator('Export')
     def export(self, path_to_single_file_or_doc_root):
         if isinstance(path_to_single_file_or_doc_root, str):
             path_to_single_file_or_doc_root = [path_to_single_file_or_doc_root]
@@ -61,23 +63,21 @@ class ExportAction:
             document._tx_metamodel = None
             document._tx_peg_rule = None
 
-        export_binding = partial(self._export,
+        export_binding = partial(self._export_with_performance,
                                  document_tree=document_tree,
                                  traceability_index=traceability_index)
 
         # TODO: Not ready for ProcessPoolExecutor: Traceability index is a shared object.
-        # # p = Pool(4)
-        # # p.map(export_binding, document_tree.document_list)
-        # with concurrent.futures.ProcessPoolExecutor(max_workers=4) as executor:
-        #     for document in executor.map(export_binding, document_tree.document_list):
-        #         print('Document completed generation: {}'.format(document.name))
-        for document in document_tree.document_list:
-            print('Exporting document: {}'.format(document.name))
-            export_binding(document)
+        with concurrent.futures.ProcessPoolExecutor(max_workers=4) as executor:
+            executor.map(export_binding, document_tree.document_list)
 
         static_files_src = os.path.join(self.root_path, 'strictdoc/export/html/static')
         static_files_dest = os.path.join(self.root_path, 'output/html/_static')
         sync_dir(static_files_src, static_files_dest)
+
+    def _export_with_performance(self, document, document_tree, traceability_index):
+        with measure_performance(document.name):
+            self._export(document, document_tree, traceability_index)
 
     def _export(self, document, document_tree, traceability_index):
         document_meta: DocumentMeta = document.meta

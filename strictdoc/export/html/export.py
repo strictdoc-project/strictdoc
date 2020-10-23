@@ -26,7 +26,6 @@ class SingleDocumentTableHTMLExport:
 
     @staticmethod
     def export(document_tree, document, traceability_index, renderer):
-        print("doc: {}, number of sections: {}".format(document.name, len(document.section_contents)))
         output = ""
 
         template = SingleDocumentTableHTMLExport.env.get_template('single_document_table/document.jinja.html')
@@ -48,7 +47,6 @@ class SingleDocumentTraceabilityHTMLExport:
 
     @staticmethod
     def export(document_tree, document, traceability_index, renderer):
-        print("doc: {}, number of sections: {}".format(document.name, len(document.section_contents)))
         output = ""
 
         template = SingleDocumentTraceabilityHTMLExport.env.get_template('single_document_traceability/document.jinja.html')
@@ -62,7 +60,6 @@ class SingleDocumentTraceabilityHTMLExport:
 
     @staticmethod
     def export_deep(document_tree, document, traceability_index, renderer):
-        print("doc: {}, number of sections: {}".format(document.name, len(document.section_contents)))
         output = ""
 
         template = SingleDocumentTraceabilityHTMLExport.env.get_template('single_document_traceability_deep/document.jinja.html')

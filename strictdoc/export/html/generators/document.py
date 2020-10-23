@@ -11,7 +11,6 @@ class DocumentHTMLGenerator:
 
     @staticmethod
     def export(document_tree, document, traceability_index, renderer):
-        print("doc: {}, number of sections: {}".format(document.name, len(document.section_contents)))
         output = ""
 
         template = DocumentHTMLGenerator.env.get_template('single_document/document.jinja.html')

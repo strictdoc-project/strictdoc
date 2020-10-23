@@ -145,7 +145,6 @@ class TraceabilityIndex:
             if ref.path not in self.requirements_parents:
                 continue
             if 'requirement' not in self.requirements_parents[ref.path]:
-                print(ref.path)
                 continue
             parent_requirements.append(self.requirements_parents[ref.path]['requirement'])
         return parent_requirements

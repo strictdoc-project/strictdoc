@@ -1,7 +1,6 @@
 from jinja2 import Environment, PackageLoader
 
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
-from strictdoc.export.html.export import get_traceability_link, get_traceability_deep_link
 
 
 class DocumentTreeHTMLGenerator:
@@ -18,8 +17,6 @@ class DocumentTreeHTMLGenerator:
 
         template = DocumentTreeHTMLGenerator.env.get_template('document_tree/document_tree.jinja.html')
         output = template.render(document_tree=document_tree,
-                                 artefact_list=document_tree_iterator.iterator(),
-                                 get_traceability_link=get_traceability_link,
-                                 get_traceability_deep_link=get_traceability_deep_link)
+                                 artefact_list=document_tree_iterator.iterator())
 
         return output

@@ -107,7 +107,6 @@ class SDReader:
 
         try:
             sdoc = self.read(sdoc_content)
-            sdoc.assign_path(file_path)
             return sdoc
         except NotImplementedError as exc:
             traceback.print_exc()

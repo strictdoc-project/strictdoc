@@ -1,11 +1,14 @@
+from strictdoc.core.document_meta import DocumentMeta
+
+
 class Document(object):
     def __init__(self, name, section_contents=[]):
         self.name = name
         self.section_contents = section_contents
-        self.path = "<No document path>"
 
         self.ng_sections = []
         self.ng_level = 0
+        self.meta = None
 
     def __str__(self):
         return "Document: <name: {}, section_contents: {}>".format(
@@ -15,9 +18,9 @@ class Document(object):
     def __repr__(self):
         return self.__str__()
 
-    def assign_path(self, path):
-        assert isinstance(path, str)
-        self.path = path
+    def assign_meta(self, meta):
+        assert isinstance(meta, DocumentMeta)
+        self.meta = meta
 
 
 class ReqComment(object):

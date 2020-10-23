@@ -4,13 +4,14 @@ import sys
 
 from strictdoc.backend.dsl.models import Document
 from strictdoc.backend.dsl.reader import SDReader
+from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import FileTree, DocumentTree
 from strictdoc.helpers.sorting import alphanumeric_sort
 
 
 class DocumentFinder:
     @staticmethod
-    def find_sdoc_content(paths_to_files_or_docs):
+    def find_sdoc_content(paths_to_files_or_docs, output_root_html):
         for paths_to_files_or_doc in paths_to_files_or_docs:
             if os.path.isfile(paths_to_files_or_doc):
                 raise NotImplementedError
@@ -23,32 +24,61 @@ class DocumentFinder:
                 exit(1)
 
         file_tree = DocumentFinder._build_file_tree(paths_to_files_or_docs)
-        document_tree = DocumentFinder._build_document_tree(file_tree)
+        document_tree = DocumentFinder._build_document_tree(file_tree,
+                                                            output_root_html)
 
         return document_tree
 
     @staticmethod
-    def _build_document_tree(file_trees):
+    def _build_document_tree(file_trees, output_root_html):
         assert isinstance(file_trees, list)
         reader = SDReader()
 
-        document_list, document_map = [], {}
+        document_list, map_docs_by_paths, map_relpaths_by_docs = [], {}, {}
 
         for file_tree in file_trees:
             task_list = [file_tree]
+
+            file_tree_mount_folder = os.path.basename(file_tree.root_path)
+
             while len(task_list) > 0:
                 current_tree = task_list.pop(0)
 
                 for doc_file in current_tree.files:
                     doc_full_path = doc_file.get_full_path()
-
                     document = reader.read_from_file(doc_full_path)
                     assert isinstance(document, Document)
                     document_list.append(document)
-                    document_map[doc_full_path] = document
+
+                    doc_relative_path = os.path.relpath(doc_full_path, file_tree.root_path)
+                    doc_relative_path_folder = os.path.dirname(doc_relative_path)
+
+                    document_relpath_folder = '{}/{}'.format(
+                        file_tree_mount_folder,
+                        doc_relative_path_folder
+                    ) if doc_relative_path_folder else file_tree_mount_folder
+
+                    document_filename = os.path.basename(doc_full_path)
+                    document_filename_base = os.path.splitext(document_filename)[0]
+
+                    document_full_html_out_path = '{}/{}'.format(
+                        output_root_html, document_relpath_folder
+                    )
+
+                    document_meta = DocumentMeta(doc_file.level,
+                                                 doc_full_path,
+                                                 document_full_html_out_path,
+                                                 document_relpath_folder,
+                                                 document_filename_base)
+
+                    document.assign_meta(document_meta)
+
+                    map_docs_by_paths[doc_full_path] = document
                 task_list.extend(current_tree.subfolder_trees)
 
-        return DocumentTree(file_trees, document_list, document_map)
+        return DocumentTree(file_trees,
+                            document_list,
+                            map_docs_by_paths)
 
     @staticmethod
     def _build_file_tree(paths_to_files_or_docs):

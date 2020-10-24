@@ -135,8 +135,8 @@ span.document-view-type {
   margin: 8px 0px;
 }
 
-.requirement-statement ul,
-.requirement-statement ol {
+.requirement ul,
+.requirement ol {
   padding-left: 1.6em;
 }
 

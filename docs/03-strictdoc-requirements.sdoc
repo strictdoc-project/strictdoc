@@ -3,7 +3,7 @@ NAME: Requirements
 
 [SECTION]
 LEVEL: 1
-TITLE: Project goal
+TITLE: Problems
 
 [REQUIREMENT]
 UID: PROBLEM-1-TOOLS
@@ -13,7 +13,7 @@ There shall exist free and lightweight yet capable software for technical
 documentation.
 <<<
 COMMENT: >>>
-The state of the art for many smaller companies working with
+The state of the art for many small companies working with
 requirements: using Excel for requirements management in the projects with
 hundreds or thousands of requirements.
 <<<
@@ -56,7 +56,9 @@ UID: PROBLEM-5-CHANGE-MANAGEMENT
 TITLE: Change management is difficult
 STATEMENT: Software shall provide capabilities for change management and impact assessment.
 COMMENT: >>>
-TBD
+The bigger the project is, the harder it is to maintain its documentation.
+If a change is introduced to a project, it usually requires a full revision
+of its requirements TBD.
 <<<
 
 [/SECTION]
@@ -91,12 +93,16 @@ and specifications management tool TBD.
 <<<
 
 [REQUIREMENT]
+TITLE: Command-line interface
+STATEMENT: StrictDoc shall provide a command-line interface.
+
+[REQUIREMENT]
 TITLE: Requirements validation
 STATEMENT: StrictDoc shall allow validation of requirement documents.
 
 [REQUIREMENT]
 TITLE: Requirements text format
-STATEMENT: StrictDoc shall allow storage of requirements in text form.
+STATEMENT: StrictDoc shall allow storage of requirements in a plain-text human readable form.
 
 [REQUIREMENT]
 TITLE: Linking requirements
@@ -211,13 +217,17 @@ STATEMENT: Requirement item might have one or more comments.
 LEVEL: 2
 TITLE: Composite Requirement item
 
+[FREETEXT]
+TBD
+[/FREETEXT]
+
 [/SECTION]
 
 [/SECTION]
 
 [SECTION]
 LEVEL: 1
-TITLE: Requirements document format (SDOC)
+TITLE: SDOC file format
 
 [REQUIREMENT]
 UID: SDOC-RDF-001
@@ -225,15 +235,15 @@ REFS:
 - TYPE: Parent
   VALUE: SDOC-DM-001
 TITLE: Primary text implementation
-STATEMENT: StrictDoc RDF shall serve as a text-based implementation of the Strict Doc Data Model.
+STATEMENT: SDOC format shall support encoding the Strict Doc Data Model in a plain-text human readable form.
 
 [REQUIREMENT]
 TITLE: Grammar
-STATEMENT: StrictDoc RDF shall provide a fixed grammar structure.
+STATEMENT: SDOC format shall be based on a fixed grammar.
 
 [REQUIREMENT]
 TITLE: Type safety
-STATEMENT: StrictDoc RDF shall enable type-safe parsing of requirement documents.
+STATEMENT: SDOC format shall allow type-safe encoding of requirement documents.
 
 [/SECTION]
 

@@ -123,9 +123,13 @@
   font-weight: bold;
 }
 
-.view-traceability pre.code {
+.view-traceability .requirement pre.code {
   font-size: 0.75em;
   line-height: 1.2;
   margin: 10px 0;
   padding: 10px 10px 10px 15px;
+}
+
+.view-traceability .requirement .image {
+  width: 100%;
 }

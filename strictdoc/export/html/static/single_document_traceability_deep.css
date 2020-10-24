@@ -25,7 +25,7 @@
 
 /* BASE */
 
-* {
+.view-traceability-deep * {
   box-sizing: border-box;
 }
 
@@ -37,7 +37,7 @@ ul, li {
 
 /* MAIN */
 
-.table {
+.view-traceability-deep {
   display: flex;
   flex-direction: column;
   justify-content: center;

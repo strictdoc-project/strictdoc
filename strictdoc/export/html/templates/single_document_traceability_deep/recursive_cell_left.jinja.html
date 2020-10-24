@@ -1,12 +1,12 @@
-<ul class="row">
-  <li class="column">
-    <div class="cell">
+<ul class="recursive_row">
+  <li class="recursive_column">
+    <div class="recursive_cell">
       {% include "_shared/requirement_card.jinja.html" %}
     </div>
   </li>
 
   {%- if traceability_index.has_parent_requirements(requirement) %}
-    <li class="column">
+    <li class="recursive_column">
       {%- for requirement in traceability_index.get_parent_requirements(requirement) %}
         {% include "single_document_traceability_deep/recursive_cell_left.jinja.html" %}
       {%- endfor %}

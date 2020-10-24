@@ -11,7 +11,7 @@
 
     <style>
       :root {
-        /* --table-test-width: {{ (traceability_index.get_max_ref_depth(document) * 2 + 1) * 320 }}px; */
+        --table-calculated-width: {{ (traceability_index.get_max_ref_depth(document) * 2 + 1) * 320 }}px;
       }
     </style>
     <title>{{document.name}} - Deep Traceability</title>
@@ -41,30 +41,30 @@
   <div class="view-traceability-deep">
   {%- for section_or_requirement in document_iterator.all_content() %}
     {%- if section_or_requirement.is_requirement %}
-      <div class="row-main">
+      <div class="view-traceability-deep_row">
 
-        <div class="column-left">
+        <div class="view-traceability-deep_column-left">
           {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) %}
             {% include "single_document_traceability_deep/recursive_cell_left.jinja.html" %}
           {%- endfor %}
-        </div> <!-- //column-left -->
+        </div> <!-- //view-traceability-deep_column-left -->
 
         {%- set requirement = section_or_requirement %}
-        <div class="column-main">
-          <div class="cell-main" id="{{ requirement.uid }}">
+        <div class="view-traceability-deep_column-main">
+          <div class="main-cell" id="{{ requirement.uid }}">
             {% include "_shared/requirement_card.jinja.html" %}
           </div>
-        </div> <!-- //column-main -->
+        </div> <!-- //view-traceability-deep_column-main -->
 
-        <div class="column-right">
+        <div class="view-traceability-deep_column-right">
 
           {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) %}
             {% include "single_document_traceability_deep/recursive_cell_right.jinja.html" %}
           {%- endfor %}
 
-        </div> <!-- //column-right -->
+        </div> <!-- //view-traceability-deep_column-right -->
 
-      </div>
+      </div> <!-- //view-traceability-deep_row -->
     {%- endif %}
   {%- endfor %}
   </div>

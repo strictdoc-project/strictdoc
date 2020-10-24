@@ -1,11 +1,8 @@
 * {
+  box-sizing: border-box;
   font-family: sans-serif;
   margin: 0;
   padding: 0;
-}
-
-body {
-  margin: 40px;
 }
 
 div.document {
@@ -36,7 +33,12 @@ div.document {
   --comment-color: #636669;
   --comment-border-color: #838689;
 
-  --traceability-arrow: 20px;
+  --primary-requirement-card-width: 300px;
+  --secondary-requirement-card-width: 300px;
+
+  --traceability-arrow: 1.25rem;
+  --traceability-outer-row-gap: 1.25rem;
+  --traceability-inner-row-gap: .5rem;
 }
 
 cite {
@@ -154,6 +156,8 @@ span.document-view-type {
 .requirement .image,
 .requirement object {
   width: 100%;
+  padding: 1em;
+  background: #fff;
 }
 
 /* requirement_card */
@@ -162,11 +166,12 @@ span.document-view-type {
   padding: .5em 0.75em;
   border: 1px solid var(--color-table-border);
   background-color: #fff;
+  background-color: rgba(0,0,0,0.01);
   position: relative;
 }
 
 .requirement_card + .requirement_card {
-  margin-top: .25em;
+  margin-top: var(--traceability-inner-row-gap);
 }
 
 /* requirement_card elements */
@@ -197,18 +202,19 @@ span.document-view-type {
 .requirement_card::after {
   content: '\2192';
   position: absolute;
-  top: 8px;
+  top: .5rem;
   display: block;
   width: var(--traceability-arrow);
   line-height: var(--traceability-arrow);
   font-size: calc(var(--traceability-arrow) * 1);
   text-align: center;
+  color: var(--color-accent-dark);
 }
 
 .requirement_card::after {
-  right: calc(var(--traceability-arrow) *(-1));
+  right: calc(var(--traceability-arrow) *(-1) - 1px);
 }
 
 .requirement_card::before {
-  left: calc(var(--traceability-arrow) *(-1));
+  left: calc(var(--traceability-arrow) *(-1) - 1px);
 }

@@ -21,7 +21,7 @@ class SingleDocumentFragmentRenderer:
         if comment in self.cache:
             return self.cache[comment]
 
-        output = RstToHtmlFragmentWriter.write(comment.comment)
+        output = RstToHtmlFragmentWriter.write(comment.get_comment())
         self.cache[comment] = output
 
         return output

@@ -80,7 +80,7 @@ RequirementStatus[noskipws]:
   'Draft' | 'Active' | 'Deleted';
 
 ReqComment[noskipws]:
-  'COMMENT: ' (comment = SingleLineString | comment = MultiLineString) '\n'
+  'COMMENT: ' (comment_single = SingleLineString | comment_multiline = MultiLineString) '\n'
 ;
 
 SingleLineString:

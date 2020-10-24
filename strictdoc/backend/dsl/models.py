@@ -24,9 +24,10 @@ class Document(object):
 
 
 class ReqComment(object):
-    def __init__(self, parent, comment):
+    def __init__(self, parent, comment_single, comment_multiline):
         self.parent = parent
-        self.comment = comment
+        self.comment_single = comment_single
+        self.comment_multiline = comment_multiline
 
     def __str__(self):
         return "Comment: <{}>".format(
@@ -36,9 +37,9 @@ class ReqComment(object):
     def __repr__(self):
         return self.__str__()
 
-    def comment_by_paragraphs(self):
-        paragraphs = self.comment.split('\n\n')
-        return paragraphs
+    def get_comment(self):
+        comment = self.comment_single if self.comment_single else self.comment_multiline
+        return comment
 
 
 class Section(object):

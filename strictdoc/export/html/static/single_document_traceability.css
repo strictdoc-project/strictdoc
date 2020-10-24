@@ -61,26 +61,17 @@
 }
 
 .view-traceability .section-title {
+  font-size: 1.6em;
   margin: 0.75rem 0 0.25rem;
   background-color: #fff;
   position: relative;
 }
 
 .view-traceability .section-title:only-child {
-  border: 1px solid var(--color-table-border);
-  /* width: 100%; */
   margin: 0;
   padding: 0 0.75em;
+  border: 1px solid var(--color-table-border);
 }
-
-.view-traceability .requirement .section-title {
-  margin: 0 0 0.5rem;
-  line-height: 1.2;
-}
-
-.view-traceability h1 { font-size: 1.6em; }
-.view-traceability .requirement .section-title { font-size: 1.1em; }
-.view-traceability .requirement h1 { font-size: 1.4em; }
 
 .view-traceability .requirement {
   padding: .5em 0.75em;
@@ -97,6 +88,34 @@
   height: 100%;
   border: 1px solid #000;
 }
+
+/* requirement elements */
+
+.view-traceability .requirement .section-title {
+  font-size: 1.1em;
+  margin: 0 0 0.5rem;
+  line-height: 1.2;
+}
+
+.view-traceability .requirement h1 { font-size: 1.4em; }
+
+.view-traceability .requirement .comment p:first-child::before {
+  content: "Comment: ";
+  font-weight: bold;
+}
+
+.view-traceability .requirement pre.code {
+  font-size: 0.75em;
+  line-height: 1.2;
+  margin: 10px 0;
+  padding: 10px 10px 10px 15px;
+}
+
+.view-traceability .requirement .image {
+  width: 100%;
+}
+
+/* arrows */
 
 .view-traceability .requirement::before,
 .view-traceability .requirement::after {
@@ -116,20 +135,4 @@
 
 .view-traceability .requirement::before {
   left: -30px;
-}
-
-.view-traceability .requirement .comment p:first-child::before {
-  content: "Comment: ";
-  font-weight: bold;
-}
-
-.view-traceability .requirement pre.code {
-  font-size: 0.75em;
-  line-height: 1.2;
-  margin: 10px 0;
-  padding: 10px 10px 10px 15px;
-}
-
-.view-traceability .requirement .image {
-  width: 100%;
 }

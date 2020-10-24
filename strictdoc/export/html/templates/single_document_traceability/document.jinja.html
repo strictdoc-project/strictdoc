@@ -37,7 +37,7 @@
       <div class="view-traceability_cell cell-parent">
         {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) %}
 
-            {% include "single_document_traceability/requirement.jinja.html" %}
+            {% include "_shared/requirement.jinja.html" %}
 
         {%- endfor %}
       </div>
@@ -45,14 +45,14 @@
       {%- set requirement = section_or_requirement %}
       <div class="view-traceability_cell cell-central" id="{{ requirement.uid }}">
 
-          {% include "single_document_traceability/requirement.jinja.html" %}
+          {% include "_shared/requirement.jinja.html" %}
 
       </div>
 
       <div class="view-traceability_cell cell-children">
         {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) %}
 
-            {% include "single_document_traceability/requirement.jinja.html" %}
+            {% include "_shared/requirement.jinja.html" %}
 
         {%- endfor %}
       </div>

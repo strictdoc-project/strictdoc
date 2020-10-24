@@ -43,10 +43,6 @@
   flex-flow: column nowrap;
 }
 
-.cell-central .requirement {
-  height: 100%;
-}
-
 .cell-parent,
 .cell-children {
   background-color: #fff;
@@ -91,17 +87,15 @@
   border: 1px solid var(--color-table-border);
   background-color: #fff;
   position: relative;
-  /* height: 100%; */
 }
 
 .view-traceability .requirement + .requirement {
   margin-top: .25em;
 }
 
-
-.view-traceability .requirement .comment p:first-child::before {
-  content: "Comment: ";
-  font-weight: bold;
+.cell-central .requirement {
+  height: 100%;
+  border: 1px solid #000;
 }
 
 .view-traceability .requirement::before,
@@ -122,4 +116,16 @@
 
 .view-traceability .requirement::before {
   left: -30px;
+}
+
+.view-traceability .requirement .comment p:first-child::before {
+  content: "Comment: ";
+  font-weight: bold;
+}
+
+.view-traceability pre.code {
+  font-size: 0.75em;
+  line-height: 1.2;
+  margin: 10px 0;
+  padding: 10px 10px 10px 15px;
 }

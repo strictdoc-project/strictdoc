@@ -6,5 +6,5 @@
 
 .requirement .comment {
   padding-left: 1em;
-  border-left: 4px double var(--code-border-color);
+  border-left: 4px double var(--comment-border-color);
 }

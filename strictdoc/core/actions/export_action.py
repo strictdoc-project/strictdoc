@@ -1,5 +1,6 @@
 import concurrent.futures
 import datetime
+import glob
 import os
 from functools import partial
 from multiprocessing.pool import Pool
@@ -13,6 +14,7 @@ from strictdoc.export.html.generators.document import DocumentHTMLGenerator
 from strictdoc.export.html.generators.document_tree import DocumentTreeHTMLGenerator
 from strictdoc.export.html.renderer import SingleDocumentFragmentRenderer
 from strictdoc.export.rst.export import SingleDocumentRSTExport
+from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.file_system import sync_dir
 from strictdoc.helpers.timing import timing_decorator, measure_performance
 
@@ -20,6 +22,11 @@ from strictdoc.helpers.timing import timing_decorator, measure_performance
 class ExportAction:
     def __init__(self, root_path):
         self.root_path = root_path
+
+        strict_own_files = glob.iglob('{}/strictdoc/**/*'.format(self.root_path), recursive=True)
+        strict_own_files = [f for f in strict_own_files if f.endswith('.html') or f.endswith('.py')]
+        latest_strictdoc_own_file = max(strict_own_files, key=os.path.getctime)
+        self.strictdoc_last_update = get_file_modification_time(latest_strictdoc_own_file)
 
     @timing_decorator('Export')
     def export(self, path_to_single_file_or_doc_root):
@@ -91,13 +98,11 @@ class ExportAction:
         # If file exists we want to check its modification path in order to skip
         # its generation in case it has not changed since the last generation.
         if os.path.isfile(full_output_path):
-            sdoc_mtime_timestamp = (os.path.getmtime(document_meta.sdoc_full_path))
-            sdoc_mtime = datetime.datetime.fromtimestamp(sdoc_mtime_timestamp)
+            output_file_mtime = get_file_modification_time(full_output_path)
+            sdoc_mtime = get_file_modification_time(document_meta.sdoc_full_path)
 
-            output_file_mtime_timestamp = (os.path.getmtime(full_output_path))
-            output_file_mtime = datetime.datetime.fromtimestamp(output_file_mtime_timestamp)
-
-            if sdoc_mtime < output_file_mtime:
+            if (sdoc_mtime < output_file_mtime and
+                self.strictdoc_last_update < output_file_mtime):
                 with measure_performance('Skip: {}'.format(document.name)):
                     return
 

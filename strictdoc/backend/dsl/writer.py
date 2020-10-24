@@ -126,13 +126,13 @@ class SDWriter:
             output += "\n"
 
         for comment in section_content.comments:
-            if '\n' in comment.comment:
+            if comment.comment_multiline:
                 output += "COMMENT: >>>\n"
-                output += comment.comment
+                output += comment.comment_multiline
                 output += "\n<<<\n"
             else:
                 output += "COMMENT: "
-                output += comment.comment
+                output += comment.comment_single
                 output += "\n"
 
         return output

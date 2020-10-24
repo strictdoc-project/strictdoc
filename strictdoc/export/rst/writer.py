@@ -84,7 +84,7 @@ class RSTWriter:
             output += '**'
             output += "Comment:"
             output += '** '
-            output += comment.comment
+            output += comment.get_comment()
             output += "\n"
             output += "\n"
 

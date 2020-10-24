@@ -194,7 +194,7 @@ latex_elements = {
 
                 \Huge{\textbf{StrictDoc}}
                 
-                \Large{\textbf{Technical documentation control software}}
+                \Large{\textbf{Technical documentation software}}
             \end{flushright}
 
             \vspace{30mm}
@@ -206,7 +206,7 @@ latex_elements = {
                     \hline
                     \textbf{{Project goal:}} & 
                     \makecell[l]{ 
-                            Requirements management, Documentation Control
+                            Requirements and specifications management, Documentation Control
                     } 
                     \\ \hline
                     \textbf{{Supported Documents:}} & \tablecell {Requirements document, Specification, Technical Manual} \\ \hline

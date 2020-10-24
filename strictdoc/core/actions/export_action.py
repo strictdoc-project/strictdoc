@@ -91,6 +91,11 @@ class ExportAction:
             destination_path = os.path.join(output_root_html, output_relative_path)
             sync_dir(source_path, destination_path)
 
+        if not os.path.isabs(output_root_html):
+            cwd = os.getcwd()
+            output_root_html = os.path.join(cwd, output_root_html)
+        print('Export completed. Documentation tree can be found at:\n{}'.format(output_root_html))
+
     def _export_with_performance(self, document, document_tree, traceability_index):
         document_meta: DocumentMeta = document.meta
         full_output_path = os.path.join(self.root_path, document_meta.get_html_doc_path())

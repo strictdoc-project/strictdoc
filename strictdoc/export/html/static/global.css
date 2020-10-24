@@ -1,11 +1,8 @@
 * {
+  box-sizing: border-box;
   font-family: sans-serif;
   margin: 0;
   padding: 0;
-}
-
-body {
-  margin: 40px;
 }
 
 div.document {
@@ -36,7 +33,12 @@ div.document {
   --comment-color: #636669;
   --comment-border-color: #838689;
 
-  --traceability-arrow: 20px;
+  --primary-requirement-card-width: 300px;
+  --secondary-requirement-card-width: 300px;
+
+  --traceability-arrow: 1.25rem;
+  --traceability-outer-row-gap: 1.25rem;
+  --traceability-inner-row-gap: .5rem;
 }
 
 cite {
@@ -71,21 +73,16 @@ a.reference.external {
   text-overflow: ellipsis;
 }
 
-/* requirement elements */
-
-.requirement-statement ul,
-.requirement-statement ol {
-  padding-left: 1.6em;
+#tags-outline {
+  margin: 20px 0px;
 }
 
-.comment {
-  color: var(--comment-color);
-  font-size: .9em;
-  line-height: 1.4;
-}
-
-.comment + .comment {
-  margin-top: 10px;
+.tag {
+  background: #aaa;
+  border-radius: 20px;
+  margin: 2px 0px;
+  padding: 3px 10px;
+  display: inline-block;
 }
 
 /* typo */
@@ -132,4 +129,92 @@ span.document-view-type {
   top: -6px;
   background-color: var(--color-bg-mac);
   color: var(--color-accent-dark);
+}
+
+/* requirement elements */
+
+.requirement-statement {
+  margin: 8px 0px;
+}
+
+.requirement ul,
+.requirement ol {
+  padding-left: 1.6em;
+}
+
+.requirement .comment {
+  color: var(--comment-color);
+  font-size: .9em;
+  line-height: 1.4;
+}
+
+.requirement .comment + .comment {
+  margin-top: 10px;
+}
+
+
+.requirement .image,
+.requirement object {
+  width: 100%;
+  padding: 1em;
+  background: #fff;
+}
+
+/* requirement_card */
+
+.requirement_card {
+  padding: .5em 0.75em;
+  border: 1px solid var(--color-table-border);
+  background-color: #fff;
+  background-color: rgba(0,0,0,0.01);
+  position: relative;
+}
+
+.requirement_card + .requirement_card {
+  margin-top: var(--traceability-inner-row-gap);
+}
+
+/* requirement_card elements */
+
+.requirement_card .section-title {
+  font-size: 1.1em;
+  margin: 0 0 0.5rem;
+  line-height: 1.2;
+}
+
+.requirement_card h1 { font-size: 1.4em; }
+
+.requirement_card .comment p:first-child::before {
+  content: "Comment: ";
+  font-weight: bold;
+}
+
+.requirement_card pre.code {
+  font-size: 0.75em;
+  line-height: 1.2;
+  margin: 10px 0;
+  padding: 10px 10px 10px 15px;
+}
+
+/* arrows */
+
+.requirement_card::before,
+.requirement_card::after {
+  content: '\2192';
+  position: absolute;
+  top: .5rem;
+  display: block;
+  width: var(--traceability-arrow);
+  line-height: var(--traceability-arrow);
+  font-size: calc(var(--traceability-arrow) * 1);
+  text-align: center;
+  color: var(--color-accent-dark);
+}
+
+.requirement_card::after {
+  right: calc(var(--traceability-arrow) *(-1) - 1px);
+}
+
+.requirement_card::before {
+  left: calc(var(--traceability-arrow) *(-1) - 1px);
 }

@@ -1,6 +1,66 @@
 Requirements
 $$$$$$$$$$$$
 
+Project goal
+============
+
+Technical documentation software
+--------------------------------
+
+``[PROBLEM-1-TOOLS]``
+
+There shall exist free and lightweight yet capable software for technical
+documentation.
+
+**Comment:** The state of the art for many smaller companies working with
+requirements: using Excel for requirements management in the projects with
+hundreds or thousands of requirements.
+
+Technical documentation is hard
+-------------------------------
+
+``[PROBLEM-2-DOCUMENTATION-IS-HARD]``
+
+Software shall support engineers in their work with documentation.
+
+**Comment:** Technical documentation can be an extremely laborious process.
+
+Technical documentation as a source of hazards
+----------------------------------------------
+
+``[PROBLEM-3-DOCUMENTATION-AS-HAZARD]``
+
+There shall exist less opportunity for writing incorrect documentation.
+
+**Comment:** Every serious engineering activity, such as safety engineering or systems
+engineering, starts with requirements. The more critical is a product the higher
+the importance of good documentation.
+
+It is recognized that many failures stem from inadequate requirements
+engineering. While it is not possible to fix the problem of inadequate
+requirements engineering in general, it is definitely possible to improve
+software that supports engineers in activities such as requirements engineering
+and writing technical documentation.
+
+Technical documentation easily becomes outdated
+-----------------------------------------------
+
+``[PROBLEM-4-OUTDATED-DOCUMENTATION]``
+
+Software shall support engineers in keeping documentation up-to-date.
+
+**Comment:** Many existing tools for documentation do not provide any measures for
+ensuring overall consistency of documents and documentation trees.
+
+Change management is difficult
+------------------------------
+
+``[PROBLEM-5-CHANGE-MANAGEMENT]``
+
+Software shall provide capabilities for change management and impact assessment.
+
+**Comment:** TBD
+
 High-level requirements
 =======================
 
@@ -21,10 +81,13 @@ StrictDoc shall be based on a well-defined data model.
 **Comment:** StrictDoc is a result of multiple attempts to find a solution for working with
 text-based requirements:
 
-- Doorstop
-- StrictDoc, first generation: Markdown-based C++ program.
+- StrictDoc, first generation: Markdown-based C++ program. Custom requirements
+  metadata in YAML.
 - StrictDoc, second generation: RST/Sphinx-based Python program. Using Sphinx
   extensions to manage meta information.
+
+The result of these efforts is the realization that a text-based requirements
+and specifications management tool TBD.
 
 Requirements validation
 -----------------------
@@ -71,7 +134,14 @@ Parallelization
 
 ``[SDOC-IMPL-PARAL]``
 
-StrictDoc's shall parallelize the time-consuming parts of the code.
+StrictDoc shall enable parallelization of the time-consuming parts of the code.
+
+Incremental generation
+----------------------
+
+``[SDOC-IMPL-INCREMENTAL]``
+
+StrictDoc shall enable incremental generation of the documents.
 
 Data model
 ==========

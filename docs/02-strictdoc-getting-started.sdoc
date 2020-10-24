@@ -3,12 +3,26 @@ NAME: Getting started
 
 [SECTION]
 LEVEL: 1
-TITLE: PIP package
+TITLE: Installing StrictDoc as a PIP package
 
 [FREETEXT]
-.. code-block::
+.. code-block:: bash
 
     pip install strictdoc
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 1
+TITLE: Hello world
+
+[FREETEXT]
+.. code-block:: bash
+
+    git clone git@github.com:stanislaw/strictdoc.git
+    cd strictdoc
+    strictdoc export docs/
 [/FREETEXT]
 
 [/SECTION]

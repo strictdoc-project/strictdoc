@@ -133,39 +133,3 @@ ul, li {
   right: calc(var(--cell-arrow-width) * (-1.5) - 1px); /* width + 1px border */
 }
 
-/* .row:hover .cell {
-  box-shadow: 0 0 16px #808080;
-  transition: 0.3s all;
-} */
-
-#tags-outline {
-  margin: 20px 0px;
-}
-
-.tag {
-  background: #aaa;
-  border-radius: 20px;
-  margin: 2px 0px;
-  padding: 3px 10px;
-  display: inline-block;
-}
-
-.requirement-statement {
-  margin: 8px 0px;
-}
-
-.comment {
-  margin: 10px 0px;
-}
-
-.comment-word {
-  font-weight: bold;
-}
-
-.comment-paragraph {
-  margin: 10px 0px;
-}
-
-.comment-word + .comment-paragraph {
-  display: inline;
-}

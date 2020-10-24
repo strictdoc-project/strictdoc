@@ -25,11 +25,11 @@ class DocumentFinder:
                 print(err)
                 exit(1)
 
-        file_tree = DocumentFinder._build_file_tree(paths_to_files_or_docs)
+        file_tree, asset_dirs = DocumentFinder._build_file_tree(paths_to_files_or_docs)
         document_tree = DocumentFinder._build_document_tree(file_tree,
                                                             output_root_html)
 
-        return document_tree
+        return document_tree, asset_dirs
 
     @staticmethod
     def _build_document_tree(file_trees, output_root_html):
@@ -84,14 +84,22 @@ class DocumentFinder:
 
     @staticmethod
     def _build_file_tree(paths_to_files_or_docs):
+        asset_dirs = []
         root_trees = []
 
         for path_to_doc_root in paths_to_files_or_docs:
+            path_to_doc_root_base = os.path.dirname(path_to_doc_root)
             root_level = path_to_doc_root.count(os.sep)
 
             tree_map = {path_to_doc_root: FileTree(path_to_doc_root, 0)}
 
             for current_root_path, dirs, files in os.walk(path_to_doc_root, topdown=False):
+                if os.path.basename(current_root_path) == '_assets':
+                    asset_dirs.append({
+                        'full_path': current_root_path,
+                        'relative_path': os.path.relpath(current_root_path, path_to_doc_root_base)
+                    })
+
                 current_root_path_level = current_root_path.count(os.sep) - root_level
 
                 if current_root_path not in tree_map:
@@ -115,4 +123,4 @@ class DocumentFinder:
                     current_parent_tree.add_subfolder_tree(current_tree)
 
             root_trees.append(tree_map[path_to_doc_root])
-        return root_trees
+        return root_trees, asset_dirs

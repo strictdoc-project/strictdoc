@@ -51,6 +51,14 @@ Many existing tools for documentation do not provide any measures for
 ensuring overall consistency of documents and documentation trees.
 <<<
 
+[REQUIREMENT]
+UID: PROBLEM-5-CHANGE-MANAGEMENT
+TITLE: Change management is difficult
+STATEMENT: Software shall provide capabilities for change management and impact assessment.
+COMMENT: >>>
+TBD
+<<<
+
 [/SECTION]
 
 [SECTION]

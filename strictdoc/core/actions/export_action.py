@@ -30,7 +30,9 @@ class ExportAction:
         output_root_html = 'output/html'
         Path(output_root_html).mkdir(parents=True, exist_ok=True)
 
-        document_tree = DocumentFinder.find_sdoc_content(path_to_single_file_or_doc_root, output_root_html)
+        document_tree, asset_dirs = DocumentFinder.find_sdoc_content(
+            path_to_single_file_or_doc_root, output_root_html
+        )
 
         traceability_index = TraceabilityIndex.create(document_tree)
 
@@ -74,7 +76,13 @@ class ExportAction:
 
         static_files_src = os.path.join(self.root_path, 'strictdoc/export/html/static')
         static_files_dest = os.path.join(self.root_path, 'output/html/_static')
+
         sync_dir(static_files_src, static_files_dest)
+        for asset_dir in asset_dirs:
+            source_path = asset_dir['full_path']
+            output_relative_path = asset_dir['relative_path']
+            destination_path = os.path.join(output_root_html, output_relative_path)
+            sync_dir(source_path, destination_path)
 
     def _export_with_performance(self, document, document_tree, traceability_index):
         document_meta: DocumentMeta = document.meta

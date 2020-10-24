@@ -48,8 +48,8 @@
   flex-flow: column nowrap;
 }
 
-.cell-parent { padding-right: var(--traceability-arrow-length); }
-.cell-children { padding-left: var(--traceability-arrow-length); }
+.cell-parent { padding-right: var(--traceability-arrow); }
+.cell-children { padding-left: var(--traceability-arrow); }
 
 .view-traceability .free_text {
   font-size: .9em;
@@ -118,31 +118,20 @@
 
 .view-traceability .requirement::before,
 .view-traceability .requirement::after {
-  content: '';
+  content: '\2192';
   position: absolute;
+  top: 10px;
   display: block;
-  top: 50%;
-  height: var(--traceability-arrow-width);
-  width: var(--traceability-arrow-length);
-  background-color: #000;
+  width: var(--traceability-arrow);
+  line-height: var(--traceability-arrow);
+  font-size: calc(var(--traceability-arrow) * 1);
+  text-align: center;
 }
 
 .view-traceability .requirement::after {
-  right: calc(var(--traceability-arrow-length) *(-1));
+  right: calc(var(--traceability-arrow) *(-1));
 }
 
 .view-traceability .requirement::before {
-  left: calc(var(--traceability-arrow-length) *(-1));
-}
-
-.arrow {
-  border: solid black;
-  border-width: 0 3px 3px 0;
-  display: inline-block;
-  padding: 3px;
-}
-
-.right {
-  transform: rotate(-45deg);
-  -webkit-transform: rotate(-45deg);
+  left: calc(var(--traceability-arrow) *(-1));
 }

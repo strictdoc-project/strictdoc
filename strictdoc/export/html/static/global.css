@@ -36,8 +36,7 @@ div.document {
   --comment-color: #636669;
   --comment-border-color: #838689;
 
-  --traceability-arrow-length: 20px;
-  --traceability-arrow-width: 1px;
+  --traceability-arrow: 20px;
 }
 
 cite {

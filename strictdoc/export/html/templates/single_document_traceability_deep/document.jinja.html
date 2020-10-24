@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/global.css" />
+    <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/layout-main-with-toc.css" />
     <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/single_document_traceability_deep.css" />
 
     <script type="text/javascript" src="{{document.meta.get_root_path_prefix()}}/_static/jquery.min.js"></script>
@@ -10,40 +11,22 @@
 
     <style>
       :root {
-        --table-test-width: {{ (traceability_index.get_max_ref_depth(document) * 2 + 1) * 320 }}px;
-
-        --cell-border-width: 1px;
-
-        --main-border-color: #808080;
-        --cell-border-color: #808080;
-
-        --main-bg-color: #ffffff;
-        --cell-bg-color: #dddddd;
-
-        --primary-card-width: 300px;
-        --secondary-card-width: 300px;
-        --card-padding: 10px;
-
-        --cell-arrow-width: 20px;
-        --arrow-height: 2px;
-        --cell-arrow-color: #000000;
-
-        --main-row-bottom-gap: 20px;
-        --inner-row-bottom-gap: 10px;
+        /* --table-test-width: {{ (traceability_index.get_max_ref_depth(document) * 2 + 1) * 320 }}px; */
       }
     </style>
     <title>{{document.name}} - Deep Traceability</title>
 </head>
 
 <body>
-  <h1>{{document.name}} - Deep Traceability</h1>
-
-  <a href="index.html">Back to Index</a>
-
-  <br/>
 
   {%- set document_iterator = traceability_index.get_document_iterator(document) -%}
-  {% include "_shared/table_of_contents.jinja.html" %}
+  <div class="layout-with-toc open">
+
+    <aside class="toc">
+      {% include "_shared/table_of_contents.jinja.html" %}
+    </aside>
+    <main class="content">
+      <h1>{{document.name}} <span class="document-view-type">Deep Traceability</span></h1>
 
   {%- if traceability_index.has_tags(document) -%}
     <div id="tags-outline">
@@ -84,6 +67,9 @@
       </div>
     {%- endif %}
   {%- endfor %}
+  </div>
+
+    </main>
   </div>
 </body>
 

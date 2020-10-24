@@ -12,7 +12,11 @@
       <li>
         <a href="#{{ string_to_anchor_id(section.title) }}">
           <span class="section-number">{{ section.export_title }}</span>
-          {{ section.title if section.title else '(NO TITLE)' }}
+          {%- if section.is_requirement -%}
+            {{ section.title if section.title else (section.uid if section.uid else '(NO TITLE)') }}
+          {%- else -%}
+            {{ section.title if section.title else '(NO TITLE)' }}
+          {%- endif -%}
         </a>
 
       {%- if not loop.last -%}

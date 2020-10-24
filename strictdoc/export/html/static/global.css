@@ -63,6 +63,12 @@ pre.code {
   font-family: var(--code-font-family);
 }
 
+a.reference.external {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* requirement elements */
 
 .requirement-statement ul,

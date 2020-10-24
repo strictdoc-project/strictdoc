@@ -17,9 +17,8 @@
 
 /* TABLE styles */
 
-.view-traceability {
-  background: #fff;
-  padding: 0px;
+.view-traceability * {
+  box-sizing: border-box;
 }
 
 .view-traceability_row {
@@ -49,8 +48,8 @@
   flex-flow: column nowrap;
 }
 
-.cell-parent { padding-right: 1rem; }
-.cell-children { padding-left: 1rem; }
+.cell-parent { padding-right: var(--traceability-arrow-length); }
+.cell-children { padding-left: var(--traceability-arrow-length); }
 
 .view-traceability .free_text {
   font-size: .9em;
@@ -122,17 +121,28 @@
   content: '';
   position: absolute;
   display: block;
-  box-sizing: border-box;
   top: 50%;
-  height: 1px;
+  height: var(--traceability-arrow-width);
+  width: var(--traceability-arrow-length);
   background-color: #000;
-  width: 30px;
 }
 
 .view-traceability .requirement::after {
-  right: -30px;
+  right: calc(var(--traceability-arrow-length) *(-1));
 }
 
 .view-traceability .requirement::before {
-  left: -30px;
+  left: calc(var(--traceability-arrow-length) *(-1));
+}
+
+.arrow {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+}
+
+.right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
 }

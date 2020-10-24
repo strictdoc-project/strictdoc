@@ -49,19 +49,7 @@ STATEMENT: Deep Traceability page CSS: Improvements
 
 [SECTION]
 LEVEL: 1
-TITLE: Roadmap
-
-[SECTION]
-LEVEL: 2
 TITLE: First public release
-
-[REQUIREMENT]
-TITLE: StrictDoc via CLI interface
-STATEMENT: StrictDoc shall support it use as a Python command-line application.
-COMMENT: >>>
-Such a use allows a more fine-grained access to the StrictDoc's modules, such
-as Grammar, Import, Export classes, etc.
-<<<
 
 [REQUIREMENT]
 TITLE: Document tree: Incremental generation
@@ -80,6 +68,10 @@ STATEMENT: StrictDoc shall ensure that each UID used in a document tree is uniqu
 
 [/SECTION]
 
+[SECTION]
+LEVEL: 1
+TITLE: Backlog
+
 [REQUIREMENT]
 TITLE: StrictDoc as library
 STATEMENT: StrictDoc shall support it use as a Python library.
@@ -87,6 +79,10 @@ COMMENT: >>>
 Such a use allows a more fine-grained access to the StrictDoc's modules, such
 as Grammar, Import, Export classes, etc.
 <<<
+
+[SECTION]
+LEVEL: 2
+TITLE: Export capabilities
 
 [REQUIREMENT]
 TITLE: Excel Export
@@ -101,12 +97,61 @@ TITLE: ReqIF Import/Export
 STATEMENT: StrictDoc shall support ReqIF format.
 
 [REQUIREMENT]
+TITLE: Tex Export
+STATEMENT: StrictDoc shall support exporting documents to Tex format.
+
+[REQUIREMENT]
 TITLE: Markdown support for text and code blocks
 STATEMENT: StrictDoc shall support rendering text/code blocks into RST syntax.
 
-[REQUIREMENT]
+[/SECTION]
+
+[SECTION]
+LEVEL: 2
 TITLE: Platform support
-STATEMENT: StrictDoc shall work on macOS, Linux, and Windows systems.
+
+[REQUIREMENT]
+TITLE: Linux support
+STATEMENT: StrictDoc shall work on Linux systems.
+
+[REQUIREMENT]
+TITLE: Windows support
+STATEMENT: StrictDoc shall work on Windows systems.
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 2
+TITLE: Traceability and coverage
+
+[REQUIREMENT]
+TITLE: Linking with implementation artifacts
+STATEMENT: StrictDoc shall support linking requirements to files.
+
+[REQUIREMENT]
+TITLE: Requirement checksumming
+STATEMENT: StrictDoc shall support calculation of checksums for requirements.
+
+[REQUIREMENT]
+TITLE: Documentation coverage
+STATEMENT: StrictDoc shall generate requirements coverage information.
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 2
+TITLE: Validations and testing
+
+[REQUIREMENT]
+TITLE: Validation: Section Levels
+STATEMENT: Section levels must be properly nested.
+
+[REQUIREMENT]
+TITLE: Validation: Valid HTML markup
+STATEMENT: StrictDoc's HTML export tests shall validate the generated HTML markup.
+COMMENT: First candidate: Table of contents and its nested ``<ul>/<li>`` items.
+
+[/SECTION]
 
 [REQUIREMENT]
 TITLE: Custom fields
@@ -122,26 +167,9 @@ Examples:
 TITLE: Filtering by tags
 STATEMENT: StrictDoc shall support filtering filtering by tags.
 
-[REQUIREMENT]
-TITLE: Linking with implementation artifacts
-STATEMENT: StrictDoc shall support linking requirements to files.
-
-[REQUIREMENT]
-TITLE: Documentation coverage
-STATEMENT: StrictDoc shall generate requirements coverage information.
-
-[REQUIREMENT]
-TITLE: Graphical User Interface (GUI)
-STATEMENT: StrictDoc shall provide a Graphical User Interface (GUI).
-
-[REQUIREMENT]
-TITLE: Validation: Section Levels
-STATEMENT: Section levels must be properly nested.
-
-[REQUIREMENT]
-TITLE: Validation: Valid HTML markup
-STATEMENT: StrictDoc's HTML export tests shall validate the generated HTML markup.
-COMMENT: First candidate: Table of contents and its nested ``<ul>/<li>`` items.
+[SECTION]
+LEVEL: 2
+TITLE: Options
 
 [REQUIREMENT]
 TITLE: Option: Title: Automatic numeration
@@ -155,8 +183,20 @@ STATEMENT: StrictDoc shall support config option `display_requirement_titles`.
 TITLE: Option: Title: Display requirement UID
 STATEMENT: StrictDoc shall support config option `display_requirement_uids`.
 
+[/SECTION]
+
+[SECTION]
+LEVEL: 2
+TITLE: Advanced
+
 [REQUIREMENT]
-TITLE: Advanced: Facts table. Invariants calculation.
-STATEMENT: StrictDoc shall support calculating invariants that enforce numerical constraints.
+TITLE: Facts table. Invariants calculation.
+STATEMENT: StrictDoc shall support creation of fact tables calculating invariants that enforce numerical constraints.
+
+[REQUIREMENT]
+TITLE: Graphical User Interface (GUI)
+STATEMENT: StrictDoc shall provide a Graphical User Interface (GUI).
+
+[/SECTION]
 
 [/SECTION]

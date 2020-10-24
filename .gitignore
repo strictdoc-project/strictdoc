@@ -1,7 +1,9 @@
+**/build/
+*.egg-info/
 **/output/**
 **/Output/**
 *.pyc
 *.script
-**/build/
+*.venv
 output.zip
 

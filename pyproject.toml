@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "strictdoc"
+version = "0.0.1"
+description = "Technical documentation software."
+authors = ["Stanislav Pankevich <s.pankevich@gmail.com>"]
+maintainers = ["Stanislav Pankevich <s.pankevich@gmail.com>"]
+license = "Apache 2"
+readme = "README.md"
+homepage = ""
+repository = "https://github.com/stanislaw/strictdoc"
+documentation = "https://strictdoc.readthedocs.io/en/latest/index.html"
+keywords = [
+    "Documentation",
+    "Requirements management"
+]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+textx = "2.2.0"
+jinja2 = "2.11.2"
+docutils = "0.16"
+
+[tool.poetry.dev-dependencies]
+invoke = "1.4.1"
+pytest = "*"
+filecheck = "*"
+sphinx = '3.2.1'
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+
+[tool.poetry.scripts]
+strictdoc = "strictdoc.cli.main:main"
+

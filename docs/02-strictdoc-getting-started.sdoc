@@ -3,7 +3,7 @@ NAME: Getting started
 
 [SECTION]
 LEVEL: 1
-TITLE: Installing StrictDoc as a PIP package
+TITLE: Installing StrictDoc as a Pip package
 
 [FREETEXT]
 .. code-block:: bash
@@ -15,13 +15,26 @@ TITLE: Installing StrictDoc as a PIP package
 
 [SECTION]
 LEVEL: 1
+TITLE: Installing StrictDoc from GitHub (development)
+
+[FREETEXT]
+.. code-block:: bash
+
+    git clone git@github.com:stanislaw/strictdoc.git && cd strictdoc
+    poetry install
+    poetry run strictdoc
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 1
 TITLE: Hello world
 
 [FREETEXT]
 .. code-block:: bash
 
-    git clone git@github.com:stanislaw/strictdoc.git
-    cd strictdoc
+    git clone git@github.com:stanislaw/strictdoc.git && cd strictdoc
     strictdoc export docs/
 [/FREETEXT]
 

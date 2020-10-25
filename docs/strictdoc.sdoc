@@ -52,6 +52,16 @@ TITLE: Hello world
 
 [SECTION]
 LEVEL: 1
+TITLE: SDoc syntax
+
+[FREETEXT]
+TBD
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 1
 TITLE: StrictDoc and other tools
 
 [SECTION]
@@ -555,6 +565,10 @@ STATEMENT: StrictDoc shall support filtering filtering by tags.
 [SECTION]
 LEVEL: 3
 TITLE: Options
+
+[REQUIREMENT]
+TITLE: Option: RST: Top-level title: document name
+STATEMENT: StrictDoc shall support config option `include_toplevel_title`.
 
 [REQUIREMENT]
 TITLE: Option: Title: Automatic numeration

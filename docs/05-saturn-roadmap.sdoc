@@ -1,0 +1,202 @@
+[DOCUMENT]
+NAME: Roadmap
+
+[SECTION]
+LEVEL: 1
+TITLE: In works
+
+[SECTION]
+LEVEL: 2
+TITLE: PDF Export
+
+[REQUIREMENT]
+TITLE: PDF Export: TOC sections: bottom alignment.
+STATEMENT: Numbers do not align with titles.
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 2
+TITLE: HTML Export
+
+[REQUIREMENT]
+TITLE: RST support for text and code blocks
+STATEMENT: Saturn shall support rendering text/code blocks into RST syntax.
+
+[REQUIREMENT]
+TITLE: Left panel: Table of contents
+STATEMENT: Left panel: Table of contents.
+
+[REQUIREMENT]
+TITLE: Document page CSS: Proper markup
+STATEMENT: Document page: make it look like a document.
+
+[REQUIREMENT]
+TITLE: Table page CSS: Proper table
+STATEMENT: Table page: make columns be always of the same size while respecting min-max widths.
+
+[REQUIREMENT]
+TITLE: Traceability page CSS: Proper middle column document
+STATEMENT: Traceability page CSS: Proper middle column document
+
+[REQUIREMENT]
+TITLE: Deep Traceability page CSS: Improvements
+STATEMENT: Deep Traceability page CSS: Improvements
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 1
+TITLE: First public release
+
+[REQUIREMENT]
+TITLE: Document tree: Incremental generation
+STATEMENT: When exporting documentation tree, Saturn shall regenerate only changed documents and files.
+
+[REQUIREMENT]
+TITLE: Generated file names
+STATEMENT: Document name must be transformed into a valid file name.
+COMMENT: >>>
+Alternative: Simply use the original document file names.
+<<<
+
+[REQUIREMENT]
+TITLE: Validation: Uniqueness of UID identifiers in a document tree
+STATEMENT: Saturn shall ensure that each UID used in a document tree is unique.
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 1
+TITLE: Backlog
+
+[REQUIREMENT]
+TITLE: Saturn as library
+STATEMENT: Saturn shall support it use as a Python library.
+COMMENT: >>>
+Such a use allows a more fine-grained access to the Saturn's modules, such
+as Grammar, Import, Export classes, etc.
+<<<
+
+[SECTION]
+LEVEL: 2
+TITLE: Export capabilities
+
+[REQUIREMENT]
+TITLE: Excel Export
+STATEMENT: Saturn shall support exporting documents to Excel format.
+
+[REQUIREMENT]
+TITLE: PlantUML Export
+STATEMENT: Saturn shall support exporting documents to ReqIF format.
+
+[REQUIREMENT]
+TITLE: ReqIF Import/Export
+STATEMENT: Saturn shall support ReqIF format.
+
+[REQUIREMENT]
+TITLE: Tex Export
+STATEMENT: Saturn shall support exporting documents to Tex format.
+
+[REQUIREMENT]
+TITLE: Markdown support for text and code blocks
+STATEMENT: Saturn shall support rendering text/code blocks into RST syntax.
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 2
+TITLE: Platform support
+
+[REQUIREMENT]
+TITLE: Linux support
+STATEMENT: Saturn shall work on Linux systems.
+
+[REQUIREMENT]
+TITLE: Windows support
+STATEMENT: Saturn shall work on Windows systems.
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 2
+TITLE: Traceability and coverage
+
+[REQUIREMENT]
+TITLE: Linking with implementation artifacts
+STATEMENT: Saturn shall support linking requirements to files.
+
+[REQUIREMENT]
+TITLE: Requirement checksumming
+STATEMENT: Saturn shall support calculation of checksums for requirements.
+
+[REQUIREMENT]
+TITLE: Documentation coverage
+STATEMENT: Saturn shall generate requirements coverage information.
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 2
+TITLE: Validations and testing
+
+[REQUIREMENT]
+TITLE: Validation: Section Levels
+STATEMENT: Section levels must be properly nested.
+
+[REQUIREMENT]
+TITLE: Validation: Valid HTML markup
+STATEMENT: Saturn's HTML export tests shall validate the generated HTML markup.
+COMMENT: First candidate: Table of contents and its nested ``<ul>/<li>`` items.
+
+[/SECTION]
+
+[REQUIREMENT]
+TITLE: Custom fields
+STATEMENT: Saturn shall support customization of the default grammar with custom fields.
+COMMENT: >>>
+Examples:
+
+- RAIT compliance fields (Review of design, analysis, inspection, testing)
+- Automotive Safety Integrity Level level (ASIL).
+<<<
+
+[REQUIREMENT]
+TITLE: Filtering by tags
+STATEMENT: Saturn shall support filtering filtering by tags.
+
+[SECTION]
+LEVEL: 2
+TITLE: Options
+
+[REQUIREMENT]
+TITLE: Option: Title: Automatic numeration
+STATEMENT: Saturn shall support config option `numeric_titles`.
+
+[REQUIREMENT]
+TITLE: Option: Title: Display requirement titles
+STATEMENT: Saturn shall support config option `display_requirement_titles`.
+
+[REQUIREMENT]
+TITLE: Option: Title: Display requirement UID
+STATEMENT: Saturn shall support config option `display_requirement_uids`.
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 2
+TITLE: Advanced
+
+[REQUIREMENT]
+TITLE: Facts table. Invariants calculation.
+STATEMENT: Saturn shall support creation of fact tables calculating invariants that enforce numerical constraints.
+
+[REQUIREMENT]
+TITLE: Graphical User Interface (GUI)
+STATEMENT: Saturn shall provide a Graphical User Interface (GUI).
+
+[/SECTION]
+
+[/SECTION]

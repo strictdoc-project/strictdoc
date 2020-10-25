@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'StrictDoc'
+project = 'Saturn'
 copyright = '2020, Stanislav Pankevich'
 author = 'Stanislav Pankevich'
 
@@ -52,7 +52,7 @@ latex_logo = '_static/logo.jpg'
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'StrictDoc.tex', 'StrictDoc',
+    (master_doc, 'Saturn.tex', 'Saturn',
      None, 'book')
 ]
 
@@ -112,7 +112,7 @@ latex_elements = {
             \fancypagestyle{plain}{
                 \fancyhf{}
                 \fancyhead[R]{
-                    \textnormal{\nouppercase{StrictDoc}}
+                    \textnormal{\nouppercase{Saturn}}
                     \textcolor{red}{\textbf{Draft}}
                     % trim: left top
                     % \vspace*{0.4cm}{\includegraphics[trim=-1cm 1.15cm 0 -0cm, scale=.35]{PTS_bow.png}}
@@ -127,7 +127,7 @@ latex_elements = {
             \fancypagestyle{normal}{
                 \fancyhf{}
                 \fancyhead[R]{
-                    \textnormal{\nouppercase{StrictDoc}}
+                    \textnormal{\nouppercase{Saturn}}
                     \textcolor{red}{\textbf{Draft}}
                     % \vspace*{0.4cm}{\includegraphics[trim=-1cm 1.15cm 0cm 0cm, scale=.35]{PTS_bow.png}}
                 }
@@ -192,7 +192,7 @@ latex_elements = {
 
             \begin{flushright}
 
-                \Huge{\textbf{StrictDoc}}
+                \Huge{\textbf{Saturn}}
                 
                 \Large{\textbf{Technical documentation software}}
             \end{flushright}
@@ -212,7 +212,7 @@ latex_elements = {
                     \textbf{{Supported Documents:}} & \tablecell {Requirements document, Specification, Technical Manual} \\ \hline
                     \textbf{{Export formats:}} & \tablecell {RST/Sphinx, HTML, PDF} \\ \hline
                     \textbf{{License model:}} & \tablecell {Open source software, Apache 2 license} \\ \hline
-                    \textbf{{Project page:}} & \tablecell {https://github.com/stanislaw/strictdoc} \\ \hline
+                    \textbf{{Project page:}} & \tablecell {https://github.com/stanislaw/saturn} \\ \hline
                     \textbf{{Release date:}} & \tablecell {\MonthYearFormat\today} \\ \hline
                     \textbf{{Version:}} & \tablecell {0.0.1} \\ \hline
                     \end{tabular}
@@ -223,7 +223,7 @@ latex_elements = {
             \vfill 
 
             \begin{center}
-                \Large{© 2020 StrictDoc Project}
+                \Large{© 2020 Saturn Project}
             \end{center}
 
         \end{titlepage}

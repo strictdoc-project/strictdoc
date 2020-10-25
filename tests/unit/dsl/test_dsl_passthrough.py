@@ -1,6 +1,6 @@
-from strictdoc.backend.dsl.models import Document, Requirement, CompositeRequirement
-from strictdoc.backend.dsl.reader import SDReader
-from strictdoc.backend.dsl.writer import SDWriter
+from saturn.backend.dsl.models import Document, Requirement, CompositeRequirement
+from saturn.backend.dsl.reader import SDReader
+from saturn.backend.dsl.writer import SDWriter
 
 
 def test_010_multiple_sections():

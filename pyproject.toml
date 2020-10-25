@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "strictdoc"
+name = "saturn"
 version = "0.0.1"
 description = "Technical documentation software."
 authors = ["Stanislav Pankevich <s.pankevich@gmail.com>"]
@@ -7,8 +7,8 @@ maintainers = ["Stanislav Pankevich <s.pankevich@gmail.com>"]
 license = "Apache 2"
 readme = "README.md"
 homepage = ""
-repository = "https://github.com/stanislaw/strictdoc"
-documentation = "https://strictdoc.readthedocs.io/en/latest/index.html"
+repository = "https://github.com/stanislaw/saturn"
+documentation = "https://saturn.readthedocs.io/en/latest/index.html"
 keywords = [
     "Documentation",
     "Requirements management"
@@ -31,5 +31,5 @@ requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
 
 [tool.poetry.scripts]
-strictdoc = "strictdoc.cli.main:main"
+saturn = "saturn.cli.main:main"
 

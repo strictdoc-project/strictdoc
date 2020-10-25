@@ -1,4 +1,4 @@
-from strictdoc.backend.rst.rst_field_parser import RSTFieldParser
+from saturn.backend.rst.rst_field_parser import RSTFieldParser
 
 
 def test_01_one_record_per_line():

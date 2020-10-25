@@ -1,6 +1,6 @@
-from strictdoc.backend.rst.rst_reader import RSTReader
-from strictdoc.backend.rst.rst_writer import RSTWriter
-from strictdoc.backend.rst.rst_document_editor import RSTDocumentEditor
+from saturn.backend.rst.rst_reader import RSTReader
+from saturn.backend.rst.rst_writer import RSTWriter
+from saturn.backend.rst.rst_document_editor import RSTDocumentEditor
 
 
 def test_replacing_paragraph_with_paragraph():

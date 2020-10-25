@@ -1,8 +1,8 @@
 import docutils.nodes
 
-from strictdoc.backend.rst.docutils_helper import DocutilsHelper
-from strictdoc.backend.rst.rst_writer import RSTWriter
-from strictdoc.backend.rst.rst_reader import RSTReader
+from saturn.backend.rst.docutils_helper import DocutilsHelper
+from saturn.backend.rst.rst_writer import RSTWriter
+from saturn.backend.rst.rst_reader import RSTReader
 
 
 def test_01_basic_test():
@@ -21,10 +21,10 @@ def test_01_basic_test():
 
 
 def test_99_regression_printing_rst_of_level_3_headers():
-    rst_content = """StrictDoc
+    rst_content = """Saturn
 =========
 
-This is a documentation of StrictDoc written in StrictDoc.
+This is a documentation of Saturn written in Saturn.
 
 High-level requirements
 -----------------------

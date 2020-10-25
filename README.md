@@ -1,3 +1,3 @@
-# Saturn
+# StrictDoc
 
 TBD

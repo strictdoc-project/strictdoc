@@ -1,4 +1,4 @@
-RUN: %saturn passthrough %saturn_root/docs/03-saturn-requirements.sdoc --output-file=%S/Output/output.sdoc
-UN: %saturn passthrough %S/input.sdoc --output-file=%S/Output/output.sdoc | filecheck %s
-RUN: diff %saturn_root/docs/03-saturn-requirements.sdoc %S/Output/output.sdoc
+RUN: %strictdoc passthrough %strictdoc_root/docs/03-strictdoc-requirements.sdoc --output-file=%S/Output/output.sdoc
+UN: %strictdoc passthrough %S/input.sdoc --output-file=%S/Output/output.sdoc | filecheck %s
+RUN: diff %strictdoc_root/docs/03-strictdoc-requirements.sdoc %S/Output/output.sdoc
 CHECK: passthrough

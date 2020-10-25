@@ -71,21 +71,21 @@ Requirements management
 
 ``[SDOC-HIGH-REQS-MANAGEMENT]``
 
-Saturn shall enable requirements management.
+StrictDoc shall enable requirements management.
 
 Data model
 ----------
 
 ``[SDOC-HIGH-DATA-MODEL]``
 
-Saturn shall be based on a well-defined data model.
+StrictDoc shall be based on a well-defined data model.
 
-**Comment:** Saturn is a result of multiple attempts to find a solution for working with
+**Comment:** StrictDoc is a result of multiple attempts to find a solution for working with
 text-based requirements:
 
-- Saturn, first generation: Markdown-based C++ program. Custom requirements
+- StrictDoc, first generation: Markdown-based C++ program. Custom requirements
   metadata in YAML.
-- Saturn, second generation: RST/Sphinx-based Python program. Using Sphinx
+- StrictDoc, second generation: RST/Sphinx-based Python program. Using Sphinx
   extensions to manage meta information.
 
 The result of these efforts is the realization that a text-based requirements
@@ -94,44 +94,44 @@ and specifications management tool TBD.
 Command-line interface
 ----------------------
 
-Saturn shall provide a command-line interface.
+StrictDoc shall provide a command-line interface.
 
 Requirements validation
 -----------------------
 
-Saturn shall allow validation of requirement documents.
+StrictDoc shall allow validation of requirement documents.
 
 Requirements text format
 ------------------------
 
-Saturn shall allow storage of requirements in a plain-text human readable form.
+StrictDoc shall allow storage of requirements in a plain-text human readable form.
 
 Linking requirements
 --------------------
 
-Saturn shall support linking requirements to each other.
+StrictDoc shall support linking requirements to each other.
 
 Scalability
 -----------
 
-Saturn shall allow working with large documents and document trees containing at least 10000 requirement items.
+StrictDoc shall allow working with large documents and document trees containing at least 10000 requirement items.
 
 Traceability
 ------------
 
 ``[SDOC-HIGH-REQS-TRACEABILITY]``
 
-Saturn shall support traceability of requirements.
+StrictDoc shall support traceability of requirements.
 
 Visualization
 -------------
 
-Saturn shall provide means for visualization of requirement documents.
+StrictDoc shall provide means for visualization of requirement documents.
 
 Open source software
 --------------------
 
-Saturn shall always be free and open source software.
+StrictDoc shall always be free and open source software.
 
 Implementation requirements
 ===========================
@@ -141,14 +141,14 @@ Parallelization
 
 ``[SDOC-IMPL-PARAL]``
 
-Saturn shall enable parallelization of the time-consuming parts of the code.
+StrictDoc shall enable parallelization of the time-consuming parts of the code.
 
 Incremental generation
 ----------------------
 
 ``[SDOC-IMPL-INCREMENTAL]``
 
-Saturn shall enable incremental generation of the documents.
+StrictDoc shall enable incremental generation of the documents.
 
 Data model
 ==========
@@ -158,7 +158,7 @@ Modeling capability
 
 ``[SDOC-DM-001]``
 
-Saturn's Data Model shall accommodate for maximum possible standard requirement document formats.
+StrictDoc's Data Model shall accommodate for maximum possible standard requirement document formats.
 
 
 Examples of standard requirements documents include but are not limited to:
@@ -190,7 +190,7 @@ Requirement item might have an UID identifier.
 UID identifier format
 ^^^^^^^^^^^^^^^^^^^^^
 
-Saturn shall not impose any restrictions on the UID field format.
+StrictDoc shall not impose any restrictions on the UID field format.
 
 **Comment:** Conventions used for requirement UIDs can be very different. And there seems to
 be no way to define a single rule.
@@ -199,7 +199,7 @@ Some examples:
 
 - FUN-003
 - cES1008, cTBL6000.1 (NASA cFS)
-- Requirements without a number, e.g. SDOC-HIGH-DATA-MODEL (Saturn)
+- Requirements without a number, e.g. SDOC-HIGH-DATA-MODEL (StrictDoc)
 
 Title
 ~~~~~
@@ -250,22 +250,22 @@ HTML Export
 Single document: Normal form
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Saturn shall export single document pages in a normal document-like form.
+StrictDoc shall export single document pages in a normal document-like form.
 
 Single document: Tabular form
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Saturn shall export single document pages in a tabular form.
+StrictDoc shall export single document pages in a tabular form.
 
 Single document: 1-level traceability
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Saturn shall export 1-level traceability document.
+StrictDoc shall export 1-level traceability document.
 
 Single document: Deep traceability
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Saturn shall export deep traceability document.
+StrictDoc shall export deep traceability document.
 
 PDF Export
 ----------
@@ -273,5 +273,5 @@ PDF Export
 Sphinx documentation generator
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Saturn shall support exporting documents to Sphinx/RST format.
+StrictDoc shall support exporting documents to Sphinx/RST format.
 

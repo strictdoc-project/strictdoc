@@ -1,7 +1,7 @@
-from saturn.backend.rst.rst_constants import SATURN_ATTR_LEVEL
-from saturn.backend.rst.rst_document_editor import RSTDocumentEditor
-from saturn.backend.rst.rst_reader import RSTReader
-from saturn.backend.rst.rst_writer import RSTWriter
+from strictdoc.backend.rst.rst_constants import STRICTDOC_ATTR_LEVEL
+from strictdoc.backend.rst.rst_document_editor import RSTDocumentEditor
+from strictdoc.backend.rst.rst_reader import RSTReader
+from strictdoc.backend.rst.rst_writer import RSTWriter
 
 
 def test_04_replacing_header_1_with_header_2_children_behavior():
@@ -60,17 +60,17 @@ HEADER 2.1
     lines = rst_document.get_as_list()
 
     assert lines[0].astext() == 'HEADER 1'
-    assert lines[0].parent[SATURN_ATTR_LEVEL] == 1
+    assert lines[0].parent[STRICTDOC_ATTR_LEVEL] == 1
 
     assert lines[1].astext() == '1 Paragraph content'
 
     assert lines[2].astext() == 'REPLACED HEADER 1.1'
-    assert lines[2].parent[SATURN_ATTR_LEVEL] == 2
+    assert lines[2].parent[STRICTDOC_ATTR_LEVEL] == 2
 
     assert lines[3].astext() == '2 Paragraph content'
 
     assert lines[4].astext() == 'HEADER 2.1'
-    assert lines[4].parent[SATURN_ATTR_LEVEL] == 2
+    assert lines[4].parent[STRICTDOC_ATTR_LEVEL] == 2
 
     assert lines[5].astext() == '2.1 Paragraph content'
 
@@ -131,19 +131,19 @@ HEADER 2.1
     lines = rst_document.get_as_list()
 
     assert lines[0].astext() == 'HEADER 1'
-    assert lines[0].parent[SATURN_ATTR_LEVEL] == 1
+    assert lines[0].parent[STRICTDOC_ATTR_LEVEL] == 1
 
     assert lines[1].astext() == '1 Paragraph content'
 
     assert lines[2].astext() == 'HEADER 1.1.1'
-    assert lines[2].parent[SATURN_ATTR_LEVEL] == 3
+    assert lines[2].parent[STRICTDOC_ATTR_LEVEL] == 3
 
     assert lines[2].parent.parent == lines[0].parent
 
     assert lines[3].astext() == '2 Paragraph content'
 
     assert lines[4].astext() == 'HEADER 2.1'
-    assert lines[4].parent[SATURN_ATTR_LEVEL] == 2
+    assert lines[4].parent[STRICTDOC_ATTR_LEVEL] == 2
     assert lines[4].parent.parent == lines[0].parent
 
     assert lines[5].astext() == '2.1 Paragraph content'
@@ -206,6 +206,6 @@ LEVEL 2 CONTENT #3
     lines = rst_document.get_as_list()
 
     assert lines[0].astext() == 'REPLACED HEADER LEVEL 4'
-    assert lines[0].parent[SATURN_ATTR_LEVEL] == 4
+    assert lines[0].parent[STRICTDOC_ATTR_LEVEL] == 4
 
     assert lines[1].astext() == 'LEVEL 2 CONTENT #1'

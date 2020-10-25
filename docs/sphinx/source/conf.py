@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'Saturn'
+project = 'StrictDoc'
 copyright = '2020, Stanislav Pankevich'
 author = 'Stanislav Pankevich'
 
@@ -52,7 +52,7 @@ latex_logo = '_static/logo.jpg'
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'Saturn.tex', 'Saturn',
+    (master_doc, 'StrictDoc.tex', 'StrictDoc',
      None, 'book')
 ]
 
@@ -112,7 +112,7 @@ latex_elements = {
             \fancypagestyle{plain}{
                 \fancyhf{}
                 \fancyhead[R]{
-                    \textnormal{\nouppercase{Saturn}}
+                    \textnormal{\nouppercase{StrictDoc}}
                     \textcolor{red}{\textbf{Draft}}
                     % trim: left top
                     % \vspace*{0.4cm}{\includegraphics[trim=-1cm 1.15cm 0 -0cm, scale=.35]{PTS_bow.png}}
@@ -127,7 +127,7 @@ latex_elements = {
             \fancypagestyle{normal}{
                 \fancyhf{}
                 \fancyhead[R]{
-                    \textnormal{\nouppercase{Saturn}}
+                    \textnormal{\nouppercase{StrictDoc}}
                     \textcolor{red}{\textbf{Draft}}
                     % \vspace*{0.4cm}{\includegraphics[trim=-1cm 1.15cm 0cm 0cm, scale=.35]{PTS_bow.png}}
                 }
@@ -192,9 +192,10 @@ latex_elements = {
 
             \begin{flushright}
 
-                \Huge{\textbf{Saturn}}
+                \Huge{\textbf{StrictDoc}}
                 
-                \Large{\textbf{Technical documentation software}}
+                \Large{{Technical specifications documentation framework}}
+                % \Large{{management framework}}
             \end{flushright}
 
             \vspace{30mm}
@@ -204,15 +205,17 @@ latex_elements = {
                     \def\arraystretch{1.5}%  1 is the default, change whatever you need
                     \begin{tabular}{|l|l|}
                     \hline
-                    \textbf{{Project goal:}} & 
+                    \textbf{{Project goals:}} & 
                     \makecell[l]{ 
-                            Requirements and specifications management, Documentation Control
+                            Technical requirements and specifications management, 
+                            \\
+                            documentation control
                     } 
                     \\ \hline
-                    \textbf{{Supported Documents:}} & \tablecell {Requirements document, Specification, Technical Manual} \\ \hline
+                    \textbf{{Supported Documents:}} & \tablecell {Requirements document/specification, technical manual} \\ \hline
                     \textbf{{Export formats:}} & \tablecell {RST/Sphinx, HTML, PDF} \\ \hline
                     \textbf{{License model:}} & \tablecell {Open source software, Apache 2 license} \\ \hline
-                    \textbf{{Project page:}} & \tablecell {https://github.com/stanislaw/saturn} \\ \hline
+                    \textbf{{Project page:}} & \tablecell {https://github.com/stanislaw/strictdoc} \\ \hline
                     \textbf{{Release date:}} & \tablecell {\MonthYearFormat\today} \\ \hline
                     \textbf{{Version:}} & \tablecell {0.0.1} \\ \hline
                     \end{tabular}
@@ -223,7 +226,7 @@ latex_elements = {
             \vfill 
 
             \begin{center}
-                \Large{© 2020 Saturn Project}
+                \Large{© 2020 StrictDoc Project}
             \end{center}
 
         \end{titlepage}

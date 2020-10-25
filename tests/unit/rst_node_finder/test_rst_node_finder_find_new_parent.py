@@ -1,5 +1,5 @@
-from saturn.backend.rst.rst_reader import RSTReader
-from saturn.backend.rst.rst_node_finder import RSTNodeFinder
+from strictdoc.backend.rst.rst_reader import RSTReader
+from strictdoc.backend.rst.rst_node_finder import RSTNodeFinder
 
 
 def test_01_moving_level_1_headers():

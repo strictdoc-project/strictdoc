@@ -6,7 +6,7 @@ LEVEL: 1
 TITLE: Installing StrictDoc as a Pip package
 
 [FREETEXT]
-.. code-block:: bash
+.. code-block:: text
 
     pip install strictdoc
 [/FREETEXT]
@@ -18,7 +18,7 @@ LEVEL: 1
 TITLE: Installing StrictDoc from GitHub (development)
 
 [FREETEXT]
-.. code-block:: bash
+.. code-block:: text
 
     git clone git@github.com:stanislaw/strictdoc.git && cd strictdoc
     poetry install
@@ -32,7 +32,7 @@ LEVEL: 1
 TITLE: Hello world
 
 [FREETEXT]
-.. code-block:: bash
+.. code-block:: text
 
     git clone git@github.com:stanislaw/strictdoc.git && cd strictdoc
     strictdoc export docs/

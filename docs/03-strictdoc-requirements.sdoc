@@ -29,7 +29,7 @@ COMMENT: Technical documentation can be an extremely laborious process.
 [REQUIREMENT]
 UID: PROBLEM-3-DOCUMENTATION-AS-HAZARD
 TITLE: Technical documentation as a source of hazards
-STATEMENT: There shall exist less opportunity for writing incorrect documentation.
+STATEMENT: There shall exist no (or less) opportunity for writing incorrect documentation.
 COMMENT: >>>
 Every serious engineering activity, such as safety engineering or systems
 engineering, starts with requirements. The more critical is a product the higher

@@ -1,8 +1,8 @@
 Requirements
 $$$$$$$$$$$$
 
-Project goal
-============
+Problems
+========
 
 Technical documentation software
 --------------------------------
@@ -12,7 +12,7 @@ Technical documentation software
 There shall exist free and lightweight yet capable software for technical
 documentation.
 
-**Comment:** The state of the art for many smaller companies working with
+**Comment:** The state of the art for many small companies working with
 requirements: using Excel for requirements management in the projects with
 hundreds or thousands of requirements.
 
@@ -59,7 +59,9 @@ Change management is difficult
 
 Software shall provide capabilities for change management and impact assessment.
 
-**Comment:** TBD
+**Comment:** The bigger the project is, the harder it is to maintain its documentation.
+If a change is introduced to a project, it usually requires a full revision
+of its requirements TBD.
 
 High-level requirements
 =======================
@@ -89,6 +91,11 @@ text-based requirements:
 The result of these efforts is the realization that a text-based requirements
 and specifications management tool TBD.
 
+Command-line interface
+----------------------
+
+StrictDoc shall provide a command-line interface.
+
 Requirements validation
 -----------------------
 
@@ -97,7 +104,7 @@ StrictDoc shall allow validation of requirement documents.
 Requirements text format
 ------------------------
 
-StrictDoc shall allow storage of requirements in text form.
+StrictDoc shall allow storage of requirements in a plain-text human readable form.
 
 Linking requirements
 --------------------
@@ -212,25 +219,27 @@ Requirement item might have one or more comments.
 Composite Requirement item
 --------------------------
 
-Requirements document format (SDOC)
-===================================
+TBD
+
+SDOC file format
+================
 
 Primary text implementation
 ---------------------------
 
 ``[SDOC-RDF-001]``
 
-StrictDoc RDF shall serve as a text-based implementation of the Strict Doc Data Model.
+SDOC format shall support encoding the Strict Doc Data Model in a plain-text human readable form.
 
 Grammar
 -------
 
-StrictDoc RDF shall provide a fixed grammar structure.
+SDOC format shall be based on a fixed grammar.
 
 Type safety
 -----------
 
-StrictDoc RDF shall enable type-safe parsing of requirement documents.
+SDOC format shall allow type-safe encoding of requirement documents.
 
 Document Generators
 ===================

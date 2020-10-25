@@ -1,6 +1,6 @@
 import os
 import sys
 
-strictdoc_path = os.path.abspath(os.path.join(__file__, "../../../../strictdoc"))
-assert os.path.exists(strictdoc_path), "does not exist: {}".format(strictdoc_path)
-sys.path.append(strictdoc_path)
+saturn_path = os.path.abspath(os.path.join(__file__, "../../../../saturn"))
+assert os.path.exists(saturn_path), "does not exist: {}".format(saturn_path)
+sys.path.append(saturn_path)

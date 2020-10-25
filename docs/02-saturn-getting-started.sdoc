@@ -1,0 +1,41 @@
+[DOCUMENT]
+NAME: Getting started
+
+[SECTION]
+LEVEL: 1
+TITLE: Installing Saturn as a Pip package
+
+[FREETEXT]
+.. code-block:: text
+
+    pip install saturn
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 1
+TITLE: Installing Saturn from GitHub (development)
+
+[FREETEXT]
+.. code-block:: text
+
+    git clone git@github.com:stanislaw/saturn.git && cd saturn
+    poetry install
+    poetry run saturn
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 1
+TITLE: Hello world
+
+[FREETEXT]
+.. code-block:: text
+
+    git clone git@github.com:stanislaw/saturn.git && cd saturn
+    saturn export docs/
+[/FREETEXT]
+
+[/SECTION]

@@ -1,13 +1,13 @@
-from strictdoc.backend.rst.rst_reader import RSTReader
-from strictdoc.backend.rst.rst_writer import RSTWriter
-from strictdoc.backend.rst.rst_document_editor import RSTDocumentEditor
+from saturn.backend.rst.rst_reader import RSTReader
+from saturn.backend.rst.rst_writer import RSTWriter
+from saturn.backend.rst.rst_document_editor import RSTDocumentEditor
 
 
 def test_02_replacing_title_and_its_parent_section_with_paragraph():
-    rst_content = """StrictDoc
-=========
+    rst_content = """Saturn
+======
 
-This is a documentation of StrictDoc written in StrictDoc.
+This is a documentation of Saturn written in Saturn.
 
 High-level requirements
 -----------------------
@@ -22,10 +22,10 @@ Header-3-content-2
 
     new_rst_fragment = """Header-3-replacement-paragraph-text"""
 
-    expected_rst_content = """StrictDoc
-=========
+    expected_rst_content = """Saturn
+======
 
-This is a documentation of StrictDoc written in StrictDoc.
+This is a documentation of Saturn written in Saturn.
 
 High-level requirements
 -----------------------

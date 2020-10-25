@@ -11,7 +11,7 @@ def formatted_command(string):
 @task
 def sphinx(c):
     c.run(formatted_command("""
-        python3 strictdoc/cli/main.py export docs
+        python3 saturn/cli/main.py export docs
     """))
 
     c.run(formatted_command("""
@@ -24,7 +24,7 @@ def sphinx(c):
     c.run(formatted_command("""
         cd docs/sphinx &&
             make clean html latexpdf &&
-            open build/latex/strictdoc.pdf
+            open build/latex/saturn.pdf
     """))
 
 
@@ -45,15 +45,15 @@ def test_integration(c):
 
     cwd = os.getcwd()
 
-    strictdoc_exec = 'python \\"{cwd}/strictdoc/cli/main.py\\"'.format(cwd=cwd)
+    saturn_exec = 'python \\"{cwd}/saturn/cli/main.py\\"'.format(cwd=cwd)
 
     command = formatted_command("""
         lit
-        --param STRICTDOC_EXEC="{strictdoc_exec}"
+        --param SATURN_EXEC="{saturn_exec}"
         -vv
         --show-all
         {cwd}/tests/integration
-    """).format(strictdoc_exec=strictdoc_exec, cwd=cwd)
+    """).format(saturn_exec=saturn_exec, cwd=cwd)
 
     print(command)
     c.run("{}".format(command))

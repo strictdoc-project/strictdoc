@@ -1,4 +1,4 @@
-from strictdoc.backend.rst.rst_reader import RSTReader
+from saturn.backend.rst.rst_reader import RSTReader
 
 
 def test_01_basic_test():

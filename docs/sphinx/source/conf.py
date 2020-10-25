@@ -145,39 +145,42 @@ latex_elements = {
         \titlecontents{chapter}
                       [0em]
                       {\vspace{.25\baselineskip}}
-                      {\eqparbox{ch}{\thecontentslabel}\hspace{0.2cm}}
+                      {\raisebox{0.038cm}{\eqparbox{ch}{\thecontentslabel}\hspace{0.2cm}}}
                       {}
                       {\titlerule*[10pt]{$\cdot$}\contentspage}
         
         \titlecontents{section}
                       [0.5cm]
                       {\vspace{.25\baselineskip}}
-                      {\eqparbox{S}{\thecontentslabel}\hspace{0.2cm}}
+                      {\raisebox{0.038cm}{\eqparbox{S}{\thecontentslabel}\hspace{0.2cm}}}
                       {}
                       {\titlerule*[10pt]{$\cdot$}\contentspage}
         
         \titlecontents{subsection}
                       [1cm]
                       {\vspace{.25\baselineskip}}
-                      {\eqparbox{Ss}{\thecontentslabel}\hspace{0.2cm}}
+                      {\raisebox{0.038cm}{\eqparbox{Ss}{\thecontentslabel}\hspace{0.2cm}}}
                       {}
                       {\titlerule*[10pt]{$\cdot$}\contentspage}
 
         \titlecontents{subsubsection}
-                      [1.5cm]{\vspace{.25\baselineskip}}
-                      {\eqparbox{Sss}{\thecontentslabel}\hspace{0.2cm}}
+                      [1.5cm]
+                      {\vspace{.25\baselineskip}}
+                      {\raisebox{0.038cm}{\eqparbox{Sss}{\thecontentslabel}\hspace{0.2cm}}}
                       {}
                       {\titlerule*[10pt]{$\cdot$}\contentspage}
         
         \titlecontents{paragraph}
-                      [2cm]{\vspace{.25\baselineskip}}
-                      {\eqparbox{Sss}{\thecontentslabel}\hspace{0.2cm}}
+                      [2cm]
+                      {\vspace{.25\baselineskip}}
+                      {\raisebox{0.038cm}{\eqparbox{par}{\thecontentslabel}\hspace{0.2cm}}}
                       {}
                       {\titlerule*[10pt]{$\cdot$}\contentspage}
 
         \titlecontents{subparagraph}
-                      [2cm]{\vspace{.25\baselineskip}}
-                      {\eqparbox{Sss}{\thecontentslabel}\hspace{0.2cm}}
+                      [2.5cm]
+                      {\vspace{.25\baselineskip}}
+                      {\raisebox{0.038cm}{\eqparbox{subpar}{\thecontentslabel}\hspace{0.2cm}}}
                       {}
                       {\titlerule*[10pt]{$\cdot$}\contentspage}
 

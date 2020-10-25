@@ -20,7 +20,7 @@ def sphinx(c):
 
     c.run(formatted_command("""
         cd docs/sphinx &&
-            make clean html latexpdf &&
+            make html latexpdf &&
             open build/latex/strictdoc.pdf
     """))
 

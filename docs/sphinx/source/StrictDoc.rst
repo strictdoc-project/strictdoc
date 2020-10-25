@@ -1,6 +1,3 @@
-StrictDoc
-$$$$$$$$$
-
 StrictDoc is a technical specifications documentation framework TBD.
 
 Getting started
@@ -494,6 +491,11 @@ StrictDoc shall support filtering filtering by tags.
 
 Options
 ~~~~~~~
+
+Option: RST: Top-level title: document name
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+StrictDoc shall support config option `include_toplevel_title`.
 
 Option: Title: Automatic numeration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

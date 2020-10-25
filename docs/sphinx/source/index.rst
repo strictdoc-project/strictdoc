@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Welcome to Saturn's documentation!
-=====================================
+==================================
 
 .. toctree::
    :maxdepth: 6

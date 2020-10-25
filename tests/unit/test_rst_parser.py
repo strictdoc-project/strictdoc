@@ -1,10 +1,10 @@
 import docutils.nodes
 
-from saturn.backend.rst.directives.metadata import MetaInfoNode
-from saturn.backend.rst.directives.document_metadata import (
+from strictdoc.backend.rst.directives.metadata import MetaInfoNode
+from strictdoc.backend.rst.directives.document_metadata import (
     DocumentMetadataNode
 )
-from saturn.backend.rst.rst_parser import RSTParser
+from strictdoc.backend.rst.rst_parser import RSTParser
 
 
 def test_01_basic_test():

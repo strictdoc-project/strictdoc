@@ -1,4 +1,4 @@
-from saturn.backend.rst.rst_reader import RSTReader
+from strictdoc.backend.rst.rst_reader import RSTReader
 
 
 def test_01_basic_test():
@@ -39,13 +39,13 @@ WORLD
     assert lines[3].astext() == 'WORLD'
 
     section_level_1 = document.rst_document.children[0]
-    assert section_level_1['saturn_level'] == 1
+    assert section_level_1['strictdoc_level'] == 1
 
     section_level_2 = section_level_1.children[1]
-    assert section_level_2['saturn_level'] == 2
+    assert section_level_2['strictdoc_level'] == 2
 
     section_level_3 = section_level_2.children[1]
-    assert section_level_3['saturn_level'] == 3
+    assert section_level_3['strictdoc_level'] == 3
 
 
 def test_03_detecting_header_level_based_on_the_source_info_with_level_gaps():
@@ -71,10 +71,10 @@ WORLD
     assert lines[3].astext() == 'WORLD'
 
     section_level_1 = document.rst_document.children[0]
-    assert section_level_1['saturn_level'] == 1
+    assert section_level_1['strictdoc_level'] == 1
 
     section_level_2 = section_level_1.children[1]
-    assert section_level_2['saturn_level'] == 2
+    assert section_level_2['strictdoc_level'] == 2
 
     section_level_4 = section_level_2.children[1]
-    assert section_level_4['saturn_level'] == 4
+    assert section_level_4['strictdoc_level'] == 4

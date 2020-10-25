@@ -1,7 +1,7 @@
-from saturn.backend.rst.rst_reader import RSTReader
-from saturn.backend.rst.rst_document_editor import RSTDocumentEditor
-from saturn.backend.rst.rst_writer import RSTWriter
-from saturn.core.logger import Logger
+from strictdoc.backend.rst.rst_reader import RSTReader
+from strictdoc.backend.rst.rst_document_editor import RSTDocumentEditor
+from strictdoc.backend.rst.rst_writer import RSTWriter
+from strictdoc.core.logger import Logger
 
 Logger.enabled_loggers = ['RSTDocumentEditor']
 

@@ -18,7 +18,7 @@ HTML Export
 RST support for text and code blocks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Saturn shall support rendering text/code blocks into RST syntax.
+StrictDoc shall support rendering text/code blocks into RST syntax.
 
 Left panel: Table of contents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -51,7 +51,7 @@ First public release
 Document tree: Incremental generation
 -------------------------------------
 
-When exporting documentation tree, Saturn shall regenerate only changed documents and files.
+When exporting documentation tree, StrictDoc shall regenerate only changed documents and files.
 
 Generated file names
 --------------------
@@ -63,17 +63,17 @@ Document name must be transformed into a valid file name.
 Validation: Uniqueness of UID identifiers in a document tree
 ------------------------------------------------------------
 
-Saturn shall ensure that each UID used in a document tree is unique.
+StrictDoc shall ensure that each UID used in a document tree is unique.
 
 Backlog
 =======
 
-Saturn as library
+StrictDoc as library
 --------------------
 
-Saturn shall support it use as a Python library.
+StrictDoc shall support it use as a Python library.
 
-**Comment:** Such a use allows a more fine-grained access to the Saturn's modules, such
+**Comment:** Such a use allows a more fine-grained access to the StrictDoc's modules, such
 as Grammar, Import, Export classes, etc.
 
 Export capabilities
@@ -82,27 +82,27 @@ Export capabilities
 Excel Export
 ~~~~~~~~~~~~
 
-Saturn shall support exporting documents to Excel format.
+StrictDoc shall support exporting documents to Excel format.
 
 PlantUML Export
 ~~~~~~~~~~~~~~~
 
-Saturn shall support exporting documents to ReqIF format.
+StrictDoc shall support exporting documents to ReqIF format.
 
 ReqIF Import/Export
 ~~~~~~~~~~~~~~~~~~~
 
-Saturn shall support ReqIF format.
+StrictDoc shall support ReqIF format.
 
 Tex Export
 ~~~~~~~~~~
 
-Saturn shall support exporting documents to Tex format.
+StrictDoc shall support exporting documents to Tex format.
 
 Markdown support for text and code blocks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Saturn shall support rendering text/code blocks into RST syntax.
+StrictDoc shall support rendering text/code blocks into RST syntax.
 
 Platform support
 ----------------
@@ -110,12 +110,12 @@ Platform support
 Linux support
 ~~~~~~~~~~~~~
 
-Saturn shall work on Linux systems.
+StrictDoc shall work on Linux systems.
 
 Windows support
 ~~~~~~~~~~~~~~~
 
-Saturn shall work on Windows systems.
+StrictDoc shall work on Windows systems.
 
 Traceability and coverage
 -------------------------
@@ -123,17 +123,17 @@ Traceability and coverage
 Linking with implementation artifacts
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Saturn shall support linking requirements to files.
+StrictDoc shall support linking requirements to files.
 
 Requirement checksumming
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Saturn shall support calculation of checksums for requirements.
+StrictDoc shall support calculation of checksums for requirements.
 
 Documentation coverage
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Saturn shall generate requirements coverage information.
+StrictDoc shall generate requirements coverage information.
 
 Validations and testing
 -----------------------
@@ -146,14 +146,14 @@ Section levels must be properly nested.
 Validation: Valid HTML markup
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Saturn's HTML export tests shall validate the generated HTML markup.
+StrictDoc's HTML export tests shall validate the generated HTML markup.
 
 **Comment:** First candidate: Table of contents and its nested ``<ul>/<li>`` items.
 
 Custom fields
 -------------
 
-Saturn shall support customization of the default grammar with custom fields.
+StrictDoc shall support customization of the default grammar with custom fields.
 
 **Comment:** Examples:
 
@@ -163,7 +163,7 @@ Saturn shall support customization of the default grammar with custom fields.
 Filtering by tags
 -----------------
 
-Saturn shall support filtering filtering by tags.
+StrictDoc shall support filtering filtering by tags.
 
 Options
 -------
@@ -171,17 +171,17 @@ Options
 Option: Title: Automatic numeration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Saturn shall support config option `numeric_titles`.
+StrictDoc shall support config option `numeric_titles`.
 
 Option: Title: Display requirement titles
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Saturn shall support config option `display_requirement_titles`.
+StrictDoc shall support config option `display_requirement_titles`.
 
 Option: Title: Display requirement UID
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Saturn shall support config option `display_requirement_uids`.
+StrictDoc shall support config option `display_requirement_uids`.
 
 Advanced
 --------
@@ -189,10 +189,10 @@ Advanced
 Facts table. Invariants calculation.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Saturn shall support creation of fact tables calculating invariants that enforce numerical constraints.
+StrictDoc shall support creation of fact tables calculating invariants that enforce numerical constraints.
 
 Graphical User Interface (GUI)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Saturn shall provide a Graphical User Interface (GUI).
+StrictDoc shall provide a Graphical User Interface (GUI).
 

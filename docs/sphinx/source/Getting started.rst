@@ -1,27 +1,27 @@
 Getting started
 $$$$$$$$$$$$$$$
 
-Installing Saturn as a Pip package
+Installing StrictDoc as a Pip package
 =====================================
 
 .. code-block:: text
 
-    pip install saturn
+    pip install strictdoc
 
-Installing Saturn from GitHub (development)
+Installing StrictDoc from GitHub (development)
 ==============================================
 
 .. code-block:: text
 
-    git clone git@github.com:stanislaw/saturn.git && cd saturn
+    git clone git@github.com:stanislaw/strictdoc.git && cd strictdoc
     poetry install
-    poetry run saturn
+    poetry run strictdoc
 
 Hello world
 ===========
 
 .. code-block:: text
 
-    git clone git@github.com:stanislaw/saturn.git && cd saturn
-    saturn export docs/
+    git clone git@github.com:stanislaw/strictdoc.git && cd strictdoc
+    strictdoc export docs/
 

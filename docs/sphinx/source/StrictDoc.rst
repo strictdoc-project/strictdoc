@@ -1,7 +1,7 @@
 StrictDoc
 $$$$$$$$$
 
-TODO
+StrictDoc is a technical specifications documentation framework TBD.
 
 Getting started
 ===============

@@ -15,8 +15,8 @@
 
 /* layout-with-toc */
 
-.layout-with-toc {
-  --layout-transition: 0.5s;
+:root {
+  --toc-layout-transition: 0.5s;
 
   --toc-list-padding: 10px;
   --toc-font-size: 14px;
@@ -133,22 +133,22 @@ main.content p {
 
 .layout-with-toc {
   padding-left: calc(var(--toc-font-size) * var(--content-padding-index));
-  transition: var(--layout-transition);
+  transition: var(--toc-layout-transition);
 }
 
 .layout-with-toc.open {
   padding-left: calc(var(--toc-font-size) * (var(--toc-width-index) + var(--content-padding-index)));
-  transition: var(--layout-transition);
+  transition: var(--toc-layout-transition);
 }
 
 .layout-with-toc .toc {
   left: calc(var(--toc-width) * (-1));
   right: 100%;
-  transition: var(--layout-transition);
+  transition: var(--toc-layout-transition);
 }
 
 .layout-with-toc.open .toc {
   left: 0;
   right: auto;
-  transition: var(--layout-transition);
+  transition: var(--toc-layout-transition);
 }

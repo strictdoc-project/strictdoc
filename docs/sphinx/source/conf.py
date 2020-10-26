@@ -197,7 +197,7 @@ latex_elements = {
 
                 \Huge{\textbf{StrictDoc}}
                 
-                \Large{{Technical specifications documentation framework}}
+                \Large{{Software for writing technical requirements and specifications}}
                 % \Large{{management framework}}
             \end{flushright}
 
@@ -205,8 +205,8 @@ latex_elements = {
 
             \begin{flushright}
                 \bgroup
-                    \def\arraystretch{1.5}%  1 is the default, change whatever you need
-                    \begin{tabular}{|l|l|}
+                    \def\arraystretch{1.7}%  1 is the default, change whatever you need
+                    \begin{tabular}{|p{4.8cm}|p{11.7cm}|}
                     \hline
                     \textbf{{Project goals:}} & 
                     \makecell[l]{ 
@@ -216,6 +216,7 @@ latex_elements = {
                     } 
                     \\ \hline
                     \textbf{{Supported Documents:}} & \tablecell {Requirements document/specification, technical manual} \\ \hline
+                    \textbf{{Documents storage:}} & \tablecell {Plain text files} \\ \hline
                     \textbf{{Export formats:}} & \tablecell {RST/Sphinx, HTML, PDF} \\ \hline
                     \textbf{{License model:}} & \tablecell {Open source software, Apache 2 license} \\ \hline
                     \textbf{{Project page:}} & \tablecell {https://github.com/stanislaw/strictdoc} \\ \hline

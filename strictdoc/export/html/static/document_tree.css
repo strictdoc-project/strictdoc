@@ -9,6 +9,8 @@
   --color-text: #000;
   --color-bg: #fff;
   --color-row-hover-bg: rgb(244, 244, 244);
+
+  --half-sell-height: calc( var(--line-height)/2 + var(--cell-padding) );
 }
 
 .document-tree * {
@@ -61,14 +63,14 @@
   margin-right: calc(var(--font-size) * 0.25);
 }
 
-.document-tree_folder::after {
+/* .document-tree_folder::after {
   content: '';
   position: absolute;
   left: 0;
   top: 50%;
   bottom: calc(var(--cell-padding) * (-1));
   border-left: var(--level-line-width) solid var(--color-line);
-}
+} */
 
 .document-tree_file,
 .document-tree_file-name,
@@ -128,8 +130,10 @@
   position: absolute;
   left: auto;
   left: 0;
-  top: 0;
-  height: 100%;
+  /* top: 0;
+  height: 100%; */
+  bottom: 0;
+  top: calc(var(--half-sell-height)*(-1));
   background-image: linear-gradient(90deg,
                     var(--color-line) var(--level-line-width),
                     transparent var(--level-line-width));
@@ -140,21 +144,22 @@
   content: '';
   position: absolute;
   width: var(--level-padding);
-  top: calc(var(--line-height) / (2) + var(--cell-padding));
+  top: calc(var(--half-sell-height)*2);
   bottom: 0;
   right: 0;
   background-color: transparent;
   border-top: var(--level-line-width) solid var(--color-line);
 }
 
-li:last-child .level-branch::after {
+li li:last-child .level-branch::after {
   background-color: var(--color-bg);
 }
 
 li:last-child li .level-branch::before {
   content: '';
   position: absolute;
-  top: 0;
+  /* top: 0; */
+  top: 1px;
   bottom: 0;
   left: 0;
   right: calc(var(--level-padding));

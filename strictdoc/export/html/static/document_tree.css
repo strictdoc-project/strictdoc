@@ -23,6 +23,12 @@
   padding-left: calc(var(--level-padding) / 2);
 }
 
+.document-tree_table ul,
+.document-tree_table li {
+  display: contents;
+  position: relative;
+}
+
 .document-tree_row {
   display: table-row;
   padding-left: calc(var(--level-padding) / 2);
@@ -77,65 +83,45 @@
 
 /* levels */
 
-.document-tree_level_1 {
+.document-tree_level_1 .document-tree_cell:first-child,
+.document-tree_level_1 .level-branch {
   padding-left: calc(var(--level-padding) * 1);
 }
-.document-tree_level_1 .level-branch {
-  width: calc(var(--level-padding) * 1);
-}
-.document-tree_level_2 {
+.document-tree_level_2 .document-tree_cell:first-child,
+.document-tree_level_2 .level-branch {
   padding-left: calc(var(--level-padding) * 2);
 }
-.document-tree_level_2 .level-branch {
-  width: calc(var(--level-padding) * 2);
-}
-.document-tree_level_3 {
+.document-tree_level_3 .document-tree_cell:first-child,
+.document-tree_level_3 .level-branch {
   padding-left: calc(var(--level-padding) * 3);
 }
-.document-tree_level_3 .level-branch {
-  width: calc(var(--level-padding) * 3);
-}
-.document-tree_level_4 {
+.document-tree_level_4 .document-tree_cell:first-child,
+.document-tree_level_4 .level-branch {
   padding-left: calc(var(--level-padding) * 4);
 }
-.document-tree_level_4 .level-branch {
-  width: calc(var(--level-padding) * 4);
-}
-.document-tree_level_5 {
+.document-tree_level_5 .document-tree_cell:first-child,
+.document-tree_level_5 .level-branch {
   padding-left: calc(var(--level-padding) * 5);
 }
-.document-tree_level_5 .level-branch {
-  width: calc(var(--level-padding) * 5);
-}
-.document-tree_level_6 {
+.document-tree_level_6 .document-tree_cell:first-child,
+.document-tree_level_6 .level-branch {
   padding-left: calc(var(--level-padding) * 6);
 }
-.document-tree_level_6 .level-branch {
-  width: calc(var(--level-padding) * 6);
-}
-.document-tree_level_7 {
+.document-tree_level_7 .document-tree_cell:first-child,
+.document-tree_level_7 .level-branch {
   padding-left: calc(var(--level-padding) * 7);
 }
-.document-tree_level_7 .level-branch {
-  width: calc(var(--level-padding) * 7);
-}
-.document-tree_level_8 {
+.document-tree_level_8 .document-tree_cell:first-child,
+.document-tree_level_8 .level-branch {
   padding-left: calc(var(--level-padding) * 8);
 }
-.document-tree_level_8 .level-branch {
-  width: calc(var(--level-padding) * 8);
-}
-.document-tree_level_9 {
+.document-tree_level_9 .document-tree_cell:first-child,
+.document-tree_level_9 .level-branch {
   padding-left: calc(var(--level-padding) * 9);
 }
-.document-tree_level_9 .level-branch {
-  width: calc(var(--level-padding) * 9);
-}
-.document-tree_level_10 {
-  padding-left: calc(var(--level-padding) * 10);
-}
+.document-tree_level_10 .document-tree_cell:first-child,
 .document-tree_level_10 .level-branch {
-  width: calc(var(--level-padding) * 10);
+  padding-left: calc(var(--level-padding) * 10);
 }
 
 .level-branch {
@@ -183,9 +169,4 @@ li:last-child .document-tree_row:hover .level-branch::before {
   background-color: var(--color-row-hover-bg);
 }
 
-.document-tree_table ul,
-.document-tree_table li {
-  display: contents;
-  position: relative;
-}
 

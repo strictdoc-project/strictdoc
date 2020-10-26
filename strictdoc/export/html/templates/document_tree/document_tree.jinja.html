@@ -27,7 +27,7 @@
 
           <div class="document-tree_row">
             {%- if folder_or_file.is_folder(): %}
-              <div class="document-tree_cell document-tree_level_{{ folder_or_file.level }} {{last_class_or_none}}">
+              <div class="document-tree_cell">
                 {%- if folder_or_file.level > 0: %}
                   <i class="level-branch"></i>
                 {%- endif -%}
@@ -37,7 +37,7 @@
                 </span>
               </div>
             {% else %}
-              <div class="document-tree_cell document-tree_level_{{ folder_or_file.level }} {{last_class_or_none}}">
+              <div class="document-tree_cell">
                 {%- if folder_or_file.level > 0: %}
                   <i class="level-branch"></i>
                 {%- endif -%}

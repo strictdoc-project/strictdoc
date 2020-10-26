@@ -8,8 +8,30 @@ class TraceabilityIndex:
     @staticmethod
     def create(document_tree: DocumentTree):
         requirements_map = {}
+        requirements_children_map = {}
         tags_map = {}
         document_iterators = {}
+
+        # It seems to be impossible to accomplish everything in just one for
+        # loop. One particular problem that requires two passes: it is not
+        # possible to know after one iteration if any of the requirements
+        # reference parents that do not exist.
+        #
+        # Step #1:
+        # - Collect a dictionary of all requirements in the document tree:
+        # {req_id: req}
+        # - Each requirement's 'parents_uids' is populated with the forward
+        # declarations of its parents uids.
+        # - A separate map is created: {req_id: [req_children]}
+        # At this point some information is in place but it was not known if
+        # some of the UIDs could not be resolved which is the task of the second
+        # step.
+        #
+        # Step #2:
+        # - Check if each requirement's has valid parent links.
+        # - Resolve parent forward declarations
+        # - Re-assign children declarations
+        # - Calculate depth of both parent and child links.
         for document in document_tree.document_list:
             document_iterator = DocumentCachingIterator(document)
             document_iterators[document] = document_iterator
@@ -32,12 +54,25 @@ class TraceabilityIndex:
                     document_tags[tag] += 1
 
                 assert requirement.uid not in requirements_map
+                if requirement.uid not in requirements_children_map:
+                    requirements_children_map[requirement.uid] = []
+
                 requirements_map[requirement.uid] = {
                     'document': document,
                     'requirement': requirement,
                     'parents': [],
+                    'parents_uids': [],
                     'children': []
                 }
+
+                for ref in requirement.references:
+                    if ref.ref_type != "Parent":
+                        continue
+                    requirements_map[requirement.uid]['parents_uids'].append(ref.path)
+
+                    if ref.path not in requirements_children_map:
+                        requirements_children_map[ref.path] = []
+                    requirements_children_map[ref.path].append(requirement)
 
         # Now iterate over the requirements again to build an in-depth map of
         # parents and children.
@@ -57,24 +92,27 @@ class TraceabilityIndex:
                 if not requirement.uid:
                     continue
 
-                for ref in requirement.references:
-                    if ref.ref_type != "Parent":
-                        continue
-                    if ref.path not in requirements_map:
+                # Now it is possible to resolve parents first checking if they
+                # indeed exist.
+                requirement_parent_ids = requirements_map[requirement.uid]['parents_uids']
+                for requirement_parent_id in requirement_parent_ids:
+                    if requirement_parent_id not in requirements_map:
+                        # TODO: Strict variant of the behavior will be to stop
+                        # and raise an error message.
                         print("Requirement {} references parent requirement which doesn't exist: {}".format(
-                            requirement.uid, ref.path
+                            requirement.uid, requirement_parent_id
                         ))
+                        requirements_children_map.pop(requirement_parent_id, None)
                         continue
-
-                    parent_requirement = requirements_map[ref.path]['requirement']
-
+                    parent_requirement = requirements_map[requirement_parent_id]['requirement']
                     requirements_map[requirement.uid]['parents'].append(parent_requirement)
-                    requirements_map[ref.path]['children'].append(requirement)
 
                 if requirement.uid not in requirements_child_depth_map:
                     child_depth = 0
 
-                    queue = requirements_map[requirement.uid]['children']
+                    requirements_map[requirement.uid]['children'] = requirements_children_map[requirement.uid]
+
+                    queue = requirements_children_map[requirement.uid]
                     while True:
                         if len(queue) == 0:
                             break
@@ -82,25 +120,28 @@ class TraceabilityIndex:
                         child_depth += 1
                         deeper_queue = []
                         for child in queue:
-                            deeper_queue.extend(requirements_map[child.uid]['children'])
+                            deeper_queue.extend(requirements_children_map[child.uid])
                         queue = deeper_queue
 
                     requirements_child_depth_map[requirement.uid] = child_depth
                     if max_child_depth < child_depth:
                         max_child_depth = child_depth
 
+                # Calculate parent depth
                 if requirement.uid not in requirements_parent_depth_map:
                     parent_depth = 0
 
-                    queue = requirements_map[requirement.uid]['parents']
+                    queue = requirement_parent_ids
                     while True:
                         if len(queue) == 0:
                             break
 
                         parent_depth += 1
                         deeper_queue = []
-                        for parent in queue:
-                            deeper_queue.extend(requirements_map[parent.uid]['parents'])
+                        for parent_uid in queue:
+                            if parent_uid not in requirements_map:
+                                continue
+                            deeper_queue.extend(requirements_map[parent_uid]['parents_uids'])
                         queue = deeper_queue
 
                     requirements_parent_depth_map[requirement.uid] = parent_depth

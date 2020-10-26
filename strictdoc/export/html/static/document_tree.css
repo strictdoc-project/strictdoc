@@ -26,6 +26,7 @@
 .document-tree_row {
   display: table-row;
   padding-left: calc(var(--level-padding) / 2);
+  position: relative;
 }
 
 .document-tree_cell {
@@ -160,13 +161,31 @@
   border-top: var(--level-line-width) solid var(--color-line);
 }
 
-.last-in-level .level-branch::after {
+li:last-child .level-branch::after {
+  background-color: var(--color-bg);
+}
+
+li:last-child li .level-branch::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: calc(var(--level-padding));
   background-color: var(--color-bg);
 }
 
 /* hover on row */
 
 .document-tree_row:hover .document-tree_cell,
-.document-tree_row:hover .last-in-level .level-branch::after {
+li:last-child .document-tree_row:hover .level-branch::after,
+li:last-child .document-tree_row:hover .level-branch::before {
   background-color: var(--color-row-hover-bg);
 }
+
+.document-tree_table ul,
+.document-tree_table li {
+  display: contents;
+  position: relative;
+}
+

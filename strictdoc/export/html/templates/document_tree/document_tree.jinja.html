@@ -15,7 +15,7 @@
   <div class="document-tree">
     <div class="document-tree_table">
 
-      <ul class="ul-0">
+      <ul class="document-tree_ul_0">
 
       {%- for folder_or_file in artefact_list: -%}
         {%- set last_class_or_none = '' -%}
@@ -23,7 +23,7 @@
           {%- set last_class_or_none = 'last-in-level' -%}
         {%- endif -%}
 
-        <li class="li-{{folder_or_file.level}}">
+        <li class="document-tree_level_{{folder_or_file.level}}">
 
           <div class="document-tree_row">
             {%- if folder_or_file.is_folder(): %}
@@ -78,7 +78,7 @@
 
           {%- if not loop.last -%}
             {%- if loop.nextitem.level > folder_or_file.level -%}
-              <ul>
+              <ul class="document-tree_ul_{{folder_or_file.level + 1}}">
             {%- elif loop.nextitem.level < folder_or_file.level -%}
                 </li>
               {%- for x in range(0, folder_or_file.level - loop.nextitem.level) -%}

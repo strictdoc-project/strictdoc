@@ -27,6 +27,26 @@ Hello world
     git clone git@github.com:stanislaw/strictdoc.git && cd strictdoc
     strictdoc export docs/
 
+SDoc syntax
+===========
+
+StrictDoc defines a special syntax for writing specifications documents. This
+syntax is called SDoc and it's grammar is encoded with the
+`textX <https://github.com/textX/textX>`_
+tool.
+
+This is how a minimal possible SDOC document looks like:
+
+.. code-block::
+
+    [DOCUMENT]
+    NAME: StrictDoc
+
+Export options
+==============
+
+TBD
+
 StrictDoc and other tools
 =========================
 
@@ -45,8 +65,8 @@ StrictDoc and Sphinx-Needs
 
 TBD
 
-StrictDoc Development Requirements
-==================================
+StrictDoc Requirements
+======================
 
 Problems
 --------

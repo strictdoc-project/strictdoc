@@ -55,6 +55,26 @@ LEVEL: 1
 TITLE: SDoc syntax
 
 [FREETEXT]
+StrictDoc defines a special syntax for writing specifications documents. This
+syntax is called SDoc and it's grammar is encoded with the
+`textX <https://github.com/textX/textX>`_
+tool.
+
+This is how a minimal possible SDOC document looks like:
+
+.. code-block::
+
+    [DOCUMENT]
+    NAME: StrictDoc
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 1
+TITLE: Export options
+
+[FREETEXT]
 TBD
 [/FREETEXT]
 
@@ -98,7 +118,7 @@ TBD
 
 [SECTION]
 LEVEL: 1
-TITLE: StrictDoc Development Requirements
+TITLE: StrictDoc Requirements
 
 [SECTION]
 LEVEL: 2

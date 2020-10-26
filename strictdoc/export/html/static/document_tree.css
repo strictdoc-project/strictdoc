@@ -57,20 +57,13 @@
 .document-tree_folder::before {
   content: "\25B0";
   position: relative;
-  display: inline-block;
   z-index: 2;
-  margin-left: calc(var(--font-size) * (-0.25));;
-  margin-right: calc(var(--font-size) * 0.25);
+  display: inline-block;
+  text-align: center;
+  width: var(--line-height);
+  height: var(--line-height);
+  margin-left: calc(var(--line-height) * (-0.5));
 }
-
-/* .document-tree_folder::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  bottom: calc(var(--cell-padding) * (-1));
-  border-left: var(--level-line-width) solid var(--color-line);
-} */
 
 .document-tree_file,
 .document-tree_file-name,
@@ -130,8 +123,6 @@
   position: absolute;
   left: auto;
   left: 0;
-  /* top: 0;
-  height: 100%; */
   bottom: 0;
   top: calc(var(--half-sell-height)*(-1));
   background-image: linear-gradient(90deg,
@@ -158,7 +149,6 @@ li li:last-child .level-branch::after {
 li:last-child li .level-branch::before {
   content: '';
   position: absolute;
-  /* top: 0; */
   top: 1px;
   bottom: 0;
   left: 0;
@@ -173,5 +163,3 @@ li:last-child .document-tree_row:hover .level-branch::after,
 li:last-child .document-tree_row:hover .level-branch::before {
   background-color: var(--color-row-hover-bg);
 }
-
-

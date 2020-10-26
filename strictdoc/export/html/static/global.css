@@ -69,7 +69,7 @@ pre.code {
 
 a.reference.external {
   display: inline-block;
-  max-width: 200px;
+  max-width: 100%;
   vertical-align: bottom;
   overflow: hidden;
   text-overflow: ellipsis;

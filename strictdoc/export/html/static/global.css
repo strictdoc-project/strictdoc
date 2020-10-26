@@ -68,9 +68,12 @@ pre.code {
 }
 
 a.reference.external {
-  display: block;
+  display: inline-block;
+  max-width: 200px;
+  vertical-align: bottom;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 #tags-outline {

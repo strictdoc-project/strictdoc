@@ -36,7 +36,6 @@ class DocumentCachingIterator:
 
         task_list = collections.deque(document.section_contents)
 
-        title_string = None
         while True:
             if not task_list:
                 break

@@ -8,12 +8,6 @@
 
     <script type="text/javascript" src="{{document.meta.get_root_path_prefix()}}/_static/jquery.min.js"></script>
     <script type="text/javascript" src="{{document.meta.get_root_path_prefix()}}/_static/pan-with-space.js"></script>
-
-    <style>
-      :root {
-        --table-calculated-width: {{ (traceability_index.get_max_ref_depth(document) * 2 + 1) * 320 }}px;
-      }
-    </style>
     <title>{{document.name}} - Deep Traceability</title>
 </head>
 
@@ -51,17 +45,15 @@
 
         {%- set requirement = section_or_requirement %}
         <div class="view-traceability-deep_column-main">
-          <div class="main-cell" id="{{ requirement.uid }}">
+          <div class="requirement-container" id="{{ requirement.uid }}">
             {% include "_shared/requirement_card.jinja.html" %}
           </div>
         </div> <!-- //view-traceability-deep_column-main -->
 
         <div class="view-traceability-deep_column-right">
-
           {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) %}
             {% include "single_document_traceability_deep/recursive_cell_right.jinja.html" %}
           {%- endfor %}
-
         </div> <!-- //view-traceability-deep_column-right -->
 
       </div> <!-- //view-traceability-deep_row -->

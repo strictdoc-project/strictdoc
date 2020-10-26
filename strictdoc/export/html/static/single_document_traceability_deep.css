@@ -1,37 +1,32 @@
 /* MAIN */
 
 .view-traceability-deep {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: stretch;
-  margin: 0 auto; /* put on center */
-  width: var(--table-calculated-width, 3520px); /* fix width */
+  display: table;
+  height: 100%;
 }
 
 .view-traceability-deep_row {
-  display: flex;
-  margin-bottom: var(--traceability-outer-row-gap);
+  display: table-row;
 }
 
+.view-traceability-deep_column-right,
+.view-traceability-deep_column-left,
 .view-traceability-deep_column-main {
-  width: var(--primary-requirement-card-width);
-}
-
-.main-cell {
-  width: var(--primary-requirement-card-width);
+  display: table-cell;
+  padding-bottom: var(--traceability-outer-row-gap);
+  /* needed for vertical stretching: */
   height: 100%;
+  vertical-align: top;
+}
+
+.requirement-container {
+  width: var(--primary-requirement-card-width);
+  /* needed for vertical stretching: */
+  height: 100%;
+  display: inline-block;
+  vertical-align: top;
+  /* hides arrows: */
   overflow: hidden;
-}
-
-.view-traceability-deep_column-right {
-  justify-content: flex-start;
-  width: 50%;
-}
-
-.view-traceability-deep_column-left {
-  justify-content: flex-end;
-  width: 50%;
 }
 
 /* RECURIVE */
@@ -62,6 +57,7 @@
 }
 
 .view-traceability-deep_column-left .recursive_row {
+  /* parents are shown in reverse order: */
   flex-direction: row-reverse;
 }
 
@@ -73,10 +69,12 @@
 }
 
 .view-traceability-deep_column-right .recursive_cell {
+  /* shows an arrow on the left side: */
   padding-left: var(--traceability-arrow);
 }
 
 .view-traceability-deep_column-left .recursive_cell {
+  /* shows an arrow on the right side: */
   padding-right: var(--traceability-arrow);
 }
 

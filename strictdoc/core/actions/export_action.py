@@ -22,6 +22,7 @@ from strictdoc.helpers.timing import timing_decorator, measure_performance
 class ExportAction:
     def __init__(self, strictdoc_src_path):
         self.strictdoc_src_path = strictdoc_src_path
+        self.cwd = os.getcwd()
 
         strict_own_files = glob.iglob('{}/strictdoc/**/*'.format(self.strictdoc_src_path), recursive=True)
         strict_own_files = [f for f in strict_own_files if f.endswith('.html') or f.endswith('.py')]
@@ -33,6 +34,9 @@ class ExportAction:
         if isinstance(path_to_single_file_or_doc_root, str):
             path_to_single_file_or_doc_root = [path_to_single_file_or_doc_root]
         output_dir = output_dir if output_dir else "output"
+
+        if not os.path.isabs(output_dir):
+            output_dir = os.path.join(self.cwd, output_dir)
 
         output_html_root = '{}/html'.format(output_dir)
         output_html_static_files = '{}/_static'.format(output_html_root)
@@ -84,18 +88,13 @@ class ExportAction:
             executor.map(export_binding, document_tree.document_list)
 
         static_files_src = os.path.join(self.strictdoc_src_path, 'strictdoc/export/html/static')
-        static_files_dest = os.path.join(self.strictdoc_src_path, output_html_static_files)
-
-        sync_dir(static_files_src, static_files_dest)
+        sync_dir(static_files_src, output_html_static_files)
         for asset_dir in asset_dirs:
             source_path = asset_dir['full_path']
             output_relative_path = asset_dir['relative_path']
             destination_path = os.path.join(output_html_root, output_relative_path)
             sync_dir(source_path, destination_path)
 
-        if not os.path.isabs(output_html_root):
-            cwd = os.getcwd()
-            output_html_root = os.path.join(cwd, output_html_root)
         print('Export completed. Documentation tree can be found at:\n{}'.format(output_html_root))
 
     def _export_with_performance(self, document, document_tree, traceability_index):

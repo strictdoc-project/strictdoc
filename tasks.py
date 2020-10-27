@@ -37,20 +37,24 @@ def test_unit(c):
 
 
 @task
-def test_integration(c):
+def test_integration(c, focus=None):
     clean(c)
 
     cwd = os.getcwd()
 
     strictdoc_exec = 'python \\"{cwd}/strictdoc/cli/main.py\\"'.format(cwd=cwd)
 
+    focus_or_none = '--filter {}'.format(focus) if focus else ''
+
     command = formatted_command("""
         lit
         --param STRICTDOC_EXEC="{strictdoc_exec}"
         -vv
         --show-all
+        {focus_or_none}
         {cwd}/tests/integration
-    """).format(strictdoc_exec=strictdoc_exec, cwd=cwd)
+    """).format(strictdoc_exec=strictdoc_exec, cwd=cwd,
+                focus_or_none=focus_or_none)
 
     print(command)
     c.run("{}".format(command))

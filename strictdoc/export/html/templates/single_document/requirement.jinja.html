@@ -1,4 +1,8 @@
-<div class="requirement">
+<div class="requirement"
+  {%- if requirement.status %}
+data-status='{{ requirement.status.lower() }}'
+  {%- endif %}
+>
   <span id="{{ string_to_anchor_id(requirement.title) }}"></span>
 
   {%- if requirement.title -%}
@@ -22,12 +26,6 @@
       <div><dt>Tags</dt><dd>{{ ', '.join(requirement.tags) }}</dd></div>
       {%- endif %}
     </dl>
-  {%- endif %}
-
-  {%- if requirement.status %}
-    <div>
-      {{ requirement.status }}
-    </div>
   {%- endif %}
 
   {%- if requirement.statement or requirement.statement_multiline -%}

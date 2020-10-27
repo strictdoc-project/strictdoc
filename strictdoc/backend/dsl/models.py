@@ -111,6 +111,14 @@ class Requirement(object):
         return self.__str__()
 
     @property
+    def has_meta(self):
+        return (
+            self.uid is not None or
+            (self.tags is not None and len(self.tags) > 0) or
+            self.status is not None
+        )
+
+    @property
     def is_requirement(self):
         return True
 

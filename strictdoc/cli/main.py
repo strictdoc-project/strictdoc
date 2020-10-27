@@ -1,47 +1,23 @@
-import argparse
 import os
 import sys
 
 ROOT_PATH = os.path.join(os.path.dirname(__file__), "..", "..")
 sys.path.append(ROOT_PATH)
 
+from strictdoc.cli.cli_arg_parser import cli_args_parser
 from strictdoc.core.actions.export_action import ExportAction
 from strictdoc.core.actions.passthrough_action import PassthroughAction
 
+
 def main():
-    # for arg in sys.argv:
-    #     if arg == '--help':
-    #         # print_help()
-    #         assert 0
-    #         exit(0)
-    #
-    # for arg in sys.argv:
-    #     if arg == '--version':
-    #         # print_version()
-    #         assert 0
-    #         exit(0)
-
-    # if os.path.getsize(check_file) == 0:
-    #     sys.stdout.flush()
-    #     print("error: no check strings found with prefix 'CHECK:'", file=sys.stderr)
-    #     exit(2)
-
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument('command', type=str, help='TODO', choices=[
-        'passthrough', 'export'
-    ])
-
-    parser.add_argument('input_file', type=str, nargs='+', help='TODO')
-    parser.add_argument('--output-file', type=str, help='TODO')
-
+    parser = cli_args_parser()
     args = parser.parse_args()
 
     if args.command == 'passthrough':
-        paths_to_docs = args.input_file
-        if len(paths_to_docs) != 1:
+        input_file = args.input_file
+        if not os.path.isfile(input_file):
             sys.stdout.flush()
-            err = "passthrough command's input must be a single file".format(path_to_doc)
+            err = "error: passthrough command's input file does not exist: {}".format(input_file)
             print(err)
             exit(1)
 
@@ -53,7 +29,7 @@ def main():
                 exit(1)
 
         passthrough_action = PassthroughAction()
-        passthrough_action.passthrough(paths_to_docs, output_file)
+        passthrough_action.passthrough(input_file, output_file)
 
     elif args.command == 'export':
         export_controller = ExportAction(ROOT_PATH)

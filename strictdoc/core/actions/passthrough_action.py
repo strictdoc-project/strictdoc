@@ -7,8 +7,7 @@ from strictdoc.backend.dsl.writer import SDWriter
 
 class PassthroughAction:
 
-    def passthrough(self, paths_to_docs, output_file):
-        path_to_doc = paths_to_docs[0]
+    def passthrough(self, path_to_doc, output_file):
         if not os.path.isfile(path_to_doc):
             sys.stdout.flush()
             err = "Could not open doc file '{}': No such file or directory".format(path_to_doc)

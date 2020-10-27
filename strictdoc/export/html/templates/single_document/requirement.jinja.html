@@ -10,14 +10,17 @@
     </h{{ requirement.ng_level }}>
   {%- endif -%}
 
-  {%- if requirement.uid %}
+  {%- if requirement.has_meta %-}
     <dl class="requirement-meta">
+      {%- if requirement.uid %}
       <div><dt>UID</dt><dd>{{ requirement.uid }}</dd></div>
-      <!-- TODO: test content: -->
-      <div><dt>ASIL</dt><dd>D</dd></div>
-      <div><dt>Compliance</dt><dd>R,T,A,I</dd></div>
-      <div><dt>CRC</dt><dd>98dfliuhasdfjkg34rjhgadsf8sdfasdfasdf</dd></div>
-      <!-- //test content: -->
+      {%- endif %}
+      {%- if requirement.status %}
+      <div><dt>Status</dt><dd>{{ requirement.status }}</dd></div>
+      {%- endif %}
+      {%- if requirement.tags %}
+      <div><dt>Tags</dt><dd>{{ ', '.join(requirement.tags.split(',')) }}</dd></div>
+      {%- endif %}
     </dl>
   {%- endif %}
 

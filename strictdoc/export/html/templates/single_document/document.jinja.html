@@ -30,10 +30,7 @@
       {%- set section = section_or_requirement %}
       <span id="{{ string_to_anchor_id(section_or_requirement.title) }}"></span>
 
-      <h{{ section.ng_level }} class="section-title">
-        <span class="section-number">
-          {{ section.export_title }}
-        </span>
+      <h{{ section.ng_level }} class="section-title" data-level="{{ section.export_title }}">
         {{ section.title }}
       </h{{ section.ng_level }}>
   {%- elif section_or_requirement.is_free_text -%}

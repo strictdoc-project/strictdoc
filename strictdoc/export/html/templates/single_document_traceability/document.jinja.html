@@ -61,10 +61,7 @@
       </div>
       <div class="view-traceability_cell cell-central">
         {%- set section = section_or_requirement %}
-        <h{{ section.ng_level }} class="section-title">
-          <span class="level">
-            {{ section.export_title }}
-          </span>
+        <h{{ section.ng_level }} class="section-title" data-level="{{ section.export_title }}">
           {{ section.title }}
         </h{{ section.ng_level }}>
       </div>

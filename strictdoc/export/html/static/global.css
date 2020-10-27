@@ -204,6 +204,10 @@ dl.requirement-meta {
 
 /* requirement_card elements */
 
+.section-title[data-level]::before {
+  content: attr(data-level) " ";
+}
+
 .requirement_card .section-title {
   font-size: 1.1em;
   margin: 0 0 0.5rem;

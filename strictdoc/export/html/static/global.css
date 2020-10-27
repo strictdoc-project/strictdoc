@@ -136,6 +136,33 @@ span.document-view-type {
 
 /* requirement elements */
 
+.requirement-meta {
+  color: #444;
+}
+dl.requirement-meta {
+  display: table;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+.requirement-meta div {
+  display: table-row;
+}
+.requirement-meta dt,
+.requirement-meta dd {
+  display: table-cell;
+  padding: 0 6px;
+  font-size: .85rem;
+  line-height: 1.4;
+  font-family: 'Courier New', Courier, monospace;
+  border: 1px dotted;
+}
+.requirement-meta dt {
+  color: var(--color-accent-dark);
+}
+.requirement-meta dt::after {
+  content: ':';
+}
+
 .requirement-statement {
   margin: 8px 0px;
 }

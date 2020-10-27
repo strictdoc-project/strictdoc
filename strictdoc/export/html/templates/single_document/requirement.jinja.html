@@ -11,9 +11,14 @@
   {%- endif -%}
 
   {%- if requirement.uid %}
-    <div class="requirement-uid">
-      UID: {{ requirement.uid }}
-    </div>
+    <dl class="requirement-meta">
+      <div><dt>UID</dt><dd>{{ requirement.uid }}</dd></div>
+      <!-- TODO: test content: -->
+      <div><dt>ASIL</dt><dd>D</dd></div>
+      <div><dt>Compliance</dt><dd>R,T,A,I</dd></div>
+      <div><dt>CRC</dt><dd>98dfliuhasdfjkg34rjhgadsf8sdfasdfasdf</dd></div>
+      <!-- //test content: -->
+    </dl>
   {%- endif %}
 
   {%- if requirement.status %}

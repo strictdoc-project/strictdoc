@@ -1,0 +1,69 @@
+[DOCUMENT]
+NAME: Sandbox SDoc
+
+[FREETEXT]
+This is a sandbox file for experiments.
+[/FREETEXT]
+
+[SECTION]
+LEVEL: 1
+TITLE: Section 1
+
+[REQUIREMENT]
+UID: REQ-001
+TAGS: Foo, Bar, Baz
+TITLE: Requirement #1 title
+STATEMENT: Requirement #1 statement
+COMMENT: >>>
+Requirement #1 multiline comment
+<<<
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 1
+TITLE: Section 2
+
+[REQUIREMENT]
+UID: REQ-002
+STATUS: Draft
+TAGS: Foo, Bar, Baz
+TITLE: Requirement #2 title
+STATEMENT: Requirement #2 statement
+COMMENT: >>>
+Requirement #2 multiline comment
+<<<
+
+[COMPOSITE-REQUIREMENT]
+UID: REQ-003
+STATUS: Draft
+TAGS: Foo, Bar, Baz
+TITLE: Composite Requirement #3 title
+STATEMENT: Composite Requirement #3 statement
+COMMENT: >>>
+Composite Requirement #3 multiline comment
+<<<
+
+[REQUIREMENT]
+UID: REQ-003-1
+STATUS: Draft
+TAGS: Foo, Bar, Baz
+TITLE: Requirement #3.1 title
+STATEMENT: Requirement #3.1 statement
+COMMENT: >>>
+Requirement #3.1 multiline comment
+<<<
+
+[REQUIREMENT]
+UID: REQ-003-2
+STATUS: Draft
+TAGS: Foo, Bar, Baz
+TITLE: Requirement #3.2 title
+STATEMENT: Requirement #3.2 statement
+COMMENT: >>>
+Requirement #3.2 multiline comment
+<<<
+
+[/COMPOSITE-REQUIREMENT]
+
+[/SECTION]

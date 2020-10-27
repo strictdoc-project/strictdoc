@@ -10,7 +10,7 @@
     </h{{ requirement.ng_level }}>
   {%- endif -%}
 
-  {%- if requirement.has_meta %-}
+  {%- if requirement.has_meta -%}
     <dl class="requirement-meta">
       {%- if requirement.uid %}
       <div><dt>UID</dt><dd>{{ requirement.uid }}</dd></div>
@@ -19,7 +19,7 @@
       <div><dt>Status</dt><dd>{{ requirement.status }}</dd></div>
       {%- endif %}
       {%- if requirement.tags %}
-      <div><dt>Tags</dt><dd>{{ ', '.join(requirement.tags.split(',')) }}</dd></div>
+      <div><dt>Tags</dt><dd>{{ ', '.join(requirement.tags) }}</dd></div>
       {%- endif %}
     </dl>
   {%- endif %}

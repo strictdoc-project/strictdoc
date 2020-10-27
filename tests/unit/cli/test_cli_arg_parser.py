@@ -12,7 +12,22 @@ def test_export_01_minimal():
     assert args.command == 'export'
     assert args.input_paths == ['docs']
 
-    assert args._get_kwargs() == [('command', 'export'), ('input_paths', ['docs'])]
+    assert args._get_kwargs() == [('command', 'export'),
+                                  ('input_paths', ['docs']),
+                                  ('output_dir', None)]
+
+
+def test_export_02_output_dir():
+    parser = cli_args_parser()
+
+    args = parser.parse_args(['export', 'docs', '--output-dir', 'custom-output-dir'])
+
+    assert args.command == 'export'
+    assert args.input_paths == ['docs']
+
+    assert args._get_kwargs() == [('command', 'export'),
+                                  ('input_paths', ['docs']),
+                                  ('output_dir', 'custom-output-dir')]
 
 
 def test_passthrough_01_minimal():

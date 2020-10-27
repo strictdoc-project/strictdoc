@@ -136,6 +136,30 @@ span.document-view-type {
 
 /* requirement elements */
 
+.requirement-meta {
+  color: #444;
+}
+dl.requirement-meta {
+  display: table;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+.requirement-meta div {
+  display: table-row;
+}
+.requirement-meta dt,
+.requirement-meta dd {
+  display: table-cell;
+  padding: 0 6px;
+  font-size: .85rem;
+  line-height: 1.4;
+  font-family: 'Courier New', Courier, monospace;
+  border: 1px solid rgba(0,0,0,0.01);
+}
+.requirement-meta dt::after {
+  content: ':';
+}
+
 .requirement-statement {
   margin: 8px 0px;
 }
@@ -155,8 +179,6 @@ span.document-view-type {
   margin-top: 10px;
 }
 
-
-.requirement .image,
 .requirement object {
   width: 100%;
   padding: 1em;
@@ -178,6 +200,10 @@ span.document-view-type {
 }
 
 /* requirement_card elements */
+
+.section-title[data-level]::before {
+  content: attr(data-level) " ";
+}
 
 .requirement_card .section-title {
   font-size: 1.1em;

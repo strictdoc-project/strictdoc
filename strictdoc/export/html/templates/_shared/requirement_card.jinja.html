@@ -1,9 +1,6 @@
 <div class="requirement requirement_card">
   {%- if requirement.title %}
-    <h{{ requirement.ng_level }} class="section-title">
-      <span class="level">
-        {{ requirement.export_title }}
-      </span>
+    <h{{ requirement.ng_level }} class="section-title" data-level="{{ requirement.export_title }}">
       {{ requirement.title }}
     </h{{ requirement.ng_level }}>
   {%- endif %}

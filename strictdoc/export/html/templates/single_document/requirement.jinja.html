@@ -1,25 +1,28 @@
-<div class="requirement">
+<div class="requirement"
+  {%- if requirement.status %}
+data-status='{{ requirement.status.lower() }}'
+  {%- endif %}
+>
   <span id="{{ string_to_anchor_id(requirement.title) }}"></span>
 
   {%- if requirement.title -%}
-    <h{{ requirement.ng_level }} class="section-title">
-      <span class="section-number">
-        {{ requirement.export_title }}
-      </span>
+    <h{{ requirement.ng_level }} class="section-title" data-level="{{ requirement.export_title }}">
       {{ requirement.title }}
     </h{{ requirement.ng_level }}>
   {%- endif -%}
 
-  {%- if requirement.uid %}
-    <div class="requirement-uid">
-      UID: {{ requirement.uid }}
-    </div>
-  {%- endif %}
-
-  {%- if requirement.status %}
-    <div>
-      {{ requirement.status }}
-    </div>
+  {%- if requirement.has_meta -%}
+    <dl class="requirement-meta">
+      {%- if requirement.uid %}
+      <div><dt>UID</dt><dd>{{ requirement.uid }}</dd></div>
+      {%- endif %}
+      {%- if requirement.status %}
+      <div><dt>Status</dt><dd>{{ requirement.status }}</dd></div>
+      {%- endif %}
+      {%- if requirement.tags %}
+      <div><dt>Tags</dt><dd>{{ ', '.join(requirement.tags) }}</dd></div>
+      {%- endif %}
+    </dl>
   {%- endif %}
 
   {%- if requirement.statement or requirement.statement_multiline -%}
@@ -29,9 +32,9 @@
   {%- endif -%}
 
   {%- if requirement.body %}
-<pre>
+<div><p>
 {{ requirement.body }}
-</pre>
+</p></div>
   {%- endif %}
 
   {%- if requirement.comments %}

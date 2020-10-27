@@ -44,10 +44,7 @@
             <td colspan="4">
               {%- set section = section_or_requirement %}
 
-              <h{{ section.ng_level }} class="section-title">
-                <span class="level">
-                  {{ section.export_title }}
-                </span>
+              <h{{ section.ng_level }} class="section-title" data-level="{{ section.export_title }}">
                 {{ section.title }}
               </h{{ section.ng_level }}>
 
@@ -73,10 +70,7 @@
           <tr class="view-table_section-title">
             <td colspan="4">
               {%- set section = section_or_requirement %}
-              <h{{ section.ng_level }} class="section-title">
-                <span class="level">
-                  {{ section.export_title }}
-                </span>
+              <h{{ section.ng_level }} class="section-title" data-level="{{ section.export_title }}">
                 {{ section.title }}
               </h{{ section.ng_level }}>
             </td>

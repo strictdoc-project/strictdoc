@@ -2,6 +2,11 @@ RUN: %strictdoc export %S --output-dir %S/Output/CustomDir | filecheck %s --dump
 CHECK: Published: Hello world doc
 
 RUN: cat %S/Output/CustomDir/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+
+RUN: %check_exists --dir %S/Output/CustomDir/html/_static/
+RUN: %check_exists --file %S/Output/CustomDir/html/_static/global.css
+
+RUN: cat %S/Output/CustomDir/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: input.sdoc
 CHECK-HTML: Hello world doc
 CHECK-HTML: DOC

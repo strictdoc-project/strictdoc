@@ -1,3 +1,3 @@
 # StrictDoc
 
-TBD
+The project and the repository are under construction.

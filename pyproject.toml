@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "strictdoc"
 version = "0.0.1"
-description = "Technical documentation software."
+description = " Software for writing technical requirements and specifications."
 authors = ["Stanislav Pankevich <s.pankevich@gmail.com>"]
 maintainers = ["Stanislav Pankevich <s.pankevich@gmail.com>"]
 license = "Apache 2"

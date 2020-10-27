@@ -1,0 +1,10 @@
+RUN: %strictdoc export %S | filecheck %s
+CHECK: Published: Hello world doc
+
+RUN: cat %S/Output/html/index.html | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: input.sdoc
+CHECK-HTML: Hello world doc
+CHECK-HTML: DOC
+CHECK-HTML: TABLE
+CHECK-HTML: TRACE
+CHECK-HTML: DEEP-TRACE

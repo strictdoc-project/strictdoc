@@ -27,12 +27,15 @@ def cli_args_parser():
     command_subparsers.required = True
 
     command_parser_export = command_subparsers.add_parser(
-        "export", help="Export document tree.", parents=[]
+        "export",
+        help="Export document tree.",
+        parents=[],
+        description="Export command: input SDoc documents are generated into HTML and other formats."
     )
-    command_parser_export.add_argument('input_file',
+    command_parser_export.add_argument('input_paths',
                                         type=str,
                                         nargs='+',
-                                        help='TODO')
+                                        help='One or more folders with *.sdoc files')
 
     command_parser_passthrough = command_subparsers.add_parser(
         "passthrough", help="Export document tree.", parents=[]

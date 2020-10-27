@@ -10,9 +10,9 @@ def test_export_01_minimal():
     args = parser.parse_args(['export', 'docs'])
 
     assert args.command == 'export'
-    assert args.input_file == ['docs']
+    assert args.input_paths == ['docs']
 
-    assert args._get_kwargs() == [('command', 'export'), ('input_file', ['docs'])]
+    assert args._get_kwargs() == [('command', 'export'), ('input_paths', ['docs'])]
 
 
 def test_passthrough_01_minimal():

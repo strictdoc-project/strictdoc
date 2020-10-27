@@ -33,7 +33,7 @@ def main():
 
     elif args.command == 'export':
         export_controller = ExportAction(ROOT_PATH)
-        export_controller.export(args.input_file)
+        export_controller.export(args.input_paths)
 
     else:
         raise NotImplementedError

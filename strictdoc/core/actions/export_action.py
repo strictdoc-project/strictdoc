@@ -20,25 +20,27 @@ from strictdoc.helpers.timing import timing_decorator, measure_performance
 
 
 class ExportAction:
-    def __init__(self, root_path):
-        self.root_path = root_path
+    def __init__(self, strictdoc_src_path):
+        self.strictdoc_src_path = strictdoc_src_path
 
-        strict_own_files = glob.iglob('{}/strictdoc/**/*'.format(self.root_path), recursive=True)
+        strict_own_files = glob.iglob('{}/strictdoc/**/*'.format(self.strictdoc_src_path), recursive=True)
         strict_own_files = [f for f in strict_own_files if f.endswith('.html') or f.endswith('.py')]
         latest_strictdoc_own_file = max(strict_own_files, key=os.path.getctime)
         self.strictdoc_last_update = get_file_modification_time(latest_strictdoc_own_file)
 
     @timing_decorator('Export')
-    def export(self, path_to_single_file_or_doc_root):
+    def export(self, path_to_single_file_or_doc_root, output_dir):
         if isinstance(path_to_single_file_or_doc_root, str):
             path_to_single_file_or_doc_root = [path_to_single_file_or_doc_root]
+        output_dir = output_dir if output_dir else "output"
 
-        output_root = 'output'
-        output_root_html = 'output/html'
-        Path(output_root_html).mkdir(parents=True, exist_ok=True)
+        output_html_root = '{}/html'.format(output_dir)
+        output_html_static_files = '{}/_static'.format(output_html_root)
+
+        Path(output_html_root).mkdir(parents=True, exist_ok=True)
 
         document_tree, asset_dirs = DocumentFinder.find_sdoc_content(
-            path_to_single_file_or_doc_root, output_root_html
+            path_to_single_file_or_doc_root, output_html_root
         )
 
         traceability_index = TraceabilityIndex.create(document_tree)
@@ -46,7 +48,7 @@ class ExportAction:
         writer = DocumentTreeHTMLGenerator()
         output = writer.export(document_tree)
 
-        output_file = '{}/index.html'.format(output_root_html)
+        output_file = '{}/index.html'.format(output_html_root)
 
         with open(output_file, 'w') as file:
             file.write(output)
@@ -81,24 +83,24 @@ class ExportAction:
         with concurrent.futures.ProcessPoolExecutor(max_workers=4) as executor:
             executor.map(export_binding, document_tree.document_list)
 
-        static_files_src = os.path.join(self.root_path, 'strictdoc/export/html/static')
-        static_files_dest = os.path.join(self.root_path, 'output/html/_static')
+        static_files_src = os.path.join(self.strictdoc_src_path, 'strictdoc/export/html/static')
+        static_files_dest = os.path.join(self.strictdoc_src_path, output_html_static_files)
 
         sync_dir(static_files_src, static_files_dest)
         for asset_dir in asset_dirs:
             source_path = asset_dir['full_path']
             output_relative_path = asset_dir['relative_path']
-            destination_path = os.path.join(output_root_html, output_relative_path)
+            destination_path = os.path.join(output_html_root, output_relative_path)
             sync_dir(source_path, destination_path)
 
-        if not os.path.isabs(output_root_html):
+        if not os.path.isabs(output_html_root):
             cwd = os.getcwd()
-            output_root_html = os.path.join(cwd, output_root_html)
-        print('Export completed. Documentation tree can be found at:\n{}'.format(output_root_html))
+            output_html_root = os.path.join(cwd, output_html_root)
+        print('Export completed. Documentation tree can be found at:\n{}'.format(output_html_root))
 
     def _export_with_performance(self, document, document_tree, traceability_index):
         document_meta: DocumentMeta = document.meta
-        full_output_path = os.path.join(self.root_path, document_meta.get_html_doc_path())
+        full_output_path = os.path.join(self.strictdoc_src_path, document_meta.get_html_doc_path())
 
         # If file exists we want to check its modification path in order to skip
         # its generation in case it has not changed since the last generation.

@@ -1,8 +1,8 @@
 import os
 import sys
 
-ROOT_PATH = os.path.join(os.path.dirname(__file__), "..", "..")
-sys.path.append(ROOT_PATH)
+STRICTDOC_ROOT_PATH = os.path.join(os.path.dirname(__file__), "..", "..")
+sys.path.append(STRICTDOC_ROOT_PATH)
 
 from strictdoc.cli.cli_arg_parser import cli_args_parser
 from strictdoc.core.actions.export_action import ExportAction
@@ -32,8 +32,8 @@ def main():
         passthrough_action.passthrough(input_file, output_file)
 
     elif args.command == 'export':
-        export_controller = ExportAction(ROOT_PATH)
-        export_controller.export(args.input_paths)
+        export_controller = ExportAction(STRICTDOC_ROOT_PATH)
+        export_controller.export(args.input_paths, args.output_dir)
 
     else:
         raise NotImplementedError

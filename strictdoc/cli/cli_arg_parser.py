@@ -36,6 +36,9 @@ def cli_args_parser():
                                         type=str,
                                         nargs='+',
                                         help='One or more folders with *.sdoc files')
+    command_parser_export.add_argument('--output-dir',
+                                       type=str,
+                                       help='Output folder')
 
     command_parser_passthrough = command_subparsers.add_parser(
         "passthrough", help="Export document tree.", parents=[]

@@ -87,7 +87,10 @@ class DocumentFinder:
         asset_dirs = []
         root_trees = []
 
-        for path_to_doc_root in paths_to_files_or_docs:
+        for path_to_doc_root_raw in paths_to_files_or_docs:
+            # Strip away the trailing slash to let the later os.path.relpath
+            # calculations work correctly.
+            path_to_doc_root = path_to_doc_root_raw.rstrip('/')
             path_to_doc_root_base = os.path.dirname(path_to_doc_root)
             root_level = path_to_doc_root.count(os.sep)
 

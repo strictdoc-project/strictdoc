@@ -1,4 +1,0 @@
-RUN: %strictdoc passthrough %S/input.sdoc --output-file=%S/Output/output.sdoc
-UN: %strictdoc passthrough %S/input.sdoc --output-file=%S/Output/output.sdoc | filecheck %s
-RUN: diff %S/input.sdoc %S/Output/output.sdoc
-CHECK: passthrough

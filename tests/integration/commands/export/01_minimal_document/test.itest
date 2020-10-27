@@ -1,7 +1,7 @@
-RUN: %strictdoc export %S | filecheck %s
+RUN: %strictdoc export %S | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
-RUN: cat %S/Output/html/index.html | filecheck %s --check-prefix CHECK-HTML
+RUN: cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: input.sdoc
 CHECK-HTML: Hello world doc
 CHECK-HTML: DOC

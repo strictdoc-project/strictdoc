@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/global.css" />
   <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/layout-main-with-toc.css" />
-  <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/single_document_traceability.css" />
+  <!-- <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/single_document_traceability.css" /> -->
+  <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/traceability.css" />
+
   <title>{{document.name}} - Traceability</title>
 </head>
 
@@ -30,11 +32,11 @@
     </div>
   {%- endif %}
 
-  <div class="view-traceability" id="sections-and-requirements">
+  <div class="view-traceability traceability" id="sections-and-requirements">
   {%- for section_or_requirement in document_iterator.all_content() %}
-    <div class="view-traceability_row">
+    <div class="view-traceability_row traceability_row">
     {%- if section_or_requirement.is_requirement %}
-      <div class="view-traceability_cell cell-parent">
+      <div class="view-traceability_cell cell-parent traceability_column" data-requirement-role="parents">
         {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) %}
 
             {% include "_shared/requirement_card.jinja.html" %}
@@ -43,13 +45,15 @@
       </div>
 
       {%- set requirement = section_or_requirement %}
-      <div class="view-traceability_cell cell-central" id="{{ requirement.uid }}">
+      <div class="view-traceability_cell cell-central traceability_column" id="{{ requirement.uid }}" data-requirement-role="current">
 
+        <div class="requirement-container" id="{{ requirement.uid }}">
           {% include "_shared/requirement_card.jinja.html" %}
+        </div>
 
       </div>
 
-      <div class="view-traceability_cell cell-children">
+      <div class="view-traceability_cell cell-children traceability_column" data-requirement-role="children">
         {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) %}
 
             {% include "_shared/requirement_card.jinja.html" %}
@@ -57,25 +61,25 @@
         {%- endfor %}
       </div>
     {%- elif section_or_requirement.is_section %}
-      <div class="view-traceability_cell cell-parent">
+      <div class="view-traceability_cell cell-parent traceability_column" data-requirement-role="parent">
       </div>
-      <div class="view-traceability_cell cell-central">
+      <div class="view-traceability_cell cell-central traceability_column" data-requirement-role="current">
         {%- set section = section_or_requirement %}
         <h{{ section.ng_level }} class="section-title" data-level="{{ section.export_title }}">
           {{ section.title }}
         </h{{ section.ng_level }}>
       </div>
-      <div class="view-traceability_cell cell-children">
+      <div class="view-traceability_cell cell-children traceability_column" data-requirement-role="children">
       </div>
     {%- elif section_or_requirement.is_free_text %}
-      <div class="view-traceability_cell cell-parent">
+      <div class="view-traceability_cell cell-parent traceability_column" data-requirement-role="parent">
       </div>
-      <div class="view-traceability_cell cell-central">
+      <div class="view-traceability_cell cell-central traceability_column" data-requirement-role="current">
         <div class="free_text">
           {{ renderer.render_free_text(section_or_requirement) }}
         </div>
       </div>
-      <div class="view-traceability_cell cell-children">
+      <div class="view-traceability_cell cell-children traceability_column" data-requirement-role="children">
       </div>
     {%- endif %}
     </div>

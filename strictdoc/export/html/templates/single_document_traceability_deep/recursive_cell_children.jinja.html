@@ -10,7 +10,7 @@
   {%- if traceability_index.has_children_requirements(requirement) %}
     <li class="recursive_column">
       {%- for requirement in traceability_index.get_children_requirements(requirement) %}
-        {% include "single_document_traceability_deep/recursive_cell_right.jinja.html" %}
+        {% include "single_document_traceability_deep/recursive_cell_children.jinja.html" %}
       {%- endfor %}
     </li>
   {%- endif %}

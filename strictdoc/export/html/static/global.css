@@ -201,65 +201,12 @@ dl.requirement-meta {
   background: #fff;
 }
 
-/* requirement_card */
-
-.requirement_card {
-  padding: .5em 0.75em;
-  border: 1px solid var(--color-table-border);
-  background-color: #fff;
-  /* background-color: rgba(0,0,0,0.01); */
-  background-color: rgb(255 255 255 / 40%);
-  position: relative;
-}
-
-.requirement_card + .requirement_card {
-  margin-top: var(--traceability-inner-row-gap);
-}
-
-/* requirement_card elements */
-
 .section-title:only-child {
   margin: 0;
 }
 
 .section-title[data-level]::before {
   content: attr(data-level) " ";
-}
-
-.requirement_card .section-title {
-  font-size: 1.1em;
-  margin: 0 0 0.5rem;
-  line-height: 1.2;
-}
-
-.requirement_card h1 { font-size: 1.4em; }
-
-.requirement_card .comment p:first-child::before {
-  content: "Comment: ";
-  font-weight: bold;
-}
-
-/* arrows */
-
-.requirement_card::before,
-.requirement_card::after {
-  content: '\2192';
-  position: absolute;
-  top: .5rem;
-  display: block;
-  width: var(--traceability-arrow);
-  line-height: var(--traceability-arrow);
-  font-size: calc(var(--traceability-arrow) * 1);
-  text-align: center;
-  color: var(--color-accent-dark);
-}
-
-.requirement_card::after {
-  right: calc(var(--traceability-arrow) *(-1) - 1px);
-}
-
-.requirement_card::before {
-  left: calc(var(--traceability-arrow) *(-1) - 1px);
 }
 
 /* pre.code */
@@ -270,6 +217,30 @@ dl.requirement-meta {
   line-height: 1.2;
   margin: 10px 0;
   padding: 10px 10px 10px 15px;
+}
+
+/* view-article */
+
+.view-article {
+  max-width: 800px;
+  /* display: flex;
+  flex-direction: column; */
+}
+
+.view-article > section {
+  padding: 1.5rem;
+  background-color: #fff;
+  margin-bottom: 1rem;
+}
+
+.requirement_block .comment p:first-child::before {
+  content: "Comment: ";
+  font-weight: bold;
+}
+
+.requirement_block .comment {
+  padding-left: 1em;
+  border-left: 4px double var(--comment-border-color);
 }
 
 /* .view-table */
@@ -368,4 +339,199 @@ section.view-table_composite .requirement_section[data-role]::before,
 
 .view-table .requirement_section *:last-child {
   margin-bottom: 0;
+}
+
+
+
+/* .view-traceability */
+
+.view-traceability {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.view-traceability_row {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.view-traceability_column {
+  width: 33%;
+  min-width: calc(var(--primary-requirement-card-width) + var(--traceability-arrow));
+  padding: calc(var(--traceability-outer-row-gap)*0.5) 0;
+  overflow: hidden;
+}
+
+.view-traceability .requirement {
+  min-width: var(--primary-requirement-card-width);
+}
+
+/* arrows paddings */
+
+.view-traceability [data-requirement-role="parents"] {
+  padding-right: var(--traceability-arrow);
+}
+
+.view-traceability [data-requirement-role="children"] {
+  padding-left: var(--traceability-arrow);
+}
+
+/* .view-traceability-deep */
+
+.view-traceability-deep {
+  display: table;
+  height: 100%;
+}
+
+.view-traceability-deep_row {
+  display: table-row;
+}
+
+.view-traceability-deep_column {
+  display: table-cell;
+  padding-bottom: var(--traceability-outer-row-gap);
+  /* needed for vertical stretching: */
+  height: 100%;
+  vertical-align: top;
+}
+
+.view-traceability-deep .requirement {
+  /* needed for vertical stretching: */
+  height: 100%;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.view-traceability-deep .requirement {
+  width: var(--primary-requirement-card-width);
+}
+
+[data-requirement-role="current"] {
+/* hides arrows: */
+overflow: hidden;
+}
+
+/* RECURIVE */
+
+.recursive_row,   /* ul */
+.recursive_column /* li */ {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.recursive_row {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: var(--traceability-inner-row-gap);
+}
+
+.recursive_row:last-child {
+  margin-bottom: 0;
+}
+
+.recursive_column {
+  min-width: var(--secondary-requirement-card-width);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+[data-requirement-role="parents"] .recursive_row {
+  /* parents are shown in reverse order: */
+  flex-direction: row-reverse;
+}
+
+.recursive_cell {
+  position: relative;
+  height: 100%;
+  /* width: var(--secondary-requirement-card-width); */
+  overflow: hidden;
+}
+
+[data-requirement-role="children"] .recursive_cell {
+  /* shows an arrow on the left side: */
+  padding-left: var(--traceability-arrow);
+}
+
+[data-requirement-role="parents"] .recursive_cell {
+  /* shows an arrow on the right side: */
+  padding-right: var(--traceability-arrow);
+}
+
+/* Requirement */
+
+[data-requirement-role="current"] .requirement {
+  border: 1px solid #000;
+  background-color: #fff;
+  height: 100%;
+}
+
+.view-traceability .free_text {
+  font-size: .9em;
+  padding: .5em 0.75em;
+  border: 1px dashed var(--color-table-border);
+  background-color: #fff;
+  position: relative;
+}
+
+.view-traceability .section-title:only-child {
+  font-size: 1.6em;
+  background-color: #fff;
+  position: relative;
+  margin: 0;
+  padding: 0 0.75em;
+  border: 1px solid var(--color-table-border);
+}
+
+/* requirement_card */
+
+.requirement_card {
+  padding: .5em 0.75em;
+  border: 1px solid var(--color-table-border);
+  background-color: rgb(255 255 255 / 40%);
+  position: relative;
+}
+
+.requirement_card + .requirement_card {
+  margin-top: var(--traceability-inner-row-gap);
+}
+
+/* requirement_card elements */
+
+.requirement_card .section-title {
+  font-size: 1.1em;
+  margin: 0 0 0.5rem;
+  line-height: 1.2;
+}
+
+.requirement_card h1 { font-size: 1.4em; }
+
+.requirement_card .comment p:first-child::before {
+  content: "Comment: ";
+  font-weight: bold;
+}
+
+/* arrows */
+
+.requirement_card::before,
+.requirement_card::after {
+  content: '\2192';
+  position: absolute;
+  top: .5rem;
+  display: block;
+  width: var(--traceability-arrow);
+  line-height: var(--traceability-arrow);
+  font-size: calc(var(--traceability-arrow) * 1);
+  text-align: center;
+  color: var(--color-accent-dark);
+}
+
+.requirement_card::after {
+  right: calc(var(--traceability-arrow) *(-1) - 1px);
+}
+
+.requirement_card::before {
+  left: calc(var(--traceability-arrow) *(-1) - 1px);
 }

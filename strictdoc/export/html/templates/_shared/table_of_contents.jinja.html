@@ -1,9 +1,9 @@
-{%- if document.ng_sections %}
   <div class="toc_toggle"></div>
 
   <div class="toc_container">
     <a class="link-back-to-index" href="{{document.meta.get_root_path_prefix()}}/index.html">Back to Index</a>
 
+  {%- if document.ng_sections %}
     <div class="toc_header">Table of Contents</div>
 
 
@@ -41,5 +41,5 @@
       {%- endif -%}
     {%- endfor %}
 
+  {%- endif %}
   </div>
-{%- endif %}

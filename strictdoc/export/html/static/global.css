@@ -165,11 +165,14 @@ dl.requirement-meta {
 }
 
 .requirement ul,
-.requirement ol {
+.requirement ol,
+.requirement-statement ul,
+.requirement-statement ol {
   padding-left: 1.6em;
 }
 
-.requirement .comment {
+.requirement .comment,
+.view-table_requirement .comment {
   color: var(--comment-color);
   font-size: .9em;
   line-height: 1.4;

@@ -179,7 +179,8 @@ dl.requirement-meta {
   margin-top: 10px;
 }
 
-.requirement object {
+.requirement object,
+.requirement-statement object {
   width: 100%;
   padding: 1em;
   background: #fff;

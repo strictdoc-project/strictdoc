@@ -50,6 +50,13 @@
 .view-table .cell-title {
   width: 15%;
 }
+
+.view-table_requirement .cell-title  {
+  color: var(--color-accent-dark);
+  font-weight: bold;
+  line-height: 1.2;
+}
+
 .view-table .cell-statement {
   width: 40%;
 }

@@ -1,4 +1,40 @@
-StrictDoc is a technical specifications documentation framework TBD.
+StrictDoc is software for writing technical requirements and specifications.
+
+Summary of StrictDoc features:
+
+- The documentation files are stored as human-readable text files.
+- A simple domain-specific language DSL is used for writing the documents. The
+  text format encoding this language is called SDoc (strict-doc).
+- StrictDoc reads `*.sdoc` files and builds an in-memory representation of the
+  document tree.
+- From this in-memory representation, StrictDoc can generate the documentation
+  into a number of formats including HTML, RST, and PDF.
+- The initial focus of the tool is modeling requirements and specifications
+  documents. Such documents consist of multiple statements like
+  "system X shall do Y" called requirements.
+- The requirements can be linked together to form the relationships, such as
+  "parent-child", and from these connections, many useful features such as
+  `Requirements Traceability <https://en.wikipedia.org/wiki/Requirements_traceability>`_
+  and Documentation Coverage can be derived.
+
+Examples
+========
+
+"Hello World" example:
+
+.. code-block::
+
+    [DOCUMENT]
+    NAME: StrictDoc
+
+    [REQUIREMENT]
+    UID: SDOC-HIGH-REQS-MANAGEMENT
+    TITLE: Requirements management
+    STATEMENT: StrictDoc shall enable requirements management.
+
+For a more comprehensive example check the source file of this documentation
+itself which is written using StrictDoc:
+`strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc>`_.
 
 Getting started
 ===============
@@ -35,6 +71,10 @@ syntax is called SDoc and it's grammar is encoded with the
 `textX <https://github.com/textX/textX>`_
 tool.
 
+The grammar is defined using textX language for defining grammars and is
+located in a single file:
+`grammar.py <https://github.com/strictdoc-project/strictdoc/blob/master/strictdoc/backend/dsl/grammar.py>`_.
+
 This is how a minimal possible SDOC document looks like:
 
 .. code-block::
@@ -42,8 +82,24 @@ This is how a minimal possible SDOC document looks like:
     [DOCUMENT]
     NAME: StrictDoc
 
+The source file of this documentation itself which is written using StrictDoc:
+`strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc>`_.
+
 Export options
 ==============
+
+HTML documentation tree by StrictDoc
+------------------------------------
+
+TBD
+
+HTML export via Sphinx
+----------------------
+
+TBD
+
+PDF export via Sphinx/Latex
+---------------------------
 
 TBD
 
@@ -53,7 +109,53 @@ StrictDoc and other tools
 StrictDoc and Doorstop
 ----------------------
 
-TBD
+The StrictDoc project is a close successor of another project called
+`Doorstop <https://github.com/doorstop-dev/doorstop>`_.
+
+    "Doorstop is a requirements management tool that facilitates the storage of
+    textual requirements alongside source code in version control."
+
+The author of Doorstop has published a `paper about Doorstop <http://www.scirp.org/journal/PaperInformation.aspx?PaperID=44268#.UzYtfWRdXEZ>`_
+where the rationale behind text-based requirements management is provided.
+
+The first version of StrictDoc had started as a fork of the Doorstop project.
+However, after a while, the StrictDoc was started from scratch as a separate
+project. At this point, StrictDoc and Doorstop do not share any code but
+StrictDoc still shares with Doorstop their common underlying design principles:
+
+- Both Doorstop and StrictDoc are written using Python. Both are pip packages which are easy-to-install.
+- Both Doorstop and StrictDoc provide a command-line interface.
+- Both Doorstop and StrictDoc use text files for requirements management.
+- Both Doorstop and StrictDoc encourage collocation of code and documentation.
+  When documentation is hosted close to code it has less chances of diverging
+  from the actual implementation or becoming outdated.
+- As the free and open source projects, both Doorstop and StrictDoc seem to
+  struggle to find resources for development of specialized GUI interfaces this
+  is why both tools give a preference to supporting exporting documentation
+  pages to HTML format as the primary export feature.
+
+StrictDoc differs from Doorstop in a number of aspects:
+
+- Doorstop stores requirements in YAML files, one separate file per requirement
+  (`example <https://github.com/doorstop-dev/doorstop/blob/804153c67c7c5466ee94e9553118cc3df03a56f9/reqs/REQ001.yml>`_).
+  The document in Doorstop is assembled from the requirements files into a
+  single logical document during the document generation process.
+  StrictDoc's documentation unit is one document stored in an .sdoc file. Such a
+  document can have multiple requirements grouped by sections.
+- In YAML files, Doorstop stores requirements properties such as
+  `normative: true` or `level: 2.3` for which Doorstop provides validations.
+  Such a design decision, in fact, assumes an existence of implicitly-defined
+  grammar which is encoded "ad-hoc" in the parsing and validation rules of
+  Doorstop.
+  StrictDoc takes a different approach and defines its grammar explicitly using
+  a tool for creating Domain-Specific Languages called `textX <https://github.com/textX/textX>`_.
+  TextX support allows StrictDoc to encode a strict type-safe grammar in a
+  `single grammar file <https://github.com/strictdoc-project/strictdoc/blob/93486a0e9fb30b141187587eae9e995cd86c6cbf/strictdoc/backend/dsl/grammar.py>`_
+  that StrictDoc uses to parse the documentation files
+  using the parsing capabilities provided by textX out of the box.
+
+The roadmap of StrictDoc contains a work item for supporting the export/import
+to/from Doorstop format.
 
 StrictDoc and Sphinx
 --------------------
@@ -267,6 +369,7 @@ Some examples:
 - FUN-003
 - cES1008, cTBL6000.1 (NASA cFS)
 - Requirements without a number, e.g. SDOC-HIGH-DATA-MODEL (StrictDoc)
+- SAVOIR.OBC.PM.80 (SAVOIR)
 
 Title
 ^^^^^
@@ -294,7 +397,7 @@ SDOC file format
 Primary text implementation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``[SDOC-RDF-001]``
+``[SDOC-FMT-001]``
 
 SDOC format shall support encoding the Strict Doc Data Model in a plain-text human readable form.
 
@@ -341,6 +444,45 @@ Sphinx documentation generator
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 StrictDoc shall support exporting documents to Sphinx/RST format.
+
+Design decisions
+================
+
+TextX
+-----
+
+TextX shall be used for StrictDoc grammar definition and parsing of the sdoc files.
+
+**Comment:** TextX is an easy-to-install Python tool. It is fast, works out of the box.
+
+Jinja2
+------
+
+Jinja2 shall be used for rendering HTML templates.
+
+Sphinx and Docutils
+-------------------
+
+Sphinx and Docutils shall be used for the following capabilities:
+
+- Support of Restructured Text (reST) format
+- Generation of RST documents into HTML
+- Generation of RST documents into PDF using Latex
+- Generating documentation websites using Sphinx
+
+SDoc grammar
+------------
+
+No indentation
+~~~~~~~~~~~~~~
+
+SDoc grammar building blocks shall not allow any indentation.
+
+**Comment:** Rationale: Adding indentation to any of the fields does not scale well when the
+documents have deeply nested section structure as well as when the size of the
+paragraphs becomes sufficiently large. Keeping every keyword like [REQUIREMENT]
+or [COMMENT] with no indentation ensures that one does not have to think about
+possible indentation issues.
 
 Roadmap
 =======

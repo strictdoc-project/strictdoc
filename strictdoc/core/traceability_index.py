@@ -53,7 +53,12 @@ class TraceabilityIndex:
                         document_tags[tag] = 0
                     document_tags[tag] += 1
 
-                assert requirement.uid not in requirements_map
+                if requirement.uid in requirements_map:
+                    print('error: DocumentIndex: requirement already exists: {}'.format(
+                        requirement.uid
+                    ))
+                    exit(1)
+
                 if requirement.uid not in requirements_children_map:
                     requirements_children_map[requirement.uid] = []
 
@@ -99,7 +104,7 @@ class TraceabilityIndex:
                     if requirement_parent_id not in requirements_map:
                         # TODO: Strict variant of the behavior will be to stop
                         # and raise an error message.
-                        print("Requirement {} references parent requirement which doesn't exist: {}".format(
+                        print("warning: [DocumentIndex.create] Requirement {} references parent requirement which doesn't exist: {}".format(
                             requirement.uid, requirement_parent_id
                         ))
                         requirements_children_map.pop(requirement_parent_id, None)

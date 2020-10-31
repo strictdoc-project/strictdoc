@@ -14,7 +14,9 @@ class Parallelizer:
     def __init__(self):
         self.input_queue = multiprocessing.Queue()
         self.output_queue = multiprocessing.Queue()
-        self.pool = multiprocessing.Pool(4, Parallelizer._run, (self.input_queue, self.output_queue,))
+        self.pool = multiprocessing.Pool(multiprocessing.cpu_count(),
+                                         Parallelizer._run,
+                                         (self.input_queue, self.output_queue,))
 
     def map(self, contents, processing_func):
         size = 0
@@ -31,8 +33,7 @@ class Parallelizer:
     @staticmethod
     def _run(input_queue, output_queue):
         while True:
-            instance = input_queue.get(block=True)
-            content, processing_func = instance
+            content, processing_func = input_queue.get(block=True)
             result = processing_func(content)
             sys.stdout.flush()
             sys.stderr.flush()

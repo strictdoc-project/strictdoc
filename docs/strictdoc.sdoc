@@ -314,6 +314,7 @@ Some examples:
 - FUN-003
 - cES1008, cTBL6000.1 (NASA cFS)
 - Requirements without a number, e.g. SDOC-HIGH-DATA-MODEL (StrictDoc)
+- SAVOIR.OBC.PM.80 (SAVOIR)
 <<<
 
 [/COMPOSITE-REQUIREMENT]

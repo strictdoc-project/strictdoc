@@ -5,6 +5,7 @@
   <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/global.css" />
   <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/layout-main-with-toc.css" />
   <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/single_document_table.css" />
+  <script type="text/javascript" src="{{document.meta.get_root_path_prefix()}}/_static/toc.js"></script>
   <title>{{document.name}} - Table</title>
 </head>
 
@@ -12,7 +13,7 @@
 
   {%- set document_iterator = traceability_index.get_document_iterator(document) -%}
 
-<div class="layout-with-toc open">
+  <div id="toc_layout" class="layout-with-toc">
 
   <aside class="toc">
     {% include "_shared/table_of_contents.jinja.html" %}

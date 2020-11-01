@@ -36,7 +36,9 @@
       </h{{ section.ng_level }}>
   {%- elif section_or_requirement.is_free_text -%}
     {%- set freetext = section_or_requirement -%}
+    <div class="free_text">
     {{ renderer.render_free_text(freetext) }}
+    </div>
     {%- if freetext.ng_level > 1 -%}
       {%- if loop.last or not loop.nextitem.is_free_text -%}
         </div>  <!-- .section -->

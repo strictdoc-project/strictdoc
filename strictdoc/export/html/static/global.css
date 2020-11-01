@@ -167,7 +167,9 @@ dl.requirement-meta {
 .requirement ul,
 .requirement ol,
 .requirement-statement ul,
-.requirement-statement ol {
+.requirement-statement ol,
+.free_text ul,
+.free_text ol {
   padding-left: 1.6em;
 }
 

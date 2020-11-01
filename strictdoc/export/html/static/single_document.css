@@ -8,3 +8,8 @@
   padding-left: 1em;
   border-left: 4px double var(--comment-border-color);
 }
+
+/* TODO: make a special class for the 'document', and remove this general declaration */
+main.content {
+  max-width: 800px;
+}

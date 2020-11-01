@@ -42,9 +42,14 @@
 .view-table .cell-number {}
 .view-table .cell-uid {}
 .view-table .cell-title {}
-.view-table .cell-statement {}
-.view-table .cell-comment {}
 */
+
+.view-table .cell-statement {
+  width: 40%;
+}
+.view-table .cell-comment {
+  width: 30%;
+}
 
 .view-table_requirement .cell-title  {
   color: var(--color-accent-dark);

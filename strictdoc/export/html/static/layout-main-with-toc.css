@@ -136,7 +136,7 @@ main.content p {
   transition: var(--toc-layout-transition);
 }
 
-.layout-with-toc.open {
+.layout-with-toc[data-state="open"] {
   padding-left: calc(var(--toc-font-size) * (var(--toc-width-index) + var(--content-padding-index)));
   transition: var(--toc-layout-transition);
 }
@@ -147,7 +147,7 @@ main.content p {
   transition: var(--toc-layout-transition);
 }
 
-.layout-with-toc.open .toc {
+.layout-with-toc[data-state="open"] .toc {
   left: 0;
   right: auto;
   transition: var(--toc-layout-transition);

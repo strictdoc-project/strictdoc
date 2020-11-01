@@ -169,8 +169,8 @@ TITLE: StrictDoc and Doorstop
 The StrictDoc project is a close successor of another project called
 `Doorstop <https://github.com/doorstop-dev/doorstop>`_.
 
-    "Doorstop is a requirements management tool that facilitates the storage of
-    textual requirements alongside source code in version control."
+    Doorstop is a requirements management tool that facilitates the storage of
+    textual requirements alongside source code in version control.
 
 The author of Doorstop has published a `paper about Doorstop <http://www.scirp.org/journal/PaperInformation.aspx?PaperID=44268#.UzYtfWRdXEZ>`_
 where the rationale behind text-based requirements management is provided.
@@ -245,11 +245,11 @@ TITLE: StrictDoc Requirements
 
 [SECTION]
 LEVEL: 2
-TITLE: Problems
+TITLE: Project goals
 
 [REQUIREMENT]
-UID: PROBLEM-1-TOOLS
-TITLE: Technical documentation software
+UID: GOAL-1-TOOL
+TITLE: Software for writing technical documentation
 STATEMENT: >>>
 There shall exist free and lightweight yet capable software for technical
 documentation.
@@ -261,22 +261,26 @@ hundreds or thousands of requirements.
 <<<
 
 [REQUIREMENT]
-UID: PROBLEM-2-DOCUMENTATION-IS-HARD
-TITLE: Technical documentation is hard
+UID: GOAL-2-SUPPORT
+TITLE: Software support for writing documentation
 STATEMENT: >>>
 Software shall support engineers in their work with documentation.
 <<<
-COMMENT: Technical documentation can be an extremely laborious process.
+COMMENT: Technical documentation is hard, it can be an extremely laborious process.
 
 [REQUIREMENT]
-UID: PROBLEM-3-DOCUMENTATION-AS-HAZARD
-TITLE: Technical documentation as a source of hazards
-STATEMENT: There shall exist no (or less) opportunity for writing incorrect documentation.
+UID: GOAL-3-REDUCE-DOCUMENTATION-HAZARDS
+TITLE: Reduce documentation hazards
+STATEMENT: >>>
+There shall exist no (or less) opportunity for writing incorrect or inconsistent
+documentation.
+<<<
 COMMENT: >>>
 Every serious engineering activity, such as safety engineering or systems
 engineering, starts with requirements. The more critical is a product the higher
 the importance of good documentation.
 
+Technical documentation can be and often becomes a source of hazards.
 It is recognized that many failures stem from inadequate requirements
 engineering. While it is not possible to fix the problem of inadequate
 requirements engineering in general, it is definitely possible to improve
@@ -285,22 +289,23 @@ and writing technical documentation.
 <<<
 
 [REQUIREMENT]
-UID: PROBLEM-4-OUTDATED-DOCUMENTATION
-TITLE: Technical documentation easily becomes outdated
+UID: GOAL-4-PREVENT-RUNAWAY-DOCUMENTATION
+TITLE: Less run-away documentation
 STATEMENT: Software shall support engineers in keeping documentation up-to-date.
 COMMENT: >>>
-Many existing tools for documentation do not provide any measures for
-ensuring overall consistency of documents and documentation trees.
+Technical documentation easily becomes outdated. Many existing tools for
+documentation do not provide any measures for ensuring overall consistency of
+documents and documentation trees.
 <<<
 
 [REQUIREMENT]
-UID: PROBLEM-5-CHANGE-MANAGEMENT
-TITLE: Change management is difficult
+UID: GOAL-5-CHANGE-MANAGEMENT
+TITLE: Change management
 STATEMENT: Software shall provide capabilities for change management and impact assessment.
 COMMENT: >>>
-The bigger the project is, the harder it is to maintain its documentation.
-If a change is introduced to a project, it usually requires a full revision
-of its requirements TBD.
+Change management is difficult. The bigger the project is, the harder it is to
+maintain its documentation. If a change is introduced to a project, it usually
+requires a full revision of its requirements TBD.
 <<<
 
 [/SECTION]
@@ -313,7 +318,7 @@ TITLE: High-level requirements
 UID: SDOC-HIGH-REQS-MANAGEMENT
 REFS:
 - TYPE: Parent
-  VALUE: PROBLEM-1-TOOLS
+  VALUE: GOAL-1-TOOL
 TITLE: Requirements management
 STATEMENT: StrictDoc shall enable requirements management.
 

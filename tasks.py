@@ -11,11 +11,12 @@ def formatted_command(string):
 @task
 def sphinx(c):
     c.run(formatted_command("""
-        python3 strictdoc/cli/main.py export docs
+        python3 strictdoc/cli/main.py export docs --output-dir output/sphinx
     """))
 
     c.run(formatted_command("""
-        cp -v output/rst/StrictDoc.rst docs/sphinx/source/
+        cp -v output/sphinx/rst/StrictDoc.rst docs/sphinx/source/ &&
+        cp -rv output/sphinx/html/* docs/strictdoc-html/strictdoc-html
     """))
 
     c.run(formatted_command("""

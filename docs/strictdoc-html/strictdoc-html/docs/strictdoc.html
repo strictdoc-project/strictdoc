@@ -295,8 +295,8 @@ section to get an idea of the overall project direction.</p>
         Examples
       </h1><div class="free_text">
     <div class="document">
-<p>&quot;Hello World&quot; example:</p>
-<pre class="code literal-block">
+<p>&quot;Hello World&quot; example of the text language:</p>
+<pre class="code text literal-block">
 [DOCUMENT]
 NAME: StrictDoc
 
@@ -305,9 +305,18 @@ UID: SDOC-HIGH-REQS-MANAGEMENT
 TITLE: Requirements management
 STATEMENT: StrictDoc shall enable requirements management.
 </pre>
+</div>
+
+    </div><div class="free_text">
+    <div class="document">
 <p>For a more comprehensive example check the source file of this documentation
 itself which is written using StrictDoc:
 <a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc">strictdoc.sdoc</a>.</p>
+<ul class="simple">
+<li><a class="reference external" href="https://strictdoc.readthedocs.io/en/latest/strictdoc-html">StrictDoc HTML export</a></li>
+<li><a class="reference external" href="https://strictdoc.readthedocs.io/en/latest">StrictDoc HTML export using Sphinx</a></li>
+<li><a class="reference external" href="https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/">StrictDoc PDF export using Sphinx</a></li>
+</ul>
 </div>
 
     </div></div>  <!-- .section -->
@@ -396,7 +405,13 @@ NAME: StrictDoc
         HTML documentation tree by StrictDoc
       </h2><div class="free_text">
     <div class="document">
-<p>TBD</p>
+<p>This is a default export option supported by StrictDoc.</p>
+<p>The following command creates an HTML export:</p>
+<pre class="code text literal-block">
+strictdoc export docs/ --output-dir output-html
+</pre>
+<p>Example: This documentation is exported by StrictDoc to HTML:
+<a class="reference external" href="https://strictdoc.readthedocs.io/en/latest/strictdoc-html">StrictDoc HTML export</a>.</p>
 </div>
 
     </div></div>  <!-- .section -->

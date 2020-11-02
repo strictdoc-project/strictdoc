@@ -30,9 +30,9 @@ LEVEL: 1
 TITLE: Examples
 
 [FREETEXT]
-"Hello World" example:
+"Hello World" example of the text language:
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     NAME: StrictDoc
@@ -41,10 +41,16 @@ TITLE: Examples
     UID: SDOC-HIGH-REQS-MANAGEMENT
     TITLE: Requirements management
     STATEMENT: StrictDoc shall enable requirements management.
+[/FREETEXT]
 
+[FREETEXT]
 For a more comprehensive example check the source file of this documentation
 itself which is written using StrictDoc:
 `strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc>`_.
+
+- `StrictDoc HTML export <https://strictdoc.readthedocs.io/en/latest/strictdoc-html>`_
+- `StrictDoc HTML export using Sphinx <https://strictdoc.readthedocs.io/en/latest>`_
+- `StrictDoc PDF export using Sphinx <https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_
 [/FREETEXT]
 
 [/SECTION]
@@ -130,7 +136,16 @@ LEVEL: 2
 TITLE: HTML documentation tree by StrictDoc
 
 [FREETEXT]
-TBD
+This is a default export option supported by StrictDoc.
+
+The following command creates an HTML export:
+
+.. code-block:: text
+
+    strictdoc export docs/ --output-dir output-html
+
+Example: This documentation is exported by StrictDoc to HTML:
+`StrictDoc HTML export <https://strictdoc.readthedocs.io/en/latest/strictdoc-html>`_.
 [/FREETEXT]
 
 [/SECTION]

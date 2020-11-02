@@ -1,0 +1,165 @@
+
+.document-tree {
+  --level-padding: 24px;
+  --cell-padding: 6px;
+  --font-size: 16px;
+  --line-height: 20px;
+  --level-line-width: 1px;
+  --color-line: #aaa;
+  --color-text: #000;
+  --color-bg: #fff;
+  --color-row-hover-bg: rgb(244, 244, 244);
+
+  --half-sell-height: calc( var(--line-height)/2 + var(--cell-padding) );
+}
+
+.document-tree * {
+  box-sizing: border-box;
+  line-height: var(--line-height);
+  font-size: var(--font-size);
+}
+
+/* table */
+.document-tree_table {
+  display: table;
+  padding-left: calc(var(--level-padding) / 2);
+}
+
+.document-tree_table ul,
+.document-tree_table li {
+  display: contents;
+  position: relative;
+}
+
+.document-tree_row {
+  display: table-row;
+  padding-left: calc(var(--level-padding) / 2);
+  position: relative;
+}
+
+.document-tree_cell {
+  display: table-cell;
+  vertical-align: top;
+  position: relative;
+  padding-top: var(--cell-padding);
+  padding-bottom: var(--cell-padding);
+}
+
+/* content */
+
+.document-tree_folder {
+  position: relative;
+  display: inline-block;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.document-tree_folder::before {
+  content: "\25B0";
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+  text-align: center;
+  width: var(--line-height);
+  height: var(--line-height);
+  margin-left: calc(var(--line-height) * (-0.5));
+}
+
+.document-tree_file,
+.document-tree_file-name,
+.document-tree_file-link {
+  padding-right: var(--font-size);
+}
+
+.document-tree_file-link a {
+  font-size: calc(var(--font-size) * 0.75);
+  white-space: nowrap;
+}
+
+/* levels */
+
+.document-tree_level_1 .document-tree_cell:first-child,
+.document-tree_level_1 .level-branch {
+  padding-left: calc(var(--level-padding) * 1);
+}
+.document-tree_level_2 .document-tree_cell:first-child,
+.document-tree_level_2 .level-branch {
+  padding-left: calc(var(--level-padding) * 2);
+}
+.document-tree_level_3 .document-tree_cell:first-child,
+.document-tree_level_3 .level-branch {
+  padding-left: calc(var(--level-padding) * 3);
+}
+.document-tree_level_4 .document-tree_cell:first-child,
+.document-tree_level_4 .level-branch {
+  padding-left: calc(var(--level-padding) * 4);
+}
+.document-tree_level_5 .document-tree_cell:first-child,
+.document-tree_level_5 .level-branch {
+  padding-left: calc(var(--level-padding) * 5);
+}
+.document-tree_level_6 .document-tree_cell:first-child,
+.document-tree_level_6 .level-branch {
+  padding-left: calc(var(--level-padding) * 6);
+}
+.document-tree_level_7 .document-tree_cell:first-child,
+.document-tree_level_7 .level-branch {
+  padding-left: calc(var(--level-padding) * 7);
+}
+.document-tree_level_8 .document-tree_cell:first-child,
+.document-tree_level_8 .level-branch {
+  padding-left: calc(var(--level-padding) * 8);
+}
+.document-tree_level_9 .document-tree_cell:first-child,
+.document-tree_level_9 .level-branch {
+  padding-left: calc(var(--level-padding) * 9);
+}
+.document-tree_level_10 .document-tree_cell:first-child,
+.document-tree_level_10 .level-branch {
+  padding-left: calc(var(--level-padding) * 10);
+}
+
+.level-branch {
+  position: absolute;
+  left: auto;
+  left: 0;
+  bottom: 0;
+  top: calc(var(--half-sell-height)*(-1));
+  background-image: linear-gradient(90deg,
+                    var(--color-line) var(--level-line-width),
+                    transparent var(--level-line-width));
+  background-size: var(--level-padding) 100%;
+}
+
+.level-branch::after {
+  content: '';
+  position: absolute;
+  width: var(--level-padding);
+  top: calc(var(--half-sell-height)*2);
+  bottom: 0;
+  right: 0;
+  background-color: transparent;
+  border-top: var(--level-line-width) solid var(--color-line);
+}
+
+li li:last-child .level-branch::after {
+  background-color: var(--color-bg);
+}
+
+li:last-child li .level-branch::before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  bottom: 0;
+  left: 0;
+  right: calc(var(--level-padding));
+  background-color: var(--color-bg);
+}
+
+/* hover on row */
+
+.document-tree_row:hover .document-tree_cell,
+li:last-child .document-tree_row:hover .level-branch::after,
+li:last-child .document-tree_row:hover .level-branch::before {
+  background-color: var(--color-row-hover-bg);
+}

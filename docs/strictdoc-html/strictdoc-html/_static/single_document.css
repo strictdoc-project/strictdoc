@@ -1,0 +1,10 @@
+
+.requirement .comment p:first-child::before {
+  content: "Comment: ";
+  font-weight: bold;
+}
+
+.requirement .comment {
+  padding-left: 1em;
+  border-left: 4px double var(--comment-border-color);
+}

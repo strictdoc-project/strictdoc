@@ -26,9 +26,9 @@ section to get an idea of the overall project direction.
 Examples
 ========
 
-"Hello World" example:
+"Hello World" example of the text language:
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     NAME: StrictDoc
@@ -41,6 +41,10 @@ Examples
 For a more comprehensive example check the source file of this documentation
 itself which is written using StrictDoc:
 `strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc>`_.
+
+- `StrictDoc HTML export <https://strictdoc.readthedocs.io/en/latest/strictdoc-html>`_
+- `StrictDoc HTML export using Sphinx <https://strictdoc.readthedocs.io/en/latest>`_
+- `StrictDoc PDF export using Sphinx <https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_
 
 Getting started
 ===============
@@ -97,7 +101,16 @@ Export options
 HTML documentation tree by StrictDoc
 ------------------------------------
 
-TBD
+This is a default export option supported by StrictDoc.
+
+The following command creates an HTML export:
+
+.. code-block:: text
+
+    strictdoc export docs/ --output-dir output-html
+
+Example: This documentation is exported by StrictDoc to HTML:
+`StrictDoc HTML export <https://strictdoc.readthedocs.io/en/latest/strictdoc-html>`_.
 
 HTML export via Sphinx
 ----------------------

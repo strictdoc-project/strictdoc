@@ -37,6 +37,7 @@ class ExportAction:
             output_dir = os.path.join(self.cwd, output_dir)
 
         output_html_root = '{}/html'.format(output_dir)
+        output_rst_root = '{}/rst'.format(output_dir)
         output_html_static_files = '{}/_static'.format(output_html_root)
 
         Path(output_html_root).mkdir(parents=True, exist_ok=True)
@@ -55,13 +56,13 @@ class ExportAction:
             file.write(output)
 
         # Single Document pages (RST)
-        Path("output/rst").mkdir(parents=True, exist_ok=True)
+        Path(output_rst_root).mkdir(parents=True, exist_ok=True)
         for document in document_tree.document_list:
             document_content = SingleDocumentRSTExport.export(document_tree,
                                                               document,
                                                               traceability_index)
 
-            document_out_file = "output/rst/{}.rst".format(document.name)
+            document_out_file = "{}/{}.rst".format(output_rst_root, document.name)
             with open(document_out_file, 'w') as file:
                 file.write(document_content)
 

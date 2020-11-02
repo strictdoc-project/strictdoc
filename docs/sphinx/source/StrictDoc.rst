@@ -1,3 +1,6 @@
+StrictDoc
+$$$$$$$$$
+
 StrictDoc is software for writing technical requirements and specifications.
 
 Summary of StrictDoc features:
@@ -16,6 +19,9 @@ Summary of StrictDoc features:
   "parent-child", and from these connections, many useful features such as
   `Requirements Traceability <https://en.wikipedia.org/wiki/Requirements_traceability>`_
   and Documentation Coverage can be derived.
+
+**Warning:** The StrictDoc project is still under construction. See the Roadmap
+section to get an idea of the overall project direction.
 
 Examples
 ========
@@ -112,8 +118,8 @@ StrictDoc and Doorstop
 The StrictDoc project is a close successor of another project called
 `Doorstop <https://github.com/doorstop-dev/doorstop>`_.
 
-    "Doorstop is a requirements management tool that facilitates the storage of
-    textual requirements alongside source code in version control."
+    Doorstop is a requirements management tool that facilitates the storage of
+    textual requirements alongside source code in version control.
 
 The author of Doorstop has published a `paper about Doorstop <http://www.scirp.org/journal/PaperInformation.aspx?PaperID=44268#.UzYtfWRdXEZ>`_
 where the rationale behind text-based requirements management is provided.
@@ -170,13 +176,13 @@ TBD
 StrictDoc Requirements
 ======================
 
-Problems
---------
+Project goals
+-------------
 
-Technical documentation software
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Software for writing technical documentation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``[PROBLEM-1-TOOLS]``
+``[GOAL-1-TOOL]``
 
 There shall exist free and lightweight yet capable software for technical
 documentation.
@@ -185,52 +191,55 @@ documentation.
 requirements: using Excel for requirements management in the projects with
 hundreds or thousands of requirements.
 
-Technical documentation is hard
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Software support for writing documentation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``[PROBLEM-2-DOCUMENTATION-IS-HARD]``
+``[GOAL-2-SUPPORT]``
 
 Software shall support engineers in their work with documentation.
 
-**Comment:** Technical documentation can be an extremely laborious process.
+**Comment:** Technical documentation is hard, it can be an extremely laborious process.
 
-Technical documentation as a source of hazards
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Reduce documentation hazards
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``[PROBLEM-3-DOCUMENTATION-AS-HAZARD]``
+``[GOAL-3-REDUCE-DOCUMENTATION-HAZARDS]``
 
-There shall exist no (or less) opportunity for writing incorrect documentation.
+There shall exist no (or less) opportunity for writing incorrect or inconsistent
+documentation.
 
 **Comment:** Every serious engineering activity, such as safety engineering or systems
 engineering, starts with requirements. The more critical is a product the higher
 the importance of good documentation.
 
+Technical documentation can be and often becomes a source of hazards.
 It is recognized that many failures stem from inadequate requirements
 engineering. While it is not possible to fix the problem of inadequate
 requirements engineering in general, it is definitely possible to improve
 software that supports engineers in activities such as requirements engineering
 and writing technical documentation.
 
-Technical documentation easily becomes outdated
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Less run-away documentation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``[PROBLEM-4-OUTDATED-DOCUMENTATION]``
+``[GOAL-4-PREVENT-RUNAWAY-DOCUMENTATION]``
 
 Software shall support engineers in keeping documentation up-to-date.
 
-**Comment:** Many existing tools for documentation do not provide any measures for
-ensuring overall consistency of documents and documentation trees.
+**Comment:** Technical documentation easily becomes outdated. Many existing tools for
+documentation do not provide any measures for ensuring overall consistency of
+documents and documentation trees.
 
-Change management is difficult
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Change management
+~~~~~~~~~~~~~~~~~
 
-``[PROBLEM-5-CHANGE-MANAGEMENT]``
+``[GOAL-5-CHANGE-MANAGEMENT]``
 
 Software shall provide capabilities for change management and impact assessment.
 
-**Comment:** The bigger the project is, the harder it is to maintain its documentation.
-If a change is introduced to a project, it usually requires a full revision
-of its requirements TBD.
+**Comment:** Change management is difficult. The bigger the project is, the harder it is to
+maintain its documentation. If a change is introduced to a project, it usually
+requires a full revision of its requirements TBD.
 
 High-level requirements
 -----------------------
@@ -490,21 +499,8 @@ Roadmap
 In works
 --------
 
-PDF Export
-~~~~~~~~~~
-
-PDF Export: TOC sections: bottom alignment.
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Numbers do not align with titles.
-
 HTML Export
 ~~~~~~~~~~~
-
-RST support for text and code blocks
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-StrictDoc shall support rendering text/code blocks into RST syntax.
 
 Left panel: Table of contents
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -584,6 +580,11 @@ Tex Export
 ^^^^^^^^^^
 
 StrictDoc shall support exporting documents to Tex format.
+
+Doorstop Export
+^^^^^^^^^^^^^^^
+
+StrictDoc shall support import and exporting documents from/to Doorstop format.
 
 Markdown support for text and code blocks
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

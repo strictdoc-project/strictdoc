@@ -7,4 +7,5 @@
 *.venv
 dist
 output.zip
+*.sketch
 

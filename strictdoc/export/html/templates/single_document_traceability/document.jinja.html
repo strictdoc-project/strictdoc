@@ -33,8 +33,9 @@
 
   <div class="view-traceability" id="sections-and-requirements">
   {%- for section_or_requirement in document_iterator.all_content() %}
-    <div class="view-traceability_row">
     {%- if section_or_requirement.is_requirement %}
+      <div class="view-traceability_row">
+
       <div class="view-traceability_cell cell-parent">
         {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) %}
 
@@ -57,7 +58,11 @@
 
         {%- endfor %}
       </div>
+      </div>
+
     {%- elif section_or_requirement.is_section %}
+      <div class="view-traceability_row">
+
       <div class="view-traceability_cell cell-parent">
       </div>
       <div class="view-traceability_cell cell-central" id="{{ string_to_anchor_id(section_or_requirement.title) }}">
@@ -68,18 +73,25 @@
       </div>
       <div class="view-traceability_cell cell-children">
       </div>
-    {%- elif section_or_requirement.is_free_text %}
-      <div class="view-traceability_cell cell-parent">
+
       </div>
-      <div class="view-traceability_cell cell-central">
-        <div class="free_text">
-          {{ renderer.render_free_text(section_or_requirement) }}
+
+      <div class="view-traceability_row">
+
+      {%- for free_text in section.free_texts -%}
+        <div class="view-traceability_cell cell-parent">
         </div>
+        <div class="view-traceability_cell cell-central">
+          <div class="free_text">
+            {{ renderer.render_free_text(free_text) }}
+          </div>
+        </div>
+        <div class="view-traceability_cell cell-children">
+        </div>
+      {%- endfor -%}
       </div>
-      <div class="view-traceability_cell cell-children">
-      </div>
+
     {%- endif %}
-    </div>
   {%- endfor %}
   </div>
 

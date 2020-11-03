@@ -25,13 +25,12 @@ class SDWriter:
         output += document.name
         output += "\n"
 
+        for free_text in document.free_texts:
+            output += "\n"
+            output += self._print_free_text(free_text)
+
         closing_tags = []
         for content_node in document_iterator.all_content():
-            if isinstance(content_node, FreeText):
-                output += "\n"
-                output += self._print_free_text(content_node)
-                continue
-
             while len(closing_tags) > 0 and content_node.ng_level <= closing_tags[-1][1]:
                 closing_tag, level = closing_tags.pop()
                 output += self._print_closing_tag(closing_tag)
@@ -66,6 +65,9 @@ class SDWriter:
         output += "TITLE: "
         output += str(section.title)
         output += "\n"
+        for free_text in section.free_texts:
+            output += "\n"
+            output += self._print_free_text(free_text)
         return output
 
     def _print_requirement_fields(self, section_content):

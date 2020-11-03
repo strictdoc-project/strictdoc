@@ -33,14 +33,15 @@
     {%- endif %}
 
     <table class="view-table" id="sections-and-requirements">
+    {%- for free_text in document.free_texts -%}
+       <tr class="view-table_text">
+         <td colspan="4">
+           {{ renderer.render_free_text(free_text) }}
+         </td>
+       </tr>
+    {%- endfor -%}
     {%- for section_or_requirement in document_iterator.all_content() %}
-        {%- if section_or_requirement.is_free_text %}
-          <tr class="view-table_text">
-            <td colspan="4">
-              {{ renderer.render_free_text(section_or_requirement) }}
-            </td>
-          </tr>
-        {%- elif section_or_requirement.is_composite_requirement %}
+        {%- if section_or_requirement.is_composite_requirement %}
           <tr class="view-table_section-title" id="{{ string_to_anchor_id(section_or_requirement.title) }}">
             <td colspan="4">
               {%- set section = section_or_requirement %}
@@ -52,7 +53,7 @@
             </td>
           </tr>
           {%- if not loop.last -%}
-            {%- if not loop.nextitem.is_section and not loop.nextitem.is_free_text -%}
+            {%- if not loop.nextitem.is_section -%}
             <tr class="view-table_requirement-headers">
               {% include "single_document_table/table-fields.jinja.html" %}
             </tr>
@@ -77,13 +78,13 @@
             </td>
           </tr>
 
-          {%- if not loop.last -%}
-            {%- if not loop.nextitem.is_section and not loop.nextitem.is_free_text -%}
-            <tr class="view-table_requirement-headers">
-              {% include "single_document_table/table-fields.jinja.html" %}
-            </tr>
-            {%- endif -%}
-          {%- endif -%}
+          {%- for free_text in section_or_requirement.free_texts -%}
+             <tr class="view-table_text">
+               <td colspan="4">
+                 {{ renderer.render_free_text(free_text) }}
+               </td>
+             </tr>
+          {%- endfor %}
         {%- endif %}
     {%- endfor %}
     </table>

@@ -2,8 +2,9 @@ from strictdoc.core.document_meta import DocumentMeta
 
 
 class Document(object):
-    def __init__(self, name, section_contents=[]):
+    def __init__(self, name, free_texts, section_contents):
         self.name = name
+        self.free_texts = free_texts
         self.section_contents = section_contents
 
         self.ng_sections = []
@@ -41,10 +42,12 @@ class ReqComment(object):
 
 
 class Section(object):
-    def __init__(self, parent, level, title, section_contents):
+    def __init__(self, parent, level, title, free_texts, section_contents):
         self.parent = parent
         self.level = int(level)
         self.title = title
+
+        self.free_texts = free_texts
         self.section_contents = section_contents
 
         self.ng_level = self.level
@@ -210,10 +213,6 @@ class FreeText:
     @property
     def is_section(self):
         return False
-
-    @property
-    def is_free_text(self):
-        return True
 
     def text_as_paragraphs(self):
         return self.text.split('\n\n')

@@ -29,11 +29,8 @@ STRICTDOC_GRAMMAR = RubyTemplate("""
 Document[noskipws]:
   '[DOCUMENT]' '\n'
   'NAME: ' name = /.*$/ '\n'
+  free_texts *= SpaceThenFreeText
   section_contents *= SectionOrRequirement
-;
-
-SectionOrRequirement[noskipws]:
-  '\n' (Section | Requirement | CompositeRequirement | FreeText)
 ;
 
 Section[noskipws]:
@@ -41,14 +38,23 @@ Section[noskipws]:
   '\n'
   'LEVEL: ' level = /[1-6]/ '\n'
   'TITLE: ' title = /.*$/ '\n'
+  free_texts *= SpaceThenFreeText
   section_contents *= SectionOrRequirement
   '\n'
   '[/SECTION]'
   '\n'
 ;
 
+SectionOrRequirement[noskipws]:
+  '\n' (Section | Requirement | CompositeRequirement)
+;
+
 SpaceThenRequirement[noskipws]:
   '\n' (Requirement | CompositeRequirement)
+;
+
+SpaceThenFreeText[noskipws]:
+  '\n' (FreeText)
 ;
 
 Requirement[noskipws]:

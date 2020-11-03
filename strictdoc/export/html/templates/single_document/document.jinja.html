@@ -34,26 +34,22 @@
   {%- endif -%}
 
 {%- for section_or_requirement in document_iterator.all_content() %}
+<section id="{{ string_to_anchor_id(section_or_requirement.title) }}">
   {%- if section_or_requirement.is_requirement %}
     {%- set requirement = section_or_requirement %}
-  <section id="{{ string_to_anchor_id(section_or_requirement.title) }}">
     {% include "single_document/requirement.jinja.html" %}
-  </section>
   {%- elif section_or_requirement.is_section %}
-  <section id="{{ string_to_anchor_id(section_or_requirement.title) }}">
-    <div class="section">
       {%- set section = section_or_requirement %}
       <h{{ section.ng_level }} class="section-title" data-level="{{ section.export_title }}">
         {{ section.title }}
       </h{{ section.ng_level }}>
-    </div>  <!-- .section -->
     {%- for free_text in section_or_requirement.free_texts %}
       <div class="free_text">
       {{ renderer.render_free_text(free_text) }}
       </div>
     {%- endfor -%}
-  </section>
   {%- endif %}
+</section>
 {%- endfor %}
 
   </article>

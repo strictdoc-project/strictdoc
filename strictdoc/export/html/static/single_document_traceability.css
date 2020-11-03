@@ -26,7 +26,6 @@
 
 .cell-parent,
 .cell-children {
-  background-color: #fff;
   flex-flow: column nowrap;
 }
 

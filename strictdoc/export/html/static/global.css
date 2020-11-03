@@ -218,6 +218,10 @@ dl.requirement-meta {
 
 /* requirement_card elements */
 
+.section-title:only-child {
+  margin: 0;
+}
+
 .section-title[data-level]::before {
   content: attr(data-level) " ";
 }

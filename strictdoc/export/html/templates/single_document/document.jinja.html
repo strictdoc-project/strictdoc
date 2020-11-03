@@ -21,6 +21,7 @@
 
 <main class="content">
   <h1 class="document-title">{{document.name}}</h1>
+  <article class="view-article">
 
 {%- for section_or_requirement in document_iterator.all_content() %}
   {%- if section_or_requirement.is_requirement %}
@@ -49,6 +50,7 @@
   {%- endif %}
 {%- endfor %}
 
+  </article>
 </main>
 
 </div>

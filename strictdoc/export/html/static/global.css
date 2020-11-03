@@ -41,6 +41,10 @@ div.document {
   --traceability-inner-row-gap: .5rem;
 }
 
+body {
+  background-color: var(--color-bg-mac);
+}
+
 cite {
   position: relative;
   color: var(--color-text-lighter);
@@ -110,7 +114,7 @@ h3.section-title,
 h4.section-title,
 h5.section-title,
 h6.section-title {
-  margin: 2rem 0 0.75rem;
+  margin: 0 0 0.75rem;
   line-height: 1.4;
   color: var(--color-accent-dark);
 }
@@ -203,7 +207,8 @@ dl.requirement-meta {
   padding: .5em 0.75em;
   border: 1px solid var(--color-table-border);
   background-color: #fff;
-  background-color: rgba(0,0,0,0.01);
+  /* background-color: rgba(0,0,0,0.01); */
+  background-color: rgb(255 255 255 / 40%);
   position: relative;
 }
 

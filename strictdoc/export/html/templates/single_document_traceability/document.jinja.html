@@ -44,7 +44,7 @@
       </div>
 
       {%- set requirement = section_or_requirement %}
-      <div class="view-traceability_cell cell-central" id="{{ requirement.uid }}">
+      <div class="view-traceability_cell cell-central" id="{{ string_to_anchor_id(section_or_requirement.title) }}">
 
           {% include "_shared/requirement_card.jinja.html" %}
 
@@ -60,7 +60,7 @@
     {%- elif section_or_requirement.is_section %}
       <div class="view-traceability_cell cell-parent">
       </div>
-      <div class="view-traceability_cell cell-central">
+      <div class="view-traceability_cell cell-central" id="{{ string_to_anchor_id(section_or_requirement.title) }}">
         {%- set section = section_or_requirement %}
         <h{{ section.ng_level }} class="section-title" data-level="{{ section.export_title }}">
           {{ section.title }}

@@ -680,18 +680,22 @@ STATEMENT: StrictDoc shall support exporting documents to Excel format.
 
 [REQUIREMENT]
 TITLE: PlantUML Export
-STATEMENT: StrictDoc shall support exporting documents to ReqIF format.
+STATEMENT: StrictDoc shall support exporting documents to PlantUML format.
 
 [REQUIREMENT]
 TITLE: ReqIF Import/Export
 STATEMENT: StrictDoc shall support ReqIF format.
 
 [REQUIREMENT]
+TITLE: Confluence Import/Export
+STATEMENT: StrictDoc shall support importing/exporting documents from/to Confluence HTML storage format.
+
+[REQUIREMENT]
 TITLE: Tex Export
 STATEMENT: StrictDoc shall support exporting documents to Tex format.
 
 [REQUIREMENT]
-TITLE: Doorstop Export
+TITLE: Doorstop Import/Export
 STATEMENT: StrictDoc shall support import and exporting documents from/to Doorstop format.
 
 [REQUIREMENT]

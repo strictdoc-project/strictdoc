@@ -25,12 +25,13 @@
 {%- for section_or_requirement in document_iterator.all_content() %}
   {%- if section_or_requirement.is_requirement %}
     {%- set requirement = section_or_requirement %}
+  <section id="{{ string_to_anchor_id(section_or_requirement.title) }}">
     {% include "single_document/requirement.jinja.html" %}
+  </section>
   {%- elif section_or_requirement.is_section %}
+  <section id="{{ string_to_anchor_id(section_or_requirement.title) }}">
     <div class="section">
       {%- set section = section_or_requirement %}
-      <span id="{{ string_to_anchor_id(section_or_requirement.title) }}"></span>
-
       <h{{ section.ng_level }} class="section-title" data-level="{{ section.export_title }}">
         {{ section.title }}
       </h{{ section.ng_level }}>
@@ -42,6 +43,7 @@
     {%- if freetext.ng_level > 1 -%}
       {%- if loop.last or not loop.nextitem.is_free_text -%}
         </div>  <!-- .section -->
+      </section>
       {%- endif %}
     {%- endif %}
   {%- endif %}

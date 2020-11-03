@@ -3,7 +3,6 @@
 data-status='{{ requirement.status.lower() }}'
   {%- endif %}
 >
-  <span id="{{ string_to_anchor_id(requirement.title) }}"></span>
 
   {%- if requirement.title -%}
     <h{{ requirement.ng_level }} class="section-title" data-level="{{ requirement.export_title }}">

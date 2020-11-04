@@ -10,7 +10,8 @@
   /* overflow: hidden; */
   /* table-layout: fixed; */
   background-color: #fff;
-  outline: 1rem solid #fff;
+  /* outline: 1rem solid #fff; */
+  padding: 1rem;
 }
 
 .view-table tr,
@@ -67,7 +68,11 @@
   margin-top: 0;
 }
 
-.view-table pre.code {
+.view-table .requirement_section *:last-child {
+  margin-bottom: 0;
+}
+
+/* .view-table pre.code {
   width: 200px;
   margin: 0;
   font-size: 0.75em;
@@ -91,4 +96,4 @@
   .view-table pre.code {
     width: 500px;
   }
-}
+} */

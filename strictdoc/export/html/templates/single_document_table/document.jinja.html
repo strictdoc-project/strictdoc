@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/global.css" />
   <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/layout-main-with-toc.css" />
-  <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/single_document_table.css" />
+  <!-- <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/single_document_table.css" /> -->
   <script type="text/javascript" src="{{document.meta.get_root_path_prefix()}}/_static/toc.js"></script>
   <title>{{document.name}} - Table</title>
 </head>
@@ -46,43 +46,33 @@
 
 
     {%- for section_or_requirement in document_iterator.all_content() %}
-        <!-- 1 is_composite_requirement -->
         {%- if section_or_requirement.is_composite_requirement %}
-          <section id="{{ string_to_anchor_id(section_or_requirement.title) }}">
+
+          <section class="view-table_composite" id="{{ string_to_anchor_id(section_or_requirement.title) }}">
             {%- set section = section_or_requirement %}
             <h{{ section.ng_level }} class="section-title" data-level="{{ section.export_title }}">
               {{ section.title }}
             </h{{ section.ng_level }}>
-          <!-- </section> -->
-          {%- if not loop.last -%}
-            {%- if not loop.nextitem.is_section -%}
-            <!-- <div class="view-table_requirement-headers">
-              {% include "single_document_table/table-fields.jinja.html" %}
-            </div> -->
-            <div>HHHHHHHHHHHHHHHHHHHHHHHHHHHHHH</div>
-            {%- endif -%}
-          {%- endif -%}
 
           {%- set requirement = section_or_requirement %}
           {% with requirement_view_type='table' -%}
             {% include "_shared/requirement.jinja.html" %}
           {%- endwith %}
 
-          {%- if loop.nextitem.is_section -%}
-            </section>
-            <div>eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee</div>
-          {%- endif -%}
-        <!-- 1 is_requirement -->
+        </section>
+
         {%- elif section_or_requirement.is_requirement %}
 
+        <section class="view-table_requirement" id="{{ string_to_anchor_id(section_or_requirement.title) }}">
           {%- set requirement = section_or_requirement %}
           {% with requirement_view_type='table' -%}
             {% include "_shared/requirement.jinja.html" %}
           {%- endwith %}
+        </section>
 
-        <!-- 1 is_section -->
         {%- elif section_or_requirement.is_section %}
-        <section id="{{ string_to_anchor_id(section_or_requirement.title) }}">
+
+        <section class="view-table_section" id="{{ string_to_anchor_id(section_or_requirement.title) }}">
           {%- set section = section_or_requirement %}
           <h{{ section.ng_level }} class="section-title" data-level="{{ section.export_title }}">
             {{ section.title }}
@@ -94,7 +84,7 @@
           {%- endfor -%}
         </section>
         {%- endif %}
-        <!-- 1 endif -->
+
     {%- endfor %}
     </article>
 

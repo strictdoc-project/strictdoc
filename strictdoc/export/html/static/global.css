@@ -201,65 +201,12 @@ dl.requirement-meta {
   background: #fff;
 }
 
-/* requirement_card */
-
-.requirement_card {
-  padding: .5em 0.75em;
-  border: 1px solid var(--color-table-border);
-  background-color: #fff;
-  /* background-color: rgba(0,0,0,0.01); */
-  background-color: rgb(255 255 255 / 40%);
-  position: relative;
-}
-
-.requirement_card + .requirement_card {
-  margin-top: var(--traceability-inner-row-gap);
-}
-
-/* requirement_card elements */
-
 .section-title:only-child {
   margin: 0;
 }
 
 .section-title[data-level]::before {
   content: attr(data-level) " ";
-}
-
-.requirement_card .section-title {
-  font-size: 1.1em;
-  margin: 0 0 0.5rem;
-  line-height: 1.2;
-}
-
-.requirement_card h1 { font-size: 1.4em; }
-
-.requirement_card .comment p:first-child::before {
-  content: "Comment: ";
-  font-weight: bold;
-}
-
-/* arrows */
-
-.requirement_card::before,
-.requirement_card::after {
-  content: '\2192';
-  position: absolute;
-  top: .5rem;
-  display: block;
-  width: var(--traceability-arrow);
-  line-height: var(--traceability-arrow);
-  font-size: calc(var(--traceability-arrow) * 1);
-  text-align: center;
-  color: var(--color-accent-dark);
-}
-
-.requirement_card::after {
-  right: calc(var(--traceability-arrow) *(-1) - 1px);
-}
-
-.requirement_card::before {
-  left: calc(var(--traceability-arrow) *(-1) - 1px);
 }
 
 /* pre.code */

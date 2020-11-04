@@ -8,7 +8,7 @@ class RubyTemplate(string.Template):
 
 
 REQUIREMENT_FIELDS = """
-  ('UID: ' uid = /.*$/ '\n')? 
+  ('UID: ' uid = /.+$/ '\n')? 
 
   ('STATUS: ' status = RequirementStatus '\n')?
 

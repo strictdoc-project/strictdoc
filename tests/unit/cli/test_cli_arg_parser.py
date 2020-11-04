@@ -14,6 +14,7 @@ def test_export_01_minimal():
 
     assert args._get_kwargs() == [('command', 'export'),
                                   ('input_paths', ['docs']),
+                                  ('no_parallelization', False),
                                   ('output_dir', None)]
 
 
@@ -27,8 +28,21 @@ def test_export_02_output_dir():
 
     assert args._get_kwargs() == [('command', 'export'),
                                   ('input_paths', ['docs']),
+                                  ('no_parallelization', False),
                                   ('output_dir', 'custom-output-dir')]
 
+def test_export_03_parallelization():
+    parser = cli_args_parser()
+
+    args = parser.parse_args(['export', 'docs', '--no-parallelization'])
+
+    assert args.command == 'export'
+    assert args.input_paths == ['docs']
+
+    assert args._get_kwargs() == [('command', 'export'),
+                                  ('input_paths', ['docs']),
+                                  ('no_parallelization', True),
+                                  ('output_dir', None)]
 
 def test_passthrough_01_minimal():
     parser = cli_args_parser()

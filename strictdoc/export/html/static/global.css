@@ -219,6 +219,30 @@ dl.requirement-meta {
   padding: 10px 10px 10px 15px;
 }
 
+/* view-article */
+
+.view-article {
+  max-width: 800px;
+  /* display: flex;
+  flex-direction: column; */
+}
+
+.view-article > section {
+  padding: 1.5rem;
+  background-color: #fff;
+  margin-bottom: 1rem;
+}
+
+.requirement_block .comment p:first-child::before {
+  content: "Comment: ";
+  font-weight: bold;
+}
+
+.requirement_block .comment {
+  padding-left: 1em;
+  border-left: 4px double var(--comment-border-color);
+}
+
 /* .view-table */
 
 .view-table {

@@ -239,13 +239,6 @@ dl.requirement-meta {
   font-weight: bold;
 }
 
-.requirement_card pre.code {
-  font-size: 0.75em;
-  line-height: 1.2;
-  margin: 10px 0;
-  padding: 10px 10px 10px 15px;
-}
-
 /* arrows */
 
 .requirement_card::before,
@@ -269,8 +262,110 @@ dl.requirement-meta {
   left: calc(var(--traceability-arrow) *(-1) - 1px);
 }
 
-/* table */
+/* pre.code */
+
+.requirement_table pre.code,
+.requirement_card pre.code {
+  font-size: 0.75em;
+  line-height: 1.2;
+  margin: 10px 0;
+  padding: 10px 10px 10px 15px;
+}
+
+/* .view-table */
+
+.view-table {
+  width: 100%;
+  min-width: 800px;
+  box-sizing: border-box;
+  background-color: #fff;
+  padding: 1rem;
+}
+
+.view-table .free_text {
+  max-width: 800px;
+}
+
+.view-table .view-table_section {
+  margin: 2rem 0;
+}
+.view-table .view-table_composite {
+  margin-top: 2rem;
+}
+/* .view-table .view-table_requirement {} */
+
+/* requirement_table */
 
 .requirement_table {
-  border: 1px solid green;
+  display: flex;
+  justify-content: center;
+}
+
+.requirement_table .requirement_section {
+  width: 33%;
+  padding: .75rem;
+  border-right: 1px solid var(--color-table-border);
+  border-bottom: 1px solid var(--color-table-border);
+  position: relative;
+}
+
+.requirement_table .requirement_section:first-child {
+  border-left: 1px solid var(--color-table-border);
+}
+
+.requirement_table .section-title {
+  color: var(--color-text-lighter);
+  font-weight: bold;
+  font-size: 1rem;
+  margin: 0 0 1rem;
+  line-height: 1.2;
+}
+
+.requirement_table .section-title::before {
+  color: var(--color-accent-dark);
+  margin-right: .5rem;
+}
+
+section.view-table_composite .requirement_table,
+.view-table_section + .view-table_requirement .requirement_table {
+  margin-top: 3rem;
+}
+
+section.view-table_composite .requirement_section[data-role]::before,
+.view-table_section + .view-table_requirement .requirement_section[data-role]::before {
+  content: attr(data-role) " ";
+  position: absolute;
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  padding: 0 .75rem;
+  background-color: var(--color-table-header-bg);
+  color: var(--color-table-header);
+  left: -1px;
+  right: -1px;
+  bottom: 100%;
+  height: 2.5rem;
+  border: 1px solid var(--color-table-border);
+  box-sizing: border-box;
+  text-transform: capitalize;
+  font-weight: bold;
+}
+
+.requirement_table .requirement-meta {
+  width: 100%;
+}
+.requirement_table .requirement-meta dt {
+  width: 1%;
+}
+
+.view-table .requirement-statement {
+  margin: 0px;
+}
+
+.view-table .requirement-statement p:first-child {
+  margin-top: 0;
+}
+
+.view-table .requirement_section *:last-child {
+  margin-bottom: 0;
 }

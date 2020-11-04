@@ -3,6 +3,8 @@
 data-status='{{ requirement.status.lower() }}'
 {%- endif %}>
 
+<div class="requirement_section" data-role='meta'>
+
   {%- if requirement.title %}
     <h{{ requirement.ng_level }} class="section-title" data-level="{{ requirement.export_title }}">
       {{ requirement.title }}
@@ -27,6 +29,9 @@ data-status='{{ requirement.status.lower() }}'
     </dl>
   {%- endif %}
 
+  </div>
+  <div class="requirement_section" data-role='statement'>
+
   {%- if requirement.statement or requirement.statement_multiline -%}
     <div class="requirement-statement">
       {{ renderer.render_requirement_statement(requirement) }}
@@ -39,6 +44,9 @@ data-status='{{ requirement.status.lower() }}'
     </p></div>
   {%- endif %}
 
+  </div>
+  <div class="requirement_section" data-role='comment'>
+
   {%- if requirement.comments %}
     {%- for comment in requirement.comments %}
       <div class="comment">
@@ -46,6 +54,8 @@ data-status='{{ requirement.status.lower() }}'
       </div>
     {%- endfor %}
   {%- endif %}
+
+  </div>
 
 <!-- TODO: remove when certain with tags comes -->
 <!--

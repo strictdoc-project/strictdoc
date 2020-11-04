@@ -1,7 +1,9 @@
 <ul class="recursive_row">
   <li class="recursive_column">
     <div class="recursive_cell">
+      {% with requirement_view_type='block' -%}
       {% include "_shared/requirement.jinja.html" %}
+      {%- endwith %}
     </div>
   </li>
 

@@ -45,11 +45,9 @@
 
         {%- set requirement = section_or_requirement %}
         <div class="view-traceability-deep_column" data-requirement-role="current">
-
             {% with requirement_view_type='card' -%}
               {% include "_shared/requirement.jinja.html" %}
             {%- endwith %}
-
         </div>
 
         <div class="view-traceability-deep_column" data-requirement-role="children">

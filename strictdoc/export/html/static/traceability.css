@@ -1,4 +1,4 @@
-/* .view-traceability {} */
+/* .view-traceability */
 
 .view-traceability {
   display: flex;
@@ -17,17 +17,54 @@
   overflow: hidden;
 }
 
-[data-requirement-role="parents"] {
-  padding-right: var(--traceability-arrow);
-}
-
-[data-requirement-role="children"] {
-  padding-left: var(--traceability-arrow);
-}
-
 .view-traceability .requirement {
   min-width: var(--primary-requirement-card-width);
 }
+
+/* arrows paddings */
+
+.view-traceability [data-requirement-role="parents"] {
+  padding-right: var(--traceability-arrow);
+}
+
+.view-traceability [data-requirement-role="children"] {
+  padding-left: var(--traceability-arrow);
+}
+
+/* .view-traceability-deep */
+
+.view-traceability-deep {
+  display: table;
+  height: 100%;
+}
+
+.view-traceability-deep_row {
+  display: table-row;
+}
+
+.view-traceability-deep_column {
+  display: table-cell;
+  padding-bottom: var(--traceability-outer-row-gap);
+  /* needed for vertical stretching: */
+  height: 100%;
+  vertical-align: top;
+}
+
+.view-traceability-deep .requirement {
+  height: 100%;
+}
+
+.requirement-container {
+  width: var(--primary-requirement-card-width);
+  /* needed for vertical stretching: */
+  height: 100%;
+  display: inline-block;
+  vertical-align: top;
+  /* hides arrows: */
+  overflow: hidden;
+}
+
+
 
 /* RECURIVE */
 
@@ -70,12 +107,12 @@
 
 [data-requirement-role="children"] .recursive_cell {
   /* shows an arrow on the left side: */
-  padding-right: var(--traceability-arrow);
+  padding-left: var(--traceability-arrow);
 }
 
 [data-requirement-role="parents"] .recursive_cell {
   /* shows an arrow on the right side: */
-  padding-left: var(--traceability-arrow);
+  padding-right: var(--traceability-arrow);
 }
 
 /* Requirement */

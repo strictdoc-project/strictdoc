@@ -39,7 +39,9 @@
       <div class="view-traceability_cell cell-parent">
         {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) %}
 
-            {% include "_shared/requirement_card.jinja.html" %}
+          {% with requirement_view_type='card' -%}
+            {% include "_shared/requirement.jinja.html" %}
+          {%- endwith %}
 
         {%- endfor %}
       </div>
@@ -47,14 +49,18 @@
       {%- set requirement = section_or_requirement %}
       <div class="view-traceability_cell cell-central" id="{{ string_to_anchor_id(section_or_requirement.title) }}">
 
-          {% include "_shared/requirement_card.jinja.html" %}
+        {% with requirement_view_type='card' -%}
+          {% include "_shared/requirement.jinja.html" %}
+        {%- endwith %}
 
       </div>
 
       <div class="view-traceability_cell cell-children">
         {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) %}
 
-            {% include "_shared/requirement_card.jinja.html" %}
+          {% with requirement_view_type='card' -%}
+            {% include "_shared/requirement.jinja.html" %}
+          {%- endwith %}
 
         {%- endfor %}
       </div>

@@ -47,7 +47,9 @@
         {%- set requirement = section_or_requirement %}
         <div class="view-traceability-deep_column-main">
           <div class="requirement-container" id="{{ string_to_anchor_id(section_or_requirement.title) }}">
-            {% include "_shared/requirement_card.jinja.html" %}
+            {% with requirement_view_type='card' -%}
+              {% include "_shared/requirement.jinja.html" %}
+            {%- endwith %}
           </div>
         </div> <!-- //view-traceability-deep_column-main -->
 

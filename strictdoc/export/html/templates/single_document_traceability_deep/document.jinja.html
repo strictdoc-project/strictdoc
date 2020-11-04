@@ -40,7 +40,7 @@
 
         <div class="view-traceability-deep_column" data-requirement-role="parents">
           {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) %}
-            {% include "single_document_traceability_deep/recursive_cell_left.jinja.html" %}
+            {% include "single_document_traceability_deep/recursive_cell_parent.jinja.html" %}
           {%- endfor %}
         </div> <!-- //view-traceability-deep_column-left -->
 
@@ -55,7 +55,7 @@
 
         <div class="view-traceability-deep_column" data-requirement-role="children">
           {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) %}
-            {% include "single_document_traceability_deep/recursive_cell_right.jinja.html" %}
+            {% include "single_document_traceability_deep/recursive_cell_children.jinja.html" %}
           {%- endfor %}
         </div> <!-- //view-traceability-deep_column-right -->
 

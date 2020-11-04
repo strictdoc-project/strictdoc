@@ -5,7 +5,11 @@
 <td class="cell-uid">
   <div>
     {%- if requirement.uid %}
-      <small><a href="{{ traceability_index.get_link(requirement) }}">{{ requirement.uid }}</a></small>
+      <small>
+        <!-- <a href="{{ traceability_index.get_link(requirement) }}"> -->
+          {{ requirement.uid }}
+        <!-- </a> -->
+      </small>
     {%- endif %}
   </div>
 </td>

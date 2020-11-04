@@ -32,62 +32,71 @@
       </div>
     {%- endif %}
 
-    <table class="view-table" id="sections-and-requirements">
-    {%- for free_text in document.free_texts -%}
-       <tr class="view-table_text">
-         <td colspan="4">
-           {{ renderer.render_free_text(free_text) }}
-         </td>
-       </tr>
-    {%- endfor -%}
+    <article class="view-table" id="sections-and-requirements">
+
+      {%- if document.free_texts -%}
+        <section>
+        {%- for free_text in document.free_texts -%}
+          <div class="free_text">
+            {{ renderer.render_free_text(free_text) }}
+          </div>
+        {%- endfor -%}
+        </section>
+      {%- endif -%}
+
+
     {%- for section_or_requirement in document_iterator.all_content() %}
+        <!-- 1 is_composite_requirement -->
         {%- if section_or_requirement.is_composite_requirement %}
-          <tr class="view-table_section-title" id="{{ string_to_anchor_id(section_or_requirement.title) }}">
-            <td colspan="4">
-              {%- set section = section_or_requirement %}
-
-              <h{{ section.ng_level }} class="section-title" data-level="{{ section.export_title }}">
-                {{ section.title }}
-              </h{{ section.ng_level }}>
-
-            </td>
-          </tr>
+          <section id="{{ string_to_anchor_id(section_or_requirement.title) }}">
+            {%- set section = section_or_requirement %}
+            <h{{ section.ng_level }} class="section-title" data-level="{{ section.export_title }}">
+              {{ section.title }}
+            </h{{ section.ng_level }}>
+          <!-- </section> -->
           {%- if not loop.last -%}
             {%- if not loop.nextitem.is_section -%}
-            <tr class="view-table_requirement-headers">
+            <!-- <div class="view-table_requirement-headers">
               {% include "single_document_table/table-fields.jinja.html" %}
-            </tr>
+            </div> -->
+            <div>HHHHHHHHHHHHHHHHHHHHHHHHHHHHHH</div>
             {%- endif -%}
           {%- endif -%}
-          <tr class="view-table_requirement" id="{{ string_to_anchor_id(section_or_requirement.title) }}">
-            {%- set requirement = section_or_requirement %}
-            {% include "single_document_table/requirement.jinja.html" %}
-          </tr>
-        {%- elif section_or_requirement.is_requirement %}
-          <tr class="view-table_requirement" id="{{ string_to_anchor_id(section_or_requirement.title) }}">
-            {%- set requirement = section_or_requirement %}
-            {% include "single_document_table/requirement.jinja.html" %}
-          </tr>
-        {%- elif section_or_requirement.is_section %}
-          <tr class="view-table_section-title" id="{{ string_to_anchor_id(section_or_requirement.title) }}">
-            <td colspan="4">
-              {%- set section = section_or_requirement %}
-              <h{{ section.ng_level }} class="section-title" data-level="{{ section.export_title }}">
-                {{ section.title }}
-              </h{{ section.ng_level }}>
-            </td>
-          </tr>
 
-          {%- for free_text in section_or_requirement.free_texts -%}
-             <tr class="view-table_text">
-               <td colspan="4">
-                 {{ renderer.render_free_text(free_text) }}
-               </td>
-             </tr>
-          {%- endfor %}
+          {%- set requirement = section_or_requirement %}
+          {% with requirement_view_type='table' -%}
+            {% include "_shared/requirement.jinja.html" %}
+          {%- endwith %}
+
+          {%- if loop.nextitem.is_section -%}
+            </section>
+            <div>eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee</div>
+          {%- endif -%}
+        <!-- 1 is_requirement -->
+        {%- elif section_or_requirement.is_requirement %}
+
+          {%- set requirement = section_or_requirement %}
+          {% with requirement_view_type='table' -%}
+            {% include "_shared/requirement.jinja.html" %}
+          {%- endwith %}
+
+        <!-- 1 is_section -->
+        {%- elif section_or_requirement.is_section %}
+        <section id="{{ string_to_anchor_id(section_or_requirement.title) }}">
+          {%- set section = section_or_requirement %}
+          <h{{ section.ng_level }} class="section-title" data-level="{{ section.export_title }}">
+            {{ section.title }}
+          </h{{ section.ng_level }}>
+          {%- for free_text in section_or_requirement.free_texts %}
+            <div class="free_text">
+            {{ renderer.render_free_text(free_text) }}
+            </div>
+          {%- endfor -%}
+        </section>
         {%- endif %}
+        <!-- 1 endif -->
     {%- endfor %}
-    </table>
+    </article>
 
   </main>
 

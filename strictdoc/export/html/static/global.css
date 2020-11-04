@@ -268,3 +268,9 @@ dl.requirement-meta {
 .requirement_card::before {
   left: calc(var(--traceability-arrow) *(-1) - 1px);
 }
+
+/* table */
+
+.requirement_table {
+  border: 1px solid green;
+}

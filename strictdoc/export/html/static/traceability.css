@@ -1,39 +1,32 @@
-/* .traceability {} */
+/* .view-traceability {} */
 
-.traceability {
-  display: table;
-  height: 100%;
-  width: 100%;
+.view-traceability {
+  display: flex;
+  flex-flow: column nowrap;
 }
 
-.traceability_row {
-  display: table-row;
-  width: 100%;
+.view-traceability_row {
+  display: flex;
+  flex-flow: row nowrap;
 }
 
-.traceability_column {
-  display: table-cell;
-  padding-bottom: var(--traceability-outer-row-gap);
-
-  /* needed for vertical stretching: */
-  height: 100%;
-  vertical-align: top;
-
-  /* ****** */
+.view-traceability_column {
   width: 33%;
+  min-width: calc(var(--primary-requirement-card-width) + var(--traceability-arrow));
+  padding: calc(var(--traceability-outer-row-gap)*0.5) 0;
+  overflow: hidden;
 }
 
-.requirement-container {
-  /* width: var(--primary-requirement-card-width); */
-  width: 100%;
+[data-requirement-role="parents"] {
+  padding-right: var(--traceability-arrow);
+}
 
-  /* needed for vertical stretching: */
-  height: 100%;
-  display: inline-block;
-  vertical-align: top;
+[data-requirement-role="children"] {
+  padding-left: var(--traceability-arrow);
+}
 
-  /* hides arrows: */
-  overflow: hidden;
+.view-traceability .requirement {
+  min-width: var(--primary-requirement-card-width);
 }
 
 /* RECURIVE */
@@ -63,7 +56,7 @@
   overflow: hidden;
 }
 
-.traceability_column[data-requirement-role="parents"] .recursive_row {
+[data-requirement-role="parents"] .recursive_row {
   /* parents are shown in reverse order: */
   flex-direction: row-reverse;
 }
@@ -75,28 +68,25 @@
   overflow: hidden;
 }
 
-.traceability_column[data-requirement-role="children"] .recursive_cell {
+[data-requirement-role="children"] .recursive_cell {
   /* shows an arrow on the left side: */
-  padding-left: var(--traceability-arrow);
+  padding-right: var(--traceability-arrow);
 }
 
-.traceability_column[data-requirement-role="parents"] .recursive_cell {
+[data-requirement-role="parents"] .recursive_cell {
   /* shows an arrow on the right side: */
-  padding-right: var(--traceability-arrow);
+  padding-left: var(--traceability-arrow);
 }
 
 /* Requirement */
 
-.traceability .requirement {
+[data-requirement-role="current"] .requirement {
+  border: 1px solid #000;
+  background-color: #fff;
   height: 100%;
 }
 
-.traceability_column[data-requirement-role="current"] .requirement {
-  border: 1px solid #000;
-  background-color: #fff;
-}
-
-.traceability .free_text {
+.view-traceability .free_text {
   font-size: .9em;
   padding: .5em 0.75em;
   border: 1px dashed var(--color-table-border);
@@ -104,7 +94,7 @@
   position: relative;
 }
 
-.traceability .section-title:only-child {
+.view-traceability .section-title:only-child {
   font-size: 1.6em;
   background-color: #fff;
   position: relative;

@@ -3,6 +3,18 @@ import sys
 
 STRICTDOC_ROOT_PATH = os.path.join(os.path.dirname(__file__), "..", "..")
 sys.path.append(STRICTDOC_ROOT_PATH)
+from strictdoc.helpers.parallelizer import Parallelizer
+
+# Initializing the parallelizer early in the startup process because otherwise
+# fork() used by Python's multiprocessing library results in the following error:
+#
+# """
+# objc[7522]: +[__NSPlaceholderDictionary initialize] may have been in progress
+# in another thread when fork() was called. We cannot safely call it or ignore
+# it in the fork() child process. Crashing instead. Set a breakpoint on
+# objc_initializeAfterForkError to debug.
+# """
+PARALLELIZER = Parallelizer()
 
 from strictdoc.cli.cli_arg_parser import cli_args_parser
 from strictdoc.core.actions.export_action import ExportAction
@@ -32,7 +44,7 @@ def main():
         passthrough_action.passthrough(input_file, output_file)
 
     elif args.command == 'export':
-        export_controller = ExportAction(STRICTDOC_ROOT_PATH)
+        export_controller = ExportAction(STRICTDOC_ROOT_PATH, PARALLELIZER)
         export_controller.export(args.input_paths, args.output_dir)
 
     else:

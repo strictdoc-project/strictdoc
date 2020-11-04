@@ -1,0 +1,90 @@
+/* MAIN */
+
+.view-traceability-deep {
+  display: table;
+  height: 100%;
+}
+
+.view-traceability-deep_row {
+  display: table-row;
+}
+
+.view-traceability-deep_column-right,
+.view-traceability-deep_column-left,
+.view-traceability-deep_column-main {
+  display: table-cell;
+  padding-bottom: var(--traceability-outer-row-gap);
+  /* needed for vertical stretching: */
+  height: 100%;
+  vertical-align: top;
+}
+
+.requirement-container {
+  width: var(--primary-requirement-card-width);
+  /* needed for vertical stretching: */
+  height: 100%;
+  display: inline-block;
+  vertical-align: top;
+  /* hides arrows: */
+  overflow: hidden;
+}
+
+/* RECURIVE */
+
+.recursive_row,   /* ul */
+.recursive_column /* li */ {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.recursive_row {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: var(--traceability-inner-row-gap);
+}
+
+.recursive_row:last-child {
+  margin-bottom: 0;
+}
+
+.recursive_column {
+  min-width: var(--secondary-requirement-card-width);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.view-traceability-deep_column-left .recursive_row {
+  /* parents are shown in reverse order: */
+  flex-direction: row-reverse;
+}
+
+.recursive_cell {
+  position: relative;
+  height: 100%;
+  width: var(--secondary-requirement-card-width);
+  overflow: hidden;
+}
+
+.view-traceability-deep_column-right .recursive_cell {
+  /* shows an arrow on the left side: */
+  padding-left: var(--traceability-arrow);
+}
+
+.view-traceability-deep_column-left .recursive_cell {
+  /* shows an arrow on the right side: */
+  padding-right: var(--traceability-arrow);
+}
+
+/* Requirement */
+
+.view-traceability-deep .requirement {
+  height: 100%;
+}
+
+.view-traceability-deep_column-main .requirement {
+  border: 1px solid #000;
+  background-color: #fff;
+}

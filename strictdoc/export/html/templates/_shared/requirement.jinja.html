@@ -1,20 +1,24 @@
-<div class="requirement"
-  {%- if requirement.status %}
+<div class="requirement requirement_{{ requirement_view_type }}"
+{%- if requirement.status %}
 data-status='{{ requirement.status.lower() }}'
-  {%- endif %}
->
-  <span id="{{ string_to_anchor_id(requirement.title) }}"></span>
+{%- endif %}>
 
-  {%- if requirement.title -%}
+<div class="requirement_section" data-role='meta'>
+
+  {%- if requirement.title %}
     <h{{ requirement.ng_level }} class="section-title" data-level="{{ requirement.export_title }}">
       {{ requirement.title }}
     </h{{ requirement.ng_level }}>
-  {%- endif -%}
+  {%- endif %}
 
   {%- if requirement.has_meta -%}
     <dl class="requirement-meta">
       {%- if requirement.uid %}
-      <div><dt>UID</dt><dd>{{ requirement.uid }}</dd></div>
+      <div><dt>UID</dt><dd>
+        <!-- <a href="{{ traceability_index.get_link(requirement) }}"> -->
+        {{ requirement.uid }}
+        <!-- </a> -->
+      </dd></div>
       {%- endif %}
       {%- if requirement.status %}
       <div><dt>Status</dt><dd>{{ requirement.status }}</dd></div>
@@ -25,6 +29,9 @@ data-status='{{ requirement.status.lower() }}'
     </dl>
   {%- endif %}
 
+  </div>
+  <div class="requirement_section" data-role='statement'>
+
   {%- if requirement.statement or requirement.statement_multiline -%}
     <div class="requirement-statement">
       {{ renderer.render_requirement_statement(requirement) }}
@@ -32,10 +39,13 @@ data-status='{{ requirement.status.lower() }}'
   {%- endif -%}
 
   {%- if requirement.body %}
-<div><p>
-{{ requirement.body }}
-</p></div>
+    <div><p>
+      {{ requirement.body }}
+    </p></div>
   {%- endif %}
+
+  </div>
+  <div class="requirement_section" data-role='comment'>
 
   {%- if requirement.comments %}
     {%- for comment in requirement.comments %}
@@ -44,4 +54,22 @@ data-status='{{ requirement.status.lower() }}'
       </div>
     {%- endfor %}
   {%- endif %}
+
+  </div>
+
+<!-- TODO: remove when certain with tags comes -->
+<!--
+  {%- if requirement.tags %}
+    <div>
+    {%- for tag in requirement.tags %}
+      <span class="tag">
+
+        {{ tag }}
+
+      </span>
+    {%- endfor %}
+    </div>
+  {%- endif %}
+-->
+
 </div>

@@ -18,7 +18,7 @@ class RSTWriter:
         document_iterator = DocumentCachingIterator(document)
         output = ""
 
-        # output += self._print_rst_header(document.name, 0)
+        output += self._print_rst_header(document.name, 0)
 
         for content_node in document_iterator.all_content():
             if isinstance(content_node, FreeText):

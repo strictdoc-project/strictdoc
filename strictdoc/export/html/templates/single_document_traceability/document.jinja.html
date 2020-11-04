@@ -7,12 +7,13 @@
   <!-- <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/single_document_traceability.css" /> -->
   <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/traceability.css" />
 
+  <script type="text/javascript" src="{{document.meta.get_root_path_prefix()}}/_static/toc.js"></script>
   <title>{{document.name}} - Traceability</title>
 </head>
 
 <body>
   {%- set document_iterator = traceability_index.get_document_iterator(document) -%}
-  <div class="layout-with-toc open">
+  <div id="toc_layout" class="layout-with-toc">
 
     <aside class="toc">
       {% include "_shared/table_of_contents.jinja.html" %}
@@ -22,48 +23,57 @@
       <h1 class="document-title">{{document.name}} <span class="document-view-type">Traceability</span></h1>
 
 
-  {%- if traceability_index.has_tags(document) -%}
-    <div id="tags-outline">
-    {%- for tag in traceability_index.get_tags(document) %}
-      <span class="tag">
-        {{ tag[0] }} x {{ tag[1] }}
-      </span>
-    {%- endfor %}
-    </div>
-  {%- endif %}
+      {%- if traceability_index.has_tags(document) -%}
+      <div id="tags-outline">
+      {%- for tag in traceability_index.get_tags(document) %}
+        <span class="tag">
+          {{ tag[0] }} x {{ tag[1] }}
+        </span>
+      {%- endfor %}
+      </div>
+      {%- endif %}
 
   <div class="view-traceability traceability" id="sections-and-requirements">
   {%- for section_or_requirement in document_iterator.all_content() %}
+
     <div class="view-traceability_row traceability_row">
     {%- if section_or_requirement.is_requirement %}
       <div class="view-traceability_cell cell-parent traceability_column" data-requirement-role="parents">
+
         {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) %}
 
-            {% include "_shared/requirement_card.jinja.html" %}
+          {% with requirement_view_type='card' -%}
+            {% include "_shared/requirement.jinja.html" %}
+          {%- endwith %}
 
         {%- endfor %}
       </div>
 
       {%- set requirement = section_or_requirement %}
-      <div class="view-traceability_cell cell-central traceability_column" id="{{ requirement.uid }}" data-requirement-role="current">
 
-        <div class="requirement-container" id="{{ requirement.uid }}">
-          {% include "_shared/requirement_card.jinja.html" %}
-        </div>
+      <div class="view-traceability_cell cell-central traceability_column" id="{{ string_to_anchor_id(section_or_requirement.title) }}" data-requirement-role="current">
+
+        {% with requirement_view_type='card' -%}
+          {% include "_shared/requirement.jinja.html" %}
+        {%- endwith %}
 
       </div>
-
       <div class="view-traceability_cell cell-children traceability_column" data-requirement-role="children">
         {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) %}
 
-            {% include "_shared/requirement_card.jinja.html" %}
+          {% with requirement_view_type='card' -%}
+            {% include "_shared/requirement.jinja.html" %}
+          {%- endwith %}
 
         {%- endfor %}
       </div>
+
     {%- elif section_or_requirement.is_section %}
+
       <div class="view-traceability_cell cell-parent traceability_column" data-requirement-role="parent">
       </div>
-      <div class="view-traceability_cell cell-central traceability_column" data-requirement-role="current">
+      <div class="view-traceability_cell cell-central traceability_column" data-requirement-role="current" id="{{ string_to_anchor_id(section_or_requirement.title) }}">
+
         {%- set section = section_or_requirement %}
         <h{{ section.ng_level }} class="section-title" data-level="{{ section.export_title }}">
           {{ section.title }}
@@ -71,21 +81,26 @@
       </div>
       <div class="view-traceability_cell cell-children traceability_column" data-requirement-role="children">
       </div>
-    {%- elif section_or_requirement.is_free_text %}
+
+    {%- for free_text in section.free_texts -%}
       <div class="view-traceability_cell cell-parent traceability_column" data-requirement-role="parent">
       </div>
       <div class="view-traceability_cell cell-central traceability_column" data-requirement-role="current">
         <div class="free_text">
-          {{ renderer.render_free_text(section_or_requirement) }}
-        </div>
+          {{ renderer.render_free_text(free_text) }}
+
+          </div>
       </div>
       <div class="view-traceability_cell cell-children traceability_column" data-requirement-role="children">
       </div>
-    {%- endif %}
+      {%- endfor -%}
     </div>
+
+
+    {%- endif %}
   {%- endfor %}
   </div>
 
-</main>
-</div>
+    </main>
+  </div><!-- //toc_layout -->
 </body>

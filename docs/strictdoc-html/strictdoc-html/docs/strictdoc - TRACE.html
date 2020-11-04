@@ -1,0 +1,2759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../_static/global.css" />
+  <link rel="stylesheet" href="../_static/layout-main-with-toc.css" />
+  <link rel="stylesheet" href="../_static/single_document_traceability.css" />
+  <script type="text/javascript" src="../_static/toc.js"></script>
+  <title>StrictDoc - Traceability</title>
+</head>
+
+<body><div id="toc_layout" class="layout-with-toc">
+
+    <aside class="toc">
+        <div id="toc_toggle" class="toc_toggle"></div>
+
+  <div class="toc_container">
+    <a class="link-back-to-index" href="../index.html">Back to Index</a>
+    <div class="toc_header">Table of Contents</div>
+
+
+    <ul class="toc_list"><li>
+        <a href="#Examples">
+          <span class="section-number">1</span>Examples</a></li><li>
+        <a href="#Getting-started">
+          <span class="section-number">2</span>Getting started</a><ul><li>
+        <a href="#Installing-StrictDoc-as-a-Pip-package">
+          <span class="section-number">2.1</span>Installing StrictDoc as a Pip package</a></li><li>
+        <a href="#Installing-StrictDoc-from-GitHub-development-">
+          <span class="section-number">2.2</span>Installing StrictDoc from GitHub (development)</a></li><li>
+        <a href="#Hello-world">
+          <span class="section-number">2.3</span>Hello world</a></li></ul>
+            </li><li>
+        <a href="#SDoc-syntax">
+          <span class="section-number">3</span>SDoc syntax</a></li><li>
+        <a href="#Export-options">
+          <span class="section-number">4</span>Export options</a><ul><li>
+        <a href="#HTML-documentation-tree-by-StrictDoc">
+          <span class="section-number">4.1</span>HTML documentation tree by StrictDoc</a></li><li>
+        <a href="#HTML-export-via-Sphinx">
+          <span class="section-number">4.2</span>HTML export via Sphinx</a></li><li>
+        <a href="#PDF-export-via-Sphinx-Latex">
+          <span class="section-number">4.3</span>PDF export via Sphinx/Latex</a></li></ul>
+            </li><li>
+        <a href="#StrictDoc-and-other-tools">
+          <span class="section-number">5</span>StrictDoc and other tools</a><ul><li>
+        <a href="#StrictDoc-and-Doorstop">
+          <span class="section-number">5.1</span>StrictDoc and Doorstop</a></li><li>
+        <a href="#StrictDoc-and-Sphinx">
+          <span class="section-number">5.2</span>StrictDoc and Sphinx</a></li><li>
+        <a href="#StrictDoc-and-Sphinx-Needs">
+          <span class="section-number">5.3</span>StrictDoc and Sphinx-Needs</a></li></ul>
+            </li><li>
+        <a href="#StrictDoc-Requirements">
+          <span class="section-number">6</span>StrictDoc Requirements</a><ul><li>
+        <a href="#Project-goals">
+          <span class="section-number">6.1</span>Project goals</a><ul><li>
+        <a href="#Software-for-writing-technical-documentation">
+          <span class="section-number">6.1.1</span>Software for writing technical documentation</a></li><li>
+        <a href="#Software-support-for-writing-documentation">
+          <span class="section-number">6.1.2</span>Software support for writing documentation</a></li><li>
+        <a href="#Reduce-documentation-hazards">
+          <span class="section-number">6.1.3</span>Reduce documentation hazards</a></li><li>
+        <a href="#Less-run-away-documentation">
+          <span class="section-number">6.1.4</span>Less run-away documentation</a></li><li>
+        <a href="#Change-management">
+          <span class="section-number">6.1.5</span>Change management</a></li></ul>
+            </li><li>
+        <a href="#High-level-requirements">
+          <span class="section-number">6.2</span>High-level requirements</a><ul><li>
+        <a href="#Requirements-management">
+          <span class="section-number">6.2.1</span>Requirements management</a></li><li>
+        <a href="#Data-model">
+          <span class="section-number">6.2.2</span>Data model</a></li><li>
+        <a href="#Command-line-interface">
+          <span class="section-number">6.2.3</span>Command-line interface</a></li><li>
+        <a href="#Requirements-validation">
+          <span class="section-number">6.2.4</span>Requirements validation</a></li><li>
+        <a href="#Requirements-text-format">
+          <span class="section-number">6.2.5</span>Requirements text format</a></li><li>
+        <a href="#Linking-requirements">
+          <span class="section-number">6.2.6</span>Linking requirements</a></li><li>
+        <a href="#Scalability">
+          <span class="section-number">6.2.7</span>Scalability</a></li><li>
+        <a href="#Traceability">
+          <span class="section-number">6.2.8</span>Traceability</a></li><li>
+        <a href="#Visualization">
+          <span class="section-number">6.2.9</span>Visualization</a></li><li>
+        <a href="#Open-source-software">
+          <span class="section-number">6.2.10</span>Open source software</a></li></ul>
+            </li><li>
+        <a href="#Implementation-requirements">
+          <span class="section-number">6.3</span>Implementation requirements</a><ul><li>
+        <a href="#Parallelization">
+          <span class="section-number">6.3.1</span>Parallelization</a></li><li>
+        <a href="#Incremental-generation">
+          <span class="section-number">6.3.2</span>Incremental generation</a></li></ul>
+            </li><li>
+        <a href="#Data-model">
+          <span class="section-number">6.4</span>Data model</a><ul><li>
+        <a href="#Modeling-capability">
+          <span class="section-number">6.4.1</span>Modeling capability</a></li><li>
+        <a href="#Section-item">
+          <span class="section-number">6.4.2</span>Section item</a></li><li>
+        <a href="#Requirement-item">
+          <span class="section-number">6.4.3</span>Requirement item</a><ul><li>
+        <a href="#Statement">
+          <span class="section-number">6.4.3.1</span>Statement</a></li><li>
+        <a href="#Content-body">
+          <span class="section-number">6.4.3.2</span>Content body</a></li><li>
+        <a href="#UID-identifier">
+          <span class="section-number">6.4.3.3</span>UID identifier</a><ul><li>
+        <a href="#UID-identifier-format">
+          <span class="section-number">6.4.3.3.1</span>UID identifier format</a></li></ul>
+            </li><li>
+        <a href="#Title">
+          <span class="section-number">6.4.3.4</span>Title</a></li><li>
+        <a href="#References">
+          <span class="section-number">6.4.3.5</span>References</a></li><li>
+        <a href="#Comments">
+          <span class="section-number">6.4.3.6</span>Comments</a></li></ul>
+            </li><li>
+        <a href="#Composite-Requirement-item">
+          <span class="section-number">6.4.4</span>Composite Requirement item</a></li></ul>
+            </li><li>
+        <a href="#SDOC-file-format">
+          <span class="section-number">6.5</span>SDOC file format</a><ul><li>
+        <a href="#Primary-text-implementation">
+          <span class="section-number">6.5.1</span>Primary text implementation</a></li><li>
+        <a href="#Grammar">
+          <span class="section-number">6.5.2</span>Grammar</a></li><li>
+        <a href="#Type-safety">
+          <span class="section-number">6.5.3</span>Type safety</a></li></ul>
+            </li><li>
+        <a href="#Document-Generators">
+          <span class="section-number">6.6</span>Document Generators</a><ul><li>
+        <a href="#HTML-Export">
+          <span class="section-number">6.6.1</span>HTML Export</a><ul><li>
+        <a href="#Single-document-Normal-form">
+          <span class="section-number">6.6.1.1</span>Single document: Normal form</a></li><li>
+        <a href="#Single-document-Tabular-form">
+          <span class="section-number">6.6.1.2</span>Single document: Tabular form</a></li><li>
+        <a href="#Single-document-1-level-traceability">
+          <span class="section-number">6.6.1.3</span>Single document: 1-level traceability</a></li><li>
+        <a href="#Single-document-Deep-traceability">
+          <span class="section-number">6.6.1.4</span>Single document: Deep traceability</a></li></ul>
+            </li><li>
+        <a href="#PDF-Export">
+          <span class="section-number">6.6.2</span>PDF Export</a><ul><li>
+        <a href="#Sphinx-documentation-generator">
+          <span class="section-number">6.6.2.1</span>Sphinx documentation generator</a></li></ul>
+            </li></ul>
+            </li></ul>
+            </li><li>
+        <a href="#Design-decisions">
+          <span class="section-number">7</span>Design decisions</a><ul><li>
+        <a href="#TextX">
+          <span class="section-number">7.1</span>TextX</a></li><li>
+        <a href="#Jinja2">
+          <span class="section-number">7.2</span>Jinja2</a></li><li>
+        <a href="#Sphinx-and-Docutils">
+          <span class="section-number">7.3</span>Sphinx and Docutils</a></li><li>
+        <a href="#SDoc-grammar">
+          <span class="section-number">7.4</span>SDoc grammar</a><ul><li>
+        <a href="#No-indentation">
+          <span class="section-number">7.4.1</span>No indentation</a></li></ul>
+            </li></ul>
+            </li><li>
+        <a href="#Roadmap">
+          <span class="section-number">8</span>Roadmap</a><ul><li>
+        <a href="#In-works">
+          <span class="section-number">8.1</span>In works</a><ul><li>
+        <a href="#HTML-Export">
+          <span class="section-number">8.1.1</span>HTML Export</a><ul><li>
+        <a href="#Left-panel-Table-of-contents">
+          <span class="section-number">8.1.1.1</span>Left panel: Table of contents</a></li><li>
+        <a href="#Document-page-CSS-Proper-markup">
+          <span class="section-number">8.1.1.2</span>Document page CSS: Proper markup</a></li><li>
+        <a href="#Table-page-CSS-Proper-table">
+          <span class="section-number">8.1.1.3</span>Table page CSS: Proper table</a></li><li>
+        <a href="#Traceability-page-CSS-Proper-middle-column-document">
+          <span class="section-number">8.1.1.4</span>Traceability page CSS: Proper middle column document</a></li><li>
+        <a href="#Deep-Traceability-page-CSS-Improvements">
+          <span class="section-number">8.1.1.5</span>Deep Traceability page CSS: Improvements</a></li></ul>
+            </li></ul>
+            </li><li>
+        <a href="#First-public-release">
+          <span class="section-number">8.2</span>First public release</a><ul><li>
+        <a href="#Document-tree-Incremental-generation">
+          <span class="section-number">8.2.1</span>Document tree: Incremental generation</a></li><li>
+        <a href="#Generated-file-names">
+          <span class="section-number">8.2.2</span>Generated file names</a></li><li>
+        <a href="#Validation-Uniqueness-of-UID-identifiers-in-a-document-tree">
+          <span class="section-number">8.2.3</span>Validation: Uniqueness of UID identifiers in a document tree</a></li></ul>
+            </li><li>
+        <a href="#Backlog">
+          <span class="section-number">8.3</span>Backlog</a><ul><li>
+        <a href="#StrictDoc-as-library">
+          <span class="section-number">8.3.1</span>StrictDoc as library</a></li><li>
+        <a href="#Export-capabilities">
+          <span class="section-number">8.3.2</span>Export capabilities</a><ul><li>
+        <a href="#Excel-Export">
+          <span class="section-number">8.3.2.1</span>Excel Export</a></li><li>
+        <a href="#PlantUML-Export">
+          <span class="section-number">8.3.2.2</span>PlantUML Export</a></li><li>
+        <a href="#ReqIF-Import-Export">
+          <span class="section-number">8.3.2.3</span>ReqIF Import/Export</a></li><li>
+        <a href="#Tex-Export">
+          <span class="section-number">8.3.2.4</span>Tex Export</a></li><li>
+        <a href="#Doorstop-Export">
+          <span class="section-number">8.3.2.5</span>Doorstop Export</a></li><li>
+        <a href="#Markdown-support-for-text-and-code-blocks">
+          <span class="section-number">8.3.2.6</span>Markdown support for text and code blocks</a></li></ul>
+            </li><li>
+        <a href="#Platform-support">
+          <span class="section-number">8.3.3</span>Platform support</a><ul><li>
+        <a href="#Linux-support">
+          <span class="section-number">8.3.3.1</span>Linux support</a></li><li>
+        <a href="#Windows-support">
+          <span class="section-number">8.3.3.2</span>Windows support</a></li></ul>
+            </li><li>
+        <a href="#Traceability-and-coverage">
+          <span class="section-number">8.3.4</span>Traceability and coverage</a><ul><li>
+        <a href="#Linking-with-implementation-artifacts">
+          <span class="section-number">8.3.4.1</span>Linking with implementation artifacts</a></li><li>
+        <a href="#Requirement-checksumming">
+          <span class="section-number">8.3.4.2</span>Requirement checksumming</a></li><li>
+        <a href="#Documentation-coverage">
+          <span class="section-number">8.3.4.3</span>Documentation coverage</a></li></ul>
+            </li><li>
+        <a href="#Validations-and-testing">
+          <span class="section-number">8.3.5</span>Validations and testing</a><ul><li>
+        <a href="#Validation-Section-Levels">
+          <span class="section-number">8.3.5.1</span>Validation: Section Levels</a></li><li>
+        <a href="#Validation-Valid-HTML-markup">
+          <span class="section-number">8.3.5.2</span>Validation: Valid HTML markup</a></li></ul>
+            </li><li>
+        <a href="#Custom-fields">
+          <span class="section-number">8.3.6</span>Custom fields</a></li><li>
+        <a href="#Filtering-by-tags">
+          <span class="section-number">8.3.7</span>Filtering by tags</a></li><li>
+        <a href="#Options">
+          <span class="section-number">8.3.8</span>Options</a><ul><li>
+        <a href="#Option-RST-Top-level-title-document-name">
+          <span class="section-number">8.3.8.1</span>Option: RST: Top-level title: document name</a></li><li>
+        <a href="#Option-Title-Automatic-numeration">
+          <span class="section-number">8.3.8.2</span>Option: Title: Automatic numeration</a></li><li>
+        <a href="#Option-Title-Display-requirement-titles">
+          <span class="section-number">8.3.8.3</span>Option: Title: Display requirement titles</a></li><li>
+        <a href="#Option-Title-Display-requirement-UID">
+          <span class="section-number">8.3.8.4</span>Option: Title: Display requirement UID</a></li></ul>
+            </li><li>
+        <a href="#Advanced">
+          <span class="section-number">8.3.9</span>Advanced</a><ul><li>
+        <a href="#Facts-table-Invariants-calculation-">
+          <span class="section-number">8.3.9.1</span>Facts table. Invariants calculation.</a></li><li>
+        <a href="#Graphical-User-Interface-GUI-">
+          <span class="section-number">8.3.9.2</span>Graphical User Interface (GUI)</a></li></ul>
+            </li></ul>
+            </li></ul>
+            </li></ul>
+  </div>
+    </aside>
+
+    <main class="content">
+      <h1 class="document-title">StrictDoc <span class="document-view-type">Traceability</span></h1><div id="tags-outline">
+    </div>
+
+  <div class="view-traceability" id="sections-and-requirements">
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <div class="free_text">
+          <div class="document">
+<p>StrictDoc is software for writing technical requirements and specifications.</p>
+<p>Summary of StrictDoc features:</p>
+<ul class="simple">
+<li>The documentation files are stored as human-readable text files.</li>
+<li>A simple domain-specific language DSL is used for writing the documents. The
+text format encoding this language is called SDoc (strict-doc).</li>
+<li>StrictDoc reads <cite>*.sdoc</cite> files and builds an in-memory representation of the
+document tree.</li>
+<li>From this in-memory representation, StrictDoc can generate the documentation
+into a number of formats including HTML, RST, and PDF.</li>
+<li>The initial focus of the tool is modeling requirements and specifications
+documents. Such documents consist of multiple statements like
+&quot;system X shall do Y&quot; called requirements.</li>
+<li>The requirements can be linked together to form the relationships, such as
+&quot;parent-child&quot;, and from these connections, many useful features such as
+<a class="reference external" href="https://en.wikipedia.org/wiki/Requirements_traceability">Requirements Traceability</a>
+and Documentation Coverage can be derived.</li>
+</ul>
+<p><strong>Warning:</strong> The StrictDoc project is still under construction. See the Roadmap
+section to get an idea of the overall project direction.</p>
+</div>
+
+        </div>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h1 class="section-title" data-level="1">
+          Examples
+        </h1>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <div class="free_text">
+          <div class="document">
+<p>&quot;Hello World&quot; example of the text language:</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+NAME: StrictDoc
+
+[REQUIREMENT]
+UID: SDOC-HIGH-REQS-MANAGEMENT
+TITLE: Requirements management
+STATEMENT: StrictDoc shall enable requirements management.
+</pre>
+</div>
+
+        </div>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <div class="free_text">
+          <div class="document">
+<p>For a more comprehensive example check the source file of this documentation
+itself which is written using StrictDoc:
+<a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc">strictdoc.sdoc</a>.</p>
+<ul class="simple">
+<li><a class="reference external" href="https://strictdoc.readthedocs.io/en/latest/strictdoc-html">StrictDoc HTML export</a></li>
+<li><a class="reference external" href="https://strictdoc.readthedocs.io/en/latest">StrictDoc HTML export using Sphinx</a></li>
+<li><a class="reference external" href="https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/">StrictDoc PDF export using Sphinx</a></li>
+</ul>
+</div>
+
+        </div>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h1 class="section-title" data-level="2">
+          Getting started
+        </h1>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h2 class="section-title" data-level="2.1">
+          Installing StrictDoc as a Pip package
+        </h2>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <div class="free_text">
+          <div class="document">
+<pre class="code text literal-block">
+pip install strictdoc
+</pre>
+</div>
+
+        </div>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h2 class="section-title" data-level="2.2">
+          Installing StrictDoc from GitHub (development)
+        </h2>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <div class="free_text">
+          <div class="document">
+<pre class="code text literal-block">
+git clone git&#64;github.com:stanislaw/strictdoc.git &amp;&amp; cd strictdoc
+poetry install
+poetry run strictdoc
+</pre>
+</div>
+
+        </div>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h2 class="section-title" data-level="2.3">
+          Hello world
+        </h2>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <div class="free_text">
+          <div class="document">
+<pre class="code text literal-block">
+git clone git&#64;github.com:stanislaw/strictdoc.git &amp;&amp; cd strictdoc
+strictdoc export docs/
+</pre>
+</div>
+
+        </div>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h1 class="section-title" data-level="3">
+          SDoc syntax
+        </h1>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <div class="free_text">
+          <div class="document">
+<p>StrictDoc defines a special syntax for writing specifications documents. This
+syntax is called SDoc and it's grammar is encoded with the
+<a class="reference external" href="https://github.com/textX/textX">textX</a>
+tool.</p>
+<p>The grammar is defined using textX language for defining grammars and is
+located in a single file:
+<a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/master/strictdoc/backend/dsl/grammar.py">grammar.py</a>.</p>
+<p>This is how a minimal possible SDOC document looks like:</p>
+<pre class="code literal-block">
+[DOCUMENT]
+NAME: StrictDoc
+</pre>
+<p>The source file of this documentation itself which is written using StrictDoc:
+<a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc">strictdoc.sdoc</a>.</p>
+</div>
+
+        </div>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h1 class="section-title" data-level="4">
+          Export options
+        </h1>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h2 class="section-title" data-level="4.1">
+          HTML documentation tree by StrictDoc
+        </h2>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <div class="free_text">
+          <div class="document">
+<p>This is a default export option supported by StrictDoc.</p>
+<p>The following command creates an HTML export:</p>
+<pre class="code text literal-block">
+strictdoc export docs/ --output-dir output-html
+</pre>
+<p>Example: This documentation is exported by StrictDoc to HTML:
+<a class="reference external" href="https://strictdoc.readthedocs.io/en/latest/strictdoc-html">StrictDoc HTML export</a>.</p>
+</div>
+
+        </div>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h2 class="section-title" data-level="4.2">
+          HTML export via Sphinx
+        </h2>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <div class="free_text">
+          <div class="document">
+<p>TBD</p>
+</div>
+
+        </div>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h2 class="section-title" data-level="4.3">
+          PDF export via Sphinx/Latex
+        </h2>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <div class="free_text">
+          <div class="document">
+<p>TBD</p>
+</div>
+
+        </div>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h1 class="section-title" data-level="5">
+          StrictDoc and other tools
+        </h1>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h2 class="section-title" data-level="5.1">
+          StrictDoc and Doorstop
+        </h2>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <div class="free_text">
+          <div class="document">
+<p>The StrictDoc project is a close successor of another project called
+<a class="reference external" href="https://github.com/doorstop-dev/doorstop">Doorstop</a>.</p>
+<blockquote>
+Doorstop is a requirements management tool that facilitates the storage of
+textual requirements alongside source code in version control.</blockquote>
+<p>The author of Doorstop has published a <a class="reference external" href="http://www.scirp.org/journal/PaperInformation.aspx?PaperID=44268#.UzYtfWRdXEZ">paper about Doorstop</a>
+where the rationale behind text-based requirements management is provided.</p>
+<p>The first version of StrictDoc had started as a fork of the Doorstop project.
+However, after a while, the StrictDoc was started from scratch as a separate
+project. At this point, StrictDoc and Doorstop do not share any code but
+StrictDoc still shares with Doorstop their common underlying design principles:</p>
+<ul class="simple">
+<li>Both Doorstop and StrictDoc are written using Python. Both are pip packages which are easy-to-install.</li>
+<li>Both Doorstop and StrictDoc provide a command-line interface.</li>
+<li>Both Doorstop and StrictDoc use text files for requirements management.</li>
+<li>Both Doorstop and StrictDoc encourage collocation of code and documentation.
+When documentation is hosted close to code it has less chances of diverging
+from the actual implementation or becoming outdated.</li>
+<li>As the free and open source projects, both Doorstop and StrictDoc seem to
+struggle to find resources for development of specialized GUI interfaces this
+is why both tools give a preference to supporting exporting documentation
+pages to HTML format as the primary export feature.</li>
+</ul>
+<p>StrictDoc differs from Doorstop in a number of aspects:</p>
+<ul class="simple">
+<li>Doorstop stores requirements in YAML files, one separate file per requirement
+(<a class="reference external" href="https://github.com/doorstop-dev/doorstop/blob/804153c67c7c5466ee94e9553118cc3df03a56f9/reqs/REQ001.yml">example</a>).
+The document in Doorstop is assembled from the requirements files into a
+single logical document during the document generation process.
+StrictDoc's documentation unit is one document stored in an .sdoc file. Such a
+document can have multiple requirements grouped by sections.</li>
+<li>In YAML files, Doorstop stores requirements properties such as
+<cite>normative: true</cite> or <cite>level: 2.3</cite> for which Doorstop provides validations.
+Such a design decision, in fact, assumes an existence of implicitly-defined
+grammar which is encoded &quot;ad-hoc&quot; in the parsing and validation rules of
+Doorstop.
+StrictDoc takes a different approach and defines its grammar explicitly using
+a tool for creating Domain-Specific Languages called <a class="reference external" href="https://github.com/textX/textX">textX</a>.
+TextX support allows StrictDoc to encode a strict type-safe grammar in a
+<a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/93486a0e9fb30b141187587eae9e995cd86c6cbf/strictdoc/backend/dsl/grammar.py">single grammar file</a>
+that StrictDoc uses to parse the documentation files
+using the parsing capabilities provided by textX out of the box.</li>
+</ul>
+<p>The roadmap of StrictDoc contains a work item for supporting the export/import
+to/from Doorstop format.</p>
+</div>
+
+        </div>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h2 class="section-title" data-level="5.2">
+          StrictDoc and Sphinx
+        </h2>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <div class="free_text">
+          <div class="document">
+<p>TBD</p>
+</div>
+
+        </div>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h2 class="section-title" data-level="5.3">
+          StrictDoc and Sphinx-Needs
+        </h2>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <div class="free_text">
+          <div class="document">
+<p>TBD</p>
+</div>
+
+        </div>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h1 class="section-title" data-level="6">
+          StrictDoc Requirements
+        </h1>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h2 class="section-title" data-level="6.1">
+          Project goals
+        </h2>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="GOAL-1-TOOL">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.1.1">
+      Software for writing technical documentation
+    </h3>
+    <small>
+      <a href="StrictDoc - Traceability.html#GOAL-1-TOOL">GOAL-1-TOOL</a>
+    </small><div class="requirement-statement">
+      <div class="document">
+<p>There shall exist free and lightweight yet capable software for technical
+documentation.</p>
+</div>
+
+    </div>
+      <div class="comment">
+        <div class="document">
+<p>The state of the art for many small companies working with
+requirements: using Excel for requirements management in the projects with
+hundreds or thousands of requirements.</p>
+</div>
+
+      </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+
+            <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.2.1">
+      Requirements management
+    </h3>
+    <small>
+      <a href="StrictDoc - Traceability.html#SDOC-HIGH-REQS-MANAGEMENT">SDOC-HIGH-REQS-MANAGEMENT</a>
+    </small><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall enable requirements management.</p>
+</div>
+
+    </div>
+
+</div>
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="GOAL-2-SUPPORT">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.1.2">
+      Software support for writing documentation
+    </h3>
+    <small>
+      <a href="StrictDoc - Traceability.html#GOAL-2-SUPPORT">GOAL-2-SUPPORT</a>
+    </small><div class="requirement-statement">
+      <div class="document">
+<p>Software shall support engineers in their work with documentation.</p>
+</div>
+
+    </div>
+      <div class="comment">
+        <div class="document">
+<p>Technical documentation is hard, it can be an extremely laborious process.</p>
+</div>
+
+      </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="GOAL-3-REDUCE-DOCUMENTATION-HAZARDS">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.1.3">
+      Reduce documentation hazards
+    </h3>
+    <small>
+      <a href="StrictDoc - Traceability.html#GOAL-3-REDUCE-DOCUMENTATION-HAZARDS">GOAL-3-REDUCE-DOCUMENTATION-HAZARDS</a>
+    </small><div class="requirement-statement">
+      <div class="document">
+<p>There shall exist no (or less) opportunity for writing incorrect or inconsistent
+documentation.</p>
+</div>
+
+    </div>
+      <div class="comment">
+        <div class="document">
+<p>Every serious engineering activity, such as safety engineering or systems
+engineering, starts with requirements. The more critical is a product the higher
+the importance of good documentation.</p>
+<p>Technical documentation can be and often becomes a source of hazards.
+It is recognized that many failures stem from inadequate requirements
+engineering. While it is not possible to fix the problem of inadequate
+requirements engineering in general, it is definitely possible to improve
+software that supports engineers in activities such as requirements engineering
+and writing technical documentation.</p>
+</div>
+
+      </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="GOAL-4-PREVENT-RUNAWAY-DOCUMENTATION">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.1.4">
+      Less run-away documentation
+    </h3>
+    <small>
+      <a href="StrictDoc - Traceability.html#GOAL-4-PREVENT-RUNAWAY-DOCUMENTATION">GOAL-4-PREVENT-RUNAWAY-DOCUMENTATION</a>
+    </small><div class="requirement-statement">
+      <div class="document">
+<p>Software shall support engineers in keeping documentation up-to-date.</p>
+</div>
+
+    </div>
+      <div class="comment">
+        <div class="document">
+<p>Technical documentation easily becomes outdated. Many existing tools for
+documentation do not provide any measures for ensuring overall consistency of
+documents and documentation trees.</p>
+</div>
+
+      </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="GOAL-5-CHANGE-MANAGEMENT">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.1.5">
+      Change management
+    </h3>
+    <small>
+      <a href="StrictDoc - Traceability.html#GOAL-5-CHANGE-MANAGEMENT">GOAL-5-CHANGE-MANAGEMENT</a>
+    </small><div class="requirement-statement">
+      <div class="document">
+<p>Software shall provide capabilities for change management and impact assessment.</p>
+</div>
+
+    </div>
+      <div class="comment">
+        <div class="document">
+<p>Change management is difficult. The bigger the project is, the harder it is to
+maintain its documentation. If a change is introduced to a project, it usually
+requires a full revision of its requirements TBD.</p>
+</div>
+
+      </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h2 class="section-title" data-level="6.2">
+          High-level requirements
+        </h2>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+
+            <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.1.1">
+      Software for writing technical documentation
+    </h3>
+    <small>
+      <a href="StrictDoc - Traceability.html#GOAL-1-TOOL">GOAL-1-TOOL</a>
+    </small><div class="requirement-statement">
+      <div class="document">
+<p>There shall exist free and lightweight yet capable software for technical
+documentation.</p>
+</div>
+
+    </div>
+      <div class="comment">
+        <div class="document">
+<p>The state of the art for many small companies working with
+requirements: using Excel for requirements management in the projects with
+hundreds or thousands of requirements.</p>
+</div>
+
+      </div>
+
+</div>
+      </div>
+      <div class="view-traceability_cell cell-central" id="SDOC-HIGH-REQS-MANAGEMENT">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.2.1">
+      Requirements management
+    </h3>
+    <small>
+      <a href="StrictDoc - Traceability.html#SDOC-HIGH-REQS-MANAGEMENT">SDOC-HIGH-REQS-MANAGEMENT</a>
+    </small><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall enable requirements management.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+
+            <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.4.1">
+      Modeling capability
+    </h3>
+    <small>
+      <a href="StrictDoc - Traceability.html#SDOC-DM-001">SDOC-DM-001</a>
+    </small><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc's Data Model shall accommodate for maximum possible standard requirement document formats.</p>
+</div>
+
+    </div>
+    <div>
+      Examples of standard requirements documents include but are not limited to:
+
+- Non-nested requirement lists split by categories
+  (e.g., Functional Requirements, Interface Requirements, Performance Requirements, etc.)
+    </div>
+
+</div>
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="SDOC-HIGH-DATA-MODEL">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.2.2">
+      Data model
+    </h3>
+    <small>
+      <a href="StrictDoc - Traceability.html#SDOC-HIGH-DATA-MODEL">SDOC-HIGH-DATA-MODEL</a>
+    </small><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall be based on a well-defined data model.</p>
+</div>
+
+    </div>
+      <div class="comment">
+        <div class="document">
+<p>StrictDoc is a result of multiple attempts to find a solution for working with
+text-based requirements:</p>
+<ul class="simple">
+<li>StrictDoc, first generation: Markdown-based C++ program. Custom requirements
+metadata in YAML.</li>
+<li>StrictDoc, second generation: RST/Sphinx-based Python program. Using Sphinx
+extensions to manage meta information.</li>
+</ul>
+<p>The result of these efforts is the realization that a text-based requirements
+and specifications management tool TBD.</p>
+</div>
+
+      </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.2.3">
+      Command-line interface
+    </h3><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall provide a command-line interface.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.2.4">
+      Requirements validation
+    </h3><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall allow validation of requirement documents.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.2.5">
+      Requirements text format
+    </h3><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall allow storage of requirements in a plain-text human readable form.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.2.6">
+      Linking requirements
+    </h3><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall support linking requirements to each other.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.2.7">
+      Scalability
+    </h3><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall allow working with large documents and document trees containing at least 10000 requirement items.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="SDOC-HIGH-REQS-TRACEABILITY">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.2.8">
+      Traceability
+    </h3>
+    <small>
+      <a href="StrictDoc - Traceability.html#SDOC-HIGH-REQS-TRACEABILITY">SDOC-HIGH-REQS-TRACEABILITY</a>
+    </small><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall support traceability of requirements.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.2.9">
+      Visualization
+    </h3><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall provide means for visualization of requirement documents.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.2.10">
+      Open source software
+    </h3><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall always be free and open source software.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h2 class="section-title" data-level="6.3">
+          Implementation requirements
+        </h2>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="SDOC-IMPL-PARAL">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.3.1">
+      Parallelization
+    </h3>
+    <small>
+      <a href="StrictDoc - Traceability.html#SDOC-IMPL-PARAL">SDOC-IMPL-PARAL</a>
+    </small><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall enable parallelization of the time-consuming parts of the code.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="SDOC-IMPL-INCREMENTAL">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.3.2">
+      Incremental generation
+    </h3>
+    <small>
+      <a href="StrictDoc - Traceability.html#SDOC-IMPL-INCREMENTAL">SDOC-IMPL-INCREMENTAL</a>
+    </small><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall enable incremental generation of the documents.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h2 class="section-title" data-level="6.4">
+          Data model
+        </h2>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+
+            <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.2.1">
+      Requirements management
+    </h3>
+    <small>
+      <a href="StrictDoc - Traceability.html#SDOC-HIGH-REQS-MANAGEMENT">SDOC-HIGH-REQS-MANAGEMENT</a>
+    </small><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall enable requirements management.</p>
+</div>
+
+    </div>
+
+</div>
+      </div>
+      <div class="view-traceability_cell cell-central" id="SDOC-DM-001">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.4.1">
+      Modeling capability
+    </h3>
+    <small>
+      <a href="StrictDoc - Traceability.html#SDOC-DM-001">SDOC-DM-001</a>
+    </small><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc's Data Model shall accommodate for maximum possible standard requirement document formats.</p>
+</div>
+
+    </div>
+    <div>
+      Examples of standard requirements documents include but are not limited to:
+
+- Non-nested requirement lists split by categories
+  (e.g., Functional Requirements, Interface Requirements, Performance Requirements, etc.)
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+
+            <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.5.1">
+      Primary text implementation
+    </h3>
+    <small>
+      <a href="StrictDoc - Traceability.html#SDOC-FMT-001">SDOC-FMT-001</a>
+    </small><div class="requirement-statement">
+      <div class="document">
+<p>SDOC format shall support encoding the Strict Doc Data Model in a plain-text human readable form.</p>
+</div>
+
+    </div>
+
+</div>
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h3 class="section-title" data-level="6.4.2">
+          Section item
+        </h3>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h3 class="section-title" data-level="6.4.3">
+          Requirement item
+        </h3>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="6.4.3.1">
+      Statement
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>Requirement item shall have a statement.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="6.4.3.2">
+      Content body
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>Requirement item might have an content body.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="6.4.3.3">
+      UID identifier
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>Requirement item might have an UID identifier.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h5 class="section-title" data-level="6.4.3.3.1">
+      UID identifier format
+    </h5><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall not impose any restrictions on the UID field format.</p>
+</div>
+
+    </div>
+      <div class="comment">
+        <div class="document">
+<p>Conventions used for requirement UIDs can be very different. And there seems to
+be no way to define a single rule.</p>
+<p>Some examples:</p>
+<ul class="simple">
+<li>FUN-003</li>
+<li>cES1008, cTBL6000.1 (NASA cFS)</li>
+<li>Requirements without a number, e.g. SDOC-HIGH-DATA-MODEL (StrictDoc)</li>
+<li>SAVOIR.OBC.PM.80 (SAVOIR)</li>
+</ul>
+</div>
+
+      </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="6.4.3.4">
+      Title
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>Requirement item might have an title.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="6.4.3.5">
+      References
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>Requirement item might have one or more references.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="6.4.3.6">
+      Comments
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>Requirement item might have one or more comments.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h3 class="section-title" data-level="6.4.4">
+          Composite Requirement item
+        </h3>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <div class="free_text">
+          <div class="document">
+<p>TBD</p>
+</div>
+
+        </div>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h2 class="section-title" data-level="6.5">
+          SDOC file format
+        </h2>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+
+            <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.4.1">
+      Modeling capability
+    </h3>
+    <small>
+      <a href="StrictDoc - Traceability.html#SDOC-DM-001">SDOC-DM-001</a>
+    </small><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc's Data Model shall accommodate for maximum possible standard requirement document formats.</p>
+</div>
+
+    </div>
+    <div>
+      Examples of standard requirements documents include but are not limited to:
+
+- Non-nested requirement lists split by categories
+  (e.g., Functional Requirements, Interface Requirements, Performance Requirements, etc.)
+    </div>
+
+</div>
+      </div>
+      <div class="view-traceability_cell cell-central" id="SDOC-FMT-001">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.5.1">
+      Primary text implementation
+    </h3>
+    <small>
+      <a href="StrictDoc - Traceability.html#SDOC-FMT-001">SDOC-FMT-001</a>
+    </small><div class="requirement-statement">
+      <div class="document">
+<p>SDOC format shall support encoding the Strict Doc Data Model in a plain-text human readable form.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.5.2">
+      Grammar
+    </h3><div class="requirement-statement">
+      <div class="document">
+<p>SDOC format shall be based on a fixed grammar.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="6.5.3">
+      Type safety
+    </h3><div class="requirement-statement">
+      <div class="document">
+<p>SDOC format shall allow type-safe encoding of requirement documents.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h2 class="section-title" data-level="6.6">
+          Document Generators
+        </h2>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h3 class="section-title" data-level="6.6.1">
+          HTML Export
+        </h3>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="6.6.1.1">
+      Single document: Normal form
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall export single document pages in a normal document-like form.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="6.6.1.2">
+      Single document: Tabular form
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall export single document pages in a tabular form.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="6.6.1.3">
+      Single document: 1-level traceability
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall export 1-level traceability document.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="6.6.1.4">
+      Single document: Deep traceability
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall export deep traceability document.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h3 class="section-title" data-level="6.6.2">
+          PDF Export
+        </h3>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="6.6.2.1">
+      Sphinx documentation generator
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall support exporting documents to Sphinx/RST format.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h1 class="section-title" data-level="7">
+          Design decisions
+        </h1>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h2 class="section-title" data-level="7.1">
+      TextX
+    </h2><div class="requirement-statement">
+      <div class="document">
+<p>TextX shall be used for StrictDoc grammar definition and parsing of the sdoc files.</p>
+</div>
+
+    </div>
+      <div class="comment">
+        <div class="document">
+<p>TextX is an easy-to-install Python tool. It is fast, works out of the box.</p>
+</div>
+
+      </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h2 class="section-title" data-level="7.2">
+      Jinja2
+    </h2><div class="requirement-statement">
+      <div class="document">
+<p>Jinja2 shall be used for rendering HTML templates.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h2 class="section-title" data-level="7.3">
+      Sphinx and Docutils
+    </h2><div class="requirement-statement">
+      <div class="document">
+<p>Sphinx and Docutils shall be used for the following capabilities:</p>
+<ul class="simple">
+<li>Support of Restructured Text (reST) format</li>
+<li>Generation of RST documents into HTML</li>
+<li>Generation of RST documents into PDF using Latex</li>
+<li>Generating documentation websites using Sphinx</li>
+</ul>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h2 class="section-title" data-level="7.4">
+          SDoc grammar
+        </h2>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="7.4.1">
+      No indentation
+    </h3><div class="requirement-statement">
+      <div class="document">
+<p>SDoc grammar building blocks shall not allow any indentation.</p>
+</div>
+
+    </div>
+      <div class="comment">
+        <div class="document">
+<p>Rationale: Adding indentation to any of the fields does not scale well when the
+documents have deeply nested section structure as well as when the size of the
+paragraphs becomes sufficiently large. Keeping every keyword like [REQUIREMENT]
+or [COMMENT] with no indentation ensures that one does not have to think about
+possible indentation issues.</p>
+</div>
+
+      </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h1 class="section-title" data-level="8">
+          Roadmap
+        </h1>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h2 class="section-title" data-level="8.1">
+          In works
+        </h2>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h3 class="section-title" data-level="8.1.1">
+          HTML Export
+        </h3>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="8.1.1.1">
+      Left panel: Table of contents
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>Left panel: Table of contents.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="8.1.1.2">
+      Document page CSS: Proper markup
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>Document page: make it look like a document.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="8.1.1.3">
+      Table page CSS: Proper table
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>Table page: make columns be always of the same size while respecting min-max widths.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="8.1.1.4">
+      Traceability page CSS: Proper middle column document
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>Traceability page CSS: Proper middle column document</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="8.1.1.5">
+      Deep Traceability page CSS: Improvements
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>Deep Traceability page CSS: Improvements</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h2 class="section-title" data-level="8.2">
+          First public release
+        </h2>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="8.2.1">
+      Document tree: Incremental generation
+    </h3><div class="requirement-statement">
+      <div class="document">
+<p>When exporting documentation tree, StrictDoc shall regenerate only changed documents and files.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="8.2.2">
+      Generated file names
+    </h3><div class="requirement-statement">
+      <div class="document">
+<p>Document name must be transformed into a valid file name.</p>
+</div>
+
+    </div>
+      <div class="comment">
+        <div class="document">
+<p>Alternative: Simply use the original document file names.</p>
+</div>
+
+      </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="8.2.3">
+      Validation: Uniqueness of UID identifiers in a document tree
+    </h3><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall ensure that each UID used in a document tree is unique.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h2 class="section-title" data-level="8.3">
+          Backlog
+        </h2>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="8.3.1">
+      StrictDoc as library
+    </h3><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall support it use as a Python library.</p>
+</div>
+
+    </div>
+      <div class="comment">
+        <div class="document">
+<p>Such a use allows a more fine-grained access to the StrictDoc's modules, such
+as Grammar, Import, Export classes, etc.</p>
+</div>
+
+      </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h3 class="section-title" data-level="8.3.2">
+          Export capabilities
+        </h3>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="8.3.2.1">
+      Excel Export
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall support exporting documents to Excel format.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="8.3.2.2">
+      PlantUML Export
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall support exporting documents to ReqIF format.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="8.3.2.3">
+      ReqIF Import/Export
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall support ReqIF format.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="8.3.2.4">
+      Tex Export
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall support exporting documents to Tex format.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="8.3.2.5">
+      Doorstop Export
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall support import and exporting documents from/to Doorstop format.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="8.3.2.6">
+      Markdown support for text and code blocks
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall support rendering text/code blocks into RST syntax.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h3 class="section-title" data-level="8.3.3">
+          Platform support
+        </h3>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="8.3.3.1">
+      Linux support
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall work on Linux systems.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="8.3.3.2">
+      Windows support
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall work on Windows systems.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h3 class="section-title" data-level="8.3.4">
+          Traceability and coverage
+        </h3>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="8.3.4.1">
+      Linking with implementation artifacts
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall support linking requirements to files.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="8.3.4.2">
+      Requirement checksumming
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall support calculation of checksums for requirements.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="8.3.4.3">
+      Documentation coverage
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall generate requirements coverage information.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h3 class="section-title" data-level="8.3.5">
+          Validations and testing
+        </h3>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="8.3.5.1">
+      Validation: Section Levels
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>Section levels must be properly nested.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="8.3.5.2">
+      Validation: Valid HTML markup
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc's HTML export tests shall validate the generated HTML markup.</p>
+</div>
+
+    </div>
+      <div class="comment">
+        <div class="document">
+<p>First candidate: Table of contents and its nested <tt class="docutils literal"><span class="pre">&lt;ul&gt;/&lt;li&gt;</span></tt> items.</p>
+</div>
+
+      </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="8.3.6">
+      Custom fields
+    </h3><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall support customization of the default grammar with custom fields.</p>
+</div>
+
+    </div>
+      <div class="comment">
+        <div class="document">
+<p>Examples:</p>
+<ul class="simple">
+<li>RAIT compliance fields (Review of design, analysis, inspection, testing)</li>
+<li>Automotive Safety Integrity Level level (ASIL).</li>
+</ul>
+</div>
+
+      </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h3 class="section-title" data-level="8.3.7">
+      Filtering by tags
+    </h3><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall support filtering filtering by tags.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h3 class="section-title" data-level="8.3.8">
+          Options
+        </h3>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="8.3.8.1">
+      Option: RST: Top-level title: document name
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall support config option <cite>include_toplevel_title</cite>.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="8.3.8.2">
+      Option: Title: Automatic numeration
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall support config option <cite>numeric_titles</cite>.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="8.3.8.3">
+      Option: Title: Display requirement titles
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall support config option <cite>display_requirement_titles</cite>.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="8.3.8.4">
+      Option: Title: Display requirement UID
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall support config option <cite>display_requirement_uids</cite>.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central">
+        <h3 class="section-title" data-level="8.3.9">
+          Advanced
+        </h3>
+      </div>
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="8.3.9.1">
+      Facts table. Invariants calculation.
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall support creation of fact tables calculating invariants that enforce numerical constraints.</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+    <div class="view-traceability_row">
+      <div class="view-traceability_cell cell-parent">
+      </div>
+      <div class="view-traceability_cell cell-central" id="">
+
+          <div class="requirement requirement_card">
+    <h4 class="section-title" data-level="8.3.9.2">
+      Graphical User Interface (GUI)
+    </h4><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall provide a Graphical User Interface (GUI).</p>
+</div>
+
+    </div>
+
+</div>
+
+      </div>
+
+      <div class="view-traceability_cell cell-children">
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+</body>

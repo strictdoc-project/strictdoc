@@ -1,7 +1,9 @@
 <ul class="recursive_row">
   <li class="recursive_column">
     <div class="recursive_cell">
-      {% include "_shared/requirement_card.jinja.html" %}
+      {% with requirement_view_type='card' -%}
+      {% include "_shared/requirement.jinja.html" %}
+      {%- endwith %}
     </div>
   </li>
 

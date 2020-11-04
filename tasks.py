@@ -11,11 +11,12 @@ def formatted_command(string):
 @task
 def sphinx(c):
     c.run(formatted_command("""
-        python3 strictdoc/cli/main.py export docs
+        python3 strictdoc/cli/main.py export docs --output-dir output/sphinx
     """))
 
     c.run(formatted_command("""
-        cp -v output/rst/StrictDoc.rst docs/sphinx/source/
+        cp -v output/sphinx/rst/StrictDoc.rst docs/sphinx/source/ &&
+        cp -rv output/sphinx/html/* docs/strictdoc-html/strictdoc-html
     """))
 
     c.run(formatted_command("""
@@ -37,7 +38,7 @@ def test_unit(c):
 
 
 @task
-def test_integration(c, focus=None):
+def test_integration(c, focus=None, debug=False):
     clean(c)
 
     cwd = os.getcwd()
@@ -45,15 +46,18 @@ def test_integration(c, focus=None):
     strictdoc_exec = 'python \\"{cwd}/strictdoc/cli/main.py\\"'.format(cwd=cwd)
 
     focus_or_none = '--filter {}'.format(focus) if focus else ''
+    debug_opts = '-vv --show-all' if debug else ''
 
     command = formatted_command("""
         lit
         --param STRICTDOC_EXEC="{strictdoc_exec}"
-        -vv
-        --show-all
+        -v
+        {debug_opts}    
         {focus_or_none}
         {cwd}/tests/integration
-    """).format(strictdoc_exec=strictdoc_exec, cwd=cwd,
+    """).format(strictdoc_exec=strictdoc_exec,
+                cwd=cwd,
+                debug_opts=debug_opts,
                 focus_or_none=focus_or_none)
 
     print(command)

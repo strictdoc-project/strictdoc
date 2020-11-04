@@ -7,7 +7,7 @@
   --level-line-width: 1px;
   --color-line: #aaa;
   --color-text: #000;
-  --color-bg: var(--color-bg-mac, #F2F5F9);
+  --color-bg: #fff;
   --color-row-hover-bg: rgb(244, 244, 244);
 
   --half-sell-height: calc( var(--line-height)/2 + var(--cell-padding) );

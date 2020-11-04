@@ -1,9 +1,6 @@
-import concurrent.futures
-import datetime
 import glob
 import os
 from functools import partial
-from multiprocessing.pool import Pool
 from pathlib import Path
 
 from strictdoc.core.document_finder import DocumentFinder
@@ -20,10 +17,11 @@ from strictdoc.helpers.timing import timing_decorator, measure_performance
 
 
 class ExportAction:
-    def __init__(self, strictdoc_src_path):
+    def __init__(self, strictdoc_src_path, parallelizer):
+        assert parallelizer
         self.strictdoc_src_path = strictdoc_src_path
         self.cwd = os.getcwd()
-
+        self.parallelizer = parallelizer
         strict_own_files = glob.iglob('{}/strictdoc/**/*'.format(self.strictdoc_src_path), recursive=True)
         strict_own_files = [f for f in strict_own_files if f.endswith('.html') or f.endswith('.py')]
         latest_strictdoc_own_file = max(strict_own_files, key=os.path.getctime)
@@ -39,16 +37,16 @@ class ExportAction:
             output_dir = os.path.join(self.cwd, output_dir)
 
         output_html_root = '{}/html'.format(output_dir)
+        output_rst_root = '{}/rst'.format(output_dir)
         output_html_static_files = '{}/_static'.format(output_html_root)
 
         Path(output_html_root).mkdir(parents=True, exist_ok=True)
 
         document_tree, asset_dirs = DocumentFinder.find_sdoc_content(
-            path_to_single_file_or_doc_root, output_html_root
+            path_to_single_file_or_doc_root, output_html_root, self.parallelizer
         )
 
         traceability_index = TraceabilityIndex.create(document_tree)
-
         writer = DocumentTreeHTMLGenerator()
         output = writer.export(document_tree)
 
@@ -58,13 +56,13 @@ class ExportAction:
             file.write(output)
 
         # Single Document pages (RST)
-        Path("output/rst").mkdir(parents=True, exist_ok=True)
+        Path(output_rst_root).mkdir(parents=True, exist_ok=True)
         for document in document_tree.document_list:
             document_content = SingleDocumentRSTExport.export(document_tree,
                                                               document,
                                                               traceability_index)
 
-            document_out_file = "output/rst/{}.rst".format(document.name)
+            document_out_file = "{}/{}.rst".format(output_rst_root, document.name)
             with open(document_out_file, 'w') as file:
                 file.write(document_content)
 
@@ -79,15 +77,16 @@ class ExportAction:
             document._tx_metamodel = None
             document._tx_peg_rule = None
 
-        export_binding = partial(self._export_with_performance,
+        export_binding = partial(ExportAction._export_with_performance,
                                  document_tree=document_tree,
-                                 traceability_index=traceability_index)
+                                 traceability_index=traceability_index,
+                                 strictdoc_src_path=self.strictdoc_src_path,
+                                 strictdoc_last_update=self.strictdoc_last_update)
 
-        # TODO: Not ready for ProcessPoolExecutor: Traceability index is a shared object.
-        with concurrent.futures.ProcessPoolExecutor(max_workers=4) as executor:
-            executor.map(export_binding, document_tree.document_list)
+        self.parallelizer.map(document_tree.document_list, export_binding)
 
-        static_files_src = os.path.join(self.strictdoc_src_path, 'strictdoc/export/html/static')
+        static_files_src = os.path.join(self.strictdoc_src_path,
+                                        'strictdoc/export/html/static')
         sync_dir(static_files_src, output_html_static_files)
         for asset_dir in asset_dirs:
             source_path = asset_dir['full_path']
@@ -97,9 +96,14 @@ class ExportAction:
 
         print('Export completed. Documentation tree can be found at:\n{}'.format(output_html_root))
 
-    def _export_with_performance(self, document, document_tree, traceability_index):
+    @staticmethod
+    def _export_with_performance(document,
+                                 document_tree,
+                                 traceability_index,
+                                 strictdoc_src_path,
+                                 strictdoc_last_update):
         document_meta: DocumentMeta = document.meta
-        full_output_path = os.path.join(self.strictdoc_src_path, document_meta.get_html_doc_path())
+        full_output_path = os.path.join(strictdoc_src_path, document_meta.get_html_doc_path())
 
         # If file exists we want to check its modification path in order to skip
         # its generation in case it has not changed since the last generation.
@@ -108,14 +112,16 @@ class ExportAction:
             sdoc_mtime = get_file_modification_time(document_meta.sdoc_full_path)
 
             if (sdoc_mtime < output_file_mtime and
-                self.strictdoc_last_update < output_file_mtime):
+                strictdoc_last_update < output_file_mtime):
                 with measure_performance('Skip: {}'.format(document.name)):
                     return
 
         with measure_performance('Published: {}'.format(document.name)):
-            self._export(document, document_tree, traceability_index)
+            ExportAction._export(document, document_tree, traceability_index)
+        return None
 
-    def _export(self, document, document_tree, traceability_index):
+    @staticmethod
+    def _export(document, document_tree, traceability_index):
         document_meta: DocumentMeta = document.meta
 
         document_output_folder = document_meta.output_folder_rel_path

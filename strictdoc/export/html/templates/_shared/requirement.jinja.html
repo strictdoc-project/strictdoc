@@ -14,11 +14,7 @@ data-status='{{ requirement.status.lower() }}'
   {%- if requirement.has_meta -%}
     <dl class="requirement-meta">
       {%- if requirement.uid %}
-      <div><dt>UID</dt><dd>
-        <!-- <a href="{{ traceability_index.get_link(requirement) }}"> -->
-        {{ requirement.uid }}
-        <!-- </a> -->
-      </dd></div>
+      <div><dt>UID</dt><dd>{{ requirement.uid }}</dd></div>
       {%- endif %}
       {%- if requirement.status %}
       <div><dt>Status</dt><dd>{{ requirement.status }}</dd></div>

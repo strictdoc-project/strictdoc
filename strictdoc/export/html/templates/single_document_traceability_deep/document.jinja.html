@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/global.css" />
-    <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/layout-main-with-toc.css" />
-    <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/single_document_traceability_deep.css" />
 
-    <script type="text/javascript" src="{{document.meta.get_root_path_prefix()}}/_static/jquery.min.js"></script>
-    <script type="text/javascript" src="{{document.meta.get_root_path_prefix()}}/_static/pan-with-space.js"></script>
-    <script type="text/javascript" src="{{document.meta.get_root_path_prefix()}}/_static/toc.js"></script>
-    <title>{{document.name}} - Deep Traceability</title>
+<head>
+  <meta charset="UTF-8">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/global.css" />
+  <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/layout-main-with-toc.css" />
+  <script type="text/javascript" src="{{document.meta.get_root_path_prefix()}}/_static/jquery.min.js"></script>
+  <script type="text/javascript" src="{{document.meta.get_root_path_prefix()}}/_static/pan-with-space.js"></script>
+  <script type="text/javascript" src="{{document.meta.get_root_path_prefix()}}/_static/toc.js"></script>
+  <title>{{document.name}} - Deep Traceability</title>
 </head>
 
 <body>
@@ -23,53 +24,51 @@
     <main class="content">
       <h1 class="document-title">{{document.name}} <span class="document-view-type">Deep Traceability</span></h1>
 
-  {%- if traceability_index.has_tags(document) -%}
-    <div id="tags-outline">
-    {%- for tag in traceability_index.get_tags(document) %}
-      <span class="tag">
-        {{ tag[0] }} x {{ tag[1] }}
-      </span>
-    {%- endfor %}
-    </div>
-  {%- endif %}
+      {%- if traceability_index.has_tags(document) -%}
+      <div id="tags-outline">
+        {%- for tag in traceability_index.get_tags(document) %}
+        <span class="tag">
+          {{ tag[0] }} x {{ tag[1] }}
+        </span>
+        {%- endfor %}
+      </div>
+      {%- endif %}
 
-  <div class="view-traceability-deep">
-  {%- for section_or_requirement in document_iterator.all_content() %}
-    {%- if section_or_requirement.is_requirement %}
-      <div class="view-traceability-deep_row">
+      <div class="view-traceability-deep">
+      {%- for section_or_requirement in document_iterator.all_content() %}
+        {%- if section_or_requirement.is_requirement %}
+        <section class="view-traceability-deep_row" id="{{ string_to_anchor_id(section_or_requirement.title) }}">
 
-        <div class="view-traceability-deep_column-left">
+          <div class="view-traceability-deep_column" data-requirement-role="parents">
           {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) %}
-            {% include "single_document_traceability_deep/recursive_cell_left.jinja.html" %}
+            {% include "single_document_traceability_deep/recursive_cell_parent.jinja.html" %}
           {%- endfor %}
-        </div> <!-- //view-traceability-deep_column-left -->
+          </div>
 
-        {%- set requirement = section_or_requirement %}
-        <div class="view-traceability-deep_column-main">
-          <div class="requirement-container" id="{{ string_to_anchor_id(section_or_requirement.title) }}">
+          {%- set requirement = section_or_requirement %}
+          <div class="view-traceability-deep_column" data-requirement-role="current">
             {% with requirement_view_type='card' -%}
-              {% include "_shared/requirement.jinja.html" %}
+            {% include "_shared/requirement.jinja.html" %}
             {%- endwith %}
           </div>
-        </div> <!-- //view-traceability-deep_column-main -->
 
-        <div class="view-traceability-deep_column-right">
+          <div class="view-traceability-deep_column" data-requirement-role="children">
           {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) %}
-            {% include "single_document_traceability_deep/recursive_cell_right.jinja.html" %}
+            {% include "single_document_traceability_deep/recursive_cell_children.jinja.html" %}
           {%- endfor %}
-        </div> <!-- //view-traceability-deep_column-right -->
+          </div>
 
-      </div> <!-- //view-traceability-deep_row -->
-    {%- endif %}
-  {%- endfor %}
-  </div>
+        </section>
+        {%- endif %}
+      {%- endfor %}
+      </div>
 
     </main>
   </div>
 </body>
 
 <script>
-  $(document).ready(function() {
+  $(document).ready(function () {
     // Quick and dirty scrolling to the middle of the document.
     var table = $('.table').first();
     window.scrollBy(table.outerWidth() / 2 - $(window).width() / 2, 0);

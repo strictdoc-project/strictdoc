@@ -1,35 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="_static/global.css" />
-    <link rel="stylesheet" href="_static/layout-main-with-toc.css" />
-    <link rel="stylesheet" href="_static/document_tree.css" />
-    <title>Document Tree</title>
+  <meta charset="UTF-8">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="_static/global.css" />
+  <link rel="stylesheet" href="_static/layout-main-with-toc.css" />
+  <link rel="stylesheet" href="_static/document_tree.css" />
+  <title>Document Tree</title>
 </head>
 
 <body>
   <main class="content">
-  <h1 class="document-title">Document Tree</h1>
+    <h1 class="document-title">Document Tree</h1>
 
-  <div class="document-tree">
-    <div class="document-tree_table">
+    <div class="document-tree">
+      <div class="document-tree_table">
 
-      <ul class="document-tree_ul_0">
+        <ul class="document-tree_ul_0">
+        {%- for folder_or_file in artefact_list: -%}
 
-      {%- for folder_or_file in artefact_list: -%}
-        {%- set last_class_or_none = '' -%}
-        {%- if loop.last or (loop.nextitem and loop.nextitem.level < folder_or_file.level) -%}
-          {%- set last_class_or_none = 'last-in-level' -%}
-        {%- endif -%}
+          {%- set last_class_or_none = '' -%}
+          {%- if loop.last or (loop.nextitem and loop.nextitem.level < folder_or_file.level) -%}
+            {%- set last_class_or_none = 'last-in-level' -%}
+          {%- endif -%}
 
-        <li class="document-tree_level_{{folder_or_file.level}}">
+          <li class="document-tree_level_{{folder_or_file.level}}">
 
-          <div class="document-tree_row">
+            <div class="document-tree_row">
             {%- if folder_or_file.is_folder(): %}
               <div class="document-tree_cell">
                 {%- if folder_or_file.level > 0: %}
-                  <i class="level-branch"></i>
+                <i class="level-branch"></i>
                 {%- endif -%}
 
                 <span class="document-tree_folder">
@@ -39,7 +42,7 @@
             {% else %}
               <div class="document-tree_cell">
                 {%- if folder_or_file.level > 0: %}
-                  <i class="level-branch"></i>
+                <i class="level-branch"></i>
                 {%- endif -%}
 
                 <span class="document-tree_file">
@@ -74,33 +77,34 @@
                 </span>
               </div>
             {% endif %}
-          </div>
+            </div>
 
-          {%- if not loop.last -%}
+            {%- if not loop.last -%}
             {%- if loop.nextitem.level > folder_or_file.level -%}
-              <ul class="document-tree_ul_{{folder_or_file.level + 1}}">
-            {%- elif loop.nextitem.level < folder_or_file.level -%}
-                </li>
-              {%- for x in range(0, folder_or_file.level - loop.nextitem.level) -%}
-                </ul>
-                </li>
-              {%- endfor -%}
-            {%- else -%}
-              </li>
-            {%- endif -%}
-          {%- else -%}
-            </li>
-            {%- for x in range(0, folder_or_file.level - 1) -%}
-                </ul>
-                </li>
-              {%- endfor -%}
-            </ul>
-          {%- endif -%}
-      {%- endfor -%}
+            <ul class="document-tree_ul_{{folder_or_file.level + 1}}">
+              {%- elif loop.nextitem.level < folder_or_file.level -%}
 
-      </ul>
+          </li>
+          {%- for x in range(0, folder_or_file.level - loop.nextitem.level) -%}
+        </ul>
+        </li>
+        {%- endfor -%}
+        {%- else -%}
+        </li>
+        {%- endif -%}
+        {%- else -%}
+        </li>
+        {%- for x in range(0, folder_or_file.level - 1) -%}
+        </ul>
+        </li>
+        {%- endfor -%}
+        </ul>
+        {%- endif -%}
+        {%- endfor -%}
 
+        </ul>
+
+      </div>
     </div>
-  </div>
-</main>
+  </main>
 </body>

@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
-
   <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/global.css" />
   <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/layout-main-with-toc.css" />
-
   <script type="text/javascript" src="{{document.meta.get_root_path_prefix()}}/_static/toc.js"></script>
   <title>{{document.name}} - Traceability</title>
 </head>
@@ -23,80 +22,80 @@
     <main class="content">
       <h1 class="document-title">{{document.name}} <span class="document-view-type">Traceability</span></h1>
 
-
       {%- if traceability_index.has_tags(document) -%}
       <div id="tags-outline">
-      {%- for tag in traceability_index.get_tags(document) %}
+        {%- for tag in traceability_index.get_tags(document) %}
         <span class="tag">
           {{ tag[0] }} x {{ tag[1] }}
         </span>
-      {%- endfor %}
+        {%- endfor %}
       </div>
       {%- endif %}
 
-  <div class="view-traceability" id="sections-and-requirements">
-  {%- for section_or_requirement in document_iterator.all_content() %}
+      <div class="view-traceability" id="sections-and-requirements">
+      {%- for section_or_requirement in document_iterator.all_content() %}
 
-  {%- if section_or_requirement.is_requirement %}
-    <section class="view-traceability_row"  id="{{ string_to_anchor_id(section_or_requirement.title) }}">
-      <div class="view-traceability_column" data-requirement-role="parents">
-        {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) %}
+        {%- if section_or_requirement.is_requirement %}
+        <section class="view-traceability_row" id="{{ string_to_anchor_id(section_or_requirement.title) }}">
+          <div class="view-traceability_column" data-requirement-role="parents">
+          {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) %}
 
-          {% with requirement_view_type='card' -%}
+            {% with requirement_view_type='card' -%}
             {% include "_shared/requirement.jinja.html" %}
-          {%- endwith %}
+            {%- endwith %}
 
-        {%- endfor %}
-      </div>
+          {%- endfor %}
+          </div>
 
-      <div class="view-traceability_column" data-requirement-role="current">
-        {%- set requirement = section_or_requirement %}
+          <div class="view-traceability_column" data-requirement-role="current">
+            {%- set requirement = section_or_requirement %}
 
-          {% with requirement_view_type='card' -%}
+            {% with requirement_view_type='card' -%}
             {% include "_shared/requirement.jinja.html" %}
-          {%- endwith %}
+            {%- endwith %}
 
-      </div>
-      <div class="view-traceability_column" data-requirement-role="children">
-        {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) %}
+          </div>
+          <div class="view-traceability_column" data-requirement-role="children">
+          {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) %}
 
-          {% with requirement_view_type='card' -%}
+            {% with requirement_view_type='card' -%}
             {% include "_shared/requirement.jinja.html" %}
-          {%- endwith %}
+            {%- endwith %}
 
-        {%- endfor %}
-      </div>
-    </section>
+          {%- endfor %}
+          </div>
+        </section>
 
-    {%- elif section_or_requirement.is_section %}
-    <section class="view-traceability_row" id="{{ string_to_anchor_id(section_or_requirement.title) }}">
+        {%- elif section_or_requirement.is_section %}
+        <section class="view-traceability_row" id="{{ string_to_anchor_id(section_or_requirement.title) }}">
 
-      <div class="view-traceability_column" data-requirement-role="parent"></div>
-      <div class="view-traceability_column" data-requirement-role="current">
+          <div class="view-traceability_column" data-requirement-role="parent"></div>
+          <div class="view-traceability_column" data-requirement-role="current">
 
-        {%- set section = section_or_requirement %}
-        <h{{ section.ng_level }} class="section-title" data-level="{{ section.export_title }}">
-          {{ section.title }}
-        </h{{ section.ng_level }}>
-      </div>
-      <div class="view-traceability_column" data-requirement-role="children"></div>
-    </section>
-    {%- for free_text in section.free_texts -%}
-    <section class="view-traceability_row">
-      <div class="view-traceability_column" data-requirement-role="parent">
-      </div>
-      <div class="view-traceability_column" data-requirement-role="current">
-        <div class="free_text">
-          {{ renderer.render_free_text(free_text) }}
-        </div>
-      </div>
-      <div class="view-traceability_column" data-requirement-role="children">
-      </div>
-    </section>
-    {%- endfor -%}
+            {%- set section = section_or_requirement %}
+            <h{{ section.ng_level }} class="section-title" data-level="{{ section.export_title }}">
+              {{ section.title }}
+            </h{{ section.ng_level }}>
+          </div>
+          <div class="view-traceability_column" data-requirement-role="children"></div>
+        </section>
+        {%- for free_text in section.free_texts -%}
+        <section class="view-traceability_row">
+          <div class="view-traceability_column" data-requirement-role="parent">
+          </div>
+          <div class="view-traceability_column" data-requirement-role="current">
+            <div class="free_text">
+              {{ renderer.render_free_text(free_text) }}
+            </div>
+          </div>
+          <div class="view-traceability_column" data-requirement-role="children">
+          </div>
+        </section>
+        {%- endfor -%}
 
-    {%- endif %}
-  {%- endfor %}
+        {%- endif %}
+
+      {%- endfor %}
       </div>
 
     </main>

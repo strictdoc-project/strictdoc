@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/global.css" />
     <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/layout-main-with-toc.css" />
-    <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/traceability.css" />
 
     <script type="text/javascript" src="{{document.meta.get_root_path_prefix()}}/_static/jquery.min.js"></script>
     <script type="text/javascript" src="{{document.meta.get_root_path_prefix()}}/_static/pan-with-space.js"></script>
@@ -42,24 +41,24 @@
           {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) %}
             {% include "single_document_traceability_deep/recursive_cell_parent.jinja.html" %}
           {%- endfor %}
-        </div> <!-- //view-traceability-deep_column-left -->
+        </div>
 
         {%- set requirement = section_or_requirement %}
         <div class="view-traceability-deep_column" data-requirement-role="current">
-          <!-- <div class="requirement-container"> -->
+
             {% with requirement_view_type='card' -%}
               {% include "_shared/requirement.jinja.html" %}
             {%- endwith %}
-          <!-- </div> -->
-        </div> <!-- //view-traceability-deep_column-main -->
+
+        </div>
 
         <div class="view-traceability-deep_column" data-requirement-role="children">
           {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) %}
             {% include "single_document_traceability_deep/recursive_cell_children.jinja.html" %}
           {%- endfor %}
-        </div> <!-- //view-traceability-deep_column-right -->
+        </div>
 
-      </section> <!-- //view-traceability-deep_row -->
+      </section>
     {%- endif %}
   {%- endfor %}
   </div>

@@ -14,7 +14,8 @@ from strictdoc.helpers.parallelizer import Parallelizer
 # it in the fork() child process. Crashing instead. Set a breakpoint on
 # objc_initializeAfterForkError to debug.
 # """
-PARALLELIZER = Parallelizer()
+enable_parallelization = '--no-parallelization' not in sys.argv
+PARALLELIZER = Parallelizer.create(enable_parallelization)
 
 from strictdoc.cli.cli_arg_parser import cli_args_parser
 from strictdoc.core.actions.export_action import ExportAction
@@ -44,6 +45,8 @@ def main():
         passthrough_action.passthrough(input_file, output_file)
 
     elif args.command == 'export':
+        parallelization_value = 'Enabled' if enable_parallelization else 'Disabled'
+        print("Parallelization: {}".format(parallelization_value), flush=True)
         export_controller = ExportAction(STRICTDOC_ROOT_PATH, PARALLELIZER)
         export_controller.export(args.input_paths, args.output_dir)
 

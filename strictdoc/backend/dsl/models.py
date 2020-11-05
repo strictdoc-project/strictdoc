@@ -87,7 +87,10 @@ class Requirement(object):
         assert parent
 
         self.parent = parent
-        self.uid = uid.strip()
+
+        # TODO: Why textX creates empty uid when the sdoc doesn't declare the
+        # UID field?
+        self.uid = uid.strip() if (isinstance(uid, str) and len(uid) > 0) else None
         self.status = status
         self.tags = tags
         self.references: [Reference] = references

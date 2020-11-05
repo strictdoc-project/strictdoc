@@ -39,16 +39,19 @@ def cli_args_parser():
     command_parser_export.add_argument('--output-dir',
                                        type=str,
                                        help='Output folder')
+    command_parser_export.add_argument('--no-parallelization',
+                                       action='store_true',
+                                       help='Disables parallelization. All work happens in the main thread. This option might be useful for debugging.')
 
     command_parser_passthrough = command_subparsers.add_parser(
         "passthrough", help="Export document tree.", parents=[]
     )
     command_parser_passthrough.add_argument('input_file',
                                             type=str,
-                                            help='TODO')
+                                            help='Path to the input SDoc file')
 
     command_parser_passthrough.add_argument('--output-file',
                                             type=str,
-                                            help='TODO')
+                                            help='Path to the output SDoc file')
 
     return main_parser

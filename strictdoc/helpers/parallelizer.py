@@ -1,6 +1,5 @@
 import multiprocessing
 import sys
-from queue import Empty
 
 
 # This might be not the most efficient way to parallelize using processes,
@@ -11,6 +10,13 @@ from queue import Empty
 # which seems to be a worth hack than using a little bit slower parallelization
 # algorithm below (slower means roughly 7s instead of 6s, so 6/7).
 class Parallelizer:
+    @staticmethod
+    def create(parallelize):
+        if parallelize:
+            return Parallelizer()
+        else:
+            return NullParallelizer()
+
     def __init__(self):
         self.input_queue = multiprocessing.Queue()
         self.output_queue = multiprocessing.Queue()
@@ -38,3 +44,12 @@ class Parallelizer:
             sys.stdout.flush()
             sys.stderr.flush()
             output_queue.put(result)
+
+
+class NullParallelizer:
+    @staticmethod
+    def map(contents, processing_func):
+        results = []
+        for content in contents:
+            results.append(processing_func(content))
+        return results

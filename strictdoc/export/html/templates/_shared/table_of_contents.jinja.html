@@ -1,11 +1,14 @@
   <div id="toc_toggle" class="toc_toggle"></div>
 
-  <div class="toc_container">
+  <header class="toc_header">
     <a class="link-back-to-index" href="{{document.meta.get_root_path_prefix()}}/index.html">Back to Index</a>
+    {%- if document.ng_sections %}
+    <div class="toc_title">Table of Contents</div>
+    {%- endif %}
+  </header>
 
+  <div class="toc_container">
   {%- if document.ng_sections %}
-    <div class="toc_header">Table of Contents</div>
-
 
     <ul class="toc_list">
     {%- for section in document_iterator.table_of_contents() -%}

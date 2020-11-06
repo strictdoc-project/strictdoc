@@ -42,6 +42,8 @@ div.document {
   --traceability-arrow: 1.25rem;
   --traceability-outer-row-gap: 1.25rem;
   --traceability-inner-row-gap: .5rem;
+
+  --highlight-color: rgb(255, 255, 125);
 }
 
 body {
@@ -57,7 +59,7 @@ section {
 .view-article section:target .section-title,
 .view-table section:target .section-title,
 section:target [data-requirement-role="current"] .section-title {
-  background-color: rgb(255, 255, 125);
+  background-color: var(--highlight-color);
 }
 
 /* .content Layout */
@@ -134,6 +136,7 @@ h4 { font-size: 1.2em; }
 h5 { font-size: 1em; }
 h6 { font-size: 1em; }
 
+.section-title,
 h1.section-title,
 h2.section-title,
 h3.section-title,
@@ -233,6 +236,7 @@ dl.requirement-meta {
 
 .section-title[data-level]::before {
   content: attr(data-level) " ";
+  font-weight: bold;
 }
 
 /* pre.code */

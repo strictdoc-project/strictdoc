@@ -26,8 +26,8 @@ window.onload = function() {
   tocToggle = document.getElementById('toc_toggle');
   tocLayout = document.getElementById('toc_layout');
 
-  tocToggle.dataset.state = 'close';
-  tocLayout.dataset.state = 'close';
+  tocToggle.dataset.state = 'open';
+  tocLayout.dataset.state = 'open';
 
   tocToggle.addEventListener('click', () => {
     switchTOC(tocToggle.dataset.state);

@@ -25,7 +25,7 @@ class SingleDocumentTableHTMLExport:
     env.globals.update(isinstance=isinstance)
 
     @staticmethod
-    def export(document_tree, document, traceability_index, renderer):
+    def export(document, traceability_index, renderer):
         output = ""
 
         template = SingleDocumentTableHTMLExport.env.get_template('single_document_table/document.jinja.html')
@@ -46,7 +46,7 @@ class SingleDocumentTraceabilityHTMLExport:
     env.globals.update(isinstance=isinstance)
 
     @staticmethod
-    def export(document_tree, document, traceability_index, renderer):
+    def export(document, traceability_index, renderer):
         output = ""
 
         template = SingleDocumentTraceabilityHTMLExport.env.get_template('single_document_traceability/document.jinja.html')
@@ -59,7 +59,7 @@ class SingleDocumentTraceabilityHTMLExport:
         return output
 
     @staticmethod
-    def export_deep(document_tree, document, traceability_index, renderer):
+    def export_deep(document, traceability_index, renderer):
         output = ""
 
         template = SingleDocumentTraceabilityHTMLExport.env.get_template('single_document_traceability_deep/document.jinja.html')

@@ -13,6 +13,10 @@
   --half-sell-height: calc( var(--line-height)/2 + var(--cell-padding) );
 }
 
+.document-tree {
+  padding: calc(var(--toc-toggle-width) * 2);
+}
+
 .document-tree * {
   box-sizing: border-box;
   line-height: var(--line-height);

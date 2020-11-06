@@ -28,6 +28,9 @@
   --toc-width-index: 22;
 
   --content-padding-index: 3;
+
+  --toc-width: 330px;
+  --toc-toggle-width: 48px;
 }
 
 /* aside.toc */

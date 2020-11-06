@@ -159,15 +159,27 @@ header.toc_header {
   font-size: var(--toc-font-size);
 }
 
-.toc_list a:link,
+.toc_list a:link {
+  color: var(--toc-link-color);
+  text-decoration: none;
+}
+
 .toc_list a:visited {
   color: var(--toc-link-color);
   text-decoration: none;
 }
 
+.toc_list a:focus {
+  background: yellowgreen;
+}
+
 .toc_list a:hover {
   color: var(--toc-active-link-color);
   background-color: var(--toc-panel-bg-hover);
+}
+
+.toc_list a:active {
+  background: var(--highlight-color);
 }
 
 /* open / close */

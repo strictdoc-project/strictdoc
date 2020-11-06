@@ -9,6 +9,10 @@ data-status='{{ requirement.status.lower() }}'
     <h{{ requirement.ng_level }} class="section-title" data-level="{{ requirement.export_title }}">
       {{ requirement.title }}
     </h{{ requirement.ng_level }}>
+  {% else %}
+    <p class="section-title" data-level="{{ requirement.export_title }}">
+      <i>[no title]</i>
+    </p>
   {%- endif %}
 
   {%- if requirement.has_meta -%}

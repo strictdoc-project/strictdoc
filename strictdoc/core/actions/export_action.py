@@ -139,7 +139,7 @@ class ExportAction:
 
         # Single Document Table pages
         document_content = SingleDocumentTableHTMLExport.export(
-            document_tree, document, traceability_index, document.renderer
+            document, traceability_index, document.renderer
         )
         document_out_file = document_meta.get_html_table_path()
 
@@ -148,7 +148,7 @@ class ExportAction:
 
         # Single Document Traceability pages
         document_content = SingleDocumentTraceabilityHTMLExport.export(
-            document_tree, document, traceability_index, document.renderer
+            document, traceability_index, document.renderer
         )
         document_out_file = document_meta.get_html_traceability_path()
 
@@ -157,7 +157,7 @@ class ExportAction:
 
         # Single Document Deep Traceability pages
         document_content = SingleDocumentTraceabilityHTMLExport.export_deep(
-            document_tree, document, traceability_index, document.renderer
+            document, traceability_index, document.renderer
         )
         document_out_file = document_meta.get_html_deep_traceability_path()
 

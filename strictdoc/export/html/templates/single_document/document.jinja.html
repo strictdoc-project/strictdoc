@@ -36,7 +36,7 @@
         {%- endif -%}
 
         {%- for section_or_requirement in document_iterator.all_content() %}
-        <section id="{{ string_to_anchor_id(section_or_requirement.title) }}">
+        <section id="{{ link_renderer.render(section_or_requirement) }}">
         {%- if section_or_requirement.is_requirement %}
           {%- set requirement = section_or_requirement %}
           {% with requirement_view_type='block' -%}

@@ -49,7 +49,7 @@
       {%- for section_or_requirement in document_iterator.all_content() %}
 
         {%- if section_or_requirement.is_composite_requirement %}
-        <section class="view-table_composite" id="{{ string_to_anchor_id(section_or_requirement.title) }}">
+        <section class="view-table_composite" id="{{ link_renderer.render(section_or_requirement) }}">
           {%- set section = section_or_requirement %}
           <h{{ section.ng_level }} class="section-title" data-level="{{ section.export_title }}">
             {{ section.title }}
@@ -62,7 +62,7 @@
         </section>
 
         {%- elif section_or_requirement.is_requirement %}
-        <section class="view-table_requirement" id="{{ string_to_anchor_id(section_or_requirement.title) }}">
+        <section class="view-table_requirement" id="{{ link_renderer.render(section_or_requirement) }}">
           {%- set requirement = section_or_requirement %}
           {% with requirement_view_type='table' -%}
           {% include "_shared/requirement.jinja.html" %}
@@ -70,7 +70,7 @@
         </section>
 
         {%- elif section_or_requirement.is_section %}
-        <section class="view-table_section" id="{{ string_to_anchor_id(section_or_requirement.title) }}">
+        <section class="view-table_section" id="{{ link_renderer.render(section_or_requirement) }}">
           {%- set section = section_or_requirement %}
           <h{{ section.ng_level }} class="section-title" data-level="{{ section.export_title }}">
             {{ section.title }}

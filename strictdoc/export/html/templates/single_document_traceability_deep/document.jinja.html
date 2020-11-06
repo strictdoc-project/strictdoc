@@ -37,7 +37,7 @@
       <div class="view-traceability-deep">
       {%- for section_or_requirement in document_iterator.all_content() %}
         {%- if section_or_requirement.is_requirement %}
-        <section class="view-traceability-deep_row" id="{{ string_to_anchor_id(section_or_requirement.title) }}">
+        <section class="view-traceability-deep_row" id="{{ link_renderer.render(section_or_requirement) }}">
 
           <div class="view-traceability-deep_column" data-requirement-role="parents">
           {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) %}

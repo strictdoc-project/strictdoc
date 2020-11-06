@@ -1,7 +1,5 @@
 from jinja2 import Environment, PackageLoader
 
-from strictdoc.helpers.hyperlinks import string_to_anchor_id
-
 
 class DocumentTraceHTMLGenerator:
     env = Environment(
@@ -11,7 +9,7 @@ class DocumentTraceHTMLGenerator:
     env.globals.update(isinstance=isinstance)
 
     @staticmethod
-    def export(document, traceability_index, renderer):
+    def export(document, traceability_index, markup_renderer, link_renderer):
         output = ""
 
         template = DocumentTraceHTMLGenerator.env.get_template(
@@ -20,7 +18,7 @@ class DocumentTraceHTMLGenerator:
 
         output += template.render(document=document,
                                   traceability_index=traceability_index,
-                                  string_to_anchor_id=string_to_anchor_id,
-                                  renderer=renderer)
+                                  renderer=markup_renderer,
+                                  link_renderer=link_renderer)
 
         return output

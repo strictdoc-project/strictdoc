@@ -4,8 +4,6 @@ from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 
 
 class DocumentTreeHTMLGenerator:
-    OFFSET = 8
-
     env = Environment(
         loader=PackageLoader('strictdoc', 'export/html/templates')
     )

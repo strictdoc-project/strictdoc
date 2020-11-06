@@ -13,9 +13,11 @@ class LinkRenderer:
                 return self._string_to_link(node.title)
             if node.uid and len(node.uid) > 0:
                 return self._string_to_link(node.uid)
-            return ""
+
+            # TODO: This is not reliable
+            return str(id(node))
         raise NotImplementedError
 
     @staticmethod
     def _string_to_link(string):
-        return re.sub(r'[^A-Za-z0-9]+', '-', string)
+        return re.sub(r'[^\w0-9]+', '-', string)

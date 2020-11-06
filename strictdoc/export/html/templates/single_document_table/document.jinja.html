@@ -22,7 +22,9 @@
     </aside>
 
     <main class="content">
-      <h1 class="document-title">{{document.name}} <span class="document-view-type">Table</span></h1>
+      <header class="document-header">
+        {{document.name}} <span class="document-view-type">Table</span>
+      </header>
 
       {%- if traceability_index.has_tags(document) -%}
       <div id="tags-outline">

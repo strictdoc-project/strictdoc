@@ -1,18 +1,3 @@
-.section-number {
-  font-size: 1em;
-  padding-right: 0.25em;
-}
-
-.link-back-to-index {
-  float: right;
-  font-size: 14px;
-  color: var(--color-text-lighter);
-}
-
-.link-back-to-index:hover {
-  color: var(--color-text-main);
-}
-
 /* layout-with-toc */
 
 :root {
@@ -33,12 +18,60 @@
   --toc-toggle-width: 48px;
 }
 
+.layout-with-toc main {
+  position: relative;
+}
+
+.layout-with-toc header.document-header {
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  width: 100%;
+  height: var(--toc-toggle-width);
+
+  display: flex;
+  align-items: center;
+
+  padding: var(--toc-font-size);
+  padding-left: calc(var(--toc-toggle-width) + var(--toc-toggle-width));
+  padding-right: calc(var(--toc-toggle-width) + var(--toc-width));
+
+  background-color: var(--toc-panel-bg);
+  border-bottom: 2px solid var(--code-border-color);
+  box-shadow: 0 24px 24px var(--toc-panel-bg);
+
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin: 0;
+  color: var(--color-accent-dark);
+}
+
+.layout-with-toc article {
+  margin: calc(var(--toc-toggle-width) * 2);
+  box-sizing: content-box;
+}
+
+/* *** */
+
+.section-number {
+  font-size: 1em;
+  padding-right: 0.25em;
+}
+
+.link-back-to-index {
+  float: right;
+  font-size: 14px;
+  color: var(--color-text-lighter);
+}
+
+.link-back-to-index:hover {
+  color: var(--color-text-main);
+}
+
+
 /* aside.toc */
 
 .toc {
-
-  --toc-width: calc(var(--toc-font-size) * var(--toc-width-index));
-
   position: fixed;
   z-index: 10;
   width: var(--toc-width);
@@ -46,18 +79,39 @@
   bottom: 0;
 }
 
-.toc_header {
+.toc_document-title {
+  position: fixed;
+  width: 100%;
+  height: var(--toc-toggle-width);
+  padding: var(--toc-font-size);
+  padding-left: calc(var(--toc-width) + var(--toc-font-size) * 3 + var(--toc-width));
+}
+
+header.toc_header {
+  position: absolute;
+  padding:           var(--toc-font-size);
+  padding-left: calc(var(--toc-font-size) * 1.75);
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--toc-toggle-width);
+  background-color: var(--toc-panel-bg);
+  border-bottom: 1px solid var(--code-border-color);
+}
+
+.toc_title {
   font-weight: bold;
-  padding-bottom: var(--toc-font-size);
 }
 
 .toc_container {
   position: absolute;
-  top: 0;
+  top: var(--toc-toggle-width);
   bottom: 0;
   left: 0;
   right: 0;
-  padding: calc(var(--toc-font-size) * 1.5);
+  padding-left:   calc(var(--toc-font-size) * 1.75);
+  padding-right:  calc(var(--toc-font-size) * 1);
+  padding-top:    calc(var(--toc-font-size) * 1);
   padding-bottom: calc(var(--toc-font-size) * 3);
   background-color: var(--toc-panel-bg);
   overflow: auto;
@@ -68,11 +122,16 @@
   left: 100%;
   top: 0;
   bottom: 0;
-  padding: calc(var(--toc-font-size) * 0.75);
+  width: var(--toc-toggle-width);
+  padding: var(--toc-font-size);
   text-align: center;
+
   background-color: var(--toc-panel-bg);
-  box-shadow: 0 0 var(--toc-font-size) rgba(0,0,0,0.2);
+  border-right: 4px solid var(--code-border-color);
+
   cursor: pointer;
+  display: flex;
+  flex-flow: column nowrap;
 }
 
 .toc_toggle:hover {
@@ -96,7 +155,7 @@
 }
 
 .toc_list li {
-  padding-top: calc(var(--toc-font-size) * 0.5);
+  padding-top: calc(var(--toc-font-size) * 0.75);
   font-size: var(--toc-font-size);
 }
 
@@ -111,36 +170,15 @@
   background-color: var(--toc-panel-bg-hover);
 }
 
-/* .content Layout */
-
-.content {
-  padding: calc(var(--toc-font-size) * 3);
-  position: relative;
-}
-
-/* main.content typo-styles */
-
-main.content {
-  --font-size: 16px;
-  --line-height: calc(var(--font-size) * 1.6);
-
-  font-size: var(--font-size);
-  line-height: var(--line-height);
-}
-
-main.content p {
-  margin: calc(var(--font-size) * 0.5) 0;
-}
-
 /* open / close */
 
 .layout-with-toc {
-  padding-left: calc(var(--toc-font-size) * var(--content-padding-index));
   transition: var(--toc-layout-transition);
+  margin-left: 0;
 }
 
 .layout-with-toc[data-state="open"] {
-  padding-left: calc(var(--toc-font-size) * (var(--toc-width-index) + var(--content-padding-index)));
+  margin-left: var(--toc-width);
   transition: var(--toc-layout-transition);
 }
 

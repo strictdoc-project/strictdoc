@@ -22,7 +22,9 @@
       {% include "_shared/table_of_contents.jinja.html" %}
     </aside>
     <main class="content">
-      <h1 class="document-title">{{document.name}} <span class="document-view-type">Deep Traceability</span></h1>
+      <header class="document-header">
+        {{document.name}} <span class="document-view-type">Deep Traceability</span>
+      </header>
 
       {%- if traceability_index.has_tags(document) -%}
       <div id="tags-outline">
@@ -34,7 +36,7 @@
       </div>
       {%- endif %}
 
-      <div class="view-traceability-deep">
+      <article class="view-traceability-deep">
       {%- for section_or_requirement in document_iterator.all_content() %}
         {%- if section_or_requirement.is_requirement %}
         <section class="view-traceability-deep_row" id="{{ link_renderer.render(section_or_requirement) }}">
@@ -61,7 +63,7 @@
         </section>
         {%- endif %}
       {%- endfor %}
-      </div>
+      </article>
 
     </main>
   </div>

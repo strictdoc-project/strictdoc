@@ -20,7 +20,9 @@
     </aside>
 
     <main class="content">
-      <h1 class="document-title">{{document.name}} <span class="document-view-type">Traceability</span></h1>
+      <header class="document-header">
+        {{document.name}} <span class="document-view-type">Traceability</span>
+      </header>
 
       {%- if traceability_index.has_tags(document) -%}
       <div id="tags-outline">
@@ -32,7 +34,7 @@
       </div>
       {%- endif %}
 
-      <div class="view-traceability" id="sections-and-requirements">
+      <article class="view-traceability" id="sections-and-requirements">
       {%- for section_or_requirement in document_iterator.all_content() %}
 
         {%- if section_or_requirement.is_requirement %}
@@ -96,7 +98,7 @@
         {%- endif %}
 
       {%- endfor %}
-      </div>
+      </article>
 
     </main>
   </div>

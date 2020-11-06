@@ -12,6 +12,9 @@ div.document {
 /* general styles */
 
 :root {
+  --base-font-size: 16px;
+  --base-line-height: calc(var(--base-font-size) * 1.6);
+
   --color-text-main: #000;
   --color-text-lighter: #444;
   --color-text-light: #808080;
@@ -43,6 +46,29 @@ div.document {
 
 body {
   background-color: var(--color-bg-mac);
+}
+
+section {
+  /* for Fixed Headers + Section Anchors */
+  scroll-snap-margin-top: calc(var(--toc-toggle-width)*1.5);
+  scroll-margin-top:      calc(var(--toc-toggle-width)*1.5);
+}
+
+.view-article section:target .section-title,
+.view-table section:target .section-title,
+section:target [data-requirement-role="current"] .section-title {
+  background-color: rgb(255, 255, 125);
+}
+
+/* .content Layout */
+
+.content {
+  font-size: var(--base-font-size);
+  line-height: var(--base-line-height);
+}
+
+.content p {
+  margin: calc(var(--base-font-size) * 0.5) 0;
 }
 
 cite {
@@ -223,8 +249,6 @@ dl.requirement-meta {
 
 .view-article {
   max-width: 800px;
-  /* display: flex;
-  flex-direction: column; */
 }
 
 .view-article > section {
@@ -246,11 +270,10 @@ dl.requirement-meta {
 /* .view-table */
 
 .view-table {
-  width: 100%;
   min-width: 800px;
   box-sizing: border-box;
   background-color: #fff;
-  padding: 1rem;
+  padding: 1.5rem;
 }
 
 .view-table .free_text {
@@ -307,7 +330,6 @@ section.view-table_composite .requirement_section[data-role]::before,
   content: attr(data-role) " ";
   position: absolute;
   display: flex;
-  /* justify-content: center; */
   align-items: center;
   padding: 0 .75rem;
   background-color: var(--color-table-header-bg);
@@ -446,7 +468,6 @@ overflow: hidden;
 .recursive_cell {
   position: relative;
   height: 100%;
-  /* width: var(--secondary-requirement-card-width); */
   overflow: hidden;
 }
 

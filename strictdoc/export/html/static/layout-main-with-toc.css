@@ -172,22 +172,24 @@ header.toc_header {
 
 /* open / close */
 
-.layout-with-toc {
+.layout-with-toc[data-state="close"] {
   transition: var(--toc-layout-transition);
   margin-left: 0;
 }
 
+.layout-with-toc,
 .layout-with-toc[data-state="open"] {
   margin-left: var(--toc-width);
   transition: var(--toc-layout-transition);
 }
 
-.layout-with-toc .toc {
+.layout-with-toc[data-state="close"] .toc {
   left: calc(var(--toc-width) * (-1));
   right: 100%;
   transition: var(--toc-layout-transition);
 }
 
+.layout-with-toc .toc,
 .layout-with-toc[data-state="open"] .toc {
   left: 0;
   right: auto;

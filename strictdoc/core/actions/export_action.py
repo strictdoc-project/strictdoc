@@ -6,8 +6,10 @@ from pathlib import Path
 from strictdoc.core.document_finder import DocumentFinder
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.traceability_index import TraceabilityIndex
-from strictdoc.export.html.export import SingleDocumentTableHTMLExport, SingleDocumentTraceabilityHTMLExport
 from strictdoc.export.html.generators.document import DocumentHTMLGenerator
+from strictdoc.export.html.generators.document_table import SingleDocumentTableHTMLExport
+from strictdoc.export.html.generators.document_deep_trace import SingleDocumentDeepTraceabilityHTMLExport
+from strictdoc.export.html.generators.document_trace import SingleDocumentTraceabilityHTMLExport
 from strictdoc.export.html.generators.document_tree import DocumentTreeHTMLGenerator
 from strictdoc.export.html.renderer import SingleDocumentFragmentRenderer
 from strictdoc.export.rst.export import SingleDocumentRSTExport
@@ -156,7 +158,7 @@ class ExportAction:
             file.write(document_content)
 
         # Single Document Deep Traceability pages
-        document_content = SingleDocumentTraceabilityHTMLExport.export_deep(
+        document_content = SingleDocumentDeepTraceabilityHTMLExport.export_deep(
             document, traceability_index, document.renderer
         )
         document_out_file = document_meta.get_html_deep_traceability_path()

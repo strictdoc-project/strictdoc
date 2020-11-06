@@ -2,7 +2,7 @@ from strictdoc.backend.dsl.models import FreeText, Requirement, ReqComment
 from strictdoc.export.rst.rst_to_html_fragment_writer import RstToHtmlFragmentWriter
 
 
-class SingleDocumentFragmentRenderer:
+class MarkupRenderer:
     def __init__(self):
         self.cache = {}
 

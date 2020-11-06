@@ -11,7 +11,7 @@ from strictdoc.export.html.generators.document_table import DocumentTableHTMLGen
 from strictdoc.export.html.generators.document_deep_trace import DocumentDeepTraceHTMLGenerator
 from strictdoc.export.html.generators.document_trace import DocumentTraceHTMLGenerator
 from strictdoc.export.html.generators.document_tree import DocumentTreeHTMLGenerator
-from strictdoc.export.html.renderer import SingleDocumentFragmentRenderer
+from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.export.rst.export import SingleDocumentRSTExport
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.file_system import sync_dir
@@ -49,6 +49,8 @@ class ExportAction:
         )
 
         traceability_index = TraceabilityIndex.create(document_tree)
+        markup_renderer = MarkupRenderer()
+
         writer = DocumentTreeHTMLGenerator()
         output = writer.export(document_tree)
 
@@ -68,8 +70,6 @@ class ExportAction:
             with open(document_out_file, 'w') as file:
                 file.write(document_content)
 
-            document.renderer = SingleDocumentFragmentRenderer()
-
             # HACK:
             # ProcessPoolExecutor doesn't work because of non-picklable parts
             # of textx. The offending fields are stripped down because they
@@ -82,6 +82,7 @@ class ExportAction:
         export_binding = partial(ExportAction._export_with_performance,
                                  document_tree=document_tree,
                                  traceability_index=traceability_index,
+                                 markup_renderer=markup_renderer,
                                  strictdoc_src_path=self.strictdoc_src_path,
                                  strictdoc_last_update=self.strictdoc_last_update)
 
@@ -102,6 +103,7 @@ class ExportAction:
     def _export_with_performance(document,
                                  document_tree,
                                  traceability_index,
+                                 markup_renderer,
                                  strictdoc_src_path,
                                  strictdoc_last_update):
         document_meta: DocumentMeta = document.meta
@@ -119,11 +121,12 @@ class ExportAction:
                     return
 
         with measure_performance('Published: {}'.format(document.name)):
-            ExportAction._export(document, document_tree, traceability_index)
+            ExportAction._export(document, document_tree, traceability_index,
+                                 markup_renderer)
         return None
 
     @staticmethod
-    def _export(document, document_tree, traceability_index):
+    def _export(document, document_tree, traceability_index, markup_renderer):
         document_meta: DocumentMeta = document.meta
 
         document_output_folder = document_meta.output_folder_rel_path
@@ -133,7 +136,7 @@ class ExportAction:
         document_content = DocumentHTMLGenerator.export(document_tree,
                                                         document,
                                                         traceability_index,
-                                                        document.renderer)
+                                                        markup_renderer)
 
         document_out_file = document_meta.get_html_doc_path()
         with open(document_out_file, 'w') as file:
@@ -141,7 +144,7 @@ class ExportAction:
 
         # Single Document Table pages
         document_content = DocumentTableHTMLGenerator.export(
-            document, traceability_index, document.renderer
+            document, traceability_index, markup_renderer
         )
         document_out_file = document_meta.get_html_table_path()
 
@@ -150,7 +153,7 @@ class ExportAction:
 
         # Single Document Traceability pages
         document_content = DocumentTraceHTMLGenerator.export(
-            document, traceability_index, document.renderer
+            document, traceability_index, markup_renderer
         )
         document_out_file = document_meta.get_html_traceability_path()
 
@@ -159,7 +162,7 @@ class ExportAction:
 
         # Single Document Deep Traceability pages
         document_content = DocumentDeepTraceHTMLGenerator.export_deep(
-            document, traceability_index, document.renderer
+            document, traceability_index, markup_renderer
         )
         document_out_file = document_meta.get_html_deep_traceability_path()
 

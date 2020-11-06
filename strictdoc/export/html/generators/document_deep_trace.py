@@ -3,7 +3,7 @@ from jinja2 import Environment, PackageLoader
 from strictdoc.helpers.hyperlinks import string_to_anchor_id
 
 
-class SingleDocumentDeepTraceabilityHTMLExport:
+class DocumentDeepTraceHTMLGenerator:
     env = Environment(
         loader=PackageLoader('strictdoc', 'export/html/templates'),
         # autoescape=select_autoescape(['html', 'xml'])
@@ -14,7 +14,9 @@ class SingleDocumentDeepTraceabilityHTMLExport:
     def export_deep(document, traceability_index, renderer):
         output = ""
 
-        template = SingleDocumentDeepTraceabilityHTMLExport.env.get_template('single_document_traceability_deep/document.jinja.html')
+        template = DocumentDeepTraceHTMLGenerator.env.get_template(
+            'single_document_traceability_deep/document.jinja.html'
+        )
 
         output += template.render(document=document,
                                   traceability_index=traceability_index,

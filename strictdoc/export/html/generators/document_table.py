@@ -3,7 +3,7 @@ from jinja2 import Environment, PackageLoader
 from strictdoc.helpers.hyperlinks import string_to_anchor_id
 
 
-class SingleDocumentTableHTMLExport:
+class DocumentTableHTMLGenerator:
     env = Environment(
         loader=PackageLoader('strictdoc', 'export/html/templates')
     )
@@ -13,7 +13,9 @@ class SingleDocumentTableHTMLExport:
     def export(document, traceability_index, renderer):
         output = ""
 
-        template = SingleDocumentTableHTMLExport.env.get_template('single_document_table/document.jinja.html')
+        template = DocumentTableHTMLGenerator.env.get_template(
+            'single_document_table/document.jinja.html'
+        )
 
         output += template.render(document=document,
                                   traceability_index=traceability_index,

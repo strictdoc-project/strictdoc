@@ -3,6 +3,9 @@ import os
 import sys
 
 import html5lib
+from tidylib import tidy_document
+from xml.etree import ElementTree as etree
+from io import StringIO
 
 parser = argparse.ArgumentParser(description='HTML Markup validator')
 parser.add_argument('input_file', type=str,
@@ -19,27 +22,51 @@ if not os.path.isfile(input_file):
 with open(input_file, 'r') as file:
     html_content = file.read()
 
+errors = []
+warnings = []
+
+# Validation #1: html5parser
 html5parser = html5lib.HTMLParser(strict=True)
 try:
     html5parser.parse(html_content)
-except NotImplementedError as e:
-    print(e)
-    exit(1)
+except Exception as e:
+    errors.append('Error: {}'.format(str(e)))
 
-from tidylib import tidy_document
-document, errors = tidy_document(html_content, options={
-    'new-blocklevel-tags': 'main',
+# Validation #2: tidylib
+_, tidylib_messages_string = tidy_document(html_content, options={
+    'new-blocklevel-tags': 'main, aside, header, section, article',
     'char-encoding': 'utf8',
-    'input-encoding': 'utf8'
+    'input-encoding': 'utf8',
+    'output-encoding': 'utf8',
+    'drop-proprietary-attributes': 'no'
 })
 
-for error in errors.split('\n'):
-    print(error)
+for message in tidylib_messages_string.split('\n'):
+    if 'Error: ' in message:
+        errors.append(message)
+    elif 'Warning: ' in message:
+        warnings.append(message)
 
-from xml.etree import ElementTree as etree
-from io import StringIO
+# Validation #3: xml.etree
 try:
     etree.parse(StringIO(html_content), etree.XMLParser())
 except Exception as e:
-    print(e)
-    exit(1)
+    errors.append('Error: {}'.format(str(e)))
+
+if len(errors) > 0 or len(warnings) > 0:
+    for message in warnings + errors:
+        print(message)
+
+    if len(errors) > 0:
+        print("Validation COMPLETED: {} errors, {} warnings".format(
+            len(errors), len(warnings)
+        ))
+        exit(1)
+    else:
+        # Warnings are ok for now.
+        print("Validation COMPLETED: {} errors, {} warnings".format(
+            len(errors), len(warnings)
+        ))
+        exit(0)
+else:
+    print("Validation COMPLETED: 0 errors, 0 warnings")

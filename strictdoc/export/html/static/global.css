@@ -56,7 +56,7 @@ section {
   scroll-margin-top:      calc(var(--toc-toggle-width)*1.5);
 }
 
-.view-article section:target .section-title,
+.view-document section:target .section-title,
 .view-table section:target .section-title,
 section:target [data-requirement-role="current"] .section-title {
   background-color: var(--highlight-color);
@@ -249,13 +249,13 @@ dl.requirement-meta {
   padding: 10px 10px 10px 15px;
 }
 
-/* view-article */
+/* view-document */
 
-.view-article {
+.view-document {
   max-width: 800px;
 }
 
-.view-article > section {
+.view-document > section {
   padding: 1.5rem;
   background-color: #fff;
   margin-bottom: 1rem;

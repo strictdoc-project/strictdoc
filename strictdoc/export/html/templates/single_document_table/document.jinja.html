@@ -53,7 +53,7 @@
         {%- if section_or_requirement.is_composite_requirement %}
         <section class="view-table_composite" id="{{ link_renderer.render(section_or_requirement) }}">
           {%- set section = section_or_requirement %}
-          <h{{ section.ng_level }} class="section-title" data-level="{{ section.export_title }}">
+          <h{{ section.ng_level }} class="section-title" data-level="{{ section.context.title_number_string }}">
             {{ section.title }}
           </h{{ section.ng_level }}>
 
@@ -74,7 +74,7 @@
         {%- elif section_or_requirement.is_section %}
         <section class="view-table_section" id="{{ link_renderer.render(section_or_requirement) }}">
           {%- set section = section_or_requirement %}
-          <h{{ section.ng_level }} class="section-title" data-level="{{ section.export_title }}">
+          <h{{ section.ng_level }} class="section-title" data-level="{{ section.context.title_number_string }}">
             {{ section.title }}
           </h{{ section.ng_level }}>
           {%- for free_text in section_or_requirement.free_texts %}

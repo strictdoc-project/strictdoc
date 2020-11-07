@@ -1,3 +1,8 @@
+class SectionContext(object):
+    def __init__(self):
+        self.title_number_string = None
+
+
 class Section(object):
     def __init__(self, parent, level, title, free_texts, section_contents):
         self.parent = parent
@@ -9,7 +14,7 @@ class Section(object):
 
         self.ng_level = self.level
         self.ng_sections = []
-        self.export_title = None
+        self.context = SectionContext()
 
     def __str__(self):
         return "Section: <level: {}, title: {}, section_contents: {}>".format(

@@ -11,6 +11,7 @@ class DocumentMeta:
         self.output_document_dir_full_path = output_document_dir_full_path
         self.output_document_dir_rel_path = output_document_dir_rel_path
 
+    # Paths
     def get_html_doc_path(self):
         return "{}/{}.html".format(self.output_document_dir_full_path,
                                    self.document_filename_base)
@@ -27,6 +28,7 @@ class DocumentMeta:
         return "{}/{} - DEEP-TRACE.html".format(self.output_document_dir_full_path,
                                                 self.document_filename_base)
 
+    # Links
     def get_html_doc_link(self):
         return "{}/{}.html".format(self.output_document_dir_rel_path,
                                    self.document_filename_base)

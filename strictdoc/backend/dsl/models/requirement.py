@@ -1,6 +1,11 @@
 from strictdoc.backend.dsl.models.reference import Reference
 
 
+class RequirementContext(object):
+    def __init__(self):
+        self.title_number_string = None
+
+
 class Requirement(object):
     def __init__(self,
                  parent,
@@ -34,7 +39,7 @@ class Requirement(object):
         # TODO: Is it worth to move this to dedicated Presenter* classes to
         # keep this class textx-only?
         self.ng_level = None
-        self.export_title = None
+        self.context = RequirementContext()
 
     def __str__(self):
         return "{}: <ng_level: {}, uid: {}, title_or_none: {}, statement: {}>".format(
@@ -84,7 +89,6 @@ class CompositeRequirement(Requirement):
     def __init__(self, parent, **fields):
         super(CompositeRequirement, self).__init__(parent, **fields)
         self.ng_sections = []
-        self.export_title = None
 
     @property
     def is_composite_requirement(self):

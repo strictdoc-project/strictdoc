@@ -46,8 +46,8 @@ class DocumentCachingIterator:
                 isinstance(current, CompositeRequirement) or
                 isinstance(current, Requirement)):
                 level_counter.adjust(current.ng_level)
-                title_string = level_counter.get_string()
-                current.export_title = title_string
+
+                current.context.title_number_string = level_counter.get_string()
 
             self.nodes_cache.append(current)
             yield current

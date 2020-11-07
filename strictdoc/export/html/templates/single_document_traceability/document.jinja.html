@@ -75,7 +75,7 @@
           <div class="view-traceability_column" data-requirement-role="current">
 
             {%- set section = section_or_requirement %}
-            <h{{ section.ng_level }} class="section-title" data-level="{{ section.export_title }}">
+            <h{{ section.ng_level }} class="section-title" data-level="{{ section.context.title_number_string }}">
               {{ section.title }}
             </h{{ section.ng_level }}>
           </div>

@@ -26,7 +26,7 @@
     {%- for section in document_iterator.table_of_contents() -%}
       <li>
         <a href="#{{ link_renderer.render(section) }}">
-          <span class="section-number">{{ section.export_title }}</span>
+          <span class="section-number">{{ section.context.title_number_string }}</span>
           {%- if section.is_requirement -%}
             {{ section.title if section.title else (section.uid if section.uid else '(NO TITLE)') }}
           {%- else -%}

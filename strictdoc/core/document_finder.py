@@ -75,39 +75,39 @@ class DocumentFinder:
         )
 
         for doc_file, document in found_documents:
-            doc_full_path = doc_file.get_full_path()
-            map_docs_by_paths[doc_full_path] = document
+            input_doc_full_path = doc_file.get_full_path()
+            map_docs_by_paths[input_doc_full_path] = document
             document_list.append(document)
 
         for file_tree, doc_file, file_tree_mount_folder in file_tree_list:
-            doc_full_path = doc_file.get_full_path()
-            document = map_docs_by_paths[doc_full_path]
+            input_doc_full_path = doc_file.get_full_path()
+            document = map_docs_by_paths[input_doc_full_path]
             assert isinstance(document, Document)
 
-            doc_relative_path = os.path.relpath(doc_full_path, file_tree.root_path)
+            doc_relative_path = os.path.relpath(input_doc_full_path, file_tree.root_path)
             doc_relative_path_folder = os.path.dirname(doc_relative_path)
 
-            document_relpath_folder = '{}/{}'.format(
+            output_document_dir_rel_path = '{}/{}'.format(
                 file_tree_mount_folder,
                 doc_relative_path_folder
             ) if doc_relative_path_folder else file_tree_mount_folder
 
-            document_filename = os.path.basename(doc_full_path)
+            document_filename = os.path.basename(input_doc_full_path)
             document_filename_base = os.path.splitext(document_filename)[0]
 
-            document_full_html_out_path = '{}/{}'.format(
-                output_root_html, document_relpath_folder
+            output_document_dir_full_path = '{}/{}'.format(
+                output_root_html, output_document_dir_rel_path
             )
 
             document_meta = DocumentMeta(doc_file.level,
-                                         doc_full_path,
-                                         document_full_html_out_path,
-                                         document_relpath_folder,
+                                         input_doc_full_path,
+                                         output_document_dir_full_path,
+                                         output_document_dir_rel_path,
                                          document_filename_base)
 
             document.assign_meta(document_meta)
 
-            map_docs_by_paths[doc_full_path] = document
+            map_docs_by_paths[input_doc_full_path] = document
 
         return DocumentTree(file_trees,
                             document_list,

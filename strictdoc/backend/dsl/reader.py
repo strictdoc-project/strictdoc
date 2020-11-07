@@ -16,7 +16,7 @@ DOCUMENT_MODELS = [
     Section,
     Requirement,
     CompositeRequirement,
-    Body,
+    # Body,
     Reference,
     FreeText
 ]

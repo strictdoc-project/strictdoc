@@ -1,8 +1,8 @@
 import collections
 
-from strictdoc.backend.dsl.models import (
-    FreeText, Section, CompositeRequirement, Document,
-    Requirement)
+from strictdoc.backend.dsl.models.document import Document
+from strictdoc.backend.dsl.models.requirement import CompositeRequirement, Requirement
+from strictdoc.backend.dsl.models.section import FreeText, Section
 from strictdoc.core.level_counter import LevelCounter
 
 

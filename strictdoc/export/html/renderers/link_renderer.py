@@ -1,6 +1,7 @@
 import re
 
-from strictdoc.backend.dsl.models import Section, Requirement
+from strictdoc.backend.dsl.models.requirement import Requirement
+from strictdoc.backend.dsl.models.section import Section
 
 
 class LinkRenderer:

@@ -1,4 +1,5 @@
-from strictdoc.backend.dsl.models import Document, Requirement, CompositeRequirement
+from strictdoc.backend.dsl.models.document import Document
+from strictdoc.backend.dsl.models.requirement import Requirement, CompositeRequirement
 from strictdoc.backend.dsl.reader import SDReader
 from strictdoc.backend.dsl.writer import SDWriter
 

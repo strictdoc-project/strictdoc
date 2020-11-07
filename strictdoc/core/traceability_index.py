@@ -1,4 +1,4 @@
-from strictdoc.backend.dsl.models import Requirement
+from strictdoc.backend.dsl.models.requirement import Requirement
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.helpers.sorting import alphanumeric_sort

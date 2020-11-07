@@ -23,8 +23,11 @@ docutils = "0.16"
 [tool.poetry.dev-dependencies]
 invoke = "1.4.1"
 pytest = "*"
+lit = '0.11.0.post1'
 filecheck = "*"
 sphinx = '3.2.1'
+html5lib = '1.1'
+pytidylib = '0.3.2'
 
 [build-system]
 requires = ["poetry>=0.12"]

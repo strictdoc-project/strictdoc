@@ -10,12 +10,9 @@
   --toc-link-color: var(--color-text-lighter);
   --toc-active-link-color: var(--color-text-main);
 
-  --toc-width-index: 22;
-
-  --content-padding-index: 3;
-
   --toc-width: 330px;
-  --toc-toggle-width: 48px;
+  --toc-bar-width: 44px;
+  --toc-button-height: 48px;
 }
 
 .layout-with-toc main {
@@ -27,14 +24,14 @@
   z-index: 1;
   top: 0;
   width: 100%;
-  height: var(--toc-toggle-width);
+  height: var(--toc-bar-width);
 
   display: flex;
   align-items: center;
 
   padding: var(--toc-font-size);
-  padding-left: calc(var(--toc-toggle-width) + var(--toc-toggle-width));
-  padding-right: calc(var(--toc-toggle-width) + var(--toc-width));
+  padding-left: calc(var(--toc-bar-width) + var(--toc-bar-width));
+  padding-right: calc(var(--toc-bar-width) + var(--toc-width));
 
   background-color: var(--toc-panel-bg);
   border-bottom: 2px solid var(--code-border-color);
@@ -47,7 +44,7 @@
 }
 
 .layout-with-toc article {
-  margin: calc(var(--toc-toggle-width) * 2);
+  margin: calc(var(--toc-bar-width) * 2);
   box-sizing: content-box;
 }
 
@@ -79,22 +76,14 @@
   bottom: 0;
 }
 
-.toc_document-title {
-  position: fixed;
-  width: 100%;
-  height: var(--toc-toggle-width);
-  padding: var(--toc-font-size);
-  padding-left: calc(var(--toc-width) + var(--toc-font-size) * 3 + var(--toc-width));
-}
-
-header.toc_header {
+.toc_header {
   position: absolute;
   padding:           var(--toc-font-size);
   padding-left: calc(var(--toc-font-size) * 1.75);
   top: 0;
   left: 0;
   right: 0;
-  height: var(--toc-toggle-width);
+  height: var(--toc-bar-width);
   background-color: var(--toc-panel-bg);
   border-bottom: 1px solid var(--code-border-color);
 }
@@ -105,7 +94,7 @@ header.toc_header {
 
 .toc_container {
   position: absolute;
-  top: var(--toc-toggle-width);
+  top: var(--toc-bar-width);
   bottom: 0;
   left: 0;
   right: 0;
@@ -117,30 +106,22 @@ header.toc_header {
   overflow: auto;
 }
 
-.toc_toggle {
+.toc_bar {
   position: absolute;
   left: 100%;
   top: 0;
   bottom: 0;
-  width: var(--toc-toggle-width);
-  padding: var(--toc-font-size);
-  text-align: center;
+  width: var(--toc-bar-width);
+  box-sizing: content-box;
 
   background-color: var(--toc-panel-bg);
   border-right: 4px solid var(--code-border-color);
 
-  cursor: pointer;
   display: flex;
   flex-flow: column nowrap;
 }
 
-.toc_toggle:hover {
-  background-color: var(--toc-panel-bg-hover);
-}
-
-.toc_toggle::before {
-  content: '\2715';
-}
+/* list */
 
 .toc_list,
 .toc_list ul,
@@ -182,6 +163,60 @@ header.toc_header {
   background: var(--highlight-color);
 }
 
+/* menu */
+
+.toc_menu {
+  display: flex;
+  flex-flow: column nowrap;
+  width: 100%;
+}
+
+.toc_menu-spacer {
+  width: var(--toc-bar-width);
+  height: var(--toc-bar-width);
+}
+
+.toc_menu-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: var(--toc-bar-width);
+
+  cursor: pointer;
+}
+
+a.toc_menu-btn {
+  width: var(--toc-bar-width);
+  height: var(--toc-button-height);
+  font-size: 11px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.btn-toggle {
+  height: var(--toc-bar-width);
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.toc_menu-btn:hover {
+  background-color: var(--toc-panel-bg-hover);
+}
+
+body.document .btn-document,
+body.document .btn-document:hover,
+body.table .btn-table,
+body.table .btn-table:hover,
+body.traceability .btn-traceability,
+body.traceability .btn-traceability:hover,
+body.deep-traceability .btn-deep-traceability,
+body.deep-traceability .btn-deep-traceability:hover {
+  /* background-color: rgba(0,0,0,0.2); */
+  background-color: var(--code-border-color);
+  cursor: default;
+}
+
 /* open / close */
 
 .layout-with-toc[data-state="close"] {
@@ -206,4 +241,25 @@ header.toc_header {
   left: 0;
   right: auto;
   transition: var(--toc-layout-transition);
+}
+
+.layout-with-toc .btn-toggle::before,
+.layout-with-toc[data-state="open"] .btn-toggle::before {
+    /* ╳ */
+  /* content: '\2573'; */
+  /* ✕ */
+  content: '\2715';
+  /* × */
+  /* content: '\00D7'; */
+}
+
+.layout-with-toc[data-state="close"] .btn-toggle::before {
+  /* Ξ */
+  /* content: '\039E'; */
+  /* TRICOLON */
+  /* content: '\205D'; */
+  /* ≡ */
+  /* content: '\2261'; */
+  /* ☰ */
+  content: '\2630';
 }

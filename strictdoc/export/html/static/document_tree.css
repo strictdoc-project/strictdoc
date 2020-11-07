@@ -14,7 +14,7 @@
 }
 
 .document-tree {
-  padding: calc(var(--toc-toggle-width) * 2);
+  padding: calc(var(--toc-bar-width) * 2);
 }
 
 .document-tree * {

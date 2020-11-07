@@ -15,7 +15,7 @@ args = parser.parse_args()
 input_file = args.input_file
 if not os.path.isfile(input_file):
     sys.stdout.flush()
-    err = "error: input file does not exist: {}".format(input_file)
+    err = "error: html_markup_validator: input file does not exist: {}".format(input_file)
     print(err)
     exit(1)
 

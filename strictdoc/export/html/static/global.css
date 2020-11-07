@@ -52,8 +52,8 @@ body {
 
 section {
   /* for Fixed Headers + Section Anchors */
-  scroll-snap-margin-top: calc(var(--toc-toggle-width)*1.5);
-  scroll-margin-top:      calc(var(--toc-toggle-width)*1.5);
+  scroll-snap-margin-top: calc(var(--toc-bar-width)*1.5);
+  scroll-margin-top:      calc(var(--toc-bar-width)*1.5);
 }
 
 .view-document section:target .section-title,

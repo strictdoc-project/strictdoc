@@ -78,12 +78,6 @@ class Requirement(object):
             return self.statement_multiline
         raise NotImplementedError
 
-    def statement_as_html_blocks(self):
-        if self.statement:
-            return [self.statement]
-        elif self.statement_multiline:
-            return self.statement_multiline.split('\n\n')
-
 
 class CompositeRequirement(Requirement):
     def __init__(self, parent, **fields):
@@ -93,7 +87,6 @@ class CompositeRequirement(Requirement):
     @property
     def is_composite_requirement(self):
         return True
-
 
 
 class Body(object):

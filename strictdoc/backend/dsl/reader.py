@@ -1,13 +1,14 @@
 import traceback
 
-from textx import metamodel_from_str, get_children_of_type
+from textx import metamodel_from_str
 
 from strictdoc.backend.dsl.grammar import STRICTDOC_GRAMMAR
-from strictdoc.backend.dsl.models import (
-    Document,
-    Requirement, CompositeRequirement,
-    ReqComment, Section, Body, Reference, FreeText
+from strictdoc.backend.dsl.models.document import Document
+from strictdoc.backend.dsl.models.reference import Reference
+from strictdoc.backend.dsl.models.requirement import (
+    Requirement, CompositeRequirement, ReqComment, Body
 )
+from strictdoc.backend.dsl.models.section import Section, FreeText
 
 DOCUMENT_MODELS = [
     Document,

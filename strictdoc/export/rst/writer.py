@@ -1,6 +1,7 @@
 from enum import Enum
 
-from strictdoc.backend.dsl.models import Document, Requirement, ReqComment, Section, CompositeRequirement, FreeText
+from strictdoc.backend.dsl.models.requirement import Requirement
+from strictdoc.backend.dsl.models.section import FreeText, Section
 from strictdoc.core.document_iterator import DocumentCachingIterator
 
 

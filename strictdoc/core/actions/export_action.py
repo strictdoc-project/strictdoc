@@ -117,7 +117,7 @@ class ExportAction:
         # its generation in case it has not changed since the last generation.
         if os.path.isfile(full_output_path):
             output_file_mtime = get_file_modification_time(full_output_path)
-            sdoc_mtime = get_file_modification_time(document_meta.sdoc_full_path)
+            sdoc_mtime = get_file_modification_time(document_meta.input_doc_full_path)
 
             if (sdoc_mtime < output_file_mtime and
                 strictdoc_last_update < output_file_mtime):
@@ -136,7 +136,7 @@ class ExportAction:
                 link_renderer):
         document_meta: DocumentMeta = document.meta
 
-        document_output_folder = document_meta.output_folder_rel_path
+        document_output_folder = document_meta.output_document_dir_full_path
         Path(document_output_folder).mkdir(parents=True, exist_ok=True)
 
         # Single Document pages

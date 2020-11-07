@@ -12,7 +12,9 @@ class MarkupRenderer:
         if requirement in self.cache:
             return self.cache[requirement]
 
-        output = RstToHtmlFragmentWriter.write(requirement.statement_or_multiline_statement())
+        output = RstToHtmlFragmentWriter.write(
+            requirement.get_statement_single_or_multiline()
+        )
         self.cache[requirement] = output
 
         return output

@@ -71,7 +71,7 @@ class Requirement(object):
     def is_composite_requirement(self):
         return False
 
-    def statement_or_multiline_statement(self):
+    def get_statement_single_or_multiline(self):
         if self.statement:
             return self.statement
         elif self.statement_multiline:

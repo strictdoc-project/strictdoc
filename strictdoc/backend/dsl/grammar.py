@@ -22,7 +22,7 @@ REQUIREMENT_FIELDS = """
 
   ('BODY: ' body = MultiLineString '\n' )?
 
-  comments *= ReqComment
+  comments *= RequirementComment
 """
 
 STRICTDOC_GRAMMAR = RubyTemplate("""
@@ -85,7 +85,7 @@ TagXs[noskipws]:
 RequirementStatus[noskipws]:
   'Draft' | 'Active' | 'Deleted';
 
-ReqComment[noskipws]:
+RequirementComment[noskipws]:
   'COMMENT: ' (comment_single = SingleLineString | comment_multiline = MultiLineString) '\n'
 ;
 

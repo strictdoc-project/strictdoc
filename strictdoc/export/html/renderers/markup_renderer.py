@@ -1,4 +1,4 @@
-from strictdoc.backend.dsl.models.requirement import Requirement, ReqComment
+from strictdoc.backend.dsl.models.requirement import Requirement, RequirementComment
 from strictdoc.backend.dsl.models.section import FreeText
 from strictdoc.export.rst.rst_to_html_fragment_writer import RstToHtmlFragmentWriter
 
@@ -20,7 +20,7 @@ class MarkupRenderer:
         return output
 
     def render_comment(self, comment):
-        assert isinstance(comment, ReqComment)
+        assert isinstance(comment, RequirementComment)
         if comment in self.cache:
             return self.cache[comment]
 

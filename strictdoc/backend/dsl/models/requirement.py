@@ -103,7 +103,7 @@ class Body(object):
         return self.__str__()
 
 
-class ReqComment(object):
+class RequirementComment(object):
     def __init__(self, parent, comment_single, comment_multiline):
         self.parent = parent
         self.comment_single = comment_single

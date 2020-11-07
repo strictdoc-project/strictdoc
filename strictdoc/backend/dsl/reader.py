@@ -6,13 +6,13 @@ from strictdoc.backend.dsl.grammar import STRICTDOC_GRAMMAR
 from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.reference import Reference
 from strictdoc.backend.dsl.models.requirement import (
-    Requirement, CompositeRequirement, ReqComment, Body
+    Requirement, CompositeRequirement, RequirementComment, Body
 )
 from strictdoc.backend.dsl.models.section import Section, FreeText
 
 DOCUMENT_MODELS = [
     Document,
-    ReqComment,
+    RequirementComment,
     Section,
     Requirement,
     CompositeRequirement,

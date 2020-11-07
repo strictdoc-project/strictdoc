@@ -51,7 +51,7 @@ class ExportAction:
 
         traceability_index = TraceabilityIndex.create(document_tree)
         markup_renderer = MarkupRenderer()
-        link_renderer = LinkRenderer()
+        link_renderer = LinkRenderer(output_html_root)
 
         writer = DocumentTreeHTMLGenerator()
         output = writer.export(document_tree)

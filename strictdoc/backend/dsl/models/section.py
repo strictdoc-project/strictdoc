@@ -47,5 +47,3 @@ class FreeText:
     def is_section(self):
         return False
 
-    def text_as_paragraphs(self):
-        return self.text.split('\n\n')

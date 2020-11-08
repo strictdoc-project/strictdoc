@@ -1,9 +1,7 @@
 /// TODO: Resolve the ambiguity of having Output (LIT) and output (StrictDoc)
 /// Should it be something like output-strictdoc/ or export/?
-RUN: rm -rfv %S/Output
-RUN: rm -rfv %S/output
 
-RUN: %strictdoc export %S | filecheck %s --dump-input=fail --check-prefix CHECK-PARAL
+RUN: %strictdoc export %S --output-dir=%S/Output | filecheck %s --dump-input=fail --check-prefix CHECK-PARAL
 
 CHECK-PARAL: Parallelization: Enabled
 CHECK-PARAL: Published:
@@ -18,7 +16,7 @@ RUN: cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-pref
 RUN: rm -rfv %S/Output
 RUN: rm -rfv %S/output
 
-RUN: %strictdoc export %S --no-parallelization | filecheck %s --dump-input=fail --check-prefix CHECK-NO-PARAL
+RUN: %strictdoc export %S --no-parallelization --output-dir=%S/Output | filecheck %s --dump-input=fail --check-prefix CHECK-NO-PARAL
 
 CHECK-NO-PARAL: Parallelization: Disabled
 CHECK-NO-PARAL: Published:

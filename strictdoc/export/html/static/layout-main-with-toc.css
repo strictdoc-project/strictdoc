@@ -151,7 +151,7 @@
 }
 
 .toc_list a:focus {
-  background: yellowgreen;
+  background: yellow;
 }
 
 .toc_list a:hover {
@@ -160,7 +160,7 @@
 }
 
 .toc_list a:active {
-  background: var(--highlight-color);
+  background: yellow;
 }
 
 /* menu */

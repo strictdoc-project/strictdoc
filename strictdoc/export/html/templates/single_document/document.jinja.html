@@ -49,7 +49,7 @@
         {%- elif section_or_requirement.is_section %}
           {%- set section = section_or_requirement %}
           <h{{ section.ng_level }} class="section-title" data-level="{{ section.context.title_number_string }}">
-            {{ section.title }}
+            {{ section.title if section.title else '' }}
           </h{{ section.ng_level }}>
 
           {%- for free_text in section_or_requirement.free_texts %}

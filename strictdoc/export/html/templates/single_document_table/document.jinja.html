@@ -54,7 +54,7 @@
         <section class="view-table_composite" id="{{ link_renderer.render(section_or_requirement) }}">
           {%- set section = section_or_requirement %}
           <h{{ section.ng_level }} class="section-title" data-level="{{ section.context.title_number_string }}">
-            {{ section.title }}
+            {{ section.title if section.title else '' }}
           </h{{ section.ng_level }}>
 
           {%- set requirement = section_or_requirement %}
@@ -75,7 +75,7 @@
         <section class="view-table_section" id="{{ link_renderer.render(section_or_requirement) }}">
           {%- set section = section_or_requirement %}
           <h{{ section.ng_level }} class="section-title" data-level="{{ section.context.title_number_string }}">
-            {{ section.title }}
+            {{ section.title if section.title else '' }}
           </h{{ section.ng_level }}>
           {%- for free_text in section_or_requirement.free_texts %}
           <div class="free_text">

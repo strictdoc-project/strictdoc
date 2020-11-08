@@ -45,7 +45,7 @@ TITLE: Examples
 
 [FREETEXT]
 For a more comprehensive example check the source file of this documentation
-itself which is written using StrictDoc:
+which is written using StrictDoc:
 `strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc>`_.
 
 - `StrictDoc HTML export <https://strictdoc.readthedocs.io/en/latest/strictdoc-html>`_
@@ -121,7 +121,7 @@ This is how a minimal possible SDOC document looks like:
     [DOCUMENT]
     NAME: StrictDoc
 
-The source file of this documentation itself which is written using StrictDoc:
+This documentation is written using StrictDoc. Here is the source file:
 `strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc>`_.
 [/FREETEXT]
 
@@ -358,6 +358,19 @@ and specifications management tool TBD.
 TITLE: Command-line interface
 STATEMENT: StrictDoc shall provide a command-line interface.
 
+[COMPOSITE-REQUIREMENT]
+TITLE: Platform support
+
+[REQUIREMENT]
+TITLE: macOS support
+STATEMENT: StrictDoc shall work on macOS systems.
+
+[REQUIREMENT]
+TITLE: Linux support
+STATEMENT: StrictDoc shall work on Linux systems.
+
+[/COMPOSITE-REQUIREMENT]
+
 [REQUIREMENT]
 TITLE: Requirements validation
 STATEMENT: StrictDoc shall allow validation of requirement documents.
@@ -402,6 +415,10 @@ STATEMENT: StrictDoc shall enable parallelization of the time-consuming parts of
 UID: SDOC-IMPL-INCREMENTAL
 TITLE: Incremental generation
 STATEMENT: StrictDoc shall enable incremental generation of the documents.
+COMMENT: >>>
+When exporting documentation tree, StrictDoc shall regenerate only changed
+documents and files.
+<<<
 
 [/SECTION]
 
@@ -554,6 +571,17 @@ STATEMENT: StrictDoc shall support exporting documents to Sphinx/RST format.
 
 [/SECTION]
 
+[SECTION]
+LEVEL: 2
+TITLE: Validation requirements
+
+[REQUIREMENT]
+TITLE: Valid HTML markup
+STATEMENT: StrictDoc's HTML export tests shall validate the generated HTML markup.
+COMMENT: First candidate: Table of contents and its nested ``<ul>/<li>`` items.
+
+[/SECTION]
+
 [/SECTION]
 
 [SECTION]
@@ -642,10 +670,6 @@ LEVEL: 2
 TITLE: First public release
 
 [REQUIREMENT]
-TITLE: Document tree: Incremental generation
-STATEMENT: When exporting documentation tree, StrictDoc shall regenerate only changed documents and files.
-
-[REQUIREMENT]
 TITLE: Generated file names
 STATEMENT: Document name must be transformed into a valid file name.
 COMMENT: >>>
@@ -709,10 +733,6 @@ LEVEL: 3
 TITLE: Platform support
 
 [REQUIREMENT]
-TITLE: Linux support
-STATEMENT: StrictDoc shall work on Linux systems.
-
-[REQUIREMENT]
 TITLE: Windows support
 STATEMENT: StrictDoc shall work on Windows systems.
 
@@ -743,11 +763,6 @@ TITLE: Validations and testing
 [REQUIREMENT]
 TITLE: Validation: Section Levels
 STATEMENT: Section levels must be properly nested.
-
-[REQUIREMENT]
-TITLE: Validation: Valid HTML markup
-STATEMENT: StrictDoc's HTML export tests shall validate the generated HTML markup.
-COMMENT: First candidate: Table of contents and its nested ``<ul>/<li>`` items.
 
 [/SECTION]
 
@@ -793,11 +808,21 @@ TITLE: Advanced
 
 [REQUIREMENT]
 TITLE: Facts table. Invariants calculation.
-STATEMENT: StrictDoc shall support creation of fact tables calculating invariants that enforce numerical constraints.
+STATEMENT: >>>
+StrictDoc shall support creation of fact tables calculating invariants that
+enforce numerical constraints.
+<<<
 
 [REQUIREMENT]
 TITLE: Graphical User Interface (GUI)
 STATEMENT: StrictDoc shall provide a Graphical User Interface (GUI).
+
+[REQUIREMENT]
+TITLE: Web server and editable HTML pages
+STATEMENT: >>>
+StrictDoc shall provide a web server that serves as a StrictDoc backend for
+reading and writing SDoc files.
+<<<
 
 [/SECTION]
 

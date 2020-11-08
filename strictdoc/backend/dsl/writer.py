@@ -118,7 +118,7 @@ class SDWriter:
             output += "<<<"
             output += "\n"
         else:
-            raise RuntimeError('Statement is missing')
+            raise RuntimeError('Statement is missing: {}'.format(section_content))
 
         if section_content.body:
             output += "BODY: >>>"

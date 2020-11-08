@@ -360,6 +360,7 @@ STATEMENT: StrictDoc shall provide a command-line interface.
 
 [COMPOSITE-REQUIREMENT]
 TITLE: Platform support
+STATEMENT: StrictDoc shall work on all major platforms.
 
 [REQUIREMENT]
 TITLE: macOS support

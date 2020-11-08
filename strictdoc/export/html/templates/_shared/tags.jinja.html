@@ -1,0 +1,9 @@
+{%- if traceability_index.has_tags(document) -%}
+<article>
+{%- for tag in traceability_index.get_tags(document) %}
+  <span class="tag">
+    {{ tag[0] }} x {{ tag[1] }}
+  </span>
+{%- endfor %}
+</article>
+{%- endif %}

@@ -4,22 +4,22 @@ import re
 from invoke import task
 
 
-def formatted_command(string):
+def oneline_command(string):
     return re.sub('\\s+', ' ', string).strip()
 
 
 def run_invoke_cmd(c, cmd):
-    c.run(cmd,
-          env=None,
-          hide=False,
-          warn=False,
-          pty=False,
-          echo=True)
+    return c.run(cmd,
+                 env=None,
+                 hide=False,
+                 warn=False,
+                 pty=False,
+                 echo=True)
 
 
 @task
 def clean(c):
-    find_command = formatted_command("""
+    find_command = oneline_command("""
         find
             .
             -type f \\(
@@ -35,11 +35,12 @@ def clean(c):
             -not -path "**Input**"
     """)
 
-    find_result = c.run("{}".format(find_command))
+    find_result = run_invoke_cmd(c, find_command)
     find_result_stdout = find_result.stdout.strip()
-
-    echo_command = formatted_command(
-        """echo {find_result} | xargs rm -rfv""".format(find_result=find_result_stdout)
+    echo_command = oneline_command(
+        """echo {find_result} | xargs rm -rfv""".format(
+            find_result=find_result_stdout
+        )
     )
 
     run_invoke_cmd(c, echo_command)
@@ -47,16 +48,16 @@ def clean(c):
 
 @task
 def sphinx(c):
-    run_invoke_cmd(c, formatted_command("""
+    run_invoke_cmd(c, oneline_command("""
         python3 strictdoc/cli/main.py export docs --output-dir output/sphinx
     """))
 
-    run_invoke_cmd(c, formatted_command("""
+    run_invoke_cmd(c, oneline_command("""
         cp -v output/sphinx/rst/StrictDoc.rst docs/sphinx/source/ &&
         cp -rv output/sphinx/html/* docs/strictdoc-html/strictdoc-html
     """))
 
-    run_invoke_cmd(c, formatted_command("""
+    run_invoke_cmd(c, oneline_command("""
         cd docs/sphinx &&
             make html latexpdf &&
             open build/latex/strictdoc.pdf
@@ -65,7 +66,7 @@ def sphinx(c):
 
 @task
 def test_unit(c):
-    command = formatted_command("""
+    command = oneline_command("""
         pytest --capture=no
     """)
 
@@ -81,7 +82,7 @@ def test_integration(c, focus=None, debug=False):
     focus_or_none = '--filter {}'.format(focus) if focus else ''
     debug_opts = '-vv --show-all' if debug else ''
 
-    command = formatted_command("""
+    command = oneline_command("""
         lit
         --param STRICTDOC_EXEC="{strictdoc_exec}"
         -v

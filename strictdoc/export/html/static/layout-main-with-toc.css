@@ -48,6 +48,10 @@
   box-sizing: content-box;
 }
 
+.layout-with-toc article + article {
+  margin-top: calc(var(--toc-bar-width) * (-1));
+}
+
 /* *** */
 
 .section-number {

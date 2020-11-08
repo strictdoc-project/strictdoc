@@ -2,7 +2,7 @@
 <article>
 {%- for tag in traceability_index.get_tags(document) %}
   <span class="tag">
-    {{ tag[0] }} x {{ tag[1] }}
+    {{ tag[0] }}<span class="tag_badge">{{ tag[1] }}</span>
   </span>
 {%- endfor %}
 </article>

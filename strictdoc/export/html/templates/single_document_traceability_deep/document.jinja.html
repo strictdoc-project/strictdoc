@@ -26,15 +26,7 @@
         {{document.name}} <span class="document-view-type">Deep Traceability</span>
       </header>
 
-      {%- if traceability_index.has_tags(document) -%}
-      <div id="tags-outline">
-        {%- for tag in traceability_index.get_tags(document) %}
-        <span class="tag">
-          {{ tag[0] }} x {{ tag[1] }}
-        </span>
-        {%- endfor %}
-      </div>
-      {%- endif %}
+      {% include "_shared/tags.jinja.html" %}
 
       <article class="view-traceability-deep">
       {%- for section_or_requirement in document_iterator.all_content() %}

@@ -214,7 +214,7 @@ dl.requirement-meta {
 }
 
 .requirement-statement {
-  margin: 8px 0px;
+  margin: 16px 0px;
 }
 
 .requirement ul,
@@ -317,7 +317,7 @@ dl.requirement-meta {
   width: 33%;
   padding: .75rem;
   border-right: 1px solid var(--color-table-border);
-  border-bottom: 1px solid var(--color-table-border);
+  border-bottom: 3px solid var(--color-table-border);
   position: relative;
 }
 
@@ -329,7 +329,7 @@ dl.requirement-meta {
   color: var(--color-text-lighter);
   font-weight: bold;
   font-size: 1rem;
-  margin: 0 0 1rem;
+  margin: 0 0 .5rem;
   line-height: 1.2;
 }
 
@@ -363,10 +363,15 @@ section.view-table_composite .requirement_section[data-role]::before,
 }
 
 .requirement_table .requirement-meta {
-  width: 100%;
+  margin: 0 -.75rem;
 }
 .requirement_table .requirement-meta dt {
   width: 1%;
+  border-left: none;
+  padding-left: .75rem;
+}
+.requirement_table .requirement-meta dd {
+  border-right: none;
 }
 
 .view-table .requirement-statement {
@@ -556,7 +561,7 @@ overflow: hidden;
 
 .requirement_card::before,
 .requirement_card::after {
-  content: '\2192';
+  content: '\2190';
   position: absolute;
   top: .5rem;
   display: block;
@@ -574,3 +579,36 @@ overflow: hidden;
 .requirement_card::before {
   left: calc(var(--traceability-arrow) *(-1) - 1px);
 }
+
+/* requirement-parent */
+.requirement-parent,
+ul.requirement-parent {
+  font-size: 14px;
+  line-height: 1.4;
+  list-style: none;
+  padding-left: 1em;
+  margin-top: .5rem;
+}
+.requirement-parent li::before {
+  content: '\2190';
+  color: var(--color-accent-dark);
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+}
+.requirement-parent a:link,
+.requirement-parent a:visited {
+  color: var(--color-accent-dark);
+  text-decoration: underline;
+}
+.requirement-parent a:hover {
+  text-decoration: none;
+}
+.requirement-parent_uid {
+  position: relative;
+  font-weight: bold;
+}
+
+/* [data-requirement-role="current"] .requirement-parent {
+  display: none;
+} */

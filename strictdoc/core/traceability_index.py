@@ -257,7 +257,10 @@ class TraceabilityIndex:
         return "{} - Traceability Deep.html#{}".format(document.name, requirement.uid)
 
     def has_tags(self, document):
-        return document.name in self.tags_map
+        if document.name not in self.tags_map:
+            return False
+        tags_bag = self.tags_map[document.name]
+        return len(tags_bag.keys())
 
     def get_tags(self, document):
         assert document.name in self.tags_map

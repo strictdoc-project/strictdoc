@@ -9,10 +9,13 @@ data-status='{{ requirement.status.lower() }}'
     <h{{ requirement.ng_level }} class="section-title" data-level="{{ requirement.context.title_number_string }}">
       {{ requirement.title }}
     </h{{ requirement.ng_level }}>
+  {% elif requirement.uid %}
+    <h{{ requirement.ng_level }} class="section-title" data-level="{{ requirement.context.title_number_string }}">
+      {{ requirement.uid }}
+    </h{{ requirement.ng_level }}>
   {% else %}
-    <p class="section-title" data-level="{{ requirement.context.title_number_string }}">
-      <i>[no title]</i>
-    </p>
+    <h{{ requirement.ng_level }} class="section-title" data-level="{{ requirement.context.title_number_string }}">
+    </h{{ requirement.ng_level }}>
   {%- endif %}
 
   {%- if requirement.has_meta -%}

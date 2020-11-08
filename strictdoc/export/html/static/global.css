@@ -258,7 +258,7 @@ dl.requirement-meta {
 .view-document > section {
   padding: 1.5rem;
   background-color: #fff;
-  margin-bottom: 1rem;
+  margin-bottom: 2px;
 }
 
 .requirement_block .comment p:first-child::before {

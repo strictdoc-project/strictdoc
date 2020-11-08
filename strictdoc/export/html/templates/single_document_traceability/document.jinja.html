@@ -76,7 +76,7 @@
 
             {%- set section = section_or_requirement %}
             <h{{ section.ng_level }} class="section-title" data-level="{{ section.context.title_number_string }}">
-              {{ section.title }}
+              {{ section.title if section.title else '' }}
             </h{{ section.ng_level }}>
           </div>
           <div class="view-traceability_column" data-requirement-role="children"></div>

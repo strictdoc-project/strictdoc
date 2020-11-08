@@ -5,18 +5,9 @@ data-status='{{ requirement.status.lower() }}'
 
 <div class="requirement_section" data-role='meta'>
 
-  {%- if requirement.title %}
-    <h{{ requirement.ng_level }} class="section-title" data-level="{{ requirement.context.title_number_string }}">
-      {{ requirement.title }}
-    </h{{ requirement.ng_level }}>
-  {% elif requirement.uid %}
-    <h{{ requirement.ng_level }} class="section-title" data-level="{{ requirement.context.title_number_string }}">
-      {{ requirement.uid }}
-    </h{{ requirement.ng_level }}>
-  {% else %}
-    <h{{ requirement.ng_level }} class="section-title" data-level="{{ requirement.context.title_number_string }}">
-    </h{{ requirement.ng_level }}>
-  {%- endif %}
+  <h{{ requirement.ng_level }} class="section-title" data-level="{{ requirement.context.title_number_string }}">
+    {{ requirement.title if requirement.title else (requirement.uid if requirement.uid else '') }}
+  </h{{ requirement.ng_level }}>
 
   {%- if requirement.has_meta -%}
     <dl class="requirement-meta">

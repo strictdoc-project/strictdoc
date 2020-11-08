@@ -23,6 +23,19 @@ data-status='{{ requirement.status.lower() }}'
     </dl>
   {%- endif %}
 
+  {%- if traceability_index.has_parent_requirements(requirement) %}
+  <ul class="requirement-parent">
+    {%- for requirement in traceability_index.get_parent_requirements(requirement) %}
+    <li><a href="#">
+      {%- if requirement.uid %}
+      <span class="requirement-parent_uid">{{ requirement.uid }} </span>
+      {%- endif %}
+      {{ requirement.title }}
+    </a></li>
+    {%- endfor %}
+    </ul>
+  {%- endif %}
+
   </div>
   <div class="requirement_section" data-role='statement'>
 

@@ -40,7 +40,6 @@
   </header>
 
   <div class="toc_container">
-  {%- if document.ng_sections %}
 
     <ul class="toc_list">
     {%- for section in document_iterator.table_of_contents() -%}
@@ -76,5 +75,4 @@
       {%- endif -%}
     {%- endfor %}
 
-  {%- endif %}
   </div>

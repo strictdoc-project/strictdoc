@@ -20,14 +20,15 @@ class RSTWriter:
         output = ""
 
         output += self._print_rst_header(document.name, 0)
+        for free_text in document.free_texts:
+            output += self._print_free_text(free_text)
 
         for content_node in document_iterator.all_content():
-            if isinstance(content_node, FreeText):
-                output += self._print_free_text(content_node)
-                continue
-
             if isinstance(content_node, Section):
                 output += self._print_rst_header(content_node.title, content_node.ng_level)
+                for free_text in content_node.free_texts:
+                    output += self._print_free_text(free_text)
+
             elif isinstance(content_node, Requirement):
                 output += self._print_rst_header(content_node.title, content_node.ng_level)
                 output += self._print_requirement_fields(content_node)

@@ -39,7 +39,7 @@ Examples
     STATEMENT: StrictDoc shall enable requirements management.
 
 For a more comprehensive example check the source file of this documentation
-itself which is written using StrictDoc:
+which is written using StrictDoc:
 `strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc>`_.
 
 - `StrictDoc HTML export <https://strictdoc.readthedocs.io/en/latest/strictdoc-html>`_
@@ -92,7 +92,7 @@ This is how a minimal possible SDOC document looks like:
     [DOCUMENT]
     NAME: StrictDoc
 
-The source file of this documentation itself which is written using StrictDoc:
+This documentation is written using StrictDoc. Here is the source file:
 `strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc>`_.
 
 Export options
@@ -287,6 +287,19 @@ Command-line interface
 
 StrictDoc shall provide a command-line interface.
 
+Platform support
+~~~~~~~~~~~~~~~~
+
+macOS support
+^^^^^^^^^^^^^
+
+StrictDoc shall work on macOS systems.
+
+Linux support
+^^^^^^^^^^^^^
+
+StrictDoc shall work on Linux systems.
+
 Requirements validation
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -340,6 +353,9 @@ Incremental generation
 ``[SDOC-IMPL-INCREMENTAL]``
 
 StrictDoc shall enable incremental generation of the documents.
+
+**Comment:** When exporting documentation tree, StrictDoc shall regenerate only changed
+documents and files.
 
 Data model
 ----------
@@ -467,6 +483,16 @@ Sphinx documentation generator
 
 StrictDoc shall support exporting documents to Sphinx/RST format.
 
+Validation requirements
+-----------------------
+
+Valid HTML markup
+~~~~~~~~~~~~~~~~~
+
+StrictDoc's HTML export tests shall validate the generated HTML markup.
+
+**Comment:** First candidate: Table of contents and its nested ``<ul>/<li>`` items.
+
 Design decisions
 ================
 
@@ -543,11 +569,6 @@ Deep Traceability page CSS: Improvements
 First public release
 --------------------
 
-Document tree: Incremental generation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-When exporting documentation tree, StrictDoc shall regenerate only changed documents and files.
-
 Generated file names
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -582,20 +603,25 @@ StrictDoc shall support exporting documents to Excel format.
 PlantUML Export
 ^^^^^^^^^^^^^^^
 
-StrictDoc shall support exporting documents to ReqIF format.
+StrictDoc shall support exporting documents to PlantUML format.
 
 ReqIF Import/Export
 ^^^^^^^^^^^^^^^^^^^
 
 StrictDoc shall support ReqIF format.
 
+Confluence Import/Export
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+StrictDoc shall support importing/exporting documents from/to Confluence HTML storage format.
+
 Tex Export
 ^^^^^^^^^^
 
 StrictDoc shall support exporting documents to Tex format.
 
-Doorstop Export
-^^^^^^^^^^^^^^^
+Doorstop Import/Export
+^^^^^^^^^^^^^^^^^^^^^^
 
 StrictDoc shall support import and exporting documents from/to Doorstop format.
 
@@ -606,11 +632,6 @@ StrictDoc shall support rendering text/code blocks into RST syntax.
 
 Platform support
 ~~~~~~~~~~~~~~~~
-
-Linux support
-^^^^^^^^^^^^^
-
-StrictDoc shall work on Linux systems.
 
 Windows support
 ^^^^^^^^^^^^^^^
@@ -642,13 +663,6 @@ Validation: Section Levels
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Section levels must be properly nested.
-
-Validation: Valid HTML markup
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-StrictDoc's HTML export tests shall validate the generated HTML markup.
-
-**Comment:** First candidate: Table of contents and its nested ``<ul>/<li>`` items.
 
 Custom fields
 ~~~~~~~~~~~~~
@@ -694,10 +708,17 @@ Advanced
 Facts table. Invariants calculation.
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-StrictDoc shall support creation of fact tables calculating invariants that enforce numerical constraints.
+StrictDoc shall support creation of fact tables calculating invariants that
+enforce numerical constraints.
 
 Graphical User Interface (GUI)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 StrictDoc shall provide a Graphical User Interface (GUI).
+
+Web server and editable HTML pages
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+StrictDoc shall provide a web server that serves as a StrictDoc backend for
+reading and writing SDoc files.
 

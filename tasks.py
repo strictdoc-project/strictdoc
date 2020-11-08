@@ -81,7 +81,8 @@ def clean(c):
             -or -type d \\(
                 -name '*.dSYM' -or
                 -name 'Sandbox' -or
-                -name 'Output'
+                -name 'Output' -or
+                -name 'output'
             \\)
             -not -path "**Expected**"
             -not -path "**Input**"

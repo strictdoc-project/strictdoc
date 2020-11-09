@@ -1,0 +1,15 @@
+REQUIRES: PLATFORM_IS_NOT_WINDOWS
+
+RUN: %strictdoc export "%strictdoc_root/docs" --output-dir="%S/Output"
+
+RUN: %check_exists --file "%S/Output/html/index.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc - TABLE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc - TRACE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc - DEEP-TRACE.html"
+
+RUN: %html_markup_validator "%S/Output/html/index.html"
+RUN: %html_markup_validator "%S/Output/html/docs/strictdoc.html"
+RUN: %html_markup_validator "%S/Output/html/docs/strictdoc - TABLE.html"
+RUN: %html_markup_validator "%S/Output/html/docs/strictdoc - TRACE.html"
+RUN: %html_markup_validator "%S/Output/html/docs/strictdoc - DEEP-TRACE.html"

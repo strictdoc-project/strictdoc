@@ -1,0 +1,54 @@
+name: "StrictDoc on Windows"
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Upgrade pip
+      run: |
+        python -m pip install --upgrade pip
+
+    - name: Install Poetry
+      run: |
+        (Invoke-WebRequest -Uri https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -UseBasicParsing).Content | python
+
+    - name: "Poetry: add to %PATH%"
+      run: |
+        echo "::add-path::$env:USERPROFILE\.poetry\bin"
+
+    - name: "Print Debug info"
+      run: |
+        echo $env:USERPROFILE
+        echo $env:PATH
+        echo "$PWD"
+
+    - name: "Poetry: print version"
+      run: |
+        poetry --version
+
+    - name: "Poetry: configure settings"
+      run: |
+        poetry config virtualenvs.in-project true
+
+    - name: "Poetry: Install dependencies"
+      run: |
+        poetry install
+
+    - name: Run tests
+      run: |
+        poetry run invoke test
+      shell: bash

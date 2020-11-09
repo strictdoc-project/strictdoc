@@ -61,6 +61,17 @@ TITLE: Getting started
 
 [SECTION]
 LEVEL: 2
+TITLE: Requirements
+
+[FREETEXT]
+- Python 3.6+
+- macOS, Linux or Windows
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 2
 TITLE: Installing StrictDoc as a Pip package
 
 [FREETEXT]
@@ -76,11 +87,26 @@ LEVEL: 2
 TITLE: Installing StrictDoc from GitHub (development)
 
 [FREETEXT]
+`Poetry <https://python-poetry.org>`_ has to be installed first.
+
 .. code-block:: text
 
     git clone git@github.com:stanislaw/strictdoc.git && cd strictdoc
     poetry install
     poetry run strictdoc
+    poetry run invoke test
+
+StrictDoc can also be developed and run without Poetry:
+
+.. code-block:: text
+
+    git clone git@github.com:stanislaw/strictdoc.git && cd strictdoc
+    # for running strictdoc:
+    pip install textx jinja2 docutils
+    python3 strictdoc/cli/main.py
+    # for running tests:
+    pip install invoke pytest pytidylib html5lib
+    invoke test
 [/FREETEXT]
 
 [/SECTION]
@@ -369,6 +395,10 @@ STATEMENT: StrictDoc shall work on macOS systems.
 [REQUIREMENT]
 TITLE: Linux support
 STATEMENT: StrictDoc shall work on Linux systems.
+
+[REQUIREMENT]
+TITLE: Windows support
+STATEMENT: StrictDoc shall work on Windows systems.
 
 [/COMPOSITE-REQUIREMENT]
 
@@ -726,16 +756,6 @@ STATEMENT: StrictDoc shall support import and exporting documents from/to Doorst
 [REQUIREMENT]
 TITLE: Markdown support for text and code blocks
 STATEMENT: StrictDoc shall support rendering text/code blocks into RST syntax.
-
-[/SECTION]
-
-[SECTION]
-LEVEL: 3
-TITLE: Platform support
-
-[REQUIREMENT]
-TITLE: Windows support
-STATEMENT: StrictDoc shall work on Windows systems.
 
 [/SECTION]
 

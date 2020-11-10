@@ -22,7 +22,7 @@ copyright = '2020, Stanislav Pankevich'
 author = 'Stanislav Pankevich'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.1'
+release = '0.0.2'
 
 
 # -- General configuration ---------------------------------------------------
@@ -223,7 +223,7 @@ latex_elements = {
                     \textbf{{License model:}} & \tablecell {Open source software, Apache 2 license} \\ \hline
                     \textbf{{Project page:}} & \tablecell {https://github.com/stanislaw/strictdoc} \\ \hline
                     \textbf{{Release date:}} & \tablecell {\MonthYearFormat\today} \\ \hline
-                    \textbf{{Version:}} & \tablecell {0.0.1} \\ \hline
+                    \textbf{{Version:}} & \tablecell {0.0.2} \\ \hline
                     \end{tabular}
                 \egroup
             \end{flushright}

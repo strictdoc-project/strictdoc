@@ -1,28 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.jinja.html" %}
+{% block title %}Traceability{% endblock %}
+{% block pagetype %}traceability{% endblock %}
 
-<head>
-  <meta charset="UTF-8"/>
-  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
-  <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
-  <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/global.css" />
-  <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/layout-main-with-toc.css" />
-  <script type="text/javascript" src="{{document.meta.get_root_path_prefix()}}/_static/toc.js"></script>
-  <title>{{document.name}} - Traceability</title>
-</head>
-
-<body class="traceability">
-  {%- set document_iterator = traceability_index.get_document_iterator(document) -%}
-  <div id="toc_layout" class="layout-with-toc">
-
-    <aside class="toc">
-      {% include "_shared/table_of_contents.jinja.html" %}
-    </aside>
-
-    <main class="content">
-      <header class="document-header">
-        {{document.name}} <span class="document-view-type">Traceability</span>
-      </header>
+{% block content %}
 
       {% include "_shared/tags.jinja.html" %}
 
@@ -92,7 +72,4 @@
       {%- endfor %}
       </article>
 
-    </main>
-  </div>
-</body>
-</html>
+{% endblock content %}

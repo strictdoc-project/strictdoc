@@ -1,30 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.jinja.html" %}
+{% block title %}Table{% endblock %}
+{% block pagetype %}table{% endblock %}
 
-<head>
-  <meta charset="UTF-8"/>
-  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
-  <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
-  <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/global.css" />
-  <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/layout-main-with-toc.css" />
-  <script type="text/javascript" src="{{document.meta.get_root_path_prefix()}}/_static/toc.js"></script>
-  <title>{{document.name}} - Table</title>
-</head>
-
-<body class="table">
-
-  {%- set document_iterator = traceability_index.get_document_iterator(document) -%}
-
-  <div id="toc_layout" class="layout-with-toc">
-
-    <aside class="toc">
-      {% include "_shared/table_of_contents.jinja.html" %}
-    </aside>
-
-    <main class="content">
-      <header class="document-header">
-        {{document.name}} <span class="document-view-type">Table</span>
-      </header>
+{% block content %}
 
       {% include "_shared/tags.jinja.html" %}
 
@@ -39,10 +17,6 @@
           {%- endfor -%}
         </section>
         {%- endif -%}
-
-        <!-- <section style="position: -webkit-sticky;
-        position: sticky;
-        top: 0;">sticky sticky sticky sticky sticky sticky sticky</section> -->
 
       {%- for section_or_requirement in document_iterator.all_content() %}
 
@@ -85,8 +59,4 @@
       {%- endfor %}
       </article>
 
-    </main>
-
-  </div>
-</body>
-</html>
+{% endblock content %}

@@ -25,7 +25,7 @@ jobs:
     - name: Install Poetry
       run: |
         curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
-        echo ::set-env name=PATH::$HOME/.poetry/bin:$PATH
+        echo "PATH=$HOME/.poetry/bin:$PATH" >> $GITHUB_ENV
 
     - name: Install dependencies
       run: |

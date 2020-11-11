@@ -31,7 +31,7 @@
       <article class="view-table" id="sections-and-requirements">
 
         {%- if document.free_texts -%}
-        <section>
+        <section class="view-table_section">
           {%- for free_text in document.free_texts -%}
           <div class="free_text">
             {{ renderer.render_free_text(free_text) }}
@@ -40,15 +40,20 @@
         </section>
         {%- endif -%}
 
+        <!-- <section style="position: -webkit-sticky;
+        position: sticky;
+        top: 0;">sticky sticky sticky sticky sticky sticky sticky</section> -->
+
       {%- for section_or_requirement in document_iterator.all_content() %}
 
         {%- if section_or_requirement.is_composite_requirement %}
-        <section class="view-table_composite" id="{{ link_renderer.render(section_or_requirement) }}">
+        <section class="view-table_composite">
           {%- set section = section_or_requirement %}
           <h{{ section.ng_level }} class="section-title" data-level="{{ section.context.title_number_string }}">
             {{ section.title if section.title else '' }}
           </h{{ section.ng_level }}>
-
+        </section>
+        <section class="view-table_requirement-composite view-table_requirement" id="{{ link_renderer.render(section_or_requirement) }}">
           {%- set requirement = section_or_requirement %}
           {% with requirement_view_type='table' -%}
           {% include "_shared/requirement.jinja.html" %}

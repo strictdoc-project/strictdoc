@@ -49,6 +49,12 @@ which is written using StrictDoc:
 Getting started
 ===============
 
+Requirements
+------------
+
+- Python 3.6+
+- macOS, Linux or Windows
+
 Installing StrictDoc as a Pip package
 -------------------------------------
 
@@ -59,11 +65,26 @@ Installing StrictDoc as a Pip package
 Installing StrictDoc from GitHub (development)
 ----------------------------------------------
 
+`Poetry <https://python-poetry.org>`_ has to be installed first.
+
 .. code-block:: text
 
     git clone git@github.com:stanislaw/strictdoc.git && cd strictdoc
     poetry install
     poetry run strictdoc
+    poetry run invoke test
+
+StrictDoc can also be developed and run without Poetry:
+
+.. code-block:: text
+
+    git clone git@github.com:stanislaw/strictdoc.git && cd strictdoc
+    # for running strictdoc:
+    pip install textx jinja2 docutils
+    python3 strictdoc/cli/main.py
+    # for running tests:
+    pip install invoke pytest pytidylib html5lib
+    invoke test
 
 Hello world
 -----------
@@ -179,7 +200,22 @@ to/from Doorstop format.
 StrictDoc and Sphinx
 --------------------
 
-TBD
+Both Sphinx and StrictDoc are both documentation generators but StrictDoc is at
+a higher level of abstraction: StrictDoc's specialization is requirements and
+specifications documents. StrictDoc can generate documentation to a number of
+formats including HTML format as well as the RST format which is a default
+input format for Sphinx. A two stage generation is therefore possible:
+StrictDoc generates RST documentation which then can be generated to HTML, PDF,
+and other formats using Sphinx.
+
+If you are reading this documentation at
+https://strictdoc.readthedocs.io/en/latest
+then you are already looking at the example: this documentation stored in
+`strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc>`_
+is converted to RST format by StrictDoc which is further converted to the HTML
+website by readthedocs which uses Sphinx under the hood. The
+`StrictDoc -> RST -> Sphinx -> PDF` example is also generated using readthedocs:
+`StrictDoc <https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_.
 
 StrictDoc and Sphinx-Needs
 --------------------------
@@ -192,31 +228,25 @@ StrictDoc Requirements
 Project goals
 -------------
 
-Software for writing technical documentation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Software support for writing requirements and specifications documents
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``[GOAL-1-TOOL]``
+``[GOAL-1-TOOL-SUPPORT]``
 
-There shall exist free and lightweight yet capable software for technical
-documentation.
+There shall exist free and lightweight yet capable software for writing
+requirements and specifications documents
+
+**Comment:** Technical documentation is hard, it can be an extremely laborious process.
+Software shall support engineers in their work with documentation.
 
 **Comment:** The state of the art for many small companies working with
 requirements: using Excel for requirements management in the projects with
 hundreds or thousands of requirements.
 
-Software support for writing documentation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-``[GOAL-2-SUPPORT]``
-
-Software shall support engineers in their work with documentation.
-
-**Comment:** Technical documentation is hard, it can be an extremely laborious process.
-
 Reduce documentation hazards
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``[GOAL-3-REDUCE-DOCUMENTATION-HAZARDS]``
+``[GOAL-2-REDUCE-DOCUMENTATION-HAZARDS]``
 
 There shall exist no (or less) opportunity for writing incorrect or inconsistent
 documentation.
@@ -232,10 +262,10 @@ requirements engineering in general, it is definitely possible to improve
 software that supports engineers in activities such as requirements engineering
 and writing technical documentation.
 
-Less run-away documentation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+No (or less) run-away documentation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``[GOAL-4-PREVENT-RUNAWAY-DOCUMENTATION]``
+``[GOAL-3-NO-RUNAWAY-DOCUMENTATION]``
 
 Software shall support engineers in keeping documentation up-to-date.
 
@@ -246,7 +276,7 @@ documents and documentation trees.
 Change management
 ~~~~~~~~~~~~~~~~~
 
-``[GOAL-5-CHANGE-MANAGEMENT]``
+``[GOAL-4-CHANGE-MANAGEMENT]``
 
 Software shall provide capabilities for change management and impact assessment.
 
@@ -290,6 +320,8 @@ StrictDoc shall provide a command-line interface.
 Platform support
 ~~~~~~~~~~~~~~~~
 
+StrictDoc shall work on all major platforms.
+
 macOS support
 ^^^^^^^^^^^^^
 
@@ -299,6 +331,11 @@ Linux support
 ^^^^^^^^^^^^^
 
 StrictDoc shall work on Linux systems.
+
+Windows support
+^^^^^^^^^^^^^^^
+
+StrictDoc shall work on Windows systems.
 
 Requirements validation
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -496,20 +533,23 @@ StrictDoc's HTML export tests shall validate the generated HTML markup.
 Design decisions
 ================
 
+Building blocks
+---------------
+
 TextX
------
+~~~~~
 
 TextX shall be used for StrictDoc grammar definition and parsing of the sdoc files.
 
 **Comment:** TextX is an easy-to-install Python tool. It is fast, works out of the box.
 
 Jinja2
-------
+~~~~~~
 
 Jinja2 shall be used for rendering HTML templates.
 
 Sphinx and Docutils
--------------------
+~~~~~~~~~~~~~~~~~~~
 
 Sphinx and Docutils shall be used for the following capabilities:
 
@@ -592,6 +632,14 @@ StrictDoc shall support it use as a Python library.
 **Comment:** Such a use allows a more fine-grained access to the StrictDoc's modules, such
 as Grammar, Import, Export classes, etc.
 
+Links
+~~~~~
+
+StrictDoc's data model shall support linking document content nodes to each other.
+
+**Comment:** Examples:
+- Link that references a section
+
 Export capabilities
 ~~~~~~~~~~~~~~~~~~~
 
@@ -629,14 +677,6 @@ Markdown support for text and code blocks
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 StrictDoc shall support rendering text/code blocks into RST syntax.
-
-Platform support
-~~~~~~~~~~~~~~~~
-
-Windows support
-^^^^^^^^^^^^^^^
-
-StrictDoc shall work on Windows systems.
 
 Traceability and coverage
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -710,6 +750,11 @@ Facts table. Invariants calculation.
 
 StrictDoc shall support creation of fact tables calculating invariants that
 enforce numerical constraints.
+
+FMEA/FMECA tables
+^^^^^^^^^^^^^^^^^
+
+StrictDoc shall support creation of FMEA/FMECA safety analysis documents.
 
 Graphical User Interface (GUI)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

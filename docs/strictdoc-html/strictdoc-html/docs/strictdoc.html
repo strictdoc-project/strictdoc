@@ -2,13 +2,19 @@
 <html lang="en">
 
 <head>
+  
   <meta charset="UTF-8"/>
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
   <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
+  
   <link rel="stylesheet" href="../_static/global.css"/>
   <link rel="stylesheet" href="../_static/layout-main-with-toc.css"/>
+  
+  
   <script type="text/javascript" src="../_static/toc.js"></script>
-  <title>StrictDoc - Traceability</title>
+  
+  <title>StrictDoc - Document</title>
+  
 </head>
 
 <body class="document"><div id="toc_layout" class="layout-with-toc">
@@ -60,12 +66,14 @@
           <span class="section-number">1</span>Examples</a></li><li>
         <a href="#Getting-started">
           <span class="section-number">2</span>Getting started</a><ul><li>
+        <a href="#Requirements">
+          <span class="section-number">2.1</span>Requirements</a></li><li>
         <a href="#Installing-StrictDoc-as-a-Pip-package">
-          <span class="section-number">2.1</span>Installing StrictDoc as a Pip package</a></li><li>
+          <span class="section-number">2.2</span>Installing StrictDoc as a Pip package</a></li><li>
         <a href="#Installing-StrictDoc-from-GitHub-development-">
-          <span class="section-number">2.2</span>Installing StrictDoc from GitHub (development)</a></li><li>
+          <span class="section-number">2.3</span>Installing StrictDoc from GitHub (development)</a></li><li>
         <a href="#Hello-world">
-          <span class="section-number">2.3</span>Hello world</a></li></ul>
+          <span class="section-number">2.4</span>Hello world</a></li></ul>
             </li><li>
         <a href="#SDoc-syntax">
           <span class="section-number">3</span>SDoc syntax</a></li><li>
@@ -91,16 +99,14 @@
           <span class="section-number">6</span>StrictDoc Requirements</a><ul><li>
         <a href="#Project-goals">
           <span class="section-number">6.1</span>Project goals</a><ul><li>
-        <a href="#Software-for-writing-technical-documentation">
-          <span class="section-number">6.1.1</span>Software for writing technical documentation</a></li><li>
-        <a href="#Software-support-for-writing-documentation">
-          <span class="section-number">6.1.2</span>Software support for writing documentation</a></li><li>
+        <a href="#Software-support-for-writing-requirements-and-specifications-documents">
+          <span class="section-number">6.1.1</span>Software support for writing requirements and specifications documents</a></li><li>
         <a href="#Reduce-documentation-hazards">
-          <span class="section-number">6.1.3</span>Reduce documentation hazards</a></li><li>
-        <a href="#Less-run-away-documentation">
-          <span class="section-number">6.1.4</span>Less run-away documentation</a></li><li>
+          <span class="section-number">6.1.2</span>Reduce documentation hazards</a></li><li>
+        <a href="#No-or-less-run-away-documentation">
+          <span class="section-number">6.1.3</span>No (or less) run-away documentation</a></li><li>
         <a href="#Change-management">
-          <span class="section-number">6.1.5</span>Change management</a></li></ul>
+          <span class="section-number">6.1.4</span>Change management</a></li></ul>
             </li><li>
         <a href="#High-level-requirements">
           <span class="section-number">6.2</span>High-level requirements</a><ul><li>
@@ -115,7 +121,9 @@
         <a href="#macOS-support">
           <span class="section-number">6.2.4.1</span>macOS support</a></li><li>
         <a href="#Linux-support">
-          <span class="section-number">6.2.4.2</span>Linux support</a></li></ul>
+          <span class="section-number">6.2.4.2</span>Linux support</a></li><li>
+        <a href="#Windows-support">
+          <span class="section-number">6.2.4.3</span>Windows support</a></li></ul>
             </li><li>
         <a href="#Requirements-validation">
           <span class="section-number">6.2.5</span>Requirements validation</a></li><li>
@@ -202,16 +210,19 @@
             </li><li>
         <a href="#Design-decisions">
           <span class="section-number">7</span>Design decisions</a><ul><li>
+        <a href="#Building-blocks">
+          <span class="section-number">7.1</span>Building blocks</a><ul><li>
         <a href="#TextX">
-          <span class="section-number">7.1</span>TextX</a></li><li>
+          <span class="section-number">7.1.1</span>TextX</a></li><li>
         <a href="#Jinja2">
-          <span class="section-number">7.2</span>Jinja2</a></li><li>
+          <span class="section-number">7.1.2</span>Jinja2</a></li><li>
         <a href="#Sphinx-and-Docutils">
-          <span class="section-number">7.3</span>Sphinx and Docutils</a></li><li>
+          <span class="section-number">7.1.3</span>Sphinx and Docutils</a></li></ul>
+            </li><li>
         <a href="#SDoc-grammar">
-          <span class="section-number">7.4</span>SDoc grammar</a><ul><li>
+          <span class="section-number">7.2</span>SDoc grammar</a><ul><li>
         <a href="#No-indentation">
-          <span class="section-number">7.4.1</span>No indentation</a></li></ul>
+          <span class="section-number">7.2.1</span>No indentation</a></li></ul>
             </li></ul>
             </li><li>
         <a href="#Roadmap">
@@ -243,27 +254,24 @@
           <span class="section-number">8.3</span>Backlog</a><ul><li>
         <a href="#StrictDoc-as-library">
           <span class="section-number">8.3.1</span>StrictDoc as library</a></li><li>
+        <a href="#Links">
+          <span class="section-number">8.3.2</span>Links</a></li><li>
         <a href="#Export-capabilities">
-          <span class="section-number">8.3.2</span>Export capabilities</a><ul><li>
+          <span class="section-number">8.3.3</span>Export capabilities</a><ul><li>
         <a href="#Excel-Export">
-          <span class="section-number">8.3.2.1</span>Excel Export</a></li><li>
+          <span class="section-number">8.3.3.1</span>Excel Export</a></li><li>
         <a href="#PlantUML-Export">
-          <span class="section-number">8.3.2.2</span>PlantUML Export</a></li><li>
+          <span class="section-number">8.3.3.2</span>PlantUML Export</a></li><li>
         <a href="#ReqIF-Import-Export">
-          <span class="section-number">8.3.2.3</span>ReqIF Import/Export</a></li><li>
+          <span class="section-number">8.3.3.3</span>ReqIF Import/Export</a></li><li>
         <a href="#Confluence-Import-Export">
-          <span class="section-number">8.3.2.4</span>Confluence Import/Export</a></li><li>
+          <span class="section-number">8.3.3.4</span>Confluence Import/Export</a></li><li>
         <a href="#Tex-Export">
-          <span class="section-number">8.3.2.5</span>Tex Export</a></li><li>
+          <span class="section-number">8.3.3.5</span>Tex Export</a></li><li>
         <a href="#Doorstop-Import-Export">
-          <span class="section-number">8.3.2.6</span>Doorstop Import/Export</a></li><li>
+          <span class="section-number">8.3.3.6</span>Doorstop Import/Export</a></li><li>
         <a href="#Markdown-support-for-text-and-code-blocks">
-          <span class="section-number">8.3.2.7</span>Markdown support for text and code blocks</a></li></ul>
-            </li><li>
-        <a href="#Platform-support">
-          <span class="section-number">8.3.3</span>Platform support</a><ul><li>
-        <a href="#Windows-support">
-          <span class="section-number">8.3.3.1</span>Windows support</a></li></ul>
+          <span class="section-number">8.3.3.7</span>Markdown support for text and code blocks</a></li></ul>
             </li><li>
         <a href="#Traceability-and-coverage">
           <span class="section-number">8.3.4</span>Traceability and coverage</a><ul><li>
@@ -298,10 +306,12 @@
           <span class="section-number">8.3.9</span>Advanced</a><ul><li>
         <a href="#Facts-table-Invariants-calculation-">
           <span class="section-number">8.3.9.1</span>Facts table. Invariants calculation.</a></li><li>
+        <a href="#FMEA-FMECA-tables">
+          <span class="section-number">8.3.9.2</span>FMEA/FMECA tables</a></li><li>
         <a href="#Graphical-User-Interface-GUI-">
-          <span class="section-number">8.3.9.2</span>Graphical User Interface (GUI)</a></li><li>
+          <span class="section-number">8.3.9.3</span>Graphical User Interface (GUI)</a></li><li>
         <a href="#Web-server-and-editable-HTML-pages">
-          <span class="section-number">8.3.9.3</span>Web server and editable HTML pages</a></li></ul>
+          <span class="section-number">8.3.9.4</span>Web server and editable HTML pages</a></li></ul>
             </li></ul>
             </li></ul>
             </li></ul>
@@ -311,9 +321,9 @@
 
     <main class="content">
       <header class="document-header">
-        StrictDoc
+        StrictDoc <span class="document-view-type">Document</span>
       </header>
-
+      
       <article class="view-document"><section>
           <div class="free_text">
             <div class="document">
@@ -378,8 +388,22 @@ which is written using StrictDoc:
             Getting started
           </h1>
         </section>
-        <section id="Installing-StrictDoc-as-a-Pip-package">
+        <section id="Requirements">
           <h2 class="section-title" data-level="2.1">
+            Requirements
+          </h2>
+          <div class="free_text">
+            <div class="document">
+<ul class="simple">
+<li>Python 3.6+</li>
+<li>macOS, Linux or Windows</li>
+</ul>
+</div>
+
+          </div>
+        </section>
+        <section id="Installing-StrictDoc-as-a-Pip-package">
+          <h2 class="section-title" data-level="2.2">
             Installing StrictDoc as a Pip package
           </h2>
           <div class="free_text">
@@ -392,22 +416,34 @@ pip install strictdoc
           </div>
         </section>
         <section id="Installing-StrictDoc-from-GitHub-development-">
-          <h2 class="section-title" data-level="2.2">
+          <h2 class="section-title" data-level="2.3">
             Installing StrictDoc from GitHub (development)
           </h2>
           <div class="free_text">
             <div class="document">
+<p><a class="reference external" href="https://python-poetry.org">Poetry</a> has to be installed first.</p>
 <pre class="code text literal-block">
 git clone git&#64;github.com:stanislaw/strictdoc.git &amp;&amp; cd strictdoc
 poetry install
 poetry run strictdoc
+poetry run invoke test
+</pre>
+<p>StrictDoc can also be developed and run without Poetry:</p>
+<pre class="code text literal-block">
+git clone git&#64;github.com:stanislaw/strictdoc.git &amp;&amp; cd strictdoc
+# for running strictdoc:
+pip install textx jinja2 docutils
+python3 strictdoc/cli/main.py
+# for running tests:
+pip install invoke pytest pytidylib html5lib
+invoke test
 </pre>
 </div>
 
           </div>
         </section>
         <section id="Hello-world">
-          <h2 class="section-title" data-level="2.3">
+          <h2 class="section-title" data-level="2.4">
             Hello world
           </h2>
           <div class="free_text">
@@ -554,7 +590,21 @@ to/from Doorstop format.</p>
           </h2>
           <div class="free_text">
             <div class="document">
-<p>TBD</p>
+<p>Both Sphinx and StrictDoc are both documentation generators but StrictDoc is at
+a higher level of abstraction: StrictDoc's specialization is requirements and
+specifications documents. StrictDoc can generate documentation to a number of
+formats including HTML format as well as the RST format which is a default
+input format for Sphinx. A two stage generation is therefore possible:
+StrictDoc generates RST documentation which then can be generated to HTML, PDF,
+and other formats using Sphinx.</p>
+<p>If you are reading this documentation at
+<a class="reference external" href="https://strictdoc.readthedocs.io/en/latest">https://strictdoc.readthedocs.io/en/latest</a>
+then you are already looking at the example: this documentation stored in
+<a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc">strictdoc.sdoc</a>
+is converted to RST format by StrictDoc which is further converted to the HTML
+website by readthedocs which uses Sphinx under the hood. The
+<cite>StrictDoc -&gt; RST -&gt; Sphinx -&gt; PDF</cite> example is also generated using readthedocs:
+<a class="reference external" href="https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/">StrictDoc</a>.</p>
 </div>
 
           </div>
@@ -580,28 +630,35 @@ to/from Doorstop format.</p>
             Project goals
           </h2>
         </section>
-        <section id="Software-for-writing-technical-documentation">
+        <section id="Software-support-for-writing-requirements-and-specifications-documents">
           <div class="requirement requirement_block">
 
 <div class="requirement_section" data-role='meta'>
 
   <h3 class="section-title" data-level="6.1.1">
-    Software for writing technical documentation
+    Software support for writing requirements and specifications documents
   </h3><dl class="requirement-meta">
-      <div><dt>UID</dt><dd>GOAL-1-TOOL</dd></div>
+      <div><dt>UID</dt><dd>GOAL-1-TOOL-SUPPORT</dd></div>
     </dl>
 
   </div>
   <div class="requirement_section" data-role='statement'><div class="requirement-statement">
       <div class="document">
-<p>There shall exist free and lightweight yet capable software for technical
-documentation.</p>
+<p>There shall exist free and lightweight yet capable software for writing
+requirements and specifications documents</p>
 </div>
 
     </div>
 
   </div>
   <div class="requirement_section" data-role='comment'>
+      <div class="comment">
+        <div class="document">
+<p>Technical documentation is hard, it can be an extremely laborious process.
+Software shall support engineers in their work with documentation.</p>
+</div>
+
+      </div>
       <div class="comment">
         <div class="document">
 <p>The state of the art for many small companies working with
@@ -619,51 +676,15 @@ hundreds or thousands of requirements.</p>
 
 </div>
         </section>
-        <section id="Software-support-for-writing-documentation">
-          <div class="requirement requirement_block">
-
-<div class="requirement_section" data-role='meta'>
-
-  <h3 class="section-title" data-level="6.1.2">
-    Software support for writing documentation
-  </h3><dl class="requirement-meta">
-      <div><dt>UID</dt><dd>GOAL-2-SUPPORT</dd></div>
-    </dl>
-
-  </div>
-  <div class="requirement_section" data-role='statement'><div class="requirement-statement">
-      <div class="document">
-<p>Software shall support engineers in their work with documentation.</p>
-</div>
-
-    </div>
-
-  </div>
-  <div class="requirement_section" data-role='comment'>
-      <div class="comment">
-        <div class="document">
-<p>Technical documentation is hard, it can be an extremely laborious process.</p>
-</div>
-
-      </div>
-
-  </div>
-
-<!-- TODO: remove when certain with tags comes -->
-<!--
--->
-
-</div>
-        </section>
         <section id="Reduce-documentation-hazards">
           <div class="requirement requirement_block">
 
 <div class="requirement_section" data-role='meta'>
 
-  <h3 class="section-title" data-level="6.1.3">
+  <h3 class="section-title" data-level="6.1.2">
     Reduce documentation hazards
   </h3><dl class="requirement-meta">
-      <div><dt>UID</dt><dd>GOAL-3-REDUCE-DOCUMENTATION-HAZARDS</dd></div>
+      <div><dt>UID</dt><dd>GOAL-2-REDUCE-DOCUMENTATION-HAZARDS</dd></div>
     </dl>
 
   </div>
@@ -700,15 +721,15 @@ and writing technical documentation.</p>
 
 </div>
         </section>
-        <section id="Less-run-away-documentation">
+        <section id="No-or-less-run-away-documentation">
           <div class="requirement requirement_block">
 
 <div class="requirement_section" data-role='meta'>
 
-  <h3 class="section-title" data-level="6.1.4">
-    Less run-away documentation
+  <h3 class="section-title" data-level="6.1.3">
+    No (or less) run-away documentation
   </h3><dl class="requirement-meta">
-      <div><dt>UID</dt><dd>GOAL-4-PREVENT-RUNAWAY-DOCUMENTATION</dd></div>
+      <div><dt>UID</dt><dd>GOAL-3-NO-RUNAWAY-DOCUMENTATION</dd></div>
     </dl>
 
   </div>
@@ -743,10 +764,10 @@ documents and documentation trees.</p>
 
 <div class="requirement_section" data-role='meta'>
 
-  <h3 class="section-title" data-level="6.1.5">
+  <h3 class="section-title" data-level="6.1.4">
     Change management
   </h3><dl class="requirement-meta">
-      <div><dt>UID</dt><dd>GOAL-5-CHANGE-MANAGEMENT</dd></div>
+      <div><dt>UID</dt><dd>GOAL-4-CHANGE-MANAGEMENT</dd></div>
     </dl>
 
   </div>
@@ -793,8 +814,8 @@ requires a full revision of its requirements TBD.</p>
     </dl>
   <ul class="requirement-parent">
     <li><a href="#">
-      <span class="requirement-parent_uid">GOAL-1-TOOL </span>
-      Software for writing technical documentation
+      <span class="requirement-parent_uid">GOAL-1-TOOL-SUPPORT </span>
+      Software support for writing requirements and specifications documents
     </a></li>
     </ul>
 
@@ -900,7 +921,12 @@ and specifications management tool TBD.</p>
   </h3>
 
   </div>
-  <div class="requirement_section" data-role='statement'>
+  <div class="requirement_section" data-role='statement'><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall work on all major platforms.</p>
+</div>
+
+    </div>
 
   </div>
   <div class="requirement_section" data-role='comment'>
@@ -954,6 +980,34 @@ and specifications management tool TBD.</p>
   <div class="requirement_section" data-role='statement'><div class="requirement-statement">
       <div class="document">
 <p>StrictDoc shall work on Linux systems.</p>
+</div>
+
+    </div>
+
+  </div>
+  <div class="requirement_section" data-role='comment'>
+
+  </div>
+
+<!-- TODO: remove when certain with tags comes -->
+<!--
+-->
+
+</div>
+        </section>
+        <section id="Windows-support">
+          <div class="requirement requirement_block">
+
+<div class="requirement_section" data-role='meta'>
+
+  <h4 class="section-title" data-level="6.2.4.3">
+    Windows support
+  </h4>
+
+  </div>
+  <div class="requirement_section" data-role='statement'><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall work on Windows systems.</p>
 </div>
 
     </div>
@@ -1813,14 +1867,19 @@ be no way to define a single rule.</p>
             Design decisions
           </h1>
         </section>
+        <section id="Building-blocks">
+          <h2 class="section-title" data-level="7.1">
+            Building blocks
+          </h2>
+        </section>
         <section id="TextX">
           <div class="requirement requirement_block">
 
 <div class="requirement_section" data-role='meta'>
 
-  <h2 class="section-title" data-level="7.1">
+  <h3 class="section-title" data-level="7.1.1">
     TextX
-  </h2>
+  </h3>
 
   </div>
   <div class="requirement_section" data-role='statement'><div class="requirement-statement">
@@ -1852,9 +1911,9 @@ be no way to define a single rule.</p>
 
 <div class="requirement_section" data-role='meta'>
 
-  <h2 class="section-title" data-level="7.2">
+  <h3 class="section-title" data-level="7.1.2">
     Jinja2
-  </h2>
+  </h3>
 
   </div>
   <div class="requirement_section" data-role='statement'><div class="requirement-statement">
@@ -1880,9 +1939,9 @@ be no way to define a single rule.</p>
 
 <div class="requirement_section" data-role='meta'>
 
-  <h2 class="section-title" data-level="7.3">
+  <h3 class="section-title" data-level="7.1.3">
     Sphinx and Docutils
-  </h2>
+  </h3>
 
   </div>
   <div class="requirement_section" data-role='statement'><div class="requirement-statement">
@@ -1910,7 +1969,7 @@ be no way to define a single rule.</p>
 </div>
         </section>
         <section id="SDoc-grammar">
-          <h2 class="section-title" data-level="7.4">
+          <h2 class="section-title" data-level="7.2">
             SDoc grammar
           </h2>
         </section>
@@ -1919,7 +1978,7 @@ be no way to define a single rule.</p>
 
 <div class="requirement_section" data-role='meta'>
 
-  <h3 class="section-title" data-level="7.4.1">
+  <h3 class="section-title" data-level="7.2.1">
     No indentation
   </h3>
 
@@ -2214,8 +2273,43 @@ as Grammar, Import, Export classes, etc.</p>
 
 </div>
         </section>
+        <section id="Links">
+          <div class="requirement requirement_block">
+
+<div class="requirement_section" data-role='meta'>
+
+  <h3 class="section-title" data-level="8.3.2">
+    Links
+  </h3>
+
+  </div>
+  <div class="requirement_section" data-role='statement'><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc's data model shall support linking document content nodes to each other.</p>
+</div>
+
+    </div>
+
+  </div>
+  <div class="requirement_section" data-role='comment'>
+      <div class="comment">
+        <div class="document">
+<p>Examples:
+- Link that references a section</p>
+</div>
+
+      </div>
+
+  </div>
+
+<!-- TODO: remove when certain with tags comes -->
+<!--
+-->
+
+</div>
+        </section>
         <section id="Export-capabilities">
-          <h3 class="section-title" data-level="8.3.2">
+          <h3 class="section-title" data-level="8.3.3">
             Export capabilities
           </h3>
         </section>
@@ -2224,7 +2318,7 @@ as Grammar, Import, Export classes, etc.</p>
 
 <div class="requirement_section" data-role='meta'>
 
-  <h4 class="section-title" data-level="8.3.2.1">
+  <h4 class="section-title" data-level="8.3.3.1">
     Excel Export
   </h4>
 
@@ -2252,7 +2346,7 @@ as Grammar, Import, Export classes, etc.</p>
 
 <div class="requirement_section" data-role='meta'>
 
-  <h4 class="section-title" data-level="8.3.2.2">
+  <h4 class="section-title" data-level="8.3.3.2">
     PlantUML Export
   </h4>
 
@@ -2280,7 +2374,7 @@ as Grammar, Import, Export classes, etc.</p>
 
 <div class="requirement_section" data-role='meta'>
 
-  <h4 class="section-title" data-level="8.3.2.3">
+  <h4 class="section-title" data-level="8.3.3.3">
     ReqIF Import/Export
   </h4>
 
@@ -2308,7 +2402,7 @@ as Grammar, Import, Export classes, etc.</p>
 
 <div class="requirement_section" data-role='meta'>
 
-  <h4 class="section-title" data-level="8.3.2.4">
+  <h4 class="section-title" data-level="8.3.3.4">
     Confluence Import/Export
   </h4>
 
@@ -2336,7 +2430,7 @@ as Grammar, Import, Export classes, etc.</p>
 
 <div class="requirement_section" data-role='meta'>
 
-  <h4 class="section-title" data-level="8.3.2.5">
+  <h4 class="section-title" data-level="8.3.3.5">
     Tex Export
   </h4>
 
@@ -2364,7 +2458,7 @@ as Grammar, Import, Export classes, etc.</p>
 
 <div class="requirement_section" data-role='meta'>
 
-  <h4 class="section-title" data-level="8.3.2.6">
+  <h4 class="section-title" data-level="8.3.3.6">
     Doorstop Import/Export
   </h4>
 
@@ -2392,7 +2486,7 @@ as Grammar, Import, Export classes, etc.</p>
 
 <div class="requirement_section" data-role='meta'>
 
-  <h4 class="section-title" data-level="8.3.2.7">
+  <h4 class="section-title" data-level="8.3.3.7">
     Markdown support for text and code blocks
   </h4>
 
@@ -2400,39 +2494,6 @@ as Grammar, Import, Export classes, etc.</p>
   <div class="requirement_section" data-role='statement'><div class="requirement-statement">
       <div class="document">
 <p>StrictDoc shall support rendering text/code blocks into RST syntax.</p>
-</div>
-
-    </div>
-
-  </div>
-  <div class="requirement_section" data-role='comment'>
-
-  </div>
-
-<!-- TODO: remove when certain with tags comes -->
-<!--
--->
-
-</div>
-        </section>
-        <section id="Platform-support">
-          <h3 class="section-title" data-level="8.3.3">
-            Platform support
-          </h3>
-        </section>
-        <section id="Windows-support">
-          <div class="requirement requirement_block">
-
-<div class="requirement_section" data-role='meta'>
-
-  <h4 class="section-title" data-level="8.3.3.1">
-    Windows support
-  </h4>
-
-  </div>
-  <div class="requirement_section" data-role='statement'><div class="requirement-statement">
-      <div class="document">
-<p>StrictDoc shall work on Windows systems.</p>
 </div>
 
     </div>
@@ -2787,12 +2848,40 @@ enforce numerical constraints.</p>
 
 </div>
         </section>
-        <section id="Graphical-User-Interface-GUI-">
+        <section id="FMEA-FMECA-tables">
           <div class="requirement requirement_block">
 
 <div class="requirement_section" data-role='meta'>
 
   <h4 class="section-title" data-level="8.3.9.2">
+    FMEA/FMECA tables
+  </h4>
+
+  </div>
+  <div class="requirement_section" data-role='statement'><div class="requirement-statement">
+      <div class="document">
+<p>StrictDoc shall support creation of FMEA/FMECA safety analysis documents.</p>
+</div>
+
+    </div>
+
+  </div>
+  <div class="requirement_section" data-role='comment'>
+
+  </div>
+
+<!-- TODO: remove when certain with tags comes -->
+<!--
+-->
+
+</div>
+        </section>
+        <section id="Graphical-User-Interface-GUI-">
+          <div class="requirement requirement_block">
+
+<div class="requirement_section" data-role='meta'>
+
+  <h4 class="section-title" data-level="8.3.9.3">
     Graphical User Interface (GUI)
   </h4>
 
@@ -2820,7 +2909,7 @@ enforce numerical constraints.</p>
 
 <div class="requirement_section" data-role='meta'>
 
-  <h4 class="section-title" data-level="8.3.9.3">
+  <h4 class="section-title" data-level="8.3.9.4">
     Web server and editable HTML pages
   </h4>
 
@@ -2846,9 +2935,10 @@ reading and writing SDoc files.</p>
         </section>
 
       </article>
+
     </main>
 
   </div>
-
+  
 </body>
 </html>

@@ -217,7 +217,7 @@ latex_elements = {
                             documentation control
                     } 
                     \\ \hline
-                    \textbf{{Supported Documents:}} & \tablecell {Requirements document/specification, technical manual} \\ \hline
+                    \textbf{{Supported documents:}} & \tablecell {Requirements document/specification, technical manual} \\ \hline
                     \textbf{{Documents storage:}} & \tablecell {Plain text files} \\ \hline
                     \textbf{{Export formats:}} & \tablecell {RST/Sphinx, HTML, PDF} \\ \hline
                     \textbf{{License model:}} & \tablecell {Open source software, Apache 2 license} \\ \hline

@@ -23,8 +23,11 @@ function switchTOC(currState) {
 
 window.onload = function() {
 
-  tocToggle = document.getElementById('toc_toggle');
-  tocLayout = document.getElementById('toc_layout');
+  // tocToggle = document.getElementById('toc_toggle');
+  // tocLayout = document.getElementById('toc_layout');
+
+  tocToggle = document.getElementById('layout_toggle');
+  tocLayout = document.getElementById('layout');
 
   tocToggle.dataset.state = 'open';
   tocLayout.dataset.state = 'open';

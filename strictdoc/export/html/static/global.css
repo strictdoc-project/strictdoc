@@ -1,6 +1,6 @@
 * {
   box-sizing: border-box;
-  font-family: sans-serif;
+  /* font-family: sans-serif; */
   margin: 0;
   padding: 0;
 }
@@ -72,7 +72,7 @@ section:target [data-requirement-role="current"] .section-title {
   line-height: var(--base-line-height);
 }
 
-.content p {
+section p {
   margin: calc(var(--base-font-size) * 0.5) 0;
 }
 

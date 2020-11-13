@@ -1,0 +1,34 @@
+
+    <ul class="">
+    {%- for section in document_iterator.table_of_contents() -%}
+      <li>
+        <a href="#{{ link_renderer.render(section) }}">
+          <span class="section-number">{{ section.context.title_number_string }}</span>
+          {%- if section.is_requirement -%}
+            {{ section.title if section.title else (section.uid if section.uid else '[ no title ]') }}
+          {%- else -%}
+            {{ section.title if section.title else '[ no title ]' }}
+          {%- endif -%}
+        </a>
+
+      {%- if not loop.last -%}
+        {%- if loop.nextitem.ng_level > section.ng_level -%}
+          <ul>
+        {%- elif loop.nextitem.ng_level < section.ng_level -%}
+            </li>
+          {%- for x in range(0, section.ng_level - loop.nextitem.ng_level) -%}
+            </ul>
+            </li>
+          {%- endfor -%}
+        {%- else -%}
+          </li>
+        {%- endif -%}
+      {%- else -%}
+        </li>
+        {%- for x in range(0, section.ng_level - 1) -%}
+            </ul>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    {%- endfor %}

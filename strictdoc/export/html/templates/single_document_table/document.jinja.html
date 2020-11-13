@@ -9,7 +9,7 @@
       <article class="view-table" id="sections-and-requirements">
 
         {%- if document.free_texts -%}
-        <section class="view-table_section">
+        <section class="view-table_section_simple">
           {%- for free_text in document.free_texts -%}
           <div class="free_text">
             {{ renderer.render_free_text(free_text) }}
@@ -21,13 +21,12 @@
       {%- for section_or_requirement in document_iterator.all_content() %}
 
         {%- if section_or_requirement.is_composite_requirement %}
-        <section class="view-table_composite">
-          {%- set section = section_or_requirement %}
-          <h{{ section.ng_level }} class="section-title" data-level="{{ section.context.title_number_string }}">
-            {{ section.title if section.title else '' }}
-          </h{{ section.ng_level }}>
+        <section class="view-table_requirement_headers">
+          <div data-role='meta'></div>
+          <div data-role='statement'></div>
+          <div data-role='comment'></div>
         </section>
-        <section class="view-table_requirement-composite view-table_requirement" id="{{ link_renderer.render(section_or_requirement) }}">
+        <section class="view-table_requirement" id="{{ link_renderer.render(section_or_requirement) }}">
           {%- set requirement = section_or_requirement %}
           {% with requirement_view_type='table' -%}
           {% include "_shared/requirement.jinja.html" %}
@@ -35,6 +34,11 @@
         </section>
 
         {%- elif section_or_requirement.is_requirement %}
+        <section class="view-table_requirement_headers">
+          <div data-role='meta'></div>
+          <div data-role='statement'></div>
+          <div data-role='comment'></div>
+        </section>
         <section class="view-table_requirement" id="{{ link_renderer.render(section_or_requirement) }}">
           {%- set requirement = section_or_requirement %}
           {% with requirement_view_type='table' -%}
@@ -43,16 +47,26 @@
         </section>
 
         {%- elif section_or_requirement.is_section %}
+        <section class="view-table_section_headers">
+          <div data-role='meta'></div>
+          <div data-role='freetext'></div>
+        </section>
         <section class="view-table_section" id="{{ link_renderer.render(section_or_requirement) }}">
+          <div class=" requirement_table">
           {%- set section = section_or_requirement %}
+          <div class="requirement_section" data-role='meta'>
           <h{{ section.ng_level }} class="section-title" data-level="{{ section.context.title_number_string }}">
             {{ section.title if section.title else '' }}
           </h{{ section.ng_level }}>
+          </div>
+          <div class="requirement_section" data-role='freetext'>
           {%- for free_text in section_or_requirement.free_texts %}
           <div class="free_text">
             {{ renderer.render_free_text(free_text) }}
           </div>
           {%- endfor -%}
+          </div>
+        </div>
         </section>
         {%- endif %}
 

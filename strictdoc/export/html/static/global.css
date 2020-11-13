@@ -293,8 +293,6 @@ dl.requirement-meta {
 .view-table {
   min-width: 800px;
   box-sizing: border-box;
-  /* background-color: #fff;
-  padding: 1.5rem; */
 }
 
 .view-table section {
@@ -304,24 +302,14 @@ dl.requirement-meta {
 
 .view-table .free_text {
   max-width: 800px;
-  /* padding: 1.5rem; */
 }
 
-.view-table_section,
 .view-table_composite {
-  /* margin: 2rem 0; */
   padding: 1rem 1rem;
 }
-.view-table_composite {
-  /* margin-top: 2rem; */
-}
-.view-table_requirement {
-  padding-top: var(--table-header-height);
-}
 
-/* .view-table_composite + .view-table_requirement, */
-.view-table_requirement + .view-table_requirement {
-  padding-top: 0;
+.view-table_section_simple {
+  padding: 1rem 1rem;
 }
 
 /* requirement_table */
@@ -331,17 +319,34 @@ dl.requirement-meta {
   justify-content: center;
 }
 
+.view-table_section_headers,
+.view-table_requirement_headers {
+  display: flex;
+  justify-content: center;
+
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  z-index: 10;
+  top: var(--toc-bar-width);
+}
+
 .requirement_table .requirement_section {
   width: 33%;
   flex-grow: 1;
   padding: .75rem;
-  /* border-right: 1px solid var(--table-color-border);
-  border-bottom: 3px solid var(--table-color-border); */
   position: relative;
 }
 
-.requirement_table .requirement_section:first-child {
-  /* border-left: 1px solid var(--table-color-border); */
+.view-table_section_headers div,
+.view-table_requirement_headers div {
+  width: 33%;
+  flex-grow: 1;
+}
+
+.view-table_section_headers [data-role="freetext"],
+.view-table_requirement_headers [data-role="freetext"],
+.requirement_table .requirement_section[data-role="freetext"] {
+  width: 66%;
 }
 
 .requirement_table .section-title {
@@ -357,42 +362,23 @@ dl.requirement-meta {
   margin-right: .5rem;
 }
 
-/* section.view-table_composite .requirement_table,
-.view-table_section + .view-table_requirement .requirement_table {
-  margin-top: 3rem;
-} */
-
-/* section.view-table_composite .requirement_section[data-role]::before,
-.view-table_section + .view-table_requirement .requirement_section[data-role]::before */
-
-.view-table_requirement .requirement_section[data-role]::before {
+.view-table_section_headers [data-role]::before,
+.view-table_requirement_headers [data-role]::before {
   content: attr(data-role) " ";
-  position: absolute;
   display: flex;
-  align-items: center;
-  font-size: .75rem;
-  padding: 0 .75rem;
-  /* background-color: var(--table-header-bg); */
-  color: var(--table-header-color);
-  left: -1px;
-  right: -1px;
-  bottom: calc(100% + var(--table-column-gap));
-  height: calc(var(--table-header-height) - var(--table-column-gap));
-  border: 1px solid var(--table-color-border);
-  box-sizing: border-box;
+  padding: .5rem .75rem;
+  font-size: .85rem;
   text-transform: capitalize;
   font-weight: bold;
+  background-color: var(--table-color-border);
+  color: var(--color-text-main);
 }
 
-/* .view-table_composite + .view-table_requirement .requirement_section[data-role]::before, */
-.view-table_requirement + .view-table_requirement .requirement_section[data-role]::before {
+.view-table_section + .view-table_section_headers [data-role]::before,
+.view-table_requirement + .view-table_requirement_headers [data-role]::before {
   display: none;
   content: none;
 }
-
-/* .view-table_composite {
-  display: none;
-} */
 
 .requirement_table .requirement-meta {
   /* margin: 0 -.75rem; */
@@ -418,6 +404,7 @@ dl.requirement-meta {
   margin-bottom: 0;
 }
 
+.view-table .view-table_section,
 .view-table .view-table_requirement {
   background-color: var(--table-header-bg);
 }

@@ -13,7 +13,25 @@
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
+import string
+from pathlib import Path
 
+import toml
+
+
+# Strings with embedded variables in Python
+# https://stackoverflow.com/a/16553401/598057
+class RubyTemplate(string.Template):
+    delimiter = '#'
+
+
+def get_version():
+   path = Path(__file__).parent.parent.resolve().parents[1] / 'pyproject.toml'
+   pyproject = toml.loads(open(str(path)).read())
+   return pyproject['tool']['poetry']['version']
+
+
+STRICTDOC_VERSION = get_version()
 
 # -- Project information -----------------------------------------------------
 
@@ -22,7 +40,7 @@ copyright = '2020, Stanislav Pankevich'
 author = 'Stanislav Pankevich'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.2'
+release = STRICTDOC_VERSION
 
 
 # -- General configuration ---------------------------------------------------
@@ -189,7 +207,7 @@ latex_elements = {
         \newcommand{\tablecell}[1] {{{#1}}}
     ''',
 
-    'maketitle': r'''
+    'maketitle': RubyTemplate(r'''
         \pagenumbering{Roman} %%% to avoid page 1 conflict with actual page 1
 
         \begin{titlepage}   
@@ -207,7 +225,7 @@ latex_elements = {
 
             \begin{flushright}
                 \bgroup
-                    \def\arraystretch{1.7}%  1 is the default, change whatever you need
+                    \def\arraystretch{1.9}%  1 is the default, change whatever you need
                     \begin{tabular}{|p{4.8cm}|p{11.7cm}|}
                     \hline
                     \textbf{{Project goals:}} & 
@@ -223,7 +241,7 @@ latex_elements = {
                     \textbf{{License model:}} & \tablecell {Open source software, Apache 2 license} \\ \hline
                     \textbf{{Project page:}} & \tablecell {https://github.com/stanislaw/strictdoc} \\ \hline
                     \textbf{{Release date:}} & \tablecell {\MonthYearFormat\today} \\ \hline
-                    \textbf{{Version:}} & \tablecell {0.0.2} \\ \hline
+                    \textbf{{Version:}} & \tablecell #{STRICTDOC_VERSION} \\ \hline
                     \end{tabular}
                 \egroup
             \end{flushright}
@@ -247,7 +265,7 @@ latex_elements = {
         \clearpage
         \pagestyle{normal}
         \pagenumbering{arabic}
-        '''
+        ''').substitute(STRICTDOC_VERSION=STRICTDOC_VERSION)
 }
 
 # -- Options for HTML output -------------------------------------------------

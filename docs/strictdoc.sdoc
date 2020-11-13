@@ -263,7 +263,22 @@ LEVEL: 2
 TITLE: StrictDoc and Sphinx
 
 [FREETEXT]
-TBD
+Both Sphinx and StrictDoc are both documentation generators but StrictDoc is at
+a higher level of abstraction: StrictDoc's specialization is requirements and
+specifications documents. StrictDoc can generate documentation to a number of
+formats including HTML format as well as the RST format which is a default
+input format for Sphinx. A two stage generation is therefore possible:
+StrictDoc generates RST documentation which then can be generated to HTML, PDF,
+and other formats using Sphinx.
+
+If you are reading this documentation at
+https://strictdoc.readthedocs.io/en/latest
+then you are already looking at the example: this documentation stored in
+`strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc>`_
+is converted to RST format by StrictDoc which is further converted to the HTML
+website by readthedocs which uses Sphinx under the hood. The
+`StrictDoc -> RST -> Sphinx -> PDF` example is also generated using readthedocs:
+`StrictDoc <https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_.
 [/FREETEXT]
 
 [/SECTION]
@@ -289,11 +304,15 @@ LEVEL: 2
 TITLE: Project goals
 
 [REQUIREMENT]
-UID: GOAL-1-TOOL
-TITLE: Software for writing technical documentation
+UID: GOAL-1-TOOL-SUPPORT
+TITLE: Software support for writing requirements and specifications documents
 STATEMENT: >>>
-There shall exist free and lightweight yet capable software for technical
-documentation.
+There shall exist free and lightweight yet capable software for writing
+requirements and specifications documents
+<<<
+COMMENT: >>>
+Technical documentation is hard, it can be an extremely laborious process.
+Software shall support engineers in their work with documentation.
 <<<
 COMMENT: >>>
 The state of the art for many small companies working with
@@ -302,15 +321,7 @@ hundreds or thousands of requirements.
 <<<
 
 [REQUIREMENT]
-UID: GOAL-2-SUPPORT
-TITLE: Software support for writing documentation
-STATEMENT: >>>
-Software shall support engineers in their work with documentation.
-<<<
-COMMENT: Technical documentation is hard, it can be an extremely laborious process.
-
-[REQUIREMENT]
-UID: GOAL-3-REDUCE-DOCUMENTATION-HAZARDS
+UID: GOAL-2-REDUCE-DOCUMENTATION-HAZARDS
 TITLE: Reduce documentation hazards
 STATEMENT: >>>
 There shall exist no (or less) opportunity for writing incorrect or inconsistent
@@ -330,8 +341,8 @@ and writing technical documentation.
 <<<
 
 [REQUIREMENT]
-UID: GOAL-4-PREVENT-RUNAWAY-DOCUMENTATION
-TITLE: Less run-away documentation
+UID: GOAL-3-NO-RUNAWAY-DOCUMENTATION
+TITLE: No (or less) run-away documentation
 STATEMENT: Software shall support engineers in keeping documentation up-to-date.
 COMMENT: >>>
 Technical documentation easily becomes outdated. Many existing tools for
@@ -340,7 +351,7 @@ documents and documentation trees.
 <<<
 
 [REQUIREMENT]
-UID: GOAL-5-CHANGE-MANAGEMENT
+UID: GOAL-4-CHANGE-MANAGEMENT
 TITLE: Change management
 STATEMENT: Software shall provide capabilities for change management and impact assessment.
 COMMENT: >>>
@@ -359,7 +370,7 @@ TITLE: High-level requirements
 UID: SDOC-HIGH-REQS-MANAGEMENT
 REFS:
 - TYPE: Parent
-  VALUE: GOAL-1-TOOL
+  VALUE: GOAL-1-TOOL-SUPPORT
 TITLE: Requirements management
 STATEMENT: StrictDoc shall enable requirements management.
 
@@ -619,6 +630,10 @@ COMMENT: First candidate: Table of contents and its nested ``<ul>/<li>`` items.
 LEVEL: 1
 TITLE: Design decisions
 
+[SECTION]
+LEVEL: 2
+TITLE: Building blocks
+
 [REQUIREMENT]
 TITLE: TextX
 STATEMENT: TextX shall be used for StrictDoc grammar definition and parsing of the sdoc files.
@@ -640,6 +655,8 @@ Sphinx and Docutils shall be used for the following capabilities:
 - Generation of RST documents into PDF using Latex
 - Generating documentation websites using Sphinx
 <<<
+
+[/SECTION]
 
 [SECTION]
 LEVEL: 2
@@ -723,6 +740,14 @@ STATEMENT: StrictDoc shall support it use as a Python library.
 COMMENT: >>>
 Such a use allows a more fine-grained access to the StrictDoc's modules, such
 as Grammar, Import, Export classes, etc.
+<<<
+
+[REQUIREMENT]
+TITLE: Links
+STATEMENT: StrictDoc's data model shall support linking document content nodes to each other.
+COMMENT: >>>
+Examples:
+- Link that references a section
 <<<
 
 [SECTION]
@@ -832,6 +857,12 @@ TITLE: Facts table. Invariants calculation.
 STATEMENT: >>>
 StrictDoc shall support creation of fact tables calculating invariants that
 enforce numerical constraints.
+<<<
+
+[REQUIREMENT]
+TITLE: FMEA/FMECA tables
+STATEMENT: >>>
+StrictDoc shall support creation of FMEA/FMECA safety analysis documents.
 <<<
 
 [REQUIREMENT]

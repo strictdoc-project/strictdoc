@@ -10,25 +10,38 @@
   --color-bg-contrast: #fff;
   --color-fg-contrast: #000;
 
+  --color-bg-half-contrast: rgb(255 255 255 / 40%);
+  --color-fg-half-contrast: rgb(0 0 0 / 10%);
+
   --color-accent: #274466;
+  --color-highlight: rgb(255, 255, 155);
+
+  --color-bg-secondary: rgb(0 0 0 / 1%);
+
+  --color-border: rgba(0,0,0,.1);
 
   --scrollbarBG: transparent;
-  --thumbBG: rgba(0,0,0,.1);
+  --thumbBG: var(--color-border);
 
   --base-font-size: 16px;
 
-  --base-gap: 48px;
-  --base-padding: 16px;
+  --base-gap: calc(var(--base-font-size)*3);
+  --base-padding: var(--base-font-size);
+  --base-margin: var(--base-font-size);
 
   --toc-width: 300px;
   --toc-layout-transition: 0.1s;
 
   --main-elevation-shadow: inset 8px 8px 16px rgba(0,0,0,.2);
 
-  --trc-row-gap: 8px;
-  --trc-column-gap: 8px;
-
   --traceability-arrow: 1.25rem;
+
+  --code-border-color: var(--color-border);
+  --code-font-family: consolas,monaco,"Andale Mono",monospace;
+  --code-font-size: .875rem;
+
+  --card-width: 300px;
+
 }
 
 body {
@@ -37,7 +50,7 @@ body {
 
   font-family: 'Noto Sans', sans-serif;
   font-size: var(--base-font-size);
-  line-height: 1.5;
+  line-height: 1.6;
   color: var(--color-fg-main);
   background-color: var(--color-bg-main);
 }

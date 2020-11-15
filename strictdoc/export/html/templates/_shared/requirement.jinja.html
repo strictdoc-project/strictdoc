@@ -1,9 +1,9 @@
-<div class="requirement requirement_{{ requirement_view_type }}"
+<article class="requirement requirement_{{ requirement_view_type }}"
 {%- if requirement.status %}
 data-status='{{ requirement.status.lower() }}'
 {%- endif %}>
 
-<div class="requirement_section" data-role='meta'>
+  <section class="requirement_section" data-section='meta'>
 
   <h{{ requirement.ng_level }} class="section-title" data-level="{{ requirement.context.title_number_string }}">
     {{ requirement.title if requirement.title else (requirement.uid if requirement.uid else '') }}
@@ -36,8 +36,8 @@ data-status='{{ requirement.status.lower() }}'
     </ul>
   {%- endif %}
 
-  </div>
-  <div class="requirement_section" data-role='statement'>
+  </section>
+  <section class="requirement_section" data-section='statement'>
 
   {%- if requirement.statement or requirement.statement_multiline -%}
     <div class="requirement-statement">
@@ -51,32 +51,17 @@ data-status='{{ requirement.status.lower() }}'
     </p></div>
   {%- endif %}
 
-  </div>
-  <div class="requirement_section" data-role='comment'>
+  </section>
+  <section class="requirement_section" data-section='comment'>
 
   {%- if requirement.comments %}
     {%- for comment in requirement.comments %}
-      <div class="comment">
+      <div class="requirement-comment">
         {{ renderer.render_comment(comment) }}
       </div>
     {%- endfor %}
   {%- endif %}
 
-  </div>
+  </section>
 
-<!-- TODO: remove when certain with tags comes -->
-<!--
-  {%- if requirement.tags %}
-    <div>
-    {%- for tag in requirement.tags %}
-      <span class="tag">
-
-        {{ tag }}
-
-      </span>
-    {%- endfor %}
-    </div>
-  {%- endif %}
--->
-
-</div>
+</article>

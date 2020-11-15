@@ -46,6 +46,18 @@
   color: var(--color-accent);
 }
 
+.layout_header .document-view-type {
+  display: inline-block;
+  position: relative;
+  text-transform: uppercase;
+  font-size: .5em;
+  line-height: 1;
+  padding: 6px 10px;
+  top: -6px;
+  background-color: var(--color-bg-mac);
+  color: var(--color-accent);
+}
+
 .layout_toggler {
   grid-area: toggler;
   background-color: var(--color-bg-main);
@@ -147,6 +159,19 @@
 
 .layout_button:hover {
   background-color: var(--color-bg-contrast);
+}
+
+.document-view .btn-document,
+.document-view .btn-document:hover,
+.table-view .btn-table,
+.table-view .btn-table:hover,
+.traceability-view .btn-traceability,
+.traceability-view .btn-traceability:hover,
+.deep-traceability-view .btn-deep-traceability,
+.deep-traceability-view .btn-deep-traceability:hover {
+  background-color: var(--color-border);
+  /* color: var(--color-bg-main); */
+  cursor: default;
 }
 
 .index-link {

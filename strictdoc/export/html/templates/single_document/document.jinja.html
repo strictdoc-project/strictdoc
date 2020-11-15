@@ -1,18 +1,18 @@
 {% extends "base.jinja.html" %}
 {% block title %}Document{% endblock %}
-{% block pagetype %}document{% endblock %}
+{% block viewtype %}document-view{% endblock %}
 
 {% block content %}
-      <article class="view-document">
+      <div class="content">
 
         {%- if document.free_texts -%}
-        <section>
+        <section><article>
         {%- for free_text in document.free_texts %}
           <div class="free_text">
             {{ renderer.render_free_text(free_text) }}
           </div>
         {%- endfor -%}
-        </section>
+        </article></section>
         {%- endif -%}
 
         {%- for section_or_requirement in document_iterator.all_content() %}
@@ -25,19 +25,11 @@
 
         {%- elif section_or_requirement.is_section %}
           {%- set section = section_or_requirement %}
-          <h{{ section.ng_level }} class="section-title" data-level="{{ section.context.title_number_string }}">
-            {{ section.title if section.title else '' }}
-          </h{{ section.ng_level }}>
-
-          {%- for free_text in section_or_requirement.free_texts %}
-          <div class="free_text">
-            {{ renderer.render_free_text(free_text) }}
-          </div>
-          {%- endfor -%}
+          {% include "_shared/docsection.jinja.html" %}
 
         {%- endif %}
         </section>
         {%- endfor %}
 
-      </article>
+      </div>
 {% endblock content %}

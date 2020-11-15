@@ -1,75 +1,59 @@
 {% extends "base.jinja.html" %}
 {% block title %}Traceability{% endblock %}
-{% block pagetype %}traceability{% endblock %}
+{% block viewtype %}traceability-view{% endblock %}
 
 {% block content %}
 
       {% include "_shared/tags.jinja.html" %}
 
-      <article class="view-traceability" id="sections-and-requirements">
+      <div class="content">
       {%- for section_or_requirement in document_iterator.all_content() %}
 
         {%- if section_or_requirement.is_requirement %}
-        <section class="view-traceability_row" id="{{ link_renderer.render(section_or_requirement) }}">
-          <div class="view-traceability_column" data-requirement-role="parents">
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
           {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) %}
 
             {% with requirement_view_type='card' -%}
             {% include "_shared/requirement.jinja.html" %}
             {%- endwith %}
 
-          {%- endfor %}
+          {%- endfor -%}
           </div>
 
-          <div class="view-traceability_column" data-requirement-role="current">
+          <div class="content_item" data-role="current" id="{{ link_renderer.render(section_or_requirement) }}">
             {%- set requirement = section_or_requirement %}
 
             {% with requirement_view_type='card' -%}
             {% include "_shared/requirement.jinja.html" %}
-            {%- endwith %}
+            {%- endwith -%}
 
           </div>
-          <div class="view-traceability_column" data-requirement-role="children">
+          <div class="content_item" data-role="children">
           {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) %}
 
             {% with requirement_view_type='card' -%}
             {% include "_shared/requirement.jinja.html" %}
             {%- endwith %}
 
-          {%- endfor %}
+          {%- endfor -%}
           </div>
         </section>
 
         {%- elif section_or_requirement.is_section %}
-        <section class="view-traceability_row" id="{{ link_renderer.render(section_or_requirement) }}">
+        <section class="content_section">
 
-          <div class="view-traceability_column" data-requirement-role="parent"></div>
-          <div class="view-traceability_column" data-requirement-role="current">
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current" id="{{ link_renderer.render(section_or_requirement) }}">
 
             {%- set section = section_or_requirement %}
-            <h{{ section.ng_level }} class="section-title" data-level="{{ section.context.title_number_string }}">
-              {{ section.title if section.title else '' }}
-            </h{{ section.ng_level }}>
+            {% include "_shared/docsection.jinja.html" %}
           </div>
-          <div class="view-traceability_column" data-requirement-role="children"></div>
+          <div class="content_item" data-role="children"></div>
         </section>
-        {%- for free_text in section.free_texts -%}
-        <section class="view-traceability_row">
-          <div class="view-traceability_column" data-requirement-role="parent">
-          </div>
-          <div class="view-traceability_column" data-requirement-role="current">
-            <div class="free_text">
-              {{ renderer.render_free_text(free_text) }}
-            </div>
-          </div>
-          <div class="view-traceability_column" data-requirement-role="children">
-          </div>
-        </section>
-        {%- endfor -%}
-
         {%- endif %}
 
       {%- endfor %}
-      </article>
+      </div>
 
 {% endblock content %}

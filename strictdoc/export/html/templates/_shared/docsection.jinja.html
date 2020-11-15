@@ -1,0 +1,25 @@
+<article class="docsection">
+
+  <header class="docsection-headers">
+    <div data-section='meta'></div>
+    <div data-section='description'></div>
+  </header>
+
+  <section data-section="meta" class="docsection_section">
+
+    {%- if anchor is defined -%}
+    <div data-role='anchor' id="{{ anchor }}"></div>
+    {%- endif -%}
+
+    <h{{ section.ng_level }} class="section-title" data-level="{{ section.context.title_number_string }}">
+      {{ section.title if section.title else '' }}
+    </h{{ section.ng_level }}>
+  </section>
+  <section data-section="description" class="docsection_section">
+    {%- for free_text in section.free_texts -%}
+    <div class="free-text">
+      {{ renderer.render_free_text(free_text) }}
+    </div>
+    {%- endfor -%}
+  </section>
+</article>

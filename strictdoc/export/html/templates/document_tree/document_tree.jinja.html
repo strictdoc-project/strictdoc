@@ -5,8 +5,7 @@
   <meta charset="UTF-8"/>
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
   <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
-  <link rel="stylesheet" href="_static/global.css"/>
-  <link rel="stylesheet" href="_static/layout-main-with-toc.css"/>
+  <link rel="stylesheet" href="_static/_base.css"/>
   <link rel="stylesheet" href="_static/document_tree.css"/>
   <title>Document Tree</title>
 </head>
@@ -57,22 +56,22 @@
               </div>
               <div class="document-tree_cell">
                 <span class="document-tree_file-link">
-                  <a href="{{ document.meta.get_html_doc_link() }}">DOC</a>
+                  <a class="button_small" href="{{ document.meta.get_html_doc_link() }}">DOC</a>
                 </span>
               </div>
               <div class="document-tree_cell">
                 <span class="document-tree_file-link">
-                  <a href="{{ document.meta.get_html_table_link() }}">TABLE</a>
+                  <a class="button_small" href="{{ document.meta.get_html_table_link() }}">TABLE</a>
                 </span>
               </div>
               <div class="document-tree_cell">
                 <span class="document-tree_file-link">
-                  <a href="{{ document.meta.get_html_traceability_link() }}">TRACE</a>
+                  <a class="button_small" href="{{ document.meta.get_html_traceability_link() }}">TRACE</a>
                 </span>
               </div>
               <div class="document-tree_cell">
                 <span class="document-tree_file-link">
-                  <a href="{{ document.meta.get_html_deep_traceability_link() }}">DEEP-TRACE</a>
+                  <a class="button_small" href="{{ document.meta.get_html_deep_traceability_link() }}">DEEP-TRACE</a>
                 </span>
               </div>
             {% endif %}

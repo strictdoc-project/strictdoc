@@ -5,40 +5,40 @@
   {{ super() }}
 {% endblock head_scripts %}
 {% block title %}Deep Traceability{% endblock title %}
-{% block pagetype %}deep-traceability{% endblock pagetype %}
+{% block viewtype %}deep-traceability-view{% endblock %}
 
 {% block content %}
 
       {% include "_shared/tags.jinja.html" %}
 
-      <article class="view-traceability-deep">
+      <div class="content">
       {%- for section_or_requirement in document_iterator.all_content() %}
         {%- if section_or_requirement.is_requirement %}
-        <section class="view-traceability-deep_row" id="{{ link_renderer.render(section_or_requirement) }}">
+        <section class="content_section">
 
-          <div class="view-traceability-deep_column" data-requirement-role="parents">
-          {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) %}
+          <div class="content_item" data-role="parents">
+          {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) -%}
             {% include "single_document_traceability_deep/recursive_cell_parent.jinja.html" %}
-          {%- endfor %}
+          {%- endfor -%}
           </div>
 
           {%- set requirement = section_or_requirement %}
-          <div class="view-traceability-deep_column" data-requirement-role="current">
-            {% with requirement_view_type='card' -%}
+          <div class="content_item" data-role="current">
+            {%- with anchor=link_renderer.render(section_or_requirement) -%}
             {% include "_shared/requirement.jinja.html" %}
-            {%- endwith %}
+            {%- endwith -%}
           </div>
 
-          <div class="view-traceability-deep_column" data-requirement-role="children">
-          {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) %}
+          <div class="content_item" data-role="children">
+          {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) -%}
             {% include "single_document_traceability_deep/recursive_cell_children.jinja.html" %}
-          {%- endfor %}
+          {%- endfor -%}
           </div>
 
         </section>
         {%- endif %}
       {%- endfor %}
-      </article>
+      </div>
 
 {% endblock content %}
 {% block scripts %}

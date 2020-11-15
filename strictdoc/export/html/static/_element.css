@@ -173,33 +173,33 @@ blockquote {
 pre.code {
   font-family: var(--code-font-family);
 
-  font-size: calc(var(--code-font-size)*0.75);
-  line-height: 1.2;
-  margin: 10px 0;
-  padding: 10px 10px 10px 15px;
+  font-size: var(--code-font-size);
+  line-height: 1.8;
+  margin:   var(--code-font-size) 0;
+  padding:  calc(var(--code-font-size)*1.2)
+            calc(var(--code-font-size)*1.2)
+            calc(var(--code-font-size)*1.2)
+            calc(var(--code-font-size)*2);
 
   overflow: auto;
   background-color: var(--color-bg-main);
   border: 1px solid var(--color-border);
 }
 
-.document-view pre.code {
-  font-size: var(--code-font-size);
-  line-height: 1.4;
-  margin: 20px 0;
-  padding: 15px 15px 15px 20px;
-}
-
 cite {
   position: relative;
-  display: inline-block;
-  padding: 0 5px;
+  padding: 2px 6px;
   font-style: normal;
   font-family: var(--code-font-family);
   font-size: var(--code-font-size);
-  white-space: nowrap;
-  background-color: var(--color-bg-mac);
+  background-color: var(--color-bg-main);
+  border: 1px solid var(--color-border);
   border-radius: 4px;
+
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
 /* reference */

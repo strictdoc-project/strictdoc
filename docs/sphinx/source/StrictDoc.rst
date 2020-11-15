@@ -1,6 +1,3 @@
-StrictDoc
-$$$$$$$$$
-
 StrictDoc is software for writing technical requirements and specifications.
 
 Summary of StrictDoc features:

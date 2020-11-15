@@ -15,11 +15,13 @@ class RSTWriter:
     def __init__(self):
         pass
 
-    def write(self, document):
+    def write(self, document, single_document):
         document_iterator = DocumentCachingIterator(document)
         output = ""
 
-        output += self._print_rst_header(document.name, 0)
+        if not single_document:
+            output += self._print_rst_header(document.name, 0)
+
         for free_text in document.free_texts:
             output += self._print_free_text(free_text)
 

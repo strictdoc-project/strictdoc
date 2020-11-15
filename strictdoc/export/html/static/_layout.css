@@ -99,28 +99,6 @@
   font-size: 1rem;
 }
 
-.layout_aside ul {
-  list-style: none;
-  padding-left: 0;
-}
-
-.layout_aside ul ul {
-  padding-left: calc(var(--base-padding)*.5);
-}
-
-.layout_aside li {
-  margin: 0.5rem 0;
-}
-
-.layout_aside a {
-  line-height: 1;
-  color: var(--color-fg-main);
-  text-decoration: none;
-}
-.layout_aside a:hover {
-  background-color: var(--color-bg-contrast);
-}
-
 .layout_main {
   grid-area: main;
 
@@ -170,9 +148,42 @@
 .deep-traceability-view .btn-deep-traceability,
 .deep-traceability-view .btn-deep-traceability:hover {
   background-color: var(--color-border);
-  /* color: var(--color-bg-main); */
   cursor: default;
 }
+
+/* toc */
+
+.toc {
+  list-style: none;
+  padding-left: 0;
+}
+
+.toc ul {
+  list-style: none;
+  padding-left: calc(var(--base-padding)*.5);
+}
+
+.toc li {
+  margin: 0.5rem 0;
+}
+
+.toc a,
+.toc a:link,
+.toc a:visited {
+  line-height: 1;
+  color: var(--color-fg-main);
+  text-decoration: none;
+}
+.toc a:hover {
+  background-color: var(--color-bg-contrast);
+}
+
+.toc a:focus,
+.toc a:active {
+  background: yellow;
+}
+
+/*  */
 
 .index-link {
   color: var(--color-fg-main);

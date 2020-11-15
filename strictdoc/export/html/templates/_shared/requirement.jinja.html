@@ -1,16 +1,26 @@
-<article class="requirement requirement_{{ requirement_view_type }}"
+<article class="requirement"
 {%- if requirement.status %}
 data-status='{{ requirement.status.lower() }}'
 {%- endif %}>
 
+  <header class="requirement_headers">
+    <div data-section='meta'></div>
+    <div data-section='statement'></div>
+    <div data-section='comment'></div>
+  </header>
+
   <section class="requirement_section" data-section='meta'>
 
-  <h{{ requirement.ng_level }} class="section-title" data-level="{{ requirement.context.title_number_string }}">
-    {{ requirement.title if requirement.title else (requirement.uid if requirement.uid else '') }}
-  </h{{ requirement.ng_level }}>
+    {%- if anchor is defined -%}
+    <div data-role='anchor' id="{{ anchor }}"></div>
+    {%- endif -%}
+
+    <h{{ requirement.ng_level }} class="section-title" data-level="{{ requirement.context.title_number_string }}">
+      {{ requirement.title if requirement.title else (requirement.uid if requirement.uid else '') }}
+    </h{{ requirement.ng_level }}>
 
   {%- if requirement.has_meta -%}
-    <dl class="requirement-meta">
+    <dl class="requirement_meta">
       {%- if requirement.uid %}
       <div><dt>UID</dt><dd>{{ requirement.uid }}</dd></div>
       {%- endif %}
@@ -24,11 +34,11 @@ data-status='{{ requirement.status.lower() }}'
   {%- endif %}
 
   {%- if traceability_index.has_parent_requirements(requirement) %}
-  <ul class="requirement-parent">
+  <ul class="requirement_parent">
     {%- for requirement in traceability_index.get_parent_requirements(requirement) %}
     <li><a href="#">
       {%- if requirement.uid %}
-      <span class="requirement-parent_uid">{{ requirement.uid }} </span>
+      <span class="requirement_parent-uid">{{ requirement.uid }} </span>
       {%- endif %}
       {{ requirement.title }}
     </a></li>
@@ -40,7 +50,7 @@ data-status='{{ requirement.status.lower() }}'
   <section class="requirement_section" data-section='statement'>
 
   {%- if requirement.statement or requirement.statement_multiline -%}
-    <div class="requirement-statement">
+    <div class="requirement_statement">
       {{ renderer.render_requirement_statement(requirement) }}
     </div>
   {%- endif -%}
@@ -56,7 +66,7 @@ data-status='{{ requirement.status.lower() }}'
 
   {%- if requirement.comments %}
     {%- for comment in requirement.comments %}
-      <div class="requirement-comment">
+      <div class="requirement_comment">
         {{ renderer.render_comment(comment) }}
       </div>
     {%- endfor %}

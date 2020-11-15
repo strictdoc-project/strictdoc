@@ -21,43 +21,26 @@
       {%- for section_or_requirement in document_iterator.all_content() %}
 
         {%- if section_or_requirement.is_composite_requirement %}
-        <section class="content_section requirement-section">
-          <header class="requirement-headers">
-            <div data-section='meta' data-col="1">meta</div>
-            <div data-section='statement' data-col="2">statement</div>
-            <div data-section='comment' data-col="3">comment</div>
-          </header>
-          <div class="content_anchor" id="{{ link_renderer.render(section_or_requirement) }}"></div>
+
           {%- set requirement = section_or_requirement %}
-          {% with requirement_view_type='table' -%}
+          {% with anchor=link_renderer.render(section_or_requirement) -%}
           {% include "_shared/requirement.jinja.html" %}
           {%- endwith %}
-        </section>
 
         {%- elif section_or_requirement.is_requirement %}
-        <section class="content_section requirement-section">
-          <header class="requirement-headers">
-            <div data-section='meta' data-col="1">meta</div>
-            <div data-section='statement' data-col="2">statement</div>
-            <div data-section='comment' data-col="3">comment</div>
-          </header>
-          <div class="content_anchor" id="{{ link_renderer.render(section_or_requirement) }}"></div>
+
           {%- set requirement = section_or_requirement %}
-          {% with requirement_view_type='table' -%}
+          {% with anchor=link_renderer.render(section_or_requirement) -%}
           {% include "_shared/requirement.jinja.html" %}
           {%- endwith %}
-        </section>
 
         {%- elif section_or_requirement.is_section %}
-        <section class="content_section docsection-section">
-          <header class="docsection-headers">
-            <div data-section='meta' data-col="1">meta</div>
-            <div data-section='freetext' data-col="2-0">freetext</div>
-          </header>
-          <div class="content_anchor" id="{{ link_renderer.render(section_or_requirement) }}"></div>
+
           {%- set section = section_or_requirement %}
+          {% with anchor=link_renderer.render(section_or_requirement) -%}
           {% include "_shared/docsection.jinja.html" %}
-        </section>
+          {%- endwith %}
+
         {%- endif %}
 
       {%- endfor %}

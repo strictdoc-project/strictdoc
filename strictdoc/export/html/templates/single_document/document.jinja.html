@@ -16,19 +16,21 @@
         {%- endif -%}
 
         {%- for section_or_requirement in document_iterator.all_content() %}
-        <section id="{{ link_renderer.render(section_or_requirement) }}">
+
         {%- if section_or_requirement.is_requirement %}
           {%- set requirement = section_or_requirement %}
-          {% with requirement_view_type='block' -%}
+          {%- with anchor=link_renderer.render(section_or_requirement) -%}
           {% include "_shared/requirement.jinja.html" %}
           {%- endwith %}
 
         {%- elif section_or_requirement.is_section %}
           {%- set section = section_or_requirement %}
+          {%- with anchor=link_renderer.render(section_or_requirement) -%}
           {% include "_shared/docsection.jinja.html" %}
+          {%- endwith %}
 
         {%- endif %}
-        </section>
+
         {%- endfor %}
 
       </div>

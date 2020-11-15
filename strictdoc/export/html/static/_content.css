@@ -6,20 +6,25 @@
 }
 
 .traceability-view .content {
-  --min-col-width: calc(var(--card-width) + var(--traceability-arrow));
-
-  grid-template-columns: minmax(0, var(--min-col-width)) 1fr minmax(0, var(--min-col-width));
-  gap: var(--traceability-arrow) var(--traceability-arrow);
+  grid-template-columns:  minmax(min-content, max-content)
+                          minmax(min-content, max-content)
+                          minmax(min-content, max-content);
+  gap: var(--traceability-arrow) 0;
+  width: fit-content;
 }
 
 .deep-traceability-view .content {
-  width: fit-content;
-  grid-template-columns: minmax(min-content, max-content) max-content minmax(min-content, max-content);
+  grid-template-columns:  minmax(min-content, max-content)
+                          max-content
+                          minmax(min-content, max-content);
   gap: var(--traceability-arrow) 0;
+  width: fit-content;
 }
 
 .table-view .content {
-  grid-template-columns: minmax(100px, 20%) minmax(300px, 40%) minmax(300px, 40%);
+  grid-template-columns:  minmax(250px, 25%)
+                          minmax(300px, 45%)
+                          minmax(250px, 30%);
   gap: 4px 2px;
 }
 
@@ -51,35 +56,38 @@
 
 /* .table-view */
 
-.table-view [data-section="meta"],
-.table-view [data-col="1"] {
+.table-view article {
+  display: contents;
+}
+
+.table-view [data-section="meta"] {
   grid-column: 1 / 2;
 }
 
-.table-view [data-section="statement"],
-.table-view [data-col="2"] {
+.table-view [data-section="description"] {
+  grid-column: 2 / -1;
+}
+
+.table-view [data-section="statement"] {
   grid-column: 2 / 3;
 }
 
-.table-view [data-section="comment"],
-.table-view [data-col="3"] {
+.table-view [data-section="comment"] {
   grid-column: 3 / 4;
-}
-
-.table-view [data-section="freetext"],
-.table-view [data-col="2-0"] {
-  grid-column: 2 / -1;
 }
 
 .table-view [data-col="0"] {
   grid-column: 1 / -1;
 }
 
-/*  */
-.table-view .content_section header {
+/* article header */
+article header {
+  display: none;
+}
+.table-view article header {
   display: contents;
 }
-.docsection-section + .docsection-section header,
-.requirement-section + .requirement-section header {
+.docsection + .docsection header,
+.requirement + .requirement header {
   display: none;
 }

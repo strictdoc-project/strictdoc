@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+/* .test-content {} */
+
+:root {
+
+  --color-bg-main: #F2F5F9;
+  --color-fg-main: #444;
+
+  --color-bg-contrast: #fff;
+  --color-fg-contrast: #000;
+
+  --color-bg-half-contrast: rgb(255 255 255 / 40%);
+  --color-fg-half-contrast: rgb(0 0 0 / 10%);
+
+  --color-accent: #274466;
+  --color-highlight: rgb(255, 255, 155);
+
+  --color-bg-secondary: rgb(0 0 0 / 1%);
+
+  --color-border: rgba(0,0,0,.1);
+
+  --scrollbarBG: transparent;
+  --thumbBG: var(--color-border);
+
+  --base-font-size: 16px;
+
+  --base-gap: calc(var(--base-font-size)*3);
+  --base-padding: var(--base-font-size);
+  --base-margin: var(--base-font-size);
+
+  --toc-width: 300px;
+  --toc-layout-transition: 0.1s;
+
+  --main-elevation-shadow: inset 8px 8px 16px rgba(0,0,0,.2);
+
+  --traceability-arrow: 1.25rem;
+
+  --code-border-color: var(--color-border);
+  --code-font-family: consolas,monaco,"Andale Mono",monospace;
+  --code-font-size: .875rem;
+
+  --card-width: 300px;
+
+}
+
+body {
+  margin: 0;
+  padding: 0;
+
+  font-family: 'Noto Sans', sans-serif;
+  font-size: var(--base-font-size);
+  line-height: 1.6;
+  color: var(--color-fg-main);
+  background-color: var(--color-bg-main);
+}
+
+* { box-sizing: border-box; }
+
+/* scrollbar */
+
+::-webkit-scrollbar:horizontal,
+::-webkit-scrollbar:vertical,
+::-webkit-scrollbar {
+  background-color: var(--scrollbarBG);
+}
+* {
+  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+}
+::-webkit-scrollbar-track:horizontal,
+::-webkit-scrollbar-track:vertical,
+::-webkit-scrollbar-track {
+  background-color: var(--scrollbarBG);
+}
+::-webkit-scrollbar-thumb:horizontal,
+::-webkit-scrollbar-thumb:vertical,
+::-webkit-scrollbar-thumb {
+  background-color: var(--thumbBG)
+  /*
+  background-color: var(--scrollbarBG);
+  border: 3px solid var(--thumbBG);
+  border-radius: 6px;
+  */
+}

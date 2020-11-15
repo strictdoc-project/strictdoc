@@ -1,0 +1,93 @@
+.content {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0 0;
+  place-items: stretch stretch;
+}
+
+.traceability-view .content {
+  grid-template-columns:  minmax(min-content, max-content)
+                          minmax(min-content, max-content)
+                          minmax(min-content, max-content);
+  gap: var(--traceability-arrow) 0;
+  width: fit-content;
+}
+
+.deep-traceability-view .content {
+  grid-template-columns:  minmax(min-content, max-content)
+                          max-content
+                          minmax(min-content, max-content);
+  gap: var(--traceability-arrow) 0;
+  width: fit-content;
+}
+
+.table-view .content {
+  grid-template-columns:  minmax(250px, 25%)
+                          minmax(300px, 45%)
+                          minmax(250px, 30%);
+  gap: 4px 2px;
+}
+
+.document-view .content {
+  display: block;
+}
+
+.content_section {
+  display: contents;
+}
+
+.content_item {
+  position: relative;
+}
+
+/* traceability */
+
+.content_item[data-role="parents"] {
+  grid-column: 1 / 2;
+}
+
+.content_item[data-role="current"] {
+  grid-column: 2 / 3;
+}
+
+.content_item[data-role="children"] {
+  grid-column: 3 / 4;
+}
+
+/* .table-view */
+
+.table-view article {
+  display: contents;
+}
+
+.table-view [data-section="meta"] {
+  grid-column: 1 / 2;
+}
+
+.table-view [data-section="description"] {
+  grid-column: 2 / -1;
+}
+
+.table-view [data-section="statement"] {
+  grid-column: 2 / 3;
+}
+
+.table-view [data-section="comment"] {
+  grid-column: 3 / 4;
+}
+
+.table-view [data-col="0"] {
+  grid-column: 1 / -1;
+}
+
+/* article header */
+article header {
+  display: none;
+}
+.table-view article header {
+  display: contents;
+}
+.docsection + .docsection header,
+.requirement + .requirement header {
+  display: none;
+}

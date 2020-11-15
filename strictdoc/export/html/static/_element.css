@@ -39,11 +39,6 @@ article {
   margin-left: var(--traceability-arrow);
 }
 
-.traceability-view [data-role='current'] article {
-  min-width: var(--card-width);
-  max-width: calc(var(--card-width)*2);
-}
-
 .traceability-view article + article {
   margin-top: var(--base-padding);
 }

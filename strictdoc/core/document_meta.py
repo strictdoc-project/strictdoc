@@ -46,5 +46,6 @@ class DocumentMeta:
                                                 self.document_filename_base)
 
     def get_root_path_prefix(self):
-        assert self.level > 0
+        if self.level == 0:
+            return '..'
         return ('../' * self.level)[:-1]

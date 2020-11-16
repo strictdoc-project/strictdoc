@@ -4,7 +4,7 @@ import sys
 from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.reader import SDReader
 from strictdoc.core.document_meta import DocumentMeta
-from strictdoc.core.document_tree import FileTree, DocumentTree
+from strictdoc.core.document_tree import FileTree, DocumentTree, File
 from strictdoc.helpers.sorting import alphanumeric_sort
 from strictdoc.helpers.timing import measure_performance, timing_decorator
 
@@ -14,11 +14,9 @@ class DocumentFinder:
     @timing_decorator('Find')
     def find_sdoc_content(paths_to_files_or_docs, output_root_html, parallelizer):
         for paths_to_files_or_doc in paths_to_files_or_docs:
-            if os.path.isfile(paths_to_files_or_doc):
-                raise NotImplementedError
-            if not os.path.isdir(paths_to_files_or_doc):
+            if not os.path.exists(paths_to_files_or_doc):
                 sys.stdout.flush()
-                err = "error: Provided path is neither a single document or a document folder: '{}'".format(
+                err = "error: Provided path is neither a single file or a folder: '{}'".format(
                     paths_to_files_or_doc
                 )
                 print(err)
@@ -119,6 +117,10 @@ class DocumentFinder:
         root_trees = []
 
         for path_to_doc_root_raw in paths_to_files_or_docs:
+            if os.path.isfile(path_to_doc_root_raw):
+                root_trees.append(File(0, path_to_doc_root_raw))
+                continue
+
             # Strip away the trailing slash to let the later os.path.relpath
             # calculations work correctly.
             path_to_doc_root = path_to_doc_root_raw.rstrip('/')

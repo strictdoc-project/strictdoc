@@ -17,6 +17,9 @@ class File(FileOrFolderEntry):
         assert os.path.isfile(full_path)
         self.level = level
         self.full_path = full_path
+        self.root_path = full_path
+        self.files = [self]
+        self.subfolder_trees = []
 
     def __repr__(self):
         return "File: {}".format(self.full_path)

@@ -28,7 +28,7 @@ jobs:
 
     - name: "Poetry: add to %PATH%"
       run: |
-        echo "::add-path::$env:USERPROFILE\.poetry\bin"
+        echo "$env:USERPROFILE\.poetry\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
     - name: "Print Debug info"
       run: |

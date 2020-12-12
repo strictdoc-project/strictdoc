@@ -211,6 +211,11 @@ latex_elements = {
         \titleformat{\chapter}[hang] 
             {\normalfont\huge\bfseries}{\thechapter.}{3mm}{} 
         \titlespacing*{\chapter}{0pt}{-24pt}{18pt}
+
+        \makeatletter
+            \newcommand\sdocfronttitlefont{\@setfontsize\Huge{36}{36}}
+            \newcommand\sdocfrontsubtitlefont{\@setfontsize\Huge{16}{16}}
+        \makeatother
     ''',
 
     'maketitle': RubyTemplate(r'''
@@ -219,20 +224,21 @@ latex_elements = {
         \begin{titlepage}   
             \vspace*{50mm} %%% * is used to give space from top
 
-            \begin{flushright}
-
-                \Huge{\textbf{StrictDoc}}
+            \begin{center}
+                \sdocfronttitlefont{\textbf{StrictDoc}}
                 
-                \Large{{Software for writing technical requirements and specifications}}
+                \vspace{5mm}
+
+                \sdocfrontsubtitlefont{{Software for writing technical requirements and specifications}}
                 % \Large{{management framework}}
-            \end{flushright}
+            \end{center}
 
             \vspace{30mm}
 
             \begin{flushright}
                 \bgroup
                     \def\arraystretch{1.9}%  1 is the default, change whatever you need
-                    \begin{tabular}{|p{4.8cm}|p{11.7cm}|}
+                    \begin{tabular}{|p{4.85cm}|p{11.7cm}|}
                     \hline
                     \textbf{{Project goals:}} & 
                     \makecell[l]{ 

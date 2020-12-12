@@ -84,6 +84,8 @@ latex_elements = {
     'papersize': 'a4paper',
     # 'pointsize': '14pt' # does not have any effect
 
+    'fncychap': '',  # disable fncychap
+
     'releasename': "",
 
     'sphinxsetup': \
@@ -205,6 +207,10 @@ latex_elements = {
                       {\titlerule*[10pt]{$\cdot$}\contentspage}
 
         \newcommand{\tablecell}[1] {{{#1}}}
+        
+        \titleformat{\chapter}[hang] 
+            {\normalfont\huge\bfseries}{\thechapter.}{3mm}{} 
+        \titlespacing*{\chapter}{0pt}{-24pt}{18pt}
     ''',
 
     'maketitle': RubyTemplate(r'''

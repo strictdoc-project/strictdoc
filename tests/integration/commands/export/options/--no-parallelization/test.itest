@@ -27,7 +27,7 @@ RUN: %check_exists --file %S/Output/html/--no-parallelization/input2.html
 
 RUN: cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 
-CHECK-HTML: input1.sdoc
 CHECK-HTML: Doc 1
-CHECK-HTML: input2.sdoc
+CHECK-HTML: input1.sdoc
 CHECK-HTML: Doc 2
+CHECK-HTML: input2.sdoc

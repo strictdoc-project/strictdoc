@@ -33,256 +33,258 @@
     <aside class="layout_aside">
       
     <ul class="toc"><li>
+        <a href="#Introduction">
+          <span class="section-number">1</span>Introduction</a></li><li>
         <a href="#Examples">
-          <span class="section-number">1</span>Examples</a></li><li>
+          <span class="section-number">2</span>Examples</a></li><li>
         <a href="#Getting-started">
-          <span class="section-number">2</span>Getting started</a><ul><li>
+          <span class="section-number">3</span>Getting started</a><ul><li>
         <a href="#Requirements">
-          <span class="section-number">2.1</span>Requirements</a></li><li>
+          <span class="section-number">3.1</span>Requirements</a></li><li>
         <a href="#Installing-StrictDoc-as-a-Pip-package">
-          <span class="section-number">2.2</span>Installing StrictDoc as a Pip package</a></li><li>
+          <span class="section-number">3.2</span>Installing StrictDoc as a Pip package</a></li><li>
         <a href="#Installing-StrictDoc-from-GitHub-development-">
-          <span class="section-number">2.3</span>Installing StrictDoc from GitHub (development)</a></li><li>
+          <span class="section-number">3.3</span>Installing StrictDoc from GitHub (development)</a></li><li>
         <a href="#Hello-world">
-          <span class="section-number">2.4</span>Hello world</a></li></ul>
+          <span class="section-number">3.4</span>Hello world</a></li></ul>
             </li><li>
         <a href="#SDoc-syntax">
-          <span class="section-number">3</span>SDoc syntax</a></li><li>
+          <span class="section-number">4</span>SDoc syntax</a></li><li>
         <a href="#Export-options">
-          <span class="section-number">4</span>Export options</a><ul><li>
+          <span class="section-number">5</span>Export options</a><ul><li>
         <a href="#HTML-documentation-tree-by-StrictDoc">
-          <span class="section-number">4.1</span>HTML documentation tree by StrictDoc</a></li><li>
+          <span class="section-number">5.1</span>HTML documentation tree by StrictDoc</a></li><li>
         <a href="#HTML-export-via-Sphinx">
-          <span class="section-number">4.2</span>HTML export via Sphinx</a></li><li>
+          <span class="section-number">5.2</span>HTML export via Sphinx</a></li><li>
         <a href="#PDF-export-via-Sphinx-Latex">
-          <span class="section-number">4.3</span>PDF export via Sphinx/Latex</a></li></ul>
+          <span class="section-number">5.3</span>PDF export via Sphinx/Latex</a></li></ul>
             </li><li>
         <a href="#StrictDoc-and-other-tools">
-          <span class="section-number">5</span>StrictDoc and other tools</a><ul><li>
+          <span class="section-number">6</span>StrictDoc and other tools</a><ul><li>
         <a href="#StrictDoc-and-Doorstop">
-          <span class="section-number">5.1</span>StrictDoc and Doorstop</a></li><li>
+          <span class="section-number">6.1</span>StrictDoc and Doorstop</a></li><li>
         <a href="#StrictDoc-and-Sphinx">
-          <span class="section-number">5.2</span>StrictDoc and Sphinx</a></li><li>
+          <span class="section-number">6.2</span>StrictDoc and Sphinx</a></li><li>
         <a href="#StrictDoc-and-Sphinx-Needs">
-          <span class="section-number">5.3</span>StrictDoc and Sphinx-Needs</a></li></ul>
+          <span class="section-number">6.3</span>StrictDoc and Sphinx-Needs</a></li></ul>
             </li><li>
         <a href="#StrictDoc-Requirements">
-          <span class="section-number">6</span>StrictDoc Requirements</a><ul><li>
+          <span class="section-number">7</span>StrictDoc Requirements</a><ul><li>
         <a href="#Project-goals">
-          <span class="section-number">6.1</span>Project goals</a><ul><li>
+          <span class="section-number">7.1</span>Project goals</a><ul><li>
         <a href="#Software-support-for-writing-requirements-and-specifications-documents">
-          <span class="section-number">6.1.1</span>Software support for writing requirements and specifications documents</a></li><li>
+          <span class="section-number">7.1.1</span>Software support for writing requirements and specifications documents</a></li><li>
         <a href="#Reduce-documentation-hazards">
-          <span class="section-number">6.1.2</span>Reduce documentation hazards</a></li><li>
+          <span class="section-number">7.1.2</span>Reduce documentation hazards</a></li><li>
         <a href="#No-or-less-run-away-documentation">
-          <span class="section-number">6.1.3</span>No (or less) run-away documentation</a></li><li>
+          <span class="section-number">7.1.3</span>No (or less) run-away documentation</a></li><li>
         <a href="#Change-management">
-          <span class="section-number">6.1.4</span>Change management</a></li></ul>
+          <span class="section-number">7.1.4</span>Change management</a></li></ul>
             </li><li>
         <a href="#High-level-requirements">
-          <span class="section-number">6.2</span>High-level requirements</a><ul><li>
+          <span class="section-number">7.2</span>High-level requirements</a><ul><li>
         <a href="#Requirements-management">
-          <span class="section-number">6.2.1</span>Requirements management</a></li><li>
+          <span class="section-number">7.2.1</span>Requirements management</a></li><li>
         <a href="#Data-model">
-          <span class="section-number">6.2.2</span>Data model</a></li><li>
+          <span class="section-number">7.2.2</span>Data model</a></li><li>
         <a href="#Command-line-interface">
-          <span class="section-number">6.2.3</span>Command-line interface</a></li><li>
+          <span class="section-number">7.2.3</span>Command-line interface</a></li><li>
         <a href="#Platform-support">
-          <span class="section-number">6.2.4</span>Platform support</a><ul><li>
+          <span class="section-number">7.2.4</span>Platform support</a><ul><li>
         <a href="#macOS-support">
-          <span class="section-number">6.2.4.1</span>macOS support</a></li><li>
+          <span class="section-number">7.2.4.1</span>macOS support</a></li><li>
         <a href="#Linux-support">
-          <span class="section-number">6.2.4.2</span>Linux support</a></li><li>
+          <span class="section-number">7.2.4.2</span>Linux support</a></li><li>
         <a href="#Windows-support">
-          <span class="section-number">6.2.4.3</span>Windows support</a></li></ul>
+          <span class="section-number">7.2.4.3</span>Windows support</a></li></ul>
             </li><li>
         <a href="#Requirements-validation">
-          <span class="section-number">6.2.5</span>Requirements validation</a></li><li>
+          <span class="section-number">7.2.5</span>Requirements validation</a></li><li>
         <a href="#Requirements-text-format">
-          <span class="section-number">6.2.6</span>Requirements text format</a></li><li>
+          <span class="section-number">7.2.6</span>Requirements text format</a></li><li>
         <a href="#Linking-requirements">
-          <span class="section-number">6.2.7</span>Linking requirements</a></li><li>
+          <span class="section-number">7.2.7</span>Linking requirements</a></li><li>
         <a href="#Scalability">
-          <span class="section-number">6.2.8</span>Scalability</a></li><li>
+          <span class="section-number">7.2.8</span>Scalability</a></li><li>
         <a href="#Traceability">
-          <span class="section-number">6.2.9</span>Traceability</a></li><li>
+          <span class="section-number">7.2.9</span>Traceability</a></li><li>
         <a href="#Visualization">
-          <span class="section-number">6.2.10</span>Visualization</a></li><li>
+          <span class="section-number">7.2.10</span>Visualization</a></li><li>
         <a href="#Open-source-software">
-          <span class="section-number">6.2.11</span>Open source software</a></li></ul>
+          <span class="section-number">7.2.11</span>Open source software</a></li></ul>
             </li><li>
         <a href="#Implementation-requirements">
-          <span class="section-number">6.3</span>Implementation requirements</a><ul><li>
+          <span class="section-number">7.3</span>Implementation requirements</a><ul><li>
         <a href="#Parallelization">
-          <span class="section-number">6.3.1</span>Parallelization</a></li><li>
+          <span class="section-number">7.3.1</span>Parallelization</a></li><li>
         <a href="#Incremental-generation">
-          <span class="section-number">6.3.2</span>Incremental generation</a></li></ul>
+          <span class="section-number">7.3.2</span>Incremental generation</a></li></ul>
             </li><li>
         <a href="#Data-model">
-          <span class="section-number">6.4</span>Data model</a><ul><li>
+          <span class="section-number">7.4</span>Data model</a><ul><li>
         <a href="#Modeling-capability">
-          <span class="section-number">6.4.1</span>Modeling capability</a></li><li>
+          <span class="section-number">7.4.1</span>Modeling capability</a></li><li>
         <a href="#Section-item">
-          <span class="section-number">6.4.2</span>Section item</a></li><li>
+          <span class="section-number">7.4.2</span>Section item</a></li><li>
         <a href="#Requirement-item">
-          <span class="section-number">6.4.3</span>Requirement item</a><ul><li>
+          <span class="section-number">7.4.3</span>Requirement item</a><ul><li>
         <a href="#Statement">
-          <span class="section-number">6.4.3.1</span>Statement</a></li><li>
+          <span class="section-number">7.4.3.1</span>Statement</a></li><li>
         <a href="#Content-body">
-          <span class="section-number">6.4.3.2</span>Content body</a></li><li>
+          <span class="section-number">7.4.3.2</span>Content body</a></li><li>
         <a href="#UID-identifier">
-          <span class="section-number">6.4.3.3</span>UID identifier</a><ul><li>
+          <span class="section-number">7.4.3.3</span>UID identifier</a><ul><li>
         <a href="#UID-identifier-format">
-          <span class="section-number">6.4.3.3.1</span>UID identifier format</a></li></ul>
+          <span class="section-number">7.4.3.3.1</span>UID identifier format</a></li></ul>
             </li><li>
         <a href="#Title">
-          <span class="section-number">6.4.3.4</span>Title</a></li><li>
+          <span class="section-number">7.4.3.4</span>Title</a></li><li>
         <a href="#References">
-          <span class="section-number">6.4.3.5</span>References</a></li><li>
+          <span class="section-number">7.4.3.5</span>References</a></li><li>
         <a href="#Comments">
-          <span class="section-number">6.4.3.6</span>Comments</a></li></ul>
+          <span class="section-number">7.4.3.6</span>Comments</a></li></ul>
             </li><li>
         <a href="#Composite-Requirement-item">
-          <span class="section-number">6.4.4</span>Composite Requirement item</a></li></ul>
+          <span class="section-number">7.4.4</span>Composite Requirement item</a></li></ul>
             </li><li>
         <a href="#SDOC-file-format">
-          <span class="section-number">6.5</span>SDOC file format</a><ul><li>
+          <span class="section-number">7.5</span>SDOC file format</a><ul><li>
         <a href="#Primary-text-implementation">
-          <span class="section-number">6.5.1</span>Primary text implementation</a></li><li>
+          <span class="section-number">7.5.1</span>Primary text implementation</a></li><li>
         <a href="#Grammar">
-          <span class="section-number">6.5.2</span>Grammar</a></li><li>
+          <span class="section-number">7.5.2</span>Grammar</a></li><li>
         <a href="#Type-safety">
-          <span class="section-number">6.5.3</span>Type safety</a></li></ul>
+          <span class="section-number">7.5.3</span>Type safety</a></li></ul>
             </li><li>
         <a href="#Document-Generators">
-          <span class="section-number">6.6</span>Document Generators</a><ul><li>
+          <span class="section-number">7.6</span>Document Generators</a><ul><li>
         <a href="#HTML-Export">
-          <span class="section-number">6.6.1</span>HTML Export</a><ul><li>
+          <span class="section-number">7.6.1</span>HTML Export</a><ul><li>
         <a href="#Single-document-Normal-form">
-          <span class="section-number">6.6.1.1</span>Single document: Normal form</a></li><li>
+          <span class="section-number">7.6.1.1</span>Single document: Normal form</a></li><li>
         <a href="#Single-document-Tabular-form">
-          <span class="section-number">6.6.1.2</span>Single document: Tabular form</a></li><li>
+          <span class="section-number">7.6.1.2</span>Single document: Tabular form</a></li><li>
         <a href="#Single-document-1-level-traceability">
-          <span class="section-number">6.6.1.3</span>Single document: 1-level traceability</a></li><li>
+          <span class="section-number">7.6.1.3</span>Single document: 1-level traceability</a></li><li>
         <a href="#Single-document-Deep-traceability">
-          <span class="section-number">6.6.1.4</span>Single document: Deep traceability</a></li></ul>
+          <span class="section-number">7.6.1.4</span>Single document: Deep traceability</a></li></ul>
             </li><li>
         <a href="#PDF-Export">
-          <span class="section-number">6.6.2</span>PDF Export</a><ul><li>
+          <span class="section-number">7.6.2</span>PDF Export</a><ul><li>
         <a href="#Sphinx-documentation-generator">
-          <span class="section-number">6.6.2.1</span>Sphinx documentation generator</a></li></ul>
+          <span class="section-number">7.6.2.1</span>Sphinx documentation generator</a></li></ul>
             </li></ul>
             </li><li>
         <a href="#Validation-requirements">
-          <span class="section-number">6.7</span>Validation requirements</a><ul><li>
+          <span class="section-number">7.7</span>Validation requirements</a><ul><li>
         <a href="#Valid-HTML-markup">
-          <span class="section-number">6.7.1</span>Valid HTML markup</a></li></ul>
+          <span class="section-number">7.7.1</span>Valid HTML markup</a></li></ul>
             </li></ul>
             </li><li>
         <a href="#Design-decisions">
-          <span class="section-number">7</span>Design decisions</a><ul><li>
+          <span class="section-number">8</span>Design decisions</a><ul><li>
         <a href="#Building-blocks">
-          <span class="section-number">7.1</span>Building blocks</a><ul><li>
+          <span class="section-number">8.1</span>Building blocks</a><ul><li>
         <a href="#TextX">
-          <span class="section-number">7.1.1</span>TextX</a></li><li>
+          <span class="section-number">8.1.1</span>TextX</a></li><li>
         <a href="#Jinja2">
-          <span class="section-number">7.1.2</span>Jinja2</a></li><li>
+          <span class="section-number">8.1.2</span>Jinja2</a></li><li>
         <a href="#Sphinx-and-Docutils">
-          <span class="section-number">7.1.3</span>Sphinx and Docutils</a></li></ul>
+          <span class="section-number">8.1.3</span>Sphinx and Docutils</a></li></ul>
             </li><li>
         <a href="#SDoc-grammar">
-          <span class="section-number">7.2</span>SDoc grammar</a><ul><li>
+          <span class="section-number">8.2</span>SDoc grammar</a><ul><li>
         <a href="#No-indentation">
-          <span class="section-number">7.2.1</span>No indentation</a></li></ul>
+          <span class="section-number">8.2.1</span>No indentation</a></li></ul>
             </li></ul>
             </li><li>
         <a href="#Roadmap">
-          <span class="section-number">8</span>Roadmap</a><ul><li>
+          <span class="section-number">9</span>Roadmap</a><ul><li>
         <a href="#In-works">
-          <span class="section-number">8.1</span>In works</a><ul><li>
+          <span class="section-number">9.1</span>In works</a><ul><li>
         <a href="#HTML-Export">
-          <span class="section-number">8.1.1</span>HTML Export</a><ul><li>
+          <span class="section-number">9.1.1</span>HTML Export</a><ul><li>
         <a href="#Left-panel-Table-of-contents">
-          <span class="section-number">8.1.1.1</span>Left panel: Table of contents</a></li><li>
+          <span class="section-number">9.1.1.1</span>Left panel: Table of contents</a></li><li>
         <a href="#Document-page-CSS-Proper-markup">
-          <span class="section-number">8.1.1.2</span>Document page CSS: Proper markup</a></li><li>
+          <span class="section-number">9.1.1.2</span>Document page CSS: Proper markup</a></li><li>
         <a href="#Table-page-CSS-Proper-table">
-          <span class="section-number">8.1.1.3</span>Table page CSS: Proper table</a></li><li>
+          <span class="section-number">9.1.1.3</span>Table page CSS: Proper table</a></li><li>
         <a href="#Traceability-page-CSS-Proper-middle-column-document">
-          <span class="section-number">8.1.1.4</span>Traceability page CSS: Proper middle column document</a></li><li>
+          <span class="section-number">9.1.1.4</span>Traceability page CSS: Proper middle column document</a></li><li>
         <a href="#Deep-Traceability-page-CSS-Improvements">
-          <span class="section-number">8.1.1.5</span>Deep Traceability page CSS: Improvements</a></li></ul>
+          <span class="section-number">9.1.1.5</span>Deep Traceability page CSS: Improvements</a></li></ul>
             </li></ul>
             </li><li>
         <a href="#First-public-release">
-          <span class="section-number">8.2</span>First public release</a><ul><li>
+          <span class="section-number">9.2</span>First public release</a><ul><li>
         <a href="#Generated-file-names">
-          <span class="section-number">8.2.1</span>Generated file names</a></li><li>
+          <span class="section-number">9.2.1</span>Generated file names</a></li><li>
         <a href="#Validation-Uniqueness-of-UID-identifiers-in-a-document-tree">
-          <span class="section-number">8.2.2</span>Validation: Uniqueness of UID identifiers in a document tree</a></li></ul>
+          <span class="section-number">9.2.2</span>Validation: Uniqueness of UID identifiers in a document tree</a></li></ul>
             </li><li>
         <a href="#Backlog">
-          <span class="section-number">8.3</span>Backlog</a><ul><li>
+          <span class="section-number">9.3</span>Backlog</a><ul><li>
         <a href="#StrictDoc-as-library">
-          <span class="section-number">8.3.1</span>StrictDoc as library</a></li><li>
+          <span class="section-number">9.3.1</span>StrictDoc as library</a></li><li>
         <a href="#Links">
-          <span class="section-number">8.3.2</span>Links</a></li><li>
+          <span class="section-number">9.3.2</span>Links</a></li><li>
         <a href="#Export-capabilities">
-          <span class="section-number">8.3.3</span>Export capabilities</a><ul><li>
+          <span class="section-number">9.3.3</span>Export capabilities</a><ul><li>
         <a href="#Excel-Export">
-          <span class="section-number">8.3.3.1</span>Excel Export</a></li><li>
+          <span class="section-number">9.3.3.1</span>Excel Export</a></li><li>
         <a href="#PlantUML-Export">
-          <span class="section-number">8.3.3.2</span>PlantUML Export</a></li><li>
+          <span class="section-number">9.3.3.2</span>PlantUML Export</a></li><li>
         <a href="#ReqIF-Import-Export">
-          <span class="section-number">8.3.3.3</span>ReqIF Import/Export</a></li><li>
+          <span class="section-number">9.3.3.3</span>ReqIF Import/Export</a></li><li>
         <a href="#Confluence-Import-Export">
-          <span class="section-number">8.3.3.4</span>Confluence Import/Export</a></li><li>
+          <span class="section-number">9.3.3.4</span>Confluence Import/Export</a></li><li>
         <a href="#Tex-Export">
-          <span class="section-number">8.3.3.5</span>Tex Export</a></li><li>
+          <span class="section-number">9.3.3.5</span>Tex Export</a></li><li>
         <a href="#Doorstop-Import-Export">
-          <span class="section-number">8.3.3.6</span>Doorstop Import/Export</a></li><li>
+          <span class="section-number">9.3.3.6</span>Doorstop Import/Export</a></li><li>
         <a href="#Markdown-support-for-text-and-code-blocks">
-          <span class="section-number">8.3.3.7</span>Markdown support for text and code blocks</a></li></ul>
+          <span class="section-number">9.3.3.7</span>Markdown support for text and code blocks</a></li></ul>
             </li><li>
         <a href="#Traceability-and-coverage">
-          <span class="section-number">8.3.4</span>Traceability and coverage</a><ul><li>
+          <span class="section-number">9.3.4</span>Traceability and coverage</a><ul><li>
         <a href="#Linking-with-implementation-artifacts">
-          <span class="section-number">8.3.4.1</span>Linking with implementation artifacts</a></li><li>
+          <span class="section-number">9.3.4.1</span>Linking with implementation artifacts</a></li><li>
         <a href="#Requirement-checksumming">
-          <span class="section-number">8.3.4.2</span>Requirement checksumming</a></li><li>
+          <span class="section-number">9.3.4.2</span>Requirement checksumming</a></li><li>
         <a href="#Documentation-coverage">
-          <span class="section-number">8.3.4.3</span>Documentation coverage</a></li></ul>
+          <span class="section-number">9.3.4.3</span>Documentation coverage</a></li></ul>
             </li><li>
         <a href="#Validations-and-testing">
-          <span class="section-number">8.3.5</span>Validations and testing</a><ul><li>
+          <span class="section-number">9.3.5</span>Validations and testing</a><ul><li>
         <a href="#Validation-Section-Levels">
-          <span class="section-number">8.3.5.1</span>Validation: Section Levels</a></li></ul>
+          <span class="section-number">9.3.5.1</span>Validation: Section Levels</a></li></ul>
             </li><li>
         <a href="#Custom-fields">
-          <span class="section-number">8.3.6</span>Custom fields</a></li><li>
+          <span class="section-number">9.3.6</span>Custom fields</a></li><li>
         <a href="#Filtering-by-tags">
-          <span class="section-number">8.3.7</span>Filtering by tags</a></li><li>
+          <span class="section-number">9.3.7</span>Filtering by tags</a></li><li>
         <a href="#Options">
-          <span class="section-number">8.3.8</span>Options</a><ul><li>
+          <span class="section-number">9.3.8</span>Options</a><ul><li>
         <a href="#Option-RST-Top-level-title-document-name">
-          <span class="section-number">8.3.8.1</span>Option: RST: Top-level title: document name</a></li><li>
+          <span class="section-number">9.3.8.1</span>Option: RST: Top-level title: document name</a></li><li>
         <a href="#Option-Title-Automatic-numeration">
-          <span class="section-number">8.3.8.2</span>Option: Title: Automatic numeration</a></li><li>
+          <span class="section-number">9.3.8.2</span>Option: Title: Automatic numeration</a></li><li>
         <a href="#Option-Title-Display-requirement-titles">
-          <span class="section-number">8.3.8.3</span>Option: Title: Display requirement titles</a></li><li>
+          <span class="section-number">9.3.8.3</span>Option: Title: Display requirement titles</a></li><li>
         <a href="#Option-Title-Display-requirement-UID">
-          <span class="section-number">8.3.8.4</span>Option: Title: Display requirement UID</a></li></ul>
+          <span class="section-number">9.3.8.4</span>Option: Title: Display requirement UID</a></li></ul>
             </li><li>
         <a href="#Advanced">
-          <span class="section-number">8.3.9</span>Advanced</a><ul><li>
+          <span class="section-number">9.3.9</span>Advanced</a><ul><li>
         <a href="#Facts-table-Invariants-calculation-">
-          <span class="section-number">8.3.9.1</span>Facts table. Invariants calculation.</a></li><li>
+          <span class="section-number">9.3.9.1</span>Facts table. Invariants calculation.</a></li><li>
         <a href="#FMEA-FMECA-tables">
-          <span class="section-number">8.3.9.2</span>FMEA/FMECA tables</a></li><li>
+          <span class="section-number">9.3.9.2</span>FMEA/FMECA tables</a></li><li>
         <a href="#Graphical-User-Interface-GUI-">
-          <span class="section-number">8.3.9.3</span>Graphical User Interface (GUI)</a></li><li>
+          <span class="section-number">9.3.9.3</span>Graphical User Interface (GUI)</a></li><li>
         <a href="#Web-server-and-editable-HTML-pages">
-          <span class="section-number">8.3.9.4</span>Web server and editable HTML pages</a></li></ul>
+          <span class="section-number">9.3.9.4</span>Web server and editable HTML pages</a></li></ul>
             </li></ul>
             </li></ul>
             </li></ul>
@@ -338,7 +340,7 @@
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Software-support-for-writing-requirements-and-specifications-documents"></div><h3 class="section-title" data-level="6.1.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Software-support-for-writing-requirements-and-specifications-documents"></div><h3 class="section-title" data-level="7.1.1">
       Software support for writing requirements and specifications documents
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>GOAL-1-TOOL-SUPPORT</dd></div>
@@ -386,7 +388,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><h3 class="section-title" data-level="6.2.1">
+  <section class="requirement_section" data-section='meta'><h3 class="section-title" data-level="7.2.1">
       Requirements management
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-HIGH-REQS-MANAGEMENT</dd></div>
@@ -426,7 +428,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><h3 class="section-title" data-level="6.4.1">
+  <section class="requirement_section" data-section='meta'><h3 class="section-title" data-level="7.4.1">
       Modeling capability
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-DM-001</dd></div>
@@ -472,7 +474,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><h3 class="section-title" data-level="6.5.1">
+  <section class="requirement_section" data-section='meta'><h3 class="section-title" data-level="7.5.1">
       Primary text implementation
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-FMT-001</dd></div>
@@ -521,7 +523,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Reduce-documentation-hazards"></div><h3 class="section-title" data-level="6.1.2">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Reduce-documentation-hazards"></div><h3 class="section-title" data-level="7.1.2">
       Reduce documentation hazards
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>GOAL-2-REDUCE-DOCUMENTATION-HAZARDS</dd></div>
@@ -571,7 +573,7 @@ and writing technical documentation.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="No-or-less-run-away-documentation"></div><h3 class="section-title" data-level="6.1.3">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="No-or-less-run-away-documentation"></div><h3 class="section-title" data-level="7.1.3">
       No (or less) run-away documentation
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>GOAL-3-NO-RUNAWAY-DOCUMENTATION</dd></div>
@@ -614,7 +616,7 @@ documents and documentation trees.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Change-management"></div><h3 class="section-title" data-level="6.1.4">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Change-management"></div><h3 class="section-title" data-level="7.1.4">
       Change management
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>GOAL-4-CHANGE-MANAGEMENT</dd></div>
@@ -659,7 +661,7 @@ requires a full revision of its requirements TBD.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><h3 class="section-title" data-level="6.1.1">
+  <section class="requirement_section" data-section='meta'><h3 class="section-title" data-level="7.1.1">
       Software support for writing requirements and specifications documents
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>GOAL-1-TOOL-SUPPORT</dd></div>
@@ -707,7 +709,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Requirements-management"></div><h3 class="section-title" data-level="6.2.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Requirements-management"></div><h3 class="section-title" data-level="7.2.1">
       Requirements management
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-HIGH-REQS-MANAGEMENT</dd></div>
@@ -745,7 +747,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><h3 class="section-title" data-level="6.4.1">
+  <section class="requirement_section" data-section='meta'><h3 class="section-title" data-level="7.4.1">
       Modeling capability
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-DM-001</dd></div>
@@ -791,7 +793,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><h3 class="section-title" data-level="6.5.1">
+  <section class="requirement_section" data-section='meta'><h3 class="section-title" data-level="7.5.1">
       Primary text implementation
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-FMT-001</dd></div>
@@ -837,7 +839,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Data-model"></div><h3 class="section-title" data-level="6.2.2">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Data-model"></div><h3 class="section-title" data-level="7.2.2">
       Data model
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-HIGH-DATA-MODEL</dd></div>
@@ -887,7 +889,7 @@ and specifications management tool TBD.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Command-line-interface"></div><h3 class="section-title" data-level="6.2.3">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Command-line-interface"></div><h3 class="section-title" data-level="7.2.3">
       Command-line interface
     </h3>
 
@@ -920,7 +922,7 @@ and specifications management tool TBD.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Platform-support"></div><h3 class="section-title" data-level="6.2.4">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Platform-support"></div><h3 class="section-title" data-level="7.2.4">
       Platform support
     </h3>
 
@@ -953,7 +955,7 @@ and specifications management tool TBD.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="macOS-support"></div><h4 class="section-title" data-level="6.2.4.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="macOS-support"></div><h4 class="section-title" data-level="7.2.4.1">
       macOS support
     </h4>
 
@@ -986,7 +988,7 @@ and specifications management tool TBD.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Linux-support"></div><h4 class="section-title" data-level="6.2.4.2">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Linux-support"></div><h4 class="section-title" data-level="7.2.4.2">
       Linux support
     </h4>
 
@@ -1019,7 +1021,7 @@ and specifications management tool TBD.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Windows-support"></div><h4 class="section-title" data-level="6.2.4.3">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Windows-support"></div><h4 class="section-title" data-level="7.2.4.3">
       Windows support
     </h4>
 
@@ -1052,7 +1054,7 @@ and specifications management tool TBD.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Requirements-validation"></div><h3 class="section-title" data-level="6.2.5">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Requirements-validation"></div><h3 class="section-title" data-level="7.2.5">
       Requirements validation
     </h3>
 
@@ -1085,7 +1087,7 @@ and specifications management tool TBD.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Requirements-text-format"></div><h3 class="section-title" data-level="6.2.6">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Requirements-text-format"></div><h3 class="section-title" data-level="7.2.6">
       Requirements text format
     </h3>
 
@@ -1118,7 +1120,7 @@ and specifications management tool TBD.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Linking-requirements"></div><h3 class="section-title" data-level="6.2.7">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Linking-requirements"></div><h3 class="section-title" data-level="7.2.7">
       Linking requirements
     </h3>
 
@@ -1151,7 +1153,7 @@ and specifications management tool TBD.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Scalability"></div><h3 class="section-title" data-level="6.2.8">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Scalability"></div><h3 class="section-title" data-level="7.2.8">
       Scalability
     </h3>
 
@@ -1184,7 +1186,7 @@ and specifications management tool TBD.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Traceability"></div><h3 class="section-title" data-level="6.2.9">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Traceability"></div><h3 class="section-title" data-level="7.2.9">
       Traceability
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-HIGH-REQS-TRACEABILITY</dd></div>
@@ -1219,7 +1221,7 @@ and specifications management tool TBD.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Visualization"></div><h3 class="section-title" data-level="6.2.10">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Visualization"></div><h3 class="section-title" data-level="7.2.10">
       Visualization
     </h3>
 
@@ -1252,7 +1254,7 @@ and specifications management tool TBD.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Open-source-software"></div><h3 class="section-title" data-level="6.2.11">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Open-source-software"></div><h3 class="section-title" data-level="7.2.11">
       Open source software
     </h3>
 
@@ -1285,7 +1287,7 @@ and specifications management tool TBD.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Parallelization"></div><h3 class="section-title" data-level="6.3.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Parallelization"></div><h3 class="section-title" data-level="7.3.1">
       Parallelization
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-IMPL-PARAL</dd></div>
@@ -1320,7 +1322,7 @@ and specifications management tool TBD.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Incremental-generation"></div><h3 class="section-title" data-level="6.3.2">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Incremental-generation"></div><h3 class="section-title" data-level="7.3.2">
       Incremental generation
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-IMPL-INCREMENTAL</dd></div>
@@ -1364,7 +1366,7 @@ documents and files.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><h3 class="section-title" data-level="6.2.1">
+  <section class="requirement_section" data-section='meta'><h3 class="section-title" data-level="7.2.1">
       Requirements management
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-HIGH-REQS-MANAGEMENT</dd></div>
@@ -1404,7 +1406,7 @@ documents and files.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><h3 class="section-title" data-level="6.1.1">
+  <section class="requirement_section" data-section='meta'><h3 class="section-title" data-level="7.1.1">
       Software support for writing requirements and specifications documents
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>GOAL-1-TOOL-SUPPORT</dd></div>
@@ -1455,7 +1457,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Modeling-capability"></div><h3 class="section-title" data-level="6.4.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Modeling-capability"></div><h3 class="section-title" data-level="7.4.1">
       Modeling capability
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-DM-001</dd></div>
@@ -1499,7 +1501,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><h3 class="section-title" data-level="6.5.1">
+  <section class="requirement_section" data-section='meta'><h3 class="section-title" data-level="7.5.1">
       Primary text implementation
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-FMT-001</dd></div>
@@ -1542,7 +1544,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Statement"></div><h4 class="section-title" data-level="6.4.3.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Statement"></div><h4 class="section-title" data-level="7.4.3.1">
       Statement
     </h4>
 
@@ -1575,7 +1577,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Content-body"></div><h4 class="section-title" data-level="6.4.3.2">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Content-body"></div><h4 class="section-title" data-level="7.4.3.2">
       Content body
     </h4>
 
@@ -1608,7 +1610,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="UID-identifier"></div><h4 class="section-title" data-level="6.4.3.3">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="UID-identifier"></div><h4 class="section-title" data-level="7.4.3.3">
       UID identifier
     </h4>
 
@@ -1641,7 +1643,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="UID-identifier-format"></div><h5 class="section-title" data-level="6.4.3.3.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="UID-identifier-format"></div><h5 class="section-title" data-level="7.4.3.3.1">
       UID identifier format
     </h5>
 
@@ -1688,7 +1690,7 @@ be no way to define a single rule.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Title"></div><h4 class="section-title" data-level="6.4.3.4">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Title"></div><h4 class="section-title" data-level="7.4.3.4">
       Title
     </h4>
 
@@ -1721,7 +1723,7 @@ be no way to define a single rule.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="References"></div><h4 class="section-title" data-level="6.4.3.5">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="References"></div><h4 class="section-title" data-level="7.4.3.5">
       References
     </h4>
 
@@ -1754,7 +1756,7 @@ be no way to define a single rule.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Comments"></div><h4 class="section-title" data-level="6.4.3.6">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Comments"></div><h4 class="section-title" data-level="7.4.3.6">
       Comments
     </h4>
 
@@ -1789,7 +1791,7 @@ be no way to define a single rule.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><h3 class="section-title" data-level="6.4.1">
+  <section class="requirement_section" data-section='meta'><h3 class="section-title" data-level="7.4.1">
       Modeling capability
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-DM-001</dd></div>
@@ -1835,7 +1837,7 @@ be no way to define a single rule.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><h3 class="section-title" data-level="6.2.1">
+  <section class="requirement_section" data-section='meta'><h3 class="section-title" data-level="7.2.1">
       Requirements management
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-HIGH-REQS-MANAGEMENT</dd></div>
@@ -1875,7 +1877,7 @@ be no way to define a single rule.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><h3 class="section-title" data-level="6.1.1">
+  <section class="requirement_section" data-section='meta'><h3 class="section-title" data-level="7.1.1">
       Software support for writing requirements and specifications documents
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>GOAL-1-TOOL-SUPPORT</dd></div>
@@ -1929,7 +1931,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Primary-text-implementation"></div><h3 class="section-title" data-level="6.5.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Primary-text-implementation"></div><h3 class="section-title" data-level="7.5.1">
       Primary text implementation
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-FMT-001</dd></div>
@@ -1970,7 +1972,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Grammar"></div><h3 class="section-title" data-level="6.5.2">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Grammar"></div><h3 class="section-title" data-level="7.5.2">
       Grammar
     </h3>
 
@@ -2003,7 +2005,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Type-safety"></div><h3 class="section-title" data-level="6.5.3">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Type-safety"></div><h3 class="section-title" data-level="7.5.3">
       Type safety
     </h3>
 
@@ -2036,7 +2038,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Single-document-Normal-form"></div><h4 class="section-title" data-level="6.6.1.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Single-document-Normal-form"></div><h4 class="section-title" data-level="7.6.1.1">
       Single document: Normal form
     </h4>
 
@@ -2069,7 +2071,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Single-document-Tabular-form"></div><h4 class="section-title" data-level="6.6.1.2">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Single-document-Tabular-form"></div><h4 class="section-title" data-level="7.6.1.2">
       Single document: Tabular form
     </h4>
 
@@ -2102,7 +2104,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Single-document-1-level-traceability"></div><h4 class="section-title" data-level="6.6.1.3">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Single-document-1-level-traceability"></div><h4 class="section-title" data-level="7.6.1.3">
       Single document: 1-level traceability
     </h4>
 
@@ -2135,7 +2137,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Single-document-Deep-traceability"></div><h4 class="section-title" data-level="6.6.1.4">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Single-document-Deep-traceability"></div><h4 class="section-title" data-level="7.6.1.4">
       Single document: Deep traceability
     </h4>
 
@@ -2168,7 +2170,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Sphinx-documentation-generator"></div><h4 class="section-title" data-level="6.6.2.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Sphinx-documentation-generator"></div><h4 class="section-title" data-level="7.6.2.1">
       Sphinx documentation generator
     </h4>
 
@@ -2201,7 +2203,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Valid-HTML-markup"></div><h3 class="section-title" data-level="6.7.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Valid-HTML-markup"></div><h3 class="section-title" data-level="7.7.1">
       Valid HTML markup
     </h3>
 
@@ -2240,7 +2242,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="TextX"></div><h3 class="section-title" data-level="7.1.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="TextX"></div><h3 class="section-title" data-level="8.1.1">
       TextX
     </h3>
 
@@ -2279,7 +2281,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Jinja2"></div><h3 class="section-title" data-level="7.1.2">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Jinja2"></div><h3 class="section-title" data-level="8.1.2">
       Jinja2
     </h3>
 
@@ -2312,7 +2314,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Sphinx-and-Docutils"></div><h3 class="section-title" data-level="7.1.3">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Sphinx-and-Docutils"></div><h3 class="section-title" data-level="8.1.3">
       Sphinx and Docutils
     </h3>
 
@@ -2351,7 +2353,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="No-indentation"></div><h3 class="section-title" data-level="7.2.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="No-indentation"></div><h3 class="section-title" data-level="8.2.1">
       No indentation
     </h3>
 
@@ -2394,7 +2396,7 @@ possible indentation issues.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Left-panel-Table-of-contents"></div><h4 class="section-title" data-level="8.1.1.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Left-panel-Table-of-contents"></div><h4 class="section-title" data-level="9.1.1.1">
       Left panel: Table of contents
     </h4>
 
@@ -2427,7 +2429,7 @@ possible indentation issues.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Document-page-CSS-Proper-markup"></div><h4 class="section-title" data-level="8.1.1.2">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Document-page-CSS-Proper-markup"></div><h4 class="section-title" data-level="9.1.1.2">
       Document page CSS: Proper markup
     </h4>
 
@@ -2460,7 +2462,7 @@ possible indentation issues.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Table-page-CSS-Proper-table"></div><h4 class="section-title" data-level="8.1.1.3">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Table-page-CSS-Proper-table"></div><h4 class="section-title" data-level="9.1.1.3">
       Table page CSS: Proper table
     </h4>
 
@@ -2493,7 +2495,7 @@ possible indentation issues.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Traceability-page-CSS-Proper-middle-column-document"></div><h4 class="section-title" data-level="8.1.1.4">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Traceability-page-CSS-Proper-middle-column-document"></div><h4 class="section-title" data-level="9.1.1.4">
       Traceability page CSS: Proper middle column document
     </h4>
 
@@ -2526,7 +2528,7 @@ possible indentation issues.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Deep-Traceability-page-CSS-Improvements"></div><h4 class="section-title" data-level="8.1.1.5">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Deep-Traceability-page-CSS-Improvements"></div><h4 class="section-title" data-level="9.1.1.5">
       Deep Traceability page CSS: Improvements
     </h4>
 
@@ -2559,7 +2561,7 @@ possible indentation issues.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Generated-file-names"></div><h3 class="section-title" data-level="8.2.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Generated-file-names"></div><h3 class="section-title" data-level="9.2.1">
       Generated file names
     </h3>
 
@@ -2598,7 +2600,7 @@ possible indentation issues.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Validation-Uniqueness-of-UID-identifiers-in-a-document-tree"></div><h3 class="section-title" data-level="8.2.2">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Validation-Uniqueness-of-UID-identifiers-in-a-document-tree"></div><h3 class="section-title" data-level="9.2.2">
       Validation: Uniqueness of UID identifiers in a document tree
     </h3>
 
@@ -2631,7 +2633,7 @@ possible indentation issues.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="StrictDoc-as-library"></div><h3 class="section-title" data-level="8.3.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="StrictDoc-as-library"></div><h3 class="section-title" data-level="9.3.1">
       StrictDoc as library
     </h3>
 
@@ -2671,7 +2673,7 @@ as Grammar, Import, Export classes, etc.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Links"></div><h3 class="section-title" data-level="8.3.2">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Links"></div><h3 class="section-title" data-level="9.3.2">
       Links
     </h3>
 
@@ -2711,7 +2713,7 @@ as Grammar, Import, Export classes, etc.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Excel-Export"></div><h4 class="section-title" data-level="8.3.3.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Excel-Export"></div><h4 class="section-title" data-level="9.3.3.1">
       Excel Export
     </h4>
 
@@ -2744,7 +2746,7 @@ as Grammar, Import, Export classes, etc.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="PlantUML-Export"></div><h4 class="section-title" data-level="8.3.3.2">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="PlantUML-Export"></div><h4 class="section-title" data-level="9.3.3.2">
       PlantUML Export
     </h4>
 
@@ -2777,7 +2779,7 @@ as Grammar, Import, Export classes, etc.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="ReqIF-Import-Export"></div><h4 class="section-title" data-level="8.3.3.3">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="ReqIF-Import-Export"></div><h4 class="section-title" data-level="9.3.3.3">
       ReqIF Import/Export
     </h4>
 
@@ -2810,7 +2812,7 @@ as Grammar, Import, Export classes, etc.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Confluence-Import-Export"></div><h4 class="section-title" data-level="8.3.3.4">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Confluence-Import-Export"></div><h4 class="section-title" data-level="9.3.3.4">
       Confluence Import/Export
     </h4>
 
@@ -2843,7 +2845,7 @@ as Grammar, Import, Export classes, etc.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Tex-Export"></div><h4 class="section-title" data-level="8.3.3.5">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Tex-Export"></div><h4 class="section-title" data-level="9.3.3.5">
       Tex Export
     </h4>
 
@@ -2876,7 +2878,7 @@ as Grammar, Import, Export classes, etc.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Doorstop-Import-Export"></div><h4 class="section-title" data-level="8.3.3.6">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Doorstop-Import-Export"></div><h4 class="section-title" data-level="9.3.3.6">
       Doorstop Import/Export
     </h4>
 
@@ -2909,7 +2911,7 @@ as Grammar, Import, Export classes, etc.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Markdown-support-for-text-and-code-blocks"></div><h4 class="section-title" data-level="8.3.3.7">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Markdown-support-for-text-and-code-blocks"></div><h4 class="section-title" data-level="9.3.3.7">
       Markdown support for text and code blocks
     </h4>
 
@@ -2942,7 +2944,7 @@ as Grammar, Import, Export classes, etc.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Linking-with-implementation-artifacts"></div><h4 class="section-title" data-level="8.3.4.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Linking-with-implementation-artifacts"></div><h4 class="section-title" data-level="9.3.4.1">
       Linking with implementation artifacts
     </h4>
 
@@ -2975,7 +2977,7 @@ as Grammar, Import, Export classes, etc.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Requirement-checksumming"></div><h4 class="section-title" data-level="8.3.4.2">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Requirement-checksumming"></div><h4 class="section-title" data-level="9.3.4.2">
       Requirement checksumming
     </h4>
 
@@ -3008,7 +3010,7 @@ as Grammar, Import, Export classes, etc.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Documentation-coverage"></div><h4 class="section-title" data-level="8.3.4.3">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Documentation-coverage"></div><h4 class="section-title" data-level="9.3.4.3">
       Documentation coverage
     </h4>
 
@@ -3041,7 +3043,7 @@ as Grammar, Import, Export classes, etc.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Validation-Section-Levels"></div><h4 class="section-title" data-level="8.3.5.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Validation-Section-Levels"></div><h4 class="section-title" data-level="9.3.5.1">
       Validation: Section Levels
     </h4>
 
@@ -3074,7 +3076,7 @@ as Grammar, Import, Export classes, etc.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Custom-fields"></div><h3 class="section-title" data-level="8.3.6">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Custom-fields"></div><h3 class="section-title" data-level="9.3.6">
       Custom fields
     </h3>
 
@@ -3117,7 +3119,7 @@ as Grammar, Import, Export classes, etc.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Filtering-by-tags"></div><h3 class="section-title" data-level="8.3.7">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Filtering-by-tags"></div><h3 class="section-title" data-level="9.3.7">
       Filtering by tags
     </h3>
 
@@ -3150,7 +3152,7 @@ as Grammar, Import, Export classes, etc.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Option-RST-Top-level-title-document-name"></div><h4 class="section-title" data-level="8.3.8.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Option-RST-Top-level-title-document-name"></div><h4 class="section-title" data-level="9.3.8.1">
       Option: RST: Top-level title: document name
     </h4>
 
@@ -3183,7 +3185,7 @@ as Grammar, Import, Export classes, etc.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Option-Title-Automatic-numeration"></div><h4 class="section-title" data-level="8.3.8.2">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Option-Title-Automatic-numeration"></div><h4 class="section-title" data-level="9.3.8.2">
       Option: Title: Automatic numeration
     </h4>
 
@@ -3216,7 +3218,7 @@ as Grammar, Import, Export classes, etc.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Option-Title-Display-requirement-titles"></div><h4 class="section-title" data-level="8.3.8.3">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Option-Title-Display-requirement-titles"></div><h4 class="section-title" data-level="9.3.8.3">
       Option: Title: Display requirement titles
     </h4>
 
@@ -3249,7 +3251,7 @@ as Grammar, Import, Export classes, etc.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Option-Title-Display-requirement-UID"></div><h4 class="section-title" data-level="8.3.8.4">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Option-Title-Display-requirement-UID"></div><h4 class="section-title" data-level="9.3.8.4">
       Option: Title: Display requirement UID
     </h4>
 
@@ -3282,7 +3284,7 @@ as Grammar, Import, Export classes, etc.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Facts-table-Invariants-calculation-"></div><h4 class="section-title" data-level="8.3.9.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Facts-table-Invariants-calculation-"></div><h4 class="section-title" data-level="9.3.9.1">
       Facts table. Invariants calculation.
     </h4>
 
@@ -3316,7 +3318,7 @@ enforce numerical constraints.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="FMEA-FMECA-tables"></div><h4 class="section-title" data-level="8.3.9.2">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="FMEA-FMECA-tables"></div><h4 class="section-title" data-level="9.3.9.2">
       FMEA/FMECA tables
     </h4>
 
@@ -3349,7 +3351,7 @@ enforce numerical constraints.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Graphical-User-Interface-GUI-"></div><h4 class="section-title" data-level="8.3.9.3">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Graphical-User-Interface-GUI-"></div><h4 class="section-title" data-level="9.3.9.3">
       Graphical User Interface (GUI)
     </h4>
 
@@ -3382,7 +3384,7 @@ enforce numerical constraints.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Web-server-and-editable-HTML-pages"></div><h4 class="section-title" data-level="8.3.9.4">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Web-server-and-editable-HTML-pages"></div><h4 class="section-title" data-level="9.3.9.4">
       Web server and editable HTML pages
     </h4>
 

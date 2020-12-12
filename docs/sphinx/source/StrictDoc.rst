@@ -1,10 +1,13 @@
+Introduction
+============
+
 StrictDoc is software for writing technical requirements and specifications.
 
 Summary of StrictDoc features:
 
 - The documentation files are stored as human-readable text files.
 - A simple domain-specific language DSL is used for writing the documents. The
-  text format encoding this language is called SDoc (strict-doc).
+  text format for encoding this language is called SDoc (strict-doc).
 - StrictDoc reads `*.sdoc` files and builds an in-memory representation of the
   document tree.
 - From this in-memory representation, StrictDoc can generate the documentation

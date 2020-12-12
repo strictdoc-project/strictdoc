@@ -34,7 +34,7 @@ except Exception as e:
 
 # Validation #2: tidylib
 _, tidylib_messages_string = tidy_document(html_content, options={
-    'new-blocklevel-tags': 'main, aside, header, section, article, nav',
+    'new-blocklevel-tags': 'main, aside, header, section, article, nav, svg, path',
     'char-encoding': 'utf8',
     'input-encoding': 'utf8',
     'output-encoding': 'utf8',

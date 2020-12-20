@@ -138,6 +138,73 @@ This is a body part 3
     assert requirement_1.body == 'This is a body part 1\nThis is a body part 2\nThis is a body part 3'
 
 
+def test_036_rationale_singleline():
+    input = """
+[DOCUMENT]
+NAME: Test Doc
+
+[SECTION]
+LEVEL: 1
+TITLE: Test Section
+
+[REQUIREMENT]
+STATEMENT: Some statement
+RATIONALE: This is a Rationale
+
+[/SECTION]
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input == output
+
+    assert isinstance(document.section_contents[0].section_contents[0], Requirement)
+    requirement_1 = document.section_contents[0].section_contents[0]
+    assert requirement_1.rationale == 'This is a Rationale'
+
+
+def test_037_rationale_multiline():
+    input = """
+[DOCUMENT]
+NAME: Test Doc
+
+[SECTION]
+LEVEL: 1
+TITLE: Test Section
+
+[REQUIREMENT]
+STATEMENT: Some statement
+RATIONALE: >>>
+This is a Rationale line 1
+This is a Rationale line 2
+This is a Rationale line 3
+<<<
+
+[/SECTION]
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input == output
+
+    assert isinstance(document.section_contents[0].section_contents[0], Requirement)
+    requirement_1 = document.section_contents[0].section_contents[0]
+    assert requirement_1.rationale_multiline == \
+           'This is a Rationale line 1\nThis is a Rationale line 2\nThis is a Rationale line 3'
+
+
 def test_040_composite_requirement_1_level():
     input = """
 [DOCUMENT]

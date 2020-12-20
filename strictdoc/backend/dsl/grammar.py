@@ -22,7 +22,7 @@ REQUIREMENT_FIELDS = """
 
   ('BODY: ' body = MultiLineString '\n' )?
 
-  ('RATIONALE: ' (rationale = SingleLineString | rationale = MultiLineString) '\n')?
+  ('RATIONALE: ' (rationale = SingleLineString | rationale_multiline = MultiLineString) '\n')?
 
   comments *= RequirementComment
 """

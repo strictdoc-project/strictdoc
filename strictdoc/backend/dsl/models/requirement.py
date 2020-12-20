@@ -17,6 +17,7 @@ class Requirement(object):
                  references,
                  title,
                  body,
+                 rationale,
                  comments,
                  requirements=None):
         assert parent

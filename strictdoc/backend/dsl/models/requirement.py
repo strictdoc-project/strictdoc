@@ -18,6 +18,7 @@ class Requirement(object):
                  title,
                  body,
                  rationale,
+                 rationale_multiline,
                  comments,
                  requirements=None):
         assert parent
@@ -34,6 +35,8 @@ class Requirement(object):
         self.statement = statement
         self.statement_multiline = statement_multiline
         self.body = body
+        self.rationale = rationale
+        self.rationale_multiline = rationale_multiline
         self.comments = comments
         self.requirements = requirements
 

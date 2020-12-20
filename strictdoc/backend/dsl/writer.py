@@ -128,6 +128,15 @@ class SDWriter:
             output += "<<<"
             output += "\n"
 
+        if section_content.rationale_multiline:
+            output += "RATIONALE: >>>\n"
+            output += section_content.rationale_multiline
+            output += "\n<<<\n"
+        elif section_content.rationale:
+            output += "RATIONALE: "
+            output += section_content.rationale
+            output += "\n"
+
         for comment in section_content.comments:
             if comment.comment_multiline:
                 output += "COMMENT: >>>\n"

@@ -116,3 +116,16 @@ def test_integration(c, focus=None, debug=False):
 @task(test_unit, test_integration)
 def test(c):
     pass
+
+
+@task
+def install_local(c):
+    command = oneline_command(
+        """
+        rm -rfv dist &&
+        poetry build &&
+        tar -xvf dist/*.tar.gz --wildcards --no-anchored '*/setup.py' --strip=1 &&
+        pip install -e .
+        """
+    )
+    run_invoke_cmd(c, command)

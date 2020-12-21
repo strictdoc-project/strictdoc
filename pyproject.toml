@@ -28,6 +28,8 @@ filecheck = "*"
 sphinx = '3.2.1'
 html5lib = '1.1'
 pytidylib = '0.3.2'
+beautifulsoup4 = '4.9.3'
+lxml = '4.6.2'
 
 [build-system]
 requires = ["poetry>=0.12"]

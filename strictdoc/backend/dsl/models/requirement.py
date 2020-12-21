@@ -122,3 +122,52 @@ class RequirementComment(object):
     def get_comment(self):
         comment = self.comment_single if self.comment_single else self.comment_multiline
         return comment
+
+
+def requirement_from_dict(requirement_dict, parent, level):
+    assert requirement_dict is not None
+    assert parent
+    assert isinstance(level, int)
+    assert level > 0
+
+    uid = None
+    if 'UID' in requirement_dict:
+        uid_ = requirement_dict['UID']
+        if isinstance(uid_, str):
+            uid = uid_
+
+    title = None
+    if 'TITLE' in requirement_dict:
+        title_ = requirement_dict['TITLE']
+        if isinstance(title_, str):
+            title = title_
+
+    statement_multiline = None
+    if 'STATEMENT' in requirement_dict:
+        statement_multiline_ = requirement_dict['STATEMENT']
+        if isinstance(statement_multiline_, str):
+            statement_multiline = statement_multiline_
+
+    rationale_multiline = None
+    if 'RATIONALE' in requirement_dict:
+        rationale_multiline_ = requirement_dict['RATIONALE']
+        if isinstance(rationale_multiline_, str):
+            rationale_multiline = rationale_multiline_
+
+    requirement = Requirement(
+        parent,
+        None,
+        statement_multiline,
+        uid,
+        None,
+        None,
+        None,
+        title,
+        None,
+        None,
+        rationale_multiline,
+        []
+    )
+
+    requirement.ng_level = level
+    return requirement

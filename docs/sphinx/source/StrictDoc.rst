@@ -228,6 +228,8 @@ StrictDoc Requirements
 Project goals
 -------------
 
+.. _GOAL-1-TOOL-SUPPORT:
+
 Software support for writing requirements and specifications documents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -242,6 +244,12 @@ Software shall support engineers in their work with documentation.
 **Comment:** The state of the art for many small companies working with
 requirements: using Excel for requirements management in the projects with
 hundreds or thousands of requirements.
+
+**Children:**
+
+- *[SDOC-HIGH-REQS-MANAGEMENT]* :ref:`SDOC-HIGH-REQS-MANAGEMENT`
+
+.. _GOAL-2-REDUCE-DOCUMENTATION-HAZARDS:
 
 Reduce documentation hazards
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -262,6 +270,8 @@ requirements engineering in general, it is definitely possible to improve
 software that supports engineers in activities such as requirements engineering
 and writing technical documentation.
 
+.. _GOAL-3-NO-RUNAWAY-DOCUMENTATION:
+
 No (or less) run-away documentation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -272,6 +282,8 @@ Software shall support engineers in keeping documentation up-to-date.
 **Comment:** Technical documentation easily becomes outdated. Many existing tools for
 documentation do not provide any measures for ensuring overall consistency of
 documents and documentation trees.
+
+.. _GOAL-4-CHANGE-MANAGEMENT:
 
 Change management
 ~~~~~~~~~~~~~~~~~
@@ -287,12 +299,24 @@ requires a full revision of its requirements TBD.
 High-level requirements
 -----------------------
 
+.. _SDOC-HIGH-REQS-MANAGEMENT:
+
 Requirements management
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 ``[SDOC-HIGH-REQS-MANAGEMENT]``
 
 StrictDoc shall enable requirements management.
+
+**Parents:**
+
+- *[GOAL-1-TOOL-SUPPORT]* :ref:`GOAL-1-TOOL-SUPPORT`
+
+**Children:**
+
+- *[SDOC-DM-001]* :ref:`SDOC-DM-001`
+
+.. _SDOC-HIGH-DATA-MODEL:
 
 Data model
 ~~~~~~~~~~
@@ -357,6 +381,8 @@ Scalability
 
 StrictDoc shall allow working with large documents and document trees containing at least 10000 requirement items.
 
+.. _SDOC-HIGH-REQS-TRACEABILITY:
+
 Traceability
 ~~~~~~~~~~~~
 
@@ -377,12 +403,16 @@ StrictDoc shall always be free and open source software.
 Implementation requirements
 ---------------------------
 
+.. _SDOC-IMPL-PARAL:
+
 Parallelization
 ~~~~~~~~~~~~~~~
 
 ``[SDOC-IMPL-PARAL]``
 
 StrictDoc shall enable parallelization of the time-consuming parts of the code.
+
+.. _SDOC-IMPL-INCREMENTAL:
 
 Incremental generation
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -397,6 +427,8 @@ documents and files.
 Data model
 ----------
 
+.. _SDOC-DM-001:
+
 Modeling capability
 ~~~~~~~~~~~~~~~~~~~
 
@@ -409,6 +441,14 @@ Examples of standard requirements documents include but are not limited to:
 
 - Non-nested requirement lists split by categories
   (e.g., Functional Requirements, Interface Requirements, Performance Requirements, etc.)
+
+**Parents:**
+
+- *[SDOC-HIGH-REQS-MANAGEMENT]* :ref:`SDOC-HIGH-REQS-MANAGEMENT`
+
+**Children:**
+
+- *[SDOC-FMT-001]* :ref:`SDOC-FMT-001`
 
 Section item
 ~~~~~~~~~~~~
@@ -469,12 +509,18 @@ TBD
 SDOC file format
 ----------------
 
+.. _SDOC-FMT-001:
+
 Primary text implementation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ``[SDOC-FMT-001]``
 
 SDOC format shall support encoding the Strict Doc Data Model in a plain-text human readable form.
+
+**Parents:**
+
+- *[SDOC-DM-001]* :ref:`SDOC-DM-001`
 
 Grammar
 ~~~~~~~
@@ -507,10 +553,18 @@ Single document: 1-level traceability
 
 StrictDoc shall export 1-level traceability document.
 
+**Parents:**
+
+- *[SDOC-HIGH-REQS-TRACEABILITY]* :ref:`SDOC-HIGH-REQS-TRACEABILITY`
+
 Single document: Deep traceability
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 StrictDoc shall export deep traceability document.
+
+**Parents:**
+
+- *[SDOC-HIGH-REQS-TRACEABILITY]* :ref:`SDOC-HIGH-REQS-TRACEABILITY`
 
 PDF Export
 ~~~~~~~~~~

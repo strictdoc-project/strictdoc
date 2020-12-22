@@ -12,7 +12,7 @@ def get_path_components(folder_path):
 class SingleDocumentRSTExport:
     @staticmethod
     def export(document_tree: DocumentTree, document, traceability_index):
-        writer = RSTWriter()
+        writer = RSTWriter(traceability_index)
 
         single_or_many = len(document_tree.document_list) == 1
         output = writer.write(document, single_or_many)

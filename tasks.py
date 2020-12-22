@@ -133,7 +133,7 @@ def install_local(c):
 def lint_black_diff(c):
     command = oneline_command(
         """
-        git diff --name-only -- *.py | xargs black --diff --color --fast 2>&1
+        git diff --name-only -- '*.py' | xargs black --diff --color --fast 2>&1
         """
     )
     result = run_invoke_cmd(c, command)

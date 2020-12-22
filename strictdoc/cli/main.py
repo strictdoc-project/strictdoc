@@ -21,19 +21,18 @@ def main():
     # it in the fork() child process. Crashing instead. Set a breakpoint on
     # objc_initializeAfterForkError to debug.
     # """
-    enable_parallelization = '--no-parallelization' not in sys.argv
-    PARALLELIZER = Parallelizer.create(enable_parallelization)
-
+    enable_parallelization = "--no-parallelization" not in sys.argv
+    parallelizer = Parallelizer.create(enable_parallelization)
 
     parser = cli_args_parser()
     args = parser.parse_args()
 
-    if args.command == 'passthrough':
+    if args.command == "passthrough":
         input_file = args.input_file
         if not os.path.isfile(input_file):
             sys.stdout.flush()
-            err = "error: passthrough command's input file does not exist: {}".format(input_file)
-            print(err)
+            message = "error: passthrough command's input file does not exist"
+            print("{}: {}".format(message, input_file))
             sys.exit(1)
 
         output_file = args.output_file
@@ -46,15 +45,17 @@ def main():
         passthrough_action = PassthroughAction()
         passthrough_action.passthrough(input_file, output_file)
 
-    elif args.command == 'export':
-        parallelization_value = 'Enabled' if enable_parallelization else 'Disabled'
+    elif args.command == "export":
+        parallelization_value = (
+            "Enabled" if enable_parallelization else "Disabled"
+        )
         print("Parallelization: {}".format(parallelization_value), flush=True)
-        export_controller = ExportAction(STRICTDOC_ROOT_PATH, PARALLELIZER)
+        export_controller = ExportAction(STRICTDOC_ROOT_PATH, parallelizer)
         export_controller.export(args.input_paths, args.output_dir)
 
     else:
         raise NotImplementedError
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

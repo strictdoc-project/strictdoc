@@ -34,14 +34,14 @@ def main():
             sys.stdout.flush()
             err = "error: passthrough command's input file does not exist: {}".format(input_file)
             print(err)
-            exit(1)
+            sys.exit(1)
 
         output_file = args.output_file
         if output_file:
             output_dir = os.path.dirname(output_file)
             if not os.path.isdir(output_dir):
                 print("not a directory: {}".format(output_file))
-                exit(1)
+                sys.exit(1)
 
         passthrough_action = PassthroughAction()
         passthrough_action.passthrough(input_file, output_file)

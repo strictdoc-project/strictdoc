@@ -1,6 +1,7 @@
 import os
 import re
 
+import invoke
 from invoke import task
 
 
@@ -35,7 +36,9 @@ def clean(c):
     find_result = run_invoke_cmd(c, find_command)
     find_result_stdout = find_result.stdout.strip()
     echo_command = oneline_command(
-        """echo {find_result} | xargs rm -rfv""".format(find_result=find_result_stdout)
+        """echo {find_result} | xargs rm -rfv""".format(
+            find_result=find_result_stdout
+        )
     )
 
     run_invoke_cmd(c, echo_command)
@@ -99,7 +102,7 @@ def test_integration(c, focus=None, debug=False):
         lit
         --param STRICTDOC_EXEC="{strictdoc_exec}"
         -v
-        {debug_opts}    
+        {debug_opts}
         {focus_or_none}
         {cwd}/tests/integration
         """
@@ -113,11 +116,6 @@ def test_integration(c, focus=None, debug=False):
     run_invoke_cmd(c, command)
 
 
-@task(test_unit, test_integration)
-def test(c):
-    pass
-
-
 @task
 def install_local(c):
     command = oneline_command(
@@ -129,3 +127,46 @@ def install_local(c):
         """
     )
     run_invoke_cmd(c, command)
+
+
+@task
+def lint_black_diff(c):
+    command = oneline_command(
+        """
+        git diff --name-only -- *.py | xargs black --diff --color --fast 2>&1
+        """
+    )
+    result = run_invoke_cmd(c, command)
+
+    # black always exits with 0, so we handle the output.
+    if "would be reformatted" in result.stdout:
+        print("invoke: black found issues")
+        result.exited = 1
+        raise invoke.exceptions.UnexpectedExit(result)
+
+
+@task
+def lint_pylint(c):
+    command = oneline_command(
+        """
+        poetry run pylint --rcfile=.pylint.ini strictdoc/ tasks.py
+        """
+    )
+    try:
+        run_invoke_cmd(c, command)
+    except invoke.exceptions.UnexpectedExit as exc:
+        # pylink doesn't show an error message when exit code != 0, so we do.
+        print(
+            "invoke: pylint exited with error code {}".format(exc.result.exited)
+        )
+        raise exc
+
+
+@task(lint_pylint, lint_black_diff)
+def lint(c):
+    pass
+
+
+@task(lint, test_unit, test_integration)
+def test(c):
+    pass

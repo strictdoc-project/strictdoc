@@ -64,6 +64,12 @@ data-status='{{ requirement.status.lower() }}'
   </section>
   <section class="requirement_section" data-section='comment'>
 
+  {%- if requirement.rationale or requirement.rationale_multiline -%}
+    <div class="requirement_rationale">
+      {{ renderer.render_requirement_rationale(requirement) }}
+    </div>
+  {%- endif -%}
+
   {%- if requirement.comments %}
     {%- for comment in requirement.comments %}
       <div class="requirement_comment">

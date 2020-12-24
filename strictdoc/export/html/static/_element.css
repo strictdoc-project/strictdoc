@@ -50,8 +50,16 @@ article {
 
 .document-view article {
   background-color: var(--color-bg-contrast);
-  padding: calc(var(--base-padding)*2) calc(var(--base-padding)*3);
+  padding: calc(var(--base-padding)*1) calc(var(--base-padding)*3);
   max-width: 900px;
+}
+
+.document-view article:first-child {
+  padding-top: calc(var(--base-padding)*3);
+}
+
+.document-view article:last-child {
+  padding-bottom: calc(var(--base-padding)*2);
 }
 
 /* .table-view */
@@ -310,6 +318,22 @@ ul.requirement_parent {
 }
 .requirement_parent-uid {
   position: relative;
+  font-weight: bold;
+}
+
+/* rationale */
+
+.requirement_rationale {
+  font-size: .9em;
+  font-style: italic;
+}
+
+.requirement_rationale + .requirement_rationale {
+  margin-top: var(--base-margin);
+}
+
+.requirement_rationale p:first-child::before {
+  content: "Rationale: ";
   font-weight: bold;
 }
 

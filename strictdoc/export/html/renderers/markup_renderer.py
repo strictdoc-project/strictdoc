@@ -6,6 +6,7 @@ from strictdoc.export.rst.rst_to_html_fragment_writer import RstToHtmlFragmentWr
 class MarkupRenderer:
     def __init__(self):
         self.cache = {}
+        self.rationale_cache = {}
 
     def render_requirement_statement(self, requirement):
         assert isinstance(requirement, Requirement)
@@ -16,6 +17,18 @@ class MarkupRenderer:
             requirement.get_statement_single_or_multiline()
         )
         self.cache[requirement] = output
+
+        return output
+
+    def render_requirement_rationale(self, requirement):
+        assert isinstance(requirement, Requirement)
+        if requirement in self.rationale_cache:
+            return self.rationale_cache[requirement]
+
+        output = RstToHtmlFragmentWriter.write(
+            requirement.get_rationale_single_or_multiline()
+        )
+        self.rationale_cache[requirement] = output
 
         return output
 

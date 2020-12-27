@@ -395,3 +395,27 @@ ul.requirement_parent {
   position: relative;
   height: 100%;
 }
+/* table */
+
+article table {
+  border-collapse: collapse;
+  margin: var(--base-margin) 0;
+  font-size: 1rem;
+  border: #ccc;
+}
+
+article table caption {
+  font-weight: bold;
+  padding-bottom: 1rem;
+}
+
+article table th {
+  background-color: #eee;
+}
+
+article table th,
+article table td {
+  padding: calc(var(--base-margin)/2);
+  vertical-align: top;
+  text-align: left;
+}

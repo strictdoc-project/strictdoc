@@ -1,0 +1,6 @@
+RUN: %strictdoc export "%S/input.sdoc" --output-dir Output | filecheck "%s" --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%S/Output/rst/Hello world doc.rst"
+
+RUN: %diff "%S/Output/rst/Hello world doc.rst" "%S/expected/Hello world doc.rst"

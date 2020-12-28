@@ -9,7 +9,7 @@ def get_path_components(folder_path):
     return path.split(os.sep)
 
 
-class SingleDocumentRSTExport:
+class DocumentRSTGenerator:
     @staticmethod
     def export(document_tree: DocumentTree, document, traceability_index):
         writer = RSTWriter(traceability_index)

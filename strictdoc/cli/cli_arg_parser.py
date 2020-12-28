@@ -39,6 +39,12 @@ def cli_args_parser():
     command_parser_export.add_argument('--output-dir',
                                        type=str,
                                        help='Output folder')
+    command_parser_export.add_argument('--formats',
+                                       type=str,
+                                       nargs='+',
+                                       choices=['html', 'rst'],
+                                       default=['html'],
+                                       help='Export formats')
     command_parser_export.add_argument('--no-parallelization',
                                        action='store_true',
                                        help='Disables parallelization. All work happens in the main thread. This option might be useful for debugging.')

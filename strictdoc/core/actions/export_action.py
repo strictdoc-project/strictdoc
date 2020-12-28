@@ -77,27 +77,9 @@ class ExportAction:
         with open(output_file, "w") as file:
             file.write(output)
 
-        # Single Document pages (RST)
-        Path(output_rst_root).mkdir(parents=True, exist_ok=True)
-        for document in document_tree.document_list:
-            document_content = DocumentRSTGenerator.export(
-                document_tree, document, traceability_index
-            )
-
-            document_out_file = "{}/{}.rst".format(
-                output_rst_root, document.name
-            )
-            with open(document_out_file, "w") as file:
-                file.write(document_content)
-
-            # HACK:
-            # ProcessPoolExecutor doesn't work because of non-picklable parts
-            # of textx. The offending fields are stripped down because they
-            # are not used anyway.
-            document._tx_parser = None
-            document._tx_attrs = None
-            document._tx_metamodel = None
-            document._tx_peg_rule = None
+        DocumentRSTGenerator.export_tree(
+            document_tree, traceability_index, output_rst_root
+        )
 
         export_binding = partial(
             ExportAction._export_with_performance,

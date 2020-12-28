@@ -107,6 +107,16 @@ class SDReader:
 
     def read(self, input):
         document = self.meta_model.model_from_str(input)
+
+        # HACK:
+        # ProcessPoolExecutor doesn't work because of non-picklable parts
+        # of textx. The offending fields are stripped down because they
+        # are not used anyway.
+        document._tx_parser = None
+        document._tx_attrs = None
+        document._tx_metamodel = None
+        document._tx_peg_rule = None
+
         return document
 
     def read_from_file(self, file_path):

@@ -1,0 +1,14 @@
+[DOCUMENT]
+NAME: Hello world doc
+
+[REQUIREMENT]
+TITLE: Title #1
+STATEMENT: Statement #1
+
+[REQUIREMENT]
+TITLE: Title #2
+STATEMENT: Statement #2
+
+[REQUIREMENT]
+TITLE: Title #3
+STATEMENT: Statement #3

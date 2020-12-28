@@ -15,7 +15,6 @@ class DocumentRSTGenerator:
     def export_tree(
         document_tree: DocumentTree, traceability_index, output_rst_root
     ):
-        # Single Document pages (RST)
         Path(output_rst_root).mkdir(parents=True, exist_ok=True)
         for document in document_tree.document_list:
             document_content = DocumentRSTGenerator.export(

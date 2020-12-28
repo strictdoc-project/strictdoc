@@ -670,7 +670,7 @@ TITLE: SDoc grammar
 
 [REQUIREMENT]
 TITLE: No indentation
-STATEMENT: SDoc grammar building blocks shall not allow any indentation.
+STATEMENT: SDoc grammar's building blocks shall not allow any indentation.
 COMMENT: >>>
 Rationale: Adding indentation to any of the fields does not scale well when the
 documents have deeply nested section structure as well as when the size of the
@@ -759,6 +759,10 @@ Examples:
 [SECTION]
 LEVEL: 3
 TITLE: Export capabilities
+
+[REQUIREMENT]
+TITLE: CSV Import/Export
+STATEMENT: StrictDoc shall support exporting documents to CSV format.
 
 [REQUIREMENT]
 TITLE: Excel Export

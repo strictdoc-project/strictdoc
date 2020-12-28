@@ -1,0 +1,5 @@
+RUN: %strictdoc export --formats=excel --output-dir=Output "%S/input.sdoc"
+
+RUN: %check_exists --file "%S/Output/excel/input.xlsx"
+
+RUN: %excel_diff "%S/Output/excel/input.xlsx" "%S/expected/input.xlsx"

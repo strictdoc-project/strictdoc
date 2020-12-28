@@ -15,10 +15,11 @@ keywords = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.6.2"
 textx = "2.2.0"
 jinja2 = "2.11.2"
 docutils = "0.16"
+XlsxWriter = "^1.3.7"
 
 [tool.poetry.dev-dependencies]
 invoke = "1.4.1"
@@ -32,6 +33,7 @@ html5lib = '1.1'
 pytidylib = '0.3.2'
 beautifulsoup4 = '4.9.3'
 lxml = '4.6.2'
+openpyxl = '^3.0.5'
 
 [build-system]
 requires = ["poetry>=0.12"]

@@ -55,6 +55,9 @@ TITLE: Section 2
 UID: REQ-002
 STATUS: Draft
 TAGS: Foo, Bar, Baz
+REFS:
+- TYPE: Parent
+  VALUE: REQ-001
 TITLE: Requirement #2 title
 STATEMENT: Requirement #2 statement
 COMMENT: >>>

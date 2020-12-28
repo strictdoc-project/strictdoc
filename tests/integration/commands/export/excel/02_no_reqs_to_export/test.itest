@@ -1,0 +1,6 @@
+RUN: %strictdoc export --formats=excel --output-dir Output "%S/input.sdoc" | filecheck %s
+
+CHECK: No requirement with UID, nothing to export into excel
+
+TODO: find a way to to compare
+R U N: %diff "%S/Output/excel/input.xlsx" "%S/expected/input.xlsx"

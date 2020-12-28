@@ -6,7 +6,10 @@ from strictdoc.backend.dsl.grammar import STRICTDOC_GRAMMAR
 from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.reference import Reference
 from strictdoc.backend.dsl.models.requirement import (
-    Requirement, CompositeRequirement, RequirementComment, Body
+    Requirement,
+    CompositeRequirement,
+    RequirementComment,
+    Body,
 )
 from strictdoc.backend.dsl.models.section import Section, FreeText
 
@@ -18,7 +21,7 @@ DOCUMENT_MODELS = [
     CompositeRequirement,
     # Body,
     Reference,
-    FreeText
+    FreeText,
 ]
 
 
@@ -51,7 +54,9 @@ def composite_requirement_obj_processor(composite_requirement):
         if not composite_requirement.parent.ng_level:
             resolve_parents(composite_requirement)
         assert composite_requirement.parent.ng_level
-        composite_requirement.ng_level = composite_requirement.parent.ng_level + 1
+        composite_requirement.ng_level = (
+            composite_requirement.parent.ng_level + 1
+        )
     elif isinstance(composite_requirement.parent, Document):
         composite_requirement.ng_level = 1
     else:
@@ -71,6 +76,7 @@ def requirement_obj_processor(requirement):
     else:
         raise NotImplementedError
 
+
 def freetext_obj_processor(free_text):
     if isinstance(free_text.parent, Section):
         assert free_text.parent.level
@@ -84,16 +90,17 @@ def freetext_obj_processor(free_text):
     else:
         raise NotImplementedError
 
+
 class SDReader:
     def __init__(self):
-        self.meta_model = metamodel_from_str(STRICTDOC_GRAMMAR,
-                                             classes=DOCUMENT_MODELS,
-                                             use_regexp_group=True)
+        self.meta_model = metamodel_from_str(
+            STRICTDOC_GRAMMAR, classes=DOCUMENT_MODELS, use_regexp_group=True
+        )
         obj_processors = {
-            'Section': section_obj_processor,
-            'CompositeRequirement': composite_requirement_obj_processor,
-            'Requirement': requirement_obj_processor,
-            'FreeText': freetext_obj_processor
+            "Section": section_obj_processor,
+            "CompositeRequirement": composite_requirement_obj_processor,
+            "Requirement": requirement_obj_processor,
+            "FreeText": freetext_obj_processor,
         }
 
         self.meta_model.register_obj_processors(obj_processors)
@@ -103,7 +110,7 @@ class SDReader:
         return document
 
     def read_from_file(self, file_path):
-        with open(file_path, 'r') as file:
+        with open(file_path, "r") as file:
             sdoc_content = file.read()
 
         try:
@@ -113,6 +120,10 @@ class SDReader:
             traceback.print_exc()
             exit(1)
         except Exception as exc:
-            print("error: could not parse file: {}.\n{}: {}".format(file_path, exc.__class__.__name__,  exc))
+            print(
+                "error: could not parse file: {}.\n{}: {}".format(
+                    file_path, exc.__class__.__name__, exc
+                )
+            )
             traceback.print_exc()
             exit(1)

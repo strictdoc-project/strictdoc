@@ -1,5 +1,4 @@
-RUN: %strictdoc export "%S/input.sdoc" --output-dir Output | filecheck "%s" --dump-input=fail
-CHECK: Published: Hello world doc
+RUN: %strictdoc export --formats=rst --output-dir Output "%S/input.sdoc"
 
 RUN: %check_exists --file "%S/Output/rst/Hello world doc.rst"
 

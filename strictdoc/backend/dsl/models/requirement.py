@@ -80,14 +80,15 @@ class Requirement(object):
             return self.statement
         elif self.statement_multiline:
             return self.statement_multiline
-        raise NotImplementedError
+        return None
 
     def get_rationale_single_or_multiline(self):
         if self.rationale:
             return self.rationale
         elif self.rationale_multiline:
             return self.rationale_multiline
-        raise NotImplementedError
+        return None
+
 
 class CompositeRequirement(Requirement):
     def __init__(self, parent, **fields):

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from strictdoc.core.document_meta import DocumentMeta
 
 
@@ -10,7 +12,7 @@ class Document(object):
 
         self.ng_sections = []
         self.ng_level = 0
-        self.meta = None
+        self.meta: Optional[DocumentMeta] = None
 
     def __str__(self):
         return "Document: <name: {}, section_contents: {}>".format(

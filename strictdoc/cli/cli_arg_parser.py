@@ -1,6 +1,21 @@
 import argparse
 
 
+EXPORT_FORMATS = ['html', 'rst']
+
+
+def _check_formats(formats):
+    formats_array = formats.split(',')
+    for fmt in formats_array:
+        if fmt in EXPORT_FORMATS:
+            continue
+        message = "invalid choice: '{}' (choose from {})".format(
+            fmt, ', '.join(map(lambda f: "'{}'".format(f), EXPORT_FORMATS))
+        )
+        raise argparse.ArgumentTypeError(message)
+    return formats_array
+
+
 def cli_args_parser():
     # for arg in sys.argv:
     #     if arg == '--help':
@@ -40,9 +55,7 @@ def cli_args_parser():
                                        type=str,
                                        help='Output folder')
     command_parser_export.add_argument('--formats',
-                                       type=str,
-                                       nargs='+',
-                                       choices=['html', 'rst'],
+                                       type=_check_formats,
                                        default=['html'],
                                        help='Export formats')
     command_parser_export.add_argument('--no-parallelization',

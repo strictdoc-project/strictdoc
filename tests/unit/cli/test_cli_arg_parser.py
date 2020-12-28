@@ -64,6 +64,21 @@ def test_export_04_export_format_rst():
                                   ('output_dir', None)]
 
 
+def test_export_05_export_format_multiple():
+    parser = cli_args_parser()
+
+    args = parser.parse_args(['export', '--formats=html,rst', 'docs'])
+
+    assert args.command == 'export'
+    assert args.input_paths == ['docs']
+
+    assert args._get_kwargs() == [('command', 'export'),
+                                  ('formats', ['html', 'rst']),
+                                  ('input_paths', ['docs']),
+                                  ('no_parallelization', False),
+                                  ('output_dir', None)]
+
+
 def test_passthrough_01_minimal():
     parser = cli_args_parser()
 

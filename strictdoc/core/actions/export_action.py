@@ -21,7 +21,7 @@ from strictdoc.export.html.generators.document_tree import (
 )
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
-from strictdoc.export.rst.export import SingleDocumentRSTExport
+from strictdoc.export.rst.document_rst_generator import DocumentRSTGenerator
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.file_system import sync_dir
 from strictdoc.helpers.timing import timing_decorator, measure_performance
@@ -80,7 +80,7 @@ class ExportAction:
         # Single Document pages (RST)
         Path(output_rst_root).mkdir(parents=True, exist_ok=True)
         for document in document_tree.document_list:
-            document_content = SingleDocumentRSTExport.export(
+            document_content = DocumentRSTGenerator.export(
                 document_tree, document, traceability_index
             )
 

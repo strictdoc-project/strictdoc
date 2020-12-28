@@ -4,6 +4,7 @@ from pathlib import Path
 
 from strictdoc.core.document_finder import DocumentFinder
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.export.excel.excel_generator import ExcelGenerator
 from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.rst.document_rst_generator import DocumentRSTGenerator
 from strictdoc.helpers.file_modification_time import get_file_modification_time
@@ -65,4 +66,10 @@ class ExportAction:
             Path(output_rst_root).mkdir(parents=True, exist_ok=True)
             DocumentRSTGenerator.export_tree(
                 document_tree, traceability_index, output_rst_root
+            )
+
+        if "excel" in formats:
+            output_excel_root = "{}/excel".format(output_dir)
+            ExcelGenerator.export_tree(
+                document_tree, traceability_index, output_excel_root
             )

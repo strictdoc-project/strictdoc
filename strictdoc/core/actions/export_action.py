@@ -30,7 +30,9 @@ class ExportAction:
         )
 
     @timing_decorator("Export")
-    def export(self, path_to_single_file_or_doc_root, output_dir):
+    def export(self, path_to_single_file_or_doc_root, output_dir, formats):
+        assert isinstance(formats, list)
+
         if isinstance(path_to_single_file_or_doc_root, str):
             path_to_single_file_or_doc_root = [path_to_single_file_or_doc_root]
         output_dir = output_dir if output_dir else "output"
@@ -49,16 +51,18 @@ class ExportAction:
 
         traceability_index = TraceabilityIndex.create(document_tree)
 
-        HTMLGenerator.export_tree(
-            document_tree,
-            traceability_index,
-            output_html_root,
-            self.strictdoc_src_path,
-            self.strictdoc_last_update,
-            asset_dirs,
-            self.parallelizer,
-        )
+        if "html" in formats:
+            HTMLGenerator.export_tree(
+                document_tree,
+                traceability_index,
+                output_html_root,
+                self.strictdoc_src_path,
+                self.strictdoc_last_update,
+                asset_dirs,
+                self.parallelizer,
+            )
 
-        DocumentRSTGenerator.export_tree(
-            document_tree, traceability_index, output_rst_root
-        )
+        if "rst" in formats:
+            DocumentRSTGenerator.export_tree(
+                document_tree, traceability_index, output_rst_root
+            )

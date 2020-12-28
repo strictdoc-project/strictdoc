@@ -41,9 +41,6 @@ class ExportAction:
             output_dir = os.path.join(self.cwd, output_dir)
 
         output_html_root = "{}/html".format(output_dir)
-        output_rst_root = "{}/rst".format(output_dir)
-
-        Path(output_html_root).mkdir(parents=True, exist_ok=True)
 
         document_tree, asset_dirs = DocumentFinder.find_sdoc_content(
             path_to_single_file_or_doc_root, output_html_root, self.parallelizer
@@ -52,6 +49,7 @@ class ExportAction:
         traceability_index = TraceabilityIndex.create(document_tree)
 
         if "html" in formats:
+            Path(output_html_root).mkdir(parents=True, exist_ok=True)
             HTMLGenerator.export_tree(
                 document_tree,
                 traceability_index,
@@ -63,6 +61,8 @@ class ExportAction:
             )
 
         if "rst" in formats:
+            output_rst_root = "{}/rst".format(output_dir)
+            Path(output_rst_root).mkdir(parents=True, exist_ok=True)
             DocumentRSTGenerator.export_tree(
                 document_tree, traceability_index, output_rst_root
             )

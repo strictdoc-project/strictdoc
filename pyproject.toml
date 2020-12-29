@@ -19,6 +19,7 @@ python = "^3.6"
 textx = "2.2.0"
 jinja2 = "2.11.2"
 docutils = "0.16"
+XlsxWriter = "^1.3.7"
 
 [tool.poetry.dev-dependencies]
 invoke = "1.4.1"

@@ -13,7 +13,7 @@ from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
 
 
-EXCEL_SHEET_NAME = "requierements"
+EXCEL_SHEET_NAME = "requirements"
 MAX_WIDTH = 75
 HEADER_MARGIN = 3
 MAX_WIDTH_KEY = "max_width"
@@ -45,90 +45,9 @@ EXPORT_COLUMNS = [
 
 class ExcelGenerator:
     @staticmethod
-    def lookup_refs(document_contents: List) -> Dict[str, int]:
-        """Lookups each req position in the list, keeping track of where it will be placed in the excel sheet
-
-        Args:
-            document_contents (List): List of potential requierement
-
-        Returns:
-            Dict[str, int]: Dict containing the position of each requierement
-        """
-        refs: Dict[str, int] = {}
-        row = 1
-
-        for content_node in document_contents:
-            if isinstance(content_node, Requirement):
-                if content_node.uid:
-                    # we only export the requierements with uid, allowing tracking
-                    refs[content_node.uid] = row + 1
-                    row += 1
-
-        return refs
-
-    def _init_columns_width() -> int:
-        """Init the width of each column based on the definition + return the defaullt width for the parent column
-
-        Returns:
-            int: Width of the Parent column
-        """
-        for column in EXPORT_COLUMNS:
-            column[MAX_WIDTH_KEY] = (
-                len(column[COLUMN_HEADER_KEY]) + HEADER_MARGIN
-            )
-        parent_header_len = len(PARENT_COLUMN_HEADER_LABEL) + HEADER_MARGIN
-
-        return parent_header_len
-
-    @staticmethod
-    def _set_columns_width(
-        workbook: Workbook, worksheet: Worksheet, parent_header_len: int
-    ):
-        """Set the width of each columns based on the max lenght and the max possible
-
-        Args:
-            workbook (Workbook): Excel workbook
-            worksheet (Worksheet): Excel worksheet
-            parent_header_len (int): Len of the parent column
-        """
-        cell_format_text_wrap = workbook.add_format()
-        cell_format_text_wrap.set_text_wrap()
-
-        for idx, column in enumerate(EXPORT_COLUMNS, start=0):
-            if column[MAX_WIDTH_KEY] > MAX_WIDTH:
-                worksheet.set_column(idx, idx, MAX_WIDTH, cell_format_text_wrap)
-            else:
-                worksheet.set_column(idx, idx, column[MAX_WIDTH_KEY])
-        worksheet.set_column(
-            len(EXPORT_COLUMNS), len(EXPORT_COLUMNS), parent_header_len
-        )
-
-    @staticmethod
-    def _init_headers() -> List:
-        """Init the header list
-
-        Returns:
-            List: List of header
-        """
-        headers: List = []
-
-        for column in EXPORT_COLUMNS:
-            headers.append({"header": column[COLUMN_HEADER_KEY]})
-        headers.append({"header": PARENT_COLUMN_HEADER_LABEL})
-
-        return headers
-
-    @staticmethod
     def export_tree(
         document_tree: DocumentTree, traceability_index, output_excel_root
     ):
-        """Will create and fill one excel file per document, containing requierements with an UID
-
-        Args:
-            document_tree (DocumentTree): List of document to export
-            traceability_index (Any): traceability)index
-            output_excel_root (str): Path of the export
-        """
         Path(output_excel_root).mkdir(parents=True, exist_ok=True)
 
         document: Document
@@ -138,18 +57,20 @@ class ExcelGenerator:
                 f"{document.meta.document_filename_base}.xlsx",
             )
 
-            document_contents = list(
-                DocumentCachingIterator(document).all_content()
-            )  # not ideal but needed to make the first pass to detect refs
-
             with xlsxwriter.Workbook(document_out_file) as workbook:
-                refs = ExcelGenerator.lookup_refs(document_contents)
+                refs = ExcelGenerator._lookup_refs(
+                    traceability_index.get_document_iterator(
+                        document
+                    ).all_content()
+                )
                 worksheet = workbook.add_worksheet(name=EXCEL_SHEET_NAME)
 
                 parent_header_len = ExcelGenerator._init_columns_width()
 
                 row = 1
-                for node in document_contents:
+                for node in traceability_index.get_document_iterator(
+                    document
+                ).all_content():
                     if not node.is_requirement or not node.uid:
                         # we only export the requierements with uid, allowing tracking
                         continue
@@ -191,3 +112,53 @@ class ExcelGenerator:
                 ExcelGenerator._set_columns_width(
                     workbook, worksheet, parent_header_len
                 )
+
+    @staticmethod
+    def _lookup_refs(document_contents: List) -> Dict[str, int]:
+        refs: Dict[str, int] = {}
+        row = 1
+
+        for content_node in document_contents:
+            if isinstance(content_node, Requirement):
+                if content_node.uid:
+                    # we only export the requierements with uid, allowing tracking
+                    refs[content_node.uid] = row + 1
+                    row += 1
+
+        return refs
+
+    @staticmethod
+    def _init_columns_width() -> int:
+        for column in EXPORT_COLUMNS:
+            column[MAX_WIDTH_KEY] = (
+                len(column[COLUMN_HEADER_KEY]) + HEADER_MARGIN
+            )
+        parent_header_len = len(PARENT_COLUMN_HEADER_LABEL) + HEADER_MARGIN
+
+        return parent_header_len
+
+    @staticmethod
+    def _set_columns_width(
+        workbook: Workbook, worksheet: Worksheet, parent_header_len: int
+    ):
+        cell_format_text_wrap = workbook.add_format()
+        cell_format_text_wrap.set_text_wrap()
+
+        for idx, column in enumerate(EXPORT_COLUMNS, start=0):
+            if column[MAX_WIDTH_KEY] > MAX_WIDTH:
+                worksheet.set_column(idx, idx, MAX_WIDTH, cell_format_text_wrap)
+            else:
+                worksheet.set_column(idx, idx, column[MAX_WIDTH_KEY])
+        worksheet.set_column(
+            len(EXPORT_COLUMNS), len(EXPORT_COLUMNS), parent_header_len
+        )
+
+    @staticmethod
+    def _init_headers() -> List:
+        headers: List = []
+
+        for column in EXPORT_COLUMNS:
+            headers.append({"header": column[COLUMN_HEADER_KEY]})
+        headers.append({"header": PARENT_COLUMN_HEADER_LABEL})
+
+        return headers

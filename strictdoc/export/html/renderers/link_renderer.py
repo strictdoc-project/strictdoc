@@ -9,7 +9,7 @@ class LinkRenderer:
     def __init__(self, output_html_root):
         self.output_html_root = output_html_root
 
-    def render(self, node):
+    def render_local_anchor(self, node):
         if isinstance(node, Section):
             return self._string_to_link(node.title)
         if isinstance(node, Requirement):

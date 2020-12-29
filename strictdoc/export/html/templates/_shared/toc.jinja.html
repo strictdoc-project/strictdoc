@@ -2,7 +2,7 @@
     <ul class="toc">
     {%- for section in document_iterator.table_of_contents() -%}
       <li>
-        <a href="#{{ link_renderer.render(section) }}">
+        <a href="#{{ link_renderer.render_local_anchor(section) }}">
           <span class="section-number">{{ section.context.title_number_string }}</span>
           {%- if section.is_requirement -%}
             {{ section.title if section.title else (section.uid if section.uid else '[ no title ]') }}

@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import Dict, List
 
@@ -97,19 +98,28 @@ class ExcelGenerator:
                         )
                     row += 1
 
-                # we add a table around all this data, allowing filtering and ordering in Excel
-                worksheet.add_table(
-                    0,
-                    0,
-                    row - 1,
-                    len(EXPORT_COLUMNS),
-                    {"columns": ExcelGenerator._init_headers()},
-                )
+                if row == 1:
+                    # no requirement with UID
+                    print(
+                        "No requirement with UID, nothing to export into excel"
+                    )
+                else:
+                    # we add a table around all this data, allowing filtering and ordering in Excel
+                    worksheet.add_table(
+                        0,
+                        0,
+                        row - 1,
+                        len(EXPORT_COLUMNS),
+                        {"columns": ExcelGenerator._init_headers()},
+                    )
 
-                # we enforce columns width
-                ExcelGenerator._set_columns_width(
-                    workbook, worksheet, parent_header_len
-                )
+                    # we enforce columns width
+                    ExcelGenerator._set_columns_width(
+                        workbook, worksheet, parent_header_len
+                    )
+
+            if row == 1:
+                os.unlink(document_out_file)
 
     @staticmethod
     def _lookup_refs(document_contents: List) -> Dict[str, int]:

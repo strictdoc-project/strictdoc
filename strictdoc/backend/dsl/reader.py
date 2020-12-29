@@ -1,7 +1,9 @@
 import traceback
+from functools import partial
 
 from textx import metamodel_from_str
 
+from strictdoc.backend.dsl.document_reference import DocumentReference
 from strictdoc.backend.dsl.grammar import STRICTDOC_GRAMMAR
 from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.reference import Reference
@@ -42,7 +44,9 @@ def resolve_parents(node):
         parent.ng_level = cursor.ng_level + parent_idx + 1
 
 
-def composite_requirement_obj_processor(composite_requirement):
+def composite_requirement_obj_processor(composite_requirement, parse_context):
+    composite_requirement.ng_document_reference = parse_context.document_reference
+
     if isinstance(composite_requirement.parent, Section):
         if not composite_requirement.parent.ng_level:
             resolve_parents(composite_requirement)
@@ -63,7 +67,9 @@ def composite_requirement_obj_processor(composite_requirement):
         raise NotImplementedError
 
 
-def requirement_obj_processor(requirement):
+def requirement_obj_processor(requirement, parse_context):
+    requirement.ng_document_reference = parse_context.document_reference
+
     if isinstance(requirement.parent, Section):
         assert requirement.parent.level
         requirement.ng_level = requirement.parent.level + 1
@@ -91,22 +97,41 @@ def freetext_obj_processor(free_text):
         raise NotImplementedError
 
 
+class ParseContext:
+    def __init__(self):
+        self.document_reference = DocumentReference()
+
+
 class SDReader:
     def __init__(self):
         self.meta_model = metamodel_from_str(
             STRICTDOC_GRAMMAR, classes=DOCUMENT_MODELS, use_regexp_group=True
         )
+
+    def read(self, input):
+        parse_context = ParseContext()
+
+        requirement_processor = partial(
+            requirement_obj_processor,
+            parse_context=parse_context
+        )
+        composite_requirement_processor = partial(
+            composite_requirement_obj_processor,
+            parse_context=parse_context
+        )
+
         obj_processors = {
             "Section": section_obj_processor,
-            "CompositeRequirement": composite_requirement_obj_processor,
-            "Requirement": requirement_obj_processor,
+            "CompositeRequirement": composite_requirement_processor,
+            "Requirement": requirement_processor,
             "FreeText": freetext_obj_processor,
         }
 
         self.meta_model.register_obj_processors(obj_processors)
 
-    def read(self, input):
         document = self.meta_model.model_from_str(input)
+
+        parse_context.document_reference.set_document(document)
 
         # HACK:
         # ProcessPoolExecutor doesn't work because of non-picklable parts

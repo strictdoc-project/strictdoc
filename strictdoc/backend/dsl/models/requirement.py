@@ -1,3 +1,6 @@
+from typing import Optional
+
+from strictdoc.backend.dsl.document_reference import DocumentReference
 from strictdoc.backend.dsl.models.reference import Reference
 
 
@@ -43,6 +46,7 @@ class Requirement(object):
         # TODO: Is it worth to move this to dedicated Presenter* classes to
         # keep this class textx-only?
         self.ng_level = None
+        self.ng_document_reference: Optional[DocumentReference] = None
         self.context = RequirementContext()
 
     def __str__(self):
@@ -75,6 +79,10 @@ class Requirement(object):
     def is_composite_requirement(self):
         return False
 
+    @property
+    def document(self):
+        return self.ng_document_reference.get_document()
+
     def get_statement_single_or_multiline(self):
         if self.statement:
             return self.statement
@@ -94,10 +102,15 @@ class CompositeRequirement(Requirement):
     def __init__(self, parent, **fields):
         super(CompositeRequirement, self).__init__(parent, **fields)
         self.ng_sections = []
+        self.ng_document_reference: Optional[DocumentReference] = None
 
     @property
     def is_composite_requirement(self):
         return True
+
+    @property
+    def document(self):
+        return self.ng_document_reference.get_document()
 
 
 class Body(object):

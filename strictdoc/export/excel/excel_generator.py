@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 from typing import Dict, List
 
@@ -52,9 +51,8 @@ class ExcelGenerator:
 
         document: Document
         for document in document_tree.document_list:
-            document_out_file = Path(
-                output_excel_root,
-                f"{document.meta.document_filename_base}.xlsx",
+            document_out_file = "{}/{}.xlsx".format(
+                output_excel_root, document.meta.document_filename_base
             )
 
             with xlsxwriter.Workbook(document_out_file) as workbook:

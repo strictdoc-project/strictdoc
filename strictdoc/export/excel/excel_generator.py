@@ -13,7 +13,7 @@ from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
 
 
-EXCEL_SHEET_NAME = "requirements"
+EXCEL_SHEET_NAME = "Requirements"
 MAX_WIDTH = 75
 HEADER_MARGIN = 3
 MAX_WIDTH_KEY = "max_width"
@@ -55,71 +55,81 @@ class ExcelGenerator:
             document_out_file = "{}/{}.xlsx".format(
                 output_excel_root, document.meta.document_filename_base
             )
+            ExcelGenerator._export_single_document(
+                document, traceability_index, document_out_file
+            )
 
-            with xlsxwriter.Workbook(document_out_file) as workbook:
-                refs = ExcelGenerator._lookup_refs(
-                    traceability_index.get_document_iterator(
-                        document
-                    ).all_content()
-                )
-                worksheet = workbook.add_worksheet(name=EXCEL_SHEET_NAME)
-
-                parent_header_len = ExcelGenerator._init_columns_width()
-
-                row = 1
-                for node in traceability_index.get_document_iterator(
+    @staticmethod
+    def _export_single_document(
+        document: Document,
+        traceability_index,
+        document_out_file
+    ):
+        with xlsxwriter.Workbook(document_out_file) as workbook:
+            refs = ExcelGenerator._lookup_refs(
+                traceability_index.get_document_iterator(
                     document
-                ).all_content():
-                    if not node.is_requirement or not node.uid:
-                        # we only export the requierements with uid, allowing tracking
-                        continue
+                ).all_content()
+            )
+            worksheet = workbook.add_worksheet(name=EXCEL_SHEET_NAME)
 
-                    for idx, column in enumerate(EXPORT_COLUMNS, start=0):
-                        if hasattr(node, column["name"]):
-                            if column["name"] == "statement":
-                                value = node.get_statement_single_or_multiline()
-                            elif column["name"] == "rationale":
-                                value = node.get_rationale_single_or_multiline()
-                            else:
-                                value = getattr(node, column["name"])
-                            worksheet.write(row, idx, value)
-                            if value and len(value) > column[MAX_WIDTH_KEY]:
-                                column[MAX_WIDTH_KEY] = len(value)
+            parent_header_len = ExcelGenerator._init_columns_width()
 
-                    if node.references:
-                        ref = node.references[0]
-                        if len(ref.path) > parent_header_len:
-                            parent_header_len = len(ref.path)
-                        worksheet.write_url(
-                            row,
-                            len(EXPORT_COLUMNS),
-                            f"internal:'{EXCEL_SHEET_NAME}'!A{refs[ref.path]}",
-                            string=ref.path,
-                        )
-                    row += 1
+            row = 1
+            for node in traceability_index.get_document_iterator(
+                document
+            ).all_content():
+                if not node.is_requirement or not node.uid:
+                    # only export the requirements with uid, allowing tracking
+                    continue
 
-                if row == 1:
-                    # no requirement with UID
-                    print(
-                        "No requirement with UID, nothing to export into excel"
-                    )
-                else:
-                    # we add a table around all this data, allowing filtering and ordering in Excel
-                    worksheet.add_table(
-                        0,
-                        0,
-                        row - 1,
+                for idx, column in enumerate(EXPORT_COLUMNS, start=0):
+                    if hasattr(node, column["name"]):
+                        if column["name"] == "statement":
+                            value = node.get_statement_single_or_multiline()
+                        elif column["name"] == "rationale":
+                            value = node.get_rationale_single_or_multiline()
+                        else:
+                            value = getattr(node, column["name"])
+                        worksheet.write(row, idx, value)
+                        if value and len(value) > column[MAX_WIDTH_KEY]:
+                            column[MAX_WIDTH_KEY] = len(value)
+
+                if node.references:
+                    ref = node.references[0]
+                    if len(ref.path) > parent_header_len:
+                        parent_header_len = len(ref.path)
+                    worksheet.write_url(
+                        row,
                         len(EXPORT_COLUMNS),
-                        {"columns": ExcelGenerator._init_headers()},
+                        f"internal:'{EXCEL_SHEET_NAME}'!A{refs[ref.path]}",
+                        string=ref.path,
                     )
-
-                    # we enforce columns width
-                    ExcelGenerator._set_columns_width(
-                        workbook, worksheet, parent_header_len
-                    )
+                row += 1
 
             if row == 1:
-                os.unlink(document_out_file)
+                # no requirement with UID
+                print(
+                    "No requirement with UID, nothing to export into excel"
+                )
+            else:
+                # add a table around all this data, allowing filtering and
+                # ordering in Excel
+                worksheet.add_table(
+                    0,
+                    0,
+                    row - 1,
+                    len(EXPORT_COLUMNS),
+                    {"columns": ExcelGenerator._init_headers()},
+                )
+
+                # enforce columns width
+                ExcelGenerator._set_columns_width(
+                    workbook, worksheet, parent_header_len
+                )
+
+        if row == 1:
+            os.unlink(document_out_file)
 
     @staticmethod
     def _lookup_refs(document_contents: List) -> Dict[str, int]:
@@ -129,7 +139,7 @@ class ExcelGenerator:
         for content_node in document_contents:
             if isinstance(content_node, Requirement):
                 if content_node.uid:
-                    # we only export the requierements with uid, allowing tracking
+                    # only export the requirements with uid, allowing tracking
                     refs[content_node.uid] = row + 1
                     row += 1
 

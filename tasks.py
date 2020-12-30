@@ -170,3 +170,16 @@ def lint(c):
 @task(lint, test_unit, test_integration)
 def test(c):
     pass
+
+
+# https://github.com/github-changelog-generator/github-changelog-generator
+# gem install github_changelog_generator
+@task
+def changelog(c, github_token):
+    command = oneline_command(f"""
+        github_changelog_generator
+        --token {github_token}
+        --user strictdoc-project
+        --project strictdoc
+    """)
+    run_invoke_cmd(c, command)

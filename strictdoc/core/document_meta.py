@@ -45,7 +45,22 @@ class DocumentMeta:
         return "{}/{} - DEEP-TRACE.html".format(self.output_document_dir_rel_path,
                                                 self.document_filename_base)
 
-    def get_root_path_prefix(self):
-        if self.level == 0:
+    def get_html_link(self, document_type, other_doc_level):
+        path_prefix = self.get_root_path_prefix(other_doc_level)
+        if document_type == "document":
+            document_link = self.get_html_doc_link()
+        elif document_type == "table":
+            document_link = self.get_html_table_link()
+        elif document_type == "trace":
+            document_link = self.get_html_traceability_link()
+        elif document_type == "deeptrace":
+            document_link = self.get_html_deep_traceability_link()
+        else:
+            raise NotImplementedError
+        return f"{path_prefix}/{document_link}"
+
+    def get_root_path_prefix(self, other_doc_level=None):
+        level = self.level if not other_doc_level else other_doc_level
+        if level == 0:
             return '..'
-        return ('../' * self.level)[:-1]
+        return ('../' * level)[:-1]

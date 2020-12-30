@@ -36,12 +36,14 @@ data-status='{{ requirement.status.lower() }}'
   {%- if traceability_index.has_parent_requirements(requirement) %}
   <ul class="requirement_parent">
     {%- for requirement in traceability_index.get_parent_requirements(requirement) %}
-    <li><a href="#">
-      {%- if requirement.uid %}
-      <span class="requirement_parent-uid">{{ requirement.uid }} </span>
-      {%- endif %}
-      {{ requirement.title }}
-    </a></li>
+    <li>
+      <a href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
+        {%- if requirement.uid %}
+        <span class="requirement_parent-uid">{{ requirement.uid }} </span>
+        {%- endif %}
+        {{ requirement.title }}
+      </a>
+    </li>
     {%- endfor %}
     </ul>
   {%- endif %}

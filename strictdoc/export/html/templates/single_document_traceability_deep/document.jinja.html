@@ -24,7 +24,7 @@
 
           {%- set requirement = section_or_requirement %}
           <div class="content_item" data-role="current">
-            {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
+            {%- with anchor=link_renderer.render_local_anchor(section_or_requirement), document_type="deeptrace" -%}
             {% include "_shared/requirement.jinja.html" %}
             {%- endwith -%}
           </div>

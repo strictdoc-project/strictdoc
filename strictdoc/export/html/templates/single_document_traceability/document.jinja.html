@@ -14,7 +14,9 @@
           <div class="content_item" data-role="parents">
           {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) %}
 
+            {%- with document_type="trace" -%}
             {% include "_shared/requirement.jinja.html" %}
+            {%- endwith -%}
 
           {%- endfor -%}
           </div>
@@ -22,16 +24,16 @@
           <div class="content_item" data-role="current">
             {%- set requirement = section_or_requirement %}
 
-            {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
-            {% include "_shared/requirement.jinja.html" %}
+            {%- with anchor=link_renderer.render_local_anchor(section_or_requirement), document_type="trace" -%}
+              {% include "_shared/requirement.jinja.html" %}
             {%- endwith -%}
 
           </div>
           <div class="content_item" data-role="children">
           {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) %}
-
-            {% include "_shared/requirement.jinja.html" %}
-
+            {%- with document_type="trace" -%}
+              {% include "_shared/requirement.jinja.html" %}
+            {%- endwith -%}
           {%- endfor -%}
           </div>
         </section>

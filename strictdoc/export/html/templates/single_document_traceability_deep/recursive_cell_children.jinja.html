@@ -1,7 +1,9 @@
 <ul class="recursive_row">
   <li class="recursive_column">
     <div class="recursive_cell">
-      {% include "_shared/requirement.jinja.html" %}
+      {%- with document_type="deeptrace" -%}
+        {% include "_shared/requirement.jinja.html" %}
+      {%- endwith -%}
     </div>
   </li>
 

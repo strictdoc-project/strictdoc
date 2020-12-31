@@ -11,7 +11,7 @@ def test_010_full_dict():
         'UID': 'ABC-123',
         'RATIONALE': 'REQ RATIONALE'
     }
-    document = Document('NONAME', [], [])
+    document = Document('NONAME', None, [], [])
     requirement = requirement_from_dict(requirement_dict, document, 1)
 
     assert requirement.ng_level == 1
@@ -24,7 +24,7 @@ def test_010_full_dict():
 def test_020_empty_dict():
     requirement_dict = {
     }
-    document = Document('NONAME', [], [])
+    document = Document('NONAME', None, [], [])
     requirement = requirement_from_dict(requirement_dict, document, 1)
 
     assert requirement.ng_level == 1

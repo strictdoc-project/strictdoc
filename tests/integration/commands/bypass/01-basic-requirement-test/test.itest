@@ -1,0 +1,3 @@
+RUN: %expect_exit 0 --expect-no-content %strictdoc passthrough %S/input.sdoc --output-file=%S/Output/output.sdoc
+RUN: %diff %S/input.sdoc %S/Output/output.sdoc
+CHECK: passthrough

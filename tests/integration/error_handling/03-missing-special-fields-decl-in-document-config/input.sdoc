@@ -1,0 +1,6 @@
+[DOCUMENT]
+NAME: Hello world doc
+
+[REQUIREMENT]
+SPECIAL_FIELDS:
+  ECSS_COMPLIANCE: Compliant

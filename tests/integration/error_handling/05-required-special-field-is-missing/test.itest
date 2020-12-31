@@ -1,0 +1,17 @@
+RUN: %expect_exit 1 %strictdoc passthrough %S/input.sdoc --output-file=%S/Output/output.sdoc | filecheck %s --dump-input=fail
+CHECK: error: could not parse file: {{.*}}.
+CHECK: Semantic error: Requirement is missing required special fields: ECSS_COMPLIANCE, ECSS_VERIFICATION
+CHECK: Location: {{.*}}
+CHECK: Message: All fields that are declared in [DOCUMENT].SPECIAL_FIELDS section as 'REQUIRED: Yes' must be present in every requirement.
+CHECK: Example:
+CHECK: [DOCUMENT]
+CHECK: SPECIAL_FIELDS:
+CHECK: - NAME: ECSS_COMPLIANCE
+CHECK:   TYPE: String
+CHECK: - NAME: ECSS_VERIFICATION
+CHECK:   TYPE: String
+CHECK-EMPTY:
+CHECK: [REQUIREMENT]
+CHECK: SPECIAL_FIELDS:
+CHECK:   ECSS_COMPLIANCE: Some value
+CHECK:   ECSS_VERIFICATION: Some value

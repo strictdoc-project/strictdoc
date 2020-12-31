@@ -23,6 +23,7 @@ class Requirement(object):
                  rationale,
                  rationale_multiline,
                  comments,
+                 special_fields,
                  requirements=None):
         assert parent
 
@@ -41,6 +42,8 @@ class Requirement(object):
         self.rationale = rationale
         self.rationale_multiline = rationale_multiline
         self.comments = comments
+        self.special_fields = special_fields
+
         self.requirements = requirements
 
         # TODO: Is it worth to move this to dedicated Presenter* classes to
@@ -186,6 +189,7 @@ def requirement_from_dict(requirement_dict, parent, level):
         None,
         None,
         rationale_multiline,
+        None,
         []
     )
 

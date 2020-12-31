@@ -4,7 +4,7 @@ import string
 # Strings with embedded variables in Python
 # https://stackoverflow.com/a/16553401/598057
 class RubyTemplate(string.Template):
-    delimiter = '#'
+    delimiter = "#"
 
 
 REQUIREMENT_FIELDS = """
@@ -14,8 +14,10 @@ REQUIREMENT_FIELDS = """
 
   ('TAGS: ' (tags = TagRegex) tags *= TagXs '\n')?
 
-  ('REFS:' '\n' references *= Reference)?
+  ('SPECIAL_FIELDS:' '\n' special_fields += SpecialField)?
 
+  ('REFS:' '\n' references *= Reference)?
+  
   ('TITLE: ' title = /.*$/ '\n')?
 
   ('STATEMENT: ' (statement = SingleLineString | statement_multiline = MultiLineString) '\n')?
@@ -27,12 +29,24 @@ REQUIREMENT_FIELDS = """
   comments *= RequirementComment
 """
 
-STRICTDOC_GRAMMAR = RubyTemplate("""
+STRICTDOC_GRAMMAR = RubyTemplate(
+    """
 Document[noskipws]:
   '[DOCUMENT]' '\n'
   'NAME: ' name = /.*$/ '\n'
+  (config = DocumentConfig)? 
   free_texts *= SpaceThenFreeText
   section_contents *= SectionOrRequirement
+;
+
+DocumentConfig[noskipws]:
+('SPECIAL_FIELDS:' '\n' special_fields += ConfigSpecialField)?
+;
+
+ConfigSpecialField[noskipws]:
+'- NAME: ' field_name = /.*$/ '\n'
+'  TYPE: ' field_type = /.*$/ '\n'
+('  REQUIRED: ' field_required = 'Yes' '\n')?
 ;
 
 Section[noskipws]:
@@ -76,6 +90,10 @@ CompositeRequirement[noskipws]:
   '[/COMPOSITE-REQUIREMENT]' '\n'
 ;
 
+SpecialField[noskipws]:
+  '  ' field_name = /[A-Z][A-Z0-9_]+/ ': ' field_value = /.*$/ '\n'
+;
+
 TagRegex[noskipws]:
   /[\w\/-]+( *[\w\/-]+)*/
 ;
@@ -111,4 +129,5 @@ ReferenceType[noskipws]:
 FreeText[noskipws]:
   text = /(?ms)\[FREETEXT\]\n(.*?)\n\[\/FREETEXT\]/ '\n'
 ;
-""").substitute(REQUIREMENT_FIELDS=REQUIREMENT_FIELDS)
+"""
+).substitute(REQUIREMENT_FIELDS=REQUIREMENT_FIELDS)

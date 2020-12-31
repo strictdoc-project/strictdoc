@@ -4,9 +4,10 @@ from strictdoc.core.document_meta import DocumentMeta
 
 
 class Document(object):
-    def __init__(self, name, free_texts, section_contents):
+    def __init__(self, name, config, free_texts, section_contents):
         assert isinstance(free_texts, list)
         self.name = name
+        self.config = config
         self.free_texts = free_texts
         self.section_contents = section_contents
 

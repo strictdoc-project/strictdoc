@@ -39,7 +39,7 @@ class ConfluenceHTMLTableImport:
             reqs = ConfluenceHTMLTableImport.parse_table(reqs_table)
             reqs_array_array.append(reqs)
 
-        document = Document("Imported Doc", [], [])
+        document = Document("Imported Doc", None, [], [])
         for section_idx, reqs in enumerate(reqs_array_array):
             section_name = headers[section_idx].text
             section = Section(document, 1, section_name, [], [])
@@ -65,6 +65,7 @@ class ConfluenceHTMLTableImport:
                     [RequirementComment(None, None, comment)]
                     if comment
                     else [],
+                    None,
                 )
                 sreq.ng_level = 2
                 section.section_contents.append(sreq)

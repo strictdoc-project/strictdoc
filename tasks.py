@@ -172,14 +172,30 @@ def test(c):
     pass
 
 
+# Support generation of Poetry managed setup.py file #761
+# https://github.com/python-poetry/poetry/issues/761#issuecomment-689491920
+@task
+def create_local_setup(c):
+    command = oneline_command(
+        """
+        poetry build &&
+        tar -xvf dist/*.tar.gz --wildcards --no-anchored '*/setup.py' --strip=1 &&
+        pip install -e .
+        """
+    )
+    run_invoke_cmd(c, command)
+
+
 # https://github.com/github-changelog-generator/github-changelog-generator
 # gem install github_changelog_generator
 @task
 def changelog(c, github_token):
-    command = oneline_command(f"""
+    command = oneline_command(
+        f"""
         github_changelog_generator
         --token {github_token}
         --user strictdoc-project
         --project strictdoc
-    """)
+        """
+    )
     run_invoke_cmd(c, command)

@@ -1,5 +1,10 @@
 [DOCUMENT]
 NAME: Sandbox SDoc
+SPECIAL_FIELDS:
+- NAME: OWNER
+  TYPE: String
+- NAME: PRIORITY
+  TYPE: String
 
 [FREETEXT]
 This is a sandbox file for experiments.
@@ -12,6 +17,9 @@ TITLE: Section 1
 [REQUIREMENT]
 UID: REQ-001
 TAGS: Foo, Bar, Baz
+SPECIAL_FIELDS:
+  OWNER: Some Owner
+  PRIORITY: High
 TITLE: Requirement #1 title
 STATEMENT: >>>
 Requirement #1 statement

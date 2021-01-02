@@ -45,7 +45,7 @@ DocumentConfig[noskipws]:
 
 ConfigSpecialField[noskipws]:
 '- NAME: ' field_name = /.*$/ '\n'
-'  TYPE: ' field_type = /.*$/ '\n'
+'  TYPE: ' field_type = 'String' '\n'
 ('  REQUIRED: ' field_required = 'Yes' '\n')?
 ;
 

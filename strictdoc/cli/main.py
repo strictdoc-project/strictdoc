@@ -52,7 +52,7 @@ def main():
         print("Parallelization: {}".format(parallelization_value), flush=True)
         export_controller = ExportAction(STRICTDOC_ROOT_PATH, parallelizer)
         export_controller.export(
-            args.input_paths, args.output_dir, args.formats
+            args.input_paths, args.output_dir, args.formats, args.fields
         )
 
     else:

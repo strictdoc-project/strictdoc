@@ -18,7 +18,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
-        echo ::set-env name=PATH::$HOME/.poetry/bin:$PATH
+        echo "PATH=$HOME/.poetry/bin:$PATH" >> $GITHUB_ENV
     - name: Build and publish
       run: |
         poetry publish --username ${{ secrets.PYPI_USERNAME }} --password ${{ secrets.PYPI_PASSWORD }} --build

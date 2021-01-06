@@ -1,4 +1,5 @@
 import os
+from enum import Enum
 from functools import partial
 from pathlib import Path
 
@@ -10,14 +11,31 @@ from strictdoc.export.html.generators.document_trace import DocumentTraceHTMLGen
 from strictdoc.export.html.generators.document_tree import DocumentTreeHTMLGenerator
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
+from strictdoc.export.html.tools.html_embedded import HTMLEmbedder
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.file_system import sync_dir
 from strictdoc.helpers.timing import measure_performance
 
 
+class ExportOptions:
+    def __init__(self, export_mode, strictdoc_src_path, strictdoc_last_update):
+        self.export_mode = export_mode
+        self.strictdoc_src_path = strictdoc_src_path
+        self.strictdoc_last_update = strictdoc_last_update
+
+
+class ExportMode(Enum):
+    DOCTREE = 1
+    STANDALONE = 2
+    DOCTREE_AND_STANDALONE = 3
+
+
 class HTMLGenerator:
+
+
     @staticmethod
     def export_tree(
+        formats_string,
         document_tree,
         traceability_index,
         output_html_root,
@@ -26,6 +44,20 @@ class HTMLGenerator:
         asset_dirs,
         parallelizer,
     ):
+        if 'html' in formats_string:
+            if 'html-standalone' in formats_string:
+                export_mode = ExportMode.DOCTREE_AND_STANDALONE
+            else:
+                export_mode = ExportMode.DOCTREE
+        else:
+            if 'html-standalone' in formats_string:
+                export_mode = ExportMode.STANDALONE
+            else:
+                raise NotImplementedError
+
+        export_options = ExportOptions(
+            export_mode, strictdoc_src_path, strictdoc_last_update
+        )
         markup_renderer = MarkupRenderer()
         link_renderer = LinkRenderer(output_html_root)
 
@@ -38,20 +70,8 @@ class HTMLGenerator:
         with open(output_file, "w") as file:
             file.write(output)
 
-        export_binding = partial(
-            HTMLGenerator._export_with_performance,
-            document_tree=document_tree,
-            traceability_index=traceability_index,
-            markup_renderer=markup_renderer,
-            link_renderer=link_renderer,
-            strictdoc_src_path=strictdoc_src_path,
-            strictdoc_last_update=strictdoc_last_update,
-        )
-
-        parallelizer.map(document_tree.document_list, export_binding)
-
         static_files_src = os.path.join(
-            strictdoc_src_path, "strictdoc/export/html/static"
+            strictdoc_src_path, "strictdoc/export/html/_static"
         )
         sync_dir(static_files_src, output_html_static_files)
         for asset_dir in asset_dirs:
@@ -62,6 +82,17 @@ class HTMLGenerator:
             )
             sync_dir(source_path, destination_path)
 
+        export_binding = partial(
+            HTMLGenerator._export_with_performance,
+            export_options=export_options,
+            document_tree=document_tree,
+            traceability_index=traceability_index,
+            markup_renderer=markup_renderer,
+            link_renderer=link_renderer
+        )
+
+        parallelizer.map(document_tree.document_list, export_binding)
+
         print(
             "Export completed. Documentation tree can be found at:\n{}".format(
                 output_html_root
@@ -71,16 +102,15 @@ class HTMLGenerator:
     @staticmethod
     def _export_with_performance(
         document,
+        export_options: ExportOptions,
         document_tree,
         traceability_index,
         markup_renderer,
-        link_renderer,
-        strictdoc_src_path,
-        strictdoc_last_update,
+        link_renderer
     ):
         document_meta: DocumentMeta = document.meta
         full_output_path = os.path.join(
-            strictdoc_src_path, document_meta.get_html_doc_path()
+            export_options.strictdoc_src_path, document_meta.get_html_doc_path()
         )
 
         # If file exists we want to check its modification path in order to skip
@@ -93,13 +123,14 @@ class HTMLGenerator:
 
             if (
                 sdoc_mtime < output_file_mtime
-                and strictdoc_last_update < output_file_mtime
+                and export_options.strictdoc_last_update < output_file_mtime
             ):
                 with measure_performance("Skip: {}".format(document.name)):
                     return
 
         with measure_performance("Published: {}".format(document.name)):
             HTMLGenerator._export(
+                export_options.export_mode,
                 document,
                 document_tree,
                 traceability_index,
@@ -110,6 +141,7 @@ class HTMLGenerator:
 
     @staticmethod
     def _export(
+        export_mode,
         document,
         document_tree,
         traceability_index,
@@ -121,58 +153,69 @@ class HTMLGenerator:
         document_output_folder = document_meta.output_document_dir_full_path
         Path(document_output_folder).mkdir(parents=True, exist_ok=True)
 
-        # Single Document pages
-        document_content = DocumentHTMLGenerator.export(
-            document_tree,
-            document,
-            traceability_index,
-            markup_renderer,
-            link_renderer,
-        )
+        if (
+            export_mode == ExportMode.DOCTREE
+            or export_mode == ExportMode.DOCTREE_AND_STANDALONE
+        ):
+            # Single Document pages
+            document_content = DocumentHTMLGenerator.export(
+                document_tree,
+                document,
+                traceability_index,
+                markup_renderer,
+                link_renderer,
+            )
 
-        document_out_file = document_meta.get_html_doc_path()
-        with open(document_out_file, "w") as file:
-            file.write(document_content)
+            document_out_file = document_meta.get_html_doc_path()
+            with open(document_out_file, "w") as file:
+                file.write(document_content)
 
-        # Single Document pages (standalone)
-        document_content = DocumentHTMLGenerator.export(
-            document_tree,
-            document,
-            traceability_index,
-            markup_renderer,
-            link_renderer,
-            standalone=True
-        )
+            # Single Document Table pages
+            document_content = DocumentTableHTMLGenerator.export(
+                document, traceability_index, markup_renderer, link_renderer
+            )
+            document_out_file = document_meta.get_html_table_path()
 
-        document_out_file = document_meta.get_html_doc_standalone_path()
-        with open(document_out_file, "w") as file:
-            file.write(document_content)
+            with open(document_out_file, "w") as file:
+                file.write(document_content)
 
-        # Single Document Table pages
-        document_content = DocumentTableHTMLGenerator.export(
-            document, traceability_index, markup_renderer, link_renderer
-        )
-        document_out_file = document_meta.get_html_table_path()
+            # Single Document Traceability pages
+            document_content = DocumentTraceHTMLGenerator.export(
+                document, traceability_index, markup_renderer, link_renderer
+            )
+            document_out_file = document_meta.get_html_traceability_path()
 
-        with open(document_out_file, "w") as file:
-            file.write(document_content)
+            with open(document_out_file, "w") as file:
+                file.write(document_content)
 
-        # Single Document Traceability pages
-        document_content = DocumentTraceHTMLGenerator.export(
-            document, traceability_index, markup_renderer, link_renderer
-        )
-        document_out_file = document_meta.get_html_traceability_path()
+            # Single Document Deep Traceability pages
+            document_content = DocumentDeepTraceHTMLGenerator.export_deep(
+                document, traceability_index, markup_renderer, link_renderer
+            )
+            document_out_file = document_meta.get_html_deep_traceability_path()
 
-        with open(document_out_file, "w") as file:
-            file.write(document_content)
+            with open(document_out_file, "w") as file:
+                file.write(document_content)
 
-        # Single Document Deep Traceability pages
-        document_content = DocumentDeepTraceHTMLGenerator.export_deep(
-            document, traceability_index, markup_renderer, link_renderer
-        )
-        document_out_file = document_meta.get_html_deep_traceability_path()
+        if (
+            export_mode == ExportMode.STANDALONE
+            or export_mode == ExportMode.DOCTREE_AND_STANDALONE
+        ):
+            # Single Document pages (standalone)
+            document_content = DocumentHTMLGenerator.export(
+                document_tree,
+                document,
+                traceability_index,
+                markup_renderer,
+                link_renderer,
+                standalone=True
+            )
 
-        with open(document_out_file, "w") as file:
-            file.write(document_content)
+            document_out_file = document_meta.get_html_doc_standalone_path()
+            document_content_with_embedded_assets = HTMLEmbedder.embed_assets(
+                document_content, document_out_file
+            )
+            with open(document_out_file, "w") as file:
+                file.write(document_content_with_embedded_assets)
 
         return document

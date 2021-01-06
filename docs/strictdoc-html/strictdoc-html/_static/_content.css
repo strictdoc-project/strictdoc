@@ -25,7 +25,7 @@
   grid-template-columns:  minmax(250px, 25%)
                           minmax(300px, 45%)
                           minmax(250px, 30%);
-  gap: 4px 2px;
+  gap: 2px 2px;
 }
 
 .document-view .content {
@@ -85,7 +85,12 @@ article header {
   display: none;
 }
 .table-view article header {
-  display: contents;
+  /*
+    TODO: Displaying table headers very often produces visual noise.
+    Consider deleting headers altogether or find a better visual presentation.
+    *display: contents;
+  */
+  display: none;
 }
 .docsection + .docsection header,
 .requirement + .requirement header {

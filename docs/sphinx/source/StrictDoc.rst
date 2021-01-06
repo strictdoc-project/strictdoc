@@ -11,10 +11,10 @@ Summary of StrictDoc features:
 - StrictDoc reads `*.sdoc` files and builds an in-memory representation of the
   document tree.
 - From this in-memory representation, StrictDoc can generate the documentation
-  into a number of formats including HTML, RST, and PDF.
-- The initial focus of the tool is modeling requirements and specifications
-  documents. Such documents consist of multiple statements like
-  "system X shall do Y" called requirements.
+  into a number of formats including HTML, RST, PDF, Excel.
+- The focus of the tool is modeling requirements and specifications documents.
+  Such documents consist of multiple statements like "system X shall do Y"
+  called requirements.
 - The requirements can be linked together to form the relationships, such as
   "parent-child", and from these connections, many useful features such as
   `Requirements Traceability <https://en.wikipedia.org/wiki/Requirements_traceability>`_
@@ -220,7 +220,58 @@ website by readthedocs which uses Sphinx under the hood. The
 StrictDoc and Sphinx-Needs
 --------------------------
 
-TBD
+`Sphinx-Needs <https://sphinxcontrib-needs.readthedocs.io/en/latest/>`_ is a
+text-based requirements management system based on Sphinx. It is implemented
+as a Sphinx extension that extends the
+`reStructuredText (RST)
+<https://docutils.sourceforge.io/docs/user/rst/quickref.html>`_
+markup language with additional syntax for writing requirements documents.
+
+Sphinx-Needs was a great source of inspiration for the second version of
+StrictDoc which was first implemented as a Sphinx extension and then as a more
+independent library on top of `docutils <https://docutils.sourceforge.io/>`_
+that Sphinx uses for the underlying RST syntax processing work.
+
+The similarities between Sphinx-Needs and StrictDoc:
+
+- In contrast to Doorstop, both Sphinx-Needs and StrictDoc do not split a
+  document into many small files, one file per single requirement (see
+  discussion
+  `doorstop#401 <https://github.com/doorstop-dev/doorstop/issues/401>`_). Both
+  tools follow the "file per document" approach.
+- Sphinx-Needs has a
+  `well-developed language
+  <https://sphinxcontrib-needs.readthedocs.io/en/latest/directives/index.html>`_
+  based on custom RST directives, such
+  as `req::`, `spec::`, `needtable::`, etc. The RST document is parsed
+  by Sphinx/docutils into RST abstract syntax tree (AST) which allows creating
+  an object graph out for the documents and their requirements from the RST
+  document. StrictDoc uses textX for building an AST from a SDoc document.
+  Essentially, both Sphinx-Needs and StrictDoc works in a similar way but use
+  different markup languages and tooling for the job.
+
+The difference between Sphinx-Needs and StrictDoc:
+
+- RST tooling provided by Sphinx/docutils is very powerful, yet it can also be
+  rather limiting. The RST syntax and underlying docutils tooling do not allow
+  much flexibility needed for creating a language for defining requirements
+  using a custom and explicit grammar, a feature that became a cornerstone of
+  StrictDoc. This was a major reason why the third generation of
+  StrictDoc started with a migration from docutils to
+  `textX <https://github.com/textX/textX>`_ which is a
+  dedicated tool for creating custom Domain-Specific Languages. After the
+  migration to textX, StrictDoc is no longer restricted to the limitations of
+  the RST document, while it is still possible to generate SDoc files to RST
+  using StrictDoc and then further generate RST to HTML/PDF and other formats
+  using Sphinx.
+- Sphinx-Needs has an impressive list of config options and features that
+  StrictDoc is missing. Examples: Customizing the look of the requirements,
+  `Roles <https://sphinxcontrib-needs.readthedocs.io/en/latest/roles.html>`_,
+  `Services
+  <https://sphinxcontrib-needs.readthedocs.io/en/latest/services/index.html>`_
+  and
+  `others
+  <https://sphinxcontrib-needs.readthedocs.io/en/latest/index.html>`_.
 
 StrictDoc Requirements
 ======================
@@ -436,8 +487,7 @@ Modeling capability
 
 StrictDoc's Data Model shall accommodate for maximum possible standard requirement document formats.
 
-
-Examples of standard requirements documents include but are not limited to:
+**Comment:** Examples of standard requirements documents include but are not limited to:
 
 - Non-nested requirement lists split by categories
   (e.g., Functional Requirements, Interface Requirements, Performance Requirements, etc.)
@@ -501,10 +551,30 @@ Comments
 
 Requirement item might have one or more comments.
 
+Special fields
+^^^^^^^^^^^^^^
+
+StrictDoc shall support customization of the default Requirement's grammar with special fields.
+
+**Comment:** Examples:
+
+- RAIT compliance fields (Review of design, analysis, inspection, testing)
+- Automotive Safety Integrity Level level (ASIL).
+
 Composite Requirement item
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 TBD
+
+Links
+~~~~~
+
+StrictDoc's data model shall support linking document content nodes to each other.
+
+Parent links
+^^^^^^^^^^^^
+
+StrictDoc's data model shall support linking a requirement to another requirement using PARENT link.
 
 SDOC file format
 ----------------
@@ -566,6 +636,11 @@ StrictDoc shall export deep traceability document.
 
 - *[SDOC-HIGH-REQS-TRACEABILITY]* :ref:`SDOC-HIGH-REQS-TRACEABILITY`
 
+Left panel: Table of contents
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+StrictDoc shall export all HTML pages with Table of Contents.
+
 PDF Export
 ~~~~~~~~~~
 
@@ -573,6 +648,11 @@ Sphinx documentation generator
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 StrictDoc shall support exporting documents to Sphinx/RST format.
+
+Excel Export
+~~~~~~~~~~~~
+
+StrictDoc shall support exporting documents to Excel format.
 
 Validation requirements
 -----------------------
@@ -618,7 +698,7 @@ SDoc grammar
 No indentation
 ~~~~~~~~~~~~~~
 
-SDoc grammar building blocks shall not allow any indentation.
+SDoc grammar's building blocks shall not allow any indentation.
 
 **Comment:** Rationale: Adding indentation to any of the fields does not scale well when the
 documents have deeply nested section structure as well as when the size of the
@@ -628,37 +708,6 @@ possible indentation issues.
 
 Roadmap
 =======
-
-In works
---------
-
-HTML Export
-~~~~~~~~~~~
-
-Left panel: Table of contents
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Left panel: Table of contents.
-
-Document page CSS: Proper markup
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Document page: make it look like a document.
-
-Table page CSS: Proper table
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Table page: make columns be always of the same size while respecting min-max widths.
-
-Traceability page CSS: Proper middle column document
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Traceability page CSS: Proper middle column document
-
-Deep Traceability page CSS: Improvements
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Deep Traceability page CSS: Improvements
 
 First public release
 --------------------
@@ -686,21 +735,13 @@ StrictDoc shall support it use as a Python library.
 **Comment:** Such a use allows a more fine-grained access to the StrictDoc's modules, such
 as Grammar, Import, Export classes, etc.
 
-Links
-~~~~~
-
-StrictDoc's data model shall support linking document content nodes to each other.
-
-**Comment:** Examples:
-- Link that references a section
-
 Export capabilities
 ~~~~~~~~~~~~~~~~~~~
 
-Excel Export
-^^^^^^^^^^^^
+CSV Import/Export
+^^^^^^^^^^^^^^^^^
 
-StrictDoc shall support exporting documents to Excel format.
+StrictDoc shall support exporting documents to CSV format.
 
 PlantUML Export
 ^^^^^^^^^^^^^^^
@@ -757,16 +798,6 @@ Validation: Section Levels
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Section levels must be properly nested.
-
-Custom fields
-~~~~~~~~~~~~~
-
-StrictDoc shall support customization of the default grammar with custom fields.
-
-**Comment:** Examples:
-
-- RAIT compliance fields (Review of design, analysis, inspection, testing)
-- Automotive Safety Integrity Level level (ASIL).
 
 Filtering by tags
 ~~~~~~~~~~~~~~~~~

@@ -49,9 +49,10 @@ class ExportAction:
 
         traceability_index = TraceabilityIndex.create(document_tree)
 
-        if "html" in formats:
+        if "html" in formats or "html-standalone" in formats:
             Path(output_html_root).mkdir(parents=True, exist_ok=True)
             HTMLGenerator.export_tree(
+                formats,
                 document_tree,
                 traceability_index,
                 output_html_root,

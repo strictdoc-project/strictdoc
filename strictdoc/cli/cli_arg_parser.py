@@ -1,7 +1,7 @@
 import argparse
 
 
-EXPORT_FORMATS = ["html", "rst", "excel"]
+EXPORT_FORMATS = ["html", "html-standalone", "rst", "excel"]
 
 
 def _check_formats(formats):

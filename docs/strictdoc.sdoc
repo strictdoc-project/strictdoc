@@ -16,10 +16,10 @@ Summary of StrictDoc features:
 - StrictDoc reads `*.sdoc` files and builds an in-memory representation of the
   document tree.
 - From this in-memory representation, StrictDoc can generate the documentation
-  into a number of formats including HTML, RST, and PDF.
-- The initial focus of the tool is modeling requirements and specifications
-  documents. Such documents consist of multiple statements like
-  "system X shall do Y" called requirements.
+  into a number of formats including HTML, RST, PDF, Excel.
+- The focus of the tool is modeling requirements and specifications documents.
+  Such documents consist of multiple statements like "system X shall do Y"
+  called requirements.
 - The requirements can be linked together to form the relationships, such as
   "parent-child", and from these connections, many useful features such as
   `Requirements Traceability <https://en.wikipedia.org/wiki/Requirements_traceability>`_
@@ -532,7 +532,7 @@ REFS:
   VALUE: SDOC-HIGH-REQS-MANAGEMENT
 TITLE: Modeling capability
 STATEMENT: StrictDoc's Data Model shall accommodate for maximum possible standard requirement document formats.
-BODY: >>>
+COMMENT: >>>
 Examples of standard requirements documents include but are not limited to:
 
 - Non-nested requirement lists split by categories
@@ -590,6 +590,16 @@ STATEMENT: Requirement item might have one or more references.
 TITLE: Comments
 STATEMENT: Requirement item might have one or more comments.
 
+[REQUIREMENT]
+TITLE: Special fields
+STATEMENT: StrictDoc shall support customization of the default Requirement's grammar with special fields.
+COMMENT: >>>
+Examples:
+
+- RAIT compliance fields (Review of design, analysis, inspection, testing)
+- Automotive Safety Integrity Level level (ASIL).
+<<<
+
 [/SECTION]
 
 [SECTION]
@@ -601,6 +611,16 @@ TBD
 [/FREETEXT]
 
 [/SECTION]
+
+[COMPOSITE-REQUIREMENT]
+TITLE: Links
+STATEMENT: StrictDoc's data model shall support linking document content nodes to each other.
+
+[REQUIREMENT]
+TITLE: Parent links
+STATEMENT: StrictDoc's data model shall support linking a requirement to another requirement using PARENT link.
+
+[/COMPOSITE-REQUIREMENT]
 
 [/SECTION]
 
@@ -656,6 +676,10 @@ REFS:
 TITLE: Single document: Deep traceability
 STATEMENT: StrictDoc shall export deep traceability document.
 
+[REQUIREMENT]
+TITLE: Left panel: Table of contents
+STATEMENT: StrictDoc shall export all HTML pages with Table of Contents.
+
 [/SECTION]
 
 [SECTION]
@@ -667,6 +691,10 @@ TITLE: Sphinx documentation generator
 STATEMENT: StrictDoc shall support exporting documents to Sphinx/RST format.
 
 [/SECTION]
+
+[REQUIREMENT]
+TITLE: Excel Export
+STATEMENT: StrictDoc shall support exporting documents to Excel format.
 
 [/SECTION]
 
@@ -740,38 +768,6 @@ TITLE: Roadmap
 
 [SECTION]
 LEVEL: 2
-TITLE: In works
-
-[SECTION]
-LEVEL: 3
-TITLE: HTML Export
-
-[REQUIREMENT]
-TITLE: Left panel: Table of contents
-STATEMENT: Left panel: Table of contents.
-
-[REQUIREMENT]
-TITLE: Document page CSS: Proper markup
-STATEMENT: Document page: make it look like a document.
-
-[REQUIREMENT]
-TITLE: Table page CSS: Proper table
-STATEMENT: Table page: make columns be always of the same size while respecting min-max widths.
-
-[REQUIREMENT]
-TITLE: Traceability page CSS: Proper middle column document
-STATEMENT: Traceability page CSS: Proper middle column document
-
-[REQUIREMENT]
-TITLE: Deep Traceability page CSS: Improvements
-STATEMENT: Deep Traceability page CSS: Improvements
-
-[/SECTION]
-
-[/SECTION]
-
-[SECTION]
-LEVEL: 2
 TITLE: First public release
 
 [REQUIREMENT]
@@ -799,14 +795,6 @@ Such a use allows a more fine-grained access to the StrictDoc's modules, such
 as Grammar, Import, Export classes, etc.
 <<<
 
-[REQUIREMENT]
-TITLE: Links
-STATEMENT: StrictDoc's data model shall support linking document content nodes to each other.
-COMMENT: >>>
-Examples:
-- Link that references a section
-<<<
-
 [SECTION]
 LEVEL: 3
 TITLE: Export capabilities
@@ -814,10 +802,6 @@ TITLE: Export capabilities
 [REQUIREMENT]
 TITLE: CSV Import/Export
 STATEMENT: StrictDoc shall support exporting documents to CSV format.
-
-[REQUIREMENT]
-TITLE: Excel Export
-STATEMENT: StrictDoc shall support exporting documents to Excel format.
 
 [REQUIREMENT]
 TITLE: PlantUML Export
@@ -872,16 +856,6 @@ TITLE: Validation: Section Levels
 STATEMENT: Section levels must be properly nested.
 
 [/SECTION]
-
-[REQUIREMENT]
-TITLE: Custom fields
-STATEMENT: StrictDoc shall support customization of the default grammar with custom fields.
-COMMENT: >>>
-Examples:
-
-- RAIT compliance fields (Review of design, analysis, inspection, testing)
-- Automotive Safety Integrity Level level (ASIL).
-<<<
 
 [REQUIREMENT]
 TITLE: Filtering by tags

@@ -262,6 +262,7 @@ article ol {
 
 /* object */
 
+article img,
 article object {
   width: 100%;
   padding: 1em;

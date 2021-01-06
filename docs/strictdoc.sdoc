@@ -294,7 +294,58 @@ LEVEL: 2
 TITLE: StrictDoc and Sphinx-Needs
 
 [FREETEXT]
-TBD
+`Sphinx-Needs <https://sphinxcontrib-needs.readthedocs.io/en/latest/>`_ is a
+text-based requirements management system based on Sphinx. It is implemented
+as a Sphinx extension that extends the
+`reStructuredText (RST)
+<https://docutils.sourceforge.io/docs/user/rst/quickref.html>`_
+markup language with additional syntax for writing requirements documents.
+
+Sphinx-Needs was a great source of inspiration for the second version of
+StrictDoc which was first implemented as a Sphinx extension and then as a more
+independent library on top of `docutils <https://docutils.sourceforge.io/>`_
+that Sphinx uses for the underlying RST syntax processing work.
+
+The similarities between Sphinx-Needs and StrictDoc:
+
+- In contrast to Doorstop, both Sphinx-Needs and StrictDoc do not split a
+  document into many small files, one file per single requirement (see
+  discussion
+  `doorstop#401 <https://github.com/doorstop-dev/doorstop/issues/401>`_). Both
+  tools follow the "file per document" approach.
+- Sphinx-Needs has a
+  `well-developed language
+  <https://sphinxcontrib-needs.readthedocs.io/en/latest/directives/index.html>`_
+  based on custom RST directives, such
+  as `req::`, `spec::`, `needtable::`, etc. The RST document is parsed
+  by Sphinx/docutils into RST abstract syntax tree (AST) which allows creating
+  an object graph out for the documents and their requirements from the RST
+  document. StrictDoc uses textX for building an AST from a SDoc document.
+  Essentially, both Sphinx-Needs and StrictDoc works in a similar way but use
+  different markup languages and tooling for the job.
+
+The difference between Sphinx-Needs and StrictDoc:
+
+- RST tooling provided by Sphinx/docutils is very powerful, yet it can also be
+  rather limiting. The RST syntax and underlying docutils tooling do not allow
+  much flexibility needed for creating a language for defining requirements
+  using a custom and explicit grammar, a feature that became a cornerstone of
+  StrictDoc. This was a major reason why the third generation of
+  StrictDoc started with a migration from docutils to
+  `textX <https://github.com/textX/textX>`_ which is a
+  dedicated tool for creating custom Domain-Specific Languages. After the
+  migration to textX, StrictDoc is no longer restricted to the limitations of
+  the RST document, while it is still possible to generate SDoc files to RST
+  using StrictDoc and then further generate RST to HTML/PDF and other formats
+  using Sphinx.
+- Sphinx-Needs has an impressive list of config options and features that
+  StrictDoc is missing. Examples: Customizing the look of the requirements,
+  `Roles <https://sphinxcontrib-needs.readthedocs.io/en/latest/roles.html>`_,
+  `Services
+  <https://sphinxcontrib-needs.readthedocs.io/en/latest/services/index.html>`_
+  and
+  `others
+  <https://sphinxcontrib-needs.readthedocs.io/en/latest/index.html>`_.
 [/FREETEXT]
 
 [/SECTION]

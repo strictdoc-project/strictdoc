@@ -8,9 +8,13 @@ class DocumentHTMLGenerator:
     env.globals.update(isinstance=isinstance)
 
     @staticmethod
-    def export(document_tree, document, traceability_index,
-               markup_renderer,
-               link_renderer):
+    def export(
+        document_tree,
+        document,
+        traceability_index,
+        markup_renderer,
+        link_renderer,
+        standalone=False):
         output = ""
 
         template = DocumentHTMLGenerator.env.get_template('single_document/document.jinja.html')
@@ -18,6 +22,7 @@ class DocumentHTMLGenerator:
         output += template.render(document=document,
                                   traceability_index=traceability_index,
                                   link_renderer=link_renderer,
-                                  renderer=markup_renderer)
+                                  renderer=markup_renderer,
+                                  standalone=standalone)
 
         return output

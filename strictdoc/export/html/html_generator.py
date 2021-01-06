@@ -134,6 +134,20 @@ class HTMLGenerator:
         with open(document_out_file, "w") as file:
             file.write(document_content)
 
+        # Single Document pages (standalone)
+        document_content = DocumentHTMLGenerator.export(
+            document_tree,
+            document,
+            traceability_index,
+            markup_renderer,
+            link_renderer,
+            standalone=True
+        )
+
+        document_out_file = document_meta.get_html_doc_standalone_path()
+        with open(document_out_file, "w") as file:
+            file.write(document_content)
+
         # Single Document Table pages
         document_content = DocumentTableHTMLGenerator.export(
             document, traceability_index, markup_renderer, link_renderer

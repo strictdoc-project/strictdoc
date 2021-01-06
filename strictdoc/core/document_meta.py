@@ -16,6 +16,11 @@ class DocumentMeta:
         return "{}/{}.html".format(self.output_document_dir_full_path,
                                    self.document_filename_base)
 
+    def get_html_doc_standalone_path(self):
+        return "{}/{}.standalone.html".format(
+            self.output_document_dir_full_path, self.document_filename_base
+        )
+
     def get_html_table_path(self):
         return "{}/{} - TABLE.html".format(self.output_document_dir_full_path,
                                            self.document_filename_base)

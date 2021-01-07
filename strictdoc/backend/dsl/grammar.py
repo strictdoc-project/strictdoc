@@ -80,14 +80,14 @@ Requirement[noskipws]:
 ;
 
 CompositeRequirement[noskipws]:
-  '[COMPOSITE-REQUIREMENT]' '\n'
+  '[COMPOSITE_REQUIREMENT]' '\n'
 
   #{REQUIREMENT_FIELDS}
   
   requirements *= SpaceThenRequirement
 
   '\n'
-  '[/COMPOSITE-REQUIREMENT]' '\n'
+  '[/COMPOSITE_REQUIREMENT]' '\n'
 ;
 
 SpecialField[noskipws]:

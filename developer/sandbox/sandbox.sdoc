@@ -76,7 +76,7 @@ COMMENT: >>>
 Requirement #2 multiline comment
 <<<
 
-[COMPOSITE-REQUIREMENT]
+[COMPOSITE_REQUIREMENT]
 UID: REQ-003
 STATUS: Draft
 TAGS: Foo, Bar, Baz
@@ -106,6 +106,6 @@ COMMENT: >>>
 Requirement #3.2 multiline comment
 <<<
 
-[/COMPOSITE-REQUIREMENT]
+[/COMPOSITE_REQUIREMENT]
 
 [/SECTION]

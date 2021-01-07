@@ -255,7 +255,7 @@ NAME: Test Doc
 LEVEL: 1
 TITLE: Test Section
 
-[COMPOSITE-REQUIREMENT]
+[COMPOSITE_REQUIREMENT]
 STATEMENT: Some parent requirement statement
 BODY: >>>
 This is a body part 1
@@ -271,7 +271,7 @@ This is a child body part 2
 This is a child body part 3
 <<<
 
-[/COMPOSITE-REQUIREMENT]
+[/COMPOSITE_REQUIREMENT]
 
 [/SECTION]
 """.lstrip()
@@ -306,13 +306,13 @@ NAME: Test Doc
 LEVEL: 1
 TITLE: Test Section
 
-[COMPOSITE-REQUIREMENT]
+[COMPOSITE_REQUIREMENT]
 STATEMENT: 1.1 composite req statement
 BODY: >>>
 body composite 1.1
 <<<
 
-[COMPOSITE-REQUIREMENT]
+[COMPOSITE_REQUIREMENT]
 STATEMENT: 1.1.1 composite req statement
 BODY: >>>
 body composite 1.1.1
@@ -324,9 +324,9 @@ BODY: >>>
 body 1.1.1.1
 <<<
 
-[/COMPOSITE-REQUIREMENT]
+[/COMPOSITE_REQUIREMENT]
 
-[/COMPOSITE-REQUIREMENT]
+[/COMPOSITE_REQUIREMENT]
 
 [/SECTION]
 """.lstrip()
@@ -383,7 +383,7 @@ SPECIAL_FIELDS:
 - NAME: ECSS_VERIFICATION
   TYPE: String
 
-[COMPOSITE-REQUIREMENT]
+[COMPOSITE_REQUIREMENT]
 SPECIAL_FIELDS:
   ECSS_VERIFICATION: R,A,I,T
 STATEMENT: Some parent requirement statement
@@ -391,7 +391,7 @@ STATEMENT: Some parent requirement statement
 [REQUIREMENT]
 STATEMENT: Some child requirement statement
 
-[/COMPOSITE-REQUIREMENT]
+[/COMPOSITE_REQUIREMENT]
 """.lstrip()
 
     reader = SDReader()

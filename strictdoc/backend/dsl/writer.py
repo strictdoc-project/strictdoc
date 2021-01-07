@@ -67,7 +67,7 @@ class SDWriter:
                 closing_tags.append((TAG.SECTION, content_node.ng_level))
             elif isinstance(content_node, Requirement):
                 if isinstance(content_node, CompositeRequirement):
-                    output += "[COMPOSITE-REQUIREMENT]\n"
+                    output += "[COMPOSITE_REQUIREMENT]\n"
                     closing_tags.append(
                         (TAG.COMPOSITE_REQUIREMENT, content_node.ng_level)
                     )
@@ -191,7 +191,7 @@ class SDWriter:
             output += "\n"
         if closing_tag == TAG.COMPOSITE_REQUIREMENT:
             output += "\n"
-            output += "[/COMPOSITE-REQUIREMENT]"
+            output += "[/COMPOSITE_REQUIREMENT]"
             output += "\n"
         return output
 

@@ -543,7 +543,7 @@ and specifications management tool TBD.
 TITLE: Command-line interface
 STATEMENT: StrictDoc shall provide a command-line interface.
 
-[COMPOSITE-REQUIREMENT]
+[COMPOSITE_REQUIREMENT]
 TITLE: Platform support
 STATEMENT: StrictDoc shall work on all major platforms.
 
@@ -559,7 +559,7 @@ STATEMENT: StrictDoc shall work on Linux systems.
 TITLE: Windows support
 STATEMENT: StrictDoc shall work on Windows systems.
 
-[/COMPOSITE-REQUIREMENT]
+[/COMPOSITE_REQUIREMENT]
 
 [REQUIREMENT]
 TITLE: Requirements validation
@@ -648,7 +648,7 @@ STATEMENT: Requirement item shall have a statement.
 TITLE: Content body
 STATEMENT: Requirement item might have an content body.
 
-[COMPOSITE-REQUIREMENT]
+[COMPOSITE_REQUIREMENT]
 TITLE: UID identifier
 STATEMENT: Requirement item might have an UID identifier.
 
@@ -667,7 +667,7 @@ Some examples:
 - SAVOIR.OBC.PM.80 (SAVOIR)
 <<<
 
-[/COMPOSITE-REQUIREMENT]
+[/COMPOSITE_REQUIREMENT]
 
 [REQUIREMENT]
 TITLE: Title
@@ -703,7 +703,7 @@ TBD
 
 [/SECTION]
 
-[COMPOSITE-REQUIREMENT]
+[COMPOSITE_REQUIREMENT]
 TITLE: Links
 STATEMENT: StrictDoc's data model shall support linking document content nodes to each other.
 
@@ -711,7 +711,7 @@ STATEMENT: StrictDoc's data model shall support linking document content nodes t
 TITLE: Parent links
 STATEMENT: StrictDoc's data model shall support linking a requirement to another requirement using PARENT link.
 
-[/COMPOSITE-REQUIREMENT]
+[/COMPOSITE_REQUIREMENT]
 
 [/SECTION]
 

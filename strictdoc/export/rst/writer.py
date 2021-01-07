@@ -101,7 +101,7 @@ class RSTWriter:
             output += "**Parents:**"
             output += "\n\n"
             for reference in section_content.references:
-                output += "- *[{}]* ".format(reference.path)
+                output += "- ``[{}]`` ".format(reference.path)
                 output += ":ref:`{}`".format(reference.path)
                 output += "\n"
             output += "\n"
@@ -112,7 +112,7 @@ class RSTWriter:
             for child_requirement in self.index.get_children_requirements(
                 section_content
             ):
-                output += "- *[{}]* ".format(child_requirement.uid)
+                output += "- ``[{}]`` ".format(child_requirement.uid)
                 output += ":ref:`{}`".format(child_requirement.uid)
                 output += "\n"
             output += "\n"

@@ -376,7 +376,7 @@ hundreds or thousands of requirements.
 
 **Children:**
 
-- *[SDOC-HIGH-REQS-MANAGEMENT]* :ref:`SDOC-HIGH-REQS-MANAGEMENT`
+- ``[SDOC-HIGH-REQS-MANAGEMENT]`` :ref:`SDOC-HIGH-REQS-MANAGEMENT`
 
 .. _GOAL-2-REDUCE-DOCUMENTATION-HAZARDS:
 
@@ -439,11 +439,11 @@ StrictDoc shall enable requirements management.
 
 **Parents:**
 
-- *[GOAL-1-TOOL-SUPPORT]* :ref:`GOAL-1-TOOL-SUPPORT`
+- ``[GOAL-1-TOOL-SUPPORT]`` :ref:`GOAL-1-TOOL-SUPPORT`
 
 **Children:**
 
-- *[SDOC-DM-001]* :ref:`SDOC-DM-001`
+- ``[SDOC-DM-001]`` :ref:`SDOC-DM-001`
 
 .. _SDOC-HIGH-DATA-MODEL:
 
@@ -572,11 +572,11 @@ StrictDoc's Data Model shall accommodate for maximum possible standard requireme
 
 **Parents:**
 
-- *[SDOC-HIGH-REQS-MANAGEMENT]* :ref:`SDOC-HIGH-REQS-MANAGEMENT`
+- ``[SDOC-HIGH-REQS-MANAGEMENT]`` :ref:`SDOC-HIGH-REQS-MANAGEMENT`
 
 **Children:**
 
-- *[SDOC-FMT-001]* :ref:`SDOC-FMT-001`
+- ``[SDOC-FMT-001]`` :ref:`SDOC-FMT-001`
 
 Section item
 ~~~~~~~~~~~~
@@ -668,7 +668,7 @@ SDOC format shall support encoding the Strict Doc Data Model in a plain-text hum
 
 **Parents:**
 
-- *[SDOC-DM-001]* :ref:`SDOC-DM-001`
+- ``[SDOC-DM-001]`` :ref:`SDOC-DM-001`
 
 Grammar
 ~~~~~~~
@@ -703,7 +703,7 @@ StrictDoc shall export 1-level traceability document.
 
 **Parents:**
 
-- *[SDOC-HIGH-REQS-TRACEABILITY]* :ref:`SDOC-HIGH-REQS-TRACEABILITY`
+- ``[SDOC-HIGH-REQS-TRACEABILITY]`` :ref:`SDOC-HIGH-REQS-TRACEABILITY`
 
 Single document: Deep traceability
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -712,7 +712,7 @@ StrictDoc shall export deep traceability document.
 
 **Parents:**
 
-- *[SDOC-HIGH-REQS-TRACEABILITY]* :ref:`SDOC-HIGH-REQS-TRACEABILITY`
+- ``[SDOC-HIGH-REQS-TRACEABILITY]`` :ref:`SDOC-HIGH-REQS-TRACEABILITY`
 
 Left panel: Table of contents
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

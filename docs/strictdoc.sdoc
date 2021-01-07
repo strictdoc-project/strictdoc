@@ -21,9 +21,9 @@ Summary of StrictDoc features:
   Such documents consist of multiple statements like "system X shall do Y"
   called requirements.
 - The requirements can be linked together to form the relationships, such as
-  "parent-child", and from these connections, many useful features such as
+  "parent-child", and from these connections, many useful features, such as
   `Requirements Traceability <https://en.wikipedia.org/wiki/Requirements_traceability>`_
-  and Documentation Coverage can be derived.
+  and Documentation Coverage, can be derived.
 
 **Warning:** The StrictDoc project is still under construction. See the Roadmap
 section to get an idea of the overall project direction.
@@ -234,7 +234,7 @@ is generated this way, see the Invoke task:
 
 [SECTION]
 LEVEL: 2
-TITLE: PDF export via Sphinx/Latex
+TITLE: PDF export via Sphinx/LaTeX
 
 [FREETEXT]
 
@@ -274,7 +274,7 @@ TITLE: Parallelization
 To improve performance for the large document trees (1000+ requirements),
 StrictDoc parallelizes reading and generation of the documents using
 process-based parallelization: `multiprocessing.Pool` and
-`multiprocessing.Queue()`.
+`multiprocessing.Queue`.
 
 Parallelization improves performance but can also complicate understanding
 behavior of the code if something goes wrong.
@@ -287,8 +287,8 @@ To disable parallelization use the `--no-parallelization` option:
 
 **Note:** Currently, only the generation of HTML documents is parallelized, so
 this option will only have effect on the HTML export. All other export options
-run from the main thread. Reading of the SDoc documents is parallelized for all
-export options and is disabled with this option as well.
+are run from the main thread. Reading of the SDoc documents is parallelized for
+all export options and is disabled with this option as well.
 [/FREETEXT]
 
 [/SECTION]
@@ -828,7 +828,7 @@ Sphinx and Docutils shall be used for the following capabilities:
 
 - Support of Restructured Text (reST) format
 - Generation of RST documents into HTML
-- Generation of RST documents into PDF using Latex
+- Generation of RST documents into PDF using LaTeX
 - Generating documentation websites using Sphinx
 <<<
 

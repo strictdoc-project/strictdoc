@@ -16,9 +16,9 @@ Summary of StrictDoc features:
   Such documents consist of multiple statements like "system X shall do Y"
   called requirements.
 - The requirements can be linked together to form the relationships, such as
-  "parent-child", and from these connections, many useful features such as
+  "parent-child", and from these connections, many useful features, such as
   `Requirements Traceability <https://en.wikipedia.org/wiki/Requirements_traceability>`_
-  and Documentation Coverage can be derived.
+  and Documentation Coverage, can be derived.
 
 **Warning:** The StrictDoc project is still under construction. See the Roadmap
 section to get an idea of the overall project direction.
@@ -128,20 +128,98 @@ The following command creates an HTML export:
 
 .. code-block:: text
 
-    strictdoc export docs/ --output-dir output-html
+    strictdoc export docs/ --formats=html --output-dir output-html
 
-Example: This documentation is exported by StrictDoc to HTML:
+**Example:** This documentation is exported by StrictDoc to HTML:
 `StrictDoc HTML export <https://strictdoc.readthedocs.io/en/latest/strictdoc-html>`_.
+
+**Note:** The options `--formats=html` and `--output-dir output-html` can be
+skipped because HTML export is a default export option and the default output
+folder is `output`.
+
+Standalone HTML pages (experimental)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following command creates a normal HTML export with all pages having their
+assets embedded into HTML using Data URI / Base64:
+
+.. code-block:: text
+
+    strictdoc export docs/ --formats=html-standalone --output-dir output-html
+
+The generated document are self-contained HTML pages that can be shared via
+email as single files. This option might be especially useful if you work with
+a single document instead of a documentation tree with multiple documents.
 
 HTML export via Sphinx
 ----------------------
 
-TBD
+The following command creates an RST export:
 
-PDF export via Sphinx/Latex
+.. code-block:: text
+
+    strictdoc export YourDoc.sdoc --formats=rst --output-dir output
+
+The created RST files can be copied to a project created using Sphinx, see
+`Getting Started with Sphinx <https://docs.readthedocs.io/en/stable/intro/getting-started-with-sphinx.html>`_.
+
+.. code-block:: text
+
+    cp -v output/YourDoc.rst docs/sphinx/source/
+    cd docs/sphinx && make html
+
+`StrictDoc's own Sphinx/HTML documentation
+<https://strictdoc.readthedocs.io/en/latest/>`_
+is generated this way, see the Invoke task:
+`invoke sphinx <https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48>`_.
+
+PDF export via Sphinx/LaTeX
 ---------------------------
 
-TBD
+
+The following command creates an RST export:
+
+.. code-block:: text
+
+    strictdoc export YourDoc.sdoc --formats=rst --output-dir output
+
+The created RST files can be copied to a project created using Sphinx, see
+`Getting Started with Sphinx <https://docs.readthedocs.io/en/stable/intro/getting-started-with-sphinx.html>`_.
+
+.. code-block:: text
+
+    cp -v output/YourDoc.rst docs/sphinx/source/
+    cd docs/sphinx && make pdf
+
+`StrictDoc's own Sphinx/PDF documentation
+<https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_
+is generated this way, see the Invoke task:
+`invoke sphinx <https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48>`_.
+
+Options
+=======
+
+Parallelization
+---------------
+
+To improve performance for the large document trees (1000+ requirements),
+StrictDoc parallelizes reading and generation of the documents using
+process-based parallelization: `multiprocessing.Pool` and
+`multiprocessing.Queue`.
+
+Parallelization improves performance but can also complicate understanding
+behavior of the code if something goes wrong.
+
+To disable parallelization use the `--no-parallelization` option:
+
+.. code-block:: text
+
+    strictdoc export --no-parallelization docs/
+
+**Note:** Currently, only the generation of HTML documents is parallelized, so
+this option will only have effect on the HTML export. All other export options
+are run from the main thread. Reading of the SDoc documents is parallelized for
+all export options and is disabled with this option as well.
 
 StrictDoc and other tools
 =========================
@@ -689,7 +767,7 @@ Sphinx and Docutils shall be used for the following capabilities:
 
 - Support of Restructured Text (reST) format
 - Generation of RST documents into HTML
-- Generation of RST documents into PDF using Latex
+- Generation of RST documents into PDF using LaTeX
 - Generating documentation websites using Sphinx
 
 SDoc grammar

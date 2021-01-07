@@ -50,7 +50,7 @@ def sphinx(c):
         c,
         oneline_command(
             """
-            python3 strictdoc/cli/main.py export docs --output-dir output/sphinx
+            python3 strictdoc/cli/main.py export docs --formats=html,rst --output-dir output/sphinx
             """
         ),
     )

@@ -1,0 +1,13 @@
+col {
+  width: auto !important;
+}
+/* text looks vertically centered in cells */
+td {
+  vertical-align: middle;
+  border: 1px solid #ccc;
+  padding: 3px 6px;
+}
+td p {
+  /* without this vertical alignment doesn't work :( */
+  display: inline;
+}

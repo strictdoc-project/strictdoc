@@ -362,7 +362,12 @@ Project goals
 Software support for writing requirements and specifications documents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``[GOAL-1-TOOL-SUPPORT]``
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - GOAL-1-TOOL-SUPPORT
 
 There shall exist free and lightweight yet capable software for writing
 requirements and specifications documents
@@ -383,7 +388,12 @@ hundreds or thousands of requirements.
 Reduce documentation hazards
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``[GOAL-2-REDUCE-DOCUMENTATION-HAZARDS]``
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - GOAL-2-REDUCE-DOCUMENTATION-HAZARDS
 
 There shall exist no (or less) opportunity for writing incorrect or inconsistent
 documentation.
@@ -404,7 +414,12 @@ and writing technical documentation.
 No (or less) run-away documentation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``[GOAL-3-NO-RUNAWAY-DOCUMENTATION]``
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - GOAL-3-NO-RUNAWAY-DOCUMENTATION
 
 Software shall support engineers in keeping documentation up-to-date.
 
@@ -417,7 +432,12 @@ documents and documentation trees.
 Change management
 ~~~~~~~~~~~~~~~~~
 
-``[GOAL-4-CHANGE-MANAGEMENT]``
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - GOAL-4-CHANGE-MANAGEMENT
 
 Software shall provide capabilities for change management and impact assessment.
 
@@ -433,7 +453,12 @@ High-level requirements
 Requirements management
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-``[SDOC-HIGH-REQS-MANAGEMENT]``
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-HIGH-REQS-MANAGEMENT
 
 StrictDoc shall enable requirements management.
 
@@ -450,7 +475,12 @@ StrictDoc shall enable requirements management.
 Data model
 ~~~~~~~~~~
 
-``[SDOC-HIGH-DATA-MODEL]``
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-HIGH-DATA-MODEL
 
 StrictDoc shall be based on a well-defined data model.
 
@@ -515,7 +545,12 @@ StrictDoc shall allow working with large documents and document trees containing
 Traceability
 ~~~~~~~~~~~~
 
-``[SDOC-HIGH-REQS-TRACEABILITY]``
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-HIGH-REQS-TRACEABILITY
 
 StrictDoc shall support traceability of requirements.
 
@@ -537,7 +572,12 @@ Implementation requirements
 Parallelization
 ~~~~~~~~~~~~~~~
 
-``[SDOC-IMPL-PARAL]``
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-IMPL-PARAL
 
 StrictDoc shall enable parallelization of the time-consuming parts of the code.
 
@@ -546,7 +586,12 @@ StrictDoc shall enable parallelization of the time-consuming parts of the code.
 Incremental generation
 ~~~~~~~~~~~~~~~~~~~~~~
 
-``[SDOC-IMPL-INCREMENTAL]``
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-IMPL-INCREMENTAL
 
 StrictDoc shall enable incremental generation of the documents.
 
@@ -561,7 +606,12 @@ Data model
 Modeling capability
 ~~~~~~~~~~~~~~~~~~~
 
-``[SDOC-DM-001]``
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-DM-001
 
 StrictDoc's Data Model shall accommodate for maximum possible standard requirement document formats.
 
@@ -662,7 +712,12 @@ SDOC file format
 Primary text implementation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``[SDOC-FMT-001]``
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-FMT-001
 
 SDOC format shall support encoding the Strict Doc Data Model in a plain-text human readable form.
 
@@ -929,4 +984,6 @@ Web server and editable HTML pages
 
 StrictDoc shall provide a web server that serves as a StrictDoc backend for
 reading and writing SDoc files.
+
+
 

@@ -985,5 +985,3 @@ Web server and editable HTML pages
 StrictDoc shall provide a web server that serves as a StrictDoc backend for
 reading and writing SDoc files.
 
-
-

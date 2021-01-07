@@ -300,3 +300,7 @@ html_context = {
         '_static/theme_overrides.css',
     ],
 }
+html_theme_options = {
+    "project_nav_name": "StrictDoc",
+}
+html_sidebars = { '**': ['globaltoc.html', 'searchbox.html'] }

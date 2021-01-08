@@ -2,7 +2,6 @@
 NAME: StrictDoc
 
 [SECTION]
-LEVEL: 1
 TITLE: Introduction
 
 [FREETEXT]
@@ -32,7 +31,6 @@ section to get an idea of the overall project direction.
 [/SECTION]
 
 [SECTION]
-LEVEL: 1
 TITLE: Examples
 
 [FREETEXT]
@@ -62,11 +60,9 @@ which is written using StrictDoc:
 [/SECTION]
 
 [SECTION]
-LEVEL: 1
 TITLE: Getting started
 
 [SECTION]
-LEVEL: 2
 TITLE: Requirements
 
 [FREETEXT]
@@ -77,7 +73,6 @@ TITLE: Requirements
 [/SECTION]
 
 [SECTION]
-LEVEL: 2
 TITLE: Installing StrictDoc as a Pip package
 
 [FREETEXT]
@@ -89,7 +84,6 @@ TITLE: Installing StrictDoc as a Pip package
 [/SECTION]
 
 [SECTION]
-LEVEL: 2
 TITLE: Installing StrictDoc from GitHub (development)
 
 [FREETEXT]
@@ -118,7 +112,6 @@ StrictDoc can also be developed and run without Poetry:
 [/SECTION]
 
 [SECTION]
-LEVEL: 2
 TITLE: Hello world
 
 [FREETEXT]
@@ -133,7 +126,6 @@ TITLE: Hello world
 [/SECTION]
 
 [SECTION]
-LEVEL: 1
 TITLE: SDoc syntax
 
 [FREETEXT]
@@ -160,11 +152,9 @@ This documentation is written using StrictDoc. Here is the source file:
 [/SECTION]
 
 [SECTION]
-LEVEL: 1
 TITLE: Export options
 
 [SECTION]
-LEVEL: 2
 TITLE: HTML documentation tree by StrictDoc
 
 [FREETEXT]
@@ -185,7 +175,6 @@ folder is `output`.
 [/FREETEXT]
 
 [SECTION]
-LEVEL: 3
 TITLE: Standalone HTML pages (experimental)
 
 [FREETEXT]
@@ -206,7 +195,6 @@ a single document instead of a documentation tree with multiple documents.
 [/SECTION]
 
 [SECTION]
-LEVEL: 2
 TITLE: HTML export via Sphinx
 
 [FREETEXT]
@@ -233,7 +221,6 @@ is generated this way, see the Invoke task:
 [/SECTION]
 
 [SECTION]
-LEVEL: 2
 TITLE: PDF export via Sphinx/LaTeX
 
 [FREETEXT]
@@ -263,11 +250,9 @@ is generated this way, see the Invoke task:
 [/SECTION]
 
 [SECTION]
-LEVEL: 1
 TITLE: Options
 
 [SECTION]
-LEVEL: 2
 TITLE: Parallelization
 
 [FREETEXT]
@@ -296,11 +281,9 @@ all export options and is disabled with this option as well.
 [/SECTION]
 
 [SECTION]
-LEVEL: 1
 TITLE: StrictDoc and other tools
 
 [SECTION]
-LEVEL: 2
 TITLE: StrictDoc and Doorstop
 
 [FREETEXT]
@@ -356,7 +339,6 @@ to/from Doorstop format.
 [/SECTION]
 
 [SECTION]
-LEVEL: 2
 TITLE: StrictDoc and Sphinx
 
 [FREETEXT]
@@ -381,7 +363,6 @@ website by readthedocs which uses Sphinx under the hood. The
 [/SECTION]
 
 [SECTION]
-LEVEL: 2
 TITLE: StrictDoc and Sphinx-Needs
 
 [FREETEXT]
@@ -444,11 +425,9 @@ The difference between Sphinx-Needs and StrictDoc:
 [/SECTION]
 
 [SECTION]
-LEVEL: 1
 TITLE: StrictDoc Requirements
 
 [SECTION]
-LEVEL: 2
 TITLE: Project goals
 
 [REQUIREMENT]
@@ -511,7 +490,6 @@ requires a full revision of its requirements TBD.
 [/SECTION]
 
 [SECTION]
-LEVEL: 2
 TITLE: High-level requirements
 
 [REQUIREMENT]
@@ -593,7 +571,6 @@ STATEMENT: StrictDoc shall always be free and open source software.
 [/SECTION]
 
 [SECTION]
-LEVEL: 2
 TITLE: Implementation requirements
 
 [REQUIREMENT]
@@ -613,7 +590,6 @@ documents and files.
 [/SECTION]
 
 [SECTION]
-LEVEL: 2
 TITLE: Data model
 
 [REQUIREMENT]
@@ -631,13 +607,11 @@ Examples of standard requirements documents include but are not limited to:
 <<<
 
 [SECTION]
-LEVEL: 3
 TITLE: Section item
 
 [/SECTION]
 
 [SECTION]
-LEVEL: 3
 TITLE: Requirement item
 
 [REQUIREMENT]
@@ -694,7 +668,6 @@ Examples:
 [/SECTION]
 
 [SECTION]
-LEVEL: 3
 TITLE: Composite Requirement item
 
 [FREETEXT]
@@ -716,7 +689,6 @@ STATEMENT: StrictDoc's data model shall support linking a requirement to another
 [/SECTION]
 
 [SECTION]
-LEVEL: 2
 TITLE: SDOC file format
 
 [REQUIREMENT]
@@ -738,11 +710,9 @@ STATEMENT: SDOC format shall allow type-safe encoding of requirement documents.
 [/SECTION]
 
 [SECTION]
-LEVEL: 2
 TITLE: Document Generators
 
 [SECTION]
-LEVEL: 3
 TITLE: HTML Export
 
 [REQUIREMENT]
@@ -774,7 +744,6 @@ STATEMENT: StrictDoc shall export all HTML pages with Table of Contents.
 [/SECTION]
 
 [SECTION]
-LEVEL: 3
 TITLE: PDF Export
 
 [REQUIREMENT]
@@ -790,7 +759,6 @@ STATEMENT: StrictDoc shall support exporting documents to Excel format.
 [/SECTION]
 
 [SECTION]
-LEVEL: 2
 TITLE: Validation requirements
 
 [REQUIREMENT]
@@ -803,11 +771,9 @@ COMMENT: First candidate: Table of contents and its nested ``<ul>/<li>`` items.
 [/SECTION]
 
 [SECTION]
-LEVEL: 1
 TITLE: Design decisions
 
 [SECTION]
-LEVEL: 2
 TITLE: Building blocks
 
 [REQUIREMENT]
@@ -835,7 +801,6 @@ Sphinx and Docutils shall be used for the following capabilities:
 [/SECTION]
 
 [SECTION]
-LEVEL: 2
 TITLE: SDoc grammar
 
 [REQUIREMENT]
@@ -854,11 +819,9 @@ possible indentation issues.
 [/SECTION]
 
 [SECTION]
-LEVEL: 1
 TITLE: Roadmap
 
 [SECTION]
-LEVEL: 2
 TITLE: First public release
 
 [REQUIREMENT]
@@ -875,7 +838,6 @@ STATEMENT: StrictDoc shall ensure that each UID used in a document tree is uniqu
 [/SECTION]
 
 [SECTION]
-LEVEL: 2
 TITLE: Backlog
 
 [REQUIREMENT]
@@ -887,7 +849,6 @@ as Grammar, Import, Export classes, etc.
 <<<
 
 [SECTION]
-LEVEL: 3
 TITLE: Export capabilities
 
 [REQUIREMENT]
@@ -921,7 +882,6 @@ STATEMENT: StrictDoc shall support rendering text/code blocks into RST syntax.
 [/SECTION]
 
 [SECTION]
-LEVEL: 3
 TITLE: Traceability and coverage
 
 [REQUIREMENT]
@@ -939,7 +899,6 @@ STATEMENT: StrictDoc shall generate requirements coverage information.
 [/SECTION]
 
 [SECTION]
-LEVEL: 3
 TITLE: Validations and testing
 
 [REQUIREMENT]
@@ -953,7 +912,6 @@ TITLE: Filtering by tags
 STATEMENT: StrictDoc shall support filtering filtering by tags.
 
 [SECTION]
-LEVEL: 3
 TITLE: Options
 
 [REQUIREMENT]
@@ -975,7 +933,6 @@ STATEMENT: StrictDoc shall support config option `display_requirement_uids`.
 [/SECTION]
 
 [SECTION]
-LEVEL: 3
 TITLE: Advanced
 
 [REQUIREMENT]

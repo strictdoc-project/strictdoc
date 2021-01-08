@@ -36,7 +36,6 @@ def test_010_multiple_sections():
 NAME: Test Doc
 
 [SECTION]
-LEVEL: 1
 TITLE: Test Section
 
 [REQUIREMENT]
@@ -49,7 +48,6 @@ This is a statement 3
 [/SECTION]
 
 [SECTION]
-LEVEL: 1
 TITLE: Test Section
 
 [REQUIREMENT]
@@ -100,7 +98,6 @@ def test_030_multiline_statement():
 NAME: Test Doc
 
 [SECTION]
-LEVEL: 1
 TITLE: Test Section
 
 [REQUIREMENT]
@@ -139,7 +136,6 @@ def test_032_multiline_body():
 NAME: Test Doc
 
 [SECTION]
-LEVEL: 1
 TITLE: Test Section
 
 [REQUIREMENT]
@@ -179,7 +175,6 @@ def test_036_rationale_singleline():
 NAME: Test Doc
 
 [SECTION]
-LEVEL: 1
 TITLE: Test Section
 
 [REQUIREMENT]
@@ -212,7 +207,6 @@ def test_037_rationale_multiline():
 NAME: Test Doc
 
 [SECTION]
-LEVEL: 1
 TITLE: Test Section
 
 [REQUIREMENT]
@@ -252,7 +246,6 @@ def test_040_composite_requirement_1_level():
 NAME: Test Doc
 
 [SECTION]
-LEVEL: 1
 TITLE: Test Section
 
 [COMPOSITE_REQUIREMENT]
@@ -303,7 +296,6 @@ def test_042_composite_requirement_2_level():
 NAME: Test Doc
 
 [SECTION]
-LEVEL: 1
 TITLE: Test Section
 
 [COMPOSITE_REQUIREMENT]
@@ -420,7 +412,6 @@ SPECIAL_FIELDS:
   TYPE: String
 
 [SECTION]
-LEVEL: 1
 TITLE: Test Section
 
 [REQUIREMENT]

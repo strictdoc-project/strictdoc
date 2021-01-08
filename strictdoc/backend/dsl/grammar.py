@@ -52,7 +52,7 @@ ConfigSpecialField[noskipws]:
 Section[noskipws]:
   '[SECTION]' 
   '\n'
-  'LEVEL: ' level = /[1-6]/ '\n'
+  ('LEVEL: ' level = /[1-6]/ '\n')?
   'TITLE: ' title = /.*$/ '\n'
   free_texts *= SpaceThenFreeText
   section_contents *= SectionOrRequirement

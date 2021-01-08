@@ -1,9 +1,8 @@
-import os
 import traceback
 from functools import partial
 from typing import Optional
 
-from textx import metamodel_from_str, TextXSemanticError
+from textx import metamodel_from_str
 from textx.scoping.tools import get_location
 
 from strictdoc.backend.dsl.document_reference import DocumentReference
@@ -36,11 +35,28 @@ DOCUMENT_MODELS = [
 ]
 
 
+class ParseContext:
+    def __init__(self):
+        self.document_reference: DocumentReference = DocumentReference()
+        self.document_config: Optional[DocumentConfig] = None
+        self.at_least_one_section_level_warning = None
+
+
 def document_config_obj_processor(document_config, parse_context):
     parse_context.document_config = document_config
 
 
-def section_obj_processor(section):
+def section_obj_processor(section, parse_context: ParseContext):
+    if section.level and not parse_context.at_least_one_section_level_warning:
+        print("warning: [SECTION].LEVEL fields are deprecated."
+              " Section levels are calculated automatically."
+              " Simply remove 'LEVEL:' from all [SECTION] declarations.")
+        parse_context.at_least_one_section_level_warning = True
+
+    if section.parent.ng_level is None:
+        resolve_parents(section)
+    section.ng_level = section.parent.ng_level + 1
+    assert section.ng_level > 0
     section.parent.ng_sections.append(section)
 
 
@@ -63,14 +79,14 @@ def composite_requirement_obj_processor(composite_requirement, parse_context):
     )
 
     if isinstance(composite_requirement.parent, Section):
-        if not composite_requirement.parent.ng_level:
+        if composite_requirement.parent.ng_level is None:
             resolve_parents(composite_requirement)
-        assert composite_requirement.parent.level
-        composite_requirement.ng_level = composite_requirement.parent.level + 1
-
+        composite_requirement.ng_level = (
+            composite_requirement.parent.ng_level + 1
+        )
         composite_requirement.parent.ng_sections.append(composite_requirement)
     elif isinstance(composite_requirement.parent, CompositeRequirement):
-        if not composite_requirement.parent.ng_level:
+        if composite_requirement.parent.ng_level is None:
             resolve_parents(composite_requirement)
         assert composite_requirement.parent.ng_level
         composite_requirement.ng_level = (
@@ -130,10 +146,11 @@ def requirement_obj_processor(requirement, parse_context):
     requirement.ng_document_reference = parse_context.document_reference
 
     if isinstance(requirement.parent, Section):
-        assert requirement.parent.level
-        requirement.ng_level = requirement.parent.level + 1
+        if requirement.parent.ng_level is None:
+            resolve_parents(requirement)
+        requirement.ng_level = requirement.parent.ng_level + 1
     elif isinstance(requirement.parent, CompositeRequirement):
-        if not requirement.parent.ng_level:
+        if requirement.parent.ng_level is None:
             resolve_parents(requirement)
         requirement.ng_level = requirement.parent.ng_level + 1
     elif isinstance(requirement.parent, Document):
@@ -144,22 +161,17 @@ def requirement_obj_processor(requirement, parse_context):
 
 def freetext_obj_processor(free_text):
     if isinstance(free_text.parent, Section):
-        assert free_text.parent.level
-        free_text.ng_level = free_text.parent.level + 1
+        if free_text.parent.ng_level is None:
+            resolve_parents(free_text)
+        free_text.ng_level = free_text.parent.ng_level + 1
     elif isinstance(free_text.parent, CompositeRequirement):
-        if not free_text.parent.ng_level:
+        if free_text.parent.ng_level is None:
             resolve_parents(free_text)
         free_text.ng_level = free_text.parent.ng_level + 1
     elif isinstance(free_text.parent, Document):
         free_text.ng_level = 1
     else:
         raise NotImplementedError
-
-
-class ParseContext:
-    def __init__(self):
-        self.document_reference: DocumentReference = DocumentReference()
-        self.document_config: Optional[DocumentConfig] = None
 
 
 class SDReader:
@@ -174,7 +186,9 @@ class SDReader:
         document_config_processor = partial(
             document_config_obj_processor, parse_context=parse_context
         )
-
+        section_processor = partial(
+            section_obj_processor, parse_context=parse_context
+        )
         requirement_processor = partial(
             requirement_obj_processor, parse_context=parse_context
         )
@@ -184,7 +198,7 @@ class SDReader:
 
         obj_processors = {
             "DocumentConfig": document_config_processor,
-            "Section": section_obj_processor,
+            "Section": section_processor,
             "CompositeRequirement": composite_requirement_processor,
             "Requirement": requirement_processor,
             "FreeText": freetext_obj_processor,

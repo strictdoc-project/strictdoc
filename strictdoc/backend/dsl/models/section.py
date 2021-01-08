@@ -6,20 +6,18 @@ class SectionContext(object):
 class Section(object):
     def __init__(self, parent, level, title, free_texts, section_contents):
         self.parent = parent
-        self.level = int(level)
+        self.level = int(level) if level else None
         self.title = title
 
         self.free_texts = free_texts
         self.section_contents = section_contents
 
-        self.ng_level = self.level
+        self.ng_level = None
         self.ng_sections = []
         self.context = SectionContext()
 
     def __str__(self):
-        return "Section: <level: {}, title: {}, section_contents: {}>".format(
-            self.level, self.title, self.section_contents
-        )
+        return f"Section(title: {self.title})"
 
     def __repr__(self):
         return self.__str__()
@@ -46,4 +44,3 @@ class FreeText:
     @property
     def is_section(self):
         return False
-

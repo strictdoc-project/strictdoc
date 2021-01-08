@@ -1,7 +1,10 @@
 import collections
 
 from strictdoc.backend.dsl.models.document import Document
-from strictdoc.backend.dsl.models.requirement import CompositeRequirement, Requirement
+from strictdoc.backend.dsl.models.requirement import (
+    CompositeRequirement,
+    Requirement,
+)
 from strictdoc.backend.dsl.models.section import FreeText, Section
 from strictdoc.core.level_counter import LevelCounter
 
@@ -42,9 +45,12 @@ class DocumentCachingIterator:
 
             current = task_list.popleft()
 
-            if (isinstance(current, Section) or
-                isinstance(current, CompositeRequirement) or
-                isinstance(current, Requirement)):
+            if (
+                isinstance(current, Section)
+                or isinstance(current, CompositeRequirement)
+                or isinstance(current, Requirement)
+            ):
+                assert current.ng_level, f"Node has no ng_level: {current}"
                 level_counter.adjust(current.ng_level)
 
                 current.context.title_number_string = level_counter.get_string()

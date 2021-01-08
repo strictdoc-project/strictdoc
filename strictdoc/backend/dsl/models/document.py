@@ -4,9 +4,9 @@ from strictdoc.core.document_meta import DocumentMeta
 
 
 class Document(object):
-    def __init__(self, name, config, free_texts, section_contents):
+    def __init__(self, name, title, config, free_texts, section_contents):
         assert isinstance(free_texts, list)
-        self.name = name
+        self.name = name if name else title
         self.config = config
         self.free_texts = free_texts
         self.section_contents = section_contents
@@ -14,6 +14,7 @@ class Document(object):
         self.ng_sections = []
         self.ng_level = 0
         self.meta: Optional[DocumentMeta] = None
+        self.legacy_title_is_used = True if name else False
 
     def __str__(self):
         return "Document: <name: {}, section_contents: {}>".format(

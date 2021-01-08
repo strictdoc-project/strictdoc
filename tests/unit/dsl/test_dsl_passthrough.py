@@ -10,7 +10,7 @@ from strictdoc.backend.dsl.writer import SDWriter
 def test_001_minimal_doc():
     input = """
 [DOCUMENT]
-NAME: Test Doc
+TITLE: Test Doc
 
 [REQUIREMENT]
 
@@ -33,7 +33,7 @@ NAME: Test Doc
 def test_010_multiple_sections():
     input = """
 [DOCUMENT]
-NAME: Test Doc
+TITLE: Test Doc
 
 [SECTION]
 TITLE: Test Section
@@ -74,7 +74,7 @@ This is a statement 3
 def test_020_free_text():
     input = """
 [DOCUMENT]
-NAME: Test Doc
+TITLE: Test Doc
 
 [FREETEXT]
 Hello world
@@ -95,7 +95,7 @@ Hello world
 def test_030_multiline_statement():
     input = """
 [DOCUMENT]
-NAME: Test Doc
+TITLE: Test Doc
 
 [SECTION]
 TITLE: Test Section
@@ -133,7 +133,7 @@ This is a statement 3
 def test_032_multiline_body():
     input = """
 [DOCUMENT]
-NAME: Test Doc
+TITLE: Test Doc
 
 [SECTION]
 TITLE: Test Section
@@ -172,7 +172,7 @@ This is a body part 3
 def test_036_rationale_singleline():
     input = """
 [DOCUMENT]
-NAME: Test Doc
+TITLE: Test Doc
 
 [SECTION]
 TITLE: Test Section
@@ -204,7 +204,7 @@ RATIONALE: This is a Rationale
 def test_037_rationale_multiline():
     input = """
 [DOCUMENT]
-NAME: Test Doc
+TITLE: Test Doc
 
 [SECTION]
 TITLE: Test Section
@@ -243,7 +243,7 @@ This is a Rationale line 3
 def test_040_composite_requirement_1_level():
     input = """
 [DOCUMENT]
-NAME: Test Doc
+TITLE: Test Doc
 
 [SECTION]
 TITLE: Test Section
@@ -293,7 +293,7 @@ This is a child body part 3
 def test_042_composite_requirement_2_level():
     input = """
 [DOCUMENT]
-NAME: Test Doc
+TITLE: Test Doc
 
 [SECTION]
 TITLE: Test Section
@@ -370,7 +370,7 @@ body 1.1.1.1
 def test_045_composite_requirement_custom_fields():
     input = """
 [DOCUMENT]
-NAME: Test Doc
+TITLE: Test Doc
 SPECIAL_FIELDS:
 - NAME: ECSS_VERIFICATION
   TYPE: String
@@ -406,7 +406,7 @@ STATEMENT: Some child requirement statement
 def test_100_basic_test():
     input = """
 [DOCUMENT]
-NAME: Test Doc
+TITLE: Test Doc
 SPECIAL_FIELDS:
 - NAME: ECSS_VERIFICATION
   TYPE: String

@@ -1,5 +1,5 @@
 [DOCUMENT]
-NAME: Sandbox SDoc
+TITLE: Sandbox SDoc
 SPECIAL_FIELDS:
 - NAME: OWNER
   TYPE: String

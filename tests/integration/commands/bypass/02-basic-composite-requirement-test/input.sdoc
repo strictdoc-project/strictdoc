@@ -1,5 +1,5 @@
 [DOCUMENT]
-NAME: Hello world doc
+TITLE: Hello world doc
 SPECIAL_FIELDS:
 - NAME: ECSS_VERIFICATION
   TYPE: String

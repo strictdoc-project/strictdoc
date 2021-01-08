@@ -33,7 +33,8 @@ STRICTDOC_GRAMMAR = RubyTemplate(
     """
 Document[noskipws]:
   '[DOCUMENT]' '\n'
-  'NAME: ' name = /.*$/ '\n'
+  // NAME: is deprecated. Both documents and sections now have TITLE:.
+  (('NAME: ' name = /.*$/ '\n') | ('TITLE: ' title = /.*$/ '\n')?)
   (config = DocumentConfig)? 
   free_texts *= SpaceThenFreeText
   section_contents *= SectionOrRequirement

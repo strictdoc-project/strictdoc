@@ -1,13 +1,11 @@
 from strictdoc.backend.dsl.models.document import Document
-from strictdoc.backend.dsl.models.requirement import Requirement, CompositeRequirement
 from strictdoc.backend.dsl.reader import SDReader
-from strictdoc.backend.dsl.writer import SDWriter
 
 
 def test_001_level_1_req():
     input = """
 [DOCUMENT]
-NAME: Test Doc
+TITLE: Test Doc
 
 [REQUIREMENT]
 """.lstrip()
@@ -25,10 +23,9 @@ NAME: Test Doc
 def test_002_level_2_req():
     input = """
 [DOCUMENT]
-NAME: Test Doc
+TITLE: Test Doc
 
 [SECTION]
-LEVEL: 1
 TITLE: Section 1
 
 [REQUIREMENT]
@@ -45,4 +42,3 @@ TITLE: Section 1
     req = section.section_contents[0]
     assert req.ng_document_reference.get_document() == document
     assert req.document == document
-

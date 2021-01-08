@@ -9,7 +9,7 @@ from strictdoc.backend.dsl.reader import SDReader
 def test_001_custom_fields():
     input = """
 [DOCUMENT]
-NAME: Test Doc
+TITLE: Test Doc
 SPECIAL_FIELDS:
 - NAME: OWNER
   TYPE: String
@@ -39,7 +39,7 @@ TITLE: Requirement 1
 def test_002_no_special_fields_declared():
     input = """
 [DOCUMENT]
-NAME: Hello world doc
+TITLE: Hello world doc
 
 [REQUIREMENT]
 SPECIAL_FIELDS:
@@ -58,7 +58,7 @@ SPECIAL_FIELDS:
 def test_003_required_custom_field_missing():
     input = """
 [DOCUMENT]
-NAME: Test Doc
+TITLE: Test Doc
 SPECIAL_FIELDS:
 - NAME: OWNER
   TYPE: String
@@ -84,7 +84,7 @@ TITLE: Requirement 1
 def test_004_custom_field_undeclared():
     input = """
 [DOCUMENT]
-NAME: Test Doc
+TITLE: Test Doc
 SPECIAL_FIELDS:
 - NAME: PRIORITY
   TYPE: String

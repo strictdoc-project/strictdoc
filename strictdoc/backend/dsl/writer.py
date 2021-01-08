@@ -25,7 +25,7 @@ class SDWriter:
         output += "[DOCUMENT]"
         output += "\n"
 
-        output += "NAME: "
+        output += "TITLE: "
         output += document.name
         output += "\n"
 

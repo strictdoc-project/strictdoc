@@ -42,15 +42,26 @@ class ParseContext:
         self.at_least_one_section_level_warning = None
 
 
+def document_obj_processor(document: Document, parse_context):
+    if document.legacy_title_is_used:
+        print(
+            "warning: [DOCUMENT].NAME field is deprecated."
+            " Now both [DOCUMENT]s and [SECTION]s have 'TITLE:'."
+            " Use 'TITLE:' instead."
+        )
+
+
 def document_config_obj_processor(document_config, parse_context):
     parse_context.document_config = document_config
 
 
 def section_obj_processor(section, parse_context: ParseContext):
     if section.level and not parse_context.at_least_one_section_level_warning:
-        print("warning: [SECTION].LEVEL fields are deprecated."
-              " Section levels are calculated automatically."
-              " Simply remove 'LEVEL:' from all [SECTION] declarations.")
+        print(
+            "warning: [SECTION].LEVEL fields are deprecated."
+            " Section levels are calculated automatically."
+            " Simply remove 'LEVEL:' from all [SECTION] declarations."
+        )
         parse_context.at_least_one_section_level_warning = True
 
     if section.parent.ng_level is None:
@@ -183,6 +194,9 @@ class SDReader:
     def read(self, input, file_path=None):
         parse_context = ParseContext()
 
+        document_processor = partial(
+            document_obj_processor, parse_context=parse_context
+        )
         document_config_processor = partial(
             document_config_obj_processor, parse_context=parse_context
         )
@@ -197,6 +211,7 @@ class SDReader:
         )
 
         obj_processors = {
+            "Document": document_processor,
             "DocumentConfig": document_config_processor,
             "Section": section_processor,
             "CompositeRequirement": composite_requirement_processor,

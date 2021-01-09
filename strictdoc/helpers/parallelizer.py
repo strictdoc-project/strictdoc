@@ -20,9 +20,14 @@ class Parallelizer:
     def __init__(self):
         self.input_queue = multiprocessing.Queue()
         self.output_queue = multiprocessing.Queue()
-        self.pool = multiprocessing.Pool(multiprocessing.cpu_count(),
-                                         Parallelizer._run,
-                                         (self.input_queue, self.output_queue,))
+        self.pool = multiprocessing.Pool(
+            multiprocessing.cpu_count(),
+            Parallelizer._run,
+            (
+                self.input_queue,
+                self.output_queue,
+            ),
+        )
 
     def map(self, contents, processing_func):
         size = 0

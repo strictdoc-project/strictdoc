@@ -10,28 +10,32 @@ class RequirementContext(object):
 
 
 class Requirement(object):
-    def __init__(self,
-                 parent,
-                 statement,
-                 statement_multiline,
-                 uid,
-                 status,
-                 tags,
-                 references,
-                 title,
-                 body,
-                 rationale,
-                 rationale_multiline,
-                 comments,
-                 special_fields,
-                 requirements=None):
+    def __init__(
+        self,
+        parent,
+        statement,
+        statement_multiline,
+        uid,
+        status,
+        tags,
+        references,
+        title,
+        body,
+        rationale,
+        rationale_multiline,
+        comments,
+        special_fields,
+        requirements=None,
+    ):
         assert parent
 
         self.parent = parent
 
         # TODO: Why textX creates empty uid when the sdoc doesn't declare the
         # UID field?
-        self.uid = uid.strip() if (isinstance(uid, str) and len(uid) > 0) else None
+        self.uid = (
+            uid.strip() if (isinstance(uid, str) and len(uid) > 0) else None
+        )
         self.status = status
         self.tags = tags
         self.references: [Reference] = references
@@ -56,7 +60,9 @@ class Requirement(object):
         return "{}: <ng_level: {}, uid: {}, title_or_none: {}, statement: {}>".format(
             self.__class__.__name__,
             self.ng_level,
-            self.uid, self.title, self.statement
+            self.uid,
+            self.title,
+            self.statement,
         )
 
     def __repr__(self):
@@ -65,9 +71,9 @@ class Requirement(object):
     @property
     def has_meta(self):
         return (
-            self.uid is not None or
-            (self.tags is not None and len(self.tags) > 0) or
-            self.status is not None
+            self.uid is not None
+            or (self.tags is not None and len(self.tags) > 0)
+            or self.status is not None
         )
 
     @property
@@ -123,9 +129,7 @@ class Body(object):
         self.content = content.strip()
 
     def __str__(self):
-        return "Body: <{}>".format(
-            self.content
-        )
+        return "Body: <{}>".format(self.content)
 
     def __repr__(self):
         return self.__str__()
@@ -144,7 +148,11 @@ class RequirementComment(object):
         return self.__str__()
 
     def get_comment(self):
-        comment = self.comment_single if self.comment_single else self.comment_multiline
+        comment = (
+            self.comment_single
+            if self.comment_single
+            else self.comment_multiline
+        )
         return comment
 
 
@@ -155,26 +163,26 @@ def requirement_from_dict(requirement_dict, parent, level):
     assert level > 0
 
     uid = None
-    if 'UID' in requirement_dict:
-        uid_ = requirement_dict['UID']
+    if "UID" in requirement_dict:
+        uid_ = requirement_dict["UID"]
         if isinstance(uid_, str):
             uid = uid_
 
     title = None
-    if 'TITLE' in requirement_dict:
-        title_ = requirement_dict['TITLE']
+    if "TITLE" in requirement_dict:
+        title_ = requirement_dict["TITLE"]
         if isinstance(title_, str):
             title = title_
 
     statement_multiline = None
-    if 'STATEMENT' in requirement_dict:
-        statement_multiline_ = requirement_dict['STATEMENT']
+    if "STATEMENT" in requirement_dict:
+        statement_multiline_ = requirement_dict["STATEMENT"]
         if isinstance(statement_multiline_, str):
             statement_multiline = statement_multiline_
 
     rationale_multiline = None
-    if 'RATIONALE' in requirement_dict:
-        rationale_multiline_ = requirement_dict['RATIONALE']
+    if "RATIONALE" in requirement_dict:
+        rationale_multiline_ = requirement_dict["RATIONALE"]
         if isinstance(rationale_multiline_, str):
             rationale_multiline = rationale_multiline_
 
@@ -191,7 +199,7 @@ def requirement_from_dict(requirement_dict, parent, level):
         None,
         rationale_multiline,
         None,
-        []
+        [],
     )
 
     requirement.ng_level = level

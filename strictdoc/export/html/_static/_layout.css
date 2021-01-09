@@ -182,6 +182,10 @@
   background: yellow;
 }
 
+.toc-title-no-link {
+  color: #999;
+}
+
 /*  */
 
 .index-link {

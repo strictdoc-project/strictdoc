@@ -108,6 +108,12 @@ def composite_requirement_obj_processor(composite_requirement, parse_context):
     else:
         raise NotImplementedError
 
+    # TODO: there is now walking up the parents 2 times (ng_levels and here).
+    cursor = composite_requirement.parent
+    while not isinstance(cursor, Document) and not cursor.has_requirements:
+        cursor.has_requirements = True
+        cursor = cursor.parent
+
 
 def requirement_obj_processor(requirement, parse_context):
     # Validation
@@ -168,6 +174,12 @@ def requirement_obj_processor(requirement, parse_context):
         requirement.ng_level = 1
     else:
         raise NotImplementedError
+
+    # TODO: there is now walking up the parents 2 times (ng_levels and here).
+    cursor = requirement.parent
+    while not isinstance(cursor, Document) and not cursor.has_requirements:
+        cursor.has_requirements = True
+        cursor = cursor.parent
 
 
 def freetext_obj_processor(free_text):

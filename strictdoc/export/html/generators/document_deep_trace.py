@@ -1,5 +1,7 @@
 from jinja2 import Environment, PackageLoader
 
+from strictdoc.export.html.document_type import DocumentType
+
 
 class DocumentDeepTraceHTMLGenerator:
     env = Environment(
@@ -19,6 +21,7 @@ class DocumentDeepTraceHTMLGenerator:
         output += template.render(document=document,
                                   traceability_index=traceability_index,
                                   renderer=markup_renderer,
-                                  link_renderer=link_renderer)
+                                  link_renderer=link_renderer,
+                                  document_type=DocumentType.deeptrace())
 
         return output

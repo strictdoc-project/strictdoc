@@ -13,7 +13,17 @@
 
       <div class="content">
       {%- for section_or_requirement in document_iterator.all_content() %}
-        {%- if section_or_requirement.is_requirement %}
+        {%- if section_or_requirement.is_section and section_or_requirement.has_requirements %}
+          <section class="content_section">
+            <div class="content_item" data-role="current">
+              {%- set section = section_or_requirement %}
+              {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
+                {% include "_shared/docsection.jinja.html" %}
+              {%- endwith -%}
+            </div>
+          </section>
+
+        {%- elif section_or_requirement.is_requirement %}
         <section class="content_section">
 
           <div class="content_item" data-role="parents">

@@ -1,5 +1,7 @@
 from jinja2 import Environment, PackageLoader
 
+from strictdoc.export.html.document_type import DocumentType
+
 
 class DocumentHTMLGenerator:
     env = Environment(
@@ -23,6 +25,7 @@ class DocumentHTMLGenerator:
                                   traceability_index=traceability_index,
                                   link_renderer=link_renderer,
                                   renderer=markup_renderer,
-                                  standalone=standalone)
+                                  standalone=standalone,
+                                  document_type=DocumentType.document())
 
         return output

@@ -2,14 +2,26 @@
     <ul class="toc">
     {%- for section in document_iterator.table_of_contents() -%}
       <li>
+        {%- if section.is_section -%}
+          {%- if not section.has_requirements and document_type.is_deeptrace -%}
+            <span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                {{ section.context.title_number_string }}
+              </span>
+              {{ section.title if section.title else '[ no title ]' }}
+            </span>
+          {%- else -%}
+            <a href="#{{ link_renderer.render_local_anchor(section) }}">
+              <span class="section-number">{{ section.context.title_number_string }}</span>
+              {{ section.title if section.title else '[ no title ]' }}
+            </a>
+          {%- endif -%}
+        {%- else -%}
         <a href="#{{ link_renderer.render_local_anchor(section) }}">
           <span class="section-number">{{ section.context.title_number_string }}</span>
-          {%- if section.is_requirement -%}
-            {{ section.title if section.title else (section.uid if section.uid else '[ no title ]') }}
-          {%- else -%}
-            {{ section.title if section.title else '[ no title ]' }}
-          {%- endif -%}
+          {{ section.title if section.title else (section.uid if section.uid else '[ no title ]') }}
         </a>
+        {%- endif -%}
 
       {%- if not loop.last -%}
         {%- if loop.nextitem.ng_level > section.ng_level -%}

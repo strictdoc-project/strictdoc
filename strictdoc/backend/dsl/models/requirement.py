@@ -112,7 +112,7 @@ class CompositeRequirement(Requirement):
         super(CompositeRequirement, self).__init__(parent, **fields)
         self.ng_sections = []
         self.ng_document_reference: Optional[DocumentReference] = None
-        self.has_requirements = False
+        self.ng_has_requirements = False
 
     @property
     def is_composite_requirement(self):

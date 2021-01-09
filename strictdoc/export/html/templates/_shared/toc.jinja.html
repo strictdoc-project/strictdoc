@@ -3,7 +3,7 @@
     {%- for section in document_iterator.table_of_contents() -%}
       <li>
         {%- if section.is_section -%}
-          {%- if not section.has_requirements and document_type.is_deeptrace -%}
+          {%- if not section.ng_has_requirements and document_type.is_deeptrace -%}
             <span class="toc-title-no-link" title="Section has no requirements">
               <span class="section-number">
                 {{ section.context.title_number_string }}

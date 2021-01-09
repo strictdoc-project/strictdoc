@@ -110,8 +110,8 @@ def composite_requirement_obj_processor(composite_requirement, parse_context):
 
     # TODO: there is now walking up the parents 2 times (ng_levels and here).
     cursor = composite_requirement.parent
-    while not isinstance(cursor, Document) and not cursor.has_requirements:
-        cursor.has_requirements = True
+    while not isinstance(cursor, Document) and not cursor.ng_has_requirements:
+        cursor.ng_has_requirements = True
         cursor = cursor.parent
 
 
@@ -177,8 +177,8 @@ def requirement_obj_processor(requirement, parse_context):
 
     # TODO: there is now walking up the parents 2 times (ng_levels and here).
     cursor = requirement.parent
-    while not isinstance(cursor, Document) and not cursor.has_requirements:
-        cursor.has_requirements = True
+    while not isinstance(cursor, Document) and not cursor.ng_has_requirements:
+        cursor.ng_has_requirements = True
         cursor = cursor.parent
 
 

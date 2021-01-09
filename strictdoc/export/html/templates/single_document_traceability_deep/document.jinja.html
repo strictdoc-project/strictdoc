@@ -13,7 +13,7 @@
 
       <div class="content">
       {%- for section_or_requirement in document_iterator.all_content() %}
-        {%- if section_or_requirement.is_section and section_or_requirement.has_requirements %}
+        {%- if section_or_requirement.is_section and section_or_requirement.ng_has_requirements %}
           <section class="content_section">
             <div class="content_item" data-role="current">
               {%- set section = section_or_requirement %}

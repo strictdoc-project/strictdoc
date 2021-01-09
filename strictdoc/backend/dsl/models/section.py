@@ -14,7 +14,7 @@ class Section(object):
 
         self.ng_level = None
         self.ng_sections = []
-        self.has_requirements = False
+        self.ng_has_requirements = False
         self.context = SectionContext()
 
     def __str__(self):

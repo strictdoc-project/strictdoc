@@ -484,7 +484,14 @@ STATEMENT: Software shall provide capabilities for change management and impact 
 COMMENT: >>>
 Change management is difficult. The bigger the project is, the harder it is to
 maintain its documentation. If a change is introduced to a project, it usually
-requires a full revision of its requirements TBD.
+requires a full revision of its requirements.
+<<<
+COMMENT: >>>
+When the basic capabilities of StrictDoc are in place, it should be possible
+to do a more advanced analysis of requirements and requirement trees:
+
+- Finding similar or relevant requirements.
+- Enforce invariants that should be hold. Example: mass or power budget.
 <<<
 
 [/SECTION]
@@ -505,7 +512,7 @@ UID: SDOC-HIGH-DATA-MODEL
 TITLE: Data model
 STATEMENT: StrictDoc shall be based on a well-defined data model.
 COMMENT: >>>
-StrictDoc is a result of multiple attempts to find a solution for working with
+StrictDoc is a result of several attempts to find a solution for working with
 text-based requirements:
 
 - StrictDoc, first generation: Markdown-based C++ program. Custom requirements
@@ -513,8 +520,11 @@ text-based requirements:
 - StrictDoc, second generation: RST/Sphinx-based Python program. Using Sphinx
   extensions to manage meta information.
 
-The result of these efforts is the realization that a text-based requirements
-and specifications management tool TBD.
+The result of these efforts was the realization that a text-based requirements
+and specifications management tool could be built on top of a domain-specific
+language (DSL) created specifically for the purpose of writing requirements and
+specifications documents. Such a language allows an explicit definition of a
+document data model which is called "grammar".
 <<<
 
 [REQUIREMENT]
@@ -593,10 +603,12 @@ documents and files.
 TITLE: Data model
 
 [REQUIREMENT]
-UID: SDOC-DM-001
+UID: SDOC-DM-MODEL
 REFS:
 - TYPE: Parent
   VALUE: SDOC-HIGH-REQS-MANAGEMENT
+- TYPE: Parent
+  VALUE: SDOC-HIGH-DATA-MODEL
 TITLE: Modeling capability
 STATEMENT: StrictDoc's Data Model shall accommodate for maximum possible standard requirement document formats.
 COMMENT: >>>
@@ -692,14 +704,18 @@ STATEMENT: StrictDoc's data model shall support linking a requirement to another
 TITLE: SDOC file format
 
 [REQUIREMENT]
-UID: SDOC-FMT-001
+UID: SDOC-FMT-PRIMARY
 REFS:
 - TYPE: Parent
-  VALUE: SDOC-DM-001
+  VALUE: SDOC-DM-MODEL
 TITLE: Primary text implementation
 STATEMENT: SDOC format shall support encoding the Strict Doc Data Model in a plain-text human readable form.
 
 [REQUIREMENT]
+UID: SDOC-FMT-GRAMMAR
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-HIGH-DATA-MODEL
 TITLE: Grammar
 STATEMENT: SDOC format shall be based on a fixed grammar.
 

@@ -603,7 +603,7 @@ documents and files.
 TITLE: Data model
 
 [REQUIREMENT]
-UID: SDOC-DM-001
+UID: SDOC-DM-MODEL
 REFS:
 - TYPE: Parent
   VALUE: SDOC-HIGH-REQS-MANAGEMENT
@@ -707,7 +707,7 @@ TITLE: SDOC file format
 UID: SDOC-FMT-PRIMARY
 REFS:
 - TYPE: Parent
-  VALUE: SDOC-DM-001
+  VALUE: SDOC-DM-MODEL
 TITLE: Primary text implementation
 STATEMENT: SDOC format shall support encoding the Strict Doc Data Model in a plain-text human readable form.
 

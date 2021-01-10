@@ -31,7 +31,7 @@ Examples
 .. code-block:: text
 
     [DOCUMENT]
-    NAME: StrictDoc
+    TITLE: StrictDoc
 
     [REQUIREMENT]
     UID: SDOC-HIGH-REQS-MANAGEMENT
@@ -111,7 +111,7 @@ This is how a minimal possible SDOC document looks like:
 .. code-block::
 
     [DOCUMENT]
-    NAME: StrictDoc
+    TITLE: StrictDoc
 
 This documentation is written using StrictDoc. Here is the source file:
 `strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc>`_.
@@ -443,7 +443,13 @@ Software shall provide capabilities for change management and impact assessment.
 
 **Comment:** Change management is difficult. The bigger the project is, the harder it is to
 maintain its documentation. If a change is introduced to a project, it usually
-requires a full revision of its requirements TBD.
+requires a full revision of its requirements.
+
+**Comment:** When the basic capabilities of StrictDoc are in place, it should be possible
+to do a more advanced analysis of requirements and requirement trees:
+
+- Finding similar or relevant requirements.
+- Enforce invariants that should be hold. Example: mass or power budget.
 
 High-level requirements
 -----------------------
@@ -468,7 +474,7 @@ StrictDoc shall enable requirements management.
 
 **Children:**
 
-- ``[SDOC-DM-001]`` :ref:`SDOC-DM-001`
+- ``[SDOC-DM-MODEL]`` :ref:`SDOC-DM-MODEL`
 
 .. _SDOC-HIGH-DATA-MODEL:
 
@@ -484,7 +490,7 @@ Data model
 
 StrictDoc shall be based on a well-defined data model.
 
-**Comment:** StrictDoc is a result of multiple attempts to find a solution for working with
+**Comment:** StrictDoc is a result of several attempts to find a solution for working with
 text-based requirements:
 
 - StrictDoc, first generation: Markdown-based C++ program. Custom requirements
@@ -492,8 +498,16 @@ text-based requirements:
 - StrictDoc, second generation: RST/Sphinx-based Python program. Using Sphinx
   extensions to manage meta information.
 
-The result of these efforts is the realization that a text-based requirements
-and specifications management tool TBD.
+The result of these efforts was the realization that a text-based requirements
+and specifications management tool could be built on top of a domain-specific
+language (DSL) created specifically for the purpose of writing requirements and
+specifications documents. Such a language allows an explicit definition of a
+document data model which is called "grammar".
+
+**Children:**
+
+- ``[SDOC-DM-MODEL]`` :ref:`SDOC-DM-MODEL`
+- ``[SDOC-FMT-GRAMMAR]`` :ref:`SDOC-FMT-GRAMMAR`
 
 Command-line interface
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -601,7 +615,7 @@ documents and files.
 Data model
 ----------
 
-.. _SDOC-DM-001:
+.. _SDOC-DM-MODEL:
 
 Modeling capability
 ~~~~~~~~~~~~~~~~~~~
@@ -611,7 +625,7 @@ Modeling capability
     :header-rows: 0
 
     * - **UID:**
-      - SDOC-DM-001
+      - SDOC-DM-MODEL
 
 StrictDoc's Data Model shall accommodate for maximum possible standard requirement document formats.
 
@@ -623,10 +637,11 @@ StrictDoc's Data Model shall accommodate for maximum possible standard requireme
 **Parents:**
 
 - ``[SDOC-HIGH-REQS-MANAGEMENT]`` :ref:`SDOC-HIGH-REQS-MANAGEMENT`
+- ``[SDOC-HIGH-DATA-MODEL]`` :ref:`SDOC-HIGH-DATA-MODEL`
 
 **Children:**
 
-- ``[SDOC-FMT-001]`` :ref:`SDOC-FMT-001`
+- ``[SDOC-FMT-PRIMARY]`` :ref:`SDOC-FMT-PRIMARY`
 
 Section item
 ~~~~~~~~~~~~
@@ -707,7 +722,7 @@ StrictDoc's data model shall support linking a requirement to another requiremen
 SDOC file format
 ----------------
 
-.. _SDOC-FMT-001:
+.. _SDOC-FMT-PRIMARY:
 
 Primary text implementation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -717,18 +732,31 @@ Primary text implementation
     :header-rows: 0
 
     * - **UID:**
-      - SDOC-FMT-001
+      - SDOC-FMT-PRIMARY
 
 SDOC format shall support encoding the Strict Doc Data Model in a plain-text human readable form.
 
 **Parents:**
 
-- ``[SDOC-DM-001]`` :ref:`SDOC-DM-001`
+- ``[SDOC-DM-MODEL]`` :ref:`SDOC-DM-MODEL`
+
+.. _SDOC-FMT-GRAMMAR:
 
 Grammar
 ~~~~~~~
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-FMT-GRAMMAR
+
 SDOC format shall be based on a fixed grammar.
+
+**Parents:**
+
+- ``[SDOC-HIGH-DATA-MODEL]`` :ref:`SDOC-HIGH-DATA-MODEL`
 
 Type safety
 ~~~~~~~~~~~

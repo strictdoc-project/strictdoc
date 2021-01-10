@@ -26,258 +26,370 @@
 
     <aside class="layout_aside">
       
-    <ul class="toc"><li>
-        <a href="#Introduction">
-          <span class="section-number">1</span>Introduction</a></li><li>
-        <a href="#Examples">
-          <span class="section-number">2</span>Examples</a></li><li>
-        <a href="#Getting-started">
-          <span class="section-number">3</span>Getting started</a><ul><li>
-        <a href="#Requirements">
-          <span class="section-number">3.1</span>Requirements</a></li><li>
-        <a href="#Installing-StrictDoc-as-a-Pip-package">
-          <span class="section-number">3.2</span>Installing StrictDoc as a Pip package</a></li><li>
-        <a href="#Installing-StrictDoc-from-GitHub-development-">
-          <span class="section-number">3.3</span>Installing StrictDoc from GitHub (development)</a></li><li>
-        <a href="#Hello-world">
-          <span class="section-number">3.4</span>Hello world</a></li></ul>
-            </li><li>
-        <a href="#SDoc-syntax">
-          <span class="section-number">4</span>SDoc syntax</a></li><li>
-        <a href="#Export-options">
-          <span class="section-number">5</span>Export options</a><ul><li>
-        <a href="#HTML-documentation-tree-by-StrictDoc">
-          <span class="section-number">5.1</span>HTML documentation tree by StrictDoc</a><ul><li>
-        <a href="#Standalone-HTML-pages-experimental-">
-          <span class="section-number">5.1.1</span>Standalone HTML pages (experimental)</a></li></ul>
-            </li><li>
-        <a href="#HTML-export-via-Sphinx">
-          <span class="section-number">5.2</span>HTML export via Sphinx</a></li><li>
-        <a href="#PDF-export-via-Sphinx-LaTeX">
-          <span class="section-number">5.3</span>PDF export via Sphinx/LaTeX</a></li></ul>
-            </li><li>
-        <a href="#Options">
-          <span class="section-number">6</span>Options</a><ul><li>
-        <a href="#Parallelization">
-          <span class="section-number">6.1</span>Parallelization</a></li></ul>
-            </li><li>
-        <a href="#StrictDoc-and-other-tools">
-          <span class="section-number">7</span>StrictDoc and other tools</a><ul><li>
-        <a href="#StrictDoc-and-Doorstop">
-          <span class="section-number">7.1</span>StrictDoc and Doorstop</a></li><li>
-        <a href="#StrictDoc-and-Sphinx">
-          <span class="section-number">7.2</span>StrictDoc and Sphinx</a></li><li>
-        <a href="#StrictDoc-and-Sphinx-Needs">
-          <span class="section-number">7.3</span>StrictDoc and Sphinx-Needs</a></li></ul>
-            </li><li>
-        <a href="#StrictDoc-Requirements">
-          <span class="section-number">8</span>StrictDoc Requirements</a><ul><li>
-        <a href="#Project-goals">
-          <span class="section-number">8.1</span>Project goals</a><ul><li>
-        <a href="#Software-support-for-writing-requirements-and-specifications-documents">
-          <span class="section-number">8.1.1</span>Software support for writing requirements and specifications documents</a></li><li>
-        <a href="#Reduce-documentation-hazards">
-          <span class="section-number">8.1.2</span>Reduce documentation hazards</a></li><li>
-        <a href="#No-or-less-run-away-documentation">
-          <span class="section-number">8.1.3</span>No (or less) run-away documentation</a></li><li>
-        <a href="#Change-management">
-          <span class="section-number">8.1.4</span>Change management</a></li></ul>
-            </li><li>
-        <a href="#High-level-requirements">
-          <span class="section-number">8.2</span>High-level requirements</a><ul><li>
-        <a href="#Requirements-management">
-          <span class="section-number">8.2.1</span>Requirements management</a></li><li>
-        <a href="#Data-model">
-          <span class="section-number">8.2.2</span>Data model</a></li><li>
-        <a href="#Command-line-interface">
-          <span class="section-number">8.2.3</span>Command-line interface</a></li><li>
-        <a href="#Platform-support">
-          <span class="section-number">8.2.4</span>Platform support</a><ul><li>
-        <a href="#macOS-support">
-          <span class="section-number">8.2.4.1</span>macOS support</a></li><li>
-        <a href="#Linux-support">
-          <span class="section-number">8.2.4.2</span>Linux support</a></li><li>
-        <a href="#Windows-support">
-          <span class="section-number">8.2.4.3</span>Windows support</a></li></ul>
-            </li><li>
-        <a href="#Requirements-validation">
-          <span class="section-number">8.2.5</span>Requirements validation</a></li><li>
-        <a href="#Requirements-text-format">
-          <span class="section-number">8.2.6</span>Requirements text format</a></li><li>
-        <a href="#Linking-requirements">
-          <span class="section-number">8.2.7</span>Linking requirements</a></li><li>
-        <a href="#Scalability">
-          <span class="section-number">8.2.8</span>Scalability</a></li><li>
-        <a href="#Traceability">
-          <span class="section-number">8.2.9</span>Traceability</a></li><li>
-        <a href="#Visualization">
-          <span class="section-number">8.2.10</span>Visualization</a></li><li>
-        <a href="#Open-source-software">
-          <span class="section-number">8.2.11</span>Open source software</a></li></ul>
-            </li><li>
-        <a href="#Implementation-requirements">
-          <span class="section-number">8.3</span>Implementation requirements</a><ul><li>
-        <a href="#Parallelization">
-          <span class="section-number">8.3.1</span>Parallelization</a></li><li>
-        <a href="#Incremental-generation">
-          <span class="section-number">8.3.2</span>Incremental generation</a></li></ul>
-            </li><li>
-        <a href="#Data-model">
-          <span class="section-number">8.4</span>Data model</a><ul><li>
-        <a href="#Modeling-capability">
-          <span class="section-number">8.4.1</span>Modeling capability</a></li><li>
-        <a href="#Section-item">
-          <span class="section-number">8.4.2</span>Section item</a></li><li>
-        <a href="#Requirement-item">
-          <span class="section-number">8.4.3</span>Requirement item</a><ul><li>
-        <a href="#Statement">
-          <span class="section-number">8.4.3.1</span>Statement</a></li><li>
-        <a href="#Content-body">
-          <span class="section-number">8.4.3.2</span>Content body</a></li><li>
-        <a href="#UID-identifier">
-          <span class="section-number">8.4.3.3</span>UID identifier</a><ul><li>
-        <a href="#UID-identifier-format">
-          <span class="section-number">8.4.3.3.1</span>UID identifier format</a></li></ul>
-            </li><li>
-        <a href="#Title">
-          <span class="section-number">8.4.3.4</span>Title</a></li><li>
-        <a href="#References">
-          <span class="section-number">8.4.3.5</span>References</a></li><li>
-        <a href="#Comments">
-          <span class="section-number">8.4.3.6</span>Comments</a></li><li>
-        <a href="#Special-fields">
-          <span class="section-number">8.4.3.7</span>Special fields</a></li></ul>
-            </li><li>
-        <a href="#Composite-Requirement-item">
-          <span class="section-number">8.4.4</span>Composite Requirement item</a></li><li>
-        <a href="#Links">
-          <span class="section-number">8.4.5</span>Links</a><ul><li>
-        <a href="#Parent-links">
-          <span class="section-number">8.4.5.1</span>Parent links</a></li></ul>
+    <ul class="toc"><li><a href="#Introduction">
+              <span class="section-number">1</span>
+              Introduction
+            </a></li><li><a href="#Examples">
+              <span class="section-number">2</span>
+              Examples
+            </a></li><li><a href="#Getting-started">
+              <span class="section-number">3</span>
+              Getting started
+            </a><ul><li><a href="#Requirements">
+              <span class="section-number">3.1</span>
+              Requirements
+            </a></li><li><a href="#Installing-StrictDoc-as-a-Pip-package">
+              <span class="section-number">3.2</span>
+              Installing StrictDoc as a Pip package
+            </a></li><li><a href="#Installing-StrictDoc-from-GitHub-development-">
+              <span class="section-number">3.3</span>
+              Installing StrictDoc from GitHub (development)
+            </a></li><li><a href="#Hello-world">
+              <span class="section-number">3.4</span>
+              Hello world
+            </a></li></ul>
+            </li><li><a href="#SDoc-syntax">
+              <span class="section-number">4</span>
+              SDoc syntax
+            </a></li><li><a href="#Export-options">
+              <span class="section-number">5</span>
+              Export options
+            </a><ul><li><a href="#HTML-documentation-tree-by-StrictDoc">
+              <span class="section-number">5.1</span>
+              HTML documentation tree by StrictDoc
+            </a><ul><li><a href="#Standalone-HTML-pages-experimental-">
+              <span class="section-number">5.1.1</span>
+              Standalone HTML pages (experimental)
+            </a></li></ul>
+            </li><li><a href="#HTML-export-via-Sphinx">
+              <span class="section-number">5.2</span>
+              HTML export via Sphinx
+            </a></li><li><a href="#PDF-export-via-Sphinx-LaTeX">
+              <span class="section-number">5.3</span>
+              PDF export via Sphinx/LaTeX
+            </a></li></ul>
+            </li><li><a href="#Options">
+              <span class="section-number">6</span>
+              Options
+            </a><ul><li><a href="#Parallelization">
+              <span class="section-number">6.1</span>
+              Parallelization
+            </a></li></ul>
+            </li><li><a href="#StrictDoc-and-other-tools">
+              <span class="section-number">7</span>
+              StrictDoc and other tools
+            </a><ul><li><a href="#StrictDoc-and-Doorstop">
+              <span class="section-number">7.1</span>
+              StrictDoc and Doorstop
+            </a></li><li><a href="#StrictDoc-and-Sphinx">
+              <span class="section-number">7.2</span>
+              StrictDoc and Sphinx
+            </a></li><li><a href="#StrictDoc-and-Sphinx-Needs">
+              <span class="section-number">7.3</span>
+              StrictDoc and Sphinx-Needs
+            </a></li></ul>
+            </li><li><a href="#StrictDoc-Requirements">
+              <span class="section-number">8</span>
+              StrictDoc Requirements
+            </a><ul><li><a href="#Project-goals">
+              <span class="section-number">8.1</span>
+              Project goals
+            </a><ul><li><a href="#Software-support-for-writing-requirements-and-specifications-documents">
+          <span class="section-number">8.1.1</span>
+          Software support for writing requirements and specifications documents
+        </a></li><li><a href="#Reduce-documentation-hazards">
+          <span class="section-number">8.1.2</span>
+          Reduce documentation hazards
+        </a></li><li><a href="#No-or-less-run-away-documentation">
+          <span class="section-number">8.1.3</span>
+          No (or less) run-away documentation
+        </a></li><li><a href="#Change-management">
+          <span class="section-number">8.1.4</span>
+          Change management
+        </a></li></ul>
+            </li><li><a href="#High-level-requirements">
+              <span class="section-number">8.2</span>
+              High-level requirements
+            </a><ul><li><a href="#Requirements-management">
+          <span class="section-number">8.2.1</span>
+          Requirements management
+        </a></li><li><a href="#Data-model">
+          <span class="section-number">8.2.2</span>
+          Data model
+        </a></li><li><a href="#Command-line-interface">
+          <span class="section-number">8.2.3</span>
+          Command-line interface
+        </a></li><li><a href="#Platform-support">
+          <span class="section-number">8.2.4</span>
+          Platform support
+        </a><ul><li><a href="#macOS-support">
+          <span class="section-number">8.2.4.1</span>
+          macOS support
+        </a></li><li><a href="#Linux-support">
+          <span class="section-number">8.2.4.2</span>
+          Linux support
+        </a></li><li><a href="#Windows-support">
+          <span class="section-number">8.2.4.3</span>
+          Windows support
+        </a></li></ul>
+            </li><li><a href="#Requirements-validation">
+          <span class="section-number">8.2.5</span>
+          Requirements validation
+        </a></li><li><a href="#Requirements-text-format">
+          <span class="section-number">8.2.6</span>
+          Requirements text format
+        </a></li><li><a href="#Linking-requirements">
+          <span class="section-number">8.2.7</span>
+          Linking requirements
+        </a></li><li><a href="#Scalability">
+          <span class="section-number">8.2.8</span>
+          Scalability
+        </a></li><li><a href="#Traceability">
+          <span class="section-number">8.2.9</span>
+          Traceability
+        </a></li><li><a href="#Visualization">
+          <span class="section-number">8.2.10</span>
+          Visualization
+        </a></li><li><a href="#Open-source-software">
+          <span class="section-number">8.2.11</span>
+          Open source software
+        </a></li></ul>
+            </li><li><a href="#Implementation-requirements">
+              <span class="section-number">8.3</span>
+              Implementation requirements
+            </a><ul><li><a href="#Parallelization">
+          <span class="section-number">8.3.1</span>
+          Parallelization
+        </a></li><li><a href="#Incremental-generation">
+          <span class="section-number">8.3.2</span>
+          Incremental generation
+        </a></li></ul>
+            </li><li><a href="#Data-model">
+              <span class="section-number">8.4</span>
+              Data model
+            </a><ul><li><a href="#Modeling-capability">
+          <span class="section-number">8.4.1</span>
+          Modeling capability
+        </a></li><li><a href="#Section-item">
+              <span class="section-number">8.4.2</span>
+              Section item
+            </a></li><li><a href="#Requirement-item">
+              <span class="section-number">8.4.3</span>
+              Requirement item
+            </a><ul><li><a href="#Statement">
+          <span class="section-number">8.4.3.1</span>
+          Statement
+        </a></li><li><a href="#Content-body">
+          <span class="section-number">8.4.3.2</span>
+          Content body
+        </a></li><li><a href="#UID-identifier">
+          <span class="section-number">8.4.3.3</span>
+          UID identifier
+        </a><ul><li><a href="#UID-identifier-format">
+          <span class="section-number">8.4.3.3.1</span>
+          UID identifier format
+        </a></li></ul>
+            </li><li><a href="#Title">
+          <span class="section-number">8.4.3.4</span>
+          Title
+        </a></li><li><a href="#References">
+          <span class="section-number">8.4.3.5</span>
+          References
+        </a></li><li><a href="#Comments">
+          <span class="section-number">8.4.3.6</span>
+          Comments
+        </a></li><li><a href="#Special-fields">
+          <span class="section-number">8.4.3.7</span>
+          Special fields
+        </a></li></ul>
+            </li><li><a href="#Composite-Requirement-item">
+              <span class="section-number">8.4.4</span>
+              Composite Requirement item
+            </a></li><li><a href="#Links">
+          <span class="section-number">8.4.5</span>
+          Links
+        </a><ul><li><a href="#Parent-links">
+          <span class="section-number">8.4.5.1</span>
+          Parent links
+        </a></li></ul>
             </li></ul>
-            </li><li>
-        <a href="#SDOC-file-format">
-          <span class="section-number">8.5</span>SDOC file format</a><ul><li>
-        <a href="#Primary-text-implementation">
-          <span class="section-number">8.5.1</span>Primary text implementation</a></li><li>
-        <a href="#Grammar">
-          <span class="section-number">8.5.2</span>Grammar</a></li><li>
-        <a href="#Type-safety">
-          <span class="section-number">8.5.3</span>Type safety</a></li></ul>
-            </li><li>
-        <a href="#Document-Generators">
-          <span class="section-number">8.6</span>Document Generators</a><ul><li>
-        <a href="#HTML-Export">
-          <span class="section-number">8.6.1</span>HTML Export</a><ul><li>
-        <a href="#Single-document-Normal-form">
-          <span class="section-number">8.6.1.1</span>Single document: Normal form</a></li><li>
-        <a href="#Single-document-Tabular-form">
-          <span class="section-number">8.6.1.2</span>Single document: Tabular form</a></li><li>
-        <a href="#Single-document-1-level-traceability">
-          <span class="section-number">8.6.1.3</span>Single document: 1-level traceability</a></li><li>
-        <a href="#Single-document-Deep-traceability">
-          <span class="section-number">8.6.1.4</span>Single document: Deep traceability</a></li><li>
-        <a href="#Left-panel-Table-of-contents">
-          <span class="section-number">8.6.1.5</span>Left panel: Table of contents</a></li></ul>
-            </li><li>
-        <a href="#PDF-Export">
-          <span class="section-number">8.6.2</span>PDF Export</a><ul><li>
-        <a href="#Sphinx-documentation-generator">
-          <span class="section-number">8.6.2.1</span>Sphinx documentation generator</a></li></ul>
-            </li><li>
-        <a href="#Excel-Export">
-          <span class="section-number">8.6.3</span>Excel Export</a></li></ul>
-            </li><li>
-        <a href="#Validation-requirements">
-          <span class="section-number">8.7</span>Validation requirements</a><ul><li>
-        <a href="#Valid-HTML-markup">
-          <span class="section-number">8.7.1</span>Valid HTML markup</a></li></ul>
+            </li><li><a href="#SDOC-file-format">
+              <span class="section-number">8.5</span>
+              SDOC file format
+            </a><ul><li><a href="#Primary-text-implementation">
+          <span class="section-number">8.5.1</span>
+          Primary text implementation
+        </a></li><li><a href="#Grammar">
+          <span class="section-number">8.5.2</span>
+          Grammar
+        </a></li><li><a href="#Type-safety">
+          <span class="section-number">8.5.3</span>
+          Type safety
+        </a></li></ul>
+            </li><li><a href="#Document-Generators">
+              <span class="section-number">8.6</span>
+              Document Generators
+            </a><ul><li><a href="#HTML-Export">
+              <span class="section-number">8.6.1</span>
+              HTML Export
+            </a><ul><li><a href="#Single-document-Normal-form">
+          <span class="section-number">8.6.1.1</span>
+          Single document: Normal form
+        </a></li><li><a href="#Single-document-Tabular-form">
+          <span class="section-number">8.6.1.2</span>
+          Single document: Tabular form
+        </a></li><li><a href="#Single-document-1-level-traceability">
+          <span class="section-number">8.6.1.3</span>
+          Single document: 1-level traceability
+        </a></li><li><a href="#Single-document-Deep-traceability">
+          <span class="section-number">8.6.1.4</span>
+          Single document: Deep traceability
+        </a></li><li><a href="#Left-panel-Table-of-contents">
+          <span class="section-number">8.6.1.5</span>
+          Left panel: Table of contents
+        </a></li></ul>
+            </li><li><a href="#PDF-Export">
+              <span class="section-number">8.6.2</span>
+              PDF Export
+            </a><ul><li><a href="#Sphinx-documentation-generator">
+          <span class="section-number">8.6.2.1</span>
+          Sphinx documentation generator
+        </a></li></ul>
+            </li><li><a href="#Excel-Export">
+          <span class="section-number">8.6.3</span>
+          Excel Export
+        </a></li></ul>
+            </li><li><a href="#Validation-requirements">
+              <span class="section-number">8.7</span>
+              Validation requirements
+            </a><ul><li><a href="#Valid-HTML-markup">
+          <span class="section-number">8.7.1</span>
+          Valid HTML markup
+        </a></li></ul>
             </li></ul>
-            </li><li>
-        <a href="#Design-decisions">
-          <span class="section-number">9</span>Design decisions</a><ul><li>
-        <a href="#Building-blocks">
-          <span class="section-number">9.1</span>Building blocks</a><ul><li>
-        <a href="#TextX">
-          <span class="section-number">9.1.1</span>TextX</a></li><li>
-        <a href="#Jinja2">
-          <span class="section-number">9.1.2</span>Jinja2</a></li><li>
-        <a href="#Sphinx-and-Docutils">
-          <span class="section-number">9.1.3</span>Sphinx and Docutils</a></li></ul>
-            </li><li>
-        <a href="#SDoc-grammar">
-          <span class="section-number">9.2</span>SDoc grammar</a><ul><li>
-        <a href="#No-indentation">
-          <span class="section-number">9.2.1</span>No indentation</a></li></ul>
+            </li><li><a href="#Design-decisions">
+              <span class="section-number">9</span>
+              Design decisions
+            </a><ul><li><a href="#Building-blocks">
+              <span class="section-number">9.1</span>
+              Building blocks
+            </a><ul><li><a href="#TextX">
+          <span class="section-number">9.1.1</span>
+          TextX
+        </a></li><li><a href="#Jinja2">
+          <span class="section-number">9.1.2</span>
+          Jinja2
+        </a></li><li><a href="#Sphinx-and-Docutils">
+          <span class="section-number">9.1.3</span>
+          Sphinx and Docutils
+        </a></li></ul>
+            </li><li><a href="#SDoc-grammar">
+              <span class="section-number">9.2</span>
+              SDoc grammar
+            </a><ul><li><a href="#No-indentation">
+          <span class="section-number">9.2.1</span>
+          No indentation
+        </a></li></ul>
             </li></ul>
-            </li><li>
-        <a href="#Roadmap">
-          <span class="section-number">10</span>Roadmap</a><ul><li>
-        <a href="#First-public-release">
-          <span class="section-number">10.1</span>First public release</a><ul><li>
-        <a href="#Generated-file-names">
-          <span class="section-number">10.1.1</span>Generated file names</a></li><li>
-        <a href="#Validation-Uniqueness-of-UID-identifiers-in-a-document-tree">
-          <span class="section-number">10.1.2</span>Validation: Uniqueness of UID identifiers in a document tree</a></li></ul>
-            </li><li>
-        <a href="#Backlog">
-          <span class="section-number">10.2</span>Backlog</a><ul><li>
-        <a href="#StrictDoc-as-library">
-          <span class="section-number">10.2.1</span>StrictDoc as library</a></li><li>
-        <a href="#Export-capabilities">
-          <span class="section-number">10.2.2</span>Export capabilities</a><ul><li>
-        <a href="#CSV-Import-Export">
-          <span class="section-number">10.2.2.1</span>CSV Import/Export</a></li><li>
-        <a href="#PlantUML-Export">
-          <span class="section-number">10.2.2.2</span>PlantUML Export</a></li><li>
-        <a href="#ReqIF-Import-Export">
-          <span class="section-number">10.2.2.3</span>ReqIF Import/Export</a></li><li>
-        <a href="#Confluence-Import-Export">
-          <span class="section-number">10.2.2.4</span>Confluence Import/Export</a></li><li>
-        <a href="#Tex-Export">
-          <span class="section-number">10.2.2.5</span>Tex Export</a></li><li>
-        <a href="#Doorstop-Import-Export">
-          <span class="section-number">10.2.2.6</span>Doorstop Import/Export</a></li><li>
-        <a href="#Markdown-support-for-text-and-code-blocks">
-          <span class="section-number">10.2.2.7</span>Markdown support for text and code blocks</a></li></ul>
-            </li><li>
-        <a href="#Traceability-and-coverage">
-          <span class="section-number">10.2.3</span>Traceability and coverage</a><ul><li>
-        <a href="#Linking-with-implementation-artifacts">
-          <span class="section-number">10.2.3.1</span>Linking with implementation artifacts</a></li><li>
-        <a href="#Requirement-checksumming">
-          <span class="section-number">10.2.3.2</span>Requirement checksumming</a></li><li>
-        <a href="#Documentation-coverage">
-          <span class="section-number">10.2.3.3</span>Documentation coverage</a></li></ul>
-            </li><li>
-        <a href="#Validations-and-testing">
-          <span class="section-number">10.2.4</span>Validations and testing</a><ul><li>
-        <a href="#Validation-Section-Levels">
-          <span class="section-number">10.2.4.1</span>Validation: Section Levels</a></li></ul>
-            </li><li>
-        <a href="#Filtering-by-tags">
-          <span class="section-number">10.2.5</span>Filtering by tags</a></li><li>
-        <a href="#Options">
-          <span class="section-number">10.2.6</span>Options</a><ul><li>
-        <a href="#Option-RST-Top-level-title-document-name">
-          <span class="section-number">10.2.6.1</span>Option: RST: Top-level title: document name</a></li><li>
-        <a href="#Option-Title-Automatic-numeration">
-          <span class="section-number">10.2.6.2</span>Option: Title: Automatic numeration</a></li><li>
-        <a href="#Option-Title-Display-requirement-titles">
-          <span class="section-number">10.2.6.3</span>Option: Title: Display requirement titles</a></li><li>
-        <a href="#Option-Title-Display-requirement-UID">
-          <span class="section-number">10.2.6.4</span>Option: Title: Display requirement UID</a></li></ul>
-            </li><li>
-        <a href="#Advanced">
-          <span class="section-number">10.2.7</span>Advanced</a><ul><li>
-        <a href="#Facts-table-Invariants-calculation-">
-          <span class="section-number">10.2.7.1</span>Facts table. Invariants calculation.</a></li><li>
-        <a href="#FMEA-FMECA-tables">
-          <span class="section-number">10.2.7.2</span>FMEA/FMECA tables</a></li><li>
-        <a href="#Graphical-User-Interface-GUI-">
-          <span class="section-number">10.2.7.3</span>Graphical User Interface (GUI)</a></li><li>
-        <a href="#Web-server-and-editable-HTML-pages">
-          <span class="section-number">10.2.7.4</span>Web server and editable HTML pages</a></li></ul>
+            </li><li><a href="#Roadmap">
+              <span class="section-number">10</span>
+              Roadmap
+            </a><ul><li><a href="#First-public-release">
+              <span class="section-number">10.1</span>
+              First public release
+            </a><ul><li><a href="#Generated-file-names">
+          <span class="section-number">10.1.1</span>
+          Generated file names
+        </a></li><li><a href="#Validation-Uniqueness-of-UID-identifiers-in-a-document-tree">
+          <span class="section-number">10.1.2</span>
+          Validation: Uniqueness of UID identifiers in a document tree
+        </a></li></ul>
+            </li><li><a href="#Backlog">
+              <span class="section-number">10.2</span>
+              Backlog
+            </a><ul><li><a href="#StrictDoc-as-library">
+          <span class="section-number">10.2.1</span>
+          StrictDoc as library
+        </a></li><li><a href="#Export-capabilities">
+              <span class="section-number">10.2.2</span>
+              Export capabilities
+            </a><ul><li><a href="#CSV-Import-Export">
+          <span class="section-number">10.2.2.1</span>
+          CSV Import/Export
+        </a></li><li><a href="#PlantUML-Export">
+          <span class="section-number">10.2.2.2</span>
+          PlantUML Export
+        </a></li><li><a href="#ReqIF-Import-Export">
+          <span class="section-number">10.2.2.3</span>
+          ReqIF Import/Export
+        </a></li><li><a href="#Confluence-Import-Export">
+          <span class="section-number">10.2.2.4</span>
+          Confluence Import/Export
+        </a></li><li><a href="#Tex-Export">
+          <span class="section-number">10.2.2.5</span>
+          Tex Export
+        </a></li><li><a href="#Doorstop-Import-Export">
+          <span class="section-number">10.2.2.6</span>
+          Doorstop Import/Export
+        </a></li><li><a href="#Markdown-support-for-text-and-code-blocks">
+          <span class="section-number">10.2.2.7</span>
+          Markdown support for text and code blocks
+        </a></li></ul>
+            </li><li><a href="#Traceability-and-coverage">
+              <span class="section-number">10.2.3</span>
+              Traceability and coverage
+            </a><ul><li><a href="#Linking-with-implementation-artifacts">
+          <span class="section-number">10.2.3.1</span>
+          Linking with implementation artifacts
+        </a></li><li><a href="#Requirement-checksumming">
+          <span class="section-number">10.2.3.2</span>
+          Requirement checksumming
+        </a></li><li><a href="#Documentation-coverage">
+          <span class="section-number">10.2.3.3</span>
+          Documentation coverage
+        </a></li></ul>
+            </li><li><a href="#Validations-and-testing">
+              <span class="section-number">10.2.4</span>
+              Validations and testing
+            </a><ul><li><a href="#Validation-Section-Levels">
+          <span class="section-number">10.2.4.1</span>
+          Validation: Section Levels
+        </a></li></ul>
+            </li><li><a href="#Filtering-by-tags">
+          <span class="section-number">10.2.5</span>
+          Filtering by tags
+        </a></li><li><a href="#Options">
+              <span class="section-number">10.2.6</span>
+              Options
+            </a><ul><li><a href="#Option-RST-Top-level-title-document-name">
+          <span class="section-number">10.2.6.1</span>
+          Option: RST: Top-level title: document name
+        </a></li><li><a href="#Option-Title-Automatic-numeration">
+          <span class="section-number">10.2.6.2</span>
+          Option: Title: Automatic numeration
+        </a></li><li><a href="#Option-Title-Display-requirement-titles">
+          <span class="section-number">10.2.6.3</span>
+          Option: Title: Display requirement titles
+        </a></li><li><a href="#Option-Title-Display-requirement-UID">
+          <span class="section-number">10.2.6.4</span>
+          Option: Title: Display requirement UID
+        </a></li></ul>
+            </li><li><a href="#Advanced">
+              <span class="section-number">10.2.7</span>
+              Advanced
+            </a><ul><li><a href="#Facts-table-Invariants-calculation-">
+          <span class="section-number">10.2.7.1</span>
+          Facts table. Invariants calculation.
+        </a></li><li><a href="#FMEA-FMECA-tables">
+          <span class="section-number">10.2.7.2</span>
+          FMEA/FMECA tables
+        </a></li><li><a href="#Graphical-User-Interface-GUI-">
+          <span class="section-number">10.2.7.3</span>
+          Graphical User Interface (GUI)
+        </a></li><li><a href="#Web-server-and-editable-HTML-pages">
+          <span class="section-number">10.2.7.4</span>
+          Web server and editable HTML pages
+        </a></li></ul>
             </li></ul>
             </li></ul>
             </li></ul>
@@ -366,7 +478,7 @@ section to get an idea of the overall project direction.</p>
 <p>&quot;Hello World&quot; example of the text language:</p>
 <pre class="code text literal-block">
 [DOCUMENT]
-NAME: StrictDoc
+TITLE: StrictDoc
 
 [REQUIREMENT]
 UID: SDOC-HIGH-REQS-MANAGEMENT
@@ -515,7 +627,7 @@ located in a single file:
 <p>This is how a minimal possible SDOC document looks like:</p>
 <pre class="code literal-block">
 [DOCUMENT]
-NAME: StrictDoc
+TITLE: StrictDoc
 </pre>
 <p>This documentation is written using StrictDoc. Here is the source file:
 <a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc">strictdoc.sdoc</a>.</p>
@@ -1027,7 +1139,18 @@ documents and documentation trees.</p>
         <div class="document">
 <p>Change management is difficult. The bigger the project is, the harder it is to
 maintain its documentation. If a change is introduced to a project, it usually
-requires a full revision of its requirements TBD.</p>
+requires a full revision of its requirements.</p>
+</div>
+
+      </div>
+      <div class="requirement_comment">
+        <div class="document">
+<p>When the basic capabilities of StrictDoc are in place, it should be possible
+to do a more advanced analysis of requirements and requirement trees:</p>
+<ul class="simple">
+<li>Finding similar or relevant requirements.</li>
+<li>Enforce invariants that should be hold. Example: mass or power budget.</li>
+</ul>
 </div>
 
       </div>
@@ -1109,7 +1232,7 @@ requires a full revision of its requirements TBD.</p>
   <section class="requirement_section" data-section='comment'>
       <div class="requirement_comment">
         <div class="document">
-<p>StrictDoc is a result of multiple attempts to find a solution for working with
+<p>StrictDoc is a result of several attempts to find a solution for working with
 text-based requirements:</p>
 <ul class="simple">
 <li>StrictDoc, first generation: Markdown-based C++ program. Custom requirements
@@ -1117,8 +1240,11 @@ metadata in YAML.</li>
 <li>StrictDoc, second generation: RST/Sphinx-based Python program. Using Sphinx
 extensions to manage meta information.</li>
 </ul>
-<p>The result of these efforts is the realization that a text-based requirements
-and specifications management tool TBD.</p>
+<p>The result of these efforts was the realization that a text-based requirements
+and specifications management tool could be built on top of a domain-specific
+language (DSL) created specifically for the purpose of writing requirements and
+specifications documents. Such a language allows an explicit definition of a
+document data model which is called &quot;grammar&quot;.</p>
 </div>
 
       </div>
@@ -1526,7 +1652,7 @@ documents and files.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Modeling-capability"></div><h3 class="section-title" data-level="8.4.1">
       Modeling capability
     </h3><dl class="requirement_meta">
-      <div><dt>UID</dt><dd>SDOC-DM-001</dd></div>
+      <div><dt>UID</dt><dd>SDOC-DM-MODEL</dd></div>
 
     </dl>
   <ul class="requirement_parent">
@@ -1534,6 +1660,12 @@ documents and files.</p>
       <a href="#Requirements-management">
         <span class="requirement_parent-uid">SDOC-HIGH-REQS-MANAGEMENT </span>
         Requirements management
+      </a>
+    </li>
+    <li>
+      <a href="#Data-model">
+        <span class="requirement_parent-uid">SDOC-HIGH-DATA-MODEL </span>
+        Data model
       </a>
     </li>
     </ul>
@@ -1899,13 +2031,13 @@ be no way to define a single rule.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Primary-text-implementation"></div><h3 class="section-title" data-level="8.5.1">
       Primary text implementation
     </h3><dl class="requirement_meta">
-      <div><dt>UID</dt><dd>SDOC-FMT-001</dd></div>
+      <div><dt>UID</dt><dd>SDOC-FMT-PRIMARY</dd></div>
 
     </dl>
   <ul class="requirement_parent">
     <li>
       <a href="#Modeling-capability">
-        <span class="requirement_parent-uid">SDOC-DM-001 </span>
+        <span class="requirement_parent-uid">SDOC-DM-MODEL </span>
         Modeling capability
       </a>
     </li>
@@ -1934,7 +2066,18 @@ be no way to define a single rule.</p>
 
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Grammar"></div><h3 class="section-title" data-level="8.5.2">
       Grammar
-    </h3>
+    </h3><dl class="requirement_meta">
+      <div><dt>UID</dt><dd>SDOC-FMT-GRAMMAR</dd></div>
+
+    </dl>
+  <ul class="requirement_parent">
+    <li>
+      <a href="#Data-model">
+        <span class="requirement_parent-uid">SDOC-HIGH-DATA-MODEL </span>
+        Data model
+      </a>
+    </li>
+    </ul>
 
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">

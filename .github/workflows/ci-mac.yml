@@ -29,6 +29,11 @@ jobs:
       run: |
         poetry config virtualenvs.in-project true
         poetry install
+
+    - name: Run Lint tasks
+      run: |
+        poetry run invoke lint
+
     - name: Run tests
       run: |
         poetry run invoke test

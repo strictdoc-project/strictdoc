@@ -48,6 +48,10 @@ jobs:
       run: |
         poetry install
 
+    - name: Run Lint tasks
+      run: |
+        poetry run invoke lint
+
     - name: Run tests
       run: |
         poetry run invoke test

@@ -9,12 +9,14 @@ def oneline_command(string):
     return re.sub("\\s+", " ", string).strip()
 
 
-def run_invoke_cmd(c, cmd):
-    return c.run(cmd, env=None, hide=False, warn=False, pty=False, echo=True)
+def run_invoke_cmd(context, cmd):
+    return context.run(
+        cmd, env=None, hide=False, warn=False, pty=False, echo=True
+    )
 
 
 @task
-def clean(c):
+def clean(context):
     find_command = oneline_command(
         """
         find
@@ -33,7 +35,7 @@ def clean(c):
         """
     )
 
-    find_result = run_invoke_cmd(c, find_command)
+    find_result = run_invoke_cmd(context, find_command)
     find_result_stdout = find_result.stdout.strip()
     echo_command = oneline_command(
         """echo {find_result} | xargs rm -rfv""".format(
@@ -41,13 +43,13 @@ def clean(c):
         )
     )
 
-    run_invoke_cmd(c, echo_command)
+    run_invoke_cmd(context, echo_command)
 
 
 @task
-def sphinx(c):
+def sphinx(context):
     run_invoke_cmd(
-        c,
+        context,
         oneline_command(
             """
             python3 strictdoc/cli/main.py export docs --formats=html,rst --output-dir output/sphinx
@@ -56,7 +58,7 @@ def sphinx(c):
     )
 
     run_invoke_cmd(
-        c,
+        context,
         oneline_command(
             """
             cp -v output/sphinx/rst/StrictDoc.rst docs/sphinx/source/ &&
@@ -66,7 +68,7 @@ def sphinx(c):
     )
 
     run_invoke_cmd(
-        c,
+        context,
         oneline_command(
             """
             cd docs/sphinx &&
@@ -78,18 +80,18 @@ def sphinx(c):
 
 
 @task
-def test_unit(c):
+def test_unit(context):
     command = oneline_command(
         """
         pytest --capture=no
         """
     )
 
-    run_invoke_cmd(c, command)
+    run_invoke_cmd(context, command)
 
 
 @task(clean)
-def test_integration(c, focus=None, debug=False):
+def test_integration(context, focus=None, debug=False):
     cwd = os.getcwd()
 
     strictdoc_exec = 'python \\"{cwd}/strictdoc/cli/main.py\\"'.format(cwd=cwd)
@@ -113,11 +115,11 @@ def test_integration(c, focus=None, debug=False):
         focus_or_none=focus_or_none,
     )
 
-    run_invoke_cmd(c, command)
+    run_invoke_cmd(context, command)
 
 
 @task
-def install_local(c):
+def install_local(context):
     command = oneline_command(
         """
         rm -rfv dist &&
@@ -126,17 +128,18 @@ def install_local(c):
         pip install -e .
         """
     )
-    run_invoke_cmd(c, command)
+    run_invoke_cmd(context, command)
 
 
 @task
-def lint_black_diff(c):
+def lint_black_diff(context):
+    # git diff --name-only -- '*.py' | xargs black --diff --color --fast 2>&1
     command = oneline_command(
         """
-        git diff --name-only -- '*.py' | xargs black --diff --color --fast 2>&1
+        black . --diff --color 2>&1
         """
     )
-    result = run_invoke_cmd(c, command)
+    result = run_invoke_cmd(context, command)
 
     # black always exits with 0, so we handle the output.
     if "would be reformatted" in result.stdout:
@@ -146,14 +149,14 @@ def lint_black_diff(c):
 
 
 @task
-def lint_pylint(c):
+def lint_pylint(context):
     command = oneline_command(
         """
         poetry run pylint --rcfile=.pylint.ini strictdoc/ tasks.py
         """
     )
     try:
-        run_invoke_cmd(c, command)
+        run_invoke_cmd(context, command)
     except invoke.exceptions.UnexpectedExit as exc:
         # pylink doesn't show an error message when exit code != 0, so we do.
         print(
@@ -163,19 +166,19 @@ def lint_pylint(c):
 
 
 @task(lint_pylint, lint_black_diff)
-def lint(c):
+def lint(context):
     pass
 
 
 @task(lint, test_unit, test_integration)
-def test(c):
+def test(context):
     pass
 
 
 # Support generation of Poetry managed setup.py file #761
 # https://github.com/python-poetry/poetry/issues/761#issuecomment-689491920
 @task
-def create_local_setup(c):
+def create_local_setup(context):
     command = oneline_command(
         """
         poetry build &&
@@ -183,13 +186,13 @@ def create_local_setup(c):
         pip install -e .
         """
     )
-    run_invoke_cmd(c, command)
+    run_invoke_cmd(context, command)
 
 
 # https://github.com/github-changelog-generator/github-changelog-generator
 # gem install github_changelog_generator
 @task
-def changelog(c, github_token):
+def changelog(context, github_token):
     command = oneline_command(
         f"""
         github_changelog_generator
@@ -198,4 +201,4 @@ def changelog(c, github_token):
         --project strictdoc
         """
     )
-    run_invoke_cmd(c, command)
+    run_invoke_cmd(context, command)

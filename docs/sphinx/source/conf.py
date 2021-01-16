@@ -23,22 +23,22 @@ import toml
 # Strings with embedded variables in Python
 # https://stackoverflow.com/a/16553401/598057
 class RubyTemplate(string.Template):
-    delimiter = '#'
+    delimiter = "#"
 
 
 def get_version():
-   path = Path(__file__).parent.parent.resolve().parents[1] / 'pyproject.toml'
-   pyproject = toml.loads(open(str(path)).read())
-   return pyproject['tool']['poetry']['version']
+    path = Path(__file__).parent.parent.resolve().parents[1] / "pyproject.toml"
+    pyproject = toml.loads(open(str(path)).read())
+    return pyproject["tool"]["poetry"]["version"]
 
 
 STRICTDOC_VERSION = get_version()
 
 # -- Project information -----------------------------------------------------
 
-project = 'StrictDoc'
-copyright = '2020, Stanislav Pankevich'
-author = 'Stanislav Pankevich'
+project = "StrictDoc"
+copyright = "2020, Stanislav Pankevich"
+author = "Stanislav Pankevich"
 
 # The full version, including alpha/beta/rc tags
 release = STRICTDOC_VERSION
@@ -49,65 +49,54 @@ release = STRICTDOC_VERSION
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = [
-]
+extensions = []
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
-html_extra_path = ['../../strictdoc-html']
+html_extra_path = ["../../strictdoc-html"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
-master_doc = 'index'
+master_doc = "index"
 
 # -- Options for PDF/TEX output
-latex_engine = 'xelatex'
+latex_engine = "xelatex"
 
-latex_logo = '_static/logo.jpg'
+latex_logo = "_static/logo.jpg"
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
-latex_documents = [
-    (master_doc, 'StrictDoc.tex', 'StrictDoc',
-     None, 'book')
-]
+latex_documents = [(master_doc, "StrictDoc.tex", "StrictDoc", None, "book")]
 
 # - \usepackage[utf8x]{inputenc} enables UTF-8 support.
 # - 'extraclassoptions': 'openany,oneside' removes second blank page.
 latex_elements = {
-    'extraclassoptions': 'openany,oneside',
+    "extraclassoptions": "openany,oneside",
     # The paper size ('letterpaper' or 'a4paper').
-    'papersize': 'a4paper',
+    "papersize": "a4paper",
     # 'pointsize': '14pt' # does not have any effect
-
-    'fncychap': '',  # disable fncychap
-
-    'releasename': "",
-
-    'sphinxsetup': \
-        'hmargin={0.7in,0.7in}, vmargin={1in,1in}, \
+    "fncychap": "",  # disable fncychap
+    "releasename": "",
+    "sphinxsetup": "hmargin={0.7in,0.7in}, vmargin={1in,1in}, \
         verbatimwithframe=true, \
         TitleColor={rgb}{0,0,0}, \
         InnerLinkColor={rgb}{0.1,0.1,0.1}, \
-        OuterLinkColor={rgb}{1,0,0}',
-
+        OuterLinkColor={rgb}{1,0,0}",
     # Roboto is also a good choice.
     # sudo apt install fonts-roboto
-    'fontpkg': r'''
+    "fontpkg": r"""
         \setmainfont{DejaVu Sans}
         \setsansfont{DejaVu Sans}
         \setmonofont{DejaVu Sans Mono}
-    ''',
-
+    """,
     # Disable default Sphinx styles for the TOC.
-    'tableofcontents': ' ',
-
-    'preamble': r'''
+    "tableofcontents": " ",
+    "preamble": r"""
         \usepackage{datetime}
         \usepackage{hyperref}
         \usepackage{fancyhdr}
@@ -217,9 +206,9 @@ latex_elements = {
             \newcommand\sdocfronttitlefont{\@setfontsize\Huge{36}{36}}
             \newcommand\sdocfrontsubtitlefont{\@setfontsize\Huge{16}{16}}
         \makeatother
-    ''',
-
-    'maketitle': RubyTemplate(r'''
+    """,
+    "maketitle": RubyTemplate(
+        r"""
         \pagenumbering{Roman} %%% to avoid page 1 conflict with actual page 1
 
         \begin{titlepage}   
@@ -278,7 +267,8 @@ latex_elements = {
         \clearpage
         \pagestyle{normal}
         \pagenumbering{arabic}
-        ''').substitute(STRICTDOC_VERSION=STRICTDOC_VERSION)
+        """
+    ).substitute(STRICTDOC_VERSION=STRICTDOC_VERSION),
 }
 
 # -- Options for HTML output -------------------------------------------------
@@ -289,18 +279,18 @@ latex_elements = {
 # html_theme = 'classic'
 html_theme_path = guzzle_sphinx_theme.html_theme_path()
 extensions.append("guzzle_sphinx_theme")
-html_theme = 'guzzle_sphinx_theme'
+html_theme = "guzzle_sphinx_theme"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ["_static"]
 html_context = {
-    'css_files': [
-        '_static/theme_overrides.css',
+    "css_files": [
+        "_static/theme_overrides.css",
     ],
 }
 html_theme_options = {
     "project_nav_name": "StrictDoc",
 }
-html_sidebars = { '**': ['globaltoc.html', 'searchbox.html'] }
+html_sidebars = {"**": ["globaltoc.html", "searchbox.html"]}

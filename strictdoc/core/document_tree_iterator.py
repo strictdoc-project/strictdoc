@@ -16,4 +16,6 @@ class DocumentTreeIterator:
             yield file_tree_or_file
             if isinstance(file_tree_or_file, FileTree):
                 task_list.extendleft(reversed(file_tree_or_file.files))
-                task_list.extendleft(reversed(file_tree_or_file.subfolder_trees))
+                task_list.extendleft(
+                    reversed(file_tree_or_file.subfolder_trees)
+                )

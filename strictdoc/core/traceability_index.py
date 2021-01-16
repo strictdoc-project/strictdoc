@@ -54,26 +54,30 @@ class TraceabilityIndex:
                     document_tags[tag] += 1
 
                 if requirement.uid in requirements_map:
-                    print('error: DocumentIndex: requirement already exists: {}'.format(
-                        requirement.uid
-                    ))
+                    print(
+                        "error: DocumentIndex: requirement already exists: {}".format(
+                            requirement.uid
+                        )
+                    )
                     exit(1)
 
                 if requirement.uid not in requirements_children_map:
                     requirements_children_map[requirement.uid] = []
 
                 requirements_map[requirement.uid] = {
-                    'document': document,
-                    'requirement': requirement,
-                    'parents': [],
-                    'parents_uids': [],
-                    'children': []
+                    "document": document,
+                    "requirement": requirement,
+                    "parents": [],
+                    "parents_uids": [],
+                    "children": [],
                 }
 
                 for ref in requirement.references:
                     if ref.ref_type != "Parent":
                         continue
-                    requirements_map[requirement.uid]['parents_uids'].append(ref.path)
+                    requirements_map[requirement.uid]["parents_uids"].append(
+                        ref.path
+                    )
 
                     if ref.path not in requirements_children_map:
                         requirements_children_map[ref.path] = []
@@ -99,23 +103,35 @@ class TraceabilityIndex:
 
                 # Now it is possible to resolve parents first checking if they
                 # indeed exist.
-                requirement_parent_ids = requirements_map[requirement.uid]['parents_uids']
+                requirement_parent_ids = requirements_map[requirement.uid][
+                    "parents_uids"
+                ]
                 for requirement_parent_id in requirement_parent_ids:
                     if requirement_parent_id not in requirements_map:
                         # TODO: Strict variant of the behavior will be to stop
                         # and raise an error message.
-                        print("warning: [DocumentIndex.create] Requirement {} references parent requirement which doesn't exist: {}".format(
-                            requirement.uid, requirement_parent_id
-                        ))
-                        requirements_children_map.pop(requirement_parent_id, None)
+                        print(
+                            "warning: [DocumentIndex.create] Requirement {} references parent requirement which doesn't exist: {}".format(
+                                requirement.uid, requirement_parent_id
+                            )
+                        )
+                        requirements_children_map.pop(
+                            requirement_parent_id, None
+                        )
                         continue
-                    parent_requirement = requirements_map[requirement_parent_id]['requirement']
-                    requirements_map[requirement.uid]['parents'].append(parent_requirement)
+                    parent_requirement = requirements_map[
+                        requirement_parent_id
+                    ]["requirement"]
+                    requirements_map[requirement.uid]["parents"].append(
+                        parent_requirement
+                    )
 
                 if requirement.uid not in requirements_child_depth_map:
                     child_depth = 0
 
-                    requirements_map[requirement.uid]['children'] = requirements_children_map[requirement.uid]
+                    requirements_map[requirement.uid][
+                        "children"
+                    ] = requirements_children_map[requirement.uid]
 
                     queue = requirements_children_map[requirement.uid]
                     while True:
@@ -125,7 +141,9 @@ class TraceabilityIndex:
                         child_depth += 1
                         deeper_queue = []
                         for child in queue:
-                            deeper_queue.extend(requirements_children_map[child.uid])
+                            deeper_queue.extend(
+                                requirements_children_map[child.uid]
+                            )
                         queue = deeper_queue
 
                     requirements_child_depth_map[requirement.uid] = child_depth
@@ -146,28 +164,36 @@ class TraceabilityIndex:
                         for parent_uid in queue:
                             if parent_uid not in requirements_map:
                                 continue
-                            deeper_queue.extend(requirements_map[parent_uid]['parents_uids'])
+                            deeper_queue.extend(
+                                requirements_map[parent_uid]["parents_uids"]
+                            )
                         queue = deeper_queue
 
-                    requirements_parent_depth_map[requirement.uid] = parent_depth
+                    requirements_parent_depth_map[
+                        requirement.uid
+                    ] = parent_depth
                     if max_parent_depth < parent_depth:
                         max_parent_depth = parent_depth
 
-            documents_ref_depth_map[document] = max(max_parent_depth, max_child_depth)
+            documents_ref_depth_map[document] = max(
+                max_parent_depth, max_child_depth
+            )
 
         traceability_index = TraceabilityIndex(
             document_iterators,
             requirements_map,
             tags_map,
-            documents_ref_depth_map
+            documents_ref_depth_map,
         )
         return traceability_index
 
-    def __init__(self,
-                 document_iterators,
-                 requirements_parents,
-                 tags_map,
-                 documents_ref_depth_map):
+    def __init__(
+        self,
+        document_iterators,
+        requirements_parents,
+        tags_map,
+        documents_ref_depth_map,
+    ):
         self._document_iterators = document_iterators
         self._requirements_parents = requirements_parents
         self._tags_map = tags_map
@@ -203,7 +229,9 @@ class TraceabilityIndex:
         if not self.requirements_parents:
             return []
 
-        parent_requirements = self.requirements_parents[requirement.uid]['parents']
+        parent_requirements = self.requirements_parents[requirement.uid][
+            "parents"
+        ]
         return parent_requirements
 
     def has_parent_requirements(self, requirement: Requirement):
@@ -217,7 +245,9 @@ class TraceabilityIndex:
         if len(self.requirements_parents) == 0:
             return False
 
-        parent_requirements = self.requirements_parents[requirement.uid]['parents']
+        parent_requirements = self.requirements_parents[requirement.uid][
+            "parents"
+        ]
         return len(parent_requirements) > 0
 
     def has_children_requirements(self, requirement: Requirement):
@@ -231,7 +261,9 @@ class TraceabilityIndex:
         if not self.requirements_parents:
             return False
 
-        children_requirements = self.requirements_parents[requirement.uid]['children']
+        children_requirements = self.requirements_parents[requirement.uid][
+            "children"
+        ]
         return len(children_requirements) > 0
 
     def get_children_requirements(self, requirement: Requirement):
@@ -245,16 +277,22 @@ class TraceabilityIndex:
         if not self.requirements_parents:
             return []
 
-        children_requirements = self.requirements_parents[requirement.uid]['children']
+        children_requirements = self.requirements_parents[requirement.uid][
+            "children"
+        ]
         return children_requirements
 
     def get_link(self, requirement):
-        document = self.requirements_parents[requirement.uid]['document']
-        return "{} - Traceability.html#{}".format(document.name, requirement.uid)
+        document = self.requirements_parents[requirement.uid]["document"]
+        return "{} - Traceability.html#{}".format(
+            document.name, requirement.uid
+        )
 
     def get_deep_link(self, requirement):
-        document = self.requirements_parents[requirement.uid]['document']
-        return "{} - Traceability Deep.html#{}".format(document.name, requirement.uid)
+        document = self.requirements_parents[requirement.uid]["document"]
+        return "{} - Traceability Deep.html#{}".format(
+            document.name, requirement.uid
+        )
 
     def has_tags(self, document):
         if document.name not in self.tags_map:

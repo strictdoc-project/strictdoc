@@ -5,7 +5,7 @@ from strictdoc.export.html.document_type import DocumentType
 
 class DocumentTableHTMLGenerator:
     env = Environment(
-        loader=PackageLoader('strictdoc', 'export/html/templates')
+        loader=PackageLoader("strictdoc", "export/html/templates")
     )
     env.globals.update(isinstance=isinstance)
 
@@ -14,13 +14,15 @@ class DocumentTableHTMLGenerator:
         output = ""
 
         template = DocumentTableHTMLGenerator.env.get_template(
-            'single_document_table/document.jinja.html'
+            "single_document_table/document.jinja.html"
         )
 
-        output += template.render(document=document,
-                                  traceability_index=traceability_index,
-                                  renderer=markup_renderer,
-                                  link_renderer=link_renderer,
-                                  document_type=DocumentType.table())
+        output += template.render(
+            document=document,
+            traceability_index=traceability_index,
+            renderer=markup_renderer,
+            link_renderer=link_renderer,
+            document_type=DocumentType.table(),
+        )
 
         return output

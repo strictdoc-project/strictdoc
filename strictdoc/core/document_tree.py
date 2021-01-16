@@ -47,7 +47,9 @@ class FileTree(FileOrFolderEntry):
         self.subfolder_trees = []
 
     def __repr__(self):
-        return "FileTree: (root_path: {}, files: {})".format(self.root_path, self.files)
+        return "FileTree: (root_path: {}, files: {})".format(
+            self.root_path, self.files
+        )
 
     def is_folder(self):
         return True
@@ -80,10 +82,7 @@ class FileTree(FileOrFolderEntry):
 
 
 class DocumentTree:
-    def __init__(self,
-                 file_tree,
-                 document_list,
-                 map_docs_by_paths):
+    def __init__(self, file_tree, document_list, map_docs_by_paths):
         assert isinstance(file_tree, list)
         assert isinstance(document_list, list)
         assert isinstance(map_docs_by_paths, dict)
@@ -92,7 +91,9 @@ class DocumentTree:
         self.map_docs_by_paths = map_docs_by_paths
 
     def __repr__(self):
-        return "DocumentTree: {} document_list: {}".format(self.file_tree, self.document_list)
+        return "DocumentTree: {} document_list: {}".format(
+            self.file_tree, self.document_list
+        )
 
     def get_document_by_path(self, doc_full_path):
         document = self.map_docs_by_paths[doc_full_path]

@@ -5,7 +5,7 @@ from strictdoc.export.html.document_type import DocumentType
 
 class DocumentHTMLGenerator:
     env = Environment(
-        loader=PackageLoader('strictdoc', 'export/html/templates')
+        loader=PackageLoader("strictdoc", "export/html/templates")
     )
     env.globals.update(isinstance=isinstance)
 
@@ -16,16 +16,21 @@ class DocumentHTMLGenerator:
         traceability_index,
         markup_renderer,
         link_renderer,
-        standalone=False):
+        standalone=False,
+    ):
         output = ""
 
-        template = DocumentHTMLGenerator.env.get_template('single_document/document.jinja.html')
+        template = DocumentHTMLGenerator.env.get_template(
+            "single_document/document.jinja.html"
+        )
 
-        output += template.render(document=document,
-                                  traceability_index=traceability_index,
-                                  link_renderer=link_renderer,
-                                  renderer=markup_renderer,
-                                  standalone=standalone,
-                                  document_type=DocumentType.document())
+        output += template.render(
+            document=document,
+            traceability_index=traceability_index,
+            link_renderer=link_renderer,
+            renderer=markup_renderer,
+            standalone=standalone,
+            document_type=DocumentType.document(),
+        )
 
         return output

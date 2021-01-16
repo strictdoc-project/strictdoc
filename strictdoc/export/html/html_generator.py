@@ -5,10 +5,18 @@ from pathlib import Path
 
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.export.html.generators.document import DocumentHTMLGenerator
-from strictdoc.export.html.generators.document_deep_trace import DocumentDeepTraceHTMLGenerator
-from strictdoc.export.html.generators.document_table import DocumentTableHTMLGenerator
-from strictdoc.export.html.generators.document_trace import DocumentTraceHTMLGenerator
-from strictdoc.export.html.generators.document_tree import DocumentTreeHTMLGenerator
+from strictdoc.export.html.generators.document_deep_trace import (
+    DocumentDeepTraceHTMLGenerator,
+)
+from strictdoc.export.html.generators.document_table import (
+    DocumentTableHTMLGenerator,
+)
+from strictdoc.export.html.generators.document_trace import (
+    DocumentTraceHTMLGenerator,
+)
+from strictdoc.export.html.generators.document_tree import (
+    DocumentTreeHTMLGenerator,
+)
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.export.html.tools.html_embedded import HTMLEmbedder
@@ -31,8 +39,6 @@ class ExportMode(Enum):
 
 
 class HTMLGenerator:
-
-
     @staticmethod
     def export_tree(
         formats_string,
@@ -44,13 +50,13 @@ class HTMLGenerator:
         asset_dirs,
         parallelizer,
     ):
-        if 'html' in formats_string:
-            if 'html-standalone' in formats_string:
+        if "html" in formats_string:
+            if "html-standalone" in formats_string:
                 export_mode = ExportMode.DOCTREE_AND_STANDALONE
             else:
                 export_mode = ExportMode.DOCTREE
         else:
-            if 'html-standalone' in formats_string:
+            if "html-standalone" in formats_string:
                 export_mode = ExportMode.STANDALONE
             else:
                 raise NotImplementedError
@@ -88,7 +94,7 @@ class HTMLGenerator:
             document_tree=document_tree,
             traceability_index=traceability_index,
             markup_renderer=markup_renderer,
-            link_renderer=link_renderer
+            link_renderer=link_renderer,
         )
 
         parallelizer.map(document_tree.document_list, export_binding)
@@ -106,7 +112,7 @@ class HTMLGenerator:
         document_tree,
         traceability_index,
         markup_renderer,
-        link_renderer
+        link_renderer,
     ):
         document_meta: DocumentMeta = document.meta
         full_output_path = os.path.join(
@@ -208,7 +214,7 @@ class HTMLGenerator:
                 traceability_index,
                 markup_renderer,
                 link_renderer,
-                standalone=True
+                standalone=True,
             )
 
             document_out_file = document_meta.get_html_doc_standalone_path()

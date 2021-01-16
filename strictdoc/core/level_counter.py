@@ -1,4 +1,3 @@
-
 class LevelCounter:
     def __init__(self):
         self.levels = []
@@ -18,6 +17,6 @@ class LevelCounter:
 
     def get_string(self):
         str_levels = map(lambda el: str(el), self.levels)
-        string = '.'.join(str_levels)
+        string = ".".join(str_levels)
 
         return string

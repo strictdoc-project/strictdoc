@@ -1,9 +1,10 @@
+import sys
 import traceback
 from functools import partial
 from typing import Optional
 
 from textx import metamodel_from_str
-from textx.scoping.tools import get_location
+from textx.model import get_location
 
 from strictdoc.backend.dsl.document_reference import DocumentReference
 from strictdoc.backend.dsl.error_handling import StrictDocSemanticError

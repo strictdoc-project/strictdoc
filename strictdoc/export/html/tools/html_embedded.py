@@ -39,13 +39,17 @@ class EmbeddableTag:
         elif tag.name == "img":
             if "src" in tag.attrs:
                 rel_value: str = tag.attrs["src"]
-                if rel_value.lower().endswith('.png'):
-                    return EmbeddableTag(EmbeddableTag.IMAGE_PNG, tag.attrs["src"])
+                if rel_value.lower().endswith(".png"):
+                    return EmbeddableTag(
+                        EmbeddableTag.IMAGE_PNG, tag.attrs["src"]
+                    )
         elif tag.name == "object":
             if "type" in tag.attrs:
                 type_value = tag.attrs["type"]
                 if type_value == "image/svg+xml":
-                    return EmbeddableTag(EmbeddableTag.IMAGE_SVG, tag.attrs["data"])
+                    return EmbeddableTag(
+                        EmbeddableTag.IMAGE_SVG, tag.attrs["data"]
+                    )
         return None
 
     def get_path(self):
@@ -72,9 +76,7 @@ class HTMLEmbedder:
             asset_path = os.path.join(output_dir, embeddable_tag.get_path())
             tag.attrs[
                 embeddable_tag.get_attr()
-            ] = HTMLEmbedder._read_file_as_base64(
-                asset_path
-            )
+            ] = HTMLEmbedder._read_file_as_base64(asset_path)
 
         output = str(soup)
         return output

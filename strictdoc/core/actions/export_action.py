@@ -31,7 +31,9 @@ class ExportAction:
         )
 
     @timing_decorator("Export")
-    def export(self, path_to_single_file_or_doc_root, output_dir, formats, fields):
+    def export(
+        self, path_to_single_file_or_doc_root, output_dir, formats, fields
+    ):
         assert isinstance(formats, list)
 
         if isinstance(path_to_single_file_or_doc_root, str):

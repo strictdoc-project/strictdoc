@@ -24,8 +24,12 @@ class Logger:
         caller_line = calframe[1][2]
         caller_name = calframe[1][3]
 
-        print('{}.{}>\n"""\n{}\n"""\n{}:{}\n\n'.format(
-            self.logger_class_name, caller_name,
-            message,
-            caller_file, caller_line
-        ))
+        print(
+            '{}.{}>\n"""\n{}\n"""\n{}:{}\n\n'.format(
+                self.logger_class_name,
+                caller_name,
+                message,
+                caller_file,
+                caller_line,
+            )
+        )

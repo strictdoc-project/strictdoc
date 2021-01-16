@@ -1,6 +1,11 @@
-from strictdoc.backend.dsl.models.requirement import Requirement, RequirementComment
+from strictdoc.backend.dsl.models.requirement import (
+    Requirement,
+    RequirementComment,
+)
 from strictdoc.backend.dsl.models.section import FreeText
-from strictdoc.export.rst.rst_to_html_fragment_writer import RstToHtmlFragmentWriter
+from strictdoc.export.rst.rst_to_html_fragment_writer import (
+    RstToHtmlFragmentWriter,
+)
 
 
 class MarkupRenderer:

@@ -1,8 +1,12 @@
 import os
 
-from strictdoc.export.rst.rst_to_html_fragment_writer import RstToHtmlFragmentWriter
+from strictdoc.export.rst.rst_to_html_fragment_writer import (
+    RstToHtmlFragmentWriter,
+)
 
-FIXTURES_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "fixtures"))
+FIXTURES_PATH = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "fixtures")
+)
 
 
 def test_01():

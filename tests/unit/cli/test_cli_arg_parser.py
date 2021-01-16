@@ -9,17 +9,14 @@ def test_export_01_minimal():
 
     args = parser.parse_args(["export", "docs"])
 
-    assert args.command == "export"
-    assert args.input_paths == ["docs"]
+    assert len(args._get_kwargs()) == 6
 
-    assert args._get_kwargs() == [
-        ("command", "export"),
-        ("fields", ["uid", "statement", "parent"]),
-        ("formats", ["html"]),
-        ("input_paths", ["docs"]),
-        ("no_parallelization", False),
-        ("output_dir", None),
-    ]
+    assert args.command == "export"
+    assert args.fields == ["uid", "statement", "parent"]
+    assert args.formats == ["html"]
+    assert args.input_paths == ["docs"]
+    assert args.no_parallelization is False
+    assert args.output_dir is None
 
 
 def test_export_02_output_dir():
@@ -29,17 +26,14 @@ def test_export_02_output_dir():
         ["export", "docs", "--output-dir", "custom-output-dir"]
     )
 
+    assert len(args._get_kwargs()) == 6
+
     assert args.command == "export"
     assert args.input_paths == ["docs"]
-
-    assert args._get_kwargs() == [
-        ("command", "export"),
-        ("fields", ["uid", "statement", "parent"]),
-        ("formats", ["html"]),
-        ("input_paths", ["docs"]),
-        ("no_parallelization", False),
-        ("output_dir", "custom-output-dir"),
-    ]
+    assert args.fields == ["uid", "statement", "parent"]
+    assert args.formats == ["html"]
+    assert args.no_parallelization is False
+    assert args.output_dir == "custom-output-dir"
 
 
 def test_export_03_parallelization():
@@ -47,17 +41,14 @@ def test_export_03_parallelization():
 
     args = parser.parse_args(["export", "docs", "--no-parallelization"])
 
-    assert args.command == "export"
-    assert args.input_paths == ["docs"]
+    assert len(args._get_kwargs()) == 6
 
-    assert args._get_kwargs() == [
-        ("command", "export"),
-        ("fields", ["uid", "statement", "parent"]),
-        ("formats", ["html"]),
-        ("input_paths", ["docs"]),
-        ("no_parallelization", True),
-        ("output_dir", None),
-    ]
+    assert args.command == "export"
+    assert args.fields == ["uid", "statement", "parent"]
+    assert args.formats == ["html"]
+    assert args.input_paths == ["docs"]
+    assert args.no_parallelization is True
+    assert args.output_dir is None
 
 
 def test_export_04_export_format_rst():
@@ -65,17 +56,14 @@ def test_export_04_export_format_rst():
 
     args = parser.parse_args(["export", "--formats=rst", "docs"])
 
-    assert args.command == "export"
-    assert args.input_paths == ["docs"]
+    assert len(args._get_kwargs()) == 6
 
-    assert args._get_kwargs() == [
-        ("command", "export"),
-        ("fields", ["uid", "statement", "parent"]),
-        ("formats", ["rst"]),
-        ("input_paths", ["docs"]),
-        ("no_parallelization", False),
-        ("output_dir", None),
-    ]
+    assert args.command == "export"
+    assert args.fields == ["uid", "statement", "parent"]
+    assert args.formats == ["rst"]
+    assert args.input_paths == ["docs"]
+    assert args.no_parallelization is False
+    assert args.output_dir is None
 
 
 def test_export_05_export_format_multiple():
@@ -86,14 +74,14 @@ def test_export_05_export_format_multiple():
     assert args.command == "export"
     assert args.input_paths == ["docs"]
 
-    assert args._get_kwargs() == [
-        ("command", "export"),
-        ("fields", ["uid", "statement", "parent"]),
-        ("formats", ["html", "rst"]),
-        ("input_paths", ["docs"]),
-        ("no_parallelization", False),
-        ("output_dir", None),
-    ]
+    assert len(args._get_kwargs()) == 6
+
+    assert args.command == "export"
+    assert args.fields == ["uid", "statement", "parent"]
+    assert args.formats == ["html", "rst"]
+    assert args.input_paths == ["docs"]
+    assert args.no_parallelization is False
+    assert args.output_dir is None
 
 
 def test_passthrough_01_minimal():

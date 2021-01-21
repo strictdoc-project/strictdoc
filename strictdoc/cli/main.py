@@ -12,15 +12,6 @@ from strictdoc.core.actions.passthrough_action import PassthroughAction
 
 
 def main():
-    # Initializing the parallelizer early in the startup process because otherwise
-    # fork() used by Python's multiprocessing library results in the following error:
-    #
-    # """
-    # objc[7522]: +[__NSPlaceholderDictionary initialize] may have been in progress
-    # in another thread when fork() was called. We cannot safely call it or ignore
-    # it in the fork() child process. Crashing instead. Set a breakpoint on
-    # objc_initializeAfterForkError to debug.
-    # """
     enable_parallelization = "--no-parallelization" not in sys.argv
     parallelizer = Parallelizer.create(enable_parallelization)
 

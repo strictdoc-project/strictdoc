@@ -1,0 +1,37 @@
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+
+CHECK-NOT: {{.*objc.*}}
+CHECK-NOT: {{.*fork.*}}
+
+RUN: %check_exists --file %S/Output/html/05_parallelization_no_macos_problem_regression/input1.html
+RUN: %check_exists --file %S/Output/html/05_parallelization_no_macos_problem_regression/input2.html
+RUN: %check_exists --file %S/Output/html/05_parallelization_no_macos_problem_regression/input3.html
+RUN: %check_exists --file %S/Output/html/05_parallelization_no_macos_problem_regression/input4.html
+RUN: %check_exists --file %S/Output/html/05_parallelization_no_macos_problem_regression/input5.html
+RUN: %check_exists --file %S/Output/html/05_parallelization_no_macos_problem_regression/input6.html
+RUN: %check_exists --file %S/Output/html/05_parallelization_no_macos_problem_regression/input7.html
+RUN: %check_exists --file %S/Output/html/05_parallelization_no_macos_problem_regression/input8.html
+RUN: %check_exists --file %S/Output/html/05_parallelization_no_macos_problem_regression/input9.html
+RUN: %check_exists --file %S/Output/html/05_parallelization_no_macos_problem_regression/input10.html
+
+RUN: cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: Doc 1
+CHECK-HTML: input1.sdoc
+CHECK-HTML: Doc 2
+CHECK-HTML: input2.sdoc
+CHECK-HTML: Doc 3
+CHECK-HTML: input3.sdoc
+CHECK-HTML: Doc 4
+CHECK-HTML: input4.sdoc
+CHECK-HTML: Doc 5
+CHECK-HTML: input5.sdoc
+CHECK-HTML: Doc 6
+CHECK-HTML: input6.sdoc
+CHECK-HTML: Doc 7
+CHECK-HTML: input7.sdoc
+CHECK-HTML: Doc 8
+CHECK-HTML: input8.sdoc
+CHECK-HTML: Doc 9
+CHECK-HTML: input9.sdoc
+CHECK-HTML: Doc 10
+CHECK-HTML: input10.sdoc

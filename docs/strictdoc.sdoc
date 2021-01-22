@@ -23,6 +23,11 @@ Summary of StrictDoc features:
   "parent-child", and from these connections, many useful features, such as
   `Requirements Traceability <https://en.wikipedia.org/wiki/Requirements_traceability>`_
   and Documentation Coverage, can be derived.
+- Good performance of the `textX <https://github.com/textX/textX>`_
+  parser and parallelized incremental generation of documents: generation of
+  document trees with up to 2000-3000 requirements into HTML pages stays within
+  a few seconds. From the second run, only changed documents are regenerated.
+  Further performance tuning should be possible.
 
 **Warning:** The StrictDoc project is still under construction. See the Roadmap
 section to get an idea of the overall project direction.

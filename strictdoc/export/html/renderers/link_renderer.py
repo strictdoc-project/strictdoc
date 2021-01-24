@@ -17,10 +17,10 @@ class LinkRenderer:
         if isinstance(node, Section):
             local_anchor = self._string_to_link(node.title)
         elif isinstance(node, Requirement):
-            if node.title and len(node.title) > 0:
-                local_anchor = self._string_to_link(node.title)
-            elif node.uid and len(node.uid) > 0:
+            if node.uid and len(node.uid) > 0:
                 local_anchor = self._string_to_link(node.uid)
+            elif node.title and len(node.title) > 0:
+                local_anchor = self._string_to_link(node.title)
             else:
                 # TODO: This is not reliable
                 local_anchor = str(id(node))

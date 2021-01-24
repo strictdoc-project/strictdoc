@@ -94,26 +94,26 @@
             </a><ul><li><a href="#Project-goals">
               <span class="section-number">8.1</span>
               Project goals
-            </a><ul><li><a href="#Software-support-for-writing-requirements-and-specifications-documents">
+            </a><ul><li><a href="#GOAL-1-TOOL-SUPPORT">
           <span class="section-number">8.1.1</span>
           Software support for writing requirements and specifications documents
-        </a></li><li><a href="#Reduce-documentation-hazards">
+        </a></li><li><a href="#GOAL-2-REDUCE-DOCUMENTATION-HAZARDS">
           <span class="section-number">8.1.2</span>
           Reduce documentation hazards
-        </a></li><li><a href="#No-or-less-run-away-documentation">
+        </a></li><li><a href="#GOAL-3-NO-RUNAWAY-DOCUMENTATION">
           <span class="section-number">8.1.3</span>
           No (or less) run-away documentation
-        </a></li><li><a href="#Change-management">
+        </a></li><li><a href="#GOAL-4-CHANGE-MANAGEMENT">
           <span class="section-number">8.1.4</span>
           Change management
         </a></li></ul>
             </li><li><a href="#High-level-requirements">
               <span class="section-number">8.2</span>
               High-level requirements
-            </a><ul><li><a href="#Requirements-management">
+            </a><ul><li><a href="#SDOC-HIGH-REQS-MANAGEMENT">
           <span class="section-number">8.2.1</span>
           Requirements management
-        </a></li><li><a href="#Data-model">
+        </a></li><li><a href="#SDOC-HIGH-DATA-MODEL">
           <span class="section-number">8.2.2</span>
           Data model
         </a></li><li><a href="#Command-line-interface">
@@ -144,7 +144,7 @@
         </a></li><li><a href="#Scalability">
           <span class="section-number">8.2.8</span>
           Scalability
-        </a></li><li><a href="#Traceability">
+        </a></li><li><a href="#SDOC-HIGH-REQS-TRACEABILITY">
           <span class="section-number">8.2.9</span>
           Traceability
         </a></li><li><a href="#Visualization">
@@ -157,17 +157,17 @@
             </li><li><a href="#Implementation-requirements">
               <span class="section-number">8.3</span>
               Implementation requirements
-            </a><ul><li><a href="#Parallelization">
+            </a><ul><li><a href="#SDOC-IMPL-PARAL">
           <span class="section-number">8.3.1</span>
           Parallelization
-        </a></li><li><a href="#Incremental-generation">
+        </a></li><li><a href="#SDOC-IMPL-INCREMENTAL">
           <span class="section-number">8.3.2</span>
           Incremental generation
         </a></li></ul>
             </li><li><a href="#Data-model">
               <span class="section-number">8.4</span>
               Data model
-            </a><ul><li><a href="#Modeling-capability">
+            </a><ul><li><a href="#SDOC-DM-MODEL">
           <span class="section-number">8.4.1</span>
           Modeling capability
         </a></li><li><a href="#Section-item">
@@ -216,10 +216,10 @@
             </li><li><a href="#SDOC-file-format">
               <span class="section-number">8.5</span>
               SDOC file format
-            </a><ul><li><a href="#Primary-text-implementation">
+            </a><ul><li><a href="#SDOC-FMT-PRIMARY">
           <span class="section-number">8.5.1</span>
           Primary text implementation
-        </a></li><li><a href="#Grammar">
+        </a></li><li><a href="#SDOC-FMT-GRAMMAR">
           <span class="section-number">8.5.2</span>
           Grammar
         </a></li><li><a href="#Type-safety">
@@ -1133,13 +1133,20 @@ and
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Software-support-for-writing-requirements-and-specifications-documents"></div><h3 class="section-title" data-level="8.1.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="GOAL-1-TOOL-SUPPORT"></div><h3 class="section-title" data-level="8.1.1">
       Software support for writing requirements and specifications documents
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>GOAL-1-TOOL-SUPPORT</dd></div>
 
     </dl>
-
+  <ul class="requirement_child">
+    <li>
+      <a href="#SDOC-HIGH-REQS-MANAGEMENT">
+        <span class="requirement_child-uid">SDOC-HIGH-REQS-MANAGEMENT </span>
+        Requirements management
+      </a>
+    </li>
+    </ul>
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -1186,13 +1193,20 @@ hundreds or thousands of requirements.</p>
     </dl>
   <ul class="requirement_parent">
     <li>
-      <a href="#Software-support-for-writing-requirements-and-specifications-documents">
+      <a href="#GOAL-1-TOOL-SUPPORT">
         <span class="requirement_parent-uid">GOAL-1-TOOL-SUPPORT </span>
         Software support for writing requirements and specifications documents
       </a>
     </li>
     </ul>
-
+  <ul class="requirement_child">
+    <li>
+      <a href="#SDOC-DM-MODEL">
+        <span class="requirement_child-uid">SDOC-DM-MODEL </span>
+        Modeling capability
+      </a>
+    </li>
+    </ul>
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -1219,13 +1233,12 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Reduce-documentation-hazards"></div><h3 class="section-title" data-level="8.1.2">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="GOAL-2-REDUCE-DOCUMENTATION-HAZARDS"></div><h3 class="section-title" data-level="8.1.2">
       Reduce documentation hazards
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>GOAL-2-REDUCE-DOCUMENTATION-HAZARDS</dd></div>
 
     </dl>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -1268,13 +1281,12 @@ and writing technical documentation.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="No-or-less-run-away-documentation"></div><h3 class="section-title" data-level="8.1.3">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="GOAL-3-NO-RUNAWAY-DOCUMENTATION"></div><h3 class="section-title" data-level="8.1.3">
       No (or less) run-away documentation
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>GOAL-3-NO-RUNAWAY-DOCUMENTATION</dd></div>
 
     </dl>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -1310,13 +1322,12 @@ documents and documentation trees.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Change-management"></div><h3 class="section-title" data-level="8.1.4">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="GOAL-4-CHANGE-MANAGEMENT"></div><h3 class="section-title" data-level="8.1.4">
       Change management
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>GOAL-4-CHANGE-MANAGEMENT</dd></div>
 
     </dl>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -1385,7 +1396,14 @@ to do a more advanced analysis of requirements and requirement trees:</p>
       <div><dt>UID</dt><dd>GOAL-1-TOOL-SUPPORT</dd></div>
 
     </dl>
-
+  <ul class="requirement_child">
+    <li>
+      <a href="#SDOC-HIGH-REQS-MANAGEMENT">
+        <span class="requirement_child-uid">SDOC-HIGH-REQS-MANAGEMENT </span>
+        Requirements management
+      </a>
+    </li>
+    </ul>
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -1425,7 +1443,7 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Requirements-management"></div><h3 class="section-title" data-level="8.2.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="SDOC-HIGH-REQS-MANAGEMENT"></div><h3 class="section-title" data-level="8.2.1">
       Requirements management
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-HIGH-REQS-MANAGEMENT</dd></div>
@@ -1433,13 +1451,20 @@ hundreds or thousands of requirements.</p>
     </dl>
   <ul class="requirement_parent">
     <li>
-      <a href="#Software-support-for-writing-requirements-and-specifications-documents">
+      <a href="#GOAL-1-TOOL-SUPPORT">
         <span class="requirement_parent-uid">GOAL-1-TOOL-SUPPORT </span>
         Software support for writing requirements and specifications documents
       </a>
     </li>
     </ul>
-
+  <ul class="requirement_child">
+    <li>
+      <a href="#SDOC-DM-MODEL">
+        <span class="requirement_child-uid">SDOC-DM-MODEL </span>
+        Modeling capability
+      </a>
+    </li>
+    </ul>
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -1470,19 +1495,26 @@ hundreds or thousands of requirements.</p>
     </dl>
   <ul class="requirement_parent">
     <li>
-      <a href="#Requirements-management">
+      <a href="#SDOC-HIGH-REQS-MANAGEMENT">
         <span class="requirement_parent-uid">SDOC-HIGH-REQS-MANAGEMENT </span>
         Requirements management
       </a>
     </li>
     <li>
-      <a href="#Data-model">
+      <a href="#SDOC-HIGH-DATA-MODEL">
         <span class="requirement_parent-uid">SDOC-HIGH-DATA-MODEL </span>
         Data model
       </a>
     </li>
     </ul>
-
+  <ul class="requirement_child">
+    <li>
+      <a href="#SDOC-FMT-PRIMARY">
+        <span class="requirement_child-uid">SDOC-FMT-PRIMARY </span>
+        Primary text implementation
+      </a>
+    </li>
+    </ul>
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -1519,13 +1551,26 @@ hundreds or thousands of requirements.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Data-model"></div><h3 class="section-title" data-level="8.2.2">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="SDOC-HIGH-DATA-MODEL"></div><h3 class="section-title" data-level="8.2.2">
       Data model
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-HIGH-DATA-MODEL</dd></div>
 
     </dl>
-
+  <ul class="requirement_child">
+    <li>
+      <a href="#SDOC-DM-MODEL">
+        <span class="requirement_child-uid">SDOC-DM-MODEL </span>
+        Modeling capability
+      </a>
+    </li>
+    <li>
+      <a href="#SDOC-FMT-GRAMMAR">
+        <span class="requirement_child-uid">SDOC-FMT-GRAMMAR </span>
+        Grammar
+      </a>
+    </li>
+    </ul>
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -1574,19 +1619,26 @@ document data model which is called &quot;grammar&quot;.</p>
     </dl>
   <ul class="requirement_parent">
     <li>
-      <a href="#Requirements-management">
+      <a href="#SDOC-HIGH-REQS-MANAGEMENT">
         <span class="requirement_parent-uid">SDOC-HIGH-REQS-MANAGEMENT </span>
         Requirements management
       </a>
     </li>
     <li>
-      <a href="#Data-model">
+      <a href="#SDOC-HIGH-DATA-MODEL">
         <span class="requirement_parent-uid">SDOC-HIGH-DATA-MODEL </span>
         Data model
       </a>
     </li>
     </ul>
-
+  <ul class="requirement_child">
+    <li>
+      <a href="#SDOC-FMT-PRIMARY">
+        <span class="requirement_child-uid">SDOC-FMT-PRIMARY </span>
+        Primary text implementation
+      </a>
+    </li>
+    </ul>
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -1626,13 +1678,12 @@ document data model which is called &quot;grammar&quot;.</p>
     </dl>
   <ul class="requirement_parent">
     <li>
-      <a href="#Data-model">
+      <a href="#SDOC-HIGH-DATA-MODEL">
         <span class="requirement_parent-uid">SDOC-HIGH-DATA-MODEL </span>
         Data model
       </a>
     </li>
     </ul>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -1662,7 +1713,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Command-line-interface"></div><h3 class="section-title" data-level="8.2.3">
       Command-line interface
     </h3>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -1693,7 +1743,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Platform-support"></div><h3 class="section-title" data-level="8.2.4">
       Platform support
     </h3>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -1724,7 +1773,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="macOS-support"></div><h4 class="section-title" data-level="8.2.4.1">
       macOS support
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -1755,7 +1803,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Linux-support"></div><h4 class="section-title" data-level="8.2.4.2">
       Linux support
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -1786,7 +1833,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Windows-support"></div><h4 class="section-title" data-level="8.2.4.3">
       Windows support
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -1817,7 +1863,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Requirements-validation"></div><h3 class="section-title" data-level="8.2.5">
       Requirements validation
     </h3>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -1848,7 +1893,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Requirements-text-format"></div><h3 class="section-title" data-level="8.2.6">
       Requirements text format
     </h3>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -1879,7 +1923,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Linking-requirements"></div><h3 class="section-title" data-level="8.2.7">
       Linking requirements
     </h3>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -1910,7 +1953,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Scalability"></div><h3 class="section-title" data-level="8.2.8">
       Scalability
     </h3>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -1938,13 +1980,12 @@ document data model which is called &quot;grammar&quot;.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Traceability"></div><h3 class="section-title" data-level="8.2.9">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="SDOC-HIGH-REQS-TRACEABILITY"></div><h3 class="section-title" data-level="8.2.9">
       Traceability
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-HIGH-REQS-TRACEABILITY</dd></div>
 
     </dl>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -1975,7 +2016,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Visualization"></div><h3 class="section-title" data-level="8.2.10">
       Visualization
     </h3>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -2006,7 +2046,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Open-source-software"></div><h3 class="section-title" data-level="8.2.11">
       Open source software
     </h3>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -2052,13 +2091,12 @@ document data model which is called &quot;grammar&quot;.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Parallelization"></div><h3 class="section-title" data-level="8.3.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="SDOC-IMPL-PARAL"></div><h3 class="section-title" data-level="8.3.1">
       Parallelization
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-IMPL-PARAL</dd></div>
 
     </dl>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -2086,13 +2124,12 @@ document data model which is called &quot;grammar&quot;.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Incremental-generation"></div><h3 class="section-title" data-level="8.3.2">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="SDOC-IMPL-INCREMENTAL"></div><h3 class="section-title" data-level="8.3.2">
       Incremental generation
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-IMPL-INCREMENTAL</dd></div>
 
     </dl>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -2151,13 +2188,20 @@ documents and files.</p>
     </dl>
   <ul class="requirement_parent">
     <li>
-      <a href="#Software-support-for-writing-requirements-and-specifications-documents">
+      <a href="#GOAL-1-TOOL-SUPPORT">
         <span class="requirement_parent-uid">GOAL-1-TOOL-SUPPORT </span>
         Software support for writing requirements and specifications documents
       </a>
     </li>
     </ul>
-
+  <ul class="requirement_child">
+    <li>
+      <a href="#SDOC-DM-MODEL">
+        <span class="requirement_child-uid">SDOC-DM-MODEL </span>
+        Modeling capability
+      </a>
+    </li>
+    </ul>
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -2185,7 +2229,20 @@ documents and files.</p>
       <div><dt>UID</dt><dd>SDOC-HIGH-DATA-MODEL</dd></div>
 
     </dl>
-
+  <ul class="requirement_child">
+    <li>
+      <a href="#SDOC-DM-MODEL">
+        <span class="requirement_child-uid">SDOC-DM-MODEL </span>
+        Modeling capability
+      </a>
+    </li>
+    <li>
+      <a href="#SDOC-FMT-GRAMMAR">
+        <span class="requirement_child-uid">SDOC-FMT-GRAMMAR </span>
+        Grammar
+      </a>
+    </li>
+    </ul>
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -2227,7 +2284,7 @@ document data model which is called &quot;grammar&quot;.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Modeling-capability"></div><h3 class="section-title" data-level="8.4.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="SDOC-DM-MODEL"></div><h3 class="section-title" data-level="8.4.1">
       Modeling capability
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-DM-MODEL</dd></div>
@@ -2235,19 +2292,26 @@ document data model which is called &quot;grammar&quot;.</p>
     </dl>
   <ul class="requirement_parent">
     <li>
-      <a href="#Requirements-management">
+      <a href="#SDOC-HIGH-REQS-MANAGEMENT">
         <span class="requirement_parent-uid">SDOC-HIGH-REQS-MANAGEMENT </span>
         Requirements management
       </a>
     </li>
     <li>
-      <a href="#Data-model">
+      <a href="#SDOC-HIGH-DATA-MODEL">
         <span class="requirement_parent-uid">SDOC-HIGH-DATA-MODEL </span>
         Data model
       </a>
     </li>
     </ul>
-
+  <ul class="requirement_child">
+    <li>
+      <a href="#SDOC-FMT-PRIMARY">
+        <span class="requirement_child-uid">SDOC-FMT-PRIMARY </span>
+        Primary text implementation
+      </a>
+    </li>
+    </ul>
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -2288,13 +2352,12 @@ document data model which is called &quot;grammar&quot;.</p>
     </dl>
   <ul class="requirement_parent">
     <li>
-      <a href="#Modeling-capability">
+      <a href="#SDOC-DM-MODEL">
         <span class="requirement_parent-uid">SDOC-DM-MODEL </span>
         Modeling capability
       </a>
     </li>
     </ul>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -2360,7 +2423,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Statement"></div><h4 class="section-title" data-level="8.4.3.1">
       Statement
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -2391,7 +2453,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Content-body"></div><h4 class="section-title" data-level="8.4.3.2">
       Content body
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -2422,7 +2483,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="UID-identifier"></div><h4 class="section-title" data-level="8.4.3.3">
       UID identifier
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -2453,7 +2513,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="UID-identifier-format"></div><h5 class="section-title" data-level="8.4.3.3.1">
       UID identifier format
     </h5>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -2498,7 +2557,6 @@ be no way to define a single rule.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Title"></div><h4 class="section-title" data-level="8.4.3.4">
       Title
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -2529,7 +2587,6 @@ be no way to define a single rule.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="References"></div><h4 class="section-title" data-level="8.4.3.5">
       References
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -2560,7 +2617,6 @@ be no way to define a single rule.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Comments"></div><h4 class="section-title" data-level="8.4.3.6">
       Comments
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -2591,7 +2647,6 @@ be no way to define a single rule.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Special-fields"></div><h4 class="section-title" data-level="8.4.3.7">
       Special fields
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -2655,7 +2710,6 @@ be no way to define a single rule.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Links"></div><h3 class="section-title" data-level="8.4.5">
       Links
     </h3>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -2686,7 +2740,6 @@ be no way to define a single rule.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Parent-links"></div><h4 class="section-title" data-level="8.4.5.1">
       Parent links
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -2738,19 +2791,26 @@ be no way to define a single rule.</p>
     </dl>
   <ul class="requirement_parent">
     <li>
-      <a href="#Requirements-management">
+      <a href="#SDOC-HIGH-REQS-MANAGEMENT">
         <span class="requirement_parent-uid">SDOC-HIGH-REQS-MANAGEMENT </span>
         Requirements management
       </a>
     </li>
     <li>
-      <a href="#Data-model">
+      <a href="#SDOC-HIGH-DATA-MODEL">
         <span class="requirement_parent-uid">SDOC-HIGH-DATA-MODEL </span>
         Data model
       </a>
     </li>
     </ul>
-
+  <ul class="requirement_child">
+    <li>
+      <a href="#SDOC-FMT-PRIMARY">
+        <span class="requirement_child-uid">SDOC-FMT-PRIMARY </span>
+        Primary text implementation
+      </a>
+    </li>
+    </ul>
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -2784,7 +2844,7 @@ be no way to define a single rule.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Primary-text-implementation"></div><h3 class="section-title" data-level="8.5.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="SDOC-FMT-PRIMARY"></div><h3 class="section-title" data-level="8.5.1">
       Primary text implementation
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-FMT-PRIMARY</dd></div>
@@ -2792,13 +2852,12 @@ be no way to define a single rule.</p>
     </dl>
   <ul class="requirement_parent">
     <li>
-      <a href="#Modeling-capability">
+      <a href="#SDOC-DM-MODEL">
         <span class="requirement_parent-uid">SDOC-DM-MODEL </span>
         Modeling capability
       </a>
     </li>
     </ul>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -2830,7 +2889,20 @@ be no way to define a single rule.</p>
       <div><dt>UID</dt><dd>SDOC-HIGH-DATA-MODEL</dd></div>
 
     </dl>
-
+  <ul class="requirement_child">
+    <li>
+      <a href="#SDOC-DM-MODEL">
+        <span class="requirement_child-uid">SDOC-DM-MODEL </span>
+        Modeling capability
+      </a>
+    </li>
+    <li>
+      <a href="#SDOC-FMT-GRAMMAR">
+        <span class="requirement_child-uid">SDOC-FMT-GRAMMAR </span>
+        Grammar
+      </a>
+    </li>
+    </ul>
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -2872,7 +2944,7 @@ document data model which is called &quot;grammar&quot;.</p>
     <div data-section='comment'></div>
   </header>
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Grammar"></div><h3 class="section-title" data-level="8.5.2">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="SDOC-FMT-GRAMMAR"></div><h3 class="section-title" data-level="8.5.2">
       Grammar
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-FMT-GRAMMAR</dd></div>
@@ -2880,13 +2952,12 @@ document data model which is called &quot;grammar&quot;.</p>
     </dl>
   <ul class="requirement_parent">
     <li>
-      <a href="#Data-model">
+      <a href="#SDOC-HIGH-DATA-MODEL">
         <span class="requirement_parent-uid">SDOC-HIGH-DATA-MODEL </span>
         Data model
       </a>
     </li>
     </ul>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -2917,7 +2988,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Type-safety"></div><h3 class="section-title" data-level="8.5.3">
       Type safety
     </h3>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -2984,7 +3054,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Single-document-Normal-form"></div><h4 class="section-title" data-level="8.6.1.1">
       Single document: Normal form
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3015,7 +3084,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Single-document-Tabular-form"></div><h4 class="section-title" data-level="8.6.1.2">
       Single document: Tabular form
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3046,7 +3114,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Single-document-1-level-traceability"></div><h4 class="section-title" data-level="8.6.1.3">
       Single document: 1-level traceability
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3077,7 +3144,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Single-document-Deep-traceability"></div><h4 class="section-title" data-level="8.6.1.4">
       Single document: Deep traceability
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3108,7 +3174,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Left-panel-Table-of-contents"></div><h4 class="section-title" data-level="8.6.1.5">
       Left panel: Table of contents
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3157,7 +3222,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Sphinx-documentation-generator"></div><h4 class="section-title" data-level="8.6.2.1">
       Sphinx documentation generator
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3188,7 +3252,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Excel-Export"></div><h3 class="section-title" data-level="8.6.3">
       Excel Export
     </h3>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3237,7 +3300,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Valid-HTML-markup"></div><h3 class="section-title" data-level="8.7.1">
       Valid HTML markup
     </h3>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3310,7 +3372,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="TextX"></div><h3 class="section-title" data-level="9.1.1">
       TextX
     </h3>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3347,7 +3408,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Jinja2"></div><h3 class="section-title" data-level="9.1.2">
       Jinja2
     </h3>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3378,7 +3438,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Sphinx-and-Docutils"></div><h3 class="section-title" data-level="9.1.3">
       Sphinx and Docutils
     </h3>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3433,7 +3492,6 @@ document data model which is called &quot;grammar&quot;.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="No-indentation"></div><h3 class="section-title" data-level="9.2.1">
       No indentation
     </h3>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3510,7 +3568,6 @@ possible indentation issues.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Generated-file-names"></div><h3 class="section-title" data-level="10.1.1">
       Generated file names
     </h3>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3547,7 +3604,6 @@ possible indentation issues.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Validation-Uniqueness-of-UID-identifiers-in-a-document-tree"></div><h3 class="section-title" data-level="10.1.2">
       Validation: Uniqueness of UID identifiers in a document tree
     </h3>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3596,7 +3652,6 @@ possible indentation issues.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="StrictDoc-as-library"></div><h3 class="section-title" data-level="10.2.1">
       StrictDoc as library
     </h3>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3652,7 +3707,6 @@ as Grammar, Import, Export classes, etc.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="CSV-Import-Export"></div><h4 class="section-title" data-level="10.2.2.1">
       CSV Import/Export
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3683,7 +3737,6 @@ as Grammar, Import, Export classes, etc.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="PlantUML-Export"></div><h4 class="section-title" data-level="10.2.2.2">
       PlantUML Export
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3714,7 +3767,6 @@ as Grammar, Import, Export classes, etc.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="ReqIF-Import-Export"></div><h4 class="section-title" data-level="10.2.2.3">
       ReqIF Import/Export
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3745,7 +3797,6 @@ as Grammar, Import, Export classes, etc.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Confluence-Import-Export"></div><h4 class="section-title" data-level="10.2.2.4">
       Confluence Import/Export
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3776,7 +3827,6 @@ as Grammar, Import, Export classes, etc.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Tex-Export"></div><h4 class="section-title" data-level="10.2.2.5">
       Tex Export
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3807,7 +3857,6 @@ as Grammar, Import, Export classes, etc.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Doorstop-Import-Export"></div><h4 class="section-title" data-level="10.2.2.6">
       Doorstop Import/Export
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3838,7 +3887,6 @@ as Grammar, Import, Export classes, etc.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Markdown-support-for-text-and-code-blocks"></div><h4 class="section-title" data-level="10.2.2.7">
       Markdown support for text and code blocks
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3887,7 +3935,6 @@ as Grammar, Import, Export classes, etc.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Linking-with-implementation-artifacts"></div><h4 class="section-title" data-level="10.2.3.1">
       Linking with implementation artifacts
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3918,7 +3965,6 @@ as Grammar, Import, Export classes, etc.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Requirement-checksumming"></div><h4 class="section-title" data-level="10.2.3.2">
       Requirement checksumming
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3949,7 +3995,6 @@ as Grammar, Import, Export classes, etc.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Documentation-coverage"></div><h4 class="section-title" data-level="10.2.3.3">
       Documentation coverage
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -3998,7 +4043,6 @@ as Grammar, Import, Export classes, etc.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Validation-Section-Levels"></div><h4 class="section-title" data-level="10.2.4.1">
       Validation: Section Levels
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -4029,7 +4073,6 @@ as Grammar, Import, Export classes, etc.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Filtering-by-tags"></div><h3 class="section-title" data-level="10.2.5">
       Filtering by tags
     </h3>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -4078,7 +4121,6 @@ as Grammar, Import, Export classes, etc.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Option-RST-Top-level-title-document-name"></div><h4 class="section-title" data-level="10.2.6.1">
       Option: RST: Top-level title: document name
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -4109,7 +4151,6 @@ as Grammar, Import, Export classes, etc.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Option-Title-Automatic-numeration"></div><h4 class="section-title" data-level="10.2.6.2">
       Option: Title: Automatic numeration
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -4140,7 +4181,6 @@ as Grammar, Import, Export classes, etc.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Option-Title-Display-requirement-titles"></div><h4 class="section-title" data-level="10.2.6.3">
       Option: Title: Display requirement titles
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -4171,7 +4211,6 @@ as Grammar, Import, Export classes, etc.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Option-Title-Display-requirement-UID"></div><h4 class="section-title" data-level="10.2.6.4">
       Option: Title: Display requirement UID
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -4220,7 +4259,6 @@ as Grammar, Import, Export classes, etc.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Facts-table-Invariants-calculation-"></div><h4 class="section-title" data-level="10.2.7.1">
       Facts table. Invariants calculation.
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -4252,7 +4290,6 @@ enforce numerical constraints.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="FMEA-FMECA-tables"></div><h4 class="section-title" data-level="10.2.7.2">
       FMEA/FMECA tables
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -4283,7 +4320,6 @@ enforce numerical constraints.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Graphical-User-Interface-GUI-"></div><h4 class="section-title" data-level="10.2.7.3">
       Graphical User Interface (GUI)
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">
@@ -4314,7 +4350,6 @@ enforce numerical constraints.</p>
   <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Web-server-and-editable-HTML-pages"></div><h4 class="section-title" data-level="10.2.7.4">
       Web server and editable HTML pages
     </h4>
-
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
       <div class="document">

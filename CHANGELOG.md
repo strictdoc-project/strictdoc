@@ -1,26 +1,112 @@
 # Changelog
 
-## [Unreleased](https://github.com/strictdoc-project/strictdoc/tree/HEAD)
+## [0.0.8](https://github.com/strictdoc-project/strictdoc/tree/0.0.8) (2021-01-24)
 
-[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.4...HEAD)
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.7...0.0.8)
 
 **Implemented enhancements:**
 
-- Excel export [\#258](https://github.com/strictdoc-project/strictdoc/issues/258)
+- HTML distribution as one file [\#279](https://github.com/strictdoc-project/strictdoc/issues/279)
+
+**Fixed bugs:**
+
+- Parallelizing with multiprocessing can leave Zombie processes running [\#313](https://github.com/strictdoc-project/strictdoc/issues/313)
 
 **Closed issues:**
 
-- HTML anchors are not working [\#268](https://github.com/strictdoc-project/strictdoc/issues/268)
-- Styles: Requirement Rationale [\#249](https://github.com/strictdoc-project/strictdoc/issues/249)
-- Styles: basic styles for \<table\> [\#248](https://github.com/strictdoc-project/strictdoc/issues/248)
-- export/rst: Print requirement parents  [\#237](https://github.com/strictdoc-project/strictdoc/issues/237)
+- export/html: store Google font as a local asset [\#306](https://github.com/strictdoc-project/strictdoc/issues/306)
+- tasks and CI: Set up Black [\#238](https://github.com/strictdoc-project/strictdoc/issues/238)
+- export/html: Document tree: adjust styles to handle single files without folders [\#236](https://github.com/strictdoc-project/strictdoc/issues/236)
 
 **Merged pull requests:**
 
+- Bump version to 0.0.8 [\#322](https://github.com/strictdoc-project/strictdoc/pull/322) ([stanislaw](https://github.com/stanislaw))
+- export/html: print children links, allow full left-right navigation [\#321](https://github.com/strictdoc-project/strictdoc/pull/321) ([stanislaw](https://github.com/stanislaw))
+- document\_finder: include case when intermediate folder has no .sdoc files [\#319](https://github.com/strictdoc-project/strictdoc/pull/319) ([stanislaw](https://github.com/stanislaw))
+- tasks: fix install-local task issue [\#317](https://github.com/strictdoc-project/strictdoc/pull/317) ([stanislaw](https://github.com/stanislaw))
+- docs: performance feature highlight [\#316](https://github.com/strictdoc-project/strictdoc/pull/316) ([stanislaw](https://github.com/stanislaw))
+- tests/integration: test that no fork\(\) warning appears [\#315](https://github.com/strictdoc-project/strictdoc/pull/315) ([stanislaw](https://github.com/stanislaw))
+- parallelizer: fix hanging and zombie processes when child processes misbehave [\#314](https://github.com/strictdoc-project/strictdoc/pull/314) ([stanislaw](https://github.com/stanislaw))
+-  CI: add invoke lint task  [\#312](https://github.com/strictdoc-project/strictdoc/pull/312) ([stanislaw](https://github.com/stanislaw))
+- Code climate: black-format the rest of strictdoc/\*\*/\* files [\#311](https://github.com/strictdoc-project/strictdoc/pull/311) ([stanislaw](https://github.com/stanislaw))
+- Enable Python 3.9: Related fixes in the code, enable GitHub action. [\#309](https://github.com/strictdoc-project/strictdoc/pull/309) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.7](https://github.com/strictdoc-project/strictdoc/tree/0.0.7) (2021-01-10)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.6...0.0.7)
+
+**Implemented enhancements:**
+
+-  docs/sphinx: switch to guzzle\_sphinx\_theme, improve presentation of meta  [\#296](https://github.com/strictdoc-project/strictdoc/pull/296) ([stanislaw](https://github.com/stanislaw))
+
+**Closed issues:**
+
+- Fix lost links in TOC on the DEEP TRACEABILITY page [\#180](https://github.com/strictdoc-project/strictdoc/issues/180)
+
+**Merged pull requests:**
+
+- Bump version to 0.0.7 [\#308](https://github.com/strictdoc-project/strictdoc/pull/308) ([stanislaw](https://github.com/stanislaw))
+-  docs: finish two TBDs  [\#307](https://github.com/strictdoc-project/strictdoc/pull/307) ([stanislaw](https://github.com/stanislaw))
+- dsl: requirement: has\_requirements -\> ng\_has\_requirements [\#305](https://github.com/strictdoc-project/strictdoc/pull/305) ([stanislaw](https://github.com/stanislaw))
+- Code climate: black-format requirement and helpers [\#304](https://github.com/strictdoc-project/strictdoc/pull/304) ([stanislaw](https://github.com/stanislaw))
+- export/html: DTR: display sections that have requirements [\#303](https://github.com/strictdoc-project/strictdoc/pull/303) ([stanislaw](https://github.com/stanislaw))
+- grammar: deprecate \[DOCUMENT\].NAME [\#302](https://github.com/strictdoc-project/strictdoc/pull/302) ([stanislaw](https://github.com/stanislaw))
+- grammar: deprecate \[SECTION\].level [\#301](https://github.com/strictdoc-project/strictdoc/pull/301) ([stanislaw](https://github.com/stanislaw))
+- grammar: COMPOSITE-REQUIREMENT -\> COMPOSITE\_REQUIREMENT [\#299](https://github.com/strictdoc-project/strictdoc/pull/299) ([stanislaw](https://github.com/stanislaw))
+- Create LICENSE [\#298](https://github.com/strictdoc-project/strictdoc/pull/298) ([stanislaw](https://github.com/stanislaw))
+- docs/sphinx: fix nav bar presentation [\#297](https://github.com/strictdoc-project/strictdoc/pull/297) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.6](https://github.com/strictdoc-project/strictdoc/tree/0.0.6) (2021-01-07)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.5...0.0.6)
+
+**Implemented enhancements:**
+
+- export/html: new 'standlone' export with assets embedded in HTML [\#287](https://github.com/strictdoc-project/strictdoc/pull/287) ([stanislaw](https://github.com/stanislaw))
+
+**Merged pull requests:**
+
+- Bump version to 0.0.6 [\#295](https://github.com/strictdoc-project/strictdoc/pull/295) ([stanislaw](https://github.com/stanislaw))
+-  docs: regenerate Read the Docs  [\#294](https://github.com/strictdoc-project/strictdoc/pull/294) ([stanislaw](https://github.com/stanislaw))
+-  docs: all export options and --no-parallelization option  [\#293](https://github.com/strictdoc-project/strictdoc/pull/293) ([stanislaw](https://github.com/stanislaw))
+- docs: regenerate readthedocs [\#291](https://github.com/strictdoc-project/strictdoc/pull/291) ([stanislaw](https://github.com/stanislaw))
+- docs: update to the latest state [\#290](https://github.com/strictdoc-project/strictdoc/pull/290) ([stanislaw](https://github.com/stanislaw))
+- docs: Other tools: Sphinx-Needs and StrictDoc [\#289](https://github.com/strictdoc-project/strictdoc/pull/289) ([stanislaw](https://github.com/stanislaw))
+- export/html: correct width for \<img\> tags [\#288](https://github.com/strictdoc-project/strictdoc/pull/288) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.5](https://github.com/strictdoc-project/strictdoc/tree/0.0.5) (2021-01-04)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.4...0.0.5)
+
+**Implemented enhancements:**
+
+- HTML anchors are not working [\#268](https://github.com/strictdoc-project/strictdoc/issues/268)
+- Excel export [\#258](https://github.com/strictdoc-project/strictdoc/issues/258)
+- export/rst: Print requirement parents  [\#237](https://github.com/strictdoc-project/strictdoc/issues/237)
+- export/excel: export special fields [\#282](https://github.com/strictdoc-project/strictdoc/pull/282) ([stumpyfr](https://github.com/stumpyfr))
+- grammar: only allow special fields of type 'String' [\#281](https://github.com/strictdoc-project/strictdoc/pull/281) ([stanislaw](https://github.com/stanislaw))
+- dsl: special fields support [\#277](https://github.com/strictdoc-project/strictdoc/pull/277) ([stanislaw](https://github.com/stanislaw))
 - export/html: requirements' hyperlinks are implemented consistently [\#274](https://github.com/strictdoc-project/strictdoc/pull/274) ([stanislaw](https://github.com/stanislaw))
+
+**Closed issues:**
+
+- export/excel: make fields configurable [\#272](https://github.com/strictdoc-project/strictdoc/issues/272)
+- Custom fields usage [\#269](https://github.com/strictdoc-project/strictdoc/issues/269)
+- Styles: Requirement Rationale [\#249](https://github.com/strictdoc-project/strictdoc/issues/249)
+- Styles: basic styles for \<table\> [\#248](https://github.com/strictdoc-project/strictdoc/issues/248)
+
+**Merged pull requests:**
+
+- .github/workflows/release.yml: switch to using $GITHUB\_ENV [\#286](https://github.com/strictdoc-project/strictdoc/pull/286) ([stanislaw](https://github.com/stanislaw))
+- Bump version to 0.0.5 [\#285](https://github.com/strictdoc-project/strictdoc/pull/285) ([stanislaw](https://github.com/stanislaw))
+- tests/integration: excel/02\_no\_reqs\_to\_export: remove copy paste garbage [\#283](https://github.com/strictdoc-project/strictdoc/pull/283) ([stanislaw](https://github.com/stanislaw))
+- export/html: display requirement's special fields [\#280](https://github.com/strictdoc-project/strictdoc/pull/280) ([mettta](https://github.com/mettta))
+- black-format: tools/confluence\_html\_table\_import.py [\#278](https://github.com/strictdoc-project/strictdoc/pull/278) ([stanislaw](https://github.com/stanislaw))
+- invoke: create\_local\_setup task [\#276](https://github.com/strictdoc-project/strictdoc/pull/276) ([stanislaw](https://github.com/stanislaw))
+- CHANGELOG: initial commit and invoke task [\#275](https://github.com/strictdoc-project/strictdoc/pull/275) ([stanislaw](https://github.com/stanislaw))
 - export/html: link\_renderer: render -\> render\_local\_anchor [\#273](https://github.com/strictdoc-project/strictdoc/pull/273) ([stanislaw](https://github.com/stanislaw))
 - export/excel: basic Excel export [\#271](https://github.com/strictdoc-project/strictdoc/pull/271) ([stanislaw](https://github.com/stanislaw))
-- dsl/reader: Requirement\#document and CompositeRequirement\#document fields [\#270](https://github.com/strictdoc-project/strictdoc/pull/270) ([mettta](https://github.com/mettta))
+- dsl/reader: Requirement\#document and CompositeRequirement\#document fields  [\#270](https://github.com/strictdoc-project/strictdoc/pull/270) ([mettta](https://github.com/mettta))
 - cli/cli\_arg\_parser: support multiple export formats [\#266](https://github.com/strictdoc-project/strictdoc/pull/266) ([stanislaw](https://github.com/stanislaw))
 - export\_action: create output folders only when requested [\#265](https://github.com/strictdoc-project/strictdoc/pull/265) ([stanislaw](https://github.com/stanislaw))
 - cli: generate RST only when --formats=rst is provided [\#264](https://github.com/strictdoc-project/strictdoc/pull/264) ([stanislaw](https://github.com/stanislaw))
@@ -82,6 +168,7 @@
 
 **Implemented enhancements:**
 
+- Find a solution for TOC with reqs. without headers [\#187](https://github.com/strictdoc-project/strictdoc/issues/187)
 - Requirement href: create generic helper [\#184](https://github.com/strictdoc-project/strictdoc/issues/184)
 - export/html: Fix structure of single\_document template [\#182](https://github.com/strictdoc-project/strictdoc/issues/182)
 - TOC: consider including requirement titles as well [\#162](https://github.com/strictdoc-project/strictdoc/issues/162)
@@ -104,7 +191,6 @@
 
 **Closed issues:**
 
-- Find a solution for TOC with reqs. without headers [\#187](https://github.com/strictdoc-project/strictdoc/issues/187)
 - export/html: Document page: print requirement parents [\#176](https://github.com/strictdoc-project/strictdoc/issues/176)
 - export/html: make TOC closeable [\#171](https://github.com/strictdoc-project/strictdoc/issues/171)
 -  export/html: Document page: styles for \<blockquote\> [\#167](https://github.com/strictdoc-project/strictdoc/issues/167)

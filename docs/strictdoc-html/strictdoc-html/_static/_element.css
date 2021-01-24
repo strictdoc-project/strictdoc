@@ -295,29 +295,41 @@ dl.requirement_meta {
 /* requirement_parent */
 
 .requirement_parent,
-ul.requirement_parent {
+ul.requirement_parent,
+.requirement_child,
+ul.requirement_child {
   font-size: 14px;
   line-height: 1.4;
   list-style: none;
   padding-left: 1em;
   margin-top: .5rem;
 }
-.requirement_parent li::before {
-  content: '\2190';
+.requirement_parent li::before,
+.requirement_child li::before {
   color: var(--color-accent-dark);
   display: inline-block;
   width: 1em;
   margin-left: -1em;
 }
+.requirement_parent li::before {
+  content: '\2190';
+}
+.requirement_child li::before {
+  content: '\2192';
+}
 .requirement_parent a:link,
-.requirement_parent a:visited {
+.requirement_parent a:visited,
+.requirement_child a:link,
+.requirement_child a:visited {
   color: var(--color-accent-dark);
   text-decoration: underline;
 }
-.requirement_parent a:hover {
+.requirement_parent a:hover,
+.requirement_child a:hover {
   text-decoration: none;
 }
-.requirement_parent-uid {
+.requirement_parent-uid,
+.requirement_child-uid {
   position: relative;
   font-weight: bold;
 }

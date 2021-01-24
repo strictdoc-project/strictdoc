@@ -163,20 +163,24 @@ class DocumentFinder:
                 current_tree.sort_subfolder_trees()
 
                 files = [f for f in files if f.endswith(".sdoc")]
-                if len(files) > 0:
-                    files.sort(key=alphanumeric_sort)
-                    current_tree.set(files)
+                files.sort(key=alphanumeric_sort)
+                current_tree.set(files)
+                if not current_tree.has_sdoc_content and len(files) > 0:
+                    current_tree.has_sdoc_content = True
 
-                    if current_root_path == path_to_doc_root:
-                        continue
+                if current_root_path == path_to_doc_root:
+                    continue
 
-                    current_parent_path = os.path.dirname(current_root_path)
-                    if current_parent_path not in tree_map:
-                        tree_map[current_parent_path] = FileTree(
-                            current_parent_path, current_root_path_level - 1
-                        )
-                    current_parent_tree = tree_map[current_parent_path]
-                    current_parent_tree.add_subfolder_tree(current_tree)
+                current_parent_path = os.path.dirname(current_root_path)
+                if current_parent_path not in tree_map:
+                    tree_map[current_parent_path] = FileTree(
+                        current_parent_path, current_root_path_level - 1
+                    )
+                current_parent_tree = tree_map[current_parent_path]
+                if len(files) > 0 or current_tree.has_sdoc_content:
+                    current_parent_tree.has_sdoc_content = True
+
+                current_parent_tree.add_subfolder_tree(current_tree)
 
             root_trees.append(tree_map[path_to_doc_root])
         return root_trees, asset_dirs

@@ -45,6 +45,7 @@ class FileTree(FileOrFolderEntry):
         self.level = level
         self.files = []
         self.subfolder_trees = []
+        self.has_sdoc_content = False
 
     def __repr__(self):
         return "FileTree: (root_path: {}, files: {})".format(

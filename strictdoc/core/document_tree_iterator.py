@@ -1,6 +1,6 @@
 import collections
 
-from strictdoc.core.document_tree import FileTree, DocumentTree
+from strictdoc.core.document_tree import FileTree, DocumentTree, File
 
 
 class DocumentTreeIterator:
@@ -13,8 +13,12 @@ class DocumentTreeIterator:
 
         while task_list:
             file_tree_or_file = task_list.popleft()
-            yield file_tree_or_file
-            if isinstance(file_tree_or_file, FileTree):
+            if isinstance(file_tree_or_file, File):
+                yield file_tree_or_file
+            elif isinstance(file_tree_or_file, FileTree):
+                if not file_tree_or_file.has_sdoc_content:
+                    continue
+                yield file_tree_or_file
                 task_list.extendleft(reversed(file_tree_or_file.files))
                 task_list.extendleft(
                     reversed(file_tree_or_file.subfolder_trees)

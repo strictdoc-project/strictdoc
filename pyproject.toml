@@ -36,9 +36,11 @@ beautifulsoup4 = '4.9.3'
 lxml = '4.6.2'
 openpyxl = '^3.0.5'
 
+# https://python-poetry.org/blog/announcing-poetry-1-1-0.html#standalone-build-backend
+# https://github.com/python-poetry/poetry/issues/3153#issuecomment-727196619
 [build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+requires = ["setuptools", "poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 strictdoc = "strictdoc.cli.main:main"

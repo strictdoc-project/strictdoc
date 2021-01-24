@@ -118,17 +118,29 @@ def test_integration(context, focus=None, debug=False):
     run_invoke_cmd(context, command)
 
 
+# Support generation of Poetry managed setup.py file #761
+# https://github.com/python-poetry/poetry/issues/761#issuecomment-689491920
 @task
 def install_local(context):
-    command = oneline_command(
+    command_1 = oneline_command(
         """
-        rm -rfv dist &&
-        poetry build &&
-        tar -xvf dist/*.tar.gz --wildcards --no-anchored '*/setup.py' --strip=1 &&
+        poetry build
+        """
+    )
+    command_2 = oneline_command(
+        """
+        tar -xvf dist/*.tar.gz --wildcards --no-anchored '*/setup.py' --strip=1
+        """
+    )
+    command_3 = oneline_command(
+        """
         pip install -e .
         """
     )
-    run_invoke_cmd(context, command)
+
+    run_invoke_cmd(context, command_1)
+    run_invoke_cmd(context, command_2)
+    run_invoke_cmd(context, command_3)
 
 
 @task
@@ -173,20 +185,6 @@ def lint(context):
 @task(lint, test_unit, test_integration)
 def test(context):
     pass
-
-
-# Support generation of Poetry managed setup.py file #761
-# https://github.com/python-poetry/poetry/issues/761#issuecomment-689491920
-@task
-def create_local_setup(context):
-    command = oneline_command(
-        """
-        poetry build &&
-        tar -xvf dist/*.tar.gz --wildcards --no-anchored '*/setup.py' --strip=1 &&
-        pip install -e .
-        """
-    )
-    run_invoke_cmd(context, command)
 
 
 # https://github.com/github-changelog-generator/github-changelog-generator

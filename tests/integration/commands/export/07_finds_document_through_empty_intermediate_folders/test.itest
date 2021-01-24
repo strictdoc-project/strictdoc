@@ -1,0 +1,13 @@
+RUN: %strictdoc export %S/input --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%S/Output/html/index.html"
+RUN: %check_exists --file "%S/Output/html/input/intermediate/requirements/input.html"
+
+RUN: cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: Hello world doc
+CHECK-HTML: input.sdoc
+CHECK-HTML: DOC
+CHECK-HTML: TABLE
+CHECK-HTML: TRACE
+CHECK-HTML: DEEP-TRACE

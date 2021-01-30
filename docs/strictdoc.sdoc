@@ -78,7 +78,7 @@ TITLE: Requirements
 [/SECTION]
 
 [SECTION]
-TITLE: Installing StrictDoc as a Pip package
+TITLE: Installing StrictDoc as a Pip package (recommended way)
 
 [FREETEXT]
 .. code-block:: text
@@ -89,14 +89,22 @@ TITLE: Installing StrictDoc as a Pip package
 [/SECTION]
 
 [SECTION]
-TITLE: Installing StrictDoc from GitHub (development)
+TITLE: Installing StrictDoc from GitHub (developer mode)
 
 [FREETEXT]
-`Poetry <https://python-poetry.org>`_ has to be installed first.
+**Note:** Use this way of installing StrictDoc only if you want to make changes
+in StrictDoc's source code. Otherwise, install StrictDoc as a Pip package
+(see above).
+
+StrictDoc uses Poetry, so `Poetry <https://python-poetry.org>`_ has to be
+installed. To install Poetry, read the instructions here:
+`Poetry / Installation <https://python-poetry.org/docs/#installation>`_.
+
+When Poetry is installed, clone StrictDoc:
 
 .. code-block:: text
 
-    git clone git@github.com:stanislaw/strictdoc.git && cd strictdoc
+    git clone https://github.com/strictdoc-project/strictdoc.git && cd strictdoc
     poetry install
     poetry run strictdoc
     poetry run invoke test
@@ -105,9 +113,8 @@ StrictDoc can also be developed and run without Poetry:
 
 .. code-block:: text
 
-    git clone git@github.com:stanislaw/strictdoc.git && cd strictdoc
-    # for running strictdoc:
-    pip install textx jinja2 docutils
+    git clone https://github.com/strictdoc-project/strictdoc.git && cd strictdoc
+    pip install -r requirements.txt
     python3 strictdoc/cli/main.py
     # for running tests:
     pip install invoke pytest pytidylib html5lib

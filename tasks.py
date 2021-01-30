@@ -170,7 +170,7 @@ def lint_black_diff(context):
 def lint_pylint(context):
     command = oneline_command(
         """
-        poetry run pylint --rcfile=.pylint.ini strictdoc/ tasks.py
+        pylint --rcfile=.pylint.ini strictdoc/ tasks.py
         """
     )
     try:

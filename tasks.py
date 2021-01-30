@@ -152,16 +152,15 @@ def install_local(context):
 
 @task
 def lint_black_diff(context):
-    # git diff --name-only -- '*.py' | xargs black --diff --color --fast 2>&1
     command = oneline_command(
         """
-        black . --diff --color 2>&1
+        black . --color 2>&1
         """
     )
     result = run_invoke_cmd(context, command)
 
     # black always exits with 0, so we handle the output.
-    if "would be reformatted" in result.stdout:
+    if "reformatted" in result.stdout:
         print("invoke: black found issues")
         result.exited = 1
         raise invoke.exceptions.UnexpectedExit(result)

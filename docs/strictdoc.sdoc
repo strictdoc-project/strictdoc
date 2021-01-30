@@ -150,7 +150,7 @@ The grammar is defined using textX language for defining grammars and is
 located in a single file:
 `grammar.py <https://github.com/strictdoc-project/strictdoc/blob/master/strictdoc/backend/dsl/grammar.py>`_.
 
-This is how a minimal possible SDOC document looks like:
+This is how a minimal possible SDoc document looks like:
 
 .. code-block::
 
@@ -160,6 +160,57 @@ This is how a minimal possible SDOC document looks like:
 This documentation is written using StrictDoc. Here is the source file:
 `strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc>`_.
 [/FREETEXT]
+
+[SECTION]
+TITLE: Document structure
+
+[FREETEXT]
+An SDoc document consists of a `[DOCUMENT]` declaration followed by one or many
+`[REQUIREMENT]` or `[COMPOSITE_REQUIREMENT]` statements which can be grouped
+into `[SECTION]` blocks.
+
+The following grammatical constructs are currently supported:
+
+- `DOCUMENT`
+
+  - `FREE_TEXT`
+
+- `REQUIREMENT` and `COMPOSITE_REQUIREMENT`
+
+- `SECTION`
+
+  - `FREE_TEXT`
+
+Each construct is described in more detail below.
+[/FREETEXT]
+
+[SECTION]
+TITLE: Strict rule #1: One empty line between all nodes
+
+[FREETEXT]
+StrictDoc's grammar requires each node, such as `[REQUIREMENT]`, `[SECTION]`,
+etc., to be separated with exactly one empty line from the nodes surrounding it.
+This rule is valid for all nodes. Absence of an empty line or presence of more
+than one empty line between two nodes will result in an SDoc parsing error.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Strict rule #2: No content is allowed outside of SDoc grammar
+
+[FREETEXT]
+StrictDoc's grammar does not allow any content to be written outside of the SDoc
+grammatical constructs. It is assumed that the critical content shall always be
+written in a form of requirements:
+`[REQUIREMENT]` and `[COMPOSITE_REQUIREMENT]`. Non-critical content shall
+be specified using `[FREETEXT]` nodes. By design, the `[FREETEXT]` nodes can
+be only attached to the `[DOCUMENT]` and `[SECTION]` nodes.
+[/FREETEXT]
+
+[/SECTION]
+
+[/SECTION]
 
 [/SECTION]
 

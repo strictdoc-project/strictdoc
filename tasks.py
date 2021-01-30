@@ -118,6 +118,13 @@ def test_integration(context, focus=None, debug=False):
     run_invoke_cmd(context, command)
 
 
+@task
+def export_pip_requirements(context):
+    run_invoke_cmd(
+        context, "poetry export -f requirements.txt > requirements.txt"
+    )
+
+
 # Support generation of Poetry managed setup.py file #761
 # https://github.com/python-poetry/poetry/issues/761#issuecomment-689491920
 @task

@@ -12,7 +12,7 @@ Summary of StrictDoc features:
 - The documentation files are stored as human-readable text files.
 - A simple domain-specific language DSL is used for writing the documents. The
   text format for encoding this language is called SDoc (strict-doc).
-- StrictDoc reads `*.sdoc` files and builds an in-memory representation of the
+- StrictDoc reads ``*.sdoc`` files and builds an in-memory representation of the
   document tree.
 - From this in-memory representation, StrictDoc can generate the documentation
   into a number of formats including HTML, RST, PDF, Excel.
@@ -24,9 +24,9 @@ Summary of StrictDoc features:
   `Requirements Traceability <https://en.wikipedia.org/wiki/Requirements_traceability>`_
   and Documentation Coverage, can be derived.
 - Special fields support. The StrictDoc's grammar can be extended to support
-  arbitrary special fields, such as `PRIORITY`, `OWNER`, or even more
-  specialized fields, such as `Automotive Safety Integrity Level (ASIL)` or
-  `ECSS verification method`.
+  arbitrary special fields, such as ``PRIORITY``, ``OWNER``, or even more
+  specialized fields, such as ``Automotive Safety Integrity Level (ASIL)`` or
+  ``ECSS verification method``.
 - Good performance of the `textX <https://github.com/textX/textX>`_
   parser and parallelized incremental generation of documents: generation of
   document trees with up to 2000-3000 requirements into HTML pages stays within
@@ -156,7 +156,7 @@ located in a single file:
 
 This is how a minimal possible SDoc document looks like:
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -169,21 +169,21 @@ This documentation is written using StrictDoc. Here is the source file:
 TITLE: Document structure
 
 [FREETEXT]
-An SDoc document consists of a `[DOCUMENT]` declaration followed by one or many
-`[REQUIREMENT]` or `[COMPOSITE_REQUIREMENT]` statements which can be grouped
-into `[SECTION]` blocks.
+An SDoc document consists of a ``[DOCUMENT]`` declaration followed by one or many
+``[REQUIREMENT]`` or ``[COMPOSITE_REQUIREMENT]`` statements which can be grouped
+into ``[SECTION]`` blocks.
 
 The following grammatical constructs are currently supported:
 
-- `DOCUMENT`
+- ``DOCUMENT``
 
-  - `FREE_TEXT`
+  - ``FREE_TEXT``
 
-- `REQUIREMENT` and `COMPOSITE_REQUIREMENT`
+- ``REQUIREMENT`` and ``COMPOSITE_REQUIREMENT``
 
-- `SECTION`
+- ``SECTION``
 
-  - `FREE_TEXT`
+  - ``FREE_TEXT``
 
 Each construct is described in more detail below.
 [/FREETEXT]
@@ -192,7 +192,7 @@ Each construct is described in more detail below.
 TITLE: Strict rule #1: One empty line between all nodes
 
 [FREETEXT]
-StrictDoc's grammar requires each node, such as `[REQUIREMENT]`, `[SECTION]`,
+StrictDoc's grammar requires each node, such as ``[REQUIREMENT]``, ``[SECTION]``,
 etc., to be separated with exactly one empty line from the nodes surrounding it.
 This rule is valid for all nodes. Absence of an empty line or presence of more
 than one empty line between two nodes will result in an SDoc parsing error.
@@ -207,9 +207,9 @@ TITLE: Strict rule #2: No content is allowed outside of SDoc grammar
 StrictDoc's grammar does not allow any content to be written outside of the SDoc
 grammatical constructs. It is assumed that the critical content shall always be
 written in form of requirements:
-`[REQUIREMENT]` and `[COMPOSITE_REQUIREMENT]`. Non-critical content shall
-be specified using `[FREETEXT]` nodes. By design, the `[FREETEXT]` nodes can
-be only attached to the `[DOCUMENT]` and `[SECTION]` nodes.
+``[REQUIREMENT]`` and ``[COMPOSITE_REQUIREMENT]``. Non-critical content shall
+be specified using ``[FREETEXT]`` nodes. By design, the ``[FREETEXT]`` nodes can
+be only attached to the ``[DOCUMENT]`` and ``[SECTION]`` nodes.
 [/FREETEXT]
 
 [/SECTION]
@@ -223,19 +223,19 @@ TITLE: Grammar elements
 TITLE: Document
 
 [FREETEXT]
-`[DOCUMENT]` element must always be present in an SDoc document. It is a root
+``[DOCUMENT]`` element must always be present in an SDoc document. It is a root
 of an SDoc document graph.
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
     (newline)
 
-`DOCUMENT` declaration must always have a `TITLE` field. It can have
-optional configuration fields and an optional `[FREETEXT]` block.
+``DOCUMENT`` declaration must always have a ``TITLE`` field. It can have
+optional configuration fields and an optional ``[FREETEXT]`` block.
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -246,7 +246,7 @@ optional configuration fields and an optional `[FREETEXT]` block.
 
 Supported configuration fields:
 
-`SPECIAL_FIELDS` (see Requirement / Special fields below).
+``SPECIAL_FIELDS`` (see Requirement / Special fields below).
 [/FREETEXT]
 
 [/SECTION]
@@ -257,7 +257,7 @@ TITLE: Requirement
 [FREETEXT]
 Minimal "Hello World" program with 3 empty requirements:
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -270,18 +270,18 @@ Minimal "Hello World" program with 3 empty requirements:
 
 Supported fields:
 
-- `UID` (unique identifier)
-- `SPECIAL_FIELDS`
-- `REFS`
-- `TITLE`
-- `STATEMENT`
-- `RATIONALE`
-- `COMMENT` (multiple comments are possible)
+- ``UID`` (unique identifier)
+- ``SPECIAL_FIELDS``
+- ``REFS``
+- ``TITLE``
+- ``STATEMENT``
+- ``RATIONALE``
+- ``COMMENT`` (multiple comments are possible)
 
-Currently, all `[REQUIREMENT]`'s are optional but most of the time at least
-the `STATEMENT:` field must be present as well as the `TITLE:` field.
+Currently, all ``[REQUIREMENT]``'s are optional but most of the time at least
+the ``STATEMENT:`` field must be present as well as the ``TITLE:`` field.
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -294,7 +294,7 @@ the `STATEMENT:` field must be present as well as the `TITLE:` field.
 titles but some documents only use statements without title in which case their
 title becomes their UID. Example:
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -311,18 +311,18 @@ TITLE: UID
 **Observation:** Some documents do not use unique identifiers which makes it
 impossible to trace their requirements to each other. Within StrictDoc's
 framework, it is assumed that a good requirements document has all of its
-requirements uniquely identifiable, however, the `UID` field is optional to
+requirements uniquely identifiable, however, the ``UID`` field is optional to
 accommodate for documents without connections between requirements.
 
 StrictDoc does not impose any limitations on the format of a UID. Examples of
 typical conventions for naming UIDs:
 
-- `REQ-001`, `SCA-001` (scalability), `PERF-001` (performance), etc.
-- `cES1008`, `cTBL6000.1` (example from NASA cFS requirements)
-- Requirements without a number, e.g. `SDOC-HIGH-DATA-MODEL` (StrictDoc)
-- `SAVOIR.OBC.PM.80` (SAVOIR guidelines)
+- ``REQ-001``, ``SCA-001`` (scalability), ``PERF-001`` (performance), etc.
+- ``cES1008``, ``cTBL6000.1`` (example from NASA cFS requirements)
+- Requirements without a number, e.g. ``SDOC-HIGH-DATA-MODEL`` (StrictDoc)
+- ``SAVOIR.OBC.PM.80`` (SAVOIR guidelines)
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -338,10 +338,10 @@ typical conventions for naming UIDs:
 TITLE: References
 
 [FREETEXT]
-The `[REQUIREMENT]` / `REFS:` field is used to connect requirements to each
+The ``[REQUIREMENT]`` / ``REFS:`` field is used to connect requirements to each
 other:
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -358,11 +358,11 @@ other:
     TITLE: Requirement #2's title
     STATEMENT: Requirement #2 statement
 
-**Note:** The `TYPE: Parent` is the only supported type of connection. In the
+**Note:** The ``TYPE: Parent`` is the only supported type of connection. In the
 future, linking requirements to files will be possible.
 
 **Note:** By design, StrictDoc will only show parent or child links if both
-requirements connected with a reference have `UID` defined.
+requirements connected with a reference have ``UID`` defined.
 [/FREETEXT]
 
 [/SECTION]
@@ -374,7 +374,7 @@ TITLE: Comment
 A requirement can have one or more comments explaining this requirement. The
 comments can be single-line or multiline.
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -398,10 +398,11 @@ comments can be single-line or multiline.
 TITLE: Rationale
 
 [FREETEXT]
-A requirement can have a `RATIONALE:` field that explains why such a requirement
-exists. Like comments, the rationale field can be single-line or multiline.
+A requirement can have a ``RATIONALE:`` field that explains why such a
+requirement exists. Like comments, the rationale field can be single-line or
+multiline.
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -421,16 +422,16 @@ TITLE: Special fields
 [FREETEXT]
 **Observation:** Different industries have their own types of requirements
 documents. These documents often have specialized meta information which is
-different from industry to industry. Example: `ECSS_VERIFICATION` field in the
-European space industry or `ASIL` in the automotive industry.
+different from industry to industry. Example: ``ECSS_VERIFICATION`` field in the
+European space industry or ``ASIL`` in the automotive industry.
 
 StrictDoc allows extending its grammar with custom fields that are specific to
 a particular document.
 
 First, such fields have to be registered on a document level using the
-`SPECIAL_FIELDS` field:
+``SPECIAL_FIELDS`` field:
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -443,13 +444,13 @@ First, such fields have to be registered on a document level using the
 
 This registration adds these fields to the parser that will recognize them
 as special fields defined by a user. Declaring a special field as
-`REQUIRED: Yes` makes this field mandatory for each and every requirement in the
-document.
+``REQUIRED: Yes`` makes this field mandatory for each and every requirement in
+the document.
 
 When the fields are registered on the document level, it becomes possible to
-declare them as the `[REQUIREMENT]` special fields:
+declare them as the ``[REQUIREMENT]`` special fields:
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -461,8 +462,9 @@ declare them as the `[REQUIREMENT]` special fields:
       ECSS_VERIFICATION: R,A,I,T
     STATEMENT: StrictDoc shall enable requirements management.
 
-**Note:** The `TYPE: String` is the only supported type of a special field. In
-the future, more specialized types are envisioned, such as `Int`, `Enum`, `Tag`.
+**Note:** The ``TYPE: String`` is the only supported type of a special field. In
+the future, more specialized types are envisioned, such as ``Int``, ``Enum``,
+``Tag``.
 [/FREETEXT]
 
 [/SECTION]
@@ -473,11 +475,11 @@ the future, more specialized types are envisioned, such as `Int`, `Enum`, `Tag`.
 TITLE: Section
 
 [FREETEXT]
-The `[SECTION]` element is used for creating document chapters and grouping
-requirements into logical groups. It is equivalent to the use of `#`, `##`,
-`###`, etc., in Markdown and `====`, `----`, `~~~~` in RST.
+The ``[SECTION]`` element is used for creating document chapters and grouping
+requirements into logical groups. It is equivalent to the use of ``#``, ``##``,
+``###``, etc., in Markdown and ``====``, ``----``, ``~~~~`` in RST.
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -507,7 +509,7 @@ TITLE: Nesting sections
 [FREETEXT]
 Sections can be nested within each other.
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -526,8 +528,8 @@ Sections can be nested within each other.
     [/SECTION]
 
 StrictDoc creates section numbers automatically. In the example above, the
-sections will have their titles numbered accordingly: `1 Chapter` and
-`1.1 Subchapter`.
+sections will have their titles numbered accordingly: ``1 Chapter`` and
+``1.1 Subchapter``.
 [/FREETEXT]
 
 [/SECTION]
@@ -536,9 +538,9 @@ sections will have their titles numbered accordingly: `1 Chapter` and
 TITLE: Free text
 
 [FREETEXT]
-A section can have a block of `[FREETEXT]` connected to it:
+A section can have a block of ``[FREETEXT]`` connected to it:
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -547,7 +549,7 @@ A section can have a block of `[FREETEXT]` connected to it:
     TITLE: Free text
 
     [FREETEXT]
-    A sections can have a block of `[FREETEXT]` connected to it:
+    A sections can have a block of ``[FREETEXT]`` connected to it:
 
     ...
     [/FREETEXT]
@@ -555,7 +557,7 @@ A section can have a block of `[FREETEXT]` connected to it:
     [/SECTION]
 
 According to the Strict Rule #2, arbitrary content cannot be written outside
-of StrictDoc's grammar structure. `[SECTION] / [FREETEXT]` is therefore a
+of StrictDoc's grammar structure. ``[SECTION] / [FREETEXT]`` is therefore a
 designated grammar element for writing free text content.
 
 **Note:** Free text can also be called "nonnormative" or "informative" text
@@ -564,7 +566,7 @@ document. The nonnormative text is there to give a context to the reader and
 help with the conceptual understanding of the information. If a certain
 information influences or is influenced by existing requirements, it has to be
 promoted to the requirement level: the information has to be broken down into
-atomic `[REQUIREMENT]` statements and get connected to the other requirement
+atomic ``[REQUIREMENT]`` statements and get connected to the other requirement
 statements in the document.
 [/FREETEXT]
 
@@ -576,15 +578,15 @@ statements in the document.
 TITLE: Composite requirement
 
 [FREETEXT]
-A `[COMPOSITE_REQUIREMENT]` is a requirement that combines requirement
-properties of a `[REQUIREMENT]` element and grouping features of a `[SECTION]`
+A ``[COMPOSITE_REQUIREMENT]`` is a requirement that combines requirement
+properties of a ``[REQUIREMENT]`` element and grouping features of a ``[SECTION]``
 element. This element can be useful in lower-level specifications documents
 where a given section of a document has to describe a single feature and the
 description requires a one or more levels of nesting. In this case, it might be
 natural to use a composite requirement that is tightly connected to a few
 related sub-requirements.
 
-.. code-block::
+.. code-block:: text
 
     [COMPOSITE_REQUIREMENT]
     STATEMENT: Statement
@@ -600,12 +602,12 @@ related sub-requirements.
 
     [/COMPOSITE_REQUIREMENT]
 
-Special feature of `[COMPOSITE_REQUIREMENT]`: like `[SECTION]` element, the
-`[COMPOSITE_REQUIREMENT]` elements can be nested within each other. However,
-`[COMPOSITE_REQUIREMENT]` cannot nest sections.
+Special feature of ``[COMPOSITE_REQUIREMENT]``: like ``[SECTION]`` element, the
+``[COMPOSITE_REQUIREMENT]`` elements can be nested within each other. However,
+``[COMPOSITE_REQUIREMENT]`` cannot nest sections.
 
 **Note:** Composite requirements should not be used in every document. Most
-often, a more basic combination of nested `[SECTION]` and `[REQUIREMENT]`
+often, a more basic combination of nested ``[SECTION]`` and ``[REQUIREMENT]``
 elements should do the job.
 [/FREETEXT]
 
@@ -633,9 +635,9 @@ The following command creates an HTML export:
 **Example:** This documentation is exported by StrictDoc to HTML:
 `StrictDoc HTML export <https://strictdoc.readthedocs.io/en/latest/strictdoc-html>`_.
 
-**Note:** The options `--formats=html` and `--output-dir output-html` can be
+**Note:** The options ``--formats=html`` and ``--output-dir output-html`` can be
 skipped because HTML export is a default export option and the default output
-folder is `output`.
+folder is ``output``.
 [/FREETEXT]
 
 [SECTION]
@@ -722,13 +724,13 @@ TITLE: Parallelization
 [FREETEXT]
 To improve performance for the large document trees (1000+ requirements),
 StrictDoc parallelizes reading and generation of the documents using
-process-based parallelization: `multiprocessing.Pool` and
-`multiprocessing.Queue`.
+process-based parallelization: ``multiprocessing.Pool`` and
+``multiprocessing.Queue``.
 
 Parallelization improves performance but can also complicate understanding
 behavior of the code if something goes wrong.
 
-To disable parallelization use the `--no-parallelization` option:
+To disable parallelization use the ``--no-parallelization`` option:
 
 .. code-block:: text
 
@@ -785,7 +787,7 @@ StrictDoc differs from Doorstop in a number of aspects:
   StrictDoc's documentation unit is one document stored in an .sdoc file. Such a
   document can have multiple requirements grouped by sections.
 - In YAML files, Doorstop stores requirements properties such as
-  `normative: true` or `level: 2.3` for which Doorstop provides validations.
+  ``normative: true`` or ``level: 2.3`` for which Doorstop provides validations.
   Such a design decision, in fact, assumes an existence of implicitly-defined
   grammar which is encoded "ad-hoc" in the parsing and validation rules of
   Doorstop.
@@ -820,7 +822,7 @@ then you are already looking at the example: this documentation stored in
 `strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc>`_
 is converted to RST format by StrictDoc which is further converted to the HTML
 website by readthedocs which uses Sphinx under the hood. The
-`StrictDoc -> RST -> Sphinx -> PDF` example is also generated using readthedocs:
+``StrictDoc -> RST -> Sphinx -> PDF`` example is also generated using readthedocs:
 `StrictDoc <https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_.
 [/FREETEXT]
 
@@ -853,7 +855,7 @@ The similarities between Sphinx-Needs and StrictDoc:
   `well-developed language
   <https://sphinxcontrib-needs.readthedocs.io/en/latest/directives/index.html>`_
   based on custom RST directives, such
-  as `req::`, `spec::`, `needtable::`, etc. The RST document is parsed
+  as ``req::``, ``spec::``, ``needtable::``, etc. The RST document is parsed
   by Sphinx/docutils into RST abstract syntax tree (AST) which allows creating
   an object graph out for the documents and their requirements from the RST
   document. StrictDoc uses textX for building an AST from a SDoc document.

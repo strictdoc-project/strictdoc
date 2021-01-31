@@ -194,7 +194,8 @@ pre.code {
   border: 1px solid var(--color-border);
 }
 
-cite {
+/* ``some text`` is generated into: <tt class="docutils literal"> by docutils. */
+tt.literal {
   position: relative;
   padding: 2px 6px;
   font-style: normal;

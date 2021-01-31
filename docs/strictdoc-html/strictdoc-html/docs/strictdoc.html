@@ -467,7 +467,7 @@
 <li>The documentation files are stored as human-readable text files.</li>
 <li>A simple domain-specific language DSL is used for writing the documents. The
 text format for encoding this language is called SDoc (strict-doc).</li>
-<li>StrictDoc reads <cite>*.sdoc</cite> files and builds an in-memory representation of the
+<li>StrictDoc reads <tt class="docutils literal">*.sdoc</tt> files and builds an in-memory representation of the
 document tree.</li>
 <li>From this in-memory representation, StrictDoc can generate the documentation
 into a number of formats including HTML, RST, PDF, Excel.</li>
@@ -479,9 +479,9 @@ called requirements.</li>
 <a class="reference external" href="https://en.wikipedia.org/wiki/Requirements_traceability">Requirements Traceability</a>
 and Documentation Coverage, can be derived.</li>
 <li>Special fields support. The StrictDoc's grammar can be extended to support
-arbitrary special fields, such as <cite>PRIORITY</cite>, <cite>OWNER</cite>, or even more
-specialized fields, such as <cite>Automotive Safety Integrity Level (ASIL)</cite> or
-<cite>ECSS verification method</cite>.</li>
+arbitrary special fields, such as <tt class="docutils literal">PRIORITY</tt>, <tt class="docutils literal">OWNER</tt>, or even more
+specialized fields, such as <tt class="docutils literal">Automotive Safety Integrity Level (ASIL)</tt> or
+<tt class="docutils literal">ECSS verification method</tt>.</li>
 <li>Good performance of the <a class="reference external" href="https://github.com/textX/textX">textX</a>
 parser and parallelized incremental generation of documents: generation of
 document trees with up to 2000-3000 requirements into HTML pages stays within
@@ -661,7 +661,7 @@ tool.</p>
 located in a single file:
 <a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/master/strictdoc/backend/dsl/grammar.py">grammar.py</a>.</p>
 <p>This is how a minimal possible SDoc document looks like:</p>
-<pre class="code literal-block">
+<pre class="code text literal-block">
 [DOCUMENT]
 TITLE: StrictDoc
 </pre>
@@ -683,18 +683,18 @@ TITLE: StrictDoc
   </section>
   <section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
-<p>An SDoc document consists of a <cite>[DOCUMENT]</cite> declaration followed by one or many
-<cite>[REQUIREMENT]</cite> or <cite>[COMPOSITE_REQUIREMENT]</cite> statements which can be grouped
-into <cite>[SECTION]</cite> blocks.</p>
+<p>An SDoc document consists of a <tt class="docutils literal">[DOCUMENT]</tt> declaration followed by one or many
+<tt class="docutils literal">[REQUIREMENT]</tt> or <tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt> statements which can be grouped
+into <tt class="docutils literal">[SECTION]</tt> blocks.</p>
 <p>The following grammatical constructs are currently supported:</p>
 <ul class="simple">
-<li><cite>DOCUMENT</cite><ul>
-<li><cite>FREE_TEXT</cite></li>
+<li><tt class="docutils literal">DOCUMENT</tt><ul>
+<li><tt class="docutils literal">FREE_TEXT</tt></li>
 </ul>
 </li>
-<li><cite>REQUIREMENT</cite> and <cite>COMPOSITE_REQUIREMENT</cite></li>
-<li><cite>SECTION</cite><ul>
-<li><cite>FREE_TEXT</cite></li>
+<li><tt class="docutils literal">REQUIREMENT</tt> and <tt class="docutils literal">COMPOSITE_REQUIREMENT</tt></li>
+<li><tt class="docutils literal">SECTION</tt><ul>
+<li><tt class="docutils literal">FREE_TEXT</tt></li>
 </ul>
 </li>
 </ul>
@@ -715,7 +715,7 @@ into <cite>[SECTION]</cite> blocks.</p>
   </section>
   <section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
-<p>StrictDoc's grammar requires each node, such as <cite>[REQUIREMENT]</cite>, <cite>[SECTION]</cite>,
+<p>StrictDoc's grammar requires each node, such as <tt class="docutils literal">[REQUIREMENT]</tt>, <tt class="docutils literal">[SECTION]</tt>,
 etc., to be separated with exactly one empty line from the nodes surrounding it.
 This rule is valid for all nodes. Absence of an empty line or presence of more
 than one empty line between two nodes will result in an SDoc parsing error.</p>
@@ -738,9 +738,9 @@ than one empty line between two nodes will result in an SDoc parsing error.</p>
 <p>StrictDoc's grammar does not allow any content to be written outside of the SDoc
 grammatical constructs. It is assumed that the critical content shall always be
 written in form of requirements:
-<cite>[REQUIREMENT]</cite> and <cite>[COMPOSITE_REQUIREMENT]</cite>. Non-critical content shall
-be specified using <cite>[FREETEXT]</cite> nodes. By design, the <cite>[FREETEXT]</cite> nodes can
-be only attached to the <cite>[DOCUMENT]</cite> and <cite>[SECTION]</cite> nodes.</p>
+<tt class="docutils literal">[REQUIREMENT]</tt> and <tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt>. Non-critical content shall
+be specified using <tt class="docutils literal">[FREETEXT]</tt> nodes. By design, the <tt class="docutils literal">[FREETEXT]</tt> nodes can
+be only attached to the <tt class="docutils literal">[DOCUMENT]</tt> and <tt class="docutils literal">[SECTION]</tt> nodes.</p>
 </div>
 
     </div></section>
@@ -769,16 +769,16 @@ be only attached to the <cite>[DOCUMENT]</cite> and <cite>[SECTION]</cite> nodes
   </section>
   <section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
-<p><cite>[DOCUMENT]</cite> element must always be present in an SDoc document. It is a root
+<p><tt class="docutils literal">[DOCUMENT]</tt> element must always be present in an SDoc document. It is a root
 of an SDoc document graph.</p>
-<pre class="code literal-block">
+<pre class="code text literal-block">
 [DOCUMENT]
 TITLE: StrictDoc
 (newline)
 </pre>
-<p><cite>DOCUMENT</cite> declaration must always have a <cite>TITLE</cite> field. It can have
-optional configuration fields and an optional <cite>[FREETEXT]</cite> block.</p>
-<pre class="code literal-block">
+<p><tt class="docutils literal">DOCUMENT</tt> declaration must always have a <tt class="docutils literal">TITLE</tt> field. It can have
+optional configuration fields and an optional <tt class="docutils literal">[FREETEXT]</tt> block.</p>
+<pre class="code text literal-block">
 [DOCUMENT]
 TITLE: StrictDoc
 
@@ -787,7 +787,7 @@ StrictDoc is software for writing technical requirements and specifications.
 [/FREETEXT]
 </pre>
 <p>Supported configuration fields:</p>
-<p><cite>SPECIAL_FIELDS</cite> (see Requirement / Special fields below).</p>
+<p><tt class="docutils literal">SPECIAL_FIELDS</tt> (see Requirement / Special fields below).</p>
 </div>
 
     </div></section>
@@ -805,7 +805,7 @@ StrictDoc is software for writing technical requirements and specifications.
   <section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>Minimal &quot;Hello World&quot; program with 3 empty requirements:</p>
-<pre class="code literal-block">
+<pre class="code text literal-block">
 [DOCUMENT]
 TITLE: StrictDoc
 
@@ -817,17 +817,17 @@ TITLE: StrictDoc
 </pre>
 <p>Supported fields:</p>
 <ul class="simple">
-<li><cite>UID</cite> (unique identifier)</li>
-<li><cite>SPECIAL_FIELDS</cite></li>
-<li><cite>REFS</cite></li>
-<li><cite>TITLE</cite></li>
-<li><cite>STATEMENT</cite></li>
-<li><cite>RATIONALE</cite></li>
-<li><cite>COMMENT</cite> (multiple comments are possible)</li>
+<li><tt class="docutils literal">UID</tt> (unique identifier)</li>
+<li><tt class="docutils literal">SPECIAL_FIELDS</tt></li>
+<li><tt class="docutils literal">REFS</tt></li>
+<li><tt class="docutils literal">TITLE</tt></li>
+<li><tt class="docutils literal">STATEMENT</tt></li>
+<li><tt class="docutils literal">RATIONALE</tt></li>
+<li><tt class="docutils literal">COMMENT</tt> (multiple comments are possible)</li>
 </ul>
-<p>Currently, all <cite>[REQUIREMENT]</cite>'s are optional but most of the time at least
-the <cite>STATEMENT:</cite> field must be present as well as the <cite>TITLE:</cite> field.</p>
-<pre class="code literal-block">
+<p>Currently, all <tt class="docutils literal">[REQUIREMENT]</tt>'s are optional but most of the time at least
+the <tt class="docutils literal">STATEMENT:</tt> field must be present as well as the <tt class="docutils literal">TITLE:</tt> field.</p>
+<pre class="code text literal-block">
 [DOCUMENT]
 TITLE: StrictDoc
 
@@ -838,7 +838,7 @@ STATEMENT: StrictDoc shall enable requirements management.
 <p><strong>Observation:</strong> Many real-world documents have requirements with statements and
 titles but some documents only use statements without title in which case their
 title becomes their UID. Example:</p>
-<pre class="code literal-block">
+<pre class="code text literal-block">
 [DOCUMENT]
 TITLE: StrictDoc
 
@@ -865,17 +865,17 @@ STATEMENT: StrictDoc shall enable requirements management.
 <p><strong>Observation:</strong> Some documents do not use unique identifiers which makes it
 impossible to trace their requirements to each other. Within StrictDoc's
 framework, it is assumed that a good requirements document has all of its
-requirements uniquely identifiable, however, the <cite>UID</cite> field is optional to
+requirements uniquely identifiable, however, the <tt class="docutils literal">UID</tt> field is optional to
 accommodate for documents without connections between requirements.</p>
 <p>StrictDoc does not impose any limitations on the format of a UID. Examples of
 typical conventions for naming UIDs:</p>
 <ul class="simple">
-<li><cite>REQ-001</cite>, <cite>SCA-001</cite> (scalability), <cite>PERF-001</cite> (performance), etc.</li>
-<li><cite>cES1008</cite>, <cite>cTBL6000.1</cite> (example from NASA cFS requirements)</li>
-<li>Requirements without a number, e.g. <cite>SDOC-HIGH-DATA-MODEL</cite> (StrictDoc)</li>
-<li><cite>SAVOIR.OBC.PM.80</cite> (SAVOIR guidelines)</li>
+<li><tt class="docutils literal"><span class="pre">REQ-001</span></tt>, <tt class="docutils literal"><span class="pre">SCA-001</span></tt> (scalability), <tt class="docutils literal"><span class="pre">PERF-001</span></tt> (performance), etc.</li>
+<li><tt class="docutils literal">cES1008</tt>, <tt class="docutils literal">cTBL6000.1</tt> (example from NASA cFS requirements)</li>
+<li>Requirements without a number, e.g. <tt class="docutils literal"><span class="pre">SDOC-HIGH-DATA-MODEL</span></tt> (StrictDoc)</li>
+<li><tt class="docutils literal">SAVOIR.OBC.PM.80</tt> (SAVOIR guidelines)</li>
 </ul>
-<pre class="code literal-block">
+<pre class="code text literal-block">
 [DOCUMENT]
 TITLE: StrictDoc
 
@@ -899,9 +899,9 @@ STATEMENT: STATEMENT: StrictDoc shall be based on a well-defined data model.
   </section>
   <section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
-<p>The <cite>[REQUIREMENT]</cite> / <cite>REFS:</cite> field is used to connect requirements to each
+<p>The <tt class="docutils literal">[REQUIREMENT]</tt> / <tt class="docutils literal">REFS:</tt> field is used to connect requirements to each
 other:</p>
-<pre class="code literal-block">
+<pre class="code text literal-block">
 [DOCUMENT]
 TITLE: StrictDoc
 
@@ -917,10 +917,10 @@ REFS:
 TITLE: Requirement #2's title
 STATEMENT: Requirement #2 statement
 </pre>
-<p><strong>Note:</strong> The <cite>TYPE: Parent</cite> is the only supported type of connection. In the
+<p><strong>Note:</strong> The <tt class="docutils literal">TYPE: Parent</tt> is the only supported type of connection. In the
 future, linking requirements to files will be possible.</p>
 <p><strong>Note:</strong> By design, StrictDoc will only show parent or child links if both
-requirements connected with a reference have <cite>UID</cite> defined.</p>
+requirements connected with a reference have <tt class="docutils literal">UID</tt> defined.</p>
 </div>
 
     </div></section>
@@ -939,7 +939,7 @@ requirements connected with a reference have <cite>UID</cite> defined.</p>
       <div class="document">
 <p>A requirement can have one or more comments explaining this requirement. The
 comments can be single-line or multiline.</p>
-<pre class="code literal-block">
+<pre class="code text literal-block">
 [DOCUMENT]
 TITLE: StrictDoc
 
@@ -971,9 +971,10 @@ Each line is rendered as a separate paragraph.
   </section>
   <section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
-<p>A requirement can have a <cite>RATIONALE:</cite> field that explains why such a requirement
-exists. Like comments, the rationale field can be single-line or multiline.</p>
-<pre class="code literal-block">
+<p>A requirement can have a <tt class="docutils literal">RATIONALE:</tt> field that explains why such a
+requirement exists. Like comments, the rationale field can be single-line or
+multiline.</p>
+<pre class="code text literal-block">
 [DOCUMENT]
 TITLE: StrictDoc
 
@@ -1001,13 +1002,13 @@ RATIONALE: The presence of the REQ-001 is justified.
       <div class="document">
 <p><strong>Observation:</strong> Different industries have their own types of requirements
 documents. These documents often have specialized meta information which is
-different from industry to industry. Example: <cite>ECSS_VERIFICATION</cite> field in the
-European space industry or <cite>ASIL</cite> in the automotive industry.</p>
+different from industry to industry. Example: <tt class="docutils literal">ECSS_VERIFICATION</tt> field in the
+European space industry or <tt class="docutils literal">ASIL</tt> in the automotive industry.</p>
 <p>StrictDoc allows extending its grammar with custom fields that are specific to
 a particular document.</p>
 <p>First, such fields have to be registered on a document level using the
-<cite>SPECIAL_FIELDS</cite> field:</p>
-<pre class="code literal-block">
+<tt class="docutils literal">SPECIAL_FIELDS</tt> field:</p>
+<pre class="code text literal-block">
 [DOCUMENT]
 TITLE: StrictDoc
 SPECIAL_FIELDS:
@@ -1019,11 +1020,11 @@ SPECIAL_FIELDS:
 </pre>
 <p>This registration adds these fields to the parser that will recognize them
 as special fields defined by a user. Declaring a special field as
-<cite>REQUIRED: Yes</cite> makes this field mandatory for each and every requirement in the
-document.</p>
+<tt class="docutils literal">REQUIRED: Yes</tt> makes this field mandatory for each and every requirement in
+the document.</p>
 <p>When the fields are registered on the document level, it becomes possible to
-declare them as the <cite>[REQUIREMENT]</cite> special fields:</p>
-<pre class="code literal-block">
+declare them as the <tt class="docutils literal">[REQUIREMENT]</tt> special fields:</p>
+<pre class="code text literal-block">
 [DOCUMENT]
 TITLE: StrictDoc
 
@@ -1034,8 +1035,9 @@ SPECIAL_FIELDS:
   ECSS_VERIFICATION: R,A,I,T
 STATEMENT: StrictDoc shall enable requirements management.
 </pre>
-<p><strong>Note:</strong> The <cite>TYPE: String</cite> is the only supported type of a special field. In
-the future, more specialized types are envisioned, such as <cite>Int</cite>, <cite>Enum</cite>, <cite>Tag</cite>.</p>
+<p><strong>Note:</strong> The <tt class="docutils literal">TYPE: String</tt> is the only supported type of a special field. In
+the future, more specialized types are envisioned, such as <tt class="docutils literal">Int</tt>, <tt class="docutils literal">Enum</tt>,
+<tt class="docutils literal">Tag</tt>.</p>
 </div>
 
     </div></section>
@@ -1052,10 +1054,10 @@ the future, more specialized types are envisioned, such as <cite>Int</cite>, <ci
   </section>
   <section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
-<p>The <cite>[SECTION]</cite> element is used for creating document chapters and grouping
-requirements into logical groups. It is equivalent to the use of <cite>#</cite>, <cite>##</cite>,
-<cite>###</cite>, etc., in Markdown and <cite>====</cite>, <cite>----</cite>, <cite>~~~~</cite> in RST.</p>
-<pre class="code literal-block">
+<p>The <tt class="docutils literal">[SECTION]</tt> element is used for creating document chapters and grouping
+requirements into logical groups. It is equivalent to the use of <tt class="docutils literal">#</tt>, <tt class="docutils literal">##</tt>,
+<tt class="docutils literal">###</tt>, etc., in Markdown and <tt class="docutils literal"><span class="pre">====</span></tt>, <tt class="docutils literal"><span class="pre">----</span></tt>, <tt class="docutils literal"><span class="pre">~~~~</span></tt> in RST.</p>
+<pre class="code text literal-block">
 [DOCUMENT]
 TITLE: StrictDoc
 
@@ -1094,7 +1096,7 @@ STATEMENT: ...
   <section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>Sections can be nested within each other.</p>
-<pre class="code literal-block">
+<pre class="code text literal-block">
 [DOCUMENT]
 TITLE: StrictDoc
 
@@ -1112,8 +1114,8 @@ STATEMENT: ...
 [/SECTION]
 </pre>
 <p>StrictDoc creates section numbers automatically. In the example above, the
-sections will have their titles numbered accordingly: <cite>1 Chapter</cite> and
-<cite>1.1 Subchapter</cite>.</p>
+sections will have their titles numbered accordingly: <tt class="docutils literal">1 Chapter</tt> and
+<tt class="docutils literal">1.1 Subchapter</tt>.</p>
 </div>
 
     </div></section>
@@ -1130,8 +1132,8 @@ sections will have their titles numbered accordingly: <cite>1 Chapter</cite> and
   </section>
   <section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
-<p>A section can have a block of <cite>[FREETEXT]</cite> connected to it:</p>
-<pre class="code literal-block">
+<p>A section can have a block of <tt class="docutils literal">[FREETEXT]</tt> connected to it:</p>
+<pre class="code text literal-block">
 [DOCUMENT]
 TITLE: StrictDoc
 
@@ -1139,7 +1141,7 @@ TITLE: StrictDoc
 TITLE: Free text
 
 [FREETEXT]
-A sections can have a block of `[FREETEXT]` connected to it:
+A sections can have a block of ``[FREETEXT]`` connected to it:
 
 ...
 [/FREETEXT]
@@ -1147,7 +1149,7 @@ A sections can have a block of `[FREETEXT]` connected to it:
 [/SECTION]
 </pre>
 <p>According to the Strict Rule #2, arbitrary content cannot be written outside
-of StrictDoc's grammar structure. <cite>[SECTION] / [FREETEXT]</cite> is therefore a
+of StrictDoc's grammar structure. <tt class="docutils literal">[SECTION] / [FREETEXT]</tt> is therefore a
 designated grammar element for writing free text content.</p>
 <p><strong>Note:</strong> Free text can also be called &quot;nonnormative&quot; or &quot;informative&quot; text
 because it does not contribute anything to the traceability information of the
@@ -1155,7 +1157,7 @@ document. The nonnormative text is there to give a context to the reader and
 help with the conceptual understanding of the information. If a certain
 information influences or is influenced by existing requirements, it has to be
 promoted to the requirement level: the information has to be broken down into
-atomic <cite>[REQUIREMENT]</cite> statements and get connected to the other requirement
+atomic <tt class="docutils literal">[REQUIREMENT]</tt> statements and get connected to the other requirement
 statements in the document.</p>
 </div>
 
@@ -1173,14 +1175,14 @@ statements in the document.</p>
   </section>
   <section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
-<p>A <cite>[COMPOSITE_REQUIREMENT]</cite> is a requirement that combines requirement
-properties of a <cite>[REQUIREMENT]</cite> element and grouping features of a <cite>[SECTION]</cite>
+<p>A <tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt> is a requirement that combines requirement
+properties of a <tt class="docutils literal">[REQUIREMENT]</tt> element and grouping features of a <tt class="docutils literal">[SECTION]</tt>
 element. This element can be useful in lower-level specifications documents
 where a given section of a document has to describe a single feature and the
 description requires a one or more levels of nesting. In this case, it might be
 natural to use a composite requirement that is tightly connected to a few
 related sub-requirements.</p>
-<pre class="code literal-block">
+<pre class="code text literal-block">
 [COMPOSITE_REQUIREMENT]
 STATEMENT: Statement
 
@@ -1195,11 +1197,11 @@ STATEMENT: Substatement #3
 
 [/COMPOSITE_REQUIREMENT]
 </pre>
-<p>Special feature of <cite>[COMPOSITE_REQUIREMENT]</cite>: like <cite>[SECTION]</cite> element, the
-<cite>[COMPOSITE_REQUIREMENT]</cite> elements can be nested within each other. However,
-<cite>[COMPOSITE_REQUIREMENT]</cite> cannot nest sections.</p>
+<p>Special feature of <tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt>: like <tt class="docutils literal">[SECTION]</tt> element, the
+<tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt> elements can be nested within each other. However,
+<tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt> cannot nest sections.</p>
 <p><strong>Note:</strong> Composite requirements should not be used in every document. Most
-often, a more basic combination of nested <cite>[SECTION]</cite> and <cite>[REQUIREMENT]</cite>
+often, a more basic combination of nested <tt class="docutils literal">[SECTION]</tt> and <tt class="docutils literal">[REQUIREMENT]</tt>
 elements should do the job.</p>
 </div>
 
@@ -1236,9 +1238,9 @@ strictdoc export docs/ --formats=html --output-dir output-html
 </pre>
 <p><strong>Example:</strong> This documentation is exported by StrictDoc to HTML:
 <a class="reference external" href="https://strictdoc.readthedocs.io/en/latest/strictdoc-html">StrictDoc HTML export</a>.</p>
-<p><strong>Note:</strong> The options <cite>--formats=html</cite> and <cite>--output-dir output-html</cite> can be
+<p><strong>Note:</strong> The options <tt class="docutils literal"><span class="pre">--formats=html</span></tt> and <tt class="docutils literal"><span class="pre">--output-dir</span> <span class="pre">output-html</span></tt> can be
 skipped because HTML export is a default export option and the default output
-folder is <cite>output</cite>.</p>
+folder is <tt class="docutils literal">output</tt>.</p>
 </div>
 
     </div></section>
@@ -1351,11 +1353,11 @@ is generated this way, see the Invoke task:
       <div class="document">
 <p>To improve performance for the large document trees (1000+ requirements),
 StrictDoc parallelizes reading and generation of the documents using
-process-based parallelization: <cite>multiprocessing.Pool</cite> and
-<cite>multiprocessing.Queue</cite>.</p>
+process-based parallelization: <tt class="docutils literal">multiprocessing.Pool</tt> and
+<tt class="docutils literal">multiprocessing.Queue</tt>.</p>
 <p>Parallelization improves performance but can also complicate understanding
 behavior of the code if something goes wrong.</p>
-<p>To disable parallelization use the <cite>--no-parallelization</cite> option:</p>
+<p>To disable parallelization use the <tt class="docutils literal"><span class="pre">--no-parallelization</span></tt> option:</p>
 <pre class="code text literal-block">
 strictdoc export --no-parallelization docs/
 </pre>
@@ -1423,7 +1425,7 @@ single logical document during the document generation process.
 StrictDoc's documentation unit is one document stored in an .sdoc file. Such a
 document can have multiple requirements grouped by sections.</li>
 <li>In YAML files, Doorstop stores requirements properties such as
-<cite>normative: true</cite> or <cite>level: 2.3</cite> for which Doorstop provides validations.
+<tt class="docutils literal">normative: true</tt> or <tt class="docutils literal">level: 2.3</tt> for which Doorstop provides validations.
 Such a design decision, in fact, assumes an existence of implicitly-defined
 grammar which is encoded &quot;ad-hoc&quot; in the parsing and validation rules of
 Doorstop.
@@ -1465,7 +1467,7 @@ then you are already looking at the example: this documentation stored in
 <a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc">strictdoc.sdoc</a>
 is converted to RST format by StrictDoc which is further converted to the HTML
 website by readthedocs which uses Sphinx under the hood. The
-<cite>StrictDoc -&gt; RST -&gt; Sphinx -&gt; PDF</cite> example is also generated using readthedocs:
+<tt class="docutils literal">StrictDoc <span class="pre">-&gt;</span> RST <span class="pre">-&gt;</span> Sphinx <span class="pre">-&gt;</span> PDF</tt> example is also generated using readthedocs:
 <a class="reference external" href="https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/">StrictDoc</a>.</p>
 </div>
 
@@ -1502,7 +1504,7 @@ tools follow the &quot;file per document&quot; approach.</li>
 <li>Sphinx-Needs has a
 <a class="reference external" href="https://sphinxcontrib-needs.readthedocs.io/en/latest/directives/index.html">well-developed language</a>
 based on custom RST directives, such
-as <cite>req::</cite>, <cite>spec::</cite>, <cite>needtable::</cite>, etc. The RST document is parsed
+as <tt class="docutils literal">req::</tt>, <tt class="docutils literal">spec::</tt>, <tt class="docutils literal">needtable::</tt>, etc. The RST document is parsed
 by Sphinx/docutils into RST abstract syntax tree (AST) which allows creating
 an object graph out for the documents and their requirements from the RST
 document. StrictDoc uses textX for building an AST from a SDoc document.

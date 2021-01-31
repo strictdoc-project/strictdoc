@@ -156,7 +156,7 @@ located in a single file:
 
 This is how a minimal possible SDoc document looks like:
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -226,7 +226,7 @@ TITLE: Document
 `[DOCUMENT]` element must always be present in an SDoc document. It is a root
 of an SDoc document graph.
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -235,7 +235,7 @@ of an SDoc document graph.
 `DOCUMENT` declaration must always have a `TITLE` field. It can have
 optional configuration fields and an optional `[FREETEXT]` block.
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -257,7 +257,7 @@ TITLE: Requirement
 [FREETEXT]
 Minimal "Hello World" program with 3 empty requirements:
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -281,7 +281,7 @@ Supported fields:
 Currently, all `[REQUIREMENT]`'s are optional but most of the time at least
 the `STATEMENT:` field must be present as well as the `TITLE:` field.
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -294,7 +294,7 @@ the `STATEMENT:` field must be present as well as the `TITLE:` field.
 titles but some documents only use statements without title in which case their
 title becomes their UID. Example:
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -322,7 +322,7 @@ typical conventions for naming UIDs:
 - Requirements without a number, e.g. `SDOC-HIGH-DATA-MODEL` (StrictDoc)
 - `SAVOIR.OBC.PM.80` (SAVOIR guidelines)
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -341,7 +341,7 @@ TITLE: References
 The `[REQUIREMENT]` / `REFS:` field is used to connect requirements to each
 other:
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -374,7 +374,7 @@ TITLE: Comment
 A requirement can have one or more comments explaining this requirement. The
 comments can be single-line or multiline.
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -401,7 +401,7 @@ TITLE: Rationale
 A requirement can have a `RATIONALE:` field that explains why such a requirement
 exists. Like comments, the rationale field can be single-line or multiline.
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -430,7 +430,7 @@ a particular document.
 First, such fields have to be registered on a document level using the
 `SPECIAL_FIELDS` field:
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -449,7 +449,7 @@ document.
 When the fields are registered on the document level, it becomes possible to
 declare them as the `[REQUIREMENT]` special fields:
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -477,7 +477,7 @@ The `[SECTION]` element is used for creating document chapters and grouping
 requirements into logical groups. It is equivalent to the use of `#`, `##`,
 `###`, etc., in Markdown and `====`, `----`, `~~~~` in RST.
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -507,7 +507,7 @@ TITLE: Nesting sections
 [FREETEXT]
 Sections can be nested within each other.
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -538,7 +538,7 @@ TITLE: Free text
 [FREETEXT]
 A section can have a block of `[FREETEXT]` connected to it:
 
-.. code-block::
+.. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -584,7 +584,7 @@ description requires a one or more levels of nesting. In this case, it might be
 natural to use a composite requirement that is tightly connected to a few
 related sub-requirements.
 
-.. code-block::
+.. code-block:: text
 
     [COMPOSITE_REQUIREMENT]
     STATEMENT: Statement

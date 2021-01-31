@@ -133,7 +133,7 @@ TITLE: Hello world
 [FREETEXT]
 .. code-block:: text
 
-    git clone git@github.com:stanislaw/strictdoc.git && cd strictdoc
+    git clone --depth 1 https://github.com/strictdoc-project/strictdoc && cd strictdoc
     strictdoc export docs/
 [/FREETEXT]
 

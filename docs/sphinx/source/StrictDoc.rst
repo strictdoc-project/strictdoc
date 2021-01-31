@@ -19,6 +19,10 @@ Summary of StrictDoc features:
   "parent-child", and from these connections, many useful features, such as
   `Requirements Traceability <https://en.wikipedia.org/wiki/Requirements_traceability>`_
   and Documentation Coverage, can be derived.
+- Special fields support. The StrictDoc's grammar can be extended to support
+  arbitrary special fields, such as `PRIORITY`, `OWNER`, or even more
+  specialized fields, such as `Automotive Safety Integrity Level (ASIL)` or
+  `ECSS verification method`.
 - Good performance of the `textX <https://github.com/textX/textX>`_
   parser and parallelized incremental generation of documents: generation of
   document trees with up to 2000-3000 requirements into HTML pages stays within
@@ -60,21 +64,29 @@ Requirements
 - Python 3.6+
 - macOS, Linux or Windows
 
-Installing StrictDoc as a Pip package
--------------------------------------
+Installing StrictDoc as a Pip package (recommended way)
+-------------------------------------------------------
 
 .. code-block:: text
 
     pip install strictdoc
 
-Installing StrictDoc from GitHub (development)
-----------------------------------------------
+Installing StrictDoc from GitHub (developer mode)
+-------------------------------------------------
 
-`Poetry <https://python-poetry.org>`_ has to be installed first.
+**Note:** Use this way of installing StrictDoc only if you want to make changes
+in StrictDoc's source code. Otherwise, install StrictDoc as a Pip package
+(see above).
+
+StrictDoc uses Poetry, so `Poetry <https://python-poetry.org>`_ has to be
+installed. To install Poetry, read the instructions here:
+`Poetry / Installation <https://python-poetry.org/docs/#installation>`_.
+
+When Poetry is installed, clone StrictDoc:
 
 .. code-block:: text
 
-    git clone git@github.com:stanislaw/strictdoc.git && cd strictdoc
+    git clone https://github.com/strictdoc-project/strictdoc.git && cd strictdoc
     poetry install
     poetry run strictdoc
     poetry run invoke test
@@ -83,9 +95,8 @@ StrictDoc can also be developed and run without Poetry:
 
 .. code-block:: text
 
-    git clone git@github.com:stanislaw/strictdoc.git && cd strictdoc
-    # for running strictdoc:
-    pip install textx jinja2 docutils
+    git clone https://github.com/strictdoc-project/strictdoc.git && cd strictdoc
+    pip install -r requirements.txt
     python3 strictdoc/cli/main.py
     # for running tests:
     pip install invoke pytest pytidylib html5lib
@@ -111,7 +122,7 @@ The grammar is defined using textX language for defining grammars and is
 located in a single file:
 `grammar.py <https://github.com/strictdoc-project/strictdoc/blob/master/strictdoc/backend/dsl/grammar.py>`_.
 
-This is how a minimal possible SDOC document looks like:
+This is how a minimal possible SDoc document looks like:
 
 .. code-block::
 
@@ -120,6 +131,396 @@ This is how a minimal possible SDOC document looks like:
 
 This documentation is written using StrictDoc. Here is the source file:
 `strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc>`_.
+
+Document structure
+------------------
+
+An SDoc document consists of a `[DOCUMENT]` declaration followed by one or many
+`[REQUIREMENT]` or `[COMPOSITE_REQUIREMENT]` statements which can be grouped
+into `[SECTION]` blocks.
+
+The following grammatical constructs are currently supported:
+
+- `DOCUMENT`
+
+  - `FREE_TEXT`
+
+- `REQUIREMENT` and `COMPOSITE_REQUIREMENT`
+
+- `SECTION`
+
+  - `FREE_TEXT`
+
+Each construct is described in more detail below.
+
+Strict rule #1: One empty line between all nodes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+StrictDoc's grammar requires each node, such as `[REQUIREMENT]`, `[SECTION]`,
+etc., to be separated with exactly one empty line from the nodes surrounding it.
+This rule is valid for all nodes. Absence of an empty line or presence of more
+than one empty line between two nodes will result in an SDoc parsing error.
+
+Strict rule #2: No content is allowed outside of SDoc grammar
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+StrictDoc's grammar does not allow any content to be written outside of the SDoc
+grammatical constructs. It is assumed that the critical content shall always be
+written in form of requirements:
+`[REQUIREMENT]` and `[COMPOSITE_REQUIREMENT]`. Non-critical content shall
+be specified using `[FREETEXT]` nodes. By design, the `[FREETEXT]` nodes can
+be only attached to the `[DOCUMENT]` and `[SECTION]` nodes.
+
+Grammar elements
+----------------
+
+Document
+~~~~~~~~
+
+`[DOCUMENT]` element must always be present in an SDoc document. It is a root
+of an SDoc document graph.
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+    (newline)
+
+`DOCUMENT` declaration must always have a `TITLE` field. It can have
+optional configuration fields and an optional `[FREETEXT]` block.
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [FREETEXT]
+    StrictDoc is software for writing technical requirements and specifications.
+    [/FREETEXT]
+
+Supported configuration fields:
+
+`SPECIAL_FIELDS` (see Requirement / Special fields below).
+
+Requirement
+~~~~~~~~~~~
+
+Minimal "Hello World" program with 3 empty requirements:
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [REQUIREMENT]
+
+    [REQUIREMENT]
+
+    [REQUIREMENT]
+
+Supported fields:
+
+- `UID` (unique identifier)
+- `SPECIAL_FIELDS`
+- `REFS`
+- `TITLE`
+- `STATEMENT`
+- `RATIONALE`
+- `COMMENT` (multiple comments are possible)
+
+Currently, all `[REQUIREMENT]`'s are optional but most of the time at least
+the `STATEMENT:` field must be present as well as the `TITLE:` field.
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [REQUIREMENT]
+    TITLE: Requirements management
+    STATEMENT: StrictDoc shall enable requirements management.
+
+**Observation:** Many real-world documents have requirements with statements and
+titles but some documents only use statements without title in which case their
+title becomes their UID. Example:
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [REQUIREMENT]
+    UID: REQ-001
+    STATEMENT: StrictDoc shall enable requirements management.
+
+UID
+^^^
+
+**Observation:** Some documents do not use unique identifiers which makes it
+impossible to trace their requirements to each other. Within StrictDoc's
+framework, it is assumed that a good requirements document has all of its
+requirements uniquely identifiable, however, the `UID` field is optional to
+accommodate for documents without connections between requirements.
+
+StrictDoc does not impose any limitations on the format of a UID. Examples of
+typical conventions for naming UIDs:
+
+- `REQ-001`, `SCA-001` (scalability), `PERF-001` (performance), etc.
+- `cES1008`, `cTBL6000.1` (example from NASA cFS requirements)
+- Requirements without a number, e.g. `SDOC-HIGH-DATA-MODEL` (StrictDoc)
+- `SAVOIR.OBC.PM.80` (SAVOIR guidelines)
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [REQUIREMENT]
+    UID: SDOC-HIGH-DATA-MODEL
+    STATEMENT: STATEMENT: StrictDoc shall be based on a well-defined data model.
+
+References
+^^^^^^^^^^
+
+The `[REQUIREMENT]` / `REFS:` field is used to connect requirements to each
+other:
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [REQUIREMENT]
+    UID: REQ-001
+    STATEMENT: StrictDoc shall enable requirements management.
+
+    [REQUIREMENT]
+    UID: REQ-002
+    REFS:
+    - TYPE: Parent
+      VALUE: REQ-001
+    TITLE: Requirement #2's title
+    STATEMENT: Requirement #2 statement
+
+**Note:** The `TYPE: Parent` is the only supported type of connection. In the
+future, linking requirements to files will be possible.
+
+**Note:** By design, StrictDoc will only show parent or child links if both
+requirements connected with a reference have `UID` defined.
+
+Comment
+^^^^^^^
+
+A requirement can have one or more comments explaining this requirement. The
+comments can be single-line or multiline.
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [REQUIREMENT]
+    UID: REQ-001
+    STATEMENT: StrictDoc shall enable requirements management.
+    COMMENT: Clarify the meaning or give additional information here.
+    COMMENT: >>>
+    This is a multiline comment.
+
+    The content is split via \n\n.
+
+    Each line is rendered as a separate paragraph.
+    <<<
+
+Rationale
+^^^^^^^^^
+
+A requirement can have a `RATIONALE:` field that explains why such a requirement
+exists. Like comments, the rationale field can be single-line or multiline.
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [REQUIREMENT]
+    UID: REQ-001
+    STATEMENT: StrictDoc shall enable requirements management.
+    COMMENT: Clarify the meaning or give additional information here.
+    RATIONALE: The presence of the REQ-001 is justified.
+
+Special fields
+^^^^^^^^^^^^^^
+
+**Observation:** Different industries have their own types of requirements
+documents. These documents often have specialized meta information which is
+different from industry to industry. Example: `ECSS_VERIFICATION` field in the
+European space industry or `ASIL` in the automotive industry.
+
+StrictDoc allows extending its grammar with custom fields that are specific to
+a particular document.
+
+First, such fields have to be registered on a document level using the
+`SPECIAL_FIELDS` field:
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+    SPECIAL_FIELDS:
+    - NAME: ASIL
+      TYPE: String
+    - NAME: ECSS_VERIFICATION
+      TYPE: String
+      REQUIRED: Yes
+
+This registration adds these fields to the parser that will recognize them
+as special fields defined by a user. Declaring a special field as
+`REQUIRED: Yes` makes this field mandatory for each and every requirement in the
+document.
+
+When the fields are registered on the document level, it becomes possible to
+declare them as the `[REQUIREMENT]` special fields:
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [REQUIREMENT]
+    UID: REQ-001
+    SPECIAL_FIELDS:
+      ASIL: D
+      ECSS_VERIFICATION: R,A,I,T
+    STATEMENT: StrictDoc shall enable requirements management.
+
+**Note:** The `TYPE: String` is the only supported type of a special field. In
+the future, more specialized types are envisioned, such as `Int`, `Enum`, `Tag`.
+
+Section
+~~~~~~~
+
+The `[SECTION]` element is used for creating document chapters and grouping
+requirements into logical groups. It is equivalent to the use of `#`, `##`,
+`###`, etc., in Markdown and `====`, `----`, `~~~~` in RST.
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [SECTION]
+    TITLE: High-level requirements
+
+    [REQUIREMENT]
+    UID: HIGH-001
+    STATEMENT: ...
+
+    [/SECTION]
+
+    [SECTION]
+    TITLE: Implementation requirements
+
+    [REQUIREMENT]
+    UID: IMPL-001
+    STATEMENT: ...
+
+    [/SECTION]
+
+Nesting sections
+^^^^^^^^^^^^^^^^
+
+Sections can be nested within each other.
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [SECTION]
+    TITLE: Chapter
+
+    [SECTION]
+    TITLE: Subchapter
+
+    [REQUIREMENT]
+    STATEMENT: ...
+
+    [/SECTION]
+
+    [/SECTION]
+
+StrictDoc creates section numbers automatically. In the example above, the
+sections will have their titles numbered accordingly: `1 Chapter` and
+`1.1 Subchapter`.
+
+Free text
+^^^^^^^^^
+
+A section can have a block of `[FREETEXT]` connected to it:
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [SECTION]
+    TITLE: Free text
+
+    [FREETEXT]
+    A sections can have a block of `[FREETEXT]` connected to it:
+
+    ...
+    [/FREETEXT]
+
+    [/SECTION]
+
+According to the Strict Rule #2, arbitrary content cannot be written outside
+of StrictDoc's grammar structure. `[SECTION] / [FREETEXT]` is therefore a
+designated grammar element for writing free text content.
+
+**Note:** Free text can also be called "nonnormative" or "informative" text
+because it does not contribute anything to the traceability information of the
+document. The nonnormative text is there to give a context to the reader and
+help with the conceptual understanding of the information. If a certain
+information influences or is influenced by existing requirements, it has to be
+promoted to the requirement level: the information has to be broken down into
+atomic `[REQUIREMENT]` statements and get connected to the other requirement
+statements in the document.
+
+Composite requirement
+~~~~~~~~~~~~~~~~~~~~~
+
+A `[COMPOSITE_REQUIREMENT]` is a requirement that combines requirement
+properties of a `[REQUIREMENT]` element and grouping features of a `[SECTION]`
+element. This element can be useful in lower-level specifications documents
+where a given section of a document has to describe a single feature and the
+description requires a one or more levels of nesting. In this case, it might be
+natural to use a composite requirement that is tightly connected to a few
+related sub-requirements.
+
+.. code-block::
+
+    [COMPOSITE_REQUIREMENT]
+    STATEMENT: Statement
+
+    [REQUIREMENT]
+    STATEMENT: Substatement #1
+
+    [REQUIREMENT]
+    STATEMENT: Substatement #2
+
+    [REQUIREMENT]
+    STATEMENT: Substatement #3
+
+    [/COMPOSITE_REQUIREMENT]
+
+Special feature of `[COMPOSITE_REQUIREMENT]`: like `[SECTION]` element, the
+`[COMPOSITE_REQUIREMENT]` elements can be nested within each other. However,
+`[COMPOSITE_REQUIREMENT]` cannot nest sections.
+
+**Note:** Composite requirements should not be used in every document. Most
+often, a more basic combination of nested `[SECTION]` and `[REQUIREMENT]`
+elements should do the job.
 
 Export options
 ==============
@@ -455,6 +856,10 @@ to do a more advanced analysis of requirements and requirement trees:
 
 - Finding similar or relevant requirements.
 - Enforce invariants that should be hold. Example: mass or power budget.
+
+**Children:**
+
+- ``[BACKLOG-FUZZY-SEARCH]`` :ref:`BACKLOG-FUZZY-SEARCH`
 
 High-level requirements
 -----------------------
@@ -872,148 +1277,137 @@ paragraphs becomes sufficiently large. Keeping every keyword like [REQUIREMENT]
 or [COMMENT] with no indentation ensures that one does not have to think about
 possible indentation issues.
 
-Roadmap
+Backlog
 =======
 
-First public release
+Generated file names
 --------------------
 
-Generated file names
-~~~~~~~~~~~~~~~~~~~~
+StrictDoc shall preserve original document file names when generating to all export formats.
 
-Document name must be transformed into a valid file name.
-
-**Comment:** Alternative: Simply use the original document file names.
+**Comment:** StrictDoc used to create file names that were document names. This has been
+changed for HTML but not yet for RST.
 
 Validation: Uniqueness of UID identifiers in a document tree
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------------------------------------
 
 StrictDoc shall ensure that each UID used in a document tree is unique.
 
-Backlog
--------
+**Comment:** This is implemented but the error message shall be made more readable.
 
 StrictDoc as library
-~~~~~~~~~~~~~~~~~~~~
+--------------------
 
 StrictDoc shall support it use as a Python library.
 
 **Comment:** Such a use allows a more fine-grained access to the StrictDoc's modules, such
 as Grammar, Import, Export classes, etc.
 
-Export capabilities
-~~~~~~~~~~~~~~~~~~~
+.. _BACKLOG-FUZZY-SEARCH:
 
-CSV Import/Export
-^^^^^^^^^^^^^^^^^
+Fuzzy requirements search
+-------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - BACKLOG-FUZZY-SEARCH
+
+StrictDoc shall support finding relevant requirements.
+
+**Comment:** This feature can be implemented in the CLI as well as in the future GUI. A fuzzy
+requirements search can help to find existing requirements and also identify
+relevant requirements when creating new requirements.
+
+**Parents:**
+
+- ``[GOAL-4-CHANGE-MANAGEMENT]`` :ref:`GOAL-4-CHANGE-MANAGEMENT`
+
+Export capabilities
+-------------------
+
+CSV import/export
+~~~~~~~~~~~~~~~~~
 
 StrictDoc shall support exporting documents to CSV format.
 
-PlantUML Export
-^^^^^^^^^^^^^^^
+PlantUML export
+~~~~~~~~~~~~~~~
 
 StrictDoc shall support exporting documents to PlantUML format.
 
-ReqIF Import/Export
-^^^^^^^^^^^^^^^^^^^
+ReqIF import/export
+~~~~~~~~~~~~~~~~~~~
 
 StrictDoc shall support ReqIF format.
 
-Confluence Import/Export
-^^^^^^^^^^^^^^^^^^^^^^^^
+Confluence import/export
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 StrictDoc shall support importing/exporting documents from/to Confluence HTML storage format.
 
-Tex Export
-^^^^^^^^^^
+Tex export
+~~~~~~~~~~
 
 StrictDoc shall support exporting documents to Tex format.
 
-Doorstop Import/Export
-^^^^^^^^^^^^^^^^^^^^^^
+Doorstop import/export
+~~~~~~~~~~~~~~~~~~~~~~
 
-StrictDoc shall support import and exporting documents from/to Doorstop format.
+StrictDoc shall support import and exporting documents from/to
+`Doorstop <https://github.com/doorstop-dev/doorstop>`_ format.
 
 Markdown support for text and code blocks
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-StrictDoc shall support rendering text/code blocks into RST syntax.
+StrictDoc shall support rendering text/code blocks into Markdown syntax.
 
 Traceability and coverage
-~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------
 
 Linking with implementation artifacts
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 StrictDoc shall support linking requirements to files.
 
 Requirement checksumming
-^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 StrictDoc shall support calculation of checksums for requirements.
 
 Documentation coverage
-^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~
 
 StrictDoc shall generate requirements coverage information.
 
-Validations and testing
-~~~~~~~~~~~~~~~~~~~~~~~
-
-Validation: Section Levels
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Section levels must be properly nested.
-
 Filtering by tags
-~~~~~~~~~~~~~~~~~
+-----------------
 
 StrictDoc shall support filtering filtering by tags.
 
-Options
-~~~~~~~
-
-Option: RST: Top-level title: document name
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-StrictDoc shall support config option `include_toplevel_title`.
-
-Option: Title: Automatic numeration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-StrictDoc shall support config option `numeric_titles`.
-
-Option: Title: Display requirement titles
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-StrictDoc shall support config option `display_requirement_titles`.
-
-Option: Title: Display requirement UID
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-StrictDoc shall support config option `display_requirement_uids`.
-
 Advanced
-~~~~~~~~
+--------
 
 Facts table. Invariants calculation.
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-StrictDoc shall support creation of fact tables calculating invariants that
-enforce numerical constraints.
+StrictDoc shall support creation of fact tables and allow calculation of
+invariants for constraints enforcement.
 
 FMEA/FMECA tables
-^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~
 
 StrictDoc shall support creation of FMEA/FMECA safety analysis documents.
 
 Graphical User Interface (GUI)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 StrictDoc shall provide a Graphical User Interface (GUI).
 
 Web server and editable HTML pages
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 StrictDoc shall provide a web server that serves as a StrictDoc backend for
 reading and writing SDoc files.

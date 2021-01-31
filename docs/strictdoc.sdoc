@@ -422,7 +422,7 @@ TITLE: Special fields
 [FREETEXT]
 **Observation:** Different industries have their own types of requirements
 documents. These documents often have specialized meta information which is
-different from industry to industry. Example: ``ECSS_VERIFICATION` field in the
+different from industry to industry. Example: ``ECSS_VERIFICATION`` field in the
 European space industry or ``ASIL`` in the automotive industry.
 
 StrictDoc allows extending its grammar with custom fields that are specific to

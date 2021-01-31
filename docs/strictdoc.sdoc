@@ -23,6 +23,10 @@ Summary of StrictDoc features:
   "parent-child", and from these connections, many useful features, such as
   `Requirements Traceability <https://en.wikipedia.org/wiki/Requirements_traceability>`_
   and Documentation Coverage, can be derived.
+- Special fields support. The StrictDoc's grammar can be extended to support
+  arbitrary special fields, such as `PRIORITY`, `OWNER`, or even more
+  specialized fields, such as `Automotive Safety Integrity Level (ASIL)` or
+  `ECSS verification method`.
 - Good performance of the `textX <https://github.com/textX/textX>`_
   parser and parallelized incremental generation of documents: generation of
   document trees with up to 2000-3000 requirements into HTML pages stays within
@@ -202,10 +206,412 @@ TITLE: Strict rule #2: No content is allowed outside of SDoc grammar
 [FREETEXT]
 StrictDoc's grammar does not allow any content to be written outside of the SDoc
 grammatical constructs. It is assumed that the critical content shall always be
-written in a form of requirements:
+written in form of requirements:
 `[REQUIREMENT]` and `[COMPOSITE_REQUIREMENT]`. Non-critical content shall
 be specified using `[FREETEXT]` nodes. By design, the `[FREETEXT]` nodes can
 be only attached to the `[DOCUMENT]` and `[SECTION]` nodes.
+[/FREETEXT]
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Grammar elements
+
+[SECTION]
+TITLE: Document
+
+[FREETEXT]
+`[DOCUMENT]` element must always be present in an SDoc document. It it a root
+of an object graph.
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+    (newline)
+
+`DOCUMENT` declaration must always have a `TITLE` field, optional configuration
+fields and an optional `[FREETEXT]` declaration block.
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [FREETEXT]
+    StrictDoc is software for writing technical requirements and specifications.
+    [/FREETEXT]
+
+Supported configuration fields:
+
+`SPECIAL_FIELDS` (see Requirement / Special fields below).
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Requirement
+
+[FREETEXT]
+Minimal "Hello World" program with 3 empty requirements:
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [REQUIREMENT]
+
+    [REQUIREMENT]
+
+    [REQUIREMENT]
+
+Supported fields:
+
+- `UID` (unique identifier)
+- `SPECIAL_FIELDS`
+- `REFS`
+- `TITLE`
+- `STATEMENT`
+- `RATIONALE`
+- `COMMENT` (multiple comments are possible)
+
+Currently, all `[REQUIREMENT]`'s are optional but most of the time at least
+`STATEMENT:` field must be present as well as the `TITLE:` field.
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [REQUIREMENT]
+    TITLE: Requirements management
+    STATEMENT: StrictDoc shall enable requirements management.
+
+**Observation:** Many real-world documents have requirements with statements and
+titles but some documents only use statements without title in which case their
+title becomes their UID. Example:
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [REQUIREMENT]
+    UID: REQ-001
+    STATEMENT: StrictDoc shall enable requirements management.
+
+[/FREETEXT]
+
+[SECTION]
+TITLE: UID
+
+[FREETEXT]
+**Observation:** Some documents do not use unique identifiers which makes it
+impossible to trace their requirements to each other. Within StrictDoc's
+framework, it is assumed that a good requirements document has all of its
+requirements uniquely identifiable, however, the `UID` field is optional to
+accommodate for documents without connections between requirements.
+
+StrictDoc does not impose any limitations on a format of a UID. Examples of
+typical conventions for naming UIDs:
+
+- `REQ-001`, `SCA-001` (scalability), `PERF-001` (performance), etc.
+- `cES1008`, `cTBL6000.1` (example from NASA cFS requirements)
+- Requirements without a number, e.g. `SDOC-HIGH-DATA-MODEL` (StrictDoc)
+- `SAVOIR.OBC.PM.80` (SAVOIR guidelines)
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [REQUIREMENT]
+    UID: SDOC-HIGH-DATA-MODEL
+    STATEMENT: STATEMENT: StrictDoc shall be based on a well-defined data model.
+
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: References
+
+[FREETEXT]
+The `[REQUIREMENT]` / `REFS:` field is used to connect requirements to each
+other:
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [REQUIREMENT]
+    UID: REQ-001
+    STATEMENT: StrictDoc shall enable requirements management.
+
+    [REQUIREMENT]
+    UID: REQ-002
+    REFS:
+    - TYPE: Parent
+      VALUE: REQ-001
+    TITLE: Requirement #2's title
+    STATEMENT: Requirement #2 statement
+
+**Note:** The `TYPE: Parent` is the only supported type of connection. In the
+future, linking requirements to files will be possible.
+
+**Note:** By design, StrictDoc will only show "parents" or "children" links if
+both requirements connected with a reference have `UID` defined.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Comment
+
+[FREETEXT]
+Requirement can have one or more comments explaining this requirement. The
+comments can be single-line or multiline.
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [REQUIREMENT]
+    UID: REQ-001
+    STATEMENT: StrictDoc shall enable requirements management.
+    COMMENT: Clarify the meaning or give additional information here.
+    COMMENT: >>>
+    This is a multiline comment.
+
+    The content is split via \n\n.
+
+    Each line is rendered as a separate paragraph.
+    <<<
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Rationale
+
+[FREETEXT]
+A requirement can have a `RATIONALE:` field that explains why such a requirement
+exists. Like comments, the rationale field can be single-line or multiline.
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [REQUIREMENT]
+    UID: REQ-001
+    STATEMENT: StrictDoc shall enable requirements management.
+    COMMENT: Clarify the meaning or give additional information here.
+    RATIONALE: The presence of the REQ-001 is justified.
+
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Special fields
+
+[FREETEXT]
+**Observation:** Different industries have their own types of requirements
+documents. These documents often have specialized meta information which is
+different from industry to industry. Example: `ECSS_VERIFICATION` field in the
+European space industry or `ASIL` in the automotive industry.
+
+StrictDoc allows extending its grammar with custom fields that are specific to
+a particular document.
+
+First, such fields have to be registered on a document level using the
+`SPECIAL_FIELDS` field:
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+    SPECIAL_FIELDS:
+    - NAME: ASIL
+      TYPE: String
+    - NAME: ECSS_VERIFICATION
+      TYPE: String
+      REQUIRED: Yes
+
+This registration adds these fields to the parser that will recognize them
+as special fields defined by a user. Declaring a special field as
+`REQUIRED: Yes` makes this field mandatory for each and every requirement in the
+document.
+
+When the fields are registered on the document level, it becomes possible to
+declare them as the `[REQUIREMENT]` special fields:
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [REQUIREMENT]
+    UID: REQ-001
+    SPECIAL_FIELDS:
+      ASIL: D
+      ECSS_VERIFICATION: R,A,I,T
+    STATEMENT: StrictDoc shall enable requirements management.
+
+**Note:** The `TYPE: String` is the only supported type of a special field. In
+the future, more specialized types are envisioned, such as `Int`, `Enum`, `Tag`.
+[/FREETEXT]
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Section
+
+[FREETEXT]
+The `[SECTION]` element is used for creating document chapters and grouping
+requirements into logical groups. It is equivalent to the use of `#`, `##`,
+`###`, etc., in Markdown and `====`, `----`, `~~~~` in RST.
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [SECTION]
+    TITLE: High-level requirements
+
+    [REQUIREMENT]
+    UID: HIGH-001
+    STATEMENT: ...
+
+    [/SECTION]
+
+    [SECTION]
+    TITLE: Implementation requirements
+
+    [REQUIREMENT]
+    UID: IMPL-001
+    STATEMENT: ...
+
+    [/SECTION]
+
+[/FREETEXT]
+
+[SECTION]
+TITLE: Nesting sections
+
+[FREETEXT]
+Sections can be nested within each other.
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [SECTION]
+    TITLE: Chapter
+
+    [SECTION]
+    TITLE: Subchapter
+
+    [REQUIREMENT]
+    STATEMENT: ...
+
+    [/SECTION]
+
+    [/SECTION]
+
+StrictDoc creates section numbers automatically. In the example above, the
+sections will have their titles numbered accordingly: `1 Chapter` and
+`1.1 Subchapter`.
+
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Free text
+
+[FREETEXT]
+A section can have a block of `[FREETEXT]` connected to it:
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [SECTION]
+    TITLE: Free text
+
+    [FREETEXT]
+    A sections can have a block of `[FREETEXT]` connected to it:
+
+    ...
+    [/FREETEXT]
+
+    [/SECTION]
+
+According to the Strict Rule #2, an arbitrary content cannot be written outside
+of StrictDoc's grammar structure. `[SECTION] / [FREETEXT]` is therefore a
+designated grammar element for writing free text content.
+
+**Note:** Free text can also be called "nonnormative" or "informative" text
+because it does not contribute anything to the traceability information of the
+document. The nonnormative text is there to give a context to the reader and
+help with the conceptual understanding of the information. If a certain
+information influences or is influenced by existing requirements, it has to be
+promoted to the requirement level: the information has to be split into atomic
+`[REQUIREMENT]` statements and get connected to the other requirement statements
+in the document.
+[/FREETEXT]
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Composite requirement
+
+[FREETEXT]
+A `[COMPOSITE_REQUIREMENT]` is a requirement that combines requirement
+properties of a `[REQUIREMENT]` element and grouping features of a `[SECTION]`
+element. This element can be useful in lower-level specifications documents
+where a given section of a document has to describe a single feature and the
+description requires a one or more levels of nesting. In this case, it might be
+natural to use a composite requirement that is tightly connected to a few
+related sub-requirements.
+
+.. code-block::
+
+    [COMPOSITE_REQUIREMENT]
+    STATEMENT: Statement
+
+    [REQUIREMENT]
+    STATEMENT: Substatement #1
+
+    [REQUIREMENT]
+    STATEMENT: Substatement #2
+
+    [REQUIREMENT]
+    STATEMENT: Substatement #3
+
+    [/COMPOSITE_REQUIREMENT]
+
+Special feature of `[COMPOSITE_REQUIREMENT]`: like `[SECTION]` element, the
+`[COMPOSITE_REQUIREMENT]` elements can be nested within each other. However,
+`[COMPOSITE_REQUIREMENT]` cannot nest sections.
+
+**Note:** Composite requirements should not be used in every document. Most
+often, a more basic combination of nested `[SECTION]` and `[REQUIREMENT]`
+elements should do the job.
 [/FREETEXT]
 
 [/SECTION]

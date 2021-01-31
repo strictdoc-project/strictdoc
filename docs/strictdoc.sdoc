@@ -223,8 +223,8 @@ TITLE: Grammar elements
 TITLE: Document
 
 [FREETEXT]
-`[DOCUMENT]` element must always be present in an SDoc document. It it a root
-of an object graph.
+`[DOCUMENT]` element must always be present in an SDoc document. It is a root
+of an SDoc document graph.
 
 .. code-block::
 
@@ -232,8 +232,8 @@ of an object graph.
     TITLE: StrictDoc
     (newline)
 
-`DOCUMENT` declaration must always have a `TITLE` field, optional configuration
-fields and an optional `[FREETEXT]` declaration block.
+`DOCUMENT` declaration must always have a `TITLE` field. It can have
+optional configuration fields and an optional `[FREETEXT]` block.
 
 .. code-block::
 
@@ -279,7 +279,7 @@ Supported fields:
 - `COMMENT` (multiple comments are possible)
 
 Currently, all `[REQUIREMENT]`'s are optional but most of the time at least
-`STATEMENT:` field must be present as well as the `TITLE:` field.
+the `STATEMENT:` field must be present as well as the `TITLE:` field.
 
 .. code-block::
 
@@ -302,7 +302,6 @@ title becomes their UID. Example:
     [REQUIREMENT]
     UID: REQ-001
     STATEMENT: StrictDoc shall enable requirements management.
-
 [/FREETEXT]
 
 [SECTION]
@@ -315,7 +314,7 @@ framework, it is assumed that a good requirements document has all of its
 requirements uniquely identifiable, however, the `UID` field is optional to
 accommodate for documents without connections between requirements.
 
-StrictDoc does not impose any limitations on a format of a UID. Examples of
+StrictDoc does not impose any limitations on the format of a UID. Examples of
 typical conventions for naming UIDs:
 
 - `REQ-001`, `SCA-001` (scalability), `PERF-001` (performance), etc.
@@ -331,7 +330,6 @@ typical conventions for naming UIDs:
     [REQUIREMENT]
     UID: SDOC-HIGH-DATA-MODEL
     STATEMENT: STATEMENT: StrictDoc shall be based on a well-defined data model.
-
 [/FREETEXT]
 
 [/SECTION]
@@ -363,8 +361,8 @@ other:
 **Note:** The `TYPE: Parent` is the only supported type of connection. In the
 future, linking requirements to files will be possible.
 
-**Note:** By design, StrictDoc will only show "parents" or "children" links if
-both requirements connected with a reference have `UID` defined.
+**Note:** By design, StrictDoc will only show parent or child links if both
+requirements connected with a reference have `UID` defined.
 [/FREETEXT]
 
 [/SECTION]
@@ -373,7 +371,7 @@ both requirements connected with a reference have `UID` defined.
 TITLE: Comment
 
 [FREETEXT]
-Requirement can have one or more comments explaining this requirement. The
+A requirement can have one or more comments explaining this requirement. The
 comments can be single-line or multiline.
 
 .. code-block::
@@ -413,7 +411,6 @@ exists. Like comments, the rationale field can be single-line or multiline.
     STATEMENT: StrictDoc shall enable requirements management.
     COMMENT: Clarify the meaning or give additional information here.
     RATIONALE: The presence of the REQ-001 is justified.
-
 [/FREETEXT]
 
 [/SECTION]
@@ -502,7 +499,6 @@ requirements into logical groups. It is equivalent to the use of `#`, `##`,
     STATEMENT: ...
 
     [/SECTION]
-
 [/FREETEXT]
 
 [SECTION]
@@ -532,7 +528,6 @@ Sections can be nested within each other.
 StrictDoc creates section numbers automatically. In the example above, the
 sections will have their titles numbered accordingly: `1 Chapter` and
 `1.1 Subchapter`.
-
 [/FREETEXT]
 
 [/SECTION]
@@ -559,7 +554,7 @@ A section can have a block of `[FREETEXT]` connected to it:
 
     [/SECTION]
 
-According to the Strict Rule #2, an arbitrary content cannot be written outside
+According to the Strict Rule #2, arbitrary content cannot be written outside
 of StrictDoc's grammar structure. `[SECTION] / [FREETEXT]` is therefore a
 designated grammar element for writing free text content.
 
@@ -568,9 +563,9 @@ because it does not contribute anything to the traceability information of the
 document. The nonnormative text is there to give a context to the reader and
 help with the conceptual understanding of the information. If a certain
 information influences or is influenced by existing requirements, it has to be
-promoted to the requirement level: the information has to be split into atomic
-`[REQUIREMENT]` statements and get connected to the other requirement statements
-in the document.
+promoted to the requirement level: the information has to be broken down into
+atomic `[REQUIREMENT]` statements and get connected to the other requirement
+statements in the document.
 [/FREETEXT]
 
 [/SECTION]
@@ -1304,26 +1299,20 @@ possible indentation issues.
 [/SECTION]
 
 [SECTION]
-TITLE: Roadmap
-
-[SECTION]
-TITLE: First public release
+TITLE: Backlog
 
 [REQUIREMENT]
 TITLE: Generated file names
-STATEMENT: Document name must be transformed into a valid file name.
+STATEMENT: StrictDoc shall preserve original document file names when generating to all export formats.
 COMMENT: >>>
-Alternative: Simply use the original document file names.
+StrictDoc used to create file names that were document names. This has been
+changed for HTML but not yet for RST.
 <<<
 
 [REQUIREMENT]
 TITLE: Validation: Uniqueness of UID identifiers in a document tree
 STATEMENT: StrictDoc shall ensure that each UID used in a document tree is unique.
-
-[/SECTION]
-
-[SECTION]
-TITLE: Backlog
+COMMENT: This is implemented but the error message shall be made more readable.
 
 [REQUIREMENT]
 TITLE: StrictDoc as library
@@ -1333,36 +1322,52 @@ Such a use allows a more fine-grained access to the StrictDoc's modules, such
 as Grammar, Import, Export classes, etc.
 <<<
 
+[REQUIREMENT]
+UID: BACKLOG-FUZZY-SEARCH
+REFS:
+- TYPE: Parent
+  VALUE: GOAL-4-CHANGE-MANAGEMENT
+TITLE: Fuzzy requirements search
+STATEMENT: StrictDoc shall support finding relevant requirements.
+COMMENT: >>>
+This feature can be implemented in the CLI as well as in the future GUI. A fuzzy
+requirements search can help to find existing requirements and also identify
+relevant requirements when creating new requirements.
+<<<
+
 [SECTION]
 TITLE: Export capabilities
 
 [REQUIREMENT]
-TITLE: CSV Import/Export
+TITLE: CSV import/export
 STATEMENT: StrictDoc shall support exporting documents to CSV format.
 
 [REQUIREMENT]
-TITLE: PlantUML Export
+TITLE: PlantUML export
 STATEMENT: StrictDoc shall support exporting documents to PlantUML format.
 
 [REQUIREMENT]
-TITLE: ReqIF Import/Export
+TITLE: ReqIF import/export
 STATEMENT: StrictDoc shall support ReqIF format.
 
 [REQUIREMENT]
-TITLE: Confluence Import/Export
+TITLE: Confluence import/export
 STATEMENT: StrictDoc shall support importing/exporting documents from/to Confluence HTML storage format.
 
 [REQUIREMENT]
-TITLE: Tex Export
+TITLE: Tex export
 STATEMENT: StrictDoc shall support exporting documents to Tex format.
 
 [REQUIREMENT]
-TITLE: Doorstop Import/Export
-STATEMENT: StrictDoc shall support import and exporting documents from/to Doorstop format.
+TITLE: Doorstop import/export
+STATEMENT: >>>
+StrictDoc shall support import and exporting documents from/to
+`Doorstop <https://github.com/doorstop-dev/doorstop>`_ format.
+<<<
 
 [REQUIREMENT]
 TITLE: Markdown support for text and code blocks
-STATEMENT: StrictDoc shall support rendering text/code blocks into RST syntax.
+STATEMENT: StrictDoc shall support rendering text/code blocks into Markdown syntax.
 
 [/SECTION]
 
@@ -1383,39 +1388,9 @@ STATEMENT: StrictDoc shall generate requirements coverage information.
 
 [/SECTION]
 
-[SECTION]
-TITLE: Validations and testing
-
-[REQUIREMENT]
-TITLE: Validation: Section Levels
-STATEMENT: Section levels must be properly nested.
-
-[/SECTION]
-
 [REQUIREMENT]
 TITLE: Filtering by tags
 STATEMENT: StrictDoc shall support filtering filtering by tags.
-
-[SECTION]
-TITLE: Options
-
-[REQUIREMENT]
-TITLE: Option: RST: Top-level title: document name
-STATEMENT: StrictDoc shall support config option `include_toplevel_title`.
-
-[REQUIREMENT]
-TITLE: Option: Title: Automatic numeration
-STATEMENT: StrictDoc shall support config option `numeric_titles`.
-
-[REQUIREMENT]
-TITLE: Option: Title: Display requirement titles
-STATEMENT: StrictDoc shall support config option `display_requirement_titles`.
-
-[REQUIREMENT]
-TITLE: Option: Title: Display requirement UID
-STATEMENT: StrictDoc shall support config option `display_requirement_uids`.
-
-[/SECTION]
 
 [SECTION]
 TITLE: Advanced
@@ -1423,8 +1398,8 @@ TITLE: Advanced
 [REQUIREMENT]
 TITLE: Facts table. Invariants calculation.
 STATEMENT: >>>
-StrictDoc shall support creation of fact tables calculating invariants that
-enforce numerical constraints.
+StrictDoc shall support creation of fact tables and allow calculation of
+invariants for constraints enforcement.
 <<<
 
 [REQUIREMENT]
@@ -1443,8 +1418,6 @@ STATEMENT: >>>
 StrictDoc shall provide a web server that serves as a StrictDoc backend for
 reading and writing SDoc files.
 <<<
-
-[/SECTION]
 
 [/SECTION]
 

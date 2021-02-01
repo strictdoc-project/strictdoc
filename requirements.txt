@@ -1,6 +1,10 @@
 arpeggio==1.10.1 \
     --hash=sha256:f01a330148d972714458faf7bc142e9780fb443d33bb2474e5df2ad0a81635bc \
     --hash=sha256:920d12cc762edb2eb56daae64a14c93e43dc181b481c88fc79314c0df6ee639e
+beautifulsoup4==4.9.3 \
+    --hash=sha256:4c98143716ef1cb40bf7f39a8e3eec8f8b009509e74904ba3a7b315431577e35 \
+    --hash=sha256:fff47e031e34ec82bf17e00da8f592fe7de69aeea38be00523c04623c04fb666 \
+    --hash=sha256:84729e322ad1d5b4d25f805bfa05b902dd96450f43842c4e99067d5e1369eb25
 docutils==0.16; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0") \
     --hash=sha256:0c5b78adfbf7762415433f5515cd5c9e762339e23369dbe8000d84a4bf4ab3af \
     --hash=sha256:c2de3a60e9e7d07be26b7f2b00ca0309c207e06c100f9cc2a94931fc75a478fc
@@ -44,6 +48,9 @@ markupsafe==1.1.1; python_version >= "2.7" and python_full_version < "3.0.0" or 
 python-datauri==0.2.9 \
     --hash=sha256:3a23f135b5b029cf4f4b8e91d50d537b8398b07291872b6bbda7d62254faeaea \
     --hash=sha256:9afc2cf448ee7572192e8ed6908808962ef3a61ac2ff1692551cf0b07fdc62eb
+soupsieve==2.1; python_version >= "3.5" \
+    --hash=sha256:4bb21a6ee4707bf43b61230e80740e71bfe56e55d1f1f50924b087bb2975c851 \
+    --hash=sha256:6dc52924dc0bc710a5d16794e6b3480b2c7c08b07729505feab2b2c16661ff6e
 textx==2.3.0 \
     --hash=sha256:f24aa485580ea5f81020b3a1af32760155f889a83490822e94159664c2bf5c8d \
     --hash=sha256:265afc12d4ae421a7794c8cdc58c6eed44cc879f078cb54c32d5dc6bc74efbac

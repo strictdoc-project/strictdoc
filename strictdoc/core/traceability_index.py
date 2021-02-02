@@ -1,3 +1,5 @@
+import sys
+
 from strictdoc.backend.dsl.models.requirement import Requirement
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
@@ -54,12 +56,28 @@ class TraceabilityIndex:
                     document_tags[tag] += 1
 
                 if requirement.uid in requirements_map:
-                    print(
-                        "error: DocumentIndex: requirement already exists: {}".format(
-                            requirement.uid
+                    other_req_doc = requirements_map[requirement.uid][
+                        "document"
+                    ]
+                    if other_req_doc == document:
+                        print(
+                            "error: DocumentIndex: two requirements with the same UID "
+                            "exist in the same document: "
+                            '{} in "{}".'.format(
+                                requirement.uid, document.title
+                            )
                         )
-                    )
-                    exit(1)
+                    else:
+                        print(
+                            "error: DocumentIndex: two requirements with the same UID "
+                            "exist in two different documents: "
+                            '{} in "{}" and "{}".'.format(
+                                requirement.uid,
+                                document.title,
+                                other_req_doc.title,
+                            )
+                        )
+                    sys.exit(1)
 
                 if requirement.uid not in requirements_children_map:
                     requirements_children_map[requirement.uid] = []
@@ -304,7 +322,8 @@ class TraceabilityIndex:
         assert document.name in self.tags_map
         tags_bag = self.tags_map[document.name]
         if not tags_bag:
-            return []
+            yield []
+            return
 
         tags = sorted(tags_bag.keys(), key=alphanumeric_sort)
         for tag in tags:

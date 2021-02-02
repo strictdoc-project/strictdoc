@@ -184,12 +184,12 @@ def lint_pylint(context):
 
 
 @task(lint_pylint, lint_black_diff)
-def lint(context):
+def lint(_):
     pass
 
 
 @task(lint, test_unit, test_integration)
-def test(context):
+def test(_):
     pass
 
 

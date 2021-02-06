@@ -1,3 +1,4 @@
+import multiprocessing
 import os
 import sys
 from multiprocessing import freeze_support
@@ -11,10 +12,7 @@ from strictdoc.core.actions.export_action import ExportAction
 from strictdoc.core.actions.passthrough_action import PassthroughAction
 
 
-def main():
-    enable_parallelization = "--no-parallelization" not in sys.argv
-    parallelizer = Parallelizer.create(enable_parallelization)
-
+def _main(parallelizer):
     parser = cli_args_parser()
     args = parser.parse_args()
 
@@ -38,7 +36,7 @@ def main():
 
     elif args.command == "export":
         parallelization_value = (
-            "Enabled" if enable_parallelization else "Disabled"
+            "Enabled" if parallelizer.parallelization_enabled else "Disabled"
         )
         print("Parallelization: {}".format(parallelization_value), flush=True)
         export_controller = ExportAction(STRICTDOC_ROOT_PATH, parallelizer)
@@ -48,6 +46,17 @@ def main():
 
     else:
         raise NotImplementedError
+
+
+def main():
+    enable_parallelization = "--no-parallelization" not in sys.argv
+    parallelizer = Parallelizer.create(enable_parallelization)
+    try:
+        _main(parallelizer)
+    except Exception as e:
+        raise e
+    finally:
+        parallelizer.shutdown()
 
 
 if __name__ == "__main__":

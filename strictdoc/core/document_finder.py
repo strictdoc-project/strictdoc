@@ -132,6 +132,7 @@ class DocumentFinder:
             # Strip away the trailing slash to let the later os.path.relpath
             # calculations work correctly.
             path_to_doc_root = path_to_doc_root_raw.rstrip("/")
+            path_to_doc_root = os.path.abspath(path_to_doc_root)
             path_to_doc_root_base = os.path.dirname(path_to_doc_root)
             root_level = path_to_doc_root.count(os.sep)
 

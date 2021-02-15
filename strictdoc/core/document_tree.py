@@ -40,6 +40,7 @@ class File(FileOrFolderEntry):
 class FileTree(FileOrFolderEntry):
     def __init__(self, root_path, level):
         assert os.path.isdir(root_path)
+        assert os.path.isabs(root_path)
 
         self.root_path = root_path
         self.level = level
@@ -91,6 +92,8 @@ class DocumentTree:
         self.document_list = document_list
         self.map_docs_by_paths = map_docs_by_paths
 
+        self.source_files = None  # attached later.
+
     def __repr__(self):
         return "DocumentTree: {} document_list: {}".format(
             self.file_tree, self.document_list
@@ -99,3 +102,6 @@ class DocumentTree:
     def get_document_by_path(self, doc_full_path):
         document = self.map_docs_by_paths[doc_full_path]
         return document
+
+    def attach_source_files(self, source_files):
+        self.source_files = source_files

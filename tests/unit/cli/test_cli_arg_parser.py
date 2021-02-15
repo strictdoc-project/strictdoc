@@ -4,12 +4,15 @@ from strictdoc.cli.cli_arg_parser import cli_args_parser
 STRICTDOC_CMD = "strictdoc"
 
 
+TOTAL_EXPORT_ARGS = 7
+
+
 def test_export_01_minimal():
     parser = cli_args_parser()
 
     args = parser.parse_args(["export", "docs"])
 
-    assert len(args._get_kwargs()) == 6
+    assert len(args._get_kwargs()) == TOTAL_EXPORT_ARGS
 
     assert args.command == "export"
     assert args.fields == ["uid", "statement", "parent"]
@@ -26,7 +29,7 @@ def test_export_02_output_dir():
         ["export", "docs", "--output-dir", "custom-output-dir"]
     )
 
-    assert len(args._get_kwargs()) == 6
+    assert len(args._get_kwargs()) == TOTAL_EXPORT_ARGS
 
     assert args.command == "export"
     assert args.input_paths == ["docs"]
@@ -41,7 +44,7 @@ def test_export_03_parallelization():
 
     args = parser.parse_args(["export", "docs", "--no-parallelization"])
 
-    assert len(args._get_kwargs()) == 6
+    assert len(args._get_kwargs()) == TOTAL_EXPORT_ARGS
 
     assert args.command == "export"
     assert args.fields == ["uid", "statement", "parent"]
@@ -56,7 +59,7 @@ def test_export_04_export_format_rst():
 
     args = parser.parse_args(["export", "--formats=rst", "docs"])
 
-    assert len(args._get_kwargs()) == 6
+    assert len(args._get_kwargs()) == TOTAL_EXPORT_ARGS
 
     assert args.command == "export"
     assert args.fields == ["uid", "statement", "parent"]
@@ -74,7 +77,7 @@ def test_export_05_export_format_multiple():
     assert args.command == "export"
     assert args.input_paths == ["docs"]
 
-    assert len(args._get_kwargs()) == 6
+    assert len(args._get_kwargs()) == TOTAL_EXPORT_ARGS
 
     assert args.command == "export"
     assert args.fields == ["uid", "statement", "parent"]
@@ -82,6 +85,21 @@ def test_export_05_export_format_multiple():
     assert args.input_paths == ["docs"]
     assert args.no_parallelization is False
     assert args.output_dir is None
+
+
+def test_export_06_export_format_multiple():
+    parser = cli_args_parser()
+
+    args = parser.parse_args(
+        ["export", "--experimental-enable-file-traceability", "docs"]
+    )
+
+    assert args.command == "export"
+    assert args.input_paths == ["docs"]
+
+    assert len(args._get_kwargs()) == TOTAL_EXPORT_ARGS
+    assert args.command == "export"
+    assert args.experimental_enable_file_traceability is True
 
 
 def test_passthrough_01_minimal():

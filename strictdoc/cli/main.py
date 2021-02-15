@@ -1,7 +1,5 @@
-import multiprocessing
 import os
 import sys
-from multiprocessing import freeze_support
 
 STRICTDOC_ROOT_PATH = os.path.join(os.path.dirname(__file__), "..", "..")
 sys.path.append(STRICTDOC_ROOT_PATH)
@@ -41,7 +39,11 @@ def _main(parallelizer):
         print("Parallelization: {}".format(parallelization_value), flush=True)
         export_controller = ExportAction(STRICTDOC_ROOT_PATH, parallelizer)
         export_controller.export(
-            args.input_paths, args.output_dir, args.formats, args.fields
+            args.input_paths,
+            args.output_dir,
+            args.formats,
+            args.fields,
+            args.experimental_enable_file_traceability,
         )
 
     else:

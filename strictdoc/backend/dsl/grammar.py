@@ -119,12 +119,19 @@ MultiLineString:
 ;
 
 Reference[noskipws]:
-  '- TYPE: ' ref_type = ReferenceType '\n'
+  // FileReference is an early, experimental feature. Do not use yet.
+  ParentReqReference | FileReference
+;
+
+ParentReqReference[noskipws]:
+  '- TYPE: ' ref_type = 'Parent' '\n'
   '  VALUE: ' path = /.*$/ '\n'
 ;
 
-ReferenceType[noskipws]:
-  'File' | 'Parent'
+FileReference[noskipws]:
+  // FileReference is an early, experimental feature. Do not use yet.
+  '- TYPE: ' ref_type = 'File' '\n'
+  '  VALUE: ' path = /.*$/ '\n'
 ;
 
 FreeText[noskipws]:

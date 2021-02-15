@@ -1,0 +1,102 @@
+THIS IS A TEMPLATE
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  .source-code-container {
+    position: relative;
+    width: calc(100vw - 600px);
+    margin: 1rem auto;
+    // overflow: hidden;
+    padding-left: 3rem;
+  }
+
+  .blueprint {
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .blueprint-line {
+    position: relative;
+  }
+
+  .blueprint-line-number {
+    text-align: right;
+    width: 3rem;
+    position: absolute;
+    top: 0;
+    left: -3.5rem;
+  }
+
+  .blueprint-line-content {
+    user-select: none;
+  }
+
+  .test-requirement {
+    pointer-events: auto;
+    position: absolute;
+    top: 0;
+    // right: 100%;
+    left: -15rem;
+    text-align: right;
+  }
+
+  {{pygments_styles | safe}}
+</style>
+
+
+{%- set source_file_requirement_links = traceability_index.get_source_file_requirement_links(source_file.in_doctree_source_file_rel_path) -%}
+{%- if source_file_requirement_links -%}
+  <div>
+  <div>
+  <b>The following requirements refer to this source file:</b>
+  </div>
+
+  {%- for requirement in source_file_requirement_links -%}
+    <div>
+    <a href="{{ link_renderer.render_requirement_link_from_source_file(requirement, source_file) }}">
+      {%- if requirement.uid %}
+      <span class="requirement_child-uid">{{ requirement.uid }} </span>
+      {%- endif %}
+      {{ requirement.title }}
+    </a>
+    </div>
+  {%- endfor -%}
+  </div>
+{%- endif -%}
+
+<div class="source-code-container">
+  <!-- Blueprint -->
+  <div class="blueprint">
+    {%- for source_line in source_file_lines -%}
+
+    <div id="line-{{loop.index}}" class="blueprint-line">
+      {%- set source_line_reqs = traceability_index.get_source_file_range_reqs(source_file.in_doctree_source_file_rel_path, loop.index) -%}
+      {%- if source_line_reqs -%}
+        <div class="test-requirement">
+          {%- for requirement in source_line_reqs -%}
+            <div>
+              <a href="{{ link_renderer.render_requirement_link_from_source_file(requirement, source_file) }}">
+                {%- if requirement.uid %}
+                <span class="requirement_child-uid">{{ requirement.uid }} </span>
+                {%- endif %}
+                {{ requirement.title }}
+              </a>
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+      <pre class="blueprint-line-number">{{loop.index}}</pre>
+      <pre class="blueprint-line-content"><span/>{{ source_line }}</pre>
+    </div>
+
+    {%- endfor -%}
+  </div>
+
+  <!-- Pygments -->
+  {{ source_file_content | safe }}
+</div>

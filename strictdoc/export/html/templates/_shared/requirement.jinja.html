@@ -72,6 +72,30 @@ data-status='{{ requirement.status.lower() }}'
     {%- endfor %}
     </ul>
   {%- endif %}
+
+  {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
+  {%- if requirement_file_links %}
+  <ul class="requirement_child">
+    {%- for link, opt_ranges in requirement_file_links %}
+      {%- if opt_ranges -%}
+        {%- for range in opt_ranges %}
+          <li>
+            <a href="{{ link_renderer.render_source_file_link(requirement, link) }}#line-{{range.ng_source_line_begin}}">
+              {{ link }}, lines: {{ range.ng_source_line_begin }}-{{ range.ng_source_line_end }}
+            </a>
+          </li>
+        {%- endfor -%}
+      {%- else -%}
+        <li>
+          <a href="{{ link_renderer.render_source_file_link(requirement, link) }}">
+            {{ link }}
+          </a>
+        </li>
+      {%- endif -%}
+    {%- endfor -%}
+    </ul>
+  {%- endif %}
+
   </section>
   <section class="requirement_section" data-section='statement'>
 

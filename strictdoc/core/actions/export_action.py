@@ -2,7 +2,14 @@ import glob
 import os
 from pathlib import Path
 
+from strictdoc.backend.source_file_syntax.reader import (
+    SourceFileTraceabilityReader,
+)
 from strictdoc.core.document_finder import DocumentFinder
+from strictdoc.core.finders.source_files_finder import (
+    SourceFilesFinder,
+    SourceFile,
+)
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.excel.excel_generator import ExcelGenerator
 from strictdoc.export.html.html_generator import HTMLGenerator
@@ -32,7 +39,12 @@ class ExportAction:
 
     @timing_decorator("Export")
     def export(
-        self, path_to_single_file_or_doc_root, output_dir, formats, fields
+        self,
+        path_to_single_file_or_doc_root,
+        output_dir,
+        formats,
+        fields,
+        experimental_enable_file_traceability,
     ):
         assert isinstance(formats, list)
 
@@ -50,6 +62,23 @@ class ExportAction:
         )
 
         traceability_index = TraceabilityIndex.create(document_tree)
+        if experimental_enable_file_traceability:
+            source_files = SourceFilesFinder.find_source_files(
+                output_html_root, document_tree
+            )
+
+            source_file: SourceFile
+            for source_file in source_files:
+                traceability_reader = SourceFileTraceabilityReader()
+                traceability_info = traceability_reader.read_from_file(
+                    source_file.in_cwd_source_file_rel_path
+                )
+                if traceability_info:
+                    traceability_index.attach_traceability_info(
+                        source_file.in_doctree_source_file_rel_path,
+                        traceability_info,
+                    )
+            document_tree.attach_source_files(source_files)
 
         if "html" in formats or "html-standalone" in formats:
             Path(output_html_root).mkdir(parents=True, exist_ok=True)

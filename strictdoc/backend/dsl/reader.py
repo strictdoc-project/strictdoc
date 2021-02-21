@@ -12,7 +12,11 @@ from strictdoc.backend.dsl.grammar import STRICTDOC_GRAMMAR
 from strictdoc.backend.dsl.models.config_special_field import ConfigSpecialField
 from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.document_config import DocumentConfig
-from strictdoc.backend.dsl.models.reference import Reference
+from strictdoc.backend.dsl.models.reference import (
+    Reference,
+    ParentReqReference,
+    FileReference,
+)
 from strictdoc.backend.dsl.models.requirement import (
     Requirement,
     CompositeRequirement,
@@ -32,6 +36,8 @@ DOCUMENT_MODELS = [
     # Body,
     SpecialField,
     Reference,
+    ParentReqReference,
+    FileReference,
     FreeText,
 ]
 

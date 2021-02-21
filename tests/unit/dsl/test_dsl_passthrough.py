@@ -403,6 +403,34 @@ STATEMENT: Some child requirement statement
     assert composite_req.special_fields[0].field_value == "R,A,I,T"
 
 
+def test_060_file_ref():
+    input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+REFS:
+- TYPE: File
+  VALUE: /tmp/sample.cpp
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input)
+    assert isinstance(document, Document)
+
+    document: Document = reader.read(input)
+    requirement = document.section_contents[0]
+    assert len(requirement.references) == 1
+    assert requirement.references[0].ref_type == "File"
+    assert requirement.references[0].path == "/tmp/sample.cpp"
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input == output
+
+
 def test_100_basic_test():
     input = """
 [DOCUMENT]

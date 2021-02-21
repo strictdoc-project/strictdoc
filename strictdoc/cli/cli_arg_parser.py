@@ -79,6 +79,11 @@ def cli_args_parser():
         action="store_true",
         help="Disables parallelization. All work happens in the main thread. This option might be useful for debugging.",
     )
+    command_parser_export.add_argument(
+        "--experimental-enable-file-traceability",
+        action="store_true",
+        help="Experimental feature: enables traceability between requirements and files.",
+    )
 
     command_parser_passthrough = command_subparsers.add_parser(
         "passthrough", help="Export document tree.", parents=[]

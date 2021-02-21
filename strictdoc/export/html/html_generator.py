@@ -3,7 +3,15 @@ from enum import Enum
 from functools import partial
 from pathlib import Path
 
+from strictdoc.backend.source_file_syntax.reader import (
+    SourceFileTraceabilityReader,
+)
 from strictdoc.core.document_meta import DocumentMeta
+from strictdoc.core.document_tree import DocumentTree, FileTree
+from strictdoc.core.finders.source_files_finder import (
+    SourceFilesFinder,
+    SourceFile,
+)
 from strictdoc.export.html.generators.document import DocumentHTMLGenerator
 from strictdoc.export.html.generators.document_deep_trace import (
     DocumentDeepTraceHTMLGenerator,
@@ -16,6 +24,9 @@ from strictdoc.export.html.generators.document_trace import (
 )
 from strictdoc.export.html.generators.document_tree import (
     DocumentTreeHTMLGenerator,
+)
+from strictdoc.export.html.generators.source_file_view_generator import (
+    SourceFileViewHTMLGenerator,
 )
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
@@ -42,7 +53,7 @@ class HTMLGenerator:
     @staticmethod
     def export_tree(
         formats_string,
-        document_tree,
+        document_tree: DocumentTree,
         traceability_index,
         output_html_root,
         strictdoc_src_path,
@@ -98,6 +109,22 @@ class HTMLGenerator:
         )
 
         parallelizer.map(document_tree.document_list, export_binding)
+
+        if document_tree.source_files:
+            print("Generating source files")
+            for source_file in document_tree.source_files:
+                Path(source_file.output_path_dir_full_path).mkdir(
+                    parents=True, exist_ok=True
+                )
+                document_content = SourceFileViewHTMLGenerator.export(
+                    source_file,
+                    document_tree,
+                    traceability_index,
+                    markup_renderer,
+                    link_renderer,
+                )
+                with open(source_file.output_path_file_full_path, "w") as file:
+                    file.write(document_content)
 
         print(
             "Export completed. Documentation tree can be found at:\n{}".format(

@@ -57,12 +57,19 @@ class Requirement(object):
         self.context = RequirementContext()
 
     def __str__(self):
-        return "{}: <ng_level: {}, uid: {}, title_or_none: {}, statement: {}>".format(
-            self.__class__.__name__,
-            self.ng_level,
-            self.uid,
-            self.title,
-            self.statement,
+        return (
+            "{}("
+            "ng_level: {}, "
+            "uid: {}, "
+            "title_or_none: {}, "
+            "statement: {}"
+            ")".format(
+                self.__class__.__name__,
+                self.ng_level,
+                self.uid,
+                self.title,
+                self.statement,
+            )
         )
 
     def __repr__(self):

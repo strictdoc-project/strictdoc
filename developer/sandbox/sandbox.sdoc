@@ -107,3 +107,32 @@ Requirement #3.2 multiline comment
 [/COMPOSITE_REQUIREMENT]
 
 [/SECTION]
+
+[SECTION]
+TITLE: File References (Early experimental feature, do not use yet)
+
+[REQUIREMENT]
+UID: REQ-FILE-REF
+REFS:
+- TYPE: File
+  VALUE: hello_world.py
+TITLE: Simple file reference link
+STATEMENT: Requirement statement
+
+[REQUIREMENT]
+UID: REQ-FILE-REF2
+REFS:
+- TYPE: File
+  VALUE: hello_world.py
+TITLE: Simple file reference link
+STATEMENT: Requirement statement
+
+[REQUIREMENT]
+UID: REQ-FILE-REF-NESTED-FOLDER
+REFS:
+- TYPE: File
+  VALUE: nested_folder/hello_world_2.py
+TITLE: Simple file reference link (nested folder)
+STATEMENT: Requirement statement
+
+[/SECTION]

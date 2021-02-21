@@ -1,9 +1,120 @@
+import os
 import sys
 
+from strictdoc.backend.dsl.models.reference import Reference
 from strictdoc.backend.dsl.models.requirement import Requirement
+from strictdoc.backend.source_file_syntax.reader import (
+    SourceFileTraceabilityInfo,
+    RangePragma,
+)
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.helpers.sorting import alphanumeric_sort
+
+
+class FileTraceabilityIndex:
+    def __init__(self):
+        self.map_paths_to_reqs = {}
+        self.map_reqs_to_paths = {}
+        self.map_paths_to_source_file_traceability_info = {}
+
+    def register(self, requirement):
+        ref: Reference
+        for ref in requirement.references:
+            if ref.ref_type == "File":
+                assert not os.path.isabs(ref.path)
+
+                requirements = self.map_paths_to_reqs.setdefault(ref.path, [])
+                requirements.append(requirement)
+
+                paths = self.map_reqs_to_paths.setdefault(requirement, [])
+                paths.append(ref.path)
+
+    def get_requirement_file_links(self, requirement):
+        if requirement not in self.map_reqs_to_paths:
+            return []
+
+        matching_links_with_opt_ranges = []
+        file_links = self.map_reqs_to_paths[requirement]
+        for file_link in file_links:
+            source_file_traceability_info: SourceFileTraceabilityInfo = (
+                self.map_paths_to_source_file_traceability_info.get(file_link)
+            )
+            if not source_file_traceability_info:
+                matching_links_with_opt_ranges.append((file_link, None))
+                continue
+            pragmas = source_file_traceability_info.ng_map_reqs_to_pragmas.get(
+                requirement.uid
+            )
+            if not pragmas:
+                matching_links_with_opt_ranges.append((file_link, None))
+                continue
+            matching_links_with_opt_ranges.append((file_link, pragmas))
+        return matching_links_with_opt_ranges
+
+    def get_source_file_requirement_links(self, source_file_rel_path):
+        if not source_file_rel_path in self.map_paths_to_reqs:
+            return False
+
+        requirements = self.map_paths_to_reqs[source_file_rel_path]
+        assert len(requirements) > 0
+
+        if (
+            source_file_rel_path
+            not in self.map_paths_to_source_file_traceability_info
+        ):
+            return True
+
+        source_file_traceability_info: SourceFileTraceabilityInfo = (
+            self.map_paths_to_source_file_traceability_info[
+                source_file_rel_path
+            ]
+        )
+        matching_requirements = []
+        for requirement in requirements:
+            if (
+                requirement.uid
+                not in source_file_traceability_info.ng_map_reqs_to_pragmas
+            ):
+                matching_requirements.append(requirement)
+        return matching_requirements
+
+    def get_source_file_range_reqs(self, source_file_rel_path, source_line):
+        if (
+            source_file_rel_path
+            not in self.map_paths_to_source_file_traceability_info
+        ):
+            return False
+        source_file_tr_info: SourceFileTraceabilityInfo = (
+            self.map_paths_to_source_file_traceability_info[
+                source_file_rel_path
+            ]
+        )
+        if source_line not in source_file_tr_info.ng_map_lines_to_pragmas:
+            return []
+        assert source_file_rel_path in self.map_paths_to_reqs
+
+        pragma: RangePragma = source_file_tr_info.ng_map_lines_to_pragmas[
+            source_line
+        ]
+
+        requirements = self.map_paths_to_reqs[source_file_rel_path]
+        matching_requirements = []
+        requirement: Requirement
+        for requirement in requirements:
+            if requirement.uid in pragma.reqs:
+                matching_requirements.append(requirement)
+        return matching_requirements
+
+    def attach_traceability_info(
+        self,
+        source_file_rel_path: str,
+        traceability_info: SourceFileTraceabilityInfo,
+    ):
+        assert isinstance(traceability_info, SourceFileTraceabilityInfo)
+        self.map_paths_to_source_file_traceability_info[
+            source_file_rel_path
+        ] = traceability_info
 
 
 class TraceabilityIndex:
@@ -13,6 +124,7 @@ class TraceabilityIndex:
         requirements_children_map = {}
         tags_map = {}
         document_iterators = {}
+        file_traceability_index = FileTraceabilityIndex()
 
         # It seems to be impossible to accomplish everything in just one for
         # loop. One particular problem that requires two passes: it is not
@@ -91,6 +203,10 @@ class TraceabilityIndex:
                 }
 
                 for ref in requirement.references:
+                    if ref.ref_type == "File":
+                        file_traceability_index.register(requirement)
+                        continue
+
                     if ref.ref_type != "Parent":
                         continue
                     requirements_map[requirement.uid]["parents_uids"].append(
@@ -202,6 +318,7 @@ class TraceabilityIndex:
             requirements_map,
             tags_map,
             documents_ref_depth_map,
+            file_traceability_index,
         )
         return traceability_index
 
@@ -211,11 +328,13 @@ class TraceabilityIndex:
         requirements_parents,
         tags_map,
         documents_ref_depth_map,
+        file_traceability_index: FileTraceabilityIndex,
     ):
         self._document_iterators = document_iterators
         self._requirements_parents = requirements_parents
         self._tags_map = tags_map
         self._documents_ref_depth_map = documents_ref_depth_map
+        self._file_traceability_index = file_traceability_index
 
     @property
     def document_iterators(self):
@@ -331,3 +450,28 @@ class TraceabilityIndex:
 
     def get_max_ref_depth(self, document):
         return self.documents_ref_depth_map[document]
+
+    def get_requirement_file_links(self, requirement):
+        return self._file_traceability_index.get_requirement_file_links(
+            requirement
+        )
+
+    def get_source_file_requirement_links(self, source_file_rel_path):
+        return self._file_traceability_index.get_source_file_requirement_links(
+            source_file_rel_path
+        )
+
+    def get_source_file_range_reqs(self, source_file_rel_path, source_line):
+        return self._file_traceability_index.get_source_file_range_reqs(
+            source_file_rel_path, source_line
+        )
+
+    def attach_traceability_info(
+        self,
+        source_file_rel_path: str,
+        traceability_info: SourceFileTraceabilityInfo,
+    ):
+        assert isinstance(traceability_info, SourceFileTraceabilityInfo)
+        self._file_traceability_index.attach_traceability_info(
+            source_file_rel_path, traceability_info
+        )

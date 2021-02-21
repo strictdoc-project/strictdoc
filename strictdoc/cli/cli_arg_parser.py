@@ -21,7 +21,7 @@ def _parse_fields(fields):
     return fields_array
 
 
-def cli_args_parser():
+def cli_args_parser() -> argparse.ArgumentParser:
     # for arg in sys.argv:
     #     if arg == '--help':
     #         # print_help()
@@ -33,11 +33,6 @@ def cli_args_parser():
     #         # print_version()
     #         assert 0
     #         exit(0)
-
-    # if os.path.getsize(check_file) == 0:
-    #     sys.stdout.flush()
-    #     print("error: no check strings found with prefix 'CHECK:'", file=sys.stderr)
-    #     exit(2)
 
     # https://stackoverflow.com/a/19476216/598057
     main_parser = argparse.ArgumentParser()
@@ -97,3 +92,65 @@ def cli_args_parser():
     )
 
     return main_parser
+
+
+class PassthroughCommandConfig:
+    def __init__(self, input_file, output_file):
+        self.input_file = input_file
+        self.output_file = output_file
+
+
+class ExportCommandConfig:
+    def __init__(
+        self,
+        input_paths,
+        output_dir,
+        formats,
+        fields,
+        no_parallelization,
+        experimental_enable_file_traceability,
+    ):
+        self.input_paths = input_paths
+        self.output_dir = output_dir
+        self.formats = formats
+        self.fields = fields
+        self.no_parallelization = no_parallelization
+        self.experimental_enable_file_traceability = (
+            experimental_enable_file_traceability
+        )
+
+
+class SDocArgsParser:
+    def __init__(self, args):
+        self.args = args
+
+    @property
+    def is_passthrough_command(self):
+        return self.args.command == "passthrough"
+
+    def get_passthrough_config(self) -> PassthroughCommandConfig:
+        return PassthroughCommandConfig(
+            self.args.input_file, self.args.output_file
+        )
+
+    @property
+    def is_export_command(self):
+        return self.args.command == "export"
+
+    def get_export_config(self) -> ExportCommandConfig:
+        return ExportCommandConfig(
+            self.args.input_paths,
+            self.args.output_dir,
+            self.args.formats,
+            self.args.fields,
+            self.args.no_parallelization,
+            self.args.experimental_enable_file_traceability,
+        )
+
+
+def create_sdoc_args_parser(testing_args=None) -> SDocArgsParser:
+    args = testing_args
+    if not args:
+        parser = cli_args_parser()
+        args = parser.parse_args()
+    return SDocArgsParser(args)

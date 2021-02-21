@@ -5,6 +5,7 @@ from pathlib import Path
 from strictdoc.backend.source_file_syntax.reader import (
     SourceFileTraceabilityReader,
 )
+from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.document_finder import DocumentFinder
 from strictdoc.core.finders.source_files_finder import (
     SourceFilesFinder,
@@ -38,19 +39,13 @@ class ExportAction:
         )
 
     @timing_decorator("Export")
-    def export(
-        self,
-        path_to_single_file_or_doc_root,
-        output_dir,
-        formats,
-        fields,
-        experimental_enable_file_traceability,
-    ):
-        assert isinstance(formats, list)
+    def export(self, config: ExportCommandConfig):
+        assert isinstance(config.formats, list)
 
+        path_to_single_file_or_doc_root = config.input_paths
         if isinstance(path_to_single_file_or_doc_root, str):
-            path_to_single_file_or_doc_root = [path_to_single_file_or_doc_root]
-        output_dir = output_dir if output_dir else "output"
+            path_to_single_file_or_doc_root = [config.input_paths]
+        output_dir = config.output_dir if config.output_dir else "output"
 
         if not os.path.isabs(output_dir):
             output_dir = os.path.join(self.cwd, output_dir)
@@ -62,7 +57,7 @@ class ExportAction:
         )
 
         traceability_index = TraceabilityIndex.create(document_tree)
-        if experimental_enable_file_traceability:
+        if config.experimental_enable_file_traceability:
             source_files = SourceFilesFinder.find_source_files(
                 output_html_root, document_tree
             )
@@ -80,10 +75,10 @@ class ExportAction:
                     )
             document_tree.attach_source_files(source_files)
 
-        if "html" in formats or "html-standalone" in formats:
+        if "html" in config.formats or "html-standalone" in config.formats:
             Path(output_html_root).mkdir(parents=True, exist_ok=True)
             HTMLGenerator.export_tree(
-                formats,
+                config.formats,
                 document_tree,
                 traceability_index,
                 output_html_root,
@@ -93,15 +88,18 @@ class ExportAction:
                 self.parallelizer,
             )
 
-        if "rst" in formats:
+        if "rst" in config.formats:
             output_rst_root = "{}/rst".format(output_dir)
             Path(output_rst_root).mkdir(parents=True, exist_ok=True)
             DocumentRSTGenerator.export_tree(
                 document_tree, traceability_index, output_rst_root
             )
 
-        if "excel" in formats:
+        if "excel" in config.formats:
             output_excel_root = "{}/excel".format(output_dir)
             ExcelGenerator.export_tree(
-                document_tree, traceability_index, output_excel_root, fields
+                document_tree,
+                traceability_index,
+                output_excel_root,
+                config.fields,
             )

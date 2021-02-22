@@ -98,9 +98,7 @@ THIS IS A TEMPLATE
   </div>
 
   <!-- Pygments -->
-  <div class="highlight"><pre>
-    {%- for line in source_file_content -%}
-      {{ line | safe }}
-    {%- endfor -%}
-  </pre></div>
+  <div class="highlight">
+    <pre>{%- for line in source_file_content -%}<div>{{ line if line != "" else "\n" }}</div>{%- endfor -%}</pre>
+  </div>
 </div>

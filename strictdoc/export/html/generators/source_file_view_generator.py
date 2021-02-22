@@ -37,6 +37,12 @@ class SourceFileViewHTMLGenerator:
             "".join(source_file_lines), PythonLexer(), html_formatter
         )
 
+        # Ugly hack to split content into lines: Cutting off:
+        # <div class="highlight"><pre> and </pre></div>
+        # TODO: Implement proper splitting.
+        pygmented_source_file_content = pygmented_source_file_content[
+            28 : len(pygmented_source_file_content) - 13
+        ]
         pygments_styles = html_formatter.get_style_defs(".highlight")
         output += template.render(
             source_file=source_file,

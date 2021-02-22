@@ -98,5 +98,9 @@ THIS IS A TEMPLATE
   </div>
 
   <!-- Pygments -->
-  {{ source_file_content | safe }}
+  <div class="highlight"><pre>
+    {%- for line in source_file_content -%}
+      {{ line | safe }}
+    {%- endfor -%}
+  </pre></div>
 </div>

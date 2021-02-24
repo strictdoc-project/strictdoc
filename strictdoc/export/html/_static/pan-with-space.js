@@ -1,103 +1,120 @@
 // This code in this file is a simplified version of the StackOverflow answer
 // taken from: https://stackoverflow.com/a/33948409/598057.
 
-var state = {
-  spacePressed: false,
-  isDown: false,
-  startX: 0,
-  startY: 0
-}
+$(document).ready(function() {
+  var state = {
+    spacePressed: false,
+    isDown: false,
+    startX: 0,
+    startY: 0
+  }
 
-$(window).keydown(function (e) {
-  if (e.key === ' ' || e.key === 'Spacebar') {
-    // ' ' is standard, 'Spacebar' was used by IE9 and Firefox < 37
+  var element = '.layout_main';
+
+  $(window).keydown(function (e) {
+    if (e.key === ' ' || e.key === 'Spacebar') {
+      // ' ' is standard, 'Spacebar' was used by IE9 and Firefox < 37
+
+      state.spacePressed = true;
+      $(element).css('cursor', 'move');
+    }
+    var moveFactor = 20;
+    if (event.altKey) {
+      moveFactor = 250;
+    }
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      e.stopPropagation();
+      $(element).scrollTop($(element).scrollTop() + moveFactor);
+    }
+    else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      e.stopPropagation();
+      $(element).scrollTop($(element).scrollTop() - moveFactor);
+    }
+    else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      e.stopPropagation();
+      $(element).scrollLeft($(element).scrollLeft() - moveFactor);
+    }
+    else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      e.stopPropagation();
+      $(element).scrollLeft($(element).scrollLeft() + moveFactor);
+    }
+  })
+
+  $(window).keyup(function (e) {
+    if (e.key === ' ' || e.key === 'Spacebar') {
+      // ' ' is standard, 'Spacebar' was used by IE9 and Firefox < 37
+      e.preventDefault();
+      e.stopPropagation();
+      state.spacePressed = false;
+      $(element).css('cursor', 'default');
+    }
+  })
+
+  $(element).mousedown(function (e) {
+    if (!state.spacePressed) {
+      return;
+    }
+
+    // tell the browser we're handling this event
     e.preventDefault();
-    // console.log('Space pressed');
-    state.spacePressed = true;
-  }
-})
+    e.stopPropagation();
 
-$(window).keyup(function (e) {
-  if (e.key === ' ' || e.key === 'Spacebar') {
-    // ' ' is standard, 'Spacebar' was used by IE9 and Firefox < 37
+    // calc the starting mouse X,Y for the drag
+    state.startX = parseInt(e.clientX);
+    state.startY = parseInt(e.clientY);
+
+    var mouseX = parseInt(e.clientX);
+    var mouseY = parseInt(e.clientY);
+
+    state.isDown = true;
+  });
+
+  $(element).mouseup(function (e) {
+    if (!state.spacePressed) {
+      return;
+    }
+
     e.preventDefault();
-    //console.log('Space keyup');
-    state.spacePressed = false;
-  }
-})
+    e.stopPropagation();
 
-$(document).mousedown(function (e) {
-  // console.log("mouse down");
+    state.isDown = false;
+  });
 
-  if (!state.spacePressed) {
-    return;
-  }
+  $(element).mousemove(function (e) {
+    if (!state.isDown){
+      return;
+    }
 
-  // tell the browser we're handling this event
-  e.preventDefault();
-  e.stopPropagation();
+    if (!state.spacePressed) {
+      return;
+    }
 
-  // calc the starting mouse X,Y for the drag
-  state.startX = parseInt(e.clientX);
-  state.startY = parseInt(e.clientY);
+    e.preventDefault();
+    e.stopPropagation();
 
-  state.isDown = true;
-});
+    var mouseX = parseInt(e.clientX);
+    var mouseY = parseInt(e.clientY);
 
-$(document).mouseup(function (e) {
-  // console.log("mouse up");
-  // tell the browser we're handling this event
+    var dx = mouseX - state.startX;
+    var dy = mouseY - state.startY;
 
-  if (!state.spacePressed) {
-    return;
-  }
+    state.startX = mouseX;
+    state.startY = mouseY;
 
-  e.preventDefault();
-  e.stopPropagation();
+    var speedupFactor = 2;
+    $(element).scrollTop($(element).scrollTop() - dy * speedupFactor);
+    $(element).scrollLeft($(element).scrollLeft() - dx * speedupFactor);
+  });
 
-  state.isDown = false;
-});
+  $(element).mouseleave(function (e) {
+    // tell the browser we're handling this event
+    e.preventDefault();
+    e.stopPropagation();
 
-$(document).mousemove(function (e) {
-  // console.log("mouse move");
-
-  // only do this code if the mouse is being dragged
-  if (!state.isDown){
-    return;
-  }
-
-  if (!state.spacePressed) {
-    return;
-  }
-
-  // tell the browser we're handling this event
-  e.preventDefault();
-  e.stopPropagation();
-
-  // get the current mouse position
-  var mouseX = parseInt(e.clientX);
-  var mouseY = parseInt(e.clientY);
-
-  // dx & dy are the distance the mouse has moved since
-  // the last mousemove event
-  var dx = mouseX - state.startX;
-  var dy = mouseY - state.startY;
-
-  // reset the vars for next mousemove
-  state.startX = mouseX;
-  state.startY = mouseY;
-
-  if (state.spacePressed) {
-    window.scrollBy(-dx, -dy);
-  }
-});
-
-$(document).mouseleave(function (e) {
-  // console.log("mouse out");
-
-  // tell the browser we're handling this event
-  e.preventDefault();
-  e.stopPropagation();
-
-  state.isDown=false;
+    state.isDown=false;
+  });
 });

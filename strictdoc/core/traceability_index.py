@@ -79,6 +79,32 @@ class FileTraceabilityIndex:
                 matching_requirements.append(requirement)
         return matching_requirements
 
+    def get_source_file_all_range_reqs(self, source_file_rel_path):
+        if (
+            source_file_rel_path
+            not in self.map_paths_to_source_file_traceability_info
+        ):
+            return False
+        source_file_tr_info: SourceFileTraceabilityInfo = (
+            self.map_paths_to_source_file_traceability_info[
+                source_file_rel_path
+            ]
+        )
+
+        pragma: RangePragma
+        range_reqs = set()
+        for pragma in source_file_tr_info.pragmas:
+            if pragma.begin_or_end == "BEGIN":
+                range_reqs.update(pragma.reqs)
+
+        requirements = self.map_paths_to_reqs[source_file_rel_path]
+        matching_requirements = []
+        requirement: Requirement
+        for requirement in requirements:
+            if requirement.uid in range_reqs:
+                matching_requirements.append(requirement)
+        return matching_requirements
+
     def get_source_file_range_reqs(self, source_file_rel_path, source_line):
         if (
             source_file_rel_path
@@ -464,6 +490,11 @@ class TraceabilityIndex:
     def get_source_file_range_reqs(self, source_file_rel_path, source_line):
         return self._file_traceability_index.get_source_file_range_reqs(
             source_file_rel_path, source_line
+        )
+
+    def get_source_file_all_range_reqs(self, source_file_rel_path):
+        return self._file_traceability_index.get_source_file_all_range_reqs(
+            source_file_rel_path
         )
 
     def attach_traceability_info(

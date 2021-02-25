@@ -1,124 +1,109 @@
-THIS IS A TEMPLATE
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../../_static/_base.css" />
+    {# <link rel="stylesheet" href="_static/document_tree.css"/> #}
+    <link rel="stylesheet" href="../../_static/_source.css" />
+    {# <link rel="stylesheet" href="../../_static/_element.css" /> #}
+    <title>source-file-view</title>
+  </head>
 
-<style>
-  * {
-    margin: 0;
-    padding: 0;
-  }
+  <style>
+    {{pygments_styles | safe}}
+  </style>
 
-  .source-code-container {
-    position: relative;
-    width: calc(100vw - 600px);
-    margin: 1rem auto;
-    // overflow: hidden;
-    padding-left: 3rem;
-  }
+  <body>
+    <main class="source-file-view">
 
-  .blueprint {
-    position: absolute;
-    z-index: 1;
-    pointer-events: none;
-  }
+      <div class="source-file__refer">
+        <div class="source-file__path">
+          {{source_file.in_doctree_source_file_rel_path}}
+        </div>
 
-  .blueprint-line {
-    position: relative;
-  }
-
-  .blueprint-line-number {
-    text-align: right;
-    width: 3rem;
-    position: absolute;
-    top: 0;
-    left: -3.5rem;
-  }
-
-  .blueprint-line-content {
-    user-select: none;
-  }
-
-  .test-requirement {
-    pointer-events: auto;
-    position: absolute;
-    top: 0;
-    // right: 100%;
-    left: -15rem;
-    text-align: right;
-  }
-
-  {{pygments_styles | safe}}
-</style>
-
-
-{%- set source_file_requirement_links = traceability_index.get_source_file_requirement_links(source_file.in_doctree_source_file_rel_path) -%}
-{%- if source_file_requirement_links -%}
-  <div>
-  <div>
-  <b>The following requirements refer to this source file:</b>
-  </div>
-
-  {%- for requirement in source_file_requirement_links -%}
-    <div>
-    <a href="{{ link_renderer.render_requirement_link_from_source_file(requirement, source_file) }}">
-      {%- if requirement.uid %}
-      <span class="requirement_child-uid">{{ requirement.uid }} </span>
-      {%- endif %}
-      {{ requirement.title }}
-    </a>
-    </div>
-  {%- endfor -%}
-  </div>
-{%- endif -%}
-
-{%- set source_file_range_reqs = traceability_index.get_source_file_all_range_reqs(source_file.in_doctree_source_file_rel_path) -%}
-{%- if source_file_range_reqs -%}
-  <div>
-  <div>
-  <b>The following requirements refer to the ranges in this source file:</b>
-  </div>
-
-  {%- for requirement in source_file_range_reqs -%}
-    <div>
-    <a href="{{ link_renderer.render_requirement_link_from_source_file(requirement, source_file) }}">
-      {%- if requirement.uid %}
-      <span class="requirement_child-uid">{{ requirement.uid }} </span>
-      {%- endif %}
-      {{ requirement.title }}
-    </a>
-    </div>
-  {%- endfor -%}
-  </div>
-{%- endif -%}
-
-<div class="source-code-container">
-  <!-- Blueprint -->
-  <div class="blueprint">
-    {%- for source_line in source_file_lines -%}
-
-    <div id="line-{{loop.index}}" class="blueprint-line">
-      {%- set source_line_reqs = traceability_index.get_source_file_range_reqs(source_file.in_doctree_source_file_rel_path, loop.index) -%}
-      {%- if source_line_reqs -%}
-        <div class="test-requirement">
-          {%- for requirement in source_line_reqs -%}
-            <div>
-              <a href="{{ link_renderer.render_requirement_link_from_source_file(requirement, source_file) }}">
-                {%- if requirement.uid %}
-                <span class="requirement_child-uid">{{ requirement.uid }} </span>
-                {%- endif %}
-                {{ requirement.title }}
-              </a>
-            </div>
+        {# requirements #}
+        {%- set source_file_requirement_links =
+        traceability_index.get_source_file_requirement_links(source_file.in_doctree_source_file_rel_path) -%}
+        {%- if source_file_requirement_links -%}
+        <div class="source-file__reqs">
+          <div>
+            {# <h5> #}
+              The following requirements refer to this source file:
+            {# </h5> #}
+          </div>
+          {%- for requirement in source_file_requirement_links -%}
+          <article id="{{ requirement.uid }}" class="requirement">
+            <a href="{{ link_renderer.render_requirement_link_from_source_file(requirement, source_file) }}">
+              {%- if requirement.uid %}
+              <span class="requirement_child-uid">{{ requirement.uid }}</span>
+              {%- endif %}
+              {{ requirement.title }}
+            </a>
+          </article>
           {%- endfor -%}
         </div>
-      {%- endif -%}
-      <pre class="blueprint-line-number">{{loop.index}}</pre>
-      <pre class="blueprint-line-content"><span/>{{ source_line }}</pre>
-    </div>
+        {%- endif -%}
 
-    {%- endfor -%}
-  </div>
+        {# ranges #}
+        {%- set source_file_range_reqs =
+        traceability_index.get_source_file_all_range_reqs(source_file.in_doctree_source_file_rel_path) -%}
+        {%- if source_file_range_reqs -%}
+        <div class="source-file__ranges">
+          <div>
+            {# <h5> #}
+              The following requirements refer <b>to the ranges</b> in this source file:
+            {# </h5> #}
+          </div>
+          {%- for requirement in source_file_range_reqs -%}
+          <article id="{{ requirement.uid }}" class="requirement">
+            <a href="{{ link_renderer.render_requirement_link_from_source_file(requirement, source_file) }}">
+              {%- if requirement.uid %}
+              <span class="requirement_child-uid">{{ requirement.uid }}</span>
+              {%- endif %}
+              {{ requirement.title }}
+            </a>
+          </article>
+          {%- endfor -%}
+        </div>
+        {%- endif -%}
+      </div>
 
-  <!-- Pygments -->
-  <div class="highlight">
-    <pre>{%- for line in source_file_content -%}<div>{{ line if line != "" else "\n" }}</div>{%- endfor -%}</pre>
-  </div>
-</div>
+      <div class="source-file__code">
+        <div id="source" class="source">
+          {%- for line in source_file_content -%}
+          {# <div class="source__req" id="line-{{loop.index}}">
+          {%- set source_line_reqs =
+          traceability_index.get_source_file_range_reqs(source_file.in_doctree_source_file_rel_path,
+          loop.index) -%} {%- if source_line_reqs -%}
+            <div class="test-requirement">
+              {%- for requirement in source_line_reqs -%}
+              <div>
+                <a
+                  href="{{ link_renderer.render_requirement_link_from_source_file(requirement, source_file) }}"
+                >
+                  {%- if requirement.uid %}
+                  <span class="requirement_child-uid">{{ requirement.uid }} </span>
+                  {%- endif %} {{ requirement.title }}
+                </a>
+              </div>
+              {%- endfor -%}
+            </div>
+            {%- endif -%}
+          </div> #}
+          <div class="source__line-number"><pre>{{loop.index}}</pre></div>
+          <div class="source__line-content">
+            {%- if line != "" -%}
+            {# <!-- Pygments --> #}
+            <pre class="highlight">{{ line }}</pre>
+            {%- else -%}
+            <pre style="user-select: none">&nbsp;</pre>
+            {%- endif -%}
+          </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

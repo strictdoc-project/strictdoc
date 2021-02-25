@@ -62,6 +62,14 @@ article {
   padding-bottom: calc(var(--base-padding)*2);
 }
 
+.source-file-view article.requirement {
+  position: relative;
+  padding: var(--base-padding);
+  background-color: var(--color-bg-contrast);
+  border: 1px solid var(--color-fg-contrast);
+  margin: 1rem 0;
+}
+
 /* .table-view */
 
 .table-view [data-section] {

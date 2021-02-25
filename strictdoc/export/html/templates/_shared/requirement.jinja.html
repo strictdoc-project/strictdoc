@@ -80,8 +80,8 @@ data-status='{{ requirement.status.lower() }}'
       {%- if opt_ranges -%}
         {%- for range in opt_ranges %}
           <li>
-            {# <a href="{{ link_renderer.render_source_file_link(requirement, link) }}#line-{{range.ng_source_line_begin}}"> #}
-            <a href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.uid }}">
+            {# TODO link as .../hello_world.py.html?begin=6&end=10#REQ-ID #}
+            <a href="{{ link_renderer.render_source_file_link(requirement, link) }}?begin={{ range.ng_source_line_begin }}&end={{ range.ng_source_line_end }}#{{ requirement.uid }}">
               <b>{{ link }}</b>, lines: {{ range.ng_source_line_begin }}-{{ range.ng_source_line_end }}
             </a>
           </li>

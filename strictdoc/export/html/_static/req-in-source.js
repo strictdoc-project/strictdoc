@@ -11,6 +11,9 @@ window.onload = function () {
   // console.log('pathname: ', window.location.pathname);
   // console.log('hash: ', window.location.hash);
 
+  // TODO relative pos = REQ pos - LINE pos
+  console.log(document.getElementById('line-1').offsetTop);
+
   // get sourceBlock
   sourceBlock = document.getElementById('source');
 

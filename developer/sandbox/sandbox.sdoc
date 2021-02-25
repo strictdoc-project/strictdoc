@@ -128,6 +128,14 @@ TITLE: Simple file reference link
 STATEMENT: Requirement statement
 
 [REQUIREMENT]
+UID: REQ-FILE-REF3
+REFS:
+- TYPE: File
+  VALUE: hello_world.py
+TITLE: Simple file reference link
+STATEMENT: Requirement statement
+
+[REQUIREMENT]
 UID: REQ-FILE-REF-NESTED-FOLDER
 REFS:
 - TYPE: File

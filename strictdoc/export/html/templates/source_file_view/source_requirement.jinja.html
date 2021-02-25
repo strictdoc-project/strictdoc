@@ -19,7 +19,7 @@
           <li>
             {# TODO link as .../hello_world.py.html?begin=6&end=10#REQ-ID #}
             <a onclick="toggleRequirement('{{ requirement.uid }}', '{{ range.ng_source_line_begin }}', '{{ range.ng_source_line_end }}')"
-               href="{{ link_renderer.render_requirement_in_source_file_link(requirement, link, source_file) }}?begin={{ range.ng_source_line_begin }}&end={{ range.ng_source_line_end }}#{{ requirement.uid }}">
+               href="{{ link_renderer.render_requirement_in_source_file_range_link(requirement, link, source_file, range) }}">
               <b>{{ link }}</b>, lines: {{ range.ng_source_line_begin }}-{{ range.ng_source_line_end }}
             </a>
           </li>

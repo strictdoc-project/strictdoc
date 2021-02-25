@@ -55,25 +55,6 @@
       <div class="source-file__code">
         <div id="source" class="source">
           {%- for line in source_file_content -%}
-          {# <div class="source__req" id="line-{{loop.index}}">
-          {%- set source_line_reqs =
-          traceability_index.get_source_file_range_reqs(source_file.in_doctree_source_file_rel_path,
-          loop.index) -%} {%- if source_line_reqs -%}
-            <div class="test-requirement">
-              {%- for requirement in source_line_reqs -%}
-              <div>
-                <a
-                  href="{{ link_renderer.render_requirement_link_from_source_file(requirement, source_file) }}"
-                >
-                  {%- if requirement.uid %}
-                  <span class="requirement_child-uid">{{ requirement.uid }} </span>
-                  {%- endif %} {{ requirement.title }}
-                </a>
-              </div>
-              {%- endfor -%}
-            </div>
-            {%- endif -%}
-          </div> #}
           <div class="source__line-number"><pre>{{loop.index}}</pre></div>
           <div class="source__line-content">
             {%- if line != "" -%}

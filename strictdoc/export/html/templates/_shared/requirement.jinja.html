@@ -49,7 +49,7 @@ data-status='{{ requirement.status.lower() }}'
     <li>
       <a href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
         {%- if requirement.uid %}
-        <span class="requirement_parent-uid">{{ requirement.uid }} </span>
+        <span class="requirement_parent-uid">{{ requirement.uid }}</span>
         {%- endif %}
         {{ requirement.title }}
       </a>
@@ -64,7 +64,7 @@ data-status='{{ requirement.status.lower() }}'
     <li>
       <a href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
         {%- if requirement.uid %}
-        <span class="requirement_child-uid">{{ requirement.uid }} </span>
+        <span class="requirement_child-uid">{{ requirement.uid }}</span>
         {%- endif %}
         {{ requirement.title }}
       </a>
@@ -80,14 +80,15 @@ data-status='{{ requirement.status.lower() }}'
       {%- if opt_ranges -%}
         {%- for range in opt_ranges %}
           <li>
-            <a href="{{ link_renderer.render_source_file_link(requirement, link) }}#line-{{range.ng_source_line_begin}}">
+            {# <a href="{{ link_renderer.render_source_file_link(requirement, link) }}#line-{{range.ng_source_line_begin}}"> #}
+            <a href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.uid }}">
               <b>{{ link }}</b>, lines: {{ range.ng_source_line_begin }}-{{ range.ng_source_line_end }}
             </a>
           </li>
         {%- endfor -%}
       {%- else -%}
         <li>
-          <a href="{{ link_renderer.render_source_file_link(requirement, link) }}">
+          <a href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.uid }}">
             <b>{{ link }}</b>
           </a>
         </li>

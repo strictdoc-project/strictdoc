@@ -6,6 +6,8 @@
     {{ requirement.title }}
   </a>
 
+  <p><a onclick="toggleRequirement('{{ requirement.uid }}')" href="#{{ requirement.uid }}">go to</a></p>
+
   {# LINKS #}
   {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
   {%- if requirement_file_links %}

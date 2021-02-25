@@ -42,7 +42,7 @@
 
   padding-bottom: 4rem;
 
-  transition: transform 0.5s ease-in;
+  transition: transform 0.3s ease-in;
   transform: translateY(100px);
 }
 

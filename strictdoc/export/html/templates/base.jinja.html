@@ -4,8 +4,8 @@
 <head>
   {% block head %}
   <meta charset="UTF-8"/>
-  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
-  <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
+  <link rel="shortcut icon" href="{{document.meta.get_root_path_prefix()}}/_static/favicon.ico" type="image/x-icon"/>
+  <link rel="icon" href="{{document.meta.get_root_path_prefix()}}/_static/favicon.ico" type="image/x-icon"/>
   {% block head_css %}
   <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/_base.css"/>
   <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/_layout.css"/>

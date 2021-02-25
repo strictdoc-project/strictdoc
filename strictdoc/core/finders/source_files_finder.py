@@ -12,6 +12,7 @@ class SourceFile:
     def __init__(
         self,
         level,
+        doctree_root_mount_path,
         in_cwd_source_file_rel_path,
         in_doctree_source_file_rel_path,
         output_path_dir_full_path,
@@ -21,11 +22,12 @@ class SourceFile:
         assert os.path.exists(in_cwd_source_file_rel_path)
 
         self.level = level
+        self.doctree_root_mount_path = doctree_root_mount_path
         self.in_cwd_source_file_rel_path = in_cwd_source_file_rel_path
         self.in_doctree_source_file_rel_path = in_doctree_source_file_rel_path
         self.output_path_dir_full_path = output_path_dir_full_path
         self.output_path_file_full_path = output_path_file_full_path
-
+        self.path_depth_prefix = ("../" * (level + 2))[:-1]
         self.traceability_info = None
 
     def __str__(self):
@@ -58,7 +60,6 @@ class SourceFilesFinder:
         doctree_root_abs_path = the_only_file_tree.root_path
         doctree_root_mount_path = os.path.basename(doctree_root_abs_path)
         root_level = the_only_file_tree.root_path.count(os.sep)
-
         for current_root_path, dirs, files in os.walk(
             the_only_file_tree.root_path, topdown=False
         ):
@@ -85,6 +86,7 @@ class SourceFilesFinder:
                     found_source_files.append(
                         SourceFile(
                             level,
+                            doctree_root_mount_path,
                             in_cwd_source_file_rel_path,
                             in_doctree_source_file_rel_path,
                             output_path_dir_full_path,

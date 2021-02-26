@@ -43,7 +43,15 @@
   padding-bottom: 4rem;
 
   transition: transform 0.3s ease-in;
-  transform: translateY(100px);
+  /* transform: translateY(100px); */
+}
+
+.source_highlight {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background-color: var(--color-highlight);
+  z-index: -1;
 }
 
 .source__line-number {

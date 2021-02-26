@@ -65,7 +65,7 @@ article {
 /* article in SOURCE */
 
 .source-file-view article.requirement {
-  position: relative;
+  position: static;
   padding: var(--base-padding);
   background-color: var(--color-bg-contrast);
   border: 1px solid var(--color-fg-contrast);
@@ -73,7 +73,16 @@ article {
 }
 
 .source-file-view article.requirement:target {
+  /* TODO */
   border-color: red;
+}
+
+.source-file-view .requirementToggler {
+  padding: .5rem .25rem;
+}
+
+.source-file-view .requirementToggler:target {
+  background-color: var(--color-highlight);
 }
 
 /* .table-view */

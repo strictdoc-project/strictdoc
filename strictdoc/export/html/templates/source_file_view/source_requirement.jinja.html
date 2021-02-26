@@ -1,4 +1,4 @@
-<article id="{{ requirement.uid }}" class="requirement">
+<article class="requirement">
   <a href="{{ link_renderer.render_requirement_link_from_source_file(requirement, source_file) }}">
     {%- if requirement.uid %}
     <span class="requirement_child-uid">{{ requirement.uid }}</span>
@@ -6,7 +6,7 @@
     {{ requirement.title }}
   </a>
 
-  <p><a onclick="toggleRequirement('{{ requirement.uid }}')" href="#{{ requirement.uid }}">go to</a></p>
+  {# <p><a onclick="toggleRequirement('{{ requirement.uid }}')" href="#{{ requirement.uid }}">go to</a></p> #}
 
   {# LINKS #}
   {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
@@ -15,9 +15,9 @@
     {%- for link, opt_ranges in requirement_file_links %}
       {%- if opt_ranges -%}
         {%- for range in opt_ranges %}
-        {# TODO current link #}
-          <li>
-            {# TODO link as .../hello_world.py.html?begin=6&end=10#REQ-ID #}
+          <li
+            id="{{ requirement.uid }}:{{ range.ng_source_line_begin }}:{{ range.ng_source_line_end }}"
+            class="requirementToggler">
             <a onclick="toggleRequirement('{{ requirement.uid }}', '{{ range.ng_source_line_begin }}', '{{ range.ng_source_line_end }}')"
                href="{{ link_renderer.render_requirement_in_source_file_range_link(requirement, link, source_file, range) }}">
               <b>{{ link }}</b>, lines: {{ range.ng_source_line_begin }}-{{ range.ng_source_line_end }}
@@ -25,7 +25,9 @@
           </li>
         {%- endfor -%}
       {%- else -%}
-        <li>
+        <li
+          id="{{ requirement.uid }}"
+          class="requirementToggler">
           <a onclick="toggleRequirement('{{ requirement.uid }}')"
              href="{{ link_renderer.render_requirement_in_source_file_link(requirement, link, source_file) }}">
             <b>{{ link }}</b>

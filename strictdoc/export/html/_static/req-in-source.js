@@ -1,9 +1,5 @@
 
 // TODO
-// 1
-// сделать для рекв ID
-// а для ссылки без параметров какой-то свой, например 'REQ:'
-// и делать активной карточку каким-то образом
 // 2
 // сделать article relative
 // и считать общую позицию ссылки, складывая позицию карточки и ссылки внутри карточки
@@ -11,13 +7,13 @@
 // init:
 let sourceBlock;
 let highlightBlock;
-let targetsPositions = {};
+let requirements = [];
+let requirementsPositions = {};
+let pointers = [];
+let pointersPositions = {};
 let stringHeight = 24;
 
 window.onload = function () {
-
-  // console.log('pathname: ', window.location.pathname);
-  // console.log('hash: ', window.location.hash);
 
   // TODO relative pos = REQ pos - LINE pos
   stringHeight = document.getElementById('line-2').offsetTop;
@@ -26,61 +22,77 @@ window.onload = function () {
   sourceBlock = document.getElementById('source');
   // get highlightBlock
   highlightBlock = sourceBlock.querySelector('.source_highlight');
-  console.log(highlightBlock);
 
-  // get targetsPositions
-  const requirementTogglers = document.querySelectorAll('.requirementToggler');
+  // get requirements NodeList; convert it to array:
+  requirements = [...document.querySelectorAll('.requirement')];
+  // get pointers NodeList; convert it to array:
+  pointers = [...document.querySelectorAll('.pointer')];
 
-  for (var link of requirementTogglers) {
-    const id = link.id;
-    const x = link.offsetTop;
-
-    // console.log(id);
-    // console.log(x);
-
-    targetsPositions = {
-      ...targetsPositions,
-      [id]: x
+  requirements.map((element) => {
+    // ID format of DOM element is 'requirement:ID'
+    const id = element.id.split(':')[1];
+    // set requirementsPositions
+    requirementsPositions = {
+      ...requirementsPositions,
+      [id]: element.offsetTop
     };
-  }
+  })
+
+  pointers.map((element) => {
+    // set pointersPositions
+    pointersPositions = {
+      ...pointersPositions,
+      [element.id]: element.offsetTop
+    };
+    // add addEventListener on click
+    element.addEventListener("click",
+      function () {
+        toggleRequirement(this.id);
+      }
+    );
+  })
+
+  console.log('pointers: ', pointers);
+  console.log('requirementsPositions: ', requirementsPositions);
+  console.log('pointersPositions: ', pointersPositions);
 
   // fire on load:
   toggleRequirement();
 
 };
 
-function toggleRequirement(reqId, rangeStart, rangeEnd) {
+function toggleRequirement(pointerID) {
 
-  if (!reqId) {
+  // prepare params
+  if (!pointerID) {
     // get params from URL:
-    [reqId, rangeStart, rangeEnd] = window.location.hash.substring(1).split(':');
+    pointerID = window.location.hash.substring(1);
   }
+  [reqId, rangeStart, rangeEnd] = pointerID.split(':');
 
-  const targetId =
-    rangeStart
-      ? (
-        rangeEnd
-          ? reqId + ':' + rangeStart + ':' + rangeEnd
-          : reqId + ':' + rangeStart
-      )
-      : reqId;
+  // toggle active requirement
+  requirements.map((element) => {
+    element.classList.remove('active');
+    // ID format of DOM element is 'requirement:ID'
+    if (element.id === `requirement:${reqId}`) {
+      element.classList.add('active');
+    }
+  })
 
+  // toggle active pointer
+  pointers.map((element) => {
+    element.classList.remove('active');
+    if (element.id === pointerID) {
+      element.classList.add('active');
+    }
+  })
+
+  // prepare variables for translate
   const rangeSize = (rangeEnd - rangeStart + 1) || 0;
   const rangeAmend = (rangeStart - 1) * stringHeight || 0;
-
-  const translateTo = targetsPositions[targetId] - rangeAmend;
-
+  const translateTo = pointersPositions[pointerID] - rangeAmend;
+  // translate
   sourceBlock.style.transform = 'translateY(' + translateTo + 'px)';
   highlightBlock.style.top = rangeAmend + 'px';
   highlightBlock.style.height = rangeSize * stringHeight + 'px';
 }
-
-
-
-
-// console.log(`
-// targetId: ${targetId},
-// reqId: ${reqId},
-// rangeStart: ${rangeStart},
-// rangeEnd: ${rangeEnd}
-//   `)

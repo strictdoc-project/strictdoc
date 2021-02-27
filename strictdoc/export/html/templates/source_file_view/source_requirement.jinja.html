@@ -1,4 +1,4 @@
-<article class="requirement">
+<article id="requirement:{{ requirement.uid }}" class="requirement">
   <a href="{{ link_renderer.render_requirement_link_from_source_file(requirement, source_file) }}">
     {%- if requirement.uid %}
     <span class="requirement_child-uid">{{ requirement.uid }}</span>
@@ -15,21 +15,23 @@
     {%- for link, opt_ranges in requirement_file_links %}
       {%- if opt_ranges -%}
         {%- for range in opt_ranges %}
-          <li
-            id="{{ requirement.uid }}:{{ range.ng_source_line_begin }}:{{ range.ng_source_line_end }}"
-            class="requirementToggler">
-            <a onclick="toggleRequirement('{{ requirement.uid }}', '{{ range.ng_source_line_begin }}', '{{ range.ng_source_line_end }}')"
-               href="{{ link_renderer.render_requirement_in_source_file_range_link(requirement, link, source_file, range) }}">
+          <li>
+            <a
+              id="{{ requirement.uid }}:{{ range.ng_source_line_begin }}:{{ range.ng_source_line_end }}"
+              class="pointer"
+              href="{{ link_renderer.render_requirement_in_source_file_range_link(requirement, link, source_file, range) }}"
+            >
               <b>{{ link }}</b>, lines: {{ range.ng_source_line_begin }}-{{ range.ng_source_line_end }}
             </a>
           </li>
         {%- endfor -%}
       {%- else -%}
-        <li
-          id="{{ requirement.uid }}"
-          class="requirementToggler">
-          <a onclick="toggleRequirement('{{ requirement.uid }}')"
-             href="{{ link_renderer.render_requirement_in_source_file_link(requirement, link, source_file) }}">
+        <li>
+          <a
+            id="{{ requirement.uid }}"
+            class="pointer"
+            href="{{ link_renderer.render_requirement_in_source_file_link(requirement, link, source_file) }}"
+          >
             <b>{{ link }}</b>
           </a>
         </li>

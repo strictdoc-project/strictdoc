@@ -17,9 +17,9 @@
   </style>
 
   <body>
-    <main class="source-file-view">
+    <main id="mainContainer" class="source-file-view">
 
-      <div class="source-file__refer">
+      <div id="referContainer" class="source-file__refer">
         <div class="source-file__path">
           {{source_file.in_doctree_source_file_rel_path}}
         </div>
@@ -53,7 +53,7 @@
         {%- endif -%}
       </div>
 
-      <div class="source-file__code">
+      <div id="sourceContainer" class="source-file__code">
         <div id="source" class="source">
           <div class="source_highlight"></div>
           {%- for line in source_file_content -%}

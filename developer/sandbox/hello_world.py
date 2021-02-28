@@ -21,6 +21,7 @@ class DocumentTree:
     def attach_source_files(self, source_files):
         self.source_files = source_files
 
+
 # Python3 program to add two numbers
 
 number1 = input("First number: ")
@@ -37,6 +38,7 @@ sum = float(number1) + float(number2)
 # STRICTDOC RANGE BEGIN: REQ-FILE-REF, REQ-FILE-REF2
 print("The sum of {0} and {1} is {2}".format(number1, number2, sum))
 # STRICTDOC RANGE END: REQ-FILE-REF, REQ-FILE-REF2
+
 
 class FileTree(FileOrFolderEntry):
     def __init__(self, root_path, level):

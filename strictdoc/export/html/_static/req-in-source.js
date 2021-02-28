@@ -17,7 +17,7 @@ let bottomSourceScrollLimit; // TODO update on window resize
 let mainContainer;
 let referContainer;
 let sourceContainer;
-let sourceContainerHeight;
+let sourceContainerHeight; // TODO update on window resize
 let sourceBlock;
 let sourceBlockHeight; // TODO update on window resize
 let translateSourceBlockTo;
@@ -28,6 +28,30 @@ let requirementsPositions = {};
 let pointers = [];
 let pointersPositions = {};
 
+// update params on window resize
+(function () {
+
+  window.addEventListener("resize", resizeThrottler, false);
+
+  var resizeTimeout;
+  function resizeThrottler() {
+    // ignore resize events as long as an actualResizeHandler execution is in the queue
+    if (!resizeTimeout) {
+      resizeTimeout = setTimeout(function () {
+        resizeTimeout = null;
+        actualResizeHandler();
+
+        // The actualResizeHandler will execute at a rate of 15fps
+      }, 66);
+    }
+  }
+
+  function actualResizeHandler() {
+    getParamsFromDOMElements();
+    console.log(sourceContainerHeight);
+  }
+
+}());
 
 function prepareDOMElements() {
   // get Containers

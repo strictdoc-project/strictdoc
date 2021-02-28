@@ -11,9 +11,6 @@
 // 4
 // что если карточек много и прокрутка левой части?
 
-// 5
-// прокрутка кода с границами
-
 // init:
 const topSourceScrollLimit = 200;
 let bottomSourceScrollLimit; // TODO update on window resize
@@ -31,23 +28,14 @@ let requirementsPositions = {};
 let pointers = [];
 let pointersPositions = {};
 
-window.onload = function () {
 
+function prepareDOMElements() {
   // get Containers
   mainContainer = document.getElementById('mainContainer');
   referContainer = document.getElementById('referContainer');
   sourceContainer = document.getElementById('sourceContainer');
-
-  // add MouseWheelHandler
-  sourceContainer.addEventListener("wheel", MouseWheelHandler);
-  sourceContainerHeight = sourceContainer.offsetHeight;
-
   // get sourceBlock
   sourceBlock = document.getElementById('source');
-  sourceBlockHeight = sourceBlock.offsetHeight;
-
-  bottomSourceScrollLimit = sourceContainerHeight - sourceBlockHeight - topSourceScrollLimit;
-
   // get highlightBlock
   highlightBlock = sourceBlock.querySelector('.source_highlight');
 
@@ -56,6 +44,18 @@ window.onload = function () {
   // get pointers NodeList; convert it to array:
   pointers = [...document.querySelectorAll('.pointer')];
 
+  // add MouseWheelHandler
+  sourceContainer.addEventListener("wheel", MouseWheelHandler);
+}
+
+function getParamsFromDOMElements() {
+  // get current parameters
+  sourceContainerHeight = sourceContainer.offsetHeight;
+  sourceBlockHeight = sourceBlock.offsetHeight;
+  bottomSourceScrollLimit = sourceContainerHeight - sourceBlockHeight - topSourceScrollLimit;
+}
+
+function preparePointersPositions() {
   requirements.map((element) => {
     // ID format of DOM element is 'requirement:ID'
     const id = element.id.split(':')[1];
@@ -79,18 +79,36 @@ window.onload = function () {
       }
     );
   })
+}
 
-  // TODO relative pos = REQ pos - LINE pos
-  stringHeight = document.getElementById('line-2').offsetTop;
+function MouseWheelHandler(e) {
+  // reset sourceContainer scroll limit indicator
+  sourceContainer.classList.remove('limit-top');
+  sourceContainer.classList.remove('limit-bottom');
 
-  // fire on load:
-  toggleRequirement();
+  const delta = e.deltaY;
 
-  console.log('pointers: ', pointers);
-  console.log('requirementsPositions: ', requirementsPositions);
-  console.log('pointersPositions: ', pointersPositions);
+  const isScrollBottom = delta < 0;
+  // console.log('delta: ', delta);
 
-};
+  const style = window.getComputedStyle(sourceBlock);
+  const matrix = new WebKitCSSMatrix(style.transform);
+  const currTranslate = Math.round(matrix.m42);
+  let nextTranslate = Math.round(currTranslate - delta);
+
+  if (isScrollBottom && currTranslate > topSourceScrollLimit) {
+    nextTranslate = currTranslate;
+    sourceContainer.classList.add('limit-top');
+  }
+
+  if (!isScrollBottom && currTranslate < bottomSourceScrollLimit) {
+    nextTranslate = currTranslate;;
+    sourceContainer.classList.add('limit-bottom');
+  }
+
+  sourceBlock.style.transform = 'translateY(' + nextTranslate + 'px)';
+  return false;
+}
 
 function toggleRequirement(pointerID) {
 
@@ -131,35 +149,22 @@ function toggleRequirement(pointerID) {
   // reset sourceContainer scroll limit indicator
   sourceContainer.classList.remove('limit-top');
   sourceContainer.classList.remove('limit-bottom');
-
-  console.log('translateSourceBlockTo: ', translateSourceBlockTo);
 }
 
-function MouseWheelHandler(e) {
-  // reset sourceContainer scroll limit indicator
-  sourceContainer.classList.remove('limit-top');
-  sourceContainer.classList.remove('limit-bottom');
+window.onload = function () {
 
-  const delta = e.deltaY;
+  // TODO relative pos = REQ pos - LINE pos
+  stringHeight = document.getElementById('line-2').offsetTop;
 
-  const isScrollBottom = delta < 0;
-  // console.log('delta: ', delta);
+  prepareDOMElements();
+  getParamsFromDOMElements();
+  preparePointersPositions();
 
-  const style = window.getComputedStyle(sourceBlock);
-  const matrix = new WebKitCSSMatrix(style.transform);
-  const currTranslate = Math.round(matrix.m42);
-  let nextTranslate = Math.round(currTranslate - delta);
+  // fire on load:
+  toggleRequirement();
 
-  if (isScrollBottom && currTranslate > topSourceScrollLimit) {
-    nextTranslate = currTranslate;
-    sourceContainer.classList.add('limit-top');
-  }
+  console.log('pointers: ', pointers);
+  console.log('requirementsPositions: ', requirementsPositions);
+  console.log('pointersPositions: ', pointersPositions);
 
-  if (!isScrollBottom && currTranslate < bottomSourceScrollLimit) {
-    nextTranslate = currTranslate;;
-    sourceContainer.classList.add('limit-bottom');
-  }
-
-  sourceBlock.style.transform = 'translateY(' + nextTranslate + 'px)';
-  return false;
-}
+};

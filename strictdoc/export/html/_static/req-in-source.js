@@ -81,12 +81,11 @@ function getParamsFromDOMElements() {
 
 function preparePointersPositions() {
   requirements.map((element) => {
-    // ID format of DOM element is 'requirement:ID'
-    const id = element.id.split(':')[1];
     // set requirementsPositions
     requirementsPositions = {
       ...requirementsPositions,
-      [id]: element.offsetTop
+      // ID format of DOM element is 'requirement:ID'
+      [element.id]: element.offsetTop
     };
   })
 
@@ -94,11 +93,13 @@ function preparePointersPositions() {
     // set pointersPositions
     pointersPositions = {
       ...pointersPositions,
+      // ID format of DOM element is 'pointer:ID'
       [element.id]: element.offsetTop
     };
     // add addEventListener on click
     element.addEventListener("click",
       function () {
+        // ID format of DOM element is 'pointer:ID'
         toggleRequirement(this.id);
       }
     );
@@ -139,15 +140,16 @@ function toggleRequirement(pointerID) {
   // prepare params
   if (!pointerID) {
     // get params from URL:
-    pointerID = window.location.hash.substring(1);
+    pointerID = `pointer:${window.location.hash.substring(1)}`;
   }
-  [reqId, rangeStart, rangeEnd] = pointerID.split(':');
+  // ['pointer', hashId, rangeStart, rangeEnd]:
+  [_, hashId, rangeStart, rangeEnd] = pointerID.split(':');
 
   // toggle active requirement
   requirements.map((element) => {
     element.classList.remove('active');
     // ID format of DOM element is 'requirement:ID'
-    if (element.id === `requirement:${reqId}`) {
+    if (element.id === `requirement:${hashId}`) {
       element.classList.add('active');
     }
   })
@@ -155,6 +157,7 @@ function toggleRequirement(pointerID) {
   // toggle active pointer
   pointers.map((element) => {
     element.classList.remove('active');
+    // ID format of DOM element is 'pointer:ID'
     if (element.id === pointerID) {
       element.classList.add('active');
     }

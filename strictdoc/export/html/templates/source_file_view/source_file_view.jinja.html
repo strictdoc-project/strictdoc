@@ -20,6 +20,7 @@
     <main id="mainContainer" class="source-file-view">
 
       <div id="referContainer" class="source-file__refer">
+        <div class="source-file__refer-container">
         <div class="source-file__path">
           {{source_file.in_doctree_source_file_rel_path}}
         </div>
@@ -51,6 +52,7 @@
           {%- endfor -%}
         </div>
         {%- endif -%}
+        </div>
       </div>
 
       <div id="sourceContainer" class="source-file__code">

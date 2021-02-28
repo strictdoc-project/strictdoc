@@ -28,31 +28,6 @@ let requirementsPositions = {};
 let pointers = [];
 let pointersPositions = {};
 
-// update params on window resize
-(function () {
-
-  window.addEventListener("resize", resizeThrottler, false);
-
-  var resizeTimeout;
-  function resizeThrottler() {
-    // ignore resize events as long as an actualResizeHandler execution is in the queue
-    if (!resizeTimeout) {
-      resizeTimeout = setTimeout(function () {
-        resizeTimeout = null;
-        actualResizeHandler();
-
-        // The actualResizeHandler will execute at a rate of 15fps
-      }, 66);
-    }
-  }
-
-  function actualResizeHandler() {
-    getParamsFromDOMElements();
-    console.log(sourceContainerHeight);
-  }
-
-}());
-
 function prepareDOMElements() {
   // get Containers
   mainContainer = document.getElementById('mainContainer');
@@ -81,12 +56,11 @@ function getParamsFromDOMElements() {
 
 function preparePointersPositions() {
   requirements.map((element) => {
-    // ID format of DOM element is 'requirement:ID'
-    const id = element.id.split(':')[1];
     // set requirementsPositions
     requirementsPositions = {
       ...requirementsPositions,
-      [id]: element.offsetTop
+      // ID format of DOM element is 'requirement:ID'
+      [element.id]: element.offsetTop
     };
   })
 
@@ -94,11 +68,13 @@ function preparePointersPositions() {
     // set pointersPositions
     pointersPositions = {
       ...pointersPositions,
+      // ID format of DOM element is 'pointer:ID'
       [element.id]: element.offsetTop
     };
     // add addEventListener on click
     element.addEventListener("click",
       function () {
+        // ID format of DOM element is 'pointer:ID'
         toggleRequirement(this.id);
       }
     );
@@ -139,15 +115,16 @@ function toggleRequirement(pointerID) {
   // prepare params
   if (!pointerID) {
     // get params from URL:
-    pointerID = window.location.hash.substring(1);
+    pointerID = `pointer:${window.location.hash.substring(1)}`;
   }
-  [reqId, rangeStart, rangeEnd] = pointerID.split(':');
+  // ['pointer', hashId, rangeStart, rangeEnd]:
+  [_, hashId, rangeStart, rangeEnd] = pointerID.split(':');
 
   // toggle active requirement
   requirements.map((element) => {
     element.classList.remove('active');
     // ID format of DOM element is 'requirement:ID'
-    if (element.id === `requirement:${reqId}`) {
+    if (element.id === `requirement:${hashId}`) {
       element.classList.add('active');
     }
   })
@@ -155,6 +132,7 @@ function toggleRequirement(pointerID) {
   // toggle active pointer
   pointers.map((element) => {
     element.classList.remove('active');
+    // ID format of DOM element is 'pointer:ID'
     if (element.id === pointerID) {
       element.classList.add('active');
     }
@@ -175,6 +153,32 @@ function toggleRequirement(pointerID) {
   sourceContainer.classList.remove('limit-bottom');
 }
 
+// update params on window resize
+var resizeTimeout;
+function resizeThrottler() {
+  // ignore resize events as long as an resizeHandler execution is in the queue
+  if (!resizeTimeout) {
+    resizeTimeout = setTimeout(function () {
+      resizeTimeout = null;
+      resizeHandler();
+
+      // The resizeHandler will execute at a rate of 15fps
+    }, 66);
+  }
+}
+function resizeHandler() {
+  getParamsFromDOMElements();
+}
+
+// update params on scroll
+let last_known_scroll_position = 0;
+let ticking = false;
+function referContainerScrollHandler(scroll_pos) {
+  console.log(scroll_pos);
+  sourceBlock.style.marginTop = `-${scroll_pos}px`;
+}
+
+// FIRE
 window.onload = function () {
 
   // TODO relative pos = REQ pos - LINE pos
@@ -183,6 +187,22 @@ window.onload = function () {
   prepareDOMElements();
   getParamsFromDOMElements();
   preparePointersPositions();
+
+  // for update params on scroll
+  referContainer.addEventListener('scroll', function (e) {
+
+    if (!ticking) {
+      window.requestAnimationFrame(function () {
+        referContainerScrollHandler(referContainer.scrollTop);
+        ticking = false;
+      });
+
+      ticking = true;
+    }
+  });
+
+  // for update params on window resize
+  window.addEventListener("resize", resizeThrottler, false);
 
   // fire on load:
   toggleRequirement();

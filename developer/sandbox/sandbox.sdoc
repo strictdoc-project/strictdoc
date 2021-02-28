@@ -136,6 +136,46 @@ TITLE: Simple file reference link
 STATEMENT: Requirement statement
 
 [REQUIREMENT]
+UID: REQ-FILE-REF4
+REFS:
+- TYPE: File
+  VALUE: hello_world.py
+TITLE: Simple file reference link
+STATEMENT: Requirement statement
+
+[REQUIREMENT]
+UID: REQ-FILE-REF5
+REFS:
+- TYPE: File
+  VALUE: hello_world.py
+TITLE: Simple file reference link
+STATEMENT: Requirement statement
+
+[REQUIREMENT]
+UID: REQ-FILE-REF6
+REFS:
+- TYPE: File
+  VALUE: hello_world.py
+TITLE: Simple file reference link
+STATEMENT: Requirement statement
+
+[REQUIREMENT]
+UID: REQ-FILE-REF7
+REFS:
+- TYPE: File
+  VALUE: hello_world.py
+TITLE: Simple file reference link
+STATEMENT: Requirement statement
+
+[REQUIREMENT]
+UID: REQ-FILE-REF8
+REFS:
+- TYPE: File
+  VALUE: hello_world.py
+TITLE: Simple file reference link
+STATEMENT: Requirement statement
+
+[REQUIREMENT]
 UID: REQ-FILE-REF-NESTED-FOLDER
 REFS:
 - TYPE: File

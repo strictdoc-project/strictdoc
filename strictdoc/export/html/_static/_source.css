@@ -23,13 +23,15 @@
 /* REQS */
 
 .source-file__refer {
-  /* min-width: 300px; */
   width: calc(300px + 4rem);
+
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.source-file__refer-container {
+  /* padding: 2rem 2rem 100vh 2rem; */
   padding: 2rem;
-  min-height: 100vh;
-  background-color: var(--color-bg-main);
-  /* position: fixed;
-  z-index: 2; */
 }
 
 .source-file__path {

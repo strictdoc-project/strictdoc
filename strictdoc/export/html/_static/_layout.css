@@ -22,11 +22,11 @@
   z-index: 2;
 }
 
+.layout,
 .layout[data-state="close"] {
   margin-left: calc(var(--toc-width) * (-1));
 }
 
-.layout,
 .layout[data-state="open"] {
   margin-left: 0;
 }
@@ -65,12 +65,12 @@
 }
 
 .layout_toggler::before,
-.layout_toggler[data-state="open"]::before {
-  content: '\2715';
-}
-
 .layout_toggler[data-state="close"]::before {
   content: '\2630';
+}
+
+.layout_toggler[data-state="open"]::before {
+  content: '\2715';
 }
 
 .layout_aside {

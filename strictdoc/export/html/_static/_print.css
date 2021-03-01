@@ -1,0 +1,83 @@
+/* general styles */
+
+.pdf-view {
+  --print-elevation-shadow: rgba(0, 0, 0, 0.1) 2px 2px 12px 0px;
+  --print-A4-width: 210mm;
+  --print-A4-height: 297mm;
+  --print-padding: 20mm;
+  --print-font-size: 12pt;
+}
+
+.pdf-view .content,
+.pdf-view .frontpage {
+  display: block;
+  box-shadow: var(--print-elevation-shadow);
+  background-color: #fff;
+  margin: 1rem auto;
+  width: var(--print-A4-width);
+  padding: var(--print-padding);
+}
+
+.pdf-view .frontpage {
+  /* fixed height */
+  display: flex;
+  height: var(--print-A4-height);
+}
+
+.pdf-view .printable {
+  margin: 0 auto;
+  width: calc(var(--print-A4-width) - var(--print-padding) * 2);
+  font-size: var(--print-font-size);
+}
+
+.pdf-view .frontpage .printable {
+  /* fixed height */
+  height: calc(var(--print-A4-height) - var(--print-padding) * 2);
+}
+
+.pdf-view .content article {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* print service */
+.break-after-page { break-after: page; }
+
+/* print styles */
+/* should be after other styles */
+@media print {
+
+  .pdf-view aside,
+  .pdf-view header,
+  .pdf-view nav,
+  .pdf-view .layout_button {
+    display: none ;
+  }
+
+  .pdf-view  main,
+  .pdf-view  .layout {
+    display: contents;
+  }
+
+  .pdf-view .frontpage,
+  .pdf-view .content {
+    padding: 0;
+    display: contents ;
+  }
+
+}
+
+/* test */
+
+.test-t {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.test-row {
+  height: 6.62mm;
+  width: 400px;
+  box-shadow: inset 1px 1px 0 #ccc;
+}
+

@@ -1,4 +1,5 @@
 {% extends "base.jinja.html" %}
+{% block spetial_head_css %}<link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/_print.css"/>{% endblock %}
 {% block title %}Printable Document{% endblock %}
 {% block viewtype %}pdf-view{% endblock %}
 

@@ -39,6 +39,11 @@ class DocumentMeta:
             self.output_document_dir_full_path, self.document_filename_base
         )
 
+    def get_html_pdf_path(self):
+        return "{}/{} - PDF.html".format(
+            self.output_document_dir_full_path, self.document_filename_base
+        )
+
     # Links
     def get_html_doc_link(self):
         return "{}/{}.html".format(
@@ -60,6 +65,11 @@ class DocumentMeta:
             self.output_document_dir_rel_path, self.document_filename_base
         )
 
+    def get_html_pdf_link(self):
+        return "{}/{} - PDF.html".format(
+            self.output_document_dir_rel_path, self.document_filename_base
+        )
+
     def get_html_link(self, document_type, other_doc_level):
         path_prefix = self.get_root_path_prefix(other_doc_level)
         if document_type == "document":
@@ -70,6 +80,8 @@ class DocumentMeta:
             document_link = self.get_html_traceability_link()
         elif document_type == "deeptrace":
             document_link = self.get_html_deep_traceability_link()
+        elif document_type == "pdf":
+            document_link = self.get_html_pdf_link()
         else:
             raise NotImplementedError
         return f"{path_prefix}/{document_link}"

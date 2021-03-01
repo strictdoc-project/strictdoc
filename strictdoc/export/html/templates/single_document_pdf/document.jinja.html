@@ -1,0 +1,39 @@
+{% extends "base.jinja.html" %}
+{% block title %}Printable Document{% endblock %}
+{% block viewtype %}pdf-view{% endblock %}
+
+{% block content %}
+      <div class="content">
+
+      <h1>PDF</h1>
+
+        {%- if document.free_texts -%}
+        <section><article>
+        {%- for free_text in document.free_texts %}
+          <div class="free_text">
+            {{ renderer.render_free_text(free_text) }}
+          </div>
+        {%- endfor -%}
+        </article></section>
+        {%- endif -%}
+
+        {%- for section_or_requirement in document_iterator.all_content() %}
+
+        {%- if section_or_requirement.is_requirement %}
+          {%- set requirement = section_or_requirement %}
+          {%- with anchor=link_renderer.render_local_anchor(section_or_requirement), document_type="document" -%}
+            {% include "_shared/requirement.jinja.html" %}
+          {%- endwith %}
+
+        {%- elif section_or_requirement.is_section %}
+          {%- set section = section_or_requirement %}
+          {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
+          {% include "_shared/docsection.jinja.html" %}
+          {%- endwith %}
+
+        {%- endif %}
+
+        {%- endfor %}
+
+      </div>
+{% endblock content %}

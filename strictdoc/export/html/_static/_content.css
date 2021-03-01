@@ -28,6 +28,7 @@
   gap: 2px 2px;
 }
 
+.pdf-view .content,
 .document-view .content {
   display: block;
 }

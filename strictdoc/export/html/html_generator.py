@@ -22,6 +22,9 @@ from strictdoc.export.html.generators.document_table import (
 from strictdoc.export.html.generators.document_trace import (
     DocumentTraceHTMLGenerator,
 )
+from strictdoc.export.html.generators.document_pdf import (
+    DocumentPrintableHTMLGenerator,
+)
 from strictdoc.export.html.generators.document_tree import (
     DocumentTreeHTMLGenerator,
 )
@@ -226,6 +229,19 @@ class HTMLGenerator:
                 document, traceability_index, markup_renderer, link_renderer
             )
             document_out_file = document_meta.get_html_deep_traceability_path()
+
+            with open(document_out_file, "w") as file:
+                file.write(document_content)
+
+            # Single Document PDF pages
+            document_content = DocumentPrintableHTMLGenerator.export(
+                document_tree,
+                document,
+                traceability_index,
+                markup_renderer,
+                link_renderer,
+            )
+            document_out_file = document_meta.get_html_pdf_path()
 
             with open(document_out_file, "w") as file:
                 file.write(document_content)

@@ -8,8 +8,7 @@
   --print-font-size: 12pt;
 }
 
-.pdf-view .content,
-.pdf-view .frontpage {
+.pdf-view .content {
   display: block;
   box-shadow: var(--print-elevation-shadow);
   background-color: #fff;
@@ -18,9 +17,9 @@
   padding: var(--print-padding);
 }
 
-.pdf-view .frontpage {
+.pdf-view .onepage {
   /* fixed height */
-  display: flex;
+  /* display: flex; */
   height: var(--print-A4-height);
 }
 
@@ -30,7 +29,7 @@
   font-size: var(--print-font-size);
 }
 
-.pdf-view .frontpage .printable {
+.pdf-view .onepage .printable {
   /* fixed height */
   height: calc(var(--print-A4-height) - var(--print-padding) * 2);
 }
@@ -44,7 +43,7 @@
 .break-after-page { break-after: page; }
 
 /* print styles */
-/* should be after other styles */
+/* should be after general styles */
 @media print {
 
   .pdf-view aside,
@@ -79,5 +78,82 @@
   height: 6.62mm;
   width: 400px;
   box-shadow: inset 1px 1px 0 #ccc;
+}
+
+/* frontpage */
+
+.frontpage {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: minmax(min-content, max-content) 1fr minmax(min-content, max-content);
+  grid-template-areas:
+    "header header header"
+    "content content content"
+    "footer footer footer";
+  place-items: stretch stretch;
+  place-content: stretch stretch;
+}
+
+@page  {
+  size: A4;
+  margin: var(--print-padding);
+
+  @top-left{
+      content: element(headerLeft);
+      border-bottom:2px solid #434190;
+  }
+
+  @top-center{
+      border-bottom:2px solid #434190;
+  }
+
+  @top-right{
+      content: element(headerRight);
+      border-bottom:2px solid #434190;
+  }
+
+  @bottom-right {
+      content: element(footerRight);
+      border-top:2px solid #434190;
+  }
+
+  @bottom-center{
+      content: counter(page) ' / ' counter(pages);
+      border-top:2px solid #434190;
+      font-size:8pt;
+  }
+
+  @bottom-left{
+      content: element(footerLeft);
+      border-top:2px solid #434190;
+  }
+}
+
+.headerLeft{
+  position: running(headerLeft);
+  font-size:12pt;
+}
+
+.headerRight{
+  position: running(headerRight);
+  font-size:8pt;
+  font-style: italic;
+  text-align: right;
+  color:#667eea;
+}
+
+.footerLeft{
+  position: running(footerLeft);
+}
+
+.footerLeft img{
+  width:20mm;
+}
+
+.footerRight{
+  position: running(footerRight);
+  text-align: right;
+  font-size:8pt;
 }
 

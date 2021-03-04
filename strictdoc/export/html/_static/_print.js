@@ -18,17 +18,30 @@ window.onload = function () {
   // Defining the constant printAreaHeight corresponding frontpage offsetHeight.
   const printAreaHeight = frontpage.offsetHeight;
 
+  // The height compensator is taken into account
+  // in the calculation of page breaks
+  // in makePageBreaks().
+  // It is used for Spacer and is added after each printable element
+  // in makePreview().
+  const compensatorHeight = 16;
+
   // Adding IDs to nodes (that) we don't want to break,
   // and collecting their heights
   // to then break down the content into pages.
   // ? use articles level
-  // const offsetHeightsOfPageElements = useArticles();
+  // const allPrinableElementsOffsetHeights = useArticles();
   // ? use elements level
-  const offsetHeightsOfPageElements = usePrintable('.printable');
+  const allPrinableElementsOffsetHeights = processPrintable({
+    // use any selector:
+    printable: '.printable',
+    // use class selector:
+    breakable: '.breakable',
+  });
 
   const pageBreaks = makePageBreaks({
-    offsetHeightsOfPageElements,
-    printAreaHeight
+    allPrinableElementsOffsetHeights,
+    printAreaHeight,
+    compensatorHeight,
   });
 
   // Splitting content into virtual pages
@@ -39,7 +52,8 @@ window.onload = function () {
     runningFooterTemplate,
     runningHeaderTemplate,
     pageBreaks,
-    printAreaHeight
+    printAreaHeight,
+    compensatorHeight,
   });
 
 };
@@ -71,58 +85,97 @@ function prepareDomElements({
   }
 }
 
-function usePrintable(selectors) {
+function makeArrayOfNotTextChildNodes(element) {
+  // Check that the element is a tag and not '#text'.
+  // https://developer.mozilla.org/ru/docs/Web/API/Node/nodeName
+  let children = element.childNodes;
+  return [...children].filter(item => item.tagName);
+}
 
-  let offsetHeightsOfPageElements = [];
+function processPrintable({
+  printable,
+  breakable,
+  // The height compensator is taken into account in the calculation of page breaks.
+  // It is used for Spacer and is added after each printable element.
+  compensatorHeight = 16
+}) {
+
+  // Checking for variable format.
+  // breakable should be suitable for classList.contains
+  if (breakable.charAt(0) === '.') {
+    breakable = breakable.substring(1);
+  }
+  if (breakable.charAt(0) === '#') {
+    console.error('"breakable" var in processPrintable() should be suitable for classList.contains and contain only the class name!');
+  }
+
+  // let accumulator
+  let allPrinableElementsOffsetHeights = [];
+
+  // What we are going to do with the element:
+  const processElement = (element) => {
+    // Get offsetHeight and push to accumulator,
+    allPrinableElementsOffsetHeights.push(element.offsetHeight);
+    // set ID to element, corresponding ID in accumulator.
+    element.id = `printable${allPrinableElementsOffsetHeights.length - 1}`;
+
+    // If an element has no class '.printable' and is found as a child of content .printable, add a class to it.
+    // element.classList.add(printable.substring(1));
+
+    // Add styles, compensate for visibility over the virtual page.
+    element.style.position = 'relative';
+
+    // TODO
+    // Add compensator after each printable element.
+    // We will add a Footer after breakable in makePreview(),
+    // and its compensator will go to the next page,
+    // and it will turn out ...
+    const compensator = document.createElement('div');
+    compensator.style.paddingTop = compensatorHeight + 'px';
+    compensator.style.background = 'red';
+    element.after(compensator);
+  }
 
   // Get printable NodeList,
   // from all .selectors elements.
-  const sections = [...document.querySelectorAll(selectors)];
+  const sections = [...document.querySelectorAll(printable)];
   sections.map((element, id) => {
-    // Get offsetHeight and push to accumulator,
-    offsetHeightsOfPageElements.push(element.offsetHeight);
-    // set ID to element, corresponding ID in accumulator.
-    element.id = `printable${offsetHeightsOfPageElements.length - 1}`;
+
+    // If the item is breakable, process ONLY its child elements.
+    if (element.classList.contains(breakable) && element.hasChildNodes()) {
+
+      const children = makeArrayOfNotTextChildNodes(element);
+
+      children.forEach((element) => {
+        if (element.classList.contains('document')) {
+          // The condition is specific to STRICTDOC:
+          // '.document' is generated inside requirement statement.
+          const documentChildren = makeArrayOfNotTextChildNodes(element);
+
+          documentChildren.forEach((element) => {
+            processElement(element);
+          })
+        } else {
+          processElement(element);
+        }
+      })
+    } else {
+      // Else process the elements.
+      processElement(element);
+    }
   })
 
-  console.log(offsetHeightsOfPageElements);
-  return offsetHeightsOfPageElements;
-}
-
-function useArticles(selectors) {
-
-  let offsetHeightsOfPageElements = [];
-
-  // Get printable NodeList,
-  // for all children that are tags,
-  // add IDs and collect their heights to offsetHeightsOfPageElements.
-  if (printable.hasChildNodes()) {
-    // So first we check to see if the object is empty, if it has children.
-
-    let children = printable.childNodes;
-
-    // children.forEach()
-    for (let i = 0; i < children.length; ++i) {
-
-      // Check that the element is a tag and not '#text'.
-      // https://developer.mozilla.org/ru/docs/Web/API/Node/nodeName
-      if (children[i].tagName) {
-
-        // Get offsetHeight and push to accumulator,
-        offsetHeightsOfPageElements.push(children[i].offsetHeight);
-        // set ID to element, corresponding ID in accumulator.
-        children[i].id = `printable${offsetHeightsOfPageElements.length - 1}`;
-
-      }
-    }
-  }
-
-  return offsetHeightsOfPageElements;
+  console.log('allPrinableElementsOffsetHeights: \n', allPrinableElementsOffsetHeights);
+  return allPrinableElementsOffsetHeights;
 }
 
 function makePageBreaks({
-  offsetHeightsOfPageElements,
-  printAreaHeight
+  allPrinableElementsOffsetHeights,
+  printAreaHeight,
+  // We take the height compensator into account in this function in the calculation of the page breaks:
+  // via compensatedCurrentElementHeight.
+  // It is used for Spacer and is added after each printable element.
+  compensatorHeight = 16
 }) {
 
   // Calculate from which elements new pages will start.
@@ -141,13 +194,14 @@ function makePageBreaks({
 
   // We start the loop with 1 because the frontpage has a fixed height
   // and we've already added a page break after frontpage when initializing 'pageBreaks'.
-  for (let i = 1; i < offsetHeightsOfPageElements.length; ++i) {
+  for (let i = 1; i < allPrinableElementsOffsetHeights.length; ++i) {
 
-    const currentElementHeight = offsetHeightsOfPageElements[i];
+    const currentElementHeight = allPrinableElementsOffsetHeights[i];
+    const compensatedCurrentElementHeight = currentElementHeight + compensatorHeight;
 
     // TODO the case when the element is larger than the printable area, we will handle later:
     // // if the item fits in the height of the printing area
-    // if (offsetHeightsOfPageElements[i] <= printAreaHeight) {
+    // if (allPrinableElementsOffsetHeights[i] <= printAreaHeight) {
     //   // add its height to the accumulator
     //   heightAccumulator = heightAccumulator + currentElementHeight;
     // }
@@ -156,7 +210,7 @@ function makePageBreaks({
     const previousPageContentHeight = heightAccumulator;
 
     // Add elements height to the accumulator.
-    heightAccumulator = heightAccumulator + currentElementHeight;
+    heightAccumulator = heightAccumulator + compensatedCurrentElementHeight;
 
     // If the accumulator is overflowed,
     if (heightAccumulator >= printAreaHeight) {
@@ -167,12 +221,12 @@ function makePageBreaks({
         previousPageContentHeight: previousPageContentHeight
       });
       // reset the accumulator and add current element height.
-      heightAccumulator = currentElementHeight;
+      heightAccumulator = compensatedCurrentElementHeight;
     }
 
     // register the last element as a page break
     // and store the resulting content height of the last page.
-    if (i === offsetHeightsOfPageElements.length - 1) {
+    if (i === allPrinableElementsOffsetHeights.length - 1) {
       pageBreaks.push({
         id: i,
         previousPageContentHeight: heightAccumulator
@@ -190,7 +244,13 @@ function makePreview({
   runningHeaderTemplate,
   pageBreaks,
   printAreaHeight,
+  // Consider the height compensator.
+  // It is taken into account in the calculation of page breaks.
+  // It is used for Spacer and is added after each printable element.
+  compensatorHeight = 16
 }) {
+
+  console.log('pageBreaks: \n', pageBreaks)
 
   // Set the header for the frontpage here,
   // because it cannot be set in the loop.
@@ -198,6 +258,9 @@ function makePreview({
 
   // Set the header and footer for all pages in loop:
   // // pageBreaks.forEach(({ id, previousPageContentHeight }) => {
+
+  // TODO  MAP?
+
   for (let i = 0; i < pageBreaks.length; ++i) {
 
     const { id, previousPageContentHeight } = pageBreaks[i];
@@ -225,3 +288,36 @@ function makePreview({
 
   };
 }
+
+// NOT IN USE:
+
+// function useArticles(selectors) {
+
+//   let allPrinableElementsOffsetHeights = [];
+
+//   // Get printable NodeList,
+//   // for all children that are tags,
+//   // add IDs and collect their heights to allPrinableElementsOffsetHeights.
+//   if (printable.hasChildNodes()) {
+//     // So first we check to see if the object is empty, if it has children.
+
+//     let children = printable.childNodes;
+
+//     // children.forEach()
+//     for (let i = 0; i < children.length; ++i) {
+
+//       // Check that the element is a tag and not '#text'.
+//       // https://developer.mozilla.org/ru/docs/Web/API/Node/nodeName
+//       if (children[i].tagName) {
+
+//         // Get offsetHeight and push to accumulator,
+//         allPrinableElementsOffsetHeights.push(children[i].offsetHeight);
+//         // set ID to element, corresponding ID in accumulator.
+//         children[i].id = `printable${allPrinableElementsOffsetHeights.length - 1}`;
+
+//       }
+//     }
+//   }
+
+//   return allPrinableElementsOffsetHeights;
+// }

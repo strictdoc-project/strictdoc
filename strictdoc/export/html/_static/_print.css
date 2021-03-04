@@ -27,12 +27,19 @@
   width: var(--printing-width);
 }
 
+/* TODO margins to padding in ALL styles, so that the height of the element is defined correctly */
+/* adding a workaround for this case for now */
+.pdf-view .printable_flow * {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .pdf-view .printable {
   /* compensate for visibility over the virtual page */
-  position: relative;
+  /* position: relative; */
   /* compensate collapsing margins */
-  padding: calc(var(--base-margin)/2) 0;
-  margin: 0;
+  /* padding: calc(var(--base-margin)/2) 0;
+  margin: 0; */
 }
 
 /* frontpage */

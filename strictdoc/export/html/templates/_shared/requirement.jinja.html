@@ -106,11 +106,13 @@ data-status='{{ requirement.status.lower() }}'
     </div>
   {%- endif -%}
 
+  {# ! DEPRECATED #}
   {%- if requirement.body %}
-    <div class="requirement_statement printable_element"><p>
+    <div><p>
       {{ requirement.body }}
     </p></div>
   {%- endif %}
+  {# ! // DEPRECATED #}
 
   </section>
   <section class="requirement_section" data-section='comment'>

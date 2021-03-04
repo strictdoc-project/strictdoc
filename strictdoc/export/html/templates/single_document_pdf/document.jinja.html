@@ -1,20 +1,35 @@
 {% extends "base.jinja.html" %}
-{% block spetial_head_css %}<link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/_print.css"/>{% endblock %}
+{% block head_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/_print.css"/>
+{% endblock %}
+{% block head_scripts %}
+  {{ super() }}
+  <script type="text/javascript" src="{{document.meta.get_root_path_prefix()}}/_static/_print.js"></script>
+  {% endblock head_scripts %}
 {% block title %}Printable Document{% endblock %}
 {% block viewtype %}pdf-view{% endblock %}
 
 {% block content %}
 
-      <div class="frontpage">
-        <div class="printable break-after-page">
-          {% include "single_document_pdf/frontpage.jinja.html" %}
-        </div>
-      </div>
+<template id="runningHeaderTemplate">
+  <div class="virtualA4"></div>
+  <div class="virtualpadding"></div>
+  <div class="running-header">runningHeader</div>
+</template>
+<template id="runningFooterTemplate">
+  <div class="running-footer">runningFooter</div>
+  <div class="virtualpadding"></div>
+  <div class="virtualdivider"></div>
+</template>
 
       <div class="content">
-        <div class="printable">
 
-        <p>PDF 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50</p>
+      <div id="printable" class="printable">
+
+        {% include "single_document_pdf/frontpage.jinja.html" %}
+
+        {# <p>PDF 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50</p> #}
 
         {%- if document.free_texts -%}
         <section><article>
@@ -46,3 +61,4 @@
 
       </div></div>
 {% endblock content %}
+

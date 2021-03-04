@@ -110,26 +110,24 @@ window.onload = function () {
 
     // Close the current page,
     // which ends with a page break.
-    const endPage = printable.querySelector(`#printable${id}`);
+    const pageEnd = printable.querySelector(`#printable${id}`);
     const _runningFooter = runningFooter.cloneNode(true);
     // Add page number.
     _runningFooter.querySelector('.page-number').innerHTML = ` ${i + 1} / ${pageBreaks.length}`;
-    endPage?.after(_runningFooter);
+    pageEnd?.after(_runningFooter);
 
 
     // To compensate for the empty space at the end of the page, add a padding to footer.
     const compensateDiv = document.createElement('div');
     const paddingCompensation = PRINT_HEIGHT - previousPageContentHeight
     compensateDiv.style.paddingTop = paddingCompensation + 'px';
-    endPage?.after(compensateDiv);
+    pageEnd?.after(compensateDiv);
 
     // Starting a new page,
     //which begins after a page break.
-    const startPage = printable.querySelector(`#printable${id + 1}`);
+    const pageStart = printable.querySelector(`#printable${id + 1}`);
     // In the case of the last page we use the optionality.
-    startPage?.before(runningHeader.cloneNode(true));
-
-    // .page-number
+    pageStart?.before(runningHeader.cloneNode(true));
 
   };
 

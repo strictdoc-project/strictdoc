@@ -103,12 +103,19 @@ window.onload = function () {
   frontpage.before(runningHeader.cloneNode(true));
 
   // Set the header and footer for all pages in loop:
-  pageBreaks.forEach(({ id, previousPageContentHeight }) => {
+  // // pageBreaks.forEach(({ id, previousPageContentHeight }) => {
+  for (let i = 0; i < pageBreaks.length; ++i) {
+
+    const { id, previousPageContentHeight } = pageBreaks[i];
 
     // Close the current page,
     // which ends with a page break.
     const endPage = printable.querySelector(`#printable${id}`);
-    endPage?.after(runningFooter.cloneNode(true));
+    const _runningFooter = runningFooter.cloneNode(true);
+    // Add page number.
+    _runningFooter.querySelector('.page-number').innerHTML = ` ${i + 1} / ${pageBreaks.length}`;
+    endPage?.after(_runningFooter);
+
 
     // To compensate for the empty space at the end of the page, add a padding to footer.
     const compensateDiv = document.createElement('div');
@@ -122,6 +129,8 @@ window.onload = function () {
     // In the case of the last page we use the optionality.
     startPage?.before(runningHeader.cloneNode(true));
 
-  });
+    // .page-number
+
+  };
 
 };

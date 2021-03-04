@@ -22,12 +22,12 @@ window.onload = function () {
   // and collecting their heights
   // to then break down the content into pages.
   // ? level articles ???
-  const offsetHeightsOfPageElemments = useArticles();
+  // const offsetHeightsOfPageElements = useArticles();
   // ? level sections ???
-  // const offsetHeightsOfPageElemments = useSections('section, .frontpage');
+  const offsetHeightsOfPageElements = useSections('section, .frontpage');
 
   const pageBreaks = makePageBreaks({
-    offsetHeightsOfPageElemments,
+    offsetHeightsOfPageElements,
     printAreaHeight
   });
 
@@ -72,26 +72,29 @@ function prepareDomElements({
 }
 
 function useSections(selectors) {
+
+  let offsetHeightsOfPageElements = [];
+
   // Get printable NodeList,
   // from all <sections> tags.
   const sections = [...document.querySelectorAll(selectors)];
   sections.map((element, id) => {
     // Get offsetHeight and push to accumulator,
-    offsetHeightsOfPageElemments.push(element.offsetHeight);
+    offsetHeightsOfPageElements.push(element.offsetHeight);
     // set ID to element, corresponding ID in accumulator.
-    element.id = `printable${offsetHeightsOfPageElemments.length - 1}`;
+    element.id = `printable${offsetHeightsOfPageElements.length - 1}`;
   })
 
-  return offsetHeightsOfPageElemments;
+  return offsetHeightsOfPageElements;
 }
 
 function useArticles(selectors) {
 
-  let offsetHeightsOfPageElemments = [];
+  let offsetHeightsOfPageElements = [];
 
   // Get printable NodeList,
   // for all children that are tags,
-  // add IDs and collect their heights to offsetHeightsOfPageElemments.
+  // add IDs and collect their heights to offsetHeightsOfPageElements.
   if (printable.hasChildNodes()) {
     // So first we check to see if the object is empty, if it has children.
 
@@ -105,19 +108,19 @@ function useArticles(selectors) {
       if (children[i].tagName) {
 
         // Get offsetHeight and push to accumulator,
-        offsetHeightsOfPageElemments.push(children[i].offsetHeight);
+        offsetHeightsOfPageElements.push(children[i].offsetHeight);
         // set ID to element, corresponding ID in accumulator.
-        children[i].id = `printable${offsetHeightsOfPageElemments.length - 1}`;
+        children[i].id = `printable${offsetHeightsOfPageElements.length - 1}`;
 
       }
     }
   }
 
-  return offsetHeightsOfPageElemments;
+  return offsetHeightsOfPageElements;
 }
 
 function makePageBreaks({
-  offsetHeightsOfPageElemments,
+  offsetHeightsOfPageElements,
   printAreaHeight
 }) {
 
@@ -137,13 +140,13 @@ function makePageBreaks({
 
   // We start the loop with 1 because the frontpage has a fixed height
   // and we've already added a page break after frontpage when initializing 'pageBreaks'.
-  for (let i = 1; i < offsetHeightsOfPageElemments.length; ++i) {
+  for (let i = 1; i < offsetHeightsOfPageElements.length; ++i) {
 
-    const currentElementHeight = offsetHeightsOfPageElemments[i];
+    const currentElementHeight = offsetHeightsOfPageElements[i];
 
     // TODO the case when the element is larger than the printable area, we will handle later:
     // // if the item fits in the height of the printing area
-    // if (offsetHeightsOfPageElemments[i] <= printAreaHeight) {
+    // if (offsetHeightsOfPageElements[i] <= printAreaHeight) {
     //   // add its height to the accumulator
     //   heightAccumulator = heightAccumulator + currentElementHeight;
     // }
@@ -168,7 +171,7 @@ function makePageBreaks({
 
     // register the last element as a page break
     // and store the resulting content height of the last page.
-    if (i === offsetHeightsOfPageElemments.length - 1) {
+    if (i === offsetHeightsOfPageElements.length - 1) {
       pageBreaks.push({
         id: i,
         previousPageContentHeight: heightAccumulator

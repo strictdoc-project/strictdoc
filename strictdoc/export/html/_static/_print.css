@@ -13,6 +13,7 @@
   --printing-height: calc(var(--print-A4-height) - var(--print-padding) * 2 - var(--print-running-header-height) - var(--print-running-footer-height));
   --printing-width: calc(var(--print-A4-width) - var(--print-padding) * 2);
 
+  /* ! for test */
   --print-testborder: 1px dashed #666;
 }
 

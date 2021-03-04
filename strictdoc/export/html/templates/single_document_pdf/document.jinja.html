@@ -27,7 +27,7 @@
 
       <div class="content">
 
-      <div id="printable" class="printable">
+      <div id="printable" class="printable_flow">
 
         {% include "single_document_pdf/frontpage.jinja.html" %}
 
@@ -36,7 +36,7 @@
         {%- if document.free_texts -%}
         <section><article>
         {%- for free_text in document.free_texts %}
-          <div class="free_text printable_element">
+          <div class="free_text printable">
             {{ renderer.render_free_text(free_text) }}
           </div>
         {%- endfor -%}

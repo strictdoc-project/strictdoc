@@ -4,12 +4,12 @@ window.onload = function () {
 
   // Preparing the DOM elements.
   const {
-    printable,
+    printableFlow,
     frontpage,
     runningHeaderTemplate,
     runningFooterTemplate,
   } = prepareDomElements({
-    printable: '#printable',
+    printableFlow: '#printable',
     frontpage: '.frontpage',
     runningHeaderTemplate: '#runningHeaderTemplate',
     runningFooterTemplate: '#runningFooterTemplate',
@@ -21,11 +21,10 @@ window.onload = function () {
   // Adding IDs to nodes (that) we don't want to break,
   // and collecting their heights
   // to then break down the content into pages.
-  // ? level articles ???
+  // ? use articles level
   // const offsetHeightsOfPageElements = useArticles();
-  // ? level sections ???
-  // const offsetHeightsOfPageElements = useSections('section, .frontpage');
-  const offsetHeightsOfPageElements = usePrintableElements('.printable_element');
+  // ? use elements level
+  const offsetHeightsOfPageElements = usePrintable('.printable');
 
   const pageBreaks = makePageBreaks({
     offsetHeightsOfPageElements,
@@ -35,7 +34,7 @@ window.onload = function () {
   // Splitting content into virtual pages
   // and generating previews that look like PDF.
   makePreview({
-    printable,
+    printableFlow,
     frontpage,
     runningFooterTemplate,
     runningHeaderTemplate,
@@ -48,36 +47,36 @@ window.onload = function () {
 // USED FUNCTIONS
 
 function prepareDomElements({
-  printable,
+  printableFlow,
   frontpage,
   runningHeaderTemplate,
   runningFooterTemplate,
 }) {
 
   // Get printable wrapper.
-  const _printable = document.querySelector(printable);
+  const _printableFlow = document.querySelector(printableFlow);
 
   // Get frontpage.
-  const _frontpage = _printable.querySelector(frontpage);
+  const _frontpage = _printableFlow.querySelector(frontpage);
 
   // Get templates.
   const _runningHeaderTemplate = document.querySelector(runningHeaderTemplate).content;
   const _runningFooterTemplate = document.querySelector(runningFooterTemplate).content;
 
   return {
-    printable: _printable,
+    printableFlow: _printableFlow,
     frontpage: _frontpage,
     runningHeaderTemplate: _runningHeaderTemplate,
     runningFooterTemplate: _runningFooterTemplate,
   }
 }
 
-function usePrintableElements(selectors) {
+function usePrintable(selectors) {
 
   let offsetHeightsOfPageElements = [];
 
   // Get printable NodeList,
-  // from all <sections> tags.
+  // from all .selectors elements.
   const sections = [...document.querySelectorAll(selectors)];
   sections.map((element, id) => {
     // Get offsetHeight and push to accumulator,
@@ -185,7 +184,7 @@ function makePageBreaks({
 }
 
 function makePreview({
-  printable,
+  printableFlow,
   frontpage,
   runningFooterTemplate,
   runningHeaderTemplate,
@@ -205,7 +204,7 @@ function makePreview({
 
     // Close the current page,
     // which ends with a page break.
-    const pageEnd = printable.querySelector(`#printable${id}`);
+    const pageEnd = printableFlow.querySelector(`#printable${id}`);
     const runningFooter = runningFooterTemplate.cloneNode(true);
     // Add page number.
     runningFooter.querySelector('.page-number').innerHTML = ` ${i + 1} / ${pageBreaks.length}`;
@@ -220,7 +219,7 @@ function makePreview({
 
     // Starting a new page,
     //which begins after a page break.
-    const pageStart = printable.querySelector(`#printable${id + 1}`);
+    const pageStart = printableFlow.querySelector(`#printable${id + 1}`);
     // In the case of the last page we use the optionality.
     pageStart?.before(runningHeaderTemplate.cloneNode(true));
 

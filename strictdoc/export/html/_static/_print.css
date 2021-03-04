@@ -21,13 +21,13 @@
   display: block;
 }
 
-.pdf-view .printable {
+.pdf-view .printable_flow {
   margin: 0 auto;
   font-size: var(--print-font-size);
   width: var(--printing-width);
 }
 
-.pdf-view .printable .printable_element {
+.pdf-view .printable {
   /* compensate for visibility over the virtual page */
   position: relative;
   /* compensate collapsing margins */

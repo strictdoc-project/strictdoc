@@ -15,12 +15,12 @@ data-status='{{ requirement.status.lower() }}'
     <div data-role='anchor' id="{{ anchor }}"></div>
     {%- endif -%}
 
-    <h{{ requirement.ng_level }} class="section-title" data-level="{{ requirement.context.title_number_string }}">
+    <h{{ requirement.ng_level }} class="section-title printable_element" data-level="{{ requirement.context.title_number_string }}">
       {{ requirement.title if requirement.title else (requirement.uid if requirement.uid else '') }}
     </h{{ requirement.ng_level }}>
 
   {%- if requirement.has_meta -%}
-    <dl class="requirement_meta">
+    <dl class="requirement_meta printable_element">
       {%- if requirement.uid %}
       <div><dt>UID</dt><dd>{{ requirement.uid }}</dd></div>
       {%- endif %}
@@ -44,7 +44,7 @@ data-status='{{ requirement.status.lower() }}'
   {%- endif %}
 
   {%- if traceability_index.has_parent_requirements(requirement) %}
-  <ul class="requirement_parent">
+  <ul class="requirement_parent printable_element">
     {%- for requirement in traceability_index.get_parent_requirements(requirement) %}
     <li>
       <a href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
@@ -59,7 +59,7 @@ data-status='{{ requirement.status.lower() }}'
   {%- endif %}
 
   {%- if traceability_index.has_children_requirements(requirement) %}
-  <ul class="requirement_child">
+  <ul class="requirement_child printable_element">
     {%- for requirement in traceability_index.get_children_requirements(requirement) %}
     <li>
       <a href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
@@ -75,7 +75,7 @@ data-status='{{ requirement.status.lower() }}'
 
   {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
   {%- if requirement_file_links %}
-  <ul class="requirement_file">
+  <ul class="requirement_file printable_element">
     {%- for link, opt_ranges in requirement_file_links %}
       {%- if opt_ranges -%}
         {%- for range in opt_ranges %}
@@ -101,13 +101,13 @@ data-status='{{ requirement.status.lower() }}'
   <section class="requirement_section" data-section='statement'>
 
   {%- if requirement.statement or requirement.statement_multiline -%}
-    <div class="requirement_statement">
+    <div class="requirement_statement printable_element">
       {{ renderer.render_requirement_statement(requirement) }}
     </div>
   {%- endif -%}
 
   {%- if requirement.body %}
-    <div><p>
+    <div class="requirement_statement printable_element"><p>
       {{ requirement.body }}
     </p></div>
   {%- endif %}
@@ -116,14 +116,14 @@ data-status='{{ requirement.status.lower() }}'
   <section class="requirement_section" data-section='comment'>
 
   {%- if requirement.rationale or requirement.rationale_multiline -%}
-    <div class="requirement_rationale">
+    <div class="requirement_rationale printable_element">
       {{ renderer.render_requirement_rationale(requirement) }}
     </div>
   {%- endif -%}
 
   {%- if requirement.comments %}
     {%- for comment in requirement.comments %}
-      <div class="requirement_comment">
+      <div class="requirement_comment printable_element">
         {{ renderer.render_comment(comment) }}
       </div>
     {%- endfor %}

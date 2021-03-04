@@ -19,32 +19,20 @@
 
 .pdf-view .content {
   display: block;
-  margin: 0 auto;
-  background-color: rgba(255,0,0,0.025); /* ! temp */
-  /* padding: 0 var(--print-padding); */
-  width: var(--print-A4-width);
-  /* height: var(--print-A4-height); */
 }
 
 .pdf-view .printable {
   margin: 0 auto;
   font-size: var(--print-font-size);
-  /* height: var(--printing-height); */
   width: var(--printing-width);
-  /* column-width: var(--printing-width);;
-  column-gap: 20px; */
 }
 
-.pdf-view .content article {
-  padding-left: 0;
-  padding-right: 0;
-  /* display: contents; */
-}
-
-/* compensate for visibility over the virtual page */
-.pdf-view .content article header,
-.pdf-view .content article section {
+.pdf-view .printable .printable_element {
+  /* compensate for visibility over the virtual page */
   position: relative;
+  /* compensate collapsing margins */
+  padding: calc(var(--base-margin)/2) 0;
+  margin: 0;
 }
 
 /* frontpage */

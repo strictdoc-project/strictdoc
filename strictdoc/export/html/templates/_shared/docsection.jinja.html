@@ -11,13 +11,13 @@
     <div data-role='anchor' id="{{ anchor }}"></div>
     {%- endif -%}
 
-    <h{{ section.ng_level }} class="section-title" data-level="{{ section.context.title_number_string }}">
+    <h{{ section.ng_level }} class="section-title printable_element" data-level="{{ section.context.title_number_string }}">
       {{ section.title if section.title else '' }}
     </h{{ section.ng_level }}>
   </section>
   <section data-section="description" class="docsection_section">
     {%- for free_text in section.free_texts -%}
-    <div class="free-text">
+    <div class="free-text printable_element">
       {{ renderer.render_free_text(free_text) }}
     </div>
     {%- endfor -%}

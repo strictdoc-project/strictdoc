@@ -36,7 +36,7 @@
         {%- if document.free_texts -%}
         <section><article>
         {%- for free_text in document.free_texts %}
-          <div class="free_text">
+          <div class="free_text printable_element">
             {{ renderer.render_free_text(free_text) }}
           </div>
         {%- endfor -%}

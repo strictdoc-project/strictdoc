@@ -24,7 +24,8 @@ window.onload = function () {
   // ? level articles ???
   // const offsetHeightsOfPageElements = useArticles();
   // ? level sections ???
-  const offsetHeightsOfPageElements = useSections('section, .frontpage');
+  // const offsetHeightsOfPageElements = useSections('section, .frontpage');
+  const offsetHeightsOfPageElements = usePrintableElements('.printable_element');
 
   const pageBreaks = makePageBreaks({
     offsetHeightsOfPageElements,
@@ -71,7 +72,7 @@ function prepareDomElements({
   }
 }
 
-function useSections(selectors) {
+function usePrintableElements(selectors) {
 
   let offsetHeightsOfPageElements = [];
 
@@ -85,6 +86,7 @@ function useSections(selectors) {
     element.id = `printable${offsetHeightsOfPageElements.length - 1}`;
   })
 
+  console.log(offsetHeightsOfPageElements);
   return offsetHeightsOfPageElements;
 }
 

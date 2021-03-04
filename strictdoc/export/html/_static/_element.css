@@ -12,10 +12,6 @@
 
 article {
   position: relative;
-  padding:  calc(var(--base-padding)*1.5)
-            calc(var(--base-padding)*1.5)
-            var(--base-padding)
-            calc(var(--base-padding)*1.5);
 }
 
 [data-role='current'] article {
@@ -37,6 +33,14 @@ article {
 
 [data-role='children'] article {
   margin-left: var(--traceability-arrow);
+}
+
+.deep-traceability-view article,
+.traceability-view article {
+  padding:  calc(var(--base-padding)*1.5)
+            calc(var(--base-padding)*1.5)
+            var(--base-padding)
+            calc(var(--base-padding)*1.5);
 }
 
 .traceability-view article + article {
@@ -88,6 +92,13 @@ article {
 }
 
 /* .table-view */
+
+.table-view article {
+  padding:  calc(var(--base-padding)*1.5)
+            calc(var(--base-padding)*1.5)
+            var(--base-padding)
+            calc(var(--base-padding)*1.5);
+}
 
 .table-view [data-section] {
   background-color: var(--color-bg-contrast);

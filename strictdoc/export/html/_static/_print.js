@@ -1,23 +1,93 @@
-// INIT vars.
-let PRINT_HEIGHT;
-let offsetHeightsOfPageElemments = [];
-
 window.onload = function () {
 
   console.log('I am in _print.js',);
 
-  // Get templates.
-  const runningHeader = document.querySelector("#runningHeaderTemplate").content;
-  const runningFooter = document.querySelector("#runningFooterTemplate").content;
+  // Preparing the DOM elements.
+  const {
+    printable,
+    frontpage,
+    runningHeaderTemplate,
+    runningFooterTemplate,
+  } = prepareDomElements({
+    printable: '#printable',
+    frontpage: '.frontpage',
+    runningHeaderTemplate: '#runningHeaderTemplate',
+    runningFooterTemplate: '#runningFooterTemplate',
+  });
+
+  // Defining the constant printAreaHeight corresponding frontpage offsetHeight.
+  const printAreaHeight = frontpage.offsetHeight;
+
+  // Adding IDs to nodes (that) we don't want to break,
+  // and collecting their heights
+  // to then break down the content into pages.
+  // ? level articles ???
+  const offsetHeightsOfPageElemments = useArticles();
+  // ? level sections ???
+  // const offsetHeightsOfPageElemments = useSections('section, .frontpage');
+
+  const pageBreaks = makePageBreaks({
+    offsetHeightsOfPageElemments,
+    printAreaHeight
+  });
+
+  // Splitting content into virtual pages
+  // and generating previews that look like PDF.
+  makePreview({
+    printable,
+    frontpage,
+    runningFooterTemplate,
+    runningHeaderTemplate,
+    pageBreaks,
+    printAreaHeight
+  });
+
+};
+
+// USED FUNCTIONS
+
+function prepareDomElements({
+  printable,
+  frontpage,
+  runningHeaderTemplate,
+  runningFooterTemplate,
+}) {
 
   // Get printable wrapper.
-  const printable = document.querySelector("#printable");
+  const _printable = document.querySelector(printable);
 
   // Get frontpage.
-  const frontpage = printable.querySelector('.frontpage');
+  const _frontpage = _printable.querySelector(frontpage);
 
-  // Set constant PRINT_HEIGHT corresponding frontpage offsetHeight.
-  PRINT_HEIGHT = frontpage.offsetHeight;
+  // Get templates.
+  const _runningHeaderTemplate = document.querySelector(runningHeaderTemplate).content;
+  const _runningFooterTemplate = document.querySelector(runningFooterTemplate).content;
+
+  return {
+    printable: _printable,
+    frontpage: _frontpage,
+    runningHeaderTemplate: _runningHeaderTemplate,
+    runningFooterTemplate: _runningFooterTemplate,
+  }
+}
+
+function useSections(selectors) {
+  // Get printable NodeList,
+  // from all <sections> tags.
+  const sections = [...document.querySelectorAll(selectors)];
+  sections.map((element, id) => {
+    // Get offsetHeight and push to accumulator,
+    offsetHeightsOfPageElemments.push(element.offsetHeight);
+    // set ID to element, corresponding ID in accumulator.
+    element.id = `printable${offsetHeightsOfPageElemments.length - 1}`;
+  })
+
+  return offsetHeightsOfPageElemments;
+}
+
+function useArticles(selectors) {
+
+  let offsetHeightsOfPageElemments = [];
 
   // Get printable NodeList,
   // for all children that are tags,
@@ -43,9 +113,17 @@ window.onload = function () {
     }
   }
 
+  return offsetHeightsOfPageElemments;
+}
+
+function makePageBreaks({
+  offsetHeightsOfPageElemments,
+  printAreaHeight
+}) {
+
   // Calculate from which elements new pages will start.
   // We will accumulate the height of the elements in the heightAccumulator
-  // and compare it to the PRINT_HEIGHT - maximum height of the printed area.
+  // and compare it to the printAreaHeight - maximum height of the printed area.
   let heightAccumulator = 0;
   // We will collect the IDs of the page breaks and height of contents
   // into the 'pageBreaks' array.
@@ -53,7 +131,7 @@ window.onload = function () {
   let pageBreaks = [
     {
       id: 0,
-      previousPageContentHeight: PRINT_HEIGHT
+      previousPageContentHeight: printAreaHeight
     }
   ];
 
@@ -65,7 +143,7 @@ window.onload = function () {
 
     // TODO the case when the element is larger than the printable area, we will handle later:
     // // if the item fits in the height of the printing area
-    // if (offsetHeightsOfPageElemments[i] <= PRINT_HEIGHT) {
+    // if (offsetHeightsOfPageElemments[i] <= printAreaHeight) {
     //   // add its height to the accumulator
     //   heightAccumulator = heightAccumulator + currentElementHeight;
     // }
@@ -77,7 +155,7 @@ window.onload = function () {
     heightAccumulator = heightAccumulator + currentElementHeight;
 
     // If the accumulator is overflowed,
-    if (heightAccumulator >= PRINT_HEIGHT) {
+    if (heightAccumulator >= printAreaHeight) {
       // // NOT: mark current element as the beginning of a new page,
       // mark the PREVIOUS element as a page break,
       pageBreaks.push({
@@ -98,9 +176,21 @@ window.onload = function () {
     }
   }
 
+  return pageBreaks;
+}
+
+function makePreview({
+  printable,
+  frontpage,
+  runningFooterTemplate,
+  runningHeaderTemplate,
+  pageBreaks,
+  printAreaHeight,
+}) {
+
   // Set the header for the frontpage here,
   // because it cannot be set in the loop.
-  frontpage.before(runningHeader.cloneNode(true));
+  frontpage.before(runningHeaderTemplate.cloneNode(true));
 
   // Set the header and footer for all pages in loop:
   // // pageBreaks.forEach(({ id, previousPageContentHeight }) => {
@@ -111,15 +201,15 @@ window.onload = function () {
     // Close the current page,
     // which ends with a page break.
     const pageEnd = printable.querySelector(`#printable${id}`);
-    const _runningFooter = runningFooter.cloneNode(true);
+    const runningFooter = runningFooterTemplate.cloneNode(true);
     // Add page number.
-    _runningFooter.querySelector('.page-number').innerHTML = ` ${i + 1} / ${pageBreaks.length}`;
-    pageEnd?.after(_runningFooter);
+    runningFooter.querySelector('.page-number').innerHTML = ` ${i + 1} / ${pageBreaks.length}`;
+    pageEnd?.after(runningFooter);
 
 
     // To compensate for the empty space at the end of the page, add a padding to footer.
     const compensateDiv = document.createElement('div');
-    const paddingCompensation = PRINT_HEIGHT - previousPageContentHeight
+    const paddingCompensation = printAreaHeight - previousPageContentHeight
     compensateDiv.style.paddingTop = paddingCompensation + 'px';
     pageEnd?.after(compensateDiv);
 
@@ -127,8 +217,7 @@ window.onload = function () {
     //which begins after a page break.
     const pageStart = printable.querySelector(`#printable${id + 1}`);
     // In the case of the last page we use the optionality.
-    pageStart?.before(runningHeader.cloneNode(true));
+    pageStart?.before(runningHeaderTemplate.cloneNode(true));
 
   };
-
-};
+}

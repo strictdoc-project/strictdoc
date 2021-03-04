@@ -47,10 +47,19 @@ window.onload = function () {
   // We will accumulate the height of the elements in the heightAccumulator
   // and compare it to the PRINT_HEIGHT - maximum height of the printed area.
   let heightAccumulator = 0;
-  // We will collect the IDs of the page breaks into the 'pageBreaks' array.
-  let pageBreaks = [];
+  // We will collect the IDs of the page breaks and height of contents
+  // into the 'pageBreaks' array.
+  // Initiate it with a page break after the frontpage.
+  let pageBreaks = [
+    {
+      id: 0,
+      previousPageContentHeight: PRINT_HEIGHT
+    }
+  ];
 
-  for (let i = 0; i < offsetHeightsOfPageElemments.length; ++i) {
+  // We start the loop with 1 because the frontpage has a fixed height
+  // and we've already added a page break after frontpage when initializing 'pageBreaks'.
+  for (let i = 1; i < offsetHeightsOfPageElemments.length; ++i) {
 
     const currentElementHeight = offsetHeightsOfPageElemments[i];
 
@@ -69,9 +78,10 @@ window.onload = function () {
 
     // If the accumulator is overflowed,
     if (heightAccumulator >= PRINT_HEIGHT) {
-      // mark current element as the beginning of a new page,
+      // // NOT: mark current element as the beginning of a new page,
+      // mark the PREVIOUS element as a page break,
       pageBreaks.push({
-        id: i,
+        id: i - 1,
         previousPageContentHeight: previousPageContentHeight
       });
       // reset the accumulator and add current element height.
@@ -88,33 +98,30 @@ window.onload = function () {
     }
   }
 
-  console.log(pageBreaks);
+  // Set the header for the frontpage here,
+  // because it cannot be set in the loop.
+  frontpage.before(runningHeader.cloneNode(true));
 
-  // Set breaks for all pages in loop:
+  // Set the header and footer for all pages in loop:
   pageBreaks.forEach(({ id, previousPageContentHeight }) => {
 
-    // Close the previous page.
-    // In the case of the first page:
-    // the end of previous page does not exist.
-    const endPage = id ? printable.querySelector(`#printable${id - 1}`) : undefined;
+    // Close the current page,
+    // which ends with a page break.
+    const endPage = printable.querySelector(`#printable${id}`);
     endPage?.after(runningFooter.cloneNode(true));
 
     // To compensate for the empty space at the end of the page, add a padding to footer.
     const compensateDiv = document.createElement('div');
     const paddingCompensation = PRINT_HEIGHT - previousPageContentHeight
-    console.log('paddingCompensation: ', id, paddingCompensation);
     compensateDiv.style.paddingTop = paddingCompensation + 'px';
-    compensateDiv.style.backgroundColor = 'red';
     endPage?.after(compensateDiv);
 
-    // Starting a new page.
-    const startPage = printable.querySelector(`#printable${id}`);
-    startPage.before(runningHeader.cloneNode(true));
+    // Starting a new page,
+    //which begins after a page break.
+    const startPage = printable.querySelector(`#printable${id + 1}`);
+    // In the case of the last page we use the optionality.
+    startPage?.before(runningHeader.cloneNode(true));
 
   });
 
-  // // Add runningHeader for last page if it was not added.
-  // if (heightAccumulator < PRINT_HEIGHT) {
-  //   printable.append(runningFooter.cloneNode(true));
-  // }
 };

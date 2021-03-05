@@ -2,32 +2,32 @@
 {% block head_css %}
   {{ super() }}
   <link rel="stylesheet" href="{{document.meta.get_root_path_prefix()}}/_static/_print.css"/>
-{% endblock %}
+{% endblock head_css %}
 {% block head_scripts %}
   {{ super() }}
   <script type="text/javascript" src="{{document.meta.get_root_path_prefix()}}/_static/_print.js"></script>
-  {% endblock head_scripts %}
+{% endblock head_scripts %}
 {% block title %}Printable Document{% endblock %}
 {% block viewtype %}pdf-view{% endblock %}
 
 {% block content %}
 
 <template id="runningHeaderTemplate">
-  <div class="virtualA4"></div>
-  <div class="virtualpadding"></div>
+  <div class="virtualA4_page"></div>
+  <div class="virtualA4_page_padding"></div>
   <div class="running-header">runningHeader</div>
 </template>
 <template id="runningFooterTemplate">
   <div class="running-footer">
     runningFooter <span class="page-number"></span>
   </div>
-  <div class="virtualpadding"></div>
-  <div class="virtualdivider"></div>
+  <div class="virtualA4_page_padding"></div>
+  <div class="virtualA4_pages_divider"></div>
 </template>
 
       <div class="content">
 
-      <div id="printable" class="printable_flow">
+      <div id="printableFlow" class="printable_flow">
 
         {% include "single_document_pdf/frontpage.jinja.html" %}
 

@@ -9,7 +9,7 @@ window.onload = function () {
     runningHeaderTemplate,
     runningFooterTemplate,
   } = prepareDomElements({
-    printableFlow: '#printable',
+    printableFlow: '#printableFlow',
     frontpage: '.frontpage',
     runningHeaderTemplate: '#runningHeaderTemplate',
     runningFooterTemplate: '#runningFooterTemplate',

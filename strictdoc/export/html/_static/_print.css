@@ -1,16 +1,15 @@
 /* general styles */
 
 .pdf-view {
-  --print-elevation-shadow: rgba(0, 0, 0, 0.1) 2px 2px 12px 0px;
   --print-A4-width: 210mm;
   --print-A4-height: 297mm;
   --print-font-size: 12pt;
-  --print-running-header-height: 20mm;
-  --print-running-footer-height: 10mm;
+  /* vitual */
+  --vitual-pages-elevation-shadow: rgba(0, 0, 0, 0.1) 2px 2px 12px 0px;
+  --vitual-pages-divider: 1rem;
   /* in @page don't work, use 20mm instead var */
   --print-padding: 20mm;
   /* calculated */
-  --printing-height: calc(var(--print-A4-height) - var(--print-padding) * 2 - var(--print-running-header-height) - var(--print-running-footer-height));
   --printing-width: calc(var(--print-A4-width) - var(--print-padding) * 2);
 
   /* ! for test */
@@ -45,8 +44,6 @@
 /* frontpage */
 
 .frontpage {
-  /* height: 100%; */
-  height: var(--printing-height);
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: minmax(min-content, max-content) 1fr minmax(min-content, max-content);
@@ -56,6 +53,10 @@
     "footer footer footer";
   place-items: stretch stretch;
   place-content: stretch stretch;
+
+  /* We want the 'frontpage' content to take up all available heights,
+  excluding the footer and header heights. */
+  height: 100%;
 
   /* elevate above the virtual page */
   position: relative;
@@ -67,11 +68,12 @@
 /* running */
 
 .running-header {
-  height: var(--print-running-header-height);
-
   display: flex;
   justify-content: center;
   align-items: center;
+
+  padding-bottom: .5rem;
+
   /* elevate above the virtual page */
   position: relative;
 
@@ -81,11 +83,13 @@
 
 .running-footer {
   break-after: page;
-  height: var(--print-running-footer-height);
 
   display: flex;
   justify-content: center;
   align-items: center;
+
+  padding-top: .5rem;
+
   /* elevate above the virtual page */
   position: relative;
 
@@ -96,28 +100,48 @@
 /* print service */
 .break-after-page { break-after: page; }
 
+/*
+  Virtual elements for preview in browser,
+  are used only to calculate the simulation page template.
+*/
 .virtualA4 {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: minmax(min-content, max-content)
+                      1fr
+                      minmax(min-content, max-content);
+  place-items: stretch stretch;
+  place-content: stretch stretch;
+
+  /*
+    Based on the height of the middle grid row
+    we calculate the height of the printable area for the rest of the pages.
+    We want the 'frontpage' content to take up all available heights,
+    excluding the footer and header heights.
+    By adding the height of the virtualA4_pages_divider to the height of the virtualA4,
+    we compensate for the final height of the 'frontpage' content.
+  */
+  height: calc(var(--print-A4-height) + var(--vitual-pages-divider));
+}
+.virtualA4_page {
   position: relative;
   height: 0;
 }
-.virtualA4::before {
+.virtualA4_page::before {
   position: absolute;
   content: '';
   width: var(--print-A4-width);
   height: var(--print-A4-height);
   left: calc(var(--print-padding)*(-1));
   background-color: #fff;
-  box-shadow: var(--print-elevation-shadow);
+  box-shadow: var(--vitual-pages-elevation-shadow);
 }
-.virtualpadding {
+.virtualA4_page_padding {
   padding-top: var(--print-padding);
 }
-.virtualdivider {
-  padding: 1rem;
+.virtualA4_pages_divider {
+  padding-top: var(--vitual-pages-divider);
 }
-
-
-
 
 /*
  * print styles
@@ -144,9 +168,9 @@
     display: contents ;
   }
 
-  .virtualA4,
-  .virtualdivider,
-  .virtualpadding {
+  .virtualA4_page,
+  .virtualA4_page_padding,
+  .virtualA4_pages_divider {
     display: none;
   }
 
@@ -157,82 +181,4 @@
   /* var don't work in @page */
   /* ~ 0,64" */
   margin: 16mm;
-}
-
-/* @page  {
-  size: A4;
-  //margin: var(--print-padding);
-  margin: 20mm;
-
-  @top-left{
-      content: element(headerLeft);
-      border-bottom:2px solid #434190;
-  }
-
-  @top-center{
-      border-bottom:2px solid #434190;
-  }
-
-  @top-right{
-      content: element(headerRight);
-      border-bottom:2px solid #434190;
-  }
-
-  @bottom-right {
-      content: element(footerRight);
-      border-top:2px solid #434190;
-  }
-
-  @bottom-center{
-      content: counter(page) ' / ' counter(pages);
-      border-top:2px solid #434190;
-      font-size:8pt;
-  }
-
-  @bottom-left{
-      content: element(footerLeft);
-      border-top:2px solid #434190;
-  }
-}
-
-.headerLeft{
-  position: running(headerLeft);
-  font-size:12pt;
-}
-
-.headerRight{
-  position: running(headerRight);
-  font-size:8pt;
-  font-style: italic;
-  text-align: right;
-  color:#667eea;
-}
-
-.footerLeft{
-  position: running(footerLeft);
-}
-
-.footerLeft img{
-  width:20mm;
-}
-
-.footerRight{
-  position: running(footerRight);
-  text-align: right;
-  font-size:8pt;
-} */
-
-
-/* test */
-
-.test-t {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-}
-
-.test-row {
-  height: 6.62mm;
-  width: 400px;
-  box-shadow: inset 1px 1px 0 #ccc;
 }

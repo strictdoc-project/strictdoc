@@ -18,17 +18,17 @@ window.onload = function () {
   // Defining the constant printAreaHeight corresponding frontpage offsetHeight.
   const printAreaHeight = frontpage.offsetHeight;
 
-  // The height compensator is taken into account
+  // The elementsPaddingCompensator is taken into account
   // in the calculation of page breaks in calculatePageBreaks().
   // It is used for Spacer that is added after each printable element
   // in makePreview().
-  const heightCompensator = 16;
+  // This is done to make the page height predictable.
+  const elementsPaddingCompensator = 16;
 
   // Adding IDs to nodes that we don't want to break,
-  // and collecting their IDs and heights
-  // in processedPrintable
+  // and collecting their IDs and heights in printableElements
   // to then break down the content into pages.
-  const processedPrintable = processPrintable({
+  const printableElements = processPrintable({
     // use any selector:
     printable: '.printable',
     // use class selector:
@@ -36,12 +36,12 @@ window.onload = function () {
   });
 
   // Calculate page breaks
-  // and add flags to processedPrintable.
-  // Reyurns pageNumbers.
+  // and add flags to printableElements.
+  // Returns pageNumbers.
   const pageNumbers = calculatePageBreaks({
-    processedPrintable,
+    printableElements,
     printAreaHeight,
-    heightCompensator,
+    elementsPaddingCompensator,
   });
 
   // Splitting content into virtual pages
@@ -50,10 +50,10 @@ window.onload = function () {
     printableFlow,
     runningFooterTemplate,
     runningHeaderTemplate,
-    processedPrintable,
+    printableElements,
     pageNumbers,
     printAreaHeight,
-    heightCompensator,
+    elementsPaddingCompensator,
   });
 };
 
@@ -84,36 +84,36 @@ function prepareDomElements({
   }
 }
 
-
-
-function processPrintable({
+const processPrintable = ({
   printable,
   breakable,
-}) {
+}) => {
 
   // Checking for variable format.
-  // breakable should be suitable for classList.contains
+  // Selector in breakable should be suitable for classList.contains
   if (breakable.charAt(0) === '.') {
     breakable = breakable.substring(1);
   }
   if (breakable.charAt(0) === '#') {
-    console.error('"breakable" var in processPrintable() should be suitable for classList.contains and contain only the class name!');
+    console.error(` "breakable" var in processPrintable() should be suitable for classList.contains and contain only the class name!`);
   }
 
-  // let accumulator
-  let processedPrintable = [];
+  // let accumulator of printable elements data
+  const printableElements = [];
 
   // What we are going to do with the element:
   const processElement = (element) => {
-    const elementId = processedPrintable.length;
+
+    const elementId = printableElements.length;
     const elementHeight = element.offsetHeight;
 
-    // Get offsetHeight and push to accumulator 'processedPrintable',
-    processedPrintable.push({
+    // Get offsetHeight and push to accumulator 'printableElements',
+    printableElements.push({
       id: elementId, // is equal to id in array
       height: elementHeight,
     });
-    // set ID to element, corresponding ID in accumulator 'processedPrintable'.
+
+    // set ID to element, corresponding ID in accumulator 'printableElements'.
     element.id = `printable${elementId}`;
 
     // Add styles, compensate for visibility over the virtual page.
@@ -121,45 +121,52 @@ function processPrintable({
   }
 
   // Get printable NodeList,
-  // from all .selectors elements.
-  const sections = [...document.querySelectorAll(printable)];
-  sections.map((element, id) => {
+  // from all elements with selectors in 'printable'.
+  [...document.querySelectorAll(printable)]
+    .map((printableElement, id) => {
 
-    // If the item is breakable, process ONLY its child elements.
-    if (element.classList.contains(breakable) && element.hasChildNodes()) {
+      // If the printable Element is breakable, process ONLY its child elements.
+      if (printableElement.classList.contains(breakable) && printableElement.hasChildNodes()) {
 
-      const children = makeArrayOfNotTextChildNodes(element);
+        const breakableElement = printableElement;
+        makeArrayOfNotTextChildNodes(breakableElement)
+          .forEach((breakableElementChild) => {
 
-      children.forEach((element) => {
-        if (element.classList.contains('document')) {
-          // The condition is specific to STRICTDOC:
-          // '.document' is generated inside requirement statement.
-          const documentChildren = makeArrayOfNotTextChildNodes(element);
+            // The condition is specific to STRICTDOC:
+            // '.document' is generated inside requirement statement,
+            // so we have to process his children.
+            if (breakableElementChild.classList.contains('document')) {
 
-          documentChildren.forEach((element) => {
-            processElement(element);
+              const strictddocElement = breakableElementChild;
+              makeArrayOfNotTextChildNodes(strictddocElement)
+
+                .forEach((strictddocElementChild) => {
+                  processElement(strictddocElementChild);
+                })
+
+            } else {
+              // Else process other childs of breakable Element.
+              processElement(breakableElementChild);
+            }
           })
-        } else {
-          processElement(element);
-        }
-      })
-    } else {
-      // Else process the elements.
-      processElement(element);
-    }
-  })
 
-  console.log('processedPrintable: \n', processedPrintable);
-  return processedPrintable;
+      } else {
+        // Else process the printable Element.
+        processElement(printableElement);
+      }
+    })
+
+  console.log('printableElements: \n', printableElements);
+  return printableElements;
 }
 
 function calculatePageBreaks({
-  processedPrintable,
+  printableElements,
   printAreaHeight,
-  // We take the height compensator into account in this function in the calculation of the page breaks:
+  // We take the padding compensator into account in this function in the calculation of the page breaks:
   // via compensatedCurrentElementHeight.
   // It is used for Spacer and is added after each printable element.
-  heightCompensator = 16
+  elementsPaddingCompensator = 16
 }) {
 
   // Calculate from which elements new pages will start.
@@ -170,15 +177,14 @@ function calculatePageBreaks({
   const pageNumbers = [];
 
   // We will collect the IDs of the page breaks and height of contents
-  // into the 'processedPrintable' array.
-  processedPrintable.map((item, id) => {
+  // into the 'printableElements' array.
+  printableElements.map((element, id) => {
 
-    const currentElementHeight = item.height;
-    const compensatedCurrentElementHeight = currentElementHeight + heightCompensator;
+    const compensatedCurrentElementHeight = element.height + elementsPaddingCompensator;
 
     // TODO the case when the element is larger than the printable area, we will handle later:
 
-    // Reserve the previous accumulator value.
+    // Memorize the previous accumulator value.
     const pageContentHeight = heightAccumulator;
 
     // Add element height to the accumulator.
@@ -187,38 +193,41 @@ function calculatePageBreaks({
     // If the accumulator is overflowed,
     if (heightAccumulator > printAreaHeight) {
 
-      // register page
+      // register page,
       pageNumbers.push(id);
 
       // mark the CURRENT element as a page start,
-      processedPrintable[id] = {
-        ...processedPrintable[id],
+      printableElements[id] = {
+        ...printableElements[id],
         pageStart: true,
       };
 
-      // // NOT: mark current element as the beginning of a new page,
       // mark the PREVIOUS element as a page break,
-      // and set page content height,
+      // write the memorized pageContentHeight down,
+      // write the page number down,
       // TODO front?
       // TODO вынести все темплейты на фронт и брать оттуда, а тут обрабатывать поток без фронта!
       if (id === 0) {
         console.log("000");
       }
-      processedPrintable[id - 1] = {
-        ...processedPrintable[id - 1],
+      printableElements[id - 1] = {
+        ...printableElements[id - 1],
         pageBreak: pageContentHeight,
         pageNumber: pageNumbers.length - 1,
       };
 
-      // reset the accumulator and add current element height.
+      // reset the accumulator
+      // and add to it the height of the current element,
+      // which will be the start of the new page.
       heightAccumulator = compensatedCurrentElementHeight;
     }
 
-    // register the last element as a page break
-    // and store the resulting content height of the last page.
-    if (id === processedPrintable.length - 1) {
-      processedPrintable[id] = {
-        ...processedPrintable[id],
+    // Register the last element as a page break
+    // and assign the last heightAccumulator value
+    // as the height of the last page.
+    if (id === printableElements.length - 1) {
+      printableElements[id] = {
+        ...printableElements[id],
         pageBreak: heightAccumulator,
         pageNumber: pageNumbers.length,
       };
@@ -234,18 +243,18 @@ function makePreview({
   runningFooterTemplate,
   runningHeaderTemplate,
   // data
-  processedPrintable,
+  printableElements,
   pageNumbers,
   printAreaHeight,
   // Consider the height compensator.
   // It is taken into account in the calculation of page breaks.
   // It is used for Spacer and is added after each printable element.
-  heightCompensator = 16
+  elementsPaddingCompensator = 16
 }) {
 
   // Set the header and footer for all pages:
 
-  processedPrintable.map((item) => {
+  printableElements.map((item) => {
 
     const { id, height, pageStart, pageBreak, pageNumber } = item;
     const element = printableFlow.querySelector(`#printable${id}`);
@@ -265,18 +274,16 @@ function makePreview({
       element.after(runningFooter);
 
       // To compensate for the empty space at the end of the page, add a padding to footer.
-      const pageHeightCompensator = document.createElement('div');
-      const paddingCompensation = printAreaHeight - pageBreak;
-      pageHeightCompensator.style.paddingTop = paddingCompensation + 'px';
-      element.after(pageHeightCompensator);
+      const pageHeightCompensatorDIV = document.createElement('div');
+      pageHeightCompensatorDIV.style.paddingTop = printAreaHeight - pageBreak + 'px';
+      element.after(pageHeightCompensatorDIV);
     }
 
-    // Add elementsPaddingCompensator after each printable element.
-    const elementsPaddingCompensator = document.createElement('div');
-    elementsPaddingCompensator.style.paddingTop = heightCompensator + 'px';
-    elementsPaddingCompensator.style.position = 'relative';
-
-    element.after(elementsPaddingCompensator);
+    // Add elementPaddingCompensatorDIV after each printable element.
+    const elementPaddingCompensatorDIV = document.createElement('div');
+    elementPaddingCompensatorDIV.style.paddingTop = elementsPaddingCompensator + 'px';
+    elementPaddingCompensatorDIV.style.position = 'relative';
+    element.after(elementPaddingCompensatorDIV);
   })
 }
 

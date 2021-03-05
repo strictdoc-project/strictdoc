@@ -9,6 +9,8 @@
   --vitual-pages-divider: 1rem;
   /* in @page don't work, use 20mm instead var */
   --print-padding: 20mm;
+  --print-top-padding: 20mm;
+  --print-bottom-padding: 20mm;
   /* calculated */
   --printing-width: calc(var(--print-A4-width) - var(--print-padding) * 2);
 
@@ -31,14 +33,6 @@
 .pdf-view .printable_flow * {
   margin-top: 0;
   margin-bottom: 0;
-}
-
-.pdf-view .printable {
-  /* compensate for visibility over the virtual page */
-  /* position: relative; */
-  /* compensate collapsing margins */
-  /* padding: calc(var(--base-margin)/2) 0;
-  margin: 0; */
 }
 
 /* frontpage */
@@ -113,6 +107,7 @@
   place-items: stretch stretch;
   place-content: stretch stretch;
 
+  /* height: var(--print-A4-height); */
   /*
     Based on the height of the middle grid row
     we calculate the height of the printable area for the rest of the pages.
@@ -136,12 +131,25 @@
   background-color: #fff;
   box-shadow: var(--vitual-pages-elevation-shadow);
 }
-.virtualA4_page_padding {
-  padding-top: var(--print-padding);
+.virtualA4_page_top_padding {
+  position: relative;
+  padding-top: var(--print-top-padding);
+  background-color: rgba(0, 187, 255, 0.427);
 }
+.virtualA4_page_bottom_padding {
+  position: relative;
+  padding-top: var(--print-bottom-padding);
+  background-color: rgba(0, 255, 191, 0.481);
+}
+
 .virtualA4_pages_divider {
+  position: relative;
   padding-top: var(--vitual-pages-divider);
+  background-color: rgba(247, 0, 255, 0.427);
 }
+/* .virtualA4 .virtualA4_pages_divider {
+  margin-bottom: calc((-1) * var(--vitual-pages-divider)) !important;
+} */
 
 /*
  * print styles
@@ -165,11 +173,16 @@
   /* .pdf-view .frontpage, */
   .pdf-view .content {
     padding: 0;
-    display: contents ;
+    display: contents;
+  }
+
+  .virtualA4 {
+    display: contents;
   }
 
   .virtualA4_page,
-  .virtualA4_page_padding,
+  .virtualA4_page_top_padding,
+  .virtualA4_page_bottom_padding,
   .virtualA4_pages_divider {
     display: none;
   }

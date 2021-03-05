@@ -12,8 +12,8 @@ window.onload = function () {
     printableFlow: '#printableFlow',
     pageTemplate: '#pageTemplate',
     printAreaTemplate: '#printAreaTemplate',
-    runningHeaderTemplate: '#runningHeaderTemplate',
-    runningFooterTemplate: '#runningFooterTemplate',
+    runningHeaderTemplate: '#runningHeaderTemplate .running',
+    runningFooterTemplate: '#runningFooterTemplate .running',
   });
 
   // The elementsPaddingCompensator is taken into account
@@ -73,12 +73,18 @@ function prepareTemplates({
 
   // Get templates for cloning.
   const _printAreaTemplate = _pageTemplate.querySelector(printAreaTemplate);
-  // const _runningHeaderTemplate = document.querySelector(runningHeaderTemplate).content;
   const _runningHeaderTemplate = _pageTemplate.querySelector(runningHeaderTemplate);
   const _runningFooterTemplate = _pageTemplate.querySelector(runningFooterTemplate);
 
   // Get print area height for calculating pages.
   const _printAreaHeight = _printAreaTemplate.offsetHeight;
+
+  // To print frontage correctly, fix the height of the printable area,
+  // otherwise it changes after processing the CSS virtual elements.
+  const frontpage = document.querySelector('.frontpage');
+  frontpage.style.height = _printAreaHeight + 'px';
+
+  console.log(_printAreaHeight);
 
   return {
     printableFlow: _printableFlow,
@@ -262,7 +268,10 @@ function makePreview({
   elementsPaddingCompensator = 16
 }) {
 
-  // Set the header and footer for all pages:
+  // Set the page number for Frontpage.
+  // const frontpageFooter = printableFlow.querySelector(`#printable${id}`);
+
+  // Set the header and footer for all pages.
 
   printableElements.map((item) => {
 
@@ -286,6 +295,7 @@ function makePreview({
       // To compensate for the empty space at the end of the page, add a padding to footer.
       const pageHeightCompensatorDIV = document.createElement('div');
       pageHeightCompensatorDIV.style.paddingTop = printAreaHeight - pageBreak + 'px';
+      pageHeightCompensatorDIV.style.background = 'yellow'; // ! temp
       element.after(pageHeightCompensatorDIV);
     }
 
@@ -293,6 +303,7 @@ function makePreview({
     const elementPaddingCompensatorDIV = document.createElement('div');
     elementPaddingCompensatorDIV.style.paddingTop = elementsPaddingCompensator + 'px';
     elementPaddingCompensatorDIV.style.position = 'relative';
+    elementPaddingCompensatorDIV.style.background = 'red'; // ! temp
     element.after(elementPaddingCompensatorDIV);
   })
 }

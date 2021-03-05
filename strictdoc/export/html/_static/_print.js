@@ -35,8 +35,8 @@ window.onload = function () {
 
   // Calculate page breaks
   // and add flags to printableElements.
-  // Returns pageNumbers.
-  const pageNumbers = calculatePageBreaks({
+  // Returns pageBreaks.
+  const pageBreaks = calculatePageBreaks({
     printableElements,
     printAreaHeight,
     elementsPaddingCompensator,
@@ -49,7 +49,7 @@ window.onload = function () {
     runningFooterTemplate,
     runningHeaderTemplate,
     printableElements,
-    pageNumbers,
+    pageBreaks,
     printAreaHeight,
     elementsPaddingCompensator,
   });
@@ -178,8 +178,8 @@ function calculatePageBreaks({
   // and compare it to the printAreaHeight - maximum height of the printed area.
   let heightAccumulator = 0;
 
-  // init with flagged first page
-  const pageNumbers = [0];
+  // init with flagged front page
+  const pageBreaks = [0];
 
   function registerPageStart(id) {
     // mark the (CURRENT) element as a page start,
@@ -189,9 +189,9 @@ function calculatePageBreaks({
     };
   }
 
-  function registerPageEnd(id, memorizedPageContentHeight) {
-    // register next page,
-    pageNumbers.push(id);
+  function registerPageBreak(id, memorizedPageContentHeight) {
+    // register the page break,
+    pageBreaks.push(id);
 
     // mark the (PREVIOUS) element as a page break,
     // write the memorized pageContentHeight down,
@@ -199,7 +199,7 @@ function calculatePageBreaks({
     printableElements[id] = {
       ...printableElements[id],
       pageBreak: memorizedPageContentHeight,
-      pageNumber: pageNumbers.length,
+      pageNumber: pageBreaks.length,
     };
   }
 
@@ -228,7 +228,7 @@ function calculatePageBreaks({
       // mark the CURRENT element as a page start,
       registerPageStart(id);
       // mark the PREVIOUS element as a page break.
-      registerPageEnd(id - 1, pageContentHeight);
+      registerPageBreak(id - 1, pageContentHeight);
 
       // reset the accumulator
       // and add to it the height of the current element,
@@ -240,10 +240,11 @@ function calculatePageBreaks({
   // Register the last element as a page break
   // and assign the last heightAccumulator value
   // as the height of the last page.
-  registerPageEnd(printableElements.length - 1, heightAccumulator);
+  // We need it to generate the footer on the last page correctly.
+  registerPageBreak(printableElements.length - 1, heightAccumulator);
 
-  console.log('pageNumbers:\n', pageNumbers);
-  return pageNumbers;
+  console.log('pageBreaks:\n', pageBreaks);
+  return pageBreaks;
 }
 
 function makePreview({
@@ -253,7 +254,7 @@ function makePreview({
   runningHeaderTemplate,
   // data
   printableElements,
-  pageNumbers,
+  pageBreaks,
   printAreaHeight,
   // Consider the height compensator.
   // It is taken into account in the calculation of page breaks.
@@ -279,7 +280,7 @@ function makePreview({
       // which ends with a page break.
       const runningFooter = runningFooterTemplate.cloneNode(true);
       // Add page number.
-      runningFooter.querySelector('.page-number').innerHTML = ` ${pageNumber} / ${pageNumbers.length}`;
+      runningFooter.querySelector('.page-number').innerHTML = ` ${pageNumber} / ${pageBreaks.length}`;
       element.after(runningFooter);
 
       // To compensate for the empty space at the end of the page, add a padding to footer.

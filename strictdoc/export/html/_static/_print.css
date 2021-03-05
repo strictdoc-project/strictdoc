@@ -7,15 +7,18 @@
   /* vitual */
   --vitual-pages-elevation-shadow: rgba(0, 0, 0, 0.1) 2px 2px 12px 0px;
   --vitual-pages-divider: 1rem;
-  /* in @page don't work, use 20mm instead var */
+
+  /*
+  ! in @page CCS variables don't work!
+  ! when changing print-padding parameters
+  ! do not forget to change the corresponding margins in @page
+  */
   --print-padding: 20mm;
-  --print-top-padding: 20mm;
-  --print-bottom-padding: 20mm;
+  --print-top-padding: 10mm;
+  --print-bottom-padding: 10mm;
+
   /* calculated */
   --printing-width: calc(var(--print-A4-width) - var(--print-padding) * 2);
-
-  /* ! for test */
-  --print-testborder: 1px dashed #666;
 }
 
 .pdf-view .content {
@@ -56,7 +59,7 @@
   position: relative;
 
   /* ! temp */
-  border: var(--print-testborder);
+  background-color: rgba(0, 0, 0, 0.01);
 }
 
 /* running */
@@ -72,7 +75,7 @@
   position: relative;
 
   /* ! temp */
-  border: var(--print-testborder);
+  background-color: rgba(0, 0, 0, 0.02);
 }
 
 .running-footer {
@@ -88,7 +91,7 @@
   position: relative;
 
   /* ! temp */
-  border: var(--print-testborder);
+  background-color: rgba(0, 0, 0, 0.02);
 }
 
 /* print service */
@@ -134,22 +137,17 @@
 .virtualA4_page_top_padding {
   position: relative;
   padding-top: var(--print-top-padding);
-  background-color: rgba(0, 187, 255, 0.427);
 }
 .virtualA4_page_bottom_padding {
   position: relative;
   padding-top: var(--print-bottom-padding);
-  background-color: rgba(0, 255, 191, 0.481);
 }
 
 .virtualA4_pages_divider {
   position: relative;
   padding-top: var(--vitual-pages-divider);
-  background-color: rgba(247, 0, 255, 0.427);
+  background-color: rgba(255, 0, 0, 0.1);
 }
-/* .virtualA4 .virtualA4_pages_divider {
-  margin-bottom: calc((-1) * var(--vitual-pages-divider)) !important;
-} */
 
 /*
  * print styles
@@ -189,9 +187,22 @@
 
 }
 
-@page  {
-  size: A5;
+@page {
+  /* size: A4; */
   /* var don't work in @page */
   /* ~ 0,64" */
-  margin: 16mm;
+  /* should be synchronized width
+  --print-padding: 20mm;
+  --print-top-padding: 10mm;
+  --print-bottom-padding: 10mm;
+  */
+
+  /*
+  make left & right margin slightly smaller than the SSA variables.
+  To keep the width from overflowing when printing.
+  */
+  margin-left: 16mm;  /* --print-padding: 20mm; */
+  margin-right: 16mm; /* --print-padding: 20mm; */
+  margin-top: 10mm;
+  margin-bottom: 10mm;
 }

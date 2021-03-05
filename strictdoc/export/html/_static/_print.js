@@ -295,7 +295,6 @@ function makePreview({
       // To compensate for the empty space at the end of the page, add a padding to footer.
       const pageHeightCompensatorDIV = document.createElement('div');
       pageHeightCompensatorDIV.style.paddingTop = printAreaHeight - pageBreak + 'px';
-      pageHeightCompensatorDIV.style.background = 'yellow'; // ! temp
       element.after(pageHeightCompensatorDIV);
     }
 
@@ -303,7 +302,6 @@ function makePreview({
     const elementPaddingCompensatorDIV = document.createElement('div');
     elementPaddingCompensatorDIV.style.paddingTop = elementsPaddingCompensator + 'px';
     elementPaddingCompensatorDIV.style.position = 'relative';
-    elementPaddingCompensatorDIV.style.background = 'red'; // ! temp
     element.after(elementPaddingCompensatorDIV);
   })
 }

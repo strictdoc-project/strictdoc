@@ -82,12 +82,7 @@ function prepareDomElements({
   }
 }
 
-function makeArrayOfNotTextChildNodes(element) {
-  // Check that the element is a tag and not '#text'.
-  // https://developer.mozilla.org/ru/docs/Web/API/Node/nodeName
-  let children = element.childNodes;
-  return [...children].filter(item => item.tagName);
-}
+
 
 function processPrintable({
   printable,
@@ -269,4 +264,11 @@ function makePreview({
 
     element.after(elementsPaddingCompensator);
   })
+}
+
+function makeArrayOfNotTextChildNodes(element) {
+  // Check that the element is a tag and not '#text'.
+  // https://developer.mozilla.org/ru/docs/Web/API/Node/nodeName
+  let children = element.childNodes;
+  return [...children].filter(item => item.tagName);
 }

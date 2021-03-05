@@ -11,26 +11,22 @@
 {% block viewtype %}pdf-view{% endblock %}
 
 {% block content %}
+  <div class="content">
+    <div id="printableFlow" class="printable_flow">
 
-      <div class="content">
+      {% include "single_document_pdf/frontpage.jinja.html" %}
 
-      <div id="printableFlow" class="printable_flow">
-
-        {% include "single_document_pdf/frontpage.jinja.html" %}
-
-        {# <p>PDF 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50</p> #}
-
-        {%- if document.free_texts -%}
+      {%- if document.free_texts -%}
         <section><article>
-        {%- for free_text in document.free_texts %}
+          {%- for free_text in document.free_texts %}
           <div class="free_text printable">
             {{ renderer.render_free_text(free_text) }}
           </div>
-        {%- endfor -%}
+          {%- endfor -%}
         </article></section>
-        {%- endif -%}
+      {%- endif -%}
 
-        {%- for section_or_requirement in document_iterator.all_content() %}
+      {%- for section_or_requirement in document_iterator.all_content() %}
 
         {%- if section_or_requirement.is_requirement %}
           {%- set requirement = section_or_requirement %}
@@ -39,15 +35,16 @@
           {%- endwith %}
 
         {%- elif section_or_requirement.is_section %}
+
           {%- set section = section_or_requirement %}
           {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
-          {% include "_shared/docsection.jinja.html" %}
+            {% include "_shared/docsection.jinja.html" %}
           {%- endwith %}
-
         {%- endif %}
 
-        {%- endfor %}
+      {%- endfor %}
 
-      </div></div>
+    </div>
+  </div>
 {% endblock content %}
 

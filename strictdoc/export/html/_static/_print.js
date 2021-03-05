@@ -37,7 +37,8 @@ window.onload = function () {
 
   // Calculate page breaks
   // and add flags to processedPrintable.
-  calculatePageBreaks({
+  // Reyurns pageNumbers.
+  const pageNumbers = calculatePageBreaks({
     processedPrintable,
     printAreaHeight,
     heightCompensator,
@@ -50,6 +51,7 @@ window.onload = function () {
     runningFooterTemplate,
     runningHeaderTemplate,
     processedPrintable,
+    pageNumbers,
     printAreaHeight,
     heightCompensator,
   });
@@ -165,6 +167,8 @@ function calculatePageBreaks({
   // and compare it to the printAreaHeight - maximum height of the printed area.
   let heightAccumulator = 0;
 
+  const pageNumbers = [];
+
   // We will collect the IDs of the page breaks and height of contents
   // into the 'processedPrintable' array.
   processedPrintable.map((item, id) => {
@@ -182,6 +186,16 @@ function calculatePageBreaks({
 
     // If the accumulator is overflowed,
     if (heightAccumulator > printAreaHeight) {
+
+      // register page
+      pageNumbers.push(id);
+
+      // mark the CURRENT element as a page start,
+      processedPrintable[id] = {
+        ...processedPrintable[id],
+        pageStart: true,
+      };
+
       // // NOT: mark current element as the beginning of a new page,
       // mark the PREVIOUS element as a page break,
       // and set page content height,
@@ -192,13 +206,10 @@ function calculatePageBreaks({
       }
       processedPrintable[id - 1] = {
         ...processedPrintable[id - 1],
-        pageBreak: pageContentHeight
+        pageBreak: pageContentHeight,
+        pageNumber: pageNumbers.length - 1,
       };
-      // mark the CURRENT element as a page start,
-      processedPrintable[id] = {
-        ...processedPrintable[id],
-        pageStart: true,
-      };
+
       // reset the accumulator and add current element height.
       heightAccumulator = compensatedCurrentElementHeight;
     }
@@ -208,10 +219,13 @@ function calculatePageBreaks({
     if (id === processedPrintable.length - 1) {
       processedPrintable[id] = {
         ...processedPrintable[id],
-        pageBreak: heightAccumulator
+        pageBreak: heightAccumulator,
+        pageNumber: pageNumbers.length,
       };
     }
   })
+
+  return pageNumbers;
 }
 
 function makePreview({
@@ -221,6 +235,7 @@ function makePreview({
   runningHeaderTemplate,
   // data
   processedPrintable,
+  pageNumbers,
   printAreaHeight,
   // Consider the height compensator.
   // It is taken into account in the calculation of page breaks.
@@ -232,7 +247,7 @@ function makePreview({
 
   processedPrintable.map((item) => {
 
-    const { id, height, pageStart, pageBreak } = item;
+    const { id, height, pageStart, pageBreak, pageNumber } = item;
     const element = printableFlow.querySelector(`#printable${id}`);
 
     if (pageStart) {
@@ -246,8 +261,7 @@ function makePreview({
       // which ends with a page break.
       const runningFooter = runningFooterTemplate.cloneNode(true);
       // Add page number.
-      // TODO
-      // runningFooter.querySelector('.page-number').innerHTML = ` ${i + 1} / ${pageBreaks.length}`;
+      runningFooter.querySelector('.page-number').innerHTML = ` ${pageNumber} / ${pageNumbers.length}`;
       element.after(runningFooter);
 
       // To compensate for the empty space at the end of the page, add a padding to footer.

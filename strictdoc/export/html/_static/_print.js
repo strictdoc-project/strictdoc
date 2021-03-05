@@ -19,43 +19,40 @@ window.onload = function () {
   const printAreaHeight = frontpage.offsetHeight;
 
   // The height compensator is taken into account
-  // in the calculation of page breaks
-  // in makePageBreaks().
-  // It is used for Spacer and is added after each printable element
+  // in the calculation of page breaks in calculatePageBreaks().
+  // It is used for Spacer that is added after each printable element
   // in makePreview().
-  const compensatorHeight = 16;
+  const heightCompensator = 16;
 
-  // Adding IDs to nodes (that) we don't want to break,
-  // and collecting their heights
+  // Adding IDs to nodes that we don't want to break,
+  // and collecting their IDs and heights
+  // in processedPrintable
   // to then break down the content into pages.
-  // ? use articles level
-  // const allPrinableElementsOffsetHeights = useArticles();
-  // ? use elements level
-  const allPrinableElementsOffsetHeights = processPrintable({
+  const processedPrintable = processPrintable({
     // use any selector:
     printable: '.printable',
     // use class selector:
     breakable: '.breakable',
   });
 
-  const pageBreaks = makePageBreaks({
-    allPrinableElementsOffsetHeights,
+  // Calculate page breaks
+  // and add flags to processedPrintable.
+  calculatePageBreaks({
+    processedPrintable,
     printAreaHeight,
-    compensatorHeight,
+    heightCompensator,
   });
 
   // Splitting content into virtual pages
   // and generating previews that look like PDF.
   makePreview({
     printableFlow,
-    frontpage,
     runningFooterTemplate,
     runningHeaderTemplate,
-    pageBreaks,
+    processedPrintable,
     printAreaHeight,
-    compensatorHeight,
+    heightCompensator,
   });
-
 };
 
 // USED FUNCTIONS
@@ -95,9 +92,6 @@ function makeArrayOfNotTextChildNodes(element) {
 function processPrintable({
   printable,
   breakable,
-  // The height compensator is taken into account in the calculation of page breaks.
-  // It is used for Spacer and is added after each printable element.
-  compensatorHeight = 16
 }) {
 
   // Checking for variable format.
@@ -110,30 +104,23 @@ function processPrintable({
   }
 
   // let accumulator
-  let allPrinableElementsOffsetHeights = [];
+  let processedPrintable = [];
 
   // What we are going to do with the element:
   const processElement = (element) => {
-    // Get offsetHeight and push to accumulator,
-    allPrinableElementsOffsetHeights.push(element.offsetHeight);
-    // set ID to element, corresponding ID in accumulator.
-    element.id = `printable${allPrinableElementsOffsetHeights.length - 1}`;
+    const elementId = processedPrintable.length;
+    const elementHeight = element.offsetHeight;
 
-    // If an element has no class '.printable' and is found as a child of content .printable, add a class to it.
-    // element.classList.add(printable.substring(1));
+    // Get offsetHeight and push to accumulator 'processedPrintable',
+    processedPrintable.push({
+      id: elementId, // is equal to id in array
+      height: elementHeight,
+    });
+    // set ID to element, corresponding ID in accumulator 'processedPrintable'.
+    element.id = `printable${elementId}`;
 
     // Add styles, compensate for visibility over the virtual page.
     element.style.position = 'relative';
-
-    // TODO
-    // Add compensator after each printable element.
-    // We will add a Footer after breakable in makePreview(),
-    // and its compensator will go to the next page,
-    // and it will turn out ...
-    const compensator = document.createElement('div');
-    compensator.style.paddingTop = compensatorHeight + 'px';
-    compensator.style.background = 'red';
-    element.after(compensator);
   }
 
   // Get printable NodeList,
@@ -165,159 +152,121 @@ function processPrintable({
     }
   })
 
-  console.log('allPrinableElementsOffsetHeights: \n', allPrinableElementsOffsetHeights);
-  return allPrinableElementsOffsetHeights;
+  console.log('processedPrintable: \n', processedPrintable);
+  return processedPrintable;
 }
 
-function makePageBreaks({
-  allPrinableElementsOffsetHeights,
+function calculatePageBreaks({
+  processedPrintable,
   printAreaHeight,
   // We take the height compensator into account in this function in the calculation of the page breaks:
   // via compensatedCurrentElementHeight.
   // It is used for Spacer and is added after each printable element.
-  compensatorHeight = 16
+  heightCompensator = 16
 }) {
 
   // Calculate from which elements new pages will start.
   // We will accumulate the height of the elements in the heightAccumulator
   // and compare it to the printAreaHeight - maximum height of the printed area.
   let heightAccumulator = 0;
+
   // We will collect the IDs of the page breaks and height of contents
-  // into the 'pageBreaks' array.
-  // Initiate it with a page break after the frontpage.
-  let pageBreaks = [
-    {
-      id: 0,
-      previousPageContentHeight: printAreaHeight
-    }
-  ];
+  // into the 'processedPrintable' array.
+  processedPrintable.map((item, id) => {
 
-  // We start the loop with 1 because the frontpage has a fixed height
-  // and we've already added a page break after frontpage when initializing 'pageBreaks'.
-  for (let i = 1; i < allPrinableElementsOffsetHeights.length; ++i) {
-
-    const currentElementHeight = allPrinableElementsOffsetHeights[i];
-    const compensatedCurrentElementHeight = currentElementHeight + compensatorHeight;
+    const currentElementHeight = item.height;
+    const compensatedCurrentElementHeight = currentElementHeight + heightCompensator;
 
     // TODO the case when the element is larger than the printable area, we will handle later:
-    // // if the item fits in the height of the printing area
-    // if (allPrinableElementsOffsetHeights[i] <= printAreaHeight) {
-    //   // add its height to the accumulator
-    //   heightAccumulator = heightAccumulator + currentElementHeight;
-    // }
 
     // Reserve the previous accumulator value.
-    const previousPageContentHeight = heightAccumulator;
+    const pageContentHeight = heightAccumulator;
 
-    // Add elements height to the accumulator.
+    // Add element height to the accumulator.
     heightAccumulator = heightAccumulator + compensatedCurrentElementHeight;
 
     // If the accumulator is overflowed,
-    if (heightAccumulator >= printAreaHeight) {
+    if (heightAccumulator > printAreaHeight) {
       // // NOT: mark current element as the beginning of a new page,
       // mark the PREVIOUS element as a page break,
-      pageBreaks.push({
-        id: i - 1,
-        previousPageContentHeight: previousPageContentHeight
-      });
+      // and set page content height,
+      // TODO front?
+      // TODO вынести все темплейты на фронт и брать оттуда, а тут обрабатывать поток без фронта!
+      if (id === 0) {
+        console.log("000");
+      }
+      processedPrintable[id - 1] = {
+        ...processedPrintable[id - 1],
+        pageBreak: pageContentHeight
+      };
+      // mark the CURRENT element as a page start,
+      processedPrintable[id] = {
+        ...processedPrintable[id],
+        pageStart: true,
+      };
       // reset the accumulator and add current element height.
       heightAccumulator = compensatedCurrentElementHeight;
     }
 
     // register the last element as a page break
     // and store the resulting content height of the last page.
-    if (i === allPrinableElementsOffsetHeights.length - 1) {
-      pageBreaks.push({
-        id: i,
-        previousPageContentHeight: heightAccumulator
-      });
+    if (id === processedPrintable.length - 1) {
+      processedPrintable[id] = {
+        ...processedPrintable[id],
+        pageBreak: heightAccumulator
+      };
     }
-  }
-
-  return pageBreaks;
+  })
 }
 
 function makePreview({
+  // elements
   printableFlow,
-  frontpage,
   runningFooterTemplate,
   runningHeaderTemplate,
-  pageBreaks,
+  // data
+  processedPrintable,
   printAreaHeight,
   // Consider the height compensator.
   // It is taken into account in the calculation of page breaks.
   // It is used for Spacer and is added after each printable element.
-  compensatorHeight = 16
+  heightCompensator = 16
 }) {
 
-  console.log('pageBreaks: \n', pageBreaks)
+  // Set the header and footer for all pages:
 
-  // Set the header for the frontpage here,
-  // because it cannot be set in the loop.
-  frontpage.before(runningHeaderTemplate.cloneNode(true));
+  processedPrintable.map((item) => {
 
-  // Set the header and footer for all pages in loop:
-  // // pageBreaks.forEach(({ id, previousPageContentHeight }) => {
+    const { id, height, pageStart, pageBreak } = item;
+    const element = printableFlow.querySelector(`#printable${id}`);
 
-  // TODO  MAP?
+    if (pageStart) {
+      // Starting a new virtual page.
+      const runningHeader = runningHeaderTemplate.cloneNode(true);
+      element.before(runningHeader);
+    }
 
-  for (let i = 0; i < pageBreaks.length; ++i) {
+    if (pageBreak) {
+      // Closing the current virtual page,
+      // which ends with a page break.
+      const runningFooter = runningFooterTemplate.cloneNode(true);
+      // Add page number.
+      // TODO
+      // runningFooter.querySelector('.page-number').innerHTML = ` ${i + 1} / ${pageBreaks.length}`;
+      element.after(runningFooter);
 
-    const { id, previousPageContentHeight } = pageBreaks[i];
+      // To compensate for the empty space at the end of the page, add a padding to footer.
+      const pageHeightCompensator = document.createElement('div');
+      const paddingCompensation = printAreaHeight - pageBreak;
+      pageHeightCompensator.style.paddingTop = paddingCompensation + 'px';
+      element.after(pageHeightCompensator);
+    }
 
-    // Close the current page,
-    // which ends with a page break.
-    const pageEnd = printableFlow.querySelector(`#printable${id}`);
-    const runningFooter = runningFooterTemplate.cloneNode(true);
-    // Add page number.
-    runningFooter.querySelector('.page-number').innerHTML = ` ${i + 1} / ${pageBreaks.length}`;
-    pageEnd?.after(runningFooter);
+    // Add elementsPaddingCompensator after each printable element.
+    const elementsPaddingCompensator = document.createElement('div');
+    elementsPaddingCompensator.style.paddingTop = heightCompensator + 'px';
+    elementsPaddingCompensator.style.position = 'relative';
 
-
-    // To compensate for the empty space at the end of the page, add a padding to footer.
-    const compensateDiv = document.createElement('div');
-    const paddingCompensation = printAreaHeight - previousPageContentHeight
-    compensateDiv.style.paddingTop = paddingCompensation + 'px';
-    pageEnd?.after(compensateDiv);
-
-    // Starting a new page,
-    //which begins after a page break.
-    const pageStart = printableFlow.querySelector(`#printable${id + 1}`);
-    // In the case of the last page we use the optionality.
-    pageStart?.before(runningHeaderTemplate.cloneNode(true));
-
-  };
+    element.after(elementsPaddingCompensator);
+  })
 }
-
-// NOT IN USE:
-
-// function useArticles(selectors) {
-
-//   let allPrinableElementsOffsetHeights = [];
-
-//   // Get printable NodeList,
-//   // for all children that are tags,
-//   // add IDs and collect their heights to allPrinableElementsOffsetHeights.
-//   if (printable.hasChildNodes()) {
-//     // So first we check to see if the object is empty, if it has children.
-
-//     let children = printable.childNodes;
-
-//     // children.forEach()
-//     for (let i = 0; i < children.length; ++i) {
-
-//       // Check that the element is a tag and not '#text'.
-//       // https://developer.mozilla.org/ru/docs/Web/API/Node/nodeName
-//       if (children[i].tagName) {
-
-//         // Get offsetHeight and push to accumulator,
-//         allPrinableElementsOffsetHeights.push(children[i].offsetHeight);
-//         // set ID to element, corresponding ID in accumulator.
-//         children[i].id = `printable${allPrinableElementsOffsetHeights.length - 1}`;
-
-//       }
-//     }
-//   }
-
-//   return allPrinableElementsOffsetHeights;
-// }

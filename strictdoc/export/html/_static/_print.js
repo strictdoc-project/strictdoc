@@ -178,10 +178,38 @@ function calculatePageBreaks({
   // and compare it to the printAreaHeight - maximum height of the printed area.
   let heightAccumulator = 0;
 
-  const pageNumbers = [];
+  // init with flagged first page
+  const pageNumbers = [0];
+
+  function registerPageStart(id) {
+    // mark the (CURRENT) element as a page start,
+    printableElements[id] = {
+      ...printableElements[id],
+      pageStart: true,
+    };
+  }
+
+  function registerPageEnd(id, memorizedPageContentHeight) {
+    // register next page,
+    pageNumbers.push(id);
+
+    // mark the (PREVIOUS) element as a page break,
+    // write the memorized pageContentHeight down,
+    // write the page number down,
+    printableElements[id] = {
+      ...printableElements[id],
+      pageBreak: memorizedPageContentHeight,
+      pageNumber: pageNumbers.length,
+    };
+  }
 
   // We will collect the IDs of the page breaks and height of contents
   // into the 'printableElements' array.
+
+  // Register the first element as a page start.
+  registerPageStart(0);
+
+  // process content flow
   printableElements.map((element, id) => {
 
     const compensatedCurrentElementHeight = element.height + elementsPaddingCompensator;
@@ -197,47 +225,24 @@ function calculatePageBreaks({
     // If the accumulator is overflowed,
     if (heightAccumulator > printAreaHeight) {
 
-      // register page,
-      pageNumbers.push(id);
-
       // mark the CURRENT element as a page start,
-      printableElements[id] = {
-        ...printableElements[id],
-        pageStart: true,
-      };
-
-      // mark the PREVIOUS element as a page break,
-      // write the memorized pageContentHeight down,
-      // write the page number down,
-      // TODO front?
-      // TODO вынести все темплейты на фронт и брать оттуда, а тут обрабатывать поток без фронта!
-      if (id === 0) {
-        console.log("000");
-      }
-      printableElements[id - 1] = {
-        ...printableElements[id - 1],
-        pageBreak: pageContentHeight,
-        pageNumber: pageNumbers.length - 1,
-      };
+      registerPageStart(id);
+      // mark the PREVIOUS element as a page break.
+      registerPageEnd(id - 1, pageContentHeight);
 
       // reset the accumulator
       // and add to it the height of the current element,
       // which will be the start of the new page.
       heightAccumulator = compensatedCurrentElementHeight;
     }
-
-    // Register the last element as a page break
-    // and assign the last heightAccumulator value
-    // as the height of the last page.
-    if (id === printableElements.length - 1) {
-      printableElements[id] = {
-        ...printableElements[id],
-        pageBreak: heightAccumulator,
-        pageNumber: pageNumbers.length,
-      };
-    }
   })
 
+  // Register the last element as a page break
+  // and assign the last heightAccumulator value
+  // as the height of the last page.
+  registerPageEnd(printableElements.length - 1, heightAccumulator);
+
+  console.log('pageNumbers:\n', pageNumbers);
   return pageNumbers;
 }
 

@@ -304,6 +304,8 @@ article object {
   width: 100%;
   padding: 1em;
   background: var(--color-bg-contrast);
+  /* compansate margin after block: */
+  display: block;
 }
 
 /* meta table */

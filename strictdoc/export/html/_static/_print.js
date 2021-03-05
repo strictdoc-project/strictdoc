@@ -2,21 +2,19 @@ window.onload = function () {
 
   console.log('I am in _print.js',);
 
-  // Preparing the DOM elements.
+  // Preparing templates.
   const {
     printableFlow,
-    frontpage,
     runningHeaderTemplate,
     runningFooterTemplate,
-  } = prepareDomElements({
+    printAreaHeight,
+  } = prepareTemplates({
     printableFlow: '#printableFlow',
-    frontpage: '.frontpage',
+    pageTemplate: '#pageTemplate',
+    printAreaTemplate: '#printAreaTemplate',
     runningHeaderTemplate: '#runningHeaderTemplate',
     runningFooterTemplate: '#runningFooterTemplate',
   });
-
-  // Defining the constant printAreaHeight corresponding frontpage offsetHeight.
-  const printAreaHeight = frontpage.offsetHeight;
 
   // The elementsPaddingCompensator is taken into account
   // in the calculation of page breaks in calculatePageBreaks().
@@ -59,9 +57,10 @@ window.onload = function () {
 
 // USED FUNCTIONS
 
-function prepareDomElements({
+function prepareTemplates({
   printableFlow,
-  frontpage,
+  pageTemplate,
+  printAreaTemplate,
   runningHeaderTemplate,
   runningFooterTemplate,
 }) {
@@ -69,18 +68,23 @@ function prepareDomElements({
   // Get printable wrapper.
   const _printableFlow = document.querySelector(printableFlow);
 
-  // Get frontpage.
-  const _frontpage = _printableFlow.querySelector(frontpage);
+  // Get page templates container.
+  const _pageTemplate = document.querySelector(pageTemplate);
 
-  // Get templates.
-  const _runningHeaderTemplate = document.querySelector(runningHeaderTemplate).content;
-  const _runningFooterTemplate = document.querySelector(runningFooterTemplate).content;
+  // Get templates for cloning.
+  const _printAreaTemplate = _pageTemplate.querySelector(printAreaTemplate);
+  // const _runningHeaderTemplate = document.querySelector(runningHeaderTemplate).content;
+  const _runningHeaderTemplate = _pageTemplate.querySelector(runningHeaderTemplate);
+  const _runningFooterTemplate = _pageTemplate.querySelector(runningFooterTemplate);
+
+  // Get print area height for calculating pages.
+  const _printAreaHeight = _printAreaTemplate.offsetHeight;
 
   return {
     printableFlow: _printableFlow,
-    frontpage: _frontpage,
     runningHeaderTemplate: _runningHeaderTemplate,
     runningFooterTemplate: _runningFooterTemplate,
+    printAreaHeight: _printAreaHeight,
   }
 }
 

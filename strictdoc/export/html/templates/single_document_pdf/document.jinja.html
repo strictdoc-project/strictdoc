@@ -16,6 +16,19 @@
 
       {% include "single_document_pdf/frontpage.jinja.html" %}
 
+      <p class="printable ">
+        Just test line
+      </p>
+      <p class="printable ">
+        Just test line
+      </p>
+      <p class="printable ">
+        Just test line
+      </p>
+      <p class="printable pagebreak">
+        After this line is page break
+      </p>
+
       {%- if document.free_texts -%}
         <section><article>
           {%- for free_text in document.free_texts %}

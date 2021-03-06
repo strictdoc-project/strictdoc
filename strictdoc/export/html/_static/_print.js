@@ -31,6 +31,7 @@ window.onload = function () {
     printable: '.printable',
     // use class selector:
     breakable: '.breakable',
+    pagebreak: '.pagebreak',
   });
 
   // Calculate page breaks
@@ -97,15 +98,22 @@ function prepareTemplates({
 const processPrintable = ({
   printable,
   breakable,
+  pagebreak,
 }) => {
 
   // Checking for variable format.
-  // Selector in breakable should be suitable for classList.contains
+  // Selector in 'breakable' and 'pagebreak' should be suitable for classList.contains
   if (breakable.charAt(0) === '.') {
     breakable = breakable.substring(1);
   }
+  if (pagebreak.charAt(0) === '.') {
+    pagebreak = pagebreak.substring(1);
+  }
   if (breakable.charAt(0) === '#') {
     console.error(` "breakable" var in processPrintable() should be suitable for classList.contains and contain only the class name!`);
+  }
+  if (pagebreak.charAt(0) === '#') {
+    console.error(` "pagebreak" var in processPrintable() should be suitable for classList.contains and contain only the class name!`);
   }
 
   // let accumulator of printable elements data
@@ -123,8 +131,17 @@ const processPrintable = ({
       height: elementHeight,
     });
 
+    // register a forced page break
+    if (element.classList.contains(pagebreak)) {
+      console.log('has pagebreak:', elementId, element);
+      printableElements[elementId] = {
+        ...printableElements[elementId],
+        pageBreak: true,
+      };
+    }
+
     // set ID to element, corresponding ID in accumulator 'printableElements'.
-    element.id = `printable${elementId}`;
+    element.id = `printable_${elementId}`;
 
     // Add styles, compensate for visibility over the virtual page.
     element.style.position = 'relative';
@@ -184,8 +201,10 @@ function calculatePageBreaks({
   // and compare it to the printAreaHeight - maximum height of the printed area.
   let heightAccumulator = 0;
 
-  // init with flagged front page
-  const pageBreaks = [0];
+  // Init with flagged front page.
+  // From this variable we only use the length of the array,
+  // so we can use 'frontpage' here, and then IDs.
+  const pageBreaks = ['frontpage'];
 
   function registerPageStart(id) {
     // mark the (CURRENT) element as a page start,
@@ -228,6 +247,19 @@ function calculatePageBreaks({
     // Add element height to the accumulator.
     heightAccumulator = heightAccumulator + compensatedCurrentElementHeight;
 
+    // If the element has pagebreak attribute,
+    if (element.pageBreak) {
+      // mark the CURRENT element as a page break
+      // with pageBreak equal to the accumulated height at this moment,
+      registerPageBreak(id, heightAccumulator);
+      // mark the NEXT element as a page start,
+      registerPageStart(id + 1);
+      // reset the accumulator
+      heightAccumulator = 0;
+      // go to next element
+      return;
+    }
+
     // If the accumulator is overflowed,
     if (heightAccumulator > printAreaHeight) {
 
@@ -269,14 +301,14 @@ function makePreview({
 }) {
 
   // Set the page number for Frontpage.
-  // const frontpageFooter = printableFlow.querySelector(`#printable${id}`);
+  // const frontpageFooter = printableFlow.querySelector(`#printable_${id}`);
 
   // Set the header and footer for all pages.
 
   printableElements.map((item) => {
 
     const { id, height, pageStart, pageBreak, pageNumber } = item;
-    const element = printableFlow.querySelector(`#printable${id}`);
+    const element = printableFlow.querySelector(`#printable_${id}`);
 
     if (pageStart) {
       // Starting a new virtual page.

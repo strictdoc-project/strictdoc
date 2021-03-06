@@ -17,7 +17,7 @@ window.onload = function () {
   });
 
   // The elementsPaddingCompensator is taken into account
-  // in the calculation of page breaks in calculatePageBreaks().
+  // in the calculation of page breaks in calculatePages().
   // It is used for Spacer that is added after each printable element
   // in makePreview().
   // This is done to make the page height predictable.
@@ -36,8 +36,8 @@ window.onload = function () {
 
   // Calculate page breaks
   // and add flags to printableElements.
-  // Returns pageBreaks.
-  const pageBreaks = calculatePageBreaks({
+  // Returns printablePages.
+  const printablePages = calculatePages({
     printableElements,
     printAreaHeight,
     elementsPaddingCompensator,
@@ -50,7 +50,7 @@ window.onload = function () {
     runningFooterTemplate,
     runningHeaderTemplate,
     printableElements,
-    pageBreaks,
+    printablePages,
     printAreaHeight,
     elementsPaddingCompensator,
   });
@@ -187,7 +187,7 @@ const processPrintable = ({
   return printableElements;
 }
 
-function calculatePageBreaks({
+function calculatePages({
   printableElements,
   printAreaHeight,
   // We take the padding compensator into account in this function in the calculation of the page breaks:
@@ -204,7 +204,7 @@ function calculatePageBreaks({
   // Init with flagged front page.
   // From this variable we only use the length of the array,
   // so we can use 'frontpage' here, and then IDs.
-  const pageBreaks = ['frontpage'];
+  const printablePages = ['frontpage'];
 
   function registerPageStart(id) {
     // mark the (CURRENT) element as a page start,
@@ -215,8 +215,8 @@ function calculatePageBreaks({
   }
 
   function registerPageBreak(id, memorizedPageContentHeight) {
-    // register the page break,
-    pageBreaks.push(id);
+    // register the page,
+    printablePages.push(id);
 
     // mark the (PREVIOUS) element as a page break,
     // write the memorized pageContentHeight down,
@@ -224,7 +224,7 @@ function calculatePageBreaks({
     printableElements[id] = {
       ...printableElements[id],
       pageBreak: memorizedPageContentHeight,
-      pageNumber: pageBreaks.length,
+      pageNumber: printablePages.length,
     };
   }
 
@@ -281,8 +281,8 @@ function calculatePageBreaks({
   // We need it to generate the footer on the last page correctly.
   registerPageBreak(printableElements.length - 1, heightAccumulator);
 
-  console.log('pageBreaks:\n', pageBreaks);
-  return pageBreaks;
+  console.log('printablePages:\n', printablePages);
+  return printablePages;
 }
 
 function makePreview({
@@ -292,7 +292,7 @@ function makePreview({
   runningHeaderTemplate,
   // data
   printableElements,
-  pageBreaks,
+  printablePages,
   printAreaHeight,
   // Consider the height compensator.
   // It is taken into account in the calculation of page breaks.
@@ -321,7 +321,7 @@ function makePreview({
       // which ends with a page break.
       const runningFooter = runningFooterTemplate.cloneNode(true);
       // Add page number.
-      runningFooter.querySelector('.page-number').innerHTML = ` ${pageNumber} / ${pageBreaks.length}`;
+      runningFooter.querySelector('.page-number').innerHTML = ` ${pageNumber} / ${printablePages.length}`;
       element.after(runningFooter);
 
       // To compensate for the empty space at the end of the page, add a padding to footer.

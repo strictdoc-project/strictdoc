@@ -3,7 +3,7 @@
 .pdf-view {
   --print-A4-width: 210mm;
   --print-A4-height: 297mm;
-  --print-font-size: 12pt;
+  --print-font-size: 11pt;
   /* vitual */
   --vitual-pages-elevation-shadow: rgba(0, 0, 0, 0.1) 2px 2px 12px 0px;
   --vitual-pages-divider: 1rem;
@@ -202,4 +202,48 @@
   margin-right: 20mm;  /* --print-padding: 25mm; */
   margin-top: 12mm;    /* --print-top-padding: 12mm; */
   margin-bottom: 12mm; /* --print-bottom-padding: 15mm; */
+}
+
+/* typography */
+
+.printable_flow {
+  color: #000;
+}
+
+.printable_flow .section-title {
+  color: #000;
+}
+
+.printable_flow .section-title[data-level]::before {
+  content: attr(data-level) ". ";
+  margin-right: .5rem;
+}
+
+.printable_flow h1 {
+  font-size: 2em;
+  padding-top: 1em;
+  border-bottom: 4px solid #ddd;
+}
+/* .printable_flow h1::after {
+  position: absolute;
+  content: '';
+  border-top: 4px solid #ccc;
+  left: 0;
+  right: 0;
+  top: 1em;
+} */
+.printable_flow h2 {
+  font-size: 1.4em;
+  padding-top: .5em;
+}
+.printable_flow h3 {
+  font-size: 1.2em;
+  padding-top: .5em;
+}
+.printable_flow h4,
+.printable_flow h5,
+.printable_flow h6 {
+  font-size: 1.1em;
+  font-style: italic;
+  padding-top: .5em;
 }

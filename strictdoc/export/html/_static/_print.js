@@ -2,6 +2,14 @@ window.onload = function () {
 
   console.log('I am in _print.js',);
 
+  // The elementsPaddingCompensator is taken into account
+  // in the calculation of page breaks
+  // in calculatePages().
+  // It is used for Spacer that is added after each printable element
+  // in makePreview().
+  // This is done to make the page height predictable.
+  const elementsPaddingCompensator = 16;
+
   // Preparing templates.
   const {
     printableFlow,
@@ -9,49 +17,49 @@ window.onload = function () {
     runningFooterTemplate,
     printAreaHeight,
   } = prepareTemplates({
-    printableFlow: '#printableFlow',
-    pageTemplate: '#pageTemplate',
-    printAreaTemplate: '#printAreaTemplate',
-    runningHeaderTemplate: '#runningHeaderTemplate .running',
-    runningFooterTemplate: '#runningFooterTemplate .running',
+    printableFlowSelector: '#printableFlow',
+    pageTemplateSelector: '#pageTemplate',
+    printAreaTemplateSelector: '#printAreaTemplate',
+    runningHeaderTemplateSelector: '#runningHeaderTemplate .running',
+    runningFooterTemplateSelector: '#runningFooterTemplate .running',
   });
 
-  // The elementsPaddingCompensator is taken into account
-  // in the calculation of page breaks in calculatePages().
-  // It is used for Spacer that is added after each printable element
-  // in makePreview().
-  // This is done to make the page height predictable.
-  const elementsPaddingCompensator = 16;
-
-  // Adding IDs to nodes that we don't want to break,
-  // and collecting their IDs and heights in printableElements
+  // Collects nodes with the corresponding selectors,
+  // adding IDs to nodes that we don't want to break,
+  // and collecting their data in printableElements
   // to then break down the content into pages.
   const printableElements = processPrintable({
     // use any selector:
-    printable: '.printable',
-    // use class selector:
-    breakable: '.breakable',
-    pagebreak: '.pagebreak',
+    printableSelector: '.printable',
+    // use class selector (is intended for use in classList.contains):
+    breakableSelector: 'breakable',
+    pagebreakSelector: 'pagebreak',
   });
 
   // Calculate page breaks
   // and add flags to printableElements.
   // Returns printablePages.
   const printablePages = calculatePages({
-    printableElements,
+    // from the templates
     printAreaHeight,
+    // from the processed data
+    printableElements,
+    // constant
     elementsPaddingCompensator,
   });
 
   // Splitting content into virtual pages
   // and generating previews that look like PDF.
   makePreview({
+    // from the templates
     printableFlow,
     runningFooterTemplate,
     runningHeaderTemplate,
+    printAreaHeight,
+    // from the processed data
     printableElements,
     printablePages,
-    printAreaHeight,
+    // constant
     elementsPaddingCompensator,
   });
 };
@@ -59,23 +67,23 @@ window.onload = function () {
 // USED FUNCTIONS
 
 function prepareTemplates({
-  printableFlow,
-  pageTemplate,
-  printAreaTemplate,
-  runningHeaderTemplate,
-  runningFooterTemplate,
+  printableFlowSelector,
+  pageTemplateSelector,
+  printAreaTemplateSelector,
+  runningHeaderTemplateSelector,
+  runningFooterTemplateSelector,
 }) {
 
   // Get printable wrapper.
-  const _printableFlow = document.querySelector(printableFlow);
+  const _printableFlow = document.querySelector(printableFlowSelector);
 
   // Get page templates container.
-  const _pageTemplate = document.querySelector(pageTemplate);
+  const _pageTemplate = document.querySelector(pageTemplateSelector);
 
   // Get templates for cloning.
-  const _printAreaTemplate = _pageTemplate.querySelector(printAreaTemplate);
-  const _runningHeaderTemplate = _pageTemplate.querySelector(runningHeaderTemplate);
-  const _runningFooterTemplate = _pageTemplate.querySelector(runningFooterTemplate);
+  const _printAreaTemplate = _pageTemplate.querySelector(printAreaTemplateSelector);
+  const _runningHeaderTemplate = _pageTemplate.querySelector(runningHeaderTemplateSelector);
+  const _runningFooterTemplate = _pageTemplate.querySelector(runningFooterTemplateSelector);
 
   // Get print area height for calculating pages.
   const _printAreaHeight = _printAreaTemplate.offsetHeight;
@@ -96,24 +104,24 @@ function prepareTemplates({
 }
 
 const processPrintable = ({
-  printable,
-  breakable,
-  pagebreak,
+  printableSelector,
+  breakableSelector,
+  pagebreakSelector,
 }) => {
 
   // Checking for variable format.
   // Selector in 'breakable' and 'pagebreak' should be suitable for classList.contains
-  if (breakable.charAt(0) === '.') {
-    breakable = breakable.substring(1);
+  if (breakableSelector.charAt(0) === '.') {
+    breakableSelector = breakableSelector.substring(1);
   }
-  if (pagebreak.charAt(0) === '.') {
-    pagebreak = pagebreak.substring(1);
+  if (pagebreakSelector.charAt(0) === '.') {
+    pagebreakSelector = pagebreakSelector.substring(1);
   }
-  if (breakable.charAt(0) === '#') {
-    console.error(` "breakable" var in processPrintable() should be suitable for classList.contains and contain only the class name!`);
+  if (breakableSelector.charAt(0) === '#') {
+    console.error(` "breakableSelector" var in processPrintable() should be suitable for classList.contains and contain only the class name!`);
   }
-  if (pagebreak.charAt(0) === '#') {
-    console.error(` "pagebreak" var in processPrintable() should be suitable for classList.contains and contain only the class name!`);
+  if (pagebreakSelector.charAt(0) === '#') {
+    console.error(` "pagebreakSelector" var in processPrintable() should be suitable for classList.contains and contain only the class name!`);
   }
 
   // let accumulator of printable elements data
@@ -132,7 +140,7 @@ const processPrintable = ({
     });
 
     // register a forced page break
-    if (element.classList.contains(pagebreak)) {
+    if (element.classList.contains(pagebreakSelector)) {
       console.log('has pagebreak:', elementId, element);
       printableElements[elementId] = {
         ...printableElements[elementId],
@@ -149,11 +157,11 @@ const processPrintable = ({
 
   // Get printable NodeList,
   // from all elements with selectors in 'printable'.
-  [...document.querySelectorAll(printable)]
+  [...document.querySelectorAll(printableSelector)]
     .map((printableElement, id) => {
 
       // If the printable Element is breakable, process ONLY its child elements.
-      if (printableElement.classList.contains(breakable) && printableElement.hasChildNodes()) {
+      if (printableElement.classList.contains(breakableSelector) && printableElement.hasChildNodes()) {
 
         const breakableElement = printableElement;
         makeArrayOfNotTextChildNodes(breakableElement)
@@ -188,8 +196,8 @@ const processPrintable = ({
 }
 
 function calculatePages({
-  printableElements,
   printAreaHeight,
+  printableElements,
   // We take the padding compensator into account in this function in the calculation of the page breaks:
   // via compensatedCurrentElementHeight.
   // It is used for Spacer and is added after each printable element.
@@ -291,9 +299,9 @@ function makePreview({
   runningFooterTemplate,
   runningHeaderTemplate,
   // data
+  printAreaHeight,
   printableElements,
   printablePages,
-  printAreaHeight,
   // Consider the height compensator.
   // It is taken into account in the calculation of page breaks.
   // It is used for Spacer and is added after each printable element.

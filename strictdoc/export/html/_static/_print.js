@@ -1,5 +1,7 @@
 window.onload = function () {
 
+  // TODO fire this as eventHandler -- conflict on the window.onload
+
   console.log('I am in _print.js',);
 
   // The elementsPaddingCompensator is taken into account

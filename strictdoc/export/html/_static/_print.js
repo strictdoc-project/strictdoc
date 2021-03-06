@@ -91,11 +91,9 @@ function prepareTemplates({
 
   // Get print area height for calculating pages.
   const _printAreaHeight = _printAreaTemplate.offsetHeight;
-
   // To print frontage correctly, fix the height of the printable area,
   // otherwise it changes after processing the CSS virtual elements.
-  const frontpage = document.querySelector('.frontpage');
-  frontpage.style.height = _printAreaHeight + 'px';
+  _printAreaTemplate.style.height = _printAreaHeight + 'px';
 
   console.log('print area height: ', _printAreaHeight);
 

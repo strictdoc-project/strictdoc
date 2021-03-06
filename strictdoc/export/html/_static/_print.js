@@ -94,6 +94,7 @@ function prepareTemplates({
   // To print frontage correctly, fix the height of the printable area,
   // otherwise it changes after processing the CSS virtual elements.
   _printAreaTemplate.style.height = _printAreaHeight + 'px';
+  preparePreview(_printAreaTemplate);
 
   console.log('print area height: ', _printAreaHeight);
 
@@ -154,7 +155,7 @@ function processPrintable({
     element.id = `printable_${elementId}`;
 
     // Add styles, compensate for visibility over the virtual page.
-    element.style.position = 'relative';
+    preparePreview(element);
   }
 
   // Get printable NodeList,
@@ -355,7 +356,7 @@ function makePreview({
     // Add elementPaddingCompensatorDIV after each printable element.
     const elementPaddingCompensatorDIV = document.createElement('div');
     elementPaddingCompensatorDIV.style.paddingTop = elementsPaddingCompensator + 'px';
-    elementPaddingCompensatorDIV.style.position = 'relative';
+    preparePreview(elementPaddingCompensatorDIV);
     element.after(elementPaddingCompensatorDIV);
   })
 }
@@ -373,4 +374,9 @@ function setPageNumber(target, current, total) {
     contaiter.querySelector('.current').innerHTML = current;
     contaiter.querySelector('.total').innerHTML = total;
   }
+}
+
+function preparePreview(element) {
+  // Add styles, compensate for visibility over the virtual page.
+  element.style.position = 'relative';
 }

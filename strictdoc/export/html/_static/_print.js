@@ -29,6 +29,8 @@ window.onload = function () {
   // and collecting their data in printableElements
   // to then break down the content into pages.
   const printableElements = processPrintable({
+    // where we're looking for:
+    printableFlow,
     // use any selector:
     printableSelector: '.printable',
     // use class selector (is intended for use in classList.contains):
@@ -103,11 +105,12 @@ function prepareTemplates({
   }
 }
 
-const processPrintable = ({
+function processPrintable({
+  printableFlow,
   printableSelector,
   breakableSelector,
   pagebreakSelector,
-}) => {
+}) {
 
   // Checking for variable format.
   // Selector in 'breakable' and 'pagebreak' should be suitable for classList.contains
@@ -141,7 +144,6 @@ const processPrintable = ({
 
     // register a forced page break
     if (element.classList.contains(pagebreakSelector)) {
-      console.log('has pagebreak:', elementId, element);
       printableElements[elementId] = {
         ...printableElements[elementId],
         pageBreak: true,
@@ -157,7 +159,7 @@ const processPrintable = ({
 
   // Get printable NodeList,
   // from all elements with selectors in 'printable'.
-  [...document.querySelectorAll(printableSelector)]
+  [...printableFlow.querySelectorAll(printableSelector)]
     .map((printableElement, id) => {
 
       // If the printable Element is breakable, process ONLY its child elements.

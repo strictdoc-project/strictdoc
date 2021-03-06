@@ -95,7 +95,7 @@ function prepareTemplates({
   const frontpage = document.querySelector('.frontpage');
   frontpage.style.height = _printAreaHeight + 'px';
 
-  console.log(_printAreaHeight);
+  console.log('print area height: ', _printAreaHeight);
 
   return {
     printableFlow: _printableFlow,
@@ -216,33 +216,39 @@ function calculatePages({
   // so we can use 'frontpage' here, and then IDs.
   const printablePages = ['frontpage'];
 
-  function registerPageStart(id) {
-    // mark the (CURRENT) element as a page start,
+  function registerPageStart(id, printablePages) {
+    // mark the element as a page start,
     printableElements[id] = {
       ...printableElements[id],
-      pageStart: true,
+      //We register the beginning of the page
+      // based on the registration of the end of the previous page.
+      // So we force its number by 1 beforehand:
+      pageStart: printablePages.length + 1,
     };
   }
 
-  function registerPageBreak(id, memorizedPageContentHeight) {
+  // TODO внести обратно эту функцию в registerPageEnd
+  function registerPage(id, printablePages) {
     // register the page,
     printablePages.push(id);
+  }
 
-    // mark the (PREVIOUS) element as a page break,
+  function registerPageEnd(id, printablePages, memorizedPageContentHeight) {
+    // mark the element as a page break,
     // write the memorized pageContentHeight down,
     // write the page number down,
     printableElements[id] = {
       ...printableElements[id],
+      pageEnd: printablePages.length,
       pageBreak: memorizedPageContentHeight,
-      pageNumber: printablePages.length,
     };
   }
 
   // We will collect the IDs of the page breaks and height of contents
   // into the 'printableElements' array.
 
-  // Register the first element as a page start.
-  registerPageStart(0);
+  // Register the first element of the 'printableElements' as a page start.
+  registerPageStart(0, printablePages);
 
   // process content flow
   printableElements.map((element, id) => {
@@ -261,9 +267,10 @@ function calculatePages({
     if (element.pageBreak) {
       // mark the CURRENT element as a page break
       // with pageBreak equal to the accumulated height at this moment,
-      registerPageBreak(id, heightAccumulator);
+      registerPage(id, printablePages);
+      registerPageEnd(id, printablePages, heightAccumulator);
       // mark the NEXT element as a page start,
-      registerPageStart(id + 1);
+      registerPageStart(id + 1, printablePages);
       // reset the accumulator
       heightAccumulator = 0;
       // go to next element
@@ -272,12 +279,11 @@ function calculatePages({
 
     // If the accumulator is overflowed,
     if (heightAccumulator > printAreaHeight) {
-
-      // mark the CURRENT element as a page start,
-      registerPageStart(id);
       // mark the PREVIOUS element as a page break.
-      registerPageBreak(id - 1, pageContentHeight);
-
+      registerPage(id - 1, printablePages);
+      registerPageEnd(id - 1, printablePages, pageContentHeight);
+      // mark the CURRENT element as a page start,
+      registerPageStart(id, printablePages);
       // reset the accumulator
       // and add to it the height of the current element,
       // which will be the start of the new page.
@@ -289,7 +295,9 @@ function calculatePages({
   // and assign the last heightAccumulator value
   // as the height of the last page.
   // We need it to generate the footer on the last page correctly.
-  registerPageBreak(printableElements.length - 1, heightAccumulator);
+  const lastPrintableElementId = printableElements.length - 1;
+  registerPage(lastPrintableElementId, printablePages);
+  registerPageEnd(lastPrintableElementId, printablePages, heightAccumulator);
 
   console.log('printablePages:\n', printablePages);
   return printablePages;
@@ -310,28 +318,34 @@ function makePreview({
   elementsPaddingCompensator = 16
 }) {
 
-  // Set the page number for Frontpage.
-  // const frontpageFooter = printableFlow.querySelector(`#printable_${id}`);
+  // Set the page number for Frontpage, if possible.
+  // runningHeaderTemplate & runningFooterTemplate are frontpage children.
+  setPageNumber(runningHeaderTemplate, 1, printablePages.length);
+  setPageNumber(runningFooterTemplate, 1, printablePages.length);
 
   // Set the header and footer for all pages.
 
   printableElements.map((item) => {
 
-    const { id, height, pageStart, pageBreak, pageNumber } = item;
+    const { id, height, pageStart, pageEnd, pageBreak } = item;
     const element = printableFlow.querySelector(`#printable_${id}`);
 
     if (pageStart) {
       // Starting a new virtual page.
       const runningHeader = runningHeaderTemplate.cloneNode(true);
+      // Add page number, if possible.
+      setPageNumber(runningHeader, pageStart, printablePages.length);
+      // Put the element into DOM.
       element.before(runningHeader);
     }
 
-    if (pageBreak) {
+    if (pageEnd) {
       // Closing the current virtual page,
       // which ends with a page break.
       const runningFooter = runningFooterTemplate.cloneNode(true);
-      // Add page number.
-      runningFooter.querySelector('.page-number').innerHTML = ` ${pageNumber} / ${printablePages.length}`;
+      // Add page number, if possible.
+      setPageNumber(runningFooter, pageEnd, printablePages.length);
+      // Put the element into DOM.
       element.after(runningFooter);
 
       // To compensate for the empty space at the end of the page, add a padding to footer.
@@ -353,4 +367,12 @@ function makeArrayOfNotTextChildNodes(element) {
   // https://developer.mozilla.org/ru/docs/Web/API/Node/nodeName
   let children = element.childNodes;
   return [...children].filter(item => item.tagName);
+}
+
+function setPageNumber(target, current, total) {
+  const contaiter = target.querySelector(`.page-number`);
+  if (contaiter) {
+    contaiter.querySelector('.current').innerHTML = current;
+    contaiter.querySelector('.total').innerHTML = total;
+  }
 }

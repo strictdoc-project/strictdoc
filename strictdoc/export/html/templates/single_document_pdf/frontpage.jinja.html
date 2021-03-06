@@ -1,3 +1,33 @@
+{#
+
+  To design the headers and footers of a document,
+  edit the content of the <footer> and <header> tags.
+
+  You can change the style through CSS.
+  You can change or add your own CSS styles for a customized look.
+
+  To add a PAGE NUMBER you can use:
+  .page-number,
+  .page-number .current,
+  .page-number .total,
+
+  which is used by the JS script.
+  Tags with .current and .total selectors are filled in automatically.
+
+  You can change the separator and change the internal structure of the .page-number block.
+
+  HERE IS AN EXAMPLE:
+
+  <div class="page-number">
+    <span class="current"></span>
+    of
+    <span class="total"></span>
+  </div>
+
+  You can put this block inside the <footer> or <header>.
+
+#}
+
 <div class="virtualA4" id="pageTemplate">
 
   <div id="runningHeaderTemplate">
@@ -5,9 +35,20 @@
       <div class="virtualA4_page"></div>
       <div class="virtualA4_page_top_padding"></div>
       <div class="running-header">
-        <p>
-          <b>runningHeader</b> from frontpage temlate
-        </p>
+
+        {# HERE IS YOUR CUSTOM MARKUP #}
+        <header>
+          <p>
+            <b>runningHeader</b> from frontpage temlpate ###
+          </p>
+          <div class="page-number">
+            <span class="current"></span>
+            of
+            <span class="total"></span>
+          </div>
+        </header>
+        {# // HERE IS THE END OF YOUR CUSTOM MARKUP #}
+
       </div>
     </div>
   </div>
@@ -23,11 +64,16 @@
   <div id="runningFooterTemplate">
     <div class="running">
       <div class="running-footer">
-        <p>
-          <b>runningFooter</b> from frontpage temlate
-          <br>
-          <span class="page-number">#</span>
-        </p>
+
+        {# HERE IS YOUR CUSTOM MARKUP #}
+        <footer>
+          <p>© 2020 PTS GmbH</p>
+          <p>This document is not to be reproduced, modified, adapted, published, translated in any material form in whole or in part without the prior written permission of PTScientists GmbH as the proprietor of this document.</p>
+            {# <span class="page-number">#</span> #}
+          </p>
+        </footer>
+        {# // HERE IS THE END OF YOUR CUSTOM MARKUP #}
+
       </div>
       <div class="virtualA4_page_bottom_padding"></div>
       <div class="virtualA4_pages_divider"></div>

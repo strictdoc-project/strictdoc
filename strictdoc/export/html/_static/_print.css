@@ -75,7 +75,7 @@
   position: relative;
 
   /* ! temp */
-  background-color: rgba(0, 0, 0, 0.02);
+  /* background-color: rgba(0, 0, 0, 0.02); */
 }
 
 .running-footer {
@@ -91,11 +91,8 @@
   position: relative;
 
   /* ! temp */
-  background-color: rgba(0, 0, 0, 0.02);
+  /* background-color: rgba(0, 0, 0, 0.02); */
 }
-
-/* print service */
-.break-after-page { break-after: page; }
 
 /*
   Virtual elements for preview in browser,
@@ -156,20 +153,20 @@
 
 @media print {
 
-  .pdf-view aside,
-  .pdf-view header,
-  .pdf-view nav,
+  .pdf-view .layout > aside,
+  .pdf-view .layout > header,
+  .pdf-view .layout > nav,
   .pdf-view .layout_button {
     display: none ;
   }
 
-  .pdf-view  main,
-  .pdf-view  .layout {
+  .pdf-view .layout,
+  .pdf-view .layout_main {
     display: contents;
   }
 
   /* .pdf-view .frontpage, */
-  .pdf-view .content {
+  .pdf-view .layout .layout_main .content {
     padding: 0;
     display: contents;
   }

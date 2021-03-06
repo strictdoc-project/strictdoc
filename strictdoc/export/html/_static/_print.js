@@ -229,13 +229,9 @@ function calculatePages({
     };
   }
 
-  // TODO внести обратно эту функцию в registerPageEnd
-  function registerPage(id, printablePages) {
-    // register the page,
-    printablePages.push(id);
-  }
-
   function registerPageEnd(id, printablePages, memorizedPageContentHeight) {
+    registerPage(id, printablePages);
+
     // mark the element as a page break,
     // write the memorized pageContentHeight down,
     // write the page number down,
@@ -244,6 +240,11 @@ function calculatePages({
       pageEnd: printablePages.length,
       pageBreak: memorizedPageContentHeight,
     };
+  }
+
+  function registerPage(id, printablePages) {
+    // register the page,
+    printablePages.push(id);
   }
 
   // We will collect the IDs of the page breaks and height of contents
@@ -269,7 +270,6 @@ function calculatePages({
     if (element.pageBreak) {
       // mark the CURRENT element as a page break
       // with pageBreak equal to the accumulated height at this moment,
-      registerPage(id, printablePages);
       registerPageEnd(id, printablePages, heightAccumulator);
       // mark the NEXT element as a page start,
       registerPageStart(id + 1, printablePages);
@@ -282,7 +282,6 @@ function calculatePages({
     // If the accumulator is overflowed,
     if (heightAccumulator > printAreaHeight) {
       // mark the PREVIOUS element as a page break.
-      registerPage(id - 1, printablePages);
       registerPageEnd(id - 1, printablePages, pageContentHeight);
       // mark the CURRENT element as a page start,
       registerPageStart(id, printablePages);
@@ -298,7 +297,6 @@ function calculatePages({
   // as the height of the last page.
   // We need it to generate the footer on the last page correctly.
   const lastPrintableElementId = printableElements.length - 1;
-  registerPage(lastPrintableElementId, printablePages);
   registerPageEnd(lastPrintableElementId, printablePages, heightAccumulator);
 
   console.log('printablePages:\n', printablePages);

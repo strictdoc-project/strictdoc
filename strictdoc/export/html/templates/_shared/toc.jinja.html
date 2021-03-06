@@ -1,5 +1,5 @@
-
-    <ul class="toc">
+    {# add classes 'printable' 'breakable' for _print.js #}
+    <ul class="toc printable breakable">
     {%- for section in document_iterator.table_of_contents() -%}
       <li>
         {%- if section.is_section -%}
@@ -44,3 +44,5 @@
         </ul>
       {%- endif -%}
     {%- endfor %}
+    {# add class 'pagebreak' for _print.js #}
+    <div class="printable pagebreak"></div>

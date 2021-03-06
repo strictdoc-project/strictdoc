@@ -29,6 +29,9 @@
         After this line is page break
       </p>
 
+      <h3 class="printable">Table of contents</h3>
+      {% include "_shared/toc.jinja.html" %}
+
       {%- if document.free_texts -%}
         <section><article>
           {%- for free_text in document.free_texts %}

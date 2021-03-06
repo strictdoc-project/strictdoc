@@ -81,7 +81,7 @@
 }
 
 /* article header */
-article header {
+article > header {
   display: none;
 }
 .table-view article header {
@@ -92,7 +92,7 @@ article header {
   */
   display: none;
 }
-.docsection + .docsection header,
-.requirement + .requirement header {
+.docsection + .docsection header.docsection-headers,
+.requirement + .requirement header.requirement_headers {
   display: none;
 }

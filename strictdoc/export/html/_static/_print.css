@@ -3,12 +3,15 @@
 @page {
   size: A4;
   /* css variables don't work in @page */
+
   /*
   Make sure that the print margins (set for @page)
   are slightly SMALLER than the corresponding indents
   used for the the printable area (.pdf-view .printable_flow),
   to avoid overfilling the printable area and the mismatch
   between preview and the flow processed by paged media.
+  In other words,
+  the printed text will NOT be WIDE than the printable area.
   */
   margin-left: 20mm;   /* --print-padding: 25mm; */
   margin-right: 20mm;  /* --print-padding: 25mm; */

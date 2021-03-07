@@ -182,13 +182,6 @@
   --base-unit: var(--print-font-size);
 }
 
-.printable_flow .running-header .page-number {
-  padding-bottom: calc(var(--base-unit) * 0.5);
-}
-.printable_flow .running-footer .page-number {
-  padding-top: calc(var(--base-unit) * 0.5);
-}
-
 /* general document typography */
 
 .printable_flow {

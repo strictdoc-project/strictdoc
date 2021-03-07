@@ -1,7 +1,5 @@
-window.onload = function () {
-
-  // TODO fire this as eventHandler -- conflict on the window.onload
-
+window.addEventListener("load", function (event) {
+  console.log("All resources finished loading!");
   console.log('I am in _print.js',);
 
   // The elementsPaddingCompensator is taken into account
@@ -66,7 +64,7 @@ window.onload = function () {
     // constant
     elementsPaddingCompensator,
   });
-};
+});
 
 // USED FUNCTIONS
 

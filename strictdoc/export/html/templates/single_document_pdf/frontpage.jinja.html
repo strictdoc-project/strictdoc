@@ -37,17 +37,22 @@
       <div class="running-header">
 
         {# HERE IS YOUR CUSTOM MARKUP #}
-        <header>
-          <div class="page-number">
-            <span class="current"></span>
-            of
-            <span class="total"></span>
-          </div>
+        <header class="pdf-header">
 
-          <div class="running-header__document-title">
-            <p><b>A Practical Tutorial on Modified Condition/ Decision Coverage</b></p>
-            <p>COM_PRJ_DOC_NUM.0.1</p>
-            <p>Version <b>0.1</b> dated <b>03.03.2021</b></p>
+          <div class="pdf-header__main">
+            <div class="pdf-header__title">
+              A Practical Tutorial on Modified Condition/ Decision Coverage
+            </div>
+            <div class="pdfPageNumber">
+              <span class="current"></span>
+              of
+              <span class="total"></span>
+            </div>
+          </div>
+          <div class="pdf-header__aside">
+            <div>COM_PRJ_DOC_NUM.0.1</div>
+            <div>Version 0.1</div>
+            <div>03.03.2021</div>
           </div>
 
         </header>
@@ -61,20 +66,20 @@
 
     {# HERE IS YOUR CUSTOM MARKUP #}
     <div class="frontpage">
-      <div class="frontpage__document-context">
-        Open Source software
-      </div>
-      <div class="frontpage__document-title">
-        <h1>A Practical Tutorial on Modified Condition/ Decision Coverage</h1>
-        <p>A Long Subtitle that can be a project subtitle or a project context.</p>
-      </div>
-      <div class="frontpage__document-info">
+      <div class="frontpage__top">
         <div class="frontpage__adress">
           <p>XYZ GmbH</p>
           <p>Zermatter Str. 160B</p>
           <p>13000 Berlin, Germany</p>
           <p>https://github.com/strictdoc-project/strictdoc.git/</p>
         </div>
+      </div>
+      <div class="frontpage__middle">
+        <div class="frontpage__document-title">A Practical Tutorial on Modified Condition/ Decision Coverage</div>
+        <div class="frontpage__document-subtitle">A Long Subtitle that can be a project subtitle or a project context.</div>
+      </div>
+      <div class="frontpage__bottom">
+
         <table class="frontpage__infotable">
           <tr>
             <td>Document ref:</td>
@@ -124,11 +129,11 @@
       <div class="running-footer">
 
         {# HERE IS YOUR CUSTOM MARKUP #}
-        <footer>
-          <p class="running-footer__copywrite">© 2021 StrictDoc GmbH</p>
-          <p class="running-footer__copywrite-text">
+        <footer class="pdf-footer">
+          <div class="pdf-footer__copywrite">© 2021 StrictDoc GmbH</div>
+          <div class="pdf-footer__copywrite-text">
             This document is not&nbsp;to&nbsp;be reproduced, modified, adapted, published, translated in&nbsp;any&nbsp;material form in&nbsp;whole or in&nbsp;part without the&nbsp;prior written permission of&nbsp;XYZ as&nbsp;the&nbsp;proprietor of&nbsp;this&nbsp;document.
-          </p>
+          </div>
         </footer>
         {# // HERE IS THE END OF YOUR CUSTOM MARKUP #}
 

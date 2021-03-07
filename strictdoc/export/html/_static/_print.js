@@ -367,7 +367,7 @@ function makeArrayOfNotTextChildNodes(element) {
 }
 
 function setPageNumber(target, current, total) {
-  const contaiter = target.querySelector(`.page-number`);
+  const contaiter = target.querySelector(`.pdfPageNumber`);
   if (contaiter) {
     contaiter.querySelector('.current').innerHTML = current;
     contaiter.querySelector('.total').innerHTML = total;

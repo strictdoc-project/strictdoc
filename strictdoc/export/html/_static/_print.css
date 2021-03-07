@@ -1,24 +1,44 @@
 /* general styles */
 
+@page {
+  size: A4;
+  /* css variables don't work in @page */
+  /*
+  Make sure that the print margins (set for @page)
+  are slightly SMALLER than the corresponding indents
+  used for the the printable area (.pdf-view .printable_flow),
+  to avoid overfilling the printable area and the mismatch
+  between preview and the flow processed by paged media.
+  */
+  margin-left: 20mm;   /* --print-padding: 25mm; */
+  margin-right: 20mm;  /* --print-padding: 25mm; */
+  margin-top: 10mm;    /* --print-top-padding: 10mm; */
+  margin-bottom: 10mm; /* --print-bottom-padding: 12mm; */
+}
+
 .pdf-view {
   --print-A4-width: 210mm;
   --print-A4-height: 297mm;
   --print-font-size: 11pt;
-  /* vitual */
-  --vitual-pages-elevation-shadow: rgba(0, 0, 0, 0.1) 2px 2px 12px 0px;
-  --vitual-pages-divider: 1rem;
-
   /*
-  ! in @page CCS variables don't work!
-  ! when changing print-padding parameters
-  ! do not forget to change the corresponding margins in @page
+  ! In @page CCS variables don't work!
+  ! When changing print-padding parameters (especially in the case of downsizing)
+  ! do not forget to change the corresponding margins in @page.
   */
   --print-padding: 25mm;
   --print-top-padding: 12mm;
-  --print-bottom-padding: 15mm;
+  --print-bottom-padding: 12mm;
 
   /* calculated */
   --printing-width: calc(var(--print-A4-width) - var(--print-padding) * 2);
+
+  /* vitual; not printed, only for the preview area */
+  --vitual-pages-elevation-shadow: rgba(0, 0, 0, 0.1) 2px 2px 12px 0px;
+  --vitual-pages-divider: 1rem;
+
+  /* general indents between the running header/footer and the content */
+  --running-header-padding: 3rem;
+  --running-footer-padding: 3rem;
 }
 
 .pdf-view .content {
@@ -36,62 +56,6 @@
 .pdf-view .printable_flow * {
   margin-top: 0;
   margin-bottom: 0;
-}
-
-/* frontpage */
-
-.frontpage {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: minmax(min-content, max-content) 1fr minmax(min-content, max-content);
-  grid-template-areas:
-    "header header header"
-    "content content content"
-    "footer footer footer";
-  place-items: stretch stretch;
-  place-content: stretch stretch;
-
-  /* We want the 'frontpage' content to take up all available heights,
-  excluding the footer and header heights. */
-  height: 100%;
-
-  /* elevate above the virtual page */
-  position: relative;
-
-  /* ! temp */
-  background-color: rgba(0, 0, 0, 0.01);
-}
-
-/* running */
-
-.running-header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  padding-bottom: .5rem;
-
-  /* elevate above the virtual page */
-  position: relative;
-
-  /* ! temp */
-  /* background-color: rgba(0, 0, 0, 0.02); */
-}
-
-.running-footer {
-  break-after: page;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  padding-top: .5rem;
-
-  /* elevate above the virtual page */
-  position: relative;
-
-  /* ! temp */
-  /* background-color: rgba(0, 0, 0, 0.02); */
 }
 
 /*
@@ -182,47 +146,64 @@
     display: none;
   }
 
+  .running-footer {
+    break-after: page;
+  }
+
 }
 
-@page {
-  size: A4;
-  /* var don't work in @page */
-  /* ~ 0,64" */
-  /* should be synchronized width
-  --print-padding: 25mm;
-  --print-top-padding: 12mm;
-  --print-bottom-padding: 15mm;
-  */
+/* running header & footer */
 
-  /*
-  make left & right margin slightly smaller than the SSA variables.
-  To keep the width from overflowing when printing.
-  */
-  margin-left: 20mm;   /* --print-padding: 25mm; */
-  margin-right: 20mm;  /* --print-padding: 25mm; */
-  margin-top: 12mm;    /* --print-top-padding: 12mm; */
-  margin-bottom: 12mm; /* --print-bottom-padding: 15mm; */
+.running-header {
+  padding-bottom: var(--running-header-padding);
+  /* elevate above the virtual page for visibility */
+  position: relative;
 }
 
-/* typography */
+.running-footer {
+  padding-top: var(--running-footer-padding);
+  /* elevate above the virtual page for visibility */
+  position: relative;
+}
+
+/** ************************** **/
+/** HERE IS YOUR CUSTOM MARKUP **/
+/** ************************** **/
 
 .printable_flow {
-  color: #000;
+  --color-0: #000;
+  --color-1: #333;
+  --color-2: #666;
+  --color-3: #999;
+  --base-unit: var(--print-font-size);
+}
+
+.printable_flow .running-header .page-number {
+  padding-bottom: calc(var(--base-unit) * 0.5);
+}
+.printable_flow .running-footer .page-number {
+  padding-top: calc(var(--base-unit) * 0.5);
+}
+
+/* general document typography */
+
+.printable_flow {
+  color: var(--color-0);
 }
 
 .printable_flow .section-title {
-  color: #000;
+  color: var(--color-0);
 }
 
 .printable_flow .section-title[data-level]::before {
   content: attr(data-level) ". ";
-  margin-right: .5rem;
+  margin-right: calc(var(--base-unit) * 0.5);
 }
 
 .printable_flow h1 {
-  font-size: 2em;
-  padding-top: 1em;
-  border-bottom: 4px solid #ddd;
+  font-size: calc(var(--base-unit) * 2);
+  padding-top: var(--base-unit);
+  /* border-bottom: 4px solid #ddd; */
 }
 /* .printable_flow h1::after {
   position: absolute;
@@ -233,17 +214,131 @@
   top: 1em;
 } */
 .printable_flow h2 {
-  font-size: 1.4em;
-  padding-top: .5em;
+  font-size: calc(var(--base-unit) * 1.4);
+  padding-top: calc(var(--base-unit) * 0.5);
 }
 .printable_flow h3 {
-  font-size: 1.2em;
-  padding-top: .5em;
+  font-size: calc(var(--base-unit) * 1.2);
+  padding-top: calc(var(--base-unit) * 0.5);
 }
 .printable_flow h4,
 .printable_flow h5,
 .printable_flow h6 {
-  font-size: 1.1em;
+  font-size: calc(var(--base-unit) * 1.1);
   font-style: italic;
-  padding-top: .5em;
+  padding-top: calc(var(--base-unit) * 0.5);
 }
+
+ /* frontpage */
+
+.frontpage {
+  display: grid;
+  grid-template:
+  /* rows */
+    " . context" 1fr
+    "title title" 1fr
+    "info info" 2fr
+  /* columns */
+    / 1fr 1fr;
+  place-items: start stretch;
+  place-content: stretch stretch;
+
+  height: 100%;
+
+  /* ! temp */
+  /* background-color: rgba(0, 0, 0, 0.01); */
+}
+
+.frontpage__document-context {
+  grid-area: context;
+  place-self: start end;
+  padding: var(--base-unit);
+  text-align: right;
+  font-size: calc(var(--base-unit) * 0.85);
+  font-weight: bold;
+  color: var(--color-2);
+  border-top: 1px solid var(--color-3);
+  border-right: 1px solid var(--color-3);
+}
+
+.frontpage__document-title {
+  grid-area: title;
+  align-self: start;
+  padding-bottom: var(--base-unit);
+
+  font-size: calc(var(--base-unit) * 1.2);
+  text-align: center;
+  font-weight: 900;
+  color: var(--color-2);
+}
+
+.frontpage__document-info {
+  grid-area: info;
+  align-self: end;
+}
+
+.frontpage__document-title h1 {
+  margin: 0;
+  padding: 0;
+  padding-bottom: var(--base-unit);
+  text-align: center;
+  font-weight: 900;
+  color: var(--color-0);
+}
+
+.frontpage__adress {
+  color: var(--color-2);
+  padding-bottom: calc(var(--base-unit) * 1.5);
+}
+
+table.frontpage__infotable {
+  border-collapse: collapse;
+  width: 100%;
+  line-height: 1.2;
+}
+table.frontpage__infotable th,
+table.frontpage__infotable td {
+  padding: calc(var(--base-unit) * 0.65);
+  border: 1px solid var(--color-3);
+  width: 20%;
+  text-align: left;
+}
+table.frontpage__infotable td:last-child {
+  width: 30%;
+}
+table.frontpage__infotable th {
+  font-weight: normal;
+  color: var(--color-2);
+  text-transform: uppercase;
+  font-size: calc(var(--base-unit) * 0.8);
+}
+table.frontpage__infotable td {
+  font-weight: bold;
+  color: var(--color-0);
+}
+table.frontpage__infotable td:first-child {
+  font-weight: normal;
+  color: var(--color-2);
+}
+
+/* running header & footer */
+
+.running-header header {
+  color: var(--color-2);
+  text-align: right;
+  font-size: calc(var(--base-unit) * 0.75);
+}
+
+.running-footer footer {
+  font-size: calc(var(--base-unit) * 0.75);
+  color: var(--color-2);
+}
+
+.running-footer__copywrite {
+  text-align: center;
+}
+.running-footer__copywrite-text {
+  text-align: center;
+}
+
+

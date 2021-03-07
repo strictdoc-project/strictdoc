@@ -38,14 +38,18 @@
 
         {# HERE IS YOUR CUSTOM MARKUP #}
         <header>
-          <p>
-            <b>runningHeader</b> from frontpage temlpate ###
-          </p>
           <div class="page-number">
             <span class="current"></span>
             of
             <span class="total"></span>
           </div>
+
+          <div class="running-header__document-title">
+            <p><b>A Practical Tutorial on Modified Condition/ Decision Coverage</b></p>
+            <p>COM_PRJ_DOC_NUM.0.1</p>
+            <p>Version <b>0.1</b> dated <b>03.03.2021</b></p>
+          </div>
+
         </header>
         {# // HERE IS THE END OF YOUR CUSTOM MARKUP #}
 
@@ -55,9 +59,63 @@
 
   <div id="printAreaTemplate">
 
+    {# HERE IS YOUR CUSTOM MARKUP #}
     <div class="frontpage">
-      frontpage
+      <div class="frontpage__document-context">
+        Open Source software
+      </div>
+      <div class="frontpage__document-title">
+        <h1>A Practical Tutorial on Modified Condition/ Decision Coverage</h1>
+        <p>A Long Subtitle that can be a project subtitle or a project context.</p>
+      </div>
+      <div class="frontpage__document-info">
+        <div class="frontpage__adress">
+          <p>XYZ GmbH</p>
+          <p>Zermatter Str. 160B</p>
+          <p>13000 Berlin, Germany</p>
+          <p>https://github.com/strictdoc-project/strictdoc.git/</p>
+        </div>
+        <table class="frontpage__infotable">
+          <tr>
+            <td>Document ref:</td>
+            <td colspan="3">COM_PRJ_DOC_NUM.0.1</td>
+          </tr>
+          <tr>
+            <td>Version no.:</td>
+            <td colspan="3">0.1</td>
+          </tr>
+          <tr>
+            <td>Version date:</td>
+            <td colspan="3">03.03.2021</td>
+          </tr>
+          <tr>
+            <th>Function</th>
+            <th>Name</th>
+            <th>Company</th>
+            <th>Signature/Date</th>
+          </tr>
+          <tr>
+            <td>Prepared by</td>
+            <td>Stanislav Pankevich</td>
+            <td>StrictDoc</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Reviewed by</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Approved by</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+      </div>
     </div>
+    {# // HERE IS THE END OF YOUR CUSTOM MARKUP #}
 
   </div>
 
@@ -67,9 +125,9 @@
 
         {# HERE IS YOUR CUSTOM MARKUP #}
         <footer>
-          <p>© 2020 PTS GmbH</p>
-          <p>This document is not to be reproduced, modified, adapted, published, translated in any material form in whole or in part without the prior written permission of PTScientists GmbH as the proprietor of this document.</p>
-            {# <span class="page-number">#</span> #}
+          <p class="running-footer__copywrite">© 2021 StrictDoc GmbH</p>
+          <p class="running-footer__copywrite-text">
+            This document is not&nbsp;to&nbsp;be reproduced, modified, adapted, published, translated in&nbsp;any&nbsp;material form in&nbsp;whole or in&nbsp;part without the&nbsp;prior written permission of&nbsp;XYZ as&nbsp;the&nbsp;proprietor of&nbsp;this&nbsp;document.
           </p>
         </footer>
         {# // HERE IS THE END OF YOUR CUSTOM MARKUP #}

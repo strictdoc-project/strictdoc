@@ -57,6 +57,10 @@
   margin-top: 0;
   margin-bottom: 0;
 }
+.pdf-view .printable_flow article img,
+.pdf-view .printable_flow article object {
+  padding: 0;
+}
 
 /*
   Virtual elements for preview in browser,

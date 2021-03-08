@@ -13,8 +13,8 @@
   In other words,
   the printed text will NOT be WIDE than the printable area.
   */
-  margin-left: 20mm;   /* --print-padding: 25mm; */
-  margin-right: 20mm;  /* --print-padding: 25mm; */
+  margin-left: 20mm;   /* --print-padding: 21mm; */
+  margin-right: 20mm;  /* --print-padding: 21mm; */
   margin-top: 10mm;    /* --print-top-padding: 10mm; */
   margin-bottom: 10mm; /* --print-bottom-padding: 12mm; */
 }
@@ -28,8 +28,8 @@
   ! When changing print-padding parameters (especially in the case of downsizing)
   ! do not forget to change the corresponding margins in @page.
   */
-  --print-padding: 25mm;
-  --print-top-padding: 12mm;
+  --print-padding: 21mm;
+  --print-top-padding: 10mm;
   --print-bottom-padding: 12mm;
 
   /* calculated */
@@ -44,24 +44,32 @@
   --running-footer-padding: 3rem;
 }
 
-.pdf-view .content {
+/* .content.printTHIS: */
+.printTHIS {
   display: block;
+  font-size: var(--print-font-size);
+
+  /* affects previews */
+  margin: 0 auto;
+  width: var(--printing-width);
 }
 
-.pdf-view .printable_flow {
+/* affects the width and centering of the printed area */
+.printable_flow,
+.frontpage,
+.running {
   margin: 0 auto;
-  font-size: var(--print-font-size);
   width: var(--printing-width);
 }
 
 /* TODO margins to padding in ALL styles, so that the height of the element is defined correctly */
 /* adding a workaround for this case for now */
-.pdf-view .printable_flow * {
+.printTHIS .printable_flow * {
   margin-top: 0;
   margin-bottom: 0;
 }
-.pdf-view .printable_flow article img,
-.pdf-view .printable_flow article object {
+.printTHIS .printable_flow article img,
+.printTHIS .printable_flow article object {
   padding: 0;
 }
 
@@ -137,7 +145,9 @@
   }
 
   /* .pdf-view .frontpage, */
-  .pdf-view .layout .layout_main .content {
+  /* .pdf-view .layout .layout_main .content { */
+  /* .printTHIS.content { */
+  .printTHIS {
     padding: 0;
     display: contents;
   }
@@ -174,10 +184,10 @@
 }
 
 /** ************************** **/
-/** HERE IS YOUR CUSTOM MARKUP **/
+/** HERE IS YOUR CUSTOM STYLES **/
 /** ************************** **/
 
-.printable_flow {
+.printTHIS {
   --color-0: #000;
   --color-1: #333;
   --color-2: #666;

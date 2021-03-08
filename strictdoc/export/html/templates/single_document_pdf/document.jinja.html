@@ -11,10 +11,11 @@
 {% block viewtype %}pdf-view{% endblock %}
 
 {% block content %}
-  <div class="content">
-    <div id="printableFlow" class="printable_flow">
+  <div class="content printTHIS">
 
-      {% include "single_document_pdf/frontpage.jinja.html" %}
+    {% include "single_document_pdf/frontpage.jinja.html" %}
+
+    <div id="printableFlow" class="printable_flow">
 
       <h1 class="printable">Table of contents</h1>
       <h2 class="printable">Table of contents</h2>

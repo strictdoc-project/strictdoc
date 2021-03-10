@@ -121,7 +121,8 @@ def test_integration(context, focus=None, debug=False):
 @task
 def export_pip_requirements(context):
     run_invoke_cmd(
-        context, "poetry export -f requirements.txt > requirements.txt"
+        context,
+        "poetry export --dev --without-hashes --format requirements.txt > requirements.txt",
     )
 
 

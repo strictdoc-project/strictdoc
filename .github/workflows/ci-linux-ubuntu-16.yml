@@ -1,6 +1,10 @@
 name: "StrictDoc on Linux Ubuntu 16.04"
 
-on: [pull_request]
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "**" ]
 
 jobs:
   build:

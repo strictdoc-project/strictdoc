@@ -20,9 +20,10 @@ from strictdoc.helpers.timing import timing_decorator
 
 
 class ExportAction:
-    def __init__(self, strictdoc_src_path, parallelizer):
+    @timing_decorator("Export")
+    def export(self, config: ExportCommandConfig, parallelizer):
         assert parallelizer
-        self.strictdoc_src_path = strictdoc_src_path
+        self.strictdoc_src_path = config.strictdoc_root_path
         self.cwd = os.getcwd()
         self.parallelizer = parallelizer
         strict_own_files = glob.iglob(
@@ -38,8 +39,6 @@ class ExportAction:
             latest_strictdoc_own_file
         )
 
-    @timing_decorator("Export")
-    def export(self, config: ExportCommandConfig):
         assert isinstance(config.formats, list)
 
         path_to_single_file_or_doc_root = config.input_paths

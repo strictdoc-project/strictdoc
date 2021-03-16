@@ -1,6 +1,7 @@
 from jinja2 import Environment, PackageLoader
 
 from strictdoc.export.html.document_type import DocumentType
+from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 
 
 class DocumentTraceHTMLGenerator:
@@ -11,8 +12,10 @@ class DocumentTraceHTMLGenerator:
     env.globals.update(isinstance=isinstance)
 
     @staticmethod
-    def export(document, traceability_index, markup_renderer, link_renderer):
+    def export(document, traceability_index, link_renderer):
         output = ""
+
+        markup_renderer = MarkupRenderer()
 
         template = DocumentTraceHTMLGenerator.env.get_template(
             "single_document_traceability/document.jinja.html"

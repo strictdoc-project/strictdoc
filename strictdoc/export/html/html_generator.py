@@ -78,7 +78,6 @@ class HTMLGenerator:
         export_options = ExportOptions(
             export_mode, strictdoc_src_path, strictdoc_last_update
         )
-        markup_renderer = MarkupRenderer()
         link_renderer = LinkRenderer(output_html_root)
 
         writer = DocumentTreeHTMLGenerator()
@@ -107,7 +106,6 @@ class HTMLGenerator:
             export_options=export_options,
             document_tree=document_tree,
             traceability_index=traceability_index,
-            markup_renderer=markup_renderer,
             link_renderer=link_renderer,
         )
 
@@ -123,7 +121,6 @@ class HTMLGenerator:
                     source_file,
                     document_tree,
                     traceability_index,
-                    markup_renderer,
                     link_renderer,
                 )
                 with open(source_file.output_path_file_full_path, "w") as file:
@@ -141,7 +138,6 @@ class HTMLGenerator:
         export_options: ExportOptions,
         document_tree,
         traceability_index,
-        markup_renderer,
         link_renderer,
     ):
         document_meta: DocumentMeta = document.meta
@@ -170,7 +166,6 @@ class HTMLGenerator:
                 document,
                 document_tree,
                 traceability_index,
-                markup_renderer,
                 link_renderer,
             )
         return None
@@ -181,7 +176,6 @@ class HTMLGenerator:
         document,
         document_tree,
         traceability_index,
-        markup_renderer,
         link_renderer,
     ):
         document_meta: DocumentMeta = document.meta
@@ -198,7 +192,6 @@ class HTMLGenerator:
                 document_tree,
                 document,
                 traceability_index,
-                markup_renderer,
                 link_renderer,
             )
 
@@ -208,7 +201,7 @@ class HTMLGenerator:
 
             # Single Document Table pages
             document_content = DocumentTableHTMLGenerator.export(
-                document, traceability_index, markup_renderer, link_renderer
+                document, traceability_index, link_renderer
             )
             document_out_file = document_meta.get_html_table_path()
 
@@ -217,7 +210,7 @@ class HTMLGenerator:
 
             # Single Document Traceability pages
             document_content = DocumentTraceHTMLGenerator.export(
-                document, traceability_index, markup_renderer, link_renderer
+                document, traceability_index, link_renderer
             )
             document_out_file = document_meta.get_html_traceability_path()
 
@@ -226,7 +219,7 @@ class HTMLGenerator:
 
             # Single Document Deep Traceability pages
             document_content = DocumentDeepTraceHTMLGenerator.export_deep(
-                document, traceability_index, markup_renderer, link_renderer
+                document, traceability_index, link_renderer
             )
             document_out_file = document_meta.get_html_deep_traceability_path()
 
@@ -255,7 +248,6 @@ class HTMLGenerator:
                 document_tree,
                 document,
                 traceability_index,
-                markup_renderer,
                 link_renderer,
                 standalone=True,
             )

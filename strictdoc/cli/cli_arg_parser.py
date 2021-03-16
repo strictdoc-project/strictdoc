@@ -103,6 +103,7 @@ class PassthroughCommandConfig:
 class ExportCommandConfig:
     def __init__(
         self,
+        strictdoc_root_path,
         input_paths,
         output_dir,
         formats,
@@ -110,6 +111,7 @@ class ExportCommandConfig:
         no_parallelization,
         experimental_enable_file_traceability,
     ):
+        self.strictdoc_root_path = strictdoc_root_path
         self.input_paths = input_paths
         self.output_dir = output_dir
         self.formats = formats
@@ -137,8 +139,9 @@ class SDocArgsParser:
     def is_export_command(self):
         return self.args.command == "export"
 
-    def get_export_config(self) -> ExportCommandConfig:
+    def get_export_config(self, strictdoc_root_path) -> ExportCommandConfig:
         return ExportCommandConfig(
+            strictdoc_root_path,
             self.args.input_paths,
             self.args.output_dir,
             self.args.formats,

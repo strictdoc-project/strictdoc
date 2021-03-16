@@ -1,8 +1,8 @@
 # StrictDoc
 
-![](https://github.com/stanislaw/strictdoc/workflows/StrictDoc%20on%20macOS/badge.svg)
-![](https://github.com/stanislaw/strictdoc/workflows/StrictDoc%20on%20Linux/badge.svg)
-![](https://github.com/stanislaw/strictdoc/workflows/StrictDoc%20on%20Windows/badge.svg)
+![](https://github.com/stanislaw/strictdoc/workflows/StrictDoc%20on%20macOS/badge.svg?branch=master)
+![](https://github.com/stanislaw/strictdoc/workflows/StrictDoc%20on%20Linux/badge.svg?branch=master)
+![](https://github.com/stanislaw/strictdoc/workflows/StrictDoc%20on%20Windows/badge.svg?branch=master)
 
 StrictDoc is software for writing technical requirements and specifications.
 

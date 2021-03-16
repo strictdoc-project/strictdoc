@@ -1,6 +1,10 @@
 name: "StrictDoc on Windows"
 
-on: [pull_request]
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "**" ]
 
 jobs:
   build:
@@ -22,13 +26,17 @@ jobs:
       run: |
         python -m pip install --upgrade pip
 
-    - name: Install Poetry
+    - name: Install Pip dependencies from requirements.txt
       run: |
-        (Invoke-WebRequest -Uri https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -UseBasicParsing).Content | python
+        pip install -r requirements.txt
 
-    - name: "Poetry: add to %PATH%"
-      run: |
-        echo "$env:USERPROFILE\.poetry\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+#    - name: Install Poetry
+#      run: |
+#        (Invoke-WebRequest -Uri https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -UseBasicParsing).Content | python
+
+#    - name: "Poetry: add to %PATH%"
+#      run: |
+#        echo "$env:USERPROFILE\.poetry\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
     - name: "Print Debug info"
       run: |
@@ -36,23 +44,23 @@ jobs:
         echo $env:PATH
         echo "$PWD"
 
-    - name: "Poetry: print version"
-      run: |
-        poetry --version
-
-    - name: "Poetry: configure settings"
-      run: |
-        poetry config virtualenvs.in-project true
-
-    - name: "Poetry: Install dependencies"
-      run: |
-        poetry install
+#    - name: "Poetry: print version"
+#      run: |
+#        poetry --version
+#
+#    - name: "Poetry: configure settings"
+#      run: |
+#        poetry config virtualenvs.in-project true
+#
+#    - name: "Poetry: Install dependencies"
+#      run: |
+#        poetry install
 
     - name: Run Lint tasks
       run: |
-        poetry run invoke lint
+        invoke lint
 
     - name: Run tests
       run: |
-        poetry run invoke test
+        invoke test
       shell: bash

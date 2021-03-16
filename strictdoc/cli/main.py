@@ -33,13 +33,13 @@ def _main(parallelizer):
         passthrough_action.passthrough(config)
 
     elif parser.is_export_command:
-        config = parser.get_export_config()
+        config = parser.get_export_config(STRICTDOC_ROOT_PATH)
         parallelization_value = (
-            "Enabled" if parallelizer.parallelization_enabled else "Disabled"
+            "Disabled" if config.no_parallelization else "Enabled"
         )
         print("Parallelization: {}".format(parallelization_value), flush=True)
-        export_controller = ExportAction(STRICTDOC_ROOT_PATH, parallelizer)
-        export_controller.export(config)
+        export_action = ExportAction()
+        export_action.export(config, parallelizer)
 
     else:
         raise NotImplementedError

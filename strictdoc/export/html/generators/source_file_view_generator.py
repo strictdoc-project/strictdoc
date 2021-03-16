@@ -6,6 +6,7 @@ from pygments.lexers.python import PythonLexer
 from strictdoc.core.finders.source_files_finder import SourceFile
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
+from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 
 
 class SourceFileViewHTMLGenerator:
@@ -19,7 +20,6 @@ class SourceFileViewHTMLGenerator:
         source_file: SourceFile,
         document_tree,
         traceability_index: TraceabilityIndex,
-        markup_renderer,
         link_renderer,
     ):
         output = ""
@@ -30,6 +30,8 @@ class SourceFileViewHTMLGenerator:
 
         with open(source_file.in_cwd_source_file_rel_path) as f:
             source_file_lines = f.readlines()
+
+        markup_renderer = MarkupRenderer()
 
         html_formatter = HtmlFormatter()
         pygmented_source_file_content = highlight(

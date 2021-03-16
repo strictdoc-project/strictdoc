@@ -1,10 +1,13 @@
 from typing import Optional
 
+from strictdoc.backend.dsl.models.document_config import DocumentConfig
 from strictdoc.core.document_meta import DocumentMeta
 
 
 class Document(object):
-    def __init__(self, name, title, config, free_texts, section_contents):
+    def __init__(
+        self, name, title, config: DocumentConfig, free_texts, section_contents
+    ):
         assert isinstance(free_texts, list)
         self.name = name if name else title
         self.config = config

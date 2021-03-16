@@ -37,6 +37,11 @@ class SDWriter:
                 output += f"VERSION: {version}"
                 output += "\n"
 
+            number = document_config.number
+            if number:
+                output += f"NUMBER: {number}"
+                output += "\n"
+
             config_special_fields = document_config.special_fields
             if config_special_fields:
                 output += "SPECIAL_FIELDS:"

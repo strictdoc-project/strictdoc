@@ -4,8 +4,9 @@ from strictdoc.backend.dsl.models.config_special_field import ConfigSpecialField
 
 
 class DocumentConfig:
-    def __init__(self, parent, special_fields):
+    def __init__(self, parent, version, special_fields):
         self.parent = parent
+        self.version = version
         self.special_fields: [ConfigSpecialField] = special_fields
         self.special_fields_set: Set[str] = set()
         self.special_fields_required: [str] = []

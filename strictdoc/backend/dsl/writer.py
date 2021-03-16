@@ -1,5 +1,6 @@
 from enum import Enum
 
+from strictdoc.backend.dsl.models.document_config import DocumentConfig
 from strictdoc.backend.dsl.models.requirement import (
     Requirement,
     CompositeRequirement,
@@ -29,8 +30,13 @@ class SDWriter:
         output += document.name
         output += "\n"
 
-        document_config = document.config
+        document_config: DocumentConfig = document.config
         if document_config:
+            version = document_config.version
+            if version:
+                output += f"VERSION: {version}"
+                output += "\n"
+
             config_special_fields = document_config.special_fields
             if config_special_fields:
                 output += "SPECIAL_FIELDS:"

@@ -431,6 +431,32 @@ REFS:
     assert input == output
 
 
+def test_070_document_config_version():
+    input = """
+[DOCUMENT]
+TITLE: Test Doc
+VERSION: 0.0.1
+
+[REQUIREMENT]
+REFS:
+- TYPE: File
+  VALUE: /tmp/sample.cpp
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input)
+    assert isinstance(document, Document)
+
+    document: Document = reader.read(input)
+    assert document.config.version == "0.0.1"
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input == output
+
+
 def test_100_basic_test():
     input = """
 [DOCUMENT]

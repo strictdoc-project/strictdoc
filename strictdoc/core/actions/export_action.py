@@ -20,14 +20,14 @@ from strictdoc.helpers.timing import timing_decorator
 
 
 class ExportAction:
+    @staticmethod
     @timing_decorator("Export")
-    def export(self, config: ExportCommandConfig, parallelizer):
+    def export(config: ExportCommandConfig, parallelizer):
         assert parallelizer
-        self.strictdoc_src_path = config.strictdoc_root_path
-        self.cwd = os.getcwd()
-        self.parallelizer = parallelizer
+        cwd = os.getcwd()
         strict_own_files = glob.iglob(
-            "{}/strictdoc/**/*".format(self.strictdoc_src_path), recursive=True
+            "{}/strictdoc/**/*".format(config.strictdoc_root_path),
+            recursive=True,
         )
         strict_own_files = [
             f
@@ -35,7 +35,7 @@ class ExportAction:
             if f.endswith(".html") or f.endswith(".py")
         ]
         latest_strictdoc_own_file = max(strict_own_files, key=os.path.getctime)
-        self.strictdoc_last_update = get_file_modification_time(
+        strictdoc_last_update = get_file_modification_time(
             latest_strictdoc_own_file
         )
 
@@ -47,12 +47,12 @@ class ExportAction:
         output_dir = config.output_dir if config.output_dir else "output"
 
         if not os.path.isabs(output_dir):
-            output_dir = os.path.join(self.cwd, output_dir)
+            output_dir = os.path.join(cwd, output_dir)
 
         output_html_root = "{}/html".format(output_dir)
 
         document_tree, asset_dirs = DocumentFinder.find_sdoc_content(
-            path_to_single_file_or_doc_root, output_html_root, self.parallelizer
+            path_to_single_file_or_doc_root, output_html_root, parallelizer
         )
 
         traceability_index = TraceabilityIndex.create(document_tree)
@@ -81,10 +81,10 @@ class ExportAction:
                 document_tree,
                 traceability_index,
                 output_html_root,
-                self.strictdoc_src_path,
-                self.strictdoc_last_update,
+                config.strictdoc_root_path,
+                strictdoc_last_update,
                 asset_dirs,
-                self.parallelizer,
+                parallelizer,
             )
 
         if "rst" in config.formats:

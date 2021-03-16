@@ -457,6 +457,32 @@ REFS:
     assert input == output
 
 
+def test_071_document_config_number():
+    input = """
+[DOCUMENT]
+TITLE: Test Doc
+NUMBER: SDOC-01
+
+[REQUIREMENT]
+REFS:
+- TYPE: File
+  VALUE: /tmp/sample.cpp
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input)
+    assert isinstance(document, Document)
+
+    document: Document = reader.read(input)
+    assert document.config.number == "SDOC-01"
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input == output
+
+
 def test_100_basic_test():
     input = """
 [DOCUMENT]

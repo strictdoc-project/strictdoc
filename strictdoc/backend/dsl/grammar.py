@@ -42,6 +42,7 @@ Document[noskipws]:
 
 DocumentConfig[noskipws]:
   ('VERSION: ' version = /.*$/ '\n')?
+  ('NUMBER: ' number = /.*$/ '\n')?
   ('SPECIAL_FIELDS:' '\n' special_fields += ConfigSpecialField)?
 ;
 

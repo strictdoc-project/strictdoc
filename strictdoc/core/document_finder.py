@@ -109,6 +109,7 @@ class DocumentFinder:
                 doc_file.level,
                 document_filename_base,
                 input_doc_full_path,
+                doc_relative_path_folder,
                 output_document_dir_full_path,
                 output_document_dir_rel_path,
             )

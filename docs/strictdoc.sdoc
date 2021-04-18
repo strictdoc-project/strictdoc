@@ -1241,7 +1241,7 @@ STATEMENT: StrictDoc shall support exporting documents to Excel format.
 [/SECTION]
 
 [SECTION]
-TITLE: Validation requirements
+TITLE: Validation
 
 [REQUIREMENT]
 TITLE: Valid HTML markup
@@ -1393,6 +1393,40 @@ STATEMENT: StrictDoc shall generate requirements coverage information.
 [REQUIREMENT]
 TITLE: Filtering by tags
 STATEMENT: StrictDoc shall support filtering filtering by tags.
+
+[SECTION]
+TITLE: Open questions
+
+[SECTION]
+TITLE: One or many input sdoc trees
+
+[FREETEXT]
+StrictDoc supports this for HTML already but not for RST.
+
+When passed
+``strictdoc export ... /path/to/doctree1, /path/to/doctree2, /path/to/doctree3``,
+the following is generated:
+
+.. code-block:: text
+
+    output folder:
+    - doctree1/
+      - contents
+    - doctree2/
+      - contents
+    - doctree3/
+      - contents
+
+and all three doctrees' requirements are merged into a single documentation
+space with cross-linking possible.
+
+The question is if it is worth supporting this case further or StrictDoc should
+only work with one input folder with a single doc tree.
+[/FREETEXT]
+
+[/SECTION]
+
+[/SECTION]
 
 [SECTION]
 TITLE: Advanced

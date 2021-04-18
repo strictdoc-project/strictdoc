@@ -1,0 +1,5 @@
+RUN: %strictdoc export --formats=rst --output-dir Output "%S"
+
+RUN: %check_exists --file "%S/Output/rst/input_folder/input.rst"
+
+RUN: %diff "%S/Output/rst/input_folder/input.rst" "%S/expected/input.rst"

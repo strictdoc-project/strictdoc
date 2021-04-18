@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 
+from strictdoc.backend.dsl.models.document import Document
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.export.rst.writer import RSTWriter
 
@@ -16,15 +17,22 @@ class DocumentRSTGenerator:
         document_tree: DocumentTree, traceability_index, output_rst_root
     ):
         Path(output_rst_root).mkdir(parents=True, exist_ok=True)
+
+        document: Document
         for document in document_tree.document_list:
             document_content = DocumentRSTGenerator.export(
                 document_tree, document, traceability_index
             )
 
-            document_out_file = "{}/{}.rst".format(
-                output_rst_root, document.name
+            output_folder = os.path.join(
+                output_rst_root, document.meta.input_doc_rel_path
             )
-            with open(document_out_file, "w") as file:
+            Path(output_folder).mkdir(parents=True, exist_ok=True)
+
+            document_out_file = f"{document.meta.document_filename_base}.rst"
+            output_path = os.path.join(output_folder, document_out_file)
+
+            with open(output_path, "w") as file:
                 file.write(document_content)
 
     @staticmethod

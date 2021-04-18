@@ -1,5 +1,70 @@
 # Changelog
 
+## [0.0.10](https://github.com/strictdoc-project/strictdoc/tree/0.0.10) (2021-04-18)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.9...0.0.10)
+
+**Closed issues:**
+
+- ModuleNotFoundError: No module named 'bs4' [\#336](https://github.com/strictdoc-project/strictdoc/issues/336)
+- Parallelization: when Jinja crashes, the parent process is not signalled [\#320](https://github.com/strictdoc-project/strictdoc/issues/320)
+- Error message: "requirement already exists": make more detailed [\#318](https://github.com/strictdoc-project/strictdoc/issues/318)
+- export/html: Fix Pan.js to reflect the latest grid-based layout [\#232](https://github.com/strictdoc-project/strictdoc/issues/232)
+
+**Merged pull requests:**
+
+- Bump version to 0.0.10 [\#374](https://github.com/strictdoc-project/strictdoc/pull/374) ([stanislaw](https://github.com/stanislaw))
+- cli: add a warning that the traceability is not complete  [\#373](https://github.com/strictdoc-project/strictdoc/pull/373) ([stanislaw](https://github.com/stanislaw))
+- export/rst: preserve original file name instead of using document title  [\#372](https://github.com/strictdoc-project/strictdoc/pull/372) ([stanislaw](https://github.com/stanislaw))
+- Poetry: use caret "^" for docutils, jinja, and lxml [\#371](https://github.com/strictdoc-project/strictdoc/pull/371) ([stanislaw](https://github.com/stanislaw))
+- \[Snyk\] Security upgrade urllib3 from 1.26.3 to 1.26.4 [\#370](https://github.com/strictdoc-project/strictdoc/pull/370) ([snyk-bot](https://github.com/snyk-bot))
+- \[Snyk\] Security upgrade Pygments from 2.5.2 to 2.7.4 [\#367](https://github.com/strictdoc-project/strictdoc/pull/367) ([snyk-bot](https://github.com/snyk-bot))
+- Code climate: ExportAction: remove self, simplify code [\#364](https://github.com/strictdoc-project/strictdoc/pull/364) ([stanislaw](https://github.com/stanislaw))
+- Code climate: move MarkupRenderer down to generators [\#363](https://github.com/strictdoc-project/strictdoc/pull/363) ([stanislaw](https://github.com/stanislaw))
+- grammar: Document number [\#362](https://github.com/strictdoc-project/strictdoc/pull/362) ([stanislaw](https://github.com/stanislaw))
+- grammar: Document version [\#361](https://github.com/strictdoc-project/strictdoc/pull/361) ([stanislaw](https://github.com/stanislaw))
+- cli: include root path to the ExportConfig object [\#360](https://github.com/strictdoc-project/strictdoc/pull/360) ([stanislaw](https://github.com/stanislaw))
+- README: Fix badges to the master branch [\#359](https://github.com/strictdoc-project/strictdoc/pull/359) ([stanislaw](https://github.com/stanislaw))
+- Front: large number of requirements in aside [\#353](https://github.com/strictdoc-project/strictdoc/pull/353) ([mettta](https://github.com/mettta))
+- Front: translate code block with boundaries [\#352](https://github.com/strictdoc-project/strictdoc/pull/352) ([mettta](https://github.com/mettta))
+- scrolling and highlighting code Block depending on  parameters in URL [\#351](https://github.com/strictdoc-project/strictdoc/pull/351) ([mettta](https://github.com/mettta))
+- Front: params in URL [\#350](https://github.com/strictdoc-project/strictdoc/pull/350) ([mettta](https://github.com/mettta))
+- Front: source page [\#349](https://github.com/strictdoc-project/strictdoc/pull/349) ([mettta](https://github.com/mettta))
+- sandbox: add a non-range link for hello\_world.py [\#348](https://github.com/strictdoc-project/strictdoc/pull/348) ([stanislaw](https://github.com/stanislaw))
+-  export/html: pan-with-space.js: fix scrolling  [\#347](https://github.com/strictdoc-project/strictdoc/pull/347) ([stanislaw](https://github.com/stanislaw))
+- export/html: source file view: print all range requirements [\#346](https://github.com/strictdoc-project/strictdoc/pull/346) ([stanislaw](https://github.com/stanislaw))
+-  export/html: source files: improve \<pre\> rendering and no last newline  [\#345](https://github.com/strictdoc-project/strictdoc/pull/345) ([stanislaw](https://github.com/stanislaw))
+- export/html: source files: split contents from Pygments by lines [\#344](https://github.com/strictdoc-project/strictdoc/pull/344) ([stanislaw](https://github.com/stanislaw))
+- config: ExportCommandConfig for grouping config options [\#343](https://github.com/strictdoc-project/strictdoc/pull/343) ([stanislaw](https://github.com/stanislaw))
+- Basic forward and reverse traceability between SDoc and source files [\#342](https://github.com/strictdoc-project/strictdoc/pull/342) ([stanislaw](https://github.com/stanislaw))
+- Parallelizer: switch from Pool to Process: handle exits and exceptions [\#340](https://github.com/strictdoc-project/strictdoc/pull/340) ([stanislaw](https://github.com/stanislaw))
+-  traceability\_index: "requirement already exists" - more detailed message  [\#339](https://github.com/strictdoc-project/strictdoc/pull/339) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.9](https://github.com/strictdoc-project/strictdoc/tree/0.0.9) (2021-02-01)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.8...0.0.9)
+
+**Closed issues:**
+
+- Installation problems on Ubuntu 20.04 [\#326](https://github.com/strictdoc-project/strictdoc/issues/326)
+- Enable testing on older Linux distributions [\#325](https://github.com/strictdoc-project/strictdoc/issues/325)
+
+**Merged pull requests:**
+
+- Bump version to 0.0.9 [\#338](https://github.com/strictdoc-project/strictdoc/pull/338) ([stanislaw](https://github.com/stanislaw))
+- Poetry: move bs4 to normal dependencies [\#337](https://github.com/strictdoc-project/strictdoc/pull/337) ([stanislaw](https://github.com/stanislaw))
+- docs: update the clone URL [\#335](https://github.com/strictdoc-project/strictdoc/pull/335) ([stanislaw](https://github.com/stanislaw))
+- docs: resolve a few RST syntax-related issues [\#334](https://github.com/strictdoc-project/strictdoc/pull/334) ([stanislaw](https://github.com/stanislaw))
+- docs: regenerate Read the Docs [\#333](https://github.com/strictdoc-project/strictdoc/pull/333) ([stanislaw](https://github.com/stanislaw))
+- CI: add Ubuntu 16.04 workflow [\#332](https://github.com/strictdoc-project/strictdoc/pull/332) ([stanislaw](https://github.com/stanislaw))
+-  docs: Grammar elements  [\#331](https://github.com/strictdoc-project/strictdoc/pull/331) ([stanislaw](https://github.com/stanislaw))
+- docs: Document structure and two strict rules of SDoc [\#330](https://github.com/strictdoc-project/strictdoc/pull/330) ([stanislaw](https://github.com/stanislaw))
+- tasks: remove dependency on poetry run [\#329](https://github.com/strictdoc-project/strictdoc/pull/329) ([stanislaw](https://github.com/stanislaw))
+- tasks: make black make changes right away and exit with 1 [\#328](https://github.com/strictdoc-project/strictdoc/pull/328) ([stanislaw](https://github.com/stanislaw))
+-  README: Expand the second installation option section.  [\#327](https://github.com/strictdoc-project/strictdoc/pull/327) ([stanislaw](https://github.com/stanislaw))
+- README: remove "under construction", add summary [\#324](https://github.com/strictdoc-project/strictdoc/pull/324) ([stanislaw](https://github.com/stanislaw))
+- docs: regenerate Read the Docs and CHANGELOG [\#323](https://github.com/strictdoc-project/strictdoc/pull/323) ([stanislaw](https://github.com/stanislaw))
+
 ## [0.0.8](https://github.com/strictdoc-project/strictdoc/tree/0.0.8) (2021-01-24)
 
 [Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.7...0.0.8)

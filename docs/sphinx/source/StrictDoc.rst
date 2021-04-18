@@ -107,7 +107,7 @@ Hello world
 
 .. code-block:: text
 
-    git clone git@github.com:stanislaw/strictdoc.git && cd strictdoc
+    git clone --depth 1 https://github.com/strictdoc-project/strictdoc && cd strictdoc
     strictdoc export docs/
 
 SDoc syntax
@@ -1227,8 +1227,8 @@ Excel Export
 
 StrictDoc shall support exporting documents to Excel format.
 
-Validation requirements
------------------------
+Validation
+----------
 
 Valid HTML markup
 ~~~~~~~~~~~~~~~~~
@@ -1388,6 +1388,34 @@ Filtering by tags
 -----------------
 
 StrictDoc shall support filtering filtering by tags.
+
+Open questions
+--------------
+
+One or many input sdoc trees
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+StrictDoc supports this for HTML already but not for RST.
+
+When passed
+``strictdoc export ... /path/to/doctree1, /path/to/doctree2, /path/to/doctree3``,
+the following is generated:
+
+.. code-block:: text
+
+    output folder:
+    - doctree1/
+      - contents
+    - doctree2/
+      - contents
+    - doctree3/
+      - contents
+
+and all three doctrees' requirements are merged into a single documentation
+space with cross-linking possible.
+
+The question is if it is worth supporting this case further or StrictDoc should
+only work with one input folder with a single doc tree.
 
 Advanced
 --------

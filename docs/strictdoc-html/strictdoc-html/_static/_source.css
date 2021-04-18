@@ -1,0 +1,122 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* body, html {
+  overflow-y: hidden;
+  height: 100vh;
+} */
+
+.source-file-view {
+  --source-line: 1px solid rgba(0, 0, 0, .05);
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  /* padding-right: 1rem; */
+  padding: 0;
+  height: 100vh;
+  position: relative;
+}
+
+/* REQS */
+
+.source-file__refer {
+  width: calc(300px + 4rem);
+
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.source-file__refer-container {
+  /* padding: 2rem 2rem 100vh 2rem; */
+  padding: 2rem;
+}
+
+.source-file__path {
+  padding: 1rem 0;
+  font-size: 1.4rem;
+}
+
+.source-file__reqs {}
+.source-file__ranges {
+  margin-top: 4rem;
+}
+
+/* CODE */
+
+.source-file__code {
+  position: relative;
+  overflow-y: hidden;
+  height: 100vh;
+  transition: box-shadow 0.3s ease-in;
+}
+
+.source-file__code::before,
+.source-file__code::after {
+content: '';
+position: absolute;
+background-color: #ccc;
+border-radius: 100%;
+left: 0;
+right: 0;
+height: 0;
+transition: height 0.2s ease-in;
+}
+
+.source-file__code::before {
+  top: -4rem;
+}
+.source-file__code::after {
+  bottom: -4rem;
+}
+
+.source-file__code.limit-top::before {
+  height: 6rem;
+  transition: height 0.6s ease-in;
+}
+.source-file__code.limit-bottom::after {
+  height: 6rem;
+  transition: height 0.6s ease-in;
+}
+
+.source {
+  display: grid;
+  grid-template-columns: minmax(min-content, max-content) 1fr;
+  gap: 0 0;
+  place-items: stretch stretch;
+  transition: transform 0.3s ease-in;
+  position: relative;
+}
+
+.source_highlight {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background-color: var(--color-highlight);
+  z-index: -1;
+  transition: height 0.3s ease-in, top 0.3s ease-in;
+}
+
+.source__line-number {
+  grid-column: 1 / 2;
+  padding: 0.25rem 2rem;
+  text-align: right;
+  border-bottom: var(--source-line);
+  /* background: #f8f8f8; */
+}
+
+.source__line-content {
+  grid-column: 2 / 3;
+  padding: 0.25rem 1rem 0.25rem .5rem;
+  border-bottom: var(--source-line);
+  border-left: var(--source-line);
+  /* background: #f8f8f8; */
+}
+
+/* Pygments */
+
+.highlight {
+  background: transparent !important;
+}

@@ -77,7 +77,7 @@ def cli_args_parser() -> argparse.ArgumentParser:
     command_parser_export.add_argument(
         "--experimental-enable-file-traceability",
         action="store_true",
-        help="Experimental feature: enables traceability between requirements and files.",
+        help="Experimental feature: enables traceability between requirements and files (warning: implementation is not complete).",
     )
 
     command_parser_passthrough = command_subparsers.add_parser(

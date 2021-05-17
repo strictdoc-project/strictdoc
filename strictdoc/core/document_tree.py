@@ -11,10 +11,14 @@ class FileOrFolderEntry:
     def is_folder(self):
         raise NotImplementedError
 
+    def mount_folder(self):
+        raise NotImplementedError
+
 
 class File(FileOrFolderEntry):
     def __init__(self, level, full_path):
         assert os.path.isfile(full_path)
+        assert os.path.isabs(full_path)
         self.level = level
         self.full_path = full_path
         self.root_path = full_path
@@ -35,6 +39,9 @@ class File(FileOrFolderEntry):
 
     def get_file_name(self):
         return os.path.basename(self.full_path)
+
+    def mount_folder(self):
+        return os.path.basename(os.path.dirname(self.root_path))
 
 
 class FileTree(FileOrFolderEntry):
@@ -64,6 +71,9 @@ class FileTree(FileOrFolderEntry):
 
     def get_folder_name(self):
         return os.path.basename(os.path.normpath(self.root_path))
+
+    def mount_folder(self):
+        return os.path.basename(self.root_path)
 
     def set(self, files):
         for file in files:

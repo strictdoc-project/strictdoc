@@ -9,5 +9,5 @@ CHECK-HTML: TABLE
 CHECK-HTML: TRACE
 CHECK-HTML: DEEP-TRACE
 
-RUN: cat %S/Output/html/input.sdoc/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-CONTENT
+RUN: cat %S/Output/html/07_input_is_single_file/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-CONTENT
 CHECK-CONTENT: Hello world!

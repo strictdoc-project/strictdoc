@@ -1,0 +1,13 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[SECTION]
+TITLE: Images
+
+[FREETEXT]
+.. image:: _assets/sandbox1.svg
+   :alt: Sandbox demo
+   :class: image
+[/FREETEXT]
+
+[/SECTION]

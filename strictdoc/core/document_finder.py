@@ -38,8 +38,7 @@ class DocumentFinder:
         for file_tree in file_trees:
             task_list = [file_tree]
 
-            file_tree_mount_folder = os.path.basename(file_tree.root_path)
-
+            file_tree_mount_folder = file_tree.mount_folder()
             while len(task_list) > 0:
                 current_tree = task_list.pop(0)
 
@@ -127,7 +126,24 @@ class DocumentFinder:
 
         for path_to_doc_root_raw in paths_to_files_or_docs:
             if os.path.isfile(path_to_doc_root_raw):
-                root_trees.append(File(0, path_to_doc_root_raw))
+                path_to_doc_root = path_to_doc_root_raw
+                if not os.path.isabs(path_to_doc_root):
+                    path_to_doc_root = os.path.abspath(path_to_doc_root)
+
+                parent_dir = os.path.dirname(path_to_doc_root)
+                path_to_doc_root_base = os.path.dirname(parent_dir)
+
+                assets_dir = os.path.join(parent_dir, "_assets")
+                if os.path.isdir(assets_dir):
+                    asset_dirs.append(
+                        {
+                            "full_path": assets_dir,
+                            "relative_path": os.path.relpath(
+                                assets_dir, path_to_doc_root_base
+                            ),
+                        }
+                    )
+                root_trees.append(File(0, path_to_doc_root))
                 continue
 
             # Strip away the trailing slash to let the later os.path.relpath

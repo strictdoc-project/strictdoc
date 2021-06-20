@@ -19,6 +19,9 @@ class FileTraceabilityIndex:
         self.map_paths_to_source_file_traceability_info = {}
 
     def register(self, requirement):
+        if requirement in self.map_reqs_to_paths:
+            return
+
         ref: Reference
         for ref in requirement.references:
             if ref.ref_type == "File":

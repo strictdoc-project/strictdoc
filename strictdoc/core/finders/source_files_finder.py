@@ -2,9 +2,6 @@ import os
 from pathlib import Path
 from typing import List
 
-from strictdoc.backend.source_file_syntax.reader import (
-    SourceFileTraceabilityInfo,
-)
 from strictdoc.core.document_tree import DocumentTree, FileTree
 
 

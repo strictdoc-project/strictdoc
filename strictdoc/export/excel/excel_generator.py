@@ -1,17 +1,14 @@
 import os
 from pathlib import Path
-from typing import Dict, List, Any, Tuple
+from typing import Dict, List
 
 import xlsxwriter
 from xlsxwriter.workbook import Workbook
 from xlsxwriter.worksheet import Worksheet
-from xlsxwriter.utility import xl_cell_to_rowcol_abs
 
 from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.requirement import Requirement
-from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
-
 
 EXCEL_SHEET_NAME = "Requirements"
 MAX_WIDTH = 75

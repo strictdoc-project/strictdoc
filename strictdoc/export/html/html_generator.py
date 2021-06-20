@@ -3,15 +3,8 @@ from enum import Enum
 from functools import partial
 from pathlib import Path
 
-from strictdoc.backend.source_file_syntax.reader import (
-    SourceFileTraceabilityReader,
-)
 from strictdoc.core.document_meta import DocumentMeta
-from strictdoc.core.document_tree import DocumentTree, FileTree
-from strictdoc.core.finders.source_files_finder import (
-    SourceFilesFinder,
-    SourceFile,
-)
+from strictdoc.core.document_tree import DocumentTree
 from strictdoc.export.html.generators.document import DocumentHTMLGenerator
 from strictdoc.export.html.generators.document_deep_trace import (
     DocumentDeepTraceHTMLGenerator,
@@ -29,7 +22,6 @@ from strictdoc.export.html.generators.source_file_view_generator import (
     SourceFileViewHTMLGenerator,
 )
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
-from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.export.html.tools.html_embedded import HTMLEmbedder
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.file_system import sync_dir

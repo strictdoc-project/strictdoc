@@ -26,15 +26,20 @@
           </li>
         {%- endfor -%}
       {%- else -%}
-        <li>
-          <a
-            id="pointer:{{ requirement.uid }}"
-            class="pointer"
-            href="{{ link_renderer.render_requirement_in_source_file_link(requirement, link, source_file) }}"
-          >
-            <b>{{ link }}</b>
-          </a>
-        </li>
+        {%- if source_file.in_doctree_source_file_rel_path == link -%}
+          {# TODO: @mettta #}
+          {{ link }}
+        {%- else -%}
+          <li>
+            <a
+              id="pointer:{{ requirement.uid }}"
+              class="pointer"
+              href="{{ link_renderer.render_requirement_in_source_file_link(requirement, link, source_file) }}"
+            >
+              <b>{{ link }}</b>
+            </a>
+          </li>
+        {%- endif -%}
       {%- endif -%}
     {%- endfor -%}
     </ul>

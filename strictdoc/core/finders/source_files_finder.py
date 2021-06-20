@@ -12,21 +12,21 @@ class SourceFile:
     def __init__(
         self,
         level,
+        full_path,
         doctree_root_mount_path,
-        in_cwd_source_file_rel_path,
         in_doctree_source_file_rel_path,
-        output_path_dir_full_path,
-        output_path_file_full_path,
+        output_dir_full_path,
+        output_file_full_path,
     ):
         assert isinstance(level, int)
-        assert os.path.exists(in_cwd_source_file_rel_path)
+        assert os.path.exists(full_path)
 
         self.level = level
+        self.full_path = full_path
         self.doctree_root_mount_path = doctree_root_mount_path
-        self.in_cwd_source_file_rel_path = in_cwd_source_file_rel_path
         self.in_doctree_source_file_rel_path = in_doctree_source_file_rel_path
-        self.output_path_dir_full_path = output_path_dir_full_path
-        self.output_path_file_full_path = output_path_file_full_path
+        self.output_dir_full_path = output_dir_full_path
+        self.output_file_full_path = output_file_full_path
         self.path_depth_prefix = ("../" * (level + 2))[:-1]
         self.traceability_info = None
 
@@ -34,16 +34,18 @@ class SourceFile:
         return (
             "SourceFile("
             "level: {}, "
-            "in_cwd_source_file_rel_path: {}, "
+            "full_path: {}, "
+            "doctree_root_mount_path: {}, "
             "in_doctree_source_file_rel_path: {}, "
             "output_path_dir_full_path: {}, "
             "output_path_file_full_path: {}"
             ")".format(
                 self.level,
-                self.in_cwd_source_file_rel_path,
+                self.full_path,
+                self.doctree_root_mount_path,
                 self.in_doctree_source_file_rel_path,
-                self.output_path_dir_full_path,
-                self.output_path_file_full_path,
+                self.output_dir_full_path,
+                self.output_file_full_path,
             )
         )
 
@@ -72,32 +74,38 @@ class SourceFilesFinder:
             doctree_root_abs_path, topdown=False
         ):
             for file in files:
-                in_cwd_source_file_rel_path = f"{current_root_path}/{file}"
+                full_path = os.path.join(current_root_path, file)
                 in_doctree_source_file_rel_path = os.path.relpath(
-                    in_cwd_source_file_rel_path, doctree_root_abs_path
+                    full_path, doctree_root_abs_path
                 )
                 if file.endswith(".py"):
                     last_folder_in_path = os.path.relpath(
                         current_root_path, doctree_root_abs_path
                     )
-                    output_path_dir_full_path = f"{output_html_root}/_source_files/{doctree_root_mount_path}/{last_folder_in_path}"
-                    Path(output_path_dir_full_path).mkdir(
+                    output_dir_full_path = os.path.join(
+                        output_html_root,
+                        "_source_files",
+                        doctree_root_mount_path,
+                        last_folder_in_path,
+                    )
+                    Path(output_dir_full_path).mkdir(
                         parents=True, exist_ok=True
                     )
 
-                    output_path_file_full_path = (
-                        f"{output_path_dir_full_path}/{file}.html"
+                    output_file_name = f"{file}.html"
+                    output_file_full_path = os.path.join(
+                        output_dir_full_path, output_file_name
                     )
 
                     level = current_root_path.count(os.sep) - root_level
 
                     source_file = SourceFile(
                         level,
+                        full_path,
                         doctree_root_mount_path,
-                        in_cwd_source_file_rel_path,
                         in_doctree_source_file_rel_path,
-                        output_path_dir_full_path,
-                        output_path_file_full_path,
+                        output_dir_full_path,
+                        output_file_full_path,
                     )
                     found_source_files.append(source_file)
 

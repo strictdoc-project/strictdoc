@@ -111,7 +111,7 @@ class HTMLGenerator:
         if document_tree.source_files:
             print("Generating source files")
             for source_file in document_tree.source_files:
-                Path(source_file.output_path_dir_full_path).mkdir(
+                Path(source_file.output_dir_full_path).mkdir(
                     parents=True, exist_ok=True
                 )
                 document_content = SourceFileViewHTMLGenerator.export(
@@ -120,7 +120,7 @@ class HTMLGenerator:
                     traceability_index,
                     link_renderer,
                 )
-                with open(source_file.output_path_file_full_path, "w") as file:
+                with open(source_file.output_file_full_path, "w") as file:
                     file.write(document_content)
 
         print(

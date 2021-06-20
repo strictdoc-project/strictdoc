@@ -65,7 +65,7 @@ class ExportAction:
             for source_file in source_files:
                 traceability_reader = SourceFileTraceabilityReader()
                 traceability_info = traceability_reader.read_from_file(
-                    source_file.in_cwd_source_file_rel_path
+                    source_file.full_path
                 )
                 if traceability_info:
                     traceability_index.attach_traceability_info(

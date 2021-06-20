@@ -28,7 +28,7 @@ class SourceFileViewHTMLGenerator:
             "source_file_view/source_file_view.jinja.html"
         )
 
-        with open(source_file.in_cwd_source_file_rel_path) as f:
+        with open(source_file.full_path) as f:
             source_file_lines = f.readlines()
 
         markup_renderer = MarkupRenderer()

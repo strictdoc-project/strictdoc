@@ -1,14 +1,9 @@
 import traceback
 from functools import partial
 
-from strictdoc.backend.dsl.models.reference import (
-    ParentReqReference,
-    FileReference,
-)
 from textx import metamodel_from_str, get_location
 
 from strictdoc.backend.dsl.error_handling import StrictDocSemanticError
-from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.source_file_syntax.grammar import SOURCE_FILE_GRAMMAR
 
 

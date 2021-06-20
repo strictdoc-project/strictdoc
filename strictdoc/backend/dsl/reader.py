@@ -1,4 +1,3 @@
-import sys
 import traceback
 from functools import partial
 from typing import Optional

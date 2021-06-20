@@ -172,6 +172,8 @@ UID: REQ-FILE-REF8
 REFS:
 - TYPE: File
   VALUE: hello_world.py
+- TYPE: File
+  VALUE: nested_folder/hello_world_2.py
 TITLE: Simple file reference link
 STATEMENT: Requirement statement
 

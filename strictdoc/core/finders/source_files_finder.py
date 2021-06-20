@@ -57,11 +57,19 @@ class SourceFilesFinder:
         the_only_file_tree: FileTree = document_tree.file_tree[0]
         assert os.path.abspath(the_only_file_tree.root_path)
 
+        # TODO: Unify this on the FileTree class level.
+        # Introduce #mount_directory method?
         doctree_root_abs_path = the_only_file_tree.root_path
+        doctree_root_abs_path = (
+            os.path.dirname(doctree_root_abs_path)
+            if os.path.isfile(doctree_root_abs_path)
+            else doctree_root_abs_path
+        )
         doctree_root_mount_path = os.path.basename(doctree_root_abs_path)
-        root_level = the_only_file_tree.root_path.count(os.sep)
+        root_level = doctree_root_abs_path.count(os.sep)
+
         for current_root_path, dirs, files in os.walk(
-            the_only_file_tree.root_path, topdown=False
+            doctree_root_abs_path, topdown=False
         ):
             for file in files:
                 in_cwd_source_file_rel_path = f"{current_root_path}/{file}"
@@ -83,14 +91,14 @@ class SourceFilesFinder:
 
                     level = current_root_path.count(os.sep) - root_level
 
-                    found_source_files.append(
-                        SourceFile(
-                            level,
-                            doctree_root_mount_path,
-                            in_cwd_source_file_rel_path,
-                            in_doctree_source_file_rel_path,
-                            output_path_dir_full_path,
-                            output_path_file_full_path,
-                        )
+                    source_file = SourceFile(
+                        level,
+                        doctree_root_mount_path,
+                        in_cwd_source_file_rel_path,
+                        in_doctree_source_file_rel_path,
+                        output_path_dir_full_path,
+                        output_path_file_full_path,
                     )
+                    found_source_files.append(source_file)
+
         return found_source_files

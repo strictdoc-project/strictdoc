@@ -1,0 +1,10 @@
+RUN: %strictdoc export %S/input.sdoc --experimental-enable-file-traceability --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%S/Output/html/_source_files/04_input_is_single_file/file.py.html"
+
+RUN: cat %S/Output/html/04_input_is_single_file/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: <a href="../_source_files/04_input_is_single_file/file.py.html#REQ-001">
+
+RUN: cat %S/Output/html/_source_files/04_input_is_single_file/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE: <a href="../../04_input_is_single_file/input.html#REQ-001">

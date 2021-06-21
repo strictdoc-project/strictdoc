@@ -37,36 +37,9 @@
       {% include "_shared/toc.jinja.html" %}
     </aside>
 
-    <a class="layout_toggler layout_button" id="layout_toggle"></a>
-
-    {%- if not standalone -%}
-      <nav class="layout_nav">
-        <a
-        class="layout_nav-btn layout_button btn-document"
-        title="Go to Document view"
-        href="{{document.meta.get_root_path_prefix()}}/{{document.meta.get_html_doc_link()}}">
-        DOC
-      </a>
-      <a
-        class="layout_nav-btn layout_button btn-table"
-        title="Go to Table view"
-        href="{{document.meta.get_root_path_prefix()}}/{{document.meta.get_html_table_link()}}">
-        TBL
-      </a>
-      <a
-        class="layout_nav-btn layout_button btn-traceability"
-        title="Go to Traceability view"
-        href="{{document.meta.get_root_path_prefix()}}/{{document.meta.get_html_traceability_link()}}">
-        TR
-      </a>
-      <a
-        class="layout_nav-btn layout_button btn-deep-traceability"
-        title="Go to Deep Traceability view"
-        href="{{document.meta.get_root_path_prefix()}}/{{document.meta.get_html_deep_traceability_link()}}">
-        DTR
-      </a>
-      </nav>
-    {%- endif -%}
+    {% block layout_nav %}
+    {# Include "_shared/layout_nav.jinja.html" in the corresponding template, if the block is needed #}
+    {% endblock layout_nav %}
 
     <header class="layout_header">
       <p>{{document.name}} <span class="document-view-type">{{ self.title() }}</span></p>

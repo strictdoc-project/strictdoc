@@ -6,6 +6,14 @@
   {% include "_shared/layout_nav.jinja.html" %}
 {% endblock layout_nav %}
 
+{% block aside_header_content %}
+  {% include "_shared/toc_header.jinja.html" %}
+{% endblock aside_header_content %}
+
+{% block aside_content %}
+  {% include "_shared/toc.jinja.html" %}
+{% endblock aside_content %}
+
 {% block header_content %}
   <p>{{document.name}} <span class="document-view-type">{{ self.title() }}</span></p>
 {% endblock header_content %}

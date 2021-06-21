@@ -26,15 +26,11 @@
   <div class="layout" id="layout">
 
     <aside class="layout_aside-header">
-      <div>Table of Contents</div>
-
-      {%- if not standalone -%}
-        <a class="index-link" href="{{document.meta.get_root_path_prefix()}}/index.html">To Index</a>
-      {%- endif -%}
+      {% block aside_header_content %}{% endblock %}
     </aside>
 
     <aside class="layout_aside">
-      {% include "_shared/toc.jinja.html" %}
+      {% block aside_content %}{% endblock %}
     </aside>
 
     {% block layout_nav %}

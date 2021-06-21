@@ -23,7 +23,7 @@
   {%- if source_file_requirement_links -%}
   <div class="source-file__reqs">
 
-    <details>
+    <details open>
       <summary>See requirements that refer to&nbsp;this source&nbsp;file <b>without specifying a&nbsp;range</b>.</summary>
       {%- for requirement in source_file_requirement_links -%}
           {% include "source_file_view/source_requirement.jinja.html" %}

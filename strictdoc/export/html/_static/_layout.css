@@ -22,15 +22,6 @@
   z-index: 2;
 }
 
-.layout[data-state="close"] {
-  margin-left: calc(var(--toc-width) * (-1));
-}
-
-.layout,
-.layout[data-state="open"] {
-  margin-left: 0;
-}
-
 .layout_header {
   grid-area: header;
   color: var(--contrast-color);
@@ -55,22 +46,6 @@
   padding: 6px 10px;
   top: -6px;
   color: var(--color-accent);
-}
-
-.layout_toggler {
-  grid-area: toggler;
-  background-color: var(--color-bg-main);
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
-.layout_toggler::before,
-.layout_toggler[data-state="open"]::before {
-  content: '\2715';
-}
-
-.layout_toggler[data-state="close"]::before {
-  content: '\2630';
 }
 
 .layout_aside {
@@ -197,4 +172,32 @@
   margin-right: .5rem;
   font-size: 0.85em;
   font-weight: bold;
+}
+
+/* layout_toggler */
+
+
+.layout,
+body[data-state="open"] .layout {
+  margin-left: 0;
+}
+
+body[data-state="close"] .layout {
+  margin-left: calc(var(--toc-width) * (-1));
+}
+
+.layout_toggler {
+  grid-area: toggler;
+  background-color: var(--color-bg-main);
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.layout_toggler::before,
+body[data-state="open"] .layout_toggler::before {
+  content: '\2715';
+}
+
+body[data-state="close"] .layout_toggler::before {
+  content: '\2630';
 }

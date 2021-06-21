@@ -78,10 +78,14 @@ article {
   border: 1px solid var(--color-fg-contrast);
 }
 
-.source-file-view .pointer {
+.source-file-view .requirement_file li > a,
+.source-file-view .requirement_file li > span {
   display: inline-block;
   padding: .15rem .25rem .15rem 0;
   line-height: 1;
+}
+
+.source-file-view .pointer {
 }
 /* .source-file-view .pointer:target, */
 .source-file-view .pointer.active {
@@ -89,9 +93,6 @@ article {
 }
 
 .source-file-view .current_file_pseudolink {
-  display: inline-block;
-  padding: .15rem .25rem .15rem 0;
-  line-height: 1;
   font-weight: bold;
   color: #808080;
 }

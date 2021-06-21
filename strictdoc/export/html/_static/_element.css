@@ -80,11 +80,29 @@ article {
 
 .source-file-view .pointer {
   display: inline-block;
-  padding: .5rem .25rem .5rem 0;
+  padding: .15rem .25rem .15rem 0;
+  line-height: 1;
 }
 /* .source-file-view .pointer:target, */
 .source-file-view .pointer.active {
   background-color: var(--color-highlight);
+}
+
+.source-file-view .current_file_pseudolink {
+  display: inline-block;
+  padding: .15rem .25rem .15rem 0;
+  line-height: 1;
+  font-weight: bold;
+  color: #808080;
+}
+
+.source-file-view .requirement_link {
+  color: var(--color-accent-dark);
+  line-height: 1;
+}
+
+.source-file-view .requirement_link:hover {
+  text-decoration: none;
 }
 
 /* .table-view */
@@ -341,6 +359,7 @@ ul.requirement_child {
 }
 .requirement_file li::before {
   content: '</>';
+  color: #808080;
 }
 .requirement_parent li::before {
   content: '\2190';

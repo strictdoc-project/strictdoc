@@ -17,6 +17,7 @@
 .source-file-view .layout_aside {
   border-right: none;
   overflow-y: scroll;
+  padding-left: calc(var(--base-padding)*1.5);
 }
 
 .source-file-view .layout_main {

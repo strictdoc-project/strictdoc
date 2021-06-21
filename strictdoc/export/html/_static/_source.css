@@ -33,10 +33,42 @@
 .source-file__refer-container {
 } */
 
-/* .source-file__reqs {} */
+/* .source-file__ranges {
+} */
 
-.source-file__ranges {
-  margin-top: 4rem;
+.source-file__reqs {
+  margin-top: 2rem;
+}
+
+.source-file__refer-container summary {
+  display: block;
+  padding: var(--base-padding);
+  background-color: #fff;
+  color: var(--color-accent);;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  padding-right: 2rem;
+}
+
+.source-file__refer-container summary::-webkit-details-marker {
+  display: none;
+}
+
+.source-file__refer-container summary::before {
+  /* content: '⊕'; */
+  content: '\25B6';
+  text-align: right;
+  line-height: 1;
+  position: absolute;
+  top: 1.25rem;
+  right: 1rem;
+}
+
+.source-file__refer-container details[open] > summary::before {
+  /* content: '⊖'; */
+  content: '\25BC';
+  opacity: 0.75;
 }
 
 /* CODE */

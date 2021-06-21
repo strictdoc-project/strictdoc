@@ -20,6 +20,7 @@
               id="pointer:{{ requirement.uid }}:{{ range.ng_source_line_begin }}:{{ range.ng_source_line_end }}"
               class="pointer"
               href="{{ link_renderer.render_requirement_in_source_file_range_link(requirement, link, source_file, range) }}"
+              title="lines {{ range.ng_source_line_begin }}-{{ range.ng_source_line_end }} in file {{ link }}"
             >
               <b>[{{ range.ng_source_line_begin }}-{{ range.ng_source_line_end }}]</b>
               {{ link }}

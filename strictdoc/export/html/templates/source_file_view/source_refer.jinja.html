@@ -1,32 +1,38 @@
 <div id="referContainer" class="source-file__refer">
   <div class="source-file__refer-container">
 
-  {# requirements #}
-  {%- set source_file_requirement_links =
-  traceability_index.get_source_file_requirement_links(source_file.in_doctree_source_file_rel_path) -%}
-  {%- if source_file_requirement_links -%}
-  <div class="source-file__reqs">
-    <div>
-        The following requirements refer to this source file:
-    </div>
-    {%- for requirement in source_file_requirement_links -%}
-      {% include "source_file_view/source_requirement.jinja.html" %}
-    {%- endfor -%}
-  </div>
-  {%- endif -%}
-
   {# ranges #}
   {%- set source_file_range_reqs =
   traceability_index.get_source_file_all_range_reqs(source_file.in_doctree_source_file_rel_path) -%}
   {%- if source_file_range_reqs -%}
   <div class="source-file__ranges">
-    <div>
-        The following requirements refer <b>to the ranges</b> in this source file:
-    </div>
-    {%- for requirement in source_file_range_reqs -%}
-      {% include "source_file_view/source_requirement.jinja.html" %}
-    {%- endfor -%}
+
+    <details open>
+      <summary>The following requirements refer <b>to&nbsp;the&nbsp;ranges</b> in this source&nbsp;file.</summary>
+        {%- for requirement in source_file_range_reqs -%}
+          {% include "source_file_view/source_requirement.jinja.html" %}
+        {%- endfor -%}
+    </details>
+
   </div>
   {%- endif -%}
+
+  {# requirements #}
+  {%- set source_file_requirement_links =
+  traceability_index.get_source_file_requirement_links(source_file.in_doctree_source_file_rel_path) -%}
+  {%- if source_file_requirement_links -%}
+  <div class="source-file__reqs">
+
+    <details>
+      <summary>See requirements that refer to&nbsp;this source&nbsp;file <b>without specifying a&nbsp;range</b>.</summary>
+      {%- for requirement in source_file_requirement_links -%}
+          {% include "source_file_view/source_requirement.jinja.html" %}
+        {%- endfor -%}
+    </details>
+
+  </div>
+  {%- endif -%}
+
+
   </div>
 </div>

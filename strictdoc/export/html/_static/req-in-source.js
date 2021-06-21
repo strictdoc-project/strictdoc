@@ -14,7 +14,7 @@
 // init:
 const topSourceScrollLimit = 200;
 let bottomSourceScrollLimit; // TODO update on window resize
-let mainContainer;
+// let mainContainer;
 let referContainer;
 let sourceContainer;
 let sourceContainerHeight; // TODO update on window resize
@@ -30,7 +30,7 @@ let pointersPositions = {};
 
 function prepareDOMElements() {
   // get Containers
-  mainContainer = document.getElementById('mainContainer');
+  // mainContainer = document.getElementById('mainContainer');
   referContainer = document.getElementById('referContainer');
   sourceContainer = document.getElementById('sourceContainer');
   // get sourceBlock

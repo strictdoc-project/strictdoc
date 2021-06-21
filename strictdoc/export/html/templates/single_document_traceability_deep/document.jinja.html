@@ -1,10 +1,14 @@
+{% set root_path = document.meta.get_root_path_prefix() %}
+{% set document_iterator = traceability_index.get_document_iterator(document) %}
+
 {% extends "base.jinja.html" %}
+
 {% block head_scripts %}
-  <script type="text/javascript" src="{{document.meta.get_root_path_prefix()}}/_static/jquery.min.js"></script>
-  <script type="text/javascript" src="{{document.meta.get_root_path_prefix()}}/_static/pan-with-space.js"></script>
+  <script type="text/javascript" src="{{root_path}}/_static/jquery.min.js"></script>
+  <script type="text/javascript" src="{{root_path}}/_static/pan-with-space.js"></script>
   {{ super() }}
 {% endblock head_scripts %}
-{% block title %}Deep Traceability{% endblock title %}
+{% block title %}{{document.name}} - Deep Traceability{% endblock title %}
 {% block viewtype %}deep-traceability-view{% endblock %}
 
 {% block layout_nav %}

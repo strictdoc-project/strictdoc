@@ -27,17 +27,20 @@
 {% endblock layout_nav %}
 
 {% block aside_header_content %}
-  {# {% include "_shared/toc_header.jinja.html" %} #}
+  {#
+  this zone is stretched to the full width of the screen in the CSS,
+  .source-file-view .layout_aside-header
+  #}
+  <p class="source-file__name"> &lt;/&gt; {{source_file.in_doctree_source_file_rel_path}}</p>
 {% endblock aside_header_content %}
+{% block header_content %}
+  {# DON'T USE IT, space is taken #}
+{% endblock header_content %}
 
 {% block aside_content %}
   {# {% include "_shared/toc.jinja.html" %} #}
   {% include "source_file_view/source_refer.jinja.html" %}
 {% endblock aside_content %}
-
-{% block header_content %}
-  <p>{{source_file.in_doctree_source_file_rel_path}}</p>
-{% endblock header_content %}
 
 {% block content %}
   {# <main id="mainContainer" class="source-file-view"></main> #}

@@ -14,6 +14,13 @@
   grid-template-columns: 340px 0 1fr;
 }
 
+/* .source-file-view .layout_header {
+} */
+
+.source-file-view .layout_aside-header {
+  grid-area: aside-header / aside-header / header / header;
+}
+
 .source-file-view .layout_aside {
   border-right: none;
   overflow-y: scroll;
@@ -23,6 +30,11 @@
 .source-file-view .layout_main {
   padding: 0;
   background: white;
+}
+
+.source-file__name {
+  font-size: 1rem;
+  font-weight: bold;
 }
 
 /* REQS */
@@ -61,14 +73,13 @@
   text-align: right;
   line-height: 1;
   position: absolute;
-  top: 1.25rem;
+  bottom: 1rem;
   right: 1rem;
 }
 
 .source-file__refer-container details[open] > summary::before {
   /* content: '⊖'; */
   content: '\25BC';
-  opacity: 0.75;
 }
 
 /* CODE */

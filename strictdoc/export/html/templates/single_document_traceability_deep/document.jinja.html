@@ -11,6 +11,10 @@
   {% include "_shared/layout_nav.jinja.html" %}
 {% endblock layout_nav %}
 
+{% block header_content %}
+  <p>{{document.name}} <span class="document-view-type">{{ self.title() }}</span></p>
+{% endblock header_content %}
+
 {% block content %}
 
       {% include "_shared/tags.jinja.html" %}

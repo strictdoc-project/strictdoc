@@ -8,4 +8,4 @@ CHECK-HTML: <link rel="stylesheet" href="../_static/_base.css"/>
 CHECK-HTML: <a href="../_source_files/02_basic_req_to_file_link_cwd_dot/file.py.html#REQ-001">
 
 RUN: cat %S/Output/html/_source_files/02_basic_req_to_file_link_cwd_dot/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
-CHECK-SOURCE-FILE: <a href="../../02_basic_req_to_file_link_cwd_dot/input.html#REQ-001">
+CHECK-SOURCE-FILE: <a{{.*}}href="../../02_basic_req_to_file_link_cwd_dot/input.html#REQ-001"{{.*}}>

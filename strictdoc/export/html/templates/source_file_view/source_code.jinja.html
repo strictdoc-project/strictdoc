@@ -1,0 +1,16 @@
+<div id="sourceContainer" class="source-file__code">
+  <div id="source" class="source">
+    <div class="source_highlight"></div>
+    {%- for line in source_file_content -%}
+    <div id="line-{{loop.index}}" class="source__line-number"><pre>{{loop.index}}</pre></div>
+    <div class="source__line-content">
+      {%- if line != "" -%}
+      {# <!-- Pygments --> #}
+      <pre class="highlight">{{ line }}</pre>
+      {%- else -%}
+      <pre style="user-select: none">&nbsp;</pre>
+      {%- endif -%}
+    </div>
+    {%- endfor -%}
+  </div>
+</div>

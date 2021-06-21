@@ -11,4 +11,5 @@ output.zip
 *.sketch
 .DS_Store
 setup.py
+.vscode
 

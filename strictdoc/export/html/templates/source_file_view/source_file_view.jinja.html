@@ -1,76 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="shortcut icon" href="{{source_file.path_depth_prefix}}/_static/favicon.ico" type="image/x-icon" />
-    <link rel="icon" href="{{source_file.path_depth_prefix}}/_static/favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="{{source_file.path_depth_prefix}}/_static/_base.css" />
-    <link rel="stylesheet" href="{{source_file.path_depth_prefix}}/_static/_source.css" />
-    <link rel="stylesheet" href="{{source_file.path_depth_prefix}}/_static/_element.css" />
+{% set root_path = source_file.path_depth_prefix %}
 
-    <script type="text/javascript" src="../../_static/req-in-source.js"></script>
-    <title>source-file-view</title>
-  </head>
+{% extends "base.jinja.html" %}
+
+{% block head_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{root_path}}/_static/_source.css" />
+{% endblock head_css %}
+{% block head_scripts %}
+  <script type="text/javascript" src="{{root_path}}/_static/req-in-source.js"></script>
+  {{ super() }}
+{% endblock head_scripts %}
+
+{% block title %}source-file-view{% endblock title %}
+{% block viewtype %}source-file-view{% endblock viewtype %}
+
+{% block head %}
+  {{ super() }}
 
   <style>
     {{pygments_styles | safe}}
   </style>
+{% endblock head %}
 
-  <body>
-    <main id="mainContainer" class="source-file-view">
+{% block layout_nav %}
+  {# {% include "_shared/layout_nav.jinja.html" %} #}
+{% endblock layout_nav %}
 
-      <div id="referContainer" class="source-file__refer">
-        <div class="source-file__refer-container">
-        <div class="source-file__path">
-          {{source_file.in_doctree_source_file_rel_path}}
-        </div>
+{% block aside_header_content %}
+  {# {% include "_shared/toc_header.jinja.html" %} #}
+{% endblock aside_header_content %}
 
-        {# requirements #}
-        {%- set source_file_requirement_links =
-        traceability_index.get_source_file_requirement_links(source_file.in_doctree_source_file_rel_path) -%}
-        {%- if source_file_requirement_links -%}
-        <div class="source-file__reqs">
-          <div>
-              The following requirements refer to this source file:
-          </div>
-          {%- for requirement in source_file_requirement_links -%}
-            {% include "source_file_view/source_requirement.jinja.html" %}
-          {%- endfor -%}
-        </div>
-        {%- endif -%}
+{% block aside_content %}
+  {# {% include "_shared/toc.jinja.html" %} #}
+  {% include "source_file_view/source_refer.jinja.html" %}
+{% endblock aside_content %}
 
-        {# ranges #}
-        {%- set source_file_range_reqs =
-        traceability_index.get_source_file_all_range_reqs(source_file.in_doctree_source_file_rel_path) -%}
-        {%- if source_file_range_reqs -%}
-        <div class="source-file__ranges">
-          <div>
-              The following requirements refer <b>to the ranges</b> in this source file:
-          </div>
-          {%- for requirement in source_file_range_reqs -%}
-            {% include "source_file_view/source_requirement.jinja.html" %}
-          {%- endfor -%}
-        </div>
-        {%- endif -%}
-        </div>
-      </div>
+{% block header_content %}
+  <p>{{source_file.in_doctree_source_file_rel_path}}</p>
+{% endblock header_content %}
 
-      <div id="sourceContainer" class="source-file__code">
-        <div id="source" class="source">
-          <div class="source_highlight"></div>
-          {%- for line in source_file_content -%}
-          <div id="line-{{loop.index}}" class="source__line-number"><pre>{{loop.index}}</pre></div>
-          <div class="source__line-content">
-            {%- if line != "" -%}
-            {# <!-- Pygments --> #}
-            <pre class="highlight">{{ line }}</pre>
-            {%- else -%}
-            <pre style="user-select: none">&nbsp;</pre>
-            {%- endif -%}
-          </div>
-          {%- endfor -%}
-        </div>
-      </div>
-    </main>
-  </body>
-</html>
+{% block content %}
+  {# <main id="mainContainer" class="source-file-view"></main> #}
+  {% include "source_file_view/source_code.jinja.html" %}
+{% endblock content %}

@@ -1,6 +1,31 @@
+{% set root_path = document.meta.get_root_path_prefix() %}
+{% set document_iterator = traceability_index.get_document_iterator(document) %}
+
 {% extends "base.jinja.html" %}
-{% block title %}Document{% endblock %}
+
+{% block head_scripts %}
+  <script type="text/javascript" src="{{root_path}}/_static/toc.js"></script>
+  {{ super() }}
+{% endblock head_scripts %}
+
+{% block title %}{{document.name}} - Document{% endblock %}
 {% block viewtype %}document-view{% endblock %}
+
+{% block layout_nav %}
+  {% include "_shared/layout_nav.jinja.html" %}
+{% endblock layout_nav %}
+
+{% block aside_header_content %}
+  {% include "_shared/toc_header.jinja.html" %}
+{% endblock aside_header_content %}
+
+{% block aside_content %}
+  {% include "_shared/toc.jinja.html" %}
+{% endblock aside_content %}
+
+{% block header_content %}
+  <p>{{document.name}} <span class="document-view-type">{{ self.title() }}</span></p>
+{% endblock header_content %}
 
 {% block content %}
       <div class="content">

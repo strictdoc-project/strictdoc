@@ -17,13 +17,20 @@
   </style>
 
   <body>
+
+    <div class='layout'>
+
+    <header class="layout_header">
+      <p>{{source_file.in_doctree_source_file_rel_path}}</p>
+    </header>
+
     <main id="mainContainer" class="source-file-view">
 
       <div id="referContainer" class="source-file__refer">
         <div class="source-file__refer-container">
-        <div class="source-file__path">
+        {# <div class="source-file__path">
           {{source_file.in_doctree_source_file_rel_path}}
-        </div>
+        </div> #}
 
         {# requirements #}
         {%- set source_file_requirement_links =
@@ -72,5 +79,7 @@
         </div>
       </div>
     </main>
+
+    </div>
   </body>
 </html>

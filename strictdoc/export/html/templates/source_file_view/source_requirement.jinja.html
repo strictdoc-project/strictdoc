@@ -1,7 +1,7 @@
 <article id="requirement:{{ requirement.uid }}" class="requirement">
-  <a href="{{ link_renderer.render_requirement_link_from_source_file(requirement, source_file) }}">
+  <a class="requirement_link" href="{{ link_renderer.render_requirement_link_from_source_file(requirement, source_file) }}">
     {%- if requirement.uid %}
-    <span class="requirement_child-uid">{{ requirement.uid }}</span>
+    <div class="requirement_child-uid">{{ requirement.uid }}</div>
     {%- endif %}
     {{ requirement.title }}
   </a>
@@ -20,15 +20,20 @@
               id="pointer:{{ requirement.uid }}:{{ range.ng_source_line_begin }}:{{ range.ng_source_line_end }}"
               class="pointer"
               href="{{ link_renderer.render_requirement_in_source_file_range_link(requirement, link, source_file, range) }}"
+              title="lines {{ range.ng_source_line_begin }}-{{ range.ng_source_line_end }} in file {{ link }}"
             >
-              <b>{{ link }}</b>, lines: {{ range.ng_source_line_begin }}-{{ range.ng_source_line_end }}
+              <b>[{{ range.ng_source_line_begin }}-{{ range.ng_source_line_end }}]</b>
+              {{ link }}
             </a>
           </li>
         {%- endfor -%}
       {%- else -%}
         {%- if source_file.in_doctree_source_file_rel_path == link -%}
-          {# TODO: @mettta #}
-          {{ link }}
+          <li>
+            <span class="current_file_pseudolink">
+              {{ link }}
+            </span>
+          </li>
         {%- else -%}
           <li>
             <a
@@ -36,7 +41,7 @@
               class="pointer"
               href="{{ link_renderer.render_requirement_in_source_file_link(requirement, link, source_file) }}"
             >
-              <b>{{ link }}</b>
+              {{ link }}
             </a>
           </li>
         {%- endif -%}

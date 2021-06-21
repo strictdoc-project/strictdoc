@@ -3,6 +3,11 @@
 
 {% extends "base.jinja.html" %}
 
+{% block head_scripts %}
+  <script type="text/javascript" src="{{root_path}}/_static/toc.js"></script>
+  {{ super() }}
+{% endblock head_scripts %}
+
 {% block title %}{{document.name}} - Table{% endblock %}
 {% block viewtype %}table-view{% endblock %}
 

@@ -185,4 +185,12 @@ REFS:
 TITLE: Simple file reference link (nested folder)
 STATEMENT: Requirement statement
 
+[REQUIREMENT]
+UID: REQ-FILE-SUM
+REFS:
+- TYPE: File
+  VALUE: hello_world.py
+TITLE: Adding two numbers
+STATEMENT: Python3 program shall add two numbers
+
 [/SECTION]

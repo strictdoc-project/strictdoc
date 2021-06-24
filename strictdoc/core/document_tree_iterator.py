@@ -1,6 +1,7 @@
 import collections
 
-from strictdoc.core.document_tree import FileTree, DocumentTree, File
+from strictdoc.core.document_tree import DocumentTree
+from strictdoc.core.file_tree import File, FileTree
 
 
 class DocumentTreeIterator:
@@ -9,7 +10,9 @@ class DocumentTreeIterator:
         self.document_tree = document_tree
 
     def iterator(self):
-        task_list = collections.deque(self.document_tree.file_tree)
+        task_list = collections.deque(
+            map(lambda tree: tree.root_file_tree, self.document_tree.file_tree)
+        )
 
         while task_list:
             file_tree_or_file = task_list.popleft()

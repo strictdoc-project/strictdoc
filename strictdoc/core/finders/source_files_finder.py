@@ -2,7 +2,8 @@ import os
 from pathlib import Path
 from typing import List
 
-from strictdoc.core.document_tree import DocumentTree, FileTree
+from strictdoc.core.document_tree import DocumentTree
+from strictdoc.core.file_tree import FileTree
 
 
 class SourceFile:
@@ -53,7 +54,7 @@ class SourceFilesFinder:
         output_html_root, document_tree: DocumentTree
     ) -> List[SourceFile]:
         found_source_files: List[SourceFile] = []
-        the_only_file_tree: FileTree = document_tree.file_tree[0]
+        the_only_file_tree: FileTree = document_tree.file_tree[0].root_file_tree
         assert os.path.abspath(the_only_file_tree.root_path)
 
         # TODO: Unify this on the FileTree class level.

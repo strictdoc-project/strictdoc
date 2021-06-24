@@ -4,8 +4,13 @@ import sys
 from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.reader import SDReader
 from strictdoc.core.document_meta import DocumentMeta
-from strictdoc.core.document_tree import FileTree, DocumentTree, File
-from strictdoc.helpers.sorting import alphanumeric_sort
+from strictdoc.core.document_tree import DocumentTree
+from strictdoc.core.file_tree import (
+    File,
+    FileTreeStructure,
+    FileFinder,
+    PathFinder,
+)
 from strictdoc.helpers.timing import measure_performance, timing_decorator
 
 
@@ -34,22 +39,8 @@ class DocumentFinder:
         return document_tree, asset_dirs
 
     @staticmethod
-    def _iterate_file_trees(file_trees):
-        for file_tree in file_trees:
-            task_list = [file_tree]
-
-            file_tree_mount_folder = file_tree.mount_folder()
-            while len(task_list) > 0:
-                current_tree = task_list.pop(0)
-
-                for doc_file in current_tree.files:
-                    yield file_tree, doc_file, file_tree_mount_folder
-
-                task_list.extend(current_tree.subfolder_trees)
-
-    @staticmethod
     def processing(document_triple):
-        file_tree, doc_file, file_tree_mount_folder = document_triple
+        _, doc_file, _ = document_triple
         doc_full_path = doc_file.get_full_path()
 
         with measure_performance(
@@ -71,7 +62,10 @@ class DocumentFinder:
         assert isinstance(file_trees, list)
         document_list, map_docs_by_paths, map_relpaths_by_docs = [], {}, {}
 
-        file_tree_list = list(DocumentFinder._iterate_file_trees(file_trees))
+        file_tree_list = []
+        for file_tree in file_trees:
+            file_tree_list.extend(list(file_tree.iterate()))
+
         found_documents = parallelizer.map(
             file_tree_list, DocumentFinder.processing
         )
@@ -143,7 +137,9 @@ class DocumentFinder:
                             ),
                         }
                     )
-                root_trees.append(File(0, path_to_doc_root))
+                root_trees.append(
+                    FileTreeStructure.create_single_file(path_to_doc_root)
+                )
                 continue
 
             # Strip away the trailing slash to let the later os.path.relpath
@@ -151,54 +147,23 @@ class DocumentFinder:
             path_to_doc_root = path_to_doc_root_raw.rstrip("/")
             path_to_doc_root = os.path.abspath(path_to_doc_root)
             path_to_doc_root_base = os.path.dirname(path_to_doc_root)
-            root_level = path_to_doc_root.count(os.sep)
 
-            tree_map = {path_to_doc_root: FileTree(path_to_doc_root, 0)}
-
-            for current_root_path, dirs, files in os.walk(
-                path_to_doc_root, topdown=False
-            ):
-                if os.path.basename(current_root_path) == "_assets":
-                    asset_dirs.append(
-                        {
-                            "full_path": current_root_path,
-                            "relative_path": os.path.relpath(
-                                current_root_path, path_to_doc_root_base
-                            ),
-                        }
-                    )
-
-                current_root_path_level = (
-                    current_root_path.count(os.sep) - root_level
+            # Finding assets.
+            tree_asset_dirs = PathFinder.find_directories(
+                path_to_doc_root, "_assets"
+            )
+            for asset_dir in tree_asset_dirs:
+                asset_dirs.append(
+                    {
+                        "full_path": asset_dir,
+                        "relative_path": os.path.relpath(
+                            asset_dir, path_to_doc_root_base
+                        ),
+                    }
                 )
 
-                if current_root_path not in tree_map:
-                    tree_map[current_root_path] = FileTree(
-                        current_root_path, current_root_path_level
-                    )
-                current_tree = tree_map[current_root_path]
+            # Finding SDoc files.
+            file_tree_structure = FileFinder.find_files(path_to_doc_root)
+            root_trees.append(file_tree_structure)
 
-                current_tree.sort_subfolder_trees()
-
-                files = [f for f in files if f.endswith(".sdoc")]
-                files.sort(key=alphanumeric_sort)
-                current_tree.set(files)
-                if not current_tree.has_sdoc_content and len(files) > 0:
-                    current_tree.has_sdoc_content = True
-
-                if current_root_path == path_to_doc_root:
-                    continue
-
-                current_parent_path = os.path.dirname(current_root_path)
-                if current_parent_path not in tree_map:
-                    tree_map[current_parent_path] = FileTree(
-                        current_parent_path, current_root_path_level - 1
-                    )
-                current_parent_tree = tree_map[current_parent_path]
-                if len(files) > 0 or current_tree.has_sdoc_content:
-                    current_parent_tree.has_sdoc_content = True
-
-                current_parent_tree.add_subfolder_tree(current_tree)
-
-            root_trees.append(tree_map[path_to_doc_root])
         return root_trees, asset_dirs

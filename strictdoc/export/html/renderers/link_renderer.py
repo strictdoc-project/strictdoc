@@ -113,7 +113,7 @@ class LinkRenderer:
 
         path_prefix = get_root_path_prefix(context_source_file.level + 2)
         # source_file_link = f"{path_prefix}/_source_files/{context_source_file.doctree_root_mount_path}/{source_link}.html?begin={range.ng_source_line_begin}&end={range.ng_source_line_end}#{requirement.uid}"
-        source_file_link = f"{path_prefix}/_source_files/{context_source_file.doctree_root_mount_path}/{source_link}.html#{requirement.uid}:{range.ng_source_line_begin}:{range.ng_source_line_end}"
+        source_file_link = f"{path_prefix}/_source_files/{context_source_file.doctree_root_mount_path}/{source_link}.html#{requirement.uid}#{range.ng_source_line_begin}#{range.ng_source_line_end}"
         return source_file_link
 
     @staticmethod

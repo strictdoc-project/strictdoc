@@ -82,6 +82,12 @@
   content: '\25BC';
 }
 
+.source-file__coverage {
+  /* padding: var(--base-padding);
+  border-bottom: 2px solid var(--thumbBG); */
+  margin-bottom: var(--base-padding);
+}
+
 /* CODE */
 
 .source-file__code {
@@ -99,6 +105,7 @@
   position: relative;
 
   font-size: 14px;
+  z-index: 1;
 }
 
 .source_highlight {

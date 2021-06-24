@@ -1,4 +1,4 @@
-<article id="requirement:{{ requirement.uid }}" class="requirement">
+<article id="requirement:{{ requirement.uid }}" class="requirement" data-reqid="{{ requirement.uid }}">
   <a class="requirement_link" href="{{ link_renderer.render_requirement_link_from_source_file(requirement, source_file) }}">
     {%- if requirement.uid %}
     <div class="requirement_child-uid">{{ requirement.uid }}</div>
@@ -19,11 +19,15 @@
             <a
               id="pointer:{{ requirement.uid }}:{{ range.ng_source_line_begin }}:{{ range.ng_source_line_end }}"
               class="pointer"
+              data-reqid="{{ requirement.uid }}"
+              data-begin="{{ range.ng_source_line_begin }}"
+              data-end="{{ range.ng_source_line_end }}"
               href="{{ link_renderer.render_requirement_in_source_file_range_link(requirement, link, source_file, range) }}"
               title="lines {{ range.ng_source_line_begin }}-{{ range.ng_source_line_end }} in file {{ link }}"
             >
               <b>[{{ range.ng_source_line_begin }}-{{ range.ng_source_line_end }}]</b>
               {{ link }}
+              <span class="reset_range_highlight"></span>
             </a>
           </li>
         {%- endfor -%}
@@ -38,7 +42,8 @@
           <li>
             <a
               id="pointer:{{ requirement.uid }}"
-              class="pointer"
+              class=""
+              data-reqid="{{ requirement.uid }}"
               href="{{ link_renderer.render_requirement_in_source_file_link(requirement, link, source_file) }}"
             >
               {{ link }}

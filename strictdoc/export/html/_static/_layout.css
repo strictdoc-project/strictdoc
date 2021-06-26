@@ -43,8 +43,7 @@
   text-transform: uppercase;
   font-size: .5em;
   line-height: 1;
-  padding: 6px 10px;
-  top: -6px;
+  top: -12px;
   color: var(--color-accent);
 }
 

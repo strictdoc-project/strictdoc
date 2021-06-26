@@ -39,7 +39,7 @@ class DocumentFinder:
         return document_tree, asset_dirs
 
     @staticmethod
-    def processing(document_triple):
+    def _process_worker_parse_document(document_triple):
         _, doc_file, _ = document_triple
         doc_full_path = doc_file.get_full_path()
 
@@ -67,7 +67,7 @@ class DocumentFinder:
             file_tree_list.extend(list(file_tree.iterate()))
 
         found_documents = parallelizer.map(
-            file_tree_list, DocumentFinder.processing
+            file_tree_list, DocumentFinder._process_worker_parse_document
         )
 
         for doc_file, document in found_documents:

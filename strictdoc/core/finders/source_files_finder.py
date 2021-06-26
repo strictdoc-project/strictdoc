@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import List
 
 from strictdoc.core.document_tree import DocumentTree
-from strictdoc.core.file_tree import FileTree
+from strictdoc.core.file_tree import Folder
 
 
 class SourceFile:
@@ -54,7 +54,9 @@ class SourceFilesFinder:
         output_html_root, document_tree: DocumentTree
     ) -> List[SourceFile]:
         found_source_files: List[SourceFile] = []
-        the_only_file_tree: FileTree = document_tree.file_tree[0].root_file_tree
+        the_only_file_tree: Folder = document_tree.file_tree[
+            0
+        ].root_folder_or_file
         assert os.path.abspath(the_only_file_tree.root_path)
 
         # TODO: Unify this on the FileTree class level.

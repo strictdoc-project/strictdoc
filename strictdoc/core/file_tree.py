@@ -46,7 +46,7 @@ class File(FileOrFolderEntry):
         return os.path.basename(os.path.dirname(self.root_path))
 
 
-class FileTree(FileOrFolderEntry):
+class Folder(FileOrFolderEntry):
     def __init__(self, root_path, level):
         assert os.path.isdir(root_path)
         assert os.path.isabs(root_path)
@@ -55,7 +55,7 @@ class FileTree(FileOrFolderEntry):
         self.level = level
         self.files = []
         self.subfolder_trees = []
-        self.parent_tree = None
+        self.parent_folder = None
         self.has_sdoc_content = False
 
     def __repr__(self):
@@ -84,40 +84,37 @@ class FileTree(FileOrFolderEntry):
             self.files.append(File(self.level + 1, full_file_path))
 
     def add_subfolder_tree(self, subfolder_tree):
-        assert isinstance(subfolder_tree, FileTree)
+        assert isinstance(subfolder_tree, Folder)
         self.subfolder_trees.append(subfolder_tree)
 
-    def sort_subfolder_trees(self):
-        self.subfolder_trees.sort(key=lambda subfolder: subfolder.root_path)
+    def set_parent_folder(self, parent_folder):
+        assert isinstance(parent_folder, Folder)
+        self.parent_folder = parent_folder
 
     def dump(self):
         print(self)
         for subfolder in self.subfolder_trees:
             subfolder.dump()
 
-    def set_parent_tree(self, parent_tree):
-        assert isinstance(parent_tree, FileTree)
-        self.parent_tree = parent_tree
 
-
-class FileTreeStructure:
-    def __init__(self, root_file_tree):
-        self.root_file_tree = root_file_tree
+class FileTree:
+    def __init__(self, root_folder_or_file):
+        self.root_folder_or_file = root_folder_or_file
 
     @staticmethod
-    def create_single_file(root_path):
+    def create_single_file_tree(root_path):
         single_file = File(0, root_path)
-        return FileTreeStructure(single_file)
+        return FileTree(single_file)
 
     def iterate(self):
-        file_tree_mount_folder = self.root_file_tree.mount_folder()
+        file_tree_mount_folder = self.root_folder_or_file.mount_folder()
 
-        task_list = [self.root_file_tree]
+        task_list = [self.root_folder_or_file]
         while len(task_list) > 0:
             current_tree = task_list.pop(0)
 
             for doc_file in current_tree.files:
-                yield self.root_file_tree, doc_file, file_tree_mount_folder
+                yield self.root_folder_or_file, doc_file, file_tree_mount_folder
 
             task_list.extend(current_tree.subfolder_trees)
 
@@ -130,8 +127,8 @@ class FileFinder:
 
         root_level = root_path.count(os.sep)
 
-        root_tree = FileTree(root_path, 0)
-        tree_map = {root_path: root_tree}
+        root_folder = Folder(root_path, 0)
+        folder_map = {root_path: root_folder}
 
         for current_root_path, dirs, files in os.walk(root_path, topdown=True):
             dirs[:] = [
@@ -145,11 +142,11 @@ class FileFinder:
                 current_root_path.count(os.sep) - root_level
             )
 
-            if current_root_path not in tree_map:
-                tree_map[current_root_path] = FileTree(
+            if current_root_path not in folder_map:
+                folder_map[current_root_path] = Folder(
                     current_root_path, current_root_path_level
                 )
-            current_tree = tree_map[current_root_path]
+            current_tree = folder_map[current_root_path]
 
             files = [f for f in files if f.endswith(".sdoc")]
             files.sort(key=alphanumeric_sort)
@@ -163,22 +160,22 @@ class FileFinder:
             current_parent_path = os.path.dirname(current_root_path)
 
             # top-down search assumes we have seen the parent before.
-            assert current_parent_path in tree_map
+            assert current_parent_path in folder_map
 
-            current_parent_tree = tree_map[current_parent_path]
-            current_tree.set_parent_tree(current_parent_tree)
+            current_parent_folder = folder_map[current_parent_path]
+            current_tree.set_parent_folder(current_parent_folder)
             if current_tree.has_sdoc_content:
-                current_parent_cursor = current_parent_tree
+                parent_folder_cursor = current_parent_folder
                 while (
-                    current_parent_cursor
-                    and not current_parent_cursor.has_sdoc_content
+                    parent_folder_cursor
+                    and not parent_folder_cursor.has_sdoc_content
                 ):
-                    current_parent_cursor.has_sdoc_content = True
-                    current_parent_cursor = current_parent_cursor.parent_tree
+                    parent_folder_cursor.has_sdoc_content = True
+                    parent_folder_cursor = parent_folder_cursor.parent_folder
 
-            current_parent_tree.add_subfolder_tree(current_tree)
+            current_parent_folder.add_subfolder_tree(current_tree)
 
-        file_tree_structure = FileTreeStructure(tree_map[root_path])
+        file_tree_structure = FileTree(folder_map[root_path])
         return file_tree_structure
 
 

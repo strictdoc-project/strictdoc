@@ -7,7 +7,7 @@ from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_tree import (
     File,
-    FileTreeStructure,
+    FileTree,
     FileFinder,
     PathFinder,
 )
@@ -138,7 +138,7 @@ class DocumentFinder:
                         }
                     )
                 root_trees.append(
-                    FileTreeStructure.create_single_file(path_to_doc_root)
+                    FileTree.create_single_file_tree(path_to_doc_root)
                 )
                 continue
 

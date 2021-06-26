@@ -1,217 +1,420 @@
 
 
-console.log('%c coverage ', 'background:yellow;color:black');
-
-const __log = (...payload) => {
-  console.log('%c cov ', 'background:yellow;color:black',
+const __log = (topic, ...payload) => {
+  console.log(`%c ${topic} `, 'background:yellow;color:black',
     ...payload
   );
 }
 
-// CONSTANTS
-const hashSplitter = '#';
-const lineIdPattern = 'line-';
-// COLORS
-const rangeVisibleBG = 'rgba(75,255,0,0.2)';
-const rangeInvisibleBG = 'rgba(75,255,0,0)';
-const rangeHighlighterBG = 'rgba(255,255,155,1)';
+class Highlighter {
+  constructor({
+    target,
+    rgb,
+    alpha,
+  }) {
+    this.target = target || document.body;
+    this.rgb = rgb || '75,255,0';
+    this.alpha = alpha || '0.2';
+  }
 
+  create(top = 0, height = 0) {
+    const element = document.createElement('div');
+    this._addBaseStyle(element);
+    this.target.prepend(element);
+    this.move(element, top, height);
+    this.on(element);
+    return element
+  }
 
-// DOM
-const dom = {
-  ranges: null,
-  requirements: null,
-  highlighter: null,
-};
+  off(element) {
+    this._colorize(element, this.rgb, 0)
+  }
 
-const getHighlighterFromDom = () => dom.highlighter;
-const getRequirementFromDom = (reqid) => dom.requirements[reqid];
-const getRangeFromDom = (rangeBegin, rangeEnd) => dom.ranges[rangeAlias(rangeBegin, rangeEnd)].element;
-const getPointersFromDom = (rangeBegin, rangeEnd) => Object.values(dom.ranges[rangeAlias(rangeBegin, rangeEnd)].pointers);
+  on(element) {
+    this._colorize(element)
+  }
 
-// STATE
-const state = {
-  range: null,
-  requirement: null,
-  pointers: null,
-};
+  toggleVisibility(element, toggler) {
+    if (toggler) {
+      this.on(element)
+    } else {
+      this.off(element)
+    }
+  }
 
-const changeState = ({
-  range,
-  requirement,
-  pointers,
-}) => {
+  move(element, top, height) {
+    element.style.top = top + 'px';
+    element.style.height = height + 'px';
+  }
 
-  // remove old 'active'
-  state.requirement?.classList.remove('active');
-  state.pointers?.forEach(pointer => pointer?.classList.remove('active'));
+  _colorize(element, rgb, alpha = 1) {
+    element.style.background = rgb ? `rgba(${rgb}, ${alpha})` : `rgba(${this.rgb}, ${this.alpha})`;
+  }
 
-  // make changes to state
-  state.range = range;
-  state.requirement = requirement;
-  state.pointers = pointers;
-
-  // add new 'active'
-  state.requirement.classList.add('active');
-  state.pointers.forEach(pointer => pointer.classList.add('active'));
-
-  // nake changes to dom (highlight and scroll)
-  moveElement(getHighlighterFromDom(), state.range.offsetTop, state.range.offsetHeight);
-  state.range.scrollIntoView({ block: "center", behavior: "smooth" });
-
-};
-
-function usePointer(pointer) {
-
-  const rangeBegin = pointer.dataset.begin;
-  const rangeEnd = pointer.dataset.end;
-  const reqid = pointer.dataset.reqid;
-
-  changeState({
-    range: getRangeFromDom(rangeBegin, rangeEnd),
-    requirement: getRequirementFromDom(reqid),
-    pointers: getPointersFromDom(rangeBegin, rangeEnd),
-  })
-}
-
-function useHash() {
-
-  const [_, reqId, rangeBegin, rangeEnd] = window.location.hash.split(hashSplitter);
-
-  changeState({
-    range: getRangeFromDom(rangeBegin, rangeEnd),
-    requirement: getRequirementFromDom(reqId),
-    pointers: getPointersFromDom(rangeBegin, rangeEnd),
-  })
-}
-
-const rangeAlias = (begin, end) => `${begin}:${end}`;
-
-function createCoverageToggler(dom) {
-  const element = document.getElementById('sorceCodeCoverageToggler');
-  element.addEventListener('change', function () {
-    toggleRangesVisibility(dom.ranges, element.checked);
-  })
-  element.checked = true;
-  return element
-}
-
-function toggleRangesVisibility(ranges, toggler) {
-  for (key in ranges) {
-    ranges[key].element.style.background = toggler ? rangeVisibleBG : rangeInvisibleBG;
+  _addBaseStyle(element) {
+    element.style.position = 'absolute';
+    element.style.zIndex = '-1';
+    element.style.left = '0';
+    element.style.right = '0';
+    element.style.transition = 'height 0.3s ease-in, top 0.3s ease-in, background 0.15s ease-in';
   }
 }
 
-function prepareSourceBlock() {
-  const element = document.getElementById('source');
-  element.style.position = 'relative';
-  element.style.zIndex = '1';
-  return element
+class Switch {
+  constructor({
+    callback,
+    labelText,
+    checked,
+    componentClass,
+    colorOn,
+    colorOff,
+    size,
+    stroke,
+    units,
+  }) {
+    this.colorOn = colorOn || 'rgb(100, 200, 50)';
+    this.colorOff = colorOff || 'rgb(200, 200, 200)';
+    this.labelText = labelText || '';
+    this.checked = checked || true;
+
+    this.componentClass = componentClass || 'std-switch-scc';
+    this.size = size || 1;
+    this.stroke = stroke || 0.25;
+    this.units = units || 'rem';
+
+    this.callback = callback;
+  }
+
+  create() {
+    const block = document.createElement('div');
+    block.classList.add(this.componentClass);
+    const label = document.createElement('label');
+    label.classList.add(`${this.componentClass}__label`);
+    const input = document.createElement('input');
+    input.classList.add(`${this.componentClass}__input`);
+    input.type = 'checkbox';
+    input.checked = this.checked;
+    const slider = document.createElement('span');
+    slider.classList.add(`${this.componentClass}__slider`);
+    const text = document.createElement('span');
+    text.innerHTML = this.labelText;
+
+    input.addEventListener('change', () => this.callback(input.checked));
+
+    label.append(input, slider, text);
+    block.append(label);
+    this.insertStyle();
+
+    return block;
+  }
+
+  insertStyle() {
+
+    const css = `
+    .${this.componentClass} {
+      display: inline-block;
+    }
+    .${this.componentClass}__label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      user-select: none;
+      cursor: pointer;
+    }
+    .${this.componentClass}__input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+    .${this.componentClass}__slider {
+      position: relative;
+      cursor: pointer;
+      background-color: ${this.colorOff};
+      -webkit-transition: .4s;
+      transition: .4s;
+      display: inline-block;
+      width: ${this.size * 2 + this.stroke * 2}${this.units};
+      height: ${this.size + this.stroke * 2}${this.units};
+      margin-right: ${this.size * 0.5}${this.units};
+      border-radius: ${this.size * 0.5 + this.stroke}${this.units};
+    }
+    .${this.componentClass}__slider::before  {
+      position: absolute;
+      content: "";
+      height: ${this.size}${this.units};
+      width: ${this.size}${this.units};
+      left: ${this.stroke}${this.units};
+      bottom: ${this.stroke}${this.units};
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .${this.componentClass}__slider {
+      background-color: ${this.colorOn};
+    }
+    input:focus + .${this.componentClass}__slider {
+      box-shadow: 0 0 1px ${this.colorOn};
+    }
+    input:checked + .${this.componentClass}__slider::before {
+      -webkit-transform: translateX(${this.size}${this.units});
+      -ms-transform: translateX(${this.size}${this.units});
+      transform: translateX(${this.size}${this.units});
+    }
+    `;
+
+    const head = document.querySelector('head');
+    const style = document.createElement('style');
+    style.append(document.createTextNode(css));
+    style.setAttribute("data-slider-styles", '');
+    head.append(style);
+  }
+
 }
 
-function createRangeHighlighter() {
-  const element = document.createElement('div');
-  element.style.position = 'absolute';
-  element.style.left = '0';
-  element.style.right = '0';
-  element.style.background = rangeHighlighterBG;
-  element.style.zIndex = '-1';
-  element.style.transition = 'height 0.3s ease-in, top 0.3s ease-in';
-  return element
-}
+class Dom {
+  constructor({
+    sourceId,
+    hashSplitter,
+    strictdocCommentSelector,
+    strictdocCommentBeginString,
+    strictdocCommentEndString,
+  }) {
 
-function moveElement(element, top, height) {
-  element.style.top = top + 'px';
-  element.style.height = height + 'px';
-}
+    // CONSTANTS
+    this.sourceId = sourceId || 'source';
+    this.hashSplitter = hashSplitter || '#';
 
-function createRangeElement(begin, end, container) {
-  const rangeElement = document.createElement('div');
-  const beginLine = document.getElementById(`${lineIdPattern}${begin}`);
-  const endLine = document.getElementById(`${lineIdPattern}${end}`);
-  const top = beginLine.offsetTop;
-  const height = endLine.offsetTop + endLine.offsetHeight - top;
+    // STRICTDOC SPECIFIC
+    this.strictdocCommentSelector = strictdocCommentSelector || 'pre span';
+    this.strictdocCommentBeginString = strictdocCommentBeginString || '# STRICTDOC RANGE BEGIN: ';
+    this.strictdocCommentEndString = strictdocCommentEndString || '# STRICTDOC RANGE END: ';
 
-  rangeElement.style.position = 'absolute';
-  rangeElement.style.zIndex = '-1';
-  rangeElement.style.left = '0px';
-  rangeElement.style.right = '0px';
-  rangeElement.style.top = top + 'px';
-  rangeElement.style.height = height + 'px';
-  rangeElement.style.transition = 'background 0.15s ease-in';
-  rangeElement.style.background = rangeVisibleBG;
+    // objects
+    this.greenHighlighter;
+    this.yellowHighlighter;
 
-  container.prepend(rangeElement);
-  return rangeElement;
-}
+    // elements
+    this.sourceContainer;
+    this.source;
+    this.lines = {};
+    this.requirements = {};
+    this.ranges = {};
+    this.highlightedRange;
 
-// prepare DOM elements
-function prepareDOMElements(dom) {
+    // state
+    this.active = {
+      range: null,
+      requirement: null,
+      pointers: [],
+    };
+  }
 
+  prepare() {
 
-  const source = prepareSourceBlock();
-  const rangeHighlighter = createRangeHighlighter();
-  dom.highlighter = rangeHighlighter;
-  source.prepend(rangeHighlighter);
+    this.sourceContainer = document.getElementById('sourceContainer');
 
-  const requirementsList = [...document.querySelectorAll('.requirement')];
-  const pointersList = [...document.querySelectorAll('.pointer')];
+    this.sourceContainer.style.position = 'absolute';
+    this.sourceContainer.style.top = 0;
+    this.sourceContainer.style.bottom = 0;
+    this.sourceContainer.style.right = 0;
+    this.sourceContainer.style.left = 0;
+    this.sourceContainer.style.overflow = 'auto';
 
-  dom.requirements = requirementsList
-    .reduce((acc, requirement) => {
-      acc[requirement.dataset.reqid] = requirement;
-      return acc
-    }, {});
+    console.log(this.sourceContainer);
 
-  // dom.pointers = pointersList
-  // .
+    this._prepareSourceBlock();
 
-  dom.ranges = pointersList
-    .reduce((acc, pointer) => {
-      const rangeBegin = pointer.dataset.begin;
-      const rangeEnd = pointer.dataset.end;
+    this.yellowHighlighter = new Highlighter({
+      target: this.source,
+      rgb: '255,255,155',
+      alpha: '1',
+    });
+    this.highlightedRange = this.yellowHighlighter.create();
 
-      const range = rangeAlias(rangeBegin, rangeEnd);
-      acc[range] = {
-        ...acc[range],
-        pointers: {
-          ...acc[range]?.pointers,
-          [pointer.dataset.reqid]: pointer
+    this.greenHighlighter = new Highlighter({
+      target: this.source,
+      rgb: '75,255,0',
+      alpha: '0.2',
+    });
+
+    this._prepareLines();
+    this._prepareRequirements();
+    this._prepareRanges();
+
+  }
+
+  useLocationHash() {
+    const [_, reqId, rangeBegin, rangeEnd] = window.location.hash.split(this.hashSplitter);
+    const rangeAlliace = rangeBegin ? this._generateRangeAlias(rangeBegin, rangeEnd) : undefined;
+
+    this.changeActive({
+      requirement: this.requirements[reqId],
+      pointers: rangeAlliace ? this.ranges[rangeAlliace].pointers : null,
+      range: rangeAlliace ? this.ranges[rangeAlliace].highlighter : null,
+    });
+
+    this.highlightRange(this.active.range);
+  }
+
+  changeActive = ({
+    range,
+    requirement,
+    pointers,
+  }) => {
+
+    // remove old 'active'
+    this.active.requirement?.classList.remove('active');
+    this.active.pointers?.forEach(pointer => pointer?.classList.remove('active'));
+
+    // make changes to state
+    this.active.range = range;
+    this.active.requirement = requirement;
+    this.active.pointers = pointers;
+
+    // add new 'active'
+    this.active.requirement?.classList.add('active');
+    this.active.pointers?.forEach(pointer => pointer.classList.add('active'));
+
+  };
+
+  toggleRangesVisibility(toggler) {
+    for (let key in this.ranges) {
+      this.greenHighlighter.toggleVisibility(this.ranges[key].highlighter, toggler)
+    }
+  }
+
+  highlightRange(range) {
+    const top = range?.offsetTop || 0;
+    const height = range?.offsetHeight || 0;
+    this.yellowHighlighter.move(this.highlightedRange, top, height);
+
+    if (range) {
+      // range.scrollIntoView({ block: "center", inline: "nearest", behavior: "smooth" });
+      this.sourceContainer.scrollTo({
+        top: top - 200, // TODO 200 to config
+        behavior: 'smooth',
+      });
+    } else {
+      // this.source.scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth" });
+      this.sourceContainer.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    }
+  }
+
+  _prepareSourceBlock() {
+    this.source = document.getElementById(this.sourceId);
+    this.source.style.position = 'relative';
+    this.source.style.zIndex = '1';
+  }
+
+  _prepareLines() {
+    this.lines = [...document.querySelectorAll('[data-line]')]
+      .reduce((acc, line) => {
+        acc[line.dataset.line] = line;
+        return acc
+      }, {});
+  }
+
+  _prepareRequirements() {
+    this.requirements = [...document.querySelectorAll('.requirement')]
+      .reduce((acc, requirement) => {
+        acc[requirement.dataset.reqid] = requirement;
+        return acc
+      }, {});
+  }
+
+  _prepareRanges() {
+    const ranges = this.ranges;
+
+    [...document.querySelectorAll('.pointer')]
+      .map(pointer => {
+        const rangeBegin = pointer.dataset.begin;
+        const rangeEnd = pointer.dataset.end;
+
+        const range = this._generateRangeAlias(rangeBegin, rangeEnd);
+
+        if (!ranges[range]) {
+          ranges[range] = {};
+          ranges[range].pointers = [];
+
+          ranges[range].beginLine = this.lines[rangeBegin];
+          ranges[range].endLine = this.lines[rangeEnd];
+
+          const top = ranges[range].beginLine.offsetTop;
+          const height = ranges[range].endLine.offsetTop + ranges[range].endLine.offsetHeight - top;
+          ranges[range].highlighter = this.greenHighlighter.create(top, height);
         }
-      };
 
-      // add Event Listener
-      pointer.addEventListener("click",
-        function () {
-          usePointer(pointer);
-        }
+        ranges[range].pointers.push(pointer);
+      });
+
+    // put pointers from code to this.ranges
+    this._prepareInlinePointers();
+  }
+
+  _prepareInlinePointers() {
+    for (var range in this.ranges) {
+
+      const beginLine = this.ranges[range].beginLine
+        .querySelector(this.strictdocCommentSelector);
+      const endLine = this.ranges[range].endLine
+        .querySelector(this.strictdocCommentSelector);
+
+      this._processLine(
+        range,
+        beginLine,
+        this.strictdocCommentBeginString
       );
-      // make elem
-      !acc[range].element
-        && (acc[range].element = createRangeElement(
-          rangeBegin,
-          rangeEnd,
-          source
-        ));
+      this._processLine(
+        range,
+        endLine,
+        this.strictdocCommentEndString
+      );
+    }
+  }
 
-      return acc
-    }, {});
+  _processLine(range, element, string) {
 
-  const coverageToggler = createCoverageToggler(dom);
-  toggleRangesVisibility(dom.ranges, coverageToggler.checked);
+    // Assume that the requirments ID in the code and the links in the menu are correct and the same
+    const newHTML = this.ranges[range].pointers
+      .map(pointer => `<a href="${pointer.href}">${pointer.dataset.reqid}</a>`)
+      .join(', ');
+    element.innerHTML = string + newHTML;
+  }
 
+  _generateRangeAlias(begin, end) { return `${begin}${this.hashSplitter}${end}` };
 }
+
+const dom = new Dom({
+  sourceId: 'source',
+  hashSplitter: '#',
+  strictdocCommentSelector: 'pre span',
+  strictdocCommentBeginString: '# STRICTDOC RANGE BEGIN: ',
+  strictdocCommentEndString: '# STRICTDOC RANGE END: ',
+});
 
 window.addEventListener("load", function () {
   __log(
+    'start',
     window.location.hash
   )
 
-  prepareDOMElements(dom);
-  useHash();
+  dom.prepare();
+  dom.useLocationHash();
 
-  __log(
-    'dom', dom
-  )
+  const switcher = new Switch(
+    {
+      labelText: 'Coverage',
+      checked: true,
+      callback: (checked) => dom.toggleRangesVisibility(checked),
+    }
+  );
+  document.getElementById('sorceCodeCoverageSwitch').append(switcher.create());
 
 });
+
+window.addEventListener("hashchange", () => dom.useLocationHash());

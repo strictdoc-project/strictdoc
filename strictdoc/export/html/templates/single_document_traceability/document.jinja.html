@@ -1,3 +1,4 @@
+{% set template_type = 'Traceability' %}
 {% set root_path = document.meta.get_root_path_prefix() %}
 {% set document_iterator = traceability_index.get_document_iterator(document) %}
 
@@ -7,8 +8,7 @@
   <script type="text/javascript" src="{{root_path}}/_static/toc.js"></script>
   {{ super() }}
 {% endblock head_scripts %}
-
-{% block title %}{{document.name}} - Traceability{% endblock %}
+{% block title %}{{document.name}} - {{ template_type }}{% endblock %}
 {% block viewtype %}traceability-view{% endblock %}
 
 {% block layout_nav %}
@@ -24,7 +24,7 @@
 {% endblock aside_content %}
 
 {% block header_content %}
-  <p>{{document.name}} <span class="document-view-type">{{ self.title() }}</span></p>
+  <p>{{document.name}} <span class="document-view-type">{{ template_type }}</span></p>
 {% endblock header_content %}
 
 {% block content %}

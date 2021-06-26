@@ -54,14 +54,14 @@ class SourceFilesFinder:
         output_html_root, document_tree: DocumentTree
     ) -> List[SourceFile]:
         found_source_files: List[SourceFile] = []
-        the_only_file_tree: Folder = document_tree.file_tree[
+        root_folder_or_file: Folder = document_tree.file_tree[
             0
         ].root_folder_or_file
-        assert os.path.abspath(the_only_file_tree.root_path)
+        assert os.path.abspath(root_folder_or_file.root_path)
 
         # TODO: Unify this on the FileTree class level.
         # Introduce #mount_directory method?
-        doctree_root_abs_path = the_only_file_tree.root_path
+        doctree_root_abs_path = root_folder_or_file.root_path
         doctree_root_abs_path = (
             os.path.dirname(doctree_root_abs_path)
             if os.path.isfile(doctree_root_abs_path)

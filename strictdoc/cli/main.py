@@ -1,7 +1,10 @@
 import os
 import sys
 
-STRICTDOC_ROOT_PATH = os.path.join(os.path.dirname(__file__), "..", "..")
+STRICTDOC_ROOT_PATH = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "..")
+)
+assert os.path.isdir(STRICTDOC_ROOT_PATH)
 sys.path.append(STRICTDOC_ROOT_PATH)
 
 from strictdoc.helpers.parallelizer import Parallelizer

@@ -1,3 +1,4 @@
+import collections
 import os
 
 from strictdoc.helpers.sorting import alphanumeric_sort
@@ -41,6 +42,9 @@ class File(FileOrFolderEntry):
 
     def get_file_name(self):
         return os.path.basename(self.full_path)
+
+    def get_folder_path(self):
+        return os.path.dirname(self.full_path)
 
     def mount_folder(self):
         return os.path.basename(os.path.dirname(self.root_path))
@@ -118,10 +122,25 @@ class FileTree:
 
             task_list.extend(current_tree.subfolder_trees)
 
+    def iterate_directories(self):
+        task_list = collections.deque([self.root_folder_or_file])
+        while task_list:
+            file_tree_or_file = task_list.popleft()
+            if isinstance(file_tree_or_file, File):
+                yield file_tree_or_file
+            elif isinstance(file_tree_or_file, Folder):
+                if not file_tree_or_file.has_sdoc_content:
+                    continue
+                yield file_tree_or_file
+                task_list.extendleft(reversed(file_tree_or_file.files))
+                task_list.extendleft(
+                    reversed(file_tree_or_file.subfolder_trees)
+                )
+
 
 class FileFinder:
     @staticmethod
-    def find_files(root_path):
+    def find_files_with_extension(root_path, extension):
         assert os.path.isdir(root_path)
         assert os.path.isabs(root_path)
 
@@ -148,7 +167,7 @@ class FileFinder:
                 )
             current_tree = folder_map[current_root_path]
 
-            files = [f for f in files if f.endswith(".sdoc")]
+            files = [f for f in files if f.endswith(extension)]
             files.sort(key=alphanumeric_sort)
             current_tree.set(files)
             if len(files) > 0:

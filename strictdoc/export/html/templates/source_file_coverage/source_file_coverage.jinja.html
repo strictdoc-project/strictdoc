@@ -1,0 +1,137 @@
+{% set root_path = "" %}
+
+{% extends "base.jinja.html" %}
+
+{% block head_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{root_path}}/_static/_source.css!!" />
+  <link rel="stylesheet" href="_static/_base.css"/>
+  <link rel="stylesheet" href="_static/_tree.css"/>
+{% endblock head_css %}
+{% block head_scripts %}
+  <script type="text/javascript" src="{{root_path}}/_static/req-in-source.js"></script>
+  {{ super() }}
+{% endblock head_scripts %}
+
+{% block title %}source-file-view{% endblock title %}
+{% block viewtype %}source-file-view{% endblock viewtype %}
+
+{% block head %}
+  {{ super() }}
+
+  <style>
+    {{pygments_styles | safe}}
+  </style>
+{% endblock head %}
+
+{% block layout_nav %}
+  {# {% include "_shared/layout_nav.jinja.html" %} #}
+{% endblock layout_nav %}
+
+{% block aside_header_content %}
+  {#
+  this zone is stretched to the full width of the screen in the CSS,
+  .source-file-view .layout_aside-header
+  #}
+  <p class="source-file__name"> TODO </p>
+{% endblock aside_header_content %}
+{% block header_content %}
+  {# DON'T USE IT, space is taken #}
+{% endblock header_content %}
+
+{% block aside_content %}
+  {# {% include "_shared/toc.jinja.html" %} #}
+  ASIDE CONTENT
+{% endblock aside_content %}
+
+{% block content %}
+  {# <main id="mainContainer" class="source-file-view"></main> #}
+  {% for source_file in document_tree.source_tree.source_files %}
+    {{ source_file.in_doctree_source_file_rel_path }}
+  {% endfor %}
+
+    <div class="document-tree_table">
+
+      <ul class="document-tree_ul_0">
+        {%- for folder_or_file in document_tree.source_tree.file_tree.iterate_directories(): -%}
+
+          {%- set last_class_or_none = '' -%}
+          {%- if loop.last or (loop.nextitem and loop.nextitem.level < folder_or_file.level) -%}
+            {%- set last_class_or_none = 'last-in-level' -%}
+          {%- endif -%}
+
+          <li class="document-tree_level_{{folder_or_file.level}}">
+
+            <div class="document-tree_row">
+            {%- if folder_or_file.is_folder(): %}
+              <div class="document-tree_folder">
+
+                <i class="document-tree_ico">
+                  <svg class="ico__folder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="16px" height="16px"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"></path></svg>
+                </i>
+                <div class="document-tree_name">
+                  {{ folder_or_file.get_folder_name() }}/
+                </div>
+              </div>
+            {% else %}
+              <div class="document-tree_file">
+
+                <i class="document-tree_ico">
+                  <svg class="ico__file" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="16px" height="16px"><path d="M14.17,5L19,9.83V19H5V5L14.17,5L14.17,5 M14.17,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V9.83 c0-0.53-0.21-1.04-0.59-1.41l-4.83-4.83C15.21,3.21,14.7,3,14.17,3L14.17,3z M7,15h10v2H7V15z M7,11h10v2H7V11z M7,7h7v2H7V7z"></path></svg>
+                </i>
+                <div class="document-tree_desc">
+                  {{ "TBD1" }}
+                </div>
+
+                <div class="document-tree_name">
+                  {{ folder_or_file.get_file_name() }}
+                </div>
+              </div>
+
+              <div class="document-tree_links">
+
+                <span class="document-tree_file-link">
+                  <a class="button_small" href="TBD1">DOC</a>
+                </span>
+
+                <span class="document-tree_file-link">
+                  <a class="button_small" href="TBD2">TABLE</a>
+                </span>
+
+                <span class="document-tree_file-link">
+                  <a class="button_small" href="TBD3">TRACE</a>
+                </span>
+
+                <span class="document-tree_file-link">
+                  <a class="button_small" href="TBD4">DEEP-TRACE</a>
+                </span>
+              </div>
+            {% endif %}
+            </div>
+
+            {%- if not loop.last -%}
+            {%- if loop.nextitem.level > folder_or_file.level -%}
+            <ul class="document-tree_ul_{{folder_or_file.level + 1}}">
+              {%- elif loop.nextitem.level < folder_or_file.level -%}
+
+          </li>
+          {%- for x in range(0, folder_or_file.level - loop.nextitem.level) -%}
+        </ul>
+        </li>
+        {%- endfor -%}
+        {%- else -%}
+        </li>
+        {%- endif -%}
+        {%- else -%}
+        </li>
+        {%- for x in range(0, folder_or_file.level) -%}
+        </ul>
+        </li>
+        {%- endfor -%}
+        {%- endif -%}
+        {%- endfor -%}
+
+      </ul>
+    </div>
+
+{% endblock content %}

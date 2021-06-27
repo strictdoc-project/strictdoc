@@ -137,3 +137,69 @@ def test_007_single_line_with_no_newline():
     traceability_info = reader.read(input)
 
     assert traceability_info.pragmas == []
+
+
+def test_008_three_nested_range_pragmas():
+    input = """
+CONTENT 1
+# STRICTDOC RANGE BEGIN: REQ-001
+CONTENT 2
+# STRICTDOC RANGE BEGIN: REQ-002
+CONTENT 3
+# STRICTDOC RANGE BEGIN: REQ-003
+CONTENT 4
+# STRICTDOC RANGE END: REQ-003
+CONTENT 5
+# STRICTDOC RANGE END: REQ-002
+CONTENT 6
+# STRICTDOC RANGE END: REQ-001
+CONTENT 7
+# STRICTDOC RANGE BEGIN: REQ-001
+CONTENT 8
+# STRICTDOC RANGE END: REQ-001
+CONTENT 9
+""".lstrip()
+
+    reader = SourceFileTraceabilityReader()
+
+    document = reader.read(input)
+    pragmas = document.pragmas
+    assert len(pragmas) == 8
+    pragma_1 = pragmas[0]
+    pragma_2 = pragmas[1]
+    pragma_3 = pragmas[2]
+    pragma_4 = pragmas[3]
+    pragma_5 = pragmas[4]
+    pragma_6 = pragmas[5]
+    pragma_7 = pragmas[6]
+    pragma_8 = pragmas[7]
+    assert pragma_1.reqs == ["REQ-001"]
+    assert pragma_2.reqs == ["REQ-002"]
+    assert pragma_3.reqs == ["REQ-003"]
+    assert pragma_4.reqs == ["REQ-003"]
+    assert pragma_5.reqs == ["REQ-002"]
+    assert pragma_6.reqs == ["REQ-001"]
+    assert pragma_7.reqs == ["REQ-001"]
+    assert pragma_8.reqs == ["REQ-001"]
+
+    assert pragma_1.ng_source_line_begin == 2
+    assert pragma_2.ng_source_line_begin == 4
+    assert pragma_3.ng_source_line_begin == 6
+    assert pragma_4.ng_source_line_begin == 8
+    assert pragma_5.ng_source_line_begin == 10
+    assert pragma_6.ng_source_line_begin == 12
+    assert pragma_7.ng_source_line_begin == 14
+    assert pragma_8.ng_source_line_begin == 16
+
+    assert pragma_1.ng_source_line_end == 12
+    assert pragma_2.ng_source_line_end == 10
+    assert pragma_3.ng_source_line_end == 8
+    assert pragma_4.ng_source_line_end is None
+    assert pragma_5.ng_source_line_end is None
+    assert pragma_6.ng_source_line_end is None
+    assert pragma_7.ng_source_line_end == 16
+    assert pragma_8.ng_source_line_end is None
+
+    assert document._ng_lines_total == 18
+    assert document._ng_lines_covered == 12
+    assert document.coverage == 66.7

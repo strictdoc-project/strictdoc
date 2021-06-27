@@ -3,7 +3,8 @@ from pathlib import Path
 from typing import List
 
 from strictdoc.core.document_tree import DocumentTree
-from strictdoc.core.file_tree import Folder
+from strictdoc.core.file_tree import Folder, FileFinder, File
+from strictdoc.core.source_tree import SourceTree
 
 
 class SourceFile:
@@ -52,7 +53,7 @@ class SourceFilesFinder:
     @staticmethod
     def find_source_files(
         output_html_root, document_tree: DocumentTree
-    ) -> List[SourceFile]:
+    ) -> SourceTree:
         found_source_files: List[SourceFile] = []
         root_folder_or_file: Folder = document_tree.file_tree[
             0
@@ -68,45 +69,45 @@ class SourceFilesFinder:
             else doctree_root_abs_path
         )
         doctree_root_mount_path = os.path.basename(doctree_root_abs_path)
+
+        file_tree = FileFinder.find_files_with_extension(
+            doctree_root_abs_path, ".py"
+        )
+
         root_level = doctree_root_abs_path.count(os.sep)
 
-        for current_root_path, dirs, files in os.walk(
-            doctree_root_abs_path, topdown=False
-        ):
-            for file in files:
-                full_path = os.path.join(current_root_path, file)
-                in_doctree_source_file_rel_path = os.path.relpath(
-                    full_path, doctree_root_abs_path
-                )
-                if file.endswith(".py"):
-                    last_folder_in_path = os.path.relpath(
-                        current_root_path, doctree_root_abs_path
-                    )
-                    output_dir_full_path = os.path.join(
-                        output_html_root,
-                        "_source_files",
-                        doctree_root_mount_path,
-                        last_folder_in_path,
-                    )
-                    Path(output_dir_full_path).mkdir(
-                        parents=True, exist_ok=True
-                    )
+        file: File
+        for _, file, _ in file_tree.iterate():
+            in_doctree_source_file_rel_path = os.path.relpath(
+                file.root_path, doctree_root_abs_path
+            )
+            last_folder_in_path = os.path.relpath(
+                file.get_folder_path(), doctree_root_abs_path
+            )
+            output_dir_full_path = os.path.join(
+                output_html_root,
+                "_source_files",
+                doctree_root_mount_path,
+                last_folder_in_path,
+            )
+            Path(output_dir_full_path).mkdir(parents=True, exist_ok=True)
 
-                    output_file_name = f"{file}.html"
-                    output_file_full_path = os.path.join(
-                        output_dir_full_path, output_file_name
-                    )
+            output_file_name = f"{file.get_file_name()}.html"
+            output_file_full_path = os.path.join(
+                output_dir_full_path, output_file_name
+            )
 
-                    level = current_root_path.count(os.sep) - root_level
+            level = file.get_folder_path().count(os.sep) - root_level
 
-                    source_file = SourceFile(
-                        level,
-                        full_path,
-                        doctree_root_mount_path,
-                        in_doctree_source_file_rel_path,
-                        output_dir_full_path,
-                        output_file_full_path,
-                    )
-                    found_source_files.append(source_file)
+            source_file = SourceFile(
+                level,
+                file.root_path,
+                doctree_root_mount_path,
+                in_doctree_source_file_rel_path,
+                output_dir_full_path,
+                output_file_full_path,
+            )
+            found_source_files.append(source_file)
 
-        return found_source_files
+        source_tree = SourceTree(file_tree, found_source_files)
+        return source_tree

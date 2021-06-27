@@ -7,7 +7,7 @@ class DocumentTree:
         self.document_list = document_list
         self.map_docs_by_paths = map_docs_by_paths
 
-        self.source_files = None  # attached later.
+        self.source_tree = None  # attached later.
 
     def __repr__(self):
         return "DocumentTree: {} document_list: {}".format(
@@ -18,5 +18,5 @@ class DocumentTree:
         document = self.map_docs_by_paths[doc_full_path]
         return document
 
-    def attach_source_files(self, source_files):
-        self.source_files = source_files
+    def attach_source_tree(self, source_tree):
+        self.source_tree = source_tree

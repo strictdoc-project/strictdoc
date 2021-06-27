@@ -11,6 +11,7 @@ from strictdoc.core.finders.source_files_finder import (
     SourceFilesFinder,
     SourceFile,
 )
+from strictdoc.core.source_tree import SourceTree
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.excel.excel_generator import ExcelGenerator
 from strictdoc.export.html.html_generator import HTMLGenerator
@@ -57,10 +58,10 @@ class ExportAction:
 
         traceability_index = TraceabilityIndex.create(document_tree)
         if config.experimental_enable_file_traceability:
-            source_files = SourceFilesFinder.find_source_files(
+            source_tree: SourceTree = SourceFilesFinder.find_source_files(
                 output_html_root, document_tree
             )
-
+            source_files = source_tree.source_files
             source_file: SourceFile
             for source_file in source_files:
                 traceability_reader = SourceFileTraceabilityReader()
@@ -72,7 +73,7 @@ class ExportAction:
                         source_file.in_doctree_source_file_rel_path,
                         traceability_info,
                     )
-            document_tree.attach_source_files(source_files)
+            document_tree.attach_source_tree(source_tree)
 
         if "html" in config.formats or "html-standalone" in config.formats:
             Path(output_html_root).mkdir(parents=True, exist_ok=True)

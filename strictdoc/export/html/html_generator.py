@@ -18,6 +18,9 @@ from strictdoc.export.html.generators.document_trace import (
 from strictdoc.export.html.generators.document_tree import (
     DocumentTreeHTMLGenerator,
 )
+from strictdoc.export.html.generators.source_file_coverage import (
+    SourceFileCoverageHTMLGenerator,
+)
 from strictdoc.export.html.generators.source_file_view_generator import (
     SourceFileViewHTMLGenerator,
 )
@@ -100,9 +103,9 @@ class HTMLGenerator:
 
         parallelizer.map(document_tree.document_list, export_binding)
 
-        if document_tree.source_files:
+        if document_tree.source_tree:
             print("Generating source files")
-            for source_file in document_tree.source_files:
+            for source_file in document_tree.source_tree.source_files:
                 Path(source_file.output_dir_full_path).mkdir(
                     parents=True, exist_ok=True
                 )
@@ -114,6 +117,16 @@ class HTMLGenerator:
                 )
                 with open(source_file.output_file_full_path, "w") as file:
                     file.write(document_content)
+
+            source_coverage_content = SourceFileCoverageHTMLGenerator.export(
+                document_tree,
+                traceability_index,
+            )
+            output_html_source_coverage = os.path.join(
+                output_html_root, "source_coverage.html"
+            )
+            with open(output_html_source_coverage, "w") as file:
+                file.write(source_coverage_content)
 
         print(
             "Export completed. Documentation tree can be found at:\n{}".format(

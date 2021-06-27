@@ -1,13 +1,21 @@
 import os
 import sys
 
-STRICTDOC_ROOT_PATH = os.path.join(os.path.dirname(__file__), "..", "..")
-sys.path.append(STRICTDOC_ROOT_PATH)
+try:
+    STRICTDOC_ROOT_PATH = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "..")
+    )
+    if not os.path.isdir(STRICTDOC_ROOT_PATH):
+        raise FileNotFoundError
+    sys.path.append(STRICTDOC_ROOT_PATH)
 
-from strictdoc.helpers.parallelizer import Parallelizer
-from strictdoc.cli.cli_arg_parser import create_sdoc_args_parser
-from strictdoc.core.actions.export_action import ExportAction
-from strictdoc.core.actions.passthrough_action import PassthroughAction
+    from strictdoc.cli.cli_arg_parser import create_sdoc_args_parser
+    from strictdoc.core.actions.export_action import ExportAction
+    from strictdoc.core.actions.passthrough_action import PassthroughAction
+    from strictdoc.helpers.parallelizer import Parallelizer
+except FileNotFoundError:
+    print("error: could not locate strictdoc's root folder.")
+    sys.exit(1)
 
 
 def _main(parallelizer):
@@ -50,8 +58,8 @@ def main():
     parallelizer = Parallelizer.create(enable_parallelization)
     try:
         _main(parallelizer)
-    except Exception as e:
-        raise e
+    except Exception as exc:
+        raise exc
     finally:
         parallelizer.shutdown()
 

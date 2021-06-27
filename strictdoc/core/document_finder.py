@@ -6,7 +6,6 @@ from strictdoc.backend.dsl.reader import SDReader
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_tree import (
-    File,
     FileTree,
     FileFinder,
     PathFinder,
@@ -163,7 +162,9 @@ class DocumentFinder:
                 )
 
             # Finding SDoc files.
-            file_tree_structure = FileFinder.find_files(path_to_doc_root)
+            file_tree_structure = FileFinder.find_files_with_extension(
+                path_to_doc_root, ".sdoc"
+            )
             root_trees.append(file_tree_structure)
 
         return root_trees, asset_dirs

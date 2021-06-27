@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  {% block head %}
+  <meta charset="UTF-8"/>
+  <link rel="shortcut icon" href="{{root_path}}/_static/favicon.ico" type="image/x-icon"/>
+  <link rel="icon" href="{{root_path}}/_static/favicon.ico" type="image/x-icon"/>
+
+  {% block head_css %}
+  <link rel="stylesheet" href="{{root_path}}/_static/_base.css"/>
+  <link rel="stylesheet" href="{{root_path}}/_static/_tree.css"/>
+  {% endblock head_css %}
+
+  {% block head_scripts %}
+  {# <script type="text/javascript" src="{{root_path}}/_static/FILE.js"></script> #}
+  {% endblock head_scripts %}
+
+  <title>{% block title %}{% endblock title %}</title>
+
+  {% endblock head %}
+</head>
+
+<body class="{% block viewtype %}{% endblock %}">
+  <main class="document-tree">
+  {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

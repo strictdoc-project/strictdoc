@@ -1,48 +1,8 @@
 {% set root_path = "" %}
+{% set page_title = 'Source files coverage' %}
+{% extends "index.jinja.html" %}
 
-{% extends "base.jinja.html" %}
-
-{% block head_css %}
-  {{ super() }}
-  <link rel="stylesheet" href="{{root_path}}/_static/_source.css!!" />
-  <link rel="stylesheet" href="_static/_base.css"/>
-  <link rel="stylesheet" href="_static/_tree.css"/>
-{% endblock head_css %}
-{% block head_scripts %}
-  <script type="text/javascript" src="{{root_path}}/_static/req-in-source.js"></script>
-  {{ super() }}
-{% endblock head_scripts %}
-
-{% block title %}source-file-view{% endblock title %}
-{% block viewtype %}source-file-view{% endblock viewtype %}
-
-{% block head %}
-  {{ super() }}
-
-  <style>
-    {{pygments_styles | safe}}
-  </style>
-{% endblock head %}
-
-{% block layout_nav %}
-  {# {% include "_shared/layout_nav.jinja.html" %} #}
-{% endblock layout_nav %}
-
-{% block aside_header_content %}
-  {#
-  this zone is stretched to the full width of the screen in the CSS,
-  .source-file-view .layout_aside-header
-  #}
-  <p class="source-file__name"> TODO </p>
-{% endblock aside_header_content %}
-{% block header_content %}
-  {# DON'T USE IT, space is taken #}
-{% endblock header_content %}
-
-{% block aside_content %}
-  {# {% include "_shared/toc.jinja.html" %} #}
-  ASIDE CONTENT
-{% endblock aside_content %}
+{% block title %}{{ page_title }}{% endblock title %}
 
 {% block content %}
   {# <main id="mainContainer" class="source-file-view"></main> #}

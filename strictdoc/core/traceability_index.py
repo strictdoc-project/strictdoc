@@ -83,7 +83,7 @@ class FileTraceabilityIndex:
         return matching_requirements
 
     def get_source_file_range_reqs(self, source_file_rel_path):
-        if source_file_rel_path not in self.map_reqs_to_paths:
+        if source_file_rel_path not in self.map_paths_to_reqs:
             return []
         if (
             source_file_rel_path
@@ -109,6 +109,18 @@ class FileTraceabilityIndex:
             if requirement.uid in range_reqs:
                 matching_requirements.append(requirement)
         return matching_requirements
+
+    def get_coverage_info(self, source_file_rel_path):
+        assert (
+            source_file_rel_path
+            in self.map_paths_to_source_file_traceability_info
+        )
+        source_file_tr_info: SourceFileTraceabilityInfo = (
+            self.map_paths_to_source_file_traceability_info[
+                source_file_rel_path
+            ]
+        )
+        return source_file_tr_info
 
     def attach_traceability_info(
         self,
@@ -467,6 +479,11 @@ class TraceabilityIndex:
 
     def get_source_file_range_reqs(self, source_file_rel_path):
         return self._file_traceability_index.get_source_file_range_reqs(
+            source_file_rel_path
+        )
+
+    def get_coverage_info(self, source_file_rel_path):
+        return self._file_traceability_index.get_coverage_info(
             source_file_rel_path
         )
 

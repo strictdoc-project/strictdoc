@@ -26,6 +26,8 @@ class SourceFileCoverageHTMLGenerator:
             "source_file_coverage/source_file_coverage.jinja.html"
         )
 
-        output += template.render(document_tree=document_tree)
+        output += template.render(
+            document_tree=document_tree, traceability_index=traceability_index
+        )
 
         return output

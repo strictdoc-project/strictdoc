@@ -54,6 +54,7 @@ class SourceFilesFinder:
     def find_source_files(
         output_html_root, document_tree: DocumentTree
     ) -> SourceTree:
+        map_file_to_source = {}
         found_source_files: List[SourceFile] = []
         root_folder_or_file: Folder = document_tree.file_tree[
             0
@@ -108,6 +109,9 @@ class SourceFilesFinder:
                 output_file_full_path,
             )
             found_source_files.append(source_file)
+            map_file_to_source[file] = source_file
 
-        source_tree = SourceTree(file_tree, found_source_files)
+        source_tree = SourceTree(
+            file_tree, found_source_files, map_file_to_source
+        )
         return source_tree

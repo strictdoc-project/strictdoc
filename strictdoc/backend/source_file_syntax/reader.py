@@ -1,3 +1,4 @@
+import os
 import traceback
 from functools import partial
 
@@ -13,10 +14,28 @@ class SourceFileTraceabilityInfo:
         self.ng_map_lines_to_pragmas = {}
         self.ng_map_reqs_to_pragmas = {}
 
+        self._ng_lines_total = 0
+        self._ng_lines_covered = 0
+        self._coverage = 0
+
     def __str__(self):
-        return "SourceFileTraceabilityInfo(pragmas: {pragmas})".format(
-            pragmas=self.pragmas,
+        return (
+            "SourceFileTraceabilityInfo("
+            f"lines_total: {self._ng_lines_total}\n"
+            f"lines_covered: {self._ng_lines_covered}\n"
+            f"coverage: {self._coverage}\n"
+            f"pragmas: {self.pragmas}\n"
+            ")"
         )
+
+    @property
+    def coverage(self):
+        return self._coverage
+
+    def set_coverage_stats(self, lines_total, lines_covered):
+        self._ng_lines_total = lines_total
+        self._ng_lines_covered = lines_covered
+        self._coverage = round(lines_covered / lines_total * 100, 1)
 
 
 class RangePragma:
@@ -32,6 +51,7 @@ class RangePragma:
     def __str__(self):
         return (
             f"RangePragma("
+            f"begin_or_end: {self.begin_or_end}, "
             f"ng_source_line_begin: {self.ng_source_line_begin}, "
             f"ng_source_line_end: {self.ng_source_line_end}, "
             f"reqs: {self.reqs}"
@@ -43,16 +63,35 @@ class RangePragma:
 
 
 class ParseContext:
-    def __init__(self):
+    def __init__(self, lines_total):
+        self.lines_total = lines_total
         self.pragma_stack = []
         self.map_lines_to_pragmas = {}
         self.map_reqs_to_pragmas = {}
 
 
 def source_file_traceability_info_processor(
-    source_file_traceability_info, parse_context
+    source_file_traceability_info: SourceFileTraceabilityInfo,
+    parse_context: ParseContext,
 ):
-    pass
+
+    # Finding how many lines are covered by the requirements in the file.
+    # Quick and dirty: https://stackoverflow.com/a/15273749/598057
+    merged_ranges = []
+    for pragma in source_file_traceability_info.pragmas:
+        if pragma.begin_or_end != "BEGIN":
+            continue
+        begin, end = pragma.ng_source_line_begin, pragma.ng_source_line_end
+        if merged_ranges and merged_ranges[-1][1] >= (begin - 1):
+            merged_ranges[-1][1] = max(merged_ranges[-1][1], end)
+        else:
+            merged_ranges.append([begin, end])
+    coverage = 0
+    for merged_range in merged_ranges:
+        coverage += merged_range[1] - merged_range[0]
+    source_file_traceability_info.set_coverage_stats(
+        parse_context.lines_total, coverage
+    )
 
 
 def create_begin_end_range_reqs_mismatch_error(
@@ -131,10 +170,12 @@ class SourceFileTraceabilityReader:
     def read(self, input, file_path=None):
         # TODO: This might be possible to handle directly in the textx grammar.
         # AttributeError: 'str' object has no attribute '_tx_parser'
-        if len(input) == 0:
+        file_size = len(input)
+        if file_size == 0:
             return SourceFileTraceabilityInfo([])
 
-        parse_context = ParseContext()
+        length = input.count("\n") + 1
+        parse_context = ParseContext(length)
 
         parse_source_file_traceability_info_processor = partial(
             source_file_traceability_info_processor, parse_context=parse_context
@@ -181,7 +222,6 @@ class SourceFileTraceabilityReader:
     def read_from_file(self, file_path):
         with open(file_path, "r") as file:
             sdoc_content = file.read()
-
         try:
             sdoc = self.read(sdoc_content, file_path=file_path)
             return sdoc

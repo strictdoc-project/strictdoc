@@ -95,9 +95,8 @@
   background: rgb(80, 240, 40);
 }
 
-/* .value-bar_text:not(:empty) { */
 .value-bar_text {
-  width: 2rem;
+  width: 2.5rem;
   text-align: right;
   font-size: 0.75em;
 }

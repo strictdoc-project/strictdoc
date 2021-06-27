@@ -30,6 +30,10 @@ CONTENT 3
     assert pragmas[1].ng_source_line_begin == 5
     assert pragmas[1].ng_source_line_end is None
 
+    assert document._ng_lines_total == 5
+    assert document._ng_lines_covered == 5
+    assert document.coverage == 100
+
 
 def test_002_two_range_pragmas():
     input = """
@@ -200,6 +204,6 @@ CONTENT 9
     assert pragma_7.ng_source_line_end == 16
     assert pragma_8.ng_source_line_end is None
 
-    assert document._ng_lines_total == 18
-    assert document._ng_lines_covered == 12
-    assert document.coverage == 66.7
+    assert document._ng_lines_total == 17
+    assert document._ng_lines_covered == 14
+    assert document.coverage == 82.4

@@ -6,6 +6,7 @@ from textx import metamodel_from_str, get_location
 
 from strictdoc.backend.dsl.error_handling import StrictDocSemanticError
 from strictdoc.backend.source_file_syntax.grammar import SOURCE_FILE_GRAMMAR
+from strictdoc.helpers.string import get_lines_count
 
 
 class SourceFileTraceabilityInfo:
@@ -88,7 +89,7 @@ def source_file_traceability_info_processor(
             merged_ranges.append([begin, end])
     coverage = 0
     for merged_range in merged_ranges:
-        coverage += merged_range[1] - merged_range[0]
+        coverage += merged_range[1] - merged_range[0] + 1
     source_file_traceability_info.set_coverage_stats(
         parse_context.lines_total, coverage
     )
@@ -174,7 +175,7 @@ class SourceFileTraceabilityReader:
         if file_size == 0:
             return SourceFileTraceabilityInfo([])
 
-        length = input.count("\n") + 1
+        length = get_lines_count(input)
         parse_context = ParseContext(length)
 
         parse_source_file_traceability_info_processor = partial(

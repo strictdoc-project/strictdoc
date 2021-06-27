@@ -145,36 +145,4 @@ h1.document-title,
     position: relative;
     top: -2px;
   }
-
-  /* btn-small */
-
-.button_small {
-  white-space: nowrap;
-  text-decoration: none;
-  box-sizing: border-box;
-
-  display: inline-flex;
-    align-items: center;
-  padding: 0 8px ;
-  border-radius: 1em;
-  background-color: rgb(249, 249, 249);
-  border: 1px solid var(--color-border);
-  box-shadow: 0 0 0 rgba(0,0,0,0.2);
-
-  font-size: 11px;
-  font-weight: bold;
-  line-height: 18px;
-  text-transform: uppercase;
-  color: var(--color-accent);
-
-  -webkit-user-select: none;  /* Chrome all / Safari all */
-  -moz-user-select: none;     /* Firefox all */
-  -ms-user-select: none;      /* IE 10+ */
-  user-select: none;          /* Likely future */
-}
-
-.button_small:hover {
-  background-color: #fff;
-  box-shadow: 0 0 16px rgba(0,0,0,0.2);
-  cursor: pointer;
-}
+  

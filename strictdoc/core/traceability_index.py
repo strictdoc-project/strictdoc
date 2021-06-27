@@ -55,7 +55,7 @@ class FileTraceabilityIndex:
             matching_links_with_opt_ranges.append((file_link, pragmas))
         return matching_links_with_opt_ranges
 
-    def get_source_file_requirement_links(self, source_file_rel_path):
+    def get_source_file_general_reqs(self, source_file_rel_path):
         if source_file_rel_path not in self.map_paths_to_reqs:
             return False
 
@@ -82,7 +82,7 @@ class FileTraceabilityIndex:
                 matching_requirements.append(requirement)
         return matching_requirements
 
-    def get_source_file_all_range_reqs(self, source_file_rel_path):
+    def get_source_file_range_reqs(self, source_file_rel_path):
         if source_file_rel_path not in self.map_reqs_to_paths:
             return []
         if (
@@ -460,13 +460,13 @@ class TraceabilityIndex:
             requirement
         )
 
-    def get_source_file_requirement_links(self, source_file_rel_path):
-        return self._file_traceability_index.get_source_file_requirement_links(
+    def get_source_file_general_reqs(self, source_file_rel_path):
+        return self._file_traceability_index.get_source_file_general_reqs(
             source_file_rel_path
         )
 
-    def get_source_file_all_range_reqs(self, source_file_rel_path):
-        return self._file_traceability_index.get_source_file_all_range_reqs(
+    def get_source_file_range_reqs(self, source_file_rel_path):
+        return self._file_traceability_index.get_source_file_range_reqs(
             source_file_rel_path
         )
 

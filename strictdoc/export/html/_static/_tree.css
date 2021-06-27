@@ -120,8 +120,9 @@
     justify-content: space-between;
     align-items: flex-start;
     order: 3;
+  }
 
+  .std-tree_file-link {
     position: relative;
     top: -2px;
   }
-  

@@ -1,3 +1,5 @@
+/* buttons */
+
 .button_small {
   white-space: nowrap;
   text-decoration: none;
@@ -59,4 +61,43 @@
   height: 18px;
   border-radius: 2em;
   margin-left: 4px;
+}
+
+/* coverage */
+
+.value-bar {
+  display: inline-flex;
+  height: 1rem;
+}
+
+.value-bar_bar {
+  width: 13rem;
+  border-radius: .5rem;
+  background-color: white;
+  /* box-shadow: inset 0px 2px 2px 0px #ccc; */
+  border: 1px solid rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
+
+  height: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.value-bar_bar[data-value] {
+  border: 1px solid rgb(80, 240, 40);
+}
+
+.value-bar_filler {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background: rgb(80, 240, 40);
+}
+
+/* .value-bar_text:not(:empty) { */
+.value-bar_text {
+  width: 2rem;
+  text-align: right;
+  font-size: 0.75em;
 }

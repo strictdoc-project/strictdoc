@@ -83,6 +83,8 @@ class FileTraceabilityIndex:
         return matching_requirements
 
     def get_source_file_all_range_reqs(self, source_file_rel_path):
+        if source_file_rel_path not in self.map_reqs_to_paths:
+            return []
         if (
             source_file_rel_path
             not in self.map_paths_to_source_file_traceability_info

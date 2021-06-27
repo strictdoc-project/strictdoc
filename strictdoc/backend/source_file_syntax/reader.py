@@ -129,6 +129,11 @@ class SourceFileTraceabilityReader:
         )
 
     def read(self, input, file_path=None):
+        # TODO: This might be possible to handle directly in the textx grammar.
+        # AttributeError: 'str' object has no attribute '_tx_parser'
+        if len(input) == 0:
+            return SourceFileTraceabilityInfo([])
+
         parse_context = ParseContext()
 
         parse_source_file_traceability_info_processor = partial(

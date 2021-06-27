@@ -119,3 +119,21 @@ def hello_world_2():
     traceability_info = reader.read(input)
 
     print(traceability_info)
+
+
+def test_006_empty_file():
+    input = ""
+
+    reader = SourceFileTraceabilityReader()
+    traceability_info = reader.read(input)
+
+    assert traceability_info.pragmas == []
+
+
+def test_007_single_line_with_no_newline():
+    input = "Single line"
+
+    reader = SourceFileTraceabilityReader()
+    traceability_info = reader.read(input)
+
+    assert traceability_info.pragmas == []

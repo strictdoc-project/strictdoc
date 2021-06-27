@@ -13,7 +13,7 @@ SourceFileTraceabilityInfo[noskipws]:
 ;
 
 RangePragma[noskipws]:
-  /.*STRICTDOC / (pragma_type = 'RANGE') ' ' (begin_or_end = 'BEGIN' | begin_or_end = 'END') ': ' (reqs += Req[', ']) '\n'
+  /.*STRICTDOC / (pragma_type = 'RANGE') ' ' (begin_or_end = 'BEGIN' | begin_or_end = 'END') ': ' (reqs += Req[', ']) '\n'?
 ;
 
 Req[noskipws]:
@@ -21,6 +21,6 @@ Req[noskipws]:
 ;
 
 SingleLineString[noskipws]:
-  /(?!.*STRICTDOC RANGE).*/ '\n'
+  /(?!.*STRICTDOC RANGE).*/ '\n'?
 ;
 """

@@ -217,3 +217,7 @@ li:last-child .document-tree_row:hover .level-branch::after {
   background-color: var(--tree-color-row-hover-bg);
   color: var(--color-fg-contrast);
 }
+
+/* coverage */
+
+.coverage {}

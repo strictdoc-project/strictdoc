@@ -1,4 +1,4 @@
-.document-tree {
+.std-tree {
   --tree-font-size:          16px;
   --tree-line-height:        calc(var(--tree-font-size)*1.25);
   --tree-level-padding:      calc(var(--tree-font-size)*1.5);
@@ -20,8 +20,8 @@
 }
 
 
-/* table */
-.document-tree_table {
+/* tree */
+.std-tree {
   font-size: var(--tree-font-size, 1rem);
   line-height: var(--tree-line-height, 1.25);
   color: var(--tree-color-fg, #444444);
@@ -31,18 +31,18 @@
   /* margin: 0 auto; */
 }
 
-.document-tree_table ul {
+.std-tree ul {
   list-style: none;
   width: 100%;
   padding: 0;
 }
 
-.document-tree_table li {
+.std-tree li {
   position: relative;
   padding-left: var(--tree-level-padding);
 }
 
-.document-tree_table ul ul > li::before {
+.std-tree ul ul > li::before {
   content: '';
   position: absolute;
   left: calc(var(--tree-ico-size)*0.5 - var(--tree-level-padding));
@@ -51,11 +51,11 @@
   border-left: 1px solid var(--tree-color-line);
 }
 
-.document-tree_table ul > li:last-child::before {
+.std-tree ul > li:last-child::before {
   height: calc(var(--tree-ico-size) + var(--tree-cell-padding));
 }
 
-.document-tree_ico {
+.std-tree_ico {
   display: inline-flex;
   align-items: center;
 
@@ -64,7 +64,7 @@
   top: calc(var(--tree-cell-padding));
 }
 
-  ul ul .document-tree_ico::before {
+  ul ul .std-tree_ico::before {
     content: '';
     position: absolute;
     left: calc(var(--tree-ico-size)*0.5 - var(--tree-level-padding));
@@ -72,7 +72,7 @@
     border-bottom: 1px solid var(--tree-color-line);
   }
 
-  .document-tree_ico svg {
+  .std-tree_ico svg {
     display: inline-block;
     width: var(--tree-ico-size);
     height: var(--tree-ico-size);
@@ -81,7 +81,7 @@
   }
 
   /* section */
-  .document-tree_row {
+  .std-tree_row {
     padding-top: var(--tree-cell-padding);
     padding-bottom: var(--tree-cell-padding);
     padding-left: var(--tree-cell-padding);
@@ -90,30 +90,30 @@
     justify-content: space-between;
   }
 
-  .document-tree_folder {
+  .std-tree_folder {
     font-weight: bold;
     display: flex;
   }
 
-  .document-tree_file {
+  .std-tree_file {
     order: 1;
     flex-grow: 1;
   }
 
-  .document-tree_desc {
+  .std-tree_desc {
     position: relative;
     top: -2px;
     color: #000;
   }
 
-  .document-tree_name {
+  .std-tree_name {
     font-size: 0.85rem;
     line-height: 1.2;
     color: #666;
     padding: 0;
   }
 
-  .document-tree_links {
+  .std-tree_links {
     width: fit-content;
     padding-left: 20px;
     display: flex;

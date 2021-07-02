@@ -106,17 +106,20 @@ class HTMLGenerator:
         if document_tree.source_tree:
             print("Generating source files")
             for source_file in document_tree.source_tree.source_files:
-                Path(source_file.output_dir_full_path).mkdir(
-                    parents=True, exist_ok=True
-                )
-                document_content = SourceFileViewHTMLGenerator.export(
-                    source_file,
-                    document_tree,
-                    traceability_index,
-                    link_renderer,
-                )
-                with open(source_file.output_file_full_path, "w") as file:
-                    file.write(document_content)
+                with measure_performance(
+                    f"File: {source_file.in_doctree_source_file_rel_path}"
+                ):
+                    Path(source_file.output_dir_full_path).mkdir(
+                        parents=True, exist_ok=True
+                    )
+                    document_content = SourceFileViewHTMLGenerator.export(
+                        source_file,
+                        document_tree,
+                        traceability_index,
+                        link_renderer,
+                    )
+                    with open(source_file.output_file_full_path, "w") as file:
+                        file.write(document_content)
 
             source_coverage_content = SourceFileCoverageHTMLGenerator.export(
                 document_tree,

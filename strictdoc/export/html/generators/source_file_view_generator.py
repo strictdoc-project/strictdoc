@@ -7,6 +7,7 @@ from strictdoc.core.finders.source_files_finder import SourceFile
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
+from strictdoc.helpers.string import multireplace
 
 
 class SourceFileViewHTMLGenerator:
@@ -53,6 +54,19 @@ class SourceFileViewHTMLGenerator:
         pygmented_source_file_lines = pygmented_source_file_content.split("\n")
         if pygmented_source_file_lines[-1] == "":
             pygmented_source_file_lines.pop()
+
+        coverage_info = traceability_index.get_coverage_info(
+            source_file.in_doctree_source_file_rel_path
+        )
+
+        for pragma in coverage_info.pragmas:
+            pragma_line = pragma.ng_source_line_begin
+            source_line = source_file_lines[pragma_line - 1]
+            replacements = {}
+            for req in pragma.reqs:
+                replacements[req] = f'<span class="TODO-CSS">{req}</span>'
+            replacement_line = multireplace(source_line, replacements)
+            pygmented_source_file_lines[pragma_line - 1] = replacement_line
 
         pygments_styles = html_formatter.get_style_defs(".highlight")
         output += template.render(

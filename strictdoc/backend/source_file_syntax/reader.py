@@ -8,6 +8,15 @@ from strictdoc.backend.source_file_syntax.grammar import SOURCE_FILE_GRAMMAR
 from strictdoc.helpers.string import get_lines_count
 
 
+class Req:
+    def __init__(self, parent, uid):
+        self.parent = parent
+        self.uid = uid
+
+        self.ng_source_line = None
+        self.ng_source_column = None
+
+
 class SourceFileTraceabilityInfo:
     def __init__(self, pragmas):
         self.pragmas = pragmas
@@ -39,11 +48,12 @@ class SourceFileTraceabilityInfo:
 
 
 class RangePragma:
-    def __init__(self, parent, pragma_type, begin_or_end, reqs):
+    def __init__(self, parent, pragma_type, begin_or_end, reqs_objs):
         self.parent = parent
         self.pragma_type = pragma_type
         self.begin_or_end = begin_or_end
-        self.reqs = reqs
+        self.reqs_objs = reqs_objs
+        self.reqs = list(map(lambda req: req.uid, reqs_objs))
 
         self.ng_source_line_begin = None
         self.ng_source_line_end = None
@@ -68,6 +78,16 @@ class ParseContext:
         self.pragma_stack = []
         self.map_lines_to_pragmas = {}
         self.map_reqs_to_pragmas = {}
+
+
+def req_processor(req: Req, parse_context: ParseContext):
+    assert isinstance(
+        req, Req
+    ), f"Expected req to be Req, got: {req}, {type(req)}"
+    location = get_location(req)
+    assert location
+    req.ng_source_line = location["line"]
+    req.ng_source_column = location["col"]
 
 
 def source_file_traceability_info_processor(
@@ -135,6 +155,7 @@ def range_start_pragma_processor(
     location = get_location(pragma)
     line = location["line"]
     pragma.ng_source_line_begin = line
+    parse_context.map_lines_to_pragmas[line] = pragma
 
     if pragma.begin_or_end == "BEGIN":
         parse_context.pragma_stack.append(pragma)
@@ -158,7 +179,7 @@ def range_start_pragma_processor(
 
 
 class SourceFileTraceabilityReader:
-    SOURCE_FILE_MODELS = [SourceFileTraceabilityInfo, RangePragma]
+    SOURCE_FILE_MODELS = [Req, SourceFileTraceabilityInfo, RangePragma]
 
     def __init__(self):
         self.meta_model = metamodel_from_str(
@@ -180,11 +201,15 @@ class SourceFileTraceabilityReader:
         parse_source_file_traceability_info_processor = partial(
             source_file_traceability_info_processor, parse_context=parse_context
         )
+        parse_req_processor = partial(
+            req_processor, parse_context=parse_context
+        )
         parse_range_start_pragma_processor = partial(
             range_start_pragma_processor, parse_context=parse_context
         )
 
         obj_processors = {
+            "Req": parse_req_processor,
             "SourceFileTraceabilityInfo": parse_source_file_traceability_info_processor,
             "RangePragma": parse_range_start_pragma_processor,
         }

@@ -382,10 +382,10 @@ class Dom {
   _processLine(range, element, string) {
 
     // Assume that the requirments ID in the code and the links in the menu are correct and the same
-    const newHTML = this.ranges[range].pointers
-      .map(pointer => `<a href="${pointer.href}">${pointer.dataset.reqid}</a>`)
-      .join(', ');
-    element.innerHTML = string + newHTML;
+    // const newHTML = this.ranges[range].pointers
+    //   .map(pointer => `<a href="${pointer.href}">${pointer.dataset.reqid}</a>`)
+    //   .join(', ');
+    // element.innerHTML = string + newHTML;
   }
 
   _generateRangeAlias(begin, end) { return `${begin}${this.hashSplitter}${end}` };

@@ -63,8 +63,11 @@
   grid-area: aside-header;
   background-color: var(--color-bg-main);
 
-  padding: var(--base-padding);
-  padding-left: calc(var(--base-padding)*2);
+  /* padding: var(--base-padding);
+  padding-left: calc(var(--base-padding)*2); */
+
+  padding: var(--base-padding) calc(var(--base-padding)*2);
+
   display: flex;
   justify-content: space-between;
   align-items: center;

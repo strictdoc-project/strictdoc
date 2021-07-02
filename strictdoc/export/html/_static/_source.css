@@ -10,18 +10,13 @@
 }
 
 /* redefine main layout grid */
-.source-file-view .layout {
-  grid-template-columns: 340px 0 1fr;
-}
-
-/* .source-file-view .layout_header {
-} */
 
 .source-file-view .layout_aside-header {
-  grid-area: aside-header / aside-header / header / header;
+  grid-area: aside-header / aside-header / toggler / toggler;
 }
 
 .source-file-view .layout_aside {
+  grid-area: aside / aside / nav / nav;
   border-right: none;
   overflow-y: scroll;
   padding-left: calc(var(--base-padding)*1.5);

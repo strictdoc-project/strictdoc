@@ -1,16 +1,6 @@
 <div id="referContainer" class="source-file__refer">
 
-  <div id="sorceCodeCoverage" class="source-file__coverage">
-
-    <label class="std-switch">
-      <input id="sorceCodeCoverageToggler" type="checkbox">
-      <span class="std-switch_slider"></span>
-    <span>coverage</span>
-    </label>
-
-  </div>
-
-  <div class="source-file__refer-container">
+  <div id="sorceCodeCoverageSwitch"></div>
 
   {# ranges #}
   {%- set source_file_range_reqs =
@@ -44,6 +34,4 @@
   </div>
   {%- endif -%}
 
-
-  </div>
 </div>

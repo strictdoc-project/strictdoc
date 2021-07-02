@@ -28,14 +28,11 @@
 {% endblock layout_nav %}
 
 {% block aside_header_content %}
-  {#
-  this zone is stretched to the full width of the screen in the CSS,
-  .source-file-view .layout_aside-header
-  #}
-  <p class="source-file__name"> &lt;/&gt; {{source_file.in_doctree_source_file_rel_path}}</p>
+  <a class="index-link" href="{{root_path}}/index.html">To Index</a>
+  <div id="sorceCodeCoverageSwitch" style="display:contents"></div>
 {% endblock aside_header_content %}
 {% block header_content %}
-  {# DON'T USE IT, space is taken #}
+  <p class="source-file__name"> &lt;/&gt; {{source_file.in_doctree_source_file_rel_path}}</p>
 {% endblock header_content %}
 
 {% block aside_content %}

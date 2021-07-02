@@ -78,7 +78,7 @@ class Switch {
     this.checked = checked || true;
 
     this.componentClass = componentClass || 'std-switch-scc';
-    this.size = size || 1;
+    this.size = size || 0.75;
     this.stroke = stroke || 0.25;
     this.units = units || 'rem';
 
@@ -113,9 +113,11 @@ class Switch {
     const css = `
     .${this.componentClass} {
       display: inline-block;
+      line-height: 0;
     }
     .${this.componentClass}__label {
       display: inline-flex;
+      line-height: ${this.size}${this.units};
       align-items: center;
       justify-content: flex-start;
       user-select: none;

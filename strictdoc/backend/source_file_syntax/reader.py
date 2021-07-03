@@ -48,9 +48,8 @@ class SourceFileTraceabilityInfo:
 
 
 class RangePragma:
-    def __init__(self, parent, pragma_type, begin_or_end, reqs_objs):
+    def __init__(self, parent, begin_or_end, reqs_objs):
         self.parent = parent
-        self.pragma_type = pragma_type
         self.begin_or_end = begin_or_end
         self.reqs_objs = reqs_objs
         self.reqs = list(map(lambda req: req.uid, reqs_objs))
@@ -70,6 +69,12 @@ class RangePragma:
 
     def __repr__(self):
         return self.__str__()
+
+    def is_begin(self):
+        return self.begin_or_end == ">"
+
+    def is_end(self):
+        return self.begin_or_end == "<"
 
 
 class ParseContext:
@@ -99,7 +104,7 @@ def source_file_traceability_info_processor(
     # Quick and dirty: https://stackoverflow.com/a/15273749/598057
     merged_ranges = []
     for pragma in source_file_traceability_info.pragmas:
-        if pragma.begin_or_end != "BEGIN":
+        if not pragma.is_begin():
             continue
         begin, end = pragma.ng_source_line_begin, pragma.ng_source_line_end
         if merged_ranges and merged_ranges[-1][1] >= (begin - 1):
@@ -124,9 +129,9 @@ def create_begin_end_range_reqs_mismatch_error(
         "STRICTDOC RANGE: BEGIN and END requirements mismatch",
         f"STRICT RANGE pragma should START and END with the same requirement(s): '{lhs_pragma_reqs_str}' != '{rhs_pragma_reqs_str}'.",
         """
-# STRICTDOC RANGE BEGIN: REQ-001
+# SDOC> REQ-001
 Content...
-# STRICTDOC RANGE END: REQ-001
+# SDOC< REQ-001
         """.lstrip(),
         line=location["line"],
         col=location["col"],
@@ -139,9 +144,9 @@ def create_end_without_begin_error(location):
         "STRICTDOC RANGE: END pragma without preceding BEGIN pragma",
         "STRICT RANGE shall be opened with START pragma and ended with END pragma.",
         """
-# STRICTDOC RANGE BEGIN: REQ-001
+# SDOC> REQ-001
 Content...
-# STRICTDOC RANGE END: REQ-001
+# SDOC< REQ-001
         """.lstrip(),
         line=location["line"],
         col=location["col"],
@@ -157,14 +162,14 @@ def range_start_pragma_processor(
     pragma.ng_source_line_begin = line
     parse_context.map_lines_to_pragmas[line] = pragma
 
-    if pragma.begin_or_end == "BEGIN":
+    if pragma.is_begin():
         parse_context.pragma_stack.append(pragma)
         parse_context.map_lines_to_pragmas[line] = pragma
         for req in pragma.reqs:
             pragmas = parse_context.map_reqs_to_pragmas.setdefault(req, [])
             pragmas.append(pragma)
 
-    elif pragma.begin_or_end == "END":
+    elif pragma.is_end():
         try:
             current_top_pragma: RangePragma = parse_context.pragma_stack.pop()
             if pragma.reqs != current_top_pragma.reqs:

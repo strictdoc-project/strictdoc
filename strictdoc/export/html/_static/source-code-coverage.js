@@ -190,8 +190,8 @@ class Dom {
 
     // STRICTDOC SPECIFIC
     this.strictdocCommentSelector = strictdocCommentSelector || 'pre span';
-    this.strictdocCommentBeginString = strictdocCommentBeginString || '# STRICTDOC RANGE BEGIN: ';
-    this.strictdocCommentEndString = strictdocCommentEndString || '# STRICTDOC RANGE END: ';
+    this.strictdocCommentBeginString = strictdocCommentBeginString || '# SDOC> ';
+    this.strictdocCommentEndString = strictdocCommentEndString || '# SDOC< ';
 
     // objects
     this.greenHighlighter;
@@ -395,8 +395,8 @@ const dom = new Dom({
   sourceId: 'source',
   hashSplitter: '#',
   strictdocCommentSelector: 'pre span',
-  strictdocCommentBeginString: '# STRICTDOC RANGE BEGIN: ',
-  strictdocCommentEndString: '# STRICTDOC RANGE END: ',
+  strictdocCommentBeginString: '# SDOC> ',
+  strictdocCommentEndString: '# SDOC< ',
 });
 
 window.addEventListener("load", function () {

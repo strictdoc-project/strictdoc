@@ -7,11 +7,11 @@ from strictdoc.backend.source_file_syntax.reader import (
 
 def test_001_one_range_pragma():
     input = """
-# STRICTDOC RANGE BEGIN: REQ-001, REQ-002
+# SDOC> REQ-001, REQ-002
 CONTENT 1
 CONTENT 2
 CONTENT 3
-# STRICTDOC RANGE END: REQ-001, REQ-002
+# SDOC< REQ-001, REQ-002
 """.lstrip()
 
     reader = SourceFileTraceabilityReader()
@@ -19,14 +19,12 @@ CONTENT 3
     document = reader.read(input)
     pragmas = document.pragmas
     assert pragmas[0].reqs == ["REQ-001", "REQ-002"]
-    assert pragmas[0].pragma_type == "RANGE"
-    assert pragmas[0].begin_or_end == "BEGIN"
+    assert pragmas[0].begin_or_end == ">"
     assert pragmas[0].ng_source_line_begin == 1
     assert pragmas[0].ng_source_line_end == 5
 
     assert pragmas[1].reqs == ["REQ-001", "REQ-002"]
-    assert pragmas[1].pragma_type == "RANGE"
-    assert pragmas[1].begin_or_end == "END"
+    assert pragmas[1].begin_or_end == "<"
     assert pragmas[1].ng_source_line_begin == 5
     assert pragmas[1].ng_source_line_end is None
 
@@ -37,16 +35,16 @@ CONTENT 3
 
 def test_002_two_range_pragmas():
     input = """
-# STRICTDOC RANGE BEGIN: REQ-001
+# SDOC> REQ-001
 CONTENT 1
 CONTENT 2
 CONTENT 3
-# STRICTDOC RANGE END: REQ-001
-# STRICTDOC RANGE BEGIN: REQ-002
+# SDOC< REQ-001
+# SDOC> REQ-002
 CONTENT 4
 CONTENT 5
 CONTENT 6
-# STRICTDOC RANGE END: REQ-002
+# SDOC< REQ-002
 """.lstrip()
 
     reader = SourceFileTraceabilityReader()
@@ -76,11 +74,11 @@ CONTENT 6
 
 def test_003_one_range_pragma_begin_req_not_equal_to_end_req():
     input = """
-# STRICTDOC RANGE BEGIN: REQ-001
+# SDOC> REQ-001
 CONTENT 1
 CONTENT 2
 CONTENT 3
-# STRICTDOC RANGE END: REQ-002
+# SDOC< REQ-002
 """.lstrip()
 
     reader = SourceFileTraceabilityReader()
@@ -97,7 +95,7 @@ CONTENT 3
 
 def test_004_one_range_pragma_end_without_begin():
     input = """
-# STRICTDOC RANGE END: REQ-002
+# SDOC< REQ-002
 """.lstrip()
 
     reader = SourceFileTraceabilityReader()
@@ -146,21 +144,21 @@ def test_007_single_line_with_no_newline():
 def test_008_three_nested_range_pragmas():
     input = """
 CONTENT 1
-# STRICTDOC RANGE BEGIN: REQ-001
+# SDOC> REQ-001
 CONTENT 2
-# STRICTDOC RANGE BEGIN: REQ-002
+# SDOC> REQ-002
 CONTENT 3
-# STRICTDOC RANGE BEGIN: REQ-003
+# SDOC> REQ-003
 CONTENT 4
-# STRICTDOC RANGE END: REQ-003
+# SDOC< REQ-003
 CONTENT 5
-# STRICTDOC RANGE END: REQ-002
+# SDOC< REQ-002
 CONTENT 6
-# STRICTDOC RANGE END: REQ-001
+# SDOC< REQ-001
 CONTENT 7
-# STRICTDOC RANGE BEGIN: REQ-001
+# SDOC> REQ-001
 CONTENT 8
-# STRICTDOC RANGE END: REQ-001
+# SDOC< REQ-001
 CONTENT 9
 """.lstrip()
 

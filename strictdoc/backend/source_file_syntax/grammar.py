@@ -9,11 +9,11 @@ class RubyTemplate(string.Template):
 
 SOURCE_FILE_GRAMMAR = """
 SourceFileTraceabilityInfo[noskipws]:
-    (SingleLineString | pragmas += RangePragma)*
+    ((pragmas += RangePragma) | SingleLineString)*
 ;
 
 RangePragma[noskipws]:
-  /.*STRICTDOC / (pragma_type = 'RANGE') ' ' (begin_or_end = 'BEGIN' | begin_or_end = 'END') ': ' (reqs_objs += Req[', ']) '\n'?
+  /.*SDOC/ (begin_or_end = '>' | begin_or_end = '<') ' ' (reqs_objs += Req[', ']) '\n'?
 ;
 
 Req[noskipws]:
@@ -21,6 +21,6 @@ Req[noskipws]:
 ;
 
 SingleLineString[noskipws]:
-  /(?!.*STRICTDOC RANGE).*/ '\n'?
+  /(?!.*SDOC[><]).*/ '\n'?
 ;
 """

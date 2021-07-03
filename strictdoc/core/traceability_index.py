@@ -99,7 +99,7 @@ class FileTraceabilityIndex:
         pragma: RangePragma
         range_reqs = set()
         for pragma in source_file_tr_info.pragmas:
-            if pragma.begin_or_end == "BEGIN":
+            if pragma.is_begin():
                 range_reqs.update(pragma.reqs)
 
         requirements = self.map_paths_to_reqs[source_file_rel_path]

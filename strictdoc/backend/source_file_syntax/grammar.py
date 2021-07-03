@@ -13,11 +13,11 @@ SourceFileTraceabilityInfo[noskipws]:
 ;
 
 RangePragma[noskipws]:
-  /.*STRICTDOC / (pragma_type = 'RANGE') ' ' (begin_or_end = 'BEGIN' | begin_or_end = 'END') ': ' (reqs += Req[', ']) '\n'?
+  /.*STRICTDOC / (pragma_type = 'RANGE') ' ' (begin_or_end = 'BEGIN' | begin_or_end = 'END') ': ' (reqs_objs += Req[', ']) '\n'?
 ;
 
 Req[noskipws]:
-  /[A-Za-z][A-Z0-9-]+/
+  uid = /[A-Za-z][A-Z0-9-]+/
 ;
 
 SingleLineString[noskipws]:

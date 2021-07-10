@@ -193,4 +193,20 @@ REFS:
 TITLE: Adding two numbers
 STATEMENT: Python3 program shall add two numbers
 
+[REQUIREMENT]
+UID: REQ-FILE-C
+REFS:
+- TYPE: File
+  VALUE: hello_world.c
+TITLE: C Hello world program
+STATEMENT: Hello world program shall print "Hello World!".
+
+[REQUIREMENT]
+UID: REQ-FILE-CPP
+REFS:
+- TYPE: File
+  VALUE: hello_world.cpp
+TITLE: C++ Hello world program
+STATEMENT: Hello world program shall print "Hello World!".
+
 [/SECTION]

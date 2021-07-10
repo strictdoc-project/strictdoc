@@ -29,16 +29,15 @@ class SourceFileTraceabilityInfo:
 
     def __str__(self):
         return (
-            "SourceFileTraceabilityInfo("
-            f"lines_total: {self._ng_lines_total}\n"
-            f"lines_covered: {self._ng_lines_covered}\n"
-            f"coverage: {self._coverage}\n"
-            f"pragmas: {self.pragmas}\n"
+            "SourceFileTraceabilityInfo(\n"
+            f"\tlines_total: {self._ng_lines_total}\n"
+            f"\tlines_covered: {self._ng_lines_covered}\n"
+            f"\tcoverage: {self._coverage}\n"
+            f"\tpragmas: {self.pragmas}\n"
             ")"
         )
 
-    @property
-    def coverage(self):
+    def get_coverage(self):
         return self._coverage
 
     def set_coverage_stats(self, lines_total, lines_covered):

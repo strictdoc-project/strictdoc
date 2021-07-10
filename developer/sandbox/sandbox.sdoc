@@ -209,4 +209,12 @@ REFS:
 TITLE: C++ Hello world program
 STATEMENT: Hello world program shall print "Hello World!".
 
+[REQUIREMENT]
+UID: REQ-FILE-CPP-2
+REFS:
+- TYPE: File
+  VALUE: hello_world.cpp
+TITLE: C++ Hello world program
+STATEMENT: Hello world program shall print "Hello World!".
+
 [/SECTION]

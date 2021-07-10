@@ -49,13 +49,18 @@ class SourceFileTraceabilityInfo:
 
 class RangePragma:
     def __init__(self, parent, begin_or_end, reqs_objs):
+        assert isinstance(reqs_objs, list)
         self.parent = parent
         self.begin_or_end = begin_or_end
         self.reqs_objs = reqs_objs
         self.reqs = list(map(lambda req: req.uid, reqs_objs))
 
+        # TODO: Merge ng_source_line_* and ng_range_line_*?
         self.ng_source_line_begin = None
         self.ng_source_line_end = None
+
+        self.ng_range_line_begin = None
+        self.ng_range_line_begin = None
 
     def __str__(self):
         return (
@@ -163,6 +168,7 @@ def range_start_pragma_processor(
     parse_context.map_lines_to_pragmas[line] = pragma
 
     if pragma.is_begin():
+        pragma.ng_range_line_begin = line
         parse_context.pragma_stack.append(pragma)
         parse_context.map_lines_to_pragmas[line] = pragma
         for req in pragma.reqs:
@@ -177,6 +183,11 @@ def range_start_pragma_processor(
                     location, current_top_pragma.reqs, pragma.reqs
                 )
             current_top_pragma.ng_source_line_end = line
+            current_top_pragma.ng_range_line_end = line
+
+            pragma.ng_range_line_begin = current_top_pragma.ng_range_line_begin
+            pragma.ng_range_line_end = line
+
         except IndexError:
             raise create_end_without_begin_error(location)
     else:

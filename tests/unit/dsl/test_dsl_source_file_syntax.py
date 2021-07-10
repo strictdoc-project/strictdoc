@@ -30,7 +30,7 @@ CONTENT 3
 
     assert document._ng_lines_total == 5
     assert document._ng_lines_covered == 5
-    assert document.coverage == 100
+    assert document.get_coverage() == 100
 
 
 def test_002_two_range_pragmas():
@@ -204,4 +204,4 @@ CONTENT 9
 
     assert document._ng_lines_total == 17
     assert document._ng_lines_covered == 14
-    assert document.coverage == 82.4
+    assert document.get_coverage() == 82.4

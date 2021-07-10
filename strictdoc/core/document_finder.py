@@ -10,6 +10,7 @@ from strictdoc.core.file_tree import (
     FileFinder,
     PathFinder,
 )
+from strictdoc.helpers.textx import drop_textx_meta
 from strictdoc.helpers.timing import measure_performance, timing_decorator
 
 
@@ -49,11 +50,7 @@ class DocumentFinder:
             document = reader.read_from_file(doc_full_path)
             assert isinstance(document, Document)
 
-        document._tx_parser = None
-        document._tx_attrs = None
-        document._tx_metamodel = None
-        document._tx_peg_rule = None
-        document._tx_model_params = None
+        drop_textx_meta(document)
         return doc_file, document
 
     @staticmethod

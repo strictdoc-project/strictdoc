@@ -5,7 +5,6 @@ from strictdoc.backend.dsl.models.reference import Reference
 from strictdoc.backend.dsl.models.requirement import Requirement
 from strictdoc.backend.source_file_syntax.reader import (
     SourceFileTraceabilityInfo,
-    RangePragma,
 )
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
@@ -55,60 +54,33 @@ class FileTraceabilityIndex:
             matching_links_with_opt_ranges.append((file_link, pragmas))
         return matching_links_with_opt_ranges
 
-    def get_source_file_general_reqs(self, source_file_rel_path):
+    def get_source_file_reqs(self, source_file_rel_path):
         if source_file_rel_path not in self.map_paths_to_reqs:
-            return False
+            return None, None
 
         requirements = self.map_paths_to_reqs[source_file_rel_path]
         assert len(requirements) > 0
-
-        if (
+        assert (
             source_file_rel_path
-            not in self.map_paths_to_source_file_traceability_info
-        ):
-            return True
+            in self.map_paths_to_source_file_traceability_info
+        )
 
         source_file_traceability_info: SourceFileTraceabilityInfo = (
             self.map_paths_to_source_file_traceability_info[
                 source_file_rel_path
             ]
         )
-        matching_requirements = []
+        general_requirements = []
+        range_requirements = []
         for requirement in requirements:
             if (
                 requirement.uid
                 not in source_file_traceability_info.ng_map_reqs_to_pragmas
             ):
-                matching_requirements.append(requirement)
-        return matching_requirements
-
-    def get_source_file_range_reqs(self, source_file_rel_path):
-        if source_file_rel_path not in self.map_paths_to_reqs:
-            return []
-        if (
-            source_file_rel_path
-            not in self.map_paths_to_source_file_traceability_info
-        ):
-            return False
-        source_file_tr_info: SourceFileTraceabilityInfo = (
-            self.map_paths_to_source_file_traceability_info[
-                source_file_rel_path
-            ]
-        )
-
-        pragma: RangePragma
-        range_reqs = set()
-        for pragma in source_file_tr_info.pragmas:
-            if pragma.is_begin():
-                range_reqs.update(pragma.reqs)
-
-        requirements = self.map_paths_to_reqs[source_file_rel_path]
-        matching_requirements = []
-        requirement: Requirement
-        for requirement in requirements:
-            if requirement.uid in range_reqs:
-                matching_requirements.append(requirement)
-        return matching_requirements
+                general_requirements.append(requirement)
+            else:
+                range_requirements.append(requirement)
+        return general_requirements, range_requirements
 
     def get_coverage_info(self, source_file_rel_path):
         assert (
@@ -472,13 +444,8 @@ class TraceabilityIndex:
             requirement
         )
 
-    def get_source_file_general_reqs(self, source_file_rel_path):
-        return self._file_traceability_index.get_source_file_general_reqs(
-            source_file_rel_path
-        )
-
-    def get_source_file_range_reqs(self, source_file_rel_path):
-        return self._file_traceability_index.get_source_file_range_reqs(
+    def get_source_file_reqs(self, source_file_rel_path):
+        return self._file_traceability_index.get_source_file_reqs(
             source_file_rel_path
         )
 

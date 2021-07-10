@@ -45,10 +45,8 @@ class DocumentCachingIterator:
 
             current = task_list.popleft()
 
-            if (
-                isinstance(current, Section)
-                or isinstance(current, CompositeRequirement)
-                or isinstance(current, Requirement)
+            if isinstance(
+                current, (Section, Requirement, CompositeRequirement)
             ):
                 assert current.ng_level, f"Node has no ng_level: {current}"
                 level_counter.adjust(current.ng_level)

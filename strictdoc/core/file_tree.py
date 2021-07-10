@@ -140,9 +140,10 @@ class FileTree:
 
 class FileFinder:
     @staticmethod
-    def find_files_with_extension(root_path, extension):
+    def find_files_with_extensions(root_path, extensions):
         assert os.path.isdir(root_path)
         assert os.path.isabs(root_path)
+        assert isinstance(extensions, set)
 
         root_level = root_path.count(os.sep)
 
@@ -161,13 +162,20 @@ class FileFinder:
                 current_root_path.count(os.sep) - root_level
             )
 
-            if current_root_path not in folder_map:
-                folder_map[current_root_path] = Folder(
-                    current_root_path, current_root_path_level
-                )
-            current_tree = folder_map[current_root_path]
+            current_tree = folder_map.setdefault(
+                current_root_path,
+                Folder(current_root_path, current_root_path_level),
+            )
 
-            files = [f for f in files if f.endswith(extension)]
+            def filter_source_files(_files):
+                _source_files = []
+                for file in _files:
+                    _, file_extension = os.path.splitext(file)
+                    if file_extension in extensions:
+                        _source_files.append(file)
+                return _source_files
+
+            files = filter_source_files(files)
             files.sort(key=alphanumeric_sort)
             current_tree.set(files)
             if len(files) > 0:

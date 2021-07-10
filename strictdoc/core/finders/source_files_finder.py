@@ -27,6 +27,10 @@ class SourceFile:
         self.output_dir_full_path = output_dir_full_path
         self.output_file_full_path = output_file_full_path
         self.path_depth_prefix = ("../" * (level + 2))[:-1]
+
+        _, file_extension = os.path.splitext(in_doctree_source_file_rel_path)
+        self.extension = file_extension
+
         self.traceability_info = None
 
     def __str__(self):
@@ -47,6 +51,15 @@ class SourceFile:
                 self.output_file_full_path,
             )
         )
+
+    def is_python_file(self):
+        return self.extension == ".py"
+
+    def is_c_file(self):
+        return self.extension == ".c"
+
+    def is_cpp_file(self):
+        return self.extension == ".cpp"
 
 
 class SourceFilesFinder:
@@ -71,8 +84,8 @@ class SourceFilesFinder:
         )
         doctree_root_mount_path = os.path.basename(doctree_root_abs_path)
 
-        file_tree = FileFinder.find_files_with_extension(
-            doctree_root_abs_path, ".py"
+        file_tree = FileFinder.find_files_with_extensions(
+            doctree_root_abs_path, {".py", ".c", ".cpp"}
         )
 
         root_level = doctree_root_abs_path.count(os.sep)

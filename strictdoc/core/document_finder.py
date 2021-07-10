@@ -162,8 +162,8 @@ class DocumentFinder:
                 )
 
             # Finding SDoc files.
-            file_tree_structure = FileFinder.find_files_with_extension(
-                path_to_doc_root, ".sdoc"
+            file_tree_structure = FileFinder.find_files_with_extensions(
+                path_to_doc_root, {".sdoc"}
             )
             root_trees.append(file_tree_structure)
 

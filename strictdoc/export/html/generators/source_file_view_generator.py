@@ -1,6 +1,7 @@
 from jinja2 import Environment, PackageLoader
 from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
+from pygments.lexers.c_cpp import CppLexer, CLexer
 from pygments.lexers.python import PythonLexer
 
 from strictdoc.core.finders.source_files_finder import SourceFile
@@ -34,9 +35,19 @@ class SourceFileViewHTMLGenerator:
 
         markup_renderer = MarkupRenderer()
 
+        lexer = None
+        if source_file.is_python_file():
+            lexer = PythonLexer()
+        elif source_file.is_c_file():
+            lexer = CLexer()
+        elif source_file.is_cpp_file():
+            lexer = CppLexer()
+        else:
+            assert NotImplementedError
+
         html_formatter = HtmlFormatter()
         pygmented_source_file_content = highlight(
-            "".join(source_file_lines), PythonLexer(), html_formatter
+            "".join(source_file_lines), lexer, html_formatter
         )
 
         # Ugly hack to split content into lines: Cutting off:

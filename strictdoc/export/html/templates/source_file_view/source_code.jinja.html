@@ -4,7 +4,20 @@
     {%- for line in source_file_content -%}
     <div id="line-{{loop.index}}" class="source__line-number"><pre>{{loop.index}}</pre></div>
     <div data-line={{loop.index}} class="source__line-content">
-      {%- if line != "" -%}
+      {%- if line.__class__.__name__ == "tuple" -%}
+        {%- set source_line, pragma = line -%}
+        <pre>
+{{ source_line }}
+{%- for req in pragma.reqs_objs -%}
+  <a
+    data-reqid="{{ req.uid }}"
+    data-begin="{{ pragma.ng_range_line_begin }}"
+    data-end="{{ pragma.ng_range_line_end }}"
+    href="{{ link_renderer.render_requirement_in_source_file_range_link_using_id(req.uid, source_file.in_doctree_source_file_rel_path, source_file, pragma) }}"
+    >{{ req.uid }}</a>{%- if not loop.last -%}, {% endif -%}
+{%- endfor -%}
+        </pre>
+      {%- elif line != "" -%}
       {# <!-- Pygments --> #}
       <pre class="highlight">{{ line }}</pre>
       {%- else -%}

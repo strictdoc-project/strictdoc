@@ -96,9 +96,9 @@ class LinkRenderer:
         source_file_link = f"{path_prefix}/_source_files/{context_source_file.doctree_root_mount_path}/{source_link}.html#{requirement.uid}"
         return source_file_link
 
-    def render_requirement_in_source_file_range_link(
+    def render_requirement_in_source_file_range_link_using_id(
         self,
-        requirement: Requirement,
+        req_uid: str,
         source_link: str,
         context_source_file: SourceFile,
         range,
@@ -112,9 +112,19 @@ class LinkRenderer:
             return ("../" * level)[:-1]
 
         path_prefix = get_root_path_prefix(context_source_file.level + 2)
-        # source_file_link = f"{path_prefix}/_source_files/{context_source_file.doctree_root_mount_path}/{source_link}.html?begin={range.ng_source_line_begin}&end={range.ng_source_line_end}#{requirement.uid}"
-        source_file_link = f"{path_prefix}/_source_files/{context_source_file.doctree_root_mount_path}/{source_link}.html#{requirement.uid}#{range.ng_source_line_begin}#{range.ng_source_line_end}"
+        source_file_link = f"{path_prefix}/_source_files/{context_source_file.doctree_root_mount_path}/{source_link}.html#{req_uid}#{range.ng_range_line_begin}#{range.ng_range_line_end}"
         return source_file_link
+
+    def render_requirement_in_source_file_range_link(
+        self,
+        requirement: Requirement,
+        source_link: str,
+        context_source_file: SourceFile,
+        range,
+    ):
+        return self.render_requirement_in_source_file_range_link_using_id(
+            requirement.uid, source_link, context_source_file, range
+        )
 
     @staticmethod
     def _string_to_link(string):

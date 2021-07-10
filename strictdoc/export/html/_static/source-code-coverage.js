@@ -359,39 +359,17 @@ class Dom {
         ranges[range].pointers.push(pointer);
       });
 
+    console.log(this.ranges);
+
     // put pointers from code to this.ranges
     this._prepareInlinePointers();
   }
 
   _prepareInlinePointers() {
-    for (var range in this.ranges) {
 
-      const beginLine = this.ranges[range].beginLine
-        .querySelector(this.strictdocCommentSelector);
-      const endLine = this.ranges[range].endLine
-        .querySelector(this.strictdocCommentSelector);
-
-      this._processLine(
-        range,
-        beginLine,
-        this.strictdocCommentBeginString
-      );
-      this._processLine(
-        range,
-        endLine,
-        this.strictdocCommentEndString
-      );
-    }
   }
 
-  _processLine(range, element, string) {
 
-    // Assume that the requirments ID in the code and the links in the menu are correct and the same
-    // const newHTML = this.ranges[range].pointers
-    //   .map(pointer => `<a href="${pointer.href}">${pointer.dataset.reqid}</a>`)
-    //   .join(', ');
-    // element.innerHTML = string + newHTML;
-  }
 
   _generateRangeAlias(begin, end) { return `${begin}${this.hashSplitter}${end}` };
 }

@@ -27,7 +27,7 @@ class DocumentFinder:
                     paths_to_files_or_doc
                 )
                 print(err)
-                exit(1)
+                sys.exit(1)
 
         file_tree, asset_dirs = DocumentFinder._build_file_tree(
             paths_to_files_or_docs
@@ -56,7 +56,7 @@ class DocumentFinder:
     @staticmethod
     def _build_document_tree(file_trees, output_root_html, parallelizer):
         assert isinstance(file_trees, list)
-        document_list, map_docs_by_paths, map_relpaths_by_docs = [], {}, {}
+        document_list, map_docs_by_paths = [], {}
 
         file_tree_list = []
         for file_tree in file_trees:

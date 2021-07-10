@@ -178,6 +178,7 @@ class Switch {
 class Dom {
   constructor({
     sourceId,
+    sourceContainerId,
     hashSplitter,
     strictdocCommentSelector,
     strictdocCommentBeginString,
@@ -186,6 +187,7 @@ class Dom {
 
     // CONSTANTS
     this.sourceId = sourceId || 'source';
+    this.sourceContainerId = sourceContainerId || 'sourceContainer';
     this.hashSplitter = hashSplitter || '#';
 
     // STRICTDOC SPECIFIC
@@ -215,18 +217,8 @@ class Dom {
 
   prepare() {
 
-    this.sourceContainer = document.getElementById('sourceContainer');
-
-    this.sourceContainer.style.position = 'absolute';
-    this.sourceContainer.style.top = 0;
-    this.sourceContainer.style.bottom = 0;
-    this.sourceContainer.style.right = 0;
-    this.sourceContainer.style.left = 0;
-    this.sourceContainer.style.overflow = 'auto';
-
-    console.log(this.sourceContainer);
-
-    this._prepareSourceBlock();
+    this._prepareSourceContainer();
+    this._prepareSource();
 
     this.yellowHighlighter = new Highlighter({
       target: this.source,
@@ -307,10 +299,23 @@ class Dom {
     }
   }
 
-  _prepareSourceBlock() {
+  _prepareSource() {
     this.source = document.getElementById(this.sourceId);
     this.source.style.position = 'relative';
     this.source.style.zIndex = '1';
+  }
+
+  _prepareSourceContainer() {
+    this.sourceContainer = document.getElementById('sourceContainer');
+
+    this.sourceContainer.style.position = 'absolute';
+    this.sourceContainer.style.top = 0;
+    this.sourceContainer.style.bottom = 0;
+    this.sourceContainer.style.right = 0;
+    this.sourceContainer.style.left = 0;
+    this.sourceContainer.style.overflow = 'auto';
+
+    console.log(this.sourceContainer);
   }
 
   _prepareLines() {
@@ -393,6 +398,7 @@ class Dom {
 
 const dom = new Dom({
   sourceId: 'source',
+  sourceContainerId: 'sourceContainer',
   hashSplitter: '#',
   strictdocCommentSelector: 'pre span',
   strictdocCommentBeginString: '# SDOC> ',

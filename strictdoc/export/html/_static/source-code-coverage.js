@@ -216,6 +216,7 @@ class Dom {
       range: null,
       requirement: null,
       pointers: [],
+      labels: [],
     };
   }
 
@@ -251,6 +252,7 @@ class Dom {
       requirement: this.requirements[reqId],
       pointers: rangeAlliace ? this.ranges[rangeAlliace].pointers : null,
       range: rangeAlliace ? this.ranges[rangeAlliace].highlighter : null,
+      labels: reqId ? this.ranges[rangeAlliace][reqId] : null,
     });
 
     this.highlightRange(this.active.range);
@@ -260,20 +262,24 @@ class Dom {
     range,
     requirement,
     pointers,
+    labels,
   }) => {
 
     // remove old 'active'
     this.active.requirement?.classList.remove(this.activeClass);
     this.active.pointers?.forEach(pointer => pointer?.classList.remove(this.activeClass));
+    this.active.labels?.forEach(label => label?.classList.remove(this.activeClass));
 
     // make changes to state
     this.active.range = range;
     this.active.requirement = requirement;
     this.active.pointers = pointers;
+    this.active.labels = labels;
 
     // add new 'active'
     this.active.requirement?.classList.add(this.activeClass);
     this.active.pointers?.forEach(pointer => pointer.classList.add(this.activeClass));
+    this.active.labels?.forEach(label => label.classList.add(this.activeClass));
 
   };
 
@@ -345,6 +351,7 @@ class Dom {
       .map(pointer => {
         const rangeBegin = pointer.dataset.begin;
         const rangeEnd = pointer.dataset.end;
+        const rangeReq = pointer.dataset.reqid;
 
         const range = this._generateRangeAlias(rangeBegin, rangeEnd);
 
@@ -360,20 +367,23 @@ class Dom {
           ranges[range].highlighter = this.greenHighlighter.create(top, height);
         }
 
-        ranges[range].pointers.push(pointer);
+        if (rangeReq) {
+
+          // add pointer from code
+          if (ranges[range][rangeReq]) {
+            ranges[range][rangeReq].push(pointer);
+          } else {
+            ranges[range][rangeReq] = [pointer]
+          }
+
+        } else {
+
+          // add pointer from menu
+          ranges[range].pointers.push(pointer);
+        }
+
       });
-
-    console.log(this.ranges);
-
-    // put pointers from code to this.ranges
-    this._prepareInlinePointers();
   }
-
-  _prepareInlinePointers() {
-
-  }
-
-
 
   _generateRangeAlias(begin, end) { return `${begin}${this.hashSplitter}${end}` };
 }

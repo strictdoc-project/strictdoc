@@ -17,9 +17,7 @@
         {%- for range in opt_ranges %}
           <li>
             <a
-              id="pointer:{{ requirement.uid }}:{{ range.ng_source_line_begin }}:{{ range.ng_source_line_end }}"
               class="pointer"
-              data-reqid="{{ requirement.uid }}"
               data-begin="{{ range.ng_source_line_begin }}"
               data-end="{{ range.ng_source_line_end }}"
               href="{{ link_renderer.render_requirement_in_source_file_range_link(requirement, link, source_file, range) }}"
@@ -27,7 +25,6 @@
             >
               <b>[{{ range.ng_source_line_begin }}-{{ range.ng_source_line_end }}]</b>
               {{ link }}
-              <span class="reset_range_highlight"></span>
             </a>
           </li>
         {%- endfor -%}
@@ -41,9 +38,6 @@
         {%- else -%}
           <li>
             <a
-              id="pointer:{{ requirement.uid }}"
-              class=""
-              data-reqid="{{ requirement.uid }}"
               href="{{ link_renderer.render_requirement_in_source_file_link(requirement, link, source_file) }}"
             >
               {{ link }}

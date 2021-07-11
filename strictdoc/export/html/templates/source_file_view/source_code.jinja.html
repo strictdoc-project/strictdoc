@@ -9,7 +9,8 @@
         <pre class="sdoc-comment">
 {{ source_line }}
 {%- for req in pragma.reqs_objs -%}
-  <a class="inline-pointer"
+  <a
+    class="pointer"
     data-reqid="{{ req.uid }}"
     data-begin="{{ pragma.ng_range_line_begin }}"
     data-end="{{ pragma.ng_range_line_end }}"

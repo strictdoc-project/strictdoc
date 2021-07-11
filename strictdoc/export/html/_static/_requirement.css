@@ -62,62 +62,6 @@ article {
   padding-bottom: calc(var(--base-padding)*2);
 }
 
-/* article in SOURCE */
-
-.source-file-view article.requirement {
-  position: static;
-  padding: var(--base-padding);
-  background-color: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
-  margin: 1rem 0;
-  transition: background-color 0.3s ease-in, border-color 0.3s ease-in;
-}
-/* .source-file-view article.requirement:target, */
-.source-file-view article.requirement.active {
-  background-color: var(--color-bg-contrast);
-  border: 1px solid var(--color-fg-contrast);
-}
-
-.source-file-view .requirement_file li {
-  /* position: relative; */
-}
-
-.source-file-view .requirement_file li > a,
-.source-file-view .requirement_file li > span {
-  display: inline-block;
-  padding: .15rem .25rem .15rem 0;
-  line-height: 1;
-}
-
-.source-file-view .pointer {
-}
-/* .source-file-view .pointer:target, */
-.source-file-view .pointer.active {
-  background-color: var(--color-highlight);
-}
-
-.reset_range_highlight {
-  position: absolute;
-  right: 0;
-  width: 10px;
-  height: 10px;
-  background-color: var(--color-highlight);
-}
-
-.source-file-view .current_file_pseudolink {
-  font-weight: bold;
-  color: #808080;
-}
-
-.source-file-view .requirement_link {
-  color: var(--color-accent-dark);
-  line-height: 1;
-}
-
-.source-file-view .requirement_link:hover {
-  text-decoration: none;
-}
-
 /* .table-view */
 
 .table-view [data-section] {

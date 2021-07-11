@@ -181,8 +181,10 @@ class Dom {
     sourceContainerId,
     hashSplitter,
     strictdocCommentSelector,
-    strictdocCommentBeginString,
-    strictdocCommentEndString,
+    strictdocPointerSelector,
+    strictdocInlinePointerSelector,
+    strictdocRequirementSelector,
+    activeClass,
   }) {
 
     // CONSTANTS
@@ -192,8 +194,10 @@ class Dom {
 
     // STRICTDOC SPECIFIC
     this.strictdocCommentSelector = strictdocCommentSelector || 'pre span';
-    this.strictdocCommentBeginString = strictdocCommentBeginString || '# SDOC> ';
-    this.strictdocCommentEndString = strictdocCommentEndString || '# SDOC< ';
+    this.strictdocPointerSelector = strictdocPointerSelector || '.pointer';
+    this.strictdocInlinePointerSelector = strictdocInlinePointerSelector || '.inline-pointer';
+    this.strictdocRequirementSelector = strictdocRequirementSelector || '.requirement';
+    this.activeClass = activeClass || 'active';
 
     // objects
     this.greenHighlighter;
@@ -259,8 +263,8 @@ class Dom {
   }) => {
 
     // remove old 'active'
-    this.active.requirement?.classList.remove('active');
-    this.active.pointers?.forEach(pointer => pointer?.classList.remove('active'));
+    this.active.requirement?.classList.remove(this.activeClass);
+    this.active.pointers?.forEach(pointer => pointer?.classList.remove(this.activeClass));
 
     // make changes to state
     this.active.range = range;
@@ -268,8 +272,8 @@ class Dom {
     this.active.pointers = pointers;
 
     // add new 'active'
-    this.active.requirement?.classList.add('active');
-    this.active.pointers?.forEach(pointer => pointer.classList.add('active'));
+    this.active.requirement?.classList.add(this.activeClass);
+    this.active.pointers?.forEach(pointer => pointer.classList.add(this.activeClass));
 
   };
 
@@ -327,7 +331,7 @@ class Dom {
   }
 
   _prepareRequirements() {
-    this.requirements = [...document.querySelectorAll('.requirement')]
+    this.requirements = [...document.querySelectorAll(this.strictdocRequirementSelector)]
       .reduce((acc, requirement) => {
         acc[requirement.dataset.reqid] = requirement;
         return acc
@@ -337,7 +341,7 @@ class Dom {
   _prepareRanges() {
     const ranges = this.ranges;
 
-    [...document.querySelectorAll('.pointer')]
+    [...document.querySelectorAll(this.strictdocPointerSelector)]
       .map(pointer => {
         const rangeBegin = pointer.dataset.begin;
         const rangeEnd = pointer.dataset.end;
@@ -375,12 +379,10 @@ class Dom {
 }
 
 const dom = new Dom({
-  sourceId: 'source',
-  sourceContainerId: 'sourceContainer',
-  hashSplitter: '#',
-  strictdocCommentSelector: 'pre span',
-  strictdocCommentBeginString: '# SDOC> ',
-  strictdocCommentEndString: '# SDOC< ',
+  // sourceId: 'source',
+  // sourceContainerId: 'sourceContainer',
+  // hashSplitter: '#',
+  // strictdocCommentSelector: 'pre span',
 });
 
 window.addEventListener("load", function () {

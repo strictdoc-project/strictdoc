@@ -63,6 +63,28 @@
   background-color: var(--color-highlight);
 }
 
+.reset_range_highlight {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1rem;
+  height: 1rem;
+  background-color: var(--color-highlight);
+  justify-content: center;
+  align-items: center;
+  text-decoration: none !important;
+  padding: 0 !important;
+  display: none !important;
+}
+
+.reset_range_highlight::before {
+  content: '\2715';
+}
+
+.pointer.active + .reset_range_highlight {
+  display: flex !important;
+}
+
 .source-file-view .current_file_pseudolink {
   font-weight: bold;
   color: #808080;

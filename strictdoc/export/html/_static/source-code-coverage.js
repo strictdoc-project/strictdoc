@@ -178,20 +178,26 @@ class Switch {
 class Dom {
   constructor({
     sourceId,
+    sourceContainerId,
     hashSplitter,
     strictdocCommentSelector,
-    strictdocCommentBeginString,
-    strictdocCommentEndString,
+    strictdocPointerSelector,
+    strictdocInlinePointerSelector,
+    strictdocRequirementSelector,
+    activeClass,
   }) {
 
     // CONSTANTS
     this.sourceId = sourceId || 'source';
+    this.sourceContainerId = sourceContainerId || 'sourceContainer';
     this.hashSplitter = hashSplitter || '#';
 
     // STRICTDOC SPECIFIC
     this.strictdocCommentSelector = strictdocCommentSelector || 'pre span';
-    this.strictdocCommentBeginString = strictdocCommentBeginString || '# SDOC> ';
-    this.strictdocCommentEndString = strictdocCommentEndString || '# SDOC< ';
+    this.strictdocPointerSelector = strictdocPointerSelector || '.pointer';
+    this.strictdocInlinePointerSelector = strictdocInlinePointerSelector || '.inline-pointer';
+    this.strictdocRequirementSelector = strictdocRequirementSelector || '.requirement';
+    this.activeClass = activeClass || 'active';
 
     // objects
     this.greenHighlighter;
@@ -210,23 +216,14 @@ class Dom {
       range: null,
       requirement: null,
       pointers: [],
+      labels: [],
     };
   }
 
   prepare() {
 
-    this.sourceContainer = document.getElementById('sourceContainer');
-
-    this.sourceContainer.style.position = 'absolute';
-    this.sourceContainer.style.top = 0;
-    this.sourceContainer.style.bottom = 0;
-    this.sourceContainer.style.right = 0;
-    this.sourceContainer.style.left = 0;
-    this.sourceContainer.style.overflow = 'auto';
-
-    console.log(this.sourceContainer);
-
-    this._prepareSourceBlock();
+    this._prepareSourceContainer();
+    this._prepareSource();
 
     this.yellowHighlighter = new Highlighter({
       target: this.source,
@@ -255,6 +252,7 @@ class Dom {
       requirement: this.requirements[reqId],
       pointers: rangeAlliace ? this.ranges[rangeAlliace].pointers : null,
       range: rangeAlliace ? this.ranges[rangeAlliace].highlighter : null,
+      labels: reqId ? this.ranges[rangeAlliace][reqId] : null,
     });
 
     this.highlightRange(this.active.range);
@@ -264,20 +262,24 @@ class Dom {
     range,
     requirement,
     pointers,
+    labels,
   }) => {
 
     // remove old 'active'
-    this.active.requirement?.classList.remove('active');
-    this.active.pointers?.forEach(pointer => pointer?.classList.remove('active'));
+    this.active.requirement?.classList.remove(this.activeClass);
+    this.active.pointers?.forEach(pointer => pointer?.classList.remove(this.activeClass));
+    this.active.labels?.forEach(label => label?.classList.remove(this.activeClass));
 
     // make changes to state
     this.active.range = range;
     this.active.requirement = requirement;
     this.active.pointers = pointers;
+    this.active.labels = labels;
 
     // add new 'active'
-    this.active.requirement?.classList.add('active');
-    this.active.pointers?.forEach(pointer => pointer.classList.add('active'));
+    this.active.requirement?.classList.add(this.activeClass);
+    this.active.pointers?.forEach(pointer => pointer.classList.add(this.activeClass));
+    this.active.labels?.forEach(label => label.classList.add(this.activeClass));
 
   };
 
@@ -307,10 +309,23 @@ class Dom {
     }
   }
 
-  _prepareSourceBlock() {
+  _prepareSource() {
     this.source = document.getElementById(this.sourceId);
     this.source.style.position = 'relative';
     this.source.style.zIndex = '1';
+  }
+
+  _prepareSourceContainer() {
+    this.sourceContainer = document.getElementById('sourceContainer');
+
+    this.sourceContainer.style.position = 'absolute';
+    this.sourceContainer.style.top = 0;
+    this.sourceContainer.style.bottom = 0;
+    this.sourceContainer.style.right = 0;
+    this.sourceContainer.style.left = 0;
+    this.sourceContainer.style.overflow = 'auto';
+
+    console.log(this.sourceContainer);
   }
 
   _prepareLines() {
@@ -322,7 +337,7 @@ class Dom {
   }
 
   _prepareRequirements() {
-    this.requirements = [...document.querySelectorAll('.requirement')]
+    this.requirements = [...document.querySelectorAll(this.strictdocRequirementSelector)]
       .reduce((acc, requirement) => {
         acc[requirement.dataset.reqid] = requirement;
         return acc
@@ -332,10 +347,11 @@ class Dom {
   _prepareRanges() {
     const ranges = this.ranges;
 
-    [...document.querySelectorAll('.pointer')]
+    [...document.querySelectorAll(this.strictdocPointerSelector)]
       .map(pointer => {
         const rangeBegin = pointer.dataset.begin;
         const rangeEnd = pointer.dataset.end;
+        const rangeReq = pointer.dataset.reqid;
 
         const range = this._generateRangeAlias(rangeBegin, rangeEnd);
 
@@ -351,52 +367,32 @@ class Dom {
           ranges[range].highlighter = this.greenHighlighter.create(top, height);
         }
 
-        ranges[range].pointers.push(pointer);
+        if (rangeReq) {
+
+          // add pointer from code
+          if (ranges[range][rangeReq]) {
+            ranges[range][rangeReq].push(pointer);
+          } else {
+            ranges[range][rangeReq] = [pointer]
+          }
+
+        } else {
+
+          // add pointer from menu
+          ranges[range].pointers.push(pointer);
+        }
+
       });
-
-    // put pointers from code to this.ranges
-    this._prepareInlinePointers();
-  }
-
-  _prepareInlinePointers() {
-    for (var range in this.ranges) {
-
-      const beginLine = this.ranges[range].beginLine
-        .querySelector(this.strictdocCommentSelector);
-      const endLine = this.ranges[range].endLine
-        .querySelector(this.strictdocCommentSelector);
-
-      this._processLine(
-        range,
-        beginLine,
-        this.strictdocCommentBeginString
-      );
-      this._processLine(
-        range,
-        endLine,
-        this.strictdocCommentEndString
-      );
-    }
-  }
-
-  _processLine(range, element, string) {
-
-    // Assume that the requirments ID in the code and the links in the menu are correct and the same
-    // const newHTML = this.ranges[range].pointers
-    //   .map(pointer => `<a href="${pointer.href}">${pointer.dataset.reqid}</a>`)
-    //   .join(', ');
-    // element.innerHTML = string + newHTML;
   }
 
   _generateRangeAlias(begin, end) { return `${begin}${this.hashSplitter}${end}` };
 }
 
 const dom = new Dom({
-  sourceId: 'source',
-  hashSplitter: '#',
-  strictdocCommentSelector: 'pre span',
-  strictdocCommentBeginString: '# SDOC> ',
-  strictdocCommentEndString: '# SDOC< ',
+  // sourceId: 'source',
+  // sourceContainerId: 'sourceContainer',
+  // hashSplitter: '#',
+  // strictdocCommentSelector: 'pre span',
 });
 
 window.addEventListener("load", function () {

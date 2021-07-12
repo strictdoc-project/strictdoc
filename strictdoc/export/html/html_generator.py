@@ -18,6 +18,9 @@ from strictdoc.export.html.generators.document_trace import (
 from strictdoc.export.html.generators.document_tree import (
     DocumentTreeHTMLGenerator,
 )
+from strictdoc.export.html.generators.requirements_coverage import (
+    RequirementsCoverageHTMLGenerator,
+)
 from strictdoc.export.html.generators.source_file_coverage import (
     SourceFileCoverageHTMLGenerator,
 )
@@ -130,6 +133,19 @@ class HTMLGenerator:
             )
             with open(output_html_source_coverage, "w") as file:
                 file.write(source_coverage_content)
+
+            requirements_coverage_content = (
+                RequirementsCoverageHTMLGenerator.export(
+                    document_tree,
+                    traceability_index,
+                    link_renderer,
+                )
+            )
+            output_html_requirements_coverage = os.path.join(
+                output_html_root, "requirements_coverage.html"
+            )
+            with open(output_html_requirements_coverage, "w") as file:
+                file.write(requirements_coverage_content)
 
         print(
             "Export completed. Documentation tree can be found at:\n{}".format(

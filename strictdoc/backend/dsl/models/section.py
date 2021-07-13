@@ -28,6 +28,10 @@ class Section(object):
         return False
 
     @property
+    def is_composite_requirement(self):
+        return False
+
+    @property
     def is_section(self):
         return True
 

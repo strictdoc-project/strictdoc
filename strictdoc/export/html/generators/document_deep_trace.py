@@ -1,4 +1,4 @@
-from jinja2 import Environment, PackageLoader
+from jinja2 import Environment, PackageLoader, StrictUndefined
 
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
@@ -7,6 +7,7 @@ from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 class DocumentDeepTraceHTMLGenerator:
     env = Environment(
         loader=PackageLoader("strictdoc", "export/html/templates"),
+        undefined=StrictUndefined
         # autoescape=select_autoescape(['html', 'xml'])
     )
     env.globals.update(isinstance=isinstance)
@@ -27,6 +28,7 @@ class DocumentDeepTraceHTMLGenerator:
             renderer=markup_renderer,
             link_renderer=link_renderer,
             document_type=DocumentType.deeptrace(),
+            standalone=False,
         )
 
         return output

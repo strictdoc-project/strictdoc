@@ -1,4 +1,4 @@
-from jinja2 import Environment, PackageLoader
+from jinja2 import Environment, PackageLoader, StrictUndefined
 from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers.python import PythonLexer
@@ -11,7 +11,8 @@ from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 
 class SourceFileCoverageHTMLGenerator:
     env = Environment(
-        loader=PackageLoader("strictdoc", "export/html/templates")
+        loader=PackageLoader("strictdoc", "export/html/templates"),
+        undefined=StrictUndefined,
     )
     env.globals.update(isinstance=isinstance)
 

@@ -1,3 +1,5 @@
+import os
+
 from jinja2 import Environment, PackageLoader, StrictUndefined
 from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
@@ -85,6 +87,7 @@ class SourceFileViewHTMLGenerator:
         pygments_styles = html_formatter.get_style_defs(".highlight")
 
         root_path = source_file.path_depth_prefix
+        static_path = os.path.join(root_path, "_static")
 
         output += template.render(
             source_file=source_file,
@@ -96,5 +99,6 @@ class SourceFileViewHTMLGenerator:
             renderer=markup_renderer,
             document_type=DocumentType.document(),
             root_path=root_path,
+            static_path=static_path,
         )
         return output

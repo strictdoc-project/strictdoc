@@ -167,6 +167,7 @@
 
 .index-link {
   color: var(--color-fg-main);
+  font-size: 1rem;
   font-weight: normal;
 }
 

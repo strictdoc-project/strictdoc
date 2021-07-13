@@ -51,12 +51,11 @@
   grid-area: aside;
   overflow: auto;
 
-  padding: var(--base-padding) var(--base-padding) var(--base-padding) calc(var(--base-padding)*2);
+  /* padding: var(--base-padding) var(--base-padding) var(--base-padding) calc(var(--base-padding)*2); */
+  padding: var(--base-gap) var(--base-padding) var(--base-gap) calc(var(--base-padding)*2);
   background-color: var(--color-bg-main);
   border-top: 2px solid var(--thumbBG);
   border-right: 2px solid var(--thumbBG);
-
-  font-size: 0.85rem;
 }
 
 .layout_aside-header {
@@ -132,6 +131,7 @@
 .toc {
   list-style: none;
   padding-left: 0;
+  font-size: 0.85rem;
 }
 
 .toc ul {

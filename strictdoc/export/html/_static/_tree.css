@@ -27,6 +27,7 @@
   color: var(--tree-color-fg, #444444);
 
   position: relative;
+  width: -moz-fit-content;
   width: fit-content;
   /* margin: 0 auto; */
 }

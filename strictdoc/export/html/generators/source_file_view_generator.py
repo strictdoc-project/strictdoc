@@ -87,7 +87,7 @@ class SourceFileViewHTMLGenerator:
         pygments_styles = html_formatter.get_style_defs(".highlight")
 
         root_path = source_file.path_depth_prefix
-        static_path = os.path.join(root_path, "_static")
+        static_path = f"{root_path}/_static"
 
         output += template.render(
             source_file=source_file,

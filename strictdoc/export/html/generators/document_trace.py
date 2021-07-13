@@ -25,7 +25,7 @@ class DocumentTraceHTMLGenerator:
         )
 
         root_path = document.meta.get_root_path_prefix()
-        static_path = os.path.join(root_path, "_static")
+        static_path = f"{root_path}/_static"
         document_iterator = traceability_index.get_document_iterator(document)
 
         output += template.render(

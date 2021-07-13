@@ -28,7 +28,9 @@ class SourceFileCoverageHTMLGenerator:
         )
 
         output += template.render(
-            document_tree=document_tree, traceability_index=traceability_index
+            document_tree=document_tree,
+            traceability_index=traceability_index,
+            static_path="_static",
         )
 
         return output

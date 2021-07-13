@@ -20,6 +20,7 @@ class DocumentTreeHTMLGenerator:
         output = template.render(
             document_tree=document_tree,
             artefact_list=document_tree_iterator.iterator(),
+            static_path="_static",
         )
 
         return output

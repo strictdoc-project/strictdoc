@@ -5,20 +5,20 @@
   {% block head %}
   <meta charset="UTF-8"/>
 
-  <link rel="shortcut icon" href="{{root_path}}/_static/favicon.ico" type="image/x-icon"/>
-  <link rel="icon" href="{{root_path}}/_static/favicon.ico" type="image/x-icon"/>
+  <link rel="shortcut icon" href="{{static_path}}/favicon.ico" type="image/x-icon"/>
+  <link rel="icon" href="{{static_path}}/favicon.ico" type="image/x-icon"/>
 
   {% block head_css %}
-  <link rel="stylesheet" href="{{root_path}}/_static/_base.css"/>
-  <link rel="stylesheet" href="{{root_path}}/_static/_layout.css"/>
-  <link rel="stylesheet" href="{{root_path}}/_static/_content.css"/>
-  <link rel="stylesheet" href="{{root_path}}/_static/_requirement.css"/>
-  <link rel="stylesheet" href="{{root_path}}/_static/_element.css"/>
+  <link rel="stylesheet" href="{{static_path}}/_base.css"/>
+  <link rel="stylesheet" href="{{static_path}}/_layout.css"/>
+  <link rel="stylesheet" href="{{static_path}}/_content.css"/>
+  <link rel="stylesheet" href="{{static_path}}/_requirement.css"/>
+  <link rel="stylesheet" href="{{static_path}}/_element.css"/>
   {% endblock head_css %}
 
   {% block head_scripts %}
   {# moved to docs templates: #}
-  {# <script type="text/javascript" src="{{root_path}}/_static/toc.js"></script> #}
+  {# <script type="text/javascript" src="{{static_path}}/_static/toc.js"></script> #}
   {% endblock head_scripts %}
 
   <title>{% block title %}{% endblock title %}</title>
@@ -40,7 +40,7 @@
     </aside>
 
     {% block layout_nav %}
-    {# Include "_shared/layout_nav.jinja.html" in the corresponding template, if the block is needed #}
+    {# Include "_shared/doc_nav.jinja.html" in the corresponding template, if the block is needed #}
     {% endblock layout_nav %}
 
     <header class="layout_header">

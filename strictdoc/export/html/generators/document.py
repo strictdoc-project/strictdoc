@@ -27,6 +27,9 @@ class DocumentHTMLGenerator:
             "single_document/document.jinja.html"
         )
 
+        root_path = document.meta.get_root_path_prefix()
+        document_iterator = traceability_index.get_document_iterator(document)
+
         output += template.render(
             document=document,
             traceability_index=traceability_index,
@@ -34,6 +37,8 @@ class DocumentHTMLGenerator:
             renderer=markup_renderer,
             standalone=standalone,
             document_type=DocumentType.document(),
+            root_path=root_path,
+            document_iterator=document_iterator,
         )
 
         return output

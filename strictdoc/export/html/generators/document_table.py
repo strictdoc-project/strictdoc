@@ -21,6 +21,9 @@ class DocumentTableHTMLGenerator:
             "single_document_table/document.jinja.html"
         )
 
+        root_path = document.meta.get_root_path_prefix()
+        document_iterator = traceability_index.get_document_iterator(document)
+
         output += template.render(
             document=document,
             traceability_index=traceability_index,
@@ -28,6 +31,8 @@ class DocumentTableHTMLGenerator:
             link_renderer=link_renderer,
             document_type=DocumentType.table(),
             standalone=False,
+            root_path=root_path,
+            document_iterator=document_iterator,
         )
 
         return output

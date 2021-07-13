@@ -1,3 +1,5 @@
+import os
+
 from jinja2 import Environment, PackageLoader, StrictUndefined
 
 from strictdoc.export.html.document_type import DocumentType
@@ -22,6 +24,7 @@ class DocumentTableHTMLGenerator:
         )
 
         root_path = document.meta.get_root_path_prefix()
+        static_path = os.path.join(root_path, "_static")
         document_iterator = traceability_index.get_document_iterator(document)
 
         output += template.render(
@@ -32,6 +35,7 @@ class DocumentTableHTMLGenerator:
             document_type=DocumentType.table(),
             standalone=False,
             root_path=root_path,
+            static_path=static_path,
             document_iterator=document_iterator,
         )
 

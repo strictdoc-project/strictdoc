@@ -1,4 +1,4 @@
-from jinja2 import Environment, PackageLoader
+from jinja2 import Environment, PackageLoader, StrictUndefined
 
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
@@ -6,7 +6,8 @@ from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 
 class DocumentTableHTMLGenerator:
     env = Environment(
-        loader=PackageLoader("strictdoc", "export/html/templates")
+        loader=PackageLoader("strictdoc", "export/html/templates"),
+        undefined=StrictUndefined,
     )
     env.globals.update(isinstance=isinstance)
 
@@ -26,6 +27,7 @@ class DocumentTableHTMLGenerator:
             renderer=markup_renderer,
             link_renderer=link_renderer,
             document_type=DocumentType.table(),
+            standalone=False,
         )
 
         return output

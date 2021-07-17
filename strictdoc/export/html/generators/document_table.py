@@ -1,5 +1,3 @@
-import os
-
 from jinja2 import Environment, PackageLoader, StrictUndefined
 
 from strictdoc.export.html.document_type import DocumentType

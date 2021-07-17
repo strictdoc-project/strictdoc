@@ -2,8 +2,6 @@ import concurrent
 import multiprocessing
 import sys
 
-from concurrent.futures import ProcessPoolExecutor
-
 
 class Parallelizer:
     def __init__(self):

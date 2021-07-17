@@ -1,5 +1,3 @@
-import os
-
 from jinja2 import Environment, PackageLoader, StrictUndefined
 from pygments import highlight
 from pygments.formatters.html import HtmlFormatter

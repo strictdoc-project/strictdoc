@@ -1,12 +1,6 @@
 from jinja2 import Environment, PackageLoader, StrictUndefined
-from pygments import highlight
-from pygments.formatters.html import HtmlFormatter
-from pygments.lexers.python import PythonLexer
 
-from strictdoc.core.finders.source_files_finder import SourceFile
 from strictdoc.core.traceability_index import TraceabilityIndex
-from strictdoc.export.html.document_type import DocumentType
-from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 
 
 class SourceFileCoverageHTMLGenerator:

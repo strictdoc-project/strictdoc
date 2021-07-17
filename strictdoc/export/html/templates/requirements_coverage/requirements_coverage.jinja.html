@@ -1,0 +1,74 @@
+{% set page_title = 'Source coverage' %}
+{% set template_type = 'Deep Traceability' %}
+
+{% extends "base.jinja.html" %}
+
+{% block head_scripts %}
+  <script type="text/javascript" src="{{static_path}}/toc.js"></script>
+  {# only for deep-trace: #}
+  <script type="text/javascript" src="{{static_path}}/jquery.min.js"></script>
+  <script type="text/javascript" src="{{static_path}}/pan-with-space.js"></script>
+  {{ super() }}
+{% endblock head_scripts %}
+
+{% block title %}Requirements coverage{% endblock %}
+{% block viewtype %}deep-traceability-view{% endblock %}
+
+{% block layout_nav %}
+
+  {# TODO: This does not work for multiple documents:
+     include "_shared/doc_nav.jinja.html" #}
+
+{% endblock layout_nav %}
+
+{% block aside_header_content %}
+  <a class="index-link" href="index.html">To Index</a>
+{% endblock aside_header_content %}
+
+{% block aside_content %}
+  {% include "requirements_coverage/document_list.jinja.html" %}
+{% endblock aside_content %}
+
+{% block header_content %}
+  <p>Requirements coverage</p>
+{% endblock header_content %}
+
+{% block content %}
+
+  {%- for document in document_tree.document_list -%}
+      {%- set document_iterator = traceability_index.get_document_iterator(document) -%}
+      <div id="{{loop.index}}" class="content">
+      {%- for section_or_requirement in document_iterator.all_content() %}
+        {%- if section_or_requirement.is_section and section_or_requirement.ng_has_requirements %}
+          <section class="content_section">
+            <div class="content_item" data-role="current">
+              {%- set section = section_or_requirement %}
+              {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
+                {% include "_shared/docsection.jinja.html" %}
+              {%- endwith -%}
+            </div>
+          </section>
+
+        {%- elif section_or_requirement.is_requirement %}
+        <section class="content_section">
+
+          {%- set requirement = section_or_requirement %}
+          <div class="content_item" data-role="current">
+            {%- with anchor=link_renderer.render_local_anchor(section_or_requirement), document_type="deeptrace" -%}
+            {% include "_shared/requirement.jinja.html" %}
+            {%- endwith -%}
+          </div>
+
+          <div class="content_item" data-role="children">
+          {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) -%}
+            {% include "single_document_traceability_deep/recursive_cell_children.jinja.html" %}
+          {%- endfor -%}
+          </div>
+
+        </section>
+        {%- endif %}
+      {%- endfor %}
+      </div>
+  {%- endfor %}
+
+{% endblock content %}

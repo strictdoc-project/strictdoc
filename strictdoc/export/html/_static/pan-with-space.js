@@ -1,7 +1,7 @@
 // This code in this file is a simplified version of the StackOverflow answer
 // taken from: https://stackoverflow.com/a/33948409/598057.
 
-$(document).ready(function() {
+$(document).ready(function () {
   var state = {
     spacePressed: false,
     isDown: false,
@@ -15,6 +15,8 @@ $(document).ready(function() {
     if (e.key === ' ' || e.key === 'Spacebar') {
       // ' ' is standard, 'Spacebar' was used by IE9 and Firefox < 37
 
+      e.preventDefault();
+      e.stopPropagation();
       state.spacePressed = true;
       $(element).css('cursor', 'move');
     }
@@ -85,7 +87,7 @@ $(document).ready(function() {
   });
 
   $(element).mousemove(function (e) {
-    if (!state.isDown){
+    if (!state.isDown) {
       return;
     }
 
@@ -115,6 +117,6 @@ $(document).ready(function() {
     e.preventDefault();
     e.stopPropagation();
 
-    state.isDown=false;
+    state.isDown = false;
   });
 });

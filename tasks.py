@@ -184,7 +184,17 @@ def lint_pylint(context):
         raise exc
 
 
-@task(lint_pylint, lint_black_diff)
+@task
+def lint_flake8(context):
+    command = oneline_command(
+        """
+        flake8 strictdoc --statistics --exit-zero --max-line-length 80
+        """
+    )
+    run_invoke_cmd(context, command)
+
+
+@task(lint_black_diff, lint_pylint, lint_flake8)
 def lint(_):
     pass
 

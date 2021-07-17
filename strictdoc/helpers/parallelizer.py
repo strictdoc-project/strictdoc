@@ -1,6 +1,7 @@
 import concurrent
 import multiprocessing
 import sys
+from queue import Empty
 
 
 class Parallelizer:
@@ -48,10 +49,11 @@ class Parallelizer:
                 result = self.output_queue.get(block=False, timeout=0.1)
                 results.append(result)
                 size -= 1
-            except:
+            except Empty:
                 if any(process.exitcode for process in self.processes):
                     print(
-                        "error: Parallelizer: One of the child processes has exited prematurely."
+                        "error: Parallelizer: One of the child processes "
+                        "has exited prematurely."
                     )
                     self.shutdown()
                     exit(1)

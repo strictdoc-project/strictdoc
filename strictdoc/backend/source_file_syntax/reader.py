@@ -265,7 +265,7 @@ class SourceFileTraceabilityReader:
         try:
             sdoc = self.read(sdoc_content, file_path=file_path)
             return sdoc
-        except NotImplementedError as exc:
+        except NotImplementedError:
             traceback.print_exc()
             exit(1)
         except StrictDocSemanticError as exc:

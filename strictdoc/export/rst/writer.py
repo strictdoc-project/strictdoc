@@ -75,7 +75,7 @@ class RSTWriter:
             output += "    :align: left\n"
             output += "    :header-rows: 0\n\n"
 
-            output += f"    * - **UID:**\n"
+            output += "    * - **UID:**\n"
             output += f"      - {section_content.uid}\n"
             output += "\n"
         else:

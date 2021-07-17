@@ -53,14 +53,17 @@ class SourceFileViewHTMLGenerator:
         # Ugly hack to split content into lines: Cutting off:
         # <div class="highlight"><pre> and </pre></div>
         # TODO: Implement proper splitting.
-        assert pygmented_source_file_content.startswith(
-            '<div class="highlight"><pre>'
-        )
+        start_pattern = '<div class="highlight"><pre>'
+        end_pattern = "</pre></div>\n"
+        assert pygmented_source_file_content.startswith(start_pattern)
         assert pygmented_source_file_content.endswith(
-            "</pre></div>\n"
+            end_pattern
         ), f"{pygmented_source_file_content}"
+
+        slice_start = len(start_pattern)
+        slice_end = len(pygmented_source_file_content) - len(end_pattern)
         pygmented_source_file_content = pygmented_source_file_content[
-            28 : len(pygmented_source_file_content) - 13
+            slice_start:slice_end
         ]
         pygmented_source_file_lines = pygmented_source_file_content.split("\n")
         if pygmented_source_file_lines[-1] == "":

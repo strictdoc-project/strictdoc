@@ -8,7 +8,7 @@ class RubyTemplate(string.Template):
 
 
 REQUIREMENT_FIELDS = """
-  ('UID: ' uid = /.+$/ '\n')? 
+  ('UID: ' uid = /.+$/ '\n')?
 
   ('STATUS: ' status = RequirementStatus '\n')?
 
@@ -17,7 +17,7 @@ REQUIREMENT_FIELDS = """
   ('SPECIAL_FIELDS:' '\n' special_fields += SpecialField)?
 
   ('REFS:' '\n' references *= Reference)?
-  
+
   ('TITLE: ' title = /.*$/ '\n')?
 
   ('STATEMENT: ' (statement = SingleLineString | statement_multiline = MultiLineString) '\n')?
@@ -35,7 +35,7 @@ Document[noskipws]:
   '[DOCUMENT]' '\n'
   // NAME: is deprecated. Both documents and sections now have TITLE:.
   (('NAME: ' name = /.*$/ '\n') | ('TITLE: ' title = /.*$/ '\n')?)
-  (config = DocumentConfig)? 
+  (config = DocumentConfig)?
   free_texts *= SpaceThenFreeText
   section_contents *= SectionOrRequirement
 ;
@@ -53,7 +53,7 @@ ConfigSpecialField[noskipws]:
 ;
 
 Section[noskipws]:
-  '[SECTION]' 
+  '[SECTION]'
   '\n'
   ('LEVEL: ' level = /[1-6]/ '\n')?
   'TITLE: ' title = /.*$/ '\n'
@@ -86,7 +86,7 @@ CompositeRequirement[noskipws]:
   '[COMPOSITE_REQUIREMENT]' '\n'
 
   #{REQUIREMENT_FIELDS}
-  
+
   requirements *= SpaceThenRequirement
 
   '\n'
@@ -98,7 +98,7 @@ SpecialField[noskipws]:
 ;
 
 TagRegex[noskipws]:
-  /[\w\/-]+( *[\w\/-]+)*/
+  /[\\w\\/-]+( *[\\w\\/-]+)*/
 ;
 
 TagXs[noskipws]:
@@ -137,7 +137,7 @@ FileReference[noskipws]:
 ;
 
 FreeText[noskipws]:
-  text = /(?ms)\[FREETEXT\]\n(.*?)\n\[\/FREETEXT\]/ '\n'
+  text = /(?ms)\\[FREETEXT\\]\n(.*?)\n\\[\\/FREETEXT\\]/ '\n'
 ;
 """
 ).substitute(REQUIREMENT_FIELDS=REQUIREMENT_FIELDS)

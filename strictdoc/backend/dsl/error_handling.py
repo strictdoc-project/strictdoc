@@ -53,7 +53,7 @@ class StrictDocSemanticError(Exception):
         example_fields = os.linesep.join(example_field_components)
         return StrictDocSemanticError(
             f"Undeclared special field: {field_name}",
-            f"Requirement's special fields must be declared in [DOCUMENT].SPECIAL_FIELDS",
+            "Requirement's special fields must be declared in [DOCUMENT].SPECIAL_FIELDS",
             f"[DOCUMENT]\nSPECIAL_FIELDS:\n{example_fields}",
             line=line,
             col=col,
@@ -80,7 +80,7 @@ class StrictDocSemanticError(Exception):
 
         return StrictDocSemanticError(
             f"Requirement is missing required special fields: {missing_special_fields}",
-            f"All fields that are declared in [DOCUMENT].SPECIAL_FIELDS section as 'REQUIRED: Yes' must be present in every requirement.",
+            "All fields that are declared in [DOCUMENT].SPECIAL_FIELDS section as 'REQUIRED: Yes' must be present in every requirement.",
             f"{example}",
             line=line,
             col=col,
@@ -103,7 +103,7 @@ class StrictDocSemanticError(Exception):
         example_fields = os.linesep.join(example_field_components)
         return StrictDocSemanticError(
             f"Requirement is missing a required special field: {required_special_field}.",
-            f"All fields that are declared in [DOCUMENT].SPECIAL_FIELDS section as 'REQUIRED: Yes' must be present in every requirement.",
+            "All fields that are declared in [DOCUMENT].SPECIAL_FIELDS section as 'REQUIRED: Yes' must be present in every requirement.",
             f"[DOCUMENT]\nSPECIAL_FIELDS:\n{example_fields}",
             line=line,
             col=col,

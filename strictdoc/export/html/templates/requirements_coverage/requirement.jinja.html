@@ -9,7 +9,7 @@ data-status='{{ requirement.status.lower() }}'
     <div data-role='anchor' id="{{ anchor }}"></div>
     {%- endif -%}
 
-    <div class="section-title" data-level="{{ requirement.context.title_number_string }}">{{ requirement.uid }}</div>
+    <div class="section-title" data-level="{{ requirement.context.title_number_string }}">{{ requirement.uid if requirement.uid else '[no UID]' }}</div>
     <div>{{ requirement.title if requirement.title else (requirement.uid if requirement.uid else '') }}</div>
 
   {# {%- if traceability_index.has_parent_requirements(requirement) %}

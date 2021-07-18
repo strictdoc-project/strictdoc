@@ -371,7 +371,9 @@ ul.requirement_child {
 }
 
 .recursive_column {
-  min-width: var(--card-width);
+  /* min-width: var(--card-width); */
+  width: -moz-fit-content;
+  width: fit-content;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -385,6 +387,8 @@ ul.requirement_child {
 .recursive_cell {
   position: relative;
   height: 100%;
+  width: -moz-fit-content;
+  width: fit-content;
 }
 /* table */
 

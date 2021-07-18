@@ -20,10 +20,12 @@ $(document).ready(function () {
       state.spacePressed = true;
       $(element).css('cursor', 'move');
     }
+
     var moveFactor = 20;
-    if (event.altKey) {
+    if (e.altKey) {
       moveFactor = 250;
     }
+
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       e.stopPropagation();

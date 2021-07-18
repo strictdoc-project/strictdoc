@@ -78,11 +78,10 @@ class ExportAction:
         if "html" in config.formats or "html-standalone" in config.formats:
             Path(output_html_root).mkdir(parents=True, exist_ok=True)
             HTMLGenerator.export_tree(
-                config.formats,
+                config,
                 document_tree,
                 traceability_index,
                 output_html_root,
-                config.strictdoc_root_path,
                 strictdoc_last_update,
                 asset_dirs,
                 parallelizer,

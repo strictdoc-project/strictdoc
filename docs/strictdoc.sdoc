@@ -1177,13 +1177,26 @@ REFS:
 TITLE: Primary text implementation
 STATEMENT: SDOC format shall support encoding the Strict Doc Data Model in a plain-text human readable form.
 
-[REQUIREMENT]
+[COMPOSITE_REQUIREMENT]
 UID: SDOC-FMT-GRAMMAR
 REFS:
 - TYPE: Parent
   VALUE: SDOC-HIGH-DATA-MODEL
 TITLE: Grammar
 STATEMENT: SDOC format shall be based on a fixed grammar.
+
+[REQUIREMENT]
+TITLE: No indentation
+STATEMENT: SDoc grammar's building blocks shall not allow any indentation.
+COMMENT: >>>
+Rationale: Adding indentation to any of the fields does not scale well when the
+documents have deeply nested section structure as well as when the size of the
+paragraphs becomes sufficiently large. Keeping every keyword like [REQUIREMENT]
+or [COMMENT] with no indentation ensures that one does not have to think about
+possible indentation issues.
+<<<
+
+[/COMPOSITE_REQUIREMENT]
 
 [REQUIREMENT]
 TITLE: Type safety
@@ -1193,6 +1206,15 @@ STATEMENT: SDOC format shall allow type-safe encoding of requirement documents.
 
 [SECTION]
 TITLE: Document Generators
+
+[SECTION]
+TITLE: General
+
+[REQUIREMENT]
+TITLE: Generated file names
+STATEMENT: StrictDoc shall preserve original document file names when generating to all export formats.
+
+[/SECTION]
 
 [SECTION]
 TITLE: HTML Export
@@ -1244,6 +1266,11 @@ STATEMENT: StrictDoc shall support exporting documents to Excel format.
 TITLE: Validation
 
 [REQUIREMENT]
+TITLE: Validation: Uniqueness of UID identifiers in a document tree
+STATEMENT: StrictDoc shall ensure that each UID used in a document tree is unique.
+COMMENT: This is implemented but the error message shall be made more readable.
+
+[REQUIREMENT]
 TITLE: Valid HTML markup
 STATEMENT: StrictDoc's HTML export tests shall validate the generated HTML markup.
 COMMENT: First candidate: Table of contents and its nested ``<ul>/<li>`` items.
@@ -1282,63 +1309,43 @@ Sphinx and Docutils shall be used for the following capabilities:
 
 [/SECTION]
 
-[SECTION]
-TITLE: SDoc grammar
-
-[REQUIREMENT]
-TITLE: No indentation
-STATEMENT: SDoc grammar's building blocks shall not allow any indentation.
-COMMENT: >>>
-Rationale: Adding indentation to any of the fields does not scale well when the
-documents have deeply nested section structure as well as when the size of the
-paragraphs becomes sufficiently large. Keeping every keyword like [REQUIREMENT]
-or [COMMENT] with no indentation ensures that one does not have to think about
-possible indentation issues.
-<<<
-
-[/SECTION]
-
 [/SECTION]
 
 [SECTION]
 TITLE: Backlog
 
-[REQUIREMENT]
-TITLE: Generated file names
-STATEMENT: StrictDoc shall preserve original document file names when generating to all export formats.
-COMMENT: >>>
-StrictDoc used to create file names that were document names. This has been
-changed for HTML but not yet for RST.
-<<<
-
-[REQUIREMENT]
-TITLE: Validation: Uniqueness of UID identifiers in a document tree
-STATEMENT: StrictDoc shall ensure that each UID used in a document tree is unique.
-COMMENT: This is implemented but the error message shall be made more readable.
-
-[REQUIREMENT]
-TITLE: StrictDoc as library
-STATEMENT: StrictDoc shall support it use as a Python library.
-COMMENT: >>>
-Such a use allows a more fine-grained access to the StrictDoc's modules, such
-as Grammar, Import, Export classes, etc.
-<<<
-
-[REQUIREMENT]
-UID: BACKLOG-FUZZY-SEARCH
-REFS:
-- TYPE: Parent
-  VALUE: GOAL-4-CHANGE-MANAGEMENT
-TITLE: Fuzzy requirements search
-STATEMENT: StrictDoc shall support finding relevant requirements.
-COMMENT: >>>
-This feature can be implemented in the CLI as well as in the future GUI. A fuzzy
-requirements search can help to find existing requirements and also identify
-relevant requirements when creating new requirements.
-<<<
+[FREETEXT]
+**Note:** The items below are weakly sorted from top to bottom. The topmost
+items are either work-in-progress or will be implemented next.
+[/FREETEXT]
 
 [SECTION]
-TITLE: Export capabilities
+TITLE: Traceability and coverage
+
+[REQUIREMENT]
+TITLE: Linking with implementation artifacts
+STATEMENT: StrictDoc shall support linking requirements to files.
+
+[REQUIREMENT]
+TITLE: Requirement checksumming
+STATEMENT: StrictDoc shall support calculation of checksums for requirements.
+COMMENT: >>>
+This feature is relatively easy to implement but the implementation is postponed
+until the linking between requirements and files is implemented.
+<<<
+
+[REQUIREMENT]
+TITLE: Documentation coverage
+STATEMENT: StrictDoc shall generate requirements coverage information.
+
+[/SECTION]
+
+[SECTION]
+TITLE: Export and import capabilities
+
+[REQUIREMENT]
+TITLE: ReqIF import/export
+STATEMENT: StrictDoc shall support ReqIF format.
 
 [REQUIREMENT]
 TITLE: CSV import/export
@@ -1347,10 +1354,6 @@ STATEMENT: StrictDoc shall support exporting documents to CSV format.
 [REQUIREMENT]
 TITLE: PlantUML export
 STATEMENT: StrictDoc shall support exporting documents to PlantUML format.
-
-[REQUIREMENT]
-TITLE: ReqIF import/export
-STATEMENT: StrictDoc shall support ReqIF format.
 
 [REQUIREMENT]
 TITLE: Confluence import/export
@@ -1373,26 +1376,68 @@ STATEMENT: StrictDoc shall support rendering text/code blocks into Markdown synt
 
 [/SECTION]
 
-[SECTION]
-TITLE: Traceability and coverage
+[REQUIREMENT]
+TITLE: StrictDoc as library
+STATEMENT: StrictDoc shall support it use as a Python library.
+COMMENT: >>>
+Such a use allows a more fine-grained access to the StrictDoc's modules, such
+as Grammar, Import, Export classes, etc.
+<<<
 
 [REQUIREMENT]
-TITLE: Linking with implementation artifacts
-STATEMENT: StrictDoc shall support linking requirements to files.
-
-[REQUIREMENT]
-TITLE: Requirement checksumming
-STATEMENT: StrictDoc shall support calculation of checksums for requirements.
-
-[REQUIREMENT]
-TITLE: Documentation coverage
-STATEMENT: StrictDoc shall generate requirements coverage information.
-
-[/SECTION]
+UID: BACKLOG-FUZZY-SEARCH
+REFS:
+- TYPE: Parent
+  VALUE: GOAL-4-CHANGE-MANAGEMENT
+TITLE: Fuzzy requirements search
+STATEMENT: StrictDoc shall support finding relevant requirements.
+COMMENT: >>>
+This feature can be implemented in the CLI as well as in the future GUI. A fuzzy
+requirements search can help to find existing requirements and also identify
+relevant requirements when creating new requirements.
+<<<
 
 [REQUIREMENT]
 TITLE: Filtering by tags
 STATEMENT: StrictDoc shall support filtering filtering by tags.
+
+[SECTION]
+TITLE: Advanced
+
+[COMPOSITE_REQUIREMENT]
+TITLE: Graphical User Interface (GUI)
+STATEMENT: StrictDoc shall provide a Graphical User Interface (GUI).
+COMMENT: >>>
+Several trade-offs to consider:
+
+- Desktop vs Web. Rather web-based, i.e. Python backend and JS frontend, but
+  which technology?
+- Still keep the current behavior of a statically generated website?
+<<<
+
+[REQUIREMENT]
+TITLE: Web server and editable HTML pages
+STATEMENT: >>>
+StrictDoc shall provide a web server that serves as a StrictDoc backend for
+reading and writing SDoc files.
+<<<
+
+[/COMPOSITE_REQUIREMENT]
+
+[REQUIREMENT]
+TITLE: Facts table. Invariants calculation.
+STATEMENT: >>>
+StrictDoc shall support creation of fact tables and allow calculation of
+invariants for constraints enforcement.
+<<<
+
+[REQUIREMENT]
+TITLE: FMEA/FMECA tables
+STATEMENT: >>>
+StrictDoc shall support creation of FMEA/FMECA safety analysis documents.
+<<<
+
+[/SECTION]
 
 [SECTION]
 TITLE: Open questions
@@ -1425,35 +1470,6 @@ only work with one input folder with a single doc tree.
 [/FREETEXT]
 
 [/SECTION]
-
-[/SECTION]
-
-[SECTION]
-TITLE: Advanced
-
-[REQUIREMENT]
-TITLE: Facts table. Invariants calculation.
-STATEMENT: >>>
-StrictDoc shall support creation of fact tables and allow calculation of
-invariants for constraints enforcement.
-<<<
-
-[REQUIREMENT]
-TITLE: FMEA/FMECA tables
-STATEMENT: >>>
-StrictDoc shall support creation of FMEA/FMECA safety analysis documents.
-<<<
-
-[REQUIREMENT]
-TITLE: Graphical User Interface (GUI)
-STATEMENT: StrictDoc shall provide a Graphical User Interface (GUI).
-
-[REQUIREMENT]
-TITLE: Web server and editable HTML pages
-STATEMENT: >>>
-StrictDoc shall provide a web server that serves as a StrictDoc backend for
-reading and writing SDoc files.
-<<<
 
 [/SECTION]
 

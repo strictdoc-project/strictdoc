@@ -1,0 +1,70 @@
+<article class="requirement"
+{%- if requirement.status %}
+data-status='{{ requirement.status.lower() }}'
+{%- endif %}>
+
+  <section class="requirement_section" data-section='meta'>
+
+    {%- if anchor is defined -%}
+    <div data-role='anchor' id="{{ anchor }}"></div>
+    {%- endif -%}
+
+    <div class="section-title" data-level="{{ requirement.context.title_number_string }}">{{ requirement.uid }}</div>
+    <div>{{ requirement.title if requirement.title else (requirement.uid if requirement.uid else '') }}</div>
+
+  {# {%- if traceability_index.has_parent_requirements(requirement) %}
+  <ul class="requirement_parent">
+    {%- for requirement in traceability_index.get_parent_requirements(requirement) %}
+    <li>
+      <a href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
+        {%- if requirement.uid %}
+        <span class="requirement_parent-uid">{{ requirement.uid }}</span>
+        {%- endif %}
+        {{ requirement.title }}
+      </a>
+    </li>
+    {%- endfor %}
+    </ul>
+  {%- endif %} #}
+
+  {# {%- if traceability_index.has_children_requirements(requirement) %}
+  <ul class="requirement_child">
+    {%- for requirement in traceability_index.get_children_requirements(requirement) %}
+    <li>
+      <a href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
+        {%- if requirement.uid %}
+        <span class="requirement_child-uid">{{ requirement.uid }}</span>
+        {%- endif %}
+        {{ requirement.title }}
+      </a>
+    </li>
+    {%- endfor %}
+    </ul>
+  {%- endif %} #}
+
+  {# {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
+  {%- if requirement_file_links %}
+  <ul class="requirement_file">
+    {%- for link, opt_ranges in requirement_file_links %}
+      {%- if opt_ranges -%}
+        {%- for range in opt_ranges %}
+          <li>
+            <a href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.uid }}#{{ range.ng_source_line_begin }}#{{ range.ng_source_line_end }}">
+              <b>{{ link }}</b>, lines: {{ range.ng_source_line_begin }}-{{ range.ng_source_line_end }}
+            </a>
+          </li>
+        {%- endfor -%}
+      {%- else -%}
+        <li>
+          <a href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.uid }}">
+            <b>{{ link }}</b>
+          </a>
+        </li>
+      {%- endif -%}
+    {%- endfor -%}
+    </ul>
+  {%- endif %} #}
+
+  </section>
+
+</article>

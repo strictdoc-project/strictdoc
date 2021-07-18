@@ -14,6 +14,7 @@
   width: fit-content;
 }
 
+.requirements-coverage-view .content,
 .deep-traceability-view .content {
   grid-template-columns:  minmax(min-content, max-content)
                           max-content

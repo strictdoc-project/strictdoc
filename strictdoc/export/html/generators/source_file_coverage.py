@@ -1,5 +1,6 @@
 from jinja2 import Environment, PackageLoader, StrictUndefined
 
+from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 
 
@@ -12,6 +13,7 @@ class SourceFileCoverageHTMLGenerator:
 
     @staticmethod
     def export(
+        config: ExportCommandConfig,
         document_tree,
         traceability_index: TraceabilityIndex,
     ):
@@ -22,6 +24,7 @@ class SourceFileCoverageHTMLGenerator:
         )
 
         output += template.render(
+            config=config,
             document_tree=document_tree,
             traceability_index=traceability_index,
             static_path="_static",

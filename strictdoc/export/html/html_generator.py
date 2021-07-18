@@ -3,8 +3,10 @@ from enum import Enum
 from functools import partial
 from pathlib import Path
 
+from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
+from strictdoc.core.source_tree import SourceTree
 from strictdoc.export.html.generators.document import DocumentHTMLGenerator
 from strictdoc.export.html.generators.document_deep_trace import (
     DocumentDeepTraceHTMLGenerator,
@@ -50,33 +52,32 @@ class ExportMode(Enum):
 class HTMLGenerator:
     @staticmethod
     def export_tree(
-        formats_string,
+        config: ExportCommandConfig,
         document_tree: DocumentTree,
         traceability_index,
         output_html_root,
-        strictdoc_src_path,
         strictdoc_last_update,
         asset_dirs,
         parallelizer,
     ):
-        if "html" in formats_string:
-            if "html-standalone" in formats_string:
+        if "html" in config.formats:
+            if "html-standalone" in config.formats:
                 export_mode = ExportMode.DOCTREE_AND_STANDALONE
             else:
                 export_mode = ExportMode.DOCTREE
         else:
-            if "html-standalone" in formats_string:
+            if "html-standalone" in config.formats:
                 export_mode = ExportMode.STANDALONE
             else:
                 raise NotImplementedError
 
         export_options = ExportOptions(
-            export_mode, strictdoc_src_path, strictdoc_last_update
+            export_mode, config.strictdoc_root_path, strictdoc_last_update
         )
         link_renderer = LinkRenderer(output_html_root)
 
         writer = DocumentTreeHTMLGenerator()
-        output = writer.export(document_tree)
+        output = writer.export(config, document_tree)
 
         output_html_static_files = "{}/_static".format(output_html_root)
         output_file = "{}/index.html".format(output_html_root)
@@ -85,7 +86,7 @@ class HTMLGenerator:
             file.write(output)
 
         static_files_src = os.path.join(
-            strictdoc_src_path, "strictdoc/export/html/_static"
+            config.strictdoc_root_path, "strictdoc/export/html/_static"
         )
         sync_dir(static_files_src, output_html_static_files)
         for asset_dir in asset_dirs:
@@ -106,7 +107,8 @@ class HTMLGenerator:
 
         parallelizer.map(document_tree.document_list, export_binding)
 
-        if document_tree.source_tree:
+        if config.experimental_enable_file_traceability:
+            assert isinstance(document_tree.source_tree, SourceTree)
             print("Generating source files")
             for source_file in document_tree.source_tree.source_files:
                 with measure_performance(
@@ -125,8 +127,9 @@ class HTMLGenerator:
                         file.write(document_content)
 
             source_coverage_content = SourceFileCoverageHTMLGenerator.export(
-                document_tree,
-                traceability_index,
+                config=config,
+                document_tree=document_tree,
+                traceability_index=traceability_index,
             )
             output_html_source_coverage = os.path.join(
                 output_html_root, "source_coverage.html"

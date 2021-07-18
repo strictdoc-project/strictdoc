@@ -10,14 +10,17 @@
                           minmax(var(--card-width), calc(2*var(--card-width)))
                           minmax(min-content, max-content);
   gap: var(--traceability-arrow) 0;
+  width: -moz-fit-content;
   width: fit-content;
 }
 
+.requirements-coverage-view .content,
 .deep-traceability-view .content {
   grid-template-columns:  minmax(min-content, max-content)
                           max-content
                           minmax(min-content, max-content);
   gap: var(--traceability-arrow) 0;
+  width: -moz-fit-content;
   width: fit-content;
 }
 

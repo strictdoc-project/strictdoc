@@ -48,6 +48,14 @@ article {
   height: 100%;
 }
 
+.requirements-coverage-view article {
+  width: calc(var(--card-width)*0.75);
+  padding: calc(var(--base-padding)*0.75) var(--base-padding);
+  height: 100%;
+  font-size: .85em;
+  line-height: 1.4;
+}
+
 .document-view article {
   background-color: var(--color-bg-contrast);
   padding: calc(var(--base-padding)*1) calc(var(--base-padding)*3);
@@ -161,6 +169,10 @@ h6 { font-size: 1em; }
 .deep-traceability-view .section-title {
   font-size: 1.1em;
   line-height: 1.2;
+}
+
+.requirements-coverage-view .section-title {
+  margin: 0;
 }
 
 .table-view .section-title {
@@ -346,6 +358,7 @@ ul.requirement_child {
 
 /* free-text */
 
+.requirements-coverage-view .free-text,
 .traceability-view .free-text,
 .deep-traceability-view .free-text {
   font-size: .85em;
@@ -371,7 +384,9 @@ ul.requirement_child {
 }
 
 .recursive_column {
-  min-width: var(--card-width);
+  /* min-width: var(--card-width); */
+  width: -moz-fit-content;
+  width: fit-content;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -385,6 +400,8 @@ ul.requirement_child {
 .recursive_cell {
   position: relative;
   height: 100%;
+  width: -moz-fit-content;
+  width: fit-content;
 }
 /* table */
 
@@ -471,4 +488,17 @@ input:checked + .std-switch_slider:before {
   -webkit-transform: translateX(18px);
   -ms-transform: translateX(18px);
   transform: translateX(18px);
+}
+
+/* requirements-coverage */
+
+.requirements-coverage-document-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 1rem 0;
+  padding-top: 1rem;
+}
+
+.requirements-coverage-document-title:first-child {
+  margin-top: -1rem;
 }

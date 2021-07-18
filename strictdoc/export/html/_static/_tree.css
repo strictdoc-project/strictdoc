@@ -116,6 +116,7 @@
   }
 
   .std-tree_aside {
+    width: -moz-fit-content;
     width: fit-content;
     padding-left: 20px;
     display: flex;

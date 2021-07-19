@@ -39,6 +39,18 @@ article {
   margin-left: var(--traceability-arrow);
 }
 
+article.requirement.nouid {
+  background-color: rgba(255, 0, 0, 0.1);
+}
+
+article.requirement.nouid .section-title {
+  color: #502222;
+}
+
+article.requirement.highlighted {
+  background-color: var(--color-highlight);
+}
+
 .traceability-view article + article {
   margin-top: var(--base-padding);
 }

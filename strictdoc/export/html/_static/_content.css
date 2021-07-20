@@ -5,6 +5,12 @@
   place-items: stretch stretch;
 }
 
+.document-view .content {
+  background-color: var(--color-bg-contrast);
+  max-width: 900px;
+  padding: calc(var(--base-padding)*2);
+}
+
 .traceability-view .content {
   grid-template-columns:  minmax(min-content, max-content)
                           minmax(var(--card-width), calc(2*var(--card-width)))

@@ -10,6 +10,8 @@
       {{ section.title if section.title else '' }}
     </h{{ section.ng_level }}>
   </section>
+
+  {%- if section.free_texts -%}
   <section data-section="description" class="docsection_section">
     {%- for free_text in section.free_texts -%}
     <div class="free-text">
@@ -17,4 +19,6 @@
     </div>
     {%- endfor -%}
   </section>
+  {%- endif -%}
+
 </article>

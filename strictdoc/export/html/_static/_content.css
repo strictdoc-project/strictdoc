@@ -47,6 +47,11 @@
 
 .content_item {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-content: stretch;
+  align-items: stretch;
 }
 
 /* traceability */

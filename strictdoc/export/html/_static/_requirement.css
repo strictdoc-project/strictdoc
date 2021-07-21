@@ -296,49 +296,47 @@ dl.requirement_meta {
 
 /* requirement: parent / child / file */
 
-.requirement_file,
-ul.requirement_file,
-.requirement_parent,
-ul.requirement_parent,
-.requirement_child,
-ul.requirement_child {
-  font-size: 14px;
+ul.requirement_link {
+  font-size: .85em;
   line-height: 1.4;
   list-style: none;
   padding: 0;
-  margin-top: .5rem;
 }
-.requirement_file li::before,
-.requirement_parent li::before,
-.requirement_child li::before {
-  color: var(--color-accent-dark);
+
+.requirement_link a {
   display: inline-block;
-  width: 1.5em;
+  position: relative;
+  margin-left: 1.5rem;
 }
-.requirement_file li::before {
-  content: '</>';
+
+.requirement_link a::before {
   color: #808080;
+  position: absolute;
+  left: -1.5rem;
 }
-.requirement_parent li::before {
-  content: '\2190';
-}
-.requirement_child li::before {
-  content: '\2192';
-}
-.requirement_file a:link,
-.requirement_file a:visited,
-.requirement_parent a:link,
-.requirement_parent a:visited,
-.requirement_child a:link,
-.requirement_child a:visited {
+
+.requirement_link a:link,
+.requirement_link a:visited {
   color: var(--color-accent-dark);
   text-decoration: underline;
 }
-.requirement_file a:hover,
-.requirement_parent a:hover,
-.requirement_child a:hover {
+
+.requirement_link a:hover {
   text-decoration: none;
 }
+
+a.requirement_link-file::before {
+  content: '</>';
+}
+
+a.requirement_link-parent::before {
+  content: '\2190';
+}
+
+a.requirement_link-child::before {
+  content: '\2192';
+}
+
 .requirement_parent-uid,
 .requirement_child-uid {
   position: relative;

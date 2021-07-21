@@ -309,6 +309,8 @@ ul.requirement_link {
   display: inline-block;
   position: relative;
   margin-left: 1.5rem;
+  width: calc(100% - 1.5rem);
+  overflow-wrap: break-word;
 }
 
 .requirement_link a::before {

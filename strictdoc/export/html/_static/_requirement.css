@@ -56,6 +56,8 @@ article.requirement.highlighted {
   flex-grow: 1;
   font-size: .85em;
   line-height: 1.4;
+  /* for links tree: */
+  z-index: 2;
 }
 
 /* section */
@@ -325,6 +327,10 @@ ul.requirement_link {
   text-decoration: none;
 }
 
+.requirement_link a::before {
+  content: '\2014';
+}
+
 a.requirement_link-file::before {
   content: '</>';
 }
@@ -527,4 +533,61 @@ input:checked + .std-switch_slider:before {
 
 .requirements-coverage-document-title:first-child {
   margin-top: -1rem;
+}
+
+/* details */
+
+details.requirement_files {
+  display: block;
+  position: relative;
+  width: calc(var(--card-width)*0.75);
+  padding-left: var(--base-padding);
+
+  overflow: hidden;
+  padding-bottom: 0.5rem;
+}
+
+details.requirement_files summary {
+  display: block;
+  cursor: pointer;
+  user-select: none;
+}
+
+details.requirement_files summary::-webkit-details-marker {
+  display: none;
+}
+
+details.requirement_files summary::before {
+  /* content: '⊕'; */
+  content: '\25B6';
+  text-align: right;
+  line-height: 1;
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+}
+
+details.requirement_files[open] > summary {
+  display: none;
+}
+
+details.requirement_files ul.requirement_link {
+  font-size: 0.75rem;
+  margin: 0;
+  /* border-left: 1px solid var(--color-fg-contrast); */
+}
+
+details.requirement_files ul.requirement_link li {
+  position: relative;
+  bottom: -.5rem;
+}
+
+details.requirement_files ul.requirement_link li a::before {
+  content: '';
+  width: 1rem;
+  height: 3rem;
+  top: -2.5rem;
+  /* left: calc(-1.5rem - 1px); */
+  border-bottom: 1px solid var(--color-fg-contrast);
+  border-left: 1px solid var(--color-fg-contrast);
 }

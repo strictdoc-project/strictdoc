@@ -11,13 +11,13 @@
   {# LINKS #}
   {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
   {%- if requirement_file_links %}
-  <ul class="requirement_file">
+  <ul class="requirement_link">
     {%- for link, opt_ranges in requirement_file_links %}
       {%- if opt_ranges -%}
         {%- for range in opt_ranges %}
           <li>
             <a
-              class="pointer"
+              class="pointer requirement_link-file"
               data-begin="{{ range.ng_source_line_begin }}"
               data-end="{{ range.ng_source_line_end }}"
               href="{{ link_renderer.render_requirement_in_source_file_range_link(requirement, link, source_file, range) }}"
@@ -33,13 +33,14 @@
       {%- else -%}
         {%- if source_file.in_doctree_source_file_rel_path == link -%}
           <li>
-            <span class="current_file_pseudolink">
+            <span class="current_file_pseudolink requirement_link-file">
               {{ link }}
             </span>
           </li>
         {%- else -%}
           <li>
             <a
+              class="requirement_link-file"
               href="{{ link_renderer.render_requirement_in_source_file_link(requirement, link, source_file) }}"
             >
               {{ link }}

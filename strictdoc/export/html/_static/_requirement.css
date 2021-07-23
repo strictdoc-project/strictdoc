@@ -317,7 +317,12 @@ ul.requirement_link {
   padding: 0;
 }
 
-.requirement_link a {
+.source-file-view ul.requirement_link li {
+  margin-top: 0.5rem;
+}
+
+.requirement_link a,
+.requirement_link li > span {
   display: inline-block;
   position: relative;
   margin-left: 1.5rem;
@@ -325,7 +330,8 @@ ul.requirement_link {
   overflow-wrap: break-word;
 }
 
-.requirement_link a::before {
+.requirement_link a::before,
+.requirement_link li > span::before {
   color: #808080;
   position: absolute;
   left: -1.5rem;
@@ -345,7 +351,8 @@ ul.requirement_link {
   content: '\2014';
 } */
 
-a.requirement_link-file::before {
+a.requirement_link-file::before,
+.requirement_link-file::before {
   content: '</>';
 }
 

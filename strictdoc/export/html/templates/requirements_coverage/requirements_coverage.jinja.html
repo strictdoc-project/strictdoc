@@ -1,6 +1,11 @@
 {% set page_title = 'Requirements coverage' %}
 {% extends "base.jinja.html" %}
 
+{% block head_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{static_path}}/_requirement-tree.css"/>
+{% endblock head_css %}
+
 {% block head_scripts %}
   {{ super() }}
   <script type="text/javascript" src="{{static_path}}/jquery.min.js"></script>
@@ -31,6 +36,9 @@
       <div class="content">
       {%- for section_or_requirement in document_iterator.all_content() %}
         {%- if section_or_requirement.is_section and section_or_requirement.ng_has_requirements %}
+
+        {# TODO Stanilaw: iterate only throw requirements #}
+
           {# <section class="content_section">
             <div class="content_item" data-role="current">
               {%- set section = section_or_requirement %}
@@ -51,11 +59,9 @@
           </div>
 
           <div class="content_item" data-role="children">
-          {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) -%}
-          {%- with partial="requirements_coverage/requirement.jinja.html" -%}
-            {% include "_shared/recursive_cell_right.jinja.html" %}
+          {%- with requirement=section_or_requirement, requirement_partial="requirements_coverage/requirement.jinja.html" -%}
+            {% include "_shared/requirement_tree_right.jinja.html" %}
           {%- endwith -%}
-          {%- endfor -%}
           </div>
 
         </section>

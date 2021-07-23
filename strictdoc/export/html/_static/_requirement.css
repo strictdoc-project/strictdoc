@@ -46,18 +46,30 @@ article.requirement.highlighted {
 
 .deep-traceability-view article {
   width: var(--card-width);
-  /* height: 100%; */
   flex-grow: 1;
 }
 
 .requirements-coverage-view article {
-  width: calc(var(--card-width)*0.75);
-  /* height: 100%; */
+  /* width: calc(var(--card-width)*0.75); */
+  width: auto;
   flex-grow: 1;
   font-size: .85em;
   line-height: 1.4;
-  /* for links tree: */
-  z-index: 2;
+}
+
+.requirements-coverage-view_node {
+  width: calc(var(--card-width)*0.75);
+}
+
+.requirements-coverage-view_node a {
+  color: var(--color-accent);
+  font-size: .75em;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.requirements-coverage-view_node a:hover {
+  text-decoration: underline;
 }
 
 /* section */

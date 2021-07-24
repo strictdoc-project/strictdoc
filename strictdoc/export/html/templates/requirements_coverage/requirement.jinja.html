@@ -31,7 +31,7 @@ data-uid='{{ requirement.uid }}'
       {%- for range in opt_ranges %}
         <li class="requirement-tree_downward_node">
           <div class="requirement-tree_downward_item">
-          <a class="" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.uid }}#{{ range.ng_source_line_begin }}#{{ range.ng_source_line_end }}">
+          <a class="" href="{{ link_renderer.render_source_file_link_from_root(requirement, link) }}#{{ requirement.uid }}#{{ range.ng_source_line_begin }}#{{ range.ng_source_line_end }}">
             <b>[ {{ range.ng_source_line_begin }}-{{ range.ng_source_line_end }} ]</b> {{ link }}
           </a>
           </div>
@@ -40,7 +40,7 @@ data-uid='{{ requirement.uid }}'
     {%- else -%}
       <li class="requirement-tree_downward_node">
         <div class="requirement-tree_downward_item">
-        <a href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.uid }}">
+        <a href="{{ link_renderer.render_source_file_link_from_root(requirement, link) }}#{{ requirement.uid }}">
           {{ link }}
         </a>
         </div>

@@ -130,6 +130,7 @@ class HTMLGenerator:
                 config=config,
                 document_tree=document_tree,
                 traceability_index=traceability_index,
+                link_renderer=link_renderer,
             )
             output_html_source_coverage = os.path.join(
                 output_html_root, "source_coverage.html"

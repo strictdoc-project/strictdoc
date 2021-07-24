@@ -78,6 +78,13 @@ class LinkRenderer:
         source_file_link = f"{path_prefix}/_source_files/{document.meta.output_document_dir_rel_path}/{source_file_link}.html"
         return source_file_link
 
+    def render_source_file_link_from_root(
+        self, requirement: Requirement, source_file_link: str
+    ):
+        document: Document = requirement.ng_document_reference.get_document()
+        source_file_link = f"_source_files/{document.meta.output_document_dir_rel_path}/{source_file_link}.html"
+        return source_file_link
+
     def render_source_file_link_from_source_file(
         self, requirement: Requirement, source_file_link: str
     ):

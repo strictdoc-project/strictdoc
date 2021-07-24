@@ -7,7 +7,7 @@ RUN: cat %S/Output/html/05_multiple_files_per_requirement/input.html | filecheck
 CHECK-HTML: <a{{.*}}href="../_source_files/05_multiple_files_per_requirement/file.py.html#REQ-001">
 
 RUN: cat %S/Output/html/_source_files/05_multiple_files_per_requirement/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
-CHECK-SOURCE-FILE: <a{{.*}}href="../../05_multiple_files_per_requirement/input.html#REQ-001"{{.*}}>
+CHECK-SOURCE-FILE: <a{{.*}}href="../../05_multiple_files_per_requirement/input.html#1-REQ-001"{{.*}}>
 
 RUN: cat %S/Output/html/_source_files/05_multiple_files_per_requirement/file.py.html | grep "Requirement Title" | filecheck %s --dump-input=fail --check-prefix CHECK-NO-DUPLICATES
 RUN: cat %S/Output/html/_source_files/05_multiple_files_per_requirement/file2.py.html | grep "Requirement Title" | filecheck %s --dump-input=fail --check-prefix CHECK-NO-DUPLICATES

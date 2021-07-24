@@ -1,8 +1,8 @@
 {# needs requirement_partial for node content #}
 
-{%- if traceability_index.has_children_requirements(requirement) %}
-<ul class="requirement-tree requirement-tree_right">
-{%- for requirement in traceability_index.get_children_requirements(requirement) -%}
+{%- if traceability_index.has_parent_requirements(requirement) %}
+<ul class="requirement-tree requirement-tree_left">
+{%- for requirement in traceability_index.get_parent_requirements(requirement) -%}
 
   <li class="requirement-tree_branch">
     <div class="requirement-tree_node">
@@ -11,7 +11,7 @@
     {%- endwith -%}
     </div>
 
-    {% include "_shared/requirement_tree_right.jinja.html" %}
+    {% include "_shared/requirement_tree_left.jinja.html" %}
 
   </li>
 {%- endfor -%}

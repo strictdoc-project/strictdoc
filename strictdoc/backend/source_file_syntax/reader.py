@@ -131,7 +131,11 @@ def create_begin_end_range_reqs_mismatch_error(
 
     return StrictDocSemanticError(
         "STRICTDOC RANGE: BEGIN and END requirements mismatch",
-        f"STRICT RANGE pragma should START and END with the same requirement(s): '{lhs_pragma_reqs_str}' != '{rhs_pragma_reqs_str}'.",
+        (
+            "STRICT RANGE pragma should START and END "
+            "with the same requirement(s): "
+            f"'{lhs_pragma_reqs_str}' != '{rhs_pragma_reqs_str}'."
+        ),
         """
 # SDOC> REQ-001
 Content...
@@ -146,7 +150,10 @@ Content...
 def create_end_without_begin_error(location):
     return StrictDocSemanticError(
         "STRICTDOC RANGE: END pragma without preceding BEGIN pragma",
-        "STRICT RANGE shall be opened with START pragma and ended with END pragma.",
+        (
+            "STRICT RANGE shall be opened with "
+            "START pragma and ended with END pragma."
+        ),
         """
 # SDOC> REQ-001
 Content...
@@ -213,7 +220,7 @@ class SourceFileTraceabilityReader:
         length = get_lines_count(input)
         parse_context = ParseContext(length)
 
-        parse_source_file_traceability_info_processor = partial(
+        parse_source_traceability_processor = partial(
             source_file_traceability_info_processor, parse_context=parse_context
         )
         parse_req_processor = partial(
@@ -225,7 +232,7 @@ class SourceFileTraceabilityReader:
 
         obj_processors = {
             "Req": parse_req_processor,
-            "SourceFileTraceabilityInfo": parse_source_file_traceability_info_processor,
+            "SourceFileTraceabilityInfo": parse_source_traceability_processor,
             "RangePragma": parse_range_start_pragma_processor,
         }
 
@@ -273,9 +280,8 @@ class SourceFileTraceabilityReader:
             exit(1)
         except Exception as exc:
             print(
-                "error: SourceFileTraceabilityReader: could not parse file: {}.\n{}: {}".format(
-                    file_path, exc.__class__.__name__, exc
-                )
+                f"error: SourceFileTraceabilityReader: could not parse file: "
+                f"{file_path}.\n{exc.__class__.__name__}: {exc}"
             )
             # TODO: when --debug is provided
             # traceback.print_exc()

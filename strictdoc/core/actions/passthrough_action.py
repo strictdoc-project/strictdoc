@@ -10,8 +10,9 @@ class PassthroughAction:
     def passthrough(self, config: PassthroughCommandConfig):
         if not os.path.isfile(config.input_file):
             sys.stdout.flush()
-            err = "Could not open doc file '{}': No such file or directory".format(
-                config.input_file
+            err = (
+                f"Could not open doc file '{config.input_file}': "
+                "No such file or directory"
             )
             print(err)
             exit(1)

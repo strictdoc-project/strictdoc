@@ -20,11 +20,15 @@ REQUIREMENT_FIELDS = """
 
   ('TITLE: ' title = /.*$/ '\n')?
 
-  ('STATEMENT: ' (statement = SingleLineString | statement_multiline = MultiLineString) '\n')?
+  ('STATEMENT: ' (
+    statement = SingleLineString | statement_multiline = MultiLineString
+  ) '\n')?
 
   ('BODY: ' body = MultiLineString '\n' )?
 
-  ('RATIONALE: ' (rationale = SingleLineString | rationale_multiline = MultiLineString) '\n')?
+  ('RATIONALE: ' (
+    rationale = SingleLineString | rationale_multiline = MultiLineString
+  ) '\n')?
 
   comments *= RequirementComment
 """
@@ -109,7 +113,9 @@ RequirementStatus[noskipws]:
   'Draft' | 'Active' | 'Deleted';
 
 RequirementComment[noskipws]:
-  'COMMENT: ' (comment_single = SingleLineString | comment_multiline = MultiLineString) '\n'
+  'COMMENT: ' (
+    comment_single = SingleLineString | comment_multiline = MultiLineString
+  ) '\n'
 ;
 
 SingleLineString:

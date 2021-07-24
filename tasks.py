@@ -188,7 +188,7 @@ def lint_pylint(context):
 def lint_flake8(context):
     command = oneline_command(
         """
-        flake8 strictdoc --statistics --exit-zero --max-line-length 80 --show-source
+        flake8 strictdoc --statistics --max-line-length 80 --show-source
         """
     )
     run_invoke_cmd(context, command)

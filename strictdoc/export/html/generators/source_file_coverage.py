@@ -2,6 +2,7 @@ from jinja2 import Environment, PackageLoader, StrictUndefined
 
 from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 
 
 class SourceFileCoverageHTMLGenerator:
@@ -16,6 +17,7 @@ class SourceFileCoverageHTMLGenerator:
         config: ExportCommandConfig,
         document_tree,
         traceability_index: TraceabilityIndex,
+        link_renderer: LinkRenderer,
     ):
         output = ""
 
@@ -28,6 +30,7 @@ class SourceFileCoverageHTMLGenerator:
             document_tree=document_tree,
             traceability_index=traceability_index,
             static_path="_static",
+            link_renderer=link_renderer,
         )
 
         return output

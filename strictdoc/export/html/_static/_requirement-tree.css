@@ -149,7 +149,7 @@
 .requirement-tree_downward_node .requirement-tree_downward_item {
   position: relative;
   /* margin-left: calc(var(--requirement-tree-downward-margin) + var(--requirement-tree-downward-string-margin)); */
-  margin-left: var(--requirement-tree-downward-margin);
+  margin-left: calc(var(--requirement-tree-downward-margin) - 0.25rem);
   width: 100%;
   overflow-wrap: break-word;
 

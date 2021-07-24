@@ -161,21 +161,18 @@ class TraceabilityIndex:
                     ]
                     if other_req_doc == document:
                         print(
-                            "error: DocumentIndex: two requirements with the same UID "
+                            "error: DocumentIndex: "
+                            "two requirements with the same UID "
                             "exist in the same document: "
-                            '{} in "{}".'.format(
-                                requirement.uid, document.title
-                            )
+                            f'{requirement.uid} in "{document.title}".'
                         )
                     else:
                         print(
-                            "error: DocumentIndex: two requirements with the same UID "
+                            "error: DocumentIndex: "
+                            "two requirements with the same UID "
                             "exist in two different documents: "
-                            '{} in "{}" and "{}".'.format(
-                                requirement.uid,
-                                document.title,
-                                other_req_doc.title,
-                            )
+                            f'{requirement.uid} in "{document.title}" and '
+                            f'"{other_req_doc.title}".'
                         )
                     sys.exit(1)
 
@@ -233,9 +230,10 @@ class TraceabilityIndex:
                         # TODO: Strict variant of the behavior will be to stop
                         # and raise an error message.
                         print(
-                            "warning: [DocumentIndex.create] Requirement {} references parent requirement which doesn't exist: {}".format(
-                                requirement.uid, requirement_parent_id
-                            )
+                            f"warning: [DocumentIndex.create] "
+                            f"Requirement {requirement.uid} references "
+                            f"parent requirement which doesn't exist: "
+                            f"{requirement_parent_id}"
                         )
                         requirements_children_map.pop(
                             requirement_parent_id, None

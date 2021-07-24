@@ -75,35 +75,57 @@ class LinkRenderer:
         self.req_link_cache[link_cache_key][node] = requirement_link
         return requirement_link
 
+    @staticmethod
     def render_source_file_link(
-        self, requirement: Requirement, source_file_link: str
+        requirement: Requirement, source_file_link: str
     ):
         document: Document = requirement.ng_document_reference.get_document()
         path_prefix = document.meta.get_root_path_prefix()
-        source_file_link = f"{path_prefix}/_source_files/{document.meta.output_document_dir_rel_path}/{source_file_link}.html"
+        source_file_link = (
+            f"{path_prefix}"
+            f"/_source_files"
+            f"/{document.meta.output_document_dir_rel_path}"
+            f"/{source_file_link}.html"
+        )
         return source_file_link
 
+    @staticmethod
     def render_source_file_link_from_root(
-        self, requirement: Requirement, source_file_link: str
+        requirement: Requirement, source_file_link: str
     ):
         document: Document = requirement.ng_document_reference.get_document()
-        source_file_link = f"_source_files/{document.meta.output_document_dir_rel_path}/{source_file_link}.html"
+        source_file_link = (
+            f"_source_files"
+            f"/{document.meta.output_document_dir_rel_path}"
+            f"/{source_file_link}.html"
+        )
         return source_file_link
 
-    def render_source_file_link_from_root_2(self, source_file: SourceFile):
-        source_file_link = f"_source_files/{source_file.doctree_root_mount_path}/{source_file.in_doctree_source_file_rel_path}.html"
+    @staticmethod
+    def render_source_file_link_from_root_2(source_file: SourceFile):
+        assert isinstance(source_file, SourceFile)
+        source_file_link = (
+            f"_source_files"
+            f"/{source_file.doctree_root_mount_path}"
+            f"/{source_file.in_doctree_source_file_rel_path}.html"
+        )
         return source_file_link
 
+    @staticmethod
     def render_source_file_link_from_source_file(
-        self, requirement: Requirement, source_file_link: str
+        requirement: Requirement, source_file_link: str
     ):
         document: Document = requirement.ng_document_reference.get_document()
         path_prefix = document.meta.get_root_path_prefix()
-        source_file_link = f"{path_prefix}/{document.meta.output_document_dir_rel_path}/{source_file_link}.html#"
+        source_file_link = (
+            f"{path_prefix}"
+            f"/{document.meta.output_document_dir_rel_path}"
+            f"/{source_file_link}.html#"
+        )
         return source_file_link
 
+    @staticmethod
     def render_requirement_in_source_file_link(
-        self,
         requirement: Requirement,
         source_link: str,
         context_source_file: SourceFile,
@@ -117,11 +139,16 @@ class LinkRenderer:
             return ("../" * level)[:-1]
 
         path_prefix = get_root_path_prefix(context_source_file.level + 2)
-        source_file_link = f"{path_prefix}/_source_files/{context_source_file.doctree_root_mount_path}/{source_link}.html#{requirement.uid}"
+        source_file_link = (
+            f"{path_prefix}"
+            f"/_source_files"
+            f"/{context_source_file.doctree_root_mount_path}"
+            f"/{source_link}.html#{requirement.uid}"
+        )
         return source_file_link
 
+    @staticmethod
     def render_requirement_in_source_file_range_link_using_id(
-        self,
         req_uid: str,
         source_link: str,
         context_source_file: SourceFile,
@@ -136,7 +163,13 @@ class LinkRenderer:
             return ("../" * level)[:-1]
 
         path_prefix = get_root_path_prefix(context_source_file.level + 2)
-        source_file_link = f"{path_prefix}/_source_files/{context_source_file.doctree_root_mount_path}/{source_link}.html#{req_uid}#{range.ng_range_line_begin}#{range.ng_range_line_end}"
+        source_file_link = (
+            f"{path_prefix}"
+            f"/_source_files"
+            f"/{context_source_file.doctree_root_mount_path}"
+            f"/{source_link}.html"
+            f"#{req_uid}#{range.ng_range_line_begin}#{range.ng_range_line_end}"
+        )
         return source_file_link
 
     def render_requirement_in_source_file_range_link(

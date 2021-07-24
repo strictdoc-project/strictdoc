@@ -13,7 +13,10 @@ SourceFileTraceabilityInfo[noskipws]:
 ;
 
 RangePragma[noskipws]:
-  /.*SDOC/ (begin_or_end = '>' | begin_or_end = '<') ' ' (reqs_objs += Req[', ']) '\n'?
+  /.*SDOC/
+  (begin_or_end = '>' | begin_or_end = '<')
+  ' '
+  (reqs_objs += Req[', ']) '\n'?
 ;
 
 Req[noskipws]:

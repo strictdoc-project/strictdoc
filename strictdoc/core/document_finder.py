@@ -23,8 +23,10 @@ class DocumentFinder:
         for paths_to_files_or_doc in paths_to_files_or_docs:
             if not os.path.exists(paths_to_files_or_doc):
                 sys.stdout.flush()
-                err = "error: Provided path is neither a single file or a folder: '{}'".format(
-                    paths_to_files_or_doc
+                err = (
+                    "error: "
+                    "Provided path is neither a single file or a folder: "
+                    f"'{paths_to_files_or_doc}'"
                 )
                 print(err)
                 sys.exit(1)

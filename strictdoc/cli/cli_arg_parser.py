@@ -46,7 +46,10 @@ def cli_args_parser() -> argparse.ArgumentParser:
         "export",
         help="Export document tree.",
         parents=[],
-        description="Export command: input SDoc documents are generated into HTML and other formats.",
+        description=(
+            "Export command: "
+            "input SDoc documents are generated into HTML and other formats."
+        ),
     )
     command_parser_export.add_argument(
         "input_paths",
@@ -72,12 +75,19 @@ def cli_args_parser() -> argparse.ArgumentParser:
     command_parser_export.add_argument(
         "--no-parallelization",
         action="store_true",
-        help="Disables parallelization. All work happens in the main thread. This option might be useful for debugging.",
+        help=(
+            "Disables parallelization. All work happens in the main thread. "
+            "This option might be useful for debugging."
+        ),
     )
     command_parser_export.add_argument(
         "--experimental-enable-file-traceability",
         action="store_true",
-        help="Experimental feature: enables traceability between requirements and files (warning: implementation is not complete).",
+        help=(
+            "Experimental feature: "
+            "enables traceability between requirements and files "
+            "(warning: implementation is not complete)."
+        ),
     )
 
     command_parser_passthrough = command_subparsers.add_parser(

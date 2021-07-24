@@ -91,7 +91,10 @@ class ExcelGenerator:
                             worksheet.write_url(
                                 row,
                                 idx,
-                                f"internal:'{EXCEL_SHEET_NAME}'!A{refs[ref.path]}",
+                                (
+                                    "internal:"
+                                    f"'{EXCEL_SHEET_NAME}'!A{refs[ref.path]}"
+                                ),
                                 string=ref.path,
                             )
                     elif hasattr(node, field):
@@ -100,10 +103,10 @@ class ExcelGenerator:
                         elif field == "rationale":
                             value = node.get_rationale_single_or_multiline()
                         elif field == "comments":
+                            # TODO: how do we want to join multiple comment?
+                            # I am using only one comment with multi line
                             if len(node.comments):
-                                value = node.comments[
-                                    0
-                                ].get_comment()  # TODO: how do we want to join multiple comment? I am using only one comment with multi line
+                                value = node.comments[0].get_comment()
                             else:
                                 value = ""
                         else:

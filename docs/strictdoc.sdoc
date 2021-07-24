@@ -1320,6 +1320,9 @@ items are either work-in-progress or will be implemented next.
 [/FREETEXT]
 
 [SECTION]
+TITLE: Work in progress
+
+[SECTION]
 TITLE: Traceability and coverage
 
 [REQUIREMENT]
@@ -1327,18 +1330,41 @@ TITLE: Linking with implementation artifacts
 STATEMENT: StrictDoc shall support linking requirements to files.
 
 [REQUIREMENT]
-TITLE: Requirement checksumming
-STATEMENT: StrictDoc shall support calculation of checksums for requirements.
+TITLE: Requirements coverage
+STATEMENT: StrictDoc shall generate requirements coverage information.
 COMMENT: >>>
-This feature is relatively easy to implement but the implementation is postponed
-until the linking between requirements and files is implemented.
+Requirements coverage screen shows how requirements are linked with source files.
 <<<
 
 [REQUIREMENT]
-TITLE: Documentation coverage
-STATEMENT: StrictDoc shall generate requirements coverage information.
+TITLE: Source coverage
+STATEMENT: StrictDoc shall generate source coverage information.
+COMMENT: >>>
+Source coverage screen shows how source files are linked with requirements.
+<<<
 
 [/SECTION]
+
+[/SECTION]
+
+[REQUIREMENT]
+TITLE: Project-level configuration file
+STATEMENT: StrictDoc shall support reading project configuration from a file.
+COMMENT: >>>
+- TOML format looks like a good option.
+
+- Project title.
+
+- Project prefix?
+
+- Explicit or wildcard paths to sdoc files.
+
+- Paths to dirs with source files.
+
+- Config options for presenting requirements.
+
+  - Include/exclude requirements in TOC
+<<<
 
 [SECTION]
 TITLE: Export and import capabilities
@@ -1403,6 +1429,14 @@ STATEMENT: StrictDoc shall support filtering filtering by tags.
 
 [SECTION]
 TITLE: Advanced
+
+[REQUIREMENT]
+TITLE: Requirement checksumming
+STATEMENT: StrictDoc shall support calculation of checksums for requirements.
+COMMENT: >>>
+This feature is relatively easy to implement but the implementation is postponed
+until the linking between requirements and files is implemented.
+<<<
 
 [COMPOSITE_REQUIREMENT]
 TITLE: Graphical User Interface (GUI)

@@ -1,5 +1,85 @@
 # Changelog
 
+## [Unreleased](https://github.com/strictdoc-project/strictdoc/tree/HEAD)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.11...HEAD)
+
+**Closed issues:**
+
+- export/html: the TOC does not work for sections or requirements with identical name [\#431](https://github.com/strictdoc-project/strictdoc/issues/431)
+
+**Merged pull requests:**
+
+- Code climate: fix unnecessary lambda warning [\#435](https://github.com/strictdoc-project/strictdoc/pull/435) ([stanislaw](https://github.com/stanislaw))
+- Code climate: fix several long line warnings from flake8 [\#434](https://github.com/strictdoc-project/strictdoc/pull/434) ([stanislaw](https://github.com/stanislaw))
+- export/html: Sec and Req anchors section number to ensure link uniqueness [\#433](https://github.com/strictdoc-project/strictdoc/pull/433) ([stanislaw](https://github.com/stanislaw))
+-  export/html: requirements and source coverage: correct links to source files  [\#432](https://github.com/strictdoc-project/strictdoc/pull/432) ([stanislaw](https://github.com/stanislaw))
+- docs: add project-level config todo [\#430](https://github.com/strictdoc-project/strictdoc/pull/430) ([stanislaw](https://github.com/stanislaw))
+- export/html: Requirements Tree with files branch [\#429](https://github.com/strictdoc-project/strictdoc/pull/429) ([mettta](https://github.com/mettta))
+- export/html: add files tree in requirements\_coverage [\#428](https://github.com/strictdoc-project/strictdoc/pull/428) ([mettta](https://github.com/mettta))
+- @mettta export/html: requirements-coverage.js [\#426](https://github.com/strictdoc-project/strictdoc/pull/426) ([mettta](https://github.com/mettta))
+- export/html: hide new traceability-related work under a feature toggle [\#425](https://github.com/strictdoc-project/strictdoc/pull/425) ([stanislaw](https://github.com/stanislaw))
+- docs: update backlog [\#424](https://github.com/strictdoc-project/strictdoc/pull/424) ([stanislaw](https://github.com/stanislaw))
+- export/rst: catch and report RST-to-HTML conversion warnings [\#423](https://github.com/strictdoc-project/strictdoc/pull/423) ([stanislaw](https://github.com/stanislaw))
+- export/html: stop using deprecated window.event [\#422](https://github.com/strictdoc-project/strictdoc/pull/422) ([stanislaw](https://github.com/stanislaw))
+- export/html: Requirements Coverage page boilerplate improvements [\#421](https://github.com/strictdoc-project/strictdoc/pull/421) ([mettta](https://github.com/mettta))
+- Code climate: fix several flake8 warnings [\#420](https://github.com/strictdoc-project/strictdoc/pull/420) ([stanislaw](https://github.com/stanislaw))
+- export/html: Requirements Coverage page boilerplate [\#419](https://github.com/strictdoc-project/strictdoc/pull/419) ([stanislaw](https://github.com/stanislaw))
+- export/html: fix space behavior in pan-with-space.js [\#418](https://github.com/strictdoc-project/strictdoc/pull/418) ([mettta](https://github.com/mettta))
+- Code climate: fix unused imports [\#417](https://github.com/strictdoc-project/strictdoc/pull/417) ([stanislaw](https://github.com/stanislaw))
+- Code climate: add flake8 linter [\#416](https://github.com/strictdoc-project/strictdoc/pull/416) ([stanislaw](https://github.com/stanislaw))
+- export/html: introduce static\_path variable [\#415](https://github.com/strictdoc-project/strictdoc/pull/415) ([stanislaw](https://github.com/stanislaw))
+- export/html: move root\_path and document\_iterator vars to Python level [\#414](https://github.com/strictdoc-project/strictdoc/pull/414) ([stanislaw](https://github.com/stanislaw))
+- export/html: use Jinja's StrictUndefined, fix found issues [\#413](https://github.com/strictdoc-project/strictdoc/pull/413) ([stanislaw](https://github.com/stanislaw))
+- export/html: put index & coverage pages into the base template [\#412](https://github.com/strictdoc-project/strictdoc/pull/412) ([mettta](https://github.com/mettta))
+- @mettta export/html: source code coverage [\#411](https://github.com/strictdoc-project/strictdoc/pull/411) ([mettta](https://github.com/mettta))
+- Code climate: Fix several Pylint warnings [\#410](https://github.com/strictdoc-project/strictdoc/pull/410) ([stanislaw](https://github.com/stanislaw))
+- traceability: simplify logic of finding source file reqs [\#409](https://github.com/strictdoc-project/strictdoc/pull/409) ([stanislaw](https://github.com/stanislaw))
+- traceability: render source lines with reqs in Jinja template [\#408](https://github.com/strictdoc-project/strictdoc/pull/408) ([stanislaw](https://github.com/stanislaw))
+- traceability: Support turning on Pygments for C and C++ files [\#407](https://github.com/strictdoc-project/strictdoc/pull/407) ([stanislaw](https://github.com/stanislaw))
+- Poetry: update dependencies [\#406](https://github.com/strictdoc-project/strictdoc/pull/406) ([stanislaw](https://github.com/stanislaw))
+- export/html: source coverage: simplify source file syntax [\#405](https://github.com/strictdoc-project/strictdoc/pull/405) ([stanislaw](https://github.com/stanislaw))
+- export/html: source coverage: generate SDoc keywords in a special way [\#404](https://github.com/strictdoc-project/strictdoc/pull/404) ([stanislaw](https://github.com/stanislaw))
+- export/html: add index link in aside header content for doc/coverage … [\#403](https://github.com/strictdoc-project/strictdoc/pull/403) ([mettta](https://github.com/mettta))
+- export/html: Source code coverage \(classes & hashchange\) [\#402](https://github.com/strictdoc-project/strictdoc/pull/402) ([mettta](https://github.com/mettta))
+- export/html:  css fix [\#401](https://github.com/strictdoc-project/strictdoc/pull/401) ([mettta](https://github.com/mettta))
+- traceability: source coverage displays source coverage \(3 cases\)  [\#400](https://github.com/strictdoc-project/strictdoc/pull/400) ([stanislaw](https://github.com/stanislaw))
+- Code climate: traceability\_index: better function naming  [\#399](https://github.com/strictdoc-project/strictdoc/pull/399) ([stanislaw](https://github.com/stanislaw))
+- traceability: source coverage page: show stats [\#398](https://github.com/strictdoc-project/strictdoc/pull/398) ([stanislaw](https://github.com/stanislaw))
+- traceability: calculate source file coverage at the time of parsing [\#397](https://github.com/strictdoc-project/strictdoc/pull/397) ([stanislaw](https://github.com/stanislaw))
+- traceability: read empty and one-line source files [\#396](https://github.com/strictdoc-project/strictdoc/pull/396) ([stanislaw](https://github.com/stanislaw))
+- traceability: no ranges, when no requirements point to a source file [\#395](https://github.com/strictdoc-project/strictdoc/pull/395) ([stanislaw](https://github.com/stanislaw))
+- traceability: Source Coverage page \(draft\) [\#394](https://github.com/strictdoc-project/strictdoc/pull/394) ([mettta](https://github.com/mettta))
+- file\_tree: naming improvements, prepare for reuse [\#393](https://github.com/strictdoc-project/strictdoc/pull/393) ([stanislaw](https://github.com/stanislaw))
+- document\_finder: switch to top-down search and some cleanups [\#392](https://github.com/strictdoc-project/strictdoc/pull/392) ([stanislaw](https://github.com/stanislaw))
+- export/html: fix template\_type in the title [\#391](https://github.com/strictdoc-project/strictdoc/pull/391) ([mettta](https://github.com/mettta))
+- export/html: Source code coverage [\#390](https://github.com/strictdoc-project/strictdoc/pull/390) ([mettta](https://github.com/mettta))
+- Source file view: reqs list [\#389](https://github.com/strictdoc-project/strictdoc/pull/389) ([mettta](https://github.com/mettta))
+- Making the BASE tpl. shared by documents and source-code pages; TOC improving. [\#388](https://github.com/strictdoc-project/strictdoc/pull/388) ([mettta](https://github.com/mettta))
+- Code climate: fix some of the LGTM warnings [\#387](https://github.com/strictdoc-project/strictdoc/pull/387) ([stanislaw](https://github.com/stanislaw))
+- Code climate: source\_files\_finder: more meaningful variable names [\#386](https://github.com/strictdoc-project/strictdoc/pull/386) ([stanislaw](https://github.com/stanislaw))
+- traceability: detect when requirement link points to the current file [\#385](https://github.com/strictdoc-project/strictdoc/pull/385) ([stanislaw](https://github.com/stanislaw))
+- traceability: ensure no requirement duplicates, when multiple file lines [\#384](https://github.com/strictdoc-project/strictdoc/pull/384) ([stanislaw](https://github.com/stanislaw))
+-  traceability: single file case: fix finding Python files  [\#383](https://github.com/strictdoc-project/strictdoc/pull/383) ([stanislaw](https://github.com/stanislaw))
+- docs: constraint for sphinx: ~=3.0 [\#381](https://github.com/strictdoc-project/strictdoc/pull/381) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.11](https://github.com/strictdoc-project/strictdoc/tree/0.0.11) (2021-05-17)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.10...0.0.11)
+
+**Closed issues:**
+
+- The \_assets folder is not copied when a doc tree is a single file [\#341](https://github.com/strictdoc-project/strictdoc/issues/341)
+
+**Merged pull requests:**
+
+- Bump version to 0.0.11 [\#380](https://github.com/strictdoc-project/strictdoc/pull/380) ([stanislaw](https://github.com/stanislaw))
+- export/html: fix the generation of assets for a single file case [\#379](https://github.com/strictdoc-project/strictdoc/pull/379) ([stanislaw](https://github.com/stanislaw))
+- tests/integration: basic test: how assets are exported [\#378](https://github.com/strictdoc-project/strictdoc/pull/378) ([stanislaw](https://github.com/stanislaw))
+- Poetry: sphinx: change to caret-based [\#377](https://github.com/strictdoc-project/strictdoc/pull/377) ([stanislaw](https://github.com/stanislaw))
+- \[Snyk\] Fix for 4 vulnerabilities [\#376](https://github.com/strictdoc-project/strictdoc/pull/376) ([snyk-bot](https://github.com/snyk-bot))
+-  docs: regenerate Read the Docs, update CHANGELOG [\#375](https://github.com/strictdoc-project/strictdoc/pull/375) ([stanislaw](https://github.com/stanislaw))
+
 ## [0.0.10](https://github.com/strictdoc-project/strictdoc/tree/0.0.10) (2021-04-18)
 
 [Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.9...0.0.10)

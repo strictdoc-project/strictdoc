@@ -1,4 +1,5 @@
  {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
+<div class="requirements-coverage-view_node">
 
 <article class="requirement"
 {%- if requirement.status %}
@@ -24,29 +25,29 @@ data-uid='{{ requirement.uid }}'
 </article>
 
 {%- if requirement_file_links %}
-<details class="requirement_files" open>
-  <summary>files</summary>
-
-  <ul class="requirement_link">
-    <li></li>
+  <ul class="requirement-tree_downward">
   {%- for link, opt_ranges in requirement_file_links %}
     {%- if opt_ranges -%}
       {%- for range in opt_ranges %}
-        <li>
+        <li class="requirement-tree_downward_node">
+          <div class="requirement-tree_downward_item">
           <a class="" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.uid }}#{{ range.ng_source_line_begin }}#{{ range.ng_source_line_end }}">
             <b>[ {{ range.ng_source_line_begin }}-{{ range.ng_source_line_end }} ]</b> {{ link }}
           </a>
+          </div>
         </li>
       {%- endfor -%}
     {%- else -%}
-      <li>
-        <a class="" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.uid }}">
+      <li class="requirement-tree_downward_node">
+        <div class="requirement-tree_downward_item">
+        <a href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.uid }}">
           {{ link }}
         </a>
+        </div>
       </li>
     {%- endif -%}
   {%- endfor -%}
   </ul>
-
-</details>
 {%- endif %}
+
+</div>

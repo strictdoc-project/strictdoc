@@ -5,124 +5,22 @@ data-status='{{ requirement.status.lower() }}'
 
   <section class="requirement_section" data-section='meta'>
 
-    {%- if anchor is defined -%}
-    <div data-role='anchor' id="{{ anchor }}"></div>
-    {%- endif -%}
-
-    <h{{ requirement.ng_level }} class="section-title" data-level="{{ requirement.context.title_number_string }}">
-      {{ requirement.title if requirement.title else (requirement.uid if requirement.uid else '') }}
-    </h{{ requirement.ng_level }}>
-
-  {%- if requirement.has_meta -%}
-    <dl class="requirement_meta">
-      {%- if requirement.uid %}
-      <div><dt>UID</dt><dd>{{ requirement.uid }}</dd></div>
-      {%- endif %}
-      {%- if requirement.status %}
-      <div><dt>Status</dt><dd>{{ requirement.status }}</dd></div>
-      {%- endif %}
-      {%- if requirement.tags %}
-      <div><dt>Tags</dt><dd>{{ ', '.join(requirement.tags) }}</dd></div>
-      {%- endif %}
-
-      {%- if requirement.special_fields %}
-      {%- for special_field in requirement.special_fields %}
-      <div>
-        <dt>{{special_field.field_name.lower().capitalize()}}</dt>
-        <dd>{{special_field.field_value}}</dd>
-      </div>
-      {%- endfor %}
-      {%- endif %}
-
-    </dl>
-  {%- endif %}
-
-  {%- if traceability_index.has_parent_requirements(requirement) %}
-  <ul class="requirement_link">
-    {%- for requirement in traceability_index.get_parent_requirements(requirement) %}
-    <li>
-      <a class="requirement_link-parent" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
-        {%- if requirement.uid %}
-        <span class="requirement_parent-uid">{{ requirement.uid }}</span>
-        {%- endif %}
-        {{ requirement.title }}
-      </a>
-    </li>
-    {%- endfor %}
-    </ul>
-  {%- endif %}
-
-  {%- if traceability_index.has_children_requirements(requirement) %}
-  <ul class="requirement_link">
-    {%- for requirement in traceability_index.get_children_requirements(requirement) %}
-    <li>
-      <a class="requirement_link-child" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
-        {%- if requirement.uid %}
-        <span class="requirement_child-uid">{{ requirement.uid }}</span>
-        {%- endif %}
-        {{ requirement.title }}
-      </a>
-    </li>
-    {%- endfor %}
-    </ul>
-  {%- endif %}
-
-  {%- if config.experimental_enable_file_traceability -%}
-  {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
-  {%- if requirement_file_links %}
-  <ul class="requirement_link">
-    {%- for link, opt_ranges in requirement_file_links %}
-      {%- if opt_ranges -%}
-        {%- for range in opt_ranges %}
-          <li>
-            <a class="requirement_link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.uid }}#{{ range.ng_source_line_begin }}#{{ range.ng_source_line_end }}">
-              <b>{{ link }}</b>, lines: {{ range.ng_source_line_begin }}-{{ range.ng_source_line_end }}
-            </a>
-          </li>
-        {%- endfor -%}
-      {%- else -%}
-        <li>
-          <a class="requirement_link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.uid }}">
-            <b>{{ link }}</b>
-          </a>
-        </li>
-      {%- endif -%}
-    {%- endfor -%}
-  </ul>
-  {%- endif %}
-  {%- endif %}
+    {% include "_shared/requirement_block/ancor.jinja.html" %}
+    {% include "_shared/requirement_block/h_title.jinja.html" %}
+    {% include "_shared/requirement_block/meta.jinja.html" %}
+    {% include "_shared/requirement_block/related.jinja.html" %}
+    {% include "_shared/requirement_block/files_list.jinja.html" %}
 
   </section>
   <section class="requirement_section" data-section='statement'>
 
-  {%- if requirement.statement or requirement.statement_multiline -%}
-    <div class="requirement_statement">
-      {{ renderer.render_requirement_statement(requirement) }}
-    </div>
-  {%- endif -%}
-
-  {%- if requirement.body %}
-    <div><p>
-      {{ requirement.body }}
-    </p></div>
-  {%- endif %}
+    {% include "_shared/requirement_block/statement.jinja.html" %}
 
   </section>
   <section class="requirement_section" data-section='comment'>
 
-  {%- if requirement.rationale or requirement.rationale_multiline -%}
-    <div class="requirement_rationale">
-      {{ renderer.render_requirement_rationale(requirement) }}
-    </div>
-  {%- endif -%}
-
-  {%- if requirement.comments %}
-    {%- for comment in requirement.comments %}
-      <div class="requirement_comment">
-        {{ renderer.render_comment(comment) }}
-      </div>
-    {%- endfor %}
-  {%- endif %}
+    {% include "_shared/requirement_block/rationale.jinja.html" %}
+    {% include "_shared/requirement_block/comment.jinja.html" %}
 
   </section>
 

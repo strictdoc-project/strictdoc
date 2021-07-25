@@ -1,0 +1,9 @@
+{%- if section.free_texts -%}
+  <section data-section="description" class="docsection_section">
+    {%- for free_text in section.free_texts -%}
+    <div class="free-text">
+      {{ renderer.render_free_text(free_text) }}
+    </div>
+    {%- endfor -%}
+  </section>
+{%- endif -%}

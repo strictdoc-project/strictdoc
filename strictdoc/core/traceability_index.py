@@ -1,6 +1,8 @@
 import os
 import sys
+from collections import deque
 
+from strictdoc.backend.dsl.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.dsl.models.reference import Reference
 from strictdoc.backend.dsl.models.requirement import Requirement
 from strictdoc.backend.source_file_syntax.reader import (
@@ -9,6 +11,9 @@ from strictdoc.backend.source_file_syntax.reader import (
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.helpers.sorting import alphanumeric_sort
+
+BEFORE = 1
+AFTER = 2
 
 
 class FileTraceabilityIndex:
@@ -208,6 +213,9 @@ class TraceabilityIndex:
         requirements_parent_depth_map = {}
         documents_ref_depth_map = {}
 
+        cycle_checked_parents = set()
+        cycle_checked_children = set()
+
         for document in document_tree.document_list:
             document_iterator = document_iterators[document]
             max_parent_depth, max_child_depth = 0, 0
@@ -245,6 +253,69 @@ class TraceabilityIndex:
                     requirements_map[requirement.uid]["parents"].append(
                         parent_requirement
                     )
+
+                # Detect cycles
+                stack = deque()
+                stack.append((requirement.uid, BEFORE))
+                current_set = set()
+                while stack:
+                    current_uid, token = stack[-1]
+                    if current_uid not in requirements_map:
+                        stack.pop()
+                        continue
+
+                    if token == BEFORE:
+                        current_set.add(current_uid)
+                        stack[-1] = (current_uid, AFTER)
+                        parent_uids = requirements_map[current_uid][
+                            "parents_uids"
+                        ]
+                        for parent_uid in reversed(parent_uids):
+                            if parent_uid in current_set:
+                                cycled_uids = []
+                                for uid, token in stack:
+                                    if token == BEFORE:
+                                        continue
+                                    cycled_uids.append(uid)
+                                raise DocumentTreeError.cycle_error(
+                                    parent_uid, requirement, cycled_uids
+                                )
+                            if parent_uid not in cycle_checked_parents:
+                                stack.append((parent_uid, BEFORE))
+                    elif token == AFTER:
+                        current_set.remove(current_uid)
+                        stack.pop()
+                cycle_checked_parents.add(requirement)
+
+                stack = deque()
+                stack.append((requirement.uid, BEFORE))
+                current_set = set()
+                while stack:
+                    current_uid, token = stack[-1]
+                    if current_uid not in requirements_map:
+                        stack.pop()
+                        continue
+
+                    if token == BEFORE:
+                        stack[-1] = (current_uid, AFTER)
+                        current_set.add(current_uid)
+                        children = requirements_children_map[current_uid]
+                        for child in reversed(children):
+                            if child.uid in current_set:
+                                cycled_uids = []
+                                for uid, token in stack:
+                                    if token != AFTER:
+                                        continue
+                                    cycled_uids.append(uid)
+                                raise DocumentTreeError.cycle_error(
+                                    child.uid, requirement, cycled_uids
+                                )
+                            if child.uid not in cycle_checked_children:
+                                stack.append((child.uid, BEFORE))
+                    elif token == AFTER:
+                        current_set.remove(current_uid)
+                        stack.pop()
+                cycle_checked_children.add(requirement)
 
                 if requirement.uid not in requirements_child_depth_map:
                     child_depth = 0

@@ -135,47 +135,6 @@ article > section:last-of-type {
   font-size: calc(var(--base-font-size)*1.2);
 }
 
-/* arrows */
-
-.recursive_row {
-  position: relative;
-}
-
-[data-role='parents'] > article,
-[data-role='parents'] .recursive_row {
-  margin-right: var(--traceability-arrow);
-}
-
-[data-role='children'] > article,
-[data-role='children'] .recursive_row {
-  margin-left: var(--traceability-arrow);
-}
-
-[data-role='parents'] > article::before,
-[data-role='children'] > article::before,
-[data-role='parents'] .recursive_row::before,
-[data-role='children'] .recursive_row::before {
-  content: '\2190';
-  position: absolute;
-  top: calc(var(--base-padding)*1);
-  display: block;
-  width: var(--traceability-arrow);
-  line-height: var(--traceability-arrow);
-  font-size: calc(var(--traceability-arrow) * 1);
-  text-align: center;
-  color: var(--color-accent-dark);
-}
-
-[data-role='parents'] > article::before,
-[data-role='parents'] .recursive_row::before {
-  right: calc(var(--traceability-arrow) *(-1));
-}
-
-[data-role='children'] > article::before,
-[data-role='children'] .recursive_row::before {
-  left: calc(var(--traceability-arrow) *(-1));
-}
-
 /*  */
 
 div.document {
@@ -420,52 +379,6 @@ a.requirement_link-child::before {
   font-size: .85em;
 }
 
-/* RECURIVE */
-
-.recursive_row,   /* ul */
-.recursive_column /* li */ {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.recursive_row {
-  display: flex;
-  flex-direction: row;
-  margin-bottom: var(--traceability-arrow);
-}
-
-.recursive_row:last-child {
-  margin-bottom: 0;
-}
-
-.recursive_column {
-  /* min-width: var(--card-width); */
-  width: -moz-fit-content;
-  width: fit-content;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-}
-
-[data-role="parents"] .recursive_row {
-  /* parents are shown in reverse order: */
-  flex-direction: row-reverse;
-}
-
-.recursive_cell {
-  position: relative;
-  /* height: 100%; */
-  width: -moz-fit-content;
-  width: fit-content;
-
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  align-content: stretch;
-  align-items: stretch;
-  flex-grow: 1;
-}
 /* table */
 
 article table {

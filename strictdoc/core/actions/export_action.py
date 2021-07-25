@@ -2,6 +2,7 @@ import glob
 import os
 from pathlib import Path
 
+from strictdoc.backend.dsl.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.source_file_syntax.reader import (
     SourceFileTraceabilityReader,
 )
@@ -56,7 +57,12 @@ class ExportAction:
             path_to_single_file_or_doc_root, output_html_root, parallelizer
         )
 
-        traceability_index = TraceabilityIndex.create(document_tree)
+        try:
+            traceability_index = TraceabilityIndex.create(document_tree)
+        except DocumentTreeError as exc:
+            print(exc.to_print_message())
+            exit(1)
+
         if config.experimental_enable_file_traceability:
             source_tree: SourceTree = SourceFilesFinder.find_source_files(
                 output_html_root, document_tree

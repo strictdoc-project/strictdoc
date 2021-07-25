@@ -3,6 +3,11 @@
   grid-template-columns: 1fr 1fr 1fr;
   gap: 0 0;
   place-items: stretch stretch;
+  /*
+    for vertical line in 'current' culumn:
+    .content_item[data-role="current"]::before
+  */
+  overflow: hidden;
 }
 
 .document-view .content {
@@ -66,6 +71,17 @@
 
 .content_item[data-role="children"] {
   grid-column: 3 / 4;
+}
+
+.deep-traceability-view .content_item[data-role="current"]::before,
+.traceability-view .content_item[data-role="current"]::before {
+  /* for vertical line in 'current' culumn */
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: calc(var(--traceability-arrow)*(-1));
+  left: 50%;
+  border-left: 1px dotted #000;
 }
 
 /* .table-view */

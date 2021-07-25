@@ -2,6 +2,11 @@
 
 {% extends "base.jinja.html" %}
 
+{% block head_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{static_path}}/_requirement-tree.css"/>
+{% endblock head_css %}
+
 {% block head_scripts %}
   <script type="text/javascript" src="{{root_path}}/_static/toc.js"></script>
   {# only for deep-trace: #}
@@ -48,9 +53,9 @@
         <section class="content_section">
 
           <div class="content_item" data-role="parents">
-          {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) -%}
-            {% include "single_document_traceability_deep/recursive_cell_parent.jinja.html" %}
-          {%- endfor -%}
+          {%- with requirement=section_or_requirement, requirement_partial="_shared/requirement.jinja.html" -%}
+            {% include "_shared/requirement_tree_left.jinja.html" %}
+          {%- endwith -%}
           </div>
 
           {%- set requirement = section_or_requirement %}
@@ -61,9 +66,9 @@
           </div>
 
           <div class="content_item" data-role="children">
-          {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) -%}
-            {% include "single_document_traceability_deep/recursive_cell_children.jinja.html" %}
-          {%- endfor -%}
+          {%- with requirement=section_or_requirement, requirement_partial="_shared/requirement.jinja.html" -%}
+            {% include "_shared/requirement_tree_right.jinja.html" %}
+          {%- endwith -%}
           </div>
 
         </section>

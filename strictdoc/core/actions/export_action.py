@@ -14,6 +14,7 @@ from strictdoc.core.finders.source_files_finder import (
 )
 from strictdoc.core.source_tree import SourceTree
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from strictdoc.export.excel.excel_generator import ExcelGenerator
 from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.rst.document_rst_generator import DocumentRSTGenerator
@@ -58,7 +59,9 @@ class ExportAction:
         )
 
         try:
-            traceability_index = TraceabilityIndex.create(document_tree)
+            traceability_index: TraceabilityIndex = (
+                TraceabilityIndexBuilder.create(document_tree)
+            )
         except DocumentTreeError as exc:
             print(exc.to_print_message())
             exit(1)

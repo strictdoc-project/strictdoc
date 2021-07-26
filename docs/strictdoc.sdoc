@@ -1016,6 +1016,7 @@ STATEMENT: StrictDoc shall work on Windows systems.
 [/COMPOSITE_REQUIREMENT]
 
 [REQUIREMENT]
+UID: SDOC-HIGH-VALIDATION
 TITLE: Requirements validation
 STATEMENT: StrictDoc shall allow validation of requirement documents.
 
@@ -1266,11 +1267,29 @@ STATEMENT: StrictDoc shall support exporting documents to Excel format.
 TITLE: Validation
 
 [REQUIREMENT]
-TITLE: Validation: Uniqueness of UID identifiers in a document tree
+UID: SDOC-VALIDATION-UNIQUE-UID
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-HIGH-VALIDATION
+TITLE: Uniqueness of UID identifiers in a document tree
 STATEMENT: StrictDoc shall ensure that each UID used in a document tree is unique.
 COMMENT: This is implemented but the error message shall be made more readable.
 
 [REQUIREMENT]
+UID: SDOC-VALIDATION-NO-CYCLES
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-HIGH-VALIDATION
+TITLE: No cycles in a document tree
+STATEMENT: >>>
+StrictDoc shall ensure that no requirements in document tree reference each other.
+<<<
+
+[REQUIREMENT]
+UID: SDOC-VALIDATION-VALID-HTML
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-HIGH-VALIDATION
 TITLE: Valid HTML markup
 STATEMENT: StrictDoc's HTML export tests shall validate the generated HTML markup.
 COMMENT: First candidate: Table of contents and its nested ``<ul>/<li>`` items.

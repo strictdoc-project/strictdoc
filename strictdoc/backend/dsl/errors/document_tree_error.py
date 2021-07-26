@@ -4,15 +4,14 @@ class DocumentTreeError(Exception):
         self.message = message
 
     @staticmethod
-    def cycle_error(problem_uid, requirement, cycled_uids):
+    def cycle_error(problem_uid, cycled_uids):
         return DocumentTreeError(
             (
                 "a cycle detected: requirements in the document tree must not "
                 "reference each other."
             ),
             (
-                f"problematic UID: {problem_uid}\n"
-                f"requirement: {requirement}\n"
+                f"Problematic UID: {problem_uid}\n"
                 f"Cycle: {', '.join(cycled_uids)}"
             ),
         )

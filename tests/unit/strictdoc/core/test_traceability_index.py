@@ -3,6 +3,7 @@ import pytest
 from strictdoc.backend.dsl.errors.document_tree_error import DocumentTreeError
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 
 from tests.unit.helpers.test_document_builder import DocumentBuilder
 
@@ -20,7 +21,7 @@ def test_valid_01_one_document_with_1req():
         document_list=document_list,
         map_docs_by_paths=map_docs_by_paths,
     )
-    traceability_index = TraceabilityIndex.create(document_tree)
+    traceability_index = TraceabilityIndexBuilder.create(document_tree)
     parent_requirements = traceability_index.get_parent_requirements(
         requirement
     )
@@ -48,7 +49,7 @@ def test_valid_02_one_document_with_1req():
         document_list=document_list,
         map_docs_by_paths=map_docs_by_paths,
     )
-    traceability_index = TraceabilityIndex.create(document_tree)
+    traceability_index = TraceabilityIndexBuilder.create(document_tree)
     requirement1_parents = traceability_index.get_parent_requirements(
         requirement1
     )
@@ -90,7 +91,7 @@ def test_valid_3_3_requirements_cycle():
         document_list=document_list,
         map_docs_by_paths=map_docs_by_paths,
     )
-    traceability_index = TraceabilityIndex.create(document_tree)
+    traceability_index = TraceabilityIndexBuilder.create(document_tree)
     assert traceability_index.get_max_ref_depth(document_1) == 1
 
 
@@ -113,7 +114,7 @@ def test_valid_04_3_reqs_angle():
         document_list=document_list,
         map_docs_by_paths=map_docs_by_paths,
     )
-    traceability_index = TraceabilityIndex.create(document_tree)
+    traceability_index = TraceabilityIndexBuilder.create(document_tree)
     assert traceability_index.get_max_ref_depth(document_1) == 2
 
 
@@ -146,7 +147,7 @@ def test_valid_05_4_reqs_good_then_3_good():
         document_list=document_list,
         map_docs_by_paths=map_docs_by_paths,
     )
-    traceability_index = TraceabilityIndex.create(document_tree)
+    traceability_index = TraceabilityIndexBuilder.create(document_tree)
     assert traceability_index.get_max_ref_depth(document_1) == 6
 
 
@@ -168,7 +169,7 @@ def test_invalid_01_2_reqs_cycled():
         map_docs_by_paths=map_docs_by_paths,
     )
     with pytest.raises(DocumentTreeError) as e_info:
-        _ = TraceabilityIndex.create(document_tree)
+        _ = TraceabilityIndexBuilder.create(document_tree)
 
 
 def test_invalid_02_4_reqs_cycled():
@@ -193,7 +194,7 @@ def test_invalid_02_4_reqs_cycled():
         map_docs_by_paths=map_docs_by_paths,
     )
     with pytest.raises(DocumentTreeError) as e_info:
-        _ = TraceabilityIndex.create(document_tree)
+        _ = TraceabilityIndexBuilder.create(document_tree)
 
 
 def test_invalid_03_3_reqs_cycled():
@@ -216,7 +217,7 @@ def test_invalid_03_3_reqs_cycled():
         map_docs_by_paths=map_docs_by_paths,
     )
     with pytest.raises(DocumentTreeError) as e_info:
-        _ = TraceabilityIndex.create(document_tree)
+        _ = TraceabilityIndexBuilder.create(document_tree)
 
 
 def test_invalid_04_5_reqs_cycled():
@@ -243,7 +244,7 @@ def test_invalid_04_5_reqs_cycled():
         map_docs_by_paths=map_docs_by_paths,
     )
     with pytest.raises(DocumentTreeError) as e_info:
-        _ = TraceabilityIndex.create(document_tree)
+        _ = TraceabilityIndexBuilder.create(document_tree)
 
 
 def test_invalid_05_4_reqs_good_then_3_cycled():
@@ -276,4 +277,4 @@ def test_invalid_05_4_reqs_good_then_3_cycled():
         map_docs_by_paths=map_docs_by_paths,
     )
     with pytest.raises(DocumentTreeError) as e_info:
-        _ = TraceabilityIndex.create(document_tree)
+        _ = TraceabilityIndexBuilder.create(document_tree)

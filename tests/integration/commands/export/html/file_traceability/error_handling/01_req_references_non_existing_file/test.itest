@@ -1,0 +1,3 @@
+RUN: %strictdoc export %S --experimental-enable-file-traceability --output-dir Output | filecheck %s --dump-input=fail
+CHECK: warning: Requirement REQ-001 references a file that does not exist: file.py
+CHECK: Published: Hello world doc

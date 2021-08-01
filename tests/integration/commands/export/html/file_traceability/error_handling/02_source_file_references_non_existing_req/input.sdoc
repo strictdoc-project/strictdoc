@@ -1,0 +1,9 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[REQUIREMENT]
+REFS:
+- TYPE: File
+  VALUE: file.py
+TITLE: Requirement Title
+STATEMENT: Requirement Statement

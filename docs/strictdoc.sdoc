@@ -1344,9 +1344,25 @@ TITLE: Work in progress
 [SECTION]
 TITLE: Traceability and coverage
 
-[REQUIREMENT]
+[COMPOSITE_REQUIREMENT]
 TITLE: Linking with implementation artifacts
 STATEMENT: StrictDoc shall support linking requirements to files.
+
+[REQUIREMENT]
+TITLE: Validation: Broken links from requirements to source files
+STATEMENT: >>>
+StrictDoc shall warn a user about all requirements whose links reference source
+files that do not exist.
+<<<
+
+[REQUIREMENT]
+TITLE: Validation: Broken links from source files to requirements
+STATEMENT: >>>
+StrictDoc shall warn a user about all source files whose links reference
+requirements that do not exist.
+<<<
+
+[/COMPOSITE_REQUIREMENT]
 
 [REQUIREMENT]
 TITLE: Requirements coverage

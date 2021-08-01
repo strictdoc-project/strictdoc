@@ -13,6 +13,7 @@ class FileTraceabilityIndex:
         self.map_paths_to_reqs = {}
         self.map_reqs_to_paths = {}
         self.map_paths_to_source_file_traceability_info = {}
+        self.source_file_reqs_cache = {}
 
     def register(self, requirement):
         if requirement in self.map_reqs_to_paths:
@@ -22,6 +23,11 @@ class FileTraceabilityIndex:
         for ref in requirement.references:
             if ref.ref_type == "File":
                 assert not os.path.isabs(ref.path)
+                if not os.path.exists(ref.path):
+                    print(
+                        f"warning: Requirement {requirement.uid} references "
+                        f"a file that does not exist: {ref.path}"
+                    )
 
                 requirements = self.map_paths_to_reqs.setdefault(ref.path, [])
                 requirements.append(requirement)
@@ -52,21 +58,33 @@ class FileTraceabilityIndex:
         return matching_links_with_opt_ranges
 
     def get_source_file_reqs(self, source_file_rel_path):
-        if source_file_rel_path not in self.map_paths_to_reqs:
-            return None, None
-
-        requirements = self.map_paths_to_reqs[source_file_rel_path]
-        assert len(requirements) > 0
         assert (
             source_file_rel_path
             in self.map_paths_to_source_file_traceability_info
         )
+        if source_file_rel_path in self.source_file_reqs_cache:
+            return self.source_file_reqs_cache[source_file_rel_path]
 
         source_file_traceability_info: SourceFileTraceabilityInfo = (
             self.map_paths_to_source_file_traceability_info[
                 source_file_rel_path
             ]
         )
+        for (
+            req_uid
+        ) in source_file_traceability_info.ng_map_reqs_to_pragmas.keys():
+            if req_uid not in self.map_reqs_to_paths:
+                print(
+                    f"warning: source file {source_file_rel_path} references "
+                    f"a requirement that does not exist: {req_uid}"
+                )
+
+        if source_file_rel_path not in self.map_paths_to_reqs:
+            self.source_file_reqs_cache[source_file_rel_path] = (None, None)
+            return None, None
+        requirements = self.map_paths_to_reqs[source_file_rel_path]
+        assert len(requirements) > 0
+
         general_requirements = []
         range_requirements = []
         for requirement in requirements:
@@ -77,6 +95,10 @@ class FileTraceabilityIndex:
                 general_requirements.append(requirement)
             else:
                 range_requirements.append(requirement)
+        self.source_file_reqs_cache[source_file_rel_path] = (
+            general_requirements,
+            range_requirements,
+        )
         return general_requirements, range_requirements
 
     def get_coverage_info(self, source_file_rel_path):

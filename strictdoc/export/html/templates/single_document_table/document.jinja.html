@@ -4,7 +4,7 @@
 
 {% block head_scripts %}
   <script type="text/javascript" src="{{root_path}}/_static/toc.js"></script>
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script id="MathJax-script" async src="{{root_path}}/_static/mathjax3-tex-mml-chtml.js"></script>
   {{ super() }}
 {% endblock head_scripts %}
 {% block title %}{{document.name}} - {{ template_type }}{% endblock %}

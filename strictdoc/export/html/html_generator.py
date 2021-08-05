@@ -274,6 +274,7 @@ class HTMLGenerator:
         ):
             # Single Document pages (standalone)
             document_content = DocumentHTMLGenerator.export(
+                config,
                 document_tree,
                 document,
                 traceability_index,

@@ -3,7 +3,7 @@
 *.egg-info/
 **/output/**
 **/Output/**
-!strictdoc/export/html/_static/mathjax/output/**
+!strictdoc/export/html/_static_extra/mathjax/output/**
 *.pyc
 *.script
 *.venv

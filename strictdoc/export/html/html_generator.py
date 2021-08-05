@@ -89,6 +89,18 @@ class HTMLGenerator:
             config.strictdoc_root_path, "strictdoc/export/html/_static"
         )
         sync_dir(static_files_src, output_html_static_files)
+
+        if config.enable_mathjax:
+            output_html_mathjax = os.path.join(
+                output_html_root, "_static", "mathjax"
+            )
+            Path(output_html_mathjax).mkdir(parents=True, exist_ok=True)
+            mathjax_src = os.path.join(
+                config.strictdoc_root_path,
+                "strictdoc/export/html/_static_extra/mathjax",
+            )
+            sync_dir(mathjax_src, output_html_mathjax)
+
         for asset_dir in asset_dirs:
             source_path = asset_dir["full_path"]
             output_relative_path = asset_dir["relative_path"]
@@ -99,6 +111,7 @@ class HTMLGenerator:
 
         export_binding = partial(
             HTMLGenerator._export_with_performance,
+            config,
             export_options=export_options,
             document_tree=document_tree,
             traceability_index=traceability_index,
@@ -159,6 +172,7 @@ class HTMLGenerator:
 
     @staticmethod
     def _export_with_performance(
+        config: ExportCommandConfig,
         document,
         export_options: ExportOptions,
         document_tree,
@@ -187,6 +201,7 @@ class HTMLGenerator:
 
         with measure_performance("Published: {}".format(document.name)):
             HTMLGenerator._export(
+                config,
                 export_options.export_mode,
                 document,
                 document_tree,
@@ -197,6 +212,7 @@ class HTMLGenerator:
 
     @staticmethod
     def _export(
+        config: ExportCommandConfig,
         export_mode,
         document,
         document_tree,
@@ -214,6 +230,7 @@ class HTMLGenerator:
         ):
             # Single Document pages
             document_content = DocumentHTMLGenerator.export(
+                config,
                 document_tree,
                 document,
                 traceability_index,
@@ -226,7 +243,7 @@ class HTMLGenerator:
 
             # Single Document Table pages
             document_content = DocumentTableHTMLGenerator.export(
-                document, traceability_index, link_renderer
+                config, document, traceability_index, link_renderer
             )
             document_out_file = document_meta.get_html_table_path()
 
@@ -235,7 +252,7 @@ class HTMLGenerator:
 
             # Single Document Traceability pages
             document_content = DocumentTraceHTMLGenerator.export(
-                document, traceability_index, link_renderer
+                config, document, traceability_index, link_renderer
             )
             document_out_file = document_meta.get_html_traceability_path()
 
@@ -244,7 +261,7 @@ class HTMLGenerator:
 
             # Single Document Deep Traceability pages
             document_content = DocumentDeepTraceHTMLGenerator.export_deep(
-                document, traceability_index, link_renderer
+                config, document, traceability_index, link_renderer
             )
             document_out_file = document_meta.get_html_deep_traceability_path()
 

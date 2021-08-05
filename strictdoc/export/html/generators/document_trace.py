@@ -13,7 +13,7 @@ class DocumentTraceHTMLGenerator:
     env.globals.update(isinstance=isinstance)
 
     @staticmethod
-    def export(document, traceability_index, link_renderer):
+    def export(config, document, traceability_index, link_renderer):
         output = ""
 
         markup_renderer = MarkupRenderer()
@@ -27,6 +27,7 @@ class DocumentTraceHTMLGenerator:
         document_iterator = traceability_index.get_document_iterator(document)
 
         output += template.render(
+            config=config,
             document=document,
             traceability_index=traceability_index,
             renderer=markup_renderer,

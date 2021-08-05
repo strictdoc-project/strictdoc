@@ -6,7 +6,7 @@ from strictdoc.cli.cli_arg_parser import (
 FAKE_STRICTDOC_ROOT_PATH = "/tmp/strictdoc-123"
 
 
-TOTAL_EXPORT_ARGS = 7
+TOTAL_EXPORT_ARGS = 8
 
 
 def test_export_00_strictdoc_root_path():
@@ -39,6 +39,7 @@ def test_export_01_minimal():
     assert args.input_paths == ["docs"]
     assert args.no_parallelization is False
     assert args.output_dir is None
+    assert args.enable_mathjax is False
 
     config_parser = create_sdoc_args_parser(args)
     export_config = config_parser.get_export_config(FAKE_STRICTDOC_ROOT_PATH)
@@ -167,6 +168,20 @@ def test_export_06_export_format_multiple():
     assert export_config.input_paths == args.input_paths
     assert export_config.no_parallelization == args.no_parallelization
     assert export_config.output_dir == args.output_dir
+
+
+def test_export_07_enable_mathjax():
+    parser = cli_args_parser()
+    args = parser.parse_args(["export", "--enable-mathjax", "docs"])
+
+    assert len(args._get_kwargs()) == TOTAL_EXPORT_ARGS
+
+    assert args.command == "export"
+    assert args.enable_mathjax is True
+
+    config_parser = create_sdoc_args_parser(args)
+    export_config = config_parser.get_export_config(FAKE_STRICTDOC_ROOT_PATH)
+    assert export_config.enable_mathjax is True
 
 
 def test_passthrough_01_minimal():

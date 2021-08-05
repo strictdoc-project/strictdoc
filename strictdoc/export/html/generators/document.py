@@ -13,6 +13,7 @@ class DocumentHTMLGenerator:
 
     @staticmethod
     def export(
+        config,
         document_tree,
         document,
         traceability_index,
@@ -32,6 +33,7 @@ class DocumentHTMLGenerator:
         document_iterator = traceability_index.get_document_iterator(document)
 
         output += template.render(
+            config=config,
             document=document,
             traceability_index=traceability_index,
             link_renderer=link_renderer,

@@ -81,6 +81,11 @@ def cli_args_parser() -> argparse.ArgumentParser:
         ),
     )
     command_parser_export.add_argument(
+        "--enable-mathjax",
+        action="store_true",
+        help=("Enables Mathjax support (only HTML export)."),
+    )
+    command_parser_export.add_argument(
         "--experimental-enable-file-traceability",
         action="store_true",
         help=(
@@ -119,6 +124,7 @@ class ExportCommandConfig:
         formats,
         fields,
         no_parallelization,
+        enable_mathjax,
         experimental_enable_file_traceability,
     ):
         self.strictdoc_root_path = strictdoc_root_path
@@ -127,6 +133,7 @@ class ExportCommandConfig:
         self.formats = formats
         self.fields = fields
         self.no_parallelization = no_parallelization
+        self.enable_mathjax = enable_mathjax
         self.experimental_enable_file_traceability = (
             experimental_enable_file_traceability
         )
@@ -157,6 +164,7 @@ class SDocArgsParser:
             self.args.formats,
             self.args.fields,
             self.args.no_parallelization,
+            self.args.enable_mathjax,
             self.args.experimental_enable_file_traceability,
         )
 

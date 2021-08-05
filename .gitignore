@@ -1,8 +1,6 @@
 *.idea
 **/build/
 *.egg-info/
-**/output/**
-**/Output/**
 *.pyc
 *.script
 *.venv
@@ -13,3 +11,8 @@ output.zip
 setup.py
 .vscode
 
+# StrictDoc's default export path
+output/**
+# LIT/FileCheck integration tests' artifacts.
+tests/integration/**/Output/**
+tests/integration/**/output/**

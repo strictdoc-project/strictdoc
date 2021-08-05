@@ -20,7 +20,7 @@ def clean(context):
     find_command = oneline_command(
         """
         find
-            .
+            tests
             -type f \\(
                 -name '*.script'
             \\)

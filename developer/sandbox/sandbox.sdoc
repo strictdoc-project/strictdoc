@@ -8,6 +8,12 @@ SPECIAL_FIELDS:
 
 [FREETEXT]
 This is a sandbox file for experiments.
+
+$$
+\\mathbf{\\underline{k}}_{\\text{a}} =
+\\mathbf{\\underline{i}}_{\\text{a}} \\times
+\\mathbf{\\underline{j}}_{\\text{a}}
+$$
 [/FREETEXT]
 
 [SECTION]

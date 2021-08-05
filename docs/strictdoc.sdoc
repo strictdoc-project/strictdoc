@@ -618,6 +618,39 @@ elements should do the job.
 [/SECTION]
 
 [SECTION]
+TITLE: Markup
+
+[FREETEXT]
+The Restructured Text (reST) markup is the default markup supported by
+StrictDoc. The reST markup can be written inside all StrictDoc's text blocks,
+such as ``[FREETEXT]``, ``STATEMENT``, ``COMMENT``, ``RATIONALE``.
+
+See the `reST syntax documentation <https://docutils.sourceforge.io/rst.html>`_
+for a full reference.
+
+The support of Tex and HTML is planned.
+[/FREETEXT]
+
+[SECTION]
+TITLE: Images
+
+[FREETEXT]
+This is the example of how images are included using the reST syntax:
+
+.. code-block:: text
+
+    [FREETEXT]
+    .. image:: _assets/sandbox1.svg
+       :alt: Sandbox demo
+       :class: image
+    [/FREETEXT]
+[/FREETEXT]
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
 TITLE: Export options
 
 [SECTION]
@@ -639,6 +672,33 @@ The following command creates an HTML export:
 skipped because HTML export is a default export option and the default output
 folder is ``output``.
 [/FREETEXT]
+
+[SECTION]
+TITLE: Mathjax support
+
+[FREETEXT]
+The option ``--enable-mathjax`` makes StrictDoc to include the
+`Mathjax <https://www.mathjax.org/>`_ Javascript library to all of the document
+templates.
+
+.. code-block:: text
+
+    strictdoc export docs/ --enable-mathjax --output-dir output-html
+
+Example of using Mathjax:
+
+.. code-block:: text
+
+    [FREETEXT]
+    $$
+    \\mathbf{\\underline{k}}_{\\text{a}} =
+    \\mathbf{\\underline{i}}_{\\text{a}} \\times
+    \\mathbf{\\underline{j}}_{\\text{a}}
+    $$
+    [/FREETEXT]
+[/FREETEXT]
+
+[/SECTION]
 
 [SECTION]
 TITLE: Standalone HTML pages (experimental)

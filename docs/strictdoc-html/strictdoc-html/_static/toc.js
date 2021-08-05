@@ -1,39 +1,27 @@
 
-let tocToggle;
-let tocLayout;
+// **
+// Place this code right after the opening BODY tag:
 
-function switchTOC(currState) {
+// <script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script>
 
-  if(currState == 'open') {
+// This ensures that the status of the sidebar is preserved when the page is reloaded.
+// **
 
-    tocToggle.dataset.state = 'close';
-    tocLayout.dataset.state = 'close';
-    console.log('layout: ' + tocLayout.dataset.state);
-    console.log('toggle: ' + tocToggle.dataset.state);
+let setTocState = sessionStorage.getItem('tocState');
+sessionStorage.setItem('tocState', (setTocState ? setTocState : 'open'));
 
-  } else {
-
-    tocToggle.dataset.state = 'open';
-    tocLayout.dataset.state = 'open';
-    console.log('layout: ' + tocLayout.dataset.state);
-    console.log('toggle: ' + tocToggle.dataset.state);
-
-  }
+function switchTOC() {
+  sessionStorage.setItem('tocState', (
+    sessionStorage.getItem('tocState') === 'open'
+      ? 'close'
+      : 'open'
+  ));
+  document.body.dataset.state = sessionStorage.getItem('tocState');
 }
 
-window.onload = function() {
-
-  // tocToggle = document.getElementById('toc_toggle');
-  // tocLayout = document.getElementById('toc_layout');
-
-  tocToggle = document.getElementById('layout_toggle');
-  tocLayout = document.getElementById('layout');
-
-  tocToggle.dataset.state = 'open';
-  tocLayout.dataset.state = 'open';
-
-  tocToggle.addEventListener('click', () => {
-    switchTOC(tocToggle.dataset.state);
+window.onload = function () {
+  document.body.dataset.state = sessionStorage.getItem('tocState');
+  document.getElementById('layout_toggle').addEventListener('click', () => {
+    switchTOC();
   });
-
 };

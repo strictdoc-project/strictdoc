@@ -52,7 +52,10 @@ def sphinx(context):
         context,
         oneline_command(
             """
-            python3 strictdoc/cli/main.py export docs --formats=html,rst --output-dir output/sphinx
+            python3 strictdoc/cli/main.py
+                export docs
+                    --formats=html,rst
+                    --output-dir output/sphinx
             """
         ),
     )
@@ -61,7 +64,8 @@ def sphinx(context):
         context,
         oneline_command(
             """
-            cp -v output/sphinx/rst/StrictDoc.rst docs/sphinx/source/ &&
+            cp -v output/sphinx/rst/strictdoc.rst docs/sphinx/source/ &&
+            mkdir -p docs/strictdoc-html/strictdoc-html &&
             cp -rv output/sphinx/html/* docs/strictdoc-html/strictdoc-html
             """
         ),

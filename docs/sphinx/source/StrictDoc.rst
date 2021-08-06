@@ -524,6 +524,31 @@ Special feature of ``[COMPOSITE_REQUIREMENT]``: like ``[SECTION]`` element, the
 often, a more basic combination of nested ``[SECTION]`` and ``[REQUIREMENT]``
 elements should do the job.
 
+Markup
+======
+
+The Restructured Text (reST) markup is the default markup supported by
+StrictDoc. The reST markup can be written inside all StrictDoc's text blocks,
+such as ``[FREETEXT]``, ``STATEMENT``, ``COMMENT``, ``RATIONALE``.
+
+See the `reST syntax documentation <https://docutils.sourceforge.io/rst.html>`_
+for a full reference.
+
+The support of Tex and HTML is planned.
+
+Images
+------
+
+This is the example of how images are included using the reST syntax:
+
+.. code-block:: text
+
+    [FREETEXT]
+    .. image:: _assets/sandbox1.svg
+       :alt: Sandbox demo
+       :class: image
+    [/FREETEXT]
+
 Export options
 ==============
 
@@ -544,6 +569,29 @@ The following command creates an HTML export:
 **Note:** The options ``--formats=html`` and ``--output-dir output-html`` can be
 skipped because HTML export is a default export option and the default output
 folder is ``output``.
+
+Mathjax support
+~~~~~~~~~~~~~~~
+
+The option ``--enable-mathjax`` makes StrictDoc to include the
+`Mathjax <https://www.mathjax.org/>`_ Javascript library to all of the document
+templates.
+
+.. code-block:: text
+
+    strictdoc export docs/ --enable-mathjax --output-dir output-html
+
+Example of using Mathjax:
+
+.. code-block:: text
+
+    [FREETEXT]
+    $$
+    \\mathbf{\\underline{k}}_{\\text{a}} =
+    \\mathbf{\\underline{i}}_{\\text{a}} \\times
+    \\mathbf{\\underline{j}}_{\\text{a}}
+    $$
+    [/FREETEXT]
 
 Standalone HTML pages (experimental)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -946,10 +994,25 @@ Windows support
 
 StrictDoc shall work on Windows systems.
 
+.. _SDOC-HIGH-VALIDATION:
+
 Requirements validation
 ~~~~~~~~~~~~~~~~~~~~~~~
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-HIGH-VALIDATION
+
 StrictDoc shall allow validation of requirement documents.
+
+**Children:**
+
+- ``[SDOC-VALIDATION-UNIQUE-UID]`` :ref:`SDOC-VALIDATION-UNIQUE-UID`
+- ``[SDOC-VALIDATION-NO-CYCLES]`` :ref:`SDOC-VALIDATION-NO-CYCLES`
+- ``[SDOC-VALIDATION-VALID-HTML]`` :ref:`SDOC-VALIDATION-VALID-HTML`
 
 Requirements text format
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1170,6 +1233,17 @@ SDOC format shall be based on a fixed grammar.
 
 - ``[SDOC-HIGH-DATA-MODEL]`` :ref:`SDOC-HIGH-DATA-MODEL`
 
+No indentation
+^^^^^^^^^^^^^^
+
+SDoc grammar's building blocks shall not allow any indentation.
+
+**Comment:** Rationale: Adding indentation to any of the fields does not scale well when the
+documents have deeply nested section structure as well as when the size of the
+paragraphs becomes sufficiently large. Keeping every keyword like [REQUIREMENT]
+or [COMMENT] with no indentation ensures that one does not have to think about
+possible indentation issues.
+
 Type safety
 ~~~~~~~~~~~
 
@@ -1177,6 +1251,14 @@ SDOC format shall allow type-safe encoding of requirement documents.
 
 Document Generators
 -------------------
+
+General
+~~~~~~~
+
+Generated file names
+^^^^^^^^^^^^^^^^^^^^
+
+StrictDoc shall preserve original document file names when generating to all export formats.
 
 HTML Export
 ~~~~~~~~~~~
@@ -1230,12 +1312,63 @@ StrictDoc shall support exporting documents to Excel format.
 Validation
 ----------
 
+.. _SDOC-VALIDATION-UNIQUE-UID:
+
+Uniqueness of UID identifiers in a document tree
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-VALIDATION-UNIQUE-UID
+
+StrictDoc shall ensure that each UID used in a document tree is unique.
+
+**Comment:** This is implemented but the error message shall be made more readable.
+
+**Parents:**
+
+- ``[SDOC-HIGH-VALIDATION]`` :ref:`SDOC-HIGH-VALIDATION`
+
+.. _SDOC-VALIDATION-NO-CYCLES:
+
+No cycles in a document tree
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-VALIDATION-NO-CYCLES
+
+StrictDoc shall ensure that no requirements in document tree reference each other.
+
+**Parents:**
+
+- ``[SDOC-HIGH-VALIDATION]`` :ref:`SDOC-HIGH-VALIDATION`
+
+.. _SDOC-VALIDATION-VALID-HTML:
+
 Valid HTML markup
 ~~~~~~~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-VALIDATION-VALID-HTML
 
 StrictDoc's HTML export tests shall validate the generated HTML markup.
 
 **Comment:** First candidate: Table of contents and its nested ``<ul>/<li>`` items.
+
+**Parents:**
+
+- ``[SDOC-HIGH-VALIDATION]`` :ref:`SDOC-HIGH-VALIDATION`
 
 Design decisions
 ================
@@ -1265,37 +1398,106 @@ Sphinx and Docutils shall be used for the following capabilities:
 - Generation of RST documents into PDF using LaTeX
 - Generating documentation websites using Sphinx
 
-SDoc grammar
-------------
-
-No indentation
-~~~~~~~~~~~~~~
-
-SDoc grammar's building blocks shall not allow any indentation.
-
-**Comment:** Rationale: Adding indentation to any of the fields does not scale well when the
-documents have deeply nested section structure as well as when the size of the
-paragraphs becomes sufficiently large. Keeping every keyword like [REQUIREMENT]
-or [COMMENT] with no indentation ensures that one does not have to think about
-possible indentation issues.
-
 Backlog
 =======
 
-Generated file names
---------------------
+**Note:** The items below are weakly sorted from top to bottom. The topmost
+items are either work-in-progress or will be implemented next.
 
-StrictDoc shall preserve original document file names when generating to all export formats.
+Work in progress
+----------------
 
-**Comment:** StrictDoc used to create file names that were document names. This has been
-changed for HTML but not yet for RST.
+Traceability and coverage
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Validation: Uniqueness of UID identifiers in a document tree
-------------------------------------------------------------
+Linking with implementation artifacts
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-StrictDoc shall ensure that each UID used in a document tree is unique.
+StrictDoc shall support linking requirements to files.
 
-**Comment:** This is implemented but the error message shall be made more readable.
+Validation: Broken links from requirements to source files
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+StrictDoc shall warn a user about all requirements whose links reference source
+files that do not exist.
+
+Validation: Broken links from source files to requirements
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+StrictDoc shall warn a user about all source files whose links reference
+requirements that do not exist.
+
+Requirements coverage
+^^^^^^^^^^^^^^^^^^^^^
+
+StrictDoc shall generate requirements coverage information.
+
+**Comment:** Requirements coverage screen shows how requirements are linked with source files.
+
+Source coverage
+^^^^^^^^^^^^^^^
+
+StrictDoc shall generate source coverage information.
+
+**Comment:** Source coverage screen shows how source files are linked with requirements.
+
+Project-level configuration file
+--------------------------------
+
+StrictDoc shall support reading project configuration from a file.
+
+**Comment:** - TOML format looks like a good option.
+
+- Project title.
+
+- Project prefix?
+
+- Explicit or wildcard paths to sdoc files.
+
+- Paths to dirs with source files.
+
+- Config options for presenting requirements.
+
+  - Include/exclude requirements in TOC
+
+Export and import capabilities
+------------------------------
+
+ReqIF import/export
+~~~~~~~~~~~~~~~~~~~
+
+StrictDoc shall support ReqIF format.
+
+CSV import/export
+~~~~~~~~~~~~~~~~~
+
+StrictDoc shall support exporting documents to CSV format.
+
+PlantUML export
+~~~~~~~~~~~~~~~
+
+StrictDoc shall support exporting documents to PlantUML format.
+
+Confluence import/export
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+StrictDoc shall support importing/exporting documents from/to Confluence HTML storage format.
+
+Tex export
+~~~~~~~~~~
+
+StrictDoc shall support exporting documents to Tex format.
+
+Doorstop import/export
+~~~~~~~~~~~~~~~~~~~~~~
+
+StrictDoc shall support import and exporting documents from/to
+`Doorstop <https://github.com/doorstop-dev/doorstop>`_ format.
+
+Markdown support for text and code blocks
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+StrictDoc shall support rendering text/code blocks into Markdown syntax.
 
 StrictDoc as library
 --------------------
@@ -1327,67 +1529,49 @@ relevant requirements when creating new requirements.
 
 - ``[GOAL-4-CHANGE-MANAGEMENT]`` :ref:`GOAL-4-CHANGE-MANAGEMENT`
 
-Export capabilities
--------------------
+Filtering by tags
+-----------------
 
-CSV import/export
-~~~~~~~~~~~~~~~~~
+StrictDoc shall support filtering filtering by tags.
 
-StrictDoc shall support exporting documents to CSV format.
-
-PlantUML export
-~~~~~~~~~~~~~~~
-
-StrictDoc shall support exporting documents to PlantUML format.
-
-ReqIF import/export
-~~~~~~~~~~~~~~~~~~~
-
-StrictDoc shall support ReqIF format.
-
-Confluence import/export
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-StrictDoc shall support importing/exporting documents from/to Confluence HTML storage format.
-
-Tex export
-~~~~~~~~~~
-
-StrictDoc shall support exporting documents to Tex format.
-
-Doorstop import/export
-~~~~~~~~~~~~~~~~~~~~~~
-
-StrictDoc shall support import and exporting documents from/to
-`Doorstop <https://github.com/doorstop-dev/doorstop>`_ format.
-
-Markdown support for text and code blocks
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-StrictDoc shall support rendering text/code blocks into Markdown syntax.
-
-Traceability and coverage
--------------------------
-
-Linking with implementation artifacts
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-StrictDoc shall support linking requirements to files.
+Advanced
+--------
 
 Requirement checksumming
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 StrictDoc shall support calculation of checksums for requirements.
 
-Documentation coverage
-~~~~~~~~~~~~~~~~~~~~~~
+**Comment:** This feature is relatively easy to implement but the implementation is postponed
+until the linking between requirements and files is implemented.
 
-StrictDoc shall generate requirements coverage information.
+Graphical User Interface (GUI)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Filtering by tags
------------------
+StrictDoc shall provide a Graphical User Interface (GUI).
 
-StrictDoc shall support filtering filtering by tags.
+**Comment:** Several trade-offs to consider:
+
+- Desktop vs Web. Rather web-based, i.e. Python backend and JS frontend, but
+  which technology?
+- Still keep the current behavior of a statically generated website?
+
+Web server and editable HTML pages
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+StrictDoc shall provide a web server that serves as a StrictDoc backend for
+reading and writing SDoc files.
+
+Facts table. Invariants calculation.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+StrictDoc shall support creation of fact tables and allow calculation of
+invariants for constraints enforcement.
+
+FMEA/FMECA tables
+~~~~~~~~~~~~~~~~~
+
+StrictDoc shall support creation of FMEA/FMECA safety analysis documents.
 
 Open questions
 --------------
@@ -1416,29 +1600,4 @@ space with cross-linking possible.
 
 The question is if it is worth supporting this case further or StrictDoc should
 only work with one input folder with a single doc tree.
-
-Advanced
---------
-
-Facts table. Invariants calculation.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-StrictDoc shall support creation of fact tables and allow calculation of
-invariants for constraints enforcement.
-
-FMEA/FMECA tables
-~~~~~~~~~~~~~~~~~
-
-StrictDoc shall support creation of FMEA/FMECA safety analysis documents.
-
-Graphical User Interface (GUI)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-StrictDoc shall provide a Graphical User Interface (GUI).
-
-Web server and editable HTML pages
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-StrictDoc shall provide a web server that serves as a StrictDoc backend for
-reading and writing SDoc files.
 

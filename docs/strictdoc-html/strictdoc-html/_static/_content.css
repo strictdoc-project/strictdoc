@@ -3,6 +3,17 @@
   grid-template-columns: 1fr 1fr 1fr;
   gap: 0 0;
   place-items: stretch stretch;
+  /*
+    for vertical line in 'current' culumn:
+    .content_item[data-role="current"]::before
+  */
+  overflow: hidden;
+}
+
+.document-view .content {
+  background-color: var(--color-bg-contrast);
+  max-width: 900px;
+  padding: calc(var(--base-padding)*2);
 }
 
 .traceability-view .content {
@@ -10,14 +21,17 @@
                           minmax(var(--card-width), calc(2*var(--card-width)))
                           minmax(min-content, max-content);
   gap: var(--traceability-arrow) 0;
+  width: -moz-fit-content;
   width: fit-content;
 }
 
+.requirements-coverage-view .content,
 .deep-traceability-view .content {
   grid-template-columns:  minmax(min-content, max-content)
                           max-content
                           minmax(min-content, max-content);
   gap: var(--traceability-arrow) 0;
+  width: -moz-fit-content;
   width: fit-content;
 }
 
@@ -38,6 +52,11 @@
 
 .content_item {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-content: stretch;
+  align-items: stretch;
 }
 
 /* traceability */
@@ -52,6 +71,17 @@
 
 .content_item[data-role="children"] {
   grid-column: 3 / 4;
+}
+
+.deep-traceability-view .content_item[data-role="current"]::before,
+.traceability-view .content_item[data-role="current"]::before {
+  /* for vertical line in 'current' culumn */
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: calc(var(--traceability-arrow)*(-1));
+  left: 50%;
+  border-left: 1px dotted #000;
 }
 
 /* .table-view */
@@ -78,21 +108,4 @@
 
 .table-view [data-col="0"] {
   grid-column: 1 / -1;
-}
-
-/* article header */
-article header {
-  display: none;
-}
-.table-view article header {
-  /*
-    TODO: Displaying table headers very often produces visual noise.
-    Consider deleting headers altogether or find a better visual presentation.
-    *display: contents;
-  */
-  display: none;
-}
-.docsection + .docsection header,
-.requirement + .requirement header {
-  display: none;
 }

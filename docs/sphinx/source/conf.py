@@ -37,7 +37,7 @@ STRICTDOC_VERSION = get_version()
 # -- Project information -----------------------------------------------------
 
 project = "StrictDoc"
-copyright = "2020, Stanislav Pankevich"
+copyright = "2021, Stanislav Pankevich"
 author = "Stanislav Pankevich"
 
 # The full version, including alpha/beta/rc tags
@@ -252,7 +252,7 @@ latex_elements = {
             \vfill 
 
             \begin{center}
-                \Large{© 2020 StrictDoc Project}
+                \Large{© 2021 StrictDoc Project}
             \end{center}
 
         \end{titlepage}

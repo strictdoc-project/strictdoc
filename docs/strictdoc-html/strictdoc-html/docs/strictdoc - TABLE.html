@@ -1,456 +1,514 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   
   <meta charset="UTF-8"/>
+
   <link rel="shortcut icon" href="../_static/favicon.ico" type="image/x-icon"/>
   <link rel="icon" href="../_static/favicon.ico" type="image/x-icon"/>
+
   
   <link rel="stylesheet" href="../_static/_base.css"/>
   <link rel="stylesheet" href="../_static/_layout.css"/>
   <link rel="stylesheet" href="../_static/_content.css"/>
+  <link rel="stylesheet" href="../_static/_requirement.css"/>
   <link rel="stylesheet" href="../_static/_element.css"/>
   
+
   
   <script type="text/javascript" src="../_static/toc.js"></script>
   
+  
+  
+
+
   <title>StrictDoc - Table</title>
+
   
 </head>
 
-<body class="table-view"><div class="layout" id="layout">
+<body class="table-view">
+<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script>
+
+  <div class="layout" id="layout">
 
     <aside class="layout_aside-header">
-      <div>Table of Contents</div><a class="index-link" href="../index.html">To Index</a></aside>
+      
+  <a class="index-link" href="../index.html">To Index</a>
+
+    </aside>
 
     <aside class="layout_aside">
       
-    <ul class="toc"><li><a href="#Introduction">
+  
+    <div>Table of Contents</div>
+    <ul class="toc"><li><a href="#1-Introduction">
               <span class="section-number">1</span>
               Introduction
-            </a></li><li><a href="#Examples">
+            </a></li><li><a href="#2-Examples">
               <span class="section-number">2</span>
               Examples
-            </a></li><li><a href="#Getting-started">
+            </a></li><li><a href="#3-Getting-started">
               <span class="section-number">3</span>
               Getting started
-            </a><ul><li><a href="#Requirements">
+            </a><ul><li><a href="#3.1-Requirements">
               <span class="section-number">3.1</span>
               Requirements
-            </a></li><li><a href="#Installing-StrictDoc-as-a-Pip-package-recommended-way-">
+            </a></li><li><a href="#3.2-Installing-StrictDoc-as-a-Pip-package-recommended-way-">
               <span class="section-number">3.2</span>
               Installing StrictDoc as a Pip package (recommended way)
-            </a></li><li><a href="#Installing-StrictDoc-from-GitHub-developer-mode-">
+            </a></li><li><a href="#3.3-Installing-StrictDoc-from-GitHub-developer-mode-">
               <span class="section-number">3.3</span>
               Installing StrictDoc from GitHub (developer mode)
-            </a></li><li><a href="#Hello-world">
+            </a></li><li><a href="#3.4-Hello-world">
               <span class="section-number">3.4</span>
               Hello world
             </a></li></ul>
-            </li><li><a href="#SDoc-syntax">
+            </li><li><a href="#4-SDoc-syntax">
               <span class="section-number">4</span>
               SDoc syntax
-            </a><ul><li><a href="#Document-structure">
+            </a><ul><li><a href="#4.1-Document-structure">
               <span class="section-number">4.1</span>
               Document structure
-            </a><ul><li><a href="#Strict-rule-1-One-empty-line-between-all-nodes">
+            </a><ul><li><a href="#4.1.1-Strict-rule-1-One-empty-line-between-all-nodes">
               <span class="section-number">4.1.1</span>
               Strict rule #1: One empty line between all nodes
-            </a></li><li><a href="#Strict-rule-2-No-content-is-allowed-outside-of-SDoc-grammar">
+            </a></li><li><a href="#4.1.2-Strict-rule-2-No-content-is-allowed-outside-of-SDoc-grammar">
               <span class="section-number">4.1.2</span>
               Strict rule #2: No content is allowed outside of SDoc grammar
             </a></li></ul>
-            </li><li><a href="#Grammar-elements">
+            </li><li><a href="#4.2-Grammar-elements">
               <span class="section-number">4.2</span>
               Grammar elements
-            </a><ul><li><a href="#Document">
+            </a><ul><li><a href="#4.2.1-Document">
               <span class="section-number">4.2.1</span>
               Document
-            </a></li><li><a href="#Requirement">
+            </a></li><li><a href="#4.2.2-Requirement">
               <span class="section-number">4.2.2</span>
               Requirement
-            </a><ul><li><a href="#UID">
+            </a><ul><li><a href="#4.2.2.1-UID">
               <span class="section-number">4.2.2.1</span>
               UID
-            </a></li><li><a href="#References">
+            </a></li><li><a href="#4.2.2.2-References">
               <span class="section-number">4.2.2.2</span>
               References
-            </a></li><li><a href="#Comment">
+            </a></li><li><a href="#4.2.2.3-Comment">
               <span class="section-number">4.2.2.3</span>
               Comment
-            </a></li><li><a href="#Rationale">
+            </a></li><li><a href="#4.2.2.4-Rationale">
               <span class="section-number">4.2.2.4</span>
               Rationale
-            </a></li><li><a href="#Special-fields">
+            </a></li><li><a href="#4.2.2.5-Special-fields">
               <span class="section-number">4.2.2.5</span>
               Special fields
             </a></li></ul>
-            </li><li><a href="#Section">
+            </li><li><a href="#4.2.3-Section">
               <span class="section-number">4.2.3</span>
               Section
-            </a><ul><li><a href="#Nesting-sections">
+            </a><ul><li><a href="#4.2.3.1-Nesting-sections">
               <span class="section-number">4.2.3.1</span>
               Nesting sections
-            </a></li><li><a href="#Free-text">
+            </a></li><li><a href="#4.2.3.2-Free-text">
               <span class="section-number">4.2.3.2</span>
               Free text
             </a></li></ul>
-            </li><li><a href="#Composite-requirement">
+            </li><li><a href="#4.2.4-Composite-requirement">
               <span class="section-number">4.2.4</span>
               Composite requirement
             </a></li></ul>
             </li></ul>
-            </li><li><a href="#Export-options">
+            </li><li><a href="#5-Markup">
               <span class="section-number">5</span>
-              Export options
-            </a><ul><li><a href="#HTML-documentation-tree-by-StrictDoc">
+              Markup
+            </a><ul><li><a href="#5.1-Images">
               <span class="section-number">5.1</span>
+              Images
+            </a></li></ul>
+            </li><li><a href="#6-Export-options">
+              <span class="section-number">6</span>
+              Export options
+            </a><ul><li><a href="#6.1-HTML-documentation-tree-by-StrictDoc">
+              <span class="section-number">6.1</span>
               HTML documentation tree by StrictDoc
-            </a><ul><li><a href="#Standalone-HTML-pages-experimental-">
-              <span class="section-number">5.1.1</span>
+            </a><ul><li><a href="#6.1.1-Mathjax-support">
+              <span class="section-number">6.1.1</span>
+              Mathjax support
+            </a></li><li><a href="#6.1.2-Standalone-HTML-pages-experimental-">
+              <span class="section-number">6.1.2</span>
               Standalone HTML pages (experimental)
             </a></li></ul>
-            </li><li><a href="#HTML-export-via-Sphinx">
-              <span class="section-number">5.2</span>
+            </li><li><a href="#6.2-HTML-export-via-Sphinx">
+              <span class="section-number">6.2</span>
               HTML export via Sphinx
-            </a></li><li><a href="#PDF-export-via-Sphinx-LaTeX">
-              <span class="section-number">5.3</span>
+            </a></li><li><a href="#6.3-PDF-export-via-Sphinx-LaTeX">
+              <span class="section-number">6.3</span>
               PDF export via Sphinx/LaTeX
             </a></li></ul>
-            </li><li><a href="#Options">
-              <span class="section-number">6</span>
+            </li><li><a href="#7-Options">
+              <span class="section-number">7</span>
               Options
-            </a><ul><li><a href="#Parallelization">
-              <span class="section-number">6.1</span>
+            </a><ul><li><a href="#7.1-Parallelization">
+              <span class="section-number">7.1</span>
               Parallelization
             </a></li></ul>
-            </li><li><a href="#StrictDoc-and-other-tools">
-              <span class="section-number">7</span>
+            </li><li><a href="#8-StrictDoc-and-other-tools">
+              <span class="section-number">8</span>
               StrictDoc and other tools
-            </a><ul><li><a href="#StrictDoc-and-Doorstop">
-              <span class="section-number">7.1</span>
+            </a><ul><li><a href="#8.1-StrictDoc-and-Doorstop">
+              <span class="section-number">8.1</span>
               StrictDoc and Doorstop
-            </a></li><li><a href="#StrictDoc-and-Sphinx">
-              <span class="section-number">7.2</span>
+            </a></li><li><a href="#8.2-StrictDoc-and-Sphinx">
+              <span class="section-number">8.2</span>
               StrictDoc and Sphinx
-            </a></li><li><a href="#StrictDoc-and-Sphinx-Needs">
-              <span class="section-number">7.3</span>
+            </a></li><li><a href="#8.3-StrictDoc-and-Sphinx-Needs">
+              <span class="section-number">8.3</span>
               StrictDoc and Sphinx-Needs
             </a></li></ul>
-            </li><li><a href="#StrictDoc-Requirements">
-              <span class="section-number">8</span>
+            </li><li><a href="#9-StrictDoc-Requirements">
+              <span class="section-number">9</span>
               StrictDoc Requirements
-            </a><ul><li><a href="#Project-goals">
-              <span class="section-number">8.1</span>
+            </a><ul><li><a href="#9.1-Project-goals">
+              <span class="section-number">9.1</span>
               Project goals
-            </a><ul><li><a href="#GOAL-1-TOOL-SUPPORT">
-          <span class="section-number">8.1.1</span>
+            </a><ul><li><a href="#9.1.1-GOAL-1-TOOL-SUPPORT">
+          <span class="section-number">9.1.1</span>
           Software support for writing requirements and specifications documents
-        </a></li><li><a href="#GOAL-2-REDUCE-DOCUMENTATION-HAZARDS">
-          <span class="section-number">8.1.2</span>
+        </a></li><li><a href="#9.1.2-GOAL-2-REDUCE-DOCUMENTATION-HAZARDS">
+          <span class="section-number">9.1.2</span>
           Reduce documentation hazards
-        </a></li><li><a href="#GOAL-3-NO-RUNAWAY-DOCUMENTATION">
-          <span class="section-number">8.1.3</span>
+        </a></li><li><a href="#9.1.3-GOAL-3-NO-RUNAWAY-DOCUMENTATION">
+          <span class="section-number">9.1.3</span>
           No (or less) run-away documentation
-        </a></li><li><a href="#GOAL-4-CHANGE-MANAGEMENT">
-          <span class="section-number">8.1.4</span>
+        </a></li><li><a href="#9.1.4-GOAL-4-CHANGE-MANAGEMENT">
+          <span class="section-number">9.1.4</span>
           Change management
         </a></li></ul>
-            </li><li><a href="#High-level-requirements">
-              <span class="section-number">8.2</span>
+            </li><li><a href="#9.2-High-level-requirements">
+              <span class="section-number">9.2</span>
               High-level requirements
-            </a><ul><li><a href="#SDOC-HIGH-REQS-MANAGEMENT">
-          <span class="section-number">8.2.1</span>
+            </a><ul><li><a href="#9.2.1-SDOC-HIGH-REQS-MANAGEMENT">
+          <span class="section-number">9.2.1</span>
           Requirements management
-        </a></li><li><a href="#SDOC-HIGH-DATA-MODEL">
-          <span class="section-number">8.2.2</span>
+        </a></li><li><a href="#9.2.2-SDOC-HIGH-DATA-MODEL">
+          <span class="section-number">9.2.2</span>
           Data model
-        </a></li><li><a href="#Command-line-interface">
-          <span class="section-number">8.2.3</span>
+        </a></li><li><a href="#9.2.3-Command-line-interface">
+          <span class="section-number">9.2.3</span>
           Command-line interface
-        </a></li><li><a href="#Platform-support">
-          <span class="section-number">8.2.4</span>
+        </a></li><li><a href="#9.2.4-Platform-support">
+          <span class="section-number">9.2.4</span>
           Platform support
-        </a><ul><li><a href="#macOS-support">
-          <span class="section-number">8.2.4.1</span>
+        </a><ul><li><a href="#9.2.4.1-macOS-support">
+          <span class="section-number">9.2.4.1</span>
           macOS support
-        </a></li><li><a href="#Linux-support">
-          <span class="section-number">8.2.4.2</span>
+        </a></li><li><a href="#9.2.4.2-Linux-support">
+          <span class="section-number">9.2.4.2</span>
           Linux support
-        </a></li><li><a href="#Windows-support">
-          <span class="section-number">8.2.4.3</span>
+        </a></li><li><a href="#9.2.4.3-Windows-support">
+          <span class="section-number">9.2.4.3</span>
           Windows support
         </a></li></ul>
-            </li><li><a href="#Requirements-validation">
-          <span class="section-number">8.2.5</span>
+            </li><li><a href="#9.2.5-SDOC-HIGH-VALIDATION">
+          <span class="section-number">9.2.5</span>
           Requirements validation
-        </a></li><li><a href="#Requirements-text-format">
-          <span class="section-number">8.2.6</span>
+        </a></li><li><a href="#9.2.6-Requirements-text-format">
+          <span class="section-number">9.2.6</span>
           Requirements text format
-        </a></li><li><a href="#Linking-requirements">
-          <span class="section-number">8.2.7</span>
+        </a></li><li><a href="#9.2.7-Linking-requirements">
+          <span class="section-number">9.2.7</span>
           Linking requirements
-        </a></li><li><a href="#Scalability">
-          <span class="section-number">8.2.8</span>
+        </a></li><li><a href="#9.2.8-Scalability">
+          <span class="section-number">9.2.8</span>
           Scalability
-        </a></li><li><a href="#SDOC-HIGH-REQS-TRACEABILITY">
-          <span class="section-number">8.2.9</span>
+        </a></li><li><a href="#9.2.9-SDOC-HIGH-REQS-TRACEABILITY">
+          <span class="section-number">9.2.9</span>
           Traceability
-        </a></li><li><a href="#Visualization">
-          <span class="section-number">8.2.10</span>
+        </a></li><li><a href="#9.2.10-Visualization">
+          <span class="section-number">9.2.10</span>
           Visualization
-        </a></li><li><a href="#Open-source-software">
-          <span class="section-number">8.2.11</span>
+        </a></li><li><a href="#9.2.11-Open-source-software">
+          <span class="section-number">9.2.11</span>
           Open source software
         </a></li></ul>
-            </li><li><a href="#Implementation-requirements">
-              <span class="section-number">8.3</span>
+            </li><li><a href="#9.3-Implementation-requirements">
+              <span class="section-number">9.3</span>
               Implementation requirements
-            </a><ul><li><a href="#SDOC-IMPL-PARAL">
-          <span class="section-number">8.3.1</span>
+            </a><ul><li><a href="#9.3.1-SDOC-IMPL-PARAL">
+          <span class="section-number">9.3.1</span>
           Parallelization
-        </a></li><li><a href="#SDOC-IMPL-INCREMENTAL">
-          <span class="section-number">8.3.2</span>
+        </a></li><li><a href="#9.3.2-SDOC-IMPL-INCREMENTAL">
+          <span class="section-number">9.3.2</span>
           Incremental generation
         </a></li></ul>
-            </li><li><a href="#Data-model">
-              <span class="section-number">8.4</span>
+            </li><li><a href="#9.4-Data-model">
+              <span class="section-number">9.4</span>
               Data model
-            </a><ul><li><a href="#SDOC-DM-MODEL">
-          <span class="section-number">8.4.1</span>
+            </a><ul><li><a href="#9.4.1-SDOC-DM-MODEL">
+          <span class="section-number">9.4.1</span>
           Modeling capability
-        </a></li><li><a href="#Section-item">
-              <span class="section-number">8.4.2</span>
+        </a></li><li><a href="#9.4.2-Section-item">
+              <span class="section-number">9.4.2</span>
               Section item
-            </a></li><li><a href="#Requirement-item">
-              <span class="section-number">8.4.3</span>
+            </a></li><li><a href="#9.4.3-Requirement-item">
+              <span class="section-number">9.4.3</span>
               Requirement item
-            </a><ul><li><a href="#Statement">
-          <span class="section-number">8.4.3.1</span>
+            </a><ul><li><a href="#9.4.3.1-Statement">
+          <span class="section-number">9.4.3.1</span>
           Statement
-        </a></li><li><a href="#Content-body">
-          <span class="section-number">8.4.3.2</span>
+        </a></li><li><a href="#9.4.3.2-Content-body">
+          <span class="section-number">9.4.3.2</span>
           Content body
-        </a></li><li><a href="#UID-identifier">
-          <span class="section-number">8.4.3.3</span>
+        </a></li><li><a href="#9.4.3.3-UID-identifier">
+          <span class="section-number">9.4.3.3</span>
           UID identifier
-        </a><ul><li><a href="#UID-identifier-format">
-          <span class="section-number">8.4.3.3.1</span>
+        </a><ul><li><a href="#9.4.3.3.1-UID-identifier-format">
+          <span class="section-number">9.4.3.3.1</span>
           UID identifier format
         </a></li></ul>
-            </li><li><a href="#Title">
-          <span class="section-number">8.4.3.4</span>
+            </li><li><a href="#9.4.3.4-Title">
+          <span class="section-number">9.4.3.4</span>
           Title
-        </a></li><li><a href="#References">
-          <span class="section-number">8.4.3.5</span>
+        </a></li><li><a href="#9.4.3.5-References">
+          <span class="section-number">9.4.3.5</span>
           References
-        </a></li><li><a href="#Comments">
-          <span class="section-number">8.4.3.6</span>
+        </a></li><li><a href="#9.4.3.6-Comments">
+          <span class="section-number">9.4.3.6</span>
           Comments
-        </a></li><li><a href="#Special-fields">
-          <span class="section-number">8.4.3.7</span>
+        </a></li><li><a href="#9.4.3.7-Special-fields">
+          <span class="section-number">9.4.3.7</span>
           Special fields
         </a></li></ul>
-            </li><li><a href="#Composite-Requirement-item">
-              <span class="section-number">8.4.4</span>
+            </li><li><a href="#9.4.4-Composite-Requirement-item">
+              <span class="section-number">9.4.4</span>
               Composite Requirement item
-            </a></li><li><a href="#Links">
-          <span class="section-number">8.4.5</span>
+            </a></li><li><a href="#9.4.5-Links">
+          <span class="section-number">9.4.5</span>
           Links
-        </a><ul><li><a href="#Parent-links">
-          <span class="section-number">8.4.5.1</span>
+        </a><ul><li><a href="#9.4.5.1-Parent-links">
+          <span class="section-number">9.4.5.1</span>
           Parent links
         </a></li></ul>
             </li></ul>
-            </li><li><a href="#SDOC-file-format">
-              <span class="section-number">8.5</span>
+            </li><li><a href="#9.5-SDOC-file-format">
+              <span class="section-number">9.5</span>
               SDOC file format
-            </a><ul><li><a href="#SDOC-FMT-PRIMARY">
-          <span class="section-number">8.5.1</span>
+            </a><ul><li><a href="#9.5.1-SDOC-FMT-PRIMARY">
+          <span class="section-number">9.5.1</span>
           Primary text implementation
-        </a></li><li><a href="#SDOC-FMT-GRAMMAR">
-          <span class="section-number">8.5.2</span>
+        </a></li><li><a href="#9.5.2-SDOC-FMT-GRAMMAR">
+          <span class="section-number">9.5.2</span>
           Grammar
-        </a></li><li><a href="#Type-safety">
-          <span class="section-number">8.5.3</span>
+        </a><ul><li><a href="#9.5.2.1-No-indentation">
+          <span class="section-number">9.5.2.1</span>
+          No indentation
+        </a></li></ul>
+            </li><li><a href="#9.5.3-Type-safety">
+          <span class="section-number">9.5.3</span>
           Type safety
         </a></li></ul>
-            </li><li><a href="#Document-Generators">
-              <span class="section-number">8.6</span>
+            </li><li><a href="#9.6-Document-Generators">
+              <span class="section-number">9.6</span>
               Document Generators
-            </a><ul><li><a href="#HTML-Export">
-              <span class="section-number">8.6.1</span>
+            </a><ul><li><a href="#9.6.1-General">
+              <span class="section-number">9.6.1</span>
+              General
+            </a><ul><li><a href="#9.6.1.1-Generated-file-names">
+          <span class="section-number">9.6.1.1</span>
+          Generated file names
+        </a></li></ul>
+            </li><li><a href="#9.6.2-HTML-Export">
+              <span class="section-number">9.6.2</span>
               HTML Export
-            </a><ul><li><a href="#Single-document-Normal-form">
-          <span class="section-number">8.6.1.1</span>
+            </a><ul><li><a href="#9.6.2.1-Single-document-Normal-form">
+          <span class="section-number">9.6.2.1</span>
           Single document: Normal form
-        </a></li><li><a href="#Single-document-Tabular-form">
-          <span class="section-number">8.6.1.2</span>
+        </a></li><li><a href="#9.6.2.2-Single-document-Tabular-form">
+          <span class="section-number">9.6.2.2</span>
           Single document: Tabular form
-        </a></li><li><a href="#Single-document-1-level-traceability">
-          <span class="section-number">8.6.1.3</span>
+        </a></li><li><a href="#9.6.2.3-Single-document-1-level-traceability">
+          <span class="section-number">9.6.2.3</span>
           Single document: 1-level traceability
-        </a></li><li><a href="#Single-document-Deep-traceability">
-          <span class="section-number">8.6.1.4</span>
+        </a></li><li><a href="#9.6.2.4-Single-document-Deep-traceability">
+          <span class="section-number">9.6.2.4</span>
           Single document: Deep traceability
-        </a></li><li><a href="#Left-panel-Table-of-contents">
-          <span class="section-number">8.6.1.5</span>
+        </a></li><li><a href="#9.6.2.5-Left-panel-Table-of-contents">
+          <span class="section-number">9.6.2.5</span>
           Left panel: Table of contents
         </a></li></ul>
-            </li><li><a href="#PDF-Export">
-              <span class="section-number">8.6.2</span>
+            </li><li><a href="#9.6.3-PDF-Export">
+              <span class="section-number">9.6.3</span>
               PDF Export
-            </a><ul><li><a href="#Sphinx-documentation-generator">
-          <span class="section-number">8.6.2.1</span>
+            </a><ul><li><a href="#9.6.3.1-Sphinx-documentation-generator">
+          <span class="section-number">9.6.3.1</span>
           Sphinx documentation generator
         </a></li></ul>
-            </li><li><a href="#Excel-Export">
-          <span class="section-number">8.6.3</span>
+            </li><li><a href="#9.6.4-Excel-Export">
+          <span class="section-number">9.6.4</span>
           Excel Export
         </a></li></ul>
-            </li><li><a href="#Validation">
-              <span class="section-number">8.7</span>
+            </li><li><a href="#9.7-Validation">
+              <span class="section-number">9.7</span>
               Validation
-            </a><ul><li><a href="#Valid-HTML-markup">
-          <span class="section-number">8.7.1</span>
+            </a><ul><li><a href="#9.7.1-SDOC-VALIDATION-UNIQUE-UID">
+          <span class="section-number">9.7.1</span>
+          Uniqueness of UID identifiers in a document tree
+        </a></li><li><a href="#9.7.2-SDOC-VALIDATION-NO-CYCLES">
+          <span class="section-number">9.7.2</span>
+          No cycles in a document tree
+        </a></li><li><a href="#9.7.3-SDOC-VALIDATION-VALID-HTML">
+          <span class="section-number">9.7.3</span>
           Valid HTML markup
         </a></li></ul>
             </li></ul>
-            </li><li><a href="#Design-decisions">
-              <span class="section-number">9</span>
+            </li><li><a href="#10-Design-decisions">
+              <span class="section-number">10</span>
               Design decisions
-            </a><ul><li><a href="#Building-blocks">
-              <span class="section-number">9.1</span>
+            </a><ul><li><a href="#10.1-Building-blocks">
+              <span class="section-number">10.1</span>
               Building blocks
-            </a><ul><li><a href="#TextX">
-          <span class="section-number">9.1.1</span>
+            </a><ul><li><a href="#10.1.1-TextX">
+          <span class="section-number">10.1.1</span>
           TextX
-        </a></li><li><a href="#Jinja2">
-          <span class="section-number">9.1.2</span>
+        </a></li><li><a href="#10.1.2-Jinja2">
+          <span class="section-number">10.1.2</span>
           Jinja2
-        </a></li><li><a href="#Sphinx-and-Docutils">
-          <span class="section-number">9.1.3</span>
+        </a></li><li><a href="#10.1.3-Sphinx-and-Docutils">
+          <span class="section-number">10.1.3</span>
           Sphinx and Docutils
         </a></li></ul>
-            </li><li><a href="#SDoc-grammar">
-              <span class="section-number">9.2</span>
-              SDoc grammar
-            </a><ul><li><a href="#No-indentation">
-          <span class="section-number">9.2.1</span>
-          No indentation
+            </li></ul>
+            </li><li><a href="#11-Backlog">
+              <span class="section-number">11</span>
+              Backlog
+            </a><ul><li><a href="#11.1-Work-in-progress">
+              <span class="section-number">11.1</span>
+              Work in progress
+            </a><ul><li><a href="#11.1.1-Traceability-and-coverage">
+              <span class="section-number">11.1.1</span>
+              Traceability and coverage
+            </a><ul><li><a href="#11.1.1.1-Linking-with-implementation-artifacts">
+          <span class="section-number">11.1.1.1</span>
+          Linking with implementation artifacts
+        </a><ul><li><a href="#11.1.1.1.1-Validation-Broken-links-from-requirements-to-source-files">
+          <span class="section-number">11.1.1.1.1</span>
+          Validation: Broken links from requirements to source files
+        </a></li><li><a href="#11.1.1.1.2-Validation-Broken-links-from-source-files-to-requirements">
+          <span class="section-number">11.1.1.1.2</span>
+          Validation: Broken links from source files to requirements
+        </a></li></ul>
+            </li><li><a href="#11.1.1.2-Requirements-coverage">
+          <span class="section-number">11.1.1.2</span>
+          Requirements coverage
+        </a></li><li><a href="#11.1.1.3-Source-coverage">
+          <span class="section-number">11.1.1.3</span>
+          Source coverage
         </a></li></ul>
             </li></ul>
-            </li><li><a href="#Backlog">
-              <span class="section-number">10</span>
-              Backlog
-            </a><ul><li><a href="#Generated-file-names">
-          <span class="section-number">10.1</span>
-          Generated file names
-        </a></li><li><a href="#Validation-Uniqueness-of-UID-identifiers-in-a-document-tree">
-          <span class="section-number">10.2</span>
-          Validation: Uniqueness of UID identifiers in a document tree
-        </a></li><li><a href="#StrictDoc-as-library">
-          <span class="section-number">10.3</span>
-          StrictDoc as library
-        </a></li><li><a href="#BACKLOG-FUZZY-SEARCH">
-          <span class="section-number">10.4</span>
-          Fuzzy requirements search
-        </a></li><li><a href="#Export-capabilities">
-              <span class="section-number">10.5</span>
-              Export capabilities
-            </a><ul><li><a href="#CSV-import-export">
-          <span class="section-number">10.5.1</span>
-          CSV import/export
-        </a></li><li><a href="#PlantUML-export">
-          <span class="section-number">10.5.2</span>
-          PlantUML export
-        </a></li><li><a href="#ReqIF-import-export">
-          <span class="section-number">10.5.3</span>
+            </li><li><a href="#11.2-Project-level-configuration-file">
+          <span class="section-number">11.2</span>
+          Project-level configuration file
+        </a></li><li><a href="#11.3-Export-and-import-capabilities">
+              <span class="section-number">11.3</span>
+              Export and import capabilities
+            </a><ul><li><a href="#11.3.1-ReqIF-import-export">
+          <span class="section-number">11.3.1</span>
           ReqIF import/export
-        </a></li><li><a href="#Confluence-import-export">
-          <span class="section-number">10.5.4</span>
+        </a></li><li><a href="#11.3.2-CSV-import-export">
+          <span class="section-number">11.3.2</span>
+          CSV import/export
+        </a></li><li><a href="#11.3.3-PlantUML-export">
+          <span class="section-number">11.3.3</span>
+          PlantUML export
+        </a></li><li><a href="#11.3.4-Confluence-import-export">
+          <span class="section-number">11.3.4</span>
           Confluence import/export
-        </a></li><li><a href="#Tex-export">
-          <span class="section-number">10.5.5</span>
+        </a></li><li><a href="#11.3.5-Tex-export">
+          <span class="section-number">11.3.5</span>
           Tex export
-        </a></li><li><a href="#Doorstop-import-export">
-          <span class="section-number">10.5.6</span>
+        </a></li><li><a href="#11.3.6-Doorstop-import-export">
+          <span class="section-number">11.3.6</span>
           Doorstop import/export
-        </a></li><li><a href="#Markdown-support-for-text-and-code-blocks">
-          <span class="section-number">10.5.7</span>
+        </a></li><li><a href="#11.3.7-Markdown-support-for-text-and-code-blocks">
+          <span class="section-number">11.3.7</span>
           Markdown support for text and code blocks
         </a></li></ul>
-            </li><li><a href="#Traceability-and-coverage">
-              <span class="section-number">10.6</span>
-              Traceability and coverage
-            </a><ul><li><a href="#Linking-with-implementation-artifacts">
-          <span class="section-number">10.6.1</span>
-          Linking with implementation artifacts
-        </a></li><li><a href="#Requirement-checksumming">
-          <span class="section-number">10.6.2</span>
-          Requirement checksumming
-        </a></li><li><a href="#Documentation-coverage">
-          <span class="section-number">10.6.3</span>
-          Documentation coverage
-        </a></li></ul>
-            </li><li><a href="#Filtering-by-tags">
-          <span class="section-number">10.7</span>
+            </li><li><a href="#11.4-StrictDoc-as-library">
+          <span class="section-number">11.4</span>
+          StrictDoc as library
+        </a></li><li><a href="#11.5-BACKLOG-FUZZY-SEARCH">
+          <span class="section-number">11.5</span>
+          Fuzzy requirements search
+        </a></li><li><a href="#11.6-Filtering-by-tags">
+          <span class="section-number">11.6</span>
           Filtering by tags
-        </a></li><li><a href="#Open-questions">
-              <span class="section-number">10.8</span>
-              Open questions
-            </a><ul><li><a href="#One-or-many-input-sdoc-trees">
-              <span class="section-number">10.8.1</span>
-              One or many input sdoc trees
-            </a></li></ul>
-            </li><li><a href="#Advanced">
-              <span class="section-number">10.9</span>
+        </a></li><li><a href="#11.7-Advanced">
+              <span class="section-number">11.7</span>
               Advanced
-            </a><ul><li><a href="#Facts-table-Invariants-calculation-">
-          <span class="section-number">10.9.1</span>
-          Facts table. Invariants calculation.
-        </a></li><li><a href="#FMEA-FMECA-tables">
-          <span class="section-number">10.9.2</span>
-          FMEA/FMECA tables
-        </a></li><li><a href="#Graphical-User-Interface-GUI-">
-          <span class="section-number">10.9.3</span>
+            </a><ul><li><a href="#11.7.1-Requirement-checksumming">
+          <span class="section-number">11.7.1</span>
+          Requirement checksumming
+        </a></li><li><a href="#11.7.2-Graphical-User-Interface-GUI-">
+          <span class="section-number">11.7.2</span>
           Graphical User Interface (GUI)
-        </a></li><li><a href="#Web-server-and-editable-HTML-pages">
-          <span class="section-number">10.9.4</span>
+        </a><ul><li><a href="#11.7.2.1-Web-server-and-editable-HTML-pages">
+          <span class="section-number">11.7.2.1</span>
           Web server and editable HTML pages
         </a></li></ul>
+            </li><li><a href="#11.7.3-Facts-table-Invariants-calculation-">
+          <span class="section-number">11.7.3</span>
+          Facts table. Invariants calculation.
+        </a></li><li><a href="#11.7.4-FMEA-FMECA-tables">
+          <span class="section-number">11.7.4</span>
+          FMEA/FMECA tables
+        </a></li></ul>
+            </li><li><a href="#11.8-Open-questions">
+              <span class="section-number">11.8</span>
+              Open questions
+            </a><ul><li><a href="#11.8.1-One-or-many-input-sdoc-trees">
+              <span class="section-number">11.8.1</span>
+              One or many input sdoc trees
+            </a></li></ul>
             </li></ul>
             </li></ul>
+
     </aside>
 
-    <a class="layout_toggler layout_button" id="layout_toggle"></a><nav class="layout_nav">
-        <a
-        class="layout_nav-btn layout_button btn-document"
-        title="Go to Document view"
-        href="../docs/strictdoc.html">
-        DOC
-      </a>
-      <a
-        class="layout_nav-btn layout_button btn-table"
-        title="Go to Table view"
-        href="../docs/strictdoc - TABLE.html">
-        TBL
-      </a>
-      <a
-        class="layout_nav-btn layout_button btn-traceability"
-        title="Go to Traceability view"
-        href="../docs/strictdoc - TRACE.html">
-        TR
-      </a>
-      <a
-        class="layout_nav-btn layout_button btn-deep-traceability"
-        title="Go to Deep Traceability view"
-        href="../docs/strictdoc - DEEP-TRACE.html">
-        DTR
-      </a>
-      </nav><header class="layout_header">
-      <p>StrictDoc <span class="document-view-type">Table</span></p>
+    
+  <a class="layout_toggler layout_button" id="layout_toggle"></a><nav class="layout_nav">
+    <a
+    class="layout_nav-btn layout_button btn-document"
+    title="Go to Document view"
+    href="../docs/strictdoc.html">
+    DOC
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-table"
+    title="Go to Table view"
+    href="../docs/strictdoc - TABLE.html">
+    TBL
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-traceability"
+    title="Go to Traceability view"
+    href="../docs/strictdoc - TRACE.html">
+    TR
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-deep-traceability"
+    title="Go to Deep Traceability view"
+    href="../docs/strictdoc - DEEP-TRACE.html">
+    DTR
+  </a>
+  </nav>
+
+
+    <header class="layout_header">
+      
+  <p>StrictDoc <span class="document-view-type">Table</span></p>
+
     </header>
 
     <main class="layout_main">
@@ -461,16 +519,10 @@
       <div class="content">
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Introduction"></div><h1 class="section-title" data-level="1">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="1-Introduction"></div><h1 class="section-title" data-level="1">
       Introduction
     </h1>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>StrictDoc is software for writing technical requirements and specifications.</p>
 <p>Summary of StrictDoc features:</p>
@@ -503,20 +555,13 @@ Further performance tuning should be possible.</li>
 section to get an idea of the overall project direction.</p>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Examples"></div><h1 class="section-title" data-level="2">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="2-Examples"></div><h1 class="section-title" data-level="2">
       Examples
     </h1>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>&quot;Hello World&quot; example of the text language:</p>
 <pre class="code text literal-block">
@@ -542,33 +587,19 @@ which is written using StrictDoc:
 </ul>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Getting-started"></div><h1 class="section-title" data-level="3">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="3-Getting-started"></div><h1 class="section-title" data-level="3">
       Getting started
     </h1>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
+  </section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Requirements"></div><h2 class="section-title" data-level="3.1">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="3.1-Requirements"></div><h2 class="section-title" data-level="3.1">
       Requirements
     </h2>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <ul class="simple">
 <li>Python 3.6+</li>
@@ -576,40 +607,26 @@ which is written using StrictDoc:
 </ul>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Installing-StrictDoc-as-a-Pip-package-recommended-way-"></div><h2 class="section-title" data-level="3.2">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="3.2-Installing-StrictDoc-as-a-Pip-package-recommended-way-"></div><h2 class="section-title" data-level="3.2">
       Installing StrictDoc as a Pip package (recommended way)
     </h2>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <pre class="code text literal-block">
 pip install strictdoc
 </pre>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Installing-StrictDoc-from-GitHub-developer-mode-"></div><h2 class="section-title" data-level="3.3">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="3.3-Installing-StrictDoc-from-GitHub-developer-mode-"></div><h2 class="section-title" data-level="3.3">
       Installing StrictDoc from GitHub (developer mode)
     </h2>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p><strong>Note:</strong> Use this way of installing StrictDoc only if you want to make changes
 in StrictDoc's source code. Otherwise, install StrictDoc as a Pip package
@@ -635,20 +652,13 @@ invoke test
 </pre>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Hello-world"></div><h2 class="section-title" data-level="3.4">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="3.4-Hello-world"></div><h2 class="section-title" data-level="3.4">
       Hello world
     </h2>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <pre class="code text literal-block">
 git clone --depth 1 https://github.com/strictdoc-project/strictdoc &amp;&amp; cd strictdoc
@@ -656,20 +666,13 @@ strictdoc export docs/
 </pre>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="SDoc-syntax"></div><h1 class="section-title" data-level="4">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="4-SDoc-syntax"></div><h1 class="section-title" data-level="4">
       SDoc syntax
     </h1>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>StrictDoc defines a special syntax for writing specifications documents. This
 syntax is called SDoc and it's grammar is encoded with the
@@ -687,20 +690,13 @@ TITLE: StrictDoc
 <a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc">strictdoc.sdoc</a>.</p>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Document-structure"></div><h2 class="section-title" data-level="4.1">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="4.1-Document-structure"></div><h2 class="section-title" data-level="4.1">
       Document structure
     </h2>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>An SDoc document consists of a <tt class="docutils literal">[DOCUMENT]</tt> declaration followed by one or many
 <tt class="docutils literal">[REQUIREMENT]</tt> or <tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt> statements which can be grouped
@@ -720,20 +716,13 @@ into <tt class="docutils literal">[SECTION]</tt> blocks.</p>
 <p>Each construct is described in more detail below.</p>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Strict-rule-1-One-empty-line-between-all-nodes"></div><h3 class="section-title" data-level="4.1.1">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="4.1.1-Strict-rule-1-One-empty-line-between-all-nodes"></div><h3 class="section-title" data-level="4.1.1">
       Strict rule #1: One empty line between all nodes
     </h3>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>StrictDoc's grammar requires each node, such as <tt class="docutils literal">[REQUIREMENT]</tt>, <tt class="docutils literal">[SECTION]</tt>,
 etc., to be separated with exactly one empty line from the nodes surrounding it.
@@ -741,20 +730,13 @@ This rule is valid for all nodes. Absence of an empty line or presence of more
 than one empty line between two nodes will result in an SDoc parsing error.</p>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Strict-rule-2-No-content-is-allowed-outside-of-SDoc-grammar"></div><h3 class="section-title" data-level="4.1.2">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="4.1.2-Strict-rule-2-No-content-is-allowed-outside-of-SDoc-grammar"></div><h3 class="section-title" data-level="4.1.2">
       Strict rule #2: No content is allowed outside of SDoc grammar
     </h3>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>StrictDoc's grammar does not allow any content to be written outside of the SDoc
 grammatical constructs. It is assumed that the critical content shall always be
@@ -764,33 +746,19 @@ be specified using <tt class="docutils literal">[FREETEXT]</tt> nodes. By design
 be only attached to the <tt class="docutils literal">[DOCUMENT]</tt> and <tt class="docutils literal">[SECTION]</tt> nodes.</p>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Grammar-elements"></div><h2 class="section-title" data-level="4.2">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="4.2-Grammar-elements"></div><h2 class="section-title" data-level="4.2">
       Grammar elements
     </h2>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
+  </section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Document"></div><h3 class="section-title" data-level="4.2.1">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="4.2.1-Document"></div><h3 class="section-title" data-level="4.2.1">
       Document
     </h3>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p><tt class="docutils literal">[DOCUMENT]</tt> element must always be present in an SDoc document. It is a root
 of an SDoc document graph.</p>
@@ -813,20 +781,13 @@ StrictDoc is software for writing technical requirements and specifications.
 <p><tt class="docutils literal">SPECIAL_FIELDS</tt> (see Requirement / Special fields below).</p>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Requirement"></div><h3 class="section-title" data-level="4.2.2">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="4.2.2-Requirement"></div><h3 class="section-title" data-level="4.2.2">
       Requirement
     </h3>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>Minimal &quot;Hello World&quot; program with 3 empty requirements:</p>
 <pre class="code text literal-block">
@@ -872,20 +833,13 @@ STATEMENT: StrictDoc shall enable requirements management.
 </pre>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="UID"></div><h4 class="section-title" data-level="4.2.2.1">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="4.2.2.1-UID"></div><h4 class="section-title" data-level="4.2.2.1">
       UID
     </h4>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p><strong>Observation:</strong> Some documents do not use unique identifiers which makes it
 impossible to trace their requirements to each other. Within StrictDoc's
@@ -910,20 +864,13 @@ STATEMENT: STATEMENT: StrictDoc shall be based on a well-defined data model.
 </pre>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="References"></div><h4 class="section-title" data-level="4.2.2.2">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="4.2.2.2-References"></div><h4 class="section-title" data-level="4.2.2.2">
       References
     </h4>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>The <tt class="docutils literal">[REQUIREMENT]</tt> / <tt class="docutils literal">REFS:</tt> field is used to connect requirements to each
 other:</p>
@@ -949,20 +896,13 @@ future, linking requirements to files will be possible.</p>
 requirements connected with a reference have <tt class="docutils literal">UID</tt> defined.</p>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Comment"></div><h4 class="section-title" data-level="4.2.2.3">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="4.2.2.3-Comment"></div><h4 class="section-title" data-level="4.2.2.3">
       Comment
     </h4>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>A requirement can have one or more comments explaining this requirement. The
 comments can be single-line or multiline.</p>
@@ -984,20 +924,13 @@ Each line is rendered as a separate paragraph.
 </pre>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Rationale"></div><h4 class="section-title" data-level="4.2.2.4">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="4.2.2.4-Rationale"></div><h4 class="section-title" data-level="4.2.2.4">
       Rationale
     </h4>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>A requirement can have a <tt class="docutils literal">RATIONALE:</tt> field that explains why such a
 requirement exists. Like comments, the rationale field can be single-line or
@@ -1014,20 +947,13 @@ RATIONALE: The presence of the REQ-001 is justified.
 </pre>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Special-fields"></div><h4 class="section-title" data-level="4.2.2.5">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="4.2.2.5-Special-fields"></div><h4 class="section-title" data-level="4.2.2.5">
       Special fields
     </h4>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p><strong>Observation:</strong> Different industries have their own types of requirements
 documents. These documents often have specialized meta information which is
@@ -1069,20 +995,13 @@ the future, more specialized types are envisioned, such as <tt class="docutils l
 <tt class="docutils literal">Tag</tt>.</p>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Section"></div><h3 class="section-title" data-level="4.2.3">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="4.2.3-Section"></div><h3 class="section-title" data-level="4.2.3">
       Section
     </h3>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>The <tt class="docutils literal">[SECTION]</tt> element is used for creating document chapters and grouping
 requirements into logical groups. It is equivalent to the use of <tt class="docutils literal">#</tt>, <tt class="docutils literal">##</tt>,
@@ -1111,20 +1030,13 @@ STATEMENT: ...
 </pre>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Nesting-sections"></div><h4 class="section-title" data-level="4.2.3.1">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="4.2.3.1-Nesting-sections"></div><h4 class="section-title" data-level="4.2.3.1">
       Nesting sections
     </h4>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>Sections can be nested within each other.</p>
 <pre class="code text literal-block">
@@ -1149,20 +1061,13 @@ sections will have their titles numbered accordingly: <tt class="docutils litera
 <tt class="docutils literal">1.1 Subchapter</tt>.</p>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Free-text"></div><h4 class="section-title" data-level="4.2.3.2">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="4.2.3.2-Free-text"></div><h4 class="section-title" data-level="4.2.3.2">
       Free text
     </h4>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>A section can have a block of <tt class="docutils literal">[FREETEXT]</tt> connected to it:</p>
 <pre class="code text literal-block">
@@ -1193,20 +1098,13 @@ atomic <tt class="docutils literal">[REQUIREMENT]</tt> statements and get connec
 statements in the document.</p>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Composite-requirement"></div><h3 class="section-title" data-level="4.2.4">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="4.2.4-Composite-requirement"></div><h3 class="section-title" data-level="4.2.4">
       Composite requirement
     </h3>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>A <tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt> is a requirement that combines requirement
 properties of a <tt class="docutils literal">[REQUIREMENT]</tt> element and grouping features of a <tt class="docutils literal">[SECTION]</tt>
@@ -1238,33 +1136,53 @@ often, a more basic combination of nested <tt class="docutils literal">[SECTION]
 elements should do the job.</p>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="5-Markup"></div><h1 class="section-title" data-level="5">
+      Markup
+    </h1>
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>The Restructured Text (reST) markup is the default markup supported by
+StrictDoc. The reST markup can be written inside all StrictDoc's text blocks,
+such as <tt class="docutils literal">[FREETEXT]</tt>, <tt class="docutils literal">STATEMENT</tt>, <tt class="docutils literal">COMMENT</tt>, <tt class="docutils literal">RATIONALE</tt>.</p>
+<p>See the <a class="reference external" href="https://docutils.sourceforge.io/rst.html">reST syntax documentation</a>
+for a full reference.</p>
+<p>The support of Tex and HTML is planned.</p>
+</div>
 
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Export-options"></div><h1 class="section-title" data-level="5">
+    </div></section></article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="5.1-Images"></div><h2 class="section-title" data-level="5.1">
+      Images
+    </h2>
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>This is the example of how images are included using the reST syntax:</p>
+<pre class="code text literal-block">
+[FREETEXT]
+.. image:: _assets/sandbox1.svg
+   :alt: Sandbox demo
+   :class: image
+[/FREETEXT]
+</pre>
+</div>
+
+    </div></section></article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="6-Export-options"></div><h1 class="section-title" data-level="6">
       Export options
     </h1>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
+  </section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="HTML-documentation-tree-by-StrictDoc"></div><h2 class="section-title" data-level="5.1">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="6.1-HTML-documentation-tree-by-StrictDoc"></div><h2 class="section-title" data-level="6.1">
       HTML documentation tree by StrictDoc
     </h2>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>This is a default export option supported by StrictDoc.</p>
 <p>The following command creates an HTML export:</p>
@@ -1278,20 +1196,39 @@ skipped because HTML export is a default export option and the default output
 folder is <tt class="docutils literal">output</tt>.</p>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="6.1.1-Mathjax-support"></div><h3 class="section-title" data-level="6.1.1">
+      Mathjax support
+    </h3>
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>The option <tt class="docutils literal"><span class="pre">--enable-mathjax</span></tt> makes StrictDoc to include the
+<a class="reference external" href="https://www.mathjax.org/">Mathjax</a> Javascript library to all of the document
+templates.</p>
+<pre class="code text literal-block">
+strictdoc export docs/ --enable-mathjax --output-dir output-html
+</pre>
+<p>Example of using Mathjax:</p>
+<pre class="code text literal-block">
+[FREETEXT]
+$$
+\\mathbf{\\underline{k}}_{\\text{a}} =
+\\mathbf{\\underline{i}}_{\\text{a}} \\times
+\\mathbf{\\underline{j}}_{\\text{a}}
+$$
+[/FREETEXT]
+</pre>
+</div>
 
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Standalone-HTML-pages-experimental-"></div><h3 class="section-title" data-level="5.1.1">
+    </div></section></article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="6.1.2-Standalone-HTML-pages-experimental-"></div><h3 class="section-title" data-level="6.1.2">
       Standalone HTML pages (experimental)
     </h3>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>The following command creates a normal HTML export with all pages having their
 assets embedded into HTML using Data URI / Base64:</p>
@@ -1303,20 +1240,13 @@ email as single files. This option might be especially useful if you work with
 a single document instead of a documentation tree with multiple documents.</p>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="HTML-export-via-Sphinx"></div><h2 class="section-title" data-level="5.2">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="6.2-HTML-export-via-Sphinx"></div><h2 class="section-title" data-level="6.2">
       HTML export via Sphinx
     </h2>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>The following command creates an RST export:</p>
 <pre class="code text literal-block">
@@ -1333,20 +1263,13 @@ is generated this way, see the Invoke task:
 <a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48">invoke sphinx</a>.</p>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="PDF-export-via-Sphinx-LaTeX"></div><h2 class="section-title" data-level="5.3">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="6.3-PDF-export-via-Sphinx-LaTeX"></div><h2 class="section-title" data-level="6.3">
       PDF export via Sphinx/LaTeX
     </h2>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>The following command creates an RST export:</p>
 <pre class="code text literal-block">
@@ -1363,33 +1286,19 @@ is generated this way, see the Invoke task:
 <a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48">invoke sphinx</a>.</p>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Options"></div><h1 class="section-title" data-level="6">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="7-Options"></div><h1 class="section-title" data-level="7">
       Options
     </h1>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
+  </section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Parallelization"></div><h2 class="section-title" data-level="6.1">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="7.1-Parallelization"></div><h2 class="section-title" data-level="7.1">
       Parallelization
     </h2>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>To improve performance for the large document trees (1000+ requirements),
 StrictDoc parallelizes reading and generation of the documents using
@@ -1407,33 +1316,19 @@ are run from the main thread. Reading of the SDoc documents is parallelized for
 all export options and is disabled with this option as well.</p>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="StrictDoc-and-other-tools"></div><h1 class="section-title" data-level="7">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="8-StrictDoc-and-other-tools"></div><h1 class="section-title" data-level="8">
       StrictDoc and other tools
     </h1>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
+  </section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="StrictDoc-and-Doorstop"></div><h2 class="section-title" data-level="7.1">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="8.1-StrictDoc-and-Doorstop"></div><h2 class="section-title" data-level="8.1">
       StrictDoc and Doorstop
     </h2>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>The StrictDoc project is a close successor of another project called
 <a class="reference external" href="https://github.com/doorstop-dev/doorstop">Doorstop</a>.</p>
@@ -1482,20 +1377,13 @@ using the parsing capabilities provided by textX out of the box.</li>
 to/from Doorstop format.</p>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="StrictDoc-and-Sphinx"></div><h2 class="section-title" data-level="7.2">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="8.2-StrictDoc-and-Sphinx"></div><h2 class="section-title" data-level="8.2">
       StrictDoc and Sphinx
     </h2>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>Both Sphinx and StrictDoc are both documentation generators but StrictDoc is at
 a higher level of abstraction: StrictDoc's specialization is requirements and
@@ -1514,20 +1402,13 @@ website by readthedocs which uses Sphinx under the hood. The
 <a class="reference external" href="https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/">StrictDoc</a>.</p>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="StrictDoc-and-Sphinx-Needs"></div><h2 class="section-title" data-level="7.3">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="8.3-StrictDoc-and-Sphinx-Needs"></div><h2 class="section-title" data-level="8.3">
       StrictDoc and Sphinx-Needs
     </h2>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p><a class="reference external" href="https://sphinxcontrib-needs.readthedocs.io/en/latest/">Sphinx-Needs</a> is a
 text-based requirements management system based on Sphinx. It is implemented
@@ -1578,51 +1459,32 @@ and
 </ul>
 </div>
 
-    </div></section>
-</article>
+    </div></section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="StrictDoc-Requirements"></div><h1 class="section-title" data-level="8">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="9-StrictDoc-Requirements"></div><h1 class="section-title" data-level="9">
       StrictDoc Requirements
     </h1>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
+  </section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Project-goals"></div><h2 class="section-title" data-level="8.1">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="9.1-Project-goals"></div><h2 class="section-title" data-level="9.1">
       Project goals
     </h2>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
-          <article class="requirement">
+  </section></article>
+          <div class="requirement-card-view_node">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+<article class="requirement">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="GOAL-1-TOOL-SUPPORT"></div><h3 class="section-title" data-level="8.1.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.1.1-GOAL-1-TOOL-SUPPORT"></div><h3 class="section-title" data-level="9.1.1">
       Software support for writing requirements and specifications documents
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>GOAL-1-TOOL-SUPPORT</dd></div>
 
     </dl>
-  <ul class="requirement_child">
+  <ul class="requirement_link">
     <li>
-      <a href="#SDOC-HIGH-REQS-MANAGEMENT">
+      <a class="requirement_link-child" href="#9.2.1-SDOC-HIGH-REQS-MANAGEMENT">
         <span class="requirement_child-uid">SDOC-HIGH-REQS-MANAGEMENT</span>
         Requirements management
       </a>
@@ -1659,15 +1521,13 @@ hundreds or thousands of requirements.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="GOAL-2-REDUCE-DOCUMENTATION-HAZARDS"></div><h3 class="section-title" data-level="8.1.2">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.1.2-GOAL-2-REDUCE-DOCUMENTATION-HAZARDS"></div><h3 class="section-title" data-level="9.1.2">
       Reduce documentation hazards
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>GOAL-2-REDUCE-DOCUMENTATION-HAZARDS</dd></div>
@@ -1703,15 +1563,13 @@ and writing technical documentation.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="GOAL-3-NO-RUNAWAY-DOCUMENTATION"></div><h3 class="section-title" data-level="8.1.3">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.1.3-GOAL-3-NO-RUNAWAY-DOCUMENTATION"></div><h3 class="section-title" data-level="9.1.3">
       No (or less) run-away documentation
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>GOAL-3-NO-RUNAWAY-DOCUMENTATION</dd></div>
@@ -1740,23 +1598,21 @@ documents and documentation trees.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="GOAL-4-CHANGE-MANAGEMENT"></div><h3 class="section-title" data-level="8.1.4">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.1.4-GOAL-4-CHANGE-MANAGEMENT"></div><h3 class="section-title" data-level="9.1.4">
       Change management
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>GOAL-4-CHANGE-MANAGEMENT</dd></div>
 
     </dl>
-  <ul class="requirement_child">
+  <ul class="requirement_link">
     <li>
-      <a href="#BACKLOG-FUZZY-SEARCH">
+      <a class="requirement_link-child" href="#11.5-BACKLOG-FUZZY-SEARCH">
         <span class="requirement_child-uid">BACKLOG-FUZZY-SEARCH</span>
         Fuzzy requirements search
       </a>
@@ -1796,44 +1652,35 @@ to do a more advanced analysis of requirements and requirement trees:</p>
   </section>
 
 </article>
+
+</div>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="High-level-requirements"></div><h2 class="section-title" data-level="8.2">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="9.2-High-level-requirements"></div><h2 class="section-title" data-level="9.2">
       High-level requirements
     </h2>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
-          <article class="requirement">
+  </section></article>
+          <div class="requirement-card-view_node">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+<article class="requirement">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="SDOC-HIGH-REQS-MANAGEMENT"></div><h3 class="section-title" data-level="8.2.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.2.1-SDOC-HIGH-REQS-MANAGEMENT"></div><h3 class="section-title" data-level="9.2.1">
       Requirements management
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-HIGH-REQS-MANAGEMENT</dd></div>
 
     </dl>
-  <ul class="requirement_parent">
+  <ul class="requirement_link">
     <li>
-      <a href="#GOAL-1-TOOL-SUPPORT">
+      <a class="requirement_link-parent" href="#9.1.1-GOAL-1-TOOL-SUPPORT">
         <span class="requirement_parent-uid">GOAL-1-TOOL-SUPPORT</span>
         Software support for writing requirements and specifications documents
       </a>
     </li>
     </ul>
-  <ul class="requirement_child">
+  <ul class="requirement_link">
     <li>
-      <a href="#SDOC-DM-MODEL">
+      <a class="requirement_link-child" href="#9.4.1-SDOC-DM-MODEL">
         <span class="requirement_child-uid">SDOC-DM-MODEL</span>
         Modeling capability
       </a>
@@ -1854,29 +1701,27 @@ to do a more advanced analysis of requirements and requirement trees:</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="SDOC-HIGH-DATA-MODEL"></div><h3 class="section-title" data-level="8.2.2">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.2.2-SDOC-HIGH-DATA-MODEL"></div><h3 class="section-title" data-level="9.2.2">
       Data model
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-HIGH-DATA-MODEL</dd></div>
 
     </dl>
-  <ul class="requirement_child">
+  <ul class="requirement_link">
     <li>
-      <a href="#SDOC-DM-MODEL">
+      <a class="requirement_link-child" href="#9.4.1-SDOC-DM-MODEL">
         <span class="requirement_child-uid">SDOC-DM-MODEL</span>
         Modeling capability
       </a>
     </li>
     <li>
-      <a href="#SDOC-FMT-GRAMMAR">
+      <a class="requirement_link-child" href="#9.5.2-SDOC-FMT-GRAMMAR">
         <span class="requirement_child-uid">SDOC-FMT-GRAMMAR</span>
         Grammar
       </a>
@@ -1915,15 +1760,13 @@ document data model which is called &quot;grammar&quot;.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Command-line-interface"></div><h3 class="section-title" data-level="8.2.3">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.2.3-Command-line-interface"></div><h3 class="section-title" data-level="9.2.3">
       Command-line interface
     </h3>
 
@@ -1941,15 +1784,13 @@ document data model which is called &quot;grammar&quot;.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Platform-support"></div><h3 class="section-title" data-level="8.2.4">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.2.4-Platform-support"></div><h3 class="section-title" data-level="9.2.4">
       Platform support
     </h3>
 
@@ -1967,15 +1808,13 @@ document data model which is called &quot;grammar&quot;.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="macOS-support"></div><h4 class="section-title" data-level="8.2.4.1">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.2.4.1-macOS-support"></div><h4 class="section-title" data-level="9.2.4.1">
       macOS support
     </h4>
 
@@ -1993,15 +1832,13 @@ document data model which is called &quot;grammar&quot;.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Linux-support"></div><h4 class="section-title" data-level="8.2.4.2">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.2.4.2-Linux-support"></div><h4 class="section-title" data-level="9.2.4.2">
       Linux support
     </h4>
 
@@ -2019,15 +1856,13 @@ document data model which is called &quot;grammar&quot;.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Windows-support"></div><h4 class="section-title" data-level="8.2.4.3">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.2.4.3-Windows-support"></div><h4 class="section-title" data-level="9.2.4.3">
       Windows support
     </h4>
 
@@ -2045,17 +1880,38 @@ document data model which is called &quot;grammar&quot;.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Requirements-validation"></div><h3 class="section-title" data-level="8.2.5">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.2.5-SDOC-HIGH-VALIDATION"></div><h3 class="section-title" data-level="9.2.5">
       Requirements validation
-    </h3>
+    </h3><dl class="requirement_meta">
+      <div><dt>UID</dt><dd>SDOC-HIGH-VALIDATION</dd></div>
+
+    </dl>
+  <ul class="requirement_link">
+    <li>
+      <a class="requirement_link-child" href="#9.7.1-SDOC-VALIDATION-UNIQUE-UID">
+        <span class="requirement_child-uid">SDOC-VALIDATION-UNIQUE-UID</span>
+        Uniqueness of UID identifiers in a document tree
+      </a>
+    </li>
+    <li>
+      <a class="requirement_link-child" href="#9.7.2-SDOC-VALIDATION-NO-CYCLES">
+        <span class="requirement_child-uid">SDOC-VALIDATION-NO-CYCLES</span>
+        No cycles in a document tree
+      </a>
+    </li>
+    <li>
+      <a class="requirement_link-child" href="#9.7.3-SDOC-VALIDATION-VALID-HTML">
+        <span class="requirement_child-uid">SDOC-VALIDATION-VALID-HTML</span>
+        Valid HTML markup
+      </a>
+    </li>
+    </ul>
 
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
@@ -2071,15 +1927,13 @@ document data model which is called &quot;grammar&quot;.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Requirements-text-format"></div><h3 class="section-title" data-level="8.2.6">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.2.6-Requirements-text-format"></div><h3 class="section-title" data-level="9.2.6">
       Requirements text format
     </h3>
 
@@ -2097,15 +1951,13 @@ document data model which is called &quot;grammar&quot;.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Linking-requirements"></div><h3 class="section-title" data-level="8.2.7">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.2.7-Linking-requirements"></div><h3 class="section-title" data-level="9.2.7">
       Linking requirements
     </h3>
 
@@ -2123,15 +1975,13 @@ document data model which is called &quot;grammar&quot;.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Scalability"></div><h3 class="section-title" data-level="8.2.8">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.2.8-Scalability"></div><h3 class="section-title" data-level="9.2.8">
       Scalability
     </h3>
 
@@ -2149,15 +1999,13 @@ document data model which is called &quot;grammar&quot;.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="SDOC-HIGH-REQS-TRACEABILITY"></div><h3 class="section-title" data-level="8.2.9">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.2.9-SDOC-HIGH-REQS-TRACEABILITY"></div><h3 class="section-title" data-level="9.2.9">
       Traceability
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-HIGH-REQS-TRACEABILITY</dd></div>
@@ -2178,15 +2026,13 @@ document data model which is called &quot;grammar&quot;.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Visualization"></div><h3 class="section-title" data-level="8.2.10">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.2.10-Visualization"></div><h3 class="section-title" data-level="9.2.10">
       Visualization
     </h3>
 
@@ -2204,15 +2050,13 @@ document data model which is called &quot;grammar&quot;.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Open-source-software"></div><h3 class="section-title" data-level="8.2.11">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.2.11-Open-source-software"></div><h3 class="section-title" data-level="9.2.11">
       Open source software
     </h3>
 
@@ -2230,28 +2074,19 @@ document data model which is called &quot;grammar&quot;.</p>
   </section>
 
 </article>
+
+</div>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Implementation-requirements"></div><h2 class="section-title" data-level="8.3">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="9.3-Implementation-requirements"></div><h2 class="section-title" data-level="9.3">
       Implementation requirements
     </h2>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
-          <article class="requirement">
+  </section></article>
+          <div class="requirement-card-view_node">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+<article class="requirement">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="SDOC-IMPL-PARAL"></div><h3 class="section-title" data-level="8.3.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.3.1-SDOC-IMPL-PARAL"></div><h3 class="section-title" data-level="9.3.1">
       Parallelization
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-IMPL-PARAL</dd></div>
@@ -2272,15 +2107,13 @@ document data model which is called &quot;grammar&quot;.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="SDOC-IMPL-INCREMENTAL"></div><h3 class="section-title" data-level="8.3.2">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.3.2-SDOC-IMPL-INCREMENTAL"></div><h3 class="section-title" data-level="9.3.2">
       Incremental generation
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-IMPL-INCREMENTAL</dd></div>
@@ -2308,50 +2141,41 @@ documents and files.</p>
   </section>
 
 </article>
+
+</div>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Data-model"></div><h2 class="section-title" data-level="8.4">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="9.4-Data-model"></div><h2 class="section-title" data-level="9.4">
       Data model
     </h2>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
-          <article class="requirement">
+  </section></article>
+          <div class="requirement-card-view_node">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+<article class="requirement">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="SDOC-DM-MODEL"></div><h3 class="section-title" data-level="8.4.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.4.1-SDOC-DM-MODEL"></div><h3 class="section-title" data-level="9.4.1">
       Modeling capability
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-DM-MODEL</dd></div>
 
     </dl>
-  <ul class="requirement_parent">
+  <ul class="requirement_link">
     <li>
-      <a href="#SDOC-HIGH-REQS-MANAGEMENT">
+      <a class="requirement_link-parent" href="#9.2.1-SDOC-HIGH-REQS-MANAGEMENT">
         <span class="requirement_parent-uid">SDOC-HIGH-REQS-MANAGEMENT</span>
         Requirements management
       </a>
     </li>
     <li>
-      <a href="#SDOC-HIGH-DATA-MODEL">
+      <a class="requirement_link-parent" href="#9.2.2-SDOC-HIGH-DATA-MODEL">
         <span class="requirement_parent-uid">SDOC-HIGH-DATA-MODEL</span>
         Data model
       </a>
     </li>
     </ul>
-  <ul class="requirement_child">
+  <ul class="requirement_link">
     <li>
-      <a href="#SDOC-FMT-PRIMARY">
+      <a class="requirement_link-child" href="#9.5.1-SDOC-FMT-PRIMARY">
         <span class="requirement_child-uid">SDOC-FMT-PRIMARY</span>
         Primary text implementation
       </a>
@@ -2382,41 +2206,25 @@ documents and files.</p>
   </section>
 
 </article>
+
+</div>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Section-item"></div><h3 class="section-title" data-level="8.4.2">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="9.4.2-Section-item"></div><h3 class="section-title" data-level="9.4.2">
       Section item
     </h3>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
+  </section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Requirement-item"></div><h3 class="section-title" data-level="8.4.3">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="9.4.3-Requirement-item"></div><h3 class="section-title" data-level="9.4.3">
       Requirement item
     </h3>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
-          <article class="requirement">
+  </section></article>
+          <div class="requirement-card-view_node">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+<article class="requirement">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Statement"></div><h4 class="section-title" data-level="8.4.3.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.4.3.1-Statement"></div><h4 class="section-title" data-level="9.4.3.1">
       Statement
     </h4>
 
@@ -2434,15 +2242,13 @@ documents and files.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Content-body"></div><h4 class="section-title" data-level="8.4.3.2">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.4.3.2-Content-body"></div><h4 class="section-title" data-level="9.4.3.2">
       Content body
     </h4>
 
@@ -2460,15 +2266,13 @@ documents and files.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="UID-identifier"></div><h4 class="section-title" data-level="8.4.3.3">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.4.3.3-UID-identifier"></div><h4 class="section-title" data-level="9.4.3.3">
       UID identifier
     </h4>
 
@@ -2486,15 +2290,13 @@ documents and files.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="UID-identifier-format"></div><h5 class="section-title" data-level="8.4.3.3.1">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.4.3.3.1-UID-identifier-format"></div><h5 class="section-title" data-level="9.4.3.3.1">
       UID identifier format
     </h5>
 
@@ -2526,15 +2328,13 @@ be no way to define a single rule.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Title"></div><h4 class="section-title" data-level="8.4.3.4">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.4.3.4-Title"></div><h4 class="section-title" data-level="9.4.3.4">
       Title
     </h4>
 
@@ -2552,15 +2352,13 @@ be no way to define a single rule.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="References"></div><h4 class="section-title" data-level="8.4.3.5">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.4.3.5-References"></div><h4 class="section-title" data-level="9.4.3.5">
       References
     </h4>
 
@@ -2578,15 +2376,13 @@ be no way to define a single rule.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Comments"></div><h4 class="section-title" data-level="8.4.3.6">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.4.3.6-Comments"></div><h4 class="section-title" data-level="9.4.3.6">
       Comments
     </h4>
 
@@ -2604,15 +2400,13 @@ be no way to define a single rule.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Special-fields"></div><h4 class="section-title" data-level="8.4.3.7">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.4.3.7-Special-fields"></div><h4 class="section-title" data-level="9.4.3.7">
       Special fields
     </h4>
 
@@ -2640,33 +2434,24 @@ be no way to define a single rule.</p>
   </section>
 
 </article>
+
+</div>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Composite-Requirement-item"></div><h3 class="section-title" data-level="8.4.4">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="9.4.4-Composite-Requirement-item"></div><h3 class="section-title" data-level="9.4.4">
       Composite Requirement item
     </h3>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>TBD</p>
 </div>
 
-    </div></section>
-</article>
-          <article class="requirement">
+    </div></section></article>
+          <div class="requirement-card-view_node">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+<article class="requirement">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Links"></div><h3 class="section-title" data-level="8.4.5">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.4.5-Links"></div><h3 class="section-title" data-level="9.4.5">
       Links
     </h3>
 
@@ -2684,15 +2469,13 @@ be no way to define a single rule.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Parent-links"></div><h4 class="section-title" data-level="8.4.5.1">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.4.5.1-Parent-links"></div><h4 class="section-title" data-level="9.4.5.1">
       Parent links
     </h4>
 
@@ -2710,36 +2493,27 @@ be no way to define a single rule.</p>
   </section>
 
 </article>
+
+</div>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="SDOC-file-format"></div><h2 class="section-title" data-level="8.5">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="9.5-SDOC-file-format"></div><h2 class="section-title" data-level="9.5">
       SDOC file format
     </h2>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
-          <article class="requirement">
+  </section></article>
+          <div class="requirement-card-view_node">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+<article class="requirement">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="SDOC-FMT-PRIMARY"></div><h3 class="section-title" data-level="8.5.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.5.1-SDOC-FMT-PRIMARY"></div><h3 class="section-title" data-level="9.5.1">
       Primary text implementation
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-FMT-PRIMARY</dd></div>
 
     </dl>
-  <ul class="requirement_parent">
+  <ul class="requirement_link">
     <li>
-      <a href="#SDOC-DM-MODEL">
+      <a class="requirement_link-parent" href="#9.4.1-SDOC-DM-MODEL">
         <span class="requirement_parent-uid">SDOC-DM-MODEL</span>
         Modeling capability
       </a>
@@ -2760,23 +2534,21 @@ be no way to define a single rule.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="SDOC-FMT-GRAMMAR"></div><h3 class="section-title" data-level="8.5.2">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.5.2-SDOC-FMT-GRAMMAR"></div><h3 class="section-title" data-level="9.5.2">
       Grammar
     </h3><dl class="requirement_meta">
       <div><dt>UID</dt><dd>SDOC-FMT-GRAMMAR</dd></div>
 
     </dl>
-  <ul class="requirement_parent">
+  <ul class="requirement_link">
     <li>
-      <a href="#SDOC-HIGH-DATA-MODEL">
+      <a class="requirement_link-parent" href="#9.2.2-SDOC-HIGH-DATA-MODEL">
         <span class="requirement_parent-uid">SDOC-HIGH-DATA-MODEL</span>
         Data model
       </a>
@@ -2797,438 +2569,15 @@ be no way to define a single rule.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Type-safety"></div><h3 class="section-title" data-level="8.5.3">
-      Type safety
-    </h3>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>SDOC format shall allow type-safe encoding of requirement documents.</p>
 </div>
+          <div class="requirement-card-view_node">
 
-    </div>
+<article class="requirement">
 
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-  </section>
-
-</article>
-          <article class="docsection">
-
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Document-Generators"></div><h2 class="section-title" data-level="8.6">
-      Document Generators
-    </h2>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
-          <article class="docsection">
-
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="HTML-Export"></div><h3 class="section-title" data-level="8.6.1">
-      HTML Export
-    </h3>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Single-document-Normal-form"></div><h4 class="section-title" data-level="8.6.1.1">
-      Single document: Normal form
-    </h4>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>StrictDoc shall export single document pages in a normal document-like form.</p>
-</div>
-
-    </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Single-document-Tabular-form"></div><h4 class="section-title" data-level="8.6.1.2">
-      Single document: Tabular form
-    </h4>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>StrictDoc shall export single document pages in a tabular form.</p>
-</div>
-
-    </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Single-document-1-level-traceability"></div><h4 class="section-title" data-level="8.6.1.3">
-      Single document: 1-level traceability
-    </h4>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>StrictDoc shall export 1-level traceability document.</p>
-</div>
-
-    </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Single-document-Deep-traceability"></div><h4 class="section-title" data-level="8.6.1.4">
-      Single document: Deep traceability
-    </h4>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>StrictDoc shall export deep traceability document.</p>
-</div>
-
-    </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Left-panel-Table-of-contents"></div><h4 class="section-title" data-level="8.6.1.5">
-      Left panel: Table of contents
-    </h4>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>StrictDoc shall export all HTML pages with Table of Contents.</p>
-</div>
-
-    </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-  </section>
-
-</article>
-          <article class="docsection">
-
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="PDF-Export"></div><h3 class="section-title" data-level="8.6.2">
-      PDF Export
-    </h3>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Sphinx-documentation-generator"></div><h4 class="section-title" data-level="8.6.2.1">
-      Sphinx documentation generator
-    </h4>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>StrictDoc shall support exporting documents to Sphinx/RST format.</p>
-</div>
-
-    </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Excel-Export"></div><h3 class="section-title" data-level="8.6.3">
-      Excel Export
-    </h3>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>StrictDoc shall support exporting documents to Excel format.</p>
-</div>
-
-    </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-  </section>
-
-</article>
-          <article class="docsection">
-
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Validation"></div><h2 class="section-title" data-level="8.7">
-      Validation
-    </h2>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Valid-HTML-markup"></div><h3 class="section-title" data-level="8.7.1">
-      Valid HTML markup
-    </h3>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>StrictDoc's HTML export tests shall validate the generated HTML markup.</p>
-</div>
-
-    </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-      <div class="requirement_comment">
-        <div class="document">
-<p>First candidate: Table of contents and its nested <tt class="docutils literal"><span class="pre">&lt;ul&gt;/&lt;li&gt;</span></tt> items.</p>
-</div>
-
-      </div>
-
-  </section>
-
-</article>
-          <article class="docsection">
-
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Design-decisions"></div><h1 class="section-title" data-level="9">
-      Design decisions
-    </h1>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
-          <article class="docsection">
-
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Building-blocks"></div><h2 class="section-title" data-level="9.1">
-      Building blocks
-    </h2>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="TextX"></div><h3 class="section-title" data-level="9.1.1">
-      TextX
-    </h3>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>TextX shall be used for StrictDoc grammar definition and parsing of the sdoc files.</p>
-</div>
-
-    </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-      <div class="requirement_comment">
-        <div class="document">
-<p>TextX is an easy-to-install Python tool. It is fast, works out of the box.</p>
-</div>
-
-      </div>
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Jinja2"></div><h3 class="section-title" data-level="9.1.2">
-      Jinja2
-    </h3>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>Jinja2 shall be used for rendering HTML templates.</p>
-</div>
-
-    </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Sphinx-and-Docutils"></div><h3 class="section-title" data-level="9.1.3">
-      Sphinx and Docutils
-    </h3>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>Sphinx and Docutils shall be used for the following capabilities:</p>
-<ul class="simple">
-<li>Support of Restructured Text (reST) format</li>
-<li>Generation of RST documents into HTML</li>
-<li>Generation of RST documents into PDF using LaTeX</li>
-<li>Generating documentation websites using Sphinx</li>
-</ul>
-</div>
-
-    </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-  </section>
-
-</article>
-          <article class="docsection">
-
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="SDoc-grammar"></div><h2 class="section-title" data-level="9.2">
-      SDoc grammar
-    </h2>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="No-indentation"></div><h3 class="section-title" data-level="9.2.1">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.5.2.1-No-indentation"></div><h4 class="section-title" data-level="9.5.2.1">
       No indentation
-    </h3>
+    </h4>
 
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
@@ -3254,30 +2603,51 @@ possible indentation issues.</p>
   </section>
 
 </article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.5.3-Type-safety"></div><h3 class="section-title" data-level="9.5.3">
+      Type safety
+    </h3>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>SDOC format shall allow type-safe encoding of requirement documents.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+  </section>
+
+</article>
+
+</div>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Backlog"></div><h1 class="section-title" data-level="10">
-      Backlog
-    </h1>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Generated-file-names"></div><h2 class="section-title" data-level="10.1">
-      Generated file names
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="9.6-Document-Generators"></div><h2 class="section-title" data-level="9.6">
+      Document Generators
     </h2>
+  </section></article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="9.6.1-General"></div><h3 class="section-title" data-level="9.6.1">
+      General
+    </h3>
+  </section></article>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.6.1.1-Generated-file-names"></div><h4 class="section-title" data-level="9.6.1.1">
+      Generated file names
+    </h4>
 
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
@@ -3289,28 +2659,216 @@ possible indentation issues.</p>
 
   </section>
   <section class="requirement_section" data-section='comment'>
-      <div class="requirement_comment">
-        <div class="document">
-<p>StrictDoc used to create file names that were document names. This has been
-changed for HTML but not yet for RST.</p>
-</div>
-
-      </div>
 
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <article class="docsection">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Validation-Uniqueness-of-UID-identifiers-in-a-document-tree"></div><h2 class="section-title" data-level="10.2">
-      Validation: Uniqueness of UID identifiers in a document tree
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="9.6.2-HTML-Export"></div><h3 class="section-title" data-level="9.6.2">
+      HTML Export
+    </h3>
+  </section></article>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.6.2.1-Single-document-Normal-form"></div><h4 class="section-title" data-level="9.6.2.1">
+      Single document: Normal form
+    </h4>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall export single document pages in a normal document-like form.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+  </section>
+
+</article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.6.2.2-Single-document-Tabular-form"></div><h4 class="section-title" data-level="9.6.2.2">
+      Single document: Tabular form
+    </h4>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall export single document pages in a tabular form.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+  </section>
+
+</article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.6.2.3-Single-document-1-level-traceability"></div><h4 class="section-title" data-level="9.6.2.3">
+      Single document: 1-level traceability
+    </h4>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall export 1-level traceability document.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+  </section>
+
+</article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.6.2.4-Single-document-Deep-traceability"></div><h4 class="section-title" data-level="9.6.2.4">
+      Single document: Deep traceability
+    </h4>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall export deep traceability document.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+  </section>
+
+</article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.6.2.5-Left-panel-Table-of-contents"></div><h4 class="section-title" data-level="9.6.2.5">
+      Left panel: Table of contents
+    </h4>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall export all HTML pages with Table of Contents.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+  </section>
+
+</article>
+
+</div>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="9.6.3-PDF-Export"></div><h3 class="section-title" data-level="9.6.3">
+      PDF Export
+    </h3>
+  </section></article>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.6.3.1-Sphinx-documentation-generator"></div><h4 class="section-title" data-level="9.6.3.1">
+      Sphinx documentation generator
+    </h4>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall support exporting documents to Sphinx/RST format.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+  </section>
+
+</article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.6.4-Excel-Export"></div><h3 class="section-title" data-level="9.6.4">
+      Excel Export
+    </h3>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall support exporting documents to Excel format.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+  </section>
+
+</article>
+
+</div>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="9.7-Validation"></div><h2 class="section-title" data-level="9.7">
+      Validation
     </h2>
+  </section></article>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.7.1-SDOC-VALIDATION-UNIQUE-UID"></div><h3 class="section-title" data-level="9.7.1">
+      Uniqueness of UID identifiers in a document tree
+    </h3><dl class="requirement_meta">
+      <div><dt>UID</dt><dd>SDOC-VALIDATION-UNIQUE-UID</dd></div>
+
+    </dl>
+  <ul class="requirement_link">
+    <li>
+      <a class="requirement_link-parent" href="#9.2.5-SDOC-HIGH-VALIDATION">
+        <span class="requirement_parent-uid">SDOC-HIGH-VALIDATION</span>
+        Requirements validation
+      </a>
+    </li>
+    </ul>
 
   </section>
   <section class="requirement_section" data-section='statement'><div class="requirement_statement">
@@ -3332,15 +2890,558 @@ changed for HTML but not yet for RST.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="StrictDoc-as-library"></div><h2 class="section-title" data-level="10.3">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.7.2-SDOC-VALIDATION-NO-CYCLES"></div><h3 class="section-title" data-level="9.7.2">
+      No cycles in a document tree
+    </h3><dl class="requirement_meta">
+      <div><dt>UID</dt><dd>SDOC-VALIDATION-NO-CYCLES</dd></div>
+
+    </dl>
+  <ul class="requirement_link">
+    <li>
+      <a class="requirement_link-parent" href="#9.2.5-SDOC-HIGH-VALIDATION">
+        <span class="requirement_parent-uid">SDOC-HIGH-VALIDATION</span>
+        Requirements validation
+      </a>
+    </li>
+    </ul>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall ensure that no requirements in document tree reference each other.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+  </section>
+
+</article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="9.7.3-SDOC-VALIDATION-VALID-HTML"></div><h3 class="section-title" data-level="9.7.3">
+      Valid HTML markup
+    </h3><dl class="requirement_meta">
+      <div><dt>UID</dt><dd>SDOC-VALIDATION-VALID-HTML</dd></div>
+
+    </dl>
+  <ul class="requirement_link">
+    <li>
+      <a class="requirement_link-parent" href="#9.2.5-SDOC-HIGH-VALIDATION">
+        <span class="requirement_parent-uid">SDOC-HIGH-VALIDATION</span>
+        Requirements validation
+      </a>
+    </li>
+    </ul>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc's HTML export tests shall validate the generated HTML markup.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+      <div class="requirement_comment">
+        <div class="document">
+<p>First candidate: Table of contents and its nested <tt class="docutils literal"><span class="pre">&lt;ul&gt;/&lt;li&gt;</span></tt> items.</p>
+</div>
+
+      </div>
+
+  </section>
+
+</article>
+
+</div>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="10-Design-decisions"></div><h1 class="section-title" data-level="10">
+      Design decisions
+    </h1>
+  </section></article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="10.1-Building-blocks"></div><h2 class="section-title" data-level="10.1">
+      Building blocks
+    </h2>
+  </section></article>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="10.1.1-TextX"></div><h3 class="section-title" data-level="10.1.1">
+      TextX
+    </h3>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>TextX shall be used for StrictDoc grammar definition and parsing of the sdoc files.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+      <div class="requirement_comment">
+        <div class="document">
+<p>TextX is an easy-to-install Python tool. It is fast, works out of the box.</p>
+</div>
+
+      </div>
+
+  </section>
+
+</article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="10.1.2-Jinja2"></div><h3 class="section-title" data-level="10.1.2">
+      Jinja2
+    </h3>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>Jinja2 shall be used for rendering HTML templates.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+  </section>
+
+</article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="10.1.3-Sphinx-and-Docutils"></div><h3 class="section-title" data-level="10.1.3">
+      Sphinx and Docutils
+    </h3>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>Sphinx and Docutils shall be used for the following capabilities:</p>
+<ul class="simple">
+<li>Support of Restructured Text (reST) format</li>
+<li>Generation of RST documents into HTML</li>
+<li>Generation of RST documents into PDF using LaTeX</li>
+<li>Generating documentation websites using Sphinx</li>
+</ul>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+  </section>
+
+</article>
+
+</div>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="11-Backlog"></div><h1 class="section-title" data-level="11">
+      Backlog
+    </h1>
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p><strong>Note:</strong> The items below are weakly sorted from top to bottom. The topmost
+items are either work-in-progress or will be implemented next.</p>
+</div>
+
+    </div></section></article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="11.1-Work-in-progress"></div><h2 class="section-title" data-level="11.1">
+      Work in progress
+    </h2>
+  </section></article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="11.1.1-Traceability-and-coverage"></div><h3 class="section-title" data-level="11.1.1">
+      Traceability and coverage
+    </h3>
+  </section></article>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="11.1.1.1-Linking-with-implementation-artifacts"></div><h4 class="section-title" data-level="11.1.1.1">
+      Linking with implementation artifacts
+    </h4>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall support linking requirements to files.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+  </section>
+
+</article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="11.1.1.1.1-Validation-Broken-links-from-requirements-to-source-files"></div><h5 class="section-title" data-level="11.1.1.1.1">
+      Validation: Broken links from requirements to source files
+    </h5>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall warn a user about all requirements whose links reference source
+files that do not exist.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+  </section>
+
+</article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="11.1.1.1.2-Validation-Broken-links-from-source-files-to-requirements"></div><h5 class="section-title" data-level="11.1.1.1.2">
+      Validation: Broken links from source files to requirements
+    </h5>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall warn a user about all source files whose links reference
+requirements that do not exist.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+  </section>
+
+</article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="11.1.1.2-Requirements-coverage"></div><h4 class="section-title" data-level="11.1.1.2">
+      Requirements coverage
+    </h4>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall generate requirements coverage information.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+      <div class="requirement_comment">
+        <div class="document">
+<p>Requirements coverage screen shows how requirements are linked with source files.</p>
+</div>
+
+      </div>
+
+  </section>
+
+</article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="11.1.1.3-Source-coverage"></div><h4 class="section-title" data-level="11.1.1.3">
+      Source coverage
+    </h4>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall generate source coverage information.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+      <div class="requirement_comment">
+        <div class="document">
+<p>Source coverage screen shows how source files are linked with requirements.</p>
+</div>
+
+      </div>
+
+  </section>
+
+</article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="11.2-Project-level-configuration-file"></div><h2 class="section-title" data-level="11.2">
+      Project-level configuration file
+    </h2>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall support reading project configuration from a file.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+      <div class="requirement_comment">
+        <div class="document">
+<ul class="simple">
+<li>TOML format looks like a good option.</li>
+<li>Project title.</li>
+<li>Project prefix?</li>
+<li>Explicit or wildcard paths to sdoc files.</li>
+<li>Paths to dirs with source files.</li>
+<li>Config options for presenting requirements.<ul>
+<li>Include/exclude requirements in TOC</li>
+</ul>
+</li>
+</ul>
+</div>
+
+      </div>
+
+  </section>
+
+</article>
+
+</div>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="11.3-Export-and-import-capabilities"></div><h2 class="section-title" data-level="11.3">
+      Export and import capabilities
+    </h2>
+  </section></article>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="11.3.1-ReqIF-import-export"></div><h3 class="section-title" data-level="11.3.1">
+      ReqIF import/export
+    </h3>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall support ReqIF format.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+  </section>
+
+</article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="11.3.2-CSV-import-export"></div><h3 class="section-title" data-level="11.3.2">
+      CSV import/export
+    </h3>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall support exporting documents to CSV format.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+  </section>
+
+</article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="11.3.3-PlantUML-export"></div><h3 class="section-title" data-level="11.3.3">
+      PlantUML export
+    </h3>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall support exporting documents to PlantUML format.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+  </section>
+
+</article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="11.3.4-Confluence-import-export"></div><h3 class="section-title" data-level="11.3.4">
+      Confluence import/export
+    </h3>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall support importing/exporting documents from/to Confluence HTML storage format.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+  </section>
+
+</article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="11.3.5-Tex-export"></div><h3 class="section-title" data-level="11.3.5">
+      Tex export
+    </h3>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall support exporting documents to Tex format.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+  </section>
+
+</article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="11.3.6-Doorstop-import-export"></div><h3 class="section-title" data-level="11.3.6">
+      Doorstop import/export
+    </h3>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall support import and exporting documents from/to
+<a class="reference external" href="https://github.com/doorstop-dev/doorstop">Doorstop</a> format.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+  </section>
+
+</article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="11.3.7-Markdown-support-for-text-and-code-blocks"></div><h3 class="section-title" data-level="11.3.7">
+      Markdown support for text and code blocks
+    </h3>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall support rendering text/code blocks into Markdown syntax.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+  </section>
+
+</article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="11.4-StrictDoc-as-library"></div><h2 class="section-title" data-level="11.4">
       StrictDoc as library
     </h2>
 
@@ -3365,23 +3466,21 @@ as Grammar, Import, Export classes, etc.</p>
   </section>
 
 </article>
-          <article class="requirement">
 
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
+</div>
+          <div class="requirement-card-view_node">
 
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="BACKLOG-FUZZY-SEARCH"></div><h2 class="section-title" data-level="10.4">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="11.5-BACKLOG-FUZZY-SEARCH"></div><h2 class="section-title" data-level="11.5">
       Fuzzy requirements search
     </h2><dl class="requirement_meta">
       <div><dt>UID</dt><dd>BACKLOG-FUZZY-SEARCH</dd></div>
 
     </dl>
-  <ul class="requirement_parent">
+  <ul class="requirement_link">
     <li>
-      <a href="#GOAL-4-CHANGE-MANAGEMENT">
+      <a class="requirement_link-parent" href="#9.1.4-GOAL-4-CHANGE-MANAGEMENT">
         <span class="requirement_parent-uid">GOAL-4-CHANGE-MANAGEMENT</span>
         Change management
       </a>
@@ -3410,302 +3509,13 @@ relevant requirements when creating new requirements.</p>
   </section>
 
 </article>
-          <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Export-capabilities"></div><h2 class="section-title" data-level="10.5">
-      Export capabilities
-    </h2>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="CSV-import-export"></div><h3 class="section-title" data-level="10.5.1">
-      CSV import/export
-    </h3>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>StrictDoc shall support exporting documents to CSV format.</p>
 </div>
+          <div class="requirement-card-view_node">
 
-    </div>
+<article class="requirement">
 
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="PlantUML-export"></div><h3 class="section-title" data-level="10.5.2">
-      PlantUML export
-    </h3>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>StrictDoc shall support exporting documents to PlantUML format.</p>
-</div>
-
-    </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="ReqIF-import-export"></div><h3 class="section-title" data-level="10.5.3">
-      ReqIF import/export
-    </h3>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>StrictDoc shall support ReqIF format.</p>
-</div>
-
-    </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Confluence-import-export"></div><h3 class="section-title" data-level="10.5.4">
-      Confluence import/export
-    </h3>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>StrictDoc shall support importing/exporting documents from/to Confluence HTML storage format.</p>
-</div>
-
-    </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Tex-export"></div><h3 class="section-title" data-level="10.5.5">
-      Tex export
-    </h3>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>StrictDoc shall support exporting documents to Tex format.</p>
-</div>
-
-    </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Doorstop-import-export"></div><h3 class="section-title" data-level="10.5.6">
-      Doorstop import/export
-    </h3>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>StrictDoc shall support import and exporting documents from/to
-<a class="reference external" href="https://github.com/doorstop-dev/doorstop">Doorstop</a> format.</p>
-</div>
-
-    </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Markdown-support-for-text-and-code-blocks"></div><h3 class="section-title" data-level="10.5.7">
-      Markdown support for text and code blocks
-    </h3>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>StrictDoc shall support rendering text/code blocks into Markdown syntax.</p>
-</div>
-
-    </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-  </section>
-
-</article>
-          <article class="docsection">
-
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Traceability-and-coverage"></div><h2 class="section-title" data-level="10.6">
-      Traceability and coverage
-    </h2>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Linking-with-implementation-artifacts"></div><h3 class="section-title" data-level="10.6.1">
-      Linking with implementation artifacts
-    </h3>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>StrictDoc shall support linking requirements to files.</p>
-</div>
-
-    </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Requirement-checksumming"></div><h3 class="section-title" data-level="10.6.2">
-      Requirement checksumming
-    </h3>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>StrictDoc shall support calculation of checksums for requirements.</p>
-</div>
-
-    </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Documentation-coverage"></div><h3 class="section-title" data-level="10.6.3">
-      Documentation coverage
-    </h3>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>StrictDoc shall generate requirements coverage information.</p>
-</div>
-
-    </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Filtering-by-tags"></div><h2 class="section-title" data-level="10.7">
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="11.6-Filtering-by-tags"></div><h2 class="section-title" data-level="11.6">
       Filtering by tags
     </h2>
 
@@ -3723,31 +3533,166 @@ relevant requirements when creating new requirements.</p>
   </section>
 
 </article>
+
+</div>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="11.7-Advanced"></div><h2 class="section-title" data-level="11.7">
+      Advanced
+    </h2>
+  </section></article>
+          <div class="requirement-card-view_node">
 
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Open-questions"></div><h2 class="section-title" data-level="10.8">
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="11.7.1-Requirement-checksumming"></div><h3 class="section-title" data-level="11.7.1">
+      Requirement checksumming
+    </h3>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall support calculation of checksums for requirements.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+      <div class="requirement_comment">
+        <div class="document">
+<p>This feature is relatively easy to implement but the implementation is postponed
+until the linking between requirements and files is implemented.</p>
+</div>
+
+      </div>
+
+  </section>
+
+</article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="11.7.2-Graphical-User-Interface-GUI-"></div><h3 class="section-title" data-level="11.7.2">
+      Graphical User Interface (GUI)
+    </h3>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall provide a Graphical User Interface (GUI).</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+      <div class="requirement_comment">
+        <div class="document">
+<p>Several trade-offs to consider:</p>
+<ul class="simple">
+<li>Desktop vs Web. Rather web-based, i.e. Python backend and JS frontend, but
+which technology?</li>
+<li>Still keep the current behavior of a statically generated website?</li>
+</ul>
+</div>
+
+      </div>
+
+  </section>
+
+</article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="11.7.2.1-Web-server-and-editable-HTML-pages"></div><h4 class="section-title" data-level="11.7.2.1">
+      Web server and editable HTML pages
+    </h4>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall provide a web server that serves as a StrictDoc backend for
+reading and writing SDoc files.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+  </section>
+
+</article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="11.7.3-Facts-table-Invariants-calculation-"></div><h3 class="section-title" data-level="11.7.3">
+      Facts table. Invariants calculation.
+    </h3>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall support creation of fact tables and allow calculation of
+invariants for constraints enforcement.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+  </section>
+
+</article>
+
+</div>
+          <div class="requirement-card-view_node">
+
+<article class="requirement">
+
+  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="11.7.4-FMEA-FMECA-tables"></div><h3 class="section-title" data-level="11.7.4">
+      FMEA/FMECA tables
+    </h3>
+
+  </section>
+  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
+      <div class="document">
+<p>StrictDoc shall support creation of FMEA/FMECA safety analysis documents.</p>
+</div>
+
+    </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+  </section>
+
+</article>
+
+</div>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="11.8-Open-questions"></div><h2 class="section-title" data-level="11.8">
       Open questions
     </h2>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
+  </section></article>
           <article class="docsection">
 
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="One-or-many-input-sdoc-trees"></div><h3 class="section-title" data-level="10.8.1">
+  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="11.8.1-One-or-many-input-sdoc-trees"></div><h3 class="section-title" data-level="11.8.1">
       One or many input sdoc trees
     </h3>
-  </section>
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  </section><section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>StrictDoc supports this for HTML already but not for RST.</p>
 <p>When passed
@@ -3768,127 +3713,7 @@ space with cross-linking possible.</p>
 only work with one input folder with a single doc tree.</p>
 </div>
 
-    </div></section>
-</article>
-          <article class="docsection">
-
-  <header class="docsection-headers">
-    <div data-section='meta'></div>
-    <div data-section='description'></div>
-  </header>
-
-  <section data-section="meta" class="docsection_section"><div data-role='anchor' id="Advanced"></div><h2 class="section-title" data-level="10.9">
-      Advanced
-    </h2>
-  </section>
-  <section data-section="description" class="docsection_section"></section>
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Facts-table-Invariants-calculation-"></div><h3 class="section-title" data-level="10.9.1">
-      Facts table. Invariants calculation.
-    </h3>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>StrictDoc shall support creation of fact tables and allow calculation of
-invariants for constraints enforcement.</p>
-</div>
-
-    </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="FMEA-FMECA-tables"></div><h3 class="section-title" data-level="10.9.2">
-      FMEA/FMECA tables
-    </h3>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>StrictDoc shall support creation of FMEA/FMECA safety analysis documents.</p>
-</div>
-
-    </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Graphical-User-Interface-GUI-"></div><h3 class="section-title" data-level="10.9.3">
-      Graphical User Interface (GUI)
-    </h3>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>StrictDoc shall provide a Graphical User Interface (GUI).</p>
-</div>
-
-    </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <header class="requirement_headers">
-    <div data-section='meta'></div>
-    <div data-section='statement'></div>
-    <div data-section='comment'></div>
-  </header>
-
-  <section class="requirement_section" data-section='meta'><div data-role='anchor' id="Web-server-and-editable-HTML-pages"></div><h3 class="section-title" data-level="10.9.4">
-      Web server and editable HTML pages
-    </h3>
-
-  </section>
-  <section class="requirement_section" data-section='statement'><div class="requirement_statement">
-      <div class="document">
-<p>StrictDoc shall provide a web server that serves as a StrictDoc backend for
-reading and writing SDoc files.</p>
-</div>
-
-    </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-  </section>
-
-</article>
+    </div></section></article>
       </div>
 
 

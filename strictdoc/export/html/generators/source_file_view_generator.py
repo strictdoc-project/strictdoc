@@ -80,8 +80,12 @@ class SourceFileViewHTMLGenerator:
                 replacement_line = source_line[
                     : pragma.reqs_objs[0].ng_source_column - 1
                 ]
+                replacement_line = (
+                    replacement_line.rstrip("/").rstrip("[").rstrip()
+                )
             pygmented_source_file_lines[pragma_line - 1] = (
                 replacement_line,
+                "",
                 pragma,
             )
 

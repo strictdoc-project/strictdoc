@@ -75,10 +75,10 @@ class RangePragma:
         return self.__str__()
 
     def is_begin(self):
-        return self.begin_or_end == ">"
+        return self.begin_or_end == "["
 
     def is_end(self):
-        return self.begin_or_end == "<"
+        return self.begin_or_end == "[/"
 
 
 class ParseContext:
@@ -137,9 +137,9 @@ def create_begin_end_range_reqs_mismatch_error(
             f"'{lhs_pragma_reqs_str}' != '{rhs_pragma_reqs_str}'."
         ),
         """
-# SDOC> REQ-001
+# [REQ-001]
 Content...
-# SDOC< REQ-001
+# [/REQ-001]
         """.lstrip(),
         line=location["line"],
         col=location["col"],
@@ -155,9 +155,9 @@ def create_end_without_begin_error(location):
             "START pragma and ended with END pragma."
         ),
         """
-# SDOC> REQ-001
+# [REQ-001]
 Content...
-# SDOC< REQ-001
+# [/REQ-001]
         """.lstrip(),
         line=location["line"],
         col=location["col"],

@@ -5,9 +5,8 @@
     <div id="line-{{loop.index}}" class="source__line-number"><pre>{{loop.index}}</pre></div>
     <div data-line={{loop.index}} class="source__line-content">
       {%- if line.__class__.__name__ == "tuple" -%}
-        {%- set source_line, pragma = line -%}
-        <pre class="sdoc-comment">
-{{ source_line }}
+        {%- set replacement_before, replacement_after, pragma = line -%}
+        <pre class="sdoc-comment">{{ replacement_before }}&nbsp;
 {%- for req in pragma.reqs_objs -%}
   <a
     class="pointer"
@@ -15,9 +14,8 @@
     data-begin="{{ pragma.ng_range_line_begin }}"
     data-end="{{ pragma.ng_range_line_end }}"
     href="{{ link_renderer.render_requirement_in_source_file_range_link_using_id(req.uid, source_file.in_doctree_source_file_rel_path, source_file, pragma) }}"
-    >{{ req.uid }}</a>{%- if not loop.last -%}, {% endif -%}
-{%- endfor -%}
-        </pre>
+    >{%- if pragma.is_end() -%}/{%- endif -%}{{ req.uid }}</a>{%- if not loop.last -%}, {% endif -%}
+{%- endfor -%}&nbsp;{{ replacement_after }}</pre>
       {%- elif line != "" -%}
       {# <!-- Pygments --> #}
       <pre class="highlight">{{ line }}</pre>

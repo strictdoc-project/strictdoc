@@ -13,10 +13,9 @@ SourceFileTraceabilityInfo[noskipws]:
 ;
 
 RangePragma[noskipws]:
-  /.*SDOC/
-  (begin_or_end = '>' | begin_or_end = '<')
-  ' '
-  (reqs_objs += Req[', ']) '\n'?
+  / *(#|(\\/\\/)) */
+  (begin_or_end = "[/" | begin_or_end = "[")
+  (reqs_objs += Req[', ']) ']' '\n'?
 ;
 
 Req[noskipws]:
@@ -24,6 +23,6 @@ Req[noskipws]:
 ;
 
 SingleLineString[noskipws]:
-  /(?!.*SDOC[><]).*/ '\n'?
+  !RangePragma /.*/ '\n'?
 ;
 """

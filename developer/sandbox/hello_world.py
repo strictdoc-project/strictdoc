@@ -27,17 +27,17 @@ class DocumentTree:
 number1 = input("First number: ")
 number2 = input("\nSecond number: ")
 
-# SDOC> REQ-FILE-REF, REQ-FILE-REF2
+# [REQ-FILE-REF, REQ-FILE-REF2]
 # Adding two numbers
 # User might also enter float numbers
 sum = float(number1) + float(number2)
-# SDOC< REQ-FILE-REF, REQ-FILE-REF2
+# [/REQ-FILE-REF, REQ-FILE-REF2]
 
 # Display the sum
 # will print value in float
-# SDOC> REQ-FILE-REF, REQ-FILE-REF2
+# [REQ-FILE-REF, REQ-FILE-REF2]
 print("The sum of {0} and {1} is {2}".format(number1, number2, sum))
-# SDOC< REQ-FILE-REF, REQ-FILE-REF2
+# [/REQ-FILE-REF, REQ-FILE-REF2]
 
 
 class FileTree(FileOrFolderEntry):
@@ -85,6 +85,6 @@ class FileTree(FileOrFolderEntry):
         for subfolder in self.subfolder_trees:
             subfolder.dump()
 
-    # SDOC> REQ-FILE-REF2
+    # [REQ-FILE-REF2]
     print("The sum of {0} and {1} is {2}".format(number1, number2, sum))
-    # SDOC< REQ-FILE-REF2
+    # [/REQ-FILE-REF2]

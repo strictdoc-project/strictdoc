@@ -1,5 +1,3 @@
-import os
-
 from strictdoc.backend.dsl.models.reference import Reference
 from strictdoc.backend.dsl.models.requirement import Requirement
 from strictdoc.backend.source_file_syntax.reader import (
@@ -11,41 +9,40 @@ from strictdoc.helpers.sorting import alphanumeric_sort
 class FileTraceabilityIndex:
     def __init__(self):
         self.map_paths_to_reqs = {}
-        self.map_reqs_to_paths = {}
+        self.map_reqs_uids_to_paths = {}
         self.map_paths_to_source_file_traceability_info = {}
         self.source_file_reqs_cache = {}
 
     def register(self, requirement):
-        if requirement in self.map_reqs_to_paths:
+        if requirement.uid in self.map_reqs_uids_to_paths:
             return
 
         ref: Reference
         for ref in requirement.references:
             if ref.ref_type == "File":
-                assert not os.path.isabs(ref.path)
-                if not os.path.exists(ref.path):
-                    print(
-                        f"warning: Requirement {requirement.uid} references "
-                        f"a file that does not exist: {ref.path}"
-                    )
-
                 requirements = self.map_paths_to_reqs.setdefault(ref.path, [])
                 requirements.append(requirement)
 
-                paths = self.map_reqs_to_paths.setdefault(requirement, [])
+                paths = self.map_reqs_uids_to_paths.setdefault(
+                    requirement.uid, []
+                )
                 paths.append(ref.path)
 
     def get_requirement_file_links(self, requirement):
-        if requirement not in self.map_reqs_to_paths:
+        if requirement.uid not in self.map_reqs_uids_to_paths:
             return []
 
         matching_links_with_opt_ranges = []
-        file_links = self.map_reqs_to_paths[requirement]
+        file_links = self.map_reqs_uids_to_paths[requirement.uid]
         for file_link in file_links:
             source_file_traceability_info: SourceFileTraceabilityInfo = (
                 self.map_paths_to_source_file_traceability_info.get(file_link)
             )
             if not source_file_traceability_info:
+                print(
+                    f"warning: Requirement {requirement.uid} references "
+                    f"a file that does not exist: {file_link}"
+                )
                 matching_links_with_opt_ranges.append((file_link, None))
                 continue
             pragmas = source_file_traceability_info.ng_map_reqs_to_pragmas.get(
@@ -73,7 +70,7 @@ class FileTraceabilityIndex:
         for (
             req_uid
         ) in source_file_traceability_info.ng_map_reqs_to_pragmas.keys():
-            if req_uid not in self.map_reqs_to_paths:
+            if req_uid not in self.map_reqs_uids_to_paths:
                 print(
                     f"warning: source file {source_file_rel_path} references "
                     f"a requirement that does not exist: {req_uid}"

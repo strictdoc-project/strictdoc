@@ -84,7 +84,7 @@ class LinkRenderer:
         source_file_link = (
             f"{path_prefix}"
             f"/_source_files"
-            f"/{document.meta.output_document_dir_rel_path}"
+            f"/{document.meta.file_tree_mount_folder}"
             f"/{source_file_link}.html"
         )
         return source_file_link
@@ -96,7 +96,7 @@ class LinkRenderer:
         document: Document = requirement.ng_document_reference.get_document()
         source_file_link = (
             f"_source_files"
-            f"/{document.meta.output_document_dir_rel_path}"
+            f"/{document.meta.file_tree_mount_folder}"
             f"/{source_file_link}.html"
         )
         return source_file_link

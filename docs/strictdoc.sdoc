@@ -1243,6 +1243,8 @@ UID: SDOC-FMT-GRAMMAR
 REFS:
 - TYPE: Parent
   VALUE: SDOC-HIGH-DATA-MODEL
+- TYPE: File
+  VALUE: strictdoc/backend/source_file_syntax/grammar.py
 TITLE: Grammar
 STATEMENT: SDOC format shall be based on a fixed grammar.
 

@@ -113,13 +113,20 @@ class LinkRenderer:
 
     @staticmethod
     def render_source_file_link_from_source_file(
-        requirement: Requirement, source_file_link: str
+        source_file: SourceFile, requirement: Requirement, source_file_link: str
     ):
+        assert isinstance(source_file, SourceFile)
         document: Document = requirement.ng_document_reference.get_document()
-        path_prefix = document.meta.get_root_path_prefix()
+
+        def get_root_path_prefix(level):
+            assert level > 0
+            return ("../" * level)[:-1]
+
+        path_prefix = get_root_path_prefix(source_file.level + 1)
+
         source_file_link = (
             f"{path_prefix}"
-            f"/{document.meta.output_document_dir_rel_path}"
+            f"/{document.meta.file_tree_mount_folder}"
             f"/{source_file_link}.html#"
         )
         return source_file_link

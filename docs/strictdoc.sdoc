@@ -1320,6 +1320,10 @@ STATEMENT: StrictDoc shall support exporting documents to Sphinx/RST format.
 [/SECTION]
 
 [REQUIREMENT]
+UID: SDOC-GEN-EXCEL-EXPORT
+REFS:
+- TYPE: File
+  VALUE: strictdoc/export/excel/excel_generator.py
 TITLE: Excel Export
 STATEMENT: StrictDoc shall support exporting documents to Excel format.
 
@@ -1342,6 +1346,10 @@ UID: SDOC-VALIDATION-NO-CYCLES
 REFS:
 - TYPE: Parent
   VALUE: SDOC-HIGH-VALIDATION
+- TYPE: File
+  VALUE: strictdoc/core/tree_cycle_detector.py
+- TYPE: File
+  VALUE: strictdoc/core/traceability_index_builder.py
 TITLE: No cycles in a document tree
 STATEMENT: >>>
 StrictDoc shall ensure that no requirements in document tree reference each other.

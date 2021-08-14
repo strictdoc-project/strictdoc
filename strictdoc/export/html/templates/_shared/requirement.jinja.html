@@ -69,6 +69,7 @@ data-status='{{ requirement.status.lower() }}'
     </ul>
   {%- endif %}
 
+  {%- if config.experimental_enable_file_traceability -%}
   {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
   {%- if requirement_file_links %}
   <ul class="requirement_link">
@@ -89,7 +90,8 @@ data-status='{{ requirement.status.lower() }}'
         </li>
       {%- endif -%}
     {%- endfor -%}
-    </ul>
+  </ul>
+  {%- endif %}
   {%- endif %}
 
   </section>

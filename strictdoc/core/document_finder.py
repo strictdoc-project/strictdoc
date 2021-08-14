@@ -98,6 +98,7 @@ class DocumentFinder:
 
             document_meta = DocumentMeta(
                 doc_file.level,
+                file_tree_mount_folder,
                 document_filename_base,
                 input_doc_full_path,
                 doc_relative_path_folder,

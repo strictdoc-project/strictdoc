@@ -155,9 +155,9 @@ class FileFinder:
                 d
                 for d in dirs
                 if (
-                    not d.startswith(".") and
-                    not d.startswith("_") and
-                    "tests" not in d
+                    not d.startswith(".")
+                    and not d.startswith("_")
+                    and "tests" not in d
                 )
             ]
             dirs.sort(key=alphanumeric_sort)

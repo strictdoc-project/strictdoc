@@ -1,4 +1,5 @@
 {# needs requirement_partial for node content #}
+{# needs document_type for requirement_partial #}
 
 {%- if traceability_index.has_children_requirements(requirement) %}
 <ul class="requirement-tree requirement-tree_right">
@@ -6,12 +7,12 @@
 
   <li class="requirement-tree_branch">
     <div class="requirement-tree_node">
-    {%- with document_type="deeptrace" -%}
       {% include requirement_partial %}
-    {%- endwith -%}
     </div>
 
+    {%- if document_type=="deeptrace" -%}
     {% include "_shared/requirement_tree_right.jinja.html" %}
+    {%- endif %}
 
   </li>
 {%- endfor -%}

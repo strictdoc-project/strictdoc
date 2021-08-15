@@ -34,6 +34,7 @@
       <h3 class="requirements-coverage-document-title" id="{{loop.index}}">{{document.title}}</h3>
       {%- set document_iterator = traceability_index.get_document_iterator(document) -%}
       <div class="content">
+      {%- with document_type="deeptrace" -%}
       {%- for section_or_requirement in document_iterator.all_content() %}
         {%- if section_or_requirement.is_section and section_or_requirement.ng_has_requirements %}
 
@@ -53,7 +54,7 @@
 
           {%- set requirement = section_or_requirement %}
           <div class="content_item" data-role="current">
-            {%- with anchor=link_renderer.render_local_anchor(section_or_requirement), document_type="deeptrace" -%}
+            {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
             {% include "requirements_coverage/requirement.jinja.html" %}
             {%- endwith -%}
           </div>
@@ -67,6 +68,7 @@
         </section>
         {%- endif %}
       {%- endfor %}
+      {%- endwith -%}
       </div>
   {%- endfor %}
 

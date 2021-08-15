@@ -69,6 +69,16 @@
   grid-column: 2 / 3;
 }
 
+.deep-traceability-view .content_item[data-role="current"] {
+  /* central column */
+  width: var(--card-width);
+}
+
+.requirements-coverage-view .content_item[data-role="current"] {
+  /* central column */
+  width: calc(var(--card-width)*0.75);
+}
+
 .content_item[data-role="children"] {
   grid-column: 3 / 4;
 }

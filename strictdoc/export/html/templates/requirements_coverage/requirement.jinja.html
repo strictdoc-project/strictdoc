@@ -1,5 +1,4 @@
  {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
-<div class="requirements-coverage-view_node">
 
 <article class="requirement"
 {%- if requirement.status %}
@@ -49,5 +48,3 @@ data-uid='{{ requirement.uid }}'
   {%- endfor -%}
   </ul>
 {%- endif %}
-
-</div>

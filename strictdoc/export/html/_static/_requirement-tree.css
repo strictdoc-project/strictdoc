@@ -62,6 +62,13 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
+
+  /* for width restrictions in deep trace */
+  max-width: var(--card-width);
+}
+
+.requirements-coverage-view .requirement-tree_node {
+  width: calc(var(--card-width)*0.75);
 }
 
   /* arrows */
@@ -201,6 +208,9 @@
   margin: 0;
   margin-left: var(--requirement-tree-downward-margin);
   box-sizing: border-box;
+
+    /* temp */
+    width: 88%;
 }
 
 .requirement-tree_downward .requirement-tree_downward_node {
@@ -241,13 +251,29 @@
   position: relative;
   /* margin-left: calc(var(--requirement-tree-downward-margin) + var(--requirement-tree-downward-string-margin)); */
   margin-left: calc(var(--requirement-tree-downward-margin) - 0.25rem);
-  width: 100%;
-  overflow-wrap: break-word;
 
-  padding: 2px 6px;
+  padding: 4px 8px;
   border: 1px solid var(--color-accent);
   background-color: var(--color-bg-main);
   line-height: 1.2;
+
+  width: 100%;
+  overflow-wrap: break-word;
+}
+
+.requirement-tree_downward_item a {
+  color: var(--color-accent);
+  font-size: .75em;
+  line-height: 1.2;
+  text-decoration: none;
+
+  display: inline-block;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+.requirement-tree_downward_item a:hover {
+  text-decoration: underline;
 }
 
 /* hover */

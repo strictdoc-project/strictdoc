@@ -2,6 +2,11 @@
 
 {% extends "base.jinja.html" %}
 
+{% block head_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{static_path}}/_requirement-tree.css"/>
+{% endblock head_css %}
+
 {% block head_scripts %}
   <script type="text/javascript" src="{{root_path}}/_static/toc.js"></script>
   {%- if config.enable_mathjax -%}
@@ -37,31 +42,30 @@
 
         {%- if section_or_requirement.is_requirement %}
         <section class="content_section">
+        {%- with document_type="trace" -%}
+
           <div class="content_item" data-role="parents">
-          {%- for requirement in traceability_index.get_parent_requirements(section_or_requirement) %}
-
-            {%- with document_type="trace" -%}
-            {% include "_shared/requirement.jinja.html" %}
+            {%- with requirement=section_or_requirement, requirement_partial="_shared/requirement.jinja.html" -%}
+            {% include "_shared/requirement_tree_left.jinja.html" %}
             {%- endwith -%}
-
-          {%- endfor -%}
           </div>
 
           <div class="content_item" data-role="current">
             {%- set requirement = section_or_requirement %}
 
-            {%- with anchor=link_renderer.render_local_anchor(section_or_requirement), document_type="trace" -%}
+            {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
               {% include "_shared/requirement.jinja.html" %}
             {%- endwith -%}
 
           </div>
+
           <div class="content_item" data-role="children">
-          {%- for requirement in traceability_index.get_children_requirements(section_or_requirement) %}
-            {%- with document_type="trace" -%}
-              {% include "_shared/requirement.jinja.html" %}
+            {%- with requirement=section_or_requirement, requirement_partial="_shared/requirement.jinja.html" -%}
+            {% include "_shared/requirement_tree_right.jinja.html" %}
             {%- endwith -%}
-          {%- endfor -%}
           </div>
+
+        {%- endwith -%}
         </section>
 
         {%- elif section_or_requirement.is_section %}

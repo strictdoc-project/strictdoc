@@ -205,7 +205,7 @@ def requirement_from_dict(requirement_dict, parent, level):
         None,
         None,
         rationale_multiline,
-        None,
+        [],
         [],
     )
 

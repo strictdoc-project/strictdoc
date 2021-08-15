@@ -217,7 +217,9 @@ class PathFinder:
         assert os.path.isabs(root_path)
         directories = []
         for current_root_path, dirs, _ in os.walk(root_path, topdown=True):
-            dirs[:] = [d for d in dirs if not d.startswith(".")]
+            dirs[:] = [
+                d for d in dirs if not d.startswith(".") and d != "output"
+            ]
             if os.path.basename(current_root_path) == directory:
                 directories.append(current_root_path)
         return directories

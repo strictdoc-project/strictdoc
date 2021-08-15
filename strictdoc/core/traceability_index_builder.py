@@ -108,11 +108,11 @@ class TraceabilityIndexBuilder:
                         requirements_children_map[ref.path] = []
                     requirements_children_map[ref.path].append(requirement)
 
+        # Now iterate over the requirements again to build an in-depth map of
+        # parents and children.
         parents_cycle_detector = TreeCycleDetector(requirements_map)
         children_cycle_detector = TreeCycleDetector(requirements_map)
 
-        # Now iterate over the requirements again to build an in-depth map of
-        # parents and children.
         requirements_child_depth_map = {}
         requirements_parent_depth_map = {}
         documents_ref_depth_map = {}
@@ -155,6 +155,7 @@ class TraceabilityIndexBuilder:
                         parent_requirement
                     )
 
+                # [SDOC-VALIDATION-NO-CYCLES]
                 # Detect cycles
                 parents_cycle_detector.check_node(
                     requirement.uid,
@@ -171,6 +172,7 @@ class TraceabilityIndexBuilder:
                         )
                     ),
                 )
+                # [/SDOC-VALIDATION-NO-CYCLES]
 
                 if requirement.uid not in requirements_child_depth_map:
                     child_depth = 0

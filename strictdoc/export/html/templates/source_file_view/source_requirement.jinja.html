@@ -26,7 +26,7 @@
               <b>[{{ range.ng_source_line_begin }}-{{ range.ng_source_line_end }}]</b>
               {{ link }}
             </a>
-            <a href="{{ link_renderer.render_source_file_link_from_source_file(requirement, link) }}"
+            <a href="{{ link_renderer.render_source_file_link_from_source_file(source_file, requirement, link) }}"
                class="reset_range_highlight"></a>
           </li>
         {%- endfor -%}

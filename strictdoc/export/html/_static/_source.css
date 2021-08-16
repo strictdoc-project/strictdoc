@@ -39,8 +39,9 @@
   padding: var(--base-padding);
   background-color: var(--color-bg-secondary);
   border: 1px solid var(--color-border);
-  margin: 1rem 0;
+  margin: 1rem 0 0 0;
   transition: background-color 0.3s ease-in, border-color 0.3s ease-in;
+  font-size: 0.75em;
 }
 /* .source-file-view article.requirement:target, */
 .source-file-view article.requirement.active {
@@ -93,16 +94,8 @@
 /* REQS */
 
 .source-file__refer > * {
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
 }
-
-/* .source-file__ranges {
-  margin-bottom: 2rem;
-}
-
-.source-file__reqs {
-  margin-bottom: 2rem;
-} */
 
 .source-file__refer summary {
   display: block;
@@ -113,6 +106,7 @@
   user-select: none;
   position: relative;
   padding-right: 2rem;
+  font-size: 0.85rem;
 }
 
 .source-file__refer summary::-webkit-details-marker {

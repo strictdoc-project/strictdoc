@@ -1,3 +1,9 @@
+{#
+  render_source_file_link --- works in documents
+  render_source_file_link_from_root --- works in files
+#}
+
+{%- if config.experimental_enable_file_traceability -%}
 {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
 {%- if requirement_file_links %}
 <ul class="requirement_link">
@@ -19,4 +25,5 @@
     {%- endif -%}
   {%- endfor -%}
 </ul>
+{%- endif %}
 {%- endif %}

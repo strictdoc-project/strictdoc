@@ -1,15 +1,47 @@
 # Changelog
 
-## [Unreleased](https://github.com/strictdoc-project/strictdoc/tree/HEAD)
+## [0.0.13](https://github.com/strictdoc-project/strictdoc/tree/0.0.13) (2021-08-16)
 
-[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.11...HEAD)
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.12...0.0.13)
 
 **Closed issues:**
 
+- traceability: improve resolution of full paths during validation checks [\#448](https://github.com/strictdoc-project/strictdoc/issues/448)
+
+**Merged pull requests:**
+
+- Bump version to 0.0.13 [\#460](https://github.com/strictdoc-project/strictdoc/pull/460) ([stanislaw](https://github.com/stanislaw))
+- export/html: ignore "tests" when looking for \_assets for now [\#459](https://github.com/strictdoc-project/strictdoc/pull/459) ([stanislaw](https://github.com/stanislaw))
+- export/html: update source-file-view, use micro requirement blocks [\#458](https://github.com/strictdoc-project/strictdoc/pull/458) ([mettta](https://github.com/mettta))
+- export/html: fix reqs in table view, fix reqs width in deep-traceability view, make TR and DTR screens use the same requirement tree [\#457](https://github.com/strictdoc-project/strictdoc/pull/457) ([mettta](https://github.com/mettta))
+- export/html: prevent recursive search of assets in the output directories [\#455](https://github.com/strictdoc-project/strictdoc/pull/455) ([stanislaw](https://github.com/stanislaw))
+- export/html: improve path resolution for source-to-source links [\#454](https://github.com/strictdoc-project/strictdoc/pull/454) ([stanislaw](https://github.com/stanislaw))
+-  export/html: improve handling of relative paths between reqs and files  [\#452](https://github.com/strictdoc-project/strictdoc/pull/452) ([stanislaw](https://github.com/stanislaw))
+- traceability: fix the missing source file and requirement warnings [\#450](https://github.com/strictdoc-project/strictdoc/pull/450) ([stanislaw](https://github.com/stanislaw))
+- traceability: simplify and improve source files grammar [\#449](https://github.com/strictdoc-project/strictdoc/pull/449) ([stanislaw](https://github.com/stanislaw))
+- docs: regenerate Read the Docs [\#446](https://github.com/strictdoc-project/strictdoc/pull/446) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.12](https://github.com/strictdoc-project/strictdoc/tree/0.0.12) (2021-08-05)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.11...0.0.12)
+
+**Closed issues:**
+
+- Allow images to be displayed in output [\#445](https://github.com/strictdoc-project/strictdoc/issues/445)
+- Include mathjax in HTML template to allow for TeX rendering in exported HTML [\#443](https://github.com/strictdoc-project/strictdoc/issues/443)
 - export/html: the TOC does not work for sections or requirements with identical name [\#431](https://github.com/strictdoc-project/strictdoc/issues/431)
 
 **Merged pull requests:**
 
+- Bump version to 0.0.12 [\#447](https://github.com/strictdoc-project/strictdoc/pull/447) ([stanislaw](https://github.com/stanislaw))
+- Add Mathjax to base HTML template to allow for TeX rendering [\#444](https://github.com/strictdoc-project/strictdoc/pull/444) ([lochsh](https://github.com/lochsh))
+- Code climate: fix unnecessary lambda warning [\#442](https://github.com/strictdoc-project/strictdoc/pull/442) ([stanislaw](https://github.com/stanislaw))
+- traceability: 2 validations of consistency of the req-source links [\#441](https://github.com/strictdoc-project/strictdoc/pull/441) ([stanislaw](https://github.com/stanislaw))
+- Code climate: split: traceability\_index and traceability\_index\_builder [\#440](https://github.com/strictdoc-project/strictdoc/pull/440) ([stanislaw](https://github.com/stanislaw))
+- traceability: extract and simplify cycle detection code [\#439](https://github.com/strictdoc-project/strictdoc/pull/439) ([stanislaw](https://github.com/stanislaw))
+- traceability: detect cycles between requirements [\#438](https://github.com/strictdoc-project/strictdoc/pull/438) ([stanislaw](https://github.com/stanislaw))
+-  export/html: add requirement-tree to traceability [\#437](https://github.com/strictdoc-project/strictdoc/pull/437) ([mettta](https://github.com/mettta))
+- Regenerate CHANGELOG [\#436](https://github.com/strictdoc-project/strictdoc/pull/436) ([stanislaw](https://github.com/stanislaw))
 - Code climate: fix unnecessary lambda warning [\#435](https://github.com/strictdoc-project/strictdoc/pull/435) ([stanislaw](https://github.com/stanislaw))
 - Code climate: fix several long line warnings from flake8 [\#434](https://github.com/strictdoc-project/strictdoc/pull/434) ([stanislaw](https://github.com/stanislaw))
 - export/html: Sec and Req anchors section number to ensure link uniqueness [\#433](https://github.com/strictdoc-project/strictdoc/pull/433) ([stanislaw](https://github.com/stanislaw))
@@ -280,7 +312,7 @@
 
 ## [0.0.4](https://github.com/strictdoc-project/strictdoc/tree/0.0.4) (2020-11-17)
 
-[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.2...0.0.4)
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.3...0.0.4)
 
 **Implemented enhancements:**
 
@@ -307,9 +339,17 @@
 - export/html: Add template Inheritance for views \(except doc-tree\) & styles for tables [\#223](https://github.com/strictdoc-project/strictdoc/pull/223) ([mettta](https://github.com/mettta))
 - Bump version to 0.0.2 [\#222](https://github.com/strictdoc-project/strictdoc/pull/222) ([stanislaw](https://github.com/stanislaw))
 
+## [0.0.3](https://github.com/strictdoc-project/strictdoc/tree/0.0.3) (2020-11-10)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.2...0.0.3)
+
 ## [0.0.2](https://github.com/strictdoc-project/strictdoc/tree/0.0.2) (2020-11-10)
 
-[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/f03d6f8f97f3efc65554e974c2c66245b938455c...0.0.2)
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.1...0.0.2)
+
+## [0.0.1](https://github.com/strictdoc-project/strictdoc/tree/0.0.1) (2020-11-10)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/f03d6f8f97f3efc65554e974c2c66245b938455c...0.0.1)
 
 **Implemented enhancements:**
 

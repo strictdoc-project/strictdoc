@@ -29,8 +29,8 @@ Summary of StrictDoc features:
   a few seconds. From the second run, only changed documents are regenerated.
   Further performance tuning should be possible.
 
-**Warning:** The StrictDoc project is still under construction. See the Roadmap
-section to get an idea of the overall project direction.
+**Warning:** The StrictDoc project is alpha quality. See the Backlog section to
+get an idea of the overall project direction.
 
 Examples
 ========
@@ -1304,8 +1304,17 @@ Sphinx documentation generator
 
 StrictDoc shall support exporting documents to Sphinx/RST format.
 
+.. _SDOC-GEN-EXCEL-EXPORT:
+
 Excel Export
 ~~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-GEN-EXCEL-EXPORT
 
 StrictDoc shall support exporting documents to Excel format.
 

@@ -18,7 +18,7 @@ article {
   background-color: var(--color-bg-contrast);
   border: 1px solid var(--color-fg-contrast);
   /* height: 100%; */
-  flex-grow: 1;
+  /* flex-grow: 1; */
 }
 
 [data-role='parents'] article,
@@ -46,40 +46,14 @@ article.requirement.highlighted {
 
 .deep-traceability-view article {
   /* width: var(--card-width); */
-  flex-grow: 1;
+  /* flex-grow: 1; */
 }
 
 .requirements-coverage-view article {
-  /* width: calc(var(--card-width)*0.75); */
-  width: auto;
-  flex-grow: 1;
+  width: calc(var(--card-width)*0.75);
+  /* width: auto; */
   font-size: .85em;
   line-height: 1.4;
-}
-
-/* only aside */
-[data-role='parents'] .requirement-card-view_node,
-[data-role='children'] .requirement-card-view_node,
-/* all in deep */
-.deep-traceability-view .requirement-card-view_node,
-.deep-traceability-view article.docsection {
-  width: var(--card-width);
-}
-
-
-.requirements-coverage-view_node {
-  width: calc(var(--card-width)*0.75);
-}
-
-.requirements-coverage-view_node a {
-  color: var(--color-accent);
-  font-size: .75em;
-  line-height: 1.2;
-  text-decoration: none;
-}
-
-.requirements-coverage-view_node a:hover {
-  text-decoration: underline;
 }
 
 /* section */

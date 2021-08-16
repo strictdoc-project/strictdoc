@@ -99,6 +99,16 @@ class Requirement(object):
     def document(self):
         return self.ng_document_reference.get_document()
 
+    def get_requirement_references(self):
+        if not self.references or len(self.references) == 0:
+            return []
+        references = []
+        for reference in self.references:
+            if reference.ref_type != "Parent":
+                continue
+            references.append(reference)
+        return references
+
     def get_statement_single_or_multiline(self):
         if self.statement:
             return self.statement

@@ -4,7 +4,7 @@
   gap: 0 0;
   place-items: stretch stretch;
   /*
-    for vertical line in 'current' culumn:
+    for vertical line in 'current' column:
     .content_item[data-role="current"]::before
   */
   overflow: hidden;
@@ -67,6 +67,16 @@
 
 .content_item[data-role="current"] {
   grid-column: 2 / 3;
+}
+
+.deep-traceability-view .content_item[data-role="current"] {
+  /* central column */
+  width: var(--card-width);
+}
+
+.requirements-coverage-view .content_item[data-role="current"] {
+  /* central column */
+  width: calc(var(--card-width)*0.75);
 }
 
 .content_item[data-role="children"] {

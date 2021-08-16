@@ -117,10 +117,11 @@ class RSTWriter:
             output += comment.get_comment()
             output += "\n\n"
 
-        if section_content.references and len(section_content.references) > 0:
+        requirement_references = section_content.get_requirement_references()
+        if len(requirement_references) > 0:
             output += "**Parents:**"
             output += "\n\n"
-            for reference in section_content.references:
+            for reference in requirement_references:
                 output += "- ``[{}]`` ".format(reference.path)
                 output += ":ref:`{}`".format(reference.path)
                 output += "\n"

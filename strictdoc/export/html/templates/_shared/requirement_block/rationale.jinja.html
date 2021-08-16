@@ -1,0 +1,5 @@
+{%- if requirement.rationale or requirement.rationale_multiline -%}
+  <div class="requirement_rationale">
+    {{ renderer.render_requirement_rationale(requirement) }}
+  </div>
+{%- endif -%}

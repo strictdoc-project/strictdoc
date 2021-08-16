@@ -1,5 +1,3 @@
- {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
-
 <article class="requirement"
 {%- if requirement.status %}
 data-status='{{ requirement.status.lower() }}'
@@ -9,42 +7,8 @@ data-uid='{{ requirement.uid }}'
 {%- endif %}>
 
   <section>
-
-    {%- if anchor is defined -%}
-    <div data-role='anchor' id="{{ anchor }}"></div>
-    {%- endif -%}
-
-    <div
-      class="section-title"
-      data-level="{{ requirement.context.title_number_string }}"
-    >{{ requirement.uid if requirement.uid else '[no UID]' }}</div>
-    <div>{{ requirement.title if requirement.title else (requirement.uid if requirement.uid else '') }}</div>
-
+    {% include "_shared/requirement_block/uid_and_title.jinja.html" %}
   </section>
 </article>
 
-{%- if requirement_file_links %}
-  <ul class="requirement-tree_downward">
-  {%- for link, opt_ranges in requirement_file_links %}
-    {%- if opt_ranges -%}
-      {%- for range in opt_ranges %}
-        <li class="requirement-tree_downward_node">
-          <div class="requirement-tree_downward_item">
-          <a class="" href="{{ link_renderer.render_source_file_link_from_root(requirement, link) }}#{{ requirement.uid }}#{{ range.ng_source_line_begin }}#{{ range.ng_source_line_end }}">
-            <b>[ {{ range.ng_source_line_begin }}-{{ range.ng_source_line_end }} ]</b> {{ link }}
-          </a>
-          </div>
-        </li>
-      {%- endfor -%}
-    {%- else -%}
-      <li class="requirement-tree_downward_node">
-        <div class="requirement-tree_downward_item">
-        <a href="{{ link_renderer.render_source_file_link_from_root(requirement, link) }}#{{ requirement.uid }}">
-          {{ link }}
-        </a>
-        </div>
-      </li>
-    {%- endif -%}
-  {%- endfor -%}
-  </ul>
-{%- endif %}
+{% include "_shared/requirement_block/files_tree.jinja.html" %}

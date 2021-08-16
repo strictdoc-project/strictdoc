@@ -1,56 +1,54 @@
 <article id="requirement:{{ requirement.uid }}" class="requirement" data-reqid="{{ requirement.uid }}">
-  <a class="requirement_link" href="{{ link_renderer.render_requirement_link_from_source_file(requirement, source_file) }}">
+  <a class="" href="{{ link_renderer.render_requirement_link_from_source_file(requirement, source_file) }}">
     {%- if requirement.uid %}
     <div class="requirement_child-uid">{{ requirement.uid }}</div>
     {%- endif %}
     {{ requirement.title }}
   </a>
+</article>
 
-  {# <p><a onclick="toggleRequirement('{{ requirement.uid }}')" href="#{{ requirement.uid }}">go to</a></p> #}
+ {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
+ {%- if requirement_file_links %}
+  <ul class="requirement-tree_downward">
+  {%- for link, opt_ranges in requirement_file_links %}
+    {%- if opt_ranges -%}
+      {%- for range in opt_ranges %}
+        <li class="requirement-tree_downward_node">
+          <div class="requirement-tree_downward_item">
+          <a
+            class="pointer"
+            data-begin="{{ range.ng_source_line_begin }}"
+            data-end="{{ range.ng_source_line_end }}"
+            href="{{ link_renderer.render_requirement_in_source_file_range_link(requirement, link, source_file, range) }}"
+            title="lines {{ range.ng_source_line_begin }}-{{ range.ng_source_line_end }} in file {{ link }}"
+          >
+            <b>[ {{ range.ng_source_line_begin }}-{{ range.ng_source_line_end }} ]</b> {{ link }}
+          </a>
+          </div>
+        </li>
+      {%- endfor -%}
+    {%- else -%}
 
-  {# LINKS #}
-  {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
-  {%- if requirement_file_links %}
-  <ul class="requirement_link">
-    {%- for link, opt_ranges in requirement_file_links %}
-      {%- if opt_ranges -%}
-        {%- for range in opt_ranges %}
-          <li>
-            <a
-              class="pointer requirement_link-file"
-              data-begin="{{ range.ng_source_line_begin }}"
-              data-end="{{ range.ng_source_line_end }}"
-              href="{{ link_renderer.render_requirement_in_source_file_range_link(requirement, link, source_file, range) }}"
-              title="lines {{ range.ng_source_line_begin }}-{{ range.ng_source_line_end }} in file {{ link }}"
-            >
-              <b>[{{ range.ng_source_line_begin }}-{{ range.ng_source_line_end }}]</b>
-              {{ link }}
-            </a>
-            <a href="{{ link_renderer.render_source_file_link_from_source_file(source_file, requirement, link) }}"
-               class="reset_range_highlight"></a>
-          </li>
-        {%- endfor -%}
-      {%- else -%}
-        {%- if source_file.in_doctree_source_file_rel_path == link -%}
-          <li>
-            <span class="current_file_pseudolink requirement_link-file">
+      {%- if source_file.in_doctree_source_file_rel_path == link -%}
+        <li class="requirement-tree_downward_node">
+          <div class="requirement-tree_downward_item">
+          <span class="current_file_pseudolink">
               {{ link }}
             </span>
-          </li>
-        {%- else -%}
-          <li>
-            <a
-              class="requirement_link-file"
-              href="{{ link_renderer.render_requirement_in_source_file_link(requirement, link, source_file) }}"
-            >
-              {{ link }}
-            </a>
-          </li>
-        {%- endif -%}
-      {%- endif -%}
-    {%- endfor -%}
-    </ul>
-  {%- endif %}
-  {# // LINKS #}
+          </div>
+        </li>
 
-</article>
+        {%- else -%}
+
+      <li class="requirement-tree_downward_node">
+          <div class="requirement-tree_downward_item">
+          <a href="{{ link_renderer.render_requirement_in_source_file_link(requirement, link, source_file) }}" >
+          {{ link }}
+          </a>
+          </div>
+        </li>
+    {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+  </ul>
+{%- endif %}

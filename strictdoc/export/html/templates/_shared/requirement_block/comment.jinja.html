@@ -1,0 +1,7 @@
+{%- if requirement.comments %}
+  {%- for comment in requirement.comments %}
+    <div class="requirement_comment">
+      {{ renderer.render_comment(comment) }}
+    </div>
+  {%- endfor %}
+{%- endif %}

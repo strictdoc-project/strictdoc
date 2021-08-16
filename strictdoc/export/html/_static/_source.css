@@ -19,7 +19,7 @@
   grid-area: aside / aside / nav / nav;
   border-right: none;
   overflow-y: scroll;
-  padding-left: calc(var(--base-padding)*1.5);
+  padding: var(--base-padding);
 }
 
 .source-file-view .layout_main {
@@ -126,6 +126,10 @@
 .source-file__refer details[open] > summary::before {
   /* content: '⊖'; */
   content: '\25BC';
+}
+
+.source-file__toggle-switch:not(:empty) {
+  margin-bottom: 1rem;
 }
 
 /* CODE */

@@ -406,7 +406,7 @@ window.addEventListener("load", function () {
 
   const switcher = new Switch(
     {
-      labelText: 'Coverage',
+      labelText: 'Show coverage',
       checked: true,
       callback: (checked) => dom.toggleRangesVisibility(checked),
     }

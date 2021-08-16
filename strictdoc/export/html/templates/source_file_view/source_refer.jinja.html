@@ -8,7 +8,10 @@
   <div class="source-file__ranges">
 
     <details open>
-      <summary>The following requirements refer <b>to&nbsp;the&nbsp;ranges</b> in this source&nbsp;file.</summary>
+      <summary>
+        <div id="sorceCodeCoverageSwitch" class="source-file__toggle-switch"></div>
+        The following requirements refer <b>to&nbsp;the&nbsp;ranges</b> in this source&nbsp;file.
+      </summary>
         {%- for requirement in source_file_range_reqs -%}
           {% include "source_file_view/source_requirement.jinja.html" %}
         {%- endfor -%}

@@ -539,3 +539,58 @@ COMMENT: This requirement is very important
     output = writer.write(document)
 
     assert input == output
+
+
+def test_081_document_config_markup_not_specified():
+    input = """
+[DOCUMENT]
+TITLE: Test Doc
+VERSION: 0.0.1
+
+[REQUIREMENT]
+REFS:
+- TYPE: File
+  VALUE: /tmp/sample.cpp
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input)
+    assert isinstance(document, Document)
+
+    document: Document = reader.read(input)
+    assert document.config.version == "0.0.1"
+    assert document.config.markup is None
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input == output
+
+
+def test_081_document_config_markup_specified():
+    input = """
+[DOCUMENT]
+TITLE: Test Doc
+VERSION: 0.0.1
+OPTIONS:
+  MARKUP: Text
+
+[REQUIREMENT]
+REFS:
+- TYPE: File
+  VALUE: /tmp/sample.cpp
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input)
+    assert isinstance(document, Document)
+
+    document: Document = reader.read(input)
+    assert document.config.version == "0.0.1"
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input == output

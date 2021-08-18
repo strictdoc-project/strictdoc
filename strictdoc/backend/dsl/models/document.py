@@ -10,7 +10,7 @@ class Document(object):
     ):
         assert isinstance(free_texts, list)
         self.name = name if name else title
-        self.config = config
+        self.config = config if config else DocumentConfig.default_config(self)
         self.free_texts = free_texts
         self.section_contents = section_contents
 

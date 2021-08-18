@@ -1,5 +1,6 @@
 from jinja2 import Environment, PackageLoader, StrictUndefined
 
+from strictdoc.backend.dsl.models.document import Document
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 
@@ -15,14 +16,14 @@ class DocumentHTMLGenerator:
     def export(
         config,
         document_tree,
-        document,
+        document: Document,
         traceability_index,
         link_renderer,
         standalone=False,
     ):
         output = ""
 
-        markup_renderer = MarkupRenderer()
+        markup_renderer = MarkupRenderer.create(document.config.markup)
 
         template = DocumentHTMLGenerator.env.get_template(
             "single_document/document.jinja.html"

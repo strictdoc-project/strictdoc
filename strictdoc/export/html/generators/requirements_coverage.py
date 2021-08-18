@@ -24,12 +24,13 @@ class RequirementsCoverageHTMLGenerator:
             "requirements_coverage/requirements_coverage.jinja.html"
         )
 
+        markup_renderer = MarkupRenderer.create("RST")
         output += template.render(
             document_tree=document_tree,
             traceability_index=traceability_index,
             documents_iterator=document_tree_iterator.iterator(),
             link_renderer=link_renderer,
-            renderer=MarkupRenderer(),
+            renderer=markup_renderer,
             static_path="_static",
         )
 

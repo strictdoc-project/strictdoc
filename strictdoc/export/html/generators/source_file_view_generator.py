@@ -33,7 +33,7 @@ class SourceFileViewHTMLGenerator:
         with open(source_file.full_path) as f:
             source_file_lines = f.readlines()
 
-        markup_renderer = MarkupRenderer()
+        markup_renderer = MarkupRenderer.create("RST")
 
         lexer = None
         if source_file.is_python_file():

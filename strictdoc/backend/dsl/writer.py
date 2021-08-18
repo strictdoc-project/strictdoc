@@ -58,6 +58,15 @@ class SDWriter:
                         output += "  REQUIRED: Yes"
                         output += "\n"
 
+            markup = document_config.markup
+            if markup:
+                output += "OPTIONS:"
+                output += "\n"
+
+                output += "  MARKUP: "
+                output += markup
+                output += "\n"
+
         for free_text in document.free_texts:
             output += "\n"
             output += self._print_free_text(free_text)

@@ -4,11 +4,17 @@ from strictdoc.backend.dsl.models.config_special_field import ConfigSpecialField
 
 
 class DocumentConfig:
-    def __init__(self, parent, version, number, special_fields):
+    @staticmethod
+    def default_config(document):
+        return DocumentConfig(document, None, None, None, None)
+
+    def __init__(self, parent, version, number, special_fields, markup):
         self.parent = parent
         self.version = version
         self.number = number
         self.special_fields: [ConfigSpecialField] = special_fields
+        self.markup = markup
+
         self.special_fields_set: Set[str] = set()
         self.special_fields_required: [str] = []
         if special_fields:

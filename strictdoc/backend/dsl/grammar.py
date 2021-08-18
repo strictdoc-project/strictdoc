@@ -48,12 +48,20 @@ DocumentConfig[noskipws]:
   ('VERSION: ' version = /.*$/ '\n')?
   ('NUMBER: ' number = /.*$/ '\n')?
   ('SPECIAL_FIELDS:' '\n' special_fields += ConfigSpecialField)?
+
+  ('OPTIONS:' '\n'
+    ('  MARKUP: ' (markup = MarkupChoice) '\n')
+  )?
 ;
 
 ConfigSpecialField[noskipws]:
 '- NAME: ' field_name = /.*$/ '\n'
 '  TYPE: ' field_type = 'String' '\n'
 ('  REQUIRED: ' field_required = 'Yes' '\n')?
+;
+
+MarkupChoice[noskipws]:
+  'RST' | 'Text'
 ;
 
 Section[noskipws]:

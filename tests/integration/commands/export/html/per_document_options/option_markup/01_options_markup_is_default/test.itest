@@ -1,0 +1,7 @@
+RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: cat %S/Output/html/01_options_markup_is_default/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+
+// ** ** is transformed to <strong> by RST
+CHECK-HTML: <strong>Hello world</strong>

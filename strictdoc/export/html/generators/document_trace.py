@@ -16,7 +16,7 @@ class DocumentTraceHTMLGenerator:
     def export(config, document, traceability_index, link_renderer):
         output = ""
 
-        markup_renderer = MarkupRenderer()
+        markup_renderer = MarkupRenderer.create(document.config.markup)
 
         template = DocumentTraceHTMLGenerator.env.get_template(
             "single_document_traceability/document.jinja.html"

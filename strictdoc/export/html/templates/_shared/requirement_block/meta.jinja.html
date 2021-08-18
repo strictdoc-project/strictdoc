@@ -1,21 +1,19 @@
 {%- if requirement.has_meta -%}
   <dl class="requirement_meta">
     {%- if requirement.uid %}
-    <div><dt>UID</dt><dd>{{ requirement.uid }}</dd></div>
+    <dt><i>UID</i></dt><dd>{{ requirement.uid }}</dd>
     {%- endif %}
     {%- if requirement.status %}
-    <div><dt>Status</dt><dd>{{ requirement.status }}</dd></div>
+    <dt><i>Status</i></dt><dd>{{ requirement.status }}</dd>
     {%- endif %}
     {%- if requirement.tags %}
-    <div><dt>Tags</dt><dd>{{ ', '.join(requirement.tags) }}</dd></div>
+    <dt><i>Tags</i></dt><dd>{{ ', '.join(requirement.tags) }}</dd>
     {%- endif %}
 
     {%- if requirement.special_fields %}
     {%- for special_field in requirement.special_fields %}
-    <div>
-      <dt>{{special_field.field_name.lower().capitalize()}}</dt>
+      <dt><i>{{special_field.field_name.lower().capitalize()}}</i></dt>
       <dd>{{special_field.field_value}}</dd>
-    </div>
     {%- endfor %}
     {%- endif %}
 

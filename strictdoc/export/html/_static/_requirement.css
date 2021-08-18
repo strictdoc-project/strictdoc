@@ -231,23 +231,37 @@ article object {
 /* meta table */
 
 dl.requirement_meta {
-  display: table;
-  border-collapse: collapse;
+  display: grid;
+  grid-template-columns: min-content auto;
+  place-items: stretch stretch;
+  gap: 1px 1px;
+  border: 1px solid #ddd;
+  background-color: #ddd;
+
+  width: fit-content;
   margin-bottom: 1rem;
 }
-.requirement_meta div {
-  display: table-row;
+
+dl.requirement_meta:last-child {
+  border-bottom: none;
 }
+
 .requirement_meta dt,
 .requirement_meta dd {
-  display: table-cell;
-  padding: 0 6px;
+  margin: 0;
+  padding: 2px 8px;
   font-size: .85rem;
   line-height: 1.4;
   font-family: 'Courier New', Courier, monospace;
-  border: 1px solid #dddddd;
+  background-color: #ffffff;
 }
-.requirement_meta dt::after {
+.requirement_meta dt i {
+  display: inline-block;
+  /* letter-spacing: -1px; */
+  overflow-wrap: break-word;
+}
+
+.requirement_meta dt i::after {
   content: ':';
 }
 

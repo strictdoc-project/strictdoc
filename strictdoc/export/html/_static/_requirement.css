@@ -73,34 +73,46 @@ article > section:last-of-type {
 
 /* .table-view */
 
+.table-view section,
 .table-view [data-section] {
   background-color: var(--color-bg-contrast);
   padding: var(--base-padding);
 }
 
-.table-view header [data-section] {
-  background-color: var(--color-bg-main);
-  color: var(--color-text-main);
-
-  display: flex;
-  align-items: center;
-  height: var(--base-gap);
-
-  position: -webkit-sticky; /* Safari */
-  position: sticky;
-  z-index: 10;
-  top: calc(var(--base-gap)*(-1));
-}
-
-.table-view header [data-section]::before {
-  content: attr(data-section) " ";
-  font-size: .85rem;
-  text-transform: capitalize;
-  font-weight: bold;
-}
-
 .table-view [data-section] p:first-child { margin-top: 0; }
 .table-view [data-section] p:last-child { margin-bottom: 0; }
+
+.table-view [data-section="meta"] {
+  padding: 0;
+}
+
+.table-view [data-section="meta"] > .section-title {
+  padding: var(--base-padding);
+}
+
+.table-view [data-section="meta"] > .requirement_meta {
+  gap: 1px;
+  border-width: 1px;
+  border-color: #ddd;
+  background-color: #ddd;
+  margin: 0;
+  padding: 0;
+  border-left: none;
+  border-right: none;
+  width: 100%;
+}
+
+.table-view [data-section="meta"] > .requirement_meta dt {
+  padding-left: var(--base-padding);
+}
+
+.table-view [data-section="meta"] > .requirement_meta dt i {
+  max-width: 100px;
+}
+
+.table-view [data-section="meta"] > .requirement_link {
+  padding: 0 var(--base-padding);
+}
 
 /* requirement_statement */
 

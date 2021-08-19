@@ -12,7 +12,7 @@
 
     {%- if requirement.special_fields %}
     {%- for special_field in requirement.special_fields %}
-      <dt><i>{{special_field.field_name.lower().capitalize()}}</i></dt>
+      <dt><i>{{special_field.field_name}}</i></dt>
       <dd>{{special_field.field_value}}</dd>
     {%- endfor %}
     {%- endif %}

@@ -102,6 +102,10 @@ article > section:last-of-type {
   width: 100%;
 }
 
+.table-view [data-section="meta"] > .requirement_meta:last-child {
+  border-bottom: none;
+}
+
 .table-view [data-section="meta"] > .requirement_meta dt {
   padding-left: var(--base-padding);
 }
@@ -252,10 +256,6 @@ dl.requirement_meta {
 
   width: fit-content;
   margin-bottom: 1rem;
-}
-
-dl.requirement_meta:last-child {
-  border-bottom: none;
 }
 
 .requirement_meta dt,

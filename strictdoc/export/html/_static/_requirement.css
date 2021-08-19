@@ -255,7 +255,7 @@ dl.requirement_meta {
   background-color: #ddd;
 
   width: fit-content;
-  margin-bottom: 1rem;
+  margin: 1rem 0;
 }
 
 .requirement_meta dt,
@@ -266,7 +266,9 @@ dl.requirement_meta {
   line-height: 1.4;
   font-family: 'Courier New', Courier, monospace;
   background-color: #ffffff;
+  /* background-color: var(--color-bg-main); */
 }
+
 .requirement_meta dt i {
   display: inline-block;
   /* letter-spacing: -1px; */
@@ -275,6 +277,11 @@ dl.requirement_meta {
 
 .requirement_meta dt i::after {
   content: ':';
+}
+
+.requirement-tree_node .requirement_meta dt,
+.requirement-tree_node .requirement_meta dd {
+  background-color: var(--color-bg-main);
 }
 
 /* requirement: parent / child / file */

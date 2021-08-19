@@ -146,7 +146,7 @@ h6 { font-size: 1em; }
 
 .section-title {
   margin: 0;
-  line-height: 1.4;
+  line-height: 1.6;
   color: var(--color-accent);
 }
 
@@ -158,7 +158,6 @@ h6 { font-size: 1em; }
 .traceability-view .section-title,
 .deep-traceability-view .section-title {
   font-size: 1.1em;
-  line-height: 1.2;
 }
 
 .requirements-coverage-view .section-title {
@@ -167,7 +166,6 @@ h6 { font-size: 1em; }
 
 .table-view .section-title {
   font-size: 1rem;
-  line-height: 1.2;
 }
 
 /* blockquote */

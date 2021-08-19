@@ -95,15 +95,11 @@ article > section:last-of-type {
   border-width: 1px;
   border-color: #ddd;
   background-color: #ddd;
-  margin: 0;
+  margin-top: 0;
   padding: 0;
   border-left: none;
   border-right: none;
   width: 100%;
-}
-
-.table-view [data-section="meta"] > .requirement_meta:last-child {
-  margin-bottom: -1px;
 }
 
 .table-view [data-section="meta"] > .requirement_meta dt {

@@ -29,8 +29,8 @@ Summary of StrictDoc features:
   a few seconds. From the second run, only changed documents are regenerated.
   Further performance tuning should be possible.
 
-**Warning:** The StrictDoc project is alpha quality. See the Backlog section to
-get an idea of the overall project direction.
+**Warning:** The StrictDoc project is alpha quality. See the
+`Backlog`_ section to get an idea of the overall project direction.
 
 Examples
 ========

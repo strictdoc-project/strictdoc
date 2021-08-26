@@ -15,7 +15,14 @@ class DocumentTableHTMLGenerator:
     def export(config, document, traceability_index, link_renderer):
         output = ""
 
-        markup_renderer = MarkupRenderer.create(document.config.markup)
+        document_type = DocumentType.table()
+        markup_renderer = MarkupRenderer.create(
+            document.config.markup,
+            traceability_index,
+            link_renderer,
+            document,
+            document_type,
+        )
 
         template = DocumentTableHTMLGenerator.env.get_template(
             "single_document_table/document.jinja.html"
@@ -31,7 +38,7 @@ class DocumentTableHTMLGenerator:
             traceability_index=traceability_index,
             renderer=markup_renderer,
             link_renderer=link_renderer,
-            document_type=DocumentType.table(),
+            document_type=document_type,
             standalone=False,
             root_path=root_path,
             static_path=static_path,

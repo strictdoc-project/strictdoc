@@ -26,6 +26,7 @@ class SourceFileViewHTMLGenerator:
     ):
         output = ""
 
+        document_type = DocumentType.document()
         template = SourceFileViewHTMLGenerator.env.get_template(
             "source_file_view/source_file_view.jinja.html"
         )
@@ -33,7 +34,9 @@ class SourceFileViewHTMLGenerator:
         with open(source_file.full_path) as f:
             source_file_lines = f.readlines()
 
-        markup_renderer = MarkupRenderer.create("RST")
+        markup_renderer = MarkupRenderer.create(
+            "RST", traceability_index, link_renderer, None, document_type
+        )
 
         lexer = None
         if source_file.is_python_file():
@@ -102,7 +105,7 @@ class SourceFileViewHTMLGenerator:
             traceability_index=traceability_index,
             link_renderer=link_renderer,
             renderer=markup_renderer,
-            document_type=DocumentType.document(),
+            document_type=document_type,
             root_path=root_path,
             static_path=static_path,
         )

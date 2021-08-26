@@ -1,0 +1,14 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[FREETEXT]
+Hello1
+[/FREETEXT]
+
+[FREETEXT]
+Hello2
+[/FREETEXT]
+
+[FREETEXT]
+Hello3
+[/FREETEXT]

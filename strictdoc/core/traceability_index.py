@@ -266,6 +266,9 @@ class TraceabilityIndex:
             source_file_rel_path
         )
 
+    def get_node_by_uid(self, uid):
+        return self._requirements_parents[uid]["requirement"]
+
     def attach_traceability_info(
         self,
         source_file_rel_path: str,

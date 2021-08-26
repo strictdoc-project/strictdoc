@@ -1,0 +1,2 @@
+RUN: %expect_exit 1 %strictdoc export %S | filecheck %s --dump-input=fail
+CHECK: error: DocumentIndex: two nodes with the same UID exist in two different documents: REQ-001 in "Doc 1" and "Doc 2".

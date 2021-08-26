@@ -16,7 +16,14 @@ class DocumentDeepTraceHTMLGenerator:
     def export_deep(config, document, traceability_index, link_renderer):
         output = ""
 
-        markup_renderer = MarkupRenderer.create(document.config.markup)
+        document_type = DocumentType.deeptrace()
+        markup_renderer = MarkupRenderer.create(
+            document.config.markup,
+            traceability_index,
+            link_renderer,
+            document,
+            document_type,
+        )
 
         template = DocumentDeepTraceHTMLGenerator.env.get_template(
             "single_document_traceability_deep/document.jinja.html"
@@ -32,7 +39,7 @@ class DocumentDeepTraceHTMLGenerator:
             traceability_index=traceability_index,
             renderer=markup_renderer,
             link_renderer=link_renderer,
-            document_type=DocumentType.deeptrace(),
+            document_type=document_type,
             standalone=False,
             root_path=root_path,
             static_path=static_path,

@@ -1,6 +1,7 @@
 from enum import Enum
 
 from strictdoc.backend.dsl.models.document_config import DocumentConfig
+from strictdoc.backend.dsl.models.inline_link import InlineLink
 from strictdoc.backend.dsl.models.requirement import (
     Requirement,
     CompositeRequirement,
@@ -70,7 +71,6 @@ class SDWriter:
         for free_text in document.free_texts:
             output += "\n"
             output += self._print_free_text(free_text)
-
         closing_tags = []
         for content_node in document_iterator.all_content():
             while (
@@ -106,6 +106,12 @@ class SDWriter:
         output = ""
         output += "[SECTION]"
         output += "\n"
+
+        if section.uid:
+            output += "UID: "
+            output += section.uid
+            output += "\n"
+
         output += "TITLE: "
         output += str(section.title)
         output += "\n"
@@ -217,8 +223,16 @@ class SDWriter:
         output = ""
         output += "[FREETEXT]"
         output += "\n"
-        output += free_text.text.rstrip()
-        output += "\n"
+        for part in free_text.parts:
+            if isinstance(part, str):
+                output += part
+            elif isinstance(part, InlineLink):
+                output += "[LINK: "
+                output += part.link
+                output += "]"
+            else:
+                raise NotImplementedError
+        # output += "\n"
         output += "[/FREETEXT]"
         output += "\n"
         return output

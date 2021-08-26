@@ -2,6 +2,6 @@ RUN: %strictdoc export "%strictdoc_root/docs" --output-dir="%S/Output"
 
 RUN: %check_exists --file "%S/Output/html/index.html"
 RUN: %check_exists --file %S/Output/html/docs/strictdoc.html
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc - TABLE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc - TRACE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc - DEEP-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-DEEP-TRACE.html"

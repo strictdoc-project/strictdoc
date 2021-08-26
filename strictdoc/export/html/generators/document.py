@@ -21,9 +21,16 @@ class DocumentHTMLGenerator:
         link_renderer,
         standalone=False,
     ):
+        document_type = DocumentType.document()
         output = ""
 
-        markup_renderer = MarkupRenderer.create(document.config.markup)
+        markup_renderer = MarkupRenderer.create(
+            document.config.markup,
+            traceability_index,
+            link_renderer,
+            document,
+            document_type,
+        )
 
         template = DocumentHTMLGenerator.env.get_template(
             "single_document/document.jinja.html"

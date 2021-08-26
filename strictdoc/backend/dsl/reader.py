@@ -11,6 +11,7 @@ from strictdoc.backend.dsl.grammar import STRICTDOC_GRAMMAR
 from strictdoc.backend.dsl.models.config_special_field import ConfigSpecialField
 from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.document_config import DocumentConfig
+from strictdoc.backend.dsl.models.inline_link import InlineLink
 from strictdoc.backend.dsl.models.reference import (
     Reference,
     ParentReqReference,
@@ -38,6 +39,7 @@ DOCUMENT_MODELS = [
     ParentReqReference,
     FileReference,
     FreeText,
+    InlineLink,
 ]
 
 
@@ -62,6 +64,8 @@ def document_config_obj_processor(document_config, parse_context):
 
 
 def section_obj_processor(section, parse_context: ParseContext):
+    section.ng_document_reference = parse_context.document_reference
+
     if section.level and not parse_context.at_least_one_section_level_warning:
         print(
             "warning: [SECTION].LEVEL fields are deprecated."

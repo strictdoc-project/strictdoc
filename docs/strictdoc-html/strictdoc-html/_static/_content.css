@@ -39,7 +39,9 @@
   grid-template-columns:  minmax(250px, 25%)
                           minmax(300px, 45%)
                           minmax(250px, 30%);
-  gap: 2px 2px;
+  gap: 2px;
+  background-color: #ddd;
+  border: 2px solid #ddd;
 }
 
 .document-view .content {
@@ -102,6 +104,11 @@
 
 .table-view [data-section="meta"] {
   grid-column: 1 / 2;
+}
+
+.table-view [data-section="meta"].docsection_section:only-child {
+  grid-column: 1 / -1;
+  background-color: var(--color-bg-main);
 }
 
 .table-view [data-section="description"] {

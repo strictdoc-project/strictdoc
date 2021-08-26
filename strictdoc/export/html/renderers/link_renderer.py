@@ -4,6 +4,7 @@ from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.requirement import Requirement
 from strictdoc.backend.dsl.models.section import Section
 from strictdoc.core.finders.source_files_finder import SourceFile
+from strictdoc.export.html.document_type import DocumentType
 
 
 class LinkRenderer:
@@ -35,10 +36,12 @@ class LinkRenderer:
         self.local_anchor_cache[node] = local_anchor
         return local_anchor
 
-    def render_requirement_link(self, node, context_document, document_type):
-        assert isinstance(node, Requirement)
+    def render_requirement_link(
+        self, node, context_document, document_type: DocumentType
+    ):
+        assert isinstance(node, Requirement) or isinstance(node, Section)
         assert isinstance(context_document, Document)
-        assert isinstance(document_type, str)
+        assert isinstance(document_type, DocumentType)
         local_link = self.render_local_anchor(node)
         if node.document == context_document:
             return f"#{local_link}"
@@ -69,7 +72,7 @@ class LinkRenderer:
         else:
             self.req_link_cache[link_cache_key] = {}
         document_link = node.document.meta.get_html_link(
-            "document", source_file.level + 2
+            DocumentType.document(), source_file.level + 2
         )
         requirement_link = f"{document_link}#{local_link}"
         self.req_link_cache[link_cache_key][node] = requirement_link

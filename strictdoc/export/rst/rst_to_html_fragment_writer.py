@@ -29,3 +29,7 @@ class RstToHtmlFragmentWriter:
 
         html = output["html_body"]
         return html
+
+    @staticmethod
+    def write_link(title, href):
+        return f"`{title} <{href}>`_"

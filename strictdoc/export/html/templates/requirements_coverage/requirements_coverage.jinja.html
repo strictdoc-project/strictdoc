@@ -34,7 +34,6 @@
       <h3 class="requirements-coverage-document-title" id="{{loop.index}}">{{document.title}}</h3>
       {%- set document_iterator = traceability_index.get_document_iterator(document) -%}
       <div class="content">
-      {%- with document_type="deeptrace" -%}
       {%- for section_or_requirement in document_iterator.all_content() %}
         {%- if section_or_requirement.is_section and section_or_requirement.ng_has_requirements %}
 
@@ -68,7 +67,6 @@
         </section>
         {%- endif %}
       {%- endfor %}
-      {%- endwith -%}
       </div>
   {%- endfor %}
 

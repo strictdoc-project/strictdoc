@@ -1,5 +1,6 @@
 from enum import Enum
 
+from strictdoc.backend.dsl.models.inline_link import InlineLink
 from strictdoc.backend.dsl.models.requirement import Requirement
 from strictdoc.backend.dsl.models.section import FreeText, Section
 from strictdoc.backend.dsl.models.special_field import SpecialField
@@ -142,7 +143,16 @@ class RSTWriter:
 
     def _print_free_text(self, free_text):
         assert isinstance(free_text, FreeText)
+        if not len(free_text.parts):
+            return ""
         output = ""
-        output += free_text.text
-        output += "\n\n"
+        for part in free_text.parts:
+            if isinstance(part, str):
+                output += part
+            elif isinstance(part, InlineLink):
+                node = self.index.get_node_by_uid(part.link)
+                output += f"`{node.title}`_"
+            else:
+                raise NotImplementedError
+        output += "\n"
         return output

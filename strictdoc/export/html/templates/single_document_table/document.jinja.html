@@ -49,14 +49,14 @@
         {%- if section_or_requirement.is_composite_requirement %}
 
           {%- set requirement = section_or_requirement %}
-          {% with anchor=link_renderer.render_local_anchor(section_or_requirement), document_type="table" -%}
+          {% with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
           {% include "_shared/requirement.jinja.html" %}
           {%- endwith %}
 
         {%- elif section_or_requirement.is_requirement %}
 
           {%- set requirement = section_or_requirement %}
-          {% with anchor=link_renderer.render_local_anchor(section_or_requirement), document_type="table" -%}
+          {% with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
             {% include "_shared/requirement.jinja.html" %}
           {%- endwith %}
 

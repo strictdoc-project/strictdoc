@@ -2,6 +2,7 @@ from jinja2 import Environment, PackageLoader, StrictUndefined
 
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 
 
@@ -24,7 +25,13 @@ class RequirementsCoverageHTMLGenerator:
             "requirements_coverage/requirements_coverage.jinja.html"
         )
 
-        markup_renderer = MarkupRenderer.create("RST")
+        markup_renderer = MarkupRenderer.create(
+            "RST",
+            traceability_index,
+            link_renderer,
+            None,
+            DocumentType.document(),
+        )
         output += template.render(
             document_tree=document_tree,
             traceability_index=traceability_index,
@@ -32,6 +39,7 @@ class RequirementsCoverageHTMLGenerator:
             link_renderer=link_renderer,
             renderer=markup_renderer,
             static_path="_static",
+            document_type=DocumentType.deeptrace(),
         )
 
         return output

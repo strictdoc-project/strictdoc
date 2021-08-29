@@ -1,3 +1,6 @@
+from strictdoc.export.html.document_type import DocumentType
+
+
 class DocumentMeta:
     def __init__(
         self,
@@ -29,17 +32,17 @@ class DocumentMeta:
         )
 
     def get_html_table_path(self):
-        return "{}/{} - TABLE.html".format(
+        return "{}/{}-TABLE.html".format(
             self.output_document_dir_full_path, self.document_filename_base
         )
 
     def get_html_traceability_path(self):
-        return "{}/{} - TRACE.html".format(
+        return "{}/{}-TRACE.html".format(
             self.output_document_dir_full_path, self.document_filename_base
         )
 
     def get_html_deep_traceability_path(self):
-        return "{}/{} - DEEP-TRACE.html".format(
+        return "{}/{}-DEEP-TRACE.html".format(
             self.output_document_dir_full_path, self.document_filename_base
         )
 
@@ -50,29 +53,32 @@ class DocumentMeta:
         )
 
     def get_html_table_link(self):
-        return "{}/{} - TABLE.html".format(
+        return "{}/{}-TABLE.html".format(
             self.output_document_dir_rel_path, self.document_filename_base
         )
 
     def get_html_traceability_link(self):
-        return "{}/{} - TRACE.html".format(
+        return "{}/{}-TRACE.html".format(
             self.output_document_dir_rel_path, self.document_filename_base
         )
 
     def get_html_deep_traceability_link(self):
-        return "{}/{} - DEEP-TRACE.html".format(
+        return "{}/{}-DEEP-TRACE.html".format(
             self.output_document_dir_rel_path, self.document_filename_base
         )
 
-    def get_html_link(self, document_type, other_doc_level):
+    def get_html_link(self, document_type: DocumentType, other_doc_level):
+        assert isinstance(document_type, DocumentType)
+
+        document_type_type = document_type.type
         path_prefix = self.get_root_path_prefix(other_doc_level)
-        if document_type == "document":
+        if document_type_type == DocumentType.DOCUMENT:
             document_link = self.get_html_doc_link()
-        elif document_type == "table":
+        elif document_type_type == DocumentType.TABLE:
             document_link = self.get_html_table_link()
-        elif document_type == "trace":
+        elif document_type_type == DocumentType.TRACE:
             document_link = self.get_html_traceability_link()
-        elif document_type == "deeptrace":
+        elif document_type_type == DocumentType.DEEPTRACE:
             document_link = self.get_html_deep_traceability_link()
         else:
             raise NotImplementedError

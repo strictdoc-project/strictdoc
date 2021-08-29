@@ -54,8 +54,6 @@
 
         {%- elif section_or_requirement.is_requirement %}
         <section class="content_section">
-        {%- with document_type="deeptrace" -%}
-
           <div class="content_item" data-role="parents">
           {%- with requirement=section_or_requirement, requirement_partial="_shared/requirement.jinja.html" -%}
             {% include "_shared/requirement_tree_left.jinja.html" %}
@@ -74,8 +72,6 @@
             {% include "_shared/requirement_tree_right.jinja.html" %}
           {%- endwith -%}
           </div>
-
-        {%- endwith -%}
         </section>
         {%- endif %}
       {%- endfor %}

@@ -92,6 +92,70 @@ Hello world
     assert input == output
 
 
+def test_021_freetext_empty():
+    input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[FREETEXT]
+[/FREETEXT]
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input == output
+
+
+def test_022_free_text_inline_link():
+    input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[FREETEXT]
+String 1
+String 2 [LINK: REQ-001] String 3
+String 4
+[/FREETEXT]
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input == output
+
+
+def test_023_free_text_():
+    input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[FREETEXT]
+AAA  [/FREETEXT]
+[/FREETEXT]
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input == output
+
+
 def test_030_multiline_statement():
     input = """
 [DOCUMENT]

@@ -17,4 +17,4 @@ Line2
 """.lstrip()
 
     html_output = TextToHtmlWriter.write(text_input)
-    assert "Line1<br />\nLine2<br />\n" == html_output
+    assert "Line1<br/>\nLine2<br/>\n" == html_output

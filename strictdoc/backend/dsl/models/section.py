@@ -4,8 +4,9 @@ class SectionContext(object):
 
 
 class Section(object):
-    def __init__(self, parent, level, title, free_texts, section_contents):
+    def __init__(self, parent, uid, level, title, free_texts, section_contents):
         self.parent = parent
+        self.uid = uid
         self.level = int(level) if level else None
         self.title = title
 
@@ -15,6 +16,7 @@ class Section(object):
         self.ng_level = None
         self.ng_sections = []
         self.ng_has_requirements = False
+        self.ng_document_reference = None
         self.context = SectionContext()
 
     def __str__(self):
@@ -22,6 +24,10 @@ class Section(object):
 
     def __repr__(self):
         return self.__str__()
+
+    @property
+    def document(self):
+        return self.ng_document_reference.get_document()
 
     @property
     def is_requirement(self):
@@ -37,9 +43,9 @@ class Section(object):
 
 
 class FreeText:
-    def __init__(self, parent, text):
+    def __init__(self, parent, parts):
         self.parent = parent
-        self.text = text
+        self.parts = parts
         self.ng_level = None
 
     @property

@@ -67,6 +67,7 @@ MarkupChoice[noskipws]:
 Section[noskipws]:
   '[SECTION]'
   '\n'
+  ('UID: ' uid = /.+$/ '\n')?
   ('LEVEL: ' level = /[1-6]/ '\n')?
   'TITLE: ' title = /.*$/ '\n'
   free_texts *= SpaceThenFreeText
@@ -151,7 +152,29 @@ FileReference[noskipws]:
 ;
 
 FreeText[noskipws]:
-  text = /(?ms)\\[FREETEXT\\]\n(.*?)\n\\[\\/FREETEXT\\]/ '\n'
+  '[FREETEXT]' '\n'
+  parts+=TextPart
+  FreeTextEnd
+;
+
+FreeTextEnd: /^/ '[/FREETEXT]' '\n';
+
+TextPart[noskipws]:
+  (InlineLink | NormalString)
+;
+
+NormalString[noskipws]:
+  (!SpecialKeyword !FreeTextEnd /(?ms)./)*
+;
+
+SpecialKeyword:
+  InlineLinkStart // more keywords are coming later
+;
+
+InlineLinkStart: '[LINK: ';
+
+InlineLink[noskipws]:
+  InlineLinkStart value = /[^\\]]*/ ']'
 ;
 """
 ).substitute(REQUIREMENT_FIELDS=REQUIREMENT_FIELDS)

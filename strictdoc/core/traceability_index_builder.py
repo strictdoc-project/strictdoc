@@ -47,13 +47,41 @@ class TraceabilityIndexBuilder:
             if document.name not in tags_map:
                 tags_map[document.name] = {}
 
-            for section_or_requirement in document_iterator.all_content():
-                if not section_or_requirement.is_requirement:
+            for node in document_iterator.all_content():
+                if not node.uid:
                     continue
 
-                requirement: Requirement = section_or_requirement
-                if not requirement.uid:
+                if node.uid in requirements_map:
+                    other_req_doc = requirements_map[node.uid]["document"]
+                    if other_req_doc == document:
+                        print(
+                            "error: DocumentIndex: "
+                            "two nodes with the same UID "
+                            "exist in the same document: "
+                            f'{node.uid} in "{document.title}".'
+                        )
+                    else:
+                        print(
+                            "error: DocumentIndex: "
+                            "two nodes with the same UID "
+                            "exist in two different documents: "
+                            f'{node.uid} in "{document.title}" and '
+                            f'"{other_req_doc.title}".'
+                        )
+                    sys.exit(1)
+
+                requirements_map[node.uid] = {
+                    "document": document,
+                    "requirement": node,
+                    "parents": [],
+                    "parents_uids": [],
+                    "children": [],
+                }
+
+                if not node.is_requirement:
                     continue
+
+                requirement: Requirement = node
 
                 document_tags = tags_map[document.name]
                 for tag in requirement.tags:
@@ -61,37 +89,8 @@ class TraceabilityIndexBuilder:
                         document_tags[tag] = 0
                     document_tags[tag] += 1
 
-                if requirement.uid in requirements_map:
-                    other_req_doc = requirements_map[requirement.uid][
-                        "document"
-                    ]
-                    if other_req_doc == document:
-                        print(
-                            "error: DocumentIndex: "
-                            "two requirements with the same UID "
-                            "exist in the same document: "
-                            f'{requirement.uid} in "{document.title}".'
-                        )
-                    else:
-                        print(
-                            "error: DocumentIndex: "
-                            "two requirements with the same UID "
-                            "exist in two different documents: "
-                            f'{requirement.uid} in "{document.title}" and '
-                            f'"{other_req_doc.title}".'
-                        )
-                    sys.exit(1)
-
                 if requirement.uid not in requirements_children_map:
                     requirements_children_map[requirement.uid] = []
-
-                requirements_map[requirement.uid] = {
-                    "document": document,
-                    "requirement": requirement,
-                    "parents": [],
-                    "parents_uids": [],
-                    "children": [],
-                }
 
                 for ref in requirement.references:
                     if ref.ref_type == "File":
@@ -121,11 +120,11 @@ class TraceabilityIndexBuilder:
             document_iterator = document_iterators[document]
             max_parent_depth, max_child_depth = 0, 0
 
-            for section_or_requirement in document_iterator.all_content():
-                if not section_or_requirement.is_requirement:
+            for node in document_iterator.all_content():
+                if not node.is_requirement:
                     continue
 
-                requirement: Requirement = section_or_requirement
+                requirement: Requirement = node
                 if not requirement.uid:
                     continue
 

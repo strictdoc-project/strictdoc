@@ -42,7 +42,7 @@ class ConfluenceHTMLTableImport:
         document = Document(None, "Imported Doc", None, [], [])
         for section_idx, reqs in enumerate(reqs_array_array):
             section_name = headers[section_idx].text
-            section = Section(document, 1, section_name, [], [])
+            section = Section(document, None, 1, section_name, [], [])
             document.section_contents.append(section)
             for req in reqs:
                 uid = req["UID"]

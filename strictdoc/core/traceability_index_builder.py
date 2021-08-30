@@ -1,8 +1,10 @@
 import sys
 
+from strictdoc.backend.dsl.models.inline_link import InlineLink
 from strictdoc.backend.dsl.models.requirement import Requirement
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
+from strictdoc.core.error_message import ErrorMessage
 from strictdoc.core.traceability_index import (
     TraceabilityIndex,
     FileTraceabilityIndex,
@@ -121,6 +123,17 @@ class TraceabilityIndexBuilder:
             max_parent_depth, max_child_depth = 0, 0
 
             for node in document_iterator.all_content():
+                if node.is_section:
+                    for free_text in node.free_texts:
+                        for part in free_text.parts:
+                            if isinstance(part, InlineLink):
+                                if part.link not in requirements_map:
+                                    print(
+                                        ErrorMessage.inline_link_uid_not_exist(
+                                            part.link
+                                        )
+                                    )
+                                    sys.exit(1)
                 if not node.is_requirement:
                     continue
 

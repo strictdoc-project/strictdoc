@@ -1,5 +1,6 @@
 {% set root_path = "" %}
-{% set page_title = 'Document Tree' %}
+{% set template_type = "Project index" %}
+
 {% extends "base.jinja.html" %}
 
 {% block head_css %}
@@ -7,7 +8,10 @@
   <link rel="stylesheet" href="{{static_path}}/_tree.css"/>
 {% endblock head_css %}
 
-{% block title %}{{ page_title }}{% endblock title %}
+{% block title %}
+  {{ config.project_title }} - {{template_type}}
+{% endblock title %}
+
 {% block viewtype %}document-tree-view{% endblock %}
 
 {% block layout_nav %}
@@ -23,7 +27,7 @@
 {% endblock aside_content %}
 
 {% block header_content %}
-  <p>{{ page_title }}</p>
+  <p>{{config.project_title}} <span class="document-view-type">{{template_type}}</span></p>
 {% endblock header_content %}
 
 {% block content %}

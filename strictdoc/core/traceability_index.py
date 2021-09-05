@@ -136,6 +136,9 @@ class TraceabilityIndex:
         self._documents_ref_depth_map = documents_ref_depth_map
         self._file_traceability_index = file_traceability_index
 
+    def has_requirements(self):
+        return len(self.requirements_parents.keys()) > 0
+
     @property
     def document_iterators(self):
         return self._document_iterators

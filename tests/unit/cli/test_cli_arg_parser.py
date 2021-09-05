@@ -6,7 +6,7 @@ from strictdoc.cli.cli_arg_parser import (
 FAKE_STRICTDOC_ROOT_PATH = "/tmp/strictdoc-123"
 
 
-TOTAL_EXPORT_ARGS = 8
+TOTAL_EXPORT_ARGS = 9
 
 
 def test_export_00_strictdoc_root_path():
@@ -21,10 +21,12 @@ def test_export_00_strictdoc_root_path():
     assert args.input_paths == ["docs"]
     assert args.no_parallelization is False
     assert args.output_dir is None
+    assert args.project_title is None
 
     config_parser = create_sdoc_args_parser(args)
     export_config = config_parser.get_export_config(FAKE_STRICTDOC_ROOT_PATH)
     assert export_config.strictdoc_root_path == FAKE_STRICTDOC_ROOT_PATH
+    assert export_config.project_title == "Untitled Project"
 
 
 def test_export_01_minimal():
@@ -182,6 +184,19 @@ def test_export_07_enable_mathjax():
     config_parser = create_sdoc_args_parser(args)
     export_config = config_parser.get_export_config(FAKE_STRICTDOC_ROOT_PATH)
     assert export_config.enable_mathjax is True
+
+
+def test_export_08_project_title():
+    parser = cli_args_parser()
+
+    args = parser.parse_args(["export", "docs", "--project-title", "StrictDoc"])
+
+    assert len(args._get_kwargs()) == TOTAL_EXPORT_ARGS
+    assert args.project_title == "StrictDoc"
+
+    config_parser = create_sdoc_args_parser(args)
+    export_config = config_parser.get_export_config(FAKE_STRICTDOC_ROOT_PATH)
+    assert export_config.project_title == args.project_title
 
 
 def test_passthrough_01_minimal():

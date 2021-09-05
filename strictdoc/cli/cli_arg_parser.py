@@ -61,6 +61,9 @@ def cli_args_parser() -> argparse.ArgumentParser:
         "--output-dir", type=str, help="Output folder"
     )
     command_parser_export.add_argument(
+        "--project-title", type=str, help="Project title"
+    )
+    command_parser_export.add_argument(
         "--formats",
         type=_check_formats,
         default=["html"],
@@ -121,6 +124,7 @@ class ExportCommandConfig:
         strictdoc_root_path,
         input_paths,
         output_dir,
+        project_title,
         formats,
         fields,
         no_parallelization,
@@ -130,6 +134,7 @@ class ExportCommandConfig:
         self.strictdoc_root_path = strictdoc_root_path
         self.input_paths = input_paths
         self.output_dir = output_dir
+        self.project_title = project_title
         self.formats = formats
         self.fields = fields
         self.no_parallelization = no_parallelization
@@ -157,10 +162,16 @@ class SDocArgsParser:
         return self.args.command == "export"
 
     def get_export_config(self, strictdoc_root_path) -> ExportCommandConfig:
+        project_title = (
+            self.args.project_title
+            if self.args.project_title
+            else "Untitled Project"
+        )
         return ExportCommandConfig(
             strictdoc_root_path,
             self.args.input_paths,
             self.args.output_dir,
+            project_title,
             self.args.formats,
             self.args.fields,
             self.args.no_parallelization,

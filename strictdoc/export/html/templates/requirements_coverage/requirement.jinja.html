@@ -11,4 +11,6 @@ data-uid='{{ requirement.uid }}'
   </section>
 </article>
 
+{% if config.experimental_enable_file_traceability %}
 {% include "_shared/requirement_block/files_tree.jinja.html" %}
+{% endif %}

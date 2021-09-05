@@ -1,5 +1,5 @@
-{% set page_title = 'Requirements coverage' %}
 {% extends "base.jinja.html" %}
+{% set template_type = "Requirements coverage" %}
 
 {% block head_css %}
   {{ super() }}
@@ -13,7 +13,10 @@
   <script type="text/javascript" src="{{static_path}}/requirements-coverage.js"></script>
 {% endblock head_scripts %}
 
-{% block title %}{{ page_title }}{% endblock title %}
+{% block title %}
+  {{ config.project_title }} - {{template_type}}
+{% endblock title %}
+
 {% block viewtype %}requirements-coverage-view{% endblock %}
 
 {% block aside_header_content %}
@@ -25,7 +28,7 @@
 {% endblock aside_content %}
 
 {% block header_content %}
-  <p>{{ page_title }}</p>
+  <p>{{config.project_title}} <span class="document-view-type">{{template_type}}</span></p>
 {% endblock header_content %}
 
 {% block content %}

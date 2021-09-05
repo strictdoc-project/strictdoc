@@ -267,11 +267,11 @@ class SourceFileTraceabilityReader:
         return source_file_traceability_info
 
     def read_from_file(self, file_path):
-        with open(file_path, "r") as file:
-            sdoc_content = file.read()
         try:
-            sdoc = self.read(sdoc_content, file_path=file_path)
-            return sdoc
+            with open(file_path, "r") as file:
+                sdoc_content = file.read()
+                sdoc = self.read(sdoc_content, file_path=file_path)
+                return sdoc
         except NotImplementedError:
             traceback.print_exc()
             exit(1)

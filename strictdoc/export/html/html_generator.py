@@ -77,7 +77,7 @@ class HTMLGenerator:
         link_renderer = LinkRenderer(output_html_root)
 
         writer = DocumentTreeHTMLGenerator()
-        output = writer.export(config, document_tree)
+        output = writer.export(config, document_tree, traceability_index)
 
         output_html_static_files = "{}/_static".format(output_html_root)
         output_file = "{}/index.html".format(output_html_root)
@@ -120,6 +120,20 @@ class HTMLGenerator:
 
         parallelizer.map(document_tree.document_list, export_binding)
 
+        requirements_coverage_content = (
+            RequirementsCoverageHTMLGenerator.export(
+                config,
+                document_tree,
+                traceability_index,
+                link_renderer,
+            )
+        )
+        output_html_requirements_coverage = os.path.join(
+            output_html_root, "requirements_coverage.html"
+        )
+        with open(output_html_requirements_coverage, "w") as file:
+            file.write(requirements_coverage_content)
+
         if config.experimental_enable_file_traceability:
             assert isinstance(document_tree.source_tree, SourceTree)
             print("Generating source files")
@@ -150,19 +164,6 @@ class HTMLGenerator:
             )
             with open(output_html_source_coverage, "w") as file:
                 file.write(source_coverage_content)
-
-            requirements_coverage_content = (
-                RequirementsCoverageHTMLGenerator.export(
-                    document_tree,
-                    traceability_index,
-                    link_renderer,
-                )
-            )
-            output_html_requirements_coverage = os.path.join(
-                output_html_root, "requirements_coverage.html"
-            )
-            with open(output_html_requirements_coverage, "w") as file:
-                file.write(requirements_coverage_content)
 
         print(
             "Export completed. Documentation tree can be found at:\n{}".format(

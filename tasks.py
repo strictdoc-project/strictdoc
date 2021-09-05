@@ -56,6 +56,7 @@ def sphinx(context):
                 export docs
                     --formats=html,rst
                     --output-dir output/sphinx
+                    --project-title "StrictDoc"
             """
         ),
     )

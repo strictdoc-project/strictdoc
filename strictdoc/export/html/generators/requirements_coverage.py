@@ -1,5 +1,6 @@
 from jinja2 import Environment, PackageLoader, StrictUndefined
 
+from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
@@ -15,7 +16,10 @@ class RequirementsCoverageHTMLGenerator:
 
     @staticmethod
     def export(
-        document_tree, traceability_index: TraceabilityIndex, link_renderer
+        config: ExportCommandConfig,
+        document_tree,
+        traceability_index: TraceabilityIndex,
+        link_renderer,
     ):
         document_tree_iterator = DocumentTreeIterator(document_tree)
 
@@ -33,6 +37,7 @@ class RequirementsCoverageHTMLGenerator:
             DocumentType.document(),
         )
         output += template.render(
+            config=config,
             document_tree=document_tree,
             traceability_index=traceability_index,
             documents_iterator=document_tree_iterator.iterator(),

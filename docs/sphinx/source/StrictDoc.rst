@@ -655,6 +655,17 @@ is generated this way, see the Invoke task:
 Options
 =======
 
+Project title
+-------------
+
+By default, StrictDoc generates a project tree with a project title
+"Untitled Project". To specify the project title use the option
+``--project-title``.
+
+.. code-block:: text
+
+    strictdoc export --project-title "My Project" .
+
 Parallelization
 ---------------
 

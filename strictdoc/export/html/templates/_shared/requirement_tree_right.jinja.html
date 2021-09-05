@@ -10,7 +10,7 @@
       {% include requirement_partial %}
     </div>
 
-    {%- if document_type=="deeptrace" -%}
+    {%- if document_type.is_deeptrace -%}
     {% include "_shared/requirement_tree_right.jinja.html" %}
     {%- endif %}
 

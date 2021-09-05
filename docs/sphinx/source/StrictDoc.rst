@@ -549,7 +549,7 @@ This is the example of how images are included using the reST syntax:
        :class: image
     [/FREETEXT]
 
-Export options
+Export formats
 ==============
 
 HTML documentation tree by StrictDoc
@@ -1129,8 +1129,31 @@ StrictDoc's Data Model shall accommodate for maximum possible standard requireme
 
 - ``[SDOC-FMT-PRIMARY]`` :ref:`SDOC-FMT-PRIMARY`
 
-Section item
-~~~~~~~~~~~~
+Project
+~~~~~~~
+
+StrictDoc shall support the "Project" concept as a top-level entity that serves
+for grouping of SDoc documents into a single project documentation tree.
+
+Project title
+^^^^^^^^^^^^^
+
+Project shall have a "Title" property.
+
+**Comment:** Currently, the project title aspect is not part of the SDoc grammar. It is
+simply specified via the ``--project-title`` command-line option. This might
+change when the project title will be configured as part of the project-level
+config file (TOML or SDoc-like grammar).
+
+Document
+~~~~~~~~
+
+TBD
+
+Section
+~~~~~~~
+
+TBD
 
 Requirement item
 ~~~~~~~~~~~~~~~~

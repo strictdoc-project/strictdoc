@@ -651,7 +651,7 @@ This is the example of how images are included using the reST syntax:
 [/SECTION]
 
 [SECTION]
-TITLE: Export options
+TITLE: Export formats
 
 [SECTION]
 TITLE: HTML documentation tree by StrictDoc
@@ -1160,8 +1160,42 @@ Examples of standard requirements documents include but are not limited to:
   (e.g., Functional Requirements, Interface Requirements, Performance Requirements, etc.)
 <<<
 
+[COMPOSITE_REQUIREMENT]
+TITLE: Project
+STATEMENT: >>>
+StrictDoc shall support the "Project" concept as a top-level entity that serves
+for grouping of SDoc documents into a single project documentation tree.
+<<<
+
+[REQUIREMENT]
+TITLE: Project title
+STATEMENT: >>>
+Project shall have a "Title" property.
+<<<
+COMMENT: >>>
+Currently, the project title aspect is not part of the SDoc grammar. It is
+simply specified via the ``--project-title`` command-line option. This might
+change when the project title will be configured as part of the project-level
+config file (TOML or SDoc-like grammar).
+<<<
+
+[/COMPOSITE_REQUIREMENT]
+
 [SECTION]
-TITLE: Section item
+TITLE: Document
+
+[FREETEXT]
+TBD
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Section
+
+[FREETEXT]
+TBD
+[/FREETEXT]
 
 [/SECTION]
 

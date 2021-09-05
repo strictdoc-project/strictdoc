@@ -16,6 +16,7 @@ docutils==0.16; (python_version >= "2.7" and python_full_version < "3.0.0") or (
 et-xmlfile==1.1.0; python_version >= "3.6"
 filecheck==0.0.18; python_version >= "3.5" and python_version < "4.0"
 flake8==3.9.2; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0")
+guzzle-sphinx-theme==0.7.11
 html5lib==1.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0")
 idna==3.2; python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version >= "3.5"
 imagesize==1.2.0; python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.5"
@@ -49,7 +50,6 @@ requests==2.26.0; python_version >= "3.5" and python_full_version < "3.0.0" or p
 six==1.16.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 snowballstemmer==2.1.0; python_version >= "3.5"
 soupsieve==2.2.1; python_version >= "3.6"
-sphinx-rtd-theme==0.5.2
 sphinx==3.5.4; python_version >= "3.5"
 sphinxcontrib-applehelp==1.0.2; python_version >= "3.5"
 sphinxcontrib-devhelp==1.0.2; python_version >= "3.5"

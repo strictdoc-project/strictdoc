@@ -1,0 +1,14 @@
+RUN: %strictdoc export %S --experimental-enable-file-traceability --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%S/Output/html/_source_files/07_utf8_symbols_in_source_files/file.py.html"
+
+RUN: cat %S/Output/html/07_utf8_symbols_in_source_files/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: <a{{.*}}href="../_source_files/07_utf8_symbols_in_source_files/file.py.html#REQ-001">
+
+RUN: cat %S/Output/html/_source_files/07_utf8_symbols_in_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE: <a{{.*}}href="../../07_utf8_symbols_in_source_files/input.html#1-REQ-001"{{.*}}>
+
+CHECK-SOURCE-FILE: # © A line with UTF-8 produces
+CHECK-SOURCE-FILE: # UnicodeDecodeError: &#39;ascii&#39; codec can&#39;t decode byte
+CHECK-SOURCE-FILE: # if not properly handled

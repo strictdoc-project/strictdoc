@@ -150,7 +150,9 @@ class HTMLGenerator:
                         traceability_index,
                         link_renderer,
                     )
-                    with open(source_file.output_file_full_path, "w") as file:
+                    with open(
+                        source_file.output_file_full_path, "w", encoding="utf-8"
+                    ) as file:
                         file.write(document_content)
 
             source_coverage_content = SourceFileCoverageHTMLGenerator.export(

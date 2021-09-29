@@ -268,7 +268,7 @@ class SourceFileTraceabilityReader:
 
     def read_from_file(self, file_path):
         try:
-            with open(file_path, "r") as file:
+            with open(file_path, "r", encoding="utf-8") as file:
                 sdoc_content = file.read()
                 sdoc = self.read(sdoc_content, file_path=file_path)
                 return sdoc

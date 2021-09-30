@@ -1,0 +1,8 @@
+RUN: %strictdoc export %S --experimental-enable-file-traceability --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%S/Output/html/_source_files/08_nosdoc_pragma/file.py.html"
+
+RUN: cat %S/Output/html/_source_files/08_nosdoc_pragma/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE-NOT: 3-5
+CHECK-SOURCE-FILE: 7-9

@@ -207,7 +207,7 @@ CONTENT 9
     assert document.get_coverage() == 82.4
 
 
-def test_09_two_requirements_in_one_pragma():
+def test_009_two_requirements_in_one_pragma():
     input = """
 # [REQ-001, REQ-002]
 CONTENT 1
@@ -233,3 +233,67 @@ CONTENT 3
     assert document._ng_lines_total == 5
     assert document._ng_lines_covered == 5
     assert document.get_coverage() == 100
+
+
+def test_010_nosdoc_keyword():
+    input = """
+# [nosdoc]
+# [REQ-001]
+CONTENT 1
+CONTENT 2
+CONTENT 3
+# [/REQ-001]
+# [/nosdoc]
+""".lstrip()
+
+    reader = SourceFileTraceabilityReader()
+
+    document = reader.read(input)
+    assert len(document.nosdoc_blocks) == 1
+    assert len(document.pragmas) == 0
+
+
+def test_011_nosdoc_keyword_then_normal_pragma():
+    input = """
+# [nosdoc]
+# [REQ-001]
+CONTENT 1
+CONTENT 2
+CONTENT 3
+# [/REQ-001]
+# [/nosdoc]
+# [REQ-001]
+CONTENT 1
+CONTENT 2
+CONTENT 3
+# [/REQ-001]
+""".lstrip()
+
+    reader = SourceFileTraceabilityReader()
+
+    document = reader.read(input)
+    assert len(document.nosdoc_blocks) == 1
+    assert len(document.pragmas) == 2
+
+
+def test_011_nosdoc_keyword_then_normal_pragma_4spaces_indent():
+    input = """
+    # [nosdoc]
+    # [REQ-001]
+    CONTENT 1
+    CONTENT 2
+    CONTENT 3
+    # [/REQ-001]
+    # [/nosdoc]
+    # [REQ-001]
+    CONTENT 1
+    CONTENT 2
+    CONTENT 3
+    # [/REQ-001]
+""".lstrip()
+
+    reader = SourceFileTraceabilityReader()
+
+    document = reader.read(input)
+    assert len(document.nosdoc_blocks) == 1
+    assert len(document.pragmas) == 2

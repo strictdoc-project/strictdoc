@@ -18,7 +18,8 @@ class Req:
 
 
 class SourceFileTraceabilityInfo:
-    def __init__(self, pragmas):
+    def __init__(self, nosdoc_blocks, pragmas):
+        self.nosdoc_blocks = nosdoc_blocks
         self.pragmas = pragmas
         self.ng_map_lines_to_pragmas = {}
         self.ng_map_reqs_to_pragmas = {}
@@ -136,11 +137,13 @@ def create_begin_end_range_reqs_mismatch_error(
             "with the same requirement(s): "
             f"'{lhs_pragma_reqs_str}' != '{rhs_pragma_reqs_str}'."
         ),
+        # [nosdoc]
         """
 # [REQ-001]
 Content...
 # [/REQ-001]
         """.lstrip(),
+        # [/nosdoc]
         line=location["line"],
         col=location["col"],
         filename=location["filename"],
@@ -154,11 +157,13 @@ def create_end_without_begin_error(location):
             "STRICT RANGE shall be opened with "
             "START pragma and ended with END pragma."
         ),
+        # [nosdoc]
         """
 # [REQ-001]
 Content...
 # [/REQ-001]
         """.lstrip(),
+        # [/nosdoc]
         line=location["line"],
         col=location["col"],
         filename=location["filename"],
@@ -215,7 +220,7 @@ class SourceFileTraceabilityReader:
         # AttributeError: 'str' object has no attribute '_tx_parser'
         file_size = len(input)
         if file_size == 0:
-            return SourceFileTraceabilityInfo([])
+            return SourceFileTraceabilityInfo([], [])
 
         length = get_lines_count(input)
         parse_context = ParseContext(length)

@@ -32,6 +32,13 @@ Summary of StrictDoc features:
 **Warning:** The StrictDoc project is alpha quality. See the
 `Backlog`_ section to get an idea of the overall project direction.
 
+Contact the developers
+----------------------
+
+Join us in Discord. Here is the invitation link: https://discord.gg/j8AC8qFp
+
+The author can be also contacted via `email <s.pankevich@gmail.com>`_.
+
 Examples
 ========
 

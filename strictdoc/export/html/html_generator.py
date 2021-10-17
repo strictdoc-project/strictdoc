@@ -82,7 +82,7 @@ class HTMLGenerator:
         output_html_static_files = "{}/_static".format(output_html_root)
         output_file = "{}/index.html".format(output_html_root)
 
-        with open(output_file, "w") as file:
+        with open(output_file, "w", encoding="utf8") as file:
             file.write(output)
 
         static_files_src = os.path.join(
@@ -131,7 +131,9 @@ class HTMLGenerator:
         output_html_requirements_coverage = os.path.join(
             output_html_root, "requirements_coverage.html"
         )
-        with open(output_html_requirements_coverage, "w") as file:
+        with open(
+            output_html_requirements_coverage, "w", encoding="utf8"
+        ) as file:
             file.write(requirements_coverage_content)
 
         if config.experimental_enable_file_traceability:
@@ -164,7 +166,9 @@ class HTMLGenerator:
             output_html_source_coverage = os.path.join(
                 output_html_root, "source_coverage.html"
             )
-            with open(output_html_source_coverage, "w") as file:
+            with open(
+                output_html_source_coverage, "w", encoding="utf8"
+            ) as file:
                 file.write(source_coverage_content)
 
         print(
@@ -241,7 +245,7 @@ class HTMLGenerator:
             )
 
             document_out_file = document_meta.get_html_doc_path()
-            with open(document_out_file, "w") as file:
+            with open(document_out_file, "w", encoding="utf8") as file:
                 file.write(document_content)
 
             # Single Document Table pages
@@ -250,7 +254,7 @@ class HTMLGenerator:
             )
             document_out_file = document_meta.get_html_table_path()
 
-            with open(document_out_file, "w") as file:
+            with open(document_out_file, "w", encoding="utf8") as file:
                 file.write(document_content)
 
             # Single Document Traceability pages
@@ -259,7 +263,7 @@ class HTMLGenerator:
             )
             document_out_file = document_meta.get_html_traceability_path()
 
-            with open(document_out_file, "w") as file:
+            with open(document_out_file, "w", encoding="utf8") as file:
                 file.write(document_content)
 
             # Single Document Deep Traceability pages
@@ -268,7 +272,7 @@ class HTMLGenerator:
             )
             document_out_file = document_meta.get_html_deep_traceability_path()
 
-            with open(document_out_file, "w") as file:
+            with open(document_out_file, "w", encoding="utf8") as file:
                 file.write(document_content)
 
         if (
@@ -289,7 +293,7 @@ class HTMLGenerator:
             document_content_with_embedded_assets = HTMLEmbedder.embed_assets(
                 document_content, document_out_file
             )
-            with open(document_out_file, "w") as file:
+            with open(document_out_file, "w", encoding="utf8") as file:
                 file.write(document_content_with_embedded_assets)
 
         return document

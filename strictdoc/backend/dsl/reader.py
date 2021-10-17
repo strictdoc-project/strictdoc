@@ -258,7 +258,7 @@ class SDReader:
         return document
 
     def read_from_file(self, file_path):
-        with open(file_path, "r") as file:
+        with open(file_path, "r", encoding="utf8") as file:
             sdoc_content = file.read()
 
         try:

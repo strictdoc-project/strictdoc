@@ -120,8 +120,6 @@ def hello_world_2():
     reader = SourceFileTraceabilityReader()
     traceability_info = reader.read(input)
 
-    print(traceability_info)
-
 
 def test_006_empty_file():
     input = ""

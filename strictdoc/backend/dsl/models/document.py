@@ -16,6 +16,7 @@ class Document(object):
 
         self.ng_sections = []
         self.ng_level = 0
+        self.ng_needs_generation = False
         self.meta: Optional[DocumentMeta] = None
         self.legacy_title_is_used = True if name else False
 

@@ -1514,6 +1514,51 @@ Source coverage screen shows how source files are linked with requirements.
 [/SECTION]
 
 [REQUIREMENT]
+TITLE: Document archetypes
+STATEMENT: >>>
+StrictDoc shall support the following document archetypes: **requirements document**
+and **specification** document. For both archetypes, StrictDoc shall further
+support the following options.
+
+.. list-table:: Table: Requirements and specification document
+   :widths: 20 40 40
+   :header-rows: 1
+
+   * -
+     - Requirements document
+     - Specification document
+   * - Examples
+     - Most typical: requirements lists split by categories (e.g., Functional
+       Requirements, Interface Requirements, Performance Requirements, etc.)
+     - Often: a standard document
+   * - Structure
+     - Not nested or not too deeply nested
+     - Nested
+   * - Visual presentation
+     - Requirements are often presented as table cells. Cells can be standalone
+       or the whole section or document can be a long table with cells.
+     - Requirements are rather presented as header + text
+   * - Unique requirement identifiers (UID)
+     - Most always
+     - - Present or not
+       - **NOT SUPPORTED YET:** Can be missing, the chapter headers are used instead.
+         The combination "Number + Title" becomes a reference-able identifier.
+         A possible intermediate solution when modeling such a document is to
+         make the UIDs map to the section number.
+   * - Requirement titles
+     - - Often
+       - **NOT SUPPORTED YET:** But maybe absent (ex: NASA cFS SCH). If absent,
+         the grouping is provided by sections.
+     - Requirement titles are most often section titles
+   * - Real-world examples
+     - - NASA cFE Functional Requirements
+       - MISRA C coding guidelines,
+       - NASA Software Engineering Requirements NPR 7150.2
+     - - ECSS Software ECSS-E-ST-40C
+<<<
+COMMENT: This draft requirement is the first attempt to organize this information.
+
+[REQUIREMENT]
 TITLE: Project-level configuration file
 STATEMENT: StrictDoc shall support reading project configuration from a file.
 COMMENT: >>>

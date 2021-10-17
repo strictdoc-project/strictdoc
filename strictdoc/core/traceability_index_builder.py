@@ -10,10 +10,12 @@ from strictdoc.core.traceability_index import (
     FileTraceabilityIndex,
 )
 from strictdoc.core.tree_cycle_detector import TreeCycleDetector
+from strictdoc.helpers.timing import timing_decorator
 
 
 class TraceabilityIndexBuilder:
     @staticmethod
+    @timing_decorator("Collect traceability information")
     def create(document_tree: DocumentTree):
         requirements_map = {}
         requirements_children_map = {}

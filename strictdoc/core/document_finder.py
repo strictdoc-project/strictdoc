@@ -16,7 +16,7 @@ from strictdoc.helpers.timing import measure_performance, timing_decorator
 
 class DocumentFinder:
     @staticmethod
-    @timing_decorator("Find")
+    @timing_decorator("Find and read SDoc files")
     def find_sdoc_content(
         paths_to_files_or_docs, output_root_html, parallelizer
     ):

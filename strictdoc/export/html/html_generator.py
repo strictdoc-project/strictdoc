@@ -177,7 +177,7 @@ class HTMLGenerator:
 
         if config.experimental_enable_file_traceability:
             assert isinstance(document_tree.source_tree, SourceTree)
-            print("Generating source files")
+            print("Generating source files:")
             for source_file in document_tree.source_tree.source_files:
                 with measure_performance(
                     f"File: {source_file.in_doctree_source_file_rel_path}"

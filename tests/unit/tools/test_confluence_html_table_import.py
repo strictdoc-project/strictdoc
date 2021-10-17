@@ -76,7 +76,6 @@ def test_02():
 def test_fragments_01():
     html_content = "<html><td>REQ-1-1 Statement</td></html>"
     soup = BeautifulSoup(html_content, "xml")
-    print(soup)
     td = soup.find("td")
     assert td
 
@@ -88,7 +87,6 @@ def test_fragments_01():
 def test_fragments_02():
     html_content = "<html><td><p>REQ-1-1</p><p>Statement</p></td></html>"
     soup = BeautifulSoup(html_content, "xml")
-    print(soup)
     td = soup.find("td")
     assert td
 
@@ -102,7 +100,6 @@ def test_fragments_03():
         "<html><td><ul><li>Item 1</li><li>Item 2</li></ul></td></html>"
     )
     soup = BeautifulSoup(html_content, "xml")
-    print(soup)
     td = soup.find("td")
     assert td
 

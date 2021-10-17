@@ -13,12 +13,14 @@ class TraceabilityIndex:
         requirements_parents,
         tags_map,
         documents_ref_depth_map,
+        document_children_map,
         file_traceability_index: FileTraceabilityIndex,
     ):
         self._document_iterators = document_iterators
         self._requirements_parents = requirements_parents
         self._tags_map = tags_map
         self._documents_ref_depth_map = documents_ref_depth_map
+        self._document_children_map = document_children_map
         self._file_traceability_index = file_traceability_index
 
     def has_requirements(self):
@@ -166,3 +168,6 @@ class TraceabilityIndex:
         self._file_traceability_index.attach_traceability_info(
             source_file_rel_path, traceability_info
         )
+
+    def get_document_children(self, document):
+        return self._document_children_map[document]

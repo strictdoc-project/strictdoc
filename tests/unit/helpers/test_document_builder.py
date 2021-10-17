@@ -1,3 +1,4 @@
+from strictdoc.backend.dsl.document_reference import DocumentReference
 from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.document_config import DocumentConfig
 from strictdoc.backend.dsl.models.reference import Reference
@@ -6,7 +7,7 @@ from strictdoc.backend.dsl.models.requirement import Requirement
 
 class DocumentBuilder:
     def __init__(self):
-        self.document = self._create_empty_document()
+        self.document: Document = self._create_empty_document()
         self.requirements = []
 
     def add_requirement(self, uid):
@@ -41,7 +42,8 @@ class DocumentBuilder:
         requirement.ng_level = 1
         self.requirements.append(requirement)
         self.document.section_contents.append(requirement)
-
+        requirement.ng_document_reference = DocumentReference()
+        requirement.ng_document_reference.set_document(self.document)
         return requirement
 
     def add_requirement_parent(self, req_id, parent_req_id):

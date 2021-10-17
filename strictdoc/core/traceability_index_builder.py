@@ -45,14 +45,11 @@ class TraceabilityIndexBuilder:
         for document in document_tree.document_list:
             document_iterator = DocumentCachingIterator(document)
             document_iterators[document] = document_iterator
-
             if document.name not in tags_map:
                 tags_map[document.name] = {}
-
             for node in document_iterator.all_content():
                 if not node.uid:
                     continue
-
                 if node.uid in requirements_map:
                     other_req_doc = requirements_map[node.uid]["document"]
                     if other_req_doc == document:
@@ -71,7 +68,6 @@ class TraceabilityIndexBuilder:
                             f'"{other_req_doc.title}".'
                         )
                     sys.exit(1)
-
                 requirements_map[node.uid] = {
                     "document": document,
                     "requirement": node,
@@ -79,32 +75,25 @@ class TraceabilityIndexBuilder:
                     "parents_uids": [],
                     "children": [],
                 }
-
                 if not node.is_requirement:
                     continue
-
                 requirement: Requirement = node
-
                 document_tags = tags_map[document.name]
                 for tag in requirement.tags:
                     if tag not in document_tags:
                         document_tags[tag] = 0
                     document_tags[tag] += 1
-
                 if requirement.uid not in requirements_children_map:
                     requirements_children_map[requirement.uid] = []
-
                 for ref in requirement.references:
                     if ref.ref_type == "File":
                         file_traceability_index.register(requirement)
                         continue
-
                     if ref.ref_type != "Parent":
                         continue
                     requirements_map[requirement.uid]["parents_uids"].append(
                         ref.path
                     )
-
                     if ref.path not in requirements_children_map:
                         requirements_children_map[ref.path] = []
                     requirements_children_map[ref.path].append(requirement)
@@ -117,8 +106,10 @@ class TraceabilityIndexBuilder:
         requirements_child_depth_map = {}
         requirements_parent_depth_map = {}
         documents_ref_depth_map = {}
+        document_children_map = {}
 
         for document in document_tree.document_list:
+            document_children_map.setdefault(document, set())
             document_iterator = document_iterators[document]
             max_parent_depth, max_child_depth = 0, 0
 
@@ -136,7 +127,6 @@ class TraceabilityIndexBuilder:
                                     sys.exit(1)
                 if not node.is_requirement:
                     continue
-
                 requirement: Requirement = node
                 if not requirement.uid:
                     continue
@@ -166,6 +156,14 @@ class TraceabilityIndexBuilder:
                     requirements_map[requirement.uid]["parents"].append(
                         parent_requirement
                     )
+                    # Set document dependencies.
+                    parent_document = requirements_map[requirement_parent_id][
+                        "document"
+                    ]
+                    document_children_map.setdefault(parent_document, set())
+                    document_children_map[parent_document].add(
+                        requirement.document
+                    )
 
                 # [SDOC-VALIDATION-NO-CYCLES]
                 # Detect cycles
@@ -188,16 +186,13 @@ class TraceabilityIndexBuilder:
 
                 if requirement.uid not in requirements_child_depth_map:
                     child_depth = 0
-
                     requirements_map[requirement.uid][
                         "children"
                     ] = requirements_children_map[requirement.uid]
-
                     queue = requirements_children_map[requirement.uid]
                     while True:
                         if len(queue) == 0:
                             break
-
                         child_depth += 1
                         deeper_queue = []
                         for child in queue:
@@ -205,7 +200,6 @@ class TraceabilityIndexBuilder:
                                 requirements_children_map[child.uid]
                             )
                         queue = deeper_queue
-
                     requirements_child_depth_map[requirement.uid] = child_depth
                     if max_child_depth < child_depth:
                         max_child_depth = child_depth
@@ -213,12 +207,10 @@ class TraceabilityIndexBuilder:
                 # Calculate parent depth
                 if requirement.uid not in requirements_parent_depth_map:
                     parent_depth = 0
-
                     queue = requirement_parent_ids
                     while True:
                         if len(queue) == 0:
                             break
-
                         parent_depth += 1
                         deeper_queue = []
                         for parent_uid in queue:
@@ -228,22 +220,20 @@ class TraceabilityIndexBuilder:
                                 requirements_map[parent_uid]["parents_uids"]
                             )
                         queue = deeper_queue
-
                     requirements_parent_depth_map[
                         requirement.uid
                     ] = parent_depth
                     if max_parent_depth < parent_depth:
                         max_parent_depth = parent_depth
-
             documents_ref_depth_map[document] = max(
                 max_parent_depth, max_child_depth
             )
-
         traceability_index = TraceabilityIndex(
             document_iterators,
             requirements_map,
             tags_map,
             documents_ref_depth_map,
+            document_children_map,
             file_traceability_index,
         )
         return traceability_index

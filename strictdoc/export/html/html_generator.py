@@ -3,10 +3,12 @@ from enum import Enum
 from functools import partial
 from pathlib import Path
 
+from strictdoc.backend.dsl.models.document import Document
 from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.source_tree import SourceTree
+from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.generators.document import DocumentHTMLGenerator
 from strictdoc.export.html.generators.document_deep_trace import (
     DocumentDeepTraceHTMLGenerator,
@@ -54,7 +56,7 @@ class HTMLGenerator:
     def export_tree(
         config: ExportCommandConfig,
         document_tree: DocumentTree,
-        traceability_index,
+        traceability_index: TraceabilityIndex,
         output_html_root,
         strictdoc_last_update,
         asset_dirs,
@@ -108,6 +110,43 @@ class HTMLGenerator:
                 output_html_root, output_relative_path
             )
             sync_dir(source_path, destination_path)
+
+        document: Document
+        for document in document_tree.document_list:
+            # If a document file exists we want to check its modification path
+            # in order to skip its generation in case it has not changed since
+            # the last generation. We also check the Traceability Index for the
+            # document's dependencies to see if they must be regenerated as
+            # well.
+            document_meta: DocumentMeta = document.meta
+            full_output_path = os.path.join(
+                export_options.strictdoc_src_path,
+                document_meta.get_html_doc_path(),
+            )
+            if not os.path.isfile(full_output_path):
+                document.ng_needs_generation = True
+                continue
+            output_file_mtime = get_file_modification_time(full_output_path)
+            sdoc_mtime = get_file_modification_time(
+                document_meta.input_doc_full_path
+            )
+            if (
+                sdoc_mtime < output_file_mtime
+                and export_options.strictdoc_last_update < output_file_mtime
+            ):
+                continue
+            todo_list = [document]
+            finished = set()
+            while todo_list:
+                document = todo_list.pop()
+                if document in finished:
+                    continue
+                document.ng_needs_generation = True
+                document_children = traceability_index.get_document_children(
+                    document
+                )
+                todo_list.extend(document_children)
+                finished.add(document)
 
         export_binding = partial(
             HTMLGenerator._export_with_performance,
@@ -186,26 +225,9 @@ class HTMLGenerator:
         traceability_index,
         link_renderer,
     ):
-        document_meta: DocumentMeta = document.meta
-        full_output_path = os.path.join(
-            export_options.strictdoc_src_path, document_meta.get_html_doc_path()
-        )
-
-        # If file exists we want to check its modification path in order to skip
-        # its generation in case it has not changed since the last generation.
-        if os.path.isfile(full_output_path):
-            output_file_mtime = get_file_modification_time(full_output_path)
-            sdoc_mtime = get_file_modification_time(
-                document_meta.input_doc_full_path
-            )
-
-            if (
-                sdoc_mtime < output_file_mtime
-                and export_options.strictdoc_last_update < output_file_mtime
-            ):
-                with measure_performance("Skip: {}".format(document.name)):
-                    return
-
+        if not document.ng_needs_generation:
+            with measure_performance("Skip: {}".format(document.name)):
+                return
         with measure_performance("Published: {}".format(document.name)):
             HTMLGenerator._export(
                 config,

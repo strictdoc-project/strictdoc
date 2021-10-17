@@ -32,7 +32,7 @@ class DocumentRSTGenerator:
             document_out_file = f"{document.meta.document_filename_base}.rst"
             output_path = os.path.join(output_folder, document_out_file)
 
-            with open(output_path, "w") as file:
+            with open(output_path, "w", encoding="utf8") as file:
                 file.write(document_content)
 
     @staticmethod

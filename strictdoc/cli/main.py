@@ -54,6 +54,11 @@ def _main(parallelizer):
 
 
 def main():
+    # How to make python 3 print() utf8
+    # https://stackoverflow.com/a/3597849/598057
+    # sys.stdout.reconfigure(encoding='utf-8') for Python 3.7
+    sys.stdout = open(1, "w", encoding="utf-8", closefd=False)
+
     enable_parallelization = "--no-parallelization" not in sys.argv
     parallelizer = Parallelizer.create(enable_parallelization)
     try:

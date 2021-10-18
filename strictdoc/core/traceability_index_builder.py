@@ -108,9 +108,11 @@ class TraceabilityIndexBuilder:
         requirements_child_depth_map = {}
         requirements_parent_depth_map = {}
         documents_ref_depth_map = {}
+        document_parents_map = {}
         document_children_map = {}
 
         for document in document_tree.document_list:
+            document_parents_map.setdefault(document, set())
             document_children_map.setdefault(document, set())
             document_iterator = document_iterators[document]
             max_parent_depth, max_child_depth = 0, 0
@@ -162,6 +164,10 @@ class TraceabilityIndexBuilder:
                     parent_document = requirements_map[requirement_parent_id][
                         "document"
                     ]
+                    document_parents_map.setdefault(requirement.document, set())
+                    document_parents_map[requirement.document].add(
+                        parent_document
+                    )
                     document_children_map.setdefault(parent_document, set())
                     document_children_map[parent_document].add(
                         requirement.document
@@ -235,6 +241,7 @@ class TraceabilityIndexBuilder:
             requirements_map,
             tags_map,
             documents_ref_depth_map,
+            document_parents_map,
             document_children_map,
             file_traceability_index,
         )

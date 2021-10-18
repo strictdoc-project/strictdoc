@@ -142,9 +142,13 @@ class HTMLGenerator:
                 if document in finished:
                     continue
                 document.ng_needs_generation = True
+                document_parents = traceability_index.get_document_parents(
+                    document
+                )
                 document_children = traceability_index.get_document_children(
                     document
                 )
+                todo_list.extend(document_parents)
                 todo_list.extend(document_children)
                 finished.add(document)
 

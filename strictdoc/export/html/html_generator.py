@@ -125,32 +125,33 @@ class HTMLGenerator:
             )
             if not os.path.isfile(full_output_path):
                 document.ng_needs_generation = True
-                continue
-            output_file_mtime = get_file_modification_time(full_output_path)
-            sdoc_mtime = get_file_modification_time(
-                document_meta.input_doc_full_path
-            )
-            if (
-                sdoc_mtime < output_file_mtime
-                and export_options.strictdoc_last_update < output_file_mtime
-            ):
-                continue
-            todo_list = [document]
-            finished = set()
-            while todo_list:
-                document = todo_list.pop()
-                if document in finished:
-                    continue
-                document.ng_needs_generation = True
-                document_parents = traceability_index.get_document_parents(
-                    document
+            else:
+                output_file_mtime = get_file_modification_time(full_output_path)
+                sdoc_mtime = get_file_modification_time(
+                    document_meta.input_doc_full_path
                 )
-                document_children = traceability_index.get_document_children(
-                    document
-                )
-                todo_list.extend(document_parents)
-                todo_list.extend(document_children)
-                finished.add(document)
+                if not(
+                    sdoc_mtime < output_file_mtime
+                    and export_options.strictdoc_last_update < output_file_mtime
+                ):
+                    document.ng_needs_generation = True
+            if document.ng_needs_generation:
+                todo_list = [document]
+                finished = set()
+                while todo_list:
+                    document = todo_list.pop()
+                    if document in finished:
+                        continue
+                    document.ng_needs_generation = True
+                    document_parents = traceability_index.get_document_parents(
+                        document
+                    )
+                    document_children = traceability_index.get_document_children(
+                        document
+                    )
+                    todo_list.extend(document_parents)
+                    todo_list.extend(document_children)
+                    finished.add(document)
 
         export_binding = partial(
             HTMLGenerator._export_with_performance,

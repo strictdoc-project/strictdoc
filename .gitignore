@@ -16,3 +16,5 @@ output/**
 # LIT/FileCheck integration tests' artifacts.
 tests/integration/**/Output/**
 tests/integration/**/output/**
+tests/integration/**/sandbox/**
+

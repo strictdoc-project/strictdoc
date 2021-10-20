@@ -26,7 +26,7 @@ def clean(context):
             \\)
             -or -type d \\(
                 -name '*.dSYM' -or
-                -name 'Sandbox' -or
+                -name 'sandbox' -or
                 -name 'Output' -or
                 -name 'output'
             \\)

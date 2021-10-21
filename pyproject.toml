@@ -16,6 +16,7 @@ keywords = [
 
 [tool.poetry.dependencies]
 python = "^3.6.2"
+dataclasses = { version = "^0.7", python=">=3.6,<3.7" }
 textx = "2.3.0"
 jinja2 = "^2.11.2"
 docutils = "^0.16"
@@ -29,8 +30,8 @@ invoke = "1.4.1"
 pytest = "^6.2.2"
 lit = '0.11.0.post1'
 filecheck = "*"
-black = "20.8b1"
-pylint = "2.6.0"
+black = "21.9b0"
+pylint = "2.11.1"
 flake8 = "^3.9.2"
 sphinx = '^3.2.1'
 guzzle_sphinx_theme = "^0.7.11"

@@ -22,49 +22,67 @@ class DocumentMeta:
 
     # Paths
     def get_html_doc_path(self):
-        return "{}/{}.html".format(
-            self.output_document_dir_full_path, self.document_filename_base
+        return (
+            f"{self.output_document_dir_full_path}"
+            f"/"
+            f"{self.document_filename_base}.html"
         )
 
     def get_html_doc_standalone_path(self):
-        return "{}/{}.standalone.html".format(
-            self.output_document_dir_full_path, self.document_filename_base
+        return (
+            f"{self.output_document_dir_full_path}"
+            f"/"
+            f"{self.document_filename_base}.standalone.html"
         )
 
     def get_html_table_path(self):
-        return "{}/{}-TABLE.html".format(
-            self.output_document_dir_full_path, self.document_filename_base
+        return (
+            f"{self.output_document_dir_full_path}"
+            f"/"
+            f"{self.document_filename_base}-TABLE.html"
         )
 
     def get_html_traceability_path(self):
-        return "{}/{}-TRACE.html".format(
-            self.output_document_dir_full_path, self.document_filename_base
+        return (
+            f"{self.output_document_dir_full_path}"
+            f"/"
+            f"{self.document_filename_base}-TRACE.html"
         )
 
     def get_html_deep_traceability_path(self):
-        return "{}/{}-DEEP-TRACE.html".format(
-            self.output_document_dir_full_path, self.document_filename_base
+        return (
+            f"{self.output_document_dir_full_path}"
+            f"/"
+            f"{self.document_filename_base}-DEEP-TRACE.html"
         )
 
     # Links
     def get_html_doc_link(self):
-        return "{}/{}.html".format(
-            self.output_document_dir_rel_path, self.document_filename_base
+        return (
+            f"{self.output_document_dir_rel_path}"
+            f"/"
+            f"{self.document_filename_base}.html"
         )
 
     def get_html_table_link(self):
-        return "{}/{}-TABLE.html".format(
-            self.output_document_dir_rel_path, self.document_filename_base
+        return (
+            f"{self.output_document_dir_rel_path}"
+            f"/"
+            f"{self.document_filename_base}-TABLE.html"
         )
 
     def get_html_traceability_link(self):
-        return "{}/{}-TRACE.html".format(
-            self.output_document_dir_rel_path, self.document_filename_base
+        return (
+            f"{self.output_document_dir_rel_path}"
+            f"/"
+            f"{self.document_filename_base}-TRACE.html"
         )
 
     def get_html_deep_traceability_link(self):
-        return "{}/{}-DEEP-TRACE.html".format(
-            self.output_document_dir_rel_path, self.document_filename_base
+        return (
+            f"{self.output_document_dir_rel_path}"
+            f"/"
+            f"{self.document_filename_base}-DEEP-TRACE.html"
         )
 
     def get_html_link(self, document_type: DocumentType, other_doc_level):

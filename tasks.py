@@ -38,9 +38,7 @@ def clean(context):
     find_result = run_invoke_cmd(context, find_command)
     find_result_stdout = find_result.stdout.strip()
     echo_command = oneline_command(
-        """echo {find_result} | xargs rm -rfv""".format(
-            find_result=find_result_stdout
-        )
+        f"""echo {find_result_stdout} | xargs rm -rfv"""
     )
 
     run_invoke_cmd(context, echo_command)
@@ -99,9 +97,9 @@ def test_unit(context):
 def test_integration(context, focus=None, debug=False):
     cwd = os.getcwd()
 
-    strictdoc_exec = 'python \\"{cwd}/strictdoc/cli/main.py\\"'.format(cwd=cwd)
+    strictdoc_exec = f'python \\"{cwd}/strictdoc/cli/main.py\\"'
 
-    focus_or_none = "--filter {}".format(focus) if focus else ""
+    focus_or_none = f"--filter {focus}" if focus else ""
     debug_opts = "-vv --show-all" if debug else ""
 
     command = oneline_command(
@@ -183,9 +181,7 @@ def lint_pylint(context):
         run_invoke_cmd(context, command)
     except invoke.exceptions.UnexpectedExit as exc:
         # pylink doesn't show an error message when exit code != 0, so we do.
-        print(
-            "invoke: pylint exited with error code {}".format(exc.result.exited)
-        )
+        print(f"invoke: pylint exited with error code {exc.result.exited}")
         raise exc
 
 

@@ -46,7 +46,7 @@ class DocumentFinder:
         doc_full_path = doc_file.get_full_path()
 
         with measure_performance(
-            "Reading SDOC: {}".format(os.path.basename(doc_full_path))
+            f"Reading SDOC: {os.path.basename(doc_full_path)}"
         ):
             reader = SDReader()
             document = reader.read_from_file(doc_full_path)
@@ -84,7 +84,7 @@ class DocumentFinder:
             doc_relative_path_folder = os.path.dirname(doc_relative_path)
 
             output_document_dir_rel_path = (
-                "{}/{}".format(file_tree_mount_folder, doc_relative_path_folder)
+                f"{file_tree_mount_folder}/{doc_relative_path_folder}"
                 if doc_relative_path_folder
                 else file_tree_mount_folder
             )
@@ -92,8 +92,8 @@ class DocumentFinder:
             document_filename = os.path.basename(input_doc_full_path)
             document_filename_base = os.path.splitext(document_filename)[0]
 
-            output_document_dir_full_path = "{}/{}".format(
-                output_root_html, output_document_dir_rel_path
+            output_document_dir_full_path = (
+                f"{output_root_html}/{output_document_dir_rel_path}"
             )
 
             document_meta = DocumentMeta(

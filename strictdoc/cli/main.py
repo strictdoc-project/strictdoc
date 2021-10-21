@@ -27,14 +27,14 @@ def _main(parallelizer):
         if not os.path.isfile(input_file):
             sys.stdout.flush()
             message = "error: passthrough command's input file does not exist"
-            print("{}: {}".format(message, input_file))
+            print(f"{message}: {input_file}")
             sys.exit(1)
 
         output_file = config.output_file
         if output_file:
             output_dir = os.path.dirname(output_file)
             if not os.path.isdir(output_dir):
-                print("not a directory: {}".format(output_file))
+                print(f"not a directory: {output_file}")
                 sys.exit(1)
 
         passthrough_action = PassthroughAction()
@@ -45,7 +45,7 @@ def _main(parallelizer):
         parallelization_value = (
             "Disabled" if config.no_parallelization else "Enabled"
         )
-        print("Parallelization: {}".format(parallelization_value), flush=True)
+        print(f"Parallelization: {parallelization_value}", flush=True)
         export_action = ExportAction()
         export_action.export(config, parallelizer)
 
@@ -57,7 +57,9 @@ def main():
     # How to make python 3 print() utf8
     # https://stackoverflow.com/a/3597849/598057
     # sys.stdout.reconfigure(encoding='utf-8') for Python 3.7
-    sys.stdout = open(1, "w", encoding="utf-8", closefd=False)
+    sys.stdout = open(  # pylint: disable=consider-using-with
+        1, "w", encoding="utf-8", closefd=False
+    )
 
     enable_parallelization = "--no-parallelization" not in sys.argv
     parallelizer = Parallelizer.create(enable_parallelization)

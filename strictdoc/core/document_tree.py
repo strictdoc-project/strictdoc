@@ -10,8 +10,12 @@ class DocumentTree:
         self.source_tree = None  # attached later.
 
     def __repr__(self):
-        return "DocumentTree: {} document_list: {}".format(
-            self.file_tree, self.document_list
+        return (
+            f"DocumentTree("
+            f"{self.file_tree}"
+            f", "
+            f"document_list: {self.document_list}"
+            f")"
         )
 
     def get_document_by_path(self, doc_full_path):

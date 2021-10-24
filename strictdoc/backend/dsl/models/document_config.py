@@ -1,4 +1,4 @@
-from typing import Set
+from typing import Set, Optional
 
 from strictdoc.backend.dsl.models.config_special_field import ConfigSpecialField
 
@@ -8,7 +8,9 @@ class DocumentConfig:
     def default_config(document):
         return DocumentConfig(document, None, None, None, None)
 
-    def __init__(self, parent, version, number, special_fields, markup):
+    def __init__(
+        self, parent, version, number, special_fields, markup: Optional[str]
+    ):
         self.parent = parent
         self.version = version
         self.number = number

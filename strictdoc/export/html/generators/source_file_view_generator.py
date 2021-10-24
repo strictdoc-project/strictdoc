@@ -35,7 +35,7 @@ class SourceFileViewHTMLGenerator:
             source_file_lines = f.readlines()
 
         markup_renderer = MarkupRenderer.create(
-            "RST", traceability_index, link_renderer, None, document_type
+            "RST", traceability_index, link_renderer, None
         )
 
         lexer = None

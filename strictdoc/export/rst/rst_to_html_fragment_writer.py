@@ -4,8 +4,13 @@ from docutils.core import publish_parts
 
 
 class RstToHtmlFragmentWriter:
+    cache = {}
+
     @staticmethod
     def write(rst_fragment):
+        if rst_fragment in RstToHtmlFragmentWriter.cache:
+            return RstToHtmlFragmentWriter.cache[rst_fragment]
+
         # How do I convert a docutils document tree into an HTML string?
         # https://stackoverflow.com/a/32168938/598057
         # Use a io.StringIO as the warning stream to prevent warnings from
@@ -28,6 +33,9 @@ class RstToHtmlFragmentWriter:
             exit(1)
 
         html = output["html_body"]
+
+        RstToHtmlFragmentWriter.cache[rst_fragment] = html
+
         return html
 
     @staticmethod

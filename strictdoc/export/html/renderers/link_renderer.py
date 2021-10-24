@@ -1,4 +1,5 @@
 import re
+from typing import Optional
 
 from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.requirement import Requirement
@@ -37,13 +38,16 @@ class LinkRenderer:
         return local_anchor
 
     def render_requirement_link(
-        self, node, context_document, document_type: DocumentType
+        self,
+        node,
+        context_document: Optional[Document],
+        document_type: DocumentType,
     ):
         assert isinstance(node, Requirement) or isinstance(node, Section)
         assert isinstance(context_document, Document)
         assert isinstance(document_type, DocumentType)
         local_link = self.render_local_anchor(node)
-        if node.document == context_document:
+        if context_document and node.document == context_document:
             return f"#{local_link}"
         else:
             link_cache_key = (document_type, context_document.meta.level)

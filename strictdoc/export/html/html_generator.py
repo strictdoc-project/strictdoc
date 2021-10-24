@@ -32,6 +32,7 @@ from strictdoc.export.html.generators.source_file_view_generator import (
     SourceFileViewHTMLGenerator,
 )
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
+from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.export.html.tools.html_embedded import HTMLEmbedder
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.file_system import sync_dir
@@ -258,6 +259,13 @@ class HTMLGenerator:
         document_output_folder = document_meta.output_document_dir_full_path
         Path(document_output_folder).mkdir(parents=True, exist_ok=True)
 
+        markup_renderer = MarkupRenderer.create(
+            document.config.markup,
+            traceability_index,
+            link_renderer,
+            document,
+        )
+
         if (
             export_mode == ExportMode.DOCTREE
             or export_mode == ExportMode.DOCTREE_AND_STANDALONE
@@ -268,37 +276,47 @@ class HTMLGenerator:
                 document_tree,
                 document,
                 traceability_index,
+                markup_renderer,
                 link_renderer,
+                standalone=False,
             )
-
             document_out_file = document_meta.get_html_doc_path()
             with open(document_out_file, "w", encoding="utf8") as file:
                 file.write(document_content)
 
             # Single Document Table pages
             document_content = DocumentTableHTMLGenerator.export(
-                config, document, traceability_index, link_renderer
+                config,
+                document,
+                traceability_index,
+                markup_renderer,
+                link_renderer,
             )
             document_out_file = document_meta.get_html_table_path()
-
             with open(document_out_file, "w", encoding="utf8") as file:
                 file.write(document_content)
 
             # Single Document Traceability pages
             document_content = DocumentTraceHTMLGenerator.export(
-                config, document, traceability_index, link_renderer
+                config,
+                document,
+                traceability_index,
+                markup_renderer,
+                link_renderer,
             )
             document_out_file = document_meta.get_html_traceability_path()
-
             with open(document_out_file, "w", encoding="utf8") as file:
                 file.write(document_content)
 
             # Single Document Deep Traceability pages
             document_content = DocumentDeepTraceHTMLGenerator.export_deep(
-                config, document, traceability_index, link_renderer
+                config,
+                document,
+                traceability_index,
+                markup_renderer,
+                link_renderer,
             )
             document_out_file = document_meta.get_html_deep_traceability_path()
-
             with open(document_out_file, "w", encoding="utf8") as file:
                 file.write(document_content)
 
@@ -312,10 +330,10 @@ class HTMLGenerator:
                 document_tree,
                 document,
                 traceability_index,
+                markup_renderer,
                 link_renderer,
                 standalone=True,
             )
-
             document_out_file = document_meta.get_html_doc_standalone_path()
             document_content_with_embedded_assets = HTMLEmbedder.embed_assets(
                 document_content, document_out_file

@@ -117,8 +117,8 @@ class PassthroughCommandConfig:
         self.output_file = output_file
 
 
-class ExportCommandConfig:
-    def __init__(
+class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         strictdoc_root_path,
         input_paths,

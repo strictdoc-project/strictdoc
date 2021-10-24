@@ -6,6 +6,7 @@ from datauri import DataURI
 
 
 class EmbeddableTag:
+    ICO = "ico"
     CSS = "css"
     JS = "js"
     IMAGE_PNG = "image_png"
@@ -14,6 +15,7 @@ class EmbeddableTag:
     MAP = {
         CSS: {"attr": "href", "type": "text/css"},
         JS: {"attr": "src", "type": "text/javascript"},
+        ICO: {"attr": "href", "type": "image/x-icon"},
         IMAGE_PNG: {"attr": "src", "type": "image/png"},
         IMAGE_SVG: {"attr": "data", "type": "image/svg+xml"},
     }
@@ -28,9 +30,20 @@ class EmbeddableTag:
     def recognize_from_soup_tag(tag: bs4.element.Tag):
         if tag.name == "link":
             if "rel" in tag.attrs:
-                rel_value = tag.attrs["rel"][0]
-                if rel_value == "stylesheet":
-                    return EmbeddableTag(EmbeddableTag.CSS, tag.attrs["href"])
+                if len(tag.attrs["rel"]) == 1:
+                    rel_value = tag.attrs["rel"][0]
+                    if rel_value == "stylesheet":
+                        return EmbeddableTag(
+                            EmbeddableTag.CSS, tag.attrs["href"]
+                        )
+                if len(tag.attrs["rel"]) == 2:
+                    rel_value = tag.attrs["rel"][0]
+                    if rel_value == "shortcut":
+                        ref_value_second = tag.attrs["rel"][1]
+                        if ref_value_second == "icon":
+                            return EmbeddableTag(
+                                EmbeddableTag.ICO, tag.attrs["href"]
+                            )
         elif tag.name == "script":
             if "type" in tag.attrs:
                 type_value = tag.attrs["type"]

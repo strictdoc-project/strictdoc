@@ -57,7 +57,7 @@ def main():
     # How to make python 3 print() utf8
     # https://stackoverflow.com/a/3597849/598057
     # sys.stdout.reconfigure(encoding='utf-8') for Python 3.7
-    sys.stdout = open(  # pylint: disable=consider-using-with
+    sys.stdout = open(  # pylint: disable=bad-option-value,consider-using-with
         1, "w", encoding="utf-8", closefd=False
     )
 

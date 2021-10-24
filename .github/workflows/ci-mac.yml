@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
 
     steps:
     - uses: actions/checkout@v2
@@ -25,10 +25,11 @@ jobs:
     - name: Upgrade pip
       run: |
         python -m pip install --upgrade pip
+
     - name: Install Poetry
       run: |
-        curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
-        echo "PATH=$HOME/.poetry/bin:$PATH" >> $GITHUB_ENV
+        pip install poetry==1.1.11
+
     - name: Install dependencies
       run: |
         poetry config virtualenvs.in-project true

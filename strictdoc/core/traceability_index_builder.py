@@ -209,8 +209,7 @@ class TraceabilityIndexBuilder:
                             )
                         queue = deeper_queue
                     requirements_child_depth_map[requirement.uid] = child_depth
-                    if max_child_depth < child_depth:
-                        max_child_depth = child_depth
+                    max_child_depth = max(max_child_depth, child_depth)
 
                 # Calculate parent depth
                 if requirement.uid not in requirements_parent_depth_map:
@@ -231,8 +230,7 @@ class TraceabilityIndexBuilder:
                     requirements_parent_depth_map[
                         requirement.uid
                     ] = parent_depth
-                    if max_parent_depth < parent_depth:
-                        max_parent_depth = parent_depth
+                    max_parent_depth = max(max_parent_depth, parent_depth)
             documents_ref_depth_map[document] = max(
                 max_parent_depth, max_child_depth
             )

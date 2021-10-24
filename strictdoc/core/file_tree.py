@@ -29,7 +29,7 @@ class File(FileOrFolderEntry):
         self.subfolder_trees = []
 
     def __repr__(self):
-        return "File: {}".format(self.full_path)
+        return f"File: {self.full_path}"
 
     def is_folder(self):
         return False
@@ -63,9 +63,7 @@ class Folder(FileOrFolderEntry):
         self.has_sdoc_content = False
 
     def __repr__(self):
-        return "FileTree: (root_path: {}, files: {})".format(
-            self.root_path, self.files
-        )
+        return f"FileTree: (root_path: {self.root_path}, files: {self.files})"
 
     def is_folder(self):
         return True

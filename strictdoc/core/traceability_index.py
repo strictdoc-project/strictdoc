@@ -6,8 +6,8 @@ from strictdoc.core.file_traceability_index import FileTraceabilityIndex
 from strictdoc.helpers.sorting import alphanumeric_sort
 
 
-class TraceabilityIndex:
-    def __init__(
+class TraceabilityIndex:  # pylint: disable=too-many-public-methods
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         document_iterators,
         requirements_parents,
@@ -113,15 +113,11 @@ class TraceabilityIndex:
 
     def get_link(self, requirement):
         document = self.requirements_parents[requirement.uid]["document"]
-        return "{} - Traceability.html#{}".format(
-            document.name, requirement.uid
-        )
+        return f"{document.name} - Traceability.html#{requirement.uid}"
 
     def get_deep_link(self, requirement):
         document = self.requirements_parents[requirement.uid]["document"]
-        return "{} - Traceability Deep.html#{}".format(
-            document.name, requirement.uid
-        )
+        return f"{document.name} - Traceability Deep.html#{requirement.uid}"
 
     def has_tags(self, document):
         if document.name not in self.tags_map:

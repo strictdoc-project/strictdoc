@@ -9,9 +9,8 @@ def _check_formats(formats):
     for fmt in formats_array:
         if fmt in EXPORT_FORMATS:
             continue
-        message = "invalid choice: '{}' (choose from {})".format(
-            fmt, ", ".join(map(lambda f: f"'{f}'", EXPORT_FORMATS))
-        )
+        export_formats = ", ".join(map(lambda f: f"'{f}'", EXPORT_FORMATS))
+        message = f"invalid choice: '{fmt}' (choose from {export_formats})"
         raise argparse.ArgumentTypeError(message)
     return formats_array
 

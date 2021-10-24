@@ -32,4 +32,4 @@ def measure_performance(title):
 
     padded_name = "{title} ".format(title=title).ljust(60, ".")
     padded_time = " {:0.2f}".format((te - ts)).rjust(6, ".")
-    print("{}{}s".format(padded_name, padded_time))
+    print("{}{}s".format(padded_name, padded_time), flush=True)

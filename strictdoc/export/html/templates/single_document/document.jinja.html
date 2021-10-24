@@ -35,7 +35,7 @@
         <article><section>
         {%- for free_text in document.free_texts %}
           <div class="free_text">
-            {{ renderer.render_free_text(free_text) }}
+            {{ renderer.render_free_text(document_type, free_text) }}
           </div>
         {%- endfor -%}
         </section></article>

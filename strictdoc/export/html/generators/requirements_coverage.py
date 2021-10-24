@@ -34,7 +34,6 @@ class RequirementsCoverageHTMLGenerator:
             traceability_index,
             link_renderer,
             None,
-            DocumentType.document(),
         )
         output += template.render(
             config=config,

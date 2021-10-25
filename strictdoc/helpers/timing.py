@@ -6,15 +6,17 @@ from strictdoc.helpers.math import round_up
 
 
 def timing_decorator(name):
-    def timing_internal(f):
-        @wraps(f)
+    def timing_internal(func):
+        @wraps(func)
         def wrap(*args, **kw):
             print(f"Step '{name}' start", flush=True)
-            ts = time()
-            result = f(*args, **kw)
-            te = time()
+            time_start = time()
+            result = func(*args, **kw)
+            time_end = time()
             print(
-                "Step '{}' took: {} sec".format(name, round_up(te - ts, 2)),
+                "Step '{}' took: {} sec".format(
+                    name, round_up(time_end - time_start, 2)
+                ),
                 flush=True,
             )
             return result

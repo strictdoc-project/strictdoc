@@ -4,12 +4,12 @@ from strictdoc.backend.dsl.document_reference import DocumentReference
 from strictdoc.backend.dsl.models.reference import Reference
 
 
-class RequirementContext(object):
+class RequirementContext:
     def __init__(self):
         self.title_number_string = None
 
 
-class Requirement(object):
+class Requirement:
     def __init__(
         self,
         parent,
@@ -140,7 +140,7 @@ class CompositeRequirement(Requirement):
         return self.ng_document_reference.get_document()
 
 
-class Body(object):
+class Body:
     def __init__(self, parent, content):
         self.parent = parent
         self.content = content.strip()
@@ -152,7 +152,7 @@ class Body(object):
         return self.__str__()
 
 
-class RequirementComment(object):
+class RequirementComment:
     def __init__(self, parent, comment_single, comment_multiline):
         self.parent = parent
         self.comment_single = comment_single

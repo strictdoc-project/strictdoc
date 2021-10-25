@@ -1,3 +1,4 @@
+import sys
 import traceback
 from functools import partial
 from typing import Optional
@@ -24,6 +25,7 @@ from strictdoc.backend.dsl.models.requirement import (
 )
 from strictdoc.backend.dsl.models.section import Section, FreeText
 from strictdoc.backend.dsl.models.special_field import SpecialField
+from strictdoc.helpers.textx import drop_textx_meta
 
 DOCUMENT_MODELS = [
     DocumentConfig,
@@ -250,10 +252,7 @@ class SDReader:
         # ProcessPoolExecutor doesn't work because of non-picklable parts
         # of textx. The offending fields are stripped down because they
         # are not used anyway.
-        document._tx_parser = None
-        document._tx_attrs = None
-        document._tx_metamodel = None
-        document._tx_peg_rule = None
+        drop_textx_meta(document)
 
         return document
 
@@ -266,10 +265,10 @@ class SDReader:
             return sdoc
         except NotImplementedError:
             traceback.print_exc()
-            exit(1)
+            sys.exit(1)
         except StrictDocSemanticError as exc:
             print(exc.to_print_message())
-            exit(1)
+            sys.exit(1)
         except Exception as exc:
             print(
                 "error: could not parse file: {}.\n{}: {}".format(
@@ -278,4 +277,4 @@ class SDReader:
             )
             # TODO: when --debug is provided
             # traceback.print_exc()
-            exit(1)
+            sys.exit(1)

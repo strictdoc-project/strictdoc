@@ -1,4 +1,5 @@
 import io
+import sys
 
 from docutils.core import publish_parts
 
@@ -30,7 +31,7 @@ class RstToHtmlFragmentWriter:
             print("RST fragment: >>>")
             print(rst_fragment)
             print("<<<")
-            exit(1)
+            sys.exit(1)
 
         html = output["html_body"]
 

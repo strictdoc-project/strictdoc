@@ -6,6 +6,7 @@ from textx import metamodel_from_str, get_location
 from strictdoc.backend.dsl.error_handling import StrictDocSemanticError
 from strictdoc.backend.source_file_syntax.grammar import SOURCE_FILE_GRAMMAR
 from strictdoc.helpers.string import get_lines_count
+from strictdoc.helpers.textx import drop_textx_meta
 
 
 class Req:
@@ -264,11 +265,7 @@ class SourceFileTraceabilityReader:
         # ProcessPoolExecutor doesn't work because of non-picklable parts
         # of textx. The offending fields are stripped down because they
         # are not used anyway.
-        source_file_traceability_info._tx_parser = None
-        source_file_traceability_info._tx_attrs = None
-        source_file_traceability_info._tx_metamodel = None
-        source_file_traceability_info._tx_peg_rule = None
-
+        drop_textx_meta(source_file_traceability_info)
         return source_file_traceability_info
 
     def read_from_file(self, file_path):

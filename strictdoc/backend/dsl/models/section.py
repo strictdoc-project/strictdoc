@@ -1,9 +1,9 @@
-class SectionContext(object):
+class SectionContext:
     def __init__(self):
         self.title_number_string = None
 
 
-class Section(object):
+class Section:
     def __init__(self, parent, uid, level, title, free_texts, section_contents):
         self.parent = parent
         self.uid = uid

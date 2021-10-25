@@ -1,4 +1,3 @@
-import concurrent
 import multiprocessing
 import sys
 from queue import Empty
@@ -35,8 +34,7 @@ class Parallelizer:
     def create(parallelize):
         if parallelize:
             return Parallelizer()
-        else:
-            return NullParallelizer()
+        return NullParallelizer()
 
     def map(self, contents, processing_func):
         size = 0
@@ -56,15 +54,15 @@ class Parallelizer:
                         "has exited prematurely."
                     )
                     self.shutdown()
-                    exit(1)
+                    sys.exit(1)
         return map(lambda r: r[1], sorted(results, key=lambda r: r[0]))
 
     # This version doesn't handle the following cases properly:
     # - when a child process exists unexpectedly
     # - when a child process raises exception
-    def map_does_not_work(self, contents, processing_func):
-        with concurrent.futures.ProcessPoolExecutor() as executor:
-            return executor.map(processing_func, contents)
+    # def map_does_not_work(self, contents, processing_func):
+    #     with concurrent.futures.ProcessPoolExecutor() as executor:
+    #         return executor.map(processing_func, contents)
 
     @staticmethod
     def _run(input_queue, output_queue):

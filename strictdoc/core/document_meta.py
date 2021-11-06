@@ -88,7 +88,7 @@ class DocumentMeta:
     def get_html_link(self, document_type: DocumentType, other_doc_level):
         assert isinstance(document_type, DocumentType)
 
-        document_type_type = document_type.type
+        document_type_type = document_type.document_type
         path_prefix = self.get_root_path_prefix(other_doc_level)
         if document_type_type == DocumentType.DOCUMENT:
             document_link = self.get_html_doc_link()

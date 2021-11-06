@@ -4,7 +4,7 @@ from strictdoc.backend.dsl.models.document_config import DocumentConfig
 from strictdoc.core.document_meta import DocumentMeta
 
 
-class Document(object):
+class Document:
     def __init__(
         self, name, title, config: DocumentConfig, free_texts, section_contents
     ):

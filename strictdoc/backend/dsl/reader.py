@@ -215,7 +215,7 @@ class SDReader:
             STRICTDOC_GRAMMAR, classes=DOCUMENT_MODELS, use_regexp_group=True
         )
 
-    def read(self, input, file_path=None):
+    def read(self, input_string, file_path=None):
         parse_context = ParseContext()
 
         document_processor = partial(
@@ -245,7 +245,9 @@ class SDReader:
 
         self.meta_model.register_obj_processors(obj_processors)
 
-        document = self.meta_model.model_from_str(input, file_name=file_path)
+        document = self.meta_model.model_from_str(
+            input_string, file_name=file_path
+        )
         parse_context.document_reference.set_document(document)
 
         # HACK:

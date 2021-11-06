@@ -4,8 +4,8 @@ class DocumentType:
     TRACE = 3
     DEEPTRACE = 4
 
-    def __init__(self, type):
-        self.type = type
+    def __init__(self, document_type):
+        self.document_type = document_type
 
     @staticmethod
     def document():
@@ -25,4 +25,4 @@ class DocumentType:
 
     @property
     def is_deeptrace(self):
-        return self.type == DocumentType.DEEPTRACE
+        return self.document_type == DocumentType.DEEPTRACE

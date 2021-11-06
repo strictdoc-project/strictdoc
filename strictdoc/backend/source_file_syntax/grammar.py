@@ -12,9 +12,18 @@ COMMENT_REGEX = "/\\s*(#|(\\/\\/))\\s*/"
 SOURCE_FILE_GRAMMAR = RubyTemplate(
     """
 SourceFileTraceabilityInfo[noskipws]:
-    (nosdoc_blocks += NoSDocBlock |
-    (pragmas += RangePragma) |
-    SingleLineString)*
+  parts += Part
+;
+
+Part[noskipws]:
+  // The EmptyLine is needed in addition to the SingleLineString because
+  // otherwise textX's get_location() ignores the whitespaces.
+  // TODO: Maybe there is a trick to disable that and only use SingleLineString.
+  EmptyLine | NoSDocBlock | RangePragma | SingleLineString
+;
+
+EmptyLine[noskipws]:
+  '\n'
 ;
 
 RangePragma[noskipws]:
@@ -41,9 +50,9 @@ NoSDocBlockEnd[noskipws]:
 ;
 
 NoSDocBlock[noskipws]:
-    NoSDocBlockStart
-    SingleLineString*
-    NoSDocBlockEnd
+  NoSDocBlockStart
+  (SingleLineString | EmptyLine) *
+  NoSDocBlockEnd
 ;
 """
 ).substitute(COMMENT_REGEX=COMMENT_REGEX)

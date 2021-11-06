@@ -1,7 +1,11 @@
+from typing import List
+
 import pytest
+
 from strictdoc.backend.dsl.error_handling import StrictDocSemanticError
 from strictdoc.backend.source_file_syntax.reader import (
     SourceFileTraceabilityReader,
+    RangePragma,
 )
 
 
@@ -234,7 +238,7 @@ CONTENT 3
 
 
 def test_010_nosdoc_keyword():
-    input = """
+    source_input = """
 # [nosdoc]
 # [REQ-001]
 CONTENT 1
@@ -246,13 +250,13 @@ CONTENT 3
 
     reader = SourceFileTraceabilityReader()
 
-    document = reader.read(input)
-    assert len(document.nosdoc_blocks) == 1
+    document = reader.read(source_input)
+    assert len(document.parts) == 1
     assert len(document.pragmas) == 0
 
 
 def test_011_nosdoc_keyword_then_normal_pragma():
-    input = """
+    source_input = """
 # [nosdoc]
 # [REQ-001]
 CONTENT 1
@@ -269,8 +273,8 @@ CONTENT 3
 
     reader = SourceFileTraceabilityReader()
 
-    document = reader.read(input)
-    assert len(document.nosdoc_blocks) == 1
+    document = reader.read(source_input)
+    assert len(document.parts) == 6
     assert len(document.pragmas) == 2
 
 
@@ -293,5 +297,44 @@ def test_011_nosdoc_keyword_then_normal_pragma_4spaces_indent():
     reader = SourceFileTraceabilityReader()
 
     document = reader.read(input)
-    assert len(document.nosdoc_blocks) == 1
+    assert len(document.parts) == 6
     assert len(document.pragmas) == 2
+
+
+# Testing that textx assigns correct line location when the pragma is not on the
+# first line.
+def test_012_pragma_not_first_line():
+    source_input = """
+
+
+# [REQ-001]
+CONTENT 1
+CONTENT 2
+CONTENT 3
+# [/REQ-001]
+
+
+
+"""
+
+    reader = SourceFileTraceabilityReader()
+
+    document = reader.read(source_input)
+    for idx, line in enumerate(document.parts):
+        print(f"LINE {idx}: {line}", flush=True)
+
+    pragmas: List[RangePragma] = document.pragmas
+    assert pragmas[0].reqs == ["REQ-001"]
+    assert pragmas[0].begin_or_end == "["
+    assert pragmas[0].ng_source_line_begin == 4
+    assert pragmas[0].ng_source_line_end == 8
+    assert pragmas[0].ng_range_line_begin == 4
+
+    assert pragmas[1].reqs == ["REQ-001"]
+    assert pragmas[1].begin_or_end == "[/"
+    assert pragmas[1].ng_source_line_begin == 8
+    assert pragmas[1].ng_source_line_end is None
+
+    assert document._ng_lines_total == 11
+    assert document._ng_lines_covered == 5
+    assert document.get_coverage() == 45.5

@@ -17,4 +17,5 @@ output/**
 tests/integration/**/Output/**
 tests/integration/**/output/**
 tests/integration/**/sandbox/**
+.lit_test_times.txt
 

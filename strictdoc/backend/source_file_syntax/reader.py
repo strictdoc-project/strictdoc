@@ -19,15 +19,15 @@ class Req:
 
 
 class SourceFileTraceabilityInfo:
-    def __init__(self, nosdoc_blocks, pragmas):
-        self.nosdoc_blocks = nosdoc_blocks
-        self.pragmas = pragmas
+    def __init__(self, parts):
+        self.parts = parts
         self.ng_map_lines_to_pragmas = {}
         self.ng_map_reqs_to_pragmas = {}
 
         self._ng_lines_total = 0
         self._ng_lines_covered = 0
         self._coverage = 0
+        self.pragmas = []
 
     def __str__(self):
         return (
@@ -86,6 +86,7 @@ class RangePragma:
 class ParseContext:
     def __init__(self, lines_total):
         self.lines_total = lines_total
+        self.pragmas = []
         self.pragma_stack = []
         self.map_lines_to_pragmas = {}
         self.map_reqs_to_pragmas = {}
@@ -105,7 +106,7 @@ def source_file_traceability_info_processor(
     source_file_traceability_info: SourceFileTraceabilityInfo,
     parse_context: ParseContext,
 ):
-
+    source_file_traceability_info.pragmas = parse_context.pragmas
     # Finding how many lines are covered by the requirements in the file.
     # Quick and dirty: https://stackoverflow.com/a/15273749/598057
     merged_ranges = []
@@ -174,6 +175,7 @@ Content...
 def range_start_pragma_processor(
     pragma: RangePragma, parse_context: ParseContext
 ):
+    parse_context.pragmas.append(pragma)
     location = get_location(pragma)
     line = location["line"]
     pragma.ng_source_line_begin = line
@@ -216,14 +218,14 @@ class SourceFileTraceabilityReader:
             use_regexp_group=True,
         )
 
-    def read(self, input, file_path=None):
+    def read(self, input_string, file_path=None):
         # TODO: This might be possible to handle directly in the textx grammar.
         # AttributeError: 'str' object has no attribute '_tx_parser'
-        file_size = len(input)
+        file_size = len(input_string)
         if file_size == 0:
-            return SourceFileTraceabilityInfo([], [])
+            return SourceFileTraceabilityInfo([])
 
-        length = get_lines_count(input)
+        length = get_lines_count(input_string)
         parse_context = ParseContext(length)
 
         parse_source_traceability_processor = partial(
@@ -246,7 +248,9 @@ class SourceFileTraceabilityReader:
 
         try:
             source_file_traceability_info: SourceFileTraceabilityInfo = (
-                self.meta_model.model_from_str(input, file_name=file_path)
+                self.meta_model.model_from_str(
+                    input_string, file_name=file_path
+                )
             )
             if source_file_traceability_info:
                 source_file_traceability_info.ng_map_lines_to_pragmas = (

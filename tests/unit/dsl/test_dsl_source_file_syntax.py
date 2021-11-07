@@ -25,12 +25,14 @@ CONTENT 3
     assert pragmas[0].reqs == ["REQ-001"]
     assert pragmas[0].begin_or_end == "["
     assert pragmas[0].ng_source_line_begin == 1
-    assert pragmas[0].ng_source_line_end == 5
+    assert pragmas[0].ng_range_line_begin == 1
+    assert pragmas[0].ng_range_line_end == 5
 
     assert pragmas[1].reqs == ["REQ-001"]
     assert pragmas[1].begin_or_end == "[/"
     assert pragmas[1].ng_source_line_begin == 5
-    assert pragmas[1].ng_source_line_end is None
+    assert pragmas[1].ng_range_line_begin == 1
+    assert pragmas[1].ng_range_line_end == 5
 
     assert document._ng_lines_total == 5
     assert document._ng_lines_covered == 5
@@ -38,7 +40,7 @@ CONTENT 3
 
 
 def test_002_two_range_pragmas():
-    input = """
+    source_input = """
 # [REQ-001]
 CONTENT 1
 CONTENT 2
@@ -53,7 +55,7 @@ CONTENT 6
 
     reader = SourceFileTraceabilityReader()
 
-    document = reader.read(input)
+    document = reader.read(source_input)
     pragmas = document.pragmas
     assert len(pragmas) == 4
     pragma_1 = pragmas[0]
@@ -70,10 +72,10 @@ CONTENT 6
     assert pragma_3.ng_source_line_begin == 6
     assert pragma_4.ng_source_line_begin == 10
 
-    assert pragma_1.ng_source_line_end == 5
-    assert pragma_2.ng_source_line_end is None
-    assert pragma_3.ng_source_line_end == 10
-    assert pragma_4.ng_source_line_end is None
+    assert pragma_1.ng_range_line_begin == 1
+    assert pragma_2.ng_range_line_begin == 1
+    assert pragma_3.ng_range_line_begin == 6
+    assert pragma_4.ng_range_line_begin == 6
 
 
 def test_003_one_range_pragma_begin_req_not_equal_to_end_req():
@@ -144,7 +146,7 @@ def test_007_single_line_with_no_newline():
 
 
 def test_008_three_nested_range_pragmas():
-    input = """
+    source_input = """
 CONTENT 1
 # [REQ-001]
 CONTENT 2
@@ -166,7 +168,7 @@ CONTENT 9
 
     reader = SourceFileTraceabilityReader()
 
-    document = reader.read(input)
+    document = reader.read(source_input)
     pragmas = document.pragmas
     assert len(pragmas) == 8
     pragma_1 = pragmas[0]
@@ -195,14 +197,14 @@ CONTENT 9
     assert pragma_7.ng_source_line_begin == 14
     assert pragma_8.ng_source_line_begin == 16
 
-    assert pragma_1.ng_source_line_end == 12
-    assert pragma_2.ng_source_line_end == 10
-    assert pragma_3.ng_source_line_end == 8
-    assert pragma_4.ng_source_line_end is None
-    assert pragma_5.ng_source_line_end is None
-    assert pragma_6.ng_source_line_end is None
-    assert pragma_7.ng_source_line_end == 16
-    assert pragma_8.ng_source_line_end is None
+    assert pragma_1.ng_range_line_begin == 2
+    assert pragma_2.ng_range_line_begin == 4
+    assert pragma_3.ng_range_line_begin == 6
+    assert pragma_4.ng_range_line_begin == 6
+    assert pragma_5.ng_range_line_begin == 4
+    assert pragma_6.ng_range_line_begin == 2
+    assert pragma_7.ng_range_line_begin == 14
+    assert pragma_8.ng_range_line_begin == 14
 
     assert document._ng_lines_total == 17
     assert document._ng_lines_covered == 14
@@ -210,7 +212,7 @@ CONTENT 9
 
 
 def test_009_two_requirements_in_one_pragma():
-    input = """
+    source_input = """
 # [REQ-001, REQ-002]
 CONTENT 1
 CONTENT 2
@@ -220,17 +222,19 @@ CONTENT 3
 
     reader = SourceFileTraceabilityReader()
 
-    document = reader.read(input)
+    document = reader.read(source_input)
     pragmas = document.pragmas
     assert pragmas[0].reqs == ["REQ-001", "REQ-002"]
     assert pragmas[0].begin_or_end == "["
     assert pragmas[0].ng_source_line_begin == 1
-    assert pragmas[0].ng_source_line_end == 5
+    assert pragmas[0].ng_range_line_begin == 1
+    assert pragmas[0].ng_range_line_end == 5
 
     assert pragmas[1].reqs == ["REQ-001", "REQ-002"]
     assert pragmas[1].begin_or_end == "[/"
     assert pragmas[1].ng_source_line_begin == 5
-    assert pragmas[1].ng_source_line_end is None
+    assert pragmas[1].ng_range_line_begin == 1
+    assert pragmas[1].ng_range_line_end == 5
 
     assert document._ng_lines_total == 5
     assert document._ng_lines_covered == 5
@@ -320,20 +324,19 @@ CONTENT 3
     reader = SourceFileTraceabilityReader()
 
     document = reader.read(source_input)
-    for idx, line in enumerate(document.parts):
-        print(f"LINE {idx}: {line}", flush=True)
 
     pragmas: List[RangePragma] = document.pragmas
     assert pragmas[0].reqs == ["REQ-001"]
     assert pragmas[0].begin_or_end == "["
     assert pragmas[0].ng_source_line_begin == 4
-    assert pragmas[0].ng_source_line_end == 8
     assert pragmas[0].ng_range_line_begin == 4
+    assert pragmas[0].ng_range_line_end == 8
 
     assert pragmas[1].reqs == ["REQ-001"]
     assert pragmas[1].begin_or_end == "[/"
     assert pragmas[1].ng_source_line_begin == 8
-    assert pragmas[1].ng_source_line_end is None
+    assert pragmas[1].ng_range_line_begin == 4
+    assert pragmas[1].ng_range_line_end == 8
 
     assert document._ng_lines_total == 11
     assert document._ng_lines_covered == 5

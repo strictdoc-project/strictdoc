@@ -21,8 +21,11 @@ class Document:
         self.legacy_title_is_used = True if name else False
 
     def __str__(self):
-        return "Document: <name: {}, section_contents: {}>".format(
-            self.name, self.section_contents
+        return (
+            f"Document("
+            f"id: {id(self)}, "
+            f"name: {self.name}, "
+            f"section_contents: {self.section_contents})"
         )
 
     def __repr__(self):

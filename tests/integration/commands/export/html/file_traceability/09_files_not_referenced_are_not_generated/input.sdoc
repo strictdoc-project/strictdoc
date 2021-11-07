@@ -1,0 +1,7 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: Requirement Title
+STATEMENT: Requirement Statement

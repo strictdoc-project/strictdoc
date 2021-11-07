@@ -20,7 +20,7 @@ class Requirement:
         status,
         tags,
         references,
-        title: str,
+        title: Optional[str],
         body,
         rationale,
         rationale_multiline,

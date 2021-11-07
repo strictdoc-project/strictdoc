@@ -74,6 +74,14 @@ class ExportAction:
             source_files = source_tree.source_files
             source_file: SourceFile
             for source_file in source_files:
+                is_source_file_referenced = (
+                    traceability_index.has_source_file_reqs(
+                        source_file.in_doctree_source_file_rel_path
+                    )
+                )
+                if not is_source_file_referenced:
+                    continue
+                source_file.is_referenced = True
                 traceability_reader = SourceFileTraceabilityReader()
                 traceability_info = traceability_reader.read_from_file(
                     source_file.full_path

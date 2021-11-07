@@ -25,6 +25,7 @@ class DocumentConfig:
         self.auto_levels: bool = (
             True if (auto_levels is None or auto_levels == "On") else False
         )
+        self.ng_auto_levels_specified = auto_levels is not None
 
         self.special_fields_set: Set[str] = set()
         self.special_fields_required: [str] = []

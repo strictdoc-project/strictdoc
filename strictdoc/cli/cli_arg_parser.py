@@ -3,6 +3,8 @@ import argparse
 
 EXPORT_FORMATS = ["html", "html-standalone", "rst", "excel"]
 
+IMPORT_MAPPINGS = ["strictdoc", "doors", "magna"]
+
 
 def _check_formats(formats):
     formats_array = formats.split(",")
@@ -33,22 +35,29 @@ def cli_args_parser() -> argparse.ArgumentParser:
     #         assert 0
     #         exit(0)
 
+    def formatter(prog):
+        return argparse.RawTextHelpFormatter(
+            prog, indent_increment=2, max_help_position=4, width=80
+        )
+
     # https://stackoverflow.com/a/19476216/598057
     main_parser = argparse.ArgumentParser()
+    main_parser.formatter_class = formatter
 
     command_subparsers = main_parser.add_subparsers(
         title="command", dest="command"
     )
     command_subparsers.required = True
 
+    # Command: Export
     command_parser_export = command_subparsers.add_parser(
         "export",
         help="Export document tree.",
-        parents=[],
         description=(
             "Export command: "
             "input SDoc documents are generated into HTML and other formats."
         ),
+        formatter_class=formatter,
     )
     command_parser_export.add_argument(
         "input_paths",
@@ -85,7 +94,7 @@ def cli_args_parser() -> argparse.ArgumentParser:
     command_parser_export.add_argument(
         "--enable-mathjax",
         action="store_true",
-        help=("Enables Mathjax support (only HTML export)."),
+        help="Enables Mathjax support (only HTML export).",
     )
     command_parser_export.add_argument(
         "--experimental-enable-file-traceability",
@@ -97,8 +106,59 @@ def cli_args_parser() -> argparse.ArgumentParser:
         ),
     )
 
+    # Command: Import
+    command_parser_import = command_subparsers.add_parser(
+        "import",
+        help="Create StrictDoc files from other formats.",
+        description="Create StrictDoc files from other formats.",
+        formatter_class=formatter,
+    )
+    command_parser_import_subparsers = command_parser_import.add_subparsers(
+        title="import_format", dest="import_format"
+    )
+    command_parser_import_subparsers.required = True
+
+    command_parser_import_reqif = command_parser_import_subparsers.add_parser(
+        "reqif-experimental",
+        help="Create StrictDoc file from ReqIF document.",
+        description="Create StrictDoc file from ReqIF document.",
+        formatter_class=formatter,
+    )
+    command_parser_import_reqif.add_argument(
+        "input_path",
+        type=str,
+        help="Path to the input ReqIF file.",
+    )
+    command_parser_import_reqif.add_argument(
+        "output_path",
+        type=str,
+        help="Path to the output SDoc file.",
+    )
+
+    def check_mapping(mapping):
+        if mapping not in IMPORT_MAPPINGS:
+            message = (
+                f"invalid choice: '{mapping}' (choose from {IMPORT_MAPPINGS})"
+            )
+            raise argparse.ArgumentTypeError(message)
+        return mapping
+
+    command_parser_import_reqif.add_argument(
+        "--mapping",
+        type=check_mapping,
+        default="strictdoc",
+        help=(
+            "A mapping that controls how the fields of ReqIF mapped "
+            f"to the fields of StrictDoc. "
+            f"Possible values: {{{', '.join(IMPORT_MAPPINGS)}}}"
+        ),
+    )
+
+    # Command: Passthrough
     command_parser_passthrough = command_subparsers.add_parser(
-        "passthrough", help="Export document tree.", parents=[]
+        "passthrough",
+        help="Read an SDoc file, then output it again. (used for testing)",
+        formatter_class=formatter,
     )
     command_parser_passthrough.add_argument(
         "input_file", type=str, help="Path to the input SDoc file"
@@ -109,6 +169,13 @@ def cli_args_parser() -> argparse.ArgumentParser:
     )
 
     return main_parser
+
+
+class ImportCommandConfig:
+    def __init__(self, input_path, output_path, mapping):
+        self.input_path = input_path
+        self.output_path = output_path
+        self.mapping = mapping
 
 
 class PassthroughCommandConfig:
@@ -151,14 +218,18 @@ class SDocArgsParser:
     def is_passthrough_command(self):
         return self.args.command == "passthrough"
 
+    @property
+    def is_export_command(self):
+        return self.args.command == "export"
+
+    @property
+    def is_import_command(self):
+        return self.args.command == "import"
+
     def get_passthrough_config(self) -> PassthroughCommandConfig:
         return PassthroughCommandConfig(
             self.args.input_file, self.args.output_file
         )
-
-    @property
-    def is_export_command(self):
-        return self.args.command == "export"
 
     def get_export_config(self, strictdoc_root_path) -> ExportCommandConfig:
         project_title = (
@@ -176,6 +247,11 @@ class SDocArgsParser:
             self.args.no_parallelization,
             self.args.enable_mathjax,
             self.args.experimental_enable_file_traceability,
+        )
+
+    def get_import_config(self, _) -> ImportCommandConfig:
+        return ImportCommandConfig(
+            self.args.input_path, self.args.output_path, self.args.mapping
         )
 
 

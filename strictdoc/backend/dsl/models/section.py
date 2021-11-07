@@ -31,7 +31,7 @@ class Section:
         self.context = SectionContext()
 
     def __str__(self):
-        return f"Section(title: {self.title})"
+        return f"Section(level: {self.ng_level}, title: {self.title})"
 
     def __repr__(self):
         return self.__str__()

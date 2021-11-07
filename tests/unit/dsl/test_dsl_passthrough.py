@@ -8,7 +8,7 @@ from strictdoc.backend.dsl.writer import SDWriter
 
 
 def test_001_minimal_doc():
-    input = """
+    sdoc_input = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -21,13 +21,13 @@ TITLE: Test Doc
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(sdoc_input)
     assert isinstance(document, Document)
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert sdoc_input == output
 
 
 def test_010_multiple_sections():
@@ -684,3 +684,65 @@ REFS:
     output = writer.write(document)
 
     assert input == output
+
+
+def test_082_document_config_auto_levels_specified_to_false():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+VERSION: 0.0.1
+OPTIONS:
+  AUTO_LEVELS: Off
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    document: Document = reader.read(sdoc_input)
+    assert document.config.auto_levels is False
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+def test_083_requirement_level():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+VERSION: 0.0.1
+OPTIONS:
+  AUTO_LEVELS: Off
+
+[SECTION]
+LEVEL: 123
+TITLE: "Section"
+
+[REQUIREMENT]
+LEVEL: 456
+STATEMENT: ABC
+
+[/SECTION]
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    document: Document = reader.read(sdoc_input)
+    assert document.config.auto_levels is False
+    section = document.section_contents[0]
+    assert section.level == "123"
+
+    requirement = section.section_contents[0]
+    assert isinstance(requirement, Requirement)
+    assert requirement.level == "456"
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output

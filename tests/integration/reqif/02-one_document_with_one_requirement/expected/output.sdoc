@@ -1,0 +1,8 @@
+[DOCUMENT]
+TITLE: Empty ReqIF document
+OPTIONS:
+  MARKUP: Text
+
+[REQUIREMENT]
+UID: LLR001
+STATEMENT: The mapping function shall map requirement_ID to UID.

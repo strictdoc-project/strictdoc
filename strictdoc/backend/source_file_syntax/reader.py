@@ -1,3 +1,4 @@
+import sys
 import traceback
 from functools import partial
 
@@ -280,10 +281,10 @@ class SourceFileTraceabilityReader:
                 return sdoc
         except NotImplementedError:
             traceback.print_exc()
-            exit(1)
+            sys.exit(1)
         except StrictDocSemanticError as exc:
             print(exc.to_print_message())
-            exit(1)
+            sys.exit(1)
         except Exception as exc:
             print(
                 f"error: SourceFileTraceabilityReader: could not parse file: "
@@ -291,4 +292,4 @@ class SourceFileTraceabilityReader:
             )
             # TODO: when --debug is provided
             # traceback.print_exc()
-            exit(1)
+            sys.exit(1)

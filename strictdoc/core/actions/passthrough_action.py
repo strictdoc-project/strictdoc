@@ -7,7 +7,8 @@ from strictdoc.cli.cli_arg_parser import PassthroughCommandConfig
 
 
 class PassthroughAction:
-    def passthrough(self, config: PassthroughCommandConfig):
+    @staticmethod
+    def passthrough(config: PassthroughCommandConfig):
         if not os.path.isfile(config.input_file):
             sys.stdout.flush()
             err = (
@@ -15,7 +16,7 @@ class PassthroughAction:
                 "No such file or directory"
             )
             print(err)
-            exit(1)
+            sys.exit(1)
 
         document = SDReader().read_from_file(config.input_file)
 

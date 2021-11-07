@@ -166,7 +166,7 @@ class LinkRenderer:
         req_uid: str,
         source_link: str,
         context_source_file: SourceFile,
-        range,
+        source_range,
     ):
         assert isinstance(source_link, str)
         assert len(source_link) > 0
@@ -182,7 +182,9 @@ class LinkRenderer:
             f"/_source_files"
             f"/{context_source_file.doctree_root_mount_path}"
             f"/{source_link}.html"
-            f"#{req_uid}#{range.ng_range_line_begin}#{range.ng_range_line_end}"
+            f"#{req_uid}"
+            f"#{source_range.ng_range_line_begin}"
+            f"#{source_range.ng_range_line_end}"
         )
         return source_file_link
 
@@ -191,10 +193,10 @@ class LinkRenderer:
         requirement: Requirement,
         source_link: str,
         context_source_file: SourceFile,
-        range,
+        source_range,
     ):
         return self.render_requirement_in_source_file_range_link_using_id(
-            requirement.uid, source_link, context_source_file, range
+            requirement.uid, source_link, context_source_file, source_range
         )
 
     @staticmethod

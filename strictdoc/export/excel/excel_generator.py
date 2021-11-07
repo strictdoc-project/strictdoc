@@ -115,9 +115,9 @@ class ExcelGenerator:
                         if value and len(value) > columns[field][MAX_WIDTH_KEY]:
                             columns[field][MAX_WIDTH_KEY] = len(value)
                     elif len(node.special_fields):
-                        for sf in node.special_fields:
-                            if sf.field_name.lower() == field:
-                                value = sf.field_value
+                        for special_field in node.special_fields:
+                            if special_field.field_name.lower() == field:
+                                value = special_field.field_value
                                 worksheet.write(row, idx, value)
                                 if (
                                     value

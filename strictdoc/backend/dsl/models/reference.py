@@ -1,4 +1,4 @@
-class Reference(object):
+class Reference:
     def __init__(self, parent, ref_type, path):
         self.parent = parent
         self.ref_type = ref_type

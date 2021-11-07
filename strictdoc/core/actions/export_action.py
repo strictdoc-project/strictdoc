@@ -1,5 +1,6 @@
 import glob
 import os
+import sys
 from pathlib import Path
 
 from strictdoc.backend.dsl.errors.document_tree_error import DocumentTreeError
@@ -64,7 +65,7 @@ class ExportAction:
             )
         except DocumentTreeError as exc:
             print(exc.to_print_message())
-            exit(1)
+            sys.exit(1)
 
         if config.experimental_enable_file_traceability:
             source_tree: SourceTree = SourceFilesFinder.find_source_files(

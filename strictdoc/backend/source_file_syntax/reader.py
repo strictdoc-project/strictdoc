@@ -6,6 +6,10 @@ from textx import metamodel_from_str, get_location
 
 from strictdoc.backend.dsl.error_handling import StrictDocSemanticError
 from strictdoc.backend.source_file_syntax.grammar import SOURCE_FILE_GRAMMAR
+from strictdoc.backend.source_file_syntax.models.range_pragma import RangePragma
+from strictdoc.backend.source_file_syntax.models.source_file_info import (
+    SourceFileTraceabilityInfo,
+)
 from strictdoc.helpers.string import get_lines_count
 from strictdoc.helpers.textx import drop_textx_meta
 
@@ -17,71 +21,6 @@ class Req:
 
         self.ng_source_line = None
         self.ng_source_column = None
-
-
-class SourceFileTraceabilityInfo:
-    def __init__(self, parts):
-        self.parts = parts
-        self.ng_map_lines_to_pragmas = {}
-        self.ng_map_reqs_to_pragmas = {}
-
-        self._ng_lines_total = 0
-        self._ng_lines_covered = 0
-        self._coverage = 0
-        self.pragmas = []
-
-    def __str__(self):
-        return (
-            "SourceFileTraceabilityInfo(\n"
-            f"\tlines_total: {self._ng_lines_total}\n"
-            f"\tlines_covered: {self._ng_lines_covered}\n"
-            f"\tcoverage: {self._coverage}\n"
-            f"\tpragmas: {self.pragmas}\n"
-            ")"
-        )
-
-    def get_coverage(self):
-        return self._coverage
-
-    def set_coverage_stats(self, lines_total, lines_covered):
-        self._ng_lines_total = lines_total
-        self._ng_lines_covered = lines_covered
-        self._coverage = round(lines_covered / lines_total * 100, 1)
-
-
-class RangePragma:
-    def __init__(self, parent, begin_or_end, reqs_objs):
-        assert isinstance(reqs_objs, list)
-        self.parent = parent
-        self.begin_or_end = begin_or_end
-        self.reqs_objs = reqs_objs
-        self.reqs = list(map(lambda req: req.uid, reqs_objs))
-
-        # TODO: Merge ng_source_line_* and ng_range_line_*?
-        self.ng_source_line_begin = None
-        self.ng_source_line_end = None
-
-        self.ng_range_line_begin = None
-        self.ng_range_line_begin = None
-
-    def __str__(self):
-        return (
-            f"RangePragma("
-            f"begin_or_end: {self.begin_or_end}, "
-            f"ng_source_line_begin: {self.ng_source_line_begin}, "
-            f"ng_source_line_end: {self.ng_source_line_end}, "
-            f"reqs: {self.reqs}"
-            f")"
-        )
-
-    def __repr__(self):
-        return self.__str__()
-
-    def is_begin(self):
-        return self.begin_or_end == "["
-
-    def is_end(self):
-        return self.begin_or_end == "[/"
 
 
 class ParseContext:
@@ -114,7 +53,7 @@ def source_file_traceability_info_processor(
     for pragma in source_file_traceability_info.pragmas:
         if not pragma.is_begin():
             continue
-        begin, end = pragma.ng_source_line_begin, pragma.ng_source_line_end
+        begin, end = pragma.ng_range_line_begin, pragma.ng_range_line_end
         if merged_ranges and merged_ranges[-1][1] >= (begin - 1):
             merged_ranges[-1][1] = max(merged_ranges[-1][1], end)
         else:
@@ -197,7 +136,6 @@ def range_start_pragma_processor(
                 raise create_begin_end_range_reqs_mismatch_error(
                     location, current_top_pragma.reqs, pragma.reqs
                 )
-            current_top_pragma.ng_source_line_end = line
             current_top_pragma.ng_range_line_end = line
 
             pragma.ng_range_line_begin = current_top_pragma.ng_range_line_begin
@@ -263,8 +201,6 @@ class SourceFileTraceabilityReader:
 
         except StrictDocSemanticError as exc:
             raise exc
-
-        # parse_context.document_reference.set_document(source_file_traceability_info)
 
         # HACK:
         # ProcessPoolExecutor doesn't work because of non-picklable parts

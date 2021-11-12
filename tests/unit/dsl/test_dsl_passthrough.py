@@ -179,11 +179,6 @@ This is a statement 3
     document = reader.read(input)
     assert isinstance(document, Document)
 
-    writer = SDWriter()
-    output = writer.write(document)
-
-    assert input == output
-
     assert isinstance(
         document.section_contents[0].section_contents[0], Requirement
     )
@@ -192,6 +187,11 @@ This is a statement 3
         requirement_1.statement_multiline
         == "This is a statement 1\nThis is a statement 2\nThis is a statement 3"
     )
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input == output
 
 
 def test_032_multiline_body():
@@ -465,6 +465,32 @@ STATEMENT: Some child requirement statement
     assert composite_req.ng_level == 1
     assert composite_req.special_fields[0].field_name == "ECSS_VERIFICATION"
     assert composite_req.special_fields[0].field_value == "R,A,I,T"
+
+
+# This test is needed to make sure that the grammar details related
+# to the difference of parting single vs multiline strings are covered.
+def test_050_requirement_single_line_statement_one_symbol():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+STATEMENT: 1
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    document: Document = reader.read(sdoc_input)
+    requirement = document.section_contents[0]
+    assert requirement.statement == "1"
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
 
 
 def test_060_file_ref():

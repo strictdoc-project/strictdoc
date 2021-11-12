@@ -128,11 +128,21 @@ RequirementComment[noskipws]:
 ;
 
 SingleLineString:
-  /[^>]{3}.*$/
+  (!MultiLineStringStart /./)*
 ;
 
-MultiLineString:
-  /(?ms)>>>\n(.*?)\n<<</
+MultiLineStringStart[noskipws]:
+  '>>>' '\n'
+;
+
+MultiLineStringEnd[noskipws]:
+  '<<<'
+;
+
+MultiLineString[noskipws]:
+  MultiLineStringStart-
+  (!MultiLineStringEnd /(?ms)./)*
+  MultiLineStringEnd-
 ;
 
 Reference[noskipws]:

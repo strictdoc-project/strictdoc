@@ -41,14 +41,21 @@ class Requirement:
         self.references: [Reference] = references
         self.title = title
         self.statement = statement
-        self.statement_multiline = statement_multiline
-        self.body = body
         self.rationale = rationale
-        self.rationale_multiline = rationale_multiline
         self.comments = comments
         self.special_fields = special_fields
-
         self.requirements = requirements
+
+        # For multiline fields:
+        # Due to the details of how matching single vs multistring lines is
+        # implemented, the rstrip() is done to simplify SDoc code generation.
+        self.statement_multiline = (
+            statement_multiline.rstrip() if statement_multiline else None
+        )
+        self.body = body.rstrip() if body else None
+        self.rationale_multiline = (
+            rationale_multiline.rstrip() if rationale_multiline else None
+        )
 
         # TODO: Is it worth to move this to dedicated Presenter* classes to
         # keep this class textx-only?
@@ -156,7 +163,12 @@ class RequirementComment:
     def __init__(self, parent, comment_single, comment_multiline):
         self.parent = parent
         self.comment_single = comment_single
-        self.comment_multiline = comment_multiline
+
+        # Due to the details of how matching single vs multistring lines is
+        # implemented, the rstrip() is done to simplify SDoc code generation.
+        self.comment_multiline = (
+            comment_multiline.rstrip() if comment_multiline else None
+        )
 
     def __str__(self):
         return "Comment: <>".format()

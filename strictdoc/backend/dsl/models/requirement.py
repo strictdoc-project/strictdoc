@@ -16,10 +16,11 @@ class Requirement:
         statement,
         statement_multiline,
         uid,
+        level: Optional[str],
         status,
         tags,
         references,
-        title,
+        title: str,
         body,
         rationale,
         rationale_multiline,
@@ -36,6 +37,7 @@ class Requirement:
         self.uid = (
             uid.strip() if (isinstance(uid, str) and len(uid) > 0) else None
         )
+        self.level: Optional[str] = level
         self.status = status
         self.tags = tags
         self.references: [Reference] = references
@@ -223,12 +225,14 @@ def requirement_from_dict(requirement_dict, parent, level):
         None,
         None,
         None,
+        None,
         title,
         None,
         None,
         rationale_multiline,
         [],
         [],
+        requirements=None,
     )
 
     requirement.ng_level = level

@@ -49,7 +49,6 @@ class ParseContext:
     def __init__(self):
         self.document_reference: DocumentReference = DocumentReference()
         self.document_config: Optional[DocumentConfig] = None
-        self.at_least_one_section_level_warning = None
 
 
 def document_obj_processor(document: Document, parse_context):
@@ -68,13 +67,22 @@ def document_config_obj_processor(document_config, parse_context):
 def section_obj_processor(section, parse_context: ParseContext):
     section.ng_document_reference = parse_context.document_reference
 
-    if section.level and not parse_context.at_least_one_section_level_warning:
-        print(
-            "warning: [SECTION].LEVEL fields are deprecated."
-            " Section levels are calculated automatically."
-            " Simply remove 'LEVEL:' from all [SECTION] declarations."
-        )
-        parse_context.at_least_one_section_level_warning = True
+    if parse_context.document_config.auto_levels:
+        if section.level:
+            print(
+                "warning: [SECTION].LEVEL field is provided. "
+                "This contradicts to the option [DOCUMENT].OPTIONS.AUTO_LEVELS "
+                "set to On. "
+                f"Section: {section}"
+            )
+    else:
+        if not section.level:
+            print(
+                "warning: [SECTION].LEVEL field is not provided. "
+                "This contradicts to the option [DOCUMENT].OPTIONS.AUTO_LEVELS "
+                "set to Off. "
+                f"Section: {section}"
+            )
 
     if section.parent.ng_level is None:
         resolve_parents(section)
@@ -97,6 +105,23 @@ def resolve_parents(node):
 
 
 def composite_requirement_obj_processor(composite_requirement, parse_context):
+    if parse_context.document_config.auto_levels:
+        if composite_requirement.level:
+            print(
+                "warning: [COMPOSITE_REQUIREMENT].LEVEL field is provided. "
+                "This contradicts to the option [DOCUMENT].OPTIONS.AUTO_LEVELS "
+                "set to On. "
+                f"Composite requirement: {composite_requirement}"
+            )
+    else:
+        if not composite_requirement.level:
+            print(
+                "warning: [COMPOSITE_REQUIREMENT].LEVEL field is not provided. "
+                "This contradicts to the option [DOCUMENT].OPTIONS.AUTO_LEVELS "
+                "set to Off. "
+                f"Composite requirement: {composite_requirement}"
+            )
+
     composite_requirement.ng_document_reference = (
         parse_context.document_reference
     )
@@ -129,6 +154,23 @@ def composite_requirement_obj_processor(composite_requirement, parse_context):
 
 def requirement_obj_processor(requirement, parse_context):
     # Validation
+    if parse_context.document_config.auto_levels:
+        if requirement.level:
+            print(
+                "warning: [REQUIREMENT].LEVEL field is provided. "
+                "This contradicts to the option [DOCUMENT].OPTIONS.AUTO_LEVELS "
+                "set to On. "
+                f"Requirement: {requirement}"
+            )
+    else:
+        if not requirement.level:
+            print(
+                "warning: [REQUIREMENT].LEVEL field is not provided. "
+                "This contradicts to the option [DOCUMENT].OPTIONS.AUTO_LEVELS "
+                "set to Off. "
+                f"Requirement: {requirement}"
+            )
+
     special_fields = requirement.special_fields
     if special_fields:
         document_config = parse_context.document_config
@@ -278,5 +320,5 @@ class SDReader:
                 )
             )
             # TODO: when --debug is provided
-            # traceback.print_exc()
+            traceback.print_exc()
             sys.exit(1)

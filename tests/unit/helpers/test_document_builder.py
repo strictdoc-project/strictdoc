@@ -12,6 +12,7 @@ class DocumentBuilder:
 
     def add_requirement(self, uid):
         parent = self.document
+        level = None
         statement = "System X shall do Y"
         statement_multiline = None
         status = None
@@ -29,6 +30,7 @@ class DocumentBuilder:
             statement,
             statement_multiline,
             uid,
+            level,
             status,
             tags,
             references,
@@ -58,7 +60,7 @@ class DocumentBuilder:
 
     @staticmethod
     def _create_empty_document() -> Document:
-        config = DocumentConfig(None, "0.0.1", "DOC-1", [], None)
+        config = DocumentConfig(None, "0.0.1", "DOC-1", [], None, None)
         free_texts = []
         section_contents = []
         document = Document(

@@ -1,0 +1,2 @@
+RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+CHECK: warning: [REQUIREMENT].LEVEL field is not provided. This contradicts to the option [DOCUMENT].OPTIONS.AUTO_LEVELS set to Off.

@@ -1,0 +1,4 @@
+RUN: %strictdoc export %S --experimental-enable-file-traceability --output-dir Output | filecheck %s --dump-input=fail
+
+CHECK: Published: Hello world doc
+CHECK-NOT: {{.*}}file.py{{.*}}

@@ -13,6 +13,8 @@ try:
     from strictdoc.core.actions.export_action import ExportAction
     from strictdoc.core.actions.passthrough_action import PassthroughAction
     from strictdoc.helpers.parallelizer import Parallelizer
+    from strictdoc.imports.reqif.reqif_import import ReqIFImport
+
 except FileNotFoundError:
     print("error: could not locate strictdoc's root folder.")
     sys.exit(1)
@@ -48,6 +50,10 @@ def _main(parallelizer):
         print(f"Parallelization: {parallelization_value}", flush=True)
         export_action = ExportAction()
         export_action.export(config, parallelizer)
+
+    elif parser.is_import_command:
+        import_config = parser.get_import_config(STRICTDOC_ROOT_PATH)
+        ReqIFImport.import_from_file(import_config)
 
     else:
         raise NotImplementedError

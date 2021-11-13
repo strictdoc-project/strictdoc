@@ -52,6 +52,9 @@ class FileTraceabilityIndex:
             matching_links_with_opt_ranges.append((file_link, pragmas))
         return matching_links_with_opt_ranges
 
+    def has_source_file_reqs(self, source_file_rel_path):
+        return self.map_paths_to_reqs.get(source_file_rel_path) is not None
+
     def get_source_file_reqs(self, source_file_rel_path):
         assert (
             source_file_rel_path

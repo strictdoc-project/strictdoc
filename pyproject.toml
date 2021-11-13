@@ -24,6 +24,7 @@ XlsxWriter = "^1.3.7"
 python-datauri = "^0.2.9"
 beautifulsoup4 = '^4.9.3'
 pygments = "^2.10.0"
+lxml = '^4.6.2'
 
 [tool.poetry.dev-dependencies]
 invoke = "1.4.1"
@@ -37,7 +38,6 @@ sphinx = '^3.2.1'
 guzzle_sphinx_theme = "^0.7.11"
 html5lib = '1.1'
 pytidylib = '0.3.2'
-lxml = '^4.6.2'
 openpyxl = '^3.0.5'
 
 # https://python-poetry.org/blog/announcing-poetry-1-1-0.html#standalone-build-backend

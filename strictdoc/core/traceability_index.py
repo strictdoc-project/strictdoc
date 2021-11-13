@@ -144,6 +144,11 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods
             requirement
         )
 
+    def has_source_file_reqs(self, source_file_rel_path):
+        return self._file_traceability_index.has_source_file_reqs(
+            source_file_rel_path
+        )
+
     def get_source_file_reqs(self, source_file_rel_path):
         return self._file_traceability_index.get_source_file_reqs(
             source_file_rel_path

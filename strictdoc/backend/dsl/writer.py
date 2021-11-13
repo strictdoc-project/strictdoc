@@ -60,13 +60,21 @@ class SDWriter:
                         output += "\n"
 
             markup = document_config.markup
-            if markup:
+            auto_levels_specified = document_config.ng_auto_levels_specified
+
+            if markup or auto_levels_specified:
                 output += "OPTIONS:"
                 output += "\n"
 
-                output += "  MARKUP: "
-                output += markup
-                output += "\n"
+                if markup:
+                    output += "  MARKUP: "
+                    output += markup
+                    output += "\n"
+
+                if auto_levels_specified:
+                    output += "  AUTO_LEVELS: "
+                    output += "On" if document_config.auto_levels else "Off"
+                    output += "\n"
 
         for free_text in document.free_texts:
             output += "\n"
@@ -112,6 +120,11 @@ class SDWriter:
             output += section.uid
             output += "\n"
 
+        if section.level:
+            output += "LEVEL: "
+            output += section.level
+            output += "\n"
+
         output += "TITLE: "
         output += str(section.title)
         output += "\n"
@@ -126,6 +139,11 @@ class SDWriter:
         if section_content.uid:
             output += "UID: "
             output += section_content.uid
+            output += "\n"
+
+        if section_content.level:
+            output += "LEVEL: "
+            output += section_content.level
             output += "\n"
 
         if section_content.status:

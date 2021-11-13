@@ -1,4 +1,4 @@
 def hello_world():
-    # [REQ-001]
+    # [REQ-002]
     print("Hello world!")
-    # [/REQ-001]
+    # [/REQ-002]

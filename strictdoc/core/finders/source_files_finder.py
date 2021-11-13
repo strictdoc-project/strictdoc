@@ -32,6 +32,7 @@ class SourceFile:
         self.extension = file_extension
 
         self.traceability_info = None
+        self.is_referenced = False
 
     def __str__(self):
         return (

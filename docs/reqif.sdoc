@@ -1,0 +1,43 @@
+[DOCUMENT]
+TITLE: StrictDoc/ReqIF
+
+[SECTION]
+TITLE: Introduction
+
+[FREETEXT]
+TODO
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Relevant resources
+
+[FREETEXT]
+- OMG standard: `Requirements Interchange Format (ReqIF), Version 1.2 <https://www.omg.org/spec/ReqIF/1.2/PDF>`_
+- `How the ReqIF Standard for Requirements Exchange Disrupts the Tool Market <https://re-magazine.ireb.org/articles/open-up#fn-13>`_
+- `ReqIF Implementation Guide <https://www.prostep.org/fileadmin/downloads/PSI_ImplementationGuide_ReqIF_V1-7.pdf>`_
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Implementation outline (TODO)
+
+[FREETEXT]
+- Section: What is common in all ReqIF documents?
+
+- Section: What is special in every ReqIF document?
+
+- Section: Two-stage parsing
+
+  - First stage: parsing ReqIF into Objects
+
+    - When stable, the first stage is a candidate for an extraction to a
+      separate Pip package.
+
+  - Stage stage: building an SDoc document from the "ReqIF document bundle"
+    based on a provided mapping.
+[/FREETEXT]
+
+[/SECTION]

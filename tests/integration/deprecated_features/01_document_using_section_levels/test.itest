@@ -1,2 +1,0 @@
-RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
-CHECK: warning: [SECTION].LEVEL fields are deprecated. Section levels are calculated automatically. Simply remove 'LEVEL:' from all [SECTION] declarations

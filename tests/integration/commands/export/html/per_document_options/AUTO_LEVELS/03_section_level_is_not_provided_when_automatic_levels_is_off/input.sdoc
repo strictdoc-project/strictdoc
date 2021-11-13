@@ -1,0 +1,13 @@
+[DOCUMENT]
+TITLE: Hello world doc
+OPTIONS:
+  AUTO_LEVELS: Off
+
+[SECTION]
+TITLE: Section 1.2.3
+
+[REQUIREMENT]
+LEVEL: 4.5.6
+STATEMENT: Requirement 4.5.6
+
+[/SECTION]

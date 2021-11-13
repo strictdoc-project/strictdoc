@@ -1,13 +1,24 @@
+from typing import Optional
+
+
 class SectionContext:
     def __init__(self):
         self.title_number_string = None
 
 
 class Section:
-    def __init__(self, parent, uid, level, title, free_texts, section_contents):
+    def __init__(
+        self,
+        parent,
+        uid,
+        level: Optional[str],
+        title,
+        free_texts,
+        section_contents,
+    ):
         self.parent = parent
         self.uid = uid
-        self.level = int(level) if level else None
+        self.level: Optional[str] = level
         self.title = title
 
         self.free_texts = free_texts

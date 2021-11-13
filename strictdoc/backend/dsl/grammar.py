@@ -10,6 +10,8 @@ class RubyTemplate(string.Template):
 REQUIREMENT_FIELDS = """
   ('UID: ' uid = /.+$/ '\n')?
 
+  ('LEVEL: ' level = /.*/ '\n')?
+
   ('STATUS: ' status = RequirementStatus '\n')?
 
   ('TAGS: ' (tags = TagRegex) tags *= TagXs '\n')?
@@ -50,7 +52,8 @@ DocumentConfig[noskipws]:
   ('SPECIAL_FIELDS:' '\n' special_fields += ConfigSpecialField)?
 
   ('OPTIONS:' '\n'
-    ('  MARKUP: ' (markup = MarkupChoice) '\n')
+    ('  MARKUP: ' (markup = MarkupChoice) '\n')?
+    ('  AUTO_LEVELS: ' (auto_levels = AutoLevelsChoice) '\n')?
   )?
 ;
 
@@ -64,11 +67,15 @@ MarkupChoice[noskipws]:
   'RST' | 'Text'
 ;
 
+AutoLevelsChoice[noskipws]:
+  'On' | 'Off'
+;
+
 Section[noskipws]:
   '[SECTION]'
   '\n'
   ('UID: ' uid = /.+$/ '\n')?
-  ('LEVEL: ' level = /[1-6]/ '\n')?
+  ('LEVEL: ' level = /.*/ '\n')?
   'TITLE: ' title = /.*$/ '\n'
   free_texts *= SpaceThenFreeText
   section_contents *= SectionOrRequirement

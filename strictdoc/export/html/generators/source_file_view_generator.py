@@ -31,8 +31,8 @@ class SourceFileViewHTMLGenerator:
             "source_file_view/source_file_view.jinja.html"
         )
 
-        with open(source_file.full_path, encoding="utf-8") as f:
-            source_file_lines = f.readlines()
+        with open(source_file.full_path, encoding="utf-8") as opened_file:
+            source_file_lines = opened_file.readlines()
 
         markup_renderer = MarkupRenderer.create(
             "RST", traceability_index, link_renderer, None

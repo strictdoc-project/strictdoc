@@ -18,7 +18,7 @@ class Document:
         self.ng_level = 0
         self.ng_needs_generation = False
         self.meta: Optional[DocumentMeta] = None
-        self.legacy_title_is_used = True if name else False
+        self.legacy_title_is_used = name is not None and len(name) > 0
 
     def __str__(self):
         return (

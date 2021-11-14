@@ -133,7 +133,8 @@ class SDWriter:
             output += self._print_free_text(free_text)
         return output
 
-    def _print_requirement_fields(self, section_content):
+    @staticmethod
+    def _print_requirement_fields(section_content):
         output = ""
 
         if section_content.uid:
@@ -224,7 +225,8 @@ class SDWriter:
 
         return output
 
-    def _print_closing_tag(self, closing_tag):
+    @staticmethod
+    def _print_closing_tag(closing_tag):
         output = ""
         if closing_tag == TAG.SECTION:
             output += "\n"
@@ -236,7 +238,8 @@ class SDWriter:
             output += "\n"
         return output
 
-    def _print_free_text(self, free_text):
+    @staticmethod
+    def _print_free_text(free_text):
         assert isinstance(free_text, FreeText)
         output = ""
         output += "[FREETEXT]"

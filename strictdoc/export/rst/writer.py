@@ -41,7 +41,8 @@ class RSTWriter:
 
         return output.lstrip()
 
-    def _print_rst_header(self, string, level):
+    @staticmethod
+    def _print_rst_header(string, level):
         chars = {
             0: "$",
             1: "=",

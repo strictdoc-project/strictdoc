@@ -22,9 +22,7 @@ class DocumentConfig:
         self.number = number
         self.special_fields: [ConfigSpecialField] = special_fields
         self.markup = markup
-        self.auto_levels: bool = (
-            True if (auto_levels is None or auto_levels == "On") else False
-        )
+        self.auto_levels: bool = auto_levels is None or auto_levels == "On"
         self.ng_auto_levels_specified = auto_levels is not None
 
         self.special_fields_set: Set[str] = set()

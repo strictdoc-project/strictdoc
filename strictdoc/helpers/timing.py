@@ -28,10 +28,10 @@ def timing_decorator(name):
 
 @contextlib.contextmanager
 def measure_performance(title):
-    ts = time()
+    time_start = time()
     yield
-    te = time()
+    time_end = time()
 
     padded_name = "{title} ".format(title=title).ljust(60, ".")
-    padded_time = " {:0.2f}".format((te - ts)).rjust(6, ".")
+    padded_time = " {:0.2f}".format((time_end - time_start)).rjust(6, ".")
     print("{}{}s".format(padded_name, padded_time), flush=True)

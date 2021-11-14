@@ -168,9 +168,9 @@ class ExcelGenerator:
     def _init_columns_width(fields: List[str]):
         columns = {}
 
-        for f in fields:
-            columns[f] = {}
-            columns[f][MAX_WIDTH_KEY] = len(f) + HEADER_MARGIN
+        for field in fields:
+            columns[field] = {}
+            columns[field][MAX_WIDTH_KEY] = len(field) + HEADER_MARGIN
         return columns
 
     @staticmethod
@@ -190,7 +190,7 @@ class ExcelGenerator:
     def _init_headers(fields: List[str]) -> List:
         headers: List = []
 
-        for f in fields:
-            headers.append({"header": f.upper()})
+        for field in fields:
+            headers.append({"header": field.upper()})
 
         return headers

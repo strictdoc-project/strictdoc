@@ -16,8 +16,8 @@ class Parallelizer:
             for _ in range(0, multiprocessing.cpu_count())
         ]
 
-        for p in self.processes:
-            p.start()
+        for process in self.processes:
+            process.start()
 
     def __del__(self):
         self.shutdown()

@@ -19,6 +19,7 @@ class ReqIFField(Enum):
 class ReqIFNodeType(Enum):
     SECTION = "_enumVal_Kind_HEADING"
     REQUIREMENT = "_enumVal_Kind_ORDINARY"
+    TABLE = "_enumVal_Kind_TABLE"
 
 
 class DoorsMapping:
@@ -37,13 +38,14 @@ class DoorsMapping:
     #   '_stype_requirement_kind': '_enumVal_Kind_HEADING'
     # }
 
-    def create_document(self):
+    @staticmethod
+    def create_document():
         document_config = DocumentConfig(
             parent=None,
             version=None,
             number=None,
             special_fields=[],
-            markup="Text",
+            markup="HTML",
             auto_levels="Off",
         )
         document = Document(
@@ -69,6 +71,15 @@ class DoorsMapping:
 
         spec_object_type = spec_object.attribute_map[ReqIFField.TYPE.value]
         return spec_object_type == ReqIFNodeType.REQUIREMENT.value
+
+    @staticmethod
+    def is_spec_object_table(spec_object):
+        assert (
+            ReqIFField.TYPE.value in spec_object.attribute_map
+        ), spec_object.attribute_map
+
+        spec_object_type = spec_object.attribute_map[ReqIFField.TYPE.value]
+        return spec_object_type == ReqIFNodeType.TABLE.value
 
     def create_section_from_spec_object(
         self, spec_object: ReqIFSpecObject, level

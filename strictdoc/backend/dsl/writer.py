@@ -253,7 +253,8 @@ class SDWriter:
                 output += "]"
             else:
                 raise NotImplementedError
-        # output += "\n"
+        if output[-1] != "\n":
+            output += "\n"
         output += "[/FREETEXT]"
         output += "\n"
         return output

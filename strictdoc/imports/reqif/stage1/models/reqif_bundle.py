@@ -4,6 +4,9 @@ from typing import Dict, List, Deque
 from strictdoc.imports.reqif.stage1.models.reqif_spec_hierarchy import (
     ReqIFSpecHierarchy,
 )
+from strictdoc.imports.reqif.stage1.models.reqif_spec_object import (
+    ReqIFSpecObject,
+)
 
 
 class ReqIFBundle:
@@ -24,7 +27,7 @@ class ReqIFBundle:
 
         self.specifications = specifications
 
-    def get_spec_object_by_ref(self, ref):
+    def get_spec_object_by_ref(self, ref) -> ReqIFSpecObject:
         return self.spec_objects_lookup[ref]
 
     def iterate_specification_hierarchy(self, specification):

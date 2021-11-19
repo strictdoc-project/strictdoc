@@ -54,7 +54,8 @@ class Section:
 
 
 class FreeText:
-    def __init__(self, parent, parts):
+    def __init__(self, parent, parts: []):
+        assert isinstance(parts, list)
         self.parent = parent
         self.parts = parts
         self.ng_level = None

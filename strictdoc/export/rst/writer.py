@@ -144,7 +144,7 @@ class RSTWriter:
 
     def _print_free_text(self, free_text):
         assert isinstance(free_text, FreeText)
-        if not len(free_text.parts):
+        if len(free_text.parts) == 0:
             return ""
         output = ""
         for part in free_text.parts:

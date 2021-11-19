@@ -3,7 +3,7 @@ import argparse
 
 EXPORT_FORMATS = ["html", "html-standalone", "rst", "excel"]
 
-IMPORT_MAPPINGS = ["strictdoc", "doors", "magna"]
+REQIF_PARSERS = ["strictdoc", "doors"]
 
 
 def _check_formats(formats):
@@ -135,22 +135,21 @@ def cli_args_parser() -> argparse.ArgumentParser:
         help="Path to the output SDoc file.",
     )
 
-    def check_mapping(mapping):
-        if mapping not in IMPORT_MAPPINGS:
+    def check_reqif_parser(parser):
+        if parser not in REQIF_PARSERS:
             message = (
-                f"invalid choice: '{mapping}' (choose from {IMPORT_MAPPINGS})"
+                f"invalid choice: '{parser}' (choose from {REQIF_PARSERS})"
             )
             raise argparse.ArgumentTypeError(message)
-        return mapping
+        return parser
 
     command_parser_import_reqif.add_argument(
-        "--mapping",
-        type=check_mapping,
+        "--parser",
+        type=check_reqif_parser,
         default="strictdoc",
         help=(
-            "A mapping that controls how the fields of ReqIF mapped "
-            f"to the fields of StrictDoc. "
-            f"Possible values: {{{', '.join(IMPORT_MAPPINGS)}}}"
+            "An argument that select the ReqIF parser. "
+            f"Possible values: {{{', '.join(REQIF_PARSERS)}}}"
         ),
     )
 
@@ -172,10 +171,10 @@ def cli_args_parser() -> argparse.ArgumentParser:
 
 
 class ImportCommandConfig:
-    def __init__(self, input_path, output_path, mapping):
+    def __init__(self, input_path, output_path, parser):
         self.input_path = input_path
         self.output_path = output_path
-        self.mapping = mapping
+        self.parser = parser
 
 
 class PassthroughCommandConfig:
@@ -251,7 +250,7 @@ class SDocArgsParser:
 
     def get_import_config(self, _) -> ImportCommandConfig:
         return ImportCommandConfig(
-            self.args.input_path, self.args.output_path, self.args.mapping
+            self.args.input_path, self.args.output_path, self.args.parser
         )
 
 

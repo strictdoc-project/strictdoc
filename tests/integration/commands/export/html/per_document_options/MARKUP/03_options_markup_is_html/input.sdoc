@@ -1,0 +1,8 @@
+[DOCUMENT]
+TITLE: Hello world doc
+OPTIONS:
+  MARKUP: HTML
+
+[FREETEXT]
+<b>This <a href="#">text</a> will be rendered directly as HTML!</b>
+[/FREETEXT]

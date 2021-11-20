@@ -64,7 +64,7 @@ ConfigSpecialField[noskipws]:
 ;
 
 MarkupChoice[noskipws]:
-  'RST' | 'Text'
+  'RST' | 'Text' | 'HTML'
 ;
 
 AutoLevelsChoice[noskipws]:

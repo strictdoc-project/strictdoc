@@ -8,6 +8,9 @@ from strictdoc.backend.dsl.models.requirement import (
 )
 from strictdoc.backend.dsl.models.section import FreeText
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.export.html.renderers.html_fragment_writer import (
+    HTMLFragmentWriter,
+)
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.text_to_html_writer import TextToHtmlWriter
 from strictdoc.export.rst.rst_to_html_fragment_writer import (
@@ -27,6 +30,8 @@ class MarkupRenderer:
         assert isinstance(link_renderer, LinkRenderer)
         if not markup or markup == "RST":
             html_fragment_writer = RstToHtmlFragmentWriter
+        elif markup == "HTML":
+            html_fragment_writer = HTMLFragmentWriter
         else:
             html_fragment_writer = TextToHtmlWriter
         return MarkupRenderer(

@@ -52,6 +52,8 @@ class ReqIFStage1Parser:
         # the reqif(xml) tag. Dashes are turned into underscores.
         if xml_reqif is None:
             raise NotImplementedError
+        if xml_reqif.tag != "REQ-IF":
+            raise NotImplementedError
 
         if len(xml_reqif) == 0:
             return ReqIFBundle.create_empty()

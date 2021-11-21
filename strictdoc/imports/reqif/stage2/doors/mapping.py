@@ -112,7 +112,7 @@ class DoorsMapping:
             level=uid,
             status=None,
             tags=None,
-            references=None,
+            references=[],
             title=None,
             body=None,
             rationale=None,

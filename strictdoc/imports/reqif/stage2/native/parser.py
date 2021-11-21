@@ -1,3 +1,4 @@
+from strictdoc.backend.dsl.models.reference import Reference
 from strictdoc.imports.reqif.stage1.models.reqif_bundle import ReqIFBundle
 from strictdoc.imports.reqif.stage2.abstract_parser import (
     AbstractReqIFStage2Parser,
@@ -46,6 +47,18 @@ class StrictDocReqIFStage2Parser(AbstractReqIFStage2Parser):
                     document,
                     current_hierarchy.level,
                 )
+                spec_object_parents = reqif_bundle.get_spec_object_parents(
+                    spec_object.identifier
+                )
+                parent_refs = list(
+                    map(
+                        lambda spec_object_parent: Reference(
+                            requirement, "Parent", spec_object_parent
+                        ),
+                        spec_object_parents,
+                    )
+                )
+                requirement.references = parent_refs
                 current_section.section_contents.append(requirement)
             else:
                 continue

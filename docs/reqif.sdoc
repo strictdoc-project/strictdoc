@@ -22,22 +22,70 @@ TITLE: Relevant resources
 [/SECTION]
 
 [SECTION]
+TITLE: ReqIF Overview
+
+[FREETEXT]
+
+**Spec Object**: Represents an atomic requirement item.
+
+**Spec Relation**: encodes a relationship between two Spec Objects.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
 TITLE: Implementation outline (TODO)
 
 [FREETEXT]
 - Section: What is common in all ReqIF documents?
 
 - Section: What is special in every ReqIF document?
-
-- Section: Two-stage parsing
-
-  - First stage: parsing ReqIF into Objects
-
-    - When stable, the first stage is a candidate for an extraction to a
-      separate Pip package.
-
-  - Stage stage: building an SDoc document from the "ReqIF document bundle"
-    based on a provided mapping.
 [/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Two-stage parsing
+
+[FREETEXT]
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: First stage: parsing ReqIF into Objects
+
+[FREETEXT]
+When stable, the first stage is a candidate for an extraction to a
+separate ReqIF parser (Pip package).
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Stage stage: Building SDoc from a ReqIF bundle
+
+[FREETEXT]
+Building an SDoc document from the "ReqIF document bundle"
+based on a provided mapping.
+[/FREETEXT]
+
+[SECTION]
+TITLE: Native StrictDoc
+
+[FREETEXT]
+TBD
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Doors-like ReqIF schema parser
+
+[FREETEXT]
+TBD
+[/FREETEXT]
+
+[/SECTION]
 
 [/SECTION]

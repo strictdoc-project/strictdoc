@@ -167,7 +167,7 @@ class SDWriter:
                 )
                 output += "\n"
 
-        if section_content.references:
+        if len(section_content.references) > 0:
             output += "REFS:"
             output += "\n"
 

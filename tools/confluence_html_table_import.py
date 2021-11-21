@@ -58,7 +58,7 @@ class ConfluenceHTMLTableImport:
                     None,
                     None,
                     None,
-                    None,
+                    [],
                     title,
                     None,
                     None,

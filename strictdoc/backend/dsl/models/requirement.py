@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from strictdoc.backend.dsl.document_reference import DocumentReference
 from strictdoc.backend.dsl.models.reference import Reference
@@ -19,7 +19,7 @@ class Requirement:
         level: Optional[str],
         status,
         tags,
-        references,
+        references: List[Reference],
         title: Optional[str],
         body,
         rationale,
@@ -40,7 +40,10 @@ class Requirement:
         self.level: Optional[str] = level
         self.status = status
         self.tags = tags
+
+        assert isinstance(references, List)
         self.references: [Reference] = references
+
         self.title = title
         self.statement = statement
         self.rationale = rationale
@@ -231,7 +234,7 @@ def requirement_from_dict(requirement_dict, parent, level):
         None,
         None,
         None,
-        None,
+        [],
         title,
         None,
         None,

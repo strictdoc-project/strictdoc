@@ -1,5 +1,6 @@
 import io
 import sys
+from collections import defaultdict
 from typing import List
 
 from lxml import etree
@@ -19,6 +20,9 @@ from strictdoc.imports.reqif.stage1.parsers.spec_object_parser import (
 )
 from strictdoc.imports.reqif.stage1.parsers.spec_object_type_parser import (
     SpecObjectTypeParser,
+)
+from strictdoc.imports.reqif.stage1.parsers.spec_relation_parser import (
+    SpecRelationParser,
 )
 from strictdoc.imports.reqif.stage1.parsers.specification_parser import (
     ReqIFSpecificationParser,
@@ -103,10 +107,10 @@ class ReqIFStage1Parser:
         # Spec-relations contains arbitrarily defined relations between spec
         # objects. These relations may be grouped into relation groups which
         # have user-defined meaning.
-        # element_spec_relations = xml_req_if_content.find(
-        #     "SDOC:SPEC-RELATIONS", namespace_dict
-        # )
-        # assert element_spec_relations
+        xml_spec_relations = xml_req_if_content.find("SPEC-RELATIONS")
+        xml_spec_relations = (
+            xml_spec_relations if xml_spec_relations is not None else []
+        )
 
         # Specifications contains one or more specification elements.
         # Each specification element contains a tree of spec-hierarchy elements
@@ -126,7 +130,6 @@ class ReqIFStage1Parser:
                 spec_type = SpecObjectTypeParser.parse(xml_spec_object_type_xml)
                 spec_object_types.append(spec_type)
 
-        # structure_map = defaultdict(list)
         specifications: List[ReqIFSpecification] = []
         if xml_specifications is not None:
             for xml_specification in xml_specifications:
@@ -135,10 +138,14 @@ class ReqIFStage1Parser:
                 )
                 specifications.append(specification)
 
-        # if element_spec_relations is not None:
-        #     relation_map = SpecRelationParser.parse(element_spec_relations)
-        #     for k, v in relation_map.items():
-        #         structure_map[k].append(v)
+        spec_relations = []
+        spec_relations_parent_lookup = defaultdict(list)
+        for xml_spec_relation in xml_spec_relations:
+            spec_relation = SpecRelationParser.parse(xml_spec_relation)
+            spec_relations.append(spec_relation)
+            spec_relations_parent_lookup[spec_relation.source].append(
+                spec_relation.target
+            )
 
         spec_objects = []
         spec_objects_lookup = {}
@@ -148,7 +155,12 @@ class ReqIFStage1Parser:
             spec_objects_lookup[spec_object.identifier] = spec_object
 
         return ReqIFBundle(
-            data_types, spec_objects, spec_objects_lookup, specifications
+            data_types=data_types,
+            spec_objects=spec_objects,
+            spec_objects_lookup=spec_objects_lookup,
+            spec_relations=spec_relations,
+            spec_relations_parent_lookup=spec_relations_parent_lookup,
+            specifications=specifications,
         )
 
     @staticmethod

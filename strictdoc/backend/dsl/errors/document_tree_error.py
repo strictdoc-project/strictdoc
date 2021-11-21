@@ -1,5 +1,6 @@
 class DocumentTreeError(Exception):
     def __init__(self, title, message):
+        super().__init__(title, message)
         self.title = title
         self.message = message
 

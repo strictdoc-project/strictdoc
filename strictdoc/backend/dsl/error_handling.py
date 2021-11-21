@@ -5,6 +5,7 @@ class StrictDocSemanticError(Exception):
     def __init__(
         self, title, message, example, line=None, col=None, filename=None
     ):
+        super().__init__(title, message, line, col, filename)
         self.title = title
         self.message = message
         self.example = example

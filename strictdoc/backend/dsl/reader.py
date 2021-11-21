@@ -313,7 +313,7 @@ class SDReader:
         except StrictDocSemanticError as exc:
             print(exc.to_print_message())
             sys.exit(1)
-        except Exception as exc:
+        except Exception as exc:  # pylint: disable=broad-except
             print(
                 "error: could not parse file: {}.\n{}: {}".format(
                     file_path, exc.__class__.__name__, exc

@@ -221,7 +221,7 @@ class SourceFileTraceabilityReader:
         except StrictDocSemanticError as exc:
             print(exc.to_print_message())
             sys.exit(1)
-        except Exception as exc:
+        except Exception as exc:  # pylint: disable=broad-except
             print(
                 f"error: SourceFileTraceabilityReader: could not parse file: "
                 f"{file_path}.\n{exc.__class__.__name__}: {exc}"

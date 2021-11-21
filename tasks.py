@@ -178,7 +178,7 @@ def lint_pylint(context):
           --rcfile=.pylint.ini
           --disable=all
           --fail-under=10.0
-          --enable=R0201,R1719,C0103,C1801
+          --enable=R0201,R1719,C0103,C1801,W0703,W0231
           strictdoc/ tasks.py 
         &&
         pylint

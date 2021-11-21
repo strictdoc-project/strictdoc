@@ -51,7 +51,7 @@ class Requirement:
         # For multiline fields:
         # Due to the details of how matching single vs multistring lines is
         # implemented, the rstrip() is done to simplify SDoc code generation.
-        self.statement_multiline = (
+        self.statement_multiline: str = (
             statement_multiline.rstrip() if statement_multiline else None
         )
         self.body = body.rstrip() if body else None
@@ -131,6 +131,12 @@ class Requirement:
         elif self.rationale_multiline:
             return self.rationale_multiline
         return None
+
+    def switch_to_multiline_statement(self):
+        if self.statement:
+            assert self.statement_multiline is None
+            self.statement_multiline = self.statement
+            self.statement = None
 
 
 class CompositeRequirement(Requirement):

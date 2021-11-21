@@ -1,4 +1,4 @@
-RUN: %strictdoc import reqif-experimental %S/sample.reqif %S/output/output.sdoc --parser=doors
+RUN: %strictdoc import reqif-experimental %S/subset26-chapter3.reqif %S/output/output.sdoc --parser=doors
 RUN: %strictdoc export %S/output/output.sdoc
 
 UN: %strictdoc export %S/output.sdoc

@@ -1,5 +1,6 @@
 from lxml import etree
 
+from strictdoc.helpers.lxml import stringify_children
 from strictdoc.imports.reqif.stage1.models.reqif_spec_object import (
     ReqIFSpecObject,
 )
@@ -51,8 +52,9 @@ class SpecObjectParser:
                     .text
                 )
             elif attribute_xml.tag == "ATTRIBUTE-VALUE-XHTML":
-                attribute_value = attribute_xml.find("THE-VALUE").text
-
+                attribute_value = stringify_children(
+                    attribute_xml.find("THE-VALUE")
+                )
                 attribute_name = (
                     attribute_xml.find("DEFINITION")
                     .find("ATTRIBUTE-DEFINITION-XHTML-REF")

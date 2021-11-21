@@ -1,8 +1,11 @@
+from strictdoc.backend.dsl.models.requirement import Requirement
+from strictdoc.backend.dsl.models.section import FreeText, Section
 from strictdoc.imports.reqif.stage1.models.reqif_bundle import ReqIFBundle
 from strictdoc.imports.reqif.stage2.abstract_parser import (
     AbstractReqIFStage2Parser,
 )
 from strictdoc.imports.reqif.stage2.doors.mapping import DoorsMapping
+from strictdoc.imports.reqif.stage2.doors.uid_matcher import match_letter_uid
 
 
 class DoorsReqIFReqIFStage2Parser(AbstractReqIFStage2Parser):
@@ -46,7 +49,57 @@ class DoorsReqIFReqIFStage2Parser(AbstractReqIFStage2Parser):
                     document,
                     current_hierarchy.level,
                 )
-                current_section.section_contents.append(requirement)
+
+                # The ReqIF example contains cases when a requirement 1.2.3 is
+                # followed by sub-requirements: 1.2.3.a, 1.2.3.b, etc.
+                # The current solution is to simply to merge the sub-requirement
+                # statements into the parent requirement statement, so that the
+                # sub-requirements do not appear in the tree.
+                # A possible alternative is to use composite requirements, e.g.
+                # [COMPOSITE_REQUIREMENT].
+                matched_letter_uid = match_letter_uid(requirement.uid)
+                if matched_letter_uid:
+                    # Assumption: The a) b) c) ... requirements always follow
+                    # a requirement. Cannot be a section.
+                    assert isinstance(
+                        current_section.section_contents[-1], Requirement
+                    ), f"{current_section.section_contents[-1]} {spec_object}"
+
+                    parent_requirement = current_section.section_contents[-1]
+                    parent_requirement.switch_to_multiline_statement()
+                    parent_requirement.statement_multiline += "<br/>"
+                    parent_requirement.statement_multiline += (
+                        f"{matched_letter_uid}) "
+                    )
+                    parent_requirement.statement_multiline += (
+                        requirement.statement
+                    )
+                else:
+                    current_section.section_contents.append(requirement)
+            elif mapping.is_spec_object_table(spec_object):
+                # Assumption: All tables should be rich XHTML content anyway.
+                rich_text = spec_object.attribute_map[
+                    "_stype_requirement_RichText"
+                ]
+                if len(current_section.section_contents) > 0:
+                    latest_requirement = current_section.section_contents[-1]
+                    if isinstance(latest_requirement, Requirement):
+                        if not latest_requirement.statement_multiline:
+                            assert latest_requirement.statement
+                            latest_requirement.statement_multiline = (
+                                latest_requirement.statement
+                            )
+                            latest_requirement.statement = None
+                        latest_requirement.statement_multiline += rich_text
+                    elif isinstance(latest_requirement, Section):
+                        free_text = FreeText(current_section, [rich_text])
+                        latest_requirement.free_texts.append(free_text)
+                    else:
+                        raise NotImplementedError(latest_requirement)
+                else:
+                    # free_text = FreeText(current_section, [rich_text])
+                    # current_section.free_texts.append(free_text)
+                    raise NotImplementedError(spec_object)
             else:
                 continue
 

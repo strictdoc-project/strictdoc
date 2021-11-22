@@ -20,7 +20,6 @@ class SourceFileViewHTMLGenerator:
     @staticmethod
     def export(
         source_file: SourceFile,
-        document_tree,
         traceability_index: TraceabilityIndex,
         link_renderer,
     ):

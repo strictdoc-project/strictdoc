@@ -7,5 +7,5 @@ class TextToHtmlWriter:
         return html.escape(text_fragment, quote=True).replace("\n", "<br/>\n")
 
     @staticmethod
-    def write_link(title, href):
+    def write_link(title, _):
         return f"{title}"

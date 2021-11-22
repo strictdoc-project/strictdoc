@@ -14,7 +14,6 @@ class DocumentHTMLGenerator:
     @staticmethod
     def export(
         config,
-        document_tree,
         document: Document,
         traceability_index,
         markup_renderer,

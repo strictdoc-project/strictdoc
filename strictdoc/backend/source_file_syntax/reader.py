@@ -32,7 +32,7 @@ class ParseContext:
         self.map_reqs_to_pragmas = {}
 
 
-def req_processor(req: Req, parse_context: ParseContext):
+def req_processor(req: Req):
     assert isinstance(
         req, Req
     ), f"Expected req to be Req, got: {req}, {type(req)}"
@@ -170,9 +170,7 @@ class SourceFileTraceabilityReader:
         parse_source_traceability_processor = partial(
             source_file_traceability_info_processor, parse_context=parse_context
         )
-        parse_req_processor = partial(
-            req_processor, parse_context=parse_context
-        )
+        parse_req_processor = partial(req_processor)
         parse_range_start_pragma_processor = partial(
             range_start_pragma_processor, parse_context=parse_context
         )

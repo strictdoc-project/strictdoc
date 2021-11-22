@@ -51,7 +51,7 @@ class ParseContext:
         self.document_config: Optional[DocumentConfig] = None
 
 
-def document_obj_processor(document: Document, parse_context):
+def document_obj_processor(document: Document):
     if document.legacy_title_is_used:
         print(
             "warning: [DOCUMENT].NAME field is deprecated."
@@ -260,9 +260,7 @@ class SDReader:
     def read(self, input_string, file_path=None):
         parse_context = ParseContext()
 
-        document_processor = partial(
-            document_obj_processor, parse_context=parse_context
-        )
+        document_processor = partial(document_obj_processor)
         document_config_processor = partial(
             document_config_obj_processor, parse_context=parse_context
         )

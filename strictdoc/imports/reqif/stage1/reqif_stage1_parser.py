@@ -41,7 +41,7 @@ class ReqIFStage1Parser:
             parsed_xml = etree.parse(io.BytesIO(bytes(content, "UTF-8")))
             parsed_xml = ReqIFStage1Parser.strip_namespace_from_xml(parsed_xml)
             xml_reqif = parsed_xml.getroot()
-        except Exception as exception:
+        except Exception as exception:  # pylint: disable=broad-except
             # TODO: handle
             print(f"error: problem parsing file: {exception}")
             sys.exit(1)

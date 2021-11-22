@@ -1,4 +1,4 @@
-from typing import Set, Optional
+from typing import Set, Optional, List
 
 from strictdoc.backend.dsl.models.config_special_field import ConfigSpecialField
 
@@ -20,7 +20,7 @@ class DocumentConfig:
         self.parent = parent
         self.version = version
         self.number = number
-        self.special_fields: [ConfigSpecialField] = special_fields
+        self.special_fields: List[ConfigSpecialField] = special_fields
         self.markup = markup
         self.auto_levels: bool = auto_levels is None or auto_levels == "On"
         self.ng_auto_levels_specified = auto_levels is not None

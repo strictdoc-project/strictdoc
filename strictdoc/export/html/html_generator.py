@@ -158,7 +158,6 @@ class HTMLGenerator:
             HTMLGenerator._export_with_performance,
             config,
             export_options=export_options,
-            document_tree=document_tree,
             traceability_index=traceability_index,
             link_renderer=link_renderer,
         )
@@ -196,7 +195,6 @@ class HTMLGenerator:
                     )
                     document_content = SourceFileViewHTMLGenerator.export(
                         source_file,
-                        document_tree,
                         traceability_index,
                         link_renderer,
                     )
@@ -230,7 +228,6 @@ class HTMLGenerator:
         config: ExportCommandConfig,
         document,
         export_options: ExportOptions,
-        document_tree,
         traceability_index,
         link_renderer,
     ):
@@ -242,7 +239,6 @@ class HTMLGenerator:
                 config,
                 export_options.export_mode,
                 document,
-                document_tree,
                 traceability_index,
                 link_renderer,
             )
@@ -253,7 +249,6 @@ class HTMLGenerator:
         config: ExportCommandConfig,
         export_mode,
         document,
-        document_tree,
         traceability_index,
         link_renderer,
     ):
@@ -276,7 +271,6 @@ class HTMLGenerator:
             # Single Document pages
             document_content = DocumentHTMLGenerator.export(
                 config,
-                document_tree,
                 document,
                 traceability_index,
                 markup_renderer,
@@ -330,7 +324,6 @@ class HTMLGenerator:
             # Single Document pages (standalone)
             document_content = DocumentHTMLGenerator.export(
                 config,
-                document_tree,
                 document,
                 traceability_index,
                 markup_renderer,

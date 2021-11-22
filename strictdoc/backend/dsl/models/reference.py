@@ -14,10 +14,8 @@ class Reference:
 
 
 class FileReference(Reference):
-    def __init__(self, parent, ref_type, path):
-        super(FileReference, self).__init__(parent, ref_type, path)
+    pass
 
 
 class ParentReqReference(Reference):
-    def __init__(self, parent, ref_type, path):
-        super(ParentReqReference, self).__init__(parent, ref_type, path)
+    pass

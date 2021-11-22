@@ -4,5 +4,5 @@ class HTMLFragmentWriter:
         return text_fragment
 
     @staticmethod
-    def write_link(title, href):
+    def write_link(title, _):
         return f"{title}"

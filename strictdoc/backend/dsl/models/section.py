@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 
 class SectionContext:
@@ -54,7 +54,7 @@ class Section:
 
 
 class FreeText:
-    def __init__(self, parent, parts: []):
+    def __init__(self, parent, parts: List):
         assert isinstance(parts, list)
         self.parent = parent
         self.parts = parts

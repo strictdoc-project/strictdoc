@@ -1,3 +1,5 @@
+from typing import List
+
 from strictdoc.backend.dsl.models.config_special_field import ConfigSpecialField
 from strictdoc.backend.dsl.models.reference import Reference
 from strictdoc.imports.reqif.stage1.models.reqif_bundle import ReqIFBundle
@@ -19,7 +21,7 @@ class StrictDocReqIFStage2Parser(AbstractReqIFStage2Parser):
             return document
 
         native_fields = ReqIFField.list()
-        special_fields: [str] = []
+        special_fields: List[str] = []
         if len(reqif_bundle.spec_object_types) > 0:
             for field in reqif_bundle.spec_object_types[0].attribute_map:
                 if field not in native_fields:

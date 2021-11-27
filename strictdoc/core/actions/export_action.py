@@ -2,6 +2,7 @@ import glob
 import os
 import sys
 from pathlib import Path
+from typing import List, Iterator
 
 from strictdoc.backend.dsl.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.source_file_syntax.reader import (
@@ -29,13 +30,13 @@ class ExportAction:
     def export(config: ExportCommandConfig, parallelizer):
         assert parallelizer
         cwd = os.getcwd()
-        strict_own_files = glob.iglob(
+        strict_own_files_unfiltered: Iterator[str] = glob.iglob(
             "{}/strictdoc/**/*".format(config.strictdoc_root_path),
             recursive=True,
         )
-        strict_own_files = [
+        strict_own_files: List[str] = [
             f
-            for f in strict_own_files
+            for f in strict_own_files_unfiltered
             if f.endswith(".html") or f.endswith(".py")
         ]
         latest_strictdoc_own_file = max(strict_own_files, key=os.path.getctime)

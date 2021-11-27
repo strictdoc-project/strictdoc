@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "strictdoc"
 version = "0.0.17"
-description = " Software for writing technical requirements and specifications."
+description = "Software for writing technical requirements and specifications."
 authors = ["Stanislav Pankevich <s.pankevich@gmail.com>"]
 maintainers = ["Stanislav Pankevich <s.pankevich@gmail.com>"]
 license = "Apache 2"
@@ -30,6 +30,7 @@ lxml = '^4.6.2'
 invoke = "1.4.1"
 pytest = "^6.2.2"
 lit = '0.11.0.post1'
+mypy = "0.910"
 filecheck = "*"
 black = "21.9b0"
 pylint = "2.11.1"

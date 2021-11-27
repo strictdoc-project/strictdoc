@@ -6,9 +6,6 @@ from typing import List
 from lxml import etree
 
 from strictdoc.imports.reqif.stage1.models.reqif_bundle import ReqIFBundle
-from strictdoc.imports.reqif.stage1.models.reqif_spec_object_type import (
-    ReqIFSpecObjectType,
-)
 from strictdoc.imports.reqif.stage1.models.reqif_specification import (
     ReqIFSpecification,
 )
@@ -83,12 +80,12 @@ class ReqIFStage1Parser:
         xml_req_if_content = xml_core_content.find("REQ-IF-CONTENT")
         assert xml_req_if_content is not None
 
-        xml_datatypes = xml_req_if_content.find("DATATYPES")
-        assert xml_datatypes is not None
+        xml_data_types = xml_req_if_content.find("DATATYPES")
+        assert xml_data_types is not None
 
         data_types = []
         data_types_lookup = {}
-        for xml_data_type in list(xml_datatypes):
+        for xml_data_type in list(xml_data_types):
             data_type = DataTypeParser.parse(xml_data_type)
             data_types.append(data_type)
             data_types_lookup[data_type.identifier] = data_type
@@ -97,7 +94,6 @@ class ReqIFStage1Parser:
         # objects. Spec types use datatypes to define the kind of information
         # stored.
         xml_spec_types = xml_req_if_content.find("SPEC-TYPES")
-        assert xml_spec_types is not None
 
         # spec-objects contains specobjects, which are the actual requirements.
         # every specobject must have a spec_type which defines its structure
@@ -126,10 +122,9 @@ class ReqIFStage1Parser:
 
         spec_object_types = []
         for xml_spec_object_type_xml in list(xml_spec_types):
-            if isinstance(xml_spec_object_type_xml, ReqIFSpecObjectType):
+            if xml_spec_object_type_xml.tag == "SPEC-OBJECT-TYPE":
                 spec_type = SpecObjectTypeParser.parse(xml_spec_object_type_xml)
-                spec_object_types.append(spec_type)
-
+            spec_object_types.append(spec_type)
         specifications: List[ReqIFSpecification] = []
         if xml_specifications is not None:
             for xml_specification in xml_specifications:
@@ -156,6 +151,7 @@ class ReqIFStage1Parser:
 
         return ReqIFBundle(
             data_types=data_types,
+            spec_object_types=spec_object_types,
             spec_objects=spec_objects,
             spec_objects_lookup=spec_objects_lookup,
             spec_relations=spec_relations,

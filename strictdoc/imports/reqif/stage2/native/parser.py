@@ -1,9 +1,13 @@
+from strictdoc.backend.dsl.models.config_special_field import ConfigSpecialField
 from strictdoc.backend.dsl.models.reference import Reference
 from strictdoc.imports.reqif.stage1.models.reqif_bundle import ReqIFBundle
 from strictdoc.imports.reqif.stage2.abstract_parser import (
     AbstractReqIFStage2Parser,
 )
-from strictdoc.imports.reqif.stage2.native.mapping import StrictDocReqIFMapping
+from strictdoc.imports.reqif.stage2.native.mapping import (
+    StrictDocReqIFMapping,
+    ReqIFField,
+)
 
 
 class StrictDocReqIFStage2Parser(AbstractReqIFStage2Parser):
@@ -13,6 +17,17 @@ class StrictDocReqIFStage2Parser(AbstractReqIFStage2Parser):
         # TODO: Should we rather show an error that there are no specifications?
         if len(reqif_bundle.specifications) == 0:
             return document
+
+        native_fields = ReqIFField.list()
+        special_fields: [str] = []
+        if len(reqif_bundle.spec_object_types) > 0:
+            for field in reqif_bundle.spec_object_types[0].attribute_map:
+                if field not in native_fields:
+                    special_fields.append(field)
+                    special_field = ConfigSpecialField(
+                        document.config, field, "String", False
+                    )
+                    document.config.special_fields.append(special_field)
 
         specification = reqif_bundle.specifications[0]
 
@@ -46,6 +61,7 @@ class StrictDocReqIFStage2Parser(AbstractReqIFStage2Parser):
                     spec_object,
                     document,
                     current_hierarchy.level,
+                    special_fields,
                 )
                 spec_object_parents = reqif_bundle.get_spec_object_parents(
                     spec_object.identifier

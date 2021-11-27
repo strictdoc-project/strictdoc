@@ -4,6 +4,7 @@ from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.document_config import DocumentConfig
 from strictdoc.backend.dsl.models.requirement import Requirement
 from strictdoc.backend.dsl.models.section import Section
+from strictdoc.backend.dsl.models.special_field import SpecialField
 from strictdoc.imports.reqif.stage1.models.reqif_spec_object import (
     ReqIFSpecObject,
 )
@@ -12,8 +13,14 @@ from strictdoc.imports.reqif.stage1.models.reqif_spec_object import (
 class ReqIFField(Enum):
     TYPE = "TYPE"
     UID = "UID"
+    STATUS = "STATUS"
     TITLE = "TITLE"
     STATEMENT = "STATEMENT"
+    COMMENT = "COMMENT"
+
+    @classmethod
+    def list(cls):
+        return list(map(lambda c: c.value, cls))
 
 
 class ReqIFNodeType(Enum):
@@ -66,7 +73,7 @@ class StrictDocReqIFMapping:
 
     @staticmethod
     def create_requirement_from_spec_object(
-        spec_object, document, level
+        spec_object, document, level, reqif_special_fields
     ) -> Requirement:
         uid = spec_object.attribute_map[ReqIFField.UID.value]
         statement = spec_object.attribute_map[ReqIFField.STATEMENT.value]
@@ -86,8 +93,15 @@ class StrictDocReqIFMapping:
             rationale=None,
             rationale_multiline=None,
             comments=[],
-            special_fields=None,
+            special_fields=[],
             requirements=None,
         )
         requirement.ng_level = level
+
+        for field in reqif_special_fields:
+            requirement.special_fields.append(
+                SpecialField(
+                    requirement, field, spec_object.attribute_map[field]
+                )
+            )
         return requirement

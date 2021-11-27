@@ -7,6 +7,9 @@ from strictdoc.imports.reqif.stage1.models.reqif_spec_hierarchy import (
 from strictdoc.imports.reqif.stage1.models.reqif_spec_object import (
     ReqIFSpecObject,
 )
+from strictdoc.imports.reqif.stage1.models.reqif_spec_object_type import (
+    ReqIFSpecObjectType,
+)
 from strictdoc.imports.reqif.stage1.models.reqif_spec_relation import (
     ReqIFSpecRelation,
 )
@@ -20,6 +23,7 @@ class ReqIFBundle:
     def create_empty():
         return ReqIFBundle(
             data_types=[],
+            spec_object_types=[],
             spec_objects=[],
             spec_objects_lookup={},
             spec_relations=[],
@@ -30,6 +34,7 @@ class ReqIFBundle:
     def __init__(
         self,
         data_types,
+        spec_object_types: List[ReqIFSpecObjectType],
         spec_objects: List[ReqIFSpecObject],
         spec_objects_lookup: Dict,
         spec_relations: List[ReqIFSpecRelation],
@@ -37,6 +42,7 @@ class ReqIFBundle:
         specifications: List[ReqIFSpecification],
     ):
         self.data_types = data_types
+        self.spec_object_types = spec_object_types
         self.spec_objects = spec_objects
         self.spec_objects_lookup = spec_objects_lookup
         self.spec_relations = spec_relations

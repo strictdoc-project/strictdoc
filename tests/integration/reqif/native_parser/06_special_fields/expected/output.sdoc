@@ -1,0 +1,13 @@
+[DOCUMENT]
+TITLE: Empty ReqIF document
+SPECIAL_FIELDS:
+- NAME: CUSTOM_FIELD
+  TYPE: String
+OPTIONS:
+  MARKUP: Text
+
+[REQUIREMENT]
+UID: REQ-001
+SPECIAL_FIELDS:
+  CUSTOM_FIELD: Custom field value
+STATEMENT: Requirement 1 statement.

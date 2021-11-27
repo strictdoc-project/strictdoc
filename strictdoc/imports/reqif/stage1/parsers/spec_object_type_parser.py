@@ -5,8 +5,10 @@ from strictdoc.imports.reqif.stage1.models.reqif_spec_object_type import (
 
 class SpecObjectTypeParser:
     @staticmethod
-    def parse(spec_object_type_xml):
-        assert spec_object_type_xml.tag == "SPEC-OBJECT-TYPE"
+    def parse(spec_object_type_xml) -> ReqIFSpecObjectType:
+        assert (
+            spec_object_type_xml.tag == "SPEC-OBJECT-TYPE"
+        ), f"{spec_object_type_xml}"
         attribute_map = {}
 
         attributes = spec_object_type_xml.attrib

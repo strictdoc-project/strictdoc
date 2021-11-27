@@ -9,7 +9,7 @@ def oneline_command(string):
     return re.sub("\\s+", " ", string).strip()
 
 
-def run_invoke_cmd(context, cmd):
+def run_invoke_cmd(context, cmd) -> invoke.runners.Result:
     return context.run(
         cmd, env=None, hide=False, warn=False, pty=False, echo=True
     )
@@ -205,7 +205,26 @@ def lint_flake8(context):
     run_invoke_cmd(context, command)
 
 
-@task(lint_black_diff, lint_pylint, lint_flake8)
+@task
+def lint_mypy(context):
+    command = oneline_command(
+        """
+        mypy strictdoc/ | grep Did | wc -l
+        """
+    )
+    result = run_invoke_cmd(context, command)
+    if result.stdout.strip() != "0":
+        print("invoke: mypy found issues")
+        result.exited = 1
+        raise invoke.exceptions.UnexpectedExit(result)
+
+
+@task(
+    lint_black_diff,
+    lint_pylint,
+    lint_flake8,
+    lint_mypy,
+)
 def lint(_):
     pass
 

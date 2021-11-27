@@ -26,7 +26,7 @@ class DocumentConfig:
         self.ng_auto_levels_specified = auto_levels is not None
 
         self.special_fields_set: Set[str] = set()
-        self.special_fields_required: [str] = []
+        self.special_fields_required: List[str] = []
         if special_fields:
             for user_field in self.special_fields:
                 self.special_fields_set.add(user_field.field_name)

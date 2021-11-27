@@ -43,7 +43,7 @@ class Requirement:
         self.tags = tags
 
         assert isinstance(references, List)
-        self.references: [Reference] = references
+        self.references: List[Reference] = references
 
         self.title = title
         self.statement = statement

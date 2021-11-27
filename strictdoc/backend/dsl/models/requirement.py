@@ -2,6 +2,7 @@ from typing import Optional, List
 
 from strictdoc.backend.dsl.document_reference import DocumentReference
 from strictdoc.backend.dsl.models.reference import Reference
+from strictdoc.backend.dsl.models.special_field import SpecialField
 
 
 class RequirementContext:
@@ -25,7 +26,7 @@ class Requirement:
         rationale,
         rationale_multiline,
         comments,
-        special_fields,
+        special_fields: List[SpecialField],
         requirements=None,
     ):
         assert parent

@@ -1,5 +1,6 @@
 class ConfigSpecialField:
     def __init__(self, parent, field_name, field_type, field_required):
+        assert field_type == "String"
         self.parent = parent
         self.field_name = field_name
         self.field_type = field_type

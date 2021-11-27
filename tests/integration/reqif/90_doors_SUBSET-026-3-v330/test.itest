@@ -1,6 +1,37 @@
 RUN: %strictdoc import reqif-experimental %S/subset26-chapter3.reqif %S/output/output.sdoc --parser=doors
+RUN: cp -rv %S/media %S/output/_assets
 RUN: %strictdoc export %S/output/output.sdoc
 
-UN: %strictdoc export %S/output.sdoc
+RUN: cat %S/output/output.sdoc | filecheck %s --dump-input=fail --check-prefix=CHECK-SDOC
+CHECK-SDOC: [DOCUMENT]
+CHECK-SDOC: TITLE: Empty ReqIF document
+CHECK-SDOC: OPTIONS:
+CHECK-SDOC:   MARKUP: HTML
+CHECK-SDOC:   AUTO_LEVELS: Off
 
-UN: diff %S/expected/output.sdoc %S/output/output.sdoc
+# Parsing Figures
+CHECK-SDOC: [REQUIREMENT]
+CHECK-SDOC: UID: 3.4.2.2.2
+CHECK-SDOC: LEVEL: 3.4.2.2.2
+CHECK-SDOC: STATEMENT: >>>
+CHECK-SDOC: The nominal direction of each balise group is defined by increasing internal balise numbers.
+CHECK-SDOC:
+CHECK-SDOC: <div>
+CHECK-SDOC:   <object data="_assets/Subset026-3_4_2_2_2%5B2%5D_%5Bf%5D1_I.png" height="159" type="image/png" width="504">
+CHECK-SDOC:     Picture missing. No alternative text available.
+CHECK-SDOC:   </object>
+CHECK-SDOC: </div>
+CHECK-SDOC:
+CHECK-SDOC: <div>
+CHECK-SDOC:   <b>
+CHECK-SDOC:     <span style="font-family:Arial; font-size:11pt;">
+CHECK-SDOC:       Figure
+CHECK-SDOC:       <span style="background-color:yellow; font-family:courier; font-weight:bolder;">
+CHECK-SDOC:         {Figure 1}
+CHECK-SDOC:       </span>
+CHECK-SDOC:       : Orientation of the balise group
+CHECK-SDOC:     </span>
+CHECK-SDOC:   </b>
+CHECK-SDOC: </div>
+<<<
+

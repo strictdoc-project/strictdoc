@@ -1,5 +1,6 @@
 from strictdoc.backend.dsl.models.requirement import Requirement
 from strictdoc.backend.dsl.models.section import FreeText, Section
+from strictdoc.helpers.html import prettify_html_fragment
 from strictdoc.imports.reqif.stage1.models.reqif_bundle import ReqIFBundle
 from strictdoc.imports.reqif.stage2.abstract_parser import (
     AbstractReqIFStage2Parser,
@@ -81,6 +82,8 @@ class DoorsReqIFReqIFStage2Parser(AbstractReqIFStage2Parser):
                 rich_text = spec_object.attribute_map[
                     "_stype_requirement_RichText"
                 ]
+                rich_text = prettify_html_fragment(rich_text)
+
                 if len(current_section.section_contents) > 0:
                     latest_requirement = current_section.section_contents[-1]
                     if isinstance(latest_requirement, Requirement):
@@ -100,6 +103,30 @@ class DoorsReqIFReqIFStage2Parser(AbstractReqIFStage2Parser):
                     # free_text = FreeText(current_section, [rich_text])
                     # current_section.free_texts.append(free_text)
                     raise NotImplementedError(spec_object)
+            elif mapping.is_spec_object_figure(spec_object):
+                # Assumption: A Figure always follow a requirement.
+                # Cannot be a section.
+                assert isinstance(
+                    current_section.section_contents[-1], Requirement
+                ), f"{current_section.section_contents[-1]} {spec_object}"
+                spec_object_rich_text = spec_object.attribute_map[
+                    "_stype_requirement_RichText"
+                ].replace("media/", "_assets/")
+
+                spec_object_rich_text = prettify_html_fragment(
+                    spec_object_rich_text
+                )
+                spec_object.attribute_map[
+                    "_stype_requirement_RichText"
+                ] = spec_object_rich_text
+                parent_requirement: Requirement = (
+                    current_section.section_contents[-1]
+                )
+                parent_requirement.switch_to_multiline_statement()
+                parent_requirement.statement_multiline += (
+                    f"\n\n{spec_object_rich_text.strip()}"
+                )
+
             else:
                 continue
 

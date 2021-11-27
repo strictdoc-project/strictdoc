@@ -19,7 +19,9 @@ class ReqIFField(Enum):
 class ReqIFNodeType(Enum):
     SECTION = "_enumVal_Kind_HEADING"
     REQUIREMENT = "_enumVal_Kind_ORDINARY"
+    NOTE = "_enumVal_Kind_NOTE"
     TABLE = "_enumVal_Kind_TABLE"
+    FIGURE = "_enumVal_Kind_FIGURE"
 
 
 class DoorsMapping:
@@ -70,7 +72,10 @@ class DoorsMapping:
         ), spec_object.attribute_map
 
         spec_object_type = spec_object.attribute_map[ReqIFField.TYPE.value]
-        return spec_object_type == ReqIFNodeType.REQUIREMENT.value
+        return (
+            spec_object_type == ReqIFNodeType.REQUIREMENT.value
+            or spec_object_type == ReqIFNodeType.NOTE.value
+        )
 
     @staticmethod
     def is_spec_object_table(spec_object):
@@ -80,6 +85,15 @@ class DoorsMapping:
 
         spec_object_type = spec_object.attribute_map[ReqIFField.TYPE.value]
         return spec_object_type == ReqIFNodeType.TABLE.value
+
+    @staticmethod
+    def is_spec_object_figure(spec_object):
+        assert (
+            ReqIFField.TYPE.value in spec_object.attribute_map
+        ), spec_object.attribute_map
+
+        spec_object_type = spec_object.attribute_map[ReqIFField.TYPE.value]
+        return spec_object_type == ReqIFNodeType.FIGURE.value
 
     @staticmethod
     def create_section_from_spec_object(

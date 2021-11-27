@@ -1,5 +1,6 @@
-from lxml.etree import tostring
 from itertools import chain
+
+from lxml.etree import tostring
 
 
 # https://stackoverflow.com/a/4624146/598057

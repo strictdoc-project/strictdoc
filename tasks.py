@@ -178,7 +178,7 @@ def lint_pylint(context):
           --rcfile=.pylint.ini
           --disable=all
           --fail-under=10.0
-          --enable=R0201,R1719,C0103,C1801,W0703,W0231,W0235,W0613
+          --enable=R0201,R1719,C0103,C0411,C1801,W0703,W0231,W0235,W0613
           strictdoc/ tasks.py 
         &&
         pylint
@@ -206,17 +206,21 @@ def lint_flake8(context):
 
 
 @task
-def lint_mypy(context):
-    command = oneline_command(
+def lint_mypy(_):
+    oneline_command(
         """
-        mypy strictdoc/ | grep Did | wc -l
+        mypy strictdoc/
+            --show-error-codes
+            --disable-error-code=arg-type
+            --disable-error-code=assignment
+            --disable-error-code=attr-defined
+            --disable-error-code=no-redef
+            --disable-error-code=operator
+            --disable-error-code=var-annotated
+            --disable-error-code=union-attr
+            --enable-error-code=misc
         """
     )
-    result = run_invoke_cmd(context, command)
-    if result.stdout.strip() != "0":
-        print("invoke: mypy found issues")
-        result.exited = 1
-        raise invoke.exceptions.UnexpectedExit(result)
 
 
 @task(

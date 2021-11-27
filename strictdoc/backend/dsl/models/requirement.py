@@ -1,6 +1,7 @@
 from typing import Optional, List
 
 from strictdoc.backend.dsl.document_reference import DocumentReference
+from strictdoc.backend.dsl.models.node import Node
 from strictdoc.backend.dsl.models.reference import Reference
 from strictdoc.backend.dsl.models.special_field import SpecialField
 
@@ -10,7 +11,7 @@ class RequirementContext:
         self.title_number_string = None
 
 
-class Requirement:
+class Requirement(Node):
     def __init__(
         self,
         parent,
@@ -71,18 +72,12 @@ class Requirement:
 
     def __str__(self):
         return (
-            "{}("
-            "ng_level: {}, "
-            "uid: {}, "
-            "title_or_none: {}, "
-            "statement: {}"
-            ")".format(
-                self.__class__.__name__,
-                self.ng_level,
-                self.uid,
-                self.title,
-                self.statement,
-            )
+            f"{self.__class__.__name__}("
+            f"ng_level: {self.ng_level}, "
+            f"uid: {self.uid}, "
+            f"title_or_none: {self.title}, "
+            f"statement: {self.statement}"
+            ")"
         )
 
     def __repr__(self):
@@ -165,7 +160,7 @@ class Body:
         self.content = content.strip()
 
     def __str__(self):
-        return "Body: <{}>".format(self.content)
+        return f"Body({self.content})"
 
     def __repr__(self):
         return self.__str__()
@@ -183,7 +178,12 @@ class RequirementComment:
         )
 
     def __str__(self):
-        return "Comment: <>".format()
+        return (
+            f"Comment("
+            f"comment_single: {self.comment_single}, "
+            f"comment_multiline: {self.comment_multiline}"
+            f")"
+        )
 
     def __repr__(self):
         return self.__str__()

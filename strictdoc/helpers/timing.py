@@ -14,9 +14,7 @@ def timing_decorator(name):
             result = func(*args, **kw)
             time_end = time()
             print(
-                "Step '{}' took: {} sec".format(
-                    name, round_up(time_end - time_start, 2)
-                ),
+                f"Step '{name}' took: {round_up(time_end - time_start, 2)} sec",
                 flush=True,
             )
             return result
@@ -32,6 +30,8 @@ def measure_performance(title):
     yield
     time_end = time()
 
-    padded_name = "{title} ".format(title=title).ljust(60, ".")
-    padded_time = " {:0.2f}".format((time_end - time_start)).rjust(6, ".")
-    print("{}{}s".format(padded_name, padded_time), flush=True)
+    padded_name = f"{title} ".ljust(60, ".")
+    padded_time = " {:0.2f}".format(  # pylint: disable=consider-using-f-string
+        (time_end - time_start)
+    ).rjust(6, ".")
+    print(f"{padded_name}{padded_time}s", flush=True)

@@ -51,7 +51,7 @@ class StrictDocReqIFStage2Parser(AbstractReqIFStage2Parser):
                 if current_hierarchy.level > current_section.ng_level:
                     current_section.section_contents.append(section)
                 elif current_hierarchy.level < current_section.ng_level:
-                    for i in range(
+                    for _ in range(
                         0, current_section.ng_level - current_hierarchy.level
                     ):
                         current_section = current_section.parent

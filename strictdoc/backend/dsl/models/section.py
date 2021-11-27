@@ -1,12 +1,14 @@
 from typing import Optional, List
 
+from strictdoc.backend.dsl.models.node import Node
+
 
 class SectionContext:
     def __init__(self):
         self.title_number_string = None
 
 
-class Section:
+class Section(Node):
     def __init__(
         self,
         parent,
@@ -14,7 +16,7 @@ class Section:
         level: Optional[str],
         title,
         free_texts,
-        section_contents,
+        section_contents: List[Node],
     ):
         self.parent = parent
         self.uid = uid

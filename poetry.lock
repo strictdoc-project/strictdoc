@@ -174,7 +174,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "filecheck"
-version = "0.0.19"
+version = "0.0.20"
 description = "Python port of LLVM's FileCheck, flexible pattern matching file verifier"
 category = "dev"
 optional = false
@@ -787,7 +787,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6.2"
-content-hash = "259c8e7571bb3c7f45da1f03e70610e6feb5fb95edeffeec91dcfb62790aff3b"
+content-hash = "a5b1560b65e838ed68667e44c17f328a7d63a8c8ea285670fbc3d62e91363074"
 
 [metadata.files]
 alabaster = [
@@ -851,8 +851,8 @@ et-xmlfile = [
     {file = "et_xmlfile-1.1.0.tar.gz", hash = "sha256:8eb9e2bc2f8c97e37a2dc85a09ecdcdec9d8a396530a6d5a33b30b9a92da0c5c"},
 ]
 filecheck = [
-    {file = "filecheck-0.0.19-py3-none-any.whl", hash = "sha256:0b8e9047a0041807924e3d795ad04d875ce273383e263eeac8319ac2e22390d3"},
-    {file = "filecheck-0.0.19.tar.gz", hash = "sha256:040ff25c87fad64a675451f4aa8d891840e5351c25611e5bdc16e7acb3852da8"},
+    {file = "filecheck-0.0.20-py3-none-any.whl", hash = "sha256:1dc057d319b65671a597e1a5b33dbe394b028b566a262163eea0651b43439ee1"},
+    {file = "filecheck-0.0.20.tar.gz", hash = "sha256:77dbc1d1d4f1b71b7e57123dd21c768f5af85340aa80ac3393ba411c43c4be49"},
 ]
 flake8 = [
     {file = "flake8-3.9.2-py2.py3-none-any.whl", hash = "sha256:bf8fd333346d844f616e8d47905ef3a3384edae6b4e9beb0c5101e25e3110907"},

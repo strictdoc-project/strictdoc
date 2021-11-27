@@ -81,8 +81,9 @@ class DoorsMapping:
         spec_object_type = spec_object.attribute_map[ReqIFField.TYPE.value]
         return spec_object_type == ReqIFNodeType.TABLE.value
 
+    @staticmethod
     def create_section_from_spec_object(
-        self, spec_object: ReqIFSpecObject, level
+        spec_object: ReqIFSpecObject, level
     ) -> Section:
         uid = spec_object.attribute_map[ReqIFField.UID.value]
         title = spec_object.attribute_map[ReqIFField.TITLE.value]
@@ -97,8 +98,9 @@ class DoorsMapping:
         section.ng_level = level
         return section
 
+    @staticmethod
     def create_requirement_from_spec_object(
-        self, spec_object, document, level
+        spec_object, document, level
     ) -> Requirement:
         uid = spec_object.attribute_map[ReqIFField.UID.value]
         statement = spec_object.attribute_map[ReqIFField.STATEMENT.value]

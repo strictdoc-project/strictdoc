@@ -28,6 +28,7 @@ def test_01_nominal_case():
     specification_xml = etree.fromstring(specification_string)
     specification = ReqIFSpecificationParser.parse(specification_xml)
     assert specification.identifier == "TEST_SPECIFICATION_ID"
+    assert specification.long_name == "Specification Document"
     assert len(specification.children) == 1
 
     spec_hierarchy_1 = specification.children[0]

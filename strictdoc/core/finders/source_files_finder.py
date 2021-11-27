@@ -37,20 +37,14 @@ class SourceFile:
     def __str__(self):
         return (
             "SourceFile("
-            "level: {}, "
-            "full_path: {}, "
-            "doctree_root_mount_path: {}, "
-            "in_doctree_source_file_rel_path: {}, "
-            "output_path_dir_full_path: {}, "
-            "output_path_file_full_path: {}"
-            ")".format(
-                self.level,
-                self.full_path,
-                self.doctree_root_mount_path,
-                self.in_doctree_source_file_rel_path,
-                self.output_dir_full_path,
-                self.output_file_full_path,
-            )
+            f"level: {self.level}, "
+            f"full_path: {self.full_path}, "
+            f"doctree_root_mount_path: {self.doctree_root_mount_path}, "
+            "in_doctree_source_file_rel_path: "
+            f"{self.in_doctree_source_file_rel_path}, "
+            f"output_path_dir_full_path: {self.output_dir_full_path}, "
+            f"output_path_file_full_path: {self.output_file_full_path}"
+            ")"
         )
 
     def is_python_file(self):

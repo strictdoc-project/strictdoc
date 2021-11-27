@@ -52,9 +52,13 @@ class ExcelGenerator:
 
         document: Document
         for document in document_tree.document_list:
-            document_out_file = "{}/{}.xlsx".format(
-                output_excel_root, document.meta.document_filename_base
+            document_out_file_name = (
+                f"{document.meta.document_filename_base}.xlsx"
             )
+            document_out_file = os.path.join(
+                output_excel_root, document_out_file_name
+            )
+
             ExcelGenerator._export_single_document(
                 document, traceability_index, document_out_file, fields
             )

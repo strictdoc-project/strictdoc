@@ -85,7 +85,7 @@ class SDWriter:
                 len(closing_tags) > 0
                 and content_node.ng_level <= closing_tags[-1][1]
             ):
-                closing_tag, level = closing_tags.pop()
+                closing_tag, _ = closing_tags.pop()
                 output += self._print_closing_tag(closing_tag)
 
             output += "\n"
@@ -104,7 +104,7 @@ class SDWriter:
 
                 output += self._print_requirement_fields(content_node)
 
-        for closing_tag, level in reversed(closing_tags):
+        for closing_tag, _ in reversed(closing_tags):
             output += self._print_closing_tag(closing_tag)
 
         return output

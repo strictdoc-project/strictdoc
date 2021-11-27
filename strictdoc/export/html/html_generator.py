@@ -82,8 +82,8 @@ class HTMLGenerator:
         writer = DocumentTreeHTMLGenerator()
         output = writer.export(config, document_tree, traceability_index)
 
-        output_html_static_files = "{}/_static".format(output_html_root)
-        output_file = "{}/index.html".format(output_html_root)
+        output_html_static_files = os.path.join(output_html_root, "_static")
+        output_file = os.path.join(output_html_root, "index.html")
 
         with open(output_file, "w", encoding="utf8") as file:
             file.write(output)
@@ -218,9 +218,8 @@ class HTMLGenerator:
                 file.write(source_coverage_content)
 
         print(
-            "Export completed. Documentation tree can be found at:\n{}".format(
-                output_html_root
-            )
+            "Export completed. Documentation tree can be found at:\n"
+            f"{output_html_root}"
         )
 
     @staticmethod
@@ -232,9 +231,9 @@ class HTMLGenerator:
         link_renderer,
     ):
         if not document.ng_needs_generation:
-            with measure_performance("Skip: {}".format(document.name)):
+            with measure_performance(f"Skip: {document.name}"):
                 return
-        with measure_performance("Published: {}".format(document.name)):
+        with measure_performance(f"Published: {document.name}"):
             HTMLGenerator._export(
                 config,
                 export_options.export_mode,
@@ -242,7 +241,7 @@ class HTMLGenerator:
                 traceability_index,
                 link_renderer,
             )
-        return None
+        return
 
     @staticmethod
     def _export(

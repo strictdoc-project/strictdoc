@@ -8,12 +8,11 @@ class ConfigSpecialField:
 
     def __str__(self):
         return (
-            "{}: <field_name: {}, field_type: {}, field_required: {}>".format(
-                self.__class__.__name__,
-                self.field_name,
-                self.field_type,
-                self.field_required,
-            )
+            f"{self.__class__.__name__}("
+            f"field_name: {self.field_name}, "
+            f"field_type: {self.field_type}, "
+            f"field_required: {self.field_required}"
+            f")"
         )
 
     def __repr__(self):

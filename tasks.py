@@ -133,25 +133,30 @@ def export_pip_requirements(context):
 # https://github.com/python-poetry/poetry/issues/761#issuecomment-689491920
 @task
 def install_local(context):
-    command_1 = oneline_command(
-        """
+    run_invoke_cmd(
+        context,
+        oneline_command(
+            """
         poetry build
         """
+        ),
     )
-    command_2 = oneline_command(
-        """
+    run_invoke_cmd(
+        context,
+        oneline_command(
+            """
         tar -xvf dist/*.tar.gz --wildcards --no-anchored '*/setup.py' --strip=1
         """
+        ),
     )
-    command_3 = oneline_command(
-        """
+    run_invoke_cmd(
+        context,
+        oneline_command(
+            """
         pip install -e .
         """
+        ),
     )
-
-    run_invoke_cmd(context, command_1)
-    run_invoke_cmd(context, command_2)
-    run_invoke_cmd(context, command_3)
 
 
 @task
@@ -178,8 +183,8 @@ def lint_pylint(context):
           --rcfile=.pylint.ini
           --disable=all
           --fail-under=10.0
-          --enable=R0201,R1719,C0103,C0411,C1801,W0703,W0231,W0235,W0613
-          strictdoc/ tasks.py 
+          --enable=R0201,R1710,R1719,C0103,C0209,C0303,C0411,C1801,W0703,W0231,W0235,W0612,W0613
+          strictdoc/ tasks.py
         &&
         pylint
           --rcfile=.pylint.ini

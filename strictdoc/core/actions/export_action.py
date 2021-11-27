@@ -31,7 +31,7 @@ class ExportAction:
         assert parallelizer
         cwd = os.getcwd()
         strict_own_files_unfiltered: Iterator[str] = glob.iglob(
-            "{}/strictdoc/**/*".format(config.strictdoc_root_path),
+            f"{config.strictdoc_root_path}/strictdoc/**/*",
             recursive=True,
         )
         strict_own_files: List[str] = [
@@ -54,7 +54,7 @@ class ExportAction:
         if not os.path.isabs(output_dir):
             output_dir = os.path.join(cwd, output_dir)
 
-        output_html_root = "{}/html".format(output_dir)
+        output_html_root = os.path.join(output_dir, "html")
 
         document_tree, asset_dirs = DocumentFinder.find_sdoc_content(
             path_to_single_file_or_doc_root, output_html_root, parallelizer
@@ -107,14 +107,14 @@ class ExportAction:
             )
 
         if "rst" in config.formats:
-            output_rst_root = "{}/rst".format(output_dir)
+            output_rst_root = os.path.join(output_dir, "rst")
             Path(output_rst_root).mkdir(parents=True, exist_ok=True)
             DocumentRSTGenerator.export_tree(
                 document_tree, traceability_index, output_rst_root
             )
 
         if "excel" in config.formats:
-            output_excel_root = "{}/excel".format(output_dir)
+            output_excel_root = f"{output_dir}/excel"
             ExcelGenerator.export_tree(
                 document_tree,
                 traceability_index,

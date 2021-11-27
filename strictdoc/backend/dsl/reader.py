@@ -313,9 +313,8 @@ class SDReader:
             sys.exit(1)
         except Exception as exc:  # pylint: disable=broad-except
             print(
-                "error: could not parse file: {}.\n{}: {}".format(
-                    file_path, exc.__class__.__name__, exc
-                )
+                f"error: could not parse file: "
+                f"{file_path}.\n{exc.__class__.__name__}: {exc}"
             )
             # TODO: when --debug is provided
             traceback.print_exc()

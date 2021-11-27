@@ -66,7 +66,7 @@ class RSTWriter:
 
         meta_table_started = False
         if section_content.uid:
-            output += ".. _{}:".format(section_content.uid)
+            output += f".. _{section_content.uid}:"
             output += "\n\n"
             output += self._print_rst_header(
                 section_content.title, section_content.ng_level
@@ -124,8 +124,8 @@ class RSTWriter:
             output += "**Parents:**"
             output += "\n\n"
             for reference in requirement_references:
-                output += "- ``[{}]`` ".format(reference.path)
-                output += ":ref:`{}`".format(reference.path)
+                output += f"- ``[{reference.path}]`` "
+                output += f":ref:`{reference.path}`"
                 output += "\n"
             output += "\n"
 
@@ -135,8 +135,8 @@ class RSTWriter:
             for child_requirement in self.index.get_children_requirements(
                 section_content
             ):
-                output += "- ``[{}]`` ".format(child_requirement.uid)
-                output += ":ref:`{}`".format(child_requirement.uid)
+                output += f"- ``[{child_requirement.uid}]`` "
+                output += f":ref:`{child_requirement.uid}`"
                 output += "\n"
             output += "\n"
 

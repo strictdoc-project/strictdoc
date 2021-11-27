@@ -6,7 +6,11 @@ from strictdoc.imports.reqif.stage2.abstract_parser import (
     AbstractReqIFStage2Parser,
 )
 from strictdoc.imports.reqif.stage2.doors.mapping import DoorsMapping
-from strictdoc.imports.reqif.stage2.doors.uid_matcher import match_letter_uid
+from strictdoc.imports.reqif.stage2.doors.uid_matcher import (
+    match_letter_uid,
+    match_bullet_uid,
+    match_continuation_uid,
+)
 
 
 class DoorsReqIFReqIFStage2Parser(AbstractReqIFStage2Parser):
@@ -72,6 +76,33 @@ class DoorsReqIFReqIFStage2Parser(AbstractReqIFStage2Parser):
                     parent_requirement.statement_multiline += (
                         f"{matched_letter_uid}) "
                     )
+                    parent_requirement.statement_multiline += (
+                        requirement.statement
+                    )
+                elif match_bullet_uid(requirement.uid):
+                    # Assumption: The bullet-point requirements always follow
+                    # a requirement. Cannot be a section.
+                    assert isinstance(
+                        current_section.section_contents[-1], Requirement
+                    ), f"{current_section.section_contents[-1]} {spec_object}"
+
+                    parent_requirement = current_section.section_contents[-1]
+                    parent_requirement.switch_to_multiline_statement()
+                    parent_requirement.statement_multiline += "<br/>"
+                    parent_requirement.statement_multiline += "- "
+                    parent_requirement.statement_multiline += (
+                        requirement.statement
+                    )
+                elif match_continuation_uid(requirement.uid):
+                    # Assumption: The continuation requirements always follow
+                    # a requirement. Cannot be a section.
+                    assert isinstance(
+                        current_section.section_contents[-1], Requirement
+                    ), f"{current_section.section_contents[-1]} {spec_object}"
+
+                    parent_requirement = current_section.section_contents[-1]
+                    parent_requirement.switch_to_multiline_statement()
+                    parent_requirement.statement_multiline += "<br/>"
                     parent_requirement.statement_multiline += (
                         requirement.statement
                     )

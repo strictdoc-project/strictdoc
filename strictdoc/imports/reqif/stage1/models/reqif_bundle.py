@@ -40,7 +40,7 @@ class ReqIFBundle:
         spec_relations: List[ReqIFSpecRelation],
         spec_relations_parent_lookup: Dict[str, List[ReqIFSpecRelation]],
         specifications: List[ReqIFSpecification],
-    ):
+    ):  # pylint: disable=too-many-arguments
         self.data_types = data_types
         self.spec_object_types = spec_object_types
         self.spec_objects = spec_objects

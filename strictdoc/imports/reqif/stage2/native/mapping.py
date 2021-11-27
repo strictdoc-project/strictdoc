@@ -2,6 +2,7 @@ from enum import Enum
 
 from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.document_config import DocumentConfig
+from strictdoc.backend.dsl.models.reference import Reference
 from strictdoc.backend.dsl.models.requirement import Requirement
 from strictdoc.backend.dsl.models.section import Section
 from strictdoc.backend.dsl.models.special_field import SpecialField
@@ -105,3 +106,7 @@ class StrictDocReqIFMapping:
                 )
             )
         return requirement
+
+    @staticmethod
+    def create_reference(requirement: Requirement, spec_object_parent):
+        return Reference(requirement, "Parent", spec_object_parent)

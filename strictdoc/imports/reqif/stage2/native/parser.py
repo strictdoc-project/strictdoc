@@ -1,7 +1,8 @@
 from typing import List
 
 from strictdoc.backend.dsl.models.config_special_field import ConfigSpecialField
-from strictdoc.backend.dsl.models.reference import Reference
+from strictdoc.backend.dsl.models.document import Document
+from strictdoc.backend.dsl.models.section import Section
 from strictdoc.imports.reqif.stage1.models.reqif_bundle import ReqIFBundle
 from strictdoc.imports.reqif.stage2.abstract_parser import (
     AbstractReqIFStage2Parser,
@@ -54,7 +55,9 @@ class StrictDocReqIFStage2Parser(AbstractReqIFStage2Parser):
                     for _ in range(
                         0, current_section.ng_level - current_hierarchy.level
                     ):
-                        current_section = current_section.parent
+                        assert not isinstance(current_section, Document)
+                        if isinstance(current_section, Section):
+                            current_section = current_section.parent
                     current_section.section_contents.append(section)
                 else:
                     raise NotImplementedError
@@ -68,14 +71,13 @@ class StrictDocReqIFStage2Parser(AbstractReqIFStage2Parser):
                 spec_object_parents = reqif_bundle.get_spec_object_parents(
                     spec_object.identifier
                 )
-                parent_refs = list(
-                    map(
-                        lambda spec_object_parent: Reference(
-                            requirement, "Parent", spec_object_parent
-                        ),
-                        spec_object_parents,
+                parent_refs = []
+                for spec_object_parent in spec_object_parents:
+                    parent_refs.append(
+                        mapping.create_reference(
+                            requirement, spec_object_parent
+                        )
                     )
-                )
                 requirement.references = parent_refs
                 current_section.section_contents.append(requirement)
             else:

@@ -3,12 +3,12 @@ from typing import Set, Optional, List
 from strictdoc.backend.dsl.models.config_special_field import ConfigSpecialField
 
 
-class DocumentConfig:
+class DocumentConfig:  # pylint: disable=too-many-instance-attributes
     @staticmethod
     def default_config(document):
         return DocumentConfig(document, None, None, None, None, None)
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         parent,
         version,

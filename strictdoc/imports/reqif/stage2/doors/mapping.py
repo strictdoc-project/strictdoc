@@ -72,9 +72,9 @@ class DoorsMapping:
         ), spec_object.attribute_map
 
         spec_object_type = spec_object.attribute_map[ReqIFField.TYPE.value]
-        return (
-            spec_object_type == ReqIFNodeType.REQUIREMENT.value
-            or spec_object_type == ReqIFNodeType.NOTE.value
+        return spec_object_type in (
+            ReqIFNodeType.REQUIREMENT.value,
+            ReqIFNodeType.NOTE.value,
         )
 
     @staticmethod

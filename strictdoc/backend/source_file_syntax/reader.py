@@ -142,7 +142,7 @@ def range_start_pragma_processor(
             pragma.ng_range_line_end = line
 
         except IndexError:
-            raise create_end_without_begin_error(location)
+            raise create_end_without_begin_error(location) from None
     else:
         raise NotImplementedError
 

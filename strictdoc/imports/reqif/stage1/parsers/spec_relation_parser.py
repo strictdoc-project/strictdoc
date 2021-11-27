@@ -6,7 +6,7 @@ from strictdoc.imports.reqif.stage1.models.reqif_spec_relation import (
 class SpecRelationParser:
     @staticmethod
     def parse(xml_spec_relation) -> ReqIFSpecRelation:
-        assert "SPEC-RELATION" == xml_spec_relation.tag
+        assert xml_spec_relation.tag == "SPEC-RELATION"
         attributes = xml_spec_relation.attrib
 
         assert "IDENTIFIER" in attributes, f"{attributes}"

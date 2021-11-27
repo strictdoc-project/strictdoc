@@ -15,7 +15,7 @@ class SpecObjectParser:
         try:
             identifier = attributes["IDENTIFIER"]
         except Exception:
-            raise NotImplementedError
+            raise NotImplementedError from None
 
         spec_object_type = (
             spec_object_xml.find("TYPE").find("SPEC-OBJECT-TYPE-REF").text

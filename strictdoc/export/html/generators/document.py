@@ -12,7 +12,7 @@ class DocumentHTMLGenerator:
     env.globals.update(isinstance=isinstance)
 
     @staticmethod
-    def export(
+    def export(  # pylint: disable=too-many-arguments
         config,
         document: Document,
         traceability_index,

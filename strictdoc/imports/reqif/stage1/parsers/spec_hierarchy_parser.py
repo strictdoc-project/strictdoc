@@ -11,7 +11,7 @@ class ReqIFSpecHierarchyParser:
         try:
             identifier = attributes["IDENTIFIER"]
         except Exception:
-            raise NotImplementedError
+            raise NotImplementedError from None
 
         spec_hierarchy_children_xml = list(spec_hierarchy_xml)
         assert spec_hierarchy_children_xml[0].tag == "OBJECT"

@@ -15,12 +15,12 @@ class SpecObjectTypeParser:
         try:
             spec_type_id = attributes["IDENTIFIER"]
         except Exception:
-            raise NotImplementedError
+            raise NotImplementedError from None
 
         try:
             spec_type_long_name = attributes["LONG-NAME"]
         except Exception:
-            raise NotImplementedError
+            raise NotImplementedError from None
 
         spec_attributes = list(spec_object_type_xml)[0]
         for attribute_definition in spec_attributes:
@@ -28,7 +28,7 @@ class SpecObjectTypeParser:
                 value = attribute_definition.attrib["LONG-NAME"]
                 key = attribute_definition.attrib["IDENTIFIER"]
             except Exception:
-                raise NotImplementedError(attribute_definition)
+                raise NotImplementedError(attribute_definition) from None
             attribute_map[key] = value
 
         return ReqIFSpecObjectType(

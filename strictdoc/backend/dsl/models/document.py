@@ -4,8 +4,8 @@ from strictdoc.backend.dsl.models.document_config import DocumentConfig
 from strictdoc.core.document_meta import DocumentMeta
 
 
-class Document:
-    def __init__(
+class Document:  # pylint: disable=too-many-instance-attributes
+    def __init__(  # pylint: disable=too-many-arguments
         self, name, title, config: DocumentConfig, free_texts, section_contents
     ):
         assert isinstance(free_texts, list)

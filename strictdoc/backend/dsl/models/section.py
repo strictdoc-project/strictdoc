@@ -8,8 +8,8 @@ class SectionContext:
         self.title_number_string = None
 
 
-class Section(Node):
-    def __init__(
+class Section(Node):  # pylint: disable=too-many-instance-attributes
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         parent,
         uid,

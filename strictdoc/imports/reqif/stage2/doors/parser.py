@@ -1,3 +1,4 @@
+from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.requirement import Requirement
 from strictdoc.backend.dsl.models.section import FreeText, Section
 from strictdoc.helpers.html import prettify_html_fragment
@@ -44,7 +45,10 @@ class DoorsReqIFReqIFStage2Parser(AbstractReqIFStage2Parser):
                     for _ in range(
                         0, current_section.ng_level - current_hierarchy.level
                     ):
-                        current_section = current_section.parent
+                        assert not isinstance(current_section, Document)
+                        if isinstance(current_section, Section):
+                            current_section = current_section.parent
+
                     current_section.section_contents.append(section)
                 else:
                     raise NotImplementedError

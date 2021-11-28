@@ -32,14 +32,18 @@ class DataTypeParser:
 
                 values_map[specified_value_identifier] = embedded_value_key
             return ReqIFDataTypeDefinitionEnumeration(identifier, values_map)
-        elif data_type_xml.tag == "DATATYPE-DEFINITION-STRING":
+
+        if data_type_xml.tag == "DATATYPE-DEFINITION-STRING":
             return ReqIFDataTypeDefinitionString(identifier)
 
         # TODO: All the following is parsed to just String.
-        elif data_type_xml.tag == "DATATYPE-DEFINITION-INTEGER":
+        if data_type_xml.tag == "DATATYPE-DEFINITION-INTEGER":
             return ReqIFDataTypeDefinitionString(identifier)
-        elif data_type_xml.tag == "DATATYPE-DEFINITION-XHTML":
+
+        if data_type_xml.tag == "DATATYPE-DEFINITION-XHTML":
             return ReqIFDataTypeDefinitionString(identifier)
-        elif data_type_xml.tag == "DATATYPE-DEFINITION-BOOLEAN":
+
+        if data_type_xml.tag == "DATATYPE-DEFINITION-BOOLEAN":
             return ReqIFDataTypeDefinitionString(identifier)
+
         raise NotImplementedError(etree.tostring(data_type_xml))

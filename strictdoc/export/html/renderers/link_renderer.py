@@ -43,26 +43,26 @@ class LinkRenderer:
         context_document: Optional[Document],
         document_type: DocumentType,
     ):
-        assert isinstance(node, Requirement) or isinstance(node, Section)
+        assert isinstance(node, (Requirement, Section))
         assert isinstance(context_document, Document)
         assert isinstance(document_type, DocumentType)
         local_link = self.render_local_anchor(node)
         if context_document and node.document == context_document:
             return f"#{local_link}"
+
+        link_cache_key = (document_type, context_document.meta.level)
+        if link_cache_key in self.req_link_cache:
+            document_type_cache = self.req_link_cache[link_cache_key]
+            if node in document_type_cache:
+                return document_type_cache[node]
         else:
-            link_cache_key = (document_type, context_document.meta.level)
-            if link_cache_key in self.req_link_cache:
-                document_type_cache = self.req_link_cache[link_cache_key]
-                if node in document_type_cache:
-                    return document_type_cache[node]
-            else:
-                self.req_link_cache[link_cache_key] = {}
-            document_link = node.document.meta.get_html_link(
-                document_type, context_document.meta.level
-            )
-            requirement_link = f"{document_link}#{local_link}"
-            self.req_link_cache[link_cache_key][node] = requirement_link
-            return requirement_link
+            self.req_link_cache[link_cache_key] = {}
+        document_link = node.document.meta.get_html_link(
+            document_type, context_document.meta.level
+        )
+        requirement_link = f"{document_link}#{local_link}"
+        self.req_link_cache[link_cache_key][node] = requirement_link
+        return requirement_link
 
     def render_requirement_link_from_source_file(self, node, source_file):
         assert isinstance(node, Requirement)

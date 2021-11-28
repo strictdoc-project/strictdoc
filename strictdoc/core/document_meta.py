@@ -2,7 +2,7 @@ from strictdoc.export.html.document_type import DocumentType
 
 
 class DocumentMeta:
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         level,
         file_tree_mount_folder,

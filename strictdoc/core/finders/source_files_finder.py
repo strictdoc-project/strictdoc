@@ -7,8 +7,8 @@ from strictdoc.core.file_tree import Folder, FileFinder, File
 from strictdoc.core.source_tree import SourceTree
 
 
-class SourceFile:
-    def __init__(
+class SourceFile:  # pylint: disable=too-many-instance-attributes
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         level,
         full_path,

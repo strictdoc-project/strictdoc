@@ -11,8 +11,8 @@ class RequirementContext:
         self.title_number_string = None
 
 
-class Requirement(Node):
-    def __init__(
+class Requirement(Node):  # pylint: disable=too-many-instance-attributes
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         parent,
         statement,
@@ -120,14 +120,14 @@ class Requirement(Node):
     def get_statement_single_or_multiline(self):
         if self.statement:
             return self.statement
-        elif self.statement_multiline:
+        if self.statement_multiline:
             return self.statement_multiline
         return None
 
     def get_rationale_single_or_multiline(self):
         if self.rationale:
             return self.rationale
-        elif self.rationale_multiline:
+        if self.rationale_multiline:
             return self.rationale_multiline
         return None
 
@@ -140,7 +140,7 @@ class Requirement(Node):
 
 class CompositeRequirement(Requirement):
     def __init__(self, parent, **fields):
-        super(CompositeRequirement, self).__init__(parent, **fields)
+        super().__init__(parent, **fields)
         self.ng_sections = []
         self.ng_document_reference: Optional[DocumentReference] = None
         self.ng_has_requirements = False

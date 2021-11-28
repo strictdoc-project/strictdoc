@@ -62,7 +62,7 @@ class HTMLGenerator:
         strictdoc_last_update,
         asset_dirs,
         parallelizer,
-    ):
+    ):  # pylint: disable=too-many-arguments,too-many-statements
         if "html" in config.formats:
             if "html-standalone" in config.formats:
                 export_mode = ExportMode.DOCTREE_AND_STANDALONE
@@ -263,9 +263,9 @@ class HTMLGenerator:
             document,
         )
 
-        if (
-            export_mode == ExportMode.DOCTREE
-            or export_mode == ExportMode.DOCTREE_AND_STANDALONE
+        if export_mode in (
+            ExportMode.DOCTREE,
+            ExportMode.DOCTREE_AND_STANDALONE,
         ):
             # Single Document pages
             document_content = DocumentHTMLGenerator.export(
@@ -316,9 +316,9 @@ class HTMLGenerator:
             with open(document_out_file, "w", encoding="utf8") as file:
                 file.write(document_content)
 
-        if (
-            export_mode == ExportMode.STANDALONE
-            or export_mode == ExportMode.DOCTREE_AND_STANDALONE
+        if export_mode in (
+            ExportMode.STANDALONE,
+            ExportMode.DOCTREE_AND_STANDALONE,
         ):
             # Single Document pages (standalone)
             document_content = DocumentHTMLGenerator.export(

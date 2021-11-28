@@ -14,11 +14,11 @@ class ReqIFSpecificationParser:
         try:
             identifier = attributes["IDENTIFIER"]
         except Exception:
-            raise NotImplementedError(specification_xml)
+            raise NotImplementedError(specification_xml) from None
         try:
             long_name = attributes["LONG-NAME"]
         except Exception:
-            raise NotImplementedError(specification_xml)
+            raise NotImplementedError(specification_xml) from None
 
         specification_children_xml = list(specification_xml)
         # type_xml = None

@@ -2,7 +2,7 @@ import os
 
 
 class StrictDocSemanticError(Exception):
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self, title, message, example, line=None, col=None, filename=None
     ):
         super().__init__(title, message, line, col, filename)

@@ -183,14 +183,15 @@ def lint_pylint(context):
           --rcfile=.pylint.ini
           --disable=all
           --fail-under=10.0
-          --enable=R0201,R1710,R1719,C0103,C0209,C0303,C0411,C1801,W0703,W0231,W0235,W0612,W0613
+          --enable=E1101,R0201,R0902,R0913,R1701,R1705,R1710,R1714,R1719,R1725,C0103,C0209,C0303,C0411,C1801,W0703,W0231,W0235,W0612,W0613,W0640,W0707,W1514
           strictdoc/ tasks.py
         &&
         pylint
           --rcfile=.pylint.ini
+          --disable=c-extension-no-member
           --exit-zero
           strictdoc/ tasks.py
-        """
+        """  # pylint: disable=line-too-long
     )
     try:
         run_invoke_cmd(context, command)

@@ -22,7 +22,7 @@ class DoorsReqIFReqIFStage2Parser(AbstractReqIFStage2Parser):
             return document
 
         specification = reqif_bundle.specifications[0]
-
+        document.name = specification.long_name
         document.section_contents = []
         current_section = document
 

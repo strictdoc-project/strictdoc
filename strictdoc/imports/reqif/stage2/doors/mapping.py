@@ -41,7 +41,7 @@ class DoorsMapping:
     # }
 
     @staticmethod
-    def create_document():
+    def create_document() -> Document:
         document_config = DocumentConfig(
             parent=None,
             version=None,

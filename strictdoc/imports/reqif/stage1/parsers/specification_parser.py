@@ -14,7 +14,11 @@ class ReqIFSpecificationParser:
         try:
             identifier = attributes["IDENTIFIER"]
         except Exception:
-            raise NotImplementedError
+            raise NotImplementedError(specification_xml)
+        try:
+            long_name = attributes["LONG-NAME"]
+        except Exception:
+            raise NotImplementedError(specification_xml)
 
         specification_children_xml = list(specification_xml)
         # type_xml = None
@@ -31,4 +35,6 @@ class ReqIFSpecificationParser:
             for child_xml in children_xml:
                 spec_hierarchy_xml = ReqIFSpecHierarchyParser.parse(child_xml)
                 children.append(spec_hierarchy_xml)
-        return ReqIFSpecification(identifier, None, children)
+        return ReqIFSpecification(
+            identifier=identifier, long_name=long_name, children=children
+        )

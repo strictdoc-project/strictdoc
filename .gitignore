@@ -19,3 +19,8 @@ tests/integration/**/output/**
 tests/integration/**/sandbox/**
 .lit_test_times.txt
 
+# Coverage
+.coverage
+coverage.xml
+htmlcov/
+

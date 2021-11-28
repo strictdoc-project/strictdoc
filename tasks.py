@@ -84,13 +84,38 @@ def sphinx(context):
 
 @task
 def test_unit(context):
-    command = oneline_command(
+    run_invoke_cmd(
+        context,
+        oneline_command(
+            """
+        coverage run
+            --rcfile=.coveragerc
+            --branch
+            -m pytest
+            tests/unit/
         """
-        pytest --capture=no
+        ),
+    )
+    run_invoke_cmd(
+        context,
+        oneline_command(
+            """
+        coverage report --sort=cover
         """
+        ),
     )
 
-    run_invoke_cmd(context, command)
+
+@task(test_unit)
+def test_coverage_report(context):
+    run_invoke_cmd(
+        context,
+        oneline_command(
+            """
+        coverage html
+        """
+        ),
+    )
 
 
 @task(clean)

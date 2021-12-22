@@ -23,6 +23,7 @@ from strictdoc.backend.dsl.models.requirement import (
     Requirement,
     CompositeRequirement,
     RequirementComment,
+    RequirementField,
 )
 from strictdoc.backend.dsl.models.section import Section, FreeText
 from strictdoc.backend.dsl.models.special_field import SpecialField
@@ -39,6 +40,7 @@ DOCUMENT_MODELS = [
     RequirementComment,
     Section,
     Requirement,
+    RequirementField,
     CompositeRequirement,
     # Body,
     SpecialField,

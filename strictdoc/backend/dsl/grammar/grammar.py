@@ -1,42 +1,4 @@
-import string
-
-
-# Strings with embedded variables in Python
-# https://stackoverflow.com/a/16553401/598057
-class RubyTemplate(string.Template):
-    delimiter = "#"
-
-
-REQUIREMENT_FIELDS = """
-  ('UID: ' uid = /.+$/ '\n')?
-
-  ('LEVEL: ' level = /.*/ '\n')?
-
-  ('STATUS: ' status = RequirementStatus '\n')?
-
-  ('TAGS: ' (tags = TagRegex) tags *= TagXs '\n')?
-
-  ('SPECIAL_FIELDS:' '\n' special_fields += SpecialField)?
-
-  ('REFS:' '\n' references *= Reference)?
-
-  ('TITLE: ' title = /.*$/ '\n')?
-
-  ('STATEMENT: ' (
-    statement = SingleLineString | statement_multiline = MultiLineString
-  ) '\n')?
-
-  ('BODY: ' body = MultiLineString '\n' )?
-
-  ('RATIONALE: ' (
-    rationale = SingleLineString | rationale_multiline = MultiLineString
-  ) '\n')?
-
-  comments *= RequirementComment
-"""
-
-STRICTDOC_GRAMMAR = RubyTemplate(
-    """
+STRICTDOC_GRAMMAR = """
 Document[noskipws]:
   '[DOCUMENT]' '\n'
   // NAME: is deprecated. Both documents and sections now have TITLE:.
@@ -121,14 +83,28 @@ SpaceThenFreeText[noskipws]:
 
 Requirement[noskipws]:
   '[' requirement_type = /[A-Z]+[A-Z_]*?/ ']' '\n'
+  fields *= RequirementField
+;
 
-  #{REQUIREMENT_FIELDS}
+RequirementField[noskipws]:
+  (
+    field_name = /[A-Z]+[A-Z_]*?/ ':'
+    (
+      (' ' (field_value = SingleLineString) '\n') |
+      (' ' (field_value_multiline = MultiLineString) '\n') |
+      ('\n' field_value_references += Reference)
+    )
+  ) |
+  (
+    field_name = 'SPECIAL_FIELDS' ':' '\n'
+    field_value_special_fields += SpecialField
+  )?
 ;
 
 CompositeRequirement[noskipws]:
   '[COMPOSITE_' requirement_type = /[A-Z]+[A-Z_]*?/ ']' '\n'
 
-  #{REQUIREMENT_FIELDS}
+  fields *= RequirementField
 
   requirements *= SpaceThenRequirement
 
@@ -155,22 +131,6 @@ RequirementComment[noskipws]:
   'COMMENT: ' (
     comment_single = SingleLineString | comment_multiline = MultiLineString
   ) '\n'
-;
-
-Reference[noskipws]:
-  // FileReference is an early, experimental feature. Do not use yet.
-  ParentReqReference | FileReference
-;
-
-ParentReqReference[noskipws]:
-  '- TYPE: ' ref_type = 'Parent' '\n'
-  '  VALUE: ' path = /.*$/ '\n'
-;
-
-FileReference[noskipws]:
-  // FileReference is an early, experimental feature. Do not use yet.
-  '- TYPE: ' ref_type = 'File' '\n'
-  '  VALUE: ' path = /.*$/ '\n'
 ;
 
 FreeText[noskipws]:
@@ -200,4 +160,3 @@ InlineLink[noskipws]:
 ;
 \n
 """
-).substitute(REQUIREMENT_FIELDS=REQUIREMENT_FIELDS)

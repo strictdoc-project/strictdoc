@@ -7,7 +7,7 @@ from strictdoc.backend.dsl.reader import SDReader
 
 
 def test_001_custom_fields():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 SPECIAL_FIELDS:
@@ -25,7 +25,7 @@ TITLE: Requirement 1
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     requirement = document.section_contents[0]

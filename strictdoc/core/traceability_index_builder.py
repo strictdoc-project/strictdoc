@@ -81,10 +81,11 @@ class TraceabilityIndexBuilder:
                     continue
                 requirement: Requirement = node
                 document_tags = tags_map[document.name]
-                for tag in requirement.tags:
-                    if tag not in document_tags:
-                        document_tags[tag] = 0
-                    document_tags[tag] += 1
+                if requirement.tags is not None:
+                    for tag in requirement.tags:
+                        if tag not in document_tags:
+                            document_tags[tag] = 0
+                        document_tags[tag] += 1
                 if requirement.uid not in requirements_children_map:
                     requirements_children_map[requirement.uid] = []
                 for ref in requirement.references:

@@ -1,0 +1,11 @@
+[DOCUMENT]
+TITLE: Test document
+
+[GRAMMAR]
+
+[REQUIREMENT]
+UID: ABC-123
+LEVEL: 1.2.3
+DESCRIPTION: Requirement 7.8.9
+ASIL: A
+STATUS: Draft

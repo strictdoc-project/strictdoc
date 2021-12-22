@@ -2,6 +2,7 @@ from enum import Enum
 
 from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.document_config import DocumentConfig
+from strictdoc.backend.dsl.models.object_factory import SDocObjectFactory
 from strictdoc.backend.dsl.models.requirement import Requirement
 from strictdoc.backend.dsl.models.section import Section
 from strictdoc.imports.reqif.stage1.models.reqif_spec_object import (
@@ -120,23 +121,18 @@ class DoorsMapping:
         statement = spec_object.attribute_map[ReqIFField.STATEMENT.value]
         statement = statement if statement else "<STATEMENT MISSING>"
 
-        requirement = Requirement(
+        requirement = SDocObjectFactory.create_requirement(
             parent=document,
             requirement_type="REQUIREMENT",
-            statement=statement,
-            statement_multiline=None,
             uid=uid,
             level=uid,
-            status=None,
-            tags=None,
-            references=[],
             title=None,
-            body=None,
+            statement=statement,
+            statement_multiline=None,
+            tags=None,
             rationale=None,
             rationale_multiline=None,
             comments=[],
-            special_fields=None,
-            requirements=None,
         )
         requirement.ng_level = level
         return requirement

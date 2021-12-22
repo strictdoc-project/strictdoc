@@ -30,6 +30,70 @@ TITLE: Test Doc
     assert sdoc_input == output
 
 
+def test_002_minimal_req():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+TITLE: Hello
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+def test_003_several_comments():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+TITLE: Hello
+COMMENT: Comment #1
+COMMENT: Comment #2
+COMMENT: Comment #3
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+def test_004_several_tags():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+TAGS: A, B, C, D
+TITLE: Hello
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
 def test_010_multiple_sections():
     input = """
 [DOCUMENT]
@@ -195,7 +259,7 @@ This is a statement 3
 
 
 def test_032_multiline_body():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -215,13 +279,13 @@ This is a body part 3
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
     assert isinstance(
         document.section_contents[0].section_contents[0], Requirement
@@ -494,7 +558,7 @@ STATEMENT: 1
 
 
 def test_060_file_ref():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -506,10 +570,10 @@ REFS:
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
-    document: Document = reader.read(input)
+    document: Document = reader.read(input_sdoc)
     requirement = document.section_contents[0]
     assert len(requirement.references) == 1
     assert requirement.references[0].ref_type == "File"
@@ -518,7 +582,7 @@ REFS:
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
 
 def test_070_document_config_version():
@@ -574,7 +638,7 @@ REFS:
 
 
 def test_100_basic_test():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 SPECIAL_FIELDS:
@@ -614,7 +678,7 @@ COMMENT: This requirement is very important
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     assert isinstance(
@@ -628,7 +692,7 @@ COMMENT: This requirement is very important
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
 
 def test_081_document_config_markup_not_specified():

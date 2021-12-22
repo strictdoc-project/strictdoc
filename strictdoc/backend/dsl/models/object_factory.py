@@ -1,7 +1,10 @@
-from typing import Optional
+from typing import Optional, List
 
 from strictdoc.backend.dsl.models.document import Document
-from strictdoc.backend.dsl.models.requirement import Requirement
+from strictdoc.backend.dsl.models.requirement import (
+    Requirement,
+    RequirementField,
+)
 
 
 class SDocObjectFactory:
@@ -14,6 +17,133 @@ class SDocObjectFactory:
             grammar=None,
             free_texts=[],
             section_contents=[],
+        )
+
+    @staticmethod
+    def create_requirement(  # pylint: disable=too-many-arguments
+        parent,
+        requirement_type: str,
+        uid: Optional[str],
+        level: Optional[str],
+        title: Optional[str],
+        statement: Optional[str],
+        statement_multiline: Optional[str],
+        rationale: Optional[str],
+        rationale_multiline: Optional[str],
+        tags: Optional[str],
+        comments: Optional[List[str]],
+    ) -> Requirement:
+        fields: List[RequirementField] = []
+        if uid:
+            assert isinstance(uid, str) and len(uid) > 0
+            fields.append(
+                RequirementField(
+                    parent=None,
+                    field_name="UID",
+                    field_value=uid,
+                    field_value_multiline=None,
+                    field_value_references=None,
+                    field_value_special_fields=None,
+                )
+            )
+        if level:
+            assert isinstance(level, str) and len(level) > 0
+            fields.append(
+                RequirementField(
+                    parent=None,
+                    field_name="LEVEL",
+                    field_value=level,
+                    field_value_multiline=None,
+                    field_value_references=None,
+                    field_value_special_fields=None,
+                )
+            )
+        if title:
+            fields.append(
+                RequirementField(
+                    parent=None,
+                    field_name="TITLE",
+                    field_value=title,
+                    field_value_multiline=None,
+                    field_value_references=None,
+                    field_value_special_fields=None,
+                )
+            )
+        if statement:
+            fields.append(
+                RequirementField(
+                    parent=None,
+                    field_name="STATEMENT",
+                    field_value=statement,
+                    field_value_multiline=None,
+                    field_value_references=None,
+                    field_value_special_fields=None,
+                )
+            )
+        if statement_multiline:
+            assert isinstance(
+                statement_multiline, str
+            ), f"{statement_multiline}"
+            fields.append(
+                RequirementField(
+                    parent=None,
+                    field_name="STATEMENT",
+                    field_value=None,
+                    field_value_multiline=statement_multiline,
+                    field_value_references=None,
+                    field_value_special_fields=None,
+                )
+            )
+        if rationale:
+            fields.append(
+                RequirementField(
+                    parent=None,
+                    field_name="RATIONALE",
+                    field_value=rationale,
+                    field_value_multiline=None,
+                    field_value_references=None,
+                    field_value_special_fields=None,
+                )
+            )
+        if rationale_multiline:
+            fields.append(
+                RequirementField(
+                    parent=None,
+                    field_name="RATIONALE",
+                    field_value=None,
+                    field_value_multiline=rationale_multiline,
+                    field_value_references=None,
+                    field_value_special_fields=None,
+                )
+            )
+        if tags is not None:
+            assert isinstance(tags, str), f"{tags}"
+            fields.append(
+                RequirementField(
+                    parent=None,
+                    field_name="TAGS",
+                    field_value=tags,
+                    field_value_multiline=None,
+                    field_value_references=None,
+                    field_value_special_fields=None,
+                )
+            )
+        if comments is not None:
+            assert isinstance(comments, list), f"{comments}"
+            for comment in comments:
+                assert isinstance(comment, str), f"{comment}"
+                fields.append(
+                    RequirementField(
+                        parent=None,
+                        field_name="COMMENT",
+                        field_value=None,
+                        field_value_multiline=comment,
+                        field_value_references=None,
+                        field_value_special_fields=None,
+                    )
+                )
+        return Requirement(
+            parent=parent, requirement_type=requirement_type, fields=fields
         )
 
     @staticmethod
@@ -47,23 +177,18 @@ class SDocObjectFactory:
             if isinstance(rationale_multiline_, str):
                 rationale_multiline = rationale_multiline_
 
-        requirement = Requirement(
+        requirement = SDocObjectFactory.create_requirement(
             parent=parent,
             requirement_type="REQUIREMENT",
-            statement=None,
-            statement_multiline=statement_multiline,
             uid=uid,
             level=None,
-            status=None,
-            tags=None,
-            references=[],
             title=title,
-            body=None,
+            statement=None,
+            statement_multiline=statement_multiline,
             rationale=None,
             rationale_multiline=rationale_multiline,
-            comments=[],
-            special_fields=[],
-            requirements=None,
+            tags=None,
+            comments=None,
         )
 
         requirement.ng_level = level

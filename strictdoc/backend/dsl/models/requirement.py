@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from typing import Optional, List
 
 from strictdoc.backend.dsl.document_reference import DocumentReference
@@ -11,24 +12,48 @@ class RequirementContext:
         self.title_number_string = None
 
 
+class RequirementField:
+    def __init__(  # pylint: disable=too-many-arguments
+        self,
+        parent,
+        field_name: str,
+        field_value: Optional[str],
+        field_value_multiline: Optional[str],
+        field_value_references: Optional[List[Reference]],
+        field_value_special_fields: Optional[List[SpecialField]],
+    ):
+        self.parent = parent
+        self.field_name = field_name
+        self.field_value: Optional[str] = field_value
+        self.field_value_multiline: Optional[str] = field_value_multiline
+        self.field_value_references: Optional[
+            List[Reference]
+        ] = field_value_references
+        self.field_value_special_fields: Optional[
+            List[SpecialField]
+        ] = field_value_special_fields
+
+    def __str__(self):
+        return (
+            f"{self.__class__.__name__}("
+            f"field_name: {self.field_name}, "
+            f"field_value: {self.field_value}"
+            f"field_value_multiline: {self.field_value_multiline}"
+            f"field_value_references: {self.field_value_references}"
+            f"field_value_special_fields: {self.field_value_special_fields}"
+            ")"
+        )
+
+    def __repr__(self):
+        return self.__str__()
+
+
 class Requirement(Node):  # pylint: disable=too-many-instance-attributes
     def __init__(  # pylint: disable=too-many-arguments
         self,
         parent,
         requirement_type: str,
-        statement: Optional[str],
-        statement_multiline: Optional[str],
-        uid,
-        level: Optional[str],
-        status,
-        tags,
-        references: List[Reference],
-        title: Optional[str],
-        body,
-        rationale,
-        rationale_multiline,
-        comments,
-        special_fields: List[SpecialField],
+        fields: List[RequirementField],
         requirements=None,
     ):
         assert parent
@@ -38,6 +63,74 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
 
         self.requirement_type: str = requirement_type
 
+        uid = None
+        level = None
+        status = None
+        tags = None
+        references = []
+        title = None
+        statement = None
+        statement_multiline = None
+        body = None
+        rationale = None
+        rationale_multiline = None
+        comments: [RequirementComment] = []
+        special_fields = []
+
+        ordered_fields_lookup = OrderedDict()
+        for field in fields:
+            ordered_fields_lookup.setdefault(field.field_name, []).append(field)
+
+        if "UID" in ordered_fields_lookup:
+            uid = ordered_fields_lookup["UID"][0].field_value
+        if "LEVEL" in ordered_fields_lookup:
+            level = ordered_fields_lookup["LEVEL"][0].field_value
+        if "STATUS" in ordered_fields_lookup:
+            status = ordered_fields_lookup["STATUS"][0].field_value
+        if "TAGS" in ordered_fields_lookup:
+            tags = ordered_fields_lookup["TAGS"][0].field_value.split(", ")
+        if "REFS" in ordered_fields_lookup:
+            references = ordered_fields_lookup["REFS"][0].field_value_references
+        if "TITLE" in ordered_fields_lookup:
+            title = ordered_fields_lookup["TITLE"][0].field_value
+        if "STATEMENT" in ordered_fields_lookup:
+            field = ordered_fields_lookup["STATEMENT"][0]
+            if field.field_value_multiline:
+                statement_multiline = field.field_value_multiline
+            else:
+                statement = field.field_value
+        if "RATIONALE" in ordered_fields_lookup:
+            field = ordered_fields_lookup["RATIONALE"][0]
+            if field.field_value_multiline:
+                rationale_multiline = field.field_value_multiline
+            else:
+                rationale = field.field_value
+        if "COMMENT" in ordered_fields_lookup:
+            for comment_field in ordered_fields_lookup["COMMENT"]:
+                field = comment_field
+                if field.field_value_multiline:
+                    comments.append(
+                        RequirementComment(
+                            parent=self,
+                            comment_single=None,
+                            comment_multiline=field.field_value_multiline,
+                        )
+                    )
+                else:
+                    comments.append(
+                        RequirementComment(
+                            parent=self,
+                            comment_single=field.field_value,
+                            comment_multiline=None,
+                        )
+                    )
+        if "BODY" in ordered_fields_lookup:
+            body = ordered_fields_lookup["BODY"][0].field_value_multiline
+        if "SPECIAL_FIELDS" in ordered_fields_lookup:
+            special_fields = ordered_fields_lookup["SPECIAL_FIELDS"][
+                0
+            ].field_value_special_fields
+
         # TODO: Why textX creates empty uid when the sdoc doesn't declare the
         # UID field?
         self.uid = (
@@ -45,7 +138,7 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         )
         self.level: Optional[str] = level
         self.status = status
-        self.tags = tags
+        self.tags: Optional[str] = tags
 
         assert isinstance(references, List)
         self.references: List[Reference] = references
@@ -70,6 +163,7 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
 
         # TODO: Is it worth to move this to dedicated Presenter* classes to
         # keep this class textx-only?
+        self.ordered_fields_lookup = ordered_fields_lookup
         self.ng_level = None
         self.ng_document_reference: Optional[DocumentReference] = None
         self.context = RequirementContext()
@@ -171,13 +265,18 @@ class Body:
 
 
 class RequirementComment:
-    def __init__(self, parent, comment_single, comment_multiline):
+    def __init__(
+        self,
+        parent,
+        comment_single: Optional[str],
+        comment_multiline: Optional[str],
+    ):
         self.parent = parent
-        self.comment_single = comment_single
+        self.comment_single: Optional[str] = comment_single
 
         # Due to the details of how matching single vs multistring lines is
         # implemented, the rstrip() is done to simplify SDoc code generation.
-        self.comment_multiline = (
+        self.comment_multiline: Optional[str] = (
             comment_multiline.rstrip() if comment_multiline else None
         )
 

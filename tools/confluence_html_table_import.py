@@ -5,6 +5,8 @@ import sys
 import bs4
 from bs4 import BeautifulSoup
 
+from strictdoc.backend.dsl.models.object_factory import SDocObjectFactory
+
 STRICTDOC_ROOT_PATH = os.path.join(os.path.dirname(__file__), "..")
 sys.path.append(STRICTDOC_ROOT_PATH)
 
@@ -57,24 +59,18 @@ class ConfluenceHTMLTableImport:
                 statement = req["STATEMENT"]
                 rationale = req["RATIONALE"]
                 comment = req["COMMENT"]
-                sreq = Requirement(
-                    section,
-                    "REQUIREMENT",
-                    None,
-                    statement,
-                    uid,
-                    None,
-                    None,
-                    None,
-                    [],
-                    title,
-                    None,
-                    None,
-                    rationale,
-                    [RequirementComment(None, None, comment)]
-                    if comment
-                    else [],
-                    None,
+                sreq = SDocObjectFactory.create_requirement(
+                    parent=section,
+                    requirement_type="REQUIREMENT",
+                    uid=uid,
+                    level=None,
+                    title=title,
+                    statement=None,
+                    statement_multiline=statement,
+                    rationale=None,
+                    rationale_multiline=rationale,
+                    tags=None,
+                    comments=[comment] if len(comment) else None,
                 )
                 sreq.ng_level = 2
                 section.section_contents.append(sreq)

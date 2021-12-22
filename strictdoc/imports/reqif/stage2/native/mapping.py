@@ -2,6 +2,7 @@ from enum import Enum
 
 from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.document_config import DocumentConfig
+from strictdoc.backend.dsl.models.object_factory import SDocObjectFactory
 from strictdoc.backend.dsl.models.reference import Reference
 from strictdoc.backend.dsl.models.requirement import Requirement
 from strictdoc.backend.dsl.models.section import Section
@@ -80,23 +81,18 @@ class StrictDocReqIFMapping:
         statement = spec_object.attribute_map[ReqIFField.STATEMENT.value]
         statement = statement if statement else "<STATEMENT MISSING>"
 
-        requirement = Requirement(
+        requirement = SDocObjectFactory.create_requirement(
             parent=document,
             requirement_type="REQUIREMENT",
             statement=statement,
             statement_multiline=None,
             uid=uid,
             level=None,
-            status=None,
             tags=None,
-            references=[],
             title=None,
-            body=None,
             rationale=None,
             rationale_multiline=None,
             comments=[],
-            special_fields=[],
-            requirements=None,
         )
         requirement.ng_level = level
 

@@ -3,8 +3,8 @@ import traceback
 
 from textx import metamodel_from_str
 
+from strictdoc.backend.dsl.grammar.grammar_builder import SDocGrammarBuilder
 from strictdoc.backend.dsl.error_handling import StrictDocSemanticError
-from strictdoc.backend.dsl.grammar import STRICTDOC_GRAMMAR
 from strictdoc.backend.dsl.models.config_special_field import ConfigSpecialField
 from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.document_config import DocumentConfig
@@ -46,7 +46,9 @@ class SDReader:
     @staticmethod
     def read(input_string, file_path=None):
         meta_model = metamodel_from_str(
-            STRICTDOC_GRAMMAR, classes=DOCUMENT_MODELS, use_regexp_group=True
+            SDocGrammarBuilder.create_grammar(),
+            classes=DOCUMENT_MODELS,
+            use_regexp_group=True,
         )
 
         parse_context = ParseContext()
@@ -64,9 +66,7 @@ class SDReader:
 
         meta_model.register_obj_processors(obj_processors)
 
-        document = meta_model.model_from_str(
-            input_string, file_name=file_path
-        )
+        document = meta_model.model_from_str(input_string, file_name=file_path)
         parse_context.document_reference.set_document(document)
 
         # HACK:

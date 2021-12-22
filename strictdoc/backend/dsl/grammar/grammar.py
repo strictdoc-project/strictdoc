@@ -134,24 +134,6 @@ RequirementComment[noskipws]:
   ) '\n'
 ;
 
-SingleLineString:
-  (!MultiLineStringStart /./)*
-;
-
-MultiLineStringStart[noskipws]:
-  '>>>' '\n'
-;
-
-MultiLineStringEnd[noskipws]:
-  '<<<'
-;
-
-MultiLineString[noskipws]:
-  MultiLineStringStart-
-  (!MultiLineStringEnd /(?ms)./)*
-  MultiLineStringEnd-
-;
-
 Reference[noskipws]:
   // FileReference is an early, experimental feature. Do not use yet.
   ParentReqReference | FileReference
@@ -193,5 +175,6 @@ InlineLinkStart: '[LINK: ';
 InlineLink[noskipws]:
   InlineLinkStart value = /[^\\]]*/ ']'
 ;
+\n
 """
 ).substitute(REQUIREMENT_FIELDS=REQUIREMENT_FIELDS)

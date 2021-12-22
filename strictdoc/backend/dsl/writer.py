@@ -76,6 +76,25 @@ class SDWriter:
                     output += "On" if document_config.auto_levels else "Off"
                     output += "\n"
 
+        document_grammar = document.grammar
+        if document_grammar:
+            output += "\n[GRAMMAR]\n"
+            output += "ELEMENTS:\n"
+            for element in document_grammar.elements:
+                output += "- TAG: "
+                output += element.tag
+                output += "\n  FIELDS:\n"
+                for grammar_field in element.fields:
+                    output += "  - TITLE: "
+                    output += grammar_field.title
+                    output += "\n"
+                    output += "    TYPE: "
+                    output += grammar_field.field_type
+                    output += "\n"
+                    output += "    REQUIRED: "
+                    output += "True" if grammar_field.required else "False"
+                    output += "\n"
+
         for free_text in document.free_texts:
             output += "\n"
             output += self._print_free_text(free_text)

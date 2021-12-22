@@ -42,8 +42,31 @@ Document[noskipws]:
   // NAME: is deprecated. Both documents and sections now have TITLE:.
   (('NAME: ' name = /.*$/ '\n') | ('TITLE: ' title = /.*$/ '\n')?)
   (config = DocumentConfig)?
+  ('\n' grammar = DocumentGrammar)?
   free_texts *= SpaceThenFreeText
   section_contents *= SectionOrRequirement
+;
+
+DocumentGrammar[noskipws]:
+  '[GRAMMAR]' '\n'
+  'ELEMENTS:' '\n'
+  elements += GrammarElement
+;
+
+GrammarElement[noskipws]:
+  '- TAG: ' tag = /.*$/ '\n'
+  '  FIELDS:' '\n'
+  fields += GrammarElementField
+;
+
+GrammarElementField[noskipws]:
+  '  - TITLE: ' title=/.*$/ '\n'
+  '    TYPE: ' field_type = /.*$/ '\n'
+  '    REQUIRED: ' (required = BooleanChoice) '\n'
+;
+
+BooleanChoice[noskipws]:
+  ('True' | 'False')
 ;
 
 DocumentConfig[noskipws]:
@@ -97,13 +120,13 @@ SpaceThenFreeText[noskipws]:
 ;
 
 Requirement[noskipws]:
-  '[REQUIREMENT]' '\n'
+  '[' requirement_type = /[A-Z]+[A-Z_]*?/ ']' '\n'
 
   #{REQUIREMENT_FIELDS}
 ;
 
 CompositeRequirement[noskipws]:
-  '[COMPOSITE_REQUIREMENT]' '\n'
+  '[COMPOSITE_' requirement_type = /[A-Z]+[A-Z_]*?/ ']' '\n'
 
   #{REQUIREMENT_FIELDS}
 

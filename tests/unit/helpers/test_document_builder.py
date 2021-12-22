@@ -27,6 +27,7 @@ class DocumentBuilder:
 
         requirement = Requirement(
             parent,
+            "REQUIREMENT",
             statement,
             statement_multiline,
             uid,
@@ -64,6 +65,6 @@ class DocumentBuilder:
         free_texts = []
         section_contents = []
         document = Document(
-            None, "Test Document", config, free_texts, section_contents
+            None, "Test Document", config, None, free_texts, section_contents
         )
         return document

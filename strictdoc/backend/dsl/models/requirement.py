@@ -15,8 +15,9 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
     def __init__(  # pylint: disable=too-many-arguments
         self,
         parent,
-        statement,
-        statement_multiline,
+        requirement_type: str,
+        statement: Optional[str],
+        statement_multiline: Optional[str],
         uid,
         level: Optional[str],
         status,
@@ -31,8 +32,11 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         requirements=None,
     ):
         assert parent
+        assert isinstance(requirement_type, str)
 
         self.parent = parent
+
+        self.requirement_type: str = requirement_type
 
         # TODO: Why textX creates empty uid when the sdoc doesn't declare the
         # UID field?
@@ -47,7 +51,7 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         self.references: List[Reference] = references
 
         self.title = title
-        self.statement = statement
+        self.statement: Optional[str] = statement
         self.rationale = rationale
         self.comments = comments
         self.special_fields = special_fields
@@ -56,7 +60,7 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         # For multiline fields:
         # Due to the details of how matching single vs multistring lines is
         # implemented, the rstrip() is done to simplify SDoc code generation.
-        self.statement_multiline: str = (
+        self.statement_multiline: Optional[str] = (
             statement_multiline.rstrip() if statement_multiline else None
         )
         self.body = body.rstrip() if body else None
@@ -195,55 +199,3 @@ class RequirementComment:
             else self.comment_multiline
         )
         return comment
-
-
-def requirement_from_dict(requirement_dict, parent, level):
-    assert requirement_dict is not None
-    assert parent
-    assert isinstance(level, int)
-    assert level > 0
-
-    uid = None
-    if "UID" in requirement_dict:
-        uid_ = requirement_dict["UID"]
-        if isinstance(uid_, str):
-            uid = uid_
-
-    title = None
-    if "TITLE" in requirement_dict:
-        title_ = requirement_dict["TITLE"]
-        if isinstance(title_, str):
-            title = title_
-
-    statement_multiline = None
-    if "STATEMENT" in requirement_dict:
-        statement_multiline_ = requirement_dict["STATEMENT"]
-        if isinstance(statement_multiline_, str):
-            statement_multiline = statement_multiline_
-
-    rationale_multiline = None
-    if "RATIONALE" in requirement_dict:
-        rationale_multiline_ = requirement_dict["RATIONALE"]
-        if isinstance(rationale_multiline_, str):
-            rationale_multiline = rationale_multiline_
-
-    requirement = Requirement(
-        parent,
-        None,
-        statement_multiline,
-        uid,
-        None,
-        None,
-        None,
-        [],
-        title,
-        None,
-        None,
-        rationale_multiline,
-        [],
-        [],
-        requirements=None,
-    )
-
-    requirement.ng_level = level
-    return requirement

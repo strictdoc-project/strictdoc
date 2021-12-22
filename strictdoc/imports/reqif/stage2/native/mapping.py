@@ -41,7 +41,7 @@ class StrictDocReqIFMapping:
             auto_levels=None,
         )
         document = Document(
-            None, "Empty ReqIF document", document_config, [], []
+            None, "Empty ReqIF document", document_config, None, [], []
         )
         return document
 
@@ -82,6 +82,7 @@ class StrictDocReqIFMapping:
 
         requirement = Requirement(
             parent=document,
+            requirement_type="REQUIREMENT",
             statement=statement,
             statement_multiline=None,
             uid=uid,

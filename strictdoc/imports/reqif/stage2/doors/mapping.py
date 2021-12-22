@@ -51,7 +51,7 @@ class DoorsMapping:
             auto_levels="Off",
         )
         document = Document(
-            None, "Empty ReqIF document", document_config, [], []
+            None, "Empty ReqIF document", document_config, None, [], []
         )
         assert not document.config.auto_levels
         return document
@@ -122,6 +122,7 @@ class DoorsMapping:
 
         requirement = Requirement(
             parent=document,
+            requirement_type="REQUIREMENT",
             statement=statement,
             statement_multiline=None,
             uid=uid,

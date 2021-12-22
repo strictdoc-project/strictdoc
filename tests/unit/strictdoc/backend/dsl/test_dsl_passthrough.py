@@ -305,7 +305,7 @@ This is a Rationale line 3
 
 
 def test_040_composite_requirement_1_level():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -335,13 +335,13 @@ This is a child body part 3
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
     assert isinstance(
         document.section_contents[0].section_contents[0], CompositeRequirement
@@ -741,6 +741,31 @@ STATEMENT: ABC
     requirement = section.section_contents[0]
     assert isinstance(requirement, Requirement)
     assert requirement.level == "456"
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+def test_150_minimal_doc():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: LOW-LEVEL-REQUIREMENT
+  FIELDS:
+  - TITLE: CUSTOM_FIELD
+    TYPE: String
+    REQUIRED: True
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
 
     writer = SDWriter()
     output = writer.write(document)

@@ -8,6 +8,11 @@ from strictdoc.backend.dsl.error_handling import StrictDocSemanticError
 from strictdoc.backend.dsl.models.config_special_field import ConfigSpecialField
 from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.document_config import DocumentConfig
+from strictdoc.backend.dsl.models.document_grammar import (
+    DocumentGrammar,
+    GrammarElement,
+    GrammarElementField,
+)
 from strictdoc.backend.dsl.models.inline_link import InlineLink
 from strictdoc.backend.dsl.models.reference import (
     Reference,
@@ -28,6 +33,9 @@ DOCUMENT_MODELS = [
     DocumentConfig,
     ConfigSpecialField,
     Document,
+    DocumentGrammar,
+    GrammarElement,
+    GrammarElementField,
     RequirementComment,
     Section,
     Requirement,

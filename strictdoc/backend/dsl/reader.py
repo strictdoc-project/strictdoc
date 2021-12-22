@@ -43,12 +43,12 @@ DOCUMENT_MODELS = [
 
 
 class SDReader:
-    def __init__(self):
-        self.meta_model = metamodel_from_str(
+    @staticmethod
+    def read(input_string, file_path=None):
+        meta_model = metamodel_from_str(
             STRICTDOC_GRAMMAR, classes=DOCUMENT_MODELS, use_regexp_group=True
         )
 
-    def read(self, input_string, file_path=None):
         parse_context = ParseContext()
 
         processor = SDocParsingProcessor(parse_context=parse_context)
@@ -62,9 +62,9 @@ class SDReader:
             "FreeText": processor.process_free_text,
         }
 
-        self.meta_model.register_obj_processors(obj_processors)
+        meta_model.register_obj_processors(obj_processors)
 
-        document = self.meta_model.model_from_str(
+        document = meta_model.model_from_str(
             input_string, file_name=file_path
         )
         parse_context.document_reference.set_document(document)

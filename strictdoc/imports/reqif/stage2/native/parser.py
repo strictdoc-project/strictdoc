@@ -2,6 +2,10 @@ from typing import List
 
 from strictdoc.backend.dsl.models.config_special_field import ConfigSpecialField
 from strictdoc.backend.dsl.models.document import Document
+from strictdoc.backend.dsl.models.requirement import (
+    Requirement,
+    RequirementField,
+)
 from strictdoc.backend.dsl.models.section import Section
 from strictdoc.imports.reqif.stage1.models.reqif_bundle import ReqIFBundle
 from strictdoc.imports.reqif.stage2.abstract_parser import (
@@ -62,11 +66,13 @@ class StrictDocReqIFStage2Parser(AbstractReqIFStage2Parser):
                 else:
                     raise NotImplementedError
             elif mapping.is_spec_object_requirement(spec_object):
-                requirement = mapping.create_requirement_from_spec_object(
-                    spec_object,
-                    document,
-                    current_hierarchy.level,
-                    special_fields,
+                requirement: Requirement = (
+                    mapping.create_requirement_from_spec_object(
+                        spec_object,
+                        document,
+                        current_hierarchy.level,
+                        special_fields,
+                    )
                 )
                 spec_object_parents = reqif_bundle.get_spec_object_parents(
                     spec_object.identifier
@@ -78,7 +84,17 @@ class StrictDocReqIFStage2Parser(AbstractReqIFStage2Parser):
                             requirement, spec_object_parent
                         )
                     )
-                requirement.references = parent_refs
+                if len(parent_refs) > 0:
+                    requirement.ordered_fields_lookup["REFS"] = [
+                        RequirementField(
+                            parent=requirement,
+                            field_name="REFS",
+                            field_value=None,
+                            field_value_multiline=None,
+                            field_value_references=parent_refs,
+                            field_value_special_fields=None,
+                        )
+                    ]
                 current_section.section_contents.append(requirement)
             else:
                 continue

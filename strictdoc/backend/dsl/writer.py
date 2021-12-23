@@ -153,95 +153,61 @@ class SDWriter:
         return output
 
     @staticmethod
-    def _print_requirement_fields(section_content):
+    def _print_requirement_fields(section_content: Requirement):
         output = ""
 
-        if section_content.uid:
-            output += "UID: "
-            output += section_content.uid
-            output += "\n"
+        default_fields_order = [
+            "UID",
+            "LEVEL",
+            "STATUS",
+            "TAGS",
+            "SPECIAL_FIELDS",
+            "REFS",
+            "TITLE",
+            "STATEMENT",
+            "BODY",
+            "RATIONALE",
+            "COMMENT",
+        ]
+        for field_name in default_fields_order:
+            if field_name not in section_content.ordered_fields_lookup:
+                continue
+            fields = section_content.ordered_fields_lookup[field_name]
+            for field in fields:
+                if field.field_value:
+                    output += f"{field_name}: "
+                    output += field.field_value
+                    output += "\n"
+                elif field.field_value_multiline:
+                    output += f"{field_name}: >>>"
+                    output += "\n"
+                    output += field.field_value_multiline.rstrip()
+                    output += "\n"
+                    output += "<<<"
+                    output += "\n"
+                elif field.field_value_special_fields:
+                    output += "SPECIAL_FIELDS:"
+                    output += "\n"
+                    for special_field in field.field_value_special_fields:
+                        output += (
+                            f"  "
+                            f"{special_field.field_name}: "
+                            f"{special_field.field_value}"
+                        )
+                        output += "\n"
+                elif field.field_value_references:
+                    output += "REFS:"
+                    output += "\n"
 
-        if section_content.level:
-            output += "LEVEL: "
-            output += section_content.level
-            output += "\n"
-
-        if section_content.status:
-            output += "STATUS: "
-            output += section_content.status
-            output += "\n"
-
-        if section_content.tags:
-            output += "TAGS: "
-            output += ", ".join(section_content.tags)
-            output += "\n"
-
-        if section_content.special_fields:
-            output += "SPECIAL_FIELDS:"
-            output += "\n"
-
-            for special_field in section_content.special_fields:
-                output += (
-                    f"  {special_field.field_name}: {special_field.field_value}"
-                )
-                output += "\n"
-
-        if len(section_content.references) > 0:
-            output += "REFS:"
-            output += "\n"
-
-            for reference in section_content.references:
-                output += "- TYPE: "
-                output += reference.ref_type
-                output += "\n"
-                output += "  VALUE: "
-                output += reference.path
-                output += "\n"
-
-        if section_content.title:
-            output += "TITLE: "
-            output += section_content.title
-            output += "\n"
-
-        if section_content.statement:
-            output += "STATEMENT: "
-            output += section_content.statement
-            output += "\n"
-        elif section_content.statement_multiline:
-            output += "STATEMENT: >>>"
-            output += "\n"
-            output += section_content.statement_multiline
-            output += "\n"
-            output += "<<<"
-            output += "\n"
-
-        if section_content.body:
-            output += "BODY: >>>"
-            output += "\n"
-            output += section_content.body
-            output += "\n"
-            output += "<<<"
-            output += "\n"
-
-        if section_content.rationale_multiline:
-            output += "RATIONALE: >>>\n"
-            output += section_content.rationale_multiline
-            output += "\n<<<\n"
-        elif section_content.rationale:
-            output += "RATIONALE: "
-            output += section_content.rationale
-            output += "\n"
-
-        for comment in section_content.comments:
-            if comment.comment_multiline:
-                output += "COMMENT: >>>\n"
-                output += comment.comment_multiline
-                output += "\n<<<\n"
-            else:
-                output += "COMMENT: "
-                output += comment.comment_single
-                output += "\n"
-
+                    for reference in field.field_value_references:
+                        output += "- TYPE: "
+                        output += reference.ref_type
+                        output += "\n"
+                        output += "  VALUE: "
+                        output += reference.path
+                        output += "\n"
+                else:
+                    raise NotImplementedError(field) from None
         return output
 
     @staticmethod

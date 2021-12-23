@@ -1,8 +1,0 @@
-RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
-CHECK: Published: Hello world doc
-
-RUN: cat %S/Output/html/01_option_is_on/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
-
-CHECK-HTML:data-level="1"
-CHECK-HTML:data-level="1.1"
-CHECK-HTML:data-level="1.1.1"

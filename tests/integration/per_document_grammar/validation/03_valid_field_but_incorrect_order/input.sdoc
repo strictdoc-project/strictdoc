@@ -1,0 +1,17 @@
+[DOCUMENT]
+TITLE: Test document
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+
+[REQUIREMENT]
+UID: ABC-123
+TITLE: Title X

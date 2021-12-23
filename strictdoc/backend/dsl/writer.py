@@ -77,7 +77,7 @@ class SDWriter:
                     output += "\n"
 
         document_grammar = document.grammar
-        if document_grammar:
+        if not document_grammar.is_default:
             output += "\n[GRAMMAR]\n"
             output += "ELEMENTS:\n"
             for element in document_grammar.elements:

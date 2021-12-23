@@ -1,0 +1,7 @@
+RUN: %expect_exit 1 %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+
+CHECK:error: could not parse file: {{.*}}input.sdoc.
+CHECK:Semantic error: Unexpected field outside grammar: ONE
+CHECK:Location: {{.*}}input.sdoc:15:1
+CHECK:Message: Requirement fields: [ONE, TWO, ONE], Grammar fields: [ONE, TWO]
+CHECK:error: Parallelizer: One of the child processes has exited prematurely.

@@ -1,5 +1,14 @@
 import os
 
+from strictdoc.backend.dsl.models.document_grammar import (
+    DocumentGrammar,
+    GrammarElementField,
+)
+from strictdoc.backend.dsl.models.requirement import (
+    Requirement,
+    RequirementField,
+)
+
 
 class StrictDocSemanticError(Exception):
     def __init__(  # pylint: disable=too-many-arguments
@@ -12,6 +21,106 @@ class StrictDocSemanticError(Exception):
         self.line = line
         self.col = col
         self.file_path = filename
+
+    @staticmethod
+    def unknown_requirement_type(
+        requirement_type, line=None, col=None, filename=None
+    ):
+        return StrictDocSemanticError(
+            title=f"Invalid requirement type: {requirement_type}",
+            message=None,
+            example=None,
+            line=line,
+            col=col,
+            filename=filename,
+        )
+
+    @staticmethod
+    def unregistered_field(field_name, line=None, col=None, filename=None):
+        return StrictDocSemanticError(
+            title=f"Invalid requirement field: {field_name}",
+            message=None,
+            example=None,
+            line=line,
+            col=col,
+            filename=filename,
+        )
+
+    @staticmethod
+    def missing_required_field(
+        requirement: Requirement,
+        grammar_field: GrammarElementField,
+        line=None,
+        col=None,
+        filename=None,
+    ):
+        return StrictDocSemanticError(
+            title=(
+                f"Requirement is missing a field that is required by "
+                f"grammar: {grammar_field.title}"
+            ),
+            message=(f"Requirement fields: [{requirement.dump_fields()}]"),
+            example=None,
+            line=line,
+            col=col,
+            filename=filename,
+        )
+
+    @staticmethod
+    def unexpected_field_outside_grammar(  # pylint: disable=too-many-arguments
+        requirement: Requirement,
+        requirement_field: RequirementField,
+        document_grammar: DocumentGrammar,
+        line=None,
+        col=None,
+        filename=None,
+    ):
+        grammar_dump = document_grammar.dump_fields(
+            requirement.requirement_type
+        )
+        return StrictDocSemanticError(
+            title=(
+                f"Unexpected field outside grammar: "
+                f"{requirement_field.field_name}"
+            ),
+            message=(
+                f"Requirement fields: [{requirement.dump_fields()}], "
+                f"Grammar fields: [{grammar_dump}]"
+            ),
+            example=None,
+            line=line,
+            col=col,
+            filename=filename,
+        )
+
+    @staticmethod
+    def wrong_field_order(  # pylint: disable=too-many-arguments
+        requirement: Requirement,
+        document_grammar: DocumentGrammar,
+        problematic_field: RequirementField,
+        line=None,
+        col=None,
+        filename=None,
+    ):
+        assert isinstance(
+            problematic_field, RequirementField
+        ), f"{problematic_field}"
+        requirement_dump = requirement.dump_fields()
+        grammar_dump = document_grammar.dump_fields(
+            requirement.requirement_type
+        )
+        return StrictDocSemanticError(
+            title=f"Wrong field order for requirement: [{requirement_dump}]",
+            message=(
+                f"Problematic field: {problematic_field.field_name}. "
+                f"Compare with the document grammar: [{grammar_dump}] "
+                f"for type: {requirement.requirement_type}"
+            ),
+            example=None,
+            line=line,
+            col=col,
+            filename=filename,
+        )
 
     @staticmethod
     def missing_special_fields(
@@ -135,7 +244,9 @@ class StrictDocSemanticError(Exception):
         message = ""
         message += f"error: could not parse file: {self.file_path}.\n"
         message += f"Semantic error: {self.title}\n"
-        message += f"Location: {self.file_path}:{self.line}:{self.col}\n"
-        message += f"Message: {self.message}\n"
-        message += f"Example:\n{self.example}\n"
+        message += f"Location: {self.file_path}:{self.line}:{self.col}"
+        if self.message:
+            message += f"\nMessage: {self.message}"
+        if self.example:
+            message += f"\nExample:\n{self.example}"
         return message

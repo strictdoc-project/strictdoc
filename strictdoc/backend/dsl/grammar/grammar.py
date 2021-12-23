@@ -9,6 +9,10 @@ Document[noskipws]:
   section_contents *= SectionOrRequirement
 ;
 
+ReservedKeyword[noskipws]:
+  'DOCUMENT' | 'GRAMMAR'
+;
+
 DocumentGrammar[noskipws]:
   '[GRAMMAR]' '\n'
   'ELEMENTS:' '\n'
@@ -81,9 +85,21 @@ SpaceThenFreeText[noskipws]:
   '\n' (FreeText)
 ;
 
+ReservedKeyword[noskipws]:
+  'DOCUMENT' | 'GRAMMAR' | 'SECTION' | 'FREE_TEXT'
+;
+
 Requirement[noskipws]:
-  '[' requirement_type = /[A-Z]+[A-Z_]*?/ ']' '\n'
+  '[' !CompositeRequirementTagName requirement_type = RequirementType ']' '\n'
   fields *= RequirementField
+;
+
+CompositeRequirementTagName[noskipws]:
+  'COMPOSITE_'
+;
+
+RequirementType[noskipws]:
+  !ReservedKeyword /[A-Z]+(_[A-Z]+)*/
 ;
 
 RequirementField[noskipws]:
@@ -102,7 +118,7 @@ RequirementField[noskipws]:
 ;
 
 CompositeRequirement[noskipws]:
-  '[COMPOSITE_' requirement_type = /[A-Z]+[A-Z_]*?/ ']' '\n'
+  '[COMPOSITE_' requirement_type = RequirementType ']' '\n'
 
   fields *= RequirementField
 

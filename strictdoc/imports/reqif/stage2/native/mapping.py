@@ -1,10 +1,14 @@
 from enum import Enum
+from typing import List
 
 from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.document_config import DocumentConfig
 from strictdoc.backend.dsl.models.object_factory import SDocObjectFactory
 from strictdoc.backend.dsl.models.reference import Reference
-from strictdoc.backend.dsl.models.requirement import Requirement
+from strictdoc.backend.dsl.models.requirement import (
+    Requirement,
+    RequirementField,
+)
 from strictdoc.backend.dsl.models.section import Section
 from strictdoc.backend.dsl.models.special_field import SpecialField
 from strictdoc.imports.reqif.stage1.models.reqif_spec_object import (
@@ -75,7 +79,7 @@ class StrictDocReqIFMapping:
 
     @staticmethod
     def create_requirement_from_spec_object(
-        spec_object, document, level, reqif_special_fields
+        spec_object, document, level, reqif_special_fields: List[str]
     ) -> Requirement:
         uid = spec_object.attribute_map[ReqIFField.UID.value]
         statement = spec_object.attribute_map[ReqIFField.STATEMENT.value]
@@ -96,12 +100,25 @@ class StrictDocReqIFMapping:
         )
         requirement.ng_level = level
 
+        special_fields = []
         for field in reqif_special_fields:
-            requirement.special_fields.append(
+            special_fields.append(
                 SpecialField(
                     requirement, field, spec_object.attribute_map[field]
                 )
             )
+        if special_fields:
+            requirement.ordered_fields_lookup["SPECIAL_FIELDS"] = [
+                RequirementField(
+                    parent=requirement,
+                    field_name="SPECIAL_FIELDS",
+                    field_value=None,
+                    field_value_multiline=None,
+                    field_value_references=None,
+                    field_value_special_fields=special_fields,
+                )
+            ]
+
         return requirement
 
     @staticmethod

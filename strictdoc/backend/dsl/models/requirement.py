@@ -77,7 +77,9 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         comments: [RequirementComment] = []
         special_fields = []
 
-        ordered_fields_lookup = OrderedDict()
+        ordered_fields_lookup: OrderedDict[
+            str, List[RequirementField]
+        ] = OrderedDict()
         for field in fields:
             ordered_fields_lookup.setdefault(field.field_name, []).append(field)
 
@@ -163,7 +165,9 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
 
         # TODO: Is it worth to move this to dedicated Presenter* classes to
         # keep this class textx-only?
-        self.ordered_fields_lookup = ordered_fields_lookup
+        self.ordered_fields_lookup: OrderedDict[
+            str, List[RequirementField]
+        ] = ordered_fields_lookup
         self.ng_level = None
         self.ng_document_reference: Optional[DocumentReference] = None
         self.context = RequirementContext()
@@ -229,11 +233,10 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
             return self.rationale_multiline
         return None
 
-    def switch_to_multiline_statement(self):
-        if self.statement:
-            assert self.statement_multiline is None
-            self.statement_multiline = self.statement
-            self.statement = None
+    def append_to_multiline_statement(self, new_statement):
+        statement_field = self.ordered_fields_lookup["STATEMENT"][0]
+        statement_field.field_value_multiline += new_statement.rstrip()
+        self.statement_multiline = statement_field.field_value_multiline
 
 
 class CompositeRequirement(Requirement):

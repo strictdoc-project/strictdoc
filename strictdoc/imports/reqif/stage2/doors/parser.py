@@ -58,7 +58,6 @@ class DoorsReqIFReqIFStage2Parser(AbstractReqIFStage2Parser):
                     document,
                     current_hierarchy.level,
                 )
-
                 # The ReqIF example contains cases when a requirement 1.2.3 is
                 # followed by sub-requirements: 1.2.3.a, 1.2.3.b, etc.
                 # The current solution is to simply to merge the sub-requirement
@@ -75,13 +74,10 @@ class DoorsReqIFReqIFStage2Parser(AbstractReqIFStage2Parser):
                     ), f"{current_section.section_contents[-1]} {spec_object}"
 
                     parent_requirement = current_section.section_contents[-1]
-                    parent_requirement.switch_to_multiline_statement()
-                    parent_requirement.statement_multiline += "<br/>"
-                    parent_requirement.statement_multiline += (
+                    parent_requirement.append_to_multiline_statement(
+                        f"<br/>"
                         f"{matched_letter_uid}) "
-                    )
-                    parent_requirement.statement_multiline += (
-                        requirement.statement
+                        f"{requirement.statement_multiline}"
                     )
                 elif match_bullet_uid(requirement.uid):
                     # Assumption: The bullet-point requirements always follow
@@ -91,11 +87,8 @@ class DoorsReqIFReqIFStage2Parser(AbstractReqIFStage2Parser):
                     ), f"{current_section.section_contents[-1]} {spec_object}"
 
                     parent_requirement = current_section.section_contents[-1]
-                    parent_requirement.switch_to_multiline_statement()
-                    parent_requirement.statement_multiline += "<br/>"
-                    parent_requirement.statement_multiline += "- "
-                    parent_requirement.statement_multiline += (
-                        requirement.statement
+                    parent_requirement.append_to_multiline_statement(
+                        f"<br/>- {requirement.statement_multiline}"
                     )
                 elif match_continuation_uid(requirement.uid):
                     # Assumption: The continuation requirements always follow
@@ -105,10 +98,8 @@ class DoorsReqIFReqIFStage2Parser(AbstractReqIFStage2Parser):
                     ), f"{current_section.section_contents[-1]} {spec_object}"
 
                     parent_requirement = current_section.section_contents[-1]
-                    parent_requirement.switch_to_multiline_statement()
-                    parent_requirement.statement_multiline += "<br/>"
-                    parent_requirement.statement_multiline += (
-                        requirement.statement
+                    parent_requirement.append_to_multiline_statement(
+                        f"<br/>{requirement.statement_multiline}"
                     )
                 else:
                     current_section.section_contents.append(requirement)
@@ -122,13 +113,9 @@ class DoorsReqIFReqIFStage2Parser(AbstractReqIFStage2Parser):
                 if len(current_section.section_contents) > 0:
                     latest_requirement = current_section.section_contents[-1]
                     if isinstance(latest_requirement, Requirement):
-                        if not latest_requirement.statement_multiline:
-                            assert latest_requirement.statement
-                            latest_requirement.statement_multiline = (
-                                latest_requirement.statement
-                            )
-                            latest_requirement.statement = None
-                        latest_requirement.statement_multiline += rich_text
+                        latest_requirement.append_to_multiline_statement(
+                            rich_text
+                        )
                     elif isinstance(latest_requirement, Section):
                         free_text = FreeText(current_section, [rich_text])
                         latest_requirement.free_texts.append(free_text)
@@ -157,8 +144,7 @@ class DoorsReqIFReqIFStage2Parser(AbstractReqIFStage2Parser):
                 parent_requirement: Requirement = (
                     current_section.section_contents[-1]
                 )
-                parent_requirement.switch_to_multiline_statement()
-                parent_requirement.statement_multiline += (
+                parent_requirement.append_to_multiline_statement(
                     f"\n\n{spec_object_rich_text.strip()}"
                 )
 

@@ -221,7 +221,7 @@ AAA  [/FREETEXT]
 
 
 def test_030_multiline_statement():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -240,7 +240,7 @@ This is a statement 3
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     assert isinstance(
@@ -255,7 +255,7 @@ This is a statement 3
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
 
 def test_032_multiline_body():
@@ -297,8 +297,8 @@ This is a body part 3
     )
 
 
-def test_036_rationale_singleline():
-    input = """
+def test_036_rationale_single_line():
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -314,13 +314,13 @@ RATIONALE: This is a Rationale
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
     assert isinstance(
         document.section_contents[0].section_contents[0], Requirement
@@ -329,8 +329,8 @@ RATIONALE: This is a Rationale
     assert requirement_1.rationale == "This is a Rationale"
 
 
-def test_037_rationale_multiline():
-    input = """
+def test_037_rationale_multi_line():
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -350,13 +350,13 @@ This is a Rationale line 3
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
     assert isinstance(
         document.section_contents[0].section_contents[0], Requirement

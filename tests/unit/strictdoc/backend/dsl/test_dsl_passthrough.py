@@ -496,7 +496,7 @@ body 1.1.1.1
 
 
 def test_045_composite_requirement_custom_fields():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 SPECIAL_FIELDS:
@@ -516,13 +516,13 @@ STATEMENT: Some child requirement statement
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
     assert isinstance(document.section_contents[0], CompositeRequirement)
     composite_req = document.section_contents[0]

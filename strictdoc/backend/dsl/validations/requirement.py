@@ -1,3 +1,4 @@
+import re
 from typing import Optional
 
 from textx import get_location
@@ -11,6 +12,18 @@ from strictdoc.backend.dsl.models.requirement import (
     Requirement,
     RequirementField,
 )
+from strictdoc.backend.dsl.models.type_system import (
+    GrammarElementFieldSingleChoice,
+    GrammarElementFieldMultipleChoice,
+    GrammarElementFieldTag,
+)
+
+
+def multi_choice_regex_match(value):
+    keyword = "[a-zA-Z0-9_]+"
+    regex = re.compile(rf"^{keyword}(, {keyword})*$")
+    match = regex.match(value)
+    return match is not None
 
 
 def validate_requirement(
@@ -98,5 +111,41 @@ def validate_requirement_field(
                 requirement=requirement,
                 document_grammar=document_grammar,
                 problematic_field=requirement_field,
+                **get_location(requirement),
+            )
+    if isinstance(grammar_element_field, GrammarElementFieldSingleChoice):
+        if requirement_field.field_value not in grammar_element_field.options:
+            raise StrictDocSemanticError.invalid_choice_field(
+                requirement=requirement,
+                document_grammar=document_grammar,
+                requirement_field=requirement_field,
+                **get_location(requirement),
+            )
+
+    elif isinstance(grammar_element_field, GrammarElementFieldMultipleChoice):
+        requirement_field_value = requirement_field.field_value
+
+        if not multi_choice_regex_match(requirement_field_value):
+            raise StrictDocSemanticError.not_comma_separated_choices(
+                requirement_field=requirement_field,
+                **get_location(requirement),
+            )
+
+        requirement_field_value_components = requirement_field_value.split(", ")
+        for component in requirement_field_value_components:
+            if component not in grammar_element_field.options:
+                raise StrictDocSemanticError.invalid_multiple_choice_field(
+                    requirement=requirement,
+                    document_grammar=document_grammar,
+                    requirement_field=requirement_field,
+                    **get_location(requirement),
+                )
+
+    elif isinstance(grammar_element_field, GrammarElementFieldTag):
+        requirement_field_value = requirement_field.field_value
+
+        if not multi_choice_regex_match(requirement_field_value):
+            raise StrictDocSemanticError.not_comma_separated_tag_field(
+                requirement_field=requirement_field,
                 **get_location(requirement),
             )

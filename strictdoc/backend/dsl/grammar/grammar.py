@@ -26,8 +26,35 @@ GrammarElement[noskipws]:
 ;
 
 GrammarElementField[noskipws]:
-  '  - TITLE: ' title=/.*$/ '\n'
-  '    TYPE: ' field_type = /.*$/ '\n'
+  GrammarElementFieldString |
+  GrammarElementFieldSingleChoice |
+  GrammarElementFieldMultipleChoice |
+  GrammarElementFieldTag
+;
+
+GrammarElementFieldString[noskipws]:
+  '  - TITLE: ' title=FieldName '\n'
+  '    TYPE: ' field_type = 'String' '\n'
+  '    REQUIRED: ' (required = BooleanChoice) '\n'
+;
+
+GrammarElementFieldSingleChoice[noskipws]:
+  '  - TITLE: ' title=FieldName '\n'
+  '    TYPE: ' (field_type = 'SingleChoice')
+    '(' ((options = ChoiceOption) (options *= ChoiceOptionXs)) ')' '\n'
+  '    REQUIRED: ' (required = BooleanChoice) '\n'
+;
+
+GrammarElementFieldMultipleChoice[noskipws]:
+  '  - TITLE: ' title=FieldName '\n'
+  '    TYPE: ' (field_type = 'MultipleChoice')
+    '(' ((options = ChoiceOption) (options *= ChoiceOptionXs)) ')' '\n'
+  '    REQUIRED: ' (required = BooleanChoice) '\n'
+;
+
+GrammarElementFieldTag[noskipws]:
+  '  - TITLE: ' title=FieldName '\n'
+  '    TYPE: ' field_type = 'Tag' '\n'
   '    REQUIRED: ' (required = BooleanChoice) '\n'
 ;
 
@@ -104,17 +131,20 @@ RequirementType[noskipws]:
 
 RequirementField[noskipws]:
   (
-    field_name = /[A-Z]+[A-Z_]*?/ ':'
+    field_name = FieldName ':'
     (
       (' ' (field_value = SingleLineString) '\n') |
-      (' ' (field_value_multiline = MultiLineString) '\n') |
-      ('\n' field_value_references += Reference)
+      (' ' (field_value_multiline = MultiLineString) '\n')
     )
+  ) |
+  (
+    field_name = 'REFS' ':' '\n'
+    (field_value_references += Reference)
   ) |
   (
     field_name = 'SPECIAL_FIELDS' ':' '\n'
     field_value_special_fields += SpecialField
-  )?
+  )
 ;
 
 CompositeRequirement[noskipws]:
@@ -132,12 +162,12 @@ SpecialField[noskipws]:
   '  ' field_name = /[A-Z][A-Z0-9_]+/ ': ' field_value = /.*$/ '\n'
 ;
 
-TagRegex[noskipws]:
+ChoiceOption[noskipws]:
   /[\\w\\/-]+( *[\\w\\/-]+)*/
 ;
 
-TagXs[noskipws]:
-  /, /- TagRegex
+ChoiceOptionXs[noskipws]:
+  /, /- ChoiceOption
 ;
 
 RequirementStatus[noskipws]:

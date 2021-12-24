@@ -1,4 +1,8 @@
 STRICTDOC_BASIC_TYPE_SYSTEM = """
+FieldName[noskipws]:
+  /[A-Z]+[A-Z_]*/
+;
+
 SingleLineString:
   (!MultiLineStringStart /./)*
 ;

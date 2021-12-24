@@ -3,5 +3,5 @@ RUN: %expect_exit 1 %strictdoc export %S --output-dir Output/ | filecheck %s --d
 CHECK:error: could not parse file: {{.*}}input.sdoc.
 CHECK:Semantic error: Wrong field order for requirement: [UID, TITLE]
 CHECK:Location: {{.*}}input.sdoc:15:1
-CHECK:Message: Problematic field: UID. Compare with the document grammar: [TITLE, UID] for type: REQUIREMENT
+CHECK:Hint: Problematic field: UID. Compare with the document grammar: [TITLE, UID] for type: REQUIREMENT
 CHECK:error: Parallelizer: One of the child processes has exited prematurely.

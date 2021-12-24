@@ -2,7 +2,7 @@ RUN: %expect_exit 1 %strictdoc passthrough %S/input.sdoc --output-file=%S/Output
 CHECK: error: could not parse file: {{.*}}.
 CHECK: Semantic error: Undeclared special field: ECSS_VERIFICATION
 CHECK: Location: {{.*}}
-CHECK: Message: Requirement's special fields must be declared in [DOCUMENT].SPECIAL_FIELDS
+CHECK: Hint: Requirement's special fields must be declared in [DOCUMENT].SPECIAL_FIELDS
 CHECK: Example:
 CHECK: [DOCUMENT]
 CHECK: SPECIAL_FIELDS:

@@ -3,15 +3,14 @@ import traceback
 
 from textx import metamodel_from_str
 
-from strictdoc.backend.dsl.grammar.grammar_builder import SDocGrammarBuilder
 from strictdoc.backend.dsl.error_handling import StrictDocSemanticError
+from strictdoc.backend.dsl.grammar.grammar_builder import SDocGrammarBuilder
 from strictdoc.backend.dsl.models.config_special_field import ConfigSpecialField
 from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.document_config import DocumentConfig
 from strictdoc.backend.dsl.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
-    GrammarElementField,
 )
 from strictdoc.backend.dsl.models.inline_link import InlineLink
 from strictdoc.backend.dsl.models.reference import (
@@ -27,6 +26,12 @@ from strictdoc.backend.dsl.models.requirement import (
 )
 from strictdoc.backend.dsl.models.section import Section, FreeText
 from strictdoc.backend.dsl.models.special_field import SpecialField
+from strictdoc.backend.dsl.models.type_system import (
+    GrammarElementFieldSingleChoice,
+    GrammarElementFieldString,
+    GrammarElementFieldMultipleChoice,
+    GrammarElementFieldTag,
+)
 from strictdoc.backend.dsl.processor import SDocParsingProcessor, ParseContext
 from strictdoc.helpers.textx import drop_textx_meta
 
@@ -36,7 +41,10 @@ DOCUMENT_MODELS = [
     Document,
     DocumentGrammar,
     GrammarElement,
-    GrammarElementField,
+    GrammarElementFieldString,
+    GrammarElementFieldSingleChoice,
+    GrammarElementFieldMultipleChoice,
+    GrammarElementFieldTag,
     RequirementComment,
     Section,
     Requirement,

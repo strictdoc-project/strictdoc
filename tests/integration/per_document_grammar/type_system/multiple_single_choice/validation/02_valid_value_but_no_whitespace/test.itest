@@ -1,0 +1,7 @@
+RUN: %expect_exit 1 %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+
+CHECK: error: could not parse file: {{.*}}input.sdoc.
+CHECK: Semantic error: Requirement field of type MultipleChoice is invalid: A,E
+CHECK: Location: {{.*}}input.sdoc:12:1
+CHECK: Hint: MultipleChoice field requires ', '-separated values.
+CHECK: error: Parallelizer: One of the child processes has exited prematurely.

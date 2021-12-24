@@ -1,6 +1,11 @@
 from collections import defaultdict
 from typing import List, Set, Dict
 
+from strictdoc.backend.dsl.models.type_system import (
+    GrammarElementField,
+    GrammarElementFieldString,
+)
+
 RESERVED_NON_META_FIELDS = [
     "REFS",
     "TITLE",
@@ -9,14 +14,6 @@ RESERVED_NON_META_FIELDS = [
     "COMMENT",
     "RATIONALE",
 ]
-
-
-class GrammarElementField:
-    def __init__(self, parent, title: str, field_type: str, required: str):
-        self.parent = parent
-        self.title: str = title
-        self.field_type: str = field_type
-        self.required: bool = required == "True"
 
 
 class GrammarElement:
@@ -50,55 +47,55 @@ class DocumentGrammar:
     @staticmethod
     def create_default(parent):
         fields = [
-            GrammarElementField(
+            GrammarElementFieldString(
                 parent=None, title="UID", field_type="String", required="False"
             ),
-            GrammarElementField(
+            GrammarElementFieldString(
                 parent=None,
                 title="LEVEL",
                 field_type="String",
                 required="False",
             ),
-            GrammarElementField(
+            GrammarElementFieldString(
                 parent=None,
                 title="STATUS",
                 field_type="String",
                 required="False",
             ),
-            GrammarElementField(
+            GrammarElementFieldString(
                 parent=None, title="TAGS", field_type="String", required="False"
             ),
-            GrammarElementField(
+            GrammarElementFieldString(
                 parent=None,
                 title="SPECIAL_FIELDS",
                 field_type="String",
                 required="False",
             ),
-            GrammarElementField(
+            GrammarElementFieldString(
                 parent=None, title="REFS", field_type="String", required="False"
             ),
-            GrammarElementField(
+            GrammarElementFieldString(
                 parent=None,
                 title="TITLE",
                 field_type="String",
                 required="False",
             ),
-            GrammarElementField(
+            GrammarElementFieldString(
                 parent=None,
                 title="STATEMENT",
                 field_type="String",
                 required="False",
             ),
-            GrammarElementField(
+            GrammarElementFieldString(
                 parent=None, title="BODY", field_type="String", required="False"
             ),
-            GrammarElementField(
+            GrammarElementFieldString(
                 parent=None,
                 title="RATIONALE",
                 field_type="String",
                 required="False",
             ),
-            GrammarElementField(
+            GrammarElementFieldString(
                 parent=None,
                 title="COMMENT",
                 field_type="String",

@@ -68,6 +68,7 @@ class SDReader:
         obj_processors = {
             "Document": processor.process_document,
             "DocumentConfig": processor.process_document_config,
+            "DocumentGrammar": processor.process_document_grammar,
             "Section": processor.process_section,
             "CompositeRequirement": processor.process_composite_requirement,
             "Requirement": processor.process_requirement,

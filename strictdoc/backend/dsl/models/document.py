@@ -1,6 +1,7 @@
 from typing import Optional
 
 from strictdoc.backend.dsl.models.document_config import DocumentConfig
+from strictdoc.backend.dsl.models.document_grammar import DocumentGrammar
 from strictdoc.core.document_meta import DocumentMeta
 
 
@@ -10,7 +11,7 @@ class Document:  # pylint: disable=too-many-instance-attributes
         name,
         title,
         config: Optional[DocumentConfig],
-        grammar: Optional,
+        grammar: Optional[DocumentGrammar],
         free_texts,
         section_contents,
     ):
@@ -18,7 +19,7 @@ class Document:  # pylint: disable=too-many-instance-attributes
 
         self.name = name if name else title
         self.config = config if config else DocumentConfig.default_config(self)
-        self.grammar: Optional = grammar
+        self.grammar: Optional[DocumentGrammar] = grammar
         self.free_texts = free_texts
         self.section_contents = section_contents
 

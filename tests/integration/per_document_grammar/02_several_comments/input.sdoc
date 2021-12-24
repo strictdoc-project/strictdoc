@@ -1,0 +1,23 @@
+[DOCUMENT]
+TITLE: Test document
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: ONE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: True
+  - TITLE: TWO
+    TYPE: String
+    REQUIRED: True
+
+[REQUIREMENT]
+ONE: One-value
+COMMENT: Comment #1
+COMMENT: Comment #2
+COMMENT: Comment #3
+TWO: Two-value

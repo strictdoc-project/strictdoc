@@ -2,6 +2,9 @@ from collections import OrderedDict
 from typing import Optional, List
 
 from strictdoc.backend.dsl.document_reference import DocumentReference
+from strictdoc.backend.dsl.models.document_grammar import (
+    RESERVED_NON_META_FIELDS,
+)
 from strictdoc.backend.dsl.models.node import Node
 from strictdoc.backend.dsl.models.reference import Reference
 from strictdoc.backend.dsl.models.special_field import SpecialField
@@ -37,9 +40,9 @@ class RequirementField:
         return (
             f"{self.__class__.__name__}("
             f"field_name: {self.field_name}, "
-            f"field_value: {self.field_value}"
-            f"field_value_multiline: {self.field_value_multiline}"
-            f"field_value_references: {self.field_value_references}"
+            f"field_value: {self.field_value}, "
+            f"field_value_multiline: {self.field_value_multiline}, "
+            f"field_value_references: {self.field_value_references}, "
             f"field_value_special_fields: {self.field_value_special_fields}"
             ")"
         )
@@ -80,7 +83,11 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         ordered_fields_lookup: OrderedDict[
             str, List[RequirementField]
         ] = OrderedDict()
+
+        has_meta: bool = False
         for field in fields:
+            if field.field_name not in RESERVED_NON_META_FIELDS:
+                has_meta = True
             ordered_fields_lookup.setdefault(field.field_name, []).append(field)
 
         if "UID" in ordered_fields_lookup:
@@ -165,6 +172,8 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
 
         # TODO: Is it worth to move this to dedicated Presenter* classes to
         # keep this class textx-only?
+        self.has_meta: bool = has_meta
+        self.fields: List[RequirementField] = fields
         self.ordered_fields_lookup: OrderedDict[
             str, List[RequirementField]
         ] = ordered_fields_lookup
@@ -184,14 +193,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
 
     def __repr__(self):
         return self.__str__()
-
-    @property
-    def has_meta(self):
-        return (
-            self.uid is not None
-            or (self.tags is not None and len(self.tags) > 0)
-            or self.status is not None
-        )
 
     @property
     def is_requirement(self):
@@ -237,6 +238,28 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         statement_field = self.ordered_fields_lookup["STATEMENT"][0]
         statement_field.field_value_multiline += new_statement.rstrip()
         self.statement_multiline = statement_field.field_value_multiline
+
+    def enumerate_fields(self):
+        requirement_fields = self.ordered_fields_lookup.values()
+        for requirement_field in requirement_fields:
+            for single_field in requirement_field:
+                yield single_field
+
+    def enumerate_meta_fields(self):
+        for field in self.fields:
+            if field.field_name in RESERVED_NON_META_FIELDS:
+                continue
+            yield field.field_name, field.field_value
+
+    def dump_fields(self):
+        return ", ".join(
+            list(
+                map(
+                    lambda r: r.field_name,
+                    self.fields,
+                )
+            )
+        )
 
 
 class CompositeRequirement(Requirement):

@@ -3,6 +3,7 @@ from typing import List
 
 from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.document_config import DocumentConfig
+from strictdoc.backend.dsl.models.document_grammar import DocumentGrammar
 from strictdoc.backend.dsl.models.object_factory import SDocObjectFactory
 from strictdoc.backend.dsl.models.reference import Reference
 from strictdoc.backend.dsl.models.requirement import (
@@ -48,6 +49,7 @@ class StrictDocReqIFMapping:
         document = Document(
             None, "Empty ReqIF document", document_config, None, [], []
         )
+        document.grammar = DocumentGrammar.create_default(document)
         return document
 
     @staticmethod

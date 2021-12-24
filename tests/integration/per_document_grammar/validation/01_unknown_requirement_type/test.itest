@@ -1,0 +1,6 @@
+RUN: %expect_exit 1 %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+
+CHECK: error: could not parse file: {{.*}}input.sdoc.
+Semantic error: Invalid requirement type: UNKNOWN_REQUIREMENT
+Location: {{.8}}input.sdoc:12:1
+error: Parallelizer: One of the child processes has exited prematurely.

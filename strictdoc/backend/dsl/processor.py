@@ -6,31 +6,42 @@ from strictdoc.backend.dsl.document_reference import DocumentReference
 from strictdoc.backend.dsl.error_handling import StrictDocSemanticError
 from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.document_config import DocumentConfig
-from strictdoc.backend.dsl.models.requirement import CompositeRequirement
+from strictdoc.backend.dsl.models.document_grammar import DocumentGrammar
+from strictdoc.backend.dsl.models.requirement import (
+    CompositeRequirement,
+    Requirement,
+)
 from strictdoc.backend.dsl.models.section import Section
+from strictdoc.backend.dsl.validations.requirement import validate_requirement
 
 
 class ParseContext:
     def __init__(self):
         self.document_reference: DocumentReference = DocumentReference()
         self.document_config: Optional[DocumentConfig] = None
+        self.document_grammar: DocumentGrammar = DocumentGrammar.create_default(
+            None
+        )
 
 
 class SDocParsingProcessor:
     def __init__(self, parse_context: ParseContext):
         self.parse_context: ParseContext = parse_context
 
-    @staticmethod
-    def process_document(document: Document):
+    def process_document(self, document: Document):
         if document.legacy_title_is_used:
             print(
                 "warning: [DOCUMENT].NAME field is deprecated."
                 " Now both [DOCUMENT]s and [SECTION]s have 'TITLE:'."
                 " Use 'TITLE:' instead."
             )
+        document.grammar = self.parse_context.document_grammar
 
     def process_document_config(self, document_config: DocumentConfig):
         self.parse_context.document_config = document_config
+
+    def process_document_grammar(self, document_grammar: DocumentGrammar):
+        self.parse_context.document_grammar = document_grammar
 
     def process_section(self, section: Section):
         section.ng_document_reference = self.parse_context.document_reference
@@ -112,8 +123,19 @@ class SDocParsingProcessor:
             cursor.ng_has_requirements = True
             cursor = cursor.parent
 
-    def process_requirement(self, requirement):
-        # Validation
+    def process_requirement(self, requirement: Requirement):
+        document_grammar = self.parse_context.document_grammar
+        if (
+            requirement.requirement_type
+            not in document_grammar.registered_elements
+        ):
+            raise StrictDocSemanticError.unknown_requirement_type(
+                requirement_type=requirement.requirement_type,
+                **get_location(requirement),
+            )
+
+        validate_requirement(requirement, document_grammar)
+
         if self.parse_context.document_config.auto_levels:
             if requirement.level:
                 print(

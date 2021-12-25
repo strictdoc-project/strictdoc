@@ -20,7 +20,7 @@ DocumentGrammar[noskipws]:
 ;
 
 GrammarElement[noskipws]:
-  '- TAG: ' tag = /.*$/ '\n'
+  '- TAG: ' tag = RequirementType '\n'
   '  FIELDS:' '\n'
   fields += GrammarElementField
 ;

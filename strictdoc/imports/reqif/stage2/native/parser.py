@@ -85,15 +85,18 @@ class StrictDocReqIFStage2Parser(AbstractReqIFStage2Parser):
                         )
                     )
                 if len(parent_refs) > 0:
+                    requirement_field = RequirementField(
+                        parent=requirement,
+                        field_name="REFS",
+                        field_value=None,
+                        field_value_multiline=None,
+                        field_value_references=parent_refs,
+                        field_value_special_fields=None,
+                    )
+                    # TODO: This is extremely wrong.
+                    requirement.fields.append(requirement_field)
                     requirement.ordered_fields_lookup["REFS"] = [
-                        RequirementField(
-                            parent=requirement,
-                            field_name="REFS",
-                            field_value=None,
-                            field_value_multiline=None,
-                            field_value_references=parent_refs,
-                            field_value_special_fields=None,
-                        )
+                        requirement_field
                     ]
                 current_section.section_contents.append(requirement)
             else:

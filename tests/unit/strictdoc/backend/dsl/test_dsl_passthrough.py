@@ -812,18 +812,102 @@ STATEMENT: ABC
     assert sdoc_input == output
 
 
-def test_150_minimal_doc():
+def test_150_grammar_minimal_doc():
     sdoc_input = """
 [DOCUMENT]
 TITLE: Test Doc
 
 [GRAMMAR]
 ELEMENTS:
-- TAG: LOW-LEVEL-REQUIREMENT
+- TAG: LOW_LEVEL_REQUIREMENT
   FIELDS:
   - TITLE: CUSTOM_FIELD
     TYPE: String
     REQUIRED: True
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+def test_151_grammar_single_choice():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: LOW_LEVEL_REQUIREMENT
+  FIELDS:
+  - TITLE: SINGLE_CHOICE_FIELD
+    TYPE: SingleChoice(A, B, C)
+    REQUIRED: True
+
+[LOW_LEVEL_REQUIREMENT]
+SINGLE_CHOICE_FIELD: A
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+def test_152_grammar_multiple_choice():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: LOW_LEVEL_REQUIREMENT
+  FIELDS:
+  - TITLE: MULTIPLE_CHOICE_FIELD
+    TYPE: MultipleChoice(A, B, C)
+    REQUIRED: True
+
+[LOW_LEVEL_REQUIREMENT]
+MULTIPLE_CHOICE_FIELD: A, C
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+def test_153_grammar_tag():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: LOW_LEVEL_REQUIREMENT
+  FIELDS:
+  - TITLE: TAG_FIELD
+    TYPE: Tag
+    REQUIRED: True
+
+[LOW_LEVEL_REQUIREMENT]
+TAG_FIELD: A, C
 """.lstrip()
 
     reader = SDReader()

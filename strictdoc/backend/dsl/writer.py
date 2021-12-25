@@ -1,5 +1,6 @@
 from enum import Enum
 
+from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.document_config import DocumentConfig
 from strictdoc.backend.dsl.models.inline_link import InlineLink
 from strictdoc.backend.dsl.models.requirement import (
@@ -7,6 +8,12 @@ from strictdoc.backend.dsl.models.requirement import (
     CompositeRequirement,
 )
 from strictdoc.backend.dsl.models.section import Section, FreeText
+from strictdoc.backend.dsl.models.type_system import (
+    GrammarElementFieldString,
+    GrammarElementFieldSingleChoice,
+    GrammarElementFieldMultipleChoice,
+    GrammarElementFieldTag,
+)
 from strictdoc.core.document_iterator import DocumentCachingIterator
 
 
@@ -85,16 +92,7 @@ class SDWriter:
                 output += element.tag
                 output += "\n  FIELDS:\n"
                 for grammar_field in element.fields:
-                    output += "  - TITLE: "
-                    output += grammar_field.title
-                    output += "\n"
-                    output += "    TYPE: "
-                    output += grammar_field.field_type
-                    output += "\n"
-                    output += "    REQUIRED: "
-                    output += "True" if grammar_field.required else "False"
-                    output += "\n"
-
+                    output += SDWriter._print_grammar_field_type(grammar_field)
         for free_text in document.free_texts:
             output += "\n"
             output += self._print_free_text(free_text)
@@ -114,14 +112,20 @@ class SDWriter:
                 closing_tags.append((TAG.SECTION, content_node.ng_level))
             elif isinstance(content_node, Requirement):
                 if isinstance(content_node, CompositeRequirement):
-                    output += "[COMPOSITE_REQUIREMENT]\n"
+                    output += "[COMPOSITE_"
+                    output += content_node.requirement_type
+                    output += "]\n"
                     closing_tags.append(
                         (TAG.COMPOSITE_REQUIREMENT, content_node.ng_level)
                     )
                 else:
-                    output += "[REQUIREMENT]\n"
+                    output += "["
+                    output += content_node.requirement_type
+                    output += "]\n"
 
-                output += self._print_requirement_fields(content_node)
+                output += self._print_requirement_fields(
+                    section_content=content_node, document=document
+                )
 
         for closing_tag, _ in reversed(closing_tags):
             output += self._print_closing_tag(closing_tag)
@@ -153,23 +157,16 @@ class SDWriter:
         return output
 
     @staticmethod
-    def _print_requirement_fields(section_content: Requirement):
+    def _print_requirement_fields(
+        section_content: Requirement, document: Document
+    ):
         output = ""
 
-        default_fields_order = [
-            "UID",
-            "LEVEL",
-            "STATUS",
-            "TAGS",
-            "SPECIAL_FIELDS",
-            "REFS",
-            "TITLE",
-            "STATEMENT",
-            "BODY",
-            "RATIONALE",
-            "COMMENT",
+        element = document.grammar.elements_by_type[
+            section_content.requirement_type
         ]
-        for field_name in default_fields_order:
+        for element_field in element.fields:
+            field_name = element_field.title
             if field_name not in section_content.ordered_fields_lookup:
                 continue
             fields = section_content.ordered_fields_lookup[field_name]
@@ -241,5 +238,34 @@ class SDWriter:
         if output[-1] != "\n":
             output += "\n"
         output += "[/FREETEXT]"
+        output += "\n"
+        return output
+
+    @staticmethod
+    def _print_grammar_field_type(grammar_field):
+        output = ""
+        output += "  - TITLE: "
+        output += grammar_field.title
+        output += "\n"
+        output += "    TYPE: "
+
+        if isinstance(grammar_field, GrammarElementFieldString):
+            output += grammar_field.field_type
+        elif isinstance(grammar_field, GrammarElementFieldSingleChoice):
+            output += "SingleChoice("
+            output += ", ".join(grammar_field.options)
+            output += ")"
+        elif isinstance(grammar_field, GrammarElementFieldMultipleChoice):
+            output += "MultipleChoice("
+            output += ", ".join(grammar_field.options)
+            output += ")"
+        elif isinstance(grammar_field, GrammarElementFieldTag):
+            output += "Tag"
+        else:
+            raise NotImplementedError from None
+
+        output += "\n"
+        output += "    REQUIRED: "
+        output += "True" if grammar_field.required else "False"
         output += "\n"
         return output

@@ -1,5 +1,4 @@
-from strictdoc.backend.dsl.models.document import Document
-from strictdoc.backend.dsl.models.requirement import requirement_from_dict
+from strictdoc.backend.dsl.models.object_factory import SDocObjectFactory
 
 
 def test_010_full_dict():
@@ -9,8 +8,10 @@ def test_010_full_dict():
         "UID": "ABC-123",
         "RATIONALE": "REQ RATIONALE",
     }
-    document = Document(None, "NONAME", None, [], [])
-    requirement = requirement_from_dict(requirement_dict, document, 1)
+    document = SDocObjectFactory.create_document(title="NONAME")
+    requirement = SDocObjectFactory.create_requirement_from_dict(
+        requirement_dict, document, 1
+    )
 
     assert requirement.ng_level == 1
     assert requirement.uid == requirement_dict["UID"]
@@ -21,8 +22,10 @@ def test_010_full_dict():
 
 def test_020_empty_dict():
     requirement_dict = {}
-    document = Document(None, "NONAME", None, [], [])
-    requirement = requirement_from_dict(requirement_dict, document, 1)
+    document = SDocObjectFactory.create_document(title=None)
+    requirement = SDocObjectFactory.create_requirement_from_dict(
+        requirement_dict, document, 1
+    )
 
     assert requirement.ng_level == 1
     assert requirement.uid is None

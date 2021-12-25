@@ -1,16 +1,25 @@
 from typing import Optional
 
 from strictdoc.backend.dsl.models.document_config import DocumentConfig
+from strictdoc.backend.dsl.models.document_grammar import DocumentGrammar
 from strictdoc.core.document_meta import DocumentMeta
 
 
 class Document:  # pylint: disable=too-many-instance-attributes
     def __init__(  # pylint: disable=too-many-arguments
-        self, name, title, config: DocumentConfig, free_texts, section_contents
+        self,
+        name,
+        title,
+        config: Optional[DocumentConfig],
+        grammar: Optional[DocumentGrammar],
+        free_texts,
+        section_contents,
     ):
         assert isinstance(free_texts, list)
+
         self.name = name if name else title
         self.config = config if config else DocumentConfig.default_config(self)
+        self.grammar: Optional[DocumentGrammar] = grammar
         self.free_texts = free_texts
         self.section_contents = section_contents
 

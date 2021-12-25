@@ -30,6 +30,70 @@ TITLE: Test Doc
     assert sdoc_input == output
 
 
+def test_002_minimal_req():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+TITLE: Hello
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+def test_003_several_comments():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+TITLE: Hello
+COMMENT: Comment #1
+COMMENT: Comment #2
+COMMENT: Comment #3
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+def test_004_several_tags():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+TAGS: A, B, C, D
+TITLE: Hello
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
 def test_010_multiple_sections():
     input = """
 [DOCUMENT]
@@ -157,7 +221,7 @@ AAA  [/FREETEXT]
 
 
 def test_030_multiline_statement():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -176,7 +240,7 @@ This is a statement 3
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     assert isinstance(
@@ -191,11 +255,11 @@ This is a statement 3
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
 
 def test_032_multiline_body():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -215,13 +279,13 @@ This is a body part 3
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
     assert isinstance(
         document.section_contents[0].section_contents[0], Requirement
@@ -233,8 +297,8 @@ This is a body part 3
     )
 
 
-def test_036_rationale_singleline():
-    input = """
+def test_036_rationale_single_line():
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -250,13 +314,13 @@ RATIONALE: This is a Rationale
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
     assert isinstance(
         document.section_contents[0].section_contents[0], Requirement
@@ -265,8 +329,8 @@ RATIONALE: This is a Rationale
     assert requirement_1.rationale == "This is a Rationale"
 
 
-def test_037_rationale_multiline():
-    input = """
+def test_037_rationale_multi_line():
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -286,13 +350,13 @@ This is a Rationale line 3
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
     assert isinstance(
         document.section_contents[0].section_contents[0], Requirement
@@ -305,7 +369,7 @@ This is a Rationale line 3
 
 
 def test_040_composite_requirement_1_level():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -335,13 +399,13 @@ This is a child body part 3
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
     assert isinstance(
         document.section_contents[0].section_contents[0], CompositeRequirement
@@ -432,7 +496,7 @@ body 1.1.1.1
 
 
 def test_045_composite_requirement_custom_fields():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 SPECIAL_FIELDS:
@@ -452,13 +516,13 @@ STATEMENT: Some child requirement statement
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
     assert isinstance(document.section_contents[0], CompositeRequirement)
     composite_req = document.section_contents[0]
@@ -494,7 +558,7 @@ STATEMENT: 1
 
 
 def test_060_file_ref():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -506,10 +570,10 @@ REFS:
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
-    document: Document = reader.read(input)
+    document: Document = reader.read(input_sdoc)
     requirement = document.section_contents[0]
     assert len(requirement.references) == 1
     assert requirement.references[0].ref_type == "File"
@@ -518,7 +582,7 @@ REFS:
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
 
 def test_070_document_config_version():
@@ -574,7 +638,7 @@ REFS:
 
 
 def test_100_basic_test():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 SPECIAL_FIELDS:
@@ -614,7 +678,7 @@ COMMENT: This requirement is very important
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     assert isinstance(
@@ -628,7 +692,7 @@ COMMENT: This requirement is very important
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
 
 def test_081_document_config_markup_not_specified():
@@ -741,6 +805,115 @@ STATEMENT: ABC
     requirement = section.section_contents[0]
     assert isinstance(requirement, Requirement)
     assert requirement.level == "456"
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+def test_150_grammar_minimal_doc():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: LOW_LEVEL_REQUIREMENT
+  FIELDS:
+  - TITLE: CUSTOM_FIELD
+    TYPE: String
+    REQUIRED: True
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+def test_151_grammar_single_choice():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: LOW_LEVEL_REQUIREMENT
+  FIELDS:
+  - TITLE: SINGLE_CHOICE_FIELD
+    TYPE: SingleChoice(A, B, C)
+    REQUIRED: True
+
+[LOW_LEVEL_REQUIREMENT]
+SINGLE_CHOICE_FIELD: A
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+def test_152_grammar_multiple_choice():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: LOW_LEVEL_REQUIREMENT
+  FIELDS:
+  - TITLE: MULTIPLE_CHOICE_FIELD
+    TYPE: MultipleChoice(A, B, C)
+    REQUIRED: True
+
+[LOW_LEVEL_REQUIREMENT]
+MULTIPLE_CHOICE_FIELD: A, C
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+def test_153_grammar_tag():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: LOW_LEVEL_REQUIREMENT
+  FIELDS:
+  - TITLE: TAG_FIELD
+    TYPE: Tag
+    REQUIRED: True
+
+[LOW_LEVEL_REQUIREMENT]
+TAG_FIELD: A, C
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
 
     writer = SDWriter()
     output = writer.write(document)

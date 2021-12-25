@@ -1,6 +1,7 @@
 from strictdoc.backend.dsl.document_reference import DocumentReference
 from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.document_config import DocumentConfig
+from strictdoc.backend.dsl.models.object_factory import SDocObjectFactory
 from strictdoc.backend.dsl.models.reference import Reference
 from strictdoc.backend.dsl.models.requirement import Requirement
 
@@ -16,7 +17,7 @@ class DocumentBuilder:
         statement = "System X shall do Y"
         statement_multiline = None
         status = None
-        tags = []
+        tags = None
         references = []
         title = "Requirement title"
         body = None
@@ -25,21 +26,18 @@ class DocumentBuilder:
         comments = []
         special_fields = []
 
-        requirement = Requirement(
-            parent,
-            statement,
-            statement_multiline,
-            uid,
-            level,
-            status,
-            tags,
-            references,
-            title,
-            body,
-            rationale,
-            rationale_multiline,
-            comments,
-            special_fields,
+        requirement = SDocObjectFactory.create_requirement(
+            parent=parent,
+            requirement_type="REQUIREMENT",
+            uid=uid,
+            level=None,
+            title=title,
+            statement=statement,
+            statement_multiline=statement_multiline,
+            rationale=rationale,
+            rationale_multiline=rationale_multiline,
+            comments=comments,
+            tags=tags,
         )
         requirement.ng_level = 1
         self.requirements.append(requirement)
@@ -64,6 +62,6 @@ class DocumentBuilder:
         free_texts = []
         section_contents = []
         document = Document(
-            None, "Test Document", config, free_texts, section_contents
+            None, "Test Document", config, None, free_texts, section_contents
         )
         return document

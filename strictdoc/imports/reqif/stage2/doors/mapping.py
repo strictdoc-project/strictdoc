@@ -2,6 +2,8 @@ from enum import Enum
 
 from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.document_config import DocumentConfig
+from strictdoc.backend.dsl.models.document_grammar import DocumentGrammar
+from strictdoc.backend.dsl.models.object_factory import SDocObjectFactory
 from strictdoc.backend.dsl.models.requirement import Requirement
 from strictdoc.backend.dsl.models.section import Section
 from strictdoc.imports.reqif.stage1.models.reqif_spec_object import (
@@ -51,8 +53,9 @@ class DoorsMapping:
             auto_levels="Off",
         )
         document = Document(
-            None, "Empty ReqIF document", document_config, [], []
+            None, "Empty ReqIF document", document_config, None, [], []
         )
+        document.grammar = DocumentGrammar.create_default(document)
         assert not document.config.auto_levels
         return document
 
@@ -120,22 +123,18 @@ class DoorsMapping:
         statement = spec_object.attribute_map[ReqIFField.STATEMENT.value]
         statement = statement if statement else "<STATEMENT MISSING>"
 
-        requirement = Requirement(
+        requirement = SDocObjectFactory.create_requirement(
             parent=document,
-            statement=statement,
-            statement_multiline=None,
+            requirement_type="REQUIREMENT",
             uid=uid,
             level=uid,
-            status=None,
-            tags=None,
-            references=[],
             title=None,
-            body=None,
+            statement=None,
+            statement_multiline=statement,
+            tags=None,
             rationale=None,
             rationale_multiline=None,
             comments=[],
-            special_fields=None,
-            requirements=None,
         )
         requirement.ng_level = level
         return requirement

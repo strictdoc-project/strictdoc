@@ -1,5 +1,6 @@
 from enum import Enum
 
+from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.document_config import DocumentConfig
 from strictdoc.backend.dsl.models.inline_link import InlineLink
 from strictdoc.backend.dsl.models.requirement import (
@@ -7,6 +8,12 @@ from strictdoc.backend.dsl.models.requirement import (
     CompositeRequirement,
 )
 from strictdoc.backend.dsl.models.section import Section, FreeText
+from strictdoc.backend.dsl.models.type_system import (
+    GrammarElementFieldString,
+    GrammarElementFieldSingleChoice,
+    GrammarElementFieldMultipleChoice,
+    GrammarElementFieldTag,
+)
 from strictdoc.core.document_iterator import DocumentCachingIterator
 
 
@@ -76,6 +83,16 @@ class SDWriter:
                     output += "On" if document_config.auto_levels else "Off"
                     output += "\n"
 
+        document_grammar = document.grammar
+        if not document_grammar.is_default:
+            output += "\n[GRAMMAR]\n"
+            output += "ELEMENTS:\n"
+            for element in document_grammar.elements:
+                output += "- TAG: "
+                output += element.tag
+                output += "\n  FIELDS:\n"
+                for grammar_field in element.fields:
+                    output += SDWriter._print_grammar_field_type(grammar_field)
         for free_text in document.free_texts:
             output += "\n"
             output += self._print_free_text(free_text)
@@ -95,14 +112,20 @@ class SDWriter:
                 closing_tags.append((TAG.SECTION, content_node.ng_level))
             elif isinstance(content_node, Requirement):
                 if isinstance(content_node, CompositeRequirement):
-                    output += "[COMPOSITE_REQUIREMENT]\n"
+                    output += "[COMPOSITE_"
+                    output += content_node.requirement_type
+                    output += "]\n"
                     closing_tags.append(
                         (TAG.COMPOSITE_REQUIREMENT, content_node.ng_level)
                     )
                 else:
-                    output += "[REQUIREMENT]\n"
+                    output += "["
+                    output += content_node.requirement_type
+                    output += "]\n"
 
-                output += self._print_requirement_fields(content_node)
+                output += self._print_requirement_fields(
+                    section_content=content_node, document=document
+                )
 
         for closing_tag, _ in reversed(closing_tags):
             output += self._print_closing_tag(closing_tag)
@@ -134,95 +157,54 @@ class SDWriter:
         return output
 
     @staticmethod
-    def _print_requirement_fields(section_content):
+    def _print_requirement_fields(
+        section_content: Requirement, document: Document
+    ):
         output = ""
 
-        if section_content.uid:
-            output += "UID: "
-            output += section_content.uid
-            output += "\n"
+        element = document.grammar.elements_by_type[
+            section_content.requirement_type
+        ]
+        for element_field in element.fields:
+            field_name = element_field.title
+            if field_name not in section_content.ordered_fields_lookup:
+                continue
+            fields = section_content.ordered_fields_lookup[field_name]
+            for field in fields:
+                if field.field_value:
+                    output += f"{field_name}: "
+                    output += field.field_value
+                    output += "\n"
+                elif field.field_value_multiline:
+                    output += f"{field_name}: >>>"
+                    output += "\n"
+                    output += field.field_value_multiline.rstrip()
+                    output += "\n"
+                    output += "<<<"
+                    output += "\n"
+                elif field.field_value_special_fields:
+                    output += "SPECIAL_FIELDS:"
+                    output += "\n"
+                    for special_field in field.field_value_special_fields:
+                        output += (
+                            f"  "
+                            f"{special_field.field_name}: "
+                            f"{special_field.field_value}"
+                        )
+                        output += "\n"
+                elif field.field_value_references:
+                    output += "REFS:"
+                    output += "\n"
 
-        if section_content.level:
-            output += "LEVEL: "
-            output += section_content.level
-            output += "\n"
-
-        if section_content.status:
-            output += "STATUS: "
-            output += section_content.status
-            output += "\n"
-
-        if section_content.tags:
-            output += "TAGS: "
-            output += ", ".join(section_content.tags)
-            output += "\n"
-
-        if section_content.special_fields:
-            output += "SPECIAL_FIELDS:"
-            output += "\n"
-
-            for special_field in section_content.special_fields:
-                output += (
-                    f"  {special_field.field_name}: {special_field.field_value}"
-                )
-                output += "\n"
-
-        if len(section_content.references) > 0:
-            output += "REFS:"
-            output += "\n"
-
-            for reference in section_content.references:
-                output += "- TYPE: "
-                output += reference.ref_type
-                output += "\n"
-                output += "  VALUE: "
-                output += reference.path
-                output += "\n"
-
-        if section_content.title:
-            output += "TITLE: "
-            output += section_content.title
-            output += "\n"
-
-        if section_content.statement:
-            output += "STATEMENT: "
-            output += section_content.statement
-            output += "\n"
-        elif section_content.statement_multiline:
-            output += "STATEMENT: >>>"
-            output += "\n"
-            output += section_content.statement_multiline
-            output += "\n"
-            output += "<<<"
-            output += "\n"
-
-        if section_content.body:
-            output += "BODY: >>>"
-            output += "\n"
-            output += section_content.body
-            output += "\n"
-            output += "<<<"
-            output += "\n"
-
-        if section_content.rationale_multiline:
-            output += "RATIONALE: >>>\n"
-            output += section_content.rationale_multiline
-            output += "\n<<<\n"
-        elif section_content.rationale:
-            output += "RATIONALE: "
-            output += section_content.rationale
-            output += "\n"
-
-        for comment in section_content.comments:
-            if comment.comment_multiline:
-                output += "COMMENT: >>>\n"
-                output += comment.comment_multiline
-                output += "\n<<<\n"
-            else:
-                output += "COMMENT: "
-                output += comment.comment_single
-                output += "\n"
-
+                    for reference in field.field_value_references:
+                        output += "- TYPE: "
+                        output += reference.ref_type
+                        output += "\n"
+                        output += "  VALUE: "
+                        output += reference.path
+                        output += "\n"
+                else:
+                    raise NotImplementedError(field) from None
         return output
 
     @staticmethod
@@ -256,5 +238,34 @@ class SDWriter:
         if output[-1] != "\n":
             output += "\n"
         output += "[/FREETEXT]"
+        output += "\n"
+        return output
+
+    @staticmethod
+    def _print_grammar_field_type(grammar_field):
+        output = ""
+        output += "  - TITLE: "
+        output += grammar_field.title
+        output += "\n"
+        output += "    TYPE: "
+
+        if isinstance(grammar_field, GrammarElementFieldString):
+            output += grammar_field.field_type
+        elif isinstance(grammar_field, GrammarElementFieldSingleChoice):
+            output += "SingleChoice("
+            output += ", ".join(grammar_field.options)
+            output += ")"
+        elif isinstance(grammar_field, GrammarElementFieldMultipleChoice):
+            output += "MultipleChoice("
+            output += ", ".join(grammar_field.options)
+            output += ")"
+        elif isinstance(grammar_field, GrammarElementFieldTag):
+            output += "Tag"
+        else:
+            raise NotImplementedError from None
+
+        output += "\n"
+        output += "    REQUIRED: "
+        output += "True" if grammar_field.required else "False"
         output += "\n"
         return output

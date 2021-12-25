@@ -5,6 +5,8 @@ import sys
 import bs4
 from bs4 import BeautifulSoup
 
+from strictdoc.backend.dsl.models.object_factory import SDocObjectFactory
+
 STRICTDOC_ROOT_PATH = os.path.join(os.path.dirname(__file__), "..")
 sys.path.append(STRICTDOC_ROOT_PATH)
 
@@ -39,7 +41,14 @@ class ConfluenceHTMLTableImport:
             reqs = ConfluenceHTMLTableImport.parse_table(reqs_table)
             reqs_array_array.append(reqs)
 
-        document = Document(None, "Imported Doc", None, [], [])
+        document = Document(
+            name=None,
+            title="Imported Doc",
+            config=None,
+            grammar=None,
+            free_texts=[],
+            section_contents=[],
+        )
         for section_idx, reqs in enumerate(reqs_array_array):
             section_name = headers[section_idx].text
             section = Section(document, None, 1, section_name, [], [])
@@ -50,23 +59,18 @@ class ConfluenceHTMLTableImport:
                 statement = req["STATEMENT"]
                 rationale = req["RATIONALE"]
                 comment = req["COMMENT"]
-                sreq = Requirement(
-                    section,
-                    None,
-                    statement,
-                    uid,
-                    None,
-                    None,
-                    None,
-                    [],
-                    title,
-                    None,
-                    None,
-                    rationale,
-                    [RequirementComment(None, None, comment)]
-                    if comment
-                    else [],
-                    None,
+                sreq = SDocObjectFactory.create_requirement(
+                    parent=section,
+                    requirement_type="REQUIREMENT",
+                    uid=uid,
+                    level=None,
+                    title=title,
+                    statement=None,
+                    statement_multiline=statement,
+                    rationale=None,
+                    rationale_multiline=rationale,
+                    tags=None,
+                    comments=[comment] if len(comment) else None,
                 )
                 sreq.ng_level = 2
                 section.section_contents.append(sreq)

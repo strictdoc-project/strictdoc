@@ -1,7 +1,7 @@
 import argparse
+from typing import Optional
 
-
-EXPORT_FORMATS = ["html", "html-standalone", "rst", "excel"]
+EXPORT_FORMATS = ["html", "html-standalone", "rst", "excel", "reqif"]
 
 REQIF_PARSERS = ["strictdoc", "doors"]
 
@@ -198,7 +198,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
     ):
         self.strictdoc_root_path = strictdoc_root_path
         self.input_paths = input_paths
-        self.output_dir = output_dir
+        self.output_dir: Optional[str] = output_dir
         self.project_title = project_title
         self.formats = formats
         self.fields = fields

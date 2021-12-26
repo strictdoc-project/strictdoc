@@ -1,3 +1,0 @@
-RUN: %strictdoc import reqif-experimental %S/sample.reqif %S/output/output.sdoc
-
-RUN: diff %S/expected/output.sdoc %S/output/output.sdoc

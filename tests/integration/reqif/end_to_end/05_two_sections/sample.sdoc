@@ -1,0 +1,20 @@
+[DOCUMENT]
+TITLE: Document with two sections
+
+[SECTION]
+TITLE: Section #1
+
+[REQUIREMENT]
+UID: REQ-1
+STATEMENT: The mapping function shall map requirement_ID to UID.
+
+[/SECTION]
+
+[SECTION]
+TITLE: Section #2
+
+[REQUIREMENT]
+UID: REQ-2
+STATEMENT: The mapping function shall map requirement_ID to UID.
+
+[/SECTION]

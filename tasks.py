@@ -207,7 +207,6 @@ def lint_pylint(context):
         pylint
           --rcfile=.pylint.ini
           --disable=c-extension-no-member
-          --exit-zero
           strictdoc/ tasks.py
         """  # pylint: disable=line-too-long
     )

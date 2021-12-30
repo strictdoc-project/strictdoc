@@ -1,8 +1,9 @@
+from reqif.reqif_bundle import ReqIFBundle
+
 from strictdoc.backend.dsl.models.document import Document
 from strictdoc.backend.dsl.models.requirement import Requirement
 from strictdoc.backend.dsl.models.section import FreeText, Section
 from strictdoc.helpers.html import prettify_html_fragment
-from strictdoc.imports.reqif.stage1.models.reqif_bundle import ReqIFBundle
 from strictdoc.imports.reqif.stage2.abstract_parser import (
     AbstractReqIFStage2Parser,
 )
@@ -19,10 +20,12 @@ class DoorsReqIFReqIFStage2Parser(AbstractReqIFStage2Parser):
         mapping = DoorsMapping()
         document = mapping.create_document()
         # TODO: Should we rather show an error that there are no specifications?
-        if len(reqif_bundle.specifications) == 0:
+        if len(reqif_bundle.core_content.req_if_content.specifications) == 0:
             return document
 
-        specification = reqif_bundle.specifications[0]
+        specification = reqif_bundle.core_content.req_if_content.specifications[
+            0
+        ]
         document.name = specification.long_name
         document.section_contents = []
         current_section = document

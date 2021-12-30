@@ -34,27 +34,27 @@ GrammarElementField[noskipws]:
 
 GrammarElementFieldString[noskipws]:
   '  - TITLE: ' title=FieldName '\n'
-  '    TYPE: ' field_type = 'String' '\n'
+  '    TYPE: String' '\n'
   '    REQUIRED: ' (required = BooleanChoice) '\n'
 ;
 
 GrammarElementFieldSingleChoice[noskipws]:
   '  - TITLE: ' title=FieldName '\n'
-  '    TYPE: ' (field_type = 'SingleChoice')
+  '    TYPE: SingleChoice'
     '(' ((options = ChoiceOption) (options *= ChoiceOptionXs)) ')' '\n'
   '    REQUIRED: ' (required = BooleanChoice) '\n'
 ;
 
 GrammarElementFieldMultipleChoice[noskipws]:
   '  - TITLE: ' title=FieldName '\n'
-  '    TYPE: ' (field_type = 'MultipleChoice')
+  '    TYPE: MultipleChoice'
     '(' ((options = ChoiceOption) (options *= ChoiceOptionXs)) ')' '\n'
   '    REQUIRED: ' (required = BooleanChoice) '\n'
 ;
 
 GrammarElementFieldTag[noskipws]:
   '  - TITLE: ' title=FieldName '\n'
-  '    TYPE: ' field_type = 'Tag' '\n'
+  '    TYPE: Tag' '\n'
   '    REQUIRED: ' (required = BooleanChoice) '\n'
 ;
 

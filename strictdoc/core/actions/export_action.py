@@ -22,6 +22,7 @@ from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.rst.document_rst_generator import DocumentRSTGenerator
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.timing import timing_decorator
+from strictdoc.imports.reqif.reqif_export import ReqIFExport
 
 
 class ExportAction:
@@ -120,4 +121,11 @@ class ExportAction:
                 traceability_index,
                 output_excel_root,
                 config.fields,
+            )
+
+        if "reqif" in config.formats:
+            output_reqif_root = f"{output_dir}/reqif"
+            ReqIFExport.export(
+                document_tree,
+                output_reqif_root,
             )

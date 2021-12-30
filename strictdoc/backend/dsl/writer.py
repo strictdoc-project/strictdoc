@@ -250,7 +250,7 @@ class SDWriter:
         output += "    TYPE: "
 
         if isinstance(grammar_field, GrammarElementFieldString):
-            output += grammar_field.field_type
+            output += "String"
         elif isinstance(grammar_field, GrammarElementFieldSingleChoice):
             output += "SingleChoice("
             output += ", ".join(grammar_field.options)

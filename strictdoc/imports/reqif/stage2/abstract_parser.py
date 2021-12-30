@@ -1,4 +1,4 @@
-from strictdoc.imports.reqif.stage1.models.reqif_bundle import ReqIFBundle
+from reqif.reqif_bundle import ReqIFBundle
 
 
 class AbstractReqIFStage2Parser:

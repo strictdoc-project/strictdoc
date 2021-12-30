@@ -1,9 +1,10 @@
 import os
 from pathlib import Path
 
+from reqif.parser import ReqIFParser
+
 from strictdoc.backend.dsl.writer import SDWriter
 from strictdoc.cli.cli_arg_parser import ImportCommandConfig
-from strictdoc.imports.reqif.stage1.reqif_stage1_parser import ReqIFStage1Parser
 from strictdoc.imports.reqif.stage2.abstract_parser import (
     AbstractReqIFStage2Parser,
 )
@@ -23,8 +24,7 @@ class ReqIFImport:
             if import_config.parser == "doors"
             else StrictDocReqIFStage2Parser()
         )
-        reqif_bundle = ReqIFStage1Parser.parse(import_config.input_path)
-
+        reqif_bundle = ReqIFParser.parse(import_config.input_path)
         document = stage2_parser.parse_reqif(reqif_bundle)
 
         document_content = SDWriter().write(document)

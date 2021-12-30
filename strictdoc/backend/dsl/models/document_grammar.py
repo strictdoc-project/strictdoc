@@ -1,4 +1,4 @@
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from typing import List, Set, Dict
 
 from strictdoc.backend.dsl.models.type_system import (
@@ -21,6 +21,10 @@ class GrammarElement:
         self.parent = parent
         self.tag: str = tag
         self.fields: List[GrammarElementField] = fields
+        fields_map: OrderedDict = OrderedDict()
+        for field in fields:
+            fields_map[field.title] = field
+        self.fields_map = fields_map
 
 
 class DocumentGrammar:
@@ -48,57 +52,50 @@ class DocumentGrammar:
     def create_default(parent):
         fields = [
             GrammarElementFieldString(
-                parent=None, title="UID", field_type="String", required="False"
+                parent=None, title="UID", required="False"
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="LEVEL",
-                field_type="String",
                 required="False",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="STATUS",
-                field_type="String",
                 required="False",
             ),
             GrammarElementFieldString(
-                parent=None, title="TAGS", field_type="String", required="False"
+                parent=None, title="TAGS", required="False"
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="SPECIAL_FIELDS",
-                field_type="String",
                 required="False",
             ),
             GrammarElementFieldString(
-                parent=None, title="REFS", field_type="String", required="False"
+                parent=None, title="REFS", required="False"
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="TITLE",
-                field_type="String",
                 required="False",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="STATEMENT",
-                field_type="String",
                 required="False",
             ),
             GrammarElementFieldString(
-                parent=None, title="BODY", field_type="String", required="False"
+                parent=None, title="BODY", required="False"
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="RATIONALE",
-                field_type="String",
                 required="False",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="COMMENT",
-                field_type="String",
                 required="False",
             ),
         ]

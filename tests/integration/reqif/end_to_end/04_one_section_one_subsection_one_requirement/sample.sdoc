@@ -1,0 +1,16 @@
+[DOCUMENT]
+TITLE: Document with one section and one subsection
+
+[SECTION]
+TITLE: Section #1
+
+[SECTION]
+TITLE: Section #1.1
+
+[REQUIREMENT]
+UID: LLR001
+STATEMENT: The mapping function shall map requirement_ID to UID.
+
+[/SECTION]
+
+[/SECTION]

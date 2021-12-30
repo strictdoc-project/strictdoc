@@ -167,6 +167,15 @@ def cli_args_parser() -> argparse.ArgumentParser:
         "--output-file", type=str, help="Path to the output SDoc file"
     )
 
+    # Command: Dump Grammar
+    command_parser_dump_grammar = command_subparsers.add_parser(
+        "dump-grammar",
+        help="Dump the SDoc grammar to a .tx file.",
+        formatter_class=formatter,
+    )
+    command_parser_dump_grammar.add_argument(
+        "output_file", type=str, help="Path to the output .tx file"
+    )
     return main_parser
 
 
@@ -209,6 +218,11 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         )
 
 
+class DumpGrammarCommandConfig:
+    def __init__(self, output_file):
+        self.output_file = output_file
+
+
 class SDocArgsParser:
     def __init__(self, args):
         self.args = args
@@ -224,6 +238,10 @@ class SDocArgsParser:
     @property
     def is_import_command(self):
         return self.args.command == "import"
+
+    @property
+    def is_dump_grammar_command(self):
+        return self.args.command == "dump-grammar"
 
     def get_passthrough_config(self) -> PassthroughCommandConfig:
         return PassthroughCommandConfig(
@@ -252,6 +270,9 @@ class SDocArgsParser:
         return ImportCommandConfig(
             self.args.input_path, self.args.output_path, self.args.parser
         )
+
+    def get_dump_grammar_config(self) -> DumpGrammarCommandConfig:
+        return DumpGrammarCommandConfig(output_file=self.args.output_file)
 
 
 def create_sdoc_args_parser(testing_args=None) -> SDocArgsParser:

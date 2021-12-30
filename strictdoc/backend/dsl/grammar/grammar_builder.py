@@ -7,4 +7,12 @@ from strictdoc.backend.dsl.grammar.type_system import (
 class SDocGrammarBuilder:
     @staticmethod
     def create_grammar():
-        return STRICTDOC_GRAMMAR + STRICTDOC_BASIC_TYPE_SYSTEM
+        grammar = (STRICTDOC_GRAMMAR + STRICTDOC_BASIC_TYPE_SYSTEM).replace(
+            "'\\n'", "'\n'"
+        )
+        return grammar
+
+    @staticmethod
+    def create_raw_grammar():
+        grammar = STRICTDOC_GRAMMAR + STRICTDOC_BASIC_TYPE_SYSTEM
+        return grammar

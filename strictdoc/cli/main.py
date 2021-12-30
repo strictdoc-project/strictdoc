@@ -10,6 +10,7 @@ try:
     sys.path.append(STRICTDOC_ROOT_PATH)
 
     from strictdoc.cli.cli_arg_parser import create_sdoc_args_parser
+    from strictdoc.commands.dump_grammar_command import DumpGrammarCommand
     from strictdoc.core.actions.export_action import ExportAction
     from strictdoc.core.actions.passthrough_action import PassthroughAction
     from strictdoc.helpers.parallelizer import Parallelizer
@@ -54,6 +55,10 @@ def _main(parallelizer):
     elif parser.is_import_command:
         import_config = parser.get_import_config(STRICTDOC_ROOT_PATH)
         ReqIFImport.import_from_file(import_config)
+
+    elif parser.is_dump_grammar_command:
+        config = parser.get_dump_grammar_config()
+        DumpGrammarCommand.execute(config)
 
     else:
         raise NotImplementedError

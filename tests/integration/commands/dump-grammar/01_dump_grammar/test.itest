@@ -1,0 +1,8 @@
+RUN: mkdir -p %S/output/
+RUN: %strictdoc dump-grammar %S/output/output.tx
+RUN cat %S/output/output.tx | filecheck %s --dump-input=fail
+
+CHECK:   '[DOCUMENT]' '\n'
+CHECK:MultiLineStringEnd[noskipws]:
+CHECK:  '<<<'
+CHECK:;

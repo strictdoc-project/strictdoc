@@ -1,4 +1,4 @@
-STRICTDOC_BASIC_TYPE_SYSTEM = """
+STRICTDOC_BASIC_TYPE_SYSTEM = r"""
 FieldName[noskipws]:
   /[A-Z]+[A-Z_]*/
 ;
@@ -36,5 +36,4 @@ FileReference[noskipws]:
   '- TYPE: ' ref_type = 'File' '\n'
   '  VALUE: ' path = /.*$/ '\n'
 ;
-\n
 """

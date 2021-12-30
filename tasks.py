@@ -279,3 +279,13 @@ def changelog(context, github_token):
         """
     )
     run_invoke_cmd(context, command)
+
+
+@task
+def dump_grammar(context, output_file):
+    command = oneline_command(
+        f"""
+            python3 strictdoc/cli/main.py dump-grammar {output_file}
+        """
+    )
+    run_invoke_cmd(context, command)

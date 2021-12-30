@@ -1,6 +1,6 @@
 UNSUPPORTED: true
 
-RUN: %strictdoc import reqif-experimental %S/sample.reqif %S/output/output.sdoc --mapping=magna
+RUN: %strictdoc import reqif %S/sample.reqif %S/output/output.sdoc --mapping=magna
 RUN: %strictdoc export %S/output/output.sdoc
 
 UN: %strictdoc export %S/output.sdoc

@@ -1,4 +1,4 @@
 RUN: %strictdoc export --formats=reqif %S/sample.sdoc
 
-RUN: %strictdoc import reqif-experimental %S/output/reqif/output.reqif %S/output/sample.sdoc
+RUN: %strictdoc import reqif %S/output/reqif/output.reqif %S/output/sample.sdoc
 RUN: diff %S/sample.sdoc %S/output/sample.sdoc

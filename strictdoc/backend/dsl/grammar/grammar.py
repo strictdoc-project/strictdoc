@@ -1,4 +1,4 @@
-STRICTDOC_GRAMMAR = """
+STRICTDOC_GRAMMAR = r"""
 Document[noskipws]:
   '[DOCUMENT]' '\n'
   // NAME: is deprecated. Both documents and sections now have TITLE:.
@@ -163,7 +163,7 @@ SpecialField[noskipws]:
 ;
 
 ChoiceOption[noskipws]:
-  /[\\w\\/-]+( *[\\w\\/-]+)*/
+  /[\w\/-]+( *[\w\/-]+)*/
 ;
 
 ChoiceOptionXs[noskipws]:
@@ -202,7 +202,7 @@ SpecialKeyword:
 InlineLinkStart: '[LINK: ';
 
 InlineLink[noskipws]:
-  InlineLinkStart value = /[^\\]]*/ ']'
+  InlineLinkStart value = /[^\]]*/ ']'
 ;
-\n
+
 """

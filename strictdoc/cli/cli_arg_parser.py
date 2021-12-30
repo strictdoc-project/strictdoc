@@ -119,7 +119,7 @@ def cli_args_parser() -> argparse.ArgumentParser:
     command_parser_import_subparsers.required = True
 
     command_parser_import_reqif = command_parser_import_subparsers.add_parser(
-        "reqif-experimental",
+        "reqif",
         help="Create StrictDoc file from ReqIF document.",
         description="Create StrictDoc file from ReqIF document.",
         formatter_class=formatter,

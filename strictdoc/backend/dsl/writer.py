@@ -226,15 +226,7 @@ class SDWriter:
         output = ""
         output += "[FREETEXT]"
         output += "\n"
-        for part in free_text.parts:
-            if isinstance(part, str):
-                output += part
-            elif isinstance(part, InlineLink):
-                output += "[LINK: "
-                output += part.link
-                output += "]"
-            else:
-                raise NotImplementedError
+        output += SDWriter.print_free_text_content(free_text)
         if output[-1] != "\n":
             output += "\n"
         output += "[/FREETEXT]"
@@ -268,4 +260,19 @@ class SDWriter:
         output += "    REQUIRED: "
         output += "True" if grammar_field.required else "False"
         output += "\n"
+        return output
+
+    @staticmethod
+    def print_free_text_content(free_text):
+        assert isinstance(free_text, FreeText)
+        output = ""
+        for part in free_text.parts:
+            if isinstance(part, str):
+                output += part
+            elif isinstance(part, InlineLink):
+                output += "[LINK: "
+                output += part.link
+                output += "]"
+            else:
+                raise NotImplementedError
         return output

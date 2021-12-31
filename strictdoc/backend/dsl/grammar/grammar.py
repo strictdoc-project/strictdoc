@@ -113,7 +113,7 @@ SpaceThenFreeText[noskipws]:
 ;
 
 ReservedKeyword[noskipws]:
-  'DOCUMENT' | 'GRAMMAR' | 'SECTION' | 'FREE_TEXT'
+  'DOCUMENT' | 'GRAMMAR' | 'SECTION' | 'FREETEXT'
 ;
 
 Requirement[noskipws]:

@@ -1,5 +1,5 @@
 [DOCUMENT]
-TITLE: Document with two nested sections
+TITLE: Document with a requirement after a nested requirement (level drop).
 
 [SECTION]
 TITLE: Section #1

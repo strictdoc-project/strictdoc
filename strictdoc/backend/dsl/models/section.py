@@ -62,6 +62,12 @@ class FreeText:
         self.parts = parts
         self.ng_level = None
 
+    def __str__(self):
+        return f"FreeText(parts={self.parts})"
+
+    def __repr__(self):
+        return self.__str__()
+
     @property
     def is_requirement(self):
         return False

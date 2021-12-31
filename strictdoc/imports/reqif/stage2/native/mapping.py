@@ -11,7 +11,7 @@ from strictdoc.backend.dsl.models.requirement import (
     Requirement,
     RequirementField,
 )
-from strictdoc.backend.dsl.models.section import Section
+from strictdoc.backend.dsl.models.section import Section, FreeText
 
 
 class ReqIFField(Enum):
@@ -21,6 +21,15 @@ class ReqIFField(Enum):
     TITLE = "TITLE"
     STATEMENT = "STATEMENT"
     COMMENT = "COMMENT"
+
+    @classmethod
+    def list(cls):
+        return list(map(lambda c: c.value, cls))
+
+
+class ReqIFSectionField(Enum):
+    TITLE = "TITLE"
+    FREETEXT = "FREETEXT"
 
     @classmethod
     def list(cls):
@@ -60,8 +69,28 @@ class StrictDocReqIFMapping:
     def create_section_from_spec_object(
         spec_object: ReqIFSpecObject, level
     ) -> Section:
-        title = spec_object.attribute_map[ReqIFField.TITLE.value]
-        section = Section(None, None, None, title, [], [])
+        title = spec_object.attribute_map[ReqIFSectionField.TITLE.value]
+        free_texts = []
+        if ReqIFSectionField.FREETEXT.value in spec_object.attribute_map:
+            free_text = (
+                spec_object.attribute_map[ReqIFSectionField.FREETEXT.value]
+                .encode("utf-8")
+                .decode("unicode_escape")
+            )
+            free_texts.append(
+                FreeText(
+                    parent=None,
+                    parts=[free_text],
+                )
+            )
+        section = Section(
+            parent=None,
+            uid=None,
+            level=None,
+            title=title,
+            free_texts=free_texts,
+            section_contents=[],
+        )
         section.ng_level = level
         return section
 

@@ -466,7 +466,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
 name = "pygments"
-version = "2.10.0"
+version = "2.11.0"
 description = "Pygments is a syntax highlighting package written in Python."
 category = "main"
 optional = false
@@ -556,7 +556,7 @@ python-versions = "*"
 
 [[package]]
 name = "reqif"
-version = "0.0.1"
+version = "0.0.2"
 description = "Python library for ReqIF format. ReqIF parsing and unparsing."
 category = "main"
 optional = false
@@ -811,7 +811,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6.2"
-content-hash = "32e8a279bb5c2cfc10f1c8326bb94c8072d21a0351cbeb8aaf9364ebc8a3de67"
+content-hash = "adf0c4c62140cb99c5a370019833e28e82f25ed456b2861b095b2de88020399e"
 
 [metadata.files]
 alabaster = [
@@ -1179,8 +1179,8 @@ pyflakes = [
     {file = "pyflakes-2.3.1.tar.gz", hash = "sha256:f5bc8ecabc05bb9d291eb5203d6810b49040f6ff446a756326104746cc00c1db"},
 ]
 pygments = [
-    {file = "Pygments-2.10.0-py3-none-any.whl", hash = "sha256:b8e67fe6af78f492b3c4b3e2970c0624cbf08beb1e493b2c99b9fa1b67a20380"},
-    {file = "Pygments-2.10.0.tar.gz", hash = "sha256:f398865f7eb6874156579fdf36bc840a03cab64d1cde9e93d68f46a425ec52c6"},
+    {file = "Pygments-2.11.0-py3-none-any.whl", hash = "sha256:ac8098bfc40b8e1091ad7c13490c7f4797e401d0972e8fcfadde90ffb3ed4ea9"},
+    {file = "Pygments-2.11.0.tar.gz", hash = "sha256:51130f778a028f2d19c143fce00ced6f8b10f726e17599d7e91b290f6cbcda0c"},
 ]
 pylint = [
     {file = "pylint-2.11.1-py3-none-any.whl", hash = "sha256:0f358e221c45cbd4dad2a1e4b883e75d28acdcccd29d40c76eb72b307269b126"},
@@ -1257,8 +1257,8 @@ regex = [
     {file = "regex-2021.11.10.tar.gz", hash = "sha256:f341ee2df0999bfdf7a95e448075effe0db212a59387de1a70690e4acb03d4c6"},
 ]
 reqif = [
-    {file = "reqif-0.0.1-py3-none-any.whl", hash = "sha256:942657a29afe6502e060971272ad3e5d3e750a4eda60047c1d0506253a419542"},
-    {file = "reqif-0.0.1.tar.gz", hash = "sha256:cb3d853281c70c264b04d454b1958ef2d900fcff46f7ceee95cbd26ab5fe0795"},
+    {file = "reqif-0.0.2-py3-none-any.whl", hash = "sha256:33e8c0930eab89fa2a073375271f1cf8c6fe8924460a16c791d3df28a26a82ee"},
+    {file = "reqif-0.0.2.tar.gz", hash = "sha256:2bcc3c37a1b8221c697f9d2a65a91db5a6ac93f94435409c5561076bd511f2be"},
 ]
 requests = [
     {file = "requests-2.26.0-py2.py3-none-any.whl", hash = "sha256:6c1246513ecd5ecd4528a0906f910e8f0f9c6b8ec72030dc9fd154dc1a6efd24"},

@@ -65,18 +65,25 @@ class SDocToReqIFObjectConverter:
             for element in document.grammar.elements:
                 for field in element.fields:
                     if isinstance(field, GrammarElementFieldString):
-                        data_types.append(
-                            ReqIFDataTypeDefinitionString(
-                                is_self_closed=True,
-                                description=None,
-                                identifier=(
-                                    StrictDocReqIFTypes.SINGLE_LINE_STRING.name
-                                ),
-                                last_change=None,
-                                long_name=None,
-                                max_length=None,
-                            )
+                        if (
+                            StrictDocReqIFTypes.SINGLE_LINE_STRING.value
+                            in data_types_lookup
+                        ):
+                            continue
+                        data_type = ReqIFDataTypeDefinitionString(
+                            is_self_closed=True,
+                            description=None,
+                            identifier=(
+                                StrictDocReqIFTypes.SINGLE_LINE_STRING.value
+                            ),
+                            last_change=None,
+                            long_name=None,
+                            max_length=None,
                         )
+                        data_types.append(data_type)
+                        data_types_lookup[
+                            StrictDocReqIFTypes.SINGLE_LINE_STRING.value
+                        ] = data_type.identifier
                     elif isinstance(field, GrammarElementFieldSingleChoice):
                         values = []
                         values_map = {}
@@ -98,7 +105,7 @@ class SDocToReqIFObjectConverter:
                             description=None,
                             identifier=(
                                 generate_unique_identifier(
-                                    StrictDocReqIFTypes.SINGLE_CHOICE.name
+                                    StrictDocReqIFTypes.SINGLE_CHOICE.value
                                 )
                             ),
                             last_change=None,
@@ -109,7 +116,7 @@ class SDocToReqIFObjectConverter:
                         )
                         data_types.append(data_type)
                         data_types_lookup[
-                            StrictDocReqIFTypes.SINGLE_CHOICE.name
+                            StrictDocReqIFTypes.SINGLE_CHOICE.value
                         ] = data_type.identifier
                     elif isinstance(field, GrammarElementFieldMultipleChoice):
                         values = []
@@ -132,7 +139,7 @@ class SDocToReqIFObjectConverter:
                             description=None,
                             identifier=(
                                 generate_unique_identifier(
-                                    StrictDocReqIFTypes.MULTI_CHOICE.name
+                                    StrictDocReqIFTypes.MULTI_CHOICE.value
                                 )
                             ),
                             last_change=None,
@@ -143,7 +150,7 @@ class SDocToReqIFObjectConverter:
                         )
                         data_types.append(data_type)
                         data_types_lookup[
-                            StrictDocReqIFTypes.MULTI_CHOICE.name
+                            StrictDocReqIFTypes.MULTI_CHOICE.value
                         ] = data_type.identifier
                     else:
                         raise NotImplementedError(field) from None
@@ -155,12 +162,14 @@ class SDocToReqIFObjectConverter:
             document_iterator = DocumentCachingIterator(document)
 
             parents: Dict[ReqIFSpecHierarchy, ReqIFSpecHierarchy] = {}
-            # spec_hierarchies: List[ReqIFSpecHierarchy] = []
+
+            # TODO: This is a throw-away object. It gets discarded when the
+            # iteration is over. Find a way to do without it.
             root_hierarchy = ReqIFSpecHierarchy(
-                identifier="foo",
+                identifier="NOT_USED",
                 last_change=None,
                 long_name=None,
-                spec_object="foo",
+                spec_object="NOT_USED",
                 children=[],
                 ref_then_children_order=True,
                 level=0,
@@ -192,7 +201,7 @@ class SDocToReqIFObjectConverter:
                     )
                     spec_objects.append(spec_object)
                     hierarchy = ReqIFSpecHierarchy(
-                        identifier="foo",
+                        identifier=generate_unique_identifier("SPEC-HIERARCHY"),
                         last_change=None,
                         long_name=None,
                         spec_object=spec_object.identifier,
@@ -222,7 +231,9 @@ class SDocToReqIFObjectConverter:
                     )
                     spec_objects.append(spec_object)
                     hierarchy = ReqIFSpecHierarchy(
-                        identifier="foo",
+                        identifier=generate_unique_identifier(
+                            "SPEC-IDENTIFIER"
+                        ),
                         last_change=None,
                         long_name=None,
                         spec_object=spec_object.identifier,
@@ -239,11 +250,11 @@ class SDocToReqIFObjectConverter:
             specification = ReqIFSpecification(
                 type_then_children_order=True,
                 description=None,
-                identifier="FOO",
+                identifier=generate_unique_identifier("SPECIFICATION"),
                 last_change=None,
                 long_name=document.name,
                 values=None,
-                specification_type="BAR",
+                specification_type=None,
                 children=root_hierarchy.children,
             )
             specifications.append(specification)
@@ -348,9 +359,9 @@ class SDocToReqIFObjectConverter:
                         attribute_type=SpecObjectAttributeType.STRING,
                         description=None,
                         identifier=field.title,
-                        last_change="TBD",
+                        last_change=None,
                         datatype_definition=(
-                            StrictDocReqIFTypes.SINGLE_LINE_STRING.name
+                            StrictDocReqIFTypes.SINGLE_LINE_STRING.value
                         ),
                         long_name=field.title,
                         editable=None,
@@ -365,7 +376,7 @@ class SDocToReqIFObjectConverter:
                         last_change=None,
                         datatype_definition=(
                             data_types_lookup[
-                                StrictDocReqIFTypes.SINGLE_CHOICE.name
+                                StrictDocReqIFTypes.SINGLE_CHOICE.value
                             ]
                         ),
                         long_name=field.title,
@@ -381,7 +392,7 @@ class SDocToReqIFObjectConverter:
                         last_change=None,
                         datatype_definition=(
                             data_types_lookup[
-                                StrictDocReqIFTypes.MULTI_CHOICE.name
+                                StrictDocReqIFTypes.MULTI_CHOICE.value
                             ]
                         ),
                         long_name=field.title,
@@ -397,7 +408,7 @@ class SDocToReqIFObjectConverter:
             spec_object_type = ReqIFSpecObjectType(
                 description=None,
                 identifier=element.tag,
-                last_change="TBD",
+                last_change=None,
                 long_name=element.tag,
                 attribute_definitions=attribute_definitions,
                 attribute_map=attribute_map,

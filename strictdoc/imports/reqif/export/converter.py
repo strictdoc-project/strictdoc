@@ -33,6 +33,7 @@ from strictdoc.backend.dsl.models.type_system import (
 from strictdoc.backend.dsl.writer import SDWriter
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
+from strictdoc.helpers.string import escape
 from strictdoc.imports.reqif.stage2.native.mapping import ReqIFSectionField
 
 
@@ -194,10 +195,8 @@ class SDocToReqIFObjectConverter:
                     )
                     attributes.append(title_attribute)
                     if len(node.free_texts) > 0:
-                        free_text_value = (
+                        free_text_value = escape(
                             SDWriter.print_free_text_content(node.free_texts[0])
-                            .encode("unicode_escape")
-                            .decode("utf-8")
                         )
                         free_text_attribute = SpecObjectAttribute(
                             attribute_type=SpecObjectAttributeType.STRING,
@@ -319,6 +318,10 @@ class SDocToReqIFObjectConverter:
         attributes: List[SpecObjectAttribute] = []
         attribute_map: Dict[str, SpecObjectAttribute] = {}
         for field in requirement.fields:
+            if field.field_name == "REFS":
+                raise NotImplementedError(
+                    "Exporting REFS to ReqIF is not implemented yet."
+                )
             grammar_field = grammar_element.fields_map[field.field_name]
             if isinstance(grammar_field, GrammarElementFieldSingleChoice):
                 attribute = SpecObjectAttribute(
@@ -335,10 +338,15 @@ class SDocToReqIFObjectConverter:
                     enum_values_then_definition_order=True,
                 )
             elif isinstance(grammar_field, GrammarElementFieldString):
+                field_value = escape(
+                    field.field_value_multiline
+                    if field.field_value_multiline is not None
+                    else field.field_value
+                )
                 attribute = SpecObjectAttribute(
                     SpecObjectAttributeType.STRING,
                     field.field_name,
-                    field.field_value,
+                    field_value,
                     enum_values_then_definition_order=None,
                 )
             else:

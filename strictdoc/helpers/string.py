@@ -21,3 +21,11 @@ def multireplace(string, replacements):
 
     pattern = re.compile("|".join(rep_escaped), 0)
     return pattern.sub(lambda match: replacements[match.group(0)], string)
+
+
+def escape(string: str) -> str:
+    return string.encode("unicode_escape").decode("utf-8")
+
+
+def unescape(string: str) -> str:
+    return string.encode("utf-8").decode("unicode_escape")

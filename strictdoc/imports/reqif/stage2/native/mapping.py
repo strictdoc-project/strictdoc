@@ -12,6 +12,7 @@ from strictdoc.backend.dsl.models.requirement import (
     RequirementField,
 )
 from strictdoc.backend.dsl.models.section import Section, FreeText
+from strictdoc.helpers.string import unescape
 
 
 class ReqIFField(Enum):
@@ -72,10 +73,8 @@ class StrictDocReqIFMapping:
         title = spec_object.attribute_map[ReqIFSectionField.TITLE.value]
         free_texts = []
         if ReqIFSectionField.FREETEXT.value in spec_object.attribute_map:
-            free_text = (
+            free_text = unescape(
                 spec_object.attribute_map[ReqIFSectionField.FREETEXT.value]
-                .encode("utf-8")
-                .decode("unicode_escape")
             )
             free_texts.append(
                 FreeText(
@@ -102,12 +101,17 @@ class StrictDocReqIFMapping:
     ) -> Requirement:
         fields = []
         for attribute in spec_object.attributes:
+            attribute_value = unescape(attribute.value)
+            attribute_multiline_value = None
+            if "\n" in attribute_value:
+                attribute_multiline_value = attribute_value
+                attribute_value = None
             fields.append(
                 RequirementField(
                     parent=None,
                     field_name=attribute.name,
-                    field_value=attribute.value,
-                    field_value_multiline=None,
+                    field_value=attribute_value,
+                    field_value_multiline=attribute_multiline_value,
                     field_value_references=None,
                     field_value_special_fields=None,
                 )

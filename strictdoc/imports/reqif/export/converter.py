@@ -167,6 +167,12 @@ class SDocToReqIFObjectConverter:
             )
             current_hierarchy = root_hierarchy
             for node in document_iterator.all_content():
+                if node.is_composite_requirement:
+                    raise NotImplementedError(
+                        "Exporting composite requirements is not "
+                        "supported yet.",
+                        node,
+                    )
                 if node.is_section:
                     title_attribute = SpecObjectAttribute(
                         attribute_type=SpecObjectAttributeType.STRING,
@@ -224,6 +230,10 @@ class SDocToReqIFObjectConverter:
                         ref_then_children_order=True,
                         level=node.ng_level,
                     )
+                    for _ in range(
+                        0, (current_hierarchy.level - node.ng_level + 1)
+                    ):
+                        current_hierarchy = parents[current_hierarchy]
                     parents[hierarchy] = current_hierarchy
                     current_hierarchy.add_child(hierarchy)
             specification = ReqIFSpecification(

@@ -1,0 +1,8 @@
+[DOCUMENT]
+TITLE: Document with two nested sections
+
+[COMPOSITE_REQUIREMENT]
+UID: REQ-1.1.1
+STATEMENT: The mapping function shall map requirement_ID to UID.
+
+[/COMPOSITE_REQUIREMENT]

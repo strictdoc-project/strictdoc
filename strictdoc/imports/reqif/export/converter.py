@@ -30,8 +30,10 @@ from strictdoc.backend.dsl.models.type_system import (
     GrammarElementField,
     GrammarElementFieldMultipleChoice,
 )
+from strictdoc.backend.dsl.writer import SDWriter
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
+from strictdoc.imports.reqif.stage2.native.mapping import ReqIFSectionField
 
 
 class StrictDocReqIFTypes(Enum):
@@ -183,19 +185,34 @@ class SDocToReqIFObjectConverter:
                         node,
                     )
                 if node.is_section:
+                    attributes = []
                     title_attribute = SpecObjectAttribute(
                         attribute_type=SpecObjectAttributeType.STRING,
                         name="TITLE",
                         value=node.title,
                         enum_values_then_definition_order=None,
                     )
+                    attributes.append(title_attribute)
+                    if len(node.free_texts) > 0:
+                        free_text_value = (
+                            SDWriter.print_free_text_content(node.free_texts[0])
+                            .encode("unicode_escape")
+                            .decode("utf-8")
+                        )
+                        free_text_attribute = SpecObjectAttribute(
+                            attribute_type=SpecObjectAttributeType.STRING,
+                            name=ReqIFSectionField.FREETEXT.value,
+                            value=free_text_value,
+                            enum_values_then_definition_order=None,
+                        )
+                        attributes.append(free_text_attribute)
                     spec_object = ReqIFSpecObject(
                         description=None,
                         identifier=generate_unique_identifier("SECTION"),
                         last_change=None,
                         long_name=None,
                         spec_object_type="SECTION",
-                        attributes=[title_attribute],
+                        attributes=attributes,
                         attribute_map={"TITLE": title_attribute},
                         values_then_type_order=True,
                     )

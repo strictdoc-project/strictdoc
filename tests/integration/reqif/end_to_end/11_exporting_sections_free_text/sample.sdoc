@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Document with a section with a free text
+
+[SECTION]
+TITLE: Section #1
+
+[FREETEXT]
+This is a free text line #1.
+
+This is a free text line #2.
+
+This is a free text line #3.
+[/FREETEXT]
+
+[/SECTION]

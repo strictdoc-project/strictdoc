@@ -1,5 +1,5 @@
 [DOCUMENT]
-TITLE: Document with two nested sections
+TITLE: Document with a composite requirement
 
 [COMPOSITE_REQUIREMENT]
 UID: REQ-1.1.1

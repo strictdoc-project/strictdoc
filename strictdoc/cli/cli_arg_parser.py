@@ -1,9 +1,9 @@
 import argparse
 from typing import Optional
 
-EXPORT_FORMATS = ["html", "html-standalone", "rst", "excel", "reqif"]
+EXPORT_FORMATS = ["html", "html-standalone", "rst", "excel", "reqif-sdoc"]
 
-REQIF_PARSERS = ["strictdoc", "doors"]
+REQIF_PARSERS = ["sdoc", "fm-studio"]
 
 
 def _check_formats(formats):
@@ -124,16 +124,6 @@ def cli_args_parser() -> argparse.ArgumentParser:
         description="Create StrictDoc file from ReqIF document.",
         formatter_class=formatter,
     )
-    command_parser_import_reqif.add_argument(
-        "input_path",
-        type=str,
-        help="Path to the input ReqIF file.",
-    )
-    command_parser_import_reqif.add_argument(
-        "output_path",
-        type=str,
-        help="Path to the output SDoc file.",
-    )
 
     def check_reqif_parser(parser):
         if parser not in REQIF_PARSERS:
@@ -144,13 +134,22 @@ def cli_args_parser() -> argparse.ArgumentParser:
         return parser
 
     command_parser_import_reqif.add_argument(
-        "--parser",
+        "parser",
         type=check_reqif_parser,
-        default="strictdoc",
         help=(
-            "An argument that select the ReqIF parser. "
+            "An argument that selects the ReqIF parser. "
             f"Possible values: {{{', '.join(REQIF_PARSERS)}}}"
         ),
+    )
+    command_parser_import_reqif.add_argument(
+        "input_path",
+        type=str,
+        help="Path to the input ReqIF file.",
+    )
+    command_parser_import_reqif.add_argument(
+        "output_path",
+        type=str,
+        help="Path to the output SDoc file.",
     )
 
     # Command: Passthrough

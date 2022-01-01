@@ -1,10 +1,10 @@
 import os
 
-from strictdoc.backend.dsl.models.document_grammar import (
+from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElementField,
 )
-from strictdoc.backend.dsl.models.requirement import (
+from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
     RequirementField,
 )

@@ -1,13 +1,13 @@
 from collections import OrderedDict
 from typing import Optional, List
 
-from strictdoc.backend.dsl.document_reference import DocumentReference
-from strictdoc.backend.dsl.models.document_grammar import (
+from strictdoc.backend.sdoc.document_reference import DocumentReference
+from strictdoc.backend.sdoc.models.document_grammar import (
     RESERVED_NON_META_FIELDS,
 )
-from strictdoc.backend.dsl.models.node import Node
-from strictdoc.backend.dsl.models.reference import Reference
-from strictdoc.backend.dsl.models.special_field import SpecialField
+from strictdoc.backend.sdoc.models.node import Node
+from strictdoc.backend.sdoc.models.reference import Reference
+from strictdoc.backend.sdoc.models.special_field import SpecialField
 
 
 class RequirementContext:

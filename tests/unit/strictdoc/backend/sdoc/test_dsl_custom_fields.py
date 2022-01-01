@@ -1,9 +1,9 @@
 import pytest
 import textx
 
-from strictdoc.backend.dsl.error_handling import StrictDocSemanticError
-from strictdoc.backend.dsl.models.document import Document
-from strictdoc.backend.dsl.reader import SDReader
+from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
+from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.reader import SDReader
 
 
 def test_001_custom_fields():

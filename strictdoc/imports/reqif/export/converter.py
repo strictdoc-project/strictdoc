@@ -21,16 +21,16 @@ from reqif.models.reqif_types import SpecObjectAttributeType
 from reqif.object_lookup import ReqIFObjectLookup
 from reqif.reqif_bundle import ReqIFBundle
 
-from strictdoc.backend.dsl.models.document import Document
-from strictdoc.backend.dsl.models.document_grammar import DocumentGrammar
-from strictdoc.backend.dsl.models.requirement import Requirement
-from strictdoc.backend.dsl.models.type_system import (
+from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.requirement import Requirement
+from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldString,
     GrammarElementFieldSingleChoice,
     GrammarElementField,
     GrammarElementFieldMultipleChoice,
 )
-from strictdoc.backend.dsl.writer import SDWriter
+from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.helpers.string import escape

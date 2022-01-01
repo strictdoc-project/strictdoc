@@ -1,10 +1,10 @@
-from strictdoc.backend.dsl.models.document import Document
-from strictdoc.backend.dsl.models.requirement import (
+from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
     CompositeRequirement,
 )
-from strictdoc.backend.dsl.reader import SDReader
-from strictdoc.backend.dsl.writer import SDWriter
+from strictdoc.backend.sdoc.reader import SDReader
+from strictdoc.backend.sdoc.writer import SDWriter
 
 
 def test_001_minimal_doc():

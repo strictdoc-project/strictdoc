@@ -1,9 +1,9 @@
 from enum import Enum
 
-from strictdoc.backend.dsl.models.inline_link import InlineLink
-from strictdoc.backend.dsl.models.requirement import Requirement
-from strictdoc.backend.dsl.models.section import FreeText, Section
-from strictdoc.backend.dsl.models.special_field import SpecialField
+from strictdoc.backend.sdoc.models.inline_link import InlineLink
+from strictdoc.backend.sdoc.models.requirement import Requirement
+from strictdoc.backend.sdoc.models.section import FreeText, Section
+from strictdoc.backend.sdoc.models.special_field import SpecialField
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 

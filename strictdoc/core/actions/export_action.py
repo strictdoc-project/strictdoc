@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 from typing import List, Iterator
 
-from strictdoc.backend.dsl.errors.document_tree_error import DocumentTreeError
+from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.source_file_syntax.reader import (
     SourceFileTraceabilityReader,
 )

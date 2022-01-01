@@ -1,6 +1,6 @@
 from collections import deque
 
-from strictdoc.backend.dsl.errors.document_tree_error import DocumentTreeError
+from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 
 BEFORE = 1
 AFTER = 2

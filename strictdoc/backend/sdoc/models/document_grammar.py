@@ -1,7 +1,7 @@
 from collections import defaultdict, OrderedDict
 from typing import List, Set, Dict
 
-from strictdoc.backend.dsl.models.type_system import (
+from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementField,
     GrammarElementFieldString,
 )

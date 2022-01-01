@@ -1,5 +1,5 @@
-from strictdoc.backend.dsl.grammar.grammar import STRICTDOC_GRAMMAR
-from strictdoc.backend.dsl.grammar.type_system import (
+from strictdoc.backend.sdoc.grammar.grammar import STRICTDOC_GRAMMAR
+from strictdoc.backend.sdoc.grammar.type_system import (
     STRICTDOC_BASIC_TYPE_SYSTEM,
 )
 

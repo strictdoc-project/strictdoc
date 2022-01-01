@@ -3,7 +3,7 @@ from enum import Enum
 from functools import partial
 from pathlib import Path
 
-from strictdoc.backend.dsl.models.document import Document
+from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree

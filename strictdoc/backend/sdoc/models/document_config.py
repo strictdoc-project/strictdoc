@@ -1,6 +1,8 @@
 from typing import Set, Optional, List
 
-from strictdoc.backend.dsl.models.config_special_field import ConfigSpecialField
+from strictdoc.backend.sdoc.models.config_special_field import (
+    ConfigSpecialField,
+)
 
 
 class DocumentConfig:  # pylint: disable=too-many-instance-attributes

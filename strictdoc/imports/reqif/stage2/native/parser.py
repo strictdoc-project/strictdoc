@@ -5,17 +5,17 @@ from reqif.models.reqif_spec_object_type import ReqIFSpecObjectType
 from reqif.models.reqif_types import SpecObjectAttributeType
 from reqif.reqif_bundle import ReqIFBundle
 
-from strictdoc.backend.dsl.models.document import Document
-from strictdoc.backend.dsl.models.document_grammar import (
+from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document_grammar import (
     GrammarElement,
     DocumentGrammar,
 )
-from strictdoc.backend.dsl.models.requirement import (
+from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
     RequirementField,
 )
-from strictdoc.backend.dsl.models.section import Section
-from strictdoc.backend.dsl.models.type_system import (
+from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldString,
     GrammarElementFieldSingleChoice,
     GrammarElementFieldMultipleChoice,

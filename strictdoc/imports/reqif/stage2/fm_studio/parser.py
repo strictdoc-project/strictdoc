@@ -1,8 +1,8 @@
 from reqif.reqif_bundle import ReqIFBundle
 
-from strictdoc.backend.dsl.models.document import Document
-from strictdoc.backend.dsl.models.requirement import Requirement
-from strictdoc.backend.dsl.models.section import FreeText, Section
+from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.requirement import Requirement
+from strictdoc.backend.sdoc.models.section import FreeText, Section
 from strictdoc.helpers.html import prettify_html_fragment
 from strictdoc.imports.reqif.stage2.abstract_parser import (
     AbstractReqIFStage2Parser,

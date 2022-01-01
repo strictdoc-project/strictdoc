@@ -3,16 +3,16 @@ from typing import Optional
 
 from textx import get_location
 
-from strictdoc.backend.dsl.error_handling import StrictDocSemanticError
-from strictdoc.backend.dsl.models.document_grammar import (
+from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
+from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElementField,
 )
-from strictdoc.backend.dsl.models.requirement import (
+from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
     RequirementField,
 )
-from strictdoc.backend.dsl.models.type_system import (
+from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldSingleChoice,
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldTag,

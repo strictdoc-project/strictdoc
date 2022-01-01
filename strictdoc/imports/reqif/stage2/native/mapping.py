@@ -3,15 +3,15 @@ from typing import Optional, Union
 
 from reqif.models.reqif_spec_object import ReqIFSpecObject
 
-from strictdoc.backend.dsl.models.document import Document
-from strictdoc.backend.dsl.models.document_config import DocumentConfig
-from strictdoc.backend.dsl.models.document_grammar import DocumentGrammar
-from strictdoc.backend.dsl.models.reference import Reference
-from strictdoc.backend.dsl.models.requirement import (
+from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document_config import DocumentConfig
+from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.reference import Reference
+from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
     RequirementField,
 )
-from strictdoc.backend.dsl.models.section import Section, FreeText
+from strictdoc.backend.sdoc.models.section import Section, FreeText
 from strictdoc.helpers.string import unescape
 
 

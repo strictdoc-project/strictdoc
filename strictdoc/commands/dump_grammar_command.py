@@ -1,4 +1,4 @@
-from strictdoc.backend.dsl.grammar.grammar_builder import SDocGrammarBuilder
+from strictdoc.backend.sdoc.grammar.grammar_builder import SDocGrammarBuilder
 from strictdoc.cli.cli_arg_parser import DumpGrammarCommandConfig
 
 

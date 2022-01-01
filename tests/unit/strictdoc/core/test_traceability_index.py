@@ -1,6 +1,6 @@
 import pytest
 
-from strictdoc.backend.dsl.errors.document_tree_error import DocumentTreeError
+from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from tests.unit.helpers.test_document_builder import DocumentBuilder

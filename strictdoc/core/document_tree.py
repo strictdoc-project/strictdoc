@@ -1,4 +1,4 @@
-from strictdoc.backend.dsl.models.document import Document
+from strictdoc.backend.sdoc.models.document import Document
 
 
 class DocumentTree:

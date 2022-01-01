@@ -6,8 +6,8 @@ import xlsxwriter
 from xlsxwriter.workbook import Workbook
 from xlsxwriter.worksheet import Worksheet
 
-from strictdoc.backend.dsl.models.document import Document
-from strictdoc.backend.dsl.models.requirement import Requirement
+from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.core.document_tree import DocumentTree
 
 EXCEL_SHEET_NAME = "Requirements"

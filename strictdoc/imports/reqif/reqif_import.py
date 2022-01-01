@@ -3,7 +3,7 @@ from pathlib import Path
 
 from reqif.parser import ReqIFParser
 
-from strictdoc.backend.dsl.writer import SDWriter
+from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.cli.cli_arg_parser import ImportCommandConfig
 from strictdoc.imports.reqif.stage2.abstract_parser import (
     AbstractReqIFStage2Parser,

@@ -1,4 +1,4 @@
-from strictdoc.backend.dsl.validations.requirement import (
+from strictdoc.backend.sdoc.validations.requirement import (
     multi_choice_regex_match,
 )
 

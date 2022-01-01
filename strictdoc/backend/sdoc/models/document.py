@@ -1,7 +1,7 @@
 from typing import Optional
 
-from strictdoc.backend.dsl.models.document_config import DocumentConfig
-from strictdoc.backend.dsl.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.document_config import DocumentConfig
+from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.core.document_meta import DocumentMeta
 
 

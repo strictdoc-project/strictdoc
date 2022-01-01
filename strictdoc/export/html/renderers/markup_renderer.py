@@ -1,12 +1,12 @@
 from typing import Optional
 
-from strictdoc.backend.dsl.models.document import Document
-from strictdoc.backend.dsl.models.inline_link import InlineLink
-from strictdoc.backend.dsl.models.requirement import (
+from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.inline_link import InlineLink
+from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
     RequirementComment,
 )
-from strictdoc.backend.dsl.models.section import FreeText
+from strictdoc.backend.sdoc.models.section import FreeText
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.renderers.html_fragment_writer import (
     HTMLFragmentWriter,

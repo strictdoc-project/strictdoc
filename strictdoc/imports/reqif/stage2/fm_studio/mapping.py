@@ -2,12 +2,12 @@ from enum import Enum
 
 from reqif.models.reqif_spec_object import ReqIFSpecObject
 
-from strictdoc.backend.dsl.models.document import Document
-from strictdoc.backend.dsl.models.document_config import DocumentConfig
-from strictdoc.backend.dsl.models.document_grammar import DocumentGrammar
-from strictdoc.backend.dsl.models.object_factory import SDocObjectFactory
-from strictdoc.backend.dsl.models.requirement import Requirement
-from strictdoc.backend.dsl.models.section import Section
+from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document_config import DocumentConfig
+from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
+from strictdoc.backend.sdoc.models.requirement import Requirement
+from strictdoc.backend.sdoc.models.section import Section
 
 
 class ReqIFField(Enum):

@@ -1,14 +1,14 @@
 from enum import Enum
 
-from strictdoc.backend.dsl.models.document import Document
-from strictdoc.backend.dsl.models.document_config import DocumentConfig
-from strictdoc.backend.dsl.models.inline_link import InlineLink
-from strictdoc.backend.dsl.models.requirement import (
+from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document_config import DocumentConfig
+from strictdoc.backend.sdoc.models.inline_link import InlineLink
+from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
     CompositeRequirement,
 )
-from strictdoc.backend.dsl.models.section import Section, FreeText
-from strictdoc.backend.dsl.models.type_system import (
+from strictdoc.backend.sdoc.models.section import Section, FreeText
+from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldString,
     GrammarElementFieldSingleChoice,
     GrammarElementFieldMultipleChoice,

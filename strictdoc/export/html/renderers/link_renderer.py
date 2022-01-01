@@ -1,9 +1,9 @@
 import re
 from typing import Optional
 
-from strictdoc.backend.dsl.models.document import Document
-from strictdoc.backend.dsl.models.requirement import Requirement
-from strictdoc.backend.dsl.models.section import Section
+from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.requirement import Requirement
+from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.finders.source_files_finder import SourceFile
 from strictdoc.export.html.document_type import DocumentType
 

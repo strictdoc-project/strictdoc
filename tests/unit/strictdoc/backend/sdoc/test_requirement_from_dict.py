@@ -1,4 +1,4 @@
-from strictdoc.backend.dsl.models.object_factory import SDocObjectFactory
+from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 
 
 def test_010_full_dict():

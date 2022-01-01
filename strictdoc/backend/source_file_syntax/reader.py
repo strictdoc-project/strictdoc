@@ -4,7 +4,7 @@ from functools import partial
 
 from textx import metamodel_from_str, get_location
 
-from strictdoc.backend.dsl.error_handling import StrictDocSemanticError
+from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.source_file_syntax.grammar import SOURCE_FILE_GRAMMAR
 from strictdoc.backend.source_file_syntax.models.range_pragma import RangePragma
 from strictdoc.backend.source_file_syntax.models.source_file_info import (

@@ -1,7 +1,7 @@
 from typing import Optional, List
 
-from strictdoc.backend.dsl.models.document import Document
-from strictdoc.backend.dsl.models.requirement import (
+from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
     RequirementField,
 )

@@ -2,7 +2,7 @@ from typing import List
 
 import pytest
 
-from strictdoc.backend.dsl.error_handling import StrictDocSemanticError
+from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.source_file_syntax.reader import (
     SourceFileTraceabilityReader,
     RangePragma,

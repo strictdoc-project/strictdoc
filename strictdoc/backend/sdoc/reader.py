@@ -3,36 +3,38 @@ import traceback
 
 from textx import metamodel_from_str
 
-from strictdoc.backend.dsl.error_handling import StrictDocSemanticError
-from strictdoc.backend.dsl.grammar.grammar_builder import SDocGrammarBuilder
-from strictdoc.backend.dsl.models.config_special_field import ConfigSpecialField
-from strictdoc.backend.dsl.models.document import Document
-from strictdoc.backend.dsl.models.document_config import DocumentConfig
-from strictdoc.backend.dsl.models.document_grammar import (
+from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
+from strictdoc.backend.sdoc.grammar.grammar_builder import SDocGrammarBuilder
+from strictdoc.backend.sdoc.models.config_special_field import (
+    ConfigSpecialField,
+)
+from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document_config import DocumentConfig
+from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
 )
-from strictdoc.backend.dsl.models.inline_link import InlineLink
-from strictdoc.backend.dsl.models.reference import (
+from strictdoc.backend.sdoc.models.inline_link import InlineLink
+from strictdoc.backend.sdoc.models.reference import (
     Reference,
     ParentReqReference,
     FileReference,
 )
-from strictdoc.backend.dsl.models.requirement import (
+from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
     CompositeRequirement,
     RequirementComment,
     RequirementField,
 )
-from strictdoc.backend.dsl.models.section import Section, FreeText
-from strictdoc.backend.dsl.models.special_field import SpecialField
-from strictdoc.backend.dsl.models.type_system import (
+from strictdoc.backend.sdoc.models.section import Section, FreeText
+from strictdoc.backend.sdoc.models.special_field import SpecialField
+from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldTag,
 )
-from strictdoc.backend.dsl.processor import SDocParsingProcessor, ParseContext
+from strictdoc.backend.sdoc.processor import SDocParsingProcessor, ParseContext
 from strictdoc.helpers.textx import drop_textx_meta
 
 DOCUMENT_MODELS = [

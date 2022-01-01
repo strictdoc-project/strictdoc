@@ -1,4 +1,4 @@
-from strictdoc.backend.dsl.models.requirement import Requirement
+from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.source_file_syntax.reader import (
     SourceFileTraceabilityInfo,
 )

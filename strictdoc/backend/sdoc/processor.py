@@ -2,17 +2,17 @@ from typing import Optional
 
 from textx import get_location
 
-from strictdoc.backend.dsl.document_reference import DocumentReference
-from strictdoc.backend.dsl.error_handling import StrictDocSemanticError
-from strictdoc.backend.dsl.models.document import Document
-from strictdoc.backend.dsl.models.document_config import DocumentConfig
-from strictdoc.backend.dsl.models.document_grammar import DocumentGrammar
-from strictdoc.backend.dsl.models.requirement import (
+from strictdoc.backend.sdoc.document_reference import DocumentReference
+from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
+from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document_config import DocumentConfig
+from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.requirement import (
     CompositeRequirement,
     Requirement,
 )
-from strictdoc.backend.dsl.models.section import Section
-from strictdoc.backend.dsl.validations.requirement import validate_requirement
+from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.validations.requirement import validate_requirement
 
 
 class ParseContext:

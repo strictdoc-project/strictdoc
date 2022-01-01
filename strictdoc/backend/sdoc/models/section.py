@@ -1,6 +1,6 @@
 from typing import Optional, List
 
-from strictdoc.backend.dsl.models.node import Node
+from strictdoc.backend.sdoc.models.node import Node
 
 
 class SectionContext:

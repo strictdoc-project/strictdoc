@@ -34,7 +34,7 @@ from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.helpers.string import escape
-from strictdoc.imports.reqif.stage2.native.mapping import ReqIFSectionField
+from strictdoc.backend.reqif.stage2.native.mapping import ReqIFSectionField
 
 
 class StrictDocReqIFTypes(Enum):

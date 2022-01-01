@@ -20,10 +20,10 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldSingleChoice,
     GrammarElementFieldMultipleChoice,
 )
-from strictdoc.imports.reqif.stage2.abstract_parser import (
+from strictdoc.backend.reqif.stage2.abstract_parser import (
     AbstractReqIFStage2Parser,
 )
-from strictdoc.imports.reqif.stage2.native.mapping import StrictDocReqIFMapping
+from strictdoc.backend.reqif.stage2.native.mapping import StrictDocReqIFMapping
 
 DEFAULT_SDOC_GRAMMAR_FIELDS = [
     "UID",

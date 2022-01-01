@@ -123,7 +123,7 @@ class ExportAction:
                 config.fields,
             )
 
-        if "reqif" in config.formats:
+        if "reqif-sdoc" in config.formats:
             output_reqif_root = f"{output_dir}/reqif"
             ReqIFExport.export(
                 document_tree,

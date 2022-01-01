@@ -15,7 +15,7 @@ Summary of StrictDoc features:
 - StrictDoc reads ``*.sdoc`` files and builds an in-memory representation of the
   document tree.
 - From this in-memory representation, StrictDoc can generate the documentation
-  into a number of formats including HTML, RST, PDF, Excel.
+  into a number of formats including HTML, RST, ReqIF, PDF, Excel.
 - The focus of the tool is modeling requirements and specifications documents.
   Such documents consist of multiple statements like "system X shall do Y"
   called requirements.
@@ -787,6 +787,111 @@ is generated this way, see the Invoke task:
 [/SECTION]
 
 [SECTION]
+TITLE: ReqIF support
+
+[FREETEXT]
+StrictDoc has an initial support of exporting to and importing from the ReqIF
+format.
+
+**Note:** It is not possible to implement a single export/import procedure that
+works well for all ReqIF XML files produced by various requirements management
+tools. The export/import workflow is therefore tool-specific. See
+[LINK: SECTION-REQIF-DETAILS] for more details.
+
+Supported formats:
+
+- StrictDoc's "native" export/import between SDoc and ReqIF
+- `fmStudio <http://formalmind.com/studio>`_'s ReqIF. Only import from ReqIF to
+  SDoc is supported.
+
+Planned formats:
+
+- The format recommended by the
+  `ReqIF Implementation Guide <https://www.prostep.org/fileadmin/downloads/PSI_ImplementationGuide_ReqIF_V1-7.pdf>`_
+  that attempts to harmonize the developments of ReqIF by requirements
+  management tools.
+- `ProR <http://pror.org>`_
+- Doors
+- Enterprise Architect
+- and others
+[/FREETEXT]
+
+[SECTION]
+TITLE: Import flow (ReqIF -> SDoc):
+
+[FREETEXT]
+.. code-block:: text
+
+    strictdoc import reqif sdoc input.reqif output.sdoc
+
+The command does the following:
+
+1. The ReqIF is parsed from XML file to ReqIF in-memory model using the ``reqif``
+   library.
+
+2. The ReqIF in-memory model is converted to SDoc in-memory model. In this case,
+   ``sdoc`` indicates that the native ReqIF-to-SDoc conversion procedure must be
+   used.
+
+3. The SDoc in-memory model is written to an .sdoc file.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Export flow (SDoc -> ReqIF)
+
+[FREETEXT]
+.. code-block:: text
+
+    strictdoc export --formats=reqif-sdoc %S/input.sdoc
+
+The command does the following:
+
+1. The SDoc file is parsed to an SDoc in-memory model.
+2. The SDoc in-memory model is converted to a ReqIF in-memory model using the
+   native SDoc-to-ReqIF conversion procedure as indicated by the ``reqif-sdoc``
+   argument.
+3. The ReqIF in-memory model is unparsed a to ReqIF XML file using ``reqif``
+   library.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-REQIF-DETAILS
+TITLE: ReqIF implementation details
+
+[FREETEXT]
+The ReqIF is a `standard <https://www.omg.org/spec/ReqIF>`_ which is
+maintained by Object Management Group (OMG). One important feature of the
+ReqIF standard is that it requires a fixed XML structure but still leaves
+certain details open to the implementation by the ReqIF and requirements
+management tools developers. Specifically, each tool may use it own field
+names and structure to represent requirements and sections/chapters.
+
+In order to accommodate for the differences between ReqIF files produced by
+various tools, the ReqIF processing is split into two layers:
+
+1) Parsing ReqIF from ``.reqif`` XML files into ReqIF in-memory tree of Python
+objects as well as unparsing the ReqIF in-memory tree back to ReqIF XML files is
+extracted to a separate library:
+`strictdoc-project/reqif <https://github.com/strictdoc-project/reqif>`_.
+
+2) Converting between in-memory trees of SDoc and ReqIF. This layer is part of
+StrictDoc.
+
+For further overview of the ReqIF format and the ``reqif`` library's
+implementation details, refer to the
+`strictdoc-project/reqif <https://github.com/strictdoc-project/reqif>`_'s
+documentation.
+[/FREETEXT]
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
 TITLE: Options
 
 [SECTION]
@@ -1288,7 +1393,7 @@ STATEMENT: StrictDoc's data model shall support linking a requirement to another
 [/SECTION]
 
 [SECTION]
-TITLE: SDOC file format
+TITLE: SDoc file format
 
 [REQUIREMENT]
 UID: SDOC-FMT-PRIMARY
@@ -1296,7 +1401,7 @@ REFS:
 - TYPE: Parent
   VALUE: SDOC-DM-MODEL
 TITLE: Primary text implementation
-STATEMENT: SDOC format shall support encoding the Strict Doc Data Model in a plain-text human readable form.
+STATEMENT: The SDoc format shall support encoding the Strict Doc Data Model in a plain-text human readable form.
 
 [COMPOSITE_REQUIREMENT]
 UID: SDOC-FMT-GRAMMAR
@@ -1306,11 +1411,11 @@ REFS:
 - TYPE: File
   VALUE: strictdoc/backend/source_file_syntax/grammar.py
 TITLE: Grammar
-STATEMENT: SDOC format shall be based on a fixed grammar.
+STATEMENT: The SDoc format shall be based on a fixed grammar.
 
 [REQUIREMENT]
 TITLE: No indentation
-STATEMENT: SDoc grammar's building blocks shall not allow any indentation.
+STATEMENT: The SDoc grammar's building blocks shall not allow any indentation.
 COMMENT: >>>
 Rationale: Adding indentation to any of the fields does not scale well when the
 documents have deeply nested section structure as well as when the size of the
@@ -1323,19 +1428,22 @@ possible indentation issues.
 
 [REQUIREMENT]
 TITLE: Type safety
-STATEMENT: SDOC format shall allow type-safe encoding of requirement documents.
+STATEMENT: The SDoc format shall allow type-safe encoding of requirement documents.
 
 [/SECTION]
 
 [SECTION]
-TITLE: Document Generators
+TITLE: Export and import capabilities
 
 [SECTION]
 TITLE: General
 
 [REQUIREMENT]
 TITLE: Generated file names
-STATEMENT: StrictDoc shall preserve original document file names when generating to all export formats.
+STATEMENT: >>>
+StrictDoc shall preserve original document file names when generating to all
+export formats.
+<<<
 
 [/SECTION]
 
@@ -1386,6 +1494,10 @@ REFS:
   VALUE: strictdoc/export/excel/excel_generator.py
 TITLE: Excel Export
 STATEMENT: StrictDoc shall support exporting documents to Excel format.
+
+[REQUIREMENT]
+TITLE: ReqIF import/export
+STATEMENT: StrictDoc shall support the ReqIF format.
 
 [/SECTION]
 
@@ -1578,11 +1690,7 @@ COMMENT: >>>
 <<<
 
 [SECTION]
-TITLE: Export and import capabilities
-
-[REQUIREMENT]
-TITLE: ReqIF import/export
-STATEMENT: StrictDoc shall support ReqIF format.
+TITLE: Further export and import capabilities
 
 [REQUIREMENT]
 TITLE: CSV import/export
@@ -1607,11 +1715,11 @@ StrictDoc shall support import and exporting documents from/to
 `Doorstop <https://github.com/doorstop-dev/doorstop>`_ format.
 <<<
 
+[/SECTION]
+
 [REQUIREMENT]
 TITLE: Markdown support for text and code blocks
 STATEMENT: StrictDoc shall support rendering text/code blocks into Markdown syntax.
-
-[/SECTION]
 
 [REQUIREMENT]
 TITLE: StrictDoc as library

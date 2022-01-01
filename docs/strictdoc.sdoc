@@ -70,7 +70,7 @@ TITLE: Examples
 [FREETEXT]
 For a more comprehensive example check the source file of this documentation
 which is written using StrictDoc:
-`strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc>`_.
+`strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc.sdoc>`_.
 
 - `StrictDoc HTML export <https://strictdoc.readthedocs.io/en/latest/strictdoc-html>`_
 - `StrictDoc HTML export using Sphinx <https://strictdoc.readthedocs.io/en/latest>`_
@@ -163,7 +163,7 @@ tool.
 
 The grammar is defined using textX language for defining grammars and is
 located in a single file:
-`grammar.py <https://github.com/strictdoc-project/strictdoc/blob/master/strictdoc/backend/dsl/grammar.py>`_.
+`grammar.py <https://github.com/strictdoc-project/strictdoc/blob/main/strictdoc/backend/sdoc/grammar/grammar.py>`_.
 
 This is how a minimal possible SDoc document looks like:
 
@@ -173,7 +173,7 @@ This is how a minimal possible SDoc document looks like:
     TITLE: StrictDoc
 
 This documentation is written using StrictDoc. Here is the source file:
-`strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc>`_.
+`strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc.sdoc>`_.
 [/FREETEXT]
 
 [SECTION]
@@ -1010,7 +1010,7 @@ and other formats using Sphinx.
 If you are reading this documentation at
 https://strictdoc.readthedocs.io/en/latest
 then you are already looking at the example: this documentation stored in
-`strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc>`_
+`strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc.sdoc>`_
 is converted to RST format by StrictDoc which is further converted to the HTML
 website by readthedocs which uses Sphinx under the hood. The
 ``StrictDoc -> RST -> Sphinx -> PDF`` example is also generated using readthedocs:
@@ -1409,7 +1409,7 @@ REFS:
 - TYPE: Parent
   VALUE: SDOC-HIGH-DATA-MODEL
 - TYPE: File
-  VALUE: strictdoc/backend/source_file_syntax/grammar.py
+  VALUE: strictdoc/backend/sdoc/grammar/grammar.py
 TITLE: Grammar
 STATEMENT: The SDoc format shall be based on a fixed grammar.
 

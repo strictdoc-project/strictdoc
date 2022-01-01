@@ -1,8 +1,8 @@
 import os
 import sys
 
-from strictdoc.backend.dsl.models.document import Document
-from strictdoc.backend.dsl.reader import SDReader
+from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.reader import SDReader
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_tree import (

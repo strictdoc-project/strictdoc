@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from strictdoc.backend.dsl.models.document import Document
+from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.export.rst.writer import RSTWriter
 

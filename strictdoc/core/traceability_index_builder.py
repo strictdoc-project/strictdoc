@@ -1,7 +1,7 @@
 import sys
 
-from strictdoc.backend.dsl.models.inline_link import InlineLink
-from strictdoc.backend.dsl.models.requirement import Requirement
+from strictdoc.backend.sdoc.models.inline_link import InlineLink
+from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.error_message import ErrorMessage

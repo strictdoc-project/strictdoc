@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 from typing import List, Iterator
 
-from strictdoc.backend.dsl.errors.document_tree_error import DocumentTreeError
+from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.source_file_syntax.reader import (
     SourceFileTraceabilityReader,
 )
@@ -22,7 +22,7 @@ from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.rst.document_rst_generator import DocumentRSTGenerator
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.timing import timing_decorator
-from strictdoc.imports.reqif.reqif_export import ReqIFExport
+from strictdoc.backend.reqif.reqif_export import ReqIFExport
 
 
 class ExportAction:

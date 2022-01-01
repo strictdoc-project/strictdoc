@@ -1,8 +1,8 @@
 import os
 import sys
 
-from strictdoc.backend.dsl.reader import SDReader
-from strictdoc.backend.dsl.writer import SDWriter
+from strictdoc.backend.sdoc.reader import SDReader
+from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.cli.cli_arg_parser import PassthroughCommandConfig
 
 

@@ -11,7 +11,7 @@ Summary of StrictDoc features:
 - StrictDoc reads ``*.sdoc`` files and builds an in-memory representation of the
   document tree.
 - From this in-memory representation, StrictDoc can generate the documentation
-  into a number of formats including HTML, RST, PDF, Excel.
+  into a number of formats including HTML, RST, ReqIF, PDF, Excel.
 - The focus of the tool is modeling requirements and specifications documents.
   Such documents consist of multiple statements like "system X shall do Y"
   called requirements.
@@ -56,7 +56,7 @@ Examples
 
 For a more comprehensive example check the source file of this documentation
 which is written using StrictDoc:
-`strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc>`_.
+`strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc.sdoc>`_.
 
 - `StrictDoc HTML export <https://strictdoc.readthedocs.io/en/latest/strictdoc-html>`_
 - `StrictDoc HTML export using Sphinx <https://strictdoc.readthedocs.io/en/latest>`_
@@ -127,7 +127,7 @@ tool.
 
 The grammar is defined using textX language for defining grammars and is
 located in a single file:
-`grammar.py <https://github.com/strictdoc-project/strictdoc/blob/master/strictdoc/backend/dsl/grammar.py>`_.
+`grammar.py <https://github.com/strictdoc-project/strictdoc/blob/main/strictdoc/backend/sdoc/grammar/grammar.py>`_.
 
 This is how a minimal possible SDoc document looks like:
 
@@ -137,7 +137,7 @@ This is how a minimal possible SDoc document looks like:
     TITLE: StrictDoc
 
 This documentation is written using StrictDoc. Here is the source file:
-`strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc>`_.
+`strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc.sdoc>`_.
 
 Document structure
 ------------------
@@ -659,6 +659,94 @@ The created RST files can be copied to a project created using Sphinx, see
 is generated this way, see the Invoke task:
 `invoke sphinx <https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48>`_.
 
+ReqIF support
+=============
+
+StrictDoc has an initial support of exporting to and importing from the ReqIF
+format.
+
+**Note:** It is not possible to implement a single export/import procedure that
+works well for all ReqIF XML files produced by various requirements management
+tools. The export/import workflow is therefore tool-specific. See
+`ReqIF implementation details`_ for more details.
+
+Supported formats:
+
+- StrictDoc's "native" export/import between SDoc and ReqIF
+- `fmStudio <http://formalmind.com/studio>`_'s ReqIF. Only import from ReqIF to
+  SDoc is supported.
+
+Planned formats:
+
+- The format recommended by the
+  `ReqIF Implementation Guide <https://www.prostep.org/fileadmin/downloads/PSI_ImplementationGuide_ReqIF_V1-7.pdf>`_
+  that attempts to harmonize the developments of ReqIF by requirements
+  management tools.
+- `ProR <http://pror.org>`_
+- Doors
+- Enterprise Architect
+- and others
+
+Import flow (ReqIF -> SDoc):
+----------------------------
+
+.. code-block:: text
+
+    strictdoc import reqif sdoc input.reqif output.sdoc
+
+The command does the following:
+
+1. The ReqIF is parsed from XML file to ReqIF in-memory model using the ``reqif``
+   library.
+
+2. The ReqIF in-memory model is converted to SDoc in-memory model. In this case,
+   ``sdoc`` indicates that the native ReqIF-to-SDoc conversion procedure must be
+   used.
+
+3. The SDoc in-memory model is written to an .sdoc file.
+
+Export flow (SDoc -> ReqIF)
+---------------------------
+
+.. code-block:: text
+
+    strictdoc export --formats=reqif-sdoc %S/input.sdoc
+
+The command does the following:
+
+1. The SDoc file is parsed to an SDoc in-memory model.
+2. The SDoc in-memory model is converted to a ReqIF in-memory model using the
+   native SDoc-to-ReqIF conversion procedure as indicated by the ``reqif-sdoc``
+   argument.
+3. The ReqIF in-memory model is unparsed a to ReqIF XML file using ``reqif``
+   library.
+
+ReqIF implementation details
+----------------------------
+
+The ReqIF is a `standard <https://www.omg.org/spec/ReqIF>`_ which is
+maintained by Object Management Group (OMG). One important feature of the
+ReqIF standard is that it requires a fixed XML structure but still leaves
+certain details open to the implementation by the ReqIF and requirements
+management tools developers. Specifically, each tool may use it own field
+names and structure to represent requirements and sections/chapters.
+
+In order to accommodate for the differences between ReqIF files produced by
+various tools, the ReqIF processing is split into two layers:
+
+1) Parsing ReqIF from ``.reqif`` XML files into ReqIF in-memory tree of Python
+objects as well as unparsing the ReqIF in-memory tree back to ReqIF XML files is
+extracted to a separate library:
+`strictdoc-project/reqif <https://github.com/strictdoc-project/reqif>`_.
+
+2) Converting between in-memory trees of SDoc and ReqIF. This layer is part of
+StrictDoc.
+
+For further overview of the ReqIF format and the ``reqif`` library's
+implementation details, refer to the
+`strictdoc-project/reqif <https://github.com/strictdoc-project/reqif>`_'s
+documentation.
+
 Options
 =======
 
@@ -763,7 +851,7 @@ and other formats using Sphinx.
 If you are reading this documentation at
 https://strictdoc.readthedocs.io/en/latest
 then you are already looking at the example: this documentation stored in
-`strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/master/docs/strictdoc.sdoc>`_
+`strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc.sdoc>`_
 is converted to RST format by StrictDoc which is further converted to the HTML
 website by readthedocs which uses Sphinx under the hood. The
 ``StrictDoc -> RST -> Sphinx -> PDF`` example is also generated using readthedocs:
@@ -1235,7 +1323,7 @@ Parent links
 
 StrictDoc's data model shall support linking a requirement to another requirement using PARENT link.
 
-SDOC file format
+SDoc file format
 ----------------
 
 .. _SDOC-FMT-PRIMARY:
@@ -1250,7 +1338,7 @@ Primary text implementation
     * - **UID:**
       - SDOC-FMT-PRIMARY
 
-SDOC format shall support encoding the Strict Doc Data Model in a plain-text human readable form.
+The SDoc format shall support encoding the Strict Doc Data Model in a plain-text human readable form.
 
 **Parents:**
 
@@ -1268,7 +1356,7 @@ Grammar
     * - **UID:**
       - SDOC-FMT-GRAMMAR
 
-SDOC format shall be based on a fixed grammar.
+The SDoc format shall be based on a fixed grammar.
 
 **Parents:**
 
@@ -1277,7 +1365,7 @@ SDOC format shall be based on a fixed grammar.
 No indentation
 ^^^^^^^^^^^^^^
 
-SDoc grammar's building blocks shall not allow any indentation.
+The SDoc grammar's building blocks shall not allow any indentation.
 
 **Comment:** Rationale: Adding indentation to any of the fields does not scale well when the
 documents have deeply nested section structure as well as when the size of the
@@ -1288,10 +1376,10 @@ possible indentation issues.
 Type safety
 ~~~~~~~~~~~
 
-SDOC format shall allow type-safe encoding of requirement documents.
+The SDoc format shall allow type-safe encoding of requirement documents.
 
-Document Generators
--------------------
+Export and import capabilities
+------------------------------
 
 General
 ~~~~~~~
@@ -1299,7 +1387,8 @@ General
 Generated file names
 ^^^^^^^^^^^^^^^^^^^^
 
-StrictDoc shall preserve original document file names when generating to all export formats.
+StrictDoc shall preserve original document file names when generating to all
+export formats.
 
 HTML Export
 ~~~~~~~~~~~
@@ -1358,6 +1447,11 @@ Excel Export
       - SDOC-GEN-EXCEL-EXPORT
 
 StrictDoc shall support exporting documents to Excel format.
+
+ReqIF import/export
+~~~~~~~~~~~~~~~~~~~
+
+StrictDoc shall support the ReqIF format.
 
 Validation
 ----------
@@ -1491,6 +1585,51 @@ StrictDoc shall generate source coverage information.
 
 **Comment:** Source coverage screen shows how source files are linked with requirements.
 
+Document archetypes
+-------------------
+
+StrictDoc shall support the following document archetypes: **requirements document**
+and **specification** document. For both archetypes, StrictDoc shall further
+support the following options.
+
+.. list-table:: Table: Requirements and specification document
+   :widths: 20 40 40
+   :header-rows: 1
+
+   * -
+     - Requirements document
+     - Specification document
+   * - Examples
+     - Most typical: requirements lists split by categories (e.g., Functional
+       Requirements, Interface Requirements, Performance Requirements, etc.)
+     - Often: a standard document
+   * - Structure
+     - Not nested or not too deeply nested
+     - Nested
+   * - Visual presentation
+     - Requirements are often presented as table cells. Cells can be standalone
+       or the whole section or document can be a long table with cells.
+     - Requirements are rather presented as header + text
+   * - Unique requirement identifiers (UID)
+     - Most always
+     - - Present or not
+       - **NOT SUPPORTED YET:** Can be missing, the chapter headers are used instead.
+         The combination "Number + Title" becomes a reference-able identifier.
+         A possible intermediate solution when modeling such a document is to
+         make the UIDs map to the section number.
+   * - Requirement titles
+     - - Often
+       - **NOT SUPPORTED YET:** But maybe absent (ex: NASA cFS SCH). If absent,
+         the grouping is provided by sections.
+     - Requirement titles are most often section titles
+   * - Real-world examples
+     - - NASA cFE Functional Requirements
+       - MISRA C coding guidelines,
+       - NASA Software Engineering Requirements NPR 7150.2
+     - - ECSS Software ECSS-E-ST-40C
+
+**Comment:** This draft requirement is the first attempt to organize this information.
+
 Project-level configuration file
 --------------------------------
 
@@ -1510,13 +1649,8 @@ StrictDoc shall support reading project configuration from a file.
 
   - Include/exclude requirements in TOC
 
-Export and import capabilities
-------------------------------
-
-ReqIF import/export
-~~~~~~~~~~~~~~~~~~~
-
-StrictDoc shall support ReqIF format.
+Further export and import capabilities
+--------------------------------------
 
 CSV import/export
 ~~~~~~~~~~~~~~~~~
@@ -1545,7 +1679,7 @@ StrictDoc shall support import and exporting documents from/to
 `Doorstop <https://github.com/doorstop-dev/doorstop>`_ format.
 
 Markdown support for text and code blocks
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------------------
 
 StrictDoc shall support rendering text/code blocks into Markdown syntax.
 

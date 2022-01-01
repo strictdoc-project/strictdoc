@@ -5,18 +5,18 @@ import sys
 import bs4
 from bs4 import BeautifulSoup
 
-from strictdoc.backend.dsl.models.object_factory import SDocObjectFactory
+from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 
 STRICTDOC_ROOT_PATH = os.path.join(os.path.dirname(__file__), "..")
 sys.path.append(STRICTDOC_ROOT_PATH)
 
-from strictdoc.backend.dsl.writer import SDWriter
-from strictdoc.backend.dsl.models.document import Document
-from strictdoc.backend.dsl.models.requirement import (
+from strictdoc.backend.sdoc.writer import SDWriter
+from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
     RequirementComment,
 )
-from strictdoc.backend.dsl.models.section import Section
+from strictdoc.backend.sdoc.models.section import Section
 
 
 class ConfluenceHTMLTableImport:

@@ -1,4 +1,4 @@
-from strictdoc.backend.dsl.models.reference import Reference
+from strictdoc.backend.sdoc.models.reference import Reference
 from strictdoc.backend.source_file_syntax.reader import (
     SourceFileTraceabilityInfo,
 )

@@ -1,6 +1,6 @@
 from jinja2 import Environment, PackageLoader, StrictUndefined
 
-from strictdoc.backend.dsl.models.document import Document
+from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.export.html.document_type import DocumentType
 
 

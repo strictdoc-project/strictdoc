@@ -8,7 +8,7 @@
 
 FROM python:3.10-alpine
 
-RUN apk add --no-cache bash git openssh
+RUN apk add --no-cache bash
 
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir strictdoc==0.0.18

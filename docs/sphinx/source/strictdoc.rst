@@ -132,6 +132,17 @@ In the container terminal:
 
 The documentation resides in ``./docs/output/html``.
 
+Installing StrictDoc as a snap package
+--------------------------------------
+
+This installation variant is available in UNIX operating systems with support
+of the `snap package format <https://snapcraft.io/docs/snap-format>`_.
+
+.. code-block:: text
+
+    wget https://github.com/strictdoc-project/strictdoc/raw/developer/snap/snap/strictdoc_0.0.18_amd64.snap
+    sudo snap install strictdoc_*.snap --devmode --dangerous
+
 Hello world
 -----------
 

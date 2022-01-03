@@ -109,6 +109,29 @@ StrictDoc can also be developed and run without Poetry:
     pip install invoke pytest pytidylib html5lib
     invoke test
 
+Installing StrictDoc into a Docker container
+--------------------------------------------
+
+StrictDoc can be invoked inside of a Docker container. To make data available
+to the Docker container (here: ``strictdoc:0.0.18``) as well as the host system
+one needs to mount a volume via ``-v`` option.
+
+In the host operating system terminal:
+
+.. code-block:: text
+
+    docker build . -t strictdoc:0.0.18
+    docker run --name strictdoc --rm -v "$(pwd)/docs:/data" -i -t strictdoc:0.0.18
+
+In the container terminal:
+
+.. code-block:: text
+
+    bash-5.1# strictdoc export .
+    bash-5.1# exit
+
+The documentation resides in ``./docs/output/html``.
+
 Hello world
 -----------
 

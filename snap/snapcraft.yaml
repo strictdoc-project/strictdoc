@@ -1,0 +1,21 @@
+name: strictdoc
+base: core18
+version: '0.0.18'
+summary: Software for writing technical requirements specifications.
+description: |
+  StrictDoc allows to write and manage requirements in a text based
+  fashion. This enables to use version control systems like git for
+  diffing, etc. different versions of requirements.
+grade: devel
+confinement: devmode
+
+apps:
+  strictdoc:
+    command: strictdoc
+
+parts:
+  strictdoc:
+    plugin: python
+    python-version: python3
+    python-packages:
+      - strictdoc==0.0.18

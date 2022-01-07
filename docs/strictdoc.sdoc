@@ -181,6 +181,22 @@ of the `snap package format <https://snapcraft.io/docs/snap-format>`_.
 [/SECTION]
 
 [SECTION]
+TITLE: Installing StrictDoc as a brew package
+
+[FREETEXT]
+This installation variant is available in Mac OS and UNIX operating systems with
+support of the `brew package format <https://brew.sh/>`_.
+
+.. code-block:: text
+
+    brew tap strictdoc-project/strictdoc
+    brew install strictdoc-project/strictdoc
+
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
 TITLE: Hello world
 
 [FREETEXT]

@@ -143,6 +143,17 @@ of the `snap package format <https://snapcraft.io/docs/snap-format>`_.
     wget https://github.com/strictdoc-project/strictdoc/raw/developer/snap/snap/strictdoc_0.0.18_amd64.snap
     sudo snap install strictdoc_*.snap --devmode --dangerous
 
+Installing StrictDoc as a brew package
+--------------------------------------
+
+This installation variant is available in Mac OS and UNIX operating systems with
+support of the `brew package format <https://brew.sh/>`_.
+
+.. code-block:: text
+
+    brew tap strictdoc-project/strictdoc
+    brew install strictdoc-project/strictdoc
+
 Hello world
 -----------
 

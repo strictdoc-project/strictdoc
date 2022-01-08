@@ -1,8 +1,13 @@
-from enum import Enum
 from typing import Optional, Union
 
 from reqif.models.reqif_spec_object import ReqIFSpecObject
+from reqif.reqif_bundle import ReqIFBundle
 
+from strictdoc.backend.reqif.sdoc_reqif_fields import (
+    ReqIFChapterField,
+    REQIF_MAP_TO_SDOC_FIELD_MAP,
+    ReqIFRequirementReservedField,
+)
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
@@ -15,34 +20,7 @@ from strictdoc.backend.sdoc.models.section import Section, FreeText
 from strictdoc.helpers.string import unescape
 
 
-class ReqIFField(Enum):
-    TYPE = "TYPE"
-    UID = "UID"
-    STATUS = "STATUS"
-    TITLE = "TITLE"
-    STATEMENT = "STATEMENT"
-    COMMENT = "COMMENT"
-
-    @classmethod
-    def list(cls):
-        return list(map(lambda c: c.value, cls))
-
-
-class ReqIFSectionField(Enum):
-    TITLE = "TITLE"
-    FREETEXT = "FREETEXT"
-
-    @classmethod
-    def list(cls):
-        return list(map(lambda c: c.value, cls))
-
-
-class ReqIFNodeType(Enum):
-    SECTION = "SECTION"
-    REQUIREMENT = "REQUIREMENT"
-
-
-class StrictDocReqIFMapping:
+class ReqIFToSDocConverter:
     @staticmethod
     def create_document(title: Optional[str]) -> Document:
         document_config = DocumentConfig(
@@ -59,22 +37,44 @@ class StrictDocReqIFMapping:
         return document
 
     @staticmethod
-    def is_spec_object_section(spec_object: ReqIFSpecObject):
-        return spec_object.spec_object_type == ReqIFNodeType.SECTION.value
+    def is_spec_object_section(
+        spec_object: ReqIFSpecObject, reqif_bundle: ReqIFBundle
+    ):
+        spec_object_type = reqif_bundle.lookup.get_spec_type_by_ref(
+            spec_object.spec_object_type
+        )
+        attribute_map = spec_object_type.attribute_map
+        for attribute in spec_object.attributes:
+            field_name = attribute_map[attribute.definition_ref]
+            if field_name == ReqIFChapterField.CHAPTER_NAME:
+                return True
+        return False
 
     @staticmethod
-    def is_spec_object_requirement(spec_object):
-        return spec_object.spec_object_type == ReqIFNodeType.REQUIREMENT.value
+    def is_spec_object_requirement(_):
+        return True
 
     @staticmethod
     def create_section_from_spec_object(
-        spec_object: ReqIFSpecObject, level
+        spec_object: ReqIFSpecObject, level, reqif_bundle: ReqIFBundle
     ) -> Section:
-        title = spec_object.attribute_map[ReqIFSectionField.TITLE.value]
+        spec_object_type = reqif_bundle.lookup.get_spec_type_by_ref(
+            spec_object.spec_object_type
+        )
+        attribute_map = spec_object_type.attribute_map
+        section_title = None
+        for attribute in spec_object.attributes:
+            field_name = attribute_map[attribute.definition_ref]
+            if field_name == ReqIFChapterField.CHAPTER_NAME:
+                section_title = attribute.value
+                break
+        else:
+            raise NotImplementedError
+
         free_texts = []
-        if ReqIFSectionField.FREETEXT.value in spec_object.attribute_map:
+        if ReqIFChapterField.TEXT in spec_object.attribute_map:
             free_text = unescape(
-                spec_object.attribute_map[ReqIFSectionField.FREETEXT.value]
+                spec_object.attribute_map[ReqIFChapterField.TEXT].value
             )
             free_texts.append(
                 FreeText(
@@ -86,7 +86,7 @@ class StrictDocReqIFMapping:
             parent=None,
             uid=None,
             level=None,
-            title=title,
+            title=section_title,
             free_texts=free_texts,
             section_contents=[],
         )
@@ -97,19 +97,31 @@ class StrictDocReqIFMapping:
     def create_requirement_from_spec_object(
         spec_object: ReqIFSpecObject,
         parent_section: Union[Section, Document],
+        reqif_bundle: ReqIFBundle,
         level,
     ) -> Requirement:
         fields = []
+        spec_object_type = reqif_bundle.lookup.get_spec_type_by_ref(
+            spec_object.spec_object_type
+        )
+        attribute_map = spec_object_type.attribute_map
         for attribute in spec_object.attributes:
+            field_name = attribute_map[attribute.definition_ref]
             attribute_value = unescape(attribute.value)
             attribute_multiline_value = None
-            if "\n" in attribute_value:
-                attribute_multiline_value = attribute_value
+            if (
+                "\n" in attribute_value
+                or field_name == ReqIFRequirementReservedField.TEXT
+            ):
+                attribute_multiline_value = attribute_value.lstrip()
                 attribute_value = None
+
+            if field_name in ReqIFRequirementReservedField.SET:
+                field_name = REQIF_MAP_TO_SDOC_FIELD_MAP[field_name]
             fields.append(
                 RequirementField(
                     parent=None,
-                    field_name=attribute.name,
+                    field_name=field_name,
                     field_value=attribute_value,
                     field_value_multiline=attribute_multiline_value,
                     field_value_references=None,

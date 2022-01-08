@@ -21,6 +21,12 @@ from reqif.models.reqif_types import SpecObjectAttributeType
 from reqif.object_lookup import ReqIFObjectLookup
 from reqif.reqif_bundle import ReqIFBundle
 
+from strictdoc.backend.reqif.sdoc_reqif_fields import (
+    ReqIFChapterField,
+    SDocRequirementReservedField,
+    SDOC_TO_REQIF_FIELD_MAP,
+    SDOC_SPEC_OBJECT_TYPE_SINGLETON,
+)
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.requirement import Requirement
@@ -34,7 +40,6 @@ from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.helpers.string import escape
-from strictdoc.backend.reqif.stage2.native.mapping import ReqIFSectionField
 
 
 class StrictDocReqIFTypes(Enum):
@@ -169,6 +174,8 @@ class SDocToReqIFObjectConverter:
             # TODO: This is a throw-away object. It gets discarded when the
             # iteration is over. Find a way to do without it.
             root_hierarchy = ReqIFSpecHierarchy(
+                xml_node=None,
+                is_self_closed=False,
                 identifier="NOT_USED",
                 last_change=None,
                 long_name=None,
@@ -189,7 +196,7 @@ class SDocToReqIFObjectConverter:
                     attributes = []
                     title_attribute = SpecObjectAttribute(
                         attribute_type=SpecObjectAttributeType.STRING,
-                        name="TITLE",
+                        definition_ref=ReqIFChapterField.CHAPTER_NAME,
                         value=node.title,
                         enum_values_then_definition_order=None,
                     )
@@ -200,7 +207,7 @@ class SDocToReqIFObjectConverter:
                         )
                         free_text_attribute = SpecObjectAttribute(
                             attribute_type=SpecObjectAttributeType.STRING,
-                            name=ReqIFSectionField.FREETEXT.value,
+                            definition_ref=ReqIFChapterField.TEXT,
                             value=free_text_value,
                             enum_values_then_definition_order=None,
                         )
@@ -210,13 +217,15 @@ class SDocToReqIFObjectConverter:
                         identifier=generate_unique_identifier("SECTION"),
                         last_change=None,
                         long_name=None,
-                        spec_object_type="SECTION",
+                        spec_object_type=SDOC_SPEC_OBJECT_TYPE_SINGLETON,
                         attributes=attributes,
                         attribute_map={"TITLE": title_attribute},
                         values_then_type_order=True,
                     )
                     spec_objects.append(spec_object)
                     hierarchy = ReqIFSpecHierarchy(
+                        xml_node=None,
+                        is_self_closed=False,
                         identifier=generate_unique_identifier("SPEC-HIERARCHY"),
                         last_change=None,
                         long_name=None,
@@ -247,6 +256,8 @@ class SDocToReqIFObjectConverter:
                     )
                     spec_objects.append(spec_object)
                     hierarchy = ReqIFSpecHierarchy(
+                        xml_node=None,
+                        is_self_closed=False,
                         identifier=generate_unique_identifier(
                             "SPEC-IDENTIFIER"
                         ),
@@ -264,7 +275,8 @@ class SDocToReqIFObjectConverter:
                     parents[hierarchy] = current_hierarchy
                     current_hierarchy.add_child(hierarchy)
             specification = ReqIFSpecification(
-                type_then_children_order=True,
+                xml_node=None,
+                children_tags=["TYPE", "CHILDREN"],
                 description=None,
                 identifier=generate_unique_identifier("SPECIFICATION"),
                 last_change=None,
@@ -290,6 +302,8 @@ class SDocToReqIFObjectConverter:
             encoding="UTF-8",
             namespace=namespace,
             configuration=configuration,
+            namespace_id=None,
+            namespace_xhtml=None,
             schema_namespace=None,
             schema_location=None,
             language=None,
@@ -301,9 +315,11 @@ class SDocToReqIFObjectConverter:
             tool_extensions_tag_exists=False,
             lookup=ReqIFObjectLookup(
                 data_types_lookup={},
+                spec_types_lookup={},
                 spec_objects_lookup={},
                 spec_relations_parent_lookup={},
             ),
+            exceptions=[],
         )
         return reqif_bundle
 
@@ -343,9 +359,12 @@ class SDocToReqIFObjectConverter:
                     if field.field_value_multiline is not None
                     else field.field_value
                 )
+                field_name = field.field_name
+                if field_name in SDocRequirementReservedField.SET:
+                    field_name = SDOC_TO_REQIF_FIELD_MAP[field_name]
                 attribute = SpecObjectAttribute(
                     SpecObjectAttributeType.STRING,
-                    field.field_name,
+                    field_name,
                     field_value,
                     enum_values_then_definition_order=None,
                 )
@@ -359,7 +378,7 @@ class SDocToReqIFObjectConverter:
             identifier=generate_unique_identifier("REQUIREMENT"),
             last_change=None,
             long_name=None,
-            spec_object_type=requirement.requirement_type,
+            spec_object_type=SDOC_SPEC_OBJECT_TYPE_SINGLETON,
             attributes=attributes,
             attribute_map=attribute_map,
             values_then_type_order=True,
@@ -373,6 +392,10 @@ class SDocToReqIFObjectConverter:
     ):
         spec_object_types: List = []
 
+        assert (
+            len(grammar.elements) == 1
+        ), "Only one grammar element is currently supported."
+
         for element in grammar.elements:
             attribute_definitions = []
             attribute_map = {}
@@ -380,21 +403,26 @@ class SDocToReqIFObjectConverter:
             field: GrammarElementField
             for field in element.fields:
                 if isinstance(field, GrammarElementFieldString):
+                    field_title = field.title
+                    if field_title in SDocRequirementReservedField.SET:
+                        field_title = SDOC_TO_REQIF_FIELD_MAP[field_title]
                     attribute = SpecAttributeDefinition(
+                        children_tags=["TYPE"],
                         attribute_type=SpecObjectAttributeType.STRING,
                         description=None,
-                        identifier=field.title,
+                        identifier=field_title,
                         last_change=None,
                         datatype_definition=(
                             StrictDocReqIFTypes.SINGLE_LINE_STRING.value
                         ),
-                        long_name=field.title,
+                        long_name=field_title,
                         editable=None,
                         default_value=None,
                         multi_valued=None,
                     )
                 elif isinstance(field, GrammarElementFieldSingleChoice):
                     attribute = SpecAttributeDefinition(
+                        children_tags=["TYPE"],
                         attribute_type=SpecObjectAttributeType.ENUMERATION,
                         description=None,
                         identifier=field.title,
@@ -411,6 +439,7 @@ class SDocToReqIFObjectConverter:
                     )
                 elif isinstance(field, GrammarElementFieldMultipleChoice):
                     attribute = SpecAttributeDefinition(
+                        children_tags=["TYPE"],
                         attribute_type=SpecObjectAttributeType.ENUMERATION,
                         description=None,
                         identifier=field.title,
@@ -430,9 +459,29 @@ class SDocToReqIFObjectConverter:
                 attribute_definitions.append(attribute)
                 attribute_map[field.title] = attribute
 
+            # Extra chapter name attribute.
+            chapter_name_attribute = SpecAttributeDefinition(
+                children_tags=["TYPE"],
+                attribute_type=SpecObjectAttributeType.STRING,
+                description=None,
+                identifier="ReqIF.ChapterName",
+                last_change=None,
+                datatype_definition=(
+                    StrictDocReqIFTypes.SINGLE_LINE_STRING.value
+                ),
+                long_name="ReqIF.ChapterName",
+                editable=None,
+                default_value=None,
+                multi_valued=None,
+            )
+            attribute_definitions.append(chapter_name_attribute)
+            attribute_map[
+                chapter_name_attribute.identifier
+            ] = chapter_name_attribute
+
             spec_object_type = ReqIFSpecObjectType(
                 description=None,
-                identifier=element.tag,
+                identifier=SDOC_SPEC_OBJECT_TYPE_SINGLETON,
                 last_change=None,
                 long_name=element.tag,
                 attribute_definitions=attribute_definitions,

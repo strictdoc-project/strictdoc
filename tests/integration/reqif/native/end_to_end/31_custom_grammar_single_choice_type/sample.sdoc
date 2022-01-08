@@ -7,7 +7,7 @@ ELEMENTS:
   FIELDS:
   - TITLE: CHOICE_FIELD
     TYPE: SingleChoice(A, B, C, D)
-    REQUIRED: True
+    REQUIRED: False
 
 [REQUIREMENT]
 CHOICE_FIELD: A

@@ -5,6 +5,11 @@ from reqif.models.reqif_spec_object_type import ReqIFSpecObjectType
 from reqif.models.reqif_types import SpecObjectAttributeType
 from reqif.reqif_bundle import ReqIFBundle
 
+from strictdoc.backend.reqif.sdoc_reqif_fields import (
+    REQIF_MAP_TO_SDOC_FIELD_MAP,
+    ReqIFChapterField,
+    DEFAULT_SDOC_GRAMMAR_FIELDS,
+)
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_grammar import (
     GrammarElement,
@@ -23,26 +28,14 @@ from strictdoc.backend.sdoc.models.type_system import (
 from strictdoc.backend.reqif.stage2.abstract_parser import (
     AbstractReqIFStage2Parser,
 )
-from strictdoc.backend.reqif.stage2.native.mapping import StrictDocReqIFMapping
-
-DEFAULT_SDOC_GRAMMAR_FIELDS = [
-    "UID",
-    "LEVEL",
-    "STATUS",
-    "TAGS",
-    "SPECIAL_FIELDS",
-    "REFS",
-    "TITLE",
-    "STATEMENT",
-    "BODY",
-    "RATIONALE",
-    "COMMENT",
-]
+from strictdoc.backend.reqif.stage2.native.reqif_to_sdoc_converter import (
+    ReqIFToSDocConverter,
+)
 
 
 class StrictDocReqIFStage2Parser(AbstractReqIFStage2Parser):
     def parse_reqif(self, reqif_bundle: ReqIFBundle):
-        mapping = StrictDocReqIFMapping()
+        mapping = ReqIFToSDocConverter()
 
         # TODO: Should we rather show an error that there are no specifications?
         if (
@@ -63,13 +56,24 @@ class StrictDocReqIFStage2Parser(AbstractReqIFStage2Parser):
         requirement_spec_type: Optional[ReqIFSpecObjectType] = None
         for spec_type in reqif_bundle.core_content.req_if_content.spec_types:
             if isinstance(spec_type, ReqIFSpecObjectType):
-                if spec_type.identifier == "REQUIREMENT":
-                    requirement_spec_type = spec_type
+                assert requirement_spec_type is None, (
+                    "Currently only one SPEC-OBJECT-TYPE is supported per "
+                    "ReqIF document: "
+                    f"{reqif_bundle.core_content.req_if_content.spec_types}"
+                )
+                requirement_spec_type = spec_type
         if requirement_spec_type:
             attributes = list(requirement_spec_type.attribute_map.keys())
             if attributes != DEFAULT_SDOC_GRAMMAR_FIELDS:
                 fields = []
                 for attribute in requirement_spec_type.attribute_definitions:
+                    field_name = REQIF_MAP_TO_SDOC_FIELD_MAP.get(
+                        attribute.long_name, attribute.long_name
+                    )
+
+                    # Chapter name is a reserved field for sections.
+                    if field_name == ReqIFChapterField.CHAPTER_NAME:
+                        continue
                     if (
                         attribute.attribute_type
                         == SpecObjectAttributeType.STRING
@@ -77,8 +81,19 @@ class StrictDocReqIFStage2Parser(AbstractReqIFStage2Parser):
                         fields.append(
                             GrammarElementFieldString(
                                 parent=None,
-                                title=attribute.long_name,
-                                required="True",
+                                title=field_name,
+                                required="False",
+                            )
+                        )
+                    elif (
+                        attribute.attribute_type
+                        == SpecObjectAttributeType.XHTML
+                    ):
+                        fields.append(
+                            GrammarElementFieldString(
+                                parent=None,
+                                title=field_name,
+                                required="False",
                             )
                         )
                     elif (
@@ -97,18 +112,18 @@ class StrictDocReqIFStage2Parser(AbstractReqIFStage2Parser):
                             fields.append(
                                 GrammarElementFieldMultipleChoice(
                                     parent=None,
-                                    title=attribute.long_name,
+                                    title=field_name,
                                     options=options,
-                                    required="True",
+                                    required="False",
                                 )
                             )
                         else:
                             fields.append(
                                 GrammarElementFieldSingleChoice(
                                     parent=None,
-                                    title=attribute.long_name,
+                                    title=field_name,
                                     options=options,
-                                    required="True",
+                                    required="False",
                                 )
                             )
                     else:
@@ -128,10 +143,14 @@ class StrictDocReqIFStage2Parser(AbstractReqIFStage2Parser):
                 current_hierarchy.spec_object
             )
 
-            if mapping.is_spec_object_section(spec_object):
+            if mapping.is_spec_object_section(
+                spec_object,
+                reqif_bundle=reqif_bundle,
+            ):
                 section = mapping.create_section_from_spec_object(
                     spec_object,
                     current_hierarchy.level,
+                    reqif_bundle=reqif_bundle,
                 )
                 if current_hierarchy.level > current_section.ng_level:
                     current_section.section_contents.append(section)
@@ -150,6 +169,7 @@ class StrictDocReqIFStage2Parser(AbstractReqIFStage2Parser):
                     mapping.create_requirement_from_spec_object(
                         spec_object=spec_object,
                         parent_section=current_section,
+                        reqif_bundle=reqif_bundle,
                         level=current_hierarchy.level,
                     )
                 )

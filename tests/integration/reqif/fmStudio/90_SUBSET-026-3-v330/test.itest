@@ -16,22 +16,22 @@ CHECK-SDOC: LEVEL: 3.4.2.2.2
 CHECK-SDOC: STATEMENT: >>>
 CHECK-SDOC: The nominal direction of each balise group is defined by increasing internal balise numbers.
 CHECK-SDOC:
-CHECK-SDOC: <div>
-CHECK-SDOC:   <object data="_assets/Subset026-3_4_2_2_2%5B2%5D_%5Bf%5D1_I.png" height="159" type="image/png" width="504">
+CHECK-SDOC: <xhtml:div>
+CHECK-SDOC:   <xhtml:object data="_assets/Subset026-3_4_2_2_2%5B2%5D_%5Bf%5D1_I.png" height="159" type="image/png" width="504">
 CHECK-SDOC:     Picture missing. No alternative text available.
-CHECK-SDOC:   </object>
-CHECK-SDOC: </div>
+CHECK-SDOC:   </xhtml:object>
+CHECK-SDOC: </xhtml:div>
 CHECK-SDOC:
-CHECK-SDOC: <div>
-CHECK-SDOC:   <b>
-CHECK-SDOC:     <span style="font-family:Arial; font-size:11pt;">
+CHECK-SDOC: <xhtml:div>
+CHECK-SDOC:   <xhtml:b>
+CHECK-SDOC:     <xhtml:span style="font-family:Arial; font-size:11pt;">
 CHECK-SDOC:       Figure
-CHECK-SDOC:       <span style="background-color:yellow; font-family:courier; font-weight:bolder;">
+CHECK-SDOC:       <xhtml:span style="background-color:yellow; font-family:courier; font-weight:bolder;">
 CHECK-SDOC:         {Figure 1}
-CHECK-SDOC:       </span>
+CHECK-SDOC:       </xhtml:span>
 CHECK-SDOC:       : Orientation of the balise group
-CHECK-SDOC:     </span>
-CHECK-SDOC:   </b>
-CHECK-SDOC: </div>
+CHECK-SDOC:     </xhtml:span>
+CHECK-SDOC:   </xhtml:b>
+CHECK-SDOC: </xhtml:div>
 <<<
 

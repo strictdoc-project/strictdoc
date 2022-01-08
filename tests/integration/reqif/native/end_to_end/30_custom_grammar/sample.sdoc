@@ -7,23 +7,25 @@ ELEMENTS:
   FIELDS:
   - TITLE: UID
     TYPE: String
-    REQUIRED: True
+    REQUIRED: False
   - TITLE: STATEMENT
     TYPE: String
-    REQUIRED: True
+    REQUIRED: False
   - TITLE: ASIL
     TYPE: String
-    REQUIRED: True
+    REQUIRED: False
   - TITLE: STATUS
     TYPE: String
-    REQUIRED: True
+    REQUIRED: False
   - TITLE: COMMENT
     TYPE: String
-    REQUIRED: True
+    REQUIRED: False
 
 [REQUIREMENT]
 UID: ABC-123
-STATEMENT: Requirement 7.8.9
+STATEMENT: >>>
+Requirement 7.8.9
+<<<
 ASIL: A
 STATUS: Draft
 COMMENT: Test comment.

@@ -9,11 +9,15 @@ TITLE: Section #1.1
 
 [REQUIREMENT]
 UID: REQ-1.1.1
-STATEMENT: The mapping function shall map requirement_ID to UID.
+STATEMENT: >>>
+The mapping function shall map requirement_ID to UID.
+<<<
 
 [REQUIREMENT]
 UID: REQ-1.1.2
-STATEMENT: The mapping function shall map requirement_ID to UID.
+STATEMENT: >>>
+The mapping function shall map requirement_ID to UID.
+<<<
 
 [/SECTION]
 
@@ -22,11 +26,15 @@ TITLE: Section #1.2
 
 [REQUIREMENT]
 UID: REQ-1.2.1
-STATEMENT: The mapping function shall map requirement_ID to UID.
+STATEMENT: >>>
+The mapping function shall map requirement_ID to UID.
+<<<
 
 [REQUIREMENT]
 UID: REQ-1.2.2
-STATEMENT: The mapping function shall map requirement_ID to UID.
+STATEMENT: >>>
+The mapping function shall map requirement_ID to UID.
+<<<
 
 [/SECTION]
 

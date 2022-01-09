@@ -289,3 +289,19 @@ def dump_grammar(context, output_file):
         """
     )
     run_invoke_cmd(context, command)
+
+@task
+def test_brew_installation(context):
+    command = oneline_command(
+        """
+            brew tap strictdoc-project/strictdoc --debug --verbose
+        """
+    )
+    run_invoke_cmd(context, command)
+
+    command = oneline_command(
+        """
+            brew install strictdoc-project/strictdoc --debug --verbose
+        """
+    )
+    run_invoke_cmd(context, command)

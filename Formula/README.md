@@ -1,6 +1,6 @@
 # Create `brew` formula
 
-One cannot setup the `venv` using poetry cause [`poetry` does not allow to install stictdoc in development mode yet](https://github.com/python-poetry/poetry/issues/34).
+One cannot setup the `venv` using poetry cause [`poetry` does not allow to install strictdoc in development mode yet](https://github.com/python-poetry/poetry/issues/34).
 [Create and activate a `venv` the plain Python way](https://docs.python.org/3/tutorial/venv.html#creating-virtual-environments) instead.
 
 ```

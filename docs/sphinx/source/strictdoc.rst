@@ -147,7 +147,8 @@ Installing StrictDoc as a brew package
 --------------------------------------
 
 This installation variant is available in Mac OS and UNIX operating systems with
-support of the `brew package format <https://brew.sh/>`_.
+support of the `brew package format <https://brew.sh/>`_. This includes the Linux
+operating systems CentOS, Debian, Fedora, Red Hat and Ubuntu.
 
 .. code-block:: text
 

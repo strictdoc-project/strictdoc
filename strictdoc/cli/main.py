@@ -11,6 +11,7 @@ try:
 
     from strictdoc.cli.cli_arg_parser import create_sdoc_args_parser
     from strictdoc.commands.dump_grammar_command import DumpGrammarCommand
+    from strictdoc.commands.version_command import VersionCommand
     from strictdoc.core.actions.export_action import ExportAction
     from strictdoc.core.actions.passthrough_action import PassthroughAction
     from strictdoc.helpers.parallelizer import Parallelizer
@@ -60,6 +61,8 @@ def _main(parallelizer):
         config = parser.get_dump_grammar_config()
         DumpGrammarCommand.execute(config)
 
+    elif parser.is_version_command:
+        VersionCommand.execute()
     else:
         raise NotImplementedError
 

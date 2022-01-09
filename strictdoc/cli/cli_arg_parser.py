@@ -175,6 +175,13 @@ def cli_args_parser() -> argparse.ArgumentParser:
     command_parser_dump_grammar.add_argument(
         "output_file", type=str, help="Path to the output .tx file"
     )
+
+    # Command: Version
+    command_subparsers.add_parser(
+        "version",
+        help="Print the version of StrictDoc.",
+        formatter_class=formatter,
+    )
     return main_parser
 
 
@@ -241,6 +248,10 @@ class SDocArgsParser:
     @property
     def is_dump_grammar_command(self):
         return self.args.command == "dump-grammar"
+
+    @property
+    def is_version_command(self):
+        return self.args.command == "version"
 
     def get_passthrough_config(self) -> PassthroughCommandConfig:
         return PassthroughCommandConfig(

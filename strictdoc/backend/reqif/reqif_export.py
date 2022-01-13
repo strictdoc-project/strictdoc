@@ -4,7 +4,9 @@ from pathlib import Path
 from reqif.unparser import ReqIFUnparser
 
 from strictdoc.core.document_tree import DocumentTree
-from strictdoc.backend.reqif.export.converter import SDocToReqIFObjectConverter
+from strictdoc.backend.reqif.export.sdoc_to_reqif_converter import (
+    SDocToReqIFObjectConverter,
+)
 
 
 class ReqIFExport:

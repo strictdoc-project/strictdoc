@@ -136,7 +136,7 @@ class FMStudioReqIFStage2Parser(AbstractReqIFStage2Parser):
                 ), f"{current_section.section_contents[-1]} {spec_object}"
                 spec_object_rich_text = spec_object.attribute_map[
                     "_stype_requirement_RichText"
-                ].replace("media/", "_assets/")
+                ].value.replace("media/", "_assets/")
 
                 spec_object_rich_text = prettify_html_fragment(
                     spec_object_rich_text

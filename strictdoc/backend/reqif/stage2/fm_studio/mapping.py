@@ -64,7 +64,9 @@ class FMStudioMapping:
             ReqIFField.TYPE.value in spec_object.attribute_map
         ), spec_object.attribute_map
 
-        spec_object_type = spec_object.attribute_map[ReqIFField.TYPE.value]
+        spec_object_type = spec_object.attribute_map[
+            ReqIFField.TYPE.value
+        ].value
         return spec_object_type == ReqIFNodeType.SECTION.value
 
     @staticmethod
@@ -72,8 +74,9 @@ class FMStudioMapping:
         assert (
             ReqIFField.TYPE.value in spec_object.attribute_map
         ), spec_object.attribute_map
-
-        spec_object_type = spec_object.attribute_map[ReqIFField.TYPE.value]
+        spec_object_type = spec_object.attribute_map[
+            ReqIFField.TYPE.value
+        ].value
         return spec_object_type in (
             ReqIFNodeType.REQUIREMENT.value,
             ReqIFNodeType.NOTE.value,
@@ -94,15 +97,17 @@ class FMStudioMapping:
             ReqIFField.TYPE.value in spec_object.attribute_map
         ), spec_object.attribute_map
 
-        spec_object_type = spec_object.attribute_map[ReqIFField.TYPE.value]
+        spec_object_type = spec_object.attribute_map[
+            ReqIFField.TYPE.value
+        ].value
         return spec_object_type == ReqIFNodeType.FIGURE.value
 
     @staticmethod
     def create_section_from_spec_object(
         spec_object: ReqIFSpecObject, level
     ) -> Section:
-        uid = spec_object.attribute_map[ReqIFField.UID.value]
-        title = spec_object.attribute_map[ReqIFField.TITLE.value]
+        uid = spec_object.attribute_map[ReqIFField.UID.value].value
+        title = spec_object.attribute_map[ReqIFField.TITLE.value].value
         section = Section(
             parent=None,
             uid=uid,
@@ -118,8 +123,8 @@ class FMStudioMapping:
     def create_requirement_from_spec_object(
         spec_object, document, level
     ) -> Requirement:
-        uid = spec_object.attribute_map[ReqIFField.UID.value]
-        statement = spec_object.attribute_map[ReqIFField.STATEMENT.value]
+        uid = spec_object.attribute_map[ReqIFField.UID.value].value
+        statement = spec_object.attribute_map[ReqIFField.STATEMENT.value].value
         statement = statement if statement else "<STATEMENT MISSING>"
 
         requirement = SDocObjectFactory.create_requirement(

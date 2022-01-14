@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Document with a requirement with two comments.
+
+[REQUIREMENT]
+COMMENT: >>>
+This is a comment #1.
+<<<
+COMMENT: >>>
+This is a comment #2.
+<<<

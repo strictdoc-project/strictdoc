@@ -6,9 +6,9 @@ class SDocRequirementReservedField:
     # STATUS = "STATUS"
     TITLE = "TITLE"
     STATEMENT = "STATEMENT"
-    # COMMENT = "COMMENT"
+    COMMENT = "COMMENT"
 
-    SET = {UID, TITLE, STATEMENT}
+    SET = {UID, TITLE, STATEMENT, COMMENT}
 
 
 class ReqIFRequirementReservedField:
@@ -16,7 +16,9 @@ class ReqIFRequirementReservedField:
     NAME = "ReqIF.Name"
     TEXT = "ReqIF.Text"
 
-    SET = {UID, NAME, TEXT}
+    COMMENT_NOTES = "NOTES"
+
+    SET = {UID, NAME, TEXT, COMMENT_NOTES}
 
 
 class ReqIFChapterField:
@@ -28,12 +30,14 @@ SDOC_TO_REQIF_FIELD_MAP = {
     SDocRequirementReservedField.UID: ReqIFRequirementReservedField.UID,
     SDocRequirementReservedField.TITLE: ReqIFRequirementReservedField.NAME,
     SDocRequirementReservedField.STATEMENT: ReqIFRequirementReservedField.TEXT,
+    SDocRequirementReservedField.COMMENT: ReqIFRequirementReservedField.COMMENT_NOTES,  # noqa: E501
 }
 
 REQIF_MAP_TO_SDOC_FIELD_MAP = {
     ReqIFRequirementReservedField.UID: SDocRequirementReservedField.UID,
     ReqIFRequirementReservedField.NAME: SDocRequirementReservedField.TITLE,
     ReqIFRequirementReservedField.TEXT: SDocRequirementReservedField.STATEMENT,
+    ReqIFRequirementReservedField.COMMENT_NOTES: SDocRequirementReservedField.COMMENT,  # noqa: E501
 }
 
 DEFAULT_SDOC_GRAMMAR_FIELDS = [
@@ -47,6 +51,6 @@ DEFAULT_SDOC_GRAMMAR_FIELDS = [
     "ReqIF.Text",
     "BODY",
     "RATIONALE",
-    "COMMENT",
+    "NOTES",
     "ReqIF.ChapterName",
 ]

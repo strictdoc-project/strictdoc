@@ -112,6 +112,7 @@ class ReqIFToSDocConverter:
             if (
                 "\n" in attribute_value
                 or field_name == ReqIFRequirementReservedField.TEXT
+                or field_name == ReqIFRequirementReservedField.COMMENT_NOTES
             ):
                 attribute_multiline_value = attribute_value.lstrip()
                 attribute_value = None

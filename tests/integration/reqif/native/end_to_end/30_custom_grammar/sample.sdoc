@@ -28,4 +28,6 @@ Requirement 7.8.9
 <<<
 ASIL: A
 STATUS: Draft
-COMMENT: Test comment.
+COMMENT: >>>
+Test comment.
+<<<

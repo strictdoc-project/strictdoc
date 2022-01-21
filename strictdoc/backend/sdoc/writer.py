@@ -171,11 +171,7 @@ class SDWriter:
                 continue
             fields = section_content.ordered_fields_lookup[field_name]
             for field in fields:
-                if field.field_value:
-                    output += f"{field_name}: "
-                    output += field.field_value
-                    output += "\n"
-                elif field.field_value_multiline:
+                if field.field_value_multiline:
                     output += f"{field_name}: >>>"
                     output += "\n"
                     output += field.field_value_multiline.rstrip()
@@ -203,8 +199,17 @@ class SDWriter:
                         output += "  VALUE: "
                         output += reference.path
                         output += "\n"
+                elif field.field_value is not None:
+                    if len(field.field_value) > 0:
+                        output += f"{field_name}: "
+                        output += field.field_value
+                    else:
+                        output += f"{field_name}:"
+                    output += "\n"
                 else:
-                    raise NotImplementedError(field) from None
+                    output += f"{field_name}: "
+                    output += "\n"
+
         return output
 
     @staticmethod

@@ -3,6 +3,7 @@ class Strictdoc < Formula
 
   desc "Software for writing technical requirements specifications."
   homepage "https://github.com/stanislaw/strictdoc"
+  version "0.0.18"
   url "https://files.pythonhosted.org/packages/b9/07/f0c348e6b255d29ece30ab24e51eb86f6dbd3b9bc5e22e321445c144bc26/strictdoc-0.0.18.tar.gz"
   sha256 "c5a33ca63d14f9a81b2490d118bda1f1f5a38038abfb22b18662c0c46fe2d1fb"
   license "Apache-2.0"
@@ -72,6 +73,10 @@ class Strictdoc < Formula
   def install
     virtualenv_create(libexec, "python3")
     virtualenv_install_with_resources
+  end
+
+  test do
+    assert_match "#{version}", shell_output("#{bin}/strictdoc --version")
   end
 
 end

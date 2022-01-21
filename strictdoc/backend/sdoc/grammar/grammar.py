@@ -131,19 +131,19 @@ RequirementType[noskipws]:
 
 RequirementField[noskipws]:
   (
-    field_name = FieldName ':'
-    (
-      (' ' (field_value = SingleLineString) '\n') |
-      (' ' (field_value_multiline = MultiLineString) '\n')
-    )
+    field_name = 'SPECIAL_FIELDS' ':' '\n'
+    field_value_special_fields += SpecialField
   ) |
   (
     field_name = 'REFS' ':' '\n'
     (field_value_references += Reference)
   ) |
   (
-    field_name = 'SPECIAL_FIELDS' ':' '\n'
-    field_value_special_fields += SpecialField
+    field_name = FieldName ':'
+    (
+      ((' ' field_value = SingleLineString | field_value = '') '\n') |
+      (' ' (field_value_multiline = MultiLineString) '\n')
+    )
   )
 ;
 

@@ -3,7 +3,7 @@ from strictdoc.backend.sdoc.reader import SDReader
 
 
 def test_001_level_1_req():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -12,7 +12,7 @@ TITLE: Test Doc
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     requirement = document.section_contents[0]

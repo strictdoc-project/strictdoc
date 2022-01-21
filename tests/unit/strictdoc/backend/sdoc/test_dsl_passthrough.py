@@ -50,7 +50,7 @@ TITLE: Hello
     assert sdoc_input == output
 
 
-def test_003_several_comments():
+def test_003_comments_01_several_comments():
     sdoc_input = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -60,6 +60,46 @@ TITLE: Hello
 COMMENT: Comment #1
 COMMENT: Comment #2
 COMMENT: Comment #3
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+def test_003_comments_02_single_line_empty():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+COMMENT:
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+def test_003_comments_02_single_line_empty_and_space():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+COMMENT: 
 """.lstrip()
 
     reader = SDReader()

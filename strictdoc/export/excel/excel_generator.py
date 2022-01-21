@@ -33,10 +33,6 @@ EXPORT_COLUMNS = [
     #     "name": "rationale",
     #     "header": "RATIONALE",
     # },
-    # {
-    #     "name": "body",
-    #     "header": "BODY",
-    # },
 ]
 
 

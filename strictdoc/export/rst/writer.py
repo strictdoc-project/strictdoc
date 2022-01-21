@@ -107,11 +107,6 @@ class RSTWriter:
         else:
             pass  # raise RuntimeError('Statement is missing')
 
-        if section_content.body:
-            output += "\n"
-            output += section_content.body
-            output += "\n\n"
-
         for comment in section_content.comments:
             output += "**"
             output += "Comment:"

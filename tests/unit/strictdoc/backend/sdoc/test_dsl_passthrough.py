@@ -298,45 +298,6 @@ This is a statement 3
     assert input_sdoc == output
 
 
-def test_032_multiline_body():
-    input_sdoc = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[SECTION]
-TITLE: Test Section
-
-[REQUIREMENT]
-STATEMENT: Some statement
-BODY: >>>
-This is a body part 1
-This is a body part 2
-This is a body part 3
-<<<
-
-[/SECTION]
-""".lstrip()
-
-    reader = SDReader()
-
-    document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
-
-    writer = SDWriter()
-    output = writer.write(document)
-
-    assert input_sdoc == output
-
-    assert isinstance(
-        document.section_contents[0].section_contents[0], Requirement
-    )
-    requirement_1 = document.section_contents[0].section_contents[0]
-    assert (
-        requirement_1.body
-        == "This is a body part 1\nThis is a body part 2\nThis is a body part 3"
-    )
-
-
 def test_036_rationale_single_line():
     input_sdoc = """
 [DOCUMENT]
@@ -418,7 +379,7 @@ TITLE: Test Section
 
 [COMPOSITE_REQUIREMENT]
 STATEMENT: Some parent requirement statement
-BODY: >>>
+COMMENT: >>>
 This is a body part 1
 This is a body part 2
 This is a body part 3
@@ -426,7 +387,7 @@ This is a body part 3
 
 [REQUIREMENT]
 STATEMENT: Some child requirement statement
-BODY: >>>
+COMMENT: >>>
 This is a child body part 1
 This is a child body part 2
 This is a child body part 3
@@ -453,13 +414,13 @@ This is a child body part 3
     requirement_1 = document.section_contents[0].section_contents[0]
     assert requirement_1.ng_level == 2
     assert (
-        requirement_1.body
+        requirement_1.comments[0].comment_multiline
         == "This is a body part 1\nThis is a body part 2\nThis is a body part 3"
     )
 
 
 def test_042_composite_requirement_2_level():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -468,19 +429,19 @@ TITLE: Test Section
 
 [COMPOSITE_REQUIREMENT]
 STATEMENT: 1.1 composite req statement
-BODY: >>>
+COMMENT: >>>
 body composite 1.1
 <<<
 
 [COMPOSITE_REQUIREMENT]
 STATEMENT: 1.1.1 composite req statement
-BODY: >>>
+COMMENT: >>>
 body composite 1.1.1
 <<<
 
 [REQUIREMENT]
 STATEMENT: 1.1.1.1 composite req statement
-BODY: >>>
+COMMENT: >>>
 body 1.1.1.1
 <<<
 
@@ -493,20 +454,20 @@ body 1.1.1.1
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
     assert isinstance(
         document.section_contents[0].section_contents[0], CompositeRequirement
     )
     requirement_1_1 = document.section_contents[0].section_contents[0]
     assert requirement_1_1.ng_level == 2
-    assert requirement_1_1.body == "body composite 1.1"
+    assert requirement_1_1.comments[0].comment_multiline == "body composite 1.1"
 
     assert isinstance(
         document.section_contents[0].section_contents[0].requirements[0],
@@ -516,7 +477,10 @@ body 1.1.1.1
         document.section_contents[0].section_contents[0].requirements[0]
     )
     assert requirement_1_1_1.ng_level == 3
-    assert requirement_1_1_1.body == "body composite 1.1.1"
+    assert (
+        requirement_1_1_1.comments[0].comment_multiline
+        == "body composite 1.1.1"
+    )
 
     assert isinstance(
         document.section_contents[0]
@@ -532,7 +496,7 @@ body 1.1.1.1
         .requirements[0]
     )
     assert requirement_1_1_1.ng_level == 4
-    assert requirement_1_1_1.body == "body 1.1.1.1"
+    assert requirement_1_1_1.comments[0].comment_multiline == "body 1.1.1.1"
 
 
 def test_045_composite_requirement_custom_fields():

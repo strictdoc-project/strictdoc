@@ -113,6 +113,27 @@ COMMENT:
     assert sdoc_input == output
 
 
+def test_003_comments_03_multiline_empty():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+COMMENT: >>>
+<<<
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
 def test_004_several_tags():
     sdoc_input = """
 [DOCUMENT]
@@ -135,7 +156,7 @@ TITLE: Hello
 
 
 def test_010_multiple_sections():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -166,13 +187,13 @@ This is a statement 3
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
 
 def test_020_free_text():

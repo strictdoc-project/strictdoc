@@ -74,7 +74,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         title = None
         statement = None
         statement_multiline = None
-        body = None
         rationale = None
         rationale_multiline = None
         comments: [RequirementComment] = []
@@ -133,8 +132,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
                             comment_multiline=None,
                         )
                     )
-        if "BODY" in ordered_fields_lookup:
-            body = ordered_fields_lookup["BODY"][0].field_value_multiline
         if "SPECIAL_FIELDS" in ordered_fields_lookup:
             special_fields = ordered_fields_lookup["SPECIAL_FIELDS"][
                 0
@@ -165,7 +162,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         self.statement_multiline: Optional[str] = (
             statement_multiline.rstrip() if statement_multiline else None
         )
-        self.body = body.rstrip() if body else None
         self.rationale_multiline = (
             rationale_multiline.rstrip() if rationale_multiline else None
         )

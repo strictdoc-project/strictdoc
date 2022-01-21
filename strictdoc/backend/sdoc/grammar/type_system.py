@@ -17,7 +17,7 @@ MultiLineStringEnd[noskipws]:
 
 MultiLineString[noskipws]:
   MultiLineStringStart-
-  (!MultiLineStringEnd /(?ms)./)*
+  ((!MultiLineStringEnd /(?ms)./)+ | '')
   MultiLineStringEnd-
 ;
 

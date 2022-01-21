@@ -171,11 +171,12 @@ class SDWriter:
                 continue
             fields = section_content.ordered_fields_lookup[field_name]
             for field in fields:
-                if field.field_value_multiline:
+                if field.field_value_multiline is not None:
                     output += f"{field_name}: >>>"
                     output += "\n"
-                    output += field.field_value_multiline.rstrip()
-                    output += "\n"
+                    if len(field.field_value_multiline) > 0:
+                        output += field.field_value_multiline.rstrip()
+                        output += "\n"
                     output += "<<<"
                     output += "\n"
                 elif field.field_value_special_fields:

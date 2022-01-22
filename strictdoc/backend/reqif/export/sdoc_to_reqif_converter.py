@@ -17,6 +17,7 @@ from reqif.models.reqif_spec_object_type import (
     SpecAttributeDefinition,
 )
 from reqif.models.reqif_specification import ReqIFSpecification
+from reqif.models.reqif_specification_type import ReqIFSpecificationType
 from reqif.models.reqif_types import SpecObjectAttributeType
 from reqif.object_lookup import ReqIFObjectLookup
 from reqif.reqif_bundle import ReqIFBundle
@@ -25,7 +26,7 @@ from strictdoc.backend.reqif.sdoc_reqif_fields import (
     ReqIFChapterField,
     SDocRequirementReservedField,
     SDOC_TO_REQIF_FIELD_MAP,
-    SDOC_SPEC_OBJECT_TYPE_SINGLETON,
+    SDOC_SPEC_OBJECT_TYPE_SINGLETON, SDOC_SPECIFICATION_TYPE_SINGLETON,
 )
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
@@ -167,6 +168,29 @@ class SDocToReqIFObjectConverter:
                 grammar=document.grammar, data_types_lookup=data_types_lookup
             )
             spec_types.extend(document_spec_types)
+
+            specification_type = ReqIFSpecificationType(
+                description=None,
+                identifier=SDOC_SPECIFICATION_TYPE_SINGLETON,
+                last_change="",
+                long_name=SDOC_SPECIFICATION_TYPE_SINGLETON,
+                spec_attributes=[SpecAttributeDefinition(
+                    xml_node=None,
+                    attribute_type=SpecObjectAttributeType.STRING,
+                    description=None,
+                    identifier="TBD",
+                    last_change=None,
+                    datatype_definition="123",
+                    long_name="ReqIF.Name",
+                    editable=None,
+                    default_value=None,
+                    multi_valued=None
+                )],
+                spec_attribute_map={
+                    SDOC_SPECIFICATION_TYPE_SINGLETON: SDOC_SPECIFICATION_TYPE_SINGLETON
+                }
+            )
+            spec_types.append(specification_type)
             document_iterator = DocumentCachingIterator(document)
 
             parents: Dict[ReqIFSpecHierarchy, ReqIFSpecHierarchy] = {}
@@ -281,7 +305,7 @@ class SDocToReqIFObjectConverter:
                 last_change=None,
                 long_name=document.name,
                 values=None,
-                specification_type=None,
+                specification_type=specification_type.identifier,
                 children=root_hierarchy.children,
             )
             specifications.append(specification)

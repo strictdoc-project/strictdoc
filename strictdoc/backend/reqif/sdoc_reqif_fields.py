@@ -12,7 +12,8 @@ class SDocRequirementReservedField:
 
 
 class ReqIFRequirementReservedField:
-    UID = "ReqIF.ForeignID"
+    #UID = "ReqIF.ForeignID"
+    UID = "IE PUID"
     NAME = "ReqIF.Name"
     TEXT = "ReqIF.Text"
 

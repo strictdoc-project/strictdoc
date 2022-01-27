@@ -1,4 +1,5 @@
 import uuid
+import datetime
 from enum import Enum
 from typing import Dict, List
 
@@ -9,6 +10,7 @@ from reqif.models.reqif_data_type import (
     ReqIFEnumValue,
 )
 from reqif.models.reqif_namespace_info import ReqIFNamespaceInfo
+from reqif.models.reqif_reqif_header import ReqIFReqIFHeader
 from reqif.models.reqif_req_if_content import ReqIFReqIFContent
 from reqif.models.reqif_spec_hierarchy import ReqIFSpecHierarchy
 from reqif.models.reqif_spec_object import ReqIFSpecObject, SpecObjectAttribute
@@ -26,7 +28,8 @@ from strictdoc.backend.reqif.sdoc_reqif_fields import (
     ReqIFChapterField,
     SDocRequirementReservedField,
     SDOC_TO_REQIF_FIELD_MAP,
-    SDOC_SPEC_OBJECT_TYPE_SINGLETON, SDOC_SPECIFICATION_TYPE_SINGLETON,
+    SDOC_SPEC_OBJECT_TYPE_SINGLETON,
+    SDOC_SPECIFICATION_TYPE_SINGLETON,
 )
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
@@ -53,6 +56,10 @@ class StrictDocReqIFTypes(Enum):
 def generate_unique_identifier(element_type: str) -> str:
     return f"{element_type}-{uuid.uuid4()}"
 
+# TODO: globals to told the added iot datatype ids
+dt_iot_id = None
+dt_iot_reqenum_id = None
+ad_iot_id = None
 
 class SDocToReqIFObjectConverter:
     @classmethod
@@ -164,33 +171,93 @@ class SDocToReqIFObjectConverter:
                     else:
                         raise NotImplementedError(field) from None
 
+
+
+
+
+
+            values = []
+            values_map = {}
+            option = "0"
+            value = ReqIFEnumValue(
+                description=None,
+                identifier=generate_unique_identifier("DT-IOT-REQ"),
+                # TODO: the requiment implementation needs to be extended to hold long_name as well!!!
+                long_name = "Requirement",
+                last_change=None,
+                key=option,
+                other_content=None,
+            )
+            values.append(value)
+            values_map[option] = option
+
+            global dt_iot_reqenum_id
+            dt_iot_reqenum_id = value.identifier            
+
+            data_type = ReqIFDataTypeDefinitionEnumeration(
+                is_self_closed=False,
+                description=None,
+                identifier=(
+                    generate_unique_identifier(
+                        StrictDocReqIFTypes.SINGLE_CHOICE.value
+                    )
+                ),
+                last_change=None,
+                long_name="IE Object Type",
+                multi_valued=False,
+                values=values,
+                values_map={},
+            )
+            data_types.append(data_type)
+            data_types_lookup[
+                StrictDocReqIFTypes.SINGLE_CHOICE.value
+            ] = data_type.identifier
+
+            # TODO: is there a better way to get the datatype and attribute type ids into the requirement?!??!
+            global dt_iot_id
+            dt_iot_id = data_type.identifier
+
+
+
+
             document_spec_types = cls._convert_document_grammar_to_spec_types(
                 grammar=document.grammar, data_types_lookup=data_types_lookup
             )
             spec_types.extend(document_spec_types)
 
+
+                    
+            
             specification_type = ReqIFSpecificationType(
                 description=None,
                 identifier=SDOC_SPECIFICATION_TYPE_SINGLETON,
-                last_change="",
+                last_change=datetime.datetime.now(datetime.datetime.now().astimezone().tzinfo).isoformat(),
                 long_name=SDOC_SPECIFICATION_TYPE_SINGLETON,
-                spec_attributes=[SpecAttributeDefinition(
-                    xml_node=None,
-                    attribute_type=SpecObjectAttributeType.STRING,
-                    description=None,
-                    identifier="TBD",
-                    last_change=None,
-                    datatype_definition="123",
-                    long_name="ReqIF.Name",
-                    editable=None,
-                    default_value=None,
-                    multi_valued=None
-                )],
+                
+                # TODO: setting the attribute is optional
+                spec_attributes=[
+                    SpecAttributeDefinition(
+                        xml_node=None,
+                        attribute_type=SpecObjectAttributeType.STRING,
+                        description=None,
+                        identifier=generate_unique_identifier(""),
+                        last_change=None,
+                        datatype_definition="123",
+                        long_name="ReqIF.Name",
+                        editable=None,
+                        default_value=None,
+                        multi_valued=None,
+                    )
+                ],
                 spec_attribute_map={
                     SDOC_SPECIFICATION_TYPE_SINGLETON: SDOC_SPECIFICATION_TYPE_SINGLETON
-                }
+                },
             )
             spec_types.append(specification_type)
+            
+            
+            
+            
             document_iterator = DocumentCachingIterator(document)
 
             parents: Dict[ReqIFSpecHierarchy, ReqIFSpecHierarchy] = {}
@@ -331,9 +398,21 @@ class SDocToReqIFObjectConverter:
             schema_location=None,
             language=None,
         )
+        
+        req_reqif_header = ReqIFReqIFHeader(
+            identifier=generate_unique_identifier(""),
+            creation_time=datetime.datetime.now(datetime.datetime.now().astimezone().tzinfo).isoformat(),
+            title="strictdoc",
+            req_if_tool_id="strictdoc",
+            req_if_version="1.0",
+            source_tool_id="strictdoc",
+            repository_id=None,
+            comment=None
+            )
+        
         reqif_bundle = ReqIFBundle(
             namespace_info=namespace_info,
-            req_if_header=None,
+            req_if_header=req_reqif_header,
             core_content=core_content_or_none,
             tool_extensions_tag_exists=False,
             lookup=ReqIFObjectLookup(
@@ -395,6 +474,17 @@ class SDocToReqIFObjectConverter:
                 raise NotImplementedError(grammar_field) from None
             attributes.append(attribute)
             attribute_map[field.field_name] = attribute
+
+        global dt_iot_reqenum_id
+        global ad_iot_id
+        attribute = SpecObjectAttribute(
+				xml_node=None,
+				attribute_type=SpecObjectAttributeType.ENUMERATION,
+				definition_ref=ad_iot_id,
+				value=dt_iot_reqenum_id,
+			)
+        attributes.append(attribute)
+        attribute_map[ad_iot_id] = attribute
 
         spec_object = ReqIFSpecObject(
             xml_node=None,
@@ -501,6 +591,32 @@ class SDocToReqIFObjectConverter:
             attribute_map[
                 chapter_name_attribute.identifier
             ] = chapter_name_attribute
+
+
+
+            # IE Object Type Attribute
+            attribute = SpecAttributeDefinition(
+                xml_node=None,
+                attribute_type=SpecObjectAttributeType.ENUMERATION,
+                description=None,
+                identifier= generate_unique_identifier("SA-IOT-REQ"),                
+                last_change=None,
+                datatype_definition=(
+                    data_types_lookup[
+                        StrictDocReqIFTypes.SINGLE_CHOICE.value
+                    ]
+                ),
+                long_name="IE Object Type",
+                editable=None,
+                default_value=None,
+                multi_valued=False,
+            )
+            attribute_definitions.append(attribute)
+            attribute_map[attribute.identifier] = attribute
+            global ad_iot_id
+            ad_iot_id = attribute.identifier
+
+
 
             spec_object_type = ReqIFSpecObjectType(
                 description=None,

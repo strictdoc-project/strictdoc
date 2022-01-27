@@ -19,6 +19,7 @@ from reqif.models.reqif_spec_object_type import (
     SpecAttributeDefinition,
 )
 from reqif.models.reqif_specification import ReqIFSpecification
+from reqif.models.reqif_specification_type import ReqIFSpecificationType
 from reqif.models.reqif_types import SpecObjectAttributeType
 from reqif.object_lookup import ReqIFObjectLookup
 from reqif.reqif_bundle import ReqIFBundle
@@ -28,6 +29,7 @@ from strictdoc.backend.reqif.sdoc_reqif_fields import (
     SDocRequirementReservedField,
     SDOC_TO_REQIF_FIELD_MAP,
     SDOC_SPEC_OBJECT_TYPE_SINGLETON,
+    SDOC_SPECIFICATION_TYPE_SINGLETON,
 )
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
@@ -61,6 +63,10 @@ class SDocToReqIFObjectConverter:
         cls,
         document_tree: DocumentTree,
     ):
+        creation_time = datetime.datetime.now(
+            datetime.datetime.now().astimezone().tzinfo
+        ).isoformat()
+
         # TODO
         namespace = "http://www.omg.org/spec/ReqIF/20110401/reqif.xsd"
         configuration = "https://github.com/strictdoc-project/strictdoc"
@@ -171,6 +177,16 @@ class SDocToReqIFObjectConverter:
                 grammar=document.grammar, data_types_lookup=data_types_lookup
             )
             spec_types.extend(document_spec_types)
+
+            specification_type = ReqIFSpecificationType(
+                description=None,
+                identifier=SDOC_SPECIFICATION_TYPE_SINGLETON,
+                last_change=creation_time,
+                long_name=SDOC_SPECIFICATION_TYPE_SINGLETON,
+                spec_attributes=None,
+                spec_attribute_map={},
+            )
+            spec_types.append(specification_type)
             document_iterator = DocumentCachingIterator(document)
 
             parents: Dict[ReqIFSpecHierarchy, ReqIFSpecHierarchy] = {}
@@ -285,7 +301,7 @@ class SDocToReqIFObjectConverter:
                 last_change=None,
                 long_name=document.name,
                 values=None,
-                specification_type=None,
+                specification_type=specification_type.identifier,
                 children=root_hierarchy.children,
             )
             specifications.append(specification)
@@ -311,10 +327,6 @@ class SDocToReqIFObjectConverter:
             schema_location=None,
             language=None,
         )
-
-        creation_time = datetime.datetime.now(
-            datetime.datetime.now().astimezone().tzinfo
-        ).isoformat()
 
         req_reqif_header = ReqIFReqIFHeader(
             identifier=generate_unique_identifier("REQ-IF-HEADER"),

@@ -556,7 +556,7 @@ python-versions = "*"
 
 [[package]]
 name = "reqif"
-version = "0.0.13"
+version = "0.0.15"
 description = "Python library for ReqIF format. ReqIF parsing and unparsing."
 category = "main"
 optional = false
@@ -811,7 +811,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6.2"
-content-hash = "81195ab02cabe887fd270fcc875cd2dfe748d54b6926f6f9a0286802566b98aa"
+content-hash = "9c3b0afbd2ad86193e2f260b56ac14551849631d6998c27677abe8046cbb655d"
 
 [metadata.files]
 alabaster = [
@@ -1282,8 +1282,8 @@ regex = [
     {file = "regex-2022.1.18.tar.gz", hash = "sha256:97f32dc03a8054a4c4a5ab5d761ed4861e828b2c200febd4e46857069a483916"},
 ]
 reqif = [
-    {file = "reqif-0.0.13-py3-none-any.whl", hash = "sha256:2d31eb72d12479a468858bdd780ab7a9ddfb3d948a52c395650531143661795b"},
-    {file = "reqif-0.0.13.tar.gz", hash = "sha256:da11896734600293a9933963fe40264190adca0d97a7441ebd5e49436608efea"},
+    {file = "reqif-0.0.15-py3-none-any.whl", hash = "sha256:5e568f2b0a8839c87bf68ebcf6b74965bb41a77e80885558c9d27ff1de116a30"},
+    {file = "reqif-0.0.15.tar.gz", hash = "sha256:72e30fedc1c5fc03ca95c51e15f78cceb4c51caeabc70f84cef0fef01462712c"},
 ]
 requests = [
     {file = "requests-2.27.1-py2.py3-none-any.whl", hash = "sha256:f22fa1e554c9ddfd16e6e41ac79759e17be9e492b3587efa038054674760e72d"},

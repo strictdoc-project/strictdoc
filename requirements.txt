@@ -48,7 +48,7 @@ python-datauri==0.2.9
 pytidylib==0.3.2
 pytz==2021.3; python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.5"
 regex==2022.1.18; python_full_version >= "3.6.2"
-reqif==0.0.13; python_full_version >= "3.6.2" and python_full_version < "4.0.0"
+reqif==0.0.15; python_full_version >= "3.6.2" and python_full_version < "4.0.0"
 requests==2.27.1; python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version >= "3.5"
 six==1.16.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 snowballstemmer==2.2.0; python_version >= "3.5"

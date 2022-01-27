@@ -1,4 +1,5 @@
 import uuid
+import datetime
 from enum import Enum
 from typing import Dict, List
 
@@ -9,6 +10,7 @@ from reqif.models.reqif_data_type import (
     ReqIFEnumValue,
 )
 from reqif.models.reqif_namespace_info import ReqIFNamespaceInfo
+from reqif.models.reqif_reqif_header import ReqIFReqIFHeader
 from reqif.models.reqif_req_if_content import ReqIFReqIFContent
 from reqif.models.reqif_spec_hierarchy import ReqIFSpecHierarchy
 from reqif.models.reqif_spec_object import ReqIFSpecObject, SpecObjectAttribute
@@ -104,6 +106,7 @@ class SDocToReqIFObjectConverter:
                                 last_change=None,
                                 key=option,
                                 other_content=None,
+                                long_name=None,
                             )
                             values.append(value)
                             values_map[option] = option
@@ -138,6 +141,7 @@ class SDocToReqIFObjectConverter:
                                 last_change=None,
                                 key=option,
                                 other_content=None,
+                                long_name=None,
                             )
                             values.append(value)
                             values_map[option] = option
@@ -307,9 +311,25 @@ class SDocToReqIFObjectConverter:
             schema_location=None,
             language=None,
         )
+
+        creation_time = datetime.datetime.now(
+            datetime.datetime.now().astimezone().tzinfo
+        ).isoformat()
+
+        req_reqif_header = ReqIFReqIFHeader(
+            identifier=generate_unique_identifier("REQ-IF-HEADER"),
+            creation_time=creation_time,
+            title="Documentation export by StrictDoc",
+            req_if_tool_id="strictdoc",
+            req_if_version="1.0",
+            source_tool_id="strictdoc",
+            repository_id=None,
+            comment=None,
+        )
+
         reqif_bundle = ReqIFBundle(
             namespace_info=namespace_info,
-            req_if_header=None,
+            req_if_header=req_reqif_header,
             core_content=core_content_or_none,
             tool_extensions_tag_exists=False,
             lookup=ReqIFObjectLookup(

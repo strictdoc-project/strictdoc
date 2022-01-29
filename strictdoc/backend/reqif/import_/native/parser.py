@@ -25,10 +25,10 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldSingleChoice,
     GrammarElementFieldMultipleChoice,
 )
-from strictdoc.backend.reqif.stage2.abstract_parser import (
+from strictdoc.backend.reqif.import_.abstract_parser import (
     AbstractReqIFStage2Parser,
 )
-from strictdoc.backend.reqif.stage2.native.reqif_to_sdoc_converter import (
+from strictdoc.backend.reqif.import_.native.reqif_to_sdoc_converter import (
     ReqIFToSDocConverter,
 )
 

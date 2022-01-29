@@ -4,11 +4,11 @@ from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.sdoc.models.section import FreeText, Section
 from strictdoc.helpers.html import prettify_html_fragment
-from strictdoc.backend.reqif.stage2.abstract_parser import (
+from strictdoc.backend.reqif.import_.abstract_parser import (
     AbstractReqIFStage2Parser,
 )
-from strictdoc.backend.reqif.stage2.fm_studio.mapping import FMStudioMapping
-from strictdoc.backend.reqif.stage2.fm_studio.uid_matcher import (
+from strictdoc.backend.reqif.import_.fm_studio.mapping import FMStudioMapping
+from strictdoc.backend.reqif.import_.fm_studio.uid_matcher import (
     match_letter_uid,
     match_bullet_uid,
     match_continuation_uid,

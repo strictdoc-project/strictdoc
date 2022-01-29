@@ -86,15 +86,10 @@ class SDocToReqIFObjectConverter:
                             in data_types_lookup
                         ):
                             continue
-                        data_type = ReqIFDataTypeDefinitionString(
-                            is_self_closed=True,
-                            description=None,
+                        data_type = ReqIFDataTypeDefinitionString.create(
                             identifier=(
                                 StrictDocReqIFTypes.SINGLE_LINE_STRING.value
                             ),
-                            last_change=None,
-                            long_name=None,
-                            max_length=None,
                         )
                         data_types.append(data_type)
                         data_types_lookup[
@@ -104,32 +99,22 @@ class SDocToReqIFObjectConverter:
                         values = []
                         values_map = {}
                         for option in field.options:
-                            value = ReqIFEnumValue(
-                                description=None,
+                            value = ReqIFEnumValue.create(
                                 identifier=generate_unique_identifier(
                                     "ENUM-VALUE"
                                 ),
-                                last_change=None,
                                 key=option,
-                                other_content=None,
-                                long_name=None,
                             )
                             values.append(value)
                             values_map[option] = option
 
-                        data_type = ReqIFDataTypeDefinitionEnumeration(
-                            is_self_closed=False,
-                            description=None,
+                        data_type = ReqIFDataTypeDefinitionEnumeration.create(
                             identifier=(
                                 generate_unique_identifier(
                                     StrictDocReqIFTypes.SINGLE_CHOICE.value
                                 )
                             ),
-                            last_change=None,
-                            long_name=None,
-                            multi_valued=False,
                             values=values,
-                            values_map={},
                         )
                         data_types.append(data_type)
                         data_types_lookup[
@@ -139,32 +124,22 @@ class SDocToReqIFObjectConverter:
                         values = []
                         values_map = {}
                         for option in field.options:
-                            value = ReqIFEnumValue(
-                                description=None,
+                            value = ReqIFEnumValue.create(
                                 identifier=generate_unique_identifier(
                                     "ENUM-VALUE"
                                 ),
-                                last_change=None,
                                 key=option,
-                                other_content=None,
-                                long_name=None,
                             )
                             values.append(value)
                             values_map[option] = option
 
-                        data_type = ReqIFDataTypeDefinitionEnumeration(
-                            is_self_closed=False,
-                            description=None,
+                        data_type = ReqIFDataTypeDefinitionEnumeration.create(
                             identifier=(
                                 generate_unique_identifier(
                                     StrictDocReqIFTypes.MULTI_CHOICE.value
                                 )
                             ),
-                            last_change=None,
-                            long_name=None,
-                            multi_valued=True,
                             values=values,
-                            values_map={},
                         )
                         data_types.append(data_type)
                         data_types_lookup[
@@ -240,7 +215,6 @@ class SDocToReqIFObjectConverter:
                         long_name=None,
                         spec_object_type=SDOC_SPEC_OBJECT_TYPE_SINGLETON,
                         attributes=attributes,
-                        attribute_map={"TITLE": title_attribute},
                     )
                     spec_objects.append(spec_object)
                     hierarchy = ReqIFSpecHierarchy(
@@ -363,7 +337,6 @@ class SDocToReqIFObjectConverter:
         grammar_element = grammar.elements_by_type[requirement.requirement_type]
 
         attributes: List[SpecObjectAttribute] = []
-        attribute_map: Dict[str, SpecObjectAttribute] = {}
         for field in requirement.fields:
             if field.field_name == "REFS":
                 raise NotImplementedError(
@@ -402,17 +375,11 @@ class SDocToReqIFObjectConverter:
             else:
                 raise NotImplementedError(grammar_field) from None
             attributes.append(attribute)
-            attribute_map[field.field_name] = attribute
 
-        spec_object = ReqIFSpecObject(
-            xml_node=None,
-            description=None,
+        spec_object = ReqIFSpecObject.create(
             identifier=generate_unique_identifier("REQUIREMENT"),
-            last_change=None,
-            long_name=None,
             spec_object_type=SDOC_SPEC_OBJECT_TYPE_SINGLETON,
             attributes=attributes,
-            attribute_map=attribute_map,
         )
 
         return spec_object
@@ -429,7 +396,6 @@ class SDocToReqIFObjectConverter:
 
         for element in grammar.elements:
             attribute_definitions = []
-            attribute_map = {}
 
             field: GrammarElementField
             for field in element.fields:
@@ -437,86 +403,57 @@ class SDocToReqIFObjectConverter:
                     field_title = field.title
                     if field_title in SDocRequirementReservedField.SET:
                         field_title = SDOC_TO_REQIF_FIELD_MAP[field_title]
-                    attribute = SpecAttributeDefinition(
-                        xml_node=None,
+                    attribute = SpecAttributeDefinition.create(
                         attribute_type=SpecObjectAttributeType.STRING,
-                        description=None,
                         identifier=field_title,
-                        last_change=None,
                         datatype_definition=(
                             StrictDocReqIFTypes.SINGLE_LINE_STRING.value
                         ),
                         long_name=field_title,
-                        editable=None,
-                        default_value=None,
-                        multi_valued=None,
                     )
                 elif isinstance(field, GrammarElementFieldSingleChoice):
-                    attribute = SpecAttributeDefinition(
-                        xml_node=None,
+                    attribute = SpecAttributeDefinition.create(
                         attribute_type=SpecObjectAttributeType.ENUMERATION,
-                        description=None,
                         identifier=field.title,
-                        last_change=None,
                         datatype_definition=(
                             data_types_lookup[
                                 StrictDocReqIFTypes.SINGLE_CHOICE.value
                             ]
                         ),
                         long_name=field.title,
-                        editable=None,
-                        default_value=None,
                         multi_valued=False,
                     )
                 elif isinstance(field, GrammarElementFieldMultipleChoice):
-                    attribute = SpecAttributeDefinition(
-                        xml_node=None,
+                    attribute = SpecAttributeDefinition.create(
                         attribute_type=SpecObjectAttributeType.ENUMERATION,
-                        description=None,
                         identifier=field.title,
-                        last_change=None,
                         datatype_definition=(
                             data_types_lookup[
                                 StrictDocReqIFTypes.MULTI_CHOICE.value
                             ]
                         ),
                         long_name=field.title,
-                        editable=None,
-                        default_value=None,
                         multi_valued=True,
                     )
                 else:
                     raise NotImplementedError(field) from None
                 attribute_definitions.append(attribute)
-                attribute_map[field.title] = attribute
 
             # Extra chapter name attribute.
-            chapter_name_attribute = SpecAttributeDefinition(
-                xml_node=None,
+            chapter_name_attribute = SpecAttributeDefinition.create(
                 attribute_type=SpecObjectAttributeType.STRING,
-                description=None,
                 identifier="ReqIF.ChapterName",
-                last_change=None,
                 datatype_definition=(
                     StrictDocReqIFTypes.SINGLE_LINE_STRING.value
                 ),
                 long_name="ReqIF.ChapterName",
-                editable=None,
-                default_value=None,
-                multi_valued=None,
             )
             attribute_definitions.append(chapter_name_attribute)
-            attribute_map[
-                chapter_name_attribute.identifier
-            ] = chapter_name_attribute
 
-            spec_object_type = ReqIFSpecObjectType(
-                description=None,
+            spec_object_type = ReqIFSpecObjectType.create(
                 identifier=SDOC_SPEC_OBJECT_TYPE_SINGLETON,
-                last_change=None,
                 long_name=element.tag,
                 attribute_definitions=attribute_definitions,
-                attribute_map=attribute_map,
             )
             spec_object_types.append(spec_object_type)
 

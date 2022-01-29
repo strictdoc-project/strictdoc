@@ -1,6 +1,7 @@
-from typing import Optional, Union
+from typing import Optional, Union, Dict
 
 from reqif.models.reqif_spec_object import ReqIFSpecObject
+from reqif.models.reqif_spec_object_type import SpecAttributeDefinition
 from reqif.reqif_bundle import ReqIFBundle
 
 from strictdoc.backend.reqif.sdoc_reqif_fields import (
@@ -43,9 +44,16 @@ class ReqIFToSDocConverter:
         spec_object_type = reqif_bundle.lookup.get_spec_type_by_ref(
             spec_object.spec_object_type
         )
-        attribute_map = spec_object_type.attribute_map
+        attribute_map: Dict[
+            str, SpecAttributeDefinition
+        ] = spec_object_type.attribute_map
         for attribute in spec_object.attributes:
-            field_name = attribute_map[attribute.definition_ref]
+            long_name_or_none: Optional[str] = attribute_map[
+                attribute.definition_ref
+            ].long_name
+            if long_name_or_none is None:
+                raise NotImplementedError(attribute_map)
+            field_name: str = long_name_or_none
             if field_name == ReqIFChapterField.CHAPTER_NAME:
                 return True
         return False
@@ -61,15 +69,22 @@ class ReqIFToSDocConverter:
         spec_object_type = reqif_bundle.lookup.get_spec_type_by_ref(
             spec_object.spec_object_type
         )
-        attribute_map = spec_object_type.attribute_map
-        section_title = None
+        attribute_map: Dict[
+            str, SpecAttributeDefinition
+        ] = spec_object_type.attribute_map
+        assert attribute_map is not None
         for attribute in spec_object.attributes:
-            field_name = attribute_map[attribute.definition_ref]
+            field_name_or_none: Optional[str] = attribute_map[
+                attribute.definition_ref
+            ].long_name
+            if field_name_or_none is None:
+                raise NotImplementedError
+            field_name: str = field_name_or_none
             if field_name == ReqIFChapterField.CHAPTER_NAME:
                 section_title = attribute.value
                 break
         else:
-            raise NotImplementedError
+            raise NotImplementedError(attribute_map)
 
         free_texts = []
         if ReqIFChapterField.TEXT in spec_object.attribute_map:
@@ -104,9 +119,16 @@ class ReqIFToSDocConverter:
         spec_object_type = reqif_bundle.lookup.get_spec_type_by_ref(
             spec_object.spec_object_type
         )
-        attribute_map = spec_object_type.attribute_map
+        attribute_map: Dict[
+            str, SpecAttributeDefinition
+        ] = spec_object_type.attribute_map
         for attribute in spec_object.attributes:
-            field_name = attribute_map[attribute.definition_ref]
+            long_name_or_none = attribute_map[
+                attribute.definition_ref
+            ].long_name
+            if long_name_or_none is None:
+                raise NotImplementedError
+            field_name: str = long_name_or_none
             attribute_value = unescape(attribute.value)
             attribute_multiline_value = None
             if (

@@ -3,15 +3,17 @@
 data-status='{{ requirement.status.lower() }}'
 {%- endif %}>
 
-  <section class="requirement_section" data-section='meta'>
+    <section class="requirement_section" data-section='meta'>
 
-    {% include "_shared/requirement_block/ancor.jinja.html" %}
-    {% include "_shared/requirement_block/h_title.jinja.html" %}
-    {% include "_shared/requirement_block/meta.jinja.html" %}
-    {% include "_shared/requirement_block/related.jinja.html" %}
-    {% include "_shared/requirement_block/files_list.jinja.html" %}
+        {% include "_shared/requirement_block/ancor.jinja.html" %}
+        {% include "_shared/requirement_block/h_title.jinja.html" %}
+        {% include "_shared/requirement_block/meta.jinja.html" %}
+        {% include "_shared/requirement_block/capella.jinja.html" %}
+        {% include "_shared/requirement_block/related.jinja.html" %}
+        {% include "_shared/requirement_block/files_list.jinja.html" %}
 
-  </section>
+    </section>
+
   <section class="requirement_section" data-section='statement'>
 
     {% include "_shared/requirement_block/statement.jinja.html" %}

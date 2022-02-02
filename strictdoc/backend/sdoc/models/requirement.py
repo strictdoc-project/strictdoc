@@ -9,6 +9,8 @@ from strictdoc.backend.sdoc.models.node import Node
 from strictdoc.backend.sdoc.models.reference import Reference
 from strictdoc.backend.sdoc.models.special_field import SpecialField
 
+from strictdoc.backend.sdoc.models.capella_data import CapellaData
+import json
 
 class RequirementContext:
     def __init__(self):
@@ -137,6 +139,17 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
                 0
             ].field_value_special_fields
 
+        has_capella: bool = False
+        capella_req_js = ""
+        capella_allocs_js = ""
+        if "Capella.Req" in ordered_fields_lookup:
+            capella_req_js = ordered_fields_lookup["Capella.Req"][0].field_value
+            has_capella = True
+        if "Capella.Allocs" in ordered_fields_lookup:
+            capella_allocs_js = ordered_fields_lookup["Capella.Allocs"][0].field_value
+            has_capella = True
+        
+
         # TODO: Why textX creates empty uid when the sdoc doesn't declare the
         # UID field?
         self.uid = (
@@ -155,6 +168,8 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         self.comments = comments
         self.special_fields = special_fields
         self.requirements = requirements
+        self.capella_req = CapellaData.decode_req(capella_req_js)  
+        self.capella_allocs = CapellaData.decode_allocs(capella_allocs_js)
 
         # For multiline fields:
         # Due to the details of how matching single vs multistring lines is
@@ -169,6 +184,7 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         # TODO: Is it worth to move this to dedicated Presenter* classes to
         # keep this class textx-only?
         self.has_meta: bool = has_meta
+        self.has_capella: bool = has_capella
         self.fields: List[RequirementField] = fields
         self.ordered_fields_lookup: OrderedDict[
             str, List[RequirementField]
@@ -246,6 +262,14 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
             if field.field_name in RESERVED_NON_META_FIELDS:
                 continue
             yield field.field_name, field.field_value
+
+
+    #def get_capella_req(self):        
+    #    return self.capella_req   # returns CapellaData object
+
+    #def get_capella_allocs(self):        
+    #    return self.capella_allocs   # returns list of CapellaData objects
+
 
     def dump_fields(self):
         return ", ".join(

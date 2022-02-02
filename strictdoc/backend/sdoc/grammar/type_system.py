@@ -1,6 +1,8 @@
 STRICTDOC_BASIC_TYPE_SYSTEM = r"""
 FieldName[noskipws]:
-  /[A-Z]+[A-Z_]*/
+  // TBD: reqif import brings in new Capelle datatypes which can contain spaces, dots and have small chars
+  //      couldn't find a reqif->sdoc mappings yet. therefore using this to stop textx to complain.
+  /[A-Z]+[A-Za-z_. ]*/
 ;
 
 SingleLineString:

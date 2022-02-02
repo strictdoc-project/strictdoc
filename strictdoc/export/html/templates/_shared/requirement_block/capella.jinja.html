@@ -1,0 +1,24 @@
+{%- if requirement.has_capella -%}
+    Capella Requirement:
+<dl class="requirement_meta">
+
+    <dt>UUID:</dt>
+    <dd>Description</dd>
+
+    <dt><i><a href="{{ requirement.capella_req.doc_url }}">{{requirement.capella_req.uuid}}</a></i></dt>
+    <dd>{{ requirement.capella_req.name }}</dd>
+
+</dl>
+Capella Requirement Allocations:
+<dl class="requirement_meta">
+
+    <dt>UUID:</dt>
+    <dd>Description</dd>
+
+    {% for capella_field in requirement.capella_allocs %}
+    <dt><i><a href="{{ capella_field.doc_url }}">{{capella_field.uuid}}</a></i></dt>
+    <dd>{{ capella_field.name }}</dd>
+
+    {% endfor %}
+</dl>
+{%- endif %}

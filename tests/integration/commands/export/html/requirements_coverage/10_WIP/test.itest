@@ -1,0 +1,6 @@
+RUN: %strictdoc export %S/output.sdoc --formats=html --output-dir Output
+RUN: %check_exists --file "%S/Output/html/sdoc/output.html"
+
+RUN: cat "%S/Output/html//sdoc/output.html" | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: <dt><i>Capella.Req</i></dt>
+CHECK-HTML: <dd>{&quot;uuid&quot;: &quot;d605e695-2e39-4c92-b863-d096162e0014&quot;, &quot;name&quot;: &quot;Flight modes&quot;, &quot;long_name&quot;: null, &quot;doc_url&quot;: &quot;../../../system_architecture/output/test/d605e6952e394c92b863d096162e0014.html&quot;}</dd>

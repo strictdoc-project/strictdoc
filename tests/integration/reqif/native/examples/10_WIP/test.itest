@@ -1,0 +1,16 @@
+RUN: mkdir -p %S/output
+RUN: %strictdoc import reqif sdoc %S/output.reqif %S/output/output.sdoc
+RUN: %cat %S/output/output.sdoc | filecheck %s
+
+CHECK: UID: REQ-001
+CHECK: TITLE: Flight modes
+CHECK: STATEMENT: >>>
+CHECK: The avionic system shall support manual and assisted flight mode.
+CHECK: <<<
+CHECK: IE Object Type: DT-IOT-REQ-f72a872b-21e8-4c76-98af-467ddc9d8355
+CHECK: Capella.Req: {&quot;uuid&quot;: &quot;d605e695-2e39-4c92-b863-d096162e0014&quot;, &quot;name&quot;: &quot;Flight modes&quot;, &quot;long_name&quot;: null, &quot;doc_url&quot;: &quot;../../../system_architecture/output/test/d605e6952e394c92b863d096162e0014.html&quot;}
+CHECK: Capella.Allocs: [{&quot;uuid&quot;: &quot;f9cabb24-100b-4e68-930a-8f35ec38c106&quot;, &quot;name&quot;: &quot;Watch Movie&quot;, &quot;long_name&quot;: null, &quot;doc_url&quot;: &quot;../../../system_architecture/output/test/f9cabb24100b4e68930a8f35ec38c106.html&quot;}]
+
+RUN: %strictdoc export --formats=reqif-sdoc %S/output/output.sdoc
+RUN: %strictdoc import reqif sdoc %S/output/reqif/output.reqif %S/output/output_step2.sdoc
+RUN: diff %S/output/output.sdoc %S/output/output_step2.sdoc

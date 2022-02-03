@@ -1,0 +1,79 @@
+[DOCUMENT]
+TITLE: Kontrol Avionics - SORA requirements for EVLOS scenario
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: LEVEL
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATUS
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TAGS
+    TYPE: String
+    REQUIRED: False
+  - TITLE: SPECIAL_FIELDS
+    TYPE: String
+    REQUIRED: False
+  - TITLE: REFS
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: BODY
+    TYPE: String
+    REQUIRED: False
+  - TITLE: RATIONALE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: IE Object Type
+    TYPE: SingleChoice(0)
+    REQUIRED: False
+  - TITLE: Capella.Req
+    TYPE: String
+    REQUIRED: False
+  - TITLE: Capella.Allocs
+    TYPE: String
+    REQUIRED: False
+
+[SECTION]
+TITLE: Functional requirements
+
+[FREETEXT]
+Functional requirements those that describe the desired functions of the system. They are constrained by operation conditions, regulatory
+restrictions, and real life.
+[/FREETEXT]
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: Flight modes
+STATEMENT: >>>
+The avionic system shall support manual and assisted flight mode.
+<<<
+IE Object Type: DT-IOT-REQ-f72a872b-21e8-4c76-98af-467ddc9d8355
+Capella.Req: {&quot;uuid&quot;: &quot;d605e695-2e39-4c92-b863-d096162e0014&quot;, &quot;name&quot;: &quot;Flight modes&quot;, &quot;long_name&quot;: null, &quot;doc_url&quot;: &quot;../../../system_architecture/output/test/d605e6952e394c92b863d096162e0014.html&quot;}
+Capella.Allocs: [{&quot;uuid&quot;: &quot;f9cabb24-100b-4e68-930a-8f35ec38c106&quot;, &quot;name&quot;: &quot;Watch Movie&quot;, &quot;long_name&quot;: null, &quot;doc_url&quot;: &quot;../../../system_architecture/output/test/f9cabb24100b4e68930a8f35ec38c106.html&quot;}]
+
+[REQUIREMENT]
+UID: REQ-002
+TITLE: Data logging
+STATEMENT: >>>
+The avionic system shall store 50 flight hours continuous data logging time synchronized.
+<<<
+IE Object Type: DT-IOT-REQ-f72a872b-21e8-4c76-98af-467ddc9d8355
+Capella.Req: {&quot;uuid&quot;: &quot;e700de4f-afff-4ce1-8c61-16ff0892c04b&quot;, &quot;name&quot;: &quot;Data logging&quot;, &quot;long_name&quot;: null, &quot;doc_url&quot;: &quot;../../../system_architecture/output/test/e700de4fafff4ce18c6116ff0892c04b.html&quot;}
+Capella.Allocs: [{&quot;uuid&quot;: &quot;60dc5173-5420-44c0-bedf-ad3f6958a79d&quot;, &quot;name&quot;: &quot;Listen to Audio&quot;, &quot;long_name&quot;: null, &quot;doc_url&quot;: &quot;../../../system_architecture/output/test/60dc5173542044c0bedfad3f6958a79d.html&quot;}]
+
+[/SECTION]

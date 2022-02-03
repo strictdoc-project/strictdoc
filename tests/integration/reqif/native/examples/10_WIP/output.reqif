@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<REQ-IF xmlns="http://www.omg.org/spec/ReqIF/20110401/reqif.xsd" xmlns:configuration="https://github.com/strictdoc-project/strictdoc">
+  <THE-HEADER>
+    <REQ-IF-HEADER IDENTIFIER="-44e3bb57-b7c2-4f9d-b43b-fa71469d0ce6">
+      <CREATION-TIME>2022-01-27T13:53:26.504717+01:00</CREATION-TIME>
+      <REQ-IF-TOOL-ID>strictdoc</REQ-IF-TOOL-ID>
+      <REQ-IF-VERSION>1.0</REQ-IF-VERSION>
+      <SOURCE-TOOL-ID>strictdoc</SOURCE-TOOL-ID>
+      <TITLE>strictdoc</TITLE>
+    </REQ-IF-HEADER>
+  </THE-HEADER>
+  <CORE-CONTENT>
+    <REQ-IF-CONTENT>
+      <DATATYPES>
+        <DATATYPE-DEFINITION-STRING IDENTIFIER="SDOC_DATATYPE_SINGLE_LINE_STRING"/>
+        <DATATYPE-DEFINITION-ENUMERATION IDENTIFIER="SDOC_DATATYPE_SINGLE_CHOICE-c005559c-57c3-4033-a737-2b96c7ff2e5e" LONG-NAME="IE Object Type">
+          <SPECIFIED-VALUES>
+            <ENUM-VALUE IDENTIFIER="DT-IOT-REQ-f72a872b-21e8-4c76-98af-467ddc9d8355" LONG-NAME="Requirement">
+              <PROPERTIES>
+                <EMBEDDED-VALUE KEY="0" />
+              </PROPERTIES>
+            </ENUM-VALUE>
+          </SPECIFIED-VALUES>
+        </DATATYPE-DEFINITION-ENUMERATION>
+        <DATATYPE-DEFINITION-STRING IDENTIFIER="7471e6ff-a8f1-401c-b671-278ae28683eb" LONG-NAME="Capella.Escjson" MAX-LENGTH="32000">
+        </DATATYPE-DEFINITION-STRING>
+      </DATATYPES>
+      <SPEC-TYPES>
+        <SPEC-OBJECT-TYPE IDENTIFIER="REQUIREMENT_OR_SECTION" LONG-NAME="REQUIREMENT">
+          <SPEC-ATTRIBUTES>
+            <ATTRIBUTE-DEFINITION-STRING IDENTIFIER="IE PUID" LONG-NAME="IE PUID">
+              <TYPE>
+                <DATATYPE-DEFINITION-STRING-REF>SDOC_DATATYPE_SINGLE_LINE_STRING</DATATYPE-DEFINITION-STRING-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-STRING>
+            <ATTRIBUTE-DEFINITION-STRING IDENTIFIER="LEVEL" LONG-NAME="LEVEL">
+              <TYPE>
+                <DATATYPE-DEFINITION-STRING-REF>SDOC_DATATYPE_SINGLE_LINE_STRING</DATATYPE-DEFINITION-STRING-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-STRING>
+            <ATTRIBUTE-DEFINITION-STRING IDENTIFIER="STATUS" LONG-NAME="STATUS">
+              <TYPE>
+                <DATATYPE-DEFINITION-STRING-REF>SDOC_DATATYPE_SINGLE_LINE_STRING</DATATYPE-DEFINITION-STRING-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-STRING>
+            <ATTRIBUTE-DEFINITION-STRING IDENTIFIER="TAGS" LONG-NAME="TAGS">
+              <TYPE>
+                <DATATYPE-DEFINITION-STRING-REF>SDOC_DATATYPE_SINGLE_LINE_STRING</DATATYPE-DEFINITION-STRING-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-STRING>
+            <ATTRIBUTE-DEFINITION-STRING IDENTIFIER="SPECIAL_FIELDS" LONG-NAME="SPECIAL_FIELDS">
+              <TYPE>
+                <DATATYPE-DEFINITION-STRING-REF>SDOC_DATATYPE_SINGLE_LINE_STRING</DATATYPE-DEFINITION-STRING-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-STRING>
+            <ATTRIBUTE-DEFINITION-STRING IDENTIFIER="REFS" LONG-NAME="REFS">
+              <TYPE>
+                <DATATYPE-DEFINITION-STRING-REF>SDOC_DATATYPE_SINGLE_LINE_STRING</DATATYPE-DEFINITION-STRING-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-STRING>
+            <ATTRIBUTE-DEFINITION-STRING IDENTIFIER="ReqIF.Name" LONG-NAME="ReqIF.Name">
+              <TYPE>
+                <DATATYPE-DEFINITION-STRING-REF>SDOC_DATATYPE_SINGLE_LINE_STRING</DATATYPE-DEFINITION-STRING-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-STRING>
+            <ATTRIBUTE-DEFINITION-STRING IDENTIFIER="ReqIF.Text" LONG-NAME="ReqIF.Text">
+              <TYPE>
+                <DATATYPE-DEFINITION-STRING-REF>SDOC_DATATYPE_SINGLE_LINE_STRING</DATATYPE-DEFINITION-STRING-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-STRING>
+            <ATTRIBUTE-DEFINITION-STRING IDENTIFIER="BODY" LONG-NAME="BODY">
+              <TYPE>
+                <DATATYPE-DEFINITION-STRING-REF>SDOC_DATATYPE_SINGLE_LINE_STRING</DATATYPE-DEFINITION-STRING-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-STRING>
+            <ATTRIBUTE-DEFINITION-STRING IDENTIFIER="RATIONALE" LONG-NAME="RATIONALE">
+              <TYPE>
+                <DATATYPE-DEFINITION-STRING-REF>SDOC_DATATYPE_SINGLE_LINE_STRING</DATATYPE-DEFINITION-STRING-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-STRING>
+            <ATTRIBUTE-DEFINITION-STRING IDENTIFIER="NOTES" LONG-NAME="NOTES">
+              <TYPE>
+                <DATATYPE-DEFINITION-STRING-REF>SDOC_DATATYPE_SINGLE_LINE_STRING</DATATYPE-DEFINITION-STRING-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-STRING>
+            <ATTRIBUTE-DEFINITION-STRING IDENTIFIER="ReqIF.ChapterName" LONG-NAME="ReqIF.ChapterName">
+              <TYPE>
+                <DATATYPE-DEFINITION-STRING-REF>SDOC_DATATYPE_SINGLE_LINE_STRING</DATATYPE-DEFINITION-STRING-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-STRING>
+            <ATTRIBUTE-DEFINITION-ENUMERATION IDENTIFIER="SA-IOT-REQ-c274da43-1951-4b71-b19b-e6ba6763a7da" LONG-NAME="IE Object Type" MULTI-VALUED="false">
+              <TYPE>
+                <DATATYPE-DEFINITION-ENUMERATION-REF>SDOC_DATATYPE_SINGLE_CHOICE-c005559c-57c3-4033-a737-2b96c7ff2e5e</DATATYPE-DEFINITION-ENUMERATION-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-ENUMERATION>
+            <ATTRIBUTE-DEFINITION-STRING IDENTIFIER="bf7ee0ce-cd18-4a88-8a20-f0e640444a3c" LONG-NAME="Capella.Req">
+              <TYPE>
+                <DATATYPE-DEFINITION-STRING-REF>7471e6ff-a8f1-401c-b671-278ae28683eb</DATATYPE-DEFINITION-STRING-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-STRING>
+            <ATTRIBUTE-DEFINITION-STRING IDENTIFIER="10445eb7-4c12-4b74-aff9-50336e72dd8d" LONG-NAME="Capella.Allocs">
+              <TYPE>
+                <DATATYPE-DEFINITION-STRING-REF>7471e6ff-a8f1-401c-b671-278ae28683eb</DATATYPE-DEFINITION-STRING-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-STRING>
+          </SPEC-ATTRIBUTES>
+        </SPEC-OBJECT-TYPE>
+        <SPECIFICATION-TYPE IDENTIFIER="SDOC_SPECIFICATION_TYPE_SINGLETON" LAST-CHANGE="2022-01-27T13:53:26.504717+01:00" LONG-NAME="SDOC_SPECIFICATION_TYPE_SINGLETON">
+          <SPEC-ATTRIBUTES>
+            <ATTRIBUTE-DEFINITION-STRING IDENTIFIER="-44e2f276-d3b4-4b29-bd00-ea7a88cc8602" LONG-NAME="ReqIF.Name">
+              <TYPE>
+                <DATATYPE-DEFINITION-STRING-REF>123</DATATYPE-DEFINITION-STRING-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-STRING>
+          </SPEC-ATTRIBUTES>
+        </SPECIFICATION-TYPE>
+      </SPEC-TYPES>
+      <SPEC-OBJECTS>
+        <SPEC-OBJECT IDENTIFIER="SECTION-ed63e55c-bea9-46bf-9e4d-e3dd92e33ebf">
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Functional requirements">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>ReqIF.ChapterName</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Functional requirements those that describe the desired functions of the system. They are constrained by operation conditions, regulatory\nrestrictions, and real life.\n">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>ReqIF.Text</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+          </VALUES>
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>REQUIREMENT_OR_SECTION</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT IDENTIFIER="REQUIREMENT-9e1f7fcc-2a17-4ff9-a278-3aa4d8e663c6">
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="REQ-001">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>IE PUID</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Flight modes">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>ReqIF.Name</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="The avionic system shall support manual and assisted flight mode.">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>ReqIF.Text</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <VALUES>
+                <ENUM-VALUE-REF>DT-IOT-REQ-f72a872b-21e8-4c76-98af-467ddc9d8355</ENUM-VALUE-REF>
+              </VALUES>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>SA-IOT-REQ-c274da43-1951-4b71-b19b-e6ba6763a7da</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="{&amp;quot;uuid&amp;quot;: &amp;quot;d605e695-2e39-4c92-b863-d096162e0014&amp;quot;, &amp;quot;name&amp;quot;: &amp;quot;Flight modes&amp;quot;, &amp;quot;long_name&amp;quot;: null, &amp;quot;doc_url&amp;quot;: &amp;quot;../../../system_architecture/output/test/d605e6952e394c92b863d096162e0014.html&amp;quot;}">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>bf7ee0ce-cd18-4a88-8a20-f0e640444a3c</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="[{&amp;quot;uuid&amp;quot;: &amp;quot;f9cabb24-100b-4e68-930a-8f35ec38c106&amp;quot;, &amp;quot;name&amp;quot;: &amp;quot;Watch Movie&amp;quot;, &amp;quot;long_name&amp;quot;: null, &amp;quot;doc_url&amp;quot;: &amp;quot;../../../system_architecture/output/test/f9cabb24100b4e68930a8f35ec38c106.html&amp;quot;}]">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>10445eb7-4c12-4b74-aff9-50336e72dd8d</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+          </VALUES>
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>REQUIREMENT_OR_SECTION</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT IDENTIFIER="REQUIREMENT-e9c885ce-f0ed-4936-be06-ce3dafad420d">
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="REQ-002">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>IE PUID</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Data logging">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>ReqIF.Name</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="The avionic system shall store 50 flight hours continuous data logging time synchronized.">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>ReqIF.Text</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <VALUES>
+                <ENUM-VALUE-REF>DT-IOT-REQ-f72a872b-21e8-4c76-98af-467ddc9d8355</ENUM-VALUE-REF>
+              </VALUES>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>SA-IOT-REQ-c274da43-1951-4b71-b19b-e6ba6763a7da</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="{&amp;quot;uuid&amp;quot;: &amp;quot;e700de4f-afff-4ce1-8c61-16ff0892c04b&amp;quot;, &amp;quot;name&amp;quot;: &amp;quot;Data logging&amp;quot;, &amp;quot;long_name&amp;quot;: null, &amp;quot;doc_url&amp;quot;: &amp;quot;../../../system_architecture/output/test/e700de4fafff4ce18c6116ff0892c04b.html&amp;quot;}">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>bf7ee0ce-cd18-4a88-8a20-f0e640444a3c</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="[{&amp;quot;uuid&amp;quot;: &amp;quot;60dc5173-5420-44c0-bedf-ad3f6958a79d&amp;quot;, &amp;quot;name&amp;quot;: &amp;quot;Listen to Audio&amp;quot;, &amp;quot;long_name&amp;quot;: null, &amp;quot;doc_url&amp;quot;: &amp;quot;../../../system_architecture/output/test/60dc5173542044c0bedfad3f6958a79d.html&amp;quot;}]">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>10445eb7-4c12-4b74-aff9-50336e72dd8d</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+          </VALUES>
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>REQUIREMENT_OR_SECTION</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+        </SPEC-OBJECT>
+      </SPEC-OBJECTS>
+      <SPEC-RELATIONS>
+      </SPEC-RELATIONS>
+      <SPECIFICATIONS>
+        <SPECIFICATION IDENTIFIER="SPECIFICATION-9afd4d83-6e23-49ce-b333-7a38765e2546" LONG-NAME="Kontrol Avionics - SORA requirements for EVLOS scenario">
+          <TYPE>
+            <SPECIFICATION-TYPE-REF>SDOC_SPECIFICATION_TYPE_SINGLETON</SPECIFICATION-TYPE-REF>
+          </TYPE>
+          <CHILDREN>
+            <SPEC-HIERARCHY IDENTIFIER="SPEC-HIERARCHY-e7dda727-55ba-46d4-ba45-4827ff67e8c7">
+              <OBJECT>
+                <SPEC-OBJECT-REF>SECTION-ed63e55c-bea9-46bf-9e4d-e3dd92e33ebf</SPEC-OBJECT-REF>
+              </OBJECT>
+              <CHILDREN>
+                <SPEC-HIERARCHY IDENTIFIER="SPEC-IDENTIFIER-497215e8-1050-4828-a866-73574317edd5">
+                  <OBJECT>
+                    <SPEC-OBJECT-REF>REQUIREMENT-9e1f7fcc-2a17-4ff9-a278-3aa4d8e663c6</SPEC-OBJECT-REF>
+                  </OBJECT>
+                </SPEC-HIERARCHY>
+                <SPEC-HIERARCHY IDENTIFIER="SPEC-IDENTIFIER-113a4cee-45d6-46c0-8d3e-01b3ee36f34b">
+                  <OBJECT>
+                    <SPEC-OBJECT-REF>REQUIREMENT-e9c885ce-f0ed-4936-be06-ce3dafad420d</SPEC-OBJECT-REF>
+                  </OBJECT>
+                </SPEC-HIERARCHY>
+              </CHILDREN>
+            </SPEC-HIERARCHY>
+          </CHILDREN>
+        </SPECIFICATION>
+      </SPECIFICATIONS>
+    </REQ-IF-CONTENT>
+  </CORE-CONTENT>
+</REQ-IF>

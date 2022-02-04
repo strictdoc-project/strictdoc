@@ -184,13 +184,13 @@ The following grammatical constructs are currently supported:
 
 - ``DOCUMENT``
 
-  - ``FREE_TEXT``
+  - ``FREETEXT``
 
 - ``REQUIREMENT`` and ``COMPOSITE_REQUIREMENT``
 
 - ``SECTION``
 
-  - ``FREE_TEXT``
+  - ``FREETEXT``
 
 Each construct is described in more detail below.
 

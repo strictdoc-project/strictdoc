@@ -87,7 +87,7 @@ class SDReader:
 
         meta_model.register_obj_processors(obj_processors)
 
-        document = meta_model.model_from_str(input_string, file_name=file_path)
+        document = meta_model.model_from_str(input_string, file_name=file_path, debug=False)
         parse_context.document_reference.set_document(document)
 
         # HACK:

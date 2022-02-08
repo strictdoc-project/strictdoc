@@ -112,6 +112,7 @@ class SDocToReqIFObjectConverter:
                                 last_change=None,
                                 key=option,
                                 other_content=None,
+                                long_name=None
                             )
                             values.append(value)
                             values_map[option] = option
@@ -436,10 +437,10 @@ class SDocToReqIFObjectConverter:
         attributes: List[SpecObjectAttribute] = []
         attribute_map: Dict[str, SpecObjectAttribute] = {}
         for field in requirement.fields:
-            if field.field_name == "REFS":
-                raise NotImplementedError(
-                    "Exporting REFS to ReqIF is not implemented yet."
-                )
+            #if field.field_name == "REFS":
+            #    raise NotImplementedError(
+            #        "Exporting REFS to ReqIF is not implemented yet."
+            #    )
             grammar_field = grammar_element.fields_map[field.field_name]
             if isinstance(grammar_field, GrammarElementFieldSingleChoice):
                 attribute = SpecObjectAttribute(

@@ -3,7 +3,7 @@ from typing import Optional
 
 EXPORT_FORMATS = ["html", "html-standalone", "rst", "excel", "reqif-sdoc"]
 
-REQIF_PARSERS = ["sdoc", "fm-studio"]
+REQIF_PARSERS = ["sdoc"]
 
 
 def _check_formats(formats):

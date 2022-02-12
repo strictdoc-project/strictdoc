@@ -5,13 +5,13 @@ from reqif.parser import ReqIFParser
 
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.cli.cli_arg_parser import ImportCommandConfig
-from strictdoc.backend.reqif.stage2.abstract_parser import (
+from strictdoc.backend.reqif.import_.abstract_parser import (
     AbstractReqIFStage2Parser,
 )
-from strictdoc.backend.reqif.stage2.fm_studio.parser import (
+from strictdoc.backend.reqif.import_.fm_studio.parser import (
     FMStudioReqIFStage2Parser,
 )
-from strictdoc.backend.reqif.stage2.native.parser import (
+from strictdoc.backend.reqif.import_.native.parser import (
     StrictDocReqIFStage2Parser,
 )
 

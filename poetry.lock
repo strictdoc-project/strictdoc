@@ -119,7 +119,7 @@ python-versions = "*"
 
 [[package]]
 name = "charset-normalizer"
-version = "2.0.10"
+version = "2.0.12"
 description = "The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet."
 category = "dev"
 optional = false
@@ -556,7 +556,7 @@ python-versions = "*"
 
 [[package]]
 name = "reqif"
-version = "0.0.15"
+version = "0.0.17"
 description = "Python library for ReqIF format. ReqIF parsing and unparsing."
 category = "main"
 optional = false
@@ -811,7 +811,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6.2"
-content-hash = "9c3b0afbd2ad86193e2f260b56ac14551849631d6998c27677abe8046cbb655d"
+content-hash = "2860dae8c893041cd68dcb34ca5adc64f8223b0c703b745b0189416ef602cd62"
 
 [metadata.files]
 alabaster = [
@@ -851,8 +851,8 @@ certifi = [
     {file = "certifi-2021.10.8.tar.gz", hash = "sha256:78884e7c1d4b00ce3cea67b44566851c4343c120abd683433ce934a68ea58872"},
 ]
 charset-normalizer = [
-    {file = "charset-normalizer-2.0.10.tar.gz", hash = "sha256:876d180e9d7432c5d1dfd4c5d26b72f099d503e8fcc0feb7532c9289be60fcbd"},
-    {file = "charset_normalizer-2.0.10-py3-none-any.whl", hash = "sha256:cb957888737fc0bbcd78e3df769addb41fd1ff8cf950dc9e7ad7793f1bf44455"},
+    {file = "charset-normalizer-2.0.12.tar.gz", hash = "sha256:2857e29ff0d34db842cd7ca3230549d1a697f96ee6d3fb071cfa6c7393832597"},
+    {file = "charset_normalizer-2.0.12-py3-none-any.whl", hash = "sha256:6881edbebdb17b39b4eaaa821b438bf6eddffb4468cf344f09f89def34a8b1df"},
 ]
 click = [
     {file = "click-8.0.3-py3-none-any.whl", hash = "sha256:353f466495adaeb40b6b5f592f9f91cb22372351c84caeb068132442a4518ef3"},
@@ -1282,8 +1282,8 @@ regex = [
     {file = "regex-2022.1.18.tar.gz", hash = "sha256:97f32dc03a8054a4c4a5ab5d761ed4861e828b2c200febd4e46857069a483916"},
 ]
 reqif = [
-    {file = "reqif-0.0.15-py3-none-any.whl", hash = "sha256:5e568f2b0a8839c87bf68ebcf6b74965bb41a77e80885558c9d27ff1de116a30"},
-    {file = "reqif-0.0.15.tar.gz", hash = "sha256:72e30fedc1c5fc03ca95c51e15f78cceb4c51caeabc70f84cef0fef01462712c"},
+    {file = "reqif-0.0.17-py3-none-any.whl", hash = "sha256:901dea16f74f665dae8ddba8cf4219efc6b476a7c8a33e4f37219156108c4897"},
+    {file = "reqif-0.0.17.tar.gz", hash = "sha256:9fbdb3e00ab9025f49c6d6e8e3faaaff178862b051b14da27e65d1b265b3e92f"},
 ]
 requests = [
     {file = "requests-2.27.1-py2.py3-none-any.whl", hash = "sha256:f22fa1e554c9ddfd16e6e41ac79759e17be9e492b3587efa038054674760e72d"},

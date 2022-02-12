@@ -1,4 +1,4 @@
-from strictdoc.backend.reqif.stage2.fm_studio.uid_matcher import (
+from strictdoc.backend.reqif.import_.fm_studio.uid_matcher import (
     match_letter_uid,
     match_bullet_uid,
     match_continuation_uid,

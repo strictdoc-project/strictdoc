@@ -3,27 +3,20 @@ from pathlib import Path
 
 from reqif.parser import ReqIFParser
 
-from strictdoc.backend.sdoc.writer import SDWriter
-from strictdoc.cli.cli_arg_parser import ImportCommandConfig
 from strictdoc.backend.reqif.import_.abstract_parser import (
     AbstractReqIFStage2Parser,
-)
-from strictdoc.backend.reqif.import_.fm_studio.parser import (
-    FMStudioReqIFStage2Parser,
 )
 from strictdoc.backend.reqif.import_.native.parser import (
     StrictDocReqIFStage2Parser,
 )
+from strictdoc.backend.sdoc.writer import SDWriter
+from strictdoc.cli.cli_arg_parser import ImportCommandConfig
 
 
 class ReqIFImport:
     @staticmethod
     def import_from_file(import_config: ImportCommandConfig):
-        stage2_parser: AbstractReqIFStage2Parser = (
-            FMStudioReqIFStage2Parser()
-            if import_config.parser == "fm-studio"
-            else StrictDocReqIFStage2Parser()
-        )
+        stage2_parser: AbstractReqIFStage2Parser = StrictDocReqIFStage2Parser()
         reqif_bundle = ReqIFParser.parse(import_config.input_path)
         document = stage2_parser.parse_reqif(reqif_bundle)
 

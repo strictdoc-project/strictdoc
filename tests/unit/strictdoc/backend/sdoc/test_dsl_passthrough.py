@@ -644,10 +644,6 @@ REFS:
 - TYPE: File
   VALUE: /usr/local/bin/hexe
 STATEMENT: System shall do X
-BODY: >>>
-This is an optional body of the requirement.
-This is an optional body of the requirement.
-<<<
 COMMENT: This requirement is very important
 
 [REQUIREMENT]

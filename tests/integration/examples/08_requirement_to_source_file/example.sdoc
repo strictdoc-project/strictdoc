@@ -1,0 +1,18 @@
+[DOCUMENT]
+TITLE: Example: Traceability between requirements and source files
+
+[REQUIREMENT]
+UID: REQ-001
+REFS:
+- TYPE: File
+  VALUE: file.py
+TITLE: Whole file reference
+STATEMENT: This requirement references the whole file.
+
+[REQUIREMENT]
+UID: REQ-002
+REFS:
+- TYPE: File
+  VALUE: file.py
+TITLE: Source range reference
+STATEMENT: This requirement references a range in the file.

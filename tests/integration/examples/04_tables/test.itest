@@ -1,0 +1,18 @@
+RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+CHECK: Published:
+
+RUN: cat %S/Output/html/04_tables/example.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+
+CHECK-HTML:<table border="1" class="colwidths-given docutils">
+CHECK-HTML:<caption>Table Example</caption>
+CHECK-HTML:<colgroup>
+CHECK-HTML:<col width="25%" />
+CHECK-HTML:<col width="25%" />
+CHECK-HTML:<col width="50%" />
+CHECK-HTML:</colgroup>
+CHECK-HTML:<thead valign="bottom">
+CHECK-HTML:<tr><th class="head">Heading row 1, column 1</th>
+CHECK-HTML:<th class="head">Heading row 1, column 2</th>
+CHECK-HTML:<th class="head">Heading row 1, column 3</th>
+CHECK-HTML:</tr>
+CHECK-HTML:</thead>

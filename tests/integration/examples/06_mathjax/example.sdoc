@@ -1,0 +1,33 @@
+[DOCUMENT]
+TITLE: How to include MathJax
+
+[FREETEXT]
+This document shows how to enable MathJax in SDoc.
+
+The ``--enable-mathjax`` option must be provided as follows:
+
+.. code-block:: text
+
+    strictdoc export . --enable-mathjax --output-dir Output
+
+MathJax in FREETEXT:
+
+$$
+\\mathbf{\\underline{k}}_{\\text{a}} =
+\\mathbf{\\underline{i}}_{\\text{a}} \\times
+\\mathbf{\\underline{j}}_{\\text{a}}
+$$
+[/FREETEXT]
+
+[REQUIREMENT]
+UID: EXAMPLE-6-001
+TITLE: Requirement #1 title
+STATEMENT: >>>
+MathJax in requirement's STATEMENT:
+
+$$
+\\mathbf{\\underline{k}}_{\\text{a}} =
+\\mathbf{\\underline{i}}_{\\text{a}} \\times
+\\mathbf{\\underline{j}}_{\\text{a}}
+$$
+<<<

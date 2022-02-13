@@ -68,11 +68,6 @@ class DocumentGrammar:
                 parent=None, title="TAGS", required="False"
             ),
             GrammarElementFieldString(
-                parent=None,
-                title="SPECIAL_FIELDS",
-                required="False",
-            ),
-            GrammarElementFieldString(
                 parent=None, title="REFS", required="False"
             ),
             GrammarElementFieldString(

@@ -45,7 +45,6 @@ DEFAULT_SDOC_GRAMMAR_FIELDS = [
     "LEVEL",
     "STATUS",
     "TAGS",
-    "SPECIAL_FIELDS",
     "REFS",
     "ReqIF.Name",
     "ReqIF.Text",

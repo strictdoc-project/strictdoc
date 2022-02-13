@@ -17,6 +17,9 @@ ELEMENTS:
   - TITLE: UNIT
     TYPE: Tag
     REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
   - TITLE: STATEMENT
     TYPE: String
     REQUIRED: True
@@ -33,5 +36,6 @@ UID: ABC-123
 ASIL: A
 VERIFICATION: Review, Test
 UNIT: OBC, RTU
+TITLE: Requirement title
 STATEMENT: System A shall do B.
 COMMENT: Test comment.

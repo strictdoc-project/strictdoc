@@ -50,8 +50,21 @@ def sphinx(context):
         oneline_command(
             """
             python3 strictdoc/cli/main.py
+                export docs/strictdoc.sdoc
+                    --formats=html
+                    --output-dir output/sphinx
+                    --project-title "StrictDoc"
+            """
+        ),
+    )
+
+    run_invoke_cmd(
+        context,
+        oneline_command(
+            """
+            python3 strictdoc/cli/main.py
                 export docs
-                    --formats=html,rst
+                    --formats=rst
                     --output-dir output/sphinx
                     --project-title "StrictDoc"
             """

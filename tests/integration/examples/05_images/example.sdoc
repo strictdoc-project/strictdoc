@@ -1,0 +1,26 @@
+[DOCUMENT]
+TITLE: How to include images
+
+[FREETEXT]
+This document shows how to include images to an SDoc document.
+[/FREETEXT]
+
+[REQUIREMENT]
+UID: EXAMPLE-5-001
+TITLE: Requirement #1 title
+STATEMENT: >>>
+Requirement #1 statement starts:
+
+.. image:: _assets/sandbox1.svg
+   :alt: SVG demo
+   :class: image
+
+.. image:: _assets/sandbox1.png
+   :alt: PNG demo
+   :class: image
+
+Requirement #1 statement ends.
+<<<
+COMMENT: >>>
+Requirement #1 multiline comment
+<<<

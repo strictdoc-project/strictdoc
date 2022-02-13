@@ -47,7 +47,6 @@ class FMStudioMapping:
             parent=None,
             version=None,
             number=None,
-            special_fields=[],
             markup="HTML",
             auto_levels="Off",
         )

@@ -1,0 +1,6 @@
+RUN: %strictdoc export %S --enable-mathjax --output-dir Output/ | filecheck %s --dump-input=fail
+CHECK: Published:
+
+RUN: cat %S/Output/html/06_mathjax/example.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+
+CHECK-HTML: dd

@@ -19,18 +19,21 @@ Summary of StrictDoc features:
   "parent-child", and from these connections, many useful features, such as
   `Requirements Traceability <https://en.wikipedia.org/wiki/Requirements_traceability>`_
   and Documentation Coverage, can be derived.
-- Special fields support. The StrictDoc's grammar can be extended to support
-  arbitrary special fields, such as ``PRIORITY``, ``OWNER``, or even more
-  specialized fields, such as ``Automotive Safety Integrity Level (ASIL)`` or
-  ``ECSS verification method``.
+- Requirements to source files traceability (experimental). See
+  `Traceability between requirements and source code`_.
+- Custom grammar and custom fields support. The StrictDoc's grammar can be
+  extended to support arbitrary special fields, such as ``PRIORITY``, ``OWNER``,
+  or even more specialized fields, such as
+  ``Automotive Safety Integrity Level (ASIL)`` or ``Verification method``.
+  See `Custom grammars`_.
 - Good performance of the `textX <https://github.com/textX/textX>`_
   parser and parallelized incremental generation of documents: generation of
   document trees with up to 2000-3000 requirements into HTML pages stays within
   a few seconds. From the second run, only changed documents are regenerated.
   Further performance tuning should be possible.
 
-**Warning:** The StrictDoc project is alpha quality. See the
-`Backlog`_ section to get an idea of the overall project direction.
+See the `Backlog`_ section to get an idea of the overall project
+direction.
 
 Contact the developers
 ----------------------
@@ -61,6 +64,10 @@ which is written using StrictDoc:
 - `StrictDoc HTML export <https://strictdoc.readthedocs.io/en/latest/strictdoc-html>`_
 - `StrictDoc HTML export using Sphinx <https://strictdoc.readthedocs.io/en/latest>`_
 - `StrictDoc PDF export using Sphinx <https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_
+
+Additionally, the project's repository contains a folder
+``tests/integration/examples``. In this folder, there is a collection of basic
+examples.
 
 Getting started
 ===============
@@ -546,6 +553,9 @@ a grammar with four fields including a custom ``VERIFICATION`` field.
       - TITLE: VERIFICATION
         TYPE: String
         REQUIRED: True
+      - TITLE: TITLE
+        TYPE: String
+        REQUIRED: True
       - TITLE: STATEMENT
         TYPE: String
         REQUIRED: True
@@ -605,6 +615,9 @@ Example:
       - TITLE: UNIT
         TYPE: Tag
         REQUIRED: True
+      - TITLE: TITLE
+        TYPE: String
+        REQUIRED: True
       - TITLE: STATEMENT
         TYPE: String
         REQUIRED: True
@@ -621,6 +634,7 @@ Example:
     ASIL: A
     VERIFICATION: Review, Test
     UNIT: OBC, RTU
+    TITLE: Function B
     STATEMENT: System A shall do B.
     COMMENT: Test comment.
 
@@ -789,6 +803,65 @@ The created RST files can be copied to a project created using Sphinx, see
 is generated this way, see the Invoke task:
 `invoke sphinx <https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48>`_.
 
+Traceability between requirements and source code
+=================================================
+
+**Note:** This feature is experimental, the documentation is incomplete.
+
+StrictDoc allows connecting requirements to source code files. Two types of
+links are supported:
+
+1\) A basic link where a requirement links to a whole file.
+
+.. code-block:: text
+
+    [REQUIREMENT]
+    UID: REQ-001
+    REFS:
+    - TYPE: File
+      VALUE: file.py
+    TITLE: File reference
+    STATEMENT: This requirement references the file.
+
+2\) A range-based link where a requirement links to a file and
+additionally in the file, there is a reverse link that connects a source range
+back to the requirement:
+
+The requirement declaration contains a reference of the type ``File``:
+
+.. code-block:: text
+
+    [REQUIREMENT]
+    UID: REQ-001
+    REFS:
+    - TYPE: File
+      VALUE: file.py
+    TITLE: Whole file reference
+    STATEMENT: This requirement references the file.py file.
+    COMMENT: >>>
+    If the file.py contains a source range that is connected back to this
+    requirement (REQ-001), the link becomes a link to the source range.
+    <<<
+
+The source file:
+
+.. code-block:: py
+
+    # [REQ-002]
+    def hello_world():
+        print("hello world")
+    # [/REQ-002]
+
+To activate the traceability to source files, use
+``--experimental-enable-file-traceability`` option:
+
+.. code-block:: text
+
+    strictdoc export . --experimental-enable-file-traceability --output-dir output/
+
+The ``tests/integration/examples`` folder contains executable examples including
+the example of requirements-to-source-code traceability.
+
 ReqIF support
 =============
 
@@ -803,8 +876,6 @@ tools. The export/import workflow is therefore tool-specific. See
 Supported formats:
 
 - StrictDoc's "native" export/import between SDoc and ReqIF
-- `fmStudio <http://formalmind.com/studio>`_'s ReqIF. Only import from ReqIF to
-  SDoc is supported.
 
 Planned formats:
 
@@ -873,7 +944,7 @@ extracted to a separate library:
 StrictDoc.
 
 For further overview of the ReqIF format and the ``reqif`` library's
-implementation details, refer to the
+implementation details, refer to
 `strictdoc-project/reqif <https://github.com/strictdoc-project/reqif>`_'s
 documentation.
 
@@ -1644,6 +1715,40 @@ StrictDoc's HTML export tests shall validate the generated HTML markup.
 
 - ``[SDOC-HIGH-VALIDATION]`` :ref:`SDOC-HIGH-VALIDATION`
 
+Traceability and coverage
+-------------------------
+
+Linking with implementation artifacts
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+StrictDoc shall support linking requirements to files.
+
+Validation: Broken links from requirements to source files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+StrictDoc shall warn a user about all requirements whose links reference source
+files that do not exist.
+
+Validation: Broken links from source files to requirements
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+StrictDoc shall warn a user about all source files whose links reference
+requirements that do not exist.
+
+Requirements coverage
+~~~~~~~~~~~~~~~~~~~~~
+
+StrictDoc shall generate requirements coverage information.
+
+**Comment:** Requirements coverage screen shows how requirements are linked with source files.
+
+Source coverage
+~~~~~~~~~~~~~~~
+
+StrictDoc shall generate source coverage information.
+
+**Comment:** Source coverage screen shows how source files are linked with requirements.
+
 Design decisions
 ================
 
@@ -1681,39 +1786,19 @@ items are either work-in-progress or will be implemented next.
 Work in progress
 ----------------
 
-Traceability and coverage
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Integration with Capella
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-Linking with implementation artifacts
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StrictDoc shall allow bi-directional data exchange with Capella tool.
 
-StrictDoc shall support linking requirements to files.
+**Comment:** The current plan is to implement this using ReqIF export/import features.
 
-Validation: Broken links from requirements to source files
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+SDoc Language Server Protocol
+-----------------------------
 
-StrictDoc shall warn a user about all requirements whose links reference source
-files that do not exist.
+StrictDoc shall support Language Server Protocol.
 
-Validation: Broken links from source files to requirements
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-StrictDoc shall warn a user about all source files whose links reference
-requirements that do not exist.
-
-Requirements coverage
-^^^^^^^^^^^^^^^^^^^^^
-
-StrictDoc shall generate requirements coverage information.
-
-**Comment:** Requirements coverage screen shows how requirements are linked with source files.
-
-Source coverage
-^^^^^^^^^^^^^^^
-
-StrictDoc shall generate source coverage information.
-
-**Comment:** Source coverage screen shows how source files are linked with requirements.
+**Comment:** The promising base for the implementation: https://github.com/openlawlibrary/pygls.
 
 Document archetypes
 -------------------

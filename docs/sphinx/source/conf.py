@@ -125,7 +125,6 @@ latex_elements = {
                 \fancyhf{}
                 \fancyhead[R]{
                     \textnormal{\nouppercase{StrictDoc}}
-                    \textcolor{red}{\textbf{Draft}}
                     % trim: left top
                     % \vspace*{0.4cm}{\includegraphics[trim=-1cm 1.15cm 0 -0cm, scale=.35]{PTS_bow.png}}
                 }
@@ -140,7 +139,6 @@ latex_elements = {
                 \fancyhf{}
                 \fancyhead[R]{
                     \textnormal{\nouppercase{StrictDoc}}
-                    \textcolor{red}{\textbf{Draft}}
                     % \vspace*{0.4cm}{\includegraphics[trim=-1cm 1.15cm 0cm 0cm, scale=.35]{PTS_bow.png}}
                 }
                 \fancyfoot[R]{

@@ -23,18 +23,21 @@ Summary of StrictDoc features:
   "parent-child", and from these connections, many useful features, such as
   `Requirements Traceability <https://en.wikipedia.org/wiki/Requirements_traceability>`_
   and Documentation Coverage, can be derived.
-- Special fields support. The StrictDoc's grammar can be extended to support
-  arbitrary special fields, such as ``PRIORITY``, ``OWNER``, or even more
-  specialized fields, such as ``Automotive Safety Integrity Level (ASIL)`` or
-  ``ECSS verification method``.
+- Requirements to source files traceability (experimental). See
+  [LINK: SECTION-TRACEABILITY-REQS-TO-SOURCE-CODE].
+- Custom grammar and custom fields support. The StrictDoc's grammar can be
+  extended to support arbitrary special fields, such as ``PRIORITY``, ``OWNER``,
+  or even more specialized fields, such as
+  ``Automotive Safety Integrity Level (ASIL)`` or ``Verification method``.
+  See [LINK: SECTION-CUSTOM-GRAMMARS].
 - Good performance of the `textX <https://github.com/textX/textX>`_
   parser and parallelized incremental generation of documents: generation of
   document trees with up to 2000-3000 requirements into HTML pages stays within
   a few seconds. From the second run, only changed documents are regenerated.
   Further performance tuning should be possible.
 
-**Warning:** The StrictDoc project is alpha quality. See the
-[LINK: SECTION-BACKLOG] section to get an idea of the overall project direction.
+See the [LINK: SECTION-BACKLOG] section to get an idea of the overall project
+direction.
 [/FREETEXT]
 
 [SECTION]
@@ -75,6 +78,10 @@ which is written using StrictDoc:
 - `StrictDoc HTML export <https://strictdoc.readthedocs.io/en/latest/strictdoc-html>`_
 - `StrictDoc HTML export using Sphinx <https://strictdoc.readthedocs.io/en/latest>`_
 - `StrictDoc PDF export using Sphinx <https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_
+
+Additionally, the project's repository contains a folder
+``tests/integration/examples``. In this folder, there is a collection of basic
+examples.
 [/FREETEXT]
 
 [/SECTION]
@@ -616,6 +623,7 @@ elements should do the job.
 [/SECTION]
 
 [SECTION]
+UID: SECTION-CUSTOM-GRAMMARS
 TITLE: Custom grammars
 
 [FREETEXT]
@@ -644,6 +652,9 @@ a grammar with four fields including a custom ``VERIFICATION`` field.
         TYPE: String
         REQUIRED: True
       - TITLE: VERIFICATION
+        TYPE: String
+        REQUIRED: True
+      - TITLE: TITLE
         TYPE: String
         REQUIRED: True
       - TITLE: STATEMENT
@@ -707,6 +718,9 @@ Example:
       - TITLE: UNIT
         TYPE: Tag
         REQUIRED: True
+      - TITLE: TITLE
+        TYPE: String
+        REQUIRED: True
       - TITLE: STATEMENT
         TYPE: String
         REQUIRED: True
@@ -723,6 +737,7 @@ Example:
     ASIL: A
     VERIFICATION: Review, Test
     UNIT: OBC, RTU
+    TITLE: Function B
     STATEMENT: System A shall do B.
     COMMENT: Test comment.
 
@@ -933,6 +948,70 @@ is generated this way, see the Invoke task:
 [/SECTION]
 
 [SECTION]
+UID: SECTION-TRACEABILITY-REQS-TO-SOURCE-CODE
+TITLE: Traceability between requirements and source code
+
+[FREETEXT]
+**Note:** This feature is experimental, the documentation is incomplete.
+
+StrictDoc allows connecting requirements to source code files. Two types of
+links are supported:
+
+1\) A basic link where a requirement links to a whole file.
+
+.. code-block:: text
+
+    [REQUIREMENT]
+    UID: REQ-001
+    REFS:
+    - TYPE: File
+      VALUE: file.py
+    TITLE: File reference
+    STATEMENT: This requirement references the file.
+
+2\) A range-based link where a requirement links to a file and
+additionally in the file, there is a reverse link that connects a source range
+back to the requirement:
+
+The requirement declaration contains a reference of the type ``File``:
+
+.. code-block:: text
+
+    [REQUIREMENT]
+    UID: REQ-001
+    REFS:
+    - TYPE: File
+      VALUE: file.py
+    TITLE: Whole file reference
+    STATEMENT: This requirement references the file.py file.
+    COMMENT: >>>
+    If the file.py contains a source range that is connected back to this
+    requirement (REQ-001), the link becomes a link to the source range.
+    <<<
+
+The source file:
+
+.. code-block:: py
+
+    # [REQ-002]
+    def hello_world():
+        print("hello world")
+    # [/REQ-002]
+
+To activate the traceability to source files, use
+``--experimental-enable-file-traceability`` option:
+
+.. code-block:: text
+
+    strictdoc export . --experimental-enable-file-traceability --output-dir output/
+
+The ``tests/integration/examples`` folder contains executable examples including
+the example of requirements-to-source-code traceability.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
 TITLE: ReqIF support
 
 [FREETEXT]
@@ -947,8 +1026,6 @@ tools. The export/import workflow is therefore tool-specific. See
 Supported formats:
 
 - StrictDoc's "native" export/import between SDoc and ReqIF
-- `fmStudio <http://formalmind.com/studio>`_'s ReqIF. Only import from ReqIF to
-  SDoc is supported.
 
 Planned formats:
 
@@ -1028,7 +1105,7 @@ extracted to a separate library:
 StrictDoc.
 
 For further overview of the ReqIF format and the ``reqif`` library's
-implementation details, refer to the
+implementation details, refer to
 `strictdoc-project/reqif <https://github.com/strictdoc-project/reqif>`_'s
 documentation.
 [/FREETEXT]
@@ -1684,6 +1761,45 @@ COMMENT: First candidate: Table of contents and its nested ``<ul>/<li>`` items.
 
 [/SECTION]
 
+[SECTION]
+TITLE: Traceability and coverage
+
+[COMPOSITE_REQUIREMENT]
+TITLE: Linking with implementation artifacts
+STATEMENT: StrictDoc shall support linking requirements to files.
+
+[REQUIREMENT]
+TITLE: Validation: Broken links from requirements to source files
+STATEMENT: >>>
+StrictDoc shall warn a user about all requirements whose links reference source
+files that do not exist.
+<<<
+
+[REQUIREMENT]
+TITLE: Validation: Broken links from source files to requirements
+STATEMENT: >>>
+StrictDoc shall warn a user about all source files whose links reference
+requirements that do not exist.
+<<<
+
+[/COMPOSITE_REQUIREMENT]
+
+[REQUIREMENT]
+TITLE: Requirements coverage
+STATEMENT: StrictDoc shall generate requirements coverage information.
+COMMENT: >>>
+Requirements coverage screen shows how requirements are linked with source files.
+<<<
+
+[REQUIREMENT]
+TITLE: Source coverage
+STATEMENT: StrictDoc shall generate source coverage information.
+COMMENT: >>>
+Source coverage screen shows how source files are linked with requirements.
+<<<
+
+[/SECTION]
+
 [/SECTION]
 
 [SECTION]
@@ -1730,46 +1846,28 @@ items are either work-in-progress or will be implemented next.
 [SECTION]
 TITLE: Work in progress
 
-[SECTION]
-TITLE: Traceability and coverage
-
-[COMPOSITE_REQUIREMENT]
-TITLE: Linking with implementation artifacts
-STATEMENT: StrictDoc shall support linking requirements to files.
-
 [REQUIREMENT]
-TITLE: Validation: Broken links from requirements to source files
+TITLE: Integration with Capella
 STATEMENT: >>>
-StrictDoc shall warn a user about all requirements whose links reference source
-files that do not exist.
+StrictDoc shall allow bi-directional data exchange with Capella tool.
 <<<
-
-[REQUIREMENT]
-TITLE: Validation: Broken links from source files to requirements
-STATEMENT: >>>
-StrictDoc shall warn a user about all source files whose links reference
-requirements that do not exist.
-<<<
-
-[/COMPOSITE_REQUIREMENT]
-
-[REQUIREMENT]
-TITLE: Requirements coverage
-STATEMENT: StrictDoc shall generate requirements coverage information.
-COMMENT: >>>
-Requirements coverage screen shows how requirements are linked with source files.
-<<<
-
-[REQUIREMENT]
-TITLE: Source coverage
-STATEMENT: StrictDoc shall generate source coverage information.
-COMMENT: >>>
-Source coverage screen shows how source files are linked with requirements.
-<<<
+COMMENT: The current plan is to implement this using ReqIF export/import features.
 
 [/SECTION]
 
-[/SECTION]
+[REQUIREMENT]
+TITLE: SDoc Language Server Protocol
+STATEMENT: >>>
+StrictDoc shall support Language Server Protocol.
+<<<
+RATIONALE: >>>
+The LSP can enable editing of SDoc files in IDEs like Eclipse, Visual Studio,
+PyCharm. A smart LSP can enable features like syntax highlighting,
+autocompletion and easy navigation through requirements.
+<<<
+COMMENT: >>>
+The promising base for the implementation: https://github.com/openlawlibrary/pygls.
+<<<
 
 [REQUIREMENT]
 TITLE: Document archetypes

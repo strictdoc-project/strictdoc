@@ -7,7 +7,6 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 )
 from strictdoc.backend.sdoc.models.node import Node
 from strictdoc.backend.sdoc.models.reference import Reference
-from strictdoc.backend.sdoc.models.special_field import SpecialField
 
 
 class RequirementContext:
@@ -23,7 +22,6 @@ class RequirementField:
         field_value: Optional[str],
         field_value_multiline: Optional[str],
         field_value_references: Optional[List[Reference]],
-        field_value_special_fields: Optional[List[SpecialField]],
     ):
         self.parent = parent
         self.field_name = field_name
@@ -32,9 +30,6 @@ class RequirementField:
         self.field_value_references: Optional[
             List[Reference]
         ] = field_value_references
-        self.field_value_special_fields: Optional[
-            List[SpecialField]
-        ] = field_value_special_fields
 
     def __str__(self):
         return (
@@ -43,7 +38,6 @@ class RequirementField:
             f"field_value: {self.field_value}, "
             f"field_value_multiline: {self.field_value_multiline}, "
             f"field_value_references: {self.field_value_references}, "
-            f"field_value_special_fields: {self.field_value_special_fields}"
             ")"
         )
 
@@ -77,7 +71,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         rationale = None
         rationale_multiline = None
         comments: [RequirementComment] = []
-        special_fields = []
 
         ordered_fields_lookup: OrderedDict[
             str, List[RequirementField]
@@ -132,10 +125,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
                             comment_multiline=None,
                         )
                     )
-        if "SPECIAL_FIELDS" in ordered_fields_lookup:
-            special_fields = ordered_fields_lookup["SPECIAL_FIELDS"][
-                0
-            ].field_value_special_fields
 
         # TODO: Why textX creates empty uid when the sdoc doesn't declare the
         # UID field?
@@ -153,7 +142,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         self.statement: Optional[str] = statement
         self.rationale = rationale
         self.comments = comments
-        self.special_fields = special_fields
         self.requirements = requirements
 
         # For multiline fields:

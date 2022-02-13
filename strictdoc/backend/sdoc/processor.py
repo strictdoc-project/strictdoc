@@ -153,60 +153,6 @@ class SDocParsingProcessor:
                     f"Requirement: {requirement}"
                 )
 
-        special_fields = requirement.special_fields
-        if special_fields:
-            document_config = self.parse_context.document_config
-            if not document_config:
-                raise StrictDocSemanticError.missing_special_fields(
-                    special_fields,
-                    **get_location(requirement),
-                )
-            config_special_fields = document_config.special_fields
-            if not config_special_fields:
-                raise StrictDocSemanticError.missing_special_fields(
-                    special_fields,
-                    **get_location(requirement),
-                )
-
-            special_field_set = set()
-            for special_field in special_fields:
-                if (
-                    special_field.field_name
-                    not in document_config.special_fields_set
-                ):
-                    raise StrictDocSemanticError.field_is_missing_in_doc_config(
-                        special_field.field_name,
-                        special_field.field_value,
-                        **get_location(requirement),
-                    )
-                special_field_set.add(special_field.field_name)
-
-            for (
-                required_special_field
-            ) in document_config.special_fields_required:
-                if required_special_field not in special_field_set:
-                    # fmt: off
-                    raise (
-                        StrictDocSemanticError.
-                        requirement_missing_required_field(
-                            required_special_field, **get_location(requirement)
-                        )
-                    )
-                    # fmt: on
-        else:
-            document_config = self.parse_context.document_config
-            if document_config:
-                if len(document_config.special_fields_required) > 0:
-                    # fmt: off
-                    raise (
-                        StrictDocSemanticError.
-                        requirement_missing_special_fields(
-                            document_config.special_fields_required,
-                            **get_location(requirement),
-                        )
-                    )
-                    # fmt: on
-
         requirement.ng_document_reference = (
             self.parse_context.document_reference
         )

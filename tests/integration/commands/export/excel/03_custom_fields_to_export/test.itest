@@ -1,3 +1,9 @@
+UNSUPPORTED: true
+
+TODO: The special fields feature is being moved.
+TODO: This functionality has to be reworked to make Excel export
+TODO: work with custom grammars.
+
 RUN: %strictdoc export --formats=excel --fields=uid,owner --output-dir=Output "%S/input.sdoc"
 
 RUN: %check_exists --file "%S/Output/excel/input.xlsx"

@@ -190,7 +190,6 @@ class StrictDocReqIFStage2Parser(AbstractReqIFStage2Parser):
                         field_value=None,
                         field_value_multiline=None,
                         field_value_references=parent_refs,
-                        field_value_special_fields=None,
                     )
                     # TODO: This is extremely wrong.
                     requirement.fields.append(requirement_field)

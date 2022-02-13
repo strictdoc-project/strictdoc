@@ -5,9 +5,6 @@ from textx import metamodel_from_str
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.grammar.grammar_builder import SDocGrammarBuilder
-from strictdoc.backend.sdoc.models.config_special_field import (
-    ConfigSpecialField,
-)
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import (
@@ -27,7 +24,6 @@ from strictdoc.backend.sdoc.models.requirement import (
     RequirementField,
 )
 from strictdoc.backend.sdoc.models.section import Section, FreeText
-from strictdoc.backend.sdoc.models.special_field import SpecialField
 from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
@@ -39,7 +35,6 @@ from strictdoc.helpers.textx import drop_textx_meta
 
 DOCUMENT_MODELS = [
     DocumentConfig,
-    ConfigSpecialField,
     Document,
     DocumentGrammar,
     GrammarElement,
@@ -53,7 +48,6 @@ DOCUMENT_MODELS = [
     RequirementField,
     CompositeRequirement,
     # Body,
-    SpecialField,
     Reference,
     ParentReqReference,
     FileReference,

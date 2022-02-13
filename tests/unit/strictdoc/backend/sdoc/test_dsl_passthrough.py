@@ -520,42 +520,6 @@ body 1.1.1.1
     assert requirement_1_1_1.comments[0].comment_multiline == "body 1.1.1.1"
 
 
-def test_045_composite_requirement_custom_fields():
-    input_sdoc = """
-[DOCUMENT]
-TITLE: Test Doc
-SPECIAL_FIELDS:
-- NAME: ECSS_VERIFICATION
-  TYPE: String
-
-[COMPOSITE_REQUIREMENT]
-SPECIAL_FIELDS:
-  ECSS_VERIFICATION: R,A,I,T
-STATEMENT: Some parent requirement statement
-
-[REQUIREMENT]
-STATEMENT: Some child requirement statement
-
-[/COMPOSITE_REQUIREMENT]
-""".lstrip()
-
-    reader = SDReader()
-
-    document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
-
-    writer = SDWriter()
-    output = writer.write(document)
-
-    assert input_sdoc == output
-
-    assert isinstance(document.section_contents[0], CompositeRequirement)
-    composite_req = document.section_contents[0]
-    assert composite_req.ng_level == 1
-    assert composite_req.special_fields[0].field_name == "ECSS_VERIFICATION"
-    assert composite_req.special_fields[0].field_value == "R,A,I,T"
-
-
 # This test is needed to make sure that the grammar details related
 # to the difference of parting single vs multiline strings are covered.
 def test_050_requirement_single_line_statement_one_symbol():
@@ -666,17 +630,12 @@ def test_100_basic_test():
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
-SPECIAL_FIELDS:
-- NAME: ECSS_VERIFICATION
-  TYPE: String
 
 [SECTION]
 TITLE: Test Section
 
 [REQUIREMENT]
 TAGS: Tag 1, Tag 2, Tag 3
-SPECIAL_FIELDS:
-  ECSS_VERIFICATION: R,A,I,T
 REFS:
 - TYPE: File
   VALUE: /usr/local/bin/hexe

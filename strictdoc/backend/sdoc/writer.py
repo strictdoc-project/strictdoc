@@ -50,22 +50,6 @@ class SDWriter:
                 output += f"NUMBER: {number}"
                 output += "\n"
 
-            config_special_fields = document_config.special_fields
-            if config_special_fields:
-                output += "SPECIAL_FIELDS:"
-                output += "\n"
-
-                for config_special_field in config_special_fields:
-                    output += "- NAME: "
-                    output += config_special_field.field_name
-                    output += "\n"
-                    output += "  TYPE: "
-                    output += config_special_field.field_type
-                    output += "\n"
-                    if config_special_field.field_required:
-                        output += "  REQUIRED: Yes"
-                        output += "\n"
-
             markup = document_config.markup
             auto_levels_specified = document_config.ng_auto_levels_specified
 
@@ -179,16 +163,6 @@ class SDWriter:
                         output += "\n"
                     output += "<<<"
                     output += "\n"
-                elif field.field_value_special_fields:
-                    output += "SPECIAL_FIELDS:"
-                    output += "\n"
-                    for special_field in field.field_value_special_fields:
-                        output += (
-                            f"  "
-                            f"{special_field.field_name}: "
-                            f"{special_field.field_value}"
-                        )
-                        output += "\n"
                 elif field.field_value_references:
                     output += "REFS:"
                     output += "\n"

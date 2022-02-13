@@ -3,7 +3,6 @@ from enum import Enum
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.sdoc.models.section import FreeText, Section
-from strictdoc.backend.sdoc.models.special_field import SpecialField
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 
@@ -64,7 +63,6 @@ class RSTWriter:
     def _print_requirement_fields(self, section_content: Requirement):
         output = ""
 
-        meta_table_started = False
         if section_content.uid:
             output += f".. _{section_content.uid}:"
             output += "\n\n"
@@ -72,7 +70,6 @@ class RSTWriter:
                 section_content.title, section_content.ng_level
             )
 
-            meta_table_started = True
             output += ".. list-table::\n"
             output += "    :align: left\n"
             output += "    :header-rows: 0\n\n"
@@ -84,19 +81,6 @@ class RSTWriter:
             output += self._print_rst_header(
                 section_content.title, section_content.ng_level
             )
-        if section_content.special_fields and len(
-            section_content.special_fields
-        ):
-            if not meta_table_started:
-                output += ".. list-table::\n"
-                output += "    :align: left\n"
-                output += "    :header-rows: 0\n\n"
-
-            special_field: SpecialField
-            for special_field in section_content.special_fields:
-                output += f"    * - **{special_field.field_name}:**\n"
-                output += f"      - {special_field.field_value}\n"
-                output += "\n"
 
         if section_content.statement:
             output += section_content.statement

@@ -1,5 +1,179 @@
 # Changelog
 
+## [0.0.19](https://github.com/strictdoc-project/strictdoc/tree/0.0.19) (2022-02-13)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.18...0.0.19)
+
+**Closed issues:**
+
+- Add version subcommand [\#583](https://github.com/strictdoc-project/strictdoc/issues/583)
+- Snap package [\#573](https://github.com/strictdoc-project/strictdoc/issues/573)
+- Dockerized strictdoc [\#562](https://github.com/strictdoc-project/strictdoc/issues/562)
+
+**Merged pull requests:**
+
+- Bump version to 0.0.19 [\#613](https://github.com/strictdoc-project/strictdoc/pull/613) ([stanislaw](https://github.com/stanislaw))
+- Code climate: remove archive/ for good [\#612](https://github.com/strictdoc-project/strictdoc/pull/612) ([stanislaw](https://github.com/stanislaw))
+- grammar and \*: remove obsolete BODY and last artefacts of SPECIAL\_FIELDS [\#611](https://github.com/strictdoc-project/strictdoc/pull/611) ([stanislaw](https://github.com/stanislaw))
+- docs: document experimental requirements to source code traceability [\#610](https://github.com/strictdoc-project/strictdoc/pull/610) ([stanislaw](https://github.com/stanislaw))
+- docs: remove sandbox, introduce examples [\#609](https://github.com/strictdoc-project/strictdoc/pull/609) ([stanislaw](https://github.com/stanislaw))
+- DocumentFinder: do not look for .sdoc files in the output/ folder [\#608](https://github.com/strictdoc-project/strictdoc/pull/608) ([stanislaw](https://github.com/stanislaw))
+-  grammar: remove SPECIAL\_FIELDS support from everywhere  [\#607](https://github.com/strictdoc-project/strictdoc/pull/607) ([stanislaw](https://github.com/stanislaw))
+- Code climate: archive the unused FmStudio code [\#606](https://github.com/strictdoc-project/strictdoc/pull/606) ([stanislaw](https://github.com/stanislaw))
+-  reqif: minor cleanup using .create\(\) methods  [\#605](https://github.com/strictdoc-project/strictdoc/pull/605) ([stanislaw](https://github.com/stanislaw))
+- minor: replace all FREE\_TEXT with FREETEXT [\#603](https://github.com/strictdoc-project/strictdoc/pull/603) ([BenGardiner](https://github.com/BenGardiner))
+- backend/reqif: export SPECIFICATION-TYPE [\#600](https://github.com/strictdoc-project/strictdoc/pull/600) ([stanislaw](https://github.com/stanislaw))
+- backend/reqif: export REQ-IF-HEADER with basic info about strictdoc [\#599](https://github.com/strictdoc-project/strictdoc/pull/599) ([stanislaw](https://github.com/stanislaw))
+- reqif: upgrade to 0.0.13 [\#596](https://github.com/strictdoc-project/strictdoc/pull/596) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc: support multiline fields with empty string values [\#595](https://github.com/strictdoc-project/strictdoc/pull/595) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc and export/html: remove legacy BODY field [\#594](https://github.com/strictdoc-project/strictdoc/pull/594) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc: support fields with empty string values [\#593](https://github.com/strictdoc-project/strictdoc/pull/593) ([stanislaw](https://github.com/stanislaw))
+- backend/reqif: convert SDoc's COMMENT to ReqIF's NOTES and vice versa [\#586](https://github.com/strictdoc-project/strictdoc/pull/586) ([stanislaw](https://github.com/stanislaw))
+- backend/reqif: make export/import follow some of the ReqIF guideline [\#585](https://github.com/strictdoc-project/strictdoc/pull/585) ([stanislaw](https://github.com/stanislaw))
+- cli: add "version" command [\#584](https://github.com/strictdoc-project/strictdoc/pull/584) ([fkromer](https://github.com/fkromer))
+- Create CONTRIBUTING.md [\#576](https://github.com/strictdoc-project/strictdoc/pull/576) ([stanislaw](https://github.com/stanislaw))
+- add docker usage info to documentation [\#575](https://github.com/strictdoc-project/strictdoc/pull/575) ([fkromer](https://github.com/fkromer))
+- add snap package [\#574](https://github.com/strictdoc-project/strictdoc/pull/574) ([fkromer](https://github.com/fkromer))
+- add Dockerfile for dockerization of strictdoc [\#572](https://github.com/strictdoc-project/strictdoc/pull/572) ([fkromer](https://github.com/fkromer))
+
+## [0.0.18](https://github.com/strictdoc-project/strictdoc/tree/0.0.18) (2022-01-01)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.17...0.0.18)
+
+**Closed issues:**
+
+- Reference to grammar in docs is broken [\#564](https://github.com/strictdoc-project/strictdoc/issues/564)
+
+**Merged pull requests:**
+
+- Bump version to 0.0.18 [\#568](https://github.com/strictdoc-project/strictdoc/pull/568) ([stanislaw](https://github.com/stanislaw))
+- docs: fix links to the grammar.py and regenerate the docs [\#567](https://github.com/strictdoc-project/strictdoc/pull/567) ([stanislaw](https://github.com/stanislaw))
+- docs: document ReqIF export/import workflows [\#565](https://github.com/strictdoc-project/strictdoc/pull/565) ([stanislaw](https://github.com/stanislaw))
+- reqif: native: export/import roundtrip for multiline requirement fields [\#560](https://github.com/strictdoc-project/strictdoc/pull/560) ([stanislaw](https://github.com/stanislaw))
+- reqif: native: export/import roundtrip for SECTION.FREETEXT [\#559](https://github.com/strictdoc-project/strictdoc/pull/559) ([stanislaw](https://github.com/stanislaw))
+- reqif/export: case when requirement is lower-level than previous section [\#558](https://github.com/strictdoc-project/strictdoc/pull/558) ([stanislaw](https://github.com/stanislaw))
+- reqif/export: case when requirement is lower-level than previous section [\#557](https://github.com/strictdoc-project/strictdoc/pull/557) ([stanislaw](https://github.com/stanislaw))
+-  cli: dump-grammar command  [\#556](https://github.com/strictdoc-project/strictdoc/pull/556) ([stanislaw](https://github.com/stanislaw))
+-  reqif: first integration and ReqIF-SDoc end-to-end tests  [\#555](https://github.com/strictdoc-project/strictdoc/pull/555) ([stanislaw](https://github.com/stanislaw))
+- Poetry: integrate reqif 0.0.1 [\#554](https://github.com/strictdoc-project/strictdoc/pull/554) ([stanislaw](https://github.com/stanislaw))
+- tasks: remove obsolete second Pylint task [\#553](https://github.com/strictdoc-project/strictdoc/pull/553) ([stanislaw](https://github.com/stanislaw))
+- backend/dsl: support custom grammars and a basic type system [\#552](https://github.com/strictdoc-project/strictdoc/pull/552) ([stanislaw](https://github.com/stanislaw))
+- backend/dsl: more 'passthrough' tests for new types [\#551](https://github.com/strictdoc-project/strictdoc/pull/551) ([stanislaw](https://github.com/stanislaw))
+- backend/dsl: support grammar fields: SingleChoice, MultipleChoice, Tag [\#550](https://github.com/strictdoc-project/strictdoc/pull/550) ([stanislaw](https://github.com/stanislaw))
+- backend/dsl: switch to dynamic fields, with validation [\#549](https://github.com/strictdoc-project/strictdoc/pull/549) ([stanislaw](https://github.com/stanislaw))
+- backend/dsl/writer: print based on type information, not hardcoded [\#548](https://github.com/strictdoc-project/strictdoc/pull/548) ([stanislaw](https://github.com/stanislaw))
+- backend/dsl: extract parsing processing to a separate class [\#547](https://github.com/strictdoc-project/strictdoc/pull/547) ([stanislaw](https://github.com/stanislaw))
+- Code climate: introduce code coverage calculation [\#543](https://github.com/strictdoc-project/strictdoc/pull/543) ([stanislaw](https://github.com/stanislaw))
+- Code climate: set Pylint target to 10.0 [\#542](https://github.com/strictdoc-project/strictdoc/pull/542) ([stanislaw](https://github.com/stanislaw))
+- Code climate: fix all remaining major Pylint warnings [\#541](https://github.com/strictdoc-project/strictdoc/pull/541) ([stanislaw](https://github.com/stanislaw))
+- imports/reqif: REQIF.SPECIFICATION.LONG-NAME -\> SDOC.DOCUMENT.TITLE [\#540](https://github.com/strictdoc-project/strictdoc/pull/540) ([stanislaw](https://github.com/stanislaw))
+- import/reqif: Doors parser: parse bullet point-based subreqs [\#539](https://github.com/strictdoc-project/strictdoc/pull/539) ([stanislaw](https://github.com/stanislaw))
+- Code climate: fix several Pylint warnings [\#538](https://github.com/strictdoc-project/strictdoc/pull/538) ([stanislaw](https://github.com/stanislaw))
+- imports/reqif: Doors parser: initial parsing of images [\#537](https://github.com/strictdoc-project/strictdoc/pull/537) ([stanislaw](https://github.com/stanislaw))
+- Code climate: mypy: make explicit which checks are enabled/disabled [\#536](https://github.com/strictdoc-project/strictdoc/pull/536) ([stanislaw](https://github.com/stanislaw))
+- Code climate: introduce basic mypy checking [\#535](https://github.com/strictdoc-project/strictdoc/pull/535) ([stanislaw](https://github.com/stanislaw))
+- import/reqif: native parser: parse custom fields [\#534](https://github.com/strictdoc-project/strictdoc/pull/534) ([stanislaw](https://github.com/stanislaw))
+- Code climate: Fix strict Pylint warnings for newly added modules [\#533](https://github.com/strictdoc-project/strictdoc/pull/533) ([stanislaw](https://github.com/stanislaw))
+- Code climate: fix Pylint: W0235, W0613 [\#532](https://github.com/strictdoc-project/strictdoc/pull/532) ([stanislaw](https://github.com/stanislaw))
+- Code climate: fix Pylint: W0703, W0231 [\#531](https://github.com/strictdoc-project/strictdoc/pull/531) ([stanislaw](https://github.com/stanislaw))
+- import/reqif: parsing SpecRelation [\#530](https://github.com/strictdoc-project/strictdoc/pull/530) ([stanislaw](https://github.com/stanislaw))
+-  tests/unit: group stage1 parser-related tests  [\#528](https://github.com/strictdoc-project/strictdoc/pull/528) ([stanislaw](https://github.com/stanislaw))
+- import/reqif: Doors parser: parse tables stored as XHTML fields [\#527](https://github.com/strictdoc-project/strictdoc/pull/527) ([stanislaw](https://github.com/stanislaw))
+- grammar and export/html: document markup option: HTML fragment writer [\#526](https://github.com/strictdoc-project/strictdoc/pull/526) ([stanislaw](https://github.com/stanislaw))
+-  reqif: switch to selecting parser via an argument  [\#525](https://github.com/strictdoc-project/strictdoc/pull/525) ([stanislaw](https://github.com/stanislaw))
+- Code climate: pylint: fix C1801 [\#524](https://github.com/strictdoc-project/strictdoc/pull/524) ([stanislaw](https://github.com/stanislaw))
+- tasks: make pylint always be 10.0 for whitelisted fixed warnings [\#523](https://github.com/strictdoc-project/strictdoc/pull/523) ([stanislaw](https://github.com/stanislaw))
+- grammar: introduce \[DOCUMENT\].OPTIONS.AUTO\_LEVELS [\#522](https://github.com/strictdoc-project/strictdoc/pull/522) ([stanislaw](https://github.com/stanislaw))
+- import/reqif: from ReqIF to SDoc: initial implementation [\#521](https://github.com/strictdoc-project/strictdoc/pull/521) ([stanislaw](https://github.com/stanislaw))
+- grammar: improve handling of the multiline fields [\#519](https://github.com/strictdoc-project/strictdoc/pull/519) ([stanislaw](https://github.com/stanislaw))
+- backend/source\_file\_syntax: simplify handling of the source lines [\#518](https://github.com/strictdoc-project/strictdoc/pull/518) ([stanislaw](https://github.com/stanislaw))
+- Code climate: increase pylint limit again [\#517](https://github.com/strictdoc-project/strictdoc/pull/517) ([stanislaw](https://github.com/stanislaw))
+- traceability: fix calculation of locations when there are empty source lines [\#516](https://github.com/strictdoc-project/strictdoc/pull/516) ([stanislaw](https://github.com/stanislaw))
+- Code climate: fix more pylint warnings [\#513](https://github.com/strictdoc-project/strictdoc/pull/513) ([stanislaw](https://github.com/stanislaw))
+- Code climate: a few missing \_\_init\_\_.py's to prepare for mypy [\#512](https://github.com/strictdoc-project/strictdoc/pull/512) ([stanislaw](https://github.com/stanislaw))
+- export/html: reuse markup renderer to improve performance [\#511](https://github.com/strictdoc-project/strictdoc/pull/511) ([stanislaw](https://github.com/stanislaw))
+- export/html-standalone: embed favicon [\#509](https://github.com/strictdoc-project/strictdoc/pull/509) ([stanislaw](https://github.com/stanislaw))
+- CI: Enable Python 3.10 [\#508](https://github.com/strictdoc-project/strictdoc/pull/508) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.17](https://github.com/strictdoc-project/strictdoc/tree/0.0.17) (2021-10-21)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.16...0.0.17)
+
+**Closed issues:**
+
+- HTML not being regenerated correctly with multiple SDoc Files [\#494](https://github.com/strictdoc-project/strictdoc/issues/494)
+
+**Merged pull requests:**
+
+- CI: fix broken Poetry installation when Python 3.10 is used [\#507](https://github.com/strictdoc-project/strictdoc/pull/507) ([stanislaw](https://github.com/stanislaw))
+- Bump version to 0.0.17 [\#506](https://github.com/strictdoc-project/strictdoc/pull/506) ([stanislaw](https://github.com/stanislaw))
+- tests/integration: use sandbox approach to fix an incr. generation test [\#504](https://github.com/strictdoc-project/strictdoc/pull/504) ([stanislaw](https://github.com/stanislaw))
+- export/html: regenerate all parent docs if new child is found  [\#503](https://github.com/strictdoc-project/strictdoc/pull/503) ([Relasym](https://github.com/Relasym))
+- export/html: regenerate all parent docs if the child doc changes [\#501](https://github.com/strictdoc-project/strictdoc/pull/501) ([stanislaw](https://github.com/stanislaw))
+- export: print how long it takes to collect the traceability info [\#500](https://github.com/strictdoc-project/strictdoc/pull/500) ([stanislaw](https://github.com/stanislaw))
+- docs: add "Document archetypes" draft requirement [\#499](https://github.com/strictdoc-project/strictdoc/pull/499) ([stanislaw](https://github.com/stanislaw))
+- export/html: regenerate all child docs if the parent doc changes [\#497](https://github.com/strictdoc-project/strictdoc/pull/497) ([stanislaw](https://github.com/stanislaw))
+- traceability\_index: extract file traceability container to a separate file [\#496](https://github.com/strictdoc-project/strictdoc/pull/496) ([stanislaw](https://github.com/stanislaw))
+- html, html-standalone, rst: fix UTF8 when stdout + reading and writing files [\#495](https://github.com/strictdoc-project/strictdoc/pull/495) ([stanislaw](https://github.com/stanislaw))
+- docs: add "Contact developers" [\#493](https://github.com/strictdoc-project/strictdoc/pull/493) ([stanislaw](https://github.com/stanislaw))
+- docs: regenerate rst using the new file name convention [\#492](https://github.com/strictdoc-project/strictdoc/pull/492) ([stanislaw](https://github.com/stanislaw))
+- traceability: \[nosdoc\] directive to disable requirements search in source files [\#490](https://github.com/strictdoc-project/strictdoc/pull/490) ([stanislaw](https://github.com/stanislaw))
+- traceability: switch to UTF-8 when reading and generating source files [\#489](https://github.com/strictdoc-project/strictdoc/pull/489) ([stanislaw](https://github.com/stanislaw))
+- CI: Remove Ubuntu 16 workflow [\#488](https://github.com/strictdoc-project/strictdoc/pull/488) ([stanislaw](https://github.com/stanislaw))
+- Poetry: update FileCheck [\#487](https://github.com/strictdoc-project/strictdoc/pull/487) ([stanislaw](https://github.com/stanislaw))
+- tests/integration: enable back the HTML markup test [\#486](https://github.com/strictdoc-project/strictdoc/pull/486) ([stanislaw](https://github.com/stanislaw))
+- Create codeql-analysis.yml [\#485](https://github.com/strictdoc-project/strictdoc/pull/485) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.16](https://github.com/strictdoc-project/strictdoc/tree/0.0.16) (2021-09-05)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.15...0.0.16)
+
+**Merged pull requests:**
+
+- docs: switch back to guzzle\_sphinx\_theme for better support by Read the Docs [\#484](https://github.com/strictdoc-project/strictdoc/pull/484) ([stanislaw](https://github.com/stanislaw))
+- docs: switch to sphinx\_rtd\_theme for better support by Read the Docs [\#483](https://github.com/strictdoc-project/strictdoc/pull/483) ([stanislaw](https://github.com/stanislaw))
+- Bump version to 0.0.16 [\#482](https://github.com/strictdoc-project/strictdoc/pull/482) ([stanislaw](https://github.com/stanislaw))
+- docs: --project-title option [\#481](https://github.com/strictdoc-project/strictdoc/pull/481) ([stanislaw](https://github.com/stanislaw))
+- docs: --project-title option [\#479](https://github.com/strictdoc-project/strictdoc/pull/479) ([stanislaw](https://github.com/stanislaw))
+- export/html: config option --project-title and display project title [\#478](https://github.com/strictdoc-project/strictdoc/pull/478) ([stanislaw](https://github.com/stanislaw))
+- pyproject: remove guzzle\_sphinx\_theme, switch theme to bizstyle [\#477](https://github.com/strictdoc-project/strictdoc/pull/477) ([stanislaw](https://github.com/stanislaw))
+- traceability: validation: do not allow dangling inline links [\#476](https://github.com/strictdoc-project/strictdoc/pull/476) ([stanislaw](https://github.com/stanislaw))
+- Feature: Inline links to Sections and Requirements [\#475](https://github.com/strictdoc-project/strictdoc/pull/475) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.15](https://github.com/strictdoc-project/strictdoc/tree/0.0.15) (2021-08-19)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.14...0.0.15)
+
+**Closed issues:**
+
+- Document-level option to select or disable markup language \(RST vs plain text\) [\#465](https://github.com/strictdoc-project/strictdoc/issues/465)
+
+**Merged pull requests:**
+
+- Bump version to 0.0.15 [\#474](https://github.com/strictdoc-project/strictdoc/pull/474) ([stanislaw](https://github.com/stanislaw))
+- export/html: fix section-title line-height [\#473](https://github.com/strictdoc-project/strictdoc/pull/473) ([mettta](https://github.com/mettta))
+- export/html: stop decapitalizing custom field name in the meta table [\#472](https://github.com/strictdoc-project/strictdoc/pull/472) ([stanislaw](https://github.com/stanislaw))
+- export/html: requirement meta: fix margins in traceability [\#471](https://github.com/strictdoc-project/strictdoc/pull/471) ([mettta](https://github.com/mettta))
+- export/html: requirement meta: fix margins, fix background color in t… [\#470](https://github.com/strictdoc-project/strictdoc/pull/470) ([mettta](https://github.com/mettta))
+- export/html: fix bottom border in requirement meta-table [\#469](https://github.com/strictdoc-project/strictdoc/pull/469) ([mettta](https://github.com/mettta))
+- export/html: fix bottom border in requirement meta-table [\#468](https://github.com/strictdoc-project/strictdoc/pull/468) ([mettta](https://github.com/mettta))
+- export/html: styles for table-view, update styles for requirement meta-table [\#467](https://github.com/strictdoc-project/strictdoc/pull/467) ([mettta](https://github.com/mettta))
+- grammar: document-level option to specify markup \(RST and Text for now\) [\#466](https://github.com/strictdoc-project/strictdoc/pull/466) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.14](https://github.com/strictdoc-project/strictdoc/tree/0.0.14) (2021-08-18)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.14a...0.0.14)
+
+## [0.0.14a](https://github.com/strictdoc-project/strictdoc/tree/0.0.14a) (2021-08-18)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.13...0.0.14a)
+
+**Merged pull requests:**
+
+- Bump version to 0.0.14 [\#464](https://github.com/strictdoc-project/strictdoc/pull/464) ([stanislaw](https://github.com/stanislaw))
+- Add pygments to pyproject.toml [\#463](https://github.com/strictdoc-project/strictdoc/pull/463) ([adamgreig](https://github.com/adamgreig))
+- Regenerate CHANGELOG [\#461](https://github.com/strictdoc-project/strictdoc/pull/461) ([stanislaw](https://github.com/stanislaw))
+
 ## [0.0.13](https://github.com/strictdoc-project/strictdoc/tree/0.0.13) (2021-08-16)
 
 [Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.12...0.0.13)

@@ -1,6 +1,7 @@
 import collections
 import os
 
+from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.helpers.sorting import alphanumeric_sort
 
 
@@ -138,7 +139,9 @@ class FileTree:
 
 class FileFinder:
     @staticmethod
-    def find_files_with_extensions(root_path, extensions):
+    def find_files_with_extensions(
+        root_path, config: ExportCommandConfig, extensions
+    ):
         assert os.path.isdir(root_path)
         assert os.path.isabs(root_path)
         assert isinstance(extensions, set)
@@ -149,6 +152,10 @@ class FileFinder:
         folder_map = {root_path: root_folder}
 
         for current_root_path, dirs, files in os.walk(root_path, topdown=True):
+            if current_root_path == config.output_dir:
+                dirs[:] = []
+                continue
+
             dirs[:] = [
                 d
                 for d in dirs

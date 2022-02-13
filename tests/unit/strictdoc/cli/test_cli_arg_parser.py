@@ -1,3 +1,5 @@
+import os
+
 from strictdoc.cli.cli_arg_parser import (
     cli_args_parser,
     create_sdoc_args_parser,
@@ -49,7 +51,7 @@ def test_export_01_minimal():
     assert export_config.formats == args.formats
     assert export_config.input_paths == args.input_paths
     assert export_config.no_parallelization == args.no_parallelization
-    assert export_config.output_dir == args.output_dir
+    assert export_config.output_dir == os.path.join(os.getcwd(), "output")
 
 
 def test_export_02_output_dir():
@@ -74,7 +76,9 @@ def test_export_02_output_dir():
     assert export_config.formats == args.formats
     assert export_config.input_paths == args.input_paths
     assert export_config.no_parallelization == args.no_parallelization
-    assert export_config.output_dir == args.output_dir
+    assert export_config.output_dir == os.path.join(
+        os.getcwd(), "custom-output-dir"
+    )
 
 
 def test_export_03_parallelization():
@@ -97,7 +101,6 @@ def test_export_03_parallelization():
     assert export_config.formats == args.formats
     assert export_config.input_paths == args.input_paths
     assert export_config.no_parallelization == args.no_parallelization
-    assert export_config.output_dir == args.output_dir
 
 
 def test_export_04_export_format_rst():
@@ -120,7 +123,6 @@ def test_export_04_export_format_rst():
     assert export_config.formats == args.formats
     assert export_config.input_paths == args.input_paths
     assert export_config.no_parallelization == args.no_parallelization
-    assert export_config.output_dir == args.output_dir
 
 
 def test_export_05_export_format_multiple():
@@ -146,7 +148,6 @@ def test_export_05_export_format_multiple():
     assert export_config.formats == args.formats
     assert export_config.input_paths == args.input_paths
     assert export_config.no_parallelization == args.no_parallelization
-    assert export_config.output_dir == args.output_dir
 
 
 def test_export_06_export_format_multiple():
@@ -169,7 +170,6 @@ def test_export_06_export_format_multiple():
     assert export_config.formats == args.formats
     assert export_config.input_paths == args.input_paths
     assert export_config.no_parallelization == args.no_parallelization
-    assert export_config.output_dir == args.output_dir
 
 
 def test_export_07_enable_mathjax():

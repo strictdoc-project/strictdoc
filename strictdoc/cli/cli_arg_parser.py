@@ -1,5 +1,5 @@
 import argparse
-from typing import Optional
+import os
 
 EXPORT_FORMATS = ["html", "html-standalone", "rst", "excel", "reqif-sdoc"]
 
@@ -203,7 +203,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         self,
         strictdoc_root_path,
         input_paths,
-        output_dir,
+        output_dir: str,
         project_title,
         formats,
         fields,
@@ -213,7 +213,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
     ):
         self.strictdoc_root_path = strictdoc_root_path
         self.input_paths = input_paths
-        self.output_dir: Optional[str] = output_dir
+        self.output_dir: str = output_dir
         self.project_title = project_title
         self.formats = formats
         self.fields = fields
@@ -222,6 +222,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         self.experimental_enable_file_traceability = (
             experimental_enable_file_traceability
         )
+        self.output_html_root = os.path.join(output_dir, "html")
 
 
 class DumpGrammarCommandConfig:
@@ -264,10 +265,16 @@ class SDocArgsParser:
             if self.args.project_title
             else "Untitled Project"
         )
+
+        output_dir = self.args.output_dir if self.args.output_dir else "output"
+        if not os.path.isabs(output_dir):
+            cwd = os.getcwd()
+            output_dir = os.path.join(cwd, output_dir)
+
         return ExportCommandConfig(
             strictdoc_root_path,
             self.args.input_paths,
-            self.args.output_dir,
+            output_dir,
             project_title,
             self.args.formats,
             self.args.fields,

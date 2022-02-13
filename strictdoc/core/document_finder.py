@@ -3,6 +3,7 @@ import sys
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.reader import SDReader
+from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_tree import (
@@ -18,7 +19,7 @@ class DocumentFinder:
     @staticmethod
     @timing_decorator("Find and read SDoc files")
     def find_sdoc_content(
-        paths_to_files_or_docs, output_root_html, parallelizer
+        paths_to_files_or_docs, config: ExportCommandConfig, parallelizer
     ):
         for paths_to_files_or_doc in paths_to_files_or_docs:
             if not os.path.exists(paths_to_files_or_doc):
@@ -32,10 +33,10 @@ class DocumentFinder:
                 sys.exit(1)
 
         file_tree, asset_dirs = DocumentFinder._build_file_tree(
-            paths_to_files_or_docs
+            paths_to_files_or_docs, config
         )
         document_tree = DocumentFinder._build_document_tree(
-            file_tree, output_root_html, parallelizer
+            file_tree, config.output_html_root, parallelizer
         )
 
         return document_tree, asset_dirs
@@ -113,7 +114,7 @@ class DocumentFinder:
         return DocumentTree(file_trees, document_list, map_docs_by_paths)
 
     @staticmethod
-    def _build_file_tree(paths_to_files_or_docs):
+    def _build_file_tree(paths_to_files_or_docs, config: ExportCommandConfig):
         asset_dirs = []
         root_trees = []
 
@@ -163,7 +164,7 @@ class DocumentFinder:
 
             # Finding SDoc files.
             file_tree_structure = FileFinder.find_files_with_extensions(
-                path_to_doc_root, {".sdoc"}
+                path_to_doc_root, config, {".sdoc"}
             )
             root_trees.append(file_tree_structure)
 

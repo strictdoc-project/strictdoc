@@ -30,7 +30,6 @@ class ExportAction:
     @timing_decorator("Export")
     def export(config: ExportCommandConfig, parallelizer):
         assert parallelizer
-        cwd = os.getcwd()
         strict_own_files_unfiltered: Iterator[str] = glob.iglob(
             f"{config.strictdoc_root_path}/strictdoc/**/*",
             recursive=True,
@@ -50,15 +49,9 @@ class ExportAction:
         path_to_single_file_or_doc_root = config.input_paths
         if isinstance(path_to_single_file_or_doc_root, str):
             path_to_single_file_or_doc_root = [config.input_paths]
-        output_dir = config.output_dir if config.output_dir else "output"
-
-        if not os.path.isabs(output_dir):
-            output_dir = os.path.join(cwd, output_dir)
-
-        output_html_root = os.path.join(output_dir, "html")
 
         document_tree, asset_dirs = DocumentFinder.find_sdoc_content(
-            path_to_single_file_or_doc_root, output_html_root, parallelizer
+            path_to_single_file_or_doc_root, config, parallelizer
         )
 
         try:
@@ -71,7 +64,7 @@ class ExportAction:
 
         if config.experimental_enable_file_traceability:
             source_tree: SourceTree = SourceFilesFinder.find_source_files(
-                output_html_root, document_tree
+                config, document_tree
             )
             source_files = source_tree.source_files
             source_file: SourceFile
@@ -96,26 +89,26 @@ class ExportAction:
             document_tree.attach_source_tree(source_tree)
 
         if "html" in config.formats or "html-standalone" in config.formats:
-            Path(output_html_root).mkdir(parents=True, exist_ok=True)
+            Path(config.output_html_root).mkdir(parents=True, exist_ok=True)
             HTMLGenerator.export_tree(
                 config,
                 document_tree,
                 traceability_index,
-                output_html_root,
+                config.output_html_root,
                 strictdoc_last_update,
                 asset_dirs,
                 parallelizer,
             )
 
         if "rst" in config.formats:
-            output_rst_root = os.path.join(output_dir, "rst")
+            output_rst_root = os.path.join(config.output_dir, "rst")
             Path(output_rst_root).mkdir(parents=True, exist_ok=True)
             DocumentRSTGenerator.export_tree(
                 document_tree, traceability_index, output_rst_root
             )
 
         if "excel" in config.formats:
-            output_excel_root = f"{output_dir}/excel"
+            output_excel_root = f"{config.output_dir}/excel"
             ExcelGenerator.export_tree(
                 document_tree,
                 traceability_index,
@@ -124,7 +117,7 @@ class ExportAction:
             )
 
         if "reqif-sdoc" in config.formats:
-            output_reqif_root = f"{output_dir}/reqif"
+            output_reqif_root = f"{config.output_dir}/reqif"
             ReqIFExport.export(
                 document_tree,
                 output_reqif_root,

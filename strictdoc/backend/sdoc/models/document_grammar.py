@@ -10,7 +10,6 @@ RESERVED_NON_META_FIELDS = [
     "REFS",
     "TITLE",
     "STATEMENT",
-    "BODY",
     "COMMENT",
     "RATIONALE",
 ]
@@ -79,9 +78,6 @@ class DocumentGrammar:
                 parent=None,
                 title="STATEMENT",
                 required="False",
-            ),
-            GrammarElementFieldString(
-                parent=None, title="BODY", required="False"
             ),
             GrammarElementFieldString(
                 parent=None,

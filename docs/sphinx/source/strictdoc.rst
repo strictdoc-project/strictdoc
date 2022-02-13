@@ -246,9 +246,6 @@ optional configuration fields and an optional ``[FREETEXT]`` block.
     StrictDoc is software for writing technical requirements and specifications.
     [/FREETEXT]
 
-Supported configuration fields:
-
-``SPECIAL_FIELDS`` (see Requirement / Special fields below).
 
 Requirement
 ~~~~~~~~~~~
@@ -269,7 +266,6 @@ Minimal "Hello World" program with 3 empty requirements:
 Supported fields:
 
 - ``UID`` (unique identifier)
-- ``SPECIAL_FIELDS``
 - ``REFS``
 - ``TITLE``
 - ``STATEMENT``
@@ -1459,15 +1455,10 @@ Statement
 
 Requirement item shall have a statement.
 
-Content body
-^^^^^^^^^^^^
-
-Requirement item might have an content body.
-
 UID identifier
 ^^^^^^^^^^^^^^
 
-Requirement item might have an UID identifier.
+Requirement item may have an UID identifier.
 
 UID identifier format
 """""""""""""""""""""
@@ -1487,17 +1478,17 @@ Some examples:
 Title
 ^^^^^
 
-Requirement item might have an title.
+Requirement item may have an title.
 
 References
 ^^^^^^^^^^
 
-Requirement item might have one or more references.
+Requirement item may have one or more references.
 
 Comments
 ^^^^^^^^
 
-Requirement item might have one or more comments.
+Requirement item may have one or more comments.
 
 Special fields
 ^^^^^^^^^^^^^^

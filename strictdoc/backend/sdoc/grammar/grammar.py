@@ -65,18 +65,11 @@ BooleanChoice[noskipws]:
 DocumentConfig[noskipws]:
   ('VERSION: ' version = /.*$/ '\n')?
   ('NUMBER: ' number = /.*$/ '\n')?
-  ('SPECIAL_FIELDS:' '\n' special_fields += ConfigSpecialField)?
 
   ('OPTIONS:' '\n'
     ('  MARKUP: ' (markup = MarkupChoice) '\n')?
     ('  AUTO_LEVELS: ' (auto_levels = AutoLevelsChoice) '\n')?
   )?
-;
-
-ConfigSpecialField[noskipws]:
-'- NAME: ' field_name = /.*$/ '\n'
-'  TYPE: ' field_type = 'String' '\n'
-('  REQUIRED: ' field_required = 'Yes' '\n')?
 ;
 
 MarkupChoice[noskipws]:
@@ -131,10 +124,6 @@ RequirementType[noskipws]:
 
 RequirementField[noskipws]:
   (
-    field_name = 'SPECIAL_FIELDS' ':' '\n'
-    field_value_special_fields += SpecialField
-  ) |
-  (
     field_name = 'REFS' ':' '\n'
     (field_value_references += Reference)
   ) |
@@ -156,10 +145,6 @@ CompositeRequirement[noskipws]:
 
   '\n'
   '[/COMPOSITE_REQUIREMENT]' '\n'
-;
-
-SpecialField[noskipws]:
-  '  ' field_name = /[A-Z][A-Z0-9_]+/ ': ' field_value = /.*$/ '\n'
 ;
 
 ChoiceOption[noskipws]:

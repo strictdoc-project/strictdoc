@@ -28,7 +28,6 @@ class ReqIFToSDocConverter:
             parent=None,
             version=None,
             number=None,
-            special_fields=[],
             markup=None,
             auto_levels=None,
         )
@@ -148,7 +147,6 @@ class ReqIFToSDocConverter:
                     field_value=attribute_value,
                     field_value_multiline=attribute_multiline_value,
                     field_value_references=None,
-                    field_value_special_fields=None,
                 )
             )
         requirement = Requirement(

@@ -43,7 +43,6 @@ class SDocObjectFactory:
                     field_value=uid,
                     field_value_multiline=None,
                     field_value_references=None,
-                    field_value_special_fields=None,
                 )
             )
         if level:
@@ -55,7 +54,6 @@ class SDocObjectFactory:
                     field_value=level,
                     field_value_multiline=None,
                     field_value_references=None,
-                    field_value_special_fields=None,
                 )
             )
         if title:
@@ -66,7 +64,6 @@ class SDocObjectFactory:
                     field_value=title,
                     field_value_multiline=None,
                     field_value_references=None,
-                    field_value_special_fields=None,
                 )
             )
         if statement:
@@ -77,7 +74,6 @@ class SDocObjectFactory:
                     field_value=statement,
                     field_value_multiline=None,
                     field_value_references=None,
-                    field_value_special_fields=None,
                 )
             )
         if statement_multiline:
@@ -91,7 +87,6 @@ class SDocObjectFactory:
                     field_value=None,
                     field_value_multiline=statement_multiline,
                     field_value_references=None,
-                    field_value_special_fields=None,
                 )
             )
         if rationale:
@@ -102,7 +97,6 @@ class SDocObjectFactory:
                     field_value=rationale,
                     field_value_multiline=None,
                     field_value_references=None,
-                    field_value_special_fields=None,
                 )
             )
         if rationale_multiline:
@@ -113,7 +107,6 @@ class SDocObjectFactory:
                     field_value=None,
                     field_value_multiline=rationale_multiline,
                     field_value_references=None,
-                    field_value_special_fields=None,
                 )
             )
         if tags is not None:
@@ -125,7 +118,6 @@ class SDocObjectFactory:
                     field_value=tags,
                     field_value_multiline=None,
                     field_value_references=None,
-                    field_value_special_fields=None,
                 )
             )
         if comments is not None:
@@ -139,7 +131,6 @@ class SDocObjectFactory:
                         field_value=None,
                         field_value_multiline=comment,
                         field_value_references=None,
-                        field_value_special_fields=None,
                     )
                 )
         return Requirement(

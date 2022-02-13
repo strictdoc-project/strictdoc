@@ -469,59 +469,6 @@ multiline.
 
 [/SECTION]
 
-[SECTION]
-TITLE: Special fields
-
-[FREETEXT]
-**Observation:** Different industries have their own types of requirements
-documents. These documents often have specialized meta information which is
-different from industry to industry. Example: ``ECSS_VERIFICATION`` field in the
-European space industry or ``ASIL`` in the automotive industry.
-
-StrictDoc allows extending its grammar with custom fields that are specific to
-a particular document.
-
-First, such fields have to be registered on a document level using the
-``SPECIAL_FIELDS`` field:
-
-.. code-block:: text
-
-    [DOCUMENT]
-    TITLE: StrictDoc
-    SPECIAL_FIELDS:
-    - NAME: ASIL
-      TYPE: String
-    - NAME: ECSS_VERIFICATION
-      TYPE: String
-      REQUIRED: Yes
-
-This registration adds these fields to the parser that will recognize them
-as special fields defined by a user. Declaring a special field as
-``REQUIRED: Yes`` makes this field mandatory for each and every requirement in
-the document.
-
-When the fields are registered on the document level, it becomes possible to
-declare them as the ``[REQUIREMENT]`` special fields:
-
-.. code-block:: text
-
-    [DOCUMENT]
-    TITLE: StrictDoc
-
-    [REQUIREMENT]
-    UID: REQ-001
-    SPECIAL_FIELDS:
-      ASIL: D
-      ECSS_VERIFICATION: R,A,I,T
-    STATEMENT: StrictDoc shall enable requirements management.
-
-**Note:** The ``TYPE: String`` is the only supported type of a special field. In
-the future, more specialized types are envisioned, such as ``Int``, ``Enum``,
-``Tag``.
-[/FREETEXT]
-
-[/SECTION]
-
 [/SECTION]
 
 [SECTION]
@@ -662,6 +609,163 @@ Special feature of ``[COMPOSITE_REQUIREMENT]``: like ``[SECTION]`` element, the
 **Note:** Composite requirements should not be used in every document. Most
 often, a more basic combination of nested ``[SECTION]`` and ``[REQUIREMENT]``
 elements should do the job.
+[/FREETEXT]
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Custom grammars
+
+[FREETEXT]
+**Observation:** Different industries have their own types of requirements
+documents with specialized meta information.
+Examples: ``ASIL`` in the automotive industry or
+``HERITAGE`` field in some of the requirements documents by NASA.
+
+StrictDoc allows declaration of custom grammars with custom fields that are
+specific to a particular document.
+
+First, such fields have to be registered on a document level using the
+``[GRAMMAR]`` field. The following example demonstrates a declaration of
+a grammar with four fields including a custom ``VERIFICATION`` field.
+
+.. code-block:: text
+
+    [DOCUMENT]
+    TITLE: How to declare a custom grammar
+
+    [GRAMMAR]
+    ELEMENTS:
+    - TAG: REQUIREMENT
+      FIELDS:
+      - TITLE: UID
+        TYPE: String
+        REQUIRED: True
+      - TITLE: VERIFICATION
+        TYPE: String
+        REQUIRED: True
+      - TITLE: STATEMENT
+        TYPE: String
+        REQUIRED: True
+      - TITLE: COMMENT
+        TYPE: String
+        REQUIRED: True
+
+This declaration configures the parser to recognize the declared fields as
+defined by a user. Declaring a special field as ``REQUIRED: True`` makes this
+field mandatory for each and every requirement in the document.
+
+When the fields are registered on the document level, it becomes possible to
+declare them as the ``[REQUIREMENT]`` special fields:
+
+.. code-block:: text
+
+    [REQUIREMENT]
+    UID: ABC-123
+    VERIFICATION: Test
+    STATEMENT: System A shall do B.
+    COMMENT: Test comment.
+
+**Note:** The order of fields must match the order of their declaration in the
+grammar.
+[/FREETEXT]
+
+[SECTION]
+TITLE: Supported field types
+
+[FREETEXT]
+The supported field types are:
+
+- ``String``
+
+- ``SingleChoice`` (Enum-like behavior, one choice is possible)
+- ``MultipleChoice`` (comma-separated words with fixed options)
+- ``Tag`` (comma-separated words with no fixed options)
+
+Example:
+
+.. code-block:: text
+
+    [DOCUMENT]
+    TITLE: How to declare a custom grammar
+
+    [GRAMMAR]
+    ELEMENTS:
+    - TAG: REQUIREMENT
+      FIELDS:
+      - TITLE: UID
+        TYPE: String
+        REQUIRED: True
+      - TITLE: ASIL
+        TYPE: SingleChoice(A, B, C, D)
+        REQUIRED: True
+      - TITLE: VERIFICATION
+        TYPE: MultipleChoice(Review, Analysis, Inspection, Test)
+        REQUIRED: True
+      - TITLE: UNIT
+        TYPE: Tag
+        REQUIRED: True
+      - TITLE: STATEMENT
+        TYPE: String
+        REQUIRED: True
+      - TITLE: COMMENT
+        TYPE: String
+        REQUIRED: True
+
+    [FREETEXT]
+    This document is an example of a simple SDoc custom grammar.
+    [/FREETEXT]
+
+    [REQUIREMENT]
+    UID: ABC-123
+    ASIL: A
+    VERIFICATION: Review, Test
+    UNIT: OBC, RTU
+    STATEMENT: System A shall do B.
+    COMMENT: Test comment.
+
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Reserved fields
+
+[FREETEXT]
+While it is possible to declare a grammar with completely custom fields, there
+is a fixed set of reserved fields that StrictDoc uses for the presentation of
+table of contents and document structure:
+
+.. list-table:: Reserved fields in SDoc's grammar
+   :widths: 20 80
+   :header-rows: 1
+
+   * - **Reserved field**
+     - **Description**
+
+   * - UID
+     - Requirement's UID.
+
+   * - REFS
+     - StrictDoc relies on this field to link requirements
+       together and build traceability information.
+
+   * - TITLE
+     - Requirement's title. StrictDoc relies on this field to create
+       document structure and table of contents.
+
+   * - STATEMENT
+     - Requirement's statement. StrictDoc presents this field as a long text
+       block.
+
+   * - COMMENT
+     - One or more comments to a requirement.
+
+   * - RATIONALE
+     - The rationale for a requirement. Visually presented in the same way as a
+       comment.
 [/FREETEXT]
 
 [/SECTION]

@@ -24,7 +24,6 @@ class DocumentBuilder:
         rationale = None
         rationale_multiline = None
         comments = []
-        special_fields = []
 
         requirement = SDocObjectFactory.create_requirement(
             parent=parent,
@@ -58,7 +57,7 @@ class DocumentBuilder:
 
     @staticmethod
     def _create_empty_document() -> Document:
-        config = DocumentConfig(None, "0.0.1", "DOC-1", [], None, None)
+        config = DocumentConfig(None, "0.0.1", "DOC-1", [], None)
         free_texts = []
         section_contents = []
         document = Document(

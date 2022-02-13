@@ -66,8 +66,14 @@
             </a></li><li><a href="#3.3-Installing-StrictDoc-from-GitHub-developer-mode-">
               <span class="section-number">3.3</span>
               Installing StrictDoc from GitHub (developer mode)
-            </a></li><li><a href="#3.4-Hello-world">
+            </a></li><li><a href="#3.4-Installing-StrictDoc-into-a-Docker-container">
               <span class="section-number">3.4</span>
+              Installing StrictDoc into a Docker container
+            </a></li><li><a href="#3.5-Installing-StrictDoc-as-a-snap-package">
+              <span class="section-number">3.5</span>
+              Installing StrictDoc as a snap package
+            </a></li><li><a href="#3.6-Hello-world">
+              <span class="section-number">3.6</span>
               Hello world
             </a></li></ul>
             </li><li><a href="#4-SDoc-syntax">
@@ -104,9 +110,6 @@
             </a></li><li><a href="#4.2.2.4-Rationale">
               <span class="section-number">4.2.2.4</span>
               Rationale
-            </a></li><li><a href="#4.2.2.5-Special-fields">
-              <span class="section-number">4.2.2.5</span>
-              Special fields
             </a></li></ul>
             </li><li><a href="#4.2.3-Section">
               <span class="section-number">4.2.3</span>
@@ -121,6 +124,16 @@
             </li><li><a href="#4.2.4-Composite-requirement">
               <span class="section-number">4.2.4</span>
               Composite requirement
+            </a></li></ul>
+            </li><li><a href="#4.3-Custom-grammars">
+              <span class="section-number">4.3</span>
+              Custom grammars
+            </a><ul><li><a href="#4.3.1-Supported-field-types">
+              <span class="section-number">4.3.1</span>
+              Supported field types
+            </a></li><li><a href="#4.3.2-Reserved-fields">
+              <span class="section-number">4.3.2</span>
+              Reserved fields
             </a></li></ul>
             </li></ul>
             </li><li><a href="#5-Markup">
@@ -781,12 +794,76 @@ invoke test
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="3.4-Hello-world"></div>
+    <div data-role='anchor' id="3.4-Installing-StrictDoc-into-a-Docker-container"></div>
 
     
         <h2
 class="section-title"
 data-level="3.4"
+>Installing StrictDoc into a Docker container
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>StrictDoc can be invoked inside of a Docker container. To make data available
+to the Docker container (here: <tt class="docutils literal">strictdoc:0.0.18</tt>) as well as the host system
+one needs to mount a volume via <tt class="docutils literal"><span class="pre">-v</span></tt> option.</p>
+<p>In the host operating system terminal:</p>
+<pre class="code text literal-block">
+docker build . -t strictdoc:0.0.18
+docker run --name strictdoc --rm -v &quot;$(pwd)/docs:/data&quot; -i -t strictdoc:0.0.18
+</pre>
+<p>In the container terminal:</p>
+<pre class="code text literal-block">
+bash-5.1# strictdoc export .
+bash-5.1# exit
+</pre>
+<p>The documentation resides in <tt class="docutils literal">./docs/output/html</tt>.</p>
+</div>
+
+    </div></section>
+
+</article><article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="3.5-Installing-StrictDoc-as-a-snap-package"></div>
+
+    
+        <h2
+class="section-title"
+data-level="3.5"
+>Installing StrictDoc as a snap package
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>This installation variant is available in UNIX operating systems with support
+of the <a class="reference external" href="https://snapcraft.io/docs/snap-format">snap package format</a>.</p>
+<pre class="code text literal-block">
+wget https://github.com/strictdoc-project/strictdoc/raw/developer/snap/snap/strictdoc_0.0.18_amd64.snap
+sudo snap install strictdoc_*.snap --devmode --dangerous
+</pre>
+</div>
+
+    </div></section>
+
+</article><article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="3.6-Hello-world"></div>
+
+    
+        <h2
+class="section-title"
+data-level="3.6"
 >Hello world
 </h2>
     
@@ -1220,66 +1297,6 @@ RATIONALE: The presence of the REQ-001 is justified.
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="4.2.2.5-Special-fields"></div>
-
-    
-        <h4
-class="section-title"
-data-level="4.2.2.5"
->Special fields
-</h4>
-    
-
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
-      <div class="document">
-<p><strong>Observation:</strong> Different industries have their own types of requirements
-documents. These documents often have specialized meta information which is
-different from industry to industry. Example: <tt class="docutils literal">ECSS_VERIFICATION</tt> field in the
-European space industry or <tt class="docutils literal">ASIL</tt> in the automotive industry.</p>
-<p>StrictDoc allows extending its grammar with custom fields that are specific to
-a particular document.</p>
-<p>First, such fields have to be registered on a document level using the
-<tt class="docutils literal">SPECIAL_FIELDS</tt> field:</p>
-<pre class="code text literal-block">
-[DOCUMENT]
-TITLE: StrictDoc
-SPECIAL_FIELDS:
-- NAME: ASIL
-  TYPE: String
-- NAME: ECSS_VERIFICATION
-  TYPE: String
-  REQUIRED: Yes
-</pre>
-<p>This registration adds these fields to the parser that will recognize them
-as special fields defined by a user. Declaring a special field as
-<tt class="docutils literal">REQUIRED: Yes</tt> makes this field mandatory for each and every requirement in
-the document.</p>
-<p>When the fields are registered on the document level, it becomes possible to
-declare them as the <tt class="docutils literal">[REQUIREMENT]</tt> special fields:</p>
-<pre class="code text literal-block">
-[DOCUMENT]
-TITLE: StrictDoc
-
-[REQUIREMENT]
-UID: REQ-001
-SPECIAL_FIELDS:
-  ASIL: D
-  ECSS_VERIFICATION: R,A,I,T
-STATEMENT: StrictDoc shall enable requirements management.
-</pre>
-<p><strong>Note:</strong> The <tt class="docutils literal">TYPE: String</tt> is the only supported type of a special field. In
-the future, more specialized types are envisioned, such as <tt class="docutils literal">Int</tt>, <tt class="docutils literal">Enum</tt>,
-<tt class="docutils literal">Tag</tt>.</p>
-</div>
-
-    </div></section>
-
-</article><article class="docsection">
-
-  <section data-section="meta" class="docsection_section">
-
     <div data-role='anchor' id="4.2.3-Section"></div>
 
     
@@ -1461,6 +1478,202 @@ STATEMENT: Substatement #3
 <p><strong>Note:</strong> Composite requirements should not be used in every document. Most
 often, a more basic combination of nested <tt class="docutils literal">[SECTION]</tt> and <tt class="docutils literal">[REQUIREMENT]</tt>
 elements should do the job.</p>
+</div>
+
+    </div></section>
+
+</article><article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4.3-Custom-grammars"></div>
+
+    
+        <h2
+class="section-title"
+data-level="4.3"
+>Custom grammars
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p><strong>Observation:</strong> Different industries have their own types of requirements
+documents with specialized meta information.
+Examples: <tt class="docutils literal">ASIL</tt> in the automotive industry or
+<tt class="docutils literal">HERITAGE</tt> field in some of the requirements documents by NASA.</p>
+<p>StrictDoc allows declaration of custom grammars with custom fields that are
+specific to a particular document.</p>
+<p>First, such fields have to be registered on a document level using the
+<tt class="docutils literal">[GRAMMAR]</tt> field. The following example demonstrates a declaration of
+a grammar with four fields including a custom <tt class="docutils literal">VERIFICATION</tt> field.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: How to declare a custom grammar
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: VERIFICATION
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: True
+</pre>
+<p>This declaration configures the parser to recognize the declared fields as
+defined by a user. Declaring a special field as <tt class="docutils literal">REQUIRED: True</tt> makes this
+field mandatory for each and every requirement in the document.</p>
+<p>When the fields are registered on the document level, it becomes possible to
+declare them as the <tt class="docutils literal">[REQUIREMENT]</tt> special fields:</p>
+<pre class="code text literal-block">
+[REQUIREMENT]
+UID: ABC-123
+VERIFICATION: Test
+STATEMENT: System A shall do B.
+COMMENT: Test comment.
+</pre>
+<p><strong>Note:</strong> The order of fields must match the order of their declaration in the
+grammar.</p>
+</div>
+
+    </div></section>
+
+</article><article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4.3.1-Supported-field-types"></div>
+
+    
+        <h3
+class="section-title"
+data-level="4.3.1"
+>Supported field types
+</h3>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>The supported field types are:</p>
+<ul class="simple">
+<li><tt class="docutils literal">String</tt></li>
+<li><tt class="docutils literal">SingleChoice</tt> (Enum-like behavior, one choice is possible)</li>
+<li><tt class="docutils literal">MultipleChoice</tt> (comma-separated words with fixed options)</li>
+<li><tt class="docutils literal">Tag</tt> (comma-separated words with no fixed options)</li>
+</ul>
+<p>Example:</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: How to declare a custom grammar
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: ASIL
+    TYPE: SingleChoice(A, B, C, D)
+    REQUIRED: True
+  - TITLE: VERIFICATION
+    TYPE: MultipleChoice(Review, Analysis, Inspection, Test)
+    REQUIRED: True
+  - TITLE: UNIT
+    TYPE: Tag
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: True
+
+[FREETEXT]
+This document is an example of a simple SDoc custom grammar.
+[/FREETEXT]
+
+[REQUIREMENT]
+UID: ABC-123
+ASIL: A
+VERIFICATION: Review, Test
+UNIT: OBC, RTU
+STATEMENT: System A shall do B.
+COMMENT: Test comment.
+</pre>
+</div>
+
+    </div></section>
+
+</article><article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4.3.2-Reserved-fields"></div>
+
+    
+        <h3
+class="section-title"
+data-level="4.3.2"
+>Reserved fields
+</h3>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>While it is possible to declare a grammar with completely custom fields, there
+is a fixed set of reserved fields that StrictDoc uses for the presentation of
+table of contents and document structure:</p>
+<table border="1" class="colwidths-given docutils">
+<caption>Reserved fields in SDoc's grammar</caption>
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head"><strong>Reserved field</strong></th>
+<th class="head"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>UID</td>
+<td>Requirement's UID.</td>
+</tr>
+<tr><td>REFS</td>
+<td>StrictDoc relies on this field to link requirements
+together and build traceability information.</td>
+</tr>
+<tr><td>TITLE</td>
+<td>Requirement's title. StrictDoc relies on this field to create
+document structure and table of contents.</td>
+</tr>
+<tr><td>STATEMENT</td>
+<td>Requirement's statement. StrictDoc presents this field as a long text
+block.</td>
+</tr>
+<tr><td>COMMENT</td>
+<td>One or more comments to a requirement.</td>
+</tr>
+<tr><td>RATIONALE</td>
+<td>The rationale for a requirement. Visually presented in the same way as a
+comment.</td>
+</tr>
+</tbody>
+</table>
 </div>
 
     </div></section>
@@ -2188,8 +2401,6 @@ data-level="10.1.1"
     <dt><i>UID</i></dt>
     <dd>GOAL-1-TOOL-SUPPORT</dd>
     
-
-    
   </dl>
     
 <ul class="requirement_link">
@@ -2251,8 +2462,6 @@ data-level="10.1.2"
     <dt><i>UID</i></dt>
     <dd>GOAL-2-REDUCE-DOCUMENTATION-HAZARDS</dd>
     
-
-    
   </dl>
     
     
@@ -2305,8 +2514,6 @@ data-level="10.1.3"
     <dt><i>UID</i></dt>
     <dd>GOAL-3-NO-RUNAWAY-DOCUMENTATION</dd>
     
-
-    
   </dl>
     
     
@@ -2351,8 +2558,6 @@ data-level="10.1.4"
     
     <dt><i>UID</i></dt>
     <dd>GOAL-4-CHANGE-MANAGEMENT</dd>
-    
-
     
   </dl>
     
@@ -2436,8 +2641,6 @@ data-level="10.2.1"
     <dt><i>UID</i></dt>
     <dd>SDOC-HIGH-REQS-MANAGEMENT</dd>
     
-
-    
   </dl>
     
 <ul class="requirement_link">
@@ -2490,8 +2693,6 @@ data-level="10.2.2"
     
     <dt><i>UID</i></dt>
     <dd>SDOC-HIGH-DATA-MODEL</dd>
-    
-
     
   </dl>
     
@@ -2722,8 +2923,6 @@ data-level="10.2.5"
     <dt><i>UID</i></dt>
     <dd>SDOC-HIGH-VALIDATION</dd>
     
-
-    
   </dl>
     
 <ul class="requirement_link">
@@ -2877,8 +3076,6 @@ data-level="10.2.9"
     <dt><i>UID</i></dt>
     <dd>SDOC-HIGH-REQS-TRACEABILITY</dd>
     
-
-    
   </dl>
     
     
@@ -2998,8 +3195,6 @@ data-level="10.3.1"
     <dt><i>UID</i></dt>
     <dd>SDOC-IMPL-PARAL</dd>
     
-
-    
   </dl>
     
     
@@ -3036,8 +3231,6 @@ data-level="10.3.2"
     
     <dt><i>UID</i></dt>
     <dd>SDOC-IMPL-INCREMENTAL</dd>
-    
-
     
   </dl>
     
@@ -3100,8 +3293,6 @@ data-level="10.4.1"
     
     <dt><i>UID</i></dt>
     <dd>SDOC-DM-MODEL</dd>
-    
-
     
   </dl>
     
@@ -3695,8 +3886,6 @@ data-level="10.5.1"
     <dt><i>UID</i></dt>
     <dd>SDOC-FMT-PRIMARY</dd>
     
-
-    
   </dl>
     
 <ul class="requirement_link">
@@ -3741,8 +3930,6 @@ data-level="10.5.2"
     
     <dt><i>UID</i></dt>
     <dd>SDOC-FMT-GRAMMAR</dd>
-    
-
     
   </dl>
     
@@ -4160,8 +4347,6 @@ data-level="10.6.4"
     <dt><i>UID</i></dt>
     <dd>SDOC-GEN-EXCEL-EXPORT</dd>
     
-
-    
   </dl>
     
     
@@ -4249,8 +4434,6 @@ data-level="10.7.1"
     <dt><i>UID</i></dt>
     <dd>SDOC-VALIDATION-UNIQUE-UID</dd>
     
-
-    
   </dl>
     
 <ul class="requirement_link">
@@ -4302,8 +4485,6 @@ data-level="10.7.2"
     <dt><i>UID</i></dt>
     <dd>SDOC-VALIDATION-NO-CYCLES</dd>
     
-
-    
   </dl>
     
 <ul class="requirement_link">
@@ -4348,8 +4529,6 @@ data-level="10.7.3"
     
     <dt><i>UID</i></dt>
     <dd>SDOC-VALIDATION-VALID-HTML</dd>
-    
-
     
   </dl>
     
@@ -5179,8 +5358,6 @@ data-level="12.7"
     
     <dt><i>UID</i></dt>
     <dd>BACKLOG-FUZZY-SEARCH</dd>
-    
-
     
   </dl>
     

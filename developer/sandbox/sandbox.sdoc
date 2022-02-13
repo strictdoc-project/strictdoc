@@ -1,10 +1,5 @@
 [DOCUMENT]
 TITLE: StrictDoc/Sandbox
-SPECIAL_FIELDS:
-- NAME: OWNER
-  TYPE: String
-- NAME: PRIORITY
-  TYPE: String
 
 [FREETEXT]
 This is a sandbox file for experiments.

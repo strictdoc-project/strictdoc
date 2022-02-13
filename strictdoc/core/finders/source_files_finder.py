@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from typing import List
 
+from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_tree import Folder, FileFinder, File
 from strictdoc.core.source_tree import SourceTree
@@ -60,7 +61,7 @@ class SourceFile:  # pylint: disable=too-many-instance-attributes
 class SourceFilesFinder:
     @staticmethod
     def find_source_files(
-        output_html_root, document_tree: DocumentTree
+        config: ExportCommandConfig, document_tree: DocumentTree
     ) -> SourceTree:
         map_file_to_source = {}
         found_source_files: List[SourceFile] = []
@@ -80,7 +81,7 @@ class SourceFilesFinder:
         doctree_root_mount_path = os.path.basename(doctree_root_abs_path)
 
         file_tree = FileFinder.find_files_with_extensions(
-            doctree_root_abs_path, {".py", ".c", ".cpp"}
+            doctree_root_abs_path, config, {".py", ".c", ".cpp"}
         )
 
         root_level = doctree_root_abs_path.count(os.sep)
@@ -94,7 +95,7 @@ class SourceFilesFinder:
                 file.get_folder_path(), doctree_root_abs_path
             )
             output_dir_full_path = os.path.join(
-                output_html_root,
+                config.output_html_root,
                 "_source_files",
                 doctree_root_mount_path,
                 last_folder_in_path,

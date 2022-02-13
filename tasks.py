@@ -40,7 +40,6 @@ def clean(context):
     echo_command = oneline_command(
         f"""echo {find_result_stdout} | xargs rm -rfv"""
     )
-
     run_invoke_cmd(context, echo_command)
 
 

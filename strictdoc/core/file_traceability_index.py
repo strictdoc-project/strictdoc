@@ -2,7 +2,7 @@ from strictdoc.backend.sdoc.models.reference import Reference
 from strictdoc.backend.source_file_syntax.reader import (
     SourceFileTraceabilityInfo,
 )
-
+import os
 
 class FileTraceabilityIndex:
     def __init__(self):
@@ -18,13 +18,13 @@ class FileTraceabilityIndex:
         ref: Reference
         for ref in requirement.references:
             if ref.ref_type == "File":
-                requirements = self.map_paths_to_reqs.setdefault(ref.path, [])
+                requirements = self.map_paths_to_reqs.setdefault(os.path.normpath(ref.path), [])
                 requirements.append(requirement)
 
                 paths = self.map_reqs_uids_to_paths.setdefault(
                     requirement.uid, []
                 )
-                paths.append(ref.path)
+                paths.append(os.path.normpath(ref.path))
 
     def get_requirement_file_links(self, requirement):
         if requirement.uid not in self.map_reqs_uids_to_paths:

@@ -1,4 +1,5 @@
 import re
+import os
 from typing import Optional
 
 from strictdoc.backend.sdoc.models.document import Document
@@ -88,12 +89,15 @@ class LinkRenderer:
     ):
         document: Document = requirement.ng_document_reference.get_document()
         path_prefix = document.meta.get_root_path_prefix()
+
         source_file_link = (
             f"{path_prefix}"
             f"/_source_files"
             f"/{document.meta.file_tree_mount_folder}"
             f"/{source_file_link}.html"
         )
+        source_file_link = os.path.normpath(source_file_link)
+       
         return source_file_link
 
     @staticmethod
@@ -106,6 +110,7 @@ class LinkRenderer:
             f"/{document.meta.file_tree_mount_folder}"
             f"/{source_file_link}.html"
         )
+        source_file_link = os.path.normpath(source_file_link)
         return source_file_link
 
     @staticmethod
@@ -116,6 +121,7 @@ class LinkRenderer:
             f"/{source_file.doctree_root_mount_path}"
             f"/{source_file.in_doctree_source_file_rel_path}.html"
         )
+        source_file_link = os.path.normpath(source_file_link)
         return source_file_link
 
     @staticmethod
@@ -136,6 +142,7 @@ class LinkRenderer:
             f"/{document.meta.file_tree_mount_folder}"
             f"/{source_file_link}.html#"
         )
+        source_file_link = os.path.normpath(source_file_link)
         return source_file_link
 
     @staticmethod
@@ -159,6 +166,7 @@ class LinkRenderer:
             f"/{context_source_file.doctree_root_mount_path}"
             f"/{source_link}.html#{requirement.uid}"
         )
+        source_file_link = os.path.normpath(source_file_link)
         return source_file_link
 
     @staticmethod
@@ -186,6 +194,7 @@ class LinkRenderer:
             f"#{source_range.ng_range_line_begin}"
             f"#{source_range.ng_range_line_end}"
         )
+        source_file_link = os.path.normpath(source_file_link)
         return source_file_link
 
     def render_requirement_in_source_file_range_link(

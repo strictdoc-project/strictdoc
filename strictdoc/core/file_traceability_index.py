@@ -5,7 +5,6 @@ from strictdoc.backend.source_file_syntax.reader import (
 )
 
 
-
 class FileTraceabilityIndex:
     def __init__(self):
         self.map_paths_to_reqs = {}

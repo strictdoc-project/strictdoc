@@ -80,7 +80,7 @@ class SourceFilesFinder:
             if os.path.isfile(doctree_root_abs_path)
             else doctree_root_abs_path
         )
-        #        doctree_root_abs_path =  os.path.normpath(os.path.join(doctree_root_abs_path, "../"))
+        # doctree_root_abs_path =  os.path.normpath(os.path.join(doctree_root_abs_path, "../"))
         doctree_root_abs_path = os.path.normpath(doctree_root_abs_path)
         doctree_root_mount_path = os.path.basename(doctree_root_abs_path)
 

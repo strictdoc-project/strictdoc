@@ -1,5 +1,6 @@
-from strictdoc.export.html.document_type import DocumentType
 import os
+
+from strictdoc.export.html.document_type import DocumentType
 
 
 class DocumentMeta:

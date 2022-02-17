@@ -1,8 +1,9 @@
+import os
 from strictdoc.backend.sdoc.models.reference import Reference
 from strictdoc.backend.source_file_syntax.reader import (
     SourceFileTraceabilityInfo,
 )
-import os
+
 
 
 class FileTraceabilityIndex:

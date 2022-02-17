@@ -24,7 +24,9 @@ class SourceFile:  # pylint: disable=too-many-instance-attributes
         self.level = level
         self.full_path = os.path.normpath(full_path)
         self.doctree_root_mount_path = os.path.normpath(doctree_root_mount_path)
-        self.in_doctree_source_file_rel_path = os.path.normpath(in_doctree_source_file_rel_path)
+        self.in_doctree_source_file_rel_path = os.path.normpath(
+            in_doctree_source_file_rel_path
+        )
         self.output_dir_full_path = os.path.normpath(output_dir_full_path)
         self.output_file_full_path = os.path.normpath(output_file_full_path)
         self.path_depth_prefix = ("../" * (level + 2))[:-1]
@@ -78,7 +80,7 @@ class SourceFilesFinder:
             if os.path.isfile(doctree_root_abs_path)
             else doctree_root_abs_path
         )
-#        doctree_root_abs_path =  os.path.normpath(os.path.join(doctree_root_abs_path, "../"))
+        #        doctree_root_abs_path =  os.path.normpath(os.path.join(doctree_root_abs_path, "../"))
         doctree_root_abs_path = os.path.normpath(doctree_root_abs_path)
         doctree_root_mount_path = os.path.basename(doctree_root_abs_path)
 

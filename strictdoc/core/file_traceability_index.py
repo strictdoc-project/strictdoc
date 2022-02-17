@@ -4,6 +4,7 @@ from strictdoc.backend.source_file_syntax.reader import (
 )
 import os
 
+
 class FileTraceabilityIndex:
     def __init__(self):
         self.map_paths_to_reqs = {}
@@ -18,7 +19,9 @@ class FileTraceabilityIndex:
         ref: Reference
         for ref in requirement.references:
             if ref.ref_type == "File":
-                requirements = self.map_paths_to_reqs.setdefault(os.path.normpath(ref.path), [])
+                requirements = self.map_paths_to_reqs.setdefault(
+                    os.path.normpath(ref.path), []
+                )
                 requirements.append(requirement)
 
                 paths = self.map_reqs_uids_to_paths.setdefault(

@@ -1,6 +1,7 @@
 from strictdoc.export.html.document_type import DocumentType
 import os
 
+
 class DocumentMeta:
     def __init__(  # pylint: disable=too-many-arguments
         self,
@@ -17,8 +18,12 @@ class DocumentMeta:
         self.document_filename_base = os.path.normpath(document_filename_base)
         self.input_doc_full_path = os.path.normpath(input_doc_full_path)
         self.input_doc_rel_path = os.path.normpath(input_doc_dir_rel_path)
-        self.output_document_dir_full_path = os.path.normpath(output_document_dir_full_path)
-        self.output_document_dir_rel_path = os.path.normpath(output_document_dir_rel_path)
+        self.output_document_dir_full_path = os.path.normpath(
+            output_document_dir_full_path
+        )
+        self.output_document_dir_rel_path = os.path.normpath(
+            output_document_dir_rel_path
+        )
 
     # Paths
     def get_html_doc_path(self):

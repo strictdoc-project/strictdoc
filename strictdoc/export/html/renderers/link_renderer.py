@@ -97,7 +97,7 @@ class LinkRenderer:
             f"/{source_file_link}.html"
         )
         source_file_link = os.path.normpath(source_file_link)
-       
+
         return source_file_link
 
     @staticmethod

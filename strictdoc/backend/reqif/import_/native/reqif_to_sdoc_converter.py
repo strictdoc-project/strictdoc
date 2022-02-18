@@ -121,12 +121,16 @@ class ReqIFToSDocConverter:
         attribute_map: Dict[
             str, SpecAttributeDefinition
         ] = spec_object_type.attribute_map
+
+        foreign_key_id_or_none: Optional[str] = None
         for attribute in spec_object.attributes:
             long_name_or_none = attribute_map[
                 attribute.definition_ref
             ].long_name
             if long_name_or_none is None:
                 raise NotImplementedError
+            if long_name_or_none == "ReqIF.ForeignID":
+                foreign_key_id_or_none = attribute.definition_ref
             field_name: str = long_name_or_none
             attribute_value = unescape(attribute.value)
             attribute_multiline_value = None
@@ -152,10 +156,37 @@ class ReqIFToSDocConverter:
         requirement = Requirement(
             parent=parent_section, requirement_type="REQUIREMENT", fields=fields
         )
-
         requirement.ng_level = level
-        return requirement
 
-    @staticmethod
-    def create_reference(requirement: Requirement, spec_object_parent):
-        return Reference(requirement, "Parent", spec_object_parent)
+        if foreign_key_id_or_none is not None:
+            spec_object_parents = reqif_bundle.get_spec_object_parents(
+                spec_object.identifier
+            )
+            parent_refs = []
+            for spec_object_parent in spec_object_parents:
+                parent_spec_object_parent = (
+                    reqif_bundle.lookup.get_spec_object_by_ref(
+                        spec_object_parent
+                    )
+                )
+
+                parent_refs.append(
+                    Reference(
+                        requirement,
+                        "Parent",
+                        parent_spec_object_parent.attribute_map[
+                            foreign_key_id_or_none
+                        ].value,
+                    )
+                )
+            if len(parent_refs) > 0:
+                requirement_field = RequirementField(
+                    parent=requirement,
+                    field_name="REFS",
+                    field_value=None,
+                    field_value_multiline=None,
+                    field_value_references=parent_refs,
+                )
+                fields.append(requirement_field)
+                requirement.ordered_fields_lookup["REFS"] = [requirement_field]
+        return requirement

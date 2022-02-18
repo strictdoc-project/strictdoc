@@ -18,6 +18,7 @@ from reqif.models.reqif_spec_object_type import (
     ReqIFSpecObjectType,
     SpecAttributeDefinition,
 )
+from reqif.models.reqif_spec_relation import ReqIFSpecRelation
 from reqif.models.reqif_specification import ReqIFSpecification
 from reqif.models.reqif_specification_type import ReqIFSpecificationType
 from reqif.models.reqif_types import SpecObjectAttributeType
@@ -30,6 +31,7 @@ from strictdoc.backend.reqif.sdoc_reqif_fields import (
     SDOC_TO_REQIF_FIELD_MAP,
     SDOC_SPEC_OBJECT_TYPE_SINGLETON,
     SDOC_SPECIFICATION_TYPE_SINGLETON,
+    SDOC_SPEC_RELATION_PARENT_TYPE_SINGLETON,
 )
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
@@ -57,6 +59,12 @@ def generate_unique_identifier(element_type: str) -> str:
     return f"{element_type}-{uuid.uuid4()}"
 
 
+class SDocToReqIFBuildContext:
+    def __init__(self):
+        self.map_uid_to_spec_objects = {}
+        self.map_uid_to_parent_uids = {}
+
+
 class SDocToReqIFObjectConverter:
     @classmethod
     def convert_document_tree(
@@ -71,8 +79,10 @@ class SDocToReqIFObjectConverter:
         namespace = "http://www.omg.org/spec/ReqIF/20110401/reqif.xsd"
         configuration = "https://github.com/strictdoc-project/strictdoc"
 
+        context: SDocToReqIFBuildContext = SDocToReqIFBuildContext()
         spec_types: List = []
         spec_objects: [ReqIFSpecObject] = []
+        spec_relations: [ReqIFSpecRelation] = []
         specifications: [ReqIFSpecification] = []
         data_types = []
         data_types_lookup = {}
@@ -246,7 +256,9 @@ class SDocToReqIFObjectConverter:
 
                 elif node.is_requirement:
                     spec_object = cls._convert_requirement_to_spec_object(
-                        requirement=node, grammar=document.grammar
+                        requirement=node,
+                        grammar=document.grammar,
+                        context=context,
                     )
                     spec_objects.append(spec_object)
                     hierarchy = ReqIFSpecHierarchy(
@@ -280,11 +292,31 @@ class SDocToReqIFObjectConverter:
             )
             specifications.append(specification)
 
+        for (
+            requirement_id,
+            parent_uids,
+        ) in context.map_uid_to_parent_uids.items():
+            spec_object = context.map_uid_to_spec_objects[requirement_id]
+            for parent_uid in parent_uids:
+                parent_spec_object = context.map_uid_to_spec_objects[parent_uid]
+                spec_relations.append(
+                    ReqIFSpecRelation(
+                        xml_node=None,
+                        description=None,
+                        identifier=generate_unique_identifier("SPEC-RELATION"),
+                        last_change=None,
+                        relation_type_ref=SDOC_SPEC_RELATION_PARENT_TYPE_SINGLETON,  # noqa: E501
+                        source=spec_object.identifier,
+                        target=parent_spec_object.identifier,
+                        values_attribute=None,
+                    )
+                )
+
         reqif_reqif_content = ReqIFReqIFContent(
             data_types=data_types,
             spec_types=spec_types,
             spec_objects=spec_objects,
-            spec_relations=[],
+            spec_relations=spec_relations,
             specifications=specifications,
             spec_relation_groups=None,
         )
@@ -333,15 +365,23 @@ class SDocToReqIFObjectConverter:
         cls,
         requirement: Requirement,
         grammar: DocumentGrammar,
+        context: SDocToReqIFBuildContext,
     ) -> ReqIFSpecObject:
+        requirement_identifier = generate_unique_identifier("REQUIREMENT")
         grammar_element = grammar.elements_by_type[requirement.requirement_type]
 
         attributes: List[SpecObjectAttribute] = []
         for field in requirement.fields:
             if field.field_name == "REFS":
-                raise NotImplementedError(
-                    "Exporting REFS to ReqIF is not implemented yet."
-                )
+                parent_references = []
+                for reference in field.field_value_references:
+                    if reference.ref_type != "Parent":
+                        continue
+                    parent_references.append(reference.path)
+                    context.map_uid_to_parent_uids[
+                        requirement.uid
+                    ] = parent_references
+                continue
             grammar_field = grammar_element.fields_map[field.field_name]
             if isinstance(grammar_field, GrammarElementFieldSingleChoice):
                 attribute = SpecObjectAttribute(
@@ -377,11 +417,11 @@ class SDocToReqIFObjectConverter:
             attributes.append(attribute)
 
         spec_object = ReqIFSpecObject.create(
-            identifier=generate_unique_identifier("REQUIREMENT"),
+            identifier=requirement_identifier,
             spec_object_type=SDOC_SPEC_OBJECT_TYPE_SINGLETON,
             attributes=attributes,
         )
-
+        context.map_uid_to_spec_objects[requirement.uid] = spec_object
         return spec_object
 
     @classmethod

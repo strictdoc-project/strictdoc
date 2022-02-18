@@ -1,10 +1,18 @@
 from typing import Optional, List
 
 from reqif.models.reqif_data_type import ReqIFDataTypeDefinitionEnumeration
-from reqif.models.reqif_spec_object_type import ReqIFSpecObjectType
+from reqif.models.reqif_spec_object_type import (
+    ReqIFSpecObjectType,
+)
 from reqif.models.reqif_types import SpecObjectAttributeType
 from reqif.reqif_bundle import ReqIFBundle
 
+from strictdoc.backend.reqif.import_.abstract_parser import (
+    AbstractReqIFStage2Parser,
+)
+from strictdoc.backend.reqif.import_.native.reqif_to_sdoc_converter import (
+    ReqIFToSDocConverter,
+)
 from strictdoc.backend.reqif.sdoc_reqif_fields import (
     REQIF_MAP_TO_SDOC_FIELD_MAP,
     ReqIFChapterField,
@@ -17,19 +25,12 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 )
 from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
-    RequirementField,
 )
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldString,
     GrammarElementFieldSingleChoice,
     GrammarElementFieldMultipleChoice,
-)
-from strictdoc.backend.reqif.import_.abstract_parser import (
-    AbstractReqIFStage2Parser,
-)
-from strictdoc.backend.reqif.import_.native.reqif_to_sdoc_converter import (
-    ReqIFToSDocConverter,
 )
 
 
@@ -173,29 +174,6 @@ class StrictDocReqIFStage2Parser(AbstractReqIFStage2Parser):
                         level=current_hierarchy.level,
                     )
                 )
-                spec_object_parents = reqif_bundle.get_spec_object_parents(
-                    spec_object.identifier
-                )
-                parent_refs = []
-                for spec_object_parent in spec_object_parents:
-                    parent_refs.append(
-                        mapping.create_reference(
-                            requirement, spec_object_parent
-                        )
-                    )
-                if len(parent_refs) > 0:
-                    requirement_field = RequirementField(
-                        parent=requirement,
-                        field_name="REFS",
-                        field_value=None,
-                        field_value_multiline=None,
-                        field_value_references=parent_refs,
-                    )
-                    # TODO: This is extremely wrong.
-                    requirement.fields.append(requirement_field)
-                    requirement.ordered_fields_lookup["REFS"] = [
-                        requirement_field
-                    ]
                 current_section.section_contents.append(requirement)
             else:
                 raise NotImplementedError(spec_object) from None

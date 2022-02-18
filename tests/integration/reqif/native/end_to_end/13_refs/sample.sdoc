@@ -1,0 +1,13 @@
+[DOCUMENT]
+TITLE: Document with a requirement with two comments.
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: Requirement #1
+
+[REQUIREMENT]
+UID: REQ-002
+REFS:
+- TYPE: Parent
+  VALUE: REQ-001
+TITLE: Requirement #2

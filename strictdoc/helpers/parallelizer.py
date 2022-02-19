@@ -44,7 +44,7 @@ class Parallelizer:
         results = []
         while size > 0:
             try:
-                result = self.output_queue.get(block=False, timeout=0.1)
+                result = self.output_queue.get(block=True, timeout=0.1)
                 results.append(result)
                 size -= 1
             except Empty:

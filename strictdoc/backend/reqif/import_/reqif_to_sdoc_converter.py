@@ -7,7 +7,7 @@ from reqif.models.reqif_spec_object_type import (
 from reqif.models.reqif_types import SpecObjectAttributeType
 from reqif.reqif_bundle import ReqIFBundle
 
-from strictdoc.backend.reqif.import_.native.reqif_to_sdoc_factory import (
+from strictdoc.backend.reqif.import_.reqif_to_sdoc_factory import (
     ReqIFToSDocFactory,
 )
 from strictdoc.backend.reqif.sdoc_reqif_fields import (

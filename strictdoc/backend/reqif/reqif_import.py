@@ -3,7 +3,7 @@ from pathlib import Path
 
 from reqif.parser import ReqIFParser
 
-from strictdoc.backend.reqif.import_.native.reqif_to_sdoc_converter import (
+from strictdoc.backend.reqif.import_.reqif_to_sdoc_converter import (
     ReqIFToSDocConverter,
 )
 from strictdoc.backend.sdoc.writer import SDWriter

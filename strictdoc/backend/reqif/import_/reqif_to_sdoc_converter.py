@@ -7,11 +7,8 @@ from reqif.models.reqif_spec_object_type import (
 from reqif.models.reqif_types import SpecObjectAttributeType
 from reqif.reqif_bundle import ReqIFBundle
 
-from strictdoc.backend.reqif.import_.abstract_parser import (
-    AbstractReqIFStage2Parser,
-)
-from strictdoc.backend.reqif.import_.native.reqif_to_sdoc_converter import (
-    ReqIFToSDocConverter,
+from strictdoc.backend.reqif.import_.reqif_to_sdoc_factory import (
+    ReqIFToSDocFactory,
 )
 from strictdoc.backend.reqif.sdoc_reqif_fields import (
     REQIF_MAP_TO_SDOC_FIELD_MAP,
@@ -34,9 +31,10 @@ from strictdoc.backend.sdoc.models.type_system import (
 )
 
 
-class StrictDocReqIFStage2Parser(AbstractReqIFStage2Parser):
-    def parse_reqif(self, reqif_bundle: ReqIFBundle):
-        mapping = ReqIFToSDocConverter()
+class ReqIFToSDocConverter:
+    @staticmethod
+    def convert_reqif_bundle(reqif_bundle: ReqIFBundle):
+        mapping = ReqIFToSDocFactory()
 
         # TODO: Should we rather show an error that there are no specifications?
         if (

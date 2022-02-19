@@ -21,7 +21,7 @@ from strictdoc.backend.sdoc.models.section import Section, FreeText
 from strictdoc.helpers.string import unescape
 
 
-class ReqIFToSDocConverter:
+class ReqIFToSDocFactory:
     @staticmethod
     def create_document(title: Optional[str]) -> Document:
         document_config = DocumentConfig(

@@ -3,6 +3,7 @@ from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers.c_cpp import CppLexer, CLexer
 from pygments.lexers.python import PythonLexer
+from pygments.lexers.markup import TexLexer
 
 from strictdoc.core.finders.source_files_finder import SourceFile
 from strictdoc.core.traceability_index import TraceabilityIndex
@@ -44,6 +45,8 @@ class SourceFileViewHTMLGenerator:
             lexer = CLexer()
         elif source_file.is_cpp_file():
             lexer = CppLexer()
+        elif source_file.is_tex_file():
+            lexer = TexLexer()
         else:
             assert NotImplementedError
 

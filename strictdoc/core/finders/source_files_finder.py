@@ -57,6 +57,9 @@ class SourceFile:  # pylint: disable=too-many-instance-attributes
     def is_cpp_file(self):
         return self.extension == ".cpp"
 
+    def is_tex_file(self):
+        return self.extension == ".tex"
+
 
 class SourceFilesFinder:
     @staticmethod
@@ -81,7 +84,7 @@ class SourceFilesFinder:
         doctree_root_mount_path = os.path.basename(doctree_root_abs_path)
 
         file_tree = FileFinder.find_files_with_extensions(
-            doctree_root_abs_path, config, {".py", ".c", ".cpp"}
+            doctree_root_abs_path, config, {".py", ".c", ".cpp", ".tex"}
         )
 
         root_level = doctree_root_abs_path.count(os.sep)

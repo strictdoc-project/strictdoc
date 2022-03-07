@@ -11,6 +11,15 @@ class GrammarElementFieldString(GrammarElementField):
         self.title: str = title
         self.required: bool = required == "True"
 
+    def __str__(self):
+        return (
+            "GrammarElementFieldString("
+            f"parent: {self.parent}, "
+            f"title: {self.title}, "
+            f"required: {self.required}"
+            ")"
+        )
+
 
 class GrammarElementFieldSingleChoice(GrammarElementField):
     def __init__(  # pylint: disable=too-many-arguments

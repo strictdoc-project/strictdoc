@@ -1,0 +1,22 @@
+[DOCUMENT]
+TITLE: TBD
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: NOTE
+  FIELDS:
+  - TITLE: DATE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+
+[NOTE]
+DATE: 2022-03-06
+STATEMENT: >>>
+TBD
+<<<

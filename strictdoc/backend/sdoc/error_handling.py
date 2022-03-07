@@ -45,19 +45,26 @@ class StrictDocSemanticError(Exception):
         )
 
     @staticmethod
-    def missing_required_field(
+    def missing_required_field(  # pylint: disable=too-many-arguments
         requirement: Requirement,
         grammar_field: GrammarElementField,
+        document_grammar: DocumentGrammar,
         line=None,
         col=None,
         filename=None,
     ):
+        grammar_fields = document_grammar.dump_fields(
+            requirement.requirement_type
+        )
         return StrictDocSemanticError(
             title=(
                 f"Requirement is missing a field that is required by "
                 f"grammar: {grammar_field.title}"
             ),
-            hint=f"Requirement fields: [{requirement.dump_fields()}]",
+            hint=(
+                f"Requirement fields: [{requirement.dump_fields()}], "
+                f"Grammar fields: [{grammar_fields}]"
+            ),
             example=None,
             line=line,
             col=col,
@@ -73,7 +80,7 @@ class StrictDocSemanticError(Exception):
         col=None,
         filename=None,
     ):
-        grammar_dump = document_grammar.dump_fields(
+        grammar_fields = document_grammar.dump_fields(
             requirement.requirement_type
         )
         return StrictDocSemanticError(
@@ -83,7 +90,7 @@ class StrictDocSemanticError(Exception):
             ),
             hint=(
                 f"Requirement fields: [{requirement.dump_fields()}], "
-                f"Grammar fields: [{grammar_dump}]"
+                f"Grammar fields: [{grammar_fields}]"
             ),
             example=None,
             line=line,

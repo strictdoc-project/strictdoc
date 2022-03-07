@@ -63,15 +63,18 @@ def validate_requirement(
                 **get_location(requirement),
             )
         if requirement_field is None:
-            while grammar_field:
+            while grammar_field is not None:
                 if grammar_field.required:
                     raise StrictDocSemanticError.missing_required_field(
-                        requirement, grammar_field, **get_location(requirement)
+                        requirement=requirement,
+                        grammar_field=grammar_field,
+                        document_grammar=document_grammar,
+                        **get_location(requirement),
                     )
                 grammar_field = next(grammar_fields_iterator, None)
             break
 
-        validate_requirement_field(
+        valid_or_not_required_field = validate_requirement_field(
             requirement,
             document_grammar,
             requirement_field=requirement_field,
@@ -88,8 +91,13 @@ def validate_requirement(
             except StopIteration:
                 requirement_field = None
                 grammar_field = next(grammar_fields_iterator, None)
-        else:
+                continue
+
+        if valid_or_not_required_field:
             requirement_field = next(requirement_field_iterator, None)
+            grammar_field = next(grammar_fields_iterator, None)
+        else:
+            assert not grammar_field.required
             grammar_field = next(grammar_fields_iterator, None)
 
 
@@ -98,7 +106,7 @@ def validate_requirement_field(
     document_grammar: DocumentGrammar,
     requirement_field: RequirementField,
     grammar_element_field: GrammarElementField,
-):
+) -> bool:
     assert isinstance(
         requirement_field, RequirementField
     ), f"{requirement_field}"
@@ -113,6 +121,7 @@ def validate_requirement_field(
                 problematic_field=requirement_field,
                 **get_location(requirement),
             )
+        return False
     if isinstance(grammar_element_field, GrammarElementFieldSingleChoice):
         if requirement_field.field_value not in grammar_element_field.options:
             raise StrictDocSemanticError.invalid_choice_field(
@@ -149,3 +158,4 @@ def validate_requirement_field(
                 requirement_field=requirement_field,
                 **get_location(requirement),
             )
+    return True

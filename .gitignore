@@ -24,3 +24,8 @@ tests/integration/**/sandbox/**
 coverage.xml
 htmlcov/
 
+# venv
+bin/
+lib/
+pyvenv.cfg
+

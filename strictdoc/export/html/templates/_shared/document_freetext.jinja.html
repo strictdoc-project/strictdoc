@@ -1,0 +1,20 @@
+<turbo-frame id="article-{{document.node_id}}">
+<article>
+  {%- if document.free_texts -%}
+  <section>
+    {%- for free_text in document.free_texts %}
+      <div class="free_text">
+        {{ renderer.render_free_text(document_type, free_text) }}
+      </div>
+    {%- endfor -%}
+  </section>
+  {%- endif -%}
+  <a href="/fragments/document/{{document.node_id}}" data-turbo-action="replace">Edit</a>
+
+  {%- if not document.section_contents -%}
+    ,
+    <a href="/streams/document/new_section?reference_mid={{document.node_id}}&whereto=child" data-turbo-action="replace">+S⬊</a>,
+    <a href="/streams/document/new_requirement?reference_mid={{document.node_id}}&whereto=child" data-turbo-action="replace">+R⬊</a>
+  {%- endif -%}
+</article>
+</turbo-frame>

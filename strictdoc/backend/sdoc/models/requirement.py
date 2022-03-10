@@ -1,3 +1,4 @@
+import uuid
 from collections import OrderedDict
 from typing import Optional, List
 
@@ -106,13 +107,14 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
             ][0].field_value_references
             assert references_opt is not None
             references = references_opt
+
         if RequirementFieldName.TITLE in ordered_fields_lookup:
             title = ordered_fields_lookup[RequirementFieldName.TITLE][
                 0
             ].field_value
         if RequirementFieldName.STATEMENT in ordered_fields_lookup:
             field = ordered_fields_lookup[RequirementFieldName.STATEMENT][0]
-            if field.field_value_multiline:
+            if field.field_value_multiline is not None:
                 statement_multiline = field.field_value_multiline
             else:
                 statement = field.field_value
@@ -166,7 +168,9 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         # Due to the details of how matching single vs multistring lines is
         # implemented, the rstrip() is done to simplify SDoc code generation.
         self.statement_multiline: Optional[str] = (
-            statement_multiline.rstrip() if statement_multiline else None
+            statement_multiline.rstrip()
+            if statement_multiline is not None
+            else None
         )
         self.rationale_multiline = (
             rationale_multiline.rstrip() if rationale_multiline else None
@@ -182,6 +186,8 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         self.ng_level: Optional[int] = None
         self.ng_document_reference: Optional[DocumentReference] = None
         self.context = RequirementContext()
+
+        self.node_id = uuid.uuid4().hex
 
     def __str__(self):
         return (

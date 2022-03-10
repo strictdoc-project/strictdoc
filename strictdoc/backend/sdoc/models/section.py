@@ -1,6 +1,8 @@
+import uuid
 from typing import Optional, List
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
+from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.backend.sdoc.models.node import Node
 
 
@@ -16,7 +18,7 @@ class Section(Node):  # pylint: disable=too-many-instance-attributes
         uid,
         level: Optional[str],
         title,
-        free_texts,
+        free_texts: List[FreeText],
         section_contents: List[Node],
     ):
         self.parent = parent
@@ -24,13 +26,14 @@ class Section(Node):  # pylint: disable=too-many-instance-attributes
         self.level: Optional[str] = level
         self.title = title
 
-        self.free_texts = free_texts
+        self.free_texts: List[FreeText] = free_texts
         self.section_contents = section_contents
 
-        self.ng_level = None
+        self.ng_level: Optional[int] = None
         self.ng_has_requirements = False
         self.ng_document_reference: Optional[DocumentReference] = None
         self.context = SectionContext()
+        self.node_id = uuid.uuid4().hex
 
     def __str__(self):
         return f"Section(level: {self.ng_level}, title: {self.title})"
@@ -53,25 +56,3 @@ class Section(Node):  # pylint: disable=too-many-instance-attributes
     @property
     def is_section(self):
         return True
-
-
-class FreeText:
-    def __init__(self, parent, parts: List):
-        assert isinstance(parts, list)
-        self.parent = parent
-        self.parts = parts
-        self.ng_level = None
-
-    def __str__(self):
-        return f"FreeText(parts={self.parts})"
-
-    def __repr__(self):
-        return self.__str__()
-
-    @property
-    def is_requirement(self):
-        return False
-
-    @property
-    def is_section(self):
-        return False

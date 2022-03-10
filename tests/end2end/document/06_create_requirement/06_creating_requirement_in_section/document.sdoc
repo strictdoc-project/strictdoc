@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+Hello world!
+[/FREETEXT]
+
+[SECTION]
+TITLE: First title
+
+[FREETEXT]
+This is a free text of this section.
+[/FREETEXT]
+
+[/SECTION]

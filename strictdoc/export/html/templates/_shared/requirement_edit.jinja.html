@@ -1,0 +1,32 @@
+{%- if is_new_requirement -%}
+  {%- set url="/streams/document/create_requirement" %}
+{%- else -%}
+  {%- set url="/streams/document/update_requirement" %}
+{%- endif -%}
+
+<turbo-frame id="article-{{requirement.node_id}}">
+
+<form action="{{url}}" method="POST">
+  {%- if is_new_requirement -%}
+    <input type="hidden" id="reference_mid" name="reference_mid" value="{{reference_mid}}" />
+    <input type="hidden" id="whereto" name="whereto" value="{{whereto}}" />
+  {%- endif -%}
+  <input type="hidden" id="requirement_mid" name="requirement_mid" value="{{requirement.node_id}}" />
+
+  <article class="edit-docsection">
+    <section data-section="edit-section-title">
+      <input type="text" id="requirement_title" name="requirement_title" value="{{ requirement.title }}"/>
+    </section>
+
+    <section data-section="edit-section-freetext">
+      <textarea id="requirement_statement" name="requirement_statement" style="width:100%; height: 200px;">{{requirement.statement_multiline}}</textarea>
+    </section>
+
+    <section>
+        <button type="submit">Save</button>
+    </section>
+  </article>
+
+</form>
+
+</turbo-frame>

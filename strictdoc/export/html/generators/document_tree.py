@@ -18,7 +18,7 @@ class DocumentTreeHTMLGenerator:
         output = template.render(
             config=config,
             document_tree=traceability_index.document_tree,
-            artefact_list=document_tree_iterator.iterator(),
+            document_tree_iterator=document_tree_iterator,
             static_path="_static",
             traceability_index=traceability_index,
         )

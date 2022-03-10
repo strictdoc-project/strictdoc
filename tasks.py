@@ -128,6 +128,19 @@ def clean_itest_artifacts(context):
 
 
 @task
+def server(context, input_path="developer/sandbox"):
+    assert os.path.isdir(input_path), input_path
+    run_invoke_cmd(
+        context,
+        one_line_command(
+            f"""
+                python strictdoc/cli/main.py server {input_path}
+            """
+        ),
+    )  # --reload
+
+
+@task
 def sphinx(context):
     run_invoke_cmd(
         context,
@@ -188,6 +201,32 @@ def test_unit(context, focus=None):
             f"""
                 pytest tests/unit/ {focus_argument}
             """
+        ),
+    )
+
+
+@task
+def test_unit_server(context, focus=None):
+    focus_argument = f"-k {focus}" if focus is not None else ""
+    run_invoke_cmd(
+        context,
+        (
+            f"""
+                pytest tests/unit_server/ {focus_argument}
+            """
+        ),
+    )
+
+
+@task
+def test_end2end(context, focus=None):
+    focus_argument = f"-k {focus}" if focus is not None else ""
+    run_invoke_cmd(
+        context,
+        one_line_command(
+            f"""
+        pytest --exitfirst --capture=no tests/end2end {focus_argument}
+    """
         ),
     )
 
@@ -331,6 +370,7 @@ def lint(context):
 @task
 def test(context):
     test_unit_coverage(context)
+    test_unit_server(context)
     test_integration(context)
 
 
@@ -445,18 +485,21 @@ def release_pyinstaller(context):
 
 
 @task
-def watch(context, sdocs_path):
-    paths_to_watch = "." if sdocs_path == "." else f". {sdocs_path}"
-    strictdoc_command = (
-        f"python strictdoc/cli/main.py "
-        f'export "{sdocs_path}" --output-dir=output/ --experimental-enable-file-traceability'
-    )
+def watch(context, sdocs_path="developer/sandbox"):
+    paths_to_watch = "."
+    strictdoc_command = f"""
+        python strictdoc/cli/main.py
+            export
+            {sdocs_path}
+            --output-dir {sdocs_path}/output
+            --experimental-enable-file-traceability
+    """
     run_invoke_cmd(
         context,
         f"""
         {strictdoc_command} &&
         watchmedo shell-command
-        --patterns="*.py;*.sdoc;*.html;*.css"
+        --patterns="*.py;*.sdoc;*.html;*.css;*.js"
         --recursive
         --ignore-pattern='output/;tests/integration'
         --command='{strictdoc_command}'

@@ -1,0 +1,24 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+Hello world!
+[/FREETEXT]
+
+[SECTION]
+TITLE: First title
+
+[FREETEXT]
+This is a free text of the first section.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Second title
+
+[FREETEXT]
+This is a free text of the second section.
+[/FREETEXT]
+
+[/SECTION]

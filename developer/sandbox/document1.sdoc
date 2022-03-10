@@ -1,0 +1,14 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+This is an **introduction**.
+
+Hello. What nex?
+123123
+[/FREETEXT]
+
+[SECTION]
+TITLE: New section
+
+[/SECTION]

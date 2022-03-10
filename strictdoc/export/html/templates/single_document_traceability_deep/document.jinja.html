@@ -48,7 +48,7 @@
             <div class="content_item" data-role="current">
               {%- set section = section_or_requirement %}
               {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
-                {% include "_shared/docsection.jinja.html" %}
+                {% include "_shared/section.jinja.html" %}
               {%- endwith -%}
             </div>
           </section>

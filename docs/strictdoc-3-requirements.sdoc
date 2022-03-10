@@ -442,3 +442,14 @@ Source coverage screen shows how source files are linked with requirements.
 <<<
 
 [/SECTION]
+
+[SECTION]
+TITLE: Web frontend requirements
+
+[REQUIREMENT]
+TITLE: AJAX updates of multiple web forms
+STATEMENT: >>>
+StrictDoc's Web GUI shall provide capability to do multipart updates.
+<<<
+
+[/SECTION]

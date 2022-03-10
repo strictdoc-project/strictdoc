@@ -7,14 +7,17 @@
 *.venv
 .venv*
 dist
+.sandbox
 .output/
 output.zip
+.output
 *.sketch
 .DS_Store
 .vscode
 
 # StrictDoc's default export path
-output/**
+**/output/**
+tests/unit_server/**/output/**
 # LIT/FileCheck integration tests' artifacts.
 tests/integration/**/Output/**
 tests/integration/**/output/**
@@ -33,3 +36,7 @@ pyvenv.cfg
 
 # PyInstaller
 strictdoc.spec
+
+# SeleniumBase
+latest_logs/
+

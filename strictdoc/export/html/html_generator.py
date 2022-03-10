@@ -159,7 +159,7 @@ class HTMLGenerator:
         traceability_index,
         link_renderer,
     ):
-        if not document.ng_needs_generation:
+        if not config.is_running_on_server and not document.ng_needs_generation:
             with measure_performance(f"Skip: {document.title}"):
                 return
         with measure_performance(f"Published: {document.title}"):

@@ -1,0 +1,40 @@
+{%- if is_new_section -%}
+  {%- set url="/streams/document/create_section" %}
+{%- else -%}
+  {%- set url="/streams/document/update_section" %}
+{%- endif -%}
+
+<turbo-frame id="article-{{section.node_id}}">
+
+<form action="{{url}}" method="POST">
+  {%- if is_new_section -%}
+    <input type="hidden" id="reference_mid" name="reference_mid" value="{{reference_mid}}" />
+    <input type="hidden" id="whereto" name="whereto" value="{{whereto}}" />
+  {%- endif -%}
+  <input type="hidden" id="section_mid" name="section_mid" value="{{section_mid}}" />
+
+  <article class="edit-docsection" id="{{section.node_id}}">
+    <section data-section="edit-section-title">
+
+      <input type="text" id="section_title" name="section_title" value="{{ section.title }}"/>
+
+    </section>
+
+    <section data-section="edit-section-freetext">
+      <textarea id="section_content" name="section_content" style="width:100%; height: 400px;">
+
+      {%- for free_text in section.free_texts -%}
+        {{ free_text.get_parts_as_text() }}
+      {%- endfor -%}
+
+      </textarea>
+    </section>
+
+    <section>
+        <button type="submit">Save</button>
+    </section>
+  </article>
+
+</form>
+
+</turbo-frame>

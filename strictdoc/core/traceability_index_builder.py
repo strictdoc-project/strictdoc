@@ -161,6 +161,7 @@ class TraceabilityIndexBuilder:
         d_06_map_documents_to_children = {}
         d_07_file_traceability_index = FileTraceabilityIndex()
         d_08_requirements_children_map = {}
+        d_11_map_id_to_node = {}
 
         # It seems to be impossible to accomplish everything in just one for
         # loop. One particular problem that requires two passes: it is not
@@ -185,11 +186,15 @@ class TraceabilityIndexBuilder:
         # - Calculate depth of both parent and child links.
         document: Document
         for document in document_tree.document_list:
+            d_11_map_id_to_node[document.node_id] = document
+
             document_iterator = DocumentCachingIterator(document)
             d_01_document_iterators[document] = document_iterator
             if document.title not in d_03_map_doc_titles_to_tag_lists:
                 d_03_map_doc_titles_to_tag_lists[document.title] = {}
             for node in document_iterator.all_content():
+                d_11_map_id_to_node[node.node_id] = node
+
                 if not node.uid:
                     continue
                 if node.uid in d_02_requirements_map:
@@ -340,6 +345,7 @@ class TraceabilityIndexBuilder:
             d_03_map_doc_titles_to_tag_lists,
             d_05_map_documents_to_parents,
             d_06_map_documents_to_children,
-            d_07_file_traceability_index,
+            file_traceability_index=d_07_file_traceability_index,
+            map_id_to_node=d_11_map_id_to_node,
         )
         return traceability_index

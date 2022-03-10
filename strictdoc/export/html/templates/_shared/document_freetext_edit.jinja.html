@@ -1,0 +1,22 @@
+<turbo-frame id="article-{{document.node_id}}">
+
+<form action="/fragments/document/{{document.node_id}}" method="POST">
+  <article class="edit-document-freetext">
+    <section data-section="edit-document-freetext">
+      <textarea id="document_freetext" name="document_freetext" style="width:100%; height: 400px;">
+
+      {%- for free_text in document.free_texts -%}
+        {{ free_text.get_parts_as_text() }}
+      {%- endfor -%}
+
+      </textarea>
+    </section>
+
+    <section>
+        <button type="submit">Save</button>
+    </section>
+  </article>
+
+</form>
+
+</turbo-frame>

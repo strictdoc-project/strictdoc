@@ -1,3 +1,31 @@
+TEXT_TYPES_GRAMMAR = r"""
+TextPart[noskipws]:
+  (InlineLink | NormalString)
+;
+
+NormalString[noskipws]:
+  (!SpecialKeyword !FreeTextEnd /(?ms)./)*
+;
+
+SpecialKeyword:
+  InlineLinkStart // more keywords are coming later
+;
+
+InlineLinkStart: '[LINK: ';
+
+InlineLink[noskipws]:
+  InlineLinkStart value = /[^\]]*/ ']'
+;
+
+FreeTextEnd: /^/ '[/FREETEXT]' '\n';
+"""
+
+FREE_TEXT_PARSER_GRAMMAR = r"""
+FreeTextContainer[noskipws]:
+  parts+=TextPart
+;
+"""
+
 DOCUMENT_GRAMMAR = r"""
 Document[noskipws]:
   '[DOCUMENT]' '\n'
@@ -196,28 +224,8 @@ FreeText[noskipws]:
   parts+=TextPart
   FreeTextEnd
 ;
-
-FreeTextEnd: /^/ '[/FREETEXT]' '\n';
-
-TextPart[noskipws]:
-  (InlineLink | NormalString)
-;
-
-NormalString[noskipws]:
-  (!SpecialKeyword !FreeTextEnd /(?ms)./)*
-;
-
-SpecialKeyword:
-  InlineLinkStart // more keywords are coming later
-;
-
-InlineLinkStart: '[LINK: ';
-
-InlineLink[noskipws]:
-  InlineLinkStart value = /[^\]]*/ ']'
-;
-
 """
 
-STRICTINC_GRAMMAR = FRAGMENT_GRAMMAR + SECTION_GRAMMAR
-STRICTDOC_GRAMMAR = DOCUMENT_GRAMMAR + SECTION_GRAMMAR
+STRICTINC_GRAMMAR = FRAGMENT_GRAMMAR + SECTION_GRAMMAR + TEXT_TYPES_GRAMMAR
+STRICTDOC_GRAMMAR = DOCUMENT_GRAMMAR + SECTION_GRAMMAR + TEXT_TYPES_GRAMMAR
+FREE_TEXT_GRAMMAR = FREE_TEXT_PARSER_GRAMMAR + TEXT_TYPES_GRAMMAR

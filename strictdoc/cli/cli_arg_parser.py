@@ -2,6 +2,7 @@ import argparse
 import os
 import sys
 from enum import Enum
+from typing import List
 
 EXPORT_FORMATS = ["html", "html-standalone", "rst", "excel", "reqif-sdoc"]
 
@@ -215,6 +216,20 @@ def cli_args_parser() -> argparse.ArgumentParser:
         "output_file", type=str, help="Path to the output .tx file"
     )
 
+    # Command: Server
+    command_parser_server = command_subparsers.add_parser(
+        "server",
+        help="Run StrictDoc Web server",
+        formatter_class=formatter,
+    )
+    command_parser_server.add_argument("input_path")
+    command_parser_server.add_argument(
+        "--reload", default=True, action="store_true"
+    )
+    # command_parser_server.add_argument(
+    #   "--no-reload", dest="reload", action="store_false"
+    # )
+
     # Command: Version
     command_subparsers.add_parser(
         "version",
@@ -244,6 +259,11 @@ class PassthroughCommandConfig:
         self.output_file = output_file
 
 
+class ServerCommandConfig:
+    def __init__(self, input_path: str):
+        self.input_path = input_path
+
+
 class ExportMode(Enum):
     DOCTREE = 1
     STANDALONE = 2
@@ -263,8 +283,9 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         enable_mathjax,
         experimental_enable_file_traceability,
     ):
+        assert isinstance(input_paths, list), f"{input_paths}"
         self.strictdoc_root_path = strictdoc_root_path
-        self.input_paths = input_paths
+        self.input_paths: List[str] = input_paths
         self.output_dir: str = output_dir
         self.project_title = project_title
         self.formats = formats
@@ -275,6 +296,8 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
             experimental_enable_file_traceability
         )
         self.output_html_root: str = os.path.join(output_dir, "html")
+
+        self.is_running_on_server = False
 
     def get_export_mode(self):
         if "html" in self.formats:
@@ -338,6 +361,10 @@ class SDocArgsParser:
         )
 
     @property
+    def is_server_command(self):
+        return self.args.command == "server"
+
+    @property
     def is_dump_grammar_command(self):
         return self.args.command == "dump-grammar"
 
@@ -383,6 +410,9 @@ class SDocArgsParser:
         return ImportExcelCommandConfig(
             self.args.input_path, self.args.output_path, self.args.parser
         )
+
+    def get_server_config(self) -> ServerCommandConfig:
+        return ServerCommandConfig(input_path=self.args.input_path)
 
     def get_dump_grammar_config(self) -> DumpGrammarCommandConfig:
         return DumpGrammarCommandConfig(output_file=self.args.output_file)

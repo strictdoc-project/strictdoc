@@ -121,6 +121,22 @@ def clean_itest_artifacts(context):
 
 
 @task
+def server(context):
+    run_invoke_cmd(
+        context,
+        one_line_command(
+            """
+            uvicorn
+            --port 8081
+            --app-dir .
+            --factory 'strictdoc.server.app:strictdoc_production_app'
+            --reload
+            """
+        ),
+    )
+
+
+@task
 def sphinx(context):
     run_invoke_cmd(
         context,
@@ -180,6 +196,19 @@ def test_unit(context, focus=None):
         (
             f"""
                 pytest tests/unit/ {focus_argument}
+            """
+        ),
+    )
+
+
+@task
+def test_unit_server(context, focus=None):
+    focus_argument = f"-k {focus}" if focus is not None else ""
+    run_invoke_cmd(
+        context,
+        (
+            f"""
+                pytest tests/unit_server/ {focus_argument}
             """
         ),
     )
@@ -326,6 +355,7 @@ def lint(context):
 @task
 def test(context):
     test_unit_coverage(context)
+    test_unit_server(context)
     test_integration(context)
 
 

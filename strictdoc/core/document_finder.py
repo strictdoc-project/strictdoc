@@ -1,5 +1,6 @@
 import os
 import sys
+from typing import List
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.reader import SDReader
@@ -19,8 +20,15 @@ class DocumentFinder:
     @staticmethod
     @timing_decorator("Find and read SDoc files")
     def find_sdoc_content(
-        paths_to_files_or_docs, config: ExportCommandConfig, parallelizer
+        paths_to_files_or_docs: List[str],
+        config: ExportCommandConfig,
+        parallelizer,
     ):
+        assert isinstance(
+            paths_to_files_or_docs, list
+        ), f"{paths_to_files_or_docs}"
+        assert len(paths_to_files_or_docs) > 0
+
         for paths_to_files_or_doc in paths_to_files_or_docs:
             if not os.path.exists(paths_to_files_or_doc):
                 sys.stdout.flush()

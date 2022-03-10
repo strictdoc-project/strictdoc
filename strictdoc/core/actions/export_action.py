@@ -2,7 +2,7 @@ import glob
 import os
 import sys
 from pathlib import Path
-from typing import List, Iterator
+from typing import List, Iterator, Optional
 
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.source_file_syntax.reader import (
@@ -26,10 +26,22 @@ from strictdoc.backend.reqif.reqif_export import ReqIFExport
 
 
 class ExportAction:
-    @staticmethod
-    @timing_decorator("Export")
-    def export(config: ExportCommandConfig, parallelizer):
+    def __init__(self, config: ExportCommandConfig, parallelizer):
         assert parallelizer
+
+        self.config = config
+        self.parallelizer = parallelizer
+        self.document_tree = None
+        self.asset_dirs = None
+        self.strictdoc_last_update = None
+        self.traceability_index: Optional[TraceabilityIndex] = None
+
+    # TODO: Having a cycle init - prepare - export is not great.
+    # Find a better way to preserve state!
+    def prepare(self):
+        config = self.config
+        parallelizer = self.parallelizer
+
         strict_own_files_unfiltered: Iterator[str] = glob.iglob(
             f"{config.strictdoc_root_path}/strictdoc/**/*",
             recursive=True,
@@ -53,7 +65,6 @@ class ExportAction:
         document_tree, asset_dirs = DocumentFinder.find_sdoc_content(
             path_to_single_file_or_doc_root, config, parallelizer
         )
-
         try:
             traceability_index: TraceabilityIndex = (
                 TraceabilityIndexBuilder.create(document_tree)
@@ -61,6 +72,22 @@ class ExportAction:
         except DocumentTreeError as exc:
             print(exc.to_print_message())
             sys.exit(1)
+
+        self.document_tree = document_tree
+        self.asset_dirs = asset_dirs
+        self.strictdoc_last_update = strictdoc_last_update
+        self.traceability_index = traceability_index
+
+    @timing_decorator("Export")
+    def export(self):
+        assert self.traceability_index is not None
+
+        config = self.config
+        parallelizer = self.parallelizer
+        document_tree = self.document_tree
+        asset_dirs = self.asset_dirs
+        strictdoc_last_update = self.strictdoc_last_update
+        traceability_index = self.traceability_index
 
         if config.experimental_enable_file_traceability:
             source_tree: SourceTree = SourceFilesFinder.find_source_files(

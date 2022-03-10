@@ -14,7 +14,8 @@ output.zip
 .vscode
 
 # StrictDoc's default export path
-output/**
+**/output/**
+tests/unit_server/**/output/**
 # LIT/FileCheck integration tests' artifacts.
 tests/integration/**/Output/**
 tests/integration/**/output/**

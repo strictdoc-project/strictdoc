@@ -127,6 +127,9 @@
             </li><li><a href="#4.2.4-Composite-requirement">
               <span class="section-number">4.2.4</span>
               Composite requirement
+            </a></li><li><a href="#4.2.5-Include-files">
+              <span class="section-number">4.2.5</span>
+              Include files
             </a></li></ul>
             </li><li><a href="#4.3-Custom-grammars">
               <span class="section-number">4.3</span>
@@ -1655,6 +1658,95 @@ elements should do the job.</p>
 
   <section data-section="meta" class="docsection_section">
 
+    <div data-role='anchor' id="4.2.5-Include-files"></div>
+
+    
+        <h3
+class="section-title"
+data-level="4.2.5"
+>Include files
+</h3>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>StrictDoc <tt class="docutils literal">.sdoc</tt> files can be built-up from including other fragment documents.</p>
+<p>The <tt class="docutils literal">[FRAGMENT_FROM_FILE]</tt> element can be used anywhere body elements can be
+used ( e.g.``[SECTION]``, <tt class="docutils literal">[REQUIREMENT</tt>, <tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt> etc.) and will
+evaluate by inserting its contents from the file referenced by its <tt class="docutils literal">FILE:</tt> property
+where it was used in the parent document. The files included must start with a <tt class="docutils literal">[FRAGMENT]</tt>
+directive and cannot contain <tt class="docutils literal">[FREETEXT]</tt> elements but are otherwise identical to
+<tt class="docutils literal">*.sdoc</tt> files. They can have any filename except a``.sdoc`` extension.</p>
+<p>Here is an example pair of files similar to examples above. First the
+<tt class="docutils literal">.sdoc</tt> file has a <tt class="docutils literal">[FRAGMENT_FROM_FILE]</tt> that references the latter file.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[FREETEXT]
+...
+[/FREETEXT]
+
+[FRAGMENT_FROM_FILE]
+FILE: include.ssec
+
+[REQUIREMENT]
+</pre>
+<p>Then the referenced file, <tt class="docutils literal">include.ssec</tt>:</p>
+<pre class="code text literal-block">
+[FRAGMENT]
+
+[REQUIREMENT]
+
+[SECTION]
+TITLE: Sub section
+[/SECTION]
+
+[COMPOSITE_REQUIREMENT]
+
+[REQUIREMENT]
+
+[/COMPOSITE_REQUIREMENT]
+</pre>
+<p>Which will resolve to the following document after inclusion:</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[FREETEXT]
+...
+[/FREETEXT]
+
+[REQUIREMENT]
+
+[SECTION]
+TITLE: Sub section
+[/SECTION]
+
+[COMPOSITE_REQUIREMENT]
+
+[REQUIREMENT]
+
+[/COMPOSITE_REQUIREMENT]
+
+[REQUIREMENT]
+</pre>
+</div>
+
+    </div></section>
+
+</article></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
     <div data-role='anchor' id="4.3-Custom-grammars"></div>
 
     
@@ -2272,10 +2364,6 @@ tools. The export/import workflow is therefore tool-specific. See
 <a class="reference external" href="https://www.prostep.org/fileadmin/downloads/PSI_ImplementationGuide_ReqIF_V1-7.pdf">ReqIF Implementation Guide</a>
 that attempts to harmonize the developments of ReqIF by requirements
 management tools.</li>
-<li><a class="reference external" href="http://pror.org">ProR</a></li>
-<li>Doors</li>
-<li>Enterprise Architect</li>
-<li>and others</li>
 </ul>
 </div>
 

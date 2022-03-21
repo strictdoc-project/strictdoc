@@ -519,6 +519,79 @@ Special feature of ``[COMPOSITE_REQUIREMENT]``: like ``[SECTION]`` element, the
 often, a more basic combination of nested ``[SECTION]`` and ``[REQUIREMENT]``
 elements should do the job.
 
+Include files
+~~~~~~~~~~~~~
+
+StrictDoc ``.sdoc`` files can be built-up from including other fragment documents.
+
+The ``[FRAGMENT_FROM_FILE]`` element can be used anywhere body elements can be
+used ( e.g.``[SECTION]``, ``[REQUIREMENT``, ``[COMPOSITE_REQUIREMENT]`` etc.) and will
+evaluate by inserting its contents from the file referenced by its ``FILE:`` property
+where it was used in the parent document. The files included must start with a ``[FRAGMENT]``
+directive and cannot contain ``[FREETEXT]`` elements but are otherwise identical to
+``*.sdoc`` files. They can have any filename except a``.sdoc`` extension.
+
+Here is an example pair of files similar to examples above. First the
+``.sdoc`` file has a ``[FRAGMENT_FROM_FILE]`` that references the latter file.
+
+.. code-block:: text
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [FREETEXT]
+    ...
+    [/FREETEXT]
+
+    [FRAGMENT_FROM_FILE]
+    FILE: include.ssec
+
+    [REQUIREMENT]
+
+Then the referenced file, ``include.ssec``:
+
+.. code-block:: text
+
+    [FRAGMENT]
+
+    [REQUIREMENT]
+
+    [SECTION]
+    TITLE: Sub section
+    [/SECTION]
+
+    [COMPOSITE_REQUIREMENT]
+
+    [REQUIREMENT]
+
+    [/COMPOSITE_REQUIREMENT]
+
+Which will resolve to the following document after inclusion:
+
+.. code-block:: text
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [FREETEXT]
+    ...
+    [/FREETEXT]
+
+    [REQUIREMENT]
+
+    [SECTION]
+    TITLE: Sub section
+    [/SECTION]
+
+    [COMPOSITE_REQUIREMENT]
+
+    [REQUIREMENT]
+
+    [/COMPOSITE_REQUIREMENT]
+
+    [REQUIREMENT]
+
+
 Custom grammars
 ---------------
 
@@ -879,10 +952,6 @@ Planned formats:
   `ReqIF Implementation Guide <https://www.prostep.org/fileadmin/downloads/PSI_ImplementationGuide_ReqIF_V1-7.pdf>`_
   that attempts to harmonize the developments of ReqIF by requirements
   management tools.
-- `ProR <http://pror.org>`_
-- Doors
-- Enterprise Architect
-- and others
 
 Import flow (ReqIF -> SDoc):
 ----------------------------

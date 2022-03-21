@@ -1,4 +1,7 @@
-from strictdoc.backend.sdoc.grammar.grammar import STRICTDOC_GRAMMAR
+from strictdoc.backend.sdoc.grammar.grammar import (
+    STRICTDOC_GRAMMAR,
+    STRICTINC_GRAMMAR,
+)
 from strictdoc.backend.sdoc.grammar.type_system import (
     STRICTDOC_BASIC_TYPE_SYSTEM,
 )
@@ -6,9 +9,21 @@ from strictdoc.backend.sdoc.grammar.type_system import (
 
 class SDocGrammarBuilder:
     @staticmethod
+    def _prep_grammar(grammar):
+        grammar = (grammar).replace("'\\n'", "'\n'")
+        return grammar
+
+    @staticmethod
     def create_grammar():
-        grammar = (STRICTDOC_GRAMMAR + STRICTDOC_BASIC_TYPE_SYSTEM).replace(
-            "'\\n'", "'\n'"
+        grammar = SDocGrammarBuilder._prep_grammar(
+            STRICTDOC_GRAMMAR + STRICTDOC_BASIC_TYPE_SYSTEM
+        )
+        return grammar
+
+    @staticmethod
+    def create_fragment_grammar():
+        grammar = SDocGrammarBuilder._prep_grammar(
+            STRICTINC_GRAMMAR + STRICTDOC_BASIC_TYPE_SYSTEM
         )
         return grammar
 

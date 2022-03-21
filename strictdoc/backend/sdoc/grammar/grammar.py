@@ -1,4 +1,4 @@
-STRICTDOC_GRAMMAR = r"""
+DOCUMENT_GRAMMAR = r"""
 Document[noskipws]:
   '[DOCUMENT]' '\n'
   // NAME: is deprecated. Both documents and sections now have TITLE:.
@@ -79,7 +79,17 @@ MarkupChoice[noskipws]:
 AutoLevelsChoice[noskipws]:
   'On' | 'Off'
 ;
+"""
 
+FRAGMENT_GRAMMAR = r"""
+Fragment[noskipws]:
+  '[FRAGMENT]' '\n'
+  section_contents *= SectionOrRequirement
+;
+
+"""
+
+SECTION_GRAMMAR = r"""
 Section[noskipws]:
   '[SECTION]'
   '\n'
@@ -94,7 +104,12 @@ Section[noskipws]:
 ;
 
 SectionOrRequirement[noskipws]:
-  '\n' (Section | Requirement | CompositeRequirement)
+  '\n' (Section | Requirement | CompositeRequirement | FragmentFromFile)
+;
+
+FragmentFromFile[noskipws]:
+  '[FRAGMENT_FROM_FILE]' '\n'
+  'FILE: ' file = /.+$/ '\n'
 ;
 
 SpaceThenRequirement[noskipws]:
@@ -106,7 +121,7 @@ SpaceThenFreeText[noskipws]:
 ;
 
 ReservedKeyword[noskipws]:
-  'DOCUMENT' | 'GRAMMAR' | 'SECTION' | 'FREETEXT'
+  'DOCUMENT' | 'GRAMMAR' | 'SECTION' | 'FRAGMENT_FROM_FILE' | 'FREETEXT'
 ;
 
 Requirement[noskipws]:
@@ -191,3 +206,6 @@ InlineLink[noskipws]:
 ;
 
 """
+
+STRICTINC_GRAMMAR = FRAGMENT_GRAMMAR + SECTION_GRAMMAR
+STRICTDOC_GRAMMAR = DOCUMENT_GRAMMAR + SECTION_GRAMMAR

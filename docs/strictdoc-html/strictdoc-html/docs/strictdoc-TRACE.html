@@ -127,6 +127,9 @@
             </li><li><a href="#4.2.4-Composite-requirement">
               <span class="section-number">4.2.4</span>
               Composite requirement
+            </a></li><li><a href="#4.2.5-Include-Files">
+              <span class="section-number">4.2.5</span>
+              Include Files
             </a></li></ul>
             </li><li><a href="#4.3-Custom-grammars">
               <span class="section-number">4.3</span>
@@ -1641,6 +1644,60 @@ STATEMENT: Substatement #3
 <p><strong>Note:</strong> Composite requirements should not be used in every document. Most
 often, a more basic combination of nested <tt class="docutils literal">[SECTION]</tt> and <tt class="docutils literal">[REQUIREMENT]</tt>
 elements should do the job.</p>
+</div>
+
+    </div></section>
+
+</article></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4.2.5-Include-Files"></div>
+
+    
+        <h3
+class="section-title"
+data-level="4.2.5"
+>Include Files
+</h3>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>Strictdoc <tt class="docutils literal">.sdoc</tt> files can be built-up from including other fragment documents.</p>
+<p>The <tt class="docutils literal">[INCLUDE_SECTION_FROM_FILE]</tt> element can be used anywhere a <tt class="docutils literal">[SECTION]</tt> can
+be used and will evaluate to a Section containing everything in the file referenced
+by its <tt class="docutils literal">FILE:</tt> property. The files included must start with a <tt class="docutils literal">[FRAGMENT]</tt> directive
+but are otherwise identical to <tt class="docutils literal">*.sdoc</tt> files. They can have any filename except a
+<tt class="docutils literal">.sdoc</tt> extension.</p>
+<p>Here is an example pair of files identical to the section example above. First the
+<tt class="docutils literal">.sdoc</tt> file has a <tt class="docutils literal">[INCLUDE_SECTION_FROM_FILE]</tt> that references the latter file.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[INCLUDE_SECTION_FROM_FILE]
+FILE: include.ssec
+</pre>
+<p>Then the referenced file, <tt class="docutils literal">include.ssec</tt>:</p>
+<pre class="code text literal-block">
+[FRAGMENT]
+TITLE: Free text
+
+[FREETEXT]
+A sections can have a block of ``[FREETEXT]`` connected to it:
+
+...
+[/FREETEXT]
+</pre>
 </div>
 
     </div></section>

@@ -1,4 +1,4 @@
-STRICTDOC_GRAMMAR = r"""
+DOCUMENT_GRAMMAR = r"""
 Document[noskipws]:
   '[DOCUMENT]' '\n'
   // NAME: is deprecated. Both documents and sections now have TITLE:.
@@ -79,7 +79,25 @@ MarkupChoice[noskipws]:
 AutoLevelsChoice[noskipws]:
   'On' | 'Off'
 ;
+"""
 
+FRAGMENT_GRAMMAR = r"""
+Fragment[noskipws]:
+  '[FRAGMENT]' '\n'
+  ('UID: ' uid = /.+$/ '\n')?
+  ('LEVEL: ' level = /.*/ '\n')?
+  'TITLE: ' title = /.*$/ '\n'
+  free_texts *= SpaceThenFreeText
+  section_contents *= SectionOrRequirement
+;
+
+ReservedKeyword[noskipws]:
+  'FRAGMENT'
+;
+
+"""
+
+SECTION_GRAMMAR = r"""
 Section[noskipws]:
   '[SECTION]'
   '\n'
@@ -94,7 +112,16 @@ Section[noskipws]:
 ;
 
 SectionOrRequirement[noskipws]:
-  '\n' (Section | Requirement | CompositeRequirement)
+  '\n' (Section | Requirement | CompositeRequirement | IncludeFromFile)
+;
+
+IncludeFromFile[noskipws]:
+  '[INCLUDE_SECTION_FROM_FILE]' '\n'
+  ('UID: ' uid = /.+$/ '\n')?
+  ('LEVEL: ' level = /.*/ '\n')?
+  ('TITLE: ' title = /.*$/ '\n')?
+  'FILE: ' file = /.+$/ '\n'
+  '\n'
 ;
 
 SpaceThenRequirement[noskipws]:
@@ -106,7 +133,7 @@ SpaceThenFreeText[noskipws]:
 ;
 
 ReservedKeyword[noskipws]:
-  'DOCUMENT' | 'GRAMMAR' | 'SECTION' | 'FREETEXT'
+  'DOCUMENT' | 'GRAMMAR' | 'SECTION' | 'INCLUDE_SECTION_FROM_FILE' | 'FREETEXT'
 ;
 
 Requirement[noskipws]:
@@ -191,3 +218,6 @@ InlineLink[noskipws]:
 ;
 
 """
+
+STRICTINC_GRAMMAR = FRAGMENT_GRAMMAR + SECTION_GRAMMAR
+STRICTDOC_GRAMMAR = DOCUMENT_GRAMMAR + SECTION_GRAMMAR

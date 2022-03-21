@@ -519,6 +519,42 @@ Special feature of ``[COMPOSITE_REQUIREMENT]``: like ``[SECTION]`` element, the
 often, a more basic combination of nested ``[SECTION]`` and ``[REQUIREMENT]``
 elements should do the job.
 
+Include Files
+~~~~~~~~~~~~~
+
+Strictdoc ``.sdoc`` files can be built-up from including other fragment documents.
+
+The ``[INCLUDE_SECTION_FROM_FILE]`` element can be used anywhere a ``[SECTION]`` can
+be used and will evaluate to a Section containing everything in the file referenced
+by its ``FILE:`` property. The files included must start with a ``[FRAGMENT]`` directive
+but are otherwise identical to ``*.sdoc`` files. They can have any filename except a
+``.sdoc`` extension.
+
+Here is an example pair of files identical to the section example above. First the
+``.sdoc`` file has a ``[INCLUDE_SECTION_FROM_FILE]`` that references the latter file.
+
+.. code-block:: text
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [INCLUDE_SECTION_FROM_FILE]
+    FILE: include.ssec
+
+Then the referenced file, ``include.ssec``:
+
+.. code-block:: text
+
+    [FRAGMENT]
+    TITLE: Free text
+
+    [FREETEXT]
+    A sections can have a block of ``[FREETEXT]`` connected to it:
+
+    ...
+    [/FREETEXT]
+
+
 Custom grammars
 ---------------
 

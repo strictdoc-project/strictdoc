@@ -109,6 +109,7 @@ class SDReader:
             "CompositeRequirement": processor.process_composite_requirement,
             "Requirement": processor.process_requirement,
             "FreeText": processor.process_free_text,
+            "Fragment": processor.process_fragment,
         }
 
     def read_from_file(self, file_path):

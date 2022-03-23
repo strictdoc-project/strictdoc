@@ -21,7 +21,6 @@ class IncludeFromFile(Section):  # pylint: disable=too-many-instance-attributes
         super().__init__(parent, uid, level, title, None, None)
 
         self.ng_level = None
-        self.ng_sections = []
         self.ng_has_requirements = False
         self.ng_document_reference = None
         self.context = SectionContext()

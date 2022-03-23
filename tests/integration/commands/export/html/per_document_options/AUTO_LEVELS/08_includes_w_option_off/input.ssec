@@ -1,4 +1,6 @@
 [FRAGMENT]
+
+[SECTION]
 LEVEL: 1.2.3
 TITLE: Section 1.2.3
 
@@ -12,3 +14,4 @@ STATEMENT: Requirement 7.8.9
 
 [/COMPOSITE_REQUIREMENT]
 
+[/SECTION]

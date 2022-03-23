@@ -19,12 +19,12 @@ from strictdoc.backend.sdoc.validations.requirement import validate_requirement
 
 class ParseContext:
     def __init__(self):
-        self.current_include_level = None
         self.document_reference: DocumentReference = DocumentReference()
         self.document_config: Optional[DocumentConfig] = None
         self.document_grammar: DocumentGrammar = DocumentGrammar.create_default(
             None
         )
+        self.current_include_parent = None
 
 
 class SDocParsingProcessor:
@@ -79,27 +79,16 @@ class SDocParsingProcessor:
 
         if include.parent.ng_level is None:
             self._resolve_parents(include)
-        self.parse_context.current_include_level = include.parent.ng_level + 1
+        self.parse_context.current_include_parent = include.parent
 
         reader = SDIReader()
         fragment = reader.read_from_file(
             file_path=include.file, context=self.parse_context
         )
+        assert isinstance(fragment, Fragment)
 
-        if include.title.strip() == "":
-            include.title = fragment.title
-        if include.uid.strip() == "":
-            include.uid = fragment.uid
-        if include.level.strip() == "":
-            include.level = fragment.level
-        include.free_texts = fragment.free_texts
-        include.section_contents = fragment.section_contents
-
-        include.ng_sections = fragment.ng_sections
-        if hasattr(fragment, "ng_has_requirements"):
-            include.ng_has_requirements = fragment.ng_has_requirements
-
-        self.process_section(include)
+        include.parent.section_contents.extend(fragment.section_contents)
+        include.parent.section_contents.remove(include)
 
     def process_composite_requirement(
         self, composite_requirement: CompositeRequirement
@@ -208,6 +197,8 @@ class SDocParsingProcessor:
         cursor = requirement.parent
         while not self.is_top_level(cursor) and not cursor.ng_has_requirements:
             cursor.ng_has_requirements = True
+            if isinstance(cursor, Fragment):
+                break
             cursor = cursor.parent
 
     def process_free_text(self, free_text):
@@ -226,22 +217,26 @@ class SDocParsingProcessor:
         else:
             raise NotImplementedError
 
+    def process_fragment(self, fragment: Fragment):
+        pass
+
     @staticmethod
     def is_top_level(node):
-        return isinstance(node, (Document, Fragment))
+        return isinstance(node, Document)
 
     # During parsing, it is often the case that the node's parents do not have
     # their levels resolved yet. We go up the parent chain and resolve all of
     # the parents manually.
     def _resolve_parents(self, node):
         parents_to_resolve_level = []
-        cursor = node.parent
+        cursor = node
         while cursor.ng_level is None:
+            if isinstance(cursor.parent, Fragment):
+                cursor.parent = self.parse_context.current_include_parent
+                continue
             parents_to_resolve_level.append(cursor)
             cursor = cursor.parent
         cursor_level = cursor.ng_level
-        if isinstance(cursor, Fragment):
-            cursor_level = self.parse_context.current_include_level
 
         for parent_idx, parent in enumerate(reversed(parents_to_resolve_level)):
             parent.ng_level = cursor_level + parent_idx + 1

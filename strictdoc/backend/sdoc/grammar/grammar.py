@@ -84,15 +84,7 @@ AutoLevelsChoice[noskipws]:
 FRAGMENT_GRAMMAR = r"""
 Fragment[noskipws]:
   '[FRAGMENT]' '\n'
-  ('UID: ' uid = /.+$/ '\n')?
-  ('LEVEL: ' level = /.*/ '\n')?
-  'TITLE: ' title = /.*$/ '\n'
-  free_texts *= SpaceThenFreeText
   section_contents *= SectionOrRequirement
-;
-
-ReservedKeyword[noskipws]:
-  'FRAGMENT'
 ;
 
 """

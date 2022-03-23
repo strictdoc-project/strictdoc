@@ -1,4 +1,6 @@
 [FRAGMENT]
+
+[SECTION]
 TITLE: Images
 
 [FREETEXT]
@@ -7,3 +9,4 @@ TITLE: Images
    :class: image
 [/FREETEXT]
 
+[/SECTION]

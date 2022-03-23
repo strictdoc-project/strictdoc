@@ -67,7 +67,6 @@ class SDocParsingProcessor:
             SDocParsingProcessor._resolve_parents(section)
         section.ng_level = section.parent.ng_level + 1
         assert section.ng_level > 0
-        section.parent.ng_sections.append(section)
 
     def process_composite_requirement(
         self, composite_requirement: CompositeRequirement
@@ -98,9 +97,6 @@ class SDocParsingProcessor:
                 SDocParsingProcessor._resolve_parents(composite_requirement)
             composite_requirement.ng_level = (
                 composite_requirement.parent.ng_level + 1
-            )
-            composite_requirement.parent.ng_sections.append(
-                composite_requirement
             )
         elif isinstance(composite_requirement.parent, CompositeRequirement):
             if composite_requirement.parent.ng_level is None:

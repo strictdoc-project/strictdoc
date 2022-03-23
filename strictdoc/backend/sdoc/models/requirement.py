@@ -249,7 +249,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
 class CompositeRequirement(Requirement):
     def __init__(self, parent, **fields):
         super().__init__(parent, **fields)
-        self.ng_sections = []
         self.ng_document_reference: Optional[DocumentReference] = None
         self.ng_has_requirements = False
 

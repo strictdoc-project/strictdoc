@@ -27,7 +27,6 @@ class Section(Node):  # pylint: disable=too-many-instance-attributes
         self.section_contents = section_contents
 
         self.ng_level = None
-        self.ng_sections = []
         self.ng_has_requirements = False
         self.ng_document_reference = None
         self.context = SectionContext()

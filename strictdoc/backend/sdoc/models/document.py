@@ -23,7 +23,6 @@ class Document:  # pylint: disable=too-many-instance-attributes
         self.free_texts = free_texts
         self.section_contents = section_contents
 
-        self.ng_sections = []
         self.ng_level = 0
         self.ng_needs_generation = False
         self.meta: Optional[DocumentMeta] = None

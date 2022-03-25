@@ -1,0 +1,6 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[FRAGMENT_FROM_FILE]
+FILE: input.ssec
+

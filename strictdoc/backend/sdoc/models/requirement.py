@@ -233,7 +233,10 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         for field in self.fields:
             if field.field_name in RESERVED_NON_META_FIELDS:
                 continue
-            yield field.field_name, field.field_value
+            meta_field_value = field.field_value
+            if meta_field_value is None:
+                meta_field_value = field.field_value_multiline
+            yield field.field_name, meta_field_value
 
     def dump_fields(self):
         return ", ".join(

@@ -27,4 +27,4 @@ def test_01():
 """.lstrip()
 
     html_output = RstToHtmlFragmentWriter.write(rst_input)
-    assert '<table border="1" class="colwidths-given docutils">' in html_output
+    assert '<table border="1"' in html_output

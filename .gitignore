@@ -1,9 +1,11 @@
 *.idea
 **/build/
 *.egg-info/
+*.eggs
 *.pyc
 *.script
 *.venv
+.venv*
 dist
 output.zip
 *.sketch

@@ -1,18 +1,34 @@
 import os
+import platform
 import re
 
 import invoke
 from invoke import task
+
+VENV_PATH = os.path.join(os.getcwd(), ".venv-tasks")
+VENV_COMMAND_ACTIVATE = (
+    f". {VENV_PATH}/bin/activate"
+    if platform.system() != "Windows"
+    else rf"{VENV_PATH}\Scripts\activate"
+)
+VENV_COMMAND = f"python -m venv {VENV_PATH} && {VENV_COMMAND_ACTIVATE}"
+if platform.system() == "Windows":
+    VENV_COMMAND = "true"
 
 
 def run_invoke_cmd(context, cmd) -> invoke.runners.Result:
     def one_line_command(string):
         return re.sub("\\s+", " ", string).strip()
 
-    one_line_cmd = one_line_command(cmd)
-    return context.run(
-        one_line_cmd, env=None, hide=False, warn=False, pty=False, echo=True
-    )
+    with context.prefix(VENV_COMMAND):
+        return context.run(
+            one_line_command(cmd),
+            env=None,
+            hide=False,
+            warn=False,
+            pty=False,
+            echo=True,
+        )
 
 
 @task
@@ -32,7 +48,6 @@ def clean(context):
             -not -path "**Expected**"
             -not -path "**Input**"
         """
-
     find_result = run_invoke_cmd(context, find_command)
     find_result_stdout = find_result.stdout.strip()
     echo_command = f"""echo {find_result_stdout} | xargs rm -rfv"""
@@ -112,6 +127,7 @@ def test_unit_coverage(context):
                 coverage run
                 --rcfile=.coveragerc
                 --branch
+                --omit=.venv-tasks/*
                 -m pytest
                 tests/unit/
             """
@@ -272,7 +288,9 @@ def check_dead_links(context):
 @task
 def setup_development_deps(context):
     command = """
-        pip install -e.[development]
+        pip install --upgrade pip setuptools &&
+        pip install -e . &&
+        pip install -e .[development]
     """
     run_invoke_cmd(context, command)
 
@@ -281,7 +299,7 @@ def setup_development_deps(context):
 def release_local(context):
     command = """
         rm -rfv dist/ build/ && 
-        pip uninstall strictdoc -y &&
+        python -m pip uninstall strictdoc -y &&
         python setup.py check &&
             python setup.py install
     """

@@ -1,8 +1,7 @@
-import pkg_resources
+import strictdoc
 
 
 class VersionCommand:
     @staticmethod
     def execute():
-        version = pkg_resources.require("strictdoc")[0].version
-        print(version)
+        print(strictdoc.__version__)

@@ -237,25 +237,23 @@ def lint_flake8(context):
 
 
 @task
-def lint_mypy(_):
-    pass
-
-
-#     (
-#         context,
-#         """
-#         mypy strictdoc/
-#             --show-error-codes
-#             --disable-error-code=arg-type
-#             --disable-error-code=assignment
-#             --disable-error-code=attr-defined
-#             --disable-error-code=no-redef
-#             --disable-error-code=operator
-#             --disable-error-code=var-annotated
-#             --disable-error-code=union-attr
-#             --enable-error-code=misc
-#         """,
-#     )
+def lint_mypy(context):
+    run_invoke_cmd(
+        context,
+        """
+        mypy strictdoc/
+            --show-error-codes
+            --disable-error-code=arg-type
+            --disable-error-code=assignment
+            --disable-error-code=attr-defined
+            --disable-error-code=import
+            --disable-error-code=no-redef
+            --disable-error-code=operator
+            --disable-error-code=var-annotated
+            --disable-error-code=union-attr
+            --enable-error-code=misc
+        """,
+    )
 
 
 @task(

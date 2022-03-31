@@ -1,0 +1,29 @@
+---
+name: CI
+'on':
+  # pull_request:
+  # push:
+  #   branches:
+  #     - master
+  schedule:
+    - cron: "00 00 * * *"
+
+jobs:
+  check_dead_links:
+    name: Check dead links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install invoke
+        run: |
+          pip install invoke
+
+      - name: Link Health check
+        run: |
+          invoke check-dead-links

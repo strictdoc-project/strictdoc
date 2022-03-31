@@ -81,10 +81,10 @@ class SDocToReqIFObjectConverter:
 
         context: SDocToReqIFBuildContext = SDocToReqIFBuildContext()
         spec_types: List = []
-        spec_objects: [ReqIFSpecObject] = []
-        spec_relations: [ReqIFSpecRelation] = []
-        specifications: [ReqIFSpecification] = []
-        data_types = []
+        spec_objects: List[ReqIFSpecObject] = []
+        spec_relations: List[ReqIFSpecRelation] = []
+        specifications: List[ReqIFSpecification] = []
+        data_types: List = []
         data_types_lookup = {}
         document: Document
         for document in document_tree.document_list:

@@ -70,7 +70,7 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         statement_multiline = None
         rationale = None
         rationale_multiline = None
-        comments: [RequirementComment] = []
+        comments: List[RequirementComment] = []
 
         ordered_fields_lookup: OrderedDict[
             str, List[RequirementField]

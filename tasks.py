@@ -5,20 +5,19 @@ import invoke
 from invoke import task
 
 
-def oneline_command(string):
-    return re.sub("\\s+", " ", string).strip()
-
-
 def run_invoke_cmd(context, cmd) -> invoke.runners.Result:
+    def one_line_command(string):
+        return re.sub("\\s+", " ", string).strip()
+
+    one_line_cmd = one_line_command(cmd)
     return context.run(
-        cmd, env=None, hide=False, warn=False, pty=False, echo=True
+        one_line_cmd, env=None, hide=False, warn=False, pty=False, echo=True
     )
 
 
 @task
 def clean(context):
-    find_command = oneline_command(
-        """
+    find_command = """
         find
             tests
             -type f \\(
@@ -33,13 +32,10 @@ def clean(context):
             -not -path "**Expected**"
             -not -path "**Input**"
         """
-    )
 
     find_result = run_invoke_cmd(context, find_command)
     find_result_stdout = find_result.stdout.strip()
-    echo_command = oneline_command(
-        f"""echo {find_result_stdout} | xargs rm -rfv"""
-    )
+    echo_command = f"""echo {find_result_stdout} | xargs rm -rfv"""
     run_invoke_cmd(context, echo_command)
 
 
@@ -47,7 +43,7 @@ def clean(context):
 def sphinx(context):
     run_invoke_cmd(
         context,
-        oneline_command(
+        (
             """
             python3 strictdoc/cli/main.py
                 export docs/strictdoc.sdoc
@@ -60,7 +56,7 @@ def sphinx(context):
 
     run_invoke_cmd(
         context,
-        oneline_command(
+        (
             """
             python3 strictdoc/cli/main.py
                 export docs
@@ -73,7 +69,7 @@ def sphinx(context):
 
     run_invoke_cmd(
         context,
-        oneline_command(
+        (
             """
             cp -v output/sphinx/rst/strictdoc.rst docs/sphinx/source/ &&
             mkdir -p docs/strictdoc-html/strictdoc-html &&
@@ -84,7 +80,7 @@ def sphinx(context):
 
     run_invoke_cmd(
         context,
-        oneline_command(
+        (
             """
             cd docs/sphinx &&
                 make html latexpdf &&
@@ -99,7 +95,7 @@ def test_unit(context, focus=None):
     focus_argument = f"-k {focus}" if focus is not None else ""
     run_invoke_cmd(
         context,
-        oneline_command(
+        (
             f"""
                 pytest tests/unit/ {focus_argument}
             """
@@ -111,7 +107,7 @@ def test_unit(context, focus=None):
 def test_unit_coverage(context):
     run_invoke_cmd(
         context,
-        oneline_command(
+        (
             """
                 coverage run
                 --rcfile=.coveragerc
@@ -123,7 +119,7 @@ def test_unit_coverage(context):
     )
     run_invoke_cmd(
         context,
-        oneline_command(
+        (
             """
         coverage report --sort=cover
         """
@@ -135,7 +131,7 @@ def test_unit_coverage(context):
 def test_coverage_report(context):
     run_invoke_cmd(
         context,
-        oneline_command(
+        (
             """
         coverage html
         """
@@ -152,8 +148,7 @@ def test_integration(context, focus=None, debug=False):
     focus_or_none = f"--filter {focus}" if focus else ""
     debug_opts = "-vv --show-all" if debug else ""
 
-    command = oneline_command(
-        """
+    command = f"""
         lit
         --param STRICTDOC_EXEC="{strictdoc_exec}"
         -v
@@ -161,12 +156,6 @@ def test_integration(context, focus=None, debug=False):
         {focus_or_none}
         {cwd}/tests/integration
         """
-    ).format(
-        strictdoc_exec=strictdoc_exec,
-        cwd=cwd,
-        debug_opts=debug_opts,
-        focus_or_none=focus_or_none,
-    )
 
     run_invoke_cmd(context, command)
 
@@ -185,7 +174,7 @@ def export_pip_requirements(context):
 def install_local(context):
     run_invoke_cmd(
         context,
-        oneline_command(
+        (
             """
         poetry build
         """
@@ -193,7 +182,7 @@ def install_local(context):
     )
     run_invoke_cmd(
         context,
-        oneline_command(
+        (
             """
         tar -xvf dist/*.tar.gz --wildcards --no-anchored '*/setup.py' --strip=1
         """
@@ -201,7 +190,7 @@ def install_local(context):
     )
     run_invoke_cmd(
         context,
-        oneline_command(
+        (
             """
         pip install -e .
         """
@@ -211,11 +200,9 @@ def install_local(context):
 
 @task
 def lint_black_diff(context):
-    command = oneline_command(
-        """
+    command = """
         black . --color 2>&1
         """
-    )
     result = run_invoke_cmd(context, command)
 
     # black always exits with 0, so we handle the output.
@@ -227,14 +214,12 @@ def lint_black_diff(context):
 
 @task
 def lint_pylint(context):
-    command = oneline_command(
-        """
+    command = """
         pylint
           --rcfile=.pylint.ini
           --disable=c-extension-no-member
           strictdoc/ tasks.py
         """  # pylint: disable=line-too-long
-    )
     try:
         run_invoke_cmd(context, command)
     except invoke.exceptions.UnexpectedExit as exc:
@@ -245,30 +230,32 @@ def lint_pylint(context):
 
 @task
 def lint_flake8(context):
-    command = oneline_command(
-        """
+    command = """
         flake8 strictdoc --statistics --max-line-length 80 --show-source
         """
-    )
     run_invoke_cmd(context, command)
 
 
 @task
 def lint_mypy(_):
-    oneline_command(
-        """
-        mypy strictdoc/
-            --show-error-codes
-            --disable-error-code=arg-type
-            --disable-error-code=assignment
-            --disable-error-code=attr-defined
-            --disable-error-code=no-redef
-            --disable-error-code=operator
-            --disable-error-code=var-annotated
-            --disable-error-code=union-attr
-            --enable-error-code=misc
-        """
-    )
+    pass
+
+
+#     (
+#         context,
+#         """
+#         mypy strictdoc/
+#             --show-error-codes
+#             --disable-error-code=arg-type
+#             --disable-error-code=assignment
+#             --disable-error-code=attr-defined
+#             --disable-error-code=no-redef
+#             --disable-error-code=operator
+#             --disable-error-code=var-annotated
+#             --disable-error-code=union-attr
+#             --enable-error-code=misc
+#         """,
+#     )
 
 
 @task(
@@ -295,22 +282,18 @@ def check(_):
 # gem install github_changelog_generator
 @task
 def changelog(context, github_token):
-    command = oneline_command(
-        f"""
+    command = f"""
         github_changelog_generator
         --token {github_token}
         --user strictdoc-project
         --project strictdoc
         """
-    )
     run_invoke_cmd(context, command)
 
 
 @task
 def dump_grammar(context, output_file):
-    command = oneline_command(
-        f"""
+    command = f"""
             python3 strictdoc/cli/main.py dump-grammar {output_file}
         """
-    )
     run_invoke_cmd(context, command)

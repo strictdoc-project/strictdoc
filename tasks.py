@@ -295,3 +295,11 @@ def dump_grammar(context, output_file):
             python3 strictdoc/cli/main.py dump-grammar {output_file}
         """
     run_invoke_cmd(context, command)
+
+
+@task
+def check_dead_links(context):
+    command = """
+        python3 tools/link_health.py docs/strictdoc.sdoc
+    """
+    run_invoke_cmd(context, command)

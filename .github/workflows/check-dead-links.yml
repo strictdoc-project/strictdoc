@@ -22,7 +22,7 @@ jobs:
 
       - name: Install invoke
         run: |
-          pip install invoke
+          pip install invoke requests
 
       - name: Link Health check
         run: |

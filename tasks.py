@@ -323,10 +323,12 @@ def release_local(context):
 
 @task
 def release_test(context):
+    context[VENV_POSTFIX] = "release-pypi-test"
     command = """
+        rm -rfv dist/ &&
         python setup.py check &&
             python setup.py sdist &&
             python setup.py bdist_wheel --universal &&
-            twine upload --repository-url https://test.pypi.org/legacy/ dist/strictdoc-0.0.21.tar.gz
+            twine upload --repository-url https://test.pypi.org/legacy/ dist/strictdoc-*.tar.gz
     """
     run_invoke_cmd(context, command)

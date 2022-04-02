@@ -1,14 +1,15 @@
 *.idea
 **/build/
 *.egg-info/
+*.eggs
 *.pyc
 *.script
 *.venv
+.venv*
 dist
 output.zip
 *.sketch
 .DS_Store
-setup.py
 .vscode
 
 # StrictDoc's default export path

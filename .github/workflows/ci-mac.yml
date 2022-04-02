@@ -26,20 +26,18 @@ jobs:
       run: |
         python -m pip install --upgrade pip
 
-    - name: Install Poetry
+    - name: Install Invoke
       run: |
-        pip install poetry==1.1.11
+        pip install invoke
 
     - name: Install dependencies
       run: |
-        poetry config virtualenvs.in-project true
-        poetry install
+        invoke setup-development-deps
 
     - name: Run Lint tasks
       run: |
-        poetry run invoke lint
+        invoke lint
 
     - name: Run tests
       run: |
-        poetry run invoke test
-
+        invoke test

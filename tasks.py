@@ -1,18 +1,34 @@
 import os
+import platform
 import re
 
 import invoke
 from invoke import task
+
+VENV_PATH = os.path.join(os.getcwd(), ".venv-tasks")
+VENV_COMMAND_ACTIVATE = (
+    f". {VENV_PATH}/bin/activate"
+    if platform.system() != "Windows"
+    else rf"{VENV_PATH}\Scripts\activate"
+)
+VENV_COMMAND = f"python -m venv {VENV_PATH} && {VENV_COMMAND_ACTIVATE}"
+if platform.system() == "Windows":
+    VENV_COMMAND = "true"
 
 
 def run_invoke_cmd(context, cmd) -> invoke.runners.Result:
     def one_line_command(string):
         return re.sub("\\s+", " ", string).strip()
 
-    one_line_cmd = one_line_command(cmd)
-    return context.run(
-        one_line_cmd, env=None, hide=False, warn=False, pty=False, echo=True
-    )
+    with context.prefix(VENV_COMMAND):
+        return context.run(
+            one_line_command(cmd),
+            env=None,
+            hide=False,
+            warn=False,
+            pty=False,
+            echo=True,
+        )
 
 
 @task
@@ -32,7 +48,6 @@ def clean(context):
             -not -path "**Expected**"
             -not -path "**Input**"
         """
-
     find_result = run_invoke_cmd(context, find_command)
     find_result_stdout = find_result.stdout.strip()
     echo_command = f"""echo {find_result_stdout} | xargs rm -rfv"""
@@ -112,6 +127,7 @@ def test_unit_coverage(context):
                 coverage run
                 --rcfile=.coveragerc
                 --branch
+                --omit=.venv-tasks/*
                 -m pytest
                 tests/unit/
             """
@@ -140,10 +156,12 @@ def test_coverage_report(context):
 
 
 @task(clean)
-def test_integration(context, focus=None, debug=False):
+def test_integration(context, focus=None, debug=False, external_sdoc=None):
     cwd = os.getcwd()
 
     strictdoc_exec = f'python \\"{cwd}/strictdoc/cli/main.py\\"'
+    if external_sdoc is not None:
+        strictdoc_exec = "strictdoc"
 
     focus_or_none = f"--filter {focus}" if focus else ""
     debug_opts = "-vv --show-all" if debug else ""
@@ -161,47 +179,9 @@ def test_integration(context, focus=None, debug=False):
 
 
 @task
-def export_pip_requirements(context):
-    run_invoke_cmd(
-        context,
-        "poetry export --dev --without-hashes --format requirements.txt > requirements.txt",
-    )
-
-
-# Support generation of Poetry managed setup.py file #761
-# https://github.com/python-poetry/poetry/issues/761#issuecomment-689491920
-@task
-def install_local(context):
-    run_invoke_cmd(
-        context,
-        (
-            """
-        poetry build
-        """
-        ),
-    )
-    run_invoke_cmd(
-        context,
-        (
-            """
-        tar -xvf dist/*.tar.gz --wildcards --no-anchored '*/setup.py' --strip=1
-        """
-        ),
-    )
-    run_invoke_cmd(
-        context,
-        (
-            """
-        pip install -e .
-        """
-        ),
-    )
-
-
-@task
 def lint_black_diff(context):
     command = """
-        black . --color 2>&1
+        black . --color --line-length 80 2>&1
         """
     result = run_invoke_cmd(context, command)
 
@@ -301,5 +281,38 @@ def dump_grammar(context, output_file):
 def check_dead_links(context):
     command = """
         python3 tools/link_health.py docs/strictdoc.sdoc
+    """
+    run_invoke_cmd(context, command)
+
+
+@task
+def setup_development_deps(context):
+    command = """
+        pip install --upgrade pip setuptools &&
+        pip install -e . &&
+        pip install -e .[development]
+    """
+    run_invoke_cmd(context, command)
+
+
+@task(clean)
+def release_local(context):
+    command = """
+        rm -rfv dist/ build/ && 
+        python -m pip uninstall strictdoc -y &&
+        python setup.py check &&
+            python setup.py install
+    """
+    run_invoke_cmd(context, command)
+    test_integration(context, external_sdoc="strictdoc")
+
+
+@task
+def release_test(context):
+    command = """
+        python setup.py check &&
+            python setup.py sdist &&
+            python setup.py bdist_wheel --universal &&
+            twine upload --repository-url https://test.pypi.org/legacy/ dist/strictdoc-0.0.21.tar.gz
     """
     run_invoke_cmd(context, command)

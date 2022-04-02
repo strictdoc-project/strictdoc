@@ -3,7 +3,7 @@ CHECK: Published:
 
 RUN: cat %S/Output/html/04_tables/example.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 
-CHECK-HTML:<table border="1" class="colwidths-given docutils">
+CHECK-HTML:<table border="1" class="{{.*}}docutils">
 CHECK-HTML:<caption>Table Example</caption>
 CHECK-HTML:<colgroup>
 CHECK-HTML:<col width="25%" />

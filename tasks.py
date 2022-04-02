@@ -5,22 +5,33 @@ import re
 import invoke
 from invoke import task
 
-VENV_PATH = os.path.join(os.getcwd(), ".venv-tasks")
-VENV_COMMAND_ACTIVATE = (
-    f". {VENV_PATH}/bin/activate"
-    if platform.system() != "Windows"
-    else rf"{VENV_PATH}\Scripts\activate"
-)
-VENV_COMMAND = f"python -m venv {VENV_PATH} && {VENV_COMMAND_ACTIVATE}"
-if platform.system() == "Windows":
-    VENV_COMMAND = "true"
+
+def get_venv_command(postfix):
+    venv_path = os.path.join(os.getcwd(), f".venv-{postfix}")
+    venv_command_activate = (
+        f". {venv_path}/bin/activate"
+        if platform.system() != "Windows"
+        else rf"{venv_path}\Scripts\activate"
+    )
+    venv_command = f"python -m venv {venv_path} && {venv_command_activate}"
+    # Cannot make this work on Windows/PowerShell.
+    # TODO: Fix this at some point and make the Windows CI to be identical to
+    # Linux/macOS CI.
+    if platform.system() == "Windows":
+        venv_command = "true"
+    return venv_command
+
+
+VENV_POSTFIX = "VENV_POSTFIX"
 
 
 def run_invoke_cmd(context, cmd) -> invoke.runners.Result:
     def one_line_command(string):
         return re.sub("\\s+", " ", string).strip()
 
-    with context.prefix(VENV_COMMAND):
+    postfix = context[VENV_POSTFIX] if VENV_POSTFIX in context else "default"
+
+    with context.prefix(get_venv_command(postfix)):
         return context.run(
             one_line_command(cmd),
             env=None,
@@ -127,7 +138,7 @@ def test_unit_coverage(context):
                 coverage run
                 --rcfile=.coveragerc
                 --branch
-                --omit=.venv-tasks/*
+                --omit=.venv*/*
                 -m pytest
                 tests/unit/
             """
@@ -289,20 +300,23 @@ def check_dead_links(context):
 def setup_development_deps(context):
     command = """
         pip install --upgrade pip setuptools &&
-        pip install -e . &&
-        pip install -e .[development]
+        pip install -r requirements.txt &&
+        pip install -r requirements.development.txt
     """
     run_invoke_cmd(context, command)
 
 
-@task(clean)
+@task
 def release_local(context):
+    context[VENV_POSTFIX] = "release-local"
     command = """
         rm -rfv dist/ build/ && 
         python -m pip uninstall strictdoc -y &&
         python setup.py check &&
             python setup.py install
     """
+    clean(context)
+    setup_development_deps(context)
     run_invoke_cmd(context, command)
     test_integration(context, external_sdoc="strictdoc")
 

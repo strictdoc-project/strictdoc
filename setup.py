@@ -7,7 +7,10 @@ import strictdoc
 
 package_data = {}
 
-data_files = []
+data_files = [
+    "requirements.txt",
+    "requirements.development.txt",
+]
 start_point = os.path.join("strictdoc", "export", "html")
 for root, dirs, files in os.walk(start_point):
     root_files = []

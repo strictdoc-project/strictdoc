@@ -1,5 +1,5 @@
 wheel
-tween
+twine
 coverage~=5.4
 invoke~=1.4.1
 pytest~=6.2.2

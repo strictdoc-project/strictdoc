@@ -322,6 +322,21 @@ def release_local(context):
 
 
 @task
+def release(context, username=None, password=None):
+    user_password = f"-u{username} -p{password}" if username is not None else ""
+
+    context[VENV_POSTFIX] = "release-pypi"
+    command = f"""
+        rm -rfv dist/ &&
+        python setup.py check &&
+            python setup.py sdist --verbose &&
+            twine upload dist/strictdoc-*.tar.gz
+                {user_password}
+    """
+    run_invoke_cmd(context, command)
+
+
+@task
 def release_test(context):
     context[VENV_POSTFIX] = "release-pypi-test"
     command = """

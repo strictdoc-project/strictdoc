@@ -92,36 +92,31 @@ Installing StrictDoc from GitHub (developer mode)
 in StrictDoc's source code. Otherwise, install StrictDoc as a Pip package
 (see above).
 
-StrictDoc uses Poetry, so `Poetry <https://python-poetry.org>`_ has to be
-installed. To install Poetry, read the instructions here:
-`Poetry / Installation <https://python-poetry.org/docs/#installation>`_.
-
-When Poetry is installed, clone StrictDoc:
-
-.. code-block:: text
-
-    git clone https://github.com/strictdoc-project/strictdoc.git && cd strictdoc
-    poetry install
-    poetry run strictdoc
-    poetry run invoke test
-
-StrictDoc can also be developed and run without Poetry:
-
-.. code-block:: text
+.. code-block::
 
     git clone https://github.com/strictdoc-project/strictdoc.git && cd strictdoc
     pip install -r requirements.txt
     python3 strictdoc/cli/main.py
-    # for running tests:
-    pip install invoke pytest pytidylib html5lib
-    invoke test
+
+All development tasks are managed using
+`Invoke <https://www.pyinvoke.org/>`_ in the ``tasks.py`` file. On macOS and
+Linux, all tasks run in dedicated virtual environments. On Windows, invoke uses
+the parent pip environment which can be a system environment or a user's virtual
+environment.
+
+.. code-block::
+
+    pip install invoke  # macOS and Linux
+    invoke setup-development-deps  # macOS and Linux
+    pip install -r requirements.development.txt  # Windows only
+    invoke --list  # See the available tasks
 
 Installing StrictDoc into a Docker container
 --------------------------------------------
 
 StrictDoc can be invoked inside of a Docker container. To make data available
-to the Docker container (here: ``strictdoc:0.0.18``) as well as the host system
-one needs to mount a volume via ``-v`` option.
+to the Docker container (here: ``strictdoc:0.0.18``) as well as to the host
+system, one needs to mount a volume via ``-v`` option.
 
 In the host operating system terminal:
 
@@ -139,16 +134,11 @@ In the container terminal:
 
 The documentation resides in ``./docs/output/html``.
 
-Installing StrictDoc as a snap package
---------------------------------------
+Installing StrictDoc as a Snap package (not maintained)
+-------------------------------------------------------
 
-This installation variant is available in UNIX operating systems with support
-of the `snap package format <https://snapcraft.io/docs/snap-format>`_.
-
-.. code-block:: text
-
-    wget https://github.com/strictdoc-project/strictdoc/raw/developer/snap/snap/strictdoc_0.0.18_amd64.snap
-    sudo snap install strictdoc_*.snap --devmode --dangerous
+This way of installing StrictDoc is not maintained anymore. If you want to
+use it, refer to the instructions located in ``developer/snap/README.md``.
 
 Hello world
 -----------

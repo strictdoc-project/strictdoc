@@ -69,9 +69,9 @@
             </a></li><li><a href="#3.4-Installing-StrictDoc-into-a-Docker-container">
               <span class="section-number">3.4</span>
               Installing StrictDoc into a Docker container
-            </a></li><li><a href="#3.5-Installing-StrictDoc-as-a-snap-package">
+            </a></li><li><a href="#3.5-Installing-StrictDoc-as-a-Snap-package-not-maintained-">
               <span class="section-number">3.5</span>
-              Installing StrictDoc as a snap package
+              Installing StrictDoc as a Snap package (not maintained)
             </a></li><li><a href="#3.6-Hello-world">
               <span class="section-number">3.6</span>
               Hello world
@@ -782,24 +782,21 @@ data-level="3.3"
 <p><strong>Note:</strong> Use this way of installing StrictDoc only if you want to make changes
 in StrictDoc's source code. Otherwise, install StrictDoc as a Pip package
 (see above).</p>
-<p>StrictDoc uses Poetry, so <a class="reference external" href="https://python-poetry.org">Poetry</a> has to be
-installed. To install Poetry, read the instructions here:
-<a class="reference external" href="https://python-poetry.org/docs/#installation">Poetry / Installation</a>.</p>
-<p>When Poetry is installed, clone StrictDoc:</p>
-<pre class="code text literal-block">
-git clone https://github.com/strictdoc-project/strictdoc.git &amp;&amp; cd strictdoc
-poetry install
-poetry run strictdoc
-poetry run invoke test
-</pre>
-<p>StrictDoc can also be developed and run without Poetry:</p>
-<pre class="code text literal-block">
+<pre class="code literal-block">
 git clone https://github.com/strictdoc-project/strictdoc.git &amp;&amp; cd strictdoc
 pip install -r requirements.txt
 python3 strictdoc/cli/main.py
-# for running tests:
-pip install invoke pytest pytidylib html5lib
-invoke test
+</pre>
+<p>All development tasks are managed using
+<a class="reference external" href="https://www.pyinvoke.org/">Invoke</a> in the <tt class="docutils literal">tasks.py</tt> file. On macOS and
+Linux, all tasks run in dedicated virtual environments. On Windows, invoke uses
+the parent pip environment which can be a system environment or a user's virtual
+environment.</p>
+<pre class="code literal-block">
+pip install invoke  # macOS and Linux
+invoke setup-development-deps  # macOS and Linux
+pip install -r requirements.development.txt  # Windows only
+invoke --list  # See the available tasks
 </pre>
 </div>
 
@@ -824,8 +821,8 @@ data-level="3.4"
   <section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>StrictDoc can be invoked inside of a Docker container. To make data available
-to the Docker container (here: <tt class="docutils literal">strictdoc:0.0.18</tt>) as well as the host system
-one needs to mount a volume via <tt class="docutils literal"><span class="pre">-v</span></tt> option.</p>
+to the Docker container (here: <tt class="docutils literal">strictdoc:0.0.18</tt>) as well as to the host
+system, one needs to mount a volume via <tt class="docutils literal"><span class="pre">-v</span></tt> option.</p>
 <p>In the host operating system terminal:</p>
 <pre class="code text literal-block">
 docker build . -t strictdoc:0.0.18
@@ -845,13 +842,13 @@ bash-5.1# exit
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="3.5-Installing-StrictDoc-as-a-snap-package"></div>
+    <div data-role='anchor' id="3.5-Installing-StrictDoc-as-a-Snap-package-not-maintained-"></div>
 
     
         <h2
 class="section-title"
 data-level="3.5"
->Installing StrictDoc as a snap package
+>Installing StrictDoc as a Snap package (not maintained)
 </h2>
     
 
@@ -859,12 +856,8 @@ data-level="3.5"
 
   <section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
-<p>This installation variant is available in UNIX operating systems with support
-of the <a class="reference external" href="https://snapcraft.io/docs/snap-format">snap package format</a>.</p>
-<pre class="code text literal-block">
-wget https://github.com/strictdoc-project/strictdoc/raw/developer/snap/snap/strictdoc_0.0.18_amd64.snap
-sudo snap install strictdoc_*.snap --devmode --dangerous
-</pre>
+<p>This way of installing StrictDoc is not maintained anymore. If you want to
+use it, refer to the instructions located in <tt class="docutils literal">developer/snap/README.md</tt>.</p>
 </div>
 
     </div></section>
@@ -1740,7 +1733,7 @@ data-level="4.3.2"
 <p>While it is possible to declare a grammar with completely custom fields, there
 is a fixed set of reserved fields that StrictDoc uses for the presentation of
 table of contents and document structure:</p>
-<table border="1" class="colwidths-given docutils">
+<table border="1" class="docutils">
 <caption>Reserved fields in SDoc's grammar</caption>
 <colgroup>
 <col width="20%" />
@@ -5179,7 +5172,7 @@ data-level="13.3"
 <p>StrictDoc shall support the following document archetypes: <strong>requirements document</strong>
 and <strong>specification</strong> document. For both archetypes, StrictDoc shall further
 support the following options.</p>
-<table border="1" class="colwidths-given docutils">
+<table border="1" class="docutils">
 <caption>Table: Requirements and specification document</caption>
 <colgroup>
 <col width="20%" />

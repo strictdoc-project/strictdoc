@@ -1,0 +1,27 @@
+---
+name: Periodic Integration Test
+on:
+  schedule:
+    - cron: "00 00 * * *"
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  periodic_integration_test:
+    name: Periodic integration test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install release task dependencies
+        run: |
+          pip install --upgrade pip setuptools invoke
+
+      - name: Build and test locally
+        run: |
+          invoke release-local

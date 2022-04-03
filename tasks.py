@@ -1,6 +1,7 @@
 import os
 import platform
 import re
+from enum import Enum
 
 import invoke
 from invoke import task
@@ -22,14 +23,26 @@ def get_venv_command(postfix):
     return venv_command
 
 
-VENV_POSTFIX = "VENV_POSTFIX"
+VENV_FOLDER = "VENV_FOLDER"
+
+
+# To prevent all tasks from building to the same virtual environment.
+class VenvFolderType(str, Enum):
+    RELEASE_DEFAULT = "default"
+    RELEASE_LOCAL = "release-local"
+    RELEASE_PYPI = "release-pypi"
+    RELEASE_PYPI_TEST = "release-pypi-test"
 
 
 def run_invoke_cmd(context, cmd) -> invoke.runners.Result:
     def one_line_command(string):
         return re.sub("\\s+", " ", string).strip()
 
-    postfix = context[VENV_POSTFIX] if VENV_POSTFIX in context else "default"
+    postfix = (
+        context[VENV_FOLDER]
+        if VENV_FOLDER in context
+        else VenvFolderType.RELEASE_DEFAULT
+    )
 
     with context.prefix(get_venv_command(postfix)):
         return context.run(
@@ -308,7 +321,7 @@ def setup_development_deps(context):
 
 @task
 def release_local(context):
-    context[VENV_POSTFIX] = "release-local"
+    context[VENV_FOLDER] = VenvFolderType.RELEASE_LOCAL
     command = """
         rm -rfv dist/ build/ && 
         python -m pip uninstall strictdoc -y &&
@@ -325,7 +338,7 @@ def release_local(context):
 def release(context, username=None, password=None):
     user_password = f"-u{username} -p{password}" if username is not None else ""
 
-    context[VENV_POSTFIX] = "release-pypi"
+    context[VENV_FOLDER] = VenvFolderType.RELEASE_PYPI
     command = f"""
         rm -rfv dist/ &&
         python setup.py check &&
@@ -338,7 +351,7 @@ def release(context, username=None, password=None):
 
 @task
 def release_test(context):
-    context[VENV_POSTFIX] = "release-pypi-test"
+    context[VENV_FOLDER] = VenvFolderType.RELEASE_PYPI_TEST
     command = """
         rm -rfv dist/ &&
         python setup.py check &&

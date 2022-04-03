@@ -22,7 +22,9 @@ try:
     )
     if not os.path.isdir(STRICTDOC_ROOT_PATH):
         raise FileNotFoundError
-    assert os.path.basename(STRICTDOC_ROOT_PATH) == "strictdoc"
+    # Cannot assert this because readthedocs clones strictdoc to folders like:
+    # "stable", "latest", etc.
+    # assert os.path.basename(STRICTDOC_ROOT_PATH) == "strictdoc"
     sys.path.append(STRICTDOC_ROOT_PATH)
     import strictdoc
 except Exception as exception:

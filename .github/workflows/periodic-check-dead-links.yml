@@ -1,5 +1,5 @@
 ---
-name: CI
+name: Periodic Dead Links Check
 'on':
   # pull_request:
   # push:

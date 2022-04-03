@@ -832,12 +832,12 @@ data-level="3.4"
   <section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <p>StrictDoc can be invoked inside of a Docker container. To make data available
-to the Docker container (here: <tt class="docutils literal">strictdoc:0.0.18</tt>) as well as to the host
+to the Docker container (here: <tt class="docutils literal">strictdoc:latest</tt>) as well as to the host
 system, one needs to mount a volume via <tt class="docutils literal"><span class="pre">-v</span></tt> option.</p>
 <p>In the host operating system terminal:</p>
 <pre class="code text literal-block">
-docker build . -t strictdoc:0.0.18
-docker run --name strictdoc --rm -v &quot;$(pwd)/docs:/data&quot; -i -t strictdoc:0.0.18
+docker build . -t strictdoc:latest
+docker run --name strictdoc --rm -v &quot;$(pwd)/docs:/data&quot; -i -t strictdoc:latest
 </pre>
 <p>In the container terminal:</p>
 <pre class="code text literal-block">

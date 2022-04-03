@@ -145,15 +145,15 @@ TITLE: Installing StrictDoc into a Docker container
 
 [FREETEXT]
 StrictDoc can be invoked inside of a Docker container. To make data available
-to the Docker container (here: ``strictdoc:0.0.18``) as well as to the host
+to the Docker container (here: ``strictdoc:latest``) as well as to the host
 system, one needs to mount a volume via ``-v`` option.
 
 In the host operating system terminal:
 
 .. code-block:: text
 
-    docker build . -t strictdoc:0.0.18
-    docker run --name strictdoc --rm -v "$(pwd)/docs:/data" -i -t strictdoc:0.0.18
+    docker build . -t strictdoc:latest
+    docker run --name strictdoc --rm -v "$(pwd)/docs:/data" -i -t strictdoc:latest
 
 In the container terminal:
 

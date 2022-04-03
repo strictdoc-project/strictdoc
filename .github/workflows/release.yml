@@ -3,8 +3,8 @@ name: StrictDoc Python Package Release
 on:
   release:
     types: [created]
-  pull_request:
-    branches: [ "**" ]
+  # pull_request:
+  #   branches: [ "**" ]
 
 jobs:
   deploy:

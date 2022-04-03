@@ -327,8 +327,7 @@ def release_test(context):
     command = """
         rm -rfv dist/ &&
         python setup.py check &&
-            python setup.py sdist &&
-            python setup.py bdist_wheel --universal &&
+            python setup.py sdist --verbose &&
             twine upload --repository-url https://test.pypi.org/legacy/ dist/strictdoc-*.tar.gz
     """
     run_invoke_cmd(context, command)

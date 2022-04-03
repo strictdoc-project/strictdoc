@@ -4,20 +4,30 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-# -- Path setup --------------------------------------------------------------
+import os
+import string
+import sys
 
+import guzzle_sphinx_theme as guzzle_sphinx_theme
+
+# -- Path setup --------------------------------------------------------------
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
-import string
-from pathlib import Path
 
-import guzzle_sphinx_theme as guzzle_sphinx_theme
-import toml
+
+try:
+    STRICTDOC_ROOT_PATH = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "..", "..")
+    )
+    if not os.path.isdir(STRICTDOC_ROOT_PATH):
+        raise FileNotFoundError
+    assert os.path.basename(STRICTDOC_ROOT_PATH) == "strictdoc"
+    sys.path.append(STRICTDOC_ROOT_PATH)
+    import strictdoc
+except Exception as exception:
+    print(f"Could not resolve a path to strictdoc's root: {exception}")
+    sys.exit(1)
 
 
 # Strings with embedded variables in Python
@@ -26,13 +36,7 @@ class RubyTemplate(string.Template):
     delimiter = "#"
 
 
-def get_version():
-    path = Path(__file__).parent.parent.resolve().parents[1] / "pyproject.toml"
-    pyproject = toml.loads(open(str(path)).read())
-    return pyproject["tool"]["poetry"]["version"]
-
-
-STRICTDOC_VERSION = get_version()
+STRICTDOC_VERSION = strictdoc.__version__
 
 # -- Project information -----------------------------------------------------
 

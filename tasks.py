@@ -352,6 +352,8 @@ def release(context, username=None, password=None):
 @task
 def release_test(context):
     context[VENV_FOLDER] = VenvFolderType.RELEASE_PYPI_TEST
+    setup_development_deps(context)
+
     command = """
         rm -rfv dist/ &&
         python setup.py check &&

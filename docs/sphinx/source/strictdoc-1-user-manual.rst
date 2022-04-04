@@ -476,6 +476,40 @@ promoted to the requirement level: the information has to be broken down into
 atomic ``[REQUIREMENT]`` statements and get connected to the other requirement
 statements in the document.
 
+Section without a level
+^^^^^^^^^^^^^^^^^^^^^^^
+
+A section can have no level attached to it. To enable this behavior, the field
+``LEVEL`` has to be set to ``None``.
+
+.. code-block:: text
+
+    [DOCUMENT]
+    TITLE: Hello world doc
+
+    [SECTION]
+    TITLE: Section 1
+
+    [/SECTION]
+
+    [SECTION]
+    LEVEL: None
+    TITLE: Out-of-band Section
+
+    [/SECTION]
+
+    [SECTION]
+    TITLE: Section 2
+
+    [/SECTION]
+
+The section with no level will be skipped by StrictDoc's system of automatic
+numbering of the section levels (1, 1.1, 1.2, 2, ...).
+
+The behavior of the ``LEVEL: None`` option is recursive. If a parent section
+has its ``LEVEL`` set to ``None``, all its subsections' and requirements' levels
+are set to ``LEVEL: None`` by StrictDoc automatically.
+
 Composite requirement
 ~~~~~~~~~~~~~~~~~~~~~
 

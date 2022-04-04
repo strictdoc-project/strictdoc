@@ -120,6 +120,9 @@
             </a></li><li><a href="#4.2.3.2-Free-text">
               <span class="section-number">4.2.3.2</span>
               Free text
+            </a></li><li><a href="#4.2.3.3-Section-without-a-level">
+              <span class="section-number">4.2.3.3</span>
+              Section without a level
             </a></li></ul>
             </li><li><a href="#4.2.4-Composite-requirement">
               <span class="section-number">4.2.4</span>
@@ -1138,6 +1141,56 @@ information influences or is influenced by existing requirements, it has to be
 promoted to the requirement level: the information has to be broken down into
 atomic <tt class="docutils literal">[REQUIREMENT]</tt> statements and get connected to the other requirement
 statements in the document.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4.2.3.3-Section-without-a-level"></div>
+
+    
+        <h4
+class="section-title"
+data-level="4.2.3.3"
+>Section without a level
+</h4>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>A section can have no level attached to it. To enable this behavior, the field
+<tt class="docutils literal">LEVEL</tt> has to be set to <tt class="docutils literal">None</tt>.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: Hello world doc
+
+[SECTION]
+TITLE: Section 1
+
+[/SECTION]
+
+[SECTION]
+LEVEL: None
+TITLE: Out-of-band Section
+
+[/SECTION]
+
+[SECTION]
+TITLE: Section 2
+
+[/SECTION]
+</pre>
+<p>The section with no level will be skipped by StrictDoc's system of automatic
+numbering of the section levels (1, 1.1, 1.2, 2, ...).</p>
+<p>The behavior of the <tt class="docutils literal">LEVEL: None</tt> option is recursive. If a parent section
+has its <tt class="docutils literal">LEVEL</tt> set to <tt class="docutils literal">None</tt>, all its subsections' and requirements' levels
+are set to <tt class="docutils literal">LEVEL: None</tt> by StrictDoc automatically.</p>
 </div>
 
     </div></section>

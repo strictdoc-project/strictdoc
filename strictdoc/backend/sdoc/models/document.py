@@ -42,3 +42,7 @@ class Document:  # pylint: disable=too-many-instance-attributes
     def assign_meta(self, meta):
         assert isinstance(meta, DocumentMeta)
         self.meta = meta
+
+    @property
+    def level(self):
+        return None

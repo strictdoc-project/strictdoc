@@ -49,14 +49,26 @@ class DocumentCachingIterator:
                 current, (Section, Requirement, CompositeRequirement)
             ):
                 assert current.ng_level, f"Node has no ng_level: {current}"
-                level_counter.adjust(current.ng_level)
 
-                # TODO: Remove the need to do branching here.
-                current.context.title_number_string = (
-                    current.level
-                    if current.level
-                    else level_counter.get_string()
-                )
+                if current.level != "None":
+                    level_counter.adjust(current.ng_level)
+                    # TODO: Remove the need to do branching here.
+                    current.context.title_number_string = (
+                        current.level
+                        if current.level
+                        else level_counter.get_string()
+                    )
+                else:
+                    # The idea is to include a section header without affecting
+                    # the level of the nested elements (i.e. requirements), but
+                    # keeping the section title in a dedicated row in DOC, TBL
+                    # and TR/DTR views.
+                    # Such an option can be very useful when dealing with source
+                    # requirements documents with inconsistent sectioning (such
+                    # as some technical standards/normative), that need to be
+                    # included in a custom project.
+                    # https://github.com/strictdoc-project/strictdoc/issues/639
+                    current.context.title_number_string = ""
 
             self.nodes_cache.append(current)
             yield current

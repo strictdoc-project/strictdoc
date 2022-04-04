@@ -50,7 +50,7 @@ class SDocParsingProcessor:
         section.ng_document_reference = self.parse_context.document_reference
 
         if self.parse_context.document_config.auto_levels:
-            if section.level:
+            if section.level and section.level != "None":
                 print(
                     "warning: [SECTION].LEVEL field is provided. "
                     "This contradicts to the option "
@@ -66,9 +66,7 @@ class SDocParsingProcessor:
                     f"Section: {section}"
                 )
 
-        if section.parent.ng_level is None:
-            self._resolve_parents(section)
-        section.ng_level = section.parent.ng_level + 1
+        self._resolve_parents(section)
         assert section.ng_level > 0
 
     def process_include(self, include: FragmentFromFile):
@@ -77,8 +75,7 @@ class SDocParsingProcessor:
             SDIReader,
         )  # can't import globally or else module loop ensues
 
-        if include.parent.ng_level is None:
-            self._resolve_parents(include)
+        self._resolve_parents(include)
         self.parse_context.current_include_parent = include.parent
 
         reader = SDIReader()
@@ -125,18 +122,10 @@ class SDocParsingProcessor:
         )
 
         if isinstance(composite_requirement.parent, Section):
-            if composite_requirement.parent.ng_level is None:
-                self._resolve_parents(composite_requirement)
-            composite_requirement.ng_level = (
-                composite_requirement.parent.ng_level + 1
-            )
+            self._resolve_parents(composite_requirement)
         elif isinstance(composite_requirement.parent, CompositeRequirement):
-            if composite_requirement.parent.ng_level is None:
-                self._resolve_parents(composite_requirement)
+            self._resolve_parents(composite_requirement)
             assert composite_requirement.parent.ng_level
-            composite_requirement.ng_level = (
-                composite_requirement.parent.ng_level + 1
-            )
         elif isinstance(composite_requirement.parent, Document):
             composite_requirement.ng_level = 1
         elif isinstance(composite_requirement.parent, Fragment):
@@ -188,13 +177,9 @@ class SDocParsingProcessor:
         )
 
         if isinstance(requirement.parent, Section):
-            if requirement.parent.ng_level is None:
-                self._resolve_parents(requirement)
-            requirement.ng_level = requirement.parent.ng_level + 1
+            self._resolve_parents(requirement)
         elif isinstance(requirement.parent, CompositeRequirement):
-            if requirement.parent.ng_level is None:
-                self._resolve_parents(requirement)
-            requirement.ng_level = requirement.parent.ng_level + 1
+            self._resolve_parents(requirement)
         elif isinstance(requirement.parent, Document):
             requirement.ng_level = 1
         elif isinstance(requirement.parent, Fragment):
@@ -215,13 +200,9 @@ class SDocParsingProcessor:
 
     def process_free_text(self, free_text):
         if isinstance(free_text.parent, Section):
-            if free_text.parent.ng_level is None:
-                self._resolve_parents(free_text)
-            free_text.ng_level = free_text.parent.ng_level + 1
+            self._resolve_parents(free_text)
         elif isinstance(free_text.parent, CompositeRequirement):
-            if free_text.parent.ng_level is None:
-                self._resolve_parents(free_text)
-            free_text.ng_level = free_text.parent.ng_level + 1
+            self._resolve_parents(free_text)
         elif isinstance(free_text.parent, Document):
             free_text.ng_level = 1
         elif isinstance(free_text.parent, Fragment):
@@ -252,5 +233,14 @@ class SDocParsingProcessor:
             cursor = cursor.parent
         cursor_level = cursor.ng_level
 
+        section_with_none_level = cursor.level == "None"
         for parent_idx, parent in enumerate(reversed(parents_to_resolve_level)):
             parent.ng_level = cursor_level + parent_idx + 1
+            if isinstance(parent, Section):
+                if section_with_none_level:
+                    parent.level = "None"
+                elif parent.level == "None":
+                    section_with_none_level = True
+        node.ng_level = node.parent.ng_level + 1
+        if section_with_none_level:
+            node.level = "None"

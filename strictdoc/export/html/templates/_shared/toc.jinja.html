@@ -11,15 +11,23 @@
               </span>
               {{ section.title if section.title else '[ no title ]' }}
             </span>
+          {#
+             The calculation below: "&nbsp;" * (section.ng_level * 2 - 1)
+             is needed to accommodate for the case when a section or a
+             requirement don't have a numeric level set (LEVEL: None).
+             Empty spaces &nbsp; ensure the lines in the TOC are still aligned
+             on the left side. The (*2 - 1) takes into account the dots of the
+             levels: 1.2.3 is (6-1) symbols, 1.2.3.4 is (8-1) symbols, etc.
+          #}
           {%- else -%}
             <a href="#{{ link_renderer.render_local_anchor(section) }}">
-              <span class="section-number">{{ section.context.title_number_string }}</span>
+              <span class="section-number">{{ section.context.title_number_string if section.context.title_number_string else "&nbsp;" * (section.ng_level * 2 - 1) }}</span>
               {{ section.title if section.title else '[ no title ]' }}
             </a>
           {%- endif -%}
         {%- else -%}
         <a href="#{{ link_renderer.render_local_anchor(section) }}">
-          <span class="section-number">{{ section.context.title_number_string }}</span>
+          <span class="section-number">{{ section.context.title_number_string if section.context.title_number_string else "&nbsp;" * (section.ng_level * 2 - 1) }}</span>
           {{ section.title if section.title else (section.uid if section.uid else '[ no title ]') }}
         </a>
         {%- endif -%}

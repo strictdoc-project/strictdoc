@@ -5,21 +5,27 @@ from setuptools import find_packages, setup
 
 import strictdoc
 
-package_data = {}
+package_data = {
+    "": ["requirements.txt", "requirements.development.txt"],
+    # It looks like the package data in setup.py does not support globbing
+    # (see pypa/setuptools#1806, https://github.com/pypa/setuptools/issues/1806)
+    # Doing the globbing manually for now.
+    # https://stackoverflow.com/questions/27664504/how-to-add-package-data-recursively-in-python-setup-py
+    # TODO: Can be better.
+    "strictdoc.export.html": [
+        "*",
+        "*/*",
+        "*/*/*",
+        "*/*/*/*",
+        "*/*/*/*/*",
+        "*/*/*/*/*/*",
+    ],
+}
 
 data_files = [
     "requirements.txt",
     "requirements.development.txt",
 ]
-start_point = os.path.join("strictdoc", "export", "html")
-for root, dirs, files in os.walk(start_point):
-    root_files = []
-    for file in files:
-        if file.endswith(".py") or file.endswith(".pyc"):
-            continue
-        root_files.append(os.path.join(root, file))
-    if len(root_files) > 0:
-        data_files.append((root, root_files))
 
 with open("requirements.txt") as fp:
     REQUIREMENTS = fp.read()

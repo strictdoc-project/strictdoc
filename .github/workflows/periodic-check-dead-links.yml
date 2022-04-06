@@ -20,9 +20,13 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install invoke
+      - name: Install Invoke
         run: |
-          pip install invoke requests
+          pip install invoke
+
+      - name: Install Development Deps
+        run: |
+          invoke setup-development-deps
 
       - name: Link Health check
         run: |

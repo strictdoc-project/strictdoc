@@ -1,0 +1,1280 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="UTF-8"/>
+
+  <link rel="shortcut icon" href="../_static/favicon.ico" type="image/x-icon"/>
+
+  
+  
+  <link rel="stylesheet" href="../_static/_base.css"/>
+  <link rel="stylesheet" href="../_static/_layout.css"/>
+  <link rel="stylesheet" href="../_static/_content.css"/>
+  <link rel="stylesheet" href="../_static/_requirement.css"/>
+  <link rel="stylesheet" href="../_static/_element.css"/>
+  
+  <link rel="stylesheet" href="../_static/_requirement-tree.css"/>
+
+
+  
+  <script type="text/javascript" src="../_static/toc.js"></script>
+  
+  
+  
+
+
+  <title>StrictDoc Backlog - Traceability</title>
+
+  
+</head>
+
+<body class="traceability-view">
+<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script>
+
+  <div class="layout" id="layout">
+
+    <aside class="layout_aside-header">
+      
+  <a class="index-link" href="../index.html">To Index</a>
+
+    </aside>
+
+    <aside class="layout_aside">
+      
+  
+    <div>Table of Contents</div>
+    <ul class="toc"><li><a href="#1-Work-in-progress">
+              <span class="section-number">1</span>
+              Work in progress
+            </a><ul><li><a href="#1.1-Integration-with-Capella">
+          <span class="section-number">1.1</span>
+          Integration with Capella
+        </a></li></ul>
+            </li><li><a href="#2-SDoc-Language-Server-Protocol">
+          <span class="section-number">2</span>
+          SDoc Language Server Protocol
+        </a></li><li><a href="#3-Document-archetypes">
+          <span class="section-number">3</span>
+          Document archetypes
+        </a></li><li><a href="#4-Project-level-configuration-file">
+          <span class="section-number">4</span>
+          Project-level configuration file
+        </a></li><li><a href="#5-Further-export-and-import-capabilities">
+              <span class="section-number">5</span>
+              Further export and import capabilities
+            </a><ul><li><a href="#5.1-CSV-import-export">
+          <span class="section-number">5.1</span>
+          CSV import/export
+        </a></li><li><a href="#5.2-PlantUML-export">
+          <span class="section-number">5.2</span>
+          PlantUML export
+        </a></li><li><a href="#5.3-Confluence-import-export">
+          <span class="section-number">5.3</span>
+          Confluence import/export
+        </a></li><li><a href="#5.4-Tex-export">
+          <span class="section-number">5.4</span>
+          Tex export
+        </a></li><li><a href="#5.5-Doorstop-import-export">
+          <span class="section-number">5.5</span>
+          Doorstop import/export
+        </a></li></ul>
+            </li><li><a href="#6-Markdown-support-for-text-and-code-blocks">
+          <span class="section-number">6</span>
+          Markdown support for text and code blocks
+        </a></li><li><a href="#7-StrictDoc-as-library">
+          <span class="section-number">7</span>
+          StrictDoc as library
+        </a></li><li><a href="#8-BACKLOG-FUZZY-SEARCH">
+          <span class="section-number">8</span>
+          Fuzzy requirements search
+        </a></li><li><a href="#9-Filtering-by-tags">
+          <span class="section-number">9</span>
+          Filtering by tags
+        </a></li><li><a href="#10-Advanced">
+              <span class="section-number">10</span>
+              Advanced
+            </a><ul><li><a href="#10.1-Requirement-checksumming">
+          <span class="section-number">10.1</span>
+          Requirement checksumming
+        </a></li><li><a href="#10.2-Graphical-User-Interface-GUI-">
+          <span class="section-number">10.2</span>
+          Graphical User Interface (GUI)
+        </a><ul><li><a href="#10.2.1-Web-server-and-editable-HTML-pages">
+          <span class="section-number">10.2.1</span>
+          Web server and editable HTML pages
+        </a></li></ul>
+            </li><li><a href="#10.3-Facts-table-Invariants-calculation-">
+          <span class="section-number">10.3</span>
+          Facts table. Invariants calculation.
+        </a></li><li><a href="#10.4-FMEA-FMECA-tables">
+          <span class="section-number">10.4</span>
+          FMEA/FMECA tables
+        </a></li></ul>
+            </li><li><a href="#11-Open-questions">
+              <span class="section-number">11</span>
+              Open questions
+            </a><ul><li><a href="#11.1-One-or-many-input-sdoc-trees">
+              <span class="section-number">11.1</span>
+              One or many input sdoc trees
+            </a></li></ul>
+            </li></ul>
+
+    </aside>
+
+    
+  <a class="layout_toggler layout_button" id="layout_toggle"></a><nav class="layout_nav">
+    <a
+    class="layout_nav-btn layout_button btn-document"
+    title="Go to Document view"
+    href="../docs/strictdoc-2-backlog.html">
+    DOC
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-table"
+    title="Go to Table view"
+    href="../docs/strictdoc-2-backlog-TABLE.html">
+    TBL
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-traceability"
+    title="Go to Traceability view"
+    href="../docs/strictdoc-2-backlog-TRACE.html">
+    TR
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-deep-traceability"
+    title="Go to Deep Traceability view"
+    href="../docs/strictdoc-2-backlog-DEEP-TRACE.html">
+    DTR
+  </a>
+  </nav>
+
+
+    <header class="layout_header">
+      
+  <p>StrictDoc Backlog <span class="document-view-type">Traceability</span></p>
+
+    </header>
+
+    <main class="layout_main">
+      
+
+      
+
+      <div class="content">
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="1-Work-in-progress"></div>
+
+    
+        <h1
+class="section-title"
+data-level="1"
+>Work in progress
+</h1>
+    
+
+  </section>
+
+  
+
+</article></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="1.1-Integration-with-Capella"></div>
+    <h2
+class="section-title"
+data-level="1.1"
+>Integration with Capella
+</h2>
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall allow bi-directional data exchange with Capella tool.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>The current plan is to implement this using ReqIF export/import features.</p>
+</div>
+
+    </div>
+
+  </section>
+
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="2-SDoc-Language-Server-Protocol"></div>
+    <h1
+class="section-title"
+data-level="2"
+>SDoc Language Server Protocol
+</h1>
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall support Language Server Protocol.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    <div class="requirement_rationale">
+    <div class="document">
+<p>The LSP can enable editing of SDoc files in IDEs like Eclipse, Visual Studio,
+PyCharm. A smart LSP can enable features like syntax highlighting,
+autocompletion and easy navigation through requirements.</p>
+</div>
+
+  </div>
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>The promising base for the implementation: <a class="reference external" href="https://github.com/openlawlibrary/pygls">https://github.com/openlawlibrary/pygls</a>.</p>
+</div>
+
+    </div>
+
+  </section>
+
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="3-Document-archetypes"></div>
+    <h1
+class="section-title"
+data-level="3"
+>Document archetypes
+</h1>
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall support the following document archetypes: <strong>requirements document</strong>
+and <strong>specification</strong> document. For both archetypes, StrictDoc shall further
+support the following options.</p>
+<table border="1" class="docutils">
+<caption>Table: Requirements and specification document</caption>
+<colgroup>
+<col width="20%" />
+<col width="40%" />
+<col width="40%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">&nbsp;</th>
+<th class="head">Requirements document</th>
+<th class="head">Specification document</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>Examples</td>
+<td>Most typical: requirements lists split by categories (e.g., Functional
+Requirements, Interface Requirements, Performance Requirements, etc.)</td>
+<td>Often: a standard document</td>
+</tr>
+<tr><td>Structure</td>
+<td>Not nested or not too deeply nested</td>
+<td>Nested</td>
+</tr>
+<tr><td>Visual presentation</td>
+<td>Requirements are often presented as table cells. Cells can be standalone
+or the whole section or document can be a long table with cells.</td>
+<td>Requirements are rather presented as header + text</td>
+</tr>
+<tr><td>Unique requirement identifiers (UID)</td>
+<td>Most always</td>
+<td><ul class="first last simple">
+<li>Present or not</li>
+<li><strong>NOT SUPPORTED YET:</strong> Can be missing, the chapter headers are used instead.
+The combination &quot;Number + Title&quot; becomes a reference-able identifier.
+A possible intermediate solution when modeling such a document is to
+make the UIDs map to the section number.</li>
+</ul>
+</td>
+</tr>
+<tr><td>Requirement titles</td>
+<td><ul class="first last simple">
+<li>Often</li>
+<li><strong>NOT SUPPORTED YET:</strong> But maybe absent (ex: NASA cFS SCH). If absent,
+the grouping is provided by sections.</li>
+</ul>
+</td>
+<td>Requirement titles are most often section titles</td>
+</tr>
+<tr><td>Real-world examples</td>
+<td><ul class="first last simple">
+<li>NASA cFE Functional Requirements</li>
+<li>MISRA C coding guidelines,</li>
+<li>NASA Software Engineering Requirements NPR 7150.2</li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li>ECSS Software ECSS-E-ST-40C</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>This draft requirement is the first attempt to organize this information.</p>
+</div>
+
+    </div>
+
+  </section>
+
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="4-Project-level-configuration-file"></div>
+    <h1
+class="section-title"
+data-level="4"
+>Project-level configuration file
+</h1>
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall support reading project configuration from a file.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<ul class="simple">
+<li>TOML format looks like a good option.</li>
+<li>Project title.</li>
+<li>Project prefix?</li>
+<li>Explicit or wildcard paths to sdoc files.</li>
+<li>Paths to dirs with source files.</li>
+<li>Config options for presenting requirements.<ul>
+<li>Include/exclude requirements in TOC</li>
+</ul>
+</li>
+</ul>
+</div>
+
+    </div>
+
+  </section>
+
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="5-Further-export-and-import-capabilities"></div>
+
+    
+        <h1
+class="section-title"
+data-level="5"
+>Further export and import capabilities
+</h1>
+    
+
+  </section>
+
+  
+
+</article></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="5.1-CSV-import-export"></div>
+    <h2
+class="section-title"
+data-level="5.1"
+>CSV import/export
+</h2>
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall support exporting documents to CSV format.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+
+  </section>
+
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="5.2-PlantUML-export"></div>
+    <h2
+class="section-title"
+data-level="5.2"
+>PlantUML export
+</h2>
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall support exporting documents to PlantUML format.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+
+  </section>
+
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="5.3-Confluence-import-export"></div>
+    <h2
+class="section-title"
+data-level="5.3"
+>Confluence import/export
+</h2>
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall support importing/exporting documents from/to Confluence HTML storage format.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+
+  </section>
+
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="5.4-Tex-export"></div>
+    <h2
+class="section-title"
+data-level="5.4"
+>Tex export
+</h2>
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall support exporting documents to Tex format.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+
+  </section>
+
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="5.5-Doorstop-import-export"></div>
+    <h2
+class="section-title"
+data-level="5.5"
+>Doorstop import/export
+</h2>
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall support import and exporting documents from/to
+<a class="reference external" href="https://github.com/doorstop-dev/doorstop">Doorstop</a> format.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+
+  </section>
+
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="6-Markdown-support-for-text-and-code-blocks"></div>
+    <h1
+class="section-title"
+data-level="6"
+>Markdown support for text and code blocks
+</h1>
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall support rendering text/code blocks into Markdown syntax.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+
+  </section>
+
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="7-StrictDoc-as-library"></div>
+    <h1
+class="section-title"
+data-level="7"
+>StrictDoc as library
+</h1>
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall support it use as a Python library.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>Such a use allows a more fine-grained access to the StrictDoc's modules, such
+as Grammar, Import, Export classes, etc.</p>
+</div>
+
+    </div>
+
+  </section>
+
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+
+<ul class="requirement-tree requirement-tree_left"><li class="requirement-tree_branch">
+    <div class="requirement-tree_node">
+      <article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    
+    <h3
+class="section-title"
+data-level="11.1.4"
+>Change management
+</h3>
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>GOAL-4-CHANGE-MANAGEMENT</dd>
+    
+  </dl>
+    
+<ul class="requirement_link">
+  <li>
+    <a class="requirement_link-child" href="#8-BACKLOG-FUZZY-SEARCH">
+      <span class="requirement_child-uid">BACKLOG-FUZZY-SEARCH</span>
+      Fuzzy requirements search
+    </a>
+  </li>
+  </ul>
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>Software shall provide capabilities for change management and impact assessment.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>Change management is difficult. The bigger the project is, the harder it is to
+maintain its documentation. If a change is introduced to a project, it usually
+requires a full revision of its requirements.</p>
+</div>
+
+    </div>
+    <div class="requirement_comment">
+      <div class="document">
+<p>When the basic capabilities of StrictDoc are in place, it should be possible
+to do a more advanced analysis of requirements and requirement trees:</p>
+<ul class="simple">
+<li>Finding similar or relevant requirements.</li>
+<li>Enforce invariants that should be hold. Example: mass or power budget.</li>
+</ul>
+</div>
+
+    </div>
+
+  </section>
+
+</article>
+    </div>
+
+  </li></ul></div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="8-BACKLOG-FUZZY-SEARCH"></div>
+    <h1
+class="section-title"
+data-level="8"
+>Fuzzy requirements search
+</h1>
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>BACKLOG-FUZZY-SEARCH</dd>
+    
+  </dl>
+    
+<ul class="requirement_link">
+  <li>
+    <a class="requirement_link-parent" href="../docs/strictdoc-1-TRACE.html#11.1.4-GOAL-4-CHANGE-MANAGEMENT">
+      <span class="requirement_parent-uid">GOAL-4-CHANGE-MANAGEMENT</span>
+      Change management
+    </a>
+  </li>
+  </ul>
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall support finding relevant requirements.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>This feature can be implemented in the CLI as well as in the future GUI. A fuzzy
+requirements search can help to find existing requirements and also identify
+relevant requirements when creating new requirements.</p>
+</div>
+
+    </div>
+
+  </section>
+
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="9-Filtering-by-tags"></div>
+    <h1
+class="section-title"
+data-level="9"
+>Filtering by tags
+</h1>
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall support filtering filtering by tags.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+
+  </section>
+
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="10-Advanced"></div>
+
+    
+        <h1
+class="section-title"
+data-level="10"
+>Advanced
+</h1>
+    
+
+  </section>
+
+  
+
+</article></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="10.1-Requirement-checksumming"></div>
+    <h2
+class="section-title"
+data-level="10.1"
+>Requirement checksumming
+</h2>
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall support calculation of checksums for requirements.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>This feature is relatively easy to implement but the implementation is postponed
+until the linking between requirements and files is implemented.</p>
+</div>
+
+    </div>
+
+  </section>
+
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="10.2-Graphical-User-Interface-GUI-"></div>
+    <h2
+class="section-title"
+data-level="10.2"
+>Graphical User Interface (GUI)
+</h2>
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall provide a Graphical User Interface (GUI).</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>Several trade-offs to consider:</p>
+<ul class="simple">
+<li>Desktop vs Web. Rather web-based, i.e. Python backend and JS frontend, but
+which technology?</li>
+<li>Still keep the current behavior of a statically generated website?</li>
+</ul>
+</div>
+
+    </div>
+
+  </section>
+
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="10.2.1-Web-server-and-editable-HTML-pages"></div>
+    <h3
+class="section-title"
+data-level="10.2.1"
+>Web server and editable HTML pages
+</h3>
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall provide a web server that serves as a StrictDoc backend for
+reading and writing SDoc files.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+
+  </section>
+
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="10.3-Facts-table-Invariants-calculation-"></div>
+    <h2
+class="section-title"
+data-level="10.3"
+>Facts table. Invariants calculation.
+</h2>
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall support creation of fact tables and allow calculation of
+invariants for constraints enforcement.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+
+  </section>
+
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="10.4-FMEA-FMECA-tables"></div>
+    <h2
+class="section-title"
+data-level="10.4"
+>FMEA/FMECA tables
+</h2>
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall support creation of FMEA/FMECA safety analysis documents.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+
+  </section>
+
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="11-Open-questions"></div>
+
+    
+        <h1
+class="section-title"
+data-level="11"
+>Open questions
+</h1>
+    
+
+  </section>
+
+  
+
+</article></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="11.1-One-or-many-input-sdoc-trees"></div>
+
+    
+        <h2
+class="section-title"
+data-level="11.1"
+>One or many input sdoc trees
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>StrictDoc supports this for HTML already but not for RST.</p>
+<p>When passed
+<tt class="docutils literal">strictdoc export ... /path/to/doctree1, /path/to/doctree2, /path/to/doctree3</tt>,
+the following is generated:</p>
+<pre class="code text literal-block">
+output folder:
+- doctree1/
+  - contents
+- doctree2/
+  - contents
+- doctree3/
+  - contents
+</pre>
+<p>and all three doctrees' requirements are merged into a single documentation
+space with cross-linking possible.</p>
+<p>The question is if it is worth supporting this case further or StrictDoc should
+only work with one input folder with a single doc tree.</p>
+</div>
+
+    </div></section>
+
+</article></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+      </div>
+
+
+    </main>
+
+  </div>
+  
+</body>
+</html>

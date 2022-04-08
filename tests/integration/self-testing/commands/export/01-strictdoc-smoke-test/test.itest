@@ -1,7 +1,17 @@
 RUN: %strictdoc export "%strictdoc_root/docs" --output-dir="%S/Output"
 
 RUN: %check_exists --file "%S/Output/html/index.html"
-RUN: %check_exists --file %S/Output/html/docs/strictdoc.html
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc-TABLE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc-TRACE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc-DEEP-TRACE.html"
+RUN: %check_exists --file %S/Output/html/docs/strictdoc-1-user-manual.html
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-1-user-manual-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-1-user-manual-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-1-user-manual-DEEP-TRACE.html"
+
+RUN: %check_exists --file %S/Output/html/docs/strictdoc-2-requirements.html
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-2-requirements-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-2-requirements-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-2-requirements-DEEP-TRACE.html"
+
+RUN: %check_exists --file %S/Output/html/docs/strictdoc-3-backlog.html
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-3-backlog-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-3-backlog-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-3-backlog-DEEP-TRACE.html"

@@ -1,0 +1,234 @@
+[DOCUMENT]
+TITLE: StrictDoc Backlog
+
+[FREETEXT]
+**Note:** The items below are weakly sorted from top to bottom. The topmost
+items are either work-in-progress or will be implemented next.
+[/FREETEXT]
+
+[SECTION]
+TITLE: Work in progress
+
+[REQUIREMENT]
+TITLE: Integration with Capella
+STATEMENT: >>>
+StrictDoc shall allow bi-directional data exchange with Capella tool.
+<<<
+COMMENT: The current plan is to implement this using ReqIF export/import features.
+
+[/SECTION]
+
+[REQUIREMENT]
+TITLE: SDoc Language Server Protocol
+STATEMENT: >>>
+StrictDoc shall support Language Server Protocol.
+<<<
+RATIONALE: >>>
+The LSP can enable editing of SDoc files in IDEs like Eclipse, Visual Studio,
+PyCharm. A smart LSP can enable features like syntax highlighting,
+autocompletion and easy navigation through requirements.
+<<<
+COMMENT: >>>
+The promising base for the implementation: https://github.com/openlawlibrary/pygls.
+<<<
+
+[REQUIREMENT]
+TITLE: Document archetypes
+STATEMENT: >>>
+StrictDoc shall support the following document archetypes: **requirements document**
+and **specification** document. For both archetypes, StrictDoc shall further
+support the following options.
+
+.. list-table:: Table: Requirements and specification document
+   :widths: 20 40 40
+   :header-rows: 1
+
+   * -
+     - Requirements document
+     - Specification document
+   * - Examples
+     - Most typical: requirements lists split by categories (e.g., Functional
+       Requirements, Interface Requirements, Performance Requirements, etc.)
+     - Often: a standard document
+   * - Structure
+     - Not nested or not too deeply nested
+     - Nested
+   * - Visual presentation
+     - Requirements are often presented as table cells. Cells can be standalone
+       or the whole section or document can be a long table with cells.
+     - Requirements are rather presented as header + text
+   * - Unique requirement identifiers (UID)
+     - Most always
+     - - Present or not
+       - **NOT SUPPORTED YET:** Can be missing, the chapter headers are used instead.
+         The combination "Number + Title" becomes a reference-able identifier.
+         A possible intermediate solution when modeling such a document is to
+         make the UIDs map to the section number.
+   * - Requirement titles
+     - - Often
+       - **NOT SUPPORTED YET:** But maybe absent (ex: NASA cFS SCH). If absent,
+         the grouping is provided by sections.
+     - Requirement titles are most often section titles
+   * - Real-world examples
+     - - NASA cFE Functional Requirements
+       - MISRA C coding guidelines,
+       - NASA Software Engineering Requirements NPR 7150.2
+     - - ECSS Software ECSS-E-ST-40C
+<<<
+COMMENT: This draft requirement is the first attempt to organize this information.
+
+[REQUIREMENT]
+TITLE: Project-level configuration file
+STATEMENT: StrictDoc shall support reading project configuration from a file.
+COMMENT: >>>
+- TOML format looks like a good option.
+
+- Project title.
+
+- Project prefix?
+
+- Explicit or wildcard paths to sdoc files.
+
+- Paths to dirs with source files.
+
+- Config options for presenting requirements.
+
+  - Include/exclude requirements in TOC
+<<<
+
+[SECTION]
+TITLE: Further export and import capabilities
+
+[REQUIREMENT]
+TITLE: CSV import/export
+STATEMENT: StrictDoc shall support exporting documents to CSV format.
+
+[REQUIREMENT]
+TITLE: PlantUML export
+STATEMENT: StrictDoc shall support exporting documents to PlantUML format.
+
+[REQUIREMENT]
+TITLE: Confluence import/export
+STATEMENT: StrictDoc shall support importing/exporting documents from/to Confluence HTML storage format.
+
+[REQUIREMENT]
+TITLE: Tex export
+STATEMENT: StrictDoc shall support exporting documents to Tex format.
+
+[REQUIREMENT]
+TITLE: Doorstop import/export
+STATEMENT: >>>
+StrictDoc shall support import and exporting documents from/to
+`Doorstop <https://github.com/doorstop-dev/doorstop>`_ format.
+<<<
+
+[/SECTION]
+
+[REQUIREMENT]
+TITLE: Markdown support for text and code blocks
+STATEMENT: StrictDoc shall support rendering text/code blocks into Markdown syntax.
+
+[REQUIREMENT]
+TITLE: StrictDoc as library
+STATEMENT: StrictDoc shall support it use as a Python library.
+COMMENT: >>>
+Such a use allows a more fine-grained access to the StrictDoc's modules, such
+as Grammar, Import, Export classes, etc.
+<<<
+
+[REQUIREMENT]
+UID: BACKLOG-FUZZY-SEARCH
+REFS:
+- TYPE: Parent
+  VALUE: GOAL-4-CHANGE-MANAGEMENT
+TITLE: Fuzzy requirements search
+STATEMENT: StrictDoc shall support finding relevant requirements.
+COMMENT: >>>
+This feature can be implemented in the CLI as well as in the future GUI. A fuzzy
+requirements search can help to find existing requirements and also identify
+relevant requirements when creating new requirements.
+<<<
+
+[REQUIREMENT]
+TITLE: Filtering by tags
+STATEMENT: StrictDoc shall support filtering filtering by tags.
+
+[SECTION]
+TITLE: Advanced
+
+[REQUIREMENT]
+TITLE: Requirement checksumming
+STATEMENT: StrictDoc shall support calculation of checksums for requirements.
+COMMENT: >>>
+This feature is relatively easy to implement but the implementation is postponed
+until the linking between requirements and files is implemented.
+<<<
+
+[COMPOSITE_REQUIREMENT]
+TITLE: Graphical User Interface (GUI)
+STATEMENT: StrictDoc shall provide a Graphical User Interface (GUI).
+COMMENT: >>>
+Several trade-offs to consider:
+
+- Desktop vs Web. Rather web-based, i.e. Python backend and JS frontend, but
+  which technology?
+- Still keep the current behavior of a statically generated website?
+<<<
+
+[REQUIREMENT]
+TITLE: Web server and editable HTML pages
+STATEMENT: >>>
+StrictDoc shall provide a web server that serves as a StrictDoc backend for
+reading and writing SDoc files.
+<<<
+
+[/COMPOSITE_REQUIREMENT]
+
+[REQUIREMENT]
+TITLE: Facts table. Invariants calculation.
+STATEMENT: >>>
+StrictDoc shall support creation of fact tables and allow calculation of
+invariants for constraints enforcement.
+<<<
+
+[REQUIREMENT]
+TITLE: FMEA/FMECA tables
+STATEMENT: >>>
+StrictDoc shall support creation of FMEA/FMECA safety analysis documents.
+<<<
+
+[/SECTION]
+
+[SECTION]
+TITLE: Open questions
+
+[SECTION]
+TITLE: One or many input sdoc trees
+
+[FREETEXT]
+StrictDoc supports this for HTML already but not for RST.
+
+When passed
+``strictdoc export ... /path/to/doctree1, /path/to/doctree2, /path/to/doctree3``,
+the following is generated:
+
+.. code-block:: text
+
+    output folder:
+    - doctree1/
+      - contents
+    - doctree2/
+      - contents
+    - doctree3/
+      - contents
+
+and all three doctrees' requirements are merged into a single documentation
+space with cross-linking possible.
+
+The question is if it is worth supporting this case further or StrictDoc should
+only work with one input folder with a single doc tree.
+[/FREETEXT]
+
+[/SECTION]
+
+[/SECTION]

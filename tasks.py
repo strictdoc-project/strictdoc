@@ -85,7 +85,7 @@ def sphinx(context):
         (
             """
             python3 strictdoc/cli/main.py
-                export docs/strictdoc.sdoc
+                export docs/
                     --formats=html
                     --output-dir output/sphinx
                     --project-title "StrictDoc"
@@ -98,7 +98,7 @@ def sphinx(context):
         (
             """
             python3 strictdoc/cli/main.py
-                export docs
+                export docs/
                     --formats=rst
                     --output-dir output/sphinx
                     --project-title "StrictDoc"
@@ -110,7 +110,7 @@ def sphinx(context):
         context,
         (
             """
-            cp -v output/sphinx/rst/strictdoc.rst docs/sphinx/source/ &&
+            cp -v output/sphinx/rst/strictdoc*.rst docs/sphinx/source/ &&
             mkdir -p docs/strictdoc-html/strictdoc-html &&
             cp -rv output/sphinx/html/* docs/strictdoc-html/strictdoc-html
             """

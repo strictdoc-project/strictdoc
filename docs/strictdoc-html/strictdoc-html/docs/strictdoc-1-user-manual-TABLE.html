@@ -1,0 +1,2247 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="UTF-8"/>
+
+  <link rel="shortcut icon" href="../_static/favicon.ico" type="image/x-icon"/>
+
+  
+  <link rel="stylesheet" href="../_static/_base.css"/>
+  <link rel="stylesheet" href="../_static/_layout.css"/>
+  <link rel="stylesheet" href="../_static/_content.css"/>
+  <link rel="stylesheet" href="../_static/_requirement.css"/>
+  <link rel="stylesheet" href="../_static/_element.css"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/toc.js"></script>
+  
+  
+  
+
+
+  <title>StrictDoc User Manual - Table</title>
+
+  
+</head>
+
+<body class="table-view">
+<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script>
+
+  <div class="layout" id="layout">
+
+    <aside class="layout_aside-header">
+      
+  <a class="index-link" href="../index.html">To Index</a>
+
+    </aside>
+
+    <aside class="layout_aside">
+      
+  
+    <div>Table of Contents</div>
+    <ul class="toc"><li><a href="#1-Introduction">
+              <span class="section-number">1</span>
+              Introduction
+            </a><ul><li><a href="#1.1-Contact-the-developers">
+              <span class="section-number">1.1</span>
+              Contact the developers
+            </a></li></ul>
+            </li><li><a href="#2-Examples">
+              <span class="section-number">2</span>
+              Examples
+            </a></li><li><a href="#3-Getting-started">
+              <span class="section-number">3</span>
+              Getting started
+            </a><ul><li><a href="#3.1-Requirements">
+              <span class="section-number">3.1</span>
+              Requirements
+            </a></li><li><a href="#3.2-Installing-StrictDoc-as-a-Pip-package-recommended-way-">
+              <span class="section-number">3.2</span>
+              Installing StrictDoc as a Pip package (recommended way)
+            </a></li><li><a href="#3.3-Installing-StrictDoc-from-GitHub-developer-mode-">
+              <span class="section-number">3.3</span>
+              Installing StrictDoc from GitHub (developer mode)
+            </a></li><li><a href="#3.4-Installing-StrictDoc-into-a-Docker-container">
+              <span class="section-number">3.4</span>
+              Installing StrictDoc into a Docker container
+            </a></li><li><a href="#3.5-Installing-StrictDoc-as-a-Snap-package-not-maintained-">
+              <span class="section-number">3.5</span>
+              Installing StrictDoc as a Snap package (not maintained)
+            </a></li><li><a href="#3.6-Hello-world">
+              <span class="section-number">3.6</span>
+              Hello world
+            </a></li></ul>
+            </li><li><a href="#4-SDoc-syntax">
+              <span class="section-number">4</span>
+              SDoc syntax
+            </a><ul><li><a href="#4.1-Document-structure">
+              <span class="section-number">4.1</span>
+              Document structure
+            </a><ul><li><a href="#4.1.1-Strict-rule-1-One-empty-line-between-all-nodes">
+              <span class="section-number">4.1.1</span>
+              Strict rule #1: One empty line between all nodes
+            </a></li><li><a href="#4.1.2-Strict-rule-2-No-content-is-allowed-outside-of-SDoc-grammar">
+              <span class="section-number">4.1.2</span>
+              Strict rule #2: No content is allowed outside of SDoc grammar
+            </a></li></ul>
+            </li><li><a href="#4.2-Grammar-elements">
+              <span class="section-number">4.2</span>
+              Grammar elements
+            </a><ul><li><a href="#4.2.1-Document">
+              <span class="section-number">4.2.1</span>
+              Document
+            </a></li><li><a href="#4.2.2-Requirement">
+              <span class="section-number">4.2.2</span>
+              Requirement
+            </a><ul><li><a href="#4.2.2.1-UID">
+              <span class="section-number">4.2.2.1</span>
+              UID
+            </a></li><li><a href="#4.2.2.2-References">
+              <span class="section-number">4.2.2.2</span>
+              References
+            </a></li><li><a href="#4.2.2.3-Comment">
+              <span class="section-number">4.2.2.3</span>
+              Comment
+            </a></li><li><a href="#4.2.2.4-Rationale">
+              <span class="section-number">4.2.2.4</span>
+              Rationale
+            </a></li></ul>
+            </li><li><a href="#4.2.3-Section">
+              <span class="section-number">4.2.3</span>
+              Section
+            </a><ul><li><a href="#4.2.3.1-Nesting-sections">
+              <span class="section-number">4.2.3.1</span>
+              Nesting sections
+            </a></li><li><a href="#4.2.3.2-Free-text">
+              <span class="section-number">4.2.3.2</span>
+              Free text
+            </a></li></ul>
+            </li><li><a href="#4.2.4-Composite-requirement">
+              <span class="section-number">4.2.4</span>
+              Composite requirement
+            </a></li><li><a href="#4.2.5-Include-files">
+              <span class="section-number">4.2.5</span>
+              Include files
+            </a></li></ul>
+            </li><li><a href="#4.3-Custom-grammars">
+              <span class="section-number">4.3</span>
+              Custom grammars
+            </a><ul><li><a href="#4.3.1-Supported-field-types">
+              <span class="section-number">4.3.1</span>
+              Supported field types
+            </a></li><li><a href="#4.3.2-Reserved-fields">
+              <span class="section-number">4.3.2</span>
+              Reserved fields
+            </a></li></ul>
+            </li></ul>
+            </li><li><a href="#5-Markup">
+              <span class="section-number">5</span>
+              Markup
+            </a><ul><li><a href="#5.1-Images">
+              <span class="section-number">5.1</span>
+              Images
+            </a></li></ul>
+            </li><li><a href="#6-Export-formats">
+              <span class="section-number">6</span>
+              Export formats
+            </a><ul><li><a href="#6.1-HTML-documentation-tree-by-StrictDoc">
+              <span class="section-number">6.1</span>
+              HTML documentation tree by StrictDoc
+            </a><ul><li><a href="#6.1.1-Mathjax-support">
+              <span class="section-number">6.1.1</span>
+              Mathjax support
+            </a></li><li><a href="#6.1.2-Standalone-HTML-pages-experimental-">
+              <span class="section-number">6.1.2</span>
+              Standalone HTML pages (experimental)
+            </a></li></ul>
+            </li><li><a href="#6.2-HTML-export-via-Sphinx">
+              <span class="section-number">6.2</span>
+              HTML export via Sphinx
+            </a></li><li><a href="#6.3-PDF-export-via-Sphinx-LaTeX">
+              <span class="section-number">6.3</span>
+              PDF export via Sphinx/LaTeX
+            </a></li></ul>
+            </li><li><a href="#7-Traceability-between-requirements-and-source-code">
+              <span class="section-number">7</span>
+              Traceability between requirements and source code
+            </a></li><li><a href="#8-ReqIF-support">
+              <span class="section-number">8</span>
+              ReqIF support
+            </a><ul><li><a href="#8.1-Import-flow-ReqIF-SDoc-">
+              <span class="section-number">8.1</span>
+              Import flow (ReqIF -> SDoc):
+            </a></li><li><a href="#8.2-Export-flow-SDoc-ReqIF-">
+              <span class="section-number">8.2</span>
+              Export flow (SDoc -> ReqIF)
+            </a></li><li><a href="#8.3-ReqIF-implementation-details">
+              <span class="section-number">8.3</span>
+              ReqIF implementation details
+            </a></li></ul>
+            </li><li><a href="#9-Options">
+              <span class="section-number">9</span>
+              Options
+            </a><ul><li><a href="#9.1-Project-title">
+              <span class="section-number">9.1</span>
+              Project title
+            </a></li><li><a href="#9.2-Parallelization">
+              <span class="section-number">9.2</span>
+              Parallelization
+            </a></li></ul>
+            </li><li><a href="#10-StrictDoc-and-other-tools">
+              <span class="section-number">10</span>
+              StrictDoc and other tools
+            </a><ul><li><a href="#10.1-StrictDoc-and-Doorstop">
+              <span class="section-number">10.1</span>
+              StrictDoc and Doorstop
+            </a></li><li><a href="#10.2-StrictDoc-and-Sphinx">
+              <span class="section-number">10.2</span>
+              StrictDoc and Sphinx
+            </a></li><li><a href="#10.3-StrictDoc-and-Sphinx-Needs">
+              <span class="section-number">10.3</span>
+              StrictDoc and Sphinx-Needs
+            </a></li></ul>
+            </li></ul>
+
+    </aside>
+
+    
+  <a class="layout_toggler layout_button" id="layout_toggle"></a><nav class="layout_nav">
+    <a
+    class="layout_nav-btn layout_button btn-document"
+    title="Go to Document view"
+    href="../docs/strictdoc-1-user-manual.html">
+    DOC
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-table"
+    title="Go to Table view"
+    href="../docs/strictdoc-1-user-manual-TABLE.html">
+    TBL
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-traceability"
+    title="Go to Traceability view"
+    href="../docs/strictdoc-1-user-manual-TRACE.html">
+    TR
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-deep-traceability"
+    title="Go to Deep Traceability view"
+    href="../docs/strictdoc-1-user-manual-DEEP-TRACE.html">
+    DTR
+  </a>
+  </nav>
+
+
+    <header class="layout_header">
+      
+  <p>StrictDoc User Manual <span class="document-view-type">Table</span></p>
+
+    </header>
+
+    <main class="layout_main">
+      
+
+      
+
+      <div class="content">
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="1-Introduction"></div>
+
+    
+        <h1
+class="section-title"
+data-level="1"
+>Introduction
+</h1>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>StrictDoc is software for writing technical requirements and specifications.</p>
+<p>Summary of StrictDoc features:</p>
+<ul class="simple">
+<li>The documentation files are stored as human-readable text files.</li>
+<li>A simple domain-specific language DSL is used for writing the documents. The
+text format for encoding this language is called SDoc (strict-doc).</li>
+<li>StrictDoc reads <tt class="docutils literal">*.sdoc</tt> files and builds an in-memory representation of the
+document tree.</li>
+<li>From this in-memory representation, StrictDoc can generate the documentation
+into a number of formats including HTML, RST, ReqIF, PDF, Excel.</li>
+<li>The focus of the tool is modeling requirements and specifications documents.
+Such documents consist of multiple statements like &quot;system X shall do Y&quot;
+called requirements.</li>
+<li>The requirements can be linked together to form the relationships, such as
+&quot;parent-child&quot;, and from these connections, many useful features, such as
+<a class="reference external" href="https://en.wikipedia.org/wiki/Requirements_traceability">Requirements Traceability</a>
+and Documentation Coverage, can be derived.</li>
+<li>Requirements to source files traceability (experimental). See
+<a class="reference external" href="#7-Traceability-between-requirements-and-source-code">Traceability between requirements and source code</a>.</li>
+<li>Custom grammar and custom fields support. The StrictDoc's grammar can be
+extended to support arbitrary special fields, such as <tt class="docutils literal">PRIORITY</tt>, <tt class="docutils literal">OWNER</tt>,
+or even more specialized fields, such as
+<tt class="docutils literal">Automotive Safety Integrity Level (ASIL)</tt> or <tt class="docutils literal">Verification method</tt>.
+See <a class="reference external" href="#4.3-Custom-grammars">Custom grammars</a>.</li>
+<li>Good performance of the <a class="reference external" href="https://github.com/textX/textX">textX</a>
+parser and parallelized incremental generation of documents: generation of
+document trees with up to 2000-3000 requirements into HTML pages stays within
+a few seconds. From the second run, only changed documents are regenerated.
+Further performance tuning should be possible.</li>
+</ul>
+<p>See the Backlog to get an idea of the overall project direction.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="1.1-Contact-the-developers"></div>
+
+    
+        <h2
+class="section-title"
+data-level="1.1"
+>Contact the developers
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>Join us in Discord. Here is the invitation link: <a class="reference external" href="https://discord.gg/j8AC8qFp">https://discord.gg/j8AC8qFp</a></p>
+<p>The author can be also contacted via <a class="reference external" href="mailto:s.pankevich&#64;gmail.com">email</a>.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="2-Examples"></div>
+
+    
+        <h1
+class="section-title"
+data-level="2"
+>Examples
+</h1>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>&quot;Hello World&quot; example of the text language:</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[REQUIREMENT]
+UID: SDOC-HIGH-REQS-MANAGEMENT
+TITLE: Requirements management
+STATEMENT: StrictDoc shall enable requirements management.
+</pre>
+</div>
+
+    </div><div class="free-text">
+      <div class="document">
+<p>For a more comprehensive example check the source file of this documentation
+which is written using StrictDoc:
+<a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc.sdoc">strictdoc.sdoc</a>.</p>
+<ul class="simple">
+<li><a class="reference external" href="https://strictdoc.readthedocs.io/en/latest/strictdoc-html">StrictDoc HTML export</a></li>
+<li><a class="reference external" href="https://strictdoc.readthedocs.io/en/latest">StrictDoc HTML export using Sphinx</a></li>
+<li><a class="reference external" href="https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/">StrictDoc PDF export using Sphinx</a></li>
+</ul>
+<p>Additionally, the project's repository contains a folder
+<tt class="docutils literal">tests/integration/examples</tt>. In this folder, there is a collection of basic
+examples.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="3-Getting-started"></div>
+
+    
+        <h1
+class="section-title"
+data-level="3"
+>Getting started
+</h1>
+    
+
+  </section>
+
+  
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="3.1-Requirements"></div>
+
+    
+        <h2
+class="section-title"
+data-level="3.1"
+>Requirements
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<ul class="simple">
+<li>Python 3.6+</li>
+<li>macOS, Linux or Windows</li>
+</ul>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="3.2-Installing-StrictDoc-as-a-Pip-package-recommended-way-"></div>
+
+    
+        <h2
+class="section-title"
+data-level="3.2"
+>Installing StrictDoc as a Pip package (recommended way)
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<pre class="code text literal-block">
+pip install strictdoc
+</pre>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="3.3-Installing-StrictDoc-from-GitHub-developer-mode-"></div>
+
+    
+        <h2
+class="section-title"
+data-level="3.3"
+>Installing StrictDoc from GitHub (developer mode)
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p><strong>Note:</strong> Use this way of installing StrictDoc only if you want to make changes
+in StrictDoc's source code. Otherwise, install StrictDoc as a Pip package
+(see above).</p>
+<pre class="code literal-block">
+git clone https://github.com/strictdoc-project/strictdoc.git &amp;&amp; cd strictdoc
+pip install -r requirements.txt
+python3 strictdoc/cli/main.py
+</pre>
+<p>All development tasks are managed using
+<a class="reference external" href="https://www.pyinvoke.org/">Invoke</a> in the <tt class="docutils literal">tasks.py</tt> file. On macOS and
+Linux, all tasks run in dedicated virtual environments. On Windows, invoke uses
+the parent pip environment which can be a system environment or a user's virtual
+environment.</p>
+<pre class="code literal-block">
+pip install invoke  # macOS and Linux
+invoke setup-development-deps  # macOS and Linux
+pip install -r requirements.development.txt  # Windows only
+invoke --list  # See the available tasks
+</pre>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="3.4-Installing-StrictDoc-into-a-Docker-container"></div>
+
+    
+        <h2
+class="section-title"
+data-level="3.4"
+>Installing StrictDoc into a Docker container
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>StrictDoc can be invoked inside of a Docker container. To make data available
+to the Docker container (here: <tt class="docutils literal">strictdoc:latest</tt>) as well as to the host
+system, one needs to mount a volume via <tt class="docutils literal"><span class="pre">-v</span></tt> option.</p>
+<p>In the host operating system terminal:</p>
+<pre class="code text literal-block">
+docker build . -t strictdoc:latest
+docker run --name strictdoc --rm -v &quot;$(pwd)/docs:/data&quot; -i -t strictdoc:latest
+</pre>
+<p>In the container terminal:</p>
+<pre class="code text literal-block">
+bash-5.1# strictdoc export .
+bash-5.1# exit
+</pre>
+<p>The documentation resides in <tt class="docutils literal">./docs/output/html</tt>.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="3.5-Installing-StrictDoc-as-a-Snap-package-not-maintained-"></div>
+
+    
+        <h2
+class="section-title"
+data-level="3.5"
+>Installing StrictDoc as a Snap package (not maintained)
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>This way of installing StrictDoc is not maintained anymore. If you want to
+use it, refer to the instructions located in <tt class="docutils literal">developer/snap/README.md</tt>.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="3.6-Hello-world"></div>
+
+    
+        <h2
+class="section-title"
+data-level="3.6"
+>Hello world
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<pre class="code text literal-block">
+git clone --depth 1 https://github.com/strictdoc-project/strictdoc &amp;&amp; cd strictdoc
+strictdoc export docs/
+</pre>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4-SDoc-syntax"></div>
+
+    
+        <h1
+class="section-title"
+data-level="4"
+>SDoc syntax
+</h1>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>StrictDoc defines a special syntax for writing specifications documents. This
+syntax is called SDoc and it's grammar is encoded with the
+<a class="reference external" href="https://github.com/textX/textX">textX</a>
+tool.</p>
+<p>The grammar is defined using textX language for defining grammars and is
+located in a single file:
+<a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/main/strictdoc/backend/sdoc/grammar/grammar.py">grammar.py</a>.</p>
+<p>This is how a minimal possible SDoc document looks like:</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+</pre>
+<p>This documentation is written using StrictDoc. Here is the source file:
+<a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc.sdoc">strictdoc.sdoc</a>.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4.1-Document-structure"></div>
+
+    
+        <h2
+class="section-title"
+data-level="4.1"
+>Document structure
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>An SDoc document consists of a <tt class="docutils literal">[DOCUMENT]</tt> declaration followed by one or many
+<tt class="docutils literal">[REQUIREMENT]</tt> or <tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt> statements which can be grouped
+into <tt class="docutils literal">[SECTION]</tt> blocks.</p>
+<p>The following grammatical constructs are currently supported:</p>
+<ul class="simple">
+<li><tt class="docutils literal">DOCUMENT</tt><ul>
+<li><tt class="docutils literal">FREETEXT</tt></li>
+</ul>
+</li>
+<li><tt class="docutils literal">REQUIREMENT</tt> and <tt class="docutils literal">COMPOSITE_REQUIREMENT</tt></li>
+<li><tt class="docutils literal">SECTION</tt><ul>
+<li><tt class="docutils literal">FREETEXT</tt></li>
+</ul>
+</li>
+</ul>
+<p>Each construct is described in more detail below.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4.1.1-Strict-rule-1-One-empty-line-between-all-nodes"></div>
+
+    
+        <h3
+class="section-title"
+data-level="4.1.1"
+>Strict rule #1: One empty line between all nodes
+</h3>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>StrictDoc's grammar requires each node, such as <tt class="docutils literal">[REQUIREMENT]</tt>, <tt class="docutils literal">[SECTION]</tt>,
+etc., to be separated with exactly one empty line from the nodes surrounding it.
+This rule is valid for all nodes. Absence of an empty line or presence of more
+than one empty line between two nodes will result in an SDoc parsing error.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4.1.2-Strict-rule-2-No-content-is-allowed-outside-of-SDoc-grammar"></div>
+
+    
+        <h3
+class="section-title"
+data-level="4.1.2"
+>Strict rule #2: No content is allowed outside of SDoc grammar
+</h3>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>StrictDoc's grammar does not allow any content to be written outside of the SDoc
+grammatical constructs. It is assumed that the critical content shall always be
+written in form of requirements:
+<tt class="docutils literal">[REQUIREMENT]</tt> and <tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt>. Non-critical content shall
+be specified using <tt class="docutils literal">[FREETEXT]</tt> nodes. By design, the <tt class="docutils literal">[FREETEXT]</tt> nodes can
+be only attached to the <tt class="docutils literal">[DOCUMENT]</tt> and <tt class="docutils literal">[SECTION]</tt> nodes.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4.2-Grammar-elements"></div>
+
+    
+        <h2
+class="section-title"
+data-level="4.2"
+>Grammar elements
+</h2>
+    
+
+  </section>
+
+  
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4.2.1-Document"></div>
+
+    
+        <h3
+class="section-title"
+data-level="4.2.1"
+>Document
+</h3>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p><tt class="docutils literal">[DOCUMENT]</tt> element must always be present in an SDoc document. It is a root
+of an SDoc document graph.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+(newline)
+</pre>
+<p><tt class="docutils literal">DOCUMENT</tt> declaration must always have a <tt class="docutils literal">TITLE</tt> field. It can have
+optional configuration fields and an optional <tt class="docutils literal">[FREETEXT]</tt> block.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[FREETEXT]
+StrictDoc is software for writing technical requirements and specifications.
+[/FREETEXT]
+</pre>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4.2.2-Requirement"></div>
+
+    
+        <h3
+class="section-title"
+data-level="4.2.2"
+>Requirement
+</h3>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>Minimal &quot;Hello World&quot; program with 3 empty requirements:</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[REQUIREMENT]
+
+[REQUIREMENT]
+
+[REQUIREMENT]
+</pre>
+<p>Supported fields:</p>
+<ul class="simple">
+<li><tt class="docutils literal">UID</tt> (unique identifier)</li>
+<li><tt class="docutils literal">REFS</tt></li>
+<li><tt class="docutils literal">TITLE</tt></li>
+<li><tt class="docutils literal">STATEMENT</tt></li>
+<li><tt class="docutils literal">RATIONALE</tt></li>
+<li><tt class="docutils literal">COMMENT</tt> (multiple comments are possible)</li>
+</ul>
+<p>Currently, all <tt class="docutils literal">[REQUIREMENT]</tt>'s are optional but most of the time at least
+the <tt class="docutils literal">STATEMENT:</tt> field must be present as well as the <tt class="docutils literal">TITLE:</tt> field.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[REQUIREMENT]
+TITLE: Requirements management
+STATEMENT: StrictDoc shall enable requirements management.
+</pre>
+<p><strong>Observation:</strong> Many real-world documents have requirements with statements and
+titles but some documents only use statements without title in which case their
+title becomes their UID. Example:</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[REQUIREMENT]
+UID: REQ-001
+STATEMENT: StrictDoc shall enable requirements management.
+</pre>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4.2.2.1-UID"></div>
+
+    
+        <h4
+class="section-title"
+data-level="4.2.2.1"
+>UID
+</h4>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p><strong>Observation:</strong> Some documents do not use unique identifiers which makes it
+impossible to trace their requirements to each other. Within StrictDoc's
+framework, it is assumed that a good requirements document has all of its
+requirements uniquely identifiable, however, the <tt class="docutils literal">UID</tt> field is optional to
+accommodate for documents without connections between requirements.</p>
+<p>StrictDoc does not impose any limitations on the format of a UID. Examples of
+typical conventions for naming UIDs:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">REQ-001</span></tt>, <tt class="docutils literal"><span class="pre">SCA-001</span></tt> (scalability), <tt class="docutils literal"><span class="pre">PERF-001</span></tt> (performance), etc.</li>
+<li><tt class="docutils literal">cES1008</tt>, <tt class="docutils literal">cTBL6000.1</tt> (example from NASA cFS requirements)</li>
+<li>Requirements without a number, e.g. <tt class="docutils literal"><span class="pre">SDOC-HIGH-DATA-MODEL</span></tt> (StrictDoc)</li>
+<li><tt class="docutils literal">SAVOIR.OBC.PM.80</tt> (SAVOIR guidelines)</li>
+</ul>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[REQUIREMENT]
+UID: SDOC-HIGH-DATA-MODEL
+STATEMENT: STATEMENT: StrictDoc shall be based on a well-defined data model.
+</pre>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4.2.2.2-References"></div>
+
+    
+        <h4
+class="section-title"
+data-level="4.2.2.2"
+>References
+</h4>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>The <tt class="docutils literal">[REQUIREMENT]</tt> / <tt class="docutils literal">REFS:</tt> field is used to connect requirements to each
+other:</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[REQUIREMENT]
+UID: REQ-001
+STATEMENT: StrictDoc shall enable requirements management.
+
+[REQUIREMENT]
+UID: REQ-002
+REFS:
+- TYPE: Parent
+  VALUE: REQ-001
+TITLE: Requirement #2's title
+STATEMENT: Requirement #2 statement
+</pre>
+<p><strong>Note:</strong> The <tt class="docutils literal">TYPE: Parent</tt> is the only supported type of connection. In the
+future, linking requirements to files will be possible.</p>
+<p><strong>Note:</strong> By design, StrictDoc will only show parent or child links if both
+requirements connected with a reference have <tt class="docutils literal">UID</tt> defined.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4.2.2.3-Comment"></div>
+
+    
+        <h4
+class="section-title"
+data-level="4.2.2.3"
+>Comment
+</h4>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>A requirement can have one or more comments explaining this requirement. The
+comments can be single-line or multiline.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[REQUIREMENT]
+UID: REQ-001
+STATEMENT: StrictDoc shall enable requirements management.
+COMMENT: Clarify the meaning or give additional information here.
+COMMENT: &gt;&gt;&gt;
+This is a multiline comment.
+
+The content is split via \n\n.
+
+Each line is rendered as a separate paragraph.
+&lt;&lt;&lt;
+</pre>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4.2.2.4-Rationale"></div>
+
+    
+        <h4
+class="section-title"
+data-level="4.2.2.4"
+>Rationale
+</h4>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>A requirement can have a <tt class="docutils literal">RATIONALE:</tt> field that explains why such a
+requirement exists. Like comments, the rationale field can be single-line or
+multiline.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[REQUIREMENT]
+UID: REQ-001
+STATEMENT: StrictDoc shall enable requirements management.
+COMMENT: Clarify the meaning or give additional information here.
+RATIONALE: The presence of the REQ-001 is justified.
+</pre>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4.2.3-Section"></div>
+
+    
+        <h3
+class="section-title"
+data-level="4.2.3"
+>Section
+</h3>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>The <tt class="docutils literal">[SECTION]</tt> element is used for creating document chapters and grouping
+requirements into logical groups. It is equivalent to the use of <tt class="docutils literal">#</tt>, <tt class="docutils literal">##</tt>,
+<tt class="docutils literal">###</tt>, etc., in Markdown and <tt class="docutils literal"><span class="pre">====</span></tt>, <tt class="docutils literal"><span class="pre">----</span></tt>, <tt class="docutils literal"><span class="pre">~~~~</span></tt> in RST.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[SECTION]
+TITLE: High-level requirements
+
+[REQUIREMENT]
+UID: HIGH-001
+STATEMENT: ...
+
+[/SECTION]
+
+[SECTION]
+TITLE: Implementation requirements
+
+[REQUIREMENT]
+UID: IMPL-001
+STATEMENT: ...
+
+[/SECTION]
+</pre>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4.2.3.1-Nesting-sections"></div>
+
+    
+        <h4
+class="section-title"
+data-level="4.2.3.1"
+>Nesting sections
+</h4>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>Sections can be nested within each other.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[SECTION]
+TITLE: Chapter
+
+[SECTION]
+TITLE: Subchapter
+
+[REQUIREMENT]
+STATEMENT: ...
+
+[/SECTION]
+
+[/SECTION]
+</pre>
+<p>StrictDoc creates section numbers automatically. In the example above, the
+sections will have their titles numbered accordingly: <tt class="docutils literal">1 Chapter</tt> and
+<tt class="docutils literal">1.1 Subchapter</tt>.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4.2.3.2-Free-text"></div>
+
+    
+        <h4
+class="section-title"
+data-level="4.2.3.2"
+>Free text
+</h4>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>A section can have a block of <tt class="docutils literal">[FREETEXT]</tt> connected to it:</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[SECTION]
+TITLE: Free text
+
+[FREETEXT]
+A sections can have a block of ``[FREETEXT]`` connected to it:
+
+...
+[/FREETEXT]
+
+[/SECTION]
+</pre>
+<p>According to the Strict Rule #2, arbitrary content cannot be written outside
+of StrictDoc's grammar structure. <tt class="docutils literal">[SECTION] / [FREETEXT]</tt> is therefore a
+designated grammar element for writing free text content.</p>
+<p><strong>Note:</strong> Free text can also be called &quot;nonnormative&quot; or &quot;informative&quot; text
+because it does not contribute anything to the traceability information of the
+document. The nonnormative text is there to give a context to the reader and
+help with the conceptual understanding of the information. If a certain
+information influences or is influenced by existing requirements, it has to be
+promoted to the requirement level: the information has to be broken down into
+atomic <tt class="docutils literal">[REQUIREMENT]</tt> statements and get connected to the other requirement
+statements in the document.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4.2.4-Composite-requirement"></div>
+
+    
+        <h3
+class="section-title"
+data-level="4.2.4"
+>Composite requirement
+</h3>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>A <tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt> is a requirement that combines requirement
+properties of a <tt class="docutils literal">[REQUIREMENT]</tt> element and grouping features of a <tt class="docutils literal">[SECTION]</tt>
+element. This element can be useful in lower-level specifications documents
+where a given section of a document has to describe a single feature and the
+description requires a one or more levels of nesting. In this case, it might be
+natural to use a composite requirement that is tightly connected to a few
+related sub-requirements.</p>
+<pre class="code text literal-block">
+[COMPOSITE_REQUIREMENT]
+STATEMENT: Statement
+
+[REQUIREMENT]
+STATEMENT: Substatement #1
+
+[REQUIREMENT]
+STATEMENT: Substatement #2
+
+[REQUIREMENT]
+STATEMENT: Substatement #3
+
+[/COMPOSITE_REQUIREMENT]
+</pre>
+<p>Special feature of <tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt>: like <tt class="docutils literal">[SECTION]</tt> element, the
+<tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt> elements can be nested within each other. However,
+<tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt> cannot nest sections.</p>
+<p><strong>Note:</strong> Composite requirements should not be used in every document. Most
+often, a more basic combination of nested <tt class="docutils literal">[SECTION]</tt> and <tt class="docutils literal">[REQUIREMENT]</tt>
+elements should do the job.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4.2.5-Include-files"></div>
+
+    
+        <h3
+class="section-title"
+data-level="4.2.5"
+>Include files
+</h3>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>StrictDoc <tt class="docutils literal">.sdoc</tt> files can be built-up from including other fragment documents.</p>
+<p>The <tt class="docutils literal">[FRAGMENT_FROM_FILE]</tt> element can be used anywhere body elements can be
+used ( e.g.``[SECTION]``, <tt class="docutils literal">[REQUIREMENT</tt>, <tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt> etc.) and will
+evaluate by inserting its contents from the file referenced by its <tt class="docutils literal">FILE:</tt> property
+where it was used in the parent document. The files included must start with a <tt class="docutils literal">[FRAGMENT]</tt>
+directive and cannot contain <tt class="docutils literal">[FREETEXT]</tt> elements but are otherwise identical to
+<tt class="docutils literal">*.sdoc</tt> files. They can have any filename except a``.sdoc`` extension.</p>
+<p>Here is an example pair of files similar to examples above. First the
+<tt class="docutils literal">.sdoc</tt> file has a <tt class="docutils literal">[FRAGMENT_FROM_FILE]</tt> that references the latter file.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[FREETEXT]
+...
+[/FREETEXT]
+
+[FRAGMENT_FROM_FILE]
+FILE: include.ssec
+
+[REQUIREMENT]
+</pre>
+<p>Then the referenced file, <tt class="docutils literal">include.ssec</tt>:</p>
+<pre class="code text literal-block">
+[FRAGMENT]
+
+[REQUIREMENT]
+
+[SECTION]
+TITLE: Sub section
+[/SECTION]
+
+[COMPOSITE_REQUIREMENT]
+
+[REQUIREMENT]
+
+[/COMPOSITE_REQUIREMENT]
+</pre>
+<p>Which will resolve to the following document after inclusion:</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[FREETEXT]
+...
+[/FREETEXT]
+
+[REQUIREMENT]
+
+[SECTION]
+TITLE: Sub section
+[/SECTION]
+
+[COMPOSITE_REQUIREMENT]
+
+[REQUIREMENT]
+
+[/COMPOSITE_REQUIREMENT]
+
+[REQUIREMENT]
+</pre>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4.3-Custom-grammars"></div>
+
+    
+        <h2
+class="section-title"
+data-level="4.3"
+>Custom grammars
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p><strong>Observation:</strong> Different industries have their own types of requirements
+documents with specialized meta information.
+Examples: <tt class="docutils literal">ASIL</tt> in the automotive industry or
+<tt class="docutils literal">HERITAGE</tt> field in some of the requirements documents by NASA.</p>
+<p>StrictDoc allows declaration of custom grammars with custom fields that are
+specific to a particular document.</p>
+<p>First, such fields have to be registered on a document level using the
+<tt class="docutils literal">[GRAMMAR]</tt> field. The following example demonstrates a declaration of
+a grammar with four fields including a custom <tt class="docutils literal">VERIFICATION</tt> field.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: How to declare a custom grammar
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: VERIFICATION
+    TYPE: String
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: True
+</pre>
+<p>This declaration configures the parser to recognize the declared fields as
+defined by a user. Declaring a special field as <tt class="docutils literal">REQUIRED: True</tt> makes this
+field mandatory for each and every requirement in the document.</p>
+<p>When the fields are registered on the document level, it becomes possible to
+declare them as the <tt class="docutils literal">[REQUIREMENT]</tt> special fields:</p>
+<pre class="code text literal-block">
+[REQUIREMENT]
+UID: ABC-123
+VERIFICATION: Test
+STATEMENT: System A shall do B.
+COMMENT: Test comment.
+</pre>
+<p><strong>Note:</strong> The order of fields must match the order of their declaration in the
+grammar.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4.3.1-Supported-field-types"></div>
+
+    
+        <h3
+class="section-title"
+data-level="4.3.1"
+>Supported field types
+</h3>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>The supported field types are:</p>
+<ul class="simple">
+<li><tt class="docutils literal">String</tt></li>
+<li><tt class="docutils literal">SingleChoice</tt> (Enum-like behavior, one choice is possible)</li>
+<li><tt class="docutils literal">MultipleChoice</tt> (comma-separated words with fixed options)</li>
+<li><tt class="docutils literal">Tag</tt> (comma-separated words with no fixed options)</li>
+</ul>
+<p>Example:</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: How to declare a custom grammar
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: ASIL
+    TYPE: SingleChoice(A, B, C, D)
+    REQUIRED: True
+  - TITLE: VERIFICATION
+    TYPE: MultipleChoice(Review, Analysis, Inspection, Test)
+    REQUIRED: True
+  - TITLE: UNIT
+    TYPE: Tag
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: True
+
+[FREETEXT]
+This document is an example of a simple SDoc custom grammar.
+[/FREETEXT]
+
+[REQUIREMENT]
+UID: ABC-123
+ASIL: A
+VERIFICATION: Review, Test
+UNIT: OBC, RTU
+TITLE: Function B
+STATEMENT: System A shall do B.
+COMMENT: Test comment.
+</pre>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4.3.2-Reserved-fields"></div>
+
+    
+        <h3
+class="section-title"
+data-level="4.3.2"
+>Reserved fields
+</h3>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>While it is possible to declare a grammar with completely custom fields, there
+is a fixed set of reserved fields that StrictDoc uses for the presentation of
+table of contents and document structure:</p>
+<table border="1" class="docutils">
+<caption>Reserved fields in SDoc's grammar</caption>
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head"><strong>Reserved field</strong></th>
+<th class="head"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>UID</td>
+<td>Requirement's UID.</td>
+</tr>
+<tr><td>REFS</td>
+<td>StrictDoc relies on this field to link requirements
+together and build traceability information.</td>
+</tr>
+<tr><td>TITLE</td>
+<td>Requirement's title. StrictDoc relies on this field to create
+document structure and table of contents.</td>
+</tr>
+<tr><td>STATEMENT</td>
+<td>Requirement's statement. StrictDoc presents this field as a long text
+block.</td>
+</tr>
+<tr><td>COMMENT</td>
+<td>One or more comments to a requirement.</td>
+</tr>
+<tr><td>RATIONALE</td>
+<td>The rationale for a requirement. Visually presented in the same way as a
+comment.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="5-Markup"></div>
+
+    
+        <h1
+class="section-title"
+data-level="5"
+>Markup
+</h1>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>The Restructured Text (reST) markup is the default markup supported by
+StrictDoc. The reST markup can be written inside all StrictDoc's text blocks,
+such as <tt class="docutils literal">[FREETEXT]</tt>, <tt class="docutils literal">STATEMENT</tt>, <tt class="docutils literal">COMMENT</tt>, <tt class="docutils literal">RATIONALE</tt>.</p>
+<p>See the <a class="reference external" href="https://docutils.sourceforge.io/rst.html">reST syntax documentation</a>
+for a full reference.</p>
+<p>The support of Tex and HTML is planned.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="5.1-Images"></div>
+
+    
+        <h2
+class="section-title"
+data-level="5.1"
+>Images
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>This is the example of how images are included using the reST syntax:</p>
+<pre class="code text literal-block">
+[FREETEXT]
+.. image:: _assets/sandbox1.svg
+   :alt: Sandbox demo
+   :class: image
+[/FREETEXT]
+</pre>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="6-Export-formats"></div>
+
+    
+        <h1
+class="section-title"
+data-level="6"
+>Export formats
+</h1>
+    
+
+  </section>
+
+  
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="6.1-HTML-documentation-tree-by-StrictDoc"></div>
+
+    
+        <h2
+class="section-title"
+data-level="6.1"
+>HTML documentation tree by StrictDoc
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>This is a default export option supported by StrictDoc.</p>
+<p>The following command creates an HTML export:</p>
+<pre class="code text literal-block">
+strictdoc export docs/ --formats=html --output-dir output-html
+</pre>
+<p><strong>Example:</strong> This documentation is exported by StrictDoc to HTML:
+<a class="reference external" href="https://strictdoc.readthedocs.io/en/latest/strictdoc-html">StrictDoc HTML export</a>.</p>
+<p><strong>Note:</strong> The options <tt class="docutils literal"><span class="pre">--formats=html</span></tt> and <tt class="docutils literal"><span class="pre">--output-dir</span> <span class="pre">output-html</span></tt> can be
+skipped because HTML export is a default export option and the default output
+folder is <tt class="docutils literal">output</tt>.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="6.1.1-Mathjax-support"></div>
+
+    
+        <h3
+class="section-title"
+data-level="6.1.1"
+>Mathjax support
+</h3>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>The option <tt class="docutils literal"><span class="pre">--enable-mathjax</span></tt> makes StrictDoc to include the
+<a class="reference external" href="https://www.mathjax.org/">Mathjax</a> Javascript library to all of the document
+templates.</p>
+<pre class="code text literal-block">
+strictdoc export docs/ --enable-mathjax --output-dir output-html
+</pre>
+<p>Example of using Mathjax:</p>
+<pre class="code text literal-block">
+[FREETEXT]
+$$
+\\mathbf{\\underline{k}}_{\\text{a}} =
+\\mathbf{\\underline{i}}_{\\text{a}} \\times
+\\mathbf{\\underline{j}}_{\\text{a}}
+$$
+[/FREETEXT]
+</pre>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="6.1.2-Standalone-HTML-pages-experimental-"></div>
+
+    
+        <h3
+class="section-title"
+data-level="6.1.2"
+>Standalone HTML pages (experimental)
+</h3>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>The following command creates a normal HTML export with all pages having their
+assets embedded into HTML using Data URI / Base64:</p>
+<pre class="code text literal-block">
+strictdoc export docs/ --formats=html-standalone --output-dir output-html
+</pre>
+<p>The generated document are self-contained HTML pages that can be shared via
+email as single files. This option might be especially useful if you work with
+a single document instead of a documentation tree with multiple documents.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="6.2-HTML-export-via-Sphinx"></div>
+
+    
+        <h2
+class="section-title"
+data-level="6.2"
+>HTML export via Sphinx
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>The following command creates an RST export:</p>
+<pre class="code text literal-block">
+strictdoc export YourDoc.sdoc --formats=rst --output-dir output
+</pre>
+<p>The created RST files can be copied to a project created using Sphinx, see
+<a class="reference external" href="https://docs.readthedocs.io/en/stable/intro/getting-started-with-sphinx.html">Getting Started with Sphinx</a>.</p>
+<pre class="code text literal-block">
+cp -v output/YourDoc.rst docs/sphinx/source/
+cd docs/sphinx &amp;&amp; make html
+</pre>
+<p><a class="reference external" href="https://strictdoc.readthedocs.io/en/latest/">StrictDoc's own Sphinx/HTML documentation</a>
+is generated this way, see the Invoke task:
+<a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48">invoke sphinx</a>.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="6.3-PDF-export-via-Sphinx-LaTeX"></div>
+
+    
+        <h2
+class="section-title"
+data-level="6.3"
+>PDF export via Sphinx/LaTeX
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>The following command creates an RST export:</p>
+<pre class="code text literal-block">
+strictdoc export YourDoc.sdoc --formats=rst --output-dir output
+</pre>
+<p>The created RST files can be copied to a project created using Sphinx, see
+<a class="reference external" href="https://docs.readthedocs.io/en/stable/intro/getting-started-with-sphinx.html">Getting Started with Sphinx</a>.</p>
+<pre class="code text literal-block">
+cp -v output/YourDoc.rst docs/sphinx/source/
+cd docs/sphinx &amp;&amp; make pdf
+</pre>
+<p><a class="reference external" href="https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/">StrictDoc's own Sphinx/PDF documentation</a>
+is generated this way, see the Invoke task:
+<a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48">invoke sphinx</a>.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="7-Traceability-between-requirements-and-source-code"></div>
+
+    
+        <h1
+class="section-title"
+data-level="7"
+>Traceability between requirements and source code
+</h1>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p><strong>Note:</strong> This feature is experimental, the documentation is incomplete.</p>
+<p>StrictDoc allows connecting requirements to source code files. Two types of
+links are supported:</p>
+<p>1) A basic link where a requirement links to a whole file.</p>
+<pre class="code text literal-block">
+[REQUIREMENT]
+UID: REQ-001
+REFS:
+- TYPE: File
+  VALUE: file.py
+TITLE: File reference
+STATEMENT: This requirement references the file.
+</pre>
+<p>2) A range-based link where a requirement links to a file and
+additionally in the file, there is a reverse link that connects a source range
+back to the requirement:</p>
+<p>The requirement declaration contains a reference of the type <tt class="docutils literal">File</tt>:</p>
+<pre class="code text literal-block">
+[REQUIREMENT]
+UID: REQ-001
+REFS:
+- TYPE: File
+  VALUE: file.py
+TITLE: Whole file reference
+STATEMENT: This requirement references the file.py file.
+COMMENT: &gt;&gt;&gt;
+If the file.py contains a source range that is connected back to this
+requirement (REQ-001), the link becomes a link to the source range.
+&lt;&lt;&lt;
+</pre>
+<p>The source file:</p>
+<pre class="code py literal-block">
+<span class="comment single"># [REQ-002]</span>
+<span class="keyword">def</span> <span class="name function">hello_world</span><span class="punctuation">():</span>
+    <span class="name builtin">print</span><span class="punctuation">(</span><span class="literal string double">&quot;hello world&quot;</span><span class="punctuation">)</span>
+<span class="comment single"># [/REQ-002]</span>
+</pre>
+<p>To activate the traceability to source files, use
+<tt class="docutils literal"><span class="pre">--experimental-enable-file-traceability</span></tt> option:</p>
+<pre class="code text literal-block">
+strictdoc export . --experimental-enable-file-traceability --output-dir output/
+</pre>
+<p>The <tt class="docutils literal">tests/integration/examples</tt> folder contains executable examples including
+the example of requirements-to-source-code traceability.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="8-ReqIF-support"></div>
+
+    
+        <h1
+class="section-title"
+data-level="8"
+>ReqIF support
+</h1>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>StrictDoc has an initial support of exporting to and importing from the ReqIF
+format.</p>
+<p><strong>Note:</strong> It is not possible to implement a single export/import procedure that
+works well for all ReqIF XML files produced by various requirements management
+tools. The export/import workflow is therefore tool-specific. See
+<a class="reference external" href="#8.3-ReqIF-implementation-details">ReqIF implementation details</a> for more details.</p>
+<p>Supported formats:</p>
+<ul class="simple">
+<li>StrictDoc's &quot;native&quot; export/import between SDoc and ReqIF</li>
+</ul>
+<p>Planned formats:</p>
+<ul class="simple">
+<li>The format recommended by the
+<a class="reference external" href="https://www.prostep.org/fileadmin/downloads/PSI_ImplementationGuide_ReqIF_V1-7.pdf">ReqIF Implementation Guide</a>
+that attempts to harmonize the developments of ReqIF by requirements
+management tools.</li>
+</ul>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="8.1-Import-flow-ReqIF-SDoc-"></div>
+
+    
+        <h2
+class="section-title"
+data-level="8.1"
+>Import flow (ReqIF -> SDoc):
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<pre class="code text literal-block">
+strictdoc import reqif sdoc input.reqif output.sdoc
+</pre>
+<p>The command does the following:</p>
+<ol class="arabic simple">
+<li>The ReqIF is parsed from XML file to ReqIF in-memory model using the <tt class="docutils literal">reqif</tt>
+library.</li>
+<li>The ReqIF in-memory model is converted to SDoc in-memory model. In this case,
+<tt class="docutils literal">sdoc</tt> indicates that the native ReqIF-to-SDoc conversion procedure must be
+used.</li>
+<li>The SDoc in-memory model is written to an .sdoc file.</li>
+</ol>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="8.2-Export-flow-SDoc-ReqIF-"></div>
+
+    
+        <h2
+class="section-title"
+data-level="8.2"
+>Export flow (SDoc -> ReqIF)
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<pre class="code text literal-block">
+strictdoc export --formats=reqif-sdoc %S/input.sdoc
+</pre>
+<p>The command does the following:</p>
+<ol class="arabic simple">
+<li>The SDoc file is parsed to an SDoc in-memory model.</li>
+<li>The SDoc in-memory model is converted to a ReqIF in-memory model using the
+native SDoc-to-ReqIF conversion procedure as indicated by the <tt class="docutils literal"><span class="pre">reqif-sdoc</span></tt>
+argument.</li>
+<li>The ReqIF in-memory model is unparsed a to ReqIF XML file using <tt class="docutils literal">reqif</tt>
+library.</li>
+</ol>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="8.3-ReqIF-implementation-details"></div>
+
+    
+        <h2
+class="section-title"
+data-level="8.3"
+>ReqIF implementation details
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>The ReqIF is a <a class="reference external" href="https://www.omg.org/spec/ReqIF">standard</a> which is
+maintained by Object Management Group (OMG). One important feature of the
+ReqIF standard is that it requires a fixed XML structure but still leaves
+certain details open to the implementation by the ReqIF and requirements
+management tools developers. Specifically, each tool may use it own field
+names and structure to represent requirements and sections/chapters.</p>
+<p>In order to accommodate for the differences between ReqIF files produced by
+various tools, the ReqIF processing is split into two layers:</p>
+<p>1) Parsing ReqIF from <tt class="docutils literal">.reqif</tt> XML files into ReqIF in-memory tree of Python
+objects as well as unparsing the ReqIF in-memory tree back to ReqIF XML files is
+extracted to a separate library:
+<a class="reference external" href="https://github.com/strictdoc-project/reqif">strictdoc-project/reqif</a>.</p>
+<p>2) Converting between in-memory trees of SDoc and ReqIF. This layer is part of
+StrictDoc.</p>
+<p>For further overview of the ReqIF format and the <tt class="docutils literal">reqif</tt> library's
+implementation details, refer to
+<a class="reference external" href="https://github.com/strictdoc-project/reqif">strictdoc-project/reqif</a>'s
+documentation.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="9-Options"></div>
+
+    
+        <h1
+class="section-title"
+data-level="9"
+>Options
+</h1>
+    
+
+  </section>
+
+  
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="9.1-Project-title"></div>
+
+    
+        <h2
+class="section-title"
+data-level="9.1"
+>Project title
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>By default, StrictDoc generates a project tree with a project title
+&quot;Untitled Project&quot;. To specify the project title use the option
+<tt class="docutils literal"><span class="pre">--project-title</span></tt>.</p>
+<pre class="code text literal-block">
+strictdoc export --project-title &quot;My Project&quot; .
+</pre>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="9.2-Parallelization"></div>
+
+    
+        <h2
+class="section-title"
+data-level="9.2"
+>Parallelization
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>To improve performance for the large document trees (1000+ requirements),
+StrictDoc parallelizes reading and generation of the documents using
+process-based parallelization: <tt class="docutils literal">multiprocessing.Pool</tt> and
+<tt class="docutils literal">multiprocessing.Queue</tt>.</p>
+<p>Parallelization improves performance but can also complicate understanding
+behavior of the code if something goes wrong.</p>
+<p>To disable parallelization use the <tt class="docutils literal"><span class="pre">--no-parallelization</span></tt> option:</p>
+<pre class="code text literal-block">
+strictdoc export --no-parallelization docs/
+</pre>
+<p><strong>Note:</strong> Currently, only the generation of HTML documents is parallelized, so
+this option will only have effect on the HTML export. All other export options
+are run from the main thread. Reading of the SDoc documents is parallelized for
+all export options and is disabled with this option as well.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="10-StrictDoc-and-other-tools"></div>
+
+    
+        <h1
+class="section-title"
+data-level="10"
+>StrictDoc and other tools
+</h1>
+    
+
+  </section>
+
+  
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="10.1-StrictDoc-and-Doorstop"></div>
+
+    
+        <h2
+class="section-title"
+data-level="10.1"
+>StrictDoc and Doorstop
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>The StrictDoc project is a close successor of another project called
+<a class="reference external" href="https://github.com/doorstop-dev/doorstop">Doorstop</a>.</p>
+<blockquote>
+Doorstop is a requirements management tool that facilitates the storage of
+textual requirements alongside source code in version control.</blockquote>
+<p>The author of Doorstop has published a <a class="reference external" href="http://www.scirp.org/journal/PaperInformation.aspx?PaperID=44268#.UzYtfWRdXEZ">paper about Doorstop</a>
+where the rationale behind text-based requirements management is provided.</p>
+<p>The first version of StrictDoc had started as a fork of the Doorstop project.
+However, after a while, the StrictDoc was started from scratch as a separate
+project. At this point, StrictDoc and Doorstop do not share any code but
+StrictDoc still shares with Doorstop their common underlying design principles:</p>
+<ul class="simple">
+<li>Both Doorstop and StrictDoc are written using Python. Both are pip packages which are easy-to-install.</li>
+<li>Both Doorstop and StrictDoc provide a command-line interface.</li>
+<li>Both Doorstop and StrictDoc use text files for requirements management.</li>
+<li>Both Doorstop and StrictDoc encourage collocation of code and documentation.
+When documentation is hosted close to code it has less chances of diverging
+from the actual implementation or becoming outdated.</li>
+<li>As the free and open source projects, both Doorstop and StrictDoc seem to
+struggle to find resources for development of specialized GUI interfaces this
+is why both tools give a preference to supporting exporting documentation
+pages to HTML format as the primary export feature.</li>
+</ul>
+<p>StrictDoc differs from Doorstop in a number of aspects:</p>
+<ul class="simple">
+<li>Doorstop stores requirements in YAML files, one separate file per requirement
+(<a class="reference external" href="https://github.com/doorstop-dev/doorstop/blob/804153c67c7c5466ee94e9553118cc3df03a56f9/reqs/REQ001.yml">example</a>).
+The document in Doorstop is assembled from the requirements files into a
+single logical document during the document generation process.
+StrictDoc's documentation unit is one document stored in an .sdoc file. Such a
+document can have multiple requirements grouped by sections.</li>
+<li>In YAML files, Doorstop stores requirements properties such as
+<tt class="docutils literal">normative: true</tt> or <tt class="docutils literal">level: 2.3</tt> for which Doorstop provides validations.
+Such a design decision, in fact, assumes an existence of implicitly-defined
+grammar which is encoded &quot;ad-hoc&quot; in the parsing and validation rules of
+Doorstop.
+StrictDoc takes a different approach and defines its grammar explicitly using
+a tool for creating Domain-Specific Languages called <a class="reference external" href="https://github.com/textX/textX">textX</a>.
+TextX support allows StrictDoc to encode a strict type-safe grammar in a
+<a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/93486a0e9fb30b141187587eae9e995cd86c6cbf/strictdoc/backend/dsl/grammar.py">single grammar file</a>
+that StrictDoc uses to parse the documentation files
+using the parsing capabilities provided by textX out of the box.</li>
+</ul>
+<p>The roadmap of StrictDoc contains a work item for supporting the export/import
+to/from Doorstop format.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="10.2-StrictDoc-and-Sphinx"></div>
+
+    
+        <h2
+class="section-title"
+data-level="10.2"
+>StrictDoc and Sphinx
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>Both Sphinx and StrictDoc are both documentation generators but StrictDoc is at
+a higher level of abstraction: StrictDoc's specialization is requirements and
+specifications documents. StrictDoc can generate documentation to a number of
+formats including HTML format as well as the RST format which is a default
+input format for Sphinx. A two stage generation is therefore possible:
+StrictDoc generates RST documentation which then can be generated to HTML, PDF,
+and other formats using Sphinx.</p>
+<p>If you are reading this documentation at
+<a class="reference external" href="https://strictdoc.readthedocs.io/en/latest">https://strictdoc.readthedocs.io/en/latest</a>
+then you are already looking at the example: this documentation stored in
+<a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc.sdoc">strictdoc.sdoc</a>
+is converted to RST format by StrictDoc which is further converted to the HTML
+website by readthedocs which uses Sphinx under the hood. The
+<tt class="docutils literal">StrictDoc <span class="pre">-&gt;</span> RST <span class="pre">-&gt;</span> Sphinx <span class="pre">-&gt;</span> PDF</tt> example is also generated using readthedocs:
+<a class="reference external" href="https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/">StrictDoc</a>.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="10.3-StrictDoc-and-Sphinx-Needs"></div>
+
+    
+        <h2
+class="section-title"
+data-level="10.3"
+>StrictDoc and Sphinx-Needs
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p><a class="reference external" href="https://sphinxcontrib-needs.readthedocs.io/en/latest/">Sphinx-Needs</a> is a
+text-based requirements management system based on Sphinx. It is implemented
+as a Sphinx extension that extends the
+<a class="reference external" href="https://docutils.sourceforge.io/docs/user/rst/quickref.html">reStructuredText (RST)</a>
+markup language with additional syntax for writing requirements documents.</p>
+<p>Sphinx-Needs was a great source of inspiration for the second version of
+StrictDoc which was first implemented as a Sphinx extension and then as a more
+independent library on top of <a class="reference external" href="https://docutils.sourceforge.io/">docutils</a>
+that Sphinx uses for the underlying RST syntax processing work.</p>
+<p>The similarities between Sphinx-Needs and StrictDoc:</p>
+<ul class="simple">
+<li>In contrast to Doorstop, both Sphinx-Needs and StrictDoc do not split a
+document into many small files, one file per single requirement (see
+discussion
+<a class="reference external" href="https://github.com/doorstop-dev/doorstop/issues/401">doorstop#401</a>). Both
+tools follow the &quot;file per document&quot; approach.</li>
+<li>Sphinx-Needs has a
+<a class="reference external" href="https://sphinxcontrib-needs.readthedocs.io/en/latest/directives/index.html">well-developed language</a>
+based on custom RST directives, such
+as <tt class="docutils literal">req::</tt>, <tt class="docutils literal">spec::</tt>, <tt class="docutils literal">needtable::</tt>, etc. The RST document is parsed
+by Sphinx/docutils into RST abstract syntax tree (AST) which allows creating
+an object graph out for the documents and their requirements from the RST
+document. StrictDoc uses textX for building an AST from a SDoc document.
+Essentially, both Sphinx-Needs and StrictDoc works in a similar way but use
+different markup languages and tooling for the job.</li>
+</ul>
+<p>The difference between Sphinx-Needs and StrictDoc:</p>
+<ul class="simple">
+<li>RST tooling provided by Sphinx/docutils is very powerful, yet it can also be
+rather limiting. The RST syntax and underlying docutils tooling do not allow
+much flexibility needed for creating a language for defining requirements
+using a custom and explicit grammar, a feature that became a cornerstone of
+StrictDoc. This was a major reason why the third generation of
+StrictDoc started with a migration from docutils to
+<a class="reference external" href="https://github.com/textX/textX">textX</a> which is a
+dedicated tool for creating custom Domain-Specific Languages. After the
+migration to textX, StrictDoc is no longer restricted to the limitations of
+the RST document, while it is still possible to generate SDoc files to RST
+using StrictDoc and then further generate RST to HTML/PDF and other formats
+using Sphinx.</li>
+<li>Sphinx-Needs has an impressive list of config options and features that
+StrictDoc is missing. Examples: Customizing the look of the requirements,
+<a class="reference external" href="https://sphinxcontrib-needs.readthedocs.io/en/latest/roles.html">Roles</a>,
+<a class="reference external" href="https://sphinxcontrib-needs.readthedocs.io/en/latest/services/index.html">Services</a>
+and
+<a class="reference external" href="https://sphinxcontrib-needs.readthedocs.io/en/latest/index.html">others</a>.</li>
+</ul>
+</div>
+
+    </div></section>
+
+</article>
+      </div>
+
+
+    </main>
+
+  </div>
+  
+</body>
+</html>

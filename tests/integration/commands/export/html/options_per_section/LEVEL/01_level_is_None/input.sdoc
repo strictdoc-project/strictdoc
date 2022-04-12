@@ -1,0 +1,44 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[SECTION]
+TITLE: Section 1
+
+[/SECTION]
+
+[SECTION]
+LEVEL: None
+TITLE: Out-of-band Section
+
+[SECTION]
+TITLE: Out-of-band Subsection
+
+[SECTION]
+TITLE: Out-of-band Subsubsection
+
+[/SECTION]
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Section 2
+
+[SECTION]
+LEVEL: None
+TITLE: Out-of-band Section
+
+[/SECTION]
+
+[SECTION]
+TITLE: Section 2.1
+
+[/SECTION]
+
+[SECTION]
+TITLE: Section 2.2
+
+[/SECTION]
+
+[/SECTION]

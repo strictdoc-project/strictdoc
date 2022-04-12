@@ -1,0 +1,39 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[SECTION]
+TITLE: First section (numbered)
+
+[SECTION]
+LEVEL: None
+TITLE: Second section (unnumbered)
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: First requirement
+STATEMENT: >>>
+This requirement is numbered 1.1 (correct).
+<<<
+
+[REQUIREMENT]
+UID: REQ-002
+TITLE: Second requirement
+STATEMENT: >>>
+This requirement is numbered 1.1.1 (not correct, should be 1.2).
+<<<
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Second section (numbered)
+
+[REQUIREMENT]
+UID: REQ-003
+TITLE: Third requirement
+STATEMENT: >>>
+This requirement is numbered 2 (correct).
+<<<
+
+[/SECTION]

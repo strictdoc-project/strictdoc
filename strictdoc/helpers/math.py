@@ -8,6 +8,6 @@ def round_up(number: float, decimals):
     if decimals == 0:
         return ceil(number)
 
-    factor = 10 ** decimals
+    factor = 10**decimals
 
     return ceil(number * factor) / factor

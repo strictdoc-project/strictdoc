@@ -304,7 +304,9 @@ def dump_grammar(context, output_file):
 @task
 def check_dead_links(context):
     command = """
-        python3 tools/link_health.py docs/strictdoc.sdoc
+        python3 tools/link_health.py docs/strictdoc-1-user-manual.sdoc &&
+        python3 tools/link_health.py docs/strictdoc-2-requirements.sdoc &&
+        python3 tools/link_health.py docs/strictdoc-3-backlog.sdoc
     """
     run_invoke_cmd(context, command)
 

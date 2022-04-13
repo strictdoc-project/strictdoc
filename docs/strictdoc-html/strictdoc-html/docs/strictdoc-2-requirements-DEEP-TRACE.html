@@ -50,248 +50,235 @@
       
   
     <div>Table of Contents</div>
-    <ul class="toc"><li><a href="#1-Project-goals">
+    <ul class="toc"><li><a href="#1-High-level-requirements">
               <span class="section-number">1</span>
-              Project goals
-            </a><ul><li><a href="#1.1-GOAL-1-TOOL-SUPPORT">
-          <span class="section-number">1.1</span>
-          Software support for writing requirements and specifications documents
-        </a></li><li><a href="#1.2-GOAL-2-REDUCE-DOCUMENTATION-HAZARDS">
-          <span class="section-number">1.2</span>
-          Reduce documentation hazards
-        </a></li><li><a href="#1.3-GOAL-3-NO-RUNAWAY-DOCUMENTATION">
-          <span class="section-number">1.3</span>
-          No (or less) run-away documentation
-        </a></li><li><a href="#1.4-GOAL-4-CHANGE-MANAGEMENT">
-          <span class="section-number">1.4</span>
-          Change management
-        </a></li></ul>
-            </li><li><a href="#2-High-level-requirements">
-              <span class="section-number">2</span>
               High-level requirements
-            </a><ul><li><a href="#2.1-SDOC-HIGH-REQS-MANAGEMENT">
-          <span class="section-number">2.1</span>
+            </a><ul><li><a href="#1.1-SDOC-HIGH-REQS-MANAGEMENT">
+          <span class="section-number">1.1</span>
           Requirements management
-        </a></li><li><a href="#2.2-SDOC-HIGH-DATA-MODEL">
-          <span class="section-number">2.2</span>
+        </a></li><li><a href="#1.2-SDOC-HIGH-DATA-MODEL">
+          <span class="section-number">1.2</span>
           Data model
-        </a></li><li><a href="#2.3-Command-line-interface">
-          <span class="section-number">2.3</span>
+        </a></li><li><a href="#1.3-Command-line-interface">
+          <span class="section-number">1.3</span>
           Command-line interface
-        </a></li><li><a href="#2.4-Platform-support">
-          <span class="section-number">2.4</span>
+        </a></li><li><a href="#1.4-Platform-support">
+          <span class="section-number">1.4</span>
           Platform support
-        </a><ul><li><a href="#2.4.1-macOS-support">
-          <span class="section-number">2.4.1</span>
+        </a><ul><li><a href="#1.4.1-macOS-support">
+          <span class="section-number">1.4.1</span>
           macOS support
-        </a></li><li><a href="#2.4.2-Linux-support">
-          <span class="section-number">2.4.2</span>
+        </a></li><li><a href="#1.4.2-Linux-support">
+          <span class="section-number">1.4.2</span>
           Linux support
-        </a></li><li><a href="#2.4.3-Windows-support">
-          <span class="section-number">2.4.3</span>
+        </a></li><li><a href="#1.4.3-Windows-support">
+          <span class="section-number">1.4.3</span>
           Windows support
         </a></li></ul>
-            </li><li><a href="#2.5-SDOC-HIGH-VALIDATION">
-          <span class="section-number">2.5</span>
+            </li><li><a href="#1.5-SDOC-HIGH-VALIDATION">
+          <span class="section-number">1.5</span>
           Requirements validation
-        </a></li><li><a href="#2.6-Requirements-text-format">
-          <span class="section-number">2.6</span>
+        </a></li><li><a href="#1.6-Requirements-text-format">
+          <span class="section-number">1.6</span>
           Requirements text format
-        </a></li><li><a href="#2.7-Linking-requirements">
-          <span class="section-number">2.7</span>
+        </a></li><li><a href="#1.7-Linking-requirements">
+          <span class="section-number">1.7</span>
           Linking requirements
-        </a></li><li><a href="#2.8-Scalability">
-          <span class="section-number">2.8</span>
+        </a></li><li><a href="#1.8-Scalability">
+          <span class="section-number">1.8</span>
           Scalability
-        </a></li><li><a href="#2.9-SDOC-HIGH-REQS-TRACEABILITY">
-          <span class="section-number">2.9</span>
+        </a></li><li><a href="#1.9-SDOC-HIGH-REQS-TRACEABILITY">
+          <span class="section-number">1.9</span>
           Traceability
-        </a></li><li><a href="#2.10-Visualization">
-          <span class="section-number">2.10</span>
+        </a></li><li><a href="#1.10-Visualization">
+          <span class="section-number">1.10</span>
           Visualization
-        </a></li><li><a href="#2.11-Open-source-software">
-          <span class="section-number">2.11</span>
+        </a></li><li><a href="#1.11-Open-source-software">
+          <span class="section-number">1.11</span>
           Open source software
         </a></li></ul>
-            </li><li><a href="#3-Implementation-requirements">
-              <span class="section-number">3</span>
+            </li><li><a href="#2-Implementation-requirements">
+              <span class="section-number">2</span>
               Implementation requirements
-            </a><ul><li><a href="#3.1-SDOC-IMPL-PARAL">
-          <span class="section-number">3.1</span>
+            </a><ul><li><a href="#2.1-SDOC-IMPL-PARAL">
+          <span class="section-number">2.1</span>
           Parallelization
-        </a></li><li><a href="#3.2-SDOC-IMPL-INCREMENTAL">
-          <span class="section-number">3.2</span>
+        </a></li><li><a href="#2.2-SDOC-IMPL-INCREMENTAL">
+          <span class="section-number">2.2</span>
           Incremental generation
         </a></li></ul>
-            </li><li><a href="#4-Data-model">
-              <span class="section-number">4</span>
+            </li><li><a href="#3-Data-model">
+              <span class="section-number">3</span>
               Data model
-            </a><ul><li><a href="#4.1-SDOC-DM-MODEL">
-          <span class="section-number">4.1</span>
+            </a><ul><li><a href="#3.1-SDOC-DM-MODEL">
+          <span class="section-number">3.1</span>
           Modeling capability
-        </a></li><li><a href="#4.2-Project">
-          <span class="section-number">4.2</span>
+        </a></li><li><a href="#3.2-Project">
+          <span class="section-number">3.2</span>
           Project
-        </a><ul><li><a href="#4.2.1-Project-title">
-          <span class="section-number">4.2.1</span>
+        </a><ul><li><a href="#3.2.1-Project-title">
+          <span class="section-number">3.2.1</span>
           Project title
         </a></li></ul>
             </li><li><span class="toc-title-no-link" title="Section has no requirements">
               <span class="section-number">
-                4.3
+                3.3
               </span>
               Document
-            </span></li><li><span class="toc-title-no-link" title="Section has no requirements">
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
               <span class="section-number">
-                4.4
+                3.4
               </span>
               Section
-            </span></li><li><a href="#4.5-Requirement-item">
-              <span class="section-number">4.5</span>
+            </span>
+          </li><li><a href="#3.5-Requirement-item">
+              <span class="section-number">3.5</span>
               Requirement item
-            </a><ul><li><a href="#4.5.1-Statement">
-          <span class="section-number">4.5.1</span>
+            </a><ul><li><a href="#3.5.1-Statement">
+          <span class="section-number">3.5.1</span>
           Statement
-        </a></li><li><a href="#4.5.2-UID-identifier">
-          <span class="section-number">4.5.2</span>
+        </a></li><li><a href="#3.5.2-UID-identifier">
+          <span class="section-number">3.5.2</span>
           UID identifier
-        </a><ul><li><a href="#4.5.2.1-UID-identifier-format">
-          <span class="section-number">4.5.2.1</span>
+        </a><ul><li><a href="#3.5.2.1-UID-identifier-format">
+          <span class="section-number">3.5.2.1</span>
           UID identifier format
         </a></li></ul>
-            </li><li><a href="#4.5.3-Title">
-          <span class="section-number">4.5.3</span>
+            </li><li><a href="#3.5.3-Title">
+          <span class="section-number">3.5.3</span>
           Title
-        </a></li><li><a href="#4.5.4-References">
-          <span class="section-number">4.5.4</span>
+        </a></li><li><a href="#3.5.4-References">
+          <span class="section-number">3.5.4</span>
           References
-        </a></li><li><a href="#4.5.5-Comments">
-          <span class="section-number">4.5.5</span>
+        </a></li><li><a href="#3.5.5-Comments">
+          <span class="section-number">3.5.5</span>
           Comments
-        </a></li><li><a href="#4.5.6-Special-fields">
-          <span class="section-number">4.5.6</span>
+        </a></li><li><a href="#3.5.6-Special-fields">
+          <span class="section-number">3.5.6</span>
           Special fields
         </a></li></ul>
             </li><li><span class="toc-title-no-link" title="Section has no requirements">
               <span class="section-number">
-                4.6
+                3.6
               </span>
               Composite Requirement item
-            </span></li><li><a href="#4.7-Links">
-          <span class="section-number">4.7</span>
+            </span>
+          </li><li><a href="#3.7-Links">
+          <span class="section-number">3.7</span>
           Links
-        </a><ul><li><a href="#4.7.1-Parent-links">
-          <span class="section-number">4.7.1</span>
+        </a><ul><li><a href="#3.7.1-Parent-links">
+          <span class="section-number">3.7.1</span>
           Parent links
         </a></li></ul>
             </li></ul>
-            </li><li><a href="#5-SDoc-file-format">
-              <span class="section-number">5</span>
+            </li><li><a href="#4-SDoc-file-format">
+              <span class="section-number">4</span>
               SDoc file format
-            </a><ul><li><a href="#5.1-SDOC-FMT-PRIMARY">
-          <span class="section-number">5.1</span>
+            </a><ul><li><a href="#4.1-SDOC-FMT-PRIMARY">
+          <span class="section-number">4.1</span>
           Primary text implementation
-        </a></li><li><a href="#5.2-SDOC-FMT-GRAMMAR">
-          <span class="section-number">5.2</span>
+        </a></li><li><a href="#4.2-SDOC-FMT-GRAMMAR">
+          <span class="section-number">4.2</span>
           Grammar
-        </a><ul><li><a href="#5.2.1-No-indentation">
-          <span class="section-number">5.2.1</span>
+        </a><ul><li><a href="#4.2.1-No-indentation">
+          <span class="section-number">4.2.1</span>
           No indentation
         </a></li></ul>
-            </li><li><a href="#5.3-Type-safety">
-          <span class="section-number">5.3</span>
+            </li><li><a href="#4.3-Type-safety">
+          <span class="section-number">4.3</span>
           Type safety
         </a></li></ul>
-            </li><li><a href="#6-Export-and-import-capabilities">
-              <span class="section-number">6</span>
+            </li><li><a href="#5-Export-and-import-capabilities">
+              <span class="section-number">5</span>
               Export and import capabilities
-            </a><ul><li><a href="#6.1-General">
-              <span class="section-number">6.1</span>
+            </a><ul><li><a href="#5.1-General">
+              <span class="section-number">5.1</span>
               General
-            </a><ul><li><a href="#6.1.1-Generated-file-names">
-          <span class="section-number">6.1.1</span>
+            </a><ul><li><a href="#5.1.1-Generated-file-names">
+          <span class="section-number">5.1.1</span>
           Generated file names
         </a></li></ul>
-            </li><li><a href="#6.2-HTML-Export">
-              <span class="section-number">6.2</span>
+            </li><li><a href="#5.2-HTML-Export">
+              <span class="section-number">5.2</span>
               HTML Export
-            </a><ul><li><a href="#6.2.1-Single-document-Normal-form">
-          <span class="section-number">6.2.1</span>
+            </a><ul><li><a href="#5.2.1-Single-document-Normal-form">
+          <span class="section-number">5.2.1</span>
           Single document: Normal form
-        </a></li><li><a href="#6.2.2-Single-document-Tabular-form">
-          <span class="section-number">6.2.2</span>
+        </a></li><li><a href="#5.2.2-Single-document-Tabular-form">
+          <span class="section-number">5.2.2</span>
           Single document: Tabular form
-        </a></li><li><a href="#6.2.3-Single-document-1-level-traceability">
-          <span class="section-number">6.2.3</span>
+        </a></li><li><a href="#5.2.3-Single-document-1-level-traceability">
+          <span class="section-number">5.2.3</span>
           Single document: 1-level traceability
-        </a></li><li><a href="#6.2.4-Single-document-Deep-traceability">
-          <span class="section-number">6.2.4</span>
+        </a></li><li><a href="#5.2.4-Single-document-Deep-traceability">
+          <span class="section-number">5.2.4</span>
           Single document: Deep traceability
-        </a></li><li><a href="#6.2.5-Left-panel-Table-of-contents">
-          <span class="section-number">6.2.5</span>
+        </a></li><li><a href="#5.2.5-Left-panel-Table-of-contents">
+          <span class="section-number">5.2.5</span>
           Left panel: Table of contents
         </a></li></ul>
-            </li><li><a href="#6.3-PDF-Export">
-              <span class="section-number">6.3</span>
+            </li><li><a href="#5.3-PDF-Export">
+              <span class="section-number">5.3</span>
               PDF Export
-            </a><ul><li><a href="#6.3.1-Sphinx-documentation-generator">
-          <span class="section-number">6.3.1</span>
+            </a><ul><li><a href="#5.3.1-Sphinx-documentation-generator">
+          <span class="section-number">5.3.1</span>
           Sphinx documentation generator
         </a></li></ul>
-            </li><li><a href="#6.4-SDOC-GEN-EXCEL-EXPORT">
-          <span class="section-number">6.4</span>
+            </li><li><a href="#5.4-SDOC-GEN-EXCEL-EXPORT">
+          <span class="section-number">5.4</span>
           Excel Export
-        </a></li><li><a href="#6.5-ReqIF-import-export">
-          <span class="section-number">6.5</span>
+        </a></li><li><a href="#5.5-ReqIF-import-export">
+          <span class="section-number">5.5</span>
           ReqIF import/export
         </a></li></ul>
-            </li><li><a href="#7-Validation">
-              <span class="section-number">7</span>
+            </li><li><a href="#6-Validation">
+              <span class="section-number">6</span>
               Validation
-            </a><ul><li><a href="#7.1-SDOC-VALIDATION-UNIQUE-UID">
-          <span class="section-number">7.1</span>
+            </a><ul><li><a href="#6.1-SDOC-VALIDATION-UNIQUE-UID">
+          <span class="section-number">6.1</span>
           Uniqueness of UID identifiers in a document tree
-        </a></li><li><a href="#7.2-SDOC-VALIDATION-NO-CYCLES">
-          <span class="section-number">7.2</span>
+        </a></li><li><a href="#6.2-SDOC-VALIDATION-NO-CYCLES">
+          <span class="section-number">6.2</span>
           No cycles in a document tree
-        </a></li><li><a href="#7.3-SDOC-VALIDATION-VALID-HTML">
-          <span class="section-number">7.3</span>
+        </a></li><li><a href="#6.3-SDOC-VALIDATION-VALID-HTML">
+          <span class="section-number">6.3</span>
           Valid HTML markup
         </a></li></ul>
-            </li><li><a href="#8-Traceability-and-coverage">
-              <span class="section-number">8</span>
+            </li><li><a href="#7-Traceability-and-coverage">
+              <span class="section-number">7</span>
               Traceability and coverage
-            </a><ul><li><a href="#8.1-Linking-with-implementation-artifacts">
-          <span class="section-number">8.1</span>
+            </a><ul><li><a href="#7.1-Linking-with-implementation-artifacts">
+          <span class="section-number">7.1</span>
           Linking with implementation artifacts
-        </a><ul><li><a href="#8.1.1-Validation-Broken-links-from-requirements-to-source-files">
-          <span class="section-number">8.1.1</span>
+        </a><ul><li><a href="#7.1.1-Validation-Broken-links-from-requirements-to-source-files">
+          <span class="section-number">7.1.1</span>
           Validation: Broken links from requirements to source files
-        </a></li><li><a href="#8.1.2-Validation-Broken-links-from-source-files-to-requirements">
-          <span class="section-number">8.1.2</span>
+        </a></li><li><a href="#7.1.2-Validation-Broken-links-from-source-files-to-requirements">
+          <span class="section-number">7.1.2</span>
           Validation: Broken links from source files to requirements
         </a></li></ul>
-            </li><li><a href="#8.2-Requirements-coverage">
-          <span class="section-number">8.2</span>
+            </li><li><a href="#7.2-Requirements-coverage">
+          <span class="section-number">7.2</span>
           Requirements coverage
-        </a></li><li><a href="#8.3-Source-coverage">
-          <span class="section-number">8.3</span>
+        </a></li><li><a href="#7.3-Source-coverage">
+          <span class="section-number">7.3</span>
           Source coverage
         </a></li></ul>
-            </li><li><a href="#9-Design-decisions">
-              <span class="section-number">9</span>
+            </li><li><a href="#8-Design-decisions">
+              <span class="section-number">8</span>
               Design decisions
-            </a><ul><li><a href="#9.1-Building-blocks">
-              <span class="section-number">9.1</span>
+            </a><ul><li><a href="#8.1-Building-blocks">
+              <span class="section-number">8.1</span>
               Building blocks
-            </a><ul><li><a href="#9.1.1-TextX">
-          <span class="section-number">9.1.1</span>
+            </a><ul><li><a href="#8.1.1-TextX">
+          <span class="section-number">8.1.1</span>
           TextX
-        </a></li><li><a href="#9.1.2-Jinja2">
-          <span class="section-number">9.1.2</span>
+        </a></li><li><a href="#8.1.2-Jinja2">
+          <span class="section-number">8.1.2</span>
           Jinja2
-        </a></li><li><a href="#9.1.3-Sphinx-and-Docutils">
-          <span class="section-number">9.1.3</span>
+        </a></li><li><a href="#8.1.3-Sphinx-and-Docutils">
+          <span class="section-number">8.1.3</span>
           Sphinx and Docutils
         </a></li></ul>
             </li></ul>
@@ -345,535 +332,12 @@
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="1-Project-goals"></div>
+    <div data-role='anchor' id="1-High-level-requirements"></div>
 
     
         <h1
 class="section-title"
 data-level="1"
->Project goals
-</h1>
-    
-
-  </section>
-
-  
-
-</article></div>
-          </section>
-        <section class="content_section">
-          <div class="content_item" data-role="parents">
-</div>
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="1.1-GOAL-1-TOOL-SUPPORT"></div>
-    <h2
-class="section-title"
-data-level="1.1"
->Software support for writing requirements and specifications documents
-</h2>
-    <dl class="requirement_meta">
-    
-    <dt><i>UID</i></dt>
-    <dd>GOAL-1-TOOL-SUPPORT</dd>
-    
-  </dl>
-    
-<ul class="requirement_link">
-  <li>
-    <a class="requirement_link-child" href="#2.1-SDOC-HIGH-REQS-MANAGEMENT">
-      <span class="requirement_child-uid">SDOC-HIGH-REQS-MANAGEMENT</span>
-      Requirements management
-    </a>
-  </li>
-  </ul>
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>There shall exist free and lightweight yet capable software for writing
-requirements and specifications documents</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    <div class="requirement_comment">
-      <div class="document">
-<p>Technical documentation is hard, it can be an extremely laborious process.
-Software shall support engineers in their work with documentation.</p>
-</div>
-
-    </div>
-    <div class="requirement_comment">
-      <div class="document">
-<p>The state of the art for many small companies working with
-requirements: using Excel for requirements management in the projects with
-hundreds or thousands of requirements.</p>
-</div>
-
-    </div>
-
-  </section>
-
-</article></div>
-
-          <div class="content_item" data-role="children">
-
-<ul class="requirement-tree requirement-tree_right"><li class="requirement-tree_branch">
-    <div class="requirement-tree_node">
-      <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    
-    <h2
-class="section-title"
-data-level="2.1"
->Requirements management
-</h2>
-    <dl class="requirement_meta">
-    
-    <dt><i>UID</i></dt>
-    <dd>SDOC-HIGH-REQS-MANAGEMENT</dd>
-    
-  </dl>
-    
-<ul class="requirement_link">
-  <li>
-    <a class="requirement_link-parent" href="#1.1-GOAL-1-TOOL-SUPPORT">
-      <span class="requirement_parent-uid">GOAL-1-TOOL-SUPPORT</span>
-      Software support for writing requirements and specifications documents
-    </a>
-  </li>
-  </ul>
-<ul class="requirement_link">
-  <li>
-    <a class="requirement_link-child" href="#4.1-SDOC-DM-MODEL">
-      <span class="requirement_child-uid">SDOC-DM-MODEL</span>
-      Modeling capability
-    </a>
-  </li>
-  </ul>
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>StrictDoc shall enable requirements management.</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-
-  </section>
-
-</article>
-    </div>
-
-<ul class="requirement-tree requirement-tree_right"><li class="requirement-tree_branch">
-    <div class="requirement-tree_node">
-      <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    
-    <h2
-class="section-title"
-data-level="4.1"
->Modeling capability
-</h2>
-    <dl class="requirement_meta">
-    
-    <dt><i>UID</i></dt>
-    <dd>SDOC-DM-MODEL</dd>
-    
-  </dl>
-    
-<ul class="requirement_link">
-  <li>
-    <a class="requirement_link-parent" href="#2.1-SDOC-HIGH-REQS-MANAGEMENT">
-      <span class="requirement_parent-uid">SDOC-HIGH-REQS-MANAGEMENT</span>
-      Requirements management
-    </a>
-  </li>
-  <li>
-    <a class="requirement_link-parent" href="#2.2-SDOC-HIGH-DATA-MODEL">
-      <span class="requirement_parent-uid">SDOC-HIGH-DATA-MODEL</span>
-      Data model
-    </a>
-  </li>
-  </ul>
-<ul class="requirement_link">
-  <li>
-    <a class="requirement_link-child" href="#5.1-SDOC-FMT-PRIMARY">
-      <span class="requirement_child-uid">SDOC-FMT-PRIMARY</span>
-      Primary text implementation
-    </a>
-  </li>
-  </ul>
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>StrictDoc's Data Model shall accommodate for maximum possible standard requirement document formats.</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    <div class="requirement_comment">
-      <div class="document">
-<p>Examples of standard requirements documents include but are not limited to:</p>
-<ul class="simple">
-<li>Non-nested requirement lists split by categories
-(e.g., Functional Requirements, Interface Requirements, Performance Requirements, etc.)</li>
-</ul>
-</div>
-
-    </div>
-
-  </section>
-
-</article>
-    </div>
-
-<ul class="requirement-tree requirement-tree_right"><li class="requirement-tree_branch">
-    <div class="requirement-tree_node">
-      <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    
-    <h2
-class="section-title"
-data-level="5.1"
->Primary text implementation
-</h2>
-    <dl class="requirement_meta">
-    
-    <dt><i>UID</i></dt>
-    <dd>SDOC-FMT-PRIMARY</dd>
-    
-  </dl>
-    
-<ul class="requirement_link">
-  <li>
-    <a class="requirement_link-parent" href="#4.1-SDOC-DM-MODEL">
-      <span class="requirement_parent-uid">SDOC-DM-MODEL</span>
-      Modeling capability
-    </a>
-  </li>
-  </ul>
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>The SDoc format shall support encoding the Strict Doc Data Model in a plain-text human readable form.</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-
-  </section>
-
-</article>
-    </div>
-
-
-  </li></ul>
-
-  </li></ul>
-
-  </li></ul></div>
-        </section>
-        <section class="content_section">
-          <div class="content_item" data-role="parents">
-</div>
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="1.2-GOAL-2-REDUCE-DOCUMENTATION-HAZARDS"></div>
-    <h2
-class="section-title"
-data-level="1.2"
->Reduce documentation hazards
-</h2>
-    <dl class="requirement_meta">
-    
-    <dt><i>UID</i></dt>
-    <dd>GOAL-2-REDUCE-DOCUMENTATION-HAZARDS</dd>
-    
-  </dl>
-    
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>There shall exist no (or less) opportunity for writing incorrect or inconsistent
-documentation.</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    <div class="requirement_comment">
-      <div class="document">
-<p>Every serious engineering activity, such as safety engineering or systems
-engineering, starts with requirements. The more critical is a product the higher
-the importance of good documentation.</p>
-<p>Technical documentation can be and often becomes a source of hazards.
-It is recognized that many failures stem from inadequate requirements
-engineering. While it is not possible to fix the problem of inadequate
-requirements engineering in general, it is definitely possible to improve
-software that supports engineers in activities such as requirements engineering
-and writing technical documentation.</p>
-</div>
-
-    </div>
-
-  </section>
-
-</article></div>
-
-          <div class="content_item" data-role="children">
-</div>
-        </section>
-        <section class="content_section">
-          <div class="content_item" data-role="parents">
-</div>
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="1.3-GOAL-3-NO-RUNAWAY-DOCUMENTATION"></div>
-    <h2
-class="section-title"
-data-level="1.3"
->No (or less) run-away documentation
-</h2>
-    <dl class="requirement_meta">
-    
-    <dt><i>UID</i></dt>
-    <dd>GOAL-3-NO-RUNAWAY-DOCUMENTATION</dd>
-    
-  </dl>
-    
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>Software shall support engineers in keeping documentation up-to-date.</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    <div class="requirement_comment">
-      <div class="document">
-<p>Technical documentation easily becomes outdated. Many existing tools for
-documentation do not provide any measures for ensuring overall consistency of
-documents and documentation trees.</p>
-</div>
-
-    </div>
-
-  </section>
-
-</article></div>
-
-          <div class="content_item" data-role="children">
-</div>
-        </section>
-        <section class="content_section">
-          <div class="content_item" data-role="parents">
-</div>
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="1.4-GOAL-4-CHANGE-MANAGEMENT"></div>
-    <h2
-class="section-title"
-data-level="1.4"
->Change management
-</h2>
-    <dl class="requirement_meta">
-    
-    <dt><i>UID</i></dt>
-    <dd>GOAL-4-CHANGE-MANAGEMENT</dd>
-    
-  </dl>
-    
-<ul class="requirement_link">
-  <li>
-    <a class="requirement_link-child" href="../docs/strictdoc-3-backlog-DEEP-TRACE.html#8-BACKLOG-FUZZY-SEARCH">
-      <span class="requirement_child-uid">BACKLOG-FUZZY-SEARCH</span>
-      Fuzzy requirements search
-    </a>
-  </li>
-  </ul>
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>Software shall provide capabilities for change management and impact assessment.</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    <div class="requirement_comment">
-      <div class="document">
-<p>Change management is difficult. The bigger the project is, the harder it is to
-maintain its documentation. If a change is introduced to a project, it usually
-requires a full revision of its requirements.</p>
-</div>
-
-    </div>
-    <div class="requirement_comment">
-      <div class="document">
-<p>When the basic capabilities of StrictDoc are in place, it should be possible
-to do a more advanced analysis of requirements and requirement trees:</p>
-<ul class="simple">
-<li>Finding similar or relevant requirements.</li>
-<li>Enforce invariants that should be hold. Example: mass or power budget.</li>
-</ul>
-</div>
-
-    </div>
-
-  </section>
-
-</article></div>
-
-          <div class="content_item" data-role="children">
-
-<ul class="requirement-tree requirement-tree_right"><li class="requirement-tree_branch">
-    <div class="requirement-tree_node">
-      <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    
-    <h1
-class="section-title"
-data-level="8"
->Fuzzy requirements search
-</h1>
-    <dl class="requirement_meta">
-    
-    <dt><i>UID</i></dt>
-    <dd>BACKLOG-FUZZY-SEARCH</dd>
-    
-  </dl>
-    
-<ul class="requirement_link">
-  <li>
-    <a class="requirement_link-parent" href="#1.4-GOAL-4-CHANGE-MANAGEMENT">
-      <span class="requirement_parent-uid">GOAL-4-CHANGE-MANAGEMENT</span>
-      Change management
-    </a>
-  </li>
-  </ul>
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>StrictDoc shall support finding relevant requirements.</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    <div class="requirement_comment">
-      <div class="document">
-<p>This feature can be implemented in the CLI as well as in the future GUI. A fuzzy
-requirements search can help to find existing requirements and also identify
-relevant requirements when creating new requirements.</p>
-</div>
-
-    </div>
-
-  </section>
-
-</article>
-    </div>
-
-
-  </li></ul></div>
-        </section>
-          <section class="content_section">
-            <div class="content_item" data-role="current"><article class="docsection">
-
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="2-High-level-requirements"></div>
-
-    
-        <h1
-class="section-title"
-data-level="2"
 >High-level requirements
 </h1>
     
@@ -908,7 +372,7 @@ data-level="1.1"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-child" href="#2.1-SDOC-HIGH-REQS-MANAGEMENT">
+    <a class="requirement_link-child" href="#1.1-SDOC-HIGH-REQS-MANAGEMENT">
       <span class="requirement_child-uid">SDOC-HIGH-REQS-MANAGEMENT</span>
       Requirements management
     </a>
@@ -959,10 +423,10 @@ hundreds or thousands of requirements.</p>
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="2.1-SDOC-HIGH-REQS-MANAGEMENT"></div>
+    <div data-role='anchor' id="1.1-SDOC-HIGH-REQS-MANAGEMENT"></div>
     <h2
 class="section-title"
-data-level="2.1"
+data-level="1.1"
 >Requirements management
 </h2>
     <dl class="requirement_meta">
@@ -974,7 +438,7 @@ data-level="2.1"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#1.1-GOAL-1-TOOL-SUPPORT">
+    <a class="requirement_link-parent" href="../docs/strictdoc-3-development-plan-DEEP-TRACE.html#1.1-GOAL-1-TOOL-SUPPORT">
       <span class="requirement_parent-uid">GOAL-1-TOOL-SUPPORT</span>
       Software support for writing requirements and specifications documents
     </a>
@@ -982,7 +446,7 @@ data-level="2.1"
   </ul>
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-child" href="#4.1-SDOC-DM-MODEL">
+    <a class="requirement_link-child" href="#3.1-SDOC-DM-MODEL">
       <span class="requirement_child-uid">SDOC-DM-MODEL</span>
       Modeling capability
     </a>
@@ -1021,7 +485,7 @@ data-level="2.1"
     
     <h2
 class="section-title"
-data-level="4.1"
+data-level="3.1"
 >Modeling capability
 </h2>
     <dl class="requirement_meta">
@@ -1033,13 +497,13 @@ data-level="4.1"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#2.1-SDOC-HIGH-REQS-MANAGEMENT">
+    <a class="requirement_link-parent" href="#1.1-SDOC-HIGH-REQS-MANAGEMENT">
       <span class="requirement_parent-uid">SDOC-HIGH-REQS-MANAGEMENT</span>
       Requirements management
     </a>
   </li>
   <li>
-    <a class="requirement_link-parent" href="#2.2-SDOC-HIGH-DATA-MODEL">
+    <a class="requirement_link-parent" href="#1.2-SDOC-HIGH-DATA-MODEL">
       <span class="requirement_parent-uid">SDOC-HIGH-DATA-MODEL</span>
       Data model
     </a>
@@ -1047,7 +511,7 @@ data-level="4.1"
   </ul>
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-child" href="#5.1-SDOC-FMT-PRIMARY">
+    <a class="requirement_link-child" href="#4.1-SDOC-FMT-PRIMARY">
       <span class="requirement_child-uid">SDOC-FMT-PRIMARY</span>
       Primary text implementation
     </a>
@@ -1095,7 +559,7 @@ data-level="4.1"
     
     <h2
 class="section-title"
-data-level="5.1"
+data-level="4.1"
 >Primary text implementation
 </h2>
     <dl class="requirement_meta">
@@ -1107,7 +571,7 @@ data-level="5.1"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#4.1-SDOC-DM-MODEL">
+    <a class="requirement_link-parent" href="#3.1-SDOC-DM-MODEL">
       <span class="requirement_parent-uid">SDOC-DM-MODEL</span>
       Modeling capability
     </a>
@@ -1148,10 +612,10 @@ data-level="5.1"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="2.2-SDOC-HIGH-DATA-MODEL"></div>
+    <div data-role='anchor' id="1.2-SDOC-HIGH-DATA-MODEL"></div>
     <h2
 class="section-title"
-data-level="2.2"
+data-level="1.2"
 >Data model
 </h2>
     <dl class="requirement_meta">
@@ -1163,13 +627,13 @@ data-level="2.2"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-child" href="#4.1-SDOC-DM-MODEL">
+    <a class="requirement_link-child" href="#3.1-SDOC-DM-MODEL">
       <span class="requirement_child-uid">SDOC-DM-MODEL</span>
       Modeling capability
     </a>
   </li>
   <li>
-    <a class="requirement_link-child" href="#5.2-SDOC-FMT-GRAMMAR">
+    <a class="requirement_link-child" href="#4.2-SDOC-FMT-GRAMMAR">
       <span class="requirement_child-uid">SDOC-FMT-GRAMMAR</span>
       Grammar
     </a>
@@ -1226,7 +690,7 @@ document data model which is called &quot;grammar&quot;.</p>
     
     <h2
 class="section-title"
-data-level="4.1"
+data-level="3.1"
 >Modeling capability
 </h2>
     <dl class="requirement_meta">
@@ -1238,13 +702,13 @@ data-level="4.1"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#2.1-SDOC-HIGH-REQS-MANAGEMENT">
+    <a class="requirement_link-parent" href="#1.1-SDOC-HIGH-REQS-MANAGEMENT">
       <span class="requirement_parent-uid">SDOC-HIGH-REQS-MANAGEMENT</span>
       Requirements management
     </a>
   </li>
   <li>
-    <a class="requirement_link-parent" href="#2.2-SDOC-HIGH-DATA-MODEL">
+    <a class="requirement_link-parent" href="#1.2-SDOC-HIGH-DATA-MODEL">
       <span class="requirement_parent-uid">SDOC-HIGH-DATA-MODEL</span>
       Data model
     </a>
@@ -1252,7 +716,7 @@ data-level="4.1"
   </ul>
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-child" href="#5.1-SDOC-FMT-PRIMARY">
+    <a class="requirement_link-child" href="#4.1-SDOC-FMT-PRIMARY">
       <span class="requirement_child-uid">SDOC-FMT-PRIMARY</span>
       Primary text implementation
     </a>
@@ -1300,7 +764,7 @@ data-level="4.1"
     
     <h2
 class="section-title"
-data-level="5.1"
+data-level="4.1"
 >Primary text implementation
 </h2>
     <dl class="requirement_meta">
@@ -1312,7 +776,7 @@ data-level="5.1"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#4.1-SDOC-DM-MODEL">
+    <a class="requirement_link-parent" href="#3.1-SDOC-DM-MODEL">
       <span class="requirement_parent-uid">SDOC-DM-MODEL</span>
       Modeling capability
     </a>
@@ -1353,7 +817,7 @@ data-level="5.1"
     
     <h2
 class="section-title"
-data-level="5.2"
+data-level="4.2"
 >Grammar
 </h2>
     <dl class="requirement_meta">
@@ -1365,7 +829,7 @@ data-level="5.2"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#2.2-SDOC-HIGH-DATA-MODEL">
+    <a class="requirement_link-parent" href="#1.2-SDOC-HIGH-DATA-MODEL">
       <span class="requirement_parent-uid">SDOC-HIGH-DATA-MODEL</span>
       Data model
     </a>
@@ -1404,10 +868,10 @@ data-level="5.2"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="2.3-Command-line-interface"></div>
+    <div data-role='anchor' id="1.3-Command-line-interface"></div>
     <h2
 class="section-title"
-data-level="2.3"
+data-level="1.3"
 >Command-line interface
 </h2>
     
@@ -1444,10 +908,10 @@ data-level="2.3"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="2.4-Platform-support"></div>
+    <div data-role='anchor' id="1.4-Platform-support"></div>
     <h2
 class="section-title"
-data-level="2.4"
+data-level="1.4"
 >Platform support
 </h2>
     
@@ -1484,10 +948,10 @@ data-level="2.4"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="2.4.1-macOS-support"></div>
+    <div data-role='anchor' id="1.4.1-macOS-support"></div>
     <h3
 class="section-title"
-data-level="2.4.1"
+data-level="1.4.1"
 >macOS support
 </h3>
     
@@ -1524,10 +988,10 @@ data-level="2.4.1"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="2.4.2-Linux-support"></div>
+    <div data-role='anchor' id="1.4.2-Linux-support"></div>
     <h3
 class="section-title"
-data-level="2.4.2"
+data-level="1.4.2"
 >Linux support
 </h3>
     
@@ -1564,10 +1028,10 @@ data-level="2.4.2"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="2.4.3-Windows-support"></div>
+    <div data-role='anchor' id="1.4.3-Windows-support"></div>
     <h3
 class="section-title"
-data-level="2.4.3"
+data-level="1.4.3"
 >Windows support
 </h3>
     
@@ -1604,10 +1068,10 @@ data-level="2.4.3"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="2.5-SDOC-HIGH-VALIDATION"></div>
+    <div data-role='anchor' id="1.5-SDOC-HIGH-VALIDATION"></div>
     <h2
 class="section-title"
-data-level="2.5"
+data-level="1.5"
 >Requirements validation
 </h2>
     <dl class="requirement_meta">
@@ -1619,19 +1083,19 @@ data-level="2.5"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-child" href="#7.1-SDOC-VALIDATION-UNIQUE-UID">
+    <a class="requirement_link-child" href="#6.1-SDOC-VALIDATION-UNIQUE-UID">
       <span class="requirement_child-uid">SDOC-VALIDATION-UNIQUE-UID</span>
       Uniqueness of UID identifiers in a document tree
     </a>
   </li>
   <li>
-    <a class="requirement_link-child" href="#7.2-SDOC-VALIDATION-NO-CYCLES">
+    <a class="requirement_link-child" href="#6.2-SDOC-VALIDATION-NO-CYCLES">
       <span class="requirement_child-uid">SDOC-VALIDATION-NO-CYCLES</span>
       No cycles in a document tree
     </a>
   </li>
   <li>
-    <a class="requirement_link-child" href="#7.3-SDOC-VALIDATION-VALID-HTML">
+    <a class="requirement_link-child" href="#6.3-SDOC-VALIDATION-VALID-HTML">
       <span class="requirement_child-uid">SDOC-VALIDATION-VALID-HTML</span>
       Valid HTML markup
     </a>
@@ -1670,7 +1134,7 @@ data-level="2.5"
     
     <h2
 class="section-title"
-data-level="7.1"
+data-level="6.1"
 >Uniqueness of UID identifiers in a document tree
 </h2>
     <dl class="requirement_meta">
@@ -1682,7 +1146,7 @@ data-level="7.1"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#2.5-SDOC-HIGH-VALIDATION">
+    <a class="requirement_link-parent" href="#1.5-SDOC-HIGH-VALIDATION">
       <span class="requirement_parent-uid">SDOC-HIGH-VALIDATION</span>
       Requirements validation
     </a>
@@ -1727,7 +1191,7 @@ data-level="7.1"
     
     <h2
 class="section-title"
-data-level="7.2"
+data-level="6.2"
 >No cycles in a document tree
 </h2>
     <dl class="requirement_meta">
@@ -1739,7 +1203,7 @@ data-level="7.2"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#2.5-SDOC-HIGH-VALIDATION">
+    <a class="requirement_link-parent" href="#1.5-SDOC-HIGH-VALIDATION">
       <span class="requirement_parent-uid">SDOC-HIGH-VALIDATION</span>
       Requirements validation
     </a>
@@ -1778,7 +1242,7 @@ data-level="7.2"
     
     <h2
 class="section-title"
-data-level="7.3"
+data-level="6.3"
 >Valid HTML markup
 </h2>
     <dl class="requirement_meta">
@@ -1790,7 +1254,7 @@ data-level="7.3"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#2.5-SDOC-HIGH-VALIDATION">
+    <a class="requirement_link-parent" href="#1.5-SDOC-HIGH-VALIDATION">
       <span class="requirement_parent-uid">SDOC-HIGH-VALIDATION</span>
       Requirements validation
     </a>
@@ -1835,10 +1299,10 @@ data-level="7.3"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="2.6-Requirements-text-format"></div>
+    <div data-role='anchor' id="1.6-Requirements-text-format"></div>
     <h2
 class="section-title"
-data-level="2.6"
+data-level="1.6"
 >Requirements text format
 </h2>
     
@@ -1875,10 +1339,10 @@ data-level="2.6"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="2.7-Linking-requirements"></div>
+    <div data-role='anchor' id="1.7-Linking-requirements"></div>
     <h2
 class="section-title"
-data-level="2.7"
+data-level="1.7"
 >Linking requirements
 </h2>
     
@@ -1915,10 +1379,10 @@ data-level="2.7"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="2.8-Scalability"></div>
+    <div data-role='anchor' id="1.8-Scalability"></div>
     <h2
 class="section-title"
-data-level="2.8"
+data-level="1.8"
 >Scalability
 </h2>
     
@@ -1955,10 +1419,10 @@ data-level="2.8"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="2.9-SDOC-HIGH-REQS-TRACEABILITY"></div>
+    <div data-role='anchor' id="1.9-SDOC-HIGH-REQS-TRACEABILITY"></div>
     <h2
 class="section-title"
-data-level="2.9"
+data-level="1.9"
 >Traceability
 </h2>
     <dl class="requirement_meta">
@@ -2000,10 +1464,10 @@ data-level="2.9"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="2.10-Visualization"></div>
+    <div data-role='anchor' id="1.10-Visualization"></div>
     <h2
 class="section-title"
-data-level="2.10"
+data-level="1.10"
 >Visualization
 </h2>
     
@@ -2040,10 +1504,10 @@ data-level="2.10"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="2.11-Open-source-software"></div>
+    <div data-role='anchor' id="1.11-Open-source-software"></div>
     <h2
 class="section-title"
-data-level="2.11"
+data-level="1.11"
 >Open source software
 </h2>
     
@@ -2078,12 +1542,12 @@ data-level="2.11"
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="3-Implementation-requirements"></div>
+    <div data-role='anchor' id="2-Implementation-requirements"></div>
 
     
         <h1
 class="section-title"
-data-level="3"
+data-level="2"
 >Implementation requirements
 </h1>
     
@@ -2101,10 +1565,10 @@ data-level="3"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="3.1-SDOC-IMPL-PARAL"></div>
+    <div data-role='anchor' id="2.1-SDOC-IMPL-PARAL"></div>
     <h2
 class="section-title"
-data-level="3.1"
+data-level="2.1"
 >Parallelization
 </h2>
     <dl class="requirement_meta">
@@ -2146,10 +1610,10 @@ data-level="3.1"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="3.2-SDOC-IMPL-INCREMENTAL"></div>
+    <div data-role='anchor' id="2.2-SDOC-IMPL-INCREMENTAL"></div>
     <h2
 class="section-title"
-data-level="3.2"
+data-level="2.2"
 >Incremental generation
 </h2>
     <dl class="requirement_meta">
@@ -2196,12 +1660,12 @@ documents and files.</p>
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="4-Data-model"></div>
+    <div data-role='anchor' id="3-Data-model"></div>
 
     
         <h1
 class="section-title"
-data-level="4"
+data-level="3"
 >Data model
 </h1>
     
@@ -2224,7 +1688,7 @@ data-level="4"
     
     <h2
 class="section-title"
-data-level="2.1"
+data-level="1.1"
 >Requirements management
 </h2>
     <dl class="requirement_meta">
@@ -2236,7 +1700,7 @@ data-level="2.1"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#1.1-GOAL-1-TOOL-SUPPORT">
+    <a class="requirement_link-parent" href="../docs/strictdoc-3-development-plan-DEEP-TRACE.html#1.1-GOAL-1-TOOL-SUPPORT">
       <span class="requirement_parent-uid">GOAL-1-TOOL-SUPPORT</span>
       Software support for writing requirements and specifications documents
     </a>
@@ -2244,7 +1708,7 @@ data-level="2.1"
   </ul>
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-child" href="#4.1-SDOC-DM-MODEL">
+    <a class="requirement_link-child" href="#3.1-SDOC-DM-MODEL">
       <span class="requirement_child-uid">SDOC-DM-MODEL</span>
       Modeling capability
     </a>
@@ -2294,7 +1758,7 @@ data-level="1.1"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-child" href="#2.1-SDOC-HIGH-REQS-MANAGEMENT">
+    <a class="requirement_link-child" href="#1.1-SDOC-HIGH-REQS-MANAGEMENT">
       <span class="requirement_child-uid">SDOC-HIGH-REQS-MANAGEMENT</span>
       Requirements management
     </a>
@@ -2351,7 +1815,7 @@ hundreds or thousands of requirements.</p>
     
     <h2
 class="section-title"
-data-level="2.2"
+data-level="1.2"
 >Data model
 </h2>
     <dl class="requirement_meta">
@@ -2363,13 +1827,13 @@ data-level="2.2"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-child" href="#4.1-SDOC-DM-MODEL">
+    <a class="requirement_link-child" href="#3.1-SDOC-DM-MODEL">
       <span class="requirement_child-uid">SDOC-DM-MODEL</span>
       Modeling capability
     </a>
   </li>
   <li>
-    <a class="requirement_link-child" href="#5.2-SDOC-FMT-GRAMMAR">
+    <a class="requirement_link-child" href="#4.2-SDOC-FMT-GRAMMAR">
       <span class="requirement_child-uid">SDOC-FMT-GRAMMAR</span>
       Grammar
     </a>
@@ -2422,10 +1886,10 @@ document data model which is called &quot;grammar&quot;.</p>
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="4.1-SDOC-DM-MODEL"></div>
+    <div data-role='anchor' id="3.1-SDOC-DM-MODEL"></div>
     <h2
 class="section-title"
-data-level="4.1"
+data-level="3.1"
 >Modeling capability
 </h2>
     <dl class="requirement_meta">
@@ -2437,13 +1901,13 @@ data-level="4.1"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#2.1-SDOC-HIGH-REQS-MANAGEMENT">
+    <a class="requirement_link-parent" href="#1.1-SDOC-HIGH-REQS-MANAGEMENT">
       <span class="requirement_parent-uid">SDOC-HIGH-REQS-MANAGEMENT</span>
       Requirements management
     </a>
   </li>
   <li>
-    <a class="requirement_link-parent" href="#2.2-SDOC-HIGH-DATA-MODEL">
+    <a class="requirement_link-parent" href="#1.2-SDOC-HIGH-DATA-MODEL">
       <span class="requirement_parent-uid">SDOC-HIGH-DATA-MODEL</span>
       Data model
     </a>
@@ -2451,7 +1915,7 @@ data-level="4.1"
   </ul>
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-child" href="#5.1-SDOC-FMT-PRIMARY">
+    <a class="requirement_link-child" href="#4.1-SDOC-FMT-PRIMARY">
       <span class="requirement_child-uid">SDOC-FMT-PRIMARY</span>
       Primary text implementation
     </a>
@@ -2500,7 +1964,7 @@ data-level="4.1"
     
     <h2
 class="section-title"
-data-level="5.1"
+data-level="4.1"
 >Primary text implementation
 </h2>
     <dl class="requirement_meta">
@@ -2512,7 +1976,7 @@ data-level="5.1"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#4.1-SDOC-DM-MODEL">
+    <a class="requirement_link-parent" href="#3.1-SDOC-DM-MODEL">
       <span class="requirement_parent-uid">SDOC-DM-MODEL</span>
       Modeling capability
     </a>
@@ -2551,10 +2015,10 @@ data-level="5.1"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="4.2-Project"></div>
+    <div data-role='anchor' id="3.2-Project"></div>
     <h2
 class="section-title"
-data-level="4.2"
+data-level="3.2"
 >Project
 </h2>
     
@@ -2592,10 +2056,10 @@ for grouping of SDoc documents into a single project documentation tree.</p>
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="4.2.1-Project-title"></div>
+    <div data-role='anchor' id="3.2.1-Project-title"></div>
     <h3
 class="section-title"
-data-level="4.2.1"
+data-level="3.2.1"
 >Project title
 </h3>
     
@@ -2639,12 +2103,12 @@ config file (TOML or SDoc-like grammar).</p>
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="4.5-Requirement-item"></div>
+    <div data-role='anchor' id="3.5-Requirement-item"></div>
 
     
         <h2
 class="section-title"
-data-level="4.5"
+data-level="3.5"
 >Requirement item
 </h2>
     
@@ -2662,10 +2126,10 @@ data-level="4.5"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="4.5.1-Statement"></div>
+    <div data-role='anchor' id="3.5.1-Statement"></div>
     <h3
 class="section-title"
-data-level="4.5.1"
+data-level="3.5.1"
 >Statement
 </h3>
     
@@ -2702,10 +2166,10 @@ data-level="4.5.1"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="4.5.2-UID-identifier"></div>
+    <div data-role='anchor' id="3.5.2-UID-identifier"></div>
     <h3
 class="section-title"
-data-level="4.5.2"
+data-level="3.5.2"
 >UID identifier
 </h3>
     
@@ -2742,10 +2206,10 @@ data-level="4.5.2"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="4.5.2.1-UID-identifier-format"></div>
+    <div data-role='anchor' id="3.5.2.1-UID-identifier-format"></div>
     <h4
 class="section-title"
-data-level="4.5.2.1"
+data-level="3.5.2.1"
 >UID identifier format
 </h4>
     
@@ -2796,10 +2260,10 @@ be no way to define a single rule.</p>
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="4.5.3-Title"></div>
+    <div data-role='anchor' id="3.5.3-Title"></div>
     <h3
 class="section-title"
-data-level="4.5.3"
+data-level="3.5.3"
 >Title
 </h3>
     
@@ -2836,10 +2300,10 @@ data-level="4.5.3"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="4.5.4-References"></div>
+    <div data-role='anchor' id="3.5.4-References"></div>
     <h3
 class="section-title"
-data-level="4.5.4"
+data-level="3.5.4"
 >References
 </h3>
     
@@ -2876,10 +2340,10 @@ data-level="4.5.4"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="4.5.5-Comments"></div>
+    <div data-role='anchor' id="3.5.5-Comments"></div>
     <h3
 class="section-title"
-data-level="4.5.5"
+data-level="3.5.5"
 >Comments
 </h3>
     
@@ -2916,10 +2380,10 @@ data-level="4.5.5"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="4.5.6-Special-fields"></div>
+    <div data-role='anchor' id="3.5.6-Special-fields"></div>
     <h3
 class="section-title"
-data-level="4.5.6"
+data-level="3.5.6"
 >Special fields
 </h3>
     
@@ -2966,10 +2430,10 @@ data-level="4.5.6"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="4.7-Links"></div>
+    <div data-role='anchor' id="3.7-Links"></div>
     <h2
 class="section-title"
-data-level="4.7"
+data-level="3.7"
 >Links
 </h2>
     
@@ -3006,10 +2470,10 @@ data-level="4.7"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="4.7.1-Parent-links"></div>
+    <div data-role='anchor' id="3.7.1-Parent-links"></div>
     <h3
 class="section-title"
-data-level="4.7.1"
+data-level="3.7.1"
 >Parent links
 </h3>
     
@@ -3044,12 +2508,12 @@ data-level="4.7.1"
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="5-SDoc-file-format"></div>
+    <div data-role='anchor' id="4-SDoc-file-format"></div>
 
     
         <h1
 class="section-title"
-data-level="5"
+data-level="4"
 >SDoc file format
 </h1>
     
@@ -3072,7 +2536,7 @@ data-level="5"
     
     <h2
 class="section-title"
-data-level="4.1"
+data-level="3.1"
 >Modeling capability
 </h2>
     <dl class="requirement_meta">
@@ -3084,13 +2548,13 @@ data-level="4.1"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#2.1-SDOC-HIGH-REQS-MANAGEMENT">
+    <a class="requirement_link-parent" href="#1.1-SDOC-HIGH-REQS-MANAGEMENT">
       <span class="requirement_parent-uid">SDOC-HIGH-REQS-MANAGEMENT</span>
       Requirements management
     </a>
   </li>
   <li>
-    <a class="requirement_link-parent" href="#2.2-SDOC-HIGH-DATA-MODEL">
+    <a class="requirement_link-parent" href="#1.2-SDOC-HIGH-DATA-MODEL">
       <span class="requirement_parent-uid">SDOC-HIGH-DATA-MODEL</span>
       Data model
     </a>
@@ -3098,7 +2562,7 @@ data-level="4.1"
   </ul>
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-child" href="#5.1-SDOC-FMT-PRIMARY">
+    <a class="requirement_link-child" href="#4.1-SDOC-FMT-PRIMARY">
       <span class="requirement_child-uid">SDOC-FMT-PRIMARY</span>
       Primary text implementation
     </a>
@@ -3146,7 +2610,7 @@ data-level="4.1"
     
     <h2
 class="section-title"
-data-level="2.1"
+data-level="1.1"
 >Requirements management
 </h2>
     <dl class="requirement_meta">
@@ -3158,7 +2622,7 @@ data-level="2.1"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#1.1-GOAL-1-TOOL-SUPPORT">
+    <a class="requirement_link-parent" href="../docs/strictdoc-3-development-plan-DEEP-TRACE.html#1.1-GOAL-1-TOOL-SUPPORT">
       <span class="requirement_parent-uid">GOAL-1-TOOL-SUPPORT</span>
       Software support for writing requirements and specifications documents
     </a>
@@ -3166,7 +2630,7 @@ data-level="2.1"
   </ul>
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-child" href="#4.1-SDOC-DM-MODEL">
+    <a class="requirement_link-child" href="#3.1-SDOC-DM-MODEL">
       <span class="requirement_child-uid">SDOC-DM-MODEL</span>
       Modeling capability
     </a>
@@ -3216,7 +2680,7 @@ data-level="1.1"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-child" href="#2.1-SDOC-HIGH-REQS-MANAGEMENT">
+    <a class="requirement_link-child" href="#1.1-SDOC-HIGH-REQS-MANAGEMENT">
       <span class="requirement_child-uid">SDOC-HIGH-REQS-MANAGEMENT</span>
       Requirements management
     </a>
@@ -3273,7 +2737,7 @@ hundreds or thousands of requirements.</p>
     
     <h2
 class="section-title"
-data-level="2.2"
+data-level="1.2"
 >Data model
 </h2>
     <dl class="requirement_meta">
@@ -3285,13 +2749,13 @@ data-level="2.2"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-child" href="#4.1-SDOC-DM-MODEL">
+    <a class="requirement_link-child" href="#3.1-SDOC-DM-MODEL">
       <span class="requirement_child-uid">SDOC-DM-MODEL</span>
       Modeling capability
     </a>
   </li>
   <li>
-    <a class="requirement_link-child" href="#5.2-SDOC-FMT-GRAMMAR">
+    <a class="requirement_link-child" href="#4.2-SDOC-FMT-GRAMMAR">
       <span class="requirement_child-uid">SDOC-FMT-GRAMMAR</span>
       Grammar
     </a>
@@ -3346,10 +2810,10 @@ document data model which is called &quot;grammar&quot;.</p>
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="5.1-SDOC-FMT-PRIMARY"></div>
+    <div data-role='anchor' id="4.1-SDOC-FMT-PRIMARY"></div>
     <h2
 class="section-title"
-data-level="5.1"
+data-level="4.1"
 >Primary text implementation
 </h2>
     <dl class="requirement_meta">
@@ -3361,7 +2825,7 @@ data-level="5.1"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#4.1-SDOC-DM-MODEL">
+    <a class="requirement_link-parent" href="#3.1-SDOC-DM-MODEL">
       <span class="requirement_parent-uid">SDOC-DM-MODEL</span>
       Modeling capability
     </a>
@@ -3404,7 +2868,7 @@ data-level="5.1"
     
     <h2
 class="section-title"
-data-level="2.2"
+data-level="1.2"
 >Data model
 </h2>
     <dl class="requirement_meta">
@@ -3416,13 +2880,13 @@ data-level="2.2"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-child" href="#4.1-SDOC-DM-MODEL">
+    <a class="requirement_link-child" href="#3.1-SDOC-DM-MODEL">
       <span class="requirement_child-uid">SDOC-DM-MODEL</span>
       Modeling capability
     </a>
   </li>
   <li>
-    <a class="requirement_link-child" href="#5.2-SDOC-FMT-GRAMMAR">
+    <a class="requirement_link-child" href="#4.2-SDOC-FMT-GRAMMAR">
       <span class="requirement_child-uid">SDOC-FMT-GRAMMAR</span>
       Grammar
     </a>
@@ -3475,10 +2939,10 @@ document data model which is called &quot;grammar&quot;.</p>
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="5.2-SDOC-FMT-GRAMMAR"></div>
+    <div data-role='anchor' id="4.2-SDOC-FMT-GRAMMAR"></div>
     <h2
 class="section-title"
-data-level="5.2"
+data-level="4.2"
 >Grammar
 </h2>
     <dl class="requirement_meta">
@@ -3490,7 +2954,7 @@ data-level="5.2"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#2.2-SDOC-HIGH-DATA-MODEL">
+    <a class="requirement_link-parent" href="#1.2-SDOC-HIGH-DATA-MODEL">
       <span class="requirement_parent-uid">SDOC-HIGH-DATA-MODEL</span>
       Data model
     </a>
@@ -3528,10 +2992,10 @@ data-level="5.2"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="5.2.1-No-indentation"></div>
+    <div data-role='anchor' id="4.2.1-No-indentation"></div>
     <h3
 class="section-title"
-data-level="5.2.1"
+data-level="4.2.1"
 >No indentation
 </h3>
     
@@ -3578,10 +3042,10 @@ possible indentation issues.</p>
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="5.3-Type-safety"></div>
+    <div data-role='anchor' id="4.3-Type-safety"></div>
     <h2
 class="section-title"
-data-level="5.3"
+data-level="4.3"
 >Type safety
 </h2>
     
@@ -3616,12 +3080,12 @@ data-level="5.3"
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="6-Export-and-import-capabilities"></div>
+    <div data-role='anchor' id="5-Export-and-import-capabilities"></div>
 
     
         <h1
 class="section-title"
-data-level="6"
+data-level="5"
 >Export and import capabilities
 </h1>
     
@@ -3637,12 +3101,12 @@ data-level="6"
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="6.1-General"></div>
+    <div data-role='anchor' id="5.1-General"></div>
 
     
         <h2
 class="section-title"
-data-level="6.1"
+data-level="5.1"
 >General
 </h2>
     
@@ -3660,10 +3124,10 @@ data-level="6.1"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="6.1.1-Generated-file-names"></div>
+    <div data-role='anchor' id="5.1.1-Generated-file-names"></div>
     <h3
 class="section-title"
-data-level="6.1.1"
+data-level="5.1.1"
 >Generated file names
 </h3>
     
@@ -3699,12 +3163,12 @@ export formats.</p>
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="6.2-HTML-Export"></div>
+    <div data-role='anchor' id="5.2-HTML-Export"></div>
 
     
         <h2
 class="section-title"
-data-level="6.2"
+data-level="5.2"
 >HTML Export
 </h2>
     
@@ -3722,10 +3186,10 @@ data-level="6.2"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="6.2.1-Single-document-Normal-form"></div>
+    <div data-role='anchor' id="5.2.1-Single-document-Normal-form"></div>
     <h3
 class="section-title"
-data-level="6.2.1"
+data-level="5.2.1"
 >Single document: Normal form
 </h3>
     
@@ -3762,10 +3226,10 @@ data-level="6.2.1"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="6.2.2-Single-document-Tabular-form"></div>
+    <div data-role='anchor' id="5.2.2-Single-document-Tabular-form"></div>
     <h3
 class="section-title"
-data-level="6.2.2"
+data-level="5.2.2"
 >Single document: Tabular form
 </h3>
     
@@ -3802,10 +3266,10 @@ data-level="6.2.2"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="6.2.3-Single-document-1-level-traceability"></div>
+    <div data-role='anchor' id="5.2.3-Single-document-1-level-traceability"></div>
     <h3
 class="section-title"
-data-level="6.2.3"
+data-level="5.2.3"
 >Single document: 1-level traceability
 </h3>
     
@@ -3842,10 +3306,10 @@ data-level="6.2.3"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="6.2.4-Single-document-Deep-traceability"></div>
+    <div data-role='anchor' id="5.2.4-Single-document-Deep-traceability"></div>
     <h3
 class="section-title"
-data-level="6.2.4"
+data-level="5.2.4"
 >Single document: Deep traceability
 </h3>
     
@@ -3882,10 +3346,10 @@ data-level="6.2.4"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="6.2.5-Left-panel-Table-of-contents"></div>
+    <div data-role='anchor' id="5.2.5-Left-panel-Table-of-contents"></div>
     <h3
 class="section-title"
-data-level="6.2.5"
+data-level="5.2.5"
 >Left panel: Table of contents
 </h3>
     
@@ -3920,12 +3384,12 @@ data-level="6.2.5"
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="6.3-PDF-Export"></div>
+    <div data-role='anchor' id="5.3-PDF-Export"></div>
 
     
         <h2
 class="section-title"
-data-level="6.3"
+data-level="5.3"
 >PDF Export
 </h2>
     
@@ -3943,10 +3407,10 @@ data-level="6.3"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="6.3.1-Sphinx-documentation-generator"></div>
+    <div data-role='anchor' id="5.3.1-Sphinx-documentation-generator"></div>
     <h3
 class="section-title"
-data-level="6.3.1"
+data-level="5.3.1"
 >Sphinx documentation generator
 </h3>
     
@@ -3983,10 +3447,10 @@ data-level="6.3.1"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="6.4-SDOC-GEN-EXCEL-EXPORT"></div>
+    <div data-role='anchor' id="5.4-SDOC-GEN-EXCEL-EXPORT"></div>
     <h2
 class="section-title"
-data-level="6.4"
+data-level="5.4"
 >Excel Export
 </h2>
     <dl class="requirement_meta">
@@ -4028,10 +3492,10 @@ data-level="6.4"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="6.5-ReqIF-import-export"></div>
+    <div data-role='anchor' id="5.5-ReqIF-import-export"></div>
     <h2
 class="section-title"
-data-level="6.5"
+data-level="5.5"
 >ReqIF import/export
 </h2>
     
@@ -4066,12 +3530,12 @@ data-level="6.5"
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="7-Validation"></div>
+    <div data-role='anchor' id="6-Validation"></div>
 
     
         <h1
 class="section-title"
-data-level="7"
+data-level="6"
 >Validation
 </h1>
     
@@ -4094,7 +3558,7 @@ data-level="7"
     
     <h2
 class="section-title"
-data-level="2.5"
+data-level="1.5"
 >Requirements validation
 </h2>
     <dl class="requirement_meta">
@@ -4106,19 +3570,19 @@ data-level="2.5"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-child" href="#7.1-SDOC-VALIDATION-UNIQUE-UID">
+    <a class="requirement_link-child" href="#6.1-SDOC-VALIDATION-UNIQUE-UID">
       <span class="requirement_child-uid">SDOC-VALIDATION-UNIQUE-UID</span>
       Uniqueness of UID identifiers in a document tree
     </a>
   </li>
   <li>
-    <a class="requirement_link-child" href="#7.2-SDOC-VALIDATION-NO-CYCLES">
+    <a class="requirement_link-child" href="#6.2-SDOC-VALIDATION-NO-CYCLES">
       <span class="requirement_child-uid">SDOC-VALIDATION-NO-CYCLES</span>
       No cycles in a document tree
     </a>
   </li>
   <li>
-    <a class="requirement_link-child" href="#7.3-SDOC-VALIDATION-VALID-HTML">
+    <a class="requirement_link-child" href="#6.3-SDOC-VALIDATION-VALID-HTML">
       <span class="requirement_child-uid">SDOC-VALIDATION-VALID-HTML</span>
       Valid HTML markup
     </a>
@@ -4153,10 +3617,10 @@ data-level="2.5"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="7.1-SDOC-VALIDATION-UNIQUE-UID"></div>
+    <div data-role='anchor' id="6.1-SDOC-VALIDATION-UNIQUE-UID"></div>
     <h2
 class="section-title"
-data-level="7.1"
+data-level="6.1"
 >Uniqueness of UID identifiers in a document tree
 </h2>
     <dl class="requirement_meta">
@@ -4168,7 +3632,7 @@ data-level="7.1"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#2.5-SDOC-HIGH-VALIDATION">
+    <a class="requirement_link-parent" href="#1.5-SDOC-HIGH-VALIDATION">
       <span class="requirement_parent-uid">SDOC-HIGH-VALIDATION</span>
       Requirements validation
     </a>
@@ -4217,7 +3681,7 @@ data-level="7.1"
     
     <h2
 class="section-title"
-data-level="2.5"
+data-level="1.5"
 >Requirements validation
 </h2>
     <dl class="requirement_meta">
@@ -4229,19 +3693,19 @@ data-level="2.5"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-child" href="#7.1-SDOC-VALIDATION-UNIQUE-UID">
+    <a class="requirement_link-child" href="#6.1-SDOC-VALIDATION-UNIQUE-UID">
       <span class="requirement_child-uid">SDOC-VALIDATION-UNIQUE-UID</span>
       Uniqueness of UID identifiers in a document tree
     </a>
   </li>
   <li>
-    <a class="requirement_link-child" href="#7.2-SDOC-VALIDATION-NO-CYCLES">
+    <a class="requirement_link-child" href="#6.2-SDOC-VALIDATION-NO-CYCLES">
       <span class="requirement_child-uid">SDOC-VALIDATION-NO-CYCLES</span>
       No cycles in a document tree
     </a>
   </li>
   <li>
-    <a class="requirement_link-child" href="#7.3-SDOC-VALIDATION-VALID-HTML">
+    <a class="requirement_link-child" href="#6.3-SDOC-VALIDATION-VALID-HTML">
       <span class="requirement_child-uid">SDOC-VALIDATION-VALID-HTML</span>
       Valid HTML markup
     </a>
@@ -4276,10 +3740,10 @@ data-level="2.5"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="7.2-SDOC-VALIDATION-NO-CYCLES"></div>
+    <div data-role='anchor' id="6.2-SDOC-VALIDATION-NO-CYCLES"></div>
     <h2
 class="section-title"
-data-level="7.2"
+data-level="6.2"
 >No cycles in a document tree
 </h2>
     <dl class="requirement_meta">
@@ -4291,7 +3755,7 @@ data-level="7.2"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#2.5-SDOC-HIGH-VALIDATION">
+    <a class="requirement_link-parent" href="#1.5-SDOC-HIGH-VALIDATION">
       <span class="requirement_parent-uid">SDOC-HIGH-VALIDATION</span>
       Requirements validation
     </a>
@@ -4334,7 +3798,7 @@ data-level="7.2"
     
     <h2
 class="section-title"
-data-level="2.5"
+data-level="1.5"
 >Requirements validation
 </h2>
     <dl class="requirement_meta">
@@ -4346,19 +3810,19 @@ data-level="2.5"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-child" href="#7.1-SDOC-VALIDATION-UNIQUE-UID">
+    <a class="requirement_link-child" href="#6.1-SDOC-VALIDATION-UNIQUE-UID">
       <span class="requirement_child-uid">SDOC-VALIDATION-UNIQUE-UID</span>
       Uniqueness of UID identifiers in a document tree
     </a>
   </li>
   <li>
-    <a class="requirement_link-child" href="#7.2-SDOC-VALIDATION-NO-CYCLES">
+    <a class="requirement_link-child" href="#6.2-SDOC-VALIDATION-NO-CYCLES">
       <span class="requirement_child-uid">SDOC-VALIDATION-NO-CYCLES</span>
       No cycles in a document tree
     </a>
   </li>
   <li>
-    <a class="requirement_link-child" href="#7.3-SDOC-VALIDATION-VALID-HTML">
+    <a class="requirement_link-child" href="#6.3-SDOC-VALIDATION-VALID-HTML">
       <span class="requirement_child-uid">SDOC-VALIDATION-VALID-HTML</span>
       Valid HTML markup
     </a>
@@ -4393,10 +3857,10 @@ data-level="2.5"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="7.3-SDOC-VALIDATION-VALID-HTML"></div>
+    <div data-role='anchor' id="6.3-SDOC-VALIDATION-VALID-HTML"></div>
     <h2
 class="section-title"
-data-level="7.3"
+data-level="6.3"
 >Valid HTML markup
 </h2>
     <dl class="requirement_meta">
@@ -4408,7 +3872,7 @@ data-level="7.3"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#2.5-SDOC-HIGH-VALIDATION">
+    <a class="requirement_link-parent" href="#1.5-SDOC-HIGH-VALIDATION">
       <span class="requirement_parent-uid">SDOC-HIGH-VALIDATION</span>
       Requirements validation
     </a>
@@ -4450,12 +3914,12 @@ data-level="7.3"
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="8-Traceability-and-coverage"></div>
+    <div data-role='anchor' id="7-Traceability-and-coverage"></div>
 
     
         <h1
 class="section-title"
-data-level="8"
+data-level="7"
 >Traceability and coverage
 </h1>
     
@@ -4473,10 +3937,10 @@ data-level="8"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="8.1-Linking-with-implementation-artifacts"></div>
+    <div data-role='anchor' id="7.1-Linking-with-implementation-artifacts"></div>
     <h2
 class="section-title"
-data-level="8.1"
+data-level="7.1"
 >Linking with implementation artifacts
 </h2>
     
@@ -4513,10 +3977,10 @@ data-level="8.1"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="8.1.1-Validation-Broken-links-from-requirements-to-source-files"></div>
+    <div data-role='anchor' id="7.1.1-Validation-Broken-links-from-requirements-to-source-files"></div>
     <h3
 class="section-title"
-data-level="8.1.1"
+data-level="7.1.1"
 >Validation: Broken links from requirements to source files
 </h3>
     
@@ -4554,10 +4018,10 @@ files that do not exist.</p>
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="8.1.2-Validation-Broken-links-from-source-files-to-requirements"></div>
+    <div data-role='anchor' id="7.1.2-Validation-Broken-links-from-source-files-to-requirements"></div>
     <h3
 class="section-title"
-data-level="8.1.2"
+data-level="7.1.2"
 >Validation: Broken links from source files to requirements
 </h3>
     
@@ -4595,10 +4059,10 @@ requirements that do not exist.</p>
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="8.2-Requirements-coverage"></div>
+    <div data-role='anchor' id="7.2-Requirements-coverage"></div>
     <h2
 class="section-title"
-data-level="8.2"
+data-level="7.2"
 >Requirements coverage
 </h2>
     
@@ -4641,10 +4105,10 @@ data-level="8.2"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="8.3-Source-coverage"></div>
+    <div data-role='anchor' id="7.3-Source-coverage"></div>
     <h2
 class="section-title"
-data-level="8.3"
+data-level="7.3"
 >Source coverage
 </h2>
     
@@ -4685,12 +4149,12 @@ data-level="8.3"
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="9-Design-decisions"></div>
+    <div data-role='anchor' id="8-Design-decisions"></div>
 
     
         <h1
 class="section-title"
-data-level="9"
+data-level="8"
 >Design decisions
 </h1>
     
@@ -4706,12 +4170,12 @@ data-level="9"
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="9.1-Building-blocks"></div>
+    <div data-role='anchor' id="8.1-Building-blocks"></div>
 
     
         <h2
 class="section-title"
-data-level="9.1"
+data-level="8.1"
 >Building blocks
 </h2>
     
@@ -4729,10 +4193,10 @@ data-level="9.1"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="9.1.1-TextX"></div>
+    <div data-role='anchor' id="8.1.1-TextX"></div>
     <h3
 class="section-title"
-data-level="9.1.1"
+data-level="8.1.1"
 >TextX
 </h3>
     
@@ -4775,10 +4239,10 @@ data-level="9.1.1"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="9.1.2-Jinja2"></div>
+    <div data-role='anchor' id="8.1.2-Jinja2"></div>
     <h3
 class="section-title"
-data-level="9.1.2"
+data-level="8.1.2"
 >Jinja2
 </h3>
     
@@ -4815,10 +4279,10 @@ data-level="9.1.2"
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="9.1.3-Sphinx-and-Docutils"></div>
+    <div data-role='anchor' id="8.1.3-Sphinx-and-Docutils"></div>
     <h3
 class="section-title"
-data-level="9.1.3"
+data-level="8.1.3"
 >Sphinx and Docutils
 </h3>
     

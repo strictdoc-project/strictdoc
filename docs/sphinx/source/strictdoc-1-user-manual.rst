@@ -61,7 +61,7 @@ Examples
 
 For a more comprehensive example check the source file of this documentation
 which is written using StrictDoc:
-`strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc.sdoc>`_.
+`strictdoc-1-user-manual.sdoc <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc-1-user-manual.sdoc>`_.
 
 - `StrictDoc HTML export <https://strictdoc.readthedocs.io/en/latest/strictdoc-html>`_
 - `StrictDoc HTML export using Sphinx <https://strictdoc.readthedocs.io/en/latest>`_
@@ -170,7 +170,7 @@ This is how a minimal possible SDoc document looks like:
     TITLE: StrictDoc
 
 This documentation is written using StrictDoc. Here is the source file:
-`strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc.sdoc>`_.
+`strictdoc-1-user-manual.sdoc <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc-1-user-manual.sdoc>`_.
 
 Document structure
 ------------------
@@ -1143,7 +1143,7 @@ and other formats using Sphinx.
 If you are reading this documentation at
 https://strictdoc.readthedocs.io/en/latest
 then you are already looking at the example: this documentation stored in
-`strictdoc.sdoc <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc.sdoc>`_
+`strictdoc-1-user-manual <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc-1-user-manual.sdoc>`_
 is converted to RST format by StrictDoc which is further converted to the HTML
 website by readthedocs which uses Sphinx under the hood. The
 ``StrictDoc -> RST -> Sphinx -> PDF`` example is also generated using readthedocs:

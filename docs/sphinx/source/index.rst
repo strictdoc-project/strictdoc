@@ -6,4 +6,5 @@ Welcome to StrictDoc's documentation!
 
    strictdoc-1-user-manual
    strictdoc-2-requirements
-   strictdoc-3-backlog
+   strictdoc-3-development-plan
+   strictdoc-4-backlog

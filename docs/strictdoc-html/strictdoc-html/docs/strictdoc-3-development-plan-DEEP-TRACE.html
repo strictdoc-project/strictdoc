@@ -1,0 +1,653 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="UTF-8"/>
+
+  <link rel="shortcut icon" href="../_static/favicon.ico" type="image/x-icon"/>
+
+  
+  
+  <link rel="stylesheet" href="../_static/_base.css"/>
+  <link rel="stylesheet" href="../_static/_layout.css"/>
+  <link rel="stylesheet" href="../_static/_content.css"/>
+  <link rel="stylesheet" href="../_static/_requirement.css"/>
+  <link rel="stylesheet" href="../_static/_element.css"/>
+  
+  <link rel="stylesheet" href="../_static/_requirement-tree.css"/>
+
+
+  
+  <script type="text/javascript" src="../_static/toc.js"></script>
+  <script type="text/javascript" src="../_static/jquery.min.js"></script>
+  <script type="text/javascript" src="../_static/pan-with-space.js"></script>
+  
+  
+  
+  
+
+
+  <title>StrictDoc Development Plan - Deep Traceability</title>
+
+  
+</head>
+
+<body class="deep-traceability-view">
+<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script>
+
+  <div class="layout" id="layout">
+
+    <aside class="layout_aside-header">
+      
+  <a class="index-link" href="../index.html">To Index</a>
+
+    </aside>
+
+    <aside class="layout_aside">
+      
+  
+    <div>Table of Contents</div>
+    <ul class="toc"><li><a href="#1-Project-goals">
+              <span class="section-number">1</span>
+              Project goals
+            </a><ul><li><a href="#1.1-GOAL-1-TOOL-SUPPORT">
+          <span class="section-number">1.1</span>
+          Software support for writing requirements and specifications documents
+        </a></li><li><a href="#1.2-GOAL-2-REDUCE-DOCUMENTATION-HAZARDS">
+          <span class="section-number">1.2</span>
+          Reduce documentation hazards
+        </a></li><li><a href="#1.3-GOAL-3-NO-RUNAWAY-DOCUMENTATION">
+          <span class="section-number">1.3</span>
+          No (or less) run-away documentation
+        </a></li><li><a href="#1.4-GOAL-4-CHANGE-MANAGEMENT">
+          <span class="section-number">1.4</span>
+          Change management
+        </a></li></ul>
+            </li></ul>
+
+    </aside>
+
+    
+  <a class="layout_toggler layout_button" id="layout_toggle"></a><nav class="layout_nav">
+    <a
+    class="layout_nav-btn layout_button btn-document"
+    title="Go to Document view"
+    href="../docs/strictdoc-3-development-plan.html">
+    DOC
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-table"
+    title="Go to Table view"
+    href="../docs/strictdoc-3-development-plan-TABLE.html">
+    TBL
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-traceability"
+    title="Go to Traceability view"
+    href="../docs/strictdoc-3-development-plan-TRACE.html">
+    TR
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-deep-traceability"
+    title="Go to Deep Traceability view"
+    href="../docs/strictdoc-3-development-plan-DEEP-TRACE.html">
+    DTR
+  </a>
+  </nav>
+
+
+    <header class="layout_header">
+      
+  <p>StrictDoc Development Plan <span class="document-view-type">Deep Traceability</span></p>
+
+    </header>
+
+    <main class="layout_main">
+      
+
+      
+
+      <div class="content">
+          <section class="content_section">
+            <div class="content_item" data-role="current"><article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="1-Project-goals"></div>
+
+    
+        <h1
+class="section-title"
+data-level="1"
+>Project goals
+</h1>
+    
+
+  </section>
+
+  
+
+</article></div>
+          </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+          <div class="content_item" data-role="current"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="1.1-GOAL-1-TOOL-SUPPORT"></div>
+    <h2
+class="section-title"
+data-level="1.1"
+>Software support for writing requirements and specifications documents
+</h2>
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>GOAL-1-TOOL-SUPPORT</dd>
+    
+  </dl>
+    
+<ul class="requirement_link">
+  <li>
+    <a class="requirement_link-child" href="../docs/strictdoc-2-requirements-DEEP-TRACE.html#1.1-SDOC-HIGH-REQS-MANAGEMENT">
+      <span class="requirement_child-uid">SDOC-HIGH-REQS-MANAGEMENT</span>
+      Requirements management
+    </a>
+  </li>
+  </ul>
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>There shall exist free and lightweight yet capable software for writing
+requirements and specifications documents</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>Technical documentation is hard, it can be an extremely laborious process.
+Software shall support engineers in their work with documentation.</p>
+</div>
+
+    </div>
+    <div class="requirement_comment">
+      <div class="document">
+<p>The state of the art for many small companies working with
+requirements: using Excel for requirements management in the projects with
+hundreds or thousands of requirements.</p>
+</div>
+
+    </div>
+
+  </section>
+
+</article></div>
+
+          <div class="content_item" data-role="children">
+
+<ul class="requirement-tree requirement-tree_right"><li class="requirement-tree_branch">
+    <div class="requirement-tree_node">
+      <article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    
+    <h2
+class="section-title"
+data-level="1.1"
+>Requirements management
+</h2>
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>SDOC-HIGH-REQS-MANAGEMENT</dd>
+    
+  </dl>
+    
+<ul class="requirement_link">
+  <li>
+    <a class="requirement_link-parent" href="#1.1-GOAL-1-TOOL-SUPPORT">
+      <span class="requirement_parent-uid">GOAL-1-TOOL-SUPPORT</span>
+      Software support for writing requirements and specifications documents
+    </a>
+  </li>
+  </ul>
+<ul class="requirement_link">
+  <li>
+    <a class="requirement_link-child" href="../docs/strictdoc-2-requirements-DEEP-TRACE.html#3.1-SDOC-DM-MODEL">
+      <span class="requirement_child-uid">SDOC-DM-MODEL</span>
+      Modeling capability
+    </a>
+  </li>
+  </ul>
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall enable requirements management.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+
+  </section>
+
+</article>
+    </div>
+
+<ul class="requirement-tree requirement-tree_right"><li class="requirement-tree_branch">
+    <div class="requirement-tree_node">
+      <article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    
+    <h2
+class="section-title"
+data-level="3.1"
+>Modeling capability
+</h2>
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>SDOC-DM-MODEL</dd>
+    
+  </dl>
+    
+<ul class="requirement_link">
+  <li>
+    <a class="requirement_link-parent" href="../docs/strictdoc-2-requirements-DEEP-TRACE.html#1.1-SDOC-HIGH-REQS-MANAGEMENT">
+      <span class="requirement_parent-uid">SDOC-HIGH-REQS-MANAGEMENT</span>
+      Requirements management
+    </a>
+  </li>
+  <li>
+    <a class="requirement_link-parent" href="../docs/strictdoc-2-requirements-DEEP-TRACE.html#1.2-SDOC-HIGH-DATA-MODEL">
+      <span class="requirement_parent-uid">SDOC-HIGH-DATA-MODEL</span>
+      Data model
+    </a>
+  </li>
+  </ul>
+<ul class="requirement_link">
+  <li>
+    <a class="requirement_link-child" href="../docs/strictdoc-2-requirements-DEEP-TRACE.html#4.1-SDOC-FMT-PRIMARY">
+      <span class="requirement_child-uid">SDOC-FMT-PRIMARY</span>
+      Primary text implementation
+    </a>
+  </li>
+  </ul>
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc's Data Model shall accommodate for maximum possible standard requirement document formats.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>Examples of standard requirements documents include but are not limited to:</p>
+<ul class="simple">
+<li>Non-nested requirement lists split by categories
+(e.g., Functional Requirements, Interface Requirements, Performance Requirements, etc.)</li>
+</ul>
+</div>
+
+    </div>
+
+  </section>
+
+</article>
+    </div>
+
+<ul class="requirement-tree requirement-tree_right"><li class="requirement-tree_branch">
+    <div class="requirement-tree_node">
+      <article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    
+    <h2
+class="section-title"
+data-level="4.1"
+>Primary text implementation
+</h2>
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>SDOC-FMT-PRIMARY</dd>
+    
+  </dl>
+    
+<ul class="requirement_link">
+  <li>
+    <a class="requirement_link-parent" href="../docs/strictdoc-2-requirements-DEEP-TRACE.html#3.1-SDOC-DM-MODEL">
+      <span class="requirement_parent-uid">SDOC-DM-MODEL</span>
+      Modeling capability
+    </a>
+  </li>
+  </ul>
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>The SDoc format shall support encoding the Strict Doc Data Model in a plain-text human readable form.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+
+  </section>
+
+</article>
+    </div>
+
+
+  </li></ul>
+
+  </li></ul>
+
+  </li></ul></div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+          <div class="content_item" data-role="current"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="1.2-GOAL-2-REDUCE-DOCUMENTATION-HAZARDS"></div>
+    <h2
+class="section-title"
+data-level="1.2"
+>Reduce documentation hazards
+</h2>
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>GOAL-2-REDUCE-DOCUMENTATION-HAZARDS</dd>
+    
+  </dl>
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>There shall exist no (or less) opportunity for writing incorrect or inconsistent
+documentation.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>Every serious engineering activity, such as safety engineering or systems
+engineering, starts with requirements. The more critical is a product the higher
+the importance of good documentation.</p>
+<p>Technical documentation can be and often becomes a source of hazards.
+It is recognized that many failures stem from inadequate requirements
+engineering. While it is not possible to fix the problem of inadequate
+requirements engineering in general, it is definitely possible to improve
+software that supports engineers in activities such as requirements engineering
+and writing technical documentation.</p>
+</div>
+
+    </div>
+
+  </section>
+
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+          <div class="content_item" data-role="current"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="1.3-GOAL-3-NO-RUNAWAY-DOCUMENTATION"></div>
+    <h2
+class="section-title"
+data-level="1.3"
+>No (or less) run-away documentation
+</h2>
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>GOAL-3-NO-RUNAWAY-DOCUMENTATION</dd>
+    
+  </dl>
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>Software shall support engineers in keeping documentation up-to-date.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>Technical documentation easily becomes outdated. Many existing tools for
+documentation do not provide any measures for ensuring overall consistency of
+documents and documentation trees.</p>
+</div>
+
+    </div>
+
+  </section>
+
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+          <div class="content_item" data-role="current"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="1.4-GOAL-4-CHANGE-MANAGEMENT"></div>
+    <h2
+class="section-title"
+data-level="1.4"
+>Change management
+</h2>
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>GOAL-4-CHANGE-MANAGEMENT</dd>
+    
+  </dl>
+    
+<ul class="requirement_link">
+  <li>
+    <a class="requirement_link-child" href="../docs/strictdoc-4-backlog-DEEP-TRACE.html#8-BACKLOG-FUZZY-SEARCH">
+      <span class="requirement_child-uid">BACKLOG-FUZZY-SEARCH</span>
+      Fuzzy requirements search
+    </a>
+  </li>
+  </ul>
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>Software shall provide capabilities for change management and impact assessment.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>Change management is difficult. The bigger the project is, the harder it is to
+maintain its documentation. If a change is introduced to a project, it usually
+requires a full revision of its requirements.</p>
+</div>
+
+    </div>
+    <div class="requirement_comment">
+      <div class="document">
+<p>When the basic capabilities of StrictDoc are in place, it should be possible
+to do a more advanced analysis of requirements and requirement trees:</p>
+<ul class="simple">
+<li>Finding similar or relevant requirements.</li>
+<li>Enforce invariants that should be hold. Example: mass or power budget.</li>
+</ul>
+</div>
+
+    </div>
+
+  </section>
+
+</article></div>
+
+          <div class="content_item" data-role="children">
+
+<ul class="requirement-tree requirement-tree_right"><li class="requirement-tree_branch">
+    <div class="requirement-tree_node">
+      <article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    
+    <h1
+class="section-title"
+data-level="8"
+>Fuzzy requirements search
+</h1>
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>BACKLOG-FUZZY-SEARCH</dd>
+    
+  </dl>
+    
+<ul class="requirement_link">
+  <li>
+    <a class="requirement_link-parent" href="#1.4-GOAL-4-CHANGE-MANAGEMENT">
+      <span class="requirement_parent-uid">GOAL-4-CHANGE-MANAGEMENT</span>
+      Change management
+    </a>
+  </li>
+  </ul>
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall support finding relevant requirements.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>This feature can be implemented in the CLI as well as in the future GUI. A fuzzy
+requirements search can help to find existing requirements and also identify
+relevant requirements when creating new requirements.</p>
+</div>
+
+    </div>
+
+  </section>
+
+</article>
+    </div>
+
+
+  </li></ul></div>
+        </section>
+      </div>
+
+
+    </main>
+
+  </div>
+  
+  <script>
+    $(document).ready(function () {
+      // Quick and dirty scrolling to the middle of the document.
+      var table = $('.table').first();
+      window.scrollBy(table.outerWidth() / 2 - $(window).width() / 2, 0);
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+RUN: mkdir -p %S/output
+RUN: %strictdoc import excel sdoc %S/input.xls %S/output/output.sdoc
+RUN: %cat %S/output/output.sdoc | filecheck %s
+
+CHECK: [REQUIREMENT]
+CHECK: UID: A-1
+CHECK: STATEMENT: >>>
+CHECK: a statement
+CHECK: <<<
+CHECK: COMMENT: >>>
+CHECK: a comment
+CHECK: <<<

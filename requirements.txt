@@ -12,3 +12,4 @@ beautifulsoup4>=4.9.3
 pygments>=2.10.0
 lxml>=4.6.2
 reqif>=0.0.18
+xlrd==2.0.1

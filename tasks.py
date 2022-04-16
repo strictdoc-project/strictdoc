@@ -6,24 +6,40 @@ from enum import Enum
 import invoke
 from invoke import task
 
+# A flag that stores which virtual environment is used for executing tasks.
+VENV_FOLDER = "VENV_FOLDER"
+# A flag that is used to allow checking the readiness of virtual environment
+# only once independently of which task or a sequence of tasks is executed.
+VENV_DEPS_CHECK_PASSED = "VENV_DEPS_CHECK_PASSED"
 
-def get_venv_command(postfix):
-    venv_path = os.path.join(os.getcwd(), f".venv-{postfix}")
+COMMAND_SETUP_DEPS = """
+    pip install --upgrade pip setuptools &&
+    pip install -r requirements.txt &&
+    pip install -r requirements.development.txt
+"""
+
+
+def one_line_command(string):
+    return re.sub("\\s+", " ", string).strip()
+
+
+def get_venv_command(venv_path):
     venv_command_activate = (
         f". {venv_path}/bin/activate"
         if platform.system() != "Windows"
         else rf"{venv_path}\Scripts\activate"
     )
-    venv_command = f"python -m venv {venv_path} && {venv_command_activate}"
+    venv_command = f"""
+        python -m venv {venv_path} && 
+            {venv_command_activate} &&
+            export PATH="{venv_path}/bin:/usr/bin:/bin"
+    """
     # Cannot make this work on Windows/PowerShell.
     # TODO: Fix this at some point and make the Windows CI to be identical to
     # Linux/macOS CI.
     if platform.system() == "Windows":
         venv_command = "true"
-    return venv_command
-
-
-VENV_FOLDER = "VENV_FOLDER"
+    return one_line_command(venv_command)
 
 
 # To prevent all tasks from building to the same virtual environment.
@@ -35,16 +51,40 @@ class VenvFolderType(str, Enum):
 
 
 def run_invoke_cmd(context, cmd) -> invoke.runners.Result:
-    def one_line_command(string):
-        return re.sub("\\s+", " ", string).strip()
-
     postfix = (
         context[VENV_FOLDER]
         if VENV_FOLDER in context
         else VenvFolderType.RELEASE_DEFAULT
     )
+    venv_path = os.path.join(os.getcwd(), f".venv-{postfix}")
 
-    with context.prefix(get_venv_command(postfix)):
+    with context.prefix(get_venv_command(venv_path)):
+        if VENV_DEPS_CHECK_PASSED not in context:
+            result = context.run(
+                one_line_command(
+                    """
+                    python3 check_environment.py
+                    """
+                ),
+                env=None,
+                hide=False,
+                warn=True,
+                pty=False,
+                echo=True,
+            )
+            if result.exited != 0:
+                result = context.run(
+                    one_line_command(COMMAND_SETUP_DEPS),
+                    env=None,
+                    hide=False,
+                    warn=False,
+                    pty=False,
+                    echo=True,
+                )
+                if result.exited != 0:
+                    return result
+            context[VENV_DEPS_CHECK_PASSED] = True
+
         return context.run(
             one_line_command(cmd),
             env=None,
@@ -180,11 +220,14 @@ def test_coverage_report(context):
 
 
 @task(clean)
-def test_integration(context, focus=None, debug=False, external_sdoc=None):
+def test_integration(context, focus=None, debug=False):
     cwd = os.getcwd()
 
     strictdoc_exec = f'python \\"{cwd}/strictdoc/cli/main.py\\"'
-    if external_sdoc is not None:
+    if (
+        VENV_FOLDER in context
+        and context[VENV_FOLDER] == VenvFolderType.RELEASE_LOCAL
+    ):
         strictdoc_exec = "strictdoc"
 
     focus_or_none = f"--filter {focus}" if focus else ""
@@ -260,24 +303,24 @@ def lint_mypy(context):
     )
 
 
-@task(
-    lint_black_diff,
-    lint_pylint,
-    lint_flake8,
-    lint_mypy,
-)
-def lint(_):
-    pass
+@task
+def lint(context):
+    lint_black_diff(context)
+    lint_pylint(context)
+    lint_flake8(context)
+    lint_mypy(context)
 
 
-@task(test_unit_coverage, test_integration)
-def test(_):
-    pass
+@task
+def test(context):
+    test_unit_coverage(context)
+    test_integration(context)
 
 
-@task(lint, test)
-def check(_):
-    pass
+@task
+def check(context):
+    lint(context)
+    test(context)
 
 
 # https://github.com/github-changelog-generator/github-changelog-generator
@@ -314,12 +357,7 @@ def check_dead_links(context):
 
 @task
 def setup_development_deps(context):
-    command = """
-        pip install --upgrade pip setuptools &&
-        pip install -r requirements.txt &&
-        pip install -r requirements.development.txt
-    """
-    run_invoke_cmd(context, command)
+    run_invoke_cmd(context, COMMAND_SETUP_DEPS)
 
 
 @task
@@ -332,9 +370,8 @@ def release_local(context):
             python setup.py install
     """
     clean(context)
-    setup_development_deps(context)
     run_invoke_cmd(context, command)
-    test_integration(context, external_sdoc="strictdoc")
+    check(context)
 
 
 @task

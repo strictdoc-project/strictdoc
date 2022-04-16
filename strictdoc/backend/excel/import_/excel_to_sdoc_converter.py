@@ -30,14 +30,14 @@ class RequirementColumns(NamedTuple):
 # pylint: disable=too-many-instance-attributes
 class ExcelToSDocConverter:
     @staticmethod
-    def lookup_header_row_num(first_sheet):
+    def lookup_header_row_num(xlrd_sheet: xlrd.sheet.Sheet):
         for i in range(16):  # the first 16 rows should do ¯\_(ツ)_/¯
-            if first_sheet.row_values(0)[0].strip() != "":
+            if xlrd_sheet.row_values(0)[0].strip() != "":
                 return i
         return None
 
     @staticmethod
-    def get_safe_header_row(first_sheet, header_row_num):
+    def get_safe_header_row(xlrd_sheet: xlrd.sheet.Sheet, header_row_num):
         def safe_name(dangerous_name):
             dangerous_name = dangerous_name.splitlines()[0]
             dangerous_name = dangerous_name.strip()
@@ -50,18 +50,20 @@ class ExcelToSDocConverter:
             dangerous_name = dangerous_name.replace("/", "_OR_")
             return dangerous_name
 
-        header_row = first_sheet.row_values(header_row_num)
+        header_row = xlrd_sheet.row_values(header_row_num)
         header_row = list(safe_name(x) for x in header_row)
         return header_row
 
     @staticmethod
-    def get_any_header_column(first_sheet, header_texts, header_row_num):
+    def get_any_header_column(
+        xlrd_sheet: xlrd.sheet.Sheet, header_texts, header_row_num
+    ):
         if not isinstance(header_texts, list):
             header_texts = [header_texts]
         for text in header_texts:
             try:
                 return ExcelToSDocConverter.get_safe_header_row(
-                    first_sheet, header_row_num
+                    xlrd_sheet, header_row_num
                 ).index(text)
             except ValueError:
                 continue
@@ -70,7 +72,7 @@ class ExcelToSDocConverter:
     @staticmethod
     def convert(excel_file) -> Document:
         excel_workbook = xlrd.open_workbook(filename=excel_file, on_demand=True)
-        first_sheet = excel_workbook.sheet_by_index(0)
+        first_sheet: xlrd.sheet.Sheet = excel_workbook.sheet_by_index(0)
 
         # Find a row that is a header row with field titles.
         header_row_num = ExcelToSDocConverter.lookup_header_row_num(first_sheet)
@@ -176,9 +178,12 @@ class ExcelToSDocConverter:
 
     @staticmethod
     def create_requirement(
-        first_sheet, document, row_num, columns: RequirementColumns
+        xlrd_sheet: xlrd.sheet.Sheet,
+        document,
+        row_num,
+        columns: RequirementColumns,
     ):
-        row_values = first_sheet.row_values(row_num)
+        row_values = xlrd_sheet.row_values(row_num)
         statement = row_values[columns.statement_column]
         uid = None
         if columns.uid_column is not None:

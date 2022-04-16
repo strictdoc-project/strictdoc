@@ -222,6 +222,7 @@ def test_coverage_report(context):
     )
 
 
+@task
 def test_integration(context, focus=None, debug=False):
     clean_itest_artifacts(context)
 

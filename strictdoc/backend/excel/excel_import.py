@@ -7,5 +7,5 @@ from strictdoc.backend.excel.import_.excel_to_sdoc_converter import (
 class ExcelImport:
     @staticmethod
     def import_from_file(import_config: ImportCommandConfig):
-        document = ExcelToSDocConverter.parse(import_config.input_path)
+        document = ExcelToSDocConverter.convert(import_config.input_path)
         return document

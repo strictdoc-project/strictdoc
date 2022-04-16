@@ -1,6 +1,7 @@
 RUN: mkdir -p %S/output
 RUN: %strictdoc import excel sdoc %S/input.xls %S/output/output.sdoc
 RUN: %cat %S/output/output.sdoc | filecheck %s
+RUN: %diff %S/output/output.sdoc %S/expected/expected.sdoc
 
 CHECK: [REQUIREMENT]
 CHECK: UID: A-1

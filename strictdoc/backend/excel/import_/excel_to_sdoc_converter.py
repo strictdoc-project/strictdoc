@@ -1,9 +1,8 @@
 import os
-from typing import Optional, Any
+from typing import Optional, NamedTuple, List
 
 import xlrd
 
-from strictdoc.backend.sdoc.models.reference import Reference
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import (
@@ -11,6 +10,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     GrammarElement,
 )
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
+from strictdoc.backend.sdoc.models.reference import Reference
 from strictdoc.backend.sdoc.models.requirement import (
     RequirementField,
     Requirement,
@@ -18,113 +18,134 @@ from strictdoc.backend.sdoc.models.requirement import (
 from strictdoc.backend.sdoc.models.type_system import GrammarElementFieldString
 
 
+class RequirementColumns(NamedTuple):
+    uid_column: Optional[int]
+    title_column: Optional[int]
+    statement_column: Optional[int]
+    comment_column: Optional[int]
+    parent_column: Optional[int]
+    extra_header_pairs: List
+
+
 # pylint: disable=too-many-instance-attributes
 class ExcelToSDocConverter:
-    parent_column: int
-    extra_header_pairs: Any
-    criticality_column: int
-    title_column: int
-    comment_column: int
-    uid_column: int
-    statement_column: int
-
-    def __init__(self, excel_file):
-        self.excel_workbook = xlrd.open_workbook(
-            filename=excel_file, on_demand=True
-        )
-        self.first_sheet = self.excel_workbook.sheet_by_index(0)
-        self.header_row_num = self.lookup_header_row_num()
-        self.excel_file_name = os.path.basename(excel_file)
-        assert self.header_row_num is not None
-
-    def lookup_header_row_num(self):
+    @staticmethod
+    def lookup_header_row_num(first_sheet):
         for i in range(16):  # the first 16 rows should do ¯\_(ツ)_/¯
-            if self.first_sheet.row_values(0)[0].strip() != "":
+            if first_sheet.row_values(0)[0].strip() != "":
                 return i
         return None
 
-    def get_safe_header_row(self):
-        header_row = self.first_sheet.row_values(self.header_row_num)
-        header_row = list(self.safe_name(x) for x in header_row)
+    @staticmethod
+    def get_safe_header_row(first_sheet, header_row_num):
+        def safe_name(dangerous_name):
+            dangerous_name = dangerous_name.splitlines()[0]
+            dangerous_name = dangerous_name.strip()
+            dangerous_name = dangerous_name.upper()
+            dangerous_name = dangerous_name.replace(":", "")
+            dangerous_name = dangerous_name.replace("+", "")
+            dangerous_name = dangerous_name.replace(",", "_")
+            dangerous_name = dangerous_name.replace(" ", "_")
+            dangerous_name = dangerous_name.replace("-", "_")
+            dangerous_name = dangerous_name.replace("/", "_OR_")
+            return dangerous_name
+
+        header_row = first_sheet.row_values(header_row_num)
+        header_row = list(safe_name(x) for x in header_row)
         return header_row
 
-    def get_any_header_column(self, header_texts):
+    @staticmethod
+    def get_any_header_column(first_sheet, header_texts, header_row_num):
         if not isinstance(header_texts, list):
             header_texts = [header_texts]
         for text in header_texts:
             try:
-                return self.get_safe_header_row().index(text)
+                return ExcelToSDocConverter.get_safe_header_row(
+                    first_sheet, header_row_num
+                ).index(text)
             except ValueError:
                 continue
-        return -1
+        return None
 
     @staticmethod
-    def safe_name(dangerous_name):
-        dangerous_name = dangerous_name.splitlines()[0]
-        dangerous_name = dangerous_name.strip()
-        dangerous_name = dangerous_name.upper()
-        dangerous_name = dangerous_name.replace(":", "")
-        dangerous_name = dangerous_name.replace("+", "")
-        dangerous_name = dangerous_name.replace(",", "_")
-        dangerous_name = dangerous_name.replace(" ", "_")
-        dangerous_name = dangerous_name.replace("-", "_")
-        dangerous_name = dangerous_name.replace("/", "_OR_")
-        return dangerous_name
+    def convert(excel_file) -> Document:
+        excel_workbook = xlrd.open_workbook(filename=excel_file, on_demand=True)
+        first_sheet = excel_workbook.sheet_by_index(0)
 
-    def convert(self):
-        title = self.excel_file_name + " sheet " + self.first_sheet.name
+        # Find a row that is a header row with field titles.
+        header_row_num = ExcelToSDocConverter.lookup_header_row_num(first_sheet)
+        assert header_row_num is not None
 
-        self.identify_all_columns()
-        self.validate_all_required_columns()
+        excel_file_name = os.path.basename(excel_file)
+        title = excel_file_name + " sheet " + first_sheet.name
 
-        document = self.create_document(title)
-        for i in range(self.header_row_num + 1, self.first_sheet.nrows):
-            template_requirement = (
-                self.create_template_requirement_from_well_known_columns(
-                    document, i
-                )
-            )
-            requirement = self.extend_requirement_with_extra_columns(
-                template_requirement, i
+        # Identify all columns
+        all_header_columns = list(range(first_sheet.ncols))
+
+        statement_column = ExcelToSDocConverter.get_any_header_column(
+            first_sheet, ["REQUIREMENT", "STATEMENT"], header_row_num
+        )
+        if statement_column is not None:
+            all_header_columns.remove(statement_column)
+        uid_column = ExcelToSDocConverter.get_any_header_column(
+            first_sheet,
+            ["REF", "REF #", "REF_#", "REFDES", "ID", "UID"],
+            header_row_num,
+        )
+        if uid_column is not None:
+            all_header_columns.remove(uid_column)
+        comment_column = ExcelToSDocConverter.get_any_header_column(
+            first_sheet, ["REMARKS", "COMMENT"], header_row_num
+        )
+        if comment_column is not None:
+            all_header_columns.remove(comment_column)
+        title_column = ExcelToSDocConverter.get_any_header_column(
+            first_sheet, ["TITLE", "NAME"], header_row_num
+        )
+        if title_column is not None:
+            all_header_columns.remove(title_column)
+        parent_column = ExcelToSDocConverter.get_any_header_column(
+            first_sheet, ["PARENT", "PARENT_REF", "PARENT_UID"], header_row_num
+        )
+        if parent_column is not None:
+            all_header_columns.remove(parent_column)
+
+        header_row = ExcelToSDocConverter.get_safe_header_row(
+            first_sheet, header_row_num
+        )
+        # [(0, 'APPLICABLE_COMPONENT_CATEGORIES'),
+        # (2, 'CATEGORY'),
+        # (4, 'PUBLIC_REQUIREMENTS_REFERENCES_OR_DESCRIPTIONS'),
+        # (5, 'VERIFICATION_INSPECTION__DEMONSTRATION__TEST__OR_ANALYSIS'),
+        # (6, 'CRITICALITY')]
+        extra_header_pairs = list(
+            map(lambda x: (x, header_row[x]), all_header_columns)
+        )
+        columns = RequirementColumns(
+            uid_column=uid_column,
+            title_column=title_column,
+            statement_column=statement_column,
+            comment_column=comment_column,
+            parent_column=parent_column,
+            extra_header_pairs=extra_header_pairs,
+        )
+
+        # validate_all_required_columns
+        assert columns.statement_column is not None
+
+        document = ExcelToSDocConverter.create_document(
+            title, extra_header_pairs
+        )
+        for i in range(header_row_num + 1, first_sheet.nrows):
+            requirement = ExcelToSDocConverter.create_requirement(
+                first_sheet, document, i, columns
             )
             document.section_contents.append(requirement)
 
         return document
 
-    def identify_all_columns(self):
-        all_header_columns = list(range(self.first_sheet.ncols))
-
-        self.statement_column = self.get_any_header_column(
-            ["REQUIREMENT", "STATEMENT"]
-        )
-        if self.statement_column != -1:
-            all_header_columns.remove(self.statement_column)
-        self.uid_column = self.get_any_header_column(
-            ["REF", "REF #", "REF_#", "REFDES", "ID", "UID"]
-        )
-        if self.uid_column != -1:
-            all_header_columns.remove(self.uid_column)
-        self.comment_column = self.get_any_header_column(["REMARKS", "COMMENT"])
-        if self.comment_column != -1:
-            all_header_columns.remove(self.comment_column)
-        self.title_column = self.get_any_header_column(["TITLE", "NAME"])
-        if self.title_column != -1:
-            all_header_columns.remove(self.title_column)
-        self.parent_column = self.get_any_header_column(
-            ["PARENT", "PARENT_REF", "PARENT_UID"]
-        )
-        if self.parent_column != -1:
-            all_header_columns.remove(self.parent_column)
-
-        header_row = self.get_safe_header_row()
-        self.extra_header_pairs = list(
-            map(lambda x: (x, header_row[x]), all_header_columns)
-        )
-
-    def validate_all_required_columns(self):
-        assert self.statement_column != -1
-
-    def create_document(self, title: Optional[str]) -> Document:
+    @staticmethod
+    def create_document(title: Optional[str], extra_header_pairs) -> Document:
         document_config = DocumentConfig(
             parent=None,
             version=None,
@@ -136,7 +157,7 @@ class ExcelToSDocConverter:
         document = Document(None, document_title, document_config, None, [], [])
 
         fields = DocumentGrammar.create_default(document).elements[0].fields
-        for _, name in self.extra_header_pairs:
+        for _, name in extra_header_pairs:
             fields.extend(
                 [
                     GrammarElementFieldString(
@@ -153,27 +174,28 @@ class ExcelToSDocConverter:
         document.grammar = grammar
         return document
 
-    def create_template_requirement_from_well_known_columns(
-        self, document, row_num
+    @staticmethod
+    def create_requirement(
+        first_sheet, document, row_num, columns: RequirementColumns
     ):
-        row_values = self.first_sheet.row_values(row_num)
-        statement = row_values[self.statement_column]
+        row_values = first_sheet.row_values(row_num)
+        statement = row_values[columns.statement_column]
         uid = None
-        if self.uid_column != -1:
-            uid = row_values[self.uid_column].strip()
+        if columns.uid_column is not None:
+            uid = row_values[columns.uid_column].strip()
         title = None
-        if self.title_column != -1:
-            title = row_values[self.title_column].strip()
+        if columns.title_column is not None:
+            title = row_values[columns.title_column].strip()
         comments = None
-        if self.comment_column != -1:
-            comment = row_values[self.comment_column].strip()
+        if columns.comment_column is not None:
+            comment = row_values[columns.comment_column].strip()
             if comment in ("", "-"):
                 comments = None
             else:
                 comments = [comment]
         parent_uid = None
-        if self.parent_column != -1:
-            parent_uid = row_values[self.parent_column].strip()
+        if columns.parent_column is not None:
+            parent_uid = row_values[columns.parent_column].strip()
         template_requirement = SDocObjectFactory.create_requirement(
             document,
             requirement_type="REQUIREMENT",
@@ -202,17 +224,10 @@ class ExcelToSDocConverter:
                 requirement_field
             ]
 
-        return template_requirement
-
-    def extend_requirement_with_extra_columns(
-        self, template_requirement, row_num
-    ):
-        row_values = self.first_sheet.row_values(row_num)
-        fields = template_requirement.fields
-        for i, name in self.extra_header_pairs:
+        for i, name in columns.extra_header_pairs:
             value = row_values[i].strip()
             if value != "":
-                fields.append(
+                template_requirement.fields.append(
                     RequirementField(
                         parent=None,
                         field_name=name,
@@ -221,16 +236,12 @@ class ExcelToSDocConverter:
                         field_value_references=None,
                     )
                 )
+
         requirement = Requirement(
             parent=template_requirement.parent,
             requirement_type=template_requirement.requirement_type,
-            fields=fields,
+            fields=template_requirement.fields,
         )
         requirement.ng_level = 1
-        return requirement
 
-    @staticmethod
-    def parse(input_path):
-        converter = ExcelToSDocConverter(input_path)
-        document = converter.convert()
-        return document
+        return requirement

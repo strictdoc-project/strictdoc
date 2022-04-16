@@ -58,13 +58,13 @@ class ExcelToSDocConverter:
     def get_any_header_column(
         xlrd_sheet: xlrd.sheet.Sheet, header_texts, header_row_num
     ):
-        if not isinstance(header_texts, list):
-            header_texts = [header_texts]
+        assert isinstance(header_texts, list)
+        safe_header_row = ExcelToSDocConverter.get_safe_header_row(
+            xlrd_sheet, header_row_num
+        )
         for text in header_texts:
             try:
-                return ExcelToSDocConverter.get_safe_header_row(
-                    xlrd_sheet, header_row_num
-                ).index(text)
+                return safe_header_row.index(text)
             except ValueError:
                 continue
         return None

@@ -71,9 +71,8 @@ class ExcelToSDocConverter:
         dangerous_name = dangerous_name.replace("/", "_OR_")
         return dangerous_name
 
-    def convert(self, title=None):
-        if title is None:
-            title = self.excel_file_name + " sheet " + self.first_sheet.name
+    def convert(self):
+        title = self.excel_file_name + " sheet " + self.first_sheet.name
 
         self.identify_all_columns()
         self.validate_all_required_columns()
@@ -231,7 +230,7 @@ class ExcelToSDocConverter:
         return requirement
 
     @staticmethod
-    def parse(input_path, title=None):
+    def parse(input_path):
         converter = ExcelToSDocConverter(input_path)
-        document = converter.convert(title)
+        document = converter.convert()
         return document

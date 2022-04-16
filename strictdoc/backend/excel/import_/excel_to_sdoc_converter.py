@@ -1,5 +1,5 @@
 import os
-from typing import Optional, NamedTuple, List
+from typing import Optional, NamedTuple, List, Tuple
 
 import xlrd
 
@@ -24,104 +24,81 @@ class RequirementColumns(NamedTuple):
     statement_column: Optional[int]
     comment_column: Optional[int]
     parent_column: Optional[int]
-    extra_header_pairs: List
+    extra_header_pairs: List[Tuple[int, str]]
+
+
+def safe_name(dangerous_name):
+    dangerous_name = dangerous_name.splitlines()[0]
+    dangerous_name = dangerous_name.strip()
+    dangerous_name = dangerous_name.upper()
+    dangerous_name = dangerous_name.replace(":", "")
+    dangerous_name = dangerous_name.replace("+", "")
+    dangerous_name = dangerous_name.replace(",", "_")
+    dangerous_name = dangerous_name.replace(" ", "_")
+    dangerous_name = dangerous_name.replace("-", "_")
+    dangerous_name = dangerous_name.replace("/", "_OR_")
+    return dangerous_name
 
 
 # pylint: disable=too-many-instance-attributes
 class ExcelToSDocConverter:
     @staticmethod
-    def lookup_header_row_num(xlrd_sheet: xlrd.sheet.Sheet):
-        for i in range(16):  # the first 16 rows should do ¯\_(ツ)_/¯
-            if xlrd_sheet.row_values(0)[0].strip() != "":
-                return i
-        return None
-
-    @staticmethod
-    def get_safe_header_row(xlrd_sheet: xlrd.sheet.Sheet, header_row_num):
-        def safe_name(dangerous_name):
-            dangerous_name = dangerous_name.splitlines()[0]
-            dangerous_name = dangerous_name.strip()
-            dangerous_name = dangerous_name.upper()
-            dangerous_name = dangerous_name.replace(":", "")
-            dangerous_name = dangerous_name.replace("+", "")
-            dangerous_name = dangerous_name.replace(",", "_")
-            dangerous_name = dangerous_name.replace(" ", "_")
-            dangerous_name = dangerous_name.replace("-", "_")
-            dangerous_name = dangerous_name.replace("/", "_OR_")
-            return dangerous_name
-
-        header_row = xlrd_sheet.row_values(header_row_num)
-        header_row = list(safe_name(x) for x in header_row)
-        return header_row
-
-    @staticmethod
-    def get_any_header_column(
-        xlrd_sheet: xlrd.sheet.Sheet, header_texts, header_row_num
-    ):
-        assert isinstance(header_texts, list)
-        safe_header_row = ExcelToSDocConverter.get_safe_header_row(
-            xlrd_sheet, header_row_num
-        )
-        for text in header_texts:
-            try:
-                return safe_header_row.index(text)
-            except ValueError:
-                continue
-        return None
-
-    @staticmethod
     def convert(excel_file) -> Document:
         excel_workbook = xlrd.open_workbook(filename=excel_file, on_demand=True)
-        first_sheet: xlrd.sheet.Sheet = excel_workbook.sheet_by_index(0)
-
-        # Find a row that is a header row with field titles.
-        header_row_num = ExcelToSDocConverter.lookup_header_row_num(first_sheet)
-        assert header_row_num is not None
+        xlrd_sheet: xlrd.sheet.Sheet = excel_workbook.sheet_by_index(0)
 
         excel_file_name = os.path.basename(excel_file)
-        title = excel_file_name + " sheet " + first_sheet.name
+        title = excel_file_name + " sheet " + xlrd_sheet.name
 
-        # Identify all columns
-        all_header_columns = list(range(first_sheet.ncols))
+        all_header_columns = list(range(xlrd_sheet.ncols))
 
-        statement_column = ExcelToSDocConverter.get_any_header_column(
-            first_sheet, ["REQUIREMENT", "STATEMENT"], header_row_num
-        )
-        if statement_column is not None:
-            all_header_columns.remove(statement_column)
-        uid_column = ExcelToSDocConverter.get_any_header_column(
-            first_sheet,
-            ["REF", "REF #", "REF_#", "REFDES", "ID", "UID"],
-            header_row_num,
-        )
-        if uid_column is not None:
-            all_header_columns.remove(uid_column)
-        comment_column = ExcelToSDocConverter.get_any_header_column(
-            first_sheet, ["REMARKS", "COMMENT"], header_row_num
-        )
-        if comment_column is not None:
-            all_header_columns.remove(comment_column)
-        title_column = ExcelToSDocConverter.get_any_header_column(
-            first_sheet, ["TITLE", "NAME"], header_row_num
-        )
-        if title_column is not None:
-            all_header_columns.remove(title_column)
-        parent_column = ExcelToSDocConverter.get_any_header_column(
-            first_sheet, ["PARENT", "PARENT_REF", "PARENT_UID"], header_row_num
-        )
-        if parent_column is not None:
-            all_header_columns.remove(parent_column)
+        for i in range(16):  # the first 16 rows should do ¯\_(ツ)_/¯
+            if xlrd_sheet.row_values(0)[0].strip() != "":
+                header_row_idx = i
+                break
+        else:
+            raise NotImplementedError
 
-        header_row = ExcelToSDocConverter.get_safe_header_row(
-            first_sheet, header_row_num
-        )
-        # [(0, 'APPLICABLE_COMPONENT_CATEGORIES'),
-        # (2, 'CATEGORY'),
-        # (4, 'PUBLIC_REQUIREMENTS_REFERENCES_OR_DESCRIPTIONS'),
-        # (5, 'VERIFICATION_INSPECTION__DEMONSTRATION__TEST__OR_ANALYSIS'),
-        # (6, 'CRITICALITY')]
-        extra_header_pairs = list(
-            map(lambda x: (x, header_row[x]), all_header_columns)
+        header_row = xlrd_sheet.row_values(header_row_idx)
+        safe_header_row = list(safe_name(x) for x in header_row)
+
+        statement_column = None
+        uid_column = None
+        comment_column = None
+        title_column = None
+        parent_column = None
+        for header_column_idx, header_column in enumerate(safe_header_row):
+            if header_column in ("REQUIREMENT", "STATEMENT"):
+                statement_column = header_column_idx
+            elif header_column in (
+                "REF",
+                "REF #",
+                "REF_#",
+                "REFDES",
+                "ID",
+                "UID",
+            ):
+                uid_column = header_column_idx
+            elif header_column in ("REMARKS", "COMMENT"):
+                comment_column = header_column_idx
+            elif header_column in ("TITLE", "NAME"):
+                title_column = header_column_idx
+            elif header_column in ("PARENT", "PARENT_REF", "PARENT_UID"):
+                parent_column = header_column_idx
+            else:
+                continue
+            all_header_columns.remove(header_column_idx)
+        assert statement_column is not None
+
+        # array of tuples: (column_idx: int, column_name: str)
+        # [
+        #  (0, 'APPLICABLE_COMPONENT_CATEGORIES'),
+        #  (2, 'CATEGORY'),
+        #  ...
+        #  (6, 'CRITICALITY')
+        # ]
+        extra_header_pairs: List[Tuple[int, str]] = list(
+            map(lambda x: (x, safe_header_row[x]), all_header_columns)
         )
         columns = RequirementColumns(
             uid_column=uid_column,
@@ -132,15 +109,13 @@ class ExcelToSDocConverter:
             extra_header_pairs=extra_header_pairs,
         )
 
-        # validate_all_required_columns
-        assert columns.statement_column is not None
-
         document = ExcelToSDocConverter.create_document(
             title, extra_header_pairs
         )
-        for i in range(header_row_num + 1, first_sheet.nrows):
+        for i in range(header_row_idx + 1, xlrd_sheet.nrows):
+            row_values = xlrd_sheet.row_values(i)
             requirement = ExcelToSDocConverter.create_requirement(
-                first_sheet, document, i, columns
+                row_values, document, columns
             )
             document.section_contents.append(requirement)
 
@@ -178,12 +153,10 @@ class ExcelToSDocConverter:
 
     @staticmethod
     def create_requirement(
-        xlrd_sheet: xlrd.sheet.Sheet,
+        row_values,
         document,
-        row_num,
         columns: RequirementColumns,
     ):
-        row_values = xlrd_sheet.row_values(row_num)
         statement = row_values[columns.statement_column]
         uid = None
         if columns.uid_column is not None:

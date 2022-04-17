@@ -1,3 +1,3 @@
 RUN: mkdir -p %S/output
-RUN: %strictdoc import excel sdoc %S/input.xls %S/output/output.sdoc
+RUN: %strictdoc import excel basic %S/input.xls %S/output/output.sdoc
 RUN: %diff %S/output/output.sdoc %S/expected/expected.sdoc

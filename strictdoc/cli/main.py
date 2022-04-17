@@ -13,9 +13,9 @@ try:
     from strictdoc.commands.dump_grammar_command import DumpGrammarCommand
     from strictdoc.commands.version_command import VersionCommand
     from strictdoc.core.actions.export_action import ExportAction
+    from strictdoc.core.actions.import_action import ImportAction
     from strictdoc.core.actions.passthrough_action import PassthroughAction
     from strictdoc.helpers.parallelizer import Parallelizer
-    from strictdoc.backend.reqif.reqif_import import ReqIFImport
 
 except FileNotFoundError:
     print("error: could not locate strictdoc's root folder.")
@@ -53,9 +53,15 @@ def _main(parallelizer):
         export_action = ExportAction()
         export_action.export(config, parallelizer)
 
-    elif parser.is_import_command:
-        import_config = parser.get_import_config(STRICTDOC_ROOT_PATH)
-        ReqIFImport.import_from_file(import_config)
+    elif parser.is_import_command_reqif:
+        import_config = parser.get_import_config_reqif(STRICTDOC_ROOT_PATH)
+        import_action = ImportAction()
+        import_action.do_import(import_config)
+
+    elif parser.is_import_command_excel:
+        import_config = parser.get_import_config_excel(STRICTDOC_ROOT_PATH)
+        import_action = ImportAction()
+        import_action.do_import(import_config)
 
     elif parser.is_dump_grammar_command:
         config = parser.get_dump_grammar_config()

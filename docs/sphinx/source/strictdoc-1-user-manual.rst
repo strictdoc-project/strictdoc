@@ -1039,6 +1039,46 @@ implementation details, refer to
 `strictdoc-project/reqif <https://github.com/strictdoc-project/reqif>`_'s
 documentation.
 
+Excel support
+=============
+
+StrictDoc provides a support for Excel XLS on input and Excel XLSX on output.
+
+On input, the headers of sheet1 are used to put together a custom grammar and
+the requirements are imported one row per requirement. A best effort is made by
+the importer to recognize names of headers and map these to strictdoc
+requirement fields.
+
+Note: A roundtrip "SDoc -> Excel -> SDoc" is not yet supported.
+
+Import flow (Excel XLS -> SDoc):
+--------------------------------
+
+.. code-block:: text
+
+    strictdoc import excel basic input.xls output.sdoc
+
+The command does the following:
+
+1. The Excel XLS is parsed to SDoc in-memory model using the ``xlrd``
+   library.
+
+2. The SDoc in-memory model is written to an .sdoc file.
+
+Export flow (SDoc -> Excel XLSX)
+--------------------------------
+
+.. code-block:: text
+
+    strictdoc export --formats=excel --output-dir=Output input.sdoc
+
+The command does the following:
+
+1. The SDoc file is parsed to an SDoc in-memory model.
+
+2. The SDoc in-memory model is converted to an Excel XLSX file using
+   the ``XlsWriter`` library
+
 Options
 =======
 

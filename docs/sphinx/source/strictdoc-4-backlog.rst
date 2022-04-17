@@ -88,6 +88,11 @@ StrictDoc shall support reading project configuration from a file.
 Further export and import capabilities
 ======================================
 
+Excel import-export rountrip
+----------------------------
+
+StrictDoc shall support an "SDoc -> Excel -> SDoc" rountrip.
+
 CSV import/export
 -----------------
 

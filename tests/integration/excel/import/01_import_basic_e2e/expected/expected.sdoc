@@ -1,0 +1,73 @@
+[DOCUMENT]
+TITLE: input.xls sheet Sheet1
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: LEVEL
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATUS
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TAGS
+    TYPE: String
+    REQUIRED: False
+  - TITLE: REFS
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: RATIONALE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: APPLICABLE_COMPONENT_CATEGORIES
+    TYPE: String
+    REQUIRED: False
+  - TITLE: CATEGORY
+    TYPE: String
+    REQUIRED: False
+  - TITLE: PUBLIC_REQUIREMENTS_REFERENCES_OR_DESCRIPTIONS
+    TYPE: String
+    REQUIRED: False
+  - TITLE: VERIFICATION_INSPECTION__DEMONSTRATION__TEST__OR_ANALYSIS
+    TYPE: String
+    REQUIRED: False
+  - TITLE: CRITICALITY
+    TYPE: String
+    REQUIRED: False
+
+[REQUIREMENT]
+UID: A-1
+STATEMENT: >>>
+a statement
+<<<
+COMMENT: >>>
+a comment
+<<<
+APPLICABLE_COMPONENT_CATEGORIES: >>>
+all
+<<<
+CATEGORY: >>>
+something
+<<<
+PUBLIC_REQUIREMENTS_REFERENCES_OR_DESCRIPTIONS: >>>
+NIST 800-53 AC501
+<<<
+VERIFICATION_INSPECTION__DEMONSTRATION__TEST__OR_ANALYSIS: >>>
+setup the DUT in jig A-1 and confimr the statement is true under all conditions
+<<<
+CRITICALITY: >>>
+high
+<<<

@@ -185,27 +185,37 @@
               <span class="section-number">8.3</span>
               ReqIF implementation details
             </a></li></ul>
-            </li><li><a href="#9-Options">
+            </li><li><a href="#9-Excel-support">
               <span class="section-number">9</span>
-              Options
-            </a><ul><li><a href="#9.1-Project-title">
+              Excel support
+            </a><ul><li><a href="#9.1-Import-flow-Excel-XLS-SDoc-">
               <span class="section-number">9.1</span>
-              Project title
-            </a></li><li><a href="#9.2-Parallelization">
+              Import flow (Excel XLS -> SDoc):
+            </a></li><li><a href="#9.2-Export-flow-SDoc-Excel-XLSX-">
               <span class="section-number">9.2</span>
+              Export flow (SDoc -> Excel XLSX)
+            </a></li></ul>
+            </li><li><a href="#10-Options">
+              <span class="section-number">10</span>
+              Options
+            </a><ul><li><a href="#10.1-Project-title">
+              <span class="section-number">10.1</span>
+              Project title
+            </a></li><li><a href="#10.2-Parallelization">
+              <span class="section-number">10.2</span>
               Parallelization
             </a></li></ul>
-            </li><li><a href="#10-StrictDoc-and-other-tools">
-              <span class="section-number">10</span>
+            </li><li><a href="#11-StrictDoc-and-other-tools">
+              <span class="section-number">11</span>
               StrictDoc and other tools
-            </a><ul><li><a href="#10.1-StrictDoc-and-Doorstop">
-              <span class="section-number">10.1</span>
+            </a><ul><li><a href="#11.1-StrictDoc-and-Doorstop">
+              <span class="section-number">11.1</span>
               StrictDoc and Doorstop
-            </a></li><li><a href="#10.2-StrictDoc-and-Sphinx">
-              <span class="section-number">10.2</span>
+            </a></li><li><a href="#11.2-StrictDoc-and-Sphinx">
+              <span class="section-number">11.2</span>
               StrictDoc and Sphinx
-            </a></li><li><a href="#10.3-StrictDoc-and-Sphinx-Needs">
-              <span class="section-number">10.3</span>
+            </a></li><li><a href="#11.3-StrictDoc-and-Sphinx-Needs">
+              <span class="section-number">11.3</span>
               StrictDoc and Sphinx-Needs
             </a></li></ul>
             </li></ul>
@@ -2013,12 +2023,105 @@ documentation.</p>
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="9-Options"></div>
+    <div data-role='anchor' id="9-Excel-support"></div>
 
     
         <h1
 class="section-title"
 data-level="9"
+>Excel support
+</h1>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>StrictDoc provides a support for Excel XLS on input and Excel XLSX on output.</p>
+<p>On input, the headers of sheet1 are used to put together a custom grammar and
+the requirements are imported one row per requirement. A best effort is made by
+the importer to recognize names of headers and map these to strictdoc
+requirement fields.</p>
+<p>Note: A roundtrip &quot;SDoc -&gt; Excel -&gt; SDoc&quot; is not yet supported.</p>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="9.1-Import-flow-Excel-XLS-SDoc-"></div>
+
+    
+        <h2
+class="section-title"
+data-level="9.1"
+>Import flow (Excel XLS -> SDoc):
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<pre class="code text literal-block">
+strictdoc import excel basic input.xls output.sdoc
+</pre>
+<p>The command does the following:</p>
+<ol class="arabic simple">
+<li>The Excel XLS is parsed to SDoc in-memory model using the <tt class="docutils literal">xlrd</tt>
+library.</li>
+<li>The SDoc in-memory model is written to an .sdoc file.</li>
+</ol>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="9.2-Export-flow-SDoc-Excel-XLSX-"></div>
+
+    
+        <h2
+class="section-title"
+data-level="9.2"
+>Export flow (SDoc -> Excel XLSX)
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<pre class="code text literal-block">
+strictdoc export --formats=excel --output-dir=Output input.sdoc
+</pre>
+<p>The command does the following:</p>
+<ol class="arabic simple">
+<li>The SDoc file is parsed to an SDoc in-memory model.</li>
+<li>The SDoc in-memory model is converted to an Excel XLSX file using
+the <tt class="docutils literal">XlsWriter</tt> library</li>
+</ol>
+</div>
+
+    </div></section>
+
+</article>
+          <article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="10-Options"></div>
+
+    
+        <h1
+class="section-title"
+data-level="10"
 >Options
 </h1>
     
@@ -2032,12 +2135,12 @@ data-level="9"
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="9.1-Project-title"></div>
+    <div data-role='anchor' id="10.1-Project-title"></div>
 
     
         <h2
 class="section-title"
-data-level="9.1"
+data-level="10.1"
 >Project title
 </h2>
     
@@ -2061,12 +2164,12 @@ strictdoc export --project-title &quot;My Project&quot; .
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="9.2-Parallelization"></div>
+    <div data-role='anchor' id="10.2-Parallelization"></div>
 
     
         <h2
 class="section-title"
-data-level="9.2"
+data-level="10.2"
 >Parallelization
 </h2>
     
@@ -2098,12 +2201,12 @@ all export options and is disabled with this option as well.</p>
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="10-StrictDoc-and-other-tools"></div>
+    <div data-role='anchor' id="11-StrictDoc-and-other-tools"></div>
 
     
         <h1
 class="section-title"
-data-level="10"
+data-level="11"
 >StrictDoc and other tools
 </h1>
     
@@ -2117,12 +2220,12 @@ data-level="10"
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="10.1-StrictDoc-and-Doorstop"></div>
+    <div data-role='anchor' id="11.1-StrictDoc-and-Doorstop"></div>
 
     
         <h2
 class="section-title"
-data-level="10.1"
+data-level="11.1"
 >StrictDoc and Doorstop
 </h2>
     
@@ -2185,12 +2288,12 @@ to/from Doorstop format.</p>
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="10.2-StrictDoc-and-Sphinx"></div>
+    <div data-role='anchor' id="11.2-StrictDoc-and-Sphinx"></div>
 
     
         <h2
 class="section-title"
-data-level="10.2"
+data-level="11.2"
 >StrictDoc and Sphinx
 </h2>
     
@@ -2223,12 +2326,12 @@ website by readthedocs which uses Sphinx under the hood. The
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="10.3-StrictDoc-and-Sphinx-Needs"></div>
+    <div data-role='anchor' id="11.3-StrictDoc-and-Sphinx-Needs"></div>
 
     
         <h2
 class="section-title"
-data-level="10.3"
+data-level="11.3"
 >StrictDoc and Sphinx-Needs
 </h2>
     

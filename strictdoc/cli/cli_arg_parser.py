@@ -118,6 +118,7 @@ def cli_args_parser() -> argparse.ArgumentParser:
     )
     command_parser_import_subparsers.required = True
 
+    # Command: Import -> ReqIF
     command_parser_import_reqif = command_parser_import_subparsers.add_parser(
         "reqif",
         help="Create StrictDoc file from ReqIF document.",
@@ -147,6 +148,42 @@ def cli_args_parser() -> argparse.ArgumentParser:
         help="Path to the input ReqIF file.",
     )
     command_parser_import_reqif.add_argument(
+        "output_path",
+        type=str,
+        help="Path to the output SDoc file.",
+    )
+
+    # Command: Import -> Excel
+    command_parser_import_excel = command_parser_import_subparsers.add_parser(
+        "excel",
+        help="Create StrictDoc file from Excel document.",
+        description="Create StrictDoc file Excel ReqIF document.",
+        formatter_class=formatter,
+    )
+
+    def check_excel_parser(parser):
+        excel_parsers = ["basic"]
+        if parser not in excel_parsers:
+            message = (
+                f"invalid choice: '{parser}' (choose from {excel_parsers})"
+            )
+            raise argparse.ArgumentTypeError(message)
+        return parser
+
+    command_parser_import_excel.add_argument(
+        "parser",
+        type=check_excel_parser,
+        help=(
+            "An argument that selects the ReqIF parser. "
+            f"Possible values: {{{', '.join(REQIF_PARSERS)}}}"
+        ),
+    )
+    command_parser_import_excel.add_argument(
+        "input_path",
+        type=str,
+        help="Path to the input ReqIF file.",
+    )
+    command_parser_import_excel.add_argument(
         "output_path",
         type=str,
         help="Path to the output SDoc file.",
@@ -185,7 +222,14 @@ def cli_args_parser() -> argparse.ArgumentParser:
     return main_parser
 
 
-class ImportCommandConfig:
+class ImportReqIFCommandConfig:
+    def __init__(self, input_path, output_path, parser):
+        self.input_path = input_path
+        self.output_path = output_path
+        self.parser = parser
+
+
+class ImportExcelCommandConfig:
     def __init__(self, input_path, output_path, parser):
         self.input_path = input_path
         self.output_path = output_path
@@ -243,8 +287,16 @@ class SDocArgsParser:
         return self.args.command == "export"
 
     @property
-    def is_import_command(self):
-        return self.args.command == "import"
+    def is_import_command_reqif(self):
+        return (
+            self.args.command == "import" and self.args.import_format == "reqif"
+        )
+
+    @property
+    def is_import_command_excel(self):
+        return (
+            self.args.command == "import" and self.args.import_format == "excel"
+        )
 
     @property
     def is_dump_grammar_command(self):
@@ -283,8 +335,13 @@ class SDocArgsParser:
             self.args.experimental_enable_file_traceability,
         )
 
-    def get_import_config(self, _) -> ImportCommandConfig:
-        return ImportCommandConfig(
+    def get_import_config_reqif(self, _) -> ImportReqIFCommandConfig:
+        return ImportReqIFCommandConfig(
+            self.args.input_path, self.args.output_path, self.args.parser
+        )
+
+    def get_import_config_excel(self, _) -> ImportExcelCommandConfig:
+        return ImportExcelCommandConfig(
             self.args.input_path, self.args.output_path, self.args.parser
         )
 

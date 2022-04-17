@@ -53,8 +53,13 @@ def _main(parallelizer):
         export_action = ExportAction()
         export_action.export(config, parallelizer)
 
-    elif parser.is_import_command:
-        import_config = parser.get_import_config(STRICTDOC_ROOT_PATH)
+    elif parser.is_import_command_reqif:
+        import_config = parser.get_import_config_reqif(STRICTDOC_ROOT_PATH)
+        import_action = ImportAction()
+        import_action.do_import(import_config)
+
+    elif parser.is_import_command_excel:
+        import_config = parser.get_import_config_excel(STRICTDOC_ROOT_PATH)
         import_action = ImportAction()
         import_action.do_import(import_config)
 

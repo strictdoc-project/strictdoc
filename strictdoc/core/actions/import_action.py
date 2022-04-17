@@ -1,11 +1,13 @@
 import os
 from pathlib import Path
+from typing import Union
 
 from strictdoc.backend.excel.excel_import import ExcelImport
 from strictdoc.backend.reqif.reqif_import import ReqIFImport
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.cli.cli_arg_parser import (
-    ImportCommandConfig,
+    ImportExcelCommandConfig,
+    ImportReqIFCommandConfig,
 )
 from strictdoc.helpers.timing import timing_decorator
 
@@ -13,10 +15,12 @@ from strictdoc.helpers.timing import timing_decorator
 class ImportAction:
     @staticmethod
     @timing_decorator("Import")
-    def do_import(import_config: ImportCommandConfig) -> None:
-        if "reqif" in import_config.import_format:
+    def do_import(
+        import_config: Union[ImportReqIFCommandConfig, ImportExcelCommandConfig]
+    ) -> None:
+        if isinstance(import_config, ImportReqIFCommandConfig):
             document = ReqIFImport.import_from_file(import_config)
-        elif "excel" in import_config.import_format:
+        elif isinstance(import_config, ImportExcelCommandConfig):
             document = ExcelImport.import_from_file(import_config)
         else:
             raise NotImplementedError()

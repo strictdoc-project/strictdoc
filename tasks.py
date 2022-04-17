@@ -98,7 +98,7 @@ def run_invoke_cmd(context, cmd, reset_path=True) -> invoke.runners.Result:
 
 
 @task
-def clean(context):
+def clean_itest_artifacts(context):
     find_command = """
         find
             tests
@@ -222,8 +222,9 @@ def test_coverage_report(context):
     )
 
 
-@task(clean)
 def test_integration(context, focus=None, debug=False):
+    clean_itest_artifacts(context)
+
     cwd = os.getcwd()
 
     strictdoc_exec = f'python \\"{cwd}/strictdoc/cli/main.py\\"'
@@ -372,7 +373,6 @@ def release_local(context):
         python setup.py check &&
             python setup.py install
     """
-    clean(context)
     run_invoke_cmd(context, command)
     check(context)
 

@@ -81,7 +81,7 @@ class SourceFilesFinder:
             if os.path.isfile(doctree_root_abs_path)
             else doctree_root_abs_path
         )
-        doctree_root_mount_path = os.path.basename(doctree_root_abs_path)
+        doctree_root_mount_path: str = os.path.basename(doctree_root_abs_path)
 
         file_tree = FileFinder.find_files_with_extensions(
             doctree_root_abs_path, config, {".py", ".c", ".cpp", ".tex"}
@@ -94,10 +94,10 @@ class SourceFilesFinder:
             in_doctree_source_file_rel_path = os.path.relpath(
                 file.root_path, doctree_root_abs_path
             )
-            last_folder_in_path = os.path.relpath(
+            last_folder_in_path: str = os.path.relpath(
                 file.get_folder_path(), doctree_root_abs_path
             )
-            output_dir_full_path = os.path.join(
+            output_dir_full_path: str = os.path.join(
                 config.output_html_root,
                 "_source_files",
                 doctree_root_mount_path,

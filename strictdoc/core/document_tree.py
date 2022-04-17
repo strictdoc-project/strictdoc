@@ -1,3 +1,5 @@
+from typing import List
+
 from strictdoc.backend.sdoc.models.document import Document
 
 
@@ -7,7 +9,7 @@ class DocumentTree:
         assert isinstance(document_list, list)
         assert isinstance(map_docs_by_paths, dict)
         self.file_tree = file_tree
-        self.document_list: [Document] = document_list
+        self.document_list: List[Document] = document_list
         self.map_docs_by_paths = map_docs_by_paths
 
         self.source_tree = None  # attached later.

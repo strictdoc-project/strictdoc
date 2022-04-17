@@ -56,6 +56,7 @@ class ExportMode(Enum):
 class HTMLGenerator:
     @staticmethod
     def export_tree(
+        *,
         config: ExportCommandConfig,
         document_tree: DocumentTree,
         traceability_index: TraceabilityIndex,

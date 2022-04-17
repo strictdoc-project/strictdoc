@@ -1,6 +1,6 @@
 import collections
 import os
-from typing import Dict, Optional
+from typing import Dict, Optional, Set
 
 from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.helpers.sorting import alphanumeric_sort
@@ -102,13 +102,13 @@ class Folder(FileOrFolderEntry):
 
 
 class FileTree:
-    def __init__(self, root_folder_or_file):
+    def __init__(self, *, root_folder_or_file):
         self.root_folder_or_file = root_folder_or_file
 
     @staticmethod
     def create_single_file_tree(root_path):
         single_file = File(0, root_path)
-        return FileTree(single_file)
+        return FileTree(root_folder_or_file=single_file)
 
     def iterate(self):
         file_tree_mount_folder = self.root_folder_or_file.mount_folder()
@@ -141,7 +141,7 @@ class FileTree:
 class FileFinder:
     @staticmethod
     def find_files_with_extensions(
-        root_path: str, config: ExportCommandConfig, extensions
+        *, root_path: str, config: ExportCommandConfig, extensions: Set[str]
     ):
         assert os.path.isdir(root_path)
         assert os.path.isabs(root_path)
@@ -212,7 +212,9 @@ class FileFinder:
 
             current_parent_folder.add_subfolder_tree(current_tree)
 
-        file_tree_structure = FileTree(folder_map[root_path])
+        file_tree_structure = FileTree(
+            root_folder_or_file=folder_map[root_path]
+        )
         return file_tree_structure
 
 

@@ -91,13 +91,13 @@ class ExportAction:
         if "html" in config.formats or "html-standalone" in config.formats:
             Path(config.output_html_root).mkdir(parents=True, exist_ok=True)
             HTMLGenerator.export_tree(
-                config,
-                document_tree,
-                traceability_index,
-                config.output_html_root,
-                strictdoc_last_update,
-                asset_dirs,
-                parallelizer,
+                config=config,
+                document_tree=document_tree,
+                traceability_index=traceability_index,
+                output_html_root=config.output_html_root,
+                strictdoc_last_update=strictdoc_last_update,
+                asset_dirs=asset_dirs,
+                parallelizer=parallelizer,
             )
 
         if "rst" in config.formats:

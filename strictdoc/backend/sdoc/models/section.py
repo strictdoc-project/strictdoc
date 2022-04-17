@@ -1,5 +1,6 @@
 from typing import Optional, List
 
+from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.node import Node
 
 
@@ -28,7 +29,7 @@ class Section(Node):  # pylint: disable=too-many-instance-attributes
 
         self.ng_level = None
         self.ng_has_requirements = False
-        self.ng_document_reference = None
+        self.ng_document_reference: Optional[DocumentReference] = None
         self.context = SectionContext()
 
     def __str__(self):

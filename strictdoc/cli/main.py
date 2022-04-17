@@ -9,7 +9,14 @@ try:
         raise FileNotFoundError
     sys.path.append(STRICTDOC_ROOT_PATH)
 
-    from strictdoc.cli.cli_arg_parser import create_sdoc_args_parser
+    from strictdoc.cli.cli_arg_parser import (
+        create_sdoc_args_parser,
+        ExportCommandConfig,
+        PassthroughCommandConfig,
+        DumpGrammarCommandConfig,
+        ImportExcelCommandConfig,
+        ImportReqIFCommandConfig,
+    )
     from strictdoc.commands.dump_grammar_command import DumpGrammarCommand
     from strictdoc.commands.version_command import VersionCommand
     from strictdoc.core.actions.export_action import ExportAction
@@ -26,7 +33,7 @@ def _main(parallelizer):
     parser = create_sdoc_args_parser()
 
     if parser.is_passthrough_command:
-        config = parser.get_passthrough_config()
+        config: PassthroughCommandConfig = parser.get_passthrough_config()
         input_file = config.input_file
         if not os.path.isfile(input_file):
             sys.stdout.flush()
@@ -45,7 +52,9 @@ def _main(parallelizer):
         passthrough_action.passthrough(config)
 
     elif parser.is_export_command:
-        config = parser.get_export_config(STRICTDOC_ROOT_PATH)
+        config: ExportCommandConfig = parser.get_export_config(
+            STRICTDOC_ROOT_PATH
+        )
         parallelization_value = (
             "Disabled" if config.no_parallelization else "Enabled"
         )
@@ -54,17 +63,21 @@ def _main(parallelizer):
         export_action.export(config, parallelizer)
 
     elif parser.is_import_command_reqif:
-        import_config = parser.get_import_config_reqif(STRICTDOC_ROOT_PATH)
+        import_config: ImportReqIFCommandConfig = (
+            parser.get_import_config_reqif(STRICTDOC_ROOT_PATH)
+        )
         import_action = ImportAction()
         import_action.do_import(import_config)
 
     elif parser.is_import_command_excel:
-        import_config = parser.get_import_config_excel(STRICTDOC_ROOT_PATH)
+        import_config: ImportExcelCommandConfig = (
+            parser.get_import_config_excel(STRICTDOC_ROOT_PATH)
+        )
         import_action = ImportAction()
         import_action.do_import(import_config)
 
     elif parser.is_dump_grammar_command:
-        config = parser.get_dump_grammar_config()
+        config: DumpGrammarCommandConfig = parser.get_dump_grammar_config()
         DumpGrammarCommand.execute(config)
 
     elif parser.is_version_command:

@@ -63,8 +63,8 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         uid = None
         level = None
         status = None
-        tags = None
-        references = []
+        tags: Optional[List[str]] = None
+        references: List[Reference] = []
         title = None
         statement = None
         statement_multiline = None
@@ -91,7 +91,11 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         if "TAGS" in ordered_fields_lookup:
             tags = ordered_fields_lookup["TAGS"][0].field_value.split(", ")
         if "REFS" in ordered_fields_lookup:
-            references = ordered_fields_lookup["REFS"][0].field_value_references
+            references_opt: Optional[List[Reference]] = ordered_fields_lookup[
+                "REFS"
+            ][0].field_value_references
+            assert references_opt is not None
+            references = references_opt
         if "TITLE" in ordered_fields_lookup:
             title = ordered_fields_lookup["TITLE"][0].field_value
         if "STATEMENT" in ordered_fields_lookup:
@@ -133,7 +137,7 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         )
         self.level: Optional[str] = level
         self.status = status
-        self.tags: Optional[str] = tags
+        self.tags: Optional[List[str]] = tags
 
         assert isinstance(references, List)
         self.references: List[Reference] = references
@@ -161,7 +165,7 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         self.ordered_fields_lookup: OrderedDict[
             str, List[RequirementField]
         ] = ordered_fields_lookup
-        self.ng_level = None
+        self.ng_level: Optional[int] = None
         self.ng_document_reference: Optional[DocumentReference] = None
         self.context = RequirementContext()
 

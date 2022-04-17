@@ -2,6 +2,7 @@ import os
 from enum import Enum
 from functools import partial
 from pathlib import Path
+from typing import Optional
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.cli.cli_arg_parser import ExportCommandConfig
@@ -119,7 +120,9 @@ class HTMLGenerator:
             # the last generation. We also check the Traceability Index for the
             # document's dependencies to see if they must be regenerated as
             # well.
-            document_meta: DocumentMeta = document.meta
+            document_meta_or_none: Optional[DocumentMeta] = document.meta
+            assert document_meta_or_none is not None
+            document_meta: DocumentMeta = document_meta_or_none
             full_output_path = os.path.join(
                 export_options.strictdoc_src_path,
                 document_meta.get_html_doc_path(),

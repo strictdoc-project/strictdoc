@@ -289,20 +289,28 @@ def lint_flake8(context):
 
 @task
 def lint_mypy(context):
+    # Need to delete the cache every time because otherwise mypy gets
+    # stuck with 0 warnings very often.
     run_invoke_cmd(
         context,
         """
+        rm -rfv rm -rf .mypy_cache/ &&
         mypy strictdoc/
             --show-error-codes
             --disable-error-code=arg-type
             --disable-error-code=assignment
             --disable-error-code=attr-defined
             --disable-error-code=import
+            --disable-error-code=misc
+            --disable-error-code=no-any-return
             --disable-error-code=no-redef
+            --disable-error-code=no-untyped-call
+            --disable-error-code=no-untyped-def
             --disable-error-code=operator
+            --disable-error-code=type-arg
             --disable-error-code=var-annotated
             --disable-error-code=union-attr
-            --enable-error-code=misc
+            --strict
         """,
     )
 

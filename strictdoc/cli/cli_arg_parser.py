@@ -266,7 +266,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         self.experimental_enable_file_traceability = (
             experimental_enable_file_traceability
         )
-        self.output_html_root = os.path.join(output_dir, "html")
+        self.output_html_root: str = os.path.join(output_dir, "html")
 
 
 class DumpGrammarCommandConfig:

@@ -1214,11 +1214,14 @@ documentation.
 TITLE: Excel support
 
 [FREETEXT]
-StrictDoc has an support for Excel XLS on input and Excel XLSX on output.
+StrictDoc provides a support for Excel XLS on input and Excel XLSX on output.
 
-On input, the headers of sheet1 are used to put together a custom grammar and the requirements are imported one row
-per requirement. A best effort is made by the importer to recognized names of headers and map these to strictdoc
+On input, the headers of sheet1 are used to put together a custom grammar and
+the requirements are imported one row per requirement. A best effort is made by
+the importer to recognize names of headers and map these to strictdoc
 requirement fields.
+
+Note: A roundtrip "SDoc -> Excel -> SDoc" is not yet supported.
 [/FREETEXT]
 
 [SECTION]
@@ -1227,7 +1230,7 @@ TITLE: Import flow (Excel XLS -> SDoc):
 [FREETEXT]
 .. code-block:: text
 
-    strictdoc import excel sdoc input.xls output.sdoc
+    strictdoc import excel basic input.xls output.sdoc
 
 The command does the following:
 

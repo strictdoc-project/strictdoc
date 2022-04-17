@@ -100,6 +100,12 @@ COMMENT: >>>
 TITLE: Further export and import capabilities
 
 [REQUIREMENT]
+TITLE: Excel import-export rountrip
+STATEMENT: >>>
+StrictDoc shall support an "SDoc -> Excel -> SDoc" rountrip.
+<<<
+
+[REQUIREMENT]
 TITLE: CSV import/export
 STATEMENT: StrictDoc shall support exporting documents to CSV format.
 

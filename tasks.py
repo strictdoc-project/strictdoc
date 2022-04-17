@@ -23,7 +23,7 @@ def one_line_command(string):
     return re.sub("\\s+", " ", string).strip()
 
 
-def get_venv_command(venv_path):
+def get_venv_command(venv_path: str, reset_path=True):
     venv_command_activate = (
         f". {venv_path}/bin/activate"
         if platform.system() != "Windows"
@@ -31,9 +31,11 @@ def get_venv_command(venv_path):
     )
     venv_command = f"""
         python -m venv {venv_path} && 
-            {venv_command_activate} &&
-            export PATH="{venv_path}/bin:/usr/bin:/bin"
+            {venv_command_activate}
     """
+    if reset_path:
+        venv_command += f'&& export PATH="{venv_path}/bin:/usr/bin:/bin"'
+
     # Cannot make this work on Windows/PowerShell.
     # TODO: Fix this at some point and make the Windows CI to be identical to
     # Linux/macOS CI.
@@ -50,7 +52,7 @@ class VenvFolderType(str, Enum):
     RELEASE_PYPI_TEST = "release-pypi-test"
 
 
-def run_invoke_cmd(context, cmd) -> invoke.runners.Result:
+def run_invoke_cmd(context, cmd, reset_path=True) -> invoke.runners.Result:
     postfix = (
         context[VENV_FOLDER]
         if VENV_FOLDER in context
@@ -58,7 +60,7 @@ def run_invoke_cmd(context, cmd) -> invoke.runners.Result:
     )
     venv_path = os.path.join(os.getcwd(), f".venv-{postfix}")
 
-    with context.prefix(get_venv_command(venv_path)):
+    with context.prefix(get_venv_command(venv_path, reset_path=reset_path)):
         if VENV_DEPS_CHECK_PASSED not in context:
             result = context.run(
                 one_line_command(
@@ -166,6 +168,7 @@ def sphinx(context):
                 open build/latex/strictdoc.pdf
             """
         ),
+        reset_path=False,
     )
 
 

@@ -86,7 +86,11 @@ class LinkRenderer:
     def render_source_file_link(
         requirement: Requirement, source_file_link: str
     ):
-        document: Document = requirement.ng_document_reference.get_document()
+        document_or_none: Optional[
+            Document
+        ] = requirement.ng_document_reference.get_document()
+        assert document_or_none is not None
+        document: Document = document_or_none
         path_prefix = document.meta.get_root_path_prefix()
         source_file_link = (
             f"{path_prefix}"
@@ -100,7 +104,11 @@ class LinkRenderer:
     def render_source_file_link_from_root(
         requirement: Requirement, source_file_link: str
     ):
-        document: Document = requirement.ng_document_reference.get_document()
+        document_or_none: Optional[
+            Document
+        ] = requirement.ng_document_reference.get_document()
+        assert document_or_none is not None
+        document: Document = document_or_none
         source_file_link = (
             f"_source_files"
             f"/{document.meta.file_tree_mount_folder}"
@@ -123,7 +131,11 @@ class LinkRenderer:
         source_file: SourceFile, requirement: Requirement, source_file_link: str
     ):
         assert isinstance(source_file, SourceFile)
-        document: Document = requirement.ng_document_reference.get_document()
+        document_or_none: Optional[
+            Document
+        ] = requirement.ng_document_reference.get_document()
+        assert document_or_none is not None
+        document: Document = document_or_none
 
         def get_root_path_prefix(level):
             assert level > 0

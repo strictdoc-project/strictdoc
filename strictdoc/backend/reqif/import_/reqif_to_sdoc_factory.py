@@ -132,7 +132,7 @@ class ReqIFToSDocFactory:
             if long_name_or_none == "ReqIF.ForeignID":
                 foreign_key_id_or_none = attribute.definition_ref
             field_name: str = long_name_or_none
-            attribute_value = unescape(attribute.value)
+            attribute_value: Optional[str] = unescape(attribute.value)
             attribute_multiline_value = None
             if (
                 "\n" in attribute_value

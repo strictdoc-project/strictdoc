@@ -1,5 +1,6 @@
 import collections
 import os
+from typing import Dict, Optional
 
 from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.helpers.sorting import alphanumeric_sort
@@ -38,16 +39,16 @@ class File(FileOrFolderEntry):
     def get_full_path(self):
         return self.full_path
 
-    def get_level(self):
+    def get_level(self) -> int:
         return self.level
 
-    def get_file_name(self):
+    def get_file_name(self) -> str:
         return os.path.basename(self.full_path)
 
-    def get_folder_path(self):
+    def get_folder_path(self) -> str:
         return os.path.dirname(self.full_path)
 
-    def mount_folder(self):
+    def mount_folder(self) -> str:
         return os.path.basename(os.path.dirname(self.root_path))
 
 
@@ -140,16 +141,16 @@ class FileTree:
 class FileFinder:
     @staticmethod
     def find_files_with_extensions(
-        root_path, config: ExportCommandConfig, extensions
+        root_path: str, config: ExportCommandConfig, extensions
     ):
         assert os.path.isdir(root_path)
         assert os.path.isabs(root_path)
         assert isinstance(extensions, set)
 
-        root_level = root_path.count(os.sep)
+        root_level: int = root_path.count(os.sep)
 
-        root_folder = Folder(root_path, 0)
-        folder_map = {root_path: root_folder}
+        root_folder: Folder = Folder(root_path, 0)
+        folder_map: Dict[str, Folder] = {root_path: root_folder}
 
         for current_root_path, dirs, files in os.walk(root_path, topdown=True):
             if current_root_path == config.output_dir:
@@ -167,7 +168,7 @@ class FileFinder:
             ]
             dirs.sort(key=alphanumeric_sort)
 
-            current_root_path_level = (
+            current_root_path_level: int = (
                 current_root_path.count(os.sep) - root_level
             )
 
@@ -198,10 +199,10 @@ class FileFinder:
             # top-down search assumes we have seen the parent before.
             assert current_parent_path in folder_map
 
-            current_parent_folder = folder_map[current_parent_path]
+            current_parent_folder: Folder = folder_map[current_parent_path]
             current_tree.set_parent_folder(current_parent_folder)
             if current_tree.has_sdoc_content:
-                parent_folder_cursor = current_parent_folder
+                parent_folder_cursor: Optional[Folder] = current_parent_folder
                 while (
                     parent_folder_cursor
                     and not parent_folder_cursor.has_sdoc_content

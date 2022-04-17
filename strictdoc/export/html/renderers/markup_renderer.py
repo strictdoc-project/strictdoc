@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union, Type
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
@@ -28,6 +28,11 @@ class MarkupRenderer:
     ):
         assert isinstance(traceability_index, TraceabilityIndex)
         assert isinstance(link_renderer, LinkRenderer)
+        html_fragment_writer: Union[
+            Type[RstToHtmlFragmentWriter],
+            Type[HTMLFragmentWriter],
+            Type[TextToHtmlWriter],
+        ]
         if not markup or markup == "RST":
             html_fragment_writer = RstToHtmlFragmentWriter
         elif markup == "HTML":
@@ -51,7 +56,7 @@ class MarkupRenderer:
         self.fragment_writer = fragment_writer
         self.traceability_index = traceability_index
         self.link_renderer: LinkRenderer = link_renderer
-        self.context_document: Document = context_document
+        self.context_document: Optional[Document] = context_document
 
         self.cache = {}
         self.rationale_cache = {}

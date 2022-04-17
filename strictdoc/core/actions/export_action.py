@@ -17,7 +17,7 @@ from strictdoc.core.finders.source_files_finder import (
 from strictdoc.core.source_tree import SourceTree
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
-from strictdoc.export.excel.excel_generator import ExcelGenerator
+from strictdoc.backend.excel.export.excel_generator import ExcelGenerator
 from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.rst.document_rst_generator import DocumentRSTGenerator
 from strictdoc.helpers.file_modification_time import get_file_modification_time

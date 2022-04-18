@@ -43,12 +43,14 @@ def safe_name(dangerous_name):
 # pylint: disable=too-many-instance-attributes
 class ExcelToSDocConverter:
     @staticmethod
-    def convert(excel_file) -> Document:
+    # optional argument title is present for external scripts to assign a title
+    def convert(excel_file, title=None) -> Document:
         excel_workbook = xlrd.open_workbook(filename=excel_file, on_demand=True)
         xlrd_sheet: xlrd.sheet.Sheet = excel_workbook.sheet_by_index(0)
 
         excel_file_name = os.path.basename(excel_file)
-        title = excel_file_name + " sheet " + xlrd_sheet.name
+        if title is None:
+            title = excel_file_name + " sheet " + xlrd_sheet.name
 
         all_header_columns = list(range(xlrd_sheet.ncols))
 

@@ -2,11 +2,17 @@
 TITLE: StrictDoc Development Plan
 
 [FREETEXT]
-Development Plan content TBD.
+This document presents the goals of the StrictDoc project and describes how the
+project is developed.
 [/FREETEXT]
 
 [SECTION]
 TITLE: Project goals
+
+[FREETEXT]
+StrictDoc is an attempt to create an open source tool for writing
+technical requirements specifications.
+[/FREETEXT]
 
 [REQUIREMENT]
 UID: GOAL-1-TOOL-SUPPORT
@@ -71,5 +77,43 @@ to do a more advanced analysis of requirements and requirement trees:
 - Finding similar or relevant requirements.
 - Enforce invariants that should be hold. Example: mass or power budget.
 <<<
+
+[/SECTION]
+
+[SECTION]
+TITLE: Two frontends
+
+[FREETEXT]
+There are two frontends for StrictDoc:
+
+1) Text frontend
+2) Web frontend
+
+The text frontend is already developed, the web frontend is incubation.
+[/FREETEXT]
+
+[REQUIREMENT]
+UID: FRONTEND-1-TEXT
+TITLE: Text frontend
+STATEMENT: >>>
+...
+<<<
+
+[REQUIREMENT]
+UID: FRONTEND-2-WEB
+TITLE: Web frontend
+STATEMENT: >>>
+...
+<<<
+
+[/SECTION]
+
+[SECTION]
+TITLE: Development team
+
+[FREETEXT]
+StrictDoc is a spare time project developed and maintained by a single person
+with occasional contributions from the Open Source community.
+[/FREETEXT]
 
 [/SECTION]

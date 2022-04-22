@@ -19,6 +19,10 @@ COMMENT: The current plan is to implement this using ReqIF export/import feature
 [/SECTION]
 
 [REQUIREMENT]
+UID: BACKLOG-LSP
+REFS:
+- TYPE: Parent
+  VALUE: FRONTEND-1-TEXT
 TITLE: SDoc Language Server Protocol
 STATEMENT: >>>
 StrictDoc shall support Language Server Protocol.
@@ -182,6 +186,10 @@ Several trade-offs to consider:
 <<<
 
 [REQUIREMENT]
+UID: BACKLOG-WEB
+REFS:
+- TYPE: Parent
+  VALUE: FRONTEND-2-WEB
 TITLE: Web server and editable HTML pages
 STATEMENT: >>>
 StrictDoc shall provide a web server that serves as a StrictDoc backend for

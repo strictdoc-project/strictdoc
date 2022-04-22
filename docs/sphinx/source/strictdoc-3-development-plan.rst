@@ -1,10 +1,14 @@
 StrictDoc Development Plan
 $$$$$$$$$$$$$$$$$$$$$$$$$$
 
-Development Plan content TBD.
+This document presents the goals of the StrictDoc project and describes how the
+project is developed.
 
 Project goals
 =============
+
+StrictDoc is an attempt to create an open source tool for writing
+technical requirements specifications.
 
 .. _GOAL-1-TOOL-SUPPORT:
 
@@ -103,4 +107,56 @@ to do a more advanced analysis of requirements and requirement trees:
 **Children:**
 
 - ``[BACKLOG-FUZZY-SEARCH]`` :ref:`BACKLOG-FUZZY-SEARCH`
+
+Two frontends
+=============
+
+There are two frontends for StrictDoc:
+
+1) Text frontend
+2) Web frontend
+
+The text frontend is already developed, the web frontend is incubation.
+
+.. _FRONTEND-1-TEXT:
+
+Text frontend
+-------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - FRONTEND-1-TEXT
+
+...
+
+**Children:**
+
+- ``[BACKLOG-LSP]`` :ref:`BACKLOG-LSP`
+
+.. _FRONTEND-2-WEB:
+
+Web frontend
+------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - FRONTEND-2-WEB
+
+...
+
+**Children:**
+
+- ``[BACKLOG-WEB]`` :ref:`BACKLOG-WEB`
+
+Development team
+================
+
+StrictDoc is a spare time project developed and maintained by a single person
+with occasional contributions from the Open Source community.
 

@@ -14,12 +14,25 @@ StrictDoc shall allow bi-directional data exchange with Capella tool.
 
 **Comment:** The current plan is to implement this using ReqIF export/import features.
 
+.. _BACKLOG-LSP:
+
 SDoc Language Server Protocol
 =============================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - BACKLOG-LSP
 
 StrictDoc shall support Language Server Protocol.
 
 **Comment:** The promising base for the implementation: https://github.com/openlawlibrary/pygls.
+
+**Parents:**
+
+- ``[FRONTEND-1-TEXT]`` :ref:`FRONTEND-1-TEXT`
 
 Document archetypes
 ===================
@@ -181,11 +194,24 @@ StrictDoc shall provide a Graphical User Interface (GUI).
   which technology?
 - Still keep the current behavior of a statically generated website?
 
+.. _BACKLOG-WEB:
+
 Web server and editable HTML pages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - BACKLOG-WEB
+
 StrictDoc shall provide a web server that serves as a StrictDoc backend for
 reading and writing SDoc files.
+
+**Parents:**
+
+- ``[FRONTEND-2-WEB]`` :ref:`FRONTEND-2-WEB`
 
 Facts table. Invariants calculation.
 ------------------------------------

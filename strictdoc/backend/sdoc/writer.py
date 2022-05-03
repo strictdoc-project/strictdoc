@@ -52,8 +52,9 @@ class SDWriter:
 
             markup = document_config.markup
             auto_levels_specified = document_config.ng_auto_levels_specified
+            requirement_style = document_config.requirement_style
 
-            if markup or auto_levels_specified:
+            if markup is not None or auto_levels_specified is not None or requirement_style is not None:
                 output += "OPTIONS:"
                 output += "\n"
 
@@ -65,6 +66,11 @@ class SDWriter:
                 if auto_levels_specified:
                     output += "  AUTO_LEVELS: "
                     output += "On" if document_config.auto_levels else "Off"
+                    output += "\n"
+
+                if requirement_style:
+                    output += "  REQUIREMENT_STYLE: "
+                    output += requirement_style
                     output += "\n"
 
         document_grammar = document.grammar

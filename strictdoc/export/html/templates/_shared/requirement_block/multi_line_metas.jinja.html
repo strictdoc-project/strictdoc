@@ -1,0 +1,6 @@
+{%- if requirement.has_meta %}
+  {% for meta_field in requirement.enumerate_meta_fields(skip_single_lines=True) %}
+    <div class="requirement_meta_multiline_label">{{meta_field[0]}}:</div>
+    <div class="requirement_meta_multiline">{{ renderer.render_meta_value(meta_field[1]) }}</div>
+  {%- endfor %}
+{%- endif %}

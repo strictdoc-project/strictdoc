@@ -115,3 +115,13 @@ class MarkupRenderer:
         self.cache[(document_type, free_text)] = output
 
         return output
+
+    def render_meta_value(self, meta_field_value):
+        assert isinstance(meta_field_value, str)
+        if meta_field_value in self.cache:
+            return self.cache[meta_field_value]
+
+        output = self.fragment_writer.write(meta_field_value)
+        self.cache[meta_field_value] = output
+
+        return output

@@ -8,6 +8,8 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 from strictdoc.backend.sdoc.models.node import Node
 from strictdoc.backend.sdoc.models.reference import Reference
 
+MULTILINE_WORD_THRESHOLD = 6
+
 
 class RequirementContext:
     def __init__(self):
@@ -233,13 +235,30 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
             for single_field in requirement_field:
                 yield single_field
 
-    def enumerate_meta_fields(self):
+    def enumerate_meta_fields(
+        self, skip_single_lines=False, skip_multi_lines=False
+    ):
         for field in self.fields:
             if field.field_name in RESERVED_NON_META_FIELDS:
                 continue
-            meta_field_value = field.field_value
-            if meta_field_value is None:
-                meta_field_value = field.field_value_multiline
+            meta_field_value = (
+                field.field_value
+                if field.field_value
+                else field.field_value_multiline
+            )
+            if (
+                len(meta_field_value.splitlines()) > 1
+                or len(meta_field_value.split(" ")) > MULTILINE_WORD_THRESHOLD
+            ):
+                is_single_line_field = False
+            else:
+                is_single_line_field = True
+
+            if is_single_line_field and skip_single_lines:
+                continue
+            if (not is_single_line_field) and skip_multi_lines:
+                continue
+
             yield field.field_name, meta_field_value
 
     def dump_fields(self):

@@ -3,17 +3,153 @@
 data-status='{{ requirement.status.lower() }}'
 {%- endif %}>
 
-{%- if requirement.statement or requirement.statement_multiline -%}
-  <table>
-    <tr>
+  {# {% include "_shared/requirement_block/ancor.jinja.html" %}
+  {% include "_shared/requirement_block/h_title.jinja.html" %} #}
+
+  <table class="requirement-table">
+
+    <caption>
+      {{ requirement.title if requirement.title else '[no title]' }}
+    </caption>
+
+      {# <th>
+        Title:
+      </th>
       <td>
-        Statement:
+        {{ requirement.title if requirement.title else '[no title]' }}
+      </td> #}
+
+    {# {% include "_shared/requirement_block/meta.jinja.html" %} #}
+    {%- if requirement.has_meta -%}
+    {% for meta_field in requirement.enumerate_meta_fields() %}
+    <tr>
+      <th>
+        {{meta_field[0]}}:
+      </th>
+      <td>
+        {{ meta_field[1] }}
       </td>
+    </tr>
+    {% endfor %}
+    {%- endif %}
+
+    {# {% include "_shared/requirement_block/related.jinja.html" %} #}
+    {%- if traceability_index.has_parent_requirements(requirement) %}
+    <tr>
+      <th>
+        parent&nbsp;refs:
+      </th>
+      <td>
+        <ul class="requirement_link">
+        {%- for requirement in traceability_index.get_parent_requirements(requirement) %}
+        <li>
+          <a class="requirement_link-parent" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
+            {%- if requirement.uid %}
+            <span class="requirement_parent-uid">{{ requirement.uid }}</span>
+            {%- endif %}
+            {{ requirement.title }}
+          </a>
+        </li>
+        {%- endfor %}
+        </ul>
+      </td>
+    </tr>
+    {%- endif %}
+
+    {%- if traceability_index.has_children_requirements(requirement) %}
+    <tr>
+      <th>
+        child&nbsp;refs:
+      </th>
+      <td>
+        <ul class="requirement_link">
+          {%- for requirement in traceability_index.get_children_requirements(requirement) %}
+          <li>
+            <a class="requirement_link-child" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
+              {%- if requirement.uid %}
+              <span class="requirement_child-uid">{{ requirement.uid }}</span>
+              {%- endif %}
+              {{ requirement.title }}
+            </a>
+          </li>
+          {%- endfor %}
+        </ul>
+      </td>
+    </tr>
+    {%- endif %}
+
+    {# {% include "_shared/requirement_block/files_list.jinja.html" %} #}
+    {%- if config.experimental_enable_file_traceability -%}
+    {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
+    {%- if requirement_file_links %}
+    <tr>
+      <th>
+        file&nbsp;refs:
+      </th>
+      <td>
+        <ul class="requirement_link">
+          {%- for link, opt_ranges in requirement_file_links %}
+            {%- if opt_ranges -%}
+              {%- for range in opt_ranges %}
+                <li>
+                  <a class="requirement_link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
+                    {{ link }}, <i>lines: {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }}</i>
+                  </a>
+                </li>
+              {%- endfor -%}
+            {%- else -%}
+              <li>
+                <a class="requirement_link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.uid }}">
+                  {{ link }}
+                </a>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </td>
+    </tr>
+    {%- endif %}
+    {%- endif %}
+
+    {# {% include "_shared/requirement_block/statement.jinja.html" %} #}
+    {%- if requirement.statement or requirement.statement_multiline -%}
+    <tr>
+      <th>
+        Statement:
+      </th>
       <td>
         {{ renderer.render_requirement_statement(requirement) }}
       </td>
     </tr>
     {%- endif -%}
+
+    {# {% include "_shared/requirement_block/rationale.jinja.html" %} #}
+    {%- if requirement.rationale or requirement.rationale_multiline -%}
+    <tr>
+      <th>
+        Rationale:
+      </th>
+      <td>
+        <div class="requirement_rationale">
+          {{ renderer.render_requirement_rationale(requirement) }}
+        </div>
+      </td>
+    </tr>
+    {%- endif -%}
+
+    {# {% include "_shared/requirement_block/comment.jinja.html" %} #}
+    {%- if requirement.comments %}
+    {%- for comment in requirement.comments %}
+        <tr>
+      <th>
+        Comment:
+      </th>
+      <td>
+          {{ renderer.render_comment(comment) }}
+      </td>
+    </tr>
+    {%- endfor %}
+    {%- endif %}
 
   </table>
 </article>

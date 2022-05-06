@@ -71,6 +71,11 @@ article > section:last-of-type {
   padding-bottom: var(--base-padding);
 }
 
+.document-view article > section {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 /* .table-view */
 
 .table-view section,

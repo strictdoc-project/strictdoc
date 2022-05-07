@@ -8,4 +8,4 @@ RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-pre
 CHECK-HTML-DOCTREE: Hello world doc with UTF-8 symbols: –
 
 RUN: %cat %S/Output/html/01_utf8_in_sdoc/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-FILE
-CHECK-HTML-FILE: UTF-8 symbols: –––
+CHECK-HTML-FILE: UTF-8 symbols: 😀😀😀 ✓✓✓ ☂☂☂

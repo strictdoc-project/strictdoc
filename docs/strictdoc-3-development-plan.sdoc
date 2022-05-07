@@ -1,5 +1,7 @@
 [DOCUMENT]
 TITLE: StrictDoc Development Plan
+OPTIONS:
+  REQUIREMENT_STYLE: Table
 
 [FREETEXT]
 This document presents the goals of the StrictDoc project and describes how the

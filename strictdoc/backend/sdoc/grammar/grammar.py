@@ -69,11 +69,16 @@ DocumentConfig[noskipws]:
   ('OPTIONS:' '\n'
     ('  MARKUP: ' (markup = MarkupChoice) '\n')?
     ('  AUTO_LEVELS: ' (auto_levels = AutoLevelsChoice) '\n')?
+    ('  REQUIREMENT_STYLE: ' (requirement_style = RequirementStyleChoice) '\n')?
   )?
 ;
 
 MarkupChoice[noskipws]:
   'RST' | 'Text' | 'HTML'
+;
+
+RequirementStyleChoice[noskipws]:
+  'Inline' | 'Table'
 ;
 
 AutoLevelsChoice[noskipws]:

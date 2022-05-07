@@ -57,7 +57,14 @@ class DocumentBuilder:
 
     @staticmethod
     def _create_empty_document() -> Document:
-        config = DocumentConfig(None, "0.0.1", "DOC-1", [], None)
+        config = DocumentConfig(
+            parent=None,
+            version="0.0.1",
+            number="DOC-1",
+            markup=None,
+            auto_levels=None,
+            requirement_style=None,
+        )
         free_texts = []
         section_contents = []
         document = Document(

@@ -1,5 +1,7 @@
 [DOCUMENT]
 TITLE: StrictDoc Requirements
+OPTIONS:
+  REQUIREMENT_STYLE: Inline
 
 [SECTION]
 TITLE: High-level requirements

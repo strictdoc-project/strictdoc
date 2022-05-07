@@ -65,7 +65,7 @@ def run_invoke_cmd(context, cmd, reset_path=True) -> invoke.runners.Result:
             result = context.run(
                 one_line_command(
                     """
-                    python3 check_environment.py
+                    python check_environment.py
                     """
                 ),
                 env=None,
@@ -74,7 +74,7 @@ def run_invoke_cmd(context, cmd, reset_path=True) -> invoke.runners.Result:
                 pty=False,
                 echo=True,
             )
-            if result.exited != 0:
+            if result.exited == 11:
                 result = context.run(
                     one_line_command(COMMAND_SETUP_DEPS),
                     env=None,
@@ -85,6 +85,8 @@ def run_invoke_cmd(context, cmd, reset_path=True) -> invoke.runners.Result:
                 )
                 if result.exited != 0:
                     return result
+            elif result.exited != 0:
+                raise invoke.exceptions.UnexpectedExit(result)
             context[VENV_DEPS_CHECK_PASSED] = True
 
         return context.run(

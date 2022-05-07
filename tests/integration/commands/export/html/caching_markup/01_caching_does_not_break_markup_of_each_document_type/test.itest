@@ -1,8 +1,8 @@
 RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
-RUN: cat %S/Output/html/01_caching_does_not_break_markup_of_each_document_type/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC
+RUN: %cat %S/Output/html/01_caching_does_not_break_markup_of_each_document_type/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC
 CHECK-HTML-DOC: <a class="reference external" href="../01_caching_does_not_break_markup_of_each_document_type/section.html#1-Section">Section</a></p>
 
-RUN: cat %S/Output/html/01_caching_does_not_break_markup_of_each_document_type/input-TABLE.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-TABLE
+RUN: %cat %S/Output/html/01_caching_does_not_break_markup_of_each_document_type/input-TABLE.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-TABLE
 CHECK-HTML-TABLE: <a class="reference external" href="../01_caching_does_not_break_markup_of_each_document_type/section-TABLE.html#1-Section">Section</a></p>

@@ -1,7 +1,7 @@
 RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
 CHECK: Published: Test document
 
-RUN: cat %S/Output/html/02_several_comments/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %S/Output/html/02_several_comments/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML:<dt><i>ONE</i></dt>
 CHECK-HTML:<dd>One-value</dd>
 CHECK-HTML:<dt><i>TWO</i></dt>

@@ -1,5 +1,5 @@
 RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
-RUN: cat %S/Output/html/03_options_markup_is_html/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %S/Output/html/03_options_markup_is_html/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: <b>This <a href="#">text</a> will be rendered directly as HTML!</b>

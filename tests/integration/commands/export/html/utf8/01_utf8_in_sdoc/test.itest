@@ -4,8 +4,8 @@ REQUIRES: PLATFORM_IS_NOT_WINDOWS
 RUN: %strictdoc export %S --formats=html,html-standalone,rst --output-dir Output | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc with UTF-8 symbols: –
 
-RUN: cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOCTREE
+RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOCTREE
 CHECK-HTML-DOCTREE: Hello world doc with UTF-8 symbols: –
 
-RUN: cat %S/Output/html/01_utf8_in_sdoc/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-FILE
+RUN: %cat %S/Output/html/01_utf8_in_sdoc/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-FILE
 CHECK-HTML-FILE: UTF-8 symbols: –––

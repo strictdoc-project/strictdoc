@@ -1,7 +1,7 @@
 RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
-RUN: cat %S/Output/html/01_level_is_None/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %S/Output/html/01_level_is_None/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 
 CHECK-HTML:<a href="#1-Section-1">
 CHECK-HTML:<a href="#-Out-of-band-Section">

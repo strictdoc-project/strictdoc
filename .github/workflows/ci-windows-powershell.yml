@@ -1,4 +1,4 @@
-name: "StrictDoc on Windows"
+name: "StrictDoc on Windows (Powershell)"
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.7", "3.8", "3.9"]
+        python-version: ["3.9"]
 
     steps:
     - uses: actions/checkout@v2
@@ -37,11 +37,6 @@ jobs:
         pip install -r requirements.txt
         pip install -r requirements.development.txt
 
-    - name: Run Lint tasks
-      run: |
-        invoke lint
-
-    - name: Run tests (Bash)
+    - name: Run tests (Powershell)
       run: |
         invoke test
-      shell: bash

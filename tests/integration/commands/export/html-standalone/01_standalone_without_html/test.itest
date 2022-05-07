@@ -9,7 +9,7 @@ RUN: %check_exists --invert --file %S/Output/html/01_standalone_without_html/inp
 RUN: %html_markup_validator %S/Output/html/01_standalone_without_html/input.standalone.html
 
 /// Index is generated
-RUN: cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: Hello world doc
 CHECK-HTML: input.sdoc
 CHECK-HTML: DOC

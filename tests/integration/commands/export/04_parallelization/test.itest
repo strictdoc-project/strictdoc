@@ -21,7 +21,7 @@ RUN: %check_exists --file %S/Output/html/04_parallelization/input8.html
 RUN: %check_exists --file %S/Output/html/04_parallelization/input9.html
 RUN: %check_exists --file %S/Output/html/04_parallelization/input10.html
 
-RUN: cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: Doc 1
 CHECK-HTML: input1.sdoc
 CHECK-HTML: Doc 2

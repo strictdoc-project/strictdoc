@@ -85,10 +85,9 @@ class SourceFilesFinder:
 
         file_tree = FileFinder.find_files_with_extensions(
             root_path=doctree_root_abs_path,
-            config=config,
+            ignored_dirs=[config.output_dir],
             extensions={".py", ".c", ".cpp", ".tex"},
         )
-
         root_level = doctree_root_abs_path.count(os.sep)
 
         file: File

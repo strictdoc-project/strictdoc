@@ -4,6 +4,6 @@ CHECK-FIRST: Published: Grandchild doc
 RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail --check-prefix=CHECK-SECOND
 CHECK-SECOND: Skip: Grandchild doc
 
-RUN: touch %S/parent.sdoc
+RUN: %touch %S/parent.sdoc
 RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail --check-prefix=CHECK-THIRD
 CHECK-THIRD: Published: Grandchild doc

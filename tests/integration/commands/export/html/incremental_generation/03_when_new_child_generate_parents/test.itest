@@ -1,5 +1,5 @@
 # Create a separate input folder to ensure clear management of the SDoc files.
-RUN: mkdir %S/sandbox
+RUN: %mkdir %S/sandbox
 RUN: cp %S/parent.sdoc %S/sandbox/
 
 RUN: %strictdoc export %S/sandbox --output-dir Output | filecheck %s --dump-input=fail --check-prefix=CHECK-FIRST

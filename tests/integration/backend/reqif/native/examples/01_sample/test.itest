@@ -1,4 +1,4 @@
-RUN: mkdir -p %S/output
+RUN: %mkdir %S/output
 RUN: %strictdoc import reqif sdoc %S/sample.reqif %S/output/output.sdoc
 RUN: %cat %S/output/output.sdoc | filecheck %s
 

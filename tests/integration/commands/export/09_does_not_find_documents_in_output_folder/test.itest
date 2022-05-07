@@ -1,4 +1,4 @@
-RUN: mkdir -p Output/
+RUN: %mkdir Output/
 RUN: cp input2.sdoc_ Output/input2.sdoc
 RUN: %strictdoc export %S --no-parallelization --output-dir Output | filecheck %s --dump-input=fail
 CHECK-NOT: Published: Hello world doc 2

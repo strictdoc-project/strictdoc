@@ -1,4 +1,3 @@
-import os
 import re
 from typing import Optional
 
@@ -93,24 +92,23 @@ class LinkRenderer:
         assert document_or_none is not None
         document: Document = document_or_none
         path_prefix = document.meta.get_root_path_prefix()
-        source_file_link = os.path.join(
-            f"{path_prefix}", "_source_files", f"{source_file_link}.html"
+        source_file_link = (
+            f"{path_prefix}/_source_files/{source_file_link}.html"
         )
         return source_file_link
 
     @staticmethod
     def render_source_file_link_from_root(source_file_link: str):
-        source_file_link = os.path.join(
-            "_source_files", f"{source_file_link}.html"
-        )
+        source_file_link = f"_source_files/{source_file_link}.html"
         return source_file_link
 
     @staticmethod
     def render_source_file_link_from_root_2(source_file: SourceFile):
         assert isinstance(source_file, SourceFile)
-        source_file_link = os.path.join(
-            "_source_files",
-            f"{source_file.in_doctree_source_file_rel_path}.html",
+        source_file_link = (
+            "_source_files"
+            "/"
+            f"{source_file.in_doctree_source_file_rel_path}.html"
         )
         return source_file_link
 

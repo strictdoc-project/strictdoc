@@ -99,6 +99,7 @@ def run_invoke_cmd(context, cmd, reset_path=True) -> invoke.runners.Result:
 
 @task
 def clean_itest_artifacts(context):
+    # https://unix.stackexchange.com/a/689930/77389
     find_command = """
         find
             tests
@@ -113,11 +114,9 @@ def clean_itest_artifacts(context):
             \\)
             -not -path "**Expected**"
             -not -path "**Input**"
+            -exec rm -rv {} +
         """
-    find_result = run_invoke_cmd(context, find_command)
-    find_result_stdout = find_result.stdout.strip()
-    echo_command = f"""echo {find_result_stdout} | xargs rm -rfv"""
-    run_invoke_cmd(context, echo_command)
+    run_invoke_cmd(context, find_command)
 
 
 @task

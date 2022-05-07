@@ -300,7 +300,7 @@ def lint_mypy(context):
     run_invoke_cmd(
         context,
         """
-        rm -rfv rm -rf .mypy_cache/ &&
+        rm -rfv .mypy_cache/ &&
         mypy strictdoc/
             --show-error-codes
             --disable-error-code=arg-type

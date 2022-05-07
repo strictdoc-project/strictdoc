@@ -10,7 +10,7 @@ RUN: %check_exists --file %S/Output/html/--no-parallelization/input2.html
 RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 
 /// Now without parallelization
-RUN: %rm %S/Output
+RUN: %rm %S/Output/html
 
 RUN: %strictdoc export %S --no-parallelization --output-dir=%S/Output | filecheck %s --dump-input=fail --check-prefix CHECK-NO-PARAL
 

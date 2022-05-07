@@ -52,7 +52,9 @@ class VenvFolderType(str, Enum):
     RELEASE_PYPI_TEST = "release-pypi-test"
 
 
-def run_invoke_cmd(context, cmd, reset_path=True) -> invoke.runners.Result:
+def run_invoke_cmd(
+    context, cmd, warn: bool = False, reset_path: bool = True
+) -> invoke.runners.Result:
     postfix = (
         context[VENV_FOLDER]
         if VENV_FOLDER in context
@@ -93,7 +95,7 @@ def run_invoke_cmd(context, cmd, reset_path=True) -> invoke.runners.Result:
             one_line_command(cmd),
             env=None,
             hide=False,
-            warn=False,
+            warn=warn,
             pty=False,
             echo=True,
         )
@@ -118,7 +120,9 @@ def clean_itest_artifacts(context):
             -not -path "**Input**"
             -exec rm -rv {} +
         """
-    run_invoke_cmd(context, find_command)
+    # The command sometimes exits with 1 even if the files are deleted.
+    # warn=True ensures that the execution continues.
+    run_invoke_cmd(context, find_command, warn=True)
 
 
 @task

@@ -3,8 +3,7 @@ from pathlib import Path
 from typing import List
 
 from strictdoc.cli.cli_arg_parser import ExportCommandConfig
-from strictdoc.core.document_tree import DocumentTree
-from strictdoc.core.file_tree import Folder, FileFinder, File
+from strictdoc.core.file_tree import FileFinder, File
 from strictdoc.core.source_tree import SourceTree
 
 
@@ -13,7 +12,6 @@ class SourceFile:  # pylint: disable=too-many-instance-attributes
         self,
         level,
         full_path,
-        doctree_root_mount_path,
         in_doctree_source_file_rel_path,
         output_dir_full_path,
         output_file_full_path,
@@ -23,11 +21,10 @@ class SourceFile:  # pylint: disable=too-many-instance-attributes
 
         self.level = level
         self.full_path = full_path
-        self.doctree_root_mount_path = doctree_root_mount_path
         self.in_doctree_source_file_rel_path = in_doctree_source_file_rel_path
         self.output_dir_full_path = output_dir_full_path
         self.output_file_full_path = output_file_full_path
-        self.path_depth_prefix = ("../" * (level + 2))[:-1]
+        self.path_depth_prefix = ("../" * (level + 1))[:-1]
 
         _, file_extension = os.path.splitext(in_doctree_source_file_rel_path)
         self.extension = file_extension
@@ -40,7 +37,6 @@ class SourceFile:  # pylint: disable=too-many-instance-attributes
             "SourceFile("
             f"level: {self.level}, "
             f"full_path: {self.full_path}, "
-            f"doctree_root_mount_path: {self.doctree_root_mount_path}, "
             "in_doctree_source_file_rel_path: "
             f"{self.in_doctree_source_file_rel_path}, "
             f"output_path_dir_full_path: {self.output_dir_full_path}, "
@@ -63,25 +59,18 @@ class SourceFile:  # pylint: disable=too-many-instance-attributes
 
 class SourceFilesFinder:
     @staticmethod
-    def find_source_files(
-        config: ExportCommandConfig, document_tree: DocumentTree
-    ) -> SourceTree:
+    def find_source_files(config: ExportCommandConfig) -> SourceTree:
         map_file_to_source = {}
         found_source_files: List[SourceFile] = []
-        root_folder_or_file: Folder = document_tree.file_tree[
-            0
-        ].root_folder_or_file
-        assert os.path.abspath(root_folder_or_file.root_path)
 
         # TODO: Unify this on the FileTree class level.
         # Introduce #mount_directory method?
-        doctree_root_abs_path = root_folder_or_file.root_path
+        doctree_root_abs_path = os.getcwd()
         doctree_root_abs_path = (
             os.path.dirname(doctree_root_abs_path)
             if os.path.isfile(doctree_root_abs_path)
             else doctree_root_abs_path
         )
-        doctree_root_mount_path: str = os.path.basename(doctree_root_abs_path)
 
         file_tree = FileFinder.find_files_with_extensions(
             root_path=doctree_root_abs_path,
@@ -101,7 +90,6 @@ class SourceFilesFinder:
             output_dir_full_path: str = os.path.join(
                 config.output_html_root,
                 "_source_files",
-                doctree_root_mount_path,
                 last_folder_in_path,
             )
             Path(output_dir_full_path).mkdir(parents=True, exist_ok=True)
@@ -116,7 +104,6 @@ class SourceFilesFinder:
             source_file = SourceFile(
                 level,
                 file.root_path,
-                doctree_root_mount_path,
                 in_doctree_source_file_rel_path,
                 output_dir_full_path,
                 output_file_full_path,

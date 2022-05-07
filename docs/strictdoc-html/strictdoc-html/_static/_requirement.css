@@ -278,6 +278,21 @@ dl.requirement_meta {
   background-color: var(--color-bg-main);
 }
 
+/* meta multiline list (next to comments/rationale) */
+
+.requirement_meta_multiline {
+  font-size: .9em;
+  font-style: italic;
+}
+
+.requirement_meta_multiline + .requirement_meta_multiline {
+  margin-top: var(--base-margin);
+}
+
+.requirement_meta_multiline_label {
+  font-weight: bold;
+}
+
 /* requirement: parent / child / file */
 
 ul.requirement_link {

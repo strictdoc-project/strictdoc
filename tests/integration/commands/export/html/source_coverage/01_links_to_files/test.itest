@@ -1,7 +1,10 @@
+NOTE: Disabling Windows because of forward/backward slashes difference.
+REQUIRES: PLATFORM_IS_NOT_WINDOWS
+
 RUN: %strictdoc export %S --experimental-enable-file-traceability --output-dir Output | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
 RUN: %check_exists --file "%S/Output/html/source_coverage.html"
 
 RUN: cat "%S/Output/html/source_coverage.html" | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
-CHECK-HTML: <a{{.*}}href="_source_files/01_links_to_files/file.py.html">
+CHECK-HTML: <a{{.*}}href="_source_files/file.py.html">

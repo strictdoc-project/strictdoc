@@ -64,7 +64,7 @@ class ExportAction:
 
         if config.experimental_enable_file_traceability:
             source_tree: SourceTree = SourceFilesFinder.find_source_files(
-                config, document_tree
+                config
             )
             source_files = source_tree.source_files
             source_file: SourceFile

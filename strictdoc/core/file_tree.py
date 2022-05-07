@@ -1,8 +1,7 @@
 import collections
 import os
-from typing import Dict, Optional, Set
+from typing import Dict, Optional, Set, List
 
-from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.helpers.sorting import alphanumeric_sort
 
 
@@ -65,7 +64,7 @@ class Folder(FileOrFolderEntry):
         self.has_sdoc_content = False
 
     def __repr__(self):
-        return f"FileTree: (root_path: {self.root_path}, files: {self.files})"
+        return f"Folder: (root_path: {self.root_path}, files: {self.files})"
 
     def is_folder(self):
         return True
@@ -137,11 +136,21 @@ class FileTree:
                     reversed(file_tree_or_file.subfolder_trees)
                 )
 
+    def __str__(self):
+        dump = ""
+        for file_or_tree in self.iterate():
+            dump += str(file_or_tree)
+            dump += "\n"
+        return dump
+
+    def __repr__(self):
+        return self.__str__()
+
 
 class FileFinder:
     @staticmethod
     def find_files_with_extensions(
-        *, root_path: str, config: ExportCommandConfig, extensions: Set[str]
+        *, root_path: str, ignored_dirs: List[str], extensions: Set[str]
     ):
         assert os.path.isdir(root_path)
         assert os.path.isabs(root_path)
@@ -153,7 +162,7 @@ class FileFinder:
         folder_map: Dict[str, Folder] = {root_path: root_folder}
 
         for current_root_path, dirs, files in os.walk(root_path, topdown=True):
-            if current_root_path == config.output_dir:
+            if current_root_path in ignored_dirs:
                 dirs[:] = []
                 continue
 

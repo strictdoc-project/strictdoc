@@ -1,7 +1,7 @@
 RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
-RUN: cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: Hello world doc
 CHECK-HTML: input.sdoc
 CHECK-HTML: DOC
@@ -9,5 +9,5 @@ CHECK-HTML: TABLE
 CHECK-HTML: TRACE
 CHECK-HTML: DEEP-TRACE
 
-RUN: cat %S/Output/html/02_minimal_document_with_freetext/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-CONTENT
+RUN: %cat %S/Output/html/02_minimal_document_with_freetext/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-CONTENT
 CHECK-CONTENT: Hello world!

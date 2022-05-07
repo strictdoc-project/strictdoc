@@ -4,7 +4,7 @@ CHECK: Published: Hello world doc
 RUN: %check_exists --file "%S/Output/html/index.html"
 RUN: %check_exists --file "%S/Output/html/input/intermediate/requirements/input.html"
 
-RUN: cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: Hello world doc
 CHECK-HTML: input.sdoc
 CHECK-HTML: DOC

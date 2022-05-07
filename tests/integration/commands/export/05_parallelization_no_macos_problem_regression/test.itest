@@ -14,7 +14,7 @@ RUN: %check_exists --file %S/Output/html/05_parallelization_no_macos_problem_reg
 RUN: %check_exists --file %S/Output/html/05_parallelization_no_macos_problem_regression/input9.html
 RUN: %check_exists --file %S/Output/html/05_parallelization_no_macos_problem_regression/input10.html
 
-RUN: cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: Doc 1
 CHECK-HTML: input1.sdoc
 CHECK-HTML: Doc 2

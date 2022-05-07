@@ -105,21 +105,8 @@ def run_invoke_cmd(
 def clean_itest_artifacts(context):
     # https://unix.stackexchange.com/a/689930/77389
     find_command = """
-        find
-            tests
-            -type f \\(
-                -name '*.script'
-            \\)
-            -or -type d \\(
-                -name '*.dSYM' -or
-                -name 'sandbox' -or
-                -name 'Output' -or
-                -name 'output'
-            \\)
-            -not -path "**Expected**"
-            -not -path "**Input**"
-            -exec rm -rv {} +
-        """
+        git clean -dfX tests/integration/    
+    """
     # The command sometimes exits with 1 even if the files are deleted.
     # warn=True ensures that the execution continues.
     run_invoke_cmd(context, find_command, warn=True)

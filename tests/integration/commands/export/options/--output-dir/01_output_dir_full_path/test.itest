@@ -1,12 +1,12 @@
 RUN: %strictdoc export %S --output-dir %S/Output/CustomDir | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
-RUN: cat %S/Output/CustomDir/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %S/Output/CustomDir/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 
 RUN: %check_exists --dir %S/Output/CustomDir/html/_static/
 RUN: %check_exists --file %S/Output/CustomDir/html/_static/_base.css
 
-RUN: cat %S/Output/CustomDir/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %S/Output/CustomDir/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: Hello world doc
 CHECK-HTML: input.sdoc
 CHECK-HTML: DOC
@@ -14,5 +14,5 @@ CHECK-HTML: TABLE
 CHECK-HTML: TRACE
 CHECK-HTML: DEEP-TRACE
 
-RUN: cat %S/Output/CustomDir/html/01_output_dir_full_path/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-CONTENT
+RUN: %cat %S/Output/CustomDir/html/01_output_dir_full_path/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-CONTENT
 CHECK-CONTENT: Hello world!

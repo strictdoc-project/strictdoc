@@ -1,7 +1,7 @@
 RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
 CHECK: Published:
 
-RUN: cat %S/Output/html/04_tables/example.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %S/Output/html/04_tables/example.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 
 CHECK-HTML:<table border="1" class="{{.*}}docutils">
 CHECK-HTML:<caption>Table Example</caption>

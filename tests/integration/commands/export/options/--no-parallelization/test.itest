@@ -10,7 +10,7 @@ CHECK-PARAL: Published:
 RUN: %check_exists --file %S/Output/html/--no-parallelization/input1.html
 RUN: %check_exists --file %S/Output/html/--no-parallelization/input2.html
 
-RUN: cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 
 /// Now without parallelization
 RUN: rm -rfv %S/Output
@@ -25,7 +25,7 @@ CHECK-NO-PARAL: Published:
 RUN: %check_exists --file %S/Output/html/--no-parallelization/input1.html
 RUN: %check_exists --file %S/Output/html/--no-parallelization/input2.html
 
-RUN: cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 
 CHECK-HTML: Doc 1
 CHECK-HTML: input1.sdoc

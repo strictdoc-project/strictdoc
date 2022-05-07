@@ -1,7 +1,7 @@
 RUN: %strictdoc export --formats=reqif-sdoc %S/sample.sdoc
 RUN: %cat %S/output/reqif/output.reqif | filecheck %s
 RUN: %strictdoc import reqif sdoc %S/output/reqif/output.reqif %S/output/sample.sdoc
-RUN: diff %S/sample.sdoc %S/output/sample.sdoc
+RUN: %diff %S/sample.sdoc %S/output/sample.sdoc
 
 CHECK:     <THE-HEADER>
 CHECK:       <REQ-IF-HEADER IDENTIFIER="REQ-IF-HEADER-{{.*}}">

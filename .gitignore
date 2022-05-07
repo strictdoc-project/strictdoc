@@ -17,7 +17,7 @@ output/**
 # LIT/FileCheck integration tests' artifacts.
 tests/integration/**/Output/**
 tests/integration/**/output/**
-tests/integration/**/sandbox/**
+tests/integration/**/sandbox/
 .lit_test_times.txt
 
 # Coverage

@@ -30,6 +30,7 @@ class ReqIFToSDocFactory:
             number=None,
             markup=None,
             auto_levels=None,
+            requirement_style=None,
         )
         document_title = title if title else "<No title>"
         document = Document(None, document_title, document_config, None, [], [])

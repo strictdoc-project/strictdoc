@@ -201,7 +201,9 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         return self.ng_document_reference.get_document()
 
     def is_inline_requirement(self):
-        return self.ng_document_reference.get_document().config.is_inline_requirements()
+        return (
+            self.ng_document_reference.get_document().config.is_inline_requirements()  # noqa: E501
+        )
 
     def get_requirement_references(self):
         if not self.references or len(self.references) == 0:

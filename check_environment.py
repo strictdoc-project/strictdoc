@@ -16,6 +16,6 @@ try:
     pkg_resources.require(open("requirements.development.txt", mode="r"))
 except pkg_resources.DistributionNotFound as exception:
     print(f"check_environment.py: {exception}")
-    sys.exit(1)
+    sys.exit(11)
 
 print(f"check_environment.py: all packages seem to be installed.")

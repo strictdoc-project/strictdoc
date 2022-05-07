@@ -954,6 +954,9 @@ To activate the traceability to source files, use
 
     strictdoc export . --experimental-enable-file-traceability --output-dir output/
 
+Currently, StrictDoc looks for source files in a directory from which the
+``strictdoc`` command is run.
+
 The ``tests/integration/examples`` folder contains executable examples including
 the example of requirements-to-source-code traceability.
 

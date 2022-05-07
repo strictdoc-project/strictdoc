@@ -1,0 +1,35 @@
+REQUIRES: PLATFORM_IS_NOT_WINDOWS
+
+RUN: cd %strictdoc_root && %strictdoc export "%strictdoc_root/docs" --output-dir="%S/Output" --experimental-enable-file-traceability
+
+RUN: %check_exists --file "%S/Output/html/index.html"
+RUN: %check_exists --file %S/Output/html/docs/strictdoc-1-user-manual.html
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-1-user-manual-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-1-user-manual-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-1-user-manual-DEEP-TRACE.html"
+
+RUN: %check_exists --file %S/Output/html/docs/strictdoc-2-requirements.html
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-2-requirements-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-2-requirements-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-2-requirements-DEEP-TRACE.html"
+
+RUN: %check_exists --file %S/Output/html/docs/strictdoc-3-development-plan.html
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-3-development-plan-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-3-development-plan-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-3-development-plan-DEEP-TRACE.html"
+
+RUN: %check_exists --file %S/Output/html/docs/strictdoc-4-backlog.html
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-4-backlog-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-4-backlog-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-4-backlog-DEEP-TRACE.html"
+
+RUN: %check_exists --file "%S/Output/html/_source_files/strictdoc/core/tree_cycle_detector.py.html"
+RUN: %check_exists --file "%S/Output/html/_source_files/strictdoc/core/traceability_index_builder.py.html"
+
+RUN: %cat %S/Output/html/docs/strictdoc-2-requirements.html | filecheck %s --dump-input=fail --check-prefix CHECK-2-REQUIREMENTS
+CHECK-2-REQUIREMENTS: href="../_source_files/strictdoc/core/tree_cycle_detector.py.html#SDOC-VALIDATION-NO-CYCLES"
+CHECK-2-REQUIREMENTS: href="../_source_files/strictdoc/core/traceability_index_builder.py.html#SDOC-VALIDATION-NO-CYCLES
+
+RUN: %cat "%S/Output/html/_source_files/strictdoc/core/tree_cycle_detector.py.html" | filecheck %s --dump-input=fail --check-prefix CHECK-TREE-CYCLE-DETECTOR
+CHECK-TREE-CYCLE-DETECTOR: href="../../../docs/strictdoc-2-requirements.html#6.2-SDOC-VALIDATION-NO-CYCLES"
+CHECK-TREE-CYCLE-DETECTOR: href="../../../_source_files/strictdoc/core/traceability_index_builder.py.html#SDOC-VALIDATION-NO-CYCLES

@@ -1,3 +1,4 @@
+import os
 import re
 from typing import Optional
 
@@ -76,7 +77,7 @@ class LinkRenderer:
         else:
             self.req_link_cache[link_cache_key] = {}
         document_link = node.document.meta.get_html_link(
-            DocumentType.document(), source_file.level + 2
+            DocumentType.document(), source_file.level + 1
         )
         requirement_link = f"{document_link}#{local_link}"
         self.req_link_cache[link_cache_key][node] = requirement_link
@@ -92,62 +93,40 @@ class LinkRenderer:
         assert document_or_none is not None
         document: Document = document_or_none
         path_prefix = document.meta.get_root_path_prefix()
-        source_file_link = (
-            f"{path_prefix}"
-            f"/_source_files"
-            f"/{document.meta.file_tree_mount_folder}"
-            f"/{source_file_link}.html"
+        source_file_link = os.path.join(
+            f"{path_prefix}", "_source_files", f"{source_file_link}.html"
         )
         return source_file_link
 
     @staticmethod
-    def render_source_file_link_from_root(
-        requirement: Requirement, source_file_link: str
-    ):
-        document_or_none: Optional[
-            Document
-        ] = requirement.ng_document_reference.get_document()
-        assert document_or_none is not None
-        document: Document = document_or_none
-        source_file_link = (
-            f"_source_files"
-            f"/{document.meta.file_tree_mount_folder}"
-            f"/{source_file_link}.html"
+    def render_source_file_link_from_root(source_file_link: str):
+        source_file_link = os.path.join(
+            "_source_files", f"{source_file_link}.html"
         )
         return source_file_link
 
     @staticmethod
     def render_source_file_link_from_root_2(source_file: SourceFile):
         assert isinstance(source_file, SourceFile)
-        source_file_link = (
-            f"_source_files"
-            f"/{source_file.doctree_root_mount_path}"
-            f"/{source_file.in_doctree_source_file_rel_path}.html"
+        source_file_link = os.path.join(
+            "_source_files",
+            f"{source_file.in_doctree_source_file_rel_path}.html",
         )
         return source_file_link
 
     @staticmethod
     def render_source_file_link_from_source_file(
-        source_file: SourceFile, requirement: Requirement, source_file_link: str
+        source_file: SourceFile, source_file_link: str
     ):
         assert isinstance(source_file, SourceFile)
-        document_or_none: Optional[
-            Document
-        ] = requirement.ng_document_reference.get_document()
-        assert document_or_none is not None
-        document: Document = document_or_none
 
         def get_root_path_prefix(level):
             assert level > 0
             return ("../" * level)[:-1]
 
-        path_prefix = get_root_path_prefix(source_file.level + 1)
+        path_prefix = get_root_path_prefix(source_file.level)
 
-        source_file_link = (
-            f"{path_prefix}"
-            f"/{document.meta.file_tree_mount_folder}"
-            f"/{source_file_link}.html#"
-        )
+        source_file_link = f"{path_prefix}" f"/{source_file_link}.html#"
         return source_file_link
 
     @staticmethod
@@ -164,11 +143,10 @@ class LinkRenderer:
                 return ".."
             return ("../" * level)[:-1]
 
-        path_prefix = get_root_path_prefix(context_source_file.level + 2)
+        path_prefix = get_root_path_prefix(context_source_file.level + 1)
         source_file_link = (
             f"{path_prefix}"
             f"/_source_files"
-            f"/{context_source_file.doctree_root_mount_path}"
             f"/{source_link}.html#{requirement.uid}"
         )
         return source_file_link
@@ -188,11 +166,10 @@ class LinkRenderer:
                 return ".."
             return ("../" * level)[:-1]
 
-        path_prefix = get_root_path_prefix(context_source_file.level + 2)
+        path_prefix = get_root_path_prefix(context_source_file.level + 1)
         source_file_link = (
             f"{path_prefix}"
             f"/_source_files"
-            f"/{context_source_file.doctree_root_mount_path}"
             f"/{source_link}.html"
             f"#{req_uid}"
             f"#{source_range.ng_range_line_begin}"

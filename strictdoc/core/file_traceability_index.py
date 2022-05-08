@@ -1,4 +1,6 @@
-from strictdoc.backend.sdoc.models.reference import Reference
+from typing import Dict, List
+
+from strictdoc.backend.sdoc.models.reference import Reference, FileReference
 from strictdoc.backend.source_file_syntax.reader import (
     SourceFileTraceabilityInfo,
 )
@@ -7,7 +9,7 @@ from strictdoc.backend.source_file_syntax.reader import (
 class FileTraceabilityIndex:
     def __init__(self):
         self.map_paths_to_reqs = {}
-        self.map_reqs_uids_to_paths = {}
+        self.map_reqs_uids_to_paths: Dict[str, List[FileReference]] = {}
         self.map_paths_to_source_file_traceability_info = {}
         self.source_file_reqs_cache = {}
 
@@ -17,29 +19,36 @@ class FileTraceabilityIndex:
 
         ref: Reference
         for ref in requirement.references:
-            if ref.ref_type == "File":
-                requirements = self.map_paths_to_reqs.setdefault(ref.path, [])
+            if isinstance(ref, FileReference):
+                file_reference: FileReference = ref
+                requirements = self.map_paths_to_reqs.setdefault(
+                    file_reference.path_normalized, []
+                )
                 requirements.append(requirement)
 
                 paths = self.map_reqs_uids_to_paths.setdefault(
                     requirement.uid, []
                 )
-                paths.append(ref.path)
+                paths.append(ref)
 
     def get_requirement_file_links(self, requirement):
         if requirement.uid not in self.map_reqs_uids_to_paths:
             return []
 
         matching_links_with_opt_ranges = []
-        file_links = self.map_reqs_uids_to_paths[requirement.uid]
+        file_links: List[FileReference] = self.map_reqs_uids_to_paths[
+            requirement.uid
+        ]
         for file_link in file_links:
             source_file_traceability_info: SourceFileTraceabilityInfo = (
-                self.map_paths_to_source_file_traceability_info.get(file_link)
+                self.map_paths_to_source_file_traceability_info.get(
+                    file_link.path_normalized
+                )
             )
             if not source_file_traceability_info:
                 print(
                     f"warning: Requirement {requirement.uid} references "
-                    f"a file that does not exist: {file_link}"
+                    f"a file that does not exist: {file_link.path}"
                 )
                 matching_links_with_opt_ranges.append((file_link, None))
                 continue

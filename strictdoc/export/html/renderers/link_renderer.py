@@ -2,6 +2,7 @@ import re
 from typing import Optional
 
 from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.reference import FileReference
 from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.finders.source_files_finder import SourceFile
@@ -84,8 +85,10 @@ class LinkRenderer:
 
     @staticmethod
     def render_source_file_link(
-        requirement: Requirement, source_file_link: str
+        requirement: Requirement, file_reference: FileReference
     ):
+        assert isinstance(file_reference, FileReference)
+
         document_or_none: Optional[
             Document
         ] = requirement.ng_document_reference.get_document()
@@ -93,13 +96,20 @@ class LinkRenderer:
         document: Document = document_or_none
         path_prefix = document.meta.get_root_path_prefix()
         source_file_link = (
-            f"{path_prefix}/_source_files/{source_file_link}.html"
+            f"{path_prefix}"
+            "/"
+            f"_source_files"
+            "/"
+            f"{file_reference.path_forward_slashes}.html"
         )
         return source_file_link
 
     @staticmethod
-    def render_source_file_link_from_root(source_file_link: str):
-        source_file_link = f"_source_files/{source_file_link}.html"
+    def render_source_file_link_from_root(file_reference: FileReference):
+        assert isinstance(file_reference, FileReference)
+        source_file_link = (
+            f"_source_files/{file_reference.path_forward_slashes}.html"
+        )
         return source_file_link
 
     @staticmethod
@@ -113,28 +123,13 @@ class LinkRenderer:
         return source_file_link
 
     @staticmethod
-    def render_source_file_link_from_source_file(
-        source_file: SourceFile, source_file_link: str
-    ):
-        assert isinstance(source_file, SourceFile)
-
-        def get_root_path_prefix(level):
-            assert level > 0
-            return ("../" * level)[:-1]
-
-        path_prefix = get_root_path_prefix(source_file.level)
-
-        source_file_link = f"{path_prefix}" f"/{source_file_link}.html#"
-        return source_file_link
-
-    @staticmethod
     def render_requirement_in_source_file_link(
         requirement: Requirement,
-        source_link: str,
+        source_link: FileReference,
         context_source_file: SourceFile,
     ):
-        assert isinstance(source_link, str)
-        assert len(source_link) > 0
+        assert isinstance(source_link, FileReference)
+        assert len(source_link.path) > 0
 
         def get_root_path_prefix(level):
             if level == 0:
@@ -145,7 +140,7 @@ class LinkRenderer:
         source_file_link = (
             f"{path_prefix}"
             f"/_source_files"
-            f"/{source_link}.html#{requirement.uid}"
+            f"/{source_link.path_forward_slashes}.html#{requirement.uid}"
         )
         return source_file_link
 
@@ -157,6 +152,7 @@ class LinkRenderer:
         source_range,
     ):
         assert isinstance(source_link, str)
+        assert isinstance(context_source_file, SourceFile)
         assert len(source_link) > 0
 
         def get_root_path_prefix(level):
@@ -178,12 +174,17 @@ class LinkRenderer:
     def render_requirement_in_source_file_range_link(
         self,
         requirement: Requirement,
-        source_link: str,
+        source_link: FileReference,
         context_source_file: SourceFile,
         source_range,
     ):
+        assert isinstance(source_link, FileReference)
+        assert isinstance(context_source_file, SourceFile)
         return self.render_requirement_in_source_file_range_link_using_id(
-            requirement.uid, source_link, context_source_file, source_range
+            requirement.uid,
+            source_link.path_forward_slashes,
+            context_source_file,
+            source_range,
         )
 
     @staticmethod

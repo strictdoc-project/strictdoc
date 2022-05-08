@@ -1,0 +1,17 @@
+DESCRIPTION: This test has a requirement that has a Windows-style path with
+backward slashes. The test ensures that StrictDoc converts the backward slashes
+to forward slashes and otherwise works with all paths without any changes. The
+assumption is that the forward slashes everywhere should work fine on Windows.
+
+RUN: %strictdoc export %S --experimental-enable-file-traceability --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%S/Output/html/_source_files/subdir/file.py.html"
+
+RUN: %cat %S/Output/html/11_paths_with_windows_backward_slashes/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: <a{{.*}}href="../_source_files/subdir/file.py.html#REQ-001">
+CHECK-HTML: subdir\file.py
+
+RUN: %cat %S/Output/html/_source_files/subdir/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE: <a{{.*}}href="../../11_paths_with_windows_backward_slashes/input.html#1-REQ-001"{{.*}}>
+CHECK-SOURCE-FILE: subdir\file.py

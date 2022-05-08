@@ -1,6 +1,3 @@
-NOTE: Disabling Windows because of forward/backward slashes difference.
-REQUIRES: PLATFORM_IS_NOT_WINDOWS
-
 RUN: %strictdoc export %S --experimental-enable-file-traceability --output-dir Output | filecheck %s --dump-input=fail
 CHECK: Published: Example: Traceability between requirements and source files
 

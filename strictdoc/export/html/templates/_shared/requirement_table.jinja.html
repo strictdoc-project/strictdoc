@@ -93,14 +93,14 @@ data-status='{{ requirement.status.lower() }}'
               {%- for range in opt_ranges %}
                 <li>
                   <a class="requirement_link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
-                    {{ link }}, <i>lines: {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }}</i>
+                    {{ link.path }}, <i>lines: {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }}</i>
                   </a>
                 </li>
               {%- endfor -%}
             {%- else -%}
               <li>
                 <a class="requirement_link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.uid }}">
-                  {{ link }}
+                  {{ link.path }}
                 </a>
               </li>
             {%- endif -%}

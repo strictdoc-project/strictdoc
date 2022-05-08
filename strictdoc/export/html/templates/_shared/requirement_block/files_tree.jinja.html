@@ -12,7 +12,7 @@
         <li class="requirement-tree_downward_node">
           <div class="requirement-tree_downward_item">
           <a class="" href="{{ link_renderer.render_source_file_link_from_root(link) }}#{{ requirement.uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
-            <b>[ {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }} ]</b> {{ link }}
+            <b>[ {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }} ]</b> {{ link.path }}
           </a>
           </div>
         </li>
@@ -21,7 +21,7 @@
       <li class="requirement-tree_downward_node">
         <div class="requirement-tree_downward_item">
         <a href="{{ link_renderer.render_source_file_link_from_root(link) }}#{{ requirement.uid }}">
-          {{ link }}
+          {{ link.path }}
         </a>
         </div>
       </li>

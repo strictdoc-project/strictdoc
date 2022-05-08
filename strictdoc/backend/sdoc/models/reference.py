@@ -1,3 +1,6 @@
+import os
+
+
 class Reference:
     def __init__(self, parent, ref_type, path):
         self.parent = parent
@@ -12,7 +15,14 @@ class Reference:
 
 
 class FileReference(Reference):
-    pass
+    def __init__(self, parent, ref_type, path):
+        super().__init__(parent, ref_type, path)
+        path_forward_slashes = path.replace("\\", "/")
+        self.path_forward_slashes = path_forward_slashes
+        self.path_normalized = os.path.normpath(path_forward_slashes)
+
+    def __str__(self):
+        raise NotImplementedError
 
 
 class ParentReqReference(Reference):

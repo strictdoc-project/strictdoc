@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[REQUIREMENT]
+UID: REQ-001
+REFS:
+- TYPE: File
+  VALUE: subdir\file.py
+TITLE: Requirement Title
+STATEMENT: Requirement Statement

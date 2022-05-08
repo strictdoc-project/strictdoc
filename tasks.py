@@ -2,6 +2,7 @@ import os
 import platform
 import re
 from enum import Enum
+from shutil import which
 
 import invoke
 from invoke import task
@@ -36,11 +37,18 @@ def get_venv_command(venv_path: str, reset_path=True):
     if reset_path:
         venv_command += f'&& export PATH="{venv_path}/bin:/usr/bin:/bin"'
 
-    # Cannot make this work on Windows/PowerShell.
-    # TODO: Fix this at some point and make the Windows CI to be identical to
-    # Linux/macOS CI.
+    # TODO: Doing true & or VER>NUL & could be eliminated.
     if platform.system() == "Windows":
-        venv_command = "true"
+        # 1) SHELL seems to not be available in Windows shell or Powershell.
+        # 2) If SHELL is not available, this means we may be running a
+        # Windows shell or Powershell but LIT still tries to use bash if it is
+        # available. Therefore, here try to check "bash" as well.
+        # If LIT cannot find it, it prints:
+        # ...LitConfig.py: warning: Unable to find a usable version of bash.
+        if os.getenv("SHELL") is not None or which("bash") is not None:
+            venv_command = "true"
+        else:
+            venv_command = "VER>NUL"
     return one_line_command(venv_command)
 
 

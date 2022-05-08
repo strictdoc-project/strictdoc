@@ -6,17 +6,22 @@ RUN: %check_exists --file "%S/Output/html/docs/strictdoc-1-user-manual-TABLE.htm
 RUN: %check_exists --file "%S/Output/html/docs/strictdoc-1-user-manual-TRACE.html"
 RUN: %check_exists --file "%S/Output/html/docs/strictdoc-1-user-manual-DEEP-TRACE.html"
 
-RUN: %check_exists --file %S/Output/html/docs/strictdoc-2-requirements.html
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc-2-requirements-TABLE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc-2-requirements-TRACE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc-2-requirements-DEEP-TRACE.html"
+RUN: %check_exists --file %S/Output/html/docs/strictdoc-2-development-plan.html
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-2-development-plan-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-2-development-plan-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-2-development-plan-DEEP-TRACE.html"
 
-RUN: %check_exists --file %S/Output/html/docs/strictdoc-3-development-plan.html
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc-3-development-plan-TABLE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc-3-development-plan-TRACE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc-3-development-plan-DEEP-TRACE.html"
+RUN: %check_exists --file %S/Output/html/docs/strictdoc-3-requirements.html
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-3-requirements-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-3-requirements-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-3-requirements-DEEP-TRACE.html"
 
-RUN: %check_exists --file %S/Output/html/docs/strictdoc-4-backlog.html
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc-4-backlog-TABLE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc-4-backlog-TRACE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc-4-backlog-DEEP-TRACE.html"
+RUN: %check_exists --file %S/Output/html/docs/strictdoc-4-design.html
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-4-design-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-4-design-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-4-design-DEEP-TRACE.html"
+
+RUN: %check_exists --file %S/Output/html/docs/strictdoc-5-backlog.html
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-5-backlog-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-5-backlog-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-5-backlog-DEEP-TRACE.html"

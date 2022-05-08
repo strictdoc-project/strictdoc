@@ -5,6 +5,7 @@ Welcome to StrictDoc's documentation!
    :maxdepth: 1
 
    strictdoc-1-user-manual
-   strictdoc-2-requirements
-   strictdoc-3-development-plan
-   strictdoc-4-backlog
+   strictdoc-2-development-plan
+   strictdoc-3-requirements
+   strictdoc-4-design
+   strictdoc-5-backlog

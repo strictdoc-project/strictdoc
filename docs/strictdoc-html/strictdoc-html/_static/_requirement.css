@@ -71,6 +71,11 @@ article > section:last-of-type {
   padding-bottom: var(--base-padding);
 }
 
+.document-view article > section {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 /* .table-view */
 
 .table-view section,
@@ -493,4 +498,47 @@ input:checked + .std-switch_slider:before {
 
 .requirements-coverage-document-title:first-child {
   margin-top: -1rem;
+}
+
+/* requirement-table */
+
+.requirement-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.requirement-table caption {
+  text-align: left;
+  background-color: var(--color-bg-main);
+  margin-bottom: -1px;
+  font-size: 1.2em;
+}
+
+.requirement-table th {
+  background-color: #fff;
+  text-align: left;
+  font-weight: normal;
+  text-transform: uppercase;
+  font-family: 'Courier New', Courier, monospace;
+  width: 10%;
+}
+
+.requirement-table td,
+.requirement-table th,
+.requirement-table caption {
+  padding: .5rem 1rem;
+  border: 1px solid #666;
+}
+
+.requirement-table ul.requirement_link:first-child,
+.requirement-table p:first-child {
+  margin-top: 0;
+}
+.requirement-table ul.requirement_link:last-child,
+.requirement-table p:last-child {
+  margin-bottom: 0;
+}
+
+.requirement-table ul.requirement_link {
+  font-size: 1em;
 }

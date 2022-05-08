@@ -10,12 +10,15 @@
   <link rel="shortcut icon" href="../_static/favicon.ico" type="image/x-icon"/>
 
   
+  
   <link rel="stylesheet" href="../_static/_base.css"/>
   <link rel="stylesheet" href="../_static/_layout.css"/>
   <link rel="stylesheet" href="../_static/_content.css"/>
   <link rel="stylesheet" href="../_static/_requirement.css"/>
   <link rel="stylesheet" href="../_static/_element.css"/>
   
+  <link rel="stylesheet" href="../_static/_requirement-tree.css"/>
+
 
   
   <script type="text/javascript" src="../_static/toc.js"></script>
@@ -24,12 +27,12 @@
   
 
 
-  <title>StrictDoc Backlog - Document</title>
+  <title>StrictDoc Backlog - Traceability</title>
 
   
 </head>
 
-<body class="document-view">
+<body class="traceability-view">
 <script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script>
 
   <div class="layout" id="layout">
@@ -130,25 +133,25 @@
     <a
     class="layout_nav-btn layout_button btn-document"
     title="Go to Document view"
-    href="../docs/strictdoc-4-backlog.html">
+    href="../docs/strictdoc-5-backlog.html">
     DOC
   </a>
   <a
     class="layout_nav-btn layout_button btn-table"
     title="Go to Table view"
-    href="../docs/strictdoc-4-backlog-TABLE.html">
+    href="../docs/strictdoc-5-backlog-TABLE.html">
     TBL
   </a>
   <a
     class="layout_nav-btn layout_button btn-traceability"
     title="Go to Traceability view"
-    href="../docs/strictdoc-4-backlog-TRACE.html">
+    href="../docs/strictdoc-5-backlog-TRACE.html">
     TR
   </a>
   <a
     class="layout_nav-btn layout_button btn-deep-traceability"
     title="Go to Deep Traceability view"
-    href="../docs/strictdoc-4-backlog-DEEP-TRACE.html">
+    href="../docs/strictdoc-5-backlog-DEEP-TRACE.html">
     DTR
   </a>
   </nav>
@@ -156,20 +159,20 @@
 
     <header class="layout_header">
       
-  <p>StrictDoc Backlog <span class="document-view-type">Document</span></p>
+  <p>StrictDoc Backlog <span class="document-view-type">Traceability</span></p>
 
     </header>
 
     <main class="layout_main">
       
-      <div class="content"><article><section>
-          <div class="free_text">
-            <div class="document">
-<p><strong>Note:</strong> The items below are weakly sorted from top to bottom. The topmost
-items are either work-in-progress or will be implemented next.</p>
-</div>
 
-          </div></section></article><article class="docsection">
+      
+
+      <div class="content">
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><article class="docsection">
 
   <section data-section="meta" class="docsection_section">
 
@@ -187,7 +190,14 @@ data-level="1"
 
   
 
-</article><article class="requirement">
+</article></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -226,7 +236,69 @@ data-level="1.1"
 
   </section>
 
-</article><article class="requirement">
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+
+<ul class="requirement-tree requirement-tree_left"><li class="requirement-tree_branch">
+    <div class="requirement-tree_node">
+      <article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    
+    <h2
+class="section-title"
+data-level="2.1"
+>Command-line interface
+</h2>
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>FRONTEND-1-TEXT</dd>
+    
+  </dl>
+    
+<ul class="requirement_link">
+  <li>
+    <a class="requirement_link-child" href="#2-BACKLOG-LSP">
+      <span class="requirement_child-uid">BACKLOG-LSP</span>
+      SDoc Language Server Protocol
+    </a>
+  </li>
+  </ul>
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall provide a command-line interface.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+  
+
+  </section>
+
+</article>
+    </div>
+
+  </li></ul></div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -245,9 +317,9 @@ data-level="2"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="../docs/strictdoc-3-development-plan.html#2.1-FRONTEND-1-TEXT">
+    <a class="requirement_link-parent" href="../docs/strictdoc-2-development-plan-TRACE.html#2.1-FRONTEND-1-TEXT">
       <span class="requirement_parent-uid">FRONTEND-1-TEXT</span>
-      Text frontend
+      Command-line interface
     </a>
   </li>
   </ul>
@@ -286,7 +358,16 @@ autocompletion and easy navigation through requirements.</p>
 
   </section>
 
-</article><article class="requirement">
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -389,7 +470,16 @@ the grouping is provided by sections.</li>
 
   </section>
 
-</article><article class="requirement">
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -438,7 +528,15 @@ data-level="4"
 
   </section>
 
-</article><article class="docsection">
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><article class="docsection">
 
   <section data-section="meta" class="docsection_section">
 
@@ -456,7 +554,14 @@ data-level="5"
 
   
 
-</article><article class="requirement">
+</article></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -489,7 +594,16 @@ data-level="5.1"
 
   </section>
 
-</article><article class="requirement">
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -522,7 +636,16 @@ data-level="5.2"
 
   </section>
 
-</article><article class="requirement">
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -555,7 +678,16 @@ data-level="5.3"
 
   </section>
 
-</article><article class="requirement">
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -588,7 +720,16 @@ data-level="5.4"
 
   </section>
 
-</article><article class="requirement">
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -621,7 +762,16 @@ data-level="5.5"
 
   </section>
 
-</article><article class="requirement">
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -655,7 +805,16 @@ data-level="5.6"
 
   </section>
 
-</article><article class="requirement">
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -688,7 +847,16 @@ data-level="6"
 
   </section>
 
-</article><article class="requirement">
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -728,7 +896,88 @@ as Grammar, Import, Export classes, etc.</p>
 
   </section>
 
-</article><article class="requirement">
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+
+<ul class="requirement-tree requirement-tree_left"><li class="requirement-tree_branch">
+    <div class="requirement-tree_node">
+      <article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    
+    <h2
+class="section-title"
+data-level="1.4"
+>Change management
+</h2>
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>GOAL-4-CHANGE-MANAGEMENT</dd>
+    
+  </dl>
+    
+<ul class="requirement_link">
+  <li>
+    <a class="requirement_link-child" href="#8-BACKLOG-FUZZY-SEARCH">
+      <span class="requirement_child-uid">BACKLOG-FUZZY-SEARCH</span>
+      Fuzzy requirements search
+    </a>
+  </li>
+  </ul>
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>Software shall provide capabilities for change management and impact assessment.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>Change management is difficult. The bigger the project is, the harder it is to
+maintain its documentation. If a change is introduced to a project, it usually
+requires a full revision of its requirements.</p>
+</div>
+
+    </div>
+    <div class="requirement_comment">
+      <div class="document">
+<p>When the basic capabilities of StrictDoc are in place, it should be possible
+to do a more advanced analysis of requirements and requirement trees:</p>
+<ul class="simple">
+<li>Finding similar or relevant requirements.</li>
+<li>Enforce invariants that should be hold. Example: mass or power budget.</li>
+</ul>
+</div>
+
+    </div>
+    
+  
+
+  </section>
+
+</article>
+    </div>
+
+  </li></ul></div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -747,7 +996,7 @@ data-level="8"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="../docs/strictdoc-3-development-plan.html#1.4-GOAL-4-CHANGE-MANAGEMENT">
+    <a class="requirement_link-parent" href="../docs/strictdoc-2-development-plan-TRACE.html#1.4-GOAL-4-CHANGE-MANAGEMENT">
       <span class="requirement_parent-uid">GOAL-4-CHANGE-MANAGEMENT</span>
       Change management
     </a>
@@ -783,7 +1032,16 @@ relevant requirements when creating new requirements.</p>
 
   </section>
 
-</article><article class="requirement">
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -816,7 +1074,15 @@ data-level="9"
 
   </section>
 
-</article><article class="docsection">
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><article class="docsection">
 
   <section data-section="meta" class="docsection_section">
 
@@ -834,7 +1100,14 @@ data-level="10"
 
   
 
-</article><article class="requirement">
+</article></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -874,7 +1147,16 @@ until the linking between requirements and files is implemented.</p>
 
   </section>
 
-</article><article class="requirement">
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -918,7 +1200,69 @@ which technology?</li>
 
   </section>
 
-</article><article class="requirement">
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+
+<ul class="requirement-tree requirement-tree_left"><li class="requirement-tree_branch">
+    <div class="requirement-tree_node">
+      <article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    
+    <h2
+class="section-title"
+data-level="2.2"
+>Web interface
+</h2>
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>FRONTEND-2-WEB</dd>
+    
+  </dl>
+    
+<ul class="requirement_link">
+  <li>
+    <a class="requirement_link-child" href="#10.2.1-BACKLOG-WEB">
+      <span class="requirement_child-uid">BACKLOG-WEB</span>
+      Web server and editable HTML pages
+    </a>
+  </li>
+  </ul>
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall provide a web interface.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+  
+
+  </section>
+
+</article>
+    </div>
+
+  </li></ul></div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -937,9 +1281,9 @@ data-level="10.2.1"
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="../docs/strictdoc-3-development-plan.html#2.2-FRONTEND-2-WEB">
+    <a class="requirement_link-parent" href="../docs/strictdoc-2-development-plan-TRACE.html#2.2-FRONTEND-2-WEB">
       <span class="requirement_parent-uid">FRONTEND-2-WEB</span>
-      Web frontend
+      Web interface
     </a>
   </li>
   </ul>
@@ -966,7 +1310,16 @@ reading and writing SDoc files.</p>
 
   </section>
 
-</article><article class="requirement">
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -1000,7 +1353,16 @@ invariants for constraints enforcement.</p>
 
   </section>
 
-</article><article class="requirement">
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="parents">
+</div>
+
+          <div class="content_item" data-role="current"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -1033,7 +1395,15 @@ data-level="10.4"
 
   </section>
 
-</article><article class="docsection">
+</article></div>
+
+          <div class="content_item" data-role="children">
+</div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><article class="docsection">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1051,7 +1421,13 @@ data-level="11"
 
   
 
-</article><article class="docsection">
+</article></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><article class="docsection">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1090,9 +1466,11 @@ only work with one input folder with a single doc tree.</p>
 
     </div></section>
 
-</article>
-
+</article></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
       </div>
+
 
     </main>
 

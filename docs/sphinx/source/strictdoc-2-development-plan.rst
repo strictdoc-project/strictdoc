@@ -28,10 +28,6 @@ requirements and specifications documents
 **Comment:** Technical documentation is hard, it can be an extremely laborious process.
 Software shall support engineers in their work with documentation.
 
-**Comment:** The state of the art for many small companies working with
-requirements: using Excel for requirements management in the projects with
-hundreds or thousands of requirements.
-
 **Children:**
 
 - ``[SDOC-HIGH-REQS-MANAGEMENT]`` :ref:`SDOC-HIGH-REQS-MANAGEMENT`
@@ -108,20 +104,21 @@ to do a more advanced analysis of requirements and requirement trees:
 
 - ``[BACKLOG-FUZZY-SEARCH]`` :ref:`BACKLOG-FUZZY-SEARCH`
 
-Two frontends
-=============
+User interfaces
+===============
 
-There are two frontends for StrictDoc:
+There are two user interfaces for StrictDoc:
 
-1) Text frontend
-2) Web frontend
+1) Command-line interface (CLI)
+2) Web interface
 
-The text frontend is already developed, the web frontend is incubation.
+The CLI interface is already developed, the web interface is (slow)
+work-in-progress.
 
 .. _FRONTEND-1-TEXT:
 
-Text frontend
--------------
+Command-line interface
+----------------------
 
 .. list-table::
     :align: left
@@ -130,7 +127,7 @@ Text frontend
     * - **UID:**
       - FRONTEND-1-TEXT
 
-...
+StrictDoc shall provide a command-line interface.
 
 **Children:**
 
@@ -138,8 +135,8 @@ Text frontend
 
 .. _FRONTEND-2-WEB:
 
-Web frontend
-------------
+Web interface
+-------------
 
 .. list-table::
     :align: left
@@ -148,7 +145,7 @@ Web frontend
     * - **UID:**
       - FRONTEND-2-WEB
 
-...
+StrictDoc shall provide a web interface.
 
 **Children:**
 
@@ -157,6 +154,6 @@ Web frontend
 Development team
 ================
 
-StrictDoc is a spare time project developed and maintained by a single person
+StrictDoc is a spare time project developed and maintained by two people
 with occasional contributions from the Open Source community.
 

@@ -337,7 +337,7 @@ STATEMENT: StrictDoc shall support exporting documents to Sphinx/RST format.
 UID: SDOC-GEN-EXCEL-EXPORT
 REFS:
 - TYPE: File
-  VALUE: strictdoc/export/excel/excel_generator.py
+  VALUE: strictdoc/backend/excel/export/excel_generator.py
 TITLE: Excel Export
 STATEMENT: StrictDoc shall support exporting documents to Excel format.
 
@@ -420,37 +420,5 @@ STATEMENT: StrictDoc shall generate source coverage information.
 COMMENT: >>>
 Source coverage screen shows how source files are linked with requirements.
 <<<
-
-[/SECTION]
-
-[SECTION]
-TITLE: Design decisions
-
-[SECTION]
-TITLE: Building blocks
-
-[REQUIREMENT]
-TITLE: TextX
-STATEMENT: TextX shall be used for StrictDoc grammar definition and parsing of the sdoc files.
-COMMENT: >>>
-TextX is an easy-to-install Python tool. It is fast, works out of the box.
-<<<
-
-[REQUIREMENT]
-TITLE: Jinja2
-STATEMENT: Jinja2 shall be used for rendering HTML templates.
-
-[REQUIREMENT]
-TITLE: Sphinx and Docutils
-STATEMENT: >>>
-Sphinx and Docutils shall be used for the following capabilities:
-
-- Support of Restructured Text (reST) format
-- Generation of RST documents into HTML
-- Generation of RST documents into PDF using LaTeX
-- Generating documentation websites using Sphinx
-<<<
-
-[/SECTION]
 
 [/SECTION]

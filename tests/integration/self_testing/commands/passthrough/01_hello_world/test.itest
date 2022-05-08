@@ -1,11 +1,14 @@
 RUN: %strictdoc passthrough "%strictdoc_root/docs/strictdoc-1-user-manual.sdoc" --output-file="%S/Output/strictdoc-1-user-manual.sdoc"
 RUN: %diff "%strictdoc_root/docs/strictdoc-1-user-manual.sdoc" "%S/Output/strictdoc-1-user-manual.sdoc"
 
-RUN: %strictdoc passthrough "%strictdoc_root/docs/strictdoc-2-requirements.sdoc" --output-file="%S/Output/strictdoc-2-requirements.sdoc"
-RUN: %diff "%strictdoc_root/docs/strictdoc-2-requirements.sdoc" "%S/Output/strictdoc-2-requirements.sdoc"
+RUN: %strictdoc passthrough "%strictdoc_root/docs/strictdoc-2-development-plan.sdoc" --output-file="%S/Output/strictdoc-2-development-plan.sdoc"
+RUN: %diff "%strictdoc_root/docs/strictdoc-2-development-plan.sdoc" "%S/Output/strictdoc-2-development-plan.sdoc"
 
-RUN: %strictdoc passthrough "%strictdoc_root/docs/strictdoc-3-development-plan.sdoc" --output-file="%S/Output/strictdoc-3-development-plan.sdoc"
-RUN: %diff "%strictdoc_root/docs/strictdoc-3-development-plan.sdoc" "%S/Output/strictdoc-3-development-plan.sdoc"
+RUN: %strictdoc passthrough "%strictdoc_root/docs/strictdoc-3-requirements.sdoc" --output-file="%S/Output/strictdoc-3-requirements.sdoc"
+RUN: %diff "%strictdoc_root/docs/strictdoc-3-requirements.sdoc" "%S/Output/strictdoc-3-requirements.sdoc"
 
-RUN: %strictdoc passthrough "%strictdoc_root/docs/strictdoc-4-backlog.sdoc" --output-file="%S/Output/strictdoc-4-backlog.sdoc"
-RUN: %diff "%strictdoc_root/docs/strictdoc-4-backlog.sdoc" "%S/Output/strictdoc-4-backlog.sdoc"
+RUN: %strictdoc passthrough "%strictdoc_root/docs/strictdoc-4-design.sdoc" --output-file="%S/Output/strictdoc-4-design.sdoc"
+RUN: %diff "%strictdoc_root/docs/strictdoc-4-design.sdoc" "%S/Output/strictdoc-4-design.sdoc"
+
+RUN: %strictdoc passthrough "%strictdoc_root/docs/strictdoc-5-backlog.sdoc" --output-file="%S/Output/strictdoc-5-backlog.sdoc"
+RUN: %diff "%strictdoc_root/docs/strictdoc-5-backlog.sdoc" "%S/Output/strictdoc-5-backlog.sdoc"

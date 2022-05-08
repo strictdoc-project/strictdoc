@@ -337,7 +337,7 @@ STATEMENT: StrictDoc shall support exporting documents to Sphinx/RST format.
 UID: SDOC-GEN-EXCEL-EXPORT
 REFS:
 - TYPE: File
-  VALUE: strictdoc/export/excel/excel_generator.py
+  VALUE: strictdoc/backend/excel/export/excel_generator.py
 TITLE: Excel Export
 STATEMENT: StrictDoc shall support exporting documents to Excel format.
 

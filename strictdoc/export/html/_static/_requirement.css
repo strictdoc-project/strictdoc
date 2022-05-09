@@ -520,7 +520,7 @@ input:checked + .std-switch_slider:before {
   font-weight: normal;
   text-transform: uppercase;
   font-family: 'Courier New', Courier, monospace;
-  width: 10%;
+  width: 20%;
 }
 
 .requirement-table td,

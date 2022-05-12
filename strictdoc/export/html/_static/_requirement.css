@@ -87,37 +87,35 @@ article > section:last-of-type {
 .table-view [data-section] p:first-child { margin-top: 0; }
 .table-view [data-section] p:last-child { margin-bottom: 0; }
 
-.table-view [data-section="meta"] {
+/* .table-view [data-section="meta"] {
   padding: 0;
-}
+} */
 
-.table-view [data-section="meta"] > .section-title {
+/* .table-view [data-section="meta"] > .section-title {
   padding: var(--base-padding);
-}
+} */
 
 .table-view [data-section="meta"] > .requirement_meta {
-  gap: 1px;
+  gap: 0;
   border-width: 1px;
   border-color: #ddd;
   background-color: #ddd;
-  margin-top: 0;
+  /* margin-top: 0; */
   padding: 0;
-  border-left: none;
-  border-right: none;
   width: 100%;
 }
 
-.table-view [data-section="meta"] > .requirement_meta dt {
+/* .table-view [data-section="meta"] > .requirement_meta dt {
   padding-left: var(--base-padding);
-}
+} */
 
 .table-view [data-section="meta"] > .requirement_meta dt i {
   max-width: 100px;
 }
 
-.table-view [data-section="meta"] > .requirement_link {
+/* .table-view [data-section="meta"] > .requirement_link {
   padding: 0 var(--base-padding);
-}
+} */
 
 /* requirement_statement */
 
@@ -254,7 +252,12 @@ dl.requirement_meta {
   background-color: #ddd;
 
   width: fit-content;
-  margin: 1rem 0;
+  margin: 0;
+  margin-bottom: 1rem;
+}
+
+.section-title + dl.requirement_meta {
+  margin-top: 1rem;
 }
 
 .requirement_meta dt,

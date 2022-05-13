@@ -1,13 +1,12 @@
 import pytest
+
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.fragment import Fragment
 from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
     CompositeRequirement,
 )
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.reader import SDReader
-from strictdoc.backend.sdoc.reader import SDIReader
 
 
 @pytest.fixture

@@ -28,8 +28,9 @@ class ParseContext:
 
 
 class SDocParsingProcessor:
-    def __init__(self, parse_context: ParseContext):
+    def __init__(self, parse_context: ParseContext, delegate):
         self.parse_context: ParseContext = parse_context
+        self.delegate = delegate
 
     def process_document(self, document: Document):
         if document.legacy_title_is_used:
@@ -39,6 +40,19 @@ class SDocParsingProcessor:
                 " Use 'TITLE:' instead."
             )
         document.grammar = self.parse_context.document_grammar
+
+    def get_default_processors(self):
+        return {
+            "Document": self.process_document,
+            "DocumentConfig": self.process_document_config,
+            "DocumentGrammar": self.process_document_grammar,
+            "Section": self.process_section,
+            "FragmentFromFile": self.process_include,
+            "CompositeRequirement": self.process_composite_requirement,
+            "Requirement": self.process_requirement,
+            "FreeText": self.process_free_text,
+            "Fragment": self.process_fragment,
+        }
 
     def process_document_config(self, document_config: DocumentConfig):
         self.parse_context.document_config = document_config
@@ -70,19 +84,11 @@ class SDocParsingProcessor:
         assert section.ng_level > 0
 
     def process_include(self, include: FragmentFromFile):
-        # pylint: disable=import-outside-toplevel
-        from strictdoc.backend.sdoc.reader import (
-            SDIReader,
-        )  # can't import globally or else module loop ensues
-
         self._resolve_parents(include)
         self.parse_context.current_include_parent = include.parent
 
-        reader = SDIReader()
-        fragment = reader.read_from_file(
-            file_path=include.file, context=self.parse_context
-        )
-        assert isinstance(fragment, Fragment)
+        assert self.delegate is not None
+        fragment = self.delegate(include, self.parse_context)
 
         parent_section_contents = include.parent.section_contents
         index = parent_section_contents.index(include)

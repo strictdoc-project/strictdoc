@@ -85,13 +85,13 @@ class SDocParsingProcessor:
     def process_include(self, include: FragmentFromFile):
         # pylint: disable=import-outside-toplevel
         from strictdoc.backend.sdoc.reader import (
-            SDIReader,
+            SDIncludeReader,
         )  # can't import globally or else module loop ensues
 
         self._resolve_parents(include)
         self.parse_context.current_include_parent = include.parent
 
-        reader = SDIReader()
+        reader = SDIncludeReader()
         fragment = reader.read_from_file(
             file_path=include.file, context=self.parse_context
         )

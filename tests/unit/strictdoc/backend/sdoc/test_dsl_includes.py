@@ -7,7 +7,7 @@ from strictdoc.backend.sdoc.models.requirement import (
 )
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.reader import SDReader
-from strictdoc.backend.sdoc.reader import SDIReader
+from strictdoc.backend.sdoc.reader import SDIncludeReader
 
 
 @pytest.fixture

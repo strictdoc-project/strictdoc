@@ -120,7 +120,7 @@ class SDReader:
             sys.exit(1)
 
 
-class SDIReader:
+class SDIncludeReader:
     @staticmethod
     def read(input_string, parse_context: ParseContext, file_path=None):
         meta_model = metamodel_from_str(

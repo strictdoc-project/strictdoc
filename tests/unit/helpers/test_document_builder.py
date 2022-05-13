@@ -64,6 +64,7 @@ class DocumentBuilder:
             markup=None,
             auto_levels=None,
             requirement_style=None,
+            requirement_has_title=None,
         )
         free_texts = []
         section_contents = []

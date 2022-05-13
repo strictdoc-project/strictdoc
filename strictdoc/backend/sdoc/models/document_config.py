@@ -11,6 +11,7 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
             markup=None,
             auto_levels=None,
             requirement_style=None,
+            requirement_has_title=None,
         )
 
     def __init__(  # pylint: disable=too-many-arguments
@@ -22,6 +23,7 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         markup: Optional[str],
         auto_levels: Optional[str],
         requirement_style: Optional[str],
+        requirement_has_title: Optional[str],
     ):
         self.parent = parent
         self.version = version
@@ -29,6 +31,7 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         self.markup = markup
         self.auto_levels: bool = auto_levels is None or auto_levels == "On"
         self.requirement_style: Optional[str] = requirement_style
+        self.requirement_has_title: Optional[str] = requirement_has_title
         self.ng_auto_levels_specified = auto_levels is not None
 
     def is_inline_requirements(self):

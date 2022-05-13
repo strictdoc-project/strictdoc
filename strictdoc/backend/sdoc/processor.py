@@ -40,6 +40,19 @@ class SDocParsingProcessor:
             )
         document.grammar = self.parse_context.document_grammar
 
+    def get_default_processors(self):
+        return {
+            "Document": self.process_document,
+            "DocumentConfig": self.process_document_config,
+            "DocumentGrammar": self.process_document_grammar,
+            "Section": self.process_section,
+            "FragmentFromFile": self.process_include,
+            "CompositeRequirement": self.process_composite_requirement,
+            "Requirement": self.process_requirement,
+            "FreeText": self.process_free_text,
+            "Fragment": self.process_fragment,
+        }
+
     def process_document_config(self, document_config: DocumentConfig):
         self.parse_context.document_config = document_config
 

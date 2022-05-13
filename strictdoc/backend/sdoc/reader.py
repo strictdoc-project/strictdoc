@@ -79,8 +79,7 @@ class SDReader:
 
         parse_context = ParseContext()
         processor = SDocParsingProcessor(parse_context=parse_context)
-        obj_processors = SDReader.get_default_processors(processor)
-        meta_model.register_obj_processors(obj_processors)
+        meta_model.register_obj_processors(processor.get_default_processors())
 
         document = meta_model.model_from_str(input_string, file_name=file_path)
         parse_context.document_reference.set_document(document)
@@ -97,20 +96,6 @@ class SDReader:
     def read(input_string, file_path=None):
         document, _ = SDReader._read(input_string, file_path)
         return document
-
-    @staticmethod
-    def get_default_processors(processor):
-        return {
-            "Document": processor.process_document,
-            "DocumentConfig": processor.process_document_config,
-            "DocumentGrammar": processor.process_document_grammar,
-            "Section": processor.process_section,
-            "FragmentFromFile": processor.process_include,
-            "CompositeRequirement": processor.process_composite_requirement,
-            "Requirement": processor.process_requirement,
-            "FreeText": processor.process_free_text,
-            "Fragment": processor.process_fragment,
-        }
 
     def read_from_file(self, file_path):
         with open(file_path, "r", encoding="utf8") as file:
@@ -146,8 +131,7 @@ class SDIReader:
         assert isinstance(parse_context, ParseContext)
 
         processor = SDocParsingProcessor(parse_context=parse_context)
-        obj_processors = SDReader.get_default_processors(processor)
-        meta_model.register_obj_processors(obj_processors)
+        meta_model.register_obj_processors(processor.get_default_processors())
 
         section = meta_model.model_from_str(input_string, file_name=file_path)
 

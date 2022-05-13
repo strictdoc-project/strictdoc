@@ -815,13 +815,13 @@ OPTIONS:
     assert sdoc_input == output
 
 
-def test_087_options_requirement_has_title():
+def test_087_options_requirement_in_toc():
     sdoc_input = """
 [DOCUMENT]
 TITLE: Test Doc
 VERSION: 0.0.1
 OPTIONS:
-  REQUIREMENT_HAS_TITLE: True
+  REQUIREMENT_IN_TOC: True
 """.lstrip()
 
     reader = SDReader()
@@ -830,7 +830,7 @@ OPTIONS:
     assert isinstance(document, Document)
 
     document: Document = reader.read(sdoc_input)
-    assert document.config.requirement_has_title == "True"
+    assert document.config.requirement_in_toc == "True"
 
     writer = SDWriter()
     output = writer.write(document)

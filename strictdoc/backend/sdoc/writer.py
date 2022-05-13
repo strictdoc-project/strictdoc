@@ -53,13 +53,13 @@ class SDWriter:
             markup = document_config.markup
             auto_levels_specified = document_config.ng_auto_levels_specified
             requirement_style = document_config.requirement_style
-            requirement_has_title = document_config.requirement_has_title
+            requirement_in_toc = document_config.requirement_in_toc
 
             if (
                 markup is not None
                 or auto_levels_specified
                 or requirement_style is not None
-                or requirement_has_title is not None
+                or requirement_in_toc is not None
             ):
                 output += "OPTIONS:"
                 output += "\n"
@@ -79,9 +79,9 @@ class SDWriter:
                     output += requirement_style
                     output += "\n"
 
-                if requirement_has_title is not None:
-                    output += "  REQUIREMENT_HAS_TITLE: "
-                    output += requirement_has_title
+                if requirement_in_toc is not None:
+                    output += "  REQUIREMENT_IN_TOC: "
+                    output += requirement_in_toc
                     output += "\n"
 
         document_grammar = document.grammar

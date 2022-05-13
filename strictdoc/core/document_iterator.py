@@ -22,10 +22,17 @@ class DocumentCachingIterator:
             yield from self.toc_nodes_cache
             return
 
-        for node in self.all_content():
-            if isinstance(node, FreeText):
-                continue
+        nodes_to_skip = (
+            (FreeText, Requirement)
+            if not self.document.config.is_requirement_in_toc()
+            else FreeText
+        )
 
+        for node in self.all_content():
+            if isinstance(node, nodes_to_skip):
+                continue
+            if isinstance(node, Requirement) and node.title is None:
+                continue
             self.toc_nodes_cache.append(node)
             yield node
 
@@ -76,5 +83,5 @@ class DocumentCachingIterator:
             if isinstance(current, Section):
                 task_list.extendleft(reversed(current.section_contents))
 
-            if isinstance(current, CompositeRequirement):
+            elif isinstance(current, CompositeRequirement):
                 task_list.extendleft(reversed(current.requirements))

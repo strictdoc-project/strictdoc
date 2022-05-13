@@ -5,8 +5,8 @@ from textx import metamodel_from_str
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.grammar.grammar_builder import SDocGrammarBuilder
+from strictdoc.backend.sdoc.models.constants import INCLUDE_MODELS
 from strictdoc.backend.sdoc.processor import ParseContext, SDocParsingProcessor
-from strictdoc.backend.sdoc.reader import INCLUDE_MODELS
 from strictdoc.helpers.textx import drop_textx_meta
 
 
@@ -20,7 +20,9 @@ class SDIncludeReader:
         )
         assert isinstance(parse_context, ParseContext)
 
-        processor = SDocParsingProcessor(parse_context=parse_context)
+        processor = SDocParsingProcessor(
+            parse_context=parse_context, delegate=None
+        )
         meta_model.register_obj_processors(processor.get_default_processors())
 
         section = meta_model.model_from_str(input_string, file_name=file_path)

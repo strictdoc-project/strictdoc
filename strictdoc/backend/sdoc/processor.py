@@ -28,8 +28,9 @@ class ParseContext:
 
 
 class SDocParsingProcessor:
-    def __init__(self, parse_context: ParseContext):
+    def __init__(self, parse_context: ParseContext, delegate):
         self.parse_context: ParseContext = parse_context
+        self.delegate = delegate
 
     def process_document(self, document: Document):
         if document.legacy_title_is_used:
@@ -83,19 +84,11 @@ class SDocParsingProcessor:
         assert section.ng_level > 0
 
     def process_include(self, include: FragmentFromFile):
-        # pylint: disable=import-outside-toplevel
-        from strictdoc.backend.sdoc.include_reader import (
-            SDIncludeReader,
-        )  # can't import globally or else module loop ensues
-
         self._resolve_parents(include)
         self.parse_context.current_include_parent = include.parent
 
-        reader = SDIncludeReader()
-        fragment = reader.read_from_file(
-            file_path=include.file, context=self.parse_context
-        )
-        assert isinstance(fragment, Fragment)
+        assert self.delegate is not None
+        fragment = self.delegate(include, self.parse_context)
 
         parent_section_contents = include.parent.section_contents
         index = parent_section_contents.index(include)

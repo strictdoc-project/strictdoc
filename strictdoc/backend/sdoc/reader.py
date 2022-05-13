@@ -5,67 +5,11 @@ from textx import metamodel_from_str
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.grammar.grammar_builder import SDocGrammarBuilder
-from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.document_config import DocumentConfig
-from strictdoc.backend.sdoc.models.document_grammar import (
-    DocumentGrammar,
-    GrammarElement,
-)
+from strictdoc.backend.sdoc.include_reader import SDIncludeReader
+from strictdoc.backend.sdoc.models.constants import DOCUMENT_MODELS
 from strictdoc.backend.sdoc.models.fragment import Fragment
-from strictdoc.backend.sdoc.models.fragment_from_file import FragmentFromFile
-from strictdoc.backend.sdoc.models.inline_link import InlineLink
-from strictdoc.backend.sdoc.models.reference import (
-    Reference,
-    ParentReqReference,
-    FileReference,
-)
-from strictdoc.backend.sdoc.models.requirement import (
-    Requirement,
-    CompositeRequirement,
-    RequirementComment,
-    RequirementField,
-)
-from strictdoc.backend.sdoc.models.section import Section, FreeText
-from strictdoc.backend.sdoc.models.type_system import (
-    GrammarElementFieldSingleChoice,
-    GrammarElementFieldString,
-    GrammarElementFieldMultipleChoice,
-    GrammarElementFieldTag,
-)
 from strictdoc.backend.sdoc.processor import SDocParsingProcessor, ParseContext
 from strictdoc.helpers.textx import drop_textx_meta
-
-SECTION_MODELS = [
-    RequirementComment,
-    Section,
-    FragmentFromFile,
-    Requirement,
-    RequirementField,
-    CompositeRequirement,
-    # Body,
-    Reference,
-    ParentReqReference,
-    FileReference,
-    FreeText,
-    InlineLink,
-]
-
-DOCUMENT_MODELS = [
-    DocumentConfig,
-    Document,
-    DocumentGrammar,
-    GrammarElement,
-    GrammarElementFieldString,
-    GrammarElementFieldSingleChoice,
-    GrammarElementFieldMultipleChoice,
-    GrammarElementFieldTag,
-]
-DOCUMENT_MODELS.extend(SECTION_MODELS)
-
-INCLUDE_MODELS = [
-    Fragment,
-]
-INCLUDE_MODELS.extend(SECTION_MODELS)
 
 
 class SDReader:
@@ -78,7 +22,9 @@ class SDReader:
         )
 
         parse_context = ParseContext()
-        processor = SDocParsingProcessor(parse_context=parse_context)
+        processor = SDocParsingProcessor(
+            parse_context=parse_context, delegate=SDReader.parse_include
+        )
         meta_model.register_obj_processors(processor.get_default_processors())
 
         document = meta_model.model_from_str(input_string, file_name=file_path)
@@ -118,3 +64,12 @@ class SDReader:
             # TODO: when --debug is provided
             traceback.print_exc()
             sys.exit(1)
+
+    @staticmethod
+    def parse_include(include, parse_context):
+        reader = SDIncludeReader()
+        fragment = reader.read_from_file(
+            file_path=include.file, context=parse_context
+        )
+        assert isinstance(fragment, Fragment)
+        return fragment

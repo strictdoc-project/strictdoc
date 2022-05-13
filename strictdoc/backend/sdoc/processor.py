@@ -84,7 +84,7 @@ class SDocParsingProcessor:
 
     def process_include(self, include: FragmentFromFile):
         # pylint: disable=import-outside-toplevel
-        from strictdoc.backend.sdoc.reader import (
+        from strictdoc.backend.sdoc.include_reader import (
             SDIncludeReader,
         )  # can't import globally or else module loop ensues
 

@@ -815,6 +815,29 @@ OPTIONS:
     assert sdoc_input == output
 
 
+def test_087_options_requirement_has_title():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+VERSION: 0.0.1
+OPTIONS:
+  REQUIREMENT_HAS_TITLE: True
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    document: Document = reader.read(sdoc_input)
+    assert document.config.requirement_has_title == "True"
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
 def test_150_grammar_minimal_doc():
     sdoc_input = """
 [DOCUMENT]

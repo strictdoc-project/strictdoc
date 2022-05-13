@@ -35,6 +35,7 @@ def test_04_meta_multilines_not_nones():
         markup=None,
         auto_levels=None,
         requirement_style=None,
+        requirement_has_title=None,
     )
     document = Document(None, "Test Doc", document_config, None, [], [])
 

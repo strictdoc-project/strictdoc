@@ -132,6 +132,7 @@ class ExcelToSDocConverter:
             markup=None,
             auto_levels=None,
             requirement_style=None,
+            requirement_has_title=None,
         )
         document_title = title if title else "<No title>"
         document = Document(None, document_title, document_config, None, [], [])

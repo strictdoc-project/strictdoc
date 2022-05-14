@@ -254,7 +254,7 @@ class SDocParsingProcessor:
         section_with_none_level = cursor.level == "None"
         for parent_idx, parent in enumerate(reversed(parents_to_resolve_level)):
             parent.ng_level = cursor_level + parent_idx + 1
-            if isinstance(parent, Section):
+            if isinstance(parent, (Section, CompositeRequirement)):
                 if section_with_none_level:
                     parent.level = "None"
                 elif parent.level == "None":

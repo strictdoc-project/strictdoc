@@ -175,6 +175,7 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         return (
             f"{self.__class__.__name__}("
             f"ng_level: {self.ng_level}, "
+            f"level: {self.level}, "
             f"uid: {self.uid}, "
             f"title_or_none: {self.title}, "
             f"statement: {self.statement}"

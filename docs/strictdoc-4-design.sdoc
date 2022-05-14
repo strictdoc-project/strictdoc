@@ -1,7 +1,8 @@
 [DOCUMENT]
 TITLE: StrictDoc Design Document
 OPTIONS:
-  REQUIREMENT_STYLE: Inline
+  REQUIREMENT_STYLE: Table
+  REQUIREMENT_IN_TOC: True
 
 [SECTION]
 TITLE: Design decisions

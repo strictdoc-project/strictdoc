@@ -9,11 +9,11 @@ TITLE: Section 1.2.3
 
 [COMPOSITE_REQUIREMENT]
 LEVEL: 4.5.6
-STATEMENT: Composite requirement 4.5.6
+TITLE: Composite requirement 4.5.6
 
 [REQUIREMENT]
 LEVEL: 7.8.9
-STATEMENT: Requirement 7.8.9
+TITLE: Requirement 7.8.9
 
 [/COMPOSITE_REQUIREMENT]
 

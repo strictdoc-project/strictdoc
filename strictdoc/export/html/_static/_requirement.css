@@ -515,6 +515,16 @@ input:checked + .std-switch_slider:before {
   background-color: var(--color-bg-main);
   margin-bottom: -1px;
   font-size: 1.2em;
+  padding: 0;
+}
+
+.requirement-table caption .section-title {
+  padding: .5rem 1rem;
+}
+
+.requirement-table td,
+.requirement-table th {
+  padding: .5rem 1rem;
 }
 
 .requirement-table th {
@@ -529,7 +539,6 @@ input:checked + .std-switch_slider:before {
 .requirement-table td,
 .requirement-table th,
 .requirement-table caption {
-  padding: .5rem 1rem;
   border: 1px solid #666;
 }
 

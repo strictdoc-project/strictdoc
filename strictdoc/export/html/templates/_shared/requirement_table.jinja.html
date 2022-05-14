@@ -10,10 +10,12 @@ data-status='{{ requirement.status.lower() }}'
     {%- if requirement.title %}
     <caption>
     {% include "_shared/requirement_block/ancor.jinja.html" %}
+    <div class="section-title">
       {%- if requirement.context.title_number_string -%}
       {{ requirement.context.title_number_string }}.&nbsp;
       {%- endif -%}
       {{ requirement.title }}
+      </div>
     </caption>
     {# <th>
       Title:

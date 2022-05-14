@@ -421,7 +421,7 @@ def watch(context, sdocs_path):
         context,
         f"""
         watchmedo shell-command
-        --patterns="*.py;*.sdoc;*.html"
+        --patterns="*.py;*.sdoc;*.html;*.css"
         --recursive
         --ignore-pattern='output/;tests/integration'
         --command='python strictdoc/cli/main.py export "{sdocs_path}" --output-dir=output/'

@@ -31,7 +31,7 @@ def get_venv_command(venv_path: str, reset_path=True):
         else rf"{venv_path}\Scripts\activate"
     )
     venv_command = f"""
-        python -m venv {venv_path} && 
+        python3 -m venv {venv_path} && 
             {venv_command_activate}
     """
     if reset_path:
@@ -75,7 +75,7 @@ def run_invoke_cmd(
             result = context.run(
                 one_line_command(
                     """
-                    python check_environment.py
+                    python3 check_environment.py
                     """
                 ),
                 env=None,
@@ -228,7 +228,7 @@ def test_integration(context, focus=None, debug=False):
 
     cwd = os.getcwd()
 
-    strictdoc_exec = f'python \\"{cwd}/strictdoc/cli/main.py\\"'
+    strictdoc_exec = f'python3 \\"{cwd}/strictdoc/cli/main.py\\"'
     if (
         VENV_FOLDER in context
         and context[VENV_FOLDER] == VenvFolderType.RELEASE_LOCAL
@@ -377,9 +377,9 @@ def release_local(context):
     context[VENV_FOLDER] = VenvFolderType.RELEASE_LOCAL
     command = """
         rm -rfv dist/ build/ && 
-        python -m pip uninstall strictdoc -y &&
-        python setup.py check &&
-            python setup.py install
+        python3 -m pip uninstall strictdoc -y &&
+        python3 setup.py check &&
+            python3 setup.py install
     """
     run_invoke_cmd(context, command)
     check(context)
@@ -392,8 +392,8 @@ def release(context, username=None, password=None):
     context[VENV_FOLDER] = VenvFolderType.RELEASE_PYPI
     command = f"""
         rm -rfv dist/ &&
-        python setup.py check &&
-            python setup.py sdist --verbose &&
+        python3 setup.py check &&
+            python3 setup.py sdist --verbose &&
             twine upload dist/strictdoc-*.tar.gz
                 {user_password}
     """
@@ -407,8 +407,8 @@ def release_test(context):
 
     command = """
         rm -rfv dist/ &&
-        python setup.py check &&
-            python setup.py sdist --verbose &&
+        python3 setup.py check &&
+            python3 setup.py sdist --verbose &&
             twine upload --repository-url https://test.pypi.org/legacy/ dist/strictdoc-*.tar.gz
     """
     run_invoke_cmd(context, command)
@@ -424,7 +424,7 @@ def watch(context, sdocs_path):
         --patterns="*.py;*.sdoc;*.html"
         --recursive
         --ignore-pattern=.output
-        --command='python strictdoc/cli/main.py export "{sdocs_path}" --output-dir=.output/'
+        --command='python3 strictdoc/cli/main.py export "{sdocs_path}" --output-dir=.output/'
         --drop
         {paths_to_watch}
         """,

@@ -412,3 +412,20 @@ def release_test(context):
             twine upload --repository-url https://test.pypi.org/legacy/ dist/strictdoc-*.tar.gz
     """
     run_invoke_cmd(context, command)
+
+
+@task
+def watch(context, sdocs_path):
+    paths_to_watch = "." if sdocs_path == "." else f". {sdocs_path}"
+    run_invoke_cmd(
+        context,
+        f"""
+        watchmedo shell-command
+        --patterns="*.py;*.sdoc;*.html"
+        --recursive
+        --ignore-pattern=.output
+        --command='python strictdoc/cli/main.py export "{sdocs_path}" --output-dir=.output/'
+        --drop
+        {paths_to_watch}
+        """,
+    )

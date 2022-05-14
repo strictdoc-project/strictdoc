@@ -153,10 +153,10 @@ h6 { font-size: 1em; }
   color: var(--color-accent);
 }
 
-.section-title[data-level]::before {
+/* .section-title[data-level]::before {
   content: attr(data-level) " ";
   font-weight: bold;
-}
+} */
 
 .traceability-view .section-title,
 .deep-traceability-view .section-title {

@@ -6,7 +6,11 @@ data-status='{{ requirement.status.lower() }}'
   <section class="requirement_section" data-section='meta'>
 
     {% include "_shared/requirement_block/ancor.jinja.html" %}
+
+    {%- if requirement.title %}
     {% include "_shared/requirement_block/h_title.jinja.html" %}
+    {%- endif %}
+
     {% include "_shared/requirement_block/meta.jinja.html" %}
     {% include "_shared/requirement_block/related.jinja.html" %}
     {% include "_shared/requirement_block/files_list.jinja.html" %}

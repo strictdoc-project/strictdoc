@@ -4,12 +4,13 @@
     {%- for section in document_iterator.table_of_contents() -%}
       <li>
         {%- if section.is_section -%}
+        {# if section not requirement #}
           {%- if not section.ng_has_requirements and document_type.is_deeptrace -%}
             <span class="toc-title-no-link" title="Section has no requirements">
               <span class="section-number">
                 {{ section.context.title_number_string }}
               </span>
-              {{ section.title if section.title else '[ no title ]' }}
+              {{ section.title }}
             </span>
           {#
              The calculation below: "&nbsp;" * (section.ng_level * 2 - 1)
@@ -22,13 +23,14 @@
           {%- else -%}
             <a href="#{{ link_renderer.render_local_anchor(section) }}">
               <span class="section-number">{{ section.context.title_number_string if section.context.title_number_string else "&nbsp;" * (section.ng_level * 2 - 1) }}</span>
-              {{ section.title if section.title else '[ no title ]' }}
+              {{ section.title }}
             </a>
           {%- endif -%}
         {%- else -%}
+        {# if requirement #}
         <a href="#{{ link_renderer.render_local_anchor(section) }}">
           <span class="section-number">{{ section.context.title_number_string if section.context.title_number_string else "&nbsp;" * (section.ng_level * 2 - 1) }}</span>
-          {{ section.title if section.title else (section.uid if section.uid else '[ no title ]') }}
+          {{ section.title }}
         </a>
         {%- endif -%}
 

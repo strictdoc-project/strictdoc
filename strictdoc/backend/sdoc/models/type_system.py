@@ -2,11 +2,14 @@ from typing import List
 
 
 class GrammarElementField:
-    pass
+    def __init__(self):
+        self.title: str = ""
+        self.required: bool = False
 
 
 class GrammarElementFieldString(GrammarElementField):
     def __init__(self, parent, title: str, required: str):
+        super().__init__()
         self.parent = parent
         self.title: str = title
         self.required: bool = required == "True"
@@ -22,13 +25,8 @@ class GrammarElementFieldString(GrammarElementField):
 
 
 class GrammarElementFieldSingleChoice(GrammarElementField):
-    def __init__(  # pylint: disable=too-many-arguments
-        self,
-        parent,
-        title: str,
-        options: List[str],
-        required: str,
-    ):
+    def __init__(self, parent, title: str, options: List[str], required: str):
+        super().__init__()
         self.parent = parent
         self.title: str = title
         self.options: List[str] = options
@@ -36,13 +34,8 @@ class GrammarElementFieldSingleChoice(GrammarElementField):
 
 
 class GrammarElementFieldMultipleChoice(GrammarElementField):
-    def __init__(  # pylint: disable=too-many-arguments
-        self,
-        parent,
-        title: str,
-        options: List[str],
-        required: str,
-    ):
+    def __init__(self, parent, title: str, options: List[str], required: str):
+        super().__init__()
         self.parent = parent
         self.title: str = title
         self.options: List[str] = options
@@ -51,6 +44,7 @@ class GrammarElementFieldMultipleChoice(GrammarElementField):
 
 class GrammarElementFieldTag(GrammarElementField):
     def __init__(self, parent, title: str, required: str):
+        super().__init__()
         self.parent = parent
         self.title: str = title
         self.required: bool = required == "True"

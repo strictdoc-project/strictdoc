@@ -239,6 +239,33 @@ optional configuration fields and an optional ``[FREETEXT]`` block.
     [/FREETEXT]
 
 
+Option: Requirement style
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The ``REQUIREMENT_STYLE`` option controls whether requirement's elements are
+displayed inline or as table blocks. The available options are: ``Inline``
+and ``Table``.
+
+.. code-block:: text
+
+    [DOCUMENT]
+    TITLE: Hello world
+    OPTIONS:
+      REQUIREMENT_STYLE: Table
+
+Option: Requirement title in Table of Contents
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The ``REQUIREMENT_IN_TOC`` option controls whether requirement's title appear
+in the table of contents (TOC). The available options are: ``True/False``.
+
+.. code-block:: text
+
+    [DOCUMENT]
+    TITLE: Hello world
+    OPTIONS:
+      REQUIREMENT_IN_TOC: True
+
 Requirement
 ~~~~~~~~~~~
 

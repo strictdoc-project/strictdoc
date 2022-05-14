@@ -32,7 +32,7 @@ StrictDoc shall support Language Server Protocol.
 
 **Parents:**
 
-- ``[FRONTEND-1-TEXT]`` :ref:`FRONTEND-1-TEXT`
+- ``[UI-1-TEXT]`` :ref:`UI-1-TEXT`
 
 Document archetypes
 ===================
@@ -211,7 +211,7 @@ reading and writing SDoc files.
 
 **Parents:**
 
-- ``[FRONTEND-2-WEB]`` :ref:`FRONTEND-2-WEB`
+- ``[UI-2-WEB]`` :ref:`UI-2-WEB`
 
 Facts table. Invariants calculation.
 ------------------------------------

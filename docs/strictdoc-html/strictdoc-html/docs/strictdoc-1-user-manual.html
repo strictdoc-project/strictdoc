@@ -95,7 +95,14 @@
             </a><ul><li><a href="#4.2.1-Document">
               <span class="section-number">4.2.1</span>
               Document
-            </a></li><li><a href="#4.2.2-Requirement">
+            </a><ul><li><a href="#4.2.1.1-Option-Requirement-style">
+              <span class="section-number">4.2.1.1</span>
+              Option: Requirement style
+            </a></li><li><a href="#4.2.1.2-Option-Requirement-title-in-Table-of-Contents">
+              <span class="section-number">4.2.1.2</span>
+              Option: Requirement title in Table of Contents
+            </a></li></ul>
+            </li><li><a href="#4.2.2-Requirement">
               <span class="section-number">4.2.2</span>
               Requirement
             </a><ul><li><a href="#4.2.2.1-UID">
@@ -268,8 +275,8 @@
     
         <h1
 class="section-title"
-data-level="1"
->Introduction
+data-level="1">
+  1.&nbsp;Introduction
 </h1>
     
 
@@ -321,8 +328,8 @@ Further performance tuning should be possible.</li>
     
         <h2
 class="section-title"
-data-level="1.1"
->Contact the developers
+data-level="1.1">
+  1.1.&nbsp;Contact the developers
 </h2>
     
 
@@ -345,8 +352,8 @@ data-level="1.1"
     
         <h1
 class="section-title"
-data-level="2"
->Examples
+data-level="2">
+  2.&nbsp;Examples
 </h1>
     
 
@@ -392,8 +399,8 @@ examples.</p>
     
         <h1
 class="section-title"
-data-level="3"
->Getting started
+data-level="3">
+  3.&nbsp;Getting started
 </h1>
     
 
@@ -410,8 +417,8 @@ data-level="3"
     
         <h2
 class="section-title"
-data-level="3.1"
->Requirements
+data-level="3.1">
+  3.1.&nbsp;Requirements
 </h2>
     
 
@@ -436,8 +443,8 @@ data-level="3.1"
     
         <h2
 class="section-title"
-data-level="3.2"
->Installing StrictDoc as a Pip package (recommended way)
+data-level="3.2">
+  3.2.&nbsp;Installing StrictDoc as a Pip package (recommended way)
 </h2>
     
 
@@ -461,8 +468,8 @@ pip install strictdoc
     
         <h2
 class="section-title"
-data-level="3.3"
->Installing StrictDoc from GitHub (developer mode)
+data-level="3.3">
+  3.3.&nbsp;Installing StrictDoc from GitHub (developer mode)
 </h2>
     
 
@@ -502,8 +509,8 @@ invoke --list  # See the available tasks
     
         <h2
 class="section-title"
-data-level="3.4"
->Installing StrictDoc into a Docker container
+data-level="3.4">
+  3.4.&nbsp;Installing StrictDoc into a Docker container
 </h2>
     
 
@@ -538,8 +545,8 @@ bash-5.1# exit
     
         <h2
 class="section-title"
-data-level="3.5"
->Installing StrictDoc as a Snap package (not maintained)
+data-level="3.5">
+  3.5.&nbsp;Installing StrictDoc as a Snap package (not maintained)
 </h2>
     
 
@@ -562,8 +569,8 @@ use it, refer to the instructions located in <tt class="docutils literal">develo
     
         <h2
 class="section-title"
-data-level="3.6"
->Hello world
+data-level="3.6">
+  3.6.&nbsp;Hello world
 </h2>
     
 
@@ -588,8 +595,8 @@ strictdoc export docs/
     
         <h1
 class="section-title"
-data-level="4"
->SDoc syntax
+data-level="4">
+  4.&nbsp;SDoc syntax
 </h1>
     
 
@@ -624,8 +631,8 @@ TITLE: StrictDoc
     
         <h2
 class="section-title"
-data-level="4.1"
->Document structure
+data-level="4.1">
+  4.1.&nbsp;Document structure
 </h2>
     
 
@@ -662,8 +669,8 @@ into <tt class="docutils literal">[SECTION]</tt> blocks.</p>
     
         <h3
 class="section-title"
-data-level="4.1.1"
->Strict rule #1: One empty line between all nodes
+data-level="4.1.1">
+  4.1.1.&nbsp;Strict rule #1: One empty line between all nodes
 </h3>
     
 
@@ -688,8 +695,8 @@ than one empty line between two nodes will result in an SDoc parsing error.</p>
     
         <h3
 class="section-title"
-data-level="4.1.2"
->Strict rule #2: No content is allowed outside of SDoc grammar
+data-level="4.1.2">
+  4.1.2.&nbsp;Strict rule #2: No content is allowed outside of SDoc grammar
 </h3>
     
 
@@ -716,8 +723,8 @@ be only attached to the <tt class="docutils literal">[DOCUMENT]</tt> and <tt cla
     
         <h2
 class="section-title"
-data-level="4.2"
->Grammar elements
+data-level="4.2">
+  4.2.&nbsp;Grammar elements
 </h2>
     
 
@@ -734,8 +741,8 @@ data-level="4.2"
     
         <h3
 class="section-title"
-data-level="4.2.1"
->Document
+data-level="4.2.1">
+  4.2.1.&nbsp;Document
 </h3>
     
 
@@ -768,13 +775,74 @@ StrictDoc is software for writing technical requirements and specifications.
 
   <section data-section="meta" class="docsection_section">
 
+    <div data-role='anchor' id="4.2.1.1-Option-Requirement-style"></div>
+
+    
+        <h4
+class="section-title"
+data-level="4.2.1.1">
+  4.2.1.1.&nbsp;Option: Requirement style
+</h4>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>The <tt class="docutils literal">REQUIREMENT_STYLE</tt> option controls whether requirement's elements are
+displayed inline or as table blocks. The available options are: <tt class="docutils literal">Inline</tt>
+and <tt class="docutils literal">Table</tt>.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: Hello world
+OPTIONS:
+  REQUIREMENT_STYLE: Table
+</pre>
+</div>
+
+    </div></section>
+
+</article><article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4.2.1.2-Option-Requirement-title-in-Table-of-Contents"></div>
+
+    
+        <h4
+class="section-title"
+data-level="4.2.1.2">
+  4.2.1.2.&nbsp;Option: Requirement title in Table of Contents
+</h4>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>The <tt class="docutils literal">REQUIREMENT_IN_TOC</tt> option controls whether requirement's title appear
+in the table of contents (TOC). The available options are: <tt class="docutils literal">True/False</tt>.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: Hello world
+OPTIONS:
+  REQUIREMENT_IN_TOC: True
+</pre>
+</div>
+
+    </div></section>
+
+</article><article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
     <div data-role='anchor' id="4.2.2-Requirement"></div>
 
     
         <h3
 class="section-title"
-data-level="4.2.2"
->Requirement
+data-level="4.2.2">
+  4.2.2.&nbsp;Requirement
 </h3>
     
 
@@ -836,8 +904,8 @@ STATEMENT: StrictDoc shall enable requirements management.
     
         <h4
 class="section-title"
-data-level="4.2.2.1"
->UID
+data-level="4.2.2.1">
+  4.2.2.1.&nbsp;UID
 </h4>
     
 
@@ -879,8 +947,8 @@ STATEMENT: STATEMENT: StrictDoc shall be based on a well-defined data model.
     
         <h4
 class="section-title"
-data-level="4.2.2.2"
->References
+data-level="4.2.2.2">
+  4.2.2.2.&nbsp;References
 </h4>
     
 
@@ -923,8 +991,8 @@ requirements connected with a reference have <tt class="docutils literal">UID</t
     
         <h4
 class="section-title"
-data-level="4.2.2.3"
->Comment
+data-level="4.2.2.3">
+  4.2.2.3.&nbsp;Comment
 </h4>
     
 
@@ -963,8 +1031,8 @@ Each line is rendered as a separate paragraph.
     
         <h4
 class="section-title"
-data-level="4.2.2.4"
->Rationale
+data-level="4.2.2.4">
+  4.2.2.4.&nbsp;Rationale
 </h4>
     
 
@@ -998,8 +1066,8 @@ RATIONALE: The presence of the REQ-001 is justified.
     
         <h3
 class="section-title"
-data-level="4.2.3"
->Section
+data-level="4.2.3">
+  4.2.3.&nbsp;Section
 </h3>
     
 
@@ -1045,8 +1113,8 @@ STATEMENT: ...
     
         <h4
 class="section-title"
-data-level="4.2.3.1"
->Nesting sections
+data-level="4.2.3.1">
+  4.2.3.1.&nbsp;Nesting sections
 </h4>
     
 
@@ -1088,8 +1156,8 @@ sections will have their titles numbered accordingly: <tt class="docutils litera
     
         <h4
 class="section-title"
-data-level="4.2.3.2"
->Free text
+data-level="4.2.3.2">
+  4.2.3.2.&nbsp;Free text
 </h4>
     
 
@@ -1137,8 +1205,8 @@ statements in the document.</p>
     
         <h4
 class="section-title"
-data-level="4.2.3.3"
->Section without a level
+data-level="4.2.3.3">
+  4.2.3.3.&nbsp;Section without a level
 </h4>
     
 
@@ -1186,8 +1254,8 @@ are set to <tt class="docutils literal">LEVEL: None</tt> by StrictDoc automatica
     
         <h3
 class="section-title"
-data-level="4.2.4"
->Composite requirement
+data-level="4.2.4">
+  4.2.4.&nbsp;Composite requirement
 </h3>
     
 
@@ -1236,8 +1304,8 @@ elements should do the job.</p>
     
         <h3
 class="section-title"
-data-level="4.2.5"
->Include files
+data-level="4.2.5">
+  4.2.5.&nbsp;Include files
 </h3>
     
 
@@ -1319,8 +1387,8 @@ TITLE: Sub section
     
         <h2
 class="section-title"
-data-level="4.3"
->Custom grammars
+data-level="4.3">
+  4.3.&nbsp;Custom grammars
 </h2>
     
 
@@ -1388,8 +1456,8 @@ grammar.</p>
     
         <h3
 class="section-title"
-data-level="4.3.1"
->Supported field types
+data-level="4.3.1">
+  4.3.1.&nbsp;Supported field types
 </h3>
     
 
@@ -1461,8 +1529,8 @@ COMMENT: Test comment.
     
         <h3
 class="section-title"
-data-level="4.3.2"
->Reserved fields
+data-level="4.3.2">
+  4.3.2.&nbsp;Reserved fields
 </h3>
     
 
@@ -1522,8 +1590,8 @@ comment.</td>
     
         <h1
 class="section-title"
-data-level="5"
->Markup
+data-level="5">
+  5.&nbsp;Markup
 </h1>
     
 
@@ -1550,8 +1618,8 @@ for a full reference.</p>
     
         <h2
 class="section-title"
-data-level="5.1"
->Images
+data-level="5.1">
+  5.1.&nbsp;Images
 </h2>
     
 
@@ -1580,8 +1648,8 @@ data-level="5.1"
     
         <h1
 class="section-title"
-data-level="6"
->Export formats
+data-level="6">
+  6.&nbsp;Export formats
 </h1>
     
 
@@ -1598,8 +1666,8 @@ data-level="6"
     
         <h2
 class="section-title"
-data-level="6.1"
->HTML documentation tree by StrictDoc
+data-level="6.1">
+  6.1.&nbsp;HTML documentation tree by StrictDoc
 </h2>
     
 
@@ -1630,8 +1698,8 @@ folder is <tt class="docutils literal">output</tt>.</p>
     
         <h3
 class="section-title"
-data-level="6.1.1"
->Mathjax support
+data-level="6.1.1">
+  6.1.1.&nbsp;Mathjax support
 </h3>
     
 
@@ -1668,8 +1736,8 @@ $$
     
         <h3
 class="section-title"
-data-level="6.1.2"
->Standalone HTML pages (experimental)
+data-level="6.1.2">
+  6.1.2.&nbsp;Standalone HTML pages (experimental)
 </h3>
     
 
@@ -1698,8 +1766,8 @@ a single document instead of a documentation tree with multiple documents.</p>
     
         <h2
 class="section-title"
-data-level="6.2"
->HTML export via Sphinx
+data-level="6.2">
+  6.2.&nbsp;HTML export via Sphinx
 </h2>
     
 
@@ -1733,8 +1801,8 @@ is generated this way, see the Invoke task:
     
         <h2
 class="section-title"
-data-level="6.3"
->PDF export via Sphinx/LaTeX
+data-level="6.3">
+  6.3.&nbsp;PDF export via Sphinx/LaTeX
 </h2>
     
 
@@ -1768,8 +1836,8 @@ is generated this way, see the Invoke task:
     
         <h1
 class="section-title"
-data-level="7"
->Traceability between requirements and source code
+data-level="7">
+  7.&nbsp;Traceability between requirements and source code
 </h1>
     
 
@@ -1836,8 +1904,8 @@ the example of requirements-to-source-code traceability.</p>
     
         <h1
 class="section-title"
-data-level="8"
->ReqIF support
+data-level="8">
+  8.&nbsp;ReqIF support
 </h1>
     
 
@@ -1875,8 +1943,8 @@ management tools.</li>
     
         <h2
 class="section-title"
-data-level="8.1"
->Import flow (ReqIF -> SDoc):
+data-level="8.1">
+  8.1.&nbsp;Import flow (ReqIF -> SDoc):
 </h2>
     
 
@@ -1909,8 +1977,8 @@ used.</li>
     
         <h2
 class="section-title"
-data-level="8.2"
->Export flow (SDoc -> ReqIF)
+data-level="8.2">
+  8.2.&nbsp;Export flow (SDoc -> ReqIF)
 </h2>
     
 
@@ -1943,8 +2011,8 @@ library.</li>
     
         <h2
 class="section-title"
-data-level="8.3"
->ReqIF implementation details
+data-level="8.3">
+  8.3.&nbsp;ReqIF implementation details
 </h2>
     
 
@@ -1983,8 +2051,8 @@ documentation.</p>
     
         <h1
 class="section-title"
-data-level="9"
->Excel support
+data-level="9">
+  9.&nbsp;Excel support
 </h1>
     
 
@@ -2011,8 +2079,8 @@ requirement fields.</p>
     
         <h2
 class="section-title"
-data-level="9.1"
->Import flow (Excel XLS -> SDoc):
+data-level="9.1">
+  9.1.&nbsp;Import flow (Excel XLS -> SDoc):
 </h2>
     
 
@@ -2042,8 +2110,8 @@ library.</li>
     
         <h2
 class="section-title"
-data-level="9.2"
->Export flow (SDoc -> Excel XLSX)
+data-level="9.2">
+  9.2.&nbsp;Export flow (SDoc -> Excel XLSX)
 </h2>
     
 
@@ -2073,8 +2141,8 @@ the <tt class="docutils literal">XlsWriter</tt> library</li>
     
         <h1
 class="section-title"
-data-level="10"
->Options
+data-level="10">
+  10.&nbsp;Options
 </h1>
     
 
@@ -2091,8 +2159,8 @@ data-level="10"
     
         <h2
 class="section-title"
-data-level="10.1"
->Project title
+data-level="10.1">
+  10.1.&nbsp;Project title
 </h2>
     
 
@@ -2119,8 +2187,8 @@ strictdoc export --project-title &quot;My Project&quot; .
     
         <h2
 class="section-title"
-data-level="10.2"
->Parallelization
+data-level="10.2">
+  10.2.&nbsp;Parallelization
 </h2>
     
 
@@ -2155,8 +2223,8 @@ all export options and is disabled with this option as well.</p>
     
         <h1
 class="section-title"
-data-level="11"
->StrictDoc and other tools
+data-level="11">
+  11.&nbsp;StrictDoc and other tools
 </h1>
     
 
@@ -2173,8 +2241,8 @@ data-level="11"
     
         <h2
 class="section-title"
-data-level="11.1"
->StrictDoc and Doorstop
+data-level="11.1">
+  11.1.&nbsp;StrictDoc and Doorstop
 </h2>
     
 
@@ -2240,8 +2308,8 @@ to/from Doorstop format.</p>
     
         <h2
 class="section-title"
-data-level="11.2"
->StrictDoc and Sphinx
+data-level="11.2">
+  11.2.&nbsp;StrictDoc and Sphinx
 </h2>
     
 
@@ -2277,8 +2345,8 @@ website by readthedocs which uses Sphinx under the hood. The
     
         <h2
 class="section-title"
-data-level="11.3"
->StrictDoc and Sphinx-Needs
+data-level="11.3">
+  11.3.&nbsp;StrictDoc and Sphinx-Needs
 </h2>
     
 

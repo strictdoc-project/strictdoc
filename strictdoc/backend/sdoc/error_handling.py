@@ -34,10 +34,24 @@ class StrictDocSemanticError(Exception):
         )
 
     @staticmethod
-    def unregistered_field(field_name, line=None, col=None, filename=None):
+    def unregistered_field(
+        *,
+        field_name: str,
+        requirement: Requirement,
+        document_grammar: DocumentGrammar,
+        line=None,
+        col=None,
+        filename=None,
+    ):
+        grammar_dump = document_grammar.dump_fields(
+            requirement.requirement_type
+        )
         return StrictDocSemanticError(
             title=f"Invalid requirement field: {field_name}",
-            hint=None,
+            hint=(
+                f"Compare with the document grammar: [{grammar_dump}] "
+                f"for type: {requirement.requirement_type}"
+            ),
             example=None,
             line=line,
             col=col,

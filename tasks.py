@@ -417,14 +417,19 @@ def release_test(context):
 @task
 def watch(context, sdocs_path):
     paths_to_watch = "." if sdocs_path == "." else f". {sdocs_path}"
+    strictdoc_command = (
+        f"python strictdoc/cli/main.py "
+        f'export "{sdocs_path}" --output-dir=output/'
+    )
     run_invoke_cmd(
         context,
         f"""
+        {strictdoc_command} &&
         watchmedo shell-command
         --patterns="*.py;*.sdoc;*.html;*.css"
         --recursive
         --ignore-pattern='output/;tests/integration'
-        --command='python strictdoc/cli/main.py export "{sdocs_path}" --output-dir=output/'
+        --command='{strictdoc_command}'
         --drop
         {paths_to_watch}
         """,

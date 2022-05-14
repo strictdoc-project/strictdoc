@@ -1,5 +1,8 @@
 <h{{ requirement.ng_level }}
 class="section-title"
-data-level="{{ requirement.context.title_number_string }}"
->{{ requirement.title if requirement.title else (requirement.uid if requirement.uid else '[no title]') }}
+data-level="{{ requirement.context.title_number_string }}">
+  {%- if requirement.context.title_number_string %}
+  {{ requirement.context.title_number_string }}.&nbsp;
+  {%- endif -%}
+  {{ requirement.title }}
 </h{{ requirement.ng_level }}>

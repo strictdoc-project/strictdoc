@@ -3,21 +3,27 @@
 data-status='{{ requirement.status.lower() }}'
 {%- endif %}>
 
-  {% include "_shared/requirement_block/ancor.jinja.html" %}
-  {% include "_shared/requirement_block/h_title.jinja.html" %}
-
+  {# {% include "_shared/requirement_block/h_title.jinja.html" %} #}
   <table class="requirement-table">
 
-    <caption>
-      {{ requirement.title if requirement.title else '[no title]' }}
-    </caption>
 
-      {# <th>
-        Title:
-      </th>
-      <td>
-        {{ requirement.title if requirement.title else '[no title]' }}
-      </td> #}
+    {%- if requirement.title %}
+    <caption>
+    {% include "_shared/requirement_block/ancor.jinja.html" %}
+    <div class="section-title">
+      {%- if requirement.context.title_number_string -%}
+      {{ requirement.context.title_number_string }}.&nbsp;
+      {%- endif -%}
+      {{ requirement.title }}
+      </div>
+    </caption>
+    {# <th>
+      Title:
+    </th>
+    <td>
+      {{ requirement.title }}
+    </td> #}
+    {%- endif %}
 
     {# {% include "_shared/requirement_block/meta.jinja.html" %} #}
     {%- if requirement.has_meta -%}

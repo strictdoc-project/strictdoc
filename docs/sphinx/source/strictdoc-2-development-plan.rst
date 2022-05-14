@@ -115,7 +115,7 @@ There are two user interfaces for StrictDoc:
 The CLI interface is already developed, the web interface is (slow)
 work-in-progress.
 
-.. _FRONTEND-1-TEXT:
+.. _UI-1-TEXT:
 
 Command-line interface
 ----------------------
@@ -125,7 +125,7 @@ Command-line interface
     :header-rows: 0
 
     * - **UID:**
-      - FRONTEND-1-TEXT
+      - UI-1-TEXT
 
 StrictDoc shall provide a command-line interface.
 
@@ -133,7 +133,7 @@ StrictDoc shall provide a command-line interface.
 
 - ``[BACKLOG-LSP]`` :ref:`BACKLOG-LSP`
 
-.. _FRONTEND-2-WEB:
+.. _UI-2-WEB:
 
 Web interface
 -------------
@@ -143,7 +143,7 @@ Web interface
     :header-rows: 0
 
     * - **UID:**
-      - FRONTEND-2-WEB
+      - UI-2-WEB
 
 StrictDoc shall provide a web interface.
 

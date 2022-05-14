@@ -148,6 +148,12 @@ class SDocParsingProcessor:
             cursor.ng_has_requirements = True
             cursor = cursor.parent
 
+        if (
+            composite_requirement.title is None
+            or not self.parse_context.document_config.is_requirement_in_toc()
+        ) and self.parse_context.document_config.auto_levels:
+            composite_requirement.level = "None"
+
     def process_requirement(self, requirement: Requirement):
         document_grammar = self.parse_context.document_grammar
         if (
@@ -203,6 +209,12 @@ class SDocParsingProcessor:
             if isinstance(cursor, Fragment):
                 break
             cursor = cursor.parent
+
+        if (
+            requirement.title is None
+            or not self.parse_context.document_config.is_requirement_in_toc()
+        ) and self.parse_context.document_config.auto_levels:
+            requirement.level = "None"
 
     def process_free_text(self, free_text):
         if isinstance(free_text.parent, Section):

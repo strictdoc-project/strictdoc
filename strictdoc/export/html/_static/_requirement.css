@@ -87,37 +87,35 @@ article > section:last-of-type {
 .table-view [data-section] p:first-child { margin-top: 0; }
 .table-view [data-section] p:last-child { margin-bottom: 0; }
 
-.table-view [data-section="meta"] {
+/* .table-view [data-section="meta"] {
   padding: 0;
-}
+} */
 
-.table-view [data-section="meta"] > .section-title {
+/* .table-view [data-section="meta"] > .section-title {
   padding: var(--base-padding);
-}
+} */
 
 .table-view [data-section="meta"] > .requirement_meta {
-  gap: 1px;
+  gap: 0;
   border-width: 1px;
   border-color: #ddd;
   background-color: #ddd;
-  margin-top: 0;
+  /* margin-top: 0; */
   padding: 0;
-  border-left: none;
-  border-right: none;
   width: 100%;
 }
 
-.table-view [data-section="meta"] > .requirement_meta dt {
+/* .table-view [data-section="meta"] > .requirement_meta dt {
   padding-left: var(--base-padding);
-}
+} */
 
 .table-view [data-section="meta"] > .requirement_meta dt i {
   max-width: 100px;
 }
 
-.table-view [data-section="meta"] > .requirement_link {
+/* .table-view [data-section="meta"] > .requirement_link {
   padding: 0 var(--base-padding);
-}
+} */
 
 /* requirement_statement */
 
@@ -152,13 +150,13 @@ h6 { font-size: 1em; }
 .section-title {
   margin: 0;
   line-height: 1.6;
-  color: var(--color-accent);
+  /* color: var(--color-accent); */
 }
 
-.section-title[data-level]::before {
+/* .section-title[data-level]::before {
   content: attr(data-level) " ";
   font-weight: bold;
-}
+} */
 
 .traceability-view .section-title,
 .deep-traceability-view .section-title {
@@ -254,7 +252,12 @@ dl.requirement_meta {
   background-color: #ddd;
 
   width: fit-content;
-  margin: 1rem 0;
+  margin: 0;
+  margin-bottom: 1rem;
+}
+
+.section-title + dl.requirement_meta {
+  margin-top: 1rem;
 }
 
 .requirement_meta dt,
@@ -512,6 +515,16 @@ input:checked + .std-switch_slider:before {
   background-color: var(--color-bg-main);
   margin-bottom: -1px;
   font-size: 1.2em;
+  padding: 0;
+}
+
+.requirement-table caption .section-title {
+  padding: .5rem 1rem;
+}
+
+.requirement-table td,
+.requirement-table th {
+  padding: .5rem 1rem;
 }
 
 .requirement-table th {
@@ -520,13 +533,12 @@ input:checked + .std-switch_slider:before {
   font-weight: normal;
   text-transform: uppercase;
   font-family: 'Courier New', Courier, monospace;
-  width: 10%;
+  width: 20%;
 }
 
 .requirement-table td,
 .requirement-table th,
 .requirement-table caption {
-  padding: .5rem 1rem;
   border: 1px solid #666;
 }
 

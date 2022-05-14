@@ -37,6 +37,8 @@ def validate_requirement(
         if field_name not in registered_fields:
             raise StrictDocSemanticError.unregistered_field(
                 field_name=field_name,
+                requirement=requirement,
+                document_grammar=document_grammar,
                 **get_location(requirement),
             )
 

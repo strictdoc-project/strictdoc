@@ -2,6 +2,7 @@
 TITLE: StrictDoc Development Plan
 OPTIONS:
   REQUIREMENT_STYLE: Table
+  REQUIREMENT_IN_TOC: True
 
 [FREETEXT]
 This document presents the goals of the StrictDoc project and describes how the

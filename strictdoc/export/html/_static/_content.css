@@ -105,7 +105,7 @@
 
 .table-view [data-section="meta"].docsection_section:only-child {
   grid-column: 1 / -1;
-  background-color: var(--color-bg-main);
+  /* background-color: var(--color-bg-main); */
 }
 
 .table-view [data-section="description"] {

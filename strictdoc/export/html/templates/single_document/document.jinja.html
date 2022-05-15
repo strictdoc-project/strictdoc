@@ -29,6 +29,34 @@
 {% endblock header_content %}
 
 {% block content %}
+  {%- if document.config.has_meta() -%}
+      <div class="content_meta">
+      <h1>{{document.title}}</h1>
+        <table>
+          {%- if document.config.version -%}
+          <tr>
+            <th>
+              VERSION:
+            </th>
+            <td>
+              {{document.config.version}}
+            </td>
+          </tr>
+          {%- endif -%}
+          {%- if document.config.number -%}
+          <tr>
+            <th>
+              NUMBER:
+            </th>
+            <td>
+              {{document.config.number}}
+            </td>
+          </tr>
+          {%- endif -%}
+        </table>
+      </div>
+    {%- endif -%}
+
       <div class="content">
 
         {%- if document.free_texts -%}

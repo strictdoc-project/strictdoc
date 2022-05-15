@@ -360,9 +360,10 @@ def dump_grammar(context, output_file):
 def check_dead_links(context):
     command = """
         python3 tools/link_health.py docs/strictdoc-1-user-manual.sdoc &&
-        python3 tools/link_health.py docs/strictdoc-2-requirements.sdoc &&
-        python3 tools/link_health.py docs/strictdoc-3-development-plan.sdoc &&
-        python3 tools/link_health.py docs/strictdoc-4-backlog.sdoc
+        python3 tools/link_health.py docs/strictdoc-2-development-plan.sdoc &&
+        python3 tools/link_health.py docs/strictdoc-3-requirements.sdoc &&
+        python3 tools/link_health.py docs/strictdoc-4-design.sdoc &&
+        python3 tools/link_health.py docs/strictdoc-5-backlog.sdoc
     """
     run_invoke_cmd(context, command)
 

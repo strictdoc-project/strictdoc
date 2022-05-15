@@ -45,9 +45,9 @@ class SDWriter:
                 output += f"VERSION: {version}"
                 output += "\n"
 
-            number = document_config.number
-            if number:
-                output += f"NUMBER: {number}"
+            uid = document_config.uid
+            if uid:
+                output += f"UID: {uid}"
                 output += "\n"
 
             markup = document_config.markup

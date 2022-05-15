@@ -60,7 +60,7 @@ class DocumentBuilder:
         config = DocumentConfig(
             parent=None,
             version="0.0.1",
-            number="DOC-1",
+            uid="DOC-1",
             markup=None,
             auto_levels=None,
             requirement_style=None,

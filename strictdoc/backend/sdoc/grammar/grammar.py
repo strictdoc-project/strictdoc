@@ -63,8 +63,8 @@ BooleanChoice[noskipws]:
 ;
 
 DocumentConfig[noskipws]:
+  ('UID: ' uid = /.*$/ '\n')?
   ('VERSION: ' version = /.*$/ '\n')?
-  ('NUMBER: ' number = /.*$/ '\n')?
 
   ('OPTIONS:' '\n'
     ('  MARKUP: ' (markup = MarkupChoice) '\n')?

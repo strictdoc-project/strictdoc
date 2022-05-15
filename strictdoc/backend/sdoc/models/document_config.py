@@ -7,7 +7,7 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         return DocumentConfig(
             parent=document,
             version=None,
-            number=None,
+            uid=None,
             markup=None,
             auto_levels=None,
             requirement_style=None,
@@ -19,7 +19,7 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         *,
         parent,
         version: Optional[str],
-        number: Optional[str],
+        uid: Optional[str],
         markup: Optional[str],
         auto_levels: Optional[str],
         requirement_style: Optional[str],
@@ -27,7 +27,7 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
     ):
         self.parent = parent
         self.version: Optional[str] = version
-        self.number: Optional[str] = number
+        self.uid: Optional[str] = uid
         self.markup = markup
         self.auto_levels: bool = auto_levels is None or auto_levels == "On"
         self.requirement_style: Optional[str] = requirement_style
@@ -45,4 +45,9 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         )
 
     def has_meta(self):
-        return self.number is not None or self.version is not None
+        # TODO: When OPTIONS are not provided to a document, the self.number and
+        # self.version are both None. Otherwise, they become empty strings "".
+        # This issue might deserve a bug report to TextX.
+        return (self.uid is not None and len(self.uid) > 0) or (
+            self.version is not None and len(self.version) > 0
+        )

@@ -604,7 +604,7 @@ def test_071_document_config_number():
     input = """
 [DOCUMENT]
 TITLE: Test Doc
-NUMBER: SDOC-01
+UID: SDOC-01
 
 [REQUIREMENT]
 REFS:
@@ -618,7 +618,7 @@ REFS:
     assert isinstance(document, Document)
 
     document: Document = reader.read(input)
-    assert document.config.number == "SDOC-01"
+    assert document.config.uid == "SDOC-01"
 
     writer = SDWriter()
     output = writer.write(document)

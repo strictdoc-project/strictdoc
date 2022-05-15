@@ -18,16 +18,16 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         self,
         *,
         parent,
-        version,
-        number,
+        version: Optional[str],
+        number: Optional[str],
         markup: Optional[str],
         auto_levels: Optional[str],
         requirement_style: Optional[str],
         requirement_in_toc: Optional[str],
     ):
         self.parent = parent
-        self.version = version
-        self.number = number
+        self.version: Optional[str] = version
+        self.number: Optional[str] = number
         self.markup = markup
         self.auto_levels: bool = auto_levels is None or auto_levels == "On"
         self.requirement_style: Optional[str] = requirement_style
@@ -43,3 +43,6 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         return (
             self.requirement_in_toc is None or self.requirement_in_toc == "True"
         )
+
+    def has_meta(self):
+        return self.number is not None or self.version is not None

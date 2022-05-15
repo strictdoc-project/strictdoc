@@ -87,35 +87,17 @@ article > section:last-of-type {
 .table-view [data-section] p:first-child { margin-top: 0; }
 .table-view [data-section] p:last-child { margin-bottom: 0; }
 
-/* .table-view [data-section="meta"] {
-  padding: 0;
-} */
-
-/* .table-view [data-section="meta"] > .section-title {
-  padding: var(--base-padding);
-} */
-
 .table-view [data-section="meta"] > .requirement_meta {
-  gap: 0;
   border-width: 1px;
   border-color: #ddd;
   background-color: #ddd;
-  /* margin-top: 0; */
   padding: 0;
   width: 100%;
 }
 
-/* .table-view [data-section="meta"] > .requirement_meta dt {
-  padding-left: var(--base-padding);
-} */
-
 .table-view [data-section="meta"] > .requirement_meta dt i {
   max-width: 100px;
 }
-
-/* .table-view [data-section="meta"] > .requirement_link {
-  padding: 0 var(--base-padding);
-} */
 
 /* requirement_statement */
 

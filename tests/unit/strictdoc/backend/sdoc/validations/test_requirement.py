@@ -31,7 +31,7 @@ def test_04_meta_multilines_not_nones():
     document_config = DocumentConfig(
         parent=None,
         version=None,
-        number=None,
+        uid=None,
         markup=None,
         auto_levels=None,
         requirement_style=None,

@@ -33,6 +33,16 @@
       <div class="content_meta">
       <h1>{{document.title}}</h1>
         <table>
+          {%- if document.config.uid -%}
+          <tr>
+            <th>
+              UID:
+            </th>
+            <td>
+              {{document.config.uid}}
+            </td>
+          </tr>
+          {%- endif -%}
           {%- if document.config.version -%}
           <tr>
             <th>
@@ -40,16 +50,6 @@
             </th>
             <td>
               {{document.config.version}}
-            </td>
-          </tr>
-          {%- endif -%}
-          {%- if document.config.number -%}
-          <tr>
-            <th>
-              NUMBER:
-            </th>
-            <td>
-              {{document.config.number}}
             </td>
           </tr>
           {%- endif -%}

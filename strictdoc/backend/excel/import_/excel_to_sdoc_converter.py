@@ -128,7 +128,7 @@ class ExcelToSDocConverter:
         document_config = DocumentConfig(
             parent=None,
             version=None,
-            number=None,
+            uid=None,
             markup=None,
             auto_levels=None,
             requirement_style=None,

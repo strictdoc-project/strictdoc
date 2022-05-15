@@ -45,4 +45,11 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         )
 
     def has_meta(self):
-        return self.number is not None or self.version is not None
+        # TODO: When OPTIONS are not provided to a document, the self.number and
+        # self.version are both None. Otherwise, they become empty strings "".
+        # This issue might deserve a bug report to TextX.
+        return (
+            (self.number is not None and len(self.number) > 0)
+            or
+            (self.version is not None and len(self.version) > 0)
+        )

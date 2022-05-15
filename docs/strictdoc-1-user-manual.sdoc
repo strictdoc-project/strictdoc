@@ -1,5 +1,8 @@
 [DOCUMENT]
 TITLE: StrictDoc User Manual
+OPTIONS:
+  REQUIREMENT_STYLE: Inline
+  REQUIREMENT_IN_TOC: True
 
 [SECTION]
 TITLE: Introduction

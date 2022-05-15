@@ -272,9 +272,9 @@
 
 /* hover */
 
-.requirement-tree_node:hover + .requirement-tree::before,
+/* .requirement-tree_node:hover + .requirement-tree::before,
 .requirement-tree_node:hover + .requirement-tree .requirement-tree::before,
 .requirement-tree_node:hover + .requirement-tree .requirement-tree_branch::before,
 .requirement-tree_node:hover + .requirement-tree .requirement-tree_branch::after {
   border-width: 2px;
-}
+} */

@@ -1,5 +1,5 @@
-StrictDoc Design Document
-$$$$$$$$$$$$$$$$$$$$$$$$$
+Design Document
+$$$$$$$$$$$$$$$
 
 Design decisions
 ================

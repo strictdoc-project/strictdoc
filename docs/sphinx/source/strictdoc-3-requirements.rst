@@ -1,5 +1,5 @@
-StrictDoc Requirements
-$$$$$$$$$$$$$$$$$$$$$$
+Requirements
+$$$$$$$$$$$$
 
 High-level requirements
 =======================

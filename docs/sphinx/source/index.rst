@@ -9,3 +9,4 @@ Welcome to StrictDoc's documentation!
    strictdoc-3-requirements
    strictdoc-4-design
    strictdoc-5-backlog
+   strictdoc-6-contributing

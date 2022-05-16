@@ -1,5 +1,5 @@
-StrictDoc User Manual
-$$$$$$$$$$$$$$$$$$$$$
+User Manual
+$$$$$$$$$$$
 
 Introduction
 ============

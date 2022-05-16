@@ -1,5 +1,5 @@
-StrictDoc Development Plan
-$$$$$$$$$$$$$$$$$$$$$$$$$$
+Development Plan
+$$$$$$$$$$$$$$$$
 
 This document presents the goals of the StrictDoc project and describes how the
 project is developed.

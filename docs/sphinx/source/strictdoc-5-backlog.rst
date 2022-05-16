@@ -1,5 +1,5 @@
-StrictDoc Backlog
-$$$$$$$$$$$$$$$$$
+Backlog
+$$$$$$$
 
 **Note:** The items below are weakly sorted from top to bottom. The topmost
 items are either work-in-progress or will be implemented next.

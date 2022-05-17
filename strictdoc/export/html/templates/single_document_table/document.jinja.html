@@ -32,6 +32,34 @@
 
       {% include "_shared/tags.jinja.html" %}
 
+    {%- if document.config.has_meta() -%}
+      <div class="content_meta">
+      <h1>{{document.title}}</h1>
+        <table>
+          {%- if document.config.uid -%}
+          <tr>
+            <th>
+              UID:
+            </th>
+            <td>
+              {{document.config.uid}}
+            </td>
+          </tr>
+          {%- endif -%}
+          {%- if document.config.version -%}
+          <tr>
+            <th>
+              VERSION:
+            </th>
+            <td>
+              {{document.config.version}}
+            </td>
+          </tr>
+          {%- endif -%}
+        </table>
+      </div>
+    {%- endif -%}
+
       <div class="content">
 
         {%- if document.free_texts -%}

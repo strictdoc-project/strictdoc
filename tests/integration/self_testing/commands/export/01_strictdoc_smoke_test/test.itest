@@ -25,3 +25,13 @@ RUN: %check_exists --file %S/Output/html/docs/strictdoc-5-backlog.html
 RUN: %check_exists --file "%S/Output/html/docs/strictdoc-5-backlog-TABLE.html"
 RUN: %check_exists --file "%S/Output/html/docs/strictdoc-5-backlog-TRACE.html"
 RUN: %check_exists --file "%S/Output/html/docs/strictdoc-5-backlog-DEEP-TRACE.html"
+
+RUN: %check_exists --file %S/Output/html/docs/strictdoc-6-contributing.html
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-6-contributing-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-6-contributing-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-6-contributing-DEEP-TRACE.html"
+
+RUN: %check_exists --file %S/Output/html/docs/strictdoc-7-faq.html
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-7-faq-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-7-faq-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/docs/strictdoc-7-faq-DEEP-TRACE.html"

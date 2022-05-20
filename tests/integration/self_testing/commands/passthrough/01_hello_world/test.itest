@@ -12,3 +12,6 @@ RUN: %diff "%strictdoc_root/docs/strictdoc-4-design.sdoc" "%S/Output/strictdoc-4
 
 RUN: %strictdoc passthrough "%strictdoc_root/docs/strictdoc-5-backlog.sdoc" --output-file="%S/Output/strictdoc-5-backlog.sdoc"
 RUN: %diff "%strictdoc_root/docs/strictdoc-5-backlog.sdoc" "%S/Output/strictdoc-5-backlog.sdoc"
+
+RUN: %strictdoc passthrough "%strictdoc_root/docs/strictdoc-7-faq.sdoc" --output-file="%S/Output/strictdoc-7-faq.sdoc"
+RUN: %diff "%strictdoc_root/docs/strictdoc-7-faq.sdoc" "%S/Output/strictdoc-7-faq.sdoc"

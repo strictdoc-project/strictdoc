@@ -10,3 +10,4 @@ Welcome to StrictDoc's documentation!
    strictdoc-4-design
    strictdoc-5-backlog
    strictdoc-6-contributing
+   strictdoc-7-faq

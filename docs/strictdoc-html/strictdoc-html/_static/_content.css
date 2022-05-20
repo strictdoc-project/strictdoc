@@ -129,8 +129,12 @@
 .content_meta {
   display: block;
   background-color: var(--color-bg-contrast);
-  max-width: 900px;
   padding: calc(var(--base-padding)*2);
+}
+
+.document-view .content_meta {
+  max-width: 900px;
+  padding-bottom: 0;
 }
 
 .content_meta table {

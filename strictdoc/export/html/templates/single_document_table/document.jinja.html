@@ -96,7 +96,7 @@
    </th>
     {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
       {%- set field_value = requirement.get_meta_field_value_by_title(meta_field_title) %}
-      <td>
+      <td class="td-meta">
         {%- if field_value %}
         {{ field_value }}
         {%- endif -%}
@@ -120,7 +120,7 @@
   <tr>
    <th>Section</th>
    {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
-      <td></td>
+      <td class="td-meta"></td>
     {%- endfor -%}
     <td class="td-title" colspan="4">{%- if section.title %}{{ section.title }}{%- endif -%}</td>
   </tr>
@@ -130,8 +130,8 @@
     <tr>
       <th>Free text</th>
       {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
-      <td></td>
-    {%- endfor -%}
+      <td class="td-meta"></td>
+      {%- endfor -%}
       {# мы не будем знать, сколько здесь колонок, когла будем обходить мету #}
       <td colspan="5">
         {{ renderer.render_free_text(document_type, free_text) }}

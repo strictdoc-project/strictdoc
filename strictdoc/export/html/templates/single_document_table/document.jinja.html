@@ -165,7 +165,7 @@
     <td class="td-title">
       {%- if requirement.title %}
       {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
-      {% include "_shared/requirement_block/ancor.jinja.html" %}
+      {% include "_shared/requirement_block/anchor.jinja.html" %}
       {%- endwith %}
       <div class="section-title">
         {{ requirement.title }}
@@ -195,7 +195,7 @@
     <td class="td-title" colspan="4">
       {%- if section.title %}
       {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
-      {% include "_shared/requirement_block/ancor.jinja.html" %}
+      {% include "_shared/requirement_block/anchor.jinja.html" %}
       {%- endwith %}
       <div class="section-title">
         {{ section.title }}

@@ -5,10 +5,26 @@ OPTIONS:
   REQUIREMENT_IN_TOC: True
 
 [SECTION]
-TITLE: StrictDoc and other tools
+TITLE: Blog posts about StrictDoc
+
+[FREETEXT]
+`Requirement Traceability with All Substance and No Fuss
+<https://www.bugseng.com/blog/requirement-traceability-all-substance-and-no-fuss>`_
+by BUGSENG.
+
+`Text-Based Requirement Management with StrictDoc
+<https://python.plainenglish.io/text-based-requirement-management-with-strictdoc-b03c1098a3c9>`_
+by Florian Kromer.
+
+[/FREETEXT]
+
+[/SECTION]
 
 [SECTION]
-TITLE: StrictDoc and Doorstop
+TITLE: How StrictDoc compares to other tools?
+
+[SECTION]
+TITLE: Doorstop
 
 [FREETEXT]
 The StrictDoc project is a close successor of another project called
@@ -63,7 +79,7 @@ to/from Doorstop format.
 [/SECTION]
 
 [SECTION]
-TITLE: StrictDoc and Sphinx
+TITLE: Sphinx
 
 [FREETEXT]
 Both Sphinx and StrictDoc are both documentation generators but StrictDoc is at
@@ -87,7 +103,7 @@ website by readthedocs which uses Sphinx under the hood. The
 [/SECTION]
 
 [SECTION]
-TITLE: StrictDoc and Sphinx-Needs
+TITLE: Sphinx-Needs
 
 [FREETEXT]
 `Sphinx-Needs <https://sphinxcontrib-needs.readthedocs.io/en/latest/>`_ is a
@@ -142,6 +158,30 @@ The difference between Sphinx-Needs and StrictDoc:
   and
   `others
   <https://sphinxcontrib-needs.readthedocs.io/en/latest/index.html>`_.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: FRET
+
+[FREETEXT]
+`FRET <https://github.com/NASA-SW-VnV/fret>`_ is a framework for the
+elicitation, specification, formalization and understanding of requirements.
+
+    - Users enter system requirements in a specialized natural language.
+    - FRET helps understanding and review of semantics by utilizing a variety of forms
+      for each requirement: natural language description, formal mathematical logics,
+      and diagrams.
+    - Requirements can be defined in a hierarchical fashion and can be exported
+      in a variety of forms to be used by analysis tools.
+
+FRET has an impressive list of
+`Publications <https://github.com/NASA-SW-VnV/fret/blob/master/PUBLICATIONS.md>`_.
+
+FRET's user interface is built with Electron.
+
+The detailed comparison is coming.
 [/FREETEXT]
 
 [/SECTION]

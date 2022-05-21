@@ -363,7 +363,9 @@ def check_dead_links(context):
         python3 tools/link_health.py docs/strictdoc-2-development-plan.sdoc &&
         python3 tools/link_health.py docs/strictdoc-3-requirements.sdoc &&
         python3 tools/link_health.py docs/strictdoc-4-design.sdoc &&
-        python3 tools/link_health.py docs/strictdoc-5-backlog.sdoc
+        python3 tools/link_health.py docs/strictdoc-5-backlog.sdoc &&
+        python3 tools/link_health.py docs/strictdoc-6-contributing.sdoc &&
+        python3 tools/link_health.py docs/strictdoc-7-faq.sdoc
     """
     run_invoke_cmd(context, command)
 

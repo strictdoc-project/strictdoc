@@ -135,8 +135,43 @@
         {%- endfor %}
         </ul>
       {%- endif %}
+
+      {%- if config.experimental_enable_file_traceability -%}
+      {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
+      {%- if requirement_file_links %}
+      Source files:
+      <ul class="requirement_link">
+        {%- for link, opt_ranges in requirement_file_links %}
+          {%- if opt_ranges -%}
+            {%- for range in opt_ranges %}
+              <li>
+                <a class="requirement_link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
+                  {{ link.path }}, <i>lines: {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }}</i>
+                </a>
+              </li>
+            {%- endfor -%}
+          {%- else -%}
+            <li>
+              <a class="requirement_link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.uid }}">
+                {{ link.path }}
+              </a>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+      {%- endif %}
+      {%- endif %}
     </td>
-    <td class="td-title">{%- if requirement.title %}{{ requirement.title }}{%- endif -%}</td>
+    <td class="td-title">
+      {%- if requirement.title %}
+      {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
+      {% include "_shared/requirement_block/ancor.jinja.html" %}
+      {%- endwith %}
+      <div class="section-title">
+        {{ requirement.title }}
+      </div>
+    {%- endif -%}
+    </td>
     <td class="td-content">{%- if requirement.statement or requirement.statement_multiline -%}{{ renderer.render_requirement_statement(requirement) }}{%- endif -%}</td>
     <td class="td-content">{%- if requirement.rationale or requirement.rationale_multiline -%}{{ renderer.render_requirement_rationale(requirement) }}{%- endif -%}</td>
     <td class="td-content">
@@ -157,7 +192,16 @@
       <td class="td-meta"></td>
     {%- endfor -%}
     <td class="td-meta">{# Children & Parents #}</td>
-    <td class="td-title" colspan="4">{%- if section.title %}{{ section.title }}{%- endif -%}</td>
+    <td class="td-title" colspan="4">
+      {%- if section.title %}
+      {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
+      {% include "_shared/requirement_block/ancor.jinja.html" %}
+      {%- endwith %}
+      <div class="section-title">
+        {{ section.title }}
+      </div>
+    {%- endif -%}
+    </td>
   </tr>
 
   {%- if section.free_texts -%}

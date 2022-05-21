@@ -71,9 +71,9 @@
   <thead>
     <tr>
       <th>Type</th>
-      {# if exists #}
-      <th>UID</th>
-      {# endif #}
+      {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
+        <th>{{meta_field_title}}</th>
+      {%- endfor -%}
       <th>Title</th>
       <th>Statement</th>
       <th>Rationale</th>
@@ -82,11 +82,26 @@
   </thead>
 
   {%- for section_or_requirement in document_iterator.all_content() %}
-  {%- if section_or_requirement.is_composite_requirement %}
+
+  {%- if section_or_requirement.is_composite_requirement or section_or_requirement.is_requirement %}
+
     {%- set requirement = section_or_requirement %}
   <tr>
-   <th>Composite requirement</th>
-    <td>{%- if requirement.uid %}{{ requirement.uid }}{%- endif -%}</td>
+   <th>
+    {%- if section_or_requirement.is_composite_requirement %}
+    Composite requirement
+    {%- else %}
+    Requirement
+    {%- endif -%}
+   </th>
+    {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
+      {%- set field_value = requirement.get_meta_field_value_by_title(meta_field_title) %}
+      <td>
+        {%- if field_value %}
+        {{ field_value }}
+        {%- endif -%}
+      </td>
+    {%- endfor -%}
     <td class="td-title">{%- if requirement.title %}{{ requirement.title }}{%- endif -%}</td>
     <td class="td-content">{%- if requirement.statement or requirement.statement_multiline -%}{{ renderer.render_requirement_statement(requirement) }}{%- endif -%}</td>
     <td class="td-content">{%- if requirement.rationale or requirement.rationale_multiline -%}{{ renderer.render_requirement_rationale(requirement) }}{%- endif -%}</td>
@@ -98,28 +113,15 @@
       {%- endif %}
     </td>
   </tr>
-  {%- elif section_or_requirement.is_requirement %}
-    {%- set requirement = section_or_requirement %}
-  <tr>
-    <th>Requirement</th>
-    <td>{%- if requirement.uid %}{{ requirement.uid }}{%- endif -%}</td>
-    <td class="td-title">{%- if requirement.title %}{{ requirement.title }}{%- endif -%}</td>
-    <td class="td-content">{%- if requirement.statement or requirement.statement_multiline -%}{{ renderer.render_requirement_statement(requirement) }}{%- endif -%}</td>
-    <td class="td-content">{%- if requirement.rationale or requirement.rationale_multiline -%}{{ renderer.render_requirement_rationale(requirement) }}{%- endif -%}</td>
-    <td class="td-content">
-      {%- if requirement.comments %}
-      {%- for comment in requirement.comments %}
-      {{ renderer.render_comment(comment) }}
-      {%- endfor %}
-      {%- endif %}
-    </td>
-  </tr>
+
   {%- elif section_or_requirement.is_section %}
 
   {%- set section = section_or_requirement %}
   <tr>
    <th>Section</th>
-    <td>{%- if section.uid %}{{ section.uid }}{%- endif -%}</td>
+   {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
+      <td></td>
+    {%- endfor -%}
     <td class="td-title" colspan="4">{%- if section.title %}{{ section.title }}{%- endif -%}</td>
   </tr>
 
@@ -127,6 +129,9 @@
     {%- for free_text in section.free_texts -%}
     <tr>
       <th>Free text</th>
+      {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
+      <td></td>
+    {%- endfor -%}
       {# мы не будем знать, сколько здесь колонок, когла будем обходить мету #}
       <td colspan="5">
         {{ renderer.render_free_text(document_type, free_text) }}

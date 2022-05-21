@@ -267,6 +267,19 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
 
             yield field.field_name, meta_field_value
 
+    def get_meta_field_value_by_title(self, field_title: str) -> Optional[str]:
+        assert isinstance(field_title, str)
+        if field_title not in self.ordered_fields_lookup:
+            return None
+        field: RequirementField = self.ordered_fields_lookup[field_title][0]
+        meta_field_value: str = (
+            field.field_value
+            if field.field_value
+            else field.field_value_multiline
+        )
+        return meta_field_value
+
+
     def dump_fields(self):
         return ", ".join(
             list(

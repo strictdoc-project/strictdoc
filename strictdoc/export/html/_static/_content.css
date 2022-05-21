@@ -195,3 +195,26 @@
   font-weight: bold;
   min-width: 264px;
 }
+
+.td-related,
+.td-related > ul.requirement_link {
+  font-size: .85rem;
+}
+
+.td-related > ul.requirement_link:last-child {
+  margin-bottom: 0;
+}
+
+.td-related > ul.requirement_link a {
+  margin-left: 0.5rem;
+  width: calc(100% - 0.5rem);
+}
+
+.td-related > ul.requirement_link a::before,
+.td-related > ul.requirement_link li > span::before {
+  left: -1rem;
+}
+
+.table-content .td-related:not(:empty) {
+  min-width: 264px;
+}

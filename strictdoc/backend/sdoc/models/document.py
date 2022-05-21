@@ -46,3 +46,8 @@ class Document:  # pylint: disable=too-many-instance-attributes
     @property
     def level(self):
         return None
+
+    def enumerate_meta_field_titles(self):
+        # TODO: currently only enumerating a single element ([0])
+        for field_title in self.grammar.elements[0].enumerate_meta_field_titles():
+            yield field_title

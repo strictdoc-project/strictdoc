@@ -25,6 +25,12 @@ class GrammarElement:
             fields_map[field.title] = field
         self.fields_map = fields_map
 
+    def enumerate_meta_field_titles(self):
+        for field in self.fields:
+            if field.title in RESERVED_NON_META_FIELDS:
+                continue
+            yield field.title
+
 
 class DocumentGrammar:
     def __init__(self, parent, elements: List[GrammarElement]):

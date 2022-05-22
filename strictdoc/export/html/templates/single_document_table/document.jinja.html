@@ -79,6 +79,9 @@
       <th>Statement</th>
       <th>Rationale</th>
       <th>Comment</th>
+      {%- for meta_field_title in document.enumerate_custom_content_field_titles() -%}
+        <th>{{meta_field_title}}</th>
+      {%- endfor -%}
     </tr>
   </thead>
 
@@ -181,6 +184,14 @@
       {%- endfor %}
       {%- endif %}
     </td>
+    {%- for meta_field_title in document.enumerate_custom_content_field_titles() -%}
+      {%- set field_value = requirement.get_meta_field_value_by_title(meta_field_title) %}
+      <td class="">
+        {%- if field_value %}
+        {{ field_value }}
+        {%- endif -%}
+      </td>
+    {%- endfor -%}
   </tr>
 
   {%- elif section_or_requirement.is_section %}
@@ -188,18 +199,21 @@
   {%- set section = section_or_requirement %}
   <tr>
    <th>Section</th>
-   {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
+    {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
       <td class="td-meta"></td>
     {%- endfor -%}
     <td class="td-meta">{# Children & Parents #}</td>
     <td class="td-title" colspan="4">
-      {%- if section.title %}
+    {%- if section.title %}
       {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
       {% include "_shared/requirement_block/anchor.jinja.html" %}
       {%- endwith %}
       <div class="section-title">
         {{ section.title }}
       </div>
+    {%- for meta_field_title in document.enumerate_custom_content_field_titles() -%}
+      <td class=""></td>
+    {%- endfor -%}
     {%- endif -%}
     </td>
   </tr>
@@ -212,7 +226,7 @@
       <td class="td-meta"></td>
       {%- endfor -%}
       <td class="td-meta">{# Children & Parents #}</td>
-      <td colspan="5">
+      <td colspan="50">
         {{ renderer.render_free_text(document_type, free_text) }}
       </td>
     </tr>

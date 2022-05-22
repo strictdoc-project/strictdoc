@@ -61,11 +61,15 @@
     {%- endif -%}
 
 <div class="content">
-  <!--
-      {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
-        <div>{{meta_field_title}}</div>
-      {%- endfor -%}
-  -->
+
+  {%- if document.free_texts -%}
+  {%- for free_text in document.free_texts %}
+    <div class="free_text">
+      {{ renderer.render_free_text(document_type, free_text) }}
+    </div>
+  {%- endfor -%}
+  {%- endif -%}
+
 <table class="table-content">
 
   <thead>

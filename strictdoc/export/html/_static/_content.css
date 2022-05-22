@@ -157,6 +157,12 @@
 
 /* ultimate table view */
 
+.table-view .content > .free_text:first-child {
+  padding: calc(var(--base-padding)*2);
+  padding-top: 0;
+  max-width: 900px;
+}
+
 .table-content {
   border-collapse: collapse;
   width: 100%;

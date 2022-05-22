@@ -46,6 +46,7 @@
   background-color: var(--color-bg-contrast);
   display: block;
   overflow: visible;
+  padding-top: calc(var(--base-padding)*2);
 }
 
 .content_section {
@@ -139,6 +140,22 @@
   max-width: 900px;
   padding-bottom: 0;
 }
+
+.table_meta {
+  width: auto;
+  border-collapse: collapse;
+  background-color: var(--color-bg-contrast);
+  /* font-size: .85em; */
+  text-align: left;
+}
+
+.table_meta th,
+.table_meta td {
+  padding: .15rem .5rem;
+  border: 1px solid #666;
+}
+
+/* ultimate table view */
 
 .table-content {
   border-collapse: collapse;

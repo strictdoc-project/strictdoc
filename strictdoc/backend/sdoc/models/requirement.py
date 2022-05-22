@@ -279,7 +279,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         )
         return meta_field_value
 
-
     def dump_fields(self):
         return ", ".join(
             list(

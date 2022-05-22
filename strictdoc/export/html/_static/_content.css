@@ -37,12 +37,15 @@
 }
 
 .table-view .content {
-  grid-template-columns:  minmax(250px, 25%)
+  /* grid-template-columns:  minmax(250px, 25%)
                           minmax(300px, 45%)
                           minmax(250px, 30%);
   gap: 2px;
   background-color: #ddd;
-  border: 2px solid #ddd;
+  border: 2px solid #ddd; */
+  background-color: var(--color-bg-contrast);
+  display: block;
+  overflow: visible;
 }
 
 .content_section {

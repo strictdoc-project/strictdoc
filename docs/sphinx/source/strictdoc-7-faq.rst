@@ -1,11 +1,23 @@
 F.A.Q.
 $$$$$$
 
-StrictDoc and other tools
-=========================
+Blog posts about StrictDoc
+==========================
 
-StrictDoc and Doorstop
-----------------------
+`Requirement Traceability with All Substance and No Fuss
+<https://www.bugseng.com/blog/requirement-traceability-all-substance-and-no-fuss>`_
+by BUGSENG.
+
+`Text-Based Requirement Management with StrictDoc
+<https://python.plainenglish.io/text-based-requirement-management-with-strictdoc-b03c1098a3c9>`_
+by Florian Kromer.
+
+
+How StrictDoc compares to other tools?
+======================================
+
+Doorstop
+--------
 
 The StrictDoc project is a close successor of another project called
 `Doorstop <https://github.com/doorstop-dev/doorstop>`_.
@@ -55,8 +67,8 @@ StrictDoc differs from Doorstop in a number of aspects:
 The roadmap of StrictDoc contains a work item for supporting the export/import
 to/from Doorstop format.
 
-StrictDoc and Sphinx
---------------------
+Sphinx
+------
 
 Both Sphinx and StrictDoc are both documentation generators but StrictDoc is at
 a higher level of abstraction: StrictDoc's specialization is requirements and
@@ -75,8 +87,8 @@ website by readthedocs which uses Sphinx under the hood. The
 ``StrictDoc -> RST -> Sphinx -> PDF`` example is also generated using readthedocs:
 `StrictDoc <https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_.
 
-StrictDoc and Sphinx-Needs
---------------------------
+Sphinx-Needs
+------------
 
 `Sphinx-Needs <https://sphinxcontrib-needs.readthedocs.io/en/latest/>`_ is a
 text-based requirements management system based on Sphinx. It is implemented
@@ -130,4 +142,24 @@ The difference between Sphinx-Needs and StrictDoc:
   and
   `others
   <https://sphinxcontrib-needs.readthedocs.io/en/latest/index.html>`_.
+
+FRET
+----
+
+`FRET <https://github.com/NASA-SW-VnV/fret>`_ is a framework for the
+elicitation, specification, formalization and understanding of requirements.
+
+    - Users enter system requirements in a specialized natural language.
+    - FRET helps understanding and review of semantics by utilizing a variety of forms
+      for each requirement: natural language description, formal mathematical logics,
+      and diagrams.
+    - Requirements can be defined in a hierarchical fashion and can be exported
+      in a variety of forms to be used by analysis tools.
+
+FRET has an impressive list of
+`Publications <https://github.com/NASA-SW-VnV/fret/blob/master/PUBLICATIONS.md>`_.
+
+FRET's user interface is built with Electron.
+
+The detailed comparison is coming.
 

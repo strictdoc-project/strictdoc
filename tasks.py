@@ -422,7 +422,7 @@ def watch(context, sdocs_path):
     paths_to_watch = "." if sdocs_path == "." else f". {sdocs_path}"
     strictdoc_command = (
         f"python strictdoc/cli/main.py "
-        f'export "{sdocs_path}" --output-dir=output/'
+        f'export "{sdocs_path}" --output-dir=output/ --experimental-enable-file-traceability'
     )
     run_invoke_cmd(
         context,

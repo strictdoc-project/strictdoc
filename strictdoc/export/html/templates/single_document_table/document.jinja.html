@@ -35,7 +35,7 @@
     {%- if document.config.has_meta() -%}
       <div class="content_meta">
       <h1>{{document.title}}</h1>
-        <table>
+        <table class="table_meta">
           {%- if document.config.uid -%}
           <tr>
             <th>
@@ -60,44 +60,196 @@
       </div>
     {%- endif -%}
 
-      <div class="content">
+<div class="content">
 
-        {%- if document.free_texts -%}
-        <section data-col="0">
-          {%- for free_text in document.free_texts -%}
-          <div class="free-text">
-            {{ renderer.render_free_text(document_type, free_text) }}
-          </div>
-          {%- endfor -%}
-        </section>
+  {%- if document.free_texts -%}
+  {%- for free_text in document.free_texts %}
+    <div class="free_text">
+      {{ renderer.render_free_text(document_type, free_text) }}
+    </div>
+  {%- endfor -%}
+  {%- endif -%}
+
+<table class="table-content">
+
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Level</th>
+      {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
+        <th>{{meta_field_title}}</th>
+      {%- endfor -%}
+      <th>REFS</th>
+      <th>Title</th>
+      <th>Statement</th>
+      <th>Rationale</th>
+      <th>Comment</th>
+      {%- for meta_field_title in document.enumerate_custom_content_field_titles() -%}
+        <th>{{meta_field_title}}</th>
+      {%- endfor -%}
+    </tr>
+  </thead>
+
+  {%- for section_or_requirement in document_iterator.all_content() %}
+
+  {%- if section_or_requirement.is_composite_requirement or section_or_requirement.is_requirement %}
+
+    {%- set requirement = section_or_requirement %}
+  <tr>
+   <th>
+    {%- if section_or_requirement.is_composite_requirement %}
+    Composite requirement
+    {%- else %}
+    Requirement
+    {%- endif -%}
+   </th>
+   <th>
+     {{ requirement.context.title_number_string }}
+   </th>
+    {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
+      {%- set field_value = requirement.get_meta_field_value_by_title(meta_field_title) %}
+      <td class="td-meta">
+        {%- if field_value %}
+        {{ field_value }}
         {%- endif -%}
+      </td>
+    {%- endfor -%}
+    <td class="td-meta td-related">
+      {%- if traceability_index.has_parent_requirements(requirement) %}
+      Parents:
+      <ul class="requirement_link">
+        {%- for requirement in traceability_index.get_parent_requirements(requirement) %}
+        <li>
+          <a class="requirement_link-parent" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
+            {%- if requirement.uid %}
+            <span class="requirement_parent-uid">{{ requirement.uid }}</span>
+            {%- endif %}
+            {{ requirement.title if requirement.title else "" }}
+          </a>
+        </li>
+        {%- endfor %}
+        </ul>
+      {%- endif %}
 
-      {%- for section_or_requirement in document_iterator.all_content() %}
+      {%- if traceability_index.has_children_requirements(requirement) %}
+      Children:
+      <ul class="requirement_link">
+        {%- for requirement in traceability_index.get_children_requirements(requirement) %}
+        <li>
+          <a class="requirement_link-child" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
+            {%- if requirement.uid %}
+            <span class="requirement_child-uid">{{ requirement.uid }}</span>
+            {%- endif %}
+            {{ requirement.title if requirement.title else "" }}
+          </a>
+        </li>
+        {%- endfor %}
+        </ul>
+      {%- endif %}
 
-        {%- if section_or_requirement.is_composite_requirement %}
-
-          {%- set requirement = section_or_requirement %}
-          {% with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
-          {% include "_shared/requirement.jinja.html" %}
-          {%- endwith %}
-
-        {%- elif section_or_requirement.is_requirement %}
-
-          {%- set requirement = section_or_requirement %}
-          {% with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
-            {% include "_shared/requirement.jinja.html" %}
-          {%- endwith %}
-
-        {%- elif section_or_requirement.is_section %}
-
-          {%- set section = section_or_requirement %}
-          {% with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
-          {% include "_shared/docsection.jinja.html" %}
-          {%- endwith %}
-
-        {%- endif %}
-
-      {%- endfor %}
+      {%- if config.experimental_enable_file_traceability -%}
+      {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
+      {%- if requirement_file_links %}
+      Source files:
+      <ul class="requirement_link">
+        {%- for link, opt_ranges in requirement_file_links %}
+          {%- if opt_ranges -%}
+            {%- for range in opt_ranges %}
+              <li>
+                <a class="requirement_link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
+                  {{ link.path }}, <i>lines: {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }}</i>
+                </a>
+              </li>
+            {%- endfor -%}
+          {%- else -%}
+            <li>
+              <a class="requirement_link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.uid }}">
+                {{ link.path }}
+              </a>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+      {%- endif %}
+      {%- endif %}
+    </td>
+    <td class="td-title">
+      {%- if requirement.title %}
+      {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
+      {% include "_shared/requirement_block/anchor.jinja.html" %}
+      {%- endwith %}
+      <div class="section-title">
+        {{ requirement.title }}
       </div>
+    {%- endif -%}
+    </td>
+    <td class="td-content">{%- if requirement.statement or requirement.statement_multiline -%}{{ renderer.render_requirement_statement(requirement) }}{%- endif -%}</td>
+    <td class="td-content">{%- if requirement.rationale or requirement.rationale_multiline -%}{{ renderer.render_requirement_rationale(requirement) }}{%- endif -%}</td>
+    <td class="td-content">
+      {%- if requirement.comments %}
+      {%- for comment in requirement.comments %}
+      {{ renderer.render_comment(comment) }}
+      {%- endfor %}
+      {%- endif %}
+    </td>
+    {%- for meta_field_title in document.enumerate_custom_content_field_titles() -%}
+      {%- set field_value = requirement.get_meta_field_value_by_title(meta_field_title) %}
+      <td class="">
+        {%- if field_value %}
+        {{ field_value }}
+        {%- endif -%}
+      </td>
+    {%- endfor -%}
+  </tr>
+
+  {%- elif section_or_requirement.is_section %}
+
+  {%- set section = section_or_requirement %}
+  <tr>
+   <th>Section</th>
+   <th>
+     {{ section.context.title_number_string }}
+   </th>
+
+    {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
+      <td class="td-meta"></td>
+    {%- endfor -%}
+    <td class="td-meta">{# Children & Parents #}</td>
+    <td class="td-title" colspan="4">
+    {%- if section.title %}
+      {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
+      {% include "_shared/requirement_block/anchor.jinja.html" %}
+      {%- endwith %}
+      <div class="section-title">
+        {{ section.title }}
+      </div>
+    {%- for meta_field_title in document.enumerate_custom_content_field_titles() -%}
+      <td class=""></td>
+    {%- endfor -%}
+    {%- endif -%}
+    </td>
+  </tr>
+
+  {%- if section.free_texts -%}
+    {%- for free_text in section.free_texts -%}
+    <tr>
+      <th>Free text</th>
+      <th>–</th>
+      {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
+      <td class="td-meta"></td>
+      {%- endfor -%}
+      <td class="td-meta">{# Children & Parents #}</td>
+      <td colspan="50">
+        {{ renderer.render_free_text(document_type, free_text) }}
+      </td>
+    </tr>
+    {%- endfor -%}
+  {%- endif -%}
+
+  {%- endif %}
+  {%- endfor %}
+
+  </table>
+</div>
 
 {% endblock content %}

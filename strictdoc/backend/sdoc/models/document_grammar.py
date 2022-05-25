@@ -12,6 +12,7 @@ RESERVED_NON_META_FIELDS = [
     "STATEMENT",
     "COMMENT",
     "RATIONALE",
+    "LEVEL",
 ]
 
 
@@ -24,6 +25,25 @@ class GrammarElement:
         for field in fields:
             fields_map[field.title] = field
         self.fields_map = fields_map
+
+    def enumerate_meta_field_titles(self):
+        for field in self.fields:
+            if field.title in ("TITLE", "STATEMENT"):
+                break
+            if field.title in RESERVED_NON_META_FIELDS:
+                continue
+            yield field.title
+
+    def enumerate_custom_content_field_titles(self):
+        after_title_or_statement = False
+        for field in self.fields:
+            if field.title in ("TITLE", "STATEMENT"):
+                after_title_or_statement = True
+            if field.title in RESERVED_NON_META_FIELDS:
+                continue
+            if not after_title_or_statement:
+                continue
+            yield field.title
 
 
 class DocumentGrammar:

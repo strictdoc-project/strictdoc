@@ -84,6 +84,10 @@
   background-color: var(--color-bg-main);
 }
 
+.table-view .layout_main {
+  overflow: visible;
+}
+
 .layout_nav {
   grid-area: nav;
   background-color: var(--color-bg-main);

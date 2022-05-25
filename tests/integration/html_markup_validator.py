@@ -20,7 +20,7 @@ if not os.path.isfile(input_file):
     print(err)
     exit(1)
 
-with open(input_file, "r") as file:
+with open(input_file, "r", encoding="utf8") as file:
     html_content = file.read()
 
 errors = []

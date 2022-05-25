@@ -28,7 +28,7 @@ class GrammarElement:
 
     def enumerate_meta_field_titles(self):
         for field in self.fields:
-            if field.title == "TITLE" or field.title == "STATEMENT":
+            if field.title in ("TITLE", "STATEMENT"):
                 break
             if field.title in RESERVED_NON_META_FIELDS:
                 continue
@@ -37,7 +37,7 @@ class GrammarElement:
     def enumerate_custom_content_field_titles(self):
         after_title_or_statement = False
         for field in self.fields:
-            if field.title == "TITLE" or field.title == "STATEMENT":
+            if field.title in ("TITLE", "STATEMENT"):
                 after_title_or_statement = True
             if field.title in RESERVED_NON_META_FIELDS:
                 continue

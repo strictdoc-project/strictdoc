@@ -12,6 +12,7 @@ RESERVED_NON_META_FIELDS = [
     "STATEMENT",
     "COMMENT",
     "RATIONALE",
+    "LEVEL",
 ]
 
 

@@ -75,6 +75,7 @@
   <thead>
     <tr>
       <th>Type</th>
+      <th>Level</th>
       {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
         <th>{{meta_field_title}}</th>
       {%- endfor -%}
@@ -101,6 +102,9 @@
     {%- else %}
     Requirement
     {%- endif -%}
+   </th>
+   <th>
+     {{ requirement.context.title_number_string }}
    </th>
     {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
       {%- set field_value = requirement.get_meta_field_value_by_title(meta_field_title) %}
@@ -203,6 +207,10 @@
   {%- set section = section_or_requirement %}
   <tr>
    <th>Section</th>
+   <th>
+     {{ section.context.title_number_string }}
+   </th>
+
     {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
       <td class="td-meta"></td>
     {%- endfor -%}
@@ -226,6 +234,7 @@
     {%- for free_text in section.free_texts -%}
     <tr>
       <th>Free text</th>
+      <th>–</th>
       {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
       <td class="td-meta"></td>
       {%- endfor -%}

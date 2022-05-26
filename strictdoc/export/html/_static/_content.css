@@ -46,6 +46,9 @@
   background-color: var(--color-bg-contrast);
   display: block;
   overflow: visible;
+}
+
+.table-view .content_meta + .content {
   padding-top: calc(var(--base-padding)*2);
 }
 

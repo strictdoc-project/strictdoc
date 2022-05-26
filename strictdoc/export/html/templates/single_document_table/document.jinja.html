@@ -70,22 +70,22 @@
   {%- endfor -%}
   {%- endif -%}
 
-<table class="table-content">
+<table class="content-view-table">
 
   <thead>
     <tr>
-      <th>Type</th>
-      <th>Level</th>
+      <th class="content-view-th">Type</th>
+      <th class="content-view-th">Level</th>
       {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
-        <th>{{meta_field_title}}</th>
+        <th class="content-view-th">{{meta_field_title}}</th>
       {%- endfor -%}
-      <th>REFS</th>
-      <th>Title</th>
-      <th>Statement</th>
-      <th>Rationale</th>
-      <th>Comment</th>
+      <th class="content-view-th">REFS</th>
+      <th class="content-view-th">Title</th>
+      <th class="content-view-th">Statement</th>
+      <th class="content-view-th">Rationale</th>
+      <th class="content-view-th">Comment</th>
       {%- for meta_field_title in document.enumerate_custom_content_field_titles() -%}
-        <th>{{meta_field_title}}</th>
+        <th class="content-view-th">{{meta_field_title}}</th>
       {%- endfor -%}
     </tr>
   </thead>
@@ -96,25 +96,25 @@
 
     {%- set requirement = section_or_requirement %}
   <tr>
-   <th>
+   <td class="content-view-td content-view-td-type">
     {%- if section_or_requirement.is_composite_requirement %}
     Composite requirement
     {%- else %}
     Requirement
     {%- endif -%}
-   </th>
-   <th>
+   </td>
+   <td class="content-view-td content-view-td-meta">
      {{ requirement.context.title_number_string }}
-   </th>
+   </td>
     {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
       {%- set field_value = requirement.get_meta_field_value_by_title(meta_field_title) %}
-      <td class="td-meta">
+      <td class="content-view-td content-view-td-meta">
         {%- if field_value %}
         {{ field_value }}
         {%- endif -%}
       </td>
     {%- endfor -%}
-    <td class="td-meta td-related">
+    <td class="content-view-td content-view-td-meta content-view-td-related">
       {%- if traceability_index.has_parent_requirements(requirement) %}
       Parents:
       <ul class="requirement_link">
@@ -173,7 +173,7 @@
       {%- endif %}
       {%- endif %}
     </td>
-    <td class="td-title">
+    <td class="content-view-td content-view-td-title">
       {%- if requirement.title %}
       {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
       {% include "_shared/requirement_block/anchor.jinja.html" %}
@@ -183,9 +183,9 @@
       </div>
     {%- endif -%}
     </td>
-    <td class="td-content">{%- if requirement.statement or requirement.statement_multiline -%}{{ renderer.render_requirement_statement(requirement) }}{%- endif -%}</td>
-    <td class="td-content">{%- if requirement.rationale or requirement.rationale_multiline -%}{{ renderer.render_requirement_rationale(requirement) }}{%- endif -%}</td>
-    <td class="td-content">
+    <td class="content-view-td content-view-td-content">{%- if requirement.statement or requirement.statement_multiline -%}{{ renderer.render_requirement_statement(requirement) }}{%- endif -%}</td>
+    <td class="content-view-td content-view-td-content">{%- if requirement.rationale or requirement.rationale_multiline -%}{{ renderer.render_requirement_rationale(requirement) }}{%- endif -%}</td>
+    <td class="content-view-td content-view-td-content">
       {%- if requirement.comments %}
       {%- for comment in requirement.comments %}
       {{ renderer.render_comment(comment) }}
@@ -194,7 +194,7 @@
     </td>
     {%- for meta_field_title in document.enumerate_custom_content_field_titles() -%}
       {%- set field_value = requirement.get_meta_field_value_by_title(meta_field_title) %}
-      <td class="">
+      <td class="content-view-td">
         {%- if field_value %}
         {{ field_value }}
         {%- endif -%}
@@ -206,16 +206,16 @@
 
   {%- set section = section_or_requirement %}
   <tr>
-   <th>Section</th>
-   <th>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
      {{ section.context.title_number_string }}
-   </th>
+   </td>
 
     {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
-      <td class="td-meta"></td>
+      <td class="content-view-td content-view-td-meta"></td>
     {%- endfor -%}
-    <td class="td-meta">{# Children & Parents #}</td>
-    <td class="td-title" colspan="4">
+    <td class="content-view-td content-view-td-meta">{# Children & Parents #}</td>
+    <td class="content-view-td content-view-td-title" colspan="4">
     {%- if section.title %}
       {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
       {% include "_shared/requirement_block/anchor.jinja.html" %}
@@ -224,7 +224,7 @@
         {{ section.title }}
       </div>
     {%- for meta_field_title in document.enumerate_custom_content_field_titles() -%}
-      <td class=""></td>
+      <td class="content-view-td"></td>
     {%- endfor -%}
     {%- endif -%}
     </td>
@@ -233,13 +233,13 @@
   {%- if section.free_texts -%}
     {%- for free_text in section.free_texts -%}
     <tr>
-      <th>Free text</th>
-      <th>–</th>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td>
       {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
-      <td class="td-meta"></td>
+      <td class="content-view-td content-view-td-meta"></td>
       {%- endfor -%}
-      <td class="td-meta">{# Children & Parents #}</td>
-      <td colspan="50">
+      <td class="content-view-td content-view-td-meta">{# Children & Parents #}</td>
+      <td class="content-view-td" colspan="50">
         {{ renderer.render_free_text(document_type, free_text) }}
       </td>
     </tr>

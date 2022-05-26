@@ -32,9 +32,12 @@
 
       {% include "_shared/tags.jinja.html" %}
 
-    {%- if document.config.has_meta() -%}
+    {%- if document.config.has_meta() or document.free_texts -%}
       <div class="content_meta">
-      <h1>{{document.title}}</h1>
+
+      {%- if document.config.has_meta() -%}
+      <div>
+        <h1>{{document.title}}</h1>
         <table class="table_meta">
           {%- if document.config.uid -%}
           <tr>
@@ -58,17 +61,20 @@
           {%- endif -%}
         </table>
       </div>
+      {%- endif -%}
+
+      {%- if document.free_texts -%}
+      {%- for free_text in document.free_texts %}
+        <div class="free_text">
+          {{ renderer.render_free_text(document_type, free_text) }}
+        </div>
+      {%- endfor -%}
+      {%- endif -%}
+
+      </div>
     {%- endif -%}
 
 <div class="content">
-
-  {%- if document.free_texts -%}
-  {%- for free_text in document.free_texts %}
-    <div class="free_text">
-      {{ renderer.render_free_text(document_type, free_text) }}
-    </div>
-  {%- endfor -%}
-  {%- endif -%}
 
 <table class="content-view-table">
 

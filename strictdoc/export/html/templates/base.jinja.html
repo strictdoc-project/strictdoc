@@ -25,7 +25,7 @@
   {% endblock head %}
 </head>
 
-<body class="{% block viewtype %}{% endblock %}">
+<body class="{% block viewtype %}{% endblock %} {% block withtoc %}{% endblock %}">
 <script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script>
 
   <div class="layout" id="layout">

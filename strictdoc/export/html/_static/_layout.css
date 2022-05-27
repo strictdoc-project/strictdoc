@@ -222,7 +222,7 @@ body[data-state="open"] .layout {
   margin-left: 0;
 }
 
-body[data-state="close"] .layout {
+body[data-state="close"].withtoc .layout {
   margin-left: calc(var(--toc-width) * (-1));
 }
 

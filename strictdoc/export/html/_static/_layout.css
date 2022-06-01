@@ -85,7 +85,13 @@
 }
 
 .table-view .layout_main {
-  overflow: visible;
+  /* overflow: visible; */
+  /* background-color: var(--color-bg-contrast); */
+}
+
+.table-view .layout_tmp_inner {
+  background-color: var(--color-bg-contrast);
+  width: fit-content;
 }
 
 .layout_nav {

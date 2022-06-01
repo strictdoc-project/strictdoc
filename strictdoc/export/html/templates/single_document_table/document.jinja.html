@@ -33,6 +33,8 @@
 
       {% include "_shared/tags.jinja.html" %}
 
+      <div class="layout_tmp_inner">
+
     {%- if document.config.has_meta() or document.free_texts -%}
       <div class="content_meta">
 
@@ -258,5 +260,6 @@
 
   </table>
 </div>
+</div>{# layout_tmp_inner #}
 
 {% endblock content %}

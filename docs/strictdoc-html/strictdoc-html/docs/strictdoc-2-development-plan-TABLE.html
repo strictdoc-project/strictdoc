@@ -29,7 +29,7 @@
   
 </head>
 
-<body class="table-view">
+<body class="table-view withtoc">
 <script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script>
 
   <div class="layout" id="layout">
@@ -121,132 +121,107 @@
     <main class="layout_main">
       
 
-      <div class="content"><section data-col="0"><div class="free-text">
-            <div class="document">
+      
+
+      <div class="layout_tmp_inner"><div class="content_meta">
+        <div class="free_text">
+          <div class="document">
 <p>This document presents the goals of the StrictDoc project and describes how the
 project is developed.</p>
 </div>
 
-          </div></section>
-          <article class="docsection">
+        </div></div><div class="content">
 
-  <section data-section="meta" class="docsection_section">
+<table class="content-view-table">
 
-    <div data-role='anchor' id="1-Project-goals"></div>
-
-    
-        <h1
-class="section-title"
-data-level="1">
-  1.&nbsp;Project goals
-</h1>
-    
-
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
-      <div class="document">
+  <thead>
+    <tr>
+      <th class="content-view-th">Type</th>
+      <th class="content-view-th">Level</th><th class="content-view-th">UID</th><th class="content-view-th">STATUS</th><th class="content-view-th">TAGS</th><th class="content-view-th">REFS</th>
+      <th class="content-view-th">Title</th>
+      <th class="content-view-th">Statement</th>
+      <th class="content-view-th">Rationale</th>
+      <th class="content-view-th">Comment</th></tr>
+  </thead>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="1-Project-goals"></div>
+      <div class="section-title">
+        Project goals
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
 <p>StrictDoc is an attempt to create an open source tool for writing
 technical requirements specifications.</p>
 </div>
 
-    </div></section>
-
-</article>
-          <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="1.1-GOAL-1-TOOL-SUPPORT"></div>
-    <h2
-class="section-title"
-data-level="1.1">
-  1.1.&nbsp;Software support for writing requirements and specifications documents
-</h2>
-
-    <dl class="requirement_meta">
-    
-    <dt><i>UID</i></dt>
-    <dd>GOAL-1-TOOL-SUPPORT</dd>
-    
-  </dl>
-    
-<ul class="requirement_link">
-  <li>
-    <a class="requirement_link-child" href="../docs/strictdoc-3-requirements-TABLE.html#1.1-SDOC-HIGH-REQS-MANAGEMENT">
-      <span class="requirement_child-uid">SDOC-HIGH-REQS-MANAGEMENT</span>
-      Requirements management
-    </a>
-  </li>
-  </ul>
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     1.1
+   </td>
+      <td class="content-view-td content-view-td-meta">
+        GOAL-1-TOOL-SUPPORT</td>
+      <td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+      Children:
+      <ul class="requirement_link">
+        <li>
+          <a class="requirement_link-child" href="../docs/strictdoc-3-requirements-TABLE.html#1.1-SDOC-HIGH-REQS-MANAGEMENT">
+            <span class="requirement_child-uid">SDOC-HIGH-REQS-MANAGEMENT</span>
+            Requirements management
+          </a>
+        </li>
+        </ul>
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.1-GOAL-1-TOOL-SUPPORT"></div>
+      <div class="section-title">
+        Software support for writing requirements and specifications documents
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
 <p>There shall exist free and lightweight yet capable software for writing
 requirements and specifications documents</p>
 </div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    <div class="requirement_comment">
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
       <div class="document">
 <p>Technical documentation is hard, it can be an extremely laborious process.
 Software shall support engineers in their work with documentation.</p>
 </div>
 
-    </div>
-    
-  
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="1.2-GOAL-2-REDUCE-DOCUMENTATION-HAZARDS"></div>
-    <h2
-class="section-title"
-data-level="1.2">
-  1.2.&nbsp;Reduce documentation hazards
-</h2>
-
-    <dl class="requirement_meta">
-    
-    <dt><i>UID</i></dt>
-    <dd>GOAL-2-REDUCE-DOCUMENTATION-HAZARDS</dd>
-    
-  </dl>
-    
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     1.2
+   </td>
+      <td class="content-view-td content-view-td-meta">
+        GOAL-2-REDUCE-DOCUMENTATION-HAZARDS</td>
+      <td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.2-GOAL-2-REDUCE-DOCUMENTATION-HAZARDS"></div>
+      <div class="section-title">
+        Reduce documentation hazards
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
 <p>There shall exist no (or less) opportunity for writing incorrect or inconsistent
 documentation.</p>
 </div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    <div class="requirement_comment">
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
       <div class="document">
 <p>Every serious engineering activity, such as safety engineering or systems
 engineering, starts with requirements. The more critical is a product the higher
@@ -259,114 +234,71 @@ software that supports engineers in activities such as requirements engineering
 and writing technical documentation.</p>
 </div>
 
-    </div>
-    
-  
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="1.3-GOAL-3-NO-RUNAWAY-DOCUMENTATION"></div>
-    <h2
-class="section-title"
-data-level="1.3">
-  1.3.&nbsp;No (or less) run-away documentation
-</h2>
-
-    <dl class="requirement_meta">
-    
-    <dt><i>UID</i></dt>
-    <dd>GOAL-3-NO-RUNAWAY-DOCUMENTATION</dd>
-    
-  </dl>
-    
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     1.3
+   </td>
+      <td class="content-view-td content-view-td-meta">
+        GOAL-3-NO-RUNAWAY-DOCUMENTATION</td>
+      <td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.3-GOAL-3-NO-RUNAWAY-DOCUMENTATION"></div>
+      <div class="section-title">
+        No (or less) run-away documentation
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
 <p>Software shall support engineers in keeping documentation up-to-date.</p>
 </div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    <div class="requirement_comment">
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
       <div class="document">
 <p>Technical documentation easily becomes outdated. Many existing tools for
 documentation do not provide any measures for ensuring overall consistency of
 documents and documentation trees.</p>
 </div>
 
-    </div>
-    
-  
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="1.4-GOAL-4-CHANGE-MANAGEMENT"></div>
-    <h2
-class="section-title"
-data-level="1.4">
-  1.4.&nbsp;Change management
-</h2>
-
-    <dl class="requirement_meta">
-    
-    <dt><i>UID</i></dt>
-    <dd>GOAL-4-CHANGE-MANAGEMENT</dd>
-    
-  </dl>
-    
-<ul class="requirement_link">
-  <li>
-    <a class="requirement_link-child" href="../docs/strictdoc-5-backlog-TABLE.html#8-BACKLOG-FUZZY-SEARCH">
-      <span class="requirement_child-uid">BACKLOG-FUZZY-SEARCH</span>
-      Fuzzy requirements search
-    </a>
-  </li>
-  </ul>
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     1.4
+   </td>
+      <td class="content-view-td content-view-td-meta">
+        GOAL-4-CHANGE-MANAGEMENT</td>
+      <td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+      Children:
+      <ul class="requirement_link">
+        <li>
+          <a class="requirement_link-child" href="../docs/strictdoc-5-backlog-TABLE.html#8-BACKLOG-FUZZY-SEARCH">
+            <span class="requirement_child-uid">BACKLOG-FUZZY-SEARCH</span>
+            Fuzzy requirements search
+          </a>
+        </li>
+        </ul>
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.4-GOAL-4-CHANGE-MANAGEMENT"></div>
+      <div class="section-title">
+        Change management
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
 <p>Software shall provide capabilities for change management and impact assessment.</p>
 </div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    <div class="requirement_comment">
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
       <div class="document">
 <p>Change management is difficult. The bigger the project is, the harder it is to
 maintain its documentation. If a change is introduced to a project, it usually
 requires a full revision of its requirements.</p>
 </div>
 
-    </div>
-    <div class="requirement_comment">
       <div class="document">
 <p>When the basic capabilities of StrictDoc are in place, it should be possible
 to do a more advanced analysis of requirements and requirement trees:</p>
@@ -376,31 +308,21 @@ to do a more advanced analysis of requirements and requirement trees:</p>
 </ul>
 </div>
 
-    </div>
-    
-  
-
-  </section>
-
-</article>
-          <article class="docsection">
-
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="2-User-interfaces"></div>
-
-    
-        <h1
-class="section-title"
-data-level="2">
-  2.&nbsp;User interfaces
-</h1>
-    
-
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
-      <div class="document">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     2
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="2-User-interfaces"></div>
+      <div class="section-title">
+        User interfaces
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
 <p>There are two user interfaces for StrictDoc:</p>
 <ol class="arabic simple">
 <li>Command-line interface (CLI)</li>
@@ -410,133 +332,94 @@ data-level="2">
 work-in-progress.</p>
 </div>
 
-    </div></section>
-
-</article>
-          <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="2.1-UI-1-TEXT"></div>
-    <h2
-class="section-title"
-data-level="2.1">
-  2.1.&nbsp;Command-line interface
-</h2>
-
-    <dl class="requirement_meta">
-    
-    <dt><i>UID</i></dt>
-    <dd>UI-1-TEXT</dd>
-    
-  </dl>
-    
-<ul class="requirement_link">
-  <li>
-    <a class="requirement_link-child" href="../docs/strictdoc-5-backlog-TABLE.html#2-BACKLOG-LSP">
-      <span class="requirement_child-uid">BACKLOG-LSP</span>
-      SDoc Language Server Protocol
-    </a>
-  </li>
-  </ul>
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     2.1
+   </td>
+      <td class="content-view-td content-view-td-meta">
+        UI-1-TEXT</td>
+      <td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+      Children:
+      <ul class="requirement_link">
+        <li>
+          <a class="requirement_link-child" href="../docs/strictdoc-5-backlog-TABLE.html#2-BACKLOG-LSP">
+            <span class="requirement_child-uid">BACKLOG-LSP</span>
+            SDoc Language Server Protocol
+          </a>
+        </li>
+        </ul>
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="2.1-UI-1-TEXT"></div>
+      <div class="section-title">
+        Command-line interface
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
 <p>StrictDoc shall provide a command-line interface.</p>
 </div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    
-  
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="2.2-UI-2-WEB"></div>
-    <h2
-class="section-title"
-data-level="2.2">
-  2.2.&nbsp;Web interface
-</h2>
-
-    <dl class="requirement_meta">
-    
-    <dt><i>UID</i></dt>
-    <dd>UI-2-WEB</dd>
-    
-  </dl>
-    
-<ul class="requirement_link">
-  <li>
-    <a class="requirement_link-child" href="../docs/strictdoc-5-backlog-TABLE.html#10.2.1-BACKLOG-WEB">
-      <span class="requirement_child-uid">BACKLOG-WEB</span>
-      Web server and editable HTML pages
-    </a>
-  </li>
-  </ul>
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     2.2
+   </td>
+      <td class="content-view-td content-view-td-meta">
+        UI-2-WEB</td>
+      <td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+      Children:
+      <ul class="requirement_link">
+        <li>
+          <a class="requirement_link-child" href="../docs/strictdoc-5-backlog-TABLE.html#10.2.1-BACKLOG-WEB">
+            <span class="requirement_child-uid">BACKLOG-WEB</span>
+            Web server and editable HTML pages
+          </a>
+        </li>
+        </ul>
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="2.2-UI-2-WEB"></div>
+      <div class="section-title">
+        Web interface
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
 <p>StrictDoc shall provide a web interface.</p>
 </div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    
-  
-
-  </section>
-
-</article>
-          <article class="docsection">
-
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="3-Development-team"></div>
-
-    
-        <h1
-class="section-title"
-data-level="3">
-  3.&nbsp;Development team
-</h1>
-    
-
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
-      <div class="document">
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     3
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="3-Development-team"></div>
+      <div class="section-title">
+        Development team
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
 <p>StrictDoc is a spare time project developed and maintained by two people
 with occasional contributions from the Open Source community.</p>
 </div>
 
-    </div></section>
+      </td>
+    </tr>
 
-</article>
-      </div>
+  </table>
+</div>
+</div>
 
 
     </main>

@@ -29,7 +29,7 @@
   
 </head>
 
-<body class="table-view">
+<body class="table-view withtoc">
 <script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script>
 
   <div class="layout" id="layout">
@@ -106,141 +106,102 @@
     <main class="layout_main">
       
 
-      <div class="content">
-          <article class="docsection">
+      
 
-  <section data-section="meta" class="docsection_section">
+      <div class="layout_tmp_inner"><div class="content">
 
-    <div data-role='anchor' id="1-Design-decisions"></div>
+<table class="content-view-table">
 
-    
-        <h1
-class="section-title"
-data-level="1">
-  1.&nbsp;Design decisions
-</h1>
-    
-
-  </section>
-
-  
-
-</article>
-          <article class="docsection">
-
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="1.1-Building-blocks"></div>
-
-    
-        <h2
-class="section-title"
-data-level="1.1">
-  1.1.&nbsp;Building blocks
-</h2>
-    
-
-  </section>
-
-  
-
-</article>
-          <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="1.1.1-TextX"></div>
-    <h3
-class="section-title"
-data-level="1.1.1">
-  1.1.1.&nbsp;TextX
-</h3>
-
-    
-    
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
+  <thead>
+    <tr>
+      <th class="content-view-th">Type</th>
+      <th class="content-view-th">Level</th><th class="content-view-th">UID</th><th class="content-view-th">STATUS</th><th class="content-view-th">TAGS</th><th class="content-view-th">REFS</th>
+      <th class="content-view-th">Title</th>
+      <th class="content-view-th">Statement</th>
+      <th class="content-view-th">Rationale</th>
+      <th class="content-view-th">Comment</th></tr>
+  </thead>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="1-Design-decisions"></div>
+      <div class="section-title">
+        Design decisions
+      </div></td>
+  </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     1.1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="1.1-Building-blocks"></div>
+      <div class="section-title">
+        Building blocks
+      </div></td>
+  </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     1.1.1
+   </td>
+      <td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.1.1-TextX"></div>
+      <div class="section-title">
+        TextX
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
 <p>TextX shall be used for StrictDoc grammar definition and parsing of the sdoc files.</p>
 </div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    <div class="requirement_comment">
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
       <div class="document">
 <p>TextX is an easy-to-install Python tool. It is fast, works out of the box.</p>
 </div>
 
-    </div>
-    
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="1.1.2-Jinja2"></div>
-    <h3
-class="section-title"
-data-level="1.1.2">
-  1.1.2.&nbsp;Jinja2
-</h3>
-
-    
-    
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     1.1.2
+   </td>
+      <td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.1.2-Jinja2"></div>
+      <div class="section-title">
+        Jinja2
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
 <p>Jinja2 shall be used for rendering HTML templates.</p>
 </div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    
-
-  </section>
-
-</article>
-          <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="1.1.3-Sphinx-and-Docutils"></div>
-    <h3
-class="section-title"
-data-level="1.1.3">
-  1.1.3.&nbsp;Sphinx and Docutils
-</h3>
-
-    
-    
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     1.1.3
+   </td>
+      <td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.1.3-Sphinx-and-Docutils"></div>
+      <div class="section-title">
+        Sphinx and Docutils
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
 <p>Sphinx and Docutils shall be used for the following capabilities:</p>
 <ul class="simple">
 <li>Support of Restructured Text (reST) format</li>
@@ -249,20 +210,14 @@ data-level="1.1.3">
 <li>Generating documentation websites using Sphinx</li>
 </ul>
 </div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
 
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    
-
-  </section>
-
-</article>
-      </div>
+  </table>
+</div>
+</div>
 
 
     </main>

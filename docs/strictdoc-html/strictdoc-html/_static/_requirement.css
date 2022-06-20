@@ -387,6 +387,7 @@ a.requirement_link-child::before {
 
 /* table */
 
+div.document table,
 article table {
   border-collapse: collapse;
   margin: var(--base-margin) 0;
@@ -394,15 +395,19 @@ article table {
   border: #ccc;
 }
 
+div.document table caption,
 article table caption {
   font-weight: bold;
   padding-bottom: 1rem;
 }
 
+div.document table th,
 article table th {
   background-color: #eee;
 }
 
+div.document table th,
+div.document table td,
 article table th,
 article table td {
   padding: calc(var(--base-margin)/2);

@@ -84,6 +84,16 @@
   background-color: var(--color-bg-main);
 }
 
+.table-view .layout_main {
+  /* overflow: visible; */
+  /* background-color: var(--color-bg-contrast); */
+}
+
+.table-view .layout_tmp_inner {
+  background-color: var(--color-bg-contrast);
+  width: fit-content;
+}
+
 .layout_nav {
   grid-area: nav;
   background-color: var(--color-bg-main);
@@ -218,7 +228,7 @@ body[data-state="open"] .layout {
   margin-left: 0;
 }
 
-body[data-state="close"] .layout {
+body[data-state="close"].withtoc .layout {
   margin-left: calc(var(--toc-width) * (-1));
 }
 

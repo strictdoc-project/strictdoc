@@ -29,7 +29,7 @@
   
 </head>
 
-<body class="table-view">
+<body class="table-view withtoc">
 <script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script>
 
   <div class="layout" id="layout">
@@ -95,8 +95,11 @@
     <main class="layout_main">
       
 
-      <div class="content"><section data-col="0"><div class="free-text">
-            <div class="document">
+      
+
+      <div class="layout_tmp_inner"><div class="content_meta">
+        <div class="free_text">
+          <div class="document">
 <p>Contributions to StrictDoc are welcome and appreciated. StrictDoc is based on Python and
 maintained as any other Python package on GitHub: with linting, tests, and hopefully
 enough best practice put into the codebase.</p>
@@ -106,25 +109,33 @@ a while but any rule can still be changed if a better development practice is fo
 Any feedback on this contributing guideline is also appreciated.</p>
 </div>
 
-          </div></section>
-          <article class="docsection">
+        </div></div><div class="content">
 
-  <section data-section="meta" class="docsection_section">
+<table class="content-view-table">
 
-    <div data-role='anchor' id="1-Python-code"></div>
-
-    
-        <h1
-class="section-title"
-data-level="1">
-  1.&nbsp;Python code
-</h1>
-    
-
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
-      <div class="document">
+  <thead>
+    <tr>
+      <th class="content-view-th">Type</th>
+      <th class="content-view-th">Level</th><th class="content-view-th">UID</th><th class="content-view-th">STATUS</th><th class="content-view-th">TAGS</th><th class="content-view-th">REFS</th>
+      <th class="content-view-th">Title</th>
+      <th class="content-view-th">Statement</th>
+      <th class="content-view-th">Rationale</th>
+      <th class="content-view-th">Comment</th></tr>
+  </thead>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="1-Python-code"></div>
+      <div class="section-title">
+        Python code
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
 <ul class="simple">
 <li>The version of Python is set to be as low as possible given some constraints of
 StrictDoc's dependencies. Ideally, the lowest Python version should only be raised
@@ -145,27 +156,22 @@ preferred.</li>
 </ul>
 </div>
 
-    </div></section>
-
-</article>
-          <article class="docsection">
-
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="2-Git-workflow"></div>
-
-    
-        <h1
-class="section-title"
-data-level="2">
-  2.&nbsp;Git workflow
-</h1>
-    
-
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
-      <div class="document">
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     2
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="2-Git-workflow"></div>
+      <div class="section-title">
+        Git workflow
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
 <ul class="simple">
 <li>The preferred Git workflow is &quot;1 commit per 1 PR&quot;. When the work truly deserves
 a sequence of commits, each commit shall be self-contained and pass all checks from the
@@ -189,27 +195,22 @@ functionality, the commit should be named: <cite>Code climate: description</cite
 </ul>
 </div>
 
-    </div></section>
-
-</article>
-          <article class="docsection">
-
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="3-Documentation"></div>
-
-    
-        <h1
-class="section-title"
-data-level="3">
-  3.&nbsp;Documentation
-</h1>
-    
-
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
-      <div class="document">
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     3
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="3-Documentation"></div>
+      <div class="section-title">
+        Documentation
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
 <ul class="simple">
 <li>Every change in the functionality or the infrastructure should be documented.</li>
 <li>The <tt class="docutils literal">invoke sphinx</tt> task should be used for re-generating documentation on a developer
@@ -217,10 +218,12 @@ machine.</li>
 </ul>
 </div>
 
-    </div></section>
+      </td>
+    </tr>
 
-</article>
-      </div>
+  </table>
+</div>
+</div>
 
 
     </main>

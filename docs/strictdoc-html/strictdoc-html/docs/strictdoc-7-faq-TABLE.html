@@ -29,7 +29,7 @@
   
 </head>
 
-<body class="table-view">
+<body class="table-view withtoc">
 <script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script>
 
   <div class="layout" id="layout">
@@ -105,71 +105,67 @@
     <main class="layout_main">
       
 
-      <div class="content">
-          <article class="docsection">
+      
 
-  <section data-section="meta" class="docsection_section">
+      <div class="layout_tmp_inner"><div class="content">
 
-    <div data-role='anchor' id="1-Blog-posts-about-StrictDoc"></div>
+<table class="content-view-table">
 
-    
-        <h1
-class="section-title"
-data-level="1">
-  1.&nbsp;Blog posts about StrictDoc
-</h1>
-    
-
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
-      <div class="document">
+  <thead>
+    <tr>
+      <th class="content-view-th">Type</th>
+      <th class="content-view-th">Level</th><th class="content-view-th">UID</th><th class="content-view-th">STATUS</th><th class="content-view-th">TAGS</th><th class="content-view-th">REFS</th>
+      <th class="content-view-th">Title</th>
+      <th class="content-view-th">Statement</th>
+      <th class="content-view-th">Rationale</th>
+      <th class="content-view-th">Comment</th></tr>
+  </thead>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="1-Blog-posts-about-StrictDoc"></div>
+      <div class="section-title">
+        Blog posts about StrictDoc
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
 <p><a class="reference external" href="https://www.bugseng.com/blog/requirement-traceability-all-substance-and-no-fuss">Requirement Traceability with All Substance and No Fuss</a>
 by BUGSENG.</p>
 <p><a class="reference external" href="https://python.plainenglish.io/text-based-requirement-management-with-strictdoc-b03c1098a3c9">Text-Based Requirement Management with StrictDoc</a>
 by Florian Kromer.</p>
 </div>
 
-    </div></section>
-
-</article>
-          <article class="docsection">
-
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="2-How-StrictDoc-compares-to-other-tools-"></div>
-
-    
-        <h1
-class="section-title"
-data-level="2">
-  2.&nbsp;How StrictDoc compares to other tools?
-</h1>
-    
-
-  </section>
-
-  
-
-</article>
-          <article class="docsection">
-
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="2.1-Doorstop"></div>
-
-    
-        <h2
-class="section-title"
-data-level="2.1">
-  2.1.&nbsp;Doorstop
-</h2>
-    
-
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
-      <div class="document">
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     2
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="2-How-StrictDoc-compares-to-other-tools-"></div>
+      <div class="section-title">
+        How StrictDoc compares to other tools?
+      </div></td>
+  </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     2.1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="2.1-Doorstop"></div>
+      <div class="section-title">
+        Doorstop
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
 <p>The StrictDoc project is a close successor of another project called
 <a class="reference external" href="https://github.com/doorstop-dev/doorstop">Doorstop</a>.</p>
 <blockquote>
@@ -217,27 +213,22 @@ using the parsing capabilities provided by textX out of the box.</li>
 to/from Doorstop format.</p>
 </div>
 
-    </div></section>
-
-</article>
-          <article class="docsection">
-
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="2.2-Sphinx"></div>
-
-    
-        <h2
-class="section-title"
-data-level="2.2">
-  2.2.&nbsp;Sphinx
-</h2>
-    
-
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
-      <div class="document">
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     2.2
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="2.2-Sphinx"></div>
+      <div class="section-title">
+        Sphinx
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
 <p>Both Sphinx and StrictDoc are both documentation generators but StrictDoc is at
 a higher level of abstraction: StrictDoc's specialization is requirements and
 specifications documents. StrictDoc can generate documentation to a number of
@@ -255,27 +246,22 @@ website by readthedocs which uses Sphinx under the hood. The
 <a class="reference external" href="https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/">StrictDoc</a>.</p>
 </div>
 
-    </div></section>
-
-</article>
-          <article class="docsection">
-
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="2.3-Sphinx-Needs"></div>
-
-    
-        <h2
-class="section-title"
-data-level="2.3">
-  2.3.&nbsp;Sphinx-Needs
-</h2>
-    
-
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
-      <div class="document">
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     2.3
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="2.3-Sphinx-Needs"></div>
+      <div class="section-title">
+        Sphinx-Needs
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
 <p><a class="reference external" href="https://sphinxcontrib-needs.readthedocs.io/en/latest/">Sphinx-Needs</a> is a
 text-based requirements management system based on Sphinx. It is implemented
 as a Sphinx extension which extends the
@@ -325,27 +311,22 @@ and
 </ul>
 </div>
 
-    </div></section>
-
-</article>
-          <article class="docsection">
-
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="2.4-FRET"></div>
-
-    
-        <h2
-class="section-title"
-data-level="2.4">
-  2.4.&nbsp;FRET
-</h2>
-    
-
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
-      <div class="document">
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     2.4
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="2.4-FRET"></div>
+      <div class="section-title">
+        FRET
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
 <p><a class="reference external" href="https://github.com/NASA-SW-VnV/fret">FRET</a> is a framework for the
 elicitation, specification, formalization and understanding of requirements.</p>
 <blockquote>
@@ -364,10 +345,12 @@ in a variety of forms to be used by analysis tools.</li>
 <p>The detailed comparison is coming.</p>
 </div>
 
-    </div></section>
+      </td>
+    </tr>
 
-</article>
-      </div>
+  </table>
+</div>
+</div>
 
 
     </main>

@@ -1929,11 +1929,13 @@ strictdoc export docs/ --enable-mathjax --output-dir output-html
 <p>Example of using Mathjax:</p>
 <pre class="code text literal-block">
 [FREETEXT]
-$$
-\\mathbf{\\underline{k}}_{\\text{a}} =
-\\mathbf{\\underline{i}}_{\\text{a}} \\times
-\\mathbf{\\underline{j}}_{\\text{a}}
-$$
+.. raw:: latex html
+    $$
+    \mathbf{\underline{k}}_{\text{a}} =
+    \mathbf{\underline{i}}_{\text{a}} \times
+    \mathbf{\underline{j}}_{\text{a}}
+    $$
+
 [/FREETEXT]
 </pre>
 </div>

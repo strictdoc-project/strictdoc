@@ -859,11 +859,13 @@ Example of using Mathjax:
 .. code-block:: text
 
     [FREETEXT]
-    $$
-    \\mathbf{\\underline{k}}_{\\text{a}} =
-    \\mathbf{\\underline{i}}_{\\text{a}} \\times
-    \\mathbf{\\underline{j}}_{\\text{a}}
-    $$
+    .. raw:: latex html
+        $$
+        \mathbf{\underline{k}}_{\text{a}} =
+        \mathbf{\underline{i}}_{\text{a}} \times
+        \mathbf{\underline{j}}_{\text{a}}
+        $$
+
     [/FREETEXT]
 
 Standalone HTML pages (experimental)

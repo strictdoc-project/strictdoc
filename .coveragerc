@@ -5,7 +5,7 @@ omit =
     */.venv/*
 
 [report]
-fail_under = 80.00
+fail_under = 79.00
 precision = 2
 skip_covered = true
 show_missing = true

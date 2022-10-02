@@ -1,10 +1,10 @@
 import os
 import sys
 
-STRICTDOC_ROOT_PATH = os.path.abspath(
+strictdoc_root_path = os.path.abspath(
     os.path.join(__file__, "../../../../strictdoc")
 )
-assert os.path.exists(STRICTDOC_ROOT_PATH), "does not exist: {}".format(
-    STRICTDOC_ROOT_PATH
+assert os.path.exists(strictdoc_root_path), "does not exist: {}".format(
+    strictdoc_root_path
 )
-sys.path.append(STRICTDOC_ROOT_PATH)
+sys.path.append(strictdoc_root_path)

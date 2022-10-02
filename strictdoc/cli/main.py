@@ -2,13 +2,14 @@ import os
 import sys
 
 try:
-    STRICTDOC_ROOT_PATH = os.path.abspath(
+    strictdoc_root_path = os.path.abspath(
         os.path.join(os.path.dirname(__file__), "..", "..")
     )
-    if not os.path.isdir(STRICTDOC_ROOT_PATH):
+    if not os.path.isdir(strictdoc_root_path):
         raise FileNotFoundError
-    sys.path.append(STRICTDOC_ROOT_PATH)
+    sys.path.append(strictdoc_root_path)
 
+    from strictdoc import STRICTDOC_ROOT_PATH
     from strictdoc.cli.cli_arg_parser import (
         create_sdoc_args_parser,
         ExportCommandConfig,

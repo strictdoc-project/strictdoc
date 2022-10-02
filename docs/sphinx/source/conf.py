@@ -17,15 +17,15 @@ import guzzle_sphinx_theme as guzzle_sphinx_theme
 
 
 try:
-    STRICTDOC_ROOT_PATH = os.path.abspath(
+    strictdoc_root_path = os.path.abspath(
         os.path.join(os.path.dirname(__file__), "..", "..", "..")
     )
-    if not os.path.isdir(STRICTDOC_ROOT_PATH):
+    if not os.path.isdir(strictdoc_root_path):
         raise FileNotFoundError
     # Cannot assert this because readthedocs clones strictdoc to folders like:
     # "stable", "latest", etc.
-    # assert os.path.basename(STRICTDOC_ROOT_PATH) == "strictdoc"
-    sys.path.append(STRICTDOC_ROOT_PATH)
+    # assert os.path.basename(strictdoc_root_path) == "strictdoc"
+    sys.path.append(strictdoc_root_path)
     import strictdoc
 except Exception as exception:
     print(f"Could not resolve a path to strictdoc's root: {exception}")

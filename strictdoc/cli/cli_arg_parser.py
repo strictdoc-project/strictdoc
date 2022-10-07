@@ -1,5 +1,6 @@
 import argparse
 import os
+from enum import Enum
 
 EXPORT_FORMATS = ["html", "html-standalone", "rst", "excel", "reqif-sdoc"]
 
@@ -242,6 +243,12 @@ class PassthroughCommandConfig:
         self.output_file = output_file
 
 
+class ExportMode(Enum):
+    DOCTREE = 1
+    STANDALONE = 2
+    DOCTREE_AND_STANDALONE = 3
+
+
 class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
     def __init__(  # pylint: disable=too-many-arguments
         self,
@@ -267,6 +274,15 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
             experimental_enable_file_traceability
         )
         self.output_html_root: str = os.path.join(output_dir, "html")
+
+    def get_export_mode(self):
+        if "html" in self.formats:
+            if "html-standalone" in self.formats:
+                return ExportMode.DOCTREE_AND_STANDALONE
+            return ExportMode.DOCTREE
+        if "html-standalone" in self.formats:
+            return ExportMode.STANDALONE
+        raise NotImplementedError
 
 
 class DumpGrammarCommandConfig:

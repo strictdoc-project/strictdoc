@@ -44,14 +44,8 @@ class ExportAction:
             latest_strictdoc_own_file
         )
 
-        assert isinstance(config.formats, list)
-
-        path_to_single_file_or_doc_root = config.input_paths
-        if isinstance(path_to_single_file_or_doc_root, str):
-            path_to_single_file_or_doc_root = [config.input_paths]
-
         document_tree, asset_dirs = DocumentFinder.find_sdoc_content(
-            path_to_single_file_or_doc_root, config, parallelizer
+            config, parallelizer
         )
 
         try:

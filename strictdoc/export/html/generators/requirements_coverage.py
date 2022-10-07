@@ -17,11 +17,12 @@ class RequirementsCoverageHTMLGenerator:
     @staticmethod
     def export(
         config: ExportCommandConfig,
-        document_tree,
         traceability_index: TraceabilityIndex,
         link_renderer,
     ):
-        document_tree_iterator = DocumentTreeIterator(document_tree)
+        document_tree_iterator = DocumentTreeIterator(
+            traceability_index.document_tree
+        )
 
         output = ""
 
@@ -37,7 +38,6 @@ class RequirementsCoverageHTMLGenerator:
         )
         output += template.render(
             config=config,
-            document_tree=document_tree,
             traceability_index=traceability_index,
             documents_iterator=document_tree_iterator.iterator(),
             link_renderer=link_renderer,

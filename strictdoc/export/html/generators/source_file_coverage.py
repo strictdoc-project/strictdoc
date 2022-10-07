@@ -15,7 +15,6 @@ class SourceFileCoverageHTMLGenerator:
     @staticmethod
     def export(
         config: ExportCommandConfig,
-        document_tree,
         traceability_index: TraceabilityIndex,
         link_renderer: LinkRenderer,
     ):
@@ -27,7 +26,6 @@ class SourceFileCoverageHTMLGenerator:
 
         output += template.render(
             config=config,
-            document_tree=document_tree,
             traceability_index=traceability_index,
             static_path="_static",
             link_renderer=link_renderer,

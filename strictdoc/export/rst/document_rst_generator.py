@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.core.document_tree import DocumentTree
+from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.rst.writer import RSTWriter
 
 
@@ -13,15 +13,13 @@ def get_path_components(folder_path):
 
 class DocumentRSTGenerator:
     @staticmethod
-    def export_tree(
-        document_tree: DocumentTree, traceability_index, output_rst_root
-    ):
+    def export_tree(traceability_index: TraceabilityIndex, output_rst_root):
         Path(output_rst_root).mkdir(parents=True, exist_ok=True)
 
         document: Document
-        for document in document_tree.document_list:
+        for document in traceability_index.document_tree.document_list:
             document_content = DocumentRSTGenerator.export(
-                document_tree, document, traceability_index
+                document, traceability_index
             )
 
             output_folder = os.path.join(
@@ -36,10 +34,12 @@ class DocumentRSTGenerator:
                 file.write(document_content)
 
     @staticmethod
-    def export(document_tree: DocumentTree, document, traceability_index):
+    def export(document, traceability_index):
         writer = RSTWriter(traceability_index)
 
-        single_or_many = len(document_tree.document_list) == 1
+        single_or_many = (
+            len(traceability_index.document_tree.document_list) == 1
+        )
         output = writer.write(document, single_or_many)
 
         return output

@@ -8,7 +8,7 @@ from xlsxwriter.worksheet import Worksheet
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.requirement import Requirement
-from strictdoc.core.document_tree import DocumentTree
+from strictdoc.core.traceability_index import TraceabilityIndex
 
 EXCEL_SHEET_NAME = "Requirements"
 MAX_WIDTH = 75
@@ -39,15 +39,14 @@ EXPORT_COLUMNS = [
 class ExcelGenerator:
     @staticmethod
     def export_tree(
-        document_tree: DocumentTree,
-        traceability_index,
+        traceability_index: TraceabilityIndex,
         output_excel_root,
         fields: List[str],
     ):
         Path(output_excel_root).mkdir(parents=True, exist_ok=True)
 
         document: Document
-        for document in document_tree.document_list:
+        for document in traceability_index.document_tree.document_list:
             document_out_file_name = (
                 f"{document.meta.document_filename_base}.xlsx"
             )

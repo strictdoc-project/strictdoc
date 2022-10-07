@@ -1,5 +1,5 @@
 <ul class="nav">
-  {%- for document in document_tree.document_list -%}
+  {%- for document in traceability_index.document_tree.document_list -%}
     <li><a class="document-tree-link" href="#{{loop.index}}">{{document.title}}</a></li>
   {%- endfor -%}
 </ul>

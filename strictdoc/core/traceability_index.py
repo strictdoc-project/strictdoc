@@ -6,7 +6,7 @@ from strictdoc.core.file_traceability_index import FileTraceabilityIndex
 from strictdoc.helpers.sorting import alphanumeric_sort
 
 
-class TraceabilityIndex:  # pylint: disable=too-many-public-methods
+class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-instance-attributes  # noqa: E501
     def __init__(  # pylint: disable=too-many-arguments
         self,
         document_iterators,
@@ -24,6 +24,10 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods
         self._document_parents_map = document_parents_map
         self._document_children_map = document_children_map
         self._file_traceability_index = file_traceability_index
+
+        self.document_tree = None
+        self.asset_dirs = None
+        self.strictdoc_last_update = None
 
     def has_requirements(self):
         return len(self.requirements_parents.keys()) > 0

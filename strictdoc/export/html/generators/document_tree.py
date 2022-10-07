@@ -12,15 +12,17 @@ class DocumentTreeHTMLGenerator:
     env.globals.update(isinstance=isinstance)
 
     @staticmethod
-    def export(config, document_tree, traceability_index: TraceabilityIndex):
-        document_tree_iterator = DocumentTreeIterator(document_tree)
+    def export(config, traceability_index: TraceabilityIndex):
+        document_tree_iterator = DocumentTreeIterator(
+            traceability_index.document_tree
+        )
 
         template = DocumentTreeHTMLGenerator.env.get_template(
             "document_tree/document_tree.jinja.html"
         )
         output = template.render(
             config=config,
-            document_tree=document_tree,
+            document_tree=traceability_index.document_tree,
             artefact_list=document_tree_iterator.iterator(),
             static_path="_static",
             traceability_index=traceability_index,

@@ -34,7 +34,7 @@
     <div class="std-tree">
 
       <ul class="std-tree_ul_0">
-        {%- for folder_or_file in document_tree.source_tree.file_tree.iterate_directories(): -%}
+        {%- for folder_or_file in traceability_index.document_tree.source_tree.file_tree.iterate_directories(): -%}
 
           {%- set last_class_or_none = '' -%}
           {%- if loop.last or (loop.nextitem and loop.nextitem.level < folder_or_file.level) -%}
@@ -55,7 +55,7 @@
                 </div>
               </div>
             {% else %}
-              {%- set source_file = document_tree.source_tree.get_source_for_file(folder_or_file) -%}
+              {%- set source_file = traceability_index.document_tree.source_tree.get_source_for_file(folder_or_file) -%}
               <div class="std-tree_file">
 
                 <i class="std-tree_ico">

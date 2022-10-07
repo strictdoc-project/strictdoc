@@ -1,11 +1,10 @@
 import os
-from enum import Enum
 from functools import partial
 from pathlib import Path
 from typing import Optional
 
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.cli.cli_arg_parser import ExportCommandConfig
+from strictdoc.cli.cli_arg_parser import ExportCommandConfig, ExportMode
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.source_tree import SourceTree
@@ -41,16 +40,9 @@ from strictdoc.helpers.timing import measure_performance
 
 
 class ExportOptions:
-    def __init__(self, export_mode, strictdoc_src_path, strictdoc_last_update):
-        self.export_mode = export_mode
+    def __init__(self, strictdoc_src_path, strictdoc_last_update):
         self.strictdoc_src_path = strictdoc_src_path
         self.strictdoc_last_update = strictdoc_last_update
-
-
-class ExportMode(Enum):
-    DOCTREE = 1
-    STANDALONE = 2
-    DOCTREE_AND_STANDALONE = 3
 
 
 class HTMLGenerator:
@@ -60,32 +52,23 @@ class HTMLGenerator:
         config: ExportCommandConfig,
         document_tree: DocumentTree,
         traceability_index: TraceabilityIndex,
-        output_html_root,
         strictdoc_last_update,
         asset_dirs,
         parallelizer,
     ):  # pylint: disable=too-many-arguments,too-many-statements
-        if "html" in config.formats:
-            if "html-standalone" in config.formats:
-                export_mode = ExportMode.DOCTREE_AND_STANDALONE
-            else:
-                export_mode = ExportMode.DOCTREE
-        else:
-            if "html-standalone" in config.formats:
-                export_mode = ExportMode.STANDALONE
-            else:
-                raise NotImplementedError
 
         export_options = ExportOptions(
-            export_mode, config.strictdoc_root_path, strictdoc_last_update
+            config.strictdoc_root_path, strictdoc_last_update
         )
-        link_renderer = LinkRenderer(output_html_root)
+        link_renderer = LinkRenderer(config.output_html_root)
 
         writer = DocumentTreeHTMLGenerator()
         output = writer.export(config, document_tree, traceability_index)
 
-        output_html_static_files = os.path.join(output_html_root, "_static")
-        output_file = os.path.join(output_html_root, "index.html")
+        output_html_static_files = os.path.join(
+            config.output_html_root, "_static"
+        )
+        output_file = os.path.join(config.output_html_root, "index.html")
 
         with open(output_file, "w", encoding="utf8") as file:
             file.write(output)
@@ -97,7 +80,7 @@ class HTMLGenerator:
 
         if config.enable_mathjax:
             output_html_mathjax = os.path.join(
-                output_html_root, "_static", "mathjax"
+                config.output_html_root, "_static", "mathjax"
             )
             Path(output_html_mathjax).mkdir(parents=True, exist_ok=True)
             mathjax_src = os.path.join(
@@ -110,7 +93,7 @@ class HTMLGenerator:
             source_path = asset_dir["full_path"]
             output_relative_path = asset_dir["relative_path"]
             destination_path = os.path.join(
-                output_html_root, output_relative_path
+                config.output_html_root, output_relative_path
             )
             sync_dir(source_path, destination_path)
 
@@ -161,7 +144,6 @@ class HTMLGenerator:
         export_binding = partial(
             HTMLGenerator._export_with_performance,
             config,
-            export_options=export_options,
             traceability_index=traceability_index,
             link_renderer=link_renderer,
         )
@@ -177,7 +159,7 @@ class HTMLGenerator:
             )
         )
         output_html_requirements_coverage = os.path.join(
-            output_html_root, "requirements_coverage.html"
+            config.output_html_root, "requirements_coverage.html"
         )
         with open(
             output_html_requirements_coverage, "w", encoding="utf8"
@@ -214,7 +196,7 @@ class HTMLGenerator:
                 link_renderer=link_renderer,
             )
             output_html_source_coverage = os.path.join(
-                output_html_root, "source_coverage.html"
+                config.output_html_root, "source_coverage.html"
             )
             with open(
                 output_html_source_coverage, "w", encoding="utf8"
@@ -223,14 +205,13 @@ class HTMLGenerator:
 
         print(
             "Export completed. Documentation tree can be found at:\n"
-            f"{output_html_root}"
+            f"{config.output_html_root}"
         )
 
     @staticmethod
     def _export_with_performance(
         config: ExportCommandConfig,
         document,
-        export_options: ExportOptions,
         traceability_index,
         link_renderer,
     ):
@@ -240,7 +221,6 @@ class HTMLGenerator:
         with measure_performance(f"Published: {document.name}"):
             HTMLGenerator._export(
                 config,
-                export_options.export_mode,
                 document,
                 traceability_index,
                 link_renderer,
@@ -250,11 +230,12 @@ class HTMLGenerator:
     @staticmethod
     def _export(
         config: ExportCommandConfig,
-        export_mode,
         document,
         traceability_index,
         link_renderer,
     ):
+        export_mode = config.get_export_mode()
+
         document_meta: DocumentMeta = document.meta
 
         document_output_folder = document_meta.output_document_dir_full_path

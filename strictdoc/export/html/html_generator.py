@@ -60,7 +60,6 @@ class HTMLGenerator:
         config: ExportCommandConfig,
         document_tree: DocumentTree,
         traceability_index: TraceabilityIndex,
-        output_html_root,
         strictdoc_last_update,
         asset_dirs,
         parallelizer,
@@ -79,13 +78,15 @@ class HTMLGenerator:
         export_options = ExportOptions(
             export_mode, config.strictdoc_root_path, strictdoc_last_update
         )
-        link_renderer = LinkRenderer(output_html_root)
+        link_renderer = LinkRenderer(config.output_html_root)
 
         writer = DocumentTreeHTMLGenerator()
         output = writer.export(config, document_tree, traceability_index)
 
-        output_html_static_files = os.path.join(output_html_root, "_static")
-        output_file = os.path.join(output_html_root, "index.html")
+        output_html_static_files = os.path.join(
+            config.output_html_root, "_static"
+        )
+        output_file = os.path.join(config.output_html_root, "index.html")
 
         with open(output_file, "w", encoding="utf8") as file:
             file.write(output)
@@ -97,7 +98,7 @@ class HTMLGenerator:
 
         if config.enable_mathjax:
             output_html_mathjax = os.path.join(
-                output_html_root, "_static", "mathjax"
+                config.output_html_root, "_static", "mathjax"
             )
             Path(output_html_mathjax).mkdir(parents=True, exist_ok=True)
             mathjax_src = os.path.join(
@@ -110,7 +111,7 @@ class HTMLGenerator:
             source_path = asset_dir["full_path"]
             output_relative_path = asset_dir["relative_path"]
             destination_path = os.path.join(
-                output_html_root, output_relative_path
+                config.output_html_root, output_relative_path
             )
             sync_dir(source_path, destination_path)
 
@@ -177,7 +178,7 @@ class HTMLGenerator:
             )
         )
         output_html_requirements_coverage = os.path.join(
-            output_html_root, "requirements_coverage.html"
+            config.output_html_root, "requirements_coverage.html"
         )
         with open(
             output_html_requirements_coverage, "w", encoding="utf8"
@@ -214,7 +215,7 @@ class HTMLGenerator:
                 link_renderer=link_renderer,
             )
             output_html_source_coverage = os.path.join(
-                output_html_root, "source_coverage.html"
+                config.output_html_root, "source_coverage.html"
             )
             with open(
                 output_html_source_coverage, "w", encoding="utf8"
@@ -223,7 +224,7 @@ class HTMLGenerator:
 
         print(
             "Export completed. Documentation tree can be found at:\n"
-            f"{output_html_root}"
+            f"{config.output_html_root}"
         )
 
     @staticmethod

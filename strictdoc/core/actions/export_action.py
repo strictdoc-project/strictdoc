@@ -88,7 +88,6 @@ class ExportAction:
                 config=config,
                 document_tree=document_tree,
                 traceability_index=traceability_index,
-                output_html_root=config.output_html_root,
                 strictdoc_last_update=strictdoc_last_update,
                 asset_dirs=asset_dirs,
                 parallelizer=parallelizer,

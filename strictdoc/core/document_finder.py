@@ -18,10 +18,8 @@ from strictdoc.helpers.timing import measure_performance, timing_decorator
 class DocumentFinder:
     @staticmethod
     @timing_decorator("Find and read SDoc files")
-    def find_sdoc_content(
-        paths_to_files_or_docs, config: ExportCommandConfig, parallelizer
-    ):
-        for paths_to_files_or_doc in paths_to_files_or_docs:
+    def find_sdoc_content(config: ExportCommandConfig, parallelizer):
+        for paths_to_files_or_doc in config.input_paths:
             if not os.path.exists(paths_to_files_or_doc):
                 sys.stdout.flush()
                 err = (
@@ -32,9 +30,7 @@ class DocumentFinder:
                 print(err)
                 sys.exit(1)
 
-        file_tree, asset_dirs = DocumentFinder._build_file_tree(
-            paths_to_files_or_docs, config
-        )
+        file_tree, asset_dirs = DocumentFinder._build_file_tree(config)
         document_tree = DocumentFinder._build_document_tree(
             file_tree, config.output_html_root, parallelizer
         )
@@ -114,11 +110,11 @@ class DocumentFinder:
         return DocumentTree(file_trees, document_list, map_docs_by_paths)
 
     @staticmethod
-    def _build_file_tree(paths_to_files_or_docs, config: ExportCommandConfig):
+    def _build_file_tree(config: ExportCommandConfig):
         asset_dirs = []
         root_trees = []
 
-        for path_to_doc_root_raw in paths_to_files_or_docs:
+        for path_to_doc_root_raw in config.input_paths:
             if os.path.isfile(path_to_doc_root_raw):
                 path_to_doc_root = path_to_doc_root_raw
                 if not os.path.isabs(path_to_doc_root):

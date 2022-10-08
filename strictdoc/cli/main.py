@@ -60,8 +60,9 @@ def _main(parallelizer):
             "Disabled" if config.no_parallelization else "Enabled"
         )
         print(f"Parallelization: {parallelization_value}", flush=True)
-        export_action = ExportAction()
-        export_action.export(config, parallelizer)
+        export_action = ExportAction(config, parallelizer)
+        export_action.build_index()
+        export_action.export()
 
     elif parser.is_import_command_reqif:
         import_config: ImportReqIFCommandConfig = (

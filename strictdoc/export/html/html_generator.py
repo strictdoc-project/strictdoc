@@ -35,12 +35,6 @@ from strictdoc.helpers.file_system import sync_dir
 from strictdoc.helpers.timing import measure_performance
 
 
-class ExportOptions:
-    def __init__(self, strictdoc_src_path, strictdoc_last_update):
-        self.strictdoc_src_path = strictdoc_src_path
-        self.strictdoc_last_update = strictdoc_last_update
-
-
 class HTMLGenerator:
     @staticmethod
     def export_tree(

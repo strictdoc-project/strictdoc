@@ -285,7 +285,7 @@ class SDocToReqIFObjectConverter:
                 description=None,
                 identifier=generate_unique_identifier("SPECIFICATION"),
                 last_change=None,
-                long_name=document.name,
+                long_name=document.title,
                 values=None,
                 specification_type=specification_type.identifier,
                 children=root_hierarchy.children,

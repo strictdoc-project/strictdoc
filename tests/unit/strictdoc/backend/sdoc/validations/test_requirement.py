@@ -37,7 +37,7 @@ def test_04_meta_multilines_not_nones():
         requirement_style=None,
         requirement_in_toc=None,
     )
-    document = Document(None, "Test Doc", document_config, None, [], [])
+    document = Document("Test Doc", document_config, None, [], [])
 
     test_field = "META_TEST_FIELD"
     fields = DocumentGrammar.create_default(document).elements[0].fields

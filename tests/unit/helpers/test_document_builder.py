@@ -69,6 +69,6 @@ class DocumentBuilder:
         free_texts = []
         section_contents = []
         document = Document(
-            None, "Test Document", config, None, free_texts, section_contents
+            "Test Document", config, None, free_texts, section_contents
         )
         return document

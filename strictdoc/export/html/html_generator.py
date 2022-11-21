@@ -164,9 +164,9 @@ class HTMLGenerator:
         link_renderer,
     ):
         if not document.ng_needs_generation:
-            with measure_performance(f"Skip: {document.name}"):
+            with measure_performance(f"Skip: {document.title}"):
                 return
-        with measure_performance(f"Published: {document.name}"):
+        with measure_performance(f"Published: {document.title}"):
             HTMLGenerator._export(
                 config,
                 document,

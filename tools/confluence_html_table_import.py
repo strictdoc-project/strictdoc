@@ -42,7 +42,6 @@ class ConfluenceHTMLTableImport:
             reqs_array_array.append(reqs)
 
         document = Document(
-            name=None,
             title="Imported Doc",
             config=None,
             grammar=None,

@@ -135,7 +135,7 @@ class ExcelToSDocConverter:
             requirement_in_toc=None,
         )
         document_title = title if title else "<No title>"
-        document = Document(None, document_title, document_config, None, [], [])
+        document = Document(document_title, document_config, None, [], [])
 
         fields = DocumentGrammar.create_default(document).elements[0].fields
         for _, name in extra_header_pairs:

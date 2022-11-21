@@ -175,8 +175,8 @@ class TraceabilityIndexBuilder:
         for document in document_tree.document_list:
             document_iterator = DocumentCachingIterator(document)
             document_iterators[document] = document_iterator
-            if document.name not in tags_map:
-                tags_map[document.name] = {}
+            if document.title not in tags_map:
+                tags_map[document.title] = {}
             for node in document_iterator.all_content():
                 if not node.uid:
                     continue
@@ -208,7 +208,7 @@ class TraceabilityIndexBuilder:
                 if not node.is_requirement:
                     continue
                 requirement: Requirement = node
-                document_tags = tags_map[document.name]
+                document_tags = tags_map[document.title]
                 if requirement.tags is not None:
                     for tag in requirement.tags:
                         if tag not in document_tags:

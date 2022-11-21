@@ -11,7 +11,6 @@ class SDocObjectFactory:
     @staticmethod
     def create_document(title: Optional[str]):
         return Document(
-            name=None,
             title=title if title else "NONAME",
             config=None,
             grammar=None,

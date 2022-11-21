@@ -48,7 +48,7 @@ class SourceFileViewHTMLGenerator:
         elif source_file.is_tex_file():
             lexer = TexLexer()
         else:
-            assert NotImplementedError
+            raise NotImplementedError
 
         html_formatter = HtmlFormatter()
         pygmented_source_file_content = highlight(

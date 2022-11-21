@@ -92,10 +92,10 @@ def copytree(
                 # Will raise a SpecialFileError for unsupported file types
                 # ---
                 # StrictDoc: We don't want to copy files if they are not newer.
-                if not os.path.isfile(dst) or os.path.getmtime(
-                    src
-                ) > os.path.getmtime(dst):
-                    print(f"Copying: {src} -> {dst}")
+                if not os.path.isfile(dstname) or os.path.getmtime(
+                    srcname
+                ) > os.path.getmtime(dstname):
+                    print(f"Copying: {srcname} -> {dstname}")
                     copy_function(srcname, dstname)
         # catch the Error from the recursive copytree so that we can
         # continue with other files

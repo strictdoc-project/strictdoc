@@ -4,8 +4,15 @@ import re
 from enum import Enum
 from shutil import which
 
-import invoke
-from invoke import task
+# Invoke is broken on Python 3.11
+# https://github.com/pyinvoke/invoke/issues/833#issuecomment-1293148106
+import inspect
+
+if not hasattr(inspect, "getargspec"):
+    inspect.getargspec = inspect.getfullargspec
+
+import invoke  # pylint: disable=wrong-import-position
+from invoke import task  # pylint: disable=wrong-import-position
 
 # A flag that stores which virtual environment is used for executing tasks.
 VENV_FOLDER = "VENV_FOLDER"

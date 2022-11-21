@@ -237,7 +237,10 @@ class PathFinder:
             dirs[:] = [
                 d
                 for d in dirs
-                if not d.startswith(".") and d != "output" and d != "tests"
+                if not d.startswith(".")
+                and d != "output"
+                and d != "Output"
+                and d != "tests"
             ]
             if os.path.basename(current_root_path) == directory:
                 directories.append(current_root_path)

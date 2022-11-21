@@ -34,7 +34,7 @@ class ReqIFToSDocFactory:
             requirement_in_toc=None,
         )
         document_title = title if title else "<No title>"
-        document = Document(None, document_title, document_config, None, [], [])
+        document = Document(document_title, document_config, None, [], [])
         document.grammar = DocumentGrammar.create_default(document)
         return document
 

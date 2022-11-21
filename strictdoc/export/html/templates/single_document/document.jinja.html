@@ -9,7 +9,7 @@
   {%- endif -%}
   {{ super() }}
 {% endblock head_scripts %}
-{% block title %}{{document.name}} - {{ template_type }}{% endblock title %}
+{% block title %}{{document.title}} - {{ template_type }}{% endblock title %}
 {% block viewtype %}document-view{% endblock %}
 {% block withtoc %}withtoc{% endblock %}
 
@@ -26,7 +26,7 @@
 {% endblock aside_content %}
 
 {% block header_content %}
-  <p>{{document.name}} <span class="document-view-type">{{ template_type }}</span></p>
+  <p>{{document.title}} <span class="document-view-type">{{ template_type }}</span></p>
 {% endblock header_content %}
 
 {% block content %}

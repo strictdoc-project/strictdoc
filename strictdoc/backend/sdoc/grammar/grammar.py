@@ -1,8 +1,7 @@
 DOCUMENT_GRAMMAR = r"""
 Document[noskipws]:
   '[DOCUMENT]' '\n'
-  // NAME: is deprecated. Both documents and sections now have TITLE:.
-  (('NAME: ' name = /.*$/ '\n') | ('TITLE: ' title = /.*$/ '\n')?)
+  'TITLE: ' title = /.*$/ '\n'
   (config = DocumentConfig)?
   ('\n' grammar = DocumentGrammar)?
   free_texts *= SpaceThenFreeText

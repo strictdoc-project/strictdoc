@@ -35,7 +35,7 @@ class SDWriter:
         output += "\n"
 
         output += "TITLE: "
-        output += document.name
+        output += document.title
         output += "\n"
 
         document_config: DocumentConfig = document.config

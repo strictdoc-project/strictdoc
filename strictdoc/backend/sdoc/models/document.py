@@ -8,7 +8,6 @@ from strictdoc.core.document_meta import DocumentMeta
 class Document:  # pylint: disable=too-many-instance-attributes
     def __init__(  # pylint: disable=too-many-arguments
         self,
-        name,
         title,
         config: Optional[DocumentConfig],
         grammar: Optional[DocumentGrammar],
@@ -17,7 +16,7 @@ class Document:  # pylint: disable=too-many-instance-attributes
     ):
         assert isinstance(free_texts, list)
 
-        self.name = name if name else title
+        self.title = title
         self.config = config if config else DocumentConfig.default_config(self)
         self.grammar: Optional[DocumentGrammar] = grammar
         self.free_texts = free_texts
@@ -26,13 +25,12 @@ class Document:  # pylint: disable=too-many-instance-attributes
         self.ng_level = 0
         self.ng_needs_generation = False
         self.meta: Optional[DocumentMeta] = None
-        self.legacy_title_is_used = name is not None and len(name) > 0
 
     def __str__(self):
         return (
             f"Document("
             f"id: {id(self)}, "
-            f"name: {self.name}, "
+            f"title: {self.title}, "
             f"section_contents: {self.section_contents})"
         )
 

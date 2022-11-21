@@ -22,7 +22,7 @@ class RSTWriter:
         output = ""
 
         if not single_document:
-            output += self._print_rst_header(document.name, 0)
+            output += self._print_rst_header(document.title, 0)
 
         for free_text in document.free_texts:
             output += self._print_free_text(free_text)

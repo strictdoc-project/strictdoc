@@ -33,12 +33,6 @@ class SDocParsingProcessor:
         self.delegate = delegate
 
     def process_document(self, document: Document):
-        if document.legacy_title_is_used:
-            print(
-                "warning: [DOCUMENT].NAME field is deprecated."
-                " Now both [DOCUMENT]s and [SECTION]s have 'TITLE:'."
-                " Use 'TITLE:' instead."
-            )
         document.grammar = self.parse_context.document_grammar
 
     def get_default_processors(self):

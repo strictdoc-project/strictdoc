@@ -12,7 +12,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         document_iterators,
         requirements_parents,
         tags_map,
-        documents_ref_depth_map,
         document_parents_map,
         document_children_map,
         file_traceability_index: FileTraceabilityIndex,
@@ -20,7 +19,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         self._document_iterators = document_iterators
         self._requirements_parents = requirements_parents
         self._tags_map = tags_map
-        self._documents_ref_depth_map = documents_ref_depth_map
         self._document_parents_map = document_parents_map
         self._document_children_map = document_children_map
         self._file_traceability_index = file_traceability_index
@@ -43,10 +41,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     @property
     def tags_map(self):
         return self._tags_map
-
-    @property
-    def documents_ref_depth_map(self):
-        return self._documents_ref_depth_map
 
     def get_document_iterator(self, document):
         return self.document_iterators[document]
@@ -139,9 +133,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         tags = sorted(tags_bag.keys(), key=alphanumeric_sort)
         for tag in tags:
             yield tag, tags_bag[tag]
-
-    def get_max_ref_depth(self, document):
-        return self.documents_ref_depth_map[document]
 
     def get_requirement_file_links(self, requirement):
         return self._file_traceability_index.get_requirement_file_links(

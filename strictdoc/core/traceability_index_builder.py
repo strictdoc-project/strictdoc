@@ -149,13 +149,10 @@ class TraceabilityIndexBuilder:
         d_01_document_iterators = {}
         d_02_requirements_map = {}
         d_03_map_doc_titles_to_tag_lists = {}
-        d_04_documents_ref_depth_map = {}
         d_05_map_documents_to_parents = {}
         d_06_map_documents_to_children = {}
         d_07_file_traceability_index = FileTraceabilityIndex()
         d_08_requirements_children_map = {}
-        d_09_requirements_child_depth_map = {}
-        d_10_requirements_parent_depth_map = {}
 
         # It seems to be impossible to accomplish everything in just one for
         # loop. One particular problem that requires two passes: it is not
@@ -245,7 +242,6 @@ class TraceabilityIndexBuilder:
             d_05_map_documents_to_parents.setdefault(document, set())
             d_06_map_documents_to_children.setdefault(document, set())
             document_iterator = d_01_document_iterators[document]
-            max_parent_depth, max_child_depth = 0, 0
 
             for node in document_iterator.all_content():
                 if node.is_section:
@@ -326,57 +322,14 @@ class TraceabilityIndexBuilder:
                 )
                 # [/SDOC-VALIDATION-NO-CYCLES]
 
-                if requirement.uid not in d_09_requirements_child_depth_map:
-                    child_depth = 0
-                    d_02_requirements_map[requirement.uid][
-                        "children"
-                    ] = d_08_requirements_children_map[requirement.uid]
-                    queue = d_08_requirements_children_map[requirement.uid]
-                    while True:
-                        if len(queue) == 0:
-                            break
-                        child_depth += 1
-                        deeper_queue = []
-                        for child in queue:
-                            deeper_queue.extend(
-                                d_08_requirements_children_map[child.uid]
-                            )
-                        queue = deeper_queue
-                    d_09_requirements_child_depth_map[
-                        requirement.uid
-                    ] = child_depth
-                    max_child_depth = max(max_child_depth, child_depth)
+                d_02_requirements_map[requirement.uid][
+                    "children"
+                ] = d_08_requirements_children_map[requirement.uid]
 
-                # Calculate parent depth
-                if requirement.uid not in d_10_requirements_parent_depth_map:
-                    parent_depth = 0
-                    queue = requirement_parent_ids
-                    while True:
-                        if len(queue) == 0:
-                            break
-                        parent_depth += 1
-                        deeper_queue = []
-                        for parent_uid in queue:
-                            if parent_uid not in d_02_requirements_map:
-                                continue
-                            deeper_queue.extend(
-                                d_02_requirements_map[parent_uid][
-                                    "parents_uids"
-                                ]
-                            )
-                        queue = deeper_queue
-                    d_10_requirements_parent_depth_map[
-                        requirement.uid
-                    ] = parent_depth
-                    max_parent_depth = max(max_parent_depth, parent_depth)
-            d_04_documents_ref_depth_map[document] = max(
-                max_parent_depth, max_child_depth
-            )
         traceability_index = TraceabilityIndex(
             d_01_document_iterators,
             d_02_requirements_map,
             d_03_map_doc_titles_to_tag_lists,
-            d_04_documents_ref_depth_map,
             d_05_map_documents_to_parents,
             d_06_map_documents_to_children,
             d_07_file_traceability_index,

@@ -1,12 +1,11 @@
+# Invoke is broken on Python 3.11
+# https://github.com/pyinvoke/invoke/issues/833#issuecomment-1293148106
+import inspect
 import os
 import platform
 import re
 from enum import Enum
 from shutil import which
-
-# Invoke is broken on Python 3.11
-# https://github.com/pyinvoke/invoke/issues/833#issuecomment-1293148106
-import inspect
 
 if not hasattr(inspect, "getargspec"):
     inspect.getargspec = inspect.getfullargspec
@@ -65,6 +64,7 @@ class VenvFolderType(str, Enum):
     RELEASE_LOCAL = "release-local"
     RELEASE_PYPI = "release-pypi"
     RELEASE_PYPI_TEST = "release-pypi-test"
+    RELEASE_PYINSTALLER = "release-pyinstaller"
 
 
 def run_invoke_cmd(
@@ -230,17 +230,15 @@ def test_coverage_report(context):
 
 
 @task
-def test_integration(context, focus=None, debug=False):
+def test_integration(context, focus=None, debug=False, strictdoc=None):
     clean_itest_artifacts(context)
 
     cwd = os.getcwd()
 
-    strictdoc_exec = f'python3 \\"{cwd}/strictdoc/cli/main.py\\"'
-    if (
-        VENV_FOLDER in context
-        and context[VENV_FOLDER] == VenvFolderType.RELEASE_LOCAL
-    ):
-        strictdoc_exec = "strictdoc"
+    if strictdoc is None:
+        strictdoc_exec = f'python3 \\"{cwd}/strictdoc/cli/main.py\\"'
+    else:
+        strictdoc_exec = strictdoc
 
     focus_or_none = f"--filter {focus}" if focus else ""
     debug_opts = "-vv --show-all" if debug else ""
@@ -392,7 +390,7 @@ def release_local(context):
             python3 setup.py install
     """
     run_invoke_cmd(context, command)
-    check(context)
+    test_integration(context, strictdoc="strictdoc")
 
 
 @task
@@ -420,6 +418,28 @@ def release_test(context):
         python3 setup.py check &&
             python3 setup.py sdist --verbose &&
             twine upload --repository-url https://test.pypi.org/legacy/ dist/strictdoc-*.tar.gz
+    """
+    run_invoke_cmd(context, command)
+
+
+@task
+def release_pyinstaller(context):
+    context[VENV_FOLDER] = VenvFolderType.RELEASE_PYINSTALLER
+    setup_development_deps(context)
+
+    path_to_pyi_dist = "/tmp/strictdoc"
+
+    command = f"""
+        pip install pyinstaller &&
+        pyinstaller
+            --clean
+            --name strictdoc
+            --noconfirm
+            --distpath {path_to_pyi_dist}
+            --add-data strictdoc/export/html/templates:templates
+            --add-data strictdoc/export/html/_static:_static
+            --add-data strictdoc/export/html/_static_extra:_static_extra
+            strictdoc/cli/main.py
     """
     run_invoke_cmd(context, command)
 

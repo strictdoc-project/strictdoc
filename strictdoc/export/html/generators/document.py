@@ -1,15 +1,10 @@
-from jinja2 import Environment, PackageLoader, StrictUndefined
-
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.export.html.document_type import DocumentType
+from strictdoc.export.html.html_templates import HTMLTemplates
 
 
 class DocumentHTMLGenerator:
-    env = Environment(
-        loader=PackageLoader("strictdoc", "export/html/templates"),
-        undefined=StrictUndefined,
-    )
-    env.globals.update(isinstance=isinstance)
+    env = HTMLTemplates.jinja_environment
 
     @staticmethod
     def export(  # pylint: disable=too-many-arguments

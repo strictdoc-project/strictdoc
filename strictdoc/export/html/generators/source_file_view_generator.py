@@ -1,22 +1,18 @@
-from jinja2 import Environment, PackageLoader, StrictUndefined
 from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers.c_cpp import CppLexer, CLexer
-from pygments.lexers.python import PythonLexer
 from pygments.lexers.markup import TexLexer
+from pygments.lexers.python import PythonLexer
 
 from strictdoc.core.finders.source_files_finder import SourceFile
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
+from strictdoc.export.html.html_templates import HTMLTemplates
 
 
 class SourceFileViewHTMLGenerator:
-    env = Environment(
-        loader=PackageLoader("strictdoc", "export/html/templates"),
-        undefined=StrictUndefined,
-    )
-    env.globals.update(isinstance=isinstance)
+    env = HTMLTemplates.jinja_environment
 
     @staticmethod
     def export(

@@ -57,10 +57,7 @@ class HTMLGenerator:
             file.write(output)
 
         # Export StrictDoc's own assets.
-        static_files_src = os.path.join(
-            config.strictdoc_root_path, "strictdoc/export/html/_static"
-        )
-        sync_dir(static_files_src, output_html_static_files)
+        sync_dir(config.get_static_files_path(), output_html_static_files)
 
         # Export MathJax
         if config.enable_mathjax:
@@ -69,8 +66,7 @@ class HTMLGenerator:
             )
             Path(output_html_mathjax).mkdir(parents=True, exist_ok=True)
             mathjax_src = os.path.join(
-                config.strictdoc_root_path,
-                "strictdoc/export/html/_static_extra/mathjax",
+                config.get_extra_static_files_path(), "mathjax"
             )
             sync_dir(mathjax_src, output_html_mathjax)
 

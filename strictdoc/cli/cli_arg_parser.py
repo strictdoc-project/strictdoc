@@ -1,5 +1,6 @@
 import argparse
 import os
+import sys
 from enum import Enum
 
 EXPORT_FORMATS = ["html", "html-standalone", "rst", "excel", "reqif-sdoc"]
@@ -283,6 +284,28 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         if "html-standalone" in self.formats:
             return ExportMode.STANDALONE
         raise NotImplementedError
+
+    def get_static_files_path(self):
+        if getattr(sys, "frozen", False):
+            # If the application is run as a bundle, the PyInstaller bootloader
+            # extends the sys module by a flag frozen=True and sets the app
+            # path into variable _MEIPASS'.
+            bundle_dir = sys._MEIPASS  # pylint: disable=protected-access
+            return os.path.join(bundle_dir, "_static")
+        return os.path.join(
+            self.strictdoc_root_path, "strictdoc/export/html/_static"
+        )
+
+    def get_extra_static_files_path(self):
+        if getattr(sys, "frozen", False):
+            # If the application is run as a bundle, the PyInstaller bootloader
+            # extends the sys module by a flag frozen=True and sets the app
+            # path into variable _MEIPASS'.
+            bundle_dir = sys._MEIPASS  # pylint: disable=protected-access
+            return os.path.join(bundle_dir, "_static_extra")
+        return os.path.join(
+            self.strictdoc_root_path, "strictdoc/export/html/_static_extra"
+        )
 
 
 class DumpGrammarCommandConfig:

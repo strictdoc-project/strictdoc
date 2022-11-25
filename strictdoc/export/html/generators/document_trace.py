@@ -1,15 +1,9 @@
-from jinja2 import Environment, PackageLoader, StrictUndefined
-
 from strictdoc.export.html.document_type import DocumentType
+from strictdoc.export.html.html_templates import HTMLTemplates
 
 
 class DocumentTraceHTMLGenerator:
-    env = Environment(
-        loader=PackageLoader("strictdoc", "export/html/templates"),
-        undefined=StrictUndefined
-        # autoescape=select_autoescape(['html', 'xml'])
-    )
-    env.globals.update(isinstance=isinstance)
+    env = HTMLTemplates.jinja_environment
 
     @staticmethod
     def export(

@@ -1,18 +1,13 @@
-from jinja2 import Environment, PackageLoader, StrictUndefined
-
 from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
+from strictdoc.export.html.html_templates import HTMLTemplates
 
 
 class RequirementsCoverageHTMLGenerator:
-    env = Environment(
-        loader=PackageLoader("strictdoc", "export/html/templates"),
-        undefined=StrictUndefined,
-    )
-    env.globals.update(isinstance=isinstance)
+    env = HTMLTemplates.jinja_environment
 
     @staticmethod
     def export(

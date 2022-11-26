@@ -35,6 +35,8 @@ class TraceabilityIndexBuilder:
     def create(
         *, config: ExportCommandConfig, parallelizer
     ) -> TraceabilityIndex:
+        # TODO: It would be great to hide this code behind --development flag.
+        # There is no need for this to be activated in the Pip-released builds.
         strict_own_files_unfiltered: Iterator[str] = glob.iglob(
             f"{config.strictdoc_root_path}/strictdoc/**/*",
             recursive=True,
@@ -44,7 +46,12 @@ class TraceabilityIndexBuilder:
             for f in strict_own_files_unfiltered
             if f.endswith(".html") or f.endswith(".py")
         ]
-        latest_strictdoc_own_file = max(strict_own_files, key=os.path.getctime)
+        latest_strictdoc_own_file = (
+            max(strict_own_files, key=os.path.getctime)
+            if len(strict_own_files) > 0
+            else 0
+        )
+
         strictdoc_last_update = get_file_modification_time(
             latest_strictdoc_own_file
         )

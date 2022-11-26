@@ -31,3 +31,5 @@ bin/
 lib/
 pyvenv.cfg
 
+# PyInstaller
+strictdoc.spec

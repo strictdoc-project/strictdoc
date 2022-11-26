@@ -1,15 +1,10 @@
-from jinja2 import Environment, PackageLoader, StrictUndefined
-
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.export.html.html_templates import HTMLTemplates
 
 
 class DocumentTreeHTMLGenerator:
-    env = Environment(
-        loader=PackageLoader("strictdoc", "export/html/templates"),
-        undefined=StrictUndefined,
-    )
-    env.globals.update(isinstance=isinstance)
+    env = HTMLTemplates.jinja_environment
 
     @staticmethod
     def export(config, traceability_index: TraceabilityIndex):

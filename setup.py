@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
-import os
 
 from setuptools import find_packages, setup
 
 import strictdoc
 
 package_data = {
-    "": ["requirements.txt", "requirements.development.txt"],
     # It looks like the package data in setup.py does not support globbing
     # (see pypa/setuptools#1806, https://github.com/pypa/setuptools/issues/1806)
     # Doing the globbing manually for now.
@@ -21,11 +19,6 @@ package_data = {
         "*/*/*/*/*/*",
     ],
 }
-
-data_files = [
-    "requirements.txt",
-    "requirements.development.txt",
-]
 
 with open("requirements.txt") as fp:
     REQUIREMENTS = fp.read()
@@ -64,13 +57,11 @@ setup_kwargs = {
     ),
     "package_data": package_data,
     # 'package_dir': {"": "strictdoc"},
-    "data_files": data_files,
     "install_requires": REQUIREMENTS,
     "extras_require": REQUIREMENTS_DEVELOPMENT,
     "setup_requires": REQUIREMENTS_SETUP,
     "entry_points": entry_points,
     "python_requires": ">=3.6.2,<4.0.0",
 }
-
 
 setup(**setup_kwargs)

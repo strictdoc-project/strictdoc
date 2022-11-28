@@ -62,43 +62,17 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         return parent_requirements
 
     def has_parent_requirements(self, requirement: Requirement):
-        assert isinstance(requirement, Requirement)
-        if not isinstance(requirement.uid, str):
-            return False
-
-        if not requirement.uid or len(requirement.uid) == 0:
-            return False
-
-        if len(self.requirements_parents) == 0:
-            return False
-
-        parent_requirements = self.requirements_parents[requirement.uid][
-            "parents"
-        ]
-        return len(parent_requirements) > 0
+        return len(self.get_parent_requirements(requirement)) > 0
 
     def has_children_requirements(self, requirement: Requirement):
-        assert isinstance(requirement, Requirement)
-        if not isinstance(requirement.uid, str):
-            return False
-
-        if not requirement.uid or len(requirement.uid) == 0:
-            return False
-
-        if not self.requirements_parents:
-            return False
-
-        children_requirements = self.requirements_parents[requirement.uid][
-            "children"
-        ]
-        return len(children_requirements) > 0
+        return len(self.get_children_requirements(requirement)) > 0
 
     def get_children_requirements(self, requirement: Requirement):
         assert isinstance(requirement, Requirement)
         if not isinstance(requirement.uid, str):
             return []
 
-        if len(requirement.uid) == 0:
+        if not requirement.uid or len(requirement.uid) == 0:
             return []
 
         if not self.requirements_parents:

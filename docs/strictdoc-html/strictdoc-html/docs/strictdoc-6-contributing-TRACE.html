@@ -47,14 +47,17 @@
       
   
     <div>Table of Contents</div>
-    <ul class="toc"><li><a href="#1-Python-code">
+    <ul class="toc"><li><a href="#1-Contributor-checklist">
               <span class="section-number">1</span>
-              Python code
-            </a></li><li><a href="#2-Git-workflow">
+              Contributor checklist
+            </a></li><li><a href="#2-Python-code">
               <span class="section-number">2</span>
-              Git workflow
-            </a></li><li><a href="#3-Documentation">
+              Python code
+            </a></li><li><a href="#3-Git-workflow">
               <span class="section-number">3</span>
+              Git workflow
+            </a></li><li><a href="#4-Documentation">
+              <span class="section-number">4</span>
               Documentation
             </a></li></ul>
 
@@ -108,13 +111,55 @@
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="1-Python-code"></div>
+    <div data-role='anchor' id="1-Contributor-checklist"></div>
 
     
         <h1
 class="section-title"
 data-level="1">
-  1.&nbsp;Python code
+  1.&nbsp;Contributor checklist
+</h1>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>This is a condensed checklist that summarises the information presented in the
+rest of this guideline.</p>
+<p>Before opening your Pull Request, please make sure to:</p>
+<ol class="arabic simple">
+<li>Run <tt class="docutils literal">invoke check</tt> tasks locally. This task calls several lint and test
+scripts and it is the very task that is run by the GitHub CI process.</li>
+<li>A contribution that contains changes to the StrictDoc's codebase shall also
+include tests that exercise the changed behavior. A contribution without any
+tests is unlikely to be accepted (with the exception of &quot;code climate&quot;
+changes, see <a class="reference external" href="#2-Python-code">Python code</a> below).</li>
+<li>Follow the conventions of the section &quot;Git workflow&quot; (see
+<a class="reference external" href="#3-Git-workflow">Git workflow</a>). A clean Git history and conventional
+commit names are expected for every single contribution.</li>
+</ol>
+</div>
+
+    </div></section>
+
+</article></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><article class="docsection">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="2-Python-code"></div>
+
+    
+        <h1
+class="section-title"
+data-level="2">
+  2.&nbsp;Python code
 </h1>
     
 
@@ -123,22 +168,24 @@ data-level="1">
   <section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <ul class="simple">
-<li>The version of Python is set to be as low as possible given some constraints of
-StrictDoc's dependencies. Ideally, the lowest Python version should only be raised
-when it is consistently deprecated by major software platforms like Ubuntu or GitHub
-Actions.</li>
-<li>All developer tasks are collected in the <cite>tasks.py</cite> which is run by Invoke tool.
-Run the <tt class="docutils literal">invoke <span class="pre">--list</span></tt> command to see the list of available commands.</li>
+<li>The version of Python is set to be as low as possible given some constraints
+of StrictDoc's dependencies. Ideally, the lowest Python version should only be
+raised when it is consistently deprecated by major software platforms like
+Ubuntu or GitHub Actions.</li>
+<li>All developer tasks are collected in the <cite>tasks.py</cite> which is run by Invoke
+tool. Run the <tt class="docutils literal">invoke <span class="pre">--list</span></tt> command to see the list of available commands.</li>
 <li>Formatting is governed by <cite>black</cite> which reformats the code automatically
 when the <tt class="docutils literal">invoke check</tt> command is run.<ul>
-<li>If a string literal gets too long, it should be split into a multiline literal
-with each line being a meaningful word or subsentence.</li>
+<li>If a string literal gets too long, it should be split into a multiline
+literal with each line being a meaningful word or subsentence.</li>
 </ul>
 </li>
-<li>If a contribution includes changes in StrictDoc's code, at least the integration-level
-tests should be added to the <cite>tests/integration</cite>. If the contributed code needs a
-fine-grained control over the added behavior, adding both unit and integration tests is
-preferred.</li>
+<li>If a contribution includes changes in StrictDoc's code, at least the
+integration-level tests should be added to the <cite>tests/integration</cite>. If the
+contributed code needs a fine-grained control over the added behavior, adding
+both unit and integration tests is preferred. The only exception where a
+contribution can contain no tests is &quot;code climate&quot; which is work which
+introduces changes in code but no change to the functionality.</li>
 </ul>
 </div>
 
@@ -154,13 +201,13 @@ preferred.</li>
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="2-Git-workflow"></div>
+    <div data-role='anchor' id="3-Git-workflow"></div>
 
     
         <h1
 class="section-title"
-data-level="2">
-  2.&nbsp;Git workflow
+data-level="3">
+  3.&nbsp;Git workflow
 </h1>
     
 
@@ -169,22 +216,24 @@ data-level="2">
   <section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <ul class="simple">
-<li>The preferred Git workflow is &quot;1 commit per 1 PR&quot;. When the work truly deserves
-a sequence of commits, each commit shall be self-contained and pass all checks from the
-<tt class="docutils literal">invoke check</tt> command.</li>
+<li>The preferred Git workflow is &quot;1 commit per 1 PR&quot;. If the work truly deserves
+a sequence of commits, each commit shall be self-contained and pass all checks
+from the <tt class="docutils literal">invoke check</tt> command. The preferred approach: split the work into
+several independent Pull Requests to simplify the work of the reviewer.</li>
 <li>The branch should be always rebased against the main branch. The
-<tt class="docutils literal">git fetch &amp;&amp; git rebase origin/main</tt> is preferred over <tt class="docutils literal">git fetch &amp;&amp; git merge main</tt>.</li>
-<li>The Git commit message should follow the format: <cite>context: description</cite> where the context
-can be a major feature being added or a folder. A form of <cite>context: subcontext: description</cite>
-is also an option. Typical examples:<ul>
+<tt class="docutils literal">git fetch &amp;&amp; git rebase origin/main</tt> is preferred over
+<tt class="docutils literal">git fetch &amp;&amp; git merge main</tt>.</li>
+<li>The Git commit message should follow the format: <cite>context: description</cite> where
+the context can be a major feature being added or a folder. A form of
+<cite>context: subcontext: description</cite> is also an option. Typical examples:<ul>
 <li><cite>docs: fix links to the grammar.py</cite></li>
 <li><cite>reqif: native: export/import roundtrip for multiline requirement fields</cite></li>
 <li><cite>backend/dsl: switch to dynamic fields, with validation</cite></li>
 <li><cite>Poetry: add filecheck as a dependency</cite></li>
 </ul>
 </li>
-<li>When a contribution is simply an improvement of existing code without a change in the
-functionality, the commit should be named: <cite>Code climate: description</cite>.<ul>
+<li>When a contribution is simply an improvement of existing code without a change
+in the functionality, the commit should be named: <cite>Code climate: description</cite>.<ul>
 <li>Example: <cite>Code climate: fix all remaining major Pylint warnings</cite>.</li>
 </ul>
 </li>
@@ -203,13 +252,13 @@ functionality, the commit should be named: <cite>Code climate: description</cite
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="3-Documentation"></div>
+    <div data-role='anchor' id="4-Documentation"></div>
 
     
         <h1
 class="section-title"
-data-level="3">
-  3.&nbsp;Documentation
+data-level="4">
+  4.&nbsp;Documentation
 </h1>
     
 
@@ -219,8 +268,13 @@ data-level="3">
       <div class="document">
 <ul class="simple">
 <li>Every change in the functionality or the infrastructure should be documented.</li>
-<li>The <tt class="docutils literal">invoke sphinx</tt> task should be used for re-generating documentation on a developer
-machine.</li>
+<li>Every line of documentation shall be no longer than 80 characters. StrictDoc's
+own documentation has a few exceptions, however, the latest preference is
+given to 80 characters per line. Unfortunately, until there is automatic
+support for mixed SDoc/RST content, all long lines shall be edited and
+split by a contributor manually.</li>
+<li>The <tt class="docutils literal">invoke sphinx</tt> task should be used for re-generating documentation on a
+developer machine.</li>
 </ul>
 </div>
 

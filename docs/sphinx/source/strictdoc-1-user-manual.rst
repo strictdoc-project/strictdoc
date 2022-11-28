@@ -40,7 +40,7 @@ See the Backlog to get an idea of the overall project direction.
 Contact the developers
 ----------------------
 
-Join us in Discord. Here is the invitation link: https://discord.gg/j8AC8qFp
+Join us in Discord. Here is the invitation link: https://discord.gg/4BAAME9MmG
 
 The author can be also contacted via `email <s.pankevich@gmail.com>`_.
 

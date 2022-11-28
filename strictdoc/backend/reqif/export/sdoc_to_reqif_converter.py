@@ -35,12 +35,16 @@ from strictdoc.backend.reqif.sdoc_reqif_fields import (
 )
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
-from strictdoc.backend.sdoc.models.requirement import Requirement
+from strictdoc.backend.sdoc.models.requirement import (
+    Requirement,
+)
 from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldString,
     GrammarElementFieldSingleChoice,
     GrammarElementField,
     GrammarElementFieldMultipleChoice,
+    RequirementFieldName,
+    ReferenceType,
 )
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.core.document_iterator import DocumentCachingIterator
@@ -372,10 +376,10 @@ class SDocToReqIFObjectConverter:
 
         attributes: List[SpecObjectAttribute] = []
         for field in requirement.fields:
-            if field.field_name == "REFS":
+            if field.field_name == RequirementFieldName.REFS:
                 parent_references = []
                 for reference in field.field_value_references:
-                    if reference.ref_type != "Parent":
+                    if reference.ref_type != ReferenceType.PARENT:
                         continue
                     parent_references.append(reference.path)
                     context.map_uid_to_parent_uids[

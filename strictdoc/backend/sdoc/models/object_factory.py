@@ -5,6 +5,7 @@ from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
     RequirementField,
 )
+from strictdoc.backend.sdoc.models.type_system import RequirementFieldName
 
 
 class SDocObjectFactory:
@@ -38,7 +39,7 @@ class SDocObjectFactory:
             fields.append(
                 RequirementField(
                     parent=None,
-                    field_name="UID",
+                    field_name=RequirementFieldName.UID,
                     field_value=uid,
                     field_value_multiline=None,
                     field_value_references=None,
@@ -49,7 +50,7 @@ class SDocObjectFactory:
             fields.append(
                 RequirementField(
                     parent=None,
-                    field_name="LEVEL",
+                    field_name=RequirementFieldName.LEVEL,
                     field_value=level,
                     field_value_multiline=None,
                     field_value_references=None,
@@ -59,7 +60,7 @@ class SDocObjectFactory:
             fields.append(
                 RequirementField(
                     parent=None,
-                    field_name="TITLE",
+                    field_name=RequirementFieldName.TITLE,
                     field_value=title,
                     field_value_multiline=None,
                     field_value_references=None,
@@ -69,7 +70,7 @@ class SDocObjectFactory:
             fields.append(
                 RequirementField(
                     parent=None,
-                    field_name="STATEMENT",
+                    field_name=RequirementFieldName.STATEMENT,
                     field_value=statement,
                     field_value_multiline=None,
                     field_value_references=None,
@@ -82,7 +83,7 @@ class SDocObjectFactory:
             fields.append(
                 RequirementField(
                     parent=None,
-                    field_name="STATEMENT",
+                    field_name=RequirementFieldName.STATEMENT,
                     field_value=None,
                     field_value_multiline=statement_multiline,
                     field_value_references=None,
@@ -92,7 +93,7 @@ class SDocObjectFactory:
             fields.append(
                 RequirementField(
                     parent=None,
-                    field_name="RATIONALE",
+                    field_name=RequirementFieldName.RATIONALE,
                     field_value=rationale,
                     field_value_multiline=None,
                     field_value_references=None,
@@ -102,7 +103,7 @@ class SDocObjectFactory:
             fields.append(
                 RequirementField(
                     parent=None,
-                    field_name="RATIONALE",
+                    field_name=RequirementFieldName.RATIONALE,
                     field_value=None,
                     field_value_multiline=rationale_multiline,
                     field_value_references=None,
@@ -113,7 +114,7 @@ class SDocObjectFactory:
             fields.append(
                 RequirementField(
                     parent=None,
-                    field_name="TAGS",
+                    field_name=RequirementFieldName.TAGS,
                     field_value=tags,
                     field_value_multiline=None,
                     field_value_references=None,
@@ -126,7 +127,7 @@ class SDocObjectFactory:
                 fields.append(
                     RequirementField(
                         parent=None,
-                        field_name="COMMENT",
+                        field_name=RequirementFieldName.COMMENT,
                         field_value=None,
                         field_value_multiline=comment,
                         field_value_references=None,
@@ -144,26 +145,30 @@ class SDocObjectFactory:
         assert level > 0
 
         uid = None
-        if "UID" in requirement_dict:
-            uid_ = requirement_dict["UID"]
+        if RequirementFieldName.UID in requirement_dict:
+            uid_ = requirement_dict[RequirementFieldName.UID]
             if isinstance(uid_, str):
                 uid = uid_
 
         title = None
-        if "TITLE" in requirement_dict:
-            title_ = requirement_dict["TITLE"]
+        if RequirementFieldName.TITLE in requirement_dict:
+            title_ = requirement_dict[RequirementFieldName.TITLE]
             if isinstance(title_, str):
                 title = title_
 
         statement_multiline = None
-        if "STATEMENT" in requirement_dict:
-            statement_multiline_ = requirement_dict["STATEMENT"]
+        if RequirementFieldName.STATEMENT in requirement_dict:
+            statement_multiline_ = requirement_dict[
+                RequirementFieldName.STATEMENT
+            ]
             if isinstance(statement_multiline_, str):
                 statement_multiline = statement_multiline_
 
         rationale_multiline = None
-        if "RATIONALE" in requirement_dict:
-            rationale_multiline_ = requirement_dict["RATIONALE"]
+        if RequirementFieldName.RATIONALE in requirement_dict:
+            rationale_multiline_ = requirement_dict[
+                RequirementFieldName.RATIONALE
+            ]
             if isinstance(rationale_multiline_, str):
                 rationale_multiline = rationale_multiline_
 

@@ -2,11 +2,13 @@ from collections import OrderedDict
 from typing import Optional, List
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
-from strictdoc.backend.sdoc.models.document_grammar import (
-    RESERVED_NON_META_FIELDS,
-)
 from strictdoc.backend.sdoc.models.node import Node
 from strictdoc.backend.sdoc.models.reference import Reference
+from strictdoc.backend.sdoc.models.type_system import (
+    RequirementFieldName,
+    RESERVED_NON_META_FIELDS,
+    ReferenceType,
+)
 
 MULTILINE_WORD_THRESHOLD = 6
 
@@ -84,36 +86,46 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
                 has_meta = True
             ordered_fields_lookup.setdefault(field.field_name, []).append(field)
 
-        if "UID" in ordered_fields_lookup:
-            uid = ordered_fields_lookup["UID"][0].field_value
-        if "LEVEL" in ordered_fields_lookup:
-            level = ordered_fields_lookup["LEVEL"][0].field_value
-        if "STATUS" in ordered_fields_lookup:
-            status = ordered_fields_lookup["STATUS"][0].field_value
-        if "TAGS" in ordered_fields_lookup:
-            tags = ordered_fields_lookup["TAGS"][0].field_value.split(", ")
-        if "REFS" in ordered_fields_lookup:
+        if RequirementFieldName.UID in ordered_fields_lookup:
+            uid = ordered_fields_lookup[RequirementFieldName.UID][0].field_value
+        if RequirementFieldName.LEVEL in ordered_fields_lookup:
+            level = ordered_fields_lookup[RequirementFieldName.LEVEL][
+                0
+            ].field_value
+        if RequirementFieldName.STATUS in ordered_fields_lookup:
+            status = ordered_fields_lookup[RequirementFieldName.STATUS][
+                0
+            ].field_value
+        if RequirementFieldName.TAGS in ordered_fields_lookup:
+            tags = ordered_fields_lookup[RequirementFieldName.TAGS][
+                0
+            ].field_value.split(", ")
+        if RequirementFieldName.REFS in ordered_fields_lookup:
             references_opt: Optional[List[Reference]] = ordered_fields_lookup[
-                "REFS"
+                RequirementFieldName.REFS
             ][0].field_value_references
             assert references_opt is not None
             references = references_opt
-        if "TITLE" in ordered_fields_lookup:
-            title = ordered_fields_lookup["TITLE"][0].field_value
-        if "STATEMENT" in ordered_fields_lookup:
-            field = ordered_fields_lookup["STATEMENT"][0]
+        if RequirementFieldName.TITLE in ordered_fields_lookup:
+            title = ordered_fields_lookup[RequirementFieldName.TITLE][
+                0
+            ].field_value
+        if RequirementFieldName.STATEMENT in ordered_fields_lookup:
+            field = ordered_fields_lookup[RequirementFieldName.STATEMENT][0]
             if field.field_value_multiline:
                 statement_multiline = field.field_value_multiline
             else:
                 statement = field.field_value
-        if "RATIONALE" in ordered_fields_lookup:
-            field = ordered_fields_lookup["RATIONALE"][0]
+        if RequirementFieldName.RATIONALE in ordered_fields_lookup:
+            field = ordered_fields_lookup[RequirementFieldName.RATIONALE][0]
             if field.field_value_multiline:
                 rationale_multiline = field.field_value_multiline
             else:
                 rationale = field.field_value
-        if "COMMENT" in ordered_fields_lookup:
-            for comment_field in ordered_fields_lookup["COMMENT"]:
+        if RequirementFieldName.COMMENT in ordered_fields_lookup:
+            for comment_field in ordered_fields_lookup[
+                RequirementFieldName.COMMENT
+            ]:
                 field = comment_field
                 if field.field_value_multiline:
                     comments.append(
@@ -211,7 +223,7 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
             return []
         references = []
         for reference in self.references:
-            if reference.ref_type != "Parent":
+            if reference.ref_type != ReferenceType.PARENT:
                 continue
             references.append(reference)
         return references
@@ -231,7 +243,9 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         return None
 
     def append_to_multiline_statement(self, new_statement):
-        statement_field = self.ordered_fields_lookup["STATEMENT"][0]
+        statement_field = self.ordered_fields_lookup[
+            RequirementFieldName.STATEMENT
+        ][0]
         statement_field.field_value_multiline += new_statement.rstrip()
         self.statement_multiline = statement_field.field_value_multiline
 

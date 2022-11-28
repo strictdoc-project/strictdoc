@@ -13,6 +13,7 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldSingleChoice,
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldTag,
+    RequirementFieldType,
 )
 from strictdoc.core.document_iterator import DocumentCachingIterator
 
@@ -239,17 +240,19 @@ class SDWriter:
         output += "    TYPE: "
 
         if isinstance(grammar_field, GrammarElementFieldString):
-            output += "String"
+            output += RequirementFieldType.STRING
         elif isinstance(grammar_field, GrammarElementFieldSingleChoice):
-            output += "SingleChoice("
+            output += RequirementFieldType.SINGLE_CHOICE
+            output += "("
             output += ", ".join(grammar_field.options)
             output += ")"
         elif isinstance(grammar_field, GrammarElementFieldMultipleChoice):
-            output += "MultipleChoice("
+            output += RequirementFieldType.MULTIPLE_CHOICE
+            output += "("
             output += ", ".join(grammar_field.options)
             output += ")"
         elif isinstance(grammar_field, GrammarElementFieldTag):
-            output += "Tag"
+            output += RequirementFieldType.TAG
         else:
             raise NotImplementedError from None
 

@@ -17,6 +17,7 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldSingleChoice,
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldTag,
+    RequirementFieldName,
 )
 
 
@@ -71,7 +72,7 @@ def validate_requirement(
             break
         if valid_or_not_required_field:
             # COMMENT can appear multiple times.
-            if requirement_field.field_name == "COMMENT":
+            if requirement_field.field_name == RequirementFieldName.COMMENT:
                 requirement_field = next(requirement_field_iterator, None)
                 break
             grammar_field = next(grammar_fields_iterator, None)

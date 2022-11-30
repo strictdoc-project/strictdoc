@@ -5,6 +5,7 @@ from setuptools import find_packages, setup
 import strictdoc
 
 package_data = {
+    "": ["requirements.txt", "requirements.development.txt"],
     # It looks like the package data in setup.py does not support globbing
     # (see pypa/setuptools#1806, https://github.com/pypa/setuptools/issues/1806)
     # Doing the globbing manually for now.
@@ -55,8 +56,14 @@ setup_kwargs = {
             "tests*",
         ],
     ),
-    "package_data": package_data,
     # 'package_dir': {"": "strictdoc"},
+    # package_data - defines files related to the python package, e.g.,
+    #                documentation, static image files, configurations.
+    # data_files -   defines files that will be installed system-wise, not in
+    #                site-package directory. eg. desktop icons, fonts.
+    # https://stackoverflow.com/a/66370532/598057
+    "package_data": package_data,
+    "data_files": [],
     "install_requires": REQUIREMENTS,
     "extras_require": REQUIREMENTS_DEVELOPMENT,
     "setup_requires": REQUIREMENTS_SETUP,

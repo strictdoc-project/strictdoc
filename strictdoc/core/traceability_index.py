@@ -1,3 +1,5 @@
+from typing import Dict
+
 from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.source_file_syntax.reader import (
     SourceFileTraceabilityInfo,
@@ -10,7 +12,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def __init__(  # pylint: disable=too-many-arguments
         self,
         document_iterators,
-        requirements_parents,
+        requirements_parents: Dict[str, Dict],
         tags_map,
         document_parents_map,
         document_children_map,
@@ -50,10 +52,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         if not isinstance(requirement.uid, str):
             return []
 
-        if not requirement.uid or len(requirement.uid) == 0:
-            return []
-
-        if not self.requirements_parents:
+        if len(requirement.uid) == 0:
             return []
 
         parent_requirements = self.requirements_parents[requirement.uid][
@@ -62,20 +61,37 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         return parent_requirements
 
     def has_parent_requirements(self, requirement: Requirement):
-        return len(self.get_parent_requirements(requirement)) > 0
+        assert isinstance(requirement, Requirement)
+        if not isinstance(requirement.uid, str):
+            return False
+
+        if len(requirement.uid) == 0:
+            return False
+
+        parent_requirements = self.requirements_parents[requirement.uid][
+            "parents"
+        ]
+        return len(parent_requirements) > 0
 
     def has_children_requirements(self, requirement: Requirement):
-        return len(self.get_children_requirements(requirement)) > 0
+        assert isinstance(requirement, Requirement)
+        if not isinstance(requirement.uid, str):
+            return False
+
+        if len(requirement.uid) == 0:
+            return False
+
+        children_requirements = self.requirements_parents[requirement.uid][
+            "children"
+        ]
+        return len(children_requirements) > 0
 
     def get_children_requirements(self, requirement: Requirement):
         assert isinstance(requirement, Requirement)
         if not isinstance(requirement.uid, str):
             return []
 
-        if not requirement.uid or len(requirement.uid) == 0:
-            return []
-
-        if not self.requirements_parents:
+        if len(requirement.uid) == 0:
             return []
 
         children_requirements = self.requirements_parents[requirement.uid][

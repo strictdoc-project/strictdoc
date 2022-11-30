@@ -1,3 +1,5 @@
+from typing import Dict
+
 from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.source_file_syntax.reader import (
     SourceFileTraceabilityInfo,
@@ -10,7 +12,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def __init__(  # pylint: disable=too-many-arguments
         self,
         document_iterators,
-        requirements_parents,
+        requirements_parents: Dict[str, Dict],
         tags_map,
         document_parents_map,
         document_children_map,
@@ -50,10 +52,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         if not isinstance(requirement.uid, str):
             return []
 
-        if not requirement.uid or len(requirement.uid) == 0:
-            return []
-
-        if not self.requirements_parents:
+        if len(requirement.uid) == 0:
             return []
 
         parent_requirements = self.requirements_parents[requirement.uid][
@@ -66,10 +65,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         if not isinstance(requirement.uid, str):
             return False
 
-        if not requirement.uid or len(requirement.uid) == 0:
-            return False
-
-        if len(self.requirements_parents) == 0:
+        if len(requirement.uid) == 0:
             return False
 
         parent_requirements = self.requirements_parents[requirement.uid][
@@ -82,10 +78,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         if not isinstance(requirement.uid, str):
             return False
 
-        if not requirement.uid or len(requirement.uid) == 0:
-            return False
-
-        if not self.requirements_parents:
+        if len(requirement.uid) == 0:
             return False
 
         children_requirements = self.requirements_parents[requirement.uid][
@@ -99,9 +92,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             return []
 
         if len(requirement.uid) == 0:
-            return []
-
-        if not self.requirements_parents:
             return []
 
         children_requirements = self.requirements_parents[requirement.uid][

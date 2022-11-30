@@ -1,12 +1,13 @@
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
+from strictdoc.backend.sdoc.models.type_system import RequirementFieldName
 
 
 def test_010_full_dict():
     requirement_dict = {
-        "TITLE": "REQ TITLE",
-        "STATEMENT": "REQ STATEMENT",
-        "UID": "ABC-123",
-        "RATIONALE": "REQ RATIONALE",
+        RequirementFieldName.TITLE: "REQ TITLE",
+        RequirementFieldName.STATEMENT: "REQ STATEMENT",
+        RequirementFieldName.UID: "ABC-123",
+        RequirementFieldName.RATIONALE: "REQ RATIONALE",
     }
     document = SDocObjectFactory.create_document(title="NONAME")
     requirement = SDocObjectFactory.create_requirement_from_dict(
@@ -14,10 +15,16 @@ def test_010_full_dict():
     )
 
     assert requirement.ng_level == 1
-    assert requirement.uid == requirement_dict["UID"]
-    assert requirement.title == requirement_dict["TITLE"]
-    assert requirement.statement_multiline == requirement_dict["STATEMENT"]
-    assert requirement.rationale_multiline == requirement_dict["RATIONALE"]
+    assert requirement.uid == requirement_dict[RequirementFieldName.UID]
+    assert requirement.title == requirement_dict[RequirementFieldName.TITLE]
+    assert (
+        requirement.statement_multiline
+        == requirement_dict[RequirementFieldName.STATEMENT]
+    )
+    assert (
+        requirement.rationale_multiline
+        == requirement_dict[RequirementFieldName.RATIONALE]
+    )
 
 
 def test_020_empty_dict():

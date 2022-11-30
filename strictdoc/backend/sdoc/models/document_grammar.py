@@ -1,19 +1,11 @@
 from collections import defaultdict, OrderedDict
 from typing import List, Set, Dict
-
 from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementField,
     GrammarElementFieldString,
+    RequirementFieldName,
+    RESERVED_NON_META_FIELDS,
 )
-
-RESERVED_NON_META_FIELDS = [
-    "REFS",
-    "TITLE",
-    "STATEMENT",
-    "COMMENT",
-    "RATIONALE",
-    "LEVEL",
-]
 
 
 class GrammarElement:
@@ -28,7 +20,10 @@ class GrammarElement:
 
     def enumerate_meta_field_titles(self):
         for field in self.fields:
-            if field.title in ("TITLE", "STATEMENT"):
+            if field.title in (
+                RequirementFieldName.TITLE,
+                RequirementFieldName.STATEMENT,
+            ):
                 break
             if field.title in RESERVED_NON_META_FIELDS:
                 continue
@@ -37,7 +32,10 @@ class GrammarElement:
     def enumerate_custom_content_field_titles(self):
         after_title_or_statement = False
         for field in self.fields:
-            if field.title in ("TITLE", "STATEMENT"):
+            if field.title in (
+                RequirementFieldName.TITLE,
+                RequirementFieldName.STATEMENT,
+            ):
                 after_title_or_statement = True
             if field.title in RESERVED_NON_META_FIELDS:
                 continue
@@ -71,42 +69,42 @@ class DocumentGrammar:
     def create_default(parent):
         fields = [
             GrammarElementFieldString(
-                parent=None, title="UID", required="False"
+                parent=None, title=RequirementFieldName.UID, required="False"
             ),
             GrammarElementFieldString(
                 parent=None,
-                title="LEVEL",
+                title=RequirementFieldName.LEVEL,
                 required="False",
             ),
             GrammarElementFieldString(
                 parent=None,
-                title="STATUS",
+                title=RequirementFieldName.STATUS,
                 required="False",
             ),
             GrammarElementFieldString(
-                parent=None, title="TAGS", required="False"
+                parent=None, title=RequirementFieldName.TAGS, required="False"
             ),
             GrammarElementFieldString(
-                parent=None, title="REFS", required="False"
-            ),
-            GrammarElementFieldString(
-                parent=None,
-                title="TITLE",
-                required="False",
+                parent=None, title=RequirementFieldName.REFS, required="False"
             ),
             GrammarElementFieldString(
                 parent=None,
-                title="STATEMENT",
+                title=RequirementFieldName.TITLE,
                 required="False",
             ),
             GrammarElementFieldString(
                 parent=None,
-                title="RATIONALE",
+                title=RequirementFieldName.STATEMENT,
                 required="False",
             ),
             GrammarElementFieldString(
                 parent=None,
-                title="COMMENT",
+                title=RequirementFieldName.RATIONALE,
+                required="False",
+            ),
+            GrammarElementFieldString(
+                parent=None,
+                title=RequirementFieldName.COMMENT,
                 required="False",
             ),
         ]

@@ -33,6 +33,7 @@ def run_strictdoc_server(*, config: ServerCommandConfig):
             "*.py",
             "*.html",
             "*.css",
+            "*.js",
         ],
         # reload_excludes=[
         #     "**/developer/sandbox/output/**/*",

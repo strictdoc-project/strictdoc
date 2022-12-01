@@ -28,6 +28,7 @@ from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.helpers.parallelizer import NullParallelizer
+from strictdoc.server.error_object import ErrorObject
 
 assert os.path.isabs(STRICTDOC_ROOT_PATH), f"{STRICTDOC_ROOT_PATH}"
 
@@ -385,7 +386,7 @@ class MainController:
         )
 
         template = MainController.env.get_template(
-            "actions/document/document_freetext/stream_edit_document_freetext.jinja.html"
+            "actions/document/document_freetext/stream_edit_document_freetext.jinja.html"  # noqa: E501
         )
         link_renderer = LinkRenderer(self.export_action.config.output_html_root)
         markup_renderer = MarkupRenderer.create(
@@ -498,7 +499,7 @@ class MainController:
         requirement.ng_level = parent.ng_level + 1
 
         template = MainController.env.get_template(
-            "actions/document/create_requirement/stream_new_requirement.jinja.html"
+            "actions/document/create_requirement/stream_new_requirement.jinja.html"  # noqa: E501
         )
         link_renderer = LinkRenderer(self.export_action.config.output_html_root)
         markup_renderer = MarkupRenderer.create(
@@ -592,7 +593,7 @@ class MainController:
 
         # Rendering back the Turbo template.
         template = MainController.env.get_template(
-            "actions/document/create_requirement/stream_created_requirement.jinja.html"
+            "actions/document/create_requirement/stream_created_requirement.jinja.html"  # noqa: E501
         )
         link_renderer = LinkRenderer(self.export_action.config.output_html_root)
         markup_renderer = MarkupRenderer.create(
@@ -632,7 +633,7 @@ class MainController:
         document = requirement.document
 
         template = MainController.env.get_template(
-            "actions/document/edit_requirement/stream_edit_requirement.jinja.html"
+            "actions/document/edit_requirement/stream_edit_requirement.jinja.html"  # noqa: E501
         )
         link_renderer = LinkRenderer(self.export_action.config.output_html_root)
         markup_renderer = MarkupRenderer.create(
@@ -703,7 +704,7 @@ class MainController:
 
         # Rendering back the Turbo template.
         template = MainController.env.get_template(
-            "actions/document/edit_requirement/stream_update_requirement.jinja.html"
+            "actions/document/edit_requirement/stream_update_requirement.jinja.html"  # noqa: E501
         )
         link_renderer = LinkRenderer(self.export_action.config.output_html_root)
         markup_renderer = MarkupRenderer.create(
@@ -839,10 +840,41 @@ class MainController:
         template = MainController.env.get_template(
             "actions/document_tree/stream_new_document.jinja.html"
         )
-        output = template.render()
+        output = template.render(
+            error_object=ErrorObject(),
+            document_title="Document 1",
+            document_path="docs/document1.sdoc",
+        )
         return output
 
-    def create_document(self, *, document_title: str, document_path: str):
+    def create_document(
+        self, *, document_title: Optional[str], document_path: str
+    ):
+        error_object = ErrorObject()
+        if document_title is None or len(document_title) == 0:
+            error_object.add_error(
+                "document_title", "Document title must not be empty."
+            )
+        if document_path is None or len(document_path) == 0:
+            error_object.add_error(
+                "document_path", "Document path must not be empty."
+            )
+
+        if error_object.any_errors():
+            template = MainController.env.get_template(
+                "actions/document_tree/stream_new_document.jinja.html"
+            )
+            output = template.render(
+                error_object=error_object,
+                document_title=document_title
+                if document_title is not None
+                else "",
+                document_path=document_path
+                if document_path is not None
+                else "",
+            )
+            return output
+
         full_input_path = os.path.abspath(
             self.export_action.config.input_paths[0]
         )

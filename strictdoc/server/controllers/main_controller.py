@@ -91,6 +91,8 @@ class MainController:
             isinstance(reference_mid, str) and len(reference_mid) > 0
         ), reference_mid
 
+        error_object = ErrorObject()
+
         reference_node: Union[
             Document, Section
         ] = self.export_action.traceability_index.get_node_by_id(reference_mid)
@@ -160,6 +162,7 @@ class MainController:
             is_new_section=True,
             replace_action=replace_action,
             whereto=whereto,
+            error_object=error_object,
         )
 
         return output
@@ -206,11 +209,45 @@ class MainController:
             parent=parent,
             uid=None,
             level=None,
-            title=section_title,
+            title="New section",
             free_texts=[],
             section_contents=[],
         )
         section.node_id = section_mid
+
+        error_object = ErrorObject()
+
+        if section_title is None or len(section_title) == 0:
+            error_object.add_error(
+                "section_title", "Section title must not be empty."
+            )
+        if error_object.any_errors():
+            template = MainController.env.get_template(
+                "actions/document/create_section/stream_new_section.jinja.html"
+            )
+            link_renderer = LinkRenderer(
+                self.export_action.config.output_html_root
+            )
+            markup_renderer = MarkupRenderer.create(
+                markup="RST",
+                traceability_index=self.export_action.traceability_index,
+                link_renderer=link_renderer,
+                context_document=document,
+            )
+            output = template.render(
+                renderer=markup_renderer,
+                section=section,
+                reference_mid=reference_mid,
+                section_mid=section.node_id,
+                target_node_mid=section.node_id,
+                document_type=DocumentType.document(),
+                is_new_section=True,
+                replace_action="replace",
+                whereto=whereto,
+                error_object=error_object,
+            )
+            return output
+
         section.ng_document_reference = DocumentReference()
         section.ng_document_reference.set_document(document)
         assert parent.ng_level is not None, parent
@@ -295,6 +332,39 @@ class MainController:
             section_id
         )
 
+        error_object = ErrorObject()
+
+        if section_title is None or len(section_title) == 0:
+            error_object.add_error(
+                "section_title", "Section title must not be empty."
+            )
+        if error_object.any_errors():
+            template = MainController.env.get_template(
+                "actions/document/create_section/stream_new_section.jinja.html"
+            )
+            link_renderer = LinkRenderer(
+                self.export_action.config.output_html_root
+            )
+            markup_renderer = MarkupRenderer.create(
+                markup="RST",
+                traceability_index=self.export_action.traceability_index,
+                link_renderer=link_renderer,
+                context_document=section.document,
+            )
+            output = template.render(
+                renderer=markup_renderer,
+                section=section,
+                section_mid=section.node_id,
+                target_node_mid=section.node_id,
+                document_type=DocumentType.document(),
+                is_new_section=True,
+                replace_action="replace",
+                error_object=error_object,
+                reference_mid="NOT_RELEVANT",
+                whereto="NOT_RELEVANT",
+            )
+            return output
+
         # Updating section title.
         if section_title is not None and len(section_title) > 0:
             section.title = section_title
@@ -376,6 +446,7 @@ class MainController:
             document_type=DocumentType.document(),
             is_new_section=False,
             section_mid=section.node_id,
+            error_object=ErrorObject(),
         )
 
         return output

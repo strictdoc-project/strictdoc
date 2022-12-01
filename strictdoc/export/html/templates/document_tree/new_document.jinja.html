@@ -2,13 +2,29 @@
 
 <form action="/actions/document_tree/create_document" method="POST">
   <article class="">
+    {%- if error_object.has_errors("document_title") -%}
+      <div style="border: 1px solid red;">
+      {%- for error in error_object.get_errors("document_title") -%}
+        {{ error }}
+      {%- endfor -%}
+      </div>
+    {%- endif -%}
     Document title:
     <section data-section="">
-      <input type="text" id="document_title" name="document_title" value="Document 1"/>
+      <input type="text" id="document_title" name="document_title" value="{{document_title}}"/>
     </section>
+
+    {%- if error_object.has_errors("document_path") -%}
+      <div style="border: 1px solid red;">
+      {%- for error in error_object.get_errors("document_path") -%}
+        {{ error }}
+      {%- endfor -%}
+      </div>
+    {%- endif -%}
+
     Document path:
     <section data-section="">
-      <input type="text" id="document_path" name="document_path" value="docs/document1.sdoc"/>
+      <input type="text" id="document_path" name="document_path" value="{{document_path}}"/>
     </section>
 
     <section>

@@ -26,7 +26,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
     def get_ping():
         return f"StrictDoc v{__version__}"
 
-    @router.get("/streams/document/new_section", response_class=Response)
+    @router.get("/actions/document/new_section", response_class=Response)
     def get_new_section(reference_mid: str, whereto: str):
         assert isinstance(whereto, str), whereto
         assert NodeCreationOrder.is_valid(whereto), whereto
@@ -42,7 +42,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
             },
         )
 
-    @router.post("/streams/document/create_section", response_class=Response)
+    @router.post("/actions/document/create_section", response_class=Response)
     def create_section(
         section_mid: str = Form(None),
         section_title: str = Form(None),
@@ -68,7 +68,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
             },
         )
 
-    @router.get("/fragments/sections/{section_id}", response_class=Response)
+    @router.get("/actions/section/{section_id}", response_class=Response)
     def get_edit_section(section_id: str):
         content = main_controller.get_edit_section(section_id)
         return HTMLResponse(
@@ -79,7 +79,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
             },
         )
 
-    @router.post("/streams/document/update_section", response_class=Response)
+    @router.post("/actions/document/update_section", response_class=Response)
     def put_update_section(
         section_mid: str = Form(None),
         section_title: str = Form(None),
@@ -129,7 +129,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
             },
         )
 
-    @router.get("/streams/document/new_requirement", response_class=Response)
+    @router.get("/actions/document/new_requirement", response_class=Response)
     def get_new_requirement(reference_mid: str, whereto: str):
         assert isinstance(reference_mid, str), reference_mid
         assert isinstance(whereto, str), whereto
@@ -148,7 +148,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
         )
 
     @router.post(
-        "/streams/document/create_requirement", response_class=Response
+        "/actions/document/create_requirement", response_class=Response
     )
     def create_requirement(
         requirement_mid: str = Form(None),
@@ -173,7 +173,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
         )
 
     @router.get(
-        "/streams/document/edit_requirement/{requirement_id}",
+        "/actions/document/edit_requirement/{requirement_id}",
         response_class=Response,
     )
     def get_edit_requirement(requirement_id: str):
@@ -188,7 +188,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
         )
 
     @router.post(
-        "/streams/document/update_requirement", response_class=Response
+        "/actions/document/update_requirement", response_class=Response
     )
     def post_update_requirement(
         requirement_mid: str = Form(None),
@@ -209,7 +209,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
         )
 
     @router.delete(
-        "/streams/document/delete_section/{section_mid}",
+        "/actions/document/delete_section/{section_mid}",
         response_class=Response,
     )
     def delete_section(section_mid: str):
@@ -225,7 +225,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
         )
 
     @router.delete(
-        "/streams/document/delete_section/{section_mid}",
+        "/actions/document/delete_section/{section_mid}",
         response_class=Response,
     )
     def delete_requirement(requirement_mid: str):
@@ -241,7 +241,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
         )
 
     # Generic routes
-    @router.get("/streams/document_tree/new_document", response_class=Response)
+    @router.get("/actions/document_tree/new_document", response_class=Response)
     def get_new_document():
         content = main_controller.get_new_document()
         return HTMLResponse(
@@ -253,7 +253,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
         )
 
     @router.post(
-        "/streams/document_tree/create_document", response_class=Response
+        "/actions/document_tree/create_document", response_class=Response
     )
     def create_document(
         document_title: str = Form(None),

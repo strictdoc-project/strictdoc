@@ -14,8 +14,8 @@
     <a href="/fragments/document/{{document.node_id}}" data-turbo-action="replace">Edit</a>
     {%- if not document.section_contents -%}
       ,
-      <a href="/streams/document/new_section?reference_mid={{document.node_id}}&whereto=child" data-turbo-action="replace">+S⬊</a>,
-      <a href="/streams/document/new_requirement?reference_mid={{document.node_id}}&whereto=child" data-turbo-action="replace">+R⬊</a>
+      <a href="/actions/document/new_section?reference_mid={{document.node_id}}&whereto=child" data-turbo-action="replace">+S⬊</a>,
+      <a href="/actions/document/new_requirement?reference_mid={{document.node_id}}&whereto=child" data-turbo-action="replace">+R⬊</a>
     {%- endif -%}
   {%- endif -%}
 </article>

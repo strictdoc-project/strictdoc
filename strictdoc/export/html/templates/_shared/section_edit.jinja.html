@@ -1,7 +1,7 @@
 {%- if is_new_section -%}
-  {%- set url="/streams/document/create_section" %}
+  {%- set url="/actions/document/create_section" %}
 {%- else -%}
-  {%- set url="/streams/document/update_section" %}
+  {%- set url="/actions/document/update_section" %}
 {%- endif -%}
 
 <turbo-frame id="article-{{section.node_id}}">

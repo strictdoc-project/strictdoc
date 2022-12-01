@@ -15,7 +15,7 @@
   {% include "_shared/requirement_block/free_text.jinja.html" %}
 
   {%- if config.is_running_on_server -%}
-    <a href="/actions/section/{{section.node_id}}" data-turbo-action="replace">Edit</a>,
+    <a href="/actions/document/edit_section/{{section.node_id}}" data-turbo-action="replace">Edit</a>,
     <a href="/actions/document/delete_section/{{section.node_id}}" data-turbo-method="delete">Delete</a>,
 
     <a href="/actions/document/new_section?reference_mid={{section.node_id}}&whereto=before" data-turbo-action="replace">+S⬆</a>,

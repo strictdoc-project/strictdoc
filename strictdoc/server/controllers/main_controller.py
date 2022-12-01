@@ -140,7 +140,7 @@ class MainController:
         )
 
         template = MainController.env.get_template(
-            "actions/create_section/stream_new_section.jinja.html"
+            "actions/document/create_section/stream_new_section.jinja.html"
         )
         link_renderer = LinkRenderer(self.export_action.config.output_html_root)
         markup_renderer = MarkupRenderer.create(
@@ -250,7 +250,7 @@ class MainController:
 
         # Rendering back the Turbo template.
         template = MainController.env.get_template(
-            "actions/create_section/stream_created_section.jinja.html"
+            "actions/document/create_section/stream_created_section.jinja.html"
         )
         link_renderer = LinkRenderer(self.export_action.config.output_html_root)
         markup_renderer = MarkupRenderer.create(
@@ -273,7 +273,7 @@ class MainController:
         )
 
         toc_template = MainController.env.get_template(
-            "actions/_shared/stream_updated_toc.jinja.html"
+            "actions/document/_shared/stream_updated_toc.jinja.html"
         )
         output += toc_template.render(
             document_iterator=iterator,
@@ -325,7 +325,7 @@ class MainController:
 
         # Rendering back the Turbo template.
         template = MainController.env.get_template(
-            "actions/edit_section/stream_updated_section.jinja.html"
+            "actions/document/edit_section/stream_updated_section.jinja.html"
         )
         link_renderer = LinkRenderer(self.export_action.config.output_html_root)
         markup_renderer = MarkupRenderer.create(
@@ -338,13 +338,13 @@ class MainController:
             renderer=markup_renderer,
             section=section,
             document_type=DocumentType.document(),
-            config=self.export_action.config
+            config=self.export_action.config,
         )
         iterator = self.export_action.traceability_index.get_document_iterator(
             section.document
         )
         toc_template = MainController.env.get_template(
-            "actions/_shared/stream_updated_toc.jinja.html"
+            "actions/document/_shared/stream_updated_toc.jinja.html"
         )
         output += toc_template.render(
             document_iterator=iterator,
@@ -360,7 +360,7 @@ class MainController:
         document = section.parent
 
         template = MainController.env.get_template(
-            "actions/edit_section/stream_edit_section.jinja.html"
+            "actions/document/edit_section/stream_edit_section.jinja.html"
         )
         link_renderer = LinkRenderer(self.export_action.config.output_html_root)
         markup_renderer = MarkupRenderer.create(
@@ -385,7 +385,7 @@ class MainController:
         )
 
         template = MainController.env.get_template(
-            "actions/document_freetext/stream_edit_document_freetext.jinja.html"
+            "actions/document/document_freetext/stream_edit_document_freetext.jinja.html"
         )
         link_renderer = LinkRenderer(self.export_action.config.output_html_root)
         markup_renderer = MarkupRenderer.create(
@@ -434,7 +434,7 @@ class MainController:
 
         # Rendering back the Turbo template.
         template = MainController.env.get_template(
-            "actions/document_freetext/"
+            "actions/document/document_freetext/"
             "stream_updated_document_freetext.jinja.html"
         )
         link_renderer = LinkRenderer(self.export_action.config.output_html_root)
@@ -448,7 +448,7 @@ class MainController:
             renderer=markup_renderer,
             document=document,
             document_type=DocumentType.document(),
-            config=self.export_action.config
+            config=self.export_action.config,
         )
 
         return output
@@ -498,7 +498,7 @@ class MainController:
         requirement.ng_level = parent.ng_level + 1
 
         template = MainController.env.get_template(
-            "actions/create_requirement/stream_new_requirement.jinja.html"
+            "actions/document/create_requirement/stream_new_requirement.jinja.html"
         )
         link_renderer = LinkRenderer(self.export_action.config.output_html_root)
         markup_renderer = MarkupRenderer.create(
@@ -592,7 +592,7 @@ class MainController:
 
         # Rendering back the Turbo template.
         template = MainController.env.get_template(
-            "actions/create_requirement/stream_created_requirement.jinja.html"
+            "actions/document/create_requirement/stream_created_requirement.jinja.html"
         )
         link_renderer = LinkRenderer(self.export_action.config.output_html_root)
         markup_renderer = MarkupRenderer.create(
@@ -615,7 +615,7 @@ class MainController:
         )
 
         toc_template = MainController.env.get_template(
-            "actions/_shared/stream_updated_toc.jinja.html"
+            "actions/document/_shared/stream_updated_toc.jinja.html"
         )
         output += toc_template.render(
             document_iterator=iterator,
@@ -632,7 +632,7 @@ class MainController:
         document = requirement.document
 
         template = MainController.env.get_template(
-            "actions/edit_requirement/stream_edit_requirement.jinja.html"
+            "actions/document/edit_requirement/stream_edit_requirement.jinja.html"
         )
         link_renderer = LinkRenderer(self.export_action.config.output_html_root)
         markup_renderer = MarkupRenderer.create(
@@ -703,7 +703,7 @@ class MainController:
 
         # Rendering back the Turbo template.
         template = MainController.env.get_template(
-            "actions/edit_requirement/stream_update_requirement.jinja.html"
+            "actions/document/edit_requirement/stream_update_requirement.jinja.html"
         )
         link_renderer = LinkRenderer(self.export_action.config.output_html_root)
         markup_renderer = MarkupRenderer.create(
@@ -727,7 +727,7 @@ class MainController:
         )
 
         toc_template = MainController.env.get_template(
-            "actions/_shared/stream_updated_toc.jinja.html"
+            "actions/document/_shared/stream_updated_toc.jinja.html"
         )
         output += toc_template.render(
             document_iterator=iterator,
@@ -760,7 +760,7 @@ class MainController:
 
         # Rendering back the Turbo template.
         template = MainController.env.get_template(
-            "actions/delete_section/stream_delete_section.jinja.html"
+            "actions/document/delete_section/stream_delete_section.jinja.html"
         )
         link_renderer = LinkRenderer(self.export_action.config.output_html_root)
         markup_renderer = MarkupRenderer.create(
@@ -783,7 +783,7 @@ class MainController:
         )
 
         toc_template = MainController.env.get_template(
-            "actions/_shared/stream_updated_toc.jinja.html"
+            "actions/document/_shared/stream_updated_toc.jinja.html"
         )
         output += toc_template.render(
             document_iterator=iterator,
@@ -817,13 +817,13 @@ class MainController:
 
         # Rendering back the Turbo template.
         template = MainController.env.get_template(
-            "actions/delete_section/stream_delete_section.jinja.html"
+            "actions/document/delete_section/stream_delete_section.jinja.html"
         )
         link_renderer = LinkRenderer(self.export_action.config.output_html_root)
         output = template.render(requirement=requirement)
 
         toc_template = MainController.env.get_template(
-            "actions/_shared/stream_updated_toc.jinja.html"
+            "actions/document/_shared/stream_updated_toc.jinja.html"
         )
         iterator = self.export_action.traceability_index.get_document_iterator(
             requirement.document

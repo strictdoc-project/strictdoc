@@ -1,15 +1,22 @@
 <turbo-frame id="article-{{document.node_id}}">
 
-<form action="/fragments/document/{{document.node_id}}" method="POST">
+<form data-controller="hello" class="std-form" action="/fragments/document/{{document.node_id}}" method="POST">
   <article class="edit-document-freetext">
     <section data-section="edit-document-freetext">
-      <textarea id="document_freetext" name="document_freetext" style="width:100%; height: 400px;">
 
-      {%- for free_text in document.free_texts -%}
-        {{ free_text.get_parts_as_text() }}
-      {%- endfor -%}
+      <div class="std-form-row">
+        <div role="textbox" contenteditable="true" class="std-input-editable" id="document_freetext" placeholder="Enter text here...">
+          {%- for free_text in document.free_texts -%}
+            {{ free_text.get_parts_as_text() }}
+          {%- endfor -%}
+        </div>
+        <textarea hidden class="std-input-hidden" name="document_freetext">
+          {%- for free_text in document.free_texts -%}
+            {{ free_text.get_parts_as_text() }}
+          {%- endfor -%}
+        </textarea>
+      </div>
 
-      </textarea>
     </section>
 
     <section>

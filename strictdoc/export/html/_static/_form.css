@@ -1,0 +1,25 @@
+/* [contenteditable=true]:empty:before{
+  content: attr(placeholder);
+  pointer-events: none;
+  display: block;
+} */
+
+[placeholder]:empty::before {
+  content: attr(placeholder);
+  pointer-events: none;
+  color: #808080;
+  /* For Firefox: */
+  display: block;
+}
+
+[placeholder]:empty:focus::before {
+  color: #c0c0c0;
+}
+
+/* */
+
+div[contenteditable=true] {
+  white-space: pre-wrap;
+  border: 1px dashed #AAA;
+  padding: 5px;
+}

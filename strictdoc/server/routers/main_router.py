@@ -6,16 +6,17 @@ from fastapi import Form, APIRouter
 from starlette.responses import HTMLResponse, Response
 
 from strictdoc import __version__, STRICTDOC_ROOT_PATH
+from strictdoc.cli.cli_arg_parser import ServerCommandConfig
 from strictdoc.server.controllers.main_controller import (
     MainController,
     NodeCreationOrder,
 )
 
 
-def create_main_router(path_to_sdoc_tree: Optional[str]) -> APIRouter:
+def create_main_router(config: ServerCommandConfig) -> APIRouter:
     router = APIRouter()
 
-    main_controller = MainController(path_to_sdoc_tree=path_to_sdoc_tree)
+    main_controller = MainController(config=config)
 
     @router.get("/")
     def get_root():

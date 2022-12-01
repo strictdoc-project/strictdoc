@@ -42,6 +42,7 @@ _, tidylib_messages_string = tidy_document(
         "input-encoding": "utf8",
         "output-encoding": "utf8",
         "drop-proprietary-attributes": "no",
+        "show-warnings": False,
     },
 )
 

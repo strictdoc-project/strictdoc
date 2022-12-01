@@ -1,7 +1,4 @@
-from typing import Optional
-
-from strictdoc.cli.cli_arg_parser import ServerCommandConfig
-
-
-class ServerConfig:
-    config: Optional[ServerCommandConfig] = None
+class SDocServerEnvVariable:
+    INPUT_PATH = "SDOC_INPUT_PATH"
+    OUTPUT_PATH = "SDOC_OUTPUT_PATH"
+    RELOAD = "SDOC_RELOAD"

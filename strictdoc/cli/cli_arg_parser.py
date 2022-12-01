@@ -224,11 +224,14 @@ def cli_args_parser() -> argparse.ArgumentParser:
     )
     command_parser_server.add_argument("input_path")
     command_parser_server.add_argument(
-        "--reload", default=True, action="store_true"
+        "--output-path", default="/tmp/strictdoc/output", type=str
     )
-    # command_parser_server.add_argument(
-    #   "--no-reload", dest="reload", action="store_false"
-    # )
+    command_parser_server.add_argument(
+        "--reload", default=False, action="store_true"
+    )
+    command_parser_server.add_argument(
+        "--no-reload", dest="reload", action="store_false"
+    )
 
     # Command: Version
     command_subparsers.add_parser(
@@ -260,8 +263,12 @@ class PassthroughCommandConfig:
 
 
 class ServerCommandConfig:
-    def __init__(self, input_path: str):
-        self.input_path = input_path
+    def __init__(self, *, input_path: str, output_path: str, reload: bool):
+        assert os.path.exists(input_path)
+        abs_input_path = os.path.abspath(input_path)
+        self.input_path: str = abs_input_path
+        self.output_path: str = output_path
+        self.reload: bool = reload
 
 
 class ExportMode(Enum):
@@ -412,7 +419,11 @@ class SDocArgsParser:
         )
 
     def get_server_config(self) -> ServerCommandConfig:
-        return ServerCommandConfig(input_path=self.args.input_path)
+        return ServerCommandConfig(
+            input_path=self.args.input_path,
+            output_path=self.args.output_path,
+            reload=self.args.reload,
+        )
 
     def get_dump_grammar_config(self) -> DumpGrammarCommandConfig:
         return DumpGrammarCommandConfig(output_file=self.args.output_file)

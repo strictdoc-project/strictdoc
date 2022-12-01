@@ -17,7 +17,10 @@ from strictdoc.backend.sdoc.models.requirement import (
 )
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.writer import SDWriter
-from strictdoc.cli.cli_arg_parser import ExportCommandConfig
+from strictdoc.cli.cli_arg_parser import (
+    ExportCommandConfig,
+    ServerCommandConfig,
+)
 from strictdoc.core.actions.export_action import ExportAction
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
@@ -50,17 +53,15 @@ class MainController:
     )
     env.globals.update(isinstance=isinstance)
 
-    def __init__(self, path_to_sdoc_tree: str):
-        self.path_to_sdoc_tree = path_to_sdoc_tree
+    def __init__(self, config: ServerCommandConfig):
+        self.config: ServerCommandConfig = config
 
         parallelizer = NullParallelizer()
-        self.output_dir = (
-            "/tmp/output"  # os.path.join(self.path_to_sdoc_tree, "output")
-        )
-        config = ExportCommandConfig(
+
+        export_config = ExportCommandConfig(
             strictdoc_root_path=STRICTDOC_ROOT_PATH,
-            input_paths=[self.path_to_sdoc_tree],
-            output_dir=self.output_dir,
+            input_paths=[self.config.input_path],
+            output_dir=self.config.output_path,
             project_title="PROJECT_TITLE",
             formats=["html"],
             fields=None,
@@ -68,16 +69,16 @@ class MainController:
             enable_mathjax=False,
             experimental_enable_file_traceability=False,
         )
-        config.is_running_on_server = True
+        export_config.is_running_on_server = True
         self.export_action = ExportAction(
-            config=config, parallelizer=parallelizer
+            config=export_config, parallelizer=parallelizer
         )
         self.export_action.build_index()
         self.export_action.export()
 
     def get_document(self, path_to_document):
         full_path_to_document = os.path.join(
-            self.output_dir, "html", path_to_document
+            self.config.output_path, "html", path_to_document
         )
         assert os.path.isfile(full_path_to_document), f"{full_path_to_document}"
         with open(full_path_to_document, encoding="utf8") as sample_sdoc:
@@ -107,6 +108,10 @@ class MainController:
                 and len(parent_cursor.section_contents) > 0
             ):
                 target_node_mid = parent_cursor.section_contents[-1].node_id
+                # TODO: Make section_contents typed.
+                assert isinstance(
+                    parent_cursor.section_contents[-1], (Section, Document)
+                )
                 parent_cursor = parent_cursor.section_contents[-1]
             parent = reference_node
             replace_action = "after"

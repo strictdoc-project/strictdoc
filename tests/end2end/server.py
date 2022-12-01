@@ -42,6 +42,7 @@ class SDocTestServer:
             "python",
             "strictdoc/cli/main.py",
             "server",
+            "--no-reload",
             self.path_to_tdoc_folder,
         ]
         if self.path_to_sandbox is not None:

@@ -31,7 +31,6 @@ def run_strictdoc_server(*, config: ServerCommandConfig):
         # reload_delay: Optional[float] = None,
         reload_includes=[
             "*.py",
-            "*.sdoc",
             "*.html",
             "*.css",
         ],

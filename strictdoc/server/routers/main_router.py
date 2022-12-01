@@ -68,7 +68,9 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
             },
         )
 
-    @router.get("/actions/document/edit_section/{section_id}", response_class=Response)
+    @router.get(
+        "/actions/document/edit_section/{section_id}", response_class=Response
+    )
     def get_edit_section(section_id: str):
         content = main_controller.get_edit_section(section_id)
         return HTMLResponse(

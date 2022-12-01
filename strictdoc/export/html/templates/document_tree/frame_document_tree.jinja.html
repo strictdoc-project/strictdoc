@@ -88,5 +88,8 @@
   {%- else -%}
     The document tree has no documents yet.
   {%- endif -%}
-  {% include "document_tree/new_document_link.jinja.html" %}
+
+  {%- if config.is_running_on_server -%}
+    {% include "document_tree/new_document_link.jinja.html" %}
+  {%- endif -%}
 </turbo-frame>

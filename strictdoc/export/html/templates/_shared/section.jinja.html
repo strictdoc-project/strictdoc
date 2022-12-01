@@ -14,15 +14,17 @@
 
   {% include "_shared/requirement_block/free_text.jinja.html" %}
 
-  <a href="/fragments/sections/{{section.node_id}}" data-turbo-action="replace">Edit</a>,
-  <a href="/streams/document/delete_section/{{section.node_id}}" data-turbo-method="delete">Delete</a>,
+  {%- if config.is_running_on_server -%}
+    <a href="/fragments/sections/{{section.node_id}}" data-turbo-action="replace">Edit</a>,
+    <a href="/streams/document/delete_section/{{section.node_id}}" data-turbo-method="delete">Delete</a>,
 
-  <a href="/streams/document/new_section?reference_mid={{section.node_id}}&whereto=before" data-turbo-action="replace">+S⬆</a>,
-  <a href="/streams/document/new_section?reference_mid={{section.node_id}}&whereto=child" data-turbo-action="replace">+S⬊</a>,
-  <a href="/streams/document/new_section?reference_mid={{section.node_id}}&whereto=after" data-turbo-action="replace">+S⬇</a>,
-  <a href="/streams/document/new_requirement?reference_mid={{section.node_id}}&whereto=before" data-turbo-action="replace">+R⬆</a>,
-  <a href="/streams/document/new_requirement?reference_mid={{section.node_id}}&whereto=child" data-turbo-action="replace">+R⬊</a>,
-  <a href="/streams/document/new_requirement?reference_mid={{section.node_id}}&whereto=after" data-turbo-action="replace">+R⬇</a>
+    <a href="/streams/document/new_section?reference_mid={{section.node_id}}&whereto=before" data-turbo-action="replace">+S⬆</a>,
+    <a href="/streams/document/new_section?reference_mid={{section.node_id}}&whereto=child" data-turbo-action="replace">+S⬊</a>,
+    <a href="/streams/document/new_section?reference_mid={{section.node_id}}&whereto=after" data-turbo-action="replace">+S⬇</a>,
+    <a href="/streams/document/new_requirement?reference_mid={{section.node_id}}&whereto=before" data-turbo-action="replace">+R⬆</a>,
+    <a href="/streams/document/new_requirement?reference_mid={{section.node_id}}&whereto=child" data-turbo-action="replace">+R⬊</a>,
+    <a href="/streams/document/new_requirement?reference_mid={{section.node_id}}&whereto=after" data-turbo-action="replace">+R⬇</a>
+  {%- endif -%}
 
 </article>
 

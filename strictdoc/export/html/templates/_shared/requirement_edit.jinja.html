@@ -1,7 +1,7 @@
 {%- if is_new_requirement -%}
-  {%- set url="/streams/document/create_requirement" %}
+  {%- set url="/actions/document/create_requirement" %}
 {%- else -%}
-  {%- set url="/streams/document/update_requirement" %}
+  {%- set url="/actions/document/update_requirement" %}
 {%- endif -%}
 
 <turbo-frame id="article-{{requirement.node_id}}">

@@ -17,6 +17,9 @@ except AssertionError:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("input_path")
+    parser.add_argument(
+        "output_path", type=str, default="/tmp/strictdoc/output"
+    )
 
     parser.add_argument("--reload", default=True, action="store_true")
     parser.add_argument("--no-reload", dest="reload", action="store_false")
@@ -24,6 +27,10 @@ if __name__ == "__main__":
 
     input_path = args.input_path
     assert os.path.exists(input_path)
+    output_path = args.output_path
+    assert os.path.exists(output_path)
 
-    server_command_config = ServerCommandConfig(input_path=input_path)
+    server_command_config = ServerCommandConfig(
+        input_path=input_path, output_path=output_path, reload=args.reload
+    )
     run_strictdoc_server(config=server_command_config)

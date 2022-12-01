@@ -134,7 +134,7 @@ def server(context, input_path="developer/sandbox"):
         context,
         one_line_command(
             f"""
-                python strictdoc/cli/main.py server {input_path}
+                python strictdoc/cli/main.py server {input_path} --reload
             """
         ),
     )  # --reload

@@ -338,6 +338,7 @@ class MainController:
             renderer=markup_renderer,
             section=section,
             document_type=DocumentType.document(),
+            config=self.export_action.config
         )
         iterator = self.export_action.traceability_index.get_document_iterator(
             section.document
@@ -447,6 +448,7 @@ class MainController:
             renderer=markup_renderer,
             document=document,
             document_type=DocumentType.document(),
+            config=self.export_action.config
         )
 
         return output

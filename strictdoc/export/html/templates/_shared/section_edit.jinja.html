@@ -16,6 +16,13 @@
   <article class="edit-docsection" id="{{section.node_id}}">
     <section data-section="edit-section-title">
 
+    {%- if error_object.has_errors("section_title") -%}
+      <div style="border: 1px solid red;">
+      {%- for error in error_object.get_errors("section_title") -%}
+        {{ error }}
+      {%- endfor -%}
+      </div>
+    {%- endif -%}
       <input type="text" id="section_title" name="section_title" value="{{ section.title }}"/>
 
     </section>

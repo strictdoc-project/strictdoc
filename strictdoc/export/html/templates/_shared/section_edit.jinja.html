@@ -39,6 +39,11 @@
 
     <section>
         <button type="submit">Save</button>
+        {%- if is_new_section -%}
+          <a href="/actions/document/cancel_new_section?section_mid={{section.node_id}}">Cancel</a>
+        {%- else -%}
+          <a href="/actions/document/cancel_edit_section?section_mid={{section.node_id}}">Cancel</a>
+        {%- endif -%}
     </section>
   </article>
 

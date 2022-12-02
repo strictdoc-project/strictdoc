@@ -1,3 +1,4 @@
+import filecmp
 import os
 import shutil
 
@@ -8,7 +9,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test02EditingDocumentFreeText(BaseCase):
+class Test_03_02_CreatingBeforeSection(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -28,12 +29,10 @@ class Test02EditingDocumentFreeText(BaseCase):
         self.assert_text("Project index")
 
         self.click_link("DOC")
-
         self.assert_text("Hello world!")
 
-        self.click_link("Edit")
+        self.click_link("+S⬆")
 
         self.click_link("Cancel")
 
-        self.assert_text("Hello world!")
-        self.assert_text("Edit")
+        self.assert_text_not_visible("Cancel")

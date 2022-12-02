@@ -559,9 +559,9 @@ class MainController:
             requirement_type="REQUIREMENT",
             uid=None,
             level=None,
-            title="Untitled",
+            title="",
             statement=None,
-            statement_multiline="Statement goes here...",  # !!!
+            statement_multiline="",
             rationale=None,
             rationale_multiline=None,
             tags=None,
@@ -588,6 +588,7 @@ class MainController:
             document_type=DocumentType.document(),
             whereto=whereto,
             replace_action=replace_action,
+            error_object=ErrorObject(),
         )
 
         return output
@@ -622,20 +623,58 @@ class MainController:
         else:
             raise NotImplementedError
 
+        error_object = ErrorObject()
+
         requirement = SDocObjectFactory.create_requirement(
             parent=parent,
             requirement_type="REQUIREMENT",
             uid=None,
             level=None,
-            title=requirement_title,
+            title=requirement_title if requirement_title is not None else "",
             statement=None,
-            statement_multiline=requirement_statement,
+            statement_multiline=requirement_statement
+            if requirement_statement is not None
+            else "",
             rationale=None,
             rationale_multiline=None,
             tags=None,
             comments=None,
         )
         requirement.node_id = requirement_mid
+
+        if requirement_statement is None or len(requirement_statement) == 0:
+            error_object.add_error(
+                "requirement_statement",
+                "Requirement statement must not be empty.",
+            )
+
+        if error_object.any_errors():
+            template = MainController.env.get_template(
+                "actions/document/create_requirement/stream_new_requirement.jinja.html"  # noqa: E501
+            )
+            link_renderer = LinkRenderer(
+                self.export_action.config.output_html_root
+            )
+            markup_renderer = MarkupRenderer.create(
+                markup="RST",
+                traceability_index=self.export_action.traceability_index,
+                link_renderer=link_renderer,
+                context_document=document,
+            )
+            output = template.render(
+                is_new_requirement=True,
+                renderer=markup_renderer,
+                requirement=requirement,
+                reference_mid=reference_mid,
+                target_node_mid=requirement_mid,
+                document_type=DocumentType.document(),
+                whereto=whereto,
+                replace_action="replace",
+                error_object=error_object,
+            )
+
+            return output
+
         requirement.ng_document_reference = DocumentReference()
         requirement.ng_document_reference.set_document(document)
         requirement.ng_level = parent.ng_level + 1
@@ -718,6 +757,7 @@ class MainController:
             renderer=markup_renderer,
             requirement=requirement,
             document_type=DocumentType.document(),
+            error_object=ErrorObject(),
         )
 
         return output
@@ -737,9 +777,9 @@ class MainController:
         )
         document = requirement.document
 
-        # Updating section title.
+        error_object = ErrorObject()
+
         if requirement_title is not None and len(requirement_title) > 0:
-            requirement.title = requirement_title
             requirement.ordered_fields_lookup["TITLE"] = [
                 RequirementField(
                     requirement,
@@ -750,7 +790,14 @@ class MainController:
                 )
             ]
 
-        # Updating section content.
+        # Updating section statement.
+        if requirement_statement is None or len(requirement_statement) == 0:
+            error_object.add_error(
+                "requirement_statement",
+                "Requirement statement must not be empty.",
+            )
+            requirement_statement = ""
+
         requirement.statement_multiline = requirement_statement
         requirement.ordered_fields_lookup["STATEMENT"] = [
             RequirementField(
@@ -761,6 +808,28 @@ class MainController:
                 field_value_references=None,
             )
         ]
+
+        if error_object.any_errors():
+            template = MainController.env.get_template(
+                "actions/document/edit_requirement/stream_edit_requirement.jinja.html"  # noqa: E501
+            )
+            link_renderer = LinkRenderer(
+                self.export_action.config.output_html_root
+            )
+            markup_renderer = MarkupRenderer.create(
+                markup="RST",
+                traceability_index=self.export_action.traceability_index,
+                link_renderer=link_renderer,
+                context_document=document,
+            )
+            output = template.render(
+                is_new_requirement=False,
+                renderer=markup_renderer,
+                requirement=requirement,
+                document_type=DocumentType.document(),
+                error_object=error_object,
+            )
+            return output
 
         # Saving new content to .SDoc file.
         document_content = SDWriter().write(document)

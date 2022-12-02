@@ -630,7 +630,7 @@ class MainController:
             requirement_type="REQUIREMENT",
             uid=None,
             level=None,
-            title=requirement_title if requirement_title is not None else "",
+            title=requirement_title if requirement_title is not None and len(requirement_title) > 0 else None,
             statement=None,
             statement_multiline=requirement_statement
             if requirement_statement is not None
@@ -661,6 +661,12 @@ class MainController:
                 link_renderer=link_renderer,
                 context_document=document,
             )
+            # TODO: This is needed because otherwise the form shows "None".
+            # Ideally it would be great to split the Requirement model and
+            # RequirementFormObject to separate the use cases.
+            if requirement_title is None or len(requirement_title) == 0:
+                requirement.title = ""
+
             output = template.render(
                 is_new_requirement=True,
                 renderer=markup_renderer,
@@ -740,6 +746,12 @@ class MainController:
         requirement: Requirement = (
             self.export_action.traceability_index.get_node_by_id(requirement_id)
         )
+        # TODO: This is needed because otherwise the form shows "None".
+        # Ideally it would be great to split the Requirement model and
+        # RequirementFormObject to separate the use cases.
+        if requirement.title is None or len(requirement.title) == 0:
+            requirement.title = ""
+
         document = requirement.document
 
         template = MainController.env.get_template(
@@ -789,6 +801,10 @@ class MainController:
                     field_value_references=None,
                 )
             ]
+        else:
+            if "TITLE" in requirement.ordered_fields_lookup:
+                del requirement.ordered_fields_lookup["TITLE"]
+                requirement.title = None
 
         # Updating section statement.
         if requirement_statement is None or len(requirement_statement) == 0:

@@ -111,6 +111,17 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
             },
         )
 
+    @router.get("/actions/document/cancel_edit_freetext", response_class=Response)
+    def get_edit_document_freetext(document_mid: str):
+        content = main_controller.cancel_edit_document_freetext(document_mid)
+        return HTMLResponse(
+            content=content,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
     @router.post("/fragments/document/{document_id}", response_class=Response)
     def put_update_document_freetext(
         document_id: str,

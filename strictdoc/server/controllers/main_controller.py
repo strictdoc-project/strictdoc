@@ -525,6 +525,33 @@ class MainController:
 
         return output
 
+    def cancel_edit_document_freetext(self, document_id: str):
+        assert isinstance(document_id, str) and len(document_id) > 0, document_id
+        document: Document = (
+            self.export_action.traceability_index.get_node_by_id(document_id)
+        )
+
+        # Rendering back the Turbo template.
+        template = MainController.env.get_template(
+            "actions/document/document_freetext/"
+            "stream_cancel_edit_freetext.jinja.html"
+        )
+        link_renderer = LinkRenderer(self.export_action.config.output_html_root)
+        markup_renderer = MarkupRenderer.create(
+            markup="RST",
+            traceability_index=self.export_action.traceability_index,
+            link_renderer=link_renderer,
+            context_document=document,
+        )
+        output = template.render(
+            renderer=markup_renderer,
+            document=document,
+            document_type=DocumentType.document(),
+            config=self.export_action.config,
+        )
+
+        return output
+
     def get_new_requirement(self, *, reference_mid: str, whereto: str):
         reference_node = self.export_action.traceability_index.get_node_by_id(
             reference_mid

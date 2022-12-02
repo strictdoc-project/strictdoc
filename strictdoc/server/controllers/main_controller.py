@@ -169,11 +169,9 @@ class MainController:
 
     def cancel_new_section(self, section_mid):
         template = MainController.env.get_template(
-            "actions/document/create_section/stream_cancel_new_section.jinja.html"
+            "actions/document/create_section/stream_cancel_new_section.jinja.html"  # noqa: E501
         )
-        output = template.render(
-            section_mid=section_mid
-        )
+        output = template.render(section_mid=section_mid)
         return output
 
     def create_new_section(
@@ -557,7 +555,9 @@ class MainController:
         return output
 
     def cancel_edit_document_freetext(self, document_id: str):
-        assert isinstance(document_id, str) and len(document_id) > 0, document_id
+        assert (
+            isinstance(document_id, str) and len(document_id) > 0
+        ), document_id
         document: Document = (
             self.export_action.traceability_index.get_node_by_id(document_id)
         )
@@ -688,7 +688,9 @@ class MainController:
             requirement_type="REQUIREMENT",
             uid=None,
             level=None,
-            title=requirement_title if requirement_title is not None and len(requirement_title) > 0 else None,
+            title=requirement_title
+            if requirement_title is not None and len(requirement_title) > 0
+            else None,
             statement=None,
             statement_multiline=requirement_statement
             if requirement_statement is not None
@@ -958,9 +960,7 @@ class MainController:
         template = MainController.env.get_template(
             "actions/document/create_requirement/stream_cancel_new_requirement.jinja.html"  # noqa: E501
         )
-        output = template.render(
-            requirement_mid=requirement_mid
-        )
+        output = template.render(requirement_mid=requirement_mid)
         return output
 
     def cancel_edit_requirement(self, requirement_mid):

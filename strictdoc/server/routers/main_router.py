@@ -243,6 +243,30 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
             },
         )
 
+    @router.get("/actions/document/cancel_new_requirement", response_class=Response)
+    def cancel_new_requirement(requirement_mid: str):
+        content = main_controller.cancel_new_requirement(requirement_mid=requirement_mid)
+        return HTMLResponse(
+            content=content,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @router.get("/actions/document/cancel_edit_requirement", response_class=Response)
+    def cancel_edit_requirement(requirement_mid: str):
+        content = main_controller.cancel_edit_requirement(
+            requirement_mid=requirement_mid,
+        )
+        return HTMLResponse(
+            content=content,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
     @router.delete(
         "/actions/document/delete_section/{section_mid}",
         response_class=Response,

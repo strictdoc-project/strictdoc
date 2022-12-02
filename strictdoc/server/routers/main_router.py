@@ -111,7 +111,9 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
             },
         )
 
-    @router.get("/actions/document/cancel_edit_section", response_class=Response)
+    @router.get(
+        "/actions/document/cancel_edit_section", response_class=Response
+    )
     def cancel_edit_section(
         section_mid: str,
     ):
@@ -137,8 +139,10 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
             },
         )
 
-    @router.get("/actions/document/cancel_edit_freetext", response_class=Response)
-    def get_edit_document_freetext(document_mid: str):
+    @router.get(
+        "/actions/document/cancel_edit_freetext", response_class=Response
+    )
+    def cancel_edit_document_freetext(document_mid: str):
         content = main_controller.cancel_edit_document_freetext(document_mid)
         return HTMLResponse(
             content=content,
@@ -243,9 +247,13 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
             },
         )
 
-    @router.get("/actions/document/cancel_new_requirement", response_class=Response)
+    @router.get(
+        "/actions/document/cancel_new_requirement", response_class=Response
+    )
     def cancel_new_requirement(requirement_mid: str):
-        content = main_controller.cancel_new_requirement(requirement_mid=requirement_mid)
+        content = main_controller.cancel_new_requirement(
+            requirement_mid=requirement_mid
+        )
         return HTMLResponse(
             content=content,
             status_code=200,
@@ -254,7 +262,9 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
             },
         )
 
-    @router.get("/actions/document/cancel_edit_requirement", response_class=Response)
+    @router.get(
+        "/actions/document/cancel_edit_requirement", response_class=Response
+    )
     def cancel_edit_requirement(requirement_mid: str):
         content = main_controller.cancel_edit_requirement(
             requirement_mid=requirement_mid,

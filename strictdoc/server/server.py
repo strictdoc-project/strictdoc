@@ -7,7 +7,22 @@ from strictdoc.cli.cli_arg_parser import ServerCommandConfig
 from strictdoc.server.config import SDocServerEnvVariable
 
 
+def print_warning_message():
+    print("")
+    print("******************************************")
+    print("*               WARNING                  *")
+    print("*                                        *")
+    print("* The StrictDoc Web-based user interface *")
+    print("* is a highly experimental feature.      *")
+    print("* Things may go wrong, so get ready      *")
+    print("* to report bugs.                        *")
+    print("******************************************")
+    print("", flush=True)
+
+
 def run_strictdoc_server(*, config: ServerCommandConfig):
+    print_warning_message()
+
     # uvicorn.run does not support passing arguments to the main
     # function (strictdoc_production_app). Passing the config through the
     # environmental variables interface.

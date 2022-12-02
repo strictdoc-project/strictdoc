@@ -859,6 +859,7 @@ class MainController:
                     field_value_references=None,
                 )
             ]
+            requirement.title = requirement_title
         else:
             if "TITLE" in requirement.ordered_fields_lookup:
                 del requirement.ordered_fields_lookup["TITLE"]

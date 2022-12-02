@@ -102,10 +102,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
 
     @router.get("/fragments/document/{document_id}", response_class=Response)
     def get_edit_document_freetext(document_id: str):
-        print("get_Test")
-        print(document_id)
         content = main_controller.get_edit_document_freetext(document_id)
-        # print(content)
         return HTMLResponse(
             content=content,
             status_code=200,
@@ -180,7 +177,6 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
     )
     def get_edit_requirement(requirement_id: str):
         content = main_controller.get_edit_requirement(requirement_id)
-        # print(content)
         return HTMLResponse(
             content=content,
             status_code=200,
@@ -274,8 +270,6 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
 
     @router.get("/{full_path:path}", response_class=Response)
     def get_incoming_request(full_path: str):
-        print(full_path)
-
         if full_path.endswith(".html"):
             return get_document(full_path)
         if full_path.endswith(".css") or full_path.endswith(".js"):
@@ -285,13 +279,10 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
         )
 
     def get_document(url_to_document: str):
-        print(f"MainRounter.get_document> {url_to_document}")
         document_html_content = main_controller.get_document(url_to_document)
         return HTMLResponse(content=document_html_content, status_code=200)
 
     def get_asset(url_to_asset: str):
-        print(f"MainRounter.get_asset> {url_to_asset}")
-
         # if not os.path.isfile(filename):
         # return Response(status_code=405)
 

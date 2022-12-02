@@ -100,6 +100,32 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
             },
         )
 
+    @router.get("/actions/document/cancel_new_section", response_class=Response)
+    def cancel_new_section(section_mid: str):
+        content = main_controller.cancel_new_section(section_mid=section_mid)
+        return HTMLResponse(
+            content=content,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @router.get("/actions/document/cancel_edit_section", response_class=Response)
+    def cancel_edit_section(
+        section_mid: str,
+    ):
+        content = main_controller.cancel_edit_section(
+            section_mid=section_mid,
+        )
+        return HTMLResponse(
+            content=content,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
     @router.get("/fragments/document/{document_id}", response_class=Response)
     def get_edit_document_freetext(document_id: str):
         content = main_controller.get_edit_document_freetext(document_id)

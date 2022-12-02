@@ -167,6 +167,15 @@ class MainController:
 
         return output
 
+    def cancel_new_section(self, section_mid):
+        template = MainController.env.get_template(
+            "actions/document/create_section/stream_cancel_new_section.jinja.html"
+        )
+        output = template.render(
+            section_mid=section_mid
+        )
+        return output
+
     def create_new_section(
         self,
         *,
@@ -421,6 +430,28 @@ class MainController:
             document_iterator=iterator,
             document_type=DocumentType.document(),
             link_renderer=link_renderer,
+        )
+        return output
+
+    def cancel_edit_section(self, section_mid):
+        section: Section = self.export_action.traceability_index.get_node_by_id(
+            section_mid
+        )
+        template = MainController.env.get_template(
+            "actions/document/edit_section/stream_updated_section.jinja.html"
+        )
+        link_renderer = LinkRenderer(self.export_action.config.output_html_root)
+        markup_renderer = MarkupRenderer.create(
+            markup="RST",
+            traceability_index=self.export_action.traceability_index,
+            link_renderer=link_renderer,
+            context_document=section.parent,
+        )
+        output = template.render(
+            renderer=markup_renderer,
+            section=section,
+            document_type=DocumentType.document(),
+            config=self.export_action.config,
         )
         return output
 

@@ -2,13 +2,14 @@
 TITLE: Document 1
 
 [FREETEXT]
-This is an **introduction**.
-
-Hello. What nex?
-123123
+Hello world!
 [/FREETEXT]
 
 [SECTION]
-TITLE: New section
+TITLE: Section B
+
+[FREETEXT]
+Section B text.
+[/FREETEXT]
 
 [/SECTION]

@@ -17,7 +17,9 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldSingleChoice,
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldTag,
+    GrammarElementFieldReference,
     RequirementFieldName,
+    ReferenceType,
 )
 
 
@@ -159,4 +161,24 @@ def validate_requirement_field(
                 requirement_field=requirement_field,
                 **get_location(requirement),
             )
+
+    elif isinstance(grammar_field, GrammarElementFieldReference):
+        requirement_field_value_references = (
+            requirement_field.field_value_references
+        )
+        for reference in requirement_field_value_references:
+            if (
+                reference.ref_type in ReferenceType.GRAMMAR_REFERENCE_TYPE_MAP
+                and ReferenceType.GRAMMAR_REFERENCE_TYPE_MAP[reference.ref_type]
+                in grammar_field.types
+            ):
+                continue
+            raise StrictDocSemanticError.invalid_reference_type_item(
+                requirement=requirement,
+                document_grammar=document_grammar,
+                requirement_field=requirement_field,
+                reference_item=reference,
+                **get_location(requirement),
+            )
+
     return True

@@ -18,6 +18,13 @@
       <input type="text" id="requirement_title" name="requirement_title" value="{{ requirement.title }}"/>
     </section>
 
+    {%- if error_object.has_errors("requirement_statement") -%}
+      <div style="border: 1px solid red;">
+      {%- for error in error_object.get_errors("requirement_statement") -%}
+        {{ error }}
+      {%- endfor -%}
+      </div>
+    {%- endif -%}
     <section data-section="edit-section-freetext">
       <textarea id="requirement_statement" name="requirement_statement" style="width:100%; height: 200px;">{{requirement.statement_multiline}}</textarea>
     </section>

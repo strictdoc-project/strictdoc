@@ -2,14 +2,11 @@
 TITLE: Document 1
 
 [FREETEXT]
-This is an **introduction**.
-
-Hello. What nex?
-123123
+Hello world!
 [/FREETEXT]
 
 [REQUIREMENT]
-TITLE:
+TITLE: Requirement title
 STATEMENT: >>>
-asdfasdfasdf
+Requirement statement.
 <<<

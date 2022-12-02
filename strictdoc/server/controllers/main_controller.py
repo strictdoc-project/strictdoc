@@ -952,6 +952,49 @@ class MainController:
 
         return output
 
+    @staticmethod
+    def cancel_new_requirement(requirement_mid):
+        template = MainController.env.get_template(
+            "actions/document/create_requirement/stream_cancel_new_requirement.jinja.html"  # noqa: E501
+        )
+        output = template.render(
+            requirement_mid=requirement_mid
+        )
+        return output
+
+    def cancel_edit_requirement(self, requirement_mid):
+        assert (
+            isinstance(requirement_mid, str) and len(requirement_mid) > 0
+        ), f"{requirement_mid}"
+        requirement = self.export_action.traceability_index.get_node_by_id(
+            requirement_mid
+        )
+        document = requirement.document
+        template = MainController.env.get_template(
+            "actions/document/edit_requirement/stream_update_requirement.jinja.html"  # noqa: E501
+        )
+        link_renderer = LinkRenderer(self.export_action.config.output_html_root)
+        markup_renderer = MarkupRenderer.create(
+            markup="RST",
+            traceability_index=self.export_action.traceability_index,
+            link_renderer=link_renderer,
+            context_document=document,
+        )
+        iterator = self.export_action.traceability_index.get_document_iterator(
+            document
+        )
+        output = template.render(
+            requirement=requirement,
+            renderer=markup_renderer,
+            document=document,
+            document_iterator=iterator,
+            document_type=DocumentType.document(),
+            link_renderer=link_renderer,
+            traceability_index=self.export_action.traceability_index,
+            config=self.export_action.config,
+        )
+        return output
+
     def delete_section(self, section_mid):
         section: Section = self.export_action.traceability_index.get_node_by_id(
             section_mid

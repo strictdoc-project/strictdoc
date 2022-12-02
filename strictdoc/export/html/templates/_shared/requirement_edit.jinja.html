@@ -31,6 +31,11 @@
 
     <section>
         <button type="submit">Save</button>
+        {%- if is_new_requirement -%}
+          <a href="/actions/document/cancel_new_requirement?requirement_mid={{requirement.node_id}}">Cancel</a>
+        {%- else -%}
+          <a href="/actions/document/cancel_edit_requirement?requirement_mid={{requirement.node_id}}">Cancel</a>
+        {%- endif -%}
     </section>
   </article>
 

@@ -7,14 +7,45 @@ items are either work-in-progress or will be implemented next.
 [/FREETEXT]
 
 [SECTION]
-TITLE: Work in progress
+TITLE: Graphical user interface
 
-[REQUIREMENT]
+[FREETEXT]
+- Check preservation of anchors when updating sections.
+- Issue when adding sibling section from a nested section.
+- Auto-trim all single-line fields.
+- Auto-trim all text areas - all trailing whitespace shall be removed.
+- Edit links for table-based requirements.
+- Edit requirement's ``RATIONALE`` field.
+- Adding/editing parent/child requirements.
+- Enable SeleniumBase tests on CI.
+- Adding comments to requirements.
+- Integration with Git repository.
+- Moving node up/down/left/right. For example, move a node of level 2 to level 1.
+- Contextual help about the RST markup.
+- Non-RST markup formats.
+- Expand/collapse the table of contents.
+
+- ReqIF:
+  
+  - Export complete documentation tree or a single document to ReqIF.
+  - Import complete documentation tree or a single document from ReqIF.
+
+- How to edit tables conveniently?
+
+- Focused editing of document sections: dedicated and focused ``/sections/`` resource.
+
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
 TITLE: Integration with Capella
-STATEMENT: >>>
+
+[FREETEXT]
 StrictDoc shall allow bi-directional data exchange with Capella tool.
-<<<
-COMMENT: The current plan is to implement this using ReqIF export/import features.
+
+Note: The current plan is to implement this using ReqIF export/import features.
+[/FREETEXT]
 
 [/SECTION]
 
@@ -173,30 +204,6 @@ COMMENT: >>>
 This feature is relatively easy to implement but the implementation is postponed
 until the linking between requirements and files is implemented.
 <<<
-
-[COMPOSITE_REQUIREMENT]
-TITLE: Graphical User Interface (GUI)
-STATEMENT: StrictDoc shall provide a Graphical User Interface (GUI).
-COMMENT: >>>
-Several trade-offs to consider:
-
-- Desktop vs Web. Rather web-based, i.e. Python backend and JS frontend, but
-  which technology?
-- Still keep the current behavior of a statically generated website?
-<<<
-
-[REQUIREMENT]
-UID: BACKLOG-WEB
-REFS:
-- TYPE: Parent
-  VALUE: UI-2-WEB
-TITLE: Web server and editable HTML pages
-STATEMENT: >>>
-StrictDoc shall provide a web server that serves as a StrictDoc backend for
-reading and writing SDoc files.
-<<<
-
-[/COMPOSITE_REQUIREMENT]
 
 [REQUIREMENT]
 TITLE: Facts table. Invariants calculation.

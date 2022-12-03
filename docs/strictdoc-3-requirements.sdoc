@@ -58,6 +58,30 @@ document data model which is called "grammar".
 TITLE: Command-line interface
 STATEMENT: StrictDoc shall provide a command-line interface.
 
+[SECTION]
+TITLE: Graphical user interface
+
+[FREETEXT]
+StrictDoc shall provide a Graphical User Interface (GUI).
+
+Several trade-offs to consider:
+
+- Desktop vs Web. Rather web-based, i.e. Python backend and JS frontend, but which technology?
+- Still keep the current behavior of a statically generated website?
+
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Statically generated website
+
+[FREETEXT]
+StrictDoc shall allow generating requirements content to static HTML website.
+[/FREETEXT]
+
+[/SECTION]
+
 [COMPOSITE_REQUIREMENT]
 TITLE: Platform support
 STATEMENT: StrictDoc shall work on all major platforms.

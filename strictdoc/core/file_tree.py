@@ -172,6 +172,7 @@ class FileFinder:
                 if (
                     not d.startswith(".")
                     and not d.startswith("_")
+                    and "tests" not in d
                     and "integration" not in d
                 )
             ]

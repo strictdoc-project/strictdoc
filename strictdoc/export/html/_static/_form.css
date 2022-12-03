@@ -4,6 +4,21 @@
   display: block;
 } */
 
+:root {
+  --color-bg-form: aliceblue;
+}
+
+.std-form {
+  /* compensates for paddings in article>section */
+  padding: var(--base-margin) 0 0 0;
+}
+
+div[contenteditable=true] {
+  white-space: pre-wrap;
+  background-color: var(--color-bg-form);
+  outline: 10px solid var(--color-bg-form);
+}
+
 [placeholder]:empty::before {
   content: attr(placeholder);
   pointer-events: none;
@@ -16,10 +31,6 @@
   color: #c0c0c0;
 }
 
-/* */
-
-div[contenteditable=true] {
-  white-space: pre-wrap;
-  border: 1px dashed #AAA;
-  padding: 5px;
+.std-form-row {
+  margin-bottom: var(--base-margin);
 }

@@ -10,7 +10,7 @@ items are either work-in-progress or will be implemented next.
 TITLE: Graphical user interface
 
 [FREETEXT]
-- Check preservation of anchors when updating sections.
+- What to do with web content going out of sync with the server/file system state?
 - Issue when adding sibling section from a nested section.
 - Auto-trim all single-line fields.
 - Auto-trim all text areas - all trailing whitespace shall be removed.

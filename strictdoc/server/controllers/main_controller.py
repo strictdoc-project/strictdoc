@@ -360,6 +360,7 @@ class MainController:
             )
             output = template.render(
                 renderer=markup_renderer,
+                link_renderer=link_renderer,
                 section=section,
                 section_mid=section.node_id,
                 target_node_mid=section.node_id,
@@ -414,6 +415,7 @@ class MainController:
         )
         output = template.render(
             renderer=markup_renderer,
+            link_renderer=link_renderer,
             section=section,
             document_type=DocumentType.document(),
             config=self.export_action.config,
@@ -447,6 +449,7 @@ class MainController:
         )
         output = template.render(
             renderer=markup_renderer,
+            link_renderer=link_renderer,
             section=section,
             document_type=DocumentType.document(),
             config=self.export_action.config,

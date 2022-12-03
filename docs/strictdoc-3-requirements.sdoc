@@ -32,7 +32,9 @@ REFS:
 - TYPE: Parent
   VALUE: GOAL-1-TOOL-SUPPORT
 TITLE: Requirements management
-STATEMENT: StrictDoc shall enable requirements management.
+STATEMENT: >>>
+StrictDoc shall enable requirements management.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-HIGH-DATA-MODEL

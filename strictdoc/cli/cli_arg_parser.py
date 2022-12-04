@@ -25,32 +25,48 @@ def _parse_fields(fields):
     return fields_array
 
 
-def cli_args_parser() -> argparse.ArgumentParser:
-    # for arg in sys.argv:
-    #     if arg == '--help':
-    #         # print_help()
-    #         assert 0
-    #         exit(0)
-    #
-    # for arg in sys.argv:
-    #     if arg == '--version':
-    #         # print_version()
-    #         assert 0
-    #         exit(0)
+class SDocArgumentParser(argparse.ArgumentParser):
+    def error(self, message: str):
+        self.print_usage(sys.stderr)
+        print(f"{self.prog}: error: {message}", file=sys.stderr)
+        print("")
+        print("Further help:")
+        print("'strictdoc -h/--help' provides a general overview of available commands.")
+        print("'strictdoc <command> -h/--help' provides a command-specific help.")
+        sys.exit(2)
 
+
+def cli_args_parser() -> argparse.ArgumentParser:
     def formatter(prog):
         return argparse.RawTextHelpFormatter(
             prog, indent_increment=2, max_help_position=4, width=80
         )
 
     # https://stackoverflow.com/a/19476216/598057
-    main_parser = argparse.ArgumentParser()
-    main_parser.formatter_class = formatter
-
+    main_parser = SDocArgumentParser(
+        prog="strictdoc",
+        add_help=True,
+        epilog=(
+            """
+            Further help: https://strictdoc.readthedocs.io/en/stable/
+            """
+        )
+    )
     command_subparsers = main_parser.add_subparsers(
         title="command", dest="command"
     )
     command_subparsers.required = True
+
+    # Command: About
+    _ = command_subparsers.add_parser(
+        "about",
+        help="About StrictDoc.",
+        description=(
+            "LINE 1: "
+            "LINE 2."
+        ),
+        formatter_class=formatter,
+    )
 
     # Command: Export
     command_parser_export = command_subparsers.add_parser(
@@ -219,7 +235,8 @@ def cli_args_parser() -> argparse.ArgumentParser:
     # Command: Server
     command_parser_server = command_subparsers.add_parser(
         "server",
-        help="Run StrictDoc Web server",
+        help="Run StrictDoc Web server.",
+        description="Run StrictDoc Web server.",
         formatter_class=formatter,
     )
     command_parser_server.add_argument("input_path")
@@ -346,6 +363,10 @@ class DumpGrammarCommandConfig:
 class SDocArgsParser:
     def __init__(self, args):
         self.args = args
+
+    @property
+    def is_about_command(self):
+        return self.args.command == "about"
 
     @property
     def is_passthrough_command(self):

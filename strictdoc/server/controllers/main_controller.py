@@ -1103,8 +1103,8 @@ class MainController:
         )
         output = template.render(
             error_object=ErrorObject(),
-            document_title="Document 1",
-            document_path="docs/document1.sdoc",
+            document_title="",
+            document_path="",
         )
         return output
 

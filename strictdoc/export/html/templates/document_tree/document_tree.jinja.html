@@ -11,9 +11,10 @@
 {% block head_scripts %}
   <script type="module">
       import hotwiredTurbo from "{{root_path}}/_static/turbo.js";
-      //import { Application } from "{{root_path}}/_static/stimulus.js";
-      //window.Stimulus = Application.start();
+      import { Application } from "{{root_path}}/_static/stimulus.js";
+      window.Stimulus = Application.start();
   </script>
+  <script type="module" src="{{root_path}}/_static/std-forms.js"></script>
 {% endblock head_scripts %}
 
 {% block title %}

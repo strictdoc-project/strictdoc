@@ -1,0 +1,17 @@
+<div id="connection_status" style="position: fixed;">
+</div>
+
+<script>
+  var clientId = Date.now();
+  var ws = new WebSocket(`ws://localhost:8001/ws/${clientId}`);
+
+  ws.onmessage = function(event) {
+    // Nothing just yet.
+  };
+  ws.onclose = function(e) {
+    document.getElementById("connection_status").innerHTML = `
+      Connection with the server is lost.
+      <a href="#" onclick="location.reload(); return false;">Click to reload</a>
+    `;
+  };
+</script>

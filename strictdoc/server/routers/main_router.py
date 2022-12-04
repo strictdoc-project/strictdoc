@@ -1,9 +1,10 @@
 import os
 from mimetypes import guess_type
-from typing import Optional
+from typing import Optional, List
 
 from fastapi import Form, APIRouter
 from starlette.responses import HTMLResponse, Response
+from starlette.websockets import WebSocket, WebSocketDisconnect
 
 from strictdoc import __version__, STRICTDOC_ROOT_PATH
 from strictdoc.cli.cli_arg_parser import ServerCommandConfig
@@ -365,5 +366,41 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
         with open(static_file, encoding="utf8") as f:
             content = f.read()
         return Response(content, media_type=content_type)
+
+    # Websockets solution based on:
+    # https://fastapi.tiangolo.com/advanced/websockets/
+    class ConnectionManager:
+        def __init__(self):
+            self.active_connections: List[WebSocket] = []
+
+        async def connect(self, websocket: WebSocket):
+            await websocket.accept()
+            self.active_connections.append(websocket)
+
+        def disconnect(self, websocket: WebSocket):
+            self.active_connections.remove(websocket)
+
+        @staticmethod
+        async def send_personal_message(message: str, websocket: WebSocket):
+            await websocket.send_text(message)
+
+        async def broadcast(self, message: str):
+            for connection in self.active_connections:
+                await connection.send_text(message)
+
+    manager = ConnectionManager()
+
+    @router.websocket("/ws/{client_id}")
+    async def websocket_endpoint(websocket: WebSocket, client_id: int):
+        await manager.connect(websocket)
+        try:
+            while True:
+                _ = await websocket.receive_text()
+                # Do nothing for now.
+        except WebSocketDisconnect:
+            manager.disconnect(websocket)
+            await manager.broadcast(
+                f"Websocket: Client #{client_id} disconnected"
+            )
 
     return router

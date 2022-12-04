@@ -34,3 +34,42 @@ div[contenteditable=true] {
 .std-form-row {
   margin-bottom: var(--base-margin);
 }
+
+.std-form-buttons {
+  display: flex;
+}
+
+.std-form-btn {
+  display: inline-block;
+  text-align: center;
+  align-items: flex-start;
+  border-width: 1px;
+  border-radius: 2px;
+  border-style: outset;
+  background: buttonface;
+  /* border-color: buttonborder; */
+  border-color: transparent;
+  border-image: initial;
+  outline: none;
+  color: #000;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 12px;
+  line-height: 2;
+  padding: 0 10px;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.std-form-btn:hover {
+  background: rgb(246, 246, 246);
+  outline: 2px solid rgb(246, 246, 246);
+}
+
+.std-form-btn[type=submit] {
+  color: #000;
+}
+
+.std-form-btn[href*="cancel"] {
+  color: red;
+}

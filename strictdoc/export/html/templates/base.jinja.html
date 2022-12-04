@@ -28,6 +28,8 @@
 <body class="{% block viewtype %}{% endblock %} {% block withtoc %}{% endblock %}">
 <script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script>
 
+  {%- include "websocket.jinja.html" -%}
+
   <div class="layout" id="layout">
 
     <aside class="layout_aside-header">

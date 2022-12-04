@@ -18,6 +18,7 @@ try:
         ImportExcelCommandConfig,
         ImportReqIFCommandConfig,
     )
+    from strictdoc.commands.about_command import AboutCommand
     from strictdoc.commands.dump_grammar_command import DumpGrammarCommand
     from strictdoc.commands.version_command import VersionCommand
     from strictdoc.core.actions.export_action import ExportAction
@@ -89,6 +90,10 @@ def _main(parallelizer):
 
     elif parser.is_version_command:
         VersionCommand.execute()
+
+    elif parser.is_about_command:
+        AboutCommand.execute()
+
     else:
         raise NotImplementedError
 

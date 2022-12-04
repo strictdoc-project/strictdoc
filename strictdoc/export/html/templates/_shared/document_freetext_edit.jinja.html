@@ -2,9 +2,8 @@
 
 <form data-controller="hello" class="std-form" action="/fragments/document/{{document.node_id}}" method="POST">
   <article class="edit-document-freetext">
-    <section data-section="edit-document-freetext">
+    <section data-section="edit-document-freetext" class="std-form-row">
 
-      <div class="std-form-row">
         <div role="textbox" contenteditable="true" class="std-input-editable" id="document_freetext" placeholder="Enter text here...">
           {%- for free_text in document.free_texts -%}
             {{ free_text.get_parts_as_text() }}
@@ -15,11 +14,10 @@
             {{ free_text.get_parts_as_text() }}
           {%- endfor -%}
         </textarea>
-      </div>
 
     </section>
 
-    <section>
+    <section class="std-form-buttons">
         <button class="std-form-btn" type="submit">Save</button>
         <a class="std-form-btn" href="/actions/document/cancel_edit_freetext?document_mid={{document.node_id}}">Cancel</a>
     </section>

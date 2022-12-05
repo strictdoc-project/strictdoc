@@ -31,8 +31,10 @@ class SDocArgumentParser(argparse.ArgumentParser):
         print(f"{self.prog}: error: {message}", file=sys.stderr)
         print("")
         print("Further help:")
-        print("'strictdoc -h/--help' provides a general overview of available commands.")
-        print("'strictdoc <command> -h/--help' provides a command-specific help.")
+        print(
+            "'strictdoc -h/--help' provides a general overview of available commands."  # noqa: E501
+        )
+        print("'strictdoc <command> -h/--help' provides command-specific help.")
         sys.exit(2)
 
 
@@ -50,7 +52,7 @@ def cli_args_parser() -> argparse.ArgumentParser:
             """
             Further help: https://strictdoc.readthedocs.io/en/stable/
             """
-        )
+        ),
     )
     command_subparsers = main_parser.add_subparsers(
         title="command", dest="command"
@@ -61,10 +63,7 @@ def cli_args_parser() -> argparse.ArgumentParser:
     _ = command_subparsers.add_parser(
         "about",
         help="About StrictDoc.",
-        description=(
-            "LINE 1: "
-            "LINE 2."
-        ),
+        description="About StrictDoc.",
         formatter_class=formatter,
     )
 

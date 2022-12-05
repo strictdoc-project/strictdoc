@@ -9,7 +9,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test02EditingDocumentFreeText(BaseCase):
+class Test_01_EditingFreeTextWithInvalidRST(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -34,16 +34,20 @@ class Test02EditingDocumentFreeText(BaseCase):
 
         self.click_link("Edit")
 
-        self.type("#document_freetext", """Modified free text!""".strip())
+        self.type(
+            "#document_freetext",
+            """
+- Broken RST markup
+
+  - AAA
+  ---
+""".strip(),
+        )
 
         self.click_xpath("//button[@type='submit' and text()='Save']")
 
-        self.assert_text("Modified free text!")
-
-        assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))
-        assert filecmp.cmp(
-            os.path.join(path_to_sandbox, "document.sdoc"),
-            os.path.join(
-                path_to_this_test_file_folder, "document.expected.sdoc"
-            ),
+        self.assert_text(
+            "RST markup syntax error::4: "
+            "(WARNING/2) Bullet list ends without a blank line; "
+            "unexpected unindent."
         )

@@ -125,6 +125,7 @@ class HTMLGenerator:
                         parents=True, exist_ok=True
                     )
                     document_content = SourceFileViewHTMLGenerator.export(
+                        config,
                         source_file,
                         traceability_index,
                         link_renderer,

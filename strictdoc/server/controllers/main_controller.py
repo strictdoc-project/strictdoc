@@ -25,8 +25,14 @@ from strictdoc.core.actions.export_action import ExportAction
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.export.html.document_type import DocumentType
+from strictdoc.export.html.form_objects.document_form_object import (
+    ExistingDocumentFreeTextObject,
+)
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
+from strictdoc.export.rst.rst_to_html_fragment_writer import (
+    RstToHtmlFragmentWriter,
+)
 from strictdoc.helpers.parallelizer import NullParallelizer
 from strictdoc.server.error_object import ErrorObject
 
@@ -487,7 +493,9 @@ class MainController:
         document = self.export_action.traceability_index.get_node_by_id(
             document_id
         )
-
+        form_object = ExistingDocumentFreeTextObject.create_from_document(
+            document=document,
+        )
         template = MainController.env.get_template(
             "actions/document/document_freetext/stream_edit_document_freetext.jinja.html"  # noqa: E501
         )
@@ -500,22 +508,57 @@ class MainController:
         )
         output = template.render(
             renderer=markup_renderer,
-            document=document,
+            form_object=form_object,
             document_type=DocumentType.document(),
         )
 
         return output
 
     def update_document_freetext(self, document_id, document_freetext):
+        assert isinstance(document_id, str)
+
+        print(document_freetext)
+
+        form_object = ExistingDocumentFreeTextObject(
+            document_mid=document_id, document_free_text=document_freetext
+        )
         document: Document = (
             self.export_action.traceability_index.get_node_by_id(document_id)
         )
 
-        # Updating section content.
+        free_text_container: Optional[FreeTextContainer] = None
         if document_freetext is not None and len(document_freetext) > 0:
-            free_text_container: FreeTextContainer = SDFreeTextReader.read(
-                document_freetext
+            (
+                parsed_html,
+                rst_error,
+            ) = RstToHtmlFragmentWriter.write_with_validation(document_freetext)
+            if parsed_html is None:
+                form_object.add_error("document_freetext", rst_error)
+
+            free_text_container = SDFreeTextReader.read(document_freetext)
+
+        if form_object.any_errors():
+            template = MainController.env.get_template(
+                "actions/document/document_freetext/stream_edit_document_freetext.jinja.html"  # noqa: E501
             )
+            link_renderer = LinkRenderer(
+                self.export_action.config.output_html_root
+            )
+            markup_renderer = MarkupRenderer.create(
+                markup="RST",
+                traceability_index=self.export_action.traceability_index,
+                link_renderer=link_renderer,
+                context_document=document,
+            )
+            output = template.render(
+                renderer=markup_renderer,
+                form_object=form_object,
+                document_type=DocumentType.document(),
+            )
+            return output
+
+        # Updating section content.
+        if free_text_container is not None:
             if len(document.free_texts) > 0:
                 free_text: FreeText = document.free_texts[0]
                 free_text.parts = free_text_container.parts

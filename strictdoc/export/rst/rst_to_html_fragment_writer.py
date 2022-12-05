@@ -40,5 +40,30 @@ class RstToHtmlFragmentWriter:
         return html
 
     @staticmethod
+    def write_with_validation(rst_fragment):
+        # How do I convert a docutils document tree into an HTML string?
+        # https://stackoverflow.com/a/32168938/598057
+        # Use a io.StringIO as the warning stream to prevent warnings from
+        # being printed to sys.stderr.
+        # https://www.programcreek.com/python/example/88126/docutils.core.publish_parts
+        warning_stream = io.StringIO()
+        settings = {"warning_stream": warning_stream}
+
+        output = publish_parts(
+            rst_fragment, writer_name="html", settings_overrides=settings
+        )
+
+        if warning_stream.tell() > 0:
+            warnings = warning_stream.getvalue().rstrip("\n")
+            error_message = ""
+            error_message += "RST markup syntax error:"
+            error_message += warnings
+            return None, error_message
+
+        html = output["html_body"]
+
+        return html, None
+
+    @staticmethod
     def write_link(title, href):
         return f"`{title} <{href}>`_"

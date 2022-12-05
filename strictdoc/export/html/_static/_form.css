@@ -17,6 +17,11 @@ div[contenteditable=true] {
   white-space: pre-wrap;
   background-color: var(--color-bg-form);
   outline: 10px solid var(--color-bg-form);
+  /* Without this hack, Chrome generates duplicated new lines when Enter pressed. */
+  /* Add style display:inline-block; to contenteditable, it will not generate div, p, span automatic in chrome */
+  /* https://stackoverflow.com/a/24689390/598057 */
+  display: inline-block;
+  width: 100%;
 }
 
 [placeholder]:empty::before {

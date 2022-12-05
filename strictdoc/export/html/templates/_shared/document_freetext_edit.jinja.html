@@ -4,7 +4,7 @@
   <article class="edit-document-freetext">
     <section data-section="edit-document-freetext" class="std-form-row">
 
-        <div role="textbox" contenteditable="true" class="std-input-editable" id="document_freetext" placeholder="Enter text here...">
+        <div role="textbox" contenteditable="true" class="std-input-editable std-form-fileld-freetext" id="document_freetext" placeholder="Enter text here...">
           {%- for free_text in document.free_texts -%}
             {{ free_text.get_parts_as_text() }}
           {%- endfor -%}

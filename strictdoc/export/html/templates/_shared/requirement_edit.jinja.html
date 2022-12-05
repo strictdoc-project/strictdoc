@@ -16,28 +16,18 @@
   <article class="edit-docsection">
     <section data-section="edit-section-title" class="std-form-row">
       {# <input type="text" id="requirement_title" name="requirement_title" value="{{ requirement.title }}"/> #}
-      <h4>
-      <div role="textbox" contenteditable="true" class="std-input-editable" id="requirement_title" placeholder="Enter requirement title here...">
+      <div role="textbox" contenteditable="true" class="std-input-editable std-form-fileld-title" id="requirement_title" placeholder="Enter requirement title here...">
         {%- if true -%}
         {{ requirement.title }}
         {%- endif -%}
       </div>
       <input type="hidden" class="std-input-hidden" name="requirement_title" value="{{ requirement.title }}"/>
-      </h4>
     </section>
-
-    {%- if error_object.has_errors("requirement_statement") -%}
-      <div style="border: 1px solid red;">
-      {%- for error in error_object.get_errors("requirement_statement") -%}
-        {{ error }}
-      {%- endfor -%}
-      </div>
-    {%- endif -%}
 
     <section data-section="edit-section-freetext" class="std-form-row requirement_statement">
       {# <textarea id="requirement_statement" name="requirement_statement" style="width:100%; height: 200px;">{{requirement.statement_multiline}}</textarea> #}
 
-      <div role="textbox" contenteditable="true" class="std-input-editable" id="requirement_statement" placeholder="Enter statement text here...">
+      <div role="textbox" contenteditable="true" class="std-input-editable std-form-fileld-requirement_statement" id="requirement_statement" placeholder="Enter statement text here...">
         {%- if true -%}
         {{requirement.statement_multiline}}
         {%- endif -%}
@@ -47,6 +37,14 @@
         {{requirement.statement_multiline}}
         {%- endif -%}
       </textarea>
+
+      {%- if error_object.has_errors("requirement_statement") -%}
+        <div class="std-form-error">
+        {%- for error in error_object.get_errors("requirement_statement") -%}
+          {{ error }}
+        {%- endfor -%}
+        </div>
+      {%- endif -%}
 
     </section>
 

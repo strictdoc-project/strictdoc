@@ -6,6 +6,7 @@
 
 :root {
   --color-bg-form: aliceblue;
+  --std-form-margin: 10px;
 }
 
 .std-form {
@@ -16,7 +17,7 @@
 div[contenteditable=true] {
   white-space: pre-wrap;
   background-color: var(--color-bg-form);
-  outline: 10px solid var(--color-bg-form);
+  outline: var(--std-form-margin) solid var(--color-bg-form);
   /* Without this hack, Chrome generates duplicated new lines when Enter pressed. */
   /* Add style display:inline-block; to contenteditable, it will not generate div, p, span automatic in chrome */
   /* https://stackoverflow.com/a/24689390/598057 */
@@ -37,11 +38,13 @@ div[contenteditable=true] {
 }
 
 .std-form-row {
-  margin-bottom: var(--base-margin);
+  padding: var(--std-form-margin) 0 !important;
+  margin: 4px 0;
 }
 
 .std-form-buttons {
   display: flex;
+  margin-top: 16px;
 }
 
 .std-form-btn {
@@ -77,4 +80,23 @@ div[contenteditable=true] {
 
 .std-form-btn[href*="cancel"] {
   color: red;
+}
+
+.std-form-fileld-title {
+  font-size: calc(var(--base-font-size)*1.2);
+  font-weight: bold;
+}
+
+.std-form-fileld-requirement_statement {
+  font-size: calc(var(--base-font-size)*1.2);
+}
+
+.std-form-fileld-freetext {
+  font-size: var(--base-font-size);
+}
+
+.std-form-error {
+  color: red;
+  font-size: 12px;
+  margin-top: var(--std-form-margin);
 }

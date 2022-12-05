@@ -41,7 +41,9 @@ class RSTWriter:
         return output.lstrip()
 
     @staticmethod
-    def _print_rst_header(string, level):
+    def _print_rst_header(string: str, level: int):
+        assert isinstance(string, str), string
+        assert isinstance(level, int), level
         chars = {
             0: "$",
             1: "=",
@@ -63,13 +65,16 @@ class RSTWriter:
     def _print_requirement_fields(self, section_content: Requirement):
         output = ""
 
-        if section_content.uid:
+        if section_content.uid is not None:
             output += f".. _{section_content.uid}:"
             output += "\n\n"
+
+        if section_content.title is not None:
             output += self._print_rst_header(
                 section_content.title, section_content.ng_level
             )
 
+        if section_content.uid is not None:
             output += ".. list-table::\n"
             output += "    :align: left\n"
             output += "    :header-rows: 0\n\n"
@@ -77,10 +82,6 @@ class RSTWriter:
             output += "    * - **UID:**\n"
             output += f"      - {section_content.uid}\n"
             output += "\n"
-        else:
-            output += self._print_rst_header(
-                section_content.title, section_content.ng_level
-            )
 
         if section_content.statement:
             output += section_content.statement

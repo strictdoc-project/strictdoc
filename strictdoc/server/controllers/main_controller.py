@@ -137,7 +137,7 @@ class MainController:
             parent=parent,
             uid=None,
             level=None,
-            title="New section",
+            title="",
             free_texts=[],
             section_contents=[],
         )
@@ -216,7 +216,7 @@ class MainController:
             parent=parent,
             uid=None,
             level=None,
-            title="New section",
+            title=None,
             free_texts=[],
             section_contents=[],
         )

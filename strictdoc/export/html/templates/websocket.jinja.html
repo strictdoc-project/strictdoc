@@ -1,3 +1,5 @@
+{%- if config.is_running_on_server -%}
+
 <div id="connection_status" style="position: fixed;">
 </div>
 
@@ -15,3 +17,5 @@
     `;
   };
 </script>
+
+{%- endif -%}

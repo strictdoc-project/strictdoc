@@ -2,6 +2,7 @@ import filecmp
 import os
 import shutil
 
+from selenium.webdriver import Keys
 from seleniumbase import BaseCase
 
 from tests.end2end.server import SDocTestServer
@@ -34,7 +35,12 @@ class Test_08_EditSectionWithEmptyTitle(BaseCase):
 
         self.click_nth_visible_element("//a[contains(text(), 'Edit')]", 2)
 
-        self.type("#section_title", "")
+        # HACK: The only way the field is actually cleared.
+        self.type("#section_title", "X")
+        section_title_field = self.find_element("//div[@id='section_title']")
+        section_title_field.click()
+        section_title_field.send_keys(Keys.BACKSPACE)
+
         self.type("#section_content", "Modified statement.")
 
         self.click_xpath("//button[@type='submit' and text()='Save']")

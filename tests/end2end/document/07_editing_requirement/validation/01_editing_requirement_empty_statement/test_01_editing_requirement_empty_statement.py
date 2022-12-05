@@ -1,7 +1,7 @@
-import filecmp
 import os
 import shutil
 
+from selenium.webdriver import Keys
 from seleniumbase import BaseCase
 
 from tests.end2end.server import SDocTestServer
@@ -35,7 +35,14 @@ class Test07EditRequirement(BaseCase):
         self.click_nth_visible_element("//a[contains(text(), 'Edit')]", 2)
 
         self.type("#requirement_title", "Modified title")
-        self.type("#requirement_statement", "")
+
+        # HACK: The only way the field is actually cleared.
+        self.type("#requirement_statement", "X")
+        requirement_statement_field = self.find_element(
+            "//div[@id='requirement_statement']"
+        )
+        requirement_statement_field.click()
+        requirement_statement_field.send_keys(Keys.BACKSPACE)
 
         self.click_xpath("//button[@type='submit' and text()='Save']")
 

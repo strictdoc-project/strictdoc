@@ -4,47 +4,47 @@
   {%- set url="/actions/document/update_requirement" %}
 {%- endif -%}
 
-<turbo-frame id="article-{{requirement.node_id}}">
+<turbo-frame id="article-{{form_object.requirement_mid}}">
 
 <form data-controller="hello" class="std-form" action="{{url}}" method="POST">
   {%- if is_new_requirement -%}
     <input type="hidden" id="reference_mid" name="reference_mid" value="{{reference_mid}}" />
     <input type="hidden" id="whereto" name="whereto" value="{{whereto}}" />
   {%- endif -%}
-  <input type="hidden" id="requirement_mid" name="requirement_mid" value="{{requirement.node_id}}" />
+  <input type="hidden" id="requirement_mid" name="requirement_mid" value="{{form_object.requirement_mid}}" />
 
   <article class="edit-docsection">
     <section data-section="edit-section-title" class="std-form-row">
-      {# <input type="text" id="requirement_title" name="requirement_title" value="{{ requirement.title }}"/> #}
+      {# <input type="text" id="requirement_title" name="requirement_title" value="{{ form_object.title }}"/> #}
       <h4>
       <div role="textbox" contenteditable="true" class="std-input-editable" id="requirement_title" placeholder="Enter requirement title here...">
         {%- if true -%}
-        {{ requirement.title }}
+        {{ form_object.requirement_title }}
         {%- endif -%}
       </div>
-      <input type="hidden" class="std-input-hidden" name="requirement_title" value="{{ requirement.title }}"/>
+      <input type="hidden" class="std-input-hidden" name="requirement_title" value="{{ form_object.requirement_title }}"/>
       </h4>
     </section>
 
-    {%- if error_object.has_errors("requirement_statement") -%}
+    {%- if form_object.has_errors("requirement_statement") -%}
       <div style="border: 1px solid red;">
-      {%- for error in error_object.get_errors("requirement_statement") -%}
+      {%- for error in form_object.get_errors("requirement_statement") -%}
         {{ error }}
       {%- endfor -%}
       </div>
     {%- endif -%}
 
     <section data-section="edit-section-freetext" class="std-form-row requirement_statement">
-      {# <textarea id="requirement_statement" name="requirement_statement" style="width:100%; height: 200px;">{{requirement.statement_multiline}}</textarea> #}
+      {# <textarea id="requirement_statement" name="requirement_statement" style="width:100%; height: 200px;">{{form_object.statement_multiline}}</textarea> #}
 
       <div role="textbox" contenteditable="true" class="std-input-editable" id="requirement_statement" placeholder="Enter statement text here...">
         {%- if true -%}
-        {{requirement.statement_multiline}}
+        {{form_object.requirement_statement}}
         {%- endif -%}
       </div>
       <textarea hidden class="std-input-hidden" name="requirement_statement">
         {%- if true -%}
-        {{requirement.statement_multiline}}
+        {{form_object.requirement_statement}}
         {%- endif -%}
       </textarea>
 
@@ -53,9 +53,9 @@
     <section class="std-form-buttons">
         <button class="std-form-btn" type="submit">Save</button>
         {%- if is_new_requirement -%}
-          <a class="std-form-btn" href="/actions/document/cancel_new_requirement?requirement_mid={{requirement.node_id}}">Cancel</a>
+          <a class="std-form-btn" href="/actions/document/cancel_new_requirement?requirement_mid={{form_object.requirement_mid}}">Cancel</a>
         {%- else -%}
-          <a class="std-form-btn" href="/actions/document/cancel_edit_requirement?requirement_mid={{requirement.node_id}}">Cancel</a>
+          <a class="std-form-btn" href="/actions/document/cancel_edit_requirement?requirement_mid={{form_object.requirement_mid}}">Cancel</a>
         {%- endif -%}
     </section>
   </article>

@@ -1,4 +1,5 @@
 import os
+import uuid
 from pathlib import Path
 from typing import Optional, Union
 
@@ -27,6 +28,12 @@ from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.form_objects.document_form_object import (
     ExistingDocumentFreeTextObject,
+)
+from strictdoc.export.html.form_objects.requirement_form_object import (
+    RequirementFormObject,
+)
+from strictdoc.export.html.form_objects.section_form_object import (
+    SectionFormObject,
 )
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
@@ -97,6 +104,11 @@ class MainController:
             isinstance(reference_mid, str) and len(reference_mid) > 0
         ), reference_mid
 
+        section_form_object = SectionFormObject(
+            section_mid=uuid.uuid4().hex,
+            section_title=None,
+            section_statement=None,
+        )
         error_object = ErrorObject()
 
         reference_node: Union[
@@ -111,42 +123,13 @@ class MainController:
         target_node_mid = reference_mid
 
         if whereto == "child":
-            parent_cursor = reference_node
-            while (
-                not isinstance(parent_cursor, Requirement)
-                and len(parent_cursor.section_contents) > 0
-            ):
-                target_node_mid = parent_cursor.section_contents[-1].node_id
-                # TODO: Make section_contents typed.
-                assert isinstance(
-                    parent_cursor.section_contents[-1], (Section, Document)
-                )
-                parent_cursor = parent_cursor.section_contents[-1]
-            parent = reference_node
             replace_action = "after"
         elif whereto == "before":
-            assert isinstance(
-                reference_node, (Requirement, Section)
-            ), reference_node
-            parent = reference_node.parent
             replace_action = "before"
         elif whereto == "after":
-            assert isinstance(
-                reference_node, (Requirement, Section)
-            ), reference_node
-            parent = reference_node.parent
             replace_action = "after"
         else:
             raise NotImplementedError
-
-        section = Section(
-            parent=parent,
-            uid=None,
-            level=None,
-            title="",
-            free_texts=[],
-            section_contents=[],
-        )
 
         template = MainController.env.get_template(
             "actions/document/create_section/stream_new_section.jinja.html"
@@ -160,9 +143,8 @@ class MainController:
         )
         output = template.render(
             renderer=markup_renderer,
-            section=section,
+            form_object=section_form_object,
             reference_mid=reference_mid,
-            section_mid=section.node_id,
             target_node_mid=target_node_mid,
             document_type=DocumentType.document(),
             is_new_section=True,
@@ -173,7 +155,8 @@ class MainController:
 
         return output
 
-    def cancel_new_section(self, section_mid):
+    @staticmethod
+    def cancel_new_section(section_mid):
         template = MainController.env.get_template(
             "actions/document/create_section/stream_cancel_new_section.jinja.html"  # noqa: E501
         )
@@ -204,6 +187,44 @@ class MainController:
             else reference_node.document
         )
 
+        form_object = SectionFormObject(
+            section_mid=section_mid,
+            section_title=section_title,
+            section_statement=section_content,
+        )
+
+        error_object = ErrorObject()
+
+        if section_title is None or len(section_title) == 0:
+            error_object.add_error(
+                "section_title", "Section title must not be empty."
+            )
+        if error_object.any_errors():
+            template = MainController.env.get_template(
+                "actions/document/create_section/stream_new_section.jinja.html"
+            )
+            link_renderer = LinkRenderer(
+                self.export_action.config.output_html_root
+            )
+            markup_renderer = MarkupRenderer.create(
+                markup="RST",
+                traceability_index=self.export_action.traceability_index,
+                link_renderer=link_renderer,
+                context_document=document,
+            )
+            output = template.render(
+                renderer=markup_renderer,
+                form_object=form_object,
+                reference_mid=reference_mid,
+                target_node_mid=form_object.section_mid,
+                document_type=DocumentType.document(),
+                is_new_section=True,
+                replace_action="replace",
+                whereto=whereto,
+                error_object=error_object,
+            )
+            return output
+
         if whereto == NodeCreationOrder.CHILD:
             parent = reference_node
             insert_to_idx = len(parent.section_contents)
@@ -227,40 +248,6 @@ class MainController:
             section_contents=[],
         )
         section.node_id = section_mid
-
-        error_object = ErrorObject()
-
-        if section_title is None or len(section_title) == 0:
-            error_object.add_error(
-                "section_title", "Section title must not be empty."
-            )
-        if error_object.any_errors():
-            template = MainController.env.get_template(
-                "actions/document/create_section/stream_new_section.jinja.html"
-            )
-            link_renderer = LinkRenderer(
-                self.export_action.config.output_html_root
-            )
-            markup_renderer = MarkupRenderer.create(
-                markup="RST",
-                traceability_index=self.export_action.traceability_index,
-                link_renderer=link_renderer,
-                context_document=document,
-            )
-            output = template.render(
-                renderer=markup_renderer,
-                section=section,
-                reference_mid=reference_mid,
-                section_mid=section.node_id,
-                target_node_mid=section.node_id,
-                document_type=DocumentType.document(),
-                is_new_section=True,
-                replace_action="replace",
-                whereto=whereto,
-                error_object=error_object,
-            )
-            return output
-
         section.ng_document_reference = DocumentReference()
         section.ng_document_reference.set_document(document)
         assert parent.ng_level is not None, parent
@@ -345,6 +332,11 @@ class MainController:
             section_id
         )
 
+        form_object = SectionFormObject(
+            section_mid=section_id,
+            section_title=section_title,
+            section_statement=section_content,
+        )
         error_object = ErrorObject()
 
         if section_title is None or len(section_title) == 0:
@@ -367,8 +359,7 @@ class MainController:
             output = template.render(
                 renderer=markup_renderer,
                 link_renderer=link_renderer,
-                section=section,
-                section_mid=section.node_id,
+                form_object=form_object,
                 target_node_mid=section.node_id,
                 document_type=DocumentType.document(),
                 is_new_section=True,
@@ -463,10 +454,21 @@ class MainController:
         return output
 
     def get_edit_section(self, section_id):
-        section = self.export_action.traceability_index.get_node_by_id(
+        section: Section = self.export_action.traceability_index.get_node_by_id(
             section_id
         )
         document = section.parent
+
+        statement = (
+            section.free_texts[0].get_parts_as_text()
+            if len(section.free_texts) > 0
+            else None
+        )
+        form_object = SectionFormObject(
+            section_mid=section.node_id,
+            section_title=section.title,
+            section_statement=statement,
+        )
 
         template = MainController.env.get_template(
             "actions/document/edit_section/stream_edit_section.jinja.html"
@@ -480,7 +482,7 @@ class MainController:
         )
         output = template.render(
             renderer=markup_renderer,
-            section=section,
+            form_object=form_object,
             document_type=DocumentType.document(),
             is_new_section=False,
             section_mid=section.node_id,
@@ -639,39 +641,21 @@ class MainController:
             else reference_node.document
         )
 
+        form_object = RequirementFormObject(
+            requirement_mid=uuid.uuid4().hex,
+            requirement_title=None,
+            requirement_statement=None,
+        )
         target_node_mid = reference_mid
 
         if whereto == NodeCreationOrder.CHILD:
-            parent = reference_node
-            parent_cursor = parent
-            target_node_mid = reference_mid
-            while len(parent_cursor.section_contents) > 0:
-                target_node_mid = parent_cursor.section_contents[-1].node_id
-                parent_cursor = parent_cursor.section_contents[-1]
             replace_action = "after"
         elif whereto == NodeCreationOrder.BEFORE:
-            parent = reference_node.parent
             replace_action = "before"
         elif whereto == NodeCreationOrder.AFTER:
-            parent = reference_node.parent
             replace_action = "after"
         else:
             raise NotImplementedError
-
-        requirement = SDocObjectFactory.create_requirement(
-            parent=reference_node,
-            requirement_type="REQUIREMENT",
-            uid=None,
-            level=None,
-            title="",
-            statement=None,
-            statement_multiline="",
-            rationale=None,
-            rationale_multiline=None,
-            tags=None,
-            comments=None,
-        )
-        requirement.ng_level = parent.ng_level + 1
 
         template = MainController.env.get_template(
             "actions/document/create_requirement/stream_new_requirement.jinja.html"  # noqa: E501
@@ -686,7 +670,7 @@ class MainController:
         output = template.render(
             is_new_requirement=True,
             renderer=markup_renderer,
-            requirement=requirement,
+            form_object=form_object,
             reference_mid=reference_mid,
             target_node_mid=target_node_mid,
             document_type=DocumentType.document(),
@@ -714,7 +698,11 @@ class MainController:
             if isinstance(reference_node, Document)
             else reference_node.document
         )
-
+        form_object = RequirementFormObject(
+            requirement_mid=requirement_mid,
+            requirement_title=requirement_title,
+            requirement_statement=requirement_statement,
+        )
         if whereto == NodeCreationOrder.CHILD:
             parent = reference_node
             insert_to_idx = len(parent.section_contents)
@@ -727,7 +715,38 @@ class MainController:
         else:
             raise NotImplementedError
 
-        error_object = ErrorObject()
+        if requirement_statement is None or len(requirement_statement) == 0:
+            form_object.add_error(
+                "requirement_statement",
+                "Requirement statement must not be empty.",
+            )
+
+        if form_object.any_errors():
+            template = MainController.env.get_template(
+                "actions/document/create_requirement/stream_new_requirement.jinja.html"  # noqa: E501
+            )
+            link_renderer = LinkRenderer(
+                self.export_action.config.output_html_root
+            )
+            markup_renderer = MarkupRenderer.create(
+                markup="RST",
+                traceability_index=self.export_action.traceability_index,
+                link_renderer=link_renderer,
+                context_document=document,
+            )
+
+            output = template.render(
+                is_new_requirement=True,
+                renderer=markup_renderer,
+                form_object=form_object,
+                reference_mid=reference_mid,
+                target_node_mid=requirement_mid,
+                document_type=DocumentType.document(),
+                whereto=whereto,
+                replace_action="replace",
+            )
+
+            return output
 
         requirement = SDocObjectFactory.create_requirement(
             parent=parent,
@@ -747,46 +766,6 @@ class MainController:
             comments=None,
         )
         requirement.node_id = requirement_mid
-
-        if requirement_statement is None or len(requirement_statement) == 0:
-            error_object.add_error(
-                "requirement_statement",
-                "Requirement statement must not be empty.",
-            )
-
-        if error_object.any_errors():
-            template = MainController.env.get_template(
-                "actions/document/create_requirement/stream_new_requirement.jinja.html"  # noqa: E501
-            )
-            link_renderer = LinkRenderer(
-                self.export_action.config.output_html_root
-            )
-            markup_renderer = MarkupRenderer.create(
-                markup="RST",
-                traceability_index=self.export_action.traceability_index,
-                link_renderer=link_renderer,
-                context_document=document,
-            )
-            # TODO: This is needed because otherwise the form shows "None".
-            # Ideally it would be great to split the Requirement model and
-            # RequirementFormObject to separate the use cases.
-            if requirement_title is None or len(requirement_title) == 0:
-                requirement.title = ""
-
-            output = template.render(
-                is_new_requirement=True,
-                renderer=markup_renderer,
-                requirement=requirement,
-                reference_mid=reference_mid,
-                target_node_mid=requirement_mid,
-                document_type=DocumentType.document(),
-                whereto=whereto,
-                replace_action="replace",
-                error_object=error_object,
-            )
-
-            return output
-
         requirement.ng_document_reference = DocumentReference()
         requirement.ng_document_reference.set_document(document)
         requirement.ng_level = parent.ng_level + 1
@@ -852,14 +831,10 @@ class MainController:
         requirement: Requirement = (
             self.export_action.traceability_index.get_node_by_id(requirement_id)
         )
-        # TODO: This is needed because otherwise the form shows "None".
-        # Ideally it would be great to split the Requirement model and
-        # RequirementFormObject to separate the use cases.
-        if requirement.title is None or len(requirement.title) == 0:
-            requirement.title = ""
-
+        form_object = RequirementFormObject.create_from_requirement(
+            requirement=requirement
+        )
         document = requirement.document
-
         template = MainController.env.get_template(
             "actions/document/edit_requirement/stream_edit_requirement.jinja.html"  # noqa: E501
         )
@@ -873,7 +848,7 @@ class MainController:
         output = template.render(
             is_new_requirement=False,
             renderer=markup_renderer,
-            requirement=requirement,
+            form_object=form_object,
             document_type=DocumentType.document(),
             error_object=ErrorObject(),
         )
@@ -895,44 +870,18 @@ class MainController:
         )
         document = requirement.document
 
-        error_object = ErrorObject()
-
-        if requirement_title is not None and len(requirement_title) > 0:
-            requirement.ordered_fields_lookup["TITLE"] = [
-                RequirementField(
-                    requirement,
-                    field_name="TITLE",
-                    field_value=requirement_title,
-                    field_value_multiline=None,
-                    field_value_references=None,
-                )
-            ]
-            requirement.title = requirement_title
-        else:
-            if "TITLE" in requirement.ordered_fields_lookup:
-                del requirement.ordered_fields_lookup["TITLE"]
-                requirement.title = None
-
-        # Updating section statement.
+        form_object = RequirementFormObject(
+            requirement_mid=requirement_mid,
+            requirement_title=requirement_title,
+            requirement_statement=requirement_statement,
+        )
         if requirement_statement is None or len(requirement_statement) == 0:
-            error_object.add_error(
+            form_object.add_error(
                 "requirement_statement",
                 "Requirement statement must not be empty.",
             )
-            requirement_statement = ""
 
-        requirement.statement_multiline = requirement_statement
-        requirement.ordered_fields_lookup["STATEMENT"] = [
-            RequirementField(
-                requirement,
-                field_name="STATEMENT",
-                field_value=None,
-                field_value_multiline=requirement_statement,
-                field_value_references=None,
-            )
-        ]
-
-        if error_object.any_errors():
+        if form_object.any_errors():
             template = MainController.env.get_template(
                 "actions/document/edit_requirement/stream_edit_requirement.jinja.html"  # noqa: E501
             )
@@ -950,9 +899,36 @@ class MainController:
                 renderer=markup_renderer,
                 requirement=requirement,
                 document_type=DocumentType.document(),
-                error_object=error_object,
+                form_object=form_object,
             )
             return output
+
+        if requirement_title is not None and len(requirement_title) > 0:
+            requirement.ordered_fields_lookup["TITLE"] = [
+                RequirementField(
+                    requirement,
+                    field_name="TITLE",
+                    field_value=requirement_title,
+                    field_value_multiline=None,
+                    field_value_references=None,
+                )
+            ]
+            requirement.title = requirement_title
+        else:
+            if "TITLE" in requirement.ordered_fields_lookup:
+                del requirement.ordered_fields_lookup["TITLE"]
+                requirement.title = None
+
+        requirement.statement_multiline = requirement_statement
+        requirement.ordered_fields_lookup["STATEMENT"] = [
+            RequirementField(
+                requirement,
+                field_name="STATEMENT",
+                field_value=None,
+                field_value_multiline=requirement_statement,
+                field_value_references=None,
+            )
+        ]
 
         # Saving new content to .SDoc file.
         document_content = SDWriter().write(document)

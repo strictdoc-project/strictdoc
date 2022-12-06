@@ -344,17 +344,12 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
     def get_incoming_request(full_path: str):
         if full_path.endswith(".html"):
             return get_document(full_path)
-        if (
-            full_path.endswith(".css")
-            or full_path.endswith(".js")
-        ):
+        if full_path.endswith(".css") or full_path.endswith(".js"):
             return get_asset(full_path)
         if full_path.endswith(".ico"):
             return get_asset_binary(full_path)
 
-        return HTMLResponse(
-            content="Not Found", status_code=404
-        )
+        return HTMLResponse(content="Not Found", status_code=404)
 
     def get_document(url_to_document: str):
         document_html_content = main_controller.get_document(url_to_document)
@@ -369,7 +364,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
             return Response(
                 content=f"File not found: {url_to_asset}",
                 status_code=404,
-                media_type=content_type
+                media_type=content_type,
             )
         with open(static_file, encoding="utf8") as f:
             content = f.read()
@@ -385,7 +380,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
             return Response(
                 content=f"File not found: {url_to_asset}",
                 status_code=404,
-                media_type=content_type
+                media_type=content_type,
             )
 
         with open(static_file, "rb") as f:

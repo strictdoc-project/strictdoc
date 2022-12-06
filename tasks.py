@@ -225,9 +225,8 @@ def test_end2end(context, focus=None):
         context,
         one_line_command(
             f"""
-        pkill python;
-        pytest --exitfirst --capture=no tests/end2end {focus_argument}
-    """
+            pytest --exitfirst --capture=no tests/end2end {focus_argument}
+            """
         ),
     )
 

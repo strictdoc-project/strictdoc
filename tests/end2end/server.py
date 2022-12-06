@@ -7,6 +7,8 @@ import shutil
 import subprocess
 from threading import Thread
 
+import psutil as psutil
+
 
 class ReadTimeout(Exception):
     pass
@@ -34,8 +36,19 @@ class SDocTestServer:
         self.process = None
 
     def __del__(self):
-        print(f"TestSDocServer: stopping server: {self.process.pid}")
+        parent = psutil.Process(self.process.pid)
+        child_processes = parent.children(recursive=True)
+        child_processes_ids = list(
+            map(lambda p: p.pid, parent.children(recursive=True))
+        )
+        print(
+            "TestSDocServer: "
+            "stopping server and worker processes: "
+            f"{parent.pid} -> {child_processes_ids}"
+        )
         self.process.kill()
+        for process in child_processes:
+            process.kill()
 
     def run(self):
         args = [

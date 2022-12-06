@@ -324,8 +324,6 @@ class Dom {
     this.sourceContainer.style.right = 0;
     this.sourceContainer.style.left = 0;
     this.sourceContainer.style.overflow = 'auto';
-
-    console.log(this.sourceContainer);
   }
 
   _prepareLines() {

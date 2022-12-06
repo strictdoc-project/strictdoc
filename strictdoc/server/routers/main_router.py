@@ -344,10 +344,16 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
     def get_incoming_request(full_path: str):
         if full_path.endswith(".html"):
             return get_document(full_path)
-        if full_path.endswith(".css") or full_path.endswith(".js"):
+        if (
+            full_path.endswith(".css")
+            or full_path.endswith(".js")
+        ):
             return get_asset(full_path)
+        if full_path.endswith(".ico"):
+            return get_asset_binary(full_path)
+
         return HTMLResponse(
-            content="Neither existing HTML or CSS file", status_code=404
+            content="Not Found", status_code=404
         )
 
     def get_document(url_to_document: str):
@@ -355,15 +361,34 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
         return HTMLResponse(content=document_html_content, status_code=200)
 
     def get_asset(url_to_asset: str):
-        # if not os.path.isfile(filename):
-        # return Response(status_code=405)
-
         static_path = os.path.join(STRICTDOC_ROOT_PATH, "strictdoc/export/html")
         static_file = os.path.join(static_path, url_to_asset)
         content_type, _ = guess_type(static_file)
 
-        assert os.path.isfile(static_file), f"{static_file}"
+        if not os.path.isfile(static_file):
+            return Response(
+                content=f"File not found: {url_to_asset}",
+                status_code=404,
+                media_type=content_type
+            )
         with open(static_file, encoding="utf8") as f:
+            content = f.read()
+        return Response(content, media_type=content_type)
+
+    def get_asset_binary(url_to_asset: str):
+        static_path = os.path.join(STRICTDOC_ROOT_PATH, "strictdoc/export/html")
+
+        static_file = os.path.join(static_path, url_to_asset)
+        content_type, _ = guess_type(static_file)
+
+        if not os.path.isfile(static_file):
+            return Response(
+                content=f"File not found: {url_to_asset}",
+                status_code=404,
+                media_type=content_type
+            )
+
+        with open(static_file, "rb") as f:
             content = f.read()
         return Response(content, media_type=content_type)
 

@@ -42,7 +42,7 @@ div[contenteditable=true] {
   margin: 4px 0;
 }
 
-.std-form-buttons {
+.std-form-footer {
   display: flex;
   margin-top: 16px;
 }

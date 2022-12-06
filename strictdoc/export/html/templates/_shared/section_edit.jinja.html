@@ -13,9 +13,7 @@
   {%- endif -%}
   <input type="hidden" id="section_mid" name="section_mid" value="{{section_mid}}" />
 
-  <article class="edit-docsection" id="{{section.node_id}}">
-
-    <section data-section="edit-section-title" class="std-form-row">
+    <div class="std-form-row">
 
       {# <input type="text" id="section_title" name="section_title" value="{{ section.title }}"/> #}
       <div role="textbox" contenteditable="true" class="std-input-editable std-form-fileld-title" id="section_title" placeholder="Enter section title here...">
@@ -33,9 +31,9 @@
         </div>
       {%- endif -%}
 
-    </section>
+    </div>
 
-    <section data-section="edit-section-freetext" class="std-form-row">
+    <div class="std-form-row">
 
       <div role="textbox" contenteditable="true" class="std-input-editable" id="section_content" placeholder="Enter section text here...">
         {%- for free_text in section.free_texts -%}
@@ -48,17 +46,16 @@
         {%- endfor -%}
       </textarea>
 
-    </section>
+    </div>
 
-    <section class="std-form-buttons">
+    <div class="std-form-footer">
         <button class="std-form-btn" type="submit">Save</button>
         {%- if is_new_section -%}
           <a class="std-form-btn" href="/actions/document/cancel_new_section?section_mid={{section.node_id}}">Cancel</a>
         {%- else -%}
           <a class="std-form-btn" href="/actions/document/cancel_edit_section?section_mid={{section.node_id}}">Cancel</a>
         {%- endif -%}
-    </section>
-  </article>
+    </div>
 
 </form>
 

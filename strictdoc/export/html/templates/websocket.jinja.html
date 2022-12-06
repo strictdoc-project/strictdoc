@@ -6,16 +6,27 @@
 <script>
   var clientId = Date.now();
   var ws = new WebSocket(`ws://localhost:8001/ws/${clientId}`);
-
   ws.onmessage = function(event) {
     // Nothing just yet.
   };
+  ws.onopen = function(e) {
+    // Nothing just yet.
+  }
   ws.onclose = function(e) {
     document.getElementById("connection_status").innerHTML = `
       Connection with the server is lost.
       <a href="#" onclick="location.reload(); return false;">Click to reload</a>
     `;
   };
+  window.onbeforeunload = function (e) {
+    // Suprisingly, the last milleseconds of the page lifecycle let the page
+    // still update its HTML which creates a visual artefact when refreshing the
+    // page in the browser continuously.
+    // This event ensures that we disable websockets when the page is about to
+    // be refreshed/left.
+    ws.onclose = null;
+  };
+
 </script>
 
 {%- endif -%}

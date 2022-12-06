@@ -527,8 +527,6 @@ class MainController:
     def update_document_freetext(self, document_id, document_freetext):
         assert isinstance(document_id, str)
 
-        print(document_freetext)
-
         form_object = ExistingDocumentFreeTextObject(
             document_mid=document_id, document_free_text=document_freetext
         )

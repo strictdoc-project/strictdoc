@@ -6,17 +6,25 @@
 
 :root {
   --color-bg-form: aliceblue;
+  --color-bg-field: white;
+  --std-form-margin: 10px;
 }
 
 .std-form {
-  /* compensates for paddings in article>section */
-  padding: var(--base-margin) 0 0 0;
+  background-color: var(--color-bg-form);
+  outline: var(--std-form-margin) solid var(--color-bg-form);
+  margin: var(--base-margin) 0 0 0;
+}
+
+.std-form-row {
+  padding: var(--std-form-margin) 0 !important;
+  margin: 4px 0;
 }
 
 div[contenteditable=true] {
   white-space: pre-wrap;
-  background-color: var(--color-bg-form);
-  outline: 10px solid var(--color-bg-form);
+  background-color: var(--color-bg-field);
+  outline: calc(var(--std-form-margin)/2) solid var(--color-bg-field);
   /* Without this hack, Chrome generates duplicated new lines when Enter pressed. */
   /* Add style display:inline-block; to contenteditable, it will not generate div, p, span automatic in chrome */
   /* https://stackoverflow.com/a/24689390/598057 */
@@ -36,12 +44,9 @@ div[contenteditable=true] {
   color: #c0c0c0;
 }
 
-.std-form-row {
-  margin-bottom: var(--base-margin);
-}
-
-.std-form-buttons {
+.std-form-footer {
   display: flex;
+  margin-top: 16px;
 }
 
 .std-form-btn {
@@ -77,4 +82,23 @@ div[contenteditable=true] {
 
 .std-form-btn[href*="cancel"] {
   color: red;
+}
+
+.std-form-fileld-title {
+  font-size: calc(var(--base-font-size)*1.2);
+  font-weight: bold;
+}
+
+.std-form-fileld-requirement_statement {
+  font-size: calc(var(--base-font-size)*1.2);
+}
+
+.std-form-fileld-freetext {
+  font-size: var(--base-font-size);
+}
+
+.std-form-error {
+  color: red;
+  font-size: 12px;
+  margin-top: var(--std-form-margin);
 }

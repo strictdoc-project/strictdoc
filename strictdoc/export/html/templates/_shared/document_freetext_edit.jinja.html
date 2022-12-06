@@ -1,7 +1,6 @@
 <turbo-frame id="article-{{form_object.document_mid}}">
 
 <form data-controller="hello" class="std-form" action="/fragments/document/{{form_object.document_mid}}" method="POST">
-  <article class="edit-document-freetext">
     {%- if form_object.has_errors("document_freetext") -%}
       <div style="border: 1px solid red;">
       {%- for error in form_object.get_errors("document_freetext") -%}
@@ -9,9 +8,10 @@
       {%- endfor -%}
       </div>
     {%- endif -%}
-    <section data-section="edit-document-freetext" class="std-form-row">
 
-        <div role="textbox" contenteditable="true" class="std-input-editable" id="document_freetext" placeholder="Enter text here...">
+    <div class="std-form-row">
+
+        <div role="textbox" contenteditable="true" class="std-input-editable std-form-fileld-freetext" id="document_freetext" placeholder="Enter text here...">
           {%- if true -%}
           {{ form_object.document_free_text }}
           {%- endif -%}
@@ -22,13 +22,12 @@
           {%- endif -%}
         </textarea>
 
-    </section>
+    </div>
 
-    <section class="std-form-buttons">
+    <div class="std-form-footer">
         <button class="std-form-btn" type="submit">Save</button>
         <a class="std-form-btn" href="/actions/document/cancel_edit_freetext?document_mid={{form_object.document_mid}}">Cancel</a>
-    </section>
-  </article>
+    </div>
 
 </form>
 

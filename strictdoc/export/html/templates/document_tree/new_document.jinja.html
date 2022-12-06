@@ -1,7 +1,6 @@
 <turbo-frame id="new_document">
 
 <form data-controller="hello" class="std-form" action="/actions/document_tree/create_document" method="POST">
-  <article class="">
 
   <h3>Add new document</h3>
 
@@ -13,7 +12,7 @@
       </div>
     {%- endif -%}
 
-    <section data-section="" class="std-form-row std-tree_desc">
+    <div class="std-form-row std-tree_desc">
       {# <input type="text" id="document_title" name="document_title" value="{{document_title}}"/> #}
 
         <div role="textbox" contenteditable="true" class="std-input-editable" id="document_title" placeholder="Enter document title here...">
@@ -23,7 +22,7 @@
         </div>
         <input type="hidden" class="std-input-hidden" name="document_title" value="{{ document_title }}"/>
 
-    </section>
+    </div>
 
     {%- if error_object.has_errors("document_path") -%}
       <div style="border: 1px solid red;">
@@ -33,7 +32,7 @@
       </div>
     {%- endif -%}
 
-    <section data-section="" class="std-form-row std-tree_name">
+    <div class="std-form-row std-tree_name">
       {# <input type="text" id="document_path" name="document_path" value="{{document_path}}"/> #}
       <div role="textbox" contenteditable="true" class="std-input-editable std-input-document_path" id="document_path" placeholder="Enter document path here...">
         {%- if true -%}
@@ -41,13 +40,12 @@
         {%- endif -%}
       </div>
       <input type="hidden" class="std-input-hidden" name="document_path" value="{{ document_path }}"/>
-    </section>
+    </div>
 
-    <section class="std-form-buttons">
+    <div class="std-form-footer">
         <button class="std-form-btn" type="submit">Save</button>
         <a class="std-form-btn" href="#cancel">Cancel</a>
-    </section>
-  </article>
+    </div>
 
 </form>
 

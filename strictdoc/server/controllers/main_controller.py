@@ -109,8 +109,6 @@ class MainController:
             section_title=None,
             section_statement=None,
         )
-        error_object = ErrorObject()
-
         reference_node: Union[
             Document, Section
         ] = self.export_action.traceability_index.get_node_by_id(reference_mid)
@@ -150,7 +148,6 @@ class MainController:
             is_new_section=True,
             replace_action=replace_action,
             whereto=whereto,
-            error_object=error_object,
         )
 
         return output
@@ -193,13 +190,11 @@ class MainController:
             section_statement=section_content,
         )
 
-        error_object = ErrorObject()
-
         if section_title is None or len(section_title) == 0:
-            error_object.add_error(
+            form_object.add_error(
                 "section_title", "Section title must not be empty."
             )
-        if error_object.any_errors():
+        if form_object.any_errors():
             template = MainController.env.get_template(
                 "actions/document/create_section/stream_new_section.jinja.html"
             )
@@ -221,7 +216,6 @@ class MainController:
                 is_new_section=True,
                 replace_action="replace",
                 whereto=whereto,
-                error_object=error_object,
             )
             return output
 
@@ -337,13 +331,12 @@ class MainController:
             section_title=section_title,
             section_statement=section_content,
         )
-        error_object = ErrorObject()
 
         if section_title is None or len(section_title) == 0:
-            error_object.add_error(
+            form_object.add_error(
                 "section_title", "Section title must not be empty."
             )
-        if error_object.any_errors():
+        if form_object.any_errors():
             template = MainController.env.get_template(
                 "actions/document/create_section/stream_new_section.jinja.html"
             )
@@ -364,7 +357,6 @@ class MainController:
                 document_type=DocumentType.document(),
                 is_new_section=True,
                 replace_action="replace",
-                error_object=error_object,
                 reference_mid="NOT_RELEVANT",
                 whereto="NOT_RELEVANT",
             )
@@ -486,7 +478,6 @@ class MainController:
             document_type=DocumentType.document(),
             is_new_section=False,
             section_mid=section.node_id,
-            error_object=ErrorObject(),
         )
 
         return output
@@ -676,7 +667,6 @@ class MainController:
             document_type=DocumentType.document(),
             whereto=whereto,
             replace_action=replace_action,
-            error_object=ErrorObject(),
         )
 
         return output
@@ -850,7 +840,6 @@ class MainController:
             renderer=markup_renderer,
             form_object=form_object,
             document_type=DocumentType.document(),
-            error_object=ErrorObject(),
         )
 
         return output

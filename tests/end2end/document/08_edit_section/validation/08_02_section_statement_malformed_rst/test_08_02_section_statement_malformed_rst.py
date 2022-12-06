@@ -2,6 +2,7 @@ import filecmp
 import os
 import shutil
 
+from selenium.webdriver import Keys
 from seleniumbase import BaseCase
 
 from tests.end2end.server import SDocTestServer
@@ -9,7 +10,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test_01_EditingFreeTextWithInvalidRST(BaseCase):
+class Test_02_EditingSectionStatementMalformedRST(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -32,10 +33,10 @@ class Test_01_EditingFreeTextWithInvalidRST(BaseCase):
 
         self.assert_text("Hello world!")
 
-        self.click_link("Edit")
+        self.click_nth_visible_element("//a[contains(text(), 'Edit')]", 2)
 
         self.type(
-            "#document_freetext",
+            "#section_content",
             """
 - Broken RST markup
 
@@ -47,5 +48,6 @@ class Test_01_EditingFreeTextWithInvalidRST(BaseCase):
         self.click_xpath("//button[@type='submit' and text()='Save']")
 
         self.assert_text(
+            "RST markup syntax error on line 4: "
             "Bullet list ends without a blank line; unexpected unindent."
         )

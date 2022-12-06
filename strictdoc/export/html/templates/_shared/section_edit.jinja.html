@@ -46,6 +46,13 @@
         {%- endif -%}
       </textarea>
 
+      {%- if form_object.has_errors("section_statement") -%}
+        <div class="std-form-error">
+        {%- for error in form_object.get_errors("section_statement") -%}
+          {{ error }}
+        {%- endfor -%}
+        </div>
+      {%- endif -%}
     </div>
 
     <div class="std-form-footer">

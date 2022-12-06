@@ -28,3 +28,21 @@ def test_01():
 
     html_output = RstToHtmlFragmentWriter.write(rst_input)
     assert '<table border="1"' in html_output
+
+
+def test_02_parsing_with_validation():
+    rst_input = """
+- Broken RST markup
+
+  - AAA
+  ---
+""".lstrip()
+
+    html_output, error = RstToHtmlFragmentWriter.write_with_validation(
+        rst_input
+    )
+    assert html_output is None
+    assert error == (
+        "RST markup syntax error on line 4: "
+        "Bullet list ends without a blank line; unexpected unindent."
+    )

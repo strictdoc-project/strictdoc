@@ -1,4 +1,5 @@
 import io
+import re
 import sys
 
 from docutils.core import publish_parts
@@ -55,9 +56,22 @@ class RstToHtmlFragmentWriter:
 
         if warning_stream.tell() > 0:
             warnings = warning_stream.getvalue().rstrip("\n")
-            error_message = ""
-            error_message += "RST markup syntax error:"
-            error_message += warnings
+
+            # A typical RST warning:
+            # """
+            # <string>:4: (WARNING/2) Bullet list ends without a blank line;
+            # unexpected unindent.
+            # """
+            match = re.search(
+                r".*<.*>:(?P<line>\d+): \(.*\) (?P<message>.*)", warnings
+            )
+            if match is not None:
+                error_message = (
+                    f"RST markup syntax error on line {match.group('line')}: "
+                    f"{match.group('message')}"
+                )
+            else:
+                error_message = f"RST markup syntax error: {warnings}"
             return None, error_message
 
         html = output["html_body"]

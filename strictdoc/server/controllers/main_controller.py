@@ -194,6 +194,14 @@ class MainController:
             form_object.add_error(
                 "section_title", "Section title must not be empty."
             )
+        if section_content is not None and len(section_content) > 0:
+            (
+                parsed_html,
+                rst_error,
+            ) = RstToHtmlFragmentWriter.write_with_validation(section_content)
+            if parsed_html is None:
+                form_object.add_error("section_statement", rst_error)
+
         if form_object.any_errors():
             template = MainController.env.get_template(
                 "actions/document/create_section/stream_new_section.jinja.html"
@@ -336,6 +344,15 @@ class MainController:
             form_object.add_error(
                 "section_title", "Section title must not be empty."
             )
+
+        if section_content is not None and len(section_content) > 0:
+            (
+                parsed_html,
+                rst_error,
+            ) = RstToHtmlFragmentWriter.write_with_validation(section_content)
+            if parsed_html is None:
+                form_object.add_error("section_statement", rst_error)
+
         if form_object.any_errors():
             template = MainController.env.get_template(
                 "actions/document/create_section/stream_new_section.jinja.html"
@@ -710,6 +727,15 @@ class MainController:
                 "requirement_statement",
                 "Requirement statement must not be empty.",
             )
+        else:
+            (
+                parsed_html,
+                rst_error,
+            ) = RstToHtmlFragmentWriter.write_with_validation(
+                requirement_statement
+            )
+            if parsed_html is None:
+                form_object.add_error("requirement_statement", rst_error)
 
         if form_object.any_errors():
             template = MainController.env.get_template(
@@ -869,7 +895,15 @@ class MainController:
                 "requirement_statement",
                 "Requirement statement must not be empty.",
             )
-
+        else:
+            (
+                parsed_html,
+                rst_error,
+            ) = RstToHtmlFragmentWriter.write_with_validation(
+                requirement_statement
+            )
+            if parsed_html is None:
+                form_object.add_error("requirement_statement", rst_error)
         if form_object.any_errors():
             template = MainController.env.get_template(
                 "actions/document/edit_requirement/stream_edit_requirement.jinja.html"  # noqa: E501

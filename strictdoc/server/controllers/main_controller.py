@@ -355,7 +355,7 @@ class MainController:
 
         if form_object.any_errors():
             template = MainController.env.get_template(
-                "actions/document/create_section/stream_new_section.jinja.html"
+                "actions/document/edit_section/stream_edit_section.jinja.html"
             )
             link_renderer = LinkRenderer(
                 self.export_action.config.output_html_root
@@ -372,7 +372,7 @@ class MainController:
                 form_object=form_object,
                 target_node_mid=section.node_id,
                 document_type=DocumentType.document(),
-                is_new_section=True,
+                is_new_section=False,
                 replace_action="replace",
                 reference_mid="NOT_RELEVANT",
                 whereto="NOT_RELEVANT",

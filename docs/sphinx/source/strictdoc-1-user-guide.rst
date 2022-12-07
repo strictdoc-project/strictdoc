@@ -1,5 +1,5 @@
-User Manual
-$$$$$$$$$$$
+User Guide
+$$$$$$$$$$
 
 Introduction
 ============
@@ -61,7 +61,7 @@ Examples
 
 For a more comprehensive example check the source file of this documentation
 which is written using StrictDoc:
-`strictdoc-1-user-manual.sdoc <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc-1-user-manual.sdoc>`_.
+`strictdoc-1-user-guide.sdoc <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc-1-user-guide.sdoc>`_.
 
 - `StrictDoc HTML export <https://strictdoc.readthedocs.io/en/latest/strictdoc-html>`_
 - `StrictDoc HTML export using Sphinx <https://strictdoc.readthedocs.io/en/latest>`_
@@ -170,7 +170,7 @@ This is how a minimal possible SDoc document looks like:
     TITLE: StrictDoc
 
 This documentation is written using StrictDoc. Here is the source file:
-`strictdoc-1-user-manual.sdoc <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc-1-user-manual.sdoc>`_.
+`strictdoc-1-user-guide.sdoc <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc-1-user-guide.sdoc>`_.
 
 Document structure
 ------------------

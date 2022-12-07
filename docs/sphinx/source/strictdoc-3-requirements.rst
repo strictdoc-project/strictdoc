@@ -64,6 +64,22 @@ Command-line interface
 
 StrictDoc shall provide a command-line interface.
 
+Graphical user interface
+------------------------
+
+StrictDoc shall provide a Graphical User Interface (GUI).
+
+Several trade-offs to consider:
+
+- Desktop vs Web. Rather web-based, i.e. Python backend and JS frontend, but which technology?
+- Still keep the current behavior of a statically generated website?
+
+
+Statically generated website
+----------------------------
+
+StrictDoc shall allow generating requirements content to static HTML website.
+
 Platform support
 ----------------
 
@@ -526,4 +542,12 @@ Source coverage
 StrictDoc shall generate source coverage information.
 
 **Comment:** Source coverage screen shows how source files are linked with requirements.
+
+Web frontend requirements
+=========================
+
+AJAX updates of multiple web forms
+----------------------------------
+
+StrictDoc's Web GUI shall provide capability to do multipart updates.
 

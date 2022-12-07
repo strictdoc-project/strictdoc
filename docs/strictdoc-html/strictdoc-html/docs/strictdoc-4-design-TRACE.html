@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="../_static/_content.css"/>
   <link rel="stylesheet" href="../_static/_requirement.css"/>
   <link rel="stylesheet" href="../_static/_element.css"/>
+  <link rel="stylesheet" href="../_static/_form.css"/>
   
   <link rel="stylesheet" href="../_static/_requirement-tree.css"/>
 
@@ -33,9 +34,7 @@
 </head>
 
 <body class="traceability-view withtoc">
-<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script>
-
-  <div class="layout" id="layout">
+<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
 
     <aside class="layout_aside-header">
       
@@ -45,29 +44,33 @@
 
     <aside class="layout_aside">
       
-  
+  <turbo-frame id="frame-toc">
     <div>Table of Contents</div>
-    <ul class="toc"><li><a href="#1-Design-decisions">
+    <ul class="toc"><li><a href="#1-Design-decisions" data-turbo="false">
               <span class="section-number">1</span>
               Design decisions
-            </a><ul><li><a href="#1.1-Building-blocks">
+            </a><ul><li><a href="#1.1-Building-blocks" data-turbo="false">
               <span class="section-number">1.1</span>
               Building blocks
             </a><ul><li>
-        <a href="#1.1.1-TextX">
+        <a href="#1.1.1-TextX" data-turbo="false">
           <span class="section-number">1.1.1</span>
           TextX
         </a></li><li>
-        <a href="#1.1.2-Jinja2">
+        <a href="#1.1.2-Jinja2" data-turbo="false">
           <span class="section-number">1.1.2</span>
           Jinja2
         </a></li><li>
-        <a href="#1.1.3-Sphinx-and-Docutils">
+        <a href="#1.1.3-Sphinx-and-Docutils" data-turbo="false">
           <span class="section-number">1.1.3</span>
           Sphinx and Docutils
         </a></li></ul>
             </li></ul>
-            </li></ul>
+            </li><li><a href="#2-Graphical-user-interface" data-turbo="false">
+              <span class="section-number">2</span>
+              Graphical user interface
+            </a></li></ul>
+</turbo-frame>
 
     </aside>
 
@@ -115,7 +118,7 @@
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><article class="docsection">
+          <div class="content_item" data-role="current"><turbo-frame id="article-39092a5c412647a09bea1dd8db94ca5e"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -131,15 +134,15 @@ data-level="1">
 
   </section>
 
-  
+  </article>
 
-</article></div>
+</turbo-frame></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><article class="docsection">
+          <div class="content_item" data-role="current"><turbo-frame id="article-226fb5bf30f24f47b4d2bad92d73ecee"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -155,16 +158,16 @@ data-level="1.1">
 
   </section>
 
-  
+  </article>
 
-</article></div>
+</turbo-frame></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
           <div class="content_item" data-role="parents">
 </div>
 
-          <div class="content_item" data-role="current"><article class="requirement">
+          <div class="content_item" data-role="current"><turbo-frame id="article-714ca64bba3b4569aa9add199184df68"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -202,9 +205,9 @@ data-level="1.1.1">
     </div>
     
 
-  </section>
+  </section></article>
 
-</article></div>
+</turbo-frame></div>
 
           <div class="content_item" data-role="children">
 </div>
@@ -213,7 +216,7 @@ data-level="1.1.1">
           <div class="content_item" data-role="parents">
 </div>
 
-          <div class="content_item" data-role="current"><article class="requirement">
+          <div class="content_item" data-role="current"><turbo-frame id="article-98a66266f6534faeb9a5c61205f946c1"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -245,9 +248,9 @@ data-level="1.1.2">
     
     
 
-  </section>
+  </section></article>
 
-</article></div>
+</turbo-frame></div>
 
           <div class="content_item" data-role="children">
 </div>
@@ -256,7 +259,7 @@ data-level="1.1.2">
           <div class="content_item" data-role="parents">
 </div>
 
-          <div class="content_item" data-role="current"><article class="requirement">
+          <div class="content_item" data-role="current"><turbo-frame id="article-7fde9480d72a4d288cd636fdf72f0a74"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -294,12 +297,50 @@ data-level="1.1.3">
     
     
 
-  </section>
+  </section></article>
 
-</article></div>
+</turbo-frame></div>
 
           <div class="content_item" data-role="children">
 </div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-3709ce87ac8642c8a1a3aa58d9096bc0"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="2-Graphical-user-interface"></div>
+
+    
+        <h1
+class="section-title"
+data-level="2">
+  2.&nbsp;Graphical user interface
+</h1>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<ul class="simple">
+<li>Web interface is based on FastAPI / Uvicorn serving Jinja templates.</li>
+<li>The Javascript is minimized to Turbo/Stimulus to avoid the complexity of JS frameworks such as React, Vue, Angular, etc.</li>
+<li>Uvicorn web server that serves as a StrictDoc backend for reading and writing SDoc files.</li>
+<li>Several trade-offs to consider:<ul>
+<li>Desktop vs Web. Rather web-based, i.e. Python backend and JS frontend, but which technology?</li>
+</ul>
+</li>
+<li>Keep the current behavior of a statically generated website.</li>
+</ul>
+</div>
+
+    </div></section></article>
+
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
         </section>
       </div>
 

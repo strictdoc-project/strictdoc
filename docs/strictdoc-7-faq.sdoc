@@ -93,7 +93,7 @@ and other formats using Sphinx.
 If you are reading this documentation at
 https://strictdoc.readthedocs.io/en/latest
 then you are already looking at the example: this documentation stored in
-`strictdoc-1-user-manual <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc-1-user-manual.sdoc>`_
+`strictdoc-7-faq <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc-7-faq.sdoc>`_
 is converted to RST format by StrictDoc which is further converted to the HTML
 website by readthedocs which uses Sphinx under the hood. The
 ``StrictDoc -> RST -> Sphinx -> PDF`` example is also generated using readthedocs:

@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="../_static/_content.css"/>
   <link rel="stylesheet" href="../_static/_requirement.css"/>
   <link rel="stylesheet" href="../_static/_element.css"/>
+  <link rel="stylesheet" href="../_static/_form.css"/>
   
   <link rel="stylesheet" href="../_static/_requirement-tree.css"/>
 
@@ -36,9 +37,7 @@
 </head>
 
 <body class="deep-traceability-view withtoc">
-<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script>
-
-  <div class="layout" id="layout">
+<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
 
     <aside class="layout_aside-header">
       
@@ -48,29 +47,36 @@
 
     <aside class="layout_aside">
       
-  
+  <turbo-frame id="frame-toc">
     <div>Table of Contents</div>
-    <ul class="toc"><li><a href="#1-Design-decisions">
+    <ul class="toc"><li><a href="#1-Design-decisions" data-turbo="false">
               <span class="section-number">1</span>
               Design decisions
-            </a><ul><li><a href="#1.1-Building-blocks">
+            </a><ul><li><a href="#1.1-Building-blocks" data-turbo="false">
               <span class="section-number">1.1</span>
               Building blocks
             </a><ul><li>
-        <a href="#1.1.1-TextX">
+        <a href="#1.1.1-TextX" data-turbo="false">
           <span class="section-number">1.1.1</span>
           TextX
         </a></li><li>
-        <a href="#1.1.2-Jinja2">
+        <a href="#1.1.2-Jinja2" data-turbo="false">
           <span class="section-number">1.1.2</span>
           Jinja2
         </a></li><li>
-        <a href="#1.1.3-Sphinx-and-Docutils">
+        <a href="#1.1.3-Sphinx-and-Docutils" data-turbo="false">
           <span class="section-number">1.1.3</span>
           Sphinx and Docutils
         </a></li></ul>
             </li></ul>
-            </li></ul>
+            </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                2
+              </span>
+              Graphical user interface
+            </span>
+          </li></ul>
+</turbo-frame>
 
     </aside>
 
@@ -116,7 +122,7 @@
 
       <div class="content">
           <section class="content_section">
-            <div class="content_item" data-role="current"><article class="docsection">
+            <div class="content_item" data-role="current"><turbo-frame id="article-39092a5c412647a09bea1dd8db94ca5e"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -132,12 +138,12 @@ data-level="1">
 
   </section>
 
-  
+  </article>
 
-</article></div>
+</turbo-frame></div>
           </section>
           <section class="content_section">
-            <div class="content_item" data-role="current"><article class="docsection">
+            <div class="content_item" data-role="current"><turbo-frame id="article-226fb5bf30f24f47b4d2bad92d73ecee"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -153,14 +159,14 @@ data-level="1.1">
 
   </section>
 
-  
+  </article>
 
-</article></div>
+</turbo-frame></div>
           </section>
         <section class="content_section">
           <div class="content_item" data-role="parents">
 </div>
-          <div class="content_item" data-role="current"><article class="requirement">
+          <div class="content_item" data-role="current"><turbo-frame id="article-714ca64bba3b4569aa9add199184df68"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -198,9 +204,9 @@ data-level="1.1.1">
     </div>
     
 
-  </section>
+  </section></article>
 
-</article></div>
+</turbo-frame></div>
 
           <div class="content_item" data-role="children">
 </div>
@@ -208,7 +214,7 @@ data-level="1.1.1">
         <section class="content_section">
           <div class="content_item" data-role="parents">
 </div>
-          <div class="content_item" data-role="current"><article class="requirement">
+          <div class="content_item" data-role="current"><turbo-frame id="article-98a66266f6534faeb9a5c61205f946c1"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -240,9 +246,9 @@ data-level="1.1.2">
     
     
 
-  </section>
+  </section></article>
 
-</article></div>
+</turbo-frame></div>
 
           <div class="content_item" data-role="children">
 </div>
@@ -250,7 +256,7 @@ data-level="1.1.2">
         <section class="content_section">
           <div class="content_item" data-role="parents">
 </div>
-          <div class="content_item" data-role="current"><article class="requirement">
+          <div class="content_item" data-role="current"><turbo-frame id="article-7fde9480d72a4d288cd636fdf72f0a74"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -288,9 +294,9 @@ data-level="1.1.3">
     
     
 
-  </section>
+  </section></article>
 
-</article></div>
+</turbo-frame></div>
 
           <div class="content_item" data-role="children">
 </div>

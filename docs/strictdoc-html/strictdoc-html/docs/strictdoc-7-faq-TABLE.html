@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../_static/_content.css"/>
   <link rel="stylesheet" href="../_static/_requirement.css"/>
   <link rel="stylesheet" href="../_static/_element.css"/>
+  <link rel="stylesheet" href="../_static/_form.css"/>
   
 
   
@@ -30,9 +31,7 @@
 </head>
 
 <body class="table-view withtoc">
-<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script>
-
-  <div class="layout" id="layout">
+<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
 
     <aside class="layout_aside-header">
       
@@ -42,28 +41,29 @@
 
     <aside class="layout_aside">
       
-  
+  <turbo-frame id="frame-toc">
     <div>Table of Contents</div>
-    <ul class="toc"><li><a href="#1-Blog-posts-about-StrictDoc">
+    <ul class="toc"><li><a href="#1-Blog-posts-about-StrictDoc" data-turbo="false">
               <span class="section-number">1</span>
               Blog posts about StrictDoc
-            </a></li><li><a href="#2-How-StrictDoc-compares-to-other-tools-">
+            </a></li><li><a href="#2-How-StrictDoc-compares-to-other-tools-" data-turbo="false">
               <span class="section-number">2</span>
               How StrictDoc compares to other tools?
-            </a><ul><li><a href="#2.1-Doorstop">
+            </a><ul><li><a href="#2.1-Doorstop" data-turbo="false">
               <span class="section-number">2.1</span>
               Doorstop
-            </a></li><li><a href="#2.2-Sphinx">
+            </a></li><li><a href="#2.2-Sphinx" data-turbo="false">
               <span class="section-number">2.2</span>
               Sphinx
-            </a></li><li><a href="#2.3-Sphinx-Needs">
+            </a></li><li><a href="#2.3-Sphinx-Needs" data-turbo="false">
               <span class="section-number">2.3</span>
               Sphinx-Needs
-            </a></li><li><a href="#2.4-FRET">
+            </a></li><li><a href="#2.4-FRET" data-turbo="false">
               <span class="section-number">2.4</span>
               FRET
             </a></li></ul>
             </li></ul>
+</turbo-frame>
 
     </aside>
 
@@ -239,7 +239,7 @@ and other formats using Sphinx.</p>
 <p>If you are reading this documentation at
 <a class="reference external" href="https://strictdoc.readthedocs.io/en/latest">https://strictdoc.readthedocs.io/en/latest</a>
 then you are already looking at the example: this documentation stored in
-<a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc-1-user-manual.sdoc">strictdoc-1-user-manual</a>
+<a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc-7-faq.sdoc">strictdoc-7-faq</a>
 is converted to RST format by StrictDoc which is further converted to the HTML
 website by readthedocs which uses Sphinx under the hood. The
 <tt class="docutils literal">StrictDoc <span class="pre">-&gt;</span> RST <span class="pre">-&gt;</span> Sphinx <span class="pre">-&gt;</span> PDF</tt> example is also generated using readthedocs:

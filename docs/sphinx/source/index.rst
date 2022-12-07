@@ -4,7 +4,7 @@ Welcome to StrictDoc's documentation!
 .. toctree::
    :maxdepth: 1
 
-   strictdoc-1-user-manual
+   strictdoc-1-user-guide
    strictdoc-2-development-plan
    strictdoc-3-requirements
    strictdoc-4-design

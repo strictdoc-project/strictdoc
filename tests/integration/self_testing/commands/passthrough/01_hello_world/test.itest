@@ -1,5 +1,5 @@
-RUN: %strictdoc passthrough "%strictdoc_root/docs/strictdoc-1-user-manual.sdoc" --output-file="%S/Output/strictdoc-1-user-manual.sdoc"
-RUN: %diff "%strictdoc_root/docs/strictdoc-1-user-manual.sdoc" "%S/Output/strictdoc-1-user-manual.sdoc"
+RUN: %strictdoc passthrough "%strictdoc_root/docs/strictdoc-1-user-guide.sdoc" --output-file="%S/Output/strictdoc-1-user-guide.sdoc"
+RUN: %diff "%strictdoc_root/docs/strictdoc-1-user-guide.sdoc" "%S/Output/strictdoc-1-user-guide.sdoc"
 
 RUN: %strictdoc passthrough "%strictdoc_root/docs/strictdoc-2-development-plan.sdoc" --output-file="%S/Output/strictdoc-2-development-plan.sdoc"
 RUN: %diff "%strictdoc_root/docs/strictdoc-2-development-plan.sdoc" "%S/Output/strictdoc-2-development-plan.sdoc"

@@ -404,7 +404,7 @@ def dump_grammar(context, output_file):
 @task
 def check_dead_links(context):
     command = """
-        python3 tools/link_health.py docs/strictdoc-1-user-manual.sdoc &&
+        python3 tools/link_health.py docs/strictdoc-1-user-guide.sdoc &&
         python3 tools/link_health.py docs/strictdoc-2-development-plan.sdoc &&
         python3 tools/link_health.py docs/strictdoc-3-requirements.sdoc &&
         python3 tools/link_health.py docs/strictdoc-4-design.sdoc &&

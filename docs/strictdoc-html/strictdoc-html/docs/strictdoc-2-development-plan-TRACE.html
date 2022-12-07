@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="../_static/_content.css"/>
   <link rel="stylesheet" href="../_static/_requirement.css"/>
   <link rel="stylesheet" href="../_static/_element.css"/>
+  <link rel="stylesheet" href="../_static/_form.css"/>
   
   <link rel="stylesheet" href="../_static/_requirement-tree.css"/>
 
@@ -33,9 +34,7 @@
 </head>
 
 <body class="traceability-view withtoc">
-<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script>
-
-  <div class="layout" id="layout">
+<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
 
     <aside class="layout_aside-header">
       
@@ -45,44 +44,45 @@
 
     <aside class="layout_aside">
       
-  
+  <turbo-frame id="frame-toc">
     <div>Table of Contents</div>
-    <ul class="toc"><li><a href="#1-Project-goals">
+    <ul class="toc"><li><a href="#1-Project-goals" data-turbo="false">
               <span class="section-number">1</span>
               Project goals
             </a><ul><li>
-        <a href="#1.1-GOAL-1-TOOL-SUPPORT">
+        <a href="#1.1-GOAL-1-TOOL-SUPPORT" data-turbo="false">
           <span class="section-number">1.1</span>
           Software support for writing requirements and specifications documents
         </a></li><li>
-        <a href="#1.2-GOAL-2-REDUCE-DOCUMENTATION-HAZARDS">
+        <a href="#1.2-GOAL-2-REDUCE-DOCUMENTATION-HAZARDS" data-turbo="false">
           <span class="section-number">1.2</span>
           Reduce documentation hazards
         </a></li><li>
-        <a href="#1.3-GOAL-3-NO-RUNAWAY-DOCUMENTATION">
+        <a href="#1.3-GOAL-3-NO-RUNAWAY-DOCUMENTATION" data-turbo="false">
           <span class="section-number">1.3</span>
           No (or less) run-away documentation
         </a></li><li>
-        <a href="#1.4-GOAL-4-CHANGE-MANAGEMENT">
+        <a href="#1.4-GOAL-4-CHANGE-MANAGEMENT" data-turbo="false">
           <span class="section-number">1.4</span>
           Change management
         </a></li></ul>
-            </li><li><a href="#2-User-interfaces">
+            </li><li><a href="#2-User-interfaces" data-turbo="false">
               <span class="section-number">2</span>
               User interfaces
             </a><ul><li>
-        <a href="#2.1-UI-1-TEXT">
+        <a href="#2.1-UI-1-TEXT" data-turbo="false">
           <span class="section-number">2.1</span>
           Command-line interface
         </a></li><li>
-        <a href="#2.2-UI-2-WEB">
+        <a href="#2.2-UI-2-WEB" data-turbo="false">
           <span class="section-number">2.2</span>
           Web interface
         </a></li></ul>
-            </li><li><a href="#3-Development-team">
+            </li><li><a href="#3-Development-team" data-turbo="false">
               <span class="section-number">3</span>
               Development team
             </a></li></ul>
+</turbo-frame>
 
     </aside>
 
@@ -130,7 +130,7 @@
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><article class="docsection">
+          <div class="content_item" data-role="current"><turbo-frame id="article-d6e69bce51f146b4b9916b64ac9c4236"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -152,16 +152,16 @@ data-level="1">
 technical requirements specifications.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article></div>
+</turbo-frame></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
           <div class="content_item" data-role="parents">
 </div>
 
-          <div class="content_item" data-role="current"><article class="requirement">
+          <div class="content_item" data-role="current"><turbo-frame id="article-193f2d99e057480c9be916ff78bbee7e"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -181,7 +181,7 @@ data-level="1.1">
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-child" href="../docs/strictdoc-3-requirements-TRACE.html#1.1-SDOC-HIGH-REQS-MANAGEMENT">
+    <a data-turbo="false" class="requirement_link-child" href="../docs/strictdoc-3-requirements-TRACE.html#1.1-SDOC-HIGH-REQS-MANAGEMENT">
       <span class="requirement_child-uid">SDOC-HIGH-REQS-MANAGEMENT</span>
       Requirements management
     </a>
@@ -215,19 +215,19 @@ Software shall support engineers in their work with documentation.</p>
     
   
 
-  </section>
+  </section></article>
 
-</article></div>
+</turbo-frame></div>
 
           <div class="content_item" data-role="children">
 
 <ul class="requirement-tree requirement-tree_right"><li class="requirement-tree_branch">
     <div class="requirement-tree_node">
-      <article class="requirement">
+      <turbo-frame id="article-189d7c59b0eb4966bde2d8ea075a2bfb"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
-    
+    <div data-role='anchor' id="1.1-SDOC-HIGH-REQS-MANAGEMENT"></div>
     <h2
 class="section-title"
 data-level="1.1">
@@ -243,7 +243,7 @@ data-level="1.1">
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#1.1-GOAL-1-TOOL-SUPPORT">
+    <a data-turbo="false" class="requirement_link-parent" href="#1.1-GOAL-1-TOOL-SUPPORT">
       <span class="requirement_parent-uid">GOAL-1-TOOL-SUPPORT</span>
       Software support for writing requirements and specifications documents
     </a>
@@ -251,7 +251,7 @@ data-level="1.1">
   </ul>
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-child" href="../docs/strictdoc-3-requirements-TRACE.html#3.1-SDOC-DM-MODEL">
+    <a data-turbo="false" class="requirement_link-child" href="../docs/strictdoc-3-requirements-TRACE.html#3.1-SDOC-DM-MODEL">
       <span class="requirement_child-uid">SDOC-DM-MODEL</span>
       Modeling capability
     </a>
@@ -277,9 +277,9 @@ data-level="1.1">
     
   
 
-  </section>
+  </section></article>
 
-</article>
+</turbo-frame>
     </div>
 
   </li></ul></div>
@@ -288,7 +288,7 @@ data-level="1.1">
           <div class="content_item" data-role="parents">
 </div>
 
-          <div class="content_item" data-role="current"><article class="requirement">
+          <div class="content_item" data-role="current"><turbo-frame id="article-7f5443131e1f498a92800e1b03c1762b"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -341,9 +341,9 @@ and writing technical documentation.</p>
     
   
 
-  </section>
+  </section></article>
 
-</article></div>
+</turbo-frame></div>
 
           <div class="content_item" data-role="children">
 </div>
@@ -352,7 +352,7 @@ and writing technical documentation.</p>
           <div class="content_item" data-role="parents">
 </div>
 
-          <div class="content_item" data-role="current"><article class="requirement">
+          <div class="content_item" data-role="current"><turbo-frame id="article-9ae5221cb5924891884dca2f440ec27d"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -398,9 +398,9 @@ documents and documentation trees.</p>
     
   
 
-  </section>
+  </section></article>
 
-</article></div>
+</turbo-frame></div>
 
           <div class="content_item" data-role="children">
 </div>
@@ -409,7 +409,7 @@ documents and documentation trees.</p>
           <div class="content_item" data-role="parents">
 </div>
 
-          <div class="content_item" data-role="current"><article class="requirement">
+          <div class="content_item" data-role="current"><turbo-frame id="article-06be721456a546bc8ee8250b6078af62"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -427,14 +427,6 @@ data-level="1.4">
     
   </dl>
     
-<ul class="requirement_link">
-  <li>
-    <a class="requirement_link-child" href="../docs/strictdoc-5-backlog-TRACE.html#8-BACKLOG-FUZZY-SEARCH">
-      <span class="requirement_child-uid">BACKLOG-FUZZY-SEARCH</span>
-      Fuzzy requirements search
-    </a>
-  </li>
-  </ul>
     
 
   </section>
@@ -474,79 +466,17 @@ to do a more advanced analysis of requirements and requirement trees:</p>
     
   
 
-  </section>
+  </section></article>
 
-</article></div>
+</turbo-frame></div>
 
           <div class="content_item" data-role="children">
-
-<ul class="requirement-tree requirement-tree_right"><li class="requirement-tree_branch">
-    <div class="requirement-tree_node">
-      <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    
-    <h1
-class="section-title"
-data-level="8">
-  8.&nbsp;Fuzzy requirements search
-</h1>
-
-    <dl class="requirement_meta">
-    
-    <dt><i>UID</i></dt>
-    <dd>BACKLOG-FUZZY-SEARCH</dd>
-    
-  </dl>
-    
-<ul class="requirement_link">
-  <li>
-    <a class="requirement_link-parent" href="#1.4-GOAL-4-CHANGE-MANAGEMENT">
-      <span class="requirement_parent-uid">GOAL-4-CHANGE-MANAGEMENT</span>
-      Change management
-    </a>
-  </li>
-  </ul>
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>StrictDoc shall support finding relevant requirements.</p>
 </div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    <div class="requirement_comment">
-      <div class="document">
-<p>This feature can be implemented in the CLI as well as in the future GUI. A fuzzy
-requirements search can help to find existing requirements and also identify
-relevant requirements when creating new requirements.</p>
-</div>
-
-    </div>
-    
-  
-
-  </section>
-
-</article>
-    </div>
-
-  </li></ul></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><article class="docsection">
+          <div class="content_item" data-role="current"><turbo-frame id="article-ef28f6176cf046389611806916bf06f9"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -573,16 +503,16 @@ data-level="2">
 work-in-progress.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article></div>
+</turbo-frame></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
           <div class="content_item" data-role="parents">
 </div>
 
-          <div class="content_item" data-role="current"><article class="requirement">
+          <div class="content_item" data-role="current"><turbo-frame id="article-3e3dc1cb0c0c47f2bfd329350b34f9b5"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -600,14 +530,6 @@ data-level="2.1">
     
   </dl>
     
-<ul class="requirement_link">
-  <li>
-    <a class="requirement_link-child" href="../docs/strictdoc-5-backlog-TRACE.html#2-BACKLOG-LSP">
-      <span class="requirement_child-uid">BACKLOG-LSP</span>
-      SDoc Language Server Protocol
-    </a>
-  </li>
-  </ul>
     
 
   </section>
@@ -628,85 +550,18 @@ data-level="2.1">
     
   
 
-  </section>
+  </section></article>
 
-</article></div>
+</turbo-frame></div>
 
           <div class="content_item" data-role="children">
-
-<ul class="requirement-tree requirement-tree_right"><li class="requirement-tree_branch">
-    <div class="requirement-tree_node">
-      <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    
-    <h1
-class="section-title"
-data-level="2">
-  2.&nbsp;SDoc Language Server Protocol
-</h1>
-
-    <dl class="requirement_meta">
-    
-    <dt><i>UID</i></dt>
-    <dd>BACKLOG-LSP</dd>
-    
-  </dl>
-    
-<ul class="requirement_link">
-  <li>
-    <a class="requirement_link-parent" href="#2.1-UI-1-TEXT">
-      <span class="requirement_parent-uid">UI-1-TEXT</span>
-      Command-line interface
-    </a>
-  </li>
-  </ul>
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>StrictDoc shall support Language Server Protocol.</p>
 </div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    <div class="requirement_rationale">
-    <div class="document">
-<p>The LSP can enable editing of SDoc files in IDEs like Eclipse, Visual Studio,
-PyCharm. A smart LSP can enable features like syntax highlighting,
-autocompletion and easy navigation through requirements.</p>
-</div>
-
-  </div>
-    
-    <div class="requirement_comment">
-      <div class="document">
-<p>The promising base for the implementation: <a class="reference external" href="https://github.com/openlawlibrary/pygls">https://github.com/openlawlibrary/pygls</a>.</p>
-</div>
-
-    </div>
-    
-  
-
-  </section>
-
-</article>
-    </div>
-
-  </li></ul></div>
         </section>
         <section class="content_section">
           <div class="content_item" data-role="parents">
 </div>
 
-          <div class="content_item" data-role="current"><article class="requirement">
+          <div class="content_item" data-role="current"><turbo-frame id="article-8dd2b72b142549f48b42c937dc787124"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -724,14 +579,6 @@ data-level="2.2">
     
   </dl>
     
-<ul class="requirement_link">
-  <li>
-    <a class="requirement_link-child" href="../docs/strictdoc-5-backlog-TRACE.html#10.2.1-BACKLOG-WEB">
-      <span class="requirement_child-uid">BACKLOG-WEB</span>
-      Web server and editable HTML pages
-    </a>
-  </li>
-  </ul>
     
 
   </section>
@@ -752,72 +599,17 @@ data-level="2.2">
     
   
 
-  </section>
+  </section></article>
 
-</article></div>
+</turbo-frame></div>
 
           <div class="content_item" data-role="children">
-
-<ul class="requirement-tree requirement-tree_right"><li class="requirement-tree_branch">
-    <div class="requirement-tree_node">
-      <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    
-    <h3
-class="section-title"
-data-level="10.2.1">
-  10.2.1.&nbsp;Web server and editable HTML pages
-</h3>
-
-    <dl class="requirement_meta">
-    
-    <dt><i>UID</i></dt>
-    <dd>BACKLOG-WEB</dd>
-    
-  </dl>
-    
-<ul class="requirement_link">
-  <li>
-    <a class="requirement_link-parent" href="#2.2-UI-2-WEB">
-      <span class="requirement_parent-uid">UI-2-WEB</span>
-      Web interface
-    </a>
-  </li>
-  </ul>
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>StrictDoc shall provide a web server that serves as a StrictDoc backend for
-reading and writing SDoc files.</p>
 </div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    
-  
-
-  </section>
-
-</article>
-    </div>
-
-  </li></ul></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><article class="docsection">
+          <div class="content_item" data-role="current"><turbo-frame id="article-19fc820a55594461b6be2a2f0eaad755"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -839,9 +631,9 @@ data-level="3">
 with occasional contributions from the Open Source community.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article></div>
+</turbo-frame></div>
           <div class="content_item" data-role="children"></div>
         </section>
       </div>

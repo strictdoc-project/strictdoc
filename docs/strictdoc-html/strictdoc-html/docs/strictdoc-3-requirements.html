@@ -15,10 +15,19 @@
   <link rel="stylesheet" href="../_static/_content.css"/>
   <link rel="stylesheet" href="../_static/_requirement.css"/>
   <link rel="stylesheet" href="../_static/_element.css"/>
+  <link rel="stylesheet" href="../_static/_form.css"/>
   
 
   
   <script type="text/javascript" src="../_static/toc.js"></script>
+  <script type="text/javascript" src="../_static/jquery.min.js"></script>
+
+  <script type="module">
+      import hotwiredTurbo from "../_static/turbo.js";
+      import { Application } from "../_static/stimulus.js";
+      window.Stimulus = Application.start();
+  </script>
+  <script type="module" src="../_static/std-forms.js"></script>
   
   
   
@@ -30,9 +39,7 @@
 </head>
 
 <body class="document-view withtoc">
-<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script>
-
-  <div class="layout" id="layout">
+<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
 
     <aside class="layout_aside-header">
       
@@ -42,264 +49,279 @@
 
     <aside class="layout_aside">
       
-  
+  <turbo-frame id="frame-toc">
     <div>Table of Contents</div>
-    <ul class="toc"><li><a href="#1-High-level-requirements">
+    <ul class="toc"><li><a href="#1-High-level-requirements" data-turbo="false">
               <span class="section-number">1</span>
               High-level requirements
             </a><ul><li>
-        <a href="#1.1-SDOC-HIGH-REQS-MANAGEMENT">
+        <a href="#1.1-SDOC-HIGH-REQS-MANAGEMENT" data-turbo="false">
           <span class="section-number">1.1</span>
           Requirements management
         </a></li><li>
-        <a href="#1.2-SDOC-HIGH-DATA-MODEL">
+        <a href="#1.2-SDOC-HIGH-DATA-MODEL" data-turbo="false">
           <span class="section-number">1.2</span>
           Data model
         </a></li><li>
-        <a href="#1.3-Command-line-interface">
+        <a href="#1.3-Command-line-interface" data-turbo="false">
           <span class="section-number">1.3</span>
           Command-line interface
-        </a></li><li>
-        <a href="#1.4-Platform-support">
-          <span class="section-number">1.4</span>
+        </a></li><li><a href="#1.4-Graphical-user-interface" data-turbo="false">
+              <span class="section-number">1.4</span>
+              Graphical user interface
+            </a></li><li><a href="#1.5-Statically-generated-website" data-turbo="false">
+              <span class="section-number">1.5</span>
+              Statically generated website
+            </a></li><li>
+        <a href="#1.6-Platform-support" data-turbo="false">
+          <span class="section-number">1.6</span>
           Platform support
         </a><ul><li>
-        <a href="#1.4.1-macOS-support">
-          <span class="section-number">1.4.1</span>
+        <a href="#1.6.1-macOS-support" data-turbo="false">
+          <span class="section-number">1.6.1</span>
           macOS support
         </a></li><li>
-        <a href="#1.4.2-Linux-support">
-          <span class="section-number">1.4.2</span>
+        <a href="#1.6.2-Linux-support" data-turbo="false">
+          <span class="section-number">1.6.2</span>
           Linux support
         </a></li><li>
-        <a href="#1.4.3-Windows-support">
-          <span class="section-number">1.4.3</span>
+        <a href="#1.6.3-Windows-support" data-turbo="false">
+          <span class="section-number">1.6.3</span>
           Windows support
         </a></li></ul>
             </li><li>
-        <a href="#1.5-SDOC-HIGH-VALIDATION">
-          <span class="section-number">1.5</span>
+        <a href="#1.7-SDOC-HIGH-VALIDATION" data-turbo="false">
+          <span class="section-number">1.7</span>
           Requirements validation
         </a></li><li>
-        <a href="#1.6-Requirements-text-format">
-          <span class="section-number">1.6</span>
+        <a href="#1.8-Requirements-text-format" data-turbo="false">
+          <span class="section-number">1.8</span>
           Requirements text format
         </a></li><li>
-        <a href="#1.7-Linking-requirements">
-          <span class="section-number">1.7</span>
+        <a href="#1.9-Linking-requirements" data-turbo="false">
+          <span class="section-number">1.9</span>
           Linking requirements
         </a></li><li>
-        <a href="#1.8-Scalability">
-          <span class="section-number">1.8</span>
+        <a href="#1.10-Scalability" data-turbo="false">
+          <span class="section-number">1.10</span>
           Scalability
         </a></li><li>
-        <a href="#1.9-SDOC-HIGH-REQS-TRACEABILITY">
-          <span class="section-number">1.9</span>
+        <a href="#1.11-SDOC-HIGH-REQS-TRACEABILITY" data-turbo="false">
+          <span class="section-number">1.11</span>
           Traceability
         </a></li><li>
-        <a href="#1.10-Visualization">
-          <span class="section-number">1.10</span>
+        <a href="#1.12-Visualization" data-turbo="false">
+          <span class="section-number">1.12</span>
           Visualization
         </a></li><li>
-        <a href="#1.11-Open-source-software">
-          <span class="section-number">1.11</span>
+        <a href="#1.13-Open-source-software" data-turbo="false">
+          <span class="section-number">1.13</span>
           Open source software
         </a></li></ul>
-            </li><li><a href="#2-Implementation-requirements">
+            </li><li><a href="#2-Implementation-requirements" data-turbo="false">
               <span class="section-number">2</span>
               Implementation requirements
             </a><ul><li>
-        <a href="#2.1-SDOC-IMPL-PARAL">
+        <a href="#2.1-SDOC-IMPL-PARAL" data-turbo="false">
           <span class="section-number">2.1</span>
           Parallelization
         </a></li><li>
-        <a href="#2.2-SDOC-IMPL-INCREMENTAL">
+        <a href="#2.2-SDOC-IMPL-INCREMENTAL" data-turbo="false">
           <span class="section-number">2.2</span>
           Incremental generation
         </a></li></ul>
-            </li><li><a href="#3-Data-model">
+            </li><li><a href="#3-Data-model" data-turbo="false">
               <span class="section-number">3</span>
               Data model
             </a><ul><li>
-        <a href="#3.1-SDOC-DM-MODEL">
+        <a href="#3.1-SDOC-DM-MODEL" data-turbo="false">
           <span class="section-number">3.1</span>
           Modeling capability
         </a></li><li>
-        <a href="#3.2-Project">
+        <a href="#3.2-Project" data-turbo="false">
           <span class="section-number">3.2</span>
           Project
         </a><ul><li>
-        <a href="#3.2.1-Project-title">
+        <a href="#3.2.1-Project-title" data-turbo="false">
           <span class="section-number">3.2.1</span>
           Project title
         </a></li></ul>
-            </li><li><a href="#3.3-Document">
+            </li><li><a href="#3.3-Document" data-turbo="false">
               <span class="section-number">3.3</span>
               Document
-            </a></li><li><a href="#3.4-Section">
+            </a></li><li><a href="#3.4-Section" data-turbo="false">
               <span class="section-number">3.4</span>
               Section
-            </a></li><li><a href="#3.5-Requirement-item">
+            </a></li><li><a href="#3.5-Requirement-item" data-turbo="false">
               <span class="section-number">3.5</span>
               Requirement item
             </a><ul><li>
-        <a href="#3.5.1-Statement">
+        <a href="#3.5.1-Statement" data-turbo="false">
           <span class="section-number">3.5.1</span>
           Statement
         </a></li><li>
-        <a href="#3.5.2-UID-identifier">
+        <a href="#3.5.2-UID-identifier" data-turbo="false">
           <span class="section-number">3.5.2</span>
           UID identifier
         </a><ul><li>
-        <a href="#3.5.2.1-UID-identifier-format">
+        <a href="#3.5.2.1-UID-identifier-format" data-turbo="false">
           <span class="section-number">3.5.2.1</span>
           UID identifier format
         </a></li></ul>
             </li><li>
-        <a href="#3.5.3-Title">
+        <a href="#3.5.3-Title" data-turbo="false">
           <span class="section-number">3.5.3</span>
           Title
         </a></li><li>
-        <a href="#3.5.4-References">
+        <a href="#3.5.4-References" data-turbo="false">
           <span class="section-number">3.5.4</span>
           References
         </a></li><li>
-        <a href="#3.5.5-Comments">
+        <a href="#3.5.5-Comments" data-turbo="false">
           <span class="section-number">3.5.5</span>
           Comments
         </a></li><li>
-        <a href="#3.5.6-Special-fields">
+        <a href="#3.5.6-Special-fields" data-turbo="false">
           <span class="section-number">3.5.6</span>
           Special fields
         </a></li></ul>
-            </li><li><a href="#3.6-Composite-Requirement-item">
+            </li><li><a href="#3.6-Composite-Requirement-item" data-turbo="false">
               <span class="section-number">3.6</span>
               Composite Requirement item
             </a></li><li>
-        <a href="#3.7-Links">
+        <a href="#3.7-Links" data-turbo="false">
           <span class="section-number">3.7</span>
           Links
         </a><ul><li>
-        <a href="#3.7.1-Parent-links">
+        <a href="#3.7.1-Parent-links" data-turbo="false">
           <span class="section-number">3.7.1</span>
           Parent links
         </a></li></ul>
             </li></ul>
-            </li><li><a href="#4-SDoc-file-format">
+            </li><li><a href="#4-SDoc-file-format" data-turbo="false">
               <span class="section-number">4</span>
               SDoc file format
             </a><ul><li>
-        <a href="#4.1-SDOC-FMT-PRIMARY">
+        <a href="#4.1-SDOC-FMT-PRIMARY" data-turbo="false">
           <span class="section-number">4.1</span>
           Primary text implementation
         </a></li><li>
-        <a href="#4.2-SDOC-FMT-GRAMMAR">
+        <a href="#4.2-SDOC-FMT-GRAMMAR" data-turbo="false">
           <span class="section-number">4.2</span>
           Grammar
         </a><ul><li>
-        <a href="#4.2.1-No-indentation">
+        <a href="#4.2.1-No-indentation" data-turbo="false">
           <span class="section-number">4.2.1</span>
           No indentation
         </a></li></ul>
             </li><li>
-        <a href="#4.3-Type-safety">
+        <a href="#4.3-Type-safety" data-turbo="false">
           <span class="section-number">4.3</span>
           Type safety
         </a></li></ul>
-            </li><li><a href="#5-Export-and-import-capabilities">
+            </li><li><a href="#5-Export-and-import-capabilities" data-turbo="false">
               <span class="section-number">5</span>
               Export and import capabilities
-            </a><ul><li><a href="#5.1-General">
+            </a><ul><li><a href="#5.1-General" data-turbo="false">
               <span class="section-number">5.1</span>
               General
             </a><ul><li>
-        <a href="#5.1.1-Generated-file-names">
+        <a href="#5.1.1-Generated-file-names" data-turbo="false">
           <span class="section-number">5.1.1</span>
           Generated file names
         </a></li></ul>
-            </li><li><a href="#5.2-HTML-Export">
+            </li><li><a href="#5.2-HTML-Export" data-turbo="false">
               <span class="section-number">5.2</span>
               HTML Export
             </a><ul><li>
-        <a href="#5.2.1-Single-document-Normal-form">
+        <a href="#5.2.1-Single-document-Normal-form" data-turbo="false">
           <span class="section-number">5.2.1</span>
           Single document: Normal form
         </a></li><li>
-        <a href="#5.2.2-Single-document-Tabular-form">
+        <a href="#5.2.2-Single-document-Tabular-form" data-turbo="false">
           <span class="section-number">5.2.2</span>
           Single document: Tabular form
         </a></li><li>
-        <a href="#5.2.3-Single-document-1-level-traceability">
+        <a href="#5.2.3-Single-document-1-level-traceability" data-turbo="false">
           <span class="section-number">5.2.3</span>
           Single document: 1-level traceability
         </a></li><li>
-        <a href="#5.2.4-Single-document-Deep-traceability">
+        <a href="#5.2.4-Single-document-Deep-traceability" data-turbo="false">
           <span class="section-number">5.2.4</span>
           Single document: Deep traceability
         </a></li><li>
-        <a href="#5.2.5-Left-panel-Table-of-contents">
+        <a href="#5.2.5-Left-panel-Table-of-contents" data-turbo="false">
           <span class="section-number">5.2.5</span>
           Left panel: Table of contents
         </a></li></ul>
-            </li><li><a href="#5.3-PDF-Export">
+            </li><li><a href="#5.3-PDF-Export" data-turbo="false">
               <span class="section-number">5.3</span>
               PDF Export
             </a><ul><li>
-        <a href="#5.3.1-Sphinx-documentation-generator">
+        <a href="#5.3.1-Sphinx-documentation-generator" data-turbo="false">
           <span class="section-number">5.3.1</span>
           Sphinx documentation generator
         </a></li></ul>
             </li><li>
-        <a href="#5.4-SDOC-GEN-EXCEL-EXPORT">
+        <a href="#5.4-SDOC-GEN-EXCEL-EXPORT" data-turbo="false">
           <span class="section-number">5.4</span>
           Excel Export
         </a></li><li>
-        <a href="#5.5-ReqIF-import-export">
+        <a href="#5.5-ReqIF-import-export" data-turbo="false">
           <span class="section-number">5.5</span>
           ReqIF import/export
         </a></li></ul>
-            </li><li><a href="#6-Validation">
+            </li><li><a href="#6-Validation" data-turbo="false">
               <span class="section-number">6</span>
               Validation
             </a><ul><li>
-        <a href="#6.1-SDOC-VALIDATION-UNIQUE-UID">
+        <a href="#6.1-SDOC-VALIDATION-UNIQUE-UID" data-turbo="false">
           <span class="section-number">6.1</span>
           Uniqueness of UID identifiers in a document tree
         </a></li><li>
-        <a href="#6.2-SDOC-VALIDATION-NO-CYCLES">
+        <a href="#6.2-SDOC-VALIDATION-NO-CYCLES" data-turbo="false">
           <span class="section-number">6.2</span>
           No cycles in a document tree
         </a></li><li>
-        <a href="#6.3-SDOC-VALIDATION-VALID-HTML">
+        <a href="#6.3-SDOC-VALIDATION-VALID-HTML" data-turbo="false">
           <span class="section-number">6.3</span>
           Valid HTML markup
         </a></li></ul>
-            </li><li><a href="#7-Traceability-and-coverage">
+            </li><li><a href="#7-Traceability-and-coverage" data-turbo="false">
               <span class="section-number">7</span>
               Traceability and coverage
             </a><ul><li>
-        <a href="#7.1-Linking-with-implementation-artifacts">
+        <a href="#7.1-Linking-with-implementation-artifacts" data-turbo="false">
           <span class="section-number">7.1</span>
           Linking with implementation artifacts
         </a><ul><li>
-        <a href="#7.1.1-Validation-Broken-links-from-requirements-to-source-files">
+        <a href="#7.1.1-Validation-Broken-links-from-requirements-to-source-files" data-turbo="false">
           <span class="section-number">7.1.1</span>
           Validation: Broken links from requirements to source files
         </a></li><li>
-        <a href="#7.1.2-Validation-Broken-links-from-source-files-to-requirements">
+        <a href="#7.1.2-Validation-Broken-links-from-source-files-to-requirements" data-turbo="false">
           <span class="section-number">7.1.2</span>
           Validation: Broken links from source files to requirements
         </a></li></ul>
             </li><li>
-        <a href="#7.2-Requirements-coverage">
+        <a href="#7.2-Requirements-coverage" data-turbo="false">
           <span class="section-number">7.2</span>
           Requirements coverage
         </a></li><li>
-        <a href="#7.3-Source-coverage">
+        <a href="#7.3-Source-coverage" data-turbo="false">
           <span class="section-number">7.3</span>
           Source coverage
         </a></li></ul>
+            </li><li><a href="#8-Web-frontend-requirements" data-turbo="false">
+              <span class="section-number">8</span>
+              Web frontend requirements
+            </a><ul><li>
+        <a href="#8.1-AJAX-updates-of-multiple-web-forms" data-turbo="false">
+          <span class="section-number">8.1</span>
+          AJAX updates of multiple web forms
+        </a></li></ul>
             </li></ul>
+</turbo-frame>
 
     </aside>
 
@@ -339,7 +361,12 @@
     </header>
 
     <main class="layout_main">
-      <div class="content"><article class="docsection">
+      
+  <turbo-frame id="frame_document_content"><div class="content">
+        <turbo-frame id="article-ef132bf504b347929d5e862b44b3b881">
+<article></article>
+</turbo-frame>
+          <turbo-frame id="article-386479d6ef5f4c2c9960fd215ea0a179"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -355,10 +382,10 @@ data-level="1">
 
   </section>
 
-  
+  </article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-189d7c59b0eb4966bde2d8ea075a2bfb"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -378,7 +405,7 @@ data-level="1.1">
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="../docs/strictdoc-2-development-plan.html#1.1-GOAL-1-TOOL-SUPPORT">
+    <a data-turbo="false" class="requirement_link-parent" href="../docs/strictdoc-2-development-plan.html#1.1-GOAL-1-TOOL-SUPPORT">
       <span class="requirement_parent-uid">GOAL-1-TOOL-SUPPORT</span>
       Software support for writing requirements and specifications documents
     </a>
@@ -386,7 +413,7 @@ data-level="1.1">
   </ul>
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-child" href="#3.1-SDOC-DM-MODEL">
+    <a data-turbo="false" class="requirement_link-child" href="#3.1-SDOC-DM-MODEL">
       <span class="requirement_child-uid">SDOC-DM-MODEL</span>
       Modeling capability
     </a>
@@ -412,10 +439,10 @@ data-level="1.1">
     
   
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-ffce284d68ef4c359e2ab5cd6a4c81cc"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -435,13 +462,13 @@ data-level="1.2">
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-child" href="#3.1-SDOC-DM-MODEL">
+    <a data-turbo="false" class="requirement_link-child" href="#3.1-SDOC-DM-MODEL">
       <span class="requirement_child-uid">SDOC-DM-MODEL</span>
       Modeling capability
     </a>
   </li>
   <li>
-    <a class="requirement_link-child" href="#4.2-SDOC-FMT-GRAMMAR">
+    <a data-turbo="false" class="requirement_link-child" href="#4.2-SDOC-FMT-GRAMMAR">
       <span class="requirement_child-uid">SDOC-FMT-GRAMMAR</span>
       Grammar
     </a>
@@ -485,10 +512,10 @@ document data model which is called &quot;grammar&quot;.</p>
     
   
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-3136a27c8e144d51b81a2fc3eb09fc41"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -520,18 +547,71 @@ data-level="1.3">
     
     
 
+  </section></article>
+
+</turbo-frame>
+          <turbo-frame id="article-fa54b9b7af2c41178d956f955728195a"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="1.4-Graphical-user-interface"></div>
+
+    
+        <h2
+class="section-title"
+data-level="1.4">
+  1.4.&nbsp;Graphical user interface
+</h2>
+    
+
   </section>
 
-</article>
-              <article class="requirement">
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>StrictDoc shall provide a Graphical User Interface (GUI).</p>
+<p>Several trade-offs to consider:</p>
+<ul class="simple">
+<li>Desktop vs Web. Rather web-based, i.e. Python backend and JS frontend, but which technology?</li>
+<li>Still keep the current behavior of a statically generated website?</li>
+</ul>
+</div>
+
+    </div></section></article>
+
+</turbo-frame>
+          <turbo-frame id="article-ec06e4fdd4f442d09791c735b30fd9f4"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="1.5-Statically-generated-website"></div>
+
+    
+        <h2
+class="section-title"
+data-level="1.5">
+  1.5.&nbsp;Statically generated website
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>StrictDoc shall allow generating requirements content to static HTML website.</p>
+</div>
+
+    </div></section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-3b97d73d5d364cc280f854bd6997a4b1"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="1.4-Platform-support"></div>
+    <div data-role='anchor' id="1.6-Platform-support"></div>
     <h2
 class="section-title"
-data-level="1.4">
-  1.4.&nbsp;Platform support
+data-level="1.6">
+  1.6.&nbsp;Platform support
 </h2>
 
     
@@ -555,18 +635,18 @@ data-level="1.4">
     
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-bf325b437515409893773078235ebd99"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="1.4.1-macOS-support"></div>
+    <div data-role='anchor' id="1.6.1-macOS-support"></div>
     <h3
 class="section-title"
-data-level="1.4.1">
-  1.4.1.&nbsp;macOS support
+data-level="1.6.1">
+  1.6.1.&nbsp;macOS support
 </h3>
 
     
@@ -590,18 +670,18 @@ data-level="1.4.1">
     
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-d9ec98ee6a584a438daad4ff2f79c788"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="1.4.2-Linux-support"></div>
+    <div data-role='anchor' id="1.6.2-Linux-support"></div>
     <h3
 class="section-title"
-data-level="1.4.2">
-  1.4.2.&nbsp;Linux support
+data-level="1.6.2">
+  1.6.2.&nbsp;Linux support
 </h3>
 
     
@@ -625,18 +705,18 @@ data-level="1.4.2">
     
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-c3acf28103ad4996a96c27f9aa491549"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="1.4.3-Windows-support"></div>
+    <div data-role='anchor' id="1.6.3-Windows-support"></div>
     <h3
 class="section-title"
-data-level="1.4.3">
-  1.4.3.&nbsp;Windows support
+data-level="1.6.3">
+  1.6.3.&nbsp;Windows support
 </h3>
 
     
@@ -660,18 +740,18 @@ data-level="1.4.3">
     
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-84f6d09554f34449aeb04589242073b6"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="1.5-SDOC-HIGH-VALIDATION"></div>
+    <div data-role='anchor' id="1.7-SDOC-HIGH-VALIDATION"></div>
     <h2
 class="section-title"
-data-level="1.5">
-  1.5.&nbsp;Requirements validation
+data-level="1.7">
+  1.7.&nbsp;Requirements validation
 </h2>
 
     <dl class="requirement_meta">
@@ -683,19 +763,19 @@ data-level="1.5">
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-child" href="#6.1-SDOC-VALIDATION-UNIQUE-UID">
+    <a data-turbo="false" class="requirement_link-child" href="#6.1-SDOC-VALIDATION-UNIQUE-UID">
       <span class="requirement_child-uid">SDOC-VALIDATION-UNIQUE-UID</span>
       Uniqueness of UID identifiers in a document tree
     </a>
   </li>
   <li>
-    <a class="requirement_link-child" href="#6.2-SDOC-VALIDATION-NO-CYCLES">
+    <a data-turbo="false" class="requirement_link-child" href="#6.2-SDOC-VALIDATION-NO-CYCLES">
       <span class="requirement_child-uid">SDOC-VALIDATION-NO-CYCLES</span>
       No cycles in a document tree
     </a>
   </li>
   <li>
-    <a class="requirement_link-child" href="#6.3-SDOC-VALIDATION-VALID-HTML">
+    <a data-turbo="false" class="requirement_link-child" href="#6.3-SDOC-VALIDATION-VALID-HTML">
       <span class="requirement_child-uid">SDOC-VALIDATION-VALID-HTML</span>
       Valid HTML markup
     </a>
@@ -721,18 +801,18 @@ data-level="1.5">
     
   
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-1baf6845198a48539bcf61bcda6b2362"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="1.6-Requirements-text-format"></div>
+    <div data-role='anchor' id="1.8-Requirements-text-format"></div>
     <h2
 class="section-title"
-data-level="1.6">
-  1.6.&nbsp;Requirements text format
+data-level="1.8">
+  1.8.&nbsp;Requirements text format
 </h2>
 
     
@@ -756,18 +836,18 @@ data-level="1.6">
     
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-62cd28a255e2447381d389f547f0519c"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="1.7-Linking-requirements"></div>
+    <div data-role='anchor' id="1.9-Linking-requirements"></div>
     <h2
 class="section-title"
-data-level="1.7">
-  1.7.&nbsp;Linking requirements
+data-level="1.9">
+  1.9.&nbsp;Linking requirements
 </h2>
 
     
@@ -791,18 +871,18 @@ data-level="1.7">
     
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-4d41391d973649beae7e31be070b46e6"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="1.8-Scalability"></div>
+    <div data-role='anchor' id="1.10-Scalability"></div>
     <h2
 class="section-title"
-data-level="1.8">
-  1.8.&nbsp;Scalability
+data-level="1.10">
+  1.10.&nbsp;Scalability
 </h2>
 
     
@@ -826,18 +906,18 @@ data-level="1.8">
     
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-07beb0db3aff47cbb9d00ce81b723387"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="1.9-SDOC-HIGH-REQS-TRACEABILITY"></div>
+    <div data-role='anchor' id="1.11-SDOC-HIGH-REQS-TRACEABILITY"></div>
     <h2
 class="section-title"
-data-level="1.9">
-  1.9.&nbsp;Traceability
+data-level="1.11">
+  1.11.&nbsp;Traceability
 </h2>
 
     <dl class="requirement_meta">
@@ -867,18 +947,18 @@ data-level="1.9">
     
   
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-8a5b46f3c0bd4567940ecad11d521f1c"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="1.10-Visualization"></div>
+    <div data-role='anchor' id="1.12-Visualization"></div>
     <h2
 class="section-title"
-data-level="1.10">
-  1.10.&nbsp;Visualization
+data-level="1.12">
+  1.12.&nbsp;Visualization
 </h2>
 
     
@@ -902,18 +982,18 @@ data-level="1.10">
     
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-9cd088984109466d812c4212e1ba49bd"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="1.11-Open-source-software"></div>
+    <div data-role='anchor' id="1.13-Open-source-software"></div>
     <h2
 class="section-title"
-data-level="1.11">
-  1.11.&nbsp;Open source software
+data-level="1.13">
+  1.13.&nbsp;Open source software
 </h2>
 
     
@@ -937,9 +1017,10 @@ data-level="1.11">
     
     
 
-  </section>
+  </section></article>
 
-</article><article class="docsection">
+</turbo-frame>
+          <turbo-frame id="article-f028e92a46ec41ebbb4f0ba59fe60248"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -955,10 +1036,10 @@ data-level="2">
 
   </section>
 
-  
+  </article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-b9d24f9e0a4249eaa7ed012be18236e3"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -996,10 +1077,10 @@ data-level="2.1">
     
   
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-140438906d1f4dc19e181a51df8adce1"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -1044,9 +1125,10 @@ documents and files.</p>
     
   
 
-  </section>
+  </section></article>
 
-</article><article class="docsection">
+</turbo-frame>
+          <turbo-frame id="article-4d0643d6f0ad47fa8fba8e7b6c38f81e"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1062,10 +1144,10 @@ data-level="3">
 
   </section>
 
-  
+  </article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-4b1ffdc04276477f8e7ba2846d4f8818"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -1085,13 +1167,13 @@ data-level="3.1">
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#1.1-SDOC-HIGH-REQS-MANAGEMENT">
+    <a data-turbo="false" class="requirement_link-parent" href="#1.1-SDOC-HIGH-REQS-MANAGEMENT">
       <span class="requirement_parent-uid">SDOC-HIGH-REQS-MANAGEMENT</span>
       Requirements management
     </a>
   </li>
   <li>
-    <a class="requirement_link-parent" href="#1.2-SDOC-HIGH-DATA-MODEL">
+    <a data-turbo="false" class="requirement_link-parent" href="#1.2-SDOC-HIGH-DATA-MODEL">
       <span class="requirement_parent-uid">SDOC-HIGH-DATA-MODEL</span>
       Data model
     </a>
@@ -1099,7 +1181,7 @@ data-level="3.1">
   </ul>
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-child" href="#4.1-SDOC-FMT-PRIMARY">
+    <a data-turbo="false" class="requirement_link-child" href="#4.1-SDOC-FMT-PRIMARY">
       <span class="requirement_child-uid">SDOC-FMT-PRIMARY</span>
       Primary text implementation
     </a>
@@ -1135,10 +1217,10 @@ data-level="3.1">
     
   
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-87faa5d70659469bba0256bc42a670cf"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -1171,10 +1253,10 @@ for grouping of SDoc documents into a single project documentation tree.</p>
     
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-4017cfd3b5e44984819acf2e2528f956"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -1215,9 +1297,10 @@ config file (TOML or SDoc-like grammar).</p>
     </div>
     
 
-  </section>
+  </section></article>
 
-</article><article class="docsection">
+</turbo-frame>
+          <turbo-frame id="article-d1e6439ed1c74ff09d170577ef33b625"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1238,9 +1321,10 @@ data-level="3.3">
 <p>TBD</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame>
+          <turbo-frame id="article-2c740a0f477742939c500defe39653dd"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1261,9 +1345,10 @@ data-level="3.4">
 <p>TBD</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame>
+          <turbo-frame id="article-9a05ffe467eb4933b2634313c2175356"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1279,10 +1364,10 @@ data-level="3.5">
 
   </section>
 
-  
+  </article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-6a38f7b009514d68b719401439808fe0"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -1314,10 +1399,10 @@ data-level="3.5.1">
     
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-0882562fe932436bafdf0750438564a8"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -1349,10 +1434,10 @@ data-level="3.5.2">
     
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-039ab6a23770479a900e2bd8d1dec165"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -1398,10 +1483,10 @@ be no way to define a single rule.</p>
     </div>
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-37fde80d6f3e41ce85361218b79f0109"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -1433,10 +1518,10 @@ data-level="3.5.3">
     
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-052c02f87aac43f2a4a6b40acd839155"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -1468,10 +1553,10 @@ data-level="3.5.4">
     
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-2058d59961c24d3eb354cec46799d2ec"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -1503,10 +1588,10 @@ data-level="3.5.5">
     
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-85558becd0b14b91af78cf2e70c4bd93"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -1548,9 +1633,10 @@ data-level="3.5.6">
     </div>
     
 
-  </section>
+  </section></article>
 
-</article><article class="docsection">
+</turbo-frame>
+          <turbo-frame id="article-49bf418233604dabaf1660e550cef28e"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1571,10 +1657,10 @@ data-level="3.6">
 <p>TBD</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-273c83c101834f6887bcc4113419f346"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -1606,10 +1692,10 @@ data-level="3.7">
     
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-10a33922e1cd4be693ce11992b870c0e"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -1641,9 +1727,10 @@ data-level="3.7.1">
     
     
 
-  </section>
+  </section></article>
 
-</article><article class="docsection">
+</turbo-frame>
+          <turbo-frame id="article-f9dd61b87da94a318289c67110bee823"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1659,10 +1746,10 @@ data-level="4">
 
   </section>
 
-  
+  </article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-eca51d7f94174e49959713b6129d8cf6"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -1682,7 +1769,7 @@ data-level="4.1">
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#3.1-SDOC-DM-MODEL">
+    <a data-turbo="false" class="requirement_link-parent" href="#3.1-SDOC-DM-MODEL">
       <span class="requirement_parent-uid">SDOC-DM-MODEL</span>
       Modeling capability
     </a>
@@ -1708,10 +1795,10 @@ data-level="4.1">
     
   
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-cd4ba003cefa4e3d97a9f0c85950935c"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -1731,7 +1818,7 @@ data-level="4.2">
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#1.2-SDOC-HIGH-DATA-MODEL">
+    <a data-turbo="false" class="requirement_link-parent" href="#1.2-SDOC-HIGH-DATA-MODEL">
       <span class="requirement_parent-uid">SDOC-HIGH-DATA-MODEL</span>
       Data model
     </a>
@@ -1757,10 +1844,10 @@ data-level="4.2">
     
   
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-e75289523b7f47f88748dfc23bb1bcf6"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -1802,10 +1889,10 @@ possible indentation issues.</p>
     </div>
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-fa26871c384441b19d5c3ca814475e40"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -1837,9 +1924,10 @@ data-level="4.3">
     
     
 
-  </section>
+  </section></article>
 
-</article><article class="docsection">
+</turbo-frame>
+          <turbo-frame id="article-04e0e2b1f85642e692e9d3ac99f78e56"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1855,9 +1943,10 @@ data-level="5">
 
   </section>
 
-  
+  </article>
 
-</article><article class="docsection">
+</turbo-frame>
+          <turbo-frame id="article-0d817f7c483340e69ca3a4bf7c8d0beb"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1873,10 +1962,10 @@ data-level="5.1">
 
   </section>
 
-  
+  </article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-585adc736a6b4ab488cc564e009bcdb0"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -1909,9 +1998,10 @@ export formats.</p>
     
     
 
-  </section>
+  </section></article>
 
-</article><article class="docsection">
+</turbo-frame>
+          <turbo-frame id="article-3c537f3d4dea428fac68c63ad84b1b54"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1927,10 +2017,10 @@ data-level="5.2">
 
   </section>
 
-  
+  </article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-29af85e7ab8941d293ccf071574baaec"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -1962,10 +2052,10 @@ data-level="5.2.1">
     
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-54fa11cf2f254dfa96e23c2c125fb954"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -1997,10 +2087,10 @@ data-level="5.2.2">
     
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-f4073fbc3e7d463a9f3ee6bca8bf83c3"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -2032,10 +2122,10 @@ data-level="5.2.3">
     
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-84bc94cf61604b43b52b9a65bf39d235"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -2067,10 +2157,10 @@ data-level="5.2.4">
     
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-81a3f562519347938446dd14648d937c"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -2102,9 +2192,10 @@ data-level="5.2.5">
     
     
 
-  </section>
+  </section></article>
 
-</article><article class="docsection">
+</turbo-frame>
+          <turbo-frame id="article-69acfdf01b6b4fe792c62f426b1a377e"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -2120,10 +2211,10 @@ data-level="5.3">
 
   </section>
 
-  
+  </article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-2fc8e2081df6484fa1db9c9b4d3625e5"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -2155,10 +2246,10 @@ data-level="5.3.1">
     
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-5c6260f074ca45e69eeafc7ce072d957"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -2196,10 +2287,10 @@ data-level="5.4">
     
   
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-2823c935e9ee480ebd7a4cda23631325"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -2231,9 +2322,10 @@ data-level="5.5">
     
     
 
-  </section>
+  </section></article>
 
-</article><article class="docsection">
+</turbo-frame>
+          <turbo-frame id="article-7bb52f9ac38b4b748501f925fd365e0c"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -2249,10 +2341,10 @@ data-level="6">
 
   </section>
 
-  
+  </article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-ace70c82dd6b4164a6ee30661d7e7fd2"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -2272,7 +2364,7 @@ data-level="6.1">
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#1.5-SDOC-HIGH-VALIDATION">
+    <a data-turbo="false" class="requirement_link-parent" href="#1.7-SDOC-HIGH-VALIDATION">
       <span class="requirement_parent-uid">SDOC-HIGH-VALIDATION</span>
       Requirements validation
     </a>
@@ -2304,10 +2396,10 @@ data-level="6.1">
     
   
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-6e82c95d0c7d488e94221ca77f9cbdf8"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -2327,7 +2419,7 @@ data-level="6.2">
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#1.5-SDOC-HIGH-VALIDATION">
+    <a data-turbo="false" class="requirement_link-parent" href="#1.7-SDOC-HIGH-VALIDATION">
       <span class="requirement_parent-uid">SDOC-HIGH-VALIDATION</span>
       Requirements validation
     </a>
@@ -2353,10 +2445,10 @@ data-level="6.2">
     
   
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-bd0e9c774b3546d88918a4f1233f3bf3"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -2376,7 +2468,7 @@ data-level="6.3">
     
 <ul class="requirement_link">
   <li>
-    <a class="requirement_link-parent" href="#1.5-SDOC-HIGH-VALIDATION">
+    <a data-turbo="false" class="requirement_link-parent" href="#1.7-SDOC-HIGH-VALIDATION">
       <span class="requirement_parent-uid">SDOC-HIGH-VALIDATION</span>
       Requirements validation
     </a>
@@ -2408,9 +2500,10 @@ data-level="6.3">
     
   
 
-  </section>
+  </section></article>
 
-</article><article class="docsection">
+</turbo-frame>
+          <turbo-frame id="article-88816eab80c14ea78da7613b34a3a45d"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -2426,10 +2519,10 @@ data-level="7">
 
   </section>
 
-  
+  </article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-a5d7ffeb57ac4b679433b87f4405f197"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -2461,10 +2554,10 @@ data-level="7.1">
     
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-fedbafb78e4d4706a9794ef3b632ba33"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -2497,10 +2590,10 @@ files that do not exist.</p>
     
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-8bde005f17964fb39e703f5223a75677"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -2533,10 +2626,10 @@ requirements that do not exist.</p>
     
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-1d27fb57017a44ca9f7a73f04037cb79"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -2574,10 +2667,10 @@ data-level="7.2">
     </div>
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-25a4ac4cfca74cc7a7a36e474f322e11"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -2615,11 +2708,66 @@ data-level="7.3">
     </div>
     
 
+  </section></article>
+
+</turbo-frame>
+          <turbo-frame id="article-d8a496ff26ab45ee8addb080500fc373"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="8-Web-frontend-requirements"></div>
+
+    
+        <h1
+class="section-title"
+data-level="8">
+  8.&nbsp;Web frontend requirements
+</h1>
+    
+
   </section>
 
-</article>
+  </article>
+
+</turbo-frame>
+            <turbo-frame id="article-50be670d226d45c581785b6654bcacaf"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="8.1-AJAX-updates-of-multiple-web-forms"></div>
+    <h2
+class="section-title"
+data-level="8.1">
+  8.1.&nbsp;AJAX updates of multiple web forms
+</h2>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc's Web GUI shall provide capability to do multipart updates.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
 
       </div>
+</turbo-frame>
 
     </main>
 

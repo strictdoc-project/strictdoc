@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="../_static/_content.css"/>
   <link rel="stylesheet" href="../_static/_requirement.css"/>
   <link rel="stylesheet" href="../_static/_element.css"/>
+  <link rel="stylesheet" href="../_static/_form.css"/>
   
   <link rel="stylesheet" href="../_static/_requirement-tree.css"/>
 
@@ -33,9 +34,7 @@
 </head>
 
 <body class="traceability-view withtoc">
-<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script>
-
-  <div class="layout" id="layout">
+<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
 
     <aside class="layout_aside-header">
       
@@ -45,21 +44,22 @@
 
     <aside class="layout_aside">
       
-  
+  <turbo-frame id="frame-toc">
     <div>Table of Contents</div>
-    <ul class="toc"><li><a href="#1-Contributor-checklist">
+    <ul class="toc"><li><a href="#1-Contributor-checklist" data-turbo="false">
               <span class="section-number">1</span>
               Contributor checklist
-            </a></li><li><a href="#2-Python-code">
+            </a></li><li><a href="#2-Python-code" data-turbo="false">
               <span class="section-number">2</span>
               Python code
-            </a></li><li><a href="#3-Git-workflow">
+            </a></li><li><a href="#3-Git-workflow" data-turbo="false">
               <span class="section-number">3</span>
               Git workflow
-            </a></li><li><a href="#4-Documentation">
+            </a></li><li><a href="#4-Documentation" data-turbo="false">
               <span class="section-number">4</span>
               Documentation
             </a></li></ul>
+</turbo-frame>
 
     </aside>
 
@@ -107,7 +107,7 @@
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><article class="docsection">
+          <div class="content_item" data-role="current"><turbo-frame id="article-b03c521365794f219d278ea255c07f0f"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -141,15 +141,15 @@ commit names are expected for every single contribution.</li>
 </ol>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article></div>
+</turbo-frame></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><article class="docsection">
+          <div class="content_item" data-role="current"><turbo-frame id="article-037bdb53d0f9443095e049170011268d"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -189,15 +189,15 @@ introduces changes in code but no change to the functionality.</li>
 </ul>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article></div>
+</turbo-frame></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><article class="docsection">
+          <div class="content_item" data-role="current"><turbo-frame id="article-c0685a9f5499495a8c5cecdb57d83be9"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -240,15 +240,15 @@ in the functionality, the commit should be named: <cite>Code climate: descriptio
 </ul>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article></div>
+</turbo-frame></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><article class="docsection">
+          <div class="content_item" data-role="current"><turbo-frame id="article-0d8e715309d8406a8234d025717e4489"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -278,9 +278,9 @@ developer machine.</li>
 </ul>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article></div>
+</turbo-frame></div>
           <div class="content_item" data-role="children"></div>
         </section>
       </div>

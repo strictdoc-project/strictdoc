@@ -27,7 +27,7 @@
 
   --base-gap: calc(var(--base-font-size)*3);
   --base-padding: var(--base-font-size);
-  --base-margin: var(--base-font-size);
+  --base-margin: calc(var(--base-font-size)*1.5);
 
   --toc-width: 300px;
   --toc-layout-transition: 0.1s;

@@ -100,10 +100,6 @@ to do a more advanced analysis of requirements and requirement trees:
 - Finding similar or relevant requirements.
 - Enforce invariants that should be hold. Example: mass or power budget.
 
-**Children:**
-
-- ``[BACKLOG-FUZZY-SEARCH]`` :ref:`BACKLOG-FUZZY-SEARCH`
-
 User interfaces
 ===============
 
@@ -129,10 +125,6 @@ Command-line interface
 
 StrictDoc shall provide a command-line interface.
 
-**Children:**
-
-- ``[BACKLOG-LSP]`` :ref:`BACKLOG-LSP`
-
 .. _UI-2-WEB:
 
 Web interface
@@ -146,10 +138,6 @@ Web interface
       - UI-2-WEB
 
 StrictDoc shall provide a web interface.
-
-**Children:**
-
-- ``[BACKLOG-WEB]`` :ref:`BACKLOG-WEB`
 
 Development team
 ================

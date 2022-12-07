@@ -15,10 +15,19 @@
   <link rel="stylesheet" href="../_static/_content.css"/>
   <link rel="stylesheet" href="../_static/_requirement.css"/>
   <link rel="stylesheet" href="../_static/_element.css"/>
+  <link rel="stylesheet" href="../_static/_form.css"/>
   
 
   
   <script type="text/javascript" src="../_static/toc.js"></script>
+  <script type="text/javascript" src="../_static/jquery.min.js"></script>
+
+  <script type="module">
+      import hotwiredTurbo from "../_static/turbo.js";
+      import { Application } from "../_static/stimulus.js";
+      window.Stimulus = Application.start();
+  </script>
+  <script type="module" src="../_static/std-forms.js"></script>
   
   
   
@@ -30,9 +39,7 @@
 </head>
 
 <body class="document-view withtoc">
-<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script>
-
-  <div class="layout" id="layout">
+<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
 
     <aside class="layout_aside-header">
       
@@ -42,105 +49,27 @@
 
     <aside class="layout_aside">
       
-  
+  <turbo-frame id="frame-toc">
     <div>Table of Contents</div>
-    <ul class="toc"><li><a href="#1-Work-in-progress">
+    <ul class="toc"><li><a href="#1-Backlog-Graphical-user-interface" data-turbo="false">
               <span class="section-number">1</span>
-              Work in progress
-            </a><ul><li>
-        <a href="#1.1-Integration-with-Capella">
-          <span class="section-number">1.1</span>
-          Integration with Capella
-        </a></li></ul>
-            </li><li>
-        <a href="#2-BACKLOG-LSP">
-          <span class="section-number">2</span>
-          SDoc Language Server Protocol
-        </a></li><li>
-        <a href="#3-Document-archetypes">
+              Backlog: Graphical user interface
+            </a></li><li><a href="#2-Backlog-Nice-to-have" data-turbo="false">
+              <span class="section-number">2</span>
+              Backlog: Nice to have
+            </a></li><li>
+        <a href="#3-Document-archetypes" data-turbo="false">
           <span class="section-number">3</span>
           Document archetypes
-        </a></li><li>
-        <a href="#4-Project-level-configuration-file">
-          <span class="section-number">4</span>
-          Project-level configuration file
-        </a></li><li><a href="#5-Further-export-and-import-capabilities">
-              <span class="section-number">5</span>
-              Further export and import capabilities
-            </a><ul><li>
-        <a href="#5.1-Excel-import-export-rountrip">
-          <span class="section-number">5.1</span>
-          Excel import-export rountrip
-        </a></li><li>
-        <a href="#5.2-CSV-import-export">
-          <span class="section-number">5.2</span>
-          CSV import/export
-        </a></li><li>
-        <a href="#5.3-PlantUML-export">
-          <span class="section-number">5.3</span>
-          PlantUML export
-        </a></li><li>
-        <a href="#5.4-Confluence-import-export">
-          <span class="section-number">5.4</span>
-          Confluence import/export
-        </a></li><li>
-        <a href="#5.5-Tex-export">
-          <span class="section-number">5.5</span>
-          Tex export
-        </a></li><li>
-        <a href="#5.6-Doorstop-import-export">
-          <span class="section-number">5.6</span>
-          Doorstop import/export
-        </a></li></ul>
-            </li><li>
-        <a href="#6-Markdown-support-for-text-and-code-blocks">
-          <span class="section-number">6</span>
-          Markdown support for text and code blocks
-        </a></li><li>
-        <a href="#7-StrictDoc-as-library">
-          <span class="section-number">7</span>
-          StrictDoc as library
-        </a></li><li>
-        <a href="#8-BACKLOG-FUZZY-SEARCH">
-          <span class="section-number">8</span>
-          Fuzzy requirements search
-        </a></li><li>
-        <a href="#9-Filtering-by-tags">
-          <span class="section-number">9</span>
-          Filtering by tags
-        </a></li><li><a href="#10-Advanced">
-              <span class="section-number">10</span>
-              Advanced
-            </a><ul><li>
-        <a href="#10.1-Requirement-checksumming">
-          <span class="section-number">10.1</span>
-          Requirement checksumming
-        </a></li><li>
-        <a href="#10.2-Graphical-User-Interface-GUI-">
-          <span class="section-number">10.2</span>
-          Graphical User Interface (GUI)
-        </a><ul><li>
-        <a href="#10.2.1-BACKLOG-WEB">
-          <span class="section-number">10.2.1</span>
-          Web server and editable HTML pages
-        </a></li></ul>
-            </li><li>
-        <a href="#10.3-Facts-table-Invariants-calculation-">
-          <span class="section-number">10.3</span>
-          Facts table. Invariants calculation.
-        </a></li><li>
-        <a href="#10.4-FMEA-FMECA-tables">
-          <span class="section-number">10.4</span>
-          FMEA/FMECA tables
-        </a></li></ul>
-            </li><li><a href="#11-Open-questions">
-              <span class="section-number">11</span>
+        </a></li><li><a href="#4-Open-questions" data-turbo="false">
+              <span class="section-number">4</span>
               Open questions
-            </a><ul><li><a href="#11.1-One-or-many-input-sdoc-trees">
-              <span class="section-number">11.1</span>
+            </a><ul><li><a href="#4.1-One-or-many-input-sdoc-trees" data-turbo="false">
+              <span class="section-number">4.1</span>
               One or many input sdoc trees
             </a></li></ul>
             </li></ul>
+</turbo-frame>
 
     </aside>
 
@@ -180,136 +109,135 @@
     </header>
 
     <main class="layout_main">
-      <div class="content"><article><section>
-          <div class="free_text">
-            <div class="document">
+      
+  <turbo-frame id="frame_document_content"><div class="content">
+        <turbo-frame id="article-fd314a0dfffb4512a40101943196a504">
+<article><section>
+      <div class="free_text">
+        <div class="document">
 <p><strong>Note:</strong> The items below are weakly sorted from top to bottom. The topmost
 items are either work-in-progress or will be implemented next.</p>
 </div>
 
-          </div></section></article><article class="docsection">
+      </div></section></article>
+</turbo-frame>
+          <turbo-frame id="article-328374df95f44a8c829773a544f2b06b"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="1-Work-in-progress"></div>
+    <div data-role='anchor' id="1-Backlog-Graphical-user-interface"></div>
 
     
         <h1
 class="section-title"
 data-level="1">
-  1.&nbsp;Work in progress
+  1.&nbsp;Backlog: Graphical user interface
 </h1>
     
 
   </section>
 
-  
-
-</article>
-              <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="1.1-Integration-with-Capella"></div>
-    <h2
-class="section-title"
-data-level="1.1">
-  1.1.&nbsp;Integration with Capella
-</h2>
-
-    
-    
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>StrictDoc shall allow bi-directional data exchange with Capella tool.</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    <div class="requirement_comment">
+  <section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
-<p>The current plan is to implement this using ReqIF export/import features.</p>
+<ul class="simple">
+<li>What to do with web content going out of sync with the server/file system state?</li>
+<li>Issue when adding sibling section from a nested section.</li>
+<li>Auto-trim all single-line fields.</li>
+<li>Auto-trim all text areas - all trailing whitespace shall be removed.</li>
+<li>Edit links for table-based requirements.</li>
+<li>Edit requirement's <tt class="docutils literal">RATIONALE</tt> field.</li>
+<li>Adding/editing parent/child requirements.</li>
+<li>Enable SeleniumBase tests on CI.</li>
+<li>Adding comments to requirements.</li>
+<li>Integration with Git repository.</li>
+<li>Moving node up/down/left/right. For example, move a node of level 2 to level 1.</li>
+<li>Contextual help about the RST markup.</li>
+<li>Non-RST markup formats.</li>
+<li>Expand/collapse the table of contents.</li>
+<li>ReqIF:<ul>
+<li>Export complete documentation tree or a single document to ReqIF.</li>
+<li>Import complete documentation tree or a single document from ReqIF.</li>
+</ul>
+</li>
+<li>How to edit tables conveniently?</li>
+<li>Focused editing of document sections: dedicated and focused <tt class="docutils literal">/sections/</tt> resource.</li>
+</ul>
 </div>
 
-    </div>
+    </div></section></article>
+
+</turbo-frame>
+          <turbo-frame id="article-fa025291926b438c82266d6408b08ea2"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="2-Backlog-Nice-to-have"></div>
+
     
-
-  </section>
-
-</article>
-              <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="2-BACKLOG-LSP"></div>
-    <h1
+        <h1
 class="section-title"
 data-level="2">
-  2.&nbsp;SDoc Language Server Protocol
+  2.&nbsp;Backlog: Nice to have
 </h1>
-
-    <dl class="requirement_meta">
-    
-    <dt><i>UID</i></dt>
-    <dd>BACKLOG-LSP</dd>
-    
-  </dl>
-    
-<ul class="requirement_link">
-  <li>
-    <a class="requirement_link-parent" href="../docs/strictdoc-2-development-plan.html#2.1-UI-1-TEXT">
-      <span class="requirement_parent-uid">UI-1-TEXT</span>
-      Command-line interface
-    </a>
-  </li>
-  </ul>
     
 
   </section>
-  <section class="requirement_section" data-section='statement'>
 
-    <div class="requirement_statement">
-    <div class="document">
-<p>StrictDoc shall support Language Server Protocol.</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    <div class="requirement_rationale">
-    <div class="document">
-<p>The LSP can enable editing of SDoc files in IDEs like Eclipse, Visual Studio,
-PyCharm. A smart LSP can enable features like syntax highlighting,
-autocompletion and easy navigation through requirements.</p>
-</div>
-
-  </div>
-    
-    <div class="requirement_comment">
+  <section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
-<p>The promising base for the implementation: <a class="reference external" href="https://github.com/openlawlibrary/pygls">https://github.com/openlawlibrary/pygls</a>.</p>
+<ul class="simple">
+<li>StrictDoc as a Python library.<ul>
+<li>Such a use allows a more fine-grained access to the StrictDoc's modules, such as Grammar, Import, Export classes, etc.</li>
+</ul>
+</li>
+<li>Data exchange with Capella tool.<ul>
+<li>Note: The current plan is to implement this using ReqIF export/import features.</li>
+</ul>
+</li>
+<li>Language Server Protocol.<ul>
+<li>The LSP can enable editing of SDoc files in IDEs like Eclipse, Visual Studio, PyCharm. A smart LSP can enable features like syntax highlighting, autocompletion and easy navigation through requirements.</li>
+<li>The promising base for the implementation: <a class="reference external" href="https://github.com/openlawlibrary/pygls">https://github.com/openlawlibrary/pygls</a>.</li>
+</ul>
+</li>
+<li>StrictDoc shall support rendering text/code blocks into Markdown syntax.</li>
+<li>Fuzzy requirements search.<ul>
+<li>This feature can be implemented in the CLI as well as in the future GUI. A fuzzy requirements search can help to find existing requirements and also identify relevant requirements when creating new requirements.</li>
+</ul>
+</li>
+<li>Support creation of FMEA/FMECA safety analysis documents.</li>
+<li>Calculation of checksums for requirements.<ul>
+<li>This feature is relatively easy to implement, but the implementation is postponed until the linking between requirements and files is implemented.</li>
+</ul>
+</li>
+<li>Filtering of requirements by tags.</li>
+<li>Import/export: Excel, CSV, PlantUML, Confluence,&nbsp;Tex, Doorstop.</li>
+<li><dl class="first docutils">
+<dt>Reading project configuration from a file.</dt>
+<dd><ul class="first last">
+<li>TOML format looks like a good option.</li>
+<li>Project title.</li>
+<li>Project prefix?</li>
+<li>Explicit or wildcard paths to sdoc files.</li>
+<li>Paths to dirs with source files.</li>
+<li><dl class="first docutils">
+<dt>Config options for presenting requirements.</dt>
+<dd><ul class="first last">
+<li>Include/exclude requirements in TOC</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
 </div>
 
-    </div>
-    
-  
+    </div></section></article>
 
-  </section>
-
-</article>
-              <article class="requirement">
+</turbo-frame>
+            <turbo-frame id="article-353191c9d30945a0990a4f9393096edd"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
@@ -411,713 +339,39 @@ the grouping is provided by sections.</li>
     </div>
     
 
-  </section>
+  </section></article>
 
-</article>
-              <article class="requirement">
+</turbo-frame>
+          <turbo-frame id="article-7b7bd54d7e0f417fb4be5495686d3642"><article class="docsection" data-controller="document">
 
-  <section class="requirement_section" data-section='meta'>
+  <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="4-Project-level-configuration-file"></div>
-    <h1
+    <div data-role='anchor' id="4-Open-questions"></div>
+
+    
+        <h1
 class="section-title"
 data-level="4">
-  4.&nbsp;Project-level configuration file
+  4.&nbsp;Open questions
 </h1>
-
-    
-    
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>StrictDoc shall support reading project configuration from a file.</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    <div class="requirement_comment">
-      <div class="document">
-<ul class="simple">
-<li>TOML format looks like a good option.</li>
-<li>Project title.</li>
-<li>Project prefix?</li>
-<li>Explicit or wildcard paths to sdoc files.</li>
-<li>Paths to dirs with source files.</li>
-<li>Config options for presenting requirements.<ul>
-<li>Include/exclude requirements in TOC</li>
-</ul>
-</li>
-</ul>
-</div>
-
-    </div>
     
 
   </section>
 
-</article><article class="docsection">
+  </article>
+
+</turbo-frame>
+          <turbo-frame id="article-453e2b9e280f429b84f78f00390a0784"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="5-Further-export-and-import-capabilities"></div>
-
-    
-        <h1
-class="section-title"
-data-level="5">
-  5.&nbsp;Further export and import capabilities
-</h1>
-    
-
-  </section>
-
-  
-
-</article>
-              <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="5.1-Excel-import-export-rountrip"></div>
-    <h2
-class="section-title"
-data-level="5.1">
-  5.1.&nbsp;Excel import-export rountrip
-</h2>
-
-    
-    
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>StrictDoc shall support an &quot;SDoc -&gt; Excel -&gt; SDoc&quot; rountrip.</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    
-
-  </section>
-
-</article>
-              <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="5.2-CSV-import-export"></div>
-    <h2
-class="section-title"
-data-level="5.2">
-  5.2.&nbsp;CSV import/export
-</h2>
-
-    
-    
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>StrictDoc shall support exporting documents to CSV format.</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    
-
-  </section>
-
-</article>
-              <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="5.3-PlantUML-export"></div>
-    <h2
-class="section-title"
-data-level="5.3">
-  5.3.&nbsp;PlantUML export
-</h2>
-
-    
-    
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>StrictDoc shall support exporting documents to PlantUML format.</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    
-
-  </section>
-
-</article>
-              <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="5.4-Confluence-import-export"></div>
-    <h2
-class="section-title"
-data-level="5.4">
-  5.4.&nbsp;Confluence import/export
-</h2>
-
-    
-    
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>StrictDoc shall support importing/exporting documents from/to Confluence HTML storage format.</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    
-
-  </section>
-
-</article>
-              <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="5.5-Tex-export"></div>
-    <h2
-class="section-title"
-data-level="5.5">
-  5.5.&nbsp;Tex export
-</h2>
-
-    
-    
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>StrictDoc shall support exporting documents to Tex format.</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    
-
-  </section>
-
-</article>
-              <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="5.6-Doorstop-import-export"></div>
-    <h2
-class="section-title"
-data-level="5.6">
-  5.6.&nbsp;Doorstop import/export
-</h2>
-
-    
-    
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>StrictDoc shall support import and exporting documents from/to
-<a class="reference external" href="https://github.com/doorstop-dev/doorstop">Doorstop</a> format.</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    
-
-  </section>
-
-</article>
-              <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="6-Markdown-support-for-text-and-code-blocks"></div>
-    <h1
-class="section-title"
-data-level="6">
-  6.&nbsp;Markdown support for text and code blocks
-</h1>
-
-    
-    
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>StrictDoc shall support rendering text/code blocks into Markdown syntax.</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    
-
-  </section>
-
-</article>
-              <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="7-StrictDoc-as-library"></div>
-    <h1
-class="section-title"
-data-level="7">
-  7.&nbsp;StrictDoc as library
-</h1>
-
-    
-    
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>StrictDoc shall support it use as a Python library.</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    <div class="requirement_comment">
-      <div class="document">
-<p>Such a use allows a more fine-grained access to the StrictDoc's modules, such
-as Grammar, Import, Export classes, etc.</p>
-</div>
-
-    </div>
-    
-
-  </section>
-
-</article>
-              <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="8-BACKLOG-FUZZY-SEARCH"></div>
-    <h1
-class="section-title"
-data-level="8">
-  8.&nbsp;Fuzzy requirements search
-</h1>
-
-    <dl class="requirement_meta">
-    
-    <dt><i>UID</i></dt>
-    <dd>BACKLOG-FUZZY-SEARCH</dd>
-    
-  </dl>
-    
-<ul class="requirement_link">
-  <li>
-    <a class="requirement_link-parent" href="../docs/strictdoc-2-development-plan.html#1.4-GOAL-4-CHANGE-MANAGEMENT">
-      <span class="requirement_parent-uid">GOAL-4-CHANGE-MANAGEMENT</span>
-      Change management
-    </a>
-  </li>
-  </ul>
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>StrictDoc shall support finding relevant requirements.</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    <div class="requirement_comment">
-      <div class="document">
-<p>This feature can be implemented in the CLI as well as in the future GUI. A fuzzy
-requirements search can help to find existing requirements and also identify
-relevant requirements when creating new requirements.</p>
-</div>
-
-    </div>
-    
-  
-
-  </section>
-
-</article>
-              <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="9-Filtering-by-tags"></div>
-    <h1
-class="section-title"
-data-level="9">
-  9.&nbsp;Filtering by tags
-</h1>
-
-    
-    
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>StrictDoc shall support filtering filtering by tags.</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    
-
-  </section>
-
-</article><article class="docsection">
-
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="10-Advanced"></div>
-
-    
-        <h1
-class="section-title"
-data-level="10">
-  10.&nbsp;Advanced
-</h1>
-    
-
-  </section>
-
-  
-
-</article>
-              <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="10.1-Requirement-checksumming"></div>
-    <h2
-class="section-title"
-data-level="10.1">
-  10.1.&nbsp;Requirement checksumming
-</h2>
-
-    
-    
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>StrictDoc shall support calculation of checksums for requirements.</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    <div class="requirement_comment">
-      <div class="document">
-<p>This feature is relatively easy to implement but the implementation is postponed
-until the linking between requirements and files is implemented.</p>
-</div>
-
-    </div>
-    
-
-  </section>
-
-</article>
-              <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="10.2-Graphical-User-Interface-GUI-"></div>
-    <h2
-class="section-title"
-data-level="10.2">
-  10.2.&nbsp;Graphical User Interface (GUI)
-</h2>
-
-    
-    
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>StrictDoc shall provide a Graphical User Interface (GUI).</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    <div class="requirement_comment">
-      <div class="document">
-<p>Several trade-offs to consider:</p>
-<ul class="simple">
-<li>Desktop vs Web. Rather web-based, i.e. Python backend and JS frontend, but
-which technology?</li>
-<li>Still keep the current behavior of a statically generated website?</li>
-</ul>
-</div>
-
-    </div>
-    
-
-  </section>
-
-</article>
-              <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="10.2.1-BACKLOG-WEB"></div>
-    <h3
-class="section-title"
-data-level="10.2.1">
-  10.2.1.&nbsp;Web server and editable HTML pages
-</h3>
-
-    <dl class="requirement_meta">
-    
-    <dt><i>UID</i></dt>
-    <dd>BACKLOG-WEB</dd>
-    
-  </dl>
-    
-<ul class="requirement_link">
-  <li>
-    <a class="requirement_link-parent" href="../docs/strictdoc-2-development-plan.html#2.2-UI-2-WEB">
-      <span class="requirement_parent-uid">UI-2-WEB</span>
-      Web interface
-    </a>
-  </li>
-  </ul>
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>StrictDoc shall provide a web server that serves as a StrictDoc backend for
-reading and writing SDoc files.</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    
-  
-
-  </section>
-
-</article>
-              <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="10.3-Facts-table-Invariants-calculation-"></div>
-    <h2
-class="section-title"
-data-level="10.3">
-  10.3.&nbsp;Facts table. Invariants calculation.
-</h2>
-
-    
-    
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>StrictDoc shall support creation of fact tables and allow calculation of
-invariants for constraints enforcement.</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    
-
-  </section>
-
-</article>
-              <article class="requirement">
-
-  <section class="requirement_section" data-section='meta'>
-
-    <div data-role='anchor' id="10.4-FMEA-FMECA-tables"></div>
-    <h2
-class="section-title"
-data-level="10.4">
-  10.4.&nbsp;FMEA/FMECA tables
-</h2>
-
-    
-    
-    
-
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
-    <div class="requirement_statement">
-    <div class="document">
-<p>StrictDoc shall support creation of FMEA/FMECA safety analysis documents.</p>
-</div>
-
-  </div>
-
-  </section>
-  <section class="requirement_section" data-section='comment'>
-
-    
-    
-    
-
-  </section>
-
-</article><article class="docsection">
-
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="11-Open-questions"></div>
-
-    
-        <h1
-class="section-title"
-data-level="11">
-  11.&nbsp;Open questions
-</h1>
-    
-
-  </section>
-
-  
-
-</article><article class="docsection">
-
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="11.1-One-or-many-input-sdoc-trees"></div>
+    <div data-role='anchor' id="4.1-One-or-many-input-sdoc-trees"></div>
 
     
         <h2
 class="section-title"
-data-level="11.1">
-  11.1.&nbsp;One or many input sdoc trees
+data-level="4.1">
+  4.1.&nbsp;One or many input sdoc trees
 </h2>
     
 
@@ -1144,11 +398,12 @@ space with cross-linking possible.</p>
 only work with one input folder with a single doc tree.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article>
+</turbo-frame>
 
       </div>
+</turbo-frame>
 
     </main>
 

@@ -4,35 +4,75 @@ $$$$$$$
 **Note:** The items below are weakly sorted from top to bottom. The topmost
 items are either work-in-progress or will be implemented next.
 
-Work in progress
-================
+Backlog: Graphical user interface
+=================================
 
-Integration with Capella
-------------------------
+- What to do with web content going out of sync with the server/file system state?
+- Issue when adding sibling section from a nested section.
+- Auto-trim all single-line fields.
+- Auto-trim all text areas - all trailing whitespace shall be removed.
+- Edit links for table-based requirements.
+- Edit requirement's ``RATIONALE`` field.
+- Adding/editing parent/child requirements.
+- Enable SeleniumBase tests on CI.
+- Adding comments to requirements.
+- Integration with Git repository.
+- Moving node up/down/left/right. For example, move a node of level 2 to level 1.
+- Contextual help about the RST markup.
+- Non-RST markup formats.
+- Expand/collapse the table of contents.
 
-StrictDoc shall allow bi-directional data exchange with Capella tool.
+- ReqIF:
+  
+  - Export complete documentation tree or a single document to ReqIF.
+  - Import complete documentation tree or a single document from ReqIF.
 
-**Comment:** The current plan is to implement this using ReqIF export/import features.
+- How to edit tables conveniently?
 
-.. _BACKLOG-LSP:
+- Focused editing of document sections: dedicated and focused ``/sections/`` resource.
 
-SDoc Language Server Protocol
-=============================
+Backlog: Nice to have
+=====================
 
-.. list-table::
-    :align: left
-    :header-rows: 0
+- StrictDoc as a Python library.
 
-    * - **UID:**
-      - BACKLOG-LSP
+  - Such a use allows a more fine-grained access to the StrictDoc's modules, such as Grammar, Import, Export classes, etc.
 
-StrictDoc shall support Language Server Protocol.
+- Data exchange with Capella tool.
 
-**Comment:** The promising base for the implementation: https://github.com/openlawlibrary/pygls.
+  - Note: The current plan is to implement this using ReqIF export/import features.
 
-**Parents:**
+- Language Server Protocol.
 
-- ``[UI-1-TEXT]`` :ref:`UI-1-TEXT`
+  - The LSP can enable editing of SDoc files in IDEs like Eclipse, Visual Studio, PyCharm. A smart LSP can enable features like syntax highlighting, autocompletion and easy navigation through requirements.
+
+  - The promising base for the implementation: https://github.com/openlawlibrary/pygls.
+
+- StrictDoc shall support rendering text/code blocks into Markdown syntax.
+
+- Fuzzy requirements search.
+
+  - This feature can be implemented in the CLI as well as in the future GUI. A fuzzy requirements search can help to find existing requirements and also identify relevant requirements when creating new requirements.
+
+- Support creation of FMEA/FMECA safety analysis documents.
+
+- Calculation of checksums for requirements.
+
+  - This feature is relatively easy to implement, but the implementation is postponed until the linking between requirements and files is implemented.
+
+- Filtering of requirements by tags.
+
+- Import/export: Excel, CSV, PlantUML, Confluence, Tex, Doorstop.
+
+- Reading project configuration from a file.
+    - TOML format looks like a good option.
+    - Project title.
+    - Project prefix?
+    - Explicit or wildcard paths to sdoc files.
+    - Paths to dirs with source files.
+    - Config options for presenting requirements.
+        - Include/exclude requirements in TOC
+
 
 Document archetypes
 ===================
@@ -78,151 +118,6 @@ support the following options.
      - - ECSS Software ECSS-E-ST-40C
 
 **Comment:** This draft requirement is the first attempt to organize this information.
-
-Project-level configuration file
-================================
-
-StrictDoc shall support reading project configuration from a file.
-
-**Comment:** - TOML format looks like a good option.
-
-- Project title.
-
-- Project prefix?
-
-- Explicit or wildcard paths to sdoc files.
-
-- Paths to dirs with source files.
-
-- Config options for presenting requirements.
-
-  - Include/exclude requirements in TOC
-
-Further export and import capabilities
-======================================
-
-Excel import-export rountrip
-----------------------------
-
-StrictDoc shall support an "SDoc -> Excel -> SDoc" rountrip.
-
-CSV import/export
------------------
-
-StrictDoc shall support exporting documents to CSV format.
-
-PlantUML export
----------------
-
-StrictDoc shall support exporting documents to PlantUML format.
-
-Confluence import/export
-------------------------
-
-StrictDoc shall support importing/exporting documents from/to Confluence HTML storage format.
-
-Tex export
-----------
-
-StrictDoc shall support exporting documents to Tex format.
-
-Doorstop import/export
-----------------------
-
-StrictDoc shall support import and exporting documents from/to
-`Doorstop <https://github.com/doorstop-dev/doorstop>`_ format.
-
-Markdown support for text and code blocks
-=========================================
-
-StrictDoc shall support rendering text/code blocks into Markdown syntax.
-
-StrictDoc as library
-====================
-
-StrictDoc shall support it use as a Python library.
-
-**Comment:** Such a use allows a more fine-grained access to the StrictDoc's modules, such
-as Grammar, Import, Export classes, etc.
-
-.. _BACKLOG-FUZZY-SEARCH:
-
-Fuzzy requirements search
-=========================
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - BACKLOG-FUZZY-SEARCH
-
-StrictDoc shall support finding relevant requirements.
-
-**Comment:** This feature can be implemented in the CLI as well as in the future GUI. A fuzzy
-requirements search can help to find existing requirements and also identify
-relevant requirements when creating new requirements.
-
-**Parents:**
-
-- ``[GOAL-4-CHANGE-MANAGEMENT]`` :ref:`GOAL-4-CHANGE-MANAGEMENT`
-
-Filtering by tags
-=================
-
-StrictDoc shall support filtering filtering by tags.
-
-Advanced
-========
-
-Requirement checksumming
-------------------------
-
-StrictDoc shall support calculation of checksums for requirements.
-
-**Comment:** This feature is relatively easy to implement but the implementation is postponed
-until the linking between requirements and files is implemented.
-
-Graphical User Interface (GUI)
-------------------------------
-
-StrictDoc shall provide a Graphical User Interface (GUI).
-
-**Comment:** Several trade-offs to consider:
-
-- Desktop vs Web. Rather web-based, i.e. Python backend and JS frontend, but
-  which technology?
-- Still keep the current behavior of a statically generated website?
-
-.. _BACKLOG-WEB:
-
-Web server and editable HTML pages
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - BACKLOG-WEB
-
-StrictDoc shall provide a web server that serves as a StrictDoc backend for
-reading and writing SDoc files.
-
-**Parents:**
-
-- ``[UI-2-WEB]`` :ref:`UI-2-WEB`
-
-Facts table. Invariants calculation.
-------------------------------------
-
-StrictDoc shall support creation of fact tables and allow calculation of
-invariants for constraints enforcement.
-
-FMEA/FMECA tables
------------------
-
-StrictDoc shall support creation of FMEA/FMECA safety analysis documents.
 
 Open questions
 ==============

@@ -10,12 +10,16 @@
   <link rel="shortcut icon" href="../_static/favicon.ico" type="image/x-icon"/>
 
   
+  
   <link rel="stylesheet" href="../_static/_base.css"/>
   <link rel="stylesheet" href="../_static/_layout.css"/>
   <link rel="stylesheet" href="../_static/_content.css"/>
   <link rel="stylesheet" href="../_static/_requirement.css"/>
   <link rel="stylesheet" href="../_static/_element.css"/>
+  <link rel="stylesheet" href="../_static/_form.css"/>
   
+  <link rel="stylesheet" href="../_static/_requirement-tree.css"/>
+
 
   
   <script type="text/javascript" src="../_static/toc.js"></script>
@@ -24,15 +28,13 @@
   
 
 
-  <title>User Manual - Document</title>
+  <title>User Guide - Traceability</title>
 
   
 </head>
 
-<body class="document-view withtoc">
-<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script>
-
-  <div class="layout" id="layout">
+<body class="traceability-view withtoc">
+<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
 
     <aside class="layout_aside-header">
       
@@ -42,177 +44,178 @@
 
     <aside class="layout_aside">
       
-  
+  <turbo-frame id="frame-toc">
     <div>Table of Contents</div>
-    <ul class="toc"><li><a href="#1-Introduction">
+    <ul class="toc"><li><a href="#1-Introduction" data-turbo="false">
               <span class="section-number">1</span>
               Introduction
-            </a><ul><li><a href="#1.1-Contact-the-developers">
+            </a><ul><li><a href="#1.1-Contact-the-developers" data-turbo="false">
               <span class="section-number">1.1</span>
               Contact the developers
             </a></li></ul>
-            </li><li><a href="#2-Examples">
+            </li><li><a href="#2-Examples" data-turbo="false">
               <span class="section-number">2</span>
               Examples
-            </a></li><li><a href="#3-Getting-started">
+            </a></li><li><a href="#3-Getting-started" data-turbo="false">
               <span class="section-number">3</span>
               Getting started
-            </a><ul><li><a href="#3.1-Requirements">
+            </a><ul><li><a href="#3.1-Requirements" data-turbo="false">
               <span class="section-number">3.1</span>
               Requirements
-            </a></li><li><a href="#3.2-Installing-StrictDoc-as-a-Pip-package-recommended-way-">
+            </a></li><li><a href="#3.2-Installing-StrictDoc-as-a-Pip-package-recommended-way-" data-turbo="false">
               <span class="section-number">3.2</span>
               Installing StrictDoc as a Pip package (recommended way)
-            </a></li><li><a href="#3.3-Installing-StrictDoc-from-GitHub-developer-mode-">
+            </a></li><li><a href="#3.3-Installing-StrictDoc-from-GitHub-developer-mode-" data-turbo="false">
               <span class="section-number">3.3</span>
               Installing StrictDoc from GitHub (developer mode)
-            </a></li><li><a href="#3.4-Installing-StrictDoc-into-a-Docker-container">
+            </a></li><li><a href="#3.4-Installing-StrictDoc-into-a-Docker-container" data-turbo="false">
               <span class="section-number">3.4</span>
               Installing StrictDoc into a Docker container
-            </a></li><li><a href="#3.5-Installing-StrictDoc-as-a-Snap-package-not-maintained-">
+            </a></li><li><a href="#3.5-Installing-StrictDoc-as-a-Snap-package-not-maintained-" data-turbo="false">
               <span class="section-number">3.5</span>
               Installing StrictDoc as a Snap package (not maintained)
-            </a></li><li><a href="#3.6-Hello-world">
+            </a></li><li><a href="#3.6-Hello-world" data-turbo="false">
               <span class="section-number">3.6</span>
               Hello world
             </a></li></ul>
-            </li><li><a href="#4-SDoc-syntax">
+            </li><li><a href="#4-SDoc-syntax" data-turbo="false">
               <span class="section-number">4</span>
               SDoc syntax
-            </a><ul><li><a href="#4.1-Document-structure">
+            </a><ul><li><a href="#4.1-Document-structure" data-turbo="false">
               <span class="section-number">4.1</span>
               Document structure
-            </a><ul><li><a href="#4.1.1-Strict-rule-1-One-empty-line-between-all-nodes">
+            </a><ul><li><a href="#4.1.1-Strict-rule-1-One-empty-line-between-all-nodes" data-turbo="false">
               <span class="section-number">4.1.1</span>
               Strict rule #1: One empty line between all nodes
-            </a></li><li><a href="#4.1.2-Strict-rule-2-No-content-is-allowed-outside-of-SDoc-grammar">
+            </a></li><li><a href="#4.1.2-Strict-rule-2-No-content-is-allowed-outside-of-SDoc-grammar" data-turbo="false">
               <span class="section-number">4.1.2</span>
               Strict rule #2: No content is allowed outside of SDoc grammar
             </a></li></ul>
-            </li><li><a href="#4.2-Grammar-elements">
+            </li><li><a href="#4.2-Grammar-elements" data-turbo="false">
               <span class="section-number">4.2</span>
               Grammar elements
-            </a><ul><li><a href="#4.2.1-Document">
+            </a><ul><li><a href="#4.2.1-Document" data-turbo="false">
               <span class="section-number">4.2.1</span>
               Document
-            </a><ul><li><a href="#4.2.1.1-Option-Requirement-style">
+            </a><ul><li><a href="#4.2.1.1-Option-Requirement-style" data-turbo="false">
               <span class="section-number">4.2.1.1</span>
               Option: Requirement style
-            </a></li><li><a href="#4.2.1.2-Option-Requirement-title-in-Table-of-Contents">
+            </a></li><li><a href="#4.2.1.2-Option-Requirement-title-in-Table-of-Contents" data-turbo="false">
               <span class="section-number">4.2.1.2</span>
               Option: Requirement title in Table of Contents
             </a></li></ul>
-            </li><li><a href="#4.2.2-Requirement">
+            </li><li><a href="#4.2.2-Requirement" data-turbo="false">
               <span class="section-number">4.2.2</span>
               Requirement
-            </a><ul><li><a href="#4.2.2.1-UID">
+            </a><ul><li><a href="#4.2.2.1-UID" data-turbo="false">
               <span class="section-number">4.2.2.1</span>
               UID
-            </a></li><li><a href="#4.2.2.2-References">
+            </a></li><li><a href="#4.2.2.2-References" data-turbo="false">
               <span class="section-number">4.2.2.2</span>
               References
-            </a></li><li><a href="#4.2.2.3-Comment">
+            </a></li><li><a href="#4.2.2.3-Comment" data-turbo="false">
               <span class="section-number">4.2.2.3</span>
               Comment
-            </a></li><li><a href="#4.2.2.4-Rationale">
+            </a></li><li><a href="#4.2.2.4-Rationale" data-turbo="false">
               <span class="section-number">4.2.2.4</span>
               Rationale
             </a></li></ul>
-            </li><li><a href="#4.2.3-Section">
+            </li><li><a href="#4.2.3-Section" data-turbo="false">
               <span class="section-number">4.2.3</span>
               Section
-            </a><ul><li><a href="#4.2.3.1-Nesting-sections">
+            </a><ul><li><a href="#4.2.3.1-Nesting-sections" data-turbo="false">
               <span class="section-number">4.2.3.1</span>
               Nesting sections
-            </a></li><li><a href="#4.2.3.2-Free-text">
+            </a></li><li><a href="#4.2.3.2-Free-text" data-turbo="false">
               <span class="section-number">4.2.3.2</span>
               Free text
-            </a></li><li><a href="#4.2.3.3-Section-without-a-level">
+            </a></li><li><a href="#4.2.3.3-Section-without-a-level" data-turbo="false">
               <span class="section-number">4.2.3.3</span>
               Section without a level
             </a></li></ul>
-            </li><li><a href="#4.2.4-Composite-requirement">
+            </li><li><a href="#4.2.4-Composite-requirement" data-turbo="false">
               <span class="section-number">4.2.4</span>
               Composite requirement
-            </a></li><li><a href="#4.2.5-Include-files">
+            </a></li><li><a href="#4.2.5-Include-files" data-turbo="false">
               <span class="section-number">4.2.5</span>
               Include files
             </a></li></ul>
-            </li><li><a href="#4.3-Custom-grammars">
+            </li><li><a href="#4.3-Custom-grammars" data-turbo="false">
               <span class="section-number">4.3</span>
               Custom grammars
-            </a><ul><li><a href="#4.3.1-Supported-field-types">
+            </a><ul><li><a href="#4.3.1-Supported-field-types" data-turbo="false">
               <span class="section-number">4.3.1</span>
               Supported field types
-            </a></li><li><a href="#4.3.2-Reserved-fields">
+            </a></li><li><a href="#4.3.2-Reserved-fields" data-turbo="false">
               <span class="section-number">4.3.2</span>
               Reserved fields
             </a></li></ul>
             </li></ul>
-            </li><li><a href="#5-Markup">
+            </li><li><a href="#5-Markup" data-turbo="false">
               <span class="section-number">5</span>
               Markup
-            </a><ul><li><a href="#5.1-Images">
+            </a><ul><li><a href="#5.1-Images" data-turbo="false">
               <span class="section-number">5.1</span>
               Images
             </a></li></ul>
-            </li><li><a href="#6-Export-formats">
+            </li><li><a href="#6-Export-formats" data-turbo="false">
               <span class="section-number">6</span>
               Export formats
-            </a><ul><li><a href="#6.1-HTML-documentation-tree-by-StrictDoc">
+            </a><ul><li><a href="#6.1-HTML-documentation-tree-by-StrictDoc" data-turbo="false">
               <span class="section-number">6.1</span>
               HTML documentation tree by StrictDoc
-            </a><ul><li><a href="#6.1.1-Mathjax-support">
+            </a><ul><li><a href="#6.1.1-Mathjax-support" data-turbo="false">
               <span class="section-number">6.1.1</span>
               Mathjax support
-            </a></li><li><a href="#6.1.2-Standalone-HTML-pages-experimental-">
+            </a></li><li><a href="#6.1.2-Standalone-HTML-pages-experimental-" data-turbo="false">
               <span class="section-number">6.1.2</span>
               Standalone HTML pages (experimental)
             </a></li></ul>
-            </li><li><a href="#6.2-HTML-export-via-Sphinx">
+            </li><li><a href="#6.2-HTML-export-via-Sphinx" data-turbo="false">
               <span class="section-number">6.2</span>
               HTML export via Sphinx
-            </a></li><li><a href="#6.3-PDF-export-via-Sphinx-LaTeX">
+            </a></li><li><a href="#6.3-PDF-export-via-Sphinx-LaTeX" data-turbo="false">
               <span class="section-number">6.3</span>
               PDF export via Sphinx/LaTeX
             </a></li></ul>
-            </li><li><a href="#7-Traceability-between-requirements-and-source-code">
+            </li><li><a href="#7-Traceability-between-requirements-and-source-code" data-turbo="false">
               <span class="section-number">7</span>
               Traceability between requirements and source code
-            </a></li><li><a href="#8-ReqIF-support">
+            </a></li><li><a href="#8-ReqIF-support" data-turbo="false">
               <span class="section-number">8</span>
               ReqIF support
-            </a><ul><li><a href="#8.1-Import-flow-ReqIF-SDoc-">
+            </a><ul><li><a href="#8.1-Import-flow-ReqIF-SDoc-" data-turbo="false">
               <span class="section-number">8.1</span>
               Import flow (ReqIF -> SDoc):
-            </a></li><li><a href="#8.2-Export-flow-SDoc-ReqIF-">
+            </a></li><li><a href="#8.2-Export-flow-SDoc-ReqIF-" data-turbo="false">
               <span class="section-number">8.2</span>
               Export flow (SDoc -> ReqIF)
-            </a></li><li><a href="#8.3-ReqIF-implementation-details">
+            </a></li><li><a href="#8.3-ReqIF-implementation-details" data-turbo="false">
               <span class="section-number">8.3</span>
               ReqIF implementation details
             </a></li></ul>
-            </li><li><a href="#9-Excel-support">
+            </li><li><a href="#9-Excel-support" data-turbo="false">
               <span class="section-number">9</span>
               Excel support
-            </a><ul><li><a href="#9.1-Import-flow-Excel-XLS-SDoc-">
+            </a><ul><li><a href="#9.1-Import-flow-Excel-XLS-SDoc-" data-turbo="false">
               <span class="section-number">9.1</span>
               Import flow (Excel XLS -> SDoc):
-            </a></li><li><a href="#9.2-Export-flow-SDoc-Excel-XLSX-">
+            </a></li><li><a href="#9.2-Export-flow-SDoc-Excel-XLSX-" data-turbo="false">
               <span class="section-number">9.2</span>
               Export flow (SDoc -> Excel XLSX)
             </a></li></ul>
-            </li><li><a href="#10-Options">
+            </li><li><a href="#10-Options" data-turbo="false">
               <span class="section-number">10</span>
               Options
-            </a><ul><li><a href="#10.1-Project-title">
+            </a><ul><li><a href="#10.1-Project-title" data-turbo="false">
               <span class="section-number">10.1</span>
               Project title
-            </a></li><li><a href="#10.2-Parallelization">
+            </a></li><li><a href="#10.2-Parallelization" data-turbo="false">
               <span class="section-number">10.2</span>
               Parallelization
             </a></li></ul>
             </li></ul>
+</turbo-frame>
 
     </aside>
 
@@ -247,12 +250,20 @@
 
     <header class="layout_header">
       
-  <p>User Manual <span class="document-view-type">Document</span></p>
+  <p>User Guide <span class="document-view-type">Traceability</span></p>
 
     </header>
 
     <main class="layout_main">
-      <div class="content"><article class="docsection">
+      
+
+      
+
+      <div class="content">
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-886bfd108f19480ead75372f54d6d3c9"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -303,9 +314,15 @@ Further performance tuning should be possible.</li>
 <p>See the Backlog to get an idea of the overall project direction.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-2ad06c504e4c4838ab7984c6173f793c"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -327,9 +344,15 @@ data-level="1.1">
 <p>The author can be also contacted via <a class="reference external" href="mailto:s.pankevich&#64;gmail.com">email</a>.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-1d756a03201546a7af25bef7d9660ce9"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -374,9 +397,15 @@ which is written using StrictDoc:
 examples.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-64a0befc28184bfdbb8fb4df5afdda42"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -392,9 +421,15 @@ data-level="3">
 
   </section>
 
-  
+  </article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-674a8711431f41b09bc68b4daa475037"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -418,9 +453,15 @@ data-level="3.1">
 </ul>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-bcb6c94a5e46449bb5e7681902d61048"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -443,9 +484,15 @@ pip install strictdoc
 </pre>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-c5d2c6a6f39849eeb80eb580f5f7c9ab"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -484,9 +531,15 @@ invoke --list  # See the available tasks
 </pre>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-b1703b5610984c189ba1a78c0b5a9895"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -520,9 +573,15 @@ bash-5.1# exit
 <p>The documentation resides in <tt class="docutils literal">./docs/output/html</tt>.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-d48c56d2e7664c37b43ed57cd9e90753"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -544,9 +603,15 @@ data-level="3.5">
 use it, refer to the instructions located in <tt class="docutils literal">developer/snap/README.md</tt>.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-fcbdf79089cb4335ad91429e2dc92985"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -570,9 +635,15 @@ strictdoc export docs/
 </pre>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-341b29bd2ff1448e9074509ca95666e4"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -606,9 +677,15 @@ TITLE: StrictDoc
 <a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc-1-user-guide.sdoc">strictdoc-1-user-guide.sdoc</a>.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-7b65a777b21a4eb0bcecee7aa38cd854"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -644,9 +721,15 @@ into <tt class="docutils literal">[SECTION]</tt> blocks.</p>
 <p>Each construct is described in more detail below.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-749f234863f240a3bb88bd8009e766ed"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -670,9 +753,15 @@ This rule is valid for all nodes. Absence of an empty line or presence of more
 than one empty line between two nodes will result in an SDoc parsing error.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-547a4f5ccb2e46e788ed73470e75094a"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -698,9 +787,15 @@ be specified using <tt class="docutils literal">[FREETEXT]</tt> nodes. By design
 be only attached to the <tt class="docutils literal">[DOCUMENT]</tt> and <tt class="docutils literal">[SECTION]</tt> nodes.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-d72933290cd34f7f83b655628ba2da06"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -716,9 +811,15 @@ data-level="4.2">
 
   </section>
 
-  
+  </article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-8d2f2602f024444bb2df47278395e854"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -755,9 +856,15 @@ StrictDoc is software for writing technical requirements and specifications.
 </pre>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-f01d6a79810f453aaddaabfc2bc7b0e4"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -786,9 +893,15 @@ OPTIONS:
 </pre>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-572e276749a84532a2cbe22fcc9e2330"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -816,9 +929,15 @@ OPTIONS:
 </pre>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-66d9032a71ab40a58f2b48ac500b9357"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -879,9 +998,15 @@ STATEMENT: StrictDoc shall enable requirements management.
 </pre>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-ca07847734e940c0b26f6b9698feb02c"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -922,9 +1047,15 @@ STATEMENT: STATEMENT: StrictDoc shall be based on a well-defined data model.
 </pre>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-0f8fbf6ab33a458ebc27d5e31ac86975"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -966,9 +1097,15 @@ future, linking requirements to files will be possible.</p>
 requirements connected with a reference have <tt class="docutils literal">UID</tt> defined.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-1523708e582b4605af9428c7cc273801"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1006,9 +1143,15 @@ Each line is rendered as a separate paragraph.
 </pre>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-74941b7af0ab41daa4a179440227904f"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1041,9 +1184,15 @@ RATIONALE: The presence of the REQ-001 is justified.
 </pre>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-fc5396e372314d4a92ed41e457fa10d2"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1088,9 +1237,15 @@ STATEMENT: ...
 </pre>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-0eac0acbac1f4ca58ceef71f2539dfe9"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1131,9 +1286,15 @@ sections will have their titles numbered accordingly: <tt class="docutils litera
 <tt class="docutils literal">1.1 Subchapter</tt>.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-b50de9f6ec9748f88ef5dca0c5ac575c"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1180,9 +1341,15 @@ atomic <tt class="docutils literal">[REQUIREMENT]</tt> statements and get connec
 statements in the document.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-0b9f3e2e295c49a3b8c452316bdc8a88"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1229,9 +1396,15 @@ has its <tt class="docutils literal">LEVEL</tt> set to <tt class="docutils liter
 are set to <tt class="docutils literal">LEVEL: None</tt> by StrictDoc automatically.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-e123afe11aa04141ae0f093605ea7373"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1279,9 +1452,15 @@ often, a more basic combination of nested <tt class="docutils literal">[SECTION]
 elements should do the job.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-0dc6ce15d92e455993bb7eff39a42c1b"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1362,9 +1541,15 @@ TITLE: Sub section
 </pre>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-5f464d611d284e2eb43bed6d0645e2db"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1431,9 +1616,15 @@ COMMENT: Test comment.
 grammar.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-0703cb33b1d944cfa1496992be980dea"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1504,9 +1695,15 @@ COMMENT: Test comment.
 </pre>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-4c5744180d674b4cb4511ba79597fe4b"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1565,9 +1762,15 @@ comment.</td>
 </table>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-e497d4ef86c048699de98d1e651240c4"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1593,9 +1796,15 @@ for a full reference.</p>
 <p>The support of Tex and HTML is planned.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-23de785f70c743faa02211dce6e775c5"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1623,9 +1832,15 @@ data-level="5.1">
 </pre>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-fcd53c8d1a7f4a87801c2b11a303bc0c"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1641,9 +1856,15 @@ data-level="6">
 
   </section>
 
-  
+  </article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-b2cce0dee89043f58d93b57a9f43e26b"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1673,9 +1894,15 @@ skipped because HTML export is a default export option and the default output
 folder is <tt class="docutils literal">output</tt>.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-a17d9faa623845879dff705858540f70"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1713,9 +1940,15 @@ strictdoc export docs/ --enable-mathjax --output-dir output-html
 </pre>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-b0aa5fa64b134001963d4892bd64e626"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1743,9 +1976,15 @@ email as single files. This option might be especially useful if you work with
 a single document instead of a documentation tree with multiple documents.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-67ba9a313daa4106b6be08f5fcb4e5fe"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1778,9 +2017,15 @@ is generated this way, see the Invoke task:
 <a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48">invoke sphinx</a>.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-5c57e4eb292a4539a085873832795bc5"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1813,9 +2058,15 @@ is generated this way, see the Invoke task:
 <a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48">invoke sphinx</a>.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-de06f81a5099448c8863c2395ab1207f"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1881,9 +2132,15 @@ strictdoc export . --experimental-enable-file-traceability --output-dir output/
 the example of requirements-to-source-code traceability.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-155208ac3b994258a780f55d17b90d20"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1920,9 +2177,15 @@ management tools.</li>
 </ul>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-1d343c90ee134b06aaa4118f611f6a73"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1954,9 +2217,15 @@ used.</li>
 </ol>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-628b575be5024ba886a5fec260d8ea42"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -1988,9 +2257,15 @@ library.</li>
 </ol>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-c0e4a1ccd3834e9a800ddf8792c462ba"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -2028,9 +2303,15 @@ implementation details, refer to
 documentation.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-5ccefdd9de0d4aa2a2507b04563c0425"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -2056,9 +2337,15 @@ requirement fields.</p>
 <p>Note: A roundtrip &quot;SDoc -&gt; Excel -&gt; SDoc&quot; is not yet supported.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-2dcc220c3d30459eb9b1ecf938d6bff1"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -2087,9 +2374,15 @@ library.</li>
 </ol>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-76baf5fa0f6f4b67afcb099fec8f1ace"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -2118,9 +2411,15 @@ the <tt class="docutils literal">XlsWriter</tt> library</li>
 </ol>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-2f64e69128ed4a218f8de9155c439c0e"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -2136,9 +2435,15 @@ data-level="10">
 
   </section>
 
-  
+  </article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-4ff4321ddac54638b4a65f99e4e34075"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -2164,9 +2469,15 @@ strictdoc export --project-title &quot;My Project&quot; .
 </pre>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article><article class="docsection">
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><turbo-frame id="article-ed26dd301cab4aa4ab6a748c247177b7"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -2200,11 +2511,13 @@ are run from the main thread. Reading of the SDoc documents is parallelized for
 all export options and is disabled with this option as well.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article>
-
+</turbo-frame></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
       </div>
+
 
     </main>
 

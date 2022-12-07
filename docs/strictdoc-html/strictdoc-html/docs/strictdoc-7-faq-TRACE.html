@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="../_static/_content.css"/>
   <link rel="stylesheet" href="../_static/_requirement.css"/>
   <link rel="stylesheet" href="../_static/_element.css"/>
+  <link rel="stylesheet" href="../_static/_form.css"/>
   
   <link rel="stylesheet" href="../_static/_requirement-tree.css"/>
 
@@ -33,9 +34,7 @@
 </head>
 
 <body class="traceability-view withtoc">
-<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script>
-
-  <div class="layout" id="layout">
+<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
 
     <aside class="layout_aside-header">
       
@@ -45,28 +44,29 @@
 
     <aside class="layout_aside">
       
-  
+  <turbo-frame id="frame-toc">
     <div>Table of Contents</div>
-    <ul class="toc"><li><a href="#1-Blog-posts-about-StrictDoc">
+    <ul class="toc"><li><a href="#1-Blog-posts-about-StrictDoc" data-turbo="false">
               <span class="section-number">1</span>
               Blog posts about StrictDoc
-            </a></li><li><a href="#2-How-StrictDoc-compares-to-other-tools-">
+            </a></li><li><a href="#2-How-StrictDoc-compares-to-other-tools-" data-turbo="false">
               <span class="section-number">2</span>
               How StrictDoc compares to other tools?
-            </a><ul><li><a href="#2.1-Doorstop">
+            </a><ul><li><a href="#2.1-Doorstop" data-turbo="false">
               <span class="section-number">2.1</span>
               Doorstop
-            </a></li><li><a href="#2.2-Sphinx">
+            </a></li><li><a href="#2.2-Sphinx" data-turbo="false">
               <span class="section-number">2.2</span>
               Sphinx
-            </a></li><li><a href="#2.3-Sphinx-Needs">
+            </a></li><li><a href="#2.3-Sphinx-Needs" data-turbo="false">
               <span class="section-number">2.3</span>
               Sphinx-Needs
-            </a></li><li><a href="#2.4-FRET">
+            </a></li><li><a href="#2.4-FRET" data-turbo="false">
               <span class="section-number">2.4</span>
               FRET
             </a></li></ul>
             </li></ul>
+</turbo-frame>
 
     </aside>
 
@@ -114,7 +114,7 @@
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><article class="docsection">
+          <div class="content_item" data-role="current"><turbo-frame id="article-b577d167929544158f326a51f2d33df8"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -138,15 +138,15 @@ by BUGSENG.</p>
 by Florian Kromer.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article></div>
+</turbo-frame></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><article class="docsection">
+          <div class="content_item" data-role="current"><turbo-frame id="article-33efcdd1c9a44fe294b07d0aaf5ff0fb"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -162,15 +162,15 @@ data-level="2">
 
   </section>
 
-  
+  </article>
 
-</article></div>
+</turbo-frame></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><article class="docsection">
+          <div class="content_item" data-role="current"><turbo-frame id="article-8b54d5e84f224d358473fc856ad6f6b4"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -235,15 +235,15 @@ using the parsing capabilities provided by textX out of the box.</li>
 to/from Doorstop format.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article></div>
+</turbo-frame></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><article class="docsection">
+          <div class="content_item" data-role="current"><turbo-frame id="article-25249b18ba5b43d6a04bfead323f1792"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -271,22 +271,22 @@ and other formats using Sphinx.</p>
 <p>If you are reading this documentation at
 <a class="reference external" href="https://strictdoc.readthedocs.io/en/latest">https://strictdoc.readthedocs.io/en/latest</a>
 then you are already looking at the example: this documentation stored in
-<a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc-1-user-manual.sdoc">strictdoc-1-user-manual</a>
+<a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc-7-faq.sdoc">strictdoc-7-faq</a>
 is converted to RST format by StrictDoc which is further converted to the HTML
 website by readthedocs which uses Sphinx under the hood. The
 <tt class="docutils literal">StrictDoc <span class="pre">-&gt;</span> RST <span class="pre">-&gt;</span> Sphinx <span class="pre">-&gt;</span> PDF</tt> example is also generated using readthedocs:
 <a class="reference external" href="https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/">StrictDoc</a>.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article></div>
+</turbo-frame></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><article class="docsection">
+          <div class="content_item" data-role="current"><turbo-frame id="article-1f34a05cbacb4164905c8a1e02fcbf72"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -353,15 +353,15 @@ and
 </ul>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article></div>
+</turbo-frame></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><article class="docsection">
+          <div class="content_item" data-role="current"><turbo-frame id="article-e99d63fce1af4cbd8276c092c53eced6"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -397,9 +397,9 @@ in a variety of forms to be used by analysis tools.</li>
 <p>The detailed comparison is coming.</p>
 </div>
 
-    </div></section>
+    </div></section></article>
 
-</article></div>
+</turbo-frame></div>
           <div class="content_item" data-role="children"></div>
         </section>
       </div>

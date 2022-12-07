@@ -5,7 +5,7 @@
   <h3>Add new document</h3>
 
     <div class="std-form-row std-tree_desc">
-        <div role="textbox" data-editable contenteditable="true" class="std-input-editable" id="document_title" placeholder="Enter document title here...">
+        <div role="textbox" data-editable="single" contenteditable="true" class="" id="document_title" placeholder="Enter document title here...">
           {%- if true -%}
           {{ document_title }}
           {%- endif -%}
@@ -22,7 +22,7 @@
     </div>
 
     <div class="std-form-row std-tree_name">
-      <div role="textbox" data-editable contenteditable="true" class="std-input-editable std-input-document_path" id="document_path" placeholder="Enter document path here...">
+      <div role="textbox" data-editable="single" contenteditable="true" class="std-input-document_path" id="document_path" placeholder="Enter document path here...">
         {%- if true -%}
         {{ document_path }}
         {%- endif -%}

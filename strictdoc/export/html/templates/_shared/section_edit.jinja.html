@@ -16,7 +16,7 @@
     <div class="std-form-row">
 
       {# <input type="text" id="section_title" name="section_title" value="{{ form_object.section_title }}"/> #}
-      <div role="textbox" contenteditable="true" class="std-input-editable std-form-fileld-title" id="section_title" placeholder="Enter section title here...">
+      <div role="textbox" data-editable="single" contenteditable="true" class="std-form-fileld-title" id="section_title" placeholder="Enter section title here...">
         {%- if true -%}
         {{ form_object.section_title }}
         {%- endif -%}
@@ -35,7 +35,7 @@
 
     <div class="std-form-row">
 
-      <div role="textbox" contenteditable="true" class="std-input-editable" id="section_content" placeholder="Enter section text here...">
+      <div role="textbox" data-editable="multiline" contenteditable="true" class="" id="section_content" placeholder="Enter section text here...">
         {%- if true -%}
           {{ form_object.section_statement }}
         {%- endif -%}

@@ -10,7 +10,7 @@ Stimulus.register("hello", class extends Controller {
 
   registerFormEvents(params) {
 
-    document.querySelectorAll('.std-input-editable')
+    document.querySelectorAll('[data-editable]')
       .forEach(editable => {
         const hidden = editable.nextElementSibling;
 

@@ -6,7 +6,7 @@
 
 <turbo-frame id="article-{{form_object.requirement_mid}}">
 
-<form data-controller="hello" class="std-form" action="{{url}}" method="POST">
+<form data-controller="hello" class="std-form" action="{{url}}" method="POST" data-turbo="true">
   {%- if is_new_requirement -%}
     <input type="hidden" id="reference_mid" name="reference_mid" value="{{reference_mid}}" />
     <input type="hidden" id="whereto" name="whereto" value="{{whereto}}" />
@@ -50,9 +50,9 @@
     <div class="std-form-footer">
         <button class="std-form-btn" type="submit">Save</button>
         {%- if is_new_requirement -%}
-          <a class="std-form-btn" href="/actions/document/cancel_new_requirement?requirement_mid={{form_object.requirement_mid}}">Cancel</a>
+          <a class="std-form-btn" href="/actions/document/cancel_new_requirement?requirement_mid={{form_object.requirement_mid}}" data-turbo="true">Cancel</a>
         {%- else -%}
-          <a class="std-form-btn" href="/actions/document/cancel_edit_requirement?requirement_mid={{form_object.requirement_mid}}">Cancel</a>
+          <a class="std-form-btn" href="/actions/document/cancel_edit_requirement?requirement_mid={{form_object.requirement_mid}}" data-turbo="true">Cancel</a>
         {%- endif -%}
     </div>
 

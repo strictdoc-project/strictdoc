@@ -17,15 +17,15 @@
   {% include "_shared/requirement_block/free_text.jinja.html" %}
 
   {%- if config.is_running_on_server -%}
-    <a href="/actions/document/edit_section/{{section.node_id}}" data-turbo-action="replace">Edit</a>,
-    <a href="/actions/document/delete_section/{{section.node_id}}" data-turbo-method="delete">Delete</a>,
+    <a href="/actions/document/edit_section/{{section.node_id}}" data-turbo-action="replace" data-turbo="true">Edit</a>,
+    <a href="/actions/document/delete_section/{{section.node_id}}" data-turbo-method="delete" data-turbo="true">Delete</a>,
 
-    <a href="/actions/document/new_section?reference_mid={{section.node_id}}&whereto=before" data-turbo-action="replace">+S⬆</a>,
-    <a href="/actions/document/new_section?reference_mid={{section.node_id}}&whereto=child" data-turbo-action="replace">+S⬊</a>,
-    <a href="/actions/document/new_section?reference_mid={{section.node_id}}&whereto=after" data-turbo-action="replace">+S⬇</a>,
-    <a href="/actions/document/new_requirement?reference_mid={{section.node_id}}&whereto=before" data-turbo-action="replace">+R⬆</a>,
-    <a href="/actions/document/new_requirement?reference_mid={{section.node_id}}&whereto=child" data-turbo-action="replace">+R⬊</a>,
-    <a href="/actions/document/new_requirement?reference_mid={{section.node_id}}&whereto=after" data-turbo-action="replace">+R⬇</a>
+    <a href="/actions/document/new_section?reference_mid={{section.node_id}}&whereto=before" data-turbo-action="replace" data-turbo="true">+S⬆</a>,
+    <a href="/actions/document/new_section?reference_mid={{section.node_id}}&whereto=child" data-turbo-action="replace" data-turbo="true">+S⬊</a>,
+    <a href="/actions/document/new_section?reference_mid={{section.node_id}}&whereto=after" data-turbo-action="replace" data-turbo="true">+S⬇</a>,
+    <a href="/actions/document/new_requirement?reference_mid={{section.node_id}}&whereto=before" data-turbo-action="replace" data-turbo="true">+R⬆</a>,
+    <a href="/actions/document/new_requirement?reference_mid={{section.node_id}}&whereto=child" data-turbo-action="replace" data-turbo="true">+R⬊</a>,
+    <a href="/actions/document/new_requirement?reference_mid={{section.node_id}}&whereto=after" data-turbo-action="replace" data-turbo="true">+R⬇</a>
   {%- endif -%}
 
 </article>

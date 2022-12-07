@@ -1,7 +1,7 @@
 {%- if config.is_running_on_server -%}
 
-<div id="connection_status" style="position: fixed;">
-</div>
+{# It is important that there are no spaces within this element #connection_status: #}
+<div id="connection_status" class="connection_status"></div>
 
 <script>
   var clientId = Date.now();

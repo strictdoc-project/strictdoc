@@ -1,33 +1,38 @@
 Design Document
 $$$$$$$$$$$$$$$
 
-Design decisions
-================
-
 Building blocks
----------------
+===============
 
-TextX
-~~~~~
+StrictDoc is based on the following open-source libraries and tools:
 
-TextX shall be used for StrictDoc grammar definition and parsing of the sdoc files.
+.. list-table::
+   :header-rows: 1
+   :widths: 15 85
 
-**Comment:** TextX is an easy-to-install Python tool. It is fast, works out of the box.
+   * - **Library/tool**
+     - **Description**
 
-Jinja2
-~~~~~~
+   * - TextX
+     - Used for StrictDoc grammar definition and parsing of the sdoc files.
 
-Jinja2 shall be used for rendering HTML templates.
+   * - Jinja
+     - Rendering HTML templates.
 
-Sphinx and Docutils
-~~~~~~~~~~~~~~~~~~~
+   * - Sphinx and Docutils
+     - - Support of Restructured Text (reST) format
+       - Generation of RST documents into HTML
+       - Generation of RST documents into PDF using LaTeX
+       - Generating documentation websites using Sphinx.
 
-Sphinx and Docutils shall be used for the following capabilities:
+   * - FastAPI
+     - Server used for StrictDoc's Web-based user interface.
 
-- Support of Restructured Text (reST) format
-- Generation of RST documents into HTML
-- Generation of RST documents into PDF using LaTeX
-- Generating documentation websites using Sphinx
+   * - Turbo and Stimulus
+     - Javascript frameworks used for StrictDoc's Web-based user interface.
+
+   * - Selenium and SeleniumBase
+     - Used for end-to-end testing of StrictDoc's Web-based user interface.
 
 Graphical user interface
 ========================

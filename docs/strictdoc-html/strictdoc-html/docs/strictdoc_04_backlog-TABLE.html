@@ -49,15 +49,22 @@
             </a></li><li><a href="#2-Backlog-Nice-to-have" data-turbo="false">
               <span class="section-number">2</span>
               Backlog: Nice to have
-            </a></li><li>
-        <a href="#3-Document-archetypes" data-turbo="false">
-          <span class="section-number">3</span>
+            </a></li><li><a href="#3-Backlog-Known-issues" data-turbo="false">
+              <span class="section-number">3</span>
+              Backlog: Known issues
+            </a><ul><li><a href="#3.1-HTML-rendering-using-docutils-is-a-performance-bottleneck" data-turbo="false">
+              <span class="section-number">3.1</span>
+              HTML rendering using docutils is a performance bottleneck
+            </a></li></ul>
+            </li><li>
+        <a href="#4-Document-archetypes" data-turbo="false">
+          <span class="section-number">4</span>
           Document archetypes
-        </a></li><li><a href="#4-Open-questions" data-turbo="false">
-              <span class="section-number">4</span>
+        </a></li><li><a href="#5-Open-questions" data-turbo="false">
+              <span class="section-number">5</span>
               Open questions
-            </a><ul><li><a href="#4.1-One-or-many-input-sdoc-trees" data-turbo="false">
-              <span class="section-number">4.1</span>
+            </a><ul><li><a href="#5.1-One-or-many-input-sdoc-trees" data-turbo="false">
+              <span class="section-number">5.1</span>
               One or many input sdoc trees
             </a></li></ul>
             </li></ul>
@@ -140,27 +147,40 @@ items are either work-in-progress or will be implemented next.</p>
       <td class="content-view-td" colspan="50">
         <div class="document">
 <ul class="simple">
+<li>Requirement form:<ul>
+<li><tt class="docutils literal">RATIONALE</tt></li>
+<li><tt class="docutils literal">COMMENT</tt></li>
+<li>Edit links for table-based requirements.</li>
+<li>Adding/editing parent/child requirements.</li>
+</ul>
+</li>
+<li>Section form:<ul>
+<li><tt class="docutils literal">UID</tt></li>
+</ul>
+</li>
+<li>All forms:<ul>
+<li>Contextual help about the RST markup.</li>
+<li>How to edit tables conveniently?</li>
+</ul>
+</li>
 <li>What to do with web content going out of sync with the server/file system state?</li>
 <li>Issue when adding sibling section from a nested section.</li>
 <li>Auto-trim all single-line fields.</li>
 <li>Auto-trim all text areas - all trailing whitespace shall be removed.</li>
-<li>Edit links for table-based requirements.</li>
-<li>Edit requirement's <tt class="docutils literal">RATIONALE</tt> field.</li>
-<li>Adding/editing parent/child requirements.</li>
 <li>Enable SeleniumBase tests on CI.</li>
-<li>Adding comments to requirements.</li>
 <li>Integration with Git repository.</li>
 <li>Moving node up/down/left/right. For example, move a node of level 2 to level 1.</li>
-<li>Contextual help about the RST markup.</li>
-<li>Non-RST markup formats.</li>
 <li>Expand/collapse the table of contents.</li>
 <li>ReqIF:<ul>
 <li>Export complete documentation tree or a single document to ReqIF.</li>
 <li>Import complete documentation tree or a single document from ReqIF.</li>
 </ul>
 </li>
-<li>How to edit tables conveniently?</li>
+<li>Other:<ul>
 <li>Focused editing of document sections: dedicated and focused <tt class="docutils literal">/sections/</tt> resource.</li>
+<li>Non-RST markup formats.</li>
+</ul>
+</li>
 </ul>
 </div>
 
@@ -232,16 +252,63 @@ items are either work-in-progress or will be implemented next.</p>
       </td>
     </tr>
   <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     3
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="3-Backlog-Known-issues"></div>
+      <div class="section-title">
+        Backlog: Known issues
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     3.1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="3.1-HTML-rendering-using-docutils-is-a-performance-bottleneck"></div>
+      <div class="section-title">
+        HTML rendering using docutils is a performance bottleneck
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>The overall generation process is still fast enough but in case some improvements were to be made:</p>
+<blockquote>
+<ul class="simple">
+<li>It could be measured what takes more time: parsing RST tree or actually rendering HTML</li>
+<li>Simplified RST parser and rendered can be written and their performance can be compared with that of docutils API.</li>
+</ul>
+</blockquote>
+<pre class="code bash literal-block">
+python -m cProfile -s cumulative strictdoc/cli/main.py <span class="name builtin">export</span> --no-parallelization docs/ &gt; report.txt
+</pre>
+<p>See also: <a class="reference external" href="https://docs.python.org/3/library/profile.html#instant-user-s-manual">https://docs.python.org/3/library/profile.html#instant-user-s-manual</a></p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
    <td class="content-view-td content-view-td-type">
     Requirement</td>
    <td class="content-view-td content-view-td-meta">
-     3
+     4
    </td>
       <td class="content-view-td content-view-td-meta"></td>
       <td class="content-view-td content-view-td-meta"></td>
       <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
     </td>
-    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="3-Document-archetypes"></div>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="4-Document-archetypes"></div>
       <div class="section-title">
         Document archetypes
       </div></td>
@@ -323,9 +390,9 @@ the grouping is provided by sections.</li>
   <tr>
    <td class="content-view-td content-view-td-type">Section</td>
    <td class="content-view-td content-view-td-meta">
-     4
+     5
    </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
-    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4-Open-questions"></div>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="5-Open-questions"></div>
       <div class="section-title">
         Open questions
       </div></td>
@@ -333,9 +400,9 @@ the grouping is provided by sections.</li>
   <tr>
    <td class="content-view-td content-view-td-type">Section</td>
    <td class="content-view-td content-view-td-meta">
-     4.1
+     5.1
    </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
-    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4.1-One-or-many-input-sdoc-trees"></div>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="5.1-One-or-many-input-sdoc-trees"></div>
       <div class="section-title">
         One or many input sdoc trees
       </div></td>

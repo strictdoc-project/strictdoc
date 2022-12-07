@@ -50,7 +50,19 @@
               <span class="section-number">1.1</span>
               Installing StrictDoc from GitHub (developer mode)
             </a></li></ul>
-            </li></ul>
+            </li><li><a href="#2-Invoke-for-development-tasks" data-turbo="false">
+              <span class="section-number">2</span>
+              Invoke for development tasks
+            </a></li><li><a href="#3-Frontend-development" data-turbo="false">
+              <span class="section-number">3</span>
+              Frontend development
+            </a></li><li><a href="#4-Running-integration-tests" data-turbo="false">
+              <span class="section-number">4</span>
+              Running integration tests
+            </a></li><li><a href="#5-Generating-documentation-locally" data-turbo="false">
+              <span class="section-number">5</span>
+              Generating documentation locally
+            </a></li></ul>
 </turbo-frame>
 
     </aside>
@@ -95,7 +107,13 @@
 
       
 
-      <div class="layout_tmp_inner"><div class="content">
+      <div class="layout_tmp_inner"><div class="content_meta">
+        <div class="free_text">
+          <div class="document">
+<p>This section contains everything that a StrictDoc developer/contributor should know to get the job done.</p>
+</div>
+
+        </div></div><div class="content">
 
 <table class="content-view-table">
 
@@ -150,6 +168,98 @@ pip install invoke  # macOS and Linux
 invoke setup-development-deps  # macOS and Linux
 pip install -r requirements.development.txt  # Windows only
 invoke --list  # See the available tasks
+</pre>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     2
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="2-Invoke-for-development-tasks"></div>
+      <div class="section-title">
+        Invoke for development tasks
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>Make sure to familiarize yourself with the available developer tasks by running:</p>
+<pre class="code bash literal-block">
+invoke --list
+</pre>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     3
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="3-Frontend-development"></div>
+      <div class="section-title">
+        Frontend development
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>The shortest path to run the server when the StrictDoc's source code is cloned:</p>
+<pre class="code bash literal-block">
+invoke server
+</pre>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4-Running-integration-tests"></div>
+      <div class="section-title">
+        Running integration tests
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>The integration tests are run using Invoke:</p>
+<pre class="code bash literal-block">
+invoke test-integration
+</pre>
+<p>The <tt class="docutils literal"><span class="pre">--focus</span></tt> parameter can be used to run only selected tests that match a given substring. This helps to avoid running all tests all the time.</p>
+<pre class="code bash literal-block">
+invoke test-integration --focus &lt;keyword&gt;
+</pre>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     5
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="5-Generating-documentation-locally"></div>
+      <div class="section-title">
+        Generating documentation locally
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>The following Invoke task generates StrictDoc's documentation to StrictDoc and Sphinx:</p>
+<pre class="code bash literal-block">
+invoke sphinx
 </pre>
 </div>
 

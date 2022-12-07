@@ -5,34 +5,39 @@ OPTIONS:
   REQUIREMENT_IN_TOC: True
 
 [SECTION]
-TITLE: Design decisions
-
-[SECTION]
 TITLE: Building blocks
 
-[REQUIREMENT]
-TITLE: TextX
-STATEMENT: TextX shall be used for StrictDoc grammar definition and parsing of the sdoc files.
-COMMENT: >>>
-TextX is an easy-to-install Python tool. It is fast, works out of the box.
-<<<
+[FREETEXT]
+StrictDoc is based on the following open-source libraries and tools:
 
-[REQUIREMENT]
-TITLE: Jinja2
-STATEMENT: Jinja2 shall be used for rendering HTML templates.
+.. list-table::
+   :header-rows: 1
+   :widths: 15 85
 
-[REQUIREMENT]
-TITLE: Sphinx and Docutils
-STATEMENT: >>>
-Sphinx and Docutils shall be used for the following capabilities:
+   * - **Library/tool**
+     - **Description**
 
-- Support of Restructured Text (reST) format
-- Generation of RST documents into HTML
-- Generation of RST documents into PDF using LaTeX
-- Generating documentation websites using Sphinx
-<<<
+   * - TextX
+     - Used for StrictDoc grammar definition and parsing of the sdoc files.
 
-[/SECTION]
+   * - Jinja
+     - Rendering HTML templates.
+
+   * - Sphinx and Docutils
+     - - Support of Restructured Text (reST) format
+       - Generation of RST documents into HTML
+       - Generation of RST documents into PDF using LaTeX
+       - Generating documentation websites using Sphinx.
+
+   * - FastAPI
+     - Server used for StrictDoc's Web-based user interface.
+
+   * - Turbo and Stimulus
+     - Javascript frameworks used for StrictDoc's Web-based user interface.
+
+   * - Selenium and SeleniumBase
+     - Used for end-to-end testing of StrictDoc's Web-based user interface.
+[/FREETEXT]
 
 [/SECTION]
 

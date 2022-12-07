@@ -57,15 +57,22 @@
             </a></li><li><a href="#2-Backlog-Nice-to-have" data-turbo="false">
               <span class="section-number">2</span>
               Backlog: Nice to have
-            </a></li><li>
-        <a href="#3-Document-archetypes" data-turbo="false">
-          <span class="section-number">3</span>
+            </a></li><li><a href="#3-Backlog-Known-issues" data-turbo="false">
+              <span class="section-number">3</span>
+              Backlog: Known issues
+            </a><ul><li><a href="#3.1-HTML-rendering-using-docutils-is-a-performance-bottleneck" data-turbo="false">
+              <span class="section-number">3.1</span>
+              HTML rendering using docutils is a performance bottleneck
+            </a></li></ul>
+            </li><li>
+        <a href="#4-Document-archetypes" data-turbo="false">
+          <span class="section-number">4</span>
           Document archetypes
-        </a></li><li><a href="#4-Open-questions" data-turbo="false">
-              <span class="section-number">4</span>
+        </a></li><li><a href="#5-Open-questions" data-turbo="false">
+              <span class="section-number">5</span>
               Open questions
-            </a><ul><li><a href="#4.1-One-or-many-input-sdoc-trees" data-turbo="false">
-              <span class="section-number">4.1</span>
+            </a><ul><li><a href="#5.1-One-or-many-input-sdoc-trees" data-turbo="false">
+              <span class="section-number">5.1</span>
               One or many input sdoc trees
             </a></li></ul>
             </li></ul>
@@ -111,7 +118,7 @@
     <main class="layout_main">
       
   <turbo-frame id="frame_document_content"><div class="content">
-        <turbo-frame id="article-9c52383fe89b46a5b5368b58ea1a0aa9">
+        <turbo-frame id="article-26dab4f7cfe748afb8bde37336fca759">
 <article><section>
       <div class="free_text">
         <div class="document">
@@ -121,7 +128,7 @@ items are either work-in-progress or will be implemented next.</p>
 
       </div></section></article>
 </turbo-frame>
-          <turbo-frame id="article-60d5ce1393254fb8ba51cbbcd470e6e7"><article class="docsection" data-controller="document">
+          <turbo-frame id="article-eec8bda3b56d45f0b1fefcd8a82bce7c"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -140,34 +147,47 @@ data-level="1">
   <section data-section="description" class="docsection_section"><div class="free-text">
       <div class="document">
 <ul class="simple">
+<li>Requirement form:<ul>
+<li><tt class="docutils literal">RATIONALE</tt></li>
+<li><tt class="docutils literal">COMMENT</tt></li>
+<li>Edit links for table-based requirements.</li>
+<li>Adding/editing parent/child requirements.</li>
+</ul>
+</li>
+<li>Section form:<ul>
+<li><tt class="docutils literal">UID</tt></li>
+</ul>
+</li>
+<li>All forms:<ul>
+<li>Contextual help about the RST markup.</li>
+<li>How to edit tables conveniently?</li>
+</ul>
+</li>
 <li>What to do with web content going out of sync with the server/file system state?</li>
 <li>Issue when adding sibling section from a nested section.</li>
 <li>Auto-trim all single-line fields.</li>
 <li>Auto-trim all text areas - all trailing whitespace shall be removed.</li>
-<li>Edit links for table-based requirements.</li>
-<li>Edit requirement's <tt class="docutils literal">RATIONALE</tt> field.</li>
-<li>Adding/editing parent/child requirements.</li>
 <li>Enable SeleniumBase tests on CI.</li>
-<li>Adding comments to requirements.</li>
 <li>Integration with Git repository.</li>
 <li>Moving node up/down/left/right. For example, move a node of level 2 to level 1.</li>
-<li>Contextual help about the RST markup.</li>
-<li>Non-RST markup formats.</li>
 <li>Expand/collapse the table of contents.</li>
 <li>ReqIF:<ul>
 <li>Export complete documentation tree or a single document to ReqIF.</li>
 <li>Import complete documentation tree or a single document from ReqIF.</li>
 </ul>
 </li>
-<li>How to edit tables conveniently?</li>
+<li>Other:<ul>
 <li>Focused editing of document sections: dedicated and focused <tt class="docutils literal">/sections/</tt> resource.</li>
+<li>Non-RST markup formats.</li>
+</ul>
+</li>
 </ul>
 </div>
 
     </div></section></article>
 
 </turbo-frame>
-          <turbo-frame id="article-b7098fc2d0c44109bfcaddcb5e271ee1"><article class="docsection" data-controller="document">
+          <turbo-frame id="article-202801a4f82f42568b858ee0aea70aad"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
@@ -237,15 +257,72 @@ data-level="2">
     </div></section></article>
 
 </turbo-frame>
-            <turbo-frame id="article-a60f2f6fd7304cc1bed03869a07b9bb6"><article class="requirement">
+          <turbo-frame id="article-69923faebaa54dec8d44de7f22eba4d1"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="3-Backlog-Known-issues"></div>
+
+    
+        <h1
+class="section-title"
+data-level="3">
+  3.&nbsp;Backlog: Known issues
+</h1>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+</div>
+
+    </div></section></article>
+
+</turbo-frame>
+          <turbo-frame id="article-05212af388794c0c93dee1996702f0df"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="3.1-HTML-rendering-using-docutils-is-a-performance-bottleneck"></div>
+
+    
+        <h2
+class="section-title"
+data-level="3.1">
+  3.1.&nbsp;HTML rendering using docutils is a performance bottleneck
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>The overall generation process is still fast enough but in case some improvements were to be made:</p>
+<blockquote>
+<ul class="simple">
+<li>It could be measured what takes more time: parsing RST tree or actually rendering HTML</li>
+<li>Simplified RST parser and rendered can be written and their performance can be compared with that of docutils API.</li>
+</ul>
+</blockquote>
+<pre class="code bash literal-block">
+python -m cProfile -s cumulative strictdoc/cli/main.py <span class="name builtin">export</span> --no-parallelization docs/ &gt; report.txt
+</pre>
+<p>See also: <a class="reference external" href="https://docs.python.org/3/library/profile.html#instant-user-s-manual">https://docs.python.org/3/library/profile.html#instant-user-s-manual</a></p>
+</div>
+
+    </div></section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-fa14835c21d748e18b462115e0583632"><article class="requirement">
 
   <section class="requirement_section" data-section='meta'>
 
-    <div data-role='anchor' id="3-Document-archetypes"></div>
+    <div data-role='anchor' id="4-Document-archetypes"></div>
     <h1
 class="section-title"
-data-level="3">
-  3.&nbsp;Document archetypes
+data-level="4">
+  4.&nbsp;Document archetypes
 </h1>
 
     
@@ -342,17 +419,17 @@ the grouping is provided by sections.</li>
   </section></article>
 
 </turbo-frame>
-          <turbo-frame id="article-75f2dfc6dd9a423a9285672d9acb635c"><article class="docsection" data-controller="document">
+          <turbo-frame id="article-11554edbed9c441bafc92beefb2e9d80"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="4-Open-questions"></div>
+    <div data-role='anchor' id="5-Open-questions"></div>
 
     
         <h1
 class="section-title"
-data-level="4">
-  4.&nbsp;Open questions
+data-level="5">
+  5.&nbsp;Open questions
 </h1>
     
 
@@ -361,17 +438,17 @@ data-level="4">
   </article>
 
 </turbo-frame>
-          <turbo-frame id="article-c808d9b8b7614e5f8a67a0368c5f44cf"><article class="docsection" data-controller="document">
+          <turbo-frame id="article-87369e5fdbc349cd8f06cfd08eeef83a"><article class="docsection" data-controller="document">
 
   <section data-section="meta" class="docsection_section">
 
-    <div data-role='anchor' id="4.1-One-or-many-input-sdoc-trees"></div>
+    <div data-role='anchor' id="5.1-One-or-many-input-sdoc-trees"></div>
 
     
         <h2
 class="section-title"
-data-level="4.1">
-  4.1.&nbsp;One or many input sdoc trees
+data-level="5.1">
+  5.1.&nbsp;One or many input sdoc trees
 </h2>
     
 

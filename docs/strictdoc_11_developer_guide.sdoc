@@ -1,6 +1,10 @@
 [DOCUMENT]
 TITLE: Developer Guide
 
+[FREETEXT]
+This section contains everything that a StrictDoc developer/contributor should know to get the job done.
+[/FREETEXT]
+
 [SECTION]
 TITLE: Getting started
 
@@ -36,3 +40,61 @@ environment.
 
 [/SECTION]
 
+[SECTION]
+TITLE: Invoke for development tasks
+
+[FREETEXT]
+Make sure to familiarize yourself with the available developer tasks by running:
+
+.. code-block:: bash
+
+    invoke --list
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Frontend development
+
+[FREETEXT]
+The shortest path to run the server when the StrictDoc's source code is cloned:
+
+.. code-block:: bash
+
+    invoke server
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Running integration tests
+
+[FREETEXT]
+The integration tests are run using Invoke:
+
+.. code-block:: bash
+
+    invoke test-integration
+
+The ``--focus`` parameter can be used to run only selected tests that match a given substring. This helps to avoid running all tests all the time.
+
+.. code-block:: bash
+
+    invoke test-integration --focus <keyword>
+
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Generating documentation locally
+
+[FREETEXT]
+The following Invoke task generates StrictDoc's documentation to StrictDoc and Sphinx:
+
+.. code-block:: bash
+
+    invoke sphinx
+[/FREETEXT]
+
+[/SECTION]

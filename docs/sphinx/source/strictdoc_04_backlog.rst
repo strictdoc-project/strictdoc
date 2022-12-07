@@ -7,19 +7,29 @@ items are either work-in-progress or will be implemented next.
 Backlog: Graphical user interface
 =================================
 
+- Requirement form:
+
+  - ``RATIONALE``
+  - ``COMMENT``
+  - Edit links for table-based requirements.
+  - Adding/editing parent/child requirements.
+
+- Section form:
+
+  - ``UID``
+
+- All forms:
+
+  - Contextual help about the RST markup.
+  - How to edit tables conveniently?
+
 - What to do with web content going out of sync with the server/file system state?
 - Issue when adding sibling section from a nested section.
 - Auto-trim all single-line fields.
 - Auto-trim all text areas - all trailing whitespace shall be removed.
-- Edit links for table-based requirements.
-- Edit requirement's ``RATIONALE`` field.
-- Adding/editing parent/child requirements.
 - Enable SeleniumBase tests on CI.
-- Adding comments to requirements.
 - Integration with Git repository.
 - Moving node up/down/left/right. For example, move a node of level 2 to level 1.
-- Contextual help about the RST markup.
-- Non-RST markup formats.
 - Expand/collapse the table of contents.
 
 - ReqIF:
@@ -27,9 +37,10 @@ Backlog: Graphical user interface
   - Export complete documentation tree or a single document to ReqIF.
   - Import complete documentation tree or a single document from ReqIF.
 
-- How to edit tables conveniently?
+- Other: 
 
-- Focused editing of document sections: dedicated and focused ``/sections/`` resource.
+  - Focused editing of document sections: dedicated and focused ``/sections/`` resource.
+  - Non-RST markup formats.
 
 Backlog: Nice to have
 =====================
@@ -73,6 +84,25 @@ Backlog: Nice to have
     - Config options for presenting requirements.
         - Include/exclude requirements in TOC
 
+
+Backlog: Known issues
+=====================
+
+
+
+HTML rendering using docutils is a performance bottleneck
+---------------------------------------------------------
+
+The overall generation process is still fast enough but in case some improvements were to be made:
+
+  - It could be measured what takes more time: parsing RST tree or actually rendering HTML
+  - Simplified RST parser and rendered can be written and their performance can be compared with that of docutils API.
+
+.. code-block:: bash
+
+    python -m cProfile -s cumulative strictdoc/cli/main.py export --no-parallelization docs/ > report.txt
+
+See also: https://docs.python.org/3/library/profile.html#instant-user-s-manual
 
 Document archetypes
 ===================

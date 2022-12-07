@@ -1,0 +1,104 @@
+/* [contenteditable=true]:empty:before{
+  content: attr(placeholder);
+  pointer-events: none;
+  display: block;
+} */
+
+:root {
+  --color-bg-form: aliceblue;
+  --color-bg-field: white;
+  --std-form-margin: 10px;
+}
+
+.std-form {
+  background-color: var(--color-bg-form);
+  outline: var(--std-form-margin) solid var(--color-bg-form);
+  margin: var(--base-margin) 0 0 0;
+}
+
+.std-form-row {
+  padding: var(--std-form-margin) 0 !important;
+  margin: 4px 0;
+}
+
+div[contenteditable=true] {
+  white-space: pre-wrap;
+  background-color: var(--color-bg-field);
+  outline: calc(var(--std-form-margin)/2) solid var(--color-bg-field);
+  /* Without this hack, Chrome generates duplicated new lines when Enter pressed. */
+  /* Add style display:inline-block; to contenteditable, it will not generate div, p, span automatic in chrome */
+  /* https://stackoverflow.com/a/24689390/598057 */
+  display: inline-block;
+  width: 100%;
+}
+
+[placeholder]:empty::before {
+  content: attr(placeholder);
+  pointer-events: none;
+  color: #808080;
+  /* For Firefox: */
+  display: block;
+}
+
+[placeholder]:empty:focus::before {
+  color: #c0c0c0;
+}
+
+.std-form-footer {
+  display: flex;
+  margin-top: 16px;
+}
+
+.std-form-btn {
+  display: inline-block;
+  text-align: center;
+  align-items: flex-start;
+  border-width: 1px;
+  border-radius: 2px;
+  border-style: outset;
+  background: buttonface;
+  /* border-color: buttonborder; */
+  border-color: transparent;
+  border-image: initial;
+  outline: none;
+  color: #000;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 12px;
+  line-height: 2;
+  padding: 0 10px;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.std-form-btn:hover {
+  background: rgb(246, 246, 246);
+  outline: 2px solid rgb(246, 246, 246);
+}
+
+.std-form-btn[type=submit] {
+  color: #000;
+}
+
+.std-form-btn[href*="cancel"] {
+  color: red;
+}
+
+.std-form-fileld-title {
+  font-size: calc(var(--base-font-size)*1.2);
+  font-weight: bold;
+}
+
+.std-form-fileld-requirement_statement {
+  font-size: calc(var(--base-font-size)*1.2);
+}
+
+.std-form-fileld-freetext {
+  font-size: var(--base-font-size);
+}
+
+.std-form-error {
+  color: red;
+  font-size: 12px;
+  margin-top: var(--std-form-margin);
+}

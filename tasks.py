@@ -117,6 +117,15 @@ def run_invoke_cmd(
 
 
 @task
+def clean(context):
+    # https://unix.stackexchange.com/a/689930/77389
+    clean_command = """
+        rm -rfv output/ docs/sphinx/build/    
+    """
+    run_invoke_cmd(context, clean_command)
+
+
+@task
 def clean_itest_artifacts(context):
     # https://unix.stackexchange.com/a/689930/77389
     find_command = """
@@ -404,13 +413,13 @@ def dump_grammar(context, output_file):
 @task
 def check_dead_links(context):
     command = """
-        python3 tools/link_health.py docs/strictdoc-1-user-manual.sdoc &&
-        python3 tools/link_health.py docs/strictdoc-2-development-plan.sdoc &&
-        python3 tools/link_health.py docs/strictdoc-3-requirements.sdoc &&
-        python3 tools/link_health.py docs/strictdoc-4-design.sdoc &&
-        python3 tools/link_health.py docs/strictdoc-5-backlog.sdoc &&
-        python3 tools/link_health.py docs/strictdoc-6-contributing.sdoc &&
-        python3 tools/link_health.py docs/strictdoc-7-faq.sdoc
+        python3 tools/link_health.py docs/strictdoc_01_user_guide.sdoc &&
+        python3 tools/link_health.py docs/strictdoc_02_faq.sdoc &&
+        python3 tools/link_health.py docs/strictdoc_03_development_plan.sdoc &&
+        python3 tools/link_health.py docs/strictdoc_04_backlog.sdoc &&
+        python3 tools/link_health.py docs/strictdoc_10_contributing.sdoc &&
+        python3 tools/link_health.py docs/strictdoc_20_requirements.sdoc &&
+        python3 tools/link_health.py docs/strictdoc_21_design.sdoc
     """
     run_invoke_cmd(context, command)
 

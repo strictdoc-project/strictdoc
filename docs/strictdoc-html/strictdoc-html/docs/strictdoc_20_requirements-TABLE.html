@@ -1,0 +1,1774 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="UTF-8"/>
+
+  <link rel="shortcut icon" href="../_static/favicon.ico" type="image/x-icon"/>
+
+  
+  <link rel="stylesheet" href="../_static/_base.css"/>
+  <link rel="stylesheet" href="../_static/_layout.css"/>
+  <link rel="stylesheet" href="../_static/_content.css"/>
+  <link rel="stylesheet" href="../_static/_requirement.css"/>
+  <link rel="stylesheet" href="../_static/_element.css"/>
+  <link rel="stylesheet" href="../_static/_form.css"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/toc.js"></script>
+  
+  
+  
+
+
+  <title>Requirements - Table</title>
+
+  
+</head>
+
+<body class="table-view withtoc">
+<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
+
+    <aside class="layout_aside-header">
+      
+  <a class="index-link" href="../index.html">To Index</a>
+
+    </aside>
+
+    <aside class="layout_aside">
+      
+  <turbo-frame id="frame-toc">
+    <div>Table of Contents</div>
+    <ul class="toc"><li><a href="#1-High-level-requirements" data-turbo="false">
+              <span class="section-number">1</span>
+              High-level requirements
+            </a><ul><li>
+        <a href="#1.1-SDOC-HIGH-REQS-MANAGEMENT" data-turbo="false">
+          <span class="section-number">1.1</span>
+          Requirements management
+        </a></li><li>
+        <a href="#1.2-SDOC-HIGH-DATA-MODEL" data-turbo="false">
+          <span class="section-number">1.2</span>
+          Data model
+        </a></li><li>
+        <a href="#1.3-Command-line-interface" data-turbo="false">
+          <span class="section-number">1.3</span>
+          Command-line interface
+        </a></li><li><a href="#1.4-Graphical-user-interface" data-turbo="false">
+              <span class="section-number">1.4</span>
+              Graphical user interface
+            </a></li><li><a href="#1.5-Statically-generated-website" data-turbo="false">
+              <span class="section-number">1.5</span>
+              Statically generated website
+            </a></li><li>
+        <a href="#1.6-Platform-support" data-turbo="false">
+          <span class="section-number">1.6</span>
+          Platform support
+        </a><ul><li>
+        <a href="#1.6.1-macOS-support" data-turbo="false">
+          <span class="section-number">1.6.1</span>
+          macOS support
+        </a></li><li>
+        <a href="#1.6.2-Linux-support" data-turbo="false">
+          <span class="section-number">1.6.2</span>
+          Linux support
+        </a></li><li>
+        <a href="#1.6.3-Windows-support" data-turbo="false">
+          <span class="section-number">1.6.3</span>
+          Windows support
+        </a></li></ul>
+            </li><li>
+        <a href="#1.7-SDOC-HIGH-VALIDATION" data-turbo="false">
+          <span class="section-number">1.7</span>
+          Requirements validation
+        </a></li><li>
+        <a href="#1.8-Requirements-text-format" data-turbo="false">
+          <span class="section-number">1.8</span>
+          Requirements text format
+        </a></li><li>
+        <a href="#1.9-Linking-requirements" data-turbo="false">
+          <span class="section-number">1.9</span>
+          Linking requirements
+        </a></li><li>
+        <a href="#1.10-Scalability" data-turbo="false">
+          <span class="section-number">1.10</span>
+          Scalability
+        </a></li><li>
+        <a href="#1.11-SDOC-HIGH-REQS-TRACEABILITY" data-turbo="false">
+          <span class="section-number">1.11</span>
+          Traceability
+        </a></li><li>
+        <a href="#1.12-Visualization" data-turbo="false">
+          <span class="section-number">1.12</span>
+          Visualization
+        </a></li><li>
+        <a href="#1.13-Open-source-software" data-turbo="false">
+          <span class="section-number">1.13</span>
+          Open source software
+        </a></li></ul>
+            </li><li><a href="#2-Implementation-requirements" data-turbo="false">
+              <span class="section-number">2</span>
+              Implementation requirements
+            </a><ul><li>
+        <a href="#2.1-SDOC-IMPL-PARAL" data-turbo="false">
+          <span class="section-number">2.1</span>
+          Parallelization
+        </a></li><li>
+        <a href="#2.2-SDOC-IMPL-INCREMENTAL" data-turbo="false">
+          <span class="section-number">2.2</span>
+          Incremental generation
+        </a></li></ul>
+            </li><li><a href="#3-Data-model" data-turbo="false">
+              <span class="section-number">3</span>
+              Data model
+            </a><ul><li>
+        <a href="#3.1-SDOC-DM-MODEL" data-turbo="false">
+          <span class="section-number">3.1</span>
+          Modeling capability
+        </a></li><li>
+        <a href="#3.2-Project" data-turbo="false">
+          <span class="section-number">3.2</span>
+          Project
+        </a><ul><li>
+        <a href="#3.2.1-Project-title" data-turbo="false">
+          <span class="section-number">3.2.1</span>
+          Project title
+        </a></li></ul>
+            </li><li><a href="#3.3-Document" data-turbo="false">
+              <span class="section-number">3.3</span>
+              Document
+            </a></li><li><a href="#3.4-Section" data-turbo="false">
+              <span class="section-number">3.4</span>
+              Section
+            </a></li><li><a href="#3.5-Requirement-item" data-turbo="false">
+              <span class="section-number">3.5</span>
+              Requirement item
+            </a><ul><li>
+        <a href="#3.5.1-Statement" data-turbo="false">
+          <span class="section-number">3.5.1</span>
+          Statement
+        </a></li><li>
+        <a href="#3.5.2-UID-identifier" data-turbo="false">
+          <span class="section-number">3.5.2</span>
+          UID identifier
+        </a><ul><li>
+        <a href="#3.5.2.1-UID-identifier-format" data-turbo="false">
+          <span class="section-number">3.5.2.1</span>
+          UID identifier format
+        </a></li></ul>
+            </li><li>
+        <a href="#3.5.3-Title" data-turbo="false">
+          <span class="section-number">3.5.3</span>
+          Title
+        </a></li><li>
+        <a href="#3.5.4-References" data-turbo="false">
+          <span class="section-number">3.5.4</span>
+          References
+        </a></li><li>
+        <a href="#3.5.5-Comments" data-turbo="false">
+          <span class="section-number">3.5.5</span>
+          Comments
+        </a></li><li>
+        <a href="#3.5.6-Special-fields" data-turbo="false">
+          <span class="section-number">3.5.6</span>
+          Special fields
+        </a></li></ul>
+            </li><li><a href="#3.6-Composite-Requirement-item" data-turbo="false">
+              <span class="section-number">3.6</span>
+              Composite Requirement item
+            </a></li><li>
+        <a href="#3.7-Links" data-turbo="false">
+          <span class="section-number">3.7</span>
+          Links
+        </a><ul><li>
+        <a href="#3.7.1-Parent-links" data-turbo="false">
+          <span class="section-number">3.7.1</span>
+          Parent links
+        </a></li></ul>
+            </li></ul>
+            </li><li><a href="#4-SDoc-file-format" data-turbo="false">
+              <span class="section-number">4</span>
+              SDoc file format
+            </a><ul><li>
+        <a href="#4.1-SDOC-FMT-PRIMARY" data-turbo="false">
+          <span class="section-number">4.1</span>
+          Primary text implementation
+        </a></li><li>
+        <a href="#4.2-SDOC-FMT-GRAMMAR" data-turbo="false">
+          <span class="section-number">4.2</span>
+          Grammar
+        </a><ul><li>
+        <a href="#4.2.1-No-indentation" data-turbo="false">
+          <span class="section-number">4.2.1</span>
+          No indentation
+        </a></li></ul>
+            </li><li>
+        <a href="#4.3-Type-safety" data-turbo="false">
+          <span class="section-number">4.3</span>
+          Type safety
+        </a></li></ul>
+            </li><li><a href="#5-Export-and-import-capabilities" data-turbo="false">
+              <span class="section-number">5</span>
+              Export and import capabilities
+            </a><ul><li><a href="#5.1-General" data-turbo="false">
+              <span class="section-number">5.1</span>
+              General
+            </a><ul><li>
+        <a href="#5.1.1-Generated-file-names" data-turbo="false">
+          <span class="section-number">5.1.1</span>
+          Generated file names
+        </a></li></ul>
+            </li><li><a href="#5.2-HTML-Export" data-turbo="false">
+              <span class="section-number">5.2</span>
+              HTML Export
+            </a><ul><li>
+        <a href="#5.2.1-Single-document-Normal-form" data-turbo="false">
+          <span class="section-number">5.2.1</span>
+          Single document: Normal form
+        </a></li><li>
+        <a href="#5.2.2-Single-document-Tabular-form" data-turbo="false">
+          <span class="section-number">5.2.2</span>
+          Single document: Tabular form
+        </a></li><li>
+        <a href="#5.2.3-Single-document-1-level-traceability" data-turbo="false">
+          <span class="section-number">5.2.3</span>
+          Single document: 1-level traceability
+        </a></li><li>
+        <a href="#5.2.4-Single-document-Deep-traceability" data-turbo="false">
+          <span class="section-number">5.2.4</span>
+          Single document: Deep traceability
+        </a></li><li>
+        <a href="#5.2.5-Left-panel-Table-of-contents" data-turbo="false">
+          <span class="section-number">5.2.5</span>
+          Left panel: Table of contents
+        </a></li></ul>
+            </li><li><a href="#5.3-PDF-Export" data-turbo="false">
+              <span class="section-number">5.3</span>
+              PDF Export
+            </a><ul><li>
+        <a href="#5.3.1-Sphinx-documentation-generator" data-turbo="false">
+          <span class="section-number">5.3.1</span>
+          Sphinx documentation generator
+        </a></li></ul>
+            </li><li>
+        <a href="#5.4-SDOC-GEN-EXCEL-EXPORT" data-turbo="false">
+          <span class="section-number">5.4</span>
+          Excel Export
+        </a></li><li>
+        <a href="#5.5-ReqIF-import-export" data-turbo="false">
+          <span class="section-number">5.5</span>
+          ReqIF import/export
+        </a></li></ul>
+            </li><li><a href="#6-Validation" data-turbo="false">
+              <span class="section-number">6</span>
+              Validation
+            </a><ul><li>
+        <a href="#6.1-SDOC-VALIDATION-UNIQUE-UID" data-turbo="false">
+          <span class="section-number">6.1</span>
+          Uniqueness of UID identifiers in a document tree
+        </a></li><li>
+        <a href="#6.2-SDOC-VALIDATION-NO-CYCLES" data-turbo="false">
+          <span class="section-number">6.2</span>
+          No cycles in a document tree
+        </a></li><li>
+        <a href="#6.3-SDOC-VALIDATION-VALID-HTML" data-turbo="false">
+          <span class="section-number">6.3</span>
+          Valid HTML markup
+        </a></li></ul>
+            </li><li><a href="#7-Traceability-and-coverage" data-turbo="false">
+              <span class="section-number">7</span>
+              Traceability and coverage
+            </a><ul><li>
+        <a href="#7.1-Linking-with-implementation-artifacts" data-turbo="false">
+          <span class="section-number">7.1</span>
+          Linking with implementation artifacts
+        </a><ul><li>
+        <a href="#7.1.1-Validation-Broken-links-from-requirements-to-source-files" data-turbo="false">
+          <span class="section-number">7.1.1</span>
+          Validation: Broken links from requirements to source files
+        </a></li><li>
+        <a href="#7.1.2-Validation-Broken-links-from-source-files-to-requirements" data-turbo="false">
+          <span class="section-number">7.1.2</span>
+          Validation: Broken links from source files to requirements
+        </a></li></ul>
+            </li><li>
+        <a href="#7.2-Requirements-coverage" data-turbo="false">
+          <span class="section-number">7.2</span>
+          Requirements coverage
+        </a></li><li>
+        <a href="#7.3-Source-coverage" data-turbo="false">
+          <span class="section-number">7.3</span>
+          Source coverage
+        </a></li></ul>
+            </li><li><a href="#8-Web-frontend-requirements" data-turbo="false">
+              <span class="section-number">8</span>
+              Web frontend requirements
+            </a><ul><li>
+        <a href="#8.1-AJAX-updates-of-multiple-web-forms" data-turbo="false">
+          <span class="section-number">8.1</span>
+          AJAX updates of multiple web forms
+        </a></li></ul>
+            </li></ul>
+</turbo-frame>
+
+    </aside>
+
+    
+  <a class="layout_toggler layout_button" id="layout_toggle"></a><nav class="layout_nav">
+    <a
+    class="layout_nav-btn layout_button btn-document"
+    title="Go to Document view"
+    href="../docs/strictdoc_20_requirements.html">
+    DOC
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-table"
+    title="Go to Table view"
+    href="../docs/strictdoc_20_requirements-TABLE.html">
+    TBL
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-traceability"
+    title="Go to Traceability view"
+    href="../docs/strictdoc_20_requirements-TRACE.html">
+    TR
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-deep-traceability"
+    title="Go to Deep Traceability view"
+    href="../docs/strictdoc_20_requirements-DEEP-TRACE.html">
+    DTR
+  </a>
+  </nav>
+
+
+    <header class="layout_header">
+      
+  <p>Requirements <span class="document-view-type">Table</span></p>
+
+    </header>
+
+    <main class="layout_main">
+      
+
+      
+
+      <div class="layout_tmp_inner"><div class="content">
+
+<table class="content-view-table">
+
+  <thead>
+    <tr>
+      <th class="content-view-th">Type</th>
+      <th class="content-view-th">Level</th><th class="content-view-th">UID</th><th class="content-view-th">REFS</th>
+      <th class="content-view-th">Title</th>
+      <th class="content-view-th">Statement</th>
+      <th class="content-view-th">Rationale</th>
+      <th class="content-view-th">Comment</th></tr>
+  </thead>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="1-High-level-requirements"></div>
+      <div class="section-title">
+        High-level requirements
+      </div></td>
+  </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     1.1
+   </td>
+      <td class="content-view-td content-view-td-meta">
+        SDOC-HIGH-REQS-MANAGEMENT</td><td class="content-view-td content-view-td-meta content-view-td-related">
+      Parents:
+      <ul class="requirement_link">
+        <li>
+          <a class="requirement_link-parent" href="../docs/strictdoc_03_development_plan-TABLE.html#1.1-GOAL-1-TOOL-SUPPORT">
+            <span class="requirement_parent-uid">GOAL-1-TOOL-SUPPORT</span>
+            Software support for writing requirements and specifications documents
+          </a>
+        </li>
+        </ul>
+      Children:
+      <ul class="requirement_link">
+        <li>
+          <a class="requirement_link-child" href="#3.1-SDOC-DM-MODEL">
+            <span class="requirement_child-uid">SDOC-DM-MODEL</span>
+            Modeling capability
+          </a>
+        </li>
+        </ul>
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.1-SDOC-HIGH-REQS-MANAGEMENT"></div>
+      <div class="section-title">
+        Requirements management
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall enable requirements management.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     1.2
+   </td>
+      <td class="content-view-td content-view-td-meta">
+        SDOC-HIGH-DATA-MODEL</td><td class="content-view-td content-view-td-meta content-view-td-related">
+      Children:
+      <ul class="requirement_link">
+        <li>
+          <a class="requirement_link-child" href="#3.1-SDOC-DM-MODEL">
+            <span class="requirement_child-uid">SDOC-DM-MODEL</span>
+            Modeling capability
+          </a>
+        </li>
+        <li>
+          <a class="requirement_link-child" href="#4.2-SDOC-FMT-GRAMMAR">
+            <span class="requirement_child-uid">SDOC-FMT-GRAMMAR</span>
+            Grammar
+          </a>
+        </li>
+        </ul>
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.2-SDOC-HIGH-DATA-MODEL"></div>
+      <div class="section-title">
+        Data model
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall be based on a well-defined data model.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+      <div class="document">
+<p>StrictDoc is a result of several attempts to find a solution for working with
+text-based requirements:</p>
+<ul class="simple">
+<li>StrictDoc, first generation: Markdown-based C++ program. Custom requirements
+metadata in YAML.</li>
+<li>StrictDoc, second generation: RST/Sphinx-based Python program. Using Sphinx
+extensions to manage meta information.</li>
+</ul>
+<p>The result of these efforts was the realization that a text-based requirements
+and specifications management tool could be built on top of a domain-specific
+language (DSL) created specifically for the purpose of writing requirements and
+specifications documents. Such a language allows an explicit definition of a
+document data model which is called &quot;grammar&quot;.</p>
+</div>
+
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     1.3
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.3-Command-line-interface"></div>
+      <div class="section-title">
+        Command-line interface
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall provide a command-line interface.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     1.4
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="1.4-Graphical-user-interface"></div>
+      <div class="section-title">
+        Graphical user interface
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>StrictDoc shall provide a Graphical User Interface (GUI).</p>
+<p>Several trade-offs to consider:</p>
+<ul class="simple">
+<li>Desktop vs Web. Rather web-based, i.e. Python backend and JS frontend, but which technology?</li>
+<li>Still keep the current behavior of a statically generated website?</li>
+</ul>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     1.5
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="1.5-Statically-generated-website"></div>
+      <div class="section-title">
+        Statically generated website
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>StrictDoc shall allow generating requirements content to static HTML website.</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Composite requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     1.6
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.6-Platform-support"></div>
+      <div class="section-title">
+        Platform support
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall work on all major platforms.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     1.6.1
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.6.1-macOS-support"></div>
+      <div class="section-title">
+        macOS support
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall work on macOS systems.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     1.6.2
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.6.2-Linux-support"></div>
+      <div class="section-title">
+        Linux support
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall work on Linux systems.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     1.6.3
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.6.3-Windows-support"></div>
+      <div class="section-title">
+        Windows support
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall work on Windows systems.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     1.7
+   </td>
+      <td class="content-view-td content-view-td-meta">
+        SDOC-HIGH-VALIDATION</td><td class="content-view-td content-view-td-meta content-view-td-related">
+      Children:
+      <ul class="requirement_link">
+        <li>
+          <a class="requirement_link-child" href="#6.1-SDOC-VALIDATION-UNIQUE-UID">
+            <span class="requirement_child-uid">SDOC-VALIDATION-UNIQUE-UID</span>
+            Uniqueness of UID identifiers in a document tree
+          </a>
+        </li>
+        <li>
+          <a class="requirement_link-child" href="#6.2-SDOC-VALIDATION-NO-CYCLES">
+            <span class="requirement_child-uid">SDOC-VALIDATION-NO-CYCLES</span>
+            No cycles in a document tree
+          </a>
+        </li>
+        <li>
+          <a class="requirement_link-child" href="#6.3-SDOC-VALIDATION-VALID-HTML">
+            <span class="requirement_child-uid">SDOC-VALIDATION-VALID-HTML</span>
+            Valid HTML markup
+          </a>
+        </li>
+        </ul>
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.7-SDOC-HIGH-VALIDATION"></div>
+      <div class="section-title">
+        Requirements validation
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall allow validation of requirement documents.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     1.8
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.8-Requirements-text-format"></div>
+      <div class="section-title">
+        Requirements text format
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall allow storage of requirements in a plain-text human readable form.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     1.9
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.9-Linking-requirements"></div>
+      <div class="section-title">
+        Linking requirements
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall support linking requirements to each other.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     1.10
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.10-Scalability"></div>
+      <div class="section-title">
+        Scalability
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall allow working with large documents and document trees containing at least 10000 requirement items.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     1.11
+   </td>
+      <td class="content-view-td content-view-td-meta">
+        SDOC-HIGH-REQS-TRACEABILITY</td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.11-SDOC-HIGH-REQS-TRACEABILITY"></div>
+      <div class="section-title">
+        Traceability
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall support traceability of requirements.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     1.12
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.12-Visualization"></div>
+      <div class="section-title">
+        Visualization
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall provide means for visualization of requirement documents.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     1.13
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.13-Open-source-software"></div>
+      <div class="section-title">
+        Open source software
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall always be free and open source software.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     2
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="2-Implementation-requirements"></div>
+      <div class="section-title">
+        Implementation requirements
+      </div></td>
+  </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     2.1
+   </td>
+      <td class="content-view-td content-view-td-meta">
+        SDOC-IMPL-PARAL</td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="2.1-SDOC-IMPL-PARAL"></div>
+      <div class="section-title">
+        Parallelization
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall enable parallelization of the time-consuming parts of the code.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     2.2
+   </td>
+      <td class="content-view-td content-view-td-meta">
+        SDOC-IMPL-INCREMENTAL</td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="2.2-SDOC-IMPL-INCREMENTAL"></div>
+      <div class="section-title">
+        Incremental generation
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall enable incremental generation of the documents.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+      <div class="document">
+<p>When exporting documentation tree, StrictDoc shall regenerate only changed
+documents and files.</p>
+</div>
+
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     3
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="3-Data-model"></div>
+      <div class="section-title">
+        Data model
+      </div></td>
+  </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     3.1
+   </td>
+      <td class="content-view-td content-view-td-meta">
+        SDOC-DM-MODEL</td><td class="content-view-td content-view-td-meta content-view-td-related">
+      Parents:
+      <ul class="requirement_link">
+        <li>
+          <a class="requirement_link-parent" href="#1.1-SDOC-HIGH-REQS-MANAGEMENT">
+            <span class="requirement_parent-uid">SDOC-HIGH-REQS-MANAGEMENT</span>
+            Requirements management
+          </a>
+        </li>
+        <li>
+          <a class="requirement_link-parent" href="#1.2-SDOC-HIGH-DATA-MODEL">
+            <span class="requirement_parent-uid">SDOC-HIGH-DATA-MODEL</span>
+            Data model
+          </a>
+        </li>
+        </ul>
+      Children:
+      <ul class="requirement_link">
+        <li>
+          <a class="requirement_link-child" href="#4.1-SDOC-FMT-PRIMARY">
+            <span class="requirement_child-uid">SDOC-FMT-PRIMARY</span>
+            Primary text implementation
+          </a>
+        </li>
+        </ul>
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="3.1-SDOC-DM-MODEL"></div>
+      <div class="section-title">
+        Modeling capability
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc's Data Model shall accommodate for maximum possible standard requirement document formats.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+      <div class="document">
+<p>Examples of standard requirements documents include but are not limited to:</p>
+<ul class="simple">
+<li>Non-nested requirement lists split by categories
+(e.g., Functional Requirements, Interface Requirements, Performance Requirements, etc.)</li>
+</ul>
+</div>
+
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Composite requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     3.2
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="3.2-Project"></div>
+      <div class="section-title">
+        Project
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall support the &quot;Project&quot; concept as a top-level entity that serves
+for grouping of SDoc documents into a single project documentation tree.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     3.2.1
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="3.2.1-Project-title"></div>
+      <div class="section-title">
+        Project title
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>Project shall have a &quot;Title&quot; property.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+      <div class="document">
+<p>Currently, the project title aspect is not part of the SDoc grammar. It is
+simply specified via the <tt class="docutils literal"><span class="pre">--project-title</span></tt> command-line option. This might
+change when the project title will be configured as part of the project-level
+config file (TOML or SDoc-like grammar).</p>
+</div>
+
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     3.3
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="3.3-Document"></div>
+      <div class="section-title">
+        Document
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>TBD</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     3.4
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="3.4-Section"></div>
+      <div class="section-title">
+        Section
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>TBD</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     3.5
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="3.5-Requirement-item"></div>
+      <div class="section-title">
+        Requirement item
+      </div></td>
+  </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     3.5.1
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="3.5.1-Statement"></div>
+      <div class="section-title">
+        Statement
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>Requirement item shall have a statement.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Composite requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     3.5.2
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="3.5.2-UID-identifier"></div>
+      <div class="section-title">
+        UID identifier
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>Requirement item may have an UID identifier.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     3.5.2.1
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="3.5.2.1-UID-identifier-format"></div>
+      <div class="section-title">
+        UID identifier format
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall not impose any restrictions on the UID field format.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+      <div class="document">
+<p>Conventions used for requirement UIDs can be very different. And there seems to
+be no way to define a single rule.</p>
+<p>Some examples:</p>
+<ul class="simple">
+<li>FUN-003</li>
+<li>cES1008, cTBL6000.1 (NASA cFS)</li>
+<li>Requirements without a number, e.g. SDOC-HIGH-DATA-MODEL (StrictDoc)</li>
+<li>SAVOIR.OBC.PM.80 (SAVOIR)</li>
+</ul>
+</div>
+
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     3.5.3
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="3.5.3-Title"></div>
+      <div class="section-title">
+        Title
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>Requirement item may have an title.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     3.5.4
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="3.5.4-References"></div>
+      <div class="section-title">
+        References
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>Requirement item may have one or more references.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     3.5.5
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="3.5.5-Comments"></div>
+      <div class="section-title">
+        Comments
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>Requirement item may have one or more comments.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     3.5.6
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="3.5.6-Special-fields"></div>
+      <div class="section-title">
+        Special fields
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall support customization of the default Requirement's grammar with special fields.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+      <div class="document">
+<p>Examples:</p>
+<ul class="simple">
+<li>RAIT compliance fields (Review of design, analysis, inspection, testing)</li>
+<li>Automotive Safety Integrity Level level (ASIL).</li>
+</ul>
+</div>
+
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     3.6
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="3.6-Composite-Requirement-item"></div>
+      <div class="section-title">
+        Composite Requirement item
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>TBD</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Composite requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     3.7
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="3.7-Links"></div>
+      <div class="section-title">
+        Links
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc's data model shall support linking document content nodes to each other.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     3.7.1
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="3.7.1-Parent-links"></div>
+      <div class="section-title">
+        Parent links
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc's data model shall support linking a requirement to another requirement using PARENT link.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4-SDoc-file-format"></div>
+      <div class="section-title">
+        SDoc file format
+      </div></td>
+  </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     4.1
+   </td>
+      <td class="content-view-td content-view-td-meta">
+        SDOC-FMT-PRIMARY</td><td class="content-view-td content-view-td-meta content-view-td-related">
+      Parents:
+      <ul class="requirement_link">
+        <li>
+          <a class="requirement_link-parent" href="#3.1-SDOC-DM-MODEL">
+            <span class="requirement_parent-uid">SDOC-DM-MODEL</span>
+            Modeling capability
+          </a>
+        </li>
+        </ul>
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="4.1-SDOC-FMT-PRIMARY"></div>
+      <div class="section-title">
+        Primary text implementation
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>The SDoc format shall support encoding the Strict Doc Data Model in a plain-text human readable form.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Composite requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     4.2
+   </td>
+      <td class="content-view-td content-view-td-meta">
+        SDOC-FMT-GRAMMAR</td><td class="content-view-td content-view-td-meta content-view-td-related">
+      Parents:
+      <ul class="requirement_link">
+        <li>
+          <a class="requirement_link-parent" href="#1.2-SDOC-HIGH-DATA-MODEL">
+            <span class="requirement_parent-uid">SDOC-HIGH-DATA-MODEL</span>
+            Data model
+          </a>
+        </li>
+        </ul>
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="4.2-SDOC-FMT-GRAMMAR"></div>
+      <div class="section-title">
+        Grammar
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>The SDoc format shall be based on a fixed grammar.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     4.2.1
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="4.2.1-No-indentation"></div>
+      <div class="section-title">
+        No indentation
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>The SDoc grammar's building blocks shall not allow any indentation.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+      <div class="document">
+<p>Rationale: Adding indentation to any of the fields does not scale well when the
+documents have deeply nested section structure as well as when the size of the
+paragraphs becomes sufficiently large. Keeping every keyword like [REQUIREMENT]
+or [COMMENT] with no indentation ensures that one does not have to think about
+possible indentation issues.</p>
+</div>
+
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     4.3
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="4.3-Type-safety"></div>
+      <div class="section-title">
+        Type safety
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>The SDoc format shall allow type-safe encoding of requirement documents.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     5
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="5-Export-and-import-capabilities"></div>
+      <div class="section-title">
+        Export and import capabilities
+      </div></td>
+  </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     5.1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="5.1-General"></div>
+      <div class="section-title">
+        General
+      </div></td>
+  </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     5.1.1
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="5.1.1-Generated-file-names"></div>
+      <div class="section-title">
+        Generated file names
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall preserve original document file names when generating to all
+export formats.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     5.2
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="5.2-HTML-Export"></div>
+      <div class="section-title">
+        HTML Export
+      </div></td>
+  </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     5.2.1
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="5.2.1-Single-document-Normal-form"></div>
+      <div class="section-title">
+        Single document: Normal form
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall export single document pages in a normal document-like form.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     5.2.2
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="5.2.2-Single-document-Tabular-form"></div>
+      <div class="section-title">
+        Single document: Tabular form
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall export single document pages in a tabular form.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     5.2.3
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="5.2.3-Single-document-1-level-traceability"></div>
+      <div class="section-title">
+        Single document: 1-level traceability
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall export 1-level traceability document.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     5.2.4
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="5.2.4-Single-document-Deep-traceability"></div>
+      <div class="section-title">
+        Single document: Deep traceability
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall export deep traceability document.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     5.2.5
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="5.2.5-Left-panel-Table-of-contents"></div>
+      <div class="section-title">
+        Left panel: Table of contents
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall export all HTML pages with Table of Contents.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     5.3
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="5.3-PDF-Export"></div>
+      <div class="section-title">
+        PDF Export
+      </div></td>
+  </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     5.3.1
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="5.3.1-Sphinx-documentation-generator"></div>
+      <div class="section-title">
+        Sphinx documentation generator
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall support exporting documents to Sphinx/RST format.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     5.4
+   </td>
+      <td class="content-view-td content-view-td-meta">
+        SDOC-GEN-EXCEL-EXPORT</td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="5.4-SDOC-GEN-EXCEL-EXPORT"></div>
+      <div class="section-title">
+        Excel Export
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall support exporting documents to Excel format.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     5.5
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="5.5-ReqIF-import-export"></div>
+      <div class="section-title">
+        ReqIF import/export
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall support the ReqIF format.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     6
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="6-Validation"></div>
+      <div class="section-title">
+        Validation
+      </div></td>
+  </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     6.1
+   </td>
+      <td class="content-view-td content-view-td-meta">
+        SDOC-VALIDATION-UNIQUE-UID</td><td class="content-view-td content-view-td-meta content-view-td-related">
+      Parents:
+      <ul class="requirement_link">
+        <li>
+          <a class="requirement_link-parent" href="#1.7-SDOC-HIGH-VALIDATION">
+            <span class="requirement_parent-uid">SDOC-HIGH-VALIDATION</span>
+            Requirements validation
+          </a>
+        </li>
+        </ul>
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="6.1-SDOC-VALIDATION-UNIQUE-UID"></div>
+      <div class="section-title">
+        Uniqueness of UID identifiers in a document tree
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall ensure that each UID used in a document tree is unique.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+      <div class="document">
+<p>This is implemented but the error message shall be made more readable.</p>
+</div>
+
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     6.2
+   </td>
+      <td class="content-view-td content-view-td-meta">
+        SDOC-VALIDATION-NO-CYCLES</td><td class="content-view-td content-view-td-meta content-view-td-related">
+      Parents:
+      <ul class="requirement_link">
+        <li>
+          <a class="requirement_link-parent" href="#1.7-SDOC-HIGH-VALIDATION">
+            <span class="requirement_parent-uid">SDOC-HIGH-VALIDATION</span>
+            Requirements validation
+          </a>
+        </li>
+        </ul>
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="6.2-SDOC-VALIDATION-NO-CYCLES"></div>
+      <div class="section-title">
+        No cycles in a document tree
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall ensure that no requirements in document tree reference each other.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     6.3
+   </td>
+      <td class="content-view-td content-view-td-meta">
+        SDOC-VALIDATION-VALID-HTML</td><td class="content-view-td content-view-td-meta content-view-td-related">
+      Parents:
+      <ul class="requirement_link">
+        <li>
+          <a class="requirement_link-parent" href="#1.7-SDOC-HIGH-VALIDATION">
+            <span class="requirement_parent-uid">SDOC-HIGH-VALIDATION</span>
+            Requirements validation
+          </a>
+        </li>
+        </ul>
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="6.3-SDOC-VALIDATION-VALID-HTML"></div>
+      <div class="section-title">
+        Valid HTML markup
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc's HTML export tests shall validate the generated HTML markup.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+      <div class="document">
+<p>First candidate: Table of contents and its nested <tt class="docutils literal"><span class="pre">&lt;ul&gt;/&lt;li&gt;</span></tt> items.</p>
+</div>
+
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     7
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="7-Traceability-and-coverage"></div>
+      <div class="section-title">
+        Traceability and coverage
+      </div></td>
+  </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Composite requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     7.1
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="7.1-Linking-with-implementation-artifacts"></div>
+      <div class="section-title">
+        Linking with implementation artifacts
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall support linking requirements to files.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     7.1.1
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="7.1.1-Validation-Broken-links-from-requirements-to-source-files"></div>
+      <div class="section-title">
+        Validation: Broken links from requirements to source files
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall warn a user about all requirements whose links reference source
+files that do not exist.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     7.1.2
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="7.1.2-Validation-Broken-links-from-source-files-to-requirements"></div>
+      <div class="section-title">
+        Validation: Broken links from source files to requirements
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall warn a user about all source files whose links reference
+requirements that do not exist.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     7.2
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="7.2-Requirements-coverage"></div>
+      <div class="section-title">
+        Requirements coverage
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall generate requirements coverage information.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+      <div class="document">
+<p>Requirements coverage screen shows how requirements are linked with source files.</p>
+</div>
+
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     7.3
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="7.3-Source-coverage"></div>
+      <div class="section-title">
+        Source coverage
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc shall generate source coverage information.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+      <div class="document">
+<p>Source coverage screen shows how source files are linked with requirements.</p>
+</div>
+
+    </td></tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     8
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="8-Web-frontend-requirements"></div>
+      <div class="section-title">
+        Web frontend requirements
+      </div></td>
+  </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">
+    Requirement</td>
+   <td class="content-view-td content-view-td-meta">
+     8.1
+   </td>
+      <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
+    </td>
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="8.1-AJAX-updates-of-multiple-web-forms"></div>
+      <div class="section-title">
+        AJAX updates of multiple web forms
+      </div></td>
+    <td class="content-view-td content-view-td-content"><div class="document">
+<p>StrictDoc's Web GUI shall provide capability to do multipart updates.</p>
+</div>
+</td>
+    <td class="content-view-td content-view-td-content"></td>
+    <td class="content-view-td content-view-td-content">
+    </td></tr>
+
+  </table>
+</div>
+</div>
+
+
+    </main>
+
+  </div>
+  
+</body>
+</html>

@@ -28,15 +28,7 @@ def test_03_negative():
 
 
 def test_04_meta_multilines_not_nones():
-    document_config = DocumentConfig(
-        parent=None,
-        version=None,
-        uid=None,
-        markup=None,
-        auto_levels=None,
-        requirement_style=None,
-        requirement_in_toc=None,
-    )
+    document_config = DocumentConfig.default_config(None)
     document = Document("Test Doc", document_config, None, [], [])
 
     test_field = "META_TEST_FIELD"

@@ -41,14 +41,19 @@ class SDWriter:
 
         document_config: DocumentConfig = document.config
         if document_config:
+            uid = document_config.uid
+            if uid:
+                output += f"UID: {uid}"
+                output += "\n"
+
             version = document_config.version
             if version:
                 output += f"VERSION: {version}"
                 output += "\n"
 
-            uid = document_config.uid
-            if uid:
-                output += f"UID: {uid}"
+            classification = document_config.classification
+            if classification:
+                output += f"CLASSIFICATION: {classification}"
                 output += "\n"
 
             markup = document_config.markup

@@ -125,15 +125,7 @@ class ExcelToSDocConverter:
 
     @staticmethod
     def create_document(title: Optional[str], extra_header_pairs) -> Document:
-        document_config = DocumentConfig(
-            parent=None,
-            version=None,
-            uid=None,
-            markup=None,
-            auto_levels=None,
-            requirement_style=None,
-            requirement_in_toc=None,
-        )
+        document_config = DocumentConfig.default_config(None)
         document_title = title if title else "<No title>"
         document = Document(document_title, document_config, None, [], [])
 

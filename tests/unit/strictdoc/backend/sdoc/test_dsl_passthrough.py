@@ -3,6 +3,7 @@ from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
     CompositeRequirement,
 )
+from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.reader import SDReader
 from strictdoc.backend.sdoc.writer import SDWriter
 
@@ -619,6 +620,87 @@ REFS:
 
     document: Document = reader.read(input)
     assert document.config.uid == "SDOC-01"
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input == output
+
+
+def test_072_document_config_classification():
+    input = """
+[DOCUMENT]
+TITLE: Test Doc
+UID: SDOC-01
+VERSION: 0.0.1
+CLASSIFICATION: Restricted
+
+[REQUIREMENT]
+REFS:
+- TYPE: File
+  VALUE: /tmp/sample.cpp
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input)
+    assert isinstance(document, Document)
+
+    document: Document = reader.read(input)
+    assert document.config.classification == "Restricted"
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input == output
+
+
+def test_090_document_config_all_fields():
+    input = """
+[DOCUMENT]
+TITLE: Test Doc
+UID: SDOC-01
+VERSION: 0.0.1
+CLASSIFICATION: Restricted
+OPTIONS:
+  MARKUP: Text
+  AUTO_LEVELS: Off
+  REQUIREMENT_STYLE: Table
+  REQUIREMENT_IN_TOC: True
+
+[SECTION]
+LEVEL: 123
+TITLE: "Section"
+
+[REQUIREMENT]
+LEVEL: 456
+STATEMENT: ABC
+
+[/SECTION]
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input)
+    assert isinstance(document, Document)
+
+    document: Document = reader.read(input)
+    assert document.title == "Test Doc"
+    assert document.config.version == "0.0.1"
+    assert document.config.uid == "SDOC-01"
+    assert document.config.classification == "Restricted"
+    assert document.config.markup == "Text"
+    assert document.config.auto_levels == False
+    assert document.config.requirement_style == "Table"
+    assert document.config.requirement_in_toc == "True"
+
+    section = document.section_contents[0]
+    assert isinstance(section, Section)
+    assert section.level == "123"
+
+    requirement = section.section_contents[0]
+    assert isinstance(requirement, Requirement)
+    assert requirement.level == "456"
 
     writer = SDWriter()
     output = writer.write(document)

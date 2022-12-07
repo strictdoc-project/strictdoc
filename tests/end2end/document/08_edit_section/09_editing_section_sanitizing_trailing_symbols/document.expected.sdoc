@@ -1,0 +1,19 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+Hello world!
+[/FREETEXT]
+
+[SECTION]
+TITLE: Modified title
+
+[FREETEXT]
+Hello world!
+
+Hello world!
+
+Hello world!
+[/FREETEXT]
+
+[/SECTION]

@@ -28,8 +28,6 @@ TITLE: Backlog: Graphical user interface
 
 - What to do with web content going out of sync with the server/file system state?
 - Issue when adding sibling section from a nested section.
-- Auto-trim all single-line fields.
-- Auto-trim all text areas - all trailing whitespace shall be removed.
 - Enable SeleniumBase tests on CI.
 - Integration with Git repository.
 - Moving node up/down/left/right. For example, move a node of level 2 to level 1.

@@ -1,4 +1,8 @@
 import re
+from typing import Optional
+
+REGEX_TRAILING_WHITESPACE_SINGLELINE = re.compile(r"\s{2,}")
+REGEX_TRAILING_WHITESPACE_MULTILINE = re.compile(r" +\n")
 
 
 def get_lines_count(string):
@@ -29,3 +33,23 @@ def escape(string: str) -> str:
 
 def unescape(string: str) -> str:
     return string.encode("utf-8").decode("unicode_escape")
+
+
+def sanitize_html_form_field(
+    field: Optional[str], multiline: bool
+) -> Optional[str]:
+    if field is not None:
+        assert isinstance(field, str), field
+        if len(field) > 0:
+            sanitized_field: str = field.strip()
+            if len(sanitized_field) > 0:
+                if multiline:
+                    return REGEX_TRAILING_WHITESPACE_MULTILINE.sub(
+                        "\n", sanitized_field
+                    )
+                sanitized_field = sanitized_field.replace("\r\n", "")
+                return REGEX_TRAILING_WHITESPACE_SINGLELINE.sub(
+                    " ", sanitized_field
+                )
+
+    return None

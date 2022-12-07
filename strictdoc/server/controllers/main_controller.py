@@ -41,6 +41,7 @@ from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
 from strictdoc.helpers.parallelizer import NullParallelizer
+from strictdoc.helpers.string import sanitize_html_form_field
 from strictdoc.server.error_object import ErrorObject
 
 assert os.path.isabs(STRICTDOC_ROOT_PATH), f"{STRICTDOC_ROOT_PATH}"
@@ -164,7 +165,7 @@ class MainController:
         self,
         *,
         section_mid: str,
-        section_title: str,
+        section_title: Optional[str],
         section_content: Optional[str],
         reference_mid: str,
         whereto: str,
@@ -175,6 +176,12 @@ class MainController:
         assert (
             isinstance(reference_mid, str) and len(reference_mid) > 0
         ), reference_mid
+
+        section_title = sanitize_html_form_field(section_title, multiline=False)
+        section_content = sanitize_html_form_field(
+            section_content, multiline=True
+        )
+
         reference_node: Union[
             Document, Section
         ] = self.export_action.traceability_index.get_node_by_id(reference_mid)
@@ -327,9 +334,16 @@ class MainController:
         self,
         *,
         section_id: str,
-        section_title: str,
+        section_title: Optional[str],
         section_content: Optional[str],
     ):
+        assert isinstance(section_id, str)
+
+        section_title = sanitize_html_form_field(section_title, multiline=False)
+        section_content = sanitize_html_form_field(
+            section_content, multiline=True
+        )
+
         section: Section = self.export_action.traceability_index.get_node_by_id(
             section_id
         )
@@ -382,6 +396,8 @@ class MainController:
         # Updating section title.
         if section_title is not None and len(section_title) > 0:
             section.title = section_title
+        else:
+            assert "Should not reach here", section_title
 
         # Updating section content.
         if section_content is not None and len(section_content) > 0:
@@ -524,8 +540,14 @@ class MainController:
 
         return output
 
-    def update_document_freetext(self, document_id, document_freetext):
+    def update_document_freetext(
+        self, document_id: str, document_freetext: Optional[str]
+    ):
         assert isinstance(document_id, str)
+
+        document_freetext = sanitize_html_form_field(
+            document_freetext, multiline=True
+        )
 
         form_object = ExistingDocumentFreeTextObject(
             document_mid=document_id, document_free_text=document_freetext
@@ -690,11 +712,20 @@ class MainController:
         self,
         *,
         requirement_mid: str,
-        requirement_title: str,
+        requirement_title: Optional[str],
         requirement_statement: Optional[str],
         reference_mid: str,
         whereto: Optional[str],
     ):
+        assert isinstance(requirement_mid, str)
+
+        requirement_title = sanitize_html_form_field(
+            requirement_title, multiline=False
+        )
+        requirement_statement = sanitize_html_form_field(
+            requirement_statement, multiline=True
+        )
+
         reference_node: Union[
             Document, Section
         ] = self.export_action.traceability_index.get_node_by_id(reference_mid)
@@ -872,12 +903,20 @@ class MainController:
         self,
         *,
         requirement_mid: str,
-        requirement_title: str,
+        requirement_title: Optional[str],
         requirement_statement: Optional[str],
     ):
         assert (
             isinstance(requirement_mid, str) and len(requirement_mid) > 0
         ), f"{requirement_mid}"
+
+        requirement_title = sanitize_html_form_field(
+            requirement_title, multiline=False
+        )
+        requirement_statement = sanitize_html_form_field(
+            requirement_statement, multiline=True
+        )
+
         requirement = self.export_action.traceability_index.get_node_by_id(
             requirement_mid
         )

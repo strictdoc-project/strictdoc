@@ -8,6 +8,7 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
             parent=document,
             version=None,
             uid=None,
+            classification=None,
             markup=None,
             auto_levels=None,
             requirement_style=None,
@@ -20,6 +21,7 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         parent,
         version: Optional[str],
         uid: Optional[str],
+        classification: Optional[str],
         markup: Optional[str],
         auto_levels: Optional[str],
         requirement_style: Optional[str],
@@ -28,6 +30,7 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         self.parent = parent
         self.version: Optional[str] = version
         self.uid: Optional[str] = uid
+        self.classification: Optional[str] = classification
         self.markup = markup
         self.auto_levels: bool = auto_levels is None or auto_levels == "On"
         self.requirement_style: Optional[str] = requirement_style
@@ -50,4 +53,17 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         # This issue might deserve a bug report to TextX.
         return (self.uid is not None and len(self.uid) > 0) or (
             self.version is not None and len(self.version) > 0
+        )
+
+    def __str__(self):
+        return (
+            f"{self.__class__.__name__}("
+            f"version: {self.version}, "
+            f"uid: {self.uid}, "
+            f"classification: {self.classification}, "
+            f"markup: {self.markup}, "
+            f"auto_levels: {self.auto_levels}, "
+            f"requirement_style: {self.requirement_style}, "
+            f"requirement_in_toc: {self.requirement_in_toc}, "
+            ")"
         )

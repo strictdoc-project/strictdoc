@@ -24,15 +24,7 @@ from strictdoc.helpers.string import unescape
 class ReqIFToSDocFactory:
     @staticmethod
     def create_document(title: Optional[str]) -> Document:
-        document_config = DocumentConfig(
-            parent=None,
-            version=None,
-            uid=None,
-            markup=None,
-            auto_levels=None,
-            requirement_style=None,
-            requirement_in_toc=None,
-        )
+        document_config = DocumentConfig.default_config(None)
         document_title = title if title else "<No title>"
         document = Document(document_title, document_config, None, [], [])
         document.grammar = DocumentGrammar.create_default(document)

@@ -17,10 +17,15 @@ class DocumentCachingIterator:
         self.nodes_cache = []
         self.toc_nodes_cache = []
 
+    def invalidate_cache(self):
+        self.nodes_cache.clear()
+        self.toc_nodes_cache.clear()
+
     def table_of_contents(self):
-        if len(self.toc_nodes_cache) > 0:
-            yield from self.toc_nodes_cache
-            return
+        # TODO: WIP
+        # if len(self.toc_nodes_cache) > 0:
+        #     yield from self.toc_nodes_cache
+        #     return
 
         nodes_to_skip = (
             (FreeText, Requirement)
@@ -37,9 +42,10 @@ class DocumentCachingIterator:
             yield node
 
     def all_content(self):
-        if len(self.nodes_cache) > 0:
-            yield from self.nodes_cache
-            return
+        # TODO: WIP
+        # if len(self.nodes_cache) > 0:
+        #     yield from self.nodes_cache
+        #     return
 
         document = self.document
         level_counter = LevelCounter()

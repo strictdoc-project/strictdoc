@@ -1,0 +1,95 @@
+<turbo-frame id="frame_document_tree">
+  {%- if not document_tree_iterator.is_empty_tree() -%}
+    <div class="std-tree">
+
+      <ul class="std-tree_ul_0">
+        {%- for folder_or_file in document_tree_iterator.iterator(): -%}
+
+          {%- set last_class_or_none = '' -%}
+          {%- if loop.last or (loop.nextitem and loop.nextitem.level < folder_or_file.level) -%}
+            {%- set last_class_or_none = 'last-in-level' -%}
+          {%- endif -%}
+
+          <li class="std-tree_level_{{folder_or_file.level}}">
+
+            <div class="std-tree_row">
+            {%- if folder_or_file.is_folder(): %}
+              <div class="std-tree_folder">
+
+                <i class="std-tree_ico">
+                  <svg class="ico__folder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="16px" height="16px"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"></path></svg>
+                </i>
+                <div class="std-tree_name">
+                  {{ folder_or_file.get_folder_name() }}/
+                </div>
+              </div>
+            {% else %}
+              <div class="std-tree_file">
+
+                {%- set document = document_tree.get_document_by_path(folder_or_file.get_full_path()) %}
+
+                <i class="std-tree_ico">
+                  <svg class="ico__file" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="16px" height="16px"><path d="M14.17,5L19,9.83V19H5V5L14.17,5L14.17,5 M14.17,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V9.83 c0-0.53-0.21-1.04-0.59-1.41l-4.83-4.83C15.21,3.21,14.7,3,14.17,3L14.17,3z M7,15h10v2H7V15z M7,11h10v2H7V11z M7,7h7v2H7V7z"></path></svg>
+                </i>
+                <div class="std-tree_desc">
+                  {{ document.title }}
+                </div>
+
+                <div class="std-tree_name">
+                  {{ folder_or_file.get_file_name() }}
+                </div>
+              </div>
+
+              <div class="std-tree_aside">
+
+                <span class="std-tree_file-link">
+                  <a data-turbo="false" class="button_small" href="{{ document.meta.get_html_doc_link() }}">DOC</a>
+                </span>
+
+                <span class="std-tree_file-link">
+                  <a data-turbo="false" class="button_small" href="{{ document.meta.get_html_table_link() }}">TABLE</a>
+                </span>
+
+                <span class="std-tree_file-link">
+                  <a data-turbo="false" class="button_small" href="{{ document.meta.get_html_traceability_link() }}">TRACE</a>
+                </span>
+
+                <span class="std-tree_file-link">
+                  <a data-turbo="false" class="button_small" href="{{ document.meta.get_html_deep_traceability_link() }}">DEEP-TRACE</a>
+                </span>
+              </div>
+            {% endif %}
+            </div>
+
+            {%- if not loop.last -%}
+            {%- if loop.nextitem.level > folder_or_file.level -%}
+            <ul class="std-tree_ul_{{folder_or_file.level + 1}}">
+              {%- elif loop.nextitem.level < folder_or_file.level -%}
+
+          </li>
+          {%- for x in range(0, folder_or_file.level - loop.nextitem.level) -%}
+        </ul>
+        </li>
+        {%- endfor -%}
+        {%- else -%}
+        </li>
+        {%- endif -%}
+        {%- else -%}
+        </li>
+        {%- for x in range(0, folder_or_file.level) -%}
+        </ul>
+        </li>
+        {%- endfor -%}
+        {%- endif -%}
+        {%- endfor -%}
+
+      </ul>
+    </div>
+  {%- else -%}
+    The document tree has no documents yet.
+  {%- endif -%}
+
+  {%- if config.is_running_on_server -%}
+    {% include "document_tree/new_document_link.jinja.html" %}
+  {%- endif -%}
+</turbo-frame>

@@ -17,6 +17,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         document_parents_map,
         document_children_map,
         file_traceability_index: FileTraceabilityIndex,
+        map_id_to_node,
     ):
         self._document_iterators = document_iterators
         self._requirements_parents = requirements_parents
@@ -24,6 +25,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         self._document_parents_map = document_parents_map
         self._document_children_map = document_children_map
         self._file_traceability_index = file_traceability_index
+        self._map_id_to_node = map_id_to_node
 
         self.document_tree = None
         self.asset_dirs = None
@@ -162,3 +164,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def get_document_parents(self, document):
         return self._document_parents_map[document]
+
+    def get_node_by_id(self, node_id):
+        assert isinstance(node_id, str), f"{node_id}"
+        return self._map_id_to_node[node_id]

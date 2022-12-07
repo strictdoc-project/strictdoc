@@ -1,0 +1,4 @@
+class SDocServerEnvVariable:
+    INPUT_PATH = "SDOC_INPUT_PATH"
+    OUTPUT_PATH = "SDOC_OUTPUT_PATH"
+    RELOAD = "SDOC_RELOAD"

@@ -4,6 +4,7 @@ from pygments.lexers.c_cpp import CppLexer, CLexer
 from pygments.lexers.markup import TexLexer
 from pygments.lexers.python import PythonLexer
 
+from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.finders.source_files_finder import SourceFile
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
@@ -16,6 +17,7 @@ class SourceFileViewHTMLGenerator:
 
     @staticmethod
     def export(
+        config: ExportCommandConfig,
         source_file: SourceFile,
         traceability_index: TraceabilityIndex,
         link_renderer,
@@ -96,6 +98,7 @@ class SourceFileViewHTMLGenerator:
         static_path = f"{root_path}/_static"
 
         output += template.render(
+            config=config,
             source_file=source_file,
             source_file_lines=source_file_lines,
             pygments_styles=pygments_styles,

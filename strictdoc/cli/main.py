@@ -18,12 +18,14 @@ try:
         ImportExcelCommandConfig,
         ImportReqIFCommandConfig,
     )
+    from strictdoc.commands.about_command import AboutCommand
     from strictdoc.commands.dump_grammar_command import DumpGrammarCommand
     from strictdoc.commands.version_command import VersionCommand
     from strictdoc.core.actions.export_action import ExportAction
     from strictdoc.core.actions.import_action import ImportAction
     from strictdoc.core.actions.passthrough_action import PassthroughAction
     from strictdoc.helpers.parallelizer import Parallelizer
+    from strictdoc.server.server import run_strictdoc_server
 
 except FileNotFoundError:
     print("error: could not locate strictdoc's root folder.")
@@ -64,6 +66,10 @@ def _main(parallelizer):
         export_action.build_index()
         export_action.export()
 
+    elif parser.is_server_command:
+        server_config = parser.get_server_config()
+        run_strictdoc_server(config=server_config)
+
     elif parser.is_import_command_reqif:
         import_config: ImportReqIFCommandConfig = (
             parser.get_import_config_reqif(STRICTDOC_ROOT_PATH)
@@ -84,6 +90,10 @@ def _main(parallelizer):
 
     elif parser.is_version_command:
         VersionCommand.execute()
+
+    elif parser.is_about_command:
+        AboutCommand.execute()
+
     else:
         raise NotImplementedError
 

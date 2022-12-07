@@ -17,3 +17,10 @@ openpyxl>=3.0.5
 pyfakefs>=4.5.5
 requests>=2.27.1
 watchdog>=2.1.7
+
+# Server-related
+httpx
+seleniumbase
+# psutil is needed to reap Uvicorn's zombie processes when running end2end
+# tests. One day someone finds a better solution.
+psutil

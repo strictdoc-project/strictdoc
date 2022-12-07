@@ -56,7 +56,7 @@ class SDocObjectFactory:
                     field_value_references=None,
                 )
             )
-        if title:
+        if title is not None:
             fields.append(
                 RequirementField(
                     parent=None,
@@ -76,7 +76,7 @@ class SDocObjectFactory:
                     field_value_references=None,
                 )
             )
-        if statement_multiline:
+        if statement_multiline is not None:
             assert isinstance(
                 statement_multiline, str
             ), f"{statement_multiline}"

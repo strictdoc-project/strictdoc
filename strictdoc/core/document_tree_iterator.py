@@ -9,6 +9,9 @@ class DocumentTreeIterator:
         assert isinstance(document_tree, DocumentTree)
         self.document_tree = document_tree
 
+    def is_empty_tree(self):
+        return len(self.document_tree.document_list) == 0
+
     def iterator(self):
         task_list = collections.deque(
             map(

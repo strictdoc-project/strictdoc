@@ -2,6 +2,7 @@ import argparse
 import os
 import sys
 from enum import Enum
+from typing import List
 
 EXPORT_FORMATS = ["html", "html-standalone", "rst", "excel", "reqif-sdoc"]
 
@@ -24,32 +25,47 @@ def _parse_fields(fields):
     return fields_array
 
 
-def cli_args_parser() -> argparse.ArgumentParser:
-    # for arg in sys.argv:
-    #     if arg == '--help':
-    #         # print_help()
-    #         assert 0
-    #         exit(0)
-    #
-    # for arg in sys.argv:
-    #     if arg == '--version':
-    #         # print_version()
-    #         assert 0
-    #         exit(0)
+class SDocArgumentParser(argparse.ArgumentParser):
+    def error(self, message: str):
+        self.print_usage(sys.stderr)
+        print(f"{self.prog}: error: {message}", file=sys.stderr)
+        print("")
+        print("Further help:")
+        print(
+            "'strictdoc -h/--help' provides a general overview of available commands."  # noqa: E501
+        )
+        print("'strictdoc <command> -h/--help' provides command-specific help.")
+        sys.exit(2)
 
+
+def cli_args_parser() -> argparse.ArgumentParser:
     def formatter(prog):
         return argparse.RawTextHelpFormatter(
             prog, indent_increment=2, max_help_position=4, width=80
         )
 
     # https://stackoverflow.com/a/19476216/598057
-    main_parser = argparse.ArgumentParser()
-    main_parser.formatter_class = formatter
-
+    main_parser = SDocArgumentParser(
+        prog="strictdoc",
+        add_help=True,
+        epilog=(
+            """
+            Further help: https://strictdoc.readthedocs.io/en/stable/
+            """
+        ),
+    )
     command_subparsers = main_parser.add_subparsers(
         title="command", dest="command"
     )
     command_subparsers.required = True
+
+    # Command: About
+    _ = command_subparsers.add_parser(
+        "about",
+        help="About StrictDoc.",
+        description="About StrictDoc.",
+        formatter_class=formatter,
+    )
 
     # Command: Export
     command_parser_export = command_subparsers.add_parser(
@@ -215,6 +231,24 @@ def cli_args_parser() -> argparse.ArgumentParser:
         "output_file", type=str, help="Path to the output .tx file"
     )
 
+    # Command: Server
+    command_parser_server = command_subparsers.add_parser(
+        "server",
+        help="Run StrictDoc Web server.",
+        description="Run StrictDoc Web server.",
+        formatter_class=formatter,
+    )
+    command_parser_server.add_argument("input_path")
+    command_parser_server.add_argument(
+        "--output-path", default="/tmp/strictdoc/output", type=str
+    )
+    command_parser_server.add_argument(
+        "--reload", default=False, action="store_true"
+    )
+    command_parser_server.add_argument(
+        "--no-reload", dest="reload", action="store_false"
+    )
+
     # Command: Version
     command_subparsers.add_parser(
         "version",
@@ -244,6 +278,15 @@ class PassthroughCommandConfig:
         self.output_file = output_file
 
 
+class ServerCommandConfig:
+    def __init__(self, *, input_path: str, output_path: str, reload: bool):
+        assert os.path.exists(input_path)
+        abs_input_path = os.path.abspath(input_path)
+        self.input_path: str = abs_input_path
+        self.output_path: str = output_path
+        self.reload: bool = reload
+
+
 class ExportMode(Enum):
     DOCTREE = 1
     STANDALONE = 2
@@ -263,8 +306,9 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         enable_mathjax,
         experimental_enable_file_traceability,
     ):
+        assert isinstance(input_paths, list), f"{input_paths}"
         self.strictdoc_root_path = strictdoc_root_path
-        self.input_paths = input_paths
+        self.input_paths: List[str] = input_paths
         self.output_dir: str = output_dir
         self.project_title = project_title
         self.formats = formats
@@ -275,6 +319,8 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
             experimental_enable_file_traceability
         )
         self.output_html_root: str = os.path.join(output_dir, "html")
+
+        self.is_running_on_server = False
 
     def get_export_mode(self):
         if "html" in self.formats:
@@ -318,6 +364,10 @@ class SDocArgsParser:
         self.args = args
 
     @property
+    def is_about_command(self):
+        return self.args.command == "about"
+
+    @property
     def is_passthrough_command(self):
         return self.args.command == "passthrough"
 
@@ -336,6 +386,10 @@ class SDocArgsParser:
         return (
             self.args.command == "import" and self.args.import_format == "excel"
         )
+
+    @property
+    def is_server_command(self):
+        return self.args.command == "server"
 
     @property
     def is_dump_grammar_command(self):
@@ -382,6 +436,13 @@ class SDocArgsParser:
     def get_import_config_excel(self, _) -> ImportExcelCommandConfig:
         return ImportExcelCommandConfig(
             self.args.input_path, self.args.output_path, self.args.parser
+        )
+
+    def get_server_config(self) -> ServerCommandConfig:
+        return ServerCommandConfig(
+            input_path=self.args.input_path,
+            output_path=self.args.output_path,
+            reload=self.args.reload,
         )
 
     def get_dump_grammar_config(self) -> DumpGrammarCommandConfig:

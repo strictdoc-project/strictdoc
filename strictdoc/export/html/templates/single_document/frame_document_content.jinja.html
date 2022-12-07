@@ -1,0 +1,61 @@
+<turbo-frame id="frame_document_content">
+  {%- if document.config.has_meta() -%}
+      <div class="content_meta">
+      <h1>{{document.title}}</h1>
+        <table class="table_meta">
+          {%- if document.config.uid -%}
+          <tr>
+            <th>
+              UID:
+            </th>
+            <td>
+              {{document.config.uid}}
+            </td>
+          </tr>
+          {%- endif -%}
+          {%- if document.config.version -%}
+          <tr>
+            <th>
+              VERSION:
+            </th>
+            <td>
+              {{document.config.version}}
+            </td>
+          </tr>
+          {%- endif -%}
+          {%- if document.config.classification -%}
+          <tr>
+            <th>
+              CLASSIFICATION:
+            </th>
+            <td>
+              {{document.config.classification}}
+            </td>
+          </tr>
+          {%- endif -%}
+        </table>
+      </div>
+    {%- endif -%}
+
+      <div class="content">
+        {% include "_shared/document_freetext.jinja.html" %}
+
+        {%- for section_or_requirement in document_iterator.all_content() %}
+
+        {%- if section_or_requirement.is_requirement %}
+          {%- set requirement = section_or_requirement %}
+          {%- if section_or_requirement.is_inline_requirement() %}
+            {% include "_shared/requirement.jinja.html" %}
+          {%- else %}
+            {% include "_shared/requirement_table.jinja.html" %}
+          {%- endif %}
+
+        {%- elif section_or_requirement.is_section %}
+          {%- set section = section_or_requirement %}
+          {% include "_shared/section.jinja.html" %}
+        {%- endif %}
+
+        {%- endfor %}
+
+      </div>
+</turbo-frame>

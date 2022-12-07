@@ -1,0 +1,69 @@
+{%- if is_new_section -%}
+  {%- set url="/actions/document/create_section" %}
+{%- else -%}
+  {%- set url="/actions/document/update_section" %}
+{%- endif -%}
+
+<turbo-frame id="article-{{form_object.section_mid}}">
+
+<form data-controller="hello" class="std-form" action="{{url}}" method="POST">
+  {%- if is_new_section -%}
+    <input type="hidden" id="reference_mid" name="reference_mid" value="{{reference_mid}}" />
+    <input type="hidden" id="whereto" name="whereto" value="{{whereto}}" />
+  {%- endif -%}
+  <input type="hidden" id="section_mid" name="section_mid" value="{{form_object.section_mid}}" />
+
+    <div class="std-form-row">
+
+      {# <input type="text" id="section_title" name="section_title" value="{{ form_object.section_title }}"/> #}
+      <div role="textbox" contenteditable="true" class="std-input-editable std-form-fileld-title" id="section_title" placeholder="Enter section title here...">
+        {%- if true -%}
+        {{ form_object.section_title }}
+        {%- endif -%}
+      </div>
+      <input type="hidden" class="std-input-hidden" name="section_title" value="{{ form_object.section_title }}"/>
+
+      {%- if form_object.has_errors("section_title") -%}
+        <div class="std-form-error">
+        {%- for error in form_object.get_errors("section_title") -%}
+          {{ error }}
+        {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+    </div>
+
+    <div class="std-form-row">
+
+      <div role="textbox" contenteditable="true" class="std-input-editable" id="section_content" placeholder="Enter section text here...">
+        {%- if true -%}
+          {{ form_object.section_statement }}
+        {%- endif -%}
+      </div>
+      <textarea hidden class="std-input-hidden" name="section_content">
+        {%- if true -%}
+          {{ form_object.section_statement }}
+        {%- endif -%}
+      </textarea>
+
+      {%- if form_object.has_errors("section_statement") -%}
+        <div class="std-form-error">
+        {%- for error in form_object.get_errors("section_statement") -%}
+          {{ error }}
+        {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="std-form-footer">
+        <button class="std-form-btn" type="submit">Save</button>
+        {%- if is_new_section -%}
+          <a class="std-form-btn" href="/actions/document/cancel_new_section?section_mid={{form_object.section_mid}}">Cancel</a>
+        {%- else -%}
+          <a class="std-form-btn" href="/actions/document/cancel_edit_section?section_mid={{form_object.section_mid}}">Cancel</a>
+        {%- endif -%}
+    </div>
+
+</form>
+
+</turbo-frame>

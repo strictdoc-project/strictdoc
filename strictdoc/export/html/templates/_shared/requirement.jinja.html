@@ -1,3 +1,7 @@
+<turbo-frame id="article-{{requirement.node_id}}">
+
+{%- set anchor=link_renderer.render_local_anchor(requirement) -%}
+
 <article class="requirement"
 {%- if requirement.status %}
 data-status='{{ requirement.status.lower() }}'
@@ -29,4 +33,16 @@ data-status='{{ requirement.status.lower() }}'
 
   </section>
 
+  {%- if config.is_running_on_server -%}
+    <a href="/actions/document/edit_requirement/{{requirement.node_id}}" data-turbo-action="replace">Edit</a>,
+    <a href="/actions/document/delete_section/{{requirement.node_id}}" data-turbo-method="delete">Delete</a>,
+
+    <a href="/actions/document/new_section?reference_mid={{requirement.node_id}}&whereto=before" data-turbo-action="replace">+S⬆</a>,
+    <a href="/actions/document/new_section?reference_mid={{requirement.node_id}}&whereto=after" data-turbo-action="replace">+S⬇</a>,
+    <a href="/actions/document/new_requirement?reference_mid={{requirement.node_id}}&whereto=before" data-turbo-action="replace">+R⬆</a>,
+    <a href="/actions/document/new_requirement?reference_mid={{requirement.node_id}}&whereto=after" data-turbo-action="replace">+R⬇</a>
+  {%- endif -%}
+
 </article>
+
+</turbo-frame>

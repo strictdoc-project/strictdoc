@@ -1,4 +1,5 @@
 import io
+import re
 import sys
 
 from docutils.core import publish_parts
@@ -38,6 +39,44 @@ class RstToHtmlFragmentWriter:
         RstToHtmlFragmentWriter.cache[rst_fragment] = html
 
         return html
+
+    @staticmethod
+    def write_with_validation(rst_fragment):
+        # How do I convert a docutils document tree into an HTML string?
+        # https://stackoverflow.com/a/32168938/598057
+        # Use a io.StringIO as the warning stream to prevent warnings from
+        # being printed to sys.stderr.
+        # https://www.programcreek.com/python/example/88126/docutils.core.publish_parts
+        warning_stream = io.StringIO()
+        settings = {"warning_stream": warning_stream}
+
+        output = publish_parts(
+            rst_fragment, writer_name="html", settings_overrides=settings
+        )
+
+        if warning_stream.tell() > 0:
+            warnings = warning_stream.getvalue().rstrip("\n")
+
+            # A typical RST warning:
+            # """
+            # <string>:4: (WARNING/2) Bullet list ends without a blank line;
+            # unexpected unindent.
+            # """
+            match = re.search(
+                r".*<.*>:(?P<line>\d+): \(.*\) (?P<message>.*)", warnings
+            )
+            if match is not None:
+                error_message = (
+                    f"RST markup syntax error on line {match.group('line')}: "
+                    f"{match.group('message')}"
+                )
+            else:
+                error_message = f"RST markup syntax error: {warnings}"
+            return None, error_message
+
+        html = output["html_body"]
+
+        return html, None
 
     @staticmethod
     def write_link(title, href):

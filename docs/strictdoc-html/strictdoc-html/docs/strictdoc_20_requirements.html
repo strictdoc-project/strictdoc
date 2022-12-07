@@ -1,0 +1,2777 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="UTF-8"/>
+
+  <link rel="shortcut icon" href="../_static/favicon.ico" type="image/x-icon"/>
+
+  
+  <link rel="stylesheet" href="../_static/_base.css"/>
+  <link rel="stylesheet" href="../_static/_layout.css"/>
+  <link rel="stylesheet" href="../_static/_content.css"/>
+  <link rel="stylesheet" href="../_static/_requirement.css"/>
+  <link rel="stylesheet" href="../_static/_element.css"/>
+  <link rel="stylesheet" href="../_static/_form.css"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/toc.js"></script>
+  <script type="text/javascript" src="../_static/jquery.min.js"></script>
+
+  <script type="module">
+      import hotwiredTurbo from "../_static/turbo.js";
+      import { Application } from "../_static/stimulus.js";
+      window.Stimulus = Application.start();
+  </script>
+  <script type="module" src="../_static/std-forms.js"></script>
+  
+  
+  
+
+
+  <title>Requirements - Document</title>
+
+  
+</head>
+
+<body class="document-view withtoc">
+<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
+
+    <aside class="layout_aside-header">
+      
+  <a class="index-link" href="../index.html">To Index</a>
+
+    </aside>
+
+    <aside class="layout_aside">
+      
+  <turbo-frame id="frame-toc">
+    <div>Table of Contents</div>
+    <ul class="toc"><li><a href="#1-High-level-requirements" data-turbo="false">
+              <span class="section-number">1</span>
+              High-level requirements
+            </a><ul><li>
+        <a href="#1.1-SDOC-HIGH-REQS-MANAGEMENT" data-turbo="false">
+          <span class="section-number">1.1</span>
+          Requirements management
+        </a></li><li>
+        <a href="#1.2-SDOC-HIGH-DATA-MODEL" data-turbo="false">
+          <span class="section-number">1.2</span>
+          Data model
+        </a></li><li>
+        <a href="#1.3-Command-line-interface" data-turbo="false">
+          <span class="section-number">1.3</span>
+          Command-line interface
+        </a></li><li><a href="#1.4-Graphical-user-interface" data-turbo="false">
+              <span class="section-number">1.4</span>
+              Graphical user interface
+            </a></li><li><a href="#1.5-Statically-generated-website" data-turbo="false">
+              <span class="section-number">1.5</span>
+              Statically generated website
+            </a></li><li>
+        <a href="#1.6-Platform-support" data-turbo="false">
+          <span class="section-number">1.6</span>
+          Platform support
+        </a><ul><li>
+        <a href="#1.6.1-macOS-support" data-turbo="false">
+          <span class="section-number">1.6.1</span>
+          macOS support
+        </a></li><li>
+        <a href="#1.6.2-Linux-support" data-turbo="false">
+          <span class="section-number">1.6.2</span>
+          Linux support
+        </a></li><li>
+        <a href="#1.6.3-Windows-support" data-turbo="false">
+          <span class="section-number">1.6.3</span>
+          Windows support
+        </a></li></ul>
+            </li><li>
+        <a href="#1.7-SDOC-HIGH-VALIDATION" data-turbo="false">
+          <span class="section-number">1.7</span>
+          Requirements validation
+        </a></li><li>
+        <a href="#1.8-Requirements-text-format" data-turbo="false">
+          <span class="section-number">1.8</span>
+          Requirements text format
+        </a></li><li>
+        <a href="#1.9-Linking-requirements" data-turbo="false">
+          <span class="section-number">1.9</span>
+          Linking requirements
+        </a></li><li>
+        <a href="#1.10-Scalability" data-turbo="false">
+          <span class="section-number">1.10</span>
+          Scalability
+        </a></li><li>
+        <a href="#1.11-SDOC-HIGH-REQS-TRACEABILITY" data-turbo="false">
+          <span class="section-number">1.11</span>
+          Traceability
+        </a></li><li>
+        <a href="#1.12-Visualization" data-turbo="false">
+          <span class="section-number">1.12</span>
+          Visualization
+        </a></li><li>
+        <a href="#1.13-Open-source-software" data-turbo="false">
+          <span class="section-number">1.13</span>
+          Open source software
+        </a></li></ul>
+            </li><li><a href="#2-Implementation-requirements" data-turbo="false">
+              <span class="section-number">2</span>
+              Implementation requirements
+            </a><ul><li>
+        <a href="#2.1-SDOC-IMPL-PARAL" data-turbo="false">
+          <span class="section-number">2.1</span>
+          Parallelization
+        </a></li><li>
+        <a href="#2.2-SDOC-IMPL-INCREMENTAL" data-turbo="false">
+          <span class="section-number">2.2</span>
+          Incremental generation
+        </a></li></ul>
+            </li><li><a href="#3-Data-model" data-turbo="false">
+              <span class="section-number">3</span>
+              Data model
+            </a><ul><li>
+        <a href="#3.1-SDOC-DM-MODEL" data-turbo="false">
+          <span class="section-number">3.1</span>
+          Modeling capability
+        </a></li><li>
+        <a href="#3.2-Project" data-turbo="false">
+          <span class="section-number">3.2</span>
+          Project
+        </a><ul><li>
+        <a href="#3.2.1-Project-title" data-turbo="false">
+          <span class="section-number">3.2.1</span>
+          Project title
+        </a></li></ul>
+            </li><li><a href="#3.3-Document" data-turbo="false">
+              <span class="section-number">3.3</span>
+              Document
+            </a></li><li><a href="#3.4-Section" data-turbo="false">
+              <span class="section-number">3.4</span>
+              Section
+            </a></li><li><a href="#3.5-Requirement-item" data-turbo="false">
+              <span class="section-number">3.5</span>
+              Requirement item
+            </a><ul><li>
+        <a href="#3.5.1-Statement" data-turbo="false">
+          <span class="section-number">3.5.1</span>
+          Statement
+        </a></li><li>
+        <a href="#3.5.2-UID-identifier" data-turbo="false">
+          <span class="section-number">3.5.2</span>
+          UID identifier
+        </a><ul><li>
+        <a href="#3.5.2.1-UID-identifier-format" data-turbo="false">
+          <span class="section-number">3.5.2.1</span>
+          UID identifier format
+        </a></li></ul>
+            </li><li>
+        <a href="#3.5.3-Title" data-turbo="false">
+          <span class="section-number">3.5.3</span>
+          Title
+        </a></li><li>
+        <a href="#3.5.4-References" data-turbo="false">
+          <span class="section-number">3.5.4</span>
+          References
+        </a></li><li>
+        <a href="#3.5.5-Comments" data-turbo="false">
+          <span class="section-number">3.5.5</span>
+          Comments
+        </a></li><li>
+        <a href="#3.5.6-Special-fields" data-turbo="false">
+          <span class="section-number">3.5.6</span>
+          Special fields
+        </a></li></ul>
+            </li><li><a href="#3.6-Composite-Requirement-item" data-turbo="false">
+              <span class="section-number">3.6</span>
+              Composite Requirement item
+            </a></li><li>
+        <a href="#3.7-Links" data-turbo="false">
+          <span class="section-number">3.7</span>
+          Links
+        </a><ul><li>
+        <a href="#3.7.1-Parent-links" data-turbo="false">
+          <span class="section-number">3.7.1</span>
+          Parent links
+        </a></li></ul>
+            </li></ul>
+            </li><li><a href="#4-SDoc-file-format" data-turbo="false">
+              <span class="section-number">4</span>
+              SDoc file format
+            </a><ul><li>
+        <a href="#4.1-SDOC-FMT-PRIMARY" data-turbo="false">
+          <span class="section-number">4.1</span>
+          Primary text implementation
+        </a></li><li>
+        <a href="#4.2-SDOC-FMT-GRAMMAR" data-turbo="false">
+          <span class="section-number">4.2</span>
+          Grammar
+        </a><ul><li>
+        <a href="#4.2.1-No-indentation" data-turbo="false">
+          <span class="section-number">4.2.1</span>
+          No indentation
+        </a></li></ul>
+            </li><li>
+        <a href="#4.3-Type-safety" data-turbo="false">
+          <span class="section-number">4.3</span>
+          Type safety
+        </a></li></ul>
+            </li><li><a href="#5-Export-and-import-capabilities" data-turbo="false">
+              <span class="section-number">5</span>
+              Export and import capabilities
+            </a><ul><li><a href="#5.1-General" data-turbo="false">
+              <span class="section-number">5.1</span>
+              General
+            </a><ul><li>
+        <a href="#5.1.1-Generated-file-names" data-turbo="false">
+          <span class="section-number">5.1.1</span>
+          Generated file names
+        </a></li></ul>
+            </li><li><a href="#5.2-HTML-Export" data-turbo="false">
+              <span class="section-number">5.2</span>
+              HTML Export
+            </a><ul><li>
+        <a href="#5.2.1-Single-document-Normal-form" data-turbo="false">
+          <span class="section-number">5.2.1</span>
+          Single document: Normal form
+        </a></li><li>
+        <a href="#5.2.2-Single-document-Tabular-form" data-turbo="false">
+          <span class="section-number">5.2.2</span>
+          Single document: Tabular form
+        </a></li><li>
+        <a href="#5.2.3-Single-document-1-level-traceability" data-turbo="false">
+          <span class="section-number">5.2.3</span>
+          Single document: 1-level traceability
+        </a></li><li>
+        <a href="#5.2.4-Single-document-Deep-traceability" data-turbo="false">
+          <span class="section-number">5.2.4</span>
+          Single document: Deep traceability
+        </a></li><li>
+        <a href="#5.2.5-Left-panel-Table-of-contents" data-turbo="false">
+          <span class="section-number">5.2.5</span>
+          Left panel: Table of contents
+        </a></li></ul>
+            </li><li><a href="#5.3-PDF-Export" data-turbo="false">
+              <span class="section-number">5.3</span>
+              PDF Export
+            </a><ul><li>
+        <a href="#5.3.1-Sphinx-documentation-generator" data-turbo="false">
+          <span class="section-number">5.3.1</span>
+          Sphinx documentation generator
+        </a></li></ul>
+            </li><li>
+        <a href="#5.4-SDOC-GEN-EXCEL-EXPORT" data-turbo="false">
+          <span class="section-number">5.4</span>
+          Excel Export
+        </a></li><li>
+        <a href="#5.5-ReqIF-import-export" data-turbo="false">
+          <span class="section-number">5.5</span>
+          ReqIF import/export
+        </a></li></ul>
+            </li><li><a href="#6-Validation" data-turbo="false">
+              <span class="section-number">6</span>
+              Validation
+            </a><ul><li>
+        <a href="#6.1-SDOC-VALIDATION-UNIQUE-UID" data-turbo="false">
+          <span class="section-number">6.1</span>
+          Uniqueness of UID identifiers in a document tree
+        </a></li><li>
+        <a href="#6.2-SDOC-VALIDATION-NO-CYCLES" data-turbo="false">
+          <span class="section-number">6.2</span>
+          No cycles in a document tree
+        </a></li><li>
+        <a href="#6.3-SDOC-VALIDATION-VALID-HTML" data-turbo="false">
+          <span class="section-number">6.3</span>
+          Valid HTML markup
+        </a></li></ul>
+            </li><li><a href="#7-Traceability-and-coverage" data-turbo="false">
+              <span class="section-number">7</span>
+              Traceability and coverage
+            </a><ul><li>
+        <a href="#7.1-Linking-with-implementation-artifacts" data-turbo="false">
+          <span class="section-number">7.1</span>
+          Linking with implementation artifacts
+        </a><ul><li>
+        <a href="#7.1.1-Validation-Broken-links-from-requirements-to-source-files" data-turbo="false">
+          <span class="section-number">7.1.1</span>
+          Validation: Broken links from requirements to source files
+        </a></li><li>
+        <a href="#7.1.2-Validation-Broken-links-from-source-files-to-requirements" data-turbo="false">
+          <span class="section-number">7.1.2</span>
+          Validation: Broken links from source files to requirements
+        </a></li></ul>
+            </li><li>
+        <a href="#7.2-Requirements-coverage" data-turbo="false">
+          <span class="section-number">7.2</span>
+          Requirements coverage
+        </a></li><li>
+        <a href="#7.3-Source-coverage" data-turbo="false">
+          <span class="section-number">7.3</span>
+          Source coverage
+        </a></li></ul>
+            </li><li><a href="#8-Web-frontend-requirements" data-turbo="false">
+              <span class="section-number">8</span>
+              Web frontend requirements
+            </a><ul><li>
+        <a href="#8.1-AJAX-updates-of-multiple-web-forms" data-turbo="false">
+          <span class="section-number">8.1</span>
+          AJAX updates of multiple web forms
+        </a></li></ul>
+            </li></ul>
+</turbo-frame>
+
+    </aside>
+
+    
+  <a class="layout_toggler layout_button" id="layout_toggle"></a><nav class="layout_nav">
+    <a
+    class="layout_nav-btn layout_button btn-document"
+    title="Go to Document view"
+    href="../docs/strictdoc_20_requirements.html">
+    DOC
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-table"
+    title="Go to Table view"
+    href="../docs/strictdoc_20_requirements-TABLE.html">
+    TBL
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-traceability"
+    title="Go to Traceability view"
+    href="../docs/strictdoc_20_requirements-TRACE.html">
+    TR
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-deep-traceability"
+    title="Go to Deep Traceability view"
+    href="../docs/strictdoc_20_requirements-DEEP-TRACE.html">
+    DTR
+  </a>
+  </nav>
+
+
+    <header class="layout_header">
+      
+  <p>Requirements <span class="document-view-type">Document</span></p>
+
+    </header>
+
+    <main class="layout_main">
+      
+  <turbo-frame id="frame_document_content"><div class="content">
+        <turbo-frame id="article-41b8356934b34fa298ca7f33c50999b1">
+<article></article>
+</turbo-frame>
+          <turbo-frame id="article-6f7e16a656ab40658c796db2eca85983"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="1-High-level-requirements"></div>
+
+    
+        <h1
+class="section-title"
+data-level="1">
+  1.&nbsp;High-level requirements
+</h1>
+    
+
+  </section>
+
+  </article>
+
+</turbo-frame>
+            <turbo-frame id="article-c8aa3df468934e0c9d4879ea8cf2e85d"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="1.1-SDOC-HIGH-REQS-MANAGEMENT"></div>
+    <h2
+class="section-title"
+data-level="1.1">
+  1.1.&nbsp;Requirements management
+</h2>
+
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>SDOC-HIGH-REQS-MANAGEMENT</dd>
+    
+  </dl>
+    
+<ul class="requirement_link">
+  <li>
+    <a data-turbo="false" class="requirement_link-parent" href="../docs/strictdoc_03_development_plan.html#1.1-GOAL-1-TOOL-SUPPORT">
+      <span class="requirement_parent-uid">GOAL-1-TOOL-SUPPORT</span>
+      Software support for writing requirements and specifications documents
+    </a>
+  </li>
+  </ul>
+<ul class="requirement_link">
+  <li>
+    <a data-turbo="false" class="requirement_link-child" href="#3.1-SDOC-DM-MODEL">
+      <span class="requirement_child-uid">SDOC-DM-MODEL</span>
+      Modeling capability
+    </a>
+  </li>
+  </ul>
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall enable requirements management.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+  
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-f0da06fd13be423a9f0d03e07e315334"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="1.2-SDOC-HIGH-DATA-MODEL"></div>
+    <h2
+class="section-title"
+data-level="1.2">
+  1.2.&nbsp;Data model
+</h2>
+
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>SDOC-HIGH-DATA-MODEL</dd>
+    
+  </dl>
+    
+<ul class="requirement_link">
+  <li>
+    <a data-turbo="false" class="requirement_link-child" href="#3.1-SDOC-DM-MODEL">
+      <span class="requirement_child-uid">SDOC-DM-MODEL</span>
+      Modeling capability
+    </a>
+  </li>
+  <li>
+    <a data-turbo="false" class="requirement_link-child" href="#4.2-SDOC-FMT-GRAMMAR">
+      <span class="requirement_child-uid">SDOC-FMT-GRAMMAR</span>
+      Grammar
+    </a>
+  </li>
+  </ul>
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall be based on a well-defined data model.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>StrictDoc is a result of several attempts to find a solution for working with
+text-based requirements:</p>
+<ul class="simple">
+<li>StrictDoc, first generation: Markdown-based C++ program. Custom requirements
+metadata in YAML.</li>
+<li>StrictDoc, second generation: RST/Sphinx-based Python program. Using Sphinx
+extensions to manage meta information.</li>
+</ul>
+<p>The result of these efforts was the realization that a text-based requirements
+and specifications management tool could be built on top of a domain-specific
+language (DSL) created specifically for the purpose of writing requirements and
+specifications documents. Such a language allows an explicit definition of a
+document data model which is called &quot;grammar&quot;.</p>
+</div>
+
+    </div>
+    
+  
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-68a108895b2e4fdeaf514ed115cf340d"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="1.3-Command-line-interface"></div>
+    <h2
+class="section-title"
+data-level="1.3">
+  1.3.&nbsp;Command-line interface
+</h2>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall provide a command-line interface.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+          <turbo-frame id="article-1f429cc8244f4c04bee45a95b7ca22d5"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="1.4-Graphical-user-interface"></div>
+
+    
+        <h2
+class="section-title"
+data-level="1.4">
+  1.4.&nbsp;Graphical user interface
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>StrictDoc shall provide a Graphical User Interface (GUI).</p>
+<p>Several trade-offs to consider:</p>
+<ul class="simple">
+<li>Desktop vs Web. Rather web-based, i.e. Python backend and JS frontend, but which technology?</li>
+<li>Still keep the current behavior of a statically generated website?</li>
+</ul>
+</div>
+
+    </div></section></article>
+
+</turbo-frame>
+          <turbo-frame id="article-e9cca43f02104a0f903c331271df60f6"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="1.5-Statically-generated-website"></div>
+
+    
+        <h2
+class="section-title"
+data-level="1.5">
+  1.5.&nbsp;Statically generated website
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>StrictDoc shall allow generating requirements content to static HTML website.</p>
+</div>
+
+    </div></section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-8e581c57cc724c1ca0c9e26022fb2ac5"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="1.6-Platform-support"></div>
+    <h2
+class="section-title"
+data-level="1.6">
+  1.6.&nbsp;Platform support
+</h2>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall work on all major platforms.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-76841dfd7f8a47be8ea84525b521016a"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="1.6.1-macOS-support"></div>
+    <h3
+class="section-title"
+data-level="1.6.1">
+  1.6.1.&nbsp;macOS support
+</h3>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall work on macOS systems.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-5d4b66bb492f456996312c648faf677b"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="1.6.2-Linux-support"></div>
+    <h3
+class="section-title"
+data-level="1.6.2">
+  1.6.2.&nbsp;Linux support
+</h3>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall work on Linux systems.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-57a08050a2b0401a99375b1bfaff0d88"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="1.6.3-Windows-support"></div>
+    <h3
+class="section-title"
+data-level="1.6.3">
+  1.6.3.&nbsp;Windows support
+</h3>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall work on Windows systems.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-eb193b4eda3e42a1a96338f9a828e7f3"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="1.7-SDOC-HIGH-VALIDATION"></div>
+    <h2
+class="section-title"
+data-level="1.7">
+  1.7.&nbsp;Requirements validation
+</h2>
+
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>SDOC-HIGH-VALIDATION</dd>
+    
+  </dl>
+    
+<ul class="requirement_link">
+  <li>
+    <a data-turbo="false" class="requirement_link-child" href="#6.1-SDOC-VALIDATION-UNIQUE-UID">
+      <span class="requirement_child-uid">SDOC-VALIDATION-UNIQUE-UID</span>
+      Uniqueness of UID identifiers in a document tree
+    </a>
+  </li>
+  <li>
+    <a data-turbo="false" class="requirement_link-child" href="#6.2-SDOC-VALIDATION-NO-CYCLES">
+      <span class="requirement_child-uid">SDOC-VALIDATION-NO-CYCLES</span>
+      No cycles in a document tree
+    </a>
+  </li>
+  <li>
+    <a data-turbo="false" class="requirement_link-child" href="#6.3-SDOC-VALIDATION-VALID-HTML">
+      <span class="requirement_child-uid">SDOC-VALIDATION-VALID-HTML</span>
+      Valid HTML markup
+    </a>
+  </li>
+  </ul>
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall allow validation of requirement documents.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+  
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-8ed4b463ae9841029d96c3297bcf6005"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="1.8-Requirements-text-format"></div>
+    <h2
+class="section-title"
+data-level="1.8">
+  1.8.&nbsp;Requirements text format
+</h2>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall allow storage of requirements in a plain-text human readable form.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-72b5b45a88b64ac289b2a2fb2a99e931"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="1.9-Linking-requirements"></div>
+    <h2
+class="section-title"
+data-level="1.9">
+  1.9.&nbsp;Linking requirements
+</h2>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall support linking requirements to each other.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-2218b80ab315432d91b779351d896525"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="1.10-Scalability"></div>
+    <h2
+class="section-title"
+data-level="1.10">
+  1.10.&nbsp;Scalability
+</h2>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall allow working with large documents and document trees containing at least 10000 requirement items.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-3a8afea786994266b9662ca3d0ca28d9"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="1.11-SDOC-HIGH-REQS-TRACEABILITY"></div>
+    <h2
+class="section-title"
+data-level="1.11">
+  1.11.&nbsp;Traceability
+</h2>
+
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>SDOC-HIGH-REQS-TRACEABILITY</dd>
+    
+  </dl>
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall support traceability of requirements.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+  
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-44a7761f320e41a8b866bca100bf2bf0"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="1.12-Visualization"></div>
+    <h2
+class="section-title"
+data-level="1.12">
+  1.12.&nbsp;Visualization
+</h2>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall provide means for visualization of requirement documents.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-4814042b6a024241bb06e25add524138"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="1.13-Open-source-software"></div>
+    <h2
+class="section-title"
+data-level="1.13">
+  1.13.&nbsp;Open source software
+</h2>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall always be free and open source software.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+          <turbo-frame id="article-92dd88ec39b24ad78dd2fb67002cb8a2"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="2-Implementation-requirements"></div>
+
+    
+        <h1
+class="section-title"
+data-level="2">
+  2.&nbsp;Implementation requirements
+</h1>
+    
+
+  </section>
+
+  </article>
+
+</turbo-frame>
+            <turbo-frame id="article-7473b693178f4926b42a4acb614e4e16"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="2.1-SDOC-IMPL-PARAL"></div>
+    <h2
+class="section-title"
+data-level="2.1">
+  2.1.&nbsp;Parallelization
+</h2>
+
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>SDOC-IMPL-PARAL</dd>
+    
+  </dl>
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall enable parallelization of the time-consuming parts of the code.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+  
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-0fcbb1940a0f46e5b1e642142a0e3d87"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="2.2-SDOC-IMPL-INCREMENTAL"></div>
+    <h2
+class="section-title"
+data-level="2.2">
+  2.2.&nbsp;Incremental generation
+</h2>
+
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>SDOC-IMPL-INCREMENTAL</dd>
+    
+  </dl>
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall enable incremental generation of the documents.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>When exporting documentation tree, StrictDoc shall regenerate only changed
+documents and files.</p>
+</div>
+
+    </div>
+    
+  
+
+  </section></article>
+
+</turbo-frame>
+          <turbo-frame id="article-321088fee48d45d6a7d4be0ace807c3a"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="3-Data-model"></div>
+
+    
+        <h1
+class="section-title"
+data-level="3">
+  3.&nbsp;Data model
+</h1>
+    
+
+  </section>
+
+  </article>
+
+</turbo-frame>
+            <turbo-frame id="article-bee44b3ec47e4c6d9331997ce5df6071"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="3.1-SDOC-DM-MODEL"></div>
+    <h2
+class="section-title"
+data-level="3.1">
+  3.1.&nbsp;Modeling capability
+</h2>
+
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>SDOC-DM-MODEL</dd>
+    
+  </dl>
+    
+<ul class="requirement_link">
+  <li>
+    <a data-turbo="false" class="requirement_link-parent" href="#1.1-SDOC-HIGH-REQS-MANAGEMENT">
+      <span class="requirement_parent-uid">SDOC-HIGH-REQS-MANAGEMENT</span>
+      Requirements management
+    </a>
+  </li>
+  <li>
+    <a data-turbo="false" class="requirement_link-parent" href="#1.2-SDOC-HIGH-DATA-MODEL">
+      <span class="requirement_parent-uid">SDOC-HIGH-DATA-MODEL</span>
+      Data model
+    </a>
+  </li>
+  </ul>
+<ul class="requirement_link">
+  <li>
+    <a data-turbo="false" class="requirement_link-child" href="#4.1-SDOC-FMT-PRIMARY">
+      <span class="requirement_child-uid">SDOC-FMT-PRIMARY</span>
+      Primary text implementation
+    </a>
+  </li>
+  </ul>
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc's Data Model shall accommodate for maximum possible standard requirement document formats.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>Examples of standard requirements documents include but are not limited to:</p>
+<ul class="simple">
+<li>Non-nested requirement lists split by categories
+(e.g., Functional Requirements, Interface Requirements, Performance Requirements, etc.)</li>
+</ul>
+</div>
+
+    </div>
+    
+  
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-dd2a5fd92f444739a4eb0e85b92cfe08"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="3.2-Project"></div>
+    <h2
+class="section-title"
+data-level="3.2">
+  3.2.&nbsp;Project
+</h2>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall support the &quot;Project&quot; concept as a top-level entity that serves
+for grouping of SDoc documents into a single project documentation tree.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-cc460483891b44c0ab9f2ce28fdd0299"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="3.2.1-Project-title"></div>
+    <h3
+class="section-title"
+data-level="3.2.1">
+  3.2.1.&nbsp;Project title
+</h3>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>Project shall have a &quot;Title&quot; property.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>Currently, the project title aspect is not part of the SDoc grammar. It is
+simply specified via the <tt class="docutils literal"><span class="pre">--project-title</span></tt> command-line option. This might
+change when the project title will be configured as part of the project-level
+config file (TOML or SDoc-like grammar).</p>
+</div>
+
+    </div>
+    
+
+  </section></article>
+
+</turbo-frame>
+          <turbo-frame id="article-a390493bee664d8687737d94b72a0dc3"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="3.3-Document"></div>
+
+    
+        <h2
+class="section-title"
+data-level="3.3">
+  3.3.&nbsp;Document
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>TBD</p>
+</div>
+
+    </div></section></article>
+
+</turbo-frame>
+          <turbo-frame id="article-ecce36d72c9742f8bf9ffb9ccf32454f"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="3.4-Section"></div>
+
+    
+        <h2
+class="section-title"
+data-level="3.4">
+  3.4.&nbsp;Section
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>TBD</p>
+</div>
+
+    </div></section></article>
+
+</turbo-frame>
+          <turbo-frame id="article-e6e96529a901430ba57d18f626f6833b"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="3.5-Requirement-item"></div>
+
+    
+        <h2
+class="section-title"
+data-level="3.5">
+  3.5.&nbsp;Requirement item
+</h2>
+    
+
+  </section>
+
+  </article>
+
+</turbo-frame>
+            <turbo-frame id="article-e30f4431ffa5449087735c1db1599e8f"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="3.5.1-Statement"></div>
+    <h3
+class="section-title"
+data-level="3.5.1">
+  3.5.1.&nbsp;Statement
+</h3>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>Requirement item shall have a statement.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-c0d9f35e0e2a46499f6f6f3cea226393"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="3.5.2-UID-identifier"></div>
+    <h3
+class="section-title"
+data-level="3.5.2">
+  3.5.2.&nbsp;UID identifier
+</h3>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>Requirement item may have an UID identifier.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-d92d63d21b304005b287a9a135286e4f"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="3.5.2.1-UID-identifier-format"></div>
+    <h4
+class="section-title"
+data-level="3.5.2.1">
+  3.5.2.1.&nbsp;UID identifier format
+</h4>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall not impose any restrictions on the UID field format.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>Conventions used for requirement UIDs can be very different. And there seems to
+be no way to define a single rule.</p>
+<p>Some examples:</p>
+<ul class="simple">
+<li>FUN-003</li>
+<li>cES1008, cTBL6000.1 (NASA cFS)</li>
+<li>Requirements without a number, e.g. SDOC-HIGH-DATA-MODEL (StrictDoc)</li>
+<li>SAVOIR.OBC.PM.80 (SAVOIR)</li>
+</ul>
+</div>
+
+    </div>
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-4fed1e619849402ebcffc6e4436f4b06"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="3.5.3-Title"></div>
+    <h3
+class="section-title"
+data-level="3.5.3">
+  3.5.3.&nbsp;Title
+</h3>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>Requirement item may have an title.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-a7da9b20807041e3bf7fee5442643fba"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="3.5.4-References"></div>
+    <h3
+class="section-title"
+data-level="3.5.4">
+  3.5.4.&nbsp;References
+</h3>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>Requirement item may have one or more references.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-5e5054520cc54370811f26675b21c8ec"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="3.5.5-Comments"></div>
+    <h3
+class="section-title"
+data-level="3.5.5">
+  3.5.5.&nbsp;Comments
+</h3>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>Requirement item may have one or more comments.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-43293e23596b4cb599875289cee20822"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="3.5.6-Special-fields"></div>
+    <h3
+class="section-title"
+data-level="3.5.6">
+  3.5.6.&nbsp;Special fields
+</h3>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall support customization of the default Requirement's grammar with special fields.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>Examples:</p>
+<ul class="simple">
+<li>RAIT compliance fields (Review of design, analysis, inspection, testing)</li>
+<li>Automotive Safety Integrity Level level (ASIL).</li>
+</ul>
+</div>
+
+    </div>
+    
+
+  </section></article>
+
+</turbo-frame>
+          <turbo-frame id="article-2503dddd6a2d49bd870ee0733ad921f0"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="3.6-Composite-Requirement-item"></div>
+
+    
+        <h2
+class="section-title"
+data-level="3.6">
+  3.6.&nbsp;Composite Requirement item
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p>TBD</p>
+</div>
+
+    </div></section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-2aa3c13314364f5980bcec00e2e36203"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="3.7-Links"></div>
+    <h2
+class="section-title"
+data-level="3.7">
+  3.7.&nbsp;Links
+</h2>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc's data model shall support linking document content nodes to each other.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-30654f61583040eb8a3674daefa8ee47"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="3.7.1-Parent-links"></div>
+    <h3
+class="section-title"
+data-level="3.7.1">
+  3.7.1.&nbsp;Parent links
+</h3>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc's data model shall support linking a requirement to another requirement using PARENT link.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+          <turbo-frame id="article-bcd4b0e8b265447f8e25391679ab9b9c"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="4-SDoc-file-format"></div>
+
+    
+        <h1
+class="section-title"
+data-level="4">
+  4.&nbsp;SDoc file format
+</h1>
+    
+
+  </section>
+
+  </article>
+
+</turbo-frame>
+            <turbo-frame id="article-ebc1bc5cc6c7443fbd59f99d6995b5fe"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="4.1-SDOC-FMT-PRIMARY"></div>
+    <h2
+class="section-title"
+data-level="4.1">
+  4.1.&nbsp;Primary text implementation
+</h2>
+
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>SDOC-FMT-PRIMARY</dd>
+    
+  </dl>
+    
+<ul class="requirement_link">
+  <li>
+    <a data-turbo="false" class="requirement_link-parent" href="#3.1-SDOC-DM-MODEL">
+      <span class="requirement_parent-uid">SDOC-DM-MODEL</span>
+      Modeling capability
+    </a>
+  </li>
+  </ul>
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>The SDoc format shall support encoding the Strict Doc Data Model in a plain-text human readable form.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+  
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-fc909a9213b84fc0be89eebe7ee0178c"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="4.2-SDOC-FMT-GRAMMAR"></div>
+    <h2
+class="section-title"
+data-level="4.2">
+  4.2.&nbsp;Grammar
+</h2>
+
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>SDOC-FMT-GRAMMAR</dd>
+    
+  </dl>
+    
+<ul class="requirement_link">
+  <li>
+    <a data-turbo="false" class="requirement_link-parent" href="#1.2-SDOC-HIGH-DATA-MODEL">
+      <span class="requirement_parent-uid">SDOC-HIGH-DATA-MODEL</span>
+      Data model
+    </a>
+  </li>
+  </ul>
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>The SDoc format shall be based on a fixed grammar.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+  
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-f60e7fbe19574c738554d7c525a692e6"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="4.2.1-No-indentation"></div>
+    <h3
+class="section-title"
+data-level="4.2.1">
+  4.2.1.&nbsp;No indentation
+</h3>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>The SDoc grammar's building blocks shall not allow any indentation.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>Rationale: Adding indentation to any of the fields does not scale well when the
+documents have deeply nested section structure as well as when the size of the
+paragraphs becomes sufficiently large. Keeping every keyword like [REQUIREMENT]
+or [COMMENT] with no indentation ensures that one does not have to think about
+possible indentation issues.</p>
+</div>
+
+    </div>
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-b0215817701940aab691a9a38d35d1ee"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="4.3-Type-safety"></div>
+    <h2
+class="section-title"
+data-level="4.3">
+  4.3.&nbsp;Type safety
+</h2>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>The SDoc format shall allow type-safe encoding of requirement documents.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+          <turbo-frame id="article-844caacbdd334cc4828de31cccd4b66f"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="5-Export-and-import-capabilities"></div>
+
+    
+        <h1
+class="section-title"
+data-level="5">
+  5.&nbsp;Export and import capabilities
+</h1>
+    
+
+  </section>
+
+  </article>
+
+</turbo-frame>
+          <turbo-frame id="article-d646d48595874aa5b0d00436497d176d"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="5.1-General"></div>
+
+    
+        <h2
+class="section-title"
+data-level="5.1">
+  5.1.&nbsp;General
+</h2>
+    
+
+  </section>
+
+  </article>
+
+</turbo-frame>
+            <turbo-frame id="article-064932d5c6374f798aac43d9079d27f4"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="5.1.1-Generated-file-names"></div>
+    <h3
+class="section-title"
+data-level="5.1.1">
+  5.1.1.&nbsp;Generated file names
+</h3>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall preserve original document file names when generating to all
+export formats.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+          <turbo-frame id="article-5be5bc0044924279b7cab09d148de613"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="5.2-HTML-Export"></div>
+
+    
+        <h2
+class="section-title"
+data-level="5.2">
+  5.2.&nbsp;HTML Export
+</h2>
+    
+
+  </section>
+
+  </article>
+
+</turbo-frame>
+            <turbo-frame id="article-2b284e085ef94b8299c29d1d80bd47ed"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="5.2.1-Single-document-Normal-form"></div>
+    <h3
+class="section-title"
+data-level="5.2.1">
+  5.2.1.&nbsp;Single document: Normal form
+</h3>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall export single document pages in a normal document-like form.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-2b731a087a7d4e6aa2c09ecc11f799a0"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="5.2.2-Single-document-Tabular-form"></div>
+    <h3
+class="section-title"
+data-level="5.2.2">
+  5.2.2.&nbsp;Single document: Tabular form
+</h3>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall export single document pages in a tabular form.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-144e401775624bec87b6c8ff644bcc0d"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="5.2.3-Single-document-1-level-traceability"></div>
+    <h3
+class="section-title"
+data-level="5.2.3">
+  5.2.3.&nbsp;Single document: 1-level traceability
+</h3>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall export 1-level traceability document.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-abbee69709e34dd7b7f6f5cef308cebc"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="5.2.4-Single-document-Deep-traceability"></div>
+    <h3
+class="section-title"
+data-level="5.2.4">
+  5.2.4.&nbsp;Single document: Deep traceability
+</h3>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall export deep traceability document.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-26f3984a036a466ca9e32226c26b0a95"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="5.2.5-Left-panel-Table-of-contents"></div>
+    <h3
+class="section-title"
+data-level="5.2.5">
+  5.2.5.&nbsp;Left panel: Table of contents
+</h3>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall export all HTML pages with Table of Contents.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+          <turbo-frame id="article-f44a3b9a733a440c8c1bbe6e9ed346e5"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="5.3-PDF-Export"></div>
+
+    
+        <h2
+class="section-title"
+data-level="5.3">
+  5.3.&nbsp;PDF Export
+</h2>
+    
+
+  </section>
+
+  </article>
+
+</turbo-frame>
+            <turbo-frame id="article-3a3ccc3622394b0d8f5ae55b7ea1ca88"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="5.3.1-Sphinx-documentation-generator"></div>
+    <h3
+class="section-title"
+data-level="5.3.1">
+  5.3.1.&nbsp;Sphinx documentation generator
+</h3>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall support exporting documents to Sphinx/RST format.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-28e8996555ea4459852e610cf83bfb59"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="5.4-SDOC-GEN-EXCEL-EXPORT"></div>
+    <h2
+class="section-title"
+data-level="5.4">
+  5.4.&nbsp;Excel Export
+</h2>
+
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>SDOC-GEN-EXCEL-EXPORT</dd>
+    
+  </dl>
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall support exporting documents to Excel format.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+  
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-2c3494ef4079435a991b37926ef3842a"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="5.5-ReqIF-import-export"></div>
+    <h2
+class="section-title"
+data-level="5.5">
+  5.5.&nbsp;ReqIF import/export
+</h2>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall support the ReqIF format.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+          <turbo-frame id="article-6405d5022d8749739cc3f9626e5d614f"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="6-Validation"></div>
+
+    
+        <h1
+class="section-title"
+data-level="6">
+  6.&nbsp;Validation
+</h1>
+    
+
+  </section>
+
+  </article>
+
+</turbo-frame>
+            <turbo-frame id="article-b2b36abe73764b9cb9851b8e9d955400"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="6.1-SDOC-VALIDATION-UNIQUE-UID"></div>
+    <h2
+class="section-title"
+data-level="6.1">
+  6.1.&nbsp;Uniqueness of UID identifiers in a document tree
+</h2>
+
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>SDOC-VALIDATION-UNIQUE-UID</dd>
+    
+  </dl>
+    
+<ul class="requirement_link">
+  <li>
+    <a data-turbo="false" class="requirement_link-parent" href="#1.7-SDOC-HIGH-VALIDATION">
+      <span class="requirement_parent-uid">SDOC-HIGH-VALIDATION</span>
+      Requirements validation
+    </a>
+  </li>
+  </ul>
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall ensure that each UID used in a document tree is unique.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>This is implemented but the error message shall be made more readable.</p>
+</div>
+
+    </div>
+    
+  
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-9e13fd3af5c14ec1b2ec68c22ff7f25a"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="6.2-SDOC-VALIDATION-NO-CYCLES"></div>
+    <h2
+class="section-title"
+data-level="6.2">
+  6.2.&nbsp;No cycles in a document tree
+</h2>
+
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>SDOC-VALIDATION-NO-CYCLES</dd>
+    
+  </dl>
+    
+<ul class="requirement_link">
+  <li>
+    <a data-turbo="false" class="requirement_link-parent" href="#1.7-SDOC-HIGH-VALIDATION">
+      <span class="requirement_parent-uid">SDOC-HIGH-VALIDATION</span>
+      Requirements validation
+    </a>
+  </li>
+  </ul>
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall ensure that no requirements in document tree reference each other.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+  
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-a806466d053847ba98f947ab648c3a0a"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="6.3-SDOC-VALIDATION-VALID-HTML"></div>
+    <h2
+class="section-title"
+data-level="6.3">
+  6.3.&nbsp;Valid HTML markup
+</h2>
+
+    <dl class="requirement_meta">
+    
+    <dt><i>UID</i></dt>
+    <dd>SDOC-VALIDATION-VALID-HTML</dd>
+    
+  </dl>
+    
+<ul class="requirement_link">
+  <li>
+    <a data-turbo="false" class="requirement_link-parent" href="#1.7-SDOC-HIGH-VALIDATION">
+      <span class="requirement_parent-uid">SDOC-HIGH-VALIDATION</span>
+      Requirements validation
+    </a>
+  </li>
+  </ul>
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc's HTML export tests shall validate the generated HTML markup.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>First candidate: Table of contents and its nested <tt class="docutils literal"><span class="pre">&lt;ul&gt;/&lt;li&gt;</span></tt> items.</p>
+</div>
+
+    </div>
+    
+  
+
+  </section></article>
+
+</turbo-frame>
+          <turbo-frame id="article-c08f4bf5213145c1870920bbbb3f6419"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="7-Traceability-and-coverage"></div>
+
+    
+        <h1
+class="section-title"
+data-level="7">
+  7.&nbsp;Traceability and coverage
+</h1>
+    
+
+  </section>
+
+  </article>
+
+</turbo-frame>
+            <turbo-frame id="article-29da4e8a06ca4ff693efd7041bf4f599"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="7.1-Linking-with-implementation-artifacts"></div>
+    <h2
+class="section-title"
+data-level="7.1">
+  7.1.&nbsp;Linking with implementation artifacts
+</h2>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall support linking requirements to files.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-292213f7a76a41e3a2c1f4889a6f4845"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="7.1.1-Validation-Broken-links-from-requirements-to-source-files"></div>
+    <h3
+class="section-title"
+data-level="7.1.1">
+  7.1.1.&nbsp;Validation: Broken links from requirements to source files
+</h3>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall warn a user about all requirements whose links reference source
+files that do not exist.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-ff7824e988da4af3b08efac7855589b6"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="7.1.2-Validation-Broken-links-from-source-files-to-requirements"></div>
+    <h3
+class="section-title"
+data-level="7.1.2">
+  7.1.2.&nbsp;Validation: Broken links from source files to requirements
+</h3>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall warn a user about all source files whose links reference
+requirements that do not exist.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-9feb89cbc6ae445a944894888832a0f0"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="7.2-Requirements-coverage"></div>
+    <h2
+class="section-title"
+data-level="7.2">
+  7.2.&nbsp;Requirements coverage
+</h2>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall generate requirements coverage information.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>Requirements coverage screen shows how requirements are linked with source files.</p>
+</div>
+
+    </div>
+    
+
+  </section></article>
+
+</turbo-frame>
+            <turbo-frame id="article-af39c415e71a4b7b9ed2460a8429f5e8"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="7.3-Source-coverage"></div>
+    <h2
+class="section-title"
+data-level="7.3">
+  7.3.&nbsp;Source coverage
+</h2>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc shall generate source coverage information.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    <div class="requirement_comment">
+      <div class="document">
+<p>Source coverage screen shows how source files are linked with requirements.</p>
+</div>
+
+    </div>
+    
+
+  </section></article>
+
+</turbo-frame>
+          <turbo-frame id="article-0da4915c9b504181a756aee1332be197"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="8-Web-frontend-requirements"></div>
+
+    
+        <h1
+class="section-title"
+data-level="8">
+  8.&nbsp;Web frontend requirements
+</h1>
+    
+
+  </section>
+
+  </article>
+
+</turbo-frame>
+            <turbo-frame id="article-8155abd29b394b80a8afa0018aeb21b7"><article class="requirement">
+
+  <section class="requirement_section" data-section='meta'>
+
+    <div data-role='anchor' id="8.1-AJAX-updates-of-multiple-web-forms"></div>
+    <h2
+class="section-title"
+data-level="8.1">
+  8.1.&nbsp;AJAX updates of multiple web forms
+</h2>
+
+    
+    
+    
+
+  </section>
+  <section class="requirement_section" data-section='statement'>
+
+    <div class="requirement_statement">
+    <div class="document">
+<p>StrictDoc's Web GUI shall provide capability to do multipart updates.</p>
+</div>
+
+  </div>
+
+  </section>
+  <section class="requirement_section" data-section='comment'>
+
+    
+    
+    
+
+  </section></article>
+
+</turbo-frame>
+
+      </div>
+</turbo-frame>
+
+    </main>
+
+  </div>
+  
+</body>
+</html>

@@ -1,0 +1,279 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="UTF-8"/>
+
+  <link rel="shortcut icon" href="../_static/favicon.ico" type="image/x-icon"/>
+
+  
+  <link rel="stylesheet" href="../_static/_base.css"/>
+  <link rel="stylesheet" href="../_static/_layout.css"/>
+  <link rel="stylesheet" href="../_static/_content.css"/>
+  <link rel="stylesheet" href="../_static/_requirement.css"/>
+  <link rel="stylesheet" href="../_static/_element.css"/>
+  <link rel="stylesheet" href="../_static/_form.css"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/toc.js"></script>
+  
+  
+  
+
+
+  <title>Contributing to StrictDoc - Table</title>
+
+  
+</head>
+
+<body class="table-view withtoc">
+<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
+
+    <aside class="layout_aside-header">
+      
+  <a class="index-link" href="../index.html">To Index</a>
+
+    </aside>
+
+    <aside class="layout_aside">
+      
+  <turbo-frame id="frame-toc">
+    <div>Table of Contents</div>
+    <ul class="toc"><li><a href="#1-Contributor-checklist" data-turbo="false">
+              <span class="section-number">1</span>
+              Contributor checklist
+            </a></li><li><a href="#2-Python-code" data-turbo="false">
+              <span class="section-number">2</span>
+              Python code
+            </a></li><li><a href="#3-Git-workflow" data-turbo="false">
+              <span class="section-number">3</span>
+              Git workflow
+            </a></li><li><a href="#4-Documentation" data-turbo="false">
+              <span class="section-number">4</span>
+              Documentation
+            </a></li></ul>
+</turbo-frame>
+
+    </aside>
+
+    
+  <a class="layout_toggler layout_button" id="layout_toggle"></a><nav class="layout_nav">
+    <a
+    class="layout_nav-btn layout_button btn-document"
+    title="Go to Document view"
+    href="../docs/strictdoc_10_contributing.html">
+    DOC
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-table"
+    title="Go to Table view"
+    href="../docs/strictdoc_10_contributing-TABLE.html">
+    TBL
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-traceability"
+    title="Go to Traceability view"
+    href="../docs/strictdoc_10_contributing-TRACE.html">
+    TR
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-deep-traceability"
+    title="Go to Deep Traceability view"
+    href="../docs/strictdoc_10_contributing-DEEP-TRACE.html">
+    DTR
+  </a>
+  </nav>
+
+
+    <header class="layout_header">
+      
+  <p>Contributing to StrictDoc <span class="document-view-type">Table</span></p>
+
+    </header>
+
+    <main class="layout_main">
+      
+
+      
+
+      <div class="layout_tmp_inner"><div class="content_meta">
+        <div class="free_text">
+          <div class="document">
+<p>Contributions to StrictDoc are welcome and appreciated. StrictDoc is based on
+Python and maintained as any other Python package on GitHub: with linting,
+tests, and hopefully enough best practice put into the codebase.</p>
+<p>The rules described below is the summary of what is considered to be the
+currently preferred development style for StrictDoc. These rules have been
+relatively stable for quite a while but any rule can still be changed if a
+better development practice is found.</p>
+<p>Any feedback on this contributing guideline is appreciated.</p>
+</div>
+
+        </div></div><div class="content">
+
+<table class="content-view-table">
+
+  <thead>
+    <tr>
+      <th class="content-view-th">Type</th>
+      <th class="content-view-th">Level</th><th class="content-view-th">UID</th><th class="content-view-th">STATUS</th><th class="content-view-th">TAGS</th><th class="content-view-th">REFS</th>
+      <th class="content-view-th">Title</th>
+      <th class="content-view-th">Statement</th>
+      <th class="content-view-th">Rationale</th>
+      <th class="content-view-th">Comment</th></tr>
+  </thead>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="1-Contributor-checklist"></div>
+      <div class="section-title">
+        Contributor checklist
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>This is a condensed checklist that summarises the information presented in the
+rest of this guideline.</p>
+<p>Before opening your Pull Request, please make sure to:</p>
+<ol class="arabic simple">
+<li>Run <tt class="docutils literal">invoke check</tt> tasks locally. This task calls several lint and test
+scripts and it is the very task that is run by the GitHub CI process.</li>
+<li>A contribution that contains changes to the StrictDoc's codebase shall also
+include tests that exercise the changed behavior. A contribution without any
+tests is unlikely to be accepted (with the exception of &quot;code climate&quot;
+changes, see <a class="reference external" href="#2-Python-code">Python code</a> below).</li>
+<li>Follow the conventions of the section &quot;Git workflow&quot; (see
+<a class="reference external" href="#3-Git-workflow">Git workflow</a>). A clean Git history and conventional
+commit names are expected for every single contribution.</li>
+</ol>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     2
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="2-Python-code"></div>
+      <div class="section-title">
+        Python code
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<ul class="simple">
+<li>The version of Python is set to be as low as possible given some constraints
+of StrictDoc's dependencies. Ideally, the lowest Python version should only be
+raised when it is consistently deprecated by major software platforms like
+Ubuntu or GitHub Actions.</li>
+<li>All developer tasks are collected in the <cite>tasks.py</cite> which is run by Invoke
+tool. Run the <tt class="docutils literal">invoke <span class="pre">--list</span></tt> command to see the list of available commands.</li>
+<li>Formatting is governed by <cite>black</cite> which reformats the code automatically
+when the <tt class="docutils literal">invoke check</tt> command is run.<ul>
+<li>If a string literal gets too long, it should be split into a multiline
+literal with each line being a meaningful word or subsentence.</li>
+</ul>
+</li>
+<li>If a contribution includes changes in StrictDoc's code, at least the
+integration-level tests should be added to the <cite>tests/integration</cite>. If the
+contributed code needs a fine-grained control over the added behavior, adding
+both unit and integration tests is preferred. The only exception where a
+contribution can contain no tests is &quot;code climate&quot; which is work which
+introduces changes in code but no change to the functionality.</li>
+</ul>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     3
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="3-Git-workflow"></div>
+      <div class="section-title">
+        Git workflow
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<ul class="simple">
+<li>The preferred Git workflow is &quot;1 commit per 1 PR&quot;. If the work truly deserves
+a sequence of commits, each commit shall be self-contained and pass all checks
+from the <tt class="docutils literal">invoke check</tt> command. The preferred approach: split the work into
+several independent Pull Requests to simplify the work of the reviewer.</li>
+<li>The branch should be always rebased against the main branch. The
+<tt class="docutils literal">git fetch &amp;&amp; git rebase origin/main</tt> is preferred over
+<tt class="docutils literal">git fetch &amp;&amp; git merge main</tt>.</li>
+<li>The Git commit message should follow the format: <cite>context: description</cite> where
+the context can be a major feature being added or a folder. A form of
+<cite>context: subcontext: description</cite> is also an option. Typical examples:<ul>
+<li><cite>docs: fix links to the grammar.py</cite></li>
+<li><cite>reqif: native: export/import roundtrip for multiline requirement fields</cite></li>
+<li><cite>backend/dsl: switch to dynamic fields, with validation</cite></li>
+<li><cite>Poetry: add filecheck as a dependency</cite></li>
+</ul>
+</li>
+<li>When a contribution is simply an improvement of existing code without a change
+in the functionality, the commit should be named: <cite>Code climate: description</cite>.<ul>
+<li>Example: <cite>Code climate: fix all remaining major Pylint warnings</cite>.</li>
+</ul>
+</li>
+</ul>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4-Documentation"></div>
+      <div class="section-title">
+        Documentation
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<ul class="simple">
+<li>Every change in the functionality or the infrastructure should be documented.</li>
+<li>Every line of documentation shall be no longer than 80 characters. StrictDoc's
+own documentation has a few exceptions, however, the latest preference is
+given to 80 characters per line. Unfortunately, until there is automatic
+support for mixed SDoc/RST content, all long lines shall be edited and
+split by a contributor manually.</li>
+<li>The <tt class="docutils literal">invoke sphinx</tt> task should be used for re-generating documentation on a
+developer machine.</li>
+</ul>
+</div>
+
+      </td>
+    </tr>
+
+  </table>
+</div>
+</div>
+
+
+    </main>
+
+  </div>
+  
+</body>
+</html>

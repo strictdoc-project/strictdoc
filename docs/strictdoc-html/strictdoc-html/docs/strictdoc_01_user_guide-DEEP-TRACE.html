@@ -1,0 +1,429 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="UTF-8"/>
+
+  <link rel="shortcut icon" href="../_static/favicon.ico" type="image/x-icon"/>
+
+  
+  
+  <link rel="stylesheet" href="../_static/_base.css"/>
+  <link rel="stylesheet" href="../_static/_layout.css"/>
+  <link rel="stylesheet" href="../_static/_content.css"/>
+  <link rel="stylesheet" href="../_static/_requirement.css"/>
+  <link rel="stylesheet" href="../_static/_element.css"/>
+  <link rel="stylesheet" href="../_static/_form.css"/>
+  
+  <link rel="stylesheet" href="../_static/_requirement-tree.css"/>
+
+
+  
+  <script type="text/javascript" src="../_static/toc.js"></script>
+  <script type="text/javascript" src="../_static/jquery.min.js"></script>
+  <script type="text/javascript" src="../_static/pan-with-space.js"></script>
+  
+  
+  
+  
+
+
+  <title>User Guide - Deep Traceability</title>
+
+  
+</head>
+
+<body class="deep-traceability-view withtoc">
+<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
+
+    <aside class="layout_aside-header">
+      
+  <a class="index-link" href="../index.html">To Index</a>
+
+    </aside>
+
+    <aside class="layout_aside">
+      
+  <turbo-frame id="frame-toc">
+    <div>Table of Contents</div>
+    <ul class="toc"><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                1
+              </span>
+              Introduction
+            </span>
+          <ul><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                1.1
+              </span>
+              Contact the developers
+            </span>
+          </li></ul>
+            </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                2
+              </span>
+              Examples
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                3
+              </span>
+              Getting started
+            </span>
+          <ul><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                3.1
+              </span>
+              Requirements
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                3.2
+              </span>
+              Installing StrictDoc as a Pip package (recommended way)
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                3.3
+              </span>
+              Installing StrictDoc into a Docker container
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                3.4
+              </span>
+              Installing StrictDoc as a Snap package (not maintained)
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                3.5
+              </span>
+              Hello world
+            </span>
+          </li></ul>
+            </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                4
+              </span>
+              SDoc syntax
+            </span>
+          <ul><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                4.1
+              </span>
+              Document structure
+            </span>
+          <ul><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                4.1.1
+              </span>
+              Strict rule #1: One empty line between all nodes
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                4.1.2
+              </span>
+              Strict rule #2: No content is allowed outside of SDoc grammar
+            </span>
+          </li></ul>
+            </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                4.2
+              </span>
+              Grammar elements
+            </span>
+          <ul><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                4.2.1
+              </span>
+              Document
+            </span>
+          <ul><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                4.2.1.1
+              </span>
+              Option: Requirement style
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                4.2.1.2
+              </span>
+              Option: Requirement title in Table of Contents
+            </span>
+          </li></ul>
+            </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                4.2.2
+              </span>
+              Requirement
+            </span>
+          <ul><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                4.2.2.1
+              </span>
+              UID
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                4.2.2.2
+              </span>
+              References
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                4.2.2.3
+              </span>
+              Comment
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                4.2.2.4
+              </span>
+              Rationale
+            </span>
+          </li></ul>
+            </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                4.2.3
+              </span>
+              Section
+            </span>
+          <ul><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                4.2.3.1
+              </span>
+              Nesting sections
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                4.2.3.2
+              </span>
+              Free text
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                4.2.3.3
+              </span>
+              Section without a level
+            </span>
+          </li></ul>
+            </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                4.2.4
+              </span>
+              Composite requirement
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                4.2.5
+              </span>
+              Include files
+            </span>
+          </li></ul>
+            </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                4.3
+              </span>
+              Custom grammars
+            </span>
+          <ul><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                4.3.1
+              </span>
+              Supported field types
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                4.3.2
+              </span>
+              Reserved fields
+            </span>
+          </li></ul>
+            </li></ul>
+            </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                5
+              </span>
+              Markup
+            </span>
+          <ul><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                5.1
+              </span>
+              Images
+            </span>
+          </li></ul>
+            </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                6
+              </span>
+              Export formats
+            </span>
+          <ul><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                6.1
+              </span>
+              HTML documentation tree by StrictDoc
+            </span>
+          <ul><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                6.1.1
+              </span>
+              Mathjax support
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                6.1.2
+              </span>
+              Standalone HTML pages (experimental)
+            </span>
+          </li></ul>
+            </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                6.2
+              </span>
+              HTML export via Sphinx
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                6.3
+              </span>
+              PDF export via Sphinx/LaTeX
+            </span>
+          </li></ul>
+            </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                7
+              </span>
+              Traceability between requirements and source code
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                8
+              </span>
+              ReqIF support
+            </span>
+          <ul><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                8.1
+              </span>
+              Import flow (ReqIF -> SDoc):
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                8.2
+              </span>
+              Export flow (SDoc -> ReqIF)
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                8.3
+              </span>
+              ReqIF implementation details
+            </span>
+          </li></ul>
+            </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                9
+              </span>
+              Excel support
+            </span>
+          <ul><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                9.1
+              </span>
+              Import flow (Excel XLS -> SDoc):
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                9.2
+              </span>
+              Export flow (SDoc -> Excel XLSX)
+            </span>
+          </li></ul>
+            </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                10
+              </span>
+              Options
+            </span>
+          <ul><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                10.1
+              </span>
+              Project title
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                10.2
+              </span>
+              Parallelization
+            </span>
+          </li></ul>
+            </li></ul>
+</turbo-frame>
+
+    </aside>
+
+    
+  <a class="layout_toggler layout_button" id="layout_toggle"></a><nav class="layout_nav">
+    <a
+    class="layout_nav-btn layout_button btn-document"
+    title="Go to Document view"
+    href="../docs/strictdoc_01_user_guide.html">
+    DOC
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-table"
+    title="Go to Table view"
+    href="../docs/strictdoc_01_user_guide-TABLE.html">
+    TBL
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-traceability"
+    title="Go to Traceability view"
+    href="../docs/strictdoc_01_user_guide-TRACE.html">
+    TR
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-deep-traceability"
+    title="Go to Deep Traceability view"
+    href="../docs/strictdoc_01_user_guide-DEEP-TRACE.html">
+    DTR
+  </a>
+  </nav>
+
+
+    <header class="layout_header">
+      
+  <p>User Guide <span class="document-view-type">Deep Traceability</span></p>
+
+    </header>
+
+    <main class="layout_main">
+      
+
+      
+
+      <div class="content">
+      </div>
+
+
+    </main>
+
+  </div>
+  
+  <script>
+    $(document).ready(function () {
+      // Quick and dirty scrolling to the middle of the document.
+      var table = $('.table').first();
+      window.scrollBy(table.outerWidth() / 2 - $(window).width() / 2, 0);
+    });
+  </script>
+
+</body>
+</html>

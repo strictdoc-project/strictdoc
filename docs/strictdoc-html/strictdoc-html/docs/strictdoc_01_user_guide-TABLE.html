@@ -1,0 +1,1977 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="UTF-8"/>
+
+  <link rel="shortcut icon" href="../_static/favicon.ico" type="image/x-icon"/>
+
+  
+  <link rel="stylesheet" href="../_static/_base.css"/>
+  <link rel="stylesheet" href="../_static/_layout.css"/>
+  <link rel="stylesheet" href="../_static/_content.css"/>
+  <link rel="stylesheet" href="../_static/_requirement.css"/>
+  <link rel="stylesheet" href="../_static/_element.css"/>
+  <link rel="stylesheet" href="../_static/_form.css"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/toc.js"></script>
+  
+  
+  
+
+
+  <title>User Guide - Table</title>
+
+  
+</head>
+
+<body class="table-view withtoc">
+<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
+
+    <aside class="layout_aside-header">
+      
+  <a class="index-link" href="../index.html">To Index</a>
+
+    </aside>
+
+    <aside class="layout_aside">
+      
+  <turbo-frame id="frame-toc">
+    <div>Table of Contents</div>
+    <ul class="toc"><li><a href="#1-Introduction" data-turbo="false">
+              <span class="section-number">1</span>
+              Introduction
+            </a><ul><li><a href="#1.1-Contact-the-developers" data-turbo="false">
+              <span class="section-number">1.1</span>
+              Contact the developers
+            </a></li></ul>
+            </li><li><a href="#2-Examples" data-turbo="false">
+              <span class="section-number">2</span>
+              Examples
+            </a></li><li><a href="#3-Getting-started" data-turbo="false">
+              <span class="section-number">3</span>
+              Getting started
+            </a><ul><li><a href="#3.1-Requirements" data-turbo="false">
+              <span class="section-number">3.1</span>
+              Requirements
+            </a></li><li><a href="#3.2-Installing-StrictDoc-as-a-Pip-package-recommended-way-" data-turbo="false">
+              <span class="section-number">3.2</span>
+              Installing StrictDoc as a Pip package (recommended way)
+            </a></li><li><a href="#3.3-Installing-StrictDoc-into-a-Docker-container" data-turbo="false">
+              <span class="section-number">3.3</span>
+              Installing StrictDoc into a Docker container
+            </a></li><li><a href="#3.4-Installing-StrictDoc-as-a-Snap-package-not-maintained-" data-turbo="false">
+              <span class="section-number">3.4</span>
+              Installing StrictDoc as a Snap package (not maintained)
+            </a></li><li><a href="#3.5-Hello-world" data-turbo="false">
+              <span class="section-number">3.5</span>
+              Hello world
+            </a></li></ul>
+            </li><li><a href="#4-SDoc-syntax" data-turbo="false">
+              <span class="section-number">4</span>
+              SDoc syntax
+            </a><ul><li><a href="#4.1-Document-structure" data-turbo="false">
+              <span class="section-number">4.1</span>
+              Document structure
+            </a><ul><li><a href="#4.1.1-Strict-rule-1-One-empty-line-between-all-nodes" data-turbo="false">
+              <span class="section-number">4.1.1</span>
+              Strict rule #1: One empty line between all nodes
+            </a></li><li><a href="#4.1.2-Strict-rule-2-No-content-is-allowed-outside-of-SDoc-grammar" data-turbo="false">
+              <span class="section-number">4.1.2</span>
+              Strict rule #2: No content is allowed outside of SDoc grammar
+            </a></li></ul>
+            </li><li><a href="#4.2-Grammar-elements" data-turbo="false">
+              <span class="section-number">4.2</span>
+              Grammar elements
+            </a><ul><li><a href="#4.2.1-Document" data-turbo="false">
+              <span class="section-number">4.2.1</span>
+              Document
+            </a><ul><li><a href="#4.2.1.1-Option-Requirement-style" data-turbo="false">
+              <span class="section-number">4.2.1.1</span>
+              Option: Requirement style
+            </a></li><li><a href="#4.2.1.2-Option-Requirement-title-in-Table-of-Contents" data-turbo="false">
+              <span class="section-number">4.2.1.2</span>
+              Option: Requirement title in Table of Contents
+            </a></li></ul>
+            </li><li><a href="#4.2.2-Requirement" data-turbo="false">
+              <span class="section-number">4.2.2</span>
+              Requirement
+            </a><ul><li><a href="#4.2.2.1-UID" data-turbo="false">
+              <span class="section-number">4.2.2.1</span>
+              UID
+            </a></li><li><a href="#4.2.2.2-References" data-turbo="false">
+              <span class="section-number">4.2.2.2</span>
+              References
+            </a></li><li><a href="#4.2.2.3-Comment" data-turbo="false">
+              <span class="section-number">4.2.2.3</span>
+              Comment
+            </a></li><li><a href="#4.2.2.4-Rationale" data-turbo="false">
+              <span class="section-number">4.2.2.4</span>
+              Rationale
+            </a></li></ul>
+            </li><li><a href="#4.2.3-Section" data-turbo="false">
+              <span class="section-number">4.2.3</span>
+              Section
+            </a><ul><li><a href="#4.2.3.1-Nesting-sections" data-turbo="false">
+              <span class="section-number">4.2.3.1</span>
+              Nesting sections
+            </a></li><li><a href="#4.2.3.2-Free-text" data-turbo="false">
+              <span class="section-number">4.2.3.2</span>
+              Free text
+            </a></li><li><a href="#4.2.3.3-Section-without-a-level" data-turbo="false">
+              <span class="section-number">4.2.3.3</span>
+              Section without a level
+            </a></li></ul>
+            </li><li><a href="#4.2.4-Composite-requirement" data-turbo="false">
+              <span class="section-number">4.2.4</span>
+              Composite requirement
+            </a></li><li><a href="#4.2.5-Include-files" data-turbo="false">
+              <span class="section-number">4.2.5</span>
+              Include files
+            </a></li></ul>
+            </li><li><a href="#4.3-Custom-grammars" data-turbo="false">
+              <span class="section-number">4.3</span>
+              Custom grammars
+            </a><ul><li><a href="#4.3.1-Supported-field-types" data-turbo="false">
+              <span class="section-number">4.3.1</span>
+              Supported field types
+            </a></li><li><a href="#4.3.2-Reserved-fields" data-turbo="false">
+              <span class="section-number">4.3.2</span>
+              Reserved fields
+            </a></li></ul>
+            </li></ul>
+            </li><li><a href="#5-Markup" data-turbo="false">
+              <span class="section-number">5</span>
+              Markup
+            </a><ul><li><a href="#5.1-Images" data-turbo="false">
+              <span class="section-number">5.1</span>
+              Images
+            </a></li></ul>
+            </li><li><a href="#6-Export-formats" data-turbo="false">
+              <span class="section-number">6</span>
+              Export formats
+            </a><ul><li><a href="#6.1-HTML-documentation-tree-by-StrictDoc" data-turbo="false">
+              <span class="section-number">6.1</span>
+              HTML documentation tree by StrictDoc
+            </a><ul><li><a href="#6.1.1-Mathjax-support" data-turbo="false">
+              <span class="section-number">6.1.1</span>
+              Mathjax support
+            </a></li><li><a href="#6.1.2-Standalone-HTML-pages-experimental-" data-turbo="false">
+              <span class="section-number">6.1.2</span>
+              Standalone HTML pages (experimental)
+            </a></li></ul>
+            </li><li><a href="#6.2-HTML-export-via-Sphinx" data-turbo="false">
+              <span class="section-number">6.2</span>
+              HTML export via Sphinx
+            </a></li><li><a href="#6.3-PDF-export-via-Sphinx-LaTeX" data-turbo="false">
+              <span class="section-number">6.3</span>
+              PDF export via Sphinx/LaTeX
+            </a></li></ul>
+            </li><li><a href="#7-Traceability-between-requirements-and-source-code" data-turbo="false">
+              <span class="section-number">7</span>
+              Traceability between requirements and source code
+            </a></li><li><a href="#8-ReqIF-support" data-turbo="false">
+              <span class="section-number">8</span>
+              ReqIF support
+            </a><ul><li><a href="#8.1-Import-flow-ReqIF-SDoc-" data-turbo="false">
+              <span class="section-number">8.1</span>
+              Import flow (ReqIF -> SDoc):
+            </a></li><li><a href="#8.2-Export-flow-SDoc-ReqIF-" data-turbo="false">
+              <span class="section-number">8.2</span>
+              Export flow (SDoc -> ReqIF)
+            </a></li><li><a href="#8.3-ReqIF-implementation-details" data-turbo="false">
+              <span class="section-number">8.3</span>
+              ReqIF implementation details
+            </a></li></ul>
+            </li><li><a href="#9-Excel-support" data-turbo="false">
+              <span class="section-number">9</span>
+              Excel support
+            </a><ul><li><a href="#9.1-Import-flow-Excel-XLS-SDoc-" data-turbo="false">
+              <span class="section-number">9.1</span>
+              Import flow (Excel XLS -> SDoc):
+            </a></li><li><a href="#9.2-Export-flow-SDoc-Excel-XLSX-" data-turbo="false">
+              <span class="section-number">9.2</span>
+              Export flow (SDoc -> Excel XLSX)
+            </a></li></ul>
+            </li><li><a href="#10-Options" data-turbo="false">
+              <span class="section-number">10</span>
+              Options
+            </a><ul><li><a href="#10.1-Project-title" data-turbo="false">
+              <span class="section-number">10.1</span>
+              Project title
+            </a></li><li><a href="#10.2-Parallelization" data-turbo="false">
+              <span class="section-number">10.2</span>
+              Parallelization
+            </a></li></ul>
+            </li></ul>
+</turbo-frame>
+
+    </aside>
+
+    
+  <a class="layout_toggler layout_button" id="layout_toggle"></a><nav class="layout_nav">
+    <a
+    class="layout_nav-btn layout_button btn-document"
+    title="Go to Document view"
+    href="../docs/strictdoc_01_user_guide.html">
+    DOC
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-table"
+    title="Go to Table view"
+    href="../docs/strictdoc_01_user_guide-TABLE.html">
+    TBL
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-traceability"
+    title="Go to Traceability view"
+    href="../docs/strictdoc_01_user_guide-TRACE.html">
+    TR
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-deep-traceability"
+    title="Go to Deep Traceability view"
+    href="../docs/strictdoc_01_user_guide-DEEP-TRACE.html">
+    DTR
+  </a>
+  </nav>
+
+
+    <header class="layout_header">
+      
+  <p>User Guide <span class="document-view-type">Table</span></p>
+
+    </header>
+
+    <main class="layout_main">
+      
+
+      
+
+      <div class="layout_tmp_inner"><div class="content">
+
+<table class="content-view-table">
+
+  <thead>
+    <tr>
+      <th class="content-view-th">Type</th>
+      <th class="content-view-th">Level</th><th class="content-view-th">UID</th><th class="content-view-th">STATUS</th><th class="content-view-th">TAGS</th><th class="content-view-th">REFS</th>
+      <th class="content-view-th">Title</th>
+      <th class="content-view-th">Statement</th>
+      <th class="content-view-th">Rationale</th>
+      <th class="content-view-th">Comment</th></tr>
+  </thead>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="1-Introduction"></div>
+      <div class="section-title">
+        Introduction
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>StrictDoc is software for writing technical requirements and specifications.</p>
+<p>Summary of StrictDoc features:</p>
+<ul class="simple">
+<li>The documentation files are stored as human-readable text files.</li>
+<li>A simple domain-specific language DSL is used for writing the documents. The
+text format for encoding this language is called SDoc (strict-doc).</li>
+<li>StrictDoc reads <tt class="docutils literal">*.sdoc</tt> files and builds an in-memory representation of the
+document tree.</li>
+<li>From this in-memory representation, StrictDoc can generate the documentation
+into a number of formats including HTML, RST, ReqIF, PDF, Excel.</li>
+<li>The focus of the tool is modeling requirements and specifications documents.
+Such documents consist of multiple statements like &quot;system X shall do Y&quot;
+called requirements.</li>
+<li>The requirements can be linked together to form the relationships, such as
+&quot;parent-child&quot;, and from these connections, many useful features, such as
+<a class="reference external" href="https://en.wikipedia.org/wiki/Requirements_traceability">Requirements Traceability</a>
+and Documentation Coverage, can be derived.</li>
+<li>Requirements to source files traceability (experimental). See
+<a class="reference external" href="#7-Traceability-between-requirements-and-source-code">Traceability between requirements and source code</a>.</li>
+<li>Custom grammar and custom fields support. The StrictDoc's grammar can be
+extended to support arbitrary special fields, such as <tt class="docutils literal">PRIORITY</tt>, <tt class="docutils literal">OWNER</tt>,
+or even more specialized fields, such as
+<tt class="docutils literal">Automotive Safety Integrity Level (ASIL)</tt> or <tt class="docutils literal">Verification method</tt>.
+See <a class="reference external" href="#4.3-Custom-grammars">Custom grammars</a>.</li>
+<li>Good performance of the <a class="reference external" href="https://github.com/textX/textX">textX</a>
+parser and parallelized incremental generation of documents: generation of
+document trees with up to 2000-3000 requirements into HTML pages stays within
+a few seconds. From the second run, only changed documents are regenerated.
+Further performance tuning should be possible.</li>
+</ul>
+<p>See the Backlog to get an idea of the overall project direction.</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     1.1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="1.1-Contact-the-developers"></div>
+      <div class="section-title">
+        Contact the developers
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>Join us in Discord. Here is the invitation link: <a class="reference external" href="https://discord.gg/4BAAME9MmG">https://discord.gg/4BAAME9MmG</a></p>
+<p>The author can be also contacted via <a class="reference external" href="mailto:s.pankevich&#64;gmail.com">email</a>.</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     2
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="2-Examples"></div>
+      <div class="section-title">
+        Examples
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>&quot;Hello World&quot; example of the text language:</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[REQUIREMENT]
+UID: SDOC-HIGH-REQS-MANAGEMENT
+TITLE: Requirements management
+STATEMENT: StrictDoc shall enable requirements management.
+</pre>
+</div>
+
+      </td>
+    </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>For a more comprehensive example check the source file of this documentation
+which is written using StrictDoc:
+<a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc_01_user_guide.sdoc">strictdoc_01_user_guide.sdoc</a>.</p>
+<ul class="simple">
+<li><a class="reference external" href="https://strictdoc.readthedocs.io/en/latest/strictdoc-html">StrictDoc HTML export</a></li>
+<li><a class="reference external" href="https://strictdoc.readthedocs.io/en/latest">StrictDoc HTML export using Sphinx</a></li>
+<li><a class="reference external" href="https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/">StrictDoc PDF export using Sphinx</a></li>
+</ul>
+<p>Additionally, the project's repository contains a folder
+<tt class="docutils literal">tests/integration/examples</tt>. In this folder, there is a collection of basic
+examples.</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     3
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="3-Getting-started"></div>
+      <div class="section-title">
+        Getting started
+      </div></td>
+  </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     3.1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="3.1-Requirements"></div>
+      <div class="section-title">
+        Requirements
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<ul class="simple">
+<li>Python 3.6+</li>
+<li>macOS, Linux or Windows</li>
+</ul>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     3.2
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="3.2-Installing-StrictDoc-as-a-Pip-package-recommended-way-"></div>
+      <div class="section-title">
+        Installing StrictDoc as a Pip package (recommended way)
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<pre class="code text literal-block">
+pip install strictdoc
+</pre>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     3.3
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="3.3-Installing-StrictDoc-into-a-Docker-container"></div>
+      <div class="section-title">
+        Installing StrictDoc into a Docker container
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>StrictDoc can be invoked inside of a Docker container. To make data available
+to the Docker container (here: <tt class="docutils literal">strictdoc:latest</tt>) as well as to the host
+system, one needs to mount a volume via <tt class="docutils literal"><span class="pre">-v</span></tt> option.</p>
+<p>In the host operating system terminal:</p>
+<pre class="code text literal-block">
+docker build . -t strictdoc:latest
+docker run --name strictdoc --rm -v &quot;$(pwd)/docs:/data&quot; -i -t strictdoc:latest
+</pre>
+<p>In the container terminal:</p>
+<pre class="code text literal-block">
+bash-5.1# strictdoc export .
+bash-5.1# exit
+</pre>
+<p>The documentation resides in <tt class="docutils literal">./docs/output/html</tt>.</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     3.4
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="3.4-Installing-StrictDoc-as-a-Snap-package-not-maintained-"></div>
+      <div class="section-title">
+        Installing StrictDoc as a Snap package (not maintained)
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>This way of installing StrictDoc is not maintained anymore. If you want to
+use it, refer to the instructions located in <tt class="docutils literal">developer/snap/README.md</tt>.</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     3.5
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="3.5-Hello-world"></div>
+      <div class="section-title">
+        Hello world
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<pre class="code text literal-block">
+git clone --depth 1 https://github.com/strictdoc-project/strictdoc &amp;&amp; cd strictdoc
+strictdoc export docs/
+</pre>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4-SDoc-syntax"></div>
+      <div class="section-title">
+        SDoc syntax
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>StrictDoc defines a special syntax for writing specifications documents. This
+syntax is called SDoc and it's grammar is encoded with the
+<a class="reference external" href="https://github.com/textX/textX">textX</a>
+tool.</p>
+<p>The grammar is defined using textX language for defining grammars and is
+located in a single file:
+<a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/main/strictdoc/backend/sdoc/grammar/grammar.py">grammar.py</a>.</p>
+<p>This is how a minimal possible SDoc document looks like:</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+</pre>
+<p>This documentation is written using StrictDoc. Here is the source file:
+<a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc_01_user_guide.sdoc">strictdoc_01_user_guide.sdoc</a>.</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4.1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4.1-Document-structure"></div>
+      <div class="section-title">
+        Document structure
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>An SDoc document consists of a <tt class="docutils literal">[DOCUMENT]</tt> declaration followed by one or many
+<tt class="docutils literal">[REQUIREMENT]</tt> or <tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt> statements which can be grouped
+into <tt class="docutils literal">[SECTION]</tt> blocks.</p>
+<p>The following grammatical constructs are currently supported:</p>
+<ul class="simple">
+<li><tt class="docutils literal">DOCUMENT</tt><ul>
+<li><tt class="docutils literal">FREETEXT</tt></li>
+</ul>
+</li>
+<li><tt class="docutils literal">REQUIREMENT</tt> and <tt class="docutils literal">COMPOSITE_REQUIREMENT</tt></li>
+<li><tt class="docutils literal">SECTION</tt><ul>
+<li><tt class="docutils literal">FREETEXT</tt></li>
+</ul>
+</li>
+</ul>
+<p>Each construct is described in more detail below.</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4.1.1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4.1.1-Strict-rule-1-One-empty-line-between-all-nodes"></div>
+      <div class="section-title">
+        Strict rule #1: One empty line between all nodes
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>StrictDoc's grammar requires each node, such as <tt class="docutils literal">[REQUIREMENT]</tt>, <tt class="docutils literal">[SECTION]</tt>,
+etc., to be separated with exactly one empty line from the nodes surrounding it.
+This rule is valid for all nodes. Absence of an empty line or presence of more
+than one empty line between two nodes will result in an SDoc parsing error.</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4.1.2
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4.1.2-Strict-rule-2-No-content-is-allowed-outside-of-SDoc-grammar"></div>
+      <div class="section-title">
+        Strict rule #2: No content is allowed outside of SDoc grammar
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>StrictDoc's grammar does not allow any content to be written outside of the SDoc
+grammatical constructs. It is assumed that the critical content shall always be
+written in form of requirements:
+<tt class="docutils literal">[REQUIREMENT]</tt> and <tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt>. Non-critical content shall
+be specified using <tt class="docutils literal">[FREETEXT]</tt> nodes. By design, the <tt class="docutils literal">[FREETEXT]</tt> nodes can
+be only attached to the <tt class="docutils literal">[DOCUMENT]</tt> and <tt class="docutils literal">[SECTION]</tt> nodes.</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4.2
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4.2-Grammar-elements"></div>
+      <div class="section-title">
+        Grammar elements
+      </div></td>
+  </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4.2.1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4.2.1-Document"></div>
+      <div class="section-title">
+        Document
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p><tt class="docutils literal">[DOCUMENT]</tt> element must always be present in an SDoc document. It is a root
+of an SDoc document graph.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+(newline)
+</pre>
+<p><tt class="docutils literal">DOCUMENT</tt> declaration must always have a <tt class="docutils literal">TITLE</tt> field. It can have
+optional configuration fields and an optional <tt class="docutils literal">[FREETEXT]</tt> block.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[FREETEXT]
+StrictDoc is software for writing technical requirements and specifications.
+[/FREETEXT]
+</pre>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4.2.1.1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4.2.1.1-Option-Requirement-style"></div>
+      <div class="section-title">
+        Option: Requirement style
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>The <tt class="docutils literal">REQUIREMENT_STYLE</tt> option controls whether requirement's elements are
+displayed inline or as table blocks. The available options are: <tt class="docutils literal">Inline</tt>
+and <tt class="docutils literal">Table</tt>.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: Hello world
+OPTIONS:
+  REQUIREMENT_STYLE: Table
+</pre>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4.2.1.2
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4.2.1.2-Option-Requirement-title-in-Table-of-Contents"></div>
+      <div class="section-title">
+        Option: Requirement title in Table of Contents
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>The <tt class="docutils literal">REQUIREMENT_IN_TOC</tt> option controls whether requirement's title appear
+in the table of contents (TOC). The available options are: <tt class="docutils literal">True/False</tt>.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: Hello world
+OPTIONS:
+  REQUIREMENT_IN_TOC: True
+</pre>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4.2.2
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4.2.2-Requirement"></div>
+      <div class="section-title">
+        Requirement
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>Minimal &quot;Hello World&quot; program with 3 empty requirements:</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[REQUIREMENT]
+
+[REQUIREMENT]
+
+[REQUIREMENT]
+</pre>
+<p>Supported fields:</p>
+<ul class="simple">
+<li><tt class="docutils literal">UID</tt> (unique identifier)</li>
+<li><tt class="docutils literal">REFS</tt></li>
+<li><tt class="docutils literal">TITLE</tt></li>
+<li><tt class="docutils literal">STATEMENT</tt></li>
+<li><tt class="docutils literal">RATIONALE</tt></li>
+<li><tt class="docutils literal">COMMENT</tt> (multiple comments are possible)</li>
+</ul>
+<p>Currently, all <tt class="docutils literal">[REQUIREMENT]</tt>'s are optional but most of the time at least
+the <tt class="docutils literal">STATEMENT:</tt> field must be present as well as the <tt class="docutils literal">TITLE:</tt> field.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[REQUIREMENT]
+TITLE: Requirements management
+STATEMENT: StrictDoc shall enable requirements management.
+</pre>
+<p><strong>Observation:</strong> Many real-world documents have requirements with statements and
+titles but some documents only use statements without title in which case their
+title becomes their UID. Example:</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[REQUIREMENT]
+UID: REQ-001
+STATEMENT: StrictDoc shall enable requirements management.
+</pre>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4.2.2.1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4.2.2.1-UID"></div>
+      <div class="section-title">
+        UID
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p><strong>Observation:</strong> Some documents do not use unique identifiers which makes it
+impossible to trace their requirements to each other. Within StrictDoc's
+framework, it is assumed that a good requirements document has all of its
+requirements uniquely identifiable, however, the <tt class="docutils literal">UID</tt> field is optional to
+accommodate for documents without connections between requirements.</p>
+<p>StrictDoc does not impose any limitations on the format of a UID. Examples of
+typical conventions for naming UIDs:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">REQ-001</span></tt>, <tt class="docutils literal"><span class="pre">SCA-001</span></tt> (scalability), <tt class="docutils literal"><span class="pre">PERF-001</span></tt> (performance), etc.</li>
+<li><tt class="docutils literal">cES1008</tt>, <tt class="docutils literal">cTBL6000.1</tt> (example from NASA cFS requirements)</li>
+<li>Requirements without a number, e.g. <tt class="docutils literal"><span class="pre">SDOC-HIGH-DATA-MODEL</span></tt> (StrictDoc)</li>
+<li><tt class="docutils literal">SAVOIR.OBC.PM.80</tt> (SAVOIR guidelines)</li>
+</ul>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[REQUIREMENT]
+UID: SDOC-HIGH-DATA-MODEL
+STATEMENT: STATEMENT: StrictDoc shall be based on a well-defined data model.
+</pre>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4.2.2.2
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4.2.2.2-References"></div>
+      <div class="section-title">
+        References
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>The <tt class="docutils literal">[REQUIREMENT]</tt> / <tt class="docutils literal">REFS:</tt> field is used to connect requirements to each
+other:</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[REQUIREMENT]
+UID: REQ-001
+STATEMENT: StrictDoc shall enable requirements management.
+
+[REQUIREMENT]
+UID: REQ-002
+REFS:
+- TYPE: Parent
+  VALUE: REQ-001
+TITLE: Requirement #2's title
+STATEMENT: Requirement #2 statement
+</pre>
+<p><strong>Note:</strong> The <tt class="docutils literal">TYPE: Parent</tt> is the only supported type of connection. In the
+future, linking requirements to files will be possible.</p>
+<p><strong>Note:</strong> By design, StrictDoc will only show parent or child links if both
+requirements connected with a reference have <tt class="docutils literal">UID</tt> defined.</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4.2.2.3
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4.2.2.3-Comment"></div>
+      <div class="section-title">
+        Comment
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>A requirement can have one or more comments explaining this requirement. The
+comments can be single-line or multiline.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[REQUIREMENT]
+UID: REQ-001
+STATEMENT: StrictDoc shall enable requirements management.
+COMMENT: Clarify the meaning or give additional information here.
+COMMENT: &gt;&gt;&gt;
+This is a multiline comment.
+
+The content is split via \n\n.
+
+Each line is rendered as a separate paragraph.
+&lt;&lt;&lt;
+</pre>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4.2.2.4
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4.2.2.4-Rationale"></div>
+      <div class="section-title">
+        Rationale
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>A requirement can have a <tt class="docutils literal">RATIONALE:</tt> field that explains why such a
+requirement exists. Like comments, the rationale field can be single-line or
+multiline.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[REQUIREMENT]
+UID: REQ-001
+STATEMENT: StrictDoc shall enable requirements management.
+COMMENT: Clarify the meaning or give additional information here.
+RATIONALE: The presence of the REQ-001 is justified.
+</pre>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4.2.3
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4.2.3-Section"></div>
+      <div class="section-title">
+        Section
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>The <tt class="docutils literal">[SECTION]</tt> element is used for creating document chapters and grouping
+requirements into logical groups. It is equivalent to the use of <tt class="docutils literal">#</tt>, <tt class="docutils literal">##</tt>,
+<tt class="docutils literal">###</tt>, etc., in Markdown and <tt class="docutils literal"><span class="pre">====</span></tt>, <tt class="docutils literal"><span class="pre">----</span></tt>, <tt class="docutils literal"><span class="pre">~~~~</span></tt> in RST.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[SECTION]
+TITLE: High-level requirements
+
+[REQUIREMENT]
+UID: HIGH-001
+STATEMENT: ...
+
+[/SECTION]
+
+[SECTION]
+TITLE: Implementation requirements
+
+[REQUIREMENT]
+UID: IMPL-001
+STATEMENT: ...
+
+[/SECTION]
+</pre>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4.2.3.1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4.2.3.1-Nesting-sections"></div>
+      <div class="section-title">
+        Nesting sections
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>Sections can be nested within each other.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[SECTION]
+TITLE: Chapter
+
+[SECTION]
+TITLE: Subchapter
+
+[REQUIREMENT]
+STATEMENT: ...
+
+[/SECTION]
+
+[/SECTION]
+</pre>
+<p>StrictDoc creates section numbers automatically. In the example above, the
+sections will have their titles numbered accordingly: <tt class="docutils literal">1 Chapter</tt> and
+<tt class="docutils literal">1.1 Subchapter</tt>.</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4.2.3.2
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4.2.3.2-Free-text"></div>
+      <div class="section-title">
+        Free text
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>A section can have a block of <tt class="docutils literal">[FREETEXT]</tt> connected to it:</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[SECTION]
+TITLE: Free text
+
+[FREETEXT]
+A sections can have a block of ``[FREETEXT]`` connected to it:
+
+...
+[/FREETEXT]
+
+[/SECTION]
+</pre>
+<p>According to the Strict Rule #2, arbitrary content cannot be written outside
+of StrictDoc's grammar structure. <tt class="docutils literal">[SECTION] / [FREETEXT]</tt> is therefore a
+designated grammar element for writing free text content.</p>
+<p><strong>Note:</strong> Free text can also be called &quot;nonnormative&quot; or &quot;informative&quot; text
+because it does not contribute anything to the traceability information of the
+document. The nonnormative text is there to give a context to the reader and
+help with the conceptual understanding of the information. If a certain
+information influences or is influenced by existing requirements, it has to be
+promoted to the requirement level: the information has to be broken down into
+atomic <tt class="docutils literal">[REQUIREMENT]</tt> statements and get connected to the other requirement
+statements in the document.</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4.2.3.3
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4.2.3.3-Section-without-a-level"></div>
+      <div class="section-title">
+        Section without a level
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>A section can have no level attached to it. To enable this behavior, the field
+<tt class="docutils literal">LEVEL</tt> has to be set to <tt class="docutils literal">None</tt>.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: Hello world doc
+
+[SECTION]
+TITLE: Section 1
+
+[/SECTION]
+
+[SECTION]
+LEVEL: None
+TITLE: Out-of-band Section
+
+[/SECTION]
+
+[SECTION]
+TITLE: Section 2
+
+[/SECTION]
+</pre>
+<p>The section with no level will be skipped by StrictDoc's system of automatic
+numbering of the section levels (1, 1.1, 1.2, 2, ...).</p>
+<p>The behavior of the <tt class="docutils literal">LEVEL: None</tt> option is recursive. If a parent section
+has its <tt class="docutils literal">LEVEL</tt> set to <tt class="docutils literal">None</tt>, all its subsections' and requirements' levels
+are set to <tt class="docutils literal">LEVEL: None</tt> by StrictDoc automatically.</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4.2.4
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4.2.4-Composite-requirement"></div>
+      <div class="section-title">
+        Composite requirement
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>A <tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt> is a requirement that combines requirement
+properties of a <tt class="docutils literal">[REQUIREMENT]</tt> element and grouping features of a <tt class="docutils literal">[SECTION]</tt>
+element. This element can be useful in lower-level specifications documents
+where a given section of a document has to describe a single feature and the
+description requires a one or more levels of nesting. In this case, it might be
+natural to use a composite requirement that is tightly connected to a few
+related sub-requirements.</p>
+<pre class="code text literal-block">
+[COMPOSITE_REQUIREMENT]
+STATEMENT: Statement
+
+[REQUIREMENT]
+STATEMENT: Substatement #1
+
+[REQUIREMENT]
+STATEMENT: Substatement #2
+
+[REQUIREMENT]
+STATEMENT: Substatement #3
+
+[/COMPOSITE_REQUIREMENT]
+</pre>
+<p>Special feature of <tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt>: like <tt class="docutils literal">[SECTION]</tt> element, the
+<tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt> elements can be nested within each other. However,
+<tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt> cannot nest sections.</p>
+<p><strong>Note:</strong> Composite requirements should not be used in every document. Most
+often, a more basic combination of nested <tt class="docutils literal">[SECTION]</tt> and <tt class="docutils literal">[REQUIREMENT]</tt>
+elements should do the job.</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4.2.5
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4.2.5-Include-files"></div>
+      <div class="section-title">
+        Include files
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>StrictDoc <tt class="docutils literal">.sdoc</tt> files can be built-up from including other fragment documents.</p>
+<p>The <tt class="docutils literal">[FRAGMENT_FROM_FILE]</tt> element can be used anywhere body elements can be
+used ( e.g.``[SECTION]``, <tt class="docutils literal">[REQUIREMENT</tt>, <tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt> etc.) and will
+evaluate by inserting its contents from the file referenced by its <tt class="docutils literal">FILE:</tt> property
+where it was used in the parent document. The files included must start with a <tt class="docutils literal">[FRAGMENT]</tt>
+directive and cannot contain <tt class="docutils literal">[FREETEXT]</tt> elements but are otherwise identical to
+<tt class="docutils literal">*.sdoc</tt> files. They can have any filename except a``.sdoc`` extension.</p>
+<p>Here is an example pair of files similar to examples above. First the
+<tt class="docutils literal">.sdoc</tt> file has a <tt class="docutils literal">[FRAGMENT_FROM_FILE]</tt> that references the latter file.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[FREETEXT]
+...
+[/FREETEXT]
+
+[FRAGMENT_FROM_FILE]
+FILE: include.ssec
+
+[REQUIREMENT]
+</pre>
+<p>Then the referenced file, <tt class="docutils literal">include.ssec</tt>:</p>
+<pre class="code text literal-block">
+[FRAGMENT]
+
+[REQUIREMENT]
+
+[SECTION]
+TITLE: Sub section
+[/SECTION]
+
+[COMPOSITE_REQUIREMENT]
+
+[REQUIREMENT]
+
+[/COMPOSITE_REQUIREMENT]
+</pre>
+<p>Which will resolve to the following document after inclusion:</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[FREETEXT]
+...
+[/FREETEXT]
+
+[REQUIREMENT]
+
+[SECTION]
+TITLE: Sub section
+[/SECTION]
+
+[COMPOSITE_REQUIREMENT]
+
+[REQUIREMENT]
+
+[/COMPOSITE_REQUIREMENT]
+
+[REQUIREMENT]
+</pre>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4.3
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4.3-Custom-grammars"></div>
+      <div class="section-title">
+        Custom grammars
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p><strong>Observation:</strong> Different industries have their own types of requirements
+documents with specialized meta information.
+Examples: <tt class="docutils literal">ASIL</tt> in the automotive industry or
+<tt class="docutils literal">HERITAGE</tt> field in some of the requirements documents by NASA.</p>
+<p>StrictDoc allows declaration of custom grammars with custom fields that are
+specific to a particular document.</p>
+<p>First, such fields have to be registered on a document level using the
+<tt class="docutils literal">[GRAMMAR]</tt> field. The following example demonstrates a declaration of
+a grammar with four fields including a custom <tt class="docutils literal">VERIFICATION</tt> field.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: How to declare a custom grammar
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: VERIFICATION
+    TYPE: String
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: True
+</pre>
+<p>This declaration configures the parser to recognize the declared fields as
+defined by a user. Declaring a special field as <tt class="docutils literal">REQUIRED: True</tt> makes this
+field mandatory for each and every requirement in the document.</p>
+<p>When the fields are registered on the document level, it becomes possible to
+declare them as the <tt class="docutils literal">[REQUIREMENT]</tt> special fields:</p>
+<pre class="code text literal-block">
+[REQUIREMENT]
+UID: ABC-123
+VERIFICATION: Test
+STATEMENT: System A shall do B.
+COMMENT: Test comment.
+</pre>
+<p><strong>Note:</strong> The order of fields must match the order of their declaration in the
+grammar.</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4.3.1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4.3.1-Supported-field-types"></div>
+      <div class="section-title">
+        Supported field types
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>The supported field types are:</p>
+<ul class="simple">
+<li><tt class="docutils literal">String</tt></li>
+<li><tt class="docutils literal">SingleChoice</tt> (Enum-like behavior, one choice is possible)</li>
+<li><tt class="docutils literal">MultipleChoice</tt> (comma-separated words with fixed options)</li>
+<li><tt class="docutils literal">Tag</tt> (comma-separated words with no fixed options)</li>
+</ul>
+<p>Example:</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: How to declare a custom grammar
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: ASIL
+    TYPE: SingleChoice(A, B, C, D)
+    REQUIRED: True
+  - TITLE: VERIFICATION
+    TYPE: MultipleChoice(Review, Analysis, Inspection, Test)
+    REQUIRED: True
+  - TITLE: UNIT
+    TYPE: Tag
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: True
+
+[FREETEXT]
+This document is an example of a simple SDoc custom grammar.
+[/FREETEXT]
+
+[REQUIREMENT]
+UID: ABC-123
+ASIL: A
+VERIFICATION: Review, Test
+UNIT: OBC, RTU
+TITLE: Function B
+STATEMENT: System A shall do B.
+COMMENT: Test comment.
+</pre>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4.3.2
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4.3.2-Reserved-fields"></div>
+      <div class="section-title">
+        Reserved fields
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>While it is possible to declare a grammar with completely custom fields, there
+is a fixed set of reserved fields that StrictDoc uses for the presentation of
+table of contents and document structure:</p>
+<table border="1" class="colwidths-given docutils">
+<caption>Reserved fields in SDoc's grammar</caption>
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head"><strong>Reserved field</strong></th>
+<th class="head"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>UID</td>
+<td>Requirement's UID.</td>
+</tr>
+<tr><td>REFS</td>
+<td>StrictDoc relies on this field to link requirements
+together and build traceability information.</td>
+</tr>
+<tr><td>TITLE</td>
+<td>Requirement's title. StrictDoc relies on this field to create
+document structure and table of contents.</td>
+</tr>
+<tr><td>STATEMENT</td>
+<td>Requirement's statement. StrictDoc presents this field as a long text
+block.</td>
+</tr>
+<tr><td>COMMENT</td>
+<td>One or more comments to a requirement.</td>
+</tr>
+<tr><td>RATIONALE</td>
+<td>The rationale for a requirement. Visually presented in the same way as a
+comment.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     5
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="5-Markup"></div>
+      <div class="section-title">
+        Markup
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>The Restructured Text (reST) markup is the default markup supported by
+StrictDoc. The reST markup can be written inside all StrictDoc's text blocks,
+such as <tt class="docutils literal">[FREETEXT]</tt>, <tt class="docutils literal">STATEMENT</tt>, <tt class="docutils literal">COMMENT</tt>, <tt class="docutils literal">RATIONALE</tt>.</p>
+<p>See the <a class="reference external" href="https://docutils.sourceforge.io/rst.html">reST syntax documentation</a>
+for a full reference.</p>
+<p>The support of Tex and HTML is planned.</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     5.1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="5.1-Images"></div>
+      <div class="section-title">
+        Images
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>This is the example of how images are included using the reST syntax:</p>
+<pre class="code text literal-block">
+[FREETEXT]
+.. image:: _assets/sandbox1.svg
+   :alt: Sandbox demo
+   :class: image
+[/FREETEXT]
+</pre>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     6
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="6-Export-formats"></div>
+      <div class="section-title">
+        Export formats
+      </div></td>
+  </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     6.1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="6.1-HTML-documentation-tree-by-StrictDoc"></div>
+      <div class="section-title">
+        HTML documentation tree by StrictDoc
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>This is a default export option supported by StrictDoc.</p>
+<p>The following command creates an HTML export:</p>
+<pre class="code text literal-block">
+strictdoc export docs/ --formats=html --output-dir output-html
+</pre>
+<p><strong>Example:</strong> This documentation is exported by StrictDoc to HTML:
+<a class="reference external" href="https://strictdoc.readthedocs.io/en/latest/strictdoc-html">StrictDoc HTML export</a>.</p>
+<p><strong>Note:</strong> The options <tt class="docutils literal"><span class="pre">--formats=html</span></tt> and <tt class="docutils literal"><span class="pre">--output-dir</span> <span class="pre">output-html</span></tt> can be
+skipped because HTML export is a default export option and the default output
+folder is <tt class="docutils literal">output</tt>.</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     6.1.1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="6.1.1-Mathjax-support"></div>
+      <div class="section-title">
+        Mathjax support
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>The option <tt class="docutils literal"><span class="pre">--enable-mathjax</span></tt> makes StrictDoc to include the
+<a class="reference external" href="https://www.mathjax.org/">Mathjax</a> Javascript library to all of the document
+templates.</p>
+<pre class="code text literal-block">
+strictdoc export docs/ --enable-mathjax --output-dir output-html
+</pre>
+<p>Example of using Mathjax:</p>
+<pre class="code text literal-block">
+[FREETEXT]
+.. raw:: latex html
+    $$
+    \mathbf{\underline{k}}_{\text{a}} =
+    \mathbf{\underline{i}}_{\text{a}} \times
+    \mathbf{\underline{j}}_{\text{a}}
+    $$
+
+[/FREETEXT]
+</pre>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     6.1.2
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="6.1.2-Standalone-HTML-pages-experimental-"></div>
+      <div class="section-title">
+        Standalone HTML pages (experimental)
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>The following command creates a normal HTML export with all pages having their
+assets embedded into HTML using Data URI / Base64:</p>
+<pre class="code text literal-block">
+strictdoc export docs/ --formats=html-standalone --output-dir output-html
+</pre>
+<p>The generated document are self-contained HTML pages that can be shared via
+email as single files. This option might be especially useful if you work with
+a single document instead of a documentation tree with multiple documents.</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     6.2
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="6.2-HTML-export-via-Sphinx"></div>
+      <div class="section-title">
+        HTML export via Sphinx
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>The following command creates an RST export:</p>
+<pre class="code text literal-block">
+strictdoc export YourDoc.sdoc --formats=rst --output-dir output
+</pre>
+<p>The created RST files can be copied to a project created using Sphinx, see
+<a class="reference external" href="https://docs.readthedocs.io/en/stable/intro/getting-started-with-sphinx.html">Getting Started with Sphinx</a>.</p>
+<pre class="code text literal-block">
+cp -v output/YourDoc.rst docs/sphinx/source/
+cd docs/sphinx &amp;&amp; make html
+</pre>
+<p><a class="reference external" href="https://strictdoc.readthedocs.io/en/latest/">StrictDoc's own Sphinx/HTML documentation</a>
+is generated this way, see the Invoke task:
+<a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48">invoke sphinx</a>.</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     6.3
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="6.3-PDF-export-via-Sphinx-LaTeX"></div>
+      <div class="section-title">
+        PDF export via Sphinx/LaTeX
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>The following command creates an RST export:</p>
+<pre class="code text literal-block">
+strictdoc export YourDoc.sdoc --formats=rst --output-dir output
+</pre>
+<p>The created RST files can be copied to a project created using Sphinx, see
+<a class="reference external" href="https://docs.readthedocs.io/en/stable/intro/getting-started-with-sphinx.html">Getting Started with Sphinx</a>.</p>
+<pre class="code text literal-block">
+cp -v output/YourDoc.rst docs/sphinx/source/
+cd docs/sphinx &amp;&amp; make pdf
+</pre>
+<p><a class="reference external" href="https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/">StrictDoc's own Sphinx/PDF documentation</a>
+is generated this way, see the Invoke task:
+<a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48">invoke sphinx</a>.</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     7
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="7-Traceability-between-requirements-and-source-code"></div>
+      <div class="section-title">
+        Traceability between requirements and source code
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p><strong>Note:</strong> This feature is experimental, the documentation is incomplete.</p>
+<p>StrictDoc allows connecting requirements to source code files. Two types of
+links are supported:</p>
+<p>1) A basic link where a requirement links to a whole file.</p>
+<pre class="code text literal-block">
+[REQUIREMENT]
+UID: REQ-001
+REFS:
+- TYPE: File
+  VALUE: file.py
+TITLE: File reference
+STATEMENT: This requirement references the file.
+</pre>
+<p>2) A range-based link where a requirement links to a file and
+additionally in the file, there is a reverse link that connects a source range
+back to the requirement:</p>
+<p>The requirement declaration contains a reference of the type <tt class="docutils literal">File</tt>:</p>
+<pre class="code text literal-block">
+[REQUIREMENT]
+UID: REQ-001
+REFS:
+- TYPE: File
+  VALUE: file.py
+TITLE: Whole file reference
+STATEMENT: This requirement references the file.py file.
+COMMENT: &gt;&gt;&gt;
+If the file.py contains a source range that is connected back to this
+requirement (REQ-001), the link becomes a link to the source range.
+&lt;&lt;&lt;
+</pre>
+<p>The source file:</p>
+<pre class="code py literal-block">
+<span class="comment single"># [REQ-002]</span>
+<span class="keyword">def</span> <span class="name function">hello_world</span><span class="punctuation">():</span>
+    <span class="name builtin">print</span><span class="punctuation">(</span><span class="literal string double">&quot;hello world&quot;</span><span class="punctuation">)</span>
+<span class="comment single"># [/REQ-002]</span>
+</pre>
+<p>To activate the traceability to source files, use
+<tt class="docutils literal"><span class="pre">--experimental-enable-file-traceability</span></tt> option:</p>
+<pre class="code text literal-block">
+strictdoc export . --experimental-enable-file-traceability --output-dir output/
+</pre>
+<p>Currently, StrictDoc looks for source files in a directory from which the
+<tt class="docutils literal">strictdoc</tt> command is run.</p>
+<p>The <tt class="docutils literal">tests/integration/examples</tt> folder contains executable examples including
+the example of requirements-to-source-code traceability.</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     8
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="8-ReqIF-support"></div>
+      <div class="section-title">
+        ReqIF support
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>StrictDoc has an initial support of exporting to and importing from the ReqIF
+format.</p>
+<p><strong>Note:</strong> It is not possible to implement a single export/import procedure that
+works well for all ReqIF XML files produced by various requirements management
+tools. The export/import workflow is therefore tool-specific. See
+<a class="reference external" href="#8.3-ReqIF-implementation-details">ReqIF implementation details</a> for more details.</p>
+<p>Supported formats:</p>
+<ul class="simple">
+<li>StrictDoc's &quot;native&quot; export/import between SDoc and ReqIF</li>
+</ul>
+<p>Planned formats:</p>
+<ul class="simple">
+<li>The format recommended by the
+<a class="reference external" href="https://www.prostep.org/fileadmin/downloads/PSI_ImplementationGuide_ReqIF_V1-7.pdf">ReqIF Implementation Guide</a>
+that attempts to harmonize the developments of ReqIF by requirements
+management tools.</li>
+</ul>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     8.1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="8.1-Import-flow-ReqIF-SDoc-"></div>
+      <div class="section-title">
+        Import flow (ReqIF -> SDoc):
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<pre class="code text literal-block">
+strictdoc import reqif sdoc input.reqif output.sdoc
+</pre>
+<p>The command does the following:</p>
+<ol class="arabic simple">
+<li>The ReqIF is parsed from XML file to ReqIF in-memory model using the <tt class="docutils literal">reqif</tt>
+library.</li>
+<li>The ReqIF in-memory model is converted to SDoc in-memory model. In this case,
+<tt class="docutils literal">sdoc</tt> indicates that the native ReqIF-to-SDoc conversion procedure must be
+used.</li>
+<li>The SDoc in-memory model is written to an .sdoc file.</li>
+</ol>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     8.2
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="8.2-Export-flow-SDoc-ReqIF-"></div>
+      <div class="section-title">
+        Export flow (SDoc -> ReqIF)
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<pre class="code text literal-block">
+strictdoc export --formats=reqif-sdoc %S/input.sdoc
+</pre>
+<p>The command does the following:</p>
+<ol class="arabic simple">
+<li>The SDoc file is parsed to an SDoc in-memory model.</li>
+<li>The SDoc in-memory model is converted to a ReqIF in-memory model using the
+native SDoc-to-ReqIF conversion procedure as indicated by the <tt class="docutils literal"><span class="pre">reqif-sdoc</span></tt>
+argument.</li>
+<li>The ReqIF in-memory model is unparsed a to ReqIF XML file using <tt class="docutils literal">reqif</tt>
+library.</li>
+</ol>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     8.3
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="8.3-ReqIF-implementation-details"></div>
+      <div class="section-title">
+        ReqIF implementation details
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>The ReqIF is a <a class="reference external" href="https://www.omg.org/spec/ReqIF">standard</a> which is
+maintained by Object Management Group (OMG). One important feature of the
+ReqIF standard is that it requires a fixed XML structure but still leaves
+certain details open to the implementation by the ReqIF and requirements
+management tools developers. Specifically, each tool may use it own field
+names and structure to represent requirements and sections/chapters.</p>
+<p>In order to accommodate for the differences between ReqIF files produced by
+various tools, the ReqIF processing is split into two layers:</p>
+<p>1) Parsing ReqIF from <tt class="docutils literal">.reqif</tt> XML files into ReqIF in-memory tree of Python
+objects as well as unparsing the ReqIF in-memory tree back to ReqIF XML files is
+extracted to a separate library:
+<a class="reference external" href="https://github.com/strictdoc-project/reqif">strictdoc-project/reqif</a>.</p>
+<p>2) Converting between in-memory trees of SDoc and ReqIF. This layer is part of
+StrictDoc.</p>
+<p>For further overview of the ReqIF format and the <tt class="docutils literal">reqif</tt> library's
+implementation details, refer to
+<a class="reference external" href="https://github.com/strictdoc-project/reqif">strictdoc-project/reqif</a>'s
+documentation.</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     9
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="9-Excel-support"></div>
+      <div class="section-title">
+        Excel support
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>StrictDoc provides a support for Excel XLS on input and Excel XLSX on output.</p>
+<p>On input, the headers of sheet1 are used to put together a custom grammar and
+the requirements are imported one row per requirement. A best effort is made by
+the importer to recognize names of headers and map these to strictdoc
+requirement fields.</p>
+<p>Note: A roundtrip &quot;SDoc -&gt; Excel -&gt; SDoc&quot; is not yet supported.</p>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     9.1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="9.1-Import-flow-Excel-XLS-SDoc-"></div>
+      <div class="section-title">
+        Import flow (Excel XLS -> SDoc):
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<pre class="code text literal-block">
+strictdoc import excel basic input.xls output.sdoc
+</pre>
+<p>The command does the following:</p>
+<ol class="arabic simple">
+<li>The Excel XLS is parsed to SDoc in-memory model using the <tt class="docutils literal">xlrd</tt>
+library.</li>
+<li>The SDoc in-memory model is written to an .sdoc file.</li>
+</ol>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     9.2
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="9.2-Export-flow-SDoc-Excel-XLSX-"></div>
+      <div class="section-title">
+        Export flow (SDoc -> Excel XLSX)
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<pre class="code text literal-block">
+strictdoc export --formats=excel --output-dir=Output input.sdoc
+</pre>
+<p>The command does the following:</p>
+<ol class="arabic simple">
+<li>The SDoc file is parsed to an SDoc in-memory model.</li>
+<li>The SDoc in-memory model is converted to an Excel XLSX file using
+the <tt class="docutils literal">XlsWriter</tt> library</li>
+</ol>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     10
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="10-Options"></div>
+      <div class="section-title">
+        Options
+      </div></td>
+  </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     10.1
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="10.1-Project-title"></div>
+      <div class="section-title">
+        Project title
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>By default, StrictDoc generates a project tree with a project title
+&quot;Untitled Project&quot;. To specify the project title use the option
+<tt class="docutils literal"><span class="pre">--project-title</span></tt>.</p>
+<pre class="code text literal-block">
+strictdoc export --project-title &quot;My Project&quot; .
+</pre>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     10.2
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="10.2-Parallelization"></div>
+      <div class="section-title">
+        Parallelization
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<p>To improve performance for the large document trees (1000+ requirements),
+StrictDoc parallelizes reading and generation of the documents using
+process-based parallelization: <tt class="docutils literal">multiprocessing.Pool</tt> and
+<tt class="docutils literal">multiprocessing.Queue</tt>.</p>
+<p>Parallelization improves performance but can also complicate understanding
+behavior of the code if something goes wrong.</p>
+<p>To disable parallelization use the <tt class="docutils literal"><span class="pre">--no-parallelization</span></tt> option:</p>
+<pre class="code text literal-block">
+strictdoc export --no-parallelization docs/
+</pre>
+<p><strong>Note:</strong> Currently, only the generation of HTML documents is parallelized, so
+this option will only have effect on the HTML export. All other export options
+are run from the main thread. Reading of the SDoc documents is parallelized for
+all export options and is disabled with this option as well.</p>
+</div>
+
+      </td>
+    </tr>
+
+  </table>
+</div>
+</div>
+
+
+    </main>
+
+  </div>
+  
+</body>
+</html>

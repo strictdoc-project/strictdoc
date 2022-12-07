@@ -1,0 +1,177 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="UTF-8"/>
+
+  <link rel="shortcut icon" href="../_static/favicon.ico" type="image/x-icon"/>
+
+  
+  <link rel="stylesheet" href="../_static/_base.css"/>
+  <link rel="stylesheet" href="../_static/_layout.css"/>
+  <link rel="stylesheet" href="../_static/_content.css"/>
+  <link rel="stylesheet" href="../_static/_requirement.css"/>
+  <link rel="stylesheet" href="../_static/_element.css"/>
+  <link rel="stylesheet" href="../_static/_form.css"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/toc.js"></script>
+  <script type="text/javascript" src="../_static/jquery.min.js"></script>
+
+  <script type="module">
+      import hotwiredTurbo from "../_static/turbo.js";
+      import { Application } from "../_static/stimulus.js";
+      window.Stimulus = Application.start();
+  </script>
+  <script type="module" src="../_static/std-forms.js"></script>
+  
+  
+  
+
+
+  <title>Developer Guide - Document</title>
+
+  
+</head>
+
+<body class="document-view withtoc">
+<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
+
+    <aside class="layout_aside-header">
+      
+  <a class="index-link" href="../index.html">To Index</a>
+
+    </aside>
+
+    <aside class="layout_aside">
+      
+  <turbo-frame id="frame-toc">
+    <div>Table of Contents</div>
+    <ul class="toc"><li><a href="#1-Getting-started" data-turbo="false">
+              <span class="section-number">1</span>
+              Getting started
+            </a><ul><li><a href="#1.1-Installing-StrictDoc-from-GitHub-developer-mode-" data-turbo="false">
+              <span class="section-number">1.1</span>
+              Installing StrictDoc from GitHub (developer mode)
+            </a></li></ul>
+            </li></ul>
+</turbo-frame>
+
+    </aside>
+
+    
+  <a class="layout_toggler layout_button" id="layout_toggle"></a><nav class="layout_nav">
+    <a
+    class="layout_nav-btn layout_button btn-document"
+    title="Go to Document view"
+    href="../docs/strictdoc_11_developer_guide.html">
+    DOC
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-table"
+    title="Go to Table view"
+    href="../docs/strictdoc_11_developer_guide-TABLE.html">
+    TBL
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-traceability"
+    title="Go to Traceability view"
+    href="../docs/strictdoc_11_developer_guide-TRACE.html">
+    TR
+  </a>
+  <a
+    class="layout_nav-btn layout_button btn-deep-traceability"
+    title="Go to Deep Traceability view"
+    href="../docs/strictdoc_11_developer_guide-DEEP-TRACE.html">
+    DTR
+  </a>
+  </nav>
+
+
+    <header class="layout_header">
+      
+  <p>Developer Guide <span class="document-view-type">Document</span></p>
+
+    </header>
+
+    <main class="layout_main">
+      
+  <turbo-frame id="frame_document_content"><div class="content">
+        <turbo-frame id="article-015531a0b0c849e793295136224c510a">
+<article></article>
+</turbo-frame>
+          <turbo-frame id="article-8632ffcab3dc42988ee6aacd5cebdc2f"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="1-Getting-started"></div>
+
+    
+        <h1
+class="section-title"
+data-level="1">
+  1.&nbsp;Getting started
+</h1>
+    
+
+  </section>
+
+  </article>
+
+</turbo-frame>
+          <turbo-frame id="article-4df31fd724674dc3900bc775774ff870"><article class="docsection" data-controller="document">
+
+  <section data-section="meta" class="docsection_section">
+
+    <div data-role='anchor' id="1.1-Installing-StrictDoc-from-GitHub-developer-mode-"></div>
+
+    
+        <h2
+class="section-title"
+data-level="1.1">
+  1.1.&nbsp;Installing StrictDoc from GitHub (developer mode)
+</h2>
+    
+
+  </section>
+
+  <section data-section="description" class="docsection_section"><div class="free-text">
+      <div class="document">
+<p><strong>Note:</strong> Use this way of installing StrictDoc only if you want to make changes
+in StrictDoc's source code. Otherwise, install StrictDoc as a Pip package
+(see above).</p>
+<pre class="code literal-block">
+git clone https://github.com/strictdoc-project/strictdoc.git &amp;&amp; cd strictdoc
+pip install -r requirements.txt
+python3 strictdoc/cli/main.py
+</pre>
+<p>All development tasks are managed using
+<a class="reference external" href="https://www.pyinvoke.org/">Invoke</a> in the <tt class="docutils literal">tasks.py</tt> file. On macOS and
+Linux, all tasks run in dedicated virtual environments. On Windows, invoke uses
+the parent pip environment which can be a system environment or a user's virtual
+environment.</p>
+<pre class="code literal-block">
+pip install invoke  # macOS and Linux
+invoke setup-development-deps  # macOS and Linux
+pip install -r requirements.development.txt  # Windows only
+invoke --list  # See the available tasks
+</pre>
+</div>
+
+    </div></section></article>
+
+</turbo-frame>
+
+      </div>
+</turbo-frame>
+
+    </main>
+
+  </div>
+  
+</body>
+</html>

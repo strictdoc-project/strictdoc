@@ -254,18 +254,22 @@ body[data-state="close"] .layout_toggler::before {
   position: fixed;
   z-index: 1111;
   top: 50%;
-  left: 1rem;
-  right: 1rem;
+  left: 2rem;
+  right: 2rem;
   /* left: 1rem; */
 
+  /* background: rgba(255, 255, 255, 0.6);
+  -webkit-backdrop-filter: blur(8px);
   box-shadow: 0 8px 24px rgba(0,0,0,.3);
-  background: rgba(255, 255, 255, 0.192);
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
-  border-radius: 15px;
+  backdrop-filter: blur(8px); */
+
+  box-shadow: 0 8px 32px rgba(0,0,0,.3);
+  background: #fff;
+
+  border-radius: 2rem;
   text-align: center;
 }
 
 .connection_status:not(:empty) {
-  padding: .5rem 1rem;
+  padding: .75rem 2rem;
 }

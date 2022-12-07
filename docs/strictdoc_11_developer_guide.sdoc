@@ -1,0 +1,38 @@
+[DOCUMENT]
+TITLE: Developer Guide
+
+[SECTION]
+TITLE: Getting started
+
+[SECTION]
+TITLE: Installing StrictDoc from GitHub (developer mode)
+
+[FREETEXT]
+**Note:** Use this way of installing StrictDoc only if you want to make changes
+in StrictDoc's source code. Otherwise, install StrictDoc as a Pip package
+(see above).
+
+.. code-block::
+
+    git clone https://github.com/strictdoc-project/strictdoc.git && cd strictdoc
+    pip install -r requirements.txt
+    python3 strictdoc/cli/main.py
+
+All development tasks are managed using
+`Invoke <https://www.pyinvoke.org/>`_ in the ``tasks.py`` file. On macOS and
+Linux, all tasks run in dedicated virtual environments. On Windows, invoke uses
+the parent pip environment which can be a system environment or a user's virtual
+environment.
+
+.. code-block::
+
+    pip install invoke  # macOS and Linux
+    invoke setup-development-deps  # macOS and Linux
+    pip install -r requirements.development.txt  # Windows only
+    invoke --list  # See the available tasks
+[/FREETEXT]
+
+[/SECTION]
+
+[/SECTION]
+

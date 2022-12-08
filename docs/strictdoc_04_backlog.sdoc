@@ -10,6 +10,9 @@ items are either work-in-progress or will be implemented next.
 TITLE: Backlog: Graphical user interface
 
 [FREETEXT]
+- Enable SeleniumBase tests on CI.
+- Integration with Git repository.
+
 - Requirement form:
 
   - ``RATIONALE``
@@ -21,6 +24,10 @@ TITLE: Backlog: Graphical user interface
 
   - ``UID``
 
+- Moving node up/down/left/right. For example, move a node of level 2 to level 1.
+
+  - Follow-up feature: moving nodes between documents.
+
 - All forms:
 
   - Contextual help about the RST markup.
@@ -28,20 +35,17 @@ TITLE: Backlog: Graphical user interface
 
 - What to do with web content going out of sync with the server/file system state?
 - Issue when adding sibling section from a nested section.
-- Enable SeleniumBase tests on CI.
-- Integration with Git repository.
-- Moving node up/down/left/right. For example, move a node of level 2 to level 1.
-- Expand/collapse the table of contents.
 
 - ReqIF:
-  
+
   - Export complete documentation tree or a single document to ReqIF.
   - Import complete documentation tree or a single document from ReqIF.
 
-- Other: 
+- Other:
 
   - Focused editing of document sections: dedicated and focused ``/sections/`` resource.
   - Non-RST markup formats.
+  - Expand/collapse the table of contents.
 [/FREETEXT]
 
 [/SECTION]
@@ -89,6 +93,9 @@ TITLE: Backlog: Nice to have
     - Config options for presenting requirements.
         - Include/exclude requirements in TOC
 
+- Partial evaluation of Jinja templates
+
+  - Many of the template variables could be made to be evaluated once, for example, config object's variables.
 [/FREETEXT]
 
 [/SECTION]

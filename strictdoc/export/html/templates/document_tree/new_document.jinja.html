@@ -1,6 +1,6 @@
 <turbo-frame id="new_document">
 
-<form data-controller="hello" class="std-form" action="/actions/document_tree/create_document" method="POST">
+<form data-controller="hello" class="std-form" action="/actions/document_tree/create_document" method="POST" data-turbo="true">
 
   <h3>Add new document</h3>
 
@@ -39,7 +39,7 @@
 
     <div class="std-form-footer">
         <button class="std-form-btn" type="submit">Save</button>
-        <a class="std-form-btn" href="#cancel">Cancel</a>
+        <a class="std-form-btn" href="#cancel" data-turbo="true">Cancel</a>
     </div>
 
 </form>

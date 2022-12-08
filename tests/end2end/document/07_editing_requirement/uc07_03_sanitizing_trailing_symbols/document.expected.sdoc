@@ -1,0 +1,16 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+Hello world!
+[/FREETEXT]
+
+[REQUIREMENT]
+TITLE: Modified title
+STATEMENT: >>>
+Hello world!
+
+Hello world!
+
+Hello world!
+<<<

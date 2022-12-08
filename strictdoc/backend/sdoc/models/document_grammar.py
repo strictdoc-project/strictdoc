@@ -5,6 +5,8 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldString,
     RequirementFieldName,
     RESERVED_NON_META_FIELDS,
+    GrammarElementFieldReference,
+    GrammarReferenceType,
 )
 
 
@@ -84,8 +86,14 @@ class DocumentGrammar:
             GrammarElementFieldString(
                 parent=None, title=RequirementFieldName.TAGS, required="False"
             ),
-            GrammarElementFieldString(
-                parent=None, title=RequirementFieldName.REFS, required="False"
+            GrammarElementFieldReference(
+                parent=None,
+                title=RequirementFieldName.REFS,
+                types=[
+                    GrammarReferenceType.PARENT_REQ_REFERENCE,
+                    GrammarReferenceType.FILE_REFERENCE,
+                ],
+                required="False",
             ),
             GrammarElementFieldString(
                 parent=None,

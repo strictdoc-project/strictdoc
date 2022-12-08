@@ -45,6 +45,7 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldMultipleChoice,
     RequirementFieldName,
     ReferenceType,
+    GrammarElementFieldReference,
 )
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.core.document_iterator import DocumentCachingIterator
@@ -158,6 +159,24 @@ class SDocToReqIFObjectConverter:
                         data_types.append(data_type)
                         data_types_lookup[
                             StrictDocReqIFTypes.MULTI_CHOICE.value
+                        ] = data_type.identifier
+                    elif isinstance(field, GrammarElementFieldReference):
+                        # TODO: implement correct reqIF Encoding for
+                        #  GrammarElementFieldReference. Treat as
+                        #  GrammarElementFieldString for now.
+                        if (
+                            StrictDocReqIFTypes.SINGLE_LINE_STRING.value
+                            in data_types_lookup
+                        ):
+                            continue
+                        data_type = ReqIFDataTypeDefinitionString.create(
+                            identifier=(
+                                StrictDocReqIFTypes.SINGLE_LINE_STRING.value
+                            ),
+                        )
+                        data_types.append(data_type)
+                        data_types_lookup[
+                            StrictDocReqIFTypes.SINGLE_LINE_STRING.value
                         ] = data_type.identifier
                     else:
                         raise NotImplementedError(field) from None
@@ -479,6 +498,22 @@ class SDocToReqIFObjectConverter:
                         long_name=field.title,
                         multi_valued=True,
                     )
+                elif isinstance(field, GrammarElementFieldReference):
+                    # TODO: implement correct reqIF Encoding for
+                    #  GrammarElementFieldReference. Treat as
+                    #  GrammarElementFieldString for now.
+                    field_title = field.title
+                    if field_title in SDocRequirementReservedField.SET:
+                        field_title = SDOC_TO_REQIF_FIELD_MAP[field_title]
+                    attribute = SpecAttributeDefinition.create(
+                        attribute_type=SpecObjectAttributeType.STRING,
+                        identifier=field_title,
+                        datatype_definition=(
+                            StrictDocReqIFTypes.SINGLE_LINE_STRING.value
+                        ),
+                        long_name=field_title,
+                    )
+
                 else:
                     raise NotImplementedError(field) from None
                 attribute_definitions.append(attribute)

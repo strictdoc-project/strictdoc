@@ -1,9 +1,19 @@
+import re
+
+import pytest
+
+from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.reference import (
+    FileReference,
+    ParentReqReference,
+)
 from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
     CompositeRequirement,
 )
 from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.models.type_system import ReferenceType
 from strictdoc.backend.sdoc.reader import SDReader
 from strictdoc.backend.sdoc.writer import SDWriter
 
@@ -565,9 +575,13 @@ REFS:
 
     document: Document = reader.read(input_sdoc)
     requirement = document.section_contents[0]
-    assert len(requirement.references) == 1
-    assert requirement.references[0].ref_type == "File"
-    assert requirement.references[0].path == "/tmp/sample.cpp"
+    references = requirement.references
+    assert len(references) == 1
+
+    reference = references[0]
+    assert isinstance(reference, FileReference)
+    assert reference.ref_type == ReferenceType.FILE
+    assert reference.path == "/tmp/sample.cpp"
 
     writer = SDWriter()
     output = writer.write(document)
@@ -1027,3 +1041,358 @@ TAG_FIELD: A, C
     output = writer.write(document)
 
     assert sdoc_input == output
+
+
+def test_160_grammar_refs():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: LOW_LEVEL_REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: REFS
+    TYPE: Reference(ParentReqReference, FileReference)
+    REQUIRED: False
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-000
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-001
+REFS:
+- TYPE: File
+  VALUE: /tmp/sample0.cpp
+- TYPE: Parent
+  VALUE: ID-000
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-002
+REFS:
+- TYPE: Parent
+  VALUE: ID-001
+- TYPE: File
+  VALUE: /tmp/sample1.cpp
+- TYPE: File
+  VALUE: /tmp/sample2.cpp
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    ll_requirement = document.section_contents[2]
+    references = ll_requirement.references
+    assert len(references) == 3
+
+    reference = references[0]
+    assert isinstance(reference, ParentReqReference)
+    assert reference.ref_type == ReferenceType.PARENT
+    assert reference.path == "ID-001"
+
+    reference = references[1]
+    assert reference.ref_type == ReferenceType.FILE
+    assert isinstance(reference, FileReference)
+    assert reference.path == "/tmp/sample1.cpp"
+
+    reference = references[2]
+    assert reference.ref_type == ReferenceType.FILE
+    assert isinstance(reference, FileReference)
+    assert reference.path == "/tmp/sample2.cpp"
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+def test_161_grammar_refs_file():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: LOW_LEVEL_REQUIREMENT
+  FIELDS:
+  - TITLE: REFS
+    TYPE: Reference(ParentReqReference, FileReference)
+    REQUIRED: False
+
+[LOW_LEVEL_REQUIREMENT]
+REFS:
+- TYPE: File
+  VALUE: /tmp/sample.cpp
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    ll_requirement = document.section_contents[0]
+    references = ll_requirement.references
+    assert len(references) == 1
+
+    reference = references[0]
+    assert isinstance(reference, FileReference)
+    assert reference.ref_type == ReferenceType.FILE
+    assert reference.path == "/tmp/sample.cpp"
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+def test_162_grammar_refs_file_multi():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: LOW_LEVEL_REQUIREMENT
+  FIELDS:
+  - TITLE: REFS
+    TYPE: Reference(ParentReqReference, FileReference)
+    REQUIRED: False
+
+[LOW_LEVEL_REQUIREMENT]
+REFS:
+- TYPE: File
+  VALUE: /tmp/sample1.cpp
+- TYPE: File
+  VALUE: /tmp/sample2.cpp
+- TYPE: File
+  VALUE: /tmp/sample3.cpp
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    ll_requirement = document.section_contents[0]
+    references = ll_requirement.references
+    assert len(references) == 3
+
+    reference = references[0]
+    assert isinstance(reference, FileReference)
+    assert reference.ref_type == ReferenceType.FILE
+    assert reference.path == "/tmp/sample1.cpp"
+
+    reference = references[1]
+    assert isinstance(reference, FileReference)
+    assert reference.ref_type == ReferenceType.FILE
+    assert reference.path == "/tmp/sample2.cpp"
+
+    reference = references[2]
+    assert isinstance(reference, FileReference)
+    assert reference.ref_type == ReferenceType.FILE
+    assert reference.path == "/tmp/sample3.cpp"
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+def test_163_grammar_refs_file_only():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: LOW_LEVEL_REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: REFS
+    TYPE: Reference(FileReference)
+    REQUIRED: False
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-001
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-002
+REFS:
+- TYPE: Parent
+  VALUE: ID-001
+- TYPE: File
+  VALUE: /tmp/sample1.cpp
+""".lstrip()
+
+    reader = SDReader()
+    with pytest.raises(Exception) as exc_info:
+        _ = reader.read(sdoc_input)
+
+    assert exc_info.type is StrictDocSemanticError
+    assert (
+        exc_info.value.args[0]
+        == "Requirement field of type Reference has an unsupported Reference "
+        "Type item: Reference(ref_type = Parent, path = ID-001)"
+    )
+
+
+def test_164_grammar_refs_parent():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: LOW_LEVEL_REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: REFS
+    TYPE: Reference(ParentReqReference, FileReference)
+    REQUIRED: False
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-000
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-001
+REFS:
+- TYPE: File
+  VALUE: /tmp/sample0.cpp
+- TYPE: Parent
+  VALUE: ID-000
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-002
+REFS:
+- TYPE: Parent
+  VALUE: ID-001
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    ll_requirement = document.section_contents[2]
+    references = ll_requirement.references
+    assert len(references) == 1
+
+    reference = references[0]
+    assert isinstance(reference, ParentReqReference)
+    assert reference.ref_type == ReferenceType.PARENT
+    assert reference.path == "ID-001"
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+def test_165_grammar_refs_parent_multi():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: LOW_LEVEL_REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: REFS
+    TYPE: Reference(ParentReqReference, FileReference)
+    REQUIRED: False
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-000
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-001
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-002
+REFS:
+- TYPE: Parent
+  VALUE: ID-000
+- TYPE: Parent
+  VALUE: ID-001
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    ll_requirement = document.section_contents[2]
+    references = ll_requirement.references
+    assert len(references) == 2
+
+    reference = references[0]
+    assert isinstance(reference, ParentReqReference)
+    assert reference.ref_type == ReferenceType.PARENT
+    assert reference.path == "ID-000"
+
+    reference = references[1]
+    assert isinstance(reference, ParentReqReference)
+    assert reference.ref_type == ReferenceType.PARENT
+    assert reference.path == "ID-001"
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+def test_166_grammar_refs_parent_only():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: LOW_LEVEL_REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: REFS
+    TYPE: Reference(ParentReqReference)
+    REQUIRED: False
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-001
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-002
+REFS:
+- TYPE: Parent
+  VALUE: ID-001
+- TYPE: File
+  VALUE: /tmp/sample1.cpp
+""".lstrip()
+
+    reader = SDReader()
+    with pytest.raises(Exception) as exc_info:
+        _ = reader.read(sdoc_input)
+
+    assert exc_info.type is StrictDocSemanticError
+
+    assert re.fullmatch(
+        r"Requirement field of type Reference has an unsupported Reference "
+        r"Type item: FileReference\(ref_type = File,"
+        r" path = /tmp/sample1.cpp,"
+        r" path_forward_slashes ="
+        r" /tmp/sample1.cpp,"
+        r" path_normalized = .tmp.sample1.cpp\)",
+        exc_info.value.args[0],
+    )

@@ -22,7 +22,12 @@ class FileReference(Reference):
         self.path_normalized = os.path.normpath(path_forward_slashes)
 
     def __str__(self):
-        raise NotImplementedError
+        return (
+            f"FileReference(ref_type = {self.ref_type},"
+            f" path = {self.path},"
+            f" path_forward_slashes = {self.path_forward_slashes},"
+            f" path_normalized = {self.path_normalized})"
+        )
 
 
 class ParentReqReference(Reference):

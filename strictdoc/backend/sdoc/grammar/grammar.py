@@ -56,7 +56,8 @@ GrammarElementField[noskipws]:
   GrammarElementFieldString |
   GrammarElementFieldSingleChoice |
   GrammarElementFieldMultipleChoice |
-  GrammarElementFieldTag
+  GrammarElementFieldTag |
+  GrammarElementFieldReference
 ;
 
 GrammarElementFieldString[noskipws]:
@@ -83,6 +84,21 @@ GrammarElementFieldTag[noskipws]:
   '  - TITLE: ' title=FieldName '\n'
   '    TYPE: Tag' '\n'
   '    REQUIRED: ' (required = BooleanChoice) '\n'
+;
+
+GrammarElementFieldReference[noskipws]:
+  '  - TITLE: ' title=FieldName '\n'
+  '    TYPE: Reference'
+    '(' ((types = ReferenceType) (types *= ReferenceTypeXs)) ')' '\n'
+  '    REQUIRED: ' (required = BooleanChoice) '\n'
+;
+
+ReferenceType[noskipws]:
+  ('ParentReqReference' | 'FileReference')
+;
+
+ReferenceTypeXs[noskipws]:
+  /, /- ReferenceType
 ;
 
 BooleanChoice[noskipws]:

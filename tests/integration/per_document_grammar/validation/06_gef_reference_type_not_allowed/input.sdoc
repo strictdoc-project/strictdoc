@@ -1,0 +1,24 @@
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: LOW_LEVEL_REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: REFS
+    TYPE: Reference(ParentReqReference)
+    REQUIRED: False
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-001
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-002
+REFS:
+- TYPE: Parent
+  VALUE: ID-001
+- TYPE: File
+  VALUE: /tmp/sample1.cpp

@@ -24,6 +24,7 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldSingleChoice,
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldTag,
+    GrammarElementFieldReference,
 )
 
 SECTION_MODELS = [
@@ -49,6 +50,7 @@ DOCUMENT_MODELS = [
     GrammarElementFieldSingleChoice,
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldTag,
+    GrammarElementFieldReference,
 ]
 DOCUMENT_MODELS.extend(SECTION_MODELS)
 

@@ -2,6 +2,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElementField,
 )
+from strictdoc.backend.sdoc.models.reference import Reference
 from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
     RequirementField,
@@ -229,6 +230,36 @@ class StrictDocSemanticError(Exception):
                 f"{requirement_field.field_value}"
             ),
             hint="Tag field requires ', '-separated values.",
+            example=None,
+            line=line,
+            col=col,
+            filename=filename,
+        )
+
+    @staticmethod
+    def invalid_reference_type_item(  # pylint: disable=too-many-arguments
+        requirement: Requirement,
+        document_grammar: DocumentGrammar,
+        requirement_field: RequirementField,
+        reference_item: Reference,
+        line=None,
+        col=None,
+        filename=None,
+    ):
+        return StrictDocSemanticError(
+            title=(
+                f"Requirement field of type Reference has an unsupported"
+                f" Reference Type item: "
+                f"{reference_item}"
+            ),
+            hint=(
+                f"Problematic field: {requirement_field.field_name}. "
+                f"Compare with the document grammar: "
+                f"["
+                f"{document_grammar.dump_fields(requirement.requirement_type)}"
+                f"] "
+                f"for type: {requirement.requirement_type}"
+            ),
             example=None,
             line=line,
             col=col,

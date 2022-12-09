@@ -5,26 +5,34 @@
 } */
 
 :root {
-  --color-bg-form: aliceblue;
+  /* --color-bg-form: var(--color-bg-main); */
+  --color-bg-form: #e2e6ea;
   --color-bg-field: white;
-  --std-form-margin: 10px;
+  --std-form-margin: calc(var(--base-padding)*0.5);
 }
 
 .std-form {
   background-color: var(--color-bg-form);
-  outline: var(--std-form-margin) solid var(--color-bg-form);
-  margin: var(--base-margin) 0 0 0;
+  /* border: 1px solid rgba(0,0,0,0.05); */
+  /* box-shadow: 0 0 16px rgba(0,0,0,0.2); */
+  /* outline: var(--std-form-margin) solid var(--color-bg-form); */
+  margin-left: calc(var(--std-form-margin)*(-4));
+  margin-right: calc(var(--std-form-margin)*(-4));
+  margin-bottom: 0;
+  padding: calc(var(--std-form-margin)*2);
+  margin-top: var(--std-form-margin);
 }
 
 .std-form-row {
-  padding: var(--std-form-margin) 0 !important;
-  margin: 4px 0;
+  background-color: var(--color-bg-field);
+  /* outline: calc(var(--std-form-margin)/2) solid var(--color-bg-field); */
+  padding: calc(var(--std-form-margin)*2);
+  margin-bottom: calc(var(--std-form-margin));
 }
 
 div[contenteditable=true] {
   white-space: pre-wrap;
-  background-color: var(--color-bg-field);
-  outline: calc(var(--std-form-margin)/2) solid var(--color-bg-field);
+  outline: none;
   /* Without this hack, Chrome generates duplicated new lines when Enter pressed. */
   /* Add style display:inline-block; to contenteditable, it will not generate div, p, span automatic in chrome */
   /* https://stackoverflow.com/a/24689390/598057 */
@@ -68,6 +76,7 @@ div[contenteditable=true] {
   line-height: 2;
   padding: 0 10px;
   vertical-align: middle;
+  margin: 0;
   margin-right: 8px;
 }
 
@@ -89,12 +98,9 @@ div[contenteditable=true] {
   font-weight: bold;
 }
 
-.std-form-fileld-requirement_statement {
-  font-size: calc(var(--base-font-size)*1.2);
-}
-
-.std-form-fileld-freetext {
-  font-size: var(--base-font-size);
+.std-form-field-rst {
+  font-family: var(--code-font-family);
+  font-size: 0.9em;
 }
 
 .std-form-error {

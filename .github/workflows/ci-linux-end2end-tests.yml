@@ -1,0 +1,43 @@
+name: "StrictDoc on Linux - End-to-end tests"
+
+on:
+  pull_request:
+    branches: [ "**" ]
+
+    # UI tests take 10+ minutes and will continue to grow.
+    # Reducing the trigger to only changes in the Web frontend-related code.
+    paths:
+      - 'strictdoc/server/**'
+      - 'tests/end2end/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.7"]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Upgrade pip
+      run: |
+        python -m pip install --upgrade pip
+
+    - name: Install Invoke
+      run: |
+        pip install invoke
+
+    - name: Install dependencies
+      run: |
+        invoke setup-development-deps
+
+    - name: Run end-to-end tasks
+      run: |
+        invoke test-end2end --long-timeouts

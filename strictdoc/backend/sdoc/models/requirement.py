@@ -234,11 +234,11 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
             references.append(reference)
         return references
 
-    def get_statement_single_or_multiline(self):
-        if self.statement:
-            return self.statement
-        if self.statement_multiline:
+    def get_statement_single_or_multiline(self) -> Optional[str]:
+        if self.statement_multiline is not None:
             return self.statement_multiline
+        if self.statement is not None:
+            return self.statement
         return None
 
     def get_rationale_single_or_multiline(self):

@@ -40,5 +40,7 @@ class RequirementFormObject(ErrorObject):
         return RequirementFormObject(
             requirement_mid=requirement.node_id,
             requirement_title=requirement.title,
-            requirement_statement=requirement.statement,
+            requirement_statement=(
+                requirement.get_statement_single_or_multiline()
+            ),
         )

@@ -8,7 +8,8 @@ Hello. What nex?
 123123
 [/FREETEXT]
 
-[SECTION]
-TITLE: New section
-
-[/SECTION]
+[REQUIREMENT]
+TITLE: Title
+STATEMENT: >>>
+font-size: 0.9em;
+<<<

@@ -3,6 +3,7 @@ import re
 import sys
 
 from docutils.core import publish_parts
+from docutils.utils import SystemMessage
 
 
 class RstToHtmlFragmentWriter:
@@ -50,12 +51,20 @@ class RstToHtmlFragmentWriter:
         warning_stream = io.StringIO()
         settings = {"warning_stream": warning_stream}
 
-        output = publish_parts(
-            rst_fragment, writer_name="html", settings_overrides=settings
-        )
+        try:
+            output = publish_parts(
+                rst_fragment, writer_name="html", settings_overrides=settings
+            )
+            warnings = (
+                warning_stream.getvalue().rstrip("\n")
+                if warning_stream.tell() > 0
+                else None
+            )
+        except SystemMessage as exception:
+            output = None
+            warnings = str(exception)
 
-        if warning_stream.tell() > 0:
-            warnings = warning_stream.getvalue().rstrip("\n")
+        if warnings is not None and len(warnings) > 0:
 
             # A typical RST warning:
             # """

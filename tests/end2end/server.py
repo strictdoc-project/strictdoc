@@ -6,8 +6,21 @@ import select
 import shutil
 import subprocess
 from threading import Thread
+from time import sleep
 
 import psutil as psutil
+
+# Running selenium tests on GitHub Actions CI is considerably slower.
+# Passing the flag via env because pytest makes it hard to introduce an extra
+# command-line argument when it is not used as a test fixture.
+if os.getenv("STRICTDOC_LONGER_TIMEOUTS"):
+    WAIT_TIMEOUT = 30
+    POLL_TIMEOUT = 10000
+    WARMUP_INTERVAL = 3
+else:
+    WAIT_TIMEOUT = 5
+    POLL_TIMEOUT = 2000
+    WARMUP_INTERVAL = 3
 
 
 class ReadTimeout(Exception):
@@ -37,6 +50,8 @@ class SDocTestServer:
 
     def __del__(self):
         parent = psutil.Process(self.process.pid)
+        if not parent.is_running():
+            return
         child_processes = parent.children(recursive=True)
         child_processes_ids = list(
             map(lambda p: p.pid, parent.children(recursive=True))
@@ -92,6 +107,9 @@ class SDocTestServer:
         )
         SDocTestServer.continue_capturing_stderr(server_process=process)
 
+        sleep(WARMUP_INTERVAL)
+        print("TestSDocServer: Server is up and running.")
+
     @staticmethod
     def receive_expected_response(server_process, expectations):
         poll = select.poll()
@@ -103,10 +121,10 @@ class SDocTestServer:
         try:
             while len(expectations) > 0:
                 check_time = datetime.datetime.now()
-                if (check_time - start_time).total_seconds() > 5:
+                if (check_time - start_time).total_seconds() > WAIT_TIMEOUT:
                     raise ReadTimeout()
 
-                if poll.poll(2000):
+                if poll.poll(POLL_TIMEOUT):
                     line_bytes = server_process.stderr.readline()
                     while len(expectations) > 0 and line_bytes:
                         line_string = line_bytes.decode("utf-8")
@@ -127,8 +145,6 @@ class SDocTestServer:
             received_lines = "".join(received_input)
             print(f"Received input:\n{received_lines}")
             exit(1)
-
-        print("TestSDocServer: Server is up and running.")
 
     @staticmethod
     def enqueue_output(out):

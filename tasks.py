@@ -228,13 +228,19 @@ def test_unit_server(context, focus=None):
 
 
 @task
-def test_end2end(context, focus=None):
+def test_end2end(context, focus=None, long_timeouts=False):
     focus_argument = f"-k {focus}" if focus is not None else ""
+    timeouts_argument = "STRICTDOC_LONGER_TIMEOUTS=1" if long_timeouts else ""
     run_invoke_cmd(
         context,
         one_line_command(
             f"""
-            pytest --exitfirst --capture=no tests/end2end {focus_argument}
+            {timeouts_argument}
+            pytest
+                --exitfirst
+                --capture=no
+                {focus_argument}
+                tests/end2end
             """
         ),
     )

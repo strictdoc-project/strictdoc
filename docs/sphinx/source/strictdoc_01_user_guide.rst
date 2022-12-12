@@ -191,8 +191,8 @@ Grammar elements
 Document
 ~~~~~~~~
 
-``[DOCUMENT]`` element must always be present in an SDoc document. It is a root
-of an SDoc document graph.
+The ``[DOCUMENT]`` element must always be present in an SDoc document. It is a
+root of an SDoc document graph.
 
 .. code-block:: text
 
@@ -200,25 +200,101 @@ of an SDoc document graph.
     TITLE: StrictDoc
     (newline)
 
-``DOCUMENT`` declaration must always have a ``TITLE`` field. It can have
-optional configuration fields and an optional ``[FREETEXT]`` block.
+The following ``DOCUMENT`` fields are allowed:
+
+.. list-table:: SDoc grammar ``DOCUMENT`` fields
+   :widths: 20 80
+   :header-rows: 1
+
+   * - **Field**
+     - **Description**
+
+   * - ``TITLE``
+     - Title of the document (mandatory)
+
+   * - ``UID``
+     - Unique identifier of the document
+
+   * - ``VERSION``
+     - Current version of the document
+
+   * - ``CLASSIFICATION``
+     - Security classification of the document, e.g. Public, Internal,
+       Restricted, Confidential
+
+   * - ``OPTIONS``
+     -  Document configuration options
+
+The ``DOCUMENT`` declaration must always have a ``TITLE`` field. The other
+fields are optional. The ``OPTIONS`` field can be used for specifying
+the document configuration options. Note: The sequence of the fields is defined
+by the document's Grammar, i.e. should not be changed.
+
+Finally an optional ``[FREETEXT]`` block can be included.
 
 .. code-block:: text
 
     [DOCUMENT]
     TITLE: StrictDoc
+    OPTIONS:
+      REQUIREMENT_STYLE: Table
 
     [FREETEXT]
     StrictDoc is software for writing technical requirements and specifications.
     [/FREETEXT]
 
 
-Option: Requirement style
-^^^^^^^^^^^^^^^^^^^^^^^^^
+Document configuration options
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The ``OPTIONS`` field may have the following attribute fields:
+
+.. list-table:: SDoc grammar ``DOCUMENT``-``OPTIONS`` fields
+   :widths: 20 80
+   :header-rows: 1
+
+   * - **Field**
+     - **Attribute values**
+
+   * - ``MARKUP``
+     - ``RST``, ``HTML``, ``Text``
+
+   * - ``AUTO_LEVELS``
+     - ``On``, ``Off``
+
+   * - ``REQUIREMENT_STYLE``
+     - ``Inline``, ``Table``
+
+   * - ``REQUIREMENT_IN_TOC``
+     - ``True``, ``False``
+
+
+MARKUP
+""""""
+
+The ``MARKUP`` option controls which markup renderer will be used.
+The available options are: ``RST``, ``HTML`` and ``Text``. Default is
+``RST``.
+
+AUTO_LEVELS
+"""""""""""
+
+The ``AUTO_LEVELS`` option controls StrictDoc's system of automatic numbering
+of the section levels.
+The available options are: ``On`` /  ``Off``. Default is ``On``.
+
+In case of ``On``, the ``[SECTION].LEVEL`` fields must be absent or may only
+contain ``None`` to exclude that section from StrictDoc's automatic section
+numbering. See also `Section without a level`_.
+
+In case of ``Off``, all ``[SECTION].LEVEL`` fields must be populated.
+
+REQUIREMENT_STYLE
+"""""""""""""""""
 
 The ``REQUIREMENT_STYLE`` option controls whether requirement's elements are
-displayed inline or as table blocks. The available options are: ``Inline``
-and ``Table``.
+displayed inline or as table blocks. The available options are: ``Inline`` /
+``Table``. Default is ``Inline``.
 
 .. code-block:: text
 
@@ -227,11 +303,12 @@ and ``Table``.
     OPTIONS:
       REQUIREMENT_STYLE: Table
 
-Option: Requirement title in Table of Contents
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+REQUIREMENT_IN_TOC
+""""""""""""""""""
 
 The ``REQUIREMENT_IN_TOC`` option controls whether requirement's title appear
-in the table of contents (TOC). The available options are: ``True/False``.
+in the table of contents (TOC). The available options are: ``True`` / ``False``.
+Default is ``True``.
 
 .. code-block:: text
 
@@ -256,17 +333,47 @@ Minimal "Hello World" program with 3 empty requirements:
 
     [REQUIREMENT]
 
-Supported fields:
 
-- ``UID`` (unique identifier)
-- ``REFS``
-- ``TITLE``
-- ``STATEMENT``
-- ``RATIONALE``
-- ``COMMENT`` (multiple comments are possible)
+The following ``REQUIREMENT`` fields are supported:
 
-Currently, all ``[REQUIREMENT]``'s are optional but most of the time at least
-the ``STATEMENT:`` field must be present as well as the ``TITLE:`` field.
+.. list-table:: SDoc grammar ``REQUIREMENT`` fields
+   :widths: 20 80
+   :header-rows: 1
+
+   * - **Field**
+     - **Description**
+
+   * - ``UID``
+     - Unique identifier of the requirement
+
+   * - ``LEVEL``
+     - Define section/requirement Level numbering
+
+   * - ``STATUS``
+     - Status of the requirement, e.g. ``Draft``, ``Active``, ``Deleted``
+
+   * - ``TAGS``
+     - Tags of the requirement (comma separated AlphaNum words)
+
+   * - ``REFS``
+     - List of Parent and File references
+
+   * - ``TITLE``
+     - Title of the requirement
+
+   * - ``STATEMENT``
+     - The statement of the requirement. The field can be single-line or multiline.
+
+   * - ``RATIONALE``
+     - The rationale of the requirement. The field can be single-line or multiline.
+
+   * - ``COMMENT``
+     -  Comments to the rationale. The field can be single-line or multiline.
+        Note: Multiple comment fields are possible.
+
+Currently, all ``[REQUIREMENT]``'s fields are optional but most of the time at
+least the ``STATEMENT`` field as well as the ``TITLE`` field should be
+present.
 
 .. code-block:: text
 
@@ -277,21 +384,11 @@ the ``STATEMENT:`` field must be present as well as the ``TITLE:`` field.
     TITLE: Requirements management
     STATEMENT: StrictDoc shall enable requirements management.
 
-**Observation:** Many real-world documents have requirements with statements and
-titles but some documents only use statements without title in which case their
-title becomes their UID. Example:
-
-.. code-block:: text
-
-    [DOCUMENT]
-    TITLE: StrictDoc
-
-    [REQUIREMENT]
-    UID: REQ-001
-    STATEMENT: StrictDoc shall enable requirements management.
 
 UID
 ^^^
+
+Unique identifier of the requirement.
 
 **Observation:** Some documents do not use unique identifiers which makes it
 impossible to trace their requirements to each other. Within StrictDoc's
@@ -316,11 +413,29 @@ typical conventions for naming UIDs:
     UID: SDOC-HIGH-DATA-MODEL
     STATEMENT: STATEMENT: StrictDoc shall be based on a well-defined data model.
 
-References
-^^^^^^^^^^
+Level
+^^^^^
 
-The ``[REQUIREMENT]`` / ``REFS:`` field is used to connect requirements to each
-other:
+Also a ``[REQUIREMENT]`` can have no section level attached to it. To enable
+this behavior, the field ``LEVEL`` has to be set to ``None``.
+
+Status
+^^^^^^
+
+Defines the current status of the ``[REQUIREMENT]``, e.g. ``Draft``, ``Active``,
+``Deleted``.
+
+Tags
+^^^^
+
+Allows to add tags to a ``[REQUIREMENT]``. Tags are a comma separated list of
+single words. Only Alphanumeric tags (a-z, A-Z, 0-9 and underscore) are
+supported.
+
+References (REFS)
+^^^^^^^^^^^^^^^^^
+
+The ``REFS`` field is used to connect requirements to each other:
 
 .. code-block:: text
 
@@ -336,19 +451,79 @@ other:
     REFS:
     - TYPE: Parent
       VALUE: REQ-001
+    - TYPE: File
+      VALUE: /full/path/file.py
     TITLE: Requirement #2's title
     STATEMENT: Requirement #2 statement
 
-**Note:** The ``TYPE: Parent`` is the only supported type of connection. In the
-future, linking requirements to files will be possible.
+The ``TYPE: Parent``-``VALUE`` attribute contains a parent's requirement
+``UID``. A requirement may reference multiple parent requirements by
+adding multiple ``TYPE: Parent``-``VALUE`` items. The opposite direction i.e.
+"Child" References are traced automatically by strictdoc. Defining circular
+references e.g. ``Req-A`` ⇒ ``Req-B`` ⇒ ``Reg-C`` ⇒ ``Req-A`` must be avoided.
+
+The ``TYPE: File``-``VALUE`` attribute contains a filename referencing the
+implementation of (parts of) this requirement. A requirement may add multiple
+file references requirements by adding multiple ``TYPE: File``-``VALUE`` items.
+
+**Note:** The ``TYPE: Parent`` is currently the only fully supported type of
+connection. Linking requirements to files is still experimental (see also
+`Traceability between requirements and source code`_).
+
+**Note:** In the near future, adding information about external references (e.g.
+company policy documents, technical specifications, regulatory requirements,
+etc.) is planned.
 
 **Note:** By design, StrictDoc will only show parent or child links if both
 requirements connected with a reference have ``UID`` defined.
 
+Title
+^^^^^
+
+The title of the requirement.
+Every requirement should have its ``TITLE`` field specified.
+
+**Observation:** Many real-world documents have requirements with statements and
+titles but some documents only use statements without title in which case their
+``UID`` becomes their ``TITLE`` and vice versa. Example:
+
+.. code-block:: text
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [REQUIREMENT]
+    UID: REQ-001
+    STATEMENT: StrictDoc shall enable requirements management.
+
+Statement
+^^^^^^^^^
+
+The statement of the requirement. The field can be single-line or multiline.
+Every requirement shall have its ``STATEMENT`` field specified.
+
+Rationale
+^^^^^^^^^
+
+A requirement should have a ``RATIONALE`` field that explains/justifies why
+the requirement exists. Like comments, the rationale field can be single-line
+or multiline.
+
+.. code-block:: text
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [REQUIREMENT]
+    UID: REQ-001
+    STATEMENT: StrictDoc shall enable requirements management.
+    COMMENT: Clarify the meaning or give additional information here.
+    RATIONALE: The presence of the REQ-001 is justified.
+
 Comment
 ^^^^^^^
 
-A requirement can have one or more comments explaining this requirement. The
+A requirement can have one or more comments explaining the requirement. The
 comments can be single-line or multiline.
 
 .. code-block:: text
@@ -367,24 +542,6 @@ comments can be single-line or multiline.
 
     Each line is rendered as a separate paragraph.
     <<<
-
-Rationale
-^^^^^^^^^
-
-A requirement can have a ``RATIONALE:`` field that explains why such a
-requirement exists. Like comments, the rationale field can be single-line or
-multiline.
-
-.. code-block:: text
-
-    [DOCUMENT]
-    TITLE: StrictDoc
-
-    [REQUIREMENT]
-    UID: REQ-001
-    STATEMENT: StrictDoc shall enable requirements management.
-    COMMENT: Clarify the meaning or give additional information here.
-    RATIONALE: The presence of the REQ-001 is justified.
 
 Section
 ~~~~~~~
@@ -682,11 +839,27 @@ Supported field types
 
 The supported field types are:
 
-- ``String``
+.. list-table:: SDoc grammar field types
+   :widths: 20 80
+   :header-rows: 1
 
-- ``SingleChoice`` (Enum-like behavior, one choice is possible)
-- ``MultipleChoice`` (comma-separated words with fixed options)
-- ``Tag`` (comma-separated words with no fixed options)
+   * - **Field Type**
+     - **Description**
+
+   * - ``String``
+     - Simple String
+
+   * - ``SingleChoice``
+     - Enum-like behavior, one choice is possible
+
+   * - ``MultipleChoice``
+     - comma-separated words with fixed options
+
+   * - ``Tag``
+     - comma-separated list of tags/key words. Only Alphanumeric tags (a-z, A-Z, 0-9 and underscore) are supported.
+
+   * - ``Reference``
+     - comma-separated list with allowed reference types: ``ParentReqReference``, ``FileReference``
 
 Example:
 
@@ -720,6 +893,9 @@ Example:
       - TITLE: COMMENT
         TYPE: String
         REQUIRED: True
+      - TITLE: REFS
+        TYPE: Reference(ParentReqReference, FileReference)
+        REQUIRED: True
 
     [FREETEXT]
     This document is an example of a simple SDoc custom grammar.
@@ -733,6 +909,11 @@ Example:
     TITLE: Function B
     STATEMENT: System A shall do B.
     COMMENT: Test comment.
+    REFS:
+    - TYPE: Parent
+      VALUE: REQ-001
+    - TYPE: File
+      VALUE: /full/path/file.py
 
 
 Reserved fields

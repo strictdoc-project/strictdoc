@@ -2,7 +2,7 @@ import os
 from mimetypes import guess_type
 from typing import Optional, List
 
-from fastapi import Form, APIRouter
+from fastapi import Form, APIRouter, UploadFile
 from starlette.responses import HTMLResponse, Response
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
@@ -337,6 +337,52 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
             status_code=200,
             headers={
                 "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @router.get(
+        "/actions/document_tree/import_reqif_document_form",
+        response_class=Response,
+    )
+    def get_import_reqif_document_form():
+        content = main_controller.get_import_reqif_document_form()
+        return HTMLResponse(
+            content=content,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @router.post(
+        "/actions/document_tree/import_document_reqif", response_class=Response
+    )
+    async def import_document_reqif(reqif_file: UploadFile):
+        contents = reqif_file.file.read().decode()
+
+        content = main_controller.import_document_from_reqif(contents)
+
+        return HTMLResponse(
+            content=content,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @router.get(
+        "/reqif/export_document/{document_mid}", response_class=Response
+    )
+    def get_reqif_export_document(document_mid: str):
+        document_reqif_content = main_controller.export_document_to_reqif(
+            document_mid
+        )
+        return Response(
+            content=document_reqif_content,
+            status_code=200,
+            media_type="application/octet-stream",
+            headers={
+                "Content-Disposition": 'attachment; filename="123.reqif"',
             },
         )
 

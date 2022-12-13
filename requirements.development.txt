@@ -19,8 +19,9 @@ requests>=2.27.1
 watchdog>=2.1.7
 
 # Server-related
-httpx
 seleniumbase
+# httpx is needed for running server-related unit tests.
+httpx
 # psutil is needed to reap Uvicorn's zombie processes when running end2end
 # tests. One day someone finds a better solution.
 psutil

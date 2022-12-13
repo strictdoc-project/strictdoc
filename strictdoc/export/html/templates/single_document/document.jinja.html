@@ -34,8 +34,10 @@
   {% include "_shared/toc.jinja.html" %}
 {% endblock aside_content %}
 
+
 {% block header_content %}
   <p>{{document.title}} <span class="document-view-type">{{ template_type }}</span></p>
+  <a href="/reqif/export_document/{{document.node_id}}">Export to ReqIF</a>
 {% endblock header_content %}
 
 {% block content %}

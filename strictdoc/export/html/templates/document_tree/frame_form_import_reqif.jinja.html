@@ -1,0 +1,35 @@
+<turbo-frame id="new_document">
+
+<form
+  data-controller="hello"
+  class="std-form"
+  action="/actions/document_tree/import_document_reqif"
+  method="POST"
+  enctype="multipart/form-data"
+  data-turbo="true"
+>
+
+  <h3>Import ReqIF document</h3>
+
+    <div class="std-form-row std-tree_name">
+      <label for="reqif_file">
+        Click this div and select a file
+      </label>
+      <input type="file" name="reqif_file" id="reqif_file"/>
+      {%- if error_object.has_errors("reqif_file") -%}
+        <div class="std-form-error">
+        {%- for error in error_object.get_errors("reqif_file") -%}
+          {{ error }}
+        {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="std-form-footer">
+        <button class="std-form-btn" type="submit">Import ReqIF</button>
+        <a class="std-form-btn" href="#cancel" data-turbo="true">Cancel</a>
+    </div>
+
+</form>
+
+</turbo-frame>

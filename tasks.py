@@ -522,3 +522,13 @@ def watch(context, sdocs_path="developer/sandbox"):
         {paths_to_watch}
         """,
     )
+
+
+@task
+def run(context, command):
+    run_invoke_cmd(
+        context,
+        f"""
+        {command}
+        """,
+    )

@@ -1,0 +1,8 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[REQUIREMENT]
+TITLE: Section 1
+STATEMENT: >>>
+Section free text.
+<<<

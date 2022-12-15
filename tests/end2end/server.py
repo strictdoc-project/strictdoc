@@ -13,14 +13,14 @@ import psutil as psutil
 # Running selenium tests on GitHub Actions CI is considerably slower.
 # Passing the flag via env because pytest makes it hard to introduce an extra
 # command-line argument when it is not used as a test fixture.
-if os.getenv("STRICTDOC_LONGER_TIMEOUTS"):
+if os.getenv("STRICTDOC_LONGER_TIMEOUTS") is not None:
     WAIT_TIMEOUT = 30
     POLL_TIMEOUT = 10000
     WARMUP_INTERVAL = 3
 else:
     WAIT_TIMEOUT = 5
     POLL_TIMEOUT = 2000
-    WARMUP_INTERVAL = 3
+    WARMUP_INTERVAL = 0
 
 
 class ReadTimeout(Exception):

@@ -1,7 +1,10 @@
 dataclasses == 0.7; python_version >= "3.6" and python_version < "3.7" and python_full_version >= "3.6.2" or python_version >= "3.6" and python_version < "3.7"
 textx >= 3.0.0, == 3.*
 jinja2 >= 2.11.2
+
+# Web server dependencies
 fastapi >= 0.83.0
+# FastAPI: To receive uploaded files and/or form data, first install python-multipart.
 python-multipart
 uvicorn[standard] >= 0.14.0
 WebSockets

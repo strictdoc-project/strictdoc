@@ -1,11 +1,21 @@
 import os
+import re
 import uuid
 from pathlib import Path
 from typing import Optional, Union
 
 from jinja2 import Environment, PackageLoader, StrictUndefined
+from reqif.models.error_handling import ReqIFXMLParsingError
+from reqif.parser import ReqIFParser
+from reqif.unparser import ReqIFUnparser
 
 from strictdoc import STRICTDOC_ROOT_PATH
+from strictdoc.backend.reqif.export.sdoc_to_reqif_converter import (
+    SDocToReqIFObjectConverter,
+)
+from strictdoc.backend.reqif.import_.reqif_to_sdoc_converter import (
+    ReqIFToSDocConverter,
+)
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.free_text_reader import SDFreeTextReader
 from strictdoc.backend.sdoc.models.document import Document
@@ -1176,7 +1186,8 @@ class MainController:
         )
         return output
 
-    def get_new_document(self):
+    @staticmethod
+    def get_new_document():
         template = MainController.env.get_template(
             "actions/document_tree/stream_new_document.jinja.html"
         )
@@ -1264,3 +1275,99 @@ class MainController:
             traceability_index=self.export_action.traceability_index,
         )
         return output
+
+    @staticmethod
+    def get_import_reqif_document_form():
+        template = MainController.env.get_template(
+            "actions/document_tree/import_reqif_document/"
+            "stream_form_import_reqif_document.jinja.html"
+        )
+        output = template.render(
+            error_object=ErrorObject(),
+        )
+        return output
+
+    def import_document_from_reqif(self, reqif_content: str) -> str:
+        error_object = ErrorObject()
+        assert isinstance(reqif_content, str)
+
+        try:
+            reqif_bundle = ReqIFParser.parse_from_string(reqif_content)
+            stage2_parser: ReqIFToSDocConverter = ReqIFToSDocConverter()
+            document = stage2_parser.convert_reqif_bundle(reqif_bundle)
+        except ReqIFXMLParsingError as exception:
+            error_object.add_error(
+                "reqif_file", "Cannot parse ReqIF file: " + str(exception)
+            )
+        except Exception as exception:
+            error_object.add_error("reqif_file", str(exception))
+
+        if error_object.any_errors():
+            template = MainController.env.get_template(
+                "actions/document_tree/import_reqif_document/"
+                "stream_form_import_reqif_document.jinja.html"
+            )
+            output = template.render(
+                error_object=error_object,
+            )
+            return output
+
+        # document_path = "docs/imported.sdoc"
+        document_title = re.sub(r"[^A-Za-z0-9-]", "_", document.title)
+        document_path = f"{document_title}.sdoc"
+
+        full_input_path = os.path.abspath(
+            self.export_action.config.input_paths[0]
+        )
+        doc_full_path = os.path.join(full_input_path, document_path)
+        doc_full_path_dir = os.path.dirname(doc_full_path)
+        Path(doc_full_path_dir).mkdir(parents=True, exist_ok=True)
+
+        document.meta = DocumentMeta(
+            level=0,
+            file_tree_mount_folder=None,
+            document_filename_base=None,
+            input_doc_full_path=doc_full_path,
+            input_doc_dir_rel_path=document_path,
+            output_document_dir_full_path=None,
+            output_document_dir_rel_path=None,
+        )
+
+        document_content = SDWriter().write(document)
+        document_meta = document.meta
+        with open(
+            document_meta.input_doc_full_path, "w", encoding="utf8"
+        ) as output_file:
+            output_file.write(document_content)
+
+        self.export_action.build_index()
+        self.export_action.export()
+
+        template = MainController.env.get_template(
+            "actions/document_tree/import_reqif_document/"
+            "stream_refresh_with_imported_reqif_document.jinja.html"
+        )
+        document_tree_iterator = DocumentTreeIterator(
+            self.export_action.traceability_index.document_tree
+        )
+
+        output = template.render(
+            config=self.export_action.config,
+            document_tree=self.export_action.traceability_index.document_tree,
+            document_tree_iterator=document_tree_iterator,
+            static_path="_static",
+            traceability_index=self.export_action.traceability_index,
+        )
+        return output
+
+    def export_document_to_reqif(self, document_mid: str):
+        # TODO: Export single document, not the whole tree.
+        # document: Document = (
+        #     self.export_action.traceability_index.get_node_by_id(document_mid)
+        # )
+
+        reqif_bundle = SDocToReqIFObjectConverter.convert_document_tree(
+            document_tree=self.export_action.traceability_index.document_tree
+        )
+        reqif_content: str = ReqIFUnparser.unparse(reqif_bundle)
+        return reqif_content

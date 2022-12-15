@@ -176,4 +176,14 @@ class ReqIFToSDocConverter:
             else:
                 raise NotImplementedError(spec_object) from None
 
+        # See SDOC_IMPL_1.
+        if (
+            len(document.section_contents) > 0
+            and isinstance(document.section_contents[0], Section)
+            and document.section_contents[0].title == "Abstract"
+        ):
+            assert len(document.section_contents[0].free_texts)
+            document.free_texts = document.section_contents[0].free_texts
+            document.section_contents.pop(0)
+
         return document

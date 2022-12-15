@@ -38,6 +38,7 @@ from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
 )
+from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldString,
     GrammarElementFieldSingleChoice,
@@ -212,7 +213,30 @@ class SDocToReqIFObjectConverter:
                 ref_then_children_order=True,
                 level=0,
             )
+
             current_hierarchy = root_hierarchy
+            if len(document.free_texts) > 0:
+                # fmt: off
+                document_free_text_spec_object = (
+                    SDocToReqIFObjectConverter
+                    ._convert_document_free_text_to_spec_object(
+                        document
+                    )
+                )
+                # fmt: on
+                spec_objects.append(document_free_text_spec_object)
+                hierarchy = ReqIFSpecHierarchy(
+                    xml_node=None,
+                    is_self_closed=False,
+                    identifier=generate_unique_identifier("SPEC-HIERARCHY"),
+                    last_change=None,
+                    long_name=None,
+                    spec_object=document_free_text_spec_object.identifier,
+                    children=[],
+                    ref_then_children_order=True,
+                    level=document.ng_level + 1,
+                )
+                current_hierarchy.add_child(hierarchy)
             for node in document_iterator.all_content():
                 if node.is_composite_requirement:
                     raise NotImplementedError(
@@ -221,34 +245,14 @@ class SDocToReqIFObjectConverter:
                         node,
                     )
                 if node.is_section:
-                    attributes = []
-                    title_attribute = SpecObjectAttribute(
-                        xml_node=None,
-                        attribute_type=SpecObjectAttributeType.STRING,
-                        definition_ref=ReqIFChapterField.CHAPTER_NAME,
-                        value=node.title,
-                    )
-                    attributes.append(title_attribute)
-                    if len(node.free_texts) > 0:
-                        free_text_value = escape(
-                            SDWriter.print_free_text_content(node.free_texts[0])
+                    # fmt: off
+                    spec_object = (
+                        SDocToReqIFObjectConverter
+                        ._convert_section_to_spec_object(
+                            node
                         )
-                        free_text_attribute = SpecObjectAttribute(
-                            xml_node=None,
-                            attribute_type=SpecObjectAttributeType.STRING,
-                            definition_ref=ReqIFChapterField.TEXT,
-                            value=free_text_value,
-                        )
-                        attributes.append(free_text_attribute)
-                    spec_object = ReqIFSpecObject(
-                        xml_node=None,
-                        description=None,
-                        identifier=generate_unique_identifier("SECTION"),
-                        last_change=None,
-                        long_name=None,
-                        spec_object_type=SDOC_SPEC_OBJECT_TYPE_SINGLETON,
-                        attributes=attributes,
                     )
+                    # fmt: on
                     spec_objects.append(spec_object)
                     hierarchy = ReqIFSpecHierarchy(
                         xml_node=None,
@@ -382,6 +386,77 @@ class SDocToReqIFObjectConverter:
             exceptions=[],
         )
         return reqif_bundle
+
+    @classmethod
+    def _convert_document_free_text_to_spec_object(
+        cls, document: Document
+    ) -> ReqIFSpecObject:
+        assert isinstance(document, Document)
+        assert len(document.free_texts) > 0
+        attributes = []
+        # See SDOC_IMPL_1.
+        title_attribute = SpecObjectAttribute(
+            xml_node=None,
+            attribute_type=SpecObjectAttributeType.STRING,
+            definition_ref=ReqIFChapterField.CHAPTER_NAME,
+            value="Abstract",
+        )
+        attributes.append(title_attribute)
+        free_text_value = escape(
+            SDWriter.print_free_text_content(document.free_texts[0])
+        )
+        free_text_attribute = SpecObjectAttribute(
+            xml_node=None,
+            attribute_type=SpecObjectAttributeType.STRING,
+            definition_ref=ReqIFChapterField.TEXT,
+            value=free_text_value,
+        )
+        attributes.append(free_text_attribute)
+        spec_object = ReqIFSpecObject(
+            xml_node=None,
+            description=None,
+            identifier=generate_unique_identifier("DOCUMENT_FREETEXT"),
+            last_change=None,
+            long_name=None,
+            spec_object_type=SDOC_SPEC_OBJECT_TYPE_SINGLETON,
+            attributes=attributes,
+        )
+        return spec_object
+
+    @classmethod
+    def _convert_section_to_spec_object(
+        cls, section: Section
+    ) -> ReqIFSpecObject:
+        assert isinstance(section, Section)
+        attributes = []
+        title_attribute = SpecObjectAttribute(
+            xml_node=None,
+            attribute_type=SpecObjectAttributeType.STRING,
+            definition_ref=ReqIFChapterField.CHAPTER_NAME,
+            value=section.title,
+        )
+        attributes.append(title_attribute)
+        if len(section.free_texts) > 0:
+            free_text_value = escape(
+                SDWriter.print_free_text_content(section.free_texts[0])
+            )
+            free_text_attribute = SpecObjectAttribute(
+                xml_node=None,
+                attribute_type=SpecObjectAttributeType.STRING,
+                definition_ref=ReqIFChapterField.TEXT,
+                value=free_text_value,
+            )
+            attributes.append(free_text_attribute)
+        spec_object = ReqIFSpecObject(
+            xml_node=None,
+            description=None,
+            identifier=generate_unique_identifier("SECTION"),
+            last_change=None,
+            long_name=None,
+            spec_object_type=SDOC_SPEC_OBJECT_TYPE_SINGLETON,
+            attributes=attributes,
+        )
+        return spec_object
 
     @classmethod
     def _convert_requirement_to_spec_object(

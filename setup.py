@@ -19,6 +19,14 @@ package_data = {
         "*/*/*/*/*",
         "*/*/*/*/*/*",
     ],
+    "strictdoc.export.rst": [
+        "*",
+        "*/*",
+        "*/*/*",
+        "*/*/*/*",
+        "*/*/*/*/*",
+        "*/*/*/*/*/*",
+    ],
 }
 
 with open("requirements.txt") as fp:

@@ -1,3 +1,4 @@
+import html
 from typing import Optional
 
 from strictdoc.backend.sdoc.models.document import Document
@@ -8,6 +9,8 @@ class ExistingDocumentFreeTextObject(ErrorObject):
     def __init__(self, document_mid: str, document_free_text: Optional[str]):
         super().__init__()
         self.document_mid: str = document_mid
+        if document_free_text is not None:
+            document_free_text = html.escape(document_free_text)
         self._document_free_text: Optional[str] = document_free_text
 
     @property

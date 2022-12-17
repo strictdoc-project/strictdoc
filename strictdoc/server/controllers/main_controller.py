@@ -354,10 +354,6 @@ class MainController:
             section_content, multiline=True
         )
 
-        section: Section = self.export_action.traceability_index.get_node_by_id(
-            section_id
-        )
-
         form_object = SectionFormObject(
             section_mid=section_id,
             section_title=section_title,
@@ -376,6 +372,10 @@ class MainController:
             ) = RstToHtmlFragmentWriter.write_with_validation(section_content)
             if parsed_html is None:
                 form_object.add_error("section_statement", rst_error)
+
+        section: Section = self.export_action.traceability_index.get_node_by_id(
+            section_id
+        )
 
         if form_object.any_errors():
             template = MainController.env.get_template(
@@ -492,19 +492,7 @@ class MainController:
         section: Section = self.export_action.traceability_index.get_node_by_id(
             section_id
         )
-        document = section.parent
-
-        statement = (
-            section.free_texts[0].get_parts_as_text()
-            if len(section.free_texts) > 0
-            else None
-        )
-        form_object = SectionFormObject(
-            section_mid=section.node_id,
-            section_title=section.title,
-            section_statement=statement,
-        )
-
+        form_object = SectionFormObject.create_from_section(section=section)
         template = MainController.env.get_template(
             "actions/document/edit_section/stream_edit_section.jinja.html"
         )
@@ -513,7 +501,7 @@ class MainController:
             markup="RST",
             traceability_index=self.export_action.traceability_index,
             link_renderer=link_renderer,
-            context_document=document,
+            context_document=section.document,
         )
         output = template.render(
             renderer=markup_renderer,

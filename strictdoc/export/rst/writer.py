@@ -5,6 +5,7 @@ from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.sdoc.models.section import FreeText, Section
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.export.rst.rst_templates import RSTTemplates
 
 
 class TAG(Enum):
@@ -41,6 +42,27 @@ class RSTWriter:
         return output.lstrip()
 
     @staticmethod
+    def _print_rst_header_2(string: str, level: int):
+        assert isinstance(string, str), string
+        assert isinstance(level, int), level
+        chars = {
+            0: "$",
+            1: "=",
+            2: "-",
+            3: "~",
+            4: "^",
+            5: '"',
+            6: "#",
+            7: "'",
+        }
+        header_char = chars[level]
+        output = ""
+        output += string
+        output += "\n"
+        output += header_char.rjust(len(string), header_char)
+        return output
+
+    @staticmethod
     def _print_rst_header(string: str, level: int):
         assert isinstance(string, str), string
         assert isinstance(level, int), level
@@ -63,8 +85,18 @@ class RSTWriter:
         return output
 
     def _print_requirement_fields(self, section_content: Requirement):
-        output = ""
+        requirement_template = RSTTemplates.jinja_environment.get_template(
+            "requirement.jinja.rst"
+        )
+        output = requirement_template.render(
+            requirement=section_content,
+            index=self.index,
+            _print_rst_header=self._print_rst_header_2,
+        )
+        return output
 
+    def _print_requirement_fields_unused(self, section_content: Requirement):
+        output = ""
         if section_content.uid is not None:
             output += f".. _{section_content.uid}:"
             output += "\n\n"

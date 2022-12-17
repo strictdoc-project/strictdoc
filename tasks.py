@@ -491,8 +491,8 @@ def release_pyinstaller(context):
             --name strictdoc
             --noconfirm
             --distpath {path_to_pyi_dist}
-            --add-data strictdoc/export/html/templates:templates
-            --add-data strictdoc/export/rst/templates:templates
+            --add-data strictdoc/export/html/templates:templates/html
+            --add-data strictdoc/export/rst/templates:templates/rst
             --add-data strictdoc/export/html/_static:_static
             --add-data strictdoc/export/html/_static_extra:_static_extra
             strictdoc/cli/main.py

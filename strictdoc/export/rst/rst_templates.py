@@ -10,7 +10,7 @@ def _get_package_loader():
         # extends the sys module by a flag frozen=True and sets the app
         # path into variable _MEIPASS'.
         bundle_dir = sys._MEIPASS  # pylint: disable=protected-access
-        return FileSystemLoader(os.path.join(bundle_dir, "templates"))
+        return FileSystemLoader(os.path.join(bundle_dir, "templates/rst"))
     return PackageLoader("strictdoc", "export/rst/templates")
 
 

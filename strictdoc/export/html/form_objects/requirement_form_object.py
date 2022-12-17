@@ -1,3 +1,4 @@
+import html
 from typing import Optional
 
 from strictdoc.backend.sdoc.models.requirement import Requirement
@@ -15,6 +16,8 @@ class RequirementFormObject(ErrorObject):
         super().__init__()
         self.requirement_mid: Optional[str] = requirement_mid
         self._requirement_title: Optional[str] = requirement_title
+        if requirement_statement is not None:
+            requirement_statement = html.escape(requirement_statement)
         self._requirement_statement: Optional[str] = requirement_statement
 
     @property

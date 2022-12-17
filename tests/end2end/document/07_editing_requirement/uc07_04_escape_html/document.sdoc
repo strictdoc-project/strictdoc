@@ -1,0 +1,16 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+Hello world!
+[/FREETEXT]
+
+[REQUIREMENT]
+TITLE: Requirement title
+STATEMENT: >>>
+`Link does not get corrupted <https://github.com/strictdoc-project/sphinx-latex-reqspec-template>`_
+
+`Link does not get corrupted <https://github.com/strictdoc-project/sphinx-latex-reqspec-template>`_
+
+`Link does not get corrupted <https://github.com/strictdoc-project/sphinx-latex-reqspec-template>`_
+<<<

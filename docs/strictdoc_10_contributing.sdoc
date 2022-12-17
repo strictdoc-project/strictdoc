@@ -28,3 +28,32 @@ following steps:
 [/FREETEXT]
 
 [/SECTION]
+
+[SECTION]
+TITLE: How can I help?
+
+[SECTION]
+TITLE: ReqIF users
+
+[FREETEXT]
+The existing capability of StrictDoc to export/import SDoc to ReqIF is very basic. If you have to deal with ReqIF and you experience errors/crashes when using StrictDoc against ReqIF files, feel free to contribute the anonymized ReqIF files via StrictDoc Issues on GitHub, and we will take care of your specific case.
+
+It is straightforward to create an anonymized version of a ReqIF file. Just reduce your file to the section that causes troubles in import or export and replace all your business-specific titles/texts to some `Lorem ipsum...` boilerplate, see https://www.loremipsum.de/.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: TeX / LaTeX / Sphinx experts
+
+[FREETEXT]
+The existing template for generating PDF documents using Sphinx looks like this: https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/. The template is maintained in a separate repository: https://github.com/strictdoc-project/sphinx-latex-reqspec-template and does a good job but could be improved in terms of look and structure used.
+
+If you are an expert and have experience of customizing Sphinx/TeX templates, consider providing feedback or contributing patches.
+
+One extreme way of improving the generated output could be to take the Sphinx template for TeX files and fully customize what Sphinx does to produce a PDF. See https://www.sphinx-doc.org/en/master/latex.html.
+[/FREETEXT]
+
+[/SECTION]
+
+[/SECTION]

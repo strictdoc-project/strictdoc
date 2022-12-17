@@ -10,19 +10,22 @@ items are either work-in-progress or will be implemented next.
 TITLE: Backlog: Graphical user interface
 
 [FREETEXT]
-- Enable SeleniumBase tests on CI.
-- Integration with Git repository.
-
 - Requirement form:
 
   - ``RATIONALE``
   - ``COMMENT``
-  - Edit links for table-based requirements.
   - Adding/editing parent/child requirements.
+  - Edit links for table-based requirements.
+
+- User support - Sign In, Sign Out, Register.
+
+- Integration with Git repository.
 
 - Section form:
 
   - ``UID``
+
+- Option to keep all multi-line text fields to 80 symbols width.
 
 - Moving node up/down/left/right. For example, move a node of level 2 to level 1.
 

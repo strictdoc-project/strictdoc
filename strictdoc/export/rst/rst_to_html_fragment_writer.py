@@ -65,7 +65,6 @@ class RstToHtmlFragmentWriter:
             warnings = str(exception)
 
         if warnings is not None and len(warnings) > 0:
-
             # A typical RST warning:
             # """
             # <string>:4: (WARNING/2) Bullet list ends without a blank line;

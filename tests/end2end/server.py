@@ -94,13 +94,6 @@ class SDocTestServer:
         # https://stackoverflow.com/a/59291466/598057
         os.set_blocking(process.stderr.fileno(), False)
 
-        def exit_handler():
-            if process.poll() is None:
-                print(f"TestSDocServer: atexit: stopping server: {process.pid}")
-                process.kill()
-
-        atexit.register(exit_handler)
-
         SDocTestServer.receive_expected_response(
             server_process=process,
             expectations=["INFO:     Application startup complete."],

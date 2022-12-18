@@ -43,7 +43,6 @@ class HTMLGenerator:
         traceability_index: TraceabilityIndex,
         parallelizer,
     ):  # pylint: disable=too-many-arguments,too-many-statements
-
         link_renderer = LinkRenderer(config.output_html_root)
 
         # Export document tree.

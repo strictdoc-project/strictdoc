@@ -6,14 +6,17 @@
 {{ _print_rst_header(requirement.title, requirement.ng_level) }}
 {% endif %}
 
-{%- if requirement.uid is not none %}
+{%- if requirement.has_meta > 0 %}
 .. list-table::
     :align: left
     :header-rows: 0
-
-    * - **UID:**
-      - {{requirement.uid}}
-{% endif %}
+{% if true -%}{# without this workaround Jinja eats too much or not enough whitespace. #}{%- endif %}
+    {%- for meta_field in requirement.enumerate_meta_fields(skip_multi_lines=True) %}
+    * - **{{meta_field[0]}}:**
+      - {{ meta_field[1] }}
+    {%- endfor -%}
+{%- endif %}
+{% if true -%}{# without this workaround Jinja eats too much or not enough whitespace. #}{%- endif %}
 
 {%- if requirement.statement is not none %}
 {{requirement.statement}}
@@ -21,9 +24,20 @@
 {{requirement.statement_multiline}}
 {% endif %}
 
+{%- if requirement.rationale or requirement.rationale_multiline %}
+**Rationale:** {{ requirement.get_rationale_single_or_multiline() }}
+{% endif %}
+
 {%- for comment in requirement.comments %}
 **Comment:** {{comment.get_comment()}}
 {% endfor %}
+
+{%- if requirement.has_meta %}
+  {%- for meta_field in requirement.enumerate_meta_fields(skip_single_lines=True) %}
+**{{meta_field[0]}}:**
+{{ meta_field[1] }}
+  {%- endfor %}
+{%- endif %}
 
 {%- set requirement_references = requirement.get_requirement_references() %}
 {%- if requirement_references|length > 0 %}

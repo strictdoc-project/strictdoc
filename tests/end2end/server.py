@@ -17,10 +17,14 @@ if os.getenv("STRICTDOC_LONGER_TIMEOUTS") is not None:
     WAIT_TIMEOUT = 30
     POLL_TIMEOUT = 10000
     WARMUP_INTERVAL = 3
+    # When Selenium clicks on a link that downloads a file, it takes some time
+    # until the file actually appears on the file system.
+    DOWNLOAD_FILE_TIMEOUT = 4
 else:
     WAIT_TIMEOUT = 5
     POLL_TIMEOUT = 2000
     WARMUP_INTERVAL = 0
+    DOWNLOAD_FILE_TIMEOUT = 2
 
 
 class ReadTimeout(Exception):

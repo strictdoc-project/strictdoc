@@ -15,28 +15,26 @@ output.zip
 .DS_Store
 .vscode
 
-# StrictDoc's default export path
+### StrictDoc's default export path
 **/output/**
 tests/unit_server/**/output/**
-# LIT/FileCheck integration tests' artifacts.
+
+### LIT/FileCheck integration tests' artifacts. ###
 tests/integration/**/Output/**
 tests/integration/**/output/**
 tests/integration/**/sandbox/
 .lit_test_times.txt
 
-# Coverage
+### Coverage ###
 .coverage
 coverage.xml
 htmlcov/
 
-# venv
-bin/
-lib/
-pyvenv.cfg
-
-# PyInstaller
+### PyInstaller ###
 strictdoc.spec
 
-# SeleniumBase
+### SeleniumBase ###
 latest_logs/
+# Files downloaded during tests are stored here.
+downloaded_files/
 

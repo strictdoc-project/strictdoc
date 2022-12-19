@@ -94,6 +94,9 @@ class SDocToReqIFObjectConverter:
         data_types_lookup = {}
         document: Document
         for document in document_tree.document_list:
+            document_spec_object_type = (
+                SDOC_SPEC_OBJECT_TYPE_SINGLETON + "_" + uuid.uuid4().hex
+            )
             for element in document.grammar.elements:
                 for field in element.fields:
                     if isinstance(field, GrammarElementFieldString):
@@ -183,7 +186,9 @@ class SDocToReqIFObjectConverter:
                         raise NotImplementedError(field) from None
 
             document_spec_types = cls._convert_document_grammar_to_spec_types(
-                grammar=document.grammar, data_types_lookup=data_types_lookup
+                grammar=document.grammar,
+                data_types_lookup=data_types_lookup,
+                document_spec_object_type=document_spec_object_type,
             )
             spec_types.extend(document_spec_types)
 
@@ -220,7 +225,8 @@ class SDocToReqIFObjectConverter:
                 document_free_text_spec_object = (
                     SDocToReqIFObjectConverter
                     ._convert_document_free_text_to_spec_object(
-                        document
+                        document,
+                        document_spec_object_type=document_spec_object_type
                     )
                 )
                 # fmt: on
@@ -249,7 +255,8 @@ class SDocToReqIFObjectConverter:
                     spec_object = (
                         SDocToReqIFObjectConverter
                         ._convert_section_to_spec_object(
-                            node
+                            node,
+                            document_spec_object_type,
                         )
                     )
                     # fmt: on
@@ -286,6 +293,7 @@ class SDocToReqIFObjectConverter:
                         requirement=node,
                         grammar=document.grammar,
                         context=context,
+                        document_spec_object_type=document_spec_object_type,
                     )
                     spec_objects.append(spec_object)
                     hierarchy = ReqIFSpecHierarchy(
@@ -389,7 +397,7 @@ class SDocToReqIFObjectConverter:
 
     @classmethod
     def _convert_document_free_text_to_spec_object(
-        cls, document: Document
+        cls, document: Document, document_spec_object_type: str
     ) -> ReqIFSpecObject:
         assert isinstance(document, Document)
         assert len(document.free_texts) > 0
@@ -418,14 +426,14 @@ class SDocToReqIFObjectConverter:
             identifier=generate_unique_identifier("DOCUMENT_FREETEXT"),
             last_change=None,
             long_name=None,
-            spec_object_type=SDOC_SPEC_OBJECT_TYPE_SINGLETON,
+            spec_object_type=document_spec_object_type,
             attributes=attributes,
         )
         return spec_object
 
     @classmethod
     def _convert_section_to_spec_object(
-        cls, section: Section
+        cls, section: Section, document_spec_object_type: str
     ) -> ReqIFSpecObject:
         assert isinstance(section, Section)
         attributes = []
@@ -453,7 +461,7 @@ class SDocToReqIFObjectConverter:
             identifier=generate_unique_identifier("SECTION"),
             last_change=None,
             long_name=None,
-            spec_object_type=SDOC_SPEC_OBJECT_TYPE_SINGLETON,
+            spec_object_type=document_spec_object_type,
             attributes=attributes,
         )
         return spec_object
@@ -464,6 +472,7 @@ class SDocToReqIFObjectConverter:
         requirement: Requirement,
         grammar: DocumentGrammar,
         context: SDocToReqIFBuildContext,
+        document_spec_object_type: str,
     ) -> ReqIFSpecObject:
         requirement_identifier = generate_unique_identifier("REQUIREMENT")
         grammar_element = grammar.elements_by_type[requirement.requirement_type]
@@ -516,7 +525,7 @@ class SDocToReqIFObjectConverter:
 
         spec_object = ReqIFSpecObject.create(
             identifier=requirement_identifier,
-            spec_object_type=SDOC_SPEC_OBJECT_TYPE_SINGLETON,
+            spec_object_type=document_spec_object_type,
             attributes=attributes,
         )
         context.map_uid_to_spec_objects[requirement.uid] = spec_object
@@ -524,7 +533,10 @@ class SDocToReqIFObjectConverter:
 
     @classmethod
     def _convert_document_grammar_to_spec_types(
-        cls, grammar: DocumentGrammar, data_types_lookup
+        cls,
+        grammar: DocumentGrammar,
+        data_types_lookup,
+        document_spec_object_type: str,
     ):
         spec_object_types: List = []
 
@@ -605,7 +617,7 @@ class SDocToReqIFObjectConverter:
             attribute_definitions.append(chapter_name_attribute)
 
             spec_object_type = ReqIFSpecObjectType.create(
-                identifier=SDOC_SPEC_OBJECT_TYPE_SINGLETON,
+                identifier=document_spec_object_type,
                 long_name=element.tag,
                 attribute_definitions=attribute_definitions,
             )

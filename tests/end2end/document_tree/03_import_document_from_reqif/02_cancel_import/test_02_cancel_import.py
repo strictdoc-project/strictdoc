@@ -26,7 +26,7 @@ class Test_02_CancelReqIFImportForm(BaseCase):
 
         self.assert_text("The document tree has no documents yet.")
 
-        self.click_link("Import document from ReqIF")
+        self.click_link("Import document tree from ReqIF")
 
         self.click_nth_visible_element("//a[contains(text(), 'Cancel')]", 1)
 

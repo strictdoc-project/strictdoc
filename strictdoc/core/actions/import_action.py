@@ -19,7 +19,7 @@ class ImportAction:
         import_config: Union[ImportReqIFCommandConfig, ImportExcelCommandConfig]
     ) -> None:
         if isinstance(import_config, ImportReqIFCommandConfig):
-            document = ReqIFImport.import_from_file(import_config)
+            document = ReqIFImport.import_from_file(import_config)[0]
         elif isinstance(import_config, ImportExcelCommandConfig):
             document = ExcelImport.import_from_file(import_config)
         else:

@@ -382,7 +382,21 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
             status_code=200,
             media_type="application/octet-stream",
             headers={
-                "Content-Disposition": 'attachment; filename="123.reqif"',
+                "Content-Disposition": 'attachment; filename="export.reqif"',
+            },
+        )
+
+    @router.get("/reqif/export_tree", response_class=Response)
+    def get_reqif_export_tree():
+        document_reqif_content = main_controller.export_document_to_reqif(
+            document_mid="NOT_USED_HERE"
+        )
+        return Response(
+            content=document_reqif_content,
+            status_code=200,
+            media_type="application/octet-stream",
+            headers={
+                "Content-Disposition": 'attachment; filename="export.reqif"',
             },
         )
 

@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+Document 1 free text.
+[/FREETEXT]
+
+[SECTION]
+TITLE: Document 1 section
+
+[FREETEXT]
+Document 1 statement.
+[/FREETEXT]
+
+[/SECTION]

@@ -2,7 +2,7 @@ import os
 import re
 import uuid
 from pathlib import Path
-from typing import Optional, Union
+from typing import Optional, Union, List
 
 from jinja2 import Environment, PackageLoader, StrictUndefined
 from reqif.models.error_handling import ReqIFXMLParsingError
@@ -1279,10 +1279,13 @@ class MainController:
         error_object = ErrorObject()
         assert isinstance(reqif_content, str)
 
+        documents: Optional[List[Document]] = None
         try:
             reqif_bundle = ReqIFParser.parse_from_string(reqif_content)
             stage2_parser: ReqIFToSDocConverter = ReqIFToSDocConverter()
-            document = stage2_parser.convert_reqif_bundle(reqif_bundle)
+            documents: List[Document] = stage2_parser.convert_reqif_bundle(
+                reqif_bundle
+            )
         except ReqIFXMLParsingError as exception:
             error_object.add_error(
                 "reqif_file", "Cannot parse ReqIF file: " + str(exception)
@@ -1300,33 +1303,35 @@ class MainController:
             )
             return output
 
+        assert documents is not None
         # document_path = "docs/imported.sdoc"
-        document_title = re.sub(r"[^A-Za-z0-9-]", "_", document.title)
-        document_path = f"{document_title}.sdoc"
+        for document in documents:
+            document_title = re.sub(r"[^A-Za-z0-9-]", "_", document.title)
+            document_path = f"{document_title}.sdoc"
 
-        full_input_path = os.path.abspath(
-            self.export_action.config.input_paths[0]
-        )
-        doc_full_path = os.path.join(full_input_path, document_path)
-        doc_full_path_dir = os.path.dirname(doc_full_path)
-        Path(doc_full_path_dir).mkdir(parents=True, exist_ok=True)
+            full_input_path = os.path.abspath(
+                self.export_action.config.input_paths[0]
+            )
+            doc_full_path = os.path.join(full_input_path, document_path)
+            doc_full_path_dir = os.path.dirname(doc_full_path)
+            Path(doc_full_path_dir).mkdir(parents=True, exist_ok=True)
 
-        document.meta = DocumentMeta(
-            level=0,
-            file_tree_mount_folder=None,
-            document_filename_base=None,
-            input_doc_full_path=doc_full_path,
-            input_doc_dir_rel_path=document_path,
-            output_document_dir_full_path=None,
-            output_document_dir_rel_path=None,
-        )
+            document.meta = DocumentMeta(
+                level=0,
+                file_tree_mount_folder=None,
+                document_filename_base=None,
+                input_doc_full_path=doc_full_path,
+                input_doc_dir_rel_path=document_path,
+                output_document_dir_full_path=None,
+                output_document_dir_rel_path=None,
+            )
 
-        document_content = SDWriter().write(document)
-        document_meta = document.meta
-        with open(
-            document_meta.input_doc_full_path, "w", encoding="utf8"
-        ) as output_file:
-            output_file.write(document_content)
+            document_content = SDWriter().write(document)
+            document_meta = document.meta
+            with open(
+                document_meta.input_doc_full_path, "w", encoding="utf8"
+            ) as output_file:
+                output_file.write(document_content)
 
         self.export_action.build_index()
         self.export_action.export()

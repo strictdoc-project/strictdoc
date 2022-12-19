@@ -26,7 +26,7 @@ class Test_Validation_01_NotAReqIFormat(BaseCase):
 
         self.assert_text("The document tree has no documents yet.")
 
-        self.click_link("Import document from ReqIF")
+        self.click_link("Import document tree from ReqIF")
 
         reqif_input_field = self.find_element("#reqif_file")
         reqif_input_field.send_keys(path_to_reqif_sample)

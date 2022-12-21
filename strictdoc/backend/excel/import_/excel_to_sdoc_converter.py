@@ -10,7 +10,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     GrammarElement,
 )
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
-from strictdoc.backend.sdoc.models.reference import Reference
+from strictdoc.backend.sdoc.models.reference import ParentReqReference
 from strictdoc.backend.sdoc.models.requirement import (
     RequirementField,
     Requirement,
@@ -184,7 +184,7 @@ class ExcelToSDocConverter:
             comments=comments,
         )
         if parent_uid is not None:
-            reference = Reference(template_requirement, "Parent", parent_uid)
+            reference = ParentReqReference(template_requirement, parent_uid)
 
             requirement_field = RequirementField(
                 parent=template_requirement,

@@ -85,16 +85,17 @@ class ExcelGenerator:
                     if field == "parent":
                         if node.references:
                             ref = node.references[0]
-                            if len(ref.path) > columns[field][MAX_WIDTH_KEY]:
-                                columns[field][MAX_WIDTH_KEY] = len(ref.path)
+                            if len(ref.ref_uid) > columns[field][MAX_WIDTH_KEY]:
+                                columns[field][MAX_WIDTH_KEY] = len(ref.ref_uid)
                             worksheet.write_url(
                                 row,
                                 idx,
                                 (
                                     "internal:"
-                                    f"'{EXCEL_SHEET_NAME}'!A{refs[ref.path]}"
+                                    f"'{EXCEL_SHEET_NAME}'"
+                                    f"!A{refs[ref.ref_uid]}"
                                 ),
-                                string=ref.path,
+                                string=ref.ref_uid,
                             )
                     elif hasattr(node, field):
                         if field == "statement":

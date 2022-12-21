@@ -27,13 +27,23 @@ Reference[noskipws]:
 ;
 
 ParentReqReference[noskipws]:
-  '- TYPE: ' ref_type = 'Parent' '\n'
-  '  VALUE: ' path = /.*$/ '\n'
+  '- TYPE: Parent' '\n'
+  '  VALUE: ' ref_uid = /.*$/ '\n'
 ;
 
 FileReference[noskipws]:
   // FileReference is an early, experimental feature. Do not use yet.
-  '- TYPE: ' ref_type = 'File' '\n'
-  '  VALUE: ' path = /.*$/ '\n'
+  '- TYPE: File' '\n'
+  file_entry = FileEntry
 ;
+
+FileEntry[noskipws]:
+  ('  FORMAT: ' file_format = FileEntryFormat '\n')?
+   '  VALUE: ' file_path = /.*$/ '\n'
+;
+
+FileEntryFormat[noskipws]:
+  'Sourcecode' | 'Python' | /[A-Z]+[A-Z_]*/
+;
+
 """

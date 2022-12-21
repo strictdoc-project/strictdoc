@@ -484,7 +484,7 @@ class SDocToReqIFObjectConverter:
                 for reference in field.field_value_references:
                     if reference.ref_type != ReferenceType.PARENT:
                         continue
-                    parent_references.append(reference.path)
+                    parent_references.append(reference.ref_uid)
                     context.map_uid_to_parent_uids[
                         requirement.uid
                     ] = parent_references

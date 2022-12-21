@@ -100,7 +100,7 @@ class LinkRenderer:
             "/"
             f"_source_files"
             "/"
-            f"{file_reference.path_forward_slashes}.html"
+            f"{file_reference.file_entry.path_forward_slashes}.html"
         )
         return source_file_link
 
@@ -108,7 +108,8 @@ class LinkRenderer:
     def render_source_file_link_from_root(file_reference: FileReference):
         assert isinstance(file_reference, FileReference)
         source_file_link = (
-            f"_source_files/{file_reference.path_forward_slashes}.html"
+            f"_source_files/"
+            f"{file_reference.file_entry.path_forward_slashes}.html"
         )
         return source_file_link
 
@@ -129,7 +130,7 @@ class LinkRenderer:
         context_source_file: SourceFile,
     ):
         assert isinstance(source_link, FileReference)
-        assert len(source_link.path) > 0
+        assert len(source_link.file_entry.file_path) > 0
 
         def get_root_path_prefix(level):
             if level == 0:
@@ -140,7 +141,8 @@ class LinkRenderer:
         source_file_link = (
             f"{path_prefix}"
             f"/_source_files"
-            f"/{source_link.path_forward_slashes}.html#{requirement.uid}"
+            f"/{source_link.file_entry.path_forward_slashes}.html"
+            f"#{requirement.uid}"
         )
         return source_file_link
 
@@ -182,7 +184,7 @@ class LinkRenderer:
         assert isinstance(context_source_file, SourceFile)
         return self.render_requirement_in_source_file_range_link_using_id(
             requirement.uid,
-            source_link.path_forward_slashes,
+            source_link.file_entry.path_forward_slashes,
             context_source_file,
             source_range,
         )

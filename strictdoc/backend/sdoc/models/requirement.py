@@ -8,7 +8,6 @@ from strictdoc.backend.sdoc.models.reference import Reference
 from strictdoc.backend.sdoc.models.type_system import (
     RequirementFieldName,
     RESERVED_NON_META_FIELDS,
-    ReferenceType,
 )
 
 MULTILINE_WORD_THRESHOLD = 6
@@ -221,12 +220,20 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
             self.ng_document_reference.get_document().config.is_inline_requirements()  # noqa: E501
         )
 
-    def get_requirement_references(self):
+    def has_requirement_references(self, ref_type):
+        if not self.references or len(self.references) == 0:
+            return False
+        for reference in self.references:
+            if reference.ref_type == ref_type:
+                return True
+        return False
+
+    def get_requirement_references(self, ref_type):
         if not self.references or len(self.references) == 0:
             return []
         references = []
         for reference in self.references:
-            if reference.ref_type != ReferenceType.PARENT:
+            if reference.ref_type != ref_type:
                 continue
             references.append(reference)
         return references

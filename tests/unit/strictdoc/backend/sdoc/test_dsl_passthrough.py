@@ -1043,6 +1043,38 @@ TAG_FIELD: A, C
     assert sdoc_input == output
 
 
+def test_154_grammar_multiline_custom_field():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: MY_FIELD
+    TYPE: String
+    REQUIRED: True
+
+[REQUIREMENT]
+MY_FIELD: >>>
+Some text here...
+Some text here...
+Some text here...
+<<<
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
 def test_160_grammar_refs():
     sdoc_input = """
 [DOCUMENT]

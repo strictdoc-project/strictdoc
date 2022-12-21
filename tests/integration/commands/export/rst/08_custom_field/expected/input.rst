@@ -11,7 +11,6 @@
     * - **CRITICALITY:**
       - High
 
-
 the foo must bar
 
 **Rationale:** If the foo did not bar then it might instead baz, which must be avoided at all costs.

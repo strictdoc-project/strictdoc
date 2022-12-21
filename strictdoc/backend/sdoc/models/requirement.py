@@ -31,7 +31,13 @@ class RequirementField:
         self.parent = parent
         self.field_name = field_name
         self.field_value: Optional[str] = field_value
-        self.field_value_multiline: Optional[str] = field_value_multiline
+
+        self.field_value_multiline: Optional[str] = (
+            field_value_multiline.rstrip()
+            if field_value_multiline is not None
+            else None
+        )
+
         self.field_value_references: Optional[
             List[Reference]
         ] = field_value_references
@@ -164,17 +170,8 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         self.comments = comments
         self.requirements = requirements
 
-        # For multiline fields:
-        # Due to the details of how matching single vs multistring lines is
-        # implemented, the rstrip() is done to simplify SDoc code generation.
-        self.statement_multiline: Optional[str] = (
-            statement_multiline.rstrip()
-            if statement_multiline is not None
-            else None
-        )
-        self.rationale_multiline = (
-            rationale_multiline.rstrip() if rationale_multiline else None
-        )
+        self.statement_multiline: Optional[str] = statement_multiline
+        self.rationale_multiline: Optional[str] = rationale_multiline
 
         # TODO: Is it worth to move this to dedicated Presenter* classes to
         # keep this class textx-only?
@@ -247,13 +244,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         if self.rationale_multiline:
             return self.rationale_multiline
         return None
-
-    def append_to_multiline_statement(self, new_statement):
-        statement_field = self.ordered_fields_lookup[
-            RequirementFieldName.STATEMENT
-        ][0]
-        statement_field.field_value_multiline += new_statement.rstrip()
-        self.statement_multiline = statement_field.field_value_multiline
 
     def enumerate_fields(self):
         requirement_fields = self.ordered_fields_lookup.values()
@@ -349,11 +339,7 @@ class RequirementComment:
         self.parent = parent
         self.comment_single: Optional[str] = comment_single
 
-        # Due to the details of how matching single vs multistring lines is
-        # implemented, the rstrip() is done to simplify SDoc code generation.
-        self.comment_multiline: Optional[str] = (
-            comment_multiline.rstrip() if comment_multiline else None
-        )
+        self.comment_multiline: Optional[str] = comment_multiline
 
     def __str__(self):
         return (

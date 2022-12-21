@@ -573,7 +573,6 @@ REFS:
     document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
-    document: Document = reader.read(input_sdoc)
     requirement = document.section_contents[0]
     references = requirement.references
     assert len(references) == 1
@@ -581,7 +580,7 @@ REFS:
     reference = references[0]
     assert isinstance(reference, FileReference)
     assert reference.ref_type == ReferenceType.FILE
-    assert reference.path == "/tmp/sample.cpp"
+    assert reference.file_entry.file_path == "/tmp/sample.cpp"
 
     writer = SDWriter()
     output = writer.write(document)
@@ -1125,17 +1124,17 @@ REFS:
     reference = references[0]
     assert isinstance(reference, ParentReqReference)
     assert reference.ref_type == ReferenceType.PARENT
-    assert reference.path == "ID-001"
+    assert reference.ref_uid == "ID-001"
 
     reference = references[1]
     assert reference.ref_type == ReferenceType.FILE
     assert isinstance(reference, FileReference)
-    assert reference.path == "/tmp/sample1.cpp"
+    assert reference.file_entry.file_path == "/tmp/sample1.cpp"
 
     reference = references[2]
     assert reference.ref_type == ReferenceType.FILE
     assert isinstance(reference, FileReference)
-    assert reference.path == "/tmp/sample2.cpp"
+    assert reference.file_entry.file_path == "/tmp/sample2.cpp"
 
     writer = SDWriter()
     output = writer.write(document)
@@ -1174,7 +1173,7 @@ REFS:
     reference = references[0]
     assert isinstance(reference, FileReference)
     assert reference.ref_type == ReferenceType.FILE
-    assert reference.path == "/tmp/sample.cpp"
+    assert reference.file_entry.file_path == "/tmp/sample.cpp"
 
     writer = SDWriter()
     output = writer.write(document)
@@ -1217,17 +1216,17 @@ REFS:
     reference = references[0]
     assert isinstance(reference, FileReference)
     assert reference.ref_type == ReferenceType.FILE
-    assert reference.path == "/tmp/sample1.cpp"
+    assert reference.file_entry.file_path == "/tmp/sample1.cpp"
 
     reference = references[1]
     assert isinstance(reference, FileReference)
     assert reference.ref_type == ReferenceType.FILE
-    assert reference.path == "/tmp/sample2.cpp"
+    assert reference.file_entry.file_path == "/tmp/sample2.cpp"
 
     reference = references[2]
     assert isinstance(reference, FileReference)
     assert reference.ref_type == ReferenceType.FILE
-    assert reference.path == "/tmp/sample3.cpp"
+    assert reference.file_entry.file_path == "/tmp/sample3.cpp"
 
     writer = SDWriter()
     output = writer.write(document)
@@ -1271,7 +1270,7 @@ REFS:
     assert (
         exc_info.value.args[0]
         == "Requirement field of type Reference has an unsupported Reference "
-        "Type item: Reference(ref_type = Parent, path = ID-001)"
+        "Type item: ParentReqReference(parent = REFS, ref_uid = ID-001)"
     )
 
 
@@ -1321,7 +1320,7 @@ REFS:
     reference = references[0]
     assert isinstance(reference, ParentReqReference)
     assert reference.ref_type == ReferenceType.PARENT
-    assert reference.path == "ID-001"
+    assert reference.ref_uid == "ID-001"
 
     writer = SDWriter()
     output = writer.write(document)
@@ -1372,12 +1371,12 @@ REFS:
     reference = references[0]
     assert isinstance(reference, ParentReqReference)
     assert reference.ref_type == ReferenceType.PARENT
-    assert reference.path == "ID-000"
+    assert reference.ref_uid == "ID-000"
 
     reference = references[1]
     assert isinstance(reference, ParentReqReference)
     assert reference.ref_type == ReferenceType.PARENT
-    assert reference.path == "ID-001"
+    assert reference.ref_uid == "ID-001"
 
     writer = SDWriter()
     output = writer.write(document)
@@ -1420,11 +1419,10 @@ REFS:
     assert exc_info.type is StrictDocSemanticError
 
     assert re.fullmatch(
-        r"Requirement field of type Reference has an unsupported Reference "
-        r"Type item: FileReference\(ref_type = File,"
-        r" path = /tmp/sample1.cpp,"
-        r" path_forward_slashes ="
-        r" /tmp/sample1.cpp,"
-        r" path_normalized = .tmp.sample1.cpp\)",
+        f"Requirement field of type Reference has an unsupported Reference"
+        f" Type item: FileReference\\(parent = REFS, file_entry ="
+        f" FileEntry\\(parent = FileReference, file_format = None, file_path"
+        f" = /tmp/sample1.cpp, path_forward_slashes ="
+        f" /tmp/sample1.cpp, path_normalized = .+tmp.+sample1.cpp\\)\\)",
         exc_info.value.args[0],
     )

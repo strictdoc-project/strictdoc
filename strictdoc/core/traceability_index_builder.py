@@ -5,6 +5,7 @@ from typing import List, Iterator, Optional
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
+from strictdoc.backend.sdoc.models.reference import ParentReqReference
 from strictdoc.backend.sdoc.models.type_system import ReferenceType
 from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.source_file_syntax.reader import (
@@ -239,12 +240,15 @@ class TraceabilityIndexBuilder:
                         continue
                     if ref.ref_type != ReferenceType.PARENT:
                         continue
+                    ref: ParentReqReference
                     d_02_requirements_map[requirement.uid][
                         "parents_uids"
-                    ].append(ref.path)
-                    if ref.path not in d_08_requirements_children_map:
-                        d_08_requirements_children_map[ref.path] = []
-                    d_08_requirements_children_map[ref.path].append(requirement)
+                    ].append(ref.ref_uid)
+                    if ref.ref_uid not in d_08_requirements_children_map:
+                        d_08_requirements_children_map[ref.ref_uid] = []
+                    d_08_requirements_children_map[ref.ref_uid].append(
+                        requirement
+                    )
 
         # Now iterate over the requirements again to build an in-depth map of
         # parents and children.

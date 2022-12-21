@@ -3,6 +3,11 @@ from enum import Enum
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
+from strictdoc.backend.sdoc.models.reference import (
+    Reference,
+    FileReference,
+    ParentReqReference,
+)
 from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
     CompositeRequirement,
@@ -191,13 +196,27 @@ class SDWriter:
                     output += "REFS:"
                     output += "\n"
 
+                    reference: Reference
                     for reference in field.field_value_references:
                         output += "- TYPE: "
                         output += reference.ref_type
                         output += "\n"
-                        output += "  VALUE: "
-                        output += reference.path
-                        output += "\n"
+
+                        if isinstance(reference, FileReference):
+                            ref: FileReference = reference
+                            if ref.file_entry.file_format:
+                                output += "  FORMAT: "
+                                output += ref.file_entry.file_format
+                                output += "\n"
+                            output += "  VALUE: "
+                            output += ref.file_entry.file_path
+                            output += "\n"
+                        elif isinstance(reference, ParentReqReference):
+                            ref: ParentReqReference = reference
+                            output += "  VALUE: "
+                            output += ref.ref_uid
+                            output += "\n"
+
                 elif field.field_value is not None:
                     if len(field.field_value) > 0:
                         output += f"{field_name}: "

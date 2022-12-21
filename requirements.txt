@@ -18,5 +18,5 @@ python-datauri >= 0.2.9, == 0.*
 beautifulsoup4 >= 4.9.3, == 4.*
 pygments >= 2.10.0, == 2.*
 lxml >= 4.6.2, == 4.*
-reqif >= 0.0.18, == 0.*
+reqif >= 0.0.20, == 0.*
 xlrd >= 2.0.1, == 2.*

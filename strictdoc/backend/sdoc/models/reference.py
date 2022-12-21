@@ -1,34 +1,46 @@
-import os
+from strictdoc.backend.sdoc.models.type_system import (
+    ReferenceType,
+    FileEntry,
+)
 
 
 class Reference:
-    def __init__(self, parent, ref_type, path):
+    def __init__(self, ref_type, parent):
         self.parent = parent
         self.ref_type = ref_type
-        self.path = path.strip()
-
-    def __str__(self):
-        return f"Reference(ref_type = {self.ref_type}, path = {self.path})"
 
     def __repr__(self):
         return self.__str__()
 
+    def __str__(self):
+        return (
+            f"Reference("
+            f"parent = {self.parent.field_name},"
+            f" ref_type = {self.ref_type})"
+        )
+
 
 class FileReference(Reference):
-    def __init__(self, parent, ref_type, path):
-        super().__init__(parent, ref_type, path)
-        path_forward_slashes = path.replace("\\", "/")
-        self.path_forward_slashes = path_forward_slashes
-        self.path_normalized = os.path.normpath(path_forward_slashes)
+    def __init__(self, parent, file_entry: FileEntry):
+        super().__init__(ReferenceType.FILE, parent)
+        self.file_entry = file_entry
 
     def __str__(self):
         return (
-            f"FileReference(ref_type = {self.ref_type},"
-            f" path = {self.path},"
-            f" path_forward_slashes = {self.path_forward_slashes},"
-            f" path_normalized = {self.path_normalized})"
+            f"FileReference("
+            f"parent = {self.parent.field_name},"
+            f" file_entry = {self.file_entry})"
         )
 
 
 class ParentReqReference(Reference):
-    pass
+    def __init__(self, parent, ref_uid):
+        super().__init__(ReferenceType.PARENT, parent)
+        self.ref_uid = ref_uid
+
+    def __str__(self):
+        return (
+            f"ParentReqReference("
+            f"parent = {self.parent.field_name},"
+            f" ref_uid = {self.ref_uid})"
+        )

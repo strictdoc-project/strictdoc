@@ -39,12 +39,12 @@
 {% endfor %}
 {%- endif %}
 
-{%- set requirement_references = requirement.get_requirement_references() %}
-{%- if requirement_references|length > 0 %}
+{%- set parent_requirement_refs = requirement.get_requirement_references("Parent") %}
+{%- if parent_requirement_refs|length > 0 %}
 **Parents:**
 {% if true -%}{# without this workaround Jinja eats too much or not enough whitespace. #}{%- endif %}
-{%- for reference in requirement_references %}
-- ``[{{reference.path}}]`` :ref:`{{reference.path}}`
+{%- for reference in parent_requirement_refs %}
+- ``[{{reference.ref_uid}}]`` :ref:`{{reference.ref_uid}}`
 {%- endfor %}
 {% endif %}
 

@@ -25,6 +25,7 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldTag,
     GrammarElementFieldReference,
+    FileEntry,
 )
 
 SECTION_MODELS = [
@@ -39,6 +40,7 @@ SECTION_MODELS = [
     FileReference,
     FreeText,
     InlineLink,
+    FileEntry,
 ]
 
 DOCUMENT_MODELS = [

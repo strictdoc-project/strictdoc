@@ -2,8 +2,7 @@ from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
-from strictdoc.backend.sdoc.models.reference import Reference
-from strictdoc.backend.sdoc.models.requirement import Requirement
+from strictdoc.backend.sdoc.models.reference import ParentReqReference
 
 
 class DocumentBuilder:
@@ -49,7 +48,7 @@ class DocumentBuilder:
         requirement = next(r for r in self.requirements if r.uid == req_id)
         assert requirement
 
-        reference = Reference(requirement, "Parent", parent_req_id)
+        reference = ParentReqReference(requirement, parent_req_id)
         requirement.references.append(reference)
 
     def build(self):

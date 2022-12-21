@@ -12,7 +12,7 @@ from strictdoc.backend.reqif.sdoc_reqif_fields import (
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
-from strictdoc.backend.sdoc.models.reference import Reference
+from strictdoc.backend.sdoc.models.reference import ParentReqReference
 from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
     RequirementField,
@@ -165,9 +165,8 @@ class ReqIFToSDocFactory:
                 )
 
                 parent_refs.append(
-                    Reference(
+                    ParentReqReference(
                         requirement,
-                        "Parent",
                         parent_spec_object_parent.attribute_map[
                             foreign_key_id_or_none
                         ].value,

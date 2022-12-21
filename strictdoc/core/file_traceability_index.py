@@ -22,7 +22,7 @@ class FileTraceabilityIndex:
             if isinstance(ref, FileReference):
                 file_reference: FileReference = ref
                 requirements = self.map_paths_to_reqs.setdefault(
-                    file_reference.path_normalized, []
+                    file_reference.file_entry.path_normalized, []
                 )
                 requirements.append(requirement)
 
@@ -42,13 +42,13 @@ class FileTraceabilityIndex:
         for file_link in file_links:
             source_file_traceability_info: SourceFileTraceabilityInfo = (
                 self.map_paths_to_source_file_traceability_info.get(
-                    file_link.path_normalized
+                    file_link.file_entry.path_normalized
                 )
             )
             if not source_file_traceability_info:
                 print(
-                    f"warning: Requirement {requirement.uid} references "
-                    f"a file that does not exist: {file_link.path}"
+                    f"warning: Requirement {requirement.uid} references a file"
+                    f" that does not exist: {file_link.file_entry.file_path}"
                 )
                 matching_links_with_opt_ranges.append((file_link, None))
                 continue

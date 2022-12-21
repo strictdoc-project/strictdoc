@@ -3,6 +3,7 @@ from enum import Enum
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.sdoc.models.section import FreeText, Section
+from strictdoc.backend.sdoc.models.type_system import ReferenceType
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.rst.rst_templates import RSTTemplates
@@ -131,13 +132,15 @@ class RSTWriter:
             output += comment.get_comment()
             output += "\n\n"
 
-        requirement_references = section_content.get_requirement_references()
-        if len(requirement_references) > 0:
+        requirement_parent_refs = section_content.get_requirement_references(
+            ReferenceType.PARENT
+        )
+        if len(requirement_parent_refs) > 0:
             output += "**Parents:**"
             output += "\n\n"
-            for reference in requirement_references:
-                output += f"- ``[{reference.path}]`` "
-                output += f":ref:`{reference.path}`"
+            for reference in requirement_parent_refs:
+                output += f"- ``[{reference.ref_uid}]`` "
+                output += f":ref:`{reference.ref_uid}`"
                 output += "\n"
             output += "\n"
 

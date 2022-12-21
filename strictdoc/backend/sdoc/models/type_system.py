@@ -1,4 +1,5 @@
-from typing import List
+import os
+from typing import List, Optional
 
 
 class RequirementFieldName:
@@ -34,6 +35,32 @@ class RequirementFieldType:
 class GrammarReferenceType:
     PARENT_REQ_REFERENCE = "ParentReqReference"
     FILE_REFERENCE = "FileReference"
+
+
+class FileEntry:
+    def __init__(self, parent, file_format: Optional[str], file_path: str):
+        self.parent = parent
+        self.file_format = file_format  # Default: FileEntryFormat.SOURCECODE
+        self.file_path = file_path
+
+        path_forward_slashes = file_path.replace("\\", "/")
+        self.path_forward_slashes = path_forward_slashes
+        self.path_normalized = os.path.normpath(path_forward_slashes)
+
+    def __str__(self):
+        return (
+            f"FileEntry("
+            f"parent = {self.parent.__class__.__name__},"
+            f" file_format = {self.file_format},"
+            f" file_path = {self.file_path},"
+            f" path_forward_slashes = {self.path_forward_slashes},"
+            f" path_normalized = {self.path_normalized})"
+        )
+
+
+class FileEntryFormat:
+    SOURCECODE = "Sourcecode"
+    PYTHON = "Python"
 
 
 class ReferenceType:

@@ -108,7 +108,7 @@ COMMENT:
     assert sdoc_input == output
 
 
-def test_003_comments_02_single_line_empty_and_space():
+def test_003_comments_03_single_line_empty_and_space():
     sdoc_input = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -128,13 +128,35 @@ COMMENT:
     assert sdoc_input == output
 
 
-def test_003_comments_03_multiline_empty():
+def test_003_comments_04_multiline_empty():
     sdoc_input = """
 [DOCUMENT]
 TITLE: Test Doc
 
 [REQUIREMENT]
 COMMENT: >>>
+<<<
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+def test_003_comments_05_multiline_empty_with_one_newline():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+COMMENT: >>>
+
 <<<
 """.lstrip()
 

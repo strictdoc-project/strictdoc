@@ -189,7 +189,8 @@ class SDWriter:
                     output += f"{field_name}: >>>"
                     output += "\n"
                     if len(field.field_value_multiline) > 0:
-                        output += field.field_value_multiline
+                        if field.field_value_multiline != "\n":
+                            output += field.field_value_multiline
                         output += "\n"
                     output += "<<<"
                     output += "\n"

@@ -11,6 +11,7 @@ class RstToHtmlFragmentWriter:
 
     @staticmethod
     def write(rst_fragment):
+        assert isinstance(rst_fragment, str), rst_fragment
         if rst_fragment in RstToHtmlFragmentWriter.cache:
             return RstToHtmlFragmentWriter.cache[rst_fragment]
 

@@ -29,13 +29,26 @@ class RequirementField:
     ):
         self.parent = parent
         self.field_name = field_name
-        self.field_value: Optional[str] = field_value
 
-        self.field_value_multiline: Optional[str] = (
-            field_value_multiline.rstrip()
-            if field_value_multiline is not None
-            else None
-        )
+        if field_value_multiline is not None:
+            rstripped_field_value_multiline = field_value_multiline.rstrip()
+
+            # Edge case: empty multiline field should have one newline symbol.
+            # Example:
+            # COMMENT: >>>
+            #
+            # <<<
+            if (
+                len(rstripped_field_value_multiline) == 0
+                and len(field_value_multiline) != 0
+            ):
+                field_value_multiline = "\n"
+            else:
+                field_value_multiline = rstripped_field_value_multiline
+
+        self.field_value_multiline: Optional[str] = field_value_multiline
+
+        self.field_value: Optional[str] = field_value
 
         self.field_value_references: Optional[
             List[Reference]
@@ -134,7 +147,7 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
                 RequirementFieldName.COMMENT
             ]:
                 field = comment_field
-                if field.field_value_multiline:
+                if field.field_value_multiline is not None:
                     comments.append(
                         RequirementComment(
                             parent=self,
@@ -345,8 +358,15 @@ class RequirementComment:
     ):
         self.parent = parent
         self.comment_single: Optional[str] = comment_single
-
         self.comment_multiline: Optional[str] = comment_multiline
+
+        # The case when both are None is when a multi-line field has no text
+        # but only an empty space:
+        # [REQUIREMENT]
+        # COMMENT: <empty space symbol>
+        # assert comment_single is not None or comment_multiline is not None
+        # TODO: One solution to simplify this would be to disallow empty fields
+        # in the grammar completely.
 
     def __str__(self):
         return (

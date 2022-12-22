@@ -339,6 +339,10 @@ a.requirement_link-child::before {
   content: '\2192';
 }
 
+.requirement_link-external::before {
+  content: '\21D6';
+}
+
 .requirement_parent-uid,
 .requirement_child-uid {
   position: relative;

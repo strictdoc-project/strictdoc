@@ -1,6 +1,8 @@
 import os
 from typing import List, Optional
 
+from pybtex.database import Entry
+
 
 class RequirementFieldName:
     UID = "UID"
@@ -35,6 +37,7 @@ class RequirementFieldType:
 class GrammarReferenceType:
     PARENT_REQ_REFERENCE = "ParentReqReference"
     FILE_REFERENCE = "FileReference"
+    BIB_REFERENCE = "BibReference"
 
 
 class FileEntry:
@@ -63,13 +66,84 @@ class FileEntryFormat:
     PYTHON = "Python"
 
 
+class BibEntryFormat:
+    STRING = "String"
+    BIBTEX = "BibTex"
+    CITATION = "Citation"
+
+
+class BibEntry:
+    def __init__(self, parent, bib_format: Optional[str], bib_value: str):
+        self.parent = parent
+        self.bib_format = bib_format or BibEntryFormat.STRING
+        self.bib_value = bib_value
+        self.ref_cite = None
+        self.ref_detail = None
+        self.bibtex_entry = None
+
+        if self.bib_format == BibEntryFormat.STRING:
+            # <CitationKey>, <Entry details>
+            # Note: A STRING entry is converted in a BibTex @misc entry type
+            # where the details are put in the Entries "note" field.
+            # An empty details field is treated as a Citation!
+            cite, detail = (
+                bib_value.split(",", 1) if "," in bib_value else (bib_value, "")
+            )
+            self.ref_cite = cite.strip()
+            self.ref_detail = (
+                detail.strip()
+                if (isinstance(detail, str) and len(detail) > 0)
+                else None
+            )
+            if self.ref_detail:
+                self.bibtex_entry = Entry(
+                    "misc", fields={"note": self.ref_detail}
+                )
+                self.bibtex_entry.key = self.ref_cite
+            # TODO In case of a Citation, Verify/Reference the cited BibEntry
+
+        elif self.bib_format == BibEntryFormat.BIBTEX:
+            # @<BibTex entry type>{<CitationKey>, <BibTex key-value pairs>}
+            self.bibtex_entry = Entry.from_string(bib_value, "bibtex")
+            self.ref_cite = self.bibtex_entry.key
+
+        elif self.bib_format == BibEntryFormat.CITATION:
+            # <CitationKey>[, <Reference details>]
+            # Ref.Details may include additional info about the subsection,
+            # paragraph, page(s), etc. to be referenced, not already included
+            # in the cited BibTex entry
+            cite, detail = (
+                bib_value.split(",", 1) if "," in bib_value else (bib_value, "")
+            )
+            self.ref_cite = cite.strip()
+            self.ref_detail = (
+                detail.strip()
+                if (isinstance(detail, str) and len(detail) > 0)
+                else None
+            )
+            # TODO Verify/Reference the cited BibEntry
+
+    def __str__(self):
+        return (
+            f"BibEntry("
+            f"parent = {self.parent.__class__.__name__},"
+            f"ref_format = {self.bib_format},"
+            f" bib_value = {self.bib_value})"
+            f" ref_cite = {self.ref_cite})"
+            f" ref_detail = {self.ref_detail})"
+            f" bibtex_entry = {self.bibtex_entry})"
+        )
+
+
 class ReferenceType:
     PARENT = "Parent"
     FILE = "File"
+    BIB_REF = "BibRef"
 
     GRAMMAR_REFERENCE_TYPE_MAP = {
         PARENT: GrammarReferenceType.PARENT_REQ_REFERENCE,
         FILE: GrammarReferenceType.FILE_REFERENCE,
+        BIB_REF: GrammarReferenceType.BIB_REFERENCE,
     }
 
 

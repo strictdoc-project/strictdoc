@@ -86,6 +86,28 @@ data-status='{{ requirement.status.lower() }}'
     </tr>
     {%- endif %}
 
+    {%- if requirement.has_requirement_references("BibRef") %}
+    <tr>
+      <th>
+        external&nbsp;refs:
+      </th>
+      <td>
+        <ul class="requirement_link">
+          {%- for bib_ref in requirement.get_requirement_references("BibRef") %}
+          <li>
+            <span class="requirement_link-external">
+              {{ bib_ref.bib_entry.ref_cite if bib_ref.bib_entry.ref_cite else "" }}
+              {%- if bib_ref.bib_entry.ref_detail %}
+                : {{ bib_ref.bib_entry.ref_detail }}
+              {%- endif %}
+            </span>
+          </li>
+          {%- endfor %}
+        </ul>
+      </td>
+    </tr>
+    {%- endif %}
+
     {# {% include "_shared/requirement_block/files_list.jinja.html" %} #}
     {%- if config.experimental_enable_file_traceability -%}
     {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}

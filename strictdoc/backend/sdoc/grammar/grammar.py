@@ -94,7 +94,7 @@ GrammarElementFieldReference[noskipws]:
 ;
 
 ReferenceType[noskipws]:
-  ('ParentReqReference' | 'FileReference')
+  ('ParentReqReference' | 'FileReference' | 'BibReference')
 ;
 
 ReferenceTypeXs[noskipws]:

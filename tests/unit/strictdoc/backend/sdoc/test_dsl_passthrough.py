@@ -7,13 +7,17 @@ from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.reference import (
     FileReference,
     ParentReqReference,
+    BibReference,
 )
 from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
     CompositeRequirement,
 )
 from strictdoc.backend.sdoc.models.section import Section
-from strictdoc.backend.sdoc.models.type_system import ReferenceType
+from strictdoc.backend.sdoc.models.type_system import (
+    ReferenceType,
+    BibEntryFormat,
+)
 from strictdoc.backend.sdoc.reader import SDReader
 from strictdoc.backend.sdoc.writer import SDWriter
 
@@ -1087,7 +1091,7 @@ ELEMENTS:
     TYPE: String
     REQUIRED: True
   - TITLE: REFS
-    TYPE: Reference(ParentReqReference, FileReference)
+    TYPE: Reference(ParentReqReference, FileReference, BibReference)
     REQUIRED: False
 
 [LOW_LEVEL_REQUIREMENT]
@@ -1100,6 +1104,9 @@ REFS:
   VALUE: /tmp/sample0.cpp
 - TYPE: Parent
   VALUE: ID-000
+- TYPE: BibRef
+  FORMAT: BibTex
+  VALUE: @book{hawking1989brief, title={A Brief History of Time: From the Big Bang to Black Holes}, author={Hawking, Stephen}, isbn={9780553176988}, year={1989}, publisher={Bantam Books} }
 
 [LOW_LEVEL_REQUIREMENT]
 UID: ID-002
@@ -1110,6 +1117,9 @@ REFS:
   VALUE: /tmp/sample1.cpp
 - TYPE: File
   VALUE: /tmp/sample2.cpp
+- TYPE: BibRef
+  FORMAT: String
+  VALUE: SampleCiteKeyStringRef-1, "The sample BibReference String-Format"
 """.lstrip()
 
     reader = SDReader()
@@ -1119,7 +1129,7 @@ REFS:
 
     ll_requirement = document.section_contents[2]
     references = ll_requirement.references
-    assert len(references) == 3
+    assert len(references) == 4
 
     reference = references[0]
     assert isinstance(reference, ParentReqReference)
@@ -1135,6 +1145,14 @@ REFS:
     assert reference.ref_type == ReferenceType.FILE
     assert isinstance(reference, FileReference)
     assert reference.file_entry.file_path == "/tmp/sample2.cpp"
+
+    reference = references[3]
+    assert reference.ref_type == ReferenceType.BIB_REF
+    assert isinstance(reference, BibReference)
+    assert (
+        reference.bib_entry.bib_value == "SampleCiteKeyStringRef-1, "
+        '"The sample BibReference String-Format"'
+    )
 
     writer = SDWriter()
     output = writer.write(document)
@@ -1152,7 +1170,7 @@ ELEMENTS:
 - TAG: LOW_LEVEL_REQUIREMENT
   FIELDS:
   - TITLE: REFS
-    TYPE: Reference(ParentReqReference, FileReference)
+    TYPE: Reference(ParentReqReference, FileReference, BibReference)
     REQUIRED: False
 
 [LOW_LEVEL_REQUIREMENT]
@@ -1191,7 +1209,7 @@ ELEMENTS:
 - TAG: LOW_LEVEL_REQUIREMENT
   FIELDS:
   - TITLE: REFS
-    TYPE: Reference(ParentReqReference, FileReference)
+    TYPE: Reference(ParentReqReference, FileReference, BibReference)
     REQUIRED: False
 
 [LOW_LEVEL_REQUIREMENT]
@@ -1287,7 +1305,7 @@ ELEMENTS:
     TYPE: String
     REQUIRED: True
   - TITLE: REFS
-    TYPE: Reference(ParentReqReference, FileReference)
+    TYPE: Reference(ParentReqReference, FileReference, BibReference)
     REQUIRED: False
 
 [LOW_LEVEL_REQUIREMENT]
@@ -1341,7 +1359,7 @@ ELEMENTS:
     TYPE: String
     REQUIRED: True
   - TITLE: REFS
-    TYPE: Reference(ParentReqReference, FileReference)
+    TYPE: Reference(ParentReqReference, FileReference, BibReference)
     REQUIRED: False
 
 [LOW_LEVEL_REQUIREMENT]
@@ -1425,4 +1443,210 @@ REFS:
         f" = /tmp/sample1.cpp, path_forward_slashes ="
         f" /tmp/sample1.cpp, path_normalized = .+tmp.+sample1.cpp\\)\\)",
         exc_info.value.args[0],
+    )
+
+
+def test_167_grammar_refs_bib():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: LOW_LEVEL_REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: REFS
+    TYPE: Reference(ParentReqReference, FileReference, BibReference)
+    REQUIRED: False
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-000
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-001
+REFS:
+- TYPE: File
+  VALUE: /tmp/sample0.cpp
+- TYPE: Parent
+  VALUE: ID-000
+- TYPE: BibRef
+  FORMAT: BibTex
+  VALUE: @book{hawking1989brief, title={A Brief History of Time: From the Big Bang to Black Holes}, author={Hawking, Stephen}, isbn={9780553176988}, year={1989}, publisher={Bantam Books} }
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-002
+REFS:
+- TYPE: Parent
+  VALUE: ID-001
+- TYPE: BibRef
+  FORMAT: String
+  VALUE: SampleCiteKeyStringRef-1, "The sample BibReference String-Format"
+- TYPE: BibRef
+  FORMAT: String
+  VALUE: SampleCiteKeyStringRef-2
+- TYPE: BibRef
+  FORMAT: Citation
+  VALUE: hawking1989brief, section 2.1
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    ll_requirement = document.section_contents[2]
+    references = ll_requirement.references
+    assert len(references) == 4
+
+    reference = references[1]
+    assert isinstance(reference, BibReference)
+    assert reference.ref_type == ReferenceType.BIB_REF
+    assert reference.bib_entry.bib_format == BibEntryFormat.STRING
+    assert (
+        reference.bib_entry.bib_value == "SampleCiteKeyStringRef-1,"
+        ' "The sample BibReference'
+        ' String-Format"'
+    )
+    assert reference.bib_entry.ref_cite == "SampleCiteKeyStringRef-1"
+    assert (
+        reference.bib_entry.ref_detail
+        == '"The sample BibReference String-Format"'
+    )
+    assert reference.bib_entry.bibtex_entry.type == "misc"
+    assert (
+        reference.bib_entry.bibtex_entry.fields["note"]
+        == '"The sample BibReference String-Format"'
+    )
+
+    reference = references[2]
+    assert isinstance(reference, BibReference)
+    assert reference.ref_type == ReferenceType.BIB_REF
+    assert reference.bib_entry.bib_format == BibEntryFormat.STRING
+    assert reference.bib_entry.bib_value == "SampleCiteKeyStringRef-2"
+    assert reference.bib_entry.ref_cite == "SampleCiteKeyStringRef-2"
+    assert reference.bib_entry.ref_detail is None
+    assert reference.bib_entry.bibtex_entry is None
+
+    reference = references[3]
+    assert isinstance(reference, BibReference)
+    assert reference.ref_type == ReferenceType.BIB_REF
+    assert reference.bib_entry.bib_format == BibEntryFormat.CITATION
+    assert reference.bib_entry.bib_value == "hawking1989brief, section 2.1"
+    assert reference.bib_entry.ref_cite == "hawking1989brief"
+    assert reference.bib_entry.ref_detail == "section 2.1"
+    assert reference.bib_entry.bibtex_entry is None
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+def test_168_grammar_refs_bib_multi():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: LOW_LEVEL_REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: REFS
+    TYPE: Reference(ParentReqReference, FileReference, BibReference)
+    REQUIRED: False
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-000
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-001
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-002
+REFS:
+- TYPE: BibRef
+  FORMAT: String
+  VALUE: SampleCiteKeyStringRef-1, "The sample BibReference String-Format"
+- TYPE: BibRef
+  FORMAT: BibTex
+  VALUE: @book{hawking1989brief, title={A Brief History of Time: From the Big Bang to Black Holes}, author={Hawking, Stephen}, isbn={9780553176988}, year={1989}, publisher={Bantam Books} }
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    ll_requirement = document.section_contents[2]
+    references = ll_requirement.references
+    assert len(references) == 2
+
+    reference = references[0]
+    assert isinstance(reference, BibReference)
+    assert reference.ref_type == ReferenceType.BIB_REF
+    assert (
+        reference.bib_entry.bib_value == "SampleCiteKeyStringRef-1, "
+        '"The sample BibReference String-Format"'
+    )
+
+    reference = references[1]
+    assert isinstance(reference, BibReference)
+    assert reference.ref_type == ReferenceType.BIB_REF
+    assert (
+        reference.bib_entry.bib_value == "@book{hawking1989brief, "
+        "title={A Brief "
+        "History of Time: From the Big Bang to Black Holes}, author={Hawking, Stephen}, isbn={9780553176988}, year={1989}, publisher={Bantam Books} }"
+    )
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+def test_169_grammar_refs_bib_only():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: LOW_LEVEL_REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: REFS
+    TYPE: Reference(BibReference)
+    REQUIRED: False
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-001
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-002
+REFS:
+- TYPE: Parent
+  VALUE: ID-001
+- TYPE: BibRef
+  FORMAT: BibTex
+  VALUE: @book{hawking1989brief, title={A Brief History of Time: From the Big Bang to Black Holes}, author={Hawking, Stephen}, isbn={9780553176988}, year={1989}, publisher={Bantam Books} }
+""".lstrip()
+
+    reader = SDReader()
+    with pytest.raises(Exception) as exc_info:
+        _ = reader.read(sdoc_input)
+
+    assert exc_info.type is StrictDocSemanticError
+
+    assert (
+        exc_info.value.args[0]
+        == "Requirement field of type Reference has an unsupported Reference "
+        "Type item: ParentReqReference(parent = REFS, ref_uid = ID-001)"
     )

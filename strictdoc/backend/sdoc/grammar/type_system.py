@@ -23,7 +23,7 @@ MultiLineString[noskipws]:
 
 Reference[noskipws]:
   // FileReference is an early, experimental feature. Do not use yet.
-  ParentReqReference | FileReference
+  ParentReqReference | FileReference | BibReference
 ;
 
 ParentReqReference[noskipws]:
@@ -44,6 +44,20 @@ FileEntry[noskipws]:
 
 FileEntryFormat[noskipws]:
   'Sourcecode' | 'Python' | /[A-Z]+[A-Z_]*/
+;
+
+BibReference[noskipws]:
+  '- TYPE: BibRef' '\n'
+  bib_entry = BibEntry
+;
+
+BibEntry[noskipws]:
+  ('  FORMAT: ' bib_format = BibEntryFormat '\n')?
+   '  VALUE: ' bib_value = /.*$/ '\n'
+;
+
+BibEntryFormat[noskipws]:
+  'String' | 'BibTex' | 'Citation'
 ;
 
 """

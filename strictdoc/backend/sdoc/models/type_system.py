@@ -86,13 +86,19 @@ class BibEntry:
             # Note: A STRING entry is converted in a BibTex @misc entry type
             # where the details are put in the Entries "note" field.
             # An empty details field is treated as a Citation!
-            cite, detail = bib_value.split(",", 1) if "," in bib_value \
-                else (bib_value, "")
+            cite, detail = (
+                bib_value.split(",", 1) if "," in bib_value else (bib_value, "")
+            )
             self.ref_cite = cite.strip()
-            self.ref_detail = detail.strip() if (isinstance(detail, str) and
-                                                 len(detail) > 0) else None
+            self.ref_detail = (
+                detail.strip()
+                if (isinstance(detail, str) and len(detail) > 0)
+                else None
+            )
             if self.ref_detail:
-                self.bibtex_entry = Entry("misc", fields={"note": self.ref_detail})
+                self.bibtex_entry = Entry(
+                    "misc", fields={"note": self.ref_detail}
+                )
                 self.bibtex_entry.key = self.ref_cite
             # TODO In case of a Citation, Verify/Reference the cited BibEntry
 
@@ -106,11 +112,15 @@ class BibEntry:
             # Ref.Details may include additional info about the subsection,
             # paragraph, page(s), etc. to be referenced, not already included
             # in the cited BibTex entry
-            cite, detail = bib_value.split(",", 1) if "," in bib_value \
-                else (bib_value, "")
+            cite, detail = (
+                bib_value.split(",", 1) if "," in bib_value else (bib_value, "")
+            )
             self.ref_cite = cite.strip()
-            self.ref_detail = detail.strip() if (isinstance(detail, str) and
-                                                 len(detail) > 0) else None
+            self.ref_detail = (
+                detail.strip()
+                if (isinstance(detail, str) and len(detail) > 0)
+                else None
+            )
             # TODO Verify/Reference the cited BibEntry
 
     def __str__(self):

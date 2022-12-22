@@ -14,8 +14,10 @@ from strictdoc.backend.sdoc.models.requirement import (
     CompositeRequirement,
 )
 from strictdoc.backend.sdoc.models.section import Section
-from strictdoc.backend.sdoc.models.type_system import ReferenceType, \
-    BibEntryFormat
+from strictdoc.backend.sdoc.models.type_system import (
+    ReferenceType,
+    BibEntryFormat,
+)
 from strictdoc.backend.sdoc.reader import SDReader
 from strictdoc.backend.sdoc.writer import SDWriter
 
@@ -1503,34 +1505,39 @@ REFS:
     assert isinstance(reference, BibReference)
     assert reference.ref_type == ReferenceType.BIB_REF
     assert reference.bib_entry.bib_format == BibEntryFormat.STRING
-    assert (reference.bib_entry.bib_value == 'SampleCiteKeyStringRef-1,'
-                                             ' "The sample BibReference'
-                                             ' String-Format"'
+    assert (
+        reference.bib_entry.bib_value == "SampleCiteKeyStringRef-1,"
+        ' "The sample BibReference'
+        ' String-Format"'
     )
-    assert (reference.bib_entry.ref_cite == "SampleCiteKeyStringRef-1")
-    assert (reference.bib_entry.ref_detail ==
-            '"The sample BibReference String-Format"')
-    assert (reference.bib_entry.bibtex_entry.type == "misc")
-    assert (reference.bib_entry.bibtex_entry.fields['note'] ==
-            '"The sample BibReference String-Format"')
+    assert reference.bib_entry.ref_cite == "SampleCiteKeyStringRef-1"
+    assert (
+        reference.bib_entry.ref_detail
+        == '"The sample BibReference String-Format"'
+    )
+    assert reference.bib_entry.bibtex_entry.type == "misc"
+    assert (
+        reference.bib_entry.bibtex_entry.fields["note"]
+        == '"The sample BibReference String-Format"'
+    )
 
     reference = references[2]
     assert isinstance(reference, BibReference)
     assert reference.ref_type == ReferenceType.BIB_REF
     assert reference.bib_entry.bib_format == BibEntryFormat.STRING
-    assert (reference.bib_entry.bib_value == 'SampleCiteKeyStringRef-2')
-    assert (reference.bib_entry.ref_cite == "SampleCiteKeyStringRef-2")
-    assert (reference.bib_entry.ref_detail is None)
-    assert (reference.bib_entry.bibtex_entry is None)
+    assert reference.bib_entry.bib_value == "SampleCiteKeyStringRef-2"
+    assert reference.bib_entry.ref_cite == "SampleCiteKeyStringRef-2"
+    assert reference.bib_entry.ref_detail is None
+    assert reference.bib_entry.bibtex_entry is None
 
     reference = references[3]
     assert isinstance(reference, BibReference)
     assert reference.ref_type == ReferenceType.BIB_REF
     assert reference.bib_entry.bib_format == BibEntryFormat.CITATION
-    assert (reference.bib_entry.bib_value == 'hawking1989brief, section 2.1')
-    assert (reference.bib_entry.ref_cite == "hawking1989brief")
-    assert (reference.bib_entry.ref_detail == 'section 2.1')
-    assert (reference.bib_entry.bibtex_entry is None)
+    assert reference.bib_entry.bib_value == "hawking1989brief, section 2.1"
+    assert reference.bib_entry.ref_cite == "hawking1989brief"
+    assert reference.bib_entry.ref_detail == "section 2.1"
+    assert reference.bib_entry.bibtex_entry is None
 
     writer = SDWriter()
     output = writer.write(document)

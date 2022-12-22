@@ -1,14 +1,5 @@
-from typing import List
-
-import pytest
-
-from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.sdoc.reader import SDReader
-from strictdoc.backend.source_file_syntax.reader import (
-    SourceFileTraceabilityReader,
-    RangePragma,
-)
 
 
 def test_001_additional_field_in_grammar():
@@ -33,7 +24,7 @@ ELEMENTS:
     TYPE: String
     REQUIRED: False
   - TITLE: REFS
-    TYPE: Reference(ParentReqReference, FileReference)
+    TYPE: Reference(ParentReqReference, FileReference, BibReference)
     REQUIRED: False
   - TITLE: TITLE
     TYPE: String

@@ -92,6 +92,7 @@ class DocumentGrammar:
                 types=[
                     GrammarReferenceType.PARENT_REQ_REFERENCE,
                     GrammarReferenceType.FILE_REFERENCE,
+                    GrammarReferenceType.BIB_REFERENCE,
                 ],
                 required="False",
             ),

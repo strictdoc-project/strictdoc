@@ -4,6 +4,7 @@ from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.reference import (
+    BibReference,
     Reference,
     FileReference,
     ParentReqReference,
@@ -202,7 +203,15 @@ class SDWriter:
                         output += reference.ref_type
                         output += "\n"
 
-                        if isinstance(reference, FileReference):
+                        if isinstance(reference, BibReference):
+                            ref: BibReference = reference
+                            output += "  FORMAT: "
+                            output += ref.bib_entry.bib_format
+                            output += "\n"
+                            output += "  VALUE: "
+                            output += ref.bib_entry.bib_value
+                            output += "\n"
+                        elif isinstance(reference, FileReference):
                             ref: FileReference = reference
                             if ref.file_entry.file_format:
                                 output += "  FORMAT: "

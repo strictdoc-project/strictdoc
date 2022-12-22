@@ -1,5 +1,6 @@
 from strictdoc.backend.sdoc.models.type_system import (
     ReferenceType,
+    BibEntry,
     FileEntry,
 )
 
@@ -43,4 +44,18 @@ class ParentReqReference(Reference):
             f"ParentReqReference("
             f"parent = {self.parent.field_name},"
             f" ref_uid = {self.ref_uid})"
+        )
+
+
+class BibReference(Reference):
+    def __init__(self, parent, bib_entry: BibEntry):
+        super().__init__(ReferenceType.BIB_REF, parent)
+        self.bib_entry = bib_entry
+        # TODO Add bib_entry into Parent-Root Document.Bibliography
+
+    def __str__(self):
+        return (
+            f"BibReference("
+            f"parent = {self.parent.field_name},"
+            f" bib_entry = {self.bib_entry})"
         )

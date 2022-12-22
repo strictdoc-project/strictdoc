@@ -11,6 +11,7 @@ from strictdoc.backend.sdoc.models.reference import (
     Reference,
     ParentReqReference,
     FileReference,
+    BibReference,
 )
 from strictdoc.backend.sdoc.models.requirement import (
     RequirementComment,
@@ -26,6 +27,7 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldTag,
     GrammarElementFieldReference,
     FileEntry,
+    BibEntry,
 )
 
 SECTION_MODELS = [
@@ -38,9 +40,11 @@ SECTION_MODELS = [
     Reference,
     ParentReqReference,
     FileReference,
+    BibReference,
     FreeText,
     InlineLink,
     FileEntry,
+    BibEntry,
 ]
 
 DOCUMENT_MODELS = [

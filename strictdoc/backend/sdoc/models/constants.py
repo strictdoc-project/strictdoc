@@ -1,5 +1,8 @@
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document_bibliography import (
+    DocumentBibliography,
+)
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
@@ -23,12 +26,14 @@ from strictdoc.backend.sdoc.models.requirement import (
 from strictdoc.backend.sdoc.models.section import FreeText, Section
 from strictdoc.backend.sdoc.models.type_system import (
     BibEntry,
+    BibFileEntry,
     FileEntry,
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldReference,
     GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
     GrammarElementFieldTag,
+    GrammarElementRelationBibtex,
     GrammarElementRelationChild,
     GrammarElementRelationFile,
     GrammarElementRelationParent,
@@ -48,6 +53,7 @@ SECTION_MODELS = [
     FreeText,
     InlineLink,
     Anchor,
+    BibFileEntry,
     FileEntry,
     BibEntry,
 ]
@@ -56,12 +62,14 @@ DOCUMENT_MODELS = [
     DocumentConfig,
     Document,
     DocumentGrammar,
+    DocumentBibliography,
     GrammarElement,
     GrammarElementFieldString,
     GrammarElementFieldSingleChoice,
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldTag,
     GrammarElementFieldReference,
+    GrammarElementRelationBibtex,
     GrammarElementRelationParent,
     GrammarElementRelationChild,
     GrammarElementRelationFile,

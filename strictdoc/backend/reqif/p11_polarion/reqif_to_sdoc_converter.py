@@ -288,7 +288,7 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         document_config: DocumentConfig = DocumentConfig.default_config(None)
         document_config.markup = "HTML"
         document_title = title if title else "<No title>"
-        document = Document(document_title, document_config, None, [], [])
+        document = Document(document_title, document_config, None, None, [], [])
         document.grammar = DocumentGrammar.create_default(document)
         return document
 

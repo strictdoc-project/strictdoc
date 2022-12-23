@@ -258,7 +258,7 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
     def create_document(title: Optional[str]) -> Document:
         document_config = DocumentConfig.default_config(None)
         document_title = title if title else "<No title>"
-        document = Document(document_title, document_config, None, [], [])
+        document = Document(document_title, document_config, None, None, [], [])
         document.grammar = DocumentGrammar.create_default(document)
         # FIXME: One day this will go away.
         document.ng_at_least_one_relations_field = False

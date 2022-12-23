@@ -42,6 +42,7 @@ class ConfluenceHTMLTableImport:
             title="Imported Doc",
             config=None,
             grammar=None,
+            bibliography=None,
             free_texts=[],
             section_contents=[],
         )

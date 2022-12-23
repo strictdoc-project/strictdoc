@@ -113,7 +113,7 @@ class DocumentBuilder:
         free_texts = []
         section_contents = []
         document = Document(
-            "Test Document", config, None, free_texts, section_contents
+            "Test Document", config, None, None, free_texts, section_contents
         )
         document.grammar = DocumentGrammar.create_default(document)
         return document

@@ -1,6 +1,9 @@
 from enum import Enum
 
 from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document_bibliography import (
+    DocumentBibliography,
+)
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.reference import (
@@ -21,6 +24,8 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldTag,
     GrammarElementFieldReference,
     RequirementFieldType,
+    BibEntry,
+    FileEntry,
 )
 from strictdoc.core.document_iterator import DocumentCachingIterator
 
@@ -107,6 +112,9 @@ class SDWriter:
                 output += "\n  FIELDS:\n"
                 for grammar_field in element.fields:
                     output += SDWriter._print_grammar_field_type(grammar_field)
+
+        output += SDWriter._print_bibliography(document.bibliography)
+
         for free_text in document.free_texts:
             output += "\n"
             output += self._print_free_text(free_text)
@@ -206,21 +214,14 @@ class SDWriter:
 
                         if isinstance(reference, BibReference):
                             ref: BibReference = reference
-                            output += "  FORMAT: "
-                            output += ref.bib_entry.bib_format
-                            output += "\n"
-                            output += "  VALUE: "
-                            output += ref.bib_entry.bib_value
-                            output += "\n"
+                            output += SDWriter._print_bib_entry(
+                                False, ref.bib_entry
+                            )
                         elif isinstance(reference, FileReference):
                             ref: FileReference = reference
-                            if ref.file_entry.file_format:
-                                output += "  FORMAT: "
-                                output += ref.file_entry.file_format
-                                output += "\n"
-                            output += "  VALUE: "
-                            output += ref.file_entry.file_path
-                            output += "\n"
+                            output += SDWriter._print_file_entry(
+                                False, ref.file_entry
+                            )
                         elif isinstance(reference, ParentReqReference):
                             ref: ParentReqReference = reference
                             output += "  VALUE: "
@@ -300,6 +301,65 @@ class SDWriter:
         output += "    REQUIRED: "
         output += "True" if grammar_field.required else "False"
         output += "\n"
+        return output
+
+    @staticmethod
+    def _print_bibliography(doc_bibliography: DocumentBibliography) -> str:
+        output = ""
+        if doc_bibliography:
+            assert isinstance(doc_bibliography, DocumentBibliography)
+            output = "\n[BIBLIOGRAPHY]\n"
+            if doc_bibliography.bib_files:
+                output += "BIBFILES:\n"
+                for file_entry in doc_bibliography.bib_files:
+                    output += "- "
+                    if file_entry.file_format:
+                        output += "FORMAT: "
+                        output += file_entry.file_format
+                        output += "\n  "
+                    output += "VALUE: "
+                    output += file_entry.file_path
+                    output += "\n"
+            if doc_bibliography.bib_entries:
+                output += "ENTRIES:\n"
+                bib_entry: BibEntry
+                for bib_entry in doc_bibliography.bib_entries:
+                    output += SDWriter._print_bib_entry(True, bib_entry)
+
+        return output
+
+    @staticmethod
+    def _print_bib_entry(row_separator, bib_entry: BibEntry) -> str:
+        output = ""
+        if row_separator:
+            output += "- "
+        else:
+            output += "  "
+        if bib_entry.bib_format:
+            output += "FORMAT: "
+            output += bib_entry.bib_format
+            output += "\n  "
+        output += "VALUE: "
+        output += bib_entry.bib_value
+        output += "\n"
+
+        return output
+
+    @staticmethod
+    def _print_file_entry(row_separator, file_entry: FileEntry) -> str:
+        output = ""
+        if row_separator:
+            output += "- "
+        else:
+            output += "  "
+        if file_entry.file_format:
+            output += "FORMAT: "
+            output += file_entry.file_format
+            output += "\n  "
+        output += "VALUE: "
+        output += file_entry.file_path
+        output += "\n"
+
         return output
 
     @staticmethod

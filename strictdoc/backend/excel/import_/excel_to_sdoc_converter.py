@@ -127,7 +127,7 @@ class ExcelToSDocConverter:
     def create_document(title: Optional[str], extra_header_pairs) -> Document:
         document_config = DocumentConfig.default_config(None)
         document_title = title if title else "<No title>"
-        document = Document(document_title, document_config, None, [], [])
+        document = Document(document_title, document_config, None, None, [], [])
 
         fields = DocumentGrammar.create_default(document).elements[0].fields
         for _, name in extra_header_pairs:

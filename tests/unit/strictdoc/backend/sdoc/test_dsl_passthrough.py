@@ -22,6 +22,11 @@ from strictdoc.backend.sdoc.reader import SDReader
 from strictdoc.backend.sdoc.writer import SDWriter
 
 
+@pytest.fixture(autouse=True)
+def change_test_dir(request, monkeypatch):
+    monkeypatch.chdir(request.fspath.dirname)
+
+
 def test_001_minimal_doc():
     sdoc_input = """
 [DOCUMENT]
@@ -1671,6 +1676,130 @@ REFS:
         'Type item: ParentReqReference\\(.*ref_uid = "ID-001".*\\)',
         exc_info.value.args[0],
     )
+
+
+def test_170_grammar_document_bibliography():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: LOW_LEVEL_REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: REFS
+    TYPE: Reference(ParentReqReference, FileReference, BibReference)
+    REQUIRED: False
+
+[BIBLIOGRAPHY]
+BIBFILES:
+- FORMAT: BibTex
+  VALUE: bib-files/ctan_bibtex-test_test.bib
+- FORMAT: BibTex
+  VALUE: bib-files/ctan_biblatex-examples.bib
+ENTRIES:
+- FORMAT: String
+  VALUE: RFC-0000, Testing only
+- FORMAT: String
+  VALUE: RFC-8446, "TLS Protocol Version 1.3", https://www.rfc-editor.org/rfc/rfc8446
+- FORMAT: String
+  VALUE: RFC-5246, "TLS Protocol Version 1.2", https://www.rfc-editor.org/rfc/rfc5246
+- FORMAT: BibTex
+  VALUE: @misc{CitekeyMisc, title="Pluto: The 'Other' Red Planet", author= "{NASA}", url="https://www.nasa.gov/nh/pluto-the-other-red-planet", year=2015, note="Accessed: 2022-12-23"}
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-000
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-001
+REFS:
+- TYPE: Parent
+  VALUE: ID-000
+- TYPE: BibRef
+  FORMAT: BibTex
+  VALUE: @book{hawking1989brief, title={A Brief History of Time: From the Big Bang to Black Holes}, author={Hawking, Stephen}, isbn={9780553176988}, year={1989}, publisher={Bantam Books} }
+
+[LOW_LEVEL_REQUIREMENT]
+UID: ID-002
+REFS:
+- TYPE: Parent
+  VALUE: ID-001
+- TYPE: BibRef
+  FORMAT: String
+  VALUE: SampleCiteKeyStringRef-1, "The sample BibReference String-Format"
+- TYPE: BibRef
+  FORMAT: String
+  VALUE: SampleCiteKeyStringRef-2
+- TYPE: BibRef
+  FORMAT: Citation
+  VALUE: hawking1989brief, section 2.1
+""".lstrip()  # noqa: E501
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    doc_bib = document.bibliography
+    assert len(doc_bib.bib_files) == 2
+    assert len(doc_bib.bib_db.entries) == 181
+
+    file_entry = doc_bib.bib_files[0]
+    assert file_entry.file_path == "bib-files/ctan_bibtex-test_test.bib"
+    file_entry = doc_bib.bib_files[1]
+    assert file_entry.file_path == "bib-files/ctan_biblatex-examples.bib"
+
+    assert len(doc_bib.bib_entries) == 4
+
+    ll_requirement = document.section_contents[2]
+    references = ll_requirement.references
+    assert len(references) == 4
+
+    reference = references[1]
+    assert isinstance(reference, BibReference)
+    assert reference.ref_type == ReferenceType.BIB_REF
+    assert reference.bib_entry.bib_format == BibEntryFormat.STRING
+    assert (
+        reference.bib_entry.bib_value == "SampleCiteKeyStringRef-1,"
+        ' "The sample BibReference'
+        ' String-Format"'
+    )
+    assert reference.bib_entry.ref_cite == "SampleCiteKeyStringRef-1"
+    assert (
+        reference.bib_entry.ref_detail
+        == '"The sample BibReference String-Format"'
+    )
+    assert reference.bib_entry.bibtex_entry.type == "misc"
+    assert (
+        reference.bib_entry.bibtex_entry.fields["note"]
+        == '"The sample BibReference String-Format"'
+    )
+
+    reference = references[2]
+    assert isinstance(reference, BibReference)
+    assert reference.ref_type == ReferenceType.BIB_REF
+    assert reference.bib_entry.bib_format == BibEntryFormat.STRING
+    assert reference.bib_entry.bib_value == "SampleCiteKeyStringRef-2"
+    assert reference.bib_entry.ref_cite == "SampleCiteKeyStringRef-2"
+    assert reference.bib_entry.ref_detail is None
+    assert reference.bib_entry.bibtex_entry is None
+
+    reference = references[3]
+    assert isinstance(reference, BibReference)
+    assert reference.ref_type == ReferenceType.BIB_REF
+    assert reference.bib_entry.bib_format == BibEntryFormat.CITATION
+    assert reference.bib_entry.bib_value == "hawking1989brief, section 2.1"
+    assert reference.bib_entry.ref_cite == "hawking1989brief"
+    assert reference.bib_entry.ref_detail == "section 2.1"
+    assert reference.bib_entry.bibtex_entry is None
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
 
 
 def test_210_uid_not_specified():

@@ -1,4 +1,7 @@
 from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document_bibliography import (
+    DocumentBibliography,
+)
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
@@ -26,6 +29,7 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldTag,
     GrammarElementFieldReference,
     FileEntry,
+    BibFileEntry,
     BibEntry,
 )
 
@@ -41,6 +45,7 @@ SECTION_MODELS = [
     BibReference,
     FreeText,
     InlineLink,
+    BibFileEntry,
     FileEntry,
     BibEntry,
 ]
@@ -49,6 +54,7 @@ DOCUMENT_MODELS = [
     DocumentConfig,
     Document,
     DocumentGrammar,
+    DocumentBibliography,
     GrammarElement,
     GrammarElementFieldString,
     GrammarElementFieldSingleChoice,

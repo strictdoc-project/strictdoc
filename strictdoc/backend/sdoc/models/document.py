@@ -1,6 +1,9 @@
 import uuid
 from typing import Optional
 
+from strictdoc.backend.sdoc.models.document_bibliography import (
+    DocumentBibliography,
+)
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.core.document_meta import DocumentMeta
@@ -14,6 +17,7 @@ class Document:  # pylint: disable=too-many-instance-attributes
         title: str,
         config: Optional[DocumentConfig],
         grammar: Optional[DocumentGrammar],
+        bibliography: Optional[DocumentBibliography],
         free_texts,
         section_contents,
     ):
@@ -22,6 +26,7 @@ class Document:  # pylint: disable=too-many-instance-attributes
         self.title: str = title
         self.config = config if config else DocumentConfig.default_config(self)
         self.grammar: Optional[DocumentGrammar] = grammar
+        self.bibliography: Optional[DocumentBibliography] = bibliography
         self.free_texts = free_texts
         self.section_contents = section_contents
 

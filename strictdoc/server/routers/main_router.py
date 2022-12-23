@@ -1423,6 +1423,7 @@ def create_main_router(
             title=document_title,
             config=None,
             grammar=DocumentGrammar.create_default(parent=None),
+            bibliography=None,
             free_texts=[],
             section_contents=[],
         )

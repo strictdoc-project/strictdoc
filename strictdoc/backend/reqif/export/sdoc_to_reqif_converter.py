@@ -358,6 +358,7 @@ class SDocToReqIFObjectConverter:
         core_content_or_none = ReqIFCoreContent(reqif_reqif_content)
 
         namespace_info: ReqIFNamespaceInfo = ReqIFNamespaceInfo(
+            original_reqif_tag_dump=None,
             doctype_is_present=True,
             encoding="UTF-8",
             namespace=namespace,

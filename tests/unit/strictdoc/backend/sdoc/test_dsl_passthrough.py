@@ -1307,10 +1307,10 @@ REFS:
         _ = reader.read(sdoc_input)
 
     assert exc_info.type is StrictDocSemanticError
-    assert (
-        exc_info.value.args[0]
-        == "Requirement field of type Reference has an unsupported Reference "
-        "Type item: ParentReqReference(parent = REFS, ref_uid = ID-001)"
+    assert re.fullmatch(
+        "Requirement field of type Reference has an unsupported Reference "
+        'Type item: ParentReqReference\\(.*ref_uid = "ID-001".*\\)',
+        exc_info.value.args[0],
     )
 
 
@@ -1460,10 +1460,7 @@ REFS:
 
     assert re.fullmatch(
         f"Requirement field of type Reference has an unsupported Reference"
-        f" Type item: FileReference\\(parent = REFS, file_entry ="
-        f" FileEntry\\(parent = FileReference, file_format = None, file_path"
-        f" = /tmp/sample1.cpp, path_forward_slashes ="
-        f" /tmp/sample1.cpp, path_normalized = .+tmp.+sample1.cpp\\)\\)",
+        f" Type item: FileReference\\(.*\\)",
         exc_info.value.args[0],
     )
 
@@ -1667,8 +1664,8 @@ REFS:
 
     assert exc_info.type is StrictDocSemanticError
 
-    assert (
-        exc_info.value.args[0]
-        == "Requirement field of type Reference has an unsupported Reference "
-        "Type item: ParentReqReference(parent = REFS, ref_uid = ID-001)"
+    assert re.fullmatch(
+        "Requirement field of type Reference has an unsupported Reference "
+        'Type item: ParentReqReference\\(.*ref_uid = "ID-001".*\\)',
+        exc_info.value.args[0],
     )

@@ -1,6 +1,9 @@
 from typing import Optional
 
+from strictdoc.helpers.auto_described import auto_described
 
+
+@auto_described
 class DocumentConfig:  # pylint: disable=too-many-instance-attributes
     @staticmethod
     def default_config(document):
@@ -53,17 +56,4 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         # This issue might deserve a bug report to TextX.
         return (self.uid is not None and len(self.uid) > 0) or (
             self.version is not None and len(self.version) > 0
-        )
-
-    def __str__(self):
-        return (
-            f"{self.__class__.__name__}("
-            f"version: {self.version}, "
-            f"uid: {self.uid}, "
-            f"classification: {self.classification}, "
-            f"markup: {self.markup}, "
-            f"auto_levels: {self.auto_levels}, "
-            f"requirement_style: {self.requirement_style}, "
-            f"requirement_in_toc: {self.requirement_in_toc}, "
-            ")"
         )

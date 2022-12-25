@@ -1,3 +1,7 @@
+from strictdoc.helpers.auto_described import auto_described
+
+
+@auto_described
 class RangePragma:
     def __init__(self, parent, begin_or_end, reqs_objs):
         assert isinstance(reqs_objs, list)
@@ -18,20 +22,6 @@ class RangePragma:
         #   ng_range_line_end == ng_source_line_begin
         self.ng_range_line_begin = None
         self.ng_range_line_end = None
-
-    def __str__(self):
-        return (
-            f"RangePragma("
-            f"begin_or_end: {self.begin_or_end}, "
-            f"ng_source_line_begin: {self.ng_source_line_begin}, "
-            f"ng_range_line_begin: {self.ng_range_line_begin}, "
-            f"ng_range_line_end: {self.ng_range_line_end}, "
-            f"reqs: {self.reqs}"
-            f")"
-        )
-
-    def __repr__(self):
-        return self.__str__()
 
     def is_begin(self):
         return self.begin_or_end == "["

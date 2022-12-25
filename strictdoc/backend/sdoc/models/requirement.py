@@ -9,15 +9,18 @@ from strictdoc.backend.sdoc.models.type_system import (
     RequirementFieldName,
     RESERVED_NON_META_FIELDS,
 )
+from strictdoc.helpers.auto_described import auto_described
 
 MULTILINE_WORD_THRESHOLD = 6
 
 
+@auto_described
 class RequirementContext:
     def __init__(self):
         self.title_number_string = None
 
 
+@auto_described
 class RequirementField:
     def __init__(  # pylint: disable=too-many-arguments
         self,
@@ -53,19 +56,6 @@ class RequirementField:
         self.field_value_references: Optional[
             List[Reference]
         ] = field_value_references
-
-    def __str__(self):
-        return (
-            f"{self.__class__.__name__}("
-            f"field_name: {self.field_name}, "
-            f"field_value: {self.field_value}, "
-            f"field_value_multiline: {self.field_value_multiline}, "
-            f"field_value_references: {self.field_value_references}, "
-            ")"
-        )
-
-    def __repr__(self):
-        return self.__str__()
 
 
 class Requirement(Node):  # pylint: disable=too-many-instance-attributes
@@ -198,20 +188,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
 
         self.node_id = uuid.uuid4().hex
 
-    def __str__(self):
-        return (
-            f"{self.__class__.__name__}("
-            f"ng_level: {self.ng_level}, "
-            f"level: {self.level}, "
-            f"uid: {self.uid}, "
-            f"title_or_none: {self.title}, "
-            f"statement: {self.statement}"
-            ")"
-        )
-
-    def __repr__(self):
-        return self.__str__()
-
     @property
     def is_requirement(self):
         return True
@@ -322,6 +298,7 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         )
 
 
+@auto_described
 class CompositeRequirement(Requirement):
     def __init__(self, parent, **fields):
         super().__init__(parent, **fields)
@@ -337,18 +314,14 @@ class CompositeRequirement(Requirement):
         return self.ng_document_reference.get_document()
 
 
+@auto_described
 class Body:
     def __init__(self, parent, content):
         self.parent = parent
         self.content = content.strip()
 
-    def __str__(self):
-        return f"Body({self.content})"
 
-    def __repr__(self):
-        return self.__str__()
-
-
+@auto_described
 class RequirementComment:
     def __init__(
         self,
@@ -367,17 +340,6 @@ class RequirementComment:
         # assert comment_single is not None or comment_multiline is not None
         # TODO: One solution to simplify this would be to disallow empty fields
         # in the grammar completely.
-
-    def __str__(self):
-        return (
-            f"Comment("
-            f"comment_single: {self.comment_single}, "
-            f"comment_multiline: {self.comment_multiline}"
-            f")"
-        )
-
-    def __repr__(self):
-        return self.__str__()
 
     def get_comment(self):
         comment = (

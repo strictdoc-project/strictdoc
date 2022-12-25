@@ -1,8 +1,10 @@
 from typing import List
 
 from strictdoc.backend.source_file_syntax.models.range_pragma import RangePragma
+from strictdoc.helpers.auto_described import auto_described
 
 
+@auto_described
 class SourceFileTraceabilityInfo:
     def __init__(self, parts):
         self.parts = parts
@@ -13,16 +15,6 @@ class SourceFileTraceabilityInfo:
         self._ng_lines_covered = 0
         self._coverage = 0
         self.pragmas: List[RangePragma] = []
-
-    def __str__(self):
-        return (
-            "SourceFileTraceabilityInfo(\n"
-            f"\tlines_total: {self._ng_lines_total}\n"
-            f"\tlines_covered: {self._ng_lines_covered}\n"
-            f"\tcoverage: {self._coverage}\n"
-            f"\tpragmas: {self.pragmas}\n"
-            ")"
-        )
 
     def get_coverage(self):
         return self._coverage

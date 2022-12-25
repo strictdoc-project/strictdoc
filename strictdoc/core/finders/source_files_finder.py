@@ -5,8 +5,10 @@ from typing import List
 from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.file_tree import FileFinder, File
 from strictdoc.core.source_tree import SourceTree
+from strictdoc.helpers.auto_described import auto_described
 
 
+@auto_described
 class SourceFile:  # pylint: disable=too-many-instance-attributes
     def __init__(  # pylint: disable=too-many-arguments
         self,
@@ -31,18 +33,6 @@ class SourceFile:  # pylint: disable=too-many-instance-attributes
 
         self.traceability_info = None
         self.is_referenced = False
-
-    def __str__(self):
-        return (
-            "SourceFile("
-            f"level: {self.level}, "
-            f"full_path: {self.full_path}, "
-            "in_doctree_source_file_rel_path: "
-            f"{self.in_doctree_source_file_rel_path}, "
-            f"output_path_dir_full_path: {self.output_dir_full_path}, "
-            f"output_path_file_full_path: {self.output_file_full_path}"
-            ")"
-        )
 
     def is_python_file(self):
         return self.extension == ".py"

@@ -3,6 +3,8 @@ from typing import List, Optional
 
 from pybtex.database import Entry
 
+from strictdoc.helpers.auto_described import auto_described
+
 
 class RequirementFieldName:
     UID = "UID"
@@ -40,6 +42,7 @@ class GrammarReferenceType:
     BIB_REFERENCE = "BibReference"
 
 
+@auto_described
 class FileEntry:
     def __init__(self, parent, file_format: Optional[str], file_path: str):
         self.parent = parent
@@ -49,16 +52,6 @@ class FileEntry:
         path_forward_slashes = file_path.replace("\\", "/")
         self.path_forward_slashes = path_forward_slashes
         self.path_normalized = os.path.normpath(path_forward_slashes)
-
-    def __str__(self):
-        return (
-            f"FileEntry("
-            f"parent = {self.parent.__class__.__name__},"
-            f" file_format = {self.file_format},"
-            f" file_path = {self.file_path},"
-            f" path_forward_slashes = {self.path_forward_slashes},"
-            f" path_normalized = {self.path_normalized})"
-        )
 
 
 class FileEntryFormat:
@@ -72,6 +65,7 @@ class BibEntryFormat:
     CITATION = "Citation"
 
 
+@auto_described
 class BibEntry:
     def __init__(self, parent, bib_format: Optional[str], bib_value: str):
         self.parent = parent
@@ -123,17 +117,6 @@ class BibEntry:
             )
             # TODO Verify/Reference the cited BibEntry
 
-    def __str__(self):
-        return (
-            f"BibEntry("
-            f"parent = {self.parent.__class__.__name__},"
-            f"ref_format = {self.bib_format},"
-            f" bib_value = {self.bib_value})"
-            f" ref_cite = {self.ref_cite})"
-            f" ref_detail = {self.ref_detail})"
-            f" bibtex_entry = {self.bibtex_entry})"
-        )
-
 
 class ReferenceType:
     PARENT = "Parent"
@@ -147,6 +130,7 @@ class ReferenceType:
     }
 
 
+@auto_described
 class GrammarElementField:
     def __init__(self):
         self.title: str = ""
@@ -154,6 +138,7 @@ class GrammarElementField:
         self.required: bool = False
 
 
+@auto_described
 class GrammarElementFieldString(GrammarElementField):
     def __init__(self, parent, title: str, required: str):
         super().__init__()
@@ -162,17 +147,8 @@ class GrammarElementFieldString(GrammarElementField):
         self.gef_type = RequirementFieldType.STRING
         self.required: bool = required == "True"
 
-    def __str__(self):
-        return (
-            "GrammarElementFieldString("
-            f"parent: {self.parent}, "
-            f"title: {self.title}, "
-            f"gef_type: {self.gef_type}, "
-            f"required: {self.required}"
-            ")"
-        )
 
-
+@auto_described
 class GrammarElementFieldSingleChoice(GrammarElementField):
     def __init__(self, parent, title: str, options: List[str], required: str):
         super().__init__()
@@ -182,17 +158,8 @@ class GrammarElementFieldSingleChoice(GrammarElementField):
         self.options: List[str] = options
         self.required: bool = required == "True"
 
-    def __str__(self):
-        return (
-            "GrammarElementFieldSingleChoice("
-            f"parent: {self.parent}, "
-            f"title: {self.title}, "
-            f"gef_type: {self.gef_type}({', '.join(self.options)}), "
-            f"required: {self.required}"
-            ")"
-        )
 
-
+@auto_described
 class GrammarElementFieldMultipleChoice(GrammarElementField):
     def __init__(self, parent, title: str, options: List[str], required: str):
         super().__init__()
@@ -202,17 +169,8 @@ class GrammarElementFieldMultipleChoice(GrammarElementField):
         self.options: List[str] = options
         self.required: bool = required == "True"
 
-    def __str__(self):
-        return (
-            "GrammarElementFieldMultipleChoice("
-            f"parent: {self.parent}, "
-            f"title: {self.title}, "
-            f"gef_type: {self.gef_type}({', '.join(self.options)}), "
-            f"required: {self.required}"
-            ")"
-        )
 
-
+@auto_described
 class GrammarElementFieldTag(GrammarElementField):
     def __init__(self, parent, title: str, required: str):
         super().__init__()
@@ -221,17 +179,8 @@ class GrammarElementFieldTag(GrammarElementField):
         self.gef_type = RequirementFieldType.TAG
         self.required: bool = required == "True"
 
-    def __str__(self):
-        return (
-            "GrammarElementFieldTag("
-            f"parent: {self.parent}, "
-            f"title: {self.title}, "
-            f"gef_type: {self.gef_type}, "
-            f"required: {self.required}"
-            ")"
-        )
 
-
+@auto_described
 class GrammarElementFieldReference(GrammarElementField):
     def __init__(self, parent, title: str, types: List[str], required: str):
         super().__init__()
@@ -240,13 +189,3 @@ class GrammarElementFieldReference(GrammarElementField):
         self.title: str = title
         self.types: List[str] = types
         self.required: bool = required == "True"
-
-    def __str__(self):
-        return (
-            "GrammarElementFieldReference("
-            f"parent: {self.parent}, "
-            f"title: {self.title}, "
-            f"gef_type: {self.gef_type}({', '.join(self.types)}), "
-            f"required: {self.required}"
-            ")"
-        )

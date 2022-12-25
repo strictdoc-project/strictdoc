@@ -1,7 +1,9 @@
 from strictdoc.backend.sdoc.models.node import Node
 from strictdoc.backend.sdoc.models.section import SectionContext
+from strictdoc.helpers.auto_described import auto_described
 
 
+@auto_described
 class FragmentFromFile(Node):  # pylint: disable=too-many-instance-attributes
     def __init__(  # pylint: disable=too-many-arguments
         self,
@@ -15,12 +17,6 @@ class FragmentFromFile(Node):  # pylint: disable=too-many-instance-attributes
         self.ng_has_requirements = False
         self.ng_document_reference = None
         self.context = SectionContext()
-
-    def __str__(self):
-        return f"FragmentFromFile(level: {self.ng_level}, file: {self.file})"
-
-    def __repr__(self):
-        return self.__str__()
 
     @property
     def document(self):

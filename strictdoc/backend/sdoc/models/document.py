@@ -4,8 +4,10 @@ from typing import Optional
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.core.document_meta import DocumentMeta
+from strictdoc.helpers.auto_described import auto_described
 
 
+@auto_described
 class Document:  # pylint: disable=too-many-instance-attributes
     def __init__(  # pylint: disable=too-many-arguments
         self,
@@ -27,17 +29,6 @@ class Document:  # pylint: disable=too-many-instance-attributes
         self.ng_needs_generation = False
         self.meta: Optional[DocumentMeta] = None
         self.node_id = uuid.uuid4().hex
-
-    def __str__(self):
-        return (
-            f"Document("
-            f"id: {id(self)}, "
-            f"title: {self.title}, "
-            f"section_contents: {self.section_contents})"
-        )
-
-    def __repr__(self):
-        return self.__str__()
 
     def assign_meta(self, meta):
         assert isinstance(meta, DocumentMeta)

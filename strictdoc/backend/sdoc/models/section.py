@@ -4,13 +4,16 @@ from typing import Optional, List
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.backend.sdoc.models.node import Node
+from strictdoc.helpers.auto_described import auto_described
 
 
+@auto_described
 class SectionContext:
     def __init__(self):
         self.title_number_string = None
 
 
+@auto_described
 class Section(Node):  # pylint: disable=too-many-instance-attributes
     def __init__(  # pylint: disable=too-many-arguments
         self,
@@ -34,12 +37,6 @@ class Section(Node):  # pylint: disable=too-many-instance-attributes
         self.ng_document_reference: Optional[DocumentReference] = None
         self.context = SectionContext()
         self.node_id = uuid.uuid4().hex
-
-    def __str__(self):
-        return f"Section(level: {self.ng_level}, title: {self.title})"
-
-    def __repr__(self):
-        return self.__str__()
 
     @property
     def document(self):

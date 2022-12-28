@@ -57,6 +57,12 @@ class RequirementField:
             List[Reference]
         ] = field_value_references
 
+    def get_value(self):
+        value = (
+            self.field_value if self.field_value else self.field_value_multiline
+        )
+        return value
+
 
 class Requirement(Node):  # pylint: disable=too-many-instance-attributes
     def __init__(  # pylint: disable=too-many-arguments

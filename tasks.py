@@ -484,12 +484,21 @@ def release_pyinstaller(context):
 
     path_to_pyi_dist = "/tmp/strictdoc"
 
+    # The --additional-hooks-dir is a workaround against the following error
+    # that is produced by pybibtex:
+    # """
+    # pkg_resources.DistributionNotFound: The 'six' distribution was not found
+    # and is required by the application.
+    # """
+    # Solution found here:
+    # https://stackoverflow.com/a/64473931/598057
     command = f"""
         pip install pyinstaller &&
         pyinstaller
             --clean
             --name strictdoc
             --noconfirm
+            --additional-hooks-dir developer/pyinstaller_hooks
             --distpath {path_to_pyi_dist}
             --add-data strictdoc/export/html/templates:templates/html
             --add-data strictdoc/export/rst/templates:templates/rst

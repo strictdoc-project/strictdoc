@@ -1,0 +1,51 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: REFS
+    TYPE: Reference(ParentReqReference, FileReference, BibReference)
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  - TITLE: OWNER
+    TYPE: String
+    REQUIRED: False
+  - TITLE: PRIORITY
+    TYPE: SingleChoice(LOW, MEDIUM, HIGH)
+    REQUIRED: True
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: Title #1
+STATEMENT: Statement #1
+OWNER: Owner #1
+PRIORITY: HIGH
+
+[REQUIREMENT]
+UID: REQ-002
+REFS:
+- TYPE: Parent
+  VALUE: REQ-001
+TITLE: Title #2
+STATEMENT: Statement #2
+OWNER: Owner #2
+PRIORITY: MEDIUM
+
+[REQUIREMENT]
+UID: REQ-003
+REFS:
+- TYPE: Parent
+  VALUE: REQ-002
+TITLE: Title #3
+STATEMENT: Statement #3
+PRIORITY: LOW

@@ -1,0 +1,92 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: REFS
+    TYPE: Reference(ParentReqReference, FileReference, BibReference)
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: OWNER
+    TYPE: String
+    REQUIRED: False
+  - TITLE: PRIORITY
+    TYPE: SingleChoice(LOW, MEDIUM, HIGH)
+    REQUIRED: True
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: Title #1
+STATEMENT: Statement #1
+COMMENT: Simple Comment
+OWNER: Owner #1
+PRIORITY: HIGH
+
+[REQUIREMENT]
+UID: REQ-002
+REFS:
+- TYPE: Parent
+  VALUE: REQ-001
+TITLE: Title #2
+STATEMENT: Statement #2
+COMMENT: >>>
+Multiline Comment: line 1
+Multiline Comment: line 2
+Multiline Comment: line 3
+<<<
+OWNER: Owner #2
+PRIORITY: MEDIUM
+
+[REQUIREMENT]
+UID: REQ-003
+REFS:
+- TYPE: Parent
+  VALUE: REQ-002
+TITLE: Title #3
+STATEMENT: Statement #3
+COMMENT: Simple Comment #1
+COMMENT: >>>
+Multiline Comment #2: line 1
+Multiline Comment #2: line 2
+Multiline Comment #2: line 3
+<<<
+COMMENT: >>>
+Multiline Comment #3: line 1
+Multiline Comment #3: line 2
+Multiline Comment #3: line 3
+<<<
+COMMENT: Simple Comment #4
+PRIORITY: LOW
+
+[REQUIREMENT]
+UID: REQ-004
+REFS:
+- TYPE: Parent
+  VALUE: REQ-002
+- TYPE: File
+  VALUE: src/samplefile.cpp
+- TYPE: BibRef
+  FORMAT: String
+  VALUE: BSI-TR-02102-2, "Cryptographic Mechanisms: Recommandations and Key Lengths: Use of Transport Layer Security (TLS)", Version 2022-1, Section 3.5, https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/TechGuidelines/TG02102/BSI-TR-02102-2.pdf
+- TYPE: BibRef
+  FORMAT: BibTex
+  VALUE: @techreport{BSI-TR-02102-1:2022:DE, title = {Kryptographische Verfahren: Empfehlungen und Schlüssellängen}, institution = {Bundesamt für Sicherheit in der Informationstechnik}, series = {Kryptographische Verfahren: Empfehlungen und Schlüssellängen}, edition = {2022-1}, year = "2022", month = "2", number = "BSI TR-02102-1", address = "Bonn, DE", type = "Technische Richtlinie", url = "https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Publikationen/TechnischeRichtlinien/TR02102/BSI-TR-02102.pdf" }
+- TYPE: BibRef
+  FORMAT: Citation
+  VALUE: RFC-5280, Section 2.3.4
+TITLE: Title #4
+STATEMENT: Statement #4
+PRIORITY: LOW

@@ -7,7 +7,14 @@ from xlsxwriter.workbook import Workbook
 from xlsxwriter.worksheet import Worksheet
 
 from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.reference import (
+    ParentReqReference,
+    FileReference,
+    BibReference,
+)
 from strictdoc.backend.sdoc.models.requirement import Requirement
+from strictdoc.backend.sdoc.models.type_system import ReferenceType
+from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 
 EXCEL_SHEET_NAME = "Requirements"
@@ -40,8 +47,8 @@ class ExcelGenerator:
     @staticmethod
     def export_tree(
         traceability_index: TraceabilityIndex,
-        output_excel_root,
-        fields: List[str],
+        output_excel_root: str,
+        config: ExportCommandConfig,
     ):
         Path(output_excel_root).mkdir(parents=True, exist_ok=True)
 
@@ -55,7 +62,7 @@ class ExcelGenerator:
             )
 
             ExcelGenerator._export_single_document(
-                document, traceability_index, document_out_file, fields
+                document, traceability_index, document_out_file, config
             )
 
     @staticmethod
@@ -63,61 +70,71 @@ class ExcelGenerator:
         document: Document,
         traceability_index,
         document_out_file,
-        fields: List[str],
+        config,
     ):
         with xlsxwriter.Workbook(document_out_file) as workbook:
-            refs = ExcelGenerator._lookup_refs(
-                traceability_index.get_document_iterator(document).all_content()
-            )
             worksheet = workbook.add_worksheet(name=EXCEL_SHEET_NAME)
+            workbook.set_properties(
+                {
+                    "title": config.project_title,
+                    "comments": "Created with StrictDoc",
+                }
+            )
 
+            row = 1  # Header-Row
+            fields = config.fields
+            # TODO: Check if all fields are defined by the DocumentGrammar
             columns = ExcelGenerator._init_columns_width(fields)
 
-            row = 1
-            for node in traceability_index.get_document_iterator(
-                document
-            ).all_content():
-                if not node.is_requirement or not node.uid:
-                    # only export the requirements with uid, allowing tracking
-                    continue
+            req_uid_rows = ExcelGenerator._lookup_refs(
+                traceability_index.get_document_iterator(document).all_content()
+            )
 
-                for idx, field in enumerate(fields, start=0):
-                    if field == "parent":
-                        if node.references:
-                            ref = node.references[0]
-                            if len(ref.ref_uid) > columns[field][MAX_WIDTH_KEY]:
-                                columns[field][MAX_WIDTH_KEY] = len(ref.ref_uid)
-                            worksheet.write_url(
-                                row,
-                                idx,
-                                (
-                                    "internal:"
-                                    f"'{EXCEL_SHEET_NAME}'"
-                                    f"!A{refs[ref.ref_uid]}"
-                                ),
-                                string=ref.ref_uid,
+            if len(req_uid_rows):
+                for node in traceability_index.get_document_iterator(
+                    document
+                ).all_content():
+                    if not node.is_requirement or not node.uid:
+                        # only export the requirements with uid
+                        continue
+
+                    for idx, field in enumerate(fields, start=0):
+                        field_uc = field.upper()
+
+                        # Special treatment for ParentReqReference and Comments
+                        if field_uc in ("REFS:PARENT", "PARENT", "PARENTS"):
+                            parent_refs = node.get_requirement_references(
+                                ReferenceType.PARENT
                             )
-                    elif hasattr(node, field):
-                        if field == "statement":
-                            value = node.get_statement_single_or_multiline()
-                        elif field == "rationale":
-                            value = node.get_rationale_single_or_multiline()
-                        elif field == "comments":
-                            # TODO: how do we want to join multiple comment?
-                            # I am using only one comment with multi line
-                            if len(node.comments):
-                                value = node.comments[0].get_comment()
-                            else:
+                            if len(parent_refs) > 0:
+                                # TODO Allow multiple parent refs
+                                ref = parent_refs[0]
+                                if (
+                                    len(ref.ref_uid)
+                                    > columns[field][MAX_WIDTH_KEY]
+                                ):
+                                    columns[field][MAX_WIDTH_KEY] = len(
+                                        ref.ref_uid
+                                    )
+                                worksheet.write_url(
+                                    row,
+                                    idx,
+                                    (
+                                        "internal:"
+                                        f"'{EXCEL_SHEET_NAME}'"
+                                        f"!A{req_uid_rows[ref.ref_uid]}"
+                                    ),
+                                    string=ref.ref_uid,
+                                )
+                        elif field_uc in ("COMMENT", "COMMENTS"):
+                            # Using a transition marker to separate multiple
+                            # comments
+                            if node.comments:
                                 value = ""
-                        else:
-                            value = getattr(node, field)
-                        worksheet.write(row, idx, value)
-                        if value and len(value) > columns[field][MAX_WIDTH_KEY]:
-                            columns[field][MAX_WIDTH_KEY] = len(value)
-                    elif len(node.special_fields):
-                        for special_field in node.special_fields:
-                            if special_field.field_name.lower() == field:
-                                value = special_field.field_value
+                                for comment in node.comments:
+                                    if len(value) > 0:
+                                        value += "\n----------\n"
+                                    value += comment.get_comment()
                                 worksheet.write(row, idx, value)
                                 if (
                                     value
@@ -125,13 +142,63 @@ class ExcelGenerator:
                                     > columns[field][MAX_WIDTH_KEY]
                                 ):
                                     columns[field][MAX_WIDTH_KEY] = len(value)
-                                break
-                row += 1
+                        elif field_uc in node.ordered_fields_lookup.keys():
+                            req_field = node.ordered_fields_lookup[field_uc][0]
+                            value = ""
+                            if req_field.field_value_references:
+                                # Using a transition marker to separate
+                                # multiple references
+                                for ref in req_field.field_value_references:
+                                    if len(value) > 0:
+                                        value += "----------\n"
+                                    if isinstance(ref, ParentReqReference):
+                                        value += (
+                                            ref.ref_type
+                                            + ": "
+                                            + ref.ref_uid
+                                            + "\n"
+                                        )
+                                    elif isinstance(ref, FileReference):
+                                        value += (
+                                            ref.ref_type
+                                            + ": "
+                                            + ref.file_entry.file_path
+                                            + "\n"
+                                        )
+                                    elif isinstance(ref, BibReference):
+                                        value += (
+                                            ref.ref_type
+                                            + ": "
+                                            + ref.bib_entry.bib_value
+                                            + "\n"
+                                        )
+                            else:
+                                value = req_field.get_value()
+                            worksheet.write(row, idx, value)
+                            vallength = len(value)
+                            if vallength > columns[field][MAX_WIDTH_KEY]:
+                                columns[field][MAX_WIDTH_KEY] = vallength
+                        elif hasattr(node, "special_fields"):
+                            if len(node.special_fields):
+                                for special_field in node.special_fields:
+                                    if (
+                                        special_field.field_name.upper()
+                                        == field_uc
+                                    ):
+                                        value = special_field.field_value
+                                        worksheet.write(row, idx, value)
+                                        if (
+                                            value
+                                            and len(value)
+                                            > columns[field][MAX_WIDTH_KEY]
+                                        ):
+                                            columns[field][MAX_WIDTH_KEY] = len(
+                                                value
+                                            )
+                                        break
 
-            if row == 1:
-                # no requirement with UID
-                print("No requirement with UID, nothing to export into excel")
-            else:
+                    row += 1
+
                 # add a table around all this data, allowing filtering and
                 # ordering in Excel
                 worksheet.add_table(
@@ -146,6 +213,9 @@ class ExcelGenerator:
                 ExcelGenerator._set_columns_width(
                     workbook, worksheet, columns, fields
                 )
+            else:
+                # no requirement with UID
+                print("No requirement with UID, nothing to export into excel")
 
         if row == 1:
             os.unlink(document_out_file)
@@ -159,8 +229,8 @@ class ExcelGenerator:
             if isinstance(content_node, Requirement):
                 if content_node.uid:
                     # only export the requirements with uid, allowing tracking
-                    refs[content_node.uid] = row + 1
                     row += 1
+                    refs[content_node.uid] = row
 
         return refs
 

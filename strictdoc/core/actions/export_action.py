@@ -61,7 +61,7 @@ class ExportAction:
             ExcelGenerator.export_tree(
                 self.traceability_index,
                 output_excel_root,
-                self.config.fields,
+                self.config,
             )
 
         if "reqif-sdoc" in self.config.formats:

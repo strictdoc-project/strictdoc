@@ -102,7 +102,7 @@ class ExcelGenerator:
                         field_uc = field.upper()
 
                         # Special treatment for ParentReqReference and Comments
-                        if field_uc in ("PARENT", "PARENTS"):
+                        if field_uc in ("REFS:PARENT", "PARENT", "PARENTS"):
                             parent_refs = node.get_requirement_references(
                                 ReferenceType.PARENT
                             )
@@ -127,23 +127,30 @@ class ExcelGenerator:
                                     string=ref.ref_uid,
                                 )
                         elif field_uc in ("COMMENT", "COMMENTS"):
-                            # TODO: how do we want to join multiple comment?
-                            # I am using only one comment with multi line
-                            if len(node.comments):
-                                value = node.comments[0].get_comment()
-                            else:
+                            # Using a transition marker to separate multiple
+                            # comments
+                            if node.comments:
                                 value = ""
-                            worksheet.write(row, idx, value)
-                            if (
-                                value
-                                and len(value) > columns[field][MAX_WIDTH_KEY]
-                            ):
-                                columns[field][MAX_WIDTH_KEY] = len(value)
+                                for comment in node.comments:
+                                    if len(value) > 0:
+                                        value += "\n----------\n"
+                                    value += comment.get_comment()
+                                worksheet.write(row, idx, value)
+                                if (
+                                    value
+                                    and len(value)
+                                    > columns[field][MAX_WIDTH_KEY]
+                                ):
+                                    columns[field][MAX_WIDTH_KEY] = len(value)
                         elif field_uc in node.ordered_fields_lookup.keys():
                             req_field = node.ordered_fields_lookup[field_uc][0]
                             value = ""
                             if req_field.field_value_references:
+                                # Using a transition marker to separate
+                                # multiple references
                                 for ref in req_field.field_value_references:
+                                    if len(value) > 0:
+                                        value += "----------\n"
                                     if isinstance(ref, ParentReqReference):
                                         value += (
                                             ref.ref_type

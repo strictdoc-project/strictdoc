@@ -1,0 +1,6 @@
+; Export all available fields
+RUN: %strictdoc export --formats=excel --fields="UID","REFS","TITLE","STATEMENT","OWNER","PRIORITY" --output-dir=Output "%S/input.sdoc"
+
+RUN: %check_exists --file "%S/Output/excel/input.xlsx"
+
+RUN: %excel_diff "%S/Output/excel/input.xlsx" "%S/expected/input.xlsx"

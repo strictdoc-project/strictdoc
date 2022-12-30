@@ -37,6 +37,7 @@ class Test06CreateRequirement(BaseCase):
 
         self.type("#requirement_title", "Requirement title #1")
         self.type("#requirement_statement", "Requirement statement #1.")
+        self.type("#requirement_rationale", "Requirement rationale #1.")
 
         self.click_xpath("//button[@type='submit' and text()='Save']")
 
@@ -45,6 +46,7 @@ class Test06CreateRequirement(BaseCase):
 
         self.type("#requirement_title", "Requirement title #2")
         self.type("#requirement_statement", "Requirement statement #2.")
+        self.type("#requirement_rationale", "Requirement rationale #2.")
 
         self.click_xpath("//button[@type='submit' and text()='Save']")
 
@@ -53,6 +55,7 @@ class Test06CreateRequirement(BaseCase):
 
         self.type("#requirement_title", "Requirement title #3")
         self.type("#requirement_statement", "Requirement statement #3.")
+        self.type("#requirement_rationale", "Requirement rationale #3.")
 
         self.click_xpath("//button[@type='submit' and text()='Save']")
 

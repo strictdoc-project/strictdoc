@@ -14,7 +14,6 @@
   <input type="hidden" id="requirement_mid" name="requirement_mid" value="{{form_object.requirement_mid}}" />
 
     <div data-section="edit-section-title" class="std-form-row">
-      {# <input type="text" id="requirement_title" name="requirement_title" value="{{ form_object.requirement_title }}"/> #}
       <div role="textbox" data-editable="single" contenteditable="true" class="std-form-fileld-title" id="requirement_title" placeholder="Enter requirement title here...">
         {%- if true -%}
         {{ form_object.requirement_title }}
@@ -24,8 +23,6 @@
     </div>
 
     <div class="std-form-row requirement_statement">
-      {# <textarea id="requirement_statement" name="requirement_statement" style="width:100%; height: 200px;">{{form_object.requirement_statement}}</textarea> #}
-
       <div role="textbox" data-editable="multiline" contenteditable="true" class="std-form-field-rst" id="requirement_statement" placeholder="Enter statement text here...">
         {%- if true -%}
         {{form_object.requirement_statement}}
@@ -44,7 +41,27 @@
         {%- endfor -%}
         </div>
       {%- endif -%}
+    </div>
 
+    <div class="std-form-row requirement_rationale">
+      <div role="textbox" data-editable="multiline" contenteditable="true" class="std-form-field-rst" id="requirement_rationale" placeholder="Enter rationale text here...">
+        {%- if true -%}
+        {{form_object.requirement_rationale}}
+        {%- endif -%}
+      </div>
+      <textarea hidden class="std-input-hidden" name="requirement_rationale">
+        {%- if true -%}
+        {{form_object.requirement_rationale}}
+        {%- endif -%}
+      </textarea>
+
+      {%- if form_object.has_errors("requirement_rationale") -%}
+        <div class="std-form-error">
+        {%- for error in form_object.get_errors("requirement_rationale") -%}
+          {{ error }}
+        {%- endfor -%}
+        </div>
+      {%- endif -%}
     </div>
 
     <div class="std-form-footer">

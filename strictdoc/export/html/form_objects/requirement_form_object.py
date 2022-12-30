@@ -12,6 +12,7 @@ class RequirementFormObject(ErrorObject):
         requirement_mid: Optional[str],
         requirement_title: Optional[str],
         requirement_statement: Optional[str],
+        requirement_rationale: Optional[str],
     ):
         super().__init__()
         self.requirement_mid: Optional[str] = requirement_mid
@@ -19,6 +20,7 @@ class RequirementFormObject(ErrorObject):
         if requirement_statement is not None:
             requirement_statement = html.escape(requirement_statement)
         self._requirement_statement: Optional[str] = requirement_statement
+        self._requirement_rationale: Optional[str] = requirement_rationale
 
     @property
     def requirement_title(self) -> str:
@@ -38,6 +40,16 @@ class RequirementFormObject(ErrorObject):
         else:
             return ""
 
+    @property
+    def requirement_rationale(self) -> str:
+        if self._requirement_rationale is not None:
+            assert (
+                len(self._requirement_rationale) > 0
+            ), self._requirement_rationale
+            return self._requirement_rationale
+        else:
+            return ""
+
     @staticmethod
     def create_from_requirement(*, requirement: Requirement):
         return RequirementFormObject(
@@ -45,5 +57,8 @@ class RequirementFormObject(ErrorObject):
             requirement_title=requirement.title,
             requirement_statement=(
                 requirement.get_statement_single_or_multiline()
+            ),
+            requirement_rationale=(
+                requirement.get_rationale_single_or_multiline()
             ),
         )

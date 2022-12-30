@@ -36,6 +36,7 @@ class Test07EditRequirement(BaseCase):
 
         self.type("#requirement_title", "Modified title")
         self.type("#requirement_statement", "Modified statement.")
+        self.type("#requirement_rationale", "Modified rationale.")
 
         self.click_xpath("//button[@type='submit' and text()='Save']")
 

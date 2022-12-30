@@ -195,6 +195,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
         requirement_mid: str = Form(None),
         requirement_title: str = Form(None),
         requirement_statement: str = Form(None),
+        requirement_rationale: str = Form(None),
         reference_mid: str = Form(None),
         whereto: Optional[str] = Form(None),
     ):
@@ -202,6 +203,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
             requirement_mid=requirement_mid,
             requirement_title=requirement_title,
             requirement_statement=requirement_statement,
+            requirement_rationale=requirement_rationale,
             reference_mid=reference_mid,
             whereto=whereto,
         )
@@ -234,11 +236,13 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
         requirement_mid: str = Form(None),
         requirement_title: str = Form(None),
         requirement_statement: str = Form(None),
+        requirement_rationale: str = Form(None),
     ):
         content = main_controller.update_requirement(
             requirement_mid=requirement_mid,
             requirement_title=requirement_title,
             requirement_statement=requirement_statement,
+            requirement_rationale=requirement_rationale,
         )
         return HTMLResponse(
             content=content,

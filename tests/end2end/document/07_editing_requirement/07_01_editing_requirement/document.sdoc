@@ -10,3 +10,6 @@ TITLE: Requirement title
 STATEMENT: >>>
 Requirement statement.
 <<<
+RATIONALE: >>>
+Requirement rationale.
+<<<

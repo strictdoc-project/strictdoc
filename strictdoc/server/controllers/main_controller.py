@@ -671,6 +671,7 @@ class MainController:
             requirement_mid=uuid.uuid4().hex,
             requirement_title=None,
             requirement_statement=None,
+            requirement_rationale=None,
         )
         target_node_mid = reference_mid
 
@@ -712,6 +713,7 @@ class MainController:
         requirement_mid: str,
         requirement_title: Optional[str],
         requirement_statement: Optional[str],
+        requirement_rationale: Optional[str],
         reference_mid: str,
         whereto: Optional[str],
     ):
@@ -722,6 +724,9 @@ class MainController:
         )
         requirement_statement = sanitize_html_form_field(
             requirement_statement, multiline=True
+        )
+        requirement_rationale = sanitize_html_form_field(
+            requirement_rationale, multiline=True
         )
 
         reference_node: Union[
@@ -736,6 +741,7 @@ class MainController:
             requirement_mid=requirement_mid,
             requirement_title=requirement_title,
             requirement_statement=requirement_statement,
+            requirement_rationale=requirement_rationale,
         )
         if whereto == NodeCreationOrder.CHILD:
             parent = reference_node
@@ -800,11 +806,9 @@ class MainController:
             if requirement_title is not None and len(requirement_title) > 0
             else None,
             statement=None,
-            statement_multiline=requirement_statement
-            if requirement_statement is not None
-            else "",
+            statement_multiline=requirement_statement,
             rationale=None,
-            rationale_multiline=None,
+            rationale_multiline=requirement_rationale,
             tags=None,
             comments=None,
         )
@@ -903,6 +907,7 @@ class MainController:
         requirement_mid: str,
         requirement_title: Optional[str],
         requirement_statement: Optional[str],
+        requirement_rationale: Optional[str],
     ):
         assert (
             isinstance(requirement_mid, str) and len(requirement_mid) > 0
@@ -914,6 +919,9 @@ class MainController:
         requirement_statement = sanitize_html_form_field(
             requirement_statement, multiline=True
         )
+        requirement_rationale = sanitize_html_form_field(
+            requirement_rationale, multiline=True
+        )
 
         requirement = self.export_action.traceability_index.get_node_by_id(
             requirement_mid
@@ -924,6 +932,7 @@ class MainController:
             requirement_mid=requirement_mid,
             requirement_title=requirement_title,
             requirement_statement=requirement_statement,
+            requirement_rationale=requirement_rationale,
         )
         if requirement_statement is None or len(requirement_statement) == 0:
             form_object.add_error(
@@ -987,6 +996,23 @@ class MainController:
                 field_value_references=None,
             )
         ]
+
+        if requirement_rationale is not None:
+            requirement.rationale_multiline = requirement_rationale
+            requirement.ordered_fields_lookup["RATIONALE"] = [
+                RequirementField(
+                    requirement,
+                    field_name="RATIONALE",
+                    field_value=None,
+                    field_value_multiline=requirement_rationale,
+                    field_value_references=None,
+                )
+            ]
+        else:
+            if "RATIONALE" in requirement.ordered_fields_lookup:
+                del requirement.ordered_fields_lookup["RATIONALE"]
+            requirement.rationale = None
+            requirement.rationale_multiline = None
 
         # Saving new content to .SDoc file.
         document_content = SDWriter().write(document)

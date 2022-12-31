@@ -3,6 +3,11 @@ from collections import OrderedDict
 from typing import Optional, List
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
+from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document_grammar import (
+    DocumentGrammar,
+    GrammarElement,
+)
 from strictdoc.backend.sdoc.models.node import Node
 from strictdoc.backend.sdoc.models.reference import Reference
 from strictdoc.backend.sdoc.models.type_system import (
@@ -184,7 +189,11 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         # TODO: Is it worth to move this to dedicated Presenter* classes to
         # keep this class textx-only?
         self.has_meta: bool = has_meta
-        self.fields: List[RequirementField] = fields
+
+        # This property is only used for validating fields against grammar
+        # during TextX parsing and processing.
+        self.fields_as_parsed = fields
+
         self.ordered_fields_lookup: OrderedDict[
             str, List[RequirementField]
         ] = ordered_fields_lookup
@@ -256,7 +265,7 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
     def enumerate_meta_fields(
         self, skip_single_lines=False, skip_multi_lines=False
     ):
-        for field in self.fields:
+        for field in self.enumerate_fields():
             if field.field_name in RESERVED_NON_META_FIELDS:
                 continue
             meta_field_value = (
@@ -293,15 +302,94 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         meta_field_value = meta_field_value_or_none
         return meta_field_value
 
-    def dump_fields(self):
+    def update_has_meta(self):
+        has_meta: bool = False
+        for field in self.enumerate_fields():
+            if field.field_name not in RESERVED_NON_META_FIELDS:
+                has_meta = True
+        self.has_meta = has_meta
+
+    def dump_fields_as_parsed(self):
         return ", ".join(
             list(
                 map(
                     lambda r: r.field_name,
-                    self.fields,
+                    self.fields_as_parsed,
                 )
             )
         )
+
+    def set_field_value(self, field_name: str, value):
+        """
+        The purpose of this purpose is to provide a single-method API for
+        updating any field of a requirement. A requirement might use only some
+        fields of a document grammar, so an extra exercise done by the method is
+        to ensure that an added field that has not been attached to the
+        requirement before will be put at the right index.
+        """
+        assert isinstance(field_name, str)
+
+        # If a field value is being removed, there is not much to do.
+        if value is None or len(value) == 0:
+            if field_name in self.ordered_fields_lookup:
+                del self.ordered_fields_lookup[field_name]
+            return
+
+        singleline_fields = {"UID", "TITLE"}
+        multiline_fields = {"STATEMENT", "RATIONALE"}
+
+        field_value = None
+        field_value_multiline = None
+        field_value_references = None
+        if field_name in singleline_fields:
+            field_value = value
+        elif field_name in multiline_fields:
+            field_value_multiline = value
+        else:
+            raise NotImplementedError(value)
+
+        if field_name in self.ordered_fields_lookup:
+            self.ordered_fields_lookup[field_name] = [
+                RequirementField(
+                    self,
+                    field_name=field_name,
+                    field_value=field_value,
+                    field_value_multiline=field_value_multiline,
+                    field_value_references=field_value_references,
+                )
+            ]
+            return
+
+        new_ordered_fields_lookup = OrderedDict()
+        document: Document = self.document
+        grammar_or_none: Optional[DocumentGrammar] = document.grammar
+        assert grammar_or_none is not None
+        grammar: DocumentGrammar = grammar_or_none
+
+        element: GrammarElement = grammar.elements_by_type["REQUIREMENT"]
+        grammar_field_titles = list(map(lambda f: f.title, element.fields))
+        field_index = grammar_field_titles.index(field_name)
+        for field_title in grammar_field_titles[:field_index]:
+            if field_title in self.ordered_fields_lookup:
+                new_ordered_fields_lookup[
+                    field_title
+                ] = self.ordered_fields_lookup[field_title]
+        new_ordered_fields_lookup[field_name] = [
+            RequirementField(
+                self,
+                field_name=field_name,
+                field_value=field_value,
+                field_value_multiline=field_value_multiline,
+                field_value_references=field_value_references,
+            )
+        ]
+        after_field_index = field_index + 1
+        for field_title in grammar_field_titles[after_field_index:]:
+            if field_title in self.ordered_fields_lookup:
+                new_ordered_fields_lookup[
+                    field_title
+                ] = self.ordered_fields_lookup[field_title]
+        self.ordered_fields_lookup = new_ordered_fields_lookup
 
 
 @auto_described

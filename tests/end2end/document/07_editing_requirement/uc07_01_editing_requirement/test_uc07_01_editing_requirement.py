@@ -34,6 +34,7 @@ class Test07EditRequirement(BaseCase):
 
         self.click_nth_visible_element("//a[contains(text(), 'Edit')]", 2)
 
+        self.type("#requirement_uid", "Modified_UID")
         self.type("#requirement_title", "Modified title")
         self.type("#requirement_statement", "Modified statement.")
         self.type("#requirement_rationale", "Modified rationale.")
@@ -41,7 +42,9 @@ class Test07EditRequirement(BaseCase):
         self.click_xpath("//button[@type='submit' and text()='Save']")
 
         self.assert_text("1. Modified title")
+        self.assert_text("Modified_UID")
         self.assert_text("Modified statement.")
+        self.assert_text("Modified rationale.")
 
         self.assert_element(
             "//turbo-frame[@id='frame-toc']//*[contains(., 'Modified title')]"

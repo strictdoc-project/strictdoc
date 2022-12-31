@@ -13,6 +13,15 @@
   {%- endif -%}
   <input type="hidden" id="requirement_mid" name="requirement_mid" value="{{form_object.requirement_mid}}" />
 
+    <div data-section="edit-section-uid" class="std-form-row">
+      <div role="textbox" data-editable="single" contenteditable="true" class="std-form-fileld-title" id="requirement_uid" placeholder="Enter requirement UID here...">
+        {%- if true -%}
+        {{ form_object.requirement_uid }}
+        {%- endif -%}
+      </div>
+      <input type="hidden" class="std-input-hidden" name="requirement_uid" value="{{ form_object.requirement_uid }}"/>
+    </div>
+
     <div data-section="edit-section-title" class="std-form-row">
       <div role="textbox" data-editable="single" contenteditable="true" class="std-form-fileld-title" id="requirement_title" placeholder="Enter requirement title here...">
         {%- if true -%}

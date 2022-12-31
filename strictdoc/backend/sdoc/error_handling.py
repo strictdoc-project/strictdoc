@@ -77,7 +77,7 @@ class StrictDocSemanticError(Exception):
                 f"grammar: {grammar_field.title}"
             ),
             hint=(
-                f"Requirement fields: [{requirement.dump_fields()}], "
+                f"Requirement fields: [{requirement.dump_fields_as_parsed()}], "
                 f"Grammar fields: [{grammar_fields}]"
             ),
             example=None,
@@ -104,7 +104,7 @@ class StrictDocSemanticError(Exception):
                 f"{requirement_field.field_name}"
             ),
             hint=(
-                f"Requirement fields: [{requirement.dump_fields()}], "
+                f"Requirement fields: [{requirement.dump_fields_as_parsed()}], "
                 f"Grammar fields: [{grammar_fields}]"
             ),
             example=None,
@@ -125,7 +125,7 @@ class StrictDocSemanticError(Exception):
         assert isinstance(
             problematic_field, RequirementField
         ), f"{problematic_field}"
-        requirement_dump = requirement.dump_fields()
+        requirement_dump = requirement.dump_fields_as_parsed()
         grammar_dump = document_grammar.dump_fields(
             requirement.requirement_type
         )

@@ -1,5 +1,6 @@
 from typing import Optional, List
 
+from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
@@ -22,19 +23,19 @@ class SDocObjectFactory:
     @staticmethod
     def create_requirement(  # pylint: disable=too-many-arguments
         parent,
-        requirement_type: str,
-        uid: Optional[str],
-        level: Optional[str],
-        title: Optional[str],
-        statement: Optional[str],
-        statement_multiline: Optional[str],
-        rationale: Optional[str],
-        rationale_multiline: Optional[str],
-        tags: Optional[str],
-        comments: Optional[List[str]],
+        requirement_type: Optional[str] = "REQUIREMENT",
+        uid: Optional[str] = None,
+        level: Optional[str] = None,
+        title: Optional[str] = None,
+        statement: Optional[str] = None,
+        statement_multiline: Optional[str] = None,
+        rationale: Optional[str] = None,
+        rationale_multiline: Optional[str] = None,
+        tags: Optional[str] = None,
+        comments: Optional[List[str]] = None,
     ) -> Requirement:
         fields: List[RequirementField] = []
-        if uid:
+        if uid is not None:
             assert isinstance(uid, str) and len(uid) > 0
             fields.append(
                 RequirementField(
@@ -133,9 +134,15 @@ class SDocObjectFactory:
                         field_value_references=None,
                     )
                 )
-        return Requirement(
+        requirement = Requirement(
             parent=parent, requirement_type=requirement_type, fields=fields
         )
+        requirement.ng_document_reference = DocumentReference()
+        if isinstance(parent, Document):
+            requirement.ng_document_reference.set_document(parent)
+        else:
+            requirement.ng_document_reference.set_document(parent.document)
+        return requirement
 
     @staticmethod
     def create_requirement_from_dict(requirement_dict, parent, level):

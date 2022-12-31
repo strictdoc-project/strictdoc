@@ -5,6 +5,7 @@ import sys
 import bs4
 from bs4 import BeautifulSoup
 
+from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 
 STRICTDOC_ROOT_PATH = os.path.join(os.path.dirname(__file__), "..")
@@ -50,7 +51,9 @@ class ConfluenceHTMLTableImport:
         )
         for section_idx, reqs in enumerate(reqs_array_array):
             section_name = headers[section_idx].text
-            section = Section(document, None, 1, section_name, [], [])
+            section = Section(document, None, "1", section_name, [], [])
+            section.ng_document_reference = DocumentReference()
+            section.ng_document_reference.set_document(document)
             document.section_contents.append(section)
             for req in reqs:
                 uid = req["UID"]

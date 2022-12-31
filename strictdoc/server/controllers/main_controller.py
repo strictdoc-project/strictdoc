@@ -669,6 +669,7 @@ class MainController:
 
         form_object = RequirementFormObject(
             requirement_mid=uuid.uuid4().hex,
+            requirement_uid=None,
             requirement_title=None,
             requirement_statement=None,
             requirement_rationale=None,
@@ -711,6 +712,7 @@ class MainController:
         self,
         *,
         requirement_mid: str,
+        requirement_uid: Optional[str],
         requirement_title: Optional[str],
         requirement_statement: Optional[str],
         requirement_rationale: Optional[str],
@@ -719,6 +721,9 @@ class MainController:
     ):
         assert isinstance(requirement_mid, str)
 
+        requirement_uid = sanitize_html_form_field(
+            requirement_uid, multiline=False
+        )
         requirement_title = sanitize_html_form_field(
             requirement_title, multiline=False
         )
@@ -739,6 +744,7 @@ class MainController:
         )
         form_object = RequirementFormObject(
             requirement_mid=requirement_mid,
+            requirement_uid=requirement_uid,
             requirement_title=requirement_title,
             requirement_statement=requirement_statement,
             requirement_rationale=requirement_rationale,
@@ -800,11 +806,9 @@ class MainController:
         requirement = SDocObjectFactory.create_requirement(
             parent=parent,
             requirement_type="REQUIREMENT",
-            uid=None,
+            uid=requirement_uid,
             level=None,
-            title=requirement_title
-            if requirement_title is not None and len(requirement_title) > 0
-            else None,
+            title=requirement_title,
             statement=None,
             statement_multiline=requirement_statement,
             rationale=None,
@@ -820,13 +824,11 @@ class MainController:
             requirement.node_id
         ] = requirement
 
-        if requirement_title is not None and len(requirement_title) > 0:
-            requirement.title = requirement_title
-
-        # Updating section content.
-        requirement.statement_multiline = requirement_statement
-
         parent.section_contents.insert(insert_to_idx, requirement)
+
+        self.export_action.traceability_index.mut_add_uid_to_a_requirement(
+            requirement=requirement
+        )
 
         # Saving new content to .SDoc file.
         document_content = SDWriter().write(document)
@@ -905,6 +907,7 @@ class MainController:
         self,
         *,
         requirement_mid: str,
+        requirement_uid: Optional[str],
         requirement_title: Optional[str],
         requirement_statement: Optional[str],
         requirement_rationale: Optional[str],
@@ -913,6 +916,9 @@ class MainController:
             isinstance(requirement_mid, str) and len(requirement_mid) > 0
         ), f"{requirement_mid}"
 
+        requirement_uid = sanitize_html_form_field(
+            requirement_uid, multiline=False
+        )
         requirement_title = sanitize_html_form_field(
             requirement_title, multiline=False
         )
@@ -930,6 +936,7 @@ class MainController:
 
         form_object = RequirementFormObject(
             requirement_mid=requirement_mid,
+            requirement_uid=requirement_uid,
             requirement_title=requirement_title,
             requirement_statement=requirement_statement,
             requirement_rationale=requirement_rationale,
@@ -969,6 +976,23 @@ class MainController:
                 form_object=form_object,
             )
             return output
+
+        existing_uid = requirement.uid
+        if requirement_uid is not None and len(requirement_uid) > 0:
+            requirement.ordered_fields_lookup["UID"] = [
+                RequirementField(
+                    requirement,
+                    field_name="UID",
+                    field_value=requirement_uid,
+                    field_value_multiline=None,
+                    field_value_references=None,
+                )
+            ]
+            requirement.uid = requirement_uid
+        else:
+            if "UID" in requirement.ordered_fields_lookup:
+                del requirement.ordered_fields_lookup["UID"]
+                requirement.uid = None
 
         if requirement_title is not None and len(requirement_title) > 0:
             requirement.ordered_fields_lookup["TITLE"] = [
@@ -1013,6 +1037,12 @@ class MainController:
                 del requirement.ordered_fields_lookup["RATIONALE"]
             requirement.rationale = None
             requirement.rationale_multiline = None
+
+        requirement.update_has_meta()
+
+        self.export_action.traceability_index.mut_rename_uid_to_a_requirement(
+            requirement=requirement, old_uid=existing_uid
+        )
 
         # Saving new content to .SDoc file.
         document_content = SDWriter().write(document)

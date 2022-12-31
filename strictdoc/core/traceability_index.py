@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Optional
 
 from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.source_file_syntax.reader import (
@@ -168,3 +168,23 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def get_node_by_id(self, node_id):
         assert isinstance(node_id, str), f"{node_id}"
         return self._map_id_to_node[node_id]
+
+    def mut_add_uid_to_a_requirement(self, requirement: Requirement):
+        self.requirements_parents[requirement.uid] = {
+            "document": requirement.document,
+            "requirement": requirement,
+            "parents": [],
+            "parents_uids": [],
+            "children": [],
+        }
+
+    def mut_rename_uid_to_a_requirement(
+        self, requirement: Requirement, old_uid: Optional[str]
+    ) -> None:
+        if old_uid is None:
+            self.mut_add_uid_to_a_requirement(requirement)
+            return
+
+        existing_entry = self.requirements_parents[old_uid]
+        del self.requirements_parents[old_uid]
+        self.requirements_parents[requirement.uid] = existing_entry

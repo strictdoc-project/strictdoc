@@ -18,6 +18,8 @@ path_to_expected_downloaded_file = os.path.join(
 
 class Test_20_ExportTreeToReqIF(BaseCase):
     def test_01(self):
+        shutil.rmtree(DOWNLOADED_FILES_PATH, ignore_errors=True)
+
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
         )

@@ -193,6 +193,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
     )
     def create_requirement(
         requirement_mid: str = Form(None),
+        requirement_uid: str = Form(None),
         requirement_title: str = Form(None),
         requirement_statement: str = Form(None),
         requirement_rationale: str = Form(None),
@@ -201,6 +202,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
     ):
         content = main_controller.create_requirement(
             requirement_mid=requirement_mid,
+            requirement_uid=requirement_uid,
             requirement_title=requirement_title,
             requirement_statement=requirement_statement,
             requirement_rationale=requirement_rationale,
@@ -234,12 +236,14 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
     )
     def post_update_requirement(
         requirement_mid: str = Form(None),
+        requirement_uid: str = Form(None),
         requirement_title: str = Form(None),
         requirement_statement: str = Form(None),
         requirement_rationale: str = Form(None),
     ):
         content = main_controller.update_requirement(
             requirement_mid=requirement_mid,
+            requirement_uid=requirement_uid,
             requirement_title=requirement_title,
             requirement_statement=requirement_statement,
             requirement_rationale=requirement_rationale,

@@ -49,6 +49,8 @@ Hello world!
         )
         self.click_xpath("//button[@type='submit' and text()='Save']")
 
+        self.assert_text_not_visible("Save")
+
         assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))
 
         sandbox_document = Path(path_to_sandbox_document).read_text()

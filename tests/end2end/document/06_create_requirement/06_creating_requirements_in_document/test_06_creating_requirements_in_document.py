@@ -35,6 +35,7 @@ class Test06CreateRequirement(BaseCase):
         # Requirement 1
         self.click_nth_visible_element("//a[contains(text(), '+R⬊')]", 1)
 
+        self.type("#requirement_uid", "REQ-001")
         self.type("#requirement_title", "Requirement title #1")
         self.type("#requirement_statement", "Requirement statement #1.")
         self.type("#requirement_rationale", "Requirement rationale #1.")
@@ -44,6 +45,7 @@ class Test06CreateRequirement(BaseCase):
         # Requirement 2
         self.click_nth_visible_element("//a[contains(text(), '+R⬇')]", 1)
 
+        self.type("#requirement_uid", "REQ-002")
         self.type("#requirement_title", "Requirement title #2")
         self.type("#requirement_statement", "Requirement statement #2.")
         self.type("#requirement_rationale", "Requirement rationale #2.")
@@ -53,6 +55,7 @@ class Test06CreateRequirement(BaseCase):
         # Requirement 3
         self.click_nth_visible_element("//a[contains(text(), '+R⬇')]", 2)
 
+        self.type("#requirement_uid", "REQ-003")
         self.type("#requirement_title", "Requirement title #3")
         self.type("#requirement_statement", "Requirement statement #3.")
         self.type("#requirement_rationale", "Requirement rationale #3.")

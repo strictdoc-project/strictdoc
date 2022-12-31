@@ -27,6 +27,7 @@ def test_03_negative():
     assert multi_choice_regex_match("A,B") is False
 
 
+# FIXME: This test does not belong here.
 def test_04_meta_multilines_not_nones():
     document_config = DocumentConfig.default_config(None)
     document = Document("Test Doc", document_config, None, [], [])
@@ -62,7 +63,7 @@ def test_04_meta_multilines_not_nones():
         tags=None,
         comments=None,
     )
-    fields = template_requirement.fields
+    fields = list(template_requirement.enumerate_fields())
     fields.append(
         RequirementField(
             parent=None,

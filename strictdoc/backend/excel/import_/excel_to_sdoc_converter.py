@@ -193,7 +193,6 @@ class ExcelToSDocConverter:
                 field_value_multiline=None,
                 field_value_references=[reference],
             )
-            template_requirement.fields.append(requirement_field)
             template_requirement.ordered_fields_lookup["REFS"] = [
                 requirement_field
             ]
@@ -201,7 +200,7 @@ class ExcelToSDocConverter:
         for i, name in columns.extra_header_pairs:
             value = row_values[i].strip()
             if value != "":
-                template_requirement.fields.append(
+                template_requirement.ordered_fields_lookup[name] = [
                     RequirementField(
                         parent=None,
                         field_name=name,
@@ -209,12 +208,12 @@ class ExcelToSDocConverter:
                         field_value_multiline=value,
                         field_value_references=None,
                     )
-                )
+                ]
 
         requirement = Requirement(
             parent=template_requirement.parent,
             requirement_type=template_requirement.requirement_type,
-            fields=template_requirement.fields,
+            fields=list(template_requirement.enumerate_fields()),
         )
         requirement.ng_level = 1
 

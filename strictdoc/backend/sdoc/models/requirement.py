@@ -302,13 +302,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         meta_field_value = meta_field_value_or_none
         return meta_field_value
 
-    def update_has_meta(self):
-        has_meta: bool = False
-        for field in self.enumerate_fields():
-            if field.field_name not in RESERVED_NON_META_FIELDS:
-                has_meta = True
-        self.has_meta = has_meta
-
     def dump_fields_as_parsed(self):
         return ", ".join(
             list(
@@ -318,6 +311,8 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
                 )
             )
         )
+
+    # Below all mutating methods.
 
     def set_field_value(self, field_name: str, value):
         """
@@ -390,6 +385,14 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
                     field_title
                 ] = self.ordered_fields_lookup[field_title]
         self.ordered_fields_lookup = new_ordered_fields_lookup
+        self._update_has_meta()
+
+    def _update_has_meta(self):
+        has_meta: bool = False
+        for field in self.enumerate_fields():
+            if field.field_name not in RESERVED_NON_META_FIELDS:
+                has_meta = True
+        self.has_meta = has_meta
 
 
 @auto_described

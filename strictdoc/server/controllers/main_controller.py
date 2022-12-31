@@ -24,7 +24,6 @@ from strictdoc.backend.sdoc.models.free_text import FreeText, FreeTextContainer
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
-    RequirementField,
 )
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.writer import SDWriter
@@ -978,67 +977,18 @@ class MainController:
             return output
 
         existing_uid = requirement.uid
-        if requirement_uid is not None and len(requirement_uid) > 0:
-            requirement.ordered_fields_lookup["UID"] = [
-                RequirementField(
-                    requirement,
-                    field_name="UID",
-                    field_value=requirement_uid,
-                    field_value_multiline=None,
-                    field_value_references=None,
-                )
-            ]
-            requirement.uid = requirement_uid
-        else:
-            if "UID" in requirement.ordered_fields_lookup:
-                del requirement.ordered_fields_lookup["UID"]
-                requirement.uid = None
 
-        if requirement_title is not None and len(requirement_title) > 0:
-            requirement.ordered_fields_lookup["TITLE"] = [
-                RequirementField(
-                    requirement,
-                    field_name="TITLE",
-                    field_value=requirement_title,
-                    field_value_multiline=None,
-                    field_value_references=None,
-                )
-            ]
-            requirement.title = requirement_title
-        else:
-            if "TITLE" in requirement.ordered_fields_lookup:
-                del requirement.ordered_fields_lookup["TITLE"]
-                requirement.title = None
-
+        # FIXME: Leave only one method based on set_field_value().
+        requirement.set_field_value("UID", requirement_uid)
+        requirement.uid = requirement_uid
+        requirement.set_field_value("TITLE", requirement_title)
+        requirement.title = requirement_title
+        requirement.set_field_value("STATEMENT", requirement_statement)
         requirement.statement_multiline = requirement_statement
-        requirement.ordered_fields_lookup["STATEMENT"] = [
-            RequirementField(
-                requirement,
-                field_name="STATEMENT",
-                field_value=None,
-                field_value_multiline=requirement_statement,
-                field_value_references=None,
-            )
-        ]
-
-        if requirement_rationale is not None:
-            requirement.rationale_multiline = requirement_rationale
-            requirement.ordered_fields_lookup["RATIONALE"] = [
-                RequirementField(
-                    requirement,
-                    field_name="RATIONALE",
-                    field_value=None,
-                    field_value_multiline=requirement_rationale,
-                    field_value_references=None,
-                )
-            ]
-        else:
-            if "RATIONALE" in requirement.ordered_fields_lookup:
-                del requirement.ordered_fields_lookup["RATIONALE"]
-            requirement.rationale = None
-            requirement.rationale_multiline = None
-
-        requirement.update_has_meta()
+        requirement.statement = None
+        requirement.set_field_value("RATIONALE", requirement_rationale)
+        requirement.rationale_multiline = requirement_rationale
+        requirement.rationale = None
 
         self.export_action.traceability_index.mut_rename_uid_to_a_requirement(
             requirement=requirement, old_uid=existing_uid

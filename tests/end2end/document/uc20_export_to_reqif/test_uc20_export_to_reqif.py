@@ -14,6 +14,8 @@ path_to_expected_downloaded_file = os.path.join(
 
 class Test_UC20_ExportToReqIF(BaseCase):
     def test_01(self):
+        shutil.rmtree(DOWNLOADED_FILES_PATH, ignore_errors=True)
+
         test_server = SDocTestServer(path_to_this_test_file_folder, None)
         test_server.run()
 

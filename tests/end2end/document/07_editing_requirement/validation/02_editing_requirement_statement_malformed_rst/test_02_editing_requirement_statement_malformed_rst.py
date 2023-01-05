@@ -34,7 +34,7 @@ class Test_02_EditRequirementStatementMalformedRST(BaseCase):
         self.click_nth_visible_element("//a[contains(text(), 'Edit')]", 2)
 
         self.type(
-            "#requirement_statement",
+            "#requirement_STATEMENT",
             """
 - Broken RST markup
 

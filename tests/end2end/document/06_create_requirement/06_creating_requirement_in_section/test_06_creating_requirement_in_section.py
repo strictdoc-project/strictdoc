@@ -34,8 +34,8 @@ class Test06CreateRequirementInSection(BaseCase):
 
         self.click_nth_visible_element("//a[contains(text(), '+R⬊')]", 1)
 
-        self.type("#requirement_title", "Requirement title")
-        self.type("#requirement_statement", "Requirement statement")
+        self.type("#requirement_TITLE", "Requirement title")
+        self.type("#requirement_STATEMENT", "Requirement statement")
 
         self.click_xpath("//button[@type='submit' and text()='Save']")
 

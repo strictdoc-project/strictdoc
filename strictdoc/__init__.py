@@ -1,6 +1,6 @@
 import os
 
-__version__ = "0.0.31-alpha.2"
+__version__ = "0.0.31"
 
 STRICTDOC_ROOT_PATH = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..")

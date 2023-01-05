@@ -12,7 +12,10 @@ FIXTURES_PATH = os.path.abspath(
 def test_01():
     html_file = os.path.join(
         FIXTURES_PATH,
-        "001-confluence-html-file-two-sections/001-confluence-html-table-two-sections.html",
+        (
+            "001-confluence-html-file-two-sections/"
+            "001-confluence-html-table-two-sections.html"
+        ),
     )
     sdoc = ConfluenceHTMLTableImport.import_from_file(html_file)
 
@@ -50,7 +53,10 @@ def test_01():
 def test_02():
     html_file = os.path.join(
         FIXTURES_PATH,
-        "002-confluence-html-file-parsing-paragraphs/002-confluence-html-table-parsing-paragraphs.html",
+        (
+            "002-confluence-html-file-parsing-paragraphs/"
+            "002-confluence-html-table-parsing-paragraphs.html"
+        ),
     )
     sdoc = ConfluenceHTMLTableImport.import_from_file(html_file)
 

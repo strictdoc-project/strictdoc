@@ -14,8 +14,8 @@ args = parser.parse_args()
 input_file = args.input_file
 if not os.path.isfile(input_file):
     sys.stdout.flush()
-    err = "error: html_markup_validator: input file does not exist: {}".format(
-        input_file
+    err = (
+        f"error: html_markup_validator: input file does not exist: {input_file}"
     )
     print(err)
     exit(1)
@@ -37,7 +37,7 @@ except Exception as e:
 _, tidylib_messages_string = tidy_document(
     html_content,
     options={
-        "new-blocklevel-tags": "main, aside, header, section, article, nav, svg, path, turbo-frame",
+        "new-blocklevel-tags": "main, aside, header, section, article, nav, svg, path, turbo-frame",  # noqa: E501
         "char-encoding": "utf8",
         "input-encoding": "utf8",
         "output-encoding": "utf8",

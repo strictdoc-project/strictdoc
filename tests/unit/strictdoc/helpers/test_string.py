@@ -21,7 +21,7 @@ def test_multireplace_01():
 def test_sanitize_01_trims_all_fields_in_initializer_spaces():
     field = """
         Hello world!        
-    """
+    """  # noqa: W291
     sanitized_field = sanitize_html_form_field(field, multiline=False)
     assert sanitized_field == "Hello world!"
 
@@ -32,7 +32,7 @@ def test_sanitize_01_trims_all_fields_in_initializer_spaces():
 def test_sanitize_02_trims_all_fields_in_initializer_newlines():
     field = """
         \n\n    Hello world!   \n\n     
-    """
+    """  # noqa: W291
     sanitized_field = sanitize_html_form_field(field, multiline=False)
     assert sanitized_field == "Hello world!"
 
@@ -48,7 +48,7 @@ Hello world!
 Hello world!    
 
 Hello world!    
-    """
+    """  # noqa: W291
     sanitized_field = sanitize_html_form_field(field, multiline=True)
     assert sanitized_field == "Hello world!\n\nHello world!\n\nHello world!"
 
@@ -58,6 +58,6 @@ def test_sanitize_04_single_line_removes_all_newlines():
         Hello world!        
         Hello world!
         Hello world!
-    """
+    """  # noqa: W291
     sanitized_field = sanitize_html_form_field(field, multiline=False)
     assert sanitized_field == "Hello world! Hello world! Hello world!"

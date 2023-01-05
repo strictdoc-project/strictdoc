@@ -1,8 +1,6 @@
-import filecmp
 import os
 import shutil
 
-from selenium.webdriver import Keys
 from seleniumbase import BaseCase
 
 from tests.end2end.server import SDocTestServer

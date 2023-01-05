@@ -43,7 +43,7 @@ Hello world!
 Hello world!    
 
 Hello world!    
-            """,
+            """,  # noqa: W291
         )
 
         self.click_xpath("//button[@type='submit' and text()='Save']")

@@ -326,7 +326,7 @@ def lint_pylint(context):
         pylint
           --rcfile=.pylint.ini
           --disable=c-extension-no-member
-          strictdoc/ tasks.py
+          strictdoc/ tests/ tasks.py
         """  # pylint: disable=line-too-long
     try:
         run_invoke_cmd(context, command)
@@ -339,7 +339,7 @@ def lint_pylint(context):
 @task
 def lint_flake8(context):
     command = """
-        flake8 strictdoc --statistics --max-line-length 80 --show-source
+        flake8 strictdoc/ tests/ --statistics --max-line-length 80 --show-source
         """
     run_invoke_cmd(context, command)
 

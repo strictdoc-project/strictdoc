@@ -1,14 +1,16 @@
-import atexit
 import datetime
 import os
 import re
+
+# FIXME: select has no poll() on Windows. Find a portable implementation.
 import select
 import shutil
 import subprocess
+import sys
 from threading import Thread
 from time import sleep
 
-import psutil as psutil
+import psutil
 
 # Running selenium tests on GitHub Actions CI is considerably slower.
 # Passing the flag via env because pytest makes it hard to introduce an extra
@@ -85,18 +87,20 @@ class SDocTestServer:
                 ]
             )
 
-        temp_file = open("/tmp/sdoctest.out.log", "w")
+        temp_file = open(  # pylint: disable=consider-using-with
+            "/tmp/sdoctest.out.log", "w", encoding="utf8"
+        )
 
-        # print(f"command: " + " ".join(args))
-
-        process = subprocess.Popen(
+        process = subprocess.Popen(  # pylint: disable=consider-using-with
             args, stdout=temp_file.fileno(), stderr=subprocess.PIPE, shell=False
         )
         self.process = process
 
         # A non-blocking read on a subprocess.PIPE in Python
         # https://stackoverflow.com/a/59291466/598057
-        os.set_blocking(process.stderr.fileno(), False)
+        os.set_blocking(  # pylint: disable=no-member
+            process.stderr.fileno(), False
+        )
 
         SDocTestServer.receive_expected_response(
             server_process=process,
@@ -109,8 +113,10 @@ class SDocTestServer:
 
     @staticmethod
     def receive_expected_response(server_process, expectations):
-        poll = select.poll()
-        poll.register(server_process.stderr, select.POLLIN)
+        poll = select.poll()  # pylint: disable=no-member
+        poll.register(
+            server_process.stderr, select.POLLIN  # pylint: disable=no-member
+        )  # pylint: disable=no-member
         received_input = []
 
         start_time = datetime.datetime.now()
@@ -136,37 +142,36 @@ class SDocTestServer:
                     raise ReadTimeout()
         except ReadTimeout:
             print(
-                f"---------------------------------------------------------------------"
+                "---------------------------------------------------------------------"  # noqa: E501
             )
-            print(f"Failed to get an expected response from the server.")
+            print("Failed to get an expected response from the server.")
             received_lines = "".join(received_input)
             print(f"Received input:\n{received_lines}")
-            exit(1)
+            sys.exit(1)
 
     @staticmethod
     def enqueue_output(out):
         # This solution also uses Queue but here it is not used.
         # https://stackoverflow.com/a/4896288/598057
-        temp_file = open("/tmp/sdoctest.err.log", "wb")
+        with open("/tmp/sdoctest.err.log", "wb") as temp_file:
+            poll = select.poll()  # pylint: disable=no-member
+            poll.register(out, select.POLLIN)  # pylint: disable=no-member
 
-        poll = select.poll()
-        poll.register(out, select.POLLIN)
-
-        while True:
-            if poll.poll(1000):
-                line_bytes = out.readline()
-                while line_bytes:
-                    temp_file.write(line_bytes)
+            while True:
+                if poll.poll(1000):
                     line_bytes = out.readline()
-                temp_file.flush()
+                    while line_bytes:
+                        temp_file.write(line_bytes)
+                        line_bytes = out.readline()
+                    temp_file.flush()
 
     @staticmethod
     def continue_capturing_stderr(server_process):
-        t = Thread(
+        thread = Thread(
             target=SDocTestServer.enqueue_output, args=(server_process.stderr,)
         )
-        t.daemon = True  # thread dies with the program
-        t.start()
+        thread.daemon = True  # thread dies with the program
+        thread.start()
 
         # # read line without blocking
         # try:

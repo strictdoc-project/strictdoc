@@ -2,13 +2,14 @@ from strictdoc.helpers.html import prettify_html_fragment
 
 
 def test_01():
+    # Line also contains trailing whitespace
     node = """<content>
 
 
     Text outside tag <div>Text <em>inside</em> tag</div>
     
     </content>
-    """.rstrip()
+    """.rstrip()  # noqa: W293
 
     expected_pretty_html = """
 <content>

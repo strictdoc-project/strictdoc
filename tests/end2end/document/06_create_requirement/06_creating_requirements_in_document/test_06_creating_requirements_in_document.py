@@ -69,13 +69,16 @@ class Test06CreateRequirement(BaseCase):
         self.assert_text("3. Requirement title #3")
 
         self.assert_element(
-            "//turbo-frame[@id='frame-toc']//*[contains(., 'Requirement title #1')]"
+            "//turbo-frame[@id='frame-toc']"
+            "//*[contains(., 'Requirement title #1')]"
         )
         self.assert_element(
-            "//turbo-frame[@id='frame-toc']//*[contains(., 'Requirement title #2')]"
+            "//turbo-frame[@id='frame-toc']"
+            "//*[contains(., 'Requirement title #2')]"
         )
         self.assert_element(
-            "//turbo-frame[@id='frame-toc']//*[contains(., 'Requirement title #3')]"
+            "//turbo-frame[@id='frame-toc']"
+            "//*[contains(., 'Requirement title #3')]"
         )
 
         # Check the resulting SDoc.

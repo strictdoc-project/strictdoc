@@ -45,7 +45,7 @@ Hello world!
 Hello world!    
 
 Hello world!    
-            """,
+            """,  # noqa: W291
         )
 
         self.click_xpath("//button[@type='submit' and text()='Save']")
@@ -55,7 +55,8 @@ Hello world!
         self.assert_text("1. Requirement title #1")
 
         self.assert_element(
-            "//turbo-frame[@id='frame-toc']//*[contains(., 'Requirement title #1')]"
+            "//turbo-frame[@id='frame-toc']"
+            "//*[contains(., 'Requirement title #1')]"
         )
 
         # Check the resulting SDoc.

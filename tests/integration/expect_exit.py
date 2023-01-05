@@ -12,9 +12,9 @@ try:
         raise ValueError
 except ValueError:
     print(
-        "error: expect_exit: expect numeric exit code within range [0, 127]: {}".format(
-            expected_exit_code_arg
-        )
+        "error: expect_exit: "
+        "expect numeric exit code within range [0, 127]: "
+        f"{expected_exit_code_arg}"
     )
     exit(1)
 
@@ -43,7 +43,8 @@ process = subprocess.Popen(
 # https://stackoverflow.com/a/17735803/598057
 # TODO: This is not a good idea. What if stdin is being piped in from a file?
 # TODO: isatty() is telling you if stdin is coming in directly from a terminal,
-# TODO: not if there is more data to read from stdin – Lathan Jul 24 '15 at 21:35
+# TODO: not if there is more data to read from stdin –
+# TODO: Lathan Jul 24 '15 at 21:35
 subprocess_input = sys.stdin.read() if not sys.stdin.isatty() else None
 stdout, _ = process.communicate(input=subprocess_input)
 

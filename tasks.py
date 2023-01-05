@@ -19,11 +19,7 @@ VENV_FOLDER = "VENV_FOLDER"
 # only once independently of which task or a sequence of tasks is executed.
 VENV_DEPS_CHECK_PASSED = "VENV_DEPS_CHECK_PASSED"
 
-COMMAND_SETUP_DEPS = """
-    pip install --upgrade pip setuptools &&
-    pip install -r requirements.txt &&
-    pip install -r requirements.development.txt
-"""
+COMMAND_SETUP_DEPS = "pip install .[development]"
 
 
 def one_line_command(string):
@@ -82,6 +78,7 @@ def run_invoke_cmd(
             result = context.run(
                 one_line_command(
                     """
+                    pip install toml &&
                     python3 check_environment.py
                     """
                 ),
@@ -440,9 +437,10 @@ def release_local(context):
     context[VENV_FOLDER] = VenvFolderType.RELEASE_LOCAL
     command = """
         rm -rfv dist/ build/ && 
-        python3 -m pip uninstall strictdoc -y &&
-        python3 setup.py check &&
-            python3 setup.py install
+        pip uninstall strictdoc -y &&
+        python3 -m build &&
+        twine check dist/* &&
+        pip install dist/*.tar.gz
     """
     run_invoke_cmd(context, command)
     test_integration(context, strictdoc="strictdoc")
@@ -455,8 +453,8 @@ def release(context, username=None, password=None):
     context[VENV_FOLDER] = VenvFolderType.RELEASE_PYPI
     command = f"""
         rm -rfv dist/ &&
-        python3 setup.py check &&
-            python3 setup.py sdist --verbose &&
+        python3 -m build &&
+            twine check dist/* &&
             twine upload dist/strictdoc-*.tar.gz
                 {user_password}
     """
@@ -470,9 +468,11 @@ def release_test(context):
 
     command = """
         rm -rfv dist/ &&
-        python3 setup.py check &&
-            python3 setup.py sdist --verbose &&
-            twine upload --repository-url https://test.pypi.org/legacy/ dist/strictdoc-*.tar.gz
+        python3 -m build &&
+            twine check dist/* &&
+            twine upload
+                --repository-url
+                    https://test.pypi.org/legacy/ dist/strictdoc-*.tar.gz
     """
     run_invoke_cmd(context, command)
 

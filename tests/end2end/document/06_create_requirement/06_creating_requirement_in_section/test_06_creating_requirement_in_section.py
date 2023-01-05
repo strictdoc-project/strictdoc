@@ -41,7 +41,8 @@ class Test06CreateRequirementInSection(BaseCase):
 
         self.assert_text("1. Requirement title")
         self.assert_element(
-            "//turbo-frame[@id='frame-toc']//*[contains(., 'Requirement title')]"
+            "//turbo-frame[@id='frame-toc']"
+            "//*[contains(., 'Requirement title')]"
         )
 
         assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))

@@ -69,7 +69,9 @@ def test_04_meta_multilines_not_nones():
             parent=None,
             field_name=test_field,
             field_value=None,
-            field_value_multiline="a long\nmultiline value instead\nof the single line one",
+            field_value_multiline=(
+                "a long\nmultiline value instead\nof the single line one"
+            ),
             field_value_references=None,
         )
     )

@@ -1,9 +1,8 @@
 import argparse
-import itertools
 import os
 import sys
 
-from openpyxl import Workbook, load_workbook
+from openpyxl import load_workbook
 
 arg_parser = argparse.ArgumentParser()
 

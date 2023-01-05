@@ -115,7 +115,7 @@ TITLE: Test Doc
 
 [REQUIREMENT]
 COMMENT: 
-""".lstrip()
+""".lstrip()  # noqa: W291
 
     reader = SDReader()
 
@@ -421,9 +421,10 @@ This is a Rationale line 3
         document.section_contents[0].section_contents[0], Requirement
     )
     requirement_1 = document.section_contents[0].section_contents[0]
-    assert (
-        requirement_1.rationale_multiline
-        == "This is a Rationale line 1\nThis is a Rationale line 2\nThis is a Rationale line 3"
+    assert requirement_1.rationale_multiline == (
+        "This is a Rationale line 1\n"
+        "This is a Rationale line 2\n"
+        "This is a Rationale line 3"
     )
 
 
@@ -729,7 +730,7 @@ STATEMENT: ABC
     assert document.config.uid == "SDOC-01"
     assert document.config.classification == "Restricted"
     assert document.config.markup == "Text"
-    assert document.config.auto_levels == False
+    assert document.config.auto_levels is False
     assert document.config.requirement_style == "Table"
     assert document.config.requirement_in_toc == "True"
 
@@ -1142,7 +1143,7 @@ REFS:
 - TYPE: BibRef
   FORMAT: String
   VALUE: SampleCiteKeyStringRef-1, "The sample BibReference String-Format"
-""".lstrip()
+""".lstrip()  # noqa: E501
 
     reader = SDReader()
 
@@ -1459,8 +1460,8 @@ REFS:
     assert exc_info.type is StrictDocSemanticError
 
     assert re.fullmatch(
-        f"Requirement field of type Reference has an unsupported Reference"
-        f" Type item: FileReference\\(.*\\)",
+        "Requirement field of type Reference has an unsupported Reference"
+        " Type item: FileReference\\(.*\\)",
         exc_info.value.args[0],
     )
 
@@ -1509,7 +1510,7 @@ REFS:
 - TYPE: BibRef
   FORMAT: Citation
   VALUE: hawking1989brief, section 2.1
-""".lstrip()
+""".lstrip()  # noqa: E501
 
     reader = SDReader()
 
@@ -1595,7 +1596,7 @@ REFS:
 - TYPE: BibRef
   FORMAT: BibTex
   VALUE: @book{hawking1989brief, title={A Brief History of Time: From the Big Bang to Black Holes}, author={Hawking, Stephen}, isbn={9780553176988}, year={1989}, publisher={Bantam Books} }
-""".lstrip()
+""".lstrip()  # noqa: E501
 
     reader = SDReader()
 
@@ -1617,11 +1618,15 @@ REFS:
     reference = references[1]
     assert isinstance(reference, BibReference)
     assert reference.ref_type == ReferenceType.BIB_REF
-    assert (
-        reference.bib_entry.bib_value == "@book{hawking1989brief, "
-        "title={A Brief "
-        "History of Time: From the Big Bang to Black Holes}, author={Hawking, Stephen}, isbn={9780553176988}, year={1989}, publisher={Bantam Books} }"
-    )
+    assert reference.bib_entry.bib_value == (
+        "@book{hawking1989brief, "
+        "title={A Brief History of Time: From the Big Bang to Black Holes}, "
+        "author={Hawking, Stephen}, "
+        "isbn={9780553176988}, "
+        "year={1989}, "
+        "publisher={Bantam Books} "
+        "}"
+    )  # noqa: E501
 
     writer = SDWriter()
     output = writer.write(document)
@@ -1656,7 +1661,7 @@ REFS:
 - TYPE: BibRef
   FORMAT: BibTex
   VALUE: @book{hawking1989brief, title={A Brief History of Time: From the Big Bang to Black Holes}, author={Hawking, Stephen}, isbn={9780553176988}, year={1989}, publisher={Bantam Books} }
-""".lstrip()
+""".lstrip()  # noqa: E501
 
     reader = SDReader()
     with pytest.raises(Exception) as exc_info:

@@ -124,7 +124,7 @@ def hello_world_2():
 """.lstrip()
 
     reader = SourceFileTraceabilityReader()
-    traceability_info = reader.read(input)
+    _ = reader.read(input)
 
 
 def test_006_empty_file():

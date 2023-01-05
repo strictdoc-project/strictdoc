@@ -1,6 +1,8 @@
+import pathlib
 import sys
 
 import pkg_resources
+import toml
 
 print(
     "check_environment.py: "
@@ -12,8 +14,14 @@ try:
     # Quicker way of checking if an environment has all packages installed.
     # It is faster than running pip install ... every time.
     # https://stackoverflow.com/a/65606063/598057
-    pkg_resources.require(open("requirements.txt", mode="r"))
-    pkg_resources.require(open("requirements.development.txt", mode="r"))
+    # Modified to read from pyproject.toml, not requirements.txt file.
+    pyproject_content = toml.load("pyproject.toml")
+    dependencies = pyproject_content["project"]["dependencies"]
+    dependencies_development = pyproject_content["project"][
+        "optional-dependencies"
+    ]["development"]
+    pkg_resources.require(dependencies)
+    pkg_resources.require(dependencies_development)
 except pkg_resources.DistributionNotFound as exception:
     print(f"check_environment.py: {exception}")
     sys.exit(11)

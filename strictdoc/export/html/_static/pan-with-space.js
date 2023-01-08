@@ -9,7 +9,7 @@ $(document).ready(function () {
     startY: 0
   }
 
-  var element = '.layout_main';
+  const element = $('#pan-with-space');
 
   $(window).keydown(function (e) {
     if (e.key === ' ' || e.key === 'Spacebar') {
@@ -18,7 +18,7 @@ $(document).ready(function () {
       e.preventDefault();
       e.stopPropagation();
       state.spacePressed = true;
-      $(element).css('cursor', 'move');
+      element.css('cursor', 'move');
     }
 
     var moveFactor = 20;
@@ -29,22 +29,22 @@ $(document).ready(function () {
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       e.stopPropagation();
-      $(element).scrollTop($(element).scrollTop() + moveFactor);
+      element.scrollTop(element.scrollTop() + moveFactor);
     }
     else if (e.key === 'ArrowUp') {
       e.preventDefault();
       e.stopPropagation();
-      $(element).scrollTop($(element).scrollTop() - moveFactor);
+      element.scrollTop(element.scrollTop() - moveFactor);
     }
     else if (e.key === 'ArrowLeft') {
       e.preventDefault();
       e.stopPropagation();
-      $(element).scrollLeft($(element).scrollLeft() - moveFactor);
+      element.scrollLeft(element.scrollLeft() - moveFactor);
     }
     else if (e.key === 'ArrowRight') {
       e.preventDefault();
       e.stopPropagation();
-      $(element).scrollLeft($(element).scrollLeft() + moveFactor);
+      element.scrollLeft(element.scrollLeft() + moveFactor);
     }
   })
 
@@ -54,11 +54,11 @@ $(document).ready(function () {
       e.preventDefault();
       e.stopPropagation();
       state.spacePressed = false;
-      $(element).css('cursor', 'default');
+      element.css('cursor', 'default');
     }
   })
 
-  $(element).mousedown(function (e) {
+  element.mousedown(function (e) {
     if (!state.spacePressed) {
       return;
     }
@@ -77,7 +77,7 @@ $(document).ready(function () {
     state.isDown = true;
   });
 
-  $(element).mouseup(function (e) {
+  element.mouseup(function (e) {
     if (!state.spacePressed) {
       return;
     }
@@ -88,7 +88,7 @@ $(document).ready(function () {
     state.isDown = false;
   });
 
-  $(element).mousemove(function (e) {
+  element.mousemove(function (e) {
     if (!state.isDown) {
       return;
     }
@@ -110,11 +110,11 @@ $(document).ready(function () {
     state.startY = mouseY;
 
     var speedupFactor = 2;
-    $(element).scrollTop($(element).scrollTop() - dy * speedupFactor);
-    $(element).scrollLeft($(element).scrollLeft() - dx * speedupFactor);
+    element.scrollTop(element.scrollTop() - dy * speedupFactor);
+    element.scrollLeft(element.scrollLeft() - dx * speedupFactor);
   });
 
-  $(element).mouseleave(function (e) {
+  element.mouseleave(function (e) {
     // tell the browser we're handling this event
     e.preventDefault();
     e.stopPropagation();

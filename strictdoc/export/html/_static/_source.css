@@ -9,24 +9,6 @@
   --source-line: 1px solid rgba(0, 0, 0, .05);
 }
 
-/* redefine main layout grid */
-
-.source-file-view .layout_aside-header {
-  grid-area: aside-header / aside-header / toggler / toggler;
-}
-
-.source-file-view .layout_aside {
-  grid-area: aside / aside / nav / nav;
-  border-right: none;
-  overflow-y: scroll;
-  padding: var(--base-padding);
-}
-
-.source-file-view .layout_main {
-  padding: 0;
-  background: white;
-}
-
 .source-file__name {
   font-size: 1rem;
   font-weight: bold;

@@ -1,9 +1,4 @@
-/* layout_aside links */
 
-.layout_aside a {
-  color: var(--color-accent-dark);
-  line-height: 1;
-}
 
 .source-file-view .requirement_link:hover {
   text-decoration: none;

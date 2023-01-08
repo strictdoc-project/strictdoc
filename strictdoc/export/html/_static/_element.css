@@ -1,6 +1,6 @@
 
 
-.source-file-view .requirement_link:hover {
+[data-viewtype="source-file"] .requirement_link:hover {
   text-decoration: none;
 }
 

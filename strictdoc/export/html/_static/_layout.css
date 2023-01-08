@@ -86,30 +86,30 @@
 
 /* redefine main layout grid */
 
-.source-file-view .layout_aside-header {
+[data-viewtype="source-file"] .layout_aside-header {
   grid-area: aside-header / aside-header / toggler / toggler;
 }
 
-.source-file-view .layout_aside {
+[data-viewtype="source-file"] .layout_aside {
   grid-area: aside / aside / nav / nav;
   border-right: none;
   overflow-y: scroll;
   padding: var(--base-padding);
 }
 
-.source-file-view .layout_main {
+[data-viewtype="source-file"] .layout_main {
   padding: 0;
   background: white;
 }
 
 /* *** */
 
-.table-view .layout_main {
+[data-viewtype="table"] .layout_main {
   /* overflow: visible; */
   /* background-color: var(--color-bg-contrast); */
 }
 
-.table-view .layout_tmp_inner {
+[data-viewtype="table"] .layout_tmp_inner {
   background-color: var(--color-bg-contrast);
   width: fit-content;
 }
@@ -144,14 +144,14 @@
   background-color: var(--color-bg-contrast);
 }
 
-.document-view .btn-document,
-.document-view .btn-document:hover,
-.table-view .btn-table,
-.table-view .btn-table:hover,
-.traceability-view .btn-traceability,
-.traceability-view .btn-traceability:hover,
-.deep-traceability-view .btn-deep-traceability,
-.deep-traceability-view .btn-deep-traceability:hover {
+[data-viewtype="document"] .btn-document,
+[data-viewtype="document"] .btn-document:hover,
+[data-viewtype="table"] .btn-table,
+[data-viewtype="table"] .btn-table:hover,
+[data-viewtype="traceability"] .btn-traceability,
+[data-viewtype="traceability"] .btn-traceability:hover,
+[data-viewtype="deep-traceability"] .btn-deep-traceability,
+[data-viewtype="deep-traceability"] .btn-deep-traceability:hover {
   background-color: var(--color-border);
   cursor: default;
 }
@@ -219,8 +219,8 @@ ul.nav a:hover {
   text-decoration: none;
 }
 
-.document-tree-view .document-tree-link,
-.coverage-tree-view .coverage-tree-link {
+[data-viewtype="document-tree"] .document-tree-link,
+[data-viewtype="coverage-tree"] .coverage-tree-link {
   font-weight: bold;
   text-decoration: none;
   cursor: default;

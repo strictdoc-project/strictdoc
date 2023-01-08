@@ -70,7 +70,7 @@
   max-width: var(--card-width);
 }
 
-.requirements-coverage-view .requirement-tree_node {
+[data-viewtype="requirements-coverage"] .requirement-tree_node {
   width: calc(var(--card-width)*0.75);
 }
 

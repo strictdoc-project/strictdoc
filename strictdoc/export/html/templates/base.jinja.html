@@ -26,7 +26,7 @@
   {% endblock head %}
 </head>
 
-<body class="{% block viewtype %}{% endblock %} {% block withtoc %}{% endblock %}" data-turbo="false">
+<body data-viewtype="{% block viewtype %}{% endblock %}" class="{% block withtoc %}{% endblock %}" data-turbo="false">
 <script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script>
 
   {%- include "websocket.jinja.html" -%}

@@ -13,75 +13,64 @@
   {%- endif -%}
   <input type="hidden" id="requirement_mid" name="requirement_mid" value="{{form_object.requirement_mid}}" />
 
-    <div data-section="edit-section-uid" class="std-form-row">
-      <div role="textbox" data-editable="single" contenteditable="true" class="std-form-fileld-title" id="requirement_uid" placeholder="Enter requirement UID here...">
+  {%- for field in form_object.enumerate_fields() -%}
+    {%- if field.is_singleline() -%}
+    {{field.field_name}}:<br/>
+    <div data-section="edit-section-TBD" class="std-form-row">
+      <div
+        role="textbox"
+        data-editable="single"
+        contenteditable="true"
+        class="std-form-fileld-title"
+        id="requirement_{{field.field_name}}"
+        placeholder="Enter requirement's {{field.field_name}} here..."
+      >
         {%- if true -%}
-        {{ form_object.requirement_uid }}
+        {{ field.field_value }}
         {%- endif -%}
       </div>
-      <input type="hidden" class="std-input-hidden" name="requirement_uid" value="{{ form_object.requirement_uid }}"/>
+      <input type="hidden" class="std-input-hidden" name="requirement[{{field.field_name}}]" value="{{ field.field_value }}"/>
+      {%- if form_object.has_errors(field.field_name) -%}
+        <div class="std-form-error">
+        {%- for error in form_object.get_errors(field.field_name) -%}
+          {{ error }}
+        {%- endfor -%}
+        </div>
+      {%- endif -%}
     </div>
-
-    <div data-section="edit-section-title" class="std-form-row">
-      <div role="textbox" data-editable="single" contenteditable="true" class="std-form-fileld-title" id="requirement_title" placeholder="Enter requirement title here...">
-        {%- if true -%}
-        {{ form_object.requirement_title }}
-        {%- endif -%}
-      </div>
-      <input type="hidden" class="std-input-hidden" name="requirement_title" value="{{ form_object.requirement_title }}"/>
-    </div>
-
+    {%- elif field.is_multiline() -%}
+    {{field.field_name}}:<br/>
     <div class="std-form-row requirement_statement">
-      <div role="textbox" data-editable="multiline" contenteditable="true" class="std-form-field-rst" id="requirement_statement" placeholder="Enter statement text here...">
+      <div role="textbox" data-editable="multiline" contenteditable="true" class="std-form-field-rst" id="requirement_{{field.field_name}}" placeholder="Enter statement text here...">
         {%- if true -%}
-        {{form_object.requirement_statement}}
+        {{field.field_value}}
         {%- endif -%}
       </div>
-      <textarea hidden class="std-input-hidden" name="requirement_statement">
+      <textarea hidden class="std-input-hidden" name="requirement[{{field.field_name}}]">
         {%- if true -%}
-        {{form_object.requirement_statement}}
+        {{field.field_value}}
         {%- endif -%}
       </textarea>
 
-      {%- if form_object.has_errors("requirement_statement") -%}
+      {%- if form_object.has_errors(field.field_name) -%}
         <div class="std-form-error">
-        {%- for error in form_object.get_errors("requirement_statement") -%}
+        {%- for error in form_object.get_errors(field.field_name) -%}
           {{ error }}
         {%- endfor -%}
         </div>
       {%- endif -%}
     </div>
+    {%- endif -%}
+  {%- endfor -%}
 
-    <div class="std-form-row requirement_rationale">
-      <div role="textbox" data-editable="multiline" contenteditable="true" class="std-form-field-rst" id="requirement_rationale" placeholder="Enter rationale text here...">
-        {%- if true -%}
-        {{form_object.requirement_rationale}}
-        {%- endif -%}
-      </div>
-      <textarea hidden class="std-input-hidden" name="requirement_rationale">
-        {%- if true -%}
-        {{form_object.requirement_rationale}}
-        {%- endif -%}
-      </textarea>
-
-      {%- if form_object.has_errors("requirement_rationale") -%}
-        <div class="std-form-error">
-        {%- for error in form_object.get_errors("requirement_rationale") -%}
-          {{ error }}
-        {%- endfor -%}
-        </div>
-      {%- endif -%}
-    </div>
-
-    <div class="std-form-footer">
-        <button class="std-form-btn" type="submit">Save</button>
-        {%- if is_new_requirement -%}
-          <a class="std-form-btn" href="/actions/document/cancel_new_requirement?requirement_mid={{form_object.requirement_mid}}" data-turbo="true">Cancel</a>
-        {%- else -%}
-          <a class="std-form-btn" href="/actions/document/cancel_edit_requirement?requirement_mid={{form_object.requirement_mid}}" data-turbo="true">Cancel</a>
-        {%- endif -%}
-    </div>
-
+  <div class="std-form-footer">
+    <button class="std-form-btn" type="submit">Save</button>
+    {%- if is_new_requirement -%}
+      <a class="std-form-btn" href="/actions/document/cancel_new_requirement?requirement_mid={{form_object.requirement_mid}}" data-turbo="true">Cancel</a>
+    {%- else -%}
+      <a class="std-form-btn" href="/actions/document/cancel_edit_requirement?requirement_mid={{form_object.requirement_mid}}" data-turbo="true">Cancel</a>
+    {%- endif -%}
+  </div>
 </form>
 
 </turbo-frame>

@@ -35,30 +35,30 @@ class Test06CreateRequirement(BaseCase):
         # Requirement 1
         self.click_nth_visible_element("//a[contains(text(), '+R⬊')]", 1)
 
-        self.type("#requirement_uid", "REQ-001")
-        self.type("#requirement_title", "Requirement title #1")
-        self.type("#requirement_statement", "Requirement statement #1.")
-        self.type("#requirement_rationale", "Requirement rationale #1.")
+        self.type("#requirement_UID", "REQ-001")
+        self.type("#requirement_TITLE", "Requirement title #1")
+        self.type("#requirement_STATEMENT", "Requirement statement #1.")
+        self.type("#requirement_RATIONALE", "Requirement rationale #1.")
 
         self.click_xpath("//button[@type='submit' and text()='Save']")
 
         # Requirement 2
         self.click_nth_visible_element("//a[contains(text(), '+R⬇')]", 1)
 
-        self.type("#requirement_uid", "REQ-002")
-        self.type("#requirement_title", "Requirement title #2")
-        self.type("#requirement_statement", "Requirement statement #2.")
-        self.type("#requirement_rationale", "Requirement rationale #2.")
+        self.type("#requirement_UID", "REQ-002")
+        self.type("#requirement_TITLE", "Requirement title #2")
+        self.type("#requirement_STATEMENT", "Requirement statement #2.")
+        self.type("#requirement_RATIONALE", "Requirement rationale #2.")
 
         self.click_xpath("//button[@type='submit' and text()='Save']")
 
         # Requirement 3
         self.click_nth_visible_element("//a[contains(text(), '+R⬇')]", 2)
 
-        self.type("#requirement_uid", "REQ-003")
-        self.type("#requirement_title", "Requirement title #3")
-        self.type("#requirement_statement", "Requirement statement #3.")
-        self.type("#requirement_rationale", "Requirement rationale #3.")
+        self.type("#requirement_UID", "REQ-003")
+        self.type("#requirement_TITLE", "Requirement title #3")
+        self.type("#requirement_STATEMENT", "Requirement statement #3.")
+        self.type("#requirement_RATIONALE", "Requirement rationale #3.")
 
         self.click_xpath("//button[@type='submit' and text()='Save']")
 

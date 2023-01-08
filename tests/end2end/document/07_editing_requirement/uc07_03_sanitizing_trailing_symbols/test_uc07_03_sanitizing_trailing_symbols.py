@@ -34,10 +34,10 @@ class Test_UC07_SanitizingTrainingSymbols(BaseCase):
 
         self.click_nth_visible_element("//a[contains(text(), 'Edit')]", 2)
 
-        self.type("#requirement_title", "Modified title")
+        self.type("#requirement_TITLE", "Modified title")
         # Contains trailing symbols.
         self.type(
-            "#requirement_statement",
+            "#requirement_STATEMENT",
             """
 Hello world!    
 

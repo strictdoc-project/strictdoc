@@ -34,10 +34,10 @@ class Test07EditRequirement(BaseCase):
 
         self.click_nth_visible_element("//a[contains(text(), 'Edit')]", 2)
 
-        self.type("#requirement_uid", "Modified_UID")
-        self.type("#requirement_title", "Modified title")
-        self.type("#requirement_statement", "Modified statement.")
-        self.type("#requirement_rationale", "Modified rationale.")
+        self.type("#requirement_UID", "Modified_UID")
+        self.type("#requirement_TITLE", "Modified title")
+        self.type("#requirement_STATEMENT", "Modified statement.")
+        self.type("#requirement_RATIONALE", "Modified rationale.")
 
         self.click_xpath("//button[@type='submit' and text()='Save']")
 

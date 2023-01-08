@@ -201,7 +201,7 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         self.ng_document_reference: Optional[DocumentReference] = None
         self.context = RequirementContext()
 
-        self.node_id = uuid.uuid4().hex
+        self.node_id: str = uuid.uuid4().hex
 
     @property
     def is_requirement(self):
@@ -342,6 +342,24 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
             field_value_multiline = value
         else:
             raise NotImplementedError(value)
+
+        # FIXME: This will go away.
+        if field_name == RequirementFieldName.UID:
+            self.uid = field_value
+        elif field_name == RequirementFieldName.TITLE:
+            self.title = field_value
+        elif field_name == RequirementFieldName.TAGS:
+            self.tags = field_value
+        elif field_name == RequirementFieldName.LEVEL:
+            self.level = field_value
+        elif field_name == RequirementFieldName.STATUS:
+            self.status = field_value
+        elif field_name == RequirementFieldName.STATEMENT:
+            self.statement_multiline = field_value_multiline
+            self.statement = None
+        elif field_name == RequirementFieldName.RATIONALE:
+            self.rationale_multiline = field_value_multiline
+            self.rationale = None
 
         if field_name in self.ordered_fields_lookup:
             self.ordered_fields_lookup[field_name] = [

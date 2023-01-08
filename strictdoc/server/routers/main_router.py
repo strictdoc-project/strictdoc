@@ -3,12 +3,14 @@ import re
 import uuid
 from mimetypes import guess_type
 from pathlib import Path
-from typing import Optional, List, Union
+from typing import Optional, List, Union, Dict
 
 from fastapi import Form, APIRouter, UploadFile
 from reqif.models.error_handling import ReqIFXMLParsingError
 from reqif.parser import ReqIFParser
 from reqif.unparser import ReqIFUnparser
+from starlette.datastructures import FormData
+from starlette.requests import Request
 from starlette.responses import HTMLResponse, Response
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
@@ -514,7 +516,10 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
     @router.get("/actions/document/cancel_new_section", response_class=Response)
     def cancel_new_section(section_mid: str):
         template = env.get_template(
-            "actions/document/create_section/stream_cancel_new_section.jinja.html"  # noqa: E501
+            "actions/"
+            "document/"
+            "create_section/"
+            "stream_cancel_new_section.jinja.html"
         )
         output = template.render(section_mid=section_mid)
         return HTMLResponse(
@@ -563,7 +568,10 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
             document=document,
         )
         template = env.get_template(
-            "actions/document/document_freetext/stream_edit_document_freetext.jinja.html"  # noqa: E501
+            "actions/"
+            "document/"
+            "document_freetext/"
+            "stream_edit_document_freetext.jinja.html"
         )
         link_renderer = LinkRenderer(export_action.config.output_html_root)
         markup_renderer = MarkupRenderer.create(
@@ -650,7 +658,10 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
 
         if form_object.any_errors():
             template = env.get_template(
-                "actions/document/document_freetext/stream_edit_document_freetext.jinja.html"  # noqa: E501
+                "actions/"
+                "document/"
+                "document_freetext/"
+                "stream_edit_document_freetext.jinja.html"
             )
             link_renderer = LinkRenderer(export_action.config.output_html_root)
             markup_renderer = MarkupRenderer.create(
@@ -734,13 +745,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
             else reference_node.document
         )
 
-        form_object = RequirementFormObject(
-            requirement_mid=uuid.uuid4().hex,
-            requirement_uid=None,
-            requirement_title=None,
-            requirement_statement=None,
-            requirement_rationale=None,
-        )
+        form_object = RequirementFormObject.create_new(document=document)
         target_node_mid = reference_mid
 
         if whereto == NodeCreationOrder.CHILD:
@@ -753,7 +758,10 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
             raise NotImplementedError
 
         template = env.get_template(
-            "actions/document/create_requirement/stream_new_requirement.jinja.html"  # noqa: E501
+            "actions/"
+            "document/"
+            "create_requirement/"
+            "stream_new_requirement.jinja.html"
         )
         link_renderer = LinkRenderer(export_action.config.output_html_root)
         markup_renderer = MarkupRenderer.create(
@@ -784,29 +792,12 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
     @router.post(
         "/actions/document/create_requirement", response_class=Response
     )
-    def create_requirement(
-        requirement_mid: str = Form(None),
-        requirement_uid: Optional[str] = Form(None),
-        requirement_title: Optional[str] = Form(None),
-        requirement_statement: Optional[str] = Form(None),
-        requirement_rationale: Optional[str] = Form(None),
-        reference_mid: str = Form(None),
-        whereto: Optional[str] = Form(None),
-    ):
-        assert isinstance(requirement_mid, str)
-
-        requirement_uid = sanitize_html_form_field(
-            requirement_uid, multiline=False
-        )
-        requirement_title = sanitize_html_form_field(
-            requirement_title, multiline=False
-        )
-        requirement_statement = sanitize_html_form_field(
-            requirement_statement, multiline=True
-        )
-        requirement_rationale = sanitize_html_form_field(
-            requirement_rationale, multiline=True
-        )
+    async def create_requirement(request: Request):
+        request_form_data: FormData = await request.form()
+        request_dict: Dict[str, str] = dict(request_form_data)
+        requirement_mid: str = request_dict["requirement_mid"]
+        reference_mid: str = request_dict["reference_mid"]
+        whereto: str = request_dict["whereto"]
 
         reference_node: Union[
             Document, Section
@@ -816,12 +807,10 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
             if isinstance(reference_node, Document)
             else reference_node.document
         )
-        form_object = RequirementFormObject(
+        form_object = RequirementFormObject.create_from_request(
             requirement_mid=requirement_mid,
-            requirement_uid=requirement_uid,
-            requirement_title=requirement_title,
-            requirement_statement=requirement_statement,
-            requirement_rationale=requirement_rationale,
+            request_dict=request_dict,
+            document=document,
         )
         if whereto == NodeCreationOrder.CHILD:
             parent = reference_node
@@ -835,24 +824,14 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
         else:
             raise NotImplementedError
 
-        if requirement_statement is None or len(requirement_statement) == 0:
-            form_object.add_error(
-                "requirement_statement",
-                "Requirement statement must not be empty.",
-            )
-        else:
-            (
-                parsed_html,
-                rst_error,
-            ) = RstToHtmlFragmentWriter.write_with_validation(
-                requirement_statement
-            )
-            if parsed_html is None:
-                form_object.add_error("requirement_statement", rst_error)
+        form_object.validate()
 
         if form_object.any_errors():
             template = env.get_template(
-                "actions/document/create_requirement/stream_new_requirement.jinja.html"  # noqa: E501
+                "actions/"
+                "document/"
+                "create_requirement/"
+                "stream_new_requirement.jinja.html"
             )
             link_renderer = LinkRenderer(export_action.config.output_html_root)
             markup_renderer = MarkupRenderer.create(
@@ -880,19 +859,11 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
                 },
             )
 
-        requirement = SDocObjectFactory.create_requirement(
-            parent=parent,
-            requirement_type="REQUIREMENT",
-            uid=requirement_uid,
-            level=None,
-            title=requirement_title,
-            statement=None,
-            statement_multiline=requirement_statement,
-            rationale=None,
-            rationale_multiline=requirement_rationale,
-            tags=None,
-            comments=None,
-        )
+        requirement = SDocObjectFactory.create_requirement(parent=parent)
+
+        for form_field_name, form_field in form_object.fields.items():
+            requirement.set_field_value(form_field_name, form_field.field_value)
+
         requirement.node_id = requirement_mid
         requirement.ng_document_reference = DocumentReference()
         requirement.ng_document_reference.set_document(document)
@@ -920,7 +891,10 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
 
         # Rendering back the Turbo template.
         template = env.get_template(
-            "actions/document/create_requirement/stream_created_requirement.jinja.html"  # noqa: E501
+            "actions/"
+            "document/"
+            "create_requirement/"
+            "stream_created_requirement.jinja.html"
         )
         link_renderer = LinkRenderer(export_action.config.output_html_root)
         markup_renderer = MarkupRenderer.create(
@@ -972,7 +946,10 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
         )
         document = requirement.document
         template = env.get_template(
-            "actions/document/edit_requirement/stream_edit_requirement.jinja.html"  # noqa: E501
+            "actions/"
+            "document/"
+            "edit_requirement/"
+            "stream_edit_requirement.jinja.html"
         )
         link_renderer = LinkRenderer(export_action.config.output_html_root)
         markup_renderer = MarkupRenderer.create(
@@ -995,62 +972,34 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
             },
         )
 
-    @router.post(
-        "/actions/document/update_requirement", response_class=Response
-    )
-    def post_update_requirement(
-        requirement_mid: str = Form(None),
-        requirement_uid: Optional[str] = Form(None),
-        requirement_title: Optional[str] = Form(None),
-        requirement_statement: Optional[str] = Form(None),
-        requirement_rationale: Optional[str] = Form(None),
-    ):
-        assert (
-            isinstance(requirement_mid, str) and len(requirement_mid) > 0
-        ), f"{requirement_mid}"
-
-        requirement_uid = sanitize_html_form_field(
-            requirement_uid, multiline=False
-        )
-        requirement_title = sanitize_html_form_field(
-            requirement_title, multiline=False
-        )
-        requirement_statement = sanitize_html_form_field(
-            requirement_statement, multiline=True
-        )
-        requirement_rationale = sanitize_html_form_field(
-            requirement_rationale, multiline=True
-        )
-
+    @router.post("/actions/document/update_requirement")
+    async def post_update_requirement(request: Request):
+        request_form_data: FormData = await request.form()
+        request_dict = dict(request_form_data)
+        requirement_mid = request_dict["requirement_mid"]
         requirement = export_action.traceability_index.get_node_by_id(
             requirement_mid
         )
         document = requirement.document
 
-        form_object = RequirementFormObject(
+        assert (
+            isinstance(requirement_mid, str) and len(requirement_mid) > 0
+        ), f"{requirement_mid}"
+
+        form_object = RequirementFormObject.create_from_request(
             requirement_mid=requirement_mid,
-            requirement_uid=requirement_uid,
-            requirement_title=requirement_title,
-            requirement_statement=requirement_statement,
-            requirement_rationale=requirement_rationale,
+            request_dict=request_dict,
+            document=document,
         )
-        if requirement_statement is None or len(requirement_statement) == 0:
-            form_object.add_error(
-                "requirement_statement",
-                "Requirement statement must not be empty.",
-            )
-        else:
-            (
-                parsed_html,
-                rst_error,
-            ) = RstToHtmlFragmentWriter.write_with_validation(
-                requirement_statement
-            )
-            if parsed_html is None:
-                form_object.add_error("requirement_statement", rst_error)
+
+        form_object.validate()
+
         if form_object.any_errors():
             template = env.get_template(
-                "actions/document/edit_requirement/stream_edit_requirement.jinja.html"  # noqa: E501
+                "actions/"
+                "document/"
+                "edit_requirement/"
+                "stream_edit_requirement.jinja.html"
             )
             link_renderer = LinkRenderer(export_action.config.output_html_root)
             markup_renderer = MarkupRenderer.create(
@@ -1075,18 +1024,9 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
             )
 
         existing_uid = requirement.uid
-
         # FIXME: Leave only one method based on set_field_value().
-        requirement.set_field_value("UID", requirement_uid)
-        requirement.uid = requirement_uid
-        requirement.set_field_value("TITLE", requirement_title)
-        requirement.title = requirement_title
-        requirement.set_field_value("STATEMENT", requirement_statement)
-        requirement.statement_multiline = requirement_statement
-        requirement.statement = None
-        requirement.set_field_value("RATIONALE", requirement_rationale)
-        requirement.rationale_multiline = requirement_rationale
-        requirement.rationale = None
+        for form_field_name, form_field in form_object.fields.items():
+            requirement.set_field_value(form_field_name, form_field.field_value)
 
         export_action.traceability_index.mut_rename_uid_to_a_requirement(
             requirement=requirement, old_uid=existing_uid
@@ -1105,7 +1045,10 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
 
         # Rendering back the Turbo template.
         template = env.get_template(
-            "actions/document/edit_requirement/stream_update_requirement.jinja.html"  # noqa: E501
+            "actions/"
+            "document/"
+            "edit_requirement/"
+            "stream_update_requirement.jinja.html"
         )
         link_renderer = LinkRenderer(export_action.config.output_html_root)
         markup_renderer = MarkupRenderer.create(
@@ -1150,7 +1093,10 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
     )
     def cancel_new_requirement(requirement_mid: str):
         template = env.get_template(
-            "actions/document/create_requirement/stream_cancel_new_requirement.jinja.html"  # noqa: E501
+            "actions/"
+            "document/"
+            "create_requirement/"
+            "stream_cancel_new_requirement.jinja.html"
         )
         output = template.render(requirement_mid=requirement_mid)
         return HTMLResponse(
@@ -1173,7 +1119,10 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
         )
         document = requirement.document
         template = env.get_template(
-            "actions/document/edit_requirement/stream_update_requirement.jinja.html"  # noqa: E501
+            "actions/"
+            "document/"
+            "edit_requirement/"
+            "stream_update_requirement.jinja.html"
         )
         link_renderer = LinkRenderer(export_action.config.output_html_root)
         markup_renderer = MarkupRenderer.create(

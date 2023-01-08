@@ -34,12 +34,12 @@ class Test07EditRequirement(BaseCase):
 
         self.click_nth_visible_element("//a[contains(text(), 'Edit')]", 2)
 
-        self.type("#requirement_title", "Modified title")
+        self.type("#requirement_TITLE", "Modified title")
 
         # HACK: The only way the field is actually cleared.
-        self.type("#requirement_statement", "X")
+        self.type("#requirement_STATEMENT", "X")
         requirement_statement_field = self.find_element(
-            "//div[@id='requirement_statement']"
+            "//div[@id='requirement_STATEMENT']"
         )
         requirement_statement_field.click()
         requirement_statement_field.send_keys(Keys.BACKSPACE)

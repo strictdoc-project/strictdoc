@@ -33,9 +33,9 @@ class Test_06_02_CreatingRequirementMalformedRSTStatement(BaseCase):
 
         self.click_nth_visible_element("//a[contains(text(), '+R⬊')]", 1)
 
-        self.type("#requirement_title", "Requirement title")
+        self.type("#requirement_TITLE", "Requirement title")
         self.type(
-            "#requirement_statement",
+            "#requirement_STATEMENT",
             """
 - Broken RST markup
 

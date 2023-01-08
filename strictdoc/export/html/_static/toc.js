@@ -19,9 +19,9 @@ function switchTOC() {
   document.body.dataset.state = sessionStorage.getItem('tocState');
 }
 
-window.onload = function () {
+window.addEventListener("load",function(){
   document.body.dataset.state = sessionStorage.getItem('tocState');
   document.getElementById('layout_toggle').addEventListener('click', () => {
     switchTOC();
   });
-};
+},false);

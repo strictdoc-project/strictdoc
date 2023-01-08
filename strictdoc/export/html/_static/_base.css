@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@400;700&family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 /* .test-content {} */
 
@@ -37,7 +37,7 @@
   --traceability-arrow: 1.25rem;
 
   --code-border-color: var(--color-border);
-  --code-font-family: consolas,monaco,"Andale Mono",monospace;
+  --code-font-family: 'Noto Sans Mono', consolas, monaco, monospace;
   --code-font-size: .85em;
 
   --card-width: 300px;

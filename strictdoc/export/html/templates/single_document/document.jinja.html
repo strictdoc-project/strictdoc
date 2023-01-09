@@ -37,7 +37,9 @@
 
 {% block header_content %}
   <p>{{document.title}} <span class="document-view-type">{{ template_type }}</span></p>
+  {%- if config.is_running_on_server -%}
   <a href="/reqif/export_document/{{document.node_id}}">Export to ReqIF</a>
+  {%- endif -%}
 {% endblock header_content %}
 
 {% block content %}

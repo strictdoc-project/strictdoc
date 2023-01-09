@@ -35,3 +35,10 @@ RUN: %check_exists --file %S/Output/html/docs/strictdoc_21_design.html
 RUN: %check_exists --file "%S/Output/html/docs/strictdoc_21_design-TABLE.html"
 RUN: %check_exists --file "%S/Output/html/docs/strictdoc_21_design-TRACE.html"
 RUN: %check_exists --file "%S/Output/html/docs/strictdoc_21_design-DEEP-TRACE.html"
+
+# Naive way to check that the server-related links are not enabled in the static export.
+RUN: %cat "%S/Output/html/index.html" | filecheck %s --check-prefix=CHECK-TREE
+CHECK-TREE-NOT: ReqIF
+
+RUN: %cat "%S/Output/html/docs/strictdoc_01_user_guide.html" | filecheck %s --check-prefix=CHECK-DOCUMENT
+CHECK-DOCUMENT-NOT: Export to ReqIF

@@ -27,7 +27,7 @@
 }
 
 [data-viewtype="requirements-coverage"] .content,
-[data-viewtype="deep-traceability"] .content {
+[data-viewtype="deep_traceability"] .content {
   grid-template-columns:  minmax(min-content, max-content)
                           max-content
                           minmax(min-content, max-content);
@@ -71,7 +71,7 @@
   grid-column: 2 / 3;
 }
 
-[data-viewtype="deep-traceability"] .content_item[data-role="current"] {
+[data-viewtype="deep_traceability"] .content_item[data-role="current"] {
   /* central column */
   width: var(--card-width);
 }
@@ -85,7 +85,7 @@
   grid-column: 3 / 4;
 }
 
-[data-viewtype="deep-traceability"] .content_item[data-role="current"]::before,
+[data-viewtype="deep_traceability"] .content_item[data-role="current"]::before,
 [data-viewtype="traceability"] .content_item[data-role="current"]::before {
   /* for vertical line in 'current' culumn */
   content: '';

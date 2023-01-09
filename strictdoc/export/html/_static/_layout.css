@@ -24,19 +24,20 @@
 
 .layout_header {
   grid-area: header;
-  color: var(--contrast-color);
+  /* color: var(--contrast-color);
 
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: center; */
 
-  padding: 0 var(--base-gap);
+  /* padding: 0 var(--base-gap);
   font-size: 1.2rem;
-  font-weight: bold;
-  background-color: var(--color-bg-main);
-  color: var(--color-accent);
+  font-weight: bold; */
+  /* background-color: var(--color-bg-main); */
+  /* color: var(--color-accent); */
 }
 
+/* TODO: delete document-view-type */
 .layout_header .document-view-type {
   display: inline-block;
   position: relative;
@@ -150,8 +151,8 @@
 [data-viewtype="table"] .btn-table:hover,
 [data-viewtype="traceability"] .btn-traceability,
 [data-viewtype="traceability"] .btn-traceability:hover,
-[data-viewtype="deep-traceability"] .btn-deep-traceability,
-[data-viewtype="deep-traceability"] .btn-deep-traceability:hover {
+[data-viewtype="deep_traceability"] .btn-deep-traceability,
+[data-viewtype="deep_traceability"] .btn-deep-traceability:hover {
   background-color: var(--color-border);
   cursor: default;
 }

@@ -3,6 +3,7 @@
 {% extends "base.jinja.html" %}
 
 {% block head_scripts %}
+  <script type="text/javascript" src="{{root_path}}/_static/viewtype_menu.js"></script>
   <script type="text/javascript" src="{{root_path}}/_static/toc.js"></script>
   <script type="text/javascript" src="{{static_path}}/jquery.min.js"></script>
 
@@ -36,10 +37,12 @@
 
 
 {% block header_content %}
-  <p>{{document.title}} <span class="document-view-type">{{ template_type }}</span></p>
+<div class="header">
+  {% include "_shared/document_header.jinja.html" %}
   {%- if config.is_running_on_server -%}
   <a href="/reqif/export_document/{{document.node_id}}">Export to ReqIF</a>
   {%- endif -%}
+</div>
 {% endblock header_content %}
 
 {% block content %}

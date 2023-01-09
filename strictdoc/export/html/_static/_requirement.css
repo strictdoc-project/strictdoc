@@ -44,7 +44,7 @@ article.requirement.highlighted {
   margin-top: var(--base-padding);
 }
 
-[data-viewtype="deep-traceability"] article {
+[data-viewtype="deep_traceability"] article {
   /* width: var(--card-width); */
   /* flex-grow: 1; */
 }
@@ -141,7 +141,7 @@ h6 { font-size: 1em; }
 } */
 
 [data-viewtype="traceability"] .section-title,
-[data-viewtype="deep-traceability"] .section-title {
+[data-viewtype="deep_traceability"] .section-title {
   font-size: 1.1em;
 }
 
@@ -385,7 +385,7 @@ a.requirement_link-child::before {
 
 [data-viewtype="requirements-coverage"] .free-text,
 [data-viewtype="traceability"] .free-text,
-[data-viewtype="deep-traceability"] .free-text {
+[data-viewtype="deep_traceability"] .free-text {
   font-size: .85em;
 }
 

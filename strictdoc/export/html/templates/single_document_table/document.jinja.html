@@ -3,6 +3,7 @@
 {% extends "base.jinja.html" %}
 
 {% block head_scripts %}
+  <script type="text/javascript" src="{{root_path}}/_static/viewtype_menu.js"></script>
   <script type="text/javascript" src="{{root_path}}/_static/toc.js"></script>
   {%- if config.enable_mathjax -%}
   <script id="MathJax-script" async src="{{root_path}}/_static/mathjax/tex-mml-chtml.js"></script>
@@ -26,7 +27,9 @@
 {% endblock aside_content %}
 
 {% block header_content %}
-  <p>{{document.title}} <span class="document-view-type">{{ template_type }}</span></p>
+<div class="header">
+  {% include "_shared/document_header.jinja.html" %}
+</div>
 {% endblock header_content %}
 
 {% block content %}

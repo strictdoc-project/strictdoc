@@ -1,0 +1,53 @@
+{%- if not standalone -%}
+<div class="viewtype">
+  <div
+    id="viewtype_handler"
+    class="viewtype__handler"
+    aria-expanded="false"
+    aria-controls="viewtype_menu"
+  >
+    <span>{{ template_type }}</span>
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" role="img" aria-label="Zoom" class="sc-StfDO jCJeWn"><path d="M5 10l3 3 3-3M5 6l3-3 3 3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+  </div>
+  <menu
+    id="viewtype_menu"
+    class="viewtype__menu"
+    aria-hidden="true"
+    aria-labelledby="viewtype_handler"
+  >
+    <li class="viewtype__menu_header">VIEWS</li>
+    <li>
+      <a
+        data-viewtype_link="document"
+        class="viewtype__menu_item"
+        title="Go to Document view"
+        href="{{document.meta.get_root_path_prefix()}}/{{document.meta.get_html_doc_link()}}">
+        Document</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="table"
+        class="viewtype__menu_item"
+        title="Go to Table view"
+        href="{{document.meta.get_root_path_prefix()}}/{{document.meta.get_html_table_link()}}">
+        Table</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="traceability"
+        class="viewtype__menu_item"
+        title="Go to Traceability view"
+        href="{{document.meta.get_root_path_prefix()}}/{{document.meta.get_html_traceability_link()}}">
+        Traceability</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="deep_traceability"
+        class="viewtype__menu_item"
+        title="Go to Deep Traceability view"
+        href="{{document.meta.get_root_path_prefix()}}/{{document.meta.get_html_deep_traceability_link()}}">
+      Deep traceability</a>
+    </li>
+  </menu>
+</div>
+{%- endif -%}

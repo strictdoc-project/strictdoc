@@ -37,6 +37,57 @@
   cursor: pointer;
 }
 
+/* action_button */
+
+.actions_group {
+  display: flex;
+  column-gap: var(--base-rhythm);
+}
+
+.action_button {
+  font-size:var(--font-size-xsm);
+  font-weight: 600;
+  text-align: left;
+  text-decoration: none;
+  white-space: nowrap;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -webkit-box-pack: center;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  backface-visibility: hidden;
+  user-select: none;
+  cursor: pointer;
+  appearance: none;
+  padding: calc(var(--base-rhythm)*0.5) calc(var(--base-rhythm)*1.5);
+  min-height: 32px;
+
+  box-shadow: rgb(0 0 0 / 10%) 0px 1px 2px 0px;
+  color: var(--color-fg-accent);
+  background-color: rgb(255, 255, 255);
+  border-color: rgba(0, 0, 0, 0.1);
+  background-clip: padding-box;
+
+  transition: 0.2s;
+}
+
+.action_button:hover {
+  box-shadow: rgb(0 0 0 / 10%) 0px 2px var(--base-rhythm) 0px;
+  color: var(--color-fg-contrast);
+}
+
+.action_button:disabled,
+.action_button:disabled:hover,
+.action_button[aria-disabled="true"],
+.action_button[aria-disabled="true"]:hover {
+  color: var(--color-fg-accent);
+  opacity: .4;
+  cursor: default;
+}
+
 /* nav_button */
 
 .nav_button {

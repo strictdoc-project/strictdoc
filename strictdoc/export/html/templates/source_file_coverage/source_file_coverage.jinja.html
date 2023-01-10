@@ -10,16 +10,12 @@
 {% block viewtype %}coverage-tree{% endblock %}
 
 {% block layout_nav %}
-  {# {% include "_shared/doc_nav.jinja.html" %} #}
+  {% include "_shared/nav.jinja.html" %}
 {% endblock layout_nav %}
 
-{% block aside_header_content %}
-  {# {% include "_shared/aside_header.jinja.html" %} #}
-{% endblock aside_header_content %}
-
-{% block aside_content %}
-  {% include "_shared/nav.jinja.html" %}
-{% endblock aside_content %}
+{% block toc_content %}
+  toc_content (Source)
+{% endblock toc_content %}
 
 {% block header_content %}
   <p>{{ page_title }}</p>

@@ -37,6 +37,39 @@
   cursor: pointer;
 }
 
+/* nav_button */
+
+.nav_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  text-decoration: none;
+  color: var( --color-bg-half-contrast);
+  background-color: transparent;
+  border-left: 2px solid transparent;
+
+  height: var(--base-gap);
+  font-size: 11px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.nav_button:hover {
+  color: var(--color-bg-contrast);
+  border-color: var(--color-bg-contrast);
+}
+
+/* should be like .nav_button:hover */
+[data-viewtype="document-tree"] [data-link="index"],
+[data-viewtype="requirements-coverage"] [data-link="requirements_coverage"],
+[data-viewtype="coverage-tree"] [data-link="source_coverage"] {
+  color: var(--color-bg-contrast);
+  border-color: var(--color-bg-contrast);
+  cursor: default;
+}
+
 /* tags */
 
 .tags {

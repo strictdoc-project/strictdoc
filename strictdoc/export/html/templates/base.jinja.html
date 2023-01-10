@@ -33,17 +33,18 @@
 
   <div class="layout" id="layout">
 
-    <aside class="layout_aside-header">
-      {% block aside_header_content %}{% endblock %}
-    </aside>
+    <nav class="layout_nav">
+      {% block layout_nav %}
+      {# 1. Include "_shared/nav.jinja.html" in the corresponding template, if the block is needed #}
+      {# 2. USE ---if not standalone--- if needed (in DOCs templates) #}
+      {% endblock layout_nav %}
+    </nav>
 
-    <aside class="layout_aside">
-      {% block aside_content %}{% endblock %}
-    </aside>
-
-    {% block layout_nav %}
-    {# Include "_shared/doc_nav.jinja.html" in the corresponding template, if the block is needed #}
-    {% endblock layout_nav %}
+    <div class="layout_toc">
+      layout_toc<br>
+      <a class="layout_toggler nav_button" id="layout_toggle"></a>
+      {% block toc_content %}{% endblock %}
+    </div>
 
     <header class="layout_header">
       {% block header_content %}{% endblock %}
@@ -52,6 +53,15 @@
     <main class="layout_main" id="pan-with-space">
       {% block content %}{% endblock %}
     </main>
+
+    <footer class="layout_footer">
+    {# layout_footer #}
+    {% block footer_content %}{% endblock %}
+    </footer>
+
+    <aside class="layout_aside">
+      {% block aside_content %}{% endblock %}
+    </aside>
 
   </div>
   {% block scripts %}{% endblock %}

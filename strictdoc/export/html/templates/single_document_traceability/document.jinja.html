@@ -20,16 +20,14 @@
 {% block withtoc %}withtoc{% endblock %}
 
 {% block layout_nav %}
-  {% include "_shared/doc_nav.jinja.html" %}
+  {%- if not standalone -%}
+  {% include "_shared/nav.jinja.html" %}
+  {%- endif -%}
 {% endblock layout_nav %}
 
-{% block aside_header_content %}
-  {% include "_shared/aside_header.jinja.html" %}
-{% endblock aside_header_content %}
-
-{% block aside_content %}
+{% block toc_content %}
   {% include "_shared/toc.jinja.html" %}
-{% endblock aside_content %}
+{% endblock toc_content %}
 
 {% block header_content %}
 <div class="header">

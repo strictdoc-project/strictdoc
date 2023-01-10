@@ -19,13 +19,13 @@
 
 {% block viewtype %}requirements-coverage{% endblock %}
 
-{% block aside_header_content %}
-  <a class="index-link" href="index.html">To Index</a>
-{% endblock aside_header_content %}
+{% block layout_nav %}
+  {% include "_shared/nav.jinja.html" %}
+{% endblock layout_nav %}
 
-{% block aside_content %}
+{% block toc_content %}
   {% include "requirements_coverage/document_list.jinja.html" %}
-{% endblock aside_content %}
+{% endblock toc_content %}
 
 {% block header_content %}
   <p>{{config.project_title}} <span class="document-view-type">{{template_type}}</span></p>

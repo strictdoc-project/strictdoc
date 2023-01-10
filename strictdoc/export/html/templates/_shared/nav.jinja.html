@@ -1,11 +1,47 @@
-<ul class="nav">
-  <li><a class="document-tree-link" href="index.html">Project index</a></li>
+<div class="nav">
 
-  {%- if traceability_index.has_requirements() -%}
-    <li><a href="requirements_coverage.html">Requirements coverage</a></li>
+{# TODO: title="Project name" #}
 
-    {%- if config.experimental_enable_file_traceability -%}
-    <li><a class="coverage-tree-link" href="source_coverage.html">Source coverage</a></li>
-    {%- endif -%}
+  {# <a href="{{document.meta.get_root_path_prefix()}}/index.html">To Index</a> #}
+  <a
+    data-link="index"
+    class="nav_button"
+    href="{{root_path}}/index.html"
+    title="Project index">
+    <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <line x1="9" y1="4" x2="7" y2="4"></line>
+      <line x1="12" y1="9" x2="12" y2="7"></line>
+      <line x1="6" y1="10" x2="10" y2="6"></line>
+      <circle cx="4" cy="12" r="2.25"></circle>
+      <circle cx="12" cy="4" r="2.25"></circle>
+      <circle cx="4" cy="4" r="2.25"></circle>
+      <circle cx="12" cy="12" r="2.25"></circle>
+    </svg>
+  </a>
+
+{%- if traceability_index.has_requirements() -%}
+  {# <li><a href="requirements_coverage.html">Requirements coverage</a></li> #}
+  <a
+    data-link="requirements_coverage"
+    class="nav_button"
+    href="{{root_path}}/requirements_coverage.html"
+    title="Requirements coverage">
+      <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <path d=" M13,13 L13,8 C13,7.5 12.6,7 12,7 L9,7 C8.5,7 8,6.5 8,6 L8,3 C8,2.5 7.5,2 7,2 L4,2 C3.5,2 3,2.5 3,3 L3,13 C3,13.5 3.5,14 4,14 L12,14 C12.6,14 13,13.5 13,13 Z M13,9 L13,8 C13,7.5 13,7 12.5,6.5 L8.5,2.5 C8,2 7.5,2 7,2 L6,2"></path>
+      </svg>
+    </a>
+
+  {%- if config.experimental_enable_file_traceability -%}
+  {# <li><a href="source_coverage.html">Source coverage</a></li> #}
+  <a
+    data-link="source_coverage"
+    class="nav_button"
+    href="{{root_path}}/source_coverage.html"
+    title="Source coverage">
+      <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <path d=" M13,13 L13,8 C13,7.5 12.6,7 12,7 L9,7 C8.5,7 8,6.5 8,6 L8,3 C8,2.5 7.5,2 7,2 L4,2 C3.5,2 3,2.5 3,3 L3,13 C3,13.5 3.5,14 4,14 L12,14 C12.6,14 13,13.5 13,13 Z M13,9 L13,8 C13,7.5 13,7 12.5,6.5 L8.5,2.5 C8,2 7.5,2 7,2 L6,2"></path>
+      </svg>
+    </a>
   {%- endif -%}
-</ul>
+{%- endif -%}
+</div>

@@ -39,6 +39,7 @@ class RequirementsCoverageHTMLGenerator:
             renderer=markup_renderer,
             static_path="_static",
             document_type=DocumentType.deeptrace(),
+            root_path="",
         )
 
         return output

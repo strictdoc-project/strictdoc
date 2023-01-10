@@ -88,6 +88,16 @@
   cursor: default;
 }
 
+/* nav */
+
+.nav {
+  display: flex;
+  flex-flow: column nowrap;
+  background-color: #282c42;
+  width: var(--base-gap);
+  height: 100%;
+}
+
 /* nav_button */
 
 .nav_button {
@@ -244,7 +254,7 @@ svg.svg_icon {
   justify-content: space-between;
   column-gap: var(--base-rhythm);
   padding-right: var(--base-rhythm);
-  /* border-bottom: var(--base-border); */
+  border-bottom: var(--base-border);
   /* background-color: var(--color-bg-contrast); */
 }
 

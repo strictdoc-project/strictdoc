@@ -54,6 +54,8 @@
 
   --card-width: 300px;
 
+  --base-border: 1px solid rgba(0,0,0,0.1);
+
 }
 
 body {

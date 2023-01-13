@@ -1,3 +1,7 @@
+<turbo-frame id="frame-toc">
+
+{# TODO: turbo-frame & JS stimulus controller #}
+
 <div class="toc_panel">
 
 <div id="toc_handler" class="toc_handler nav_button">
@@ -20,8 +24,7 @@
   </div>
 
   <div class="toc_panel__content">
-<turbo-frame id="frame-toc">
-    {# <div>Table of Contents</div> #}
+
     <ul class="toc">
     {%- for section in document_iterator.table_of_contents() -%}
       <li>
@@ -77,9 +80,6 @@
         </ul>
       {%- endif -%}
     {%- endfor %}
-</turbo-frame>
   </div>
-
-
-
 </div>
+</turbo-frame>

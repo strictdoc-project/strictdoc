@@ -86,7 +86,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
         fields=None,
         no_parallelization=False,
         enable_mathjax=False,
-        experimental_enable_file_traceability=True,
+        experimental_enable_file_traceability=False,
     )
     export_config.is_running_on_server = True
     export_action = ExportAction(

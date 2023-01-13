@@ -28,7 +28,7 @@
 {% endblock toc_content %}
 
 {% block header_content %}
-  <p>{{config.project_title}} <span class="document-view-type">{{template_type}}</span></p>
+  {% include "_shared/header.jinja.html" %}
 {% endblock header_content %}
 
 {% block content %}

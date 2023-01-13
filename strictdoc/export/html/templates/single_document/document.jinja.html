@@ -38,6 +38,7 @@
 <div class="header">
   {% include "_shared/document_header.jinja.html" %}
   {%- if config.is_running_on_server -%}
+  <div class="header__r">
   <div class="actions_group">
     <a class="action_button" aria-disabled="true">
       Edit document
@@ -48,6 +49,7 @@
     <a class="action_button" href="/reqif/export_document/{{document.node_id}}">
       Export to ReqIF
     </a>
+  </div>
   </div>
   {%- endif -%}
 </div>

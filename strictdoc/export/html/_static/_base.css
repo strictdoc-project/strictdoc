@@ -28,10 +28,10 @@
   --color-action: var(--color-fg-accent);
   --color-hover: var(--color-fg-contrast);
 
-  --color-border: rgba(0,0,0,.05);
+  --color-border: rgba(0,0,0,.1);
 
   --scrollbarBG: transparent;
-  --thumbBG: var(--color-border);
+  --thumbBG: rgba(0,0,0,.05);;
 
   --base-font-size: 16px;
 

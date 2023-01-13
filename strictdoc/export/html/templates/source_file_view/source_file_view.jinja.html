@@ -28,7 +28,7 @@
 {% endblock layout_nav %}
 
 {% block header_content %}
-  <p class="source-file__name"> &lt;/&gt; {{source_file.in_doctree_source_file_rel_path}}</p>
+  {% include "_shared/source_file_header.jinja.html" %}
 {% endblock header_content %}
 
 {% block toc_content %}

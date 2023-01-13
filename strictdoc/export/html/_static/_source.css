@@ -3,15 +3,8 @@
   padding: 0;
 }
 
-
-
 [data-viewtype="source-file"] {
   --source-line: 1px solid rgba(0, 0, 0, .05);
-}
-
-.source-file__name {
-  font-size: 1rem;
-  font-weight: bold;
 }
 
 /* article in SOURCE */
@@ -23,7 +16,7 @@
   border: 1px solid var(--color-border);
   margin: 1rem 0 0 0;
   transition: background-color 0.3s ease-in, border-color 0.3s ease-in;
-  font-size: 0.75em;
+  font-size: var(--font-size-xsm);
 }
 /* [data-viewtype="source-file"] article.requirement:target, */
 [data-viewtype="source-file"] article.requirement.active {

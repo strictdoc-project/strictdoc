@@ -40,6 +40,7 @@
   --font-size: 16px;
   --font-size-sm: 0.8125rem;
   --font-size-xsm: 0.75rem;
+  --font-size-xxsm: 11px;
 
   --base-gap: calc(var(--base-font-size)*3);
   --base-padding: var(--base-font-size);

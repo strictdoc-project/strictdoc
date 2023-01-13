@@ -1,5 +1,15 @@
-<ul class="nav">
-  {%- for document in traceability_index.document_tree.document_list -%}
-    <li><a class="document-tree-link" href="#{{loop.index}}">{{document.title}}</a></li>
-  {%- endfor -%}
-</ul>
+
+  <div class="nav_panel">
+    <div class="nav_panel__header">Documents list:</div>
+
+    <ul class="nav_list">
+      {%- for document in traceability_index.document_tree.document_list -%}
+        <li>
+          <a class="nav_list__link" href="#{{loop.index}}">
+            {% include "_res/svg_ico16_document.jinja.html" %}
+            {{document.title}}
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>

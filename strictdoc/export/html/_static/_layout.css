@@ -106,36 +106,6 @@
 }
 
 
-
-
-/* nav */
-/*
-document-tree-view
-coverage-tree-view
-*/
-
-/* TODO: delete this? */
-
-ul.nav {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-ul.nav li {
-  margin: .5rem 0;
-}
-
-ul.nav a {
-  color: var(--color-fg-main);
-  font-size: 1rem;
-  font-weight: normal;
-}
-
-ul.nav a:hover {
-  text-decoration: none;
-}
-
 /*  */
 
 .section-number {

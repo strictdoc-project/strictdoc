@@ -23,19 +23,27 @@ def test_02_mutating_with_a_field():
         parent=document,
     )
 
-    requirement.set_field_value("STATEMENT", "Test statement")
+    requirement.set_field_value(
+        field_name="STATEMENT", form_field_index=0, value="Test statement"
+    )
     assert len(requirement.ordered_fields_lookup) == 1
     assert enumerate_field_titles(requirement) == ["STATEMENT"]
 
-    requirement.set_field_value("TITLE", "Test title")
+    requirement.set_field_value(
+        field_name="TITLE", form_field_index=0, value="Test title"
+    )
     assert len(requirement.ordered_fields_lookup) == 2
     assert enumerate_field_titles(requirement) == ["TITLE", "STATEMENT"]
 
-    requirement.set_field_value("UID", "Test UID")
+    requirement.set_field_value(
+        field_name="UID", form_field_index=0, value="Test UID"
+    )
     assert len(requirement.ordered_fields_lookup) == 3
     assert enumerate_field_titles(requirement) == ["UID", "TITLE", "STATEMENT"]
 
-    requirement.set_field_value("RATIONALE", "Test Rationale")
+    requirement.set_field_value(
+        field_name="RATIONALE", form_field_index=0, value="Test Rationale"
+    )
     assert len(requirement.ordered_fields_lookup) == 4
     assert enumerate_field_titles(requirement) == [
         "UID",

@@ -1,0 +1,31 @@
+<div
+  data-controller="requirement_multiline_field"
+  class="std-form-row requirement_statement"
+>
+  {{field.field_name}}:<br/>
+
+  <div data-controller="editablefield" role="textbox" data-editable="multiline" contenteditable="true" class="std-form-field-rst" id="requirement_{{field.field_name}}" placeholder="Enter statement text here...">
+    {%- if true -%}
+    {{field.field_value}}
+    {%- endif -%}
+  </div>
+  <textarea hidden class="std-input-hidden" name="requirement[{{field.field_name}}]">
+    {%- if true -%}
+    {{field.field_value}}
+    {%- endif -%}
+  </textarea>
+
+  {%- if form_object.has_errors(field.field_name) -%}
+    <div class="std-form-error">
+    {%- for error in form_object.get_errors(field.field_name) -%}
+      {{ error }}
+    {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  {%- if field.field_name == "COMMENT" -%}
+    <div>
+      <a href="#" data-turbo-action="replace" data-turbo="true" data-js-delete-comment>Delete comment</a>
+    </div>
+  {%- endif -%}
+</div>

@@ -32,7 +32,7 @@ class Test_10_EditSection_EscapeStatement(BaseCase):
 
         self.assert_text("Hello world!")
 
-        self.click_nth_visible_element("//a[contains(text(), 'Edit')]", 2)
+        self.click_nth_visible_element("//a[text()='Edit']", 2)
 
         self.assert_text(
             "`Link does not get corrupted "

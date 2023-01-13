@@ -32,7 +32,7 @@ class Test_09_EditSection_TrailingSymbols(BaseCase):
 
         self.assert_text("Hello world!")
 
-        self.click_nth_visible_element("//a[contains(text(), 'Edit')]", 2)
+        self.click_nth_visible_element("//a[text()='Edit']", 2)
 
         self.type("#section_title", "Modified title")
 

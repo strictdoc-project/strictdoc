@@ -32,7 +32,7 @@ class Test_08_EditSectionWithEmptyTitle(BaseCase):
 
         self.assert_text("Hello world!")
 
-        self.click_nth_visible_element("//a[contains(text(), 'Edit')]", 2)
+        self.click_nth_visible_element("//a[text()='Edit']", 2)
 
         # HACK: The only way the field is actually cleared.
         self.type("#section_title", "X")

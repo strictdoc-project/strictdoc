@@ -8,8 +8,8 @@
   grid-template-rows: var(--base-gap) 1fr auto;
   grid-template-areas:
       "nav  header  header  aside"
-      "nav    toc     main    aside"
-      "nav    toc     footer  aside";
+      "nav  toc     main    aside"
+      "nav  toc     footer  aside";
 
   place-items: stretch stretch;
   place-content: stretch stretch;
@@ -27,11 +27,12 @@
 
 .layout_nav {
   grid-area: nav;
+  position: relative;
+  z-index: 10;
 }
 
 .layout_toc {
   grid-area: toc;
-  overflow: hidden;
 }
 
 .layout_footer {
@@ -105,42 +106,7 @@
 }
 
 
-/* toc */
 
-.toc {
-  list-style: none;
-  padding-left: 0;
-  font-size: 0.85rem;
-}
-
-.toc ul {
-  list-style: none;
-  padding-left: calc(var(--base-padding)*.5);
-}
-
-.toc li {
-  margin: 0.5rem 0;
-}
-
-.toc a,
-.toc a:link,
-.toc a:visited {
-  line-height: 1;
-  color: var(--color-fg-main);
-  text-decoration: none;
-}
-.toc a:hover {
-  background-color: var(--color-bg-contrast);
-}
-
-.toc a:focus,
-.toc a:active {
-  background: yellow;
-}
-
-.toc-title-no-link {
-  color: #999;
-}
 
 /* nav */
 /*
@@ -176,34 +142,6 @@ ul.nav a:hover {
   margin-right: .5rem;
   font-size: 0.85em;
   font-weight: bold;
-}
-
-/* layout_toggler */
-
-
-.layout,
-body[data-state="open"] .layout {
-  margin-left: 0;
-}
-
-body[data-state="close"].withtoc .layout {
-  margin-left: calc(var(--toc-width) * (-1));
-}
-
-.layout_toggler {
-  grid-area: toggler;
-  background-color: var(--color-bg-main);
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
-.layout_toggler::before,
-body[data-state="open"] .layout_toggler::before {
-  content: '\2715';
-}
-
-body[data-state="close"] .layout_toggler::before {
-  content: '\2630';
 }
 
 /* connection_status */

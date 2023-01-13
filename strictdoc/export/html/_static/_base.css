@@ -10,9 +10,6 @@
   --color-bg-contrast: #fff;
   --color-fg-contrast: #000;
 
-  --color-bg-half-contrast: rgb(255 255 255 / 40%);
-  --color-fg-half-contrast: rgb(0 0 0 / 10%);
-
   --color-fg-accent: rgb(242, 100, 42);
   --color-bg-accent: rgb(242 100 42 / 10%);
 
@@ -24,7 +21,14 @@
   --color-fg-secondary: rgba(0, 0, 0, .5);
   --color-bg-secondary: rgba(0, 0, 0, .025);
 
-  --color-border: rgba(0,0,0,.1);
+  --color-fg-secondary-invert: rgb(255 255 255 / 50%);
+  --color-bg-secondary-invert: rgb(0 0 0 / 10%);
+
+  --color-link: var(--color-fg-secondary);
+  --color-action: var(--color-fg-accent);
+  --color-hover: var(--color-fg-contrast);
+
+  --color-border: rgba(0,0,0,.05);
 
   --scrollbarBG: transparent;
   --thumbBG: var(--color-border);

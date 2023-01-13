@@ -1,3 +1,10 @@
+<div class="toc_panel">
+
+<div id="toc_handler" class="toc_handler nav_button">
+  {% include "_res/svg_ico16_toc.jinja.html" %}
+</div>
+
+  <div class="toc_panel__content">
 <turbo-frame id="frame-toc">
     <div>Table of Contents</div>
     <ul class="toc">
@@ -56,3 +63,21 @@
       {%- endif -%}
     {%- endfor %}
 </turbo-frame>
+  </div>
+
+  <div class="toc_panel__overlay">
+    <div class="toc_panel__control">
+
+      <div class="toc_control">
+        <div id="toc_expand_all" class="toc_expand_all" title="Expand all lines in TOC">
+        {% include "_res/svg_ico16_plusplus.jinja.html" %}
+        </div>
+        <div id="toc_collapse_all" class="toc_collapse_all" title="Collapse all lines in TOC">
+        {% include "_res/svg_ico16_minusminus.jinja.html" %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

@@ -39,7 +39,7 @@ class Test_20_ExportTreeToReqIF(BaseCase):
         self.save_screenshot_to_logs()
 
         self.assert_text("Document 1")
-        self.assert_text("Project index")
+        self.assert_text("PROJECT INDEX")
 
         self.click_link("Export document tree to ReqIF")
 

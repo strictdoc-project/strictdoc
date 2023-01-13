@@ -22,7 +22,7 @@ class Test_03_ImportDocumentFromReqIF(BaseCase):
 
         self.open("http://localhost:8001")
 
-        self.assert_text("Project index")
+        self.assert_text("PROJECT INDEX")
 
         self.assert_text("The document tree has no documents yet.")
 

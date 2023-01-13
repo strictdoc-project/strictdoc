@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+Hello world!
+[/FREETEXT]
+
+[REQUIREMENT]
+TITLE: Requirement title
+STATEMENT: >>>
+Requirement statement.
+<<<
+RATIONALE: >>>
+Requirement rationale.
+<<<

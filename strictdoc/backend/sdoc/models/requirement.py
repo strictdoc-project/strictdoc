@@ -314,7 +314,9 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
 
     # Below all mutating methods.
 
-    def set_field_value(self, field_name: str, value):
+    def set_field_value(
+        self, *, field_name: str, form_field_index: int, value: Optional[str]
+    ):
         """
         The purpose of this purpose is to provide a single-method API for
         updating any field of a requirement. A requirement might use only some
@@ -331,7 +333,7 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
             return
 
         singleline_fields = {"UID", "TITLE"}
-        multiline_fields = {"STATEMENT", "RATIONALE"}
+        multiline_fields = {"STATEMENT", "RATIONALE", "COMMENT"}
 
         field_value = None
         field_value_multiline = None
@@ -349,7 +351,7 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         elif field_name == RequirementFieldName.TITLE:
             self.title = field_value
         elif field_name == RequirementFieldName.TAGS:
-            self.tags = field_value
+            self.tags = field_value.split(", ")
         elif field_name == RequirementFieldName.LEVEL:
             self.level = field_value
         elif field_name == RequirementFieldName.STATUS:
@@ -360,17 +362,47 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         elif field_name == RequirementFieldName.RATIONALE:
             self.rationale_multiline = field_value_multiline
             self.rationale = None
+        elif field_name == RequirementFieldName.COMMENT:
+            if len(self.comments) <= form_field_index:
+                self.comments.insert(
+                    form_field_index,
+                    RequirementComment(
+                        parent=self,
+                        comment_single=None,
+                        comment_multiline=field_value_multiline,
+                    ),
+                )
+            else:
+                self.comments[form_field_index] = RequirementComment(
+                    parent=self,
+                    comment_single=None,
+                    comment_multiline=field_value_multiline,
+                )
+        else:
+            raise NotImplementedError(field_name)
 
         if field_name in self.ordered_fields_lookup:
-            self.ordered_fields_lookup[field_name] = [
-                RequirementField(
+            if len(self.ordered_fields_lookup[field_name]) > form_field_index:
+                self.ordered_fields_lookup[field_name][
+                    form_field_index
+                ] = RequirementField(
                     self,
                     field_name=field_name,
                     field_value=field_value,
                     field_value_multiline=field_value_multiline,
                     field_value_references=field_value_references,
                 )
-            ]
+            else:
+                self.ordered_fields_lookup[field_name].insert(
+                    form_field_index,
+                    RequirementField(
+                        self,
+                        field_name=field_name,
+                        field_value=field_value,
+                        field_value_multiline=field_value_multiline,
+                        field_value_references=field_value_references,
+                    ),
+                )
             return
 
         new_ordered_fields_lookup = OrderedDict()

@@ -1,9 +1,11 @@
 import html
 import re
 import uuid
-from collections import OrderedDict
+from collections import defaultdict
 from enum import Enum
 from typing import Optional, List, Dict
+
+from starlette.datastructures import FormData
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_grammar import (
@@ -106,20 +108,20 @@ class RequirementFormObject(ErrorObject):
     ):
         super().__init__()
         self.requirement_mid: Optional[str] = requirement_mid
-        fields_dict: dict = OrderedDict()
+        fields_dict: dict = defaultdict(list)
         for field in fields:
-            fields_dict[field.field_name] = field
-        self.fields: Dict[str, RequirementFormField] = fields_dict
+            fields_dict[field.field_name].append(field)
+        self.fields: Dict[str, List[RequirementFormField]] = fields_dict
 
     @staticmethod
     def create_from_request(
-        *, requirement_mid: str, request_dict: dict, document: Document
+        *, requirement_mid: str, request_form_data: FormData, document: Document
     ) -> "RequirementFormObject":
-        requirement_fields = {}
-        for field_name, field_value in request_dict.items():
+        requirement_fields = defaultdict(list)
+        for field_name, field_value in request_form_data.multi_items():
             result = re.search(r"^requirement\[(.*)]$", field_name)
             if result is not None:
-                requirement_fields[result.group(1)] = field_value
+                requirement_fields[result.group(1)].append(field_value)
 
         assert document.grammar is not None
         grammar: DocumentGrammar = document.grammar
@@ -135,21 +137,30 @@ class RequirementFormObject(ErrorObject):
             multiline = field_idx > title_field_idx
             field = element.fields_map[field_name]
 
-            field_value: Optional[str] = None
             if field_name in requirement_fields:
-                field_value = requirement_fields.get(field_name, None)
-                field_value = sanitize_html_form_field(
-                    field_value, multiline=True
+                requirement_field_values = requirement_fields.get(
+                    field_name, []
                 )
-            form_field = RequirementFormField.create_from_grammar_field(
-                grammar_field=field, multiline=multiline, value=field_value
-            )
-            form_fields.append(form_field)
-
-        return RequirementFormObject(
+                for requirement_field_value in requirement_field_values:
+                    field_value: Optional[str] = sanitize_html_form_field(
+                        requirement_field_value, multiline=True
+                    )
+                    form_field = RequirementFormField.create_from_grammar_field(
+                        grammar_field=field,
+                        multiline=multiline,
+                        value=field_value,
+                    )
+                    form_fields.append(form_field)
+            else:
+                form_field = RequirementFormField.create_from_grammar_field(
+                    grammar_field=field, multiline=multiline, value=None
+                )
+                form_fields.append(form_field)
+        form_object = RequirementFormObject(
             requirement_mid=requirement_mid,
             fields=form_fields,
         )
+        return form_object
 
     @staticmethod
     def create_new(*, document: Document) -> "RequirementFormObject":
@@ -199,23 +210,24 @@ class RequirementFormObject(ErrorObject):
             field = element.fields_map[field_name]
 
             if field_name in requirement.ordered_fields_lookup:
-                requirement_field: RequirementField = (
-                    requirement.ordered_fields_lookup[field_name][0]
-                )
-                form_field = (
-                    RequirementFormField.create_existing_from_grammar_field(
-                        field,
-                        multiline=field_idx > title_field_idx,
-                        requirement_field=requirement_field,
+                for requirement_field in requirement.ordered_fields_lookup[
+                    field_name
+                ]:
+                    form_field = (
+                        RequirementFormField.create_existing_from_grammar_field(
+                            field,
+                            multiline=field_idx > title_field_idx,
+                            requirement_field=requirement_field,
+                        )
                     )
-                )
+                    form_fields.append(form_field)
             else:
                 form_field = RequirementFormField.create_from_grammar_field(
                     grammar_field=field,
                     multiline=field_idx > title_field_idx,
                     value=None,
                 )
-            form_fields.append(form_field)
+                form_fields.append(form_field)
         return RequirementFormObject(
             requirement_mid=requirement.node_id,
             fields=form_fields,
@@ -226,7 +238,7 @@ class RequirementFormObject(ErrorObject):
             yield field
 
     def validate(self):
-        requirement_statement = self.fields["STATEMENT"].field_value
+        requirement_statement = self.fields["STATEMENT"][0].field_value
         if requirement_statement is None or len(requirement_statement) == 0:
             self.add_error(
                 "STATEMENT",

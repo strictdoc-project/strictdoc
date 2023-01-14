@@ -2,7 +2,9 @@ import argparse
 import os
 import sys
 from enum import Enum
-from typing import List
+from typing import List, Optional
+
+from strictdoc.core.project_config import ProjectConfig
 
 EXPORT_FORMATS = ["html", "html-standalone", "rst", "excel", "reqif-sdoc"]
 
@@ -299,7 +301,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         strictdoc_root_path,
         input_paths,
         output_dir: str,
-        project_title,
+        project_title: Optional[str],
         formats,
         fields,
         no_parallelization,
@@ -310,7 +312,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         self.strictdoc_root_path = strictdoc_root_path
         self.input_paths: List[str] = input_paths
         self.output_dir: str = output_dir
-        self.project_title = project_title
+        self.project_title: Optional[str] = project_title
         self.formats = formats
         self.fields = fields
         self.no_parallelization = no_parallelization
@@ -352,6 +354,10 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         return os.path.join(
             self.strictdoc_root_path, "strictdoc/export/html/_static_extra"
         )
+
+    def integrate_project_config(self, project_config: ProjectConfig):
+        if self.project_title is None:
+            self.project_title = project_config.project_title
 
 
 class DumpGrammarCommandConfig:
@@ -405,11 +411,7 @@ class SDocArgsParser:
         )
 
     def get_export_config(self, strictdoc_root_path) -> ExportCommandConfig:
-        project_title = (
-            self.args.project_title
-            if self.args.project_title
-            else "Untitled Project"
-        )
+        project_title: Optional[str] = self.args.project_title
 
         output_dir = self.args.output_dir if self.args.output_dir else "output"
         if not os.path.isabs(output_dir):

@@ -37,6 +37,7 @@ from strictdoc.cli.cli_arg_parser import (
 from strictdoc.core.actions.export_action import ExportAction
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.form_objects.document_form_object import (
     ExistingDocumentFreeTextObject,
@@ -74,16 +75,18 @@ class NodeCreationOrder:
         )
 
 
-def create_main_router(config: ServerCommandConfig) -> APIRouter:
+def create_main_router(
+    server_config: ServerCommandConfig, project_config: ProjectConfig
+) -> APIRouter:
     env = HTMLTemplates.jinja_environment
 
     parallelizer = NullParallelizer()
 
     export_config = ExportCommandConfig(
         strictdoc_root_path=STRICTDOC_ROOT_PATH,
-        input_paths=[config.input_path],
-        output_dir=config.output_path,
-        project_title="Untitled Project",
+        input_paths=[server_config.input_path],
+        output_dir=server_config.output_path,
+        project_title=project_config.project_title,
         formats=["html"],
         fields=None,
         no_parallelization=False,
@@ -1573,7 +1576,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
 
     def get_document(url_to_document: str):
         full_path_to_document = os.path.join(
-            config.output_path, "html", url_to_document
+            server_config.output_path, "html", url_to_document
         )
         assert os.path.isfile(full_path_to_document), f"{full_path_to_document}"
         with open(full_path_to_document, encoding="utf8") as sample_sdoc:

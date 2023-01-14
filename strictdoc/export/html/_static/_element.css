@@ -571,6 +571,10 @@ svg.svg_icon {
   display: none;
 }
 
+.toc_handler:hover {
+  color: var(--color-fg-contrast);
+}
+
 .toc_panel__overlay {
   position: absolute;
   z-index: 2;
@@ -666,90 +670,4 @@ svg.svg_icon {
 
 .toc-title-no-link {
   color: #999;
-}
-
-.toc [data-collapse] {
-  position: absolute;
-  top: 0;
-  left: -.5rem;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  -webkit-box-align: center;
-  -webkit-box-pack: center;
-  line-height: 0;
-  width: 1rem;
-  height: 1rem;
-  border-radius: 1rem;
-  user-select: none;
-  cursor: pointer;
-  background-clip: padding-box;
-  transition: 0.2s;
-
-  font-weight: 700;
-  /* background-color: rgb(255, 255, 255); */
-  color: var(--color-fg-secondary);
-  box-shadow: rgb(0 0 0 / 10%) 0px 1px 2px 0px;
-  /* border: 1px solid rgba(0, 0, 0, 0.1); */
-}
-
-.toc [data-collapse]:hover {
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  box-shadow: rgb(0 0 0 / 15%) 0px 2px var(--base-rhythm) 0px;
-  color: var(--color-fg-contrast);
-}
-
-.toc [data-collapse='1']::before {
-  /* + */
-  content: '＋';
-}
-
-.toc [data-collapse='0']::before {
-  /* − */
-  content: '－';
-}
-
-[data-collapse='1'] + ul {
-  height: 0;
-  overflow: hidden;
-}
-
-[data-collapse='0'] + ul {
-  height: auto !important;
-}
-
-/* toc_control */
-
-.toc_control {
-  display: flex;
-  align-items: center;
-  column-gap: calc(var(--base-rhythm)/2);
-}
-
-.toc_collapse_all,
-.toc_expand_all {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  -webkit-box-align: center;
-  -webkit-box-pack: center;
-  cursor: pointer;
-  user-select: none;
-  background-clip: padding-box;
-  color: var(--color-fg-secondary);
-  transition: all .3s;
-
-  padding: 4px;
-  border-radius: 50%;
-  /* background-color: rgb(255 255 255 / 50%); */
-  box-shadow: rgb(0 0 0 / 0%) 0px 1px 8px 0px;
-  border: 1px solid rgba(0, 0, 0, 0);
-}
-
-.toc_collapse_all:hover,
-.toc_expand_all:hover {
-  color: var(--color-fg-contrast);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: rgb(0 0 0 / 10%) 0px 1px 8px 0px;
 }

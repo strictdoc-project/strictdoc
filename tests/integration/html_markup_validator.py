@@ -37,7 +37,14 @@ except Exception as e:
 _, tidylib_messages_string = tidy_document(
     html_content,
     options={
-        "new-blocklevel-tags": "main, aside, header, section, article, nav, svg, path, turbo-frame",  # noqa: E501
+        "new-blocklevel-tags": (
+            # HTML 5
+            "main, aside, header, footer, section, article, nav, "
+            # Turbo.js
+            "turbo-frame,"
+            # SVG
+            "svg, path, line, circle, polyline"
+        ),
         "char-encoding": "utf8",
         "input-encoding": "utf8",
         "output-encoding": "utf8",

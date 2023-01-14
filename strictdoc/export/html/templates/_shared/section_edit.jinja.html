@@ -6,7 +6,7 @@
 
 <turbo-frame id="article-{{form_object.section_mid}}">
 
-<form data-controller="hello" class="std-form" action="{{url}}" method="POST" data-turbo="true">
+<form class="std-form" action="{{url}}" method="POST" data-turbo="true">
   {%- if is_new_section -%}
     <input type="hidden" id="reference_mid" name="reference_mid" value="{{reference_mid}}" />
     <input type="hidden" id="whereto" name="whereto" value="{{whereto}}" />
@@ -16,7 +16,7 @@
     <div class="std-form-row">
 
       {# <input type="text" id="section_title" name="section_title" value="{{ form_object.section_title }}"/> #}
-      <div role="textbox" data-editable="single" contenteditable="true" class="std-form-fileld-title" id="section_title" placeholder="Enter section title here...">
+      <div data-controller="editablefield" role="textbox" data-editable="single" contenteditable="true" class="std-form-fileld-title" id="section_title" placeholder="Enter section title here...">
         {%- if true -%}
         {{ form_object.section_title }}
         {%- endif -%}
@@ -34,8 +34,7 @@
     </div>
 
     <div class="std-form-row">
-
-      <div role="textbox" data-editable="multiline" contenteditable="true" class="std-form-field-rst" id="section_content" placeholder="Enter section text here...">
+      <div data-controller="editablefield" role="textbox" data-editable="multiline" contenteditable="true" class="std-form-field-rst" id="section_content" placeholder="Enter section text here...">
         {%- if true -%}
           {{ form_object.section_statement }}
         {%- endif -%}

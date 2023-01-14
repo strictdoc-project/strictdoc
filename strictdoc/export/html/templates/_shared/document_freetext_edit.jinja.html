@@ -3,7 +3,7 @@
 <form data-controller="hello" class="std-form" action="/fragments/document/{{form_object.document_mid}}" method="POST" data-turbo="true">
 
     <div class="std-form-row">
-        <div role="textbox" data-editable="multiline" contenteditable="true" class="std-form-field-rst" id="document_freetext" placeholder="Enter text here...">
+        <div data-controller="editablefield" role="textbox" data-editable="multiline" contenteditable="true" class="std-form-field-rst" id="document_freetext" placeholder="Enter text here...">
           {%- if true -%}
           {{ form_object.document_free_text }}
           {%- endif -%}

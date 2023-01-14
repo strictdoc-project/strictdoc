@@ -43,6 +43,8 @@ from strictdoc.export.html.form_objects.document_form_object import (
 )
 from strictdoc.export.html.form_objects.requirement_form_object import (
     RequirementFormObject,
+    RequirementFormField,
+    RequirementFormFieldType,
 )
 from strictdoc.export.html.form_objects.section_form_object import (
     SectionFormObject,
@@ -809,7 +811,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
         )
         form_object = RequirementFormObject.create_from_request(
             requirement_mid=requirement_mid,
-            request_dict=request_dict,
+            request_form_data=request_form_data,
             document=document,
         )
         if whereto == NodeCreationOrder.CHILD:
@@ -861,8 +863,14 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
 
         requirement = SDocObjectFactory.create_requirement(parent=parent)
 
-        for form_field_name, form_field in form_object.fields.items():
-            requirement.set_field_value(form_field_name, form_field.field_value)
+        # FIXME: Leave only one method based on set_field_value().
+        for form_field_name, form_fields in form_object.fields.items():
+            for form_field_index, form_field in enumerate(form_fields):
+                requirement.set_field_value(
+                    field_name=form_field_name,
+                    form_field_index=form_field_index,
+                    value=form_field.field_value,
+                )
 
         requirement.node_id = requirement_mid
         requirement.ng_document_reference = DocumentReference()
@@ -988,7 +996,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
 
         form_object = RequirementFormObject.create_from_request(
             requirement_mid=requirement_mid,
-            request_dict=request_dict,
+            request_form_data=request_form_data,
             document=document,
         )
 
@@ -1025,8 +1033,18 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
 
         existing_uid = requirement.uid
         # FIXME: Leave only one method based on set_field_value().
-        for form_field_name, form_field in form_object.fields.items():
-            requirement.set_field_value(form_field_name, form_field.field_value)
+        # Special case: we clear out the requirement's comments and then re-fill
+        # them from scratch from the form data.
+        requirement.comments = []
+        if "COMMENT" in requirement.ordered_fields_lookup:
+            del requirement.ordered_fields_lookup["COMMENT"]
+        for form_field_name, form_fields in form_object.fields.items():
+            for form_field_index, form_field in enumerate(form_fields):
+                requirement.set_field_value(
+                    field_name=form_field_name,
+                    form_field_index=form_field_index,
+                    value=form_field.field_value,
+                )
 
         export_action.traceability_index.mut_rename_uid_to_a_requirement(
             requirement=requirement, old_uid=existing_uid
@@ -1367,6 +1385,34 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
             document_tree_iterator=document_tree_iterator,
             static_path="_static",
             traceability_index=export_action.traceability_index,
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @router.get("/actions/document/new_comment", response_class=Response)
+    def add_comment(requirement_mid: str):
+        template = env.get_template(
+            "actions/"
+            "document/"
+            "add_requirement_comment/"
+            "stream_add_requirement_comment.jinja.html"
+        )
+        output = template.render(
+            requirement_mid=requirement_mid,
+            form_object=RequirementFormObject(
+                requirement_mid=requirement_mid,
+                fields=[],
+            ),
+            field=RequirementFormField(
+                field_name="COMMENT",
+                field_type=RequirementFormFieldType.MULTILINE,
+                field_value="",
+            ),
         )
         return HTMLResponse(
             content=output,

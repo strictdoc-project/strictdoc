@@ -5,6 +5,14 @@
 {% block head_scripts %}
   <script type="text/javascript" src="{{root_path}}/_static/viewtype_menu.js"></script>
   <script type="text/javascript" src="{{root_path}}/_static/toc.js"></script>
+
+  <script type="module">
+    //import hotwiredTurbo from "{{root_path}}/_static/turbo.js";
+    import { Application } from "{{root_path}}/_static/stimulus.js";
+    window.Stimulus = Application.start();
+  </script>
+  <script type="module" src="{{root_path}}/_static/collapsible_list_controller.js"></script>
+
   {%- if config.enable_mathjax -%}
   <script id="MathJax-script" async src="{{root_path}}/_static/mathjax/tex-mml-chtml.js"></script>
   {%- endif -%}

@@ -25,7 +25,7 @@ class Test_02_CreatingSectionMalformedRSTStatement(BaseCase):
         self.open("http://localhost:8001")
 
         self.assert_text("Document 1")
-        self.assert_text("Project index")
+        self.assert_text("PROJECT INDEX")
 
         self.click_link("DOC")
 

@@ -3,6 +3,7 @@
 {% extends "base.jinja.html" %}
 
 {% block head_scripts %}
+  <script type="text/javascript" src="{{root_path}}/_static/viewtype_menu.js"></script>
   <script type="text/javascript" src="{{root_path}}/_static/toc.js"></script>
   <script type="text/javascript" src="{{static_path}}/jquery.min.js"></script>
 
@@ -19,27 +20,39 @@
   {{ super() }}
 {% endblock head_scripts %}
 {% block title %}{{document.title}} - {{ template_type }}{% endblock title %}
-{% block viewtype %}document-view{% endblock %}
+{% block viewtype %}document{% endblock %}
 {% block withtoc %}withtoc{% endblock %}
 
 {% block layout_nav %}
-  {% include "_shared/doc_nav.jinja.html" %}
+  {%- if not standalone -%}
+  {% include "_shared/nav.jinja.html" %}
+  {%- endif -%}
 {% endblock layout_nav %}
 
-{% block aside_header_content %}
-  {% include "_shared/aside_header.jinja.html" %}
-{% endblock aside_header_content %}
-
-{% block aside_content %}
+{% block toc_content %}
   {% include "_shared/toc.jinja.html" %}
-{% endblock aside_content %}
+{% endblock toc_content %}
 
 
 {% block header_content %}
-  <p>{{document.title}} <span class="document-view-type">{{ template_type }}</span></p>
+<div class="header">
+  {% include "_shared/document_header.jinja.html" %}
   {%- if config.is_running_on_server -%}
-  <a href="/reqif/export_document/{{document.node_id}}">Export to ReqIF</a>
+  <div class="header__r">
+  <div class="actions_group">
+    <a class="action_button" aria-disabled="true">
+      Edit document
+    </a>
+    {# <button type="button" disabled class="action_button">
+      Edit document
+    </button> #}
+    <a class="action_button" href="/reqif/export_document/{{document.node_id}}">
+      Export to ReqIF
+    </a>
+  </div>
+  </div>
   {%- endif -%}
+</div>
 {% endblock header_content %}
 
 {% block content %}

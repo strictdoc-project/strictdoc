@@ -1,0 +1,53 @@
+{%- if not standalone -%}
+<div class="viewtype">
+  <div
+    id="viewtype_handler"
+    class="viewtype__handler"
+    aria-expanded="false"
+    aria-controls="viewtype_menu"
+  >
+    <span>{{ template_type }}</span>
+    {% include "_res/svg_ico16_expand.jinja.html" %}
+  </div>
+  <menu
+    id="viewtype_menu"
+    class="viewtype__menu"
+    aria-hidden="true"
+    aria-labelledby="viewtype_handler"
+  >
+    <li class="viewtype__menu_header">VIEWS</li>
+    <li>
+      <a
+        data-viewtype_link="document"
+        class="viewtype__menu_item"
+        title="Go to Document view"
+        href="{{document.meta.get_root_path_prefix()}}/{{document.meta.get_html_doc_link()}}">
+        Document</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="table"
+        class="viewtype__menu_item"
+        title="Go to Table view"
+        href="{{document.meta.get_root_path_prefix()}}/{{document.meta.get_html_table_link()}}">
+        Table</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="traceability"
+        class="viewtype__menu_item"
+        title="Go to Traceability view"
+        href="{{document.meta.get_root_path_prefix()}}/{{document.meta.get_html_traceability_link()}}">
+        Traceability</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="deep_traceability"
+        class="viewtype__menu_item"
+        title="Go to Deep Traceability view"
+        href="{{document.meta.get_root_path_prefix()}}/{{document.meta.get_html_deep_traceability_link()}}">
+      Deep traceability</a>
+    </li>
+  </menu>
+</div>
+{%- endif -%}

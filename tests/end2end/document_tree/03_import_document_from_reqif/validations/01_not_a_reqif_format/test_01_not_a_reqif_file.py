@@ -21,7 +21,7 @@ class Test_Validation_01_NotAReqIFormat(BaseCase):
 
         self.open("http://localhost:8001")
 
-        self.assert_text("Project index")
+        self.assert_text("PROJECT INDEX")
 
         self.assert_text("The document tree has no documents yet.")
 

@@ -1,28 +1,25 @@
-{% set page_title = 'Source coverage' %}
 {% extends "base.jinja.html" %}
+{% set template_type = "Source coverage" %}
 
 {% block head_css %}
   {{ super() }}
   <link rel="stylesheet" href="{{static_path}}/_tree.css"/>
 {% endblock head_css %}
 
-{% block title %}{{ page_title }}{% endblock title %}
-{% block viewtype %}coverage-tree-view{% endblock %}
+{% block title %}
+  {{ config.project_title }} - {{template_type}}
+{% endblock title %}
+{% block viewtype %}coverage-tree{% endblock %}
 
 {% block layout_nav %}
-  {# {% include "_shared/doc_nav.jinja.html" %} #}
+  {% include "_shared/nav.jinja.html" %}
 {% endblock layout_nav %}
 
-{% block aside_header_content %}
-  {# {% include "_shared/aside_header.jinja.html" %} #}
-{% endblock aside_header_content %}
-
-{% block aside_content %}
-  {% include "_shared/nav.jinja.html" %}
-{% endblock aside_content %}
+{% block toc_content %}
+{% endblock toc_content %}
 
 {% block header_content %}
-  <p>{{ page_title }}</p>
+  {% include "_shared/header.jinja.html" %}
 {% endblock header_content %}
 
 {% block content %}

@@ -24,6 +24,7 @@ class SourceFileCoverageHTMLGenerator:
             traceability_index=traceability_index,
             static_path="_static",
             link_renderer=link_renderer,
+            root_path="",
         )
 
         return output

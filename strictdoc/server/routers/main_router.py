@@ -81,7 +81,7 @@ def create_main_router(config: ServerCommandConfig) -> APIRouter:
         strictdoc_root_path=STRICTDOC_ROOT_PATH,
         input_paths=[config.input_path],
         output_dir=config.output_path,
-        project_title="PROJECT_TITLE",
+        project_title="Untitled Project",
         formats=["html"],
         fields=None,
         no_parallelization=False,

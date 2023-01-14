@@ -24,6 +24,7 @@ try:
     from strictdoc.core.actions.export_action import ExportAction
     from strictdoc.core.actions.import_action import ImportAction
     from strictdoc.core.actions.passthrough_action import PassthroughAction
+    from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
     from strictdoc.helpers.parallelizer import Parallelizer
     from strictdoc.server.server import run_strictdoc_server
 
@@ -58,6 +59,12 @@ def _main(parallelizer):
         config: ExportCommandConfig = parser.get_export_config(
             STRICTDOC_ROOT_PATH
         )
+        project_config: ProjectConfig = (
+            ProjectConfigLoader.load_from_path_or_get_default(
+                path_to_config_dir=config.input_paths[0]
+            )
+        )
+        config.integrate_project_config(project_config)
         parallelization_value = (
             "Disabled" if config.no_parallelization else "Enabled"
         )
@@ -68,7 +75,14 @@ def _main(parallelizer):
 
     elif parser.is_server_command:
         server_config = parser.get_server_config()
-        run_strictdoc_server(config=server_config)
+        project_config: ProjectConfig = (
+            ProjectConfigLoader.load_from_path_or_get_default(
+                path_to_config_dir=server_config.input_path
+            )
+        )
+        run_strictdoc_server(
+            server_config=server_config, project_config=project_config
+        )
 
     elif parser.is_import_command_reqif:
         import_config: ImportReqIFCommandConfig = (

@@ -40,6 +40,10 @@ classifiers = [
 dependencies = [
     "textx >= 3.0.0, == 3.*",
     "jinja2 >= 2.11.2",
+
+    # Reading project config from strictdoc.toml file.
+    "toml",
+
     # FIXME: This might be not relevant anymore.
     # https://github.com/aws/aws-sam-cli/issues/3661#issuecomment-1044340547
     "MarkupSafe == 2.0.1",
@@ -75,7 +79,6 @@ dependencies = [
 development = [
     # Development tasks
     "invoke>=1.4.1",
-    "toml",
     # Reload files when changed
     "watchdog>=2.1.7",
 

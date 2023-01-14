@@ -28,7 +28,7 @@ def test_export_00_strictdoc_root_path():
     config_parser = create_sdoc_args_parser(args)
     export_config = config_parser.get_export_config(FAKE_STRICTDOC_ROOT_PATH)
     assert export_config.strictdoc_root_path == FAKE_STRICTDOC_ROOT_PATH
-    assert export_config.project_title == "Untitled Project"
+    assert export_config.project_title is None
 
 
 def test_export_01_minimal():

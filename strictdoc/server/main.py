@@ -3,6 +3,7 @@ import os
 import sys
 
 from strictdoc.cli.cli_arg_parser import ServerCommandConfig
+from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
 from strictdoc.server.server import run_strictdoc_server
 
 try:
@@ -33,4 +34,11 @@ if __name__ == "__main__":
     server_command_config = ServerCommandConfig(
         input_path=input_path, output_path=output_path, reload=args.reload
     )
-    run_strictdoc_server(config=server_command_config)
+    project_config: ProjectConfig = (
+        ProjectConfigLoader.load_from_path_or_get_default(
+            path_to_config_dir=input_path
+        )
+    )
+    run_strictdoc_server(
+        server_config=server_command_config, project_config=project_config
+    )

@@ -1,0 +1,13 @@
+[DOCUMENT]
+TITLE: Document 1
+CLASSIFICATION: Restricted
+
+[FREETEXT]
+Hello world!
+[/FREETEXT]
+
+[REQUIREMENT]
+TITLE: Requirement title
+STATEMENT: >>>
+Requirement statement.
+<<<

@@ -1,0 +1,26 @@
+<div data-section="edit-section-TBD" class="std-form-row">
+  {{field_name}}:<br/>
+
+  <div
+    data-controller="editablefield"
+    role="textbox"
+    data-editable="single"
+    contenteditable="true"
+    class="std-form-fileld-title"
+    id="{{ field_input_name }}"
+    placeholder="Enter {{ field_name }} here..."
+  >
+    {%- if true -%}
+    {{ field_value }}
+    {%- endif -%}
+  </div>
+  <input type="hidden" class="std-input-hidden" name="{{ field_input_name }}" value="{{ field_value }}"/>
+
+  {%- if errors|length > 0 -%}
+    <div class="std-form-error">
+    {%- for error in errors -%}
+      {{ error }}
+    {%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>

@@ -12,6 +12,8 @@ class ErrorObject:
         return field_name in self.errors
 
     def get_errors(self, field_name):
+        if field_name not in self.errors:
+            return []
         return self.errors[field_name]
 
     def add_error(self, field_name, error):

@@ -1,41 +1,5 @@
 <turbo-frame id="frame_document_content">
-  {%- if document.config.has_meta() -%}
-      <div class="content_meta">
-      <h1>{{document.title}}</h1>
-        <table class="table_meta">
-          {%- if document.config.uid -%}
-          <tr>
-            <th>
-              UID:
-            </th>
-            <td>
-              {{document.config.uid}}
-            </td>
-          </tr>
-          {%- endif -%}
-          {%- if document.config.version -%}
-          <tr>
-            <th>
-              VERSION:
-            </th>
-            <td>
-              {{document.config.version}}
-            </td>
-          </tr>
-          {%- endif -%}
-          {%- if document.config.classification -%}
-          <tr>
-            <th>
-              CLASSIFICATION:
-            </th>
-            <td>
-              {{document.config.classification}}
-            </td>
-          </tr>
-          {%- endif -%}
-        </table>
-      </div>
-    {%- endif -%}
+      {% include "single_document/frame_document_config.jinja.html" %}
 
       <div class="content">
         {% include "_shared/document_freetext.jinja.html" %}

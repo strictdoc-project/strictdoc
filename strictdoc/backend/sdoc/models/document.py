@@ -11,7 +11,7 @@ from strictdoc.helpers.auto_described import auto_described
 class Document:  # pylint: disable=too-many-instance-attributes
     def __init__(  # pylint: disable=too-many-arguments
         self,
-        title,
+        title: str,
         config: Optional[DocumentConfig],
         grammar: Optional[DocumentGrammar],
         free_texts,
@@ -19,7 +19,7 @@ class Document:  # pylint: disable=too-many-instance-attributes
     ):
         assert isinstance(free_texts, list)
 
-        self.title = title
+        self.title: str = title
         self.config = config if config else DocumentConfig.default_config(self)
         self.grammar: Optional[DocumentGrammar] = grammar
         self.free_texts = free_texts

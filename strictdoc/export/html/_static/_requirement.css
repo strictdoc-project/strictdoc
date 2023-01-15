@@ -89,7 +89,7 @@ article.requirement.highlighted {
 /* [data-viewtype="table"] [data-section] p:first-child { margin-top: 0; }
 [data-viewtype="table"] [data-section] p:last-child { margin-bottom: 0; } */
 
-/* [data-viewtype="table"] [data-section="meta"] > .requirement_meta {
+/* [data-viewtype="table"] [data-section="meta"] > .requirement__meta {
   border-width: 1px;
   border-color: #ddd;
   background-color: #ddd;
@@ -99,7 +99,7 @@ article.requirement.highlighted {
   color: red;
 } */
 
-/* [data-viewtype="table"] [data-section="meta"] > .requirement_meta dt i {
+/* [data-viewtype="table"] [data-section="meta"] > .requirement__meta dt i {
   max-width: 100px;
   background-color: red;
   color: red;
@@ -232,7 +232,7 @@ article object {
 
 /* meta table */
 
-dl.requirement_meta {
+dl.requirement__meta {
   display: grid;
   grid-template-columns: min-content auto;
   place-items: stretch stretch;
@@ -245,12 +245,12 @@ dl.requirement_meta {
   margin-bottom: 1rem;
 }
 
-.requirement__title + dl.requirement_meta {
+.requirement__title + dl.requirement__meta {
   margin-top: 1rem;
 }
 
-.requirement_meta dt,
-.requirement_meta dd {
+.requirement__meta dt,
+.requirement__meta dd {
   margin: 0;
   padding: 2px 8px;
   font-size: .85rem;
@@ -260,33 +260,33 @@ dl.requirement_meta {
   /* background-color: var(--color-bg-main); */
 }
 
-.requirement_meta dt i {
+.requirement__meta dt i {
   display: inline-block;
   /* letter-spacing: -1px; */
   overflow-wrap: break-word;
 }
 
-.requirement_meta dt i::after {
+.requirement__meta dt i::after {
   content: ':';
 }
 
-.requirement-tree_node .requirement_meta dt,
-.requirement-tree_node .requirement_meta dd {
+.requirement-tree_node .requirement__meta dt,
+.requirement-tree_node .requirement__meta dd {
   background-color: var(--color-bg-main);
 }
 
 /* meta multiline list (next to comments/rationale) */
 
-.requirement_meta_multiline {
+.requirement__meta_multiline {
   font-size: .9em;
   font-style: italic;
 }
 
-.requirement_meta_multiline + .requirement_meta_multiline {
+.requirement__meta_multiline + .requirement__meta_multiline {
   margin-top: var(--base-margin);
 }
 
-.requirement_meta_multiline_label {
+.requirement__meta_multiline_label {
   font-weight: bold;
 }
 

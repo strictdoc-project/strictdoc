@@ -2,6 +2,7 @@ import os
 from functools import partial
 from pathlib import Path
 
+from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.cli.cli_arg_parser import ExportCommandConfig, ExportMode
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.source_tree import SourceTree
@@ -46,16 +47,14 @@ class HTMLGenerator:
         link_renderer = LinkRenderer(config.output_html_root)
 
         # Export document tree.
+        HTMLGenerator.export_document_tree(
+            config=config, traceability_index=traceability_index
+        )
+
+        # Export StrictDoc's own assets.
         output_html_static_files = os.path.join(
             config.output_html_root, "_static"
         )
-        output_file = os.path.join(config.output_html_root, "index.html")
-        writer = DocumentTreeHTMLGenerator()
-        output = writer.export(config, traceability_index)
-        with open(output_file, "w", encoding="utf8") as file:
-            file.write(output)
-
-        # Export StrictDoc's own assets.
         sync_dir(config.get_static_files_path(), output_html_static_files)
 
         # Export MathJax
@@ -163,7 +162,7 @@ class HTMLGenerator:
             with measure_performance(f"Skip: {document.title}"):
                 return
         with measure_performance(f"Published: {document.title}"):
-            HTMLGenerator._export(
+            HTMLGenerator.export_single_document(
                 config,
                 document,
                 traceability_index,
@@ -172,13 +171,14 @@ class HTMLGenerator:
         return
 
     @staticmethod
-    def _export(
+    def export_single_document(
         config: ExportCommandConfig,
-        document,
+        document: Document,
         traceability_index,
         link_renderer,
     ):
         export_mode = config.get_export_mode()
+        assert document.meta is not None
 
         document_meta: DocumentMeta = document.meta
 
@@ -266,3 +266,13 @@ class HTMLGenerator:
                 file.write(document_content_with_embedded_assets)
 
         return document
+
+    @staticmethod
+    def export_document_tree(
+        *, config: ExportCommandConfig, traceability_index: TraceabilityIndex
+    ):
+        output_file = os.path.join(config.output_html_root, "index.html")
+        writer = DocumentTreeHTMLGenerator()
+        output = writer.export(config, traceability_index)
+        with open(output_file, "w", encoding="utf8") as file:
+            file.write(output)

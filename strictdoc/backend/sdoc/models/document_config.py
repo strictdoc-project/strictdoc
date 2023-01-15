@@ -54,6 +54,10 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         # TODO: When OPTIONS are not provided to a document, the self.number and
         # self.version are both None. Otherwise, they become empty strings "".
         # This issue might deserve a bug report to TextX.
-        return (self.uid is not None and len(self.uid) > 0) or (
-            self.version is not None and len(self.version) > 0
+        return (
+            (self.uid is not None and len(self.uid) > 0)
+            or (self.version is not None and len(self.version) > 0)
+            or (
+                self.classification is not None and len(self.classification) > 0
+            )
         )

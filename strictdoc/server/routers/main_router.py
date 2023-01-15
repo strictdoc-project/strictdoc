@@ -1,11 +1,11 @@
 import os
 import re
-import uuid
 from mimetypes import guess_type
 from pathlib import Path
 from typing import Optional, List, Union, Dict
 
 from fastapi import Form, APIRouter, UploadFile
+from jinja2 import Environment
 from reqif.models.error_handling import ReqIFXMLParsingError
 from reqif.parser import ReqIFParser
 from reqif.unparser import ReqIFUnparser
@@ -39,6 +39,9 @@ from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.export.html.document_type import DocumentType
+from strictdoc.export.html.form_objects.document_config_form_object import (
+    DocumentConfigFormObject,
+)
 from strictdoc.export.html.form_objects.document_form_object import (
     ExistingDocumentFreeTextObject,
 )
@@ -50,6 +53,7 @@ from strictdoc.export.html.form_objects.requirement_form_object import (
 from strictdoc.export.html.form_objects.section_form_object import (
     SectionFormObject,
 )
+from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
@@ -78,7 +82,7 @@ class NodeCreationOrder:
 def create_main_router(
     server_config: ServerCommandConfig, project_config: ProjectConfig
 ) -> APIRouter:
-    env = HTMLTemplates.jinja_environment
+    env: Environment = HTMLTemplates.jinja_environment
 
     parallelizer = NullParallelizer()
 
@@ -119,11 +123,7 @@ def create_main_router(
             isinstance(reference_mid, str) and len(reference_mid) > 0
         ), reference_mid
 
-        section_form_object = SectionFormObject(
-            section_mid=uuid.uuid4().hex,
-            section_title=None,
-            section_statement=None,
-        )
+        section_form_object = SectionFormObject.create_new()
         reference_node: Union[
             Document, Section
         ] = export_action.traceability_index.get_node_by_id(reference_mid)
@@ -174,11 +174,11 @@ def create_main_router(
 
     @router.post("/actions/document/create_section", response_class=Response)
     def create_section(
-        section_mid: str = Form(None),
-        section_title: Optional[str] = Form(None),
-        section_content: Optional[str] = Form(None),
-        reference_mid: str = Form(None),
-        whereto: str = Form(None),
+        section_mid: str = Form(""),
+        reference_mid: str = Form(""),
+        whereto: str = Form(""),
+        section_title: str = Form(""),
+        section_content: str = Form(""),
     ):
         assert isinstance(whereto, str), whereto
         assert NodeCreationOrder.is_valid(whereto), whereto
@@ -190,8 +190,10 @@ def create_main_router(
             isinstance(reference_mid, str) and len(reference_mid) > 0
         ), reference_mid
 
-        section_title = sanitize_html_form_field(section_title, multiline=False)
-        section_content = sanitize_html_form_field(
+        section_title: str = sanitize_html_form_field(
+            section_title, multiline=False
+        )
+        section_content: str = sanitize_html_form_field(
             section_content, multiline=True
         )
 
@@ -387,9 +389,9 @@ def create_main_router(
 
     @router.post("/actions/document/update_section", response_class=Response)
     def put_update_section(
-        section_mid: str = Form(None),
-        section_title: Optional[str] = Form(None),
-        section_content: Optional[str] = Form(None),
+        section_mid: str = Form(""),
+        section_title: Optional[str] = Form(""),
+        section_content: Optional[str] = Form(""),
     ):
         assert isinstance(section_mid, str)
 
@@ -404,12 +406,12 @@ def create_main_router(
             section_statement=section_content,
         )
 
-        if section_title is None or len(section_title) == 0:
+        if len(section_title) == 0:
             form_object.add_error(
                 "section_title", "Section title must not be empty."
             )
 
-        if section_content is not None and len(section_content) > 0:
+        if len(section_content) > 0:
             (
                 parsed_html,
                 rst_error,
@@ -635,14 +637,13 @@ def create_main_router(
     @router.post("/fragments/document/{document_id}", response_class=Response)
     def put_update_document_freetext(
         document_id: str,
-        document_freetext: Optional[str] = Form(None),
+        document_freetext: str = Form(""),
     ):
         assert isinstance(document_id, str)
 
         document_freetext = sanitize_html_form_field(
             document_freetext, multiline=True
         )
-
         form_object = ExistingDocumentFreeTextObject(
             document_mid=document_id, document_free_text=document_freetext
         )
@@ -1309,8 +1310,8 @@ def create_main_router(
         "/actions/document_tree/create_document", response_class=Response
     )
     def create_document(
-        document_title: str = Form(None),
-        document_path: str = Form(None),
+        document_title: str = Form(""),
+        document_path: str = Form(""),
     ):
         error_object = ErrorObject()
         if document_title is None or len(document_title) == 0:
@@ -1416,6 +1417,138 @@ def create_main_router(
                 field_type=RequirementFormFieldType.MULTILINE,
                 field_value="",
             ),
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @router.get("/actions/document/edit_config", response_class=Response)
+    def document__edit_config(document_mid: str):
+        document: Document = export_action.traceability_index.get_node_by_id(
+            document_mid
+        )
+        form_object = DocumentConfigFormObject.create_from_document(
+            document=document
+        )
+
+        template = env.get_template(
+            "actions/"
+            "document/"
+            "edit_document_config/"
+            "stream_edit_document_config.jinja.html"
+        )
+        output = template.render(form_object=form_object)
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @router.post("/actions/document/save_config", response_class=Response)
+    async def document__save_edit_config(request: Request):
+        request_form_data: FormData = await request.form()
+        request_dict: Dict[str, str] = dict(request_form_data)
+        document_mid: str = request_dict["document_mid"]
+        document: Document = export_action.traceability_index.get_node_by_id(
+            document_mid
+        )
+        form_object: DocumentConfigFormObject = (
+            DocumentConfigFormObject.create_from_request(
+                document_mid=document_mid,
+                request_form_data=request_form_data,
+            )
+        )
+        if not form_object.validate():
+            template = env.get_template(
+                "actions/"
+                "document/"
+                "edit_document_config/"
+                "stream_edit_document_config.jinja.html"
+            )
+            output = template.render(form_object=form_object)
+            return HTMLResponse(
+                content=output,
+                status_code=422,
+                headers={
+                    "Content-Type": "text/vnd.turbo-stream.html",
+                },
+            )
+
+        # Update the document.
+        document.title = form_object.document_title
+        document.config.uid = (
+            form_object.document_uid
+            if len(form_object.document_uid) > 0
+            else None
+        )
+        document.config.version = (
+            form_object.document_version
+            if len(form_object.document_version) > 0
+            else None
+        )
+        document.config.classification = (
+            form_object.document_classification
+            if len(form_object.document_classification) > 0
+            else None
+        )
+
+        # Re-generate the document's SDOC.
+        document_content = SDWriter().write(document)
+        document_meta = document.meta
+        with open(
+            document_meta.input_doc_full_path, "w", encoding="utf8"
+        ) as output_file:
+            output_file.write(document_content)
+
+        # Re-generate the document.
+        link_renderer = LinkRenderer(export_action.config.output_html_root)
+        HTMLGenerator.export_single_document(
+            config=export_config,
+            document=document,
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+        )
+
+        # Re-generate the document tree.
+        HTMLGenerator.export_document_tree(
+            config=export_config,
+            traceability_index=export_action.traceability_index,
+        )
+
+        template = env.get_template(
+            "actions/"
+            "document/"
+            "edit_document_config/"
+            "stream_save_document_config.jinja.html"
+        )
+        output = template.render(document=document)
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @router.get("/actions/document/cancel_edit_config", response_class=Response)
+    def document__cancel_edit_config(document_mid: str):
+        document: Document = export_action.traceability_index.get_node_by_id(
+            document_mid
+        )
+        template = env.get_template(
+            "actions/"
+            "document/"
+            "edit_document_config/"
+            "stream_cancel_edit_document_config.jinja.html"
+        )
+        output = template.render(
+            document=document,
         )
         return HTMLResponse(
             content=output,

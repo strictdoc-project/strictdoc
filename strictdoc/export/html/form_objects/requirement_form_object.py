@@ -39,15 +39,12 @@ class RequirementFormField:
         self,
         field_name: str,
         field_type: RequirementFormFieldType,
-        field_value: Optional[str],
+        field_value: str,
     ):
-        self.field_name = field_name
+        assert isinstance(field_value, str)
+        self.field_name: str = field_name
         self.field_type = field_type
-        self.field_value = (
-            field_value
-            if field_value is not None and len(field_value) > 0
-            else ""
-        )
+        self.field_value: str = field_value
 
     def is_singleline(self):
         return self.field_type == RequirementFormFieldType.SINGLELINE
@@ -62,8 +59,8 @@ class RequirementFormField:
         multiline: bool,
         value: Optional[str],
     ):
-        if value is not None:
-            value = html.escape(value)
+        assert isinstance(value, str)
+        value = html.escape(value)
         if grammar_field.gef_type == RequirementFieldType.STRING:
             return RequirementFormField(
                 field_name=grammar_field.title,
@@ -142,7 +139,7 @@ class RequirementFormObject(ErrorObject):
                     field_name, []
                 )
                 for requirement_field_value in requirement_field_values:
-                    field_value: Optional[str] = sanitize_html_form_field(
+                    field_value: str = sanitize_html_form_field(
                         requirement_field_value, multiline=True
                     )
                     form_field = RequirementFormField.create_from_grammar_field(
@@ -180,7 +177,7 @@ class RequirementFormObject(ErrorObject):
             form_field = RequirementFormField.create_from_grammar_field(
                 grammar_field=field,
                 multiline=field_idx > title_field_idx,
-                value=None,
+                value="",
             )
             form_fields.append(form_field)
 
@@ -225,7 +222,7 @@ class RequirementFormObject(ErrorObject):
                 form_field = RequirementFormField.create_from_grammar_field(
                     grammar_field=field,
                     multiline=field_idx > title_field_idx,
-                    value=None,
+                    value="",
                 )
                 form_fields.append(form_field)
         return RequirementFormObject(

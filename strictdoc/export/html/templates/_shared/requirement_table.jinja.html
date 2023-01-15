@@ -47,7 +47,7 @@ data-status='{{ requirement.reserved_status.lower() }}'
         <li>
           <a class="requirement__link-parent" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
             {%- if requirement.reserved_uid %}
-            <span class="requirement_parent-uid">{{ requirement.reserved_uid }}</span>
+            <span class="requirement__parent-uid">{{ requirement.reserved_uid }}</span>
             {%- endif %}
             {%- if requirement.reserved_title is not none -%}
               {{ requirement.reserved_title }}
@@ -71,7 +71,7 @@ data-status='{{ requirement.reserved_status.lower() }}'
           <li>
             <a class="requirement__link-child" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
               {%- if requirement.reserved_uid %}
-              <span class="requirement_child-uid">{{ requirement.reserved_uid }}</span>
+              <span class="requirement__child-uid">{{ requirement.reserved_uid }}</span>
               {%- endif %}
               {%- if requirement.reserved_title is not none -%}
               {{ requirement.reserved_title }}
@@ -158,7 +158,7 @@ data-status='{{ requirement.reserved_status.lower() }}'
         Rationale:
       </th>
       <td>
-        <div class="requirement_rationale">
+        <div class="requirement__rationale">
           {{ renderer.render_requirement_rationale(requirement) }}
         </div>
       </td>

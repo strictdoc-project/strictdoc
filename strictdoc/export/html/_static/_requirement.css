@@ -105,9 +105,9 @@ article.requirement.highlighted {
   color: red;
 } */
 
-/* requirement_statement */
+/* requirement__statement */
 
-[data-viewtype="document"] .requirement_statement {
+[data-viewtype="document"] .requirement__statement {
   /* margin: calc(var(--base-margin)*2) 0px; */
   font-size: calc(var(--base-font-size)*1.2);
 }
@@ -350,24 +350,24 @@ a.requirement__link-child::before {
   content: '\21D6';
 }
 
-.requirement_parent-uid,
-.requirement_child-uid {
+.requirement__parent-uid,
+.requirement__child-uid {
   position: relative;
   font-weight: bold;
 }
 
 /* rationale */
 
-.requirement_rationale {
+.requirement__rationale {
   font-size: .9em;
   font-style: italic;
 }
 
-.requirement_rationale + .requirement_rationale {
+.requirement__rationale + .requirement__rationale {
   margin-top: var(--base-margin);
 }
 
-.requirement_rationale p:first-child::before {
+.requirement__rationale p:first-child::before {
   content: "Rationale: ";
   font-weight: bold;
 }

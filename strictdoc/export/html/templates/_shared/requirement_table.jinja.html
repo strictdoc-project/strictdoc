@@ -12,7 +12,7 @@ data-status='{{ requirement.reserved_status.lower() }}'
     {%- if requirement.reserved_title is not none %}
     <caption>
     {% include "_shared/requirement_block/anchor.jinja.html" %}
-    <div class="section-title">
+    <div class="requirement__title">
       {%- if requirement.context.title_number_string -%}
       {{ requirement.context.title_number_string }}.&nbsp;
       {%- endif -%}

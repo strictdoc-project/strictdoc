@@ -4,7 +4,7 @@
   scroll-margin-top:      calc(var(--base-gap) + var(--base-padding));
 }
 
-[data-role="anchor"]:target + .section-title {
+[data-role="anchor"]:target + .requirement__title {
   background-color: var(--color-highlight);
 }
 
@@ -32,7 +32,7 @@ article.requirement.nouid {
   background-color: rgb(240, 220, 220);
 }
 
-article.requirement.nouid .section-title {
+article.requirement.nouid .requirement__title {
   color: #502222;
 }
 
@@ -118,7 +118,7 @@ div.document {
   display: contents;
 }
 
-/* section:target [data-role="current"] .section-title {
+/* section:target [data-role="current"] .requirement__title {
   background-color: var(--color-highlight);
 } */
 
@@ -134,29 +134,29 @@ h4 { font-size: 1.2em; }
 h5 { font-size: 1em; }
 h6 { font-size: 1em; }
 
-/* section-title */
+/* requirement__title */
 
-.section-title {
+.requirement__title {
   margin: 0;
   line-height: 1.6;
   /* color: var(--color-accent); */
 }
 
-/* .section-title[data-level]::before {
+/* .requirement__title[data-level]::before {
   content: attr(data-level) " ";
   font-weight: bold;
 } */
 
-[data-viewtype="traceability"] .section-title,
-[data-viewtype="deep_traceability"] .section-title {
+[data-viewtype="traceability"] .requirement__title,
+[data-viewtype="deep_traceability"] .requirement__title {
   font-size: 1.1em;
 }
 
-[data-viewtype="requirements-coverage"] .section-title {
+[data-viewtype="requirements-coverage"] .requirement__title {
   margin: 0;
 }
 
-/* [data-viewtype="table"] .section-title {
+/* [data-viewtype="table"] .requirement__title {
   font-size: 1rem;
 } */
 
@@ -245,7 +245,7 @@ dl.requirement_meta {
   margin-bottom: 1rem;
 }
 
-.section-title + dl.requirement_meta {
+.requirement__title + dl.requirement_meta {
   margin-top: 1rem;
 }
 
@@ -374,16 +374,16 @@ a.requirement_link-child::before {
 
 /* comment */
 
-.requirement_comment {
+.requirement__comment {
   font-size: .9em;
   font-style: italic;
 }
 
-.requirement_comment + .requirement_comment {
+.requirement__comment + .requirement__comment {
   margin-top: var(--base-margin);
 }
 
-.requirement_comment p:first-child::before {
+.requirement__comment p:first-child::before {
   content: "Comment: ";
   font-weight: bold;
 }
@@ -516,7 +516,7 @@ input:checked + .std-switch_slider:before {
   padding: 0;
 }
 
-.requirement-table caption .section-title {
+.requirement-table caption .requirement__title {
   padding: .5rem 1rem;
 }
 

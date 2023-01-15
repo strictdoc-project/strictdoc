@@ -223,7 +223,7 @@
       {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
       {% include "_shared/requirement_block/anchor.jinja.html" %}
       {%- endwith %}
-      <div class="section-title">
+      <div class="requirement__title">
         {{ requirement.reserved_title }}
       </div>
     {%- endif -%}
@@ -265,7 +265,7 @@
       {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
       {% include "_shared/requirement_block/anchor.jinja.html" %}
       {%- endwith %}
-      <div class="section-title">
+      <div class="requirement__title">
         {{ section.title }}
       </div>
     {%- for meta_field_title in document.enumerate_custom_content_field_titles() -%}

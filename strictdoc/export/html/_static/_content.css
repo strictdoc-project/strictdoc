@@ -48,10 +48,12 @@
   overflow: visible;
 }
 
+/* TODO */
+/* used in TR, DTR, requirements_coverage: */
 .content_section {
   display: contents;
 }
-
+/* TODO */
 .content_item {
   position: relative;
   display: flex;

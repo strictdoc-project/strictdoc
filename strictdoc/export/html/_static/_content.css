@@ -98,7 +98,7 @@
 
 /* [data-viewtype="table"] */
 
-[data-viewtype="table"] article {
+/* [data-viewtype="table"] article {
   display: contents;
 }
 
@@ -108,7 +108,6 @@
 
 [data-viewtype="table"] [data-section="meta"].docsection_section:only-child {
   grid-column: 1 / -1;
-  /* background-color: var(--color-bg-main); */
 }
 
 [data-viewtype="table"] [data-section="description"] {
@@ -125,7 +124,7 @@
 
 [data-viewtype="table"] [data-col="0"] {
   grid-column: 1 / -1;
-}
+} */
 
 /* meta info */
 

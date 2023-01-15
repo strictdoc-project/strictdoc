@@ -58,46 +58,52 @@ article.requirement.highlighted {
 
 /* section */
 
-article > section {
+/* article > section {
   padding-left: var(--base-padding);
   padding-right: var(--base-padding);
-}
+} */
 
-article > section:first-of-type {
+/* article > section:first-of-type {
   padding-top: var(--base-padding);
-}
+} */
 
-article > section:last-of-type {
+/* article > section:last-of-type {
   padding-bottom: var(--base-padding);
-}
+} */
 
-[data-viewtype="document"] article > section {
+/* [data-viewtype="document"] article > section {
   padding-left: 0;
   padding-right: 0;
-}
+} */
 
 /* [data-viewtype="table"] */
 
-[data-viewtype="table"] section,
+/* [data-viewtype="table"] section,
 [data-viewtype="table"] [data-section] {
   background-color: var(--color-bg-contrast);
+  background-color: red;
+  color: red;
   padding: var(--base-padding);
-}
+} */
 
-[data-viewtype="table"] [data-section] p:first-child { margin-top: 0; }
-[data-viewtype="table"] [data-section] p:last-child { margin-bottom: 0; }
+/* [data-viewtype="table"] [data-section] p:first-child { margin-top: 0; }
+[data-viewtype="table"] [data-section] p:last-child { margin-bottom: 0; } */
 
-[data-viewtype="table"] [data-section="meta"] > .requirement_meta {
+/* [data-viewtype="table"] [data-section="meta"] > .requirement_meta {
   border-width: 1px;
   border-color: #ddd;
   background-color: #ddd;
   padding: 0;
   width: 100%;
-}
+  background-color: red;
+  color: red;
+} */
 
-[data-viewtype="table"] [data-section="meta"] > .requirement_meta dt i {
+/* [data-viewtype="table"] [data-section="meta"] > .requirement_meta dt i {
   max-width: 100px;
-}
+  background-color: red;
+  color: red;
+} */
 
 /* requirement_statement */
 
@@ -112,11 +118,12 @@ div.document {
   display: contents;
 }
 
-section:target [data-role="current"] .section-title {
+/* section:target [data-role="current"] .section-title {
   background-color: var(--color-highlight);
-}
+} */
 
-section p {
+/* section p  */
+article p {
   margin: var(--base-margin) 0;
 }
 
@@ -149,9 +156,9 @@ h6 { font-size: 1em; }
   margin: 0;
 }
 
-[data-viewtype="table"] .section-title {
+/* [data-viewtype="table"] .section-title {
   font-size: 1rem;
-}
+} */
 
 /* blockquote */
 

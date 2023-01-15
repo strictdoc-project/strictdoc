@@ -146,10 +146,10 @@
     <td class="content-view-td content-view-td-meta content-view-td-related">
       {%- if traceability_index.has_parent_requirements(requirement) %}
       Parents:
-      <ul class="requirement_link">
+      <ul class="requirement__link">
         {%- for requirement in traceability_index.get_parent_requirements(requirement) %}
         <li>
-          <a class="requirement_link-parent" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
+          <a class="requirement__link-parent" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
             {%- if requirement.reserved_uid %}
             <span class="requirement_parent-uid">{{ requirement.reserved_uid }}</span>
             {%- endif %}
@@ -162,10 +162,10 @@
 
       {%- if traceability_index.has_children_requirements(requirement) %}
       Children:
-      <ul class="requirement_link">
+      <ul class="requirement__link">
         {%- for requirement in traceability_index.get_children_requirements(requirement) %}
         <li>
-          <a class="requirement_link-child" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
+          <a class="requirement__link-child" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
             {%- if requirement.reserved_uid %}
             <span class="requirement_child-uid">{{ requirement.reserved_uid }}</span>
             {%- endif %}
@@ -178,10 +178,10 @@
 
       {%- if requirement.has_requirement_references("BibRef") %}
       External:
-      <ul class="requirement_link">
+      <ul class="requirement__link">
         {%- for bib_ref in requirement.get_requirement_references("BibRef") %}
         <li>
-          <span class="requirement_link-external">
+          <span class="requirement__link-external">
             {{ bib_ref.bib_entry.ref_cite if bib_ref.bib_entry.ref_cite else "" }}
               {%- if bib_ref.bib_entry.ref_detail %}
                 : {{ bib_ref.bib_entry.ref_detail }}
@@ -196,19 +196,19 @@
       {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
       {%- if requirement_file_links %}
       Source files:
-      <ul class="requirement_link">
+      <ul class="requirement__link">
         {%- for link, opt_ranges in requirement_file_links %}
           {%- if opt_ranges -%}
             {%- for range in opt_ranges %}
               <li>
-                <a class="requirement_link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
+                <a class="requirement__link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
                   {{ link.file_entry.file_path }}, <i>lines: {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }}</i>
                 </a>
               </li>
             {%- endfor -%}
           {%- else -%}
             <li>
-              <a class="requirement_link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}">
+              <a class="requirement__link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}">
                 {{ link.file_entry.file_path }}
               </a>
             </li>

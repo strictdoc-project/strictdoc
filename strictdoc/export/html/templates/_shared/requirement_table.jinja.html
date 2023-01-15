@@ -42,10 +42,10 @@ data-status='{{ requirement.reserved_status.lower() }}'
         parent&nbsp;refs:
       </th>
       <td>
-        <ul class="requirement_link">
+        <ul class="requirement__link">
         {%- for requirement in traceability_index.get_parent_requirements(requirement) %}
         <li>
-          <a class="requirement_link-parent" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
+          <a class="requirement__link-parent" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
             {%- if requirement.reserved_uid %}
             <span class="requirement_parent-uid">{{ requirement.reserved_uid }}</span>
             {%- endif %}
@@ -66,10 +66,10 @@ data-status='{{ requirement.reserved_status.lower() }}'
         child&nbsp;refs:
       </th>
       <td>
-        <ul class="requirement_link">
+        <ul class="requirement__link">
           {%- for requirement in traceability_index.get_children_requirements(requirement) %}
           <li>
-            <a class="requirement_link-child" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
+            <a class="requirement__link-child" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
               {%- if requirement.reserved_uid %}
               <span class="requirement_child-uid">{{ requirement.reserved_uid }}</span>
               {%- endif %}
@@ -90,10 +90,10 @@ data-status='{{ requirement.reserved_status.lower() }}'
         external&nbsp;refs:
       </th>
       <td>
-        <ul class="requirement_link">
+        <ul class="requirement__link">
           {%- for bib_ref in requirement.get_requirement_references("BibRef") %}
           <li>
-            <span class="requirement_link-external">
+            <span class="requirement__link-external">
               {{ bib_ref.bib_entry.ref_cite if bib_ref.bib_entry.ref_cite else "" }}
               {%- if bib_ref.bib_entry.ref_detail %}
                 : {{ bib_ref.bib_entry.ref_detail }}
@@ -115,19 +115,19 @@ data-status='{{ requirement.reserved_status.lower() }}'
         file&nbsp;refs:
       </th>
       <td>
-        <ul class="requirement_link">
+        <ul class="requirement__link">
           {%- for link, opt_ranges in requirement_file_links %}
             {%- if opt_ranges -%}
               {%- for range in opt_ranges %}
                 <li>
-                  <a class="requirement_link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
+                  <a class="requirement__link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
                     {{ link.file_entry.file_path }}, <i>lines: {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }}</i>
                   </a>
                 </li>
               {%- endfor -%}
             {%- else -%}
               <li>
-                <a class="requirement_link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}">
+                <a class="requirement__link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}">
                   {{ link.file_entry.file_path }}
                 </a>
               </li>

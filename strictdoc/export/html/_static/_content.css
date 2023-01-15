@@ -251,11 +251,11 @@
 }
 
 .content-view-td-related,
-.content-view-td-related > ul.requirement_link {
+.content-view-td-related > ul.requirement__link {
   font-size: .85rem;
   margin-top: 0;
 }
 
-.content-view-td-related > ul.requirement_link:last-child {
+.content-view-td-related > ul.requirement__link:last-child {
   margin-bottom: 0;
 }

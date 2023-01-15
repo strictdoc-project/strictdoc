@@ -2,17 +2,13 @@
 
 {%- set anchor=link_renderer.render_local_anchor(section) -%}
 
-<article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+<article data-controller="document">
 
     {% include "_shared/requirement_block/anchor.jinja.html" %}
 
     {% with node=section %}
       {% include "_shared/requirement_block/h_title.jinja.html" %}
     {% endwith %}
-
-  </section>
 
   {% include "_shared/requirement_block/free_text.jinja.html" %}
 

@@ -7,9 +7,9 @@
   --source-line: 1px solid rgba(0, 0, 0, .05);
 }
 
-/* article in SOURCE */
+/* SDOC-NODE in SOURCE */
 
-[data-viewtype="source-file"] article.requirement {
+.source-file__requirement {
   position: static;
   padding: var(--base-padding);
   background-color: var(--color-bg-secondary);
@@ -18,8 +18,8 @@
   transition: background-color 0.3s ease-in, border-color 0.3s ease-in;
   font-size: var(--font-size-xsm);
 }
-/* [data-viewtype="source-file"] article.requirement:target, */
-[data-viewtype="source-file"] article.requirement.active {
+
+.source-file__requirement.active {
   background-color: var(--color-bg-contrast);
   border: 1px solid var(--color-fg-contrast);
 }

@@ -8,48 +8,44 @@
   background-color: var(--color-highlight);
 }
 
-/* article */
+/* sdoc-node */
 
-article {
-  position: relative;
-}
-
-[data-role='current'] article {
+[data-role='current'] sdoc-node {
   background-color: var(--color-bg-contrast);
   border: 1px solid var(--color-fg-contrast);
   /* height: 100%; */
   /* flex-grow: 1; */
 }
 
-[data-role='parents'] article,
-[data-role='children'] article {
+[data-role='parents'] sdoc-node,
+[data-role='children'] sdoc-node {
   background-color: var(--color-bg-secondary);
   border: 1px solid var(--color-border);
   width: var(--card-width);
 }
 
-article.requirement.nouid {
+sdoc-node.nouid {
   background-color: rgb(240, 220, 220);
 }
 
-article.requirement.nouid .requirement__title {
+sdoc-node.nouid .requirement__title {
   color: #502222;
 }
 
-article.requirement.highlighted {
+sdoc-node.highlighted {
   background-color: var(--color-highlight);
 }
 
-[data-viewtype="traceability"] article + article {
+[data-viewtype="traceability"] sdoc-node + sdoc-node {
   margin-top: var(--base-padding);
 }
 
-[data-viewtype="deep_traceability"] article {
+[data-viewtype="deep_traceability"] sdoc-node {
   /* width: var(--card-width); */
   /* flex-grow: 1; */
 }
 
-[data-viewtype="requirements-coverage"] article {
+[data-viewtype="requirements-coverage"] sdoc-node {
   width: calc(var(--card-width)*0.75);
   /* width: auto; */
   font-size: .85em;
@@ -99,7 +95,7 @@ div.document {
   display: contents;
 }
 
-article p {
+div.document p {
   margin: var(--base-margin) 0;
 }
 
@@ -115,7 +111,7 @@ h6 { font-size: 1em; }
 .requirement__title {
   margin: 0;
   line-height: 1.6;
-  /* color: var(--color-accent); */
+  font-weight: bold;
 }
 
 /* .requirement__title[data-level]::before {
@@ -192,15 +188,15 @@ a.reference.external {
 
 /* ul */
 
-article ul,
-article ol {
+div.document ul,
+div.document ol {
   padding-left: 1.6em;
 }
 
 /* object */
 
-article img,
-article object {
+div.document img,
+div.document object {
   width: 100%;
   padding: 1em;
   background: var(--color-bg-contrast);
@@ -374,29 +370,24 @@ a.requirement__link-child::before {
 
 /* table */
 
-div.document table,
-article table {
+div.document table {
   border-collapse: collapse;
   margin: var(--base-margin) 0;
   font-size: 1rem;
   border: #ccc;
 }
 
-div.document table caption,
-article table caption {
+div.document table caption {
   font-weight: bold;
   padding-bottom: 1rem;
 }
 
-div.document table th,
-article table th {
+div.document table th {
   background-color: #eee;
 }
 
 div.document table th,
-div.document table td,
-article table th,
-article table td {
+div.document table td {
   padding: calc(var(--base-margin)/2);
   vertical-align: top;
   text-align: left;
@@ -527,4 +518,13 @@ input:checked + .std-switch_slider:before {
 
 .requirement-table ul.requirement__link {
   font-size: 1em;
+}
+
+turbo-frame {
+  display: contents;
+}
+
+sdoc-node {
+  display: block;
+  position: relative;
 }

@@ -2,7 +2,7 @@
 
 {%- set anchor=link_renderer.render_local_anchor(requirement) -%}
 
-<article class="requirement"
+<sdoc-node
 {%- if requirement.reserved_status %}
 data-status='{{ requirement.reserved_status.lower() }}'
 {%- endif %}>
@@ -36,6 +36,6 @@ data-status='{{ requirement.reserved_status.lower() }}'
     <a href="/actions/document/new_requirement?reference_mid={{requirement.node_id}}&whereto=after" data-turbo-action="replace" data-turbo="true">+R⬇</a>
   {%- endif -%}
 
-</article>
+</sdoc-node>
 
 </turbo-frame>

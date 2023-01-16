@@ -1,4 +1,4 @@
-<article class="requirement"
+<sdoc-node
 {%- if requirement.reserved_status %}
 data-status='{{ requirement.reserved_status.lower() }}'
 {%- endif %}
@@ -7,7 +7,7 @@ data-uid='{{ requirement.reserved_uid }}'
 {%- endif %}>
 
     {% include "_shared/requirement_block/uid_and_title.jinja.html" %}
-</article>
+</sdoc-node>
 
 {% if config.experimental_enable_file_traceability %}
 {% include "_shared/requirement_block/files_tree.jinja.html" %}

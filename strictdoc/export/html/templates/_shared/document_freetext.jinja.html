@@ -1,5 +1,5 @@
 <turbo-frame id="article-{{document.node_id}}">
-<article>
+<sdoc-node>
   {%- if document.free_texts -%}
     {%- for free_text in document.free_texts %}
       <div class="free_text">
@@ -16,5 +16,5 @@
       <a href="/actions/document/new_requirement?reference_mid={{document.node_id}}&whereto=child" data-turbo-action="replace" data-turbo="true">+R⬊</a>
     {%- endif -%}
   {%- endif -%}
-</article>
+</sdoc-node>
 </turbo-frame>

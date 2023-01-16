@@ -27,7 +27,7 @@ window.addEventListener("load", function () {
   // https://stackoverflow.com/questions/32249997/how-to-check-if-data-attribute-exist-with-plain-javascript/32250073
 
   // const reqs = [...document.querySelectorAll('[data-uid]')]
-  const reqs = [...document.querySelectorAll('.requirement')]
+  const reqs = [...document.querySelectorAll('sdoc-node')]
     .reduce((acc, req) => {
       if (req.hasAttribute('data-uid')) {
         req.addEventListener('click', () => markSame(uid, state, reqs));

@@ -2,7 +2,7 @@
 
 {%- set anchor=link_renderer.render_local_anchor(section) -%}
 
-<article data-controller="document">
+<sdoc-node data-controller="document">
 
     {% include "_shared/requirement_block/anchor.jinja.html" %}
 
@@ -24,6 +24,6 @@
     <a href="/actions/document/new_requirement?reference_mid={{section.node_id}}&whereto=after" data-turbo-action="replace" data-turbo="true">+R⬇</a>
   {%- endif -%}
 
-</article>
+</sdoc-node>
 
 </turbo-frame>

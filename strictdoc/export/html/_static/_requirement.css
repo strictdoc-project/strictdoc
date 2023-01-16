@@ -56,25 +56,6 @@ article.requirement.highlighted {
   line-height: 1.4;
 }
 
-/* section */
-
-/* article > section {
-  padding-left: var(--base-padding);
-  padding-right: var(--base-padding);
-} */
-
-/* article > section:first-of-type {
-  padding-top: var(--base-padding);
-} */
-
-/* article > section:last-of-type {
-  padding-bottom: var(--base-padding);
-} */
-
-/* [data-viewtype="document"] article > section {
-  padding-left: 0;
-  padding-right: 0;
-} */
 
 /* [data-viewtype="table"] */
 
@@ -118,11 +99,6 @@ div.document {
   display: contents;
 }
 
-/* section:target [data-role="current"] .requirement__title {
-  background-color: var(--color-highlight);
-} */
-
-/* section p  */
 article p {
   margin: var(--base-margin) 0;
 }

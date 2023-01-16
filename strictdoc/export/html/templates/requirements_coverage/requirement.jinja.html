@@ -6,9 +6,7 @@ data-status='{{ requirement.reserved_status.lower() }}'
 data-uid='{{ requirement.reserved_uid }}'
 {%- endif %}>
 
-  <section>
     {% include "_shared/requirement_block/uid_and_title.jinja.html" %}
-  </section>
 </article>
 
 {% if config.experimental_enable_file_traceability %}

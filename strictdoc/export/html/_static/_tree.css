@@ -82,7 +82,6 @@
     fill: var(--tree-color-line);
   }
 
-  /* section */
   .std-tree_row {
     padding-top: var(--tree-cell-padding);
     padding-bottom: var(--tree-cell-padding);

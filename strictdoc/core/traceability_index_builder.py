@@ -1,7 +1,7 @@
 import glob
 import os
 import sys
-from typing import List, Iterator, Optional
+from typing import List, Iterator, Optional, Dict
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
@@ -155,7 +155,7 @@ class TraceabilityIndexBuilder:
     def create_from_document_tree(document_tree: DocumentTree):
         # TODO: Too many things going on below. Would be great to simplify this
         # workflow.
-        d_01_document_iterators = {}
+        d_01_document_iterators: Dict[Document, DocumentCachingIterator] = {}
         d_02_requirements_map = {}
         d_03_map_doc_titles_to_tag_lists = {}
         d_05_map_documents_to_parents = {}

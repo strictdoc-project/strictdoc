@@ -7,6 +7,7 @@
   >
     <input type="hidden" id="document_mid" name="document_mid" value="{{form_object.document_mid}}"/>
 
+    TITLE:<br/>
     {%- with
       field_name="TITLE",
       field_input_name="document[TITLE]",
@@ -16,6 +17,7 @@
       {% include "_helpers/singleline_field.jinja.html" %}
     {%- endwith -%}
 
+    UID:<br/>
     {%- with
       field_name="UID",
       field_input_name="document[UID]",
@@ -25,6 +27,7 @@
       {% include "_helpers/singleline_field.jinja.html" %}
     {%- endwith -%}
 
+    VERSION:<br/>
     {%- with
       field_name="VERSION",
       field_input_name="document[VERSION]",
@@ -34,6 +37,7 @@
       {% include "_helpers/singleline_field.jinja.html" %}
     {%- endwith -%}
 
+    CLASSIFICATION:<br/>
     {%- with
       field_name="CLASSIFICATION",
       field_input_name="document[CLASSIFICATION]",

@@ -41,4 +41,8 @@ RUN: %cat "%S/Output/html/index.html" | filecheck %s --check-prefix=CHECK-TREE
 CHECK-TREE-NOT: ReqIF
 
 RUN: %cat "%S/Output/html/docs/strictdoc_01_user_guide.html" | filecheck %s --check-prefix=CHECK-DOCUMENT
+# When there is no positive check, filecheck will check all not-CHECKs.
 CHECK-DOCUMENT-NOT: Export to ReqIF
+CHECK-DOCUMENT-NOT: turbo.js
+CHECK-DOCUMENT-NOT: stimulus.js
+CHECK-DOCUMENT-NOT: controller.js

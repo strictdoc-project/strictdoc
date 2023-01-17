@@ -92,7 +92,7 @@ a.action_button:visited {
   white-space: nowrap;
   position: relative;
   display: inline-flex;
-  column-gap: var(--base-rhythm);
+
   align-items: center;
   justify-content: center;
   -webkit-box-align: center;
@@ -103,13 +103,17 @@ a.action_button:visited {
   user-select: none;
   cursor: pointer;
   appearance: none;
-  padding: calc(var(--base-rhythm)*0.5) calc(var(--base-rhythm)*1.5);
-  min-height: 32px;
 
-  box-shadow: rgb(0 0 0 / 10%) 0px 1px 2px 0px;
+  /* 1.5 column-gap is compensated by SVG negative margin */
+  column-gap: calc(var(--base-rhythm)*1.5);
+  padding-left: calc(var(--base-rhythm)*1.5);
+  padding-right: calc(var(--base-rhythm)*1.5);
+  min-height: calc(var(--base-rhythm)*4);
+
+  /* box-shadow: rgb(0 0 0 / 10%) 0px 1px 2px 0px; */
   color: var(--color-action);
   background-color: rgb(255, 255, 255);
-  border-color: rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.05);
   background-clip: padding-box;
 
   transition: 0.2s;
@@ -128,6 +132,15 @@ a.action_button:hover {
   color: var(--color-action);
   opacity: .4;
   cursor: default;
+}
+
+.action_button svg {
+  /*
+    action_button 1.5 column-gap
+    is compensated by SVG negative margin
+  */
+  margin-left: calc(var(--base-rhythm)*(-.5));
+  margin-right: calc(var(--base-rhythm)*(-.5));
 }
 
 /* nav */

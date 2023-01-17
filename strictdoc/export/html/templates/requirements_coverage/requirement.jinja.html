@@ -1,11 +1,11 @@
 <sdoc-node
+js-requirements-coverage
 {%- if requirement.reserved_status %}
 data-status='{{ requirement.reserved_status.lower() }}'
 {%- endif %}
 {%- if requirement.reserved_uid %}
 data-uid='{{ requirement.reserved_uid }}'
 {%- endif %}>
-
     {% include "_shared/requirement_block/uid_and_title.jinja.html" %}
 </sdoc-node>
 

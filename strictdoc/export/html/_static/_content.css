@@ -12,9 +12,9 @@
 
 [data-viewtype="document"] .content {
   display: block;
-  background-color: var(--color-bg-contrast);
   max-width: 900px;
-  padding: calc(var(--base-padding)*2);
+  /* background-color: var(--color-bg-contrast);
+  padding: calc(var(--base-padding)*2); */
 }
 
 [data-viewtype="traceability"] .content {

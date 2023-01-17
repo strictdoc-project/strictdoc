@@ -1,9 +1,11 @@
 from typing import Dict, Optional
 
+from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.source_file_syntax.reader import (
     SourceFileTraceabilityInfo,
 )
+from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.file_traceability_index import FileTraceabilityIndex
 from strictdoc.helpers.sorting import alphanumeric_sort
 
@@ -11,7 +13,7 @@ from strictdoc.helpers.sorting import alphanumeric_sort
 class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-instance-attributes  # noqa: E501
     def __init__(  # pylint: disable=too-many-arguments
         self,
-        document_iterators,
+        document_iterators: Dict[Document, DocumentCachingIterator],
         requirements_parents: Dict[str, Dict],
         tags_map,
         document_parents_map,

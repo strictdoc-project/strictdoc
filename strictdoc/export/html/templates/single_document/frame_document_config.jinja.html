@@ -37,6 +37,8 @@
   </div>
 {%- endif -%}
 
+  {%- if config.is_running_on_server -%}
   <a href="/actions/document/edit_config?document_mid={{document.node_id}}" data-turbo-action="replace" data-turbo="true">Edit document configuration</a>
-
+  <a href="/actions/document/edit_grammar?document_mid={{document.node_id}}" data-turbo-action="replace" data-turbo="true">Edit document grammar</a>
+  {%- endif -%}
 </turbo-frame>

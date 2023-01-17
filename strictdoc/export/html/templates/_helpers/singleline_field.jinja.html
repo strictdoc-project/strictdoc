@@ -1,11 +1,13 @@
 <div data-section="edit-section-TBD" class="std-form-row">
-  {{field_name}}:<br/>
-
   <div
     data-controller="editablefield"
     role="textbox"
     data-editable="single"
-    contenteditable="true"
+    {%- if field_editable is defined and not field_editable -%}
+      contenteditable="false"
+    {%- else -%}
+      contenteditable="true"
+    {%- endif -%}
     class="std-form-fileld-title"
     id="{{ field_input_name }}"
     placeholder="Enter {{ field_name }} here..."

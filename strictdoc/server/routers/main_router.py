@@ -45,6 +45,10 @@ from strictdoc.export.html.form_objects.document_config_form_object import (
 from strictdoc.export.html.form_objects.document_form_object import (
     ExistingDocumentFreeTextObject,
 )
+from strictdoc.export.html.form_objects.document_grammar_form_object import (
+    DocumentGrammarFormObject,
+    GrammarFormField,
+)
 from strictdoc.export.html.form_objects.requirement_form_object import (
     RequirementFormObject,
     RequirementFormField,
@@ -1548,6 +1552,178 @@ def create_main_router(
         )
         output = template.render(
             document=document,
+            config=export_action.config,
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @router.get("/actions/document/edit_grammar", response_class=Response)
+    def document__edit_grammar(document_mid: str):
+        document: Document = export_action.traceability_index.get_node_by_id(
+            document_mid
+        )
+        form_object = DocumentGrammarFormObject.create_from_document(
+            document=document
+        )
+
+        template = env.get_template(
+            "actions/"
+            "document/"
+            "edit_document_grammar/"
+            "stream_edit_document_grammar.jinja.html"
+        )
+        output = template.render(form_object=form_object)
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @router.post("/actions/document/save_grammar", response_class=Response)
+    async def document__save_grammar(request: Request):
+        request_form_data: FormData = await request.form()
+        request_dict: Dict[str, str] = dict(request_form_data)
+        document_mid: str = request_dict["document_mid"]
+        document: Document = export_action.traceability_index.get_node_by_id(
+            document_mid
+        )
+        form_object: DocumentGrammarFormObject = (
+            DocumentGrammarFormObject.create_from_request(
+                document_mid=document_mid,
+                request_form_data=request_form_data,
+            )
+        )
+        if not form_object.validate():
+            template = env.get_template(
+                "actions/"
+                "document/"
+                "edit_document_grammar/"
+                "stream_edit_document_grammar.jinja.html"
+            )
+            output = template.render(
+                form_object=form_object, config=export_action.config
+            )
+            return HTMLResponse(
+                content=output,
+                status_code=422,
+                headers={
+                    "Content-Type": "text/vnd.turbo-stream.html",
+                },
+            )
+
+        # Update the document.
+        document_grammar: DocumentGrammar = (
+            form_object.convert_to_document_grammar()
+        )
+        document_grammar.parent = document
+        document.grammar = document_grammar
+        document_grammar_field_names = document_grammar.elements_by_type[
+            "REQUIREMENT"
+        ].fields_map.keys()
+        # TODO: Update all requirements
+        massive_update = False
+        document_iterator = export_action.traceability_index.document_iterators[
+            document
+        ]
+        for node in document_iterator.all_content():
+            if not node.is_requirement:
+                continue
+            requirement: Requirement = node
+            requirement_field_names = list(
+                requirement.ordered_fields_lookup.keys()
+            )
+            for requirement_field_name in requirement_field_names:
+                if requirement_field_name in document_grammar_field_names:
+                    continue
+                massive_update = True
+                del requirement.ordered_fields_lookup[requirement_field_name]
+
+        # Re-generate the document's SDOC.
+        document_content = SDWriter().write(document)
+        document_meta = document.meta
+        with open(
+            document_meta.input_doc_full_path, "w", encoding="utf8"
+        ) as output_file:
+            output_file.write(document_content)
+
+        # Re-generate the document.
+        link_renderer = LinkRenderer(export_action.config.output_html_root)
+        HTMLGenerator.export_single_document(
+            config=export_config,
+            document=document,
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+        )
+
+        # Re-generate the document tree.
+        HTMLGenerator.export_document_tree(
+            config=export_config,
+            traceability_index=export_action.traceability_index,
+        )
+
+        template = env.get_template(
+            "actions/"
+            "document/"
+            "edit_document_grammar/"
+            "stream_save_document_grammar.jinja.html"
+        )
+        output = template.render(document=document, config=export_config)
+        if massive_update:
+            link_renderer = LinkRenderer(export_action.config.output_html_root)
+            markup_renderer = MarkupRenderer.create(
+                markup="RST",
+                traceability_index=export_action.traceability_index,
+                link_renderer=link_renderer,
+                context_document=document,
+            )
+            template = env.get_template(
+                "actions/"
+                "document/"
+                "_shared/"
+                "stream_refresh_document.jinja.html"
+            )
+            output = template.render(
+                document=document,
+                config=export_config,
+                renderer=markup_renderer,
+                link_renderer=link_renderer,
+                document_type=DocumentType.document(),
+                document_iterator=document_iterator,
+                traceability_index=export_action.traceability_index,
+            )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @router.get("/actions/document/add_grammar_field", response_class=Response)
+    def document__add_grammar_field(document_mid: str):
+        template = env.get_template(
+            "actions/"
+            "document/"
+            "edit_document_grammar/"
+            "stream_add_grammar_field.jinja.html"
+        )
+        output = template.render(
+            form_object=DocumentGrammarFormObject(
+                document_mid=document_mid,
+                fields=[],  # Not used in this limited partial template.
+            ),
+            field=GrammarFormField(
+                field_name="",
+                field_required=False,
+                reserved=False,
+            ),
         )
         return HTMLResponse(
             content=output,

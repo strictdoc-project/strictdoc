@@ -1,0 +1,49 @@
+ <editable-grammar-field>
+  {%- if field.reserved -%}
+    <div>
+    Reserved field:
+    </div>
+
+    {%- with
+      field_name=field.field_name,
+      field_input_name=field.field_input_name,
+      field_value=field.field_name,
+      field_editable=false,
+      errors=form_object.get_errors(field.field_name)
+    -%}
+      {% include "_helpers/singleline_field.jinja.html" %}
+    {%- endwith -%}
+  {%- else -%}
+    <div>
+      Custom field:
+    </div>
+
+    {%- with
+      field_name="Custom field",
+      field_input_name=field.field_input_name,
+      field_value=field.field_name,
+      field_editable=true,
+      errors=form_object.get_errors(field.field_name)
+    -%}
+      {% include "_helpers/singleline_field.jinja.html" %}
+    {%- endwith -%}
+    <a
+      class="std-form-btn"
+      data-js-move-field-up
+      href="#"
+      data-turbo="false"
+    >Move up</a>
+    <a
+      class="std-form-btn"
+      data-js-move-field-down
+      href="#"
+      data-turbo="false"
+    >Move down</a>
+    <a
+      class="std-form-btn"
+      data-js-remove-field
+      href="#"
+      data-turbo="true"
+    >Delete field</a>
+  {%- endif -%}
+</editable-grammar-field>

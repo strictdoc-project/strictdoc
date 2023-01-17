@@ -25,7 +25,7 @@
         contenteditable="true"
         class="std-form-fileld-title"
         id="requirement_{{field.field_name}}"
-        placeholder="Enter requirement's {{field.field_name}} here..."
+        placeholder="Enter {{field.field_name}} here..."
       >
         {%- if true -%}
         {{ field.field_value }}
@@ -41,6 +41,7 @@
       {%- endif -%}
     </div>
     {%- elif field.is_multiline() -%}
+      {{field.field_name}}:<br/>
       {% include "_shared/requirement_edit_field_multiline.jinja.html" %}
     {%- endif -%}
     {%- endfor -%}

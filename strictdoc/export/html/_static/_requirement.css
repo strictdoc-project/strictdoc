@@ -1,3 +1,19 @@
+turbo-frame {
+  display: contents;
+}
+
+sdoc-node {
+  display: block;
+  position: relative;
+
+  background-color: var(--color-bg-contrast);
+  padding: calc(var(--base-padding)) calc(var(--base-padding)*2);
+
+  margin-bottom: 4px;
+}
+
+/* * */
+
 [data-role="anchor"] {
   /* for Fixed Headers + Section Anchors */
   scroll-snap-margin-top: calc(var(--base-gap) + var(--base-padding));
@@ -518,13 +534,4 @@ input:checked + .std-switch_slider:before {
 
 .requirement-table ul.requirement__link {
   font-size: 1em;
-}
-
-turbo-frame {
-  display: contents;
-}
-
-sdoc-node {
-  display: block;
-  position: relative;
 }

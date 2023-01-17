@@ -1,4 +1,4 @@
-
+const SELECTOR = '[js-requirements-coverage]';
 
 const __log = (topic, ...payload) => {
   console.log(`%c ${topic} `, 'background:yellow;color:black',
@@ -25,9 +25,7 @@ window.addEventListener("load", function () {
   }
 
   // https://stackoverflow.com/questions/32249997/how-to-check-if-data-attribute-exist-with-plain-javascript/32250073
-
-  // const reqs = [...document.querySelectorAll('[data-uid]')]
-  const reqs = [...document.querySelectorAll('sdoc-node')]
+  const reqs = [...document.querySelectorAll(SELECTOR)]
     .reduce((acc, req) => {
       if (req.hasAttribute('data-uid')) {
         req.addEventListener('click', () => markSame(uid, state, reqs));

@@ -270,7 +270,7 @@ def create_main_router(
         section = Section(
             parent=parent,
             uid=None,
-            level=None,
+            level_as_parsed=None,
             title=None,
             free_texts=[],
             section_contents=[],

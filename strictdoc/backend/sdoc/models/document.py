@@ -35,7 +35,7 @@ class Document:  # pylint: disable=too-many-instance-attributes
         self.meta = meta
 
     @property
-    def level(self):
+    def ng_resolved_level(self):
         return None
 
     def enumerate_meta_field_titles(self):

@@ -81,10 +81,8 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         assert isinstance(requirement_type, str)
 
         self.parent = parent
-
         self.requirement_type: str = requirement_type
 
-        tags: Optional[List[str]] = None
         references: List[Reference] = []
 
         ordered_fields_lookup: OrderedDict[
@@ -97,18 +95,12 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
                 has_meta = True
             ordered_fields_lookup.setdefault(field.field_name, []).append(field)
 
-        if RequirementFieldName.TAGS in ordered_fields_lookup:
-            tags = ordered_fields_lookup[RequirementFieldName.TAGS][
-                0
-            ].field_value.split(", ")
         if RequirementFieldName.REFS in ordered_fields_lookup:
             references_opt: Optional[List[Reference]] = ordered_fields_lookup[
                 RequirementFieldName.REFS
             ][0].field_value_references
             assert references_opt is not None
             references = references_opt
-
-        self.tags: Optional[List[str]] = tags
 
         assert isinstance(references, List)
         self.references: List[Reference] = references
@@ -158,6 +150,27 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         return self._get_cached_field(
             RequirementFieldName.STATUS, singleline_only=True
         )
+
+    @property
+    def reserved_tags(self) -> Optional[List[str]]:
+        if RequirementFieldName.TAGS in self.ng_reserved_fields_cache:
+            return self.ng_reserved_fields_cache[RequirementFieldName.TAGS]
+        if RequirementFieldName.TAGS not in self.ordered_fields_lookup:
+            self.ng_reserved_fields_cache[RequirementFieldName.TAGS] = None
+            return None
+        field: RequirementField = self.ordered_fields_lookup[
+            RequirementFieldName.TAGS
+        ][0]
+        if field.field_value is not None:
+            field_value = field.field_value
+        else:
+            raise NotImplementedError(
+                f"Field {RequirementFieldName.TAGS} "
+                f"must be a single-line field."
+            )
+        tags = field_value.split(", ")
+        self.ng_reserved_fields_cache[RequirementFieldName.TAGS] = tags
+        return tags
 
     @property
     def reserved_title(self) -> Optional[str]:
@@ -348,9 +361,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         else:
             raise NotImplementedError(value)
 
-        # FIXME: This will go away.
-        if field_name == RequirementFieldName.TAGS:
-            self.tags = field_value.split(", ")
         if field_name in self.ng_reserved_fields_cache:
             del self.ng_reserved_fields_cache[field_name]
 

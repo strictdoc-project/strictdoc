@@ -784,9 +784,9 @@ COMMENT: This requirement is very important
         document.section_contents[0].section_contents[0], Requirement
     )
     requirement_1 = document.section_contents[0].section_contents[0]
-    assert requirement_1.tags[0] == "Tag 1"
-    assert requirement_1.tags[1] == "Tag 2"
-    assert requirement_1.tags[2] == "Tag 3"
+    assert requirement_1.reserved_tags[0] == "Tag 1"
+    assert requirement_1.reserved_tags[1] == "Tag 2"
+    assert requirement_1.reserved_tags[2] == "Tag 3"
 
     writer = SDWriter()
     output = writer.write(document)

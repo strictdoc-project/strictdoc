@@ -89,8 +89,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         status = None
         tags: Optional[List[str]] = None
         references: List[Reference] = []
-        statement = None
-        statement_multiline = None
 
         ordered_fields_lookup: OrderedDict[
             str, List[RequirementField]
@@ -123,13 +121,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
             assert references_opt is not None
             references = references_opt
 
-        if RequirementFieldName.STATEMENT in ordered_fields_lookup:
-            field = ordered_fields_lookup[RequirementFieldName.STATEMENT][0]
-            if field.field_value_multiline is not None:
-                statement_multiline = field.field_value_multiline
-            else:
-                statement = field.field_value
-
         # TODO: Why textX creates empty uid when the sdoc doesn't declare the
         # UID field?
         self.uid = (
@@ -142,10 +133,7 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         assert isinstance(references, List)
         self.references: List[Reference] = references
 
-        self.statement: Optional[str] = statement
         self.requirements = requirements
-
-        self.statement_multiline: Optional[str] = statement_multiline
 
         # TODO: Is it worth to move this to dedicated Presenter* classes to
         # keep this class textx-only?
@@ -176,6 +164,27 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         return self.ordered_fields_lookup[RequirementFieldName.TITLE][
             0
         ].field_value
+
+    @property
+    def reserved_statement(self) -> Optional[str]:
+        if RequirementFieldName.STATEMENT in self.ng_reserved_fields_cache:
+            return self.ng_reserved_fields_cache[RequirementFieldName.STATEMENT]
+        if RequirementFieldName.STATEMENT not in self.ordered_fields_lookup:
+            self.ng_reserved_fields_cache[RequirementFieldName.STATEMENT] = None
+            return None
+        field: RequirementField = self.ordered_fields_lookup[
+            RequirementFieldName.STATEMENT
+        ][0]
+        if field.field_value_multiline is not None:
+            statement = field.field_value_multiline
+        elif field.field_value is not None:
+            statement = field.field_value
+        else:
+            raise NotImplementedError(self)
+        self.ng_reserved_fields_cache[
+            RequirementFieldName.STATEMENT
+        ] = statement
+        return statement
 
     @property
     def rationale(self) -> Optional[str]:
@@ -255,13 +264,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
                 continue
             references.append(reference)
         return references
-
-    def get_statement_single_or_multiline(self) -> Optional[str]:
-        if self.statement_multiline is not None:
-            return self.statement_multiline
-        if self.statement is not None:
-            return self.statement
-        return None
 
     def enumerate_fields(self):
         requirement_fields = self.ordered_fields_lookup.values()
@@ -361,9 +363,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
             self.level = field_value
         elif field_name == RequirementFieldName.STATUS:
             self.status = field_value
-        elif field_name == RequirementFieldName.STATEMENT:
-            self.statement_multiline = field_value_multiline
-            self.statement = None
         if field_name in self.ng_reserved_fields_cache:
             del self.ng_reserved_fields_cache[field_name]
 

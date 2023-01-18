@@ -119,8 +119,8 @@ class RSTWriter:
         if section_content.statement:
             output += section_content.statement
             output += "\n\n"
-        elif section_content.statement_multiline:
-            output += section_content.statement_multiline
+        elif section_content.reserved_statement:
+            output += section_content.reserved_statement
             output += "\n\n"
         else:
             pass  # raise RuntimeError('Statement is missing')

@@ -26,9 +26,12 @@ class LinkRenderer:
                 local_anchor = (
                     f"{unique_prefix}-{self._string_to_link(node.uid)}"
                 )
-            elif node.title and len(node.title) > 0:
+            elif (
+                node.reserved_title is not None and len(node.reserved_title) > 0
+            ):
                 local_anchor = (
-                    f"{unique_prefix}-{self._string_to_link(node.title)}"
+                    f"{unique_prefix}-"
+                    f"{self._string_to_link(node.reserved_title)}"
                 )
             else:
                 # TODO: This is not reliable

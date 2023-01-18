@@ -143,7 +143,7 @@ class SDocParsingProcessor:
             cursor = cursor.parent
 
         if (
-            composite_requirement.title is None
+            composite_requirement.reserved_title is None
             or not self.parse_context.document_config.is_requirement_in_toc()
         ) and self.parse_context.document_config.auto_levels:
             composite_requirement.level = "None"
@@ -205,7 +205,7 @@ class SDocParsingProcessor:
             cursor = cursor.parent
 
         if (
-            requirement.title is None
+            requirement.reserved_title is None
             or not self.parse_context.document_config.is_requirement_in_toc()
         ) and self.parse_context.document_config.auto_levels:
             requirement.level = "None"

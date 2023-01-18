@@ -158,7 +158,7 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
     # Reserved fields
 
     @property
-    def title(self) -> Optional[str]:
+    def reserved_title(self) -> Optional[str]:
         if RequirementFieldName.TITLE not in self.ordered_fields_lookup:
             return None
         return self.ordered_fields_lookup[RequirementFieldName.TITLE][

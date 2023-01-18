@@ -6,7 +6,7 @@
       {%- if requirement.uid %}
       <span class="requirement_parent-uid">{{ requirement.uid }}</span>
       {%- endif %}
-      {{ requirement.title if requirement.title else "" }}
+      {{ requirement.reserved_title if requirement.reserved_title else "" }}
     </a>
   </li>
   {%- endfor %}
@@ -21,7 +21,7 @@
       {%- if requirement.uid %}
       <span class="requirement_child-uid">{{ requirement.uid }}</span>
       {%- endif %}
-      {{ requirement.title if requirement.title else "" }}
+      {{ requirement.reserved_title if requirement.reserved_title else "" }}
     </a>
   </li>
   {%- endfor %}

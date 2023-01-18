@@ -152,7 +152,7 @@
             {%- if requirement.uid %}
             <span class="requirement_parent-uid">{{ requirement.uid }}</span>
             {%- endif %}
-            {{ requirement.title if requirement.title else "" }}
+            {{ requirement.reserved_title if requirement.reserved_title else "" }}
           </a>
         </li>
         {%- endfor %}
@@ -168,7 +168,7 @@
             {%- if requirement.uid %}
             <span class="requirement_child-uid">{{ requirement.uid }}</span>
             {%- endif %}
-            {{ requirement.title if requirement.title else "" }}
+            {{ requirement.reserved_title if requirement.reserved_title else "" }}
           </a>
         </li>
         {%- endfor %}
@@ -218,12 +218,12 @@
       {%- endif %}
     </td>
     <td class="content-view-td content-view-td-title">
-      {%- if requirement.title %}
+      {%- if requirement.reserved_title %}
       {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
       {% include "_shared/requirement_block/anchor.jinja.html" %}
       {%- endwith %}
       <div class="section-title">
-        {{ requirement.title }}
+        {{ requirement.reserved_title }}
       </div>
     {%- endif -%}
     </td>

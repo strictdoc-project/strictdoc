@@ -11,8 +11,10 @@ data-status='{{ requirement.status.lower() }}'
 
     {% include "_shared/requirement_block/anchor.jinja.html" %}
 
-    {%- if requirement.title %}
+    {%- if requirement.reserved_title %}
+    {% with node=requirement %}
     {% include "_shared/requirement_block/h_title.jinja.html" %}
+    {%- endwith %}
     {%- endif %}
 
     {% include "_shared/requirement_block/meta.jinja.html" %}

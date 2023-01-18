@@ -22,7 +22,7 @@ def test_010_full_dict():
         == requirement_dict[RequirementFieldName.STATEMENT]
     )
     assert (
-        requirement.rationale_multiline
+        requirement.rationale
         == requirement_dict[RequirementFieldName.RATIONALE]
     )
 
@@ -38,4 +38,4 @@ def test_020_empty_dict():
     assert requirement.uid is None
     assert requirement.title is None
     assert requirement.statement_multiline is None
-    assert requirement.rationale_multiline is None
+    assert requirement.rationale is None

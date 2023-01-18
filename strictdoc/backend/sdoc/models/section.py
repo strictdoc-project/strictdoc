@@ -19,7 +19,7 @@ class Section(Node):  # pylint: disable=too-many-instance-attributes
         self,
         parent,
         uid,
-        level_as_parsed: Optional[str],
+        custom_level: Optional[str],
         title,
         free_texts: List[FreeText],
         section_contents: List[Node],
@@ -34,8 +34,8 @@ class Section(Node):  # pylint: disable=too-many-instance-attributes
         self.section_contents = section_contents
 
         # HEF4
-        self.level_as_parsed: Optional[str] = level_as_parsed
-        self.ng_resolved_level: Optional[str] = level_as_parsed
+        self.custom_level: Optional[str] = custom_level
+        self.ng_resolved_custom_level: Optional[str] = custom_level
 
         self.ng_level: Optional[int] = None
         self.ng_has_requirements = False

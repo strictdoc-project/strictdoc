@@ -133,14 +133,14 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         self.node_id: str = uuid.uuid4().hex
 
         # HEF4
-        self.ng_resolved_level: Optional[str] = None
-        self.level_as_parsed: Optional[str] = None
+        self.ng_resolved_custom_level: Optional[str] = None
+        self.custom_level: Optional[str] = None
         if RequirementFieldName.LEVEL in ordered_fields_lookup:
             level = ordered_fields_lookup[RequirementFieldName.LEVEL][
                 0
             ].field_value
-            self.ng_resolved_level = level
-            self.level_as_parsed = level
+            self.ng_resolved_custom_level = level
+            self.custom_level = level
 
         # Cache for accessing the reserved fields values.
         self.ng_reserved_fields_cache: Dict[str, Any] = {}

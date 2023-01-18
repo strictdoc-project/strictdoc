@@ -59,8 +59,8 @@ class SDocParsingProcessor:
 
         if self.parse_context.document_config.auto_levels:
             if (
-                section.ng_resolved_level
-                and section.ng_resolved_level != "None"
+                section.ng_resolved_custom_level
+                and section.ng_resolved_custom_level != "None"
             ):
                 print(
                     "warning: [SECTION].LEVEL field is provided. "
@@ -69,7 +69,7 @@ class SDocParsingProcessor:
                     f"Section: {section}"
                 )
         else:
-            if not section.ng_resolved_level:
+            if not section.ng_resolved_custom_level:
                 print(
                     "warning: [SECTION].LEVEL field is not provided. "
                     "This contradicts to the option "
@@ -104,7 +104,7 @@ class SDocParsingProcessor:
         self, composite_requirement: CompositeRequirement
     ):
         if self.parse_context.document_config.auto_levels:
-            if composite_requirement.ng_resolved_level:
+            if composite_requirement.ng_resolved_custom_level:
                 print(
                     "warning: [COMPOSITE_REQUIREMENT].LEVEL field is provided. "
                     "This contradicts to the option "
@@ -112,7 +112,7 @@ class SDocParsingProcessor:
                     f"Composite requirement: {composite_requirement}"
                 )
         else:
-            if not composite_requirement.ng_resolved_level:
+            if not composite_requirement.ng_resolved_custom_level:
                 print(
                     "warning: [COMPOSITE_REQUIREMENT].LEVEL field is not "
                     "provided. This contradicts to the option "
@@ -149,7 +149,7 @@ class SDocParsingProcessor:
             composite_requirement.reserved_title is None
             or not self.parse_context.document_config.is_requirement_in_toc()
         ) and self.parse_context.document_config.auto_levels:
-            composite_requirement.ng_resolved_level = "None"
+            composite_requirement.ng_resolved_custom_level = "None"
 
     def process_requirement(self, requirement: Requirement):
         document_grammar = self.parse_context.document_grammar
@@ -165,7 +165,7 @@ class SDocParsingProcessor:
         validate_requirement(requirement, document_grammar)
 
         if self.parse_context.document_config.auto_levels:
-            if requirement.ng_resolved_level:
+            if requirement.ng_resolved_custom_level:
                 print(
                     "warning: [REQUIREMENT].LEVEL field is provided. "
                     "This contradicts to the option "
@@ -173,7 +173,7 @@ class SDocParsingProcessor:
                     f"Requirement: {requirement}"
                 )
         else:
-            if not requirement.ng_resolved_level:
+            if not requirement.ng_resolved_custom_level:
                 print(
                     "warning: [REQUIREMENT].LEVEL field is not provided. "
                     "This contradicts to the option "
@@ -211,7 +211,7 @@ class SDocParsingProcessor:
             requirement.reserved_title is None
             or not self.parse_context.document_config.is_requirement_in_toc()
         ) and self.parse_context.document_config.auto_levels:
-            requirement.ng_resolved_level = "None"
+            requirement.ng_resolved_custom_level = "None"
 
     def process_free_text(self, free_text):
         if isinstance(free_text.parent, Section):
@@ -248,14 +248,14 @@ class SDocParsingProcessor:
             cursor = cursor.parent
         cursor_level = cursor.ng_level
 
-        section_with_none_level = cursor.ng_resolved_level == "None"
+        section_with_none_level = cursor.ng_resolved_custom_level == "None"
         for parent_idx, parent in enumerate(reversed(parents_to_resolve_level)):
             parent.ng_level = cursor_level + parent_idx + 1
             if isinstance(parent, (Section, CompositeRequirement)):
                 if section_with_none_level:
-                    parent.ng_resolved_level = "None"
-                elif parent.ng_resolved_level == "None":
+                    parent.ng_resolved_custom_level = "None"
+                elif parent.ng_resolved_custom_level == "None":
                     section_with_none_level = True
         node.ng_level = node.parent.ng_level + 1
         if section_with_none_level:
-            node.ng_resolved_level = "None"
+            node.ng_resolved_custom_level = "None"

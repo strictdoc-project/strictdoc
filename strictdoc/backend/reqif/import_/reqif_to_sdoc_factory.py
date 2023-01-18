@@ -93,7 +93,7 @@ class ReqIFToSDocFactory:
         section = Section(
             parent=None,
             uid=None,
-            level_as_parsed=None,
+            custom_level=None,
             title=section_title,
             free_texts=free_texts,
             section_contents=[],

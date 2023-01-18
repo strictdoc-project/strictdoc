@@ -157,9 +157,9 @@ class SDWriter:
             output += section.uid
             output += "\n"
 
-        if section.level_as_parsed:
+        if section.custom_level:
             output += "LEVEL: "
-            output += section.level_as_parsed
+            output += section.custom_level
             output += "\n"
 
         output += "TITLE: "

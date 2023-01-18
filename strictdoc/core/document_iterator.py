@@ -36,7 +36,7 @@ class DocumentCachingIterator:
         for node in self.all_content():
             if isinstance(node, nodes_to_skip):
                 continue
-            if isinstance(node, Requirement) and node.title is None:
+            if isinstance(node, Requirement) and node.reserved_title is None:
                 continue
             self.toc_nodes_cache.append(node)
             yield node

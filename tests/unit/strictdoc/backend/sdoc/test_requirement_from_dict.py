@@ -16,7 +16,10 @@ def test_010_full_dict():
 
     assert requirement.ng_level == 1
     assert requirement.uid == requirement_dict[RequirementFieldName.UID]
-    assert requirement.title == requirement_dict[RequirementFieldName.TITLE]
+    assert (
+        requirement.reserved_title
+        == requirement_dict[RequirementFieldName.TITLE]
+    )
     assert (
         requirement.reserved_statement
         == requirement_dict[RequirementFieldName.STATEMENT]
@@ -36,6 +39,6 @@ def test_020_empty_dict():
 
     assert requirement.ng_level == 1
     assert requirement.uid is None
-    assert requirement.title is None
+    assert requirement.reserved_title is None
     assert requirement.reserved_statement is None
     assert requirement.rationale is None

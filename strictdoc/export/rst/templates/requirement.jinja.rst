@@ -2,8 +2,8 @@
 .. _{{requirement.uid}}:
 {% endif %}
 
-{%- if requirement.title is not none %}
-{{ _print_rst_header(requirement.title, requirement.ng_level) }}
+{%- if requirement.reserved_title is not none %}
+{{ _print_rst_header(requirement.reserved_title, requirement.ng_level) }}
 {% endif %}
 
 {%- if requirement.has_meta > 0 %}

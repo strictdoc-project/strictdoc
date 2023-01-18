@@ -227,8 +227,8 @@
       </div>
     {%- endif -%}
     </td>
-    <td class="content-view-td content-view-td-content">{%- if requirement.statement or requirement.statement_multiline -%}{{ renderer.render_requirement_statement(requirement) }}{%- endif -%}</td>
-    <td class="content-view-td content-view-td-content">{%- if requirement.rationale or requirement.rationale_multiline -%}{{ renderer.render_requirement_rationale(requirement) }}{%- endif -%}</td>
+    <td class="content-view-td content-view-td-content">{%- if requirement.reserved_statement -%}{{ renderer.render_requirement_statement(requirement) }}{%- endif -%}</td>
+    <td class="content-view-td content-view-td-content">{%- if requirement.rationale -%}{{ renderer.render_requirement_rationale(requirement) }}{%- endif -%}</td>
     <td class="content-view-td content-view-td-content">
       {%- if requirement.comments %}
       {%- for comment in requirement.comments %}

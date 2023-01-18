@@ -18,14 +18,12 @@
 {%- endif %}
 {% if true -%}{# without this workaround Jinja eats too much or not enough whitespace. #}{%- endif %}
 
-{%- if requirement.statement is not none %}
-{{requirement.statement}}
-{% elif requirement.statement_multiline is not none %}
-{{requirement.statement_multiline}}
+{%- if requirement.reserved_statement is not none %}
+{{requirement.reserved_statement}}
 {% endif %}
 
-{%- if requirement.rationale or requirement.rationale_multiline %}
-**Rationale:** {{ requirement.get_rationale_single_or_multiline() }}
+{%- if requirement.rationale %}
+**Rationale:** {{ requirement.rationale }}
 {% endif %}
 
 {%- for comment in requirement.comments %}

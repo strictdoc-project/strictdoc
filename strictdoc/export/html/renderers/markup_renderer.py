@@ -64,9 +64,7 @@ class MarkupRenderer:
         assert isinstance(requirement, Requirement)
         if requirement in self.cache:
             return self.cache[requirement]
-        output = self.fragment_writer.write(
-            requirement.get_statement_single_or_multiline()
-        )
+        output = self.fragment_writer.write(requirement.reserved_statement)
         self.cache[requirement] = output
 
         return output
@@ -75,12 +73,8 @@ class MarkupRenderer:
         assert isinstance(requirement, Requirement)
         if requirement in self.rationale_cache:
             return self.rationale_cache[requirement]
-
-        output = self.fragment_writer.write(
-            requirement.get_rationale_single_or_multiline()
-        )
+        output = self.fragment_writer.write(requirement.rationale)
         self.rationale_cache[requirement] = output
-
         return output
 
     def render_comment(self, comment):

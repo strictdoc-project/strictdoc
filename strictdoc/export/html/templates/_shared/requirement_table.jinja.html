@@ -142,7 +142,7 @@ data-status='{{ requirement.status.lower() }}'
     {%- endif %}
 
     {# {% include "_shared/requirement_block/statement.jinja.html" %} #}
-    {%- if requirement.statement or requirement.statement_multiline -%}
+    {%- if requirement.reserved_statement -%}
     <tr>
       <th>
         Statement:
@@ -154,7 +154,7 @@ data-status='{{ requirement.status.lower() }}'
     {%- endif -%}
 
     {# {% include "_shared/requirement_block/rationale.jinja.html" %} #}
-    {%- if requirement.rationale or requirement.rationale_multiline -%}
+    {%- if requirement.rationale -%}
     <tr>
       <th>
         Rationale:

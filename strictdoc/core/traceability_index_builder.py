@@ -229,8 +229,8 @@ class TraceabilityIndexBuilder:
                     continue
                 requirement: Requirement = node
                 document_tags = d_03_map_doc_titles_to_tag_lists[document.title]
-                if requirement.tags is not None:
-                    for tag in requirement.tags:
+                if requirement.reserved_tags is not None:
+                    for tag in requirement.reserved_tags:
                         if tag not in document_tags:
                             document_tags[tag] = 0
                         document_tags[tag] += 1

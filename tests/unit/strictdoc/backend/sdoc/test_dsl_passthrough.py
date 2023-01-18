@@ -421,7 +421,7 @@ This is a Rationale line 3
         document.section_contents[0].section_contents[0], Requirement
     )
     requirement_1 = document.section_contents[0].section_contents[0]
-    assert requirement_1.rationale_multiline == (
+    assert requirement_1.rationale == (
         "This is a Rationale line 1\n"
         "This is a Rationale line 2\n"
         "This is a Rationale line 3"

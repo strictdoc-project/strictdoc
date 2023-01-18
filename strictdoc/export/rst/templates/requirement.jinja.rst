@@ -24,8 +24,8 @@
 {{requirement.statement_multiline}}
 {% endif %}
 
-{%- if requirement.rationale or requirement.rationale_multiline %}
-**Rationale:** {{ requirement.get_rationale_single_or_multiline() }}
+{%- if requirement.rationale %}
+**Rationale:** {{ requirement.rationale }}
 {% endif %}
 
 {%- for comment in requirement.comments %}

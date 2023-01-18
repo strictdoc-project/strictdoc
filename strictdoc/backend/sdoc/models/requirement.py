@@ -430,39 +430,3 @@ class CompositeRequirement(Requirement):
     @property
     def document(self):
         return self.ng_document_reference.get_document()
-
-
-@auto_described
-class Body:
-    def __init__(self, parent, content):
-        self.parent = parent
-        self.content = content.strip()
-
-
-@auto_described
-class RequirementComment:
-    def __init__(
-        self,
-        parent,
-        comment_single: Optional[str],
-        comment_multiline: Optional[str],
-    ):
-        self.parent = parent
-        self.comment_single: Optional[str] = comment_single
-        self.comment_multiline: Optional[str] = comment_multiline
-
-        # The case when both are None is when a multi-line field has no text
-        # but only an empty space:
-        # [REQUIREMENT]
-        # COMMENT: <empty space symbol>
-        # assert comment_single is not None or comment_multiline is not None
-        # TODO: One solution to simplify this would be to disallow empty fields
-        # in the grammar completely.
-
-    def get_comment(self):
-        comment = (
-            self.comment_single
-            if self.comment_single
-            else self.comment_multiline
-        )
-        return comment

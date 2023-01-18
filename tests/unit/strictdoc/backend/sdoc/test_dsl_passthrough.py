@@ -473,7 +473,7 @@ This is a child body part 3
     requirement_1 = document.section_contents[0].section_contents[0]
     assert requirement_1.ng_level == 2
     assert (
-        requirement_1.comments[0].comment_multiline
+        requirement_1.comments[0]
         == "This is a body part 1\nThis is a body part 2\nThis is a body part 3"
     )
 
@@ -526,7 +526,7 @@ body 1.1.1.1
     )
     requirement_1_1 = document.section_contents[0].section_contents[0]
     assert requirement_1_1.ng_level == 2
-    assert requirement_1_1.comments[0].comment_multiline == "body composite 1.1"
+    assert requirement_1_1.comments[0] == "body composite 1.1"
 
     assert isinstance(
         document.section_contents[0].section_contents[0].requirements[0],
@@ -536,10 +536,7 @@ body 1.1.1.1
         document.section_contents[0].section_contents[0].requirements[0]
     )
     assert requirement_1_1_1.ng_level == 3
-    assert (
-        requirement_1_1_1.comments[0].comment_multiline
-        == "body composite 1.1.1"
-    )
+    assert requirement_1_1_1.comments[0] == "body composite 1.1.1"
 
     assert isinstance(
         document.section_contents[0]
@@ -555,7 +552,7 @@ body 1.1.1.1
         .requirements[0]
     )
     assert requirement_1_1_1.ng_level == 4
-    assert requirement_1_1_1.comments[0].comment_multiline == "body 1.1.1.1"
+    assert requirement_1_1_1.comments[0] == "body 1.1.1.1"
 
 
 # This test is needed to make sure that the grammar details related

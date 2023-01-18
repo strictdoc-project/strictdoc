@@ -13,10 +13,6 @@ sys.path.append(STRICTDOC_ROOT_PATH)
 
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.requirement import (
-    Requirement,
-    RequirementComment,
-)
 from strictdoc.backend.sdoc.models.section import Section
 
 

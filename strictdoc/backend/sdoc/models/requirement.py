@@ -1,6 +1,6 @@
 import uuid
 from collections import OrderedDict
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document
@@ -94,7 +94,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         statement_multiline = None
         rationale = None
         rationale_multiline = None
-        comments: List[RequirementComment] = []
 
         ordered_fields_lookup: OrderedDict[
             str, List[RequirementField]
@@ -143,27 +142,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
                 rationale_multiline = field.field_value_multiline
             else:
                 rationale = field.field_value
-        if RequirementFieldName.COMMENT in ordered_fields_lookup:
-            for comment_field in ordered_fields_lookup[
-                RequirementFieldName.COMMENT
-            ]:
-                field = comment_field
-                if field.field_value_multiline is not None:
-                    comments.append(
-                        RequirementComment(
-                            parent=self,
-                            comment_single=None,
-                            comment_multiline=field.field_value_multiline,
-                        )
-                    )
-                else:
-                    comments.append(
-                        RequirementComment(
-                            parent=self,
-                            comment_single=field.field_value,
-                            comment_multiline=None,
-                        )
-                    )
 
         # TODO: Why textX creates empty uid when the sdoc doesn't declare the
         # UID field?
@@ -180,7 +158,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         self.title = title
         self.statement: Optional[str] = statement
         self.rationale = rationale
-        self.comments = comments
         self.requirements = requirements
 
         self.statement_multiline: Optional[str] = statement_multiline
@@ -203,6 +180,30 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
 
         self.node_id: str = uuid.uuid4().hex
 
+        # Cache for accessing the reserved fields values.
+        self.ng_reserved_fields_cache: Dict[str, Any] = {}
+
+    # Reserved fields
+
+    @property
+    def comments(self) -> List[str]:
+        if RequirementFieldName.COMMENT in self.ng_reserved_fields_cache:
+            return self.ng_reserved_fields_cache[RequirementFieldName.COMMENT]
+        if RequirementFieldName.COMMENT not in self.ordered_fields_lookup:
+            self.ng_reserved_fields_cache[RequirementFieldName.COMMENT] = []
+            return []
+        comments = []
+        for field in self.ordered_fields_lookup[RequirementFieldName.COMMENT]:
+            if field.field_value_multiline is not None:
+                comments.append(field.field_value_multiline)
+            elif field.field_value is not None:
+                comments.append(field.field_value)
+            else:
+                raise NotImplementedError
+        self.ng_reserved_fields_cache[RequirementFieldName.COMMENT] = comments
+        return comments
+
+    # Other properties
     @property
     def is_requirement(self):
         return True
@@ -362,24 +363,8 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         elif field_name == RequirementFieldName.RATIONALE:
             self.rationale_multiline = field_value_multiline
             self.rationale = None
-        elif field_name == RequirementFieldName.COMMENT:
-            if len(self.comments) <= form_field_index:
-                self.comments.insert(
-                    form_field_index,
-                    RequirementComment(
-                        parent=self,
-                        comment_single=None,
-                        comment_multiline=field_value_multiline,
-                    ),
-                )
-            else:
-                self.comments[form_field_index] = RequirementComment(
-                    parent=self,
-                    comment_single=None,
-                    comment_multiline=field_value_multiline,
-                )
-        else:
-            raise NotImplementedError(field_name)
+        if field_name in self.ng_reserved_fields_cache:
+            del self.ng_reserved_fields_cache[field_name]
 
         if field_name in self.ordered_fields_lookup:
             if len(self.ordered_fields_lookup[field_name]) > form_field_index:

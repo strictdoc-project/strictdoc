@@ -14,7 +14,6 @@ from strictdoc.backend.sdoc.models.reference import (
     BibReference,
 )
 from strictdoc.backend.sdoc.models.requirement import (
-    RequirementComment,
     Requirement,
     RequirementField,
     CompositeRequirement,
@@ -31,7 +30,6 @@ from strictdoc.backend.sdoc.models.type_system import (
 )
 
 SECTION_MODELS = [
-    RequirementComment,
     Section,
     FragmentFromFile,
     Requirement,

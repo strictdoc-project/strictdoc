@@ -14,7 +14,7 @@ class FileTraceabilityIndex:
         self.source_file_reqs_cache = {}
 
     def register(self, requirement):
-        if requirement.uid in self.map_reqs_uids_to_paths:
+        if requirement.reserved_uid in self.map_reqs_uids_to_paths:
             return
 
         ref: Reference
@@ -27,17 +27,17 @@ class FileTraceabilityIndex:
                 requirements.append(requirement)
 
                 paths = self.map_reqs_uids_to_paths.setdefault(
-                    requirement.uid, []
+                    requirement.reserved_uid, []
                 )
                 paths.append(ref)
 
     def get_requirement_file_links(self, requirement):
-        if requirement.uid not in self.map_reqs_uids_to_paths:
+        if requirement.reserved_uid not in self.map_reqs_uids_to_paths:
             return []
 
         matching_links_with_opt_ranges = []
         file_links: List[FileReference] = self.map_reqs_uids_to_paths[
-            requirement.uid
+            requirement.reserved_uid
         ]
         for file_link in file_links:
             source_file_traceability_info: SourceFileTraceabilityInfo = (
@@ -47,13 +47,14 @@ class FileTraceabilityIndex:
             )
             if not source_file_traceability_info:
                 print(
-                    f"warning: Requirement {requirement.uid} references a file"
+                    "warning: "
+                    f"Requirement {requirement.reserved_uid} references a file"
                     f" that does not exist: {file_link.file_entry.file_path}"
                 )
                 matching_links_with_opt_ranges.append((file_link, None))
                 continue
             pragmas = source_file_traceability_info.ng_map_reqs_to_pragmas.get(
-                requirement.uid
+                requirement.reserved_uid
             )
             if not pragmas:
                 matching_links_with_opt_ranges.append((file_link, None))
@@ -96,7 +97,7 @@ class FileTraceabilityIndex:
         range_requirements = []
         for requirement in requirements:
             if (
-                requirement.uid
+                requirement.reserved_uid
                 not in source_file_traceability_info.ng_map_reqs_to_pragmas
             ):
                 general_requirements.append(requirement)

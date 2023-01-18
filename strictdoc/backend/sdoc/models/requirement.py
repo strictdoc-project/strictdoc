@@ -84,9 +84,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
 
         self.requirement_type: str = requirement_type
 
-        uid = None
-        level = None
-        status = None
         tags: Optional[List[str]] = None
         references: List[Reference] = []
 
@@ -100,16 +97,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
                 has_meta = True
             ordered_fields_lookup.setdefault(field.field_name, []).append(field)
 
-        if RequirementFieldName.UID in ordered_fields_lookup:
-            uid = ordered_fields_lookup[RequirementFieldName.UID][0].field_value
-        if RequirementFieldName.LEVEL in ordered_fields_lookup:
-            level = ordered_fields_lookup[RequirementFieldName.LEVEL][
-                0
-            ].field_value
-        if RequirementFieldName.STATUS in ordered_fields_lookup:
-            status = ordered_fields_lookup[RequirementFieldName.STATUS][
-                0
-            ].field_value
         if RequirementFieldName.TAGS in ordered_fields_lookup:
             tags = ordered_fields_lookup[RequirementFieldName.TAGS][
                 0
@@ -121,13 +108,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
             assert references_opt is not None
             references = references_opt
 
-        # TODO: Why textX creates empty uid when the sdoc doesn't declare the
-        # UID field?
-        self.uid = (
-            uid.strip() if (isinstance(uid, str) and len(uid) > 0) else None
-        )
-        self.level: Optional[str] = level
-        self.status = status
         self.tags: Optional[List[str]] = tags
 
         assert isinstance(references, List)
@@ -152,60 +132,50 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
 
         self.node_id: str = uuid.uuid4().hex
 
+        # HEF4
+        self.ng_resolved_custom_level: Optional[str] = None
+        self.custom_level: Optional[str] = None
+        if RequirementFieldName.LEVEL in ordered_fields_lookup:
+            level = ordered_fields_lookup[RequirementFieldName.LEVEL][
+                0
+            ].field_value
+            self.ng_resolved_custom_level = level
+            self.custom_level = level
+
         # Cache for accessing the reserved fields values.
         self.ng_reserved_fields_cache: Dict[str, Any] = {}
 
     # Reserved fields
 
     @property
+    def reserved_uid(self) -> Optional[str]:
+        return self._get_cached_field(
+            RequirementFieldName.UID, singleline_only=True
+        )
+
+    @property
+    def reserved_status(self) -> Optional[str]:
+        return self._get_cached_field(
+            RequirementFieldName.STATUS, singleline_only=True
+        )
+
+    @property
     def reserved_title(self) -> Optional[str]:
-        if RequirementFieldName.TITLE not in self.ordered_fields_lookup:
-            return None
-        return self.ordered_fields_lookup[RequirementFieldName.TITLE][
-            0
-        ].field_value
+        return self._get_cached_field(
+            RequirementFieldName.TITLE, singleline_only=True
+        )
 
     @property
     def reserved_statement(self) -> Optional[str]:
-        if RequirementFieldName.STATEMENT in self.ng_reserved_fields_cache:
-            return self.ng_reserved_fields_cache[RequirementFieldName.STATEMENT]
-        if RequirementFieldName.STATEMENT not in self.ordered_fields_lookup:
-            self.ng_reserved_fields_cache[RequirementFieldName.STATEMENT] = None
-            return None
-        field: RequirementField = self.ordered_fields_lookup[
-            RequirementFieldName.STATEMENT
-        ][0]
-        if field.field_value_multiline is not None:
-            statement = field.field_value_multiline
-        elif field.field_value is not None:
-            statement = field.field_value
-        else:
-            raise NotImplementedError(self)
-        self.ng_reserved_fields_cache[
-            RequirementFieldName.STATEMENT
-        ] = statement
-        return statement
+        return self._get_cached_field(
+            RequirementFieldName.STATEMENT, singleline_only=False
+        )
 
     @property
     def rationale(self) -> Optional[str]:
-        if RequirementFieldName.RATIONALE in self.ng_reserved_fields_cache:
-            return self.ng_reserved_fields_cache[RequirementFieldName.RATIONALE]
-        if RequirementFieldName.RATIONALE not in self.ordered_fields_lookup:
-            self.ng_reserved_fields_cache[RequirementFieldName.RATIONALE] = None
-            return None
-        field: RequirementField = self.ordered_fields_lookup[
-            RequirementFieldName.RATIONALE
-        ][0]
-        if field.field_value_multiline is not None:
-            rationale = field.field_value_multiline
-        elif field.field_value is not None:
-            rationale = field.field_value
-        else:
-            raise NotImplementedError(self)
-        self.ng_reserved_fields_cache[
-            RequirementFieldName.RATIONALE
-        ] = rationale
-        return rationale
+        return self._get_cached_field(
+            RequirementFieldName.RATIONALE, singleline_only=False
+        )
 
     @property
     def comments(self) -> List[str]:
@@ -321,6 +291,30 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
             )
         )
 
+    def _get_cached_field(
+        self, field_name: str, singleline_only: bool
+    ) -> Optional[str]:
+        if field_name in self.ng_reserved_fields_cache:
+            return self.ng_reserved_fields_cache[field_name]
+        if field_name not in self.ordered_fields_lookup:
+            self.ng_reserved_fields_cache[field_name] = None
+            return None
+        field: RequirementField = self.ordered_fields_lookup[field_name][0]
+
+        if field.field_value is not None:
+            field_value = field.field_value
+        else:
+            if singleline_only:
+                raise NotImplementedError(
+                    f"Field {field_name} must be a single-line field."
+                )
+            if field.field_value_multiline is not None:
+                field_value = field.field_value_multiline
+            else:
+                raise NotImplementedError(self)
+        self.ng_reserved_fields_cache[field_name] = field_value
+        return field_value
+
     # Below all mutating methods.
 
     def set_field_value(
@@ -355,14 +349,8 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
             raise NotImplementedError(value)
 
         # FIXME: This will go away.
-        if field_name == RequirementFieldName.UID:
-            self.uid = field_value
-        elif field_name == RequirementFieldName.TAGS:
+        if field_name == RequirementFieldName.TAGS:
             self.tags = field_value.split(", ")
-        elif field_name == RequirementFieldName.LEVEL:
-            self.level = field_value
-        elif field_name == RequirementFieldName.STATUS:
-            self.status = field_value
         if field_name in self.ng_reserved_fields_cache:
             del self.ng_reserved_fields_cache[field_name]
 
@@ -444,39 +432,3 @@ class CompositeRequirement(Requirement):
     @property
     def document(self):
         return self.ng_document_reference.get_document()
-
-
-@auto_described
-class Body:
-    def __init__(self, parent, content):
-        self.parent = parent
-        self.content = content.strip()
-
-
-@auto_described
-class RequirementComment:
-    def __init__(
-        self,
-        parent,
-        comment_single: Optional[str],
-        comment_multiline: Optional[str],
-    ):
-        self.parent = parent
-        self.comment_single: Optional[str] = comment_single
-        self.comment_multiline: Optional[str] = comment_multiline
-
-        # The case when both are None is when a multi-line field has no text
-        # but only an empty space:
-        # [REQUIREMENT]
-        # COMMENT: <empty space symbol>
-        # assert comment_single is not None or comment_multiline is not None
-        # TODO: One solution to simplify this would be to disallow empty fields
-        # in the grammar completely.
-
-    def get_comment(self):
-        comment = (
-            self.comment_single
-            if self.comment_single
-            else self.comment_multiline
-        )
-        return comment

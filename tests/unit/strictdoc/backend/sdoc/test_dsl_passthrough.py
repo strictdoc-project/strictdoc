@@ -733,11 +733,11 @@ STATEMENT: ABC
 
     section = document.section_contents[0]
     assert isinstance(section, Section)
-    assert section.level == "123"
+    assert section.custom_level == "123"
 
     requirement = section.section_contents[0]
     assert isinstance(requirement, Requirement)
-    assert requirement.level == "456"
+    assert requirement.custom_level == "456"
 
     writer = SDWriter()
     output = writer.write(document)
@@ -898,12 +898,12 @@ STATEMENT: ABC
 
     document: Document = reader.read(sdoc_input)
     assert document.config.auto_levels is False
-    section = document.section_contents[0]
-    assert section.level == "123"
+    section: Section = document.section_contents[0]
+    assert section.custom_level == "123"
 
     requirement = section.section_contents[0]
     assert isinstance(requirement, Requirement)
-    assert requirement.level == "456"
+    assert requirement.custom_level == "456"
 
     writer = SDWriter()
     output = writer.write(document)
@@ -1671,3 +1671,49 @@ REFS:
         'Type item: ParentReqReference\\(.*ref_uid = "ID-001".*\\)',
         exc_info.value.args[0],
     )
+
+
+def test_210_uid_not_specified():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+""".lstrip()
+
+    reader = SDReader()
+
+    document: Document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    requirement: Requirement = document.section_contents[0]
+    assert requirement.reserved_uid is None
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+# TODO: Does it make sense to disallow this case in the grammar?
+def test_211_present_but_empty():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+UID:
+""".lstrip()
+
+    reader = SDReader()
+
+    document: Document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    requirement: Requirement = document.section_contents[0]
+    assert requirement.reserved_uid == ""
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output

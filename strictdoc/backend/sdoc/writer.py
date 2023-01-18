@@ -146,7 +146,7 @@ class SDWriter:
 
         return output
 
-    def _print_section(self, section):
+    def _print_section(self, section: Section):
         assert isinstance(section, Section)
         output = ""
         output += "[SECTION]"
@@ -157,9 +157,9 @@ class SDWriter:
             output += section.uid
             output += "\n"
 
-        if section.level:
+        if section.custom_level:
             output += "LEVEL: "
-            output += section.level
+            output += section.custom_level
             output += "\n"
 
         output += "TITLE: "

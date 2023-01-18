@@ -19,18 +19,23 @@ class Section(Node):  # pylint: disable=too-many-instance-attributes
         self,
         parent,
         uid,
-        level: Optional[str],
+        custom_level: Optional[str],
         title,
         free_texts: List[FreeText],
         section_contents: List[Node],
     ):
         self.parent = parent
+        # TODO: Remove .uid, keep reserved_uid only.
         self.uid = uid
-        self.level: Optional[str] = level
+        self.reserved_uid = uid
         self.title = title
 
         self.free_texts: List[FreeText] = free_texts
         self.section_contents = section_contents
+
+        # HEF4
+        self.custom_level: Optional[str] = custom_level
+        self.ng_resolved_custom_level: Optional[str] = custom_level
 
         self.ng_level: Optional[int] = None
         self.ng_has_requirements = False

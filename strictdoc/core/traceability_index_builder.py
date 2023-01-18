@@ -196,27 +196,29 @@ class TraceabilityIndexBuilder:
             for node in document_iterator.all_content():
                 d_11_map_id_to_node[node.node_id] = node
 
-                if not node.uid:
+                if not node.reserved_uid:
                     continue
-                if node.uid in d_02_requirements_map:
-                    other_req_doc = d_02_requirements_map[node.uid]["document"]
+                if node.reserved_uid in d_02_requirements_map:
+                    other_req_doc = d_02_requirements_map[node.reserved_uid][
+                        "document"
+                    ]
                     if other_req_doc == document:
                         print(
                             "error: DocumentIndex: "
                             "two nodes with the same UID "
                             "exist in the same document: "
-                            f'{node.uid} in "{document.title}".'
+                            f'{node.reserved_uid} in "{document.title}".'
                         )
                     else:
                         print(
                             "error: DocumentIndex: "
                             "two nodes with the same UID "
                             "exist in two different documents: "
-                            f'{node.uid} in "{document.title}" and '
+                            f'{node.reserved_uid} in "{document.title}" and '
                             f'"{other_req_doc.title}".'
                         )
                     sys.exit(1)
-                d_02_requirements_map[node.uid] = {
+                d_02_requirements_map[node.reserved_uid] = {
                     "document": document,
                     "requirement": node,
                     "parents": [],
@@ -232,8 +234,13 @@ class TraceabilityIndexBuilder:
                         if tag not in document_tags:
                             document_tags[tag] = 0
                         document_tags[tag] += 1
-                if requirement.uid not in d_08_requirements_children_map:
-                    d_08_requirements_children_map[requirement.uid] = []
+                if (
+                    requirement.reserved_uid
+                    not in d_08_requirements_children_map
+                ):
+                    d_08_requirements_children_map[
+                        requirement.reserved_uid
+                    ] = []
                 for ref in requirement.references:
                     if ref.ref_type == ReferenceType.FILE:
                         d_07_file_traceability_index.register(requirement)
@@ -241,7 +248,7 @@ class TraceabilityIndexBuilder:
                     if ref.ref_type != ReferenceType.PARENT:
                         continue
                     ref: ParentReqReference
-                    d_02_requirements_map[requirement.uid][
+                    d_02_requirements_map[requirement.reserved_uid][
                         "parents_uids"
                     ].append(ref.ref_uid)
                     if ref.ref_uid not in d_08_requirements_children_map:
@@ -275,21 +282,22 @@ class TraceabilityIndexBuilder:
                 if not node.is_requirement:
                     continue
                 requirement: Requirement = node
-                if not requirement.uid:
+                if not requirement.reserved_uid:
                     continue
 
                 # Now it is possible to resolve parents first checking if they
                 # indeed exist.
-                requirement_parent_ids = d_02_requirements_map[requirement.uid][
-                    "parents_uids"
-                ]
+                requirement_parent_ids = d_02_requirements_map[
+                    requirement.reserved_uid
+                ]["parents_uids"]
                 for requirement_parent_id in requirement_parent_ids:
                     if requirement_parent_id not in d_02_requirements_map:
                         # TODO: Strict variant of the behavior will be to stop
                         # and raise an error message.
                         print(
                             f"warning: [DocumentIndex.create] "
-                            f"Requirement {requirement.uid} references "
+                            f"Requirement {requirement.reserved_uid} "
+                            f"references "
                             f"parent requirement which doesn't exist: "
                             f"{requirement_parent_id}"
                         )
@@ -300,9 +308,9 @@ class TraceabilityIndexBuilder:
                     parent_requirement = d_02_requirements_map[
                         requirement_parent_id
                     ]["requirement"]
-                    d_02_requirements_map[requirement.uid]["parents"].append(
-                        parent_requirement
-                    )
+                    d_02_requirements_map[requirement.reserved_uid][
+                        "parents"
+                    ].append(parent_requirement)
                     # Set document dependencies.
                     parent_document = d_02_requirements_map[
                         requirement_parent_id
@@ -323,25 +331,25 @@ class TraceabilityIndexBuilder:
                 # [SDOC-VALIDATION-NO-CYCLES]
                 # Detect cycles
                 parents_cycle_detector.check_node(
-                    requirement.uid,
+                    requirement.reserved_uid,
                     lambda requirement_id: d_02_requirements_map[
                         requirement_id
                     ]["parents_uids"],
                 )
                 children_cycle_detector.check_node(
-                    requirement.uid,
+                    requirement.reserved_uid,
                     lambda requirement_id: list(
                         map(
-                            lambda current_requirement: current_requirement.uid,
+                            lambda current_requirement: current_requirement.reserved_uid,  # noqa: E501
                             d_08_requirements_children_map[requirement_id],
                         )
                     ),
                 )
                 # [/SDOC-VALIDATION-NO-CYCLES]
 
-                d_02_requirements_map[requirement.uid][
+                d_02_requirements_map[requirement.reserved_uid][
                     "children"
-                ] = d_08_requirements_children_map[requirement.uid]
+                ] = d_08_requirements_children_map[requirement.reserved_uid]
 
         traceability_index = TraceabilityIndex(
             d_01_document_iterators,

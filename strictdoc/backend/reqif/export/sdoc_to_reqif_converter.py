@@ -487,7 +487,7 @@ class SDocToReqIFObjectConverter:
                         continue
                     parent_references.append(reference.ref_uid)
                     context.map_uid_to_parent_uids[
-                        requirement.uid
+                        requirement.reserved_uid
                     ] = parent_references
                 continue
             grammar_field = grammar_element.fields_map[field.field_name]
@@ -529,7 +529,7 @@ class SDocToReqIFObjectConverter:
             spec_object_type=document_spec_object_type,
             attributes=attributes,
         )
-        context.map_uid_to_spec_objects[requirement.uid] = spec_object
+        context.map_uid_to_spec_objects[requirement.reserved_uid] = spec_object
         return spec_object
 
     @classmethod

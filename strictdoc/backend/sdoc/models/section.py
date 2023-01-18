@@ -25,7 +25,9 @@ class Section(Node):  # pylint: disable=too-many-instance-attributes
         section_contents: List[Node],
     ):
         self.parent = parent
+        # TODO: Remove .uid, keep reserved_uid only.
         self.uid = uid
+        self.reserved_uid = uid
         self.level: Optional[str] = level
         self.title = title
 

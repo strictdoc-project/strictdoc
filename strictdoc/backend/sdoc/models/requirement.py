@@ -84,7 +84,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
 
         self.requirement_type: str = requirement_type
 
-        uid = None
         level = None
         status = None
         tags: Optional[List[str]] = None
@@ -100,8 +99,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
                 has_meta = True
             ordered_fields_lookup.setdefault(field.field_name, []).append(field)
 
-        if RequirementFieldName.UID in ordered_fields_lookup:
-            uid = ordered_fields_lookup[RequirementFieldName.UID][0].field_value
         if RequirementFieldName.LEVEL in ordered_fields_lookup:
             level = ordered_fields_lookup[RequirementFieldName.LEVEL][
                 0
@@ -121,11 +118,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
             assert references_opt is not None
             references = references_opt
 
-        # TODO: Why textX creates empty uid when the sdoc doesn't declare the
-        # UID field?
-        self.uid = (
-            uid.strip() if (isinstance(uid, str) and len(uid) > 0) else None
-        )
         self.level: Optional[str] = level
         self.status = status
         self.tags: Optional[List[str]] = tags
@@ -156,6 +148,23 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         self.ng_reserved_fields_cache: Dict[str, Any] = {}
 
     # Reserved fields
+
+    @property
+    def uid(self) -> Optional[str]:
+        raise NotImplementedError(self)
+
+    @property
+    def reserved_uid(self) -> Optional[str]:
+        # TODO: Why textX creates empty uid when the sdoc doesn't declare the
+        # UID field?
+        # self.uid = (
+        #     uid.strip() if (isinstance(uid, str) and len(uid) > 0) else None
+        # )
+        if RequirementFieldName.UID not in self.ordered_fields_lookup:
+            return None
+        return self.ordered_fields_lookup[RequirementFieldName.UID][
+            0
+        ].field_value
 
     @property
     def reserved_title(self) -> Optional[str]:
@@ -355,9 +364,7 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
             raise NotImplementedError(value)
 
         # FIXME: This will go away.
-        if field_name == RequirementFieldName.UID:
-            self.uid = field_value
-        elif field_name == RequirementFieldName.TAGS:
+        if field_name == RequirementFieldName.TAGS:
             self.tags = field_value.split(", ")
         elif field_name == RequirementFieldName.LEVEL:
             self.level = field_value

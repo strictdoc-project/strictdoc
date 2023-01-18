@@ -45,7 +45,7 @@ class DocumentBuilder:
         return requirement
 
     def add_requirement_parent(self, req_id, parent_req_id):
-        requirement = next(r for r in self.requirements if r.uid == req_id)
+        requirement = next(r for r in self.requirements if r.reserved_uid == req_id)
         assert requirement
 
         reference = ParentReqReference(requirement, parent_req_id)

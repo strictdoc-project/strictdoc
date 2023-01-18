@@ -1,5 +1,5 @@
-{% if requirement.uid is not none %}
-.. _{{requirement.uid}}:
+{% if requirement.reserved_uid is not none %}
+.. _{{requirement.reserved_uid}}:
 {% endif %}
 
 {%- if requirement.reserved_title is not none %}
@@ -50,6 +50,6 @@
 **Children:**
 {% if true -%}{# without this workaround Jinja eats too much or not enough whitespace. #}{%- endif %}
 {%- for child_requirement in index.get_children_requirements(requirement) %}
-- ``[{{child_requirement.uid}}]`` :ref:`{{child_requirement.uid}}`
+- ``[{{child_requirement.reserved_uid}}]`` :ref:`{{child_requirement.reserved_uid}}`
 {%- endfor %}
 {% endif %}

@@ -3,7 +3,9 @@
     {%- if requirement.uid %}
     <div class="requirement_child-uid">{{ requirement.uid }}</div>
     {%- endif %}
-    {{ requirement.title }}
+    {%- if requirement.reserved_title is not none %}
+      {{ requirement.reserved_title }}
+    {%- endif %}
   </a>
 </article>
 

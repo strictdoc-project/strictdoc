@@ -150,7 +150,7 @@ Section[noskipws]:
   '[SECTION]'
   '\n'
   ('UID: ' uid = /.+$/ '\n')?
-  ('LEVEL: ' level_as_parsed = /.*/ '\n')?
+  ('LEVEL: ' custom_level = /.*/ '\n')?
   'TITLE: ' title = /.*$/ '\n'
   free_texts *= SpaceThenFreeText
   section_contents *= SectionOrRequirement

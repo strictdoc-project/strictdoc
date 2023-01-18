@@ -63,12 +63,12 @@ class DocumentCachingIterator:
             ):
                 assert current.ng_level, f"Node has no ng_level: {current}"
 
-                if current.ng_resolved_level != "None":
+                if current.ng_resolved_custom_level != "None":
                     level_counter.adjust(current.ng_level)
                     # TODO: Remove the need to do branching here.
                     current.context.title_number_string = (
-                        current.ng_resolved_level
-                        if current.ng_resolved_level
+                        current.ng_resolved_custom_level
+                        if current.ng_resolved_custom_level
                         else level_counter.get_string()
                     )
                 else:

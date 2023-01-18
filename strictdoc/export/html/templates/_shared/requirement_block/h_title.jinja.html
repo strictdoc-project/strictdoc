@@ -5,7 +5,7 @@ data-level="{{ node.context.title_number_string }}">
   {{ node.context.title_number_string }}.&nbsp;
   {%- endif -%}
   {%- set title = node.reserved_title if node.is_requirement else node.title -%}
-  {%- if title is not none %}
+  {%- if title is not none -%}
     {{ title }}
   {%- endif -%}
 </h{{ node.ng_level }}>

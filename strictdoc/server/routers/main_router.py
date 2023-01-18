@@ -270,7 +270,7 @@ def create_main_router(
         section = Section(
             parent=parent,
             uid=None,
-            level_as_parsed=None,
+            custom_level=None,
             title=None,
             free_texts=[],
             section_contents=[],
@@ -1039,7 +1039,6 @@ def create_main_router(
         # FIXME: Leave only one method based on set_field_value().
         # Special case: we clear out the requirement's comments and then re-fill
         # them from scratch from the form data.
-        requirement.comments = []
         if "COMMENT" in requirement.ordered_fields_lookup:
             del requirement.ordered_fields_lookup["COMMENT"]
         for form_field_name, form_fields in form_object.fields.items():

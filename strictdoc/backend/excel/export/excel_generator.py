@@ -94,7 +94,7 @@ class ExcelGenerator:
                 for node in traceability_index.get_document_iterator(
                     document
                 ).all_content():
-                    if not node.is_requirement or not node.uid:
+                    if not node.is_requirement or not node.reserved_uid:
                         # only export the requirements with uid
                         continue
 
@@ -227,10 +227,10 @@ class ExcelGenerator:
 
         for content_node in document_contents:
             if isinstance(content_node, Requirement):
-                if content_node.uid:
+                if content_node.reserved_uid:
                     # only export the requirements with uid, allowing tracking
                     row += 1
-                    refs[content_node.uid] = row
+                    refs[content_node.reserved_uid] = row
 
         return refs
 

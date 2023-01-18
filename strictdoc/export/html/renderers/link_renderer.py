@@ -22,9 +22,9 @@ class LinkRenderer:
         if isinstance(node, Section):
             local_anchor = f"{unique_prefix}-{self._string_to_link(node.title)}"
         elif isinstance(node, Requirement):
-            if node.uid and len(node.uid) > 0:
+            if node.reserved_uid and len(node.reserved_uid) > 0:
                 local_anchor = (
-                    f"{unique_prefix}-{self._string_to_link(node.uid)}"
+                    f"{unique_prefix}-{self._string_to_link(node.reserved_uid)}"
                 )
             elif (
                 node.reserved_title is not None and len(node.reserved_title) > 0
@@ -145,7 +145,7 @@ class LinkRenderer:
             f"{path_prefix}"
             f"/_source_files"
             f"/{source_link.file_entry.path_forward_slashes}.html"
-            f"#{requirement.uid}"
+            f"#{requirement.reserved_uid}"
         )
         return source_file_link
 
@@ -186,7 +186,7 @@ class LinkRenderer:
         assert isinstance(source_link, FileReference)
         assert isinstance(context_source_file, SourceFile)
         return self.render_requirement_in_source_file_range_link_using_id(
-            requirement.uid,
+            requirement.reserved_uid,
             source_link.file_entry.path_forward_slashes,
             context_source_file,
             source_range,

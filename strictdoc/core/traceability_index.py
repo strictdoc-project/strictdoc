@@ -51,63 +51,63 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def get_parent_requirements(self, requirement: Requirement):
         assert isinstance(requirement, Requirement)
-        if not isinstance(requirement.uid, str):
+        if not isinstance(requirement.reserved_uid, str):
             return []
 
-        if len(requirement.uid) == 0:
+        if len(requirement.reserved_uid) == 0:
             return []
 
-        parent_requirements = self.requirements_parents[requirement.uid][
+        parent_requirements = self.requirements_parents[requirement.reserved_uid][
             "parents"
         ]
         return parent_requirements
 
     def has_parent_requirements(self, requirement: Requirement):
         assert isinstance(requirement, Requirement)
-        if not isinstance(requirement.uid, str):
+        if not isinstance(requirement.reserved_uid, str):
             return False
 
-        if len(requirement.uid) == 0:
+        if len(requirement.reserved_uid) == 0:
             return False
 
-        parent_requirements = self.requirements_parents[requirement.uid][
+        parent_requirements = self.requirements_parents[requirement.reserved_uid][
             "parents"
         ]
         return len(parent_requirements) > 0
 
     def has_children_requirements(self, requirement: Requirement):
         assert isinstance(requirement, Requirement)
-        if not isinstance(requirement.uid, str):
+        if not isinstance(requirement.reserved_uid, str):
             return False
 
-        if len(requirement.uid) == 0:
+        if len(requirement.reserved_uid) == 0:
             return False
 
-        children_requirements = self.requirements_parents[requirement.uid][
+        children_requirements = self.requirements_parents[requirement.reserved_uid][
             "children"
         ]
         return len(children_requirements) > 0
 
     def get_children_requirements(self, requirement: Requirement):
         assert isinstance(requirement, Requirement)
-        if not isinstance(requirement.uid, str):
+        if not isinstance(requirement.reserved_uid, str):
             return []
 
-        if len(requirement.uid) == 0:
+        if len(requirement.reserved_uid) == 0:
             return []
 
-        children_requirements = self.requirements_parents[requirement.uid][
+        children_requirements = self.requirements_parents[requirement.reserved_uid][
             "children"
         ]
         return children_requirements
 
     def get_link(self, requirement):
-        document = self.requirements_parents[requirement.uid]["document"]
-        return f"{document.title} - Traceability.html#{requirement.uid}"
+        document = self.requirements_parents[requirement.reserved_uid]["document"]
+        return f"{document.title} - Traceability.html#{requirement.reserved_uid}"
 
     def get_deep_link(self, requirement):
-        document = self.requirements_parents[requirement.uid]["document"]
-        return f"{document.title} - Traceability Deep.html#{requirement.uid}"
+        document = self.requirements_parents[requirement.reserved_uid]["document"]
+        return f"{document.title} - Traceability Deep.html#{requirement.reserved_uid}"
 
     def has_tags(self, document):
         if document.title not in self.tags_map:
@@ -170,7 +170,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         return self._map_id_to_node[node_id]
 
     def mut_add_uid_to_a_requirement(self, requirement: Requirement):
-        self.requirements_parents[requirement.uid] = {
+        self.requirements_parents[requirement.reserved_uid] = {
             "document": requirement.document,
             "requirement": requirement,
             "parents": [],
@@ -187,4 +187,4 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
         existing_entry = self.requirements_parents[old_uid]
         del self.requirements_parents[old_uid]
-        self.requirements_parents[requirement.uid] = existing_entry
+        self.requirements_parents[requirement.reserved_uid] = existing_entry

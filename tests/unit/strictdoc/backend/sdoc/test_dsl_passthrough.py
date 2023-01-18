@@ -1671,3 +1671,49 @@ REFS:
         'Type item: ParentReqReference\\(.*ref_uid = "ID-001".*\\)',
         exc_info.value.args[0],
     )
+
+
+def test_210_uid_not_specified():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+""".lstrip()
+
+    reader = SDReader()
+
+    document: Document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    requirement: Requirement = document.section_contents[0]
+    assert requirement.reserved_uid is None
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output
+
+
+# TODO: Does it make sense to disallow this case in the grammar?
+def test_211_present_but_empty():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+UID:
+""".lstrip()
+
+    reader = SDReader()
+
+    document: Document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    requirement: Requirement = document.section_contents[0]
+    assert requirement.reserved_uid == ""
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output

@@ -150,8 +150,8 @@ class RSTWriter:
             for child_requirement in self.index.get_children_requirements(
                 section_content
             ):
-                output += f"- ``[{child_requirement.uid}]`` "
-                output += f":ref:`{child_requirement.uid}`"
+                output += f"- ``[{child_requirement.reserved_uid}]`` "
+                output += f":ref:`{child_requirement.reserved_uid}`"
                 output += "\n"
             output += "\n"
 

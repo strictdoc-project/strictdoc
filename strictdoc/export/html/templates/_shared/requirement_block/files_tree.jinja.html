@@ -11,7 +11,7 @@
       {%- for range in opt_ranges %}
         <li class="requirement-tree_downward_node">
           <div class="requirement-tree_downward_item">
-          <a data-turbo="false" class="" href="{{ link_renderer.render_source_file_link_from_root(link) }}#{{ requirement.uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
+          <a data-turbo="false" class="" href="{{ link_renderer.render_source_file_link_from_root(link) }}#{{ requirement.reserved_uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
             <b>[ {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }} ]</b> {{ link.file_entry.file_path }}
           </a>
           </div>
@@ -20,7 +20,7 @@
     {%- else -%}
       <li class="requirement-tree_downward_node">
         <div class="requirement-tree_downward_item">
-        <a data-turbo="false" href="{{ link_renderer.render_source_file_link_from_root(link) }}#{{ requirement.uid }}">
+        <a data-turbo="false" href="{{ link_renderer.render_source_file_link_from_root(link) }}#{{ requirement.reserved_uid }}">
           {{ link.file_entry.file_path }}
         </a>
         </div>

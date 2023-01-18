@@ -2,8 +2,8 @@
 {%- if requirement.status %}
 data-status='{{ requirement.status.lower() }}'
 {%- endif %}
-{%- if requirement.uid %}
-data-uid='{{ requirement.uid }}'
+{%- if requirement.reserved_uid %}
+data-uid='{{ requirement.reserved_uid }}'
 {%- endif %}>
 
   <section>

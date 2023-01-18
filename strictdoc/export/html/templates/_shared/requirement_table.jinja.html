@@ -46,8 +46,8 @@ data-status='{{ requirement.status.lower() }}'
         {%- for requirement in traceability_index.get_parent_requirements(requirement) %}
         <li>
           <a class="requirement_link-parent" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
-            {%- if requirement.uid %}
-            <span class="requirement_parent-uid">{{ requirement.uid }}</span>
+            {%- if requirement.reserved_uid %}
+            <span class="requirement_parent-uid">{{ requirement.reserved_uid }}</span>
             {%- endif %}
             {%- if requirement.reserved_title is not none -%}
               {{ requirement.reserved_title }}
@@ -70,8 +70,8 @@ data-status='{{ requirement.status.lower() }}'
           {%- for requirement in traceability_index.get_children_requirements(requirement) %}
           <li>
             <a class="requirement_link-child" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
-              {%- if requirement.uid %}
-              <span class="requirement_child-uid">{{ requirement.uid }}</span>
+              {%- if requirement.reserved_uid %}
+              <span class="requirement_child-uid">{{ requirement.reserved_uid }}</span>
               {%- endif %}
               {%- if requirement.reserved_title is not none -%}
               {{ requirement.reserved_title }}
@@ -120,14 +120,14 @@ data-status='{{ requirement.status.lower() }}'
             {%- if opt_ranges -%}
               {%- for range in opt_ranges %}
                 <li>
-                  <a class="requirement_link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
+                  <a class="requirement_link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
                     {{ link.file_entry.file_path }}, <i>lines: {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }}</i>
                   </a>
                 </li>
               {%- endfor -%}
             {%- else -%}
               <li>
-                <a class="requirement_link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.uid }}">
+                <a class="requirement_link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}">
                   {{ link.file_entry.file_path }}
                 </a>
               </li>

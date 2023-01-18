@@ -1,7 +1,7 @@
 <div
   class="section-title"
   data-level="{{ requirement.context.title_number_string }}"
->{{ requirement.uid if requirement.uid else '[no UID]' }}</div>
+>{{ requirement.reserved_uid if requirement.reserved_uid else '[no UID]' }}</div>
 {%- if requirement.reserved_title -%}
 <div>
   {%- if requirement.context.title_number_string %}

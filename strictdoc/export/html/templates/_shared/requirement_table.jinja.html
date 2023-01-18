@@ -1,8 +1,8 @@
 {%- set anchor=link_renderer.render_local_anchor(requirement) -%}
 
 <article class="requirement"
-{%- if requirement.status %}
-data-status='{{ requirement.status.lower() }}'
+{%- if requirement.reserved_status %}
+data-status='{{ requirement.reserved_status.lower() }}'
 {%- endif %}>
 
   {# {% include "_shared/requirement_block/h_title.jinja.html" %} #}

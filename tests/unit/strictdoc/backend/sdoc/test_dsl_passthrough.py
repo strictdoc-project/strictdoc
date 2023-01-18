@@ -346,7 +346,7 @@ This is a statement 3
     )
     requirement_1 = document.section_contents[0].section_contents[0]
     assert (
-        requirement_1.statement_multiline
+        requirement_1.reserved_statement
         == "This is a statement 1\nThis is a statement 2\nThis is a statement 3"
     )
 
@@ -573,7 +573,7 @@ STATEMENT: 1
 
     document: Document = reader.read(sdoc_input)
     requirement = document.section_contents[0]
-    assert requirement.statement == "1"
+    assert requirement.reserved_statement == "1"
 
     writer = SDWriter()
     output = writer.write(document)

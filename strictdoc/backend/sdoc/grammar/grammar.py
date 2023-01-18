@@ -229,12 +229,6 @@ ChoiceOptionXs[noskipws]:
 RequirementStatus[noskipws]:
   'Draft' | 'Active' | 'Deleted';
 
-RequirementComment[noskipws]:
-  'COMMENT: ' (
-    comment_single = SingleLineString | comment_multiline = MultiLineString
-  ) '\n'
-;
-
 FreeText[noskipws]:
   '[FREETEXT]' '\n'
   parts+=TextPart

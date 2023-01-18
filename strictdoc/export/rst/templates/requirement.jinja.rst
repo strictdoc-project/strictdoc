@@ -29,7 +29,7 @@
 {% endif %}
 
 {%- for comment in requirement.comments %}
-**Comment:** {{comment.get_comment()}}
+**Comment:** {{comment}}
 {% endfor %}
 
 {%- if requirement.has_meta %}

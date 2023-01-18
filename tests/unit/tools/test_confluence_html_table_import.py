@@ -32,7 +32,7 @@ def test_01():
     assert section1_reqs[1].title == "REQ-1-2 Title"
     assert section1_reqs[1].statement_multiline == "REQ-1-2 Statement"
     assert section1_reqs[1].rationale_multiline == "REQ-1-2 Rationale"
-    assert section1_reqs[1].comments[0].comment_multiline == "REQ-1-2 Comment"
+    assert section1_reqs[1].comments[0] == "REQ-1-2 Comment"
 
     section2 = sdoc.section_contents[1]
     assert section2.title == "Section 2"
@@ -47,7 +47,7 @@ def test_01():
     assert section2_reqs[1].title == "REQ-2-2 Title"
     assert section2_reqs[1].statement_multiline == "REQ-2-2 Statement"
     assert section2_reqs[1].rationale_multiline == "REQ-2-2 Rationale"
-    assert section2_reqs[1].comments[0].comment_multiline == "REQ-2-2 Comment"
+    assert section2_reqs[1].comments[0] == "REQ-2-2 Comment"
 
 
 def test_02():
@@ -70,13 +70,8 @@ def test_02():
     assert section1_reqs[0].statement_multiline == "REQ-1-1 Statement"
     assert section1_reqs[0].rationale_multiline == "REQ-1-1 Rationale"
     assert len(section1_reqs[0].comments) == 1
-    assert (
-        section1_reqs[0].comments[0].comment_multiline
-        == "REQ-1-1 comment wrapped in p"
-    )
-    assert (
-        section1_reqs[1].comments[0].comment_multiline == "- Item 1\n- Item 2"
-    )
+    assert section1_reqs[0].comments[0] == "REQ-1-1 comment wrapped in p"
+    assert section1_reqs[1].comments[0] == "- Item 1\n- Item 2"
 
 
 def test_fragments_01():

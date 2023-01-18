@@ -134,7 +134,7 @@ class ExcelGenerator:
                                 for comment in node.comments:
                                     if len(value) > 0:
                                         value += "\n----------\n"
-                                    value += comment.get_comment()
+                                    value += comment
                                 worksheet.write(row, idx, value)
                                 if (
                                     value

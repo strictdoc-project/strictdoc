@@ -4,7 +4,6 @@ from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
-    RequirementComment,
 )
 from strictdoc.backend.sdoc.models.section import FreeText
 from strictdoc.core.traceability_index import TraceabilityIndex
@@ -85,13 +84,11 @@ class MarkupRenderer:
         return output
 
     def render_comment(self, comment):
-        assert isinstance(comment, RequirementComment)
+        assert isinstance(comment, str)
         if comment in self.cache:
             return self.cache[comment]
-
-        output = self.fragment_writer.write(comment.get_comment())
+        output = self.fragment_writer.write(comment)
         self.cache[comment] = output
-
         return output
 
     def render_free_text(self, document_type, free_text):

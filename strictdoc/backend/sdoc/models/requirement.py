@@ -89,7 +89,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         status = None
         tags: Optional[List[str]] = None
         references: List[Reference] = []
-        title = None
         statement = None
         statement_multiline = None
         rationale = None
@@ -126,10 +125,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
             assert references_opt is not None
             references = references_opt
 
-        if RequirementFieldName.TITLE in ordered_fields_lookup:
-            title = ordered_fields_lookup[RequirementFieldName.TITLE][
-                0
-            ].field_value
         if RequirementFieldName.STATEMENT in ordered_fields_lookup:
             field = ordered_fields_lookup[RequirementFieldName.STATEMENT][0]
             if field.field_value_multiline is not None:
@@ -155,7 +150,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         assert isinstance(references, List)
         self.references: List[Reference] = references
 
-        self.title = title
         self.statement: Optional[str] = statement
         self.rationale = rationale
         self.requirements = requirements
@@ -184,6 +178,14 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         self.ng_reserved_fields_cache: Dict[str, Any] = {}
 
     # Reserved fields
+
+    @property
+    def title(self) -> Optional[str]:
+        if RequirementFieldName.TITLE not in self.ordered_fields_lookup:
+            return None
+        return self.ordered_fields_lookup[RequirementFieldName.TITLE][
+            0
+        ].field_value
 
     @property
     def comments(self) -> List[str]:
@@ -349,8 +351,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         # FIXME: This will go away.
         if field_name == RequirementFieldName.UID:
             self.uid = field_value
-        elif field_name == RequirementFieldName.TITLE:
-            self.title = field_value
         elif field_name == RequirementFieldName.TAGS:
             self.tags = field_value.split(", ")
         elif field_name == RequirementFieldName.LEVEL:

@@ -15,7 +15,9 @@ def test_010_full_dict():
     )
 
     assert requirement.ng_level == 1
-    assert requirement.reserved_uid == requirement_dict[RequirementFieldName.UID]
+    assert (
+        requirement.reserved_uid == requirement_dict[RequirementFieldName.UID]
+    )
     assert (
         requirement.reserved_title
         == requirement_dict[RequirementFieldName.TITLE]

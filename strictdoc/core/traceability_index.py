@@ -57,9 +57,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         if len(requirement.reserved_uid) == 0:
             return []
 
-        parent_requirements = self.requirements_parents[requirement.reserved_uid][
-            "parents"
-        ]
+        parent_requirements = self.requirements_parents[
+            requirement.reserved_uid
+        ]["parents"]
         return parent_requirements
 
     def has_parent_requirements(self, requirement: Requirement):
@@ -70,9 +70,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         if len(requirement.reserved_uid) == 0:
             return False
 
-        parent_requirements = self.requirements_parents[requirement.reserved_uid][
-            "parents"
-        ]
+        parent_requirements = self.requirements_parents[
+            requirement.reserved_uid
+        ]["parents"]
         return len(parent_requirements) > 0
 
     def has_children_requirements(self, requirement: Requirement):
@@ -83,9 +83,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         if len(requirement.reserved_uid) == 0:
             return False
 
-        children_requirements = self.requirements_parents[requirement.reserved_uid][
-            "children"
-        ]
+        children_requirements = self.requirements_parents[
+            requirement.reserved_uid
+        ]["children"]
         return len(children_requirements) > 0
 
     def get_children_requirements(self, requirement: Requirement):
@@ -96,18 +96,27 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         if len(requirement.reserved_uid) == 0:
             return []
 
-        children_requirements = self.requirements_parents[requirement.reserved_uid][
-            "children"
-        ]
+        children_requirements = self.requirements_parents[
+            requirement.reserved_uid
+        ]["children"]
         return children_requirements
 
     def get_link(self, requirement):
-        document = self.requirements_parents[requirement.reserved_uid]["document"]
-        return f"{document.title} - Traceability.html#{requirement.reserved_uid}"
+        document = self.requirements_parents[requirement.reserved_uid][
+            "document"
+        ]
+        return (
+            f"{document.title} - Traceability.html#{requirement.reserved_uid}"
+        )
 
     def get_deep_link(self, requirement):
-        document = self.requirements_parents[requirement.reserved_uid]["document"]
-        return f"{document.title} - Traceability Deep.html#{requirement.reserved_uid}"
+        document = self.requirements_parents[requirement.reserved_uid][
+            "document"
+        ]
+        return (
+            f"{document.title} - Traceability Deep.html#"
+            f"{requirement.reserved_uid}"
+        )
 
     def has_tags(self, document):
         if document.title not in self.tags_map:

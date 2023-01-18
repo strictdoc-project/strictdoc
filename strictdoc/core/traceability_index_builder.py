@@ -199,7 +199,9 @@ class TraceabilityIndexBuilder:
                 if not node.reserved_uid:
                     continue
                 if node.reserved_uid in d_02_requirements_map:
-                    other_req_doc = d_02_requirements_map[node.reserved_uid]["document"]
+                    other_req_doc = d_02_requirements_map[node.reserved_uid][
+                        "document"
+                    ]
                     if other_req_doc == document:
                         print(
                             "error: DocumentIndex: "
@@ -232,8 +234,13 @@ class TraceabilityIndexBuilder:
                         if tag not in document_tags:
                             document_tags[tag] = 0
                         document_tags[tag] += 1
-                if requirement.reserved_uid not in d_08_requirements_children_map:
-                    d_08_requirements_children_map[requirement.reserved_uid] = []
+                if (
+                    requirement.reserved_uid
+                    not in d_08_requirements_children_map
+                ):
+                    d_08_requirements_children_map[
+                        requirement.reserved_uid
+                    ] = []
                 for ref in requirement.references:
                     if ref.ref_type == ReferenceType.FILE:
                         d_07_file_traceability_index.register(requirement)
@@ -280,16 +287,17 @@ class TraceabilityIndexBuilder:
 
                 # Now it is possible to resolve parents first checking if they
                 # indeed exist.
-                requirement_parent_ids = d_02_requirements_map[requirement.reserved_uid][
-                    "parents_uids"
-                ]
+                requirement_parent_ids = d_02_requirements_map[
+                    requirement.reserved_uid
+                ]["parents_uids"]
                 for requirement_parent_id in requirement_parent_ids:
                     if requirement_parent_id not in d_02_requirements_map:
                         # TODO: Strict variant of the behavior will be to stop
                         # and raise an error message.
                         print(
                             f"warning: [DocumentIndex.create] "
-                            f"Requirement {requirement.reserved_uid} references "
+                            f"Requirement {requirement.reserved_uid} "
+                            f"references "
                             f"parent requirement which doesn't exist: "
                             f"{requirement_parent_id}"
                         )
@@ -300,9 +308,9 @@ class TraceabilityIndexBuilder:
                     parent_requirement = d_02_requirements_map[
                         requirement_parent_id
                     ]["requirement"]
-                    d_02_requirements_map[requirement.reserved_uid]["parents"].append(
-                        parent_requirement
-                    )
+                    d_02_requirements_map[requirement.reserved_uid][
+                        "parents"
+                    ].append(parent_requirement)
                     # Set document dependencies.
                     parent_document = d_02_requirements_map[
                         requirement_parent_id
@@ -332,7 +340,7 @@ class TraceabilityIndexBuilder:
                     requirement.reserved_uid,
                     lambda requirement_id: list(
                         map(
-                            lambda current_requirement: current_requirement.reserved_uid,
+                            lambda current_requirement: current_requirement.reserved_uid,  # noqa: E501
                             d_08_requirements_children_map[requirement_id],
                         )
                     ),

@@ -85,7 +85,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         self.requirement_type: str = requirement_type
 
         level = None
-        status = None
         tags: Optional[List[str]] = None
         references: List[Reference] = []
 
@@ -103,10 +102,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
             level = ordered_fields_lookup[RequirementFieldName.LEVEL][
                 0
             ].field_value
-        if RequirementFieldName.STATUS in ordered_fields_lookup:
-            status = ordered_fields_lookup[RequirementFieldName.STATUS][
-                0
-            ].field_value
         if RequirementFieldName.TAGS in ordered_fields_lookup:
             tags = ordered_fields_lookup[RequirementFieldName.TAGS][
                 0
@@ -119,7 +114,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
             references = references_opt
 
         self.level: Optional[str] = level
-        self.status = status
         self.tags: Optional[List[str]] = tags
 
         assert isinstance(references, List)
@@ -150,71 +144,34 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
     # Reserved fields
 
     @property
-    def uid(self) -> Optional[str]:
-        raise NotImplementedError(self)
+    def reserved_uid(self) -> Optional[str]:
+        return self._get_cached_field(
+            RequirementFieldName.UID, singleline_only=True
+        )
 
     @property
-    def reserved_uid(self) -> Optional[str]:
-        # TODO: Why textX creates empty uid when the sdoc doesn't declare the
-        # UID field?
-        # self.uid = (
-        #     uid.strip() if (isinstance(uid, str) and len(uid) > 0) else None
-        # )
-        if RequirementFieldName.UID not in self.ordered_fields_lookup:
-            return None
-        return self.ordered_fields_lookup[RequirementFieldName.UID][
-            0
-        ].field_value
+    def reserved_status(self) -> Optional[str]:
+        return self._get_cached_field(
+            RequirementFieldName.STATUS, singleline_only=True
+        )
 
     @property
     def reserved_title(self) -> Optional[str]:
-        if RequirementFieldName.TITLE not in self.ordered_fields_lookup:
-            return None
-        return self.ordered_fields_lookup[RequirementFieldName.TITLE][
-            0
-        ].field_value
+        return self._get_cached_field(
+            RequirementFieldName.TITLE, singleline_only=True
+        )
 
     @property
     def reserved_statement(self) -> Optional[str]:
-        if RequirementFieldName.STATEMENT in self.ng_reserved_fields_cache:
-            return self.ng_reserved_fields_cache[RequirementFieldName.STATEMENT]
-        if RequirementFieldName.STATEMENT not in self.ordered_fields_lookup:
-            self.ng_reserved_fields_cache[RequirementFieldName.STATEMENT] = None
-            return None
-        field: RequirementField = self.ordered_fields_lookup[
-            RequirementFieldName.STATEMENT
-        ][0]
-        if field.field_value_multiline is not None:
-            statement = field.field_value_multiline
-        elif field.field_value is not None:
-            statement = field.field_value
-        else:
-            raise NotImplementedError(self)
-        self.ng_reserved_fields_cache[
-            RequirementFieldName.STATEMENT
-        ] = statement
-        return statement
+        return self._get_cached_field(
+            RequirementFieldName.STATEMENT, singleline_only=False
+        )
 
     @property
     def rationale(self) -> Optional[str]:
-        if RequirementFieldName.RATIONALE in self.ng_reserved_fields_cache:
-            return self.ng_reserved_fields_cache[RequirementFieldName.RATIONALE]
-        if RequirementFieldName.RATIONALE not in self.ordered_fields_lookup:
-            self.ng_reserved_fields_cache[RequirementFieldName.RATIONALE] = None
-            return None
-        field: RequirementField = self.ordered_fields_lookup[
-            RequirementFieldName.RATIONALE
-        ][0]
-        if field.field_value_multiline is not None:
-            rationale = field.field_value_multiline
-        elif field.field_value is not None:
-            rationale = field.field_value
-        else:
-            raise NotImplementedError(self)
-        self.ng_reserved_fields_cache[
-            RequirementFieldName.RATIONALE
-        ] = rationale
-        return rationale
+        return self._get_cached_field(
+            RequirementFieldName.RATIONALE, singleline_only=False
+        )
 
     @property
     def comments(self) -> List[str]:
@@ -330,6 +287,30 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
             )
         )
 
+    def _get_cached_field(
+        self, field_name: str, singleline_only: bool
+    ) -> Optional[str]:
+        if field_name in self.ng_reserved_fields_cache:
+            return self.ng_reserved_fields_cache[field_name]
+        if field_name not in self.ordered_fields_lookup:
+            self.ng_reserved_fields_cache[field_name] = None
+            return None
+        field: RequirementField = self.ordered_fields_lookup[field_name][0]
+
+        if field.field_value is not None:
+            field_value = field.field_value
+        else:
+            if singleline_only:
+                raise NotImplementedError(
+                    f"Field {field_name} must be a single-line field."
+                )
+            if field.field_value_multiline is not None:
+                field_value = field.field_value_multiline
+            else:
+                raise NotImplementedError(self)
+        self.ng_reserved_fields_cache[field_name] = field_value
+        return field_value
+
     # Below all mutating methods.
 
     def set_field_value(
@@ -368,8 +349,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
             self.tags = field_value.split(", ")
         elif field_name == RequirementFieldName.LEVEL:
             self.level = field_value
-        elif field_name == RequirementFieldName.STATUS:
-            self.status = field_value
         if field_name in self.ng_reserved_fields_cache:
             del self.ng_reserved_fields_cache[field_name]
 

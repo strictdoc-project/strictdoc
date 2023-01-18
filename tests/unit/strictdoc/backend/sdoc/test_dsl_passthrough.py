@@ -733,11 +733,11 @@ STATEMENT: ABC
 
     section = document.section_contents[0]
     assert isinstance(section, Section)
-    assert section.level == "123"
+    assert section.level_as_parsed == "123"
 
     requirement = section.section_contents[0]
     assert isinstance(requirement, Requirement)
-    assert requirement.level == "456"
+    assert requirement.level_as_parsed == "456"
 
     writer = SDWriter()
     output = writer.write(document)
@@ -898,12 +898,12 @@ STATEMENT: ABC
 
     document: Document = reader.read(sdoc_input)
     assert document.config.auto_levels is False
-    section = document.section_contents[0]
-    assert section.level == "123"
+    section: Section = document.section_contents[0]
+    assert section.level_as_parsed == "123"
 
     requirement = section.section_contents[0]
     assert isinstance(requirement, Requirement)
-    assert requirement.level == "456"
+    assert requirement.level_as_parsed == "456"
 
     writer = SDWriter()
     output = writer.write(document)

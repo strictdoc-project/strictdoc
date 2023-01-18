@@ -84,7 +84,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
 
         self.requirement_type: str = requirement_type
 
-        level = None
         tags: Optional[List[str]] = None
         references: List[Reference] = []
 
@@ -98,10 +97,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
                 has_meta = True
             ordered_fields_lookup.setdefault(field.field_name, []).append(field)
 
-        if RequirementFieldName.LEVEL in ordered_fields_lookup:
-            level = ordered_fields_lookup[RequirementFieldName.LEVEL][
-                0
-            ].field_value
         if RequirementFieldName.TAGS in ordered_fields_lookup:
             tags = ordered_fields_lookup[RequirementFieldName.TAGS][
                 0
@@ -113,7 +108,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
             assert references_opt is not None
             references = references_opt
 
-        self.level: Optional[str] = level
         self.tags: Optional[List[str]] = tags
 
         assert isinstance(references, List)
@@ -137,6 +131,16 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         self.context = RequirementContext()
 
         self.node_id: str = uuid.uuid4().hex
+
+        # HEF4
+        self.ng_resolved_level: Optional[str] = None
+        self.level_as_parsed: Optional[str] = None
+        if RequirementFieldName.LEVEL in ordered_fields_lookup:
+            level = ordered_fields_lookup[RequirementFieldName.LEVEL][
+                0
+            ].field_value
+            self.ng_resolved_level = level
+            self.level_as_parsed = level
 
         # Cache for accessing the reserved fields values.
         self.ng_reserved_fields_cache: Dict[str, Any] = {}
@@ -347,8 +351,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         # FIXME: This will go away.
         if field_name == RequirementFieldName.TAGS:
             self.tags = field_value.split(", ")
-        elif field_name == RequirementFieldName.LEVEL:
-            self.level = field_value
         if field_name in self.ng_reserved_fields_cache:
             del self.ng_reserved_fields_cache[field_name]
 

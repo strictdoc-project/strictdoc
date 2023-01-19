@@ -20,6 +20,8 @@ class LinkRenderer:
         self.req_link_cache = {}
 
     def render_url(self, url):
+        if len(self.root_path) == 0:
+            return url
         return self.root_path + "/" + url
 
     def render_static_url(self, url):

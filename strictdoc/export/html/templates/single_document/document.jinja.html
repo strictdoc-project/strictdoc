@@ -3,24 +3,24 @@
 {% extends "base.jinja.html" %}
 
 {% block head_scripts %}
-  <script type="text/javascript" src="{{root_path}}/_static/viewtype_menu.js"></script>
-  <script type="text/javascript" src="{{root_path}}/_static/toc.js"></script>
-  <script type="text/javascript" src="{{static_path}}/jquery.min.js"></script>
+  <script type="text/javascript" src="{{link_renderer.render_static_url('viewtype_menu.js')}}"></script>
+  <script type="text/javascript" src="{{link_renderer.render_static_url('toc.js')}}"></script>
+  <script type="text/javascript" src="{{link_renderer.render_static_url('jquery.min.js')}}"></script>
 
   {%- if config.is_running_on_server -%}
   <script type="module">
-      import hotwiredTurbo from "{{root_path}}/_static/turbo.js";
-      import { Application } from "{{root_path}}/_static/stimulus.js";
+      import hotwiredTurbo from "{{link_renderer.render_static_url('turbo.js')}}";
+      import { Application } from "{{link_renderer.render_static_url('stimulus.js')}}";
       window.Stimulus = Application.start();
   </script>
-  <script type="module" src="{{root_path}}/_static/collapsible_list_controller.js"></script>
-  <script type="module" src="{{root_path}}/_static/std-forms.js"></script>
-  <script type="module" src="{{root_path}}/_static/requirement_multiline_field_controller.js"></script>
-  <script type="module" src="{{root_path}}/_static/document_grammar_form_controller.js"></script>
+  <script type="module" src="{{link_renderer.render_static_url('collapsible_list_controller.js')}}"></script>
+  <script type="module" src="{{link_renderer.render_static_url('std-forms.js')}}"></script>
+  <script type="module" src="{{link_renderer.render_static_url('requirement_multiline_field_controller.js')}}"></script>
+  <script type="module" src="{{link_renderer.render_static_url('document_grammar_form_controller.js')}}"></script>
   {%- endif -%}
 
   {%- if config.enable_mathjax -%}
-  <script id="MathJax-script" async src="{{root_path}}/_static/mathjax/tex-mml-chtml.js"></script>
+  <script id="MathJax-script" async src="{{link_renderer.render_static_url('mathjax/tex-mml-chtml.js')}}"></script>
   {%- endif -%}
   {{ super() }}
 {% endblock head_scripts %}

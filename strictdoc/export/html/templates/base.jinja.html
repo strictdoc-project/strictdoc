@@ -5,20 +5,20 @@
   {% block head %}
   <meta charset="UTF-8"/>
 
-  <link rel="shortcut icon" href="{{static_path}}/favicon.ico" type="image/x-icon"/>
+  <link rel="shortcut icon" href="{{link_renderer.render_static_url('favicon.ico')}}" type="image/x-icon"/>
 
   {% block head_css %}
-  <link rel="stylesheet" href="{{static_path}}/_base.css"/>
-  <link rel="stylesheet" href="{{static_path}}/_layout.css"/>
-  <link rel="stylesheet" href="{{static_path}}/_content.css"/>
-  <link rel="stylesheet" href="{{static_path}}/_requirement.css"/>
-  <link rel="stylesheet" href="{{static_path}}/_element.css"/>
-  <link rel="stylesheet" href="{{static_path}}/_form.css"/>
+  <link rel="stylesheet" href="{{link_renderer.render_static_url('_base.css')}}"/>
+  <link rel="stylesheet" href="{{link_renderer.render_static_url('_layout.css')}}"/>
+  <link rel="stylesheet" href="{{link_renderer.render_static_url('_content.css')}}"/>
+  <link rel="stylesheet" href="{{link_renderer.render_static_url('_requirement.css')}}"/>
+  <link rel="stylesheet" href="{{link_renderer.render_static_url('_element.css')}}"/>
+  <link rel="stylesheet" href="{{link_renderer.render_static_url('_form.css')}}"/>
   {% endblock head_css %}
 
   {% block head_scripts %}
   {# moved to docs templates: #}
-  {# <script type="text/javascript" src="{{static_path}}/_static/toc.js"></script> #}
+  {# <script type="text/javascript" src="{{link_renderer.render_static_url('_static/toc.js')}}"></script> #}
   {% endblock head_scripts %}
 
   <title>{% block title %}{% endblock title %}</title>

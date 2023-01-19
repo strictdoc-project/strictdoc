@@ -10,10 +10,26 @@ from strictdoc.export.html.document_type import DocumentType
 
 
 class LinkRenderer:
-    def __init__(self, output_html_root):
-        self.output_html_root = output_html_root
+    def __init__(self, *, root_path):
+        assert isinstance(root_path, str)
+        self.root_path: str = root_path
+        self.static_path: str = (
+            f"{root_path}/_static" if len(root_path) > 0 else "_static"
+        )
         self.local_anchor_cache = {}
         self.req_link_cache = {}
+
+    def render_url(self, url):
+        return self.root_path + "/" + url
+
+    # slash_prefix adds slashes to the import statements within
+    # <script type="module">, for example document_tree.jinja.html.
+    # Otherwise, scripts are not imported correctly.
+    def render_static_url(self, url, slash_prefix: bool = False):
+        static_url = self.static_path + "/" + url
+        if slash_prefix:
+            static_url = "/" + static_url
+        return static_url
 
     def render_local_anchor(self, node):
         if node in self.local_anchor_cache:

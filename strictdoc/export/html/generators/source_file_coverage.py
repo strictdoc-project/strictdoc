@@ -11,20 +11,18 @@ class SourceFileCoverageHTMLGenerator:
     def export(
         config: ExportCommandConfig,
         traceability_index: TraceabilityIndex,
-        link_renderer: LinkRenderer,
     ):
         output = ""
 
         template = SourceFileCoverageHTMLGenerator.env.get_template(
             "source_file_coverage/source_file_coverage.jinja.html"
         )
-
+        link_renderer = LinkRenderer(root_path="")
         output += template.render(
             config=config,
             traceability_index=traceability_index,
             static_path="_static",
             link_renderer=link_renderer,
-            root_path="",
         )
 
         return output

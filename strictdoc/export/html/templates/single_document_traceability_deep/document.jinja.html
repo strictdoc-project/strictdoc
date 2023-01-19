@@ -17,7 +17,7 @@
     import { Application } from "{{link_renderer.render_static_url('stimulus.js')}}";
     window.Stimulus = Application.start();
   </script>
-  <script type="module" src="{{link_renderer.render_static_url('collapsible_list_controller.js')}}"></script>
+  <script type="module" src="{{link_renderer.render_static_url('controllers/collapsible_list_controller.js')}}"></script>
   {%- endif -%}
 
   {%- if config.enable_mathjax -%}

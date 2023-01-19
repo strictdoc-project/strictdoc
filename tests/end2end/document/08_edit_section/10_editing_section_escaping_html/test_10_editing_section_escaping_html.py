@@ -41,6 +41,7 @@ class Test_10_EditSection_EscapeStatement(BaseCase):
         )
 
         self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.assert_text_not_visible("Save")
 
         assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))
         assert filecmp.cmp(

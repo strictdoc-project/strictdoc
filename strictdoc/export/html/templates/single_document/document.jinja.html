@@ -7,6 +7,7 @@
   <script type="text/javascript" src="{{root_path}}/_static/toc.js"></script>
   <script type="text/javascript" src="{{static_path}}/jquery.min.js"></script>
 
+  {%- if config.is_running_on_server -%}
   <script type="module">
       import hotwiredTurbo from "{{root_path}}/_static/turbo.js";
       import { Application } from "{{root_path}}/_static/stimulus.js";
@@ -15,6 +16,8 @@
   <script type="module" src="{{root_path}}/_static/collapsible_list_controller.js"></script>
   <script type="module" src="{{root_path}}/_static/std-forms.js"></script>
   <script type="module" src="{{root_path}}/_static/requirement_multiline_field_controller.js"></script>
+  <script type="module" src="{{root_path}}/_static/document_grammar_form_controller.js"></script>
+  {%- endif -%}
 
   {%- if config.enable_mathjax -%}
   <script id="MathJax-script" async src="{{root_path}}/_static/mathjax/tex-mml-chtml.js"></script>

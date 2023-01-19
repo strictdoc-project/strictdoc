@@ -69,6 +69,7 @@ class RequirementField:
         return value
 
 
+@auto_described()
 class Requirement(Node):  # pylint: disable=too-many-instance-attributes
     def __init__(  # pylint: disable=too-many-arguments
         self,
@@ -342,27 +343,34 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         """
         assert isinstance(field_name, str)
 
+        if field_name in self.ng_reserved_fields_cache:
+            del self.ng_reserved_fields_cache[field_name]
+
         # If a field value is being removed, there is not much to do.
         if value is None or len(value) == 0:
             if field_name in self.ordered_fields_lookup:
                 del self.ordered_fields_lookup[field_name]
             return
 
-        singleline_fields = {"UID", "TITLE"}
-        multiline_fields = {"STATEMENT", "RATIONALE", "COMMENT"}
+        document: Document = self.document
+        grammar_or_none: Optional[DocumentGrammar] = document.grammar
+        assert grammar_or_none is not None
+        grammar: DocumentGrammar = grammar_or_none
+
+        element: GrammarElement = grammar.elements_by_type["REQUIREMENT"]
+        grammar_field_titles = list(map(lambda f: f.title, element.fields))
+        field_index = grammar_field_titles.index(field_name)
+        title_field_index = grammar_field_titles.index(
+            RequirementFieldName.TITLE
+        )
 
         field_value = None
         field_value_multiline = None
         field_value_references = None
-        if field_name in singleline_fields:
+        if field_index <= title_field_index:
             field_value = value
-        elif field_name in multiline_fields:
-            field_value_multiline = value
         else:
-            raise NotImplementedError(value)
-
-        if field_name in self.ng_reserved_fields_cache:
-            del self.ng_reserved_fields_cache[field_name]
+            field_value_multiline = value
 
         if field_name in self.ordered_fields_lookup:
             if len(self.ordered_fields_lookup[field_name]) > form_field_index:
@@ -389,14 +397,6 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
             return
 
         new_ordered_fields_lookup = OrderedDict()
-        document: Document = self.document
-        grammar_or_none: Optional[DocumentGrammar] = document.grammar
-        assert grammar_or_none is not None
-        grammar: DocumentGrammar = grammar_or_none
-
-        element: GrammarElement = grammar.elements_by_type["REQUIREMENT"]
-        grammar_field_titles = list(map(lambda f: f.title, element.fields))
-        field_index = grammar_field_titles.index(field_name)
         for field_title in grammar_field_titles[:field_index]:
             if field_title in self.ordered_fields_lookup:
                 new_ordered_fields_lookup[

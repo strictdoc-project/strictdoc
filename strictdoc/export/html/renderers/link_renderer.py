@@ -22,13 +22,15 @@ class LinkRenderer:
     def render_url(self, url):
         return self.root_path + "/" + url
 
-    # slash_prefix adds slashes to the import statements within
+    def render_static_url(self, url):
+        static_url = self.static_path + "/" + url
+        return static_url
+
+    # This rarely used helper adds slashes to the import statements within
     # <script type="module">, for example document_tree.jinja.html.
     # Otherwise, scripts are not imported correctly.
-    def render_static_url(self, url, slash_prefix: bool = False):
-        static_url = self.static_path + "/" + url
-        if slash_prefix:
-            static_url = "/" + static_url
+    def render_static_url_with_prefix(self, url):
+        static_url = "/" + self.static_path + "/" + url
         return static_url
 
     def render_local_anchor(self, node):

@@ -31,6 +31,7 @@ class Test_03_ImportDocumentFromReqIF(BaseCase):
         reqif_input_field = self.find_element("#reqif_file")
         reqif_input_field.send_keys(path_to_reqif_sample)
         self.click_xpath("//button[@type='submit' and text()='Import ReqIF']")
+        self.assert_text_not_visible("Import ReqIF")
 
         create_document_path = os.path.join(path_to_sandbox, "Document_1.sdoc")
         assert os.path.exists(create_document_path)

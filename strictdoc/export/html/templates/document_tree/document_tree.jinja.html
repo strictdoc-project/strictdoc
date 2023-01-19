@@ -1,20 +1,21 @@
-{% set root_path = "" %}
 {% set template_type = "Project index" %}
 
 {% extends "base.jinja.html" %}
 
 {% block head_css %}
   {{ super() }}
-  <link rel="stylesheet" href="{{static_path}}/_tree.css"/>
+  <link rel="stylesheet" href="{{link_renderer.render_static_url('_tree.css')}}"/>
 {% endblock head_css %}
 
 {% block head_scripts %}
+{%- if config.is_running_on_server -%}
   <script type="module">
-      import hotwiredTurbo from "{{root_path}}/_static/turbo.js";
-      import { Application } from "{{root_path}}/_static/stimulus.js";
-      window.Stimulus = Application.start();
+    import hotwiredTurbo from "{{link_renderer.render_static_url('turbo.js', slash_prefix=True)}}";
+    import { Application } from "{{link_renderer.render_static_url('stimulus.js', slash_prefix=True)}}";
+    window.Stimulus = Application.start();
   </script>
-  <script type="module" src="{{root_path}}/_static/std-forms.js"></script>
+  <script type="module" src="{{link_renderer.render_static_url('std-forms.js')}}"></script>
+{%- endif -%}
 {% endblock head_scripts %}
 
 {% block title %}

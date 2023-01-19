@@ -4,11 +4,11 @@
 
 {% block head_css %}
   {{ super() }}
-  <link rel="stylesheet" href="{{root_path}}/_static/_source.css" />
-  <link rel="stylesheet" href="{{root_path}}/_static/_requirement-tree.css"/>
+  <link rel="stylesheet" href="{{link_renderer.render_static_url('_source.css')}}" />
+  <link rel="stylesheet" href="{{link_renderer.render_static_url('_requirement-tree.css')}}"/>
 {% endblock head_css %}
 {% block head_scripts %}
-  <script type="text/javascript" src="{{root_path}}/_static/source-code-coverage.js"></script>
+  <script type="text/javascript" src="{{link_renderer.render_static_url('source-code-coverage.js')}}"></script>
   {{ super() }}
 {% endblock head_scripts %}
 

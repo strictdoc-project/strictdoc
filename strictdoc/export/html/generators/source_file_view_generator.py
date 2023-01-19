@@ -8,6 +8,7 @@ from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.finders.source_files_finder import SourceFile
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
+from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.export.html.html_templates import HTMLTemplates
 
@@ -20,7 +21,6 @@ class SourceFileViewHTMLGenerator:
         config: ExportCommandConfig,
         source_file: SourceFile,
         traceability_index: TraceabilityIndex,
-        link_renderer,
     ):
         output = ""
 
@@ -31,10 +31,6 @@ class SourceFileViewHTMLGenerator:
 
         with open(source_file.full_path, encoding="utf-8") as opened_file:
             source_file_lines = opened_file.readlines()
-
-        markup_renderer = MarkupRenderer.create(
-            "RST", traceability_index, link_renderer, None
-        )
 
         lexer = None
         if source_file.is_python_file():
@@ -94,8 +90,10 @@ class SourceFileViewHTMLGenerator:
 
         pygments_styles = html_formatter.get_style_defs(".highlight")
 
-        root_path = source_file.path_depth_prefix
-        static_path = f"{root_path}/_static"
+        link_renderer = LinkRenderer(root_path=source_file.path_depth_prefix)
+        markup_renderer = MarkupRenderer.create(
+            "RST", traceability_index, link_renderer, None
+        )
 
         output += template.render(
             config=config,
@@ -107,7 +105,5 @@ class SourceFileViewHTMLGenerator:
             link_renderer=link_renderer,
             renderer=markup_renderer,
             document_type=document_type,
-            root_path=root_path,
-            static_path=static_path,
         )
         return output

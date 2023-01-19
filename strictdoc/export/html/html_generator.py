@@ -44,8 +44,6 @@ class HTMLGenerator:
         traceability_index: TraceabilityIndex,
         parallelizer,
     ):  # pylint: disable=too-many-arguments,too-many-statements
-        link_renderer = LinkRenderer(config.output_html_root)
-
         # Export document tree.
         HTMLGenerator.export_document_tree(
             config=config, traceability_index=traceability_index
@@ -81,7 +79,6 @@ class HTMLGenerator:
             HTMLGenerator._export_with_performance,
             config,
             traceability_index=traceability_index,
-            link_renderer=link_renderer,
         )
 
         parallelizer.map(
@@ -93,7 +90,6 @@ class HTMLGenerator:
             RequirementsCoverageHTMLGenerator.export(
                 config,
                 traceability_index,
-                link_renderer,
             )
         )
         output_html_requirements_coverage = os.path.join(
@@ -126,7 +122,6 @@ class HTMLGenerator:
                         config,
                         source_file,
                         traceability_index,
-                        link_renderer,
                     )
                     with open(
                         source_file.output_file_full_path, "w", encoding="utf-8"
@@ -136,7 +131,6 @@ class HTMLGenerator:
             source_coverage_content = SourceFileCoverageHTMLGenerator.export(
                 config=config,
                 traceability_index=traceability_index,
-                link_renderer=link_renderer,
             )
             output_html_source_coverage = os.path.join(
                 config.output_html_root, "source_coverage.html"
@@ -156,7 +150,6 @@ class HTMLGenerator:
         config: ExportCommandConfig,
         document,
         traceability_index,
-        link_renderer,
     ):
         if not config.is_running_on_server and not document.ng_needs_generation:
             with measure_performance(f"Skip: {document.title}"):
@@ -166,16 +159,13 @@ class HTMLGenerator:
                 config,
                 document,
                 traceability_index,
-                link_renderer,
             )
-        return
 
     @staticmethod
     def export_single_document(
         config: ExportCommandConfig,
         document: Document,
         traceability_index,
-        link_renderer,
     ):
         export_mode = config.get_export_mode()
         assert document.meta is not None
@@ -185,6 +175,8 @@ class HTMLGenerator:
         document_output_folder = document_meta.output_document_dir_full_path
         Path(document_output_folder).mkdir(parents=True, exist_ok=True)
 
+        root_path = document.meta.get_root_path_prefix()
+        link_renderer = LinkRenderer(root_path=root_path)
         markup_renderer = MarkupRenderer.create(
             document.config.markup,
             traceability_index,
@@ -269,10 +261,12 @@ class HTMLGenerator:
 
     @staticmethod
     def export_document_tree(
-        *, config: ExportCommandConfig, traceability_index: TraceabilityIndex
+        *,
+        config: ExportCommandConfig,
+        traceability_index: TraceabilityIndex,
     ):
         output_file = os.path.join(config.output_html_root, "index.html")
         writer = DocumentTreeHTMLGenerator()
-        output = writer.export(config, traceability_index)
+        output = writer.export(config, traceability_index=traceability_index)
         with open(output_file, "w", encoding="utf8") as file:
             file.write(output)

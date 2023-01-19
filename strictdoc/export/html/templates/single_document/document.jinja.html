@@ -13,10 +13,10 @@
       import { Application } from "{{link_renderer.render_static_url('stimulus.js')}}";
       window.Stimulus = Application.start();
   </script>
-  <script type="module" src="{{link_renderer.render_static_url('collapsible_list_controller.js')}}"></script>
-  <script type="module" src="{{link_renderer.render_static_url('std-forms.js')}}"></script>
-  <script type="module" src="{{link_renderer.render_static_url('requirement_multiline_field_controller.js')}}"></script>
-  <script type="module" src="{{link_renderer.render_static_url('document_grammar_form_controller.js')}}"></script>
+  <script type="module" src="{{link_renderer.render_static_url('controllers/collapsible_list_controller.js')}}"></script>
+  <script type="module" src="{{link_renderer.render_static_url('controllers/editable_field_controller.js')}}"></script>
+  <script type="module" src="{{link_renderer.render_static_url('controllers/requirement_multiline_field_controller.js')}}"></script>
+  <script type="module" src="{{link_renderer.render_static_url('controllers/document_grammar_form_controller.js')}}"></script>
   {%- endif -%}
 
   {%- if config.enable_mathjax -%}

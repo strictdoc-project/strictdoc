@@ -1,5 +1,6 @@
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.html_templates import HTMLTemplates
+from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 
 
 class DocumentTableHTMLGenerator:
@@ -7,7 +8,11 @@ class DocumentTableHTMLGenerator:
 
     @staticmethod
     def export(
-        config, document, traceability_index, markup_renderer, link_renderer
+        config,
+        document,
+        traceability_index,
+        markup_renderer,
+        link_renderer: LinkRenderer,
     ):
         output = ""
 
@@ -15,8 +20,6 @@ class DocumentTableHTMLGenerator:
             "single_document_table/document.jinja.html"
         )
 
-        root_path = document.meta.get_root_path_prefix()
-        static_path = f"{root_path}/_static"
         document_iterator = traceability_index.get_document_iterator(document)
 
         output += template.render(
@@ -27,8 +30,6 @@ class DocumentTableHTMLGenerator:
             link_renderer=link_renderer,
             document_type=DocumentType.table(),
             standalone=False,
-            root_path=root_path,
-            static_path=static_path,
             document_iterator=document_iterator,
         )
 

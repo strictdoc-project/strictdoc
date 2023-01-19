@@ -4,22 +4,23 @@
 
 {% block head_css %}
   {{ super() }}
-  <link rel="stylesheet" href="{{static_path}}/_requirement-tree.css"/>
+  <link rel="stylesheet" href="{{link_renderer.render_static_url('_requirement-tree.css')}}"/>
 {% endblock head_css %}
 
 {% block head_scripts %}
-  <script type="text/javascript" src="{{root_path}}/_static/viewtype_menu.js"></script>
-  <script type="text/javascript" src="{{root_path}}/_static/toc.js"></script>
+  <script type="text/javascript" src="{{link_renderer.render_static_url('viewtype_menu.js')}}"></script>
+  <script type="text/javascript" src="{{link_renderer.render_static_url('toc.js')}}"></script>
 
+  {%- if config.is_running_on_server -%}
   <script type="module">
-    //import hotwiredTurbo from "{{root_path}}/_static/turbo.js";
-    import { Application } from "{{root_path}}/_static/stimulus.js";
+    import { Application } from "{{link_renderer.render_static_url('stimulus.js')}}";
     window.Stimulus = Application.start();
   </script>
-  <script type="module" src="{{root_path}}/_static/collapsible_list_controller.js"></script>
+  <script type="module" src="{{link_renderer.render_static_url('collapsible_list_controller.js')}}"></script>
+  {%- endif -%}
 
   {%- if config.enable_mathjax -%}
-  <script id="MathJax-script" async src="{{root_path}}/_static/mathjax/tex-mml-chtml.js"></script>
+  <script id="MathJax-script" async src="{{link_renderer.render_static_url('mathjax/tex-mml-chtml.js')}}"></script>
   {%- endif -%}
   {{ super() }}
 {% endblock head_scripts %}

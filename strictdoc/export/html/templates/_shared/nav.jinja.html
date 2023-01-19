@@ -2,31 +2,28 @@
 
 {# TODO: title="Project name" #}
 
-  {# <a href="{{document.meta.get_root_path_prefix()}}/index.html">To Index</a> #}
   <a
     data-link="index"
     class="nav_button"
-    href="{{root_path}}/index.html"
+    href="{{link_renderer.render_url('index.html')}}"
     title="Project index">
     {% include "_res/svg_ico16_index.jinja.html" %}
   </a>
 
 {%- if traceability_index.has_requirements() -%}
-  {# <li><a href="requirements_coverage.html">Requirements coverage</a></li> #}
   <a
     data-link="requirements_coverage"
     class="nav_button"
-    href="{{root_path}}/requirements_coverage.html"
+    href="{{link_renderer.render_url('requirements_coverage.html')}}"
     title="Requirements coverage">
     {% include "_res/svg_ico16_requirement.jinja.html" %}
   </a>
 
   {%- if config.experimental_enable_file_traceability -%}
-  {# <li><a href="source_coverage.html">Source coverage</a></li> #}
   <a
     data-link="source_coverage"
     class="nav_button"
-    href="{{root_path}}/source_coverage.html"
+    href="{{link_renderer.render_url('source_coverage.html')}}"
     title="Source coverage">
     {% include "_res/svg_ico16_source.jinja.html" %}
   </a>

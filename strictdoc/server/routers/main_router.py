@@ -151,7 +151,9 @@ def create_main_router(
         template = env.get_template(
             "actions/document/create_section/stream_new_section.jinja.html"
         )
-        link_renderer = LinkRenderer(export_action.config.output_html_root)
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix()
+        )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
             traceability_index=export_action.traceability_index,
@@ -232,7 +234,9 @@ def create_main_router(
             template = env.get_template(
                 "actions/document/create_section/stream_new_section.jinja.html"
             )
-            link_renderer = LinkRenderer(export_action.config.output_html_root)
+            link_renderer = LinkRenderer(
+                root_path=document.meta.get_root_path_prefix()
+            )
             markup_renderer = MarkupRenderer.create(
                 markup="RST",
                 traceability_index=export_action.traceability_index,
@@ -322,7 +326,9 @@ def create_main_router(
         template = env.get_template(
             "actions/document/create_section/stream_created_section.jinja.html"
         )
-        link_renderer = LinkRenderer(export_action.config.output_html_root)
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix()
+        )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
             traceability_index=export_action.traceability_index,
@@ -369,7 +375,9 @@ def create_main_router(
         template = env.get_template(
             "actions/document/edit_section/stream_edit_section.jinja.html"
         )
-        link_renderer = LinkRenderer(export_action.config.output_html_root)
+        link_renderer = LinkRenderer(
+            root_path=section.document.meta.get_root_path_prefix()
+        )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
             traceability_index=export_action.traceability_index,
@@ -431,7 +439,9 @@ def create_main_router(
             template = env.get_template(
                 "actions/document/edit_section/stream_edit_section.jinja.html"
             )
-            link_renderer = LinkRenderer(export_action.config.output_html_root)
+            link_renderer = LinkRenderer(
+                root_path=section.document.meta.get_root_path_prefix()
+            )
             markup_renderer = MarkupRenderer.create(
                 markup="RST",
                 traceability_index=export_action.traceability_index,
@@ -492,7 +502,9 @@ def create_main_router(
         template = env.get_template(
             "actions/document/edit_section/stream_updated_section.jinja.html"
         )
-        link_renderer = LinkRenderer(export_action.config.output_html_root)
+        link_renderer = LinkRenderer(
+            root_path=section.document.meta.get_root_path_prefix()
+        )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
             traceability_index=export_action.traceability_index,
@@ -550,7 +562,9 @@ def create_main_router(
         template = env.get_template(
             "actions/document/edit_section/stream_updated_section.jinja.html"
         )
-        link_renderer = LinkRenderer(export_action.config.output_html_root)
+        link_renderer = LinkRenderer(
+            root_path=section.document.meta.get_root_path_prefix()
+        )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
             traceability_index=export_action.traceability_index,
@@ -584,7 +598,9 @@ def create_main_router(
             "document_freetext/"
             "stream_edit_document_freetext.jinja.html"
         )
-        link_renderer = LinkRenderer(export_action.config.output_html_root)
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix()
+        )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
             traceability_index=export_action.traceability_index,
@@ -617,7 +633,9 @@ def create_main_router(
             "actions/document/document_freetext/"
             "stream_cancel_edit_freetext.jinja.html"
         )
-        link_renderer = LinkRenderer(export_action.config.output_html_root)
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix()
+        )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
             traceability_index=export_action.traceability_index,
@@ -673,7 +691,9 @@ def create_main_router(
                 "document_freetext/"
                 "stream_edit_document_freetext.jinja.html"
             )
-            link_renderer = LinkRenderer(export_action.config.output_html_root)
+            link_renderer = LinkRenderer(
+                root_path=document.meta.get_root_path_prefix()
+            )
             markup_renderer = MarkupRenderer.create(
                 markup="RST",
                 traceability_index=export_action.traceability_index,
@@ -720,7 +740,9 @@ def create_main_router(
             "actions/document/document_freetext/"
             "stream_updated_document_freetext.jinja.html"
         )
-        link_renderer = LinkRenderer(export_action.config.output_html_root)
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix()
+        )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
             traceability_index=export_action.traceability_index,
@@ -773,7 +795,9 @@ def create_main_router(
             "create_requirement/"
             "stream_new_requirement.jinja.html"
         )
-        link_renderer = LinkRenderer(export_action.config.output_html_root)
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix()
+        )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
             traceability_index=export_action.traceability_index,
@@ -843,7 +867,9 @@ def create_main_router(
                 "create_requirement/"
                 "stream_new_requirement.jinja.html"
             )
-            link_renderer = LinkRenderer(export_action.config.output_html_root)
+            link_renderer = LinkRenderer(
+                root_path=document.meta.get_root_path_prefix()
+            )
             markup_renderer = MarkupRenderer.create(
                 markup="RST",
                 traceability_index=export_action.traceability_index,
@@ -912,7 +938,9 @@ def create_main_router(
             "create_requirement/"
             "stream_created_requirement.jinja.html"
         )
-        link_renderer = LinkRenderer(export_action.config.output_html_root)
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix()
+        )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
             traceability_index=export_action.traceability_index,
@@ -967,7 +995,9 @@ def create_main_router(
             "edit_requirement/"
             "stream_edit_requirement.jinja.html"
         )
-        link_renderer = LinkRenderer(export_action.config.output_html_root)
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix()
+        )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
             traceability_index=export_action.traceability_index,
@@ -1017,7 +1047,9 @@ def create_main_router(
                 "edit_requirement/"
                 "stream_edit_requirement.jinja.html"
             )
-            link_renderer = LinkRenderer(export_action.config.output_html_root)
+            link_renderer = LinkRenderer(
+                root_path=document.meta.get_root_path_prefix()
+            )
             markup_renderer = MarkupRenderer.create(
                 markup="RST",
                 traceability_index=export_action.traceability_index,
@@ -1075,7 +1107,9 @@ def create_main_router(
             "edit_requirement/"
             "stream_update_requirement.jinja.html"
         )
-        link_renderer = LinkRenderer(export_action.config.output_html_root)
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix()
+        )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
             traceability_index=export_action.traceability_index,
@@ -1149,7 +1183,9 @@ def create_main_router(
             "edit_requirement/"
             "stream_update_requirement.jinja.html"
         )
-        link_renderer = LinkRenderer(export_action.config.output_html_root)
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix()
+        )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
             traceability_index=export_action.traceability_index,
@@ -1205,7 +1241,9 @@ def create_main_router(
         template = env.get_template(
             "actions/document/delete_section/stream_delete_section.jinja.html"
         )
-        link_renderer = LinkRenderer(export_action.config.output_html_root)
+        link_renderer = LinkRenderer(
+            root_path=section.document.meta.get_root_path_prefix()
+        )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
             traceability_index=export_action.traceability_index,
@@ -1269,7 +1307,9 @@ def create_main_router(
         template = env.get_template(
             "actions/document/delete_section/stream_delete_section.jinja.html"
         )
-        link_renderer = LinkRenderer(export_action.config.output_html_root)
+        link_renderer = LinkRenderer(
+            root_path=requirement.document.meta.get_root_path_prefix()
+        )
         output = template.render(requirement=requirement)
 
         toc_template = env.get_template(
@@ -1510,12 +1550,10 @@ def create_main_router(
             output_file.write(document_content)
 
         # Re-generate the document.
-        link_renderer = LinkRenderer(export_action.config.output_html_root)
         HTMLGenerator.export_single_document(
             config=export_config,
             document=document,
             traceability_index=export_action.traceability_index,
-            link_renderer=link_renderer,
         )
 
         # Re-generate the document tree.
@@ -1654,12 +1692,10 @@ def create_main_router(
             output_file.write(document_content)
 
         # Re-generate the document.
-        link_renderer = LinkRenderer(export_action.config.output_html_root)
         HTMLGenerator.export_single_document(
             config=export_config,
             document=document,
             traceability_index=export_action.traceability_index,
-            link_renderer=link_renderer,
         )
 
         # Re-generate the document tree.
@@ -1676,7 +1712,9 @@ def create_main_router(
         )
         output = template.render(document=document, config=export_config)
         if massive_update:
-            link_renderer = LinkRenderer(export_action.config.output_html_root)
+            link_renderer = LinkRenderer(
+                root_path=document.meta.get_root_path_prefix()
+            )
             markup_renderer = MarkupRenderer.create(
                 markup="RST",
                 traceability_index=export_action.traceability_index,

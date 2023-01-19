@@ -3,14 +3,14 @@
 
 {% block head_css %}
   {{ super() }}
-  <link rel="stylesheet" href="{{static_path}}/_requirement-tree.css"/>
+  <link rel="stylesheet" href="{{link_renderer.render_static_url('_requirement-tree.css')}}"/>
 {% endblock head_css %}
 
 {% block head_scripts %}
   {{ super() }}
-  <script type="text/javascript" src="{{static_path}}/jquery.min.js"></script>
-  <script type="text/javascript" src="{{static_path}}/pan-with-space.js"></script>
-  <script type="text/javascript" src="{{static_path}}/requirements-coverage.js"></script>
+  <script type="text/javascript" src="{{link_renderer.render_static_url('jquery.min.js')}}"></script>
+  <script type="text/javascript" src="{{link_renderer.render_static_url('pan-with-space.js')}}"></script>
+  <script type="text/javascript" src="{{link_renderer.render_static_url('requirements-coverage.js')}}"></script>
 {% endblock head_scripts %}
 
 {% block title %}

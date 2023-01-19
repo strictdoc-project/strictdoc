@@ -18,7 +18,6 @@ class Test_02_CreatingDocument(BaseCase):
         test_server.run()
 
         self.open("http://localhost:8001")
-        self.save_screenshot_to_logs()
 
         self.assert_text("PROJECT INDEX")
 

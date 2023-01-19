@@ -1,7 +1,7 @@
 // This code in this file is a simplified version of the StackOverflow answer
 // taken from: https://stackoverflow.com/a/33948409/598057.
 
-$(document).ready(function () {
+window.addEventListener('load', function () {
   var state = {
     spacePressed: false,
     isDown: false,
@@ -9,16 +9,17 @@ $(document).ready(function () {
     startY: 0
   }
 
-  const element = $('#pan-with-space');
-
-  $(window).keydown(function (e) {
+  const element = document.getElementById('pan_with_space');
+  console.assert(!!element, "Expected a valid element.");
+  document.addEventListener("keydown", function (e) {
     if (e.key === ' ' || e.key === 'Spacebar') {
       // ' ' is standard, 'Spacebar' was used by IE9 and Firefox < 37
 
       e.preventDefault();
       e.stopPropagation();
       state.spacePressed = true;
-      element.css('cursor', 'move');
+      element.style.cursor = 'move';
+      return;
     }
 
     var moveFactor = 20;
@@ -29,36 +30,36 @@ $(document).ready(function () {
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       e.stopPropagation();
-      element.scrollTop(element.scrollTop() + moveFactor);
+      element.scrollTop = element.scrollTop + moveFactor;
     }
     else if (e.key === 'ArrowUp') {
       e.preventDefault();
       e.stopPropagation();
-      element.scrollTop(element.scrollTop() - moveFactor);
+      element.scrollTop = element.scrollTop - moveFactor;
     }
     else if (e.key === 'ArrowLeft') {
       e.preventDefault();
       e.stopPropagation();
-      element.scrollLeft(element.scrollLeft() - moveFactor);
+      element.scrollLeft = element.scrollLeft - moveFactor;
     }
     else if (e.key === 'ArrowRight') {
       e.preventDefault();
       e.stopPropagation();
-      element.scrollLeft(element.scrollLeft() + moveFactor);
+      element.scrollLeft = element.scrollLeft + moveFactor;
     }
   })
 
-  $(window).keyup(function (e) {
+  document.addEventListener("keyup", function (e) {
     if (e.key === ' ' || e.key === 'Spacebar') {
       // ' ' is standard, 'Spacebar' was used by IE9 and Firefox < 37
       e.preventDefault();
       e.stopPropagation();
       state.spacePressed = false;
-      element.css('cursor', 'default');
+      element.style.cursor = 'default';
     }
-  })
+  });
 
-  element.mousedown(function (e) {
+  document.addEventListener("mousedown", function (e) {
     if (!state.spacePressed) {
       return;
     }
@@ -77,7 +78,7 @@ $(document).ready(function () {
     state.isDown = true;
   });
 
-  element.mouseup(function (e) {
+  document.addEventListener("mouseup", function (e) {
     if (!state.spacePressed) {
       return;
     }
@@ -88,7 +89,7 @@ $(document).ready(function () {
     state.isDown = false;
   });
 
-  element.mousemove(function (e) {
+  document.addEventListener("mousemove", function (e) {
     if (!state.isDown) {
       return;
     }
@@ -110,11 +111,11 @@ $(document).ready(function () {
     state.startY = mouseY;
 
     var speedupFactor = 2;
-    element.scrollTop(element.scrollTop() - dy * speedupFactor);
-    element.scrollLeft(element.scrollLeft() - dx * speedupFactor);
+    element.scrollTop = element.scrollTop - dy * speedupFactor;
+    element.scrollLeft = element.scrollLeft - dx * speedupFactor;
   });
 
-  element.mouseleave(function (e) {
+  document.addEventListener("mouseleave", function (e) {
     // tell the browser we're handling this event
     e.preventDefault();
     e.stopPropagation();

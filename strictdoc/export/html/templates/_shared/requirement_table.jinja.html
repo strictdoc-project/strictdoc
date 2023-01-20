@@ -49,7 +49,7 @@ data-status='{{ requirement.reserved_status.lower() }}'
             {%- if requirement.reserved_uid %}
             <span class="requirement__parent-uid">{{ requirement.reserved_uid }}</span>
             {%- endif %}
-            {%- if requirement.reserved_title is not none -%}
+            {%- if requirement.reserved_title is not none %}
               {{ requirement.reserved_title }}
             {%- endif -%}
           </a>
@@ -73,7 +73,7 @@ data-status='{{ requirement.reserved_status.lower() }}'
               {%- if requirement.reserved_uid %}
               <span class="requirement__child-uid">{{ requirement.reserved_uid }}</span>
               {%- endif %}
-              {%- if requirement.reserved_title is not none -%}
+              {%- if requirement.reserved_title is not none %}
               {{ requirement.reserved_title }}
               {%- endif %}
             </a>

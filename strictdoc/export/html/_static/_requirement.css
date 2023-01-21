@@ -1,107 +1,76 @@
+turbo-frame {
+  display: contents;
+}
+
+sdoc-node {
+  display: block;
+  position: relative;
+
+  background-color: var(--color-bg-contrast);
+  padding: calc(var(--base-padding)) calc(var(--base-padding)*2);
+
+  /* margin-bottom: 4px; */
+}
+
+/* * */
+
 [data-role="anchor"] {
   /* for Fixed Headers + Section Anchors */
   scroll-snap-margin-top: calc(var(--base-gap) + var(--base-padding));
   scroll-margin-top:      calc(var(--base-gap) + var(--base-padding));
 }
 
-[data-role="anchor"]:target + .section-title {
+[data-role="anchor"]:target + .requirement__title {
   background-color: var(--color-highlight);
 }
 
-/* article */
+/* sdoc-node */
 
-article {
-  position: relative;
-}
-
-[data-role='current'] article {
+[data-role='current'] sdoc-node {
   background-color: var(--color-bg-contrast);
   border: 1px solid var(--color-fg-contrast);
   /* height: 100%; */
   /* flex-grow: 1; */
 }
 
-[data-role='parents'] article,
-[data-role='children'] article {
+[data-role='parents'] sdoc-node,
+[data-role='children'] sdoc-node {
   background-color: var(--color-bg-secondary);
   border: 1px solid var(--color-border);
   width: var(--card-width);
 }
 
-article.requirement.nouid {
+sdoc-node.nouid {
   background-color: rgb(240, 220, 220);
 }
 
-article.requirement.nouid .section-title {
+sdoc-node.nouid .requirement__title {
   color: #502222;
 }
 
-article.requirement.highlighted {
+sdoc-node.highlighted {
   background-color: var(--color-highlight);
 }
 
-[data-viewtype="traceability"] article + article {
+[data-viewtype="traceability"] sdoc-node + sdoc-node {
   margin-top: var(--base-padding);
 }
 
-[data-viewtype="deep_traceability"] article {
+[data-viewtype="deep_traceability"] sdoc-node {
   /* width: var(--card-width); */
   /* flex-grow: 1; */
 }
 
-[data-viewtype="requirements-coverage"] article {
+[data-viewtype="requirements-coverage"] sdoc-node {
   width: calc(var(--card-width)*0.75);
   /* width: auto; */
   font-size: .85em;
   line-height: 1.4;
 }
 
-/* section */
+/* requirement__statement */
 
-article > section {
-  padding-left: var(--base-padding);
-  padding-right: var(--base-padding);
-}
-
-article > section:first-of-type {
-  padding-top: var(--base-padding);
-}
-
-article > section:last-of-type {
-  padding-bottom: var(--base-padding);
-}
-
-[data-viewtype="document"] article > section {
-  padding-left: 0;
-  padding-right: 0;
-}
-
-/* [data-viewtype="table"] */
-
-[data-viewtype="table"] section,
-[data-viewtype="table"] [data-section] {
-  background-color: var(--color-bg-contrast);
-  padding: var(--base-padding);
-}
-
-[data-viewtype="table"] [data-section] p:first-child { margin-top: 0; }
-[data-viewtype="table"] [data-section] p:last-child { margin-bottom: 0; }
-
-[data-viewtype="table"] [data-section="meta"] > .requirement_meta {
-  border-width: 1px;
-  border-color: #ddd;
-  background-color: #ddd;
-  padding: 0;
-  width: 100%;
-}
-
-[data-viewtype="table"] [data-section="meta"] > .requirement_meta dt i {
-  max-width: 100px;
-}
-
-/* requirement_statement */
-
-[data-viewtype="document"] .requirement_statement {
+[data-viewtype="document"] .requirement__statement {
   /* margin: calc(var(--base-margin)*2) 0px; */
   font-size: calc(var(--base-font-size)*1.2);
 }
@@ -112,11 +81,7 @@ div.document {
   display: contents;
 }
 
-section:target [data-role="current"] .section-title {
-  background-color: var(--color-highlight);
-}
-
-section p {
+div.document p {
   margin: var(--base-margin) 0;
 }
 
@@ -127,31 +92,31 @@ h4 { font-size: 1.2em; }
 h5 { font-size: 1em; }
 h6 { font-size: 1em; }
 
-/* section-title */
+/* requirement__title */
 
-.section-title {
+.requirement__title {
   margin: 0;
   line-height: 1.6;
-  /* color: var(--color-accent); */
+  font-weight: bold;
 }
 
-/* .section-title[data-level]::before {
+/* .requirement__title[data-level]::before {
   content: attr(data-level) " ";
   font-weight: bold;
 } */
 
-[data-viewtype="traceability"] .section-title,
-[data-viewtype="deep_traceability"] .section-title {
+[data-viewtype="traceability"] .requirement__title,
+[data-viewtype="deep_traceability"] .requirement__title {
   font-size: 1.1em;
 }
 
-[data-viewtype="requirements-coverage"] .section-title {
+[data-viewtype="requirements-coverage"] .requirement__title {
   margin: 0;
 }
 
-[data-viewtype="table"] .section-title {
+/* [data-viewtype="table"] .requirement__title {
   font-size: 1rem;
-}
+} */
 
 /* blockquote */
 
@@ -209,15 +174,15 @@ a.reference.external {
 
 /* ul */
 
-article ul,
-article ol {
+div.document ul,
+div.document ol {
   padding-left: 1.6em;
 }
 
 /* object */
 
-article img,
-article object {
+div.document img,
+div.document object {
   width: 100%;
   padding: 1em;
   background: var(--color-bg-contrast);
@@ -225,7 +190,7 @@ article object {
 
 /* meta table */
 
-dl.requirement_meta {
+dl.requirement__meta {
   display: grid;
   grid-template-columns: min-content auto;
   place-items: stretch stretch;
@@ -238,12 +203,12 @@ dl.requirement_meta {
   margin-bottom: 1rem;
 }
 
-.section-title + dl.requirement_meta {
+.requirement__title + dl.requirement__meta {
   margin-top: 1rem;
 }
 
-.requirement_meta dt,
-.requirement_meta dd {
+.requirement__meta dt,
+.requirement__meta dd {
   margin: 0;
   padding: 2px 8px;
   font-size: .85rem;
@@ -253,51 +218,51 @@ dl.requirement_meta {
   /* background-color: var(--color-bg-main); */
 }
 
-.requirement_meta dt i {
+.requirement__meta dt i {
   display: inline-block;
   /* letter-spacing: -1px; */
   overflow-wrap: break-word;
 }
 
-.requirement_meta dt i::after {
+.requirement__meta dt i::after {
   content: ':';
 }
 
-.requirement-tree_node .requirement_meta dt,
-.requirement-tree_node .requirement_meta dd {
+.requirement-tree_node .requirement__meta dt,
+.requirement-tree_node .requirement__meta dd {
   background-color: var(--color-bg-main);
 }
 
 /* meta multiline list (next to comments/rationale) */
 
-.requirement_meta_multiline {
+.requirement__meta_multiline {
   font-size: .9em;
   font-style: italic;
 }
 
-.requirement_meta_multiline + .requirement_meta_multiline {
+.requirement__meta_multiline + .requirement__meta_multiline {
   margin-top: var(--base-margin);
 }
 
-.requirement_meta_multiline_label {
+.requirement__meta_multiline_label {
   font-weight: bold;
 }
 
 /* requirement: parent / child / file */
 
-ul.requirement_link {
+ul.requirement__link {
   font-size: .85em;
   line-height: 1.4;
   list-style: none;
   padding: 0;
 }
 
-[data-viewtype="source-file"] ul.requirement_link li {
+[data-viewtype="source-file"] ul.requirement__link li {
   margin-top: 0.5rem;
 }
 
-.requirement_link a,
-.requirement_link li > span {
+.requirement__link a,
+.requirement__link li > span {
   display: inline-block;
   position: relative;
   margin-left: 1.5rem;
@@ -305,78 +270,78 @@ ul.requirement_link {
   overflow-wrap: break-word;
 }
 
-.requirement_link a::before,
-.requirement_link li > span::before {
+.requirement__link a::before,
+.requirement__link li > span::before {
   color: #808080;
   position: absolute;
   left: -1.5rem;
 }
 
-.requirement_link a:link,
-.requirement_link a:visited {
+.requirement__link a:link,
+.requirement__link a:visited {
   color: var(--color-accent-dark);
   text-decoration: underline;
 }
 
-.requirement_link a:hover {
+.requirement__link a:hover {
   text-decoration: none;
 }
 
-/* .requirement_link a::before {
+/* .requirement__link a::before {
   content: '\2014';
 } */
 
-a.requirement_link-file::before,
-.requirement_link-file::before {
+a.requirement__link-file::before,
+.requirement__link-file::before {
   content: '</>';
 }
 
-a.requirement_link-parent::before {
+a.requirement__link-parent::before {
   content: '\2190';
 }
 
-a.requirement_link-child::before {
+a.requirement__link-child::before {
   content: '\2192';
 }
 
-.requirement_link-external::before {
+.requirement__link-external::before {
   content: '\21D6';
 }
 
-.requirement_parent-uid,
-.requirement_child-uid {
+.requirement__parent-uid,
+.requirement__child-uid {
   position: relative;
   font-weight: bold;
 }
 
 /* rationale */
 
-.requirement_rationale {
+.requirement__rationale {
   font-size: .9em;
   font-style: italic;
 }
 
-.requirement_rationale + .requirement_rationale {
+.requirement__rationale + .requirement__rationale {
   margin-top: var(--base-margin);
 }
 
-.requirement_rationale p:first-child::before {
+.requirement__rationale p:first-child::before {
   content: "Rationale: ";
   font-weight: bold;
 }
 
 /* comment */
 
-.requirement_comment {
+.requirement__comment {
   font-size: .9em;
   font-style: italic;
 }
 
-.requirement_comment + .requirement_comment {
+.requirement__comment + .requirement__comment {
   margin-top: var(--base-margin);
 }
 
-.requirement_comment p:first-child::before {
+.requirement__comment p:first-child::before {
   content: "Comment: ";
   font-weight: bold;
 }
@@ -391,29 +356,24 @@ a.requirement_link-child::before {
 
 /* table */
 
-div.document table,
-article table {
+div.document table {
   border-collapse: collapse;
   margin: var(--base-margin) 0;
   font-size: 1rem;
   border: #ccc;
 }
 
-div.document table caption,
-article table caption {
+div.document table caption {
   font-weight: bold;
   padding-bottom: 1rem;
 }
 
-div.document table th,
-article table th {
+div.document table th {
   background-color: #eee;
 }
 
 div.document table th,
-div.document table td,
-article table th,
-article table td {
+div.document table td {
   padding: calc(var(--base-margin)/2);
   vertical-align: top;
   text-align: left;
@@ -509,7 +469,7 @@ input:checked + .std-switch_slider:before {
   padding: 0;
 }
 
-.requirement-table caption .section-title {
+.requirement-table caption .requirement__title {
   padding: .5rem 1rem;
 }
 
@@ -533,15 +493,15 @@ input:checked + .std-switch_slider:before {
   border: 1px solid #666;
 }
 
-.requirement-table ul.requirement_link:first-child,
+.requirement-table ul.requirement__link:first-child,
 .requirement-table p:first-child {
   margin-top: 0;
 }
-.requirement-table ul.requirement_link:last-child,
+.requirement-table ul.requirement__link:last-child,
 .requirement-table p:last-child {
   margin-bottom: 0;
 }
 
-.requirement-table ul.requirement_link {
+.requirement-table ul.requirement__link {
   font-size: 1em;
 }

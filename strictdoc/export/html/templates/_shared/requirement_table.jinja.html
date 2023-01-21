@@ -1,6 +1,6 @@
 {%- set anchor=link_renderer.render_local_anchor(requirement) -%}
 
-<article class="requirement"
+<sdoc-node
 {%- if requirement.reserved_status %}
 data-status='{{ requirement.reserved_status.lower() }}'
 {%- endif %}>
@@ -12,7 +12,7 @@ data-status='{{ requirement.reserved_status.lower() }}'
     {%- if requirement.reserved_title is not none %}
     <caption>
     {% include "_shared/requirement_block/anchor.jinja.html" %}
-    <div class="section-title">
+    <div class="requirement__title">
       {%- if requirement.context.title_number_string -%}
       {{ requirement.context.title_number_string }}.&nbsp;
       {%- endif -%}
@@ -42,14 +42,14 @@ data-status='{{ requirement.reserved_status.lower() }}'
         parent&nbsp;refs:
       </th>
       <td>
-        <ul class="requirement_link">
+        <ul class="requirement__link">
         {%- for requirement in traceability_index.get_parent_requirements(requirement) %}
         <li>
-          <a class="requirement_link-parent" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
+          <a class="requirement__link-parent" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
             {%- if requirement.reserved_uid %}
-            <span class="requirement_parent-uid">{{ requirement.reserved_uid }}</span>
+            <span class="requirement__parent-uid">{{ requirement.reserved_uid }}</span>
             {%- endif %}
-            {%- if requirement.reserved_title is not none -%}
+            {%- if requirement.reserved_title is not none %}
               {{ requirement.reserved_title }}
             {%- endif -%}
           </a>
@@ -66,14 +66,14 @@ data-status='{{ requirement.reserved_status.lower() }}'
         child&nbsp;refs:
       </th>
       <td>
-        <ul class="requirement_link">
+        <ul class="requirement__link">
           {%- for requirement in traceability_index.get_children_requirements(requirement) %}
           <li>
-            <a class="requirement_link-child" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
+            <a class="requirement__link-child" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
               {%- if requirement.reserved_uid %}
-              <span class="requirement_child-uid">{{ requirement.reserved_uid }}</span>
+              <span class="requirement__child-uid">{{ requirement.reserved_uid }}</span>
               {%- endif %}
-              {%- if requirement.reserved_title is not none -%}
+              {%- if requirement.reserved_title is not none %}
               {{ requirement.reserved_title }}
               {%- endif %}
             </a>
@@ -90,10 +90,10 @@ data-status='{{ requirement.reserved_status.lower() }}'
         external&nbsp;refs:
       </th>
       <td>
-        <ul class="requirement_link">
+        <ul class="requirement__link">
           {%- for bib_ref in requirement.get_requirement_references("BibRef") %}
           <li>
-            <span class="requirement_link-external">
+            <span class="requirement__link-external">
               {{ bib_ref.bib_entry.ref_cite if bib_ref.bib_entry.ref_cite else "" }}
               {%- if bib_ref.bib_entry.ref_detail %}
                 : {{ bib_ref.bib_entry.ref_detail }}
@@ -115,19 +115,19 @@ data-status='{{ requirement.reserved_status.lower() }}'
         file&nbsp;refs:
       </th>
       <td>
-        <ul class="requirement_link">
+        <ul class="requirement__link">
           {%- for link, opt_ranges in requirement_file_links %}
             {%- if opt_ranges -%}
               {%- for range in opt_ranges %}
                 <li>
-                  <a class="requirement_link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
+                  <a class="requirement__link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
                     {{ link.file_entry.file_path }}, <i>lines: {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }}</i>
                   </a>
                 </li>
               {%- endfor -%}
             {%- else -%}
               <li>
-                <a class="requirement_link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}">
+                <a class="requirement__link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}">
                   {{ link.file_entry.file_path }}
                 </a>
               </li>
@@ -158,7 +158,7 @@ data-status='{{ requirement.reserved_status.lower() }}'
         Rationale:
       </th>
       <td>
-        <div class="requirement_rationale">
+        <div class="requirement__rationale">
           {{ renderer.render_requirement_rationale(requirement) }}
         </div>
       </td>
@@ -180,4 +180,4 @@ data-status='{{ requirement.reserved_status.lower() }}'
     {%- endif %}
 
   </table>
-</article>
+</sdoc-node>

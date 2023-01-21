@@ -38,7 +38,23 @@
 {%- endif -%}
 
   {%- if config.is_running_on_server -%}
-  <a href="/actions/document/edit_config?document_mid={{document.node_id}}" data-turbo-action="replace" data-turbo="true">Edit document configuration</a>
-  <a href="/actions/document/edit_grammar?document_mid={{document.node_id}}" data-turbo-action="replace" data-turbo="true">Edit document grammar</a>
+  <a
+    href="/actions/document/edit_config?document_mid={{document.node_id}}"
+    title="Edit document configuration"
+    class="action_button"
+    data-turbo-action="replace"
+    data-turbo="true">
+    {% include "_res/svg_ico16_edit.jinja.html" %}
+    Edit document configuration
+  </a>
+  <a
+    href="/actions/document/edit_grammar?document_mid={{document.node_id}}"
+    title="Edit document grammar"
+    class="action_button"
+    data-turbo-action="replace"
+    data-turbo="true">
+    {% include "_res/svg_ico16_edit.jinja.html" %}
+    Edit document grammar
+  </a>
   {%- endif -%}
 </turbo-frame>

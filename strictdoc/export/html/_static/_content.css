@@ -1,57 +1,44 @@
-.content {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 0 0;
-  place-items: stretch stretch;
-  /*
-    for vertical line in 'current' column:
-    .content_item[data-role="current"]::before
-  */
-  overflow: hidden;
-}
-
 [data-viewtype="document"] .content {
   display: block;
-  background-color: var(--color-bg-contrast);
   max-width: 900px;
-  padding: calc(var(--base-padding)*2);
 }
 
 [data-viewtype="traceability"] .content {
+  display: grid;
+  place-items: stretch stretch;
   grid-template-columns:  minmax(min-content, max-content)
                           minmax(var(--card-width), calc(2*var(--card-width)))
                           minmax(min-content, max-content);
   gap: var(--traceability-arrow) 0;
   width: -moz-fit-content;
   width: fit-content;
+  overflow: hidden;
 }
 
 [data-viewtype="requirements-coverage"] .content,
 [data-viewtype="deep_traceability"] .content {
+  display: grid;
+  place-items: stretch stretch;
   grid-template-columns:  minmax(min-content, max-content)
                           max-content
                           minmax(min-content, max-content);
   gap: var(--traceability-arrow) 0;
   width: -moz-fit-content;
   width: fit-content;
+  overflow: hidden;
 }
 
 [data-viewtype="table"] .content {
-  /* grid-template-columns:  minmax(250px, 25%)
-                          minmax(300px, 45%)
-                          minmax(250px, 30%);
-  gap: 2px;
-  background-color: #ddd;
-  border: 2px solid #ddd; */
   background-color: var(--color-bg-contrast);
   display: block;
-  overflow: visible;
 }
 
+/* TODO */
+/* used in TR, DTR, requirements_coverage: */
 .content_section {
   display: contents;
 }
-
+/* TODO */
 .content_item {
   position: relative;
   display: flex;
@@ -94,37 +81,6 @@
   bottom: calc(var(--traceability-arrow)*(-1));
   left: 50%;
   border-left: 1px dotted #000;
-}
-
-/* [data-viewtype="table"] */
-
-[data-viewtype="table"] article {
-  display: contents;
-}
-
-[data-viewtype="table"] [data-section="meta"] {
-  grid-column: 1 / 2;
-}
-
-[data-viewtype="table"] [data-section="meta"].docsection_section:only-child {
-  grid-column: 1 / -1;
-  /* background-color: var(--color-bg-main); */
-}
-
-[data-viewtype="table"] [data-section="description"] {
-  grid-column: 2 / -1;
-}
-
-[data-viewtype="table"] [data-section="statement"] {
-  grid-column: 2 / 3;
-}
-
-[data-viewtype="table"] [data-section="comment"] {
-  grid-column: 3 / 4;
-}
-
-[data-viewtype="table"] [data-col="0"] {
-  grid-column: 1 / -1;
 }
 
 /* meta info */
@@ -250,11 +206,11 @@
 }
 
 .content-view-td-related,
-.content-view-td-related > ul.requirement_link {
+.content-view-td-related > ul.requirement__link {
   font-size: .85rem;
   margin-top: 0;
 }
 
-.content-view-td-related > ul.requirement_link:last-child {
+.content-view-td-related > ul.requirement__link:last-child {
   margin-bottom: 0;
 }

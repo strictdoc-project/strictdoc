@@ -1,13 +1,13 @@
-<article id="requirement:{{ requirement.reserved_uid }}" class="requirement" data-reqid="{{ requirement.reserved_uid }}">
+<div id="requirement:{{ requirement.reserved_uid }}" class="source-file__requirement" data-reqid="{{ requirement.reserved_uid }}">
   <a class="" href="{{ link_renderer.render_requirement_link_from_source_file(requirement, source_file) }}">
     {%- if requirement.reserved_uid %}
-    <div class="requirement_child-uid">{{ requirement.reserved_uid }}</div>
+    <div class="requirement__child-uid">{{ requirement.reserved_uid }}</div>
     {%- endif %}
     {%- if requirement.reserved_title is not none %}
       {{ requirement.reserved_title }}
     {%- endif %}
   </a>
-</article>
+</div>
 
  {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
  {%- if requirement_file_links %}

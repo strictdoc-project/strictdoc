@@ -78,7 +78,7 @@ def run_invoke_cmd(
             result = context.run(
                 one_line_command(
                     """
-                    pip install toml &&
+                    pip3 install toml &&
                     python3 check_environment.py
                     """
                 ),

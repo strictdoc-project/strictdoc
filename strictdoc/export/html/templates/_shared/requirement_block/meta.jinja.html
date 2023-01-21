@@ -1,5 +1,5 @@
 {%- if requirement.has_meta -%}
-  <dl class="requirement_meta">
+  <dl class="requirement__meta">
     {% for meta_field in requirement.enumerate_meta_fields(skip_multi_lines=True) %}
     <dt><i>{{meta_field[0]}}</i></dt>
     <dd>{{ meta_field[1] }}</dd>

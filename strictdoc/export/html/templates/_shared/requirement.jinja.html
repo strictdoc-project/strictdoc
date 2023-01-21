@@ -2,12 +2,10 @@
 
 {%- set anchor=link_renderer.render_local_anchor(requirement) -%}
 
-<article class="requirement"
+<sdoc-node
 {%- if requirement.reserved_status %}
 data-status='{{ requirement.reserved_status.lower() }}'
 {%- endif %}>
-
-  <section class="requirement_section" data-section='meta'>
 
     {% include "_shared/requirement_block/anchor.jinja.html" %}
 
@@ -21,19 +19,12 @@ data-status='{{ requirement.reserved_status.lower() }}'
     {% include "_shared/requirement_block/related.jinja.html" %}
     {% include "_shared/requirement_block/files_list.jinja.html" %}
 
-  </section>
-  <section class="requirement_section" data-section='statement'>
-
     {% include "_shared/requirement_block/statement.jinja.html" %}
 
-  </section>
-  <section class="requirement_section" data-section='comment'>
 
     {% include "_shared/requirement_block/rationale.jinja.html" %}
     {% include "_shared/requirement_block/comment.jinja.html" %}
     {% include "_shared/requirement_block/multi_line_metas.jinja.html" %}
-
-  </section>
 
   {%- if config.is_running_on_server -%}
     <a href="/actions/document/edit_requirement/{{requirement.node_id}}" data-turbo-action="replace" data-turbo="true">Edit</a>,
@@ -45,6 +36,6 @@ data-status='{{ requirement.reserved_status.lower() }}'
     <a href="/actions/document/new_requirement?reference_mid={{requirement.node_id}}&whereto=after" data-turbo-action="replace" data-turbo="true">+R⬇</a>
   {%- endif -%}
 
-</article>
+</sdoc-node>
 
 </turbo-frame>

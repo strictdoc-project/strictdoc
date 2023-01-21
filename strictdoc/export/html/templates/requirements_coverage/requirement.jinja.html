@@ -1,15 +1,13 @@
-<article class="requirement"
+<sdoc-node
+js-requirements-coverage
 {%- if requirement.reserved_status %}
 data-status='{{ requirement.reserved_status.lower() }}'
 {%- endif %}
 {%- if requirement.reserved_uid %}
 data-uid='{{ requirement.reserved_uid }}'
 {%- endif %}>
-
-  <section>
     {% include "_shared/requirement_block/uid_and_title.jinja.html" %}
-  </section>
-</article>
+</sdoc-node>
 
 {% if config.experimental_enable_file_traceability %}
 {% include "_shared/requirement_block/files_tree.jinja.html" %}

@@ -31,7 +31,7 @@ class Test_UC11_03_CancelEditDocument(BaseCase):
         self.assert_text_visible("Requirement title")
 
         self.click_nth_visible_element(
-            "//a[contains(text(), 'Edit document config')]", 1
+            "//a[@title='Edit document configuration']", 1
         )
 
         self.click_link("Cancel")

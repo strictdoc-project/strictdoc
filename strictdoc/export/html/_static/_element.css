@@ -1,6 +1,6 @@
 
 
-[data-viewtype="source-file"] .requirement_link:hover {
+[data-viewtype="source-file"] .requirement__link:hover {
   text-decoration: none;
 }
 
@@ -34,9 +34,10 @@ a[aria-disabled="true"] {
   pointer-events: none;
 }
 
-main a,
-main a:link,
-main a:visited {
+/* .document from tool */
+.document a,
+.document a:link,
+.document a:visited {
   text-decoration: underline;
 }
 
@@ -80,8 +81,10 @@ main a:visited {
   column-gap: var(--base-rhythm);
 }
 
+.action_button,
 a.action_button,
-.action_button {
+a.action_button:link,
+a.action_button:visited {
   font-size:var(--font-size-xsm);
   font-weight: 600;
   text-align: left;
@@ -89,6 +92,7 @@ a.action_button,
   white-space: nowrap;
   position: relative;
   display: inline-flex;
+
   align-items: center;
   justify-content: center;
   -webkit-box-align: center;
@@ -99,19 +103,24 @@ a.action_button,
   user-select: none;
   cursor: pointer;
   appearance: none;
-  padding: calc(var(--base-rhythm)*0.5) calc(var(--base-rhythm)*1.5);
-  min-height: 32px;
 
-  box-shadow: rgb(0 0 0 / 10%) 0px 1px 2px 0px;
+  /* 1.5 column-gap is compensated by SVG negative margin */
+  column-gap: calc(var(--base-rhythm)*1.5);
+  padding-left: calc(var(--base-rhythm)*1.5);
+  padding-right: calc(var(--base-rhythm)*1.5);
+  min-height: calc(var(--base-rhythm)*4);
+
+  /* box-shadow: rgb(0 0 0 / 10%) 0px 1px 2px 0px; */
   color: var(--color-action);
   background-color: rgb(255, 255, 255);
-  border-color: rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.05);
   background-clip: padding-box;
 
   transition: 0.2s;
 }
 
-.action_button:hover {
+.action_button:hover,
+a.action_button:hover {
   box-shadow: rgb(0 0 0 / 10%) 0px 2px var(--base-rhythm) 0px;
   color: var(--color-hover);
 }
@@ -123,6 +132,15 @@ a.action_button,
   color: var(--color-action);
   opacity: .4;
   cursor: default;
+}
+
+.action_button svg {
+  /*
+    action_button 1.5 column-gap
+    is compensated by SVG negative margin
+  */
+  margin-left: calc(var(--base-rhythm)*(-.5));
+  margin-right: calc(var(--base-rhythm)*(-.5));
 }
 
 /* nav */

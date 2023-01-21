@@ -1,13 +1,11 @@
 <turbo-frame id="article-{{document.node_id}}">
-<article>
+<sdoc-node>
   {%- if document.free_texts -%}
-  <section>
     {%- for free_text in document.free_texts %}
       <div class="free_text">
         {{ renderer.render_free_text(document_type, free_text) }}
       </div>
     {%- endfor -%}
-  </section>
   {%- endif -%}
 
   {%- if config.is_running_on_server -%}
@@ -18,5 +16,5 @@
       <a href="/actions/document/new_requirement?reference_mid={{document.node_id}}&whereto=child" data-turbo-action="replace" data-turbo="true">+R⬊</a>
     {%- endif -%}
   {%- endif -%}
-</article>
+</sdoc-node>
 </turbo-frame>

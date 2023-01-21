@@ -33,7 +33,7 @@ class Test_UC11_31_EditDocumentClassification(BaseCase):
         self.assert_text_visible("Requirement title")
 
         self.click_nth_visible_element(
-            "//a[contains(text(), 'Edit document config')]", 1
+            "//a[@title='Edit document configuration']", 1
         )
 
         self.type(
@@ -44,6 +44,7 @@ class Test_UC11_31_EditDocumentClassification(BaseCase):
 
         self.click_xpath("//button[@type='submit' and text()='Save']")
 
+        self.assert_text_not_visible("Save")
         self.assert_text("Restricted")
 
         assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))

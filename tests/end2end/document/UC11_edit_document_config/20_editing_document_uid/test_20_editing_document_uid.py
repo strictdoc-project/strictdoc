@@ -33,7 +33,7 @@ class Test_UC11_20_EditDocumentUID(BaseCase):
         self.assert_text_visible("Requirement title")
 
         self.click_nth_visible_element(
-            "//a[contains(text(), 'Edit document config')]", 1
+            "//a[@title='Edit document configuration']", 1
         )
 
         self.type("(//div[@id='document[UID]'])[1]", "DOC_001", by=By.XPATH)

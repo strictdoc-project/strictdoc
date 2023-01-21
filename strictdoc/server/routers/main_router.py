@@ -1568,7 +1568,10 @@ def create_main_router(
             "edit_document_config/"
             "stream_save_document_config.jinja.html"
         )
-        output = template.render(document=document)
+        output = template.render(
+            document=document,
+            config=export_config,
+        )
         return HTMLResponse(
             content=output,
             status_code=200,

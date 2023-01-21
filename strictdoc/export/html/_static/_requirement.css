@@ -68,36 +68,6 @@ sdoc-node.highlighted {
   line-height: 1.4;
 }
 
-
-/* [data-viewtype="table"] */
-
-/* [data-viewtype="table"] section,
-[data-viewtype="table"] [data-section] {
-  background-color: var(--color-bg-contrast);
-  background-color: red;
-  color: red;
-  padding: var(--base-padding);
-} */
-
-/* [data-viewtype="table"] [data-section] p:first-child { margin-top: 0; }
-[data-viewtype="table"] [data-section] p:last-child { margin-bottom: 0; } */
-
-/* [data-viewtype="table"] [data-section="meta"] > .requirement__meta {
-  border-width: 1px;
-  border-color: #ddd;
-  background-color: #ddd;
-  padding: 0;
-  width: 100%;
-  background-color: red;
-  color: red;
-} */
-
-/* [data-viewtype="table"] [data-section="meta"] > .requirement__meta dt i {
-  max-width: 100px;
-  background-color: red;
-  color: red;
-} */
-
 /* requirement__statement */
 
 [data-viewtype="document"] .requirement__statement {

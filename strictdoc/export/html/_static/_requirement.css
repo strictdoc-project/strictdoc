@@ -9,7 +9,7 @@ sdoc-node {
   background-color: var(--color-bg-contrast);
   padding: calc(var(--base-padding)) calc(var(--base-padding)*2);
 
-  margin-bottom: 4px;
+  /* margin-bottom: 4px; */
 }
 
 /* * */

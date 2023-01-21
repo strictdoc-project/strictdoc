@@ -1,51 +1,36 @@
-.content {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 0 0;
-  place-items: stretch stretch;
-  /*
-    for vertical line in 'current' column:
-    .content_item[data-role="current"]::before
-  */
-  overflow: hidden;
-}
-
 [data-viewtype="document"] .content {
   display: block;
   max-width: 900px;
-  /* background-color: var(--color-bg-contrast);
-  padding: calc(var(--base-padding)*2); */
 }
 
 [data-viewtype="traceability"] .content {
+  display: grid;
+  place-items: stretch stretch;
   grid-template-columns:  minmax(min-content, max-content)
                           minmax(var(--card-width), calc(2*var(--card-width)))
                           minmax(min-content, max-content);
   gap: var(--traceability-arrow) 0;
   width: -moz-fit-content;
   width: fit-content;
+  overflow: hidden;
 }
 
 [data-viewtype="requirements-coverage"] .content,
 [data-viewtype="deep_traceability"] .content {
+  display: grid;
+  place-items: stretch stretch;
   grid-template-columns:  minmax(min-content, max-content)
                           max-content
                           minmax(min-content, max-content);
   gap: var(--traceability-arrow) 0;
   width: -moz-fit-content;
   width: fit-content;
+  overflow: hidden;
 }
 
 [data-viewtype="table"] .content {
-  /* grid-template-columns:  minmax(250px, 25%)
-                          minmax(300px, 45%)
-                          minmax(250px, 30%);
-  gap: 2px;
-  background-color: #ddd;
-  border: 2px solid #ddd; */
   background-color: var(--color-bg-contrast);
   display: block;
-  overflow: visible;
 }
 
 /* TODO */

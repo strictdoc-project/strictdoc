@@ -16,9 +16,7 @@
 
     <div id="document__editable_grammar_fields">
     {%- for field in form_object.fields -%}
-    <editable-grammar-field>
       {%- include "single_document/frame_document_grammar_edit_custom_field.jinja.html" -%}
-    </editable-grammar-field>
     {%- endfor -%}
     </div>
 

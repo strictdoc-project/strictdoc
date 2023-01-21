@@ -41,9 +41,11 @@ _, tidylib_messages_string = tidy_document(
             # HTML 5
             "main, aside, header, footer, section, article, nav, "
             # Turbo.js
-            "turbo-frame,"
+            "turbo-frame, "
             # SVG
-            "svg, path, line, circle, polyline"
+            "svg, path, line, circle, polyline, "
+            # StrictDoc
+            "sdoc-node"
         ),
         "char-encoding": "utf8",
         "input-encoding": "utf8",

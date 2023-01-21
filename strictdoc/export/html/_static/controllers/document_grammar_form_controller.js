@@ -49,7 +49,7 @@ Stimulus.register("document_grammar_form", class extends Controller {
         link.addEventListener("click", function(event){
             event.preventDefault();
             const grammarFieldNode = event.target.closest('editable-grammar-field');
-            swapNodes(grammarFieldNode, grammarFieldNode.previousSibling);
+            swapNodes(grammarFieldNode, grammarFieldNode.previousElementSibling);
         });
     });
 
@@ -58,7 +58,7 @@ Stimulus.register("document_grammar_form", class extends Controller {
         link.addEventListener("click", function(event){
           event.preventDefault();
           const grammarFieldNode = event.target.closest('editable-grammar-field');
-          swapNodes(grammarFieldNode, grammarFieldNode.nextSibling);
+          swapNodes(grammarFieldNode, grammarFieldNode.nextElementSibling);
         });
     });
   }

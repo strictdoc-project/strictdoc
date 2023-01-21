@@ -74,12 +74,16 @@ def run_invoke_cmd(
     venv_path = os.path.join(os.getcwd(), f".venv-{postfix}")
 
     with context.prefix(get_venv_command(venv_path, reset_path=reset_path)):
+        # FIXME: pip3 uninstall strictdoc -y" is here because I don't know how
+        # to make pip install only the dependencies from the pyproject.toml but
+        # not the project itself.
         if VENV_DEPS_CHECK_PASSED not in context:
             result = context.run(
                 one_line_command(
                     """
                     pip3 install toml &&
-                    python3 check_environment.py
+                    python3 check_environment.py &&
+                    pip3 uninstall strictdoc -y
                     """
                 ),
                 env=None,

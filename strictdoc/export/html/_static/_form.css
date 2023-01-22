@@ -6,7 +6,8 @@
 
 :root {
   /* --color-bg-form: var(--color-bg-main); */
-  --color-bg-form: #e2e6ea;
+  /* --color-bg-form: #e2e6ea; */
+  --color-bg-form: white;
   --color-bg-field: white;
   --std-form-margin: calc(var(--base-padding)*0.5);
 }
@@ -16,11 +17,14 @@
   /* border: 1px solid rgba(0,0,0,0.05); */
   /* box-shadow: 0 0 16px rgba(0,0,0,0.2); */
   /* outline: var(--std-form-margin) solid var(--color-bg-form); */
-  margin-left: calc(var(--std-form-margin)*(-4));
-  margin-right: calc(var(--std-form-margin)*(-4));
-  margin-bottom: 0;
+  /* margin-left: calc(var(--std-form-margin)*(-4));
+  margin-right: calc(var(--std-form-margin)*(-4)); */
+  /* margin-bottom: 0; */
   padding: calc(var(--std-form-margin)*2);
-  margin-top: var(--std-form-margin);
+  /* margin-top: var(--std-form-margin); */
+  box-shadow: var(--base-elevation);
+  position: relative;
+  z-index: 2;
 }
 
 .std-form-row {
@@ -58,31 +62,43 @@ div[contenteditable=true] {
 }
 
 .std-form-btn {
-  display: inline-block;
-  text-align: center;
-  align-items: flex-start;
-  border-width: 1px;
-  border-radius: 2px;
-  border-style: outset;
-  background: buttonface;
-  /* border-color: buttonborder; */
-  border-color: transparent;
-  border-image: initial;
-  outline: none;
-  color: #000;
-  cursor: pointer;
+  font-size:var(--font-size-xsm);
+  font-weight: 600;
+  text-align: left;
   text-decoration: none;
-  font-size: 12px;
-  line-height: 2;
-  padding: 0 10px;
-  vertical-align: middle;
-  margin: 0;
-  margin-right: 8px;
+  white-space: nowrap;
+  position: relative;
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -webkit-box-pack: center;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  backface-visibility: hidden;
+  user-select: none;
+  cursor: pointer;
+  appearance: none;
+
+  /* 1.5 column-gap is compensated by SVG negative margin */
+  column-gap: calc(var(--base-rhythm)*1.5);
+  padding-left: calc(var(--base-rhythm)*1.5);
+  padding-right: calc(var(--base-rhythm)*1.5);
+  min-height: calc(var(--base-rhythm)*4);
+
+  /* box-shadow: rgb(0 0 0 / 10%) 0px 1px 2px 0px; */
+  color: var(--color-action);
+  background-color: rgb(255, 255, 255);
+  border-color: rgba(0, 0, 0, 0.05);
+  background-clip: padding-box;
+
+  transition: 0.2s;
 }
 
 .std-form-btn:hover {
-  background: rgb(246, 246, 246);
-  outline: 2px solid rgb(246, 246, 246);
+  box-shadow: rgb(0 0 0 / 10%) 0px 2px var(--base-rhythm) 0px;
+  color: var(--color-hover);
 }
 
 .std-form-btn[type=submit] {

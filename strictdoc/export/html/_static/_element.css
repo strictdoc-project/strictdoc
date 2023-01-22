@@ -143,6 +143,14 @@ a.action_button:hover {
   margin-right: calc(var(--base-rhythm)*(-.5));
 }
 
+.action_button[type=submit] {
+  color: rgb(70, 90, 110);
+}
+
+.action_button[href*="cancel"] {
+  color: red !important;
+}
+
 /* nav */
 
 .nav {

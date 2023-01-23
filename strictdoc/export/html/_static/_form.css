@@ -41,6 +41,8 @@ div[contenteditable=true] {
   /* Add style display:inline-block; to contenteditable, it will not generate div, p, span automatic in chrome */
   /* https://stackoverflow.com/a/24689390/598057 */
   display: inline-block;
+  /* This is to prevent the field from shifting when the second line appears while typing: */
+  vertical-align: top;
   width: 100%;
 }
 

@@ -1,0 +1,29 @@
+{%- set anchor=link_renderer.render_local_anchor(requirement) -%}
+
+<sdoc-node-card
+  node-role="requirement"
+  {%- if requirement.reserved_status %}
+  data-status='{{ requirement.reserved_status.lower() }}'
+  {%- endif %}
+>
+
+    {% include "_shared/requirement_block/anchor.jinja.html" %}
+
+    {%- if requirement.reserved_title %}
+    {% with node=requirement %}
+    {% include "_shared/requirement_block/h_title.jinja.html" %}
+    {%- endwith %}
+    {%- endif %}
+
+    {% include "_shared/requirement_block/meta.jinja.html" %}
+    {% include "_shared/requirement_block/related.jinja.html" %}
+    {% include "_shared/requirement_block/files_list.jinja.html" %}
+
+    {% include "_shared/requirement_block/statement.jinja.html" %}
+
+
+    {% include "_shared/requirement_block/rationale.jinja.html" %}
+    {% include "_shared/requirement_block/comment.jinja.html" %}
+    {% include "_shared/requirement_block/multi_line_metas.jinja.html" %}
+
+</sdoc-node-card>

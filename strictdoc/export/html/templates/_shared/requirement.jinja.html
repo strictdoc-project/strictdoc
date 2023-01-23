@@ -3,9 +3,11 @@
 {%- set anchor=link_renderer.render_local_anchor(requirement) -%}
 
 <sdoc-node
-{%- if requirement.reserved_status %}
-data-status='{{ requirement.reserved_status.lower() }}'
-{%- endif %}>
+  node-role="requirement"
+  {%- if requirement.reserved_status %}
+  data-status='{{ requirement.reserved_status.lower() }}'
+  {%- endif %}
+>
 
     {% include "_shared/requirement_block/anchor.jinja.html" %}
 

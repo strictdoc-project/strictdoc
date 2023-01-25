@@ -496,6 +496,14 @@ def release_pyinstaller(context):
     # """
     # Solution found here:
     # https://stackoverflow.com/a/64473931/598057
+    #
+    # The --hidden-import strictdoc.server.app flag is needed because without
+    # it, the following is produced:
+    # ERROR: Error loading ASGI app. Could not import
+    # module "strictdoc.server.app".
+    # Solution found here: https://stackoverflow.com/a/71340437/598057
+    # This behavior is not surprising because that's how the uvicorn loads the
+    # application separately from the parent process.
     command = f"""
         pip install pyinstaller &&
         pyinstaller
@@ -504,6 +512,7 @@ def release_pyinstaller(context):
             --noconfirm
             --additional-hooks-dir developer/pyinstaller_hooks
             --distpath {path_to_pyi_dist}
+            --hidden-import strictdoc.server.app
             --add-data strictdoc/export/html/templates:templates/html
             --add-data strictdoc/export/rst/templates:templates/rst
             --add-data strictdoc/export/html/_static:_static

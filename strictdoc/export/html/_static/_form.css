@@ -22,7 +22,7 @@
   /* margin-bottom: 0; */
   padding: calc(var(--std-form-margin)*2);
   /* margin-top: var(--std-form-margin); */
-  box-shadow: var(--base-elevation);
+  box-shadow: var(--base-elevation-node);
   position: relative;
   z-index: 2;
 }

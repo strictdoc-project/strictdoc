@@ -576,6 +576,7 @@ def create_main_router(
             renderer=markup_renderer,
             link_renderer=link_renderer,
             section=section,
+            document=section.document,
             document_type=DocumentType.document(),
             config=export_action.config,
         )

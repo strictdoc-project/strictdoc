@@ -123,6 +123,7 @@ a.action_button:visited {
 a.action_button:hover {
   box-shadow: rgb(0 0 0 / 10%) 0px 2px var(--base-rhythm) 0px;
   color: var(--color-hover);
+  z-index: 6;
 }
 
 .action_button:disabled,
@@ -149,6 +150,14 @@ a.action_button:hover {
 
 .action_button[href*="cancel"] {
   color: red !important;
+}
+
+/* TODO */
+sdoc-node-controls .action_button {
+  width: calc(var(--base-rhythm)*4);
+  height: calc(var(--base-rhythm)*4);
+  padding: 0;
+  vertical-align: top;
 }
 
 /* nav */
@@ -482,6 +491,71 @@ svg.svg_icon {
   background-color: var(--color-bg-accent);
   color: var(--color-fg-accent);
   cursor: default;
+}
+
+/* sdoc-menu */
+
+sdoc-menu menu {
+  position: absolute;
+  z-index: 99;
+  right: 100%;
+  top: 0;
+  margin: 0;
+  list-style: none;
+  padding: var(--base-rhythm);
+  background: var(--color-bg-contrast);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
+  border-radius: var(--base-rhythm);
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  row-gap: calc(var(--base-rhythm)/2);
+}
+
+sdoc-menu menu[aria-hidden="true"] {
+  display: none;
+}
+
+sdoc-menu menu[aria-hidden="false"] {
+  display: flex;
+}
+
+sdoc-menu menu a {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  white-space: nowrap;
+  display: block;
+  padding: var(--base-rhythm);
+  border-radius: calc(var(--base-rhythm)/2);
+  font-size: var(--font-size-xsm);
+}
+
+sdoc-menu menu a,
+sdoc-menu menu a:link,
+sdoc-menu menu a:visited {
+  text-decoration: none;
+  color: var(--color-fg-main);
+}
+
+sdoc-menu menu a:hover {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-fg-accent);
+}
+
+sdoc-menu menu header {
+  padding: var(--base-rhythm);
+  font-size: var(--font-size-xsm);
+  text-transform: uppercase;
+  color: var(--color-fg-secondary);
+  font-weight: 700;
+  font-size: var(--font-size-xxsm);
+}
+
+/* plus to close */
+[aria-expanded="true"] svg {
+  transform: rotate(45deg);
+  color: black;
 }
 
 /* left scrollable panel */

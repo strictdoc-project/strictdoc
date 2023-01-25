@@ -28,7 +28,7 @@ sdoc-node-card {
 
 [data-editable_node="on"]:hover {
   box-shadow: var(--base-elevation-node);
-  z-index: 2;
+  z-index: 10;
 }
 
 /* * */
@@ -87,6 +87,32 @@ sdoc-node-card.highlighted {
   /* width: auto; */
   font-size: .85em;
   line-height: 1.4;
+}
+
+/* sdoc-node-controls */
+
+sdoc-node-controls {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  transition: .7s ease-out;
+  opacity: 0;
+}
+
+sdoc-node:hover sdoc-node-controls {
+  /* border-color: var(--color-action); */
+  opacity: .7;
+}
+
+sdoc-node:hover sdoc-node-controls:hover {
+  opacity: 1;
+}
+
+sdoc-node-controls-line {
+  display: flex;
 }
 
 /* requirement__statement */

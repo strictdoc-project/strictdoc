@@ -1279,7 +1279,7 @@ def create_main_router(
         )
 
     @router.delete(
-        "/actions/document/delete_section/{section_mid}",
+        "/actions/document/delete_requirement/{requirement_mid}",
         response_class=Response,
     )
     def delete_requirement(requirement_mid: str):
@@ -1305,7 +1305,7 @@ def create_main_router(
 
         # Rendering back the Turbo template.
         template = env.get_template(
-            "actions/document/delete_section/stream_delete_section.jinja.html"
+            "actions/document/delete_requirement/stream_delete_requirement.jinja.html"
         )
         link_renderer = LinkRenderer(
             root_path=requirement.document.meta.get_root_path_prefix()

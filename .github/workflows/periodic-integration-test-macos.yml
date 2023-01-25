@@ -1,5 +1,5 @@
 ---
-name: Periodic Integration Test
+name: Periodic Integration Test (macOS)
 on:
   schedule:
     - cron: "00 00 * * *"
@@ -9,7 +9,7 @@ on:
 jobs:
   periodic_integration_test:
     name: Periodic integration test
-    runs-on: ubuntu-latest
+    runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v2
 

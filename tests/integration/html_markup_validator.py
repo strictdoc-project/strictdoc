@@ -39,13 +39,13 @@ _, tidylib_messages_string = tidy_document(
     options={
         "new-blocklevel-tags": (
             # HTML 5
-            "main, aside, header, footer, section, article, nav, "
+            "main, aside, header, footer, section, article, nav, menu, "
             # Turbo.js
             "turbo-frame, "
             # SVG
             "svg, path, line, circle, polyline, "
             # StrictDoc
-            "sdoc-node"
+            "sdoc-node, sdoc-node-card, sdoc-node-controls, sdoc-menu, sdoc-menu-handler, sdoc-menu-list, "
         ),
         "char-encoding": "utf8",
         "input-encoding": "utf8",

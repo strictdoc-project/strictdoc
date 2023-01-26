@@ -44,7 +44,9 @@ class Test04CreatingTwoSiblingSections(BaseCase):
 
         # Section 1_1
         # self.click_nth_visible_element("//a[contains(text(), '+S⬊')]", 1)
-        self.click_nth_visible_element('[data-testid="node-add-section-child-action"]', 1)
+        self.click_nth_visible_element(
+            '[data-testid="node-add-section-child-action"]', 1
+        )
 
         self.type("#section_title", "Section_1_1")
         self.type("#section_content", "This is a free text of the section 1_1.")
@@ -54,7 +56,9 @@ class Test04CreatingTwoSiblingSections(BaseCase):
 
         # Section 1_1_1
         # self.click_nth_visible_element("//a[contains(text(), '+S⬊')]", 2)
-        self.click_nth_visible_element('[data-testid="node-add-section-child-action"]', 2)
+        self.click_nth_visible_element(
+            '[data-testid="node-add-section-child-action"]', 2
+        )
 
         self.type("#section_title", "Section_1_1_1")
         self.type(

@@ -31,7 +31,8 @@ class Test02EditingDocumentFreeText(BaseCase):
 
         self.assert_text("Hello world!")
 
-        self.click_link("Edit")
+        # self.click_link("Edit")
+        self.click('[data-testid="node-edit-action"]')
 
         self.click_link("Cancel")
 

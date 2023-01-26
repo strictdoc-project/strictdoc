@@ -32,7 +32,8 @@ class Test04CreatingTwoSiblingSections(BaseCase):
 
         self.assert_text("Hello world!")
 
-        self.click_link("+S⬊")
+        # self.click_link("+S⬊")
+        self.click('[data-testid="node-add-section-child-action"]')
 
         self.type("#section_title", "First title")
         self.type(
@@ -43,7 +44,8 @@ class Test04CreatingTwoSiblingSections(BaseCase):
         self.assert_text("1. First title")
 
         # Creating Section 2
-        self.click_nth_visible_element("//a[contains(text(), '+S⬇')]", 1)
+        # self.click_nth_visible_element("//a[contains(text(), '+S⬇')]", 1)
+        self.click_nth_visible_element('[data-testid="node-add-section-below-action"]', 1)
 
         self.type("#section_title", "Second title")
         self.type(

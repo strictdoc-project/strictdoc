@@ -33,7 +33,8 @@ class Test_UC02_04_EscapeHTML(BaseCase):
 
         self.assert_text("Link does not get corrupted")
 
-        self.click_link("Edit")
+        # self.click_link("Edit")
+        self.click('[data-testid="node-edit-action"]')
 
         self.assert_text(
             "`Link does not get corrupted "

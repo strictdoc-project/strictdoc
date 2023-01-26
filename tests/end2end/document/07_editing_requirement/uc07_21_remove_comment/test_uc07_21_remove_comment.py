@@ -32,7 +32,8 @@ class Test_UC07_EditRequirement_21_RemoveComment(BaseCase):
 
         self.assert_text("Hello world!")
 
-        self.click_nth_visible_element("//a[text()='Edit']", 2)
+        # self.click_nth_visible_element("//a[text()='Edit']", 2)
+        self.click_nth_visible_element('[data-testid="node-edit-action"]', 2)
 
         self.click_xpath("(//a[text()='Delete comment'])[2]")
 

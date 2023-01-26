@@ -34,7 +34,8 @@ class Test_06_05_CreateSectionAfterRequirement(BaseCase):
 
         # Section
 
-        self.click_nth_visible_element("//a[contains(text(), '+S⬊')]", 1)
+        # self.click_nth_visible_element("//a[contains(text(), '+S⬊')]", 1)
+        self.click_nth_visible_element('[data-testid="node-add-section-child-action"]', 1)
 
         self.type("#section_title", "Section title")
         self.type("#section_content", "Section statement.")
@@ -45,7 +46,8 @@ class Test_06_05_CreateSectionAfterRequirement(BaseCase):
 
         # Requirement
 
-        self.click_nth_visible_element("//a[contains(text(), '+R⬇')]", 1)
+        # self.click_nth_visible_element("//a[contains(text(), '+R⬇')]", 1)
+        self.click_nth_visible_element('[data-testid="node-add-requirement-below-action"]', 1)
 
         self.type("#requirement_TITLE", "Requirement title")
         self.type("#requirement_STATEMENT", "Requirement statement.")

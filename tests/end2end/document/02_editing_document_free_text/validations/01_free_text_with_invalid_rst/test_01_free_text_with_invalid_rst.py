@@ -31,7 +31,8 @@ class Test_01_EditingFreeTextWithInvalidRST(BaseCase):
 
         self.assert_text("Hello world!")
 
-        self.click_link("Edit")
+        # self.click_link("Edit")
+        self.click('[data-testid="node-edit-action"]')
 
         self.type(
             "#document_freetext",

@@ -32,7 +32,8 @@ class Test_01_CancelNewRequirement(BaseCase):
         self.assert_text("Hello world!")
 
         # Requirement 1
-        self.click_nth_visible_element("//a[contains(text(), '+R⬊')]", 1)
+        # self.click_nth_visible_element("//a[contains(text(), '+R⬊')]", 1)
+        self.click_nth_visible_element('[data-testid="node-add-requirement-child-action"]', 1)
         self.click_link("Cancel")
 
         self.assert_text_not_visible("Cancel")

@@ -31,7 +31,8 @@ class Test_02_CreatingSectionMalformedRSTStatement(BaseCase):
 
         self.assert_text("Hello world!")
 
-        self.click_link("+S⬊")
+        # self.click_link("+S⬊")
+        self.click('[data-testid="node-add-section-child-action"]')
 
         self.type("#section_title", "Section title")
 

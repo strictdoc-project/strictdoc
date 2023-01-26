@@ -13,11 +13,11 @@
 
   {# EDIT #}
   <a
-    {%- if node_controls__node_type == 'document' -%}
-    href="/fragments/document/{{document.node_id}}"
-    {%- else -%}
-    href="/actions/document/edit_{{node_controls__node_type}}/{{node_controls__reference}}"
-    {%- endif -%}
+    {% if node_controls__node_type == 'document' -%}
+ href="/fragments/document/{{document.node_id}}"
+    {% else %}
+ href="/actions/document/edit_{{node_controls__node_type}}/{{node_controls__reference}}"
+    {% endif -%}
 
     class="action_button"
     data-turbo-action="replace"

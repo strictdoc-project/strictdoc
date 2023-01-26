@@ -1,8 +1,6 @@
-import os
+from strictdoc.core.environment import SDocRuntimeEnvironment
 
 __version__ = "0.0.32"
 
-STRICTDOC_ROOT_PATH = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..")
-)
-assert os.path.isabs(STRICTDOC_ROOT_PATH), f"{STRICTDOC_ROOT_PATH}"
+
+environment = SDocRuntimeEnvironment(__file__)

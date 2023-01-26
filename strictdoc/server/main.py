@@ -2,6 +2,7 @@ import argparse
 import os
 import sys
 
+from strictdoc import environment
 from strictdoc.cli.cli_arg_parser import ServerCommandConfig
 from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
 from strictdoc.server.server import run_strictdoc_server
@@ -32,7 +33,10 @@ if __name__ == "__main__":
     assert os.path.exists(output_path)
 
     server_command_config = ServerCommandConfig(
-        input_path=input_path, output_path=output_path, reload=args.reload
+        environment=environment,
+        input_path=input_path,
+        output_path=output_path,
+        reload=args.reload,
     )
     project_config: ProjectConfig = (
         ProjectConfigLoader.load_from_path_or_get_default(

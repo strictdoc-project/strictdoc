@@ -34,7 +34,9 @@ class Test06CreateRequirement(BaseCase):
 
         # Requirement 1
         # self.click_nth_visible_element("//a[contains(text(), '+R⬊')]", 1)
-        self.click_nth_visible_element('[data-testid="node-add-requirement-child-action"]', 1)
+        self.click_nth_visible_element(
+            '[data-testid="node-add-requirement-child-action"]', 1
+        )
 
         self.type("#requirement_UID", "REQ-001")
         self.type("#requirement_TITLE", "Requirement title #1")
@@ -45,7 +47,9 @@ class Test06CreateRequirement(BaseCase):
 
         # Requirement 2
         # self.click_nth_visible_element("//a[contains(text(), '+R⬇')]", 1)
-        self.click_nth_visible_element('[data-testid="node-add-requirement-below-action"]', 1)
+        self.click_nth_visible_element(
+            '[data-testid="node-add-requirement-below-action"]', 1
+        )
 
         self.type("#requirement_UID", "REQ-002")
         self.type("#requirement_TITLE", "Requirement title #2")
@@ -56,7 +60,9 @@ class Test06CreateRequirement(BaseCase):
 
         # Requirement 3
         # self.click_nth_visible_element("//a[contains(text(), '+R⬇')]", 2)
-        self.click_nth_visible_element('[data-testid="node-add-requirement-below-action"]', 2)
+        self.click_nth_visible_element(
+            '[data-testid="node-add-requirement-below-action"]', 2
+        )
 
         self.type("#requirement_UID", "REQ-003")
         self.type("#requirement_TITLE", "Requirement title #3")

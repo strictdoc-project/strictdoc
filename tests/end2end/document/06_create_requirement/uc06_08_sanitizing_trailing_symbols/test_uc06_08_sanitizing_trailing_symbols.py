@@ -34,7 +34,9 @@ class Test_UC06_08_SanitizingTrailingSymbols(BaseCase):
 
         # Requirement 1
         # self.click_nth_visible_element("//a[contains(text(), '+R⬊')]", 1)
-        self.click_nth_visible_element('[data-testid="node-add-requirement-child-action"]', 1)
+        self.click_nth_visible_element(
+            '[data-testid="node-add-requirement-child-action"]', 1
+        )
 
         self.type("#requirement_TITLE", "Requirement title #1")
         # Contains trailing symbols.

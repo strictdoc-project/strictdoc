@@ -4,6 +4,7 @@ import sys
 from enum import Enum
 from typing import List, Optional
 
+from strictdoc.core.environment import SDocRuntimeEnvironment
 from strictdoc.core.project_config import ProjectConfig
 
 EXPORT_FORMATS = ["html", "html-standalone", "rst", "excel", "reqif-sdoc"]
@@ -281,8 +282,16 @@ class PassthroughCommandConfig:
 
 
 class ServerCommandConfig:
-    def __init__(self, *, input_path: str, output_path: str, reload: bool):
+    def __init__(
+        self,
+        *,
+        environment: SDocRuntimeEnvironment,
+        input_path: str,
+        output_path: str,
+        reload: bool,
+    ):
         assert os.path.exists(input_path)
+        self.environment: SDocRuntimeEnvironment = environment
         abs_input_path = os.path.abspath(input_path)
         self.input_path: str = abs_input_path
         self.output_path: str = output_path
@@ -298,7 +307,7 @@ class ExportMode(Enum):
 class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
     def __init__(  # pylint: disable=too-many-arguments
         self,
-        strictdoc_root_path,
+        environment: SDocRuntimeEnvironment,
         input_paths,
         output_dir: str,
         project_title: Optional[str],
@@ -309,7 +318,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         experimental_enable_file_traceability,
     ):
         assert isinstance(input_paths, list), f"{input_paths}"
-        self.strictdoc_root_path = strictdoc_root_path
+        self.environment: SDocRuntimeEnvironment = environment
         self.input_paths: List[str] = input_paths
         self.output_dir: str = output_dir
         self.project_title: Optional[str] = project_title
@@ -333,27 +342,15 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
             return ExportMode.STANDALONE
         raise NotImplementedError
 
+    @property
+    def strictdoc_root_path(self):
+        return self.environment.path_to_strictdoc
+
     def get_static_files_path(self):
-        if getattr(sys, "frozen", False):
-            # If the application is run as a bundle, the PyInstaller bootloader
-            # extends the sys module by a flag frozen=True and sets the app
-            # path into variable _MEIPASS'.
-            bundle_dir = sys._MEIPASS  # pylint: disable=protected-access
-            return os.path.join(bundle_dir, "_static")
-        return os.path.join(
-            self.strictdoc_root_path, "strictdoc/export/html/_static"
-        )
+        return self.environment.get_static_files_path()
 
     def get_extra_static_files_path(self):
-        if getattr(sys, "frozen", False):
-            # If the application is run as a bundle, the PyInstaller bootloader
-            # extends the sys module by a flag frozen=True and sets the app
-            # path into variable _MEIPASS'.
-            bundle_dir = sys._MEIPASS  # pylint: disable=protected-access
-            return os.path.join(bundle_dir, "_static_extra")
-        return os.path.join(
-            self.strictdoc_root_path, "strictdoc/export/html/_static_extra"
-        )
+        return self.environment.get_extra_static_files_path()
 
     def integrate_project_config(self, project_config: ProjectConfig):
         if self.project_title is None:
@@ -410,7 +407,10 @@ class SDocArgsParser:
             self.args.input_file, self.args.output_file
         )
 
-    def get_export_config(self, strictdoc_root_path) -> ExportCommandConfig:
+    def get_export_config(
+        self, environment: SDocRuntimeEnvironment
+    ) -> ExportCommandConfig:
+        assert isinstance(environment, SDocRuntimeEnvironment)
         project_title: Optional[str] = self.args.project_title
 
         output_dir = self.args.output_dir if self.args.output_dir else "output"
@@ -419,7 +419,7 @@ class SDocArgsParser:
             output_dir = os.path.join(cwd, output_dir)
 
         return ExportCommandConfig(
-            strictdoc_root_path,
+            environment,
             self.args.input_paths,
             output_dir,
             project_title,
@@ -440,8 +440,12 @@ class SDocArgsParser:
             self.args.input_path, self.args.output_path, self.args.parser
         )
 
-    def get_server_config(self) -> ServerCommandConfig:
+    def get_server_config(
+        self, environment: SDocRuntimeEnvironment
+    ) -> ServerCommandConfig:
+        assert isinstance(environment, SDocRuntimeEnvironment), environment
         return ServerCommandConfig(
+            environment=environment,
             input_path=self.args.input_path,
             output_path=self.args.output_path,
             reload=self.args.reload,

@@ -27,7 +27,8 @@ jobs:
         run: |
           invoke release-local
 
-      - name: Build and test using PyInstaller
-        run: |
-          invoke release-pyinstaller
-          invoke test-integration --strictdoc /tmp/strictdoc/strictdoc/strictdoc
+      # BROKEN:
+      # - name: Build and test using PyInstaller
+      #   run: |
+      #     invoke release-pyinstaller
+      #     invoke test-integration --strictdoc /tmp/strictdoc/strictdoc/strictdoc

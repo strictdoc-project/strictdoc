@@ -355,7 +355,6 @@ def lint_mypy(context):
     run_invoke_cmd(
         context,
         """
-        rm -rfv .mypy_cache/ &&
         mypy strictdoc/
             --show-error-codes
             --disable-error-code=arg-type
@@ -553,5 +552,30 @@ def run(context, command):
         context,
         f"""
         {command}
+        """,
+    )
+
+
+@task
+def nuitka(context):
+    run_invoke_cmd(
+        context,
+        f"""
+        PYTHONPATH="{os.getcwd()}"
+        python -m nuitka
+            --static-libpython=no
+            --standalone
+            --include-module=textx
+            --include-module=pybtex.database.input.bibtex
+            --include-module=strictdoc.server.app
+            --include-module=docutils
+            --include-module=docutils.readers.standalone
+            --include-module=docutils.parsers.rst
+            --include-data-dir=strictdoc/export/html/templates=templates/html
+            --include-data-dir=strictdoc/export/rst/templates=templates/rst
+            --include-data-dir=strictdoc/export/html/_static=_static
+            --include-data-dir=strictdoc/export/html/_static_extra/mathjax=_static_extra/mathjax
+            --include-package-data=docutils
+            strictdoc/cli/main.py
         """,
     )

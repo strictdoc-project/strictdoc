@@ -30,7 +30,8 @@ class Test_03_02_CreatingBeforeSection(BaseCase):
         self.click_link("DOC")
         self.assert_text("Hello world!")
 
-        self.click_link("+S⬆")
+        # self.click_link("+S⬆")
+        self.click('[data-testid="node-add-section-above-action"]')
 
         self.click_link("Cancel")
 

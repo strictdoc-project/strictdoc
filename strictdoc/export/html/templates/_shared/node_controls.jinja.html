@@ -11,24 +11,20 @@
 
 <sdoc-node-controls>
 
-  {# EDIT: on document there is the '/fragments/document/' link #}
-  {%- if node_controls__node_type == 'document' -%}
+  {# EDIT #}
   <a
+    {%- if node_controls__node_type == 'document' -%}
     href="/fragments/document/{{document.node_id}}"
-    class="action_button"
-    data-turbo-action="replace"
-    data-turbo="true"
-    title="Edit DOC"
-  >{% include "_res/svg_ico16_edit.jinja.html" %}</a>
-  {%- else -%}
-  <a
+    {%- else -%}
     href="/actions/document/edit_{{node_controls__node_type}}/{{node_controls__reference}}"
+    {%- endif -%}
+
     class="action_button"
     data-turbo-action="replace"
     data-turbo="true"
-    title="Edit 2"
+    title="Edit"
+    data-testid="node-edit-action"
   >{% include "_res/svg_ico16_edit.jinja.html" %}</a>
-  {%- endif -%}
 
   {# DELETE:
     + section
@@ -42,6 +38,7 @@
     data-turbo-method="delete"
     data-turbo="true"
     title="Delete"
+    data-testid="node-delete-action"
   >{% include "_res/svg_ico16_delete.jinja.html" %}</a>
   {%- endif -%}
 
@@ -88,6 +85,7 @@
             data-turbo-action="replace"
             data-turbo="true"
             title="Add Section above"
+            data-testid="node-add-section-above-action"
           >+S⬆ Add Section above</a>
         </li>
         {%- endif -%}
@@ -105,6 +103,7 @@
             data-turbo-action="replace"
             data-turbo="true"
             title="Add child Section"
+            data-testid="node-add-section-child-action"
           >+S➘ Add child Section</a>
         </li>
         {%- endif -%}
@@ -121,6 +120,7 @@
             data-turbo-action="replace"
             data-turbo="true"
             title="Add Section below"
+            data-testid="node-add-section-below-action"
           >+S⬇ Add Section below</a>
         </li>
         {%- endif -%}
@@ -139,6 +139,7 @@
             data-turbo-action="replace"
             data-turbo="true"
             title="Add Requirement above"
+            data-testid="node-add-requirement-above-action"
           >+R⬆ Add Requirement above</a>
         </li>
         {%- endif -%}
@@ -156,6 +157,7 @@
               data-turbo-action="replace"
               data-turbo="true"
               title="Add child Requirement"
+              data-testid="node-add-requirement-child-action"
             >+R➘ Add child Requirement</a>
         </li>
         {%- endif -%}
@@ -172,6 +174,7 @@
             data-turbo-action="replace"
             data-turbo="true"
             title="Add Requirement below"
+            data-testid="node-add-requirement-below-action"
           >+R⬇ Add Requirement below</a>
         </li>
         {%- endif -%}

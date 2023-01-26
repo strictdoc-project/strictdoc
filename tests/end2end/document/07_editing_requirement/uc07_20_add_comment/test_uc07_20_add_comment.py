@@ -32,7 +32,8 @@ class Test_UC07_EditRequirement_20_AddComment(BaseCase):
 
         self.assert_text("Hello world!")
 
-        self.click_nth_visible_element("//a[text()='Edit']", 2)
+        # self.click_nth_visible_element("//a[text()='Edit']", 2)
+        self.click_nth_visible_element('[data-testid="node-edit-action"]', 2)
 
         self.type("(//*[@id='requirement_COMMENT'])", "Comment #1")
 

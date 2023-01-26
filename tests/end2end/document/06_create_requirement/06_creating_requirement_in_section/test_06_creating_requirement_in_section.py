@@ -32,7 +32,8 @@ class Test06CreateRequirementInSection(BaseCase):
 
         self.assert_text("Hello world!")
 
-        self.click_nth_visible_element("//a[contains(text(), '+R⬊')]", 1)
+        # self.click_nth_visible_element("//a[contains(text(), '+R⬊')]", 1)
+        self.click_nth_visible_element('[data-testid="node-add-requirement-child-action"]', 1)
 
         self.type("#requirement_TITLE", "Requirement title")
         self.type("#requirement_STATEMENT", "Requirement statement")

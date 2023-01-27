@@ -36,7 +36,9 @@ class Test08EditSection(BaseCase):
         # self.click_nth_visible_element("//a[text()='Edit']", 2)
         self.hover_and_click(
             hover_selector="(//sdoc-node)[2]",
-            click_selector='(//sdoc-node)[2]//*[@data-testid="node-edit-action"]',
+            click_selector=(
+                '(//sdoc-node)[2]//*[@data-testid="node-edit-action"]'
+            ),
             hover_by=By.XPATH,
             click_by=By.XPATH,
         )

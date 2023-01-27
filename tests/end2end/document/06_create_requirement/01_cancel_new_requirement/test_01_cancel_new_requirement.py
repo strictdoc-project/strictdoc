@@ -36,12 +36,17 @@ class Test_01_CancelNewRequirement(BaseCase):
         # self.click_nth_visible_element("//a[contains(text(), '+R⬊')]", 1)
         self.hover_and_click(
             hover_selector="(//sdoc-node)[1]",
-            click_selector='(//sdoc-node)[1]//*[@data-testid="node-menu-handler"]',
+            click_selector=(
+                '(//sdoc-node)[1]//*[@data-testid="node-menu-handler"]'
+            ),
             hover_by=By.XPATH,
             click_by=By.XPATH,
         )
         self.click(
-            selector='(//sdoc-node)[1]//*[@data-testid="node-add-requirement-child-action"]',
+            selector=(
+                "(//sdoc-node)[1]"
+                '//*[@data-testid="node-add-requirement-child-action"]'
+            ),
             by=By.XPATH,
         )
 

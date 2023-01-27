@@ -37,12 +37,17 @@ class Test05_CreatingThreeNestedSections(BaseCase):
         # self.click_link("+S⬊")
         self.hover_and_click(
             hover_selector="(//sdoc-node)[1]",
-            click_selector='(//sdoc-node)[1]//*[@data-testid="node-menu-handler"]',
+            click_selector=(
+                '(//sdoc-node)[1]//*[@data-testid="node-menu-handler"]'
+            ),
             hover_by=By.XPATH,
             click_by=By.XPATH,
         )
         self.click(
-            selector='(//sdoc-node)[1]//*[@data-testid="node-add-section-child-action"]',
+            selector=(
+                "(//sdoc-node)[1]"
+                '//*[@data-testid="node-add-section-child-action"]'
+            ),
             by=By.XPATH,
         )
 
@@ -55,12 +60,17 @@ class Test05_CreatingThreeNestedSections(BaseCase):
         # Section 1_1
         self.hover_and_click(
             hover_selector="(//sdoc-node)[2]",
-            click_selector='(//sdoc-node)[2]//*[@data-testid="node-menu-handler"]',
+            click_selector=(
+                '(//sdoc-node)[2]//*[@data-testid="node-menu-handler"]'
+            ),
             hover_by=By.XPATH,
             click_by=By.XPATH,
         )
         self.click(
-            selector='(//sdoc-node)[2]//*[@data-testid="node-add-section-child-action"]',
+            selector=(
+                "(//sdoc-node)[2]"
+                '//*[@data-testid="node-add-section-child-action"]'
+            ),
             by=By.XPATH,
         )
 
@@ -73,12 +83,17 @@ class Test05_CreatingThreeNestedSections(BaseCase):
         # # Section 1_1_1
         self.hover_and_click(
             hover_selector="(//sdoc-node)[3]",
-            click_selector='(//sdoc-node)[3]//*[@data-testid="node-menu-handler"]',
+            click_selector=(
+                '(//sdoc-node)[3]//*[@data-testid="node-menu-handler"]'
+            ),
             hover_by=By.XPATH,
             click_by=By.XPATH,
         )
         self.click(
-            selector='(//sdoc-node)[3]//*[@data-testid="node-add-section-child-action"]',
+            selector=(
+                "(//sdoc-node)[3]"
+                '//*[@data-testid="node-add-section-child-action"]'
+            ),
             by=By.XPATH,
         )
 

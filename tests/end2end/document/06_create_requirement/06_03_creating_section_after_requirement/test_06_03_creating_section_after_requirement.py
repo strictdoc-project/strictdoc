@@ -2,6 +2,7 @@ import filecmp
 import os
 import shutil
 
+from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.server import SDocTestServer
@@ -9,7 +10,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test06CreateRequirementInSection(BaseCase):
+class Test06CreateSectionAfterRequirement(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -35,8 +36,15 @@ class Test06CreateRequirementInSection(BaseCase):
         # Requirement
 
         # self.click_nth_visible_element("//a[contains(text(), '+R⬊')]", 1)
-        self.click_nth_visible_element(
-            '[data-testid="node-add-requirement-child-action"]', 1
+        self.hover_and_click(
+            hover_selector="(//sdoc-node)[1]",
+            click_selector='(//sdoc-node)[1]//*[@data-testid="node-menu-handler"]',
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+        self.click(
+            selector='(//sdoc-node)[1]//*[@data-testid="node-add-requirement-child-action"]',
+            by=By.XPATH,
         )
 
         self.type("#requirement_TITLE", "Requirement title #1")
@@ -49,8 +57,15 @@ class Test06CreateRequirementInSection(BaseCase):
         # Section
 
         # self.click_nth_visible_element("//a[contains(text(), '+S⬇')]", 1)
-        self.click_nth_visible_element(
-            '[data-testid="node-add-section-below-action"]', 1
+        self.hover_and_click(
+            hover_selector="(//sdoc-node)[2]",
+            click_selector='(//sdoc-node)[2]//*[@data-testid="node-menu-handler"]',
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+        self.click(
+            selector='(//sdoc-node)[2]//*[@data-testid="node-add-section-below-action"]',
+            by=By.XPATH,
         )
 
         self.type("#section_title", "Section title")

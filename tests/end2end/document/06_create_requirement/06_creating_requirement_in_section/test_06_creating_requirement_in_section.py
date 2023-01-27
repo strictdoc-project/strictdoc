@@ -2,6 +2,7 @@ import filecmp
 import os
 import shutil
 
+from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.server import SDocTestServer
@@ -33,8 +34,15 @@ class Test06CreateRequirementInSection(BaseCase):
         self.assert_text("Hello world!")
 
         # self.click_nth_visible_element("//a[contains(text(), '+R⬊')]", 1)
-        self.click_nth_visible_element(
-            '[data-testid="node-add-requirement-child-action"]', 1
+        self.hover_and_click(
+            hover_selector="(//sdoc-node)[2]",
+            click_selector='(//sdoc-node)[2]//*[@data-testid="node-menu-handler"]',
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+        self.click(
+            selector='(//sdoc-node)[2]//*[@data-testid="node-add-requirement-child-action"]',
+            by=By.XPATH,
         )
 
         self.type("#requirement_TITLE", "Requirement title")

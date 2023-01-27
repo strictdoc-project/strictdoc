@@ -34,7 +34,8 @@ class Test_UC02_03_SanitizingTrailingSymbols(BaseCase):
         self.assert_text("Hello world!")
 
         # self.click_link("Edit")
-        self.click('[data-testid="node-edit-action"]')
+        # self.click('[data-testid="node-edit-action"]')
+        self.hover_and_click("sdoc-node", '[data-testid="node-edit-action"]')
 
         # Contains trailing symbols.
         self.type(

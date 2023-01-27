@@ -35,12 +35,17 @@ class Test03CreatingChildSection(BaseCase):
         # self.click_link("+S⬊")
         self.hover_and_click(
             hover_selector="(//sdoc-node)[1]",
-            click_selector='(//sdoc-node)[1]//*[@data-testid="node-menu-handler"]',
+            click_selector=(
+                '(//sdoc-node)[1]//*[@data-testid="node-menu-handler"]'
+            ),
             hover_by=By.XPATH,
             click_by=By.XPATH,
         )
         self.click(
-            selector='(//sdoc-node)[1]//*[@data-testid="node-add-section-child-action"]',
+            selector=(
+                "(//sdoc-node)[1]"
+                '//*[@data-testid="node-add-section-child-action"]'
+            ),
             by=By.XPATH,
         )
 

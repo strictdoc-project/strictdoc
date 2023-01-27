@@ -36,7 +36,9 @@ class Test10DeleteRequirement(BaseCase):
         # self.click_nth_visible_element("//a[contains(text(), 'Delete')]", 1)
         self.hover_and_click(
             hover_selector="(//sdoc-node)[2]",
-            click_selector='(//sdoc-node)[2]//*[@data-testid="node-delete-action"]',
+            click_selector=(
+                '(//sdoc-node)[2]//*[@data-testid="node-delete-action"]'
+            ),
             hover_by=By.XPATH,
             click_by=By.XPATH,
         )

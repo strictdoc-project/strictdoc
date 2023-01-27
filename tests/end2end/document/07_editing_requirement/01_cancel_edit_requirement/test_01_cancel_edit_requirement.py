@@ -36,7 +36,9 @@ class Test_01_CancelEditRequirement(BaseCase):
 
         self.hover_and_click(
             hover_selector="(//sdoc-node)[2]",
-            click_selector='(//sdoc-node)[2]//*[@data-testid="node-edit-action"]',
+            click_selector=(
+                '(//sdoc-node)[2]//*[@data-testid="node-edit-action"]'
+            ),
             hover_by=By.XPATH,
             click_by=By.XPATH,
         )

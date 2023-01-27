@@ -99,12 +99,12 @@ sdoc-node-controls {
   display: flex;
   flex-direction: column;
   transition: .7s ease-out;
-  /* opacity: 0; */
+  opacity: 0;
 }
 
 sdoc-node:hover sdoc-node-controls {
   /* border-color: var(--color-action); */
-  /* opacity: .7; */
+  opacity: .7;
 }
 
 sdoc-node:hover sdoc-node-controls:hover {

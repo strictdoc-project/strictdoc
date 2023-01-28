@@ -32,7 +32,9 @@ class Test_07_EditingSection_SanitizingTrailingSymbols(BaseCase):
 
         self.assert_text("Hello world!")
 
-        self.click_link("+S⬊")
+        # self.click_link("+S⬊")
+        self.hover_and_click("sdoc-node", '[data-testid="node-menu-handler"]')
+        self.click('[data-testid="node-add-section-child-action"]')
 
         self.type("#section_title", "First title")
         self.type(

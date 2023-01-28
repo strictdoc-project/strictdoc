@@ -1,9 +1,14 @@
+<turbo-frame id="article-{{requirement.node_id}}">
+
 {%- set anchor=link_renderer.render_local_anchor(requirement) -%}
 
 <sdoc-node
-{%- if requirement.reserved_status %}
-data-status='{{ requirement.reserved_status.lower() }}'
-{%- endif %}>
+  node-role="requirement"
+  data-editable_node="on"
+  {%- if requirement.reserved_status %}
+  data-status='{{ requirement.reserved_status.lower() }}'
+  {%- endif %}
+>
 
   {# {% include "_shared/requirement_block/h_title.jinja.html" %} #}
   <table class="requirement-table">
@@ -180,4 +185,13 @@ data-status='{{ requirement.reserved_status.lower() }}'
     {%- endif %}
 
   </table>
+  {%- if config.is_running_on_server -%}
+  {% with
+    node_controls__reference = requirement.node_id,
+    node_controls__node_type = 'requirement'
+  %}
+    {% include "_shared/node_controls.jinja.html" %}
+  {% endwith %}
+  {%- endif -%}
 </sdoc-node>
+</turbo-frame>

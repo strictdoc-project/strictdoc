@@ -32,8 +32,11 @@ class Test02EditingDocumentFreeText(BaseCase):
 
         self.assert_text("Hello world!")
 
-        self.click_link("Edit")
+        # self.click_link("Edit")
+        # self.click('[data-testid="node-edit-action"]')
+        self.hover_and_click("sdoc-node", '[data-testid="node-edit-action"]')
 
+        # self.sleep(100)
         self.type("#document_freetext", """Modified free text!""".strip())
 
         self.click_xpath("//button[@type='submit' and text()='Save']")

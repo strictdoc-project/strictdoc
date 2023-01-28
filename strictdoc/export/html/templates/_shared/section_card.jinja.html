@@ -1,10 +1,7 @@
-<turbo-frame id="article-{{section.node_id}}">
-
 {%- set anchor=link_renderer.render_local_anchor(section) -%}
 
-<sdoc-node
+<sdoc-node-card
   node-role="section"
-  data-editable_node="on"
   data-controller="document"
 >
 
@@ -16,15 +13,4 @@
 
   {% include "_shared/requirement_block/free_text.jinja.html" %}
 
-  {%- if config.is_running_on_server -%}
-    {% with
-      node_controls__reference = section.node_id,
-      node_controls__node_type = 'section'
-    %}
-    {% include "_shared/node_controls.jinja.html" %}
-    {% endwith %}
-  {%- endif -%}
-
-</sdoc-node>
-
-</turbo-frame>
+</sdoc-node-card>

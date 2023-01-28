@@ -117,7 +117,8 @@ development = [
     # psutil is needed to reap Uvicorn's zombie processes when running end2end
     # tests. One day someone finds a better solution.
     "psutil",
-
+]
+nuitka = [
     # Nuitka:WARNING: Using very slow fallback for ordered sets, please install
     # 'ordered-set' PyPI package for best Python compile time performance.
     "nuitka",

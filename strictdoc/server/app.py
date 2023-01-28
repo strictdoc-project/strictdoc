@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from strictdoc.cli.cli_arg_parser import ServerCommandConfig
 from strictdoc.core.project_config import ProjectConfig
+from strictdoc.helpers.pickle import pickle_load
 from strictdoc.server.config import SDocServerEnvVariable
 from strictdoc.server.routers.main_router import create_main_router
 
@@ -38,14 +39,19 @@ def create_app(
 
 
 def strictdoc_production_app():
-    server_config = ServerCommandConfig(
-        input_path=os.environ[SDocServerEnvVariable.INPUT_PATH],
-        output_path=os.environ[SDocServerEnvVariable.OUTPUT_PATH],
-        reload=os.environ[SDocServerEnvVariable.RELOAD] == "True",
-    )
-    project_config: ProjectConfig = ProjectConfig.config_from_string_dump(
-        os.environ[SDocServerEnvVariable.PROJECT_CONFIG]
-    )
+    path_to_tmp_config = os.environ[SDocServerEnvVariable.PATH_TO_CONFIG]
+    with open(path_to_tmp_config, "rb") as tmp_config_file:
+        tmp_config_bytes = tmp_config_file.read()
+
+    two_configs = pickle_load(tmp_config_bytes)
+    assert isinstance(two_configs, tuple), type(two_configs)
+    assert len(two_configs) == 2
+    assert isinstance(two_configs[0], ServerCommandConfig)
+    assert isinstance(two_configs[1], ProjectConfig)
+
+    server_config: ServerCommandConfig = two_configs[0]
+    project_config: ProjectConfig = two_configs[1]
+
     return create_app(
         server_config=server_config,
         project_config=project_config,

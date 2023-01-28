@@ -14,7 +14,7 @@ from starlette.requests import Request
 from starlette.responses import HTMLResponse, Response
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
-from strictdoc import __version__, STRICTDOC_ROOT_PATH
+from strictdoc import __version__, SDocRuntimeEnvironment
 from strictdoc.backend.reqif.export.sdoc_to_reqif_converter import (
     SDocToReqIFObjectConverter,
 )
@@ -89,9 +89,10 @@ def create_main_router(
     env: Environment = HTMLTemplates.jinja_environment
 
     parallelizer = NullParallelizer()
+    environment: SDocRuntimeEnvironment = server_config.environment
 
     export_config = ExportCommandConfig(
-        strictdoc_root_path=STRICTDOC_ROOT_PATH,
+        environment=server_config.environment,
         input_paths=[server_config.input_path],
         output_dir=server_config.output_path,
         project_title=project_config.project_title,
@@ -1935,7 +1936,7 @@ def create_main_router(
         return HTMLResponse(content=content)
 
     def get_asset(url_to_asset: str):
-        static_path = os.path.join(STRICTDOC_ROOT_PATH, "strictdoc/export/html")
+        static_path = environment.get_path_to_export_html()
         static_file = os.path.join(static_path, url_to_asset)
         content_type, _ = guess_type(static_file)
 
@@ -1950,8 +1951,7 @@ def create_main_router(
         return Response(content, media_type=content_type)
 
     def get_asset_binary(url_to_asset: str):
-        static_path = os.path.join(STRICTDOC_ROOT_PATH, "strictdoc/export/html")
-
+        static_path = environment.get_path_to_export_html()
         static_file = os.path.join(static_path, url_to_asset)
         content_type, _ = guess_type(static_file)
 

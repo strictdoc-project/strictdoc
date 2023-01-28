@@ -27,6 +27,7 @@ jobs:
         run: |
           invoke release-local
 
+      # BROKEN:
       # - name: Build and test using PyInstaller
       #   run: |
       #     invoke release-pyinstaller

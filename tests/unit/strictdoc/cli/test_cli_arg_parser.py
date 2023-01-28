@@ -1,5 +1,6 @@
 import os
 
+from strictdoc import environment
 from strictdoc.cli.cli_arg_parser import (
     cli_args_parser,
     create_sdoc_args_parser,
@@ -26,8 +27,8 @@ def test_export_00_strictdoc_root_path():
     assert args.project_title is None
 
     config_parser = create_sdoc_args_parser(args)
-    export_config = config_parser.get_export_config(FAKE_STRICTDOC_ROOT_PATH)
-    assert export_config.strictdoc_root_path == FAKE_STRICTDOC_ROOT_PATH
+    export_config = config_parser.get_export_config(environment=environment)
+    assert export_config.strictdoc_root_path == environment.path_to_strictdoc
     assert export_config.project_title is None
 
 
@@ -46,7 +47,8 @@ def test_export_01_minimal():
     assert args.enable_mathjax is False
 
     config_parser = create_sdoc_args_parser(args)
-    export_config = config_parser.get_export_config(FAKE_STRICTDOC_ROOT_PATH)
+    export_config = config_parser.get_export_config(environment=environment)
+    assert export_config.strictdoc_root_path == environment.path_to_strictdoc
     assert export_config.fields == args.fields
     assert export_config.formats == args.formats
     assert export_config.input_paths == args.input_paths
@@ -71,7 +73,8 @@ def test_export_02_output_dir():
     assert args.output_dir == "custom-output-dir"
 
     config_parser = create_sdoc_args_parser(args)
-    export_config = config_parser.get_export_config(FAKE_STRICTDOC_ROOT_PATH)
+    export_config = config_parser.get_export_config(environment=environment)
+    assert export_config.strictdoc_root_path == environment.path_to_strictdoc
     assert export_config.fields == args.fields
     assert export_config.formats == args.formats
     assert export_config.input_paths == args.input_paths
@@ -96,7 +99,8 @@ def test_export_03_parallelization():
     assert args.output_dir is None
 
     config_parser = create_sdoc_args_parser(args)
-    export_config = config_parser.get_export_config(FAKE_STRICTDOC_ROOT_PATH)
+    export_config = config_parser.get_export_config(environment=environment)
+    assert export_config.strictdoc_root_path == environment.path_to_strictdoc
     assert export_config.fields == args.fields
     assert export_config.formats == args.formats
     assert export_config.input_paths == args.input_paths
@@ -118,7 +122,8 @@ def test_export_04_export_format_rst():
     assert args.output_dir is None
 
     config_parser = create_sdoc_args_parser(args)
-    export_config = config_parser.get_export_config(FAKE_STRICTDOC_ROOT_PATH)
+    export_config = config_parser.get_export_config(environment=environment)
+    assert export_config.strictdoc_root_path == environment.path_to_strictdoc
     assert export_config.fields == args.fields
     assert export_config.formats == args.formats
     assert export_config.input_paths == args.input_paths
@@ -143,7 +148,8 @@ def test_export_05_export_format_multiple():
     assert args.output_dir is None
 
     config_parser = create_sdoc_args_parser(args)
-    export_config = config_parser.get_export_config(FAKE_STRICTDOC_ROOT_PATH)
+    export_config = config_parser.get_export_config(environment=environment)
+    assert export_config.strictdoc_root_path == environment.path_to_strictdoc
     assert export_config.fields == args.fields
     assert export_config.formats == args.formats
     assert export_config.input_paths == args.input_paths
@@ -165,7 +171,8 @@ def test_export_06_export_format_multiple():
     assert args.experimental_enable_file_traceability is True
 
     config_parser = create_sdoc_args_parser(args)
-    export_config = config_parser.get_export_config(FAKE_STRICTDOC_ROOT_PATH)
+    export_config = config_parser.get_export_config(environment=environment)
+    assert export_config.strictdoc_root_path == environment.path_to_strictdoc
     assert export_config.fields == args.fields
     assert export_config.formats == args.formats
     assert export_config.input_paths == args.input_paths
@@ -182,7 +189,8 @@ def test_export_07_enable_mathjax():
     assert args.enable_mathjax is True
 
     config_parser = create_sdoc_args_parser(args)
-    export_config = config_parser.get_export_config(FAKE_STRICTDOC_ROOT_PATH)
+    export_config = config_parser.get_export_config(environment=environment)
+    assert export_config.strictdoc_root_path == environment.path_to_strictdoc
     assert export_config.enable_mathjax is True
 
 
@@ -195,7 +203,8 @@ def test_export_08_project_title():
     assert args.project_title == "StrictDoc"
 
     config_parser = create_sdoc_args_parser(args)
-    export_config = config_parser.get_export_config(FAKE_STRICTDOC_ROOT_PATH)
+    export_config = config_parser.get_export_config(environment=environment)
+    assert export_config.strictdoc_root_path == environment.path_to_strictdoc
     assert export_config.project_title == args.project_title
 
 

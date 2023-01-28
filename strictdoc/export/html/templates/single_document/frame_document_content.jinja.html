@@ -2,8 +2,6 @@
       {% include "single_document/frame_document_config.jinja.html" %}
 
       <div class="content">
-        {% include "_shared/document_freetext.jinja.html" %}
-
         {%- for section_or_requirement in document_iterator.all_content() %}
 
         {%- if section_or_requirement.is_requirement %}

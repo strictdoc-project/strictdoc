@@ -1,7 +1,4 @@
 <turbo-frame id="article-{{document.node_id}}">
-<sdoc-node
-  data-editable_node="on"
->
   {%- if document.free_texts -%}
     {%- for free_text in document.free_texts %}
       <div class="free_text">
@@ -15,14 +12,4 @@
       >The document is empty. Start adding text, sections, and requirements.
       </div>
   {%- endif -%}
-
-  {%- if config.is_running_on_server -%}
-    {% with
-      node_controls__reference = document.node_id,
-      node_controls__node_type = 'document'
-    %}
-    {% include "_shared/node_controls.jinja.html" %}
-    {% endwith %}
-  {%- endif -%}
-</sdoc-node>
 </turbo-frame>

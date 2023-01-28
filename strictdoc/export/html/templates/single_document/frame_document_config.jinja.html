@@ -1,5 +1,7 @@
 <turbo-frame id="frame_document_config">
-  <div class="content_meta">
+<sdoc-node
+  data-editable_node="on"
+>
   <h1>{{document.title}}</h1>
 {%- if document.config.has_meta() -%}
     <table class="table_meta">
@@ -35,26 +37,17 @@
       {%- endif -%}
     </table>
 {%- endif -%}
-  </div>
 
   {%- if config.is_running_on_server -%}
-  <a
-    href="/actions/document/edit_config?document_mid={{document.node_id}}"
-    title="Edit document configuration"
-    class="action_button"
-    data-turbo-action="replace"
-    data-turbo="true">
-    {% include "_res/svg_ico16_edit.jinja.html" %}
-    Edit document configuration
-  </a>
-  <a
-    href="/actions/document/edit_grammar?document_mid={{document.node_id}}"
-    title="Edit document grammar"
-    class="action_button"
-    data-turbo-action="replace"
-    data-turbo="true">
-    {% include "_res/svg_ico16_edit.jinja.html" %}
-    Edit document grammar
-  </a>
+    {% with
+      node_controls__reference = document.node_id,
+      node_controls__node_type = 'document'
+    %}
+    {% include "_shared/node_controls.jinja.html" %}
+    {% endwith %}
   {%- endif -%}
+
+  {% include "_shared/document_freetext.jinja.html" %}
+
+</sdoc-node>
 </turbo-frame>

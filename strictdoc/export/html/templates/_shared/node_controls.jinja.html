@@ -11,27 +11,51 @@
 
 <sdoc-node-controls>
 
-  {# EDIT #}
+  {% if node_controls__node_type == 'document' -%}
+    {# Grammar #}
   <a
-    {% if node_controls__node_type == 'document' -%}
- href="/fragments/document/{{document.node_id}}"
-    {% else %}
- href="/actions/document/edit_{{node_controls__node_type}}/{{node_controls__reference}}"
-    {% endif -%}
+    href="/actions/document/edit_grammar?document_mid={{document.node_id}}"
+    class="action_button"
+    data-turbo-action="replace"
+    data-turbo="true"
+    title="Edit document grammar"
+    data-testid="document-edit-grammar-action"
+  >{% include "_res/svg_ico16_gear.jinja.html" %}</a>
 
+  {# META #}
+  <a
+    href="/actions/document/edit_config?document_mid={{document.node_id}}"
+    class="action_button"
+    data-turbo-action="replace"
+    data-turbo="true"
+    title="Edit title and meta"
+    data-testid="document-edit-config-action"
+  >{% include "_res/svg_ico16_edit.jinja.html" %}</a>
+    {# EDIT #}
+  <a
+    href="/fragments/document/{{document.node_id}}"
+    class="action_button"
+    data-turbo-action="replace"
+    data-turbo="true"
+    title="Edit abstract"
+    data-testid="node-edit-action"
+  >{% include "_res/svg_ico16_edit.jinja.html" %}</a>
+  {%- endif -%}
+
+{%- if node_controls__node_type != 'document' -%}
+    {# EDIT & DELETE:
+    + section
+    + equirement
+    - NOT document
+  #}
+  <a
+    href="/actions/document/edit_{{node_controls__node_type}}/{{node_controls__reference}}"
     class="action_button"
     data-turbo-action="replace"
     data-turbo="true"
     title="Edit"
     data-testid="node-edit-action"
   >{% include "_res/svg_ico16_edit.jinja.html" %}</a>
-
-  {# DELETE:
-    + section
-    + equirement
-    - NOT document
-  #}
-  {%- if node_controls__node_type != 'document' -%}
   <a
     href="/actions/document/delete_{{node_controls__node_type}}/{{node_controls__reference}}"
     class="action_button"

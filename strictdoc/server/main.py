@@ -37,6 +37,7 @@ if __name__ == "__main__":
         input_path=input_path,
         output_path=output_path,
         reload=args.reload,
+        port=8000,
     )
     project_config: ProjectConfig = (
         ProjectConfigLoader.load_from_path_or_get_default(

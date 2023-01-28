@@ -229,18 +229,39 @@ def test_unit_server(context, focus=None):
 
 
 @task
-def test_end2end(context, focus=None, long_timeouts=False):
+def test_end2end(
+    context,
+    focus=None,
+    exit_first=False,
+    parallelize=False,
+    long_timeouts=False,
+):
+    if parallelize:
+        print(
+            "warning: "
+            "Running parallelized end-2-end tests is supported "
+            "but is not stable."
+        )
     focus_argument = f"-k {focus}" if focus is not None else ""
-    timeouts_argument = "STRICTDOC_LONGER_TIMEOUTS=1" if long_timeouts else ""
+    exit_first_argument = "--exitfirst" if exit_first else ""
+    parallelize_argument_1 = "STRICTDOC_PARALLELIZE=True" if parallelize else ""
+    parallelize_argument_2 = "--numprocesses=2" if parallelize else ""
+    timeouts_argument = (
+        "STRICTDOC_LONGER_TIMEOUTS=True" if long_timeouts else ""
+    )
     run_invoke_cmd(
         context,
         one_line_command(
             f"""
+            rm -rfv /tmp/strictdoc_server.* &&
+            {parallelize_argument_1}
             {timeouts_argument}
             pytest
-                --exitfirst
+                --failed-first
                 --capture=no
+                {parallelize_argument_2}
                 {focus_argument}
+                {exit_first_argument}
                 tests/end2end
             """
         ),

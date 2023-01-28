@@ -5,7 +5,7 @@
 
 <script>
   var clientId = Date.now();
-  var ws = new WebSocket(`ws://localhost:8001/ws/${clientId}`);
+  var ws = new WebSocket(`ws://localhost:{{config.server_port}}/ws/${clientId}`);
   ws.onmessage = function(event) {
     // Nothing just yet.
   };

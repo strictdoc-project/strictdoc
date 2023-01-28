@@ -1,7 +1,7 @@
 <turbo-frame id="frame_document_config">
-{%- if document.config.has_meta() -%}
   <div class="content_meta">
   <h1>{{document.title}}</h1>
+{%- if document.config.has_meta() -%}
     <table class="table_meta">
       {%- if document.config.uid -%}
       <tr>
@@ -34,8 +34,8 @@
       </tr>
       {%- endif -%}
     </table>
-  </div>
 {%- endif -%}
+  </div>
 
   {%- if config.is_running_on_server -%}
   <a

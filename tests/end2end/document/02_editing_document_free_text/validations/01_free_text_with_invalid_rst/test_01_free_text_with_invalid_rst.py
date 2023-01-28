@@ -31,8 +31,6 @@ class Test_01_EditingFreeTextWithInvalidRST(BaseCase):
 
         self.assert_text("Hello world!")
 
-        # self.click_link("Edit")
-        # self.click('[data-testid="node-edit-action"]')
         self.hover_and_click("sdoc-node", '[data-testid="node-edit-action"]')
 
         self.type(

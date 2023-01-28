@@ -33,7 +33,6 @@ class Test09DeleteSection(BaseCase):
 
         self.assert_text_visible("First section")
 
-        # self.click_nth_visible_element("//a[contains(text(), 'Delete')]", 1)
         self.hover_and_click(
             hover_selector="(//sdoc-node)[2]",
             click_selector=(

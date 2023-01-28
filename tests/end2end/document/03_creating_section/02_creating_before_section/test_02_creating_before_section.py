@@ -31,7 +31,6 @@ class Test_03_02_CreatingBeforeSection(BaseCase):
         self.click_link("DOC")
         self.assert_text("Hello world!")
 
-        # self.click_link("+S⬆")
         self.hover_and_click("sdoc-node", '[data-testid="node-menu-handler"]')
         self.click('[data-testid="node-add-section-above-action"]')
 

@@ -32,7 +32,6 @@ class Test03CreatingChildSection(BaseCase):
 
         self.assert_text("Hello world!")
 
-        # self.click_link("+S⬊")
         self.hover_and_click(
             hover_selector="(//sdoc-node)[1]",
             click_selector=(

@@ -33,7 +33,6 @@ class Test04CreatingTwoSiblingSections(BaseCase):
 
         self.assert_text("Hello world!")
 
-        # self.click_link("+S⬊")
         self.hover_and_click(
             hover_selector="(//sdoc-node)[1]",
             click_selector=(
@@ -59,7 +58,6 @@ class Test04CreatingTwoSiblingSections(BaseCase):
         self.assert_text("1. First title")
 
         # Creating Section 2
-        # self.click_nth_visible_element("//a[contains(text(), '+S⬇')]", 1)
         self.hover_and_click(
             hover_selector="(//sdoc-node)[2]",
             click_selector=(

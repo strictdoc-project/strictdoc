@@ -34,7 +34,6 @@ class Test06CreateRequirementsInDocument(BaseCase):
         self.assert_text("Hello world!")
 
         # Requirement 1
-        # self.click_nth_visible_element("//a[contains(text(), '+R⬊')]", 1)
         self.hover_and_click(
             hover_selector="(//sdoc-node)[1]",
             click_selector=(
@@ -59,7 +58,6 @@ class Test06CreateRequirementsInDocument(BaseCase):
         self.click_xpath("//button[@type='submit' and text()='Save']")
 
         # Requirement 2
-        # self.click_nth_visible_element("//a[contains(text(), '+R⬇')]", 1)
         self.hover_and_click(
             hover_selector="(//sdoc-node)[2]",
             click_selector=(
@@ -84,7 +82,6 @@ class Test06CreateRequirementsInDocument(BaseCase):
         self.click_xpath("//button[@type='submit' and text()='Save']")
 
         # Requirement 3
-        # self.click_nth_visible_element("//a[contains(text(), '+R⬇')]", 2)
         self.hover_and_click(
             hover_selector="(//sdoc-node)[3]",
             click_selector=(

@@ -13,7 +13,6 @@ class Test01MainPage(BaseCase):
         test_server.run()
 
         self.open(test_server.get_host_and_port())
-        self.save_screenshot_to_logs()
 
         self.assert_text("Document 1")
 

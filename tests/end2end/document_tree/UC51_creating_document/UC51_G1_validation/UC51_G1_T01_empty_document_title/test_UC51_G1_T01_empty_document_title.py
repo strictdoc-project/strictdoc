@@ -5,12 +5,9 @@ from seleniumbase import BaseCase
 from tests.end2end.server import SDocTestServer
 
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
-path_to_reqif_sample = os.path.join(
-    path_to_this_test_file_folder, "sample.reqif"
-)
 
 
-class Test_02_CancelReqIFImportForm(BaseCase):
+class Test_UC51_G1_T01_CreatingDocumentWithEmptyTitle(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -25,8 +22,11 @@ class Test_02_CancelReqIFImportForm(BaseCase):
 
         self.assert_text("The document tree has no documents yet.")
 
-        self.click_link("Import document tree from ReqIF")
+        self.click_link("Add document")
 
-        self.click_nth_visible_element("//a[contains(text(), 'Cancel')]", 1)
+        self.type("#document_title", "")  # Empty document
+        self.type("#document_path", "docs/document1.sdoc")
 
-        self.assert_text_not_visible("Cancel")
+        self.click_xpath("//button[@type='submit' and text()='Save']")
+
+        self.assert_text("Document title must not be empty.")

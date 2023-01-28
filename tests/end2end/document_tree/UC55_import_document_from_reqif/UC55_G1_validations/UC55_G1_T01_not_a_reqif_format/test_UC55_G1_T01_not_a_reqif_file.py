@@ -10,7 +10,7 @@ path_to_reqif_sample = os.path.join(
 )
 
 
-class Test_Validation_01_NotAReqIFormat(BaseCase):
+class Test_UC55_G1_T01_NotAReqIFormat(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"

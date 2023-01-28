@@ -1,6 +1,7 @@
 import os
 import shutil
 
+from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.server import SDocTestServer
@@ -31,7 +32,15 @@ class Test08EditSection(BaseCase):
 
         self.assert_text("Hello world!")
 
-        self.click_nth_visible_element("//a[text()='Edit']", 2)
+        # self.click_nth_visible_element("//a[text()='Edit']", 2)
+        self.hover_and_click(
+            hover_selector="(//sdoc-node)[2]",
+            click_selector=(
+                '(//sdoc-node)[2]//*[@data-testid="node-edit-action"]'
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
 
         self.click_nth_visible_element("//a[contains(text(), 'Cancel')]", 1)
 

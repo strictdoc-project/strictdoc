@@ -8,9 +8,11 @@
         {{ renderer.render_free_text(document_type, free_text) }}
       </div>
     {%- endfor -%}
-  {%- else -%}
-      <div class="document_placeholder">
-        The document is empty. Start adding text, sections, and requirements.
+  {%- elif not document.section_contents -%}
+      <div
+        data-testid="document-placeholder"
+        class="document_placeholder"
+      >The document is empty. Start adding text, sections, and requirements.
       </div>
   {%- endif -%}
 

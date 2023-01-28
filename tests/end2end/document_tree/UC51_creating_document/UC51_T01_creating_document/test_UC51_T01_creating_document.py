@@ -6,12 +6,9 @@ from seleniumbase import BaseCase
 from tests.end2end.server import SDocTestServer
 
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
-path_to_reqif_sample = os.path.join(
-    path_to_this_test_file_folder, "sample.reqif"
-)
 
 
-class Test_03_ImportDocumentFromReqIF(BaseCase):
+class Test_UC51_T01_CreatingDocument(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -26,14 +23,18 @@ class Test_03_ImportDocumentFromReqIF(BaseCase):
 
         self.assert_text("The document tree has no documents yet.")
 
-        self.click_link("Import document tree from ReqIF")
+        self.click_link("Add document")
 
-        reqif_input_field = self.find_element("#reqif_file")
-        reqif_input_field.send_keys(path_to_reqif_sample)
-        self.click_xpath("//button[@type='submit' and text()='Import ReqIF']")
-        self.assert_text_not_visible("Import ReqIF")
+        self.type("#document_title", "Document 1")
+        self.type("#document_path", "docs/document1.sdoc")
 
-        create_document_path = os.path.join(path_to_sandbox, "Document_1.sdoc")
+        self.click_xpath("//button[@type='submit' and text()='Save']")
+
+        self.assert_text("Document 1")
+
+        create_document_path = os.path.join(
+            path_to_sandbox, "docs", "document1.sdoc"
+        )
         assert os.path.exists(create_document_path)
         assert filecmp.cmp(
             create_document_path,

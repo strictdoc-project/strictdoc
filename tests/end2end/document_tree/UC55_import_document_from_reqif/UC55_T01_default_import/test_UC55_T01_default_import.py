@@ -11,7 +11,7 @@ path_to_reqif_sample = os.path.join(
 )
 
 
-class Test_03_ImportTreeOfTwoDocuments(BaseCase):
+class Test_UC55_T01_ImportDocumentFromReqIF(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -31,28 +31,13 @@ class Test_03_ImportTreeOfTwoDocuments(BaseCase):
         reqif_input_field = self.find_element("#reqif_file")
         reqif_input_field.send_keys(path_to_reqif_sample)
         self.click_xpath("//button[@type='submit' and text()='Import ReqIF']")
+        self.assert_text_not_visible("Import ReqIF")
 
-        self.assert_text("Document 1")
-        self.assert_text("Document 2")
-
-        path_to_created_document1 = os.path.join(
-            path_to_sandbox, "Document_1.sdoc"
-        )
-        assert os.path.exists(path_to_created_document1)
+        create_document_path = os.path.join(path_to_sandbox, "Document_1.sdoc")
+        assert os.path.exists(create_document_path)
         assert filecmp.cmp(
-            path_to_created_document1,
+            create_document_path,
             os.path.join(
-                path_to_this_test_file_folder, "Document_1.expected.sdoc"
-            ),
-        )
-
-        path_to_created_document2 = os.path.join(
-            path_to_sandbox, "Document_2.sdoc"
-        )
-        assert os.path.exists(path_to_created_document2)
-        assert filecmp.cmp(
-            path_to_created_document2,
-            os.path.join(
-                path_to_this_test_file_folder, "Document_2.expected.sdoc"
+                path_to_this_test_file_folder, "document.expected.sdoc"
             ),
         )

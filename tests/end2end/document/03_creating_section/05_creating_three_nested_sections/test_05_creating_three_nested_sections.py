@@ -34,7 +34,6 @@ class Test05_CreatingThreeNestedSections(BaseCase):
         self.assert_text("Hello world!")
 
         # Section 1
-        # self.click_link("+S⬊")
         self.hover_and_click(
             hover_selector="(//sdoc-node)[1]",
             click_selector=(

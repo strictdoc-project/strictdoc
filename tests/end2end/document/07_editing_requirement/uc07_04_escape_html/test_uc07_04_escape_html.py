@@ -33,7 +33,6 @@ class Test_UC07_04_EscapeHTML(BaseCase):
 
         self.assert_text("Hello world!")
 
-        # self.click_nth_visible_element("//a[text()='Edit']", 2)
         self.hover_and_click(
             hover_selector="(//sdoc-node)[2]",
             click_selector=(

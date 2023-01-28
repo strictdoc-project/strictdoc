@@ -102,7 +102,7 @@ def create_main_router(
         enable_mathjax=False,
         experimental_enable_file_traceability=False,
     )
-    export_config.is_running_on_server = True
+    export_config.configure_for_server(server_port=server_config.port)
     export_action = ExportAction(
         config=export_config, parallelizer=parallelizer
     )

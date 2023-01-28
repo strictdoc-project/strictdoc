@@ -5,16 +5,21 @@ import re
 # FIXME: select has no poll() on Windows. Find a portable implementation.
 import select
 import shutil
+import socket
 import subprocess
 import sys
+from contextlib import closing
 from threading import Thread
 from time import sleep
+from typing import Optional
 
 import psutil
 
 # Running selenium tests on GitHub Actions CI is considerably slower.
 # Passing the flag via env because pytest makes it hard to introduce an extra
 # command-line argument when it is not used as a test fixture.
+from tests.end2end.conftest import test_environment
+
 if os.getenv("STRICTDOC_LONGER_TIMEOUTS") is not None:
     WAIT_TIMEOUT = 30
     POLL_TIMEOUT = 10000
@@ -23,8 +28,8 @@ if os.getenv("STRICTDOC_LONGER_TIMEOUTS") is not None:
     # until the file actually appears on the file system.
     DOWNLOAD_FILE_TIMEOUT = 4
 else:
-    WAIT_TIMEOUT = 5
-    POLL_TIMEOUT = 2000
+    WAIT_TIMEOUT = 5  # Seconds
+    POLL_TIMEOUT = 2000  # Milliseconds
     WARMUP_INTERVAL = 0
     DOWNLOAD_FILE_TIMEOUT = 2
 
@@ -40,36 +45,39 @@ class SDocTestServer:
             shutil.rmtree(path_to_sandbox)
         os.mkdir(path_to_sandbox)
 
-        # _ = GitClient(path_to_git_root=path_to_sandbox, initialize=True)
-
         test_server = SDocTestServer(
             input_path=path_to_sandbox,
             output_path=None,
+            is_parallel_execution=test_environment.is_parallel_execution,
         )
         return test_server
 
-    def __init__(self, input_path, output_path):
+    def __init__(
+        self,
+        *,
+        input_path: str,
+        output_path: Optional[str] = None,
+        is_parallel_execution: bool = False,
+    ):
         assert os.path.isdir(input_path)
         self.path_to_tdoc_folder = input_path
-        self.path_to_sandbox = output_path
+        self.path_to_sandbox: Optional[str] = output_path
         self.process = None
+        self.server_port: int = (
+            SDocTestServer._get_test_server_port()
+            if is_parallel_execution
+            else 8001
+        )
+        if not SDocTestServer.check_no_existing_connection(
+            "127.0.0.1", self.server_port
+        ):
+            raise EnvironmentError(
+                "TestSDocServer: Cannot start a server because there is another"
+                f"server already running at the port: {self.server_port}."
+            )
 
     def __del__(self):
-        parent = psutil.Process(self.process.pid)
-        if not parent.is_running():
-            return
-        child_processes = parent.children(recursive=True)
-        child_processes_ids = list(
-            map(lambda p: p.pid, parent.children(recursive=True))
-        )
-        print(
-            "TestSDocServer: "
-            "stopping server and worker processes: "
-            f"{parent.pid} -> {child_processes_ids}"
-        )
-        self.process.kill()
-        for process in child_processes:
-            process.kill()
+        self.close()
 
     def run(self):
         args = [
@@ -77,6 +85,8 @@ class SDocTestServer:
             "strictdoc/cli/main.py",
             "server",
             "--no-reload",
+            "--port",
+            str(self.server_port),
             self.path_to_tdoc_folder,
         ]
         if self.path_to_sandbox is not None:
@@ -88,7 +98,9 @@ class SDocTestServer:
             )
 
         temp_file = open(  # pylint: disable=consider-using-with
-            "/tmp/sdoctest.out.log", "w", encoding="utf8"
+            f"/tmp/strictdoc_server.{self.server_port}.out.log",
+            "w",
+            encoding="utf8",
         )
 
         process = subprocess.Popen(  # pylint: disable=consider-using-with
@@ -106,10 +118,55 @@ class SDocTestServer:
             server_process=process,
             expectations=["INFO:     Application startup complete."],
         )
-        SDocTestServer.continue_capturing_stderr(server_process=process)
+        SDocTestServer.continue_capturing_stderr(
+            server_process=process, server_port=self.server_port
+        )
 
         sleep(WARMUP_INTERVAL)
-        print("TestSDocServer: Server is up and running.")
+        print(
+            f"TestSDocServer: "
+            f"Server is up and running on port: {self.server_port}."
+        )
+
+    def close(self):
+        if self.process is None:
+            return
+        parent = psutil.Process(self.process.pid)
+        if not parent.is_running():
+            return
+        child_processes = parent.children(recursive=True)
+        child_processes_ids = list(
+            map(lambda p: p.pid, parent.children(recursive=True))
+        )
+        print(
+            "TestSDocServer: "
+            "stopping server and worker processes: "
+            f"{parent.pid} -> {child_processes_ids}"
+        )
+        self.process.kill()
+        for process in child_processes:
+            if process.is_running():
+                process.kill()
+
+    def get_host_and_port(self):
+        return f"http://localhost:{self.server_port}"
+
+    @staticmethod
+    def _get_test_server_port() -> int:
+        # This is to avoid collisions between test processes running in
+        # parallel.
+        base_server_test_port = 14000
+        this_process_pid = os.getpid()
+        this_process_pid_hundreds = this_process_pid % 100
+        server_port = base_server_test_port + this_process_pid_hundreds
+        return server_port
+
+    @staticmethod
+    def check_no_existing_connection(host, port):
+        with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
+            if sock.connect_ex((host, port)) == 0:
+                return False
+            return True
 
     @staticmethod
     def receive_expected_response(server_process, expectations):
@@ -150,10 +207,13 @@ class SDocTestServer:
             sys.exit(1)
 
     @staticmethod
-    def enqueue_output(out):
+    def enqueue_output(out, server_port: int):
+        assert isinstance(server_port, int)
         # This solution also uses Queue but here it is not used.
         # https://stackoverflow.com/a/4896288/598057
-        with open("/tmp/sdoctest.err.log", "wb") as temp_file:
+        with open(
+            f"/tmp/strictdoc_server.{server_port}.err.log", "wb"
+        ) as temp_file:
             poll = select.poll()  # pylint: disable=no-member
             poll.register(out, select.POLLIN)  # pylint: disable=no-member
 
@@ -166,9 +226,13 @@ class SDocTestServer:
                     temp_file.flush()
 
     @staticmethod
-    def continue_capturing_stderr(server_process):
+    def continue_capturing_stderr(server_process, server_port: int):
         thread = Thread(
-            target=SDocTestServer.enqueue_output, args=(server_process.stderr,)
+            target=SDocTestServer.enqueue_output,
+            args=(
+                server_process.stderr,
+                server_port,
+            ),
         )
         thread.daemon = True  # thread dies with the program
         thread.start()

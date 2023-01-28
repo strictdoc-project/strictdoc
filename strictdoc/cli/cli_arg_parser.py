@@ -4,6 +4,7 @@ import sys
 from enum import Enum
 from typing import List, Optional
 
+from strictdoc.cli.argument_int_range import IntRange
 from strictdoc.core.environment import SDocRuntimeEnvironment
 from strictdoc.core.project_config import ProjectConfig
 
@@ -251,6 +252,9 @@ def cli_args_parser() -> argparse.ArgumentParser:
     command_parser_server.add_argument(
         "--no-reload", dest="reload", action="store_false"
     )
+    command_parser_server.add_argument(
+        "--port", default=8000, type=IntRange(1000, 65000)
+    )
 
     # Command: Version
     command_subparsers.add_parser(
@@ -289,13 +293,16 @@ class ServerCommandConfig:
         input_path: str,
         output_path: str,
         reload: bool,
+        port: int,
     ):
         assert os.path.exists(input_path)
+        assert isinstance(port, int)
         self.environment: SDocRuntimeEnvironment = environment
         abs_input_path = os.path.abspath(input_path)
         self.input_path: str = abs_input_path
         self.output_path: str = output_path
         self.reload: bool = reload
+        self.port = port
 
 
 class ExportMode(Enum):
@@ -332,6 +339,18 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         self.output_html_root: str = os.path.join(output_dir, "html")
 
         self.is_running_on_server = False
+        # FIXME: This does not belong here.
+        self._server_port: Optional[int] = None
+
+    def configure_for_server(self, server_port: int):
+        assert isinstance(server_port, int)
+        self.is_running_on_server = True
+        self._server_port = server_port
+
+    @property
+    def server_port(self) -> int:
+        assert self._server_port is not None
+        return self._server_port
 
     def get_export_mode(self):
         if "html" in self.formats:
@@ -449,6 +468,7 @@ class SDocArgsParser:
             input_path=self.args.input_path,
             output_path=self.args.output_path,
             reload=self.args.reload,
+            port=self.args.port,
         )
 
     def get_dump_grammar_config(self) -> DumpGrammarCommandConfig:

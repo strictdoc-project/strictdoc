@@ -32,10 +32,9 @@ class Test_20_ExportTreeToReqIF(BaseCase):
             os.path.join(path_to_this_test_file_folder, "Document_2.sdoc"),
             os.path.join(path_to_sandbox, "Document_2.sdoc"),
         )
-
         test_server.run()
 
-        self.open("http://localhost:8001")
+        self.open(test_server.get_host_and_port())
         self.save_screenshot_to_logs()
 
         self.assert_text("Document 1")

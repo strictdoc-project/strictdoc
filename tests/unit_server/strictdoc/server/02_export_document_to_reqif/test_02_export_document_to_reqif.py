@@ -21,6 +21,7 @@ def test_export_document_to_reqif():
         input_path=PATH_TO_THIS_TEST_FOLDER,
         output_path=PATH_TO_OUTPUT_FOLDER,
         reload=False,
+        port=8001,
     )
     client = TestClient(
         create_app(

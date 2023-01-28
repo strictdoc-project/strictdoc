@@ -8,6 +8,10 @@
         {{ renderer.render_free_text(document_type, free_text) }}
       </div>
     {%- endfor -%}
+  {%- else -%}
+      <div class="document_placeholder">
+        The document is empty. Start adding text, sections, and requirements.
+      </div>
   {%- endif -%}
 
   {%- if config.is_running_on_server -%}

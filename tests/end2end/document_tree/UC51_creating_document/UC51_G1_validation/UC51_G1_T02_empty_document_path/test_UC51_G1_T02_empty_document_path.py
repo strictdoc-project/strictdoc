@@ -7,7 +7,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test_02_CreatingDocumentWithEmptyPath(BaseCase):
+class Test_TC51_G1_T02_CreatingDocumentWithEmptyPath(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"

@@ -16,6 +16,7 @@ def test_get_document():
         input_path=PATH_TO_THIS_TEST_FOLDER,
         output_path=os.path.join(PATH_TO_THIS_TEST_FOLDER, "output"),
         reload=False,
+        port=8001,
     )
     client = TestClient(
         create_app(

@@ -45,7 +45,7 @@ def run_strictdoc_server(
         factory=True,
         host="127.0.0.1",
         log_level="info",
-        port=8001,
+        port=server_config.port,
         reload=server_config.reload,
         reload_dirs=[
             server_config.environment.path_to_strictdoc,
@@ -65,4 +65,5 @@ def run_strictdoc_server(
         # root_path: str = "",
     )
     tmp_config_file.close()
-    os.unlink(tmp_config_file.name)
+    if os.path.exists(tmp_config_file.name):
+        os.unlink(tmp_config_file.name)

@@ -35,7 +35,6 @@ class Test06CreateSectionAfterRequirement(BaseCase):
 
         # Requirement
 
-        # self.click_nth_visible_element("//a[contains(text(), '+R⬊')]", 1)
         self.hover_and_click(
             hover_selector="(//sdoc-node)[1]",
             click_selector=(
@@ -61,7 +60,6 @@ class Test06CreateSectionAfterRequirement(BaseCase):
 
         # Section
 
-        # self.click_nth_visible_element("//a[contains(text(), '+S⬇')]", 1)
         self.hover_and_click(
             hover_selector="(//sdoc-node)[2]",
             click_selector=(

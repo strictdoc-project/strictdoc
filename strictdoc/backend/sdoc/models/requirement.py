@@ -223,7 +223,7 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         return False
 
     @property
-    def document(self):
+    def document(self) -> Document:
         return self.ng_document_reference.get_document()
 
     def is_inline_requirement(self):

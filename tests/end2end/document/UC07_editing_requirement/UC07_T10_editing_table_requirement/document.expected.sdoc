@@ -1,0 +1,18 @@
+[DOCUMENT]
+TITLE: Document 1
+OPTIONS:
+  REQUIREMENT_STYLE: Table
+
+[FREETEXT]
+Hello world!
+[/FREETEXT]
+
+[REQUIREMENT]
+UID: Modified_UID
+TITLE: Modified title
+STATEMENT: >>>
+Modified statement.
+<<<
+RATIONALE: >>>
+Modified rationale.
+<<<

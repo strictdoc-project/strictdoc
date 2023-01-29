@@ -45,6 +45,12 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
             self.requirement_style is None or self.requirement_style == "Inline"
         )
 
+    def is_table_requirements(self):
+        return (
+            self.requirement_style is not None
+            and self.requirement_style == "Table"
+        )
+
     def is_requirement_in_toc(self):
         return (
             self.requirement_in_toc is None or self.requirement_in_toc == "True"

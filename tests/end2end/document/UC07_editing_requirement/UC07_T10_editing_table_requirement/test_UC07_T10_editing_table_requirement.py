@@ -10,7 +10,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test07EditRequirement(BaseCase):
+class Test_UC07_T10_EditTableRequirement(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -31,7 +31,10 @@ class Test07EditRequirement(BaseCase):
 
         self.click_link("DOC")
 
-        self.assert_text("Hello world!")
+        # Make sure that the table-based requirement is rendered.
+        self.assert_element(
+            '//sdoc-node[@data-testid="node-requirement-table"]', by=By.XPATH
+        )
 
         self.hover_and_click(
             hover_selector="(//sdoc-node)[2]",
@@ -53,6 +56,11 @@ class Test07EditRequirement(BaseCase):
         self.assert_text("Modified_UID")
         self.assert_text("Modified statement.")
         self.assert_text("Modified rationale.")
+
+        # Make sure that the table-based requirement is rendered.
+        self.assert_element(
+            '//sdoc-node[@data-testid="node-requirement-table"]', by=By.XPATH
+        )
 
         self.assert_element(
             "//turbo-frame[@id='frame-toc']//*[contains(., 'Modified title')]"

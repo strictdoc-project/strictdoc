@@ -1028,8 +1028,8 @@ def create_main_router(
         request_form_data: FormData = await request.form()
         request_dict = dict(request_form_data)
         requirement_mid = request_dict["requirement_mid"]
-        requirement = export_action.traceability_index.get_node_by_id(
-            requirement_mid
+        requirement: Requirement = (
+            export_action.traceability_index.get_node_by_id(requirement_mid)
         )
         document = requirement.document
 
@@ -1106,11 +1106,13 @@ def create_main_router(
         export_action.export()
 
         # Rendering back the Turbo template.
+        partial = (
+            "stream_update_table_requirement.jinja.html"
+            if document.config.is_table_requirements()
+            else "stream_update_requirement.jinja.html"
+        )
         template = env.get_template(
-            "actions/"
-            "document/"
-            "edit_requirement/"
-            "stream_update_requirement.jinja.html"
+            f"actions/document/edit_requirement/{partial}"
         )
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix()

@@ -223,8 +223,12 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         return False
 
     @property
-    def document(self):
-        return self.ng_document_reference.get_document()
+    def document(self) -> Document:
+        document: Optional[Document] = self.ng_document_reference.get_document()
+        assert (
+            document is not None
+        ), "A valid requirement must always have a reference to the document."
+        return document
 
     def is_inline_requirement(self):
         return (

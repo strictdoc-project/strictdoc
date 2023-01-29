@@ -65,7 +65,10 @@ from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
 from strictdoc.helpers.parallelizer import NullParallelizer
-from strictdoc.helpers.string import sanitize_html_form_field
+from strictdoc.helpers.string import (
+    sanitize_html_form_field,
+    is_safe_alphanumeric_string,
+)
 from strictdoc.server.error_object import ErrorObject
 
 
@@ -1355,7 +1358,7 @@ def create_main_router(
     @router.post(
         "/actions/document_tree/create_document", response_class=Response
     )
-    def create_document(
+    def document_tree__create_document(
         document_title: str = Form(""),
         document_path: str = Form(""),
     ):
@@ -1368,6 +1371,25 @@ def create_main_router(
             error_object.add_error(
                 "document_path", "Document path must not be empty."
             )
+        else:
+            document_path = document_path.strip()
+            if not is_safe_alphanumeric_string(document_path):
+                error_object.add_error(
+                    "document_path",
+                    (
+                        "Document path must be relative and only contain "
+                        "slashes, alphanumeric characters, "
+                        "and underscore symbols."
+                    ),
+                )
+            if not document_path.endswith(".sdoc"):
+                error_object.add_error(
+                    "document_path",
+                    (
+                        "Document path must end with a file name. "
+                        "The file name must have the .sdoc extension."
+                    ),
+                )
 
         if error_object.any_errors():
             template = env.get_template(

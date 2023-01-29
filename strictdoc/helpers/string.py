@@ -48,3 +48,8 @@ def sanitize_html_form_field(field: str, multiline: bool) -> str:
                 " ", sanitized_field
             )
     return ""
+
+
+def is_safe_alphanumeric_string(string: str) -> bool:
+    pattern = re.compile(r"^[\w.]+([/\\][\w.]+?)*$")
+    return pattern.match(string) is not None

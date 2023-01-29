@@ -1,3 +1,4 @@
+import filecmp
 import os
 import shutil
 
@@ -9,7 +10,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test_01_CancelEditRequirement(BaseCase):
+class Test_UC07_T01_EditRequirement(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -41,5 +42,26 @@ class Test_01_CancelEditRequirement(BaseCase):
             click_by=By.XPATH,
         )
 
-        self.click_link("Cancel")
-        self.assert_text_not_visible("Cancel")
+        self.type("#requirement_UID", "Modified_UID")
+        self.type("#requirement_TITLE", "Modified title")
+        self.type("#requirement_STATEMENT", "Modified statement.")
+        self.type("#requirement_RATIONALE", "Modified rationale.")
+
+        self.click_xpath("//button[@type='submit' and text()='Save']")
+
+        self.assert_text("1. Modified title")
+        self.assert_text("Modified_UID")
+        self.assert_text("Modified statement.")
+        self.assert_text("Modified rationale.")
+
+        self.assert_element(
+            "//turbo-frame[@id='frame-toc']//*[contains(., 'Modified title')]"
+        )
+
+        assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))
+        assert filecmp.cmp(
+            os.path.join(path_to_sandbox, "document.sdoc"),
+            os.path.join(
+                path_to_this_test_file_folder, "document.expected.sdoc"
+            ),
+        )

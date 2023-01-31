@@ -17,29 +17,7 @@
     {%- for field in field_values -%}
     {%- if field.is_singleline() -%}
     {{field.field_name}}:<br/>
-    <div data-section="edit-section-TBD" class="std-form-row">
-      <div
-        data-controller="editablefield"
-        role="textbox"
-        data-editable="single"
-        contenteditable="true"
-        class="std-form-fileld-title"
-        id="requirement_{{field.field_name}}"
-        placeholder="Enter {{field.field_name}} here..."
-      >
-        {%- if true -%}
-        {{ field.field_value }}
-        {%- endif -%}
-      </div>
-      <input type="hidden" class="std-input-hidden" name="requirement[{{field.field_name}}]" value="{{ field.field_value }}"/>
-      {%- if form_object.has_errors(field.field_name) -%}
-        <div class="std-form-error">
-        {%- for error in form_object.get_errors(field.field_name) -%}
-          {{ error }}
-        {%- endfor -%}
-        </div>
-      {%- endif -%}
-    </div>
+      {% include "_shared/requirement_edit_field_singleline.jinja.html" %}
     {%- elif field.is_multiline() -%}
       {{field.field_name}}:<br/>
       {% include "_shared/requirement_edit_field_multiline.jinja.html" %}

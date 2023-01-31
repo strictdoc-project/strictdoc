@@ -10,7 +10,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test_UC07_EditRequirement_20_AddComment(BaseCase):
+class Test_UC07_T61_EscapeHTML(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -42,19 +42,12 @@ class Test_UC07_EditRequirement_20_AddComment(BaseCase):
             click_by=By.XPATH,
         )
 
-        self.type("(//*[@id='requirement_COMMENT'])", "Comment #1")
-
-        self.click_link("Add comment")
-        self.type("(//*[@id='requirement_COMMENT'])[2]", "Comment #2")
-
-        self.click_link("Add comment")
-        self.type("(//*[@id='requirement_COMMENT'])[3]", "Comment #3")
-
+        self.assert_text(
+            "`Link does not get corrupted "
+            "<https://github.com/strictdoc-project/"
+            "sphinx-latex-reqspec-template>`_"
+        )
         self.click_xpath("//button[@type='submit' and text()='Save']")
-
-        self.assert_text("Comment #1")
-        self.assert_text("Comment #2")
-        self.assert_text("Comment #3")
 
         assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))
         assert filecmp.cmp(

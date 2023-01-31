@@ -1,3 +1,4 @@
+import filecmp
 import os
 import shutil
 
@@ -9,7 +10,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test_UC07_T02_CancelEditRequirement(BaseCase):
+class Test_UC07_T02_EditingStatementOnly(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -31,6 +32,10 @@ class Test_UC07_T02_CancelEditRequirement(BaseCase):
         self.click_link("DOC")
 
         self.assert_text("Hello world!")
+        # Make sure that the normal (not table-based) requirement is rendered.
+        self.assert_element(
+            '//sdoc-node[@data-testid="node-requirement-normal"]', by=By.XPATH
+        )
 
         self.hover_and_click(
             hover_selector="(//sdoc-node)[2]",
@@ -41,5 +46,21 @@ class Test_UC07_T02_CancelEditRequirement(BaseCase):
             click_by=By.XPATH,
         )
 
-        self.click_link("Cancel")
-        self.assert_text_not_visible("Cancel")
+        self.type("#requirement_STATEMENT", "Modified statement.")
+
+        self.click_xpath("//button[@type='submit' and text()='Save']")
+
+        self.assert_text("Modified statement.")
+
+        # Make sure that the normal (not table-based) requirement is rendered.
+        self.assert_element(
+            '//sdoc-node[@data-testid="node-requirement-normal"]', by=By.XPATH
+        )
+
+        assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))
+        assert filecmp.cmp(
+            os.path.join(path_to_sandbox, "document.sdoc"),
+            os.path.join(
+                path_to_this_test_file_folder, "document.expected.sdoc"
+            ),
+        )

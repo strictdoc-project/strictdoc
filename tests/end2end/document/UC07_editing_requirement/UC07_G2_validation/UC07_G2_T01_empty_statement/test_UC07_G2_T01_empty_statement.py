@@ -1,6 +1,7 @@
 import os
 import shutil
 
+from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
@@ -9,7 +10,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test_02_EditRequirementStatementMalformedRST(BaseCase):
+class Test_UC07_G2_T01_EmptyStatement(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -41,19 +42,16 @@ class Test_02_EditRequirementStatementMalformedRST(BaseCase):
             click_by=By.XPATH,
         )
 
-        self.type(
-            "#requirement_STATEMENT",
-            """
-- Broken RST markup
+        self.type("#requirement_TITLE", "Modified title")
 
-  - AAA
-  ---
-""".strip(),
+        # HACK: The only way the field is actually cleared.
+        self.type("#requirement_STATEMENT", "X")
+        requirement_statement_field = self.find_element(
+            "//div[@id='requirement_STATEMENT']"
         )
+        requirement_statement_field.click()
+        requirement_statement_field.send_keys(Keys.BACKSPACE)
 
         self.click_xpath("//button[@type='submit' and text()='Save']")
 
-        self.assert_text(
-            "RST markup syntax error on line 4: "
-            "Bullet list ends without a blank line; unexpected unindent."
-        )
+        self.assert_text("Requirement statement must not be empty.")

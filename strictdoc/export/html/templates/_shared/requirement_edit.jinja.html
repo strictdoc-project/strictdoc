@@ -13,7 +13,35 @@
   {%- endif -%}
   <input type="hidden" id="requirement_mid" name="requirement_mid" value="{{form_object.requirement_mid}}" />
 
-  {%- for field_values in form_object.enumerate_fields() -%}
+  {%- for field_values in form_object.enumerate_fields(multiline=False) -%}
+    {%- for field in field_values -%}
+    {%- if field.is_singleline() -%}
+    {{field.field_name}}:<br/>
+      {% include "_shared/requirement_edit_field_singleline.jinja.html" %}
+    {%- elif field.is_multiline() -%}
+      {{field.field_name}}:<br/>
+      {% include "_shared/requirement_edit_field_multiline.jinja.html" %}
+    {%- endif -%}
+    {%- endfor -%}
+  {%- endfor -%}
+
+  <hr/>
+
+  {%- for field in form_object.enumerate_reference_fields() -%}
+    {% include "_shared/requirement_edit_field_parent_link.jinja.html" %}
+  {%- endfor -%}
+
+  <div id="requirement_{{form_object.requirement_mid}}__new_parent_link"></div>
+  <a
+    href="/actions/document/new_parent_link?requirement_mid={{form_object.requirement_mid}}"
+    data-turbo-action="replace"
+    data-turbo="true"
+    data-testid="requirement-add-parent-link-action"
+  >Add parent link</a>
+
+  <hr/>
+
+  {%- for field_values in form_object.enumerate_fields(multiline=True) -%}
     {%- for field in field_values -%}
     {%- if field.is_singleline() -%}
     {{field.field_name}}:<br/>

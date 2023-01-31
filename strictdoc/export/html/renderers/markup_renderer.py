@@ -24,7 +24,7 @@ class MarkupRenderer:
         traceability_index: TraceabilityIndex,
         link_renderer: LinkRenderer,
         context_document: Optional[Document],
-    ):
+    ) -> "MarkupRenderer":
         assert isinstance(traceability_index, TraceabilityIndex)
         assert isinstance(link_renderer, LinkRenderer)
         html_fragment_writer: Union[

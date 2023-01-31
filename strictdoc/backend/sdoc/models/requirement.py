@@ -1,6 +1,6 @@
 import uuid
 from collections import OrderedDict
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, cast
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document
@@ -9,10 +9,14 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     GrammarElement,
 )
 from strictdoc.backend.sdoc.models.node import Node
-from strictdoc.backend.sdoc.models.reference import Reference
+from strictdoc.backend.sdoc.models.reference import (
+    Reference,
+    ParentReqReference,
+)
 from strictdoc.backend.sdoc.models.type_system import (
     RequirementFieldName,
     RESERVED_NON_META_FIELDS,
+    ReferenceType,
 )
 from strictdoc.helpers.auto_described import auto_described
 
@@ -243,14 +247,27 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
                 return True
         return False
 
-    def get_requirement_references(self, ref_type):
+    def get_requirement_references(self, ref_type) -> List[Reference]:
         if not self.references or len(self.references) == 0:
             return []
-        references = []
+        references: List[Reference] = []
         for reference in self.references:
             if reference.ref_type != ref_type:
                 continue
             references.append(reference)
+        return references
+
+    def get_parent_requirement_reference_uids(self) -> List[str]:
+        if not self.references or len(self.references) == 0:
+            return []
+        references: List[str] = []
+        for reference in self.references:
+            if reference.ref_type != ReferenceType.PARENT:
+                continue
+            parent_reference: ParentReqReference = cast(
+                ParentReqReference, reference
+            )
+            references.append(parent_reference.ref_uid)
         return references
 
     def enumerate_fields(self):

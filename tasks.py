@@ -253,7 +253,6 @@ def test_end2end(
         context,
         one_line_command(
             f"""
-            rm -rfv /tmp/strictdoc_server.* &&
             {parallelize_argument_1}
             {timeouts_argument}
             pytest

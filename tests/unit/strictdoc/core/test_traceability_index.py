@@ -199,9 +199,7 @@ def test__adding_parent_link__01__two_requirements_in_one_document():
     traceability_index: TraceabilityIndex = (
         TraceabilityIndexBuilder.create_from_document_tree(document_tree)
     )
-    traceability_index.update_requirement_parent_uid(
-        requirement2, "REQ-001", add_or_remove=True
-    )
+    traceability_index.update_requirement_parent_uid(requirement2, "REQ-001")
 
     # REQ2 has REQ1 as its parent.
     req2_parent_requirements = traceability_index.get_parent_requirements(
@@ -236,9 +234,7 @@ def test__adding_parent_link__02__two_requirements_in_two_documents():
     traceability_index: TraceabilityIndex = (
         TraceabilityIndexBuilder.create_from_document_tree(document_tree)
     )
-    traceability_index.update_requirement_parent_uid(
-        requirement2, "REQ-001", add_or_remove=True
-    )
+    traceability_index.update_requirement_parent_uid(requirement2, "REQ-001")
 
     # REQ2 has REQ1 as its parent.
     req2_parent_requirements = traceability_index.get_parent_requirements(
@@ -282,12 +278,10 @@ def test__adding_parent_link__03__two_requirements_disallow_cycle():
     traceability_index: TraceabilityIndex = (
         TraceabilityIndexBuilder.create_from_document_tree(document_tree)
     )
-    traceability_index.update_requirement_parent_uid(
-        requirement2, "REQ-001", add_or_remove=True
-    )
+    traceability_index.update_requirement_parent_uid(requirement2, "REQ-001")
     with pytest.raises(DocumentTreeError) as exc_info:
         traceability_index.update_requirement_parent_uid(
-            requirement1, "REQ-002", add_or_remove=True
+            requirement1, "REQ-002"
         )
     assert (
         "a cycle detected: "
@@ -315,9 +309,7 @@ def test__adding_parent_link__04__two_requirements_remove_parent_link():
     traceability_index: TraceabilityIndex = (
         TraceabilityIndexBuilder.create_from_document_tree(document_tree)
     )
-    traceability_index.update_requirement_parent_uid(
-        requirement2, "REQ-001", add_or_remove=False
-    )
+    traceability_index.remove_requirement_parent_uid(requirement2, "REQ-001")
 
     req2_parent_requirements = traceability_index.get_parent_requirements(
         requirement2

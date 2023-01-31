@@ -99,7 +99,7 @@ class SDocTestServer:
 
         temp_file = open(  # pylint: disable=consider-using-with
             f"/tmp/strictdoc_server.{self.server_port}.out.log",
-            "w",
+            "a",
             encoding="utf8",
         )
 
@@ -212,7 +212,7 @@ class SDocTestServer:
         # This solution also uses Queue but here it is not used.
         # https://stackoverflow.com/a/4896288/598057
         with open(
-            f"/tmp/strictdoc_server.{server_port}.err.log", "wb"
+            f"/tmp/strictdoc_server.{server_port}.err.log", "ab"
         ) as temp_file:
             poll = select.poll()  # pylint: disable=no-member
             poll.register(out, select.POLLIN)  # pylint: disable=no-member

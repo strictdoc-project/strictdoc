@@ -154,7 +154,9 @@ class TraceabilityIndexBuilder:
 
     @staticmethod
     @timing_decorator("Collect traceability information")
-    def create_from_document_tree(document_tree: DocumentTree):
+    def create_from_document_tree(
+        document_tree: DocumentTree,
+    ) -> TraceabilityIndex:
         # TODO: Too many things going on below. Would be great to simplify this
         # workflow.
         d_01_document_iterators: Dict[Document, DocumentCachingIterator] = {}

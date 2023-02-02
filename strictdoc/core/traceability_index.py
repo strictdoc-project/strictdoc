@@ -1,4 +1,4 @@
-from typing import Dict, Optional, List
+from typing import Dict, Optional, List, Set
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.requirement import Requirement
@@ -6,6 +6,7 @@ from strictdoc.backend.source_file_syntax.reader import (
     SourceFileTraceabilityInfo,
 )
 from strictdoc.core.document_iterator import DocumentCachingIterator
+from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_traceability_index import FileTraceabilityIndex
 from strictdoc.helpers.sorting import alphanumeric_sort
 
@@ -32,22 +33,28 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         document_iterators: Dict[Document, DocumentCachingIterator],
         requirements_parents: Dict[str, RequirementConnections],
         tags_map,
-        document_parents_map,
-        document_children_map,
+        document_parents_map: Dict[Document, Set[Document]],
+        document_children_map: Dict[Document, Set[Document]],
         file_traceability_index: FileTraceabilityIndex,
         map_id_to_node,
     ):
-        self._document_iterators = document_iterators
+        self._document_iterators: Dict[
+            Document, DocumentCachingIterator
+        ] = document_iterators
         self._requirements_parents: Dict[
             str, RequirementConnections
         ] = requirements_parents
         self._tags_map = tags_map
-        self._document_parents_map = document_parents_map
-        self._document_children_map = document_children_map
+        self._document_parents_map: Dict[
+            Document, Set[Document]
+        ] = document_parents_map
+        self._document_children_map: Dict[
+            Document, Set[Document]
+        ] = document_children_map
         self._file_traceability_index = file_traceability_index
         self._map_id_to_node = map_id_to_node
 
-        self.document_tree = None
+        self.document_tree: Optional[DocumentTree] = None
         self.asset_dirs = None
         self.strictdoc_last_update = None
 

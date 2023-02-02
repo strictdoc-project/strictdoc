@@ -2,7 +2,7 @@ import glob
 import os
 import sys
 from collections import defaultdict
-from typing import List, Iterator, Optional, Dict, cast
+from typing import List, Iterator, Optional, Dict, cast, Set
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
@@ -154,14 +154,20 @@ class TraceabilityIndexBuilder:
 
     @staticmethod
     @timing_decorator("Collect traceability information")
-    def create_from_document_tree(document_tree: DocumentTree):
+    def create_from_document_tree(
+        document_tree: DocumentTree,
+    ) -> TraceabilityIndex:
         # TODO: Too many things going on below. Would be great to simplify this
         # workflow.
         d_01_document_iterators: Dict[Document, DocumentCachingIterator] = {}
         d_02_requirements_map: Dict[str, RequirementConnections] = {}
         d_03_map_doc_titles_to_tag_lists = {}
-        d_05_map_documents_to_parents = {}
-        d_06_map_documents_to_children = {}
+        d_05_map_documents_to_parents: Dict[
+            Document, Set[Document]
+        ] = defaultdict(set)
+        d_06_map_documents_to_children: Dict[
+            Document, Set[Document]
+        ] = defaultdict(set)
         d_07_file_traceability_index = FileTraceabilityIndex()
         d_08_requirements_children_map: Dict[
             str, List[Requirement]
@@ -263,8 +269,6 @@ class TraceabilityIndexBuilder:
         children_cycle_detector = TreeCycleDetector(d_02_requirements_map)
 
         for document in document_tree.document_list:
-            d_05_map_documents_to_parents.setdefault(document, set())
-            d_06_map_documents_to_children.setdefault(document, set())
             document_iterator = d_01_document_iterators[document]
 
             for node in document_iterator.all_content():
@@ -315,14 +319,8 @@ class TraceabilityIndexBuilder:
                     parent_document = d_02_requirements_map[
                         requirement_parent_id
                     ].document
-                    d_05_map_documents_to_parents.setdefault(
-                        requirement.document, set()
-                    )
                     d_05_map_documents_to_parents[requirement.document].add(
                         parent_document
-                    )
-                    d_06_map_documents_to_children.setdefault(
-                        parent_document, set()
                     )
                     d_06_map_documents_to_children[parent_document].add(
                         requirement.document

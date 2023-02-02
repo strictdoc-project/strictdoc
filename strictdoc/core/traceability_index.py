@@ -1,4 +1,4 @@
-from typing import Dict, Optional, List
+from typing import Dict, Optional, List, Set
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.requirement import Requirement
@@ -6,7 +6,9 @@ from strictdoc.backend.source_file_syntax.reader import (
     SourceFileTraceabilityInfo,
 )
 from strictdoc.core.document_iterator import DocumentCachingIterator
+from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_traceability_index import FileTraceabilityIndex
+from strictdoc.core.tree_cycle_detector import TreeCycleDetector
 from strictdoc.helpers.sorting import alphanumeric_sort
 
 
@@ -32,22 +34,28 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         document_iterators: Dict[Document, DocumentCachingIterator],
         requirements_parents: Dict[str, RequirementConnections],
         tags_map,
-        document_parents_map,
-        document_children_map,
+        document_parents_map: Dict[Document, Set[Document]],
+        document_children_map: Dict[Document, Set[Document]],
         file_traceability_index: FileTraceabilityIndex,
         map_id_to_node,
     ):
-        self._document_iterators = document_iterators
+        self._document_iterators: Dict[
+            Document, DocumentCachingIterator
+        ] = document_iterators
         self._requirements_parents: Dict[
             str, RequirementConnections
         ] = requirements_parents
         self._tags_map = tags_map
-        self._document_parents_map = document_parents_map
-        self._document_children_map = document_children_map
+        self._document_parents_map: Dict[
+            Document, Set[Document]
+        ] = document_parents_map
+        self._document_children_map: Dict[
+            Document, Set[Document]
+        ] = document_children_map
         self._file_traceability_index = file_traceability_index
         self._map_id_to_node = map_id_to_node
 
-        self.document_tree = None
+        self.document_tree: Optional[DocumentTree] = None
         self.asset_dirs = None
         self.strictdoc_last_update = None
 
@@ -120,19 +128,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             requirement.reserved_uid
         ].children
         return children_requirements
-
-    def get_link(self, requirement):
-        document = self.requirements_parents[requirement.reserved_uid].document
-        return (
-            f"{document.title} - Traceability.html#{requirement.reserved_uid}"
-        )
-
-    def get_deep_link(self, requirement):
-        document = self.requirements_parents[requirement.reserved_uid].document
-        return (
-            f"{document.title} - Traceability Deep.html#"
-            f"{requirement.reserved_uid}"
-        )
 
     def has_tags(self, document):
         if document.title not in self.tags_map:
@@ -215,3 +210,65 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         existing_entry = self.requirements_parents[old_uid]
         del self.requirements_parents[old_uid]
         self.requirements_parents[requirement.reserved_uid] = existing_entry
+
+    def update_requirement_parent_uid(
+        self, requirement: Requirement, parent_uid: str, add_or_remove: bool
+    ):
+        assert requirement.reserved_uid is not None
+
+        requirement_connections: RequirementConnections = (
+            self._requirements_parents[requirement.reserved_uid]
+        )
+        parent_requirement_connections: RequirementConnections = (
+            self._requirements_parents[parent_uid]
+        )
+
+        parent_requirement = parent_requirement_connections.requirement
+        document = requirement.document
+        parent_requirement_document = parent_requirement.document
+
+        if add_or_remove:
+            requirement_connections.parents_uids.append(parent_uid)
+            requirement_connections.parents.append(parent_requirement)
+            parent_requirement_connections.children.append(requirement)
+            self._document_parents_map[document].add(
+                parent_requirement_document
+            )
+            self._document_children_map[parent_requirement_document].add(
+                document
+            )
+            cycle_detector = TreeCycleDetector(self.requirements_parents)
+            cycle_detector.check_node(
+                requirement.reserved_uid,
+                lambda requirement_id: self.requirements_parents[
+                    requirement_id
+                ].parents_uids,
+            )
+        else:
+            requirement_connections.parents_uids.remove(parent_uid)
+            requirement_connections.parents.remove(parent_requirement)
+            parent_requirement_connections.children.remove(requirement)
+
+            # If there are not requirements linking with the parent document,
+            # remove the link.
+            should_disconnect_documents = True
+            for node in self.document_iterators[document].all_content():
+                if not node.is_requirement:
+                    continue
+                requirement_node: Requirement = node
+                if requirement_node in parent_requirement_connections.children:
+                    should_disconnect_documents = False
+                    break
+
+            if should_disconnect_documents:
+                self._document_parents_map[document].remove(
+                    parent_requirement_document
+                )
+                self._document_children_map[parent_requirement_document].remove(
+                    document
+                )
+
+        # Mark document and parent document (if different) for re-generation.
+        document.ng_needs_generation = True
+        if parent_requirement_document != document:
+            parent_requirement_document.ng_needs_generation = True

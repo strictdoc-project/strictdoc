@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.requirement import Requirement
@@ -10,11 +10,27 @@ from strictdoc.core.file_traceability_index import FileTraceabilityIndex
 from strictdoc.helpers.sorting import alphanumeric_sort
 
 
+class RequirementConnections:
+    def __init__(  # pylint: disable=too-many-arguments
+        self,
+        requirement: Requirement,
+        document: Document,
+        parents: List[Requirement],
+        parents_uids: List[str],
+        children: List[Requirement],
+    ):
+        self.requirement: Requirement = requirement
+        self.document: Document = document
+        self.parents: List[Requirement] = parents
+        self.parents_uids: List[str] = parents_uids
+        self.children: List[Requirement] = children
+
+
 class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-instance-attributes  # noqa: E501
     def __init__(  # pylint: disable=too-many-arguments
         self,
         document_iterators: Dict[Document, DocumentCachingIterator],
-        requirements_parents: Dict[str, Dict],
+        requirements_parents: Dict[str, RequirementConnections],
         tags_map,
         document_parents_map,
         document_children_map,
@@ -22,7 +38,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         map_id_to_node,
     ):
         self._document_iterators = document_iterators
-        self._requirements_parents = requirements_parents
+        self._requirements_parents: Dict[
+            str, RequirementConnections
+        ] = requirements_parents
         self._tags_map = tags_map
         self._document_parents_map = document_parents_map
         self._document_children_map = document_children_map
@@ -61,7 +79,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
         parent_requirements = self.requirements_parents[
             requirement.reserved_uid
-        ]["parents"]
+        ].parents
         return parent_requirements
 
     def has_parent_requirements(self, requirement: Requirement):
@@ -74,7 +92,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
         parent_requirements = self.requirements_parents[
             requirement.reserved_uid
-        ]["parents"]
+        ].parents
         return len(parent_requirements) > 0
 
     def has_children_requirements(self, requirement: Requirement):
@@ -87,7 +105,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
         children_requirements = self.requirements_parents[
             requirement.reserved_uid
-        ]["children"]
+        ].children
         return len(children_requirements) > 0
 
     def get_children_requirements(self, requirement: Requirement):
@@ -100,21 +118,17 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
         children_requirements = self.requirements_parents[
             requirement.reserved_uid
-        ]["children"]
+        ].children
         return children_requirements
 
     def get_link(self, requirement):
-        document = self.requirements_parents[requirement.reserved_uid][
-            "document"
-        ]
+        document = self.requirements_parents[requirement.reserved_uid].document
         return (
             f"{document.title} - Traceability.html#{requirement.reserved_uid}"
         )
 
     def get_deep_link(self, requirement):
-        document = self.requirements_parents[requirement.reserved_uid][
-            "document"
-        ]
+        document = self.requirements_parents[requirement.reserved_uid].document
         return (
             f"{document.title} - Traceability Deep.html#"
             f"{requirement.reserved_uid}"
@@ -158,7 +172,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         )
 
     def get_node_by_uid(self, uid):
-        return self._requirements_parents[uid]["requirement"]
+        return self._requirements_parents[uid].requirement
 
     def attach_traceability_info(
         self,
@@ -181,13 +195,15 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         return self._map_id_to_node[node_id]
 
     def mut_add_uid_to_a_requirement(self, requirement: Requirement):
-        self.requirements_parents[requirement.reserved_uid] = {
-            "document": requirement.document,
-            "requirement": requirement,
-            "parents": [],
-            "parents_uids": [],
-            "children": [],
-        }
+        self.requirements_parents[
+            requirement.reserved_uid
+        ] = RequirementConnections(
+            requirement=requirement,
+            document=requirement.document,
+            parents=[],
+            parents_uids=[],
+            children=[],
+        )
 
     def mut_rename_uid_to_a_requirement(
         self, requirement: Requirement, old_uid: Optional[str]

@@ -121,19 +121,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         ].children
         return children_requirements
 
-    def get_link(self, requirement):
-        document = self.requirements_parents[requirement.reserved_uid].document
-        return (
-            f"{document.title} - Traceability.html#{requirement.reserved_uid}"
-        )
-
-    def get_deep_link(self, requirement):
-        document = self.requirements_parents[requirement.reserved_uid].document
-        return (
-            f"{document.title} - Traceability Deep.html#"
-            f"{requirement.reserved_uid}"
-        )
-
     def has_tags(self, document):
         if document.title not in self.tags_map:
             return False

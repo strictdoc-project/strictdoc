@@ -18,5 +18,5 @@ class DocumentTreeError(Exception):
         )
 
     def to_print_message(self):
-        message = f"error: document tree: {self.title}\n" f"{self.message}\n"
+        message = f"error: document tree: {self.title}\n{self.message}\n"
         return message

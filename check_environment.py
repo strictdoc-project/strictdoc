@@ -1,4 +1,3 @@
-import pathlib
 import sys
 
 import pkg_resources
@@ -26,4 +25,4 @@ except pkg_resources.DistributionNotFound as exception:
     print(f"check_environment.py: {exception}")
     sys.exit(11)
 
-print(f"check_environment.py: all packages seem to be installed.")
+print("check_environment.py: all packages seem to be installed.")

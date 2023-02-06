@@ -91,6 +91,7 @@ development = [
     "mypy>=0.910",
     "pylint>=2.11.1",
     "flake8>=3.9.2",
+    "ruff",
 
     # Tests
     "pytest>=6.2.2",

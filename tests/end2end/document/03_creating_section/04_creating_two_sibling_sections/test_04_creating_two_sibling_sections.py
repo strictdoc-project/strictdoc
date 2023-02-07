@@ -2,6 +2,7 @@ import filecmp
 import os
 import shutil
 
+from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.server import SDocTestServer
@@ -23,7 +24,7 @@ class Test04CreatingTwoSiblingSections(BaseCase):
 
         test_server.run()
 
-        self.open("http://localhost:8001")
+        self.open(test_server.get_host_and_port())
 
         self.assert_text("Document 1")
         self.assert_text("PROJECT INDEX")
@@ -32,7 +33,21 @@ class Test04CreatingTwoSiblingSections(BaseCase):
 
         self.assert_text("Hello world!")
 
-        self.click_link("+S⬊")
+        self.hover_and_click(
+            hover_selector="(//sdoc-node)[1]",
+            click_selector=(
+                '(//sdoc-node)[1]//*[@data-testid="node-menu-handler"]'
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+        self.click(
+            selector=(
+                "(//sdoc-node)[1]"
+                '//*[@data-testid="node-add-section-child-action"]'
+            ),
+            by=By.XPATH,
+        )
 
         self.type("#section_title", "First title")
         self.type(
@@ -43,7 +58,21 @@ class Test04CreatingTwoSiblingSections(BaseCase):
         self.assert_text("1. First title")
 
         # Creating Section 2
-        self.click_nth_visible_element("//a[contains(text(), '+S⬇')]", 1)
+        self.hover_and_click(
+            hover_selector="(//sdoc-node)[2]",
+            click_selector=(
+                '(//sdoc-node)[2]//*[@data-testid="node-menu-handler"]'
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+        self.click(
+            selector=(
+                "(//sdoc-node)[2]"
+                '//*[@data-testid="node-add-section-below-action"]'
+            ),
+            by=By.XPATH,
+        )
 
         self.type("#section_title", "Second title")
         self.type(

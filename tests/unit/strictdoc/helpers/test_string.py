@@ -1,4 +1,8 @@
-from strictdoc.helpers.string import multireplace, sanitize_html_form_field
+from strictdoc.helpers.string import (
+    multireplace,
+    sanitize_html_form_field,
+    is_safe_alphanumeric_string,
+)
 
 
 def test_multireplace_01():
@@ -61,3 +65,17 @@ def test_sanitize_04_single_line_removes_all_newlines():
     """  # noqa: W291
     sanitized_field = sanitize_html_form_field(field, multiline=False)
     assert sanitized_field == "Hello world! Hello world! Hello world!"
+
+
+def test_is_safe_alphanumeric_string():
+    assert is_safe_alphanumeric_string("") is False
+    assert is_safe_alphanumeric_string("/") is False
+    assert is_safe_alphanumeric_string("/document.sdoc") is False
+    assert is_safe_alphanumeric_string("doc#%ument.sdoc") is False
+
+    assert is_safe_alphanumeric_string("document") is True
+    assert is_safe_alphanumeric_string("document.sdoc") is True
+    assert is_safe_alphanumeric_string("document.ext.sdoc") is True
+    assert is_safe_alphanumeric_string("docs/document.ext.sdoc") is True
+    assert is_safe_alphanumeric_string("docs/docs2/document.sdoc") is True
+    assert is_safe_alphanumeric_string("docs/document1.sdoc") is True

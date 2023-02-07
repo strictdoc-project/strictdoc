@@ -14,7 +14,7 @@ from starlette.requests import Request
 from starlette.responses import HTMLResponse, Response
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
-from strictdoc import __version__, STRICTDOC_ROOT_PATH
+from strictdoc import __version__, SDocRuntimeEnvironment
 from strictdoc.backend.reqif.export.sdoc_to_reqif_converter import (
     SDocToReqIFObjectConverter,
 )
@@ -65,7 +65,10 @@ from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
 from strictdoc.helpers.parallelizer import NullParallelizer
-from strictdoc.helpers.string import sanitize_html_form_field
+from strictdoc.helpers.string import (
+    sanitize_html_form_field,
+    is_safe_alphanumeric_string,
+)
 from strictdoc.server.error_object import ErrorObject
 
 
@@ -89,9 +92,10 @@ def create_main_router(
     env: Environment = HTMLTemplates.jinja_environment
 
     parallelizer = NullParallelizer()
+    environment: SDocRuntimeEnvironment = server_config.environment
 
     export_config = ExportCommandConfig(
-        strictdoc_root_path=STRICTDOC_ROOT_PATH,
+        environment=server_config.environment,
         input_paths=[server_config.input_path],
         output_dir=server_config.output_path,
         project_title=project_config.project_title,
@@ -101,7 +105,7 @@ def create_main_router(
         enable_mathjax=False,
         experimental_enable_file_traceability=False,
     )
-    export_config.is_running_on_server = True
+    export_config.configure_for_server(server_port=server_config.port)
     export_action = ExportAction(
         config=export_config, parallelizer=parallelizer
     )
@@ -575,6 +579,7 @@ def create_main_router(
             renderer=markup_renderer,
             link_renderer=link_renderer,
             section=section,
+            document=section.document,
             document_type=DocumentType.document(),
             config=export_action.config,
         )
@@ -1023,8 +1028,8 @@ def create_main_router(
         request_form_data: FormData = await request.form()
         request_dict = dict(request_form_data)
         requirement_mid = request_dict["requirement_mid"]
-        requirement = export_action.traceability_index.get_node_by_id(
-            requirement_mid
+        requirement: Requirement = (
+            export_action.traceability_index.get_node_by_id(requirement_mid)
         )
         document = requirement.document
 
@@ -1101,11 +1106,13 @@ def create_main_router(
         export_action.export()
 
         # Rendering back the Turbo template.
+        partial = (
+            "stream_update_table_requirement.jinja.html"
+            if document.config.is_table_requirements()
+            else "stream_update_requirement.jinja.html"
+        )
         template = env.get_template(
-            "actions/"
-            "document/"
-            "edit_requirement/"
-            "stream_update_requirement.jinja.html"
+            f"actions/document/edit_requirement/{partial}"
         )
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix()
@@ -1279,7 +1286,7 @@ def create_main_router(
         )
 
     @router.delete(
-        "/actions/document/delete_section/{section_mid}",
+        "/actions/document/delete_requirement/{requirement_mid}",
         response_class=Response,
     )
     def delete_requirement(requirement_mid: str):
@@ -1305,7 +1312,8 @@ def create_main_router(
 
         # Rendering back the Turbo template.
         template = env.get_template(
-            "actions/document/delete_section/stream_delete_section.jinja.html"
+            "actions/document/delete_requirement/"
+            "stream_delete_requirement.jinja.html"
         )
         link_renderer = LinkRenderer(
             root_path=requirement.document.meta.get_root_path_prefix()
@@ -1352,7 +1360,7 @@ def create_main_router(
     @router.post(
         "/actions/document_tree/create_document", response_class=Response
     )
-    def create_document(
+    def document_tree__create_document(
         document_title: str = Form(""),
         document_path: str = Form(""),
     ):
@@ -1365,6 +1373,25 @@ def create_main_router(
             error_object.add_error(
                 "document_path", "Document path must not be empty."
             )
+        else:
+            document_path = document_path.strip()
+            if not is_safe_alphanumeric_string(document_path):
+                error_object.add_error(
+                    "document_path",
+                    (
+                        "Document path must be relative and only contain "
+                        "slashes, alphanumeric characters, "
+                        "and underscore symbols."
+                    ),
+                )
+            if not document_path.endswith(".sdoc"):
+                error_object.add_error(
+                    "document_path",
+                    (
+                        "Document path must end with a file name. "
+                        "The file name must have the .sdoc extension."
+                    ),
+                )
 
         if error_object.any_errors():
             template = env.get_template(
@@ -1933,7 +1960,7 @@ def create_main_router(
         return HTMLResponse(content=content)
 
     def get_asset(url_to_asset: str):
-        static_path = os.path.join(STRICTDOC_ROOT_PATH, "strictdoc/export/html")
+        static_path = environment.get_path_to_export_html()
         static_file = os.path.join(static_path, url_to_asset)
         content_type, _ = guess_type(static_file)
 
@@ -1948,8 +1975,7 @@ def create_main_router(
         return Response(content, media_type=content_type)
 
     def get_asset_binary(url_to_asset: str):
-        static_path = os.path.join(STRICTDOC_ROOT_PATH, "strictdoc/export/html")
-
+        static_path = environment.get_path_to_export_html()
         static_file = os.path.join(static_path, url_to_asset)
         content_type, _ = guess_type(static_file)
 

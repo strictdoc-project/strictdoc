@@ -2,6 +2,7 @@ import filecmp
 import os
 import shutil
 
+from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.server import SDocTestServer
@@ -23,7 +24,7 @@ class Test09DeleteSection(BaseCase):
 
         test_server.run()
 
-        self.open("http://localhost:8001")
+        self.open(test_server.get_host_and_port())
 
         self.assert_text("Document 1")
         self.assert_text("PROJECT INDEX")
@@ -32,7 +33,14 @@ class Test09DeleteSection(BaseCase):
 
         self.assert_text_visible("First section")
 
-        self.click_nth_visible_element("//a[contains(text(), 'Delete')]", 1)
+        self.hover_and_click(
+            hover_selector="(//sdoc-node)[2]",
+            click_selector=(
+                '(//sdoc-node)[2]//*[@data-testid="node-delete-action"]'
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
 
         self.assert_text_not_visible("First section")
 

@@ -2,6 +2,7 @@ import filecmp
 import os
 import shutil
 
+from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.server import SDocTestServer
@@ -9,7 +10,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test06CreateRequirement(BaseCase):
+class Test06CreateRequirementsInDocument(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -23,7 +24,7 @@ class Test06CreateRequirement(BaseCase):
 
         test_server.run()
 
-        self.open("http://localhost:8001")
+        self.open(test_server.get_host_and_port())
 
         self.assert_text("Document 1")
         self.assert_text("PROJECT INDEX")
@@ -33,7 +34,21 @@ class Test06CreateRequirement(BaseCase):
         self.assert_text("Hello world!")
 
         # Requirement 1
-        self.click_nth_visible_element("//a[contains(text(), '+R⬊')]", 1)
+        self.hover_and_click(
+            hover_selector="(//sdoc-node)[1]",
+            click_selector=(
+                '(//sdoc-node)[1]//*[@data-testid="node-menu-handler"]'
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+        self.click(
+            selector=(
+                "(//sdoc-node)[1]"
+                '//*[@data-testid="node-add-requirement-child-action"]'
+            ),
+            by=By.XPATH,
+        )
 
         self.type("#requirement_UID", "REQ-001")
         self.type("#requirement_TITLE", "Requirement title #1")
@@ -43,7 +58,21 @@ class Test06CreateRequirement(BaseCase):
         self.click_xpath("//button[@type='submit' and text()='Save']")
 
         # Requirement 2
-        self.click_nth_visible_element("//a[contains(text(), '+R⬇')]", 1)
+        self.hover_and_click(
+            hover_selector="(//sdoc-node)[2]",
+            click_selector=(
+                '(//sdoc-node)[2]//*[@data-testid="node-menu-handler"]'
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+        self.click(
+            selector=(
+                "(//sdoc-node)[2]"
+                '//*[@data-testid="node-add-requirement-below-action"]'
+            ),
+            by=By.XPATH,
+        )
 
         self.type("#requirement_UID", "REQ-002")
         self.type("#requirement_TITLE", "Requirement title #2")
@@ -53,7 +82,21 @@ class Test06CreateRequirement(BaseCase):
         self.click_xpath("//button[@type='submit' and text()='Save']")
 
         # Requirement 3
-        self.click_nth_visible_element("//a[contains(text(), '+R⬇')]", 2)
+        self.hover_and_click(
+            hover_selector="(//sdoc-node)[3]",
+            click_selector=(
+                '(//sdoc-node)[3]//*[@data-testid="node-menu-handler"]'
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+        self.click(
+            selector=(
+                "(//sdoc-node)[3]"
+                '//*[@data-testid="node-add-requirement-below-action"]'
+            ),
+            by=By.XPATH,
+        )
 
         self.type("#requirement_UID", "REQ-003")
         self.type("#requirement_TITLE", "Requirement title #3")

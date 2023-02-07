@@ -2,7 +2,11 @@
 
 {%- set anchor=link_renderer.render_local_anchor(section) -%}
 
-<sdoc-node data-controller="document">
+<sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
 
     {% include "_shared/requirement_block/anchor.jinja.html" %}
 
@@ -13,15 +17,12 @@
   {% include "_shared/requirement_block/free_text.jinja.html" %}
 
   {%- if config.is_running_on_server -%}
-    <a href="/actions/document/edit_section/{{section.node_id}}" data-turbo-action="replace" data-turbo="true">Edit</a>,
-    <a href="/actions/document/delete_section/{{section.node_id}}" data-turbo-method="delete" data-turbo="true">Delete</a>,
-
-    <a href="/actions/document/new_section?reference_mid={{section.node_id}}&whereto=before" data-turbo-action="replace" data-turbo="true">+S⬆</a>,
-    <a href="/actions/document/new_section?reference_mid={{section.node_id}}&whereto=child" data-turbo-action="replace" data-turbo="true">+S⬊</a>,
-    <a href="/actions/document/new_section?reference_mid={{section.node_id}}&whereto=after" data-turbo-action="replace" data-turbo="true">+S⬇</a>,
-    <a href="/actions/document/new_requirement?reference_mid={{section.node_id}}&whereto=before" data-turbo-action="replace" data-turbo="true">+R⬆</a>,
-    <a href="/actions/document/new_requirement?reference_mid={{section.node_id}}&whereto=child" data-turbo-action="replace" data-turbo="true">+R⬊</a>,
-    <a href="/actions/document/new_requirement?reference_mid={{section.node_id}}&whereto=after" data-turbo-action="replace" data-turbo="true">+R⬇</a>
+    {% with
+      node_controls__reference = section.node_id,
+      node_controls__node_type = 'section'
+    %}
+    {% include "_shared/node_controls.jinja.html" %}
+    {% endwith %}
   {%- endif -%}
 
 </sdoc-node>

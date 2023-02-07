@@ -1,36 +1,34 @@
+# pylint: disable=wrong-import-position
+# flake8: noqa: E402
+
 import os
 import sys
 
-try:
-    strictdoc_root_path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..", "..")
-    )
-    if not os.path.isdir(strictdoc_root_path):
-        raise FileNotFoundError
-    sys.path.append(strictdoc_root_path)
+strictdoc_root_path = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "..")
+)
+if not os.path.isdir(strictdoc_root_path):
+    raise FileNotFoundError
+sys.path.append(strictdoc_root_path)
 
-    from strictdoc import STRICTDOC_ROOT_PATH
-    from strictdoc.cli.cli_arg_parser import (
-        create_sdoc_args_parser,
-        ExportCommandConfig,
-        PassthroughCommandConfig,
-        DumpGrammarCommandConfig,
-        ImportExcelCommandConfig,
-        ImportReqIFCommandConfig,
-    )
-    from strictdoc.commands.about_command import AboutCommand
-    from strictdoc.commands.dump_grammar_command import DumpGrammarCommand
-    from strictdoc.commands.version_command import VersionCommand
-    from strictdoc.core.actions.export_action import ExportAction
-    from strictdoc.core.actions.import_action import ImportAction
-    from strictdoc.core.actions.passthrough_action import PassthroughAction
-    from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
-    from strictdoc.helpers.parallelizer import Parallelizer
-    from strictdoc.server.server import run_strictdoc_server
-
-except FileNotFoundError:
-    print("error: could not locate strictdoc's root folder.")
-    sys.exit(1)
+from strictdoc import environment
+from strictdoc.cli.cli_arg_parser import (
+    create_sdoc_args_parser,
+    ExportCommandConfig,
+    PassthroughCommandConfig,
+    DumpGrammarCommandConfig,
+    ImportExcelCommandConfig,
+    ImportReqIFCommandConfig,
+)
+from strictdoc.commands.about_command import AboutCommand
+from strictdoc.commands.dump_grammar_command import DumpGrammarCommand
+from strictdoc.commands.version_command import VersionCommand
+from strictdoc.core.actions.export_action import ExportAction
+from strictdoc.core.actions.import_action import ImportAction
+from strictdoc.core.actions.passthrough_action import PassthroughAction
+from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
+from strictdoc.helpers.parallelizer import Parallelizer
+from strictdoc.server.server import run_strictdoc_server
 
 
 def _main(parallelizer):
@@ -57,7 +55,7 @@ def _main(parallelizer):
 
     elif parser.is_export_command:
         config: ExportCommandConfig = parser.get_export_config(
-            STRICTDOC_ROOT_PATH
+            environment=environment
         )
         project_config: ProjectConfig = (
             ProjectConfigLoader.load_from_path_or_get_default(
@@ -74,7 +72,7 @@ def _main(parallelizer):
         export_action.export()
 
     elif parser.is_server_command:
-        server_config = parser.get_server_config()
+        server_config = parser.get_server_config(environment=environment)
         project_config: ProjectConfig = (
             ProjectConfigLoader.load_from_path_or_get_default(
                 path_to_config_dir=server_config.input_path
@@ -86,14 +84,14 @@ def _main(parallelizer):
 
     elif parser.is_import_command_reqif:
         import_config: ImportReqIFCommandConfig = (
-            parser.get_import_config_reqif(STRICTDOC_ROOT_PATH)
+            parser.get_import_config_reqif(environment.path_to_strictdoc)
         )
         import_action = ImportAction()
         import_action.do_import(import_config)
 
     elif parser.is_import_command_excel:
         import_config: ImportExcelCommandConfig = (
-            parser.get_import_config_excel(STRICTDOC_ROOT_PATH)
+            parser.get_import_config_excel(environment.path_to_strictdoc)
         )
         import_action = ImportAction()
         import_action.do_import(import_config)

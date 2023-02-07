@@ -1,5 +1,4 @@
 import os
-import pickle
 
 import toml
 
@@ -9,13 +8,6 @@ class ProjectConfig:
 
     def __init__(self, project_title: str):
         self.project_title: str = project_title
-
-    def dump_to_string(self) -> str:
-        return pickle.dumps(self, 0).decode(encoding="utf8")
-
-    @staticmethod
-    def config_from_string_dump(dump: str) -> "ProjectConfig":
-        return pickle.loads(dump.encode(encoding="utf8"))
 
     @staticmethod
     def default_config():

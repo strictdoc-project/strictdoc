@@ -2,14 +2,33 @@ turbo-frame {
   display: contents;
 }
 
-sdoc-node {
+sdoc-node,
+sdoc-node-card {
   display: block;
   position: relative;
 
   background-color: var(--color-bg-contrast);
-  padding: calc(var(--base-padding)) calc(var(--base-padding)*2);
+  border-radius: 3px;
+}
 
-  /* margin-bottom: 4px; */
+sdoc-node {
+  padding: calc(var(--base-padding)) calc(var(--base-padding)*2);
+}
+
+sdoc-node-card {
+  padding: calc(var(--base-rhythm)) calc(var(--base-rhythm)*2);
+}
+
+/* editable_node */
+
+[data-editable_node="on"] {
+  box-shadow: var(--base-elevation-0);
+  transition: box-shadow 1s;
+}
+
+[data-editable_node="on"]:hover {
+  box-shadow: var(--base-elevation-node);
+  z-index: 10;
 }
 
 /* * */
@@ -26,46 +45,74 @@ sdoc-node {
 
 /* sdoc-node */
 
-[data-role='current'] sdoc-node {
+[data-role='current'] sdoc-node-card {
   background-color: var(--color-bg-contrast);
-  border: 1px solid var(--color-fg-contrast);
-  /* height: 100%; */
-  /* flex-grow: 1; */
 }
 
-[data-role='parents'] sdoc-node,
-[data-role='children'] sdoc-node {
+[data-role='current'] [node-role="requirement"] {
+  border: 1px solid var(--color-fg-contrast);
+}
+
+[data-role='parents'] sdoc-node-card,
+[data-role='children'] sdoc-node-card {
   background-color: var(--color-bg-secondary);
   border: 1px solid var(--color-border);
   width: var(--card-width);
 }
 
-sdoc-node.nouid {
+sdoc-node.nouid,
+sdoc-node-card.nouid {
   background-color: rgb(240, 220, 220);
 }
 
-sdoc-node.nouid .requirement__title {
+.nouid .requirement__title {
   color: #502222;
 }
 
-sdoc-node.highlighted {
+sdoc-node-card.highlighted {
   background-color: var(--color-highlight);
 }
 
-[data-viewtype="traceability"] sdoc-node + sdoc-node {
+[data-viewtype="traceability"] sdoc-node-card + sdoc-node-card {
   margin-top: var(--base-padding);
 }
 
-[data-viewtype="deep_traceability"] sdoc-node {
+[data-viewtype="deep_traceability"] sdoc-node-card {
   /* width: var(--card-width); */
   /* flex-grow: 1; */
 }
 
-[data-viewtype="requirements-coverage"] sdoc-node {
+[data-viewtype="requirements-coverage"] sdoc-node-card {
   width: calc(var(--card-width)*0.75);
   /* width: auto; */
   font-size: .85em;
   line-height: 1.4;
+}
+
+/* sdoc-node-controls */
+
+sdoc-node-controls {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  transition: .7s ease-out;
+  opacity: 0;
+}
+
+sdoc-node:hover sdoc-node-controls {
+  /* border-color: var(--color-action); */
+  opacity: .7;
+}
+
+sdoc-node:hover sdoc-node-controls:hover {
+  opacity: 1;
+}
+
+sdoc-node-controls-line {
+  display: flex;
 }
 
 /* requirement__statement */

@@ -214,3 +214,13 @@
 .content-view-td-related > ul.requirement__link:last-child {
   margin-bottom: 0;
 }
+
+.document_placeholder {
+  min-height: 2rem;
+  color: rgba(0,0,0,.5);
+  font-style: italic;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+}

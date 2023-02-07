@@ -22,7 +22,7 @@ class Test_01_EditingFreeTextWithInvalidRST(BaseCase):
 
         test_server.run()
 
-        self.open("http://localhost:8001")
+        self.open(test_server.get_host_and_port())
 
         self.assert_text("Document 1")
         self.assert_text("PROJECT INDEX")
@@ -31,7 +31,7 @@ class Test_01_EditingFreeTextWithInvalidRST(BaseCase):
 
         self.assert_text("Hello world!")
 
-        self.click_link("Edit")
+        self.hover_and_click("sdoc-node", '[data-testid="node-edit-action"]')
 
         self.type(
             "#document_freetext",

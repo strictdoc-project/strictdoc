@@ -23,7 +23,7 @@ class Test_03_02_CreatingBeforeSection(BaseCase):
 
         test_server.run()
 
-        self.open("http://localhost:8001")
+        self.open(test_server.get_host_and_port())
 
         self.assert_text("Document 1")
         self.assert_text("PROJECT INDEX")
@@ -31,7 +31,8 @@ class Test_03_02_CreatingBeforeSection(BaseCase):
         self.click_link("DOC")
         self.assert_text("Hello world!")
 
-        self.click_link("+S⬆")
+        self.hover_and_click("sdoc-node", '[data-testid="node-menu-handler"]')
+        self.click('[data-testid="node-add-section-above-action"]')
 
         self.type("#section_title", "Section A")
         self.type("#section_content", "Section A text.")

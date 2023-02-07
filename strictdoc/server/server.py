@@ -1,10 +1,11 @@
 import os
+import tempfile
 
 import uvicorn
 
-from strictdoc import STRICTDOC_ROOT_PATH
 from strictdoc.cli.cli_arg_parser import ServerCommandConfig
 from strictdoc.core.project_config import ProjectConfig
+from strictdoc.helpers.pickle import pickle_dump
 from strictdoc.server.config import SDocServerEnvVariable
 
 
@@ -27,14 +28,15 @@ def run_strictdoc_server(
     print_warning_message()
 
     # uvicorn.run does not support passing arguments to the main
-    # function (strictdoc_production_app). Passing the config through the
-    # environmental variables interface.
-    os.environ[SDocServerEnvVariable.INPUT_PATH] = server_config.input_path
-    os.environ[SDocServerEnvVariable.OUTPUT_PATH] = server_config.output_path
-    os.environ[SDocServerEnvVariable.RELOAD] = str(server_config.reload)
-    os.environ[
-        SDocServerEnvVariable.PROJECT_CONFIG
-    ] = project_config.dump_to_string()
+    # function (strictdoc_production_app). Passing the pickled config through
+    # the environmental variables interface.
+    tmp_config_file = (
+        tempfile.NamedTemporaryFile()  # pylint: disable=consider-using-with  # noqa: E501
+    )
+    with open(tmp_config_file.name, "wb") as tmp_config_file_:
+        config_dump = pickle_dump((server_config, project_config))
+        tmp_config_file_.write(config_dump)
+    os.environ[SDocServerEnvVariable.PATH_TO_CONFIG] = tmp_config_file.name
 
     uvicorn.run(
         "strictdoc.server.app:strictdoc_production_app",
@@ -43,10 +45,10 @@ def run_strictdoc_server(
         factory=True,
         host="127.0.0.1",
         log_level="info",
-        port=8001,
+        port=server_config.port,
         reload=server_config.reload,
         reload_dirs=[
-            STRICTDOC_ROOT_PATH,
+            server_config.environment.path_to_strictdoc,
             server_config.input_path,
         ],
         # reload_delay: Optional[float] = None,
@@ -62,3 +64,6 @@ def run_strictdoc_server(
         # ],
         # root_path: str = "",
     )
+    tmp_config_file.close()
+    if os.path.exists(tmp_config_file.name):
+        os.unlink(tmp_config_file.name)

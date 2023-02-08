@@ -10,19 +10,21 @@ items are either work-in-progress or will be implemented next.
 TITLE: Backlog: Graphical user interface
 
 [FREETEXT]
+- Uploading images via Web interface.
+
 - Editing remaining document options: Inline/Table, Requirements in TOC, etc.
 
 - Requirement form:
 
-  - Adding/editing parent/child requirements.
-
-- User support - Sign In, Sign Out, Register.
+  - Adding/editing parent/child requirements: validation of cycles.
 
 - Integration with Git repository.
 
 - Section form:
 
   - ``UID``
+
+- User support - Sign In, Sign Out, Register.
 
 - Option to keep all multi-line text fields to 80 symbols width.
 
@@ -36,7 +38,8 @@ TITLE: Backlog: Graphical user interface
   - How to edit tables conveniently?
 
 - What to do with web content going out of sync with the server/file system state?
-- Issue when adding sibling section from a nested section.
+
+- Issue when adding a sibling section from a nested section.
 
 - ReqIF:
 

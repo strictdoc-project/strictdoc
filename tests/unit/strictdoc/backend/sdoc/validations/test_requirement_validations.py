@@ -82,5 +82,5 @@ def test_04_meta_multilines_not_nones():
     )
     requirement.ng_level = 1
 
-    for name, value in requirement.enumerate_meta_fields():
+    for _, value in requirement.enumerate_meta_fields():
         assert value is not None

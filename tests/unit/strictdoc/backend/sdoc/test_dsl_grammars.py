@@ -62,5 +62,5 @@ Yes
 
     requirement = document.section_contents[0]
     assert isinstance(requirement, Requirement)
-    for name, value in requirement.enumerate_meta_fields():
+    for _, value in requirement.enumerate_meta_fields():
         assert value is not None

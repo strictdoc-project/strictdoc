@@ -315,7 +315,7 @@ class RequirementFormObject(ErrorObject):
         return False
 
     def enumerate_fields(self, multiline: bool):
-        for field_name, field in self.fields.items():
+        for _, field in self.fields.items():
             requirement_field: RequirementFormField = field[0]
             if multiline:
                 if not requirement_field.is_multiline():

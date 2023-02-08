@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from strictdoc.backend.sdoc.models.reference import Reference, FileReference
 from strictdoc.backend.source_file_syntax.reader import (
@@ -10,7 +10,9 @@ class FileTraceabilityIndex:
     def __init__(self):
         self.map_paths_to_reqs = {}
         self.map_reqs_uids_to_paths: Dict[str, List[FileReference]] = {}
-        self.map_paths_to_source_file_traceability_info = {}
+        self.map_paths_to_source_file_traceability_info: Dict[
+            str, SourceFileTraceabilityInfo
+        ] = {}
         self.source_file_reqs_cache = {}
 
     def register(self, requirement):
@@ -40,10 +42,10 @@ class FileTraceabilityIndex:
             requirement.reserved_uid
         ]
         for file_link in file_links:
-            source_file_traceability_info: SourceFileTraceabilityInfo = (
-                self.map_paths_to_source_file_traceability_info.get(
-                    file_link.file_entry.path_normalized
-                )
+            source_file_traceability_info: Optional[
+                SourceFileTraceabilityInfo
+            ] = self.map_paths_to_source_file_traceability_info.get(
+                file_link.file_entry.path_normalized
             )
             if not source_file_traceability_info:
                 print(

@@ -9,9 +9,11 @@ from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_traceability_index import FileTraceabilityIndex
 from strictdoc.core.tree_cycle_detector import TreeCycleDetector
+from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.sorting import alphanumeric_sort
 
 
+@auto_described
 class RequirementConnections:
     def __init__(  # pylint: disable=too-many-arguments
         self,
@@ -67,14 +69,14 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         return self._document_iterators
 
     @property
-    def requirements_parents(self):
+    def requirements_parents(self) -> Dict[str, RequirementConnections]:
         return self._requirements_parents
 
     @property
     def tags_map(self):
         return self._tags_map
 
-    def get_document_iterator(self, document):
+    def get_document_iterator(self, document) -> DocumentCachingIterator:
         return self.document_iterators[document]
 
     def get_parent_requirements(self, requirement: Requirement):
@@ -116,7 +118,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         ].children
         return len(children_requirements) > 0
 
-    def get_children_requirements(self, requirement: Requirement):
+    def get_children_requirements(
+        self, requirement: Requirement
+    ) -> List[Requirement]:
         assert isinstance(requirement, Requirement)
         if not isinstance(requirement.reserved_uid, str):
             return []
@@ -179,17 +183,19 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             source_file_rel_path, traceability_info
         )
 
-    def get_document_children(self, document):
+    def get_document_children(self, document) -> Set[Document]:
         return self._document_children_map[document]
 
-    def get_document_parents(self, document):
+    def get_document_parents(self, document) -> Set[Document]:
         return self._document_parents_map[document]
 
     def get_node_by_id(self, node_id):
         assert isinstance(node_id, str), f"{node_id}"
         return self._map_id_to_node[node_id]
 
-    def mut_add_uid_to_a_requirement(self, requirement: Requirement):
+    def mut_add_uid_to_a_requirement_if_needed(self, requirement: Requirement):
+        if requirement.reserved_uid is None:
+            return
         self.requirements_parents[
             requirement.reserved_uid
         ] = RequirementConnections(
@@ -204,18 +210,56 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         self, requirement: Requirement, old_uid: Optional[str]
     ) -> None:
         if old_uid is None:
-            self.mut_add_uid_to_a_requirement(requirement)
+            self.mut_add_uid_to_a_requirement_if_needed(requirement)
             return
 
         existing_entry = self.requirements_parents[old_uid]
         del self.requirements_parents[old_uid]
-        self.requirements_parents[requirement.reserved_uid] = existing_entry
+        if requirement.reserved_uid is not None:
+            self.requirements_parents[requirement.reserved_uid] = existing_entry
 
     def update_requirement_parent_uid(
-        self, requirement: Requirement, parent_uid: str, add_or_remove: bool
-    ):
+        self, requirement: Requirement, parent_uid: str
+    ) -> None:
         assert requirement.reserved_uid is not None
+        assert isinstance(parent_uid, str), parent_uid
+        requirement_connections: RequirementConnections = (
+            self._requirements_parents[requirement.reserved_uid]
+        )
+        # If the parent uid already exists, there is nothing to do.
+        if parent_uid in requirement_connections.parents_uids:
+            return
+        parent_requirement_connections: RequirementConnections = (
+            self._requirements_parents[parent_uid]
+        )
 
+        parent_requirement = parent_requirement_connections.requirement
+        document = requirement.document
+        parent_requirement_document = parent_requirement.document
+
+        requirement_connections.parents_uids.append(parent_uid)
+        requirement_connections.parents.append(parent_requirement)
+        parent_requirement_connections.children.append(requirement)
+        self._document_parents_map[document].add(parent_requirement_document)
+        self._document_children_map[parent_requirement_document].add(document)
+        cycle_detector = TreeCycleDetector(self.requirements_parents)
+        cycle_detector.check_node(
+            requirement.reserved_uid,
+            lambda requirement_id: self.requirements_parents[
+                requirement_id
+            ].parents_uids,
+        )
+
+        # Mark document and parent document (if different) for re-generation.
+        document.ng_needs_generation = True
+        if parent_requirement_document != document:
+            parent_requirement_document.ng_needs_generation = True
+
+    def remove_requirement_parent_uid(
+        self, requirement: Requirement, parent_uid: str
+    ) -> None:
+        assert requirement.reserved_uid is not None
+        assert isinstance(parent_uid, str), parent_uid
         requirement_connections: RequirementConnections = (
             self._requirements_parents[requirement.reserved_uid]
         )
@@ -227,46 +271,28 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         document = requirement.document
         parent_requirement_document = parent_requirement.document
 
-        if add_or_remove:
-            requirement_connections.parents_uids.append(parent_uid)
-            requirement_connections.parents.append(parent_requirement)
-            parent_requirement_connections.children.append(requirement)
-            self._document_parents_map[document].add(
+        requirement_connections.parents_uids.remove(parent_uid)
+        requirement_connections.parents.remove(parent_requirement)
+        parent_requirement_connections.children.remove(requirement)
+
+        # If there are no requirements linking with the parent document,
+        # remove the link.
+        should_disconnect_documents = True
+        for node in self.document_iterators[document].all_content():
+            if not node.is_requirement:
+                continue
+            requirement_node: Requirement = node
+            if requirement_node in parent_requirement_connections.children:
+                should_disconnect_documents = False
+                break
+
+        if should_disconnect_documents:
+            self._document_parents_map[document].remove(
                 parent_requirement_document
             )
-            self._document_children_map[parent_requirement_document].add(
+            self._document_children_map[parent_requirement_document].remove(
                 document
             )
-            cycle_detector = TreeCycleDetector(self.requirements_parents)
-            cycle_detector.check_node(
-                requirement.reserved_uid,
-                lambda requirement_id: self.requirements_parents[
-                    requirement_id
-                ].parents_uids,
-            )
-        else:
-            requirement_connections.parents_uids.remove(parent_uid)
-            requirement_connections.parents.remove(parent_requirement)
-            parent_requirement_connections.children.remove(requirement)
-
-            # If there are not requirements linking with the parent document,
-            # remove the link.
-            should_disconnect_documents = True
-            for node in self.document_iterators[document].all_content():
-                if not node.is_requirement:
-                    continue
-                requirement_node: Requirement = node
-                if requirement_node in parent_requirement_connections.children:
-                    should_disconnect_documents = False
-                    break
-
-            if should_disconnect_documents:
-                self._document_parents_map[document].remove(
-                    parent_requirement_document
-                )
-                self._document_children_map[parent_requirement_document].remove(
-                    document
-                )
 
         # Mark document and parent document (if different) for re-generation.
         document.ng_needs_generation = True

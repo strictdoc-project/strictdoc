@@ -1,8 +1,9 @@
 import os
 import re
+from copy import copy
 from mimetypes import guess_type
 from pathlib import Path
-from typing import Optional, List, Union, Dict
+from typing import Optional, List, Union, Dict, Set
 
 from fastapi import Form, APIRouter, UploadFile
 from jinja2 import Environment
@@ -27,17 +28,29 @@ from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.free_text import FreeTextContainer, FreeText
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
-from strictdoc.backend.sdoc.models.requirement import Requirement
+from strictdoc.backend.sdoc.models.reference import (
+    ParentReqReference,
+    Reference,
+)
+from strictdoc.backend.sdoc.models.requirement import (
+    Requirement,
+    RequirementField,
+)
 from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.models.type_system import (
+    RequirementFieldName,
+)
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.cli.cli_arg_parser import (
     ServerCommandConfig,
     ExportCommandConfig,
 )
 from strictdoc.core.actions.export_action import ExportAction
+from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
+from strictdoc.core.traceability_index import RequirementConnections
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.form_objects.document_config_form_object import (
     DocumentConfigFormObject,
@@ -53,6 +66,7 @@ from strictdoc.export.html.form_objects.requirement_form_object import (
     RequirementFormObject,
     RequirementFormField,
     RequirementFormFieldType,
+    RequirementReferenceFormField,
 )
 from strictdoc.export.html.form_objects.section_form_object import (
     SectionFormObject,
@@ -850,6 +864,7 @@ def create_main_router(
             requirement_mid=requirement_mid,
             request_form_data=request_form_data,
             document=document,
+            exiting_requirement_uid=None,
         )
         if whereto == NodeCreationOrder.CHILD:
             parent = reference_node
@@ -863,7 +878,9 @@ def create_main_router(
         else:
             raise NotImplementedError
 
-        form_object.validate()
+        form_object.validate(
+            traceability_index=export_action.traceability_index
+        )
 
         if form_object.any_errors():
             template = env.get_template(
@@ -921,7 +938,7 @@ def create_main_router(
 
         parent.section_contents.insert(insert_to_idx, requirement)
 
-        export_action.traceability_index.mut_add_uid_to_a_requirement(
+        export_action.traceability_index.mut_add_uid_to_a_requirement_if_needed(
             requirement=requirement
         )
 
@@ -1024,7 +1041,7 @@ def create_main_router(
         )
 
     @router.post("/actions/document/update_requirement")
-    async def post_update_requirement(request: Request):
+    async def document__update_requirement(request: Request):
         request_form_data: FormData = await request.form()
         request_dict = dict(request_form_data)
         requirement_mid = request_dict["requirement_mid"]
@@ -1037,13 +1054,18 @@ def create_main_router(
             isinstance(requirement_mid, str) and len(requirement_mid) > 0
         ), f"{requirement_mid}"
 
-        form_object = RequirementFormObject.create_from_request(
-            requirement_mid=requirement_mid,
-            request_form_data=request_form_data,
-            document=document,
+        form_object: RequirementFormObject = (
+            RequirementFormObject.create_from_request(
+                requirement_mid=requirement_mid,
+                request_form_data=request_form_data,
+                document=document,
+                exiting_requirement_uid=requirement.reserved_uid,
+            )
         )
 
-        form_object.validate()
+        form_object.validate(
+            traceability_index=export_action.traceability_index
+        )
 
         if form_object.any_errors():
             template = env.get_template(
@@ -1076,7 +1098,8 @@ def create_main_router(
                 },
             )
 
-        existing_uid = requirement.reserved_uid
+        existing_uid: Optional[str] = requirement.reserved_uid
+
         # FIXME: Leave only one method based on set_field_value().
         # Special case: we clear out the requirement's comments and then re-fill
         # them from scratch from the form data.
@@ -1090,52 +1113,167 @@ def create_main_router(
                     value=form_field.field_value,
                 )
 
+        class UpdateRequirementActionObject:
+            def __init__(self):
+                self.existing_references_uids: Set[str] = set()
+                self.reference_ids_to_remove: Set[str] = set()
+                self.removed_uid_parent_documents_to_update: Set[
+                    Document
+                ] = set()
+                # All requirements that have to be updated. This set includes
+                # the requirement itself, all links it was linking to
+                # (for deleted links) and all links it is linking to now
+                # (including new links).
+                self.this_document_requirements_to_update: Set[
+                    Requirement
+                ] = set()
+
+        action_object = UpdateRequirementActionObject()
+        action_object.existing_references_uids.update(
+            requirement.get_parent_requirement_reference_uids()
+        )
+        action_object.reference_ids_to_remove = copy(
+            action_object.existing_references_uids
+        )
+        action_object.this_document_requirements_to_update = {requirement}
+
+        references: List[Reference] = []
+        reference_field: RequirementReferenceFormField
+        for reference_field in form_object.reference_fields:
+            ref_uid = reference_field.field_value
+            references.append(
+                ParentReqReference(parent=requirement, ref_uid=ref_uid)
+            )
+        if len(references) > 0:
+            requirement.ordered_fields_lookup[RequirementFieldName.REFS] = [
+                RequirementField(
+                    parent=requirement,
+                    field_name=RequirementFieldName.REFS,
+                    field_value=None,
+                    field_value_multiline=None,
+                    field_value_references=references,
+                )
+            ]
+            requirement.references = references
+        else:
+            if RequirementFieldName.REFS in requirement.ordered_fields_lookup:
+                del requirement.ordered_fields_lookup[RequirementFieldName.REFS]
+            requirement.references = []
+
+        for (
+            document_
+        ) in export_action.traceability_index.document_tree.document_list:
+            document_.ng_needs_generation = False
+
+        # Updating Traceability Index: Links
+        for reference_field in form_object.reference_fields:
+            ref_uid = reference_field.field_value
+            # If a link is in the form, we don't want to remove it.
+            if ref_uid in action_object.reference_ids_to_remove:
+                action_object.reference_ids_to_remove.remove(ref_uid)
+            # If a link is already in the requirement and traceability index,
+            # there is nothing to do.
+            if ref_uid in action_object.existing_references_uids:
+                continue
+            export_action.traceability_index.update_requirement_parent_uid(
+                requirement=requirement,
+                parent_uid=ref_uid,
+            )
+
+        # Updating Traceability Index: UID
         export_action.traceability_index.mut_rename_uid_to_a_requirement(
             requirement=requirement, old_uid=existing_uid
         )
 
-        # Saving new content to .SDoc file.
-        document_content = SDWriter().write(document)
-        document_meta = document.meta
-        with open(
-            document_meta.input_doc_full_path, "w", encoding="utf8"
-        ) as output_file:
-            output_file.write(document_content)
+        # Calculate which documents and requirements have to be regenerated.
+        updated_parent_documents: Set[
+            Document
+        ] = export_action.traceability_index.get_document_parents(document)
+        for reference_id_to_remove in action_object.reference_ids_to_remove:
+            removed_uid_parent_requirement = (
+                export_action.traceability_index.requirements_parents[
+                    reference_id_to_remove
+                ]
+            )
+            action_object.removed_uid_parent_documents_to_update.add(
+                removed_uid_parent_requirement.document
+            )
+            # If a link was pointing towards a parent requirement in this
+            # document, we will have to re-render it now.
+            if removed_uid_parent_requirement.document == document:
+                action_object.this_document_requirements_to_update.add(
+                    removed_uid_parent_requirement.requirement
+                )
+
+        for reference_id_to_remove in action_object.reference_ids_to_remove:
+            export_action.traceability_index.remove_requirement_parent_uid(
+                requirement=requirement,
+                parent_uid=reference_id_to_remove,
+            )
+
+        # Saving new content to .SDoc files.
+        sdoc_documents_to_rewrite: Set[Document] = (
+            {document}
+            | updated_parent_documents
+            | action_object.removed_uid_parent_documents_to_update
+        )
+        for sdoc_document_to_rewrite in sdoc_documents_to_rewrite:
+            sdoc_document_to_rewrite.ng_needs_generation = True
+            document_content = SDWriter().write(sdoc_document_to_rewrite)
+            document_meta = document.meta
+            with open(
+                document_meta.input_doc_full_path, "w", encoding="utf8"
+            ) as output_file:
+                output_file.write(document_content)
 
         # Re-exporting HTML files.
+        # Those with @ng_needs_generation == True will be regenerated.
         export_action.export()
 
-        # Rendering back the Turbo template.
-        partial = (
-            "stream_update_table_requirement.jinja.html"
-            if document.config.is_table_requirements()
-            else "stream_update_requirement.jinja.html"
+        # Rendering back the Turbo template for each changed requirement.
+        for reference_field in form_object.reference_fields:
+            ref_uid = reference_field.field_value
+            requirement_connections: RequirementConnections = (
+                export_action.traceability_index.requirements_parents[ref_uid]
+            )
+            if requirement_connections.document == document:
+                action_object.this_document_requirements_to_update.add(
+                    requirement_connections.requirement
+                )
+
+        iterator: DocumentCachingIterator = (
+            export_action.traceability_index.get_document_iterator(document)
         )
-        template = env.get_template(
-            f"actions/document/edit_requirement/{partial}"
-        )
-        link_renderer = LinkRenderer(
+        link_renderer: LinkRenderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix()
         )
-        markup_renderer = MarkupRenderer.create(
+        markup_renderer: MarkupRenderer = MarkupRenderer.create(
             markup="RST",
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             context_document=document,
         )
-        iterator = export_action.traceability_index.get_document_iterator(
-            document
-        )
-        output = template.render(
-            requirement=requirement,
-            renderer=markup_renderer,
-            document=document,
-            document_iterator=iterator,
-            document_type=DocumentType.document(),
-            link_renderer=link_renderer,
-            traceability_index=export_action.traceability_index,
-            config=export_action.config,
-        )
+
+        output = ""
+        for requirement in action_object.this_document_requirements_to_update:
+            partial = (
+                "stream_update_table_requirement.jinja.html"
+                if document.config.is_table_requirements()
+                else "stream_update_requirement.jinja.html"
+            )
+            template = env.get_template(
+                f"actions/document/edit_requirement/{partial}"
+            )
+            output += template.render(
+                requirement=requirement,
+                renderer=markup_renderer,
+                document=document,
+                document_iterator=iterator,
+                document_type=DocumentType.document(),
+                link_renderer=link_renderer,
+                traceability_index=export_action.traceability_index,
+                config=export_action.config,
+            )
 
         toc_template = env.get_template(
             "actions/document/_shared/stream_updated_toc.jinja.html"
@@ -1469,7 +1607,7 @@ def create_main_router(
         )
 
     @router.get("/actions/document/new_comment", response_class=Response)
-    def add_comment(requirement_mid: str):
+    def document__add_comment(requirement_mid: str):
         template = env.get_template(
             "actions/"
             "document/"
@@ -1481,10 +1619,41 @@ def create_main_router(
             form_object=RequirementFormObject(
                 requirement_mid=requirement_mid,
                 fields=[],
+                reference_fields=[],
+                exiting_requirement_uid=None,
             ),
             field=RequirementFormField(
                 field_name="COMMENT",
                 field_type=RequirementFormFieldType.MULTILINE,
+                field_value="",
+            ),
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @router.get("/actions/document/new_parent_link", response_class=Response)
+    def document__add_parent_link(requirement_mid: str):
+        template = env.get_template(
+            "actions/"
+            "document/"
+            "add_requirement_parent_link/"
+            "stream_add_requirement_parent_link.jinja.html"
+        )
+        output = template.render(
+            requirement_mid=requirement_mid,
+            form_object=RequirementFormObject(
+                requirement_mid=requirement_mid,
+                fields=[],
+                reference_fields=[],
+                exiting_requirement_uid=None,
+            ),
+            field=RequirementReferenceFormField(
+                field_type=RequirementReferenceFormField.FieldType.PARENT,
                 field_value="",
             ),
         )

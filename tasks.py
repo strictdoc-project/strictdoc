@@ -369,6 +369,14 @@ def lint_flake8(context):
 
 
 @task
+def lint_ruff(context):
+    command = """
+        ruff .
+    """
+    run_invoke_cmd(context, command)
+
+
+@task
 def lint_mypy(context):
     # Need to delete the cache every time because otherwise mypy gets
     # stuck with 0 warnings very often.
@@ -397,6 +405,7 @@ def lint_mypy(context):
 @task
 def lint(context):
     lint_black_diff(context)
+    lint_ruff(context)
     lint_pylint(context)
     lint_flake8(context)
     lint_mypy(context)

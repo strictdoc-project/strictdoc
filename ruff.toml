@@ -1,0 +1,46 @@
+select = [
+  # "A",
+  # "ARG",
+  # "B",
+  # "BLE",
+  # "C",
+  # "C4",
+  # "C90"  mccabe
+  # "COM",
+  # "D",
+  # "DTZ",
+  # "E",
+  "EXE",
+  # "ERA",
+  "F",
+  # "FBT",
+  "G",
+  # "I",
+  "ISC",
+  "ICN",
+  # "N",
+  "PGH",
+  # "PIE",
+  # "PL",  # Pylint
+  # "PT",  # pytest
+  # "PTH",
+  "Q",  # Quotes
+  # "RET",
+  # "RUF",
+  # "S",
+  # "SIM",
+  # "SLF",
+  # "T20",
+  # "TCH",
+  # "TRY",
+  # "UP",
+  "W",
+  "YTT",
+]
+
+# Never enforce `E501` (line length violations).
+ignore = ["E501"]
+
+# Avoid trying to fix flake8-bugbear (`B`) violations.
+unfixable = ["B"]
+

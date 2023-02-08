@@ -346,9 +346,12 @@ class RequirementFormObject(ErrorObject):
             if parsed_html is None:
                 self.add_error("STATEMENT", rst_error)
 
-        requirement_uid = self.fields["UID"][0].field_value
-
-        if len(self.reference_fields) > 0 and len(requirement_uid) == 0:
+        requirement_uid: Optional[str] = (
+            self.fields["UID"][0].field_value if "UID" in self.fields else None
+        )
+        if len(self.reference_fields) > 0 and (
+            requirement_uid is None or len(requirement_uid) == 0
+        ):
             self.add_error(
                 "UID",
                 "Requirement with parent links must have an UID. "

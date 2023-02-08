@@ -1,7 +1,7 @@
+import filecmp
 import os
 import shutil
 
-from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
@@ -10,7 +10,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test07EditRequirement(BaseCase):
+class Test_UC07_T21_RemoveComment(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -42,16 +42,17 @@ class Test07EditRequirement(BaseCase):
             click_by=By.XPATH,
         )
 
-        self.type("#requirement_TITLE", "Modified title")
-
-        # HACK: The only way the field is actually cleared.
-        self.type("#requirement_STATEMENT", "X")
-        requirement_statement_field = self.find_element(
-            "//div[@id='requirement_STATEMENT']"
-        )
-        requirement_statement_field.click()
-        requirement_statement_field.send_keys(Keys.BACKSPACE)
+        self.click_xpath("(//a[text()='Delete comment'])[2]")
 
         self.click_xpath("//button[@type='submit' and text()='Save']")
 
-        self.assert_text("Requirement statement must not be empty.")
+        self.assert_text("Comment #1")
+        self.assert_text("Comment #3")
+
+        assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))
+        assert filecmp.cmp(
+            os.path.join(path_to_sandbox, "document.sdoc"),
+            os.path.join(
+                path_to_this_test_file_folder, "document.expected.sdoc"
+            ),
+        )

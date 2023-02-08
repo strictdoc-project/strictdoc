@@ -10,7 +10,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test_UC07_04_EscapeHTML(BaseCase):
+class Test_UC07_T60_SanitizingTrainingSymbols(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -42,12 +42,26 @@ class Test_UC07_04_EscapeHTML(BaseCase):
             click_by=By.XPATH,
         )
 
-        self.assert_text(
-            "`Link does not get corrupted "
-            "<https://github.com/strictdoc-project/"
-            "sphinx-latex-reqspec-template>`_"
+        self.type("#requirement_TITLE", "Modified title")
+        # Contains trailing symbols.
+        self.type(
+            "#requirement_STATEMENT",
+            """
+Hello world!    
+
+Hello world!    
+
+Hello world!    
+            """,  # noqa: W291
         )
+
         self.click_xpath("//button[@type='submit' and text()='Save']")
+
+        self.assert_text("1. Modified title")
+
+        self.assert_element(
+            "//turbo-frame[@id='frame-toc']//*[contains(., 'Modified title')]"
+        )
 
         assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))
         assert filecmp.cmp(

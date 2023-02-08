@@ -5,7 +5,6 @@ import os
 import platform
 import re
 from enum import Enum
-from shutil import which
 
 if not hasattr(inspect, "getargspec"):
     inspect.getargspec = inspect.getfullargspec
@@ -106,6 +105,7 @@ def run_invoke_cmd(
             pty=False,
             echo=True,
         )
+
 
 @task
 def setup_development_deps(context):

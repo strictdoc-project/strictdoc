@@ -1,12 +1,12 @@
-from typing import Optional, Union, Dict
+from typing import Dict, Optional, Union
 
 from reqif.models.reqif_spec_object import ReqIFSpecObject
 from reqif.models.reqif_spec_object_type import SpecAttributeDefinition
 from reqif.reqif_bundle import ReqIFBundle
 
 from strictdoc.backend.reqif.sdoc_reqif_fields import (
-    ReqIFChapterField,
     REQIF_MAP_TO_SDOC_FIELD_MAP,
+    ReqIFChapterField,
     ReqIFRequirementReservedField,
 )
 from strictdoc.backend.sdoc.models.document import Document
@@ -17,7 +17,7 @@ from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
     RequirementField,
 )
-from strictdoc.backend.sdoc.models.section import Section, FreeText
+from strictdoc.backend.sdoc.models.section import FreeText, Section
 from strictdoc.helpers.string import unescape
 
 

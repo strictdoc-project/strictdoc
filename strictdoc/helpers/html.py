@@ -2,7 +2,6 @@ import re
 
 from bs4 import BeautifulSoup
 
-
 WS_REGEX = re.compile(r"^(\s*)", re.MULTILINE)
 
 

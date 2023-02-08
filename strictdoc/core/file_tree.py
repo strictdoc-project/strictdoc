@@ -1,6 +1,6 @@
 import collections
 import os
-from typing import Dict, Optional, Set, List
+from typing import Dict, List, Optional, Set
 
 from strictdoc.helpers.sorting import alphanumeric_sort
 

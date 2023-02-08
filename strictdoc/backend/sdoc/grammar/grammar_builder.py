@@ -1,7 +1,7 @@
 from strictdoc.backend.sdoc.grammar.grammar import (
+    FREE_TEXT_GRAMMAR,
     STRICTDOC_GRAMMAR,
     STRICTINC_GRAMMAR,
-    FREE_TEXT_GRAMMAR,
 )
 from strictdoc.backend.sdoc.grammar.type_system import (
     STRICTDOC_BASIC_TYPE_SYSTEM,

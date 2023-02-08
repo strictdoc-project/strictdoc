@@ -1,17 +1,17 @@
-import uuid
 import datetime
+import uuid
 from enum import Enum
 from typing import Dict, List
 
 from reqif.models.reqif_core_content import ReqIFCoreContent
 from reqif.models.reqif_data_type import (
-    ReqIFDataTypeDefinitionString,
     ReqIFDataTypeDefinitionEnumeration,
+    ReqIFDataTypeDefinitionString,
     ReqIFEnumValue,
 )
 from reqif.models.reqif_namespace_info import ReqIFNamespaceInfo
-from reqif.models.reqif_reqif_header import ReqIFReqIFHeader
 from reqif.models.reqif_req_if_content import ReqIFReqIFContent
+from reqif.models.reqif_reqif_header import ReqIFReqIFHeader
 from reqif.models.reqif_spec_hierarchy import ReqIFSpecHierarchy
 from reqif.models.reqif_spec_object import ReqIFSpecObject, SpecObjectAttribute
 from reqif.models.reqif_spec_object_type import (
@@ -26,12 +26,12 @@ from reqif.object_lookup import ReqIFObjectLookup
 from reqif.reqif_bundle import ReqIFBundle
 
 from strictdoc.backend.reqif.sdoc_reqif_fields import (
+    SDOC_SPEC_OBJECT_TYPE_SINGLETON,
+    SDOC_SPEC_RELATION_PARENT_TYPE_SINGLETON,
+    SDOC_SPECIFICATION_TYPE_SINGLETON,
+    SDOC_TO_REQIF_FIELD_MAP,
     ReqIFChapterField,
     SDocRequirementReservedField,
-    SDOC_TO_REQIF_FIELD_MAP,
-    SDOC_SPEC_OBJECT_TYPE_SINGLETON,
-    SDOC_SPECIFICATION_TYPE_SINGLETON,
-    SDOC_SPEC_RELATION_PARENT_TYPE_SINGLETON,
 )
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
@@ -40,13 +40,13 @@ from strictdoc.backend.sdoc.models.requirement import (
 )
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.models.type_system import (
-    GrammarElementFieldString,
-    GrammarElementFieldSingleChoice,
     GrammarElementField,
     GrammarElementFieldMultipleChoice,
-    RequirementFieldName,
-    ReferenceType,
     GrammarElementFieldReference,
+    GrammarElementFieldSingleChoice,
+    GrammarElementFieldString,
+    ReferenceType,
+    RequirementFieldName,
 )
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.core.document_iterator import DocumentCachingIterator

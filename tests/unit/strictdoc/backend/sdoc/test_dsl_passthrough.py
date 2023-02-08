@@ -5,18 +5,18 @@ import pytest
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.reference import (
+    BibReference,
     FileReference,
     ParentReqReference,
-    BibReference,
 )
 from strictdoc.backend.sdoc.models.requirement import (
-    Requirement,
     CompositeRequirement,
+    Requirement,
 )
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.models.type_system import (
-    ReferenceType,
     BibEntryFormat,
+    ReferenceType,
 )
 from strictdoc.backend.sdoc.reader import SDReader
 from strictdoc.backend.sdoc.writer import SDWriter

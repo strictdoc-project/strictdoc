@@ -1,7 +1,6 @@
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.html_templates import HTMLTemplates
-
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 
 

@@ -1,25 +1,25 @@
 import re
-from typing import Optional, Set, Iterator
+from typing import Iterator, Optional, Set
 
 from textx import get_location
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
-    GrammarElementField,
     GrammarElement,
+    GrammarElementField,
 )
 from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
     RequirementField,
 )
 from strictdoc.backend.sdoc.models.type_system import (
-    GrammarElementFieldSingleChoice,
     GrammarElementFieldMultipleChoice,
-    GrammarElementFieldTag,
     GrammarElementFieldReference,
-    RequirementFieldName,
+    GrammarElementFieldSingleChoice,
+    GrammarElementFieldTag,
     ReferenceType,
+    RequirementFieldName,
 )
 
 

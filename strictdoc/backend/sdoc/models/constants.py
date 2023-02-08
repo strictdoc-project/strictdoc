@@ -8,25 +8,25 @@ from strictdoc.backend.sdoc.models.fragment import Fragment
 from strictdoc.backend.sdoc.models.fragment_from_file import FragmentFromFile
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.reference import (
-    Reference,
-    ParentReqReference,
-    FileReference,
     BibReference,
+    FileReference,
+    ParentReqReference,
+    Reference,
 )
 from strictdoc.backend.sdoc.models.requirement import (
+    CompositeRequirement,
     Requirement,
     RequirementField,
-    CompositeRequirement,
 )
-from strictdoc.backend.sdoc.models.section import Section, FreeText
+from strictdoc.backend.sdoc.models.section import FreeText, Section
 from strictdoc.backend.sdoc.models.type_system import (
-    GrammarElementFieldString,
-    GrammarElementFieldSingleChoice,
-    GrammarElementFieldMultipleChoice,
-    GrammarElementFieldTag,
-    GrammarElementFieldReference,
-    FileEntry,
     BibEntry,
+    FileEntry,
+    GrammarElementFieldMultipleChoice,
+    GrammarElementFieldReference,
+    GrammarElementFieldSingleChoice,
+    GrammarElementFieldString,
+    GrammarElementFieldTag,
 )
 
 SECTION_MODELS = [

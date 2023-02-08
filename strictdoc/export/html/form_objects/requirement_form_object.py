@@ -3,7 +3,7 @@ import re
 import uuid
 from collections import defaultdict
 from enum import Enum
-from typing import Optional, List, Dict
+from typing import Dict, List, Optional
 
 from starlette.datastructures import FormData
 
@@ -25,8 +25,8 @@ from strictdoc.backend.sdoc.models.type_system import (
     RequirementFieldType,
 )
 from strictdoc.core.traceability_index import (
-    TraceabilityIndex,
     RequirementConnections,
+    TraceabilityIndex,
 )
 from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,

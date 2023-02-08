@@ -1,7 +1,7 @@
 from strictdoc.helpers.string import (
+    is_safe_alphanumeric_string,
     multireplace,
     sanitize_html_form_field,
-    is_safe_alphanumeric_string,
 )
 
 

@@ -2,13 +2,13 @@ import glob
 import os
 import sys
 from collections import defaultdict
-from typing import List, Iterator, Optional, Dict, cast, Set
+from typing import Dict, Iterator, List, Optional, Set, cast
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.reference import ParentReqReference
-from strictdoc.backend.sdoc.models.type_system import ReferenceType
 from strictdoc.backend.sdoc.models.requirement import Requirement
+from strictdoc.backend.sdoc.models.type_system import ReferenceType
 from strictdoc.backend.source_file_syntax.reader import (
     SourceFileTraceabilityReader,
 )
@@ -19,14 +19,14 @@ from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.error_message import ErrorMessage
 from strictdoc.core.finders.source_files_finder import (
-    SourceFilesFinder,
     SourceFile,
+    SourceFilesFinder,
 )
 from strictdoc.core.source_tree import SourceTree
 from strictdoc.core.traceability_index import (
-    TraceabilityIndex,
     FileTraceabilityIndex,
     RequirementConnections,
+    TraceabilityIndex,
 )
 from strictdoc.core.tree_cycle_detector import TreeCycleDetector
 from strictdoc.helpers.file_modification_time import get_file_modification_time

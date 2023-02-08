@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import List, Optional
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document

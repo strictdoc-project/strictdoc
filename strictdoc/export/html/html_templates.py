@@ -1,4 +1,4 @@
-from jinja2 import Environment, StrictUndefined, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
 from strictdoc import environment
 

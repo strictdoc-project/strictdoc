@@ -11,8 +11,8 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 )
 from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementField,
-    RequirementFieldName,
     GrammarElementFieldString,
+    RequirementFieldName,
 )
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.server.error_object import ErrorObject

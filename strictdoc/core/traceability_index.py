@@ -1,4 +1,4 @@
-from typing import Dict, Optional, List, Set
+from typing import Dict, List, Optional, Set
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.requirement import Requirement

@@ -1,7 +1,7 @@
-from strictdoc.cli.cli_arg_parser import ImportExcelCommandConfig
 from strictdoc.backend.excel.import_.excel_to_sdoc_converter import (
     ExcelToSDocConverter,
 )
+from strictdoc.cli.cli_arg_parser import ImportExcelCommandConfig
 
 
 class ExcelImport:

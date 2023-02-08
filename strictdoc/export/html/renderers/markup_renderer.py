@@ -1,4 +1,4 @@
-from typing import Optional, Union, Type
+from typing import Optional, Type, Union
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.inline_link import InlineLink

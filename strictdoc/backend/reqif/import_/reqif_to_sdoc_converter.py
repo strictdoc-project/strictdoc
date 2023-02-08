@@ -1,4 +1,4 @@
-from typing import Optional, List, Set
+from typing import List, Optional, Set
 
 from reqif.models.reqif_data_type import ReqIFDataTypeDefinitionEnumeration
 from reqif.models.reqif_spec_object_type import (
@@ -12,23 +12,23 @@ from strictdoc.backend.reqif.import_.reqif_to_sdoc_factory import (
     ReqIFToSDocFactory,
 )
 from strictdoc.backend.reqif.sdoc_reqif_fields import (
+    DEFAULT_SDOC_GRAMMAR_FIELDS,
     REQIF_MAP_TO_SDOC_FIELD_MAP,
     ReqIFChapterField,
-    DEFAULT_SDOC_GRAMMAR_FIELDS,
 )
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_grammar import (
-    GrammarElement,
     DocumentGrammar,
+    GrammarElement,
 )
 from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
 )
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.models.type_system import (
-    GrammarElementFieldString,
-    GrammarElementFieldSingleChoice,
     GrammarElementFieldMultipleChoice,
+    GrammarElementFieldSingleChoice,
+    GrammarElementFieldString,
 )
 
 

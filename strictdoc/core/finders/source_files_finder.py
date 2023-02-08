@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import List
 
 from strictdoc.cli.cli_arg_parser import ExportCommandConfig
-from strictdoc.core.file_tree import FileFinder, File
+from strictdoc.core.file_tree import File, FileFinder
 from strictdoc.core.source_tree import SourceTree
 from strictdoc.helpers.auto_described import auto_described
 

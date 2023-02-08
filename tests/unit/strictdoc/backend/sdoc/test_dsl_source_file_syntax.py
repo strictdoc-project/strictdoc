@@ -4,8 +4,8 @@ import pytest
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.source_file_syntax.reader import (
-    SourceFileTraceabilityReader,
     RangePragma,
+    SourceFileTraceabilityReader,
 )
 
 

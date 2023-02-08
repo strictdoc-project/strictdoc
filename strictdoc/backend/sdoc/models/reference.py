@@ -1,7 +1,7 @@
 from strictdoc.backend.sdoc.models.type_system import (
-    ReferenceType,
     BibEntry,
     FileEntry,
+    ReferenceType,
 )
 from strictdoc.helpers.auto_described import auto_described
 

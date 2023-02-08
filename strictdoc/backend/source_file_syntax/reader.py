@@ -2,7 +2,7 @@ import sys
 import traceback
 from functools import partial
 
-from textx import metamodel_from_str, get_location
+from textx import get_location, metamodel_from_str
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.source_file_syntax.grammar import SOURCE_FILE_GRAMMAR

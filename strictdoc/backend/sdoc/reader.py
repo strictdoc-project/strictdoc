@@ -8,7 +8,7 @@ from strictdoc.backend.sdoc.grammar.grammar_builder import SDocGrammarBuilder
 from strictdoc.backend.sdoc.include_reader import SDIncludeReader
 from strictdoc.backend.sdoc.models.constants import DOCUMENT_MODELS
 from strictdoc.backend.sdoc.models.fragment import Fragment
-from strictdoc.backend.sdoc.processor import SDocParsingProcessor, ParseContext
+from strictdoc.backend.sdoc.processor import ParseContext, SDocParsingProcessor
 from strictdoc.helpers.textx import drop_textx_meta
 
 

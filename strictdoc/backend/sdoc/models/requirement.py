@@ -1,6 +1,6 @@
 import uuid
 from collections import OrderedDict
-from typing import Optional, List, Dict, Any, cast
+from typing import Any, Dict, List, Optional, cast
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document
@@ -10,13 +10,13 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 )
 from strictdoc.backend.sdoc.models.node import Node
 from strictdoc.backend.sdoc.models.reference import (
-    Reference,
     ParentReqReference,
+    Reference,
 )
 from strictdoc.backend.sdoc.models.type_system import (
-    RequirementFieldName,
     RESERVED_NON_META_FIELDS,
     ReferenceType,
+    RequirementFieldName,
 )
 from strictdoc.helpers.auto_described import auto_described
 

@@ -1,6 +1,6 @@
 import re
 from collections import defaultdict
-from typing import Optional, Dict, List
+from typing import Dict, List, Optional
 
 from starlette.datastructures import FormData
 

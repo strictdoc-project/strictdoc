@@ -11,9 +11,9 @@ from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 STRICTDOC_ROOT_PATH = os.path.join(os.path.dirname(__file__), "..")
 sys.path.append(STRICTDOC_ROOT_PATH)
 
-from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.writer import SDWriter
 
 
 class ConfluenceHTMLTableImport:

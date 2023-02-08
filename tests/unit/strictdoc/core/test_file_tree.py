@@ -2,7 +2,7 @@ import os
 import tempfile
 from pathlib import Path
 
-from strictdoc.core.file_tree import FileFinder, FileTree, Folder, File
+from strictdoc.core.file_tree import File, FileFinder, FileTree, Folder
 
 
 def test_01():

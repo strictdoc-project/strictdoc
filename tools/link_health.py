@@ -29,12 +29,12 @@ import multiprocessing
 import os
 import re
 import sys
-import yaml
 from enum import Enum
 from queue import Empty
-from typing import Union, List
+from typing import List, Union
 
 import requests
+import yaml
 
 __version__ = "0.0.6"
 

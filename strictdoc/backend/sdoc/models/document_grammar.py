@@ -1,12 +1,13 @@
-from collections import defaultdict, OrderedDict
-from typing import List, Set, Dict
+from collections import OrderedDict, defaultdict
+from typing import Dict, List, Set
+
 from strictdoc.backend.sdoc.models.type_system import (
-    GrammarElementField,
-    GrammarElementFieldString,
-    RequirementFieldName,
     RESERVED_NON_META_FIELDS,
+    GrammarElementField,
     GrammarElementFieldReference,
+    GrammarElementFieldString,
     GrammarReferenceType,
+    RequirementFieldName,
 )
 
 

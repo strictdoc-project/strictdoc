@@ -7,8 +7,8 @@ from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_tree import (
-    FileTree,
     FileFinder,
+    FileTree,
     PathFinder,
 )
 from strictdoc.helpers.textx import drop_textx_meta

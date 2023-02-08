@@ -8,9 +8,9 @@ from xlsxwriter.worksheet import Worksheet
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.reference import (
-    ParentReqReference,
-    FileReference,
     BibReference,
+    FileReference,
+    ParentReqReference,
 )
 from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.sdoc.models.type_system import ReferenceType

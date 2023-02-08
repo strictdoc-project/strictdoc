@@ -1,7 +1,7 @@
 select = [
   # "A",
   # "ARG",
-  # "B",
+  "B",
   # "BLE",
   # "C",
   # "C4",
@@ -15,7 +15,7 @@ select = [
   "F",
   # "FBT",
   "G",
-  # "I",
+  "I",
   "ISC",
   "ICN",
   # "N",
@@ -44,3 +44,5 @@ ignore = ["E501"]
 # Avoid trying to fix flake8-bugbear (`B`) violations.
 unfixable = ["B"]
 
+[per-file-ignores]
+"strictdoc/server/routers/main_router.py" = ["B008"]

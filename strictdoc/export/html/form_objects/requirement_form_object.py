@@ -3,7 +3,7 @@ import re
 import uuid
 from collections import defaultdict
 from enum import Enum
-from typing import Optional, List, Dict
+from typing import Dict, List, Optional
 
 from starlette.datastructures import FormData
 
@@ -25,8 +25,8 @@ from strictdoc.backend.sdoc.models.type_system import (
     RequirementFieldType,
 )
 from strictdoc.core.traceability_index import (
-    TraceabilityIndex,
     RequirementConnections,
+    TraceabilityIndex,
 )
 from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
@@ -315,7 +315,7 @@ class RequirementFormObject(ErrorObject):
         return False
 
     def enumerate_fields(self, multiline: bool):
-        for field_name, field in self.fields.items():
+        for _, field in self.fields.items():
             requirement_field: RequirementFormField = field[0]
             if multiline:
                 if not requirement_field.is_multiline():

@@ -1,11 +1,11 @@
 import argparse
 import os
 import sys
+from io import StringIO
+from xml.etree import ElementTree as etree
 
 import html5lib
 from tidylib import tidy_document
-from xml.etree import ElementTree as etree
-from io import StringIO
 
 parser = argparse.ArgumentParser(description="HTML Markup validator")
 parser.add_argument("input_file", type=str, help="Path to HTML file")

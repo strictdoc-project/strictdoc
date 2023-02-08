@@ -1,6 +1,6 @@
 from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
-from pygments.lexers.c_cpp import CppLexer, CLexer
+from pygments.lexers.c_cpp import CLexer, CppLexer
 from pygments.lexers.markup import TexLexer
 from pygments.lexers.python import PythonLexer
 
@@ -8,9 +8,9 @@ from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.finders.source_files_finder import SourceFile
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
+from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
-from strictdoc.export.html.html_templates import HTMLTemplates
 
 
 class SourceFileViewHTMLGenerator:

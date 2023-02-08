@@ -3,9 +3,9 @@ import re
 from copy import copy
 from mimetypes import guess_type
 from pathlib import Path
-from typing import Optional, List, Union, Dict, Set
+from typing import Dict, List, Optional, Set, Union
 
-from fastapi import Form, APIRouter, UploadFile
+from fastapi import APIRouter, Form, UploadFile
 from jinja2 import Environment
 from reqif.models.error_handling import ReqIFXMLParsingError
 from reqif.parser import ReqIFParser
@@ -15,7 +15,7 @@ from starlette.requests import Request
 from starlette.responses import HTMLResponse, Response
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
-from strictdoc import __version__, SDocRuntimeEnvironment
+from strictdoc import SDocRuntimeEnvironment, __version__
 from strictdoc.backend.reqif.export.sdoc_to_reqif_converter import (
     SDocToReqIFObjectConverter,
 )
@@ -26,7 +26,7 @@ from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.free_text_reader import SDFreeTextReader
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
-from strictdoc.backend.sdoc.models.free_text import FreeTextContainer, FreeText
+from strictdoc.backend.sdoc.models.free_text import FreeText, FreeTextContainer
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
@@ -42,8 +42,8 @@ from strictdoc.backend.sdoc.models.type_system import (
 )
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.cli.cli_arg_parser import (
-    ServerCommandConfig,
     ExportCommandConfig,
+    ServerCommandConfig,
 )
 from strictdoc.core.actions.export_action import ExportAction
 from strictdoc.core.document_iterator import DocumentCachingIterator
@@ -63,9 +63,9 @@ from strictdoc.export.html.form_objects.document_grammar_form_object import (
     GrammarFormField,
 )
 from strictdoc.export.html.form_objects.requirement_form_object import (
-    RequirementFormObject,
     RequirementFormField,
     RequirementFormFieldType,
+    RequirementFormObject,
     RequirementReferenceFormField,
 )
 from strictdoc.export.html.form_objects.section_form_object import (
@@ -80,8 +80,8 @@ from strictdoc.export.rst.rst_to_html_fragment_writer import (
 )
 from strictdoc.helpers.parallelizer import NullParallelizer
 from strictdoc.helpers.string import (
-    sanitize_html_form_field,
     is_safe_alphanumeric_string,
+    sanitize_html_form_field,
 )
 from strictdoc.server.error_object import ErrorObject
 

@@ -59,10 +59,7 @@ dependencies = [
     "XlsxWriter >= 1.3.7, == 1.*",
     "xlrd >= 2.0.1, == 2.*",
 
-    # reqif and strictdoc share the same development cycle and both still stay
-    # within their 0.0.* versions. Hardcoding until both projects start to track the
-    # backward incompatible API updates by MAJOR and MINOR version components.
-    "reqif == 0.0.21, == 0.*",
+    "reqif >= 0.0.23, == 0.*",
 
     # Bibtex
     "pybtex >= 0.23.0, == 0.*",

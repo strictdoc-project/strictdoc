@@ -235,6 +235,11 @@ class ReqIFToSDocConverter:
                             required="False",
                         )
                     )
+            elif attribute.attribute_type == SpecObjectAttributeType.DATE:
+                # Recognize the DATE attributes but do nothing about them,
+                # since StrictDoc has no concept of "date" for its grammar
+                # fields.
+                pass
             else:
                 raise NotImplementedError(attribute) from None
         requirement_element = GrammarElement(

@@ -1,3 +1,10 @@
+class ReqIFProfile:
+    P1_SDOC = "sdoc"
+    P11_POLARION = "p11_polarion"
+
+    ALL = {P1_SDOC, P11_POLARION}
+
+
 SDOC_SPEC_OBJECT_TYPE_SINGLETON = "REQUIREMENT_OR_SECTION"
 
 
@@ -7,18 +14,20 @@ class SDocRequirementReservedField:
     TITLE = "TITLE"
     STATEMENT = "STATEMENT"
     COMMENT = "COMMENT"
+    CREATED_BY = "CREATED_BY"
 
-    SET = {UID, TITLE, STATEMENT, COMMENT}
+    SET = {UID, TITLE, STATEMENT, COMMENT, CREATED_BY}
 
 
 class ReqIFRequirementReservedField:
     UID = "ReqIF.ForeignID"
     NAME = "ReqIF.Name"
     TEXT = "ReqIF.Text"
+    CREATED_BY = "ReqIF.ForeignCreatedBy"
 
     COMMENT_NOTES = "NOTES"
 
-    SET = {UID, NAME, TEXT, COMMENT_NOTES}
+    SET = {UID, NAME, TEXT, CREATED_BY, COMMENT_NOTES}
 
 
 class ReqIFChapterField:
@@ -31,6 +40,7 @@ SDOC_TO_REQIF_FIELD_MAP = {
     SDocRequirementReservedField.TITLE: ReqIFRequirementReservedField.NAME,
     SDocRequirementReservedField.STATEMENT: ReqIFRequirementReservedField.TEXT,
     SDocRequirementReservedField.COMMENT: ReqIFRequirementReservedField.COMMENT_NOTES,  # noqa: E501
+    SDocRequirementReservedField.CREATED_BY: ReqIFRequirementReservedField.CREATED_BY,  # noqa: E501
 }
 
 REQIF_MAP_TO_SDOC_FIELD_MAP = {
@@ -38,6 +48,7 @@ REQIF_MAP_TO_SDOC_FIELD_MAP = {
     ReqIFRequirementReservedField.NAME: SDocRequirementReservedField.TITLE,
     ReqIFRequirementReservedField.TEXT: SDocRequirementReservedField.STATEMENT,
     ReqIFRequirementReservedField.COMMENT_NOTES: SDocRequirementReservedField.COMMENT,  # noqa: E501
+    ReqIFRequirementReservedField.CREATED_BY: SDocRequirementReservedField.CREATED_BY,  # noqa: E501
 }
 
 DEFAULT_SDOC_GRAMMAR_FIELDS = [

@@ -4,13 +4,13 @@ import sys
 from enum import Enum
 from typing import List, Optional
 
+from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.cli.argument_int_range import IntRange
 from strictdoc.core.environment import SDocRuntimeEnvironment
 from strictdoc.core.project_config import ProjectConfig
 
 EXPORT_FORMATS = ["html", "html-standalone", "rst", "excel", "reqif-sdoc"]
-
-REQIF_PARSERS = ["sdoc"]
+EXCEL_PARSERS = ["basic"]
 
 
 def _check_formats(formats):
@@ -149,19 +149,19 @@ def cli_args_parser() -> argparse.ArgumentParser:
     )
 
     def check_reqif_parser(parser):
-        if parser not in REQIF_PARSERS:
+        if parser not in ReqIFProfile.ALL:
             message = (
-                f"invalid choice: '{parser}' (choose from {REQIF_PARSERS})"
+                f"invalid choice: '{parser}' (choose from {ReqIFProfile.ALL})"
             )
             raise argparse.ArgumentTypeError(message)
         return parser
 
     command_parser_import_reqif.add_argument(
-        "parser",
+        "profile",
         type=check_reqif_parser,
         help=(
-            "An argument that selects the ReqIF parser. "
-            f"Possible values: {{{', '.join(REQIF_PARSERS)}}}"
+            "An argument that selects the ReqIF import/export profile. "
+            f"Possible values: {{{', '.join(ReqIFProfile.ALL)}}}"
         ),
     )
     command_parser_import_reqif.add_argument(
@@ -184,10 +184,9 @@ def cli_args_parser() -> argparse.ArgumentParser:
     )
 
     def check_excel_parser(parser):
-        excel_parsers = ["basic"]
-        if parser not in excel_parsers:
+        if parser not in EXCEL_PARSERS:
             message = (
-                f"invalid choice: '{parser}' (choose from {excel_parsers})"
+                f"invalid choice: '{parser}' (choose from {EXCEL_PARSERS})"
             )
             raise argparse.ArgumentTypeError(message)
         return parser
@@ -197,7 +196,7 @@ def cli_args_parser() -> argparse.ArgumentParser:
         type=check_excel_parser,
         help=(
             "An argument that selects the ReqIF parser. "
-            f"Possible values: {{{', '.join(REQIF_PARSERS)}}}"
+            f"Possible values: {{{', '.join(EXCEL_PARSERS)}}}"
         ),
     )
     command_parser_import_excel.add_argument(
@@ -266,10 +265,10 @@ def cli_args_parser() -> argparse.ArgumentParser:
 
 
 class ImportReqIFCommandConfig:
-    def __init__(self, input_path, output_path, parser):
-        self.input_path = input_path
-        self.output_path = output_path
-        self.parser = parser
+    def __init__(self, input_path: str, output_path: str, profile):
+        self.input_path: str = input_path
+        self.output_path: str = output_path
+        self.profile: Optional[str] = profile
 
 
 class ImportExcelCommandConfig:
@@ -451,7 +450,7 @@ class SDocArgsParser:
 
     def get_import_config_reqif(self, _) -> ImportReqIFCommandConfig:
         return ImportReqIFCommandConfig(
-            self.args.input_path, self.args.output_path, self.args.parser
+            self.args.input_path, self.args.output_path, self.args.profile
         )
 
     def get_import_config_excel(self, _) -> ImportExcelCommandConfig:

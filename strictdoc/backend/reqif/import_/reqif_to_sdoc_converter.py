@@ -229,7 +229,7 @@ class ReqIFToSDocConverter:
                     )
                 )
                 options = list(map(lambda v: v.key, enum_data_type.values))
-                if attribute.multi_valued:
+                if attribute.multi_valued is True:
                     fields.append(
                         GrammarElementFieldMultipleChoice(
                             parent=None,
@@ -302,6 +302,13 @@ class ReqIFToSDocConverter:
                     parts=[free_text],
                 )
             )
+        # Sanitize the title. Titles can also come from XHTML attributes with
+        # custom newlines such as:
+        #             <ATTRIBUTE-VALUE-XHTML>
+        #               <THE-VALUE>
+        #                 Some value
+        #               </THE-VALUE>
+        section_title = section_title.strip().replace("\n", " ")
         section = Section(
             parent=None,
             uid=None,
@@ -335,9 +342,28 @@ class ReqIFToSDocConverter:
             ].long_name
             if long_name_or_none is None:
                 raise NotImplementedError
+            field_name: str = long_name_or_none
+            if attribute.attribute_type == SpecObjectAttributeType.ENUMERATION:
+                assert isinstance(attribute.value, list)
+                enum_values_list = list(attribute.value)
+                for enum_value_idx, _ in enumerate(enum_values_list):
+                    enum_values_list[enum_value_idx] = enum_values_list[
+                        enum_value_idx
+                    ].strip()
+                enum_values = ", ".join(enum_values_list)
+                fields.append(
+                    RequirementField(
+                        parent=None,
+                        field_name=field_name,
+                        field_value=enum_values,
+                        field_value_multiline=None,
+                        field_value_references=None,
+                    )
+                )
+                continue
+            assert isinstance(attribute.value, str)
             if long_name_or_none == "ReqIF.ForeignID":
                 foreign_key_id_or_none = attribute.definition_ref
-            field_name: str = long_name_or_none
             attribute_value: Optional[str] = unescape(attribute.value)
             attribute_multiline_value = None
             if (

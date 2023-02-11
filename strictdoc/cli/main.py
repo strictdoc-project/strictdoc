@@ -3,6 +3,9 @@
 
 import os
 import sys
+# Needed to ensure that multiprocessing.freeze_support() is called
+# in a frozen application (see main() below).
+import multiprocessing
 
 strictdoc_root_path = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "..")
@@ -111,6 +114,12 @@ def _main(parallelizer):
 
 
 def main():
+    # Ensure that multiprocessing.freeze_support() is called in a frozen
+    # application
+    # https://github.com/pyinstaller/pyinstaller/issues/7438
+    if getattr(sys, 'frozen', False):
+        multiprocessing.freeze_support()
+
     # How to make python 3 print() utf8
     # https://stackoverflow.com/a/3597849/598057
     # sys.stdout.reconfigure(encoding='utf-8') for Python 3.7

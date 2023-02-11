@@ -193,12 +193,13 @@ class SDocToReqIFObjectConverter:
             spec_types.extend(document_spec_types)
 
             specification_type = ReqIFSpecificationType(
-                description=None,
                 identifier=SDOC_SPECIFICATION_TYPE_SINGLETON,
+                description=None,
                 last_change=creation_time,
                 long_name=SDOC_SPECIFICATION_TYPE_SINGLETON,
                 spec_attributes=None,
                 spec_attribute_map={},
+                is_self_closed=True,
             )
             spec_types.append(specification_type)
             document_iterator = DocumentCachingIterator(document)
@@ -496,14 +497,16 @@ class SDocToReqIFObjectConverter:
                     xml_node=None,
                     attribute_type=SpecObjectAttributeType.ENUMERATION,
                     definition_ref=field.field_name,
-                    value=field.field_value,
+                    value=[field.field_value],
                 )
             elif isinstance(grammar_field, GrammarElementFieldMultipleChoice):
+                field_values: List[str] = field.field_value.split(",")
+                field_values = list(map(lambda v: v.strip(), field_values))
                 attribute = SpecObjectAttribute(
                     xml_node=None,
                     attribute_type=SpecObjectAttributeType.ENUMERATION,
                     definition_ref=field.field_name,
-                    value=field.field_value,
+                    value=field_values,
                 )
             elif isinstance(grammar_field, GrammarElementFieldString):
                 field_value = escape(

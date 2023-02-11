@@ -3,6 +3,7 @@
 
 import os
 import sys
+
 # Needed to ensure that multiprocessing.freeze_support() is called
 # in a frozen application (see main() below).
 import multiprocessing
@@ -117,7 +118,7 @@ def main():
     # Ensure that multiprocessing.freeze_support() is called in a frozen
     # application
     # https://github.com/pyinstaller/pyinstaller/issues/7438
-    if getattr(sys, 'frozen', False):
+    if getattr(sys, "frozen", False):
         multiprocessing.freeze_support()
 
     # How to make python 3 print() utf8

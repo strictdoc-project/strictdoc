@@ -282,3 +282,17 @@ The detailed comparison is coming.
 [/SECTION]
 
 [/SECTION]
+
+[SECTION]
+TITLE: Which StrictDoc statistics are available?
+
+[FREETEXT]
+Most relevant GitHub statistics:
+
+- `Contributors <https://github.com/strictdoc-project/strictdoc/graphs/contributors>`_
+
+The `pip trends <https://piptrends.com>`_ helps to visualize the Pip package download stats. The ``reqif`` satellite project is included for comparison as well:
+`strictdoc vs reqif <https://piptrends.com/compare/strictdoc-vs-reqif>`_.
+[/FREETEXT]
+
+[/SECTION]

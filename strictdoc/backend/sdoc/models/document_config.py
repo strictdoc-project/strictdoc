@@ -6,7 +6,7 @@ from strictdoc.helpers.auto_described import auto_described
 @auto_described
 class DocumentConfig:  # pylint: disable=too-many-instance-attributes
     @staticmethod
-    def default_config(document):
+    def default_config(document) -> "DocumentConfig":
         return DocumentConfig(
             parent=document,
             version=None,

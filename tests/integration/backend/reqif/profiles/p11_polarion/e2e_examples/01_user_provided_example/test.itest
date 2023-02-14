@@ -1,0 +1,15 @@
+RUN: %mkdir %S/output
+RUN: %strictdoc import reqif p11_polarion %S/sample.reqif %S/output/output.sdoc
+
+RUN: %cat %S/output/output.sdoc | filecheck %s
+CHECK: [REQUIREMENT]
+CHECK: CREATED_BY: ...Anonymized-3286337206...
+CHECK: UID: ...Anonymized-1890729041...
+CHECK: STATEMENT: >>>
+CHECK: ...Anonymized-2087513185...
+CHECK: <<<
+
+RUN: %strictdoc export --formats=html %S/output/output.sdoc
+RUN: %strictdoc export --formats=reqif-sdoc %S/output/output.sdoc
+UN: %strictdoc import reqif sdoc %S/output/reqif/output.reqif %S/output/output_step2.sdoc
+UN: %diff %S/output/output.sdoc %S/output/output_step2.sdoc

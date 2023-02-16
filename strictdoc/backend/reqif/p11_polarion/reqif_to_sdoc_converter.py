@@ -367,7 +367,15 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                 or field_name == ReqIFRequirementReservedField.TEXT
                 or field_name == ReqIFRequirementReservedField.COMMENT_NOTES
             ):
-                attribute_multiline_value = attribute_value.lstrip()
+                if attribute.attribute_type == SpecObjectAttributeType.XHTML:
+                    attribute_multiline_value = attribute.value_stripped_xhtml
+                    # Another strip() is hidden in .value_stripped_xhtml
+                    # but doing this anyway to highlight the intention.
+                    attribute_multiline_value = (
+                        attribute_multiline_value.strip()
+                    )
+                else:
+                    attribute_multiline_value = attribute_value.strip()
                 attribute_value = None
 
             if field_name in ReqIFRequirementReservedField.SET:

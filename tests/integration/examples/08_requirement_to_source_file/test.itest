@@ -1,5 +1,5 @@
 RUN: %strictdoc export %S --experimental-enable-file-traceability --output-dir Output | filecheck %s --dump-input=fail
-CHECK: Published: Example: Traceability between requirements and source files
+CHECK: Published: Example 8: Traceability between requirements and source files
 
 RUN: %check_exists --file "%S/Output/html/_source_files/file.py.html"
 

@@ -1,5 +1,5 @@
 RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
-CHECK: Published: How to declare a custom grammar
+CHECK: Published: Example 7: How to declare a custom grammar
 
 RUN: %cat %S/Output/html/07_custom_grammar/example.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 

@@ -1,0 +1,22 @@
+[DOCUMENT]
+TITLE: Example 3: Section with requirements
+
+[SECTION]
+TITLE: High-level requirements
+
+[REQUIREMENT]
+UID: EX3-REQ-001
+TITLE: Requirement A
+STATEMENT: The system shall do A.
+
+[REQUIREMENT]
+UID: EX3-REQ-002
+TITLE: Requirement B
+STATEMENT: The system shall do B.
+
+[REQUIREMENT]
+UID: EX3-REQ-003
+TITLE: Requirement C
+STATEMENT: The system shall do C.
+
+[/SECTION]

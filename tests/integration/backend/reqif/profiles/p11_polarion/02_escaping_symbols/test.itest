@@ -6,7 +6,7 @@ CHECK: [REQUIREMENT]
 CHECK: CREATED_BY: ...Anonymized-3286337206...
 CHECK: UID: ...Anonymized-1890729041...
 CHECK: STATEMENT: >>>
-CHECK: <div>Some<span>formatted</span>content.</div>
+CHECK: <div>Are the &lt;&lt;&lt; symbols escaped?</div>
 CHECK: <<<
 
 RUN: %strictdoc export --formats=html %S/output/output.sdoc

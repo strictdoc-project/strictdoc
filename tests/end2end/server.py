@@ -26,7 +26,7 @@ if os.getenv("STRICTDOC_LONGER_TIMEOUTS") is not None:
     WARMUP_INTERVAL = 3
     # When Selenium clicks on a link that downloads a file, it takes some time
     # until the file actually appears on the file system.
-    DOWNLOAD_FILE_TIMEOUT = 4
+    DOWNLOAD_FILE_TIMEOUT = 5
 else:
     WAIT_TIMEOUT = 5  # Seconds
     POLL_TIMEOUT = 2000  # Milliseconds
@@ -66,7 +66,7 @@ class SDocTestServer:
         self.server_port: int = (
             SDocTestServer._get_test_server_port()
             if is_parallel_execution
-            else 8001
+            else 5112
         )
         if not SDocTestServer.check_no_existing_connection(
             "127.0.0.1", self.server_port
@@ -155,7 +155,7 @@ class SDocTestServer:
     def _get_test_server_port() -> int:
         # This is to avoid collisions between test processes running in
         # parallel.
-        base_server_test_port = 14000
+        base_server_test_port = 5113
         this_process_pid = os.getpid()
         this_process_pid_hundreds = this_process_pid % 100
         server_port = base_server_test_port + this_process_pid_hundreds

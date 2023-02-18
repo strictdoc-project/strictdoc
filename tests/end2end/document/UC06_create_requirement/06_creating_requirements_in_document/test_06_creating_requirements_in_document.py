@@ -105,6 +105,10 @@ class Test06CreateRequirementsInDocument(BaseCase):
 
         self.click_xpath("//button[@type='submit' and text()='Save']")
 
+        self.assert_element_not_present(
+            "//button[@type='submit' and text()='Save']", by=By.XPATH
+        )
+
         # Check the resulting TOC.
 
         self.assert_text("1. Requirement title #1")

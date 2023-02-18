@@ -34,7 +34,7 @@ class Test_UC11_T03_EditDocument_Cancel(BaseCase):
         self.hover_and_click(
             hover_selector="(//sdoc-node)[1]",
             click_selector=(
-                '(//sdoc-node)[1]//*[@data-testid="document-edit-config-action"]'
+                '(//sdoc-node)[1]//*[@data-testid="document-edit-config-action"]'  # noqa: E501
             ),
             hover_by=By.XPATH,
             click_by=By.XPATH,

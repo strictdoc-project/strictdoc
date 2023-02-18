@@ -290,7 +290,9 @@ def create_main_router(
                 insert_to_idx = 0
             else:
                 parent = reference_node.parent
-                insert_to_idx = parent.section_contents.index(reference_node) + 1
+                insert_to_idx = (
+                    parent.section_contents.index(reference_node) + 1
+                )
         else:
             raise NotImplementedError
 
@@ -703,7 +705,9 @@ def create_main_router(
                 insert_to_idx = 0
             else:
                 parent = reference_node.parent
-                insert_to_idx = parent.section_contents.index(reference_node) + 1
+                insert_to_idx = (
+                    parent.section_contents.index(reference_node) + 1
+                )
         else:
             raise NotImplementedError
 
@@ -1797,7 +1801,9 @@ def create_main_router(
             "stream_save_document_grammar.jinja.html"
         )
         output = template.render(
-            document=document, config=export_config, renderer=markup_renderer,
+            document=document,
+            config=export_config,
+            renderer=markup_renderer,
             document_type=DocumentType.document(),
         )
         if massive_update:

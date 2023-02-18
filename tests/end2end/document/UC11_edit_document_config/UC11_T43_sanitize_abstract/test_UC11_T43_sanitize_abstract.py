@@ -1,3 +1,4 @@
+# pylint: disable=invalid-name
 import filecmp
 import os
 import shutil
@@ -35,7 +36,7 @@ class Test_UC11_T43_SanitizeAbstract(BaseCase):
         self.hover_and_click(
             hover_selector="(//sdoc-node)[1]",
             click_selector=(
-                '(//sdoc-node)[1]//*[@data-testid="document-edit-config-action"]'
+                '(//sdoc-node)[1]//*[@data-testid="document-edit-config-action"]'  # noqa: E501
             ),
             hover_by=By.XPATH,
             click_by=By.XPATH,
@@ -48,7 +49,7 @@ Hello world!
 Hello world!    
             
 Hello world!    
-        """  # noqa: W291
+        """  # noqa: W291, W293
 
         self.type(
             "(//div[@id='document[FREETEXT]'])[1]",

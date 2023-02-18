@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional, List
+from typing import List, Optional
 
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
@@ -57,7 +57,7 @@ class Document:  # pylint: disable=too-many-instance-attributes
         if freetext is None or len(freetext) == 0:
             self.free_texts = []
             return
-        assert freetext == freetext.strip(), "Empty abstract with trailing whitespace."
-        self.free_texts = [
-            FreeText(parent=self, parts=[freetext])
-        ]
+        assert (
+            freetext == freetext.strip()
+        ), "Empty abstract with trailing whitespace."
+        self.free_texts = [FreeText(parent=self, parts=[freetext])]

@@ -7,8 +7,10 @@ from starlette.datastructures import FormData
 
 from strictdoc.backend.sdoc.free_text_reader import SDFreeTextReader
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.free_text import FreeText, FreeTextContainer
-from strictdoc.export.rst.rst_to_html_fragment_writer import RstToHtmlFragmentWriter
+from strictdoc.backend.sdoc.models.free_text import FreeText
+from strictdoc.export.rst.rst_to_html_fragment_writer import (
+    RstToHtmlFragmentWriter,
+)
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.string import sanitize_html_form_field
 from strictdoc.server.error_object import ErrorObject
@@ -43,9 +45,7 @@ class DocumentConfigFormObject(ErrorObject):
             else ""
         )
         self.document_freetext: Optional[str] = (
-            document_freetext
-            if document_freetext is not None
-            else ""
+            document_freetext if document_freetext is not None else ""
         )
 
     @staticmethod
@@ -131,11 +131,16 @@ class DocumentConfigFormObject(ErrorObject):
                 "Document title must not be empty.",
             )
 
-        if self.document_freetext is not None and len(self.document_freetext) > 0:
+        if (
+            self.document_freetext is not None
+            and len(self.document_freetext) > 0
+        ):
             (
                 parsed_html,
                 rst_error,
-            ) = RstToHtmlFragmentWriter.write_with_validation(self.document_freetext)
+            ) = RstToHtmlFragmentWriter.write_with_validation(
+                self.document_freetext
+            )
             if parsed_html is None:
                 self.add_error("FREETEXT", rst_error)
             free_text_container = SDFreeTextReader.read(self.document_freetext)

@@ -53,6 +53,9 @@ class Test06CreateRequirementInSection(BaseCase):
         self.type("#requirement_STATEMENT", "Requirement statement")
 
         self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.assert_element_not_present(
+            "//button[@type='submit' and text()='Save']", by=By.XPATH
+        )
 
         self.assert_text("1. Requirement title")
         self.assert_element(

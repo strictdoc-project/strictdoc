@@ -1,15 +1,13 @@
-<turbo-frame id="article-{{document.node_id}}">
-  {%- if document.free_texts -%}
-    {%- for free_text in document.free_texts %}
-      <div class="free_text">
-        {{ renderer.render_free_text(document_type, free_text) }}
-      </div>
-    {%- endfor -%}
-  {%- elif not document.section_contents -%}
-      <div
-        data-testid="document-placeholder"
-        class="document_placeholder"
-      >The document is empty. Start adding text, sections, and requirements.
-      </div>
-  {%- endif -%}
-</turbo-frame>
+{%- if document.free_texts -%}
+  {%- for free_text in document.free_texts %}
+    <div class="free_text">
+      {{ renderer.render_free_text(document_type, free_text) }}
+    </div>
+  {%- endfor -%}
+{%- elif not document.section_contents -%}
+    <div
+      data-testid="document-placeholder"
+      class="document_placeholder"
+    >The document is empty. Start adding text, sections, and requirements.
+    </div>
+{%- endif -%}

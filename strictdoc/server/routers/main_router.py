@@ -55,9 +55,6 @@ from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.form_objects.document_config_form_object import (
     DocumentConfigFormObject,
 )
-from strictdoc.export.html.form_objects.document_form_object import (
-    ExistingDocumentFreeTextObject,
-)
 from strictdoc.export.html.form_objects.document_grammar_form_object import (
     DocumentGrammarFormObject,
     GrammarFormField,
@@ -600,182 +597,6 @@ def create_main_router(
         return HTMLResponse(
             content=output,
             status_code=200,
-            headers={
-                "Content-Type": "text/vnd.turbo-stream.html",
-            },
-        )
-
-    @router.get("/fragments/document/{document_id}", response_class=Response)
-    def get_edit_document_freetext(document_id: str):
-        document = export_action.traceability_index.get_node_by_id(document_id)
-        form_object = ExistingDocumentFreeTextObject.create_from_document(
-            document=document,
-        )
-        template = env.get_template(
-            "actions/"
-            "document/"
-            "document_freetext/"
-            "stream_edit_document_freetext.jinja.html"
-        )
-        link_renderer = LinkRenderer(
-            root_path=document.meta.get_root_path_prefix()
-        )
-        markup_renderer = MarkupRenderer.create(
-            markup="RST",
-            traceability_index=export_action.traceability_index,
-            link_renderer=link_renderer,
-            context_document=document,
-        )
-        output = template.render(
-            renderer=markup_renderer,
-            form_object=form_object,
-            document_type=DocumentType.document(),
-        )
-        return HTMLResponse(
-            content=output,
-            headers={
-                "Content-Type": "text/vnd.turbo-stream.html",
-            },
-        )
-
-    @router.get(
-        "/actions/document/cancel_edit_freetext", response_class=Response
-    )
-    def cancel_edit_document_freetext(document_mid: str):
-        assert (
-            isinstance(document_mid, str) and len(document_mid) > 0
-        ), document_mid
-        document: Document = export_action.traceability_index.get_node_by_id(
-            document_mid
-        )
-        template = env.get_template(
-            "actions/document/document_freetext/"
-            "stream_cancel_edit_freetext.jinja.html"
-        )
-        link_renderer = LinkRenderer(
-            root_path=document.meta.get_root_path_prefix()
-        )
-        markup_renderer = MarkupRenderer.create(
-            markup="RST",
-            traceability_index=export_action.traceability_index,
-            link_renderer=link_renderer,
-            context_document=document,
-        )
-        output = template.render(
-            renderer=markup_renderer,
-            document=document,
-            document_type=DocumentType.document(),
-            config=export_action.config,
-        )
-        return HTMLResponse(
-            content=output,
-            status_code=200,
-            headers={
-                "Content-Type": "text/vnd.turbo-stream.html",
-            },
-        )
-
-    @router.post("/fragments/document/{document_id}", response_class=Response)
-    def put_update_document_freetext(
-        document_id: str,
-        document_freetext: str = Form(""),
-    ):
-        assert isinstance(document_id, str)
-
-        document_freetext = sanitize_html_form_field(
-            document_freetext, multiline=True
-        )
-        form_object = ExistingDocumentFreeTextObject(
-            document_mid=document_id, document_free_text=document_freetext
-        )
-        document: Document = export_action.traceability_index.get_node_by_id(
-            document_id
-        )
-
-        free_text_container: Optional[FreeTextContainer] = None
-        if document_freetext is not None and len(document_freetext) > 0:
-            (
-                parsed_html,
-                rst_error,
-            ) = RstToHtmlFragmentWriter.write_with_validation(document_freetext)
-            if parsed_html is None:
-                form_object.add_error("document_freetext", rst_error)
-
-            free_text_container = SDFreeTextReader.read(document_freetext)
-
-        if form_object.any_errors():
-            template = env.get_template(
-                "actions/"
-                "document/"
-                "document_freetext/"
-                "stream_edit_document_freetext.jinja.html"
-            )
-            link_renderer = LinkRenderer(
-                root_path=document.meta.get_root_path_prefix()
-            )
-            markup_renderer = MarkupRenderer.create(
-                markup="RST",
-                traceability_index=export_action.traceability_index,
-                link_renderer=link_renderer,
-                context_document=document,
-            )
-            output = template.render(
-                renderer=markup_renderer,
-                form_object=form_object,
-                document_type=DocumentType.document(),
-            )
-            return HTMLResponse(
-                content=output,
-                status_code=422,
-                headers={
-                    "Content-Type": "text/vnd.turbo-stream.html",
-                },
-            )
-
-        # Updating section content.
-        if free_text_container is not None:
-            if len(document.free_texts) > 0:
-                free_text: FreeText = document.free_texts[0]
-                free_text.parts = free_text_container.parts
-            else:
-                free_text = FreeText(document, free_text_container.parts)
-                document.free_texts.append(free_text)
-        else:
-            document.free_texts = []
-
-        # Saving new content to .SDoc file.
-        document_content = SDWriter().write(document)
-        document_meta = document.meta
-        with open(
-            document_meta.input_doc_full_path, "w", encoding="utf8"
-        ) as output_file:
-            output_file.write(document_content)
-
-        # Re-exporting HTML files.
-        export_action.export()
-
-        # Rendering back the Turbo template.
-        template = env.get_template(
-            "actions/document/document_freetext/"
-            "stream_updated_document_freetext.jinja.html"
-        )
-        link_renderer = LinkRenderer(
-            root_path=document.meta.get_root_path_prefix()
-        )
-        markup_renderer = MarkupRenderer.create(
-            markup="RST",
-            traceability_index=export_action.traceability_index,
-            link_renderer=link_renderer,
-            context_document=document,
-        )
-        output = template.render(
-            renderer=markup_renderer,
-            document=document,
-            document_type=DocumentType.document(),
-            config=export_action.config,
-        )
-        return HTMLResponse(
-            content=output,
             headers={
                 "Content-Type": "text/vnd.turbo-stream.html",
             },
@@ -1736,6 +1557,7 @@ def create_main_router(
             if len(form_object.document_classification) > 0
             else None
         )
+        document.set_freetext(form_object.document_freetext)
 
         # Re-generate the document's SDOC.
         document_content = SDWriter().write(document)
@@ -1758,6 +1580,15 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
         )
 
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix()
+        )
+        markup_renderer = MarkupRenderer.create(
+            markup="RST",
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+            context_document=document,
+        )
         template = env.get_template(
             "actions/"
             "document/"
@@ -1767,6 +1598,8 @@ def create_main_router(
         output = template.render(
             document=document,
             config=export_config,
+            renderer=markup_renderer,
+            document_type=DocumentType.document(),
         )
         return HTMLResponse(
             content=output,
@@ -1781,6 +1614,15 @@ def create_main_router(
         document: Document = export_action.traceability_index.get_node_by_id(
             document_mid
         )
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix()
+        )
+        markup_renderer = MarkupRenderer.create(
+            markup="RST",
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+            context_document=document,
+        )
         template = env.get_template(
             "actions/"
             "document/"
@@ -1790,6 +1632,8 @@ def create_main_router(
         output = template.render(
             document=document,
             config=export_action.config,
+            renderer=markup_renderer,
+            document_type=DocumentType.document(),
         )
         return HTMLResponse(
             content=output,

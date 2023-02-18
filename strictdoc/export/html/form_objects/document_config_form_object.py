@@ -1,10 +1,14 @@
+import html
 import re
 from collections import defaultdict
 from typing import Dict, List, Optional
 
 from starlette.datastructures import FormData
 
+from strictdoc.backend.sdoc.free_text_reader import SDFreeTextReader
 from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.free_text import FreeText, FreeTextContainer
+from strictdoc.export.rst.rst_to_html_fragment_writer import RstToHtmlFragmentWriter
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.string import sanitize_html_form_field
 from strictdoc.server.error_object import ErrorObject
@@ -20,6 +24,7 @@ class DocumentConfigFormObject(ErrorObject):
         document_uid: Optional[str],
         document_version: Optional[str],
         document_classification: Optional[str],
+        document_freetext: Optional[str],
     ):
         assert isinstance(document_mid, str), document_mid
         assert isinstance(document_title, str), document_title
@@ -35,6 +40,11 @@ class DocumentConfigFormObject(ErrorObject):
         self.document_classification: Optional[str] = (
             document_classification
             if document_classification is not None
+            else ""
+        )
+        self.document_freetext: Optional[str] = (
+            document_freetext
+            if document_freetext is not None
             else ""
         )
 
@@ -76,12 +86,20 @@ class DocumentConfigFormObject(ErrorObject):
                 document_classification, multiline=False
             )
 
+        document_freetext: str = ""
+        if "FREETEXT" in config_fields:
+            document_freetext = config_fields["FREETEXT"][0]
+            document_freetext = sanitize_html_form_field(
+                document_freetext, multiline=True
+            )
+
         form_object = DocumentConfigFormObject(
             document_mid=document_mid,
             document_title=document_title,
             document_uid=document_uid,
             document_version=document_version,
             document_classification=document_classification,
+            document_freetext=document_freetext,
         )
         return form_object
 
@@ -91,12 +109,19 @@ class DocumentConfigFormObject(ErrorObject):
     ) -> "DocumentConfigFormObject":
         assert isinstance(document, Document)
 
+        document_freetext: Optional[str] = None
+        if len(document.free_texts) > 0:
+            freetext: FreeText = document.free_texts[0]
+            document_freetext = "".join(freetext.parts)
+            document_freetext = html.escape(document_freetext)
+
         return DocumentConfigFormObject(
             document_mid=document.node_id,
             document_title=document.title,
             document_uid=document.config.uid,
             document_version=document.config.version,
             document_classification=document.config.classification,
+            document_freetext=document_freetext,
         )
 
     def validate(self) -> bool:
@@ -105,4 +130,15 @@ class DocumentConfigFormObject(ErrorObject):
                 "TITLE",
                 "Document title must not be empty.",
             )
+
+        if self.document_freetext is not None and len(self.document_freetext) > 0:
+            (
+                parsed_html,
+                rst_error,
+            ) = RstToHtmlFragmentWriter.write_with_validation(self.document_freetext)
+            if parsed_html is None:
+                self.add_error("FREETEXT", rst_error)
+            free_text_container = SDFreeTextReader.read(self.document_freetext)
+            self.document_freetext = "".join(free_text_container.parts)
+
         return len(self.errors) == 0

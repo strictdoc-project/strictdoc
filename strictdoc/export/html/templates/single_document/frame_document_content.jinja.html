@@ -1,7 +1,7 @@
 <turbo-frame id="frame_document_content">
-      {% include "single_document/frame_document_config.jinja.html" %}
-
       <div class="content">
+        {% include "single_document/frame_document_config.jinja.html" %}
+
         {%- for section_or_requirement in document_iterator.all_content() %}
 
         {%- if section_or_requirement.is_requirement %}

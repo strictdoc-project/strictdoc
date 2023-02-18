@@ -1,8 +1,8 @@
-<div data-section="edit-section-TBD" class="std-form-row">
+<div class="std-form-row">
   <div
     data-controller="editablefield"
     role="textbox"
-    data-editable="single"
+    data-editable="multiline"
     {%- if field_editable is defined and not field_editable -%}
       contenteditable="false"
     {%- else -%}
@@ -15,7 +15,12 @@
     {{ field_value }}
     {%- endif -%}
   </div>
-  <input type="hidden" class="std-input-hidden" name="{{ field_input_name }}" value="{{ field_value }}"/>
+
+  <textarea hidden class="std-input-hidden" name="{{ field_input_name }}">
+    {%- if true -%}
+    {{ field_value }}
+    {%- endif -%}
+  </textarea>
 
   {%- if errors|length > 0 -%}
     <div class="std-form-error">

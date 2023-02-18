@@ -1,8 +1,9 @@
 import uuid
-from typing import Optional
+from typing import Optional, List
 
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.helpers.auto_described import auto_described
 
@@ -14,7 +15,7 @@ class Document:  # pylint: disable=too-many-instance-attributes
         title: str,
         config: Optional[DocumentConfig],
         grammar: Optional[DocumentGrammar],
-        free_texts,
+        free_texts: List[FreeText],
         section_contents,
     ):
         assert isinstance(free_texts, list)
@@ -22,7 +23,7 @@ class Document:  # pylint: disable=too-many-instance-attributes
         self.title: str = title
         self.config = config if config else DocumentConfig.default_config(self)
         self.grammar: Optional[DocumentGrammar] = grammar
-        self.free_texts = free_texts
+        self.free_texts: List[FreeText] = free_texts
         self.section_contents = section_contents
 
         self.ng_level: int = 0
@@ -51,3 +52,12 @@ class Document:  # pylint: disable=too-many-instance-attributes
             0
         ].enumerate_custom_content_field_titles():
             yield field_title
+
+    def set_freetext(self, freetext: Optional[str]):
+        if freetext is None or len(freetext) == 0:
+            self.free_texts = []
+            return
+        assert freetext == freetext.strip(), "Empty abstract with trailing whitespace."
+        self.free_texts = [
+            FreeText(parent=self, parts=[freetext])
+        ]

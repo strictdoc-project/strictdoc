@@ -31,15 +31,6 @@
     title="Edit title and meta"
     data-testid="document-edit-config-action"
   >{% include "_res/svg_ico16_edit.jinja.html" %}</a>
-    {# EDIT #}
-  <a
-    href="/fragments/document/{{document.node_id}}"
-    class="action_button"
-    data-turbo-action="replace"
-    data-turbo="true"
-    title="Edit abstract"
-    data-testid="node-edit-action"
-  >{% include "_res/svg_ico16_edit.jinja.html" %}</a>
   {%- endif -%}
 
 {%- if node_controls__node_type != 'document' -%}

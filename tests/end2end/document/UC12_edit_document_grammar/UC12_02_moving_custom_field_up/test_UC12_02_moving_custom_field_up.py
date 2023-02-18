@@ -2,6 +2,7 @@ import filecmp
 import os
 import shutil
 
+from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.server import SDocTestServer
@@ -31,7 +32,14 @@ class Test_UC12_02_MovingCustomFieldUp(BaseCase):
         self.click_link("DOC")
         self.assert_text_visible("Requirement title")
 
-        self.click_link("Edit document grammar")
+        self.hover_and_click(
+            hover_selector="(//sdoc-node)[1]",
+            click_selector=(
+                '(//sdoc-node)[1]//*[@data-testid="document-edit-grammar-action"]'  # noqa: E501
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
 
         self.click_xpath("(//a[@title='Move up'])[last()]")
         self.click_xpath("//button[@type='submit' and text()='Save']")

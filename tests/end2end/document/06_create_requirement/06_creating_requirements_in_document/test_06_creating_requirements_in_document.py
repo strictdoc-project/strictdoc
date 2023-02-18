@@ -45,7 +45,7 @@ class Test06CreateRequirementsInDocument(BaseCase):
         self.click(
             selector=(
                 "(//sdoc-node)[1]"
-                '//*[@data-testid="node-add-requirement-child-action"]'
+                '//*[@data-testid="node-add-requirement-first-action"]'
             ),
             by=By.XPATH,
         )

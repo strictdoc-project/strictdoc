@@ -284,9 +284,13 @@ def create_main_router(
             parent = reference_node.parent
             insert_to_idx = parent.section_contents.index(reference_node)
         elif whereto == NodeCreationOrder.AFTER:
-            assert isinstance(reference_node, (Requirement, Section))
-            parent = reference_node.parent
-            insert_to_idx = parent.section_contents.index(reference_node) + 1
+            assert isinstance(reference_node, (Document, Requirement, Section))
+            if isinstance(reference_node, Document):
+                parent = reference_node
+                insert_to_idx = 0
+            else:
+                parent = reference_node.parent
+                insert_to_idx = parent.section_contents.index(reference_node) + 1
         else:
             raise NotImplementedError
 
@@ -694,8 +698,12 @@ def create_main_router(
             parent = reference_node.parent
             insert_to_idx = parent.section_contents.index(reference_node)
         elif whereto == NodeCreationOrder.AFTER:
-            parent = reference_node.parent
-            insert_to_idx = parent.section_contents.index(reference_node) + 1
+            if isinstance(reference_node, Document):
+                parent = reference_node
+                insert_to_idx = 0
+            else:
+                parent = reference_node.parent
+                insert_to_idx = parent.section_contents.index(reference_node) + 1
         else:
             raise NotImplementedError
 
@@ -1277,7 +1285,24 @@ def create_main_router(
         link_renderer = LinkRenderer(
             root_path=requirement.document.meta.get_root_path_prefix()
         )
-        output = template.render(requirement=requirement)
+        markup_renderer = MarkupRenderer.create(
+            markup="RST",
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+            context_document=requirement.document,
+        )
+        iterator = export_action.traceability_index.get_document_iterator(
+            requirement.document
+        )
+        output = template.render(
+            renderer=markup_renderer,
+            document=requirement.document,
+            document_iterator=iterator,
+            traceability_index=export_action.traceability_index,
+            document_type=DocumentType.document(),
+            link_renderer=link_renderer,
+            config=export_action.config,
+        )
 
         toc_template = env.get_template(
             "actions/document/_shared/stream_updated_toc.jinja.html"
@@ -1501,7 +1526,10 @@ def create_main_router(
             "edit_document_config/"
             "stream_edit_document_config.jinja.html"
         )
-        output = template.render(form_object=form_object)
+        output = template.render(
+            form_object=form_object,
+            document=document,
+        )
         return HTMLResponse(
             content=output,
             status_code=200,
@@ -1531,7 +1559,10 @@ def create_main_router(
                 "edit_document_config/"
                 "stream_edit_document_config.jinja.html"
             )
-            output = template.render(form_object=form_object)
+            output = template.render(
+                form_object=form_object,
+                document=document,
+            )
             return HTMLResponse(
                 content=output,
                 status_code=422,
@@ -1658,7 +1689,10 @@ def create_main_router(
             "edit_document_grammar/"
             "stream_edit_document_grammar.jinja.html"
         )
-        output = template.render(form_object=form_object)
+        output = template.render(
+            form_object=form_object,
+            document=document,
+        )
         return HTMLResponse(
             content=output,
             status_code=200,
@@ -1747,13 +1781,25 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
         )
 
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix()
+        )
+        markup_renderer = MarkupRenderer.create(
+            markup="RST",
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+            context_document=document,
+        )
         template = env.get_template(
             "actions/"
             "document/"
             "edit_document_grammar/"
             "stream_save_document_grammar.jinja.html"
         )
-        output = template.render(document=document, config=export_config)
+        output = template.render(
+            document=document, config=export_config, renderer=markup_renderer,
+            document_type=DocumentType.document(),
+        )
         if massive_update:
             link_renderer = LinkRenderer(
                 root_path=document.meta.get_root_path_prefix()

@@ -89,6 +89,19 @@
 
         <li class="viewtype__menu_header">Add section</li>
 
+        {# Add first document Section, on CONFIG#}
+        {%- if node_controls__node_type == 'document' -%}
+        <li>
+          <a
+            href="/actions/document/new_section?reference_mid={{node_controls__reference}}&whereto=after"
+            data-turbo-action="replace"
+            data-turbo="true"
+            title="Add child Section"
+            data-testid="node-add-section-first-action"
+          >+S➘ Add first Section</a>
+        </li>
+        {%- endif -%}
+
         {# Add Section above:
           + section
           + requirement
@@ -109,10 +122,10 @@
         {# Add child Section:
           + section,
           - requirement
-          + document
+          - document
           ••• MADE ON <sdoc-menu>: 'if not document.section_contents'
         #}
-        {%- if node_controls__node_type != 'requirement' -%}
+        {%- if node_controls__node_type != 'requirement' and node_controls__node_type != 'document' -%}
         <li>
           <a
             href="/actions/document/new_section?reference_mid={{node_controls__reference}}&whereto=child"
@@ -143,6 +156,19 @@
 
         <li class="viewtype__menu_header">Add requirement</li>
 
+        {# Add first document Section, on CONFIG#}
+        {%- if node_controls__node_type == 'document' -%}
+        <li>
+          <a
+              href="/actions/document/new_requirement?reference_mid={{node_controls__reference}}&whereto=after"
+              data-turbo-action="replace"
+              data-turbo="true"
+              title="Add child Requirement"
+              data-testid="node-add-requirement-first-action"
+            >+R➘ Add first Requirement</a>
+        </li>
+        {%- endif -%}
+
         {# Add Requirement above:
           + section
           + requirement
@@ -163,10 +189,10 @@
         {# Add child Requirement:
           + section,
           - requirement
-          + document
+          - document
           ••• MADE ON <sdoc-menu>: 'if not document.section_contents'
         #}
-        {%- if node_controls__node_type != 'requirement' -%}
+        {%- if node_controls__node_type != 'requirement' and node_controls__node_type != 'document' -%}
         <li>
           <a
               href="/actions/document/new_requirement?reference_mid={{node_controls__reference}}&whereto=child"

@@ -1,4 +1,3 @@
-import filecmp
 import os
 import shutil
 
@@ -10,7 +9,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test_UC12_02_MovingCustomFieldUp(BaseCase):
+class Test_UC11_T03_EditDocument_Cancel(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -35,20 +34,11 @@ class Test_UC12_02_MovingCustomFieldUp(BaseCase):
         self.hover_and_click(
             hover_selector="(//sdoc-node)[1]",
             click_selector=(
-                '(//sdoc-node)[1]//*[@data-testid="document-edit-grammar-action"]'  # noqa: E501
+                '(//sdoc-node)[1]//*[@data-testid="document-edit-config-action"]'  # noqa: E501
             ),
             hover_by=By.XPATH,
             click_by=By.XPATH,
         )
 
-        self.click_xpath("(//a[@title='Move up'])[last()]")
-        self.click_xpath("//button[@type='submit' and text()='Save']")
-        self.assert_text_not_visible("Save")
-
-        assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))
-        assert filecmp.cmp(
-            os.path.join(path_to_sandbox, "document.sdoc"),
-            os.path.join(
-                path_to_this_test_file_folder, "document.expected.sdoc"
-            ),
-        )
+        self.click_link("Cancel")
+        self.assert_text_not_visible("Cancel")

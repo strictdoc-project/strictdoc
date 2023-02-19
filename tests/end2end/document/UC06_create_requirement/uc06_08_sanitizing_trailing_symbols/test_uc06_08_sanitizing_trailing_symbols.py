@@ -2,6 +2,7 @@ import filecmp
 import os
 import shutil
 
+from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.server import SDocTestServer
@@ -9,7 +10,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test_07_EditingSection_SanitizingTrailingSymbols(BaseCase):
+class Test_UC06_08_SanitizingTrailingSymbols(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -32,12 +33,27 @@ class Test_07_EditingSection_SanitizingTrailingSymbols(BaseCase):
 
         self.assert_text("Hello world!")
 
-        self.hover_and_click("sdoc-node", '[data-testid="node-menu-handler"]')
-        self.click('[data-testid="node-add-section-first-action"]')
+        # Requirement 1
+        self.hover_and_click(
+            hover_selector="(//sdoc-node)[1]",
+            click_selector=(
+                '(//sdoc-node)[1]//*[@data-testid="node-menu-handler"]'
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+        self.click(
+            selector=(
+                "(//sdoc-node)[1]"
+                '//*[@data-testid="node-add-requirement-first-action"]'
+            ),
+            by=By.XPATH,
+        )
 
-        self.type("#section_title", "First title")
+        self.type("#requirement_TITLE", "Requirement title #1")
+        # Contains trailing symbols.
         self.type(
-            "#section_content",
+            "#requirement_STATEMENT",
             """
 Hello world!    
 
@@ -48,13 +64,17 @@ Hello world!
         )
 
         self.click_xpath("//button[@type='submit' and text()='Save']")
-        self.assert_text("1. First title")
 
-        self.assert_element("//turbo-frame[@id='frame-toc']")
-        self.assert_element("//*[contains(text(), 'First title')]")
+        # Check the resulting TOC.
+
+        self.assert_text("1. Requirement title #1")
+
         self.assert_element(
-            "//turbo-frame[@id='frame-toc']//*[contains(., 'First title')]"
+            "//turbo-frame[@id='frame-toc']"
+            "//*[contains(., 'Requirement title #1')]"
         )
+
+        # Check the resulting SDoc.
 
         assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))
         assert filecmp.cmp(

@@ -44,7 +44,7 @@ class Test04CreatingTwoSiblingSections(BaseCase):
         self.click(
             selector=(
                 "(//sdoc-node)[1]"
-                '//*[@data-testid="node-add-section-child-action"]'
+                '//*[@data-testid="node-add-section-first-action"]'
             ),
             by=By.XPATH,
         )

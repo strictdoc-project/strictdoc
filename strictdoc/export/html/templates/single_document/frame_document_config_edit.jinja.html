@@ -1,4 +1,4 @@
-<turbo-frame id="frame_document_config">
+<turbo-frame id="article-{{document.node_id}}">
   <form
     class="std-form"
     method="POST"
@@ -45,6 +45,16 @@
       errors=form_object.get_errors("CLASSIFICATION")
     -%}
       {% include "_helpers/singleline_field.jinja.html" %}
+    {%- endwith -%}
+
+    FREETEXT:<br/>
+    {%- with
+      field_name="FREETEXT",
+      field_input_name="document[FREETEXT]",
+      field_value=form_object.document_freetext,
+      errors=form_object.get_errors("FREETEXT")
+    -%}
+      {% include "_helpers/multiline_field.jinja.html" %}
     {%- endwith -%}
 
     <button class="std-form-btn" type="submit">Save</button>

@@ -32,7 +32,15 @@ class Test_UC12_01_AddingCustomField(BaseCase):
         self.click_link("DOC")
         self.assert_text_visible("Requirement title")
 
-        self.click_link("Edit document grammar")
+        self.hover_and_click(
+            hover_selector="(//sdoc-node)[1]",
+            click_selector=(
+                '(//sdoc-node)[1]//*[@data-testid="document-edit-grammar-action"]'  # noqa: E501
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+
         self.click_link("Add grammar field")
 
         self.type(

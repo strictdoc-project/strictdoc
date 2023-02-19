@@ -32,7 +32,7 @@ class Test_02_CreatingSectionMalformedRSTStatement(BaseCase):
         self.assert_text("Hello world!")
 
         self.hover_and_click("sdoc-node", '[data-testid="node-menu-handler"]')
-        self.click('[data-testid="node-add-section-child-action"]')
+        self.click('[data-testid="node-add-section-first-action"]')
 
         self.type("#section_title", "Section title")
 

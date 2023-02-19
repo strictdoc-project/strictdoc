@@ -1,5 +1,5 @@
-<turbo-stream action="replace" target="article-{{requirement.node_id}}">
+<turbo-stream action="replace" target="frame_document_content">
   <template>
-    <!-- Requirement {{requirement.node_id}} was removed. -->
+    {% include "single_document/frame_document_content.jinja.html" %}
   </template>
 </turbo-stream>

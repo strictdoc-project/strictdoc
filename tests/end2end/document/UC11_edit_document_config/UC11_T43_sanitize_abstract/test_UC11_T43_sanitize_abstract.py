@@ -1,7 +1,9 @@
+# pylint: disable=invalid-name
 import filecmp
 import os
 import shutil
 
+from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.server import SDocTestServer
@@ -9,7 +11,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test_07_EditingSection_SanitizingTrailingSymbols(BaseCase):
+class Test_UC11_T43_SanitizeAbstract(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -29,32 +31,37 @@ class Test_07_EditingSection_SanitizingTrailingSymbols(BaseCase):
         self.assert_text("PROJECT INDEX")
 
         self.click_link("DOC")
+        self.assert_text_visible("Document 1")
 
-        self.assert_text("Hello world!")
+        self.hover_and_click(
+            hover_selector="(//sdoc-node)[1]",
+            click_selector=(
+                '(//sdoc-node)[1]//*[@data-testid="document-edit-config-action"]'  # noqa: E501
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
 
-        self.hover_and_click("sdoc-node", '[data-testid="node-menu-handler"]')
-        self.click('[data-testid="node-add-section-first-action"]')
+        # Contains trailing symbols.
+        text_with_trailing_symbols = """
+Hello world!    
+              
+Hello world!    
+            
+Hello world!    
+        """  # noqa: W291, W293
 
-        self.type("#section_title", "First title")
         self.type(
-            "#section_content",
-            """
-Hello world!    
-
-Hello world!    
-
-Hello world!    
-            """,  # noqa: W291
+            "(//div[@id='document[FREETEXT]'])[1]",
+            text_with_trailing_symbols,
+            by=By.XPATH,
         )
 
         self.click_xpath("//button[@type='submit' and text()='Save']")
-        self.assert_text("1. First title")
 
-        self.assert_element("//turbo-frame[@id='frame-toc']")
-        self.assert_element("//*[contains(text(), 'First title')]")
-        self.assert_element(
-            "//turbo-frame[@id='frame-toc']//*[contains(., 'First title')]"
-        )
+        self.assert_text_not_visible("Save")
+
+        self.assert_text("Hello world!\nHello world!\nHello world!")
 
         assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))
         assert filecmp.cmp(

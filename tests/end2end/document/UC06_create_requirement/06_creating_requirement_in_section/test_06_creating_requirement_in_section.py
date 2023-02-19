@@ -2,6 +2,7 @@ import filecmp
 import os
 import shutil
 
+from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.server import SDocTestServer
@@ -9,7 +10,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test_07_EditingSection_SanitizingTrailingSymbols(BaseCase):
+class Test06CreateRequirementInSection(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -32,28 +33,34 @@ class Test_07_EditingSection_SanitizingTrailingSymbols(BaseCase):
 
         self.assert_text("Hello world!")
 
-        self.hover_and_click("sdoc-node", '[data-testid="node-menu-handler"]')
-        self.click('[data-testid="node-add-section-first-action"]')
-
-        self.type("#section_title", "First title")
-        self.type(
-            "#section_content",
-            """
-Hello world!    
-
-Hello world!    
-
-Hello world!    
-            """,  # noqa: W291
+        self.hover_and_click(
+            hover_selector="(//sdoc-node)[2]",
+            click_selector=(
+                '(//sdoc-node)[2]//*[@data-testid="node-menu-handler"]'
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+        self.click(
+            selector=(
+                "(//sdoc-node)[2]"
+                '//*[@data-testid="node-add-requirement-child-action"]'
+            ),
+            by=By.XPATH,
         )
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
-        self.assert_text("1. First title")
+        self.type("#requirement_TITLE", "Requirement title")
+        self.type("#requirement_STATEMENT", "Requirement statement")
 
-        self.assert_element("//turbo-frame[@id='frame-toc']")
-        self.assert_element("//*[contains(text(), 'First title')]")
+        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.assert_element_not_present(
+            "//button[@type='submit' and text()='Save']", by=By.XPATH
+        )
+
+        self.assert_text("1. Requirement title")
         self.assert_element(
-            "//turbo-frame[@id='frame-toc']//*[contains(., 'First title')]"
+            "//turbo-frame[@id='frame-toc']"
+            "//*[contains(., 'Requirement title')]"
         )
 
         assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))

@@ -1,0 +1,14 @@
+# This itest asserts a fix for #877:
+# Requirement-to-File links edge case: Pygments ignore the first empty line in a file
+# https://github.com/strictdoc-project/strictdoc/issues/877.
+
+RUN: %strictdoc export %S --experimental-enable-file-traceability --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%S/Output/html/_source_files/file.py.html"
+
+RUN: %cat %S/Output/html/13_file_link_to_a_file_with_empty_first_string/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001">
+
+RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE: <a{{.*}}href="../13_file_link_to_a_file_with_empty_first_string/input.html#1-REQ-001"{{.*}}>

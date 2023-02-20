@@ -16,3 +16,11 @@ REFS:
   VALUE: examples/example_source_files/file.py
 TITLE: Source range reference
 STATEMENT: This requirement references a range in the file.
+
+[REQUIREMENT]
+UID: REQ-003
+REFS:
+- TYPE: File
+  VALUE: examples/example_source_files/file2.py
+TITLE: Source range reference
+STATEMENT: This requirement references a range in the file.

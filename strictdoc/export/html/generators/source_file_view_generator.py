@@ -32,7 +32,6 @@ class SourceFileViewHTMLGenerator:
         with open(source_file.full_path, encoding="utf-8") as opened_file:
             source_file_lines = opened_file.readlines()
 
-        lexer = None
         if source_file.is_python_file():
             lexer = PythonLexer()
         elif source_file.is_c_file():
@@ -44,9 +43,19 @@ class SourceFileViewHTMLGenerator:
         else:
             raise NotImplementedError
 
+        # HACK.
+        # Otherwise, Pygments will skip the first line as if it does not exist.
+        # This behavior surprisingly affects on the first line if its empty.
+        hack_first_line: bool = False
+        if source_file_lines[0] == "\n":
+            source_file_lines[0] = " \n"
+            hack_first_line = True
+
+        source_file_content = "".join(source_file_lines)
+
         html_formatter = HtmlFormatter()
         pygmented_source_file_content = highlight(
-            "".join(source_file_lines), lexer, html_formatter
+            source_file_content, lexer, html_formatter
         )
 
         # Ugly hack to split content into lines: Cutting off:
@@ -65,13 +74,20 @@ class SourceFileViewHTMLGenerator:
             slice_start:slice_end
         ]
         pygmented_source_file_lines = pygmented_source_file_content.split("\n")
+        if hack_first_line:
+            pygmented_source_file_lines[0] = "<span></span>"
+
         if pygmented_source_file_lines[-1] == "":
             pygmented_source_file_lines.pop()
+        assert len(pygmented_source_file_lines) == len(source_file_lines), (
+            f"Something went wrong when running Pygments against "
+            f"the source file: "
+            f"{len(pygmented_source_file_lines)} == {len(source_file_lines)}"
+        )
 
         coverage_info = traceability_index.get_coverage_info(
             source_file.in_doctree_source_file_rel_path
         )
-
         for pragma in coverage_info.pragmas:
             pragma_line = pragma.ng_source_line_begin
             source_line = source_file_lines[pragma_line - 1]

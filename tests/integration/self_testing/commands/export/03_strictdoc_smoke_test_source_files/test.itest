@@ -36,5 +36,5 @@ CHECK-3-REQUIREMENTS: href="../_source_files/strictdoc/core/tree_cycle_detector.
 CHECK-3-REQUIREMENTS: href="../_source_files/strictdoc/core/traceability_index_builder.py.html#SDOC-VALIDATION-NO-CYCLES
 
 RUN: %cat "%S/Output/html/_source_files/strictdoc/core/tree_cycle_detector.py.html" | filecheck %s --dump-input=fail --check-prefix CHECK-TREE-CYCLE-DETECTOR
-CHECK-TREE-CYCLE-DETECTOR: href="../../../docs/strictdoc_20_requirements.html#6.2-SDOC-VALIDATION-NO-CYCLES"
+CHECK-TREE-CYCLE-DETECTOR: href="../../../docs/strictdoc_20_requirements.html#5.2-SDOC-VALIDATION-NO-CYCLES"
 CHECK-TREE-CYCLE-DETECTOR: href="../../../_source_files/strictdoc/core/traceability_index_builder.py.html#SDOC-VALIDATION-NO-CYCLES

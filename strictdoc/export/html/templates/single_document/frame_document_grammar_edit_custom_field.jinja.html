@@ -1,4 +1,4 @@
- <editable-grammar-field>
+<editable-grammar-field data-controller="document_grammar_form">
   {%- if field.reserved -%}
     <div>
     Reserved field:
@@ -44,8 +44,9 @@
     <a
       class="std-form-btn"
       data-js-remove-field
+      data-testid="document-grammar-remove-field"
       href="#"
-      data-turbo="true"
+      data-turbo="false"
     >Delete field</a>
   {%- endif -%}
 </editable-grammar-field>

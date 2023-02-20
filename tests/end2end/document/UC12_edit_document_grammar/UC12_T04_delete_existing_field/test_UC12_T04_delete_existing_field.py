@@ -10,7 +10,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test_UC12_03_MovingCustomFieldDown(BaseCase):
+class Test_UC12_T03_MoveFieldDown(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -41,7 +41,9 @@ class Test_UC12_03_MovingCustomFieldDown(BaseCase):
             click_by=By.XPATH,
         )
 
-        self.click_xpath("(//a[@title='Move down'])[last()]")
+        self.click_xpath(
+            '(//a[@data-testid="document-grammar-remove-field"])[1]'
+        )
 
         self.click_xpath("//button[@type='submit' and text()='Save']")
         self.assert_text_not_visible("Save")

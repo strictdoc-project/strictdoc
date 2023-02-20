@@ -1,4 +1,4 @@
-<turbo-frame id="new_document">
+<turbo-frame id="new_document" data-controller="modal_controller">
 
 <form
   class="std-form"
@@ -26,7 +26,7 @@
 
     <div class="std-form-footer">
         <button class="std-form-btn" type="submit">Import ReqIF</button>
-        <a class="std-form-btn" href="#cancel" data-turbo="true">Cancel</a>
+        <button class="std-form-btn" type="button" stimulus-modal-cancel-button>Cancel</button>
     </div>
 
 </form>

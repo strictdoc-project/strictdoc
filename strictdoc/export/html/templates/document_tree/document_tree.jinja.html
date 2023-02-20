@@ -15,6 +15,7 @@
     window.Stimulus = Application.start();
   </script>
   <script type="module" src="{{link_renderer.render_static_url('controllers/editable_field_controller.js')}}"></script>
+  <script type="module" src="{{link_renderer.render_static_url('controllers/modal_controller.js')}}"></script>
 {%- endif -%}
 {% endblock head_scripts %}
 
@@ -34,6 +35,13 @@
 {% block header_content %}
 <div class="header">
   {% include "_shared/project_header.jinja.html" %}
+    <div class="header__r">
+      <div class="actions_group">
+        {%- if config.is_running_on_server -%}
+          {% include "document_tree/document_tree_actions.jinja.html" %}
+        {%- endif -%}
+      </div>
+    </div>
 </div>
 {% endblock header_content %}
 

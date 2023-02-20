@@ -133,6 +133,8 @@
 
   font-size: 14px;
   z-index: 1;
+
+  border-top: var(--source-line);
 }
 
 .source_highlight {

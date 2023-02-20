@@ -5,7 +5,7 @@ TITLE: Example 8: Traceability between requirements and source files
 UID: REQ-001
 REFS:
 - TYPE: File
-  VALUE: file.py
+  VALUE: examples/example_source_files/file.py
 TITLE: Whole file reference
 STATEMENT: This requirement references the whole file.
 
@@ -13,6 +13,6 @@ STATEMENT: This requirement references the whole file.
 UID: REQ-002
 REFS:
 - TYPE: File
-  VALUE: file.py
+  VALUE: examples/example_source_files/file.py
 TITLE: Source range reference
 STATEMENT: This requirement references a range in the file.

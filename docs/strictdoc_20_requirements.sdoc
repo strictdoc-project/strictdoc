@@ -60,33 +60,26 @@ document data model which is called "grammar".
 TITLE: Command-line interface
 STATEMENT: StrictDoc shall provide a command-line interface.
 
-[SECTION]
+[REQUIREMENT]
 TITLE: Graphical user interface
-
-[FREETEXT]
+STATEMENT: >>>
 StrictDoc shall provide a Graphical User Interface (GUI).
-
+<<<
+COMMENT: >>>
 Several trade-offs to consider:
 
 - Desktop vs Web. Rather web-based, i.e. Python backend and JS frontend, but which technology?
 - Still keep the current behavior of a statically generated website?
+<<<
 
-[/FREETEXT]
-
-[/SECTION]
+[REQUIREMENT]
+TITLE: Statically generated website
+STATEMENT: >>>
+StrictDoc shall allow generating requirements content to static HTML website.
+<<<
 
 [SECTION]
-TITLE: Statically generated website
-
-[FREETEXT]
-StrictDoc shall allow generating requirements content to static HTML website.
-[/FREETEXT]
-
-[/SECTION]
-
-[COMPOSITE_REQUIREMENT]
 TITLE: Platform support
-STATEMENT: StrictDoc shall work on all major platforms.
 
 [REQUIREMENT]
 TITLE: macOS support
@@ -100,7 +93,7 @@ STATEMENT: StrictDoc shall work on Linux systems.
 TITLE: Windows support
 STATEMENT: StrictDoc shall work on Windows systems.
 
-[/COMPOSITE_REQUIREMENT]
+[/SECTION]
 
 [REQUIREMENT]
 UID: SDOC-HIGH-VALIDATION
@@ -135,25 +128,6 @@ STATEMENT: StrictDoc shall always be free and open source software.
 [/SECTION]
 
 [SECTION]
-TITLE: Implementation requirements
-
-[REQUIREMENT]
-UID: SDOC-IMPL-PARAL
-TITLE: Parallelization
-STATEMENT: StrictDoc shall enable parallelization of the time-consuming parts of the code.
-
-[REQUIREMENT]
-UID: SDOC-IMPL-INCREMENTAL
-TITLE: Incremental generation
-STATEMENT: StrictDoc shall enable incremental generation of the documents.
-COMMENT: >>>
-When exporting documentation tree, StrictDoc shall regenerate only changed
-documents and files.
-<<<
-
-[/SECTION]
-
-[SECTION]
 TITLE: Data model
 
 [REQUIREMENT]
@@ -172,11 +146,14 @@ Examples of standard requirements documents include but are not limited to:
   (e.g., Functional Requirements, Interface Requirements, Performance Requirements, etc.)
 <<<
 
-[COMPOSITE_REQUIREMENT]
+[SECTION]
 TITLE: Project
+
+[REQUIREMENT]
+TITLE: Project as a top-level entity
 STATEMENT: >>>
-StrictDoc shall support the "Project" concept as a top-level entity that serves
-for grouping of SDoc documents into a single project documentation tree.
+StrictDoc shall support the "Project" concept that serves for grouping of SDoc
+documents into a single project documentation tree.
 <<<
 
 [REQUIREMENT]
@@ -191,7 +168,7 @@ change when the project title will be configured as part of the project-level
 config file (TOML or SDoc-like grammar).
 <<<
 
-[/COMPOSITE_REQUIREMENT]
+[/SECTION]
 
 [SECTION]
 TITLE: Document
@@ -218,7 +195,10 @@ TITLE: Requirement item
 TITLE: Statement
 STATEMENT: Requirement item shall have a statement.
 
-[COMPOSITE_REQUIREMENT]
+[SECTION]
+TITLE: UID identifier
+
+[REQUIREMENT]
 TITLE: UID identifier
 STATEMENT: Requirement item may have an UID identifier.
 
@@ -237,7 +217,7 @@ Some examples:
 - SAVOIR.OBC.PM.80 (SAVOIR)
 <<<
 
-[/COMPOSITE_REQUIREMENT]
+[/SECTION]
 
 [REQUIREMENT]
 TITLE: Title
@@ -272,7 +252,10 @@ TBD
 
 [/SECTION]
 
-[COMPOSITE_REQUIREMENT]
+[SECTION]
+TITLE: Links
+
+[REQUIREMENT]
 TITLE: Links
 STATEMENT: StrictDoc's data model shall support linking document content nodes to each other.
 
@@ -280,7 +263,7 @@ STATEMENT: StrictDoc's data model shall support linking document content nodes t
 TITLE: Parent links
 STATEMENT: StrictDoc's data model shall support linking a requirement to another requirement using PARENT link.
 
-[/COMPOSITE_REQUIREMENT]
+[/SECTION]
 
 [/SECTION]
 
@@ -295,7 +278,10 @@ REFS:
 TITLE: Primary text implementation
 STATEMENT: The SDoc format shall support encoding the Strict Doc Data Model in a plain-text human readable form.
 
-[COMPOSITE_REQUIREMENT]
+[SECTION]
+TITLE: Grammar
+
+[REQUIREMENT]
 UID: SDOC-FMT-GRAMMAR
 REFS:
 - TYPE: Parent
@@ -316,7 +302,7 @@ or [COMMENT] with no indentation ensures that one does not have to think about
 possible indentation issues.
 <<<
 
-[/COMPOSITE_REQUIREMENT]
+[/SECTION]
 
 [REQUIREMENT]
 TITLE: Type safety
@@ -433,7 +419,7 @@ COMMENT: First candidate: Table of contents and its nested ``<ul>/<li>`` items.
 [SECTION]
 TITLE: Traceability and coverage
 
-[COMPOSITE_REQUIREMENT]
+[REQUIREMENT]
 TITLE: Linking with implementation artifacts
 STATEMENT: StrictDoc shall support linking requirements to files.
 
@@ -450,8 +436,6 @@ STATEMENT: >>>
 StrictDoc shall warn a user about all source files whose links reference
 requirements that do not exist.
 <<<
-
-[/COMPOSITE_REQUIREMENT]
 
 [REQUIREMENT]
 TITLE: Requirements coverage
@@ -472,10 +456,30 @@ Source coverage screen shows how source files are linked with requirements.
 [SECTION]
 TITLE: Web frontend requirements
 
+[FREETEXT]
+TBD
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Implementation requirements
+
 [REQUIREMENT]
-TITLE: AJAX updates of multiple web forms
-STATEMENT: >>>
-StrictDoc's Web GUI shall provide capability to do multipart updates.
+UID: SDOC-IMPL-PARAL
+REFS:
+- TYPE: File
+  VALUE: strictdoc/helpers/parallelizer.py
+TITLE: Parallelization
+STATEMENT: StrictDoc shall enable parallelization of the time-consuming parts of the code.
+
+[REQUIREMENT]
+UID: SDOC-IMPL-INCREMENTAL
+TITLE: Incremental generation
+STATEMENT: StrictDoc shall enable incremental generation of the documents.
+COMMENT: >>>
+When exporting documentation tree, StrictDoc shall regenerate only changed
+documents and files.
 <<<
 
 [/SECTION]

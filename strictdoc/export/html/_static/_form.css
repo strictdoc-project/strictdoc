@@ -21,18 +21,6 @@ sdoc-backdrop {
   z-index: 99999;
 }
 
-sdoc-modal {
-  display: block;
-  background-color: var(--color-bg-contrast);
-  padding: calc(var(--base-padding)) calc(var(--base-padding)*2);
-  border-radius: 8px;
-  max-width: 90vw;
-  max-height: 80vh;
-  border: none;
-  /* box-shadow: 0 0 0 50vmax rgba(0,0,0,.5), var(--base-elevation-modal); */
-  box-shadow: var(--base-elevation-modal);
-}
-
 sdoc-form {
   display: block;
   background-color: var(--color-bg-contrast);
@@ -40,6 +28,14 @@ sdoc-form {
   padding: calc(var(--base-padding)) calc(var(--base-padding)*2);
   box-shadow: var(--base-elevation-node);
   z-index: 10;
+}
+
+sdoc-backdrop sdoc-form {
+  border-radius: 8px;
+  max-width: 90vw;
+  max-height: 80vh;
+  /* box-shadow: 0 0 0 50vmax rgba(0,0,0,.5), var(--base-elevation-modal); */
+  box-shadow: var(--base-elevation-modal);
 }
 
 sdoc-form-header {

@@ -8,6 +8,31 @@
   --color-bg-field: white;
 }
 
+sdoc-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,.5);
+  z-index: 99999;
+}
+
+sdoc-modal {
+  display: block;
+  background-color: var(--color-bg-contrast);
+  padding: calc(var(--base-padding)) calc(var(--base-padding)*2);
+  border-radius: 8px;
+  max-width: 90vw;
+  max-height: 80vh;
+  border: none;
+  /* box-shadow: 0 0 0 50vmax rgba(0,0,0,.5), var(--base-elevation-modal); */
+  box-shadow: var(--base-elevation-modal);
+}
+
 sdoc-form {
   display: block;
   background-color: var(--color-bg-contrast);
@@ -17,15 +42,37 @@ sdoc-form {
   z-index: 10;
 }
 
-sdoc-form.modal {
-  border-radius: 8px;
-  max-width: 90vw;
-  max-height: 80vh;
-  border: none;
-
-  box-shadow: 0 0 0 50vmax rgba(0,0,0,.5), var(--base-elevation-modal);
+sdoc-form-header {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 600;
+  padding: var(--base-rhythm) 0 calc(var(--base-rhythm)*3) 0 ;
 }
 
+sdoc-form-row {
+  display: block;
+  margin-bottom: var(--base-padding);
+}
+
+sdoc-form-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: var(--base-padding);
+  margin-right: calc(var(--base-rhythm)*(-2));
+}
+
+sdoc-form-error {
+  display: block;
+  color: red;
+  font-size: 12px;
+  margin-top: calc(var(--base-padding)*0.5);
+}
+
+sdoc-contenteditable {
+  display: block;
+}
+
+/* TODO: delete class: */
 .std-form {
   position: relative;
 }
@@ -36,7 +83,7 @@ sdoc-form.modal {
   margin-bottom: calc(var(--base-padding)*0.5);
 }
 
-div[contenteditable=true] {
+[contenteditable=true] {
   white-space: pre-wrap;
   outline: none;
   /* Without this hack, Chrome generates duplicated new lines when Enter pressed. */

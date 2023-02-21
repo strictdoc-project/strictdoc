@@ -1,17 +1,17 @@
 <turbo-frame id="new_document" data-controller="modal_controller">
-<sdoc-form class="modal">
 
-<form
-  class="std-form"
-  action="/actions/document_tree/import_document_reqif"
-  method="POST"
-  enctype="multipart/form-data"
-  data-turbo="true"
->
+<sdoc-backdrop>
+  <sdoc-modal>
+    <form
+      action="/actions/document_tree/import_document_reqif"
+      method="POST"
+      enctype="multipart/form-data"
+      data-turbo="true"
+    >
 
-  <h3>Import ReqIF document</h3>
+      <sdoc-form-header>Import ReqIF document</sdoc-form-header>
 
-    <div class="std-form-row std-tree_name">
+      <sdoc-form-row class="std-tree_name">
       <label for="reqif_file">
         Click this div and select a file
       </label>
@@ -23,14 +23,14 @@
         {%- endfor -%}
         </div>
       {%- endif -%}
-    </div>
+      </sdoc-form-row>
 
-    <div class="std-form-footer">
+      <sdoc-form-footer>
         <button class="std-form-btn" type="submit">Import ReqIF</button>
         <button class="std-form-btn" type="button" stimulus-modal-cancel-button>Cancel</button>
-    </div>
+      </sdoc-form-footer>
 
-</form>
-
-</sdoc-form>
+    </form>
+  </sdoc-modal>
+</sdoc-backdrop>
 </turbo-frame>

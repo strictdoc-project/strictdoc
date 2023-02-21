@@ -39,8 +39,17 @@
       </sdoc-form-row>
 
       <sdoc-form-footer>
-        <button class="std-form-btn" type="submit">Save</button>
-        <button class="std-form-btn" type="button" stimulus-modal-cancel-button>Cancel</button>
+        <button
+          class="std-form-btn"
+          type="submit"
+          data-testid="form-submit-action"
+        >Save</button>
+        <button
+          class="std-form-btn"
+          type="button"
+          stimulus-modal-cancel-button
+          data-testid="form-cancel-action"
+        >Cancel</button>
       </sdoc-form-footer>
 
 

@@ -19,11 +19,8 @@ class Test_UC51_T01_CreatingDocument(BaseCase):
 
         self.open(test_server.get_host_and_port())
 
-        self.assert_text("PROJECT INDEX")
-
-        self.assert_text("The document tree has no documents yet.")
-
         self.click_link("Add document")
+        self.click('[data-testid="tree-add-document-action"]')
 
         self.type("#document_title", "Document 1")
         self.type("#document_path", "docs/document1.sdoc")

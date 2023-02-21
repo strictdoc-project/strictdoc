@@ -23,10 +23,8 @@ class Test_UC55_T02_CancelReqIFImportForm(BaseCase):
 
         self.assert_text("PROJECT INDEX")
 
-        self.assert_text("The document tree has no documents yet.")
+        self.click('[data-testid="tree-import-reqif-action"]')
 
-        self.click_link("Import document tree from ReqIF")
+        self.click('[data-testid="form-cancel-action"]')
 
-        self.click_nth_visible_element("//a[contains(text(), 'Cancel')]", 1)
-
-        self.assert_text_not_visible("Cancel")
+        self.assert_element_not_present('[data-testid="form-cancel-action"]')

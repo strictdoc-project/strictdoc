@@ -51,6 +51,7 @@
 
   --base-elevation-0: 0 0 0 rgba(0,0,0,0);
   --base-elevation-node: 0 0 16px rgba(0,0,0,.1);
+  --base-elevation-modal: 0 0 32px rgba(0,0,0,.32);
 
   --main-elevation-shadow: inset 8px 8px 16px rgba(0,0,0,.2);
   --base-elevation: 0 0 16px rgba(0,0,0,.2);

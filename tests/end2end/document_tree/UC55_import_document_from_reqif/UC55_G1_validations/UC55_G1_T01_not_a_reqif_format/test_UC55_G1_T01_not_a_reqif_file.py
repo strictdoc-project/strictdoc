@@ -25,11 +25,11 @@ class Test_UC55_G1_T01_NotAReqIFormat(BaseCase):
 
         self.assert_text("The document tree has no documents yet.")
 
-        self.click_link("Import document tree from ReqIF")
+        self.click('[data-testid="tree-import-reqif-action"]')
 
         reqif_input_field = self.find_element("#reqif_file")
         reqif_input_field.send_keys(path_to_reqif_sample)
-        self.click_xpath("//button[@type='submit' and text()='Import ReqIF']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text(
             "Cannot parse ReqIF file: "

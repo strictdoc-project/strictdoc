@@ -1,5 +1,6 @@
 import os
 
+from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.server import SDocTestServer
@@ -21,3 +22,11 @@ class Test_UC50_T01_EmptyDocumentTree(BaseCase):
         self.assert_text("PROJECT INDEX")
 
         self.assert_text("The document tree has no documents yet.")
+
+        self.assert_element(
+            (
+                "//*[@data-testid='document-tree-empty-text' "
+                "and contains(., 'The document tree has no documents yet.')]"
+            ),
+            by=By.XPATH,
+        )

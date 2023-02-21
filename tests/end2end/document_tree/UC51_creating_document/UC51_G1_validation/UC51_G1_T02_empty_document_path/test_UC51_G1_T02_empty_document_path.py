@@ -22,11 +22,11 @@ class Test_TC51_G1_T02_CreatingDocumentWithEmptyPath(BaseCase):
 
         self.assert_text("The document tree has no documents yet.")
 
-        self.click_link("Add document")
+        self.click('[data-testid="tree-add-document-action"]')
 
         self.type("#document_title", "Document 1")  # Empty document
         self.type("#document_path", "")
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text("Document path must not be empty.")

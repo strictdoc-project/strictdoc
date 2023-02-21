@@ -5,6 +5,7 @@
 {%- endif -%}
 
 <turbo-frame id="article-{{form_object.section_mid}}">
+<sdoc-form>
 
 <form class="std-form" action="{{url}}" method="POST" data-turbo="true">
   {%- if is_new_section -%}
@@ -21,7 +22,7 @@
         {{ form_object.section_title }}
         {%- endif -%}
       </div>
-      <input type="hidden" class="std-input-hidden" name="section_title" value="{{ form_object.section_title }}"/>
+      <input type="hidden" name="section_title" value="{{ form_object.section_title }}"/>
 
       {%- if form_object.has_errors("section_title") -%}
         <div class="std-form-error">
@@ -39,7 +40,7 @@
           {{ form_object.section_statement }}
         {%- endif -%}
       </div>
-      <textarea hidden class="std-input-hidden" name="section_content">
+      <textarea hidden name="section_content">
         {%- if true -%}
           {{ form_object.section_statement }}
         {%- endif -%}
@@ -65,4 +66,5 @@
 
 </form>
 
+</sdoc-form>
 </turbo-frame>

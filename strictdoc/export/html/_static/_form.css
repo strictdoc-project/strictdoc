@@ -5,36 +5,81 @@
 } */
 
 :root {
-  /* --color-bg-form: var(--color-bg-main); */
-  /* --color-bg-form: #e2e6ea; */
-  --color-bg-form: white;
   --color-bg-field: white;
-  --std-form-margin: calc(var(--base-padding)*0.5);
 }
 
-.std-form {
-  background-color: var(--color-bg-form);
-  /* border: 1px solid rgba(0,0,0,0.05); */
-  /* box-shadow: 0 0 16px rgba(0,0,0,0.2); */
-  /* outline: var(--std-form-margin) solid var(--color-bg-form); */
-  /* margin-left: calc(var(--std-form-margin)*(-4));
-  margin-right: calc(var(--std-form-margin)*(-4)); */
-  /* margin-bottom: 0; */
-  padding: calc(var(--std-form-margin)*2);
-  /* margin-top: var(--std-form-margin); */
+sdoc-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,.5);
+  z-index: 99999;
+}
+
+sdoc-form {
+  display: block;
+  background-color: var(--color-bg-contrast);
+  border-radius: 3px;
+  padding: calc(var(--base-padding)) calc(var(--base-padding)*2);
   box-shadow: var(--base-elevation-node);
+  z-index: 10;
+}
+
+sdoc-backdrop sdoc-form {
+  border-radius: 8px;
+  max-width: 90vw;
+  max-height: 80vh;
+  /* box-shadow: 0 0 0 50vmax rgba(0,0,0,.5), var(--base-elevation-modal); */
+  box-shadow: var(--base-elevation-modal);
+}
+
+sdoc-form-header {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 600;
+  padding: var(--base-rhythm) 0 calc(var(--base-rhythm)*3) 0 ;
+}
+
+sdoc-form-row {
+  display: block;
+  margin-bottom: var(--base-padding);
+}
+
+sdoc-form-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: var(--base-padding);
+  margin-right: calc(var(--base-rhythm)*(-2));
+}
+
+sdoc-form-error {
+  display: block;
+  color: red;
+  font-size: 12px;
+  margin-top: calc(var(--base-padding)*0.5);
+}
+
+sdoc-contenteditable {
+  display: block;
+}
+
+/* TODO: delete class: */
+.std-form {
   position: relative;
-  z-index: 2;
 }
 
 .std-form-row {
   background-color: var(--color-bg-field);
-  /* outline: calc(var(--std-form-margin)/2) solid var(--color-bg-field); */
-  padding: calc(var(--std-form-margin)*2);
-  margin-bottom: calc(var(--std-form-margin));
+  padding: var(--base-padding);
+  margin-bottom: calc(var(--base-padding)*0.5);
 }
 
-div[contenteditable=true] {
+[contenteditable=true] {
   white-space: pre-wrap;
   outline: none;
   /* Without this hack, Chrome generates duplicated new lines when Enter pressed. */
@@ -124,5 +169,5 @@ div[contenteditable=true] {
 .std-form-error {
   color: red;
   font-size: 12px;
-  margin-top: var(--std-form-margin);
+  margin-top: calc(var(--base-padding)*0.5);
 }

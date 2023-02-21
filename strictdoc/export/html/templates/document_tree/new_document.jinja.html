@@ -1,47 +1,60 @@
-<turbo-frame id="new_document">
+<turbo-frame id="new_document" data-controller="modal_controller">
 
-<form class="std-form" action="/actions/document_tree/create_document" method="POST" data-turbo="true">
+<sdoc-backdrop>
+  <sdoc-form>
+    <form action="/actions/document_tree/create_document" method="POST" data-turbo="true">
 
-  <h3>Add new document</h3>
+      <sdoc-form-header>Add new document</sdoc-form-header>
 
-    <div class="std-form-row std-tree_desc">
-        <div data-controller="editablefield" role="textbox" data-editable="single" contenteditable="true" class="" id="document_title" placeholder="Enter document title here...">
+      <sdoc-form-row class="std-tree_desc">
+        <sdoc-contenteditable data-controller="editablefield" role="textbox" data-editable="single" contenteditable="true" class="" id="document_title" placeholder="Enter document title here...">
           {%- if true -%}
           {{ document_title }}
           {%- endif -%}
-        </div>
-        <input type="hidden" class="std-input-hidden" name="document_title" value="{{ document_title }}"/>
+        </sdoc-contenteditable>
+        <input type="hidden" name="document_title" value="{{ document_title }}"/>
         {%- if error_object.has_errors("document_title") -%}
-          <div class="std-form-error">
+          <sdoc-form-error>
           {%- for error in error_object.get_errors("document_title") -%}
             {{ error }}
           {%- endfor -%}
-          </div>
+          </sdoc-form-error>
         {%- endif -%}
+      </sdoc-form-row>
 
-    </div>
-
-    <div class="std-form-row std-tree_name">
-      <div data-controller="editablefield" role="textbox" data-editable="single" contenteditable="true" class="std-input-document_path" id="document_path" placeholder="Enter document path here...">
+      <sdoc-form-row class="std-tree_name">
+      <sdoc-contenteditable data-controller="editablefield" role="textbox" data-editable="single" contenteditable="true" class="std-input-document_path" id="document_path" placeholder="Enter document path here...">
         {%- if true -%}
         {{ document_path }}
         {%- endif -%}
-      </div>
-      <input type="hidden" class="std-input-hidden" name="document_path" value="{{ document_path }}"/>
+      </sdoc-contenteditable>
+      <input type="hidden" name="document_path" value="{{ document_path }}"/>
       {%- if error_object.has_errors("document_path") -%}
-        <div class="std-form-error">
+        <sdoc-form-error>
         {%- for error in error_object.get_errors("document_path") -%}
           {{ error }}
         {%- endfor -%}
-        </div>
+        </sdoc-form-error>
       {%- endif -%}
-    </div>
+      </sdoc-form-row>
 
-    <div class="std-form-footer">
-        <button class="std-form-btn" type="submit">Save</button>
-        <a class="std-form-btn" href="#cancel" data-turbo="true">Cancel</a>
-    </div>
+      <sdoc-form-footer>
+        <button
+          class="std-form-btn"
+          type="submit"
+          data-testid="form-submit-action"
+        >Save</button>
+        <button
+          class="std-form-btn"
+          type="button"
+          stimulus-modal-cancel-button
+          data-testid="form-cancel-action"
+        >Cancel</button>
+      </sdoc-form-footer>
 
-</form>
+
+    </form>
+  </sdoc-form>
+</sdoc-backdrop>
 
 </turbo-frame>

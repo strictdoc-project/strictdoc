@@ -40,7 +40,7 @@ class Test_UC56_T01_ExportTreeToReqIF(BaseCase):
         self.assert_text("Document 1")
         self.assert_text("PROJECT INDEX")
 
-        self.click_link("Export document tree to ReqIF")
+        self.click('[data-testid="tree-export-reqif-action"]')
         # FIXME: does not work on Linux CI
         if platform == "linux" or platform == "linux2":
             return

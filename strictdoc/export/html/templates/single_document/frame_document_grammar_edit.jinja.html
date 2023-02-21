@@ -1,37 +1,47 @@
-<turbo-frame id="article-{{document.node_id}}">
+<turbo-frame data-controller="modal_controller">
+<sdoc-backdrop>
 <sdoc-form>
-  StrictDoc conventions:
-  The requirements fields above the reserved "TITLE" field are dedicated to meta
-  information and will be rendered as single-line. The fields below the reserved
-  "STATEMENT" field are multiline and should be used for fields with more
-  descriptive text.
-
   <form
-    class="std-form"
     method="POST"
     data-turbo="true"
     action="/actions/document/save_grammar"
   >
+    <sdoc-form-header>Edit document grammar</sdoc-form-header>
+    <sdoc-form-row>StrictDoc conventions:</sdoc-form-row>
+    <sdoc-form-row>The requirements fields above the reserved "TITLE" field are dedicated to meta information and will be rendered as single-line. The fields below the reserved "STATEMENT" field are multiline and should be used for fields with more descriptive text.</sdoc-form-row>
+
     <input type="hidden" id="document_mid" name="document_mid" value="{{form_object.document_mid}}"/>
 
     <div id="document__editable_grammar_fields">
     {%- for field in form_object.fields -%}
+      {# </sdoc-form-row> include into partial: #}
       {%- include "single_document/frame_document_grammar_edit_custom_field.jinja.html" -%}
     {%- endfor -%}
     </div>
 
-    <a
-      class="std-form-btn"
-      href="/actions/document/add_grammar_field?document_mid={{form_object.document_mid}}"
-      data-turbo="true"
-    >Add grammar field</a>
-    <button class="std-form-btn" type="submit">Save</button>
-    <a
-      class="std-form-btn"
-      href="/actions/document/cancel_edit_config?document_mid={{form_object.document_mid}}"
-      data-turbo="true"
-    >Cancel</a>
+    <sdoc-form-footer>
+      <a
+        class="std-form-btn"
+        href="/actions/document/add_grammar_field?document_mid={{form_object.document_mid}}"
+        data-turbo="true"
+      >Add grammar field</a>
+
+      <button
+        class="std-form-btn"
+        type="submit"
+        data-testid="form-submit-action"
+      >Save</button>
+
+      <button
+        class="std-form-btn"
+        type="button"
+        stimulus-modal-cancel-button
+        data-testid="form-cancel-action"
+      >Cancel</button>
+    </sdoc-form-footer>
+
   </form>
 
 </sdoc-form>
+</sdoc-backdrop>
 </turbo-frame>

@@ -12,15 +12,6 @@
 <sdoc-node-controls>
 
   {% if node_controls__node_type == 'document' -%}
-    {# Grammar #}
-  <a
-    href="/actions/document/edit_grammar?document_mid={{document.node_id}}"
-    class="action_button"
-    data-turbo-action="replace"
-    data-turbo="true"
-    title="Edit document grammar"
-    data-testid="document-edit-grammar-action"
-  >{% include "_res/svg_ico16_gear.jinja.html" %}</a>
 
   {# META #}
   <a

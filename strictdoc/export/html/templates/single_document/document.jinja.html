@@ -18,6 +18,7 @@
   <script type="module" src="{{link_renderer.render_static_url('controllers/requirement_multiline_field_controller.js')}}"></script>
   <script type="module" src="{{link_renderer.render_static_url('controllers/requirement_link_controller.js')}}"></script>
   <script type="module" src="{{link_renderer.render_static_url('controllers/document_grammar_form_controller.js')}}"></script>
+  <script type="module" src="{{link_renderer.render_static_url('controllers/modal_controller.js')}}"></script>
   {%- endif -%}
 
   {%- if config.enable_mathjax -%}
@@ -43,21 +44,13 @@
 {% block header_content %}
 <div class="header">
   {% include "_shared/document_header.jinja.html" %}
-  {%- if config.is_running_on_server -%}
   <div class="header__r">
-  <div class="actions_group">
-    <a class="action_button" aria-disabled="true">
-      Edit document
-    </a>
-    {# <button type="button" disabled class="action_button">
-      Edit document
-    </button> #}
-    <a class="action_button" href="/reqif/export_document/{{document.node_id}}">
-      Export to ReqIF
-    </a>
+    <div class="actions_group">
+    {%- if config.is_running_on_server -%}
+      {% include "single_document/document_actions.jinja.html" %}
+    {%- endif -%}
+    </div>
   </div>
-  </div>
-  {%- endif -%}
 </div>
 {% endblock header_content %}
 

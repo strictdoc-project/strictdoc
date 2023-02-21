@@ -5,6 +5,7 @@
 {%- endif -%}
 
 <turbo-frame id="article-{{form_object.requirement_mid}}">
+<sdoc-form>
 
 <form class="std-form" action="{{url}}" method="POST" data-turbo="true">
   {%- if is_new_requirement -%}
@@ -67,4 +68,5 @@
   </div>
 </form>
 
+</sdoc-form>
 </turbo-frame>

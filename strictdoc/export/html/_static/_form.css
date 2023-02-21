@@ -5,33 +5,35 @@
 } */
 
 :root {
-  /* --color-bg-form: var(--color-bg-main); */
-  /* --color-bg-form: #e2e6ea; */
-  --color-bg-form: white;
   --color-bg-field: white;
-  --std-form-margin: calc(var(--base-padding)*0.5);
+}
+
+sdoc-form {
+  display: block;
+  background-color: var(--color-bg-contrast);
+  border-radius: 3px;
+  padding: calc(var(--base-padding)) calc(var(--base-padding)*2);
+  box-shadow: var(--base-elevation-node);
+  z-index: 10;
+}
+
+sdoc-form.modal {
+  border-radius: 8px;
+  max-width: 90vw;
+  max-height: 80vh;
+  border: none;
+
+  box-shadow: 0 0 0 50vmax rgba(0,0,0,.5), var(--base-elevation-modal);
 }
 
 .std-form {
-  background-color: var(--color-bg-form);
-  /* border: 1px solid rgba(0,0,0,0.05); */
-  /* box-shadow: 0 0 16px rgba(0,0,0,0.2); */
-  /* outline: var(--std-form-margin) solid var(--color-bg-form); */
-  /* margin-left: calc(var(--std-form-margin)*(-4));
-  margin-right: calc(var(--std-form-margin)*(-4)); */
-  /* margin-bottom: 0; */
-  padding: calc(var(--std-form-margin)*2);
-  /* margin-top: var(--std-form-margin); */
-  box-shadow: var(--base-elevation-node);
   position: relative;
-  z-index: 2;
 }
 
 .std-form-row {
   background-color: var(--color-bg-field);
-  /* outline: calc(var(--std-form-margin)/2) solid var(--color-bg-field); */
-  padding: calc(var(--std-form-margin)*2);
-  margin-bottom: calc(var(--std-form-margin));
+  padding: var(--base-padding);
+  margin-bottom: calc(var(--base-padding)*0.5);
 }
 
 div[contenteditable=true] {
@@ -124,5 +126,5 @@ div[contenteditable=true] {
 .std-form-error {
   color: red;
   font-size: 12px;
-  margin-top: var(--std-form-margin);
+  margin-top: calc(var(--base-padding)*0.5);
 }

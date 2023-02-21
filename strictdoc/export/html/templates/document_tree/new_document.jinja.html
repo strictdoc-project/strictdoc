@@ -1,7 +1,5 @@
 <turbo-frame id="new_document" data-controller="modal_controller">
 
-{# TODO: delete ALL class="std-input-hidden" #}
-
 <sdoc-backdrop>
   <sdoc-form>
     <form action="/actions/document_tree/create_document" method="POST" data-turbo="true">
@@ -14,7 +12,7 @@
           {{ document_title }}
           {%- endif -%}
         </sdoc-contenteditable>
-        <input type="hidden" class="std-input-hidden" name="document_title" value="{{ document_title }}"/>
+        <input type="hidden" name="document_title" value="{{ document_title }}"/>
         {%- if error_object.has_errors("document_title") -%}
           <sdoc-form-error>
           {%- for error in error_object.get_errors("document_title") -%}
@@ -30,7 +28,7 @@
         {{ document_path }}
         {%- endif -%}
       </sdoc-contenteditable>
-      <input type="hidden" class="std-input-hidden" name="document_path" value="{{ document_path }}"/>
+      <input type="hidden" name="document_path" value="{{ document_path }}"/>
       {%- if error_object.has_errors("document_path") -%}
         <sdoc-form-error>
         {%- for error in error_object.get_errors("document_path") -%}

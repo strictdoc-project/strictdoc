@@ -15,7 +15,7 @@
     {{ field_value }}
     {%- endif -%}
   </div>
-  <input type="hidden" class="std-input-hidden" name="{{ field_input_name }}" value="{{ field_value }}"/>
+  <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}"/>
 
   {%- if errors|length > 0 -%}
     <div class="std-form-error">

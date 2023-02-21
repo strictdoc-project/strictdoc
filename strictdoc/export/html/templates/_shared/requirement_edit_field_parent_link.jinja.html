@@ -15,7 +15,7 @@
     {{ field.field_value }}
     {%- endif -%}
   </div>
-  <input type="hidden" class="std-input-hidden" name="requirement[REFS_PARENT][]" value="{{ field.field_value }}"/>
+  <input type="hidden" name="requirement[REFS_PARENT][]" value="{{ field.field_value }}"/>
   {%- if field.validation_messages|length > 0 -%}
     <div class="std-form-error">
     {%- for validation_message in field.validation_messages -%}

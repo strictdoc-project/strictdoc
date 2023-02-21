@@ -12,7 +12,7 @@
     {{ field.field_value }}
     {%- endif -%}
   </div>
-  <input type="hidden" class="std-input-hidden" name="requirement[{{field.field_name}}]" value="{{ field.field_value }}"/>
+  <input type="hidden" name="requirement[{{field.field_name}}]" value="{{ field.field_value }}"/>
   {%- if form_object.has_errors(field.field_name) -%}
     <div class="std-form-error">
     {%- for error in form_object.get_errors(field.field_name) -%}

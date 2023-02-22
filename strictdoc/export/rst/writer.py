@@ -3,7 +3,6 @@ from enum import Enum
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.sdoc.models.section import FreeText, Section
-from strictdoc.backend.sdoc.models.type_system import ReferenceType
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.rst.rst_templates import RSTTemplates
@@ -40,6 +39,8 @@ class RSTWriter:
             elif isinstance(content_node, Requirement):
                 output += self._print_requirement_fields(content_node)
 
+        if output.endswith("\n\n"):
+            output = output[:-1]
         return output.lstrip()
 
     @staticmethod

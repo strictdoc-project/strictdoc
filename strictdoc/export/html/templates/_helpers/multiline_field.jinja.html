@@ -11,6 +11,9 @@
     id="{{ field_input_name }}"
     placeholder="Enter {{ field_name }} here..."
     data-field-name="{{ field_name }}"
+    {%- if field_class_name is defined -%}
+      class="{{ field_class_name }}"
+    {%- endif -%}
   >
     {%- if true -%}
     {{ field_value }}

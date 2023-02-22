@@ -1,0 +1,8 @@
+[DOCUMENT]
+TITLE: Doc with a requirement that have no title
+
+[REQUIREMENT]
+UID: REQ1
+STATEMENT: >>>
+System shall do #1.
+<<<

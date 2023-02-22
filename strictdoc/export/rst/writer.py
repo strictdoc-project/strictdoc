@@ -3,7 +3,6 @@ from enum import Enum
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.sdoc.models.section import FreeText, Section
-from strictdoc.backend.sdoc.models.type_system import ReferenceType
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.rst.rst_templates import RSTTemplates
@@ -40,6 +39,8 @@ class RSTWriter:
             elif isinstance(content_node, Requirement):
                 output += self._print_requirement_fields(content_node)
 
+        if output.endswith("\n\n"):
+            output = output[:-1]
         return output.lstrip()
 
     @staticmethod
@@ -94,67 +95,6 @@ class RSTWriter:
             index=self.index,
             _print_rst_header=self._print_rst_header_2,
         )
-        return output
-
-    def _print_requirement_fields_unused(self, section_content: Requirement):
-        output = ""
-        if section_content.uid is not None:
-            output += f".. _{section_content.uid}:"
-            output += "\n\n"
-
-        if section_content.title is not None:
-            output += self._print_rst_header(
-                section_content.title, section_content.ng_level
-            )
-
-        if section_content.uid is not None:
-            output += ".. list-table::\n"
-            output += "    :align: left\n"
-            output += "    :header-rows: 0\n\n"
-
-            output += "    * - **UID:**\n"
-            output += f"      - {section_content.uid}\n"
-            output += "\n"
-
-        if section_content.statement:
-            output += section_content.statement
-            output += "\n\n"
-        elif section_content.reserved_statement:
-            output += section_content.reserved_statement
-            output += "\n\n"
-        else:
-            pass  # raise RuntimeError('Statement is missing')
-
-        for comment in section_content.comments:
-            output += "**"
-            output += "Comment:"
-            output += "** "
-            output += comment.get_comment()
-            output += "\n\n"
-
-        requirement_parent_refs = section_content.get_requirement_references(
-            ReferenceType.PARENT
-        )
-        if len(requirement_parent_refs) > 0:
-            output += "**Parents:**"
-            output += "\n\n"
-            for reference in requirement_parent_refs:
-                output += f"- ``[{reference.ref_uid}]`` "
-                output += f":ref:`{reference.ref_uid}`"
-                output += "\n"
-            output += "\n"
-
-        if self.index.has_children_requirements(section_content):
-            output += "**Children:**"
-            output += "\n\n"
-            for child_requirement in self.index.get_children_requirements(
-                section_content
-            ):
-                output += f"- ``[{child_requirement.reserved_uid}]`` "
-                output += f":ref:`{child_requirement.reserved_uid}`"
-                output += "\n"
-            output += "\n"
-
         return output
 
     def _print_free_text(self, free_text):

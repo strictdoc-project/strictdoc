@@ -1,55 +1,60 @@
-{% if requirement.reserved_uid is not none %}
+{%- if requirement.reserved_uid is not none -%}
 .. _{{requirement.reserved_uid}}:
-{% endif %}
 
-{%- if requirement.reserved_title is not none %}
+{% endif -%}
+
+{%- if requirement.reserved_title is not none -%}
 {{ _print_rst_header(requirement.reserved_title, requirement.ng_level) }}
-{% endif %}
 
-{%- if requirement.has_meta > 0 %}
+{% endif -%}
+
+{%- if requirement.has_meta > 0 -%}
 .. list-table::
     :align: left
     :header-rows: 0
-{% if true -%}{# without this workaround Jinja eats too much or not enough whitespace. #}{%- endif %}
-    {%- for meta_field in requirement.enumerate_meta_fields(skip_multi_lines=True) %}
-    * - **{{meta_field[0]}}:**
+
+{% for meta_field in requirement.enumerate_meta_fields(skip_multi_lines=True) -%}
+{%- if true %}    {% endif %}* - **{{meta_field[0]}}:**
       - {{ meta_field[1] }}
-    {%- endfor -%}
-{%- endif %}
-{% if true -%}{# without this workaround Jinja eats too much or not enough whitespace. #}{%- endif %}
-
-{%- if requirement.reserved_statement is not none %}
-{{requirement.reserved_statement}}
-{% endif %}
-
-{%- if requirement.rationale %}
-**Rationale:** {{ requirement.rationale }}
-{% endif %}
-
-{%- for comment in requirement.comments %}
-**Comment:** {{comment}}
 {% endfor %}
+{% endif %}
 
-{%- if requirement.has_meta %}
-{%- for meta_field in requirement.enumerate_meta_fields(skip_single_lines=True) %}
+{%- if requirement.reserved_statement is not none -%}
+{{requirement.reserved_statement.strip()}}
+
+{% endif -%}
+
+{%- if requirement.rationale -%}
+**Rationale:** {{ requirement.rationale }}
+
+{% endif -%}
+
+{%- for comment in requirement.comments -%}
+**Comment:** {{comment}}
+
+{% endfor -%}
+
+{%- if requirement.has_meta -%}
+{%- for meta_field in requirement.enumerate_meta_fields(skip_single_lines=True) -%}
 **{{meta_field[0]}}:**
 {{ meta_field[1] }}
-{% endfor %}
+
+{% endfor -%}
 {%- endif %}
 
-{%- set parent_requirement_refs = requirement.get_requirement_references("Parent") %}
-{%- if parent_requirement_refs|length > 0 %}
+{%- set parent_requirement_refs = requirement.get_requirement_references("Parent") -%}
+{%- if parent_requirement_refs|length > 0 -%}
 **Parents:**
-{% if true -%}{# without this workaround Jinja eats too much or not enough whitespace. #}{%- endif %}
-{%- for reference in parent_requirement_refs %}
+
+{% for reference in parent_requirement_refs -%}
 - ``[{{reference.ref_uid}}]`` :ref:`{{reference.ref_uid}}`
-{%- endfor %}
+{% endfor %}
 {% endif %}
 
-{%- if index.has_children_requirements(requirement) %}
+{%- if index.has_children_requirements(requirement) -%}
 **Children:**
-{% if true -%}{# without this workaround Jinja eats too much or not enough whitespace. #}{%- endif %}
-{%- for child_requirement in index.get_children_requirements(requirement) %}
+
+{% for child_requirement in index.get_children_requirements(requirement) -%}
 - ``[{{child_requirement.reserved_uid}}]`` :ref:`{{child_requirement.reserved_uid}}`
-{%- endfor %}
-{% endif %}
+{% endfor %}
+{% endif -%}

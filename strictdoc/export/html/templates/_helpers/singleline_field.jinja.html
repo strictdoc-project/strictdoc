@@ -1,5 +1,5 @@
-<div data-section="edit-section-TBD" class="std-form-row">
-  <div
+<sdoc-form-row>
+  <sdoc-contenteditable
     data-controller="editablefield"
     role="textbox"
     data-editable="single"
@@ -10,18 +10,19 @@
     {%- endif -%}
     id="{{ field_input_name }}"
     placeholder="Enter {{ field_name }} here..."
+    data-field-name="{{ field_name }}"
   >
     {%- if true -%}
     {{ field_value }}
     {%- endif -%}
-  </div>
+  </sdoc-contenteditable>
   <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}"/>
 
   {%- if errors|length > 0 -%}
-    <div class="std-form-error">
+    <sdoc-form-error>
     {%- for error in errors -%}
       {{ error }}
     {%- endfor -%}
-    </div>
+    </sdoc-form-error>
   {%- endif -%}
-</div>
+</sdoc-form-row>

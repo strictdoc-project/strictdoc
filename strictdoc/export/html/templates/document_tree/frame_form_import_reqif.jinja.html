@@ -18,11 +18,11 @@
         </label>
         <input type="file" name="reqif_file" id="reqif_file"/>
         {%- if error_object.has_errors("reqif_file") -%}
-          <div class="std-form-error">
+          <sdoc-form-error>
           {%- for error in error_object.get_errors("reqif_file") -%}
             {{ error }}
           {%- endfor -%}
-          </div>
+          </sdoc-form-error>
         {%- endif -%}
         </sdoc-form-row>
       </sdoc-modal-content>

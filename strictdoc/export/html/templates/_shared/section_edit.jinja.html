@@ -7,35 +7,54 @@
 <turbo-frame id="article-{{form_object.section_mid}}">
 <sdoc-form>
 
-<form class="std-form" action="{{url}}" method="POST" data-turbo="true">
+<form
+  action="{{url}}"
+  method="POST"
+  data-turbo="true"
+>
   {%- if is_new_section -%}
     <input type="hidden" id="reference_mid" name="reference_mid" value="{{reference_mid}}" />
     <input type="hidden" id="whereto" name="whereto" value="{{whereto}}" />
   {%- endif -%}
   <input type="hidden" id="section_mid" name="section_mid" value="{{form_object.section_mid}}" />
 
-    <div class="std-form-row">
+    <sdoc-form-row>
 
-      {# <input type="text" id="section_title" name="section_title" value="{{ form_object.section_title }}"/> #}
-      <div data-controller="editablefield" role="textbox" data-editable="single" contenteditable="true" class="std-form-fileld-title" id="section_title" placeholder="Enter section title here...">
+      <sdoc-contenteditable
+        class="std-form-fileld-title"
+        data-controller="editablefield"
+        role="textbox"
+        data-editable="single"
+        contenteditable="true"
+        id="section_title"
+        placeholder="Enter section title here..."
+      >
         {%- if true -%}
         {{ form_object.section_title }}
         {%- endif -%}
-      </div>
+      </sdoc-contenteditable>
       <input type="hidden" name="section_title" value="{{ form_object.section_title }}"/>
 
       {%- if form_object.has_errors("section_title") -%}
-        <div class="std-form-error">
+        <sdoc-form-error>
         {%- for error in form_object.get_errors("section_title") -%}
           {{ error }}
         {%- endfor -%}
-        </div>
+        </sdoc-form-error>
       {%- endif -%}
 
-    </div>
+    </sdoc-form-row>
 
-    <div class="std-form-row">
-      <div data-controller="editablefield" role="textbox" data-editable="multiline" contenteditable="true" class="std-form-field-rst" id="section_content" placeholder="Enter section text here...">
+    <sdoc-form-row>
+      <div
+        class="std-form-field-rst"
+        data-controller="editablefield"
+        role="textbox"
+        data-editable="multiline"
+        contenteditable="true"
+        id="section_content"
+        placeholder="Enter section text here..."
+      >
         {%- if true -%}
           {{ form_object.section_statement }}
         {%- endif -%}
@@ -47,22 +66,37 @@
       </textarea>
 
       {%- if form_object.has_errors("section_statement") -%}
-        <div class="std-form-error">
+        <sdoc-form-error>
         {%- for error in form_object.get_errors("section_statement") -%}
           {{ error }}
         {%- endfor -%}
-        </div>
+        </sdoc-form-error>
       {%- endif -%}
-    </div>
+    </sdoc-form-row>
 
-    <div class="std-form-footer">
-        <button class="std-form-btn" type="submit">Save</button>
-        {%- if is_new_section -%}
-          <a class="std-form-btn" href="/actions/document/cancel_new_section?section_mid={{form_object.section_mid}}" data-turbo="true">Cancel</a>
-        {%- else -%}
-          <a class="std-form-btn" href="/actions/document/cancel_edit_section?section_mid={{form_object.section_mid}}" data-turbo="true">Cancel</a>
-        {%- endif -%}
-    </div>
+    <sdoc-form-footer>
+      <button
+        class="std-form-btn"
+        type="submit"
+        data-testid="form-submit-action"
+      >Save</button>
+
+    {%- if is_new_section -%}
+      <a
+        class="std-form-btn"
+        href="/actions/document/cancel_new_section?section_mid={{form_object.section_mid}}"
+        data-turbo="true"
+        data-testid="form-cancel-action"
+      >Cancel</a>
+    {%- else -%}
+      <a
+        class="std-form-btn"
+        href="/actions/document/cancel_edit_section?section_mid={{form_object.section_mid}}"
+        data-turbo="true"
+        data-testid="form-cancel-action"
+      >Cancel</a>
+    {%- endif -%}
+    </sdoc-form-footer>
 
 </form>
 

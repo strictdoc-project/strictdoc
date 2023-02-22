@@ -20,13 +20,15 @@
 
   {%- for field_values in form_object.enumerate_fields(multiline=False) -%}
     {%- for field in field_values -%}
-    {%- if field.is_singleline() -%}
-    {{field.field_name}}:<br/>
-      {% include "_shared/requirement_edit_field_singleline.jinja.html" %}
-    {%- elif field.is_multiline() -%}
-      {{field.field_name}}:<br/>
-      {% include "_shared/requirement_edit_field_multiline.jinja.html" %}
-    {%- endif -%}
+      {%- with
+        field_class_name="",
+        field_name=field.field_name,
+        field_input_name="requirement[" ~ field.field_name ~ "]",
+        field_value=field.field_value,
+        errors=form_object.get_errors(field.field_name)
+      -%}
+        {% include "_helpers/singleline_field.jinja.html" %}
+      {%- endwith -%}
     {%- endfor -%}
   {%- endfor -%}
 
@@ -48,13 +50,15 @@
 
   {%- for field_values in form_object.enumerate_fields(multiline=True) -%}
     {%- for field in field_values -%}
-    {%- if field.is_singleline() -%}
-    {{field.field_name}}:<br/>
-      {% include "_shared/requirement_edit_field_singleline.jinja.html" %}
-    {%- elif field.is_multiline() -%}
-      {{field.field_name}}:<br/>
-      {% include "_shared/requirement_edit_field_multiline.jinja.html" %}
-    {%- endif -%}
+      {%- with
+        field_class_name="test",
+        field_name=field.field_name,
+        field_input_name="requirement[" ~ field.field_name ~ "]",
+        field_value=field.field_value,
+        errors=form_object.get_errors(field.field_name)
+      -%}
+        {% include "_helpers/multiline_field.jinja.html" %}
+      {%- endwith -%}
     {%- endfor -%}
   {%- endfor -%}
 

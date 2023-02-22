@@ -67,9 +67,9 @@ class LinkRenderer:
         context_document: Optional[Document],
         document_type: DocumentType,
     ):
-        assert isinstance(node, (Requirement, Section))
-        assert isinstance(context_document, Document)
-        assert isinstance(document_type, DocumentType)
+        assert isinstance(node, (Requirement, Section)), node
+        assert isinstance(context_document, Document), context_document
+        assert isinstance(document_type, DocumentType), document_type
         local_link = self.render_local_anchor(node)
         if context_document and node.document == context_document:
             return f"#{local_link}"

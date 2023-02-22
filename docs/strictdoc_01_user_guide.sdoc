@@ -58,8 +58,11 @@ The author can be also contacted via `email <s.pankevich@gmail.com>`_.
 [SECTION]
 TITLE: Examples
 
+[SECTION]
+TITLE: Hello World
+
 [FREETEXT]
-"Hello World" example of the text language:
+"Hello World" example of the SDoc text language:
 
 .. code-block:: text
 
@@ -70,25 +73,64 @@ TITLE: Examples
     UID: SDOC-HIGH-REQS-MANAGEMENT
     TITLE: Requirements management
     STATEMENT: StrictDoc shall enable requirements management.
+
+Create a file called ``hello_world.sdoc`` somewhere on your file system and copy the above text to it.
+
+Once you have ``strictdoc`` installed (see [LINK: SDOC_UG_GETTING_STARTED] below), run StrictDoc as follows:
+
+.. code-block:: text
+
+    strictdoc export hello.sdoc
+
+The expected output:
+
+.. code-block:: text
+
+    $ strictdoc export hello.sdoc
+    Parallelization: Enabled
+    Step 'Collect traceability information' start
+    Step 'Find and read SDoc files' start
+    Reading SDOC: hello.sdoc .................................... 0.08s
+    Step 'Find and read SDoc files' took: 0.09 sec
+    Step 'Collect traceability information' start
+    Step 'Collect traceability information' took: 0.01 sec
+    Step 'Collect traceability information' took: 0.11 sec
+    Published: StrictDoc ........................................ 0.24s
+    ...
+    Export completed. Documentation tree can be found at:
+    .../output/html
 [/FREETEXT]
 
+[/SECTION]
+
+[SECTION]
+TITLE: StrictDoc Examples repository
+
 [FREETEXT]
-For a more comprehensive example check the source file of this documentation
+The `strictdoc-examples <https://github.com/strictdoc-project/strictdoc-examples>`_ repository contains a collection of basic examples. Visit the repository and read its README for details.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Other examples
+
+[FREETEXT]
+For a more comprehensive example, check the source file of this documentation
 which is written using StrictDoc:
 `strictdoc_01_user_guide.sdoc <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc_01_user_guide.sdoc>`_.
 
 - `StrictDoc HTML export <https://strictdoc.readthedocs.io/en/latest/strictdoc-html>`_
 - `StrictDoc HTML export using Sphinx <https://strictdoc.readthedocs.io/en/latest>`_
 - `StrictDoc PDF export using Sphinx <https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_
-
-Additionally, the project's repository contains a folder
-``tests/integration/examples``. In this folder, there is a collection of basic
-examples.
 [/FREETEXT]
 
 [/SECTION]
 
+[/SECTION]
+
 [SECTION]
+UID: SDOC_UG_GETTING_STARTED
 TITLE: Getting started
 
 [SECTION]

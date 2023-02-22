@@ -530,7 +530,7 @@ def create_main_router(
             markup="RST",
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
-            context_document=section.parent,
+            context_document=section.document,
         )
         output = template.render(
             renderer=markup_renderer,

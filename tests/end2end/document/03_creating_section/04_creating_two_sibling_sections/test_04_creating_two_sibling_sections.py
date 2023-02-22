@@ -54,7 +54,7 @@ class Test04CreatingTwoSiblingSections(BaseCase):
             "#section_content", "This is a free text of the first section."
         )
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
         self.assert_text("1. First title")
 
         # Creating Section 2
@@ -79,7 +79,7 @@ class Test04CreatingTwoSiblingSections(BaseCase):
             "#section_content", "This is a free text of the second section."
         )
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
         self.assert_text("2. Second title")
 
         self.assert_element(

@@ -2,7 +2,6 @@ import filecmp
 import os
 import shutil
 
-from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.server import SDocTestServer
@@ -32,18 +31,12 @@ class Test_UC12_R02_MoveFieldUp(BaseCase):
         self.click_link("DOC")
         self.assert_text_visible("Requirement title")
 
-        self.hover_and_click(
-            hover_selector="(//sdoc-node)[1]",
-            click_selector=(
-                '(//sdoc-node)[1]//*[@data-testid="document-edit-grammar-action"]'  # noqa: E501
-            ),
-            hover_by=By.XPATH,
-            click_by=By.XPATH,
-        )
+        self.click_xpath('(//*[@data-testid="document-edit-grammar-action"])')
 
         self.click_xpath("(//a[@title='Move up'])[last()]")
-        self.click_xpath("//button[@type='submit' and text()='Save']")
-        self.assert_text_not_visible("Save")
+
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
+        self.assert_element_not_present('[data-testid="form-submit-action"]')
 
         assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))
         assert filecmp.cmp(

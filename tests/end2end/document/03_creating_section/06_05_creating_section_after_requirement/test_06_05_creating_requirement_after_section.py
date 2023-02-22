@@ -54,7 +54,7 @@ class Test_06_05_CreateSectionAfterRequirement(BaseCase):
         self.type("#section_title", "Section title")
         self.type("#section_content", "Section statement.")
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text("1. Section title")
 
@@ -79,7 +79,7 @@ class Test_06_05_CreateSectionAfterRequirement(BaseCase):
         self.type("#requirement_TITLE", "Requirement title")
         self.type("#requirement_STATEMENT", "Requirement statement.")
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text("2. Requirement title")
 

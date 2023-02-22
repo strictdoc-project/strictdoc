@@ -48,7 +48,7 @@ class Test_UC07_T02_EditingStatementOnly(BaseCase):
 
         self.type("#requirement_STATEMENT", "Modified statement.")
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text("Modified statement.")
 

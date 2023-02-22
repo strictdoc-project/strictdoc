@@ -51,4 +51,4 @@ class Test_01_CancelNewRequirement(BaseCase):
 
         self.click_link("Cancel")
 
-        self.assert_text_not_visible("Cancel")
+        self.assert_element_not_present('[data-testid="form-cancel-action"]')

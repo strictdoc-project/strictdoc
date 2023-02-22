@@ -49,7 +49,7 @@ class Test_UC07_G1_T10_EditRequirementRefs(BaseCase):
             "//a[@data-testid='requirement-add-parent-link-action']"
         )
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text(
             "Requirement parent link UID must not be empty.",

@@ -51,5 +51,5 @@ class Test03CreatingChildSection(BaseCase):
         self.type("#section_title", "")
         self.type("#section_content", "This is a free text of this section.")
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
         self.assert_text("Section title must not be empty.")

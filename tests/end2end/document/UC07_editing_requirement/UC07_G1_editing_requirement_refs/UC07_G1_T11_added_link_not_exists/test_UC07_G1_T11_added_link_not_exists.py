@@ -48,7 +48,7 @@ class Test_UC07_G1_T11_AddedLinkDoesNotExist(BaseCase):
             "(//*[@data-testid='requirement-parent-link-field'])[1]", "FOO-BAR"
         )
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text(
             'Parent requirement with an UID "FOO-BAR" does not exist.',

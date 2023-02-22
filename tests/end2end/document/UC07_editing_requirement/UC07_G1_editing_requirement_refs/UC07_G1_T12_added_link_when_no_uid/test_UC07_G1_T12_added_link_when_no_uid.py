@@ -48,7 +48,7 @@ class Test_UC07_G1_T12_AddedLinkWhenNoUID(BaseCase):
             "(//*[@data-testid='requirement-parent-link-field'])[1]", "REQ-002"
         )
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text(
             "Requirement with parent links must have an UID. "

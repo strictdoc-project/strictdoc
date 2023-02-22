@@ -66,7 +66,7 @@ class Test_UC07_G1_T02_AddThreeLinks(BaseCase):
             "(//*[@data-testid='requirement-parent-link-field'])[3]", "REQ-004"
         )
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
         self.assert_element_not_present(
             "//button[@type='submit' and text()='Save']", by=By.XPATH
         )

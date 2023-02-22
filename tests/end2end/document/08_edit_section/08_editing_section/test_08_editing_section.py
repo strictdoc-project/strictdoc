@@ -45,7 +45,7 @@ class Test08EditSection(BaseCase):
         self.type("#section_title", "Modified title")
         self.type("#section_content", "Modified statement.")
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text("1. Modified title")
         self.assert_text("Modified statement.")

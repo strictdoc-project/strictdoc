@@ -55,7 +55,7 @@ class Test06CreateRequirementsInDocument(BaseCase):
         self.type("#requirement_STATEMENT", "Requirement statement #1.")
         self.type("#requirement_RATIONALE", "Requirement rationale #1.")
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         # Requirement 2
         self.hover_and_click(
@@ -79,7 +79,7 @@ class Test06CreateRequirementsInDocument(BaseCase):
         self.type("#requirement_STATEMENT", "Requirement statement #2.")
         self.type("#requirement_RATIONALE", "Requirement rationale #2.")
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         # Requirement 3
         self.hover_and_click(
@@ -103,7 +103,7 @@ class Test06CreateRequirementsInDocument(BaseCase):
         self.type("#requirement_STATEMENT", "Requirement statement #3.")
         self.type("#requirement_RATIONALE", "Requirement rationale #3.")
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_element_not_present(
             "//button[@type='submit' and text()='Save']", by=By.XPATH

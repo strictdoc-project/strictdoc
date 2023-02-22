@@ -41,4 +41,4 @@ class Test_UC11_T03_EditDocument_Cancel(BaseCase):
         )
 
         self.click_link("Cancel")
-        self.assert_text_not_visible("Cancel")
+        self.assert_element_not_present('[data-testid="form-cancel-action"]')

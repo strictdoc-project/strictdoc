@@ -47,7 +47,7 @@ class Test_UC07_T61_EscapeHTML(BaseCase):
             "<https://github.com/strictdoc-project/"
             "sphinx-latex-reqspec-template>`_"
         )
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))
         assert filecmp.cmp(

@@ -51,7 +51,7 @@ class Test_UC07_T01_EditRequirement(BaseCase):
         self.type("#requirement_STATEMENT", "Modified statement.")
         self.type("#requirement_RATIONALE", "Modified rationale.")
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text("1. Modified title")
         self.assert_text("Modified_UID")

@@ -43,14 +43,14 @@ class Test_UC11_T41_RemoveDocumentAbstract(BaseCase):
         )
 
         # HACK: The only way the field is actually cleared.
-        self.type("(//div[@id='document[FREETEXT]'])[1]", "1", by=By.XPATH)
+        self.type("(//*[@id='document[FREETEXT]'])[1]", "1", by=By.XPATH)
         document_title_field = self.find_visible_elements(
-            "//div[@id='document[FREETEXT]']"
+            "//*[@id='document[FREETEXT]']"
         )[0]
         document_title_field.send_keys(Keys.BACKSPACE)
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
-        self.assert_text_not_visible("Save")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
+        self.assert_element_not_present('[data-testid="form-submit-action"]')
         self.assert_text_not_visible("Hello world!")
 
         assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))

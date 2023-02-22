@@ -42,12 +42,12 @@ class Test_UC11_G1_T01_EmptyTitle(BaseCase):
         )
 
         # HACK: The only way the field is actually cleared.
-        self.type("(//div[@id='document[TITLE]'])[1]", "1", by=By.XPATH)
+        self.type("(//*[@id='document[TITLE]'])[1]", "1", by=By.XPATH)
         document_title_field = self.find_visible_elements(
-            "//div[@id='document[TITLE]']"
+            "//*[@id='document[TITLE]']"
         )[0]
         document_title_field.send_keys(Keys.BACKSPACE)
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text("Document title must not be empty.")

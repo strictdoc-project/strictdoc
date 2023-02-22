@@ -71,16 +71,6 @@ sdoc-form {
   z-index: 10;
 }
 
-sdoc-backdrop sdoc-form {
-  border-radius: 8px;
-  max-width: 90vw;
-  max-height: 90vh;
-  /* box-shadow: 0 0 0 50vmax rgba(0,0,0,.5), var(--base-elevation-modal); */
-  box-shadow: var(--base-elevation-modal);
-
-  overflow: auto;
-}
-
 sdoc-form-header {
   display: block;
   padding-top: 0;

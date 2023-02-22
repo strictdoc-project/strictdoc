@@ -1,45 +1,47 @@
 <turbo-frame data-controller="modal_controller">
 
 <sdoc-backdrop>
-  <sdoc-form>
-    <form
-      action="/actions/document_tree/import_document_reqif"
-      method="POST"
-      enctype="multipart/form-data"
-      data-turbo="true"
-    >
-
-      <sdoc-form-header>Import ReqIF document</sdoc-form-header>
-
-      <sdoc-form-row class="std-tree_name">
-      <label for="reqif_file">
-        Click this div and select a file
-      </label>
-      <input type="file" name="reqif_file" id="reqif_file"/>
-      {%- if error_object.has_errors("reqif_file") -%}
-        <div class="std-form-error">
-        {%- for error in error_object.get_errors("reqif_file") -%}
-          {{ error }}
-        {%- endfor -%}
-        </div>
-      {%- endif -%}
-      </sdoc-form-row>
-
-      <sdoc-form-footer>
-        <button
-          class="std-form-btn"
-          type="submit"
-          data-testid="form-submit-action"
-        >Import ReqIF</button>
-        <button
-          class="std-form-btn"
-          type="button"
-          stimulus-modal-cancel-button
-          data-testid="form-cancel-action"
-        >Cancel</button>
-      </sdoc-form-footer>
-
-    </form>
-  </sdoc-form>
+  <form
+    action="/actions/document_tree/import_document_reqif"
+    method="POST"
+    enctype="multipart/form-data"
+    data-turbo="true"
+  >
+    <sdoc-modal>
+      <sdoc-modal-header>
+        <sdoc-form-header>Import ReqIF document</sdoc-form-header>
+      </sdoc-modal-header>
+      <sdoc-modal-content>
+        <sdoc-form-row class="std-tree_name">
+        <label for="reqif_file">
+          Click this div and select a file
+        </label>
+        <input type="file" name="reqif_file" id="reqif_file"/>
+        {%- if error_object.has_errors("reqif_file") -%}
+          <div class="std-form-error">
+          {%- for error in error_object.get_errors("reqif_file") -%}
+            {{ error }}
+          {%- endfor -%}
+          </div>
+        {%- endif -%}
+        </sdoc-form-row>
+      </sdoc-modal-content>
+      <sdoc-modal-footer>
+        <sdoc-form-footer>
+          <button
+            class="std-form-btn"
+            type="submit"
+            data-testid="form-submit-action"
+          >Import ReqIF</button>
+          <button
+            class="std-form-btn"
+            type="button"
+            stimulus-modal-cancel-button
+            data-testid="form-cancel-action"
+          >Cancel</button>
+        </sdoc-form-footer>
+      </sdoc-modal-footer>
+    </sdoc-form>
+  </form>
 </sdoc-backdrop>
 </turbo-frame>

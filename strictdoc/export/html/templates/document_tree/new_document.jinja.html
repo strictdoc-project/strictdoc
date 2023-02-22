@@ -1,60 +1,61 @@
 <turbo-frame data-controller="modal_controller">
 
 <sdoc-backdrop>
-  <sdoc-form>
-    <form action="/actions/document_tree/create_document" method="POST" data-turbo="true">
+  <form action="/actions/document_tree/create_document" method="POST" data-turbo="true">
+    <sdoc-modal>
+      <sdoc-modal-header>
+        <sdoc-form-header>Add new document</sdoc-form-header>
+      </sdoc-modal-header>
+      <sdoc-modal-content>
+        <sdoc-form-row class="std-tree_desc">
+          <sdoc-contenteditable data-controller="editablefield" role="textbox" data-editable="single" contenteditable="true" class="" id="document_title" placeholder="Enter document title here...">
+            {%- if true -%}
+            {{ document_title }}
+            {%- endif -%}
+          </sdoc-contenteditable>
+          <input type="hidden" name="document_title" value="{{ document_title }}"/>
+          {%- if error_object.has_errors("document_title") -%}
+            <sdoc-form-error>
+            {%- for error in error_object.get_errors("document_title") -%}
+              {{ error }}
+            {%- endfor -%}
+            </sdoc-form-error>
+          {%- endif -%}
+        </sdoc-form-row>
 
-      <sdoc-form-header>Add new document</sdoc-form-header>
-
-      <sdoc-form-row class="std-tree_desc">
-        <sdoc-contenteditable data-controller="editablefield" role="textbox" data-editable="single" contenteditable="true" class="" id="document_title" placeholder="Enter document title here...">
+        <sdoc-form-row class="std-tree_name">
+        <sdoc-contenteditable data-controller="editablefield" role="textbox" data-editable="single" contenteditable="true" class="std-input-document_path" id="document_path" placeholder="Enter document path here...">
           {%- if true -%}
-          {{ document_title }}
+          {{ document_path }}
           {%- endif -%}
         </sdoc-contenteditable>
-        <input type="hidden" name="document_title" value="{{ document_title }}"/>
-        {%- if error_object.has_errors("document_title") -%}
+        <input type="hidden" name="document_path" value="{{ document_path }}"/>
+        {%- if error_object.has_errors("document_path") -%}
           <sdoc-form-error>
-          {%- for error in error_object.get_errors("document_title") -%}
+          {%- for error in error_object.get_errors("document_path") -%}
             {{ error }}
           {%- endfor -%}
           </sdoc-form-error>
         {%- endif -%}
-      </sdoc-form-row>
-
-      <sdoc-form-row class="std-tree_name">
-      <sdoc-contenteditable data-controller="editablefield" role="textbox" data-editable="single" contenteditable="true" class="std-input-document_path" id="document_path" placeholder="Enter document path here...">
-        {%- if true -%}
-        {{ document_path }}
-        {%- endif -%}
-      </sdoc-contenteditable>
-      <input type="hidden" name="document_path" value="{{ document_path }}"/>
-      {%- if error_object.has_errors("document_path") -%}
-        <sdoc-form-error>
-        {%- for error in error_object.get_errors("document_path") -%}
-          {{ error }}
-        {%- endfor -%}
-        </sdoc-form-error>
-      {%- endif -%}
-      </sdoc-form-row>
-
-      <sdoc-form-footer>
-        <button
-          class="std-form-btn"
-          type="submit"
-          data-testid="form-submit-action"
-        >Save</button>
-        <button
-          class="std-form-btn"
-          type="button"
-          stimulus-modal-cancel-button
-          data-testid="form-cancel-action"
-        >Cancel</button>
-      </sdoc-form-footer>
-
-
-    </form>
-  </sdoc-form>
+        </sdoc-form-row>
+      </sdoc-modal-content>
+      <sdoc-modal-footer>
+        <sdoc-form-footer>
+          <button
+            class="std-form-btn"
+            type="submit"
+            data-testid="form-submit-action"
+          >Save</button>
+          <button
+            class="std-form-btn"
+            type="button"
+            stimulus-modal-cancel-button
+            data-testid="form-cancel-action"
+          >Cancel</button>
+        </sdoc-form-footer>
+      </sdoc-modal-footer>
+    </sdoc-modal>
+  </form>
 </sdoc-backdrop>
 
 </turbo-frame>

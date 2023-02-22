@@ -138,7 +138,7 @@ def clean_itest_artifacts(context):
 
 
 @task
-def server(context, input_path="developer/sandbox"):
+def server(context, input_path="."):
     assert os.path.isdir(input_path), input_path
     run_invoke_cmd(
         context,
@@ -553,7 +553,7 @@ def release_pyinstaller(context):
 
 
 @task
-def watch(context, sdocs_path="developer/sandbox"):
+def watch(context, sdocs_path="."):
     paths_to_watch = "."
     strictdoc_command = f"""
         python strictdoc/cli/main.py

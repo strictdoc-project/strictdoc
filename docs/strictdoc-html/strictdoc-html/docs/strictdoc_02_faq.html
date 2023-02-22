@@ -19,15 +19,8 @@
   
 
   
+  <script type="text/javascript" src="../_static/viewtype_menu.js"></script>
   <script type="text/javascript" src="../_static/toc.js"></script>
-  <script type="text/javascript" src="../_static/jquery.min.js"></script>
-
-  <script type="module">
-      import hotwiredTurbo from "../_static/turbo.js";
-      import { Application } from "../_static/stimulus.js";
-      window.Stimulus = Application.start();
-  </script>
-  <script type="module" src="../_static/std-forms.js"></script>
   
   
   
@@ -38,147 +31,330 @@
   
 </head>
 
-<body class="document-view withtoc">
-<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
+<body data-viewtype="document" class="withtoc" data-turbo="false">
+<script>document.body.dataset.toc_state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
 
-    <aside class="layout_aside-header">
+    <nav class="layout_nav">
+      <div class="nav">
+
+
+
+  <a
+    data-link="index"
+    class="nav_button"
+    href="../index.html"
+    title="Project index">
+    <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <line x1="9" y1="4" x2="7" y2="4"></line>
+  <line x1="12" y1="9" x2="12" y2="7"></line>
+  <line x1="6" y1="10" x2="10" y2="6"></line>
+  <circle cx="4" cy="12" r="2.25"></circle>
+  <circle cx="12" cy="4" r="2.25"></circle>
+  <circle cx="4" cy="4" r="2.25"></circle>
+  <circle cx="12" cy="12" r="2.25"></circle>
+</svg>
+  </a></div>
+    </nav>
+
+    <div class="layout_toc">
       
-  <a class="index-link" href="../index.html">To Index</a>
+  
 
-    </aside>
 
-    <aside class="layout_aside">
-      
-  <turbo-frame id="frame-toc">
-    <div>Table of Contents</div>
-    <ul class="toc"><li><a href="#1-Blog-posts-about-StrictDoc" data-turbo="false">
+
+<div class="toc_panel">
+
+<div id="toc_handler" class="toc_handler nav_button">
+  <svg class="svg_icon" width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <line class="horz" x1="2" y1="12" x2="14" y2="12" id="q3"></line>
+            <line x1="2" y1="8" x2="14" y2="8" id="q2"></line>
+            <line class="horz" x1="2" y1="4" x2="14" y2="4" id="q1"></line>
+            <line class="arrw" x1="2" y1="8" x2="8" y2="14" id="q33"></line>
+            <line class="arrw" x1="2" y1="8" x2="8" y2="2" id="q11"></line>
+</svg>
+</div>
+
+<turbo-frame id="frame-toc" style="display: contents" data-controller="collapsible_list">
+
+  <div class="toc_panel__overlay">
+    <div class="toc_panel__control">
+      <div id="toc_control"></div>
+    </div>
+  </div>
+
+  <div class="toc_panel__content">
+
+    <ul id="toc" class="toc"><li><a href="#1-Resources-about-StrictDoc" data-turbo="false">
               <span class="section-number">1</span>
-              Blog posts about StrictDoc
-            </a></li><li><a href="#2-How-StrictDoc-compares-to-other-tools-" data-turbo="false">
+              Resources about StrictDoc
+            </a></li><li><a href="#2-How-did-the-SDoc-text-language-become-what-it-is-" data-turbo="false">
               <span class="section-number">2</span>
+              How did the SDoc text language become what it is?
+            </a></li><li><a href="#3-How-StrictDoc-compares-to-other-tools-" data-turbo="false">
+              <span class="section-number">3</span>
               How StrictDoc compares to other tools?
-            </a><ul><li><a href="#2.1-Doorstop" data-turbo="false">
-              <span class="section-number">2.1</span>
+            </a><ul><li><a href="#3.1-Doorstop" data-turbo="false">
+              <span class="section-number">3.1</span>
               Doorstop
-            </a></li><li><a href="#2.2-Sphinx" data-turbo="false">
-              <span class="section-number">2.2</span>
+            </a></li><li><a href="#3.2-Sphinx" data-turbo="false">
+              <span class="section-number">3.2</span>
               Sphinx
-            </a></li><li><a href="#2.3-Sphinx-Needs" data-turbo="false">
-              <span class="section-number">2.3</span>
+            </a></li><li><a href="#3.3-Sphinx-Needs" data-turbo="false">
+              <span class="section-number">3.3</span>
               Sphinx-Needs
-            </a></li><li><a href="#2.4-FRET" data-turbo="false">
-              <span class="section-number">2.4</span>
+            </a></li><li><a href="#3.4-FRET" data-turbo="false">
+              <span class="section-number">3.4</span>
               FRET
             </a></li></ul>
-            </li></ul>
+            </li><li><a href="#4-Which-StrictDoc-statistics-are-available-" data-turbo="false">
+              <span class="section-number">4</span>
+              Which StrictDoc statistics are available?
+            </a></li></ul>
+  </div>
 </turbo-frame>
+</div>
 
-    </aside>
-
-    
-  <a class="layout_toggler layout_button" id="layout_toggle"></a><nav class="layout_nav">
-    <a
-    class="layout_nav-btn layout_button btn-document"
-    title="Go to Document view"
-    href="../docs/strictdoc_02_faq.html">
-    DOC
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-table"
-    title="Go to Table view"
-    href="../docs/strictdoc_02_faq-TABLE.html">
-    TBL
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-traceability"
-    title="Go to Traceability view"
-    href="../docs/strictdoc_02_faq-TRACE.html">
-    TR
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-deep-traceability"
-    title="Go to Deep Traceability view"
-    href="../docs/strictdoc_02_faq-DEEP-TRACE.html">
-    DTR
-  </a>
-  </nav>
-
+    </div>
 
     <header class="layout_header">
       
-  <p>F.A.Q. <span class="document-view-type">Document</span></p>
+<div class="header">
+  <turbo-frame id="document_title">
+<div class="header__document">
+  <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d=" M13,13 L13,8 C13,7.5 12.6,7 12,7 L9,7 C8.5,7 8,6.5 8,6 L8,3 C8,2.5 7.5,2 7,2 L4,2 C3.5,2 3,2.5 3,3 L3,13 C3,13.5 3.5,14 4,14 L12,14 C12.6,14 13,13.5 13,13 Z M13,9 L13,8 C13,7.5 13,7 12.5,6.5 L8.5,2.5 C8,2 7.5,2 7,2 L6,2"></path>
+</svg>
+  <div class="header__document_name"
+    title="F.A.Q.">
+    F.A.Q.
+  </div>
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" class="sc-gLvsXj bpkaBy"><path stroke="currentColor" d="M12.5 4.5l-5 11" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+  <div class="viewtype">
+  <div
+    id="viewtype_handler"
+    class="viewtype__handler"
+    aria-expanded="false"
+    aria-controls="viewtype_menu"
+  >
+    <span>Document</span>
+    <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" >
+  <path d="M5 10l3 3 3-3M5 6l3-3 3 3"></path>
+</svg>
+  </div>
+  <menu
+    id="viewtype_menu"
+    class="viewtype__menu"
+    aria-hidden="true"
+    aria-labelledby="viewtype_handler"
+  >
+    <li class="viewtype__menu_header">VIEWS</li>
+    <li>
+      <a
+        data-viewtype_link="document"
+        class="viewtype__menu_item"
+        title="Go to Document view"
+        href="../docs/strictdoc_02_faq.html">
+        Document</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="table"
+        class="viewtype__menu_item"
+        title="Go to Table view"
+        href="../docs/strictdoc_02_faq-TABLE.html">
+        Table</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="traceability"
+        class="viewtype__menu_item"
+        title="Go to Traceability view"
+        href="../docs/strictdoc_02_faq-TRACE.html">
+        Traceability</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="deep_traceability"
+        class="viewtype__menu_item"
+        title="Go to Deep Traceability view"
+        href="../docs/strictdoc_02_faq-DEEP-TRACE.html">
+      Deep traceability</a>
+    </li>
+  </menu>
+</div>
+</div>
+</turbo-frame>
+  <div class="header__r">
+    <div class="actions_group"></div>
+  </div>
+</div>
 
     </header>
 
-    <main class="layout_main">
+    <main class="layout_main" id="pan_with_space">
       
-  <turbo-frame id="frame_document_content"><div class="content">
-        <turbo-frame id="article-e0daa47545fe4909ac3314b4c23a4210">
-<article></article>
+  <turbo-frame id="frame_document_content">
+      <div class="content">
+        <turbo-frame id="article-ad1aae8b6fd842aca908ab10bf31f147">
+
+<sdoc-node
+  data-editable_node="on"
+>
+  <h1>F.A.Q.</h1>
+
+</sdoc-node>
 </turbo-frame>
-          <turbo-frame id="article-41377b88cccb489f9a79f3c8f52632cd"><article class="docsection" data-controller="document">
+          <turbo-frame id="article-ac9435bdda4042ffb403c681690c0e3a"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
 
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="1-Blog-posts-about-StrictDoc"></div>
+    <div data-role='anchor' id="1-Resources-about-StrictDoc"></div>
 
     
-        <h1
-class="section-title"
+      <h1
+class="requirement__title"
 data-level="1">
-  1.&nbsp;Blog posts about StrictDoc
-</h1>
+  1.&nbsp;Resources about StrictDoc</h1>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
-<p><a class="reference external" href="https://www.bugseng.com/blog/requirement-traceability-all-substance-and-no-fuss">Requirement Traceability with All Substance and No Fuss</a>
-by BUGSENG.</p>
-<p><a class="reference external" href="https://python.plainenglish.io/text-based-requirement-management-with-strictdoc-b03c1098a3c9">Text-Based Requirement Management with StrictDoc</a>
-by Florian Kromer.</p>
+<p>Blog posts:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://www.bugseng.com/blog/requirement-traceability-all-substance-and-no-fuss">Requirement Traceability with All Substance and No Fuss</a>
+by BUGSENG.</li>
+<li><a class="reference external" href="https://python.plainenglish.io/text-based-requirement-management-with-strictdoc-b03c1098a3c9">Text-Based Requirement Management with StrictDoc</a>
+by Florian Kromer.</li>
+</ul>
+<p>Screencasts/tutorials:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://www.youtube.com/watch?v=k2MCFWvCs7E">Automotive SPICE in opensource StrictDoc tool, with System Architecure ideas</a>
+by Lukasz Juranek.</li>
+</ul>
 </div>
 
-    </div></section></article>
+    </div></sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-607c68031a85478d9a1994f91ae41510"><article class="docsection" data-controller="document">
+          <turbo-frame id="article-201ee06a5ce04295a7123da73635a9bf"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
 
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="2-How-StrictDoc-compares-to-other-tools-"></div>
+    <div data-role='anchor' id="2-How-did-the-SDoc-text-language-become-what-it-is-"></div>
 
     
-        <h1
-class="section-title"
+      <h1
+class="requirement__title"
 data-level="2">
-  2.&nbsp;How StrictDoc compares to other tools?
-</h1>
+  2.&nbsp;How did the SDoc text language become what it is?</h1>
     
 
-  </section>
+  <div class="free-text">
+      <div class="document">
+<p>Shortly: The SDoc markup is a hybrid of TOML and YAML with some influence from HTML/XML and <a class="reference external" href="https://en.wikipedia.org/wiki/ASN.1">ASN.1</a>. Using each of these formats as-is, and also the JSON format, was considered but discarded during the design. The SDoc markup has been pretty stable since its inception but the flexibility of the TextX parser allows easy modifications of the language in case of future evolutions. Any feedback to the current design of the markup language is appreciated.</p>
+<hr class="docutils" />
+<p>The main use case for SDoc is to model a structure of a technical document that consists of tens and hundreds of technical requirements. The following high-level requirements for the markup are therefore relevant:</p>
+<ul class="simple">
+<li>Encode documents of reasonable size (up to several hundreds or few thousands of A4-printed pages).</li>
+<li>Visualize large blocks of requirements text without too much markup noise.</li>
+<li>Support documents with nested (2-4 levels) or deeply nested structure (detailed technical specifications with up to 9-10 levels of chapter nesting).</li>
+<li>Support multiple fields for requirement meta information which makes a requirement look like &quot;a text with some meta information around it&quot;.</li>
+</ul>
+<p>SDoc format is inspired by several formats: TOML, YAML, ASN.1 and HTML/XML.</p>
+<p><strong>TOML: Square bracket syntax</strong></p>
+<p>From TOML, StrictDoc borrowed the <tt class="docutils literal">[]</tt> bracket syntax to create the <tt class="docutils literal">[REQUIREMENT]</tt>, <tt class="docutils literal">[SECTION]</tt> and other blocks but uses the YAML-like syntax for these blocks' fields, for example:</p>
+<pre class="code literal-block">
+[REQUIREMENT]
+TITLE: Requirement ABC
+STATEMENT: The system A shall do B when C.
+</pre>
+<p><strong>TOML/YAML: Arrays/dictionaries</strong></p>
+<p>StrictDoc has a rudimentary support of arrays and dictionaries. For example, the syntax for defining the document's <tt class="docutils literal">[GRAMMAR]</tt> resembles what would look like an array of records in YAML:</p>
+<pre class="code literal-block">
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: LEVEL
+    TYPE: String
+    REQUIRED: False
+</pre>
+<p><strong>Capitalization of reserved keywords from ASN.1</strong></p>
+<p>From ASN.1, StrictDoc borrows the idea of having all reserved fields capitalized. This helps to visually distinguish between the grammar content and user content.</p>
+<p><strong>Nested sections</strong></p>
+<p>From HTML, the idea of opening and closing tags is taken to avoid any nesting that would otherwise be required to support the deeply nested documents with up to 6 or 8 levels, e.g., 1.1.1.1.1.1.1...</p>
+<pre class="code literal-block">
+[SECTION]
+TITLE: Section 1
 
-  </article>
+[SECTION]
+TITLE: Section 1.1
+
+...
+
+[/SECTION]
+
+[/SECTION]
+</pre>
+<p>Taking HTML or XML as-is didn't seem like a good option because of the heavy visual noise that is produced around the actual content by the surrounding tags.</p>
+<p><strong>Multiline strings</strong></p>
+<p>The support of multiline strings is arranged by a custom solution which helps to avoid any nesting of multiline text as well as to visually indicate the start and end parts of the multiline string in a visually unambiguous way. This is how the multiline string is declared:</p>
+<pre class="code literal-block">
+[REQUIREMENT]
+TITLE: Requirement ABC
+STATEMENT: &gt;&gt;&gt;
+The multiline requirement statement
+without any nesting.
+&gt;&gt;&gt;
+</pre>
+<p><strong>Discarded options</strong></p>
+<p>Taking TOML or YAML as-is didn't seem like a good option because these formats are designed to be used for configuration files or data serialization and not for large documents with hundreds of requirements. The most obvious problems for reusing either of TOML or YAML directly would have been with encoding the deeply nested documents and supporting readable and non-nested multiline strings (see also about the multiline strings below).</p>
+</div>
+
+    </div></sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-25fc2f988929442fae42cb18ee844702"><article class="docsection" data-controller="document">
+          <turbo-frame id="article-49d40bb1e0c34a88890afa3082d49564"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
 
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="2.1-Doorstop"></div>
+    <div data-role='anchor' id="3-How-StrictDoc-compares-to-other-tools-"></div>
 
     
-        <h2
-class="section-title"
-data-level="2.1">
-  2.1.&nbsp;Doorstop
-</h2>
+      <h1
+class="requirement__title"
+data-level="3">
+  3.&nbsp;How StrictDoc compares to other tools?</h1>
     
 
-  </section>
+  </sdoc-node>
 
-  <section data-section="description" class="docsection_section"><div class="free-text">
+</turbo-frame>
+          <turbo-frame id="article-5a9bb222b7084541b77b74e4b49abe67"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
+
+    <div data-role='anchor' id="3.1-Doorstop"></div>
+
+    
+      <h2
+class="requirement__title"
+data-level="3.1">
+  3.1.&nbsp;Doorstop</h2>
+    
+
+  <div class="free-text">
       <div class="document">
 <p>The StrictDoc project is a close successor of another project called
 <a class="reference external" href="https://github.com/doorstop-dev/doorstop">Doorstop</a>.</p>
@@ -227,26 +403,25 @@ using the parsing capabilities provided by textX out of the box.</li>
 to/from Doorstop format.</p>
 </div>
 
-    </div></section></article>
+    </div></sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-a1505324cd614123b0a2695170cc8232"><article class="docsection" data-controller="document">
+          <turbo-frame id="article-5a4a35f09dd24309bc4e76e06139ace2"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
 
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="2.2-Sphinx"></div>
+    <div data-role='anchor' id="3.2-Sphinx"></div>
 
     
-        <h2
-class="section-title"
-data-level="2.2">
-  2.2.&nbsp;Sphinx
-</h2>
+      <h2
+class="requirement__title"
+data-level="3.2">
+  3.2.&nbsp;Sphinx</h2>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>Both Sphinx and StrictDoc are both documentation generators but StrictDoc is at
 a higher level of abstraction: StrictDoc's specialization is requirements and
@@ -265,26 +440,25 @@ website by readthedocs which uses Sphinx under the hood. The
 <a class="reference external" href="https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/">StrictDoc</a>.</p>
 </div>
 
-    </div></section></article>
+    </div></sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-3ed7e955b2004f629fb088de3706db7c"><article class="docsection" data-controller="document">
+          <turbo-frame id="article-8570c16b3b2448768d116b2ba4eb8fc5"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
 
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="2.3-Sphinx-Needs"></div>
+    <div data-role='anchor' id="3.3-Sphinx-Needs"></div>
 
     
-        <h2
-class="section-title"
-data-level="2.3">
-  2.3.&nbsp;Sphinx-Needs
-</h2>
+      <h2
+class="requirement__title"
+data-level="3.3">
+  3.3.&nbsp;Sphinx-Needs</h2>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p><a class="reference external" href="https://sphinxcontrib-needs.readthedocs.io/en/latest/">Sphinx-Needs</a> is a
 text-based requirements management system based on Sphinx. It is implemented
@@ -335,26 +509,25 @@ and
 </ul>
 </div>
 
-    </div></section></article>
+    </div></sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-7cda21ded896456ca69d4b37a2548b9a"><article class="docsection" data-controller="document">
+          <turbo-frame id="article-85d0d04565dd4d6297ad18dddc4f618c"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
 
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="2.4-FRET"></div>
+    <div data-role='anchor' id="3.4-FRET"></div>
 
     
-        <h2
-class="section-title"
-data-level="2.4">
-  2.4.&nbsp;FRET
-</h2>
+      <h2
+class="requirement__title"
+data-level="3.4">
+  3.4.&nbsp;FRET</h2>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p><a class="reference external" href="https://github.com/NASA-SW-VnV/fret">FRET</a> is a framework for the
 elicitation, specification, formalization and understanding of requirements.</p>
@@ -374,7 +547,35 @@ in a variety of forms to be used by analysis tools.</li>
 <p>The detailed comparison is coming.</p>
 </div>
 
-    </div></section></article>
+    </div></sdoc-node>
+
+</turbo-frame>
+          <turbo-frame id="article-79c77590c5ba4a8f89e74b2fcecdcfa3"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
+
+    <div data-role='anchor' id="4-Which-StrictDoc-statistics-are-available-"></div>
+
+    
+      <h1
+class="requirement__title"
+data-level="4">
+  4.&nbsp;Which StrictDoc statistics are available?</h1>
+    
+
+  <div class="free-text">
+      <div class="document">
+<p>Most relevant GitHub statistics:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/strictdoc-project/strictdoc/graphs/contributors">Contributors</a></li>
+</ul>
+<p>The <a class="reference external" href="https://piptrends.com">pip trends</a> helps to visualize the Pip package download stats. The <tt class="docutils literal">reqif</tt> satellite project is included for comparison as well:
+<a class="reference external" href="https://piptrends.com/compare/strictdoc-vs-reqif">strictdoc vs reqif</a>.</p>
+</div>
+
+    </div></sdoc-node>
 
 </turbo-frame>
 
@@ -383,7 +584,17 @@ in a variety of forms to be used by analysis tools.</li>
 
     </main>
 
+    <footer class="layout_footer">
+    
+    
+    </footer>
+
+    <aside class="layout_aside">
+      
+    </aside>
+
   </div>
+  <div id="modal"></div>
   
 </body>
 </html>

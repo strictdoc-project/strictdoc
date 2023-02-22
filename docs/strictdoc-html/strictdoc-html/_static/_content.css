@@ -1,57 +1,44 @@
-.content {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 0 0;
-  place-items: stretch stretch;
-  /*
-    for vertical line in 'current' column:
-    .content_item[data-role="current"]::before
-  */
-  overflow: hidden;
-}
-
-.document-view .content {
+[data-viewtype="document"] .content {
   display: block;
-  background-color: var(--color-bg-contrast);
   max-width: 900px;
-  padding: calc(var(--base-padding)*2);
 }
 
-.traceability-view .content {
+[data-viewtype="traceability"] .content {
+  display: grid;
+  place-items: stretch stretch;
   grid-template-columns:  minmax(min-content, max-content)
                           minmax(var(--card-width), calc(2*var(--card-width)))
                           minmax(min-content, max-content);
   gap: var(--traceability-arrow) 0;
   width: -moz-fit-content;
   width: fit-content;
+  overflow: hidden;
 }
 
-.requirements-coverage-view .content,
-.deep-traceability-view .content {
+[data-viewtype="requirements-coverage"] .content,
+[data-viewtype="deep_traceability"] .content {
+  display: grid;
+  place-items: stretch stretch;
   grid-template-columns:  minmax(min-content, max-content)
                           max-content
                           minmax(min-content, max-content);
   gap: var(--traceability-arrow) 0;
   width: -moz-fit-content;
   width: fit-content;
+  overflow: hidden;
 }
 
-.table-view .content {
-  /* grid-template-columns:  minmax(250px, 25%)
-                          minmax(300px, 45%)
-                          minmax(250px, 30%);
-  gap: 2px;
-  background-color: #ddd;
-  border: 2px solid #ddd; */
+[data-viewtype="table"] .content {
   background-color: var(--color-bg-contrast);
   display: block;
-  overflow: visible;
 }
 
+/* TODO */
+/* used in TR, DTR, requirements_coverage: */
 .content_section {
   display: contents;
 }
-
+/* TODO */
 .content_item {
   position: relative;
   display: flex;
@@ -71,12 +58,12 @@
   grid-column: 2 / 3;
 }
 
-.deep-traceability-view .content_item[data-role="current"] {
+[data-viewtype="deep_traceability"] .content_item[data-role="current"] {
   /* central column */
   width: var(--card-width);
 }
 
-.requirements-coverage-view .content_item[data-role="current"] {
+[data-viewtype="requirements-coverage"] .content_item[data-role="current"] {
   /* central column */
   width: calc(var(--card-width)*0.75);
 }
@@ -85,8 +72,8 @@
   grid-column: 3 / 4;
 }
 
-.deep-traceability-view .content_item[data-role="current"]::before,
-.traceability-view .content_item[data-role="current"]::before {
+[data-viewtype="deep_traceability"] .content_item[data-role="current"]::before,
+[data-viewtype="traceability"] .content_item[data-role="current"]::before {
   /* for vertical line in 'current' culumn */
   content: '';
   position: absolute;
@@ -94,37 +81,6 @@
   bottom: calc(var(--traceability-arrow)*(-1));
   left: 50%;
   border-left: 1px dotted #000;
-}
-
-/* .table-view */
-
-.table-view article {
-  display: contents;
-}
-
-.table-view [data-section="meta"] {
-  grid-column: 1 / 2;
-}
-
-.table-view [data-section="meta"].docsection_section:only-child {
-  grid-column: 1 / -1;
-  /* background-color: var(--color-bg-main); */
-}
-
-.table-view [data-section="description"] {
-  grid-column: 2 / -1;
-}
-
-.table-view [data-section="statement"] {
-  grid-column: 2 / 3;
-}
-
-.table-view [data-section="comment"] {
-  grid-column: 3 / 4;
-}
-
-.table-view [data-col="0"] {
-  grid-column: 1 / -1;
 }
 
 /* meta info */
@@ -141,7 +97,7 @@
   padding-top: 0;
 }
 
-.document-view .content_meta {
+[data-viewtype="document"] .content_meta {
   max-width: 900px;
 }
 
@@ -159,7 +115,7 @@
   border: 1px solid #666;
 }
 
-.table-view .content_meta > .free_text{
+[data-viewtype="table"] .content_meta > .free_text{
   padding-top: calc(var(--base-padding)*2);
   max-width: 900px;
 }
@@ -250,11 +206,21 @@
 }
 
 .content-view-td-related,
-.content-view-td-related > ul.requirement_link {
+.content-view-td-related > ul.requirement__link {
   font-size: .85rem;
   margin-top: 0;
 }
 
-.content-view-td-related > ul.requirement_link:last-child {
+.content-view-td-related > ul.requirement__link:last-child {
   margin-bottom: 0;
+}
+
+.document_placeholder {
+  min-height: 2rem;
+  color: rgba(0,0,0,.5);
+  font-style: italic;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
 }

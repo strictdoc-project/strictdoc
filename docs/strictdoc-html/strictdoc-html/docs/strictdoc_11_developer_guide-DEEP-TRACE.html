@@ -22,9 +22,9 @@
 
 
   
+  <script type="text/javascript" src="../_static/viewtype_menu.js"></script>
   <script type="text/javascript" src="../_static/toc.js"></script>
-  <script type="text/javascript" src="../_static/jquery.min.js"></script>
-  <script type="text/javascript" src="../_static/pan-with-space.js"></script>
+  <script type="text/javascript" src="../_static/pan_with_space.js"></script>
   
   
   
@@ -36,20 +36,60 @@
   
 </head>
 
-<body class="deep-traceability-view withtoc">
-<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
+<body data-viewtype="deep_traceability" class="withtoc" data-turbo="false">
+<script>document.body.dataset.toc_state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
 
-    <aside class="layout_aside-header">
+    <nav class="layout_nav">
+      <div class="nav">
+
+
+
+  <a
+    data-link="index"
+    class="nav_button"
+    href="../index.html"
+    title="Project index">
+    <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <line x1="9" y1="4" x2="7" y2="4"></line>
+  <line x1="12" y1="9" x2="12" y2="7"></line>
+  <line x1="6" y1="10" x2="10" y2="6"></line>
+  <circle cx="4" cy="12" r="2.25"></circle>
+  <circle cx="12" cy="4" r="2.25"></circle>
+  <circle cx="4" cy="4" r="2.25"></circle>
+  <circle cx="12" cy="12" r="2.25"></circle>
+</svg>
+  </a></div>
+    </nav>
+
+    <div class="layout_toc">
       
-  <a class="index-link" href="../index.html">To Index</a>
+  
 
-    </aside>
 
-    <aside class="layout_aside">
-      
-  <turbo-frame id="frame-toc">
-    <div>Table of Contents</div>
-    <ul class="toc"><li><span class="toc-title-no-link" title="Section has no requirements">
+
+<div class="toc_panel">
+
+<div id="toc_handler" class="toc_handler nav_button">
+  <svg class="svg_icon" width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <line class="horz" x1="2" y1="12" x2="14" y2="12" id="q3"></line>
+            <line x1="2" y1="8" x2="14" y2="8" id="q2"></line>
+            <line class="horz" x1="2" y1="4" x2="14" y2="4" id="q1"></line>
+            <line class="arrw" x1="2" y1="8" x2="8" y2="14" id="q33"></line>
+            <line class="arrw" x1="2" y1="8" x2="8" y2="2" id="q11"></line>
+</svg>
+</div>
+
+<turbo-frame id="frame-toc" style="display: contents" data-controller="collapsible_list">
+
+  <div class="toc_panel__overlay">
+    <div class="toc_panel__control">
+      <div id="toc_control"></div>
+    </div>
+  </div>
+
+  <div class="toc_panel__content">
+
+    <ul id="toc" class="toc"><li><span class="toc-title-no-link" title="Section has no requirements">
               <span class="section-number">
                 1
               </span>
@@ -72,61 +112,118 @@
               <span class="section-number">
                 3
               </span>
-              Frontend development
+              Python code
             </span>
           </li><li><span class="toc-title-no-link" title="Section has no requirements">
               <span class="section-number">
                 4
               </span>
-              Running integration tests
+              Git workflow
             </span>
           </li><li><span class="toc-title-no-link" title="Section has no requirements">
               <span class="section-number">
                 5
               </span>
-              Generating documentation locally
+              Frontend development
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                6
+              </span>
+              Running integration tests
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                7
+              </span>
+              Documentation
+            </span>
+          </li><li><span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                8
+              </span>
+              Conventions
             </span>
           </li></ul>
+  </div>
 </turbo-frame>
+</div>
 
-    </aside>
-
-    
-  <a class="layout_toggler layout_button" id="layout_toggle"></a><nav class="layout_nav">
-    <a
-    class="layout_nav-btn layout_button btn-document"
-    title="Go to Document view"
-    href="../docs/strictdoc_11_developer_guide.html">
-    DOC
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-table"
-    title="Go to Table view"
-    href="../docs/strictdoc_11_developer_guide-TABLE.html">
-    TBL
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-traceability"
-    title="Go to Traceability view"
-    href="../docs/strictdoc_11_developer_guide-TRACE.html">
-    TR
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-deep-traceability"
-    title="Go to Deep Traceability view"
-    href="../docs/strictdoc_11_developer_guide-DEEP-TRACE.html">
-    DTR
-  </a>
-  </nav>
-
+    </div>
 
     <header class="layout_header">
       
-  <p>Developer Guide <span class="document-view-type">Deep Traceability</span></p>
+<div class="header">
+  <turbo-frame id="document_title">
+<div class="header__document">
+  <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d=" M13,13 L13,8 C13,7.5 12.6,7 12,7 L9,7 C8.5,7 8,6.5 8,6 L8,3 C8,2.5 7.5,2 7,2 L4,2 C3.5,2 3,2.5 3,3 L3,13 C3,13.5 3.5,14 4,14 L12,14 C12.6,14 13,13.5 13,13 Z M13,9 L13,8 C13,7.5 13,7 12.5,6.5 L8.5,2.5 C8,2 7.5,2 7,2 L6,2"></path>
+</svg>
+  <div class="header__document_name"
+    title="Developer Guide">
+    Developer Guide
+  </div>
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" class="sc-gLvsXj bpkaBy"><path stroke="currentColor" d="M12.5 4.5l-5 11" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+  <div class="viewtype">
+  <div
+    id="viewtype_handler"
+    class="viewtype__handler"
+    aria-expanded="false"
+    aria-controls="viewtype_menu"
+  >
+    <span>Deep Traceability</span>
+    <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" >
+  <path d="M5 10l3 3 3-3M5 6l3-3 3 3"></path>
+</svg>
+  </div>
+  <menu
+    id="viewtype_menu"
+    class="viewtype__menu"
+    aria-hidden="true"
+    aria-labelledby="viewtype_handler"
+  >
+    <li class="viewtype__menu_header">VIEWS</li>
+    <li>
+      <a
+        data-viewtype_link="document"
+        class="viewtype__menu_item"
+        title="Go to Document view"
+        href="../docs/strictdoc_11_developer_guide.html">
+        Document</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="table"
+        class="viewtype__menu_item"
+        title="Go to Table view"
+        href="../docs/strictdoc_11_developer_guide-TABLE.html">
+        Table</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="traceability"
+        class="viewtype__menu_item"
+        title="Go to Traceability view"
+        href="../docs/strictdoc_11_developer_guide-TRACE.html">
+        Traceability</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="deep_traceability"
+        class="viewtype__menu_item"
+        title="Go to Deep Traceability view"
+        href="../docs/strictdoc_11_developer_guide-DEEP-TRACE.html">
+      Deep traceability</a>
+    </li>
+  </menu>
+</div>
+</div>
+</turbo-frame>
+</div>
 
     </header>
 
-    <main class="layout_main">
+    <main class="layout_main" id="pan_with_space">
       
 
       
@@ -137,7 +234,17 @@
 
     </main>
 
+    <footer class="layout_footer">
+    
+    
+    </footer>
+
+    <aside class="layout_aside">
+      
+    </aside>
+
   </div>
+  <div id="modal"></div>
   
   <script>
     $(document).ready(function () {

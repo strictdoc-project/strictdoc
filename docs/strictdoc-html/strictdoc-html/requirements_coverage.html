@@ -24,8 +24,7 @@
   
   
   
-  <script type="text/javascript" src="_static/jquery.min.js"></script>
-  <script type="text/javascript" src="_static/pan-with-space.js"></script>
+  <script type="text/javascript" src="_static/pan_with_space.js"></script>
   <script type="text/javascript" src="_static/requirements-coverage.js"></script>
 
 
@@ -36,52 +35,128 @@
   
 </head>
 
-<body class="requirements-coverage-view ">
-<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
+<body data-viewtype="requirements-coverage" class="" data-turbo="false">
+<script>document.body.dataset.toc_state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
 
-    <aside class="layout_aside-header">
+    <nav class="layout_nav">
       
-  <a class="index-link" href="index.html">To Index</a>
+  <div class="nav">
 
-    </aside>
 
-    <aside class="layout_aside">
+
+  <a
+    data-link="index"
+    class="nav_button"
+    href="index.html"
+    title="Project index">
+    <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <line x1="9" y1="4" x2="7" y2="4"></line>
+  <line x1="12" y1="9" x2="12" y2="7"></line>
+  <line x1="6" y1="10" x2="10" y2="6"></line>
+  <circle cx="4" cy="12" r="2.25"></circle>
+  <circle cx="12" cy="4" r="2.25"></circle>
+  <circle cx="4" cy="4" r="2.25"></circle>
+  <circle cx="12" cy="12" r="2.25"></circle>
+</svg>
+  </a></div>
+
+    </nav>
+
+    <div class="layout_toc">
       
-  <ul class="nav"><li><a class="document-tree-link" href="#1">User Guide</a></li><li><a class="document-tree-link" href="#2">F.A.Q.</a></li><li><a class="document-tree-link" href="#3">Development Plan</a></li><li><a class="document-tree-link" href="#4">Backlog</a></li><li><a class="document-tree-link" href="#5">Contributing to StrictDoc</a></li><li><a class="document-tree-link" href="#6">Developer Guide</a></li><li><a class="document-tree-link" href="#7">Requirements</a></li><li><a class="document-tree-link" href="#8">Design Document</a></li></ul>
+  
+  <div class="nav_panel">
+    
+    <ul class="nav_list"><li>
+          <a class="nav_list__link" href="#1">
+            <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d=" M13,13 L13,8 C13,7.5 12.6,7 12,7 L9,7 C8.5,7 8,6.5 8,6 L8,3 C8,2.5 7.5,2 7,2 L4,2 C3.5,2 3,2.5 3,3 L3,13 C3,13.5 3.5,14 4,14 L12,14 C12.6,14 13,13.5 13,13 Z M13,9 L13,8 C13,7.5 13,7 12.5,6.5 L8.5,2.5 C8,2 7.5,2 7,2 L6,2"></path>
+</svg>
+            User Guide
+          </a>
+        </li><li>
+          <a class="nav_list__link" href="#2">
+            <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d=" M13,13 L13,8 C13,7.5 12.6,7 12,7 L9,7 C8.5,7 8,6.5 8,6 L8,3 C8,2.5 7.5,2 7,2 L4,2 C3.5,2 3,2.5 3,3 L3,13 C3,13.5 3.5,14 4,14 L12,14 C12.6,14 13,13.5 13,13 Z M13,9 L13,8 C13,7.5 13,7 12.5,6.5 L8.5,2.5 C8,2 7.5,2 7,2 L6,2"></path>
+</svg>
+            F.A.Q.
+          </a>
+        </li><li>
+          <a class="nav_list__link" href="#3">
+            <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d=" M13,13 L13,8 C13,7.5 12.6,7 12,7 L9,7 C8.5,7 8,6.5 8,6 L8,3 C8,2.5 7.5,2 7,2 L4,2 C3.5,2 3,2.5 3,3 L3,13 C3,13.5 3.5,14 4,14 L12,14 C12.6,14 13,13.5 13,13 Z M13,9 L13,8 C13,7.5 13,7 12.5,6.5 L8.5,2.5 C8,2 7.5,2 7,2 L6,2"></path>
+</svg>
+            Development Plan
+          </a>
+        </li><li>
+          <a class="nav_list__link" href="#4">
+            <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d=" M13,13 L13,8 C13,7.5 12.6,7 12,7 L9,7 C8.5,7 8,6.5 8,6 L8,3 C8,2.5 7.5,2 7,2 L4,2 C3.5,2 3,2.5 3,3 L3,13 C3,13.5 3.5,14 4,14 L12,14 C12.6,14 13,13.5 13,13 Z M13,9 L13,8 C13,7.5 13,7 12.5,6.5 L8.5,2.5 C8,2 7.5,2 7,2 L6,2"></path>
+</svg>
+            Backlog
+          </a>
+        </li><li>
+          <a class="nav_list__link" href="#5">
+            <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d=" M13,13 L13,8 C13,7.5 12.6,7 12,7 L9,7 C8.5,7 8,6.5 8,6 L8,3 C8,2.5 7.5,2 7,2 L4,2 C3.5,2 3,2.5 3,3 L3,13 C3,13.5 3.5,14 4,14 L12,14 C12.6,14 13,13.5 13,13 Z M13,9 L13,8 C13,7.5 13,7 12.5,6.5 L8.5,2.5 C8,2 7.5,2 7,2 L6,2"></path>
+</svg>
+            Contributing to StrictDoc
+          </a>
+        </li><li>
+          <a class="nav_list__link" href="#6">
+            <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d=" M13,13 L13,8 C13,7.5 12.6,7 12,7 L9,7 C8.5,7 8,6.5 8,6 L8,3 C8,2.5 7.5,2 7,2 L4,2 C3.5,2 3,2.5 3,3 L3,13 C3,13.5 3.5,14 4,14 L12,14 C12.6,14 13,13.5 13,13 Z M13,9 L13,8 C13,7.5 13,7 12.5,6.5 L8.5,2.5 C8,2 7.5,2 7,2 L6,2"></path>
+</svg>
+            Developer Guide
+          </a>
+        </li><li>
+          <a class="nav_list__link" href="#7">
+            <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d=" M13,13 L13,8 C13,7.5 12.6,7 12,7 L9,7 C8.5,7 8,6.5 8,6 L8,3 C8,2.5 7.5,2 7,2 L4,2 C3.5,2 3,2.5 3,3 L3,13 C3,13.5 3.5,14 4,14 L12,14 C12.6,14 13,13.5 13,13 Z M13,9 L13,8 C13,7.5 13,7 12.5,6.5 L8.5,2.5 C8,2 7.5,2 7,2 L6,2"></path>
+</svg>
+            Requirements
+          </a>
+        </li><li>
+          <a class="nav_list__link" href="#8">
+            <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d=" M13,13 L13,8 C13,7.5 12.6,7 12,7 L9,7 C8.5,7 8,6.5 8,6 L8,3 C8,2.5 7.5,2 7,2 L4,2 C3.5,2 3,2.5 3,3 L3,13 C3,13.5 3.5,14 4,14 L12,14 C12.6,14 13,13.5 13,13 Z M13,9 L13,8 C13,7.5 13,7 12.5,6.5 L8.5,2.5 C8,2 7.5,2 7,2 L6,2"></path>
+</svg>
+            Design Document
+          </a>
+        </li></ul>
+  </div>
 
-    </aside>
-
-    
-    
-    
+    </div>
 
     <header class="layout_header">
       
-  <p>StrictDoc <span class="document-view-type">Requirements coverage</span></p>
+<div class="header">
+  <div class="header__project">
+  <div class="header__project_name">StrictDoc</div>
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" class="sc-gLvsXj bpkaBy"><path stroke="currentColor" d="M12.5 4.5l-5 11" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+  <div class="pagetype">Requirements coverage</div>
+</div>
+</div>
 
     </header>
 
-    <main class="layout_main">
+    <main class="layout_main" id="pan_with_space">
       <h3 class="requirements-coverage-document-title" id="1">User Guide</h3><div class="content">
       </div><h3 class="requirements-coverage-document-title" id="2">F.A.Q.</h3><div class="content">
       </div><h3 class="requirements-coverage-document-title" id="3">Development Plan</h3><div class="content">
-
-        
-
-          
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement"
-data-uid='GOAL-1-TOOL-SUPPORT'>
-
-  <section>
-    <div
-  class="section-title"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='GOAL-1-TOOL-SUPPORT'
+>
+  <div
+  class="requirement__title"
   data-level="1.1"
 >GOAL-1-TOOL-SUPPORT</div><div>
   1.1.&nbsp;Software support for writing requirements and specifications documents
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -89,54 +164,54 @@ data-uid='GOAL-1-TOOL-SUPPORT'>
 
 <ul class="requirement-tree requirement-tree_right"><li class="requirement-tree_branch">
     <div class="requirement-tree_node">
-      <article class="requirement"
-data-uid='SDOC-HIGH-REQS-MANAGEMENT'>
-
-  <section>
-    <div
-  class="section-title"
+      <sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-HIGH-REQS-MANAGEMENT'
+>
+  <div
+  class="requirement__title"
   data-level="1.1"
 >SDOC-HIGH-REQS-MANAGEMENT</div><div>
   1.1.&nbsp;Requirements management
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 
     </div>
 
 <ul class="requirement-tree requirement-tree_right"><li class="requirement-tree_branch">
     <div class="requirement-tree_node">
-      <article class="requirement"
-data-uid='SDOC-DM-MODEL'>
-
-  <section>
-    <div
-  class="section-title"
-  data-level="3.1"
+      <sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-DM-MODEL'
+>
+  <div
+  class="requirement__title"
+  data-level="2.1"
 >SDOC-DM-MODEL</div><div>
-  3.1.&nbsp;Modeling capability
+  2.1.&nbsp;Modeling capability
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 
     </div>
 
 <ul class="requirement-tree requirement-tree_right"><li class="requirement-tree_branch">
     <div class="requirement-tree_node">
-      <article class="requirement"
-data-uid='SDOC-FMT-PRIMARY'>
-
-  <section>
-    <div
-  class="section-title"
-  data-level="4.1"
+      <sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-FMT-PRIMARY'
+>
+  <div
+  class="requirement__title"
+  data-level="3.1"
 >SDOC-FMT-PRIMARY</div><div>
-  4.1.&nbsp;Primary text implementation
+  3.1.&nbsp;Primary text implementation
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 
     </div>
@@ -150,18 +225,18 @@ data-uid='SDOC-FMT-PRIMARY'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement"
-data-uid='GOAL-2-REDUCE-DOCUMENTATION-HAZARDS'>
-
-  <section>
-    <div
-  class="section-title"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='GOAL-2-REDUCE-DOCUMENTATION-HAZARDS'
+>
+  <div
+  class="requirement__title"
   data-level="1.2"
 >GOAL-2-REDUCE-DOCUMENTATION-HAZARDS</div><div>
   1.2.&nbsp;Reduce documentation hazards
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -170,18 +245,18 @@ data-uid='GOAL-2-REDUCE-DOCUMENTATION-HAZARDS'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement"
-data-uid='GOAL-3-NO-RUNAWAY-DOCUMENTATION'>
-
-  <section>
-    <div
-  class="section-title"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='GOAL-3-NO-RUNAWAY-DOCUMENTATION'
+>
+  <div
+  class="requirement__title"
   data-level="1.3"
 >GOAL-3-NO-RUNAWAY-DOCUMENTATION</div><div>
   1.3.&nbsp;No (or less) run-away documentation
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -190,18 +265,18 @@ data-uid='GOAL-3-NO-RUNAWAY-DOCUMENTATION'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement"
-data-uid='GOAL-4-CHANGE-MANAGEMENT'>
-
-  <section>
-    <div
-  class="section-title"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='GOAL-4-CHANGE-MANAGEMENT'
+>
+  <div
+  class="requirement__title"
   data-level="1.4"
 >GOAL-4-CHANGE-MANAGEMENT</div><div>
   1.4.&nbsp;Change management
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -209,23 +284,19 @@ data-uid='GOAL-4-CHANGE-MANAGEMENT'>
 </div>
 
         </section>
-
-        
-
-          
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement"
-data-uid='UI-1-TEXT'>
-
-  <section>
-    <div
-  class="section-title"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='UI-1-TEXT'
+>
+  <div
+  class="requirement__title"
   data-level="2.1"
 >UI-1-TEXT</div><div>
   2.1.&nbsp;Command-line interface
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -234,18 +305,18 @@ data-uid='UI-1-TEXT'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement"
-data-uid='UI-2-WEB'>
-
-  <section>
-    <div
-  class="section-title"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='UI-2-WEB'
+>
+  <div
+  class="requirement__title"
   data-level="2.2"
 >UI-2-WEB</div><div>
   2.2.&nbsp;Web interface
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -255,17 +326,17 @@ data-uid='UI-2-WEB'>
         </section>
       </div><h3 class="requirements-coverage-document-title" id="4">Backlog</h3><div class="content">
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="4"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="5"
 >[no UID]</div><div>
-  4.&nbsp;Document archetypes
+  5.&nbsp;Document archetypes
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -276,23 +347,19 @@ data-uid='UI-2-WEB'>
       </div><h3 class="requirements-coverage-document-title" id="5">Contributing to StrictDoc</h3><div class="content">
       </div><h3 class="requirements-coverage-document-title" id="6">Developer Guide</h3><div class="content">
       </div><h3 class="requirements-coverage-document-title" id="7">Requirements</h3><div class="content">
-
-        
-
-          
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement"
-data-uid='SDOC-HIGH-REQS-MANAGEMENT'>
-
-  <section>
-    <div
-  class="section-title"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-HIGH-REQS-MANAGEMENT'
+>
+  <div
+  class="requirement__title"
   data-level="1.1"
 >SDOC-HIGH-REQS-MANAGEMENT</div><div>
   1.1.&nbsp;Requirements management
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -300,36 +367,36 @@ data-uid='SDOC-HIGH-REQS-MANAGEMENT'>
 
 <ul class="requirement-tree requirement-tree_right"><li class="requirement-tree_branch">
     <div class="requirement-tree_node">
-      <article class="requirement"
-data-uid='SDOC-DM-MODEL'>
-
-  <section>
-    <div
-  class="section-title"
-  data-level="3.1"
+      <sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-DM-MODEL'
+>
+  <div
+  class="requirement__title"
+  data-level="2.1"
 >SDOC-DM-MODEL</div><div>
-  3.1.&nbsp;Modeling capability
+  2.1.&nbsp;Modeling capability
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 
     </div>
 
 <ul class="requirement-tree requirement-tree_right"><li class="requirement-tree_branch">
     <div class="requirement-tree_node">
-      <article class="requirement"
-data-uid='SDOC-FMT-PRIMARY'>
-
-  <section>
-    <div
-  class="section-title"
-  data-level="4.1"
+      <sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-FMT-PRIMARY'
+>
+  <div
+  class="requirement__title"
+  data-level="3.1"
 >SDOC-FMT-PRIMARY</div><div>
-  4.1.&nbsp;Primary text implementation
+  3.1.&nbsp;Primary text implementation
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 
     </div>
@@ -341,18 +408,18 @@ data-uid='SDOC-FMT-PRIMARY'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement"
-data-uid='SDOC-HIGH-DATA-MODEL'>
-
-  <section>
-    <div
-  class="section-title"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-HIGH-DATA-MODEL'
+>
+  <div
+  class="requirement__title"
   data-level="1.2"
 >SDOC-HIGH-DATA-MODEL</div><div>
   1.2.&nbsp;Data model
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -360,36 +427,36 @@ data-uid='SDOC-HIGH-DATA-MODEL'>
 
 <ul class="requirement-tree requirement-tree_right"><li class="requirement-tree_branch">
     <div class="requirement-tree_node">
-      <article class="requirement"
-data-uid='SDOC-DM-MODEL'>
-
-  <section>
-    <div
-  class="section-title"
-  data-level="3.1"
+      <sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-DM-MODEL'
+>
+  <div
+  class="requirement__title"
+  data-level="2.1"
 >SDOC-DM-MODEL</div><div>
-  3.1.&nbsp;Modeling capability
+  2.1.&nbsp;Modeling capability
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 
     </div>
 
 <ul class="requirement-tree requirement-tree_right"><li class="requirement-tree_branch">
     <div class="requirement-tree_node">
-      <article class="requirement"
-data-uid='SDOC-FMT-PRIMARY'>
-
-  <section>
-    <div
-  class="section-title"
-  data-level="4.1"
+      <sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-FMT-PRIMARY'
+>
+  <div
+  class="requirement__title"
+  data-level="3.1"
 >SDOC-FMT-PRIMARY</div><div>
-  4.1.&nbsp;Primary text implementation
+  3.1.&nbsp;Primary text implementation
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 
     </div>
@@ -399,18 +466,18 @@ data-uid='SDOC-FMT-PRIMARY'>
 
   </li><li class="requirement-tree_branch">
     <div class="requirement-tree_node">
-      <article class="requirement"
-data-uid='SDOC-FMT-GRAMMAR'>
-
-  <section>
-    <div
-  class="section-title"
-  data-level="4.2"
+      <sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-FMT-GRAMMAR'
+>
+  <div
+  class="requirement__title"
+  data-level="3.2.1"
 >SDOC-FMT-GRAMMAR</div><div>
-  4.2.&nbsp;Grammar
+  3.2.1.&nbsp;Grammar
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 
     </div>
@@ -420,17 +487,17 @@ data-uid='SDOC-FMT-GRAMMAR'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
   data-level="1.3"
 >[no UID]</div><div>
   1.3.&nbsp;Command-line interface
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -439,17 +506,17 @@ data-uid='SDOC-FMT-GRAMMAR'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="1.6"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="1.4"
 >[no UID]</div><div>
-  1.6.&nbsp;Platform support
+  1.4.&nbsp;Graphical user interface
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -458,17 +525,36 @@ data-uid='SDOC-FMT-GRAMMAR'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="1.5"
+>[no UID]</div><div>
+  1.5.&nbsp;Statically generated website
+</div>
+</sdoc-node-card>
 
-  <section>
-    <div
-  class="section-title"
+</div>
+
+          <div class="content_item" data-role="children">
+</div>
+
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
   data-level="1.6.1"
 >[no UID]</div><div>
   1.6.1.&nbsp;macOS support
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -477,17 +563,17 @@ data-uid='SDOC-FMT-GRAMMAR'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
   data-level="1.6.2"
 >[no UID]</div><div>
   1.6.2.&nbsp;Linux support
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -496,17 +582,17 @@ data-uid='SDOC-FMT-GRAMMAR'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
   data-level="1.6.3"
 >[no UID]</div><div>
   1.6.3.&nbsp;Windows support
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -515,18 +601,18 @@ data-uid='SDOC-FMT-GRAMMAR'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement"
-data-uid='SDOC-HIGH-VALIDATION'>
-
-  <section>
-    <div
-  class="section-title"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-HIGH-VALIDATION'
+>
+  <div
+  class="requirement__title"
   data-level="1.7"
 >SDOC-HIGH-VALIDATION</div><div>
   1.7.&nbsp;Requirements validation
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -534,18 +620,18 @@ data-uid='SDOC-HIGH-VALIDATION'>
 
 <ul class="requirement-tree requirement-tree_right"><li class="requirement-tree_branch">
     <div class="requirement-tree_node">
-      <article class="requirement"
-data-uid='SDOC-VALIDATION-UNIQUE-UID'>
-
-  <section>
-    <div
-  class="section-title"
-  data-level="6.1"
+      <sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-VALIDATION-UNIQUE-UID'
+>
+  <div
+  class="requirement__title"
+  data-level="5.1"
 >SDOC-VALIDATION-UNIQUE-UID</div><div>
-  6.1.&nbsp;Uniqueness of UID identifiers in a document tree
+  5.1.&nbsp;Uniqueness of UID identifiers in a document tree
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 
     </div>
@@ -553,18 +639,18 @@ data-uid='SDOC-VALIDATION-UNIQUE-UID'>
 
   </li><li class="requirement-tree_branch">
     <div class="requirement-tree_node">
-      <article class="requirement"
-data-uid='SDOC-VALIDATION-NO-CYCLES'>
-
-  <section>
-    <div
-  class="section-title"
-  data-level="6.2"
+      <sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-VALIDATION-NO-CYCLES'
+>
+  <div
+  class="requirement__title"
+  data-level="5.2"
 >SDOC-VALIDATION-NO-CYCLES</div><div>
-  6.2.&nbsp;No cycles in a document tree
+  5.2.&nbsp;No cycles in a document tree
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 
     </div>
@@ -572,18 +658,18 @@ data-uid='SDOC-VALIDATION-NO-CYCLES'>
 
   </li><li class="requirement-tree_branch">
     <div class="requirement-tree_node">
-      <article class="requirement"
-data-uid='SDOC-VALIDATION-VALID-HTML'>
-
-  <section>
-    <div
-  class="section-title"
-  data-level="6.3"
+      <sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-VALIDATION-VALID-HTML'
+>
+  <div
+  class="requirement__title"
+  data-level="5.3"
 >SDOC-VALIDATION-VALID-HTML</div><div>
-  6.3.&nbsp;Valid HTML markup
+  5.3.&nbsp;Valid HTML markup
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 
     </div>
@@ -593,17 +679,17 @@ data-uid='SDOC-VALIDATION-VALID-HTML'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
   data-level="1.8"
 >[no UID]</div><div>
   1.8.&nbsp;Requirements text format
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -612,17 +698,17 @@ data-uid='SDOC-VALIDATION-VALID-HTML'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
   data-level="1.9"
 >[no UID]</div><div>
   1.9.&nbsp;Linking requirements
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -631,17 +717,17 @@ data-uid='SDOC-VALIDATION-VALID-HTML'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
   data-level="1.10"
 >[no UID]</div><div>
   1.10.&nbsp;Scalability
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -650,18 +736,18 @@ data-uid='SDOC-VALIDATION-VALID-HTML'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement"
-data-uid='SDOC-HIGH-REQS-TRACEABILITY'>
-
-  <section>
-    <div
-  class="section-title"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-HIGH-REQS-TRACEABILITY'
+>
+  <div
+  class="requirement__title"
   data-level="1.11"
 >SDOC-HIGH-REQS-TRACEABILITY</div><div>
   1.11.&nbsp;Traceability
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -670,17 +756,17 @@ data-uid='SDOC-HIGH-REQS-TRACEABILITY'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
   data-level="1.12"
 >[no UID]</div><div>
   1.12.&nbsp;Visualization
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -689,17 +775,17 @@ data-uid='SDOC-HIGH-REQS-TRACEABILITY'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
   data-level="1.13"
 >[no UID]</div><div>
   1.13.&nbsp;Open source software
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -707,67 +793,19 @@ data-uid='SDOC-HIGH-REQS-TRACEABILITY'>
 </div>
 
         </section>
-
-        
-
-          
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement"
-data-uid='SDOC-IMPL-PARAL'>
-
-  <section>
-    <div
-  class="section-title"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-DM-MODEL'
+>
+  <div
+  class="requirement__title"
   data-level="2.1"
->SDOC-IMPL-PARAL</div><div>
-  2.1.&nbsp;Parallelization
-</div>
-  </section>
-</article>
-
-</div>
-
-          <div class="content_item" data-role="children">
-</div>
-
-        </section>
-        <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement"
-data-uid='SDOC-IMPL-INCREMENTAL'>
-
-  <section>
-    <div
-  class="section-title"
-  data-level="2.2"
->SDOC-IMPL-INCREMENTAL</div><div>
-  2.2.&nbsp;Incremental generation
-</div>
-  </section>
-</article>
-
-</div>
-
-          <div class="content_item" data-role="children">
-</div>
-
-        </section>
-
-        
-
-          
-        <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement"
-data-uid='SDOC-DM-MODEL'>
-
-  <section>
-    <div
-  class="section-title"
-  data-level="3.1"
 >SDOC-DM-MODEL</div><div>
-  3.1.&nbsp;Modeling capability
+  2.1.&nbsp;Modeling capability
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -775,18 +813,18 @@ data-uid='SDOC-DM-MODEL'>
 
 <ul class="requirement-tree requirement-tree_right"><li class="requirement-tree_branch">
     <div class="requirement-tree_node">
-      <article class="requirement"
-data-uid='SDOC-FMT-PRIMARY'>
-
-  <section>
-    <div
-  class="section-title"
-  data-level="4.1"
+      <sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-FMT-PRIMARY'
+>
+  <div
+  class="requirement__title"
+  data-level="3.1"
 >SDOC-FMT-PRIMARY</div><div>
-  4.1.&nbsp;Primary text implementation
+  3.1.&nbsp;Primary text implementation
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 
     </div>
@@ -796,17 +834,17 @@ data-uid='SDOC-FMT-PRIMARY'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="3.2"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="2.2.1"
 >[no UID]</div><div>
-  3.2.&nbsp;Project
+  2.2.1.&nbsp;Project as a top-level entity
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -815,40 +853,17 @@ data-uid='SDOC-FMT-PRIMARY'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="3.2.1"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="2.2.2"
 >[no UID]</div><div>
-  3.2.1.&nbsp;Project title
+  2.2.2.&nbsp;Project title
 </div>
-  </section>
-</article>
-
-</div>
-
-          <div class="content_item" data-role="children">
-</div>
-
-        </section>
-
-        
-
-          
-        <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="3.5.1"
->[no UID]</div><div>
-  3.5.1.&nbsp;Statement
-</div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -857,17 +872,17 @@ data-uid='SDOC-FMT-PRIMARY'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="3.5.2"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="2.5.1"
 >[no UID]</div><div>
-  3.5.2.&nbsp;UID identifier
+  2.5.1.&nbsp;Statement
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -876,17 +891,17 @@ data-uid='SDOC-FMT-PRIMARY'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="3.5.2.1"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="2.5.2.1"
 >[no UID]</div><div>
-  3.5.2.1.&nbsp;UID identifier format
+  2.5.2.1.&nbsp;UID identifier
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -895,17 +910,17 @@ data-uid='SDOC-FMT-PRIMARY'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="3.5.3"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="2.5.2.2"
 >[no UID]</div><div>
-  3.5.3.&nbsp;Title
+  2.5.2.2.&nbsp;UID identifier format
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -914,17 +929,17 @@ data-uid='SDOC-FMT-PRIMARY'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="3.5.4"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="2.5.3"
 >[no UID]</div><div>
-  3.5.4.&nbsp;References
+  2.5.3.&nbsp;Title
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -933,17 +948,17 @@ data-uid='SDOC-FMT-PRIMARY'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="3.5.5"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="2.5.4"
 >[no UID]</div><div>
-  3.5.5.&nbsp;Comments
+  2.5.4.&nbsp;References
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -952,17 +967,17 @@ data-uid='SDOC-FMT-PRIMARY'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="3.5.6"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="2.5.5"
 >[no UID]</div><div>
-  3.5.6.&nbsp;Special fields
+  2.5.5.&nbsp;Comments
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -971,17 +986,17 @@ data-uid='SDOC-FMT-PRIMARY'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="3.7"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="2.5.6"
 >[no UID]</div><div>
-  3.7.&nbsp;Links
+  2.5.6.&nbsp;Special fields
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -990,17 +1005,17 @@ data-uid='SDOC-FMT-PRIMARY'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="3.7.1"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="2.7.1"
 >[no UID]</div><div>
-  3.7.1.&nbsp;Parent links
+  2.7.1.&nbsp;Links
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -1008,23 +1023,38 @@ data-uid='SDOC-FMT-PRIMARY'>
 </div>
 
         </section>
-
-        
-
-          
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement"
-data-uid='SDOC-FMT-PRIMARY'>
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="2.7.2"
+>[no UID]</div><div>
+  2.7.2.&nbsp;Parent links
+</div>
+</sdoc-node-card>
 
-  <section>
-    <div
-  class="section-title"
-  data-level="4.1"
+</div>
+
+          <div class="content_item" data-role="children">
+</div>
+
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-FMT-PRIMARY'
+>
+  <div
+  class="requirement__title"
+  data-level="3.1"
 >SDOC-FMT-PRIMARY</div><div>
-  4.1.&nbsp;Primary text implementation
+  3.1.&nbsp;Primary text implementation
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -1033,18 +1063,18 @@ data-uid='SDOC-FMT-PRIMARY'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement"
-data-uid='SDOC-FMT-GRAMMAR'>
-
-  <section>
-    <div
-  class="section-title"
-  data-level="4.2"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-FMT-GRAMMAR'
+>
+  <div
+  class="requirement__title"
+  data-level="3.2.1"
 >SDOC-FMT-GRAMMAR</div><div>
-  4.2.&nbsp;Grammar
+  3.2.1.&nbsp;Grammar
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -1053,17 +1083,74 @@ data-uid='SDOC-FMT-GRAMMAR'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="3.2.2"
+>[no UID]</div><div>
+  3.2.2.&nbsp;No indentation
+</div>
+</sdoc-node-card>
 
-  <section>
-    <div
-  class="section-title"
+</div>
+
+          <div class="content_item" data-role="children">
+</div>
+
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="3.3"
+>[no UID]</div><div>
+  3.3.&nbsp;Type safety
+</div>
+</sdoc-node-card>
+
+</div>
+
+          <div class="content_item" data-role="children">
+</div>
+
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="4.1.1"
+>[no UID]</div><div>
+  4.1.1.&nbsp;Generated file names
+</div>
+</sdoc-node-card>
+
+</div>
+
+          <div class="content_item" data-role="children">
+</div>
+
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
   data-level="4.2.1"
 >[no UID]</div><div>
-  4.2.1.&nbsp;No indentation
+  4.2.1.&nbsp;Single document: Normal form
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -1072,17 +1159,17 @@ data-uid='SDOC-FMT-GRAMMAR'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="4.3"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="4.2.2"
 >[no UID]</div><div>
-  4.3.&nbsp;Type safety
+  4.2.2.&nbsp;Single document: Tabular form
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -1090,26 +1177,18 @@ data-uid='SDOC-FMT-GRAMMAR'>
 </div>
 
         </section>
-
-        
-
-          
-
-        
-
-          
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="5.1.1"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="4.2.3"
 >[no UID]</div><div>
-  5.1.1.&nbsp;Generated file names
+  4.2.3.&nbsp;Single document: 1-level traceability
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -1117,22 +1196,18 @@ data-uid='SDOC-FMT-GRAMMAR'>
 </div>
 
         </section>
-
-        
-
-          
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="5.2.1"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="4.2.4"
 >[no UID]</div><div>
-  5.2.1.&nbsp;Single document: Normal form
+  4.2.4.&nbsp;Single document: Deep traceability
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -1141,17 +1216,17 @@ data-uid='SDOC-FMT-GRAMMAR'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="5.2.2"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="4.2.5"
 >[no UID]</div><div>
-  5.2.2.&nbsp;Single document: Tabular form
+  4.2.5.&nbsp;Left panel: Table of contents
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -1160,36 +1235,17 @@ data-uid='SDOC-FMT-GRAMMAR'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="5.2.3"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="4.3.1"
 >[no UID]</div><div>
-  5.2.3.&nbsp;Single document: 1-level traceability
+  4.3.1.&nbsp;Sphinx documentation generator
 </div>
-  </section>
-</article>
-
-</div>
-
-          <div class="content_item" data-role="children">
-</div>
-
-        </section>
-        <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="5.2.4"
->[no UID]</div><div>
-  5.2.4.&nbsp;Single document: Deep traceability
-</div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -1198,60 +1254,18 @@ data-uid='SDOC-FMT-GRAMMAR'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="5.2.5"
->[no UID]</div><div>
-  5.2.5.&nbsp;Left panel: Table of contents
-</div>
-  </section>
-</article>
-
-</div>
-
-          <div class="content_item" data-role="children">
-</div>
-
-        </section>
-
-        
-
-          
-        <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="5.3.1"
->[no UID]</div><div>
-  5.3.1.&nbsp;Sphinx documentation generator
-</div>
-  </section>
-</article>
-
-</div>
-
-          <div class="content_item" data-role="children">
-</div>
-
-        </section>
-        <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement"
-data-uid='SDOC-GEN-EXCEL-EXPORT'>
-
-  <section>
-    <div
-  class="section-title"
-  data-level="5.4"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-GEN-EXCEL-EXPORT'
+>
+  <div
+  class="requirement__title"
+  data-level="4.4"
 >SDOC-GEN-EXCEL-EXPORT</div><div>
-  5.4.&nbsp;Excel Export
+  4.4.&nbsp;Excel Export
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -1260,17 +1274,17 @@ data-uid='SDOC-GEN-EXCEL-EXPORT'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="5.5"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="4.5"
 >[no UID]</div><div>
-  5.5.&nbsp;ReqIF import/export
+  4.5.&nbsp;ReqIF import/export
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -1278,23 +1292,19 @@ data-uid='SDOC-GEN-EXCEL-EXPORT'>
 </div>
 
         </section>
-
-        
-
-          
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement"
-data-uid='SDOC-VALIDATION-UNIQUE-UID'>
-
-  <section>
-    <div
-  class="section-title"
-  data-level="6.1"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-VALIDATION-UNIQUE-UID'
+>
+  <div
+  class="requirement__title"
+  data-level="5.1"
 >SDOC-VALIDATION-UNIQUE-UID</div><div>
-  6.1.&nbsp;Uniqueness of UID identifiers in a document tree
+  5.1.&nbsp;Uniqueness of UID identifiers in a document tree
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -1303,18 +1313,18 @@ data-uid='SDOC-VALIDATION-UNIQUE-UID'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement"
-data-uid='SDOC-VALIDATION-NO-CYCLES'>
-
-  <section>
-    <div
-  class="section-title"
-  data-level="6.2"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-VALIDATION-NO-CYCLES'
+>
+  <div
+  class="requirement__title"
+  data-level="5.2"
 >SDOC-VALIDATION-NO-CYCLES</div><div>
-  6.2.&nbsp;No cycles in a document tree
+  5.2.&nbsp;No cycles in a document tree
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -1323,18 +1333,18 @@ data-uid='SDOC-VALIDATION-NO-CYCLES'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement"
-data-uid='SDOC-VALIDATION-VALID-HTML'>
-
-  <section>
-    <div
-  class="section-title"
-  data-level="6.3"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-VALIDATION-VALID-HTML'
+>
+  <div
+  class="requirement__title"
+  data-level="5.3"
 >SDOC-VALIDATION-VALID-HTML</div><div>
-  6.3.&nbsp;Valid HTML markup
+  5.3.&nbsp;Valid HTML markup
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -1342,22 +1352,18 @@ data-uid='SDOC-VALIDATION-VALID-HTML'>
 </div>
 
         </section>
-
-        
-
-          
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="7.1"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="6.1"
 >[no UID]</div><div>
-  7.1.&nbsp;Linking with implementation artifacts
+  6.1.&nbsp;Linking with implementation artifacts
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -1366,17 +1372,17 @@ data-uid='SDOC-VALIDATION-VALID-HTML'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="7.1.1"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="6.2"
 >[no UID]</div><div>
-  7.1.1.&nbsp;Validation: Broken links from requirements to source files
+  6.2.&nbsp;Validation: Broken links from requirements to source files
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -1385,17 +1391,17 @@ data-uid='SDOC-VALIDATION-VALID-HTML'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="7.1.2"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="6.3"
 >[no UID]</div><div>
-  7.1.2.&nbsp;Validation: Broken links from source files to requirements
+  6.3.&nbsp;Validation: Broken links from source files to requirements
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -1404,17 +1410,17 @@ data-uid='SDOC-VALIDATION-VALID-HTML'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="7.2"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="6.4"
 >[no UID]</div><div>
-  7.2.&nbsp;Requirements coverage
+  6.4.&nbsp;Requirements coverage
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -1423,17 +1429,17 @@ data-uid='SDOC-VALIDATION-VALID-HTML'>
 
         </section>
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
-  data-level="7.3"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+>
+  <div
+  class="requirement__title"
+  data-level="6.5"
 >[no UID]</div><div>
-  7.3.&nbsp;Source coverage
+  6.5.&nbsp;Source coverage
 </div>
-  </section>
-</article>
+</sdoc-node-card>
 
 </div>
 
@@ -1441,22 +1447,39 @@ data-uid='SDOC-VALIDATION-VALID-HTML'>
 </div>
 
         </section>
-
-        
-
-          
         <section class="content_section">
-          <div class="content_item" data-role="current"><article class="requirement">
-
-  <section>
-    <div
-  class="section-title"
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-IMPL-PARAL'
+>
+  <div
+  class="requirement__title"
   data-level="8.1"
->[no UID]</div><div>
-  8.1.&nbsp;AJAX updates of multiple web forms
+>SDOC-IMPL-PARAL</div><div>
+  8.1.&nbsp;Parallelization
 </div>
-  </section>
-</article>
+</sdoc-node-card>
+
+</div>
+
+          <div class="content_item" data-role="children">
+</div>
+
+        </section>
+        <section class="content_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="requirement"
+  js-requirements-coverage
+  data-uid='SDOC-IMPL-INCREMENTAL'
+>
+  <div
+  class="requirement__title"
+  data-level="8.2"
+>SDOC-IMPL-INCREMENTAL</div><div>
+  8.2.&nbsp;Incremental generation
+</div>
+</sdoc-node-card>
 
 </div>
 
@@ -1470,7 +1493,17 @@ data-uid='SDOC-VALIDATION-VALID-HTML'>
 
     </main>
 
+    <footer class="layout_footer">
+    
+    
+    </footer>
+
+    <aside class="layout_aside">
+      
+    </aside>
+
   </div>
+  <div id="modal"></div>
   
 </body>
 </html>

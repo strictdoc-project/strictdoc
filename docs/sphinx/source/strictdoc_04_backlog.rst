@@ -7,16 +7,27 @@ items are either work-in-progress or will be implemented next.
 Backlog: Graphical user interface
 =================================
 
+- Uploading images via Web interface.
+
+- Editing remaining document options: Inline/Table, Requirements in TOC, etc.
+
 - Requirement form:
 
-  - ``RATIONALE``
-  - ``COMMENT``
-  - Edit links for table-based requirements.
-  - Adding/editing parent/child requirements.
+  - Adding/editing parent/child requirements: validation of cycles.
+
+- Integration with Git repository.
 
 - Section form:
 
   - ``UID``
+
+- User support - Sign In, Sign Out, Register.
+
+- Option to keep all multi-line text fields to 80 symbols width.
+
+- Moving node up/down/left/right. For example, move a node of level 2 to level 1.
+
+  - Follow-up feature: moving nodes between documents.
 
 - All forms:
 
@@ -24,20 +35,15 @@ Backlog: Graphical user interface
   - How to edit tables conveniently?
 
 - What to do with web content going out of sync with the server/file system state?
-- Issue when adding sibling section from a nested section.
-- Auto-trim all single-line fields.
-- Auto-trim all text areas - all trailing whitespace shall be removed.
-- Enable SeleniumBase tests on CI.
-- Integration with Git repository.
-- Moving node up/down/left/right. For example, move a node of level 2 to level 1.
-- Expand/collapse the table of contents.
+
+- Issue when adding a sibling section from a nested section.
 
 - ReqIF:
-  
+
   - Export complete documentation tree or a single document to ReqIF.
   - Import complete documentation tree or a single document from ReqIF.
 
-- Other: 
+- Other:
 
   - Focused editing of document sections: dedicated and focused ``/sections/`` resource.
   - Non-RST markup formats.
@@ -45,13 +51,23 @@ Backlog: Graphical user interface
 Backlog: Nice to have
 =====================
 
+- Configure feature toggles in the ``strictdoc.toml`` config file. ``+FEATURE`` and ``-FEATURE`` to activate/deactivate features that are used or not. Also to highlight features that are most experimental/unstable.
+
+- Useful configuration file options:
+
+    - Project prefix?
+    - Explicit or wildcard paths to sdoc files.
+    - Paths to dirs with source files.
+    - Config options for presenting requirements.
+        - Include/exclude requirements in TOC
+
 - StrictDoc as a Python library.
 
   - Such a use allows a more fine-grained access to the StrictDoc's modules, such as Grammar, Import, Export classes, etc.
 
 - Data exchange with Capella tool.
 
-  - Note: The current plan is to implement this using ReqIF export/import features.
+  - Note: The current idea would be to implement this using ReqIF export/import features.
 
 - Language Server Protocol.
 
@@ -75,15 +91,17 @@ Backlog: Nice to have
 
 - Import/export: Excel, CSV, PlantUML, Confluence, Tex, Doorstop.
 
-- Reading project configuration from a file.
-    - TOML format looks like a good option.
-    - Project title.
-    - Project prefix?
-    - Explicit or wildcard paths to sdoc files.
-    - Paths to dirs with source files.
-    - Config options for presenting requirements.
-        - Include/exclude requirements in TOC
+- Partial evaluation of Jinja templates
 
+  - Many of the template variables could be made to be evaluated once, for example, config object's variables.
+
+Backlog: Technical debt
+=======================
+
+- When a document is added, the whole documentation is rebuilt from the file system from scratch. A more fine-grained re-indexing of documentation tree can be implemented. The current idea is to introduce a layer of pickled cached data: preserve the whole in-memory traceability graph in a cache, and then use the cached data for making decisions about what should be regenerated.
+- The "no framework" approach with FastAPI and Turbo/Stimulus allows writing almost zero Javascript, however some proto-framework conventions are still needed. Currently, all code is written in the ``main_controller`` which combines all responsibilities, such as parsing HTTP request fields, accessing traceability graph, validations, rendering back the updated AJAX templates. A lack of abstraction is better than a poor abstraction, but some solution has to be found.
+- Request form object vs Response form object. The workflow of form validations is not optimal.
+- For Web development, the responsibilities of the ``TraceabilityIndex`` class compared to the ``ExportAction``, ``MarkupRenderer``, ``LinkRenderer`` classes are unstable. A more ecological composition of classes has to be found. ``Traceability`` index is rightfully a "god object" because it contains all information about the in-memory documentation graph.
 
 Backlog: Known issues
 =====================
@@ -176,4 +194,3 @@ space with cross-linking possible.
 
 The question is if it is worth supporting this case further or StrictDoc should
 only work with one input folder with a single doc tree.
-

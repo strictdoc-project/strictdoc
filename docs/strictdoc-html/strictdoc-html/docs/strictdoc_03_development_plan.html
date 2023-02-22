@@ -19,15 +19,8 @@
   
 
   
+  <script type="text/javascript" src="../_static/viewtype_menu.js"></script>
   <script type="text/javascript" src="../_static/toc.js"></script>
-  <script type="text/javascript" src="../_static/jquery.min.js"></script>
-
-  <script type="module">
-      import hotwiredTurbo from "../_static/turbo.js";
-      import { Application } from "../_static/stimulus.js";
-      window.Stimulus = Application.start();
-  </script>
-  <script type="module" src="../_static/std-forms.js"></script>
   
   
   
@@ -38,142 +31,221 @@
   
 </head>
 
-<body class="document-view withtoc">
-<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
+<body data-viewtype="document" class="withtoc" data-turbo="false">
+<script>document.body.dataset.toc_state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
 
-    <aside class="layout_aside-header">
+    <nav class="layout_nav">
+      <div class="nav">
+
+
+
+  <a
+    data-link="index"
+    class="nav_button"
+    href="../index.html"
+    title="Project index">
+    <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <line x1="9" y1="4" x2="7" y2="4"></line>
+  <line x1="12" y1="9" x2="12" y2="7"></line>
+  <line x1="6" y1="10" x2="10" y2="6"></line>
+  <circle cx="4" cy="12" r="2.25"></circle>
+  <circle cx="12" cy="4" r="2.25"></circle>
+  <circle cx="4" cy="4" r="2.25"></circle>
+  <circle cx="12" cy="12" r="2.25"></circle>
+</svg>
+  </a></div>
+    </nav>
+
+    <div class="layout_toc">
       
-  <a class="index-link" href="../index.html">To Index</a>
+  
 
-    </aside>
 
-    <aside class="layout_aside">
-      
-  <turbo-frame id="frame-toc">
-    <div>Table of Contents</div>
-    <ul class="toc"><li><a href="#1-Project-goals" data-turbo="false">
+
+<div class="toc_panel">
+
+<div id="toc_handler" class="toc_handler nav_button">
+  <svg class="svg_icon" width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <line class="horz" x1="2" y1="12" x2="14" y2="12" id="q3"></line>
+            <line x1="2" y1="8" x2="14" y2="8" id="q2"></line>
+            <line class="horz" x1="2" y1="4" x2="14" y2="4" id="q1"></line>
+            <line class="arrw" x1="2" y1="8" x2="8" y2="14" id="q33"></line>
+            <line class="arrw" x1="2" y1="8" x2="8" y2="2" id="q11"></line>
+</svg>
+</div>
+
+<turbo-frame id="frame-toc" style="display: contents" data-controller="collapsible_list">
+
+  <div class="toc_panel__overlay">
+    <div class="toc_panel__control">
+      <div id="toc_control"></div>
+    </div>
+  </div>
+
+  <div class="toc_panel__content">
+
+    <ul id="toc" class="toc"><li><a href="#1-Project-goals" data-turbo="false">
               <span class="section-number">1</span>
               Project goals
             </a><ul><li>
         <a href="#1.1-GOAL-1-TOOL-SUPPORT" data-turbo="false">
-          <span class="section-number">1.1</span>
-          Software support for writing requirements and specifications documents
-        </a></li><li>
+          <span class="section-number">1.1</span>Software support for writing requirements and specifications documents</a></li><li>
         <a href="#1.2-GOAL-2-REDUCE-DOCUMENTATION-HAZARDS" data-turbo="false">
-          <span class="section-number">1.2</span>
-          Reduce documentation hazards
-        </a></li><li>
+          <span class="section-number">1.2</span>Reduce documentation hazards</a></li><li>
         <a href="#1.3-GOAL-3-NO-RUNAWAY-DOCUMENTATION" data-turbo="false">
-          <span class="section-number">1.3</span>
-          No (or less) run-away documentation
-        </a></li><li>
+          <span class="section-number">1.3</span>No (or less) run-away documentation</a></li><li>
         <a href="#1.4-GOAL-4-CHANGE-MANAGEMENT" data-turbo="false">
-          <span class="section-number">1.4</span>
-          Change management
-        </a></li></ul>
+          <span class="section-number">1.4</span>Change management</a></li></ul>
             </li><li><a href="#2-User-interfaces" data-turbo="false">
               <span class="section-number">2</span>
               User interfaces
             </a><ul><li>
         <a href="#2.1-UI-1-TEXT" data-turbo="false">
-          <span class="section-number">2.1</span>
-          Command-line interface
-        </a></li><li>
+          <span class="section-number">2.1</span>Command-line interface</a></li><li>
         <a href="#2.2-UI-2-WEB" data-turbo="false">
-          <span class="section-number">2.2</span>
-          Web interface
-        </a></li></ul>
+          <span class="section-number">2.2</span>Web interface</a></li></ul>
             </li><li><a href="#3-Development-team" data-turbo="false">
               <span class="section-number">3</span>
               Development team
             </a></li></ul>
+  </div>
 </turbo-frame>
+</div>
 
-    </aside>
-
-    
-  <a class="layout_toggler layout_button" id="layout_toggle"></a><nav class="layout_nav">
-    <a
-    class="layout_nav-btn layout_button btn-document"
-    title="Go to Document view"
-    href="../docs/strictdoc_03_development_plan.html">
-    DOC
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-table"
-    title="Go to Table view"
-    href="../docs/strictdoc_03_development_plan-TABLE.html">
-    TBL
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-traceability"
-    title="Go to Traceability view"
-    href="../docs/strictdoc_03_development_plan-TRACE.html">
-    TR
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-deep-traceability"
-    title="Go to Deep Traceability view"
-    href="../docs/strictdoc_03_development_plan-DEEP-TRACE.html">
-    DTR
-  </a>
-  </nav>
-
+    </div>
 
     <header class="layout_header">
       
-  <p>Development Plan <span class="document-view-type">Document</span></p>
+<div class="header">
+  <turbo-frame id="document_title">
+<div class="header__document">
+  <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d=" M13,13 L13,8 C13,7.5 12.6,7 12,7 L9,7 C8.5,7 8,6.5 8,6 L8,3 C8,2.5 7.5,2 7,2 L4,2 C3.5,2 3,2.5 3,3 L3,13 C3,13.5 3.5,14 4,14 L12,14 C12.6,14 13,13.5 13,13 Z M13,9 L13,8 C13,7.5 13,7 12.5,6.5 L8.5,2.5 C8,2 7.5,2 7,2 L6,2"></path>
+</svg>
+  <div class="header__document_name"
+    title="Development Plan">
+    Development Plan
+  </div>
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" class="sc-gLvsXj bpkaBy"><path stroke="currentColor" d="M12.5 4.5l-5 11" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+  <div class="viewtype">
+  <div
+    id="viewtype_handler"
+    class="viewtype__handler"
+    aria-expanded="false"
+    aria-controls="viewtype_menu"
+  >
+    <span>Document</span>
+    <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" >
+  <path d="M5 10l3 3 3-3M5 6l3-3 3 3"></path>
+</svg>
+  </div>
+  <menu
+    id="viewtype_menu"
+    class="viewtype__menu"
+    aria-hidden="true"
+    aria-labelledby="viewtype_handler"
+  >
+    <li class="viewtype__menu_header">VIEWS</li>
+    <li>
+      <a
+        data-viewtype_link="document"
+        class="viewtype__menu_item"
+        title="Go to Document view"
+        href="../docs/strictdoc_03_development_plan.html">
+        Document</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="table"
+        class="viewtype__menu_item"
+        title="Go to Table view"
+        href="../docs/strictdoc_03_development_plan-TABLE.html">
+        Table</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="traceability"
+        class="viewtype__menu_item"
+        title="Go to Traceability view"
+        href="../docs/strictdoc_03_development_plan-TRACE.html">
+        Traceability</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="deep_traceability"
+        class="viewtype__menu_item"
+        title="Go to Deep Traceability view"
+        href="../docs/strictdoc_03_development_plan-DEEP-TRACE.html">
+      Deep traceability</a>
+    </li>
+  </menu>
+</div>
+</div>
+</turbo-frame>
+  <div class="header__r">
+    <div class="actions_group"></div>
+  </div>
+</div>
 
     </header>
 
-    <main class="layout_main">
+    <main class="layout_main" id="pan_with_space">
       
-  <turbo-frame id="frame_document_content"><div class="content">
-        <turbo-frame id="article-c6cffbd8468e4f74bb6468759b3a7ffa">
-<article><section>
-      <div class="free_text">
-        <div class="document">
+  <turbo-frame id="frame_document_content">
+      <div class="content">
+        <turbo-frame id="article-a3cccdb63c844b9a94c90151ca5be512">
+
+<sdoc-node
+  data-editable_node="on"
+>
+  <h1>Development Plan</h1>
+    <div class="free_text">
+      <div class="document">
 <p>This document presents the goals of the StrictDoc project and describes how the
 project is developed.</p>
 </div>
 
-      </div></section></article>
-</turbo-frame>
-          <turbo-frame id="article-7e1d886fb3ad4694b54c3bd418496557"><article class="docsection" data-controller="document">
+    </div>
 
-  <section data-section="meta" class="docsection_section">
+</sdoc-node>
+</turbo-frame>
+          <turbo-frame id="article-eafc691c70fe4716b8df7c249bc162ef"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="1-Project-goals"></div>
 
     
-        <h1
-class="section-title"
+      <h1
+class="requirement__title"
 data-level="1">
-  1.&nbsp;Project goals
-</h1>
+  1.&nbsp;Project goals</h1>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>StrictDoc is an attempt to create an open source tool for writing
 technical requirements specifications.</p>
 </div>
 
-    </div></section></article>
+    </div></sdoc-node>
 
 </turbo-frame>
-            <article class="requirement">
+            <turbo-frame id="article-546d5a5f7dc942e09a035647f8251ef5"><sdoc-node
+  node-role="requirement"
+  data-editable_node="on"
+  data-testid="node-requirement-table"
+>
 
   
   <table class="requirement-table">
     <caption>
     <div data-role='anchor' id="1.1-GOAL-1-TOOL-SUPPORT"></div>
-    <div class="section-title">1.1.&nbsp;Software support for writing requirements and specifications documents
+    <div class="requirement__title">1.1.&nbsp;Software support for writing requirements and specifications documents
       </div>
     </caption>
-    
 
     
     <tr>
@@ -192,10 +264,10 @@ technical requirements specifications.</p>
         child&nbsp;refs:
       </th>
       <td>
-        <ul class="requirement_link">
+        <ul class="requirement__link">
           <li>
-            <a class="requirement_link-child" href="../docs/strictdoc_20_requirements.html#1.1-SDOC-HIGH-REQS-MANAGEMENT">
-              <span class="requirement_child-uid">SDOC-HIGH-REQS-MANAGEMENT</span>
+            <a class="requirement__link-child" href="../docs/strictdoc_20_requirements.html#1.1-SDOC-HIGH-REQS-MANAGEMENT">
+              <span class="requirement__child-uid">SDOC-HIGH-REQS-MANAGEMENT</span>
               Requirements management
             </a>
           </li>
@@ -230,18 +302,21 @@ Software shall support engineers in their work with documentation.</p>
       </td>
     </tr>
 
-  </table>
-</article>
-            <article class="requirement">
+  </table></sdoc-node>
+</turbo-frame>
+            <turbo-frame id="article-7674cf2b2dd74a63b8404ae640f6eeb8"><sdoc-node
+  node-role="requirement"
+  data-editable_node="on"
+  data-testid="node-requirement-table"
+>
 
   
   <table class="requirement-table">
     <caption>
     <div data-role='anchor' id="1.2-GOAL-2-REDUCE-DOCUMENTATION-HAZARDS"></div>
-    <div class="section-title">1.2.&nbsp;Reduce documentation hazards
+    <div class="requirement__title">1.2.&nbsp;Reduce documentation hazards
       </div>
     </caption>
-    
 
     
     <tr>
@@ -290,18 +365,21 @@ and writing technical documentation.</p>
       </td>
     </tr>
 
-  </table>
-</article>
-            <article class="requirement">
+  </table></sdoc-node>
+</turbo-frame>
+            <turbo-frame id="article-dd4f5124eae6469ea6c7ecc1cbdb987d"><sdoc-node
+  node-role="requirement"
+  data-editable_node="on"
+  data-testid="node-requirement-table"
+>
 
   
   <table class="requirement-table">
     <caption>
     <div data-role='anchor' id="1.3-GOAL-3-NO-RUNAWAY-DOCUMENTATION"></div>
-    <div class="section-title">1.3.&nbsp;No (or less) run-away documentation
+    <div class="requirement__title">1.3.&nbsp;No (or less) run-away documentation
       </div>
     </caption>
-    
 
     
     <tr>
@@ -343,18 +421,21 @@ documents and documentation trees.</p>
       </td>
     </tr>
 
-  </table>
-</article>
-            <article class="requirement">
+  </table></sdoc-node>
+</turbo-frame>
+            <turbo-frame id="article-19d8ace53a2e44079c4526e67eeac1fe"><sdoc-node
+  node-role="requirement"
+  data-editable_node="on"
+  data-testid="node-requirement-table"
+>
 
   
   <table class="requirement-table">
     <caption>
     <div data-role='anchor' id="1.4-GOAL-4-CHANGE-MANAGEMENT"></div>
-    <div class="section-title">1.4.&nbsp;Change management
+    <div class="requirement__title">1.4.&nbsp;Change management
       </div>
     </caption>
-    
 
     
     <tr>
@@ -412,25 +493,24 @@ to do a more advanced analysis of requirements and requirement trees:</p>
       </td>
     </tr>
 
-  </table>
-</article>
-          <turbo-frame id="article-fa57134ae6b54baf9ab31ada7907ad18"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+  </table></sdoc-node>
+</turbo-frame>
+          <turbo-frame id="article-586fda377d924aca9587f1e3660c2677"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="2-User-interfaces"></div>
 
     
-        <h1
-class="section-title"
+      <h1
+class="requirement__title"
 data-level="2">
-  2.&nbsp;User interfaces
-</h1>
+  2.&nbsp;User interfaces</h1>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>There are two user interfaces for StrictDoc:</p>
 <ol class="arabic simple">
@@ -441,19 +521,22 @@ data-level="2">
 work-in-progress.</p>
 </div>
 
-    </div></section></article>
+    </div></sdoc-node>
 
 </turbo-frame>
-            <article class="requirement">
+            <turbo-frame id="article-dba20b9264d34247b8dba308c7b6975c"><sdoc-node
+  node-role="requirement"
+  data-editable_node="on"
+  data-testid="node-requirement-table"
+>
 
   
   <table class="requirement-table">
     <caption>
     <div data-role='anchor' id="2.1-UI-1-TEXT"></div>
-    <div class="section-title">2.1.&nbsp;Command-line interface
+    <div class="requirement__title">2.1.&nbsp;Command-line interface
       </div>
     </caption>
-    
 
     
     <tr>
@@ -482,18 +565,21 @@ work-in-progress.</p>
       </td>
     </tr>
 
-  </table>
-</article>
-            <article class="requirement">
+  </table></sdoc-node>
+</turbo-frame>
+            <turbo-frame id="article-e15c42e7609c44c2a51d5b531766d03c"><sdoc-node
+  node-role="requirement"
+  data-editable_node="on"
+  data-testid="node-requirement-table"
+>
 
   
   <table class="requirement-table">
     <caption>
     <div data-role='anchor' id="2.2-UI-2-WEB"></div>
-    <div class="section-title">2.2.&nbsp;Web interface
+    <div class="requirement__title">2.2.&nbsp;Web interface
       </div>
     </caption>
-    
 
     
     <tr>
@@ -522,31 +608,30 @@ work-in-progress.</p>
       </td>
     </tr>
 
-  </table>
-</article>
-          <turbo-frame id="article-4387024c366a445691bce1d958f5d863"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+  </table></sdoc-node>
+</turbo-frame>
+          <turbo-frame id="article-9eadc971664e48939d74bbe3715ab46a"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="3-Development-team"></div>
 
     
-        <h1
-class="section-title"
+      <h1
+class="requirement__title"
 data-level="3">
-  3.&nbsp;Development team
-</h1>
+  3.&nbsp;Development team</h1>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>StrictDoc is a spare time project developed and maintained by two people
 with occasional contributions from the Open Source community.</p>
 </div>
 
-    </div></section></article>
+    </div></sdoc-node>
 
 </turbo-frame>
 
@@ -555,7 +640,17 @@ with occasional contributions from the Open Source community.</p>
 
     </main>
 
+    <footer class="layout_footer">
+    
+    
+    </footer>
+
+    <aside class="layout_aside">
+      
+    </aside>
+
   </div>
+  <div id="modal"></div>
   
 </body>
 </html>

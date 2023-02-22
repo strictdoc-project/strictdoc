@@ -144,4 +144,3 @@ Development team
 
 StrictDoc is a spare time project developed and maintained by two people
 with occasional contributions from the Open Source community.
-

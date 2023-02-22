@@ -89,7 +89,7 @@ sdoc-form-footer {
   justify-content: flex-start; /* buttons to left */
   padding-top: 0;
   padding-bottom: 0;
-  padding-left: calc(var(--base-rhythm)*3); /* buttons to left */
+  padding-left: calc(var(--base-rhythm)*2); /* buttons to left */
   padding-right: calc(var(--base-rhythm)*4);
 }
 

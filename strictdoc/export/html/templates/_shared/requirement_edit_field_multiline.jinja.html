@@ -1,6 +1,6 @@
-<div
+<sdoc-form-row
   data-controller="requirement_multiline_field"
-  class="std-form-row requirement__statement"
+  class="requirement__statement"
 >
   <div data-controller="editablefield" role="textbox" data-editable="multiline" contenteditable="true" class="std-form-field-rst" id="requirement_{{field.field_name}}" placeholder="Enter statement text here...">
     {%- if true -%}
@@ -14,7 +14,7 @@
   </textarea>
 
   {%- if form_object.has_errors(field.field_name) -%}
-    <div class="std-form-error">
+    <div>
     {%- for error in form_object.get_errors(field.field_name) -%}
       {{ error }}
     {%- endfor -%}
@@ -26,4 +26,4 @@
       <a href="#" data-turbo-action="replace" data-turbo="true" data-js-delete-comment>Delete comment</a>
     </div>
   {%- endif -%}
-</div>
+</sdoc-form-row>

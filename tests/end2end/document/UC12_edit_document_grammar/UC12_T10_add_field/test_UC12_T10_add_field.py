@@ -32,24 +32,17 @@ class Test_UC12_T10_AddField(BaseCase):
         self.click_link("DOC")
         self.assert_text_visible("Requirement title")
 
-        self.hover_and_click(
-            hover_selector="(//sdoc-node)[1]",
-            click_selector=(
-                '(//sdoc-node)[1]//*[@data-testid="document-edit-grammar-action"]'  # noqa: E501
-            ),
-            hover_by=By.XPATH,
-            click_by=By.XPATH,
-        )
+        self.click_xpath('(//*[@data-testid="document-edit-grammar-action"])')
 
         self.click_link("Add grammar field")
 
         self.type(
-            "(//div[@id='document_grammar[]'])[last()]",
+            "(//*[@id='document_grammar[]'])[last()]",
             "CUSTOM_FIELD",
             by=By.XPATH,
         )
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))
         assert filecmp.cmp(

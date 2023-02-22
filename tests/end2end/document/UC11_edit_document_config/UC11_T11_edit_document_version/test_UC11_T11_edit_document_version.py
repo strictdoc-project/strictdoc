@@ -41,9 +41,9 @@ class Test_UC11_T11_EditDocumentVersion(BaseCase):
             click_by=By.XPATH,
         )
 
-        self.type("(//div[@id='document[VERSION]'])[1]", "1.0.0", by=By.XPATH)
+        self.type("(//*[@id='document[VERSION]'])[1]", "1.0.0", by=By.XPATH)
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text("1.0.0")
 

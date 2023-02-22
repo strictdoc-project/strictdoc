@@ -9,7 +9,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test08EditSection(BaseCase):
+class Test02EditSection(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -41,6 +41,6 @@ class Test08EditSection(BaseCase):
             click_by=By.XPATH,
         )
 
-        self.click_nth_visible_element("//a[contains(text(), 'Cancel')]", 1)
+        self.click('[data-testid="form-cancel-action"]')
 
-        self.assert_text_not_visible("Cancel")
+        self.assert_element_not_present('[data-testid="form-cancel-action"]')

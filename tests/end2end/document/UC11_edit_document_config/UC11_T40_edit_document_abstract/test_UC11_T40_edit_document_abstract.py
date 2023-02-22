@@ -42,14 +42,14 @@ class Test_UC11_T40_EditDocumentAbstract(BaseCase):
         )
 
         self.type(
-            "(//div[@id='document[FREETEXT]'])[1]",
+            "(//*[@id='document[FREETEXT]'])[1]",
             "Modified free text!",
             by=By.XPATH,
         )
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
-        self.assert_text_not_visible("Save")
+        self.assert_element_not_present('[data-testid="form-submit-action"]')
 
         self.assert_text("Modified free text!")
 

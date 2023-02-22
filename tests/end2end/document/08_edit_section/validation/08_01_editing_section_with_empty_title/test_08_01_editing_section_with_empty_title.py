@@ -44,12 +44,12 @@ class Test_08_EditSectionWithEmptyTitle(BaseCase):
 
         # HACK: The only way the field is actually cleared.
         self.type("#section_title", "X")
-        section_title_field = self.find_element("//div[@id='section_title']")
+        section_title_field = self.find_element("//*[@id='section_title']")
         section_title_field.click()
         section_title_field.send_keys(Keys.BACKSPACE)
 
         self.type("#section_content", "Modified statement.")
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text("Section title must not be empty.")

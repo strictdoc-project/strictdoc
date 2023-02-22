@@ -46,7 +46,7 @@ class Test_02_CreatingSectionMalformedRSTStatement(BaseCase):
 """.strip(),
         )
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text(
             "RST markup syntax error on line 4: "

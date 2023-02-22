@@ -63,7 +63,7 @@ Hello world!
             """,  # noqa: W291
         )
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         # Check the resulting TOC.
 

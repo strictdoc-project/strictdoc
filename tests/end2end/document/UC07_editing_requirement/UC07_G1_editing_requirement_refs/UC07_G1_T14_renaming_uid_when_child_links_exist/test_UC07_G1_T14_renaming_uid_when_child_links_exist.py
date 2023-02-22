@@ -43,7 +43,7 @@ class Test_UC07_G1_T14_RenamingUIDWhenChildLinksExist(BaseCase):
 
         self.type("#requirement_UID", "Modified_UID")
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text(
             "Not supported yet: "

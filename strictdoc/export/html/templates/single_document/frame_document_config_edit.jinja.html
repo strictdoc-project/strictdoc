@@ -2,14 +2,12 @@
 <sdoc-form>
 
   <form
-    class="std-form"
     method="POST"
     data-turbo="true"
     action="/actions/document/save_config"
   >
     <input type="hidden" id="document_mid" name="document_mid" value="{{form_object.document_mid}}"/>
 
-    TITLE:<br/>
     {%- with
       field_name="TITLE",
       field_input_name="document[TITLE]",
@@ -19,7 +17,6 @@
       {% include "_helpers/singleline_field.jinja.html" %}
     {%- endwith -%}
 
-    UID:<br/>
     {%- with
       field_name="UID",
       field_input_name="document[UID]",
@@ -29,7 +26,6 @@
       {% include "_helpers/singleline_field.jinja.html" %}
     {%- endwith -%}
 
-    VERSION:<br/>
     {%- with
       field_name="VERSION",
       field_input_name="document[VERSION]",
@@ -39,7 +35,6 @@
       {% include "_helpers/singleline_field.jinja.html" %}
     {%- endwith -%}
 
-    CLASSIFICATION:<br/>
     {%- with
       field_name="CLASSIFICATION",
       field_input_name="document[CLASSIFICATION]",
@@ -49,7 +44,6 @@
       {% include "_helpers/singleline_field.jinja.html" %}
     {%- endwith -%}
 
-    FREETEXT:<br/>
     {%- with
       field_name="FREETEXT",
       field_input_name="document[FREETEXT]",
@@ -59,12 +53,20 @@
       {% include "_helpers/multiline_field.jinja.html" %}
     {%- endwith -%}
 
-    <button class="std-form-btn" type="submit">Save</button>
-    <a
-      class="std-form-btn"
-      href="/actions/document/cancel_edit_config?document_mid={{form_object.document_mid}}"
-      data-turbo="true"
-    >Cancel</a>
+    <sdoc-form-footer>
+      <button
+        class="std-form-btn"
+        type="submit"
+        data-testid="form-submit-action"
+      >Save</button>
+      <a
+        class="std-form-btn"
+        href="/actions/document/cancel_edit_config?document_mid={{form_object.document_mid}}"
+        data-turbo="true"
+        data-testid="form-cancel-action"
+      >Cancel</a>
+    </sdoc-form-footer>
+
   </form>
 
 </sdoc-form>

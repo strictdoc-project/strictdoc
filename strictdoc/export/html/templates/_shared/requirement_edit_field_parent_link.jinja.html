@@ -1,8 +1,7 @@
-<div
+<sdoc-form-row
   data-controller="requirement_link"
-  class="std-form-row"
 >
-  <div
+  <sdoc-contenteditable
     data-controller="editablefield"
     role="textbox"
     data-editable="single"
@@ -14,16 +13,16 @@
     {%- if true -%}
     {{ field.field_value }}
     {%- endif -%}
-  </div>
+  </sdoc-contenteditable>
   <input type="hidden" name="requirement[REFS_PARENT][]" value="{{ field.field_value }}"/>
   {%- if field.validation_messages|length > 0 -%}
-    <div class="std-form-error">
+    <sdoc-form-error>
     {%- for validation_message in field.validation_messages -%}
       {{ validation_message }}
     {%- endfor -%}
-    </div>
+    </sdoc-form-error>
   {%- endif -%}
   <div>
     <a href="#" data-turbo-action="replace" data-turbo="true" data-js-delete-link>Delete link</a>
   </div>
-</div>
+</sdoc-form-row>

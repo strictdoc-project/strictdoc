@@ -7,7 +7,11 @@
 <turbo-frame id="article-{{form_object.requirement_mid}}">
 <sdoc-form>
 
-<form class="std-form" action="{{url}}" method="POST" data-turbo="true">
+<form
+  action="{{url}}"
+  method="POST"
+  data-turbo="true"
+>
   {%- if is_new_requirement -%}
     <input type="hidden" id="reference_mid" name="reference_mid" value="{{reference_mid}}" />
     <input type="hidden" id="whereto" name="whereto" value="{{whereto}}" />
@@ -58,14 +62,29 @@
 
   <a href="/actions/document/new_comment?requirement_mid={{form_object.requirement_mid}}" data-turbo-action="replace" data-turbo="true">Add comment</a>
 
-  <div class="std-form-footer">
-    <button class="std-form-btn" type="submit">Save</button>
+  <sdoc-form-footer>
+    <button
+      class="std-form-btn"
+      type="submit"
+      data-testid="form-submit-action"
+    >Save</button>
+
     {%- if is_new_requirement -%}
-      <a class="std-form-btn" href="/actions/document/cancel_new_requirement?requirement_mid={{form_object.requirement_mid}}" data-turbo="true">Cancel</a>
+      <a
+        class="std-form-btn"
+        href="/actions/document/cancel_new_requirement?requirement_mid={{form_object.requirement_mid}}"
+        data-turbo="true"
+        data-testid="form-cancel-action"
+      >Cancel</a>
     {%- else -%}
-      <a class="std-form-btn" href="/actions/document/cancel_edit_requirement?requirement_mid={{form_object.requirement_mid}}" data-turbo="true">Cancel</a>
+      <a
+        class="std-form-btn"
+        href="/actions/document/cancel_edit_requirement?requirement_mid={{form_object.requirement_mid}}"
+        data-turbo="true"
+        data-testid="form-cancel-action"
+      >Cancel</a>
     {%- endif -%}
-  </div>
+  </sdoc-form-footer>
 </form>
 
 </sdoc-form>

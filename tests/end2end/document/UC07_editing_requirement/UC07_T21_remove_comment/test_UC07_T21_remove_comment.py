@@ -44,7 +44,7 @@ class Test_UC07_T21_RemoveComment(BaseCase):
 
         self.click_xpath("(//a[text()='Delete comment'])[2]")
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text("Comment #1")
         self.assert_text("Comment #3")

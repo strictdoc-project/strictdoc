@@ -47,7 +47,7 @@ Hello world!
             """,  # noqa: W291
         )
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
         self.assert_text("1. First title")
 
         self.assert_element("//turbo-frame[@id='frame-toc']")

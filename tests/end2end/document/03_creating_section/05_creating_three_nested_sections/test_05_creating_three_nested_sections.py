@@ -53,7 +53,7 @@ class Test05_CreatingThreeNestedSections(BaseCase):
         self.type("#section_title", "Section_1")
         self.type("#section_content", "This is a free text of the section 1.")
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
         self.assert_text("1. Section_1")
 
         # Section 1_1
@@ -76,7 +76,7 @@ class Test05_CreatingThreeNestedSections(BaseCase):
         self.type("#section_title", "Section_1_1")
         self.type("#section_content", "This is a free text of the section 1_1.")
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
         self.assert_text("1.1. Section_1_1")
 
         # # Section 1_1_1
@@ -101,7 +101,7 @@ class Test05_CreatingThreeNestedSections(BaseCase):
             "#section_content", "This is a free text of the section 1_1_1."
         )
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
         self.assert_text("1.1.1. Section_1_1_1")
 
         self.assert_element(

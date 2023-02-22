@@ -49,12 +49,12 @@ class Test_UC11_G1_T02_AbstractWithInvalidRST(BaseCase):
 """
 
         self.type(
-            "(//div[@id='document[FREETEXT]'])[1]",
+            "(//*[@id='document[FREETEXT]'])[1]",
             broken_abstract,
             by=By.XPATH,
         )
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text(
             "Bullet list ends without a blank line; unexpected unindent."

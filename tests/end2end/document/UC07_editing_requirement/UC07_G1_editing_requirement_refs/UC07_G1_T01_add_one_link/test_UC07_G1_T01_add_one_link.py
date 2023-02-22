@@ -51,7 +51,7 @@ class Test_UC07_G1_T01_AddOneLink(BaseCase):
         self.type(
             "(//*[@data-testid='requirement-parent-link-field'])[1]", "REQ-001"
         )
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
         self.assert_element_not_present(
             "//button[@type='submit' and text()='Save']", by=By.XPATH
         )

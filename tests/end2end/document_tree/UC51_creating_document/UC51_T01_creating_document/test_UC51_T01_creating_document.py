@@ -25,7 +25,7 @@ class Test_UC51_T01_CreatingDocument(BaseCase):
         self.type("#document_title", "Document 1")
         self.type("#document_path", "docs/document1.sdoc")
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text("Document 1")
 

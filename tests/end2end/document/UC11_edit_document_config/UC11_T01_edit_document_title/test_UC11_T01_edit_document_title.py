@@ -42,12 +42,12 @@ class Test_UC11_T01_EditDocumentTitle(BaseCase):
         )
 
         self.type(
-            "(//div[@id='document[TITLE]'])[1]",
+            "(//*[@id='document[TITLE]'])[1]",
             "Modified title of Document 1",
             by=By.XPATH,
         )
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text("Modified title of Document 1")
 

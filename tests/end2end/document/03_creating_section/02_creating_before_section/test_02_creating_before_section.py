@@ -37,7 +37,7 @@ class Test_03_02_CreatingBeforeSection(BaseCase):
         self.type("#section_title", "Section A")
         self.type("#section_content", "Section A text.")
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text("1. Section A")
         self.assert_text("2. Section B")

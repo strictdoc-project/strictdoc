@@ -52,6 +52,6 @@ class Test_UC07_G2_T01_EmptyStatement(BaseCase):
         requirement_statement_field.click()
         requirement_statement_field.send_keys(Keys.BACKSPACE)
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text("Requirement statement must not be empty.")

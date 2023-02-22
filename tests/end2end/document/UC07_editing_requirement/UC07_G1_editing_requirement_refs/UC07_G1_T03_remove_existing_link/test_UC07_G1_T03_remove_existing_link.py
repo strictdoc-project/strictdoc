@@ -52,7 +52,7 @@ class Test_UC07_G1_T03_RemoveLink(BaseCase):
         self.scroll_to(
             "//button[@type='submit' and text()='Save']", by=By.XPATH
         )
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         # TODO: Make sure that the link with the REQ-001 text no longer exists.
         # self.wait_for_element_not_present(

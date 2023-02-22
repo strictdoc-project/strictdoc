@@ -48,8 +48,8 @@ class Test_10_EditSection_EscapeStatement(BaseCase):
             "sphinx-latex-reqspec-template>`_"
         )
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
-        self.assert_text_not_visible("Save")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
+        self.assert_element_not_present('[data-testid="form-submit-action"]')
 
         assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))
         assert filecmp.cmp(

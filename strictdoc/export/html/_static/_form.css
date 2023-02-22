@@ -1,12 +1,4 @@
-/* [contenteditable=true]:empty:before{
-  content: attr(placeholder);
-  pointer-events: none;
-  display: block;
-} */
-
-:root {
-  --color-bg-field: white;
-}
+/* form */
 
 sdoc-backdrop {
   position: absolute;
@@ -21,40 +13,95 @@ sdoc-backdrop {
   z-index: 99999;
 }
 
-sdoc-form {
-  display: block;
-  background-color: var(--color-bg-contrast);
-  border-radius: 3px;
-  padding: calc(var(--base-padding)) calc(var(--base-padding)*2);
-  box-shadow: var(--base-elevation-node);
-  z-index: 10;
-}
+sdoc-modal {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: min-content 1fr min-content;
+  grid-template-areas:
+    "modal-header"
+    "modal-content"
+    "modal-footer";
+  place-items: stretch stretch;
+  place-content: stretch stretch;
 
-sdoc-backdrop sdoc-form {
+  background-color: var(--color-bg-contrast);
   border-radius: 8px;
   max-width: 90vw;
-  max-height: 80vh;
+  max-height: 90vh;
   /* box-shadow: 0 0 0 50vmax rgba(0,0,0,.5), var(--base-elevation-modal); */
   box-shadow: var(--base-elevation-modal);
 }
 
-sdoc-form-header {
-  display: block;
+sdoc-modal-header {
+  grid-area: modal-header;
+  padding-top: calc(var(--base-rhythm)*2);
+  padding-bottom: calc(var(--base-rhythm)*2);
+  padding-left: calc(var(--base-rhythm)*4);
+  padding-right: calc(var(--base-rhythm)*4);
   font-size: 1.25rem;
   font-weight: 600;
-  padding: var(--base-rhythm) 0 calc(var(--base-rhythm)*3) 0 ;
 }
 
-sdoc-form-row {
+sdoc-modal-content {
+  grid-area: modal-content;
+  border-top: var(--base-border);
+  border-bottom: var(--base-border);
+  padding-top: calc(var(--base-rhythm)*2);
+  padding-bottom: calc(var(--base-rhythm)*2);
+  overflow: auto;
+  scroll-behavior: smooth;
+}
+
+sdoc-modal-footer {
+  grid-area: modal-footer;
+  display: flex;
+  justify-content: flex-end; /* buttons to right */
+  padding-top: calc(var(--base-rhythm)*2);
+  padding-bottom: calc(var(--base-rhythm)*2);
+  padding-left: calc(var(--base-rhythm)*4);
+  padding-right: calc(var(--base-rhythm)*3); /* buttons to right */
+}
+
+/* sdoc-form  */
+
+sdoc-form {
   display: block;
-  margin-bottom: var(--base-padding);
+  position: relative;
+  padding-top: var(--base-rhythm);
+  padding-bottom: calc(var(--base-rhythm)*2);
+  background-color: var(--color-bg-contrast);
+  border-radius: 4px;
+  box-shadow: 0 0 0 2px var(--color-fg-accent);
+  z-index: 11;
+}
+
+sdoc-form-header {
+  display: block;
+  padding-top: 0;
+  padding-left: calc(var(--base-rhythm)*4);
+  padding-right: calc(var(--base-rhythm)*4);
+  font-size: 1.25rem;
+  font-weight: 600;
 }
 
 sdoc-form-footer {
   display: flex;
-  justify-content: flex-end;
-  padding-top: var(--base-padding);
-  margin-right: calc(var(--base-rhythm)*(-2));
+  justify-content: flex-start; /* buttons to left */
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: calc(var(--base-rhythm)*2); /* buttons to left */
+  padding-right: calc(var(--base-rhythm)*4);
+}
+
+sdoc-form-row {
+  display: block;
+  position: relative;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: calc(var(--base-rhythm)*4);
+  padding-right: calc(var(--base-rhythm)*4);
+  margin-top: calc(var(--base-rhythm)*4);
+  margin-bottom: calc(var(--base-rhythm)*4);
 }
 
 sdoc-form-error {
@@ -64,19 +111,44 @@ sdoc-form-error {
   margin-top: calc(var(--base-padding)*0.5);
 }
 
+/**
+ * sdoc-contenteditable
+ */
+
 sdoc-contenteditable {
   display: block;
-}
-
-/* TODO: delete class: */
-.std-form {
   position: relative;
 }
 
-.std-form-row {
-  background-color: var(--color-bg-field);
-  padding: var(--base-padding);
-  margin-bottom: calc(var(--base-padding)*0.5);
+/* field name // before */
+
+sdoc-contenteditable::before {
+  content: attr(data-field-name);
+  position: absolute;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-fg-secondary);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  top: calc(var(--base-rhythm)*(-2));
+}
+
+sdoc-contenteditable:focus::before {
+  color: var(--color-fg-accent);
+}
+
+/* placeholder // after */
+
+[placeholder]:empty::after {
+  content: attr(placeholder);
+  pointer-events: none;
+  color: rgba(0,0,0,.4);
+  /* For Firefox: */
+  display: block;
+}
+
+[placeholder]:empty:focus::after {
+  color: rgba(242, 100, 42,.2);
 }
 
 [contenteditable=true] {
@@ -91,17 +163,22 @@ sdoc-contenteditable {
   width: 100%;
 }
 
-[placeholder]:empty::before {
-  content: attr(placeholder);
-  pointer-events: none;
-  color: #808080;
-  /* For Firefox: */
-  display: block;
+
+
+
+
+/* TODO: delete class: */
+.std-form {
+  position: relative;
 }
 
-[placeholder]:empty:focus::before {
-  color: #c0c0c0;
+.std-form-row {
+  background-color: var(--color-bg-field), white;
+  padding: var(--base-padding);
+  margin-bottom: calc(var(--base-padding)*0.5);
 }
+
+
 
 .std-form-footer {
   display: flex;

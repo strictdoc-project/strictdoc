@@ -51,6 +51,6 @@ class Test_06_01_ValidationRequirementWithNoStatement(BaseCase):
         self.type("#requirement_TITLE", "Requirement title")
         self.type("#requirement_STATEMENT", "")
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text("Requirement statement must not be empty.")

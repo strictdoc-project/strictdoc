@@ -50,7 +50,7 @@ class Test_UC07_T20_AddComment(BaseCase):
         self.click_link("Add comment")
         self.type("(//*[@id='requirement_COMMENT'])[3]", "Comment #3")
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text("Comment #1")
         self.assert_text("Comment #2")

@@ -41,9 +41,9 @@ class Test_UC11_T20_EditDocumentUID(BaseCase):
             click_by=By.XPATH,
         )
 
-        self.type("(//div[@id='document[UID]'])[1]", "DOC_001", by=By.XPATH)
+        self.type("(//*[@id='document[UID]'])[1]", "DOC_001", by=By.XPATH)
 
-        self.click_xpath("//button[@type='submit' and text()='Save']")
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text("UID")
 

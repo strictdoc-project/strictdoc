@@ -64,11 +64,12 @@ sdoc-modal-footer {
 
 sdoc-form {
   display: block;
+  position: relative;
   background-color: var(--color-bg-contrast);
-  border-radius: 3px;
-  /* padding: calc(var(--base-padding)) calc(var(--base-padding)*2); */
-  box-shadow: var(--base-elevation-node);
-  z-index: 10;
+  border-radius: 4px;
+  /* padding: calc(var(--base-rhythm)*2); */
+  box-shadow: 0 0 0 2px var(--color-fg-accent);
+  z-index: 11;
 }
 
 sdoc-form-header {

@@ -127,10 +127,11 @@ sdoc-contenteditable::before {
   position: absolute;
   font-size: 10px;
   font-weight: 600;
-  color: var(--color-fg-secondary);
+  color: var(--color-placeholder);
   letter-spacing: 1px;
   text-transform: uppercase;
   top: calc(var(--base-rhythm)*(-2));
+  transition: color .2s ease;
 }
 
 sdoc-contenteditable:focus::before {
@@ -142,7 +143,7 @@ sdoc-contenteditable:focus::before {
 [placeholder]:empty::after {
   content: attr(placeholder);
   pointer-events: none;
-  color: rgba(0,0,0,.4);
+  color: var(--color-placeholder);
   /* For Firefox: */
   display: block;
 }

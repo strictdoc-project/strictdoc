@@ -1644,6 +1644,40 @@ def create_main_router(
             },
         )
 
+    @router.get("/actions/document/cancel_edit_config", response_class=Response)
+    def document__cancel_edit_config(document_mid: str):
+        document: Document = export_action.traceability_index.get_node_by_id(
+            document_mid
+        )
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix()
+        )
+        markup_renderer = MarkupRenderer.create(
+            markup="RST",
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+            context_document=document,
+        )
+        template = env.get_template(
+            "actions/"
+            "document/"
+            "edit_document_config/"
+            "stream_cancel_edit_document_config.jinja.html"
+        )
+        output = template.render(
+            document=document,
+            config=export_action.config,
+            renderer=markup_renderer,
+            document_type=DocumentType.document(),
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
     @router.get("/actions/document/edit_grammar", response_class=Response)
     def document__edit_grammar(document_mid: str):
         document: Document = export_action.traceability_index.get_node_by_id(

@@ -191,18 +191,6 @@ use it, refer to the instructions located in ``developer/snap/README.md``.
 
 [/SECTION]
 
-[SECTION]
-TITLE: Hello world
-
-[FREETEXT]
-.. code-block:: text
-
-    git clone --depth 1 https://github.com/strictdoc-project/strictdoc && cd strictdoc
-    strictdoc export docs/
-[/FREETEXT]
-
-[/SECTION]
-
 [/SECTION]
 
 [SECTION]
@@ -1379,8 +1367,10 @@ To activate the traceability to source files, use
 Currently, StrictDoc looks for source files in a directory from which the
 ``strictdoc`` command is run.
 
-The ``tests/integration/examples`` folder contains executable examples including
-the example of requirements-to-source-code traceability.
+The
+`strictdoc-examples <https://github.com/strictdoc-project/strictdoc-examples>`_
+repository contains executable examples including the example of
+requirements-to-source-code traceability.
 [/FREETEXT]
 
 [/SECTION]

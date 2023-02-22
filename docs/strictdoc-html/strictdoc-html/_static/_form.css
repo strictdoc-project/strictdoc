@@ -1,48 +1,184 @@
-/* [contenteditable=true]:empty:before{
-  content: attr(placeholder);
-  pointer-events: none;
+/* form */
+
+sdoc-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,.5);
+  z-index: 99999;
+}
+
+sdoc-modal {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: min-content 1fr min-content;
+  grid-template-areas:
+    "modal-header"
+    "modal-content"
+    "modal-footer";
+  place-items: stretch stretch;
+  place-content: stretch stretch;
+
+  background-color: var(--color-bg-contrast);
+  border-radius: 8px;
+  max-width: 90vw;
+  max-height: 90vh;
+  /* box-shadow: 0 0 0 50vmax rgba(0,0,0,.5), var(--base-elevation-modal); */
+  box-shadow: var(--base-elevation-modal);
+}
+
+sdoc-modal-header {
+  grid-area: modal-header;
+  padding-top: calc(var(--base-rhythm)*2);
+  padding-bottom: calc(var(--base-rhythm)*2);
+  padding-left: calc(var(--base-rhythm)*4);
+  padding-right: calc(var(--base-rhythm)*4);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+sdoc-modal-content {
+  grid-area: modal-content;
+  border-top: var(--base-border);
+  border-bottom: var(--base-border);
+  padding-top: calc(var(--base-rhythm)*2);
+  padding-bottom: calc(var(--base-rhythm)*2);
+  overflow: auto;
+  scroll-behavior: smooth;
+}
+
+sdoc-modal-footer {
+  grid-area: modal-footer;
+  display: flex;
+  justify-content: flex-end; /* buttons to right */
+  padding-top: calc(var(--base-rhythm)*2);
+  padding-bottom: calc(var(--base-rhythm)*2);
+  padding-left: calc(var(--base-rhythm)*4);
+  padding-right: calc(var(--base-rhythm)*3); /* buttons to right */
+}
+
+/* sdoc-form  */
+
+sdoc-form {
   display: block;
-} */
-
-:root {
-  --color-bg-form: aliceblue;
-  --color-bg-field: white;
-  --std-form-margin: 10px;
+  position: relative;
+  padding-top: var(--base-rhythm);
+  padding-bottom: calc(var(--base-rhythm)*2);
+  background-color: var(--color-bg-contrast);
+  border-radius: 4px;
+  box-shadow: 0 0 0 2px var(--color-fg-accent);
+  z-index: 11;
 }
 
-.std-form {
-  background-color: var(--color-bg-form);
-  outline: var(--std-form-margin) solid var(--color-bg-form);
-  margin: var(--base-margin) 0 0 0;
+sdoc-form-header {
+  display: block;
+  padding-top: 0;
+  padding-left: calc(var(--base-rhythm)*4);
+  padding-right: calc(var(--base-rhythm)*4);
+  font-size: 1.25rem;
+  font-weight: 600;
 }
 
-.std-form-row {
-  padding: var(--std-form-margin) 0 !important;
-  margin: 4px 0;
+sdoc-form-footer {
+  display: flex;
+  justify-content: flex-start; /* buttons to left */
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: calc(var(--base-rhythm)*2); /* buttons to left */
+  padding-right: calc(var(--base-rhythm)*4);
 }
 
-div[contenteditable=true] {
-  white-space: pre-wrap;
-  background-color: var(--color-bg-field);
-  outline: calc(var(--std-form-margin)/2) solid var(--color-bg-field);
-  /* Without this hack, Chrome generates duplicated new lines when Enter pressed. */
-  /* Add style display:inline-block; to contenteditable, it will not generate div, p, span automatic in chrome */
-  /* https://stackoverflow.com/a/24689390/598057 */
-  display: inline-block;
-  width: 100%;
+sdoc-form-row {
+  display: block;
+  position: relative;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: calc(var(--base-rhythm)*4);
+  padding-right: calc(var(--base-rhythm)*4);
+  margin-top: calc(var(--base-rhythm)*4);
+  margin-bottom: calc(var(--base-rhythm)*4);
 }
 
-[placeholder]:empty::before {
+sdoc-form-error {
+  display: block;
+  color: red;
+  font-size: 12px;
+  margin-top: calc(var(--base-padding)*0.5);
+}
+
+/**
+ * sdoc-contenteditable
+ */
+
+sdoc-contenteditable {
+  display: block;
+  position: relative;
+}
+
+/* field name // before */
+
+sdoc-contenteditable::before {
+  content: attr(data-field-name);
+  position: absolute;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-fg-secondary);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  top: calc(var(--base-rhythm)*(-2));
+}
+
+sdoc-contenteditable:focus::before {
+  color: var(--color-fg-accent);
+}
+
+/* placeholder // after */
+
+[placeholder]:empty::after {
   content: attr(placeholder);
   pointer-events: none;
-  color: #808080;
+  color: rgba(0,0,0,.4);
   /* For Firefox: */
   display: block;
 }
 
-[placeholder]:empty:focus::before {
-  color: #c0c0c0;
+[placeholder]:empty:focus::after {
+  color: rgba(242, 100, 42,.2);
 }
+
+[contenteditable=true] {
+  white-space: pre-wrap;
+  outline: none;
+  /* Without this hack, Chrome generates duplicated new lines when Enter pressed. */
+  /* Add style display:inline-block; to contenteditable, it will not generate div, p, span automatic in chrome */
+  /* https://stackoverflow.com/a/24689390/598057 */
+  display: inline-block;
+  /* This is to prevent the field from shifting when the second line appears while typing: */
+  vertical-align: top;
+  width: 100%;
+}
+
+
+
+
+
+/* TODO: delete class: */
+.std-form {
+  position: relative;
+}
+
+.std-form-row {
+  background-color: var(--color-bg-field), white;
+  padding: var(--base-padding);
+  margin-bottom: calc(var(--base-padding)*0.5);
+}
+
+
 
 .std-form-footer {
   display: flex;
@@ -50,30 +186,43 @@ div[contenteditable=true] {
 }
 
 .std-form-btn {
-  display: inline-block;
-  text-align: center;
-  align-items: flex-start;
-  border-width: 1px;
-  border-radius: 2px;
-  border-style: outset;
-  background: buttonface;
-  /* border-color: buttonborder; */
-  border-color: transparent;
-  border-image: initial;
-  outline: none;
-  color: #000;
-  cursor: pointer;
+  font-size:var(--font-size-xsm);
+  font-weight: 600;
+  text-align: left;
   text-decoration: none;
-  font-size: 12px;
-  line-height: 2;
-  padding: 0 10px;
-  vertical-align: middle;
-  margin-right: 8px;
+  white-space: nowrap;
+  position: relative;
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -webkit-box-pack: center;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  backface-visibility: hidden;
+  user-select: none;
+  cursor: pointer;
+  appearance: none;
+
+  /* 1.5 column-gap is compensated by SVG negative margin */
+  column-gap: calc(var(--base-rhythm)*1.5);
+  padding-left: calc(var(--base-rhythm)*1.5);
+  padding-right: calc(var(--base-rhythm)*1.5);
+  min-height: calc(var(--base-rhythm)*4);
+
+  /* box-shadow: rgb(0 0 0 / 10%) 0px 1px 2px 0px; */
+  color: var(--color-action);
+  background-color: rgb(255, 255, 255);
+  border-color: rgba(0, 0, 0, 0.05);
+  background-clip: padding-box;
+
+  transition: 0.2s;
 }
 
 .std-form-btn:hover {
-  background: rgb(246, 246, 246);
-  outline: 2px solid rgb(246, 246, 246);
+  box-shadow: rgb(0 0 0 / 10%) 0px 2px var(--base-rhythm) 0px;
+  color: var(--color-hover);
 }
 
 .std-form-btn[type=submit] {
@@ -89,16 +238,13 @@ div[contenteditable=true] {
   font-weight: bold;
 }
 
-.std-form-fileld-requirement_statement {
-  font-size: calc(var(--base-font-size)*1.2);
-}
-
-.std-form-fileld-freetext {
-  font-size: var(--base-font-size);
+.std-form-field-rst {
+  font-family: var(--code-font-family);
+  font-size: 0.9em;
 }
 
 .std-form-error {
   color: red;
   font-size: 12px;
-  margin-top: var(--std-form-margin);
+  margin-top: calc(var(--base-padding)*0.5);
 }

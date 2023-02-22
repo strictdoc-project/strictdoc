@@ -19,15 +19,8 @@
   
 
   
+  <script type="text/javascript" src="../_static/viewtype_menu.js"></script>
   <script type="text/javascript" src="../_static/toc.js"></script>
-  <script type="text/javascript" src="../_static/jquery.min.js"></script>
-
-  <script type="module">
-      import hotwiredTurbo from "../_static/turbo.js";
-      import { Application } from "../_static/stimulus.js";
-      window.Stimulus = Application.start();
-  </script>
-  <script type="module" src="../_static/std-forms.js"></script>
   
   
   
@@ -38,20 +31,60 @@
   
 </head>
 
-<body class="document-view withtoc">
-<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
+<body data-viewtype="document" class="withtoc" data-turbo="false">
+<script>document.body.dataset.toc_state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
 
-    <aside class="layout_aside-header">
+    <nav class="layout_nav">
+      <div class="nav">
+
+
+
+  <a
+    data-link="index"
+    class="nav_button"
+    href="../index.html"
+    title="Project index">
+    <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <line x1="9" y1="4" x2="7" y2="4"></line>
+  <line x1="12" y1="9" x2="12" y2="7"></line>
+  <line x1="6" y1="10" x2="10" y2="6"></line>
+  <circle cx="4" cy="12" r="2.25"></circle>
+  <circle cx="12" cy="4" r="2.25"></circle>
+  <circle cx="4" cy="4" r="2.25"></circle>
+  <circle cx="12" cy="12" r="2.25"></circle>
+</svg>
+  </a></div>
+    </nav>
+
+    <div class="layout_toc">
       
-  <a class="index-link" href="../index.html">To Index</a>
+  
 
-    </aside>
 
-    <aside class="layout_aside">
-      
-  <turbo-frame id="frame-toc">
-    <div>Table of Contents</div>
-    <ul class="toc"><li><a href="#1-Getting-started" data-turbo="false">
+
+<div class="toc_panel">
+
+<div id="toc_handler" class="toc_handler nav_button">
+  <svg class="svg_icon" width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <line class="horz" x1="2" y1="12" x2="14" y2="12" id="q3"></line>
+            <line x1="2" y1="8" x2="14" y2="8" id="q2"></line>
+            <line class="horz" x1="2" y1="4" x2="14" y2="4" id="q1"></line>
+            <line class="arrw" x1="2" y1="8" x2="8" y2="14" id="q33"></line>
+            <line class="arrw" x1="2" y1="8" x2="8" y2="2" id="q11"></line>
+</svg>
+</div>
+
+<turbo-frame id="frame-toc" style="display: contents" data-controller="collapsible_list">
+
+  <div class="toc_panel__overlay">
+    <div class="toc_panel__control">
+      <div id="toc_control"></div>
+    </div>
+  </div>
+
+  <div class="toc_panel__content">
+
+    <ul id="toc" class="toc"><li><a href="#1-Getting-started" data-turbo="false">
               <span class="section-number">1</span>
               Getting started
             </a><ul><li><a href="#1.1-Installing-StrictDoc-from-GitHub-developer-mode-" data-turbo="false">
@@ -61,103 +94,168 @@
             </li><li><a href="#2-Invoke-for-development-tasks" data-turbo="false">
               <span class="section-number">2</span>
               Invoke for development tasks
-            </a></li><li><a href="#3-Frontend-development" data-turbo="false">
+            </a></li><li><a href="#3-Python-code" data-turbo="false">
               <span class="section-number">3</span>
-              Frontend development
-            </a></li><li><a href="#4-Running-integration-tests" data-turbo="false">
+              Python code
+            </a></li><li><a href="#4-Git-workflow" data-turbo="false">
               <span class="section-number">4</span>
-              Running integration tests
-            </a></li><li><a href="#5-Generating-documentation-locally" data-turbo="false">
+              Git workflow
+            </a></li><li><a href="#5-Frontend-development" data-turbo="false">
               <span class="section-number">5</span>
-              Generating documentation locally
+              Frontend development
+            </a></li><li><a href="#6-Running-integration-tests" data-turbo="false">
+              <span class="section-number">6</span>
+              Running integration tests
+            </a></li><li><a href="#7-Documentation" data-turbo="false">
+              <span class="section-number">7</span>
+              Documentation
+            </a></li><li><a href="#8-Conventions" data-turbo="false">
+              <span class="section-number">8</span>
+              Conventions
             </a></li></ul>
+  </div>
 </turbo-frame>
+</div>
 
-    </aside>
-
-    
-  <a class="layout_toggler layout_button" id="layout_toggle"></a><nav class="layout_nav">
-    <a
-    class="layout_nav-btn layout_button btn-document"
-    title="Go to Document view"
-    href="../docs/strictdoc_11_developer_guide.html">
-    DOC
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-table"
-    title="Go to Table view"
-    href="../docs/strictdoc_11_developer_guide-TABLE.html">
-    TBL
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-traceability"
-    title="Go to Traceability view"
-    href="../docs/strictdoc_11_developer_guide-TRACE.html">
-    TR
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-deep-traceability"
-    title="Go to Deep Traceability view"
-    href="../docs/strictdoc_11_developer_guide-DEEP-TRACE.html">
-    DTR
-  </a>
-  </nav>
-
+    </div>
 
     <header class="layout_header">
       
-  <p>Developer Guide <span class="document-view-type">Document</span></p>
+<div class="header">
+  <turbo-frame id="document_title">
+<div class="header__document">
+  <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d=" M13,13 L13,8 C13,7.5 12.6,7 12,7 L9,7 C8.5,7 8,6.5 8,6 L8,3 C8,2.5 7.5,2 7,2 L4,2 C3.5,2 3,2.5 3,3 L3,13 C3,13.5 3.5,14 4,14 L12,14 C12.6,14 13,13.5 13,13 Z M13,9 L13,8 C13,7.5 13,7 12.5,6.5 L8.5,2.5 C8,2 7.5,2 7,2 L6,2"></path>
+</svg>
+  <div class="header__document_name"
+    title="Developer Guide">
+    Developer Guide
+  </div>
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" class="sc-gLvsXj bpkaBy"><path stroke="currentColor" d="M12.5 4.5l-5 11" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+  <div class="viewtype">
+  <div
+    id="viewtype_handler"
+    class="viewtype__handler"
+    aria-expanded="false"
+    aria-controls="viewtype_menu"
+  >
+    <span>Document</span>
+    <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" >
+  <path d="M5 10l3 3 3-3M5 6l3-3 3 3"></path>
+</svg>
+  </div>
+  <menu
+    id="viewtype_menu"
+    class="viewtype__menu"
+    aria-hidden="true"
+    aria-labelledby="viewtype_handler"
+  >
+    <li class="viewtype__menu_header">VIEWS</li>
+    <li>
+      <a
+        data-viewtype_link="document"
+        class="viewtype__menu_item"
+        title="Go to Document view"
+        href="../docs/strictdoc_11_developer_guide.html">
+        Document</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="table"
+        class="viewtype__menu_item"
+        title="Go to Table view"
+        href="../docs/strictdoc_11_developer_guide-TABLE.html">
+        Table</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="traceability"
+        class="viewtype__menu_item"
+        title="Go to Traceability view"
+        href="../docs/strictdoc_11_developer_guide-TRACE.html">
+        Traceability</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="deep_traceability"
+        class="viewtype__menu_item"
+        title="Go to Deep Traceability view"
+        href="../docs/strictdoc_11_developer_guide-DEEP-TRACE.html">
+      Deep traceability</a>
+    </li>
+  </menu>
+</div>
+</div>
+</turbo-frame>
+  <div class="header__r">
+    <div class="actions_group"></div>
+  </div>
+</div>
 
     </header>
 
-    <main class="layout_main">
+    <main class="layout_main" id="pan_with_space">
       
-  <turbo-frame id="frame_document_content"><div class="content">
-        <turbo-frame id="article-c0ded6f7afc64b52a21065dd9d494eba">
-<article><section>
-      <div class="free_text">
-        <div class="document">
-<p>This section contains everything that a StrictDoc developer/contributor should know to get the job done.</p>
+  <turbo-frame id="frame_document_content">
+      <div class="content">
+        <turbo-frame id="article-a60eabd85d954570a8e5baa81acdf644">
+
+<sdoc-node
+  data-editable_node="on"
+>
+  <h1>Developer Guide</h1>
+    <div class="free_text">
+      <div class="document">
+<p>This section contains everything that a StrictDoc developer/contributor should
+know to get the job done.</p>
+<p>StrictDoc is based on Python and maintained as any other Python package on
+GitHub: with linting, tests, and hopefully enough best practice put into the
+codebase.</p>
+<p>The instructions are conventions described below are the summary of what is
+considered to be the currently preferred development style for StrictDoc.
+These rules have been relatively stable for quite a while but any rule can still
+be changed if a better development practice is found.</p>
+<p>Any feedback on this development guide is appreciated.</p>
 </div>
 
-      </div></section></article>
-</turbo-frame>
-          <turbo-frame id="article-262c0bec522945008fac88f1dc09901d"><article class="docsection" data-controller="document">
+    </div>
 
-  <section data-section="meta" class="docsection_section">
+</sdoc-node>
+</turbo-frame>
+          <turbo-frame id="article-3d0226b0e2d5493ea19feced48ed0d3b"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="1-Getting-started"></div>
 
     
-        <h1
-class="section-title"
+      <h1
+class="requirement__title"
 data-level="1">
-  1.&nbsp;Getting started
-</h1>
+  1.&nbsp;Getting started</h1>
     
 
-  </section>
-
-  </article>
+  </sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-f73934339fed45fbab36f8d75637b155"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <turbo-frame id="article-9c9162f690ff4a8aaf85bdbb055419b7"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="1.1-Installing-StrictDoc-from-GitHub-developer-mode-"></div>
 
     
-        <h2
-class="section-title"
+      <h2
+class="requirement__title"
 data-level="1.1">
-  1.1.&nbsp;Installing StrictDoc from GitHub (developer mode)
-</h2>
+  1.1.&nbsp;Installing StrictDoc from GitHub (developer mode)</h2>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p><strong>Note:</strong> Use this way of installing StrictDoc only if you want to make changes
 in StrictDoc's source code. Otherwise, install StrictDoc as a Pip package
@@ -180,119 +278,236 @@ invoke --list  # See the available tasks
 </pre>
 </div>
 
-    </div></section></article>
+    </div></sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-40fe233441a84b08a1f73ab3dcb5c47f"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <turbo-frame id="article-03aa9c7bf79146839ff02153fea391e8"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="2-Invoke-for-development-tasks"></div>
 
     
-        <h1
-class="section-title"
+      <h1
+class="requirement__title"
 data-level="2">
-  2.&nbsp;Invoke for development tasks
-</h1>
+  2.&nbsp;Invoke for development tasks</h1>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>Make sure to familiarize yourself with the available developer tasks by running:</p>
 <pre class="code bash literal-block">
-invoke --list
+invoke<span class="whitespace"> </span>--list
 </pre>
 </div>
 
-    </div></section></article>
+    </div></sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-e220f7db950842668a7e171f6ba783af"><article class="docsection" data-controller="document">
+          <turbo-frame id="article-6ef84e51eeb8420dbe142c2256f65877"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
 
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="3-Frontend-development"></div>
+    <div data-role='anchor' id="3-Python-code"></div>
 
     
-        <h1
-class="section-title"
+      <h1
+class="requirement__title"
 data-level="3">
-  3.&nbsp;Frontend development
-</h1>
+  3.&nbsp;Python code</h1>
     
 
-  </section>
+  <div class="free-text">
+      <div class="document">
+<ul class="simple">
+<li>The version of Python is set to be as low as possible given some constraints
+of StrictDoc's dependencies. Ideally, the lowest Python version should only be
+raised when it is consistently deprecated by major software platforms like
+Ubuntu or GitHub Actions.</li>
+<li>All developer tasks are collected in the <cite>tasks.py</cite> which is run by Invoke
+tool. Run the <tt class="docutils literal">invoke <span class="pre">--list</span></tt> command to see the list of available commands.</li>
+<li>Formatting is governed by <cite>black</cite> which reformats the code automatically
+when the <tt class="docutils literal">invoke check</tt> command is run.<ul>
+<li>If a string literal gets too long, it should be split into a multiline
+literal with each line being a meaningful word or subsentence.</li>
+</ul>
+</li>
+<li>If a contribution includes changes in StrictDoc's code, at least the
+integration-level tests should be added to the <cite>tests/integration</cite>. If the
+contributed code needs a fine-grained control over the added behavior, adding
+both unit and integration tests is preferred. The only exception where a
+contribution can contain no tests is &quot;code climate&quot; which is work which
+introduces changes in code but no change to the functionality.</li>
+</ul>
+</div>
 
-  <section data-section="description" class="docsection_section"><div class="free-text">
+    </div></sdoc-node>
+
+</turbo-frame>
+          <turbo-frame id="article-3ca59b743c464f8599214e4b5e8d2dff"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
+
+    <div data-role='anchor' id="4-Git-workflow"></div>
+
+    
+      <h1
+class="requirement__title"
+data-level="4">
+  4.&nbsp;Git workflow</h1>
+    
+
+  <div class="free-text">
+      <div class="document">
+<ul class="simple">
+<li>The preferred Git workflow is &quot;1 commit per 1 PR&quot;. If the work truly deserves
+a sequence of commits, each commit shall be self-contained and pass all checks
+from the <tt class="docutils literal">invoke check</tt> command. The preferred approach: split the work into
+several independent Pull Requests to simplify the work of the reviewer.</li>
+<li>The branch should be always rebased against the main branch. The
+<tt class="docutils literal">git fetch &amp;&amp; git rebase origin/main</tt> is preferred over
+<tt class="docutils literal">git fetch &amp;&amp; git merge main</tt>.</li>
+<li>The Git commit message should follow the format: <cite>context: description</cite> where
+the context can be a major feature being added or a folder. A form of
+<cite>context: subcontext: description</cite> is also an option. Typical examples:<ul>
+<li><cite>docs: fix links to the grammar.py</cite></li>
+<li><cite>reqif: native: export/import roundtrip for multiline requirement fields</cite></li>
+<li><cite>backend/dsl: switch to dynamic fields, with validation</cite></li>
+<li><cite>Poetry: add filecheck as a dependency</cite></li>
+</ul>
+</li>
+<li>When a contribution is simply an improvement of existing code without a change
+in the functionality, the commit should be named: <cite>Code climate: description</cite>.<ul>
+<li>Example: <cite>Code climate: fix all remaining major Pylint warnings</cite>.</li>
+</ul>
+</li>
+</ul>
+</div>
+
+    </div></sdoc-node>
+
+</turbo-frame>
+          <turbo-frame id="article-6ac71d9f7d7b4d30938dad875fc0abaa"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
+
+    <div data-role='anchor' id="5-Frontend-development"></div>
+
+    
+      <h1
+class="requirement__title"
+data-level="5">
+  5.&nbsp;Frontend development</h1>
+    
+
+  <div class="free-text">
       <div class="document">
 <p>The shortest path to run the server when the StrictDoc's source code is cloned:</p>
 <pre class="code bash literal-block">
-invoke server
+invoke<span class="whitespace"> </span>server
 </pre>
 </div>
 
-    </div></section></article>
+    </div></sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-c570db40b4674d549ea465b8ad8e25d1"><article class="docsection" data-controller="document">
+          <turbo-frame id="article-4953bdf97c834f659ea64058df9d76c8"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
 
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="4-Running-integration-tests"></div>
+    <div data-role='anchor' id="6-Running-integration-tests"></div>
 
     
-        <h1
-class="section-title"
-data-level="4">
-  4.&nbsp;Running integration tests
-</h1>
+      <h1
+class="requirement__title"
+data-level="6">
+  6.&nbsp;Running integration tests</h1>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>The integration tests are run using Invoke:</p>
 <pre class="code bash literal-block">
-invoke test-integration
+invoke<span class="whitespace"> </span>test-integration
 </pre>
 <p>The <tt class="docutils literal"><span class="pre">--focus</span></tt> parameter can be used to run only selected tests that match a given substring. This helps to avoid running all tests all the time.</p>
 <pre class="code bash literal-block">
-invoke test-integration --focus &lt;keyword&gt;
+invoke<span class="whitespace"> </span>test-integration<span class="whitespace"> </span>--focus<span class="whitespace"> </span>&lt;keyword&gt;
 </pre>
 </div>
 
-    </div></section></article>
+    </div></sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-11307326b75341fda75f69bfcae17921"><article class="docsection" data-controller="document">
+          <turbo-frame id="article-e1065e10e4f44ef089a872a56130d4dd"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
 
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="5-Generating-documentation-locally"></div>
+    <div data-role='anchor' id="7-Documentation"></div>
 
     
-        <h1
-class="section-title"
-data-level="5">
-  5.&nbsp;Generating documentation locally
-</h1>
+      <h1
+class="requirement__title"
+data-level="7">
+  7.&nbsp;Documentation</h1>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
-<p>The following Invoke task generates StrictDoc's documentation to StrictDoc and Sphinx:</p>
-<pre class="code bash literal-block">
-invoke sphinx
-</pre>
+<ul class="simple">
+<li>Every change in the functionality or the infrastructure should be documented.</li>
+<li>Every line of documentation shall be no longer than 80 characters. StrictDoc's
+own documentation has a few exceptions, however, the latest preference is
+given to 80 characters per line. Unfortunately, until there is automatic
+support for mixed SDoc/RST content, all long lines shall be edited and
+split by a contributor manually.</li>
+<li>The <tt class="docutils literal">invoke sphinx</tt> task should be used for re-generating documentation on a
+developer machine.</li>
+</ul>
 </div>
 
-    </div></section></article>
+    </div></sdoc-node>
+
+</turbo-frame>
+          <turbo-frame id="article-874a5a4625a9488ea8cca03e233ba10b"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
+
+    <div data-role='anchor' id="8-Conventions"></div>
+
+    
+      <h1
+class="requirement__title"
+data-level="8">
+  8.&nbsp;Conventions</h1>
+    
+
+  <div class="free-text">
+      <div class="document">
+<ul class="simple">
+<li><tt class="docutils literal">snake_case</tt> everywhere, no <tt class="docutils literal"><span class="pre">kebab-case</span></tt>.<ul>
+<li>This rule applies everywhere where applicable: file and folder names, HTML attributes.</li>
+</ul>
+</li>
+</ul>
+</div>
+
+    </div></sdoc-node>
 
 </turbo-frame>
 
@@ -301,7 +516,17 @@ invoke sphinx
 
     </main>
 
+    <footer class="layout_footer">
+    
+    
+    </footer>
+
+    <aside class="layout_aside">
+      
+    </aside>
+
   </div>
+  <div id="modal"></div>
   
 </body>
 </html>

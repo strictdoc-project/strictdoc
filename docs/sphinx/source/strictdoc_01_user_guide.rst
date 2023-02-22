@@ -47,7 +47,10 @@ The author can be also contacted via `email <s.pankevich@gmail.com>`_.
 Examples
 ========
 
-"Hello World" example of the text language:
+Hello World
+-----------
+
+"Hello World" example of the SDoc text language:
 
 .. code-block:: text
 
@@ -59,17 +62,47 @@ Examples
     TITLE: Requirements management
     STATEMENT: StrictDoc shall enable requirements management.
 
-For a more comprehensive example check the source file of this documentation
+Create a file called ``hello_world.sdoc`` somewhere on your file system and copy the above text to it.
+
+Once you have ``strictdoc`` installed (see `Getting started`_ below), run StrictDoc as follows:
+
+.. code-block:: text
+
+    strictdoc export hello.sdoc
+
+The expected output:
+
+.. code-block:: text
+
+    $ strictdoc export hello.sdoc
+    Parallelization: Enabled
+    Step 'Collect traceability information' start
+    Step 'Find and read SDoc files' start
+    Reading SDOC: hello.sdoc .................................... 0.08s
+    Step 'Find and read SDoc files' took: 0.09 sec
+    Step 'Collect traceability information' start
+    Step 'Collect traceability information' took: 0.01 sec
+    Step 'Collect traceability information' took: 0.11 sec
+    Published: StrictDoc ........................................ 0.24s
+    ...
+    Export completed. Documentation tree can be found at:
+    .../output/html
+
+StrictDoc Examples repository
+-----------------------------
+
+The `strictdoc-examples <https://github.com/strictdoc-project/strictdoc-examples>`_ repository contains a collection of basic examples. Visit the repository and read its README for details.
+
+Other examples
+--------------
+
+For a more comprehensive example, check the source file of this documentation
 which is written using StrictDoc:
 `strictdoc_01_user_guide.sdoc <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc_01_user_guide.sdoc>`_.
 
 - `StrictDoc HTML export <https://strictdoc.readthedocs.io/en/latest/strictdoc-html>`_
 - `StrictDoc HTML export using Sphinx <https://strictdoc.readthedocs.io/en/latest>`_
 - `StrictDoc PDF export using Sphinx <https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_
-
-Additionally, the project's repository contains a folder
-``tests/integration/examples``. In this folder, there is a collection of basic
-examples.
 
 Getting started
 ===============
@@ -115,14 +148,6 @@ Installing StrictDoc as a Snap package (not maintained)
 
 This way of installing StrictDoc is not maintained anymore. If you want to
 use it, refer to the instructions located in ``developer/snap/README.md``.
-
-Hello world
------------
-
-.. code-block:: text
-
-    git clone --depth 1 https://github.com/strictdoc-project/strictdoc && cd strictdoc
-    strictdoc export docs/
 
 SDoc syntax
 ===========
@@ -1141,8 +1166,10 @@ To activate the traceability to source files, use
 Currently, StrictDoc looks for source files in a directory from which the
 ``strictdoc`` command is run.
 
-The ``tests/integration/examples`` folder contains executable examples including
-the example of requirements-to-source-code traceability.
+The
+`strictdoc-examples <https://github.com/strictdoc-project/strictdoc-examples>`_
+repository contains executable examples including the example of
+requirements-to-source-code traceability.
 
 ReqIF support
 =============
@@ -1301,4 +1328,3 @@ To disable parallelization use the ``--no-parallelization`` option:
 this option will only have effect on the HTML export. All other export options
 are run from the main thread. Reading of the SDoc documents is parallelized for
 all export options and is disabled with this option as well.
-

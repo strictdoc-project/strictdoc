@@ -22,6 +22,7 @@
 
 
   
+  <script type="text/javascript" src="../_static/viewtype_menu.js"></script>
   <script type="text/javascript" src="../_static/toc.js"></script>
   
   
@@ -33,20 +34,60 @@
   
 </head>
 
-<body class="traceability-view withtoc">
-<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
+<body data-viewtype="traceability" class="withtoc" data-turbo="false">
+<script>document.body.dataset.toc_state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
 
-    <aside class="layout_aside-header">
+    <nav class="layout_nav">
+      <div class="nav">
+
+
+
+  <a
+    data-link="index"
+    class="nav_button"
+    href="../index.html"
+    title="Project index">
+    <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <line x1="9" y1="4" x2="7" y2="4"></line>
+  <line x1="12" y1="9" x2="12" y2="7"></line>
+  <line x1="6" y1="10" x2="10" y2="6"></line>
+  <circle cx="4" cy="12" r="2.25"></circle>
+  <circle cx="12" cy="4" r="2.25"></circle>
+  <circle cx="4" cy="4" r="2.25"></circle>
+  <circle cx="12" cy="12" r="2.25"></circle>
+</svg>
+  </a></div>
+    </nav>
+
+    <div class="layout_toc">
       
-  <a class="index-link" href="../index.html">To Index</a>
+  
 
-    </aside>
 
-    <aside class="layout_aside">
-      
-  <turbo-frame id="frame-toc">
-    <div>Table of Contents</div>
-    <ul class="toc"><li><a href="#1-Introduction" data-turbo="false">
+
+<div class="toc_panel">
+
+<div id="toc_handler" class="toc_handler nav_button">
+  <svg class="svg_icon" width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <line class="horz" x1="2" y1="12" x2="14" y2="12" id="q3"></line>
+            <line x1="2" y1="8" x2="14" y2="8" id="q2"></line>
+            <line class="horz" x1="2" y1="4" x2="14" y2="4" id="q1"></line>
+            <line class="arrw" x1="2" y1="8" x2="8" y2="14" id="q33"></line>
+            <line class="arrw" x1="2" y1="8" x2="8" y2="2" id="q11"></line>
+</svg>
+</div>
+
+<turbo-frame id="frame-toc" style="display: contents" data-controller="collapsible_list">
+
+  <div class="toc_panel__overlay">
+    <div class="toc_panel__control">
+      <div id="toc_control"></div>
+    </div>
+  </div>
+
+  <div class="toc_panel__content">
+
+    <ul id="toc" class="toc"><li><a href="#1-Introduction" data-turbo="false">
               <span class="section-number">1</span>
               Introduction
             </a><ul><li><a href="#1.1-Contact-the-developers" data-turbo="false">
@@ -56,7 +97,17 @@
             </li><li><a href="#2-Examples" data-turbo="false">
               <span class="section-number">2</span>
               Examples
-            </a></li><li><a href="#3-Getting-started" data-turbo="false">
+            </a><ul><li><a href="#2.1-Hello-World" data-turbo="false">
+              <span class="section-number">2.1</span>
+              Hello World
+            </a></li><li><a href="#2.2-StrictDoc-Examples-repository" data-turbo="false">
+              <span class="section-number">2.2</span>
+              StrictDoc Examples repository
+            </a></li><li><a href="#2.3-Other-examples" data-turbo="false">
+              <span class="section-number">2.3</span>
+              Other examples
+            </a></li></ul>
+            </li><li><a href="#3-Getting-started" data-turbo="false">
               <span class="section-number">3</span>
               Getting started
             </a><ul><li><a href="#3.1-Requirements" data-turbo="false">
@@ -71,9 +122,6 @@
             </a></li><li><a href="#3.4-Installing-StrictDoc-as-a-Snap-package-not-maintained-" data-turbo="false">
               <span class="section-number">3.4</span>
               Installing StrictDoc as a Snap package (not maintained)
-            </a></li><li><a href="#3.5-Hello-world" data-turbo="false">
-              <span class="section-number">3.5</span>
-              Hello world
             </a></li></ul>
             </li><li><a href="#4-SDoc-syntax" data-turbo="false">
               <span class="section-number">4</span>
@@ -94,28 +142,53 @@
             </a><ul><li><a href="#4.2.1-Document" data-turbo="false">
               <span class="section-number">4.2.1</span>
               Document
-            </a><ul><li><a href="#4.2.1.1-Option-Requirement-style" data-turbo="false">
+            </a><ul><li><a href="#4.2.1.1-Document-configuration-options" data-turbo="false">
               <span class="section-number">4.2.1.1</span>
-              Option: Requirement style
-            </a></li><li><a href="#4.2.1.2-Option-Requirement-title-in-Table-of-Contents" data-turbo="false">
-              <span class="section-number">4.2.1.2</span>
-              Option: Requirement title in Table of Contents
+              Document configuration options
+            </a><ul><li><a href="#4.2.1.1.1-MARKUP" data-turbo="false">
+              <span class="section-number">4.2.1.1.1</span>
+              MARKUP
+            </a></li><li><a href="#4.2.1.1.2-AUTO_LEVELS" data-turbo="false">
+              <span class="section-number">4.2.1.1.2</span>
+              AUTO_LEVELS
+            </a></li><li><a href="#4.2.1.1.3-REQUIREMENT_STYLE" data-turbo="false">
+              <span class="section-number">4.2.1.1.3</span>
+              REQUIREMENT_STYLE
+            </a></li><li><a href="#4.2.1.1.4-REQUIREMENT_IN_TOC" data-turbo="false">
+              <span class="section-number">4.2.1.1.4</span>
+              REQUIREMENT_IN_TOC
             </a></li></ul>
+            </li></ul>
             </li><li><a href="#4.2.2-Requirement" data-turbo="false">
               <span class="section-number">4.2.2</span>
               Requirement
             </a><ul><li><a href="#4.2.2.1-UID" data-turbo="false">
               <span class="section-number">4.2.2.1</span>
               UID
-            </a></li><li><a href="#4.2.2.2-References" data-turbo="false">
+            </a></li><li><a href="#4.2.2.2-Level" data-turbo="false">
               <span class="section-number">4.2.2.2</span>
-              References
-            </a></li><li><a href="#4.2.2.3-Comment" data-turbo="false">
+              Level
+            </a></li><li><a href="#4.2.2.3-Status" data-turbo="false">
               <span class="section-number">4.2.2.3</span>
-              Comment
-            </a></li><li><a href="#4.2.2.4-Rationale" data-turbo="false">
+              Status
+            </a></li><li><a href="#4.2.2.4-Tags" data-turbo="false">
               <span class="section-number">4.2.2.4</span>
+              Tags
+            </a></li><li><a href="#4.2.2.5-References-REFS-" data-turbo="false">
+              <span class="section-number">4.2.2.5</span>
+              References (REFS)
+            </a></li><li><a href="#4.2.2.6-Title" data-turbo="false">
+              <span class="section-number">4.2.2.6</span>
+              Title
+            </a></li><li><a href="#4.2.2.7-Statement" data-turbo="false">
+              <span class="section-number">4.2.2.7</span>
+              Statement
+            </a></li><li><a href="#4.2.2.8-Rationale" data-turbo="false">
+              <span class="section-number">4.2.2.8</span>
               Rationale
+            </a></li><li><a href="#4.2.2.9-Comment" data-turbo="false">
+              <span class="section-number">4.2.2.9</span>
+              Comment
             </a></li></ul>
             </li><li><a href="#4.2.3-Section" data-turbo="false">
               <span class="section-number">4.2.3</span>
@@ -212,46 +285,85 @@
               Parallelization
             </a></li></ul>
             </li></ul>
+  </div>
 </turbo-frame>
+</div>
 
-    </aside>
-
-    
-  <a class="layout_toggler layout_button" id="layout_toggle"></a><nav class="layout_nav">
-    <a
-    class="layout_nav-btn layout_button btn-document"
-    title="Go to Document view"
-    href="../docs/strictdoc_01_user_guide.html">
-    DOC
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-table"
-    title="Go to Table view"
-    href="../docs/strictdoc_01_user_guide-TABLE.html">
-    TBL
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-traceability"
-    title="Go to Traceability view"
-    href="../docs/strictdoc_01_user_guide-TRACE.html">
-    TR
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-deep-traceability"
-    title="Go to Deep Traceability view"
-    href="../docs/strictdoc_01_user_guide-DEEP-TRACE.html">
-    DTR
-  </a>
-  </nav>
-
+    </div>
 
     <header class="layout_header">
       
-  <p>User Guide <span class="document-view-type">Traceability</span></p>
+<div class="header">
+  <turbo-frame id="document_title">
+<div class="header__document">
+  <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d=" M13,13 L13,8 C13,7.5 12.6,7 12,7 L9,7 C8.5,7 8,6.5 8,6 L8,3 C8,2.5 7.5,2 7,2 L4,2 C3.5,2 3,2.5 3,3 L3,13 C3,13.5 3.5,14 4,14 L12,14 C12.6,14 13,13.5 13,13 Z M13,9 L13,8 C13,7.5 13,7 12.5,6.5 L8.5,2.5 C8,2 7.5,2 7,2 L6,2"></path>
+</svg>
+  <div class="header__document_name"
+    title="User Guide">
+    User Guide
+  </div>
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" class="sc-gLvsXj bpkaBy"><path stroke="currentColor" d="M12.5 4.5l-5 11" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+  <div class="viewtype">
+  <div
+    id="viewtype_handler"
+    class="viewtype__handler"
+    aria-expanded="false"
+    aria-controls="viewtype_menu"
+  >
+    <span>Traceability</span>
+    <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" >
+  <path d="M5 10l3 3 3-3M5 6l3-3 3 3"></path>
+</svg>
+  </div>
+  <menu
+    id="viewtype_menu"
+    class="viewtype__menu"
+    aria-hidden="true"
+    aria-labelledby="viewtype_handler"
+  >
+    <li class="viewtype__menu_header">VIEWS</li>
+    <li>
+      <a
+        data-viewtype_link="document"
+        class="viewtype__menu_item"
+        title="Go to Document view"
+        href="../docs/strictdoc_01_user_guide.html">
+        Document</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="table"
+        class="viewtype__menu_item"
+        title="Go to Table view"
+        href="../docs/strictdoc_01_user_guide-TABLE.html">
+        Table</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="traceability"
+        class="viewtype__menu_item"
+        title="Go to Traceability view"
+        href="../docs/strictdoc_01_user_guide-TRACE.html">
+        Traceability</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="deep_traceability"
+        class="viewtype__menu_item"
+        title="Go to Deep Traceability view"
+        href="../docs/strictdoc_01_user_guide-DEEP-TRACE.html">
+      Deep traceability</a>
+    </li>
+  </menu>
+</div>
+</div>
+</turbo-frame>
+</div>
 
     </header>
 
-    <main class="layout_main">
+    <main class="layout_main" id="pan_with_space">
       
 
       
@@ -260,23 +372,21 @@
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-6560399c18aa4a12b8324a311d43389b"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="1-Introduction"></div>
 
     
-        <h1
-class="section-title"
+      <h1
+class="requirement__title"
 data-level="1">
-  1.&nbsp;Introduction
-</h1>
+  1.&nbsp;Introduction</h1>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>StrictDoc is software for writing technical requirements and specifications.</p>
 <p>Summary of StrictDoc features:</p>
@@ -311,63 +421,81 @@ Further performance tuning should be possible.</li>
 <p>See the Backlog to get an idea of the overall project direction.</p>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-06d87cfa0a934c76815c81d428cba921"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="1.1-Contact-the-developers"></div>
 
     
-        <h2
-class="section-title"
+      <h2
+class="requirement__title"
 data-level="1.1">
-  1.1.&nbsp;Contact the developers
-</h2>
+  1.1.&nbsp;Contact the developers</h2>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>Join us in Discord. Here is the invitation link: <a class="reference external" href="https://discord.gg/4BAAME9MmG">https://discord.gg/4BAAME9MmG</a></p>
 <p>The author can be also contacted via <a class="reference external" href="mailto:s.pankevich&#64;gmail.com">email</a>.</p>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-117fc0de70724b8cb2830c53bcfc6402"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="2-Examples"></div>
 
     
-        <h1
-class="section-title"
+      <h1
+class="requirement__title"
 data-level="2">
-  2.&nbsp;Examples
-</h1>
+  2.&nbsp;Examples</h1>
     
 
-  </section>
+  
 
-  <section data-section="description" class="docsection_section"><div class="free-text">
+</sdoc-node-card></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
+
+    <div data-role='anchor' id="2.1-Hello-World"></div>
+
+    
+      <h2
+class="requirement__title"
+data-level="2.1">
+  2.1.&nbsp;Hello World</h2>
+    
+
+  <div class="free-text">
       <div class="document">
-<p>&quot;Hello World&quot; example of the text language:</p>
+<p>&quot;Hello World&quot; example of the SDoc text language:</p>
 <pre class="code text literal-block">
 [DOCUMENT]
 TITLE: StrictDoc
@@ -377,11 +505,81 @@ UID: SDOC-HIGH-REQS-MANAGEMENT
 TITLE: Requirements management
 STATEMENT: StrictDoc shall enable requirements management.
 </pre>
+<p>Create a file called <tt class="docutils literal">hello_world.sdoc</tt> somewhere on your file system and copy the above text to it.</p>
+<p>Once you have <tt class="docutils literal">strictdoc</tt> installed (see <a class="reference external" href="#3-Getting-started">Getting started</a> below), run StrictDoc as follows:</p>
+<pre class="code text literal-block">
+strictdoc export hello.sdoc
+</pre>
+<p>The expected output:</p>
+<pre class="code text literal-block">
+$ strictdoc export hello.sdoc
+Parallelization: Enabled
+Step 'Collect traceability information' start
+Step 'Find and read SDoc files' start
+Reading SDOC: hello.sdoc .................................... 0.08s
+Step 'Find and read SDoc files' took: 0.09 sec
+Step 'Collect traceability information' start
+Step 'Collect traceability information' took: 0.01 sec
+Step 'Collect traceability information' took: 0.11 sec
+Published: StrictDoc ........................................ 0.24s
+...
+Export completed. Documentation tree can be found at:
+.../output/html
+</pre>
 </div>
 
-    </div><div class="free-text">
+    </div>
+
+</sdoc-node-card></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
+
+    <div data-role='anchor' id="2.2-StrictDoc-Examples-repository"></div>
+
+    
+      <h2
+class="requirement__title"
+data-level="2.2">
+  2.2.&nbsp;StrictDoc Examples repository</h2>
+    
+
+  <div class="free-text">
       <div class="document">
-<p>For a more comprehensive example check the source file of this documentation
+<p>The <a class="reference external" href="https://github.com/strictdoc-project/strictdoc-examples">strictdoc-examples</a> repository contains a collection of basic examples. Visit the repository and read its README for details.</p>
+</div>
+
+    </div>
+
+</sdoc-node-card></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
+
+    <div data-role='anchor' id="2.3-Other-examples"></div>
+
+    
+      <h2
+class="requirement__title"
+data-level="2.3">
+  2.3.&nbsp;Other examples</h2>
+    
+
+  <div class="free-text">
+      <div class="document">
+<p>For a more comprehensive example, check the source file of this documentation
 which is written using StrictDoc:
 <a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc_01_user_guide.sdoc">strictdoc_01_user_guide.sdoc</a>.</p>
 <ul class="simple">
@@ -389,60 +587,53 @@ which is written using StrictDoc:
 <li><a class="reference external" href="https://strictdoc.readthedocs.io/en/latest">StrictDoc HTML export using Sphinx</a></li>
 <li><a class="reference external" href="https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/">StrictDoc PDF export using Sphinx</a></li>
 </ul>
-<p>Additionally, the project's repository contains a folder
-<tt class="docutils literal">tests/integration/examples</tt>. In this folder, there is a collection of basic
-examples.</p>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-8afea6d7088f4f52acc5e03e5780efd5"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="3-Getting-started"></div>
 
     
-        <h1
-class="section-title"
+      <h1
+class="requirement__title"
 data-level="3">
-  3.&nbsp;Getting started
-</h1>
+  3.&nbsp;Getting started</h1>
     
 
-  </section>
+  
 
-  </article>
-
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-45f142545eea4dd695f6422b0df6dd9f"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="3.1-Requirements"></div>
 
     
-        <h2
-class="section-title"
+      <h2
+class="requirement__title"
 data-level="3.1">
-  3.1.&nbsp;Requirements
-</h2>
+  3.1.&nbsp;Requirements</h2>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <ul class="simple">
 <li>Python 3.6+</li>
@@ -450,62 +641,58 @@ data-level="3.1">
 </ul>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-b02610e9d73e4a8d83f9f6659729c9cf"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="3.2-Installing-StrictDoc-as-a-Pip-package-recommended-way-"></div>
 
     
-        <h2
-class="section-title"
+      <h2
+class="requirement__title"
 data-level="3.2">
-  3.2.&nbsp;Installing StrictDoc as a Pip package (recommended way)
-</h2>
+  3.2.&nbsp;Installing StrictDoc as a Pip package (recommended way)</h2>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <pre class="code text literal-block">
 pip install strictdoc
 </pre>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-4094e31118784d35984d3e5e6c7b5ab1"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="3.3-Installing-StrictDoc-into-a-Docker-container"></div>
 
     
-        <h2
-class="section-title"
+      <h2
+class="requirement__title"
 data-level="3.3">
-  3.3.&nbsp;Installing StrictDoc into a Docker container
-</h2>
+  3.3.&nbsp;Installing StrictDoc into a Docker container</h2>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>StrictDoc can be invoked inside of a Docker container. To make data available
 to the Docker container (here: <tt class="docutils literal">strictdoc:latest</tt>) as well as to the host
@@ -523,93 +710,57 @@ bash-5.1# exit
 <p>The documentation resides in <tt class="docutils literal">./docs/output/html</tt>.</p>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-fbfe5a05ce5a466b8aee977dd7547413"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="3.4-Installing-StrictDoc-as-a-Snap-package-not-maintained-"></div>
 
     
-        <h2
-class="section-title"
+      <h2
+class="requirement__title"
 data-level="3.4">
-  3.4.&nbsp;Installing StrictDoc as a Snap package (not maintained)
-</h2>
+  3.4.&nbsp;Installing StrictDoc as a Snap package (not maintained)</h2>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>This way of installing StrictDoc is not maintained anymore. If you want to
 use it, refer to the instructions located in <tt class="docutils literal">developer/snap/README.md</tt>.</p>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-05fd48ea55424c76929e099cd260f45a"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="3.5-Hello-world"></div>
-
-    
-        <h2
-class="section-title"
-data-level="3.5">
-  3.5.&nbsp;Hello world
-</h2>
-    
-
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
-      <div class="document">
-<pre class="code text literal-block">
-git clone --depth 1 https://github.com/strictdoc-project/strictdoc &amp;&amp; cd strictdoc
-strictdoc export docs/
-</pre>
-</div>
-
-    </div></section></article>
-
-</turbo-frame></div>
-          <div class="content_item" data-role="children"></div>
-        </section>
-        <section class="content_section">
-
-          <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-6f640c79d9854600ae0975c248c69dc6"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="4-SDoc-syntax"></div>
 
     
-        <h1
-class="section-title"
+      <h1
+class="requirement__title"
 data-level="4">
-  4.&nbsp;SDoc syntax
-</h1>
+  4.&nbsp;SDoc syntax</h1>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>StrictDoc defines a special syntax for writing specifications documents. This
 syntax is called SDoc and it's grammar is encoded with the
@@ -627,31 +778,29 @@ TITLE: StrictDoc
 <a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc_01_user_guide.sdoc">strictdoc_01_user_guide.sdoc</a>.</p>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-8e1a9207710d41928646d2d9238ff063"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="4.1-Document-structure"></div>
 
     
-        <h2
-class="section-title"
+      <h2
+class="requirement__title"
 data-level="4.1">
-  4.1.&nbsp;Document structure
-</h2>
+  4.1.&nbsp;Document structure</h2>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>An SDoc document consists of a <tt class="docutils literal">[DOCUMENT]</tt> declaration followed by one or many
 <tt class="docutils literal">[REQUIREMENT]</tt> or <tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt> statements which can be grouped
@@ -671,31 +820,29 @@ into <tt class="docutils literal">[SECTION]</tt> blocks.</p>
 <p>Each construct is described in more detail below.</p>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-42a855f71c344445b2145f8f4518996e"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="4.1.1-Strict-rule-1-One-empty-line-between-all-nodes"></div>
 
     
-        <h3
-class="section-title"
+      <h3
+class="requirement__title"
 data-level="4.1.1">
-  4.1.1.&nbsp;Strict rule #1: One empty line between all nodes
-</h3>
+  4.1.1.&nbsp;Strict rule #1: One empty line between all nodes</h3>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>StrictDoc's grammar requires each node, such as <tt class="docutils literal">[REQUIREMENT]</tt>, <tt class="docutils literal">[SECTION]</tt>,
 etc., to be separated with exactly one empty line from the nodes surrounding it.
@@ -703,31 +850,29 @@ This rule is valid for all nodes. Absence of an empty line or presence of more
 than one empty line between two nodes will result in an SDoc parsing error.</p>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-bb2f529b94e4401091ccbef82fbc90e1"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="4.1.2-Strict-rule-2-No-content-is-allowed-outside-of-SDoc-grammar"></div>
 
     
-        <h3
-class="section-title"
+      <h3
+class="requirement__title"
 data-level="4.1.2">
-  4.1.2.&nbsp;Strict rule #2: No content is allowed outside of SDoc grammar
-</h3>
+  4.1.2.&nbsp;Strict rule #2: No content is allowed outside of SDoc grammar</h3>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>StrictDoc's grammar does not allow any content to be written outside of the SDoc
 grammatical constructs. It is assumed that the critical content shall always be
@@ -737,68 +882,100 @@ be specified using <tt class="docutils literal">[FREETEXT]</tt> nodes. By design
 be only attached to the <tt class="docutils literal">[DOCUMENT]</tt> and <tt class="docutils literal">[SECTION]</tt> nodes.</p>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-8e9b8056dea94b85876a3869693f7457"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="4.2-Grammar-elements"></div>
 
     
-        <h2
-class="section-title"
+      <h2
+class="requirement__title"
 data-level="4.2">
-  4.2.&nbsp;Grammar elements
-</h2>
+  4.2.&nbsp;Grammar elements</h2>
     
 
-  </section>
+  
 
-  </article>
-
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-16d48b4143ff4168881d8ac53fbc1882"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="4.2.1-Document"></div>
 
     
-        <h3
-class="section-title"
+      <h3
+class="requirement__title"
 data-level="4.2.1">
-  4.2.1.&nbsp;Document
-</h3>
+  4.2.1.&nbsp;Document</h3>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
-<p><tt class="docutils literal">[DOCUMENT]</tt> element must always be present in an SDoc document. It is a root
-of an SDoc document graph.</p>
+<p>The <tt class="docutils literal">[DOCUMENT]</tt> element must always be present in an SDoc document. It is a
+root of an SDoc document graph.</p>
 <pre class="code text literal-block">
 [DOCUMENT]
 TITLE: StrictDoc
 (newline)
 </pre>
-<p><tt class="docutils literal">DOCUMENT</tt> declaration must always have a <tt class="docutils literal">TITLE</tt> field. It can have
-optional configuration fields and an optional <tt class="docutils literal">[FREETEXT]</tt> block.</p>
+<p>The following <tt class="docutils literal">DOCUMENT</tt> fields are allowed:</p>
+<table border="1" class="colwidths-given docutils">
+<caption>SDoc grammar <tt class="docutils literal">DOCUMENT</tt> fields</caption>
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head"><strong>Field</strong></th>
+<th class="head"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td><tt class="docutils literal">TITLE</tt></td>
+<td>Title of the document (mandatory)</td>
+</tr>
+<tr><td><tt class="docutils literal">UID</tt></td>
+<td>Unique identifier of the document</td>
+</tr>
+<tr><td><tt class="docutils literal">VERSION</tt></td>
+<td>Current version of the document</td>
+</tr>
+<tr><td><tt class="docutils literal">CLASSIFICATION</tt></td>
+<td>Security classification of the document, e.g. Public, Internal,
+Restricted, Confidential</td>
+</tr>
+<tr><td><tt class="docutils literal">OPTIONS</tt></td>
+<td>Document configuration options</td>
+</tr>
+</tbody>
+</table>
+<p>The <tt class="docutils literal">DOCUMENT</tt> declaration must always have a <tt class="docutils literal">TITLE</tt> field. The other
+fields are optional. The <tt class="docutils literal">OPTIONS</tt> field can be used for specifying
+the document configuration options. Note: The sequence of the fields is defined
+by the document's Grammar, i.e. should not be changed.</p>
+<p>Finally an optional <tt class="docutils literal">[FREETEXT]</tt> block can be included.</p>
 <pre class="code text literal-block">
 [DOCUMENT]
 TITLE: StrictDoc
+OPTIONS:
+  REQUIREMENT_STYLE: Table
 
 [FREETEXT]
 StrictDoc is software for writing technical requirements and specifications.
@@ -806,35 +983,148 @@ StrictDoc is software for writing technical requirements and specifications.
 </pre>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-c4cedffef2134b29af25e5729aaf4da5"><article class="docsection" data-controller="document">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="4.2.1.1-Option-Requirement-style"></div>
+    <div data-role='anchor' id="4.2.1.1-Document-configuration-options"></div>
 
     
-        <h4
-class="section-title"
+      <h4
+class="requirement__title"
 data-level="4.2.1.1">
-  4.2.1.1.&nbsp;Option: Requirement style
-</h4>
+  4.2.1.1.&nbsp;Document configuration options</h4>
     
 
-  </section>
+  <div class="free-text">
+      <div class="document">
+<p>The <tt class="docutils literal">OPTIONS</tt> field may have the following attribute fields:</p>
+<table border="1" class="colwidths-given docutils">
+<caption>SDoc grammar <tt class="docutils literal">DOCUMENT</tt>-<tt class="docutils literal">OPTIONS</tt> fields</caption>
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head"><strong>Field</strong></th>
+<th class="head"><strong>Attribute values</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td><tt class="docutils literal">MARKUP</tt></td>
+<td><tt class="docutils literal">RST</tt>, <tt class="docutils literal">HTML</tt>, <tt class="docutils literal">Text</tt></td>
+</tr>
+<tr><td><tt class="docutils literal">AUTO_LEVELS</tt></td>
+<td><tt class="docutils literal">On</tt>, <tt class="docutils literal">Off</tt></td>
+</tr>
+<tr><td><tt class="docutils literal">REQUIREMENT_STYLE</tt></td>
+<td><tt class="docutils literal">Inline</tt>, <tt class="docutils literal">Table</tt></td>
+</tr>
+<tr><td><tt class="docutils literal">REQUIREMENT_IN_TOC</tt></td>
+<td><tt class="docutils literal">True</tt>, <tt class="docutils literal">False</tt></td>
+</tr>
+</tbody>
+</table>
+</div>
 
-  <section data-section="description" class="docsection_section"><div class="free-text">
+    </div>
+
+</sdoc-node-card></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
+
+    <div data-role='anchor' id="4.2.1.1.1-MARKUP"></div>
+
+    
+      <h5
+class="requirement__title"
+data-level="4.2.1.1.1">
+  4.2.1.1.1.&nbsp;MARKUP</h5>
+    
+
+  <div class="free-text">
+      <div class="document">
+<p>The <tt class="docutils literal">MARKUP</tt> option controls which markup renderer will be used.
+The available options are: <tt class="docutils literal">RST</tt>, <tt class="docutils literal">HTML</tt> and <tt class="docutils literal">Text</tt>. Default is
+<tt class="docutils literal">RST</tt>.</p>
+</div>
+
+    </div>
+
+</sdoc-node-card></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
+
+    <div data-role='anchor' id="4.2.1.1.2-AUTO_LEVELS"></div>
+
+    
+      <h5
+class="requirement__title"
+data-level="4.2.1.1.2">
+  4.2.1.1.2.&nbsp;AUTO_LEVELS</h5>
+    
+
+  <div class="free-text">
+      <div class="document">
+<p>The <tt class="docutils literal">AUTO_LEVELS</tt> option controls StrictDoc's system of automatic numbering
+of the section levels.
+The available options are: <tt class="docutils literal">On</tt> /  <tt class="docutils literal">Off</tt>. Default is <tt class="docutils literal">On</tt>.</p>
+<p>In case of <tt class="docutils literal">On</tt>, the <tt class="docutils literal"><span class="pre">[SECTION].LEVEL</span></tt> fields must be absent or may only
+contain <tt class="docutils literal">None</tt> to exclude that section from StrictDoc's automatic section
+numbering. See also <a class="reference external" href="#4.2.3.3-Section-without-a-level">Section without a level</a>.</p>
+<p>In case of <tt class="docutils literal">Off</tt>, all <tt class="docutils literal"><span class="pre">[SECTION].LEVEL</span></tt> fields must be populated.</p>
+</div>
+
+    </div>
+
+</sdoc-node-card></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
+
+    <div data-role='anchor' id="4.2.1.1.3-REQUIREMENT_STYLE"></div>
+
+    
+      <h5
+class="requirement__title"
+data-level="4.2.1.1.3">
+  4.2.1.1.3.&nbsp;REQUIREMENT_STYLE</h5>
+    
+
+  <div class="free-text">
       <div class="document">
 <p>The <tt class="docutils literal">REQUIREMENT_STYLE</tt> option controls whether requirement's elements are
-displayed inline or as table blocks. The available options are: <tt class="docutils literal">Inline</tt>
-and <tt class="docutils literal">Table</tt>.</p>
+displayed inline or as table blocks. The available options are: <tt class="docutils literal">Inline</tt> /
+<tt class="docutils literal">Table</tt>. Default is <tt class="docutils literal">Inline</tt>.</p>
 <pre class="code text literal-block">
 [DOCUMENT]
 TITLE: Hello world
@@ -843,34 +1133,33 @@ OPTIONS:
 </pre>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-4c860c01358a4bf0b04a858506fba3bd"><article class="docsection" data-controller="document">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="4.2.1.2-Option-Requirement-title-in-Table-of-Contents"></div>
+    <div data-role='anchor' id="4.2.1.1.4-REQUIREMENT_IN_TOC"></div>
 
     
-        <h4
-class="section-title"
-data-level="4.2.1.2">
-  4.2.1.2.&nbsp;Option: Requirement title in Table of Contents
-</h4>
+      <h5
+class="requirement__title"
+data-level="4.2.1.1.4">
+  4.2.1.1.4.&nbsp;REQUIREMENT_IN_TOC</h5>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>The <tt class="docutils literal">REQUIREMENT_IN_TOC</tt> option controls whether requirement's title appear
-in the table of contents (TOC). The available options are: <tt class="docutils literal">True/False</tt>.</p>
+in the table of contents (TOC). The available options are: <tt class="docutils literal">True</tt> / <tt class="docutils literal">False</tt>.
+Default is <tt class="docutils literal">True</tt>.</p>
 <pre class="code text literal-block">
 [DOCUMENT]
 TITLE: Hello world
@@ -879,31 +1168,29 @@ OPTIONS:
 </pre>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-3c04ae1f105145828614eff3140e9bb9"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="4.2.2-Requirement"></div>
 
     
-        <h3
-class="section-title"
+      <h3
+class="requirement__title"
 data-level="4.2.2">
-  4.2.2.&nbsp;Requirement
-</h3>
+  4.2.2.&nbsp;Requirement</h3>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>Minimal &quot;Hello World&quot; program with 3 empty requirements:</p>
 <pre class="code text literal-block">
@@ -916,17 +1203,52 @@ TITLE: StrictDoc
 
 [REQUIREMENT]
 </pre>
-<p>Supported fields:</p>
-<ul class="simple">
-<li><tt class="docutils literal">UID</tt> (unique identifier)</li>
-<li><tt class="docutils literal">REFS</tt></li>
-<li><tt class="docutils literal">TITLE</tt></li>
-<li><tt class="docutils literal">STATEMENT</tt></li>
-<li><tt class="docutils literal">RATIONALE</tt></li>
-<li><tt class="docutils literal">COMMENT</tt> (multiple comments are possible)</li>
-</ul>
-<p>Currently, all <tt class="docutils literal">[REQUIREMENT]</tt>'s are optional but most of the time at least
-the <tt class="docutils literal">STATEMENT:</tt> field must be present as well as the <tt class="docutils literal">TITLE:</tt> field.</p>
+<p>The following <tt class="docutils literal">REQUIREMENT</tt> fields are supported:</p>
+<table border="1" class="colwidths-given docutils">
+<caption>SDoc grammar <tt class="docutils literal">REQUIREMENT</tt> fields</caption>
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head"><strong>Field</strong></th>
+<th class="head"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td><tt class="docutils literal">UID</tt></td>
+<td>Unique identifier of the requirement</td>
+</tr>
+<tr><td><tt class="docutils literal">LEVEL</tt></td>
+<td>Define section/requirement Level numbering</td>
+</tr>
+<tr><td><tt class="docutils literal">STATUS</tt></td>
+<td>Status of the requirement, e.g. <tt class="docutils literal">Draft</tt>, <tt class="docutils literal">Active</tt>, <tt class="docutils literal">Deleted</tt></td>
+</tr>
+<tr><td><tt class="docutils literal">TAGS</tt></td>
+<td>Tags of the requirement (comma separated AlphaNum words)</td>
+</tr>
+<tr><td><tt class="docutils literal">REFS</tt></td>
+<td>List of Parent and File references</td>
+</tr>
+<tr><td><tt class="docutils literal">TITLE</tt></td>
+<td>Title of the requirement</td>
+</tr>
+<tr><td><tt class="docutils literal">STATEMENT</tt></td>
+<td>The statement of the requirement. The field can be single-line or multiline.</td>
+</tr>
+<tr><td><tt class="docutils literal">RATIONALE</tt></td>
+<td>The rationale of the requirement. The field can be single-line or multiline.</td>
+</tr>
+<tr><td><tt class="docutils literal">COMMENT</tt></td>
+<td>Comments to the rationale. The field can be single-line or multiline.
+Note: Multiple comment fields are possible.</td>
+</tr>
+</tbody>
+</table>
+<p>Currently, all <tt class="docutils literal">[REQUIREMENT]</tt>'s fields are optional but most of the time at
+least the <tt class="docutils literal">STATEMENT</tt> field as well as the <tt class="docutils literal">TITLE</tt> field should be
+present.</p>
 <pre class="code text literal-block">
 [DOCUMENT]
 TITLE: StrictDoc
@@ -935,45 +1257,33 @@ TITLE: StrictDoc
 TITLE: Requirements management
 STATEMENT: StrictDoc shall enable requirements management.
 </pre>
-<p><strong>Observation:</strong> Many real-world documents have requirements with statements and
-titles but some documents only use statements without title in which case their
-title becomes their UID. Example:</p>
-<pre class="code text literal-block">
-[DOCUMENT]
-TITLE: StrictDoc
-
-[REQUIREMENT]
-UID: REQ-001
-STATEMENT: StrictDoc shall enable requirements management.
-</pre>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-8a82a10f9685426893f8265dcc2a6df4"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="4.2.2.1-UID"></div>
 
     
-        <h4
-class="section-title"
+      <h4
+class="requirement__title"
 data-level="4.2.2.1">
-  4.2.2.1.&nbsp;UID
-</h4>
+  4.2.2.1.&nbsp;UID</h4>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
+<p>Unique identifier of the requirement.</p>
 <p><strong>Observation:</strong> Some documents do not use unique identifiers which makes it
 impossible to trace their requirements to each other. Within StrictDoc's
 framework, it is assumed that a good requirements document has all of its
@@ -997,34 +1307,116 @@ STATEMENT: STATEMENT: StrictDoc shall be based on a well-defined data model.
 </pre>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-2da9292dd2e540b8bdad97f692800845"><article class="docsection" data-controller="document">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="4.2.2.2-References"></div>
+    <div data-role='anchor' id="4.2.2.2-Level"></div>
 
     
-        <h4
-class="section-title"
+      <h4
+class="requirement__title"
 data-level="4.2.2.2">
-  4.2.2.2.&nbsp;References
-</h4>
+  4.2.2.2.&nbsp;Level</h4>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
-<p>The <tt class="docutils literal">[REQUIREMENT]</tt> / <tt class="docutils literal">REFS:</tt> field is used to connect requirements to each
-other:</p>
+<p>Also a <tt class="docutils literal">[REQUIREMENT]</tt> can have no section level attached to it. To enable
+this behavior, the field <tt class="docutils literal">LEVEL</tt> has to be set to <tt class="docutils literal">None</tt>.</p>
+</div>
+
+    </div>
+
+</sdoc-node-card></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
+
+    <div data-role='anchor' id="4.2.2.3-Status"></div>
+
+    
+      <h4
+class="requirement__title"
+data-level="4.2.2.3">
+  4.2.2.3.&nbsp;Status</h4>
+    
+
+  <div class="free-text">
+      <div class="document">
+<p>Defines the current status of the <tt class="docutils literal">[REQUIREMENT]</tt>, e.g. <tt class="docutils literal">Draft</tt>, <tt class="docutils literal">Active</tt>,
+<tt class="docutils literal">Deleted</tt>.</p>
+</div>
+
+    </div>
+
+</sdoc-node-card></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
+
+    <div data-role='anchor' id="4.2.2.4-Tags"></div>
+
+    
+      <h4
+class="requirement__title"
+data-level="4.2.2.4">
+  4.2.2.4.&nbsp;Tags</h4>
+    
+
+  <div class="free-text">
+      <div class="document">
+<p>Allows to add tags to a <tt class="docutils literal">[REQUIREMENT]</tt>. Tags are a comma separated list of
+single words. Only Alphanumeric tags (a-z, A-Z, 0-9 and underscore) are
+supported.</p>
+</div>
+
+    </div>
+
+</sdoc-node-card></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
+
+    <div data-role='anchor' id="4.2.2.5-References-REFS-"></div>
+
+    
+      <h4
+class="requirement__title"
+data-level="4.2.2.5">
+  4.2.2.5.&nbsp;References (REFS)</h4>
+    
+
+  <div class="free-text">
+      <div class="document">
+<p>The <tt class="docutils literal">REFS</tt> field is used to connect requirements to each other:</p>
 <pre class="code text literal-block">
 [DOCUMENT]
 TITLE: StrictDoc
@@ -1038,42 +1430,160 @@ UID: REQ-002
 REFS:
 - TYPE: Parent
   VALUE: REQ-001
+- TYPE: File
+  VALUE: /full/path/file.py
 TITLE: Requirement #2's title
 STATEMENT: Requirement #2 statement
 </pre>
-<p><strong>Note:</strong> The <tt class="docutils literal">TYPE: Parent</tt> is the only supported type of connection. In the
-future, linking requirements to files will be possible.</p>
+<p>The <tt class="docutils literal">TYPE: Parent</tt>-<tt class="docutils literal">VALUE</tt> attribute contains a parent's requirement
+<tt class="docutils literal">UID</tt>. A requirement may reference multiple parent requirements by
+adding multiple <tt class="docutils literal">TYPE: Parent</tt>-<tt class="docutils literal">VALUE</tt> items. The opposite direction i.e.
+&quot;Child&quot; References are traced automatically by strictdoc. Defining circular
+references e.g. <tt class="docutils literal"><span class="pre">Req-A</span></tt> ⇒ <tt class="docutils literal"><span class="pre">Req-B</span></tt> ⇒ <tt class="docutils literal"><span class="pre">Reg-C</span></tt> ⇒ <tt class="docutils literal"><span class="pre">Req-A</span></tt> must be avoided.</p>
+<p>The <tt class="docutils literal">TYPE: File</tt>-<tt class="docutils literal">VALUE</tt> attribute contains a filename referencing the
+implementation of (parts of) this requirement. A requirement may add multiple
+file references requirements by adding multiple <tt class="docutils literal">TYPE: File</tt>-<tt class="docutils literal">VALUE</tt> items.</p>
+<p><strong>Note:</strong> The <tt class="docutils literal">TYPE: Parent</tt> is currently the only fully supported type of
+connection. Linking requirements to files is still experimental (see also
+<a class="reference external" href="#7-Traceability-between-requirements-and-source-code">Traceability between requirements and source code</a>).</p>
+<p><strong>Note:</strong> In the near future, adding information about external references (e.g.
+company policy documents, technical specifications, regulatory requirements,
+etc.) is planned.</p>
 <p><strong>Note:</strong> By design, StrictDoc will only show parent or child links if both
 requirements connected with a reference have <tt class="docutils literal">UID</tt> defined.</p>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-9a3648c4d2d742a98c38e10bced3dd04"><article class="docsection" data-controller="document">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="4.2.2.3-Comment"></div>
+    <div data-role='anchor' id="4.2.2.6-Title"></div>
 
     
-        <h4
-class="section-title"
-data-level="4.2.2.3">
-  4.2.2.3.&nbsp;Comment
-</h4>
+      <h4
+class="requirement__title"
+data-level="4.2.2.6">
+  4.2.2.6.&nbsp;Title</h4>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
-<p>A requirement can have one or more comments explaining this requirement. The
+<p>The title of the requirement.
+Every requirement should have its <tt class="docutils literal">TITLE</tt> field specified.</p>
+<p><strong>Observation:</strong> Many real-world documents have requirements with statements and
+titles but some documents only use statements without title in which case their
+<tt class="docutils literal">UID</tt> becomes their <tt class="docutils literal">TITLE</tt> and vice versa. Example:</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[REQUIREMENT]
+UID: REQ-001
+STATEMENT: StrictDoc shall enable requirements management.
+</pre>
+</div>
+
+    </div>
+
+</sdoc-node-card></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
+
+    <div data-role='anchor' id="4.2.2.7-Statement"></div>
+
+    
+      <h4
+class="requirement__title"
+data-level="4.2.2.7">
+  4.2.2.7.&nbsp;Statement</h4>
+    
+
+  <div class="free-text">
+      <div class="document">
+<p>The statement of the requirement. The field can be single-line or multiline.
+Every requirement shall have its <tt class="docutils literal">STATEMENT</tt> field specified.</p>
+</div>
+
+    </div>
+
+</sdoc-node-card></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
+
+    <div data-role='anchor' id="4.2.2.8-Rationale"></div>
+
+    
+      <h4
+class="requirement__title"
+data-level="4.2.2.8">
+  4.2.2.8.&nbsp;Rationale</h4>
+    
+
+  <div class="free-text">
+      <div class="document">
+<p>A requirement should have a <tt class="docutils literal">RATIONALE</tt> field that explains/justifies why
+the requirement exists. Like comments, the rationale field can be single-line
+or multiline.</p>
+<pre class="code text literal-block">
+[DOCUMENT]
+TITLE: StrictDoc
+
+[REQUIREMENT]
+UID: REQ-001
+STATEMENT: StrictDoc shall enable requirements management.
+COMMENT: Clarify the meaning or give additional information here.
+RATIONALE: The presence of the REQ-001 is justified.
+</pre>
+</div>
+
+    </div>
+
+</sdoc-node-card></div>
+          <div class="content_item" data-role="children"></div>
+        </section>
+        <section class="content_section">
+
+          <div class="content_item" data-role="parents"></div>
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
+
+    <div data-role='anchor' id="4.2.2.9-Comment"></div>
+
+    
+      <h4
+class="requirement__title"
+data-level="4.2.2.9">
+  4.2.2.9.&nbsp;Comment</h4>
+    
+
+  <div class="free-text">
+      <div class="document">
+<p>A requirement can have one or more comments explaining the requirement. The
 comments can be single-line or multiline.</p>
 <pre class="code text literal-block">
 [DOCUMENT]
@@ -1093,72 +1603,29 @@ Each line is rendered as a separate paragraph.
 </pre>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-2426982c26a94eb4b704696a90c50023"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="4.2.2.4-Rationale"></div>
-
-    
-        <h4
-class="section-title"
-data-level="4.2.2.4">
-  4.2.2.4.&nbsp;Rationale
-</h4>
-    
-
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
-      <div class="document">
-<p>A requirement can have a <tt class="docutils literal">RATIONALE:</tt> field that explains why such a
-requirement exists. Like comments, the rationale field can be single-line or
-multiline.</p>
-<pre class="code text literal-block">
-[DOCUMENT]
-TITLE: StrictDoc
-
-[REQUIREMENT]
-UID: REQ-001
-STATEMENT: StrictDoc shall enable requirements management.
-COMMENT: Clarify the meaning or give additional information here.
-RATIONALE: The presence of the REQ-001 is justified.
-</pre>
-</div>
-
-    </div></section></article>
-
-</turbo-frame></div>
-          <div class="content_item" data-role="children"></div>
-        </section>
-        <section class="content_section">
-
-          <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-3ccb53f5ec9b432a9b7fa6c398ca2dae"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="4.2.3-Section"></div>
 
     
-        <h3
-class="section-title"
+      <h3
+class="requirement__title"
 data-level="4.2.3">
-  4.2.3.&nbsp;Section
-</h3>
+  4.2.3.&nbsp;Section</h3>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>The <tt class="docutils literal">[SECTION]</tt> element is used for creating document chapters and grouping
 requirements into logical groups. It is equivalent to the use of <tt class="docutils literal">#</tt>, <tt class="docutils literal">##</tt>,
@@ -1187,31 +1654,29 @@ STATEMENT: ...
 </pre>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-b547d836710a4ee1a8a1a06e9975b024"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="4.2.3.1-Nesting-sections"></div>
 
     
-        <h4
-class="section-title"
+      <h4
+class="requirement__title"
 data-level="4.2.3.1">
-  4.2.3.1.&nbsp;Nesting sections
-</h4>
+  4.2.3.1.&nbsp;Nesting sections</h4>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>Sections can be nested within each other.</p>
 <pre class="code text literal-block">
@@ -1236,31 +1701,29 @@ sections will have their titles numbered accordingly: <tt class="docutils litera
 <tt class="docutils literal">1.1 Subchapter</tt>.</p>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-6063cc0db0c2427fb486df1a6984a100"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="4.2.3.2-Free-text"></div>
 
     
-        <h4
-class="section-title"
+      <h4
+class="requirement__title"
 data-level="4.2.3.2">
-  4.2.3.2.&nbsp;Free text
-</h4>
+  4.2.3.2.&nbsp;Free text</h4>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>A section can have a block of <tt class="docutils literal">[FREETEXT]</tt> connected to it:</p>
 <pre class="code text literal-block">
@@ -1291,31 +1754,29 @@ atomic <tt class="docutils literal">[REQUIREMENT]</tt> statements and get connec
 statements in the document.</p>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-1ad23d5d1ecd44e582b2212f364a8c2c"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="4.2.3.3-Section-without-a-level"></div>
 
     
-        <h4
-class="section-title"
+      <h4
+class="requirement__title"
 data-level="4.2.3.3">
-  4.2.3.3.&nbsp;Section without a level
-</h4>
+  4.2.3.3.&nbsp;Section without a level</h4>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>A section can have no level attached to it. To enable this behavior, the field
 <tt class="docutils literal">LEVEL</tt> has to be set to <tt class="docutils literal">None</tt>.</p>
@@ -1346,31 +1807,29 @@ has its <tt class="docutils literal">LEVEL</tt> set to <tt class="docutils liter
 are set to <tt class="docutils literal">LEVEL: None</tt> by StrictDoc automatically.</p>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-beb87d44bc824675a68d4bc7f7e7afc0"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="4.2.4-Composite-requirement"></div>
 
     
-        <h3
-class="section-title"
+      <h3
+class="requirement__title"
 data-level="4.2.4">
-  4.2.4.&nbsp;Composite requirement
-</h3>
+  4.2.4.&nbsp;Composite requirement</h3>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>A <tt class="docutils literal">[COMPOSITE_REQUIREMENT]</tt> is a requirement that combines requirement
 properties of a <tt class="docutils literal">[REQUIREMENT]</tt> element and grouping features of a <tt class="docutils literal">[SECTION]</tt>
@@ -1402,31 +1861,29 @@ often, a more basic combination of nested <tt class="docutils literal">[SECTION]
 elements should do the job.</p>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-5049c8a93fa14d2e84b97109bd53b6e5"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="4.2.5-Include-files"></div>
 
     
-        <h3
-class="section-title"
+      <h3
+class="requirement__title"
 data-level="4.2.5">
-  4.2.5.&nbsp;Include files
-</h3>
+  4.2.5.&nbsp;Include files</h3>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>StrictDoc <tt class="docutils literal">.sdoc</tt> files can be built-up from including other fragment documents.</p>
 <p>The <tt class="docutils literal">[FRAGMENT_FROM_FILE]</tt> element can be used anywhere body elements can be
@@ -1491,31 +1948,29 @@ TITLE: Sub section
 </pre>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-1f421c824c254978aa5f4da17bae5f2d"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="4.3-Custom-grammars"></div>
 
     
-        <h2
-class="section-title"
+      <h2
+class="requirement__title"
 data-level="4.3">
-  4.3.&nbsp;Custom grammars
-</h2>
+  4.3.&nbsp;Custom grammars</h2>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p><strong>Observation:</strong> Different industries have their own types of requirements
 documents with specialized meta information.
@@ -1566,39 +2021,60 @@ COMMENT: Test comment.
 grammar.</p>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-671d8baa4c4941c8b5a146eaedf4fdaa"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="4.3.1-Supported-field-types"></div>
 
     
-        <h3
-class="section-title"
+      <h3
+class="requirement__title"
 data-level="4.3.1">
-  4.3.1.&nbsp;Supported field types
-</h3>
+  4.3.1.&nbsp;Supported field types</h3>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>The supported field types are:</p>
-<ul class="simple">
-<li><tt class="docutils literal">String</tt></li>
-<li><tt class="docutils literal">SingleChoice</tt> (Enum-like behavior, one choice is possible)</li>
-<li><tt class="docutils literal">MultipleChoice</tt> (comma-separated words with fixed options)</li>
-<li><tt class="docutils literal">Tag</tt> (comma-separated words with no fixed options)</li>
-</ul>
+<table border="1" class="colwidths-given docutils">
+<caption>SDoc grammar field types</caption>
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head"><strong>Field Type</strong></th>
+<th class="head"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td><tt class="docutils literal">String</tt></td>
+<td>Simple String</td>
+</tr>
+<tr><td><tt class="docutils literal">SingleChoice</tt></td>
+<td>Enum-like behavior, one choice is possible</td>
+</tr>
+<tr><td><tt class="docutils literal">MultipleChoice</tt></td>
+<td>comma-separated words with fixed options</td>
+</tr>
+<tr><td><tt class="docutils literal">Tag</tt></td>
+<td>comma-separated list of tags/key words. Only Alphanumeric tags (a-z, A-Z, 0-9 and underscore) are supported.</td>
+</tr>
+<tr><td><tt class="docutils literal">Reference</tt></td>
+<td>comma-separated list with allowed reference types: <tt class="docutils literal">ParentReqReference</tt>, <tt class="docutils literal">FileReference</tt></td>
+</tr>
+</tbody>
+</table>
 <p>Example:</p>
 <pre class="code text literal-block">
 [DOCUMENT]
@@ -1629,6 +2105,9 @@ ELEMENTS:
   - TITLE: COMMENT
     TYPE: String
     REQUIRED: True
+  - TITLE: REFS
+    TYPE: Reference(ParentReqReference, FileReference)
+    REQUIRED: True
 
 [FREETEXT]
 This document is an example of a simple SDoc custom grammar.
@@ -1642,34 +2121,37 @@ UNIT: OBC, RTU
 TITLE: Function B
 STATEMENT: System A shall do B.
 COMMENT: Test comment.
+REFS:
+- TYPE: Parent
+  VALUE: REQ-001
+- TYPE: File
+  VALUE: /full/path/file.py
 </pre>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-72619197bb8f40af8e98bce9b26719c2"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="4.3.2-Reserved-fields"></div>
 
     
-        <h3
-class="section-title"
+      <h3
+class="requirement__title"
 data-level="4.3.2">
-  4.3.2.&nbsp;Reserved fields
-</h3>
+  4.3.2.&nbsp;Reserved fields</h3>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>While it is possible to declare a grammar with completely custom fields, there
 is a fixed set of reserved fields that StrictDoc uses for the presentation of
@@ -1712,31 +2194,29 @@ comment.</td>
 </table>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-7c228c899a4e4cfbb4a18ec0498b0053"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="5-Markup"></div>
 
     
-        <h1
-class="section-title"
+      <h1
+class="requirement__title"
 data-level="5">
-  5.&nbsp;Markup
-</h1>
+  5.&nbsp;Markup</h1>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>The Restructured Text (reST) markup is the default markup supported by
 StrictDoc. The reST markup can be written inside all StrictDoc's text blocks,
@@ -1746,31 +2226,29 @@ for a full reference.</p>
 <p>The support of Tex and HTML is planned.</p>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-31f7de64af5846c8a38aa78d4a9b6a3c"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="5.1-Images"></div>
 
     
-        <h2
-class="section-title"
+      <h2
+class="requirement__title"
 data-level="5.1">
-  5.1.&nbsp;Images
-</h2>
+  5.1.&nbsp;Images</h2>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>This is the example of how images are included using the reST syntax:</p>
 <pre class="code text literal-block">
@@ -1782,55 +2260,51 @@ data-level="5.1">
 </pre>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-ed6a1ad571014a14b30b5fe45e34d8e0"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="6-Export-formats"></div>
 
     
-        <h1
-class="section-title"
+      <h1
+class="requirement__title"
 data-level="6">
-  6.&nbsp;Export formats
-</h1>
+  6.&nbsp;Export formats</h1>
     
 
-  </section>
+  
 
-  </article>
-
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-5842adee1df54499bb28c66cd99c2e9a"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="6.1-HTML-documentation-tree-by-StrictDoc"></div>
 
     
-        <h2
-class="section-title"
+      <h2
+class="requirement__title"
 data-level="6.1">
-  6.1.&nbsp;HTML documentation tree by StrictDoc
-</h2>
+  6.1.&nbsp;HTML documentation tree by StrictDoc</h2>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>This is a default export option supported by StrictDoc.</p>
 <p>The following command creates an HTML export:</p>
@@ -1844,31 +2318,29 @@ skipped because HTML export is a default export option and the default output
 folder is <tt class="docutils literal">output</tt>.</p>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-bc6ff08299b1499fb3d49033ca5c8c74"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="6.1.1-Mathjax-support"></div>
 
     
-        <h3
-class="section-title"
+      <h3
+class="requirement__title"
 data-level="6.1.1">
-  6.1.1.&nbsp;Mathjax support
-</h3>
+  6.1.1.&nbsp;Mathjax support</h3>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>The option <tt class="docutils literal"><span class="pre">--enable-mathjax</span></tt> makes StrictDoc to include the
 <a class="reference external" href="https://www.mathjax.org/">Mathjax</a> Javascript library to all of the document
@@ -1890,31 +2362,29 @@ strictdoc export docs/ --enable-mathjax --output-dir output-html
 </pre>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-94e02f47e2464dc197f951fa55b55967"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="6.1.2-Standalone-HTML-pages-experimental-"></div>
 
     
-        <h3
-class="section-title"
+      <h3
+class="requirement__title"
 data-level="6.1.2">
-  6.1.2.&nbsp;Standalone HTML pages (experimental)
-</h3>
+  6.1.2.&nbsp;Standalone HTML pages (experimental)</h3>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>The following command creates a normal HTML export with all pages having their
 assets embedded into HTML using Data URI / Base64:</p>
@@ -1926,31 +2396,29 @@ email as single files. This option might be especially useful if you work with
 a single document instead of a documentation tree with multiple documents.</p>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-ce629e01a0cd4ad8803860ac6b3cc4a2"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="6.2-HTML-export-via-Sphinx"></div>
 
     
-        <h2
-class="section-title"
+      <h2
+class="requirement__title"
 data-level="6.2">
-  6.2.&nbsp;HTML export via Sphinx
-</h2>
+  6.2.&nbsp;HTML export via Sphinx</h2>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>The following command creates an RST export:</p>
 <pre class="code text literal-block">
@@ -1967,31 +2435,29 @@ is generated this way, see the Invoke task:
 <a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48">invoke sphinx</a>.</p>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-14448f0d76844259a1b9c77791646751"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="6.3-PDF-export-via-Sphinx-LaTeX"></div>
 
     
-        <h2
-class="section-title"
+      <h2
+class="requirement__title"
 data-level="6.3">
-  6.3.&nbsp;PDF export via Sphinx/LaTeX
-</h2>
+  6.3.&nbsp;PDF export via Sphinx/LaTeX</h2>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>The following command creates an RST export:</p>
 <pre class="code text literal-block">
@@ -2008,31 +2474,29 @@ is generated this way, see the Invoke task:
 <a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48">invoke sphinx</a>.</p>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-3c84ef37e4d34182be6228c560efab27"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="7-Traceability-between-requirements-and-source-code"></div>
 
     
-        <h1
-class="section-title"
+      <h1
+class="requirement__title"
 data-level="7">
-  7.&nbsp;Traceability between requirements and source code
-</h1>
+  7.&nbsp;Traceability between requirements and source code</h1>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p><strong>Note:</strong> This feature is experimental, the documentation is incomplete.</p>
 <p>StrictDoc allows connecting requirements to source code files. Two types of
@@ -2066,10 +2530,10 @@ requirement (REQ-001), the link becomes a link to the source range.
 </pre>
 <p>The source file:</p>
 <pre class="code py literal-block">
-<span class="comment single"># [REQ-002]</span>
-<span class="keyword">def</span> <span class="name function">hello_world</span><span class="punctuation">():</span>
-    <span class="name builtin">print</span><span class="punctuation">(</span><span class="literal string double">&quot;hello world&quot;</span><span class="punctuation">)</span>
-<span class="comment single"># [/REQ-002]</span>
+<span class="comment single"># [REQ-002]</span><span class="whitespace">
+</span><span class="keyword">def</span> <span class="name function">hello_world</span><span class="punctuation">():</span><span class="whitespace">
+</span>    <span class="name builtin">print</span><span class="punctuation">(</span><span class="literal string double">&quot;hello world&quot;</span><span class="punctuation">)</span><span class="whitespace">
+</span><span class="comment single"># [/REQ-002]</span>
 </pre>
 <p>To activate the traceability to source files, use
 <tt class="docutils literal"><span class="pre">--experimental-enable-file-traceability</span></tt> option:</p>
@@ -2078,35 +2542,35 @@ strictdoc export . --experimental-enable-file-traceability --output-dir output/
 </pre>
 <p>Currently, StrictDoc looks for source files in a directory from which the
 <tt class="docutils literal">strictdoc</tt> command is run.</p>
-<p>The <tt class="docutils literal">tests/integration/examples</tt> folder contains executable examples including
-the example of requirements-to-source-code traceability.</p>
+<p>The
+<a class="reference external" href="https://github.com/strictdoc-project/strictdoc-examples">strictdoc-examples</a>
+repository contains executable examples including the example of
+requirements-to-source-code traceability.</p>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-312f953c6e8c4025b7ec34f0cec1132a"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="8-ReqIF-support"></div>
 
     
-        <h1
-class="section-title"
+      <h1
+class="requirement__title"
 data-level="8">
-  8.&nbsp;ReqIF support
-</h1>
+  8.&nbsp;ReqIF support</h1>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>StrictDoc has an initial support of exporting to and importing from the ReqIF
 format.</p>
@@ -2127,31 +2591,29 @@ management tools.</li>
 </ul>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-cb0dc8a6294a490789d22cf05c4592fc"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="8.1-Import-flow-ReqIF-SDoc-"></div>
 
     
-        <h2
-class="section-title"
+      <h2
+class="requirement__title"
 data-level="8.1">
-  8.1.&nbsp;Import flow (ReqIF -> SDoc):
-</h2>
+  8.1.&nbsp;Import flow (ReqIF -> SDoc):</h2>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <pre class="code text literal-block">
 strictdoc import reqif sdoc input.reqif output.sdoc
@@ -2167,31 +2629,29 @@ used.</li>
 </ol>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-449fa4dc814743fa977bc42f1c83d8bf"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="8.2-Export-flow-SDoc-ReqIF-"></div>
 
     
-        <h2
-class="section-title"
+      <h2
+class="requirement__title"
 data-level="8.2">
-  8.2.&nbsp;Export flow (SDoc -> ReqIF)
-</h2>
+  8.2.&nbsp;Export flow (SDoc -> ReqIF)</h2>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <pre class="code text literal-block">
 strictdoc export --formats=reqif-sdoc %S/input.sdoc
@@ -2207,31 +2667,29 @@ library.</li>
 </ol>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-4508941ba24e4c9cb6345b48fb0c7112"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="8.3-ReqIF-implementation-details"></div>
 
     
-        <h2
-class="section-title"
+      <h2
+class="requirement__title"
 data-level="8.3">
-  8.3.&nbsp;ReqIF implementation details
-</h2>
+  8.3.&nbsp;ReqIF implementation details</h2>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>The ReqIF is a <a class="reference external" href="https://www.omg.org/spec/ReqIF">standard</a> which is
 maintained by Object Management Group (OMG). One important feature of the
@@ -2253,31 +2711,29 @@ implementation details, refer to
 documentation.</p>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-a31690a538d84bb39b932f9b1948598a"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="9-Excel-support"></div>
 
     
-        <h1
-class="section-title"
+      <h1
+class="requirement__title"
 data-level="9">
-  9.&nbsp;Excel support
-</h1>
+  9.&nbsp;Excel support</h1>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>StrictDoc provides a support for Excel XLS on input and Excel XLSX on output.</p>
 <p>On input, the headers of sheet1 are used to put together a custom grammar and
@@ -2287,31 +2743,29 @@ requirement fields.</p>
 <p>Note: A roundtrip &quot;SDoc -&gt; Excel -&gt; SDoc&quot; is not yet supported.</p>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-c51e2ab863cc48189fbad7b9909123d1"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="9.1-Import-flow-Excel-XLS-SDoc-"></div>
 
     
-        <h2
-class="section-title"
+      <h2
+class="requirement__title"
 data-level="9.1">
-  9.1.&nbsp;Import flow (Excel XLS -> SDoc):
-</h2>
+  9.1.&nbsp;Import flow (Excel XLS -> SDoc):</h2>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <pre class="code text literal-block">
 strictdoc import excel basic input.xls output.sdoc
@@ -2324,31 +2778,29 @@ library.</li>
 </ol>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-e2cbb473c2ff483db337900e2bf9e2df"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="9.2-Export-flow-SDoc-Excel-XLSX-"></div>
 
     
-        <h2
-class="section-title"
+      <h2
+class="requirement__title"
 data-level="9.2">
-  9.2.&nbsp;Export flow (SDoc -> Excel XLSX)
-</h2>
+  9.2.&nbsp;Export flow (SDoc -> Excel XLSX)</h2>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <pre class="code text literal-block">
 strictdoc export --formats=excel --output-dir=Output input.sdoc
@@ -2361,55 +2813,51 @@ the <tt class="docutils literal">XlsWriter</tt> library</li>
 </ol>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-babb6a8947394eff9ae59f7897010126"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="10-Options"></div>
 
     
-        <h1
-class="section-title"
+      <h1
+class="requirement__title"
 data-level="10">
-  10.&nbsp;Options
-</h1>
+  10.&nbsp;Options</h1>
     
 
-  </section>
+  
 
-  </article>
-
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-5e7ec99f00624b19bc7fbb911792a6bc"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="10.1-Project-title"></div>
 
     
-        <h2
-class="section-title"
+      <h2
+class="requirement__title"
 data-level="10.1">
-  10.1.&nbsp;Project title
-</h2>
+  10.1.&nbsp;Project title</h2>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>By default, StrictDoc generates a project tree with a project title
 &quot;Untitled Project&quot;. To specify the project title use the option
@@ -2419,31 +2867,29 @@ strictdoc export --project-title &quot;My Project&quot; .
 </pre>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
         <section class="content_section">
 
           <div class="content_item" data-role="parents"></div>
-          <div class="content_item" data-role="current"><turbo-frame id="article-6147d951a5f94a2fad3268eecf72950c"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <div class="content_item" data-role="current"><sdoc-node-card
+  node-role="section"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="10.2-Parallelization"></div>
 
     
-        <h2
-class="section-title"
+      <h2
+class="requirement__title"
 data-level="10.2">
-  10.2.&nbsp;Parallelization
-</h2>
+  10.2.&nbsp;Parallelization</h2>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>To improve performance for the large document trees (1000+ requirements),
 StrictDoc parallelizes reading and generation of the documents using
@@ -2461,9 +2907,9 @@ are run from the main thread. Reading of the SDoc documents is parallelized for
 all export options and is disabled with this option as well.</p>
 </div>
 
-    </div></section></article>
+    </div>
 
-</turbo-frame></div>
+</sdoc-node-card></div>
           <div class="content_item" data-role="children"></div>
         </section>
       </div>
@@ -2471,7 +2917,17 @@ all export options and is disabled with this option as well.</p>
 
     </main>
 
+    <footer class="layout_footer">
+    
+    
+    </footer>
+
+    <aside class="layout_aside">
+      
+    </aside>
+
   </div>
+  <div id="modal"></div>
   
 </body>
 </html>

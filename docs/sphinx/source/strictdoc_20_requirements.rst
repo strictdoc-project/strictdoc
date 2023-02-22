@@ -69,11 +69,10 @@ Graphical user interface
 
 StrictDoc shall provide a Graphical User Interface (GUI).
 
-Several trade-offs to consider:
+**Comment:** Several trade-offs to consider:
 
 - Desktop vs Web. Rather web-based, i.e. Python backend and JS frontend, but which technology?
 - Still keep the current behavior of a statically generated website?
-
 
 Statically generated website
 ----------------------------
@@ -82,8 +81,6 @@ StrictDoc shall allow generating requirements content to static HTML website.
 
 Platform support
 ----------------
-
-StrictDoc shall work on all major platforms.
 
 macOS support
 ~~~~~~~~~~~~~
@@ -159,40 +156,6 @@ Open source software
 
 StrictDoc shall always be free and open source software.
 
-Implementation requirements
-===========================
-
-.. _SDOC-IMPL-PARAL:
-
-Parallelization
----------------
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-IMPL-PARAL
-
-StrictDoc shall enable parallelization of the time-consuming parts of the code.
-
-.. _SDOC-IMPL-INCREMENTAL:
-
-Incremental generation
-----------------------
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-IMPL-INCREMENTAL
-
-StrictDoc shall enable incremental generation of the documents.
-
-**Comment:** When exporting documentation tree, StrictDoc shall regenerate only changed
-documents and files.
-
 Data model
 ==========
 
@@ -227,8 +190,11 @@ StrictDoc's Data Model shall accommodate for maximum possible standard requireme
 Project
 -------
 
-StrictDoc shall support the "Project" concept as a top-level entity that serves
-for grouping of SDoc documents into a single project documentation tree.
+Project as a top-level entity
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+StrictDoc shall support the "Project" concept that serves for grouping of SDoc
+documents into a single project documentation tree.
 
 Project title
 ~~~~~~~~~~~~~
@@ -260,6 +226,9 @@ Requirement item shall have a statement.
 
 UID identifier
 ~~~~~~~~~~~~~~
+
+UID identifier
+^^^^^^^^^^^^^^
 
 Requirement item may have an UID identifier.
 
@@ -311,6 +280,9 @@ TBD
 Links
 -----
 
+Links
+~~~~~
+
 StrictDoc's data model shall support linking document content nodes to each other.
 
 Parent links
@@ -339,10 +311,13 @@ The SDoc format shall support encoding the Strict Doc Data Model in a plain-text
 
 - ``[SDOC-DM-MODEL]`` :ref:`SDOC-DM-MODEL`
 
+Grammar
+-------
+
 .. _SDOC-FMT-GRAMMAR:
 
 Grammar
--------
+~~~~~~~
 
 .. list-table::
     :align: left
@@ -518,13 +493,13 @@ Linking with implementation artifacts
 StrictDoc shall support linking requirements to files.
 
 Validation: Broken links from requirements to source files
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------------------------------
 
 StrictDoc shall warn a user about all requirements whose links reference source
 files that do not exist.
 
 Validation: Broken links from source files to requirements
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------------------------------
 
 StrictDoc shall warn a user about all source files whose links reference
 requirements that do not exist.
@@ -546,8 +521,38 @@ StrictDoc shall generate source coverage information.
 Web frontend requirements
 =========================
 
-AJAX updates of multiple web forms
-----------------------------------
+TBD
 
-StrictDoc's Web GUI shall provide capability to do multipart updates.
+Implementation requirements
+===========================
 
+.. _SDOC-IMPL-PARAL:
+
+Parallelization
+---------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-IMPL-PARAL
+
+StrictDoc shall enable parallelization of the time-consuming parts of the code.
+
+.. _SDOC-IMPL-INCREMENTAL:
+
+Incremental generation
+----------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-IMPL-INCREMENTAL
+
+StrictDoc shall enable incremental generation of the documents.
+
+**Comment:** When exporting documentation tree, StrictDoc shall regenerate only changed
+documents and files.

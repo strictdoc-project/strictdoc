@@ -19,15 +19,8 @@
   
 
   
+  <script type="text/javascript" src="../_static/viewtype_menu.js"></script>
   <script type="text/javascript" src="../_static/toc.js"></script>
-  <script type="text/javascript" src="../_static/jquery.min.js"></script>
-
-  <script type="module">
-      import hotwiredTurbo from "../_static/turbo.js";
-      import { Application } from "../_static/stimulus.js";
-      window.Stimulus = Application.start();
-  </script>
-  <script type="module" src="../_static/std-forms.js"></script>
   
   
   
@@ -38,88 +31,183 @@
   
 </head>
 
-<body class="document-view withtoc">
-<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
+<body data-viewtype="document" class="withtoc" data-turbo="false">
+<script>document.body.dataset.toc_state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
 
-    <aside class="layout_aside-header">
+    <nav class="layout_nav">
+      <div class="nav">
+
+
+
+  <a
+    data-link="index"
+    class="nav_button"
+    href="../index.html"
+    title="Project index">
+    <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <line x1="9" y1="4" x2="7" y2="4"></line>
+  <line x1="12" y1="9" x2="12" y2="7"></line>
+  <line x1="6" y1="10" x2="10" y2="6"></line>
+  <circle cx="4" cy="12" r="2.25"></circle>
+  <circle cx="12" cy="4" r="2.25"></circle>
+  <circle cx="4" cy="4" r="2.25"></circle>
+  <circle cx="12" cy="12" r="2.25"></circle>
+</svg>
+  </a></div>
+    </nav>
+
+    <div class="layout_toc">
       
-  <a class="index-link" href="../index.html">To Index</a>
+  
 
-    </aside>
 
-    <aside class="layout_aside">
-      
-  <turbo-frame id="frame-toc">
-    <div>Table of Contents</div>
-    <ul class="toc"><li><a href="#1-Building-blocks" data-turbo="false">
+
+<div class="toc_panel">
+
+<div id="toc_handler" class="toc_handler nav_button">
+  <svg class="svg_icon" width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <line class="horz" x1="2" y1="12" x2="14" y2="12" id="q3"></line>
+            <line x1="2" y1="8" x2="14" y2="8" id="q2"></line>
+            <line class="horz" x1="2" y1="4" x2="14" y2="4" id="q1"></line>
+            <line class="arrw" x1="2" y1="8" x2="8" y2="14" id="q33"></line>
+            <line class="arrw" x1="2" y1="8" x2="8" y2="2" id="q11"></line>
+</svg>
+</div>
+
+<turbo-frame id="frame-toc" style="display: contents" data-controller="collapsible_list">
+
+  <div class="toc_panel__overlay">
+    <div class="toc_panel__control">
+      <div id="toc_control"></div>
+    </div>
+  </div>
+
+  <div class="toc_panel__content">
+
+    <ul id="toc" class="toc"><li><a href="#1-Building-blocks" data-turbo="false">
               <span class="section-number">1</span>
               Building blocks
             </a></li><li><a href="#2-Graphical-user-interface" data-turbo="false">
               <span class="section-number">2</span>
               Graphical user interface
+            </a></li><li><a href="#3-Implementation-details" data-turbo="false">
+              <span class="section-number">3</span>
+              Implementation details
+            </a><ul><li><a href="#3.1-SDOC_IMPL_1-Exporting-document-free-text-to-ReqIF-and-vice-versa" data-turbo="false">
+              <span class="section-number">3.1</span>
+              SDOC_IMPL_1: Exporting document free text to ReqIF and vice versa
             </a></li></ul>
+            </li></ul>
+  </div>
 </turbo-frame>
+</div>
 
-    </aside>
-
-    
-  <a class="layout_toggler layout_button" id="layout_toggle"></a><nav class="layout_nav">
-    <a
-    class="layout_nav-btn layout_button btn-document"
-    title="Go to Document view"
-    href="../docs/strictdoc_21_design.html">
-    DOC
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-table"
-    title="Go to Table view"
-    href="../docs/strictdoc_21_design-TABLE.html">
-    TBL
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-traceability"
-    title="Go to Traceability view"
-    href="../docs/strictdoc_21_design-TRACE.html">
-    TR
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-deep-traceability"
-    title="Go to Deep Traceability view"
-    href="../docs/strictdoc_21_design-DEEP-TRACE.html">
-    DTR
-  </a>
-  </nav>
-
+    </div>
 
     <header class="layout_header">
       
-  <p>Design Document <span class="document-view-type">Document</span></p>
+<div class="header">
+  <turbo-frame id="document_title">
+<div class="header__document">
+  <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d=" M13,13 L13,8 C13,7.5 12.6,7 12,7 L9,7 C8.5,7 8,6.5 8,6 L8,3 C8,2.5 7.5,2 7,2 L4,2 C3.5,2 3,2.5 3,3 L3,13 C3,13.5 3.5,14 4,14 L12,14 C12.6,14 13,13.5 13,13 Z M13,9 L13,8 C13,7.5 13,7 12.5,6.5 L8.5,2.5 C8,2 7.5,2 7,2 L6,2"></path>
+</svg>
+  <div class="header__document_name"
+    title="Design Document">
+    Design Document
+  </div>
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" class="sc-gLvsXj bpkaBy"><path stroke="currentColor" d="M12.5 4.5l-5 11" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+  <div class="viewtype">
+  <div
+    id="viewtype_handler"
+    class="viewtype__handler"
+    aria-expanded="false"
+    aria-controls="viewtype_menu"
+  >
+    <span>Document</span>
+    <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" >
+  <path d="M5 10l3 3 3-3M5 6l3-3 3 3"></path>
+</svg>
+  </div>
+  <menu
+    id="viewtype_menu"
+    class="viewtype__menu"
+    aria-hidden="true"
+    aria-labelledby="viewtype_handler"
+  >
+    <li class="viewtype__menu_header">VIEWS</li>
+    <li>
+      <a
+        data-viewtype_link="document"
+        class="viewtype__menu_item"
+        title="Go to Document view"
+        href="../docs/strictdoc_21_design.html">
+        Document</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="table"
+        class="viewtype__menu_item"
+        title="Go to Table view"
+        href="../docs/strictdoc_21_design-TABLE.html">
+        Table</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="traceability"
+        class="viewtype__menu_item"
+        title="Go to Traceability view"
+        href="../docs/strictdoc_21_design-TRACE.html">
+        Traceability</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="deep_traceability"
+        class="viewtype__menu_item"
+        title="Go to Deep Traceability view"
+        href="../docs/strictdoc_21_design-DEEP-TRACE.html">
+      Deep traceability</a>
+    </li>
+  </menu>
+</div>
+</div>
+</turbo-frame>
+  <div class="header__r">
+    <div class="actions_group"></div>
+  </div>
+</div>
 
     </header>
 
-    <main class="layout_main">
+    <main class="layout_main" id="pan_with_space">
       
-  <turbo-frame id="frame_document_content"><div class="content">
-        <turbo-frame id="article-da7e542ff34942d6817ac5c831cc5266">
-<article></article>
-</turbo-frame>
-          <turbo-frame id="article-b0e919b770fd4da28cea7676aa17b51f"><article class="docsection" data-controller="document">
+  <turbo-frame id="frame_document_content">
+      <div class="content">
+        <turbo-frame id="article-03bef9b456404ab492e4130e477f505d">
 
-  <section data-section="meta" class="docsection_section">
+<sdoc-node
+  data-editable_node="on"
+>
+  <h1>Design Document</h1>
+
+</sdoc-node>
+</turbo-frame>
+          <turbo-frame id="article-bb9aa2b1bc61429c9cd06d667d5bc71c"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="1-Building-blocks"></div>
 
     
-        <h1
-class="section-title"
+      <h1
+class="requirement__title"
 data-level="1">
-  1.&nbsp;Building blocks
-</h1>
+  1.&nbsp;Building blocks</h1>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <p>StrictDoc is based on the following open-source libraries and tools:</p>
 <table border="1" class="colwidths-given docutils">
@@ -161,26 +249,25 @@ data-level="1">
 </table>
 </div>
 
-    </div></section></article>
+    </div></sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-9d365a0c922245eb8a76ab0c61b34b2d"><article class="docsection" data-controller="document">
-
-  <section data-section="meta" class="docsection_section">
+          <turbo-frame id="article-9aed11ffcc774e9bb7eaa48794729d4e"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="2-Graphical-user-interface"></div>
 
     
-        <h1
-class="section-title"
+      <h1
+class="requirement__title"
 data-level="2">
-  2.&nbsp;Graphical user interface
-</h1>
+  2.&nbsp;Graphical user interface</h1>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
 <ul class="simple">
 <li>Web interface is based on FastAPI / Uvicorn serving Jinja templates.</li>
@@ -194,7 +281,48 @@ data-level="2">
 </ul>
 </div>
 
-    </div></section></article>
+    </div></sdoc-node>
+
+</turbo-frame>
+          <turbo-frame id="article-f431e66ba71440d987973ddc06be13a4"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
+
+    <div data-role='anchor' id="3-Implementation-details"></div>
+
+    
+      <h1
+class="requirement__title"
+data-level="3">
+  3.&nbsp;Implementation details</h1>
+    
+
+  </sdoc-node>
+
+</turbo-frame>
+          <turbo-frame id="article-df122ca9445b4a06a00528d0d6af906e"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
+
+    <div data-role='anchor' id="3.1-SDOC_IMPL_1-Exporting-document-free-text-to-ReqIF-and-vice-versa"></div>
+
+    
+      <h2
+class="requirement__title"
+data-level="3.1">
+  3.1.&nbsp;SDOC_IMPL_1: Exporting document free text to ReqIF and vice versa</h2>
+    
+
+  <div class="free-text">
+      <div class="document">
+<p>ReqIF format does not seem to provide a dedicated convention for a text node to be distinguished from a requirement or a section. StrictDoc implements a workaround: the document's free text is converted to a section with a <tt class="docutils literal">ChapterName</tt> field that equals &quot;Abstract&quot;. And the other way round: when a ReqIF-to-SDoc converter encounters the first section of a document to be &quot;Abstract&quot;, it is converted to a free text.</p>
+</div>
+
+    </div></sdoc-node>
 
 </turbo-frame>
 
@@ -203,7 +331,17 @@ data-level="2">
 
     </main>
 
+    <footer class="layout_footer">
+    
+    
+    </footer>
+
+    <aside class="layout_aside">
+      
+    </aside>
+
   </div>
+  <div id="modal"></div>
   
 </body>
 </html>

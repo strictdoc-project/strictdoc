@@ -19,15 +19,8 @@
   
 
   
+  <script type="text/javascript" src="../_static/viewtype_menu.js"></script>
   <script type="text/javascript" src="../_static/toc.js"></script>
-  <script type="text/javascript" src="../_static/jquery.min.js"></script>
-
-  <script type="module">
-      import hotwiredTurbo from "../_static/turbo.js";
-      import { Application } from "../_static/stimulus.js";
-      window.Stimulus = Application.start();
-  </script>
-  <script type="module" src="../_static/std-forms.js"></script>
   
   
   
@@ -38,247 +31,277 @@
   
 </head>
 
-<body class="document-view withtoc">
-<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
+<body data-viewtype="document" class="withtoc" data-turbo="false">
+<script>document.body.dataset.toc_state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
 
-    <aside class="layout_aside-header">
+    <nav class="layout_nav">
+      <div class="nav">
+
+
+
+  <a
+    data-link="index"
+    class="nav_button"
+    href="../index.html"
+    title="Project index">
+    <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <line x1="9" y1="4" x2="7" y2="4"></line>
+  <line x1="12" y1="9" x2="12" y2="7"></line>
+  <line x1="6" y1="10" x2="10" y2="6"></line>
+  <circle cx="4" cy="12" r="2.25"></circle>
+  <circle cx="12" cy="4" r="2.25"></circle>
+  <circle cx="4" cy="4" r="2.25"></circle>
+  <circle cx="12" cy="12" r="2.25"></circle>
+</svg>
+  </a></div>
+    </nav>
+
+    <div class="layout_toc">
       
-  <a class="index-link" href="../index.html">To Index</a>
+  
 
-    </aside>
 
-    <aside class="layout_aside">
-      
-  <turbo-frame id="frame-toc">
-    <div>Table of Contents</div>
-    <ul class="toc"><li><a href="#1-Contributor-checklist" data-turbo="false">
+
+<div class="toc_panel">
+
+<div id="toc_handler" class="toc_handler nav_button">
+  <svg class="svg_icon" width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <line class="horz" x1="2" y1="12" x2="14" y2="12" id="q3"></line>
+            <line x1="2" y1="8" x2="14" y2="8" id="q2"></line>
+            <line class="horz" x1="2" y1="4" x2="14" y2="4" id="q1"></line>
+            <line class="arrw" x1="2" y1="8" x2="8" y2="14" id="q33"></line>
+            <line class="arrw" x1="2" y1="8" x2="8" y2="2" id="q11"></line>
+</svg>
+</div>
+
+<turbo-frame id="frame-toc" style="display: contents" data-controller="collapsible_list">
+
+  <div class="toc_panel__overlay">
+    <div class="toc_panel__control">
+      <div id="toc_control"></div>
+    </div>
+  </div>
+
+  <div class="toc_panel__content">
+
+    <ul id="toc" class="toc"><li><a href="#1-Contributor-checklist" data-turbo="false">
               <span class="section-number">1</span>
               Contributor checklist
-            </a></li><li><a href="#2-Python-code" data-turbo="false">
+            </a></li><li><a href="#2-How-can-I-help-" data-turbo="false">
               <span class="section-number">2</span>
-              Python code
-            </a></li><li><a href="#3-Git-workflow" data-turbo="false">
-              <span class="section-number">3</span>
-              Git workflow
-            </a></li><li><a href="#4-Documentation" data-turbo="false">
-              <span class="section-number">4</span>
-              Documentation
+              How can I help?
+            </a><ul><li><a href="#2.1-ReqIF-users" data-turbo="false">
+              <span class="section-number">2.1</span>
+              ReqIF users
+            </a></li><li><a href="#2.2-TeX-LaTeX-Sphinx-experts" data-turbo="false">
+              <span class="section-number">2.2</span>
+              TeX / LaTeX / Sphinx experts
             </a></li></ul>
+            </li></ul>
+  </div>
 </turbo-frame>
+</div>
 
-    </aside>
-
-    
-  <a class="layout_toggler layout_button" id="layout_toggle"></a><nav class="layout_nav">
-    <a
-    class="layout_nav-btn layout_button btn-document"
-    title="Go to Document view"
-    href="../docs/strictdoc_10_contributing.html">
-    DOC
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-table"
-    title="Go to Table view"
-    href="../docs/strictdoc_10_contributing-TABLE.html">
-    TBL
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-traceability"
-    title="Go to Traceability view"
-    href="../docs/strictdoc_10_contributing-TRACE.html">
-    TR
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-deep-traceability"
-    title="Go to Deep Traceability view"
-    href="../docs/strictdoc_10_contributing-DEEP-TRACE.html">
-    DTR
-  </a>
-  </nav>
-
+    </div>
 
     <header class="layout_header">
       
-  <p>Contributing to StrictDoc <span class="document-view-type">Document</span></p>
+<div class="header">
+  <turbo-frame id="document_title">
+<div class="header__document">
+  <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d=" M13,13 L13,8 C13,7.5 12.6,7 12,7 L9,7 C8.5,7 8,6.5 8,6 L8,3 C8,2.5 7.5,2 7,2 L4,2 C3.5,2 3,2.5 3,3 L3,13 C3,13.5 3.5,14 4,14 L12,14 C12.6,14 13,13.5 13,13 Z M13,9 L13,8 C13,7.5 13,7 12.5,6.5 L8.5,2.5 C8,2 7.5,2 7,2 L6,2"></path>
+</svg>
+  <div class="header__document_name"
+    title="Contributing to StrictDoc">
+    Contributing to StrictDoc
+  </div>
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" class="sc-gLvsXj bpkaBy"><path stroke="currentColor" d="M12.5 4.5l-5 11" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+  <div class="viewtype">
+  <div
+    id="viewtype_handler"
+    class="viewtype__handler"
+    aria-expanded="false"
+    aria-controls="viewtype_menu"
+  >
+    <span>Document</span>
+    <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" >
+  <path d="M5 10l3 3 3-3M5 6l3-3 3 3"></path>
+</svg>
+  </div>
+  <menu
+    id="viewtype_menu"
+    class="viewtype__menu"
+    aria-hidden="true"
+    aria-labelledby="viewtype_handler"
+  >
+    <li class="viewtype__menu_header">VIEWS</li>
+    <li>
+      <a
+        data-viewtype_link="document"
+        class="viewtype__menu_item"
+        title="Go to Document view"
+        href="../docs/strictdoc_10_contributing.html">
+        Document</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="table"
+        class="viewtype__menu_item"
+        title="Go to Table view"
+        href="../docs/strictdoc_10_contributing-TABLE.html">
+        Table</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="traceability"
+        class="viewtype__menu_item"
+        title="Go to Traceability view"
+        href="../docs/strictdoc_10_contributing-TRACE.html">
+        Traceability</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="deep_traceability"
+        class="viewtype__menu_item"
+        title="Go to Deep Traceability view"
+        href="../docs/strictdoc_10_contributing-DEEP-TRACE.html">
+      Deep traceability</a>
+    </li>
+  </menu>
+</div>
+</div>
+</turbo-frame>
+  <div class="header__r">
+    <div class="actions_group"></div>
+  </div>
+</div>
 
     </header>
 
-    <main class="layout_main">
+    <main class="layout_main" id="pan_with_space">
       
-  <turbo-frame id="frame_document_content"><div class="content">
-        <turbo-frame id="article-c793b2795efe4f43975a24d818d6d9e0">
-<article><section>
-      <div class="free_text">
-        <div class="document">
-<p>Contributions to StrictDoc are welcome and appreciated. StrictDoc is based on
-Python and maintained as any other Python package on GitHub: with linting,
-tests, and hopefully enough best practice put into the codebase.</p>
-<p>The rules described below is the summary of what is considered to be the
-currently preferred development style for StrictDoc. These rules have been
-relatively stable for quite a while but any rule can still be changed if a
-better development practice is found.</p>
-<p>Any feedback on this contributing guideline is appreciated.</p>
+  <turbo-frame id="frame_document_content">
+      <div class="content">
+        <turbo-frame id="article-18074d6059fa4efe9e3a75634413517b">
+
+<sdoc-node
+  data-editable_node="on"
+>
+  <h1>Contributing to StrictDoc</h1>
+    <div class="free_text">
+      <div class="document">
+<p>Contributions to StrictDoc are welcome and appreciated.
+Presented below is a condensed checklist that summarises the information
+of the development guide, see <a class="reference external" href="../docs/strictdoc_11_developer_guide.html#1-Getting-started">Getting started</a>.</p>
 </div>
 
-      </div></section></article>
-</turbo-frame>
-          <turbo-frame id="article-255534ba15d140a99541ffb8ebb78797"><article class="docsection" data-controller="document">
+    </div>
 
-  <section data-section="meta" class="docsection_section">
+</sdoc-node>
+</turbo-frame>
+          <turbo-frame id="article-bfcc66158d094dfb9937160392f130b7"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
 
     <div data-role='anchor' id="1-Contributor-checklist"></div>
 
     
-        <h1
-class="section-title"
+      <h1
+class="requirement__title"
 data-level="1">
-  1.&nbsp;Contributor checklist
-</h1>
+  1.&nbsp;Contributor checklist</h1>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
-<p>This is a condensed checklist that summarises the information presented in the
-rest of this guideline.</p>
-<p>Before opening your Pull Request, please make sure to:</p>
+<p>Before opening your Pull Request, the contributor is encouraged to do the
+following steps:</p>
 <ol class="arabic simple">
 <li>Run <tt class="docutils literal">invoke check</tt> tasks locally. This task calls several lint and test
 scripts and it is the very task that is run by the GitHub CI process.</li>
 <li>A contribution that contains changes to the StrictDoc's codebase shall also
 include tests that exercise the changed behavior. A contribution without any
 tests is unlikely to be accepted (with the exception of &quot;code climate&quot;
-changes, see <a class="reference external" href="#2-Python-code">Python code</a> below).</li>
+changes, see <a class="reference external" href="../docs/strictdoc_11_developer_guide.html#3-Python-code">Python code</a> below).</li>
 <li>Follow the conventions of the section &quot;Git workflow&quot; (see
-<a class="reference external" href="#3-Git-workflow">Git workflow</a>). A clean Git history and conventional
+<a class="reference external" href="../docs/strictdoc_11_developer_guide.html#4-Git-workflow">Git workflow</a>). A clean Git history and conventional
 commit names are expected for every single contribution.</li>
+<li>If the contribution is not trivial, read through the complete development
+guide.</li>
 </ol>
 </div>
 
-    </div></section></article>
+    </div></sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-54b58cdde3314f0aba367402bb970091"><article class="docsection" data-controller="document">
+          <turbo-frame id="article-87886543ce49413d84fd5e0e58ad0854"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
 
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="2-Python-code"></div>
+    <div data-role='anchor' id="2-How-can-I-help-"></div>
 
     
-        <h1
-class="section-title"
+      <h1
+class="requirement__title"
 data-level="2">
-  2.&nbsp;Python code
-</h1>
+  2.&nbsp;How can I help?</h1>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
-      <div class="document">
-<ul class="simple">
-<li>The version of Python is set to be as low as possible given some constraints
-of StrictDoc's dependencies. Ideally, the lowest Python version should only be
-raised when it is consistently deprecated by major software platforms like
-Ubuntu or GitHub Actions.</li>
-<li>All developer tasks are collected in the <cite>tasks.py</cite> which is run by Invoke
-tool. Run the <tt class="docutils literal">invoke <span class="pre">--list</span></tt> command to see the list of available commands.</li>
-<li>Formatting is governed by <cite>black</cite> which reformats the code automatically
-when the <tt class="docutils literal">invoke check</tt> command is run.<ul>
-<li>If a string literal gets too long, it should be split into a multiline
-literal with each line being a meaningful word or subsentence.</li>
-</ul>
-</li>
-<li>If a contribution includes changes in StrictDoc's code, at least the
-integration-level tests should be added to the <cite>tests/integration</cite>. If the
-contributed code needs a fine-grained control over the added behavior, adding
-both unit and integration tests is preferred. The only exception where a
-contribution can contain no tests is &quot;code climate&quot; which is work which
-introduces changes in code but no change to the functionality.</li>
-</ul>
-</div>
-
-    </div></section></article>
+  </sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-cc01cb4a8893439f9b8c6e73847123ea"><article class="docsection" data-controller="document">
+          <turbo-frame id="article-7b3d80b0fb6a4236b55b61f008a70abf"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
 
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="3-Git-workflow"></div>
+    <div data-role='anchor' id="2.1-ReqIF-users"></div>
 
     
-        <h1
-class="section-title"
-data-level="3">
-  3.&nbsp;Git workflow
-</h1>
+      <h2
+class="requirement__title"
+data-level="2.1">
+  2.1.&nbsp;ReqIF users</h2>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
-<ul class="simple">
-<li>The preferred Git workflow is &quot;1 commit per 1 PR&quot;. If the work truly deserves
-a sequence of commits, each commit shall be self-contained and pass all checks
-from the <tt class="docutils literal">invoke check</tt> command. The preferred approach: split the work into
-several independent Pull Requests to simplify the work of the reviewer.</li>
-<li>The branch should be always rebased against the main branch. The
-<tt class="docutils literal">git fetch &amp;&amp; git rebase origin/main</tt> is preferred over
-<tt class="docutils literal">git fetch &amp;&amp; git merge main</tt>.</li>
-<li>The Git commit message should follow the format: <cite>context: description</cite> where
-the context can be a major feature being added or a folder. A form of
-<cite>context: subcontext: description</cite> is also an option. Typical examples:<ul>
-<li><cite>docs: fix links to the grammar.py</cite></li>
-<li><cite>reqif: native: export/import roundtrip for multiline requirement fields</cite></li>
-<li><cite>backend/dsl: switch to dynamic fields, with validation</cite></li>
-<li><cite>Poetry: add filecheck as a dependency</cite></li>
-</ul>
-</li>
-<li>When a contribution is simply an improvement of existing code without a change
-in the functionality, the commit should be named: <cite>Code climate: description</cite>.<ul>
-<li>Example: <cite>Code climate: fix all remaining major Pylint warnings</cite>.</li>
-</ul>
-</li>
-</ul>
+<p>The existing capability of StrictDoc to export/import SDoc to ReqIF is very basic. If you have to deal with ReqIF and you experience errors/crashes when using StrictDoc against ReqIF files, feel free to contribute the anonymized ReqIF files via StrictDoc Issues on GitHub, and we will take care of your specific case.</p>
+<p>It is straightforward to create an anonymized version of a ReqIF file. Just reduce your file to the section that causes troubles in import or export and replace all your business-specific titles/texts to some <cite>Lorem ipsum...</cite> boilerplate, see <a class="reference external" href="https://www.loremipsum.de/">https://www.loremipsum.de/</a>.</p>
 </div>
 
-    </div></section></article>
+    </div></sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-2bf049a0939f4de7b2808fe924d4e3f6"><article class="docsection" data-controller="document">
+          <turbo-frame id="article-e121af7518684149a7928e82b45fa8f7"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
 
-  <section data-section="meta" class="docsection_section">
-
-    <div data-role='anchor' id="4-Documentation"></div>
+    <div data-role='anchor' id="2.2-TeX-LaTeX-Sphinx-experts"></div>
 
     
-        <h1
-class="section-title"
-data-level="4">
-  4.&nbsp;Documentation
-</h1>
+      <h2
+class="requirement__title"
+data-level="2.2">
+  2.2.&nbsp;TeX / LaTeX / Sphinx experts</h2>
     
 
-  </section>
-
-  <section data-section="description" class="docsection_section"><div class="free-text">
+  <div class="free-text">
       <div class="document">
-<ul class="simple">
-<li>Every change in the functionality or the infrastructure should be documented.</li>
-<li>Every line of documentation shall be no longer than 80 characters. StrictDoc's
-own documentation has a few exceptions, however, the latest preference is
-given to 80 characters per line. Unfortunately, until there is automatic
-support for mixed SDoc/RST content, all long lines shall be edited and
-split by a contributor manually.</li>
-<li>The <tt class="docutils literal">invoke sphinx</tt> task should be used for re-generating documentation on a
-developer machine.</li>
-</ul>
+<p>The existing template for generating PDF documents using Sphinx looks like this: <a class="reference external" href="https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/">https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/</a>. The template is maintained in a separate repository: <a class="reference external" href="https://github.com/strictdoc-project/sphinx-latex-reqspec-template">https://github.com/strictdoc-project/sphinx-latex-reqspec-template</a> and does a good job but could be improved in terms of look and structure used.</p>
+<p>If you are an expert and have experience of customizing Sphinx/TeX templates, consider providing feedback or contributing patches.</p>
+<p>One extreme way of improving the generated output could be to take the Sphinx template for TeX files and fully customize what Sphinx does to produce a PDF. See <a class="reference external" href="https://www.sphinx-doc.org/en/master/latex.html">https://www.sphinx-doc.org/en/master/latex.html</a>.</p>
 </div>
 
-    </div></section></article>
+    </div></sdoc-node>
 
 </turbo-frame>
 
@@ -287,7 +310,17 @@ developer machine.</li>
 
     </main>
 
+    <footer class="layout_footer">
+    
+    
+    </footer>
+
+    <aside class="layout_aside">
+      
+    </aside>
+
   </div>
+  <div id="modal"></div>
   
 </body>
 </html>

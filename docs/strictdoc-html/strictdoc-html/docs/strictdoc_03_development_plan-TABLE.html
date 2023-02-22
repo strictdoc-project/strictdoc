@@ -19,6 +19,7 @@
   
 
   
+  <script type="text/javascript" src="../_static/viewtype_menu.js"></script>
   <script type="text/javascript" src="../_static/toc.js"></script>
   
   
@@ -30,95 +31,162 @@
   
 </head>
 
-<body class="table-view withtoc">
-<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
+<body data-viewtype="table" class="withtoc" data-turbo="false">
+<script>document.body.dataset.toc_state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
 
-    <aside class="layout_aside-header">
+    <nav class="layout_nav">
+      <div class="nav">
+
+
+
+  <a
+    data-link="index"
+    class="nav_button"
+    href="../index.html"
+    title="Project index">
+    <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <line x1="9" y1="4" x2="7" y2="4"></line>
+  <line x1="12" y1="9" x2="12" y2="7"></line>
+  <line x1="6" y1="10" x2="10" y2="6"></line>
+  <circle cx="4" cy="12" r="2.25"></circle>
+  <circle cx="12" cy="4" r="2.25"></circle>
+  <circle cx="4" cy="4" r="2.25"></circle>
+  <circle cx="12" cy="12" r="2.25"></circle>
+</svg>
+  </a></div>
+    </nav>
+
+    <div class="layout_toc">
       
-  <a class="index-link" href="../index.html">To Index</a>
+  
 
-    </aside>
 
-    <aside class="layout_aside">
-      
-  <turbo-frame id="frame-toc">
-    <div>Table of Contents</div>
-    <ul class="toc"><li><a href="#1-Project-goals" data-turbo="false">
+
+<div class="toc_panel">
+
+<div id="toc_handler" class="toc_handler nav_button">
+  <svg class="svg_icon" width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <line class="horz" x1="2" y1="12" x2="14" y2="12" id="q3"></line>
+            <line x1="2" y1="8" x2="14" y2="8" id="q2"></line>
+            <line class="horz" x1="2" y1="4" x2="14" y2="4" id="q1"></line>
+            <line class="arrw" x1="2" y1="8" x2="8" y2="14" id="q33"></line>
+            <line class="arrw" x1="2" y1="8" x2="8" y2="2" id="q11"></line>
+</svg>
+</div>
+
+<turbo-frame id="frame-toc" style="display: contents" data-controller="collapsible_list">
+
+  <div class="toc_panel__overlay">
+    <div class="toc_panel__control">
+      <div id="toc_control"></div>
+    </div>
+  </div>
+
+  <div class="toc_panel__content">
+
+    <ul id="toc" class="toc"><li><a href="#1-Project-goals" data-turbo="false">
               <span class="section-number">1</span>
               Project goals
             </a><ul><li>
         <a href="#1.1-GOAL-1-TOOL-SUPPORT" data-turbo="false">
-          <span class="section-number">1.1</span>
-          Software support for writing requirements and specifications documents
-        </a></li><li>
+          <span class="section-number">1.1</span>Software support for writing requirements and specifications documents</a></li><li>
         <a href="#1.2-GOAL-2-REDUCE-DOCUMENTATION-HAZARDS" data-turbo="false">
-          <span class="section-number">1.2</span>
-          Reduce documentation hazards
-        </a></li><li>
+          <span class="section-number">1.2</span>Reduce documentation hazards</a></li><li>
         <a href="#1.3-GOAL-3-NO-RUNAWAY-DOCUMENTATION" data-turbo="false">
-          <span class="section-number">1.3</span>
-          No (or less) run-away documentation
-        </a></li><li>
+          <span class="section-number">1.3</span>No (or less) run-away documentation</a></li><li>
         <a href="#1.4-GOAL-4-CHANGE-MANAGEMENT" data-turbo="false">
-          <span class="section-number">1.4</span>
-          Change management
-        </a></li></ul>
+          <span class="section-number">1.4</span>Change management</a></li></ul>
             </li><li><a href="#2-User-interfaces" data-turbo="false">
               <span class="section-number">2</span>
               User interfaces
             </a><ul><li>
         <a href="#2.1-UI-1-TEXT" data-turbo="false">
-          <span class="section-number">2.1</span>
-          Command-line interface
-        </a></li><li>
+          <span class="section-number">2.1</span>Command-line interface</a></li><li>
         <a href="#2.2-UI-2-WEB" data-turbo="false">
-          <span class="section-number">2.2</span>
-          Web interface
-        </a></li></ul>
+          <span class="section-number">2.2</span>Web interface</a></li></ul>
             </li><li><a href="#3-Development-team" data-turbo="false">
               <span class="section-number">3</span>
               Development team
             </a></li></ul>
+  </div>
 </turbo-frame>
+</div>
 
-    </aside>
-
-    
-  <a class="layout_toggler layout_button" id="layout_toggle"></a><nav class="layout_nav">
-    <a
-    class="layout_nav-btn layout_button btn-document"
-    title="Go to Document view"
-    href="../docs/strictdoc_03_development_plan.html">
-    DOC
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-table"
-    title="Go to Table view"
-    href="../docs/strictdoc_03_development_plan-TABLE.html">
-    TBL
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-traceability"
-    title="Go to Traceability view"
-    href="../docs/strictdoc_03_development_plan-TRACE.html">
-    TR
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-deep-traceability"
-    title="Go to Deep Traceability view"
-    href="../docs/strictdoc_03_development_plan-DEEP-TRACE.html">
-    DTR
-  </a>
-  </nav>
-
+    </div>
 
     <header class="layout_header">
       
-  <p>Development Plan <span class="document-view-type">Table</span></p>
+<div class="header">
+  <turbo-frame id="document_title">
+<div class="header__document">
+  <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d=" M13,13 L13,8 C13,7.5 12.6,7 12,7 L9,7 C8.5,7 8,6.5 8,6 L8,3 C8,2.5 7.5,2 7,2 L4,2 C3.5,2 3,2.5 3,3 L3,13 C3,13.5 3.5,14 4,14 L12,14 C12.6,14 13,13.5 13,13 Z M13,9 L13,8 C13,7.5 13,7 12.5,6.5 L8.5,2.5 C8,2 7.5,2 7,2 L6,2"></path>
+</svg>
+  <div class="header__document_name"
+    title="Development Plan">
+    Development Plan
+  </div>
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" class="sc-gLvsXj bpkaBy"><path stroke="currentColor" d="M12.5 4.5l-5 11" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+  <div class="viewtype">
+  <div
+    id="viewtype_handler"
+    class="viewtype__handler"
+    aria-expanded="false"
+    aria-controls="viewtype_menu"
+  >
+    <span>Table</span>
+    <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" >
+  <path d="M5 10l3 3 3-3M5 6l3-3 3 3"></path>
+</svg>
+  </div>
+  <menu
+    id="viewtype_menu"
+    class="viewtype__menu"
+    aria-hidden="true"
+    aria-labelledby="viewtype_handler"
+  >
+    <li class="viewtype__menu_header">VIEWS</li>
+    <li>
+      <a
+        data-viewtype_link="document"
+        class="viewtype__menu_item"
+        title="Go to Document view"
+        href="../docs/strictdoc_03_development_plan.html">
+        Document</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="table"
+        class="viewtype__menu_item"
+        title="Go to Table view"
+        href="../docs/strictdoc_03_development_plan-TABLE.html">
+        Table</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="traceability"
+        class="viewtype__menu_item"
+        title="Go to Traceability view"
+        href="../docs/strictdoc_03_development_plan-TRACE.html">
+        Traceability</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="deep_traceability"
+        class="viewtype__menu_item"
+        title="Go to Deep Traceability view"
+        href="../docs/strictdoc_03_development_plan-DEEP-TRACE.html">
+      Deep traceability</a>
+    </li>
+  </menu>
+</div>
+</div>
+</turbo-frame>
+</div>
 
     </header>
 
-    <main class="layout_main">
+    <main class="layout_main" id="pan_with_space">
       
 
       
@@ -149,7 +217,7 @@ project is developed.</p>
      1
    </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
     <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="1-Project-goals"></div>
-      <div class="section-title">
+      <div class="requirement__title">
         Project goals
       </div></td>
   </tr><tr>
@@ -174,17 +242,17 @@ technical requirements specifications.</p>
       <td class="content-view-td content-view-td-meta"></td>
       <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
       Children:
-      <ul class="requirement_link">
+      <ul class="requirement__link">
         <li>
-          <a class="requirement_link-child" href="../docs/strictdoc_20_requirements-TABLE.html#1.1-SDOC-HIGH-REQS-MANAGEMENT">
-            <span class="requirement_child-uid">SDOC-HIGH-REQS-MANAGEMENT</span>
+          <a class="requirement__link-child" href="../docs/strictdoc_20_requirements-TABLE.html#1.1-SDOC-HIGH-REQS-MANAGEMENT">
+            <span class="requirement__child-uid">SDOC-HIGH-REQS-MANAGEMENT</span>
             Requirements management
           </a>
         </li>
         </ul>
     </td>
     <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.1-GOAL-1-TOOL-SUPPORT"></div>
-      <div class="section-title">
+      <div class="requirement__title">
         Software support for writing requirements and specifications documents
       </div></td>
     <td class="content-view-td content-view-td-content"><div class="document">
@@ -212,7 +280,7 @@ Software shall support engineers in their work with documentation.</p>
       <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
     </td>
     <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.2-GOAL-2-REDUCE-DOCUMENTATION-HAZARDS"></div>
-      <div class="section-title">
+      <div class="requirement__title">
         Reduce documentation hazards
       </div></td>
     <td class="content-view-td content-view-td-content"><div class="document">
@@ -247,7 +315,7 @@ and writing technical documentation.</p>
       <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
     </td>
     <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.3-GOAL-3-NO-RUNAWAY-DOCUMENTATION"></div>
-      <div class="section-title">
+      <div class="requirement__title">
         No (or less) run-away documentation
       </div></td>
     <td class="content-view-td content-view-td-content"><div class="document">
@@ -275,7 +343,7 @@ documents and documentation trees.</p>
       <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
     </td>
     <td class="content-view-td content-view-td-title"><div data-role='anchor' id="1.4-GOAL-4-CHANGE-MANAGEMENT"></div>
-      <div class="section-title">
+      <div class="requirement__title">
         Change management
       </div></td>
     <td class="content-view-td content-view-td-content"><div class="document">
@@ -306,7 +374,7 @@ to do a more advanced analysis of requirements and requirement trees:</p>
      2
    </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
     <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="2-User-interfaces"></div>
-      <div class="section-title">
+      <div class="requirement__title">
         User interfaces
       </div></td>
   </tr><tr>
@@ -337,7 +405,7 @@ work-in-progress.</p>
       <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
     </td>
     <td class="content-view-td content-view-td-title"><div data-role='anchor' id="2.1-UI-1-TEXT"></div>
-      <div class="section-title">
+      <div class="requirement__title">
         Command-line interface
       </div></td>
     <td class="content-view-td content-view-td-content"><div class="document">
@@ -359,7 +427,7 @@ work-in-progress.</p>
       <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
     </td>
     <td class="content-view-td content-view-td-title"><div data-role='anchor' id="2.2-UI-2-WEB"></div>
-      <div class="section-title">
+      <div class="requirement__title">
         Web interface
       </div></td>
     <td class="content-view-td content-view-td-content"><div class="document">
@@ -375,7 +443,7 @@ work-in-progress.</p>
      3
    </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
     <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="3-Development-team"></div>
-      <div class="section-title">
+      <div class="requirement__title">
         Development team
       </div></td>
   </tr><tr>
@@ -397,7 +465,17 @@ with occasional contributions from the Open Source community.</p>
 
     </main>
 
+    <footer class="layout_footer">
+    
+    
+    </footer>
+
+    <aside class="layout_aside">
+      
+    </aside>
+
   </div>
+  <div id="modal"></div>
   
 </body>
 </html>

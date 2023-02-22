@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@400;700&family=Noto+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
 
 /* .test-content {} */
 
@@ -10,20 +10,37 @@
   --color-bg-contrast: #fff;
   --color-fg-contrast: #000;
 
-  --color-bg-half-contrast: rgb(255 255 255 / 40%);
-  --color-fg-half-contrast: rgb(0 0 0 / 10%);
+  --color-fg-accent: rgb(242, 100, 42);
+  --color-bg-accent: rgb(242 100 42 / 10%);
 
   --color-accent: #274466;
   --color-highlight: rgb(255, 255, 155);
 
-  --color-bg-secondary: rgb(0 0 0 / 1%);
+  /* --color-bg-secondary: rgb(0 0 0 / 1%); */
+
+  --color-fg-secondary: rgba(0, 0, 0, .5);
+  --color-bg-secondary: rgba(0, 0, 0, .025);
+
+  --color-fg-secondary-invert: rgb(255 255 255 / 50%);
+  --color-bg-secondary-invert: rgb(0 0 0 / 10%);
+
+  --color-link: var(--color-fg-secondary);
+  --color-action: var(--color-fg-accent);
+  --color-hover: var(--color-fg-contrast);
 
   --color-border: rgba(0,0,0,.1);
 
   --scrollbarBG: transparent;
-  --thumbBG: var(--color-border);
+  --thumbBG: rgba(0,0,0,.05);;
 
   --base-font-size: 16px;
+
+  --base-rhythm: 8px;
+
+  --font-size: 16px;
+  --font-size-sm: 0.8125rem;
+  --font-size-xsm: 0.75rem;
+  --font-size-xxsm: 11px;
 
   --base-gap: calc(var(--base-font-size)*3);
   --base-padding: var(--base-font-size);
@@ -32,15 +49,22 @@
   --toc-width: 300px;
   --toc-layout-transition: 0.1s;
 
+  --base-elevation-0: 0 0 0 rgba(0,0,0,0);
+  --base-elevation-node: 0 0 16px rgba(0,0,0,.1);
+  --base-elevation-modal: 0 0 32px rgba(0,0,0,.32);
+
   --main-elevation-shadow: inset 8px 8px 16px rgba(0,0,0,.2);
+  --base-elevation: 0 0 16px rgba(0,0,0,.2);
 
   --traceability-arrow: 1.25rem;
 
   --code-border-color: var(--color-border);
-  --code-font-family: consolas,monaco,"Andale Mono",monospace;
+  --code-font-family: 'Noto Sans Mono', consolas, monaco, monospace;
   --code-font-size: .85em;
 
   --card-width: 300px;
+
+  --base-border: 1px solid rgba(0,0,0,0.1);
 
 }
 

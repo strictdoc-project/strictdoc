@@ -19,6 +19,7 @@
   
 
   
+  <script type="text/javascript" src="../_static/viewtype_menu.js"></script>
   <script type="text/javascript" src="../_static/toc.js"></script>
   
   
@@ -30,84 +31,164 @@
   
 </head>
 
-<body class="table-view withtoc">
-<script>document.body.dataset.state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
+<body data-viewtype="table" class="withtoc" data-turbo="false">
+<script>document.body.dataset.toc_state = sessionStorage.getItem('tocState') || 'open';</script><div class="layout" id="layout">
 
-    <aside class="layout_aside-header">
+    <nav class="layout_nav">
+      <div class="nav">
+
+
+
+  <a
+    data-link="index"
+    class="nav_button"
+    href="../index.html"
+    title="Project index">
+    <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <line x1="9" y1="4" x2="7" y2="4"></line>
+  <line x1="12" y1="9" x2="12" y2="7"></line>
+  <line x1="6" y1="10" x2="10" y2="6"></line>
+  <circle cx="4" cy="12" r="2.25"></circle>
+  <circle cx="12" cy="4" r="2.25"></circle>
+  <circle cx="4" cy="4" r="2.25"></circle>
+  <circle cx="12" cy="12" r="2.25"></circle>
+</svg>
+  </a></div>
+    </nav>
+
+    <div class="layout_toc">
       
-  <a class="index-link" href="../index.html">To Index</a>
+  
 
-    </aside>
 
-    <aside class="layout_aside">
-      
-  <turbo-frame id="frame-toc">
-    <div>Table of Contents</div>
-    <ul class="toc"><li><a href="#1-Backlog-Graphical-user-interface" data-turbo="false">
+
+<div class="toc_panel">
+
+<div id="toc_handler" class="toc_handler nav_button">
+  <svg class="svg_icon" width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <line class="horz" x1="2" y1="12" x2="14" y2="12" id="q3"></line>
+            <line x1="2" y1="8" x2="14" y2="8" id="q2"></line>
+            <line class="horz" x1="2" y1="4" x2="14" y2="4" id="q1"></line>
+            <line class="arrw" x1="2" y1="8" x2="8" y2="14" id="q33"></line>
+            <line class="arrw" x1="2" y1="8" x2="8" y2="2" id="q11"></line>
+</svg>
+</div>
+
+<turbo-frame id="frame-toc" style="display: contents" data-controller="collapsible_list">
+
+  <div class="toc_panel__overlay">
+    <div class="toc_panel__control">
+      <div id="toc_control"></div>
+    </div>
+  </div>
+
+  <div class="toc_panel__content">
+
+    <ul id="toc" class="toc"><li><a href="#1-Backlog-Graphical-user-interface" data-turbo="false">
               <span class="section-number">1</span>
               Backlog: Graphical user interface
             </a></li><li><a href="#2-Backlog-Nice-to-have" data-turbo="false">
               <span class="section-number">2</span>
               Backlog: Nice to have
-            </a></li><li><a href="#3-Backlog-Known-issues" data-turbo="false">
+            </a></li><li><a href="#3-Backlog-Technical-debt" data-turbo="false">
               <span class="section-number">3</span>
+              Backlog: Technical debt
+            </a></li><li><a href="#4-Backlog-Known-issues" data-turbo="false">
+              <span class="section-number">4</span>
               Backlog: Known issues
-            </a><ul><li><a href="#3.1-HTML-rendering-using-docutils-is-a-performance-bottleneck" data-turbo="false">
-              <span class="section-number">3.1</span>
+            </a><ul><li><a href="#4.1-HTML-rendering-using-docutils-is-a-performance-bottleneck" data-turbo="false">
+              <span class="section-number">4.1</span>
               HTML rendering using docutils is a performance bottleneck
             </a></li></ul>
             </li><li>
-        <a href="#4-Document-archetypes" data-turbo="false">
-          <span class="section-number">4</span>
-          Document archetypes
-        </a></li><li><a href="#5-Open-questions" data-turbo="false">
-              <span class="section-number">5</span>
+        <a href="#5-Document-archetypes" data-turbo="false">
+          <span class="section-number">5</span>Document archetypes</a></li><li><a href="#6-Open-questions" data-turbo="false">
+              <span class="section-number">6</span>
               Open questions
-            </a><ul><li><a href="#5.1-One-or-many-input-sdoc-trees" data-turbo="false">
-              <span class="section-number">5.1</span>
+            </a><ul><li><a href="#6.1-One-or-many-input-sdoc-trees" data-turbo="false">
+              <span class="section-number">6.1</span>
               One or many input sdoc trees
             </a></li></ul>
             </li></ul>
+  </div>
 </turbo-frame>
+</div>
 
-    </aside>
-
-    
-  <a class="layout_toggler layout_button" id="layout_toggle"></a><nav class="layout_nav">
-    <a
-    class="layout_nav-btn layout_button btn-document"
-    title="Go to Document view"
-    href="../docs/strictdoc_04_backlog.html">
-    DOC
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-table"
-    title="Go to Table view"
-    href="../docs/strictdoc_04_backlog-TABLE.html">
-    TBL
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-traceability"
-    title="Go to Traceability view"
-    href="../docs/strictdoc_04_backlog-TRACE.html">
-    TR
-  </a>
-  <a
-    class="layout_nav-btn layout_button btn-deep-traceability"
-    title="Go to Deep Traceability view"
-    href="../docs/strictdoc_04_backlog-DEEP-TRACE.html">
-    DTR
-  </a>
-  </nav>
-
+    </div>
 
     <header class="layout_header">
       
-  <p>Backlog <span class="document-view-type">Table</span></p>
+<div class="header">
+  <turbo-frame id="document_title">
+<div class="header__document">
+  <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d=" M13,13 L13,8 C13,7.5 12.6,7 12,7 L9,7 C8.5,7 8,6.5 8,6 L8,3 C8,2.5 7.5,2 7,2 L4,2 C3.5,2 3,2.5 3,3 L3,13 C3,13.5 3.5,14 4,14 L12,14 C12.6,14 13,13.5 13,13 Z M13,9 L13,8 C13,7.5 13,7 12.5,6.5 L8.5,2.5 C8,2 7.5,2 7,2 L6,2"></path>
+</svg>
+  <div class="header__document_name"
+    title="Backlog">
+    Backlog
+  </div>
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" class="sc-gLvsXj bpkaBy"><path stroke="currentColor" d="M12.5 4.5l-5 11" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+  <div class="viewtype">
+  <div
+    id="viewtype_handler"
+    class="viewtype__handler"
+    aria-expanded="false"
+    aria-controls="viewtype_menu"
+  >
+    <span>Table</span>
+    <svg class="svg_icon" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" >
+  <path d="M5 10l3 3 3-3M5 6l3-3 3 3"></path>
+</svg>
+  </div>
+  <menu
+    id="viewtype_menu"
+    class="viewtype__menu"
+    aria-hidden="true"
+    aria-labelledby="viewtype_handler"
+  >
+    <li class="viewtype__menu_header">VIEWS</li>
+    <li>
+      <a
+        data-viewtype_link="document"
+        class="viewtype__menu_item"
+        title="Go to Document view"
+        href="../docs/strictdoc_04_backlog.html">
+        Document</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="table"
+        class="viewtype__menu_item"
+        title="Go to Table view"
+        href="../docs/strictdoc_04_backlog-TABLE.html">
+        Table</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="traceability"
+        class="viewtype__menu_item"
+        title="Go to Traceability view"
+        href="../docs/strictdoc_04_backlog-TRACE.html">
+        Traceability</a>
+    </li>
+    <li>
+      <a
+        data-viewtype_link="deep_traceability"
+        class="viewtype__menu_item"
+        title="Go to Deep Traceability view"
+        href="../docs/strictdoc_04_backlog-DEEP-TRACE.html">
+      Deep traceability</a>
+    </li>
+  </menu>
+</div>
+</div>
+</turbo-frame>
+</div>
 
     </header>
 
-    <main class="layout_main">
+    <main class="layout_main" id="pan_with_space">
       
 
       
@@ -138,7 +219,7 @@ items are either work-in-progress or will be implemented next.</p>
      1
    </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
     <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="1-Backlog-Graphical-user-interface"></div>
-      <div class="section-title">
+      <div class="requirement__title">
         Backlog: Graphical user interface
       </div></td>
   </tr><tr>
@@ -147,15 +228,21 @@ items are either work-in-progress or will be implemented next.</p>
       <td class="content-view-td" colspan="50">
         <div class="document">
 <ul class="simple">
+<li>Uploading images via Web interface.</li>
+<li>Editing remaining document options: Inline/Table, Requirements in TOC, etc.</li>
 <li>Requirement form:<ul>
-<li><tt class="docutils literal">RATIONALE</tt></li>
-<li><tt class="docutils literal">COMMENT</tt></li>
-<li>Edit links for table-based requirements.</li>
-<li>Adding/editing parent/child requirements.</li>
+<li>Adding/editing parent/child requirements: validation of cycles.</li>
 </ul>
 </li>
+<li>Integration with Git repository.</li>
 <li>Section form:<ul>
 <li><tt class="docutils literal">UID</tt></li>
+</ul>
+</li>
+<li>User support - Sign In, Sign Out, Register.</li>
+<li>Option to keep all multi-line text fields to 80 symbols width.</li>
+<li>Moving node up/down/left/right. For example, move a node of level 2 to level 1.<ul>
+<li>Follow-up feature: moving nodes between documents.</li>
 </ul>
 </li>
 <li>All forms:<ul>
@@ -164,13 +251,7 @@ items are either work-in-progress or will be implemented next.</p>
 </ul>
 </li>
 <li>What to do with web content going out of sync with the server/file system state?</li>
-<li>Issue when adding sibling section from a nested section.</li>
-<li>Auto-trim all single-line fields.</li>
-<li>Auto-trim all text areas - all trailing whitespace shall be removed.</li>
-<li>Enable SeleniumBase tests on CI.</li>
-<li>Integration with Git repository.</li>
-<li>Moving node up/down/left/right. For example, move a node of level 2 to level 1.</li>
-<li>Expand/collapse the table of contents.</li>
+<li>Issue when adding a sibling section from a nested section.</li>
 <li>ReqIF:<ul>
 <li>Export complete documentation tree or a single document to ReqIF.</li>
 <li>Import complete documentation tree or a single document from ReqIF.</li>
@@ -192,7 +273,7 @@ items are either work-in-progress or will be implemented next.</p>
      2
    </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
     <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="2-Backlog-Nice-to-have"></div>
-      <div class="section-title">
+      <div class="requirement__title">
         Backlog: Nice to have
       </div></td>
   </tr><tr>
@@ -200,37 +281,12 @@ items are either work-in-progress or will be implemented next.</p>
       <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
       <td class="content-view-td" colspan="50">
         <div class="document">
+<ul>
+<li><p class="first">Configure feature toggles in the <tt class="docutils literal">strictdoc.toml</tt> config file. <tt class="docutils literal">+FEATURE</tt> and <tt class="docutils literal"><span class="pre">-FEATURE</span></tt> to activate/deactivate features that are used or not. Also to highlight features that are most experimental/unstable.</p>
+</li>
+<li><p class="first">Useful configuration file options:</p>
+<blockquote>
 <ul class="simple">
-<li>StrictDoc as a Python library.<ul>
-<li>Such a use allows a more fine-grained access to the StrictDoc's modules, such as Grammar, Import, Export classes, etc.</li>
-</ul>
-</li>
-<li>Data exchange with Capella tool.<ul>
-<li>Note: The current plan is to implement this using ReqIF export/import features.</li>
-</ul>
-</li>
-<li>Language Server Protocol.<ul>
-<li>The LSP can enable editing of SDoc files in IDEs like Eclipse, Visual Studio, PyCharm. A smart LSP can enable features like syntax highlighting, autocompletion and easy navigation through requirements.</li>
-<li>The promising base for the implementation: <a class="reference external" href="https://github.com/openlawlibrary/pygls">https://github.com/openlawlibrary/pygls</a>.</li>
-</ul>
-</li>
-<li>StrictDoc shall support rendering text/code blocks into Markdown syntax.</li>
-<li>Fuzzy requirements search.<ul>
-<li>This feature can be implemented in the CLI as well as in the future GUI. A fuzzy requirements search can help to find existing requirements and also identify relevant requirements when creating new requirements.</li>
-</ul>
-</li>
-<li>Support creation of FMEA/FMECA safety analysis documents.</li>
-<li>Calculation of checksums for requirements.<ul>
-<li>This feature is relatively easy to implement, but the implementation is postponed until the linking between requirements and files is implemented.</li>
-</ul>
-</li>
-<li>Filtering of requirements by tags.</li>
-<li>Import/export: Excel, CSV, PlantUML, Confluence,&nbsp;Tex, Doorstop.</li>
-<li><dl class="first docutils">
-<dt>Reading project configuration from a file.</dt>
-<dd><ul class="first last">
-<li>TOML format looks like a good option.</li>
-<li>Project title.</li>
 <li>Project prefix?</li>
 <li>Explicit or wildcard paths to sdoc files.</li>
 <li>Paths to dirs with source files.</li>
@@ -243,8 +299,46 @@ items are either work-in-progress or will be implemented next.</p>
 </dl>
 </li>
 </ul>
-</dd>
-</dl>
+</blockquote>
+</li>
+<li><p class="first">StrictDoc as a Python library.</p>
+<ul class="simple">
+<li>Such a use allows a more fine-grained access to the StrictDoc's modules, such as Grammar, Import, Export classes, etc.</li>
+</ul>
+</li>
+<li><p class="first">Data exchange with Capella tool.</p>
+<ul class="simple">
+<li>Note: The current idea would be to implement this using ReqIF export/import features.</li>
+</ul>
+</li>
+<li><p class="first">Language Server Protocol.</p>
+<ul class="simple">
+<li>The LSP can enable editing of SDoc files in IDEs like Eclipse, Visual Studio, PyCharm. A smart LSP can enable features like syntax highlighting, autocompletion and easy navigation through requirements.</li>
+<li>The promising base for the implementation: <a class="reference external" href="https://github.com/openlawlibrary/pygls">https://github.com/openlawlibrary/pygls</a>.</li>
+</ul>
+</li>
+<li><p class="first">StrictDoc shall support rendering text/code blocks into Markdown syntax.</p>
+</li>
+<li><p class="first">Fuzzy requirements search.</p>
+<ul class="simple">
+<li>This feature can be implemented in the CLI as well as in the future GUI. A fuzzy requirements search can help to find existing requirements and also identify relevant requirements when creating new requirements.</li>
+</ul>
+</li>
+<li><p class="first">Support creation of FMEA/FMECA safety analysis documents.</p>
+</li>
+<li><p class="first">Calculation of checksums for requirements.</p>
+<ul class="simple">
+<li>This feature is relatively easy to implement, but the implementation is postponed until the linking between requirements and files is implemented.</li>
+</ul>
+</li>
+<li><p class="first">Filtering of requirements by tags.</p>
+</li>
+<li><p class="first">Import/export: Excel, CSV, PlantUML, Confluence,&nbsp;Tex, Doorstop.</p>
+</li>
+<li><p class="first">Partial evaluation of Jinja templates</p>
+<ul class="simple">
+<li>Many of the template variables could be made to be evaluated once, for example, config object's variables.</li>
+</ul>
 </li>
 </ul>
 </div>
@@ -256,8 +350,32 @@ items are either work-in-progress or will be implemented next.</p>
    <td class="content-view-td content-view-td-meta">
      3
    </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
-    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="3-Backlog-Known-issues"></div>
-      <div class="section-title">
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="3-Backlog-Technical-debt"></div>
+      <div class="requirement__title">
+        Backlog: Technical debt
+      </div></td>
+  </tr><tr>
+      <td class="content-view-td content-view-td-type">Free text</td>
+      <td class="content-view-td content-view-td-meta">–</td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+      <td class="content-view-td" colspan="50">
+        <div class="document">
+<ul class="simple">
+<li>When a document is added, the whole documentation is rebuilt from the file system from scratch. A more fine-grained re-indexing of documentation tree can be implemented. The current idea is to introduce a layer of pickled cached data: preserve the whole in-memory traceability graph in a cache, and then use the cached data for making decisions about what should be regenerated.</li>
+<li>The &quot;no framework&quot; approach with FastAPI and Turbo/Stimulus allows writing almost zero Javascript, however some proto-framework conventions are still needed. Currently, all code is written in the <tt class="docutils literal">main_controller</tt> which combines all responsibilities, such as parsing HTTP request fields, accessing traceability graph, validations, rendering back the updated AJAX templates. A lack of abstraction is better than a poor abstraction, but some solution has to be found.</li>
+<li>Request form object vs Response form object. The workflow of form validations is not optimal.</li>
+<li>For Web development, the responsibilities of the <tt class="docutils literal">TraceabilityIndex</tt> class compared to the <tt class="docutils literal">ExportAction</tt>, <tt class="docutils literal">MarkupRenderer</tt>, <tt class="docutils literal">LinkRenderer</tt> classes are unstable. A more ecological composition of classes has to be found. <tt class="docutils literal">Traceability</tt> index is rightfully a &quot;god object&quot; because it contains all information about the in-memory documentation graph.</li>
+</ul>
+</div>
+
+      </td>
+    </tr>
+  <tr>
+   <td class="content-view-td content-view-td-type">Section</td>
+   <td class="content-view-td content-view-td-meta">
+     4
+   </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4-Backlog-Known-issues"></div>
+      <div class="requirement__title">
         Backlog: Known issues
       </div></td>
   </tr><tr>
@@ -272,10 +390,10 @@ items are either work-in-progress or will be implemented next.</p>
   <tr>
    <td class="content-view-td content-view-td-type">Section</td>
    <td class="content-view-td content-view-td-meta">
-     3.1
+     4.1
    </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
-    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="3.1-HTML-rendering-using-docutils-is-a-performance-bottleneck"></div>
-      <div class="section-title">
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="4.1-HTML-rendering-using-docutils-is-a-performance-bottleneck"></div>
+      <div class="requirement__title">
         HTML rendering using docutils is a performance bottleneck
       </div></td>
   </tr><tr>
@@ -291,7 +409,7 @@ items are either work-in-progress or will be implemented next.</p>
 </ul>
 </blockquote>
 <pre class="code bash literal-block">
-python -m cProfile -s cumulative strictdoc/cli/main.py <span class="name builtin">export</span> --no-parallelization docs/ &gt; report.txt
+python<span class="whitespace"> </span>-m<span class="whitespace"> </span>cProfile<span class="whitespace"> </span>-s<span class="whitespace"> </span>cumulative<span class="whitespace"> </span>strictdoc/cli/main.py<span class="whitespace"> </span><span class="name builtin">export</span><span class="whitespace"> </span>--no-parallelization<span class="whitespace"> </span>docs/<span class="whitespace"> </span>&gt;<span class="whitespace"> </span>report.txt
 </pre>
 <p>See also: <a class="reference external" href="https://docs.python.org/3/library/profile.html#instant-user-s-manual">https://docs.python.org/3/library/profile.html#instant-user-s-manual</a></p>
 </div>
@@ -302,14 +420,14 @@ python -m cProfile -s cumulative strictdoc/cli/main.py <span class="name builtin
    <td class="content-view-td content-view-td-type">
     Requirement</td>
    <td class="content-view-td content-view-td-meta">
-     4
+     5
    </td>
       <td class="content-view-td content-view-td-meta"></td>
       <td class="content-view-td content-view-td-meta"></td>
       <td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta content-view-td-related">
     </td>
-    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="4-Document-archetypes"></div>
-      <div class="section-title">
+    <td class="content-view-td content-view-td-title"><div data-role='anchor' id="5-Document-archetypes"></div>
+      <div class="requirement__title">
         Document archetypes
       </div></td>
     <td class="content-view-td content-view-td-content"><div class="document">
@@ -390,20 +508,20 @@ the grouping is provided by sections.</li>
   <tr>
    <td class="content-view-td content-view-td-type">Section</td>
    <td class="content-view-td content-view-td-meta">
-     5
+     6
    </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
-    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="5-Open-questions"></div>
-      <div class="section-title">
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="6-Open-questions"></div>
+      <div class="requirement__title">
         Open questions
       </div></td>
   </tr>
   <tr>
    <td class="content-view-td content-view-td-type">Section</td>
    <td class="content-view-td content-view-td-meta">
-     5.1
+     6.1
    </td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td><td class="content-view-td content-view-td-meta"></td>
-    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="5.1-One-or-many-input-sdoc-trees"></div>
-      <div class="section-title">
+    <td class="content-view-td content-view-td-title" colspan="4"><div data-role='anchor' id="6.1-One-or-many-input-sdoc-trees"></div>
+      <div class="requirement__title">
         One or many input sdoc trees
       </div></td>
   </tr><tr>
@@ -440,7 +558,17 @@ only work with one input folder with a single doc tree.</p>
 
     </main>
 
+    <footer class="layout_footer">
+    
+    
+    </footer>
+
+    <aside class="layout_aside">
+      
+    </aside>
+
   </div>
+  <div id="modal"></div>
   
 </body>
 </html>

@@ -1,0 +1,13 @@
+[DOCUMENT]
+TITLE: Document 2
+
+[FREETEXT]
+Hello world 2!
+[/FREETEXT]
+
+[REQUIREMENT]
+UID: REQ-002
+TITLE: Requirement title #2
+STATEMENT: >>>
+Requirement statement #2.
+<<<

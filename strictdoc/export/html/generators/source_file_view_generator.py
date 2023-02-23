@@ -1,8 +1,11 @@
+import html
+
 from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers.c_cpp import CLexer, CppLexer
 from pygments.lexers.markup import TexLexer
 from pygments.lexers.python import PythonLexer
+from pygments.lexers.templates import HtmlDjangoLexer
 
 from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.finders.source_files_finder import SourceFile
@@ -40,8 +43,10 @@ class SourceFileViewHTMLGenerator:
             lexer = CppLexer()
         elif source_file.is_tex_file():
             lexer = TexLexer()
+        elif source_file.is_jinja_file():
+            lexer = HtmlDjangoLexer()
         else:
-            raise NotImplementedError
+            raise NotImplementedError(source_file)
 
         # HACK.
         # Otherwise, Pygments will skip the first line as if it does not exist.
@@ -91,26 +96,27 @@ class SourceFileViewHTMLGenerator:
         for pragma in coverage_info.pragmas:
             pragma_line = pragma.ng_source_line_begin
             source_line = source_file_lines[pragma_line - 1]
-            if len(pragma.reqs_objs):
-                replacement_line = source_line[
-                    : pragma.reqs_objs[0].ng_source_column - 1
-                ]
-                replacement_line = (
-                    replacement_line.rstrip("/").rstrip("[").rstrip()
-                )
+            assert len(pragma.reqs_objs) > 0
+            before_line = source_line[
+                : pragma.reqs_objs[0].ng_source_column - 1
+            ].rstrip("/")
+            closing_bracket_index = source_line.index("]")
+            after_line = source_line[closing_bracket_index:].rstrip()
+
+            before_line = html.escape(before_line)
+            after_line = html.escape(after_line)
+
             pygmented_source_file_lines[pragma_line - 1] = (
-                replacement_line,
-                "",
+                before_line,
+                after_line,
                 pragma,
             )
-
         pygments_styles = html_formatter.get_style_defs(".highlight")
 
         link_renderer = LinkRenderer(root_path=source_file.path_depth_prefix)
         markup_renderer = MarkupRenderer.create(
             "RST", traceability_index, link_renderer, None
         )
-
         output += template.render(
             config=config,
             source_file=source_file,

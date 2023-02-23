@@ -17,7 +17,7 @@ def test_01():
         file_tree = FileFinder.find_files_with_extensions(
             root_path=tmp_dir,
             ignored_dirs=[],
-            extensions={".py"},
+            extensions=[".py"],
         )
 
         assert isinstance(file_tree, FileTree)

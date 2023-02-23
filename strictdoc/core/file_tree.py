@@ -1,6 +1,6 @@
 import collections
 import os
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Optional
 
 from strictdoc.helpers.sorting import alphanumeric_sort
 
@@ -150,11 +150,11 @@ class FileTree:
 class FileFinder:
     @staticmethod
     def find_files_with_extensions(
-        *, root_path: str, ignored_dirs: List[str], extensions: Set[str]
+        *, root_path: str, ignored_dirs: List[str], extensions: List[str]
     ):
         assert os.path.isdir(root_path)
         assert os.path.isabs(root_path)
-        assert isinstance(extensions, set)
+        assert isinstance(extensions, list), extensions
 
         root_level: int = root_path.count(os.sep)
 
@@ -190,9 +190,9 @@ class FileFinder:
             def filter_source_files(_files):
                 _source_files = []
                 for file in _files:
-                    _, file_extension = os.path.splitext(file)
-                    if file_extension in extensions:
-                        _source_files.append(file)
+                    for file_extension in extensions:
+                        if file.endswith(file_extension):
+                            _source_files.append(file)
                 return _source_files
 
             files = filter_source_files(files)

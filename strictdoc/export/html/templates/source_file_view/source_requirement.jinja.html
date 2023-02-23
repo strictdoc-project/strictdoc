@@ -1,5 +1,5 @@
 <div id="requirement:{{ requirement.reserved_uid }}" class="source-file__requirement" data-reqid="{{ requirement.reserved_uid }}">
-  <a class="" href="{{ link_renderer.render_requirement_link_from_source_file(requirement, source_file) }}">
+  <a href="{{ link_renderer.render_requirement_link_from_source_file(requirement, source_file) }}">
     {%- if requirement.reserved_uid %}
     <div class="requirement__child-uid">{{ requirement.reserved_uid }}</div>
     {%- endif %}

@@ -3,8 +3,8 @@ CHECK: Published: Example: Traceability between requirements and source files
 
 RUN: %check_exists --file "%S/Output/html/_source_files/file.tex.html"
 
-RUN: %cat %S/Output/html/10_support_files_with_tex_extension/example.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %S/Output/html/10_tex/example.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: <a{{.*}}href="../_source_files/file.tex.html#REQ-001">
 
 RUN: %cat %S/Output/html/_source_files/file.tex.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
-CHECK-SOURCE-FILE: <a{{.*}}href="../10_support_files_with_tex_extension/example.html#1-REQ-001"{{.*}}>
+CHECK-SOURCE-FILE: <a{{.*}}href="../10_tex/example.html#1-REQ-001"{{.*}}>

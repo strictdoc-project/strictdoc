@@ -67,7 +67,7 @@ class RequirementFormField:
         multiline: bool,
         value: Optional[str],
     ):
-        assert isinstance(value, str)
+        assert isinstance(value, str), (grammar_field, multiline, value)
         value = html.escape(value)
         if grammar_field.gef_type == RequirementFieldType.STRING:
             return RequirementFormField(

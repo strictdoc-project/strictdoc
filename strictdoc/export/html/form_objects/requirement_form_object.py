@@ -65,7 +65,7 @@ class RequirementFormField:
         *,
         grammar_field: GrammarElementField,
         multiline: bool,
-        value: Optional[str],
+        value: str,
     ):
         assert isinstance(value, str), (grammar_field, multiline, value)
         value = html.escape(value)
@@ -173,23 +173,18 @@ class RequirementFormObject(ErrorObject):
             multiline = field_idx > title_field_idx
             field = element.fields_map[field_name]
 
-            if field_name in requirement_fields:
-                requirement_field_values = requirement_fields.get(
-                    field_name, []
+            if field_name not in requirement_fields:
+                continue
+
+            requirement_field_values = requirement_fields.get(field_name, [])
+            for requirement_field_value in requirement_field_values:
+                field_value: str = sanitize_html_form_field(
+                    requirement_field_value, multiline=True
                 )
-                for requirement_field_value in requirement_field_values:
-                    field_value: str = sanitize_html_form_field(
-                        requirement_field_value, multiline=True
-                    )
-                    form_field = RequirementFormField.create_from_grammar_field(
-                        grammar_field=field,
-                        multiline=multiline,
-                        value=field_value,
-                    )
-                    form_fields.append(form_field)
-            else:
                 form_field = RequirementFormField.create_from_grammar_field(
-                    grammar_field=field, multiline=multiline, value=None
+                    grammar_field=field,
+                    multiline=multiline,
+                    value=field_value,
                 )
                 form_fields.append(form_field)
 

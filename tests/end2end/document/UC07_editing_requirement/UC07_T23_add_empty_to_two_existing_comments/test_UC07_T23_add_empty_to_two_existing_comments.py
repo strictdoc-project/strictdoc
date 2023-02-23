@@ -10,7 +10,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test_UC07_T21_RemoveComment(BaseCase):
+class Test_UC07_T23_AddEmptyToTwoExistingComments(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -33,10 +33,6 @@ class Test_UC07_T21_RemoveComment(BaseCase):
 
         self.assert_text("Hello world!")
 
-        self.assert_element_present(
-            "//*[contains(., 'Comment #1')]", by=By.XPATH
-        )
-
         self.hover_and_click(
             hover_selector="(//sdoc-node)[2]",
             click_selector=(
@@ -46,16 +42,12 @@ class Test_UC07_T21_RemoveComment(BaseCase):
             click_by=By.XPATH,
         )
 
-        self.click_xpath("(//a[text()='Delete comment'])[1]")
+        self.click_link("Add comment")
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')
-        self.wait_for_element_absent(
-            '//*[@data-testid="form-submit-action"]', by=By.XPATH
-        )
 
-        self.assert_element_not_present(
-            "//*[contains(., 'Comment')]", by=By.XPATH
-        )
+        self.assert_text("Comment #1")
+        self.assert_text("Comment #2")
 
         assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))
         assert filecmp.cmp(

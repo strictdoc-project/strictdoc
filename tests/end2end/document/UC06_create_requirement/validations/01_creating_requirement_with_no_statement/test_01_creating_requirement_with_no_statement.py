@@ -48,8 +48,10 @@ class Test_06_01_ValidationRequirementWithNoStatement(BaseCase):
             by=By.XPATH,
         )
 
-        self.type("#requirement_TITLE", "Requirement title")
-        self.type("#requirement_STATEMENT", "")
+        self.type(
+            "//*[@id='requirement[TITLE]']", "Requirement title", by=By.XPATH
+        )
+        # Nothing is entered into the STATEMENT field.
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')
 

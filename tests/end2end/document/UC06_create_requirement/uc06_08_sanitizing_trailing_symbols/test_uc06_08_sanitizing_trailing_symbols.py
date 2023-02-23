@@ -50,10 +50,13 @@ class Test_UC06_08_SanitizingTrailingSymbols(BaseCase):
             by=By.XPATH,
         )
 
-        self.type("#requirement_TITLE", "Requirement title #1")
-        # Contains trailing symbols.
         self.type(
-            "#requirement_STATEMENT",
+            "//*[@id='requirement[TITLE]']", "Requirement title #1", by=By.XPATH
+        )
+        # Contains trailing symbols.
+
+        self.type(
+            "//*[@id='requirement[STATEMENT]']",
             """
 Hello world!    
 
@@ -61,6 +64,7 @@ Hello world!
 
 Hello world!    
             """,  # noqa: W291
+            by=By.XPATH,
         )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')

@@ -49,8 +49,14 @@ class Test06CreateRequirementInSection(BaseCase):
             by=By.XPATH,
         )
 
-        self.type("#requirement_TITLE", "Requirement title")
-        self.type("#requirement_STATEMENT", "Requirement statement")
+        self.type(
+            "//*[@id='requirement[TITLE]']", "Requirement title", by=By.XPATH
+        )
+        self.type(
+            "//*[@id='requirement[STATEMENT]']",
+            "Requirement statement.",
+            by=By.XPATH,
+        )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')
         self.assert_element_not_present(

@@ -51,8 +51,14 @@ class Test06CreateSectionAfterRequirement(BaseCase):
             by=By.XPATH,
         )
 
-        self.type("#requirement_TITLE", "Requirement title #1")
-        self.type("#requirement_STATEMENT", "Requirement statement #1.")
+        self.type(
+            "//*[@id='requirement[TITLE]']", "Requirement title #1", by=By.XPATH
+        )
+        self.type(
+            "//*[@id='requirement[STATEMENT]']",
+            "Requirement statement #1.",
+            by=By.XPATH,
+        )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')
 

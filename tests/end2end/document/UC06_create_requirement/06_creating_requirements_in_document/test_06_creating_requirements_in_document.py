@@ -50,10 +50,20 @@ class Test06CreateRequirementsInDocument(BaseCase):
             by=By.XPATH,
         )
 
-        self.type("#requirement_UID", "REQ-001")
-        self.type("#requirement_TITLE", "Requirement title #1")
-        self.type("#requirement_STATEMENT", "Requirement statement #1.")
-        self.type("#requirement_RATIONALE", "Requirement rationale #1.")
+        self.type("//*[@id='requirement[UID]']", "REQ-001", by=By.XPATH)
+        self.type(
+            "//*[@id='requirement[TITLE]']", "Requirement title #1", by=By.XPATH
+        )
+        self.type(
+            "//*[@id='requirement[STATEMENT]']",
+            "Requirement statement #1.",
+            by=By.XPATH,
+        )
+        self.type(
+            "//*[@id='requirement[RATIONALE]']",
+            "Requirement rationale #1.",
+            by=By.XPATH,
+        )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')
 
@@ -74,10 +84,20 @@ class Test06CreateRequirementsInDocument(BaseCase):
             by=By.XPATH,
         )
 
-        self.type("#requirement_UID", "REQ-002")
-        self.type("#requirement_TITLE", "Requirement title #2")
-        self.type("#requirement_STATEMENT", "Requirement statement #2.")
-        self.type("#requirement_RATIONALE", "Requirement rationale #2.")
+        self.type("//*[@id='requirement[UID]']", "REQ-002", by=By.XPATH)
+        self.type(
+            "//*[@id='requirement[TITLE]']", "Requirement title #2", by=By.XPATH
+        )
+        self.type(
+            "//*[@id='requirement[STATEMENT]']",
+            "Requirement statement #2.",
+            by=By.XPATH,
+        )
+        self.type(
+            "//*[@id='requirement[RATIONALE]']",
+            "Requirement rationale #2.",
+            by=By.XPATH,
+        )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')
 
@@ -98,10 +118,20 @@ class Test06CreateRequirementsInDocument(BaseCase):
             by=By.XPATH,
         )
 
-        self.type("#requirement_UID", "REQ-003")
-        self.type("#requirement_TITLE", "Requirement title #3")
-        self.type("#requirement_STATEMENT", "Requirement statement #3.")
-        self.type("#requirement_RATIONALE", "Requirement rationale #3.")
+        self.type("//*[@id='requirement[UID]']", "REQ-003", by=By.XPATH)
+        self.type(
+            "//*[@id='requirement[TITLE]']", "Requirement title #3", by=By.XPATH
+        )
+        self.type(
+            "//*[@id='requirement[STATEMENT]']",
+            "Requirement statement #3.",
+            by=By.XPATH,
+        )
+        self.type(
+            "//*[@id='requirement[RATIONALE]']",
+            "Requirement rationale #3.",
+            by=By.XPATH,
+        )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')
 

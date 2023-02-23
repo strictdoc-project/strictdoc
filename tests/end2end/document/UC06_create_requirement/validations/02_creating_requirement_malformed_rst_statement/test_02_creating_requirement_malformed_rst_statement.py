@@ -48,15 +48,18 @@ class Test_06_02_CreatingRequirementMalformedRSTStatement(BaseCase):
             by=By.XPATH,
         )
 
-        self.type("#requirement_TITLE", "Requirement title")
         self.type(
-            "#requirement_STATEMENT",
+            "//*[@id='requirement[TITLE]']", "Requirement title", by=By.XPATH
+        )
+        self.type(
+            "//*[@id='requirement[STATEMENT]']",
             """
 - Broken RST markup
 
   - AAA
   ---
 """.strip(),
+            by=By.XPATH,
         )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')

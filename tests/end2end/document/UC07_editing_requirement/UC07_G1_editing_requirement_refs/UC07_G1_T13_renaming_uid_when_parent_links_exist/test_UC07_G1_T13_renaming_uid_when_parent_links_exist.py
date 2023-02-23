@@ -41,7 +41,7 @@ class Test_UC07_G1_T13_RenamingUIDWhenParentLinksExist(BaseCase):
             click_by=By.XPATH,
         )
 
-        self.type("#requirement_UID", "Modified_UID")
+        self.type("//*[@id='requirement[UID]']", "Modified UID", by=By.XPATH)
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')
 

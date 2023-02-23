@@ -42,12 +42,14 @@ class Test_UC07_G2_T01_EmptyStatement(BaseCase):
             click_by=By.XPATH,
         )
 
-        self.type("#requirement_TITLE", "Modified title")
+        self.type(
+            "//*[@id='requirement[TITLE]']", "Modified title", by=By.XPATH
+        )
 
         # HACK: The only way the field is actually cleared.
-        self.type("#requirement_STATEMENT", "X")
+        self.type("//*[@id='requirement[STATEMENT]']", "X", by=By.XPATH)
         requirement_statement_field = self.find_element(
-            "//div[@id='requirement_STATEMENT']"
+            "//*[@id='requirement[STATEMENT]']", by=By.XPATH
         )
         requirement_statement_field.click()
         requirement_statement_field.send_keys(Keys.BACKSPACE)

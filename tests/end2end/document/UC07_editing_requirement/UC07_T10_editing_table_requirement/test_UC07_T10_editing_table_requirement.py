@@ -45,15 +45,25 @@ class Test_UC07_T10_EditTableRequirement(BaseCase):
             click_by=By.XPATH,
         )
 
-        self.type("#requirement_UID", "Modified_UID")
-        self.type("#requirement_TITLE", "Modified title")
-        self.type("#requirement_STATEMENT", "Modified statement.")
-        self.type("#requirement_RATIONALE", "Modified rationale.")
+        self.type("//*[@id='requirement[UID]']", "Modified UID", by=By.XPATH)
+        self.type(
+            "//*[@id='requirement[TITLE]']", "Modified title", by=By.XPATH
+        )
+        self.type(
+            "//*[@id='requirement[STATEMENT]']",
+            "Modified statement.",
+            by=By.XPATH,
+        )
+        self.type(
+            "//*[@id='requirement[RATIONALE]']",
+            "Modified rationale.",
+            by=By.XPATH,
+        )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         self.assert_text("1. Modified title")
-        self.assert_text("Modified_UID")
+        self.assert_text("Modified UID")
         self.assert_text("Modified statement.")
         self.assert_text("Modified rationale.")
 

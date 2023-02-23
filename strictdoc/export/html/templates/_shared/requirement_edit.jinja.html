@@ -64,7 +64,14 @@
 
   <div id="requirement_{{form_object.requirement_mid}}__new_comment"></div>
 
-  <a href="/actions/document/new_comment?requirement_mid={{form_object.requirement_mid}}" data-turbo-action="replace" data-turbo="true">Add comment</a>
+  <sdoc-form-row>
+    <a
+      class="std-form-btn"
+      href="/actions/document/new_comment?requirement_mid={{form_object.requirement_mid}}"
+      data-turbo-action="replace"
+      data-turbo="true"
+    >Add comment</a>
+  </sdoc-form-row>
 
   <sdoc-form-footer>
     <button

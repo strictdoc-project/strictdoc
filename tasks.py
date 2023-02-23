@@ -334,7 +334,7 @@ def test_integration(context, focus=None, debug=False, strictdoc=None):
 def lint_black_diff(context):
     command = """
         black
-            *.py strictdoc/ tests/unit tests/integration/*.py
+            *.py strictdoc/ tests/unit/ tests/integration/*.py tests/end2end/
             --color --line-length 80 2>&1
         """
     result = run_invoke_cmd(context, command)

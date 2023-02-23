@@ -1019,9 +1019,6 @@ def create_main_router(
         )
 
         # Calculate which documents and requirements have to be regenerated.
-        updated_parent_documents: Set[
-            Document
-        ] = export_action.traceability_index.get_document_parents(document)
         for reference_id_to_remove in action_object.reference_ids_to_remove:
             removed_uid_parent_requirement = (
                 export_action.traceability_index.requirements_parents[
@@ -1045,19 +1042,13 @@ def create_main_router(
             )
 
         # Saving new content to .SDoc files.
-        sdoc_documents_to_rewrite: Set[Document] = (
-            {document}
-            | updated_parent_documents
-            | action_object.removed_uid_parent_documents_to_update
-        )
-        for sdoc_document_to_rewrite in sdoc_documents_to_rewrite:
-            sdoc_document_to_rewrite.ng_needs_generation = True
-            document_content = SDWriter().write(sdoc_document_to_rewrite)
-            document_meta = document.meta
-            with open(
-                document_meta.input_doc_full_path, "w", encoding="utf8"
-            ) as output_file:
-                output_file.write(document_content)
+        document.ng_needs_generation = True
+        document_content = SDWriter().write(document)
+        document_meta = document.meta
+        with open(
+            document_meta.input_doc_full_path, "w", encoding="utf8"
+        ) as output_file:
+            output_file.write(document_content)
 
         # Re-exporting HTML files.
         # Those with @ng_needs_generation == True will be regenerated.

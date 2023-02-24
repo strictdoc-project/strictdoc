@@ -36,7 +36,7 @@ from typing import List, Union
 import requests
 import yaml
 
-__version__ = "0.0.6"
+__version__ = "0.0.8"
 
 
 class Parallelizer:
@@ -134,6 +134,7 @@ class Status(str, Enum):
     HTTP_4xx = "HTTP_4xx"
     HTTP_403 = "HTTP_403"
     HTTP_5xx = "HTTP_5xx"
+    HTTP_999 = "HTTP_999"
     CONNECTION_ERROR = "CONNECTION_ERROR"
     SSL_ERROR = "SSL_ERROR"
     CONNECT_TIMEOUT = "CONNECT_TIMEOUT"
@@ -171,6 +172,8 @@ class ResponseData:
             return ResponseData(link, Status.HTTP_4xx, None)
         if 500 <= response.status_code < 600:
             return ResponseData(link, Status.HTTP_5xx, None)
+        if response.status_code == 999:
+            return ResponseData(link, Status.HTTP_999, None)
         else:
             raise NotImplementedError(response)
 
@@ -207,12 +210,14 @@ class ResponseData:
         return self.status == Status.SSL_ERROR
 
     def get_error_message(self):
-        payload_string = str(self.payload) if self.payload is not None else ""
-        return " ".join([str(self.status), payload_string])
+        if self.payload is not None:
+            return f"{self.status.value} {str(self.payload)}"
+        return str(self.status.value)
 
     def get_error_message_with_link(self):
-        payload_string = str(self.payload) if self.payload is not None else ""
-        return " ".join([str(self.status), payload_string, self.link])
+        if self.payload is not None:
+            return f"{self.status.value} {self.payload} {str(self.link)}"
+        return f"{self.status.value} {str(self.link)}"
 
     def promote_to_expected(self):
         self.expected = True
@@ -284,7 +289,21 @@ def check_link(link_and_exceptions) -> ResponseData:
 
 
 def find_links(input_content):
-    return re.findall(r"(?P<url>https?://[^\s><]+[^.\s><])", input_content)
+    # This regex is extremely simple, but it does the job for the links
+    # encountered and put under test so far.
+    PART_REGEX = r"[A-Za-z0-9_\-%+]+"
+    matches = re.findall(
+        (
+            rf"(?P<url>https?://({PART_REGEX}[\.\/])+{PART_REGEX}\/?"
+            rf"(\?({PART_REGEX}={PART_REGEX}&)*{PART_REGEX}={PART_REGEX})?"
+            ")"
+        ),
+        input_content,
+    )
+    links = []
+    for match in matches:
+        links.append(match[0])
+    return links
 
 
 def main():

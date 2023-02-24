@@ -1,6 +1,24 @@
 <sdoc-form-row
-  data-controller="deletable_field"
+  {% if field_name == "COMMENT" -%}
+    data-controller="deletable_field"
+  {%- endif -%}
 >
+
+  {%- if field_name == "COMMENT" -%}
+    <sdoc-form-row-action>
+      <button
+        class="action_icon"
+        data-turbo-action="replace"
+        data-turbo="true"
+        data-js-delete-field-action
+        title="Delete comment"
+        data-action-type="delete"
+        data-testid="form-delete-comment-field-action"
+      >{% include "_res/svg_ico16_delete.jinja.html" %}</button>
+      <sdoc-form-row-area></sdoc-form-row-area>
+    </sdoc-form-row-action>
+  {%- endif -%}
+
   <sdoc-contenteditable
     data-controller="editablefield"
     role="textbox"
@@ -34,11 +52,5 @@
       {{ error }}
     {%- endfor -%}
     </sdoc-form-error>
-  {%- endif -%}
-
-  {%- if field_name == "COMMENT" -%}
-    <div>
-      <a href="#" data-turbo-action="replace" data-turbo="true" data-js-delete-comment>Delete comment</a>
-    </div>
   {%- endif -%}
 </sdoc-form-row>

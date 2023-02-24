@@ -2,7 +2,7 @@ from typing import Dict, List, Optional, Set
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.requirement import Requirement
-from strictdoc.backend.source_file_syntax.reader import (
+from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityInfo,
 )
 from strictdoc.core.document_iterator import DocumentCachingIterator

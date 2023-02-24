@@ -1,7 +1,7 @@
 from typing import Dict, List, Optional
 
 from strictdoc.backend.sdoc.models.reference import FileReference, Reference
-from strictdoc.backend.source_file_syntax.reader import (
+from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityInfo,
 )
 

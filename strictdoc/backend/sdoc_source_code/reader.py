@@ -5,9 +5,9 @@ from functools import partial
 from textx import get_location, metamodel_from_str
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
-from strictdoc.backend.source_file_syntax.grammar import SOURCE_FILE_GRAMMAR
-from strictdoc.backend.source_file_syntax.models.range_pragma import RangePragma
-from strictdoc.backend.source_file_syntax.models.source_file_info import (
+from strictdoc.backend.sdoc_source_code.grammar import SOURCE_FILE_GRAMMAR
+from strictdoc.backend.sdoc_source_code.models.range_pragma import RangePragma
+from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
 )
 from strictdoc.helpers.string import get_lines_count

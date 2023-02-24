@@ -40,23 +40,26 @@
 
     <sdoc-form-footer>
       <button
-        class="std-form-btn"
+        class="action_button"
         type="submit"
+        data-action-type="submit"
         data-testid="form-submit-action"
       >Save</button>
 
     {%- if is_new_section -%}
       <a
-        class="std-form-btn"
+        class="action_button"
         href="/actions/document/cancel_new_section?section_mid={{form_object.section_mid}}"
         data-turbo="true"
+        data-action-type="cancel"
         data-testid="form-cancel-action"
       >Cancel</a>
     {%- else -%}
       <a
-        class="std-form-btn"
+        class="action_button"
         href="/actions/document/cancel_edit_section?section_mid={{form_object.section_mid}}"
         data-turbo="true"
+        data-action-type="cancel"
         data-testid="form-cancel-action"
       >Cancel</a>
     {%- endif -%}

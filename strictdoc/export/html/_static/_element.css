@@ -144,12 +144,53 @@ a.action_button:hover {
   margin-right: calc(var(--base-rhythm)*(-.5));
 }
 
+[data-action-type="submit"],
 .action_button[type=submit] {
   color: rgb(70, 90, 110);
+  /* color: #000; */
 }
 
+/* [data-action-type="delete"], */
+[data-action-type="cancel"],
 .action_button[href*="cancel"] {
   color: red !important;
+}
+
+[data-action-type="simple"] {
+  color: rgba(0,0,0,0.5) !important;
+}
+
+.action_icon,
+a.action_icon,
+a.action_icon:link,
+a.action_icon:visited {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -webkit-box-pack: center;
+  backface-visibility: hidden;
+  user-select: none;
+  cursor: pointer;
+  appearance: none;
+  border: none;
+  border-color: transparent;
+  background-color: rgba(0,0,0,0);
+  background: rgba(0,0,0,0);
+  box-shadow: none;
+  background-clip: padding-box;
+
+  color: var(--color-action);
+  transition: 0.2s;
+  padding: calc(var(--base-rhythm)*.5);
+  z-index: 2;
+}
+
+.action_icon:hover,
+a.action_icon:hover {
+  color: var(--color-hover);
+  z-index: 6;
 }
 
 /* TODO */

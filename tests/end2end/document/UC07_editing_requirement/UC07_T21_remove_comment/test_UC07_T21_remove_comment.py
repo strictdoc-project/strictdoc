@@ -46,7 +46,9 @@ class Test_UC07_T21_RemoveComment(BaseCase):
             click_by=By.XPATH,
         )
 
-        self.click_xpath("(//a[text()='Delete comment'])[1]")
+        self.click_xpath(
+            '(//*[@data-testid="form-delete-comment-field-action"])[1]'
+        )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')
         self.wait_for_element_absent(

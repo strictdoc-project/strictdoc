@@ -50,15 +50,20 @@
 
   {%- for field_values in form_object.enumerate_fields(multiline=True) -%}
     {%- for field in field_values -%}
-      {%- with
-        field_class_name="test",
-        field_name=field.field_name,
-        field_input_name="requirement[" ~ field.field_name ~ "]",
-        field_value=field.field_value,
-        errors=form_object.get_errors(field.field_name)
-      -%}
-        {% include "_helpers/multiline_field.jinja.html" %}
-      {%- endwith -%}
+      {# If comments have not yet been added,
+      show only the add field button below,
+      and do not display the code of the field itself: #}
+      {%- if field.field_name != "COMMENT" or field.field_value|length > 0 -%}
+        {%- with
+          field_class_name="test",
+          field_name=field.field_name,
+          field_input_name="requirement[" ~ field.field_name ~ "]",
+          field_value=field.field_value,
+          errors=form_object.get_errors(field.field_name)
+        -%}
+          {% include "_helpers/multiline_field.jinja.html" %}
+        {%- endwith -%}
+      {%- endif -%}
     {%- endfor -%}
   {%- endfor -%}
 
@@ -66,32 +71,37 @@
 
   <sdoc-form-row>
     <a
-      class="std-form-btn"
+      class="action_button"
       href="/actions/document/new_comment?requirement_mid={{form_object.requirement_mid}}"
       data-turbo-action="replace"
       data-turbo="true"
-    >Add comment</a>
+      data-action-type="simple"
+      data-testid="form-add-comment-field-action"
+    >{% include "_res/svg_ico16_add.jinja.html" %} Add comment field</a>
   </sdoc-form-row>
 
   <sdoc-form-footer>
     <button
-      class="std-form-btn"
+      class="action_button"
       type="submit"
+      data-action-type="submit"
       data-testid="form-submit-action"
     >Save</button>
 
     {%- if is_new_requirement -%}
       <a
-        class="std-form-btn"
+        class="action_button"
         href="/actions/document/cancel_new_requirement?requirement_mid={{form_object.requirement_mid}}"
         data-turbo="true"
+        data-action-type="cancel"
         data-testid="form-cancel-action"
       >Cancel</a>
     {%- else -%}
       <a
-        class="std-form-btn"
+        class="action_button"
         href="/actions/document/cancel_edit_requirement?requirement_mid={{form_object.requirement_mid}}"
         data-turbo="true"
+        data-action-type="cancel"
         data-testid="form-cancel-action"
       >Cancel</a>
     {%- endif -%}

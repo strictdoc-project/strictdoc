@@ -42,7 +42,7 @@ class Test_UC07_T23_AddEmptyToTwoExistingComments(BaseCase):
             click_by=By.XPATH,
         )
 
-        self.click_link("Add comment")
+        self.click_xpath('//*[@data-testid="form-add-comment-field-action"]')
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')
 

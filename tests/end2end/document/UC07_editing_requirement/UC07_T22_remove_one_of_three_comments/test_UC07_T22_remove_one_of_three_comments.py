@@ -42,7 +42,9 @@ class Test_UC07_T22_RemoveOneOfThreeComments(BaseCase):
             click_by=By.XPATH,
         )
 
-        self.click_xpath("(//a[text()='Delete comment'])[2]")
+        self.click_xpath(
+            '(//*[@data-testid="form-delete-comment-field-action"])[2]'
+        )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')
 

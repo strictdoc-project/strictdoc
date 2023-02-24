@@ -42,16 +42,20 @@ class Test_UC07_T20_AddComment(BaseCase):
             click_by=By.XPATH,
         )
 
+        # There should be no open comment fields, only an add comment button.
+        self.assert_element_not_present("(//*[@id='requirement[COMMENT]'])")
+
+        self.click_xpath('//*[@data-testid="form-add-comment-field-action"]')
         self.type(
             "(//*[@id='requirement[COMMENT]'])", "Comment #1", by=By.XPATH
         )
 
-        self.click_link("Add comment")
+        self.click_xpath('//*[@data-testid="form-add-comment-field-action"]')
         self.type(
             "(//*[@id='requirement[COMMENT]'])[2]", "Comment #2", by=By.XPATH
         )
 
-        self.click_link("Add comment")
+        self.click_xpath('//*[@data-testid="form-add-comment-field-action"]')
         self.type(
             "(//*[@id='requirement[COMMENT]'])[3]", "Comment #3", by=By.XPATH
         )

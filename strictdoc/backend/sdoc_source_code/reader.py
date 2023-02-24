@@ -1,6 +1,7 @@
 import sys
 import traceback
 from functools import partial
+from typing import List
 
 from textx import get_location, metamodel_from_str
 
@@ -27,7 +28,7 @@ class ParseContext:
     def __init__(self, lines_total):
         self.lines_total = lines_total
         self.pragmas = []
-        self.pragma_stack = []
+        self.pragma_stack: List[RangePragma] = []
         self.map_lines_to_pragmas = {}
         self.map_reqs_to_pragmas = {}
 
@@ -50,7 +51,10 @@ def source_file_traceability_info_processor(
     # Finding how many lines are covered by the requirements in the file.
     # Quick and dirty: https://stackoverflow.com/a/15273749/598057
     merged_ranges = []
+    pragma: RangePragma
     for pragma in source_file_traceability_info.pragmas:
+        if pragma.ng_is_nodoc:
+            continue
         if not pragma.is_begin():
             continue
         begin, end = pragma.ng_range_line_begin, pragma.ng_range_line_end
@@ -115,9 +119,36 @@ Content...
 def range_start_pragma_processor(
     pragma: RangePragma, parse_context: ParseContext
 ):
-    parse_context.pragmas.append(pragma)
     location = get_location(pragma)
     line = location["line"]
+
+    if pragma.ng_is_nodoc:
+        if pragma.is_begin():
+            parse_context.pragma_stack.append(pragma)
+        elif pragma.is_end():
+            try:
+                current_top_pragma: RangePragma = (
+                    parse_context.pragma_stack.pop()
+                )
+                if (
+                    not current_top_pragma.ng_is_nodoc
+                    or current_top_pragma.is_end()
+                ):
+                    raise create_begin_end_range_reqs_mismatch_error(
+                        location, current_top_pragma.reqs, pragma.reqs
+                    )
+            except IndexError:
+                raise create_end_without_begin_error(location) from None
+        return
+
+    if (
+        len(parse_context.pragma_stack) > 0
+        and parse_context.pragma_stack[-1].ng_is_nodoc
+    ):
+        # This pragma is within a "nosdoc" block, so we ignore it.
+        return
+
+    parse_context.pragmas.append(pragma)
     pragma.ng_source_line_begin = line
     parse_context.map_lines_to_pragmas[line] = pragma
 

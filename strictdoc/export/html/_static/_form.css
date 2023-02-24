@@ -186,54 +186,6 @@ sdoc-contenteditable:focus::before {
   margin-top: 16px;
 }
 
-.std-form-btn {
-  font-size:var(--font-size-xsm);
-  font-weight: 600;
-  text-align: left;
-  text-decoration: none;
-  white-space: nowrap;
-  position: relative;
-  display: inline-flex;
-
-  align-items: center;
-  justify-content: center;
-  -webkit-box-align: center;
-  -webkit-box-pack: center;
-  border-radius: 6px;
-  border: 1px solid transparent;
-  backface-visibility: hidden;
-  user-select: none;
-  cursor: pointer;
-  appearance: none;
-
-  /* 1.5 column-gap is compensated by SVG negative margin */
-  column-gap: calc(var(--base-rhythm)*1.5);
-  padding-left: calc(var(--base-rhythm)*1.5);
-  padding-right: calc(var(--base-rhythm)*1.5);
-  min-height: calc(var(--base-rhythm)*4);
-
-  /* box-shadow: rgb(0 0 0 / 10%) 0px 1px 2px 0px; */
-  color: var(--color-action);
-  background-color: rgb(255, 255, 255);
-  border-color: rgba(0, 0, 0, 0.05);
-  background-clip: padding-box;
-
-  transition: 0.2s;
-}
-
-.std-form-btn:hover {
-  box-shadow: rgb(0 0 0 / 10%) 0px 2px var(--base-rhythm) 0px;
-  color: var(--color-hover);
-}
-
-.std-form-btn[type=submit] {
-  color: #000;
-}
-
-.std-form-btn[href*="cancel"] {
-  color: red;
-}
-
 .std-form-fileld-title {
   font-size: calc(var(--base-font-size)*1.2);
   font-weight: bold;

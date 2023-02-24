@@ -144,6 +144,7 @@ a.action_button:hover {
   margin-right: calc(var(--base-rhythm)*(-.5));
 }
 
+[data-action-type="submit"],
 .action_button[type=submit] {
   color: rgb(70, 90, 110);
 }

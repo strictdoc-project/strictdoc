@@ -933,11 +933,16 @@ def create_main_router(
 
         existing_uid: Optional[str] = requirement.reserved_uid
 
-        # FIXME: Leave only one method based on set_field_value().
+        # FIXME: [1] Leave only one method based on set_field_value().
         # Special case: we clear out the requirement's comments and then re-fill
         # them from scratch from the form data.
         if "COMMENT" in requirement.ordered_fields_lookup:
             del requirement.ordered_fields_lookup["COMMENT"]
+        if RequirementFieldName.COMMENT in requirement.ng_reserved_fields_cache:
+            del requirement.ng_reserved_fields_cache[
+                RequirementFieldName.COMMENT
+            ]
+
         for form_field_name, form_fields in form_object.fields.items():
             for form_field_index, form_field in enumerate(form_fields):
                 requirement.set_field_value(

@@ -46,7 +46,11 @@ class Test_UC07_T02_EditingStatementOnly(BaseCase):
             click_by=By.XPATH,
         )
 
-        self.type("#requirement_STATEMENT", "Modified statement.")
+        self.type(
+            "//*[@id='requirement[STATEMENT]']",
+            "Modified statement.",
+            by=By.XPATH,
+        )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')
 

@@ -1,4 +1,7 @@
-<sdoc-form-row>
+<sdoc-form-row
+  data-controller="requirement_multiline_field"
+>
+{# TODO: requirement_multiline_field: change with deletable_field #}
   <sdoc-contenteditable
     data-controller="editablefield"
     role="textbox"
@@ -11,6 +14,9 @@
     id="{{ field_input_name }}"
     placeholder="Enter {{ field_name }} here..."
     data-field-name="{{ field_name }}"
+    {%- if field_class_name is defined -%}
+      class="{{ field_class_name }}"
+    {%- endif -%}
   >
     {%- if true -%}
     {{ field_value }}
@@ -29,5 +35,11 @@
       {{ error }}
     {%- endfor -%}
     </sdoc-form-error>
+  {%- endif -%}
+
+  {%- if field_name == "COMMENT" -%}
+    <div>
+      <a href="#" data-turbo-action="replace" data-turbo="true" data-js-delete-comment>Delete comment</a>
+    </div>
   {%- endif -%}
 </sdoc-form-row>

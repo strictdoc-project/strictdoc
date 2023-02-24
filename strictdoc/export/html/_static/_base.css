@@ -29,6 +29,7 @@
   --color-hover: var(--color-fg-contrast);
 
   --color-border: rgba(0,0,0,.1);
+  --color-placeholder: rgba(0,0,0,.25);
 
   --scrollbarBG: transparent;
   --thumbBG: rgba(0,0,0,.05);;

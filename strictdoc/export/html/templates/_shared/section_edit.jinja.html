@@ -18,61 +18,25 @@
   {%- endif -%}
   <input type="hidden" id="section_mid" name="section_mid" value="{{form_object.section_mid}}" />
 
-    <sdoc-form-row>
+    {%- with
+      field_class_name="std-form-fileld-title",
+      field_name="TITLE",
+      field_input_name="section_title",
+      field_value=form_object.section_title,
+      errors=form_object.get_errors("section_title")
+    -%}
+      {% include "_helpers/singleline_field.jinja.html" %}
+    {%- endwith -%}
 
-      <sdoc-contenteditable
-        class="std-form-fileld-title"
-        data-controller="editablefield"
-        role="textbox"
-        data-editable="single"
-        contenteditable="true"
-        id="section_title"
-        placeholder="Enter section title here..."
-      >
-        {%- if true -%}
-        {{ form_object.section_title }}
-        {%- endif -%}
-      </sdoc-contenteditable>
-      <input type="hidden" name="section_title" value="{{ form_object.section_title }}"/>
-
-      {%- if form_object.has_errors("section_title") -%}
-        <sdoc-form-error>
-        {%- for error in form_object.get_errors("section_title") -%}
-          {{ error }}
-        {%- endfor -%}
-        </sdoc-form-error>
-      {%- endif -%}
-
-    </sdoc-form-row>
-
-    <sdoc-form-row>
-      <div
-        class="std-form-field-rst"
-        data-controller="editablefield"
-        role="textbox"
-        data-editable="multiline"
-        contenteditable="true"
-        id="section_content"
-        placeholder="Enter section text here..."
-      >
-        {%- if true -%}
-          {{ form_object.section_statement }}
-        {%- endif -%}
-      </div>
-      <textarea hidden name="section_content">
-        {%- if true -%}
-          {{ form_object.section_statement }}
-        {%- endif -%}
-      </textarea>
-
-      {%- if form_object.has_errors("section_statement") -%}
-        <sdoc-form-error>
-        {%- for error in form_object.get_errors("section_statement") -%}
-          {{ error }}
-        {%- endfor -%}
-        </sdoc-form-error>
-      {%- endif -%}
-    </sdoc-form-row>
+    {%- with
+      field_class_name="std-form-field-rst",
+      field_name="FREETEXT",
+      field_input_name="section_content",
+      field_value=form_object.section_statement,
+      errors= form_object.get_errors("section_statement")
+    -%}
+      {% include "_helpers/multiline_field.jinja.html" %}
+    {%- endwith -%}
 
     <sdoc-form-footer>
       <button

@@ -369,6 +369,10 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
 
         # If a field value is being removed, there is not much to do.
         if value is None or len(value) == 0:
+            # See FIXME: [1].
+            if field_name == RequirementFieldName.COMMENT:
+                return
+
             if field_name in self.ordered_fields_lookup:
                 del self.ordered_fields_lookup[field_name]
             return

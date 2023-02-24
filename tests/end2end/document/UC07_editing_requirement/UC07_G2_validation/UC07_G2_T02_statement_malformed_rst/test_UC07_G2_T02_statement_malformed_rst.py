@@ -42,13 +42,14 @@ class Test_UC07_G2_T02_StatementMalformedRST(BaseCase):
         )
 
         self.type(
-            "#requirement_STATEMENT",
+            "//*[@id='requirement[STATEMENT]']",
             """
 - Broken RST markup
 
   - AAA
   ---
 """.strip(),
+            by=By.XPATH,
         )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')

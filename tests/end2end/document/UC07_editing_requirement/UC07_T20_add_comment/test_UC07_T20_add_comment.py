@@ -42,13 +42,19 @@ class Test_UC07_T20_AddComment(BaseCase):
             click_by=By.XPATH,
         )
 
-        self.type("(//*[@id='requirement_COMMENT'])", "Comment #1")
+        self.type(
+            "(//*[@id='requirement[COMMENT]'])", "Comment #1", by=By.XPATH
+        )
 
         self.click_link("Add comment")
-        self.type("(//*[@id='requirement_COMMENT'])[2]", "Comment #2")
+        self.type(
+            "(//*[@id='requirement[COMMENT]'])[2]", "Comment #2", by=By.XPATH
+        )
 
         self.click_link("Add comment")
-        self.type("(//*[@id='requirement_COMMENT'])[3]", "Comment #3")
+        self.type(
+            "(//*[@id='requirement[COMMENT]'])[3]", "Comment #3", by=By.XPATH
+        )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')
 

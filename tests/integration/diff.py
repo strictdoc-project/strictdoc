@@ -13,12 +13,12 @@ args = main_parser.parse_args()
 
 if not os.path.exists(args.lhs_file):
     print(  # noqa: T201
-        "error: path does not exist: {}".format(args.lhs_file), file=sys.stderr
+        f"error: path does not exist: {args.lhs_file}", file=sys.stderr
     )
     exit(1)
 if not os.path.exists(args.rhs_file):
     print(  # noqa: T201
-        "error: path does not exist: {}".format(args.rhs_file), file=sys.stderr
+        f"error: path does not exist: {args.rhs_file}", file=sys.stderr
     )
     exit(1)
 

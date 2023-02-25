@@ -24,7 +24,7 @@ class ConfluenceHTMLTableImport:
             err = f"Could not open doc file '{path_to_html}': No such file or directory."
             raise FileNotFoundError(err)
 
-        with open(path_to_html, "r") as file:
+        with open(path_to_html) as file:
             html_content = file.read()
 
         soup = BeautifulSoup(html_content, "html5lib")
@@ -156,7 +156,7 @@ class ConfluenceHTMLTableImport:
                 ul_rst_list = []
                 for li in child.findChildren(recursive=False):
                     assert li.name == "li"
-                    ul_rst_list.append("- {}".format(li.text))
+                    ul_rst_list.append(f"- {li.text}")
                 paragraphs.append("\n".join(ul_rst_list))
                 continue
             child_text = ConfluenceHTMLTableImport.parse_tag_to_text(child)
@@ -178,7 +178,7 @@ def main():
 
     path_to_input_html = args.input_file
     if not os.path.isfile(path_to_input_html):
-        print("not a file: {}".format(path_to_input_html))  # noqa: T201
+        print(f"not a file: {path_to_input_html}")  # noqa: T201
         exit(1)
 
     sdoc = ConfluenceHTMLTableImport.import_from_file(path_to_input_html)

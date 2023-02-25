@@ -321,8 +321,7 @@ class RequirementFormObject(ErrorObject):
             yield field
 
     def enumerate_reference_fields(self):
-        for field in self.reference_fields:
-            yield field
+        yield from self.reference_fields
 
     def validate(self, *, traceability_index: TraceabilityIndex):
         requirement_statement = self.fields["STATEMENT"][0].field_value

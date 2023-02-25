@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Link Health checker
 
@@ -321,14 +320,14 @@ def main():
     input_path = args.input_path
     assert os.path.exists(input_path)
 
-    with open(input_path, "r") as input_file:
+    with open(input_path) as input_file:
         input_content = input_file.read()
 
     exceptions = {}
 
     config_file_name = ".link_health.yml"
     if os.path.isfile(config_file_name):
-        with open(config_file_name, "r") as stream:
+        with open(config_file_name) as stream:
             try:
                 config_dict = yaml.safe_load(stream)
             except yaml.YAMLError as exc:

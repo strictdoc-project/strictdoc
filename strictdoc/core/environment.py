@@ -42,7 +42,7 @@ class SDocRuntimeEnvironment:
         if not os.path.isdir(self.path_to_strictdoc):
             raise FileNotFoundError(self.path_to_strictdoc)
         if not os.path.isabs(self.path_to_strictdoc):
-            raise EnvironmentError(
+            raise OSError(
                 "Path to strictdoc's package path must be an absolute path: "
                 f"{self.path_to_strictdoc}"
             )

@@ -16,4 +16,4 @@ sys.stdout = open(1, "w", encoding="utf-8", closefd=False, buffering=1)
 
 # How to print without a newline or space
 # https://stackoverflow.com/a/71272802/598057
-print(open(input_file, "r", encoding="utf-8").read(), end="")  # noqa: T201
+print(open(input_file, encoding="utf-8").read(), end="")  # noqa: T201

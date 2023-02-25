@@ -41,17 +41,13 @@ class Document:  # pylint: disable=too-many-instance-attributes
 
     def enumerate_meta_field_titles(self):
         # TODO: currently only enumerating a single element ([0])
-        for field_title in self.grammar.elements[
-            0
-        ].enumerate_meta_field_titles():
-            yield field_title
+        yield from self.grammar.elements[0].enumerate_meta_field_titles()
 
     def enumerate_custom_content_field_titles(self):
         # TODO: currently only enumerating a single element ([0])
-        for field_title in self.grammar.elements[
+        yield from self.grammar.elements[
             0
-        ].enumerate_custom_content_field_titles():
-            yield field_title
+        ].enumerate_custom_content_field_titles()
 
     def set_freetext(self, freetext: Optional[str]):
         if freetext is None or len(freetext) == 0:

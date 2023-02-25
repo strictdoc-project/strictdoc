@@ -1,14 +1,50 @@
 <sdoc-form-row
   {% if data_controller is defined -%}
-    data-controller={{data_controller}}
+    data-controller="{{data_controller}}"
   {%- endif -%}
 >
   {% if field_actions is defined -%}
     <sdoc-form-row-action>
-      {% if field_actions.some_field is defined and field_actions.some_field is sameas true  -%}
-        add action code
+
+      {% if field_actions.move_up is defined and field_actions.move_up is sameas true  -%}
+        <button
+          class="action_icon"
+          title="Move this {{ field_name }} up"
+          data-action-type="move_up"
+          data-js-move-up-field-action
+          data-turbo-action="replace"
+          data-turbo="false"
+          data-testid="form-move-up-{{ field_name }}-field-action"
+        >{% include "_res/svg_ico16_move_up.jinja.html" %}</button>
+        <sdoc-form-row-area></sdoc-form-row-area>
       {%- endif -%}
-      <sdoc-form-row-area></sdoc-form-row-area>
+
+      {% if field_actions.move_down is defined and field_actions.move_down is sameas true  -%}
+        <button
+          class="action_icon"
+          title="Move this {{ field_name }} down"
+          data-action-type="move_down"
+          data-js-move-down-field-action
+          data-turbo-action="replace"
+          data-turbo="false"
+          data-testid="form-move-down-{{ field_name }}-field-action"
+        >{% include "_res/svg_ico16_move_down.jinja.html" %}</button>
+        <sdoc-form-row-area></sdoc-form-row-area>
+      {%- endif -%}
+
+      {% if field_actions.delete is defined and field_actions.delete is sameas true  -%}
+        <button
+          class="action_icon"
+          title="Delete this {{ field_name }}"
+          data-action-type="delete"
+          data-js-delete-field-action
+          data-turbo-action="replace"
+          data-turbo="false"
+          data-testid="form-delete-{{ field_name }}-field-action"
+        >{% include "_res/svg_ico16_delete.jinja.html" %}</button>
+        <sdoc-form-row-area></sdoc-form-row-area>
+      {%- endif -%}
+
     </sdoc-form-row-action>
   {%- endif -%}
 

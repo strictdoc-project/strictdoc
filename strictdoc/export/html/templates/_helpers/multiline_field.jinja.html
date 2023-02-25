@@ -1,6 +1,6 @@
 <sdoc-form-row
   {% if data_controller is defined -%}
-    data-controller={{data_controller}}
+    data-controller="{{data_controller}}"
   {%- endif -%}
 >
   {% if field_actions is defined -%}
@@ -8,15 +8,15 @@
       {% if field_actions.delete is defined and field_actions.delete is sameas true  -%}
       <button
         class="action_icon"
+        title="Delete this {{ field_name }}"
+        data-action-type="delete"
+        data-js-delete-field-action
         data-turbo-action="replace"
         data-turbo="true"
-        data-js-delete-field-action
-        title="Delete this {{ field_name }} field"
-        data-action-type="delete"
         data-testid="form-delete-{{ field_name }}-field-action"
       >{% include "_res/svg_ico16_delete.jinja.html" %}</button>
-      {%- endif -%}
       <sdoc-form-row-area></sdoc-form-row-area>
+      {%- endif -%}
     </sdoc-form-row-action>
   {%- endif -%}
 

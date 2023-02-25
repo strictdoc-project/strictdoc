@@ -61,6 +61,12 @@
           field_value=field.field_value,
           errors=form_object.get_errors(field.field_name)
         -%}
+
+          {% if field.field_name == "COMMENT" -%}
+            {% set data_controller="deletable_field" %}
+          {%- endif -%}
+
+
           {% include "_helpers/multiline_field.jinja.html" %}
         {%- endwith -%}
       {%- endif -%}

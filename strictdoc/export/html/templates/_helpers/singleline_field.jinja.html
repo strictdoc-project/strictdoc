@@ -1,4 +1,8 @@
-<sdoc-form-row>
+<sdoc-form-row
+  {% if data_controller is defined -%}
+    data-controller={{data_controller}}
+  {%- endif -%}
+>
   <sdoc-contenteditable
     data-controller="editablefield"
     role="textbox"

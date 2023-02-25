@@ -1,6 +1,6 @@
 <sdoc-form-row
-  {% if field_name == "COMMENT" -%}
-    data-controller="deletable_field"
+  {% if data_controller is defined -%}
+    data-controller={{data_controller}}
   {%- endif -%}
 >
 

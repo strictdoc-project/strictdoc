@@ -10,16 +10,16 @@ from strictdoc.server.config import SDocServerEnvVariable
 
 
 def print_warning_message():
-    print("")
-    print("******************************************")
-    print("*               WARNING                  *")
-    print("*                                        *")
-    print("* The StrictDoc Web-based user interface *")
-    print("* is a highly experimental feature.      *")
-    print("* Things may go wrong, so get ready      *")
-    print("* to report bugs.                        *")
-    print("******************************************")
-    print("", flush=True)
+    print("")  # noqa: T201
+    print("******************************************")  # noqa: T201
+    print("*               WARNING                  *")  # noqa: T201
+    print("*                                        *")  # noqa: T201
+    print("* The StrictDoc Web-based user interface *")  # noqa: T201
+    print("* is a highly experimental feature.      *")  # noqa: T201
+    print("* Things may go wrong, so get ready      *")  # noqa: T201
+    print("* to report bugs.                        *")  # noqa: T201
+    print("******************************************")  # noqa: T201
+    print("", flush=True)  # noqa: T201
 
 
 def run_strictdoc_server(

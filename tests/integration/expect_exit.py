@@ -2,7 +2,7 @@ import subprocess
 import sys
 
 if len(sys.argv) <= 2:
-    print("error: expect_exit: expect arguments to be provided")
+    print("error: expect_exit: expect arguments to be provided")  # noqa: T201
     exit(1)
 
 expected_exit_code_arg = sys.argv[1]
@@ -11,7 +11,7 @@ try:
     if expected_exit_code < 0 or expected_exit_code > 127:
         raise ValueError
 except ValueError:
-    print(
+    print(  # noqa: T201
         "error: expect_exit: "
         "expect numeric exit code within range [0, 127]: "
         f"{expected_exit_code_arg}"
@@ -50,7 +50,7 @@ stdout, _ = process.communicate(input=subprocess_input)
 
 unexpected_exit_code = process.returncode != expected_exit_code
 if unexpected_exit_code:
-    print(
+    print(  # noqa: T201
         "error: expect_exit: expected exit code: {}, actual: {}".format(
             expected_exit_code, process.returncode
         )
@@ -58,11 +58,11 @@ if unexpected_exit_code:
 
 unexpected_content = expect_no_content and len(stdout) > 0
 if unexpected_content:
-    print("error: expect_exit: expected no content but received:")
+    print("error: expect_exit: expected no content but received:")  # noqa: T201
 
 output_lines = stdout.decode("utf-8").splitlines()
 for word in output_lines:
-    print(word)
+    print(word)  # noqa: T201
 
 if unexpected_exit_code or unexpected_content:
     exit(1)

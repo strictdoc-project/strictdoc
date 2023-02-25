@@ -46,10 +46,10 @@ class SDIncludeReader:
             traceback.print_exc()
             sys.exit(1)
         except StrictDocSemanticError as exc:
-            print(exc.to_print_message())
+            print(exc.to_print_message())  # noqa: T201
             sys.exit(1)
         except Exception as exc:  # pylint: disable=broad-except
-            print(
+            print(  # noqa: T201
                 f"error: could not parse file: "
                 f"{file_path}.\n{exc.__class__.__name__}: {exc}"
             )

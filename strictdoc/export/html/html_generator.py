@@ -105,7 +105,7 @@ class HTMLGenerator:
             assert isinstance(
                 traceability_index.document_tree.source_tree, SourceTree
             )
-            print("Generating source files:")
+            print("Generating source files:")  # noqa: T201
             for (
                 source_file
             ) in traceability_index.document_tree.source_tree.source_files:
@@ -140,7 +140,7 @@ class HTMLGenerator:
             ) as file:
                 file.write(source_coverage_content)
 
-        print(
+        print(  # noqa: T201
             "Export completed. Documentation tree can be found at:\n"
             f"{config.output_html_root}"
         )

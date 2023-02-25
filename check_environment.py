@@ -3,7 +3,7 @@ import sys
 import pkg_resources
 import toml
 
-print(
+print(  # noqa: T201
     "check_environment.py: "
     "checking if the current Python environment has all packages installed"
     "."
@@ -22,7 +22,7 @@ try:
     pkg_resources.require(dependencies)
     pkg_resources.require(dependencies_development)
 except pkg_resources.DistributionNotFound as exception:
-    print(f"check_environment.py: {exception}")
+    print(f"check_environment.py: {exception}")  # noqa: T201
     sys.exit(11)
 
-print("check_environment.py: all packages seem to be installed.")
+print("check_environment.py: all packages seem to be installed.")  # noqa: T201

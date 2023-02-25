@@ -27,7 +27,7 @@ class DocumentFinder:
                     "Provided path is neither a single file or a folder: "
                     f"'{paths_to_files_or_doc}'"
                 )
-                print(err)
+                print(err)  # noqa: T201
                 sys.exit(1)
 
         file_tree, asset_dirs = DocumentFinder._build_file_tree(config)

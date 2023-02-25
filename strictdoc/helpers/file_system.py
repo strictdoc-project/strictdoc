@@ -95,7 +95,7 @@ def copytree(
                 if not os.path.isfile(dstname) or os.path.getmtime(
                     srcname
                 ) > os.path.getmtime(dstname):
-                    print(f"Copying: {srcname} -> {dstname}")
+                    print(f"Copying: {srcname} -> {dstname}")  # noqa: T201
                     copy_function(srcname, dstname)
         # catch the Error from the recursive copytree so that we can
         # continue with other files

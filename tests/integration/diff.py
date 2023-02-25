@@ -12,18 +12,18 @@ main_parser.add_argument("rhs_file", type=str, help="")
 args = main_parser.parse_args()
 
 if not os.path.exists(args.lhs_file):
-    print(
+    print(  # noqa: T201
         "error: path does not exist: {}".format(args.lhs_file), file=sys.stderr
     )
     exit(1)
 if not os.path.exists(args.rhs_file):
-    print(
+    print(  # noqa: T201
         "error: path does not exist: {}".format(args.rhs_file), file=sys.stderr
     )
     exit(1)
 
 if not filecmp.cmp(args.lhs_file, args.rhs_file):
-    print(
+    print(  # noqa: T201
         "error: files {} and {} are not identical".format(
             args.lhs_file, args.rhs_file
         )

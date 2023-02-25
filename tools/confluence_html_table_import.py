@@ -174,15 +174,15 @@ def main():
     parser.add_argument("--output-file", type=str, help="TODO")
     args = parser.parse_args()
 
-    print(args.input_file)
+    print(args.input_file)  # noqa: T201
 
     path_to_input_html = args.input_file
     if not os.path.isfile(path_to_input_html):
-        print("not a file: {}".format(path_to_input_html))
+        print("not a file: {}".format(path_to_input_html))  # noqa: T201
         exit(1)
 
     sdoc = ConfluenceHTMLTableImport.import_from_file(path_to_input_html)
-    print(sdoc)
+    print(sdoc)  # noqa: T201
 
     sdoc_content = SDWriter().write(sdoc)
     with open("output.sdoc", "w") as output_file:

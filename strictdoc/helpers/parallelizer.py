@@ -49,7 +49,7 @@ class Parallelizer:
                 size -= 1
             except Empty:
                 if any(process.exitcode for process in self.processes):
-                    print(
+                    print(  # noqa: T201
                         "error: Parallelizer: One of the child processes "
                         "has exited prematurely."
                     )

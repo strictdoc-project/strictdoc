@@ -31,11 +31,13 @@ class ProjectConfigLoader:
         try:
             config_content = toml.load(path_to_config)
         except toml.decoder.TomlDecodeError as exception:
-            print(
+            print(  # noqa: T201
                 f"warning: could not parse the config file {path_to_config}: "
                 f"{exception}."
             )
-            print("warning: using default StrictDoc configuration.")
+            print(  # noqa: T201
+                "warning: using default StrictDoc configuration."
+            )
             return ProjectConfig.default_config()
         except Exception as exception:
             raise NotImplementedError from exception

@@ -85,7 +85,7 @@ class Parallelizer:
                 size -= 1
             except Empty:
                 if any(process.exitcode for process in self.processes):
-                    print(
+                    print(  # noqa: T201
                         "error: Parallelizer: One of the child processes "
                         "has exited prematurely."
                     )
@@ -253,29 +253,33 @@ def check_link(link_and_exceptions) -> ResponseData:
     exceptions = link_and_exceptions[1]
 
     head_response = head_request(link)
-    print(".", end="")
+    print(".", end="")  # noqa: T201
     if head_response.is_success():
         return head_response
 
     if link in exceptions:
         code = exceptions[link]
         if head_response.status.value == code:
-            print(
+            print(  # noqa: T201
                 f"\nHEAD {link} -> Known exception: "
                 f"[{head_response.get_error_message()}]"
             )
             head_response.promote_to_expected()
             return head_response
 
-    print(f"\nHEAD {link} [{head_response.get_error_message()}]")
+    print(  # noqa: T201
+        f"\nHEAD {link} [{head_response.get_error_message()}]"
+    )
 
     get_response = get_request(link=link, verify=True)
     if get_response.is_success():
         return get_response
 
     if get_response.is_ssl_error():
-        print(f"\nGET {link} [{get_response.get_error_message()}]", end="\n")
-        print(
+        print(  # noqa: T201
+            f"\nGET {link} [{get_response.get_error_message()}]", end="\n"
+        )  # noqa: T201
+        print(  # noqa: T201
             f"\nGET {link} – Trying again without SSL verification...", end="\n"
         )
 
@@ -283,7 +287,9 @@ def check_link(link_and_exceptions) -> ResponseData:
         if get_response.is_success():
             return get_response
 
-    print(f"\nGET {link} [{get_response.get_error_message()}]", end="\n")
+    print(  # noqa: T201
+        f"\nGET {link} [{get_response.get_error_message()}]", end="\n"
+    )
 
     return get_response
 
@@ -326,7 +332,7 @@ def main():
             try:
                 config_dict = yaml.safe_load(stream)
             except yaml.YAMLError as exc:
-                print(exc)
+                print(exc)  # noqa: T201
                 sys.exit(1)
         if "exceptions" in config_dict:
             exceptions_dict = config_dict["exceptions"]
@@ -356,15 +362,17 @@ def main():
         filter(lambda r: not r.is_success() and not r.expected, responses)
     )
 
-    print("\n")
+    print("\n")  # noqa: T201
     for expected_failed_response in expected_failed_responses:
-        print(
+        print(  # noqa: T201
             f"Expectedly failed link: "
             f"{expected_failed_response.get_error_message_with_link()}"
         )
     for failed_response in failed_responses:
-        print(f"Failed link: {failed_response.get_error_message_with_link()}")
-    print(
+        print(  # noqa: T201
+            f"Failed link: {failed_response.get_error_message_with_link()}"
+        )
+    print(  # noqa: T201
         f"Total links: {len(responses) - len(failed_responses)}, "
         f"failed links: {len(failed_responses)}"
     )

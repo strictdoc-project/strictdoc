@@ -120,7 +120,7 @@ def test_005_no_pragmas():
     source_input = """
 def hello_world_2():
 
-    print("hello world")
+    print("hello world")  # noqa: T201
 """.lstrip()
 
     reader = SourceFileTraceabilityReader()

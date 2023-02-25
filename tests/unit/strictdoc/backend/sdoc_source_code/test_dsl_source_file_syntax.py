@@ -3,24 +3,24 @@ from typing import List
 import pytest
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
-from strictdoc.backend.source_file_syntax.reader import (
+from strictdoc.backend.sdoc_source_code.reader import (
     RangePragma,
     SourceFileTraceabilityReader,
 )
 
 
 def test_001_one_range_pragma():
-    input = """
-# [REQ-001]
+    source_input = """
+# @sdoc[REQ-001]
 CONTENT 1
 CONTENT 2
 CONTENT 3
-# [/REQ-001]
+# @sdoc[/REQ-001]
 """.lstrip()
 
     reader = SourceFileTraceabilityReader()
 
-    document = reader.read(input)
+    document = reader.read(source_input)
     pragmas = document.pragmas
     assert pragmas[0].reqs == ["REQ-001"]
     assert pragmas[0].begin_or_end == "["
@@ -34,23 +34,23 @@ CONTENT 3
     assert pragmas[1].ng_range_line_begin == 1
     assert pragmas[1].ng_range_line_end == 5
 
-    assert document._ng_lines_total == 5
-    assert document._ng_lines_covered == 5
+    assert document.ng_lines_total == 5
+    assert document.ng_lines_covered == 5
     assert document.get_coverage() == 100
 
 
 def test_002_two_range_pragmas():
     source_input = """
-# [REQ-001]
+# @sdoc[REQ-001]
 CONTENT 1
 CONTENT 2
 CONTENT 3
-# [/REQ-001]
-# [REQ-002]
+# @sdoc[/REQ-001]
+# @sdoc[REQ-002]
 CONTENT 4
 CONTENT 5
 CONTENT 6
-# [/REQ-002]
+# @sdoc[/REQ-002]
 """.lstrip()
 
     reader = SourceFileTraceabilityReader()
@@ -79,18 +79,18 @@ CONTENT 6
 
 
 def test_003_one_range_pragma_begin_req_not_equal_to_end_req():
-    input = """
-# [REQ-001]
+    source_input = """
+# @sdoc[REQ-001]
 CONTENT 1
 CONTENT 2
 CONTENT 3
-# [/REQ-002]
+# @sdoc[/REQ-002]
 """.lstrip()
 
     reader = SourceFileTraceabilityReader()
 
     with pytest.raises(Exception) as exc_info:
-        _ = reader.read(input)
+        _ = reader.read(source_input)
 
     assert exc_info.type is StrictDocSemanticError
     assert (
@@ -100,14 +100,14 @@ CONTENT 3
 
 
 def test_004_one_range_pragma_end_without_begin():
-    input = """
-# [/REQ-002]
+    source_input = """
+# @sdoc[/REQ-002]
 """.lstrip()
 
     reader = SourceFileTraceabilityReader()
 
     with pytest.raises(Exception) as exc_info:
-        _ = reader.read(input)
+        _ = reader.read(source_input)
 
     assert exc_info.type is StrictDocSemanticError
     assert (
@@ -117,30 +117,30 @@ def test_004_one_range_pragma_end_without_begin():
 
 
 def test_005_no_pragmas():
-    input = """
+    source_input = """
 def hello_world_2():
 
     print("hello world")
 """.lstrip()
 
     reader = SourceFileTraceabilityReader()
-    _ = reader.read(input)
+    _ = reader.read(source_input)
 
 
 def test_006_empty_file():
-    input = ""
+    source_input = ""
 
     reader = SourceFileTraceabilityReader()
-    traceability_info = reader.read(input)
+    traceability_info = reader.read(source_input)
 
     assert traceability_info.pragmas == []
 
 
 def test_007_single_line_with_no_newline():
-    input = "Single line"
+    source_input = "Single line"
 
     reader = SourceFileTraceabilityReader()
-    traceability_info = reader.read(input)
+    traceability_info = reader.read(source_input)
 
     assert traceability_info.pragmas == []
 
@@ -148,21 +148,21 @@ def test_007_single_line_with_no_newline():
 def test_008_three_nested_range_pragmas():
     source_input = """
 CONTENT 1
-# [REQ-001]
+# @sdoc[REQ-001]
 CONTENT 2
-# [REQ-002]
+# @sdoc[REQ-002]
 CONTENT 3
-# [REQ-003]
+# @sdoc[REQ-003]
 CONTENT 4
-# [/REQ-003]
+# @sdoc[/REQ-003]
 CONTENT 5
-# [/REQ-002]
+# @sdoc[/REQ-002]
 CONTENT 6
-# [/REQ-001]
+# @sdoc[/REQ-001]
 CONTENT 7
-# [REQ-001]
+# @sdoc[REQ-001]
 CONTENT 8
-# [/REQ-001]
+# @sdoc[/REQ-001]
 CONTENT 9
 """.lstrip()
 
@@ -206,18 +206,18 @@ CONTENT 9
     assert pragma_7.ng_range_line_begin == 14
     assert pragma_8.ng_range_line_begin == 14
 
-    assert document._ng_lines_total == 17
-    assert document._ng_lines_covered == 14
+    assert document.ng_lines_total == 17
+    assert document.ng_lines_covered == 14
     assert document.get_coverage() == 82.4
 
 
 def test_009_two_requirements_in_one_pragma():
     source_input = """
-# [REQ-001, REQ-002]
+# @sdoc[REQ-001, REQ-002]
 CONTENT 1
 CONTENT 2
 CONTENT 3
-# [/REQ-001, REQ-002]
+# @sdoc[/REQ-001, REQ-002]
 """.lstrip()
 
     reader = SourceFileTraceabilityReader()
@@ -236,72 +236,72 @@ CONTENT 3
     assert pragmas[1].ng_range_line_begin == 1
     assert pragmas[1].ng_range_line_end == 5
 
-    assert document._ng_lines_total == 5
-    assert document._ng_lines_covered == 5
+    assert document.ng_lines_total == 5
+    assert document.ng_lines_covered == 5
     assert document.get_coverage() == 100
 
 
 def test_010_nosdoc_keyword():
     source_input = """
-# [nosdoc]
-# [REQ-001]
+# @sdoc[nosdoc]
+# @sdoc[REQ-001]
 CONTENT 1
 CONTENT 2
 CONTENT 3
-# [/REQ-001]
-# [/nosdoc]
+# @sdoc[/REQ-001]
+# @sdoc[/nosdoc]
 """.lstrip()
 
     reader = SourceFileTraceabilityReader()
 
     document = reader.read(source_input)
-    assert len(document.parts) == 1
+    assert len(document.parts) == 7
     assert len(document.pragmas) == 0
 
 
 def test_011_nosdoc_keyword_then_normal_pragma():
     source_input = """
-# [nosdoc]
-# [REQ-001]
+# @sdoc[nosdoc]
+# @sdoc[REQ-001]
 CONTENT 1
 CONTENT 2
 CONTENT 3
-# [/REQ-001]
-# [/nosdoc]
-# [REQ-001]
+# @sdoc[/REQ-001]
+# @sdoc[/nosdoc]
+# @sdoc[REQ-001]
 CONTENT 1
 CONTENT 2
 CONTENT 3
-# [/REQ-001]
+# @sdoc[/REQ-001]
 """.lstrip()
 
     reader = SourceFileTraceabilityReader()
 
     document = reader.read(source_input)
-    assert len(document.parts) == 6
+    assert len(document.parts) == 12
     assert len(document.pragmas) == 2
 
 
 def test_011_nosdoc_keyword_then_normal_pragma_4spaces_indent():
-    input = """
-    # [nosdoc]
-    # [REQ-001]
+    source_input = """
+    # @sdoc[nosdoc]
+    # @sdoc[REQ-001]
     CONTENT 1
     CONTENT 2
     CONTENT 3
-    # [/REQ-001]
-    # [/nosdoc]
-    # [REQ-001]
+    # @sdoc[/REQ-001]
+    # @sdoc[/nosdoc]
+    # @sdoc[REQ-001]
     CONTENT 1
     CONTENT 2
     CONTENT 3
-    # [/REQ-001]
+    # @sdoc[/REQ-001]
 """.lstrip()
 
     reader = SourceFileTraceabilityReader()
 
-    document = reader.read(input)
-    assert len(document.parts) == 6
+    document = reader.read(source_input)
+    assert len(document.parts) == 12
     assert len(document.pragmas) == 2
 
 
@@ -311,11 +311,11 @@ def test_012_pragma_not_first_line():
     source_input = """
 
 
-# [REQ-001]
+# @sdoc[REQ-001]
 CONTENT 1
 CONTENT 2
 CONTENT 3
-# [/REQ-001]
+# @sdoc[/REQ-001]
 
 
 
@@ -338,6 +338,36 @@ CONTENT 3
     assert pragmas[1].ng_range_line_begin == 4
     assert pragmas[1].ng_range_line_end == 8
 
-    assert document._ng_lines_total == 11
-    assert document._ng_lines_covered == 5
+    assert document.ng_lines_total == 11
+    assert document.ng_lines_covered == 5
     assert document.get_coverage() == 45.5
+
+
+def test_013_one_range_pragma():
+    source_input = """
+@sdoc[REQ-001]
+CONTENT 1
+CONTENT 2
+CONTENT 3
+@sdoc[/REQ-001]
+""".lstrip()
+
+    reader = SourceFileTraceabilityReader()
+
+    document = reader.read(source_input)
+    pragmas = document.pragmas
+    assert pragmas[0].reqs == ["REQ-001"]
+    assert pragmas[0].begin_or_end == "["
+    assert pragmas[0].ng_source_line_begin == 1
+    assert pragmas[0].ng_range_line_begin == 1
+    assert pragmas[0].ng_range_line_end == 5
+
+    assert pragmas[1].reqs == ["REQ-001"]
+    assert pragmas[1].begin_or_end == "[/"
+    assert pragmas[1].ng_source_line_begin == 5
+    assert pragmas[1].ng_range_line_begin == 1
+    assert pragmas[1].ng_range_line_end == 5
+
+    assert document.ng_lines_total == 5
+    assert document.ng_lines_covered == 5
+    assert document.get_coverage() == 100

@@ -9,7 +9,7 @@ from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.reference import ParentReqReference
 from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.sdoc.models.type_system import ReferenceType
-from strictdoc.backend.source_file_syntax.reader import (
+from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityReader,
 )
 from strictdoc.cli.cli_arg_parser import ExportCommandConfig

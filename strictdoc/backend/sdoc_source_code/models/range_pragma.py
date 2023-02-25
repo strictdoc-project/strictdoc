@@ -2,7 +2,7 @@ from strictdoc.helpers.auto_described import auto_described
 
 
 @auto_described
-class RangePragma:
+class RangePragma:  # pylint: disable=too-many-instance-attributes
     def __init__(self, parent, begin_or_end, reqs_objs):
         assert isinstance(reqs_objs, list)
         self.parent = parent
@@ -22,6 +22,8 @@ class RangePragma:
         #   ng_range_line_end == ng_source_line_begin
         self.ng_range_line_begin = None
         self.ng_range_line_end = None
+
+        self.ng_is_nodoc = "nosdoc" in self.reqs
 
     def is_begin(self):
         return self.begin_or_end == "["

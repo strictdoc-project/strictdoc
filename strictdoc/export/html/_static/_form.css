@@ -149,10 +149,14 @@ sdoc-contenteditable {
   position: relative;
 }
 
+sdoc-contenteditable[contenteditable="false"] {
+  color: var(--color-fg-secondary);
+}
+
 /* field name // before */
 
 sdoc-contenteditable::before {
-  content: attr(data-field-name);
+  content: attr(data-field-label);
   position: absolute;
   font-size: 10px;
   font-weight: 600;

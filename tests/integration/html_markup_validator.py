@@ -20,7 +20,7 @@ if not os.path.isfile(input_file):
     print(err)  # noqa: T201
     exit(1)
 
-with open(input_file, "r", encoding="utf8") as file:
+with open(input_file, encoding="utf8") as file:
     html_content = file.read()
 
 errors = []
@@ -31,7 +31,7 @@ html5parser = html5lib.HTMLParser(strict=True)
 try:
     html5parser.parse(html_content)
 except Exception as e:
-    errors.append("Error: {}".format(str(e)))
+    errors.append(f"Error: {str(e)}")
 
 # Validation #2: tidylib
 _, tidylib_messages_string = tidy_document(
@@ -66,7 +66,7 @@ for message in tidylib_messages_string.split("\n"):
 try:
     etree.parse(StringIO(html_content), etree.XMLParser())
 except Exception as e:
-    errors.append("Error: {}".format(str(e)))
+    errors.append(f"Error: {str(e)}")
 
 if len(errors) > 0 or len(warnings) > 0:
     for message in warnings + errors:

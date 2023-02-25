@@ -37,19 +37,19 @@ invert: bool = args.invert
 if not invert:
     if not os.path.exists(args.input_path):
         print(  # noqa: T201
-            "error: path does not exist: {}".format(args.input_path),
+            f"error: path does not exist: {args.input_path}",
             file=sys.stderr,
         )
         exit(1)
     if args.file and not os.path.isfile(args.input_path):
         print(  # noqa: T201
-            "error: path is not a file: {}".format(args.input_path),
+            f"error: path is not a file: {args.input_path}",
             file=sys.stderr,
         )
         exit(1)
     if args.dir and not os.path.isdir(args.input_path):
         print(  # noqa: T201
-            "error: path is not a directory: {}".format(args.input_path),
+            f"error: path is not a directory: {args.input_path}",
             file=sys.stderr,
         )
         exit(1)

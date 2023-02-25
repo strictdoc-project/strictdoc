@@ -33,13 +33,19 @@ select = [
  "T20",
   # "TCH",
   # "TRY",
-  # "UP",
+  "UP",
   "W",
   "YTT",
 ]
 
-# Never enforce `E501` (line length violations).
-ignore = ["E501"]
+
+ignore = [
+    "E501",  # (line length violations).
+
+    "UP006", # Use `list` instead of `List` for type annotations
+    "UP007", # Use `X | Y` for type annotations
+    "UP035", # [*] Import from `collections.abc` instead: `Iterator`
+]
 
 # Avoid trying to fix flake8-bugbear (`B`) violations.
 unfixable = ["B"]

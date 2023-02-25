@@ -71,7 +71,7 @@ class SDocTestServer:
         if not SDocTestServer.check_no_existing_connection(
             "127.0.0.1", self.server_port
         ):
-            raise EnvironmentError(
+            raise OSError(
                 "TestSDocServer: Cannot start a server because there is another"
                 f"server already running at the port: {self.server_port}."
             )

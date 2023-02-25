@@ -3,6 +3,15 @@
     data-controller={{data_controller}}
   {%- endif -%}
 >
+  {% if field_actions is defined -%}
+    <sdoc-form-row-action>
+      {% if field_actions.some_field is defined and field_actions.some_field is sameas true  -%}
+        add action code
+      {%- endif -%}
+      <sdoc-form-row-area></sdoc-form-row-area>
+    </sdoc-form-row-action>
+  {%- endif -%}
+
   <sdoc-contenteditable
     data-controller="editablefield"
     role="textbox"

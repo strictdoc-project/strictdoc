@@ -62,7 +62,7 @@ class Parallelizer:
     # - when a child process raises exception
     # def map_does_not_work(self, contents, processing_func):
     #     with concurrent.futures.ProcessPoolExecutor() as executor:
-    #         return executor.map(processing_func, contents)
+    #         return executor.map(processing_func, contents)  # noqa: ERA001
 
     @staticmethod
     def _run(input_queue, output_queue):

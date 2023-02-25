@@ -92,13 +92,6 @@ class ExcelToSDocConverter:
             all_header_columns.remove(header_column_idx)
         assert statement_column is not None
 
-        # array of tuples: (column_idx: int, column_name: str)
-        # [
-        #  (0, 'APPLICABLE_COMPONENT_CATEGORIES'),
-        #  (2, 'CATEGORY'),
-        #  ...
-        #  (6, 'CRITICALITY')
-        # ]
         extra_header_pairs: List[Tuple[int, str]] = list(
             map(lambda x: (x, safe_header_row[x]), all_header_columns)
         )

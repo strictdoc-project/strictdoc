@@ -43,14 +43,12 @@ class GrammarFormField:
 
     @staticmethod
     def create_from_grammar_field(*, grammar_field: GrammarElementField):
-        # if grammar_field.gef_type == RequirementFieldType.STRING or:
         reserved = is_reserved_field(grammar_field.title)
         return GrammarFormField(
             field_name=grammar_field.title,
             field_required=grammar_field.required,
             reserved=reserved,
         )
-        # raise NotImplementedError(grammar_field)
 
     @property
     def field_input_name(self):
@@ -108,8 +106,6 @@ class DocumentGrammarFormObject(ErrorObject):
 
         grammar_form_fields: List[GrammarFormField] = []
         for grammar_field in element.fields:
-            # if grammar_field.gef_type == RequirementFieldType.REFERENCE:
-            #     continue
             grammar_form_field = GrammarFormField.create_from_grammar_field(
                 grammar_field=grammar_field
             )

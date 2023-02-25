@@ -238,11 +238,3 @@ class SDocTestServer:
         )
         thread.daemon = True  # thread dies with the program
         thread.start()
-
-        # # read line without blocking
-        # try:
-        #     line = q.get_nowait()  # or q.get(timeout=.1)
-        # except Empty:
-        #     print('no output yet')
-        # else:
-        #

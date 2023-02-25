@@ -83,13 +83,13 @@ def create_begin_end_range_reqs_mismatch_error(
             "with the same requirement(s): "
             f"'{lhs_pragma_reqs_str}' != '{rhs_pragma_reqs_str}'."
         ),
-        # [nosdoc]
+        # @sdoc[nosdoc]  # noqa: ERA001
         """
 # [REQ-001]
 Content...
 # [/REQ-001]
         """.lstrip(),
-        # [/nosdoc]
+        # @sdoc[/nosdoc]  # noqa: ERA001
         line=location["line"],
         col=location["col"],
         filename=location["filename"],
@@ -103,13 +103,13 @@ def create_end_without_begin_error(location):
             "STRICT RANGE shall be opened with "
             "START pragma and ended with END pragma."
         ),
-        # [nosdoc]
+        # @sdoc[nosdoc]  # noqa: ERA001
         """
 # [REQ-001]
 Content...
 # [/REQ-001]
         """.lstrip(),
-        # [/nosdoc]
+        # @sdoc[/nosdoc]  # noqa: ERA001
         line=location["line"],
         col=location["col"],
         filename=location["filename"],
@@ -256,5 +256,5 @@ class SourceFileTraceabilityReader:
                 f"{file_path}.\n{exc.__class__.__name__}: {exc}"
             )
             # TODO: when --debug is provided
-            # traceback.print_exc()
+            # traceback.print_exc()  # noqa: ERA001
             sys.exit(1)

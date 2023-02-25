@@ -28,18 +28,10 @@ EXPORT_COLUMNS = [
         "name": "uid",
         "header": "UID",
     },
-    # {
-    #     "name": "title",
-    #     "header": "TITLE",
-    # },
     {
         "name": "statement",
         "header": "STATEMENT",
     },
-    # {
-    #     "name": "rationale",
-    #     "header": "RATIONALE",
-    # },
 ]
 
 

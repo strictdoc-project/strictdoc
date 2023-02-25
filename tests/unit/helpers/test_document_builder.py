@@ -12,14 +12,10 @@ class DocumentBuilder:
 
     def add_requirement(self, uid):
         parent = self.document
-        # level = None
         statement = "System X shall do Y"
         statement_multiline = None
-        # status = None
         tags = None
-        # references = []
         title = "Requirement title"
-        # body = None
         rationale = None
         rationale_multiline = None
         comments = []

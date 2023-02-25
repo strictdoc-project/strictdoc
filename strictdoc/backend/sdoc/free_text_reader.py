@@ -17,10 +17,6 @@ class SDFreeTextReader:
         )
 
         parse_context = ParseContext()
-        # processor = SDocParsingProcessor(
-        #     parse_context=parse_context, delegate=SDReader.parse_include
-        # )
-        # meta_model.register_obj_processors(processor.get_default_processors())
 
         document = meta_model.model_from_str(input_string, file_name=file_path)
         parse_context.document_reference.set_document(document)

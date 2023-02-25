@@ -65,7 +65,7 @@ def cli_args_parser() -> argparse.ArgumentParser:
     )
     command_subparsers.required = True
 
-    # Command: About
+    # Command – About
     _ = command_subparsers.add_parser(
         "about",
         help="About StrictDoc.",
@@ -73,7 +73,7 @@ def cli_args_parser() -> argparse.ArgumentParser:
         formatter_class=formatter,
     )
 
-    # Command: Export
+    # Command – Export
     command_parser_export = command_subparsers.add_parser(
         "export",
         help="Export document tree.",
@@ -130,7 +130,7 @@ def cli_args_parser() -> argparse.ArgumentParser:
         ),
     )
 
-    # Command: Import
+    # Command – Import
     command_parser_import = command_subparsers.add_parser(
         "import",
         help="Create StrictDoc files from other formats.",
@@ -212,7 +212,7 @@ def cli_args_parser() -> argparse.ArgumentParser:
         help="Path to the output SDoc file.",
     )
 
-    # Command: Passthrough
+    # Command – Passthrough
     command_parser_passthrough = command_subparsers.add_parser(
         "passthrough",
         help="Read an SDoc file, then output it again. (used for testing)",
@@ -226,7 +226,7 @@ def cli_args_parser() -> argparse.ArgumentParser:
         "--output-file", type=str, help="Path to the output SDoc file"
     )
 
-    # Command: Dump Grammar
+    # Command – Dump Grammar
     command_parser_dump_grammar = command_subparsers.add_parser(
         "dump-grammar",
         help="Dump the SDoc grammar to a .tx file.",
@@ -236,7 +236,7 @@ def cli_args_parser() -> argparse.ArgumentParser:
         "output_file", type=str, help="Path to the output .tx file"
     )
 
-    # Command: Server
+    # Command – Server
     command_parser_server = command_subparsers.add_parser(
         "server",
         help="Run StrictDoc Web server.",
@@ -257,7 +257,7 @@ def cli_args_parser() -> argparse.ArgumentParser:
         "--port", default=5111, type=IntRange(1000, 65000)
     )
 
-    # Command: Version
+    # Command – Version
     command_subparsers.add_parser(
         "version",
         help="Print the version of StrictDoc.",

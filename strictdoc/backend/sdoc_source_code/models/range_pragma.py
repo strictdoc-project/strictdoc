@@ -14,12 +14,13 @@ class RangePragma:  # pylint: disable=too-many-instance-attributes
         self.ng_source_line_begin = None
 
         # Line number of the pragma range in the source code:
+        # TODO: Improve description.
         # For Begin pragmas:
-        #   ng_range_line_begin == ng_source_line_begin
-        #   ng_range_line_end == ng_source_line_begin of the End pragma
+        #   ng_range_line_begin == ng_source_line_begin  # noqa: ERA001
+        #   ng_range_line_end == ng_source_line_begin of the End pragma  # noqa: ERA001, E501
         # For End pragmas:
-        #   ng_range_line_begin == ng_range_line_begin of the Begin pragma
-        #   ng_range_line_end == ng_source_line_begin
+        #   ng_range_line_begin == ng_range_line_begin of the Begin pragma  # noqa: ERA001, E501
+        #   ng_range_line_end == ng_source_line_begin  # noqa: ERA001
         self.ng_range_line_begin = None
         self.ng_range_line_end = None
 

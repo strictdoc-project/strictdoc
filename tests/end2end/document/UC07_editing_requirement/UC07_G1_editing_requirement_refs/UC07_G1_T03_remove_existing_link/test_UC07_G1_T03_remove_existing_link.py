@@ -55,9 +55,7 @@ class Test_UC07_G1_T03_RemoveLink(BaseCase):
         self.click_xpath('//*[@data-testid="form-submit-action"]')
 
         # TODO: Make sure that the link with the REQ-001 text no longer exists.
-        # self.wait_for_element_not_present(
-        # "(//sdoc-node)[3](//*[text()[contains(., 'REQ-001')]])[1]", by=...
-        # )
+
         self.assert_element_not_present(
             "//button[@type='submit' and text()='Save']", by=By.XPATH
         )

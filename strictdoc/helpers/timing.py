@@ -9,11 +9,11 @@ def timing_decorator(name):
     def timing_internal(func):
         @wraps(func)
         def wrap(*args, **kw):
-            print(f"Step '{name}' start", flush=True)
+            print(f"Step '{name}' start", flush=True)  # noqa: T201
             time_start = time()
             result = func(*args, **kw)
             time_end = time()
-            print(
+            print(  # noqa: T201
                 f"Step '{name}' took: {round_up(time_end - time_start, 2)} sec",
                 flush=True,
             )
@@ -34,4 +34,4 @@ def measure_performance(title):
     padded_time = " {:0.2f}".format(  # pylint: disable=consider-using-f-string
         (time_end - time_start)
     ).rjust(6, ".")
-    print(f"{padded_name}{padded_time}s", flush=True)
+    print(f"{padded_name}{padded_time}s", flush=True)  # noqa: T201

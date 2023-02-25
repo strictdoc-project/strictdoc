@@ -11,7 +11,9 @@ def rm_dir(directory):
 
 
 if len(sys.argv) == 1 or len(sys.argv) != 2:
-    print("error: expect one argument: file or folder to be deleted.")
+    print(  # noqa: T201
+        "error: expect one argument: file or folder to be deleted."
+    )
     sys.exit(1)
 
 input_dir_or_file = sys.argv[1]
@@ -23,5 +25,7 @@ if os.path.isfile(input_dir_or_file):
     os.remove(input_dir_or_file)
     sys.exit(0)
 
-print(f"error: is neither a file or a folder: {input_dir_or_file}")
+print(  # noqa: T201
+    f"error: is neither a file or a folder: {input_dir_or_file}"
+)
 sys.exit(1)

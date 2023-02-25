@@ -17,7 +17,7 @@ if not os.path.isfile(input_file):
     err = (
         f"error: html_markup_validator: input file does not exist: {input_file}"
     )
-    print(err)
+    print(err)  # noqa: T201
     exit(1)
 
 with open(input_file, "r", encoding="utf8") as file:
@@ -70,10 +70,10 @@ except Exception as e:
 
 if len(errors) > 0 or len(warnings) > 0:
     for message in warnings + errors:
-        print(message)
+        print(message)  # noqa: T201
 
     if len(errors) > 0:
-        print(
+        print(  # noqa: T201
             "Validation COMPLETED: {} errors, {} warnings".format(
                 len(errors), len(warnings)
             )
@@ -81,11 +81,11 @@ if len(errors) > 0 or len(warnings) > 0:
         exit(1)
     else:
         # Warnings are ok for now.
-        print(
+        print(  # noqa: T201
             "Validation COMPLETED: {} errors, {} warnings".format(
                 len(errors), len(warnings)
             )
         )
         exit(0)
 else:
-    print("Validation COMPLETED: 0 errors, 0 warnings")
+    print("Validation COMPLETED: 0 errors, 0 warnings")  # noqa: T201

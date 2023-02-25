@@ -123,7 +123,7 @@ class SDocTestServer:
         )
 
         sleep(WARMUP_INTERVAL)
-        print(
+        print(  # noqa: T201
             f"TestSDocServer: "
             f"Server is up and running on port: {self.server_port}."
         )
@@ -138,7 +138,7 @@ class SDocTestServer:
         child_processes_ids = list(
             map(lambda p: p.pid, parent.children(recursive=True))
         )
-        print(
+        print(  # noqa: T201
             "TestSDocServer: "
             "stopping server and worker processes: "
             f"{parent.pid} -> {child_processes_ids}"
@@ -198,12 +198,14 @@ class SDocTestServer:
                 else:
                     raise ReadTimeout()
         except ReadTimeout:
-            print(
+            print(  # noqa: T201
                 "---------------------------------------------------------------------"  # noqa: E501
             )
-            print("Failed to get an expected response from the server.")
+            print(  # noqa: T201
+                "Failed to get an expected response from the server."
+            )
             received_lines = "".join(received_input)
-            print(f"Received input:\n{received_lines}")
+            print(f"Received input:\n{received_lines}")  # noqa: T201
             sys.exit(1)
 
     @staticmethod

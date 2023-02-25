@@ -36,26 +36,26 @@ args = main_parser.parse_args()
 invert: bool = args.invert
 if not invert:
     if not os.path.exists(args.input_path):
-        print(
+        print(  # noqa: T201
             "error: path does not exist: {}".format(args.input_path),
             file=sys.stderr,
         )
         exit(1)
     if args.file and not os.path.isfile(args.input_path):
-        print(
+        print(  # noqa: T201
             "error: path is not a file: {}".format(args.input_path),
             file=sys.stderr,
         )
         exit(1)
     if args.dir and not os.path.isdir(args.input_path):
-        print(
+        print(  # noqa: T201
             "error: path is not a directory: {}".format(args.input_path),
             file=sys.stderr,
         )
         exit(1)
 else:
     if os.path.exists(args.input_path):
-        print(
+        print(  # noqa: T201
             "error: expected path to not exist, but it does: {}".format(
                 args.input_path
             ),
@@ -63,7 +63,7 @@ else:
         )
         exit(1)
     if args.file and os.path.isfile(args.input_path):
-        print(
+        print(  # noqa: T201
             "error: expected path to not exist, but is a file: {}".format(
                 args.input_path
             ),
@@ -71,7 +71,7 @@ else:
         )
         exit(1)
     if args.dir and os.path.isdir(args.input_path):
-        print(
+        print(  # noqa: T201
             "error: expected path to not exist, but is a directory: {}".format(
                 args.input_path
             ),

@@ -44,14 +44,14 @@ def _main(parallelizer):
         if not os.path.isfile(input_file):
             sys.stdout.flush()
             message = "error: passthrough command's input file does not exist"
-            print(f"{message}: {input_file}")
+            print(f"{message}: {input_file}")  # noqa: T201
             sys.exit(1)
 
         output_file = config.output_file
         if output_file:
             output_dir = os.path.dirname(output_file)
             if not os.path.isdir(output_dir):
-                print(f"not a directory: {output_file}")
+                print(f"not a directory: {output_file}")  # noqa: T201
                 sys.exit(1)
 
         passthrough_action = PassthroughAction()
@@ -70,7 +70,9 @@ def _main(parallelizer):
         parallelization_value = (
             "Disabled" if config.no_parallelization else "Enabled"
         )
-        print(f"Parallelization: {parallelization_value}", flush=True)
+        print(  # noqa: T201
+            f"Parallelization: {parallelization_value}", flush=True
+        )
         export_action = ExportAction(config, parallelizer)
         export_action.build_index()
         export_action.export()

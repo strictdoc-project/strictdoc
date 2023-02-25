@@ -30,7 +30,7 @@ select = [
   # "S",
   # "SIM",
   # "SLF",
-  # "T20",
+ "T20",
   # "TCH",
   # "TRY",
   # "UP",
@@ -45,4 +45,6 @@ ignore = ["E501"]
 unfixable = ["B"]
 
 [per-file-ignores]
+# B008 Do not perform function calls in argument defaults.
+# The call is performed only once at function definition time.
 "strictdoc/server/routers/main_router.py" = ["B008"]

@@ -62,7 +62,7 @@ class SDocParsingProcessor:
                 section.ng_resolved_custom_level
                 and section.ng_resolved_custom_level != "None"
             ):
-                print(
+                print(  # noqa: T201
                     "warning: [SECTION].LEVEL field is provided. "
                     "This contradicts to the option "
                     "[DOCUMENT].OPTIONS.AUTO_LEVELS set to On. "
@@ -70,7 +70,7 @@ class SDocParsingProcessor:
                 )
         else:
             if not section.ng_resolved_custom_level:
-                print(
+                print(  # noqa: T201
                     "warning: [SECTION].LEVEL field is not provided. "
                     "This contradicts to the option "
                     "[DOCUMENT].OPTIONS.AUTO_LEVELS set to Off. "
@@ -105,7 +105,7 @@ class SDocParsingProcessor:
     ):
         if self.parse_context.document_config.auto_levels:
             if composite_requirement.ng_resolved_custom_level:
-                print(
+                print(  # noqa: T201
                     "warning: [COMPOSITE_REQUIREMENT].LEVEL field is provided. "
                     "This contradicts to the option "
                     "[DOCUMENT].OPTIONS.AUTO_LEVELS set to On. "
@@ -113,7 +113,7 @@ class SDocParsingProcessor:
                 )
         else:
             if not composite_requirement.ng_resolved_custom_level:
-                print(
+                print(  # noqa: T201
                     "warning: [COMPOSITE_REQUIREMENT].LEVEL field is not "
                     "provided. This contradicts to the option "
                     "[DOCUMENT].OPTIONS.AUTO_LEVELS set to Off. "
@@ -166,7 +166,7 @@ class SDocParsingProcessor:
 
         if self.parse_context.document_config.auto_levels:
             if requirement.ng_resolved_custom_level:
-                print(
+                print(  # noqa: T201
                     "warning: [REQUIREMENT].LEVEL field is provided. "
                     "This contradicts to the option "
                     "[DOCUMENT].OPTIONS.AUTO_LEVELS set to On. "
@@ -174,7 +174,7 @@ class SDocParsingProcessor:
                 )
         else:
             if not requirement.ng_resolved_custom_level:
-                print(
+                print(  # noqa: T201
                     "warning: [REQUIREMENT].LEVEL field is not provided. "
                     "This contradicts to the option "
                     "[DOCUMENT].OPTIONS.AUTO_LEVELS set to Off. "

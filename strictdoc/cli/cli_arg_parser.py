@@ -32,13 +32,15 @@ def _parse_fields(fields):
 class SDocArgumentParser(argparse.ArgumentParser):
     def error(self, message: str):
         self.print_usage(sys.stderr)
-        print(f"{self.prog}: error: {message}", file=sys.stderr)
-        print("")
-        print("Further help:")
-        print(
+        print(f"{self.prog}: error: {message}", file=sys.stderr)  # noqa: T201
+        print("")  # noqa: T201
+        print("Further help:")  # noqa: T201
+        print(  # noqa: T201
             "'strictdoc -h/--help' provides a general overview of available commands."  # noqa: E501
         )
-        print("'strictdoc <command> -h/--help' provides command-specific help.")
+        print(  # noqa: T201
+            "'strictdoc <command> -h/--help' provides command-specific help."
+        )
         sys.exit(2)
 
 

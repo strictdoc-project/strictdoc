@@ -15,7 +15,7 @@ class PassthroughAction:
                 f"Could not open doc file '{config.input_file}': "
                 "No such file or directory"
             )
-            print(err)
+            print(err)  # noqa: T201
             sys.exit(1)
 
         document = SDReader().read_from_file(config.input_file)

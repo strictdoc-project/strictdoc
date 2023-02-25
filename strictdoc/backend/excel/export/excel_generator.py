@@ -215,7 +215,9 @@ class ExcelGenerator:
                 )
             else:
                 # no requirement with UID
-                print("No requirement with UID, nothing to export into excel")
+                print(  # noqa: T201
+                    "No requirement with UID, nothing to export into excel"
+                )
 
         if row == 1:
             os.unlink(document_out_file)

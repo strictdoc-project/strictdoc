@@ -13,12 +13,12 @@ arg_parser.add_argument("rhs_file", type=str, help="")
 args = arg_parser.parse_args()
 
 if not os.path.exists(args.lhs_file):
-    print(
+    print(  # noqa: T201
         "error: path does not exist: {}".format(args.lhs_file), file=sys.stderr
     )
     exit(1)
 if not os.path.exists(args.rhs_file):
-    print(
+    print(  # noqa: T201
         "error: path does not exist: {}".format(args.rhs_file), file=sys.stderr
     )
     exit(1)
@@ -30,10 +30,10 @@ lhs_sheet = lhs_wb.active
 rhs_sheet = rhs_wb.active
 
 if lhs_sheet.max_row != rhs_sheet.max_row:
-    print("Excel files have different number of rows")
+    print("Excel files have different number of rows")  # noqa: T201
     exit(1)
 if lhs_sheet.max_column != rhs_sheet.max_column:
-    print("Excel files have different number of columns")
+    print("Excel files have different number of columns")  # noqa: T201
     exit(1)
 
 errors = []
@@ -47,7 +47,7 @@ for row_num in range(1, lhs_sheet.max_row):
             )
 
 if errors:
-    print("Excel Diff: files are not equal:")
+    print("Excel Diff: files are not equal:")  # noqa: T201
     for error in errors:
-        print(error)
+        print(error)  # noqa: T201
     exit(1)

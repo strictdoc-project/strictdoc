@@ -48,7 +48,7 @@ class FileTraceabilityIndex:
                 file_link.file_entry.path_normalized
             )
             if not source_file_traceability_info:
-                print(
+                print(  # noqa: T201
                     "warning: "
                     f"Requirement {requirement.reserved_uid} references a file"
                     f" that does not exist: {file_link.file_entry.file_path}"
@@ -84,7 +84,7 @@ class FileTraceabilityIndex:
             req_uid
         ) in source_file_traceability_info.ng_map_reqs_to_pragmas.keys():
             if req_uid not in self.map_reqs_uids_to_paths:
-                print(
+                print(  # noqa: T201
                     f"warning: source file {source_file_rel_path} references "
                     f"a requirement that does not exist: {req_uid}"
                 )

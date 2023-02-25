@@ -28,7 +28,7 @@ class ExportAction:
                 )
             )
         except DocumentTreeError as exc:
-            print(exc.to_print_message())
+            print(exc.to_print_message())  # noqa: T201
             sys.exit(1)
         self.traceability_index = traceability_index
 

@@ -29,11 +29,11 @@ class RstToHtmlFragmentWriter:
 
         if warning_stream.tell() > 0:
             warnings = warning_stream.getvalue().rstrip("\n")
-            print("error: problems when converting RST to HTML:")
-            print(warnings)
-            print("RST fragment: >>>")
-            print(rst_fragment)
-            print("<<<")
+            print("error: problems when converting RST to HTML:")  # noqa: T201
+            print(warnings)  # noqa: T201
+            print("RST fragment: >>>")  # noqa: T201
+            print(rst_fragment)  # noqa: T201
+            print("<<<")  # noqa: T201
             sys.exit(1)
 
         html = output["html_body"]

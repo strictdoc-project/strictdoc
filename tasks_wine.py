@@ -22,7 +22,6 @@ COMMAND_SETUP_DEPS = "pip install .[development]"
 
 
 def one_line_command(string):
-    print(re.sub("\\s+", " ", string).strip())
     return re.sub("\\s+", " ", string).strip()
 
 

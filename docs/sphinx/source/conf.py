@@ -28,7 +28,9 @@ try:
     sys.path.append(strictdoc_root_path)
     import strictdoc
 except Exception as exception:
-    print(f"Could not resolve a path to strictdoc's root: {exception}")
+    print(  # noqa: T201
+        f"Could not resolve a path to strictdoc's root: {exception}"
+    )
     sys.exit(1)
 
 

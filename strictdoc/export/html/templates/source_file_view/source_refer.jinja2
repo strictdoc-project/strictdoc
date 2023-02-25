@@ -14,7 +14,7 @@
         The following requirements refer <b>to&nbsp;the&nbsp;ranges</b> in this source&nbsp;file.
       </summary>
         {%- for requirement in source_file_range_reqs -%}
-          {% include "source_file_view/source_requirement.jinja.html" %}
+          {% include "source_file_view/source_requirement.jinja2" %}
         {%- endfor -%}
     </details>
 
@@ -28,7 +28,7 @@
     <details open>
       <summary>See requirements that refer to&nbsp;this source&nbsp;file <b>without specifying a&nbsp;range</b>.</summary>
       {%- for requirement in source_file_general_reqs -%}
-        {% include "source_file_view/source_requirement.jinja.html" %}
+        {% include "source_file_view/source_requirement.jinja2" %}
       {%- endfor -%}
     </details>
 

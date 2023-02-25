@@ -94,11 +94,6 @@ class Folder(FileOrFolderEntry):
         assert isinstance(parent_folder, Folder)
         self.parent_folder = parent_folder
 
-    def dump(self):
-        print(self)
-        for subfolder in self.subfolder_trees:
-            subfolder.dump()
-
 
 class FileTree:
     def __init__(self, *, root_folder_or_file):

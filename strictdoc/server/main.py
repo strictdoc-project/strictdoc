@@ -12,7 +12,7 @@ try:
     assert os.path.exists(strictdoc_path), f"does not exist: {strictdoc_path}"
     sys.path.append(strictdoc_path)
 except AssertionError:
-    print("Cannot find strictdoc's root folder.")
+    print("Cannot find strictdoc's root folder.")  # noqa: T201
     sys.exit(1)
 
 

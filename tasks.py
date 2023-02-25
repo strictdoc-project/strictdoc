@@ -237,7 +237,7 @@ def test_end2end(
     long_timeouts=False,
 ):
     if parallelize:
-        print(
+        print(  # noqa: T201
             "warning: "
             "Running parallelized end-2-end tests is supported "
             "but is not stable."
@@ -341,7 +341,7 @@ def lint_black_diff(context):
 
     # black always exits with 0, so we handle the output.
     if "reformatted" in result.stdout:
-        print("invoke: black found issues")
+        print("invoke: black found issues")  # noqa: T201
         result.exited = 1
         raise invoke.exceptions.UnexpectedExit(result)
 
@@ -358,7 +358,9 @@ def lint_pylint(context):
         run_invoke_cmd(context, command)
     except invoke.exceptions.UnexpectedExit as exc:
         # pylink doesn't show an error message when exit code != 0, so we do.
-        print(f"invoke: pylint exited with error code {exc.result.exited}")
+        print(  # noqa: T201
+            f"invoke: pylint exited with error code {exc.result.exited}"
+        )
         raise exc
 
 

@@ -213,14 +213,14 @@ class TraceabilityIndexBuilder:
                         node.reserved_uid
                     ].document
                     if other_req_doc == document:
-                        print(
+                        print(  # noqa: T201
                             "error: DocumentIndex: "
                             "two nodes with the same UID "
                             "exist in the same document: "
                             f'{node.reserved_uid} in "{document.title}".'
                         )
                     else:
-                        print(
+                        print(  # noqa: T201
                             "error: DocumentIndex: "
                             "two nodes with the same UID "
                             "exist in two different documents: "
@@ -277,7 +277,7 @@ class TraceabilityIndexBuilder:
                         for part in free_text.parts:
                             if isinstance(part, InlineLink):
                                 if part.link not in d_02_requirements_map:
-                                    print(
+                                    print(  # noqa: T201
                                         ErrorMessage.inline_link_uid_not_exist(
                                             part.link
                                         )
@@ -298,7 +298,7 @@ class TraceabilityIndexBuilder:
                     if requirement_parent_id not in d_02_requirements_map:
                         # TODO: Strict variant of the behavior will be to stop
                         # and raise an error message.
-                        print(
+                        print(  # noqa: T201
                             f"warning: [DocumentIndex.create] "
                             f"Requirement {requirement.reserved_uid} "
                             f"references "

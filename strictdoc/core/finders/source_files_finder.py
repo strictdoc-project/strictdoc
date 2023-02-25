@@ -1,4 +1,5 @@
 import os
+from enum import Enum
 from pathlib import Path
 from typing import List
 
@@ -6,6 +7,39 @@ from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.file_tree import File, FileFinder
 from strictdoc.core.source_tree import SourceTree
 from strictdoc.helpers.auto_described import auto_described
+
+
+class SourceFileType(Enum):
+    PYTHON = [".py"]
+    C = [".c"]
+    CPP = [".cpp"]
+    TEX = [".tex"]
+    # Is there an idiomatic file extension for Jinja templates?
+    # https://stackoverflow.com/questions/29590931/is-there-an-idiomatic-file-extension-for-jinja-templates  # noqa: #501
+    JINJA = [".jinja", ".jinja2", ".j2", ".html.jinja"]
+
+    @classmethod
+    def create_from_path(cls, path_to_file: str) -> "SourceFileType":
+        assert os.path.isfile(path_to_file), path_to_file
+        if path_to_file.endswith(".py"):
+            return cls.PYTHON
+        if path_to_file.endswith(".c"):
+            return cls.C
+        if path_to_file.endswith(".cpp"):
+            return cls.CPP
+        if path_to_file.endswith(".tex"):
+            return cls.TEX
+        for enum_value in SourceFileType.JINJA.value:
+            if path_to_file.endswith(enum_value):
+                return cls.JINJA
+        raise NotImplementedError(path_to_file)
+
+    @staticmethod
+    def all() -> List[str]:
+        all_extensions = []
+        for enum_value in SourceFileType:
+            all_extensions += enum_value.value
+        return all_extensions
 
 
 @auto_described
@@ -28,23 +62,27 @@ class SourceFile:  # pylint: disable=too-many-instance-attributes
         self.output_file_full_path = output_file_full_path
         self.path_depth_prefix = ("../" * (level + 1))[:-1]
 
-        _, file_extension = os.path.splitext(in_doctree_source_file_rel_path)
-        self.extension = file_extension
+        self.file_type: SourceFileType = SourceFileType.create_from_path(
+            in_doctree_source_file_rel_path
+        )
 
         self.traceability_info = None
         self.is_referenced = False
 
     def is_python_file(self):
-        return self.extension == ".py"
+        return self.file_type == SourceFileType.PYTHON
 
     def is_c_file(self):
-        return self.extension == ".c"
+        return self.file_type == SourceFileType.C
 
     def is_cpp_file(self):
-        return self.extension == ".cpp"
+        return self.file_type == SourceFileType.CPP
 
     def is_tex_file(self):
-        return self.extension == ".tex"
+        return self.file_type == SourceFileType.TEX
+
+    def is_jinja_file(self):
+        return self.file_type == SourceFileType.JINJA
 
 
 class SourceFilesFinder:
@@ -65,7 +103,7 @@ class SourceFilesFinder:
         file_tree = FileFinder.find_files_with_extensions(
             root_path=doctree_root_abs_path,
             ignored_dirs=[config.output_dir],
-            extensions={".py", ".c", ".cpp", ".tex"},
+            extensions=SourceFileType.all(),
         )
         root_level = doctree_root_abs_path.count(os.sep)
 

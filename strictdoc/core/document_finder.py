@@ -162,7 +162,7 @@ class DocumentFinder:
             file_tree_structure = FileFinder.find_files_with_extensions(
                 root_path=path_to_doc_root,
                 ignored_dirs=[config.output_dir],
-                extensions={".sdoc"},
+                extensions=[".sdoc"],
             )
             root_trees.append(file_tree_structure)
 

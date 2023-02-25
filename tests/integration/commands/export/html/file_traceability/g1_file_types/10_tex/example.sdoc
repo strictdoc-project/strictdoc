@@ -16,3 +16,11 @@ REFS:
   VALUE: file.tex
 TITLE: Source range reference
 STATEMENT: This requirement references a range in the file.
+
+[REQUIREMENT]
+UID: REQ-003
+REFS:
+- TYPE: File
+  VALUE: file.tex
+TITLE: Source range reference
+STATEMENT: This requirement references a range in the file.

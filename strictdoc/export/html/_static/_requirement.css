@@ -219,6 +219,12 @@ div.document ol {
   padding-left: 1.6em;
 }
 
+div.document td ul,
+div.document dt ol {
+  margin: 0;
+  padding-left: 1em;
+}
+
 /* object */
 
 div.document img,

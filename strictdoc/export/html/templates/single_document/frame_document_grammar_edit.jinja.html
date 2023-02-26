@@ -11,17 +11,18 @@
       </sdoc-modal-header>
 
       <sdoc-modal-content>
-        <sdoc-form-row>StrictDoc conventions:</sdoc-form-row>
-        <sdoc-form-row>The requirements fields above the reserved "TITLE" field are dedicated to meta information and will be rendered as single-line. The fields below the reserved "STATEMENT" field are multiline and should be used for fields with more descriptive text.</sdoc-form-row>
+        <sdoc-form-descr>
+        <b>StrictDoc conventions:</b><br>
+        The requirements fields above the reserved "TITLE" field are dedicated to meta information and will be rendered as single-line. The fields below the reserved "STATEMENT" field are multiline and should be used for fields with more descriptive text.
+        </sdoc-form-descr>
 
         <input type="hidden" id="document_mid" name="document_mid" value="{{form_object.document_mid}}"/>
 
-        <div id="document__editable_grammar_fields">
+        <sdoc-form-fields id="document__editable_grammar_fields">
         {%- for field in form_object.fields -%}
-          {# </sdoc-form-row> include into partial: #}
           {%- include "single_document/frame_document_grammar_edit_custom_field.jinja.html" -%}
         {%- endfor -%}
-        </div>
+        </sdoc-form-fields>
 
         <sdoc-form-footer>
           <a

@@ -54,13 +54,20 @@
       show only the add field button below,
       and do not display the code of the field itself: #}
       {%- if field.field_name != "COMMENT" or field.field_value|length > 0 -%}
+        {# TODO: make template for comment field in treauirement, 2 places #}
         {%- with
-          field_class_name="test",
           field_name=field.field_name,
           field_input_name="requirement[" ~ field.field_name ~ "]",
           field_value=field.field_value,
           errors=form_object.get_errors(field.field_name)
         -%}
+
+          {% if field.field_name == "COMMENT" -%}
+            {% set data_controller="deletable_field" %}
+            {% set field_actions={ 'delete':true } %}
+          {%- endif -%}
+
+
           {% include "_helpers/multiline_field.jinja.html" %}
         {%- endwith -%}
       {%- endif -%}

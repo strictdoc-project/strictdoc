@@ -33,7 +33,9 @@ class Test_UC12_T03_MoveFieldDown(BaseCase):
 
         self.click_xpath('(//*[@data-testid="document-edit-grammar-action"])')
 
-        self.click_xpath("(//a[@title='Move down'])[last()]")
+        self.click_xpath(
+            '(//*[@data-testid="form-move-down-Custom field-field-action"])[last()]'  # noqa: E501
+        )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')
         self.assert_element_not_present('[data-testid="form-submit-action"]')

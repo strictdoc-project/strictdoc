@@ -38,19 +38,14 @@ function swapNodes(n1, n2) {
   }
 }
 
-Stimulus.register("document_grammar_form", class extends Controller {
+Stimulus.register("movable_field", class extends Controller {
   initialize() {
     // this.element is the DOM element to which the controller is connected to.
     const thisElement = this.element;
-    const removeLinks = thisElement.querySelectorAll("[data-js-remove-field]");
-    removeLinks.forEach(link => {
-        link.addEventListener("click", function(event){
-            event.preventDefault();
-            thisElement.remove();
-        });
-    });
 
-    const moveUpLinks = thisElement.querySelectorAll("[data-js-move-field-up]");
+    console.log(this.element)
+
+    const moveUpLinks = thisElement.querySelectorAll("[data-js-move-up-field-action]");
       moveUpLinks.forEach(link => {
         link.addEventListener("click", function(event){
             event.preventDefault();
@@ -58,7 +53,7 @@ Stimulus.register("document_grammar_form", class extends Controller {
         });
     });
 
-    const moveDownLinks = thisElement.querySelectorAll("[data-js-move-field-down]");
+    const moveDownLinks = thisElement.querySelectorAll("[data-js-move-down-field-action]");
       moveDownLinks.forEach(link => {
         link.addEventListener("click", function(event){
           event.preventDefault();

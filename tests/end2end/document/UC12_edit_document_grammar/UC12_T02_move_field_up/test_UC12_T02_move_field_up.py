@@ -9,7 +9,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test_UC12_R02_MoveFieldUp(BaseCase):
+class Test_UC12_T02_MoveFieldUp(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -33,7 +33,9 @@ class Test_UC12_R02_MoveFieldUp(BaseCase):
 
         self.click_xpath('(//*[@data-testid="document-edit-grammar-action"])')
 
-        self.click_xpath("(//a[@title='Move up'])[last()]")
+        self.click_xpath(
+            '(//*[@data-testid="form-move-up-Custom field-field-action"])[last()]'  # noqa: E501
+        )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')
         self.assert_element_not_present('[data-testid="form-submit-action"]')

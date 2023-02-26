@@ -62,7 +62,7 @@ Hello world!
 
         # TODO: Cannot match this text for some reason.
         # The visual output and the written .sdoc file are ok though.
-        # self.assert_text("Hello world!\\n Hello world!\\n Hello world!")
+        # self.assert_text("Hello world!\\n Hello world!\\n Hello world!")  # noqa: ERA001, E501
 
         self.assert_element(
             "//turbo-frame[@id='frame-toc']//*[contains(., 'Modified title')]"

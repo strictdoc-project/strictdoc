@@ -41,7 +41,6 @@ def run_strictdoc_server(
     uvicorn.run(
         "strictdoc.server.app:strictdoc_production_app",
         app_dir=".",
-        # debug=False,
         factory=True,
         host="127.0.0.1",
         log_level="info",
@@ -51,18 +50,18 @@ def run_strictdoc_server(
             server_config.environment.path_to_strictdoc,
             server_config.input_path,
         ],
-        # reload_delay: Optional[float] = None,
         reload_includes=[
             "*.py",
             "*.html",
             "*.css",
             "*.js",
         ],
-        # reload_excludes=[
-        #     "**/developer/sandbox/output/**/*",
-        #     # "*output*",
+        # TODO: Enable or remove
+        # reload_excludes=[  # noqa: ERA001
+        #     "**/developer/sandbox/output/**/*",  # noqa: ERA001
+        #     # "*output*",  # noqa: ERA001
         # ],
-        # root_path: str = "",
+        # root_path: str = "",  # noqa: ERA001
     )
     tmp_config_file.close()
     if os.path.exists(tmp_config_file.name):

@@ -22,10 +22,10 @@ class DocumentCachingIterator:
         self.toc_nodes_cache.clear()
 
     def table_of_contents(self):
-        # TODO: WIP
-        # if len(self.toc_nodes_cache) > 0:
-        #     yield from self.toc_nodes_cache
-        #     return
+        # TODO: Should bring the cache back or remove?
+        # if len(self.toc_nodes_cache) > 0:  # noqa: ERA001
+        #     yield from self.toc_nodes_cache  # noqa: ERA001
+        #     return  # noqa: ERA001
 
         nodes_to_skip = (
             (FreeText, Requirement)
@@ -42,10 +42,10 @@ class DocumentCachingIterator:
             yield node
 
     def all_content(self):
-        # TODO: WIP
-        # if len(self.nodes_cache) > 0:
-        #     yield from self.nodes_cache
-        #     return
+        # TODO: Should bring the cache back or remove?
+        # if len(self.nodes_cache) > 0:  # noqa: ERA001
+        #     yield from self.nodes_cache  # noqa: ERA001
+        #     return  # noqa: ERA001
 
         document = self.document
         level_counter = LevelCounter()

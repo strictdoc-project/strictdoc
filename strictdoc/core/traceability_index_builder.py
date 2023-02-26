@@ -181,7 +181,7 @@ class TraceabilityIndexBuilder:
         #
         # Step #1:
         # - Collect a dictionary of all requirements in the document tree:
-        # {req_id: req}
+        # {req_id: req}  # noqa: ERA001
         # - Each requirement's 'parents_uids' is populated with the forward
         # declarations of its parents uids.
         # - A separate map is created: {req_id: [req_children]}
@@ -326,7 +326,7 @@ class TraceabilityIndexBuilder:
                         requirement.document
                     )
 
-                # [SDOC-VALIDATION-NO-CYCLES]
+                # @sdoc[SDOC-VALIDATION-NO-CYCLES]  # noqa: ERA001
                 # Detect cycles
                 parents_cycle_detector.check_node(
                     requirement.reserved_uid,
@@ -343,7 +343,7 @@ class TraceabilityIndexBuilder:
                         )
                     ),
                 )
-                # [/SDOC-VALIDATION-NO-CYCLES]
+                # @sdoc[/SDOC-VALIDATION-NO-CYCLES]
 
                 d_02_requirements_map[
                     requirement.reserved_uid

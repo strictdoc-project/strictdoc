@@ -78,44 +78,6 @@ CONTENT 6
     assert pragma_4.ng_range_line_begin == 6
 
 
-def test_003_one_range_pragma_begin_req_not_equal_to_end_req():
-    source_input = """
-# @sdoc[REQ-001]
-CONTENT 1
-CONTENT 2
-CONTENT 3
-# @sdoc[/REQ-002]
-""".lstrip()
-
-    reader = SourceFileTraceabilityReader()
-
-    with pytest.raises(Exception) as exc_info:
-        _ = reader.read(source_input)
-
-    assert exc_info.type is StrictDocSemanticError
-    assert (
-        exc_info.value.args[0]
-        == "STRICTDOC RANGE: BEGIN and END requirements mismatch"
-    )
-
-
-def test_004_one_range_pragma_end_without_begin():
-    source_input = """
-# @sdoc[/REQ-002]
-""".lstrip()
-
-    reader = SourceFileTraceabilityReader()
-
-    with pytest.raises(Exception) as exc_info:
-        _ = reader.read(source_input)
-
-    assert exc_info.type is StrictDocSemanticError
-    assert (
-        exc_info.value.args[0]
-        == "STRICTDOC RANGE: END pragma without preceding BEGIN pragma"
-    )
-
-
 def test_005_no_pragmas():
     source_input = """
 def hello_world_2():
@@ -371,3 +333,61 @@ CONTENT 3
     assert document.ng_lines_total == 5
     assert document.ng_lines_covered == 5
     assert document.get_coverage() == 100
+
+
+def test_validation_01_one_range_pragma_begin_req_not_equal_to_end_req():
+    source_input = """
+# @sdoc[REQ-001]
+CONTENT 1
+CONTENT 2
+CONTENT 3
+# @sdoc[/REQ-002]
+""".lstrip()
+
+    reader = SourceFileTraceabilityReader()
+
+    with pytest.raises(Exception) as exc_info:
+        _ = reader.read(source_input)
+
+    assert exc_info.type is StrictDocSemanticError
+    assert (
+        exc_info.value.args[0]
+        == "STRICTDOC RANGE: BEGIN and END requirements mismatch"
+    )
+
+
+def test_validation_02_one_range_pragma_end_without_begin():
+    source_input = """
+# @sdoc[/REQ-002]
+""".lstrip()
+
+    reader = SourceFileTraceabilityReader()
+
+    with pytest.raises(Exception) as exc_info:
+        _ = reader.read(source_input)
+
+    assert exc_info.type is StrictDocSemanticError
+    assert (
+        exc_info.value.args[0]
+        == "STRICTDOC RANGE: END pragma without preceding BEGIN pragma"
+    )
+
+
+def test_validation_03_range_start_without_range_end():
+    source_input = """
+# @sdoc[REQ-001]
+CONTENT 1
+CONTENT 2
+CONTENT 3
+""".lstrip()
+
+    reader = SourceFileTraceabilityReader()
+
+    with pytest.raises(Exception) as exc_info:
+        _ = reader.read(source_input)
+
+    assert exc_info.type is StrictDocSemanticError
+    assert (
+        exc_info.value.args[0]
+        == "Unmatched @sdoc keyword found in source file."
+    )

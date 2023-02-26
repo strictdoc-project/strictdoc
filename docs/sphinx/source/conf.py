@@ -24,7 +24,7 @@ try:
         raise FileNotFoundError
     # Cannot assert this because readthedocs clones strictdoc to folders like:
     # "stable", "latest", etc.
-    # assert os.path.basename(strictdoc_root_path) == "strictdoc"
+    # assert os.path.basename(strictdoc_root_path) == "strictdoc"  # noqa: E501, ERA001
     sys.path.append(strictdoc_root_path)
     import strictdoc
 except Exception as exception:
@@ -87,7 +87,7 @@ latex_elements = {
     "extraclassoptions": "openany,oneside",
     # The paper size ('letterpaper' or 'a4paper').
     "papersize": "a4paper",
-    # 'pointsize': '14pt' # does not have any effect
+    # 'pointsize': '14pt' # does not have any effect  # noqa: ERA001
     "fncychap": "",  # disable fncychap
     "releasename": "",
     "sphinxsetup": "hmargin={0.7in,0.7in}, vmargin={1in,1in}, \

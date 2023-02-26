@@ -1980,9 +1980,6 @@ def create_main_router(
     )
     def get_reqif_export_document(document_mid: str):
         # TODO: Export single document, not the whole tree.
-        # document: Document = (
-        #     export_action.traceability_index.get_node_by_id(document_mid)
-        # )
         return get_reqif_export_tree()
 
     @router.get("/reqif/export_tree", response_class=Response)

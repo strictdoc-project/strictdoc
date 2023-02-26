@@ -45,9 +45,6 @@ class Test10DeleteRequirement(BaseCase):
         self.assert_text_not_visible("Requirement title")
 
         # TODO: Assert that the TOC is also updated.
-        # self.assert_element(
-        #     "//turbo-frame[@id='frame-toc']//*[contains(., 'Modified title')]"
-        # )
 
         assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))
         assert filecmp.cmp(

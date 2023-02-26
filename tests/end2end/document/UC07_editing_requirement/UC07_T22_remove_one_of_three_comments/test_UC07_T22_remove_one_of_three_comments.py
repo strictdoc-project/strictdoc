@@ -43,7 +43,8 @@ class Test_UC07_T22_RemoveOneOfThreeComments(BaseCase):
         )
 
         self.click_xpath(
-            '(//*[@data-testid="form-delete-COMMENT-field-action"])[2]'
+            "(//*[@data-testid="
+            '"form-delete-requirement[COMMENT]-field-action"])[2]'
         )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')

@@ -37,23 +37,23 @@ class Test_UC12_T11_AddFieldMoveUpSave(BaseCase):
         self.click_xpath('//*[@data-testid="form-add-grammar-field-action"]')
 
         self.type(
-            "(//*[@id='document_grammar[]'])[last()]",
+            "(//*[@data-testid='form-document_grammar[]-field'])[last()]",
             "CUSTOM_FIELD",
             by=By.XPATH,
         )
 
         # Move 3 times up.
-        # Use data-testid="form-move-up-FIELD-field-action"
+        # Use data-testid="form-move-up-document_grammar[]-field-action"
         # for the newly added fields.
 
         self.click_xpath(
-            '(//*[@data-testid="form-move-up-FIELD-field-action"])'
+            '(//*[@data-testid="form-move-up-document_grammar[]-field-action"])'
         )
         self.click_xpath(
-            '(//*[@data-testid="form-move-up-FIELD-field-action"])'
+            '(//*[@data-testid="form-move-up-document_grammar[]-field-action"])'
         )
         self.click_xpath(
-            '(//*[@data-testid="form-move-up-FIELD-field-action"])'
+            '(//*[@data-testid="form-move-up-document_grammar[]-field-action"])'
         )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')

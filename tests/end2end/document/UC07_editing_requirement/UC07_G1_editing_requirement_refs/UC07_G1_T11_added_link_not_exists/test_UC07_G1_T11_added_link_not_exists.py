@@ -41,11 +41,10 @@ class Test_UC07_G1_T11_AddedLinkDoesNotExist(BaseCase):
             click_by=By.XPATH,
         )
 
-        self.click_xpath(
-            "//a[@data-testid='form-add-parent-link-action']"
-        )
+        self.click_xpath("//*[@data-testid='form-add-parent-link-action']")
         self.type(
-            "(//*[@data-testid='requirement-parent-link-field'])[1]", "FOO-BAR"
+            "(//*[@data-testid='form-requirement[REFS_PARENT][]-field'])[1]",
+            "FOO-BAR",
         )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')

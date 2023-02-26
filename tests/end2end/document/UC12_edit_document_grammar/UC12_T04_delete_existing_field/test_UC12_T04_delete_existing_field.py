@@ -34,7 +34,8 @@ class Test_UC12_T04_DeleteExistingField(BaseCase):
         self.click_xpath('(//*[@data-testid="document-edit-grammar-action"])')
 
         self.click_xpath(
-            '(//*[@data-testid="form-delete-LEVEL-field-action"])[1]'
+            "(//*[@data-testid="
+            '"form-delete-document_grammar[LEVEL]-field-action"])[1]'
         )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')

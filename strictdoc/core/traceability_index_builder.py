@@ -343,7 +343,7 @@ class TraceabilityIndexBuilder:
                         )
                     ),
                 )
-                # [/SDOC-VALIDATION-NO-CYCLES]
+                # @sdoc[/SDOC-VALIDATION-NO-CYCLES]
 
                 d_02_requirements_map[
                     requirement.reserved_uid

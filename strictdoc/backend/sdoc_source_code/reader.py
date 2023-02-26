@@ -1,7 +1,7 @@
 import sys
 import traceback
 from functools import partial
-from typing import List
+from typing import List, Optional
 
 from textx import get_location, metamodel_from_str
 
@@ -47,6 +47,10 @@ def source_file_traceability_info_processor(
     source_file_traceability_info: SourceFileTraceabilityInfo,
     parse_context: ParseContext,
 ):
+    if len(parse_context.pragma_stack) > 0:
+        raise create_unmatch_range_error(
+            parse_context.pragma_stack,
+        )
     source_file_traceability_info.pragmas = parse_context.pragmas
     # Finding how many lines are covered by the requirements in the file.
     # Quick and dirty: https://stackoverflow.com/a/15273749/598057
@@ -113,6 +117,37 @@ Content...
         line=location["line"],
         col=location["col"],
         filename=location["filename"],
+    )
+
+
+def create_unmatch_range_error(unmatched_ranges: List[RangePragma]):
+    assert isinstance(unmatched_ranges, list)
+    assert len(unmatched_ranges) > 0
+    range_locations: List = []
+    for unmatched_range in unmatched_ranges:
+        location = get_location(unmatched_range)
+        range_locations.append(location)
+    first_location = range_locations[0]
+    hint: Optional[str] = None
+    if len(unmatched_ranges) > 1:
+        range_lines = list(map(lambda loc: loc["line"], range_locations[1:]))
+        hint = f"The @sdoc keywords are also unmatched on lines: {range_lines}."
+
+    return StrictDocSemanticError(
+        "Unmatched @sdoc keyword found in source file.",
+        hint=hint,
+        # @sdoc[nosdoc]
+        example=(
+            "Each @sdoc keyword must be matched with a closing keyword. "
+            "Example:\n"
+            "@sdoc[REQ-001]\n"
+            "...\n"
+            "@sdoc[/REQ-001]"
+        ),
+        # @sdoc[/nosdoc]
+        line=first_location["line"],
+        col=first_location["col"],
+        filename=first_location["filename"],
     )
 
 

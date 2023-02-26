@@ -34,7 +34,7 @@ class Test_UC12_T10_AddField(BaseCase):
 
         self.click_xpath('(//*[@data-testid="document-edit-grammar-action"])')
 
-        self.click_link("Add grammar field")
+        self.click_xpath('//*[@data-testid="form-add-grammar-field-action"]')
 
         self.type(
             "(//*[@id='document_grammar[]'])[last()]",

@@ -30,6 +30,7 @@
               href="/actions/document/add_grammar_field?document_mid={{form_object.document_mid}}"
               data-turbo="true"
               data-action-type="add_field"
+              data-testid="form-add-grammar-field-action"
               {# TODO: https://github.com/strictdoc-project/strictdoc/issues/884 #}
               onclick="setTimeout(()=> {this.scrollIntoView()},100)"
             >{% include "_res/svg_ico16_add.jinja.html" %} Add grammar field</a>

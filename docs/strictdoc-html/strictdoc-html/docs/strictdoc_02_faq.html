@@ -87,27 +87,30 @@
     <ul id="toc" class="toc"><li><a href="#1-Resources-about-StrictDoc" data-turbo="false">
               <span class="section-number">1</span>
               Resources about StrictDoc
-            </a></li><li><a href="#2-How-did-the-SDoc-text-language-become-what-it-is-" data-turbo="false">
+            </a></li><li><a href="#2-Which-web-server-is-recommended-for-StrictDoc-documentation-" data-turbo="false">
               <span class="section-number">2</span>
-              How did the SDoc text language become what it is?
-            </a></li><li><a href="#3-How-StrictDoc-compares-to-other-tools-" data-turbo="false">
+              Which web server is recommended for StrictDoc documentation?
+            </a></li><li><a href="#3-How-did-the-SDoc-text-language-become-what-it-is-" data-turbo="false">
               <span class="section-number">3</span>
+              How did the SDoc text language become what it is?
+            </a></li><li><a href="#4-How-StrictDoc-compares-to-other-tools-" data-turbo="false">
+              <span class="section-number">4</span>
               How StrictDoc compares to other tools?
-            </a><ul><li><a href="#3.1-Doorstop" data-turbo="false">
-              <span class="section-number">3.1</span>
+            </a><ul><li><a href="#4.1-Doorstop" data-turbo="false">
+              <span class="section-number">4.1</span>
               Doorstop
-            </a></li><li><a href="#3.2-Sphinx" data-turbo="false">
-              <span class="section-number">3.2</span>
+            </a></li><li><a href="#4.2-Sphinx" data-turbo="false">
+              <span class="section-number">4.2</span>
               Sphinx
-            </a></li><li><a href="#3.3-Sphinx-Needs" data-turbo="false">
-              <span class="section-number">3.3</span>
+            </a></li><li><a href="#4.3-Sphinx-Needs" data-turbo="false">
+              <span class="section-number">4.3</span>
               Sphinx-Needs
-            </a></li><li><a href="#3.4-FRET" data-turbo="false">
-              <span class="section-number">3.4</span>
+            </a></li><li><a href="#4.4-FRET" data-turbo="false">
+              <span class="section-number">4.4</span>
               FRET
             </a></li></ul>
-            </li><li><a href="#4-Which-StrictDoc-statistics-are-available-" data-turbo="false">
-              <span class="section-number">4</span>
+            </li><li><a href="#5-Which-StrictDoc-statistics-are-available-" data-turbo="false">
+              <span class="section-number">5</span>
               Which StrictDoc statistics are available?
             </a></li></ul>
   </div>
@@ -195,7 +198,7 @@
       
   <turbo-frame id="frame_document_content">
       <div class="content">
-        <turbo-frame id="article-ad1aae8b6fd842aca908ab10bf31f147">
+        <turbo-frame id="article-bad70f4e23c7445b9a6c243aa9b2f269">
 
 <sdoc-node
   data-editable_node="on"
@@ -204,7 +207,7 @@
 
 </sdoc-node>
 </turbo-frame>
-          <turbo-frame id="article-ac9435bdda4042ffb403c681690c0e3a"><sdoc-node
+          <turbo-frame id="article-56098cbaba6542cb8d833836d0d9dd5f"><sdoc-node
   node-role="section"
   data-editable_node="on"
   data-controller="document"
@@ -238,19 +241,44 @@ by Lukasz Juranek.</li>
     </div></sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-201ee06a5ce04295a7123da73635a9bf"><sdoc-node
+          <turbo-frame id="article-29b54dae386b4043b4b8ce10ab4e8095"><sdoc-node
   node-role="section"
   data-editable_node="on"
   data-controller="document"
 >
 
-    <div data-role='anchor' id="2-How-did-the-SDoc-text-language-become-what-it-is-"></div>
+    <div data-role='anchor' id="2-Which-web-server-is-recommended-for-StrictDoc-documentation-"></div>
 
     
       <h1
 class="requirement__title"
 data-level="2">
-  2.&nbsp;How did the SDoc text language become what it is?</h1>
+  2.&nbsp;Which web server is recommended for StrictDoc documentation?</h1>
+    
+
+  <div class="free-text">
+      <div class="document">
+<p>Is your project public or private? If it is public, you could simply use <a class="reference external" href="https://pages.github.com">GitHub pages</a>. See how one user of StrictDoc is doing it here: <a class="reference external" href="https://github.com/nmfta-repo/vcr-experiment">nmfta-repo/vcr-experiment</a> and the resulting static website: <a class="reference external" href="https://nmfta-repo.github.io/vcr-experiment">nmfta-repo.github.io/vcr-experiment</a>. Explore how their GitHub CI action is configured for publishing the website: <a class="reference external" href="https://github.com/nmfta-repo/vcr-experiment/blob/db17fef8a8c41831a7698cb21997e0c0f0fb1940/.github/workflows/publish.yml">publish.yml</a>.</p>
+<p>You could also use <a class="reference external" href="https://readthedocs.org/">Read The Docs</a>. StrictDoc's documentation is exported to Read the Docs here: <a class="reference external" href="https://strictdoc.readthedocs.io/en/latest/strictdoc-html">StrictDoc documentation</a>. This is how StrictDoc's documentation is generated in the <a class="reference external" href="https://github.com/strictdoc-project/strictdoc/blob/b5d93ae64eeab0c385166a9c884effdaa8a58afc/tasks.py#L154">tasks.py file</a>. When StrictDoc is pushed to GitHub, Read the Docs gets the repository and makes its web server read the documentation from the <tt class="docutils literal">docs/</tt> folder.</p>
+<p>If the project is private, you could use any server that reads HTML files from a folder. For example, Python has an embedded Web Server, see <a class="reference external" href="https://pythonbasics.org/webserver">this for example</a>. Also you could try any web server based on Node.JS.</p>
+</div>
+
+    </div></sdoc-node>
+
+</turbo-frame>
+          <turbo-frame id="article-2e317ebee43d48db878a4040204f784c"><sdoc-node
+  node-role="section"
+  data-editable_node="on"
+  data-controller="document"
+>
+
+    <div data-role='anchor' id="3-How-did-the-SDoc-text-language-become-what-it-is-"></div>
+
+    
+      <h1
+class="requirement__title"
+data-level="3">
+  3.&nbsp;How did the SDoc text language become what it is?</h1>
     
 
   <div class="free-text">
@@ -321,37 +349,37 @@ without any nesting.
     </div></sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-49d40bb1e0c34a88890afa3082d49564"><sdoc-node
+          <turbo-frame id="article-1aa107f74e0f4992b5ef057235c40171"><sdoc-node
   node-role="section"
   data-editable_node="on"
   data-controller="document"
 >
 
-    <div data-role='anchor' id="3-How-StrictDoc-compares-to-other-tools-"></div>
+    <div data-role='anchor' id="4-How-StrictDoc-compares-to-other-tools-"></div>
 
     
       <h1
 class="requirement__title"
-data-level="3">
-  3.&nbsp;How StrictDoc compares to other tools?</h1>
+data-level="4">
+  4.&nbsp;How StrictDoc compares to other tools?</h1>
     
 
   </sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-5a9bb222b7084541b77b74e4b49abe67"><sdoc-node
+          <turbo-frame id="article-0ed775c3bbd548d59184400e8fd95923"><sdoc-node
   node-role="section"
   data-editable_node="on"
   data-controller="document"
 >
 
-    <div data-role='anchor' id="3.1-Doorstop"></div>
+    <div data-role='anchor' id="4.1-Doorstop"></div>
 
     
       <h2
 class="requirement__title"
-data-level="3.1">
-  3.1.&nbsp;Doorstop</h2>
+data-level="4.1">
+  4.1.&nbsp;Doorstop</h2>
     
 
   <div class="free-text">
@@ -406,19 +434,19 @@ to/from Doorstop format.</p>
     </div></sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-5a4a35f09dd24309bc4e76e06139ace2"><sdoc-node
+          <turbo-frame id="article-5c69032984c742d88c69320a3cf0cab3"><sdoc-node
   node-role="section"
   data-editable_node="on"
   data-controller="document"
 >
 
-    <div data-role='anchor' id="3.2-Sphinx"></div>
+    <div data-role='anchor' id="4.2-Sphinx"></div>
 
     
       <h2
 class="requirement__title"
-data-level="3.2">
-  3.2.&nbsp;Sphinx</h2>
+data-level="4.2">
+  4.2.&nbsp;Sphinx</h2>
     
 
   <div class="free-text">
@@ -443,19 +471,19 @@ website by readthedocs which uses Sphinx under the hood. The
     </div></sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-8570c16b3b2448768d116b2ba4eb8fc5"><sdoc-node
+          <turbo-frame id="article-cdd7fbfb33ff4966bf2cb3afe0184afa"><sdoc-node
   node-role="section"
   data-editable_node="on"
   data-controller="document"
 >
 
-    <div data-role='anchor' id="3.3-Sphinx-Needs"></div>
+    <div data-role='anchor' id="4.3-Sphinx-Needs"></div>
 
     
       <h2
 class="requirement__title"
-data-level="3.3">
-  3.3.&nbsp;Sphinx-Needs</h2>
+data-level="4.3">
+  4.3.&nbsp;Sphinx-Needs</h2>
     
 
   <div class="free-text">
@@ -512,19 +540,19 @@ and
     </div></sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-85d0d04565dd4d6297ad18dddc4f618c"><sdoc-node
+          <turbo-frame id="article-42b3f16c03db40d38944053235d980e0"><sdoc-node
   node-role="section"
   data-editable_node="on"
   data-controller="document"
 >
 
-    <div data-role='anchor' id="3.4-FRET"></div>
+    <div data-role='anchor' id="4.4-FRET"></div>
 
     
       <h2
 class="requirement__title"
-data-level="3.4">
-  3.4.&nbsp;FRET</h2>
+data-level="4.4">
+  4.4.&nbsp;FRET</h2>
     
 
   <div class="free-text">
@@ -550,19 +578,19 @@ in a variety of forms to be used by analysis tools.</li>
     </div></sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-79c77590c5ba4a8f89e74b2fcecdcfa3"><sdoc-node
+          <turbo-frame id="article-2fb9c940c013407e9b7ba142f4d167b8"><sdoc-node
   node-role="section"
   data-editable_node="on"
   data-controller="document"
 >
 
-    <div data-role='anchor' id="4-Which-StrictDoc-statistics-are-available-"></div>
+    <div data-role='anchor' id="5-Which-StrictDoc-statistics-are-available-"></div>
 
     
       <h1
 class="requirement__title"
-data-level="4">
-  4.&nbsp;Which StrictDoc statistics are available?</h1>
+data-level="5">
+  5.&nbsp;Which StrictDoc statistics are available?</h1>
     
 
   <div class="free-text">

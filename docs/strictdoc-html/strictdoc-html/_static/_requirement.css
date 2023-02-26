@@ -115,13 +115,6 @@ sdoc-node-controls-line {
   display: flex;
 }
 
-/* requirement__statement */
-
-[data-viewtype="document"] .requirement__statement {
-  /* margin: calc(var(--base-margin)*2) 0px; */
-  font-size: calc(var(--base-font-size)*1.2);
-}
-
 /*  */
 
 div.document {

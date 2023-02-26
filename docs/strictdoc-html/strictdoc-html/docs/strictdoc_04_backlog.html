@@ -195,7 +195,7 @@
       
   <turbo-frame id="frame_document_content">
       <div class="content">
-        <turbo-frame id="article-d661a0c649724687870d40391fe57d49">
+        <turbo-frame id="article-510076adc6bf402496666d7ca2548b11">
 
 <sdoc-node
   data-editable_node="on"
@@ -211,7 +211,7 @@ items are either work-in-progress or will be implemented next.</p>
 
 </sdoc-node>
 </turbo-frame>
-          <turbo-frame id="article-9ce5e5a6672241cd9bdc4f60efa426b7"><sdoc-node
+          <turbo-frame id="article-ebe7afa9ef2b40a69e7bbf42c452a384"><sdoc-node
   node-role="section"
   data-editable_node="on"
   data-controller="document"
@@ -252,7 +252,9 @@ data-level="1">
 </ul>
 </li>
 <li>What to do with web content going out of sync with the server/file system state?</li>
-<li>Issue when adding a sibling section from a nested section.</li>
+<li>Issue when adding a child section from a nested section. The child
+section appears right after the nested section, not after its farthest
+descendant child.</li>
 <li>ReqIF:<ul>
 <li>Export complete documentation tree or a single document to ReqIF.</li>
 <li>Import complete documentation tree or a single document from ReqIF.</li>
@@ -269,7 +271,7 @@ data-level="1">
     </div></sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-5046676226324f93b27faa4f218a12e6"><sdoc-node
+          <turbo-frame id="article-fc603aefa50e454095b26f52626571cf"><sdoc-node
   node-role="section"
   data-editable_node="on"
   data-controller="document"
@@ -306,6 +308,10 @@ data-level="2">
 </ul>
 </blockquote>
 </li>
+<li><p class="first">Diff for requirements documents and documentation trees.</p>
+</li>
+<li><p class="first">Impact analysis. Most likely a separate screen that shows which requirements a given requirements affects.</p>
+</li>
 <li><p class="first">StrictDoc as a Python library.</p>
 <ul class="simple">
 <li>Such a use allows a more fine-grained access to the StrictDoc's modules, such as Grammar, Import, Export classes, etc.</li>
@@ -338,12 +344,14 @@ data-level="2">
 </li>
 <li><p class="first">Filtering of requirements by tags.</p>
 </li>
-<li><p class="first">Import/export: Excel, CSV, PlantUML, Confluence,&nbsp;Tex, Doorstop.</p>
+<li><p class="first">Import/export: Excel, CSV, PlantUML, Confluence, Tex, Doorstop.</p>
 </li>
 <li><p class="first">Partial evaluation of Jinja templates</p>
 <ul class="simple">
 <li>Many of the template variables could be made to be evaluated once, for example, config object's variables.</li>
 </ul>
+</li>
+<li><p class="first">UI version for mobile devices (at least some basic tweaks)</p>
 </li>
 </ul>
 </div>
@@ -351,7 +359,7 @@ data-level="2">
     </div></sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-bc923adb45a347feb889cc879d8d1728"><sdoc-node
+          <turbo-frame id="article-6dc09e3de39e44fba4c5b92d0e65f875"><sdoc-node
   node-role="section"
   data-editable_node="on"
   data-controller="document"
@@ -379,7 +387,7 @@ data-level="3">
     </div></sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-fb8840672975413eb22bb20bfd0aaad0"><sdoc-node
+          <turbo-frame id="article-aa3837cdec774c27b1b9dc8246306d50"><sdoc-node
   node-role="section"
   data-editable_node="on"
   data-controller="document"
@@ -401,7 +409,7 @@ data-level="4">
     </div></sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-65ba504dc0e843588e85a0b455064612"><sdoc-node
+          <turbo-frame id="article-8d87b151c89f462aa7ac19be1c698153"><sdoc-node
   node-role="section"
   data-editable_node="on"
   data-controller="document"
@@ -434,7 +442,7 @@ python<span class="whitespace"> </span>-m<span class="whitespace"> </span>cProfi
     </div></sdoc-node>
 
 </turbo-frame>
-            <turbo-frame id="article-ff9e6a9ca37c441ba92643f97927cf18"><sdoc-node
+            <turbo-frame id="article-b3df8093993e46469400f16c143ecf35"><sdoc-node
   node-role="requirement"
   data-editable_node="on"
   data-testid="node-requirement-normal"
@@ -451,7 +459,7 @@ data-level="5">
     
     
 
-    <div class="requirement__statement">
+    <div>
     <div class="document">
 <p>StrictDoc shall support the following document archetypes: <strong>requirements document</strong>
 and <strong>specification</strong> document. For both archetypes, StrictDoc shall further
@@ -534,7 +542,7 @@ the grouping is provided by sections.</li>
     </sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-9d882c98ceba43128770fd2a7ebe18e9"><sdoc-node
+          <turbo-frame id="article-3892bf2a63d04734b897a2d000e11f18"><sdoc-node
   node-role="section"
   data-editable_node="on"
   data-controller="document"
@@ -552,7 +560,7 @@ data-level="6">
   </sdoc-node>
 
 </turbo-frame>
-          <turbo-frame id="article-9ffb20398f58430f9285d99ff336520a"><sdoc-node
+          <turbo-frame id="article-4fc15341930949a8b1166e182ff44595"><sdoc-node
   node-role="section"
   data-editable_node="on"
   data-controller="document"

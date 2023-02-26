@@ -36,7 +36,9 @@ Backlog: Graphical user interface
 
 - What to do with web content going out of sync with the server/file system state?
 
-- Issue when adding a sibling section from a nested section.
+- Issue when adding a child section from a nested section. The child
+  section appears right after the nested section, not after its farthest
+  descendant child.
 
 - ReqIF:
 
@@ -60,6 +62,10 @@ Backlog: Nice to have
     - Paths to dirs with source files.
     - Config options for presenting requirements.
         - Include/exclude requirements in TOC
+
+- Diff for requirements documents and documentation trees.
+
+- Impact analysis. Most likely a separate screen that shows which requirements a given requirements affects.
 
 - StrictDoc as a Python library.
 
@@ -89,11 +95,13 @@ Backlog: Nice to have
 
 - Filtering of requirements by tags.
 
-- Import/export: Excel, CSV, PlantUML, Confluence, Tex, Doorstop.
+- Import/export: Excel, CSV, PlantUML, Confluence, Tex, Doorstop.
 
 - Partial evaluation of Jinja templates
 
   - Many of the template variables could be made to be evaluated once, for example, config object's variables.
+
+- UI version for mobile devices (at least some basic tweaks)
 
 Backlog: Technical debt
 =======================

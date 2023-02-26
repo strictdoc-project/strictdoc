@@ -3,7 +3,7 @@ $$$$$$$$$$$$$$$$$$$$$$$$$
 
 Contributions to StrictDoc are welcome and appreciated.
 Presented below is a condensed checklist that summarises the information
-of the development guide, see `Getting started`_.
+of the development guide, see :ref:`DEVGUIDE_GETTING_STARTED`.
 
 Contributor checklist
 =====================
@@ -16,10 +16,10 @@ following steps:
 2. A contribution that contains changes to the StrictDoc's codebase shall also
    include tests that exercise the changed behavior. A contribution without any
    tests is unlikely to be accepted (with the exception of "code climate"
-   changes, see `Python code`_ below).
-3. Follow the conventions of the section "Git workflow" (see
-   `Git workflow`_). A clean Git history and conventional
-   commit names are expected for every single contribution.
+   changes, see :ref:`DEVGUIDE_PYTHON_CODE`).
+3. Follow the conventions of the section :ref:`DEVGUIDE_GIT_WORKFLOW`.
+   A clean Git history and conventional commit names are expected for every
+   single contribution.
 4. If the contribution is not trivial, read through the complete development
    guide.
 

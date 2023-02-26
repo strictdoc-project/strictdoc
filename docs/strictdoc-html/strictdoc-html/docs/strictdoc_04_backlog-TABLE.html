@@ -251,7 +251,9 @@ items are either work-in-progress or will be implemented next.</p>
 </ul>
 </li>
 <li>What to do with web content going out of sync with the server/file system state?</li>
-<li>Issue when adding a sibling section from a nested section.</li>
+<li>Issue when adding a child section from a nested section. The child
+section appears right after the nested section, not after its farthest
+descendant child.</li>
 <li>ReqIF:<ul>
 <li>Export complete documentation tree or a single document to ReqIF.</li>
 <li>Import complete documentation tree or a single document from ReqIF.</li>
@@ -301,6 +303,10 @@ items are either work-in-progress or will be implemented next.</p>
 </ul>
 </blockquote>
 </li>
+<li><p class="first">Diff for requirements documents and documentation trees.</p>
+</li>
+<li><p class="first">Impact analysis. Most likely a separate screen that shows which requirements a given requirements affects.</p>
+</li>
 <li><p class="first">StrictDoc as a Python library.</p>
 <ul class="simple">
 <li>Such a use allows a more fine-grained access to the StrictDoc's modules, such as Grammar, Import, Export classes, etc.</li>
@@ -333,12 +339,14 @@ items are either work-in-progress or will be implemented next.</p>
 </li>
 <li><p class="first">Filtering of requirements by tags.</p>
 </li>
-<li><p class="first">Import/export: Excel, CSV, PlantUML, Confluence,&nbsp;Tex, Doorstop.</p>
+<li><p class="first">Import/export: Excel, CSV, PlantUML, Confluence, Tex, Doorstop.</p>
 </li>
 <li><p class="first">Partial evaluation of Jinja templates</p>
 <ul class="simple">
 <li>Many of the template variables could be made to be evaluated once, for example, config object's variables.</li>
 </ul>
+</li>
+<li><p class="first">UI version for mobile devices (at least some basic tweaks)</p>
 </li>
 </ul>
 </div>

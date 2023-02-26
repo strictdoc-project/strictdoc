@@ -15,6 +15,8 @@ be changed if a better development practice is found.
 
 Any feedback on this development guide is appreciated.
 
+.. _DEVGUIDE_GETTING_STARTED:
+
 Getting started
 ===============
 
@@ -53,6 +55,8 @@ Make sure to familiarize yourself with the available developer tasks by running:
 
     invoke --list
 
+.. _DEVGUIDE_PYTHON_CODE:
+
 Python code
 ===========
 
@@ -76,6 +80,8 @@ Python code
   both unit and integration tests is preferred. The only exception where a
   contribution can contain no tests is "code climate" which is work which
   introduces changes in code but no change to the functionality.
+
+.. _DEVGUIDE_GIT_WORKFLOW:
 
 Git workflow
 ============

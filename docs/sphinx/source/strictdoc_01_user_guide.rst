@@ -23,12 +23,12 @@ Summary of StrictDoc features:
   `Requirements Traceability <https://en.wikipedia.org/wiki/Requirements_traceability>`_
   and Documentation Coverage, can be derived.
 - Requirements to source files traceability (experimental). See
-  `Traceability between requirements and source code`_.
+  :ref:`SECTION-TRACEABILITY-REQS-TO-SOURCE-CODE`.
 - Custom grammar and custom fields support. The StrictDoc's grammar can be
   extended to support arbitrary special fields, such as ``PRIORITY``, ``OWNER``,
   or even more specialized fields, such as
   ``Automotive Safety Integrity Level (ASIL)`` or ``Verification method``.
-  See `Custom grammars`_.
+  See :ref:`SECTION-CUSTOM-GRAMMARS`.
 - Good performance of the `textX <https://github.com/textX/textX>`_
   parser and parallelized incremental generation of documents: generation of
   document trees with up to 2000-3000 requirements into HTML pages stays within
@@ -64,7 +64,7 @@ Hello World
 
 Create a file called ``hello_world.sdoc`` somewhere on your file system and copy the above text to it.
 
-Once you have ``strictdoc`` installed (see `Getting started`_ below), run StrictDoc as follows:
+Once you have ``strictdoc`` installed (see :ref:`SDOC_UG_GETTING_STARTED` below), run StrictDoc as follows:
 
 .. code-block:: text
 
@@ -103,6 +103,8 @@ which is written using StrictDoc:
 - `StrictDoc HTML export <https://strictdoc.readthedocs.io/en/latest/strictdoc-html>`_
 - `StrictDoc HTML export using Sphinx <https://strictdoc.readthedocs.io/en/latest>`_
 - `StrictDoc PDF export using Sphinx <https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_
+
+.. _SDOC_UG_GETTING_STARTED:
 
 Getting started
 ===============
@@ -213,6 +215,8 @@ be only attached to the ``[DOCUMENT]`` and ``[SECTION]`` nodes.
 Grammar elements
 ----------------
 
+.. _ELEMENT_DOCUMENT:
+
 Document
 ~~~~~~~~
 
@@ -269,6 +273,8 @@ Finally an optional ``[FREETEXT]`` block can be included.
     [/FREETEXT]
 
 
+.. _DOCUMENT_FIELD_OPTIONS:
+
 Document configuration options
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -310,7 +316,7 @@ The available options are: ``On`` /  ``Off``. Default is ``On``.
 
 In case of ``On``, the ``[SECTION].LEVEL`` fields must be absent or may only
 contain ``None`` to exclude that section from StrictDoc's automatic section
-numbering. See also `Section without a level`_.
+numbering. See also :ref:`SECTION_WITHOUT_A_LEVEL`.
 
 In case of ``Off``, all ``[SECTION].LEVEL`` fields must be populated.
 
@@ -341,6 +347,8 @@ Default is ``True``.
     TITLE: Hello world
     OPTIONS:
       REQUIREMENT_IN_TOC: True
+
+.. _ELEMENT_REQUIREMENT:
 
 Requirement
 ~~~~~~~~~~~
@@ -493,7 +501,7 @@ file references requirements by adding multiple ``TYPE: File``-``VALUE`` items.
 
 **Note:** The ``TYPE: Parent`` is currently the only fully supported type of
 connection. Linking requirements to files is still experimental (see also
-`Traceability between requirements and source code`_).
+:ref:`SECTION-TRACEABILITY-REQS-TO-SOURCE-CODE`).
 
 **Note:** In the near future, adding information about external references (e.g.
 company policy documents, technical specifications, regulatory requirements,
@@ -568,6 +576,8 @@ comments can be single-line or multiline.
     Each line is rendered as a separate paragraph.
     <<<
 
+.. _ELEMENT_SECTION:
+
 Section
 ~~~~~~~
 
@@ -625,6 +635,8 @@ StrictDoc creates section numbers automatically. In the example above, the
 sections will have their titles numbered accordingly: ``1 Chapter`` and
 ``1.1 Subchapter``.
 
+.. _ELEMENT_FREETEXT:
+
 Free text
 ^^^^^^^^^
 
@@ -658,6 +670,8 @@ information influences or is influenced by existing requirements, it has to be
 promoted to the requirement level: the information has to be broken down into
 atomic ``[REQUIREMENT]`` statements and get connected to the other requirement
 statements in the document.
+
+.. _SECTION_WITHOUT_A_LEVEL:
 
 Section without a level
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -800,6 +814,8 @@ Which will resolve to the following document after inclusion:
 
     [REQUIREMENT]
 
+
+.. _SECTION-CUSTOM-GRAMMARS:
 
 Custom grammars
 ---------------
@@ -1107,6 +1123,8 @@ The created RST files can be copied to a project created using Sphinx, see
 is generated this way, see the Invoke task:
 `invoke sphinx <https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48>`_.
 
+.. _SECTION-TRACEABILITY-REQS-TO-SOURCE-CODE:
+
 Traceability between requirements and source code
 =================================================
 
@@ -1180,7 +1198,7 @@ format.
 **Note:** It is not possible to implement a single export/import procedure that
 works well for all ReqIF XML files produced by various requirements management
 tools. The export/import workflow is therefore tool-specific. See
-`ReqIF implementation details`_ for more details.
+:ref:`SECTION-REQIF-DETAILS` for more details.
 
 Supported formats:
 
@@ -1226,6 +1244,8 @@ The command does the following:
    argument.
 3. The ReqIF in-memory model is unparsed a to ReqIF XML file using ``reqif``
    library.
+
+.. _SECTION-REQIF-DETAILS:
 
 ReqIF implementation details
 ----------------------------

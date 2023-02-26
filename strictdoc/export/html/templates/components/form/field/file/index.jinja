@@ -1,0 +1,35 @@
+{# Variables in this template:
+
+    data_controller="one two three" | optional
+
+    field_class_name | optional
+    field_input_name
+    field_label
+    errors
+
+#}
+
+<sdoc-form-row
+  {% if data_controller is defined -%}
+      data-controller="{{data_controller}}"
+  {%- endif -%}
+>
+    <label for="{{field_input_name}}">
+        {{ field_label|default('Choose a file', true) }}
+    </label>
+    <input
+          type="file"
+          name="{{field_input_name}}"
+          id="{{field_input_name}}"
+          data-testid="form-{{ field_input_name }}-field"
+    />
+
+    {%- if errors|length > 0 -%}
+        <sdoc-form-error>
+        {%- for error in errors -%}
+          {{ error }}
+        {%- endfor -%}
+        </sdoc-form-error>
+    {%- endif -%}
+
+</sdoc-form-row>

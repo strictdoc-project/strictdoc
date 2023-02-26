@@ -1,3 +1,23 @@
+{# Variables in this template:
+
+    data_controller="one two three" | optional
+    field_editable=true/false | optional
+
+    field_class_name | optional
+    field_name
+    field_label | optional
+    field_input_name
+    field_value
+    errors
+
+    field_actions={
+      'delete':true,
+      'move_up':true,
+      'move_down':true,
+    } | optional
+
+#}
+
 <sdoc-form-row
   {% if data_controller is defined -%}
     data-controller="{{data_controller}}"
@@ -63,6 +83,7 @@
     {%- if field_class_name is defined -%}
       class="{{ field_class_name }}"
     {%- endif -%}
+    data-testid="form-{{ field_input_name }}-field"
   >
     {%- if true -%}
     {{ field_value }}

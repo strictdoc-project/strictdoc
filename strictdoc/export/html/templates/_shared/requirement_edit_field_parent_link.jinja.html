@@ -1,27 +1,11 @@
-<sdoc-form-row
-  data-controller="deletable_field"
->
-  <sdoc-contenteditable
-    data-controller="editablefield"
-    role="textbox"
-    data-editable="single"
-    contenteditable="true"
-    placeholder="Enter parent requirement UID here..."
-    data-testid="requirement-parent-link-field"
-  >
-    {%- if true -%}
-    {{ field.field_value }}
-    {%- endif -%}
-  </sdoc-contenteditable>
-  <input type="hidden" name="requirement[REFS_PARENT][]" value="{{ field.field_value }}"/>
-  {%- if field.validation_messages|length > 0 -%}
-    <sdoc-form-error>
-    {%- for validation_message in field.validation_messages -%}
-      {{ validation_message }}
-    {%- endfor -%}
-    </sdoc-form-error>
-  {%- endif -%}
-  <div>
-    <a href="#" data-turbo-action="replace" data-turbo="true" data-js-delete-field-action>Delete link</a>
-  </div>
-</sdoc-form-row>
+{%- with
+  data_controller="deletable_field",
+  field_name="requirement parent link UID",
+  field_label="Requirement parent link",
+  field_input_name="requirement[REFS_PARENT][]",
+  field_value=field.field_value,
+  field_actions={ 'delete':true },
+  errors=field.validation_messages
+-%}
+  {% include "_helpers/singleline_field.jinja.html" %}
+{%- endwith -%}

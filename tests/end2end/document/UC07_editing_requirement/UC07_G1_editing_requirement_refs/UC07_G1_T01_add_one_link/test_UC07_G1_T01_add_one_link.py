@@ -46,7 +46,7 @@ class Test_UC07_G1_T01_AddOneLink(BaseCase):
             click_by=By.XPATH,
         )
         self.click_xpath(
-            "//a[@data-testid='requirement-add-parent-link-action']"
+            "//a[@data-testid='form-add-parent-link-action']"
         )
         self.type(
             "(//*[@data-testid='requirement-parent-link-field'])[1]", "REQ-001"

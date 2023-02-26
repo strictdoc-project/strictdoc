@@ -42,7 +42,7 @@ class Test_UC07_G1_T11_AddedLinkDoesNotExist(BaseCase):
         )
 
         self.click_xpath(
-            "//a[@data-testid='requirement-add-parent-link-action']"
+            "//a[@data-testid='form-add-parent-link-action']"
         )
         self.type(
             "(//*[@data-testid='requirement-parent-link-field'])[1]", "FOO-BAR"

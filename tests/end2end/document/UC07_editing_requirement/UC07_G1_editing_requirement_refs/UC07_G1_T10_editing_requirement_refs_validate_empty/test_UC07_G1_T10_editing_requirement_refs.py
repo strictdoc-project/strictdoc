@@ -46,7 +46,7 @@ class Test_UC07_G1_T10_EditRequirementRefs(BaseCase):
         )
 
         self.click_xpath(
-            "//a[@data-testid='requirement-add-parent-link-action']"
+            "//a[@data-testid='form-add-parent-link-action']"
         )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')

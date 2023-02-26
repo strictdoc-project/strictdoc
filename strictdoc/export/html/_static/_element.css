@@ -156,8 +156,8 @@ a.action_button:hover {
   color: red !important;
 }
 
-[data-action-type="simple"] {
-  color: rgba(0,0,0,0.5) !important;
+[data-action-type="add_field"] {
+  /* color: rgba(0,0,0,0.5) !important; */
 }
 
 .action_icon,

@@ -43,12 +43,22 @@ class Test_UC12_T12_AddFieldMoveUpAndDownSave(BaseCase):
         )
 
         # Move 3 times up and two times down.
-        self.click_xpath("(//a[@title='Move up'])[last()]")
-        self.click_xpath("(//a[@title='Move up'])[last()]")
-        self.click_xpath("(//a[@title='Move up'])[last()]")
+        self.click_xpath(
+            '(//*[@data-testid="form-move-up-Custom field-field-action"])[last()]'  # noqa: E501
+        )
+        self.click_xpath(
+            '(//*[@data-testid="form-move-up-Custom field-field-action"])[last()]'  # noqa: E501
+        )
+        self.click_xpath(
+            '(//*[@data-testid="form-move-up-Custom field-field-action"])[last()]'  # noqa: E501
+        )
 
-        self.click_xpath("(//a[@title='Move down'])[last()]")
-        self.click_xpath("(//a[@title='Move down'])[last()]")
+        self.click_xpath(
+            '(//*[@data-testid="form-move-down-Custom field-field-action"])[last()]'  # noqa: E501
+        )
+        self.click_xpath(
+            '(//*[@data-testid="form-move-down-Custom field-field-action"])[last()]'  # noqa: E501
+        )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')
 

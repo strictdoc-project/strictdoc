@@ -9,48 +9,53 @@
     <input type="hidden" id="document_mid" name="document_mid" value="{{form_object.document_mid}}"/>
 
     {%- with
+      field_type="singleline",
       field_name="TITLE",
       field_input_name="document[TITLE]",
       field_value=form_object.document_title,
       errors=form_object.get_errors("TITLE")
     -%}
-      {% include "_helpers/singleline_field.jinja.html" %}
+      {% include "components/form/field/text/index.jinja" %}
     {%- endwith -%}
 
     {%- with
+      field_type="singleline",
       field_name="UID",
       field_input_name="document[UID]",
       field_value=form_object.document_uid,
       errors=form_object.get_errors("UID")
     -%}
-      {% include "_helpers/singleline_field.jinja.html" %}
+      {% include "components/form/field/text/index.jinja" %}
     {%- endwith -%}
 
     {%- with
+      field_type="singleline",
       field_name="VERSION",
       field_input_name="document[VERSION]",
       field_value=form_object.document_version,
       errors=form_object.get_errors("VERSION")
     -%}
-      {% include "_helpers/singleline_field.jinja.html" %}
+      {% include "components/form/field/text/index.jinja" %}
     {%- endwith -%}
 
     {%- with
+      field_type="singleline",
       field_name="CLASSIFICATION",
       field_input_name="document[CLASSIFICATION]",
       field_value=form_object.document_classification,
       errors=form_object.get_errors("CLASSIFICATION")
     -%}
-      {% include "_helpers/singleline_field.jinja.html" %}
+      {% include "components/form/field/text/index.jinja" %}
     {%- endwith -%}
 
     {%- with
+      field_type="multiline",
       field_name="FREETEXT",
       field_input_name="document[FREETEXT]",
       field_value=form_object.document_freetext,
       errors=form_object.get_errors("FREETEXT")
     -%}
-      {% include "_helpers/multiline_field.jinja.html" %}
+      {% include "components/form/field/text/index.jinja" %}
     {%- endwith -%}
 
     <sdoc-form-footer>

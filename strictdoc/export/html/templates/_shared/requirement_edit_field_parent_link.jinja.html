@@ -1,4 +1,5 @@
 {%- with
+  field_type="singleline",
   data_controller="deletable_field",
   field_name="requirement parent link UID",
   field_label="Requirement parent link",
@@ -7,5 +8,5 @@
   field_actions={ 'delete':true },
   errors=field.validation_messages
 -%}
-  {% include "_helpers/singleline_field.jinja.html" %}
+  {% include "components/form/field/text/index.jinja" %}
 {%- endwith -%}

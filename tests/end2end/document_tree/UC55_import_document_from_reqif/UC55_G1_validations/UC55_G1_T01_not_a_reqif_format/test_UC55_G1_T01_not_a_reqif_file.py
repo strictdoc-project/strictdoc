@@ -27,7 +27,9 @@ class Test_UC55_G1_T01_NotAReqIFormat(BaseCase):
 
         self.click('[data-testid="tree-import-reqif-action"]')
 
-        reqif_input_field = self.find_element("#reqif_file")
+        reqif_input_field = self.find_element(
+            "//*[@data-testid='form-reqif_file-field']"
+        )
         reqif_input_field.send_keys(path_to_reqif_sample)
         self.click_xpath('//*[@data-testid="form-submit-action"]')
 

@@ -1,12 +1,11 @@
 <sdoc-form-row
-  data-controller="requirement_link"
+  data-controller="deletable_field"
 >
   <sdoc-contenteditable
     data-controller="editablefield"
     role="textbox"
     data-editable="single"
     contenteditable="true"
-    class="std-form-fileld-title"
     placeholder="Enter parent requirement UID here..."
     data-testid="requirement-parent-link-field"
   >
@@ -23,6 +22,6 @@
     </sdoc-form-error>
   {%- endif -%}
   <div>
-    <a href="#" data-turbo-action="replace" data-turbo="true" data-js-delete-link>Delete link</a>
+    <a href="#" data-turbo-action="replace" data-turbo="true" data-js-delete-field-action>Delete link</a>
   </div>
 </sdoc-form-row>

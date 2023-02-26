@@ -45,8 +45,8 @@ STRICTDOC_VERSION = strictdoc.__version__
 # -- Project information -----------------------------------------------------
 
 project = "StrictDoc"
-copyright = "2022, Stanislav Pankevich"
-author = "Stanislav Pankevich"
+copyright = "2020-2023 Stanislav Pankevich and Maryna Balioura"
+author = "Stanislav Pankevich and Maryna Balioura"
 
 # The full version, including alpha/beta/rc tags
 release = STRICTDOC_VERSION
@@ -258,7 +258,7 @@ latex_elements = {
             \vfill 
 
             \begin{center}
-                \Large{© 2022 StrictDoc Project}
+                \Large{© 2020-2023 StrictDoc Project}
             \end{center}
 
         \end{titlepage}

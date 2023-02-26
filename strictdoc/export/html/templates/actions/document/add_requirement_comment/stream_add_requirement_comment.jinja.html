@@ -2,6 +2,7 @@
   <template>
     {# TODO: make template for comment field in treauirement, 2 places #}
     {%- with
+      field_type="multiline",
       field_name=field.field_name,
       field_input_name="requirement[" ~ field.field_name ~ "]",
       field_value=field.field_value,
@@ -9,7 +10,7 @@
     -%}
       {% set data_controller="deletable_field" %}
       {% set field_actions={ 'delete':true } %}
-      {% include "_helpers/multiline_field.jinja.html" %}
+      {% include "components/form/field/text/index.jinja" %}
     {%- endwith -%}
   </template>
 </turbo-stream>

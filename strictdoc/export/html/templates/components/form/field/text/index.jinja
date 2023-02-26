@@ -1,6 +1,9 @@
 {# Variables in this template:
 
     data_controller="one two three" | optional
+
+    field_type = singleline | multiline | parent
+
     field_editable=true/false | optional
 
     field_class_name | optional
@@ -71,7 +74,7 @@
   <sdoc-contenteditable
     data-controller="editablefield"
     role="textbox"
-    data-editable="single"
+    data-field-type="{{ field_type }}"
     {%- if field_editable is defined and not field_editable -%}
       contenteditable="false"
     {%- else -%}
@@ -89,7 +92,22 @@
     {{ field_value }}
     {%- endif -%}
   </sdoc-contenteditable>
+
+  {%- if field_type == "parent" -%}
   <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}"/>
+  {%- endif -%}
+
+  {%- if field_type == "singleline" -%}
+  <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}"/>
+  {%- endif -%}
+
+  {%- if field_type == "multiline" -%}
+  <textarea hidden name="{{ field_input_name }}">
+    {%- if true -%}
+    {{ field_value }}
+    {%- endif -%}
+  </textarea>
+  {%- endif -%}
 
   {%- if errors|length > 0 -%}
     <sdoc-form-error>

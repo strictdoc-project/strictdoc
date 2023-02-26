@@ -5,8 +5,6 @@
 {%- endif -%}
 
 <turbo-frame id="article-{{form_object.section_mid}}">
-<sdoc-form>
-
 <form
   action="{{url}}"
   method="POST"
@@ -18,24 +16,27 @@
   {%- endif -%}
   <input type="hidden" id="section_mid" name="section_mid" value="{{form_object.section_mid}}" />
 
+  <sdoc-form>
     {%- with
+      field_type="singleline",
       field_class_name="std-form-fileld-title",
       field_name="TITLE",
       field_input_name="section_title",
       field_value=form_object.section_title,
       errors=form_object.get_errors("section_title")
     -%}
-      {% include "_helpers/singleline_field.jinja.html" %}
+      {% include "components/form/field/text/index.jinja" %}
     {%- endwith -%}
 
     {%- with
+      field_type="multiline",
       field_class_name="std-form-field-rst",
       field_name="FREETEXT",
       field_input_name="section_content",
       field_value=form_object.section_statement,
-      errors= form_object.get_errors("section_statement")
+      errors=form_object.get_errors("section_statement")
     -%}
-      {% include "_helpers/multiline_field.jinja.html" %}
+      {% include "components/form/field/text/index.jinja" %}
     {%- endwith -%}
 
     <sdoc-form-footer>
@@ -65,7 +66,6 @@
     {%- endif -%}
     </sdoc-form-footer>
 
+  </sdoc-form>
 </form>
-
-</sdoc-form>
 </turbo-frame>

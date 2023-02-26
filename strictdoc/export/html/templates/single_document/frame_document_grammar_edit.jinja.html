@@ -29,11 +29,10 @@
               class="action_button"
               href="/actions/document/add_grammar_field?document_mid={{form_object.document_mid}}"
               data-turbo="true"
-              style="margin-right: auto;"
+              data-action-type="add_field"
               {# TODO: https://github.com/strictdoc-project/strictdoc/issues/884 #}
               onclick="setTimeout(()=> {this.scrollIntoView()},100)"
-            >Add grammar field
-          </a>
+            >{% include "_res/svg_ico16_add.jinja.html" %} Add grammar field</a>
           </sdoc-form-footer>
       </sdoc-modal-content>
 

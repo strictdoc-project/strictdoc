@@ -53,7 +53,10 @@ class Test_UC07_G1_T20_TwoDocumentsRemovingLink(BaseCase):
             click_by=By.XPATH,
         )
 
-        self.click_link("Delete link")
+        self.click_xpath(
+            '//*[@data-testid="form-delete-'
+            'requirement[REFS_PARENT][]-field-action"]'
+        )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')
         self.assert_element_not_present(

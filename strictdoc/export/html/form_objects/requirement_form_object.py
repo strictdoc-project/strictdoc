@@ -384,7 +384,7 @@ class RequirementFormObject(ErrorObject):
                 reference_field.validation_messages.append(
                     "Requirement parent link UID must not be empty."
                 )
-            if link_uid not in traceability_index.requirements_parents:
+            elif link_uid not in traceability_index.requirements_parents:
                 reference_field.validation_messages.append(
                     f'Parent requirement with an UID "{link_uid}" '
                     f"does not exist."

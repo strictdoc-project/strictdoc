@@ -34,7 +34,8 @@ class Test_UC12_T02_MoveFieldUp(BaseCase):
         self.click_xpath('(//*[@data-testid="document-edit-grammar-action"])')
 
         self.click_xpath(
-            '(//*[@data-testid="form-move-up-CUSTOM_FIELD-field-action"])'
+            "(//*[@data-testid="
+            '"form-move-up-document_grammar[CUSTOM_FIELD]-field-action"])'
         )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')

@@ -41,11 +41,10 @@ class Test_UC07_G1_T12_AddedLinkWhenNoUID(BaseCase):
             click_by=By.XPATH,
         )
 
-        self.click_xpath(
-            "//a[@data-testid='requirement-add-parent-link-action']"
-        )
+        self.click_xpath("//*[@data-testid='form-add-parent-link-action']")
         self.type(
-            "(//*[@data-testid='requirement-parent-link-field'])[1]", "REQ-002"
+            "(//*[@data-testid='form-requirement[REFS_PARENT][]-field'])[1]",
+            "REQ-002",
         )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')

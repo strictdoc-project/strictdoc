@@ -45,11 +45,10 @@ class Test_UC07_G1_T01_AddOneLink(BaseCase):
             hover_by=By.XPATH,
             click_by=By.XPATH,
         )
-        self.click_xpath(
-            "//a[@data-testid='requirement-add-parent-link-action']"
-        )
+        self.click_xpath("//*[@data-testid='form-add-parent-link-action']")
         self.type(
-            "(//*[@data-testid='requirement-parent-link-field'])[1]", "REQ-001"
+            "(//*[@data-testid='form-requirement[REFS_PARENT][]-field'])[1]",
+            "REQ-001",
         )
         self.click_xpath('//*[@data-testid="form-submit-action"]')
         self.assert_element_not_present(

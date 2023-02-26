@@ -47,7 +47,8 @@ class Test_UC07_T21_RemoveComment(BaseCase):
         )
 
         self.click_xpath(
-            '(//*[@data-testid="form-delete-COMMENT-field-action"])[1]'
+            "(//*[@data-testid="
+            '"form-delete-requirement[COMMENT]-field-action"])[1]'
         )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')

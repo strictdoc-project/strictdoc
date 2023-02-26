@@ -21,7 +21,8 @@
     {%- with
       data_controller="deletable_field movable_field",
       field_actions={ 'delete':true, 'move_up':true, 'move_down':true },
-      field_name="Custom field",
+      field_label="Custom field",
+      field_name=field.field_name,
       field_input_name=field.field_input_name,
       field_value=field.field_name,
       field_editable=true,

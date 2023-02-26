@@ -19,10 +19,10 @@ following steps:
 2. A contribution that contains changes to the StrictDoc's codebase shall also
    include tests that exercise the changed behavior. A contribution without any
    tests is unlikely to be accepted (with the exception of "code climate"
-   changes, see [LINK: DEVGUIDE_PYTHON_CODE] below).
-3. Follow the conventions of the section "Git workflow" (see
-   [LINK: DEVGUIDE_GIT_WORKFLOW]). A clean Git history and conventional
-   commit names are expected for every single contribution.
+   changes, see [LINK: DEVGUIDE_PYTHON_CODE]).
+3. Follow the conventions of the section [LINK: DEVGUIDE_GIT_WORKFLOW].
+   A clean Git history and conventional commit names are expected for every
+   single contribution.
 4. If the contribution is not trivial, read through the complete development
    guide.
 [/FREETEXT]

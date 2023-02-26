@@ -1,0 +1,21 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[SECTION]
+UID: CHAPTER_1
+TITLE: Chapter 1
+
+[FREETEXT]
+Here's the chapter 1.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Chapter 2
+
+[FREETEXT]
+See [LINK: CHAPTER_1] for more details.
+[/FREETEXT]
+
+[/SECTION]

@@ -25,11 +25,15 @@ class Section(Node):  # pylint: disable=too-many-instance-attributes
         section_contents: List[Node],
     ):
         self.parent = parent
-        # TODO: Remove .uid, keep reserved_uid only.
-        self.uid = uid
-        self.reserved_uid = uid
-        self.title = title
 
+        # TODO: Remove .uid, keep reserved_uid only.
+        meaningful_uid: Optional[str] = None
+        if uid is not None and len(uid) > 0:
+            meaningful_uid = uid
+        self.uid: Optional[str] = meaningful_uid
+        self.reserved_uid: Optional[str] = meaningful_uid
+
+        self.title = title
         self.free_texts: List[FreeText] = free_texts
         self.section_contents = section_contents
 

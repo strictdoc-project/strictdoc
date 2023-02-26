@@ -32,7 +32,12 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
     ):
         self.parent = parent
         self.version: Optional[str] = version
-        self.uid: Optional[str] = uid
+
+        meaningful_uid: Optional[str] = None
+        if uid is not None and len(uid) > 0:
+            meaningful_uid = uid
+        self.uid: Optional[str] = meaningful_uid
+
         self.classification: Optional[str] = classification
         self.markup = markup
         self.auto_levels: bool = auto_levels is None or auto_levels == "On"

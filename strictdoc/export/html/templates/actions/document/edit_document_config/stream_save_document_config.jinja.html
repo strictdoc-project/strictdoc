@@ -6,7 +6,7 @@
 <turbo-stream action="replace" target="document_title">
   <template>
     {%- with standalone=False, template_type="Document" -%}
-    {% include "_shared/document_header.jinja.html" %}
+      {% include "_shared/document_title.jinja" %}
     {%- endwith -%}
   </template>
 </turbo-stream>

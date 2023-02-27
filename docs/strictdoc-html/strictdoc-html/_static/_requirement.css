@@ -219,6 +219,12 @@ div.document ol {
   padding-left: 1.6em;
 }
 
+div.document td ul,
+div.document dt ol {
+  margin: 0;
+  padding-left: 1em;
+}
+
 /* object */
 
 div.document img,
@@ -400,7 +406,7 @@ div.document table {
   border-collapse: collapse;
   margin: var(--base-margin) 0;
   font-size: 1rem;
-  border: #ccc;
+  border: 1px solid #ccc;
 }
 
 div.document table caption {
@@ -417,6 +423,7 @@ div.document table td {
   padding: calc(var(--base-margin)/2);
   vertical-align: top;
   text-align: left;
+  border: 1px solid #ccc;
 }
 
 /* switch */

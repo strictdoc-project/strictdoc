@@ -12,3 +12,4 @@ Welcome to StrictDoc's documentation!
    strictdoc_11_developer_guide
    strictdoc_20_requirements
    strictdoc_21_design
+   strictdoc_30_credits

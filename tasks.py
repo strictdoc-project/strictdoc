@@ -33,7 +33,7 @@ def get_venv_command(venv_path: str, reset_path=True):
         else rf"{venv_path}\Scripts\activate"
     )
     venv_command = f"""
-        python3 -m venv {venv_path} && 
+        python3 -m venv {venv_path} &&
             {venv_command_activate}
     """
     if reset_path:
@@ -121,7 +121,7 @@ def run_invoke_cmd(
 def clean(context):
     # https://unix.stackexchange.com/a/689930/77389
     clean_command = """
-        rm -rfv output/ docs/sphinx/build/    
+        rm -rfv output/ docs/sphinx/build/
     """
     run_invoke_cmd(context, clean_command)
 
@@ -130,7 +130,7 @@ def clean(context):
 def clean_itest_artifacts(context):
     # https://unix.stackexchange.com/a/689930/77389
     find_command = """
-        git clean -dfX tests/integration/    
+        git clean -dfX tests/integration/
     """
     # The command sometimes exits with 1 even if the files are deleted.
     # warn=True ensures that the execution continues.
@@ -472,7 +472,7 @@ def setup_development_deps(context):
 def release_local(context):
     context[VENV_FOLDER] = VenvFolderType.RELEASE_LOCAL
     command = """
-        rm -rfv dist/ build/ && 
+        rm -rfv dist/ build/ &&
         pip uninstall strictdoc -y &&
         python3 -m build &&
         twine check dist/* &&

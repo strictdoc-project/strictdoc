@@ -431,12 +431,10 @@ data-level="4.1">
   <div class="free-text">
       <div class="document">
 <p>The overall generation process is still fast enough but in case some improvements were to be made:</p>
-<blockquote>
 <ul class="simple">
 <li>It could be measured what takes more time: parsing RST tree or actually rendering HTML</li>
 <li>Simplified RST parser and rendered can be written and their performance can be compared with that of docutils API.</li>
 </ul>
-</blockquote>
 <pre class="code bash literal-block">
 python<span class="whitespace"> </span>-m<span class="whitespace"> </span>cProfile<span class="whitespace"> </span>-s<span class="whitespace"> </span>cumulative<span class="whitespace"> </span>strictdoc/cli/main.py<span class="whitespace"> </span><span class="name builtin">export</span><span class="whitespace"> </span>--no-parallelization<span class="whitespace"> </span>docs/<span class="whitespace"> </span>&gt;<span class="whitespace"> </span>report.txt
 </pre>

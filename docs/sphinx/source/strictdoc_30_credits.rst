@@ -1,0 +1,62 @@
+Credits
+$$$$$$$
+
+As an open-source project, StrictDoc is based on the work of many people and organizations:
+
+- StrictDoc receives contributions from other developers.
+- StrictDoc is built using other open-source software.
+- StrictDoc uses free hosting and Continuous Integration services provided for open-source software.
+
+This page gives due credit to everyone who made StrictDoc possible.
+
+Contributions to StrictDoc
+==========================
+
+The core team: @stanislaw and @mettta.
+
+The following people and organizations have contributed to StrictDoc. The contributions are listed in the alphabetic order.
+
+- @BenGardiner – Import Excel feature, improvements of HTML and RST export, Document Fragments feature.
+- @GGBeer – Generating bibliography with BibTeX (ongoing), improvements of Excel export.
+- @lochsh – MathJax support.
+- @Relasym – Important fixes of how the documents are re-generated (or not).
+- @stumpyfr – Improvements of Excel export.
+
+Companies:
+
+- `BUGSENG <https://www.bugseng.com>`_ and @RobertoBagnara have contributed bug reports and feature suggestions.
+- `Kontrol <https://www.kontrol.tech>`_ have sponsored the work related to the early implementation of the ReqIF import/export feature (@alex.d, @cbernt, @Relasym).
+
+Single/smaller contributions can be also seen on the `StrictDoc's Insights/Contributors <https://github.com/strictdoc-project/strictdoc/graphs/contributors>`_ page.
+
+Open source software
+====================
+
+StrictDoc is based on other open source components. Without this support, we would have never reached where we are today.
+
+StrictDoc was heavily inspired by the `Doorstop <https://github.com/doorstop-dev/doorstop>`_ project. Without the strong example of Doorstop, StrictDoc would probably never exist.
+
+StrictDoc uses `textX <https://github.com/textX/textX>`_ as an underlying parser for the SDoc text markup language.
+
+StrictDoc uses `Sphinx <https://www.sphinx-doc.org/en/master/>`_ and `Docutils <https://docutils.sourceforge.io>`_ for generating SDoc documents to RST, HTML and PDF formats.
+
+StrictDoc has a satellite project `reqif <https://github.com/strictdoc-project/reqif>`_ which is built on top of the `lxml <https://lxml.de>`_ parser. The ``reqif`` library allows StrictDoc to import and export documents from/to ReqIF format.
+
+StrictDoc uses `FastAPI <https://github.com/tiangolo/fastapi>`_ and a combination of `Turbo.js <https://turbo.hotwired.dev>`_  and `Stimulus.js <https://stimulus.hotwired.dev>`_ for its Web-based graphical interface. This combination helps StrictDoc to stick with the `HTML over the wire approach <https://hotwired.dev>`_.
+
+StrictDoc uses `Jinja <https://jinja.palletsprojects.com>`_ as a templating engine. Jinja is used for both static HTML and RST exports as well as in the Web-based GUI.
+
+StrictDoc uses `Pygments <https://pygments.org>`_ to color-code the source files for its "requirements to source files" traceability feature.
+
+StrictDoc uses `XlsxWriter <https://xlsxwriter.readthedocs.io>`_ and `xlrd <https://xlrd.readthedocs.io/en/latest/>`_ for its Excel export/import features.
+
+The credits also recursively go to the building blocks of each of the above projects because most of them have their own dependencies.
+
+Refer to the `configuration file <https://github.com/strictdoc-project/strictdoc/blob/main/pyproject.toml>`_ for an up-to-date summary of StrictDoc's dependencies.
+
+Hosting and Continuous Integration
+==================================
+
+StrictDoc is hosted on `GitHub <https://github.com>`_ and uses `GitHub Actions <https://docs.github.com/en/actions>`_ to run all of its build, test and release tasks. As an open-source project, StrictDoc gets these services from GitHub for free.
+
+StrictDoc's documentation is hosted on `Read the Docs <https://readthedocs.org>`_.

@@ -112,7 +112,7 @@ latex_elements = {
 
         \setcounter{secnumdepth}{10}
         \setcounter{tocdepth}{6}
-        
+
         \newdateformat{MonthYearFormat}{%
             \monthname[\THEMONTH], \THEYEAR}
 
@@ -166,14 +166,14 @@ latex_elements = {
                       {\raisebox{0.038cm}{\eqparbox{ch}{\thecontentslabel}\hspace{0.2cm}}}
                       {}
                       {\titlerule*[10pt]{$\cdot$}\contentspage}
-        
+
         \titlecontents{section}
                       [0.5cm]
                       {\vspace{.25\baselineskip}}
                       {\raisebox{0.038cm}{\eqparbox{S}{\thecontentslabel}\hspace{0.2cm}}}
                       {}
                       {\titlerule*[10pt]{$\cdot$}\contentspage}
-        
+
         \titlecontents{subsection}
                       [1cm]
                       {\vspace{.25\baselineskip}}
@@ -187,7 +187,7 @@ latex_elements = {
                       {\raisebox{0.038cm}{\eqparbox{Sss}{\thecontentslabel}\hspace{0.2cm}}}
                       {}
                       {\titlerule*[10pt]{$\cdot$}\contentspage}
-        
+
         \titlecontents{paragraph}
                       [2cm]
                       {\vspace{.25\baselineskip}}
@@ -203,9 +203,9 @@ latex_elements = {
                       {\titlerule*[10pt]{$\cdot$}\contentspage}
 
         \newcommand{\tablecell}[1] {{{#1}}}
-        
-        \titleformat{\chapter}[hang] 
-            {\normalfont\huge\bfseries}{\thechapter.}{3mm}{} 
+
+        \titleformat{\chapter}[hang]
+            {\normalfont\huge\bfseries}{\thechapter.}{3mm}{}
         \titlespacing*{\chapter}{0pt}{-24pt}{18pt}
 
         \makeatletter
@@ -217,12 +217,12 @@ latex_elements = {
         r"""
         \pagenumbering{Roman} %%% to avoid page 1 conflict with actual page 1
 
-        \begin{titlepage}   
+        \begin{titlepage}
             \vspace*{50mm} %%% * is used to give space from top
 
             \begin{center}
                 \sdocfronttitlefont{\textbf{StrictDoc}}
-                
+
                 \vspace{5mm}
 
                 \sdocfrontsubtitlefont{{Software for writing technical requirements and specifications}}
@@ -236,12 +236,12 @@ latex_elements = {
                     \def\arraystretch{1.9}%  1 is the default, change whatever you need
                     \begin{tabular}{|p{4.85cm}|p{11.7cm}|}
                     \hline
-                    \textbf{{Project goals:}} & 
-                    \makecell[l]{ 
-                            Technical requirements and specifications management, 
+                    \textbf{{Project goals:}} &
+                    \makecell[l]{
+                            Technical requirements and specifications management,
                             \\
                             documentation control
-                    } 
+                    }
                     \\ \hline
                     \textbf{{Supported documents:}} & \tablecell {Requirements document/specification, technical manual} \\ \hline
                     \textbf{{Documents storage:}} & \tablecell {Plain text files} \\ \hline
@@ -255,7 +255,7 @@ latex_elements = {
             \end{flushright}
 
             %% \vfill adds at the bottom
-            \vfill 
+            \vfill
 
             \begin{center}
                 \Large{© 2020-2023 StrictDoc Project}

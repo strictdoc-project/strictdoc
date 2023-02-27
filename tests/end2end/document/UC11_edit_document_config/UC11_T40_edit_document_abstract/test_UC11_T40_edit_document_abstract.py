@@ -29,7 +29,7 @@ class Test_UC11_T40_EditDocumentAbstract(BaseCase):
         self.assert_text("Document 1")
         self.assert_text("PROJECT INDEX")
 
-        self.click_link("DOC")
+        self.click_xpath('//*[@data-testid="tree-file-link"]')
         self.assert_text_visible("Document 1")
 
         self.hover_and_click(

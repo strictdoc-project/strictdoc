@@ -101,6 +101,23 @@
     flex-grow: 1;
   }
 
+  .std-tree_file__title {
+    font-size: 1.25em;
+    color: #000;
+    transition: color .2s ease;
+  }
+
+  .std-tree_file-link:hover .std-tree_file__title {
+    color: var(--color-fg-accent);
+  }
+
+  .std-tree_file__name {
+    font-size: 0.85rem;
+    line-height: 1.2;
+    color: var(--color-fg-secondary);
+    margin-top: 0.25rem;
+  }
+
   .std-tree_desc {
     position: relative;
     top: -2px;

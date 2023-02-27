@@ -244,9 +244,7 @@ def cli_args_parser() -> argparse.ArgumentParser:
         formatter_class=formatter,
     )
     command_parser_server.add_argument("input_path")
-    command_parser_server.add_argument(
-        "--output-path", default="/tmp/strictdoc/output", type=str
-    )
+    command_parser_server.add_argument("--output-path", type=str)
     command_parser_server.add_argument(
         "--reload", default=False, action="store_true"
     )
@@ -292,7 +290,7 @@ class ServerCommandConfig:
         *,
         environment: SDocRuntimeEnvironment,
         input_path: str,
-        output_path: str,
+        output_path: Optional[str],
         reload: bool,
         port: int,
     ):
@@ -301,7 +299,7 @@ class ServerCommandConfig:
         self.environment: SDocRuntimeEnvironment = environment
         abs_input_path = os.path.abspath(input_path)
         self.input_path: str = abs_input_path
-        self.output_path: str = output_path
+        self.output_path: Optional[str] = output_path
         self.reload: bool = reload
         self.port = port
 

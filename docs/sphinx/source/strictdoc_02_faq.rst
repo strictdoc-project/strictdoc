@@ -1,6 +1,15 @@
 F.A.Q.
 $$$$$$
 
+What is StrictDoc?
+==================
+
+StrictDoc is software for writing technical requirements specifications.
+
+StrictDoc is a spare-time open-source project developed by Stanislav Pankevich (@stanislaw) and Maryna Balioura (@mettta) with contributions from the Open Source community.
+
+The project exists since mid-2019.
+
 Resources about StrictDoc
 =========================
 
@@ -23,7 +32,7 @@ Screencasts/tutorials:
 Which web server is recommended for StrictDoc documentation?
 ============================================================
 
-Is your project public or private? If it is public, you could simply use `GitHub pages <https://pages.github.com>`_. See how one user of StrictDoc is doing it here: `nmfta-repo/vcr-experiment <https://github.com/nmfta-repo/vcr-experiment>`_ and the resulting static website: `nmfta-repo.github.io/vcr-experiment <https://nmfta-repo.github.io/vcr-experiment>`_. Explore how their GitHub CI action is configured for publishing the website: `publish.yml <https://github.com/nmfta-repo/vcr-experiment/blob/db17fef8a8c41831a7698cb21997e0c0f0fb1940/.github/workflows/publish.yml>`_.
+Is your project public or private? If it is public, you could simply use `GitHub pages <https://pages.github.com>`_. See how one user of StrictDoc is doing it here: `nmfta-repo/vcr-experiment <https://github.com/nmfta-repo/vcr-experiment>`_ and the resulting static website: `nmfta-repo.github.io/vcr-experiment <https://nmfta-repo.github.io/vcr-experiment>`_. Explore how their GitHub CI action is configured for publishing the website: `publish.yml <https://github.com/nmfta-repo/vcr-experiment/blob/4b5272e2c1a6de1c58d436812c7cc8b634e6321b/.github/workflows/publish.yml>`_.
 
 You could also use `Read The Docs <https://readthedocs.org/>`_. StrictDoc's documentation is exported to Read the Docs here: `StrictDoc documentation <https://strictdoc.readthedocs.io/en/latest/strictdoc-html>`_. This is how StrictDoc's documentation is generated in the `tasks.py file <https://github.com/strictdoc-project/strictdoc/blob/b5d93ae64eeab0c385166a9c884effdaa8a58afc/tasks.py#L154>`_. When StrictDoc is pushed to GitHub, Read the Docs gets the repository and makes its web server read the documentation from the ``docs/`` folder.
 
@@ -262,6 +271,38 @@ FRET has an impressive list of
 FRET's user interface is built with Electron.
 
 The detailed comparison is coming.
+
+How long has the StrictDoc project been around?
+===============================================
+
+The first StrictDoc commit dates back to ``2019-08-10``. A short development chronology of StrictDoc is as follows:
+
+**2019 – July – August**
+
+StrictDoc is a result of several attempts to find a solution for working with
+text-based requirements. The first version of StrictDoc had started as a fork of the Doorstop project. However, after a while, StrictDoc was started from scratch as a separate project.
+
+**2019 – August**
+
+StrictDoc, first generation, the first commit dates to ``2019-08-10``. Markdown-based C++ program. Custom requirements metadata in YAML.
+
+**2020 – January**
+
+StrictDoc, second generation: RST/Sphinx-based Python program. Using Sphinx extensions to manage meta information.
+
+**2020 – May**
+
+The current StrictDoc repository was created on GitHub: the first commit dates back ``2020-05-14``. The code still uses RST for parsing requirements meta information and PySide for GUI.
+
+The result of these efforts was the realization that a text-based requirements and specifications management tool could be built on top of a domain-specific language (DSL) created specifically for the purpose of writing requirements and specifications documents. Such a language allows explicit definition of a document data model which is called "grammar".
+
+**2020 – July**
+
+The custom RST parser was replaced with a TextX-based DSL. Since then, StrictDoc has been using TextX for parsing SDoc files.
+
+**2022 – November**
+
+The FastAPI/Turbo/Stimulus-based Web interface prototype was created to complement the text-based interface with a graphical user interface (GUI). When the Web-based GUI is stable, StrictDoc may become useable by non-programmers too.
 
 Which StrictDoc statistics are available?
 =========================================

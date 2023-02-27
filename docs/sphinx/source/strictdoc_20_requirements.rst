@@ -38,21 +38,7 @@ Data model
     * - **UID:**
       - SDOC-HIGH-DATA-MODEL
 
-StrictDoc shall be based on a well-defined data model.
-
-**Comment:** StrictDoc is a result of several attempts to find a solution for working with
-text-based requirements:
-
-- StrictDoc, first generation: Markdown-based C++ program. Custom requirements
-  metadata in YAML.
-- StrictDoc, second generation: RST/Sphinx-based Python program. Using Sphinx
-  extensions to manage meta information.
-
-The result of these efforts was the realization that a text-based requirements
-and specifications management tool could be built on top of a domain-specific
-language (DSL) created specifically for the purpose of writing requirements and
-specifications documents. Such a language allows an explicit definition of a
-document data model which is called "grammar".
+StrictDoc shall be based on a data model.
 
 **Children:**
 

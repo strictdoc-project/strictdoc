@@ -121,8 +121,8 @@ HTML rendering using docutils is a performance bottleneck
 
 The overall generation process is still fast enough but in case some improvements were to be made:
 
-  - It could be measured what takes more time: parsing RST tree or actually rendering HTML
-  - Simplified RST parser and rendered can be written and their performance can be compared with that of docutils API.
+- It could be measured what takes more time: parsing RST tree or actually rendering HTML
+- Simplified RST parser and rendered can be written and their performance can be compared with that of docutils API.
 
 .. code-block:: bash
 

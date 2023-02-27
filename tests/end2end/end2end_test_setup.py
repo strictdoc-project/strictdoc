@@ -110,10 +110,10 @@ class End2EndTestSetup:
     @staticmethod
     def get_diff(path_to_file1, path_to_file2):
         with open(path_to_file1, encoding="utf8") as file1:
-            lines1 = file1.readlines()
+            lines1 = [line.rstrip() for line in file1.readlines()]
         with open(path_to_file2, encoding="utf8") as file2:
-            lines2 = file2.readlines()
-        diff_result = "".join(
+            lines2 = [line.rstrip() for line in file2.readlines()]
+        diff_result = "\n".join(
             difflib.unified_diff(
                 lines1,
                 lines2,

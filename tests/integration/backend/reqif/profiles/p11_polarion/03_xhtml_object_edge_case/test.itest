@@ -1,0 +1,16 @@
+RUN: %mkdir %S/output
+RUN: %strictdoc import reqif p11_polarion %S/sample.reqif %S/output/output.sdoc
+
+RUN: %cat %S/output/output.sdoc | filecheck %s
+CHECK: [REQUIREMENT]
+CHECK: CREATED_BY: ...Anonymized-3286337206...
+CHECK: UID: ...Anonymized-1890729041...
+CHECK: STATEMENT: >>>
+<div>
+  Unclosed object tag follows here:
+  <object data="files/rmf-1b18ef37-ca1f-4e79-954d-747df083f861_DOCATTACHMENT_3-screenshot-20220926-051927.png" name="DOCATTACHMENT_3-screenshot-20220926-051927.png" type="image/png"></object>
+<div>
+CHECK: <<<
+
+RUN: %strictdoc export --formats=html %S/output/output.sdoc
+RUN: %strictdoc export --formats=reqif-sdoc %S/output/output.sdoc

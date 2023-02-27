@@ -594,8 +594,13 @@ sdoc-menu menu header {
 }
 
 /* plus to close */
-[aria-expanded="true"] svg {
+sdoc-menu-handler[aria-expanded="true"] svg {
   transform: rotate(45deg);
+  color: black;
+}
+
+/* affects other menus: */
+[aria-expanded="true"] svg {
   color: black;
 }
 

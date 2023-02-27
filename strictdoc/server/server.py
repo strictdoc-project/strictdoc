@@ -1,5 +1,6 @@
 import os
 import tempfile
+from typing import Optional
 
 import uvicorn
 
@@ -26,6 +27,13 @@ def run_strictdoc_server(
     *, server_config: ServerCommandConfig, project_config: ProjectConfig
 ):
     print_warning_message()
+
+    temp_dir: Optional[tempfile.TemporaryDirectory] = None
+    if server_config.output_path is None:
+        temp_dir = (
+            tempfile.TemporaryDirectory()  # pylint: disable=consider-using-with
+        )
+        server_config.output_path = temp_dir.name
 
     # uvicorn.run does not support passing arguments to the main
     # function (strictdoc_production_app). Passing the pickled config through
@@ -66,3 +74,5 @@ def run_strictdoc_server(
     tmp_config_file.close()
     if os.path.exists(tmp_config_file.name):
         os.unlink(tmp_config_file.name)
+    if temp_dir is not None:
+        temp_dir.cleanup()

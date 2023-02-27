@@ -1,3 +1,4 @@
+from strictdoc import __version__
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.html_templates import HTMLTemplates
@@ -27,6 +28,7 @@ class DocumentTreeHTMLGenerator:
             document_tree_iterator=document_tree_iterator,
             traceability_index=traceability_index,
             link_renderer=link_renderer,
+            strictdoc_version=__version__,
         )
 
         return output

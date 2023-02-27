@@ -1,3 +1,4 @@
+from strictdoc import __version__
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
@@ -31,6 +32,7 @@ class DocumentDeepTraceHTMLGenerator:
             document_type=DocumentType.deeptrace(),
             standalone=False,
             document_iterator=document_iterator,
+            strictdoc_version=__version__,
         )
 
         return output

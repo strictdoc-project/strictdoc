@@ -1,3 +1,4 @@
+from strictdoc import __version__
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.html_templates import HTMLTemplates
@@ -33,6 +34,7 @@ class DocumentHTMLGenerator:
             standalone=standalone,
             document_type=DocumentType.document(),
             document_iterator=document_iterator,
+            strictdoc_version=__version__,
         )
 
         return output

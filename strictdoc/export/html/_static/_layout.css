@@ -4,12 +4,18 @@
   display: grid;
 
   grid-template-columns:
-  fit-content(var(--base-gap)) fit-content(30%) 1fr auto;
-  grid-template-rows: var(--base-gap) 1fr auto;
+                fit-content(var(--base-gap))
+                fit-content(30%)
+                1fr
+                auto;
+  grid-template-rows:
+                var(--base-gap)
+                minmax( 0, 1fr ) /* https://github.com/w3c/csswg-drafts/issues/1777 */
+                calc(var(--base-rhythm)*4);
   grid-template-areas:
       "nav  header  header  aside"
       "nav  toc     main    aside"
-      "nav  toc     footer  aside";
+      "nav  footer     footer  aside";
 
   place-items: stretch stretch;
   place-content: stretch stretch;

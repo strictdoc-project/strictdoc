@@ -1,3 +1,4 @@
+from strictdoc import __version__
 from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
@@ -40,6 +41,7 @@ class RequirementsCoverageHTMLGenerator:
             renderer=markup_renderer,
             static_path="_static",
             document_type=DocumentType.deeptrace(),
+            strictdoc_version=__version__,
         )
 
         return output

@@ -1,3 +1,4 @@
+from strictdoc import __version__
 from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.html_templates import HTMLTemplates
@@ -23,6 +24,7 @@ class SourceFileCoverageHTMLGenerator:
             traceability_index=traceability_index,
             static_path="_static",
             link_renderer=link_renderer,
+            strictdoc_version=__version__,
         )
 
         return output

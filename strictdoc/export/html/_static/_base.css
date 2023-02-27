@@ -24,6 +24,8 @@
   --color-fg-secondary-invert: rgb(255 255 255 / 50%);
   --color-bg-secondary-invert: rgb(0 0 0 / 10%);
 
+  --color-bg-ui: #282c42;
+
   --color-link: var(--color-fg-secondary);
   --color-action: var(--color-fg-accent);
   --color-hover: var(--color-fg-contrast);

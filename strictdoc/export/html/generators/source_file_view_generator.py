@@ -7,6 +7,7 @@ from pygments.lexers.markup import TexLexer
 from pygments.lexers.python import PythonLexer
 from pygments.lexers.templates import HtmlDjangoLexer
 
+from strictdoc import __version__
 from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.finders.source_files_finder import SourceFile
 from strictdoc.core.traceability_index import TraceabilityIndex
@@ -127,5 +128,6 @@ class SourceFileViewHTMLGenerator:
             link_renderer=link_renderer,
             renderer=markup_renderer,
             document_type=document_type,
+            strictdoc_version=__version__,
         )
         return output

@@ -258,6 +258,7 @@ def test_end2end(
             pytest
                 --failed-first
                 --capture=no
+                --reuse-session
                 {parallelize_argument_2}
                 {focus_argument}
                 {exit_first_argument}

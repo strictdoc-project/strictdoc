@@ -18,7 +18,7 @@ class Test_UC00_T03_DocumentHasNode(BaseCase):
 
         self.assert_text("PROJECT INDEX")
 
-        self.click_link("DOC")
+        self.click_xpath('//*[@data-testid="tree-file-link"]')
 
         self.assert_element_not_visible(
             '//*[@data-testid="document-placeholder"]'

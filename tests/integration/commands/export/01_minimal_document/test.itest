@@ -4,7 +4,3 @@ CHECK: Published: Hello world doc
 RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: Hello world doc
 CHECK-HTML: input.sdoc
-CHECK-HTML: DOC
-CHECK-HTML: TABLE
-CHECK-HTML: TRACE
-CHECK-HTML: DEEP-TRACE

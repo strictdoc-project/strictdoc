@@ -34,12 +34,12 @@ class Test_UC07_G1_T20_TwoDocumentsRemovingLink(BaseCase):
         self.assert_text("PROJECT INDEX")
         # First, check that the first document's requirement REQ-001 does
         # contain a child link to REQ-002.
-        self.click_xpath("(//a[text()='DOC'])[1]")
+        self.click_xpath("(//*[@data-testid='tree-file-link'])[1]")
         self.assert_element("//*[contains(., 'REQ-002')]", by=By.XPATH)
 
         # Now, go to the document 2 and remove the parent link to REQ-001.
         self.open(test_server.get_host_and_port())
-        self.click_xpath("(//a[text()='DOC'])[2]")
+        self.click_xpath("(//*[@data-testid='tree-file-link'])[2]")
 
         self.assert_text("Hello world 2!")
         self.assert_element("//*[contains(., 'REQ-001')]", by=By.XPATH)
@@ -80,13 +80,13 @@ class Test_UC07_G1_T20_TwoDocumentsRemovingLink(BaseCase):
 
         # Now check that the documents do not have the link anymore.
         self.open(test_server.get_host_and_port())
-        self.click_xpath("(//a[text()='DOC'])[1]")
+        self.click_xpath("(//*[@data-testid='tree-file-link'])[1]")
         self.assert_element_not_present(
             "//*[contains(., 'REQ-002')]", by=By.XPATH
         )
 
         self.open(test_server.get_host_and_port())
-        self.click_xpath("(//a[text()='DOC'])[2]")
+        self.click_xpath("(//*[@data-testid='tree-file-link'])[2]")
         self.assert_element_not_present(
             "//*[contains(., 'REQ-001')]", by=By.XPATH
         )

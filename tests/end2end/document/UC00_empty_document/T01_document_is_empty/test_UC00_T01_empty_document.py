@@ -18,6 +18,6 @@ class Test_UC00_T01_DocumentIsEmpty(BaseCase):
 
         self.assert_text("PROJECT INDEX")
 
-        self.click_link("DOC")
+        self.click_xpath('//*[@data-testid="tree-file-link"]')
 
         self.assert_element('//*[@data-testid="document-placeholder"]')

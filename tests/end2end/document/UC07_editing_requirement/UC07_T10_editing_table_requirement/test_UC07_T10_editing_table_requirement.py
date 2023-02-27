@@ -29,7 +29,7 @@ class Test_UC07_T10_EditTableRequirement(BaseCase):
         self.assert_text("Document 1")
         self.assert_text("PROJECT INDEX")
 
-        self.click_link("DOC")
+        self.click_xpath('//*[@data-testid="tree-file-link"]')
 
         # Make sure that the table-based requirement is rendered.
         self.assert_element(

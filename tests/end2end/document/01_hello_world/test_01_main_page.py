@@ -18,6 +18,6 @@ class Test01MainPage(BaseCase):
 
         self.assert_text("PROJECT INDEX")
 
-        self.click_link("DOC")
+        self.click_xpath('//*[@data-testid="tree-file-link"]')
 
         self.assert_text("Hello world!")

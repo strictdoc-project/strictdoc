@@ -7,7 +7,3 @@ RUN: %check_exists --file "%S/Output/html/input/intermediate/requirements/input.
 RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: Hello world doc
 CHECK-HTML: input.sdoc
-CHECK-HTML: DOC
-CHECK-HTML: TABLE
-CHECK-HTML: TRACE
-CHECK-HTML: DEEP-TRACE

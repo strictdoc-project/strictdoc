@@ -40,15 +40,23 @@ class ReadTimeout(Exception):
 
 class SDocTestServer:
     @staticmethod
-    def create(path_to_sandbox: str):
-        if os.path.isdir(path_to_sandbox):
-            shutil.rmtree(path_to_sandbox)
-        os.mkdir(path_to_sandbox)
+    def create_from_existing(input_path: str):
+        assert os.path.isdir(input_path), input_path
+        test_server = SDocTestServer(
+            input_path=input_path,
+            output_path=None,
+        )
+        return test_server
+
+    @staticmethod
+    def create(input_path: str):
+        if os.path.isdir(input_path):
+            shutil.rmtree(input_path)
+        os.mkdir(input_path)
 
         test_server = SDocTestServer(
-            input_path=path_to_sandbox,
+            input_path=input_path,
             output_path=None,
-            is_parallel_execution=test_environment.is_parallel_execution,
         )
         return test_server
 
@@ -57,11 +65,12 @@ class SDocTestServer:
         *,
         input_path: str,
         output_path: Optional[str] = None,
-        is_parallel_execution: bool = False,
     ):
+        is_parallel_execution = test_environment.is_parallel_execution
+
         assert os.path.isdir(input_path)
         self.path_to_tdoc_folder = input_path
-        self.path_to_sandbox: Optional[str] = output_path
+        self.output_path: Optional[str] = output_path
         self.process = None
         self.server_port: int = (
             SDocTestServer._get_test_server_port()
@@ -79,6 +88,15 @@ class SDocTestServer:
     def __del__(self):
         self.close()
 
+    def __enter__(self):
+        self.run()
+        return self
+
+    def __exit__(self, type__, value, traceback):
+        self.close()
+        if value is not None:
+            raise value from None
+
     def run(self):
         args = [
             "python",
@@ -89,11 +107,11 @@ class SDocTestServer:
             str(self.server_port),
             self.path_to_tdoc_folder,
         ]
-        if self.path_to_sandbox is not None:
+        if self.output_path is not None:
             args.extend(
                 [
                     "--output-path",
-                    self.path_to_sandbox,
+                    self.output_path,
                 ]
             )
 

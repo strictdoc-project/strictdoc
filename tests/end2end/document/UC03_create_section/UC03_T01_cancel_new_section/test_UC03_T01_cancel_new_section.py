@@ -1,30 +1,15 @@
-import os
-import shutil
-
 from seleniumbase import BaseCase
 
+from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.server import SDocTestServer
-
-path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
 class Test_UC03_T01_CancelNewSection(BaseCase):
     def test_01(self):
-        # Prepare sandbox.
-        path_to_sandbox = os.path.join(
-            path_to_this_test_file_folder, ".sandbox"
-        )
-        if os.path.isdir(path_to_sandbox):
-            shutil.rmtree(path_to_sandbox)
-        os.mkdir(path_to_sandbox)
-        shutil.copyfile(
-            os.path.join(path_to_this_test_file_folder, "document.sdoc"),
-            os.path.join(path_to_sandbox, "document.sdoc"),
-        )
+        test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
-        # Run server.
-        with SDocTestServer.create_from_existing(
-            path_to_sandbox
+        with SDocTestServer(
+            input_path=test_setup.path_to_sandbox
         ) as test_server:
             self.open(test_server.get_host_and_port())
 
@@ -44,3 +29,5 @@ class Test_UC03_T01_CancelNewSection(BaseCase):
             self.assert_element_not_present(
                 '[data-testid="form-cancel-action"]'
             )
+
+        assert test_setup.compare_sandbox_and_expected_output()

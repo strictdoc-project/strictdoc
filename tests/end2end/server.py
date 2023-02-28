@@ -40,15 +40,6 @@ class ReadTimeout(Exception):
 
 class SDocTestServer:
     @staticmethod
-    def create_from_existing(input_path: str):
-        assert os.path.isdir(input_path), input_path
-        test_server = SDocTestServer(
-            input_path=input_path,
-            output_path=None,
-        )
-        return test_server
-
-    @staticmethod
     def create(input_path: str):
         if os.path.isdir(input_path):
             shutil.rmtree(input_path)

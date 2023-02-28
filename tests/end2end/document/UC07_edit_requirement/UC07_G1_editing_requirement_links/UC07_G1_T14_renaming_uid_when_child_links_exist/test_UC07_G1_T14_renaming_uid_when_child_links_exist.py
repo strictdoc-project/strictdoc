@@ -5,7 +5,7 @@ from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.server import SDocTestServer
 
 
-class Test_UC07_G2_T02_StatementMalformedRST(BaseCase):
+class Test_UC07_G1_T14_RenamingUIDWhenChildLinksExist(BaseCase):
     def test_01(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
@@ -31,21 +31,16 @@ class Test_UC07_G2_T02_StatementMalformedRST(BaseCase):
             )
 
             self.type(
-                "//*[@id='requirement[STATEMENT]']",
-                """
-- Broken RST markup
-
-  - AAA
-  ---
-    """.strip(),
-                by=By.XPATH,
+                "//*[@id='requirement[UID]']", "Modified UID", by=By.XPATH
             )
 
             self.click_xpath('//*[@data-testid="form-submit-action"]')
 
             self.assert_text(
-                "RST markup syntax error on line 4: "
-                "Bullet list ends without a blank line; unexpected unindent."
+                "Not supported yet: "
+                "Renaming a requirement UID when the requirement has child "
+                "requirement links. For now, manually delete the links, rename "
+                "the UID, recreate the links.",
             )
 
         assert test_setup.compare_sandbox_and_expected_output()

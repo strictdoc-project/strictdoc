@@ -6,11 +6,7 @@ Hello world!
 [/FREETEXT]
 
 [REQUIREMENT]
-UID: Modified UID
-TITLE: Modified title
+TITLE: Requirement title
 STATEMENT: >>>
-Modified statement.
-<<<
-RATIONALE: >>>
-Modified rationale.
+Requirement statement.
 <<<

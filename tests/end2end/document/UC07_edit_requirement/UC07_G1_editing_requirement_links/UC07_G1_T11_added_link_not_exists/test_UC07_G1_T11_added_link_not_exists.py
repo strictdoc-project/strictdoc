@@ -5,7 +5,7 @@ from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.server import SDocTestServer
 
 
-class Test_UC07_G2_T02_StatementMalformedRST(BaseCase):
+class Test_UC07_G1_T11_AddedLinkDoesNotExist(BaseCase):
     def test_01(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
@@ -30,22 +30,20 @@ class Test_UC07_G2_T02_StatementMalformedRST(BaseCase):
                 click_by=By.XPATH,
             )
 
+            self.click_xpath("//*[@data-testid='form-add-parent-link-action']")
             self.type(
-                "//*[@id='requirement[STATEMENT]']",
-                """
-- Broken RST markup
-
-  - AAA
-  ---
-    """.strip(),
-                by=By.XPATH,
+                (
+                    "(//*["
+                    "@data-testid='form-requirement[REFS_PARENT][]-field']"
+                    ")[1]"
+                ),
+                "FOO-BAR",
             )
 
             self.click_xpath('//*[@data-testid="form-submit-action"]')
 
             self.assert_text(
-                "RST markup syntax error on line 4: "
-                "Bullet list ends without a blank line; unexpected unindent."
+                'Parent requirement with an UID "FOO-BAR" does not exist.',
             )
 
         assert test_setup.compare_sandbox_and_expected_output()

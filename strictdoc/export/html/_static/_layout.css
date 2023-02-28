@@ -83,19 +83,6 @@
   background: white;
 }
 
-/* *** */
-
-[data-viewtype="table"] .layout_main {
-  /* overflow: visible; */
-  /* background-color: var(--color-bg-contrast); */
-}
-
-[data-viewtype="table"] .layout_tmp_inner {
-  background-color: var(--color-bg-contrast);
-  width: fit-content;
-}
-
-
 /*  */
 
 .section-number {

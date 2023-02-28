@@ -31,6 +31,8 @@
 [data-viewtype="table"] .content {
   background-color: var(--color-bg-contrast);
   display: block;
+  /* aligns the width of the white box of the content and the table: */
+  width: fit-content;
 }
 
 /* TODO */
@@ -85,22 +87,6 @@
 
 /* meta info */
 
-.content_meta {
-  display: block;
-  background-color: var(--color-bg-contrast);
-  padding: calc(var(--base-padding)*2);
-  /* padding-bottom: 0; */
-  padding-top: 1px;
-}
-
-.content_meta + .content {
-  padding-top: 0;
-}
-
-[data-viewtype="document"] .content_meta {
-  max-width: 900px;
-}
-
 .table_meta {
   width: auto;
   border-collapse: collapse;
@@ -115,8 +101,8 @@
   border: 1px solid #666;
 }
 
-[data-viewtype="table"] .content_meta > .free_text{
-  padding-top: calc(var(--base-padding)*2);
+[data-viewtype="table"] sdoc-node .free_text{
+  margin-top: calc(var(--base-padding)*2);
   max-width: 900px;
 }
 

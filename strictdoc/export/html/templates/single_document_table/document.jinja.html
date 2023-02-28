@@ -42,14 +42,10 @@
 
       {% include "_shared/tags.jinja.html" %}
 
-      <div class="layout_tmp_inner">
-
-    {%- if document.config.has_meta() or document.free_texts -%}
-      <div class="content_meta">
-
+<div class="content">
+      <sdoc-node>
+      <h1>{{document.title}}</h1>
       {%- if document.config.has_meta() -%}
-      <div>
-        <h1>{{document.title}}</h1>
         <table class="table_meta">
           {%- if document.config.uid -%}
           <tr>
@@ -82,7 +78,6 @@
           </tr>
           {%- endif -%}
         </table>
-      </div>
       {%- endif -%}
 
       {%- if document.free_texts -%}
@@ -92,11 +87,7 @@
         </div>
       {%- endfor -%}
       {%- endif -%}
-
-      </div>
-    {%- endif -%}
-
-<div class="content">
+    </sdoc-node>
 
 <table class="content-view-table">
 
@@ -295,6 +286,4 @@
 
   </table>
 </div>
-</div>{# layout_tmp_inner #}
-
 {% endblock content %}

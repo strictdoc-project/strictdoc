@@ -1,0 +1,165 @@
+<turbo-frame id="article-{{requirement.node_id}}">
+
+{%- set anchor=link_renderer.render_local_anchor(requirement) -%}
+
+  <sdoc-node
+    node-role="requirement"
+    data-editable_node="on"
+    data-testid="node-requirement-normal"
+    {%- if requirement.reserved_status %}
+    data-status='{{ requirement.reserved_status.lower() }}'
+    {%- endif %}
+  >
+
+    <sdoc-requirement>
+
+      {# anchor #}
+      {%- if anchor is defined -%}
+        <div data-role='anchor' id="{{ anchor }}"></div>
+      {%- endif -%}
+
+      {# title #}
+      {%- if requirement.reserved_title %}
+      {% with node=requirement %}
+
+        <sdoc-requirement-title
+          data-level="{{ node.context.title_number_string }}"
+        >
+          {%- if node.context.title_number_string %}
+          {{ node.context.title_number_string }}.&nbsp;
+          {%- endif -%}
+          {%- set title = node.reserved_title -%}
+          {%- if title is not none -%}
+            {{ title }}
+          {%- endif -%}
+        </sdoc-requirement-title>
+
+      {%- endwith %}
+      {%- endif %}
+
+      {# meta #}
+
+      {%- if requirement.has_meta -%}
+        <sdoc-requirement-meta>
+          <dl class="requirement__meta">
+            {% for meta_field in requirement.enumerate_meta_fields(skip_multi_lines=True) %}
+            <dt><i>{{meta_field[0]}}</i></dt>
+            <dd>{{ meta_field[1] }}</dd>
+            {% endfor %}
+          </dl>
+        </sdoc-requirement-meta>
+      {%- endif %}
+
+      {# links #}
+
+      {%- if traceability_index.has_parent_requirements(requirement) %}
+        <ul class="requirement__link">
+          {%- for requirement in traceability_index.get_parent_requirements(requirement) %}
+          <li>
+            <a data-turbo="false" class="requirement__link-parent" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
+              {%- if requirement.reserved_uid %}
+              <span class="requirement__parent-uid">{{ requirement.reserved_uid }}</span>
+              {%- endif %}
+              {{ requirement.reserved_title if requirement.reserved_title else "" }}
+            </a>
+          </li>
+          {%- endfor %}
+        </ul>
+      {%- endif %}
+
+      {%- if traceability_index.has_children_requirements(requirement) %}
+        <ul class="requirement__link">
+          {%- for requirement in traceability_index.get_children_requirements(requirement) %}
+          <li>
+            <a data-turbo="false" class="requirement__link-child" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
+              {%- if requirement.reserved_uid %}
+              <span class="requirement__child-uid">{{ requirement.reserved_uid }}</span>
+              {%- endif %}
+              {{ requirement.reserved_title if requirement.reserved_title else "" }}
+            </a>
+          </li>
+          {%- endfor %}
+        </ul>
+      {%- endif %}
+
+      {# files #}
+
+      {%- if config.experimental_enable_file_traceability -%}
+        {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
+        {%- if requirement_file_links %}
+          <ul class="requirement__link">
+            {%- for link, opt_ranges in requirement_file_links %}
+              {%- if opt_ranges -%}
+                {%- for range in opt_ranges %}
+                  <li>
+                    <a data-turbo="false" class="requirement__link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
+                      {{ link.file_entry.file_path }}, <i>lines: {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }}</i>
+                    </a>
+                  </li>
+                {%- endfor -%}
+              {%- else -%}
+                <li>
+                  <a data-turbo="false" class="requirement__link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}">
+                    {{ link.file_entry.file_path }}
+                  </a>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endif %}
+      {%- endif %}
+
+      {# statement #}
+
+      {%- if requirement.reserved_statement -%}
+        <sdoc-requirement-statement>
+          {{ renderer.render_requirement_statement(requirement) }}
+        </sdoc-requirement-statement>
+      {%- endif -%}
+
+      {# rationale #}
+
+      {%- if requirement.rationale -%}
+        <sdoc-requirement-rationale class="requirement__rationale">
+          {{ renderer.render_requirement_rationale(requirement) }}
+        </sdoc-requirement-rationale>
+      {%- endif -%}
+
+      {# comments #}
+
+      {%- if requirement.comments %}
+        {%- for comment in requirement.comments %}
+          <sdoc-requirement-comment class="requirement__comment">
+            {{ renderer.render_comment(comment) }}
+          </sdoc-requirement-comment>
+        {%- endfor %}
+      {%- endif %}
+
+      {# multiline fields #}
+
+      {%- if requirement.has_meta %}
+        {% for meta_field in requirement.enumerate_meta_fields(skip_single_lines=True) %}
+          <div class="requirement__meta_multiline_label">
+            {{meta_field[0]}}:
+          </div>
+          <sdoc-requirement-field class="requirement__meta_multiline">
+            {{ renderer.render_meta_value(meta_field[1]) }}
+          </sdoc-requirement-field>
+        {%- endfor %}
+      {%- endif %}
+
+      <sdoc-requirement-row>just test</sdoc-requirement-row>
+
+    </sdoc-requirement>
+
+    {%- if config.is_running_on_server -%}
+      {% with
+        node_controls__reference = requirement.node_id,
+        node_controls__node_type = 'requirement'
+      %}
+      {% include "_shared/node_controls.jinja.html" %}
+      {% endwith %}
+    {%- endif -%}
+
+  </sdoc-node>
+</turbo-frame>

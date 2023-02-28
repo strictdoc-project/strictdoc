@@ -12,19 +12,17 @@ path_to_reqif_sample = os.path.join(
 
 class Test_UC55_T02_CancelReqIFImportForm(BaseCase):
     def test_01(self):
-        path_to_sandbox = os.path.join(
-            path_to_this_test_file_folder, ".sandbox"
-        )
+        with SDocTestServer(
+            input_path=path_to_this_test_file_folder
+        ) as test_server:
+            self.open(test_server.get_host_and_port())
 
-        test_server = SDocTestServer.create(path_to_sandbox)
-        test_server.run()
+            self.assert_text("PROJECT INDEX")
 
-        self.open(test_server.get_host_and_port())
+            self.click('[data-testid="tree-import-reqif-action"]')
 
-        self.assert_text("PROJECT INDEX")
+            self.click('[data-testid="form-cancel-action"]')
 
-        self.click('[data-testid="tree-import-reqif-action"]')
-
-        self.click('[data-testid="form-cancel-action"]')
-
-        self.assert_element_not_present('[data-testid="form-cancel-action"]')
+            self.assert_element_not_present(
+                '[data-testid="form-cancel-action"]'
+            )

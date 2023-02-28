@@ -12,28 +12,24 @@ path_to_reqif_sample = os.path.join(
 
 class Test_UC55_G1_T01_NotAReqIFormat(BaseCase):
     def test_01(self):
-        path_to_sandbox = os.path.join(
-            path_to_this_test_file_folder, ".sandbox"
-        )
+        with SDocTestServer(
+            input_path=path_to_this_test_file_folder
+        ) as test_server:
+            self.open(test_server.get_host_and_port())
 
-        test_server = SDocTestServer.create(path_to_sandbox)
-        test_server.run()
+            self.assert_text("PROJECT INDEX")
 
-        self.open(test_server.get_host_and_port())
+            self.assert_text("The document tree has no documents yet.")
 
-        self.assert_text("PROJECT INDEX")
+            self.click('[data-testid="tree-import-reqif-action"]')
 
-        self.assert_text("The document tree has no documents yet.")
+            reqif_input_field = self.find_element(
+                "//*[@data-testid='form-reqif_file-field']"
+            )
+            reqif_input_field.send_keys(path_to_reqif_sample)
+            self.click_xpath('//*[@data-testid="form-submit-action"]')
 
-        self.click('[data-testid="tree-import-reqif-action"]')
-
-        reqif_input_field = self.find_element(
-            "//*[@data-testid='form-reqif_file-field']"
-        )
-        reqif_input_field.send_keys(path_to_reqif_sample)
-        self.click_xpath('//*[@data-testid="form-submit-action"]')
-
-        self.assert_text(
-            "Cannot parse ReqIF file: "
-            "Start tag expected, '<' not found, line 1, column 1 (, line 1)"
-        )
+            self.assert_text(
+                "Cannot parse ReqIF file: "
+                "Start tag expected, '<' not found, line 1, column 1 (, line 1)"
+            )

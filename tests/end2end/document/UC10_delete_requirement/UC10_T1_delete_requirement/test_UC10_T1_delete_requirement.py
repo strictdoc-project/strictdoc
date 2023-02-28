@@ -1,3 +1,4 @@
+import filecmp
 import os
 import shutil
 
@@ -9,7 +10,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test02EditSection(BaseCase):
+class Test_UC10_T1_DeleteRequirement(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -30,17 +31,25 @@ class Test02EditSection(BaseCase):
 
         self.click_xpath('//*[@data-testid="tree-file-link"]')
 
-        self.assert_text("Hello world!")
+        self.assert_text_visible("Requirement title")
 
         self.hover_and_click(
             hover_selector="(//sdoc-node)[2]",
             click_selector=(
-                '(//sdoc-node)[2]//*[@data-testid="node-edit-action"]'
+                '(//sdoc-node)[2]//*[@data-testid="node-delete-action"]'
             ),
             hover_by=By.XPATH,
             click_by=By.XPATH,
         )
 
-        self.click('[data-testid="form-cancel-action"]')
+        self.assert_text_not_visible("Requirement title")
 
-        self.assert_element_not_present('[data-testid="form-cancel-action"]')
+        # TODO: Assert that the TOC is also updated.
+
+        assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))
+        assert filecmp.cmp(
+            os.path.join(path_to_sandbox, "document.sdoc"),
+            os.path.join(
+                path_to_this_test_file_folder, "document.expected.sdoc"
+            ),
+        )

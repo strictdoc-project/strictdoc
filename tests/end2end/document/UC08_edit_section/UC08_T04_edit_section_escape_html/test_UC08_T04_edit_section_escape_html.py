@@ -10,7 +10,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test10DeleteRequirement(BaseCase):
+class Test_UC08_T04_EditSectionEscapeHTML(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -31,20 +31,25 @@ class Test10DeleteRequirement(BaseCase):
 
         self.click_xpath('//*[@data-testid="tree-file-link"]')
 
-        self.assert_text_visible("Requirement title")
+        self.assert_text("Hello world!")
 
         self.hover_and_click(
             hover_selector="(//sdoc-node)[2]",
             click_selector=(
-                '(//sdoc-node)[2]//*[@data-testid="node-delete-action"]'
+                '(//sdoc-node)[2]//*[@data-testid="node-edit-action"]'
             ),
             hover_by=By.XPATH,
             click_by=By.XPATH,
         )
 
-        self.assert_text_not_visible("Requirement title")
+        self.assert_text(
+            "`Link does not get corrupted "
+            "<https://github.com/strictdoc-project/"
+            "sphinx-latex-reqspec-template>`_"
+        )
 
-        # TODO: Assert that the TOC is also updated.
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
+        self.assert_element_not_present('[data-testid="form-submit-action"]')
 
         assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))
         assert filecmp.cmp(

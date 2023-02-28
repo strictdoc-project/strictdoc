@@ -1,3 +1,4 @@
+import filecmp
 import os
 import shutil
 
@@ -9,7 +10,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test_02_EditingSectionStatementMalformedRST(BaseCase):
+class Test_UC08_T03_EditSectionSanitizeTrailingSymbols(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -41,19 +42,36 @@ class Test_02_EditingSectionStatementMalformedRST(BaseCase):
             click_by=By.XPATH,
         )
 
+        self.type("#section_title", "Modified title")
+
+        # Contains trailing spaces.
         self.type(
             "#section_content",
             """
-- Broken RST markup
+Hello world!    
 
-  - AAA
-  ---
-""".strip(),
+Hello world!    
+
+Hello world!    
+            """,  # noqa: W291
         )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')
 
-        self.assert_text(
-            "RST markup syntax error on line 4: "
-            "Bullet list ends without a blank line; unexpected unindent."
+        self.assert_text("1. Modified title")
+
+        # TODO: Cannot match this text for some reason.
+        # The visual output and the written .sdoc file are ok though.
+        # self.assert_text("Hello world!\\n Hello world!\\n Hello world!")  # noqa: ERA001, E501
+
+        self.assert_element(
+            "//turbo-frame[@id='frame-toc']//*[contains(., 'Modified title')]"
+        )
+
+        assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))
+        assert filecmp.cmp(
+            os.path.join(path_to_sandbox, "document.sdoc"),
+            os.path.join(
+                path_to_this_test_file_folder, "document.expected.sdoc"
+            ),
         )

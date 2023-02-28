@@ -7,7 +7,7 @@
         {%- if section_or_requirement.is_requirement %}
           {%- set requirement = section_or_requirement %}
           {%- if section_or_requirement.is_inline_requirement() %}
-            {% include "_shared/requirement.jinja.html" %}
+            {% include "components/requirement/index.jinja" %}
           {%- else %}
             {% include "_shared/requirement_table.jinja.html" %}
           {%- endif %}

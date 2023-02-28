@@ -10,7 +10,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test09DeleteSection(BaseCase):
+class Test_UC08_T02_EditSection(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -31,20 +31,28 @@ class Test09DeleteSection(BaseCase):
 
         self.click_xpath('//*[@data-testid="tree-file-link"]')
 
-        self.assert_text_visible("First section")
+        self.assert_text("Hello world!")
 
         self.hover_and_click(
             hover_selector="(//sdoc-node)[2]",
             click_selector=(
-                '(//sdoc-node)[2]//*[@data-testid="node-delete-action"]'
+                '(//sdoc-node)[2]//*[@data-testid="node-edit-action"]'
             ),
             hover_by=By.XPATH,
             click_by=By.XPATH,
         )
 
-        self.assert_text_not_visible("First section")
+        self.type("#section_title", "Modified title")
+        self.type("#section_content", "Modified statement.")
 
-        # TODO: Assert that the TOC is also updated.
+        self.click_xpath('//*[@data-testid="form-submit-action"]')
+
+        self.assert_text("1. Modified title")
+        self.assert_text("Modified statement.")
+
+        self.assert_element(
+            "//turbo-frame[@id='frame-toc']//*[contains(., 'Modified title')]"
+        )
 
         assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))
         assert filecmp.cmp(

@@ -1,4 +1,3 @@
-import filecmp
 import os
 import shutil
 
@@ -10,7 +9,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test08EditSection(BaseCase):
+class Test_UC08_G1_T02_EditSectionStatementMalformedRST(BaseCase):
     def test_01(self):
         path_to_sandbox = os.path.join(
             path_to_this_test_file_folder, ".sandbox"
@@ -42,22 +41,19 @@ class Test08EditSection(BaseCase):
             click_by=By.XPATH,
         )
 
-        self.type("#section_title", "Modified title")
-        self.type("#section_content", "Modified statement.")
+        self.type(
+            "#section_content",
+            """
+- Broken RST markup
+
+  - AAA
+  ---
+""".strip(),
+        )
 
         self.click_xpath('//*[@data-testid="form-submit-action"]')
 
-        self.assert_text("1. Modified title")
-        self.assert_text("Modified statement.")
-
-        self.assert_element(
-            "//turbo-frame[@id='frame-toc']//*[contains(., 'Modified title')]"
-        )
-
-        assert os.path.exists(os.path.join(path_to_sandbox, "document.sdoc"))
-        assert filecmp.cmp(
-            os.path.join(path_to_sandbox, "document.sdoc"),
-            os.path.join(
-                path_to_this_test_file_folder, "document.expected.sdoc"
-            ),
+        self.assert_text(
+            "RST markup syntax error on line 4: "
+            "Bullet list ends without a blank line; unexpected unindent."
         )

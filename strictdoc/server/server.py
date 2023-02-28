@@ -61,6 +61,7 @@ def run_strictdoc_server(
         reload_includes=[
             "*.py",
             "*.html",
+            "*.jinja",
             "*.css",
             "*.js",
         ],

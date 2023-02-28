@@ -11,22 +11,27 @@
     {%- endif %}
   >
 
-    <sdoc-requirement>
+    {# anchor #}
+    {%- if anchor is defined -%}
+      <sdoc-anchor id="{{ anchor }}"></sdoc-anchor>
+    {%- endif -%}
 
-      {# anchor #}
-      {%- if anchor is defined -%}
-        <div data-role='anchor' id="{{ anchor }}"></div>
-      {%- endif -%}
+    {#  sdoc-requirement:
+        attribute requirement-view can be: [flow, columns, rows].
+        Without this attribute sdoc-requirement will look like a 'flow' view.
+        If the container becomes smaller than the set parameter (300px default),
+        the 'columns' view degrades to 'rows'.
+    #}
+    <sdoc-requirement requirement-view="columns">
 
       {# title #}
       {%- if requirement.reserved_title %}
       {% with node=requirement %}
 
-        <sdoc-requirement-title
-          data-level="{{ node.context.title_number_string }}"
-        >
+        <sdoc-requirement-title>
+          {# use data-level only for content: #}
           {%- if node.context.title_number_string %}
-          {{ node.context.title_number_string }}.&nbsp;
+            {{ node.context.title_number_string }}.&nbsp;
           {%- endif -%}
           {%- set title = node.reserved_title -%}
           {%- if title is not none -%}
@@ -40,46 +45,50 @@
       {# meta #}
 
       {%- if requirement.has_meta -%}
-        <sdoc-requirement-meta>
-          <dl class="requirement__meta">
-            {% for meta_field in requirement.enumerate_meta_fields(skip_multi_lines=True) %}
-            <dt><i>{{meta_field[0]}}</i></dt>
-            <dd>{{ meta_field[1] }}</dd>
-            {% endfor %}
-          </dl>
-        </sdoc-requirement-meta>
+        {% for meta_field in requirement.enumerate_meta_fields(skip_multi_lines=True) %}
+          <sdoc-requirement-field-label>{{meta_field[0]}}:</sdoc-requirement-field-label>
+          <sdoc-requirement-field data-field-type="singleline" data-field-label="{{meta_field[0]}}">
+            {{ meta_field[1] }}
+          </sdoc-requirement-field>
+        {% endfor %}
       {%- endif %}
 
       {# links #}
 
       {%- if traceability_index.has_parent_requirements(requirement) %}
-        <ul class="requirement__link">
-          {%- for requirement in traceability_index.get_parent_requirements(requirement) %}
-          <li>
-            <a data-turbo="false" class="requirement__link-parent" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
-              {%- if requirement.reserved_uid %}
-              <span class="requirement__parent-uid">{{ requirement.reserved_uid }}</span>
-              {%- endif %}
-              {{ requirement.reserved_title if requirement.reserved_title else "" }}
-            </a>
-          </li>
-          {%- endfor %}
-        </ul>
+        <sdoc-requirement-field-label>parent links:</sdoc-requirement-field-label>
+        <sdoc-requirement-field data-field-label="parent links">
+          <ul class="requirement__link">
+            {%- for requirement in traceability_index.get_parent_requirements(requirement) %}
+            <li>
+              <a data-turbo="false" class="requirement__link-parent" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
+                {%- if requirement.reserved_uid %}
+                <span class="requirement__parent-uid">{{ requirement.reserved_uid }}</span>
+                {%- endif %}
+                {{ requirement.reserved_title if requirement.reserved_title else "" }}
+              </a>
+            </li>
+            {%- endfor %}
+          </ul>
+        </sdoc-requirement-field>
       {%- endif %}
 
       {%- if traceability_index.has_children_requirements(requirement) %}
-        <ul class="requirement__link">
-          {%- for requirement in traceability_index.get_children_requirements(requirement) %}
-          <li>
-            <a data-turbo="false" class="requirement__link-child" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
-              {%- if requirement.reserved_uid %}
-              <span class="requirement__child-uid">{{ requirement.reserved_uid }}</span>
-              {%- endif %}
-              {{ requirement.reserved_title if requirement.reserved_title else "" }}
-            </a>
-          </li>
-          {%- endfor %}
-        </ul>
+        <sdoc-requirement-field-label>child links:</sdoc-requirement-field-label>
+        <sdoc-requirement-field data-field-label="child links">
+          <ul class="requirement__link">
+            {%- for requirement in traceability_index.get_children_requirements(requirement) %}
+            <li>
+              <a data-turbo="false" class="requirement__link-child" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
+                {%- if requirement.reserved_uid %}
+                <span class="requirement__child-uid">{{ requirement.reserved_uid }}</span>
+                {%- endif %}
+                {{ requirement.reserved_title if requirement.reserved_title else "" }}
+              </a>
+            </li>
+            {%- endfor %}
+          </ul>
+        </sdoc-requirement-field>
       {%- endif %}
 
       {# files #}
@@ -87,51 +96,57 @@
       {%- if config.experimental_enable_file_traceability -%}
         {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
         {%- if requirement_file_links %}
-          <ul class="requirement__link">
-            {%- for link, opt_ranges in requirement_file_links %}
-              {%- if opt_ranges -%}
-                {%- for range in opt_ranges %}
+          <sdoc-requirement-field-label>files:</sdoc-requirement-field-label>
+          <sdoc-requirement-field data-field-label="files">
+            <ul class="requirement__link">
+              {%- for link, opt_ranges in requirement_file_links %}
+                {%- if opt_ranges -%}
+                  {%- for range in opt_ranges %}
+                    <li>
+                      <a data-turbo="false" class="requirement__link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
+                        {{ link.file_entry.file_path }}, <i>lines: {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }}</i>
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                {%- else -%}
                   <li>
-                    <a data-turbo="false" class="requirement__link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
-                      {{ link.file_entry.file_path }}, <i>lines: {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }}</i>
+                    <a data-turbo="false" class="requirement__link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}">
+                      {{ link.file_entry.file_path }}
                     </a>
                   </li>
-                {%- endfor -%}
-              {%- else -%}
-                <li>
-                  <a data-turbo="false" class="requirement__link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}">
-                    {{ link.file_entry.file_path }}
-                  </a>
-                </li>
-              {%- endif -%}
-            {%- endfor -%}
-          </ul>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          </sdoc-requirement-field>
         {%- endif %}
       {%- endif %}
 
       {# statement #}
 
       {%- if requirement.reserved_statement -%}
-        <sdoc-requirement-statement>
+        <sdoc-requirement-field-label>statement:</sdoc-requirement-field-label>
+        <sdoc-requirement-field data-field-label="statement">
           {{ renderer.render_requirement_statement(requirement) }}
-        </sdoc-requirement-statement>
+        </sdoc-requirement-field>
       {%- endif -%}
 
       {# rationale #}
 
       {%- if requirement.rationale -%}
-        <sdoc-requirement-rationale class="requirement__rationale">
+        <sdoc-requirement-field-label>rationale:</sdoc-requirement-field-label>
+        <sdoc-requirement-field data-field-label="rationale">
           {{ renderer.render_requirement_rationale(requirement) }}
-        </sdoc-requirement-rationale>
+        </sdoc-requirement-field>
       {%- endif -%}
 
       {# comments #}
 
       {%- if requirement.comments %}
         {%- for comment in requirement.comments %}
-          <sdoc-requirement-comment class="requirement__comment">
+          <sdoc-requirement-field-label>comment:</sdoc-requirement-field-label>
+          <sdoc-requirement-field data-field-label="comment">
             {{ renderer.render_comment(comment) }}
-          </sdoc-requirement-comment>
+          </sdoc-requirement-field>
         {%- endfor %}
       {%- endif %}
 
@@ -139,16 +154,12 @@
 
       {%- if requirement.has_meta %}
         {% for meta_field in requirement.enumerate_meta_fields(skip_single_lines=True) %}
-          <div class="requirement__meta_multiline_label">
-            {{meta_field[0]}}:
-          </div>
-          <sdoc-requirement-field class="requirement__meta_multiline">
-            {{ renderer.render_meta_value(meta_field[1]) }}
+          <sdoc-requirement-field-label>{{meta_field[0]}}:</sdoc-requirement-field-label>
+          <sdoc-requirement-field data-field-label="{{meta_field[0]}}">
+            {{ meta_field[1] }}
           </sdoc-requirement-field>
         {%- endfor %}
       {%- endif %}
-
-      <sdoc-requirement-row>just test</sdoc-requirement-row>
 
     </sdoc-requirement>
 

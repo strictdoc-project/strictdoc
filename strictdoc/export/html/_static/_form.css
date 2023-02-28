@@ -73,8 +73,11 @@ sdoc-form {
   padding-bottom: calc(var(--base-rhythm)*2);
   background-color: var(--color-bg-contrast);
   border-radius: 4px;
-  box-shadow: 0 0 0 2px var(--color-fg-accent);
+  /* box-shadow: 0 0 0 2px var(--color-fg-accent); */
   z-index: 11;
+
+  border: 1px solid var(--color-fg-accent);
+  /* outline: 8px solid var(--color-bg-accent); */
 }
 
 sdoc-form-header {

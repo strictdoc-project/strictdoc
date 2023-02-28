@@ -72,6 +72,7 @@
   padding: var(--base-gap);
   position: relative;
   overflow: auto;
+  scroll-behavior: smooth;
 
   background-color: var(--color-bg-main);
 }

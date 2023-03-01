@@ -1682,7 +1682,6 @@ def create_main_router(
         form_object = DocumentGrammarFormObject.create_from_document(
             document=document
         )
-
         template = env.get_template(
             "actions/"
             "document/"

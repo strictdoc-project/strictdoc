@@ -73,10 +73,18 @@ class DocumentGrammarFormObject(ErrorObject):
         *, document_mid: str, request_form_data: FormData
     ) -> "DocumentGrammarFormObject":
         grammar_fields: Dict[str, List[str]] = defaultdict(list)
+
+        # For now, the convention is that the new fields have empty
+        # brackets, e.g., ('document_grammar[]', 'CUSTOM_FIELD_1').
+        # The existing fields are:
+        # ('document_grammar[RATIONALE]', 'RATIONALE')  # noqa: ERA001
+        # This structure will be changed when not just field names, but also
+        # their options will be passed to this parser.
         for field_name, field_value in request_form_data.multi_items():
+            assert isinstance(field_value, str)
             result = re.search(r"^document_grammar\[(.*)]$", field_name)
             if result is not None:
-                grammar_fields[result.group(1)].append(field_value)
+                grammar_fields[field_value].append(field_value)
 
         form_object_fields = []
         for grammar_field_name in grammar_fields:

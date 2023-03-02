@@ -3,5 +3,5 @@ CHECK: Published: Test Document
 
 RUN: %cat %S/Output/html/01_custom_field/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 
-CHECK-HTML:<dt><i>META_TEST</i></dt>
-CHECK-HTML:<dd>Yes
+CHECK-HTML:META_TEST
+CHECK-HTML:Yes

@@ -177,14 +177,13 @@ sdoc-requirement-field-label {
 
 /* * */
 
-sdoc-anchor,
-[data-role="anchor"] {
+sdoc-anchor {
   /* for Fixed Headers + Section Anchors */
   scroll-snap-margin-top: calc(var(--base-gap) + var(--base-padding));
   scroll-margin-top:      calc(var(--base-gap) + var(--base-padding));
 }
 
 sdoc-anchor:target + sdoc-requirement sdoc-requirement-title,
-[data-role="anchor"]:target + .requirement__title {
+sdoc-anchor:target + .requirement__title {
   background-color: var(--color-highlight);
 }

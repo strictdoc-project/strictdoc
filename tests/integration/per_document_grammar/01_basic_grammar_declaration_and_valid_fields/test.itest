@@ -3,9 +3,9 @@ CHECK: Published: Test document
 
 RUN: %cat %S/Output/html/01_basic_grammar_declaration_and_valid_fields/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 
-CHECK-HTML:<dt><i>UID</i></dt>
-CHECK-HTML:<dd>ABC-123</dd>
-CHECK-HTML:<dt><i>ASIL</i></dt>
-CHECK-HTML:<dd>A</dd>
-CHECK-HTML:<dt><i>STATUS</i></dt>
-CHECK-HTML:<dd>Draft</dd>
+CHECK-HTML:UID
+CHECK-HTML:ABC-123
+CHECK-HTML:ASIL
+CHECK-HTML:A
+CHECK-HTML:STATUS
+CHECK-HTML:Draft

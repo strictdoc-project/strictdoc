@@ -24,25 +24,21 @@
         the 'columns' view degrades to 'zebra'.
     #}
     <sdoc-requirement
-      requirement-view="{{requirement_style_mode}}"
+      requirement-view="{{ requirement_style_mode }}"
+      data-level="{{ requirement.context.title_number_string }}"
     >
 
       {# title #}
       {%- if requirement.reserved_title %}
-      {% with node=requirement %}
-
         <sdoc-requirement-title>
-          {# use data-level only for content: #}
-          {%- if node.context.title_number_string %}
-            {{ node.context.title_number_string }}.&nbsp;
+          {%- if requirement.context.title_number_string %}
+            {{ requirement.context.title_number_string }}.&nbsp;
           {%- endif -%}
-          {%- set title = node.reserved_title -%}
+          {%- set title = requirement.reserved_title -%}
           {%- if title is not none -%}
             {{ title }}
           {%- endif -%}
         </sdoc-requirement-title>
-
-      {%- endwith %}
       {%- endif %}
 
       {# meta #}

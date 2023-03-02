@@ -11,9 +11,9 @@ CHECK-HTML:<a href="#2-Second-section-numbered-"{{.*}}>
 CHECK-HTML:<a href="#2.1-REQ-003"{{.*}}>
 
 
-CHECK-HTML:<div data-role='anchor' id="1-First-section-numbered-"{{.*}}></div>
-CHECK-HTML:<div data-role='anchor' id="-Second-section-unnumbered-"{{.*}}></div>
-CHECK-HTML:<div data-role='anchor' id="-REQ-001"{{.*}}></div>
-CHECK-HTML:<div data-role='anchor' id="-REQ-002"{{.*}}></div>
-CHECK-HTML:<div data-role='anchor' id="2-Second-section-numbered-"{{.*}}></div>
-CHECK-HTML:<div data-role='anchor' id="2.1-REQ-003"{{.*}}></div>
+CHECK-HTML:<sdoc-anchor id="1-First-section-numbered-"{{.*}}></sdoc-anchor>
+CHECK-HTML:<sdoc-anchor id="-Second-section-unnumbered-"{{.*}}></sdoc-anchor>
+CHECK-HTML:<sdoc-anchor id="-REQ-001"{{.*}}></sdoc-anchor>
+CHECK-HTML:<sdoc-anchor id="-REQ-002"{{.*}}></sdoc-anchor>
+CHECK-HTML:<sdoc-anchor id="2-Second-section-numbered-"{{.*}}></sdoc-anchor>
+CHECK-HTML:<sdoc-anchor id="2.1-REQ-003"{{.*}}></sdoc-anchor>

@@ -163,13 +163,13 @@ sdoc-requirement[requirement-view="rows"]
     background-color: var(--requirement-bg-light-color);
   }
 
-/* requirement-view="flow" */
+/* requirement-view="block" */
 
-sdoc-requirement[requirement-view="flow"] {
+sdoc-requirement[requirement-view="block"] {
   grid-template-columns: 1fr;
 }
 
-sdoc-requirement[requirement-view="flow"]
+sdoc-requirement[requirement-view="block"]
 sdoc-requirement-field-label {
   background-color: #fff;
   padding-bottom: 0;

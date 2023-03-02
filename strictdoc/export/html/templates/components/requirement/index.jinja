@@ -17,12 +17,12 @@
     {%- endif -%}
 
     {#  sdoc-requirement:
-        attribute requirement-view can be: [flow, columns, rows].
-        Without this attribute sdoc-requirement will look like a 'flow' view.
+        attribute requirement-view can be: [block, columns, rows].
+        Without this attribute sdoc-requirement will look like a 'block' view.
         If the container becomes smaller than the set parameter (300px default),
         the 'columns' view degrades to 'rows'.
     #}
-    <sdoc-requirement requirement-view="columns">
+    <sdoc-requirement requirement-view="block">
 
       {# title #}
       {%- if requirement.reserved_title %}

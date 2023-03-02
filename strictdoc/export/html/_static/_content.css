@@ -1,3 +1,7 @@
+.content {
+  min-width: calc(var(--card-width) + calc(var(--base-padding)*4));
+}
+
 [data-viewtype="document"] .content {
   display: block;
   max-width: 900px;

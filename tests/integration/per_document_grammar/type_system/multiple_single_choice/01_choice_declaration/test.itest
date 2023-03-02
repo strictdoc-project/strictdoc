@@ -2,5 +2,5 @@ RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
 CHECK: Published: Test document
 
 RUN: %cat %S/Output/html/01_choice_declaration/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
-CHECK-HTML:<dt><i>CHOICE_FIELD</i></dt>
-CHECK-HTML:<dd>A, B</dd>
+CHECK-HTML:CHOICE_FIELD
+CHECK-HTML:A, B

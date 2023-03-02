@@ -24,7 +24,7 @@ class Test_UC07_G1_T03_RemoveLink(BaseCase):
             # Make sure that the normal (not table-based) requirement is
             # rendered.
             self.assert_element(
-                '//sdoc-node[@data-testid="node-requirement-normal"]',
+                '//sdoc-node[@data-testid="node-requirement-simple"]',
                 by=By.XPATH,
             )
 

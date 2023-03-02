@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@400;700&family=Noto+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@400;500;600;700&family=Noto+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
 
 /* .test-content {} */
 
@@ -62,6 +62,7 @@
   --traceability-arrow: 1.25rem;
 
   --code-border-color: var(--color-border);
+  --base-font-family: 'Noto Sans', sans-serif;
   --code-font-family: 'Noto Sans Mono', consolas, monaco, monospace;
   --code-font-size: .85em;
 
@@ -75,7 +76,7 @@ body {
   margin: 0;
   padding: 0;
 
-  font-family: 'Noto Sans', sans-serif;
+  font-family: var(--base-font-family);
   font-size: var(--base-font-size);
   line-height: 1.6;
   color: var(--color-fg-main);

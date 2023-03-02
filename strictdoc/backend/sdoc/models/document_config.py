@@ -41,20 +41,24 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         self.classification: Optional[str] = classification
         self.markup = markup
         self.auto_levels: bool = auto_levels is None or auto_levels == "On"
+        # Possible requirement styles:
+        # Simple, Table, Rows
         self.requirement_style: Optional[str] = requirement_style
         self.requirement_in_toc: Optional[str] = requirement_in_toc
         self.ng_auto_levels_specified = auto_levels is not None
 
-    def is_inline_requirements(self):
-        return (
-            self.requirement_style is None or self.requirement_style == "Inline"
-        )
-
-    def is_table_requirements(self):
-        return (
-            self.requirement_style is not None
-            and self.requirement_style == "Table"
-        )
+    def get_requirement_style_mode(self):
+        if (
+            self.requirement_style is None
+            or self.requirement_style == "Inline"
+            or self.requirement_style == "Simple"
+        ):
+            return "simple"
+        if self.requirement_style == "Table":
+            return "table"
+        if self.requirement_style == "Zebra":
+            return "zebra"
+        raise NotImplementedError(self.requirement_style)
 
     def is_requirement_in_toc(self):
         return (

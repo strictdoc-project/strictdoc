@@ -1085,13 +1085,9 @@ def create_main_router(
 
         output = ""
         for requirement in action_object.this_document_requirements_to_update:
-            partial = (
-                "stream_update_table_requirement.jinja.html"
-                if document.config.is_table_requirements()
-                else "stream_update_requirement.jinja.html"
-            )
             template = env.get_template(
-                f"actions/document/edit_requirement/{partial}"
+                "actions/document/edit_requirement/"
+                "stream_update_requirement.jinja.html"
             )
             output += template.render(
                 requirement=requirement,

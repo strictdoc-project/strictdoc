@@ -187,17 +187,22 @@ sdoc-contenteditable[contenteditable="false"] {
   color: var(--color-fg-secondary);
 }
 
+.monospace {
+  font-family: var(--code-font-family);
+}
+
 /* field name // before */
 
 sdoc-contenteditable::before {
   content: attr(data-field-label);
   position: absolute;
-  font-size: 10px;
-  font-weight: 600;
+  font-family: var(--code-font-family);
+  font-size: var(--font-size-xsm);
+  font-weight: 500;
+  /* letter-spacing: 1px; */
   color: var(--color-placeholder);
-  letter-spacing: 1px;
   text-transform: uppercase;
-  top: calc(var(--base-rhythm)*(-2));
+  top: calc(var(--base-rhythm)*(-2.25));
   transition: color .2s ease;
 }
 

@@ -3,6 +3,7 @@
     {# Reserved field: #}
 
     {%- with
+      field_class_name="monospace",
       field_type="singleline",
       data_controller="deletable_field movable_field ",
       field_name=field.field_name,
@@ -20,6 +21,7 @@
       {# Custom field: #}
 
     {%- with
+      field_class_name="monospace",
       field_type="singleline",
       data_controller="deletable_field movable_field",
       field_actions={ 'delete':true, 'move_up':true, 'move_down':true },

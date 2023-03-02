@@ -234,9 +234,9 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         ), "A valid requirement must always have a reference to the document."
         return document
 
-    def is_inline_requirement(self):
+    def get_requirement_style_mode(self):
         return (
-            self.ng_document_reference.get_document().config.is_inline_requirements()  # noqa: E501
+            self.ng_document_reference.get_document().config.get_requirement_style_mode()  # noqa: E501
         )
 
     def has_requirement_references(self, ref_type):

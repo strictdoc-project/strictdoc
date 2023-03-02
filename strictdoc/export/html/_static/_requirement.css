@@ -81,27 +81,27 @@ sdoc-requirement-field ul {
   margin-bottom: 0 !important;
 }
 
-/* requirement-view="columns" */
+/* requirement-view="table" */
 
-sdoc-requirement[requirement-view="columns"] {
+sdoc-requirement[requirement-view="table"] {
   /* grid: */
   grid-template-columns: minmax(80px, min-content) 1fr;
   /* border: */
   background-color: var(--requirement-border-color);
 }
 
-sdoc-requirement[requirement-view="columns"]
+sdoc-requirement[requirement-view="table"]
   sdoc-requirement-title {
     grid-column: 1 / 3;
   }
 
-sdoc-requirement[requirement-view="columns"]
+sdoc-requirement[requirement-view="table"]
   sdoc-requirement-field-label {
     grid-column: 1 / 2;
     background-color: var(--requirement-bg-dark-color);
   }
 
-sdoc-requirement[requirement-view="columns"]
+sdoc-requirement[requirement-view="table"]
   sdoc-requirement-field {
     grid-column: 2 / 3;
     background-color: var(--requirement-bg-light-color);
@@ -122,18 +122,18 @@ sdoc-node {
 /* calc(var(--card-width) + calc(var(--base-padding)*4)) */
 /* 300 + 16*4 = 364 */
 @container node (width < 400px) {
-  sdoc-requirement[requirement-view="columns"] {
+  sdoc-requirement[requirement-view="table"] {
     /* removes columns: */
     grid-template-columns: 1fr;
     /* removes inner border: */
     background-color: var(--requirement-bg-light-color);
   }
 
-  sdoc-requirement[requirement-view="columns"]
+  sdoc-requirement[requirement-view="table"]
     sdoc-requirement-title,
-  sdoc-requirement[requirement-view="columns"]
+  sdoc-requirement[requirement-view="table"]
     sdoc-requirement-field-label,
-  sdoc-requirement[requirement-view="columns"]
+  sdoc-requirement[requirement-view="table"]
     sdoc-requirement-field {
       /* removes columns: */
       grid-column: unset;
@@ -147,29 +147,29 @@ sdoc-node {
   }
 }
 
-/* requirement-view="rows" */
+/* requirement-view="zebra" */
 
-sdoc-requirement[requirement-view="rows"] {
+sdoc-requirement[requirement-view="zebra"] {
   grid-template-columns: 1fr;
 }
 
-sdoc-requirement[requirement-view="rows"]
+sdoc-requirement[requirement-view="zebra"]
   sdoc-requirement-field-label {
     background-color: var(--requirement-bg-dark-color);
   }
 
-sdoc-requirement[requirement-view="rows"]
+sdoc-requirement[requirement-view="zebra"]
   sdoc-requirement-field {
     background-color: var(--requirement-bg-light-color);
   }
 
-/* requirement-view="block" */
+/* requirement-view="simple" */
 
-sdoc-requirement[requirement-view="block"] {
+sdoc-requirement[requirement-view="simple"] {
   grid-template-columns: 1fr;
 }
 
-sdoc-requirement[requirement-view="block"]
+sdoc-requirement[requirement-view="simple"]
 sdoc-requirement-field-label {
   background-color: #fff;
   padding-bottom: 0;

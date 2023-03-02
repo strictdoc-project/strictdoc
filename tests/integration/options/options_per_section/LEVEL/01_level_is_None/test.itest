@@ -7,11 +7,11 @@ CHECK-HTML:<a href="#1-Section-1"{{.*}}>
 CHECK-HTML:<a href="#-Out-of-band-Section"{{.*}}>
 CHECK-HTML:<a href="#2-Section-2"{{.*}}>
 
-CHECK-HTML:<div data-role='anchor' id="1-Section-1"{{.*}}></div>
-CHECK-HTML:<div data-role='anchor' id="-Out-of-band-Section"{{.*}}></div>
-CHECK-HTML:<div data-role='anchor' id="-Out-of-band-Subsection"{{.*}}></div>
-CHECK-HTML:<div data-role='anchor' id="-Out-of-band-Subsubsection"{{.*}}></div>
-CHECK-HTML:<div data-role='anchor' id="2-Section-2"{{.*}}></div>
-CHECK-HTML:<div data-role='anchor' id="-Out-of-band-Section"{{.*}}></div>
-CHECK-HTML:<div data-role='anchor' id="2.1-Section-2-1"{{.*}}></div>
-CHECK-HTML:<div data-role='anchor' id="2.2-Section-2-2"{{.*}}></div>
+CHECK-HTML:<sdoc-anchor id="1-Section-1"{{.*}}></sdoc-anchor>
+CHECK-HTML:<sdoc-anchor id="-Out-of-band-Section"{{.*}}></sdoc-anchor>
+CHECK-HTML:<sdoc-anchor id="-Out-of-band-Subsection"{{.*}}></sdoc-anchor>
+CHECK-HTML:<sdoc-anchor id="-Out-of-band-Subsubsection"{{.*}}></sdoc-anchor>
+CHECK-HTML:<sdoc-anchor id="2-Section-2"{{.*}}></sdoc-anchor>
+CHECK-HTML:<sdoc-anchor id="-Out-of-band-Section"{{.*}}></sdoc-anchor>
+CHECK-HTML:<sdoc-anchor id="2.1-Section-2-1"{{.*}}></sdoc-anchor>
+CHECK-HTML:<sdoc-anchor id="2.2-Section-2-2"{{.*}}></sdoc-anchor>

@@ -19,3 +19,15 @@ RUN: %html_markup_validator "%S/Output/html/docs/strictdoc_01_user_guide.html"
 RUN: %html_markup_validator "%S/Output/html/docs/strictdoc_01_user_guide-TABLE.html"
 RUN: %html_markup_validator "%S/Output/html/docs/strictdoc_01_user_guide-TRACE.html"
 RUN: %html_markup_validator "%S/Output/html/docs/strictdoc_01_user_guide-DEEP-TRACE.html"
+
+TODO: etree.parse fails on the "&nbsp;" surprisingly. Fix it later :(
+RUN: sed -i.bak 's/\&nbsp;/ /g' "%S/Output/html/docs/strictdoc_20_requirements.html"
+RUN: sed -i.bak 's/\&nbsp;/ /g' "%S/Output/html/docs/strictdoc_20_requirements-TABLE.html"
+RUN: sed -i.bak 's/\&nbsp;/ /g' "%S/Output/html/docs/strictdoc_20_requirements-TRACE.html"
+RUN: sed -i.bak 's/\&nbsp;/ /g' "%S/Output/html/docs/strictdoc_20_requirements-DEEP-TRACE.html"
+
+RUN: %html_markup_validator "%S/Output/html/index.html"
+RUN: %html_markup_validator "%S/Output/html/docs/strictdoc_20_requirements.html"
+RUN: %html_markup_validator "%S/Output/html/docs/strictdoc_20_requirements-TABLE.html"
+RUN: %html_markup_validator "%S/Output/html/docs/strictdoc_20_requirements-TRACE.html"
+RUN: %html_markup_validator "%S/Output/html/docs/strictdoc_20_requirements-DEEP-TRACE.html"

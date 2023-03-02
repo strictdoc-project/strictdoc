@@ -6,6 +6,7 @@ Hello world!
 [/FREETEXT]
 
 [REQUIREMENT]
+UID: Requirement UID
 TITLE: Requirement title
 STATEMENT: >>>
 Requirement statement.

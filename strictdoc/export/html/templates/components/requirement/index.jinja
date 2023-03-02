@@ -1,14 +1,12 @@
-{# variables:
-requirement_mode #}
-
 <turbo-frame id="article-{{requirement.node_id}}">
 
 {%- set anchor=link_renderer.render_local_anchor(requirement) -%}
+{%- set requirement_style_mode=requirement.get_requirement_style_mode() -%}
 
   <sdoc-node
     node-role="requirement"
     data-editable_node="on"
-    data-testid="node-requirement-normal"
+    data-testid="node-requirement-{{requirement_style_mode}}"
     {%- if requirement.reserved_status %}
     data-status='{{ requirement.reserved_status.lower() }}'
     {%- endif %}
@@ -25,7 +23,9 @@ requirement_mode #}
         If the container becomes smaller than the set parameter (300px default),
         the 'columns' view degrades to 'zebra'.
     #}
-    <sdoc-requirement requirement-view="{{requirement_mode}}">
+    <sdoc-requirement
+      requirement-view="{{requirement_style_mode}}"
+    >
 
       {# title #}
       {%- if requirement.reserved_title %}

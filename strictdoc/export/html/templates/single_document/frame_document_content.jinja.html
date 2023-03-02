@@ -7,9 +7,7 @@
         {%- if section_or_requirement.is_requirement %}
           {%- set requirement = section_or_requirement %}
           {%- set requirement_mode = requirement.get_requirement_style_mode() %}
-          {%- with requirement_mode = requirement_mode %}
             {% include "components/requirement/index.jinja" %}
-          {%- endwith %}
 
         {%- elif section_or_requirement.is_section %}
           {%- set section = section_or_requirement %}

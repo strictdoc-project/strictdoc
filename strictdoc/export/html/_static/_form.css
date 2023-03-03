@@ -191,6 +191,11 @@ sdoc-contenteditable[contenteditable="false"] {
   font-family: var(--code-font-family);
 }
 
+.form__requirement_title {
+  font-size: 1.125em;
+  font-weight: 700;
+}
+
 /* field name // before */
 
 sdoc-contenteditable::before {
@@ -234,42 +239,4 @@ sdoc-contenteditable:focus::before {
   /* This is to prevent the field from shifting when the second line appears while typing: */
   vertical-align: top;
   width: 100%;
-}
-
-
-
-
-
-/* TODO: delete class: */
-.std-form {
-  position: relative;
-}
-
-.std-form-row {
-  background-color: var(--color-bg-field), white;
-  padding: var(--base-padding);
-  margin-bottom: calc(var(--base-padding)*0.5);
-}
-
-
-
-.std-form-footer {
-  display: flex;
-  margin-top: 16px;
-}
-
-.std-form-fileld-title {
-  font-size: calc(var(--base-font-size)*1.2);
-  font-weight: bold;
-}
-
-.std-form-field-rst {
-  font-family: var(--code-font-family);
-  font-size: 0.9em;
-}
-
-.std-form-error {
-  color: red;
-  font-size: 12px;
-  margin-top: calc(var(--base-padding)*0.5);
 }

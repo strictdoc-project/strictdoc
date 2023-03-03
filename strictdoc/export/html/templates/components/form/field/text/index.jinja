@@ -55,7 +55,7 @@
     {%- endif -%}
   </sdoc-form-row-aside>
 
-  <sdoc-form-field>
+  <sdoc-form-row-main>
     {%- if errors|length > 0 -%}
       <sdoc-form-error>
       {%- for error in errors -%}
@@ -64,45 +64,47 @@
       </sdoc-form-error>
     {%- endif -%}
 
-    <sdoc-contenteditable
-      data-controller="editablefield"
-      role="textbox"
-      data-field-type="{{ field_type }}"
-      {%- if field_editable is defined and not field_editable -%}
-        contenteditable="false"
-      {%- else -%}
-        contenteditable="true"
-      {%- endif -%}
-      id="{{ field_input_name }}"
-      placeholder="Enter {{ field_name|default('FIELD_NAME', true) }} here..."
-      data-field-label="{{ field_label if field_label is defined else field_name }}"
-      {%- if field_class_name is defined -%}
-        class="{{ field_class_name }}"
-      {%- endif -%}
-      data-testid="form-{{ field_input_name }}-field"
-    >
-      {%- if true -%}
-        {{ field_value }}
-      {%- endif -%}
-    </sdoc-contenteditable>
-
-    {%- if field_type == "parent" -%}
-      <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}"/>
-    {%- endif -%}
-
-    {%- if field_type == "singleline" -%}
-      <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}"/>
-    {%- endif -%}
-
-    {%- if field_type == "multiline" -%}
-      <textarea hidden name="{{ field_input_name }}">
-        {%- if true -%}
-        {{ field_value }}
+    <sdoc-form-field>
+      <sdoc-contenteditable
+        data-controller="editablefield"
+        role="textbox"
+        data-field-type="{{ field_type }}"
+        {%- if field_editable is defined and not field_editable -%}
+          contenteditable="false"
+        {%- else -%}
+          contenteditable="true"
         {%- endif -%}
-      </textarea>
-    {%- endif -%}
-  </sdoc-form-field>
+        id="{{ field_input_name }}"
+        placeholder="Enter {{ field_name|default('FIELD_NAME', true) }} here..."
+        data-field-label="{{ field_label if field_label is defined else field_name }}"
+        {%- if field_class_name is defined -%}
+          class="{{ field_class_name }}"
+        {%- endif -%}
+        data-testid="form-{{ field_input_name }}-field"
+      >
+        {%- if true -%}
+          {{ field_value }}
+        {%- endif -%}
+      </sdoc-contenteditable>
 
+      {%- if field_type == "parent" -%}
+        <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}"/>
+      {%- endif -%}
+
+      {%- if field_type == "singleline" -%}
+        <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}"/>
+      {%- endif -%}
+
+      {%- if field_type == "multiline" -%}
+        <textarea hidden name="{{ field_input_name }}">
+          {%- if true -%}
+          {{ field_value }}
+          {%- endif -%}
+        </textarea>
+      {%- endif -%}
+    </sdoc-form-field>
+
+  </sdoc-form-row-main>
   <sdoc-form-row-aside>
     {%- if field_actions is defined -%}
       {% if field_actions.delete is defined and field_actions.delete is sameas true  -%}

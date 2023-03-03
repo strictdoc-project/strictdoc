@@ -1,0 +1,56 @@
+NOTICE file for the StrictDoc project, revision 2023-03-04
+==========================================================
+
+Purpose
+-------
+
+StrictDoc is open-source software for technical documentation and requirements management.
+
+Origin
+------
+
+This project is developed by Stanislav Pankevich and Maryna Balioura.
+For more information, please visit https://github.com/strictdoc-project/strictdoc.
+
+License
+-------
+
+This project is licensed under the Apache License, Version 2.0. Please see the
+LICENSE file for more information.
+
+Contributors
+------------
+
+Please visit: https://strictdoc.readthedocs.io/en/latest/strictdoc_30_credits.html.
+
+Third-party libraries and tools used in this project
+----------------------------------------------------
+
+- textX, MIT License, https://github.com/textX/textX/blob/master/LICENSE.txt
+- Sphinx, The 2-clause BSD License, https://github.com/sphinx-doc/sphinx/blob/master/LICENSE
+- Docutils, Public Domain Dedication with exceptions, https://docutils.sourceforge.io/COPYING.html
+- reqif, Apache 2 License, https://github.com/strictdoc-project/reqif/blob/main/LICENSE
+- lxml, The 3-Clause BSD License, https://github.com/lxml/lxml/blob/master/doc/licenses/BSD.txt
+- FastAPI, MIT License, https://github.com/tiangolo/fastapi/blob/master/LICENSE
+- Turbo.js, MIT License, https://github.com/hotwired/turbo/blob/main/MIT-LICENSE
+- Stimulus.js, MIT License, https://github.com/hotwired/stimulus/blob/main/LICENSE.md
+- Jinja, BSD 3-Clause "New" or "Revised" License, https://github.com/pallets/jinja/blob/main/LICENSE.rst
+- Pygments, BSD 2-Clause "Simplified" License, https://github.com/pygments/pygments/blob/master/LICENSE
+- XlsxWriter, BSD 2-Clause "Simplified" License, https://github.com/jmcnamara/XlsxWriter/blob/main/LICENSE.txt
+- xlrd, The 3-Clause BSD License and another license for earlier work, https://github.com/python-excel/xlrd/blob/master/LICENSE
+- python-datauri, The Unlicense, https://github.com/fcurella/python-datauri/blob/master/LICENSE
+
+Please also visit: https://strictdoc.readthedocs.io/en/latest/strictdoc_30_credits.html.
+
+Contact
+-------
+
+Stanislav Pankevich s.pankevich@gmail.com, Maryna Balioura mettta@gmail.com
+
+Modifications
+-------------
+
+If you make modifications to this project, please document them in this NOTICE
+file and clearly mark them as such. The suggested format is as follows:
+
+[date of modification] [affected file or folder] [description of modification]

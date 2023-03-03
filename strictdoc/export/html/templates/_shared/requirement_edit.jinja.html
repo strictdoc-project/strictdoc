@@ -19,6 +19,7 @@
   <input type="hidden" id="requirement_mid" name="requirement_mid" value="{{form_object.requirement_mid}}" />
 
   <sdoc-form-grid>
+
     {# Single line #}
 
     {%- for field_values in form_object.enumerate_fields(multiline=False) -%}
@@ -58,11 +59,14 @@
 
     {%- for field_values in form_object.enumerate_fields(multiline=True) -%}
       {%- for field in field_values -%}
-        {# If comments have not yet been added,
-        show only the add field button below,
-        and do not display the code of the field itself: #}
-        {%- if field.field_name != "COMMENT" or field.field_value|length > 0 -%}
-          {# TODO: make template for comment field in treauirement, 2 places #}
+        {% if field.field_name == "COMMENT" -%}
+          {# If comments have not yet been added,
+          show only the add field button below,
+          and do not display the code of the field itself: #}
+          {%- if field.field_value|length > 0 -%}
+            {% include "_shared/requirement_edit_field_comment.jinja" %}
+          {%- endif -%}
+        {%- else -%}
           {%- with
             field_type="multiline",
             field_name=field.field_name,
@@ -70,19 +74,13 @@
             field_value=field.field_value,
             errors=form_object.get_errors(field.field_name)
           -%}
-
-            {% if field.field_name == "COMMENT" -%}
-              {% set data_controller="deletable_field" %}
-              {% set field_actions={ 'delete':true } %}
-            {%- endif -%}
-
             {% include "components/form/field/text/index.jinja" %}
           {%- endwith -%}
         {%- endif -%}
       {%- endfor -%}
     {%- endfor -%}
 
-    {# Comments #}
+    {# Add new comments #}
 
     <div id="requirement_{{form_object.requirement_mid}}__new_comment"></div>
 

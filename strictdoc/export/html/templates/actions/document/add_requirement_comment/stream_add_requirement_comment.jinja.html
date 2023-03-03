@@ -1,16 +1,5 @@
 <turbo-stream action="before" target="requirement_{{requirement_mid}}__new_comment">
   <template>
-    {# TODO: make template for comment field in treauirement, 2 places #}
-    {%- with
-      field_type="multiline",
-      field_name=field.field_name,
-      field_input_name="requirement[" ~ field.field_name ~ "]",
-      field_value=field.field_value,
-      errors=form_object.get_errors(field.field_name)
-    -%}
-      {% set data_controller="deletable_field" %}
-      {% set field_actions={ 'delete':true } %}
-      {% include "components/form/field/text/index.jinja" %}
-    {%- endwith -%}
+    {% include "_shared/requirement_edit_field_comment.jinja" %}
   </template>
 </turbo-stream>

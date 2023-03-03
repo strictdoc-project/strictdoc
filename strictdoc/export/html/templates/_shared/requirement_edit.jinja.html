@@ -18,84 +18,83 @@
   {%- endif -%}
   <input type="hidden" id="requirement_mid" name="requirement_mid" value="{{form_object.requirement_mid}}" />
 
-  {# Single line #}
+  <sdoc-form-grid>
 
-  {%- for field_values in form_object.enumerate_fields(multiline=False) -%}
-    {%- for field in field_values -%}
-      {%- with
-        field_type="singleline",
-        field_class_name="",
-        field_name=field.field_name,
-        field_input_name="requirement[" ~ field.field_name ~ "]",
-        field_value=field.field_value,
-        errors=form_object.get_errors(field.field_name)
-      -%}
-        {% include "components/form/field/text/index.jinja" %}
-      {%- endwith -%}
-    {%- endfor -%}
-  {%- endfor -%}
+    {# Single line #}
 
-  {# Parent links #}
-
-  {%- for field in form_object.enumerate_reference_fields() -%}
-    {% include "_shared/requirement_edit_field_parent_link.jinja.html" %}
-  {%- endfor -%}
-
-  <div id="requirement_{{form_object.requirement_mid}}__new_parent_link"></div>
-  <sdoc-form-row>
-    <a
-      class="action_button"
-      href="/actions/document/new_parent_link?requirement_mid={{form_object.requirement_mid}}"
-      data-turbo-action="replace"
-      data-turbo="true"
-      data-action-type="add_field"
-      data-testid="form-add-parent-link-action"
-    >{% include "_res/svg_ico16_add.jinja.html" %} Add parent link</a>
-  </sdoc-form-row>
-
-  {# Multiline #}
-
-  {%- for field_values in form_object.enumerate_fields(multiline=True) -%}
-    {%- for field in field_values -%}
-      {# If comments have not yet been added,
-      show only the add field button below,
-      and do not display the code of the field itself: #}
-      {%- if field.field_name != "COMMENT" or field.field_value|length > 0 -%}
-        {# TODO: make template for comment field in treauirement, 2 places #}
+    {%- for field_values in form_object.enumerate_fields(multiline=False) -%}
+      {%- for field in field_values -%}
         {%- with
-          field_type="multiline",
+          field_type="singleline",
+          field_class_name="",
           field_name=field.field_name,
           field_input_name="requirement[" ~ field.field_name ~ "]",
           field_value=field.field_value,
           errors=form_object.get_errors(field.field_name)
         -%}
-
-          {% if field.field_name == "COMMENT" -%}
-            {% set data_controller="deletable_field" %}
-            {% set field_actions={ 'delete':true } %}
-          {%- endif -%}
-
           {% include "components/form/field/text/index.jinja" %}
         {%- endwith -%}
-      {%- endif -%}
+      {%- endfor -%}
     {%- endfor -%}
-  {%- endfor -%}
 
-  {# Comments #}
+    {# Parent links #}
 
-  <div id="requirement_{{form_object.requirement_mid}}__new_comment"></div>
+    {%- for field in form_object.enumerate_reference_fields() -%}
+      {% include "_shared/requirement_edit_field_parent_link.jinja.html" %}
+    {%- endfor -%}
 
-  <sdoc-form-row>
-    <a
-      class="action_button"
-      href="/actions/document/new_comment?requirement_mid={{form_object.requirement_mid}}"
-      data-turbo-action="replace"
-      data-turbo="true"
-      data-action-type="add_field"
-      data-testid="form-add-comment-field-action"
-    >{% include "_res/svg_ico16_add.jinja.html" %} Add comment field</a>
-  </sdoc-form-row>
+    <div id="requirement_{{form_object.requirement_mid}}__new_parent_link"></div>
+    <sdoc-form-row>
+      <a
+        class="action_button"
+        href="/actions/document/new_parent_link?requirement_mid={{form_object.requirement_mid}}"
+        data-turbo-action="replace"
+        data-turbo="true"
+        data-action-type="add_field"
+        data-testid="form-add-parent-link-action"
+      >{% include "_res/svg_ico16_add.jinja.html" %} Add parent link</a>
+    </sdoc-form-row>
 
+    {# Multiline #}
+
+    {%- for field_values in form_object.enumerate_fields(multiline=True) -%}
+      {%- for field in field_values -%}
+        {% if field.field_name == "COMMENT" -%}
+          {# If comments have not yet been added,
+          show only the add field button below,
+          and do not display the code of the field itself: #}
+          {%- if field.field_value|length > 0 -%}
+            {% include "_shared/requirement_edit_field_comment.jinja" %}
+          {%- endif -%}
+        {%- else -%}
+          {%- with
+            field_type="multiline",
+            field_name=field.field_name,
+            field_input_name="requirement[" ~ field.field_name ~ "]",
+            field_value=field.field_value,
+            errors=form_object.get_errors(field.field_name)
+          -%}
+            {% include "components/form/field/text/index.jinja" %}
+          {%- endwith -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endfor -%}
+
+    {# Add new comments #}
+
+    <div id="requirement_{{form_object.requirement_mid}}__new_comment"></div>
+
+    <sdoc-form-row>
+      <a
+        class="action_button"
+        href="/actions/document/new_comment?requirement_mid={{form_object.requirement_mid}}"
+        data-turbo-action="replace"
+        data-turbo="true"
+        data-action-type="add_field"
+        data-testid="form-add-comment-field-action"
+      >{% include "_res/svg_ico16_add.jinja.html" %} Add comment field</a>
+    </sdoc-form-row>
+  </sdoc-form-grid>
 
   {# Footer #}
 

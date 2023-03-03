@@ -14,22 +14,27 @@
       data-controller="{{data_controller}}"
   {%- endif -%}
 >
-    <label for="{{field_input_name}}">
-        {{ field_label|default('Choose a file', true) }}
-    </label>
-    <input
+  <sdoc-form-row-main>
+
+    {%- if errors|length > 0 -%}
+      <sdoc-form-error>
+      {%- for error in errors -%}
+        {{ error }}
+      {%- endfor -%}
+      </sdoc-form-error>
+    {%- endif -%}
+
+    <sdoc-form-field>
+        <label for="{{field_input_name}}">
+          {{ field_label|default('Choose a file', true) }}
+        </label>
+        <input
           type="file"
           name="{{field_input_name}}"
           id="{{field_input_name}}"
           data-testid="form-{{ field_input_name }}-field"
-    />
+        />
+    </sdoc-form-field>
 
-    {%- if errors|length > 0 -%}
-        <sdoc-form-error>
-        {%- for error in errors -%}
-          {{ error }}
-        {%- endfor -%}
-        </sdoc-form-error>
-    {%- endif -%}
-
+  </sdoc-form-row-main>
 </sdoc-form-row>

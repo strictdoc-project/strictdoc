@@ -6,7 +6,9 @@ from reqif.models.reqif_spec_object_type import (
     ReqIFSpecObjectType,
     SpecAttributeDefinition,
 )
+from reqif.models.reqif_spec_relation_type import ReqIFSpecRelationType
 from reqif.models.reqif_specification import ReqIFSpecification
+from reqif.models.reqif_specification_type import ReqIFSpecificationType
 from reqif.models.reqif_types import SpecObjectAttributeType
 from reqif.reqif_bundle import ReqIFBundle
 
@@ -69,6 +71,8 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         specification: ReqIFSpecification,
         reqif_bundle: ReqIFBundle,
     ):
+        assert isinstance(reqif_bundle, ReqIFBundle)
+
         document = P11_ReqIFToSDocConverter._p11_create_document(
             title=specification.long_name
         )
@@ -77,18 +81,41 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         current_section = document
         used_spec_object_types_ids: Set[str] = set()
 
+        assert reqif_bundle.core_content is not None
+        assert reqif_bundle.core_content.req_if_content is not None
+        assert reqif_bundle.core_content.req_if_content.spec_types is not None
+
+        spec_types: List[
+            Union[
+                ReqIFSpecObjectType,
+                ReqIFSpecRelationType,
+                ReqIFSpecificationType,
+            ]
+        ] = reqif_bundle.core_content.req_if_content.spec_types
+
         found_section_spec_object_type: Optional[ReqIFSpecObjectType] = None
         found_requirement_spec_object_type: Optional[ReqIFSpecObjectType] = None
-        for spec_type in reqif_bundle.core_content.req_if_content.spec_types:
+        for spec_type in spec_types:
             if not isinstance(spec_type, ReqIFSpecObjectType):
                 continue
             spec_object_type: ReqIFSpecObjectType = spec_type
             if spec_object_type.long_name == "Heading":
                 found_section_spec_object_type = spec_object_type
-            elif spec_object_type.long_name == "Software Requirement":
+            elif spec_object_type.long_name in (
+                "Software Requirement",
+                "DCPRS",
+            ):
                 found_requirement_spec_object_type = spec_object_type
-        assert found_section_spec_object_type is not None
-        assert found_requirement_spec_object_type is not None
+        assert found_section_spec_object_type is not None, (
+            "Expected to find a SPEC-OBJECT-TYPE that represents a "
+            "section. Spec types available in this ReqIF document: "
+            f"{spec_types}"
+        )
+        assert found_requirement_spec_object_type is not None, (
+            "Expected to find a SPEC-OBJECT-TYPE that represents a "
+            "requirement. Spec types available in this ReqIF document: "
+            f"{spec_types}"
+        )
         used_spec_object_types_ids.add(
             found_requirement_spec_object_type.identifier
         )

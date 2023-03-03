@@ -113,18 +113,13 @@ a.action_button:hover {
 
 [data-action-type="submit"],
 .action_button[type=submit] {
-  color: rgb(70, 90, 110);
-  /* color: #000; */
+  color: var(--color-submit);
 }
 
 /* [data-action-type="delete"], */
 [data-action-type="cancel"],
 .action_button[href*="cancel"] {
-  color: red !important;
-}
-
-[data-action-type="add_field"] {
-  /* color: rgba(0,0,0,0.5) !important; */
+  color: var(--color-danger) !important;
 }
 
 .action_icon,

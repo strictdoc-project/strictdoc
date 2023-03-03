@@ -30,6 +30,13 @@ class Screen_Document:  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
+    def assert_requirement_style_table(self) -> None:
+        # Make sure that the table-based requirement is rendered.
+        self.test_case.assert_element(
+            '//sdoc-node[@data-testid="node-requirement-table"]',
+            by=By.XPATH,
+        )
+
     def assert_toc_contains_string(self, string: str) -> None:
         self.test_case.assert_element(
             f"//turbo-frame[@id='frame-toc']//*[contains(., '{string}')]"

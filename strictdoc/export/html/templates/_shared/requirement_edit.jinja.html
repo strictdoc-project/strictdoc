@@ -42,7 +42,7 @@
   {%- endfor -%}
 
   <div id="requirement_{{form_object.requirement_mid}}__new_parent_link"></div>
-  <sdoc-form-row>
+  <sdoc-form-field>
     <a
       class="action_button"
       href="/actions/document/new_parent_link?requirement_mid={{form_object.requirement_mid}}"
@@ -51,7 +51,7 @@
       data-action-type="add_field"
       data-testid="form-add-parent-link-action"
     >{% include "_res/svg_ico16_add.jinja.html" %} Add parent link</a>
-  </sdoc-form-row>
+  </sdoc-form-field>
 
   {# Multiline #}
 
@@ -85,7 +85,7 @@
 
   <div id="requirement_{{form_object.requirement_mid}}__new_comment"></div>
 
-  <sdoc-form-row>
+  <sdoc-form-field>
     <a
       class="action_button"
       href="/actions/document/new_comment?requirement_mid={{form_object.requirement_mid}}"
@@ -94,7 +94,7 @@
       data-action-type="add_field"
       data-testid="form-add-comment-field-action"
     >{% include "_res/svg_ico16_add.jinja.html" %} Add comment field</a>
-  </sdoc-form-row>
+  </sdoc-form-field>
 
 
   {# Footer #}

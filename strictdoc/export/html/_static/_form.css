@@ -116,7 +116,7 @@ sdoc-form-footer {
   padding-right: calc(var(--base-rhythm)*4);
 }
 
-sdoc-form-row {
+sdoc-form-field {
   display: block;
   position: relative;
   padding-top: 0;
@@ -134,7 +134,7 @@ sdoc-form-error {
   margin-top: calc(var(--base-padding)*0.5);
 }
 
-sdoc-form-row-action {
+sdoc-form-field-action {
   display: flex;
   /* flex-direction: column; */
   flex-wrap: nowrap;
@@ -153,7 +153,7 @@ sdoc-form-row-action {
   margin-left: auto;
 } */
 
-sdoc-form-row-area {
+sdoc-form-field-area {
   position: absolute;
   left: 0;
   top: 0; /* calc(var(--base-rhythm)*(-2)); */
@@ -164,13 +164,13 @@ sdoc-form-row-area {
   transition: background-color 0.3s;
 }
 
-sdoc-form-row-action [data-action-type="delete"]:hover + sdoc-form-row-area {
+sdoc-form-field-action [data-action-type="delete"]:hover + sdoc-form-field-area {
   background-color: rgba(255, 0, 0, 0.1);
 }
-sdoc-form-row-action [data-action-type="move_up"]:hover + sdoc-form-row-area {
+sdoc-form-field-action [data-action-type="move_up"]:hover + sdoc-form-field-area {
   background-color: rgba(0, 225, 255, 0.1);
 }
-sdoc-form-row-action [data-action-type="move_down"]:hover + sdoc-form-row-area {
+sdoc-form-field-action [data-action-type="move_down"]:hover + sdoc-form-field-area {
   background-color: rgba(0, 162, 255, 0.1);
 }
 

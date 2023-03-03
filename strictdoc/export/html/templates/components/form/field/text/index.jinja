@@ -21,13 +21,13 @@
 
 #}
 
-<sdoc-form-row
+<sdoc-form-field
   {% if data_controller is defined -%}
     data-controller="{{data_controller}}"
   {%- endif -%}
 >
   {% if field_actions is defined -%}
-    <sdoc-form-row-action>
+    <sdoc-form-field-action>
 
       {% if field_actions.move_up is defined and field_actions.move_up is sameas true  -%}
         <button
@@ -39,7 +39,7 @@
           data-turbo="false"
           data-testid="form-move-up-{{ field_input_name|default('FIELD', true) }}-field-action"
         >{% include "_res/svg_ico16_move_up.jinja.html" %}</button>
-        <sdoc-form-row-area></sdoc-form-row-area>
+        <sdoc-form-field-area></sdoc-form-field-area>
       {%- endif -%}
 
       {% if field_actions.move_down is defined and field_actions.move_down is sameas true  -%}
@@ -52,7 +52,7 @@
           data-turbo="false"
           data-testid="form-move-down-{{ field_input_name|default('FIELD', true) }}-field-action"
         >{% include "_res/svg_ico16_move_down.jinja.html" %}</button>
-        <sdoc-form-row-area></sdoc-form-row-area>
+        <sdoc-form-field-area></sdoc-form-field-area>
       {%- endif -%}
 
       {% if field_actions.delete is defined and field_actions.delete is sameas true  -%}
@@ -65,10 +65,10 @@
           data-turbo="false"
           data-testid="form-delete-{{ field_input_name|default('FIELD', true) }}-field-action"
         >{% include "_res/svg_ico16_delete.jinja.html" %}</button>
-        <sdoc-form-row-area></sdoc-form-row-area>
+        <sdoc-form-field-area></sdoc-form-field-area>
       {%- endif -%}
 
-    </sdoc-form-row-action>
+    </sdoc-form-field-action>
   {%- endif -%}
 
   <sdoc-contenteditable
@@ -116,4 +116,4 @@
     {%- endfor -%}
     </sdoc-form-error>
   {%- endif -%}
-</sdoc-form-row>
+</sdoc-form-field>

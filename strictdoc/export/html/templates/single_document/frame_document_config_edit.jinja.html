@@ -8,6 +8,7 @@
   >
     <input type="hidden" id="document_mid" name="document_mid" value="{{form_object.document_mid}}"/>
 
+    <sdoc-form-grid>
     {%- with
       field_type="singleline",
       field_name="TITLE",
@@ -57,6 +58,7 @@
     -%}
       {% include "components/form/field/text/index.jinja" %}
     {%- endwith -%}
+    </sdoc-form-grid>
 
     <sdoc-form-footer>
       <button

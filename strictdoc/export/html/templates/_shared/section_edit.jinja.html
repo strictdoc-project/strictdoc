@@ -17,6 +17,8 @@
   <input type="hidden" id="section_mid" name="section_mid" value="{{form_object.section_mid}}" />
 
   <sdoc-form>
+
+    <sdoc-form-grid>
     {%- with
       field_type="singleline",
       field_class_name="form__requirement_title",
@@ -38,6 +40,7 @@
     -%}
       {% include "components/form/field/text/index.jinja" %}
     {%- endwith -%}
+    </sdoc-form-grid>
 
     <sdoc-form-footer>
       <button

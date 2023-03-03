@@ -18,6 +18,7 @@
   {%- endif -%}
   <input type="hidden" id="requirement_mid" name="requirement_mid" value="{{form_object.requirement_mid}}" />
 
+  <sdoc-form-grid>
   {# Single line #}
 
   {%- for field_values in form_object.enumerate_fields(multiline=False) -%}
@@ -95,7 +96,7 @@
       data-testid="form-add-comment-field-action"
     >{% include "_res/svg_ico16_add.jinja.html" %} Add comment field</a>
   </sdoc-form-field>
-
+  </sdoc-form-grid>
 
   {# Footer #}
 

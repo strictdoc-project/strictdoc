@@ -13,6 +13,7 @@
       </sdoc-modal-header>
       <sdoc-modal-content>
 
+      <sdoc-form-grid>
       {%- with
           field_class_name="",
           field_input_name="reqif_file",
@@ -21,6 +22,7 @@
       -%}
         {% include "components/form/field/file/index.jinja" %}
       {%- endwith -%}
+      </sdoc-form-grid>
 
       </sdoc-modal-content>
       <sdoc-modal-footer>

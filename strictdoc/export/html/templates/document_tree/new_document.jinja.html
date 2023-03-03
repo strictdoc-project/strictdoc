@@ -7,7 +7,7 @@
         Add new document
       </sdoc-modal-header>
       <sdoc-modal-content>
-
+      <sdoc-form-grid>
       {%- with
         field_type="singleline",
         field_class_name="",
@@ -31,7 +31,7 @@
       -%}
         {% include "components/form/field/text/index.jinja" %}
       {%- endwith -%}
-
+      </sdoc-form-grid>
       </sdoc-modal-content>
       <sdoc-modal-footer>
           <button

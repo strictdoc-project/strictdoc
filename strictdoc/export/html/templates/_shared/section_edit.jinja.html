@@ -19,27 +19,27 @@
   <sdoc-form>
 
     <sdoc-form-grid>
-    {%- with
-      field_type="singleline",
-      field_class_name="form__requirement_title",
-      field_name="TITLE",
-      field_input_name="section_title",
-      field_value=form_object.section_title,
-      errors=form_object.get_errors("section_title")
-    -%}
-      {% include "components/form/field/text/index.jinja" %}
-    {%- endwith -%}
+      {%- with
+        field_type="singleline",
+        field_class_name="form__requirement_title",
+        field_name="TITLE",
+        field_input_name="section_title",
+        field_value=form_object.section_title,
+        errors=form_object.get_errors("section_title")
+      -%}
+        {% include "components/form/field/text/index.jinja" %}
+      {%- endwith -%}
 
-    {%- with
-      field_type="multiline",
-      field_class_name="",
-      field_name="FREETEXT",
-      field_input_name="section_content",
-      field_value=form_object.section_statement,
-      errors=form_object.get_errors("section_statement")
-    -%}
-      {% include "components/form/field/text/index.jinja" %}
-    {%- endwith -%}
+      {%- with
+        field_type="multiline",
+        field_class_name="",
+        field_name="FREETEXT",
+        field_input_name="section_content",
+        field_value=form_object.section_statement,
+        errors=form_object.get_errors("section_statement")
+      -%}
+        {% include "components/form/field/text/index.jinja" %}
+      {%- endwith -%}
     </sdoc-form-grid>
 
     <sdoc-form-footer>

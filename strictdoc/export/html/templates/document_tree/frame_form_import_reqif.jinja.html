@@ -14,14 +14,14 @@
       <sdoc-modal-content>
 
       <sdoc-form-grid>
-      {%- with
-          field_class_name="",
-          field_input_name="reqif_file",
-          field_label="Click this div and select a file",
-          errors=error_object.get_errors("reqif_file")
-      -%}
-        {% include "components/form/field/file/index.jinja" %}
-      {%- endwith -%}
+        {%- with
+            field_class_name="",
+            field_input_name="reqif_file",
+            field_label="Click this div and select a file",
+            errors=error_object.get_errors("reqif_file")
+        -%}
+          {% include "components/form/field/file/index.jinja" %}
+        {%- endwith -%}
       </sdoc-form-grid>
 
       </sdoc-modal-content>

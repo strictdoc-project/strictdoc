@@ -82,26 +82,24 @@
       data-testid="form-{{ field_input_name }}-field"
     >
       {%- if true -%}
-      {{ field_value }}
+        {{ field_value }}
       {%- endif -%}
     </sdoc-contenteditable>
 
     {%- if field_type == "parent" -%}
-    <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}"/>
+      <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}"/>
     {%- endif -%}
 
     {%- if field_type == "singleline" -%}
-    <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}"/>
+      <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}"/>
     {%- endif -%}
 
     {%- if field_type == "multiline" -%}
-    <textarea hidden name="{{ field_input_name }}">
-      {%- if true -%}
-      {{ field_value }}
-      {%- endif -%}
-    </textarea>
-    {%- endif -%}
-
+      <textarea hidden name="{{ field_input_name }}">
+        {%- if true -%}
+        {{ field_value }}
+        {%- endif -%}
+      </textarea>
     {%- endif -%}
   </sdoc-form-field>
 

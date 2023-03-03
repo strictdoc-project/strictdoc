@@ -164,6 +164,17 @@ sdoc-form-error {
   order: 11;
 }
 
+sdoc-form-row .action_button:only-child {
+  /*
+    It is expected to be a button to add fields
+    like "comment" or "link"
+    to the requirement edit form.
+  */
+  justify-content: flex-start;
+  border: none;
+  top: -40%;
+}
+
 /*
    fields grid:
    inside sdoc-form-grid

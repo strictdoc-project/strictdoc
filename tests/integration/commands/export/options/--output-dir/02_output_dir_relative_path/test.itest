@@ -2,7 +2,7 @@ RUN: %strictdoc export %S --output-dir Output/CustomDir | filecheck %s --dump-in
 CHECK: Published: Hello world doc
 
 RUN: %check_exists --dir %S/Output/CustomDir/html/_static/
-RUN: %check_exists --file %S/Output/CustomDir/html/_static/_base.css
+RUN: %check_exists --file %S/Output/CustomDir/html/_static/base.css
 
 RUN: %cat %S/Output/CustomDir/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: Hello world doc

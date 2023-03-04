@@ -1,4 +1,3 @@
-from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
@@ -42,7 +41,7 @@ class Test_UC07_T61_EscapeHTML(BaseCase):
                 "sphinx-latex-reqspec-template>`_"
             )
             # This test is broken.
-            # Uncomment after repairing:
-            # form_edit_requirement.do_form_submit()
+            # Change to do_form_submit after repairing:
+            form_edit_requirement.do_form_cancel()
 
         assert test_setup.compare_sandbox_and_expected_output()

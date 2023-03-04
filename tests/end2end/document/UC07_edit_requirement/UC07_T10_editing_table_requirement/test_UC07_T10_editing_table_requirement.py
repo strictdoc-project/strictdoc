@@ -1,7 +1,12 @@
-from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.screens.document.form_edit_requirement import (
+    Form_EditRequirement,
+)
+from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
+    Screen_DocumentTree,
+)
 from tests.end2end.server import SDocTestServer
 
 
@@ -14,59 +19,31 @@ class Test_UC07_T10_EditTableRequirement(BaseCase):
         ) as test_server:
             self.open(test_server.get_host_and_port())
 
-            self.assert_text("Document 1")
-            self.assert_text("PROJECT INDEX")
+            screen_document_tree = Screen_DocumentTree(self)
 
-            self.click_xpath('//*[@data-testid="tree-file-link"]')
+            screen_document_tree.assert_on_screen()
+            screen_document_tree.assert_contains_string("Document 1")
 
-            # Make sure that the table-based requirement is rendered.
-            self.assert_element(
-                '//sdoc-node[@data-testid="node-requirement-table"]',
-                by=By.XPATH,
-            )
-
-            self.hover_and_click(
-                hover_selector="(//sdoc-node)[2]",
-                click_selector=(
-                    '(//sdoc-node)[2]//*[@data-testid="node-edit-action"]'
-                ),
-                hover_by=By.XPATH,
-                click_by=By.XPATH,
-            )
-
-            self.type(
-                "//*[@id='requirement[UID]']", "Modified UID", by=By.XPATH
-            )
-            self.type(
-                "//*[@id='requirement[TITLE]']", "Modified title", by=By.XPATH
-            )
-            self.type(
-                "//*[@id='requirement[STATEMENT]']",
-                "Modified statement.",
-                by=By.XPATH,
-            )
-            self.type(
-                "//*[@id='requirement[RATIONALE]']",
-                "Modified rationale.",
-                by=By.XPATH,
-            )
-
-            self.click_xpath('//*[@data-testid="form-submit-action"]')
-
-            self.assert_text("1. Modified title")
-            self.assert_text("Modified UID")
-            self.assert_text("Modified statement.")
-            self.assert_text("Modified rationale.")
+            screen_document = screen_document_tree.do_click_on_first_document()
 
             # Make sure that the table-based requirement is rendered.
-            self.assert_element(
-                '//sdoc-node[@data-testid="node-requirement-table"]',
-                by=By.XPATH,
-            )
+            screen_document.assert_requirement_style_table()
 
-            self.assert_element(
-                "//turbo-frame[@id='frame-toc']"
-                "//*[contains(., 'Modified title')]"
+            form_edit_requirement: Form_EditRequirement = (
+                screen_document.do_open_edit_form()
             )
+            form_edit_requirement.do_fill_in("UID", "Modified UID")
+            form_edit_requirement.do_fill_in("TITLE", "Modified title")
+            form_edit_requirement.do_fill_in("STATEMENT", "Modified statement.")
+            form_edit_requirement.do_fill_in("RATIONALE", "Modified rationale.")
+            form_edit_requirement.do_form_submit()
+
+            screen_document.assert_text("1. Modified title")
+            screen_document.assert_text("Modified UID")
+            screen_document.assert_text("Modified statement.")
+            screen_document.assert_text("Modified rationale.")
+            # Make sure that the table-based requirement is rendered.
+            screen_document.assert_requirement_style_table()
+            screen_document.assert_toc_contains_string("Modified title")
 
         assert test_setup.compare_sandbox_and_expected_output()

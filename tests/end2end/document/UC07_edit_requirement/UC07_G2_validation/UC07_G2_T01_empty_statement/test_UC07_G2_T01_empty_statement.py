@@ -34,17 +34,15 @@ class Test_UC07_G2_T01_EmptyStatement(BaseCase):
             self.type(
                 "//*[@id='requirement[TITLE]']", "Modified title", by=By.XPATH
             )
-
             # HACK: The only way the field is actually cleared.
+            self.scroll_to("//*[@id='requirement[STATEMENT]']", by=By.XPATH)
             self.type("//*[@id='requirement[STATEMENT]']", "X", by=By.XPATH)
             requirement_statement_field = self.find_element(
                 "//*[@id='requirement[STATEMENT]']", by=By.XPATH
             )
-            requirement_statement_field.click()
             requirement_statement_field.send_keys(Keys.BACKSPACE)
 
             self.click_xpath('//*[@data-testid="form-submit-action"]')
-
             self.assert_text("Requirement statement must not be empty.")
 
         assert test_setup.compare_sandbox_and_expected_output()

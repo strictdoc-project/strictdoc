@@ -22,20 +22,22 @@ from tests.end2end.conftest import test_environment
 
 if os.getenv("STRICTDOC_LONGER_TIMEOUTS") is not None:
     WAIT_TIMEOUT = 30
-    POLL_TIMEOUT = 10000
+    POLL_TIMEOUT = 2000
     WARMUP_INTERVAL = 3
     # When Selenium clicks on a link that downloads a file, it takes some time
     # until the file actually appears on the file system.
     DOWNLOAD_FILE_TIMEOUT = 5
 else:
     WAIT_TIMEOUT = 5  # Seconds
-    POLL_TIMEOUT = 2000  # Milliseconds
+    POLL_TIMEOUT = 1000  # Milliseconds
     WARMUP_INTERVAL = 0
     DOWNLOAD_FILE_TIMEOUT = 2
 
 
 class ReadTimeout(Exception):
-    pass
+    def __init__(self, seconds_passed):
+        assert isinstance(seconds_passed, float)
+        self.seconds_passed = seconds_passed
 
 
 class SDocTestServer:
@@ -190,9 +192,12 @@ class SDocTestServer:
         try:
             while len(expectations) > 0:
                 check_time = datetime.datetime.now()
-                if (check_time - start_time).total_seconds() > WAIT_TIMEOUT:
-                    raise ReadTimeout()
+                diff_time = (check_time - start_time).total_seconds()
+                if diff_time > float(WAIT_TIMEOUT):
+                    raise ReadTimeout(diff_time)
 
+                # TODO: it could be that just polling for WAIT_TIMEOUT
+                # is enough.
                 if poll.poll(POLL_TIMEOUT):
                     line_bytes = server_process.stderr.readline()
                     while len(expectations) > 0 and line_bytes:
@@ -204,14 +209,13 @@ class SDocTestServer:
                         ):
                             expectations.pop(0)
                         line_bytes = server_process.stderr.readline()
-                else:
-                    raise ReadTimeout()
-        except ReadTimeout:
+        except ReadTimeout as timeout_exception:
             print(  # noqa: T201
                 "---------------------------------------------------------------------"  # noqa: E501
             )
             print(  # noqa: T201
-                "Failed to get an expected response from the server."
+                "Failed to get an expected response from the server within "
+                f"{round(timeout_exception.seconds_passed, 2)} seconds."
             )
             received_lines = "".join(received_input)
             print(f"Received input:\n{received_lines}")  # noqa: T201

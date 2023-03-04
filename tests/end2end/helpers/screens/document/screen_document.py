@@ -1,6 +1,9 @@
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
+from tests.end2end.helpers.screens.document.form_edit_grammar import (
+    Form_EditGrammar,
+)
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
 )
@@ -23,10 +26,22 @@ class Screen_Document:  # pylint: disable=invalid-name
     def assert_text(self, text: str) -> None:
         self.test_case.assert_text(text)
 
+    def assert_no_text(self, text: str) -> None:
+        self.test_case.assert_element_not_present(
+            f"//*[contains(., '{text}')]", by=By.XPATH
+        )
+
     def assert_requirement_style_simple(self) -> None:
         # Make sure that the normal (not table-based) requirement is rendered.
         self.test_case.assert_element(
             '//sdoc-node[@data-testid="node-requirement-simple"]',
+            by=By.XPATH,
+        )
+
+    def assert_requirement_style_table(self) -> None:
+        # Make sure that the table-based requirement is rendered.
+        self.test_case.assert_element(
+            '//sdoc-node[@data-testid="node-requirement-table"]',
             by=By.XPATH,
         )
 
@@ -45,3 +60,14 @@ class Screen_Document:  # pylint: disable=invalid-name
             click_by=By.XPATH,
         )
         return Form_EditRequirement(self.test_case)
+
+    def do_open_edit_grammar_modal(self) -> Form_EditGrammar:
+        self.test_case.assert_element_not_present("//sdoc-modal", by=By.XPATH)
+        self.test_case.click_xpath(
+            '(//*[@data-testid="document-edit-grammar-action"])'
+        )
+        self.test_case.assert_element(
+            "//sdoc-modal",
+            by=By.XPATH,
+        )
+        return Form_EditGrammar(self.test_case)

@@ -41,3 +41,7 @@ class Form_EditRequirement:  # pylint: disable=invalid-name
     def do_form_submit(self) -> None:
         self.test_case.click_xpath('//*[@data-testid="form-submit-action"]')
         self.test_case.assert_element_not_present('//*[@data-testid="form-submit-action"]')
+
+    def do_form_cancel(self) -> None:
+        self.test_case.click_xpath('//*[@data-testid="form-cancel-action"]')
+        self.test_case.assert_element_not_present('//*[@data-testid="form-cancel-action"]')

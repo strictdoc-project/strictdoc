@@ -45,8 +45,8 @@ Hello world!
 Hello world!    
 
 Hello world!    
-                """,
-            )  # noqa: W291
+                """,  # noqa: W291
+            )
 
             form_edit_requirement.do_form_submit()
 

@@ -27,6 +27,12 @@ class Form_EditRequirement:  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
+    def do_delete_comment(self, field_order: int = 1) -> None:
+        self.test_case.click_xpath(
+                "(//*[@data-testid="
+                f'"form-delete-requirement[COMMENT]-field-action"])[{field_order}]'
+            )
+
     def do_form_add_field_comment(self) -> None:
         self.test_case.click_xpath(
             '//*[@data-testid="form-add-comment-field-action"]'

@@ -23,6 +23,11 @@ class Screen_Document:  # pylint: disable=invalid-name
     def assert_text(self, text: str) -> None:
         self.test_case.assert_text(text)
 
+    def assert_no_text(self, text: str) -> None:
+        self.test_case.assert_element_not_present(
+            f"//*[contains(., '{text}')]", by=By.XPATH
+        )
+
     def assert_requirement_style_simple(self) -> None:
         # Make sure that the normal (not table-based) requirement is rendered.
         self.test_case.assert_element(

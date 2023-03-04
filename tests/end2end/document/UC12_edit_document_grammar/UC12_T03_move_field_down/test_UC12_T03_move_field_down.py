@@ -1,6 +1,12 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
+    Screen_DocumentTree,
+)
+from tests.end2end.helpers.screens.document.form_edit_grammar import (
+    Form_EditGrammar,
+)
 from tests.end2end.server import SDocTestServer
 
 
@@ -13,24 +19,26 @@ class Test_UC12_T03_MoveFieldDown(BaseCase):
         ) as test_server:
             self.open(test_server.get_host_and_port())
 
-            self.assert_text("Document 1")
-            self.assert_text("PROJECT INDEX")
+            screen_document_tree = Screen_DocumentTree(self)
 
-            self.click_xpath('//*[@data-testid="tree-file-link"]')
-            self.assert_text_visible("Requirement title")
+            screen_document_tree.assert_on_screen()
+            screen_document_tree.assert_contains_string("Document 1")
 
-            self.click_xpath(
-                '(//*[@data-testid="document-edit-grammar-action"])'
+            screen_document = screen_document_tree.do_click_on_first_document()
+
+            screen_document.assert_on_screen()
+            screen_document.assert_is_document_title("Document 1")
+            screen_document.assert_text("Hello world!")
+
+            screen_document.assert_text("Requirement title")
+
+            form_edit_grammar: Form_EditGrammar = (
+                screen_document.do_open_edit_grammar_modal()
             )
+            form_edit_grammar.assert_on_grammar()
 
-            self.click_xpath(
-                "(//*[@data-testid="
-                '"form-move-down-document_grammar[CUSTOM_FIELD]-field-action"])'
-            )
+            form_edit_grammar.do_move_field_down('CUSTOM_FIELD')
 
-            self.click_xpath('//*[@data-testid="form-submit-action"]')
-            self.assert_element_not_present(
-                '[data-testid="form-submit-action"]'
-            )
+            form_edit_grammar.do_form_submit()
 
         assert test_setup.compare_sandbox_and_expected_output()

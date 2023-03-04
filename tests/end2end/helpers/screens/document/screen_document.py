@@ -71,3 +71,8 @@ class Screen_Document:  # pylint: disable=invalid-name
             by=By.XPATH,
         )
         return Form_EditGrammar(self.test_case)
+
+    def do_export_reqif(self) -> None:
+        self.test_case.click_xpath(
+            '(//*[@data-testid="document-export-reqif-action"])'
+        )

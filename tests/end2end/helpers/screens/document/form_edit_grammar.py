@@ -20,9 +20,34 @@ class Form_EditGrammar:  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
-    def do_grammar_add_field(self) -> None:
+    def do_add_field(self) -> None:
         self.test_case.click_xpath(
             '//*[@data-testid="form-add-grammar-field-action"]'
+        )
+
+    # Use data-testid="form-move-up-document_grammar[]-field-action"
+    # for the newly added fields.
+    def do_move_field_up(self, field_name: str = "") -> None:
+        self.test_case.click_xpath(
+            "(//*[@data-testid="
+            f"'form-move-up-document_grammar[{field_name}]-field-action'"
+            "])"
+        )
+
+    # Use data-testid="form-move-up-document_grammar[]-field-action"
+    # for the newly added fields.
+    def do_move_field_down(self, field_name: str = "") -> None:
+        self.test_case.click_xpath(
+            "(//*[@data-testid="
+            f"'form-move-down-document_grammar[{field_name}]-field-action'"
+            "])"
+        )
+
+    def do_delete_field(self, field_name: str) -> None:
+        self.test_case.click_xpath(
+            "(//*[@data-testid="
+            f"'form-delete-document_grammar[{field_name}]-field-action'"
+            "])[1]"
         )
 
     def do_fill_in(

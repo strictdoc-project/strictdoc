@@ -15,6 +15,20 @@ class Form_EditConfig:  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
+    def assert_error(self, message: str) -> None:
+        self.test_case.assert_element(
+            "//sdoc-form-error",
+            by=By.XPATH,
+        )
+        self.test_case.assert_text(f"{message}")
+
+    def assert_field_content(self, message: str) -> None:
+        self.test_case.assert_element(
+            "//sdoc-contenteditable",
+            by=By.XPATH,
+        )
+        self.test_case.assert_text(f"{message}")
+
     def do_fill_in(
         self, field_name: str, field_value: str, field_order: int = 1
     ) -> None:

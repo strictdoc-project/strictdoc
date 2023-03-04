@@ -1,11 +1,11 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
-from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
-    Screen_DocumentTree,
-)
 from tests.end2end.helpers.screens.document.form_edit_grammar import (
     Form_EditGrammar,
+)
+from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
+    Screen_DocumentTree,
 )
 from tests.end2end.server import SDocTestServer
 
@@ -37,7 +37,7 @@ class Test_UC12_T03_MoveFieldDown(BaseCase):
             )
             form_edit_grammar.assert_on_grammar()
 
-            form_edit_grammar.do_move_field_down('CUSTOM_FIELD')
+            form_edit_grammar.do_move_field_down("CUSTOM_FIELD")
 
             form_edit_grammar.do_form_submit()
 

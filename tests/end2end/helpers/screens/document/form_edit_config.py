@@ -34,16 +34,12 @@ class Form_EditConfig:  # pylint: disable=invalid-name
             f"(//*[@data-testid='form-document[{field_name}]-field'])"
             f"[{field_order}]",
             "1",
-            by=By.XPATH
+            by=By.XPATH,
         )
         this_field = self.test_case.find_visible_elements(
             f"//*[@data-testid='form-document[{field_name}]-field']"
         )[0]
         this_field.send_keys(Keys.BACKSPACE)
-
-
-
-
 
     def do_form_submit_and_catch_error(self, message: str) -> None:
         self.test_case.click_xpath('//*[@data-testid="form-submit-action"]')
@@ -51,9 +47,7 @@ class Form_EditConfig:  # pylint: disable=invalid-name
             "//sdoc-form-error",
             by=By.XPATH,
         )
-        self.test_case.assert_text(
-            f"{message}"
-        )
+        self.test_case.assert_text(f"{message}")
 
     def do_form_submit(self) -> None:
         self.test_case.click_xpath('//*[@data-testid="form-submit-action"]')

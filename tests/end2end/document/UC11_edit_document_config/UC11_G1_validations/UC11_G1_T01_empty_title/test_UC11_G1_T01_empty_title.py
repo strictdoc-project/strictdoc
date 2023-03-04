@@ -1,11 +1,11 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
-from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
-    Screen_DocumentTree,
-)
 from tests.end2end.helpers.screens.document.form_edit_config import (
     Form_EditConfig,
+)
+from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
+    Screen_DocumentTree,
 )
 from tests.end2end.server import SDocTestServer
 
@@ -32,11 +32,9 @@ class Test_UC11_G1_T01_EmptyTitle(BaseCase):
 
             screen_document.assert_text("Requirement title")
 
-            form_config: Form_EditConfig = (
-                screen_document.do_open_config_form()
-            )
+            form_config: Form_EditConfig = screen_document.do_open_config_form()
 
-            form_config.do_clear_field('TITLE')
+            form_config.do_clear_field("TITLE")
 
             form_config.do_form_submit_and_catch_error(
                 "Document title must not be empty."

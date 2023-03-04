@@ -1,14 +1,14 @@
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
+from tests.end2end.helpers.screens.document.form_edit_config import (
+    Form_EditConfig,
+)
 from tests.end2end.helpers.screens.document.form_edit_grammar import (
     Form_EditGrammar,
 )
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
-)
-from tests.end2end.helpers.screens.document.form_edit_config import (
-    Form_EditConfig,
 )
 
 

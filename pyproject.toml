@@ -44,10 +44,6 @@ dependencies = [
     # Reading project config from strictdoc.toml file.
     "toml",
 
-    # FIXME: This might be not relevant anymore.
-    # https://github.com/aws/aws-sam-cli/issues/3661#issuecomment-1044340547
-    "MarkupSafe == 2.0.1",
-
     "docutils >= 0.16, == 0.*",
     "python-datauri >= 0.2.9, == 0.*",
     "pygments >= 2.10.0, == 2.*",

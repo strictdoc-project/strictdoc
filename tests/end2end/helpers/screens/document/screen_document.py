@@ -7,6 +7,9 @@ from tests.end2end.helpers.screens.document.form_edit_grammar import (
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
 )
+from tests.end2end.helpers.screens.document.form_edit_config import (
+    Form_EditConfig,
+)
 
 
 class Screen_Document:  # pylint: disable=invalid-name
@@ -60,6 +63,17 @@ class Screen_Document:  # pylint: disable=invalid-name
             click_by=By.XPATH,
         )
         return Form_EditRequirement(self.test_case)
+
+    def do_open_config_form(self) -> Form_EditConfig:
+        self.test_case.hover_and_click(
+            hover_selector="(//sdoc-node)[1]",
+            click_selector=(
+                '(//sdoc-node)[1]//*[@data-testid="document-edit-config-action"]'  # noqa: E501
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+        return Form_EditConfig(self.test_case)
 
     def do_open_edit_grammar_modal(self) -> Form_EditGrammar:
         self.test_case.assert_element_not_present("//sdoc-modal", by=By.XPATH)

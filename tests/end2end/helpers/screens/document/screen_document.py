@@ -4,6 +4,9 @@ from seleniumbase import BaseCase
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
 )
+from tests.end2end.helpers.screens.document.form_edit_grammar import (
+    Form_EditGrammar,
+)
 
 
 class Screen_Document:  # pylint: disable=invalid-name
@@ -57,3 +60,14 @@ class Screen_Document:  # pylint: disable=invalid-name
             click_by=By.XPATH,
         )
         return Form_EditRequirement(self.test_case)
+
+    def do_open_edit_grammar_modal(self) -> Form_EditGrammar:
+        self.test_case.assert_element_not_present("//sdoc-modal", by=By.XPATH)
+        self.test_case.click_xpath(
+            '(//*[@data-testid="document-edit-grammar-action"])'
+        )
+        self.test_case.assert_element(
+            "//sdoc-modal",
+            by=By.XPATH,
+        )
+        return Form_EditGrammar(self.test_case)

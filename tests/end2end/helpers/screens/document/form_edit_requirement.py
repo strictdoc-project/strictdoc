@@ -15,9 +15,13 @@ class Form_EditRequirement:  # pylint: disable=invalid-name
         )
 
     def assert_form_has_no_comments(self) -> None:
-        self.test_case.assert_element_not_present("(//*[@id='requirement[COMMENT]'])")
+        self.test_case.assert_element_not_present(
+            "(//*[@id='requirement[COMMENT]'])"
+        )
 
-    def do_fill_in(self, field_name: str, field_value: str, field_order: int = 1) -> None:
+    def do_fill_in(
+        self, field_name: str, field_value: str, field_order: int = 1
+    ) -> None:
         assert isinstance(field_name, str)
         assert isinstance(field_value, str)
 
@@ -29,9 +33,9 @@ class Form_EditRequirement:  # pylint: disable=invalid-name
 
     def do_delete_comment(self, field_order: int = 1) -> None:
         self.test_case.click_xpath(
-                "(//*[@data-testid="
-                f'"form-delete-requirement[COMMENT]-field-action"])[{field_order}]'
-            )
+            "(//*[@data-testid="
+            f'"form-delete-requirement[COMMENT]-field-action"])[{field_order}]'
+        )
 
     def do_form_add_field_comment(self) -> None:
         self.test_case.click_xpath(
@@ -40,8 +44,12 @@ class Form_EditRequirement:  # pylint: disable=invalid-name
 
     def do_form_submit(self) -> None:
         self.test_case.click_xpath('//*[@data-testid="form-submit-action"]')
-        self.test_case.assert_element_not_present('//*[@data-testid="form-submit-action"]')
+        self.test_case.assert_element_not_present(
+            '//*[@data-testid="form-submit-action"]'
+        )
 
     def do_form_cancel(self) -> None:
         self.test_case.click_xpath('//*[@data-testid="form-cancel-action"]')
-        self.test_case.assert_element_not_present('//*[@data-testid="form-cancel-action"]')
+        self.test_case.assert_element_not_present(
+            '//*[@data-testid="form-cancel-action"]'
+        )

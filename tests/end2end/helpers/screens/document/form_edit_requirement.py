@@ -14,15 +14,24 @@ class Form_EditRequirement:  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
-    def do_fill_in(self, field_name: str, field_value: str) -> None:
+    def assert_form_has_no_comments(self) -> None:
+        self.test_case.assert_element_not_present("(//*[@id='requirement[COMMENT]'])")
+
+    def do_fill_in(self, field_name: str, field_value: str, field_order: int = 1) -> None:
         assert isinstance(field_name, str)
         assert isinstance(field_value, str)
 
         self.test_case.type(
-            f"//*[@id='requirement[{field_name}]']",
+            f"(//*[@id='requirement[{field_name}]'])[{field_order}]",
             f"{field_value}",
             by=By.XPATH,
         )
 
+    def do_form_add_field_comment(self) -> None:
+        self.test_case.click_xpath(
+            '//*[@data-testid="form-add-comment-field-action"]'
+        )
+
     def do_form_submit(self) -> None:
         self.test_case.click_xpath('//*[@data-testid="form-submit-action"]')
+        self.test_case.assert_element_not_present('//*[@data-testid="form-submit-action"]')

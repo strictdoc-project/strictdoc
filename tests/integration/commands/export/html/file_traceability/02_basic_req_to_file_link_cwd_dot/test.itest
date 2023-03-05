@@ -4,7 +4,7 @@ CHECK: Published: Hello world doc
 RUN: %check_exists --file "%S/Output/html/_source_files/file.py.html"
 
 RUN: %cat %S/Output/html/02_basic_req_to_file_link_cwd_dot/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
-CHECK-HTML: <link rel="stylesheet" href="../_static/_base.css"/>
+CHECK-HTML: <link rel="stylesheet" href="../_static/base.css"/>
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001">
 
 RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE

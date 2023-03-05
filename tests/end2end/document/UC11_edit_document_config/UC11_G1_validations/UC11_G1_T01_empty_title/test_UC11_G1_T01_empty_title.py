@@ -1,8 +1,12 @@
-from selenium.webdriver import Keys
-from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.screens.document.form_edit_config import (
+    Form_EditConfig,
+)
+from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
+    Screen_DocumentTree,
+)
 from tests.end2end.server import SDocTestServer
 
 
@@ -15,30 +19,25 @@ class Test_UC11_G1_T01_EmptyTitle(BaseCase):
         ) as test_server:
             self.open(test_server.get_host_and_port())
 
-            self.assert_text("Document 1")
-            self.assert_text("PROJECT INDEX")
+            screen_document_tree = Screen_DocumentTree(self)
 
-            self.click_xpath('//*[@data-testid="tree-file-link"]')
-            self.assert_text_visible("Requirement title")
+            screen_document_tree.assert_on_screen()
+            screen_document_tree.assert_contains_string("Document 1")
 
-            self.hover_and_click(
-                hover_selector="(//sdoc-node)[1]",
-                click_selector=(
-                    '(//sdoc-node)[1]//*[@data-testid="document-edit-config-action"]'  # noqa: E501
-                ),
-                hover_by=By.XPATH,
-                click_by=By.XPATH,
+            screen_document = screen_document_tree.do_click_on_first_document()
+
+            screen_document.assert_on_screen()
+            screen_document.assert_is_document_title("Document 1")
+            screen_document.assert_text("Hello world!")
+
+            screen_document.assert_text("Requirement title")
+
+            form_config: Form_EditConfig = screen_document.do_open_config_form()
+
+            form_config.do_clear_field("TITLE")
+
+            form_config.do_form_submit_and_catch_error(
+                "Document title must not be empty."
             )
-
-            # HACK: The only way the field is actually cleared.
-            self.type("(//*[@id='document[TITLE]'])[1]", "1", by=By.XPATH)
-            document_title_field = self.find_visible_elements(
-                "//*[@id='document[TITLE]']"
-            )[0]
-            document_title_field.send_keys(Keys.BACKSPACE)
-
-            self.click_xpath('//*[@data-testid="form-submit-action"]')
-
-            self.assert_text("Document title must not be empty.")
 
         assert test_setup.compare_sandbox_and_expected_output()

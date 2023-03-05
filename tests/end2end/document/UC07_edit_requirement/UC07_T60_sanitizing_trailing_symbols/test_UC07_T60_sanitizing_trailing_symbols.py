@@ -34,11 +34,10 @@ class Test_UC07_T60_SanitizingTrainingSymbols(BaseCase):
                 screen_document.do_open_edit_form()
             )
 
-            form_edit_requirement.do_fill_in("TITLE", "Modified title")
+            form_edit_requirement.do_fill_in_field_title("Modified title")
 
             # Contains trailing symbols.
-            form_edit_requirement.do_fill_in(
-                "STATEMENT",
+            form_edit_requirement.do_fill_in_field_statement(
                 """
 Hello world!    
 

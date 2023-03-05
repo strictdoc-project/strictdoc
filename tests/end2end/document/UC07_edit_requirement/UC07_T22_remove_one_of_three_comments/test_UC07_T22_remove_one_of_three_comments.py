@@ -35,7 +35,6 @@ class Test_UC07_T22_RemoveOneOfThreeComments(BaseCase):
             )
 
             form_edit_requirement.do_delete_comment(2)
-
             form_edit_requirement.do_form_submit()
 
             screen_document.assert_text("Comment #1")

@@ -39,13 +39,13 @@ class Test_UC07_T20_AddComment(BaseCase):
             form_edit_requirement.assert_form_has_no_comments()
 
             form_edit_requirement.do_form_add_field_comment()
-            form_edit_requirement.do_fill_in("COMMENT", "Comment #1")
+            form_edit_requirement.do_fill_in_field_comment("Comment #1")
 
             form_edit_requirement.do_form_add_field_comment()
-            form_edit_requirement.do_fill_in("COMMENT", "Comment #2", 2)
+            form_edit_requirement.do_fill_in_field_comment("Comment #2", 2)
 
             form_edit_requirement.do_form_add_field_comment()
-            form_edit_requirement.do_fill_in("COMMENT", "Comment #3", 3)
+            form_edit_requirement.do_fill_in_field_comment("Comment #3", 3)
 
             form_edit_requirement.do_form_submit()
 

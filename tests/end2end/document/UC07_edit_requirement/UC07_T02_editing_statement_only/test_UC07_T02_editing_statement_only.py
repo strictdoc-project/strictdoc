@@ -39,7 +39,7 @@ class Test_UC07_T02_EditingStatementOnly(BaseCase):
             )
 
             form_edit_requirement.assert_on_form()
-            form_edit_requirement.do_fill_in("STATEMENT", "Modified statement.")
+            form_edit_requirement.do_fill_in_field_statement("Modified statement.")
 
             form_edit_requirement.do_form_submit()
 

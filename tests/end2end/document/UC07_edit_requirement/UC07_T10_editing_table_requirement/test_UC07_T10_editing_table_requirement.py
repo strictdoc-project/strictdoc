@@ -32,10 +32,10 @@ class Test_UC07_T10_EditTableRequirement(BaseCase):
             form_edit_requirement: Form_EditRequirement = (
                 screen_document.do_open_edit_form()
             )
-            form_edit_requirement.do_fill_in("UID", "Modified UID")
-            form_edit_requirement.do_fill_in("TITLE", "Modified title")
-            form_edit_requirement.do_fill_in("STATEMENT", "Modified statement.")
-            form_edit_requirement.do_fill_in("RATIONALE", "Modified rationale.")
+            form_edit_requirement.do_fill_in_field_uid("Modified UID")
+            form_edit_requirement.do_fill_in_field_title("Modified title")
+            form_edit_requirement.do_fill_in_field_statement("Modified statement.")
+            form_edit_requirement.do_fill_in_field_rationale("Modified rationale.")
             form_edit_requirement.do_form_submit()
 
             screen_document.assert_text("1. Modified title")

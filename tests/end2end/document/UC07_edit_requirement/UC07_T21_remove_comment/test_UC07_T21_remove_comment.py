@@ -37,7 +37,6 @@ class Test_UC07_T21_RemoveComment(BaseCase):
             )
 
             form_edit_requirement.do_delete_comment()
-
             form_edit_requirement.do_form_submit()
 
             screen_document.assert_no_text("Comment #1")

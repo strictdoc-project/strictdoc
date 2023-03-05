@@ -117,6 +117,7 @@ sdoc-node {
     appears randomly between nodes.
   */
   outline: 1px solid #fff;
+  margin: 1px 0;
 }
 
 /* calc(var(--card-width) + calc(var(--base-padding)*4)) */

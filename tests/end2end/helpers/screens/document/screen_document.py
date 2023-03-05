@@ -10,6 +10,9 @@ from tests.end2end.helpers.screens.document.form_edit_grammar import (
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
 )
+from tests.end2end.helpers.screens.document.form_edit_section import (
+    Form_EditSection,
+)
 
 
 class Screen_Document:  # pylint: disable=invalid-name
@@ -99,4 +102,92 @@ class Screen_Document:  # pylint: disable=invalid-name
     def do_export_reqif(self) -> None:
         self.test_case.click_xpath(
             '(//*[@data-testid="document-export-reqif-action"])'
+        )
+
+    def do_open_node_menu(self, field_order: int = 1) -> None:
+        self.test_case.hover_and_click(
+            hover_selector=f"(//sdoc-node)[{field_order}]",
+            click_selector=(
+                f"(//sdoc-node)[{field_order}]"
+                "//*[@data-testid='node-menu-handler']"
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+
+    # Add section
+
+    def do_node_add_section_first(self, field_order: int = 1) -> Form_EditSection:
+        self.test_case.click(
+            selector=(
+                f"(//sdoc-node)[{field_order}]"
+                '//*[@data-testid="node-add-section-first-action"]'
+            ),
+            by=By.XPATH,
+        )
+        return Form_EditSection(self.test_case)
+
+    def do_node_add_section_above(self, field_order: int = 1) -> None:
+        self.test_case.click(
+            selector=(
+                f"(//sdoc-node)[{field_order}]"
+                '//*[@data-testid="node-add-section-above-action"]'
+            ),
+            by=By.XPATH,
+        )
+
+    def do_node_add_section_below(self, field_order: int = 1) -> None:
+        self.test_case.click(
+            selector=(
+                f"(//sdoc-node)[{field_order}]"
+                '//*[@data-testid="node-add-section-below-action"]'
+            ),
+            by=By.XPATH,
+        )
+
+    def do_node_add_section_child(self, field_order: int = 1) -> None:
+        self.test_case.click(
+            selector=(
+                f"(//sdoc-node)[{field_order}]"
+                '//*[@data-testid="node-add-section-child-action"]'
+            ),
+            by=By.XPATH,
+        )
+
+    # Add requirement
+
+    def do_node_add_requirement_first(self, field_order: int = 1) -> None:
+        self.test_case.click(
+            selector=(
+                f"(//sdoc-node)[{field_order}]"
+                '//*[@data-testid="node-add-requirement-first-action"]'
+            ),
+            by=By.XPATH,
+        )
+
+    def do_node_add_requirement_above(self, field_order: int = 1) -> None:
+        self.test_case.click(
+            selector=(
+                f"(//sdoc-node)[{field_order}]"
+                '//*[@data-testid="node-add-requirement-above-action"]'
+            ),
+            by=By.XPATH,
+        )
+
+    def do_node_add_requirement_below(self, field_order: int = 1) -> None:
+        self.test_case.click(
+            selector=(
+                f"(//sdoc-node)[{field_order}]"
+                '//*[@data-testid="node-add-requirement-below-action"]'
+            ),
+            by=By.XPATH,
+        )
+
+    def do_node_add_requirement_child(self, field_order: int = 1) -> None:
+        self.test_case.click(
+            selector=(
+                f"(//sdoc-node)[{field_order}]"
+                '//*[@data-testid="node-add-requirement-child-action"]'
+            ),
+            by=By.XPATH,
         )

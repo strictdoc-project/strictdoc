@@ -4,11 +4,11 @@ from sys import platform
 
 from seleniumbase import BaseCase
 
-from tests.end2end.conftest import DOWNLOADED_FILES_PATH
+from tests.end2end.conftest import DOWNLOAD_FILE_TIMEOUT, DOWNLOADED_FILES_PATH
 from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
     Screen_DocumentTree,
 )
-from tests.end2end.server import DOWNLOAD_FILE_TIMEOUT, SDocTestServer
+from tests.end2end.server import SDocTestServer
 
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 path_to_expected_downloaded_file = os.path.join(

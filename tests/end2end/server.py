@@ -20,19 +20,6 @@ import psutil
 # command-line argument when it is not used as a test fixture.
 from tests.end2end.conftest import test_environment
 
-if os.getenv("STRICTDOC_LONGER_TIMEOUTS") is not None:
-    WAIT_TIMEOUT = 30
-    POLL_TIMEOUT = 2000
-    WARMUP_INTERVAL = 3
-    # When Selenium clicks on a link that downloads a file, it takes some time
-    # until the file actually appears on the file system.
-    DOWNLOAD_FILE_TIMEOUT = 5
-else:
-    WAIT_TIMEOUT = 5  # Seconds
-    POLL_TIMEOUT = 1000  # Milliseconds
-    WARMUP_INTERVAL = 0
-    DOWNLOAD_FILE_TIMEOUT = 2
-
 
 class ReadTimeout(Exception):
     def __init__(self, seconds_passed):
@@ -133,7 +120,7 @@ class SDocTestServer:
             server_process=process, server_port=self.server_port
         )
 
-        sleep(WARMUP_INTERVAL)
+        sleep(test_environment.warm_up_interval_seconds)
         print(  # noqa: T201
             f"TestSDocServer: "
             f"Server is up and running on port: {self.server_port}."
@@ -193,12 +180,12 @@ class SDocTestServer:
             while len(expectations) > 0:
                 check_time = datetime.datetime.now()
                 diff_time = (check_time - start_time).total_seconds()
-                if diff_time > float(WAIT_TIMEOUT):
+                if diff_time > float(test_environment.wait_timeout_seconds):
                     raise ReadTimeout(diff_time)
 
                 # TODO: it could be that just polling for WAIT_TIMEOUT
                 # is enough.
-                if poll.poll(POLL_TIMEOUT):
+                if poll.poll(test_environment.poll_timeout_milliseconds):
                     line_bytes = server_process.stderr.readline()
                     while len(expectations) > 0 and line_bytes:
                         line_string = line_bytes.decode("utf-8")

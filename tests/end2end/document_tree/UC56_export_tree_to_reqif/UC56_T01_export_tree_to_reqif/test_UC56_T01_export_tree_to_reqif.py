@@ -4,9 +4,9 @@ from sys import platform
 
 from seleniumbase import BaseCase
 
-from tests.end2end.conftest import DOWNLOADED_FILES_PATH
+from tests.end2end.conftest import DOWNLOAD_FILE_TIMEOUT, DOWNLOADED_FILES_PATH
 from tests.end2end.end2end_test_setup import End2EndTestSetup
-from tests.end2end.server import DOWNLOAD_FILE_TIMEOUT, SDocTestServer
+from tests.end2end.server import SDocTestServer
 
 path_to_expected_downloaded_file = os.path.join(
     DOWNLOADED_FILES_PATH, "export.reqif"

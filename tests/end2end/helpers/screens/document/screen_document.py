@@ -23,6 +23,16 @@ class Screen_Document:  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
+    def assert_empty_document(self) -> None:
+        self.test_case.assert_element(
+            '//*[@data-testid="document-placeholder"]'
+        )
+
+    def assert_not_empty_document(self) -> None:
+        self.test_case.assert_element_not_visible(
+            '//*[@data-testid="document-placeholder"]'
+        )
+
     def assert_is_document_title(self, document_title: str) -> None:
         self.test_case.assert_text(document_title)
 

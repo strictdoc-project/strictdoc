@@ -30,7 +30,7 @@ class Test_UC07_T10_EditTableRequirement(BaseCase):
             screen_document.assert_requirement_style_table()
 
             form_edit_requirement: Form_EditRequirement = (
-                screen_document.do_open_edit_form()
+                screen_document.do_open_form_edit_requirement()
             )
             form_edit_requirement.do_fill_in_field_uid("Modified UID")
             form_edit_requirement.do_fill_in_field_title("Modified title")

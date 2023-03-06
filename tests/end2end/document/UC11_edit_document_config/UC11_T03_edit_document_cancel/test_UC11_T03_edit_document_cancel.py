@@ -30,7 +30,7 @@ class Test_UC11_T03_EditDocument_Cancel(BaseCase):
             screen_document.assert_is_document_title("Document 1")
             screen_document.assert_text("Hello world!")
 
-            form_config: Form_EditConfig = screen_document.do_open_config_form()
+            form_config: Form_EditConfig = screen_document.do_open_form_edit_config()
 
             form_config.do_form_cancel()
 

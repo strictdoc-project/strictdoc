@@ -71,9 +71,9 @@ class Screen_Document:  # pylint: disable=invalid-name
     # but named methods are recommended.
     #TODO
 
-    def assert_node_field_contains(self, xpath: str, text: str) -> None:
+    def assert_xpath_contains(self, xpath: str, text: str) -> None:
         self.test_case.assert_element(
-            f"//{xpath}"
+            f"{xpath}"
             f"[contains(., '{text}')]",
             by=By.XPATH
         )
@@ -140,9 +140,9 @@ class Screen_Document:  # pylint: disable=invalid-name
             by=By.XPATH
         )
 
-    # DO
+    # Open forms
 
-    def do_open_edit_form(self) -> Form_EditRequirement:
+    def do_open_form_edit_requirement(self) -> Form_EditRequirement:
         self.test_case.hover_and_click(
             hover_selector="(//sdoc-node)[2]",
             click_selector=(
@@ -153,7 +153,7 @@ class Screen_Document:  # pylint: disable=invalid-name
         )
         return Form_EditRequirement(self.test_case)
 
-    def do_open_config_form(self) -> Form_EditConfig:
+    def do_open_form_edit_config(self) -> Form_EditConfig:
         self.test_case.hover_and_click(
             hover_selector="(//sdoc-node)[1]",
             click_selector=(
@@ -164,7 +164,7 @@ class Screen_Document:  # pylint: disable=invalid-name
         )
         return Form_EditConfig(self.test_case)
 
-    def do_open_edit_grammar_modal(self) -> Form_EditGrammar:
+    def do_open_modal_form_edit_grammar(self) -> Form_EditGrammar:
         self.test_case.assert_element_not_present("//sdoc-modal", by=By.XPATH)
         self.test_case.click_xpath(
             '(//*[@data-testid="document-edit-grammar-action"])'
@@ -179,6 +179,8 @@ class Screen_Document:  # pylint: disable=invalid-name
         self.test_case.click_xpath(
             '(//*[@data-testid="document-export-reqif-action"])'
         )
+
+    # Node actions
 
     def do_open_node_menu(self, field_order: int = 1) -> None:
         self.test_case.hover_and_click(

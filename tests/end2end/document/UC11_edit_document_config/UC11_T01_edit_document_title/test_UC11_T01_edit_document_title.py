@@ -32,7 +32,7 @@ class Test_UC11_T01_EditDocumentTitle(BaseCase):
 
             screen_document.assert_text("Requirement title")
 
-            form_config: Form_EditConfig = screen_document.do_open_config_form()
+            form_config: Form_EditConfig = screen_document.do_open_form_edit_config()
 
             form_config.do_fill_in_document_title(
                 "Modified title of Document 1"

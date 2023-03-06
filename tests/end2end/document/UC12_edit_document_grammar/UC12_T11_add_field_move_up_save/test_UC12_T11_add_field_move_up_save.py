@@ -33,7 +33,7 @@ class Test_UC12_T11_AddFieldMoveUpSave(BaseCase):
             screen_document.assert_text("Requirement title")
 
             form_edit_grammar: Form_EditGrammar = (
-                screen_document.do_open_edit_grammar_modal()
+                screen_document.do_open_modal_form_edit_grammar()
             )
             form_edit_grammar.assert_on_grammar()
 

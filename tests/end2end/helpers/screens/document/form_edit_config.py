@@ -11,6 +11,18 @@ class Form_EditConfig(Form):  # pylint: disable=invalid-name
         assert isinstance(test_case, BaseCase)
         super().__init__(test_case)
 
+    # Assert fields:
+    # Parent class method with the 'xpath' or 'testid' can be used,
+    # but named methods are recommended.
+    # Assert: named methods:
+
+    def assert_document_abstract_contains(self, text: str) -> None:
+        assert isinstance(text, str)
+        super().assert_testid_contains(
+            "data-testid='form-document[FREETEXT]-field'",
+            text
+        )
+
     # Fill in:
     # Method with the 'field_name' can be used,
     # but named methods are recommended.

@@ -33,10 +33,23 @@ class Form:  # pylint: disable=invalid-name
             by=By.XPATH
         )
 
-    # TODO: rename to input_contains:
-    def assert_field_content(self, text: str) -> None:
+    def assert_contenteditable_contains(self, text: str) -> None:
         self.test_case.assert_element(
             "//sdoc-contenteditable"
+            f"[contains(., '{text}')]",
+            by=By.XPATH
+        )
+
+    def assert_xpath_contains(self, xpath: str, text: str) -> None:
+        self.test_case.assert_element(
+            f"{xpath}"
+            f"[contains(., '{text}')]",
+            by=By.XPATH
+        )
+
+    def assert_testid_contains(self, testid: str, text: str) -> None:
+        self.test_case.assert_element(
+            f"//*[@{testid}]"
             f"[contains(., '{text}')]",
             by=By.XPATH
         )

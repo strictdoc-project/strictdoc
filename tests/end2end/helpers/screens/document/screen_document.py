@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
-from tests.end2end.helpers.constants import NBSP
+from tests.end2end.helpers.constants import NBSP, NODE_0, NODE_1
 from tests.end2end.helpers.screens.document.form_edit_config import (
     Form_EditConfig,
 )
@@ -72,7 +72,7 @@ class Screen_Document:  # pylint: disable=invalid-name
             self,
             node_title: str,
             node_level: str = "",
-            node_order: int = 1,
+            node_order: int = NODE_1,
         ) -> None:
         # title pattern: "1.2.3.&nbsp:Title"
         # data_level (node_level) pattern: "1.2.3" (node_level)
@@ -86,7 +86,6 @@ class Screen_Document:  # pylint: disable=invalid-name
     # Assert fields content:
     # Method with the 'field_name' can be used,
     # but named methods are recommended.
-    #TODO
 
     def assert_xpath_contains(self, xpath: str, text: str) -> None:
         self.test_case.assert_element(
@@ -99,7 +98,7 @@ class Screen_Document:  # pylint: disable=invalid-name
 
     def assert_document_title_contains(self, text: str) -> None:
         assert isinstance(text, str)
-        # TODO
+        # TODO H1 -> testid
         self.test_case.assert_element(
             "//sdoc-node//H1"
             f"[contains(., '{text}')]",
@@ -108,7 +107,7 @@ class Screen_Document:  # pylint: disable=invalid-name
 
     def assert_document_uid_contains(self, text: str) -> None:
         assert isinstance(text, str)
-        # TODO
+        # TODO table_meta -> testid
         self.test_case.assert_element(
             "//table[@class='table_meta']//th"
             f"[contains(., 'UID')]",
@@ -122,7 +121,7 @@ class Screen_Document:  # pylint: disable=invalid-name
 
     def assert_document_version_contains(self, text: str) -> None:
         assert isinstance(text, str)
-        # TODO
+        # TODO table_meta -> testid
         self.test_case.assert_element(
             "//table[@class='table_meta']//th"
             f"[contains(., 'VERSION')]",
@@ -136,7 +135,7 @@ class Screen_Document:  # pylint: disable=invalid-name
 
     def assert_document_classification_contains(self, text: str) -> None:
         assert isinstance(text, str)
-        # TODO
+        # TODO table_meta -> testid
         self.test_case.assert_element(
             "//table[@class='table_meta']//th"
             f"[contains(., 'CLASSIFICATION')]",
@@ -150,7 +149,7 @@ class Screen_Document:  # pylint: disable=invalid-name
 
     def assert_document_abstract_contains(self, text: str) -> None:
         assert isinstance(text, str)
-        # TODO
+        # TODO table_meta -> testid
         self.test_case.assert_element(
             "//sdoc-node"
             f"[contains(., '{text}')]",
@@ -177,9 +176,9 @@ class Screen_Document:  # pylint: disable=invalid-name
 
     def do_open_form_edit_config(self) -> Form_EditConfig:
         self.test_case.hover_and_click(
-            hover_selector="(//sdoc-node)[1]",
+            hover_selector=f"(//sdoc-node)[{NODE_0}]",
             click_selector=(
-                '(//sdoc-node)[1]//*[@data-testid="document-edit-config-action"]'  # noqa: E501
+                f'(//sdoc-node)[{NODE_0}]//*[@data-testid="document-edit-config-action"]'  # noqa: E501
             ),
             hover_by=By.XPATH,
             click_by=By.XPATH,
@@ -188,9 +187,9 @@ class Screen_Document:  # pylint: disable=invalid-name
 
     def do_open_form_edit_requirement(self) -> Form_EditRequirement:
         self.test_case.hover_and_click(
-            hover_selector="(//sdoc-node)[2]",
+            hover_selector=f"(//sdoc-node)[{NODE_1}]",
             click_selector=(
-                '(//sdoc-node)[2]//*[@data-testid="node-edit-action"]'
+                f'(//sdoc-node)[{NODE_1}]//*[@data-testid="node-edit-action"]'
             ),
             hover_by=By.XPATH,
             click_by=By.XPATH,
@@ -199,9 +198,9 @@ class Screen_Document:  # pylint: disable=invalid-name
 
     def do_open_form_edit_section(self) -> Form_EditSection:
         self.test_case.hover_and_click(
-            hover_selector="(//sdoc-node)[2]",
+            hover_selector=f"(//sdoc-node)[{NODE_1}]",
             click_selector=(
-                '(//sdoc-node)[2]//*[@data-testid="node-edit-action"]'
+                f'(//sdoc-node)[{NODE_1}]//*[@data-testid="node-edit-action"]'
             ),
             hover_by=By.XPATH,
             click_by=By.XPATH,
@@ -210,7 +209,7 @@ class Screen_Document:  # pylint: disable=invalid-name
 
     # Node actions
 
-    def do_open_node_menu(self, field_order: int = 1) -> None:
+    def do_open_node_menu(self, field_order: int = NODE_0) -> None:
         self.test_case.hover_and_click(
             hover_selector=f"(//sdoc-node)[{field_order}]",
             click_selector=(
@@ -227,7 +226,7 @@ class Screen_Document:  # pylint: disable=invalid-name
         self.do_open_node_menu()
         self.test_case.click(
             selector=(
-                f"(//sdoc-node)[1]"
+                f"(//sdoc-node)[{NODE_0}]"
                 '//*[@data-testid="node-add-section-first-action"]'
             ),
             by=By.XPATH,
@@ -235,7 +234,7 @@ class Screen_Document:  # pylint: disable=invalid-name
         return Form_EditSection(self.test_case)
 
     def do_node_add_section_above(
-            self, field_order: int = 1
+            self, field_order: int = NODE_1
         ) -> Form_EditSection:
         self.do_open_node_menu(field_order)
         self.test_case.click(
@@ -248,7 +247,7 @@ class Screen_Document:  # pylint: disable=invalid-name
         return Form_EditSection(self.test_case)
 
     def do_node_add_section_below(
-            self, field_order: int = 1
+            self, field_order: int = NODE_1
         ) -> Form_EditSection:
         self.do_open_node_menu(field_order)
         self.test_case.click(
@@ -261,7 +260,7 @@ class Screen_Document:  # pylint: disable=invalid-name
         return Form_EditSection(self.test_case)
 
     def do_node_add_section_child(
-            self, field_order: int = 1
+            self, field_order: int = NODE_1
         ) -> Form_EditSection:
         self.do_open_node_menu(field_order)
         self.test_case.click(
@@ -279,7 +278,7 @@ class Screen_Document:  # pylint: disable=invalid-name
         self.do_open_node_menu()
         self.test_case.click(
             selector=(
-                f"(//sdoc-node)[1]"
+                f"(//sdoc-node)[{NODE_0}]"
                 '//*[@data-testid="node-add-requirement-first-action"]'
             ),
             by=By.XPATH,
@@ -287,7 +286,7 @@ class Screen_Document:  # pylint: disable=invalid-name
         return Form_EditRequirement(self.test_case)
 
     def do_node_add_requirement_above(
-            self, field_order: int = 1
+            self, field_order: int = NODE_1
         ) -> Form_EditRequirement:
         self.do_open_node_menu(field_order)
         self.test_case.click(
@@ -300,7 +299,7 @@ class Screen_Document:  # pylint: disable=invalid-name
         return Form_EditRequirement(self.test_case)
 
     def do_node_add_requirement_below(
-            self, field_order: int = 1
+            self, field_order: int = NODE_1
         ) -> Form_EditRequirement:
         self.do_open_node_menu(field_order)
         self.test_case.click(
@@ -313,7 +312,7 @@ class Screen_Document:  # pylint: disable=invalid-name
         return Form_EditRequirement(self.test_case)
 
     def do_node_add_requirement_child(
-            self, field_order: int = 1
+            self, field_order: int = NODE_1
         ) -> Form_EditRequirement:
         self.do_open_node_menu(field_order)
         self.test_case.click(

@@ -35,7 +35,8 @@ class Test_UC11_T31_EditDocumentClassification(BaseCase):
             form_config.do_fill_in_document_classification("Restricted")
             form_config.do_form_submit()
 
-            screen_document.assert_text("Restricted")
-            # assert_field_contains
+            screen_document.assert_document_classification_contains(
+                "Restricted"
+            )
 
         assert test_setup.compare_sandbox_and_expected_output()

@@ -35,7 +35,6 @@ class Test_UC11_G1_T01_EmptyTitle(BaseCase):
             form_config: Form_EditConfig = screen_document.do_open_config_form()
 
             form_config.do_clear_document_title()
-
             form_config.do_form_submit_and_catch_error(
                 "Document title must not be empty."
             )

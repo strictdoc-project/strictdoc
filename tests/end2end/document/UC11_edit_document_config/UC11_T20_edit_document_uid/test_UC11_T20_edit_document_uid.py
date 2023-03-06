@@ -35,8 +35,6 @@ class Test_UC11_T20_EditDocumentUID(BaseCase):
             form_config.do_fill_in_document_uid("DOC_001")
             form_config.do_form_submit()
 
-            screen_document.assert_text("UID")
-            screen_document.assert_text("DOC_001")
-            # assert_field_contains
+            screen_document.assert_document_uid_contains("DOC_001")
 
         assert test_setup.compare_sandbox_and_expected_output()

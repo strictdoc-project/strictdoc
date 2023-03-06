@@ -66,6 +66,82 @@ class Screen_Document:  # pylint: disable=invalid-name
             f"//turbo-frame[@id='frame-toc']//*[contains(., '{string}')]"
         )
 
+    # Assert fields content:
+    # Method with the 'field_name' can be used,
+    # but named methods are recommended.
+    #TODO
+
+    def assert_node_field_contains(self, xpath: str, text: str) -> None:
+        self.test_case.assert_element(
+            f"//{xpath}"
+            f"[contains(., '{text}')]",
+            by=By.XPATH
+        )
+
+    # Assert fields content: named methods
+
+    def assert_document_title_contains(self, text: str) -> None:
+        assert isinstance(text, str)
+        # TODO
+        self.test_case.assert_element(
+            "//sdoc-node//H1"
+            f"[contains(., '{text}')]",
+            by=By.XPATH
+        )
+
+    def assert_document_uid_contains(self, text: str) -> None:
+        assert isinstance(text, str)
+        # TODO
+        self.test_case.assert_element(
+            "//table[@class='table_meta']//th"
+            f"[contains(., 'UID')]",
+            by=By.XPATH
+        )
+        self.test_case.assert_element(
+            "//table[@class='table_meta']//td"
+            f"[contains(., '{text}')]",
+            by=By.XPATH
+        )
+
+    def assert_document_version_contains(self, text: str) -> None:
+        assert isinstance(text, str)
+        # TODO
+        self.test_case.assert_element(
+            "//table[@class='table_meta']//th"
+            f"[contains(., 'VERSION')]",
+            by=By.XPATH
+        )
+        self.test_case.assert_element(
+            "//table[@class='table_meta']//td"
+            f"[contains(., '{text}')]",
+            by=By.XPATH
+        )
+
+    def assert_document_classification_contains(self, text: str) -> None:
+        assert isinstance(text, str)
+        # TODO
+        self.test_case.assert_element(
+            "//table[@class='table_meta']//th"
+            f"[contains(., 'CLASSIFICATION')]",
+            by=By.XPATH
+        )
+        self.test_case.assert_element(
+            "//table[@class='table_meta']//td"
+            f"[contains(., '{text}')]",
+            by=By.XPATH
+        )
+
+    def assert_document_abstract_contains(self, text: str) -> None:
+        assert isinstance(text, str)
+        # TODO
+        self.test_case.assert_element(
+            "//sdoc-node"
+            f"[contains(., '{text}')]",
+            by=By.XPATH
+        )
+
+    # DO
+
     def do_open_edit_form(self) -> Form_EditRequirement:
         self.test_case.hover_and_click(
             hover_selector="(//sdoc-node)[2]",
@@ -113,13 +189,6 @@ class Screen_Document:  # pylint: disable=invalid-name
             ),
             hover_by=By.XPATH,
             click_by=By.XPATH,
-        )
-
-    def assert_field_contains(self, field_tag: str, text: str) -> None:
-        self.test_case.assert_element(
-            f"//{field_tag}"
-            f"[contains(., '{text}')]",
-            by=By.XPATH
         )
 
     # Add section

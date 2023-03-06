@@ -35,6 +35,8 @@ class Test_UC11_T40_EditDocumentAbstract(BaseCase):
             form_config.do_fill_in_document_abstract("Modified free text!")
             form_config.do_form_submit()
 
-            screen_document.assert_text("Modified free text!")
+            screen_document.assert_document_abstract_contains(
+                "Modified free text!"
+            )
 
         assert test_setup.compare_sandbox_and_expected_output()

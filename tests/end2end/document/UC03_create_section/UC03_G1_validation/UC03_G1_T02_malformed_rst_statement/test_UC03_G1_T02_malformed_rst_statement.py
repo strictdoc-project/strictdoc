@@ -1,4 +1,3 @@
-from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
@@ -11,7 +10,7 @@ from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
 from tests.end2end.server import SDocTestServer
 
 
-class Test_UC03_T06_CreateSectionAfterRequirement(BaseCase):
+class Test_UC03_G1_T02_MalformedRSTStatement(BaseCase):
     def test_01(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
@@ -32,23 +31,23 @@ class Test_UC03_T06_CreateSectionAfterRequirement(BaseCase):
 
             screen_document.assert_text("Hello world!")
 
-            # Check Requirement
-
-            screen_document.assert_node_title_contains(
-                "Requirement title",
-                "1",
-                2
+            form_edit_section: Form_EditSection = (
+                screen_document.do_node_add_section_first()
             )
 
-            # Create Section after
+            broken_rst = """
+- Broken RST markup
 
-            form_edit_section: Form_EditSection = (
-                screen_document.do_node_add_section_below(2))
+  - AAA
+  ---
+    """.strip()
+
             form_edit_section.do_fill_in_title("Section title")
-            form_edit_section.do_fill_in_text("Section statement.")
-            form_edit_section.do_form_submit()
+            form_edit_section.do_fill_in_text(broken_rst)
 
-            screen_document.assert_node_title_contains("Section title","2",3)
-            screen_document.assert_toc_contains_string("Section title")
+            form_edit_section.do_form_submit_and_catch_error(
+                "RST markup syntax error on line 4: "
+                "Bullet list ends without a blank line; unexpected unindent."
+            )
 
         assert test_setup.compare_sandbox_and_expected_output()

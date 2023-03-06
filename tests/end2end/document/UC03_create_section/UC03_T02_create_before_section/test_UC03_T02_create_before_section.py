@@ -1,6 +1,12 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.screens.document.form_edit_section import (
+    Form_EditSection,
+)
+from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
+    Screen_DocumentTree,
+)
 from tests.end2end.server import SDocTestServer
 
 
@@ -13,30 +19,46 @@ class Test_UC03_T02_CreateBeforeSection(BaseCase):
         ) as test_server:
             self.open(test_server.get_host_and_port())
 
-            self.assert_text("Document 1")
-            self.assert_text("PROJECT INDEX")
+            screen_document_tree = Screen_DocumentTree(self)
 
-            self.click_xpath('//*[@data-testid="tree-file-link"]')
-            self.assert_text("Hello world!")
+            screen_document_tree.assert_on_screen()
+            screen_document_tree.assert_contains_string("Document 1")
 
-            self.hover_and_click(
-                "sdoc-node", '[data-testid="node-menu-handler"]'
+            screen_document = screen_document_tree.do_click_on_first_document()
+
+            screen_document.assert_on_screen()
+            screen_document.assert_is_document_title("Document 1")
+
+            screen_document.assert_text("Hello world!")
+
+            existing_node_number = 2
+
+            screen_document.assert_node_title_contains(
+                'Section B',
+                '1',
+                existing_node_number
             )
-            self.click('[data-testid="node-add-section-above-action"]')
 
-            self.type("#section_title", "Section A")
-            self.type("#section_content", "Section A text.")
-
-            self.click_xpath('//*[@data-testid="form-submit-action"]')
-
-            self.assert_text("1. Section A")
-            self.assert_text("2. Section B")
-
-            self.assert_element(
-                "//turbo-frame[@id='frame-toc']//*[contains(., 'Section A')]"
+            form_edit_section: Form_EditSection = (
+                screen_document.do_node_add_section_above(existing_node_number)
             )
-            self.assert_element(
-                "//turbo-frame[@id='frame-toc']//*[contains(., 'Section B')]"
+
+            form_edit_section.do_fill_in_title("Section A")
+            form_edit_section.do_fill_in_text("Section A text.")
+            form_edit_section.do_form_submit()
+
+            screen_document.assert_node_title_contains(
+                'Section A',
+                '1',
+                existing_node_number
             )
+            screen_document.assert_node_title_contains(
+                'Section B',
+                '2',
+                existing_node_number + 1
+            )
+
+            screen_document.assert_toc_contains_string('Section A')
+            screen_document.assert_toc_contains_string('Section B')
 
         assert test_setup.compare_sandbox_and_expected_output()

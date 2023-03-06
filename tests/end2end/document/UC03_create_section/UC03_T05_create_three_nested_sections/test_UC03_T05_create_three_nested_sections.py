@@ -2,6 +2,12 @@ from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.screens.document.form_edit_section import (
+    Form_EditSection,
+)
+from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
+    Screen_DocumentTree,
+)
 from tests.end2end.server import SDocTestServer
 
 
@@ -14,90 +20,74 @@ class Test_UC03_T05_CreateThreeNestedSections(BaseCase):
         ) as test_server:
             self.open(test_server.get_host_and_port())
 
-            self.assert_text("Document 1")
-            self.assert_text("PROJECT INDEX")
+            screen_document_tree = Screen_DocumentTree(self)
 
-            self.click_xpath('//*[@data-testid="tree-file-link"]')
+            screen_document_tree.assert_on_screen()
+            screen_document_tree.assert_contains_string("Document 1")
 
-            self.assert_text("Hello world!")
+            screen_document = screen_document_tree.do_click_on_first_document()
+
+            screen_document.assert_on_screen()
+            screen_document.assert_is_document_title("Document 1")
+
+            screen_document.assert_text("Hello world!")
 
             # Section 1
-            self.hover_and_click(
-                hover_selector="(//sdoc-node)[1]",
-                click_selector=(
-                    '(//sdoc-node)[1]//*[@data-testid="node-menu-handler"]'
-                ),
-                hover_by=By.XPATH,
-                click_by=By.XPATH,
-            )
-            self.click(
-                selector=(
-                    "(//sdoc-node)[1]"
-                    '//*[@data-testid="node-add-section-first-action"]'
-                ),
-                by=By.XPATH,
-            )
+            added_node_1_order = 2
+            added_node_1_level = "1"
 
-            self.type("#section_title", "Section_1")
-            self.type(
-                "#section_content", "This is a free text of the section 1."
+            form_edit_section: Form_EditSection = (
+                screen_document.do_node_add_section_first()
             )
-
-            self.click_xpath('//*[@data-testid="form-submit-action"]')
-            self.assert_text("1. Section_1")
-
-            # Section 1_1
-            self.hover_and_click(
-                hover_selector="(//sdoc-node)[2]",
-                click_selector=(
-                    '(//sdoc-node)[2]//*[@data-testid="node-menu-handler"]'
-                ),
-                hover_by=By.XPATH,
-                click_by=By.XPATH,
+            form_edit_section.do_fill_in_title("Section_1")
+            form_edit_section.do_fill_in_text(
+                "This is a free text of the section 1."
             )
-            self.click(
-                selector=(
-                    "(//sdoc-node)[2]"
-                    '//*[@data-testid="node-add-section-child-action"]'
-                ),
-                by=By.XPATH,
-            )
+            form_edit_section.do_form_submit()
 
-            self.type("#section_title", "Section_1_1")
-            self.type(
-                "#section_content", "This is a free text of the section 1_1."
+            screen_document.assert_node_title_contains(
+                "Section_1",
+                added_node_1_level,
+                added_node_1_order
             )
+            screen_document.assert_toc_contains_string("Section_1")
 
-            self.click_xpath('//*[@data-testid="form-submit-action"]')
-            self.assert_text("1.1. Section_1_1")
+            # Section 1_1 as child
+            added_node_2_order = 3
+            added_node_2_level = "1.1"
 
-            # # Section 1_1_1
-            self.hover_and_click(
-                hover_selector="(//sdoc-node)[3]",
-                click_selector=(
-                    '(//sdoc-node)[3]//*[@data-testid="node-menu-handler"]'
-                ),
-                hover_by=By.XPATH,
-                click_by=By.XPATH,
+            form_edit_section: Form_EditSection = (
+                screen_document.do_node_add_section_child(added_node_1_order))
+            form_edit_section.do_fill_in_title("Section_1_1")
+            form_edit_section.do_fill_in_text(
+                "This is a free text of the section 1_1."
             )
-            self.click(
-                selector=(
-                    "(//sdoc-node)[3]"
-                    '//*[@data-testid="node-add-section-child-action"]'
-                ),
-                by=By.XPATH,
-            )
+            form_edit_section.do_form_submit()
 
-            self.type("#section_title", "Section_1_1_1")
-            self.type(
-                "#section_content", "This is a free text of the section 1_1_1."
+            screen_document.assert_node_title_contains(
+                "Section_1_1",
+                added_node_2_level,
+                added_node_2_order
             )
+            screen_document.assert_toc_contains_string("Section_1_1")
 
-            self.click_xpath('//*[@data-testid="form-submit-action"]')
-            self.assert_text("1.1.1. Section_1_1_1")
+            # # Section 1_1_1 as child
+            added_node_3_order = 4
+            added_node_3_level = "1.1.1"
 
-            self.assert_element(
-                "//turbo-frame[@id='frame-toc']//*[contains(., 'Section_1_1')]"
+            form_edit_section: Form_EditSection = (
+                screen_document.do_node_add_section_child(added_node_2_order))
+            form_edit_section.do_fill_in_title("Section_1_1_1")
+            form_edit_section.do_fill_in_text(
+                "This is a free text of the section 1_1_1."
             )
+            form_edit_section.do_form_submit()
+
+            screen_document.assert_node_title_contains(
+                "Section_1_1_1",
+                added_node_3_level,
+                added_node_3_order
+            )
+            screen_document.assert_toc_contains_string("Section_1_1_1")
 
         assert test_setup.compare_sandbox_and_expected_output()

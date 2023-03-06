@@ -1,6 +1,7 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.constants import NODE_1
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
 )
@@ -33,7 +34,7 @@ class Test_UC06_T03_CreateRequirementAfterSection(BaseCase):
 
             # Section exists
             existing_section_level = "1"
-            existing_section_position = 2
+            existing_section_position = NODE_1
             screen_document.assert_node_title_contains(
                 "Section title",
                 existing_section_level,
@@ -54,7 +55,7 @@ class Test_UC06_T03_CreateRequirementAfterSection(BaseCase):
 
             # Expected for Requirement:
             added_requirement_level = "2"
-            added_requirement_position = 3
+            added_requirement_position = existing_section_position + 1
 
             screen_document.assert_node_title_contains(
                 "Requirement title",

@@ -1,6 +1,7 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.constants import NODE_1
 from tests.end2end.helpers.screens.document.form_edit_section import (
     Form_EditSection,
 )
@@ -42,10 +43,8 @@ class Test_UC03_T03_CreateFirstSection(BaseCase):
             )
             form_edit_section.do_form_submit()
 
-            first_added_node_number = 2
-
             screen_document.assert_node_title_contains(
-                "First title", "1", first_added_node_number
+                "First title", "1", NODE_1
             )
             screen_document.assert_toc_contains_string("First title")
 

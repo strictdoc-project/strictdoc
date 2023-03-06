@@ -1,6 +1,7 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.constants import NODE_1
 from tests.end2end.helpers.screens.document.form_edit_section import (
     Form_EditSection,
 )
@@ -31,7 +32,7 @@ class Test_UC03_T02_CreateBeforeSection(BaseCase):
 
             screen_document.assert_text("Hello world!")
 
-            existing_node_number = 2
+            existing_node_number = NODE_1
 
             screen_document.assert_node_title_contains(
                 "Section B", "1", existing_node_number

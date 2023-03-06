@@ -1,6 +1,7 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.constants import NODE_1
 from tests.end2end.helpers.screens.document.form_edit_section import (
     Form_EditSection,
 )
@@ -33,7 +34,7 @@ class Test_UC03_T04_CreateTwoSiblingSections(BaseCase):
             screen_document.assert_text("Hello world!")
 
             # Creating Section 1
-            first_added_node_number = 2
+            first_added_node_number = NODE_1
 
             form_edit_section: Form_EditSection = (
                 screen_document.do_node_add_section_first()
@@ -50,7 +51,7 @@ class Test_UC03_T04_CreateTwoSiblingSections(BaseCase):
             screen_document.assert_toc_contains_string("First title")
 
             # Creating Section 2 below
-            second_added_node_number = 3
+            second_added_node_number = first_added_node_number + 1
 
             form_edit_section: Form_EditSection = (
                 screen_document.do_node_add_section_below(

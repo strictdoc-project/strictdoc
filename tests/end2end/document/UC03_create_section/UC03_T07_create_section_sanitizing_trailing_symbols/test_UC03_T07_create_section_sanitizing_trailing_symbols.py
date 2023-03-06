@@ -1,6 +1,7 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.constants import TEXT_WITH_TRAILING_WHITESPACES
 from tests.end2end.helpers.screens.document.form_edit_section import (
     Form_EditSection,
 )
@@ -31,22 +32,12 @@ class Test_UC03_T07_CreateSection_SanitizingTrailingSymbols(BaseCase):
 
             screen_document.assert_text("Hello world!")
 
-            # Sanitized
-
-            sanitized = """
-Hello world!    
-    
-Hello world!    
-    
-Hello world!    
-                """  # noqa: W291, W293
-
             form_edit_section: Form_EditSection = (
                 screen_document.do_node_add_section_first()
             )
 
             form_edit_section.do_fill_in_title("First title")
-            form_edit_section.do_fill_in_text(sanitized)
+            form_edit_section.do_fill_in_text(TEXT_WITH_TRAILING_WHITESPACES)
             form_edit_section.do_form_submit()
 
             screen_document.assert_node_title_contains("First title", "1", 2)

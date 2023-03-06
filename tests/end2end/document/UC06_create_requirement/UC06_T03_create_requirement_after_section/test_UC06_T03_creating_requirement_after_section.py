@@ -1,7 +1,6 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
-from tests.end2end.helpers.constants import TEXT_WITH_TRAILING_WHITESPACES
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
 )
@@ -11,7 +10,7 @@ from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
 from tests.end2end.server import SDocTestServer
 
 
-class Test_UC07_T60_SanitizingTrainingSymbols(BaseCase):
+class Test_UC06_T03_CreateRequirementAfterSection(BaseCase):
     def test_01(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
@@ -29,23 +28,39 @@ class Test_UC07_T60_SanitizingTrainingSymbols(BaseCase):
 
             screen_document.assert_on_screen()
             screen_document.assert_is_document_title("Document 1")
+
             screen_document.assert_text("Hello world!")
 
+            # Section exists
+            existing_section_level = "1"
+            existing_section_position = 2
+            screen_document.assert_node_title_contains(
+                "Section title",
+                existing_section_level,
+                existing_section_position,
+            )
+
+            # Requirement is added below
             form_edit_requirement: Form_EditRequirement = (
-                screen_document.do_open_form_edit_requirement()
+                screen_document.do_node_add_requirement_below(
+                    existing_section_position
+                )
             )
-
-            form_edit_requirement.do_fill_in_field_title("Modified title")
-
-            # Contains trailing symbols.
+            form_edit_requirement.do_fill_in_field_title("Requirement title")
             form_edit_requirement.do_fill_in_field_statement(
-                TEXT_WITH_TRAILING_WHITESPACES
+                "Requirement statement."
             )
-
             form_edit_requirement.do_form_submit()
 
-            screen_document.assert_text("1. Modified title")
+            # Expected for Requirement:
+            added_requirement_level = "2"
+            added_requirement_position = 3
 
-            screen_document.assert_toc_contains_string("Modified title")
+            screen_document.assert_node_title_contains(
+                "Requirement title",
+                added_requirement_level,
+                added_requirement_position,
+            )
+            screen_document.assert_toc_contains_string("Requirement title")
 
         assert test_setup.compare_sandbox_and_expected_output()

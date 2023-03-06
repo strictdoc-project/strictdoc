@@ -1,7 +1,13 @@
-from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.constants import NODE_1
+from tests.end2end.helpers.screens.document.form_edit_requirement import (
+    Form_EditRequirement,
+)
+from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
+    Screen_DocumentTree,
+)
 from tests.end2end.server import SDocTestServer
 
 
@@ -14,142 +20,100 @@ class Test_UC06_T06_CreateRequirementsInDocument(BaseCase):
         ) as test_server:
             self.open(test_server.get_host_and_port())
 
-            self.assert_text("Document 1")
-            self.assert_text("PROJECT INDEX")
+            screen_document_tree = Screen_DocumentTree(self)
 
-            self.click_xpath('//*[@data-testid="tree-file-link"]')
+            screen_document_tree.assert_on_screen()
+            screen_document_tree.assert_contains_string("Document 1")
 
-            self.assert_text("Hello world!")
+            screen_document = screen_document_tree.do_click_on_first_document()
+
+            screen_document.assert_on_screen()
+            screen_document.assert_is_document_title("Document 1")
+
+            screen_document.assert_text("Hello world!")
 
             # Requirement 1
-            self.hover_and_click(
-                hover_selector="(//sdoc-node)[1]",
-                click_selector=(
-                    '(//sdoc-node)[1]//*[@data-testid="node-menu-handler"]'
-                ),
-                hover_by=By.XPATH,
-                click_by=By.XPATH,
+            form_edit_requirement: Form_EditRequirement = (
+                screen_document.do_node_add_requirement_first()
             )
-            self.click(
-                selector=(
-                    "(//sdoc-node)[1]"
-                    '//*[@data-testid="node-add-requirement-first-action"]'
-                ),
-                by=By.XPATH,
+            form_edit_requirement.do_fill_in_field_uid("REQ-001")
+            form_edit_requirement.do_fill_in_field_title("Requirement title #1")
+            form_edit_requirement.do_fill_in_field_statement(
+                "Requirement statement #1."
             )
+            form_edit_requirement.do_fill_in_field_rationale(
+                "Requirement rationale #1."
+            )
+            form_edit_requirement.do_form_submit()
 
-            self.type("//*[@id='requirement[UID]']", "REQ-001", by=By.XPATH)
-            self.type(
-                "//*[@id='requirement[TITLE]']",
+            # Expected for Requirement 1:
+            added_requirement_1_level = "1"
+            added_requirement_1_position = NODE_1
+
+            screen_document.assert_node_title_contains(
                 "Requirement title #1",
-                by=By.XPATH,
+                added_requirement_1_level,
+                added_requirement_1_position,
             )
-            self.type(
-                "//*[@id='requirement[STATEMENT]']",
-                "Requirement statement #1.",
-                by=By.XPATH,
-            )
-            self.type(
-                "//*[@id='requirement[RATIONALE]']",
-                "Requirement rationale #1.",
-                by=By.XPATH,
-            )
-
-            self.click_xpath('//*[@data-testid="form-submit-action"]')
+            screen_document.assert_toc_contains_string("Requirement title #1")
 
             # Requirement 2
-            self.hover_and_click(
-                hover_selector="(//sdoc-node)[2]",
-                click_selector=(
-                    '(//sdoc-node)[2]//*[@data-testid="node-menu-handler"]'
-                ),
-                hover_by=By.XPATH,
-                click_by=By.XPATH,
+            form_edit_requirement: Form_EditRequirement = (
+                screen_document.do_node_add_requirement_below(
+                    added_requirement_1_position
+                )
             )
-            self.click(
-                selector=(
-                    "(//sdoc-node)[2]"
-                    '//*[@data-testid="node-add-requirement-below-action"]'
-                ),
-                by=By.XPATH,
+            form_edit_requirement.do_fill_in_field_uid("REQ-002")
+            form_edit_requirement.do_fill_in_field_title("Requirement title #2")
+            form_edit_requirement.do_fill_in_field_statement(
+                "Requirement statement #2."
             )
+            form_edit_requirement.do_fill_in_field_rationale(
+                "Requirement rationale #2."
+            )
+            form_edit_requirement.do_form_submit()
 
-            self.type("//*[@id='requirement[UID]']", "REQ-002", by=By.XPATH)
-            self.type(
-                "//*[@id='requirement[TITLE]']",
+            # Expected for Requirement 2:
+            added_requirement_2_level = "2"
+            added_requirement_2_position = added_requirement_1_position + 1
+
+            screen_document.assert_node_title_contains(
                 "Requirement title #2",
-                by=By.XPATH,
+                added_requirement_2_level,
+                added_requirement_2_position,
             )
-            self.type(
-                "//*[@id='requirement[STATEMENT]']",
-                "Requirement statement #2.",
-                by=By.XPATH,
-            )
-            self.type(
-                "//*[@id='requirement[RATIONALE]']",
-                "Requirement rationale #2.",
-                by=By.XPATH,
-            )
-
-            self.click_xpath('//*[@data-testid="form-submit-action"]')
+            screen_document.assert_toc_contains_string("Requirement title #2")
 
             # Requirement 3
-            self.hover_and_click(
-                hover_selector="(//sdoc-node)[3]",
-                click_selector=(
-                    '(//sdoc-node)[3]//*[@data-testid="node-menu-handler"]'
-                ),
-                hover_by=By.XPATH,
-                click_by=By.XPATH,
+            form_edit_requirement: Form_EditRequirement = (
+                screen_document.do_node_add_requirement_below(
+                    added_requirement_2_position
+                )
             )
-            self.click(
-                selector=(
-                    "(//sdoc-node)[3]"
-                    '//*[@data-testid="node-add-requirement-below-action"]'
-                ),
-                by=By.XPATH,
+            form_edit_requirement.do_fill_in_field_uid("REQ-003")
+            form_edit_requirement.do_fill_in_field_title("Requirement title #3")
+            form_edit_requirement.do_fill_in_field_statement(
+                "Requirement statement #3."
             )
+            form_edit_requirement.do_fill_in_field_rationale(
+                "Requirement rationale #3."
+            )
+            form_edit_requirement.do_form_submit()
 
-            self.type("//*[@id='requirement[UID]']", "REQ-003", by=By.XPATH)
-            self.type(
-                "//*[@id='requirement[TITLE]']",
+            # Expected for Requirement 3:
+            added_requirement_3_level = "3"
+            added_requirement_3_position = added_requirement_2_position + 1
+
+            screen_document.assert_node_title_contains(
                 "Requirement title #3",
-                by=By.XPATH,
+                added_requirement_3_level,
+                added_requirement_3_position,
             )
-            self.type(
-                "//*[@id='requirement[STATEMENT]']",
-                "Requirement statement #3.",
-                by=By.XPATH,
-            )
-            self.type(
-                "//*[@id='requirement[RATIONALE]']",
-                "Requirement rationale #3.",
-                by=By.XPATH,
-            )
-
-            self.click_xpath('//*[@data-testid="form-submit-action"]')
-
-            self.assert_element_not_present(
-                "//button[@type='submit' and text()='Save']", by=By.XPATH
-            )
+            screen_document.assert_toc_contains_string("Requirement title #3")
 
             # Check the resulting TOC.
-
-            self.assert_text("1. Requirement title #1")
-            self.assert_text("2. Requirement title #2")
-            self.assert_text("3. Requirement title #3")
-
-            self.assert_element(
-                "//turbo-frame[@id='frame-toc']"
-                "//*[contains(., 'Requirement title #1')]"
-            )
-            self.assert_element(
-                "//turbo-frame[@id='frame-toc']"
-                "//*[contains(., 'Requirement title #2')]"
-            )
-            self.assert_element(
-                "//turbo-frame[@id='frame-toc']"
-                "//*[contains(., 'Requirement title #3')]"
-            )
+            screen_document.assert_toc_contains_string("Requirement title #1")
+            screen_document.assert_toc_contains_string("Requirement title #2")
+            screen_document.assert_toc_contains_string("Requirement title #3")
 
         assert test_setup.compare_sandbox_and_expected_output()

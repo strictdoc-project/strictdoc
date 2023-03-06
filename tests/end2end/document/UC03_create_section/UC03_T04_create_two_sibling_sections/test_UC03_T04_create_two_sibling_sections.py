@@ -1,4 +1,3 @@
-from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
@@ -49,7 +48,6 @@ class Test_UC03_T04_CreateTwoSiblingSections(BaseCase):
                 "First title", "1", first_added_node_number
             )
             screen_document.assert_toc_contains_string("First title")
-
 
             # Creating Section 2 below
             second_added_node_number = 3

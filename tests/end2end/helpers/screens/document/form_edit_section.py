@@ -14,7 +14,7 @@ class Form_EditSection(Form):  # pylint: disable=invalid-name
         assert isinstance(field_value, str)
 
         self.test_case.type(
-            f"(//*[@data-testid='form-section_title-field'])",
+            "(//*[@data-testid='form-section_title-field'])",
             f"{field_value}",
             by=By.XPATH,
         )
@@ -23,7 +23,7 @@ class Form_EditSection(Form):  # pylint: disable=invalid-name
         assert isinstance(field_value, str)
 
         self.test_case.type(
-            f"(//*[@data-testid='form-section_content-field'])",
+            "(//*[@data-testid='form-section_content-field'])",
             f"{field_value}",
             by=By.XPATH,
         )

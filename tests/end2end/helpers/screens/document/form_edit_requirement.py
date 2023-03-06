@@ -1,5 +1,4 @@
 # pylint: disable=invalid-name
-from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.helpers.screens.form.form import Form
@@ -22,8 +21,8 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
         super().do_add_field("comment")
 
     def do_fill_in_field_comment(
-            self, field_value: str, field_order: int = 1
-        ) -> None:
+        self, field_value: str, field_order: int = 1
+    ) -> None:
         assert isinstance(field_value, str)
         super().do_fill_in("requirement[COMMENT]", field_value, field_order)
 
@@ -42,4 +41,3 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
     def do_fill_in_field_rationale(self, field_value: str) -> None:
         assert isinstance(field_value, str)
         super().do_fill_in("requirement[RATIONALE]", field_value)
-

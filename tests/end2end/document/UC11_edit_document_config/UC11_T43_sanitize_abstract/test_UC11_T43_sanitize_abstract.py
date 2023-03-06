@@ -32,7 +32,9 @@ class Test_UC11_T43_SanitizeAbstract(BaseCase):
             screen_document.assert_is_document_title("Document 1")
             screen_document.assert_text("Hello world!")
 
-            form_config: Form_EditConfig = screen_document.do_open_form_edit_config()
+            form_config: Form_EditConfig = (
+                screen_document.do_open_form_edit_config()
+            )
 
             # Contains trailing symbols.
             text_with_trailing_symbols = """

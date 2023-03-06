@@ -1,4 +1,3 @@
-from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
@@ -35,20 +34,19 @@ class Test_UC03_T06_CreateSectionAfterRequirement(BaseCase):
             # Check Requirement
 
             screen_document.assert_node_title_contains(
-                "Requirement title",
-                "1",
-                2
+                "Requirement title", "1", 2
             )
 
             # Create Section after
 
             form_edit_section: Form_EditSection = (
-                screen_document.do_node_add_section_below(2))
+                screen_document.do_node_add_section_below(2)
+            )
             form_edit_section.do_fill_in_title("Section title")
             form_edit_section.do_fill_in_text("Section statement.")
             form_edit_section.do_form_submit()
 
-            screen_document.assert_node_title_contains("Section title","2",3)
+            screen_document.assert_node_title_contains("Section title", "2", 3)
             screen_document.assert_toc_contains_string("Section title")
 
         assert test_setup.compare_sandbox_and_expected_output()

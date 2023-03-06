@@ -25,33 +25,24 @@ class Form:  # pylint: disable=invalid-name
 
     # Assert field content
 
-    # TODO: https://www.tutorialspoint.com/how-do-i-find-an-element-that-contains-specific-text-in-selenium-webdriver
     def assert_error(self, message: str) -> None:
         self.test_case.assert_element(
-            "//sdoc-form-error"
-            f"[contains(., '{message}')]",
-            by=By.XPATH
+            f"//sdoc-form-error[contains(., '{message}')]", by=By.XPATH
         )
 
     def assert_contenteditable_contains(self, text: str) -> None:
         self.test_case.assert_element(
-            "//sdoc-contenteditable"
-            f"[contains(., '{text}')]",
-            by=By.XPATH
+            f"//sdoc-contenteditable[contains(., '{text}')]", by=By.XPATH
         )
 
     def assert_xpath_contains(self, xpath: str, text: str) -> None:
         self.test_case.assert_element(
-            f"{xpath}"
-            f"[contains(., '{text}')]",
-            by=By.XPATH
+            f"{xpath}[contains(., '{text}')]", by=By.XPATH
         )
 
     def assert_testid_contains(self, testid: str, text: str) -> None:
         self.test_case.assert_element(
-            f"//*[@{testid}]"
-            f"[contains(., '{text}')]",
-            by=By.XPATH
+            f"//*[@{testid}][contains(., '{text}')]", by=By.XPATH
         )
 
     # Work with fields containers
@@ -106,8 +97,7 @@ class Form:  # pylint: disable=invalid-name
         assert isinstance(field_name, str)
         # HACK: The only way the field is actually cleared.
         self.test_case.type(
-            f"(//*[@data-testid='form-{field_name}-field'])"
-            f"[{field_order}]",
+            f"(//*[@data-testid='form-{field_name}-field'])[{field_order}]",
             "1",
             by=By.XPATH,
         )

@@ -31,7 +31,7 @@ class Test_UC03_T01_CancelNewSection(BaseCase):
 
             screen_document.assert_text("Hello world!")
 
-            test_node_number= 2
+            test_node_number = 2
             form_edit_section: Form_EditSection = (
                 screen_document.do_node_add_section_above(test_node_number)
             )

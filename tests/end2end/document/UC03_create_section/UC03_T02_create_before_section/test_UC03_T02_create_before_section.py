@@ -34,9 +34,7 @@ class Test_UC03_T02_CreateBeforeSection(BaseCase):
             existing_node_number = 2
 
             screen_document.assert_node_title_contains(
-                'Section B',
-                '1',
-                existing_node_number
+                "Section B", "1", existing_node_number
             )
 
             form_edit_section: Form_EditSection = (
@@ -48,17 +46,13 @@ class Test_UC03_T02_CreateBeforeSection(BaseCase):
             form_edit_section.do_form_submit()
 
             screen_document.assert_node_title_contains(
-                'Section A',
-                '1',
-                existing_node_number
+                "Section A", "1", existing_node_number
             )
             screen_document.assert_node_title_contains(
-                'Section B',
-                '2',
-                existing_node_number + 1
+                "Section B", "2", existing_node_number + 1
             )
 
-            screen_document.assert_toc_contains_string('Section A')
-            screen_document.assert_toc_contains_string('Section B')
+            screen_document.assert_toc_contains_string("Section A")
+            screen_document.assert_toc_contains_string("Section B")
 
         assert test_setup.compare_sandbox_and_expected_output()

@@ -16,7 +16,7 @@ from tests.end2end.helpers.screens.document.form_edit_section import (
 )
 
 
-class Screen_Document:  # pylint: disable=invalid-name
+class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
     def __init__(self, test_case: BaseCase) -> None:
         assert isinstance(test_case, BaseCase)
         self.test_case: BaseCase = test_case
@@ -65,22 +65,22 @@ class Screen_Document:  # pylint: disable=invalid-name
     def assert_toc_contains_string(self, string: str) -> None:
         self.test_case.assert_element(
             f"//turbo-frame[@id='frame-toc']//*[contains(., '{string}')]",
-            by=By.XPATH
+            by=By.XPATH,
         )
 
     def assert_node_title_contains(
-            self,
-            node_title: str,
-            node_level: str = "",
-            node_order: int = NODE_1,
-        ) -> None:
+        self,
+        node_title: str,
+        node_level: str = "",
+        node_order: int = NODE_1,
+    ) -> None:
         # title pattern: "1.2.3.&nbsp:Title"
         # data_level (node_level) pattern: "1.2.3" (node_level)
         prefix = "" if node_level == "" else f"{node_level}.{NBSP}"
         self.test_case.assert_element(
             f"(//sdoc-node)[{node_order}]"
             f"//*[contains(., '{prefix}{node_title}')]",
-            by=By.XPATH
+            by=By.XPATH,
         )
 
     # Assert fields content:
@@ -89,9 +89,7 @@ class Screen_Document:  # pylint: disable=invalid-name
 
     def assert_xpath_contains(self, xpath: str, text: str) -> None:
         self.test_case.assert_element(
-            f"{xpath}"
-            f"[contains(., '{text}')]",
-            by=By.XPATH
+            f"{xpath}[contains(., '{text}')]", by=By.XPATH
         )
 
     # Assert fields content: named methods
@@ -100,37 +98,31 @@ class Screen_Document:  # pylint: disable=invalid-name
         assert isinstance(text, str)
         # TODO H1 -> testid
         self.test_case.assert_element(
-            "//sdoc-node//H1"
-            f"[contains(., '{text}')]",
-            by=By.XPATH
+            "//sdoc-node//H1[contains(., '{text}')]", by=By.XPATH
         )
 
     def assert_document_uid_contains(self, text: str) -> None:
         assert isinstance(text, str)
         # TODO table_meta -> testid
         self.test_case.assert_element(
-            "//table[@class='table_meta']//th"
-            f"[contains(., 'UID')]",
-            by=By.XPATH
+            "//table[@class='table_meta']//th[contains(., 'UID')]",
+            by=By.XPATH,
         )
         self.test_case.assert_element(
-            "//table[@class='table_meta']//td"
-            f"[contains(., '{text}')]",
-            by=By.XPATH
+            f"//table[@class='table_meta']//td[contains(., '{text}')]",
+            by=By.XPATH,
         )
 
     def assert_document_version_contains(self, text: str) -> None:
         assert isinstance(text, str)
         # TODO table_meta -> testid
         self.test_case.assert_element(
-            "//table[@class='table_meta']//th"
-            f"[contains(., 'VERSION')]",
-            by=By.XPATH
+            "//table[@class='table_meta']//th[contains(., 'VERSION')]",
+            by=By.XPATH,
         )
         self.test_case.assert_element(
-            "//table[@class='table_meta']//td"
-            f"[contains(., '{text}')]",
-            by=By.XPATH
+            f"//table[@class='table_meta']//td[contains(., '{text}')]",
+            by=By.XPATH,
         )
 
     def assert_document_classification_contains(self, text: str) -> None:
@@ -138,22 +130,19 @@ class Screen_Document:  # pylint: disable=invalid-name
         # TODO table_meta -> testid
         self.test_case.assert_element(
             "//table[@class='table_meta']//th"
-            f"[contains(., 'CLASSIFICATION')]",
-            by=By.XPATH
+            "[contains(., 'CLASSIFICATION')]",
+            by=By.XPATH,
         )
         self.test_case.assert_element(
-            "//table[@class='table_meta']//td"
-            f"[contains(., '{text}')]",
-            by=By.XPATH
+            f"//table[@class='table_meta']//td[contains(., '{text}')]",
+            by=By.XPATH,
         )
 
     def assert_document_abstract_contains(self, text: str) -> None:
         assert isinstance(text, str)
         # TODO table_meta -> testid
         self.test_case.assert_element(
-            "//sdoc-node"
-            f"[contains(., '{text}')]",
-            by=By.XPATH
+            f"//sdoc-node[contains(., '{text}')]", by=By.XPATH
         )
 
     # Open forms
@@ -234,8 +223,8 @@ class Screen_Document:  # pylint: disable=invalid-name
         return Form_EditSection(self.test_case)
 
     def do_node_add_section_above(
-            self, field_order: int = NODE_1
-        ) -> Form_EditSection:
+        self, field_order: int = NODE_1
+    ) -> Form_EditSection:
         self.do_open_node_menu(field_order)
         self.test_case.click(
             selector=(
@@ -247,8 +236,8 @@ class Screen_Document:  # pylint: disable=invalid-name
         return Form_EditSection(self.test_case)
 
     def do_node_add_section_below(
-            self, field_order: int = NODE_1
-        ) -> Form_EditSection:
+        self, field_order: int = NODE_1
+    ) -> Form_EditSection:
         self.do_open_node_menu(field_order)
         self.test_case.click(
             selector=(
@@ -260,8 +249,8 @@ class Screen_Document:  # pylint: disable=invalid-name
         return Form_EditSection(self.test_case)
 
     def do_node_add_section_child(
-            self, field_order: int = NODE_1
-        ) -> Form_EditSection:
+        self, field_order: int = NODE_1
+    ) -> Form_EditSection:
         self.do_open_node_menu(field_order)
         self.test_case.click(
             selector=(
@@ -286,8 +275,8 @@ class Screen_Document:  # pylint: disable=invalid-name
         return Form_EditRequirement(self.test_case)
 
     def do_node_add_requirement_above(
-            self, field_order: int = NODE_1
-        ) -> Form_EditRequirement:
+        self, field_order: int = NODE_1
+    ) -> Form_EditRequirement:
         self.do_open_node_menu(field_order)
         self.test_case.click(
             selector=(
@@ -299,8 +288,8 @@ class Screen_Document:  # pylint: disable=invalid-name
         return Form_EditRequirement(self.test_case)
 
     def do_node_add_requirement_below(
-            self, field_order: int = NODE_1
-        ) -> Form_EditRequirement:
+        self, field_order: int = NODE_1
+    ) -> Form_EditRequirement:
         self.do_open_node_menu(field_order)
         self.test_case.click(
             selector=(
@@ -312,8 +301,8 @@ class Screen_Document:  # pylint: disable=invalid-name
         return Form_EditRequirement(self.test_case)
 
     def do_node_add_requirement_child(
-            self, field_order: int = NODE_1
-        ) -> Form_EditRequirement:
+        self, field_order: int = NODE_1
+    ) -> Form_EditRequirement:
         self.do_open_node_menu(field_order)
         self.test_case.click(
             selector=(

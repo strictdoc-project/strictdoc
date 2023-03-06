@@ -49,7 +49,7 @@ Hello world!
             form_edit_section.do_fill_in_text(sanitized)
             form_edit_section.do_form_submit()
 
-            screen_document.assert_node_title_contains("First title","1",2)
+            screen_document.assert_node_title_contains("First title", "1", 2)
             screen_document.assert_toc_contains_string("First title")
 
         assert test_setup.compare_sandbox_and_expected_output()

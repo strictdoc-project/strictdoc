@@ -1,4 +1,3 @@
-from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
@@ -46,9 +45,7 @@ class Test_UC03_T05_CreateThreeNestedSections(BaseCase):
             form_edit_section.do_form_submit()
 
             screen_document.assert_node_title_contains(
-                "Section_1",
-                added_node_1_level,
-                added_node_1_order
+                "Section_1", added_node_1_level, added_node_1_order
             )
             screen_document.assert_toc_contains_string("Section_1")
 
@@ -57,7 +54,8 @@ class Test_UC03_T05_CreateThreeNestedSections(BaseCase):
             added_node_2_level = "1.1"
 
             form_edit_section: Form_EditSection = (
-                screen_document.do_node_add_section_child(added_node_1_order))
+                screen_document.do_node_add_section_child(added_node_1_order)
+            )
             form_edit_section.do_fill_in_title("Section_1_1")
             form_edit_section.do_fill_in_text(
                 "This is a free text of the section 1_1."
@@ -65,9 +63,7 @@ class Test_UC03_T05_CreateThreeNestedSections(BaseCase):
             form_edit_section.do_form_submit()
 
             screen_document.assert_node_title_contains(
-                "Section_1_1",
-                added_node_2_level,
-                added_node_2_order
+                "Section_1_1", added_node_2_level, added_node_2_order
             )
             screen_document.assert_toc_contains_string("Section_1_1")
 
@@ -76,7 +72,8 @@ class Test_UC03_T05_CreateThreeNestedSections(BaseCase):
             added_node_3_level = "1.1.1"
 
             form_edit_section: Form_EditSection = (
-                screen_document.do_node_add_section_child(added_node_2_order))
+                screen_document.do_node_add_section_child(added_node_2_order)
+            )
             form_edit_section.do_fill_in_title("Section_1_1_1")
             form_edit_section.do_fill_in_text(
                 "This is a free text of the section 1_1_1."
@@ -84,9 +81,7 @@ class Test_UC03_T05_CreateThreeNestedSections(BaseCase):
             form_edit_section.do_form_submit()
 
             screen_document.assert_node_title_contains(
-                "Section_1_1_1",
-                added_node_3_level,
-                added_node_3_order
+                "Section_1_1_1", added_node_3_level, added_node_3_order
             )
             screen_document.assert_toc_contains_string("Section_1_1_1")
 

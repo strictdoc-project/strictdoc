@@ -29,7 +29,9 @@ class Test_UC11_T42_EscapeHTML(BaseCase):
             screen_document.assert_on_screen()
             screen_document.assert_text("Link does not get corrupted")
 
-            form_config: Form_EditConfig = screen_document.do_open_form_edit_config()
+            form_config: Form_EditConfig = (
+                screen_document.do_open_form_edit_config()
+            )
 
             form_config.assert_document_abstract_contains(
                 "`Link does not get corrupted "

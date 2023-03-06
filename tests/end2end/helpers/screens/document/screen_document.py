@@ -115,6 +115,13 @@ class Screen_Document:  # pylint: disable=invalid-name
             click_by=By.XPATH,
         )
 
+    def assert_field_contains(self, field_tag: str, text: str) -> None:
+        self.test_case.assert_element(
+            f"//{field_tag}"
+            f"[contains(., '{text}')]",
+            by=By.XPATH
+        )
+
     # Add section
 
     def do_node_add_section_first(self, field_order: int = 1) -> Form_EditSection:

@@ -32,7 +32,7 @@ class Test_UC11_T40_EditDocumentAbstract(BaseCase):
 
             form_config: Form_EditConfig = screen_document.do_open_config_form()
 
-            form_config.do_fill_in("FREETEXT", "Modified free text!")
+            form_config.do_fill_in_document_abstract("Modified free text!")
             form_config.do_form_submit()
 
             screen_document.assert_text("Modified free text!")

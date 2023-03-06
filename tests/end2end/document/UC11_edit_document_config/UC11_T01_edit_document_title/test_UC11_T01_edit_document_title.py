@@ -34,9 +34,10 @@ class Test_UC11_T01_EditDocumentTitle(BaseCase):
 
             form_config: Form_EditConfig = screen_document.do_open_config_form()
 
-            form_config.do_fill_in("TITLE", "Modified title of Document 1")
+            form_config.do_fill_in_document_title("Modified title of Document 1")
 
             form_config.do_form_submit()
             screen_document.assert_text("Modified title of Document 1")
+            # assert_field_contains
 
         assert test_setup.compare_sandbox_and_expected_output()

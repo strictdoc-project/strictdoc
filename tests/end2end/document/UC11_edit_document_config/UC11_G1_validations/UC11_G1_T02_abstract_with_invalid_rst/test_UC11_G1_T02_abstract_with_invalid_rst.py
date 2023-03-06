@@ -39,7 +39,7 @@ class Test_UC11_G1_T02_AbstractWithInvalidRST(BaseCase):
   ---
 """
 
-            form_config.do_fill_in("FREETEXT", broken_abstract)
+            form_config.do_fill_in_document_abstract(broken_abstract)
             form_config.do_form_submit_and_catch_error(
                 "Bullet list ends without a blank line; unexpected unindent."
             )

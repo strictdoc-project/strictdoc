@@ -32,7 +32,7 @@ class Test_UC11_T41_RemoveDocumentAbstract(BaseCase):
 
             form_config: Form_EditConfig = screen_document.do_open_config_form()
 
-            form_config.do_clear_field("FREETEXT")
+            form_config.do_clear_document_abstract()
 
             form_config.do_form_submit()
 

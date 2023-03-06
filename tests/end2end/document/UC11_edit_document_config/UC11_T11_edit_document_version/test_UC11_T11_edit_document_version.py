@@ -32,9 +32,10 @@ class Test_UC11_T11_EditDocumentVersion(BaseCase):
 
             form_config: Form_EditConfig = screen_document.do_open_config_form()
 
-            form_config.do_fill_in("VERSION", "1.0.0")
+            form_config.do_fill_in_document_version("1.0.0")
             form_config.do_form_submit()
 
             screen_document.assert_text("1.0.0")
+            # assert_field_contains
 
         assert test_setup.compare_sandbox_and_expected_output()

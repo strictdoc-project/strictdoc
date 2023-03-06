@@ -32,23 +32,14 @@ class Form:  # pylint: disable=invalid-name
             f"[contains(., '{message}')]",
             by=By.XPATH
         )
-        # self.test_case.assert_element(
-        #     "//sdoc-form-error",
-        #     by=By.XPATH,
-        # )
-        # self.test_case.assert_text(f"{message}")
 
+    # TODO: rename to input_contains:
     def assert_field_content(self, text: str) -> None:
         self.test_case.assert_element(
             "//sdoc-contenteditable"
             f"[contains(., '{text}')]",
             by=By.XPATH
         )
-        # self.test_case.assert_element(
-        #     "//sdoc-contenteditable",
-        #     by=By.XPATH,
-        # )
-        # self.test_case.assert_text(f"{message}")
 
     # Work with fields containers
 

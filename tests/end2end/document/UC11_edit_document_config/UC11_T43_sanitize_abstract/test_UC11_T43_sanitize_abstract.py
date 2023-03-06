@@ -43,7 +43,7 @@ Hello world!
 Hello world!    
             """  # noqa: W291, W293
 
-            form_config.do_fill_in("FREETEXT", text_with_trailing_symbols)
+            form_config.do_fill_in_document_abstract(text_with_trailing_symbols)
             form_config.do_form_submit()
 
             screen_document.assert_text(

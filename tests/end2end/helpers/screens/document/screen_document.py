@@ -142,27 +142,10 @@ class Screen_Document:  # pylint: disable=invalid-name
 
     # Open forms
 
-    def do_open_form_edit_requirement(self) -> Form_EditRequirement:
-        self.test_case.hover_and_click(
-            hover_selector="(//sdoc-node)[2]",
-            click_selector=(
-                '(//sdoc-node)[2]//*[@data-testid="node-edit-action"]'
-            ),
-            hover_by=By.XPATH,
-            click_by=By.XPATH,
+    def do_export_reqif(self) -> None:
+        self.test_case.click_xpath(
+            '(//*[@data-testid="document-export-reqif-action"])'
         )
-        return Form_EditRequirement(self.test_case)
-
-    def do_open_form_edit_config(self) -> Form_EditConfig:
-        self.test_case.hover_and_click(
-            hover_selector="(//sdoc-node)[1]",
-            click_selector=(
-                '(//sdoc-node)[1]//*[@data-testid="document-edit-config-action"]'  # noqa: E501
-            ),
-            hover_by=By.XPATH,
-            click_by=By.XPATH,
-        )
-        return Form_EditConfig(self.test_case)
 
     def do_open_modal_form_edit_grammar(self) -> Form_EditGrammar:
         self.test_case.assert_element_not_present("//sdoc-modal", by=By.XPATH)
@@ -175,10 +158,38 @@ class Screen_Document:  # pylint: disable=invalid-name
         )
         return Form_EditGrammar(self.test_case)
 
-    def do_export_reqif(self) -> None:
-        self.test_case.click_xpath(
-            '(//*[@data-testid="document-export-reqif-action"])'
+    def do_open_form_edit_config(self) -> Form_EditConfig:
+        self.test_case.hover_and_click(
+            hover_selector="(//sdoc-node)[1]",
+            click_selector=(
+                '(//sdoc-node)[1]//*[@data-testid="document-edit-config-action"]'  # noqa: E501
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
         )
+        return Form_EditConfig(self.test_case)
+
+    def do_open_form_edit_requirement(self) -> Form_EditRequirement:
+        self.test_case.hover_and_click(
+            hover_selector="(//sdoc-node)[2]",
+            click_selector=(
+                '(//sdoc-node)[2]//*[@data-testid="node-edit-action"]'
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+        return Form_EditRequirement(self.test_case)
+
+    def do_open_form_edit_section(self) -> Form_EditSection:
+        self.test_case.hover_and_click(
+            hover_selector="(//sdoc-node)[2]",
+            click_selector=(
+                '(//sdoc-node)[2]//*[@data-testid="node-edit-action"]'
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+        return Form_EditSection(self.test_case)
 
     # Node actions
 

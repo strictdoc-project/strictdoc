@@ -98,7 +98,7 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
         assert isinstance(text, str)
         # TODO H1 -> testid
         self.test_case.assert_element(
-            "//sdoc-node//H1[contains(., '{text}')]", by=By.XPATH
+            f"//sdoc-node//H1[contains(., '{text}')]", by=By.XPATH
         )
 
     def assert_document_uid_contains(self, text: str) -> None:
@@ -174,22 +174,28 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
         )
         return Form_EditConfig(self.test_case)
 
-    def do_open_form_edit_requirement(self) -> Form_EditRequirement:
+    def do_open_form_edit_requirement(
+        self, field_order: int = NODE_1
+    ) -> Form_EditRequirement:
         self.test_case.hover_and_click(
-            hover_selector=f"(//sdoc-node)[{NODE_1}]",
+            hover_selector=f"(//sdoc-node)[{field_order}]",
             click_selector=(
-                f'(//sdoc-node)[{NODE_1}]//*[@data-testid="node-edit-action"]'
+                f"(//sdoc-node)[{field_order}]"
+                '//*[@data-testid="node-edit-action"]'
             ),
             hover_by=By.XPATH,
             click_by=By.XPATH,
         )
         return Form_EditRequirement(self.test_case)
 
-    def do_open_form_edit_section(self) -> Form_EditSection:
+    def do_open_form_edit_section(
+        self, field_order: int = NODE_1
+    ) -> Form_EditSection:
         self.test_case.hover_and_click(
-            hover_selector=f"(//sdoc-node)[{NODE_1}]",
+            hover_selector=f"(//sdoc-node)[{field_order}]",
             click_selector=(
-                f'(//sdoc-node)[{NODE_1}]//*[@data-testid="node-edit-action"]'
+                f"(//sdoc-node)[{field_order}]"
+                '//*[@data-testid="node-edit-action"]'
             ),
             hover_by=By.XPATH,
             click_by=By.XPATH,

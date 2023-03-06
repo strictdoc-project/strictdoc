@@ -63,7 +63,14 @@ class Screen_Document:  # pylint: disable=invalid-name
 
     def assert_toc_contains_string(self, string: str) -> None:
         self.test_case.assert_element(
-            f"//turbo-frame[@id='frame-toc']//*[contains(., '{string}')]"
+            f"//turbo-frame[@id='frame-toc']//*[contains(., '{string}')]",
+            by=By.XPATH
+        )
+
+    def assert_node_title_contains(self, node_title: str, field_order: int = 1) -> None:
+        self.test_case.assert_element(
+            f"(//sdoc-node)[{field_order}]//*[contains(., '{node_title}')]",
+            by=By.XPATH
         )
 
     # Assert fields content:
@@ -206,17 +213,17 @@ class Screen_Document:  # pylint: disable=invalid-name
 
     # Add section
 
-    def do_node_add_section_first(self, field_order: int = 1) -> Form_EditSection:
+    def do_node_add_section_first(self) -> Form_EditSection:
         self.test_case.click(
             selector=(
-                f"(//sdoc-node)[{field_order}]"
+                f"(//sdoc-node)[1]"
                 '//*[@data-testid="node-add-section-first-action"]'
             ),
             by=By.XPATH,
         )
         return Form_EditSection(self.test_case)
 
-    def do_node_add_section_above(self, field_order: int = 1) -> None:
+    def do_node_add_section_above(self, field_order: int = 1) -> Form_EditSection:
         self.test_case.click(
             selector=(
                 f"(//sdoc-node)[{field_order}]"
@@ -224,8 +231,9 @@ class Screen_Document:  # pylint: disable=invalid-name
             ),
             by=By.XPATH,
         )
+        return Form_EditSection(self.test_case)
 
-    def do_node_add_section_below(self, field_order: int = 1) -> None:
+    def do_node_add_section_below(self, field_order: int = 1) -> Form_EditSection:
         self.test_case.click(
             selector=(
                 f"(//sdoc-node)[{field_order}]"
@@ -233,8 +241,9 @@ class Screen_Document:  # pylint: disable=invalid-name
             ),
             by=By.XPATH,
         )
+        return Form_EditSection(self.test_case)
 
-    def do_node_add_section_child(self, field_order: int = 1) -> None:
+    def do_node_add_section_child(self, field_order: int = 1) -> Form_EditSection:
         self.test_case.click(
             selector=(
                 f"(//sdoc-node)[{field_order}]"
@@ -242,19 +251,21 @@ class Screen_Document:  # pylint: disable=invalid-name
             ),
             by=By.XPATH,
         )
+        return Form_EditSection(self.test_case)
 
     # Add requirement
 
-    def do_node_add_requirement_first(self, field_order: int = 1) -> None:
+    def do_node_add_requirement_first(self) -> Form_EditRequirement:
         self.test_case.click(
             selector=(
-                f"(//sdoc-node)[{field_order}]"
+                f"(//sdoc-node)[1]"
                 '//*[@data-testid="node-add-requirement-first-action"]'
             ),
             by=By.XPATH,
         )
+        return Form_EditRequirement(self.test_case)
 
-    def do_node_add_requirement_above(self, field_order: int = 1) -> None:
+    def do_node_add_requirement_above(self, field_order: int = 1) -> Form_EditRequirement:
         self.test_case.click(
             selector=(
                 f"(//sdoc-node)[{field_order}]"
@@ -262,8 +273,9 @@ class Screen_Document:  # pylint: disable=invalid-name
             ),
             by=By.XPATH,
         )
+        return Form_EditRequirement(self.test_case)
 
-    def do_node_add_requirement_below(self, field_order: int = 1) -> None:
+    def do_node_add_requirement_below(self, field_order: int = 1) -> Form_EditRequirement:
         self.test_case.click(
             selector=(
                 f"(//sdoc-node)[{field_order}]"
@@ -271,8 +283,9 @@ class Screen_Document:  # pylint: disable=invalid-name
             ),
             by=By.XPATH,
         )
+        return Form_EditRequirement(self.test_case)
 
-    def do_node_add_requirement_child(self, field_order: int = 1) -> None:
+    def do_node_add_requirement_child(self, field_order: int = 1) -> Form_EditRequirement:
         self.test_case.click(
             selector=(
                 f"(//sdoc-node)[{field_order}]"
@@ -280,3 +293,4 @@ class Screen_Document:  # pylint: disable=invalid-name
             ),
             by=By.XPATH,
         )
+        return Form_EditRequirement(self.test_case)

@@ -30,10 +30,6 @@ class Test_UC07_G1_T10_EditRequirementRefs(BaseCase):
             screen_document.assert_is_document_title("Document 1")
 
             screen_document.assert_text("Hello world!")
-            # TODO: move to separate test:
-            # Make sure that the normal (not table-based) requirement is
-            # rendered.
-            screen_document.assert_requirement_style_simple()
 
             # Open form and add 1 fields:
             form_edit_requirement: Form_EditRequirement = (

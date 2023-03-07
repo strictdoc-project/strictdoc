@@ -26,6 +26,17 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
         assert isinstance(field_value, str)
         super().do_fill_in("requirement[COMMENT]", field_value, field_order)
 
+    def do_form_add_field_parent_link(self) -> None:
+        super().do_add_field("parent-link")
+
+    def do_fill_in_field_parent_link(
+        self, field_value: str, field_order: int = 1
+    ) -> None:
+        assert isinstance(field_value, str)
+        super().do_fill_in(
+            "requirement[REFS_PARENT][]", field_value, field_order
+        )
+
     def do_fill_in_field_uid(self, field_value: str) -> None:
         assert isinstance(field_value, str)
         super().do_fill_in("requirement[UID]", field_value)

@@ -2,6 +2,8 @@ from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.screens.document.form_edit_section import Form_EditSection
+from tests.end2end.helpers.screens.document_tree.screen_document_tree import Screen_DocumentTree
 from tests.end2end.server import SDocTestServer
 
 
@@ -14,33 +16,27 @@ class Test_UC08_T02_EditSection(BaseCase):
         ) as test_server:
             self.open(test_server.get_host_and_port())
 
-            self.assert_text("Document 1")
-            self.assert_text("PROJECT INDEX")
+            screen_document_tree = Screen_DocumentTree(self)
 
-            self.click_xpath('//*[@data-testid="tree-file-link"]')
+            screen_document_tree.assert_on_screen()
+            screen_document_tree.assert_contains_string("Document 1")
 
-            self.assert_text("Hello world!")
+            screen_document = screen_document_tree.do_click_on_first_document()
 
-            self.hover_and_click(
-                hover_selector="(//sdoc-node)[2]",
-                click_selector=(
-                    '(//sdoc-node)[2]//*[@data-testid="node-edit-action"]'
-                ),
-                hover_by=By.XPATH,
-                click_by=By.XPATH,
+            screen_document.assert_on_screen()
+            screen_document.assert_is_document_title("Document 1")
+
+            screen_document.assert_text("Hello world!")
+
+            form_edit_section: Form_EditSection = (
+                screen_document.do_open_form_edit_section()
             )
+            form_edit_section.do_fill_in_title("Modified title")
+            form_edit_section.do_fill_in_text("Modified statement.")
+            form_edit_section.do_form_submit()
 
-            self.type("#section_title", "Modified title")
-            self.type("#section_content", "Modified statement.")
-
-            self.click_xpath('//*[@data-testid="form-submit-action"]')
-
-            self.assert_text("1. Modified title")
-            self.assert_text("Modified statement.")
-
-            self.assert_element(
-                "//turbo-frame[@id='frame-toc']"
-                "//*[contains(., 'Modified title')]"
-            )
+            screen_document.assert_node_title_contains("Modified title", "1")
+            screen_document.assert_text("Modified statement.")
+            screen_document.assert_toc_contains_string('Modified title')
 
         assert test_setup.compare_sandbox_and_expected_output()

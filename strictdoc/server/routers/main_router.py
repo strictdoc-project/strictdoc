@@ -1437,7 +1437,6 @@ def create_main_router(
             config=export_action.config,
             document_tree=export_action.traceability_index.document_tree,
             document_tree_iterator=document_tree_iterator,
-            static_path="_static",
             traceability_index=export_action.traceability_index,
         )
         return HTMLResponse(
@@ -1959,7 +1958,6 @@ def create_main_router(
             config=export_action.config,
             document_tree=export_action.traceability_index.document_tree,
             document_tree_iterator=document_tree_iterator,
-            static_path="_static",
             traceability_index=export_action.traceability_index,
         )
         return HTMLResponse(

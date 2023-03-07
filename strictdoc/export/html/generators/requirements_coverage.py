@@ -39,7 +39,6 @@ class RequirementsCoverageHTMLGenerator:
             documents_iterator=document_tree_iterator.iterator(),
             link_renderer=link_renderer,
             renderer=markup_renderer,
-            static_path="_static",
             document_type=DocumentType.deeptrace(),
             strictdoc_version=__version__,
         )

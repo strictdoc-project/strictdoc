@@ -86,7 +86,7 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
         # data_level (node_level) pattern: "1.2.3" (node_level)
         prefix = "" if node_level == "" else f"{node_level}.{NBSP}"
         self.test_case.assert_element(
-            #TODO: improve pattern / testid
+            # TODO: improve pattern / testid
             f"(//sdoc-node)[{node_order}]"
             f"//*[contains(., '{prefix}{node_title}')]",
             by=By.XPATH,
@@ -97,7 +97,7 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
         uid: str,
         node_order: int = NODE_1,
     ) -> None:
-        #TODO: improve pattern
+        # TODO: improve pattern
         self.test_case.assert_element(
             f"(//sdoc-node)[{node_order}]/sdoc-requirement"
             "/sdoc-requirement-field[@data-field-label='UID']"
@@ -110,7 +110,7 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
         child_uid: str,
         node_order: int = NODE_1,
     ) -> None:
-        #TODO: improve pattern
+        # TODO: improve pattern
         self.test_case.assert_element(
             f"(//sdoc-node)[{node_order}]/sdoc-requirement"
             "/sdoc-requirement-field[@data-field-label='child links']"
@@ -123,7 +123,7 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
         parent_uid: str,
         node_order: int = NODE_1,
     ) -> None:
-        #TODO: improve pattern
+        # TODO: improve pattern
         self.test_case.assert_element(
             f"(//sdoc-node)[{node_order}]/sdoc-requirement"
             "/sdoc-requirement-field[@data-field-label='parent links']"
@@ -136,7 +136,7 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
         child_uid: str,
         node_order: int = NODE_1,
     ) -> None:
-        #TODO: improve pattern
+        # TODO: improve pattern
         self.test_case.assert_element_not_present(
             f"(//sdoc-node)[{node_order}]/sdoc-requirement"
             "/sdoc-requirement-field[@data-field-label='child links']"
@@ -149,7 +149,7 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
         parent_uid: str,
         node_order: int = NODE_1,
     ) -> None:
-        #TODO: improve pattern
+        # TODO: improve pattern
         self.test_case.assert_element_not_present(
             f"(//sdoc-node)[{node_order}]/sdoc-requirement"
             "/sdoc-requirement-field[@data-field-label='parent links']"

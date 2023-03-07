@@ -1,9 +1,12 @@
-from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
-from tests.end2end.helpers.screens.document.form_edit_section import Form_EditSection
-from tests.end2end.helpers.screens.document_tree.screen_document_tree import Screen_DocumentTree
+from tests.end2end.helpers.screens.document.form_edit_section import (
+    Form_EditSection,
+)
+from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
+    Screen_DocumentTree,
+)
 from tests.end2end.server import SDocTestServer
 
 

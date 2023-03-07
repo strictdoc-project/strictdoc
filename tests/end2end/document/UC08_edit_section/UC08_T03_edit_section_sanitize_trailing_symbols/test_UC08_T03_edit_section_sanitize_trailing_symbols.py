@@ -1,10 +1,13 @@
-from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.constants import TEXT_WITH_TRAILING_WHITESPACES
-from tests.end2end.helpers.screens.document.form_edit_section import Form_EditSection
-from tests.end2end.helpers.screens.document_tree.screen_document_tree import Screen_DocumentTree
+from tests.end2end.helpers.screens.document.form_edit_section import (
+    Form_EditSection,
+)
+from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
+    Screen_DocumentTree,
+)
 from tests.end2end.server import SDocTestServer
 
 
@@ -42,6 +45,6 @@ class Test_UC08_T03_EditSectionSanitizeTrailingSymbols(BaseCase):
             # The visual output and the written .sdoc file are ok though.
             # self.assert_text("Hello world!\\n Hello world!\\n Hello world!")  # noqa: ERA001, E501
 
-            screen_document.assert_toc_contains_string('Modified title')
+            screen_document.assert_toc_contains_string("Modified title")
 
         assert test_setup.compare_sandbox_and_expected_output()

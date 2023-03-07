@@ -76,5 +76,4 @@ class Test_UC07_G1_T03_RemoveLink(BaseCase):
                 "REQ-001", requirement2_order
             )
 
-
         assert test_setup.compare_sandbox_and_expected_output()

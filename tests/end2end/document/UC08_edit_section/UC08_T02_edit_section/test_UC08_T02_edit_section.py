@@ -1,9 +1,12 @@
-from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
-from tests.end2end.helpers.screens.document.form_edit_section import Form_EditSection
-from tests.end2end.helpers.screens.document_tree.screen_document_tree import Screen_DocumentTree
+from tests.end2end.helpers.screens.document.form_edit_section import (
+    Form_EditSection,
+)
+from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
+    Screen_DocumentTree,
+)
 from tests.end2end.server import SDocTestServer
 
 
@@ -37,6 +40,6 @@ class Test_UC08_T02_EditSection(BaseCase):
 
             screen_document.assert_node_title_contains("Modified title", "1")
             screen_document.assert_text("Modified statement.")
-            screen_document.assert_toc_contains_string('Modified title')
+            screen_document.assert_toc_contains_string("Modified title")
 
         assert test_setup.compare_sandbox_and_expected_output()

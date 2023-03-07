@@ -22,7 +22,6 @@ class SourceFileCoverageHTMLGenerator:
         output += template.render(
             config=config,
             traceability_index=traceability_index,
-            static_path="_static",
             link_renderer=link_renderer,
             strictdoc_version=__version__,
         )

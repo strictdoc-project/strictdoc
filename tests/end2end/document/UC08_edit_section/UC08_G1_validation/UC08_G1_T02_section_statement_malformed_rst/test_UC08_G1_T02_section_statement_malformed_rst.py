@@ -30,6 +30,7 @@ class Test_UC08_G1_T02_EditSectionStatementMalformedRST(BaseCase):
                 click_by=By.XPATH,
             )
 
+# from tests.end2end.helpers.constants import BROKEN_RST_MARKUP
             self.type(
                 "#section_content",
                 """

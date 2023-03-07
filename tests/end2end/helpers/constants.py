@@ -25,3 +25,10 @@ Hello world!
     
 Hello world!    
                 """  # noqa: W291, W293
+
+BROKEN_RST_MARKUP = """
+- Broken RST markup
+
+  - AAA
+  ---
+    """.strip()  # noqa: W291, W293

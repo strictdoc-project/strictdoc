@@ -2,6 +2,13 @@ from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.constants import BROKEN_RST_MARKUP
+from tests.end2end.helpers.screens.document.form_edit_requirement import (
+    Form_EditRequirement,
+)
+from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
+    Screen_DocumentTree,
+)
 from tests.end2end.server import SDocTestServer
 
 
@@ -14,36 +21,23 @@ class Test_UC07_G2_T02_StatementMalformedRST(BaseCase):
         ) as test_server:
             self.open(test_server.get_host_and_port())
 
-            self.assert_text("Document 1")
-            self.assert_text("PROJECT INDEX")
+            screen_document_tree = Screen_DocumentTree(self)
 
-            self.click_xpath('//*[@data-testid="tree-file-link"]')
+            screen_document_tree.assert_on_screen()
+            screen_document_tree.assert_contains_string("Document 1")
 
-            self.assert_text("Hello world!")
+            screen_document = screen_document_tree.do_click_on_first_document()
 
-            self.hover_and_click(
-                hover_selector="(//sdoc-node)[2]",
-                click_selector=(
-                    '(//sdoc-node)[2]//*[@data-testid="node-edit-action"]'
-                ),
-                hover_by=By.XPATH,
-                click_by=By.XPATH,
+            screen_document.assert_on_screen()
+            screen_document.assert_is_document_title("Document 1")
+
+            screen_document.assert_text("Hello world!")
+
+            form_edit_requirement: Form_EditRequirement = (
+                screen_document.do_open_form_edit_requirement()
             )
-
-            self.type(
-                "//*[@id='requirement[STATEMENT]']",
-                """
-- Broken RST markup
-
-  - AAA
-  ---
-    """.strip(),
-                by=By.XPATH,
-            )
-
-            self.click_xpath('//*[@data-testid="form-submit-action"]')
-
-            self.assert_text(
+            form_edit_requirement.do_fill_in_field_statement(BROKEN_RST_MARKUP)
+            form_edit_requirement.do_form_submit_and_catch_error(
                 "RST markup syntax error on line 4: "
                 "Bullet list ends without a blank line; unexpected unindent."
             )

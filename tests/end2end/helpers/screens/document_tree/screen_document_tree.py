@@ -19,3 +19,9 @@ class Screen_DocumentTree:  # pylint: disable=invalid-name
     def do_click_on_first_document(self) -> Screen_Document:
         self.test_case.click_xpath('//*[@data-testid="tree-file-link"]')
         return Screen_Document(self.test_case)
+
+    def do_click_on_the_document(self, doc_order: int = 1) -> Screen_Document:
+        self.test_case.click_xpath(
+            f"(//*[@data-testid='tree-file-link'])[{doc_order}]"
+        )
+        return Screen_Document(self.test_case)

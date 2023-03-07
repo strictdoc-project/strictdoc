@@ -1,6 +1,7 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.constants import BROKEN_RST_MARKUP
 from tests.end2end.helpers.screens.document.form_edit_section import (
     Form_EditSection,
 )
@@ -35,15 +36,8 @@ class Test_UC03_G1_T02_MalformedRSTStatement(BaseCase):
                 screen_document.do_node_add_section_first()
             )
 
-            broken_rst = """
-- Broken RST markup
-
-  - AAA
-  ---
-    """.strip()
-
             form_edit_section.do_fill_in_title("Section title")
-            form_edit_section.do_fill_in_text(broken_rst)
+            form_edit_section.do_fill_in_text(BROKEN_RST_MARKUP)
 
             form_edit_section.do_form_submit_and_catch_error(
                 "RST markup syntax error on line 4: "

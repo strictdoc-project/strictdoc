@@ -30,12 +30,13 @@ class Test_UC11_T20_EditDocumentUID(BaseCase):
             screen_document.assert_is_document_title("Document 1")
             screen_document.assert_text("Hello world!")
 
-            form_config: Form_EditConfig = screen_document.do_open_config_form()
+            form_config: Form_EditConfig = (
+                screen_document.do_open_form_edit_config()
+            )
 
-            form_config.do_fill_in("UID", "DOC_001")
+            form_config.do_fill_in_document_uid("DOC_001")
             form_config.do_form_submit()
 
-            screen_document.assert_text("UID")
-            screen_document.assert_text("DOC_001")
+            screen_document.assert_document_uid_contains("DOC_001")
 
         assert test_setup.compare_sandbox_and_expected_output()

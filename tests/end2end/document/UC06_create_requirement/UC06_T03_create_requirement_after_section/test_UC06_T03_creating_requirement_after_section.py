@@ -11,7 +11,7 @@ from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
 from tests.end2end.server import SDocTestServer
 
 
-class Test_UC06_T04_CreateRequirementInSection(BaseCase):
+class Test_UC06_T03_CreateRequirementAfterSection(BaseCase):
     def test_01(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
@@ -36,12 +36,14 @@ class Test_UC06_T04_CreateRequirementInSection(BaseCase):
             existing_section_level = "1"
             existing_section_position = NODE_1
             screen_document.assert_node_title_contains(
-                "First title", existing_section_level, existing_section_position
+                "Section title",
+                existing_section_level,
+                existing_section_position,
             )
 
-            # Requirement is added as a child of the Section
+            # Requirement is added below
             form_edit_requirement: Form_EditRequirement = (
-                screen_document.do_node_add_requirement_child(
+                screen_document.do_node_add_requirement_below(
                     existing_section_position
                 )
             )
@@ -52,7 +54,7 @@ class Test_UC06_T04_CreateRequirementInSection(BaseCase):
             form_edit_requirement.do_form_submit()
 
             # Expected for Requirement:
-            added_requirement_level = "1.1"
+            added_requirement_level = "2"
             added_requirement_position = existing_section_position + 1
 
             screen_document.assert_node_title_contains(

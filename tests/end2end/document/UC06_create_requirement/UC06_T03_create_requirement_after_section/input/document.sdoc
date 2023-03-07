@@ -5,17 +5,11 @@ TITLE: Document 1
 Hello world!
 [/FREETEXT]
 
-[REQUIREMENT]
-TITLE: Requirement title
-STATEMENT: >>>
-Requirement statement.
-<<<
-
 [SECTION]
 TITLE: Section title
 
 [FREETEXT]
-Section statement.
+Section text.
 [/FREETEXT]
 
 [/SECTION]

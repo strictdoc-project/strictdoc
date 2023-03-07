@@ -2,6 +2,7 @@ from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.constants import TEXT_WITH_TRAILING_WHITESPACES
 from tests.end2end.server import SDocTestServer
 
 
@@ -33,16 +34,7 @@ class Test_UC08_T03_EditSectionSanitizeTrailingSymbols(BaseCase):
             self.type("#section_title", "Modified title")
 
             # Contains trailing spaces.
-            self.type(
-                "#section_content",
-                """
-Hello world!    
-
-Hello world!    
-
-Hello world!    
-                """,  # noqa: W291
-            )
+            self.type("#section_content", TEXT_WITH_TRAILING_WHITESPACES)
 
             self.click_xpath('//*[@data-testid="form-submit-action"]')
 

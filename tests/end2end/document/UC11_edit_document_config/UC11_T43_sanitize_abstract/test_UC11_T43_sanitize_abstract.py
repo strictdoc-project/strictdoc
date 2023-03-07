@@ -3,6 +3,7 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.constants import TEXT_WITH_TRAILING_WHITESPACES
 from tests.end2end.helpers.screens.document.form_edit_config import (
     Form_EditConfig,
 )
@@ -32,18 +33,13 @@ class Test_UC11_T43_SanitizeAbstract(BaseCase):
             screen_document.assert_is_document_title("Document 1")
             screen_document.assert_text("Hello world!")
 
-            form_config: Form_EditConfig = screen_document.do_open_config_form()
+            form_config: Form_EditConfig = (
+                screen_document.do_open_form_edit_config()
+            )
 
-            # Contains trailing symbols.
-            text_with_trailing_symbols = """
-Hello world!    
-              
-Hello world!    
-            
-Hello world!    
-            """  # noqa: W291, W293
-
-            form_config.do_fill_in("FREETEXT", text_with_trailing_symbols)
+            form_config.do_fill_in_document_abstract(
+                TEXT_WITH_TRAILING_WHITESPACES
+            )
             form_config.do_form_submit()
 
             screen_document.assert_text(

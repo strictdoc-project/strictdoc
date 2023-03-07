@@ -2,6 +2,9 @@ import os
 
 from seleniumbase import BaseCase
 
+from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
+    Screen_DocumentTree,
+)
 from tests.end2end.server import SDocTestServer
 
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
@@ -14,10 +17,13 @@ class Test_UC01_T01_DocumentIsEmpty(BaseCase):
         ) as test_server:
             self.open(test_server.get_host_and_port())
 
-            self.assert_text("Empty Document")
+            screen_document_tree = Screen_DocumentTree(self)
 
-            self.assert_text("PROJECT INDEX")
+            screen_document_tree.assert_on_screen()
+            screen_document_tree.assert_contains_string("Empty Document")
 
-            self.click_xpath('//*[@data-testid="tree-file-link"]')
+            screen_document = screen_document_tree.do_click_on_first_document()
 
-            self.assert_element('//*[@data-testid="document-placeholder"]')
+            screen_document.assert_on_screen()
+            screen_document.assert_is_document_title("Empty Document")
+            screen_document.assert_empty_document()

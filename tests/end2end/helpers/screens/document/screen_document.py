@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
+from tests.end2end.helpers.constants import NBSP, NODE_0, NODE_1
 from tests.end2end.helpers.screens.document.form_edit_config import (
     Form_EditConfig,
 )
@@ -10,9 +11,12 @@ from tests.end2end.helpers.screens.document.form_edit_grammar import (
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
 )
+from tests.end2end.helpers.screens.document.form_edit_section import (
+    Form_EditSection,
+)
 
 
-class Screen_Document:  # pylint: disable=invalid-name
+class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
     def __init__(self, test_case: BaseCase) -> None:
         assert isinstance(test_case, BaseCase)
         self.test_case: BaseCase = test_case
@@ -21,6 +25,16 @@ class Screen_Document:  # pylint: disable=invalid-name
         self.test_case.assert_element(
             '//body[@data-viewtype="document"]',
             by=By.XPATH,
+        )
+
+    def assert_empty_document(self) -> None:
+        self.test_case.assert_element(
+            '//*[@data-testid="document-placeholder"]'
+        )
+
+    def assert_not_empty_document(self) -> None:
+        self.test_case.assert_element_not_visible(
+            '//*[@data-testid="document-placeholder"]'
         )
 
     def assert_is_document_title(self, document_title: str) -> None:
@@ -50,32 +64,95 @@ class Screen_Document:  # pylint: disable=invalid-name
 
     def assert_toc_contains_string(self, string: str) -> None:
         self.test_case.assert_element(
-            f"//turbo-frame[@id='frame-toc']//*[contains(., '{string}')]"
+            f"//turbo-frame[@id='frame-toc']//*[contains(., '{string}')]",
+            by=By.XPATH,
         )
 
-    def do_open_edit_form(self) -> Form_EditRequirement:
-        self.test_case.hover_and_click(
-            hover_selector="(//sdoc-node)[2]",
-            click_selector=(
-                '(//sdoc-node)[2]//*[@data-testid="node-edit-action"]'
-            ),
-            hover_by=By.XPATH,
-            click_by=By.XPATH,
+    def assert_node_title_contains(
+        self,
+        node_title: str,
+        node_level: str = "",
+        node_order: int = NODE_1,
+    ) -> None:
+        # title pattern: "1.2.3.&nbsp:Title"
+        # data_level (node_level) pattern: "1.2.3" (node_level)
+        prefix = "" if node_level == "" else f"{node_level}.{NBSP}"
+        self.test_case.assert_element(
+            f"(//sdoc-node)[{node_order}]"
+            f"//*[contains(., '{prefix}{node_title}')]",
+            by=By.XPATH,
         )
-        return Form_EditRequirement(self.test_case)
 
-    def do_open_config_form(self) -> Form_EditConfig:
-        self.test_case.hover_and_click(
-            hover_selector="(//sdoc-node)[1]",
-            click_selector=(
-                '(//sdoc-node)[1]//*[@data-testid="document-edit-config-action"]'  # noqa: E501
-            ),
-            hover_by=By.XPATH,
-            click_by=By.XPATH,
+    # Assert fields content:
+    # Method with the 'field_name' can be used,
+    # but named methods are recommended.
+
+    def assert_xpath_contains(self, xpath: str, text: str) -> None:
+        self.test_case.assert_element(
+            f"{xpath}[contains(., '{text}')]", by=By.XPATH
         )
-        return Form_EditConfig(self.test_case)
 
-    def do_open_edit_grammar_modal(self) -> Form_EditGrammar:
+    # Assert fields content: named methods
+
+    def assert_document_title_contains(self, text: str) -> None:
+        assert isinstance(text, str)
+        # TODO H1 -> testid
+        self.test_case.assert_element(
+            f"//sdoc-node//H1[contains(., '{text}')]", by=By.XPATH
+        )
+
+    def assert_document_uid_contains(self, text: str) -> None:
+        assert isinstance(text, str)
+        # TODO table_meta -> testid
+        self.test_case.assert_element(
+            "//table[@class='table_meta']//th[contains(., 'UID')]",
+            by=By.XPATH,
+        )
+        self.test_case.assert_element(
+            f"//table[@class='table_meta']//td[contains(., '{text}')]",
+            by=By.XPATH,
+        )
+
+    def assert_document_version_contains(self, text: str) -> None:
+        assert isinstance(text, str)
+        # TODO table_meta -> testid
+        self.test_case.assert_element(
+            "//table[@class='table_meta']//th[contains(., 'VERSION')]",
+            by=By.XPATH,
+        )
+        self.test_case.assert_element(
+            f"//table[@class='table_meta']//td[contains(., '{text}')]",
+            by=By.XPATH,
+        )
+
+    def assert_document_classification_contains(self, text: str) -> None:
+        assert isinstance(text, str)
+        # TODO table_meta -> testid
+        self.test_case.assert_element(
+            "//table[@class='table_meta']//th"
+            "[contains(., 'CLASSIFICATION')]",
+            by=By.XPATH,
+        )
+        self.test_case.assert_element(
+            f"//table[@class='table_meta']//td[contains(., '{text}')]",
+            by=By.XPATH,
+        )
+
+    def assert_document_abstract_contains(self, text: str) -> None:
+        assert isinstance(text, str)
+        # TODO table_meta -> testid
+        self.test_case.assert_element(
+            f"//sdoc-node[contains(., '{text}')]", by=By.XPATH
+        )
+
+    # Open forms
+
+    def do_export_reqif(self) -> None:
+        self.test_case.click_xpath(
+            '(//*[@data-testid="document-export-reqif-action"])'
+        )
+
+    def do_open_modal_form_edit_grammar(self) -> Form_EditGrammar:
         self.test_case.assert_element_not_present("//sdoc-modal", by=By.XPATH)
         self.test_case.click_xpath(
             '(//*[@data-testid="document-edit-grammar-action"])'
@@ -86,7 +163,158 @@ class Screen_Document:  # pylint: disable=invalid-name
         )
         return Form_EditGrammar(self.test_case)
 
-    def do_export_reqif(self) -> None:
-        self.test_case.click_xpath(
-            '(//*[@data-testid="document-export-reqif-action"])'
+    def do_open_form_edit_config(self) -> Form_EditConfig:
+        self.test_case.hover_and_click(
+            hover_selector=f"(//sdoc-node)[{NODE_0}]",
+            click_selector=(
+                f'(//sdoc-node)[{NODE_0}]//*[@data-testid="document-edit-config-action"]'  # noqa: E501
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
         )
+        return Form_EditConfig(self.test_case)
+
+    def do_open_form_edit_requirement(
+        self, field_order: int = NODE_1
+    ) -> Form_EditRequirement:
+        self.test_case.hover_and_click(
+            hover_selector=f"(//sdoc-node)[{field_order}]",
+            click_selector=(
+                f"(//sdoc-node)[{field_order}]"
+                '//*[@data-testid="node-edit-action"]'
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+        return Form_EditRequirement(self.test_case)
+
+    def do_open_form_edit_section(
+        self, field_order: int = NODE_1
+    ) -> Form_EditSection:
+        self.test_case.hover_and_click(
+            hover_selector=f"(//sdoc-node)[{field_order}]",
+            click_selector=(
+                f"(//sdoc-node)[{field_order}]"
+                '//*[@data-testid="node-edit-action"]'
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+        return Form_EditSection(self.test_case)
+
+    # Node actions
+
+    def do_open_node_menu(self, field_order: int = NODE_0) -> None:
+        self.test_case.hover_and_click(
+            hover_selector=f"(//sdoc-node)[{field_order}]",
+            click_selector=(
+                f"(//sdoc-node)[{field_order}]"
+                "//*[@data-testid='node-menu-handler']"
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+
+    # Add section
+
+    def do_node_add_section_first(self) -> Form_EditSection:
+        self.do_open_node_menu()
+        self.test_case.click(
+            selector=(
+                f"(//sdoc-node)[{NODE_0}]"
+                '//*[@data-testid="node-add-section-first-action"]'
+            ),
+            by=By.XPATH,
+        )
+        return Form_EditSection(self.test_case)
+
+    def do_node_add_section_above(
+        self, field_order: int = NODE_1
+    ) -> Form_EditSection:
+        self.do_open_node_menu(field_order)
+        self.test_case.click(
+            selector=(
+                f"(//sdoc-node)[{field_order}]"
+                '//*[@data-testid="node-add-section-above-action"]'
+            ),
+            by=By.XPATH,
+        )
+        return Form_EditSection(self.test_case)
+
+    def do_node_add_section_below(
+        self, field_order: int = NODE_1
+    ) -> Form_EditSection:
+        self.do_open_node_menu(field_order)
+        self.test_case.click(
+            selector=(
+                f"(//sdoc-node)[{field_order}]"
+                '//*[@data-testid="node-add-section-below-action"]'
+            ),
+            by=By.XPATH,
+        )
+        return Form_EditSection(self.test_case)
+
+    def do_node_add_section_child(
+        self, field_order: int = NODE_1
+    ) -> Form_EditSection:
+        self.do_open_node_menu(field_order)
+        self.test_case.click(
+            selector=(
+                f"(//sdoc-node)[{field_order}]"
+                '//*[@data-testid="node-add-section-child-action"]'
+            ),
+            by=By.XPATH,
+        )
+        return Form_EditSection(self.test_case)
+
+    # Add requirement
+
+    def do_node_add_requirement_first(self) -> Form_EditRequirement:
+        self.do_open_node_menu()
+        self.test_case.click(
+            selector=(
+                f"(//sdoc-node)[{NODE_0}]"
+                '//*[@data-testid="node-add-requirement-first-action"]'
+            ),
+            by=By.XPATH,
+        )
+        return Form_EditRequirement(self.test_case)
+
+    def do_node_add_requirement_above(
+        self, field_order: int = NODE_1
+    ) -> Form_EditRequirement:
+        self.do_open_node_menu(field_order)
+        self.test_case.click(
+            selector=(
+                f"(//sdoc-node)[{field_order}]"
+                '//*[@data-testid="node-add-requirement-above-action"]'
+            ),
+            by=By.XPATH,
+        )
+        return Form_EditRequirement(self.test_case)
+
+    def do_node_add_requirement_below(
+        self, field_order: int = NODE_1
+    ) -> Form_EditRequirement:
+        self.do_open_node_menu(field_order)
+        self.test_case.click(
+            selector=(
+                f"(//sdoc-node)[{field_order}]"
+                '//*[@data-testid="node-add-requirement-below-action"]'
+            ),
+            by=By.XPATH,
+        )
+        return Form_EditRequirement(self.test_case)
+
+    def do_node_add_requirement_child(
+        self, field_order: int = NODE_1
+    ) -> Form_EditRequirement:
+        self.do_open_node_menu(field_order)
+        self.test_case.click(
+            selector=(
+                f"(//sdoc-node)[{field_order}]"
+                '//*[@data-testid="node-add-requirement-child-action"]'
+            ),
+            by=By.XPATH,
+        )
+        return Form_EditRequirement(self.test_case)

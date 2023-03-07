@@ -30,7 +30,9 @@ class Test_UC11_G1_T02_AbstractWithInvalidRST(BaseCase):
             screen_document.assert_is_document_title("Document 1")
             screen_document.assert_text("Hello world!")
 
-            form_config: Form_EditConfig = screen_document.do_open_config_form()
+            form_config: Form_EditConfig = (
+                screen_document.do_open_form_edit_config()
+            )
 
             broken_abstract = """
 - Broken RST markup
@@ -39,7 +41,7 @@ class Test_UC11_G1_T02_AbstractWithInvalidRST(BaseCase):
   ---
 """
 
-            form_config.do_fill_in("FREETEXT", broken_abstract)
+            form_config.do_fill_in_document_abstract(broken_abstract)
             form_config.do_form_submit_and_catch_error(
                 "Bullet list ends without a blank line; unexpected unindent."
             )

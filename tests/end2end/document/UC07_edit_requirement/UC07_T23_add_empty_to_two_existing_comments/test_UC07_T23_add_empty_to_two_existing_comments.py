@@ -31,7 +31,7 @@ class Test_UC07_T23_AddEmptyToTwoExistingComments(BaseCase):
             screen_document.assert_text("Hello world!")
 
             form_edit_requirement: Form_EditRequirement = (
-                screen_document.do_open_edit_form()
+                screen_document.do_open_form_edit_requirement()
             )
 
             form_edit_requirement.do_form_add_field_comment()

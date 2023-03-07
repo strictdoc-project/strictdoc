@@ -66,16 +66,18 @@ class SDocTestServer:
             )
 
     def __del__(self):
-        self.close()
+        self.close(exit_due_exception=None)
 
     def __enter__(self):
         self.run()
         return self
 
-    def __exit__(self, type__, value, traceback):
-        self.close()
-        if value is not None:
-            raise value from None
+    def __exit__(
+        self, type__, reason_exception: Optional[Exception], traceback
+    ):
+        self.close(exit_due_exception=reason_exception)
+        if reason_exception is not None:
+            raise reason_exception from None
 
     def run(self):
         args = [
@@ -97,7 +99,7 @@ class SDocTestServer:
 
         temp_file = open(  # pylint: disable=consider-using-with
             f"/tmp/strictdoc_server.{self.server_port}.out.log",
-            "a",
+            "w",
             encoding="utf8",
         )
 
@@ -126,9 +128,36 @@ class SDocTestServer:
             f"Server is up and running on port: {self.server_port}."
         )
 
-    def close(self):
+    def close(self, *, exit_due_exception: Optional[Exception]):
         if self.process is None:
             return
+
+        if exit_due_exception is not None:
+            print(  # noqa: T201
+                "\nTestSDocServer: exiting due to an exception.\n"
+            )
+            print(f"--- Exception ---\n {exit_due_exception}")  # noqa: T201
+            last_lines_number = 10
+            print(  # noqa: T201
+                f"\n--- Captured Uvicorn stdout "
+                f"(last {last_lines_number} lines) ---\n"
+            )
+            with open(
+                f"/tmp/strictdoc_server.{self.server_port}.out.log",
+                encoding="utf8",
+            ) as out_temp_file:
+                out_temp_file_lines = out_temp_file.readlines()[
+                    -last_lines_number:
+                ]
+                print("".join(out_temp_file_lines))  # noqa: T201
+            print("\n--- Captured Uvicorn stderr ---\n")  # noqa: T201
+
+            with open(
+                f"/tmp/strictdoc_server.{self.server_port}.err.log",
+                encoding="utf8",
+            ) as err_temp_file:
+                print(err_temp_file.read())  # noqa: T201
+
         parent = psutil.Process(self.process.pid)
         if not parent.is_running():
             return
@@ -214,7 +243,7 @@ class SDocTestServer:
         # This solution also uses Queue but here it is not used.
         # https://stackoverflow.com/a/4896288/598057
         with open(
-            f"/tmp/strictdoc_server.{server_port}.err.log", "ab"
+            f"/tmp/strictdoc_server.{server_port}.err.log", "wb"
         ) as temp_file:
             poll = select.poll()  # pylint: disable=no-member
             poll.register(out, select.POLLIN)  # pylint: disable=no-member

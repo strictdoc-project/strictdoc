@@ -62,8 +62,16 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
             by=By.XPATH,
         )
 
+    # TOC
+
     def assert_toc_contains_string(self, string: str) -> None:
         self.test_case.assert_element(
+            f"//turbo-frame[@id='frame-toc']//*[contains(., '{string}')]",
+            by=By.XPATH,
+        )
+
+    def assert_toc_contains_not(self, string: str) -> None:
+        self.test_case.assert_element_not_present(
             f"//turbo-frame[@id='frame-toc']//*[contains(., '{string}')]",
             by=By.XPATH,
         )
@@ -279,6 +287,18 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
             ),
             hover_by=By.XPATH,
             click_by=By.XPATH,
+        )
+
+    # Node delete
+
+    def do_node_delete(self, field_order: int = NODE_1) -> None:
+        self.do_open_node_menu(field_order)
+        self.test_case.click(
+            selector=(
+                f"(//sdoc-node)[{field_order}]"
+                '//*[@data-testid="node-delete-action"]'
+            ),
+            by=By.XPATH,
         )
 
     # Add section

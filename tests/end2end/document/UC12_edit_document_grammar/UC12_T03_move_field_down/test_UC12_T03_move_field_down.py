@@ -37,7 +37,7 @@ class Test_UC12_T03_MoveFieldDown(BaseCase):
             )
             form_edit_grammar.assert_on_grammar()
 
-            form_edit_grammar.do_move_field_down("CUSTOM_FIELD")
+            form_edit_grammar.do_move_grammar_field_down("CUSTOM_FIELD")
 
             form_edit_grammar.do_form_submit()
 

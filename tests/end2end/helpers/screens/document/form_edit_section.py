@@ -1,5 +1,4 @@
 # pylint: disable=invalid-name
-from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.helpers.screens.form.form import Form
@@ -12,18 +11,8 @@ class Form_EditSection(Form):  # pylint: disable=invalid-name
 
     def do_fill_in_title(self, field_value: str) -> None:
         assert isinstance(field_value, str)
-
-        self.test_case.type(
-            "(//*[@data-testid='form-section_title-field'])",
-            f"{field_value}",
-            by=By.XPATH,
-        )
+        super().do_fill_in("section_title", field_value)
 
     def do_fill_in_text(self, field_value: str) -> None:
         assert isinstance(field_value, str)
-
-        self.test_case.type(
-            "(//*[@data-testid='form-section_content-field'])",
-            f"{field_value}",
-            by=By.XPATH,
-        )
+        super().do_fill_in("section_content", field_value)

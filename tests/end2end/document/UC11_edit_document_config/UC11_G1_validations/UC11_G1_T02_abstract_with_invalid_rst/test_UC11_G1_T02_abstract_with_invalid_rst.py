@@ -1,6 +1,7 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.constants import BROKEN_RST_MARKUP
 from tests.end2end.helpers.screens.document.form_edit_config import (
     Form_EditConfig,
 )
@@ -34,14 +35,7 @@ class Test_UC11_G1_T02_AbstractWithInvalidRST(BaseCase):
                 screen_document.do_open_form_edit_config()
             )
 
-            broken_abstract = """
-- Broken RST markup
-
-  - AAA
-  ---
-"""
-
-            form_config.do_fill_in_document_abstract(broken_abstract)
+            form_config.do_fill_in_document_abstract(BROKEN_RST_MARKUP)
             form_config.do_form_submit_and_catch_error(
                 "Bullet list ends without a blank line; unexpected unindent."
             )

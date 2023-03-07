@@ -37,8 +37,8 @@ class Test_UC12_T10_AddField(BaseCase):
             )
             form_edit_grammar.assert_on_grammar()
 
-            form_edit_grammar.do_add_field()
-            form_edit_grammar.do_fill_in("", "CUSTOM_FIELD", -1)
+            form_edit_grammar.do_add_grammar_field()
+            form_edit_grammar.do_fill_in_grammar_field("", "CUSTOM_FIELD", -1)
 
             form_edit_grammar.do_form_submit()
 

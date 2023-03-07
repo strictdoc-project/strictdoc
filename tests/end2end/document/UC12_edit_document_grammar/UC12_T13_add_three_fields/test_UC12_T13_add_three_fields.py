@@ -38,14 +38,14 @@ class Test_UC12_T13_AddThreeFields(BaseCase):
 
             form_edit_grammar.assert_on_grammar()
 
-            form_edit_grammar.do_add_field()
-            form_edit_grammar.do_fill_in("", "CUSTOM_FIELD_1", -1)
+            form_edit_grammar.do_add_grammar_field()
+            form_edit_grammar.do_fill_in_grammar_field("", "CUSTOM_FIELD_1", -1)
 
-            form_edit_grammar.do_add_field()
-            form_edit_grammar.do_fill_in("", "CUSTOM_FIELD_2", -1)
+            form_edit_grammar.do_add_grammar_field()
+            form_edit_grammar.do_fill_in_grammar_field("", "CUSTOM_FIELD_2", -1)
 
-            form_edit_grammar.do_add_field()
-            form_edit_grammar.do_fill_in("", "CUSTOM_FIELD_3", -1)
+            form_edit_grammar.do_add_grammar_field()
+            form_edit_grammar.do_fill_in_grammar_field("", "CUSTOM_FIELD_3", -1)
 
             form_edit_grammar.do_form_submit()
 

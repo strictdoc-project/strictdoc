@@ -37,7 +37,7 @@ class Test_UC12_T04_DeleteExistingField(BaseCase):
             )
             form_edit_grammar.assert_on_grammar()
 
-            form_edit_grammar.do_delete_field("LEVEL")
+            form_edit_grammar.do_delete_grammar_field("LEVEL")
 
             form_edit_grammar.do_form_submit()
 

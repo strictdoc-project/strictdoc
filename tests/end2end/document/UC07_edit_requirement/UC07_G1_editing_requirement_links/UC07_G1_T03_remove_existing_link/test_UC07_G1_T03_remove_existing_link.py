@@ -1,7 +1,13 @@
-from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.constants import NODE_1
+from tests.end2end.helpers.screens.document.form_edit_requirement import (
+    Form_EditRequirement,
+)
+from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
+    Screen_DocumentTree,
+)
 from tests.end2end.server import SDocTestServer
 
 
@@ -14,44 +20,60 @@ class Test_UC07_G1_T03_RemoveLink(BaseCase):
         ) as test_server:
             self.open(test_server.get_host_and_port())
 
-            self.assert_text("Document 1")
-            self.assert_text("PROJECT INDEX")
+            screen_document_tree = Screen_DocumentTree(self)
 
-            self.click_xpath('//*[@data-testid="tree-file-link"]')
+            screen_document_tree.assert_on_screen()
+            screen_document_tree.assert_contains_string("Document 1")
 
-            self.assert_text("Hello world!")
+            screen_document = screen_document_tree.do_click_on_first_document()
 
-            # Make sure that the normal (not table-based) requirement is
-            # rendered.
-            self.assert_element(
-                '//sdoc-node[@data-testid="node-requirement-simple"]',
-                by=By.XPATH,
+            screen_document.assert_on_screen()
+            screen_document.assert_is_document_title("Document 1")
+
+            screen_document.assert_text("Hello world!")
+
+            requirement1_order = NODE_1
+            requirement2_order = NODE_1 + 1
+
+            # Make sure there is the reference to the child in Requirement 1:
+            screen_document.assert_requirement_uid_contains(
+                "REQ-001", requirement1_order
+            )
+            screen_document.assert_requirement_has_child_link(
+                "REQ-002", requirement1_order
+            )
+            # Make sure there is the reference to the parent in Requirement 2:
+            screen_document.assert_requirement_uid_contains(
+                "REQ-002", requirement2_order
+            )
+            screen_document.assert_requirement_has_parent_link(
+                "REQ-001", requirement2_order
             )
 
-            self.hover_and_click(
-                hover_selector="(//sdoc-node)[3]",
-                click_selector=(
-                    '(//sdoc-node)[3]//*[@data-testid="node-edit-action"]'
-                ),
-                hover_by=By.XPATH,
-                click_by=By.XPATH,
+            # edit the second requirement
+            form_edit_requirement: Form_EditRequirement = (
+                screen_document.do_open_form_edit_requirement(
+                    requirement2_order
+                )
             )
+            form_edit_requirement.do_delete_parent_link()
+            # Make sure that the field is removed from the form:
+            form_edit_requirement.assert_form_has_no_parents()
+            form_edit_requirement.do_form_submit()
 
-            self.click_xpath(
-                '//*[@data-testid="form-delete-'
-                'requirement[REFS_PARENT][]-field-action"]'
+            # Make sure there is no reference to the child in Requirement 1:
+            screen_document.assert_requirement_uid_contains(
+                "REQ-001", requirement1_order
             )
-
-            self.scroll_to(
-                "//button[@type='submit' and text()='Save']", by=By.XPATH
+            screen_document.assert_requirement_has_not_child_link(
+                "REQ-002", requirement1_order
             )
-            self.click_xpath('//*[@data-testid="form-submit-action"]')
-
-            # TODO: Make sure that the link with the REQ-001 text no longer
-            # exists.
-
-            self.assert_element_not_present(
-                "//button[@type='submit' and text()='Save']", by=By.XPATH
+            # Make sure there is no reference to the parent in Requirement 2:
+            screen_document.assert_requirement_uid_contains(
+                "REQ-002", requirement2_order
+            )
+            screen_document.assert_requirement_has_not_parent_link(
+                "REQ-001", requirement2_order
             )
 
         assert test_setup.compare_sandbox_and_expected_output()

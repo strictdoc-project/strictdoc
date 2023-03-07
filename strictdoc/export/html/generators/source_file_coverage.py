@@ -18,7 +18,9 @@ class SourceFileCoverageHTMLGenerator:
         template = SourceFileCoverageHTMLGenerator.env.get_template(
             "source_file_coverage/source_file_coverage.jinja.html"
         )
-        link_renderer = LinkRenderer(root_path="")
+        link_renderer = LinkRenderer(
+            root_path="", static_path=config.dir_for_sdoc_assets
+        )
         output += template.render(
             config=config,
             traceability_index=traceability_index,

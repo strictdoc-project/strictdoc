@@ -114,7 +114,10 @@ class SourceFileViewHTMLGenerator:
             )
         pygments_styles = html_formatter.get_style_defs(".highlight")
 
-        link_renderer = LinkRenderer(root_path=source_file.path_depth_prefix)
+        link_renderer = LinkRenderer(
+            root_path=source_file.path_depth_prefix,
+            static_path=config.dir_for_sdoc_assets,
+        )
         markup_renderer = MarkupRenderer.create(
             "RST", traceability_index, link_renderer, None
         )

@@ -26,7 +26,9 @@ class RequirementsCoverageHTMLGenerator:
             "requirements_coverage/requirements_coverage.jinja.html"
         )
 
-        link_renderer = LinkRenderer(root_path="")
+        link_renderer = LinkRenderer(
+            root_path="", static_path=config.dir_for_sdoc_assets
+        )
         markup_renderer = MarkupRenderer.create(
             "RST",
             traceability_index,

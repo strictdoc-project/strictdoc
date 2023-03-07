@@ -1,0 +1,3 @@
+[project]
+title = "StrictDoc Documentation"
+html_assets_strictdoc_dir = "assets"

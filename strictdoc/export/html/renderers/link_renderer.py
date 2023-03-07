@@ -10,11 +10,16 @@ from strictdoc.export.html.document_type import DocumentType
 
 
 class LinkRenderer:
-    def __init__(self, *, root_path):
+    def __init__(self, *, root_path, static_path: str):
         assert isinstance(root_path, str)
+        assert isinstance(static_path, str), static_path
+        assert len(static_path) > 0, static_path
+
         self.root_path: str = root_path
         self.static_path: str = (
-            f"{root_path}/_static" if len(root_path) > 0 else "_static"
+            f"{root_path}/{static_path}"
+            if len(root_path) > 0
+            else f"{static_path}"
         )
         self.local_anchor_cache = {}
         self.req_link_cache = {}

@@ -18,8 +18,10 @@ class Screen_DocumentTree:  # pylint: disable=invalid-name
         self.test_case: BaseCase = test_case
 
     def assert_on_screen(self) -> None:
-        self.test_case.assert_text("PROJECT INDEX")
-        # class="pagetype"
+        self.test_case.assert_element(
+            '//body[@data-viewtype="document-tree"]',
+            by=By.XPATH,
+        )
 
     def assert_project_title(self, project_title: str) -> None:
         self.test_case.assert_element(

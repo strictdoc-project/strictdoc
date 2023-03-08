@@ -157,6 +157,10 @@ sdoc-form-error {
   order: 11;
 }
 
+sdoc-form-error + sdoc-form-error {
+  margin-top: var(--base-rhythm);
+}
+
 sdoc-form-row [data-action-type="add_field"]:only-child {
   /*
     It is expected to be a button (.action_button)

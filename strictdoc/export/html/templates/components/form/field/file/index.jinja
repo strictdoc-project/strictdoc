@@ -17,11 +17,11 @@
   <sdoc-form-row-main>
 
     {%- if errors|length > 0 -%}
-      <sdoc-form-error>
       {%- for error in errors -%}
+      <sdoc-form-error>
         {{ error }}
-      {%- endfor -%}
       </sdoc-form-error>
+      {%- endfor -%}
     {%- endif -%}
 
     <sdoc-form-field>

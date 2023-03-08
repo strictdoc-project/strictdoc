@@ -1,8 +1,10 @@
 import os
 
-from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
+from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
+    Screen_DocumentTree,
+)
 from tests.end2end.server import SDocTestServer
 
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
@@ -15,15 +17,6 @@ class Test_UC50_T01_EmptyDocumentTree(BaseCase):
         ) as test_server:
             self.open(test_server.get_host_and_port())
 
-            self.assert_text("PROJECT INDEX")
-
-            self.assert_text("The document tree has no documents yet.")
-
-            self.assert_element(
-                (
-                    "//*[@data-testid='document-tree-empty-text' "
-                    "and "
-                    "contains(., 'The document tree has no documents yet.')]"
-                ),
-                by=By.XPATH,
-            )
+            screen_document_tree = Screen_DocumentTree(self)
+            screen_document_tree.assert_on_screen()
+            screen_document_tree.assert_empty_tree()

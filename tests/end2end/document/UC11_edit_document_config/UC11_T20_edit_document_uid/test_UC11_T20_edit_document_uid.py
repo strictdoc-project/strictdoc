@@ -22,7 +22,7 @@ class Test_UC11_T20_EditDocumentUID(BaseCase):
             screen_document_tree = Screen_DocumentTree(self)
 
             screen_document_tree.assert_on_screen()
-            screen_document_tree.assert_contains_string("Document 1")
+            screen_document_tree.assert_contains_document("Document 1")
 
             screen_document = screen_document_tree.do_click_on_first_document()
 

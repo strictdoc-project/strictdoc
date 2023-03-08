@@ -20,7 +20,7 @@ class Test_UC01_T01_DocumentIsEmpty(BaseCase):
             screen_document_tree = Screen_DocumentTree(self)
 
             screen_document_tree.assert_on_screen()
-            screen_document_tree.assert_contains_string("Empty Document")
+            screen_document_tree.assert_contains_document("Empty Document")
 
             screen_document = screen_document_tree.do_click_on_first_document()
 

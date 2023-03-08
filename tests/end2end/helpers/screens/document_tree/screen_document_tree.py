@@ -7,6 +7,9 @@ from tests.end2end.helpers.screens.document.screen_document import (
 from tests.end2end.helpers.screens.document_tree.form_add_document import (
     Form_AddDocument,
 )
+from tests.end2end.helpers.screens.document_tree.form_import_reqif import (
+    Form_ImportReqIF,
+)
 
 
 class Screen_DocumentTree:  # pylint: disable=invalid-name
@@ -52,6 +55,16 @@ class Screen_DocumentTree:  # pylint: disable=invalid-name
         return Form_AddDocument(self.test_case)
 
     # Import / Export
-    # TODO: data-testid="tree-import-reqif-action"
-    # TODO: data-testid="form-reqif_file-field"
-    # TODO: data-testid="tree-export-reqif-action"
+
+    def do_open_modal_import_reqif(self) -> Form_ImportReqIF:
+        self.test_case.assert_element_not_present("//sdoc-modal", by=By.XPATH)
+        self.test_case.click_xpath(
+            '//*[@data-testid="tree-import-reqif-action"]'
+        )
+        self.test_case.assert_element("//sdoc-modal", by=By.XPATH)
+        return Form_ImportReqIF(self.test_case)
+
+    def do_export_reqif(self) -> None:
+        self.test_case.click_xpath(
+            '//*[@data-testid="tree-export-reqif-action"]'
+        )

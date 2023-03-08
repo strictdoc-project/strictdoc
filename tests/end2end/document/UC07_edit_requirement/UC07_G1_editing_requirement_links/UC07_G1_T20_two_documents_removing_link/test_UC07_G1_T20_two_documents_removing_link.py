@@ -21,7 +21,7 @@ class Test_UC07_G1_T20_TwoDocumentsRemovingLink(BaseCase):
 
             screen_document_tree = Screen_DocumentTree(self)
             screen_document_tree.assert_on_screen()
-            screen_document_tree.assert_contains_string("Document 1")
+            screen_document_tree.assert_contains_document("Document 1")
 
             # First, go to first document and check that the first document's
             # requirement REQ-001 does contain a child link to REQ-002.

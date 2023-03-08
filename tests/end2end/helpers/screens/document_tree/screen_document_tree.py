@@ -13,8 +13,12 @@ class Screen_DocumentTree:  # pylint: disable=invalid-name
     def assert_on_screen(self) -> None:
         self.test_case.assert_text("PROJECT INDEX")
 
-    def assert_contains_string(self, document_title: str) -> None:
-        self.test_case.assert_text(document_title)
+    def assert_contains_document(self, document_title: str) -> None:
+        self.test_case.assert_element(
+            "//*[@data-testid='tree-file-link']"
+            f"//*[contains(., '{document_title}')]",
+            by=By.XPATH,
+        )
 
     def do_click_on_first_document(self) -> Screen_Document:
         self.test_case.click_xpath('//*[@data-testid="tree-file-link"]')

@@ -277,6 +277,8 @@ sdoc-form-error + sdoc-form-field sdoc-contenteditable::before {
 
 [contenteditable=true] {
   white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
   outline: none;
   /* Without this hack ( display: inline-block )
      Chrome generates duplicated new lines when Enter pressed.

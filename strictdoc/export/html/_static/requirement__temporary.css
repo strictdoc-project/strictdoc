@@ -3,6 +3,7 @@
 
 div.document {
   display: contents;
+  /* hyphens: auto; */
 }
 
 div.document p {

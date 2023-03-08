@@ -19,6 +19,14 @@ class Screen_DocumentTree:  # pylint: disable=invalid-name
 
     def assert_on_screen(self) -> None:
         self.test_case.assert_text("PROJECT INDEX")
+        # class="pagetype"
+
+    def assert_project_title(self, project_title: str) -> None:
+        self.test_case.assert_element(
+            "//*[@class='header__project_name']"
+            f"[contains(., '{project_title}')]",
+            by=By.XPATH,
+        )
 
     def assert_contains_document(self, document_title: str) -> None:
         self.test_case.assert_element(

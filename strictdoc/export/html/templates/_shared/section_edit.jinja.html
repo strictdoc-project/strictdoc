@@ -47,11 +47,11 @@
 
       {%- if is_new_section -%}
         {%- with href="/actions/document/cancel_new_section?section_mid="~form_object.section_mid -%}
-          {% include 'components/button/cancel_href.jinja' %}
+          {% include 'components/button/cancel.jinja' %}
         {%- endwith -%}
       {%- else -%}
         {%- with href="/actions/document/cancel_edit_section?section_mid="~form_object.section_mid -%}
-          {% include 'components/button/cancel_href.jinja' %}
+          {% include 'components/button/cancel.jinja' %}
         {%- endwith -%}
       {%- endif -%}
     </sdoc-form-footer>

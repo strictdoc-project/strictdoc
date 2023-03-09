@@ -5,26 +5,41 @@ from queue import Empty
 
 class Parallelizer:
     def __init__(self):
-        self.input_queue = multiprocessing.Queue()
-        self.output_queue = multiprocessing.Queue()
+        # @sdoc[SDOC_IMPL_2]
+        try:
+            self.input_queue = multiprocessing.Queue()
+            self.output_queue = multiprocessing.Queue()
 
-        self.processes = [
-            multiprocessing.Process(
-                target=Parallelizer._run,
-                args=(self.input_queue, self.output_queue),
-            )
-            for _ in range(0, multiprocessing.cpu_count())
-        ]
+            self.processes = [
+                multiprocessing.Process(
+                    target=Parallelizer._run,
+                    args=(self.input_queue, self.output_queue),
+                )
+                for _ in range(0, multiprocessing.cpu_count())
+            ]
 
-        for process in self.processes:
-            process.start()
+            for process in self.processes:
+                process.start()
+        except OSError as exception:
+            raise OSError(
+                "OSError when initializing the Parallelizer. "
+                f"Underlying exception: {exception}"
+            ) from None
+        # @sdoc[/SDOC_IMPL_2]
 
     def __del__(self):
         self.shutdown()
 
     def shutdown(self):
-        for process in self.processes:
-            process.terminate()
+        # @sdoc[SDOC_IMPL_2]
+        # macOS edge case: If the __init__ fails to initialize itself, we may
+        # end up having no self.processes attribute at all.
+        was_fully_initialized = hasattr(self, "processes")
+        # @sdoc[/SDOC_IMPL_2]
+
+        if was_fully_initialized:
+            for process in self.processes:
+                process.terminate()
 
     @property
     def parallelization_enabled(self):

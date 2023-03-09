@@ -1,0 +1,36 @@
+<turbo-frame data-controller="modal_controller">
+  <sdoc-backdrop>
+    <form
+      {% block modal_form__form_attr %}{% endblock %}
+    >
+      <sdoc-modal>
+        <sdoc-modal-header>
+          {% block modal_form__header %}{% endblock %}
+        </sdoc-modal-header>
+        <sdoc-modal-content>
+          {% block modal_form__content %}{% endblock %}
+        </sdoc-modal-content>
+        <sdoc-modal-footer>
+          {% block modal_form__footer_extra %}{% endblock %}
+          {% block modal_form__footer_save %}
+            <button
+              class="action_button"
+              type="submit"
+              data-action-type="submit"
+              data-testid="form-submit-action"
+            >Save</button>
+          {% endblock %}
+          {% block modal_form__footer_cancel %}
+            <button
+              class="action_button"
+              type="button"
+              stimulus-modal-cancel-button
+              data-action-type="cancel"
+              data-testid="form-cancel-action"
+            >Cancel</button>
+          {% endblock %}
+        </sdoc-modal-footer>
+      </sdoc-modal>
+    </form>
+  </sdoc-backdrop>
+</turbo-frame>

@@ -70,4 +70,26 @@ ReqIF format does not seem to provide a dedicated convention for a text node to 
 
 [/SECTION]
 
+[REQUIREMENT]
+UID: SDOC_IMPL_2
+REFS:
+- TYPE: File
+  VALUE: strictdoc/helpers/parallelizer.py
+TITLE: SDOC_IMPL_2: Running out of semaphores on macOS
+STATEMENT: >>>
+This an edge case on macOS: Python crashes in the Parallelizer class when
+creating an output queue:
+
+.. code-block:: py
+
+    self.output_queue = multiprocessing.Queue()
+
+The fragment of the crash:
+
+.. code-block:: text
+
+    sl = self._semlock = _multiprocessing.SemLock(
+    OSError: [Errno 28] No space left on device
+<<<
+
 [/SECTION]

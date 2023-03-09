@@ -23,11 +23,8 @@ Import ReqIF document
     </sdoc-form-grid>
   </form>
 {% endblock %}
-
-{% block modal_form__footer_extra %}{% endblock %}
 {% block modal_form__footer_submit %}
   {%- with name="Import ReqIF" -%}
     {% include 'components/button/submit.jinja' %}
   {%- endwith -%}
 {% endblock %}
-{% block modal_form__footer_cancel %}{{ super() }}{% endblock %}

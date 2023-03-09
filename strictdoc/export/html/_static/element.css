@@ -116,10 +116,14 @@ a.action_button:hover {
   color: var(--color-submit);
 }
 
-/* [data-action-type="delete"], */
+[data-action-type="delete"] {
+  color: var(--color-danger) !important;
+  border-color: var(--color-danger) !important;
+}
+
 [data-action-type="cancel"],
 .action_button[href*="cancel"] {
-  color: var(--color-danger) !important;
+  color: var(--color-cancel) !important;
 }
 
 .action_icon,

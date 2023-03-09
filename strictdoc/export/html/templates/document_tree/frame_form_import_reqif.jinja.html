@@ -1,11 +1,11 @@
 {% extends "components/modal/index.jinja" %}
-
+{% set form = "sdoc_modal_form" %}
 {% block modal_form__header %}
 Import ReqIF document
 {% endblock %}
 {% block modal_form__content %}
   <form
-    id="{{form}}"  {# defined in the parent template #}
+    id="{{form}}"
     action="/actions/document_tree/import_document_reqif"
     method="POST"
     enctype="multipart/form-data"

@@ -61,19 +61,10 @@
     </sdoc-form-grid>
 
     <sdoc-form-footer>
-      <button
-        class="action_button"
-        type="submit"
-        data-action-type="submit"
-        data-testid="form-submit-action"
-      >Save</button>
-      <a
-        class="action_button"
-        href="/actions/document/cancel_edit_config?document_mid={{form_object.document_mid}}"
-        data-turbo="true"
-        data-action-type="cancel"
-        data-testid="form-cancel-action"
-      >Cancel</a>
+      {% include 'components/button/submit.jinja' %}
+      {%- with href="/actions/document/cancel_edit_config?document_mid="~form_object.document_mid -%}
+        {% include 'components/button/cancel_href.jinja' %}
+      {%- endwith -%}
     </sdoc-form-footer>
 
   </form>

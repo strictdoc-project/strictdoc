@@ -99,29 +99,16 @@
   {# Footer #}
 
   <sdoc-form-footer>
-    <button
-      class="action_button"
-      type="submit"
-      data-action-type="submit"
-      data-testid="form-submit-action"
-    >Save</button>
+    {% include 'components/button/submit.jinja' %}
 
     {%- if is_new_requirement -%}
-      <a
-        class="action_button"
-        href="/actions/document/cancel_new_requirement?requirement_mid={{form_object.requirement_mid}}"
-        data-turbo="true"
-        data-action-type="cancel"
-        data-testid="form-cancel-action"
-      >Cancel</a>
+      {%- with href="/actions/document/cancel_new_requirement?requirement_mid="~form_object.requirement_mid -%}
+        {% include 'components/button/cancel_href.jinja' %}
+      {%- endwith -%}
     {%- else -%}
-      <a
-        class="action_button"
-        href="/actions/document/cancel_edit_requirement?requirement_mid={{form_object.requirement_mid}}"
-        data-turbo="true"
-        data-action-type="cancel"
-        data-testid="form-cancel-action"
-      >Cancel</a>
+      {%- with href="/actions/document/cancel_edit_requirement?requirement_mid="~form_object.requirement_mid -%}
+        {% include 'components/button/cancel_href.jinja' %}
+      {%- endwith -%}
     {%- endif -%}
   </sdoc-form-footer>
 </form>

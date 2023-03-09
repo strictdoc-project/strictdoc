@@ -13,21 +13,10 @@
         <sdoc-modal-footer>
           {% block modal_form__footer_extra %}{% endblock %}
           {% block modal_form__footer_save %}
-            <button
-              class="action_button"
-              type="submit"
-              data-action-type="submit"
-              data-testid="form-submit-action"
-            >Save</button>
+            {% include 'components/button/submit.jinja' %}
           {% endblock %}
           {% block modal_form__footer_cancel %}
-            <button
-              class="action_button"
-              type="button"
-              stimulus-modal-cancel-button
-              data-action-type="cancel"
-              data-testid="form-cancel-action"
-            >Cancel</button>
+            {% include 'components/button/cancel_button.jinja' %}
           {% endblock %}
         </sdoc-modal-footer>
       </sdoc-modal>

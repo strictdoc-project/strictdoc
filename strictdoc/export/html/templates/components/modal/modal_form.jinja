@@ -1,8 +1,13 @@
 <turbo-frame data-controller="modal_controller">
+  {#
+    form = "sdoc_modal_form"
+    This is the ID of the form, defined in the parent template,
+  affects the modal window. If a form appears in the modal window,
+  this identifier is passed to the form and to the submit,
+  to bind the form and the submit located outside the form.
+  #}
+  {% set form = "sdoc_modal_form" %}
   <sdoc-backdrop>
-    <form
-      {% block modal_form__form_attr %}{% endblock %}
-    >
       <sdoc-modal>
         <sdoc-modal-header>
           {% block modal_form__header %}{% endblock %}
@@ -20,6 +25,5 @@
           {% endblock %}
         </sdoc-modal-footer>
       </sdoc-modal>
-    </form>
   </sdoc-backdrop>
 </turbo-frame>

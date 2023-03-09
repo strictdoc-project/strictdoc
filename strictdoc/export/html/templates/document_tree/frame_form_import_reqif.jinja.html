@@ -1,32 +1,33 @@
 {% extends "components/modal/modal_form.jinja" %}
-{% block modal_form__form_attr %}
-  action="/actions/document_tree/import_document_reqif"
-  method="POST"
-  enctype="multipart/form-data"
-  data-turbo="true"
-{% endblock %}
+
 {% block modal_form__header %}
 Import ReqIF document
 {% endblock %}
 {% block modal_form__content %}
-  <sdoc-form-grid>
-    {%- with
+  <form
+    id="{{form}}"  {# defined in the parent template #}
+    action="/actions/document_tree/import_document_reqif"
+    method="POST"
+    enctype="multipart/form-data"
+    data-turbo="true"
+  >
+    <sdoc-form-grid>
+      {%- with
         field_class_name="",
         field_input_name="reqif_file",
         field_label="Click this div and select a file",
         errors=error_object.get_errors("reqif_file")
-    -%}
-      {% include "components/form/field/file/index.jinja" %}
-    {%- endwith -%}
-  </sdoc-form-grid>
+      -%}
+        {% include "components/form/field/file/index.jinja" %}
+      {%- endwith -%}
+    </sdoc-form-grid>
+  </form>
 {% endblock %}
 
 {% block modal_form__footer_extra %}{% endblock %}
 {% block modal_form__footer_submit %}
-  {# overwrite with modified button #}
   {%- with name="Import ReqIF" -%}
     {% include 'components/button/submit.jinja' %}
   {%- endwith -%}
 {% endblock %}
-{# included Cancel from super() #}
 {% block modal_form__footer_cancel %}{{ super() }}{% endblock %}

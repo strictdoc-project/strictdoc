@@ -102,11 +102,11 @@
     {% include 'components/button/submit.jinja' %}
 
     {%- if is_new_requirement -%}
-      {%- with href_cancel="/actions/document/cancel_new_requirement?requirement_mid="~form_object.requirement_mid -%}
+      {%- with cancel_href="/actions/document/cancel_new_requirement?requirement_mid="~form_object.requirement_mid -%}
         {% include 'components/button/cancel.jinja' %}
       {%- endwith -%}
     {%- else -%}
-      {%- with href_cancel="/actions/document/cancel_edit_requirement?requirement_mid="~form_object.requirement_mid -%}
+      {%- with cancel_href="/actions/document/cancel_edit_requirement?requirement_mid="~form_object.requirement_mid -%}
         {% include 'components/button/cancel.jinja' %}
       {%- endwith -%}
     {%- endif -%}

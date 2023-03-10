@@ -1,0 +1,8 @@
+<a
+  href="{{confirm_href}}"
+  class="action_button"
+  data-turbo="true"
+  data-turbo-method="{{confirm_turbo_method|default('delete')}}"
+  data-action-type="confirm_{{confirm_action_type|default('delete')}}"
+  data-testid="confirm-action"
+>{{ confirm_name|default('Confirm the action') }}</a>

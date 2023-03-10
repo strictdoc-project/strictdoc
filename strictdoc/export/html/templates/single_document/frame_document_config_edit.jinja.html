@@ -62,7 +62,7 @@
 
     <sdoc-form-footer>
       {% include 'components/button/submit.jinja' %}
-      {%- with href_cancel="/actions/document/cancel_edit_config?document_mid="~form_object.document_mid -%}
+      {%- with cancel_href="/actions/document/cancel_edit_config?document_mid="~form_object.document_mid -%}
         {% include 'components/button/cancel.jinja' %}
       {%- endwith -%}
     </sdoc-form-footer>

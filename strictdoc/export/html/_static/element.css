@@ -116,9 +116,15 @@ a.action_button:hover {
   color: var(--color-submit);
 }
 
-[data-action-type="delete"] {
+[data-action-type="delete"],
+[data-action-type="confirm_delete"] {
   color: var(--color-danger) !important;
   border-color: var(--color-danger) !important;
+}
+
+[data-action-type="confirm_delete"]:hover {
+  color: var(--color-bg-contrast) !important;
+  background: var(--color-danger) !important;
 }
 
 [data-action-type="cancel"],

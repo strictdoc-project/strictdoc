@@ -2,7 +2,6 @@
   {{form}}
   Defined in the parent modal/form template.
 #}
-
 <button
   {% if form is defined %}
     form="{{form}}"
@@ -12,4 +11,4 @@
   type="submit"
   data-action-type="submit"
   data-testid="form-submit-action"
->{{ name|default('Save') }}</button>
+>{{ submit_name|default('Save') }}</button>

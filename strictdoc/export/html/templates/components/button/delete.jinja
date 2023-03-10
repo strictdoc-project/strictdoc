@@ -1,7 +1,8 @@
 <a
-  href="{{href_delete}}"
+  href="{{delete_href}}"
   class="action_button"
   data-turbo="true"
+  data-turbo-method="delete"
   data-action-type="delete"
-  data-testid="confirm-delete-action"
->{{ name|default('Delete') }}</a>
+  data-testid="form-delete-action"
+>{{ delete_name|default('Delete') }}</a>

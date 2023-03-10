@@ -54,6 +54,12 @@ sdoc-modal-content {
   scroll-behavior: smooth;
 }
 
+sdoc-modal-message {
+  display: block;
+  padding-left: calc(var(--base-rhythm)*4);
+  padding-right: calc(var(--base-rhythm)*4);
+}
+
 sdoc-modal-footer {
   grid-area: modal-footer;
   display: flex;

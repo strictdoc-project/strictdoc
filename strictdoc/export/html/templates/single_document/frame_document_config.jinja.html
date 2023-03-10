@@ -5,7 +5,9 @@
 >
 
 <sdoc-node
+{%- if config.is_running_on_server %}
   data-editable_node="on"
+{% endif -%}
 >
   <h1>{{document.title}}</h1>
 {%- if document.config.has_meta() -%}

@@ -1,4 +1,8 @@
-<turbo-frame id="article-{{section.node_id}}">
+<turbo-frame
+{%- if config.is_running_on_server %}
+  id="article-{{section.node_id}}"
+{% endif -%}
+>
 
 {%- set anchor=link_renderer.render_local_anchor(section) -%}
 

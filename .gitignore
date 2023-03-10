@@ -39,3 +39,6 @@ latest_logs/
 # Files downloaded during tests are stored here.
 downloaded_files/
 
+### StrictDoc's documentation ###
+strictdoc-project.github.io/
+

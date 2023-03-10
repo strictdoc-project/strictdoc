@@ -38,14 +38,10 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
         )
 
     def assert_confirm(self) -> None:
-        self.test_case.assert_element(
-            '//*[@data-testid="confirm-message"]'
-        )
+        self.test_case.assert_element('//*[@data-testid="confirm-message"]')
 
     def assert_confirm_requirement_delete(self) -> None:
-        self.test_case.assert_element(
-            '//*[@data-testid="confirm-message"]'
-        )
+        self.test_case.assert_element('//*[@data-testid="confirm-message"]')
         self.test_case.assert_element(
             '//*[@data-testid="confirm-action"]'
             '[contains(., "Delete requirement")]',
@@ -53,9 +49,7 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
         )
 
     def assert_confirm_section_delete(self) -> None:
-        self.test_case.assert_element(
-            '//*[@data-testid="confirm-message"]'
-        )
+        self.test_case.assert_element('//*[@data-testid="confirm-message"]')
         self.test_case.assert_element(
             '//*[@data-testid="confirm-action"]'
             '[contains(., "Delete section")]',

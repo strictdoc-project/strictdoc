@@ -1207,9 +1207,7 @@ def create_main_router(
                 "actions/document/delete_section/"
                 "stream_confirm_delete_section.jinja"
             )
-            output = template.render(
-                section_mid=section_mid
-            )
+            output = template.render(section_mid=section_mid)
             return HTMLResponse(
                 content=output,
                 status_code=200,
@@ -1290,9 +1288,7 @@ def create_main_router(
                 "actions/document/delete_requirement/"
                 "stream_confirm_delete_requirement.jinja"
             )
-            output = template.render(
-                requirement_mid=requirement_mid
-            )
+            output = template.render(requirement_mid=requirement_mid)
             return HTMLResponse(
                 content=output,
                 status_code=200,

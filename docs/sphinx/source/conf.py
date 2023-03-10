@@ -62,7 +62,11 @@ extensions = ["guzzle_sphinx_theme"]
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
-html_extra_path = ["../../strictdoc-html"]
+html_extra_path = [
+    # The StrictDoc HTML Export used to be stored alongside this Sphinx HTML
+    # export.
+    # "../../strictdoc-html"
+]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -238,9 +242,7 @@ latex_elements = {
                     \hline
                     \textbf{{Project goals:}} &
                     \makecell[l]{
-                            Technical requirements and specifications management,
-                            \\
-                            documentation control
+                        Technical requirements and specifications management
                     }
                     \\ \hline
                     \textbf{{Supported documents:}} & \tablecell {Requirements document/specification, technical manual} \\ \hline

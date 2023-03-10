@@ -54,3 +54,29 @@ SDOC_IMPL_1: Exporting document free text to ReqIF and vice versa
 -----------------------------------------------------------------
 
 ReqIF format does not seem to provide a dedicated convention for a text node to be distinguished from a requirement or a section. StrictDoc implements a workaround: the document's free text is converted to a section with a ``ChapterName`` field that equals "Abstract". And the other way round: when a ReqIF-to-SDoc converter encounters the first section of a document to be "Abstract", it is converted to a free text.
+
+.. _SDOC_IMPL_2:
+
+SDOC_IMPL_2: Running out of semaphores on macOS
+-----------------------------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC_IMPL_2
+
+This an edge case on macOS: Python crashes in the Parallelizer class when
+creating an output queue:
+
+.. code-block:: py
+
+    self.output_queue = multiprocessing.Queue()
+
+The fragment of the crash:
+
+.. code-block:: text
+
+    sl = self._semlock = _multiprocessing.SemLock(
+    OSError: [Errno 28] No space left on device

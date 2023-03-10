@@ -9,7 +9,9 @@
 
   <sdoc-node
     node-role="requirement"
-    data-editable_node="on"
+    {%- if config.is_running_on_server %}
+      data-editable_node="on"
+    {%- endif %}
     data-testid="node-requirement-{{requirement_style_mode}}"
     {%- if requirement.reserved_status %}
     data-status='{{ requirement.reserved_status.lower() }}'

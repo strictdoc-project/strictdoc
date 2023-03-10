@@ -8,7 +8,9 @@
 
 <sdoc-node
   node-role="section"
-  data-editable_node="on"
+  {%- if config.is_running_on_server %}
+    data-editable_node="on"
+  {%- endif %}
   data-controller="document"
 >
 

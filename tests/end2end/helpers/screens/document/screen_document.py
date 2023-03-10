@@ -37,6 +37,25 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
             '//*[@data-testid="document-placeholder"]'
         )
 
+    def assert_confirm(self) -> None:
+        self.test_case.assert_element('//*[@data-testid="confirm-message"]')
+
+    def assert_confirm_requirement_delete(self) -> None:
+        self.test_case.assert_element('//*[@data-testid="confirm-message"]')
+        self.test_case.assert_element(
+            '//*[@data-testid="confirm-action"]'
+            '[contains(., "Delete requirement")]',
+            by=By.XPATH,
+        )
+
+    def assert_confirm_section_delete(self) -> None:
+        self.test_case.assert_element('//*[@data-testid="confirm-message"]')
+        self.test_case.assert_element(
+            '//*[@data-testid="confirm-action"]'
+            '[contains(., "Delete section")]',
+            by=By.XPATH,
+        )
+
     def assert_is_document_title(self, document_title: str) -> None:
         self.test_case.assert_text(document_title)
 
@@ -404,3 +423,9 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
             by=By.XPATH,
         )
         return Form_EditRequirement(self.test_case)
+
+    def do_confirm_action(self) -> None:
+        self.test_case.click(
+            selector=('//*[@data-testid="confirm-action"]'),
+            by=By.XPATH,
+        )

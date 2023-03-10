@@ -43,30 +43,17 @@
     </sdoc-form-grid>
 
     <sdoc-form-footer>
-      <button
-        class="action_button"
-        type="submit"
-        data-action-type="submit"
-        data-testid="form-submit-action"
-      >Save</button>
+      {% include 'components/button/submit.jinja' %}
 
-    {%- if is_new_section -%}
-      <a
-        class="action_button"
-        href="/actions/document/cancel_new_section?section_mid={{form_object.section_mid}}"
-        data-turbo="true"
-        data-action-type="cancel"
-        data-testid="form-cancel-action"
-      >Cancel</a>
-    {%- else -%}
-      <a
-        class="action_button"
-        href="/actions/document/cancel_edit_section?section_mid={{form_object.section_mid}}"
-        data-turbo="true"
-        data-action-type="cancel"
-        data-testid="form-cancel-action"
-      >Cancel</a>
-    {%- endif -%}
+      {%- if is_new_section -%}
+        {%- with cancel_href="/actions/document/cancel_new_section?section_mid="~form_object.section_mid -%}
+          {% include 'components/button/cancel.jinja' %}
+        {%- endwith -%}
+      {%- else -%}
+        {%- with cancel_href="/actions/document/cancel_edit_section?section_mid="~form_object.section_mid -%}
+          {% include 'components/button/cancel.jinja' %}
+        {%- endwith -%}
+      {%- endif -%}
     </sdoc-form-footer>
 
   </sdoc-form>

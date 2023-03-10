@@ -31,7 +31,9 @@ class Test_UC09_T01_DeleteSection(BaseCase):
             screen_document.assert_node_title_contains("First section")
 
             screen_document.do_node_delete()
-            screen_document.assert_no_text("First section")
+            screen_document.assert_confirm_section_delete()
+            screen_document.do_confirm_action()
+
             screen_document.assert_no_text("First section")
             screen_document.assert_toc_contains_not("First section")
 

@@ -1,0 +1,14 @@
+{#
+  {{form}}
+  Defined in the parent modal/form template.
+#}
+<button
+  {% if form is defined %}
+    form="{{form}}"
+  {% endif %}
+  data-turbo="true"
+  class="action_button"
+  type="submit"
+  data-action-type="submit"
+  data-testid="form-submit-action"
+>{{ submit_name|default('Save') }}</button>

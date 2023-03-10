@@ -1201,7 +1201,21 @@ def create_main_router(
         "/actions/document/delete_section/{section_mid}",
         response_class=Response,
     )
-    def delete_section(section_mid: str):
+    def delete_section(section_mid: str, confirmed: bool = False):
+        if not confirmed:
+            template = env.get_template(
+                "actions/document/delete_section/"
+                "stream_confirm_delete_section.jinja"
+            )
+            output = template.render(section_mid=section_mid)
+            return HTMLResponse(
+                content=output,
+                status_code=200,
+                headers={
+                    "Content-Type": "text/vnd.turbo-stream.html",
+                },
+            )
+
         section: Section = export_action.traceability_index.get_node_by_id(
             section_mid
         )
@@ -1268,7 +1282,21 @@ def create_main_router(
         "/actions/document/delete_requirement/{requirement_mid}",
         response_class=Response,
     )
-    def delete_requirement(requirement_mid: str):
+    def delete_requirement(requirement_mid: str, confirmed: bool = False):
+        if not confirmed:
+            template = env.get_template(
+                "actions/document/delete_requirement/"
+                "stream_confirm_delete_requirement.jinja"
+            )
+            output = template.render(requirement_mid=requirement_mid)
+            return HTMLResponse(
+                content=output,
+                status_code=200,
+                headers={
+                    "Content-Type": "text/vnd.turbo-stream.html",
+                },
+            )
+
         requirement: Requirement = (
             export_action.traceability_index.get_node_by_id(requirement_mid)
         )

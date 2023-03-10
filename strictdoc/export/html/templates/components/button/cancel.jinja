@@ -1,0 +1,17 @@
+{%- if cancel_href is defined -%}
+  <a
+    href="{{cancel_href}}"
+    class="action_button"
+    data-turbo="true"
+    data-action-type="cancel"
+    data-testid="form-cancel-action"
+  >{{ cancel_name|default('Cancel') }}</a>
+{%- else -%}
+  <button
+    stimulus-modal-cancel-button
+    type="button"
+    class="action_button"
+    data-action-type="cancel"
+    data-testid="form-cancel-action"
+  >{{ cancel_name|default('Cancel') }}</button>
+{%- endif -%}

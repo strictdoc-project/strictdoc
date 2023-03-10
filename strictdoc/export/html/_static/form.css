@@ -54,6 +54,12 @@ sdoc-modal-content {
   scroll-behavior: smooth;
 }
 
+sdoc-modal-message {
+  display: block;
+  padding-left: calc(var(--base-rhythm)*4);
+  padding-right: calc(var(--base-rhythm)*4);
+}
+
 sdoc-modal-footer {
   grid-area: modal-footer;
   display: flex;
@@ -62,6 +68,7 @@ sdoc-modal-footer {
   padding-bottom: calc(var(--base-rhythm)*2);
   padding-left: calc(var(--base-rhythm)*4);
   padding-right: calc(var(--base-rhythm)*3); /* buttons to right */
+  column-gap: var(--base-rhythm);
 }
 
 /* sdoc-form  */
@@ -103,6 +110,7 @@ sdoc-form-footer {
   padding-bottom: 0;
   padding-left: calc(var(--base-rhythm)*2); /* buttons to left */
   padding-right: calc(var(--base-rhythm)*4);
+  column-gap: var(--base-rhythm);
 }
 
 sdoc-form-field {

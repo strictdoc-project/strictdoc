@@ -75,7 +75,8 @@
   --color-green: rgb(0, 100, 100);
 
   --color-danger: var(--color-red);
-  --color-submit: var(--color-blue);
+  --color-cancel: var(--color-fg-secondary);
+  --color-submit: var(--color-action);
 
 }
 

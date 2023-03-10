@@ -1,11 +1,28 @@
 {% extends "components/modal/index.jinja" %}
-{% set form = "sdoc_modal_form" %}
+
+{#
+
+  {{form}}
+
+  This is the ID of the form, affects the modal window,
+  and the form and submit button included in it.
+
+  This ID is used to bind the form and the button,
+  which is outside the form, in the footer of the modal window.
+
+  If you create a modal window with a form that requires a specific identifier,
+  override it by editing the value of the variable:
+#}
+
+{% set form = "sdoc_modal_form_id" %}
+
 {% block modal_form__header %}
 Import ReqIF document
 {% endblock %}
 {% block modal_form__content %}
   <form
     id="{{form}}"
+{# paste here the form attributes: #}
     action="/actions/document_tree/import_document_reqif"
     method="POST"
     enctype="multipart/form-data"
@@ -23,8 +40,15 @@ Import ReqIF document
     </sdoc-form-grid>
   </form>
 {% endblock %}
+
+{% block modal_form__footer_extra %}{% endblock %}
 {% block modal_form__footer_submit %}
+  {# It is possible to call with a 'name' variable #}
   {%- with name="Import ReqIF" -%}
     {% include 'components/button/submit.jinja' %}
   {%- endwith -%}
+{% endblock %}
+{% block modal_form__footer_cancel %}
+  {# It is possible to call with a 'name' and 'href' variable #}
+  {{ super() }}
 {% endblock %}

@@ -8,6 +8,7 @@ from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.cli.argument_int_range import IntRange
 from strictdoc.core.environment import SDocRuntimeEnvironment
 from strictdoc.core.project_config import ProjectConfig
+from strictdoc.helpers.auto_described import auto_described
 
 EXPORT_FORMATS = ["html", "html-standalone", "rst", "excel", "reqif-sdoc"]
 EXCEL_PARSERS = ["basic"]
@@ -284,6 +285,7 @@ class PassthroughCommandConfig:
         self.output_file = output_file
 
 
+@auto_described
 class ServerCommandConfig:
     def __init__(
         self,
@@ -338,6 +340,11 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         self.output_html_root: str = os.path.join(output_dir, "html")
 
         self.is_running_on_server = False
+
+        # This option comes from the project config when the
+        # config file is read.
+        self.dir_for_sdoc_assets: str = ""
+
         # FIXME: This does not belong here.
         self._server_port: Optional[int] = None
 
@@ -373,6 +380,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
     def integrate_project_config(self, project_config: ProjectConfig):
         if self.project_title is None:
             self.project_title = project_config.project_title
+        self.dir_for_sdoc_assets = project_config.dir_for_sdoc_assets
 
 
 class DumpGrammarCommandConfig:

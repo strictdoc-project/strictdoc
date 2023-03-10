@@ -2,16 +2,24 @@ import os
 
 import toml
 
+from strictdoc.helpers.auto_described import auto_described
 
+
+@auto_described
 class ProjectConfig:
     DEFAULT_PROJECT_TITLE = "Untitled Project"
+    DEFAULT_DIR_FOR_SDOC_ASSETS = "_static"
 
-    def __init__(self, project_title: str):
+    def __init__(self, project_title: str, dir_for_sdoc_assets: str):
         self.project_title: str = project_title
+        self.dir_for_sdoc_assets: str = dir_for_sdoc_assets
 
     @staticmethod
     def default_config():
-        return ProjectConfig(project_title=ProjectConfig.DEFAULT_PROJECT_TITLE)
+        return ProjectConfig(
+            project_title=ProjectConfig.DEFAULT_PROJECT_TITLE,
+            dir_for_sdoc_assets=ProjectConfig.DEFAULT_DIR_FOR_SDOC_ASSETS,
+        )
 
 
 class ProjectConfigLoader:
@@ -27,6 +35,7 @@ class ProjectConfigLoader:
             return ProjectConfig.default_config()
 
         project_title = ProjectConfig.DEFAULT_PROJECT_TITLE
+        dir_for_sdoc_assets = ProjectConfig.DEFAULT_DIR_FOR_SDOC_ASSETS
 
         try:
             config_content = toml.load(path_to_config)
@@ -45,4 +54,10 @@ class ProjectConfigLoader:
         if "project" in config_content:
             project_content = config_content["project"]
             project_title = project_content.get("title", project_title)
-        return ProjectConfig(project_title=project_title)
+            dir_for_sdoc_assets = project_content.get(
+                "html_assets_strictdoc_dir", dir_for_sdoc_assets
+            )
+        return ProjectConfig(
+            project_title=project_title,
+            dir_for_sdoc_assets=dir_for_sdoc_assets,
+        )

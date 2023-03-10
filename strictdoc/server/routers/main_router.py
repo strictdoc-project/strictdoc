@@ -116,6 +116,7 @@ def create_main_router(
         enable_mathjax=False,
         experimental_enable_file_traceability=False,
     )
+    export_config.integrate_project_config(project_config)
     export_config.configure_for_server(server_port=server_config.port)
     export_action = ExportAction(
         config=export_config, parallelizer=parallelizer
@@ -167,7 +168,8 @@ def create_main_router(
             "actions/document/create_section/stream_new_section.jinja.html"
         )
         link_renderer = LinkRenderer(
-            root_path=document.meta.get_root_path_prefix()
+            root_path=document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
@@ -250,7 +252,8 @@ def create_main_router(
                 "actions/document/create_section/stream_new_section.jinja.html"
             )
             link_renderer = LinkRenderer(
-                root_path=document.meta.get_root_path_prefix()
+                root_path=document.meta.get_root_path_prefix(),
+                static_path=project_config.dir_for_sdoc_assets,
             )
             markup_renderer = MarkupRenderer.create(
                 markup="RST",
@@ -348,7 +351,8 @@ def create_main_router(
             "actions/document/create_section/stream_created_section.jinja.html"
         )
         link_renderer = LinkRenderer(
-            root_path=document.meta.get_root_path_prefix()
+            root_path=document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
@@ -397,7 +401,8 @@ def create_main_router(
             "actions/document/edit_section/stream_edit_section.jinja.html"
         )
         link_renderer = LinkRenderer(
-            root_path=section.document.meta.get_root_path_prefix()
+            root_path=section.document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
@@ -461,7 +466,8 @@ def create_main_router(
                 "actions/document/edit_section/stream_edit_section.jinja.html"
             )
             link_renderer = LinkRenderer(
-                root_path=section.document.meta.get_root_path_prefix()
+                root_path=section.document.meta.get_root_path_prefix(),
+                static_path=project_config.dir_for_sdoc_assets,
             )
             markup_renderer = MarkupRenderer.create(
                 markup="RST",
@@ -524,7 +530,8 @@ def create_main_router(
             "actions/document/edit_section/stream_updated_section.jinja.html"
         )
         link_renderer = LinkRenderer(
-            root_path=section.document.meta.get_root_path_prefix()
+            root_path=section.document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
@@ -584,7 +591,8 @@ def create_main_router(
             "actions/document/edit_section/stream_updated_section.jinja.html"
         )
         link_renderer = LinkRenderer(
-            root_path=section.document.meta.get_root_path_prefix()
+            root_path=section.document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
@@ -642,7 +650,8 @@ def create_main_router(
             "stream_new_requirement.jinja.html"
         )
         link_renderer = LinkRenderer(
-            root_path=document.meta.get_root_path_prefix()
+            root_path=document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
@@ -723,7 +732,8 @@ def create_main_router(
                 "stream_new_requirement.jinja.html"
             )
             link_renderer = LinkRenderer(
-                root_path=document.meta.get_root_path_prefix()
+                root_path=document.meta.get_root_path_prefix(),
+                static_path=project_config.dir_for_sdoc_assets,
             )
             markup_renderer = MarkupRenderer.create(
                 markup="RST",
@@ -794,7 +804,8 @@ def create_main_router(
             "stream_created_requirement.jinja.html"
         )
         link_renderer = LinkRenderer(
-            root_path=document.meta.get_root_path_prefix()
+            root_path=document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
@@ -851,7 +862,8 @@ def create_main_router(
             "stream_edit_requirement.jinja.html"
         )
         link_renderer = LinkRenderer(
-            root_path=document.meta.get_root_path_prefix()
+            root_path=document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
@@ -908,7 +920,8 @@ def create_main_router(
                 "stream_edit_requirement.jinja.html"
             )
             link_renderer = LinkRenderer(
-                root_path=document.meta.get_root_path_prefix()
+                root_path=document.meta.get_root_path_prefix(),
+                static_path=project_config.dir_for_sdoc_assets,
             )
             markup_renderer = MarkupRenderer.create(
                 markup="RST",
@@ -1074,7 +1087,8 @@ def create_main_router(
             export_action.traceability_index.get_document_iterator(document)
         )
         link_renderer: LinkRenderer = LinkRenderer(
-            root_path=document.meta.get_root_path_prefix()
+            root_path=document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer: MarkupRenderer = MarkupRenderer.create(
             markup="RST",
@@ -1154,7 +1168,8 @@ def create_main_router(
             "stream_update_requirement.jinja.html"
         )
         link_renderer = LinkRenderer(
-            root_path=document.meta.get_root_path_prefix()
+            root_path=document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
@@ -1212,7 +1227,8 @@ def create_main_router(
             "actions/document/delete_section/stream_delete_section.jinja.html"
         )
         link_renderer = LinkRenderer(
-            root_path=section.document.meta.get_root_path_prefix()
+            root_path=section.document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
@@ -1279,7 +1295,8 @@ def create_main_router(
             "stream_delete_requirement.jinja.html"
         )
         link_renderer = LinkRenderer(
-            root_path=requirement.document.meta.get_root_path_prefix()
+            root_path=requirement.document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
@@ -1607,7 +1624,8 @@ def create_main_router(
         )
 
         link_renderer = LinkRenderer(
-            root_path=document.meta.get_root_path_prefix()
+            root_path=document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
@@ -1641,7 +1659,8 @@ def create_main_router(
             document_mid
         )
         link_renderer = LinkRenderer(
-            root_path=document.meta.get_root_path_prefix()
+            root_path=document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
@@ -1776,7 +1795,8 @@ def create_main_router(
         )
 
         link_renderer = LinkRenderer(
-            root_path=document.meta.get_root_path_prefix()
+            root_path=document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
             markup="RST",
@@ -1798,7 +1818,8 @@ def create_main_router(
         )
         if massive_update:
             link_renderer = LinkRenderer(
-                root_path=document.meta.get_root_path_prefix()
+                root_path=document.meta.get_root_path_prefix(),
+                static_path=project_config.dir_for_sdoc_assets,
             )
             markup_renderer = MarkupRenderer.create(
                 markup="RST",

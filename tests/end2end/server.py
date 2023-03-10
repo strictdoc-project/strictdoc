@@ -7,13 +7,13 @@ import select
 import shutil
 import socket
 import subprocess
-import sys
 from contextlib import closing
 from threading import Thread
 from time import sleep
 from typing import Optional
 
 import psutil
+from psutil import NoSuchProcess
 
 # Running selenium tests on GitHub Actions CI is considerably slower.
 # Passing the flag via env because pytest makes it hard to introduce an extra
@@ -24,7 +24,7 @@ from tests.end2end.conftest import test_environment
 class ReadTimeout(Exception):
     def __init__(self, seconds_passed):
         assert isinstance(seconds_passed, float)
-        self.seconds_passed = seconds_passed
+        self.seconds_passed = round(seconds_passed, 2)
 
 
 class SDocTestServer:
@@ -64,9 +64,6 @@ class SDocTestServer:
                 "TestSDocServer: Cannot start a server because there is another"
                 f"server already running at the port: {self.server_port}."
             )
-
-    def __del__(self):
-        self.close(exit_due_exception=None)
 
     def __enter__(self):
         self.run()
@@ -128,7 +125,7 @@ class SDocTestServer:
             f"Server is up and running on port: {self.server_port}."
         )
 
-    def close(self, *, exit_due_exception: Optional[Exception]):
+    def close(self, *, exit_due_exception: Optional[Exception]) -> None:
         if self.process is None:
             return
 
@@ -158,9 +155,20 @@ class SDocTestServer:
             ) as err_temp_file:
                 print(err_temp_file.read())  # noqa: T201
 
-        parent = psutil.Process(self.process.pid)
+        try:
+            parent = psutil.Process(self.process.pid)
+        except NoSuchProcess:
+            print(  # noqa: T201
+                "TestSDocServer: "
+                "no need to stop the server process because it is not running: "
+                f"{self.process.pid}.",
+                flush=True,
+            )
+            return
+
         if not parent.is_running():
             return
+
         child_processes = parent.children(recursive=True)
         child_processes_ids = list(
             map(lambda p: p.pid, parent.children(recursive=True))
@@ -227,15 +235,12 @@ class SDocTestServer:
                         line_bytes = server_process.stderr.readline()
         except ReadTimeout as timeout_exception:
             print(  # noqa: T201
-                "---------------------------------------------------------------------"  # noqa: E501
-            )
-            print(  # noqa: T201
-                "Failed to get an expected response from the server within "
-                f"{round(timeout_exception.seconds_passed, 2)} seconds."
+                "\nFailed to get an expected response from the server within "
+                f"{timeout_exception.seconds_passed} seconds."
             )
             received_lines = "".join(received_input)
-            print(f"Received input:\n{received_lines}")  # noqa: T201
-            sys.exit(1)
+            print(f"\n--- Received input ---\n\n{received_lines}")  # noqa: T201
+            raise ReadTimeout(timeout_exception.seconds_passed) from None
 
     @staticmethod
     def enqueue_output(out, server_port: int):

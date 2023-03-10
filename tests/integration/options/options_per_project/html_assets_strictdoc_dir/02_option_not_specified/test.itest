@@ -1,0 +1,12 @@
+RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --dir "%S/Output/html/_static"
+RUN: %check_exists --file "%S/Output/html/_static/base.css"
+RUN: %check_exists --file "%S/Output/html/_static/pan_with_space.js"
+
+RUN: %cat "%S/Output/html/index.html" | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML-TREE
+CHECK-HTML-TREE: <link rel="stylesheet" href="_static/base.css"/>
+
+RUN: %cat "%S/Output/html/02_option_not_specified/input.html" | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML-DOC
+CHECK-HTML-DOC: <link rel="stylesheet" href="../_static/base.css"/>

@@ -111,7 +111,7 @@ sdoc-node {
   /* Making the node a container for the requirement: */
   container: node / inline-size;
   /*
-  HACK:
+  HACK: [sdoc-node outline hack]
     Buggy behavior for @container CSS feature:
     after window resize, the 1px vertically space
     appears randomly between nodes.

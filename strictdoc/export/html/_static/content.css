@@ -1,5 +1,6 @@
 .content {
   min-width: calc(var(--card-width) + calc(var(--base-padding)*4));
+  min-height: 100%;
 }
 
 [data-viewtype="document"] .content {
@@ -205,12 +206,12 @@
   margin-bottom: 0;
 }
 
-.document_placeholder {
-  min-height: 2rem;
-  color: rgba(0,0,0,.5);
-  font-style: italic;
+sdoc-main-placeholder {
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
+  align-items: center;
   justify-content: center;
+  height: 100%;
+  color: var(--color-placeholder);
+  font-weight: 700;
+  font-family: var(--code-font-family);
 }

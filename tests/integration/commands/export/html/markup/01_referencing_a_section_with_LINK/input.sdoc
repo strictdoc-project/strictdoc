@@ -1,6 +1,11 @@
 [DOCUMENT]
 TITLE: Hello world doc
 
+[SECTION]
+TITLE: Referencing section
+
 [FREETEXT]
 [LINK: SECTION]
 [/FREETEXT]
+
+[/SECTION]

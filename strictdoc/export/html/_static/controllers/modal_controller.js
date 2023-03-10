@@ -5,9 +5,6 @@ Stimulus.register("modal_controller", class extends Controller {
     // this.element is the DOM element to which the controller is connected to.
     const thisElement = this.element;
 
-    // Target to place the modal window code using Turbo: #modal
-    const modalContainer = thisElement.closest('#modal');
-
     // Cancel button selector: [stimulus-modal-cancel-button]
     const cancelButton = thisElement.querySelector('[stimulus-modal-cancel-button]');
 
@@ -17,7 +14,7 @@ Stimulus.register("modal_controller", class extends Controller {
 
     // Removing a modal window code added using Turbo:
     const removeModal = () => {
-      modalContainer.innerHTML = "";
+      thisElement.remove()
     }
 
     // Removing the Escape listener:

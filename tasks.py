@@ -151,7 +151,7 @@ def server(context, input_path="."):
 
 
 @task
-def sphinx(context):
+def docs(context):
     run_invoke_cmd(
         context,
         (
@@ -159,7 +159,7 @@ def sphinx(context):
             python3 strictdoc/cli/main.py
                 export docs/
                     --formats=html
-                    --output-dir output/sphinx
+                    --output-dir output/strictdoc_website
                     --project-title "StrictDoc"
             """
         ),
@@ -175,7 +175,7 @@ def sphinx(context):
         context,
         (
             """
-            cp -rv output/sphinx/html/* strictdoc-project.github.io/
+            cp -rv output/strictdoc_website/html/* strictdoc-project.github.io/
             """
         ),
     )

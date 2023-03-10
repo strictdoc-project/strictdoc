@@ -165,6 +165,21 @@ def sphinx(context):
         ),
     )
 
+    assert os.path.isdir(
+        "strictdoc-project.github.io/"
+    ), "Expecting the documentation to be cloned."
+    assert os.path.isdir(
+        "strictdoc-project.github.io/.git/"
+    ), "Expecting the documentation to be a valid Git repository."
+    run_invoke_cmd(
+        context,
+        (
+            """
+            cp -rv output/sphinx/html/* strictdoc-project.github.io/
+            """
+        ),
+    )
+
     run_invoke_cmd(
         context,
         (

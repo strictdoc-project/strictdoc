@@ -1,4 +1,8 @@
-<turbo-frame id="article-{{document.node_id}}">
+<turbo-frame
+{%- if config.is_running_on_server %}
+  id="article-{{document.node_id}}"
+{% endif -%}
+>
 
 <sdoc-node
   data-editable_node="on"

@@ -25,8 +25,6 @@ class MarkupRenderer:
         link_renderer: LinkRenderer,
         context_document: Optional[Document],
     ) -> "MarkupRenderer":
-        assert isinstance(traceability_index, TraceabilityIndex)
-        assert isinstance(link_renderer, LinkRenderer)
         html_fragment_writer: Union[
             Type[RstToHtmlFragmentWriter],
             Type[HTMLFragmentWriter],
@@ -52,6 +50,12 @@ class MarkupRenderer:
         link_renderer: LinkRenderer,
         context_document: Optional[Document],
     ):
+        assert isinstance(traceability_index, TraceabilityIndex)
+        assert isinstance(link_renderer, LinkRenderer)
+        assert context_document is None or isinstance(
+            context_document, Document
+        ), context_document
+
         self.fragment_writer = fragment_writer
         self.traceability_index = traceability_index
         self.link_renderer: LinkRenderer = link_renderer

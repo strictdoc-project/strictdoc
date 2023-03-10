@@ -197,9 +197,7 @@ def sphinx(context):
         context,
         (
             """
-            cp -v output/sphinx/rst/strictdoc*.rst docs/sphinx/source/ &&
-            mkdir -p docs/strictdoc-html/strictdoc-html &&
-            cp -rv output/sphinx/html/* docs/strictdoc-html/strictdoc-html
+            cp -v output/sphinx/rst/strictdoc*.rst docs/sphinx/source/
             """
         ),
     )

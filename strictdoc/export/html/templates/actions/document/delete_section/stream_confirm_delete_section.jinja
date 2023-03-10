@@ -1,0 +1,12 @@
+<turbo-stream action="update" target="confirm">
+  <template>
+  {% with
+    confirm_title = default,
+    confirm_message = "Deleting a section is an unrecoverable action. If you delete a section, all its content will be removed, including the content of the children sections and requirements.",
+    confirm_name = "Delete section",
+    confirm_href = "/actions/document/delete_section/"~section_mid~"?confirmed=1"
+  %}
+    {% include "components/confirm/index.jinja" %}
+  {% endwith %}
+  </template>
+</turbo-stream>

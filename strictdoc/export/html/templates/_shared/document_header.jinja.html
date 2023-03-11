@@ -1,9 +1,6 @@
 <div class="header__document">
   {% include "_res/svg_ico16_document.jinja.html" %}
-  <div class="header__document_name"
-    title="{{document.title}}">
-    {% include "_shared/document_title.jinja" %}
-  </div>
+  {% include "_shared/document_title.jinja" %}
   {% include "_res/svg__separator.jinja.html" %}
   {% include "_shared/viewtype_menu.jinja.html" %}
 </div>

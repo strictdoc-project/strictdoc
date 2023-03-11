@@ -26,27 +26,13 @@ TITLE: Installing StrictDoc from GitHub (developer mode)
 
 [FREETEXT]
 **Note:** Use this way of installing StrictDoc only if you want to make changes
-in StrictDoc's source code. Otherwise, install StrictDoc as a Pip package
-(see above).
+in StrictDoc's source code. Otherwise, install StrictDoc as a normal Pip package by running ``pip install strictdoc``.
 
 .. code-block::
 
     git clone https://github.com/strictdoc-project/strictdoc.git && cd strictdoc
-    pip install -r requirements.txt
+    pip install .[development]
     python3 strictdoc/cli/main.py
-
-All development tasks are managed using
-`Invoke <https://www.pyinvoke.org/>`_ in the ``tasks.py`` file. On macOS and
-Linux, all tasks run in dedicated virtual environments. On Windows, invoke uses
-the parent pip environment which can be a system environment or a user's virtual
-environment.
-
-.. code-block::
-
-    pip install invoke  # macOS and Linux
-    invoke setup-development-deps  # macOS and Linux
-    pip install -r requirements.development.txt  # Windows only
-    invoke --list  # See the available tasks
 [/FREETEXT]
 
 [/SECTION]
@@ -57,6 +43,12 @@ environment.
 TITLE: Invoke for development tasks
 
 [FREETEXT]
+All development tasks are managed using
+`Invoke <https://www.pyinvoke.org/>`_ in the ``tasks.py`` file. On macOS and
+Linux, all tasks run in dedicated virtual environments. On Windows, invoke uses
+the parent pip environment, which can be a system environment or a user's virtual
+environment.
+
 Make sure to familiarize yourself with the available developer tasks by running:
 
 .. code-block:: bash
@@ -76,17 +68,17 @@ TITLE: Python code
   raised when it is consistently deprecated by major software platforms like
   Ubuntu or GitHub Actions.
 
-- All developer tasks are collected in the `tasks.py` which is run by Invoke
+- All developer tasks are collected in the ``tasks.py`` which is run by Invoke
   tool. Run the ``invoke --list`` command to see the list of available commands.
 
-- Formatting is governed by `black` which reformats the code automatically
+- Formatting is governed by ``black`` which reformats the code automatically
   when the ``invoke check`` command is run.
 
   - If a string literal gets too long, it should be split into a multiline
     literal with each line being a meaningful word or subsentence.
 
 - If a contribution includes changes in StrictDoc's code, at least the
-  integration-level tests should be added to the `tests/integration`. If the
+  integration-level tests should be added to the ``tests/integration``. If the
   contributed code needs a fine-grained control over the added behavior, adding
   both unit and integration tests is preferred. The only exception where a
   contribution can contain no tests is "code climate" which is work which
@@ -109,19 +101,34 @@ TITLE: Git workflow
   ``git fetch && git rebase origin/main`` is preferred over
   ``git fetch && git merge main``.
 
-- The Git commit message should follow the format: `context: description` where
-  the context can be a major feature being added or a folder. A form of
-  `context: subcontext: description` is also an option. Typical examples:
+- The Git commit message should follow the format:
 
-  - `docs: fix links to the grammar.py`
-  - `reqif: native: export/import roundtrip for multiline requirement fields`
-  - `backend/dsl: switch to dynamic fields, with validation`
-  - `Poetry: add filecheck as a dependency`
+.. code-block::
+
+    context: description
+
+where the context can be a major feature being added or a folder. A form of  ``context: subcontext: description`` is also an option. Typical examples:
+
+``docs: fix links to the grammar.py``
+
+``reqif: native: export/import roundtrip for multiline requirement fields``
+
+``backend/dsl: switch to dynamic fields, with validation``
+
+``Poetry: add filecheck as a dependency``
+
+- Use comma-separated contexts, if the committed work is dedicated to more than one topic. Example:
+
+.. code-block::
+
+    server, UI: update to new requirement styles
 
 - When a contribution is simply an improvement of existing code without a change
-  in the functionality, the commit should be named: `Code climate: description`.
+  in the functionality, the commit should be named: ``Code climate: description``. Example:
 
-  - Example: `Code climate: fix all remaining major Pylint warnings`.
+.. code-block::
+
+    Code climate: fix all remaining major Pylint warnings
 [/FREETEXT]
 
 [/SECTION]
@@ -169,7 +176,7 @@ TITLE: Documentation
   given to 80 characters per line. Unfortunately, until there is automatic
   support for mixed SDoc/RST content, all long lines shall be edited and
   split by a contributor manually.
-- The ``invoke sphinx`` task should be used for re-generating documentation on a
+- The ``invoke docs`` task should be used for re-generating documentation on a
   developer machine.
 [/FREETEXT]
 
@@ -182,6 +189,7 @@ TITLE: Conventions
 - ``snake_case`` everywhere, no ``kebab-case``.
 
   - This rule applies everywhere where applicable: file and folder names, HTML attributes.
+  - Exception: HTML data-attributes and ``testid`` identifiers.
 [/FREETEXT]
 
 [/SECTION]

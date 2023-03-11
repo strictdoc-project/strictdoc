@@ -1,0 +1,221 @@
+{#
+  required variables:
+
+  sdoc_entity.node_id :
+     document.node_id
+     section.node_id
+     requirement.node_id
+  sdoc_entity.get_type_string():
+      document
+      section
+      requirement
+#}
+
+<sdoc-node-controls>
+
+  {% if sdoc_entity.get_type_string() == 'document' -%}
+
+  {# META #}
+  <a
+    href="/actions/document/edit_config?document_mid={{document.node_id}}"
+    class="action_button"
+    data-turbo-action="replace"
+    data-turbo="true"
+    title="Edit title and meta"
+    data-testid="document-edit-config-action"
+  >{% include "_res/svg_ico16_edit.jinja.html" %}</a>
+  {%- endif -%}
+
+{%- if sdoc_entity.get_type_string() != 'document' -%}
+    {# EDIT & DELETE:
+    + section
+    + equirement
+    - NOT document
+  #}
+  <a
+    href="/actions/document/edit_{{ sdoc_entity.get_type_string() }}/{{ sdoc_entity.node_id }}"
+    class="action_button"
+    data-turbo-action="replace"
+    data-turbo="true"
+    title="Edit"
+    data-testid="node-edit-action"
+  >{% include "_res/svg_ico16_edit.jinja.html" %}</a>
+  <a
+    href="/actions/document/delete_{{ sdoc_entity.get_type_string() }}/{{ sdoc_entity.node_id }}"
+    class="action_button"
+    data-turbo-method="delete"
+    data-turbo="true"
+    title="Delete"
+    data-testid="node-delete-action"
+  >{% include "_res/svg_ico16_delete.jinja.html" %}</a>
+  {%- endif -%}
+
+  {# ADD NODES menu:
+    + section
+    + equirement
+    + document ONLY 'not document.section_contents'
+  #}
+  {%- if sdoc_entity.get_type_string() != 'document' or not document.section_contents -%}
+
+  {# ADD NODES: dropdown menu #}
+  <sdoc-menu
+    js-dropdown-menu
+    data-controller="dropdown_menu"
+  >
+
+    <sdoc-menu-handler
+      js-dropdown-menu-handler
+      aria-expanded="false"
+    >
+      <a
+        class="action_button"
+        title="Add node"
+        data-testid="node-menu-handler"
+      >{% include "_res/svg_ico16_add.jinja.html" %}</a>
+    </sdoc-menu-handler>
+
+    <sdoc-menu-list>
+      <menu
+        js-dropdown-menu-list
+        aria-hidden="true"
+      >
+
+        <li class="viewtype__menu_header">Add section</li>
+
+        {# Add first document Section, on CONFIG#}
+        {%- if sdoc_entity.get_type_string() == 'document' -%}
+        <li>
+          <a
+            href="/actions/document/new_section?reference_mid={{ sdoc_entity.node_id }}&whereto=after"
+            data-turbo-action="replace"
+            data-turbo="true"
+            title="Add child Section"
+            data-testid="node-add-section-first-action"
+          >+S➘ Add first Section</a>
+        </li>
+        {%- endif -%}
+
+        {# Add Section above:
+          + section
+          + requirement
+          - document
+        #}
+        {%- if sdoc_entity.get_type_string() != 'document' -%}
+        <li>
+          <a
+            href="/actions/document/new_section?reference_mid={{ sdoc_entity.node_id }}&whereto=before"
+            data-turbo-action="replace"
+            data-turbo="true"
+            title="Add Section above"
+            data-testid="node-add-section-above-action"
+          >+S⬆ Add Section above</a>
+        </li>
+        {%- endif -%}
+
+        {# Add child Section:
+          + section,
+          - requirement
+          - document
+          ••• MADE ON <sdoc-menu>: 'if not document.section_contents'
+        #}
+        {%- if sdoc_entity.get_type_string() != 'requirement' and sdoc_entity.get_type_string() != 'document' -%}
+        <li>
+          <a
+            href="/actions/document/new_section?reference_mid={{ sdoc_entity.node_id }}&whereto=child"
+            data-turbo-action="replace"
+            data-turbo="true"
+            title="Add child Section"
+            data-testid="node-add-section-child-action"
+          >+S➘ Add child Section</a>
+        </li>
+        {%- endif -%}
+
+        {# Add Section below:
+          + section
+          + requirement
+          - document
+        #}
+        {%- if sdoc_entity.get_type_string() != 'document' -%}
+        <li>
+          <a
+            href="/actions/document/new_section?reference_mid={{ sdoc_entity.node_id }}&whereto=after"
+            data-turbo-action="replace"
+            data-turbo="true"
+            title="Add Section below"
+            data-testid="node-add-section-below-action"
+          >+S⬇ Add Section below</a>
+        </li>
+        {%- endif -%}
+
+        <li class="viewtype__menu_header">Add requirement</li>
+
+        {# Add first document Section, on CONFIG#}
+        {%- if sdoc_entity.get_type_string() == 'document' -%}
+        <li>
+          <a
+              href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.node_id }}&whereto=after"
+              data-turbo-action="replace"
+              data-turbo="true"
+              title="Add child Requirement"
+              data-testid="node-add-requirement-first-action"
+            >+R➘ Add first Requirement</a>
+        </li>
+        {%- endif -%}
+
+        {# Add Requirement above:
+          + section
+          + requirement
+          - document
+        #}
+        {%- if sdoc_entity.get_type_string() != 'document' -%}
+        <li>
+          <a
+            href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.node_id }}&whereto=before"
+            data-turbo-action="replace"
+            data-turbo="true"
+            title="Add Requirement above"
+            data-testid="node-add-requirement-above-action"
+          >+R⬆ Add Requirement above</a>
+        </li>
+        {%- endif -%}
+
+        {# Add child Requirement:
+          + section,
+          - requirement
+          - document
+          ••• MADE ON <sdoc-menu>: 'if not document.section_contents'
+        #}
+        {%- if sdoc_entity.get_type_string() != 'requirement' and sdoc_entity.get_type_string() != 'document' -%}
+        <li>
+          <a
+              href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.node_id }}&whereto=child"
+              data-turbo-action="replace"
+              data-turbo="true"
+              title="Add child Requirement"
+              data-testid="node-add-requirement-child-action"
+            >+R➘ Add child Requirement</a>
+        </li>
+        {%- endif -%}
+
+        {# Add Requirement below:
+          + section
+          + requirement
+          - document
+        #}
+        {%- if sdoc_entity.get_type_string() != 'document' -%}
+        <li>
+          <a
+            href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.node_id }}&whereto=after"
+            data-turbo-action="replace"
+            data-turbo="true"
+            title="Add Requirement below"
+            data-testid="node-add-requirement-below-action"
+          >+R⬇ Add Requirement below</a>
+        </li>
+        {%- endif -%}
+
+      </menu>
+    </sdoc-menu-list>
+  </sdoc-menu>
+  {%- endif -%}
+</sdoc-node-controls>

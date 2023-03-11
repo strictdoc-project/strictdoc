@@ -36,12 +36,7 @@
 
     {# node_controls #}
     {%- if config.is_running_on_server -%}
-      {% with
-        node_controls__reference = sdoc_entity.node_id,
-        node_controls__node_type = sdoc_entity.get_type_string()
-      %}
-      {% include "_shared/node_controls.jinja.html" %}
-      {% endwith %}
+    {% include "components/node/node_controls/index.jinja" %}
     {%- endif -%}
 
   </sdoc-node>

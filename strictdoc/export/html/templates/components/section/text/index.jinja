@@ -1,0 +1,8 @@
+{# TODO: change to 'text' #}
+{%- if section.free_texts -%}
+  {%- for free_text in section.free_texts -%}
+  <sdoc-section-text>
+    {{ renderer.render_free_text(document_type, free_text) }}
+  </sdoc-section-text>
+  {%- endfor -%}
+{%- endif -%}

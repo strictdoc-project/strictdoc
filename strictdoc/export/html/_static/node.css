@@ -17,6 +17,15 @@ sdoc-node {
   padding: calc(var(--base-padding)*2) calc(var(--base-padding)*2);
 }
 
+sdoc-section-h * {
+  margin: 0;
+}
+
+sdoc-section,
+sdoc-section-text {
+  margin: 0;
+}
+
 /* editable_node */
 
 [data-editable_node="on"] {

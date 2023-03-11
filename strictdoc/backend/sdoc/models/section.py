@@ -47,6 +47,10 @@ class Section(Node):  # pylint: disable=too-many-instance-attributes
         self.context = SectionContext()
         self.node_id = uuid.uuid4().hex
 
+    @staticmethod
+    def get_type_string() -> str:
+        return "section"
+
     @property
     def document(self):
         return self.ng_document_reference.get_document()

@@ -142,6 +142,10 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
         # Cache for accessing the reserved fields values.
         self.ng_reserved_fields_cache: Dict[str, Any] = {}
 
+    @staticmethod
+    def get_type_string() -> str:
+        return "requirement"
+
     # Reserved fields
 
     @property

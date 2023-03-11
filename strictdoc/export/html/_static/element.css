@@ -383,7 +383,7 @@ svg.svg_icon {
   line-height: 1.5;
 }
 
-.header__document_name {
+.header__document_title {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

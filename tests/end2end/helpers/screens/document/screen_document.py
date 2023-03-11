@@ -70,14 +70,14 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
     def assert_requirement_style_simple(self) -> None:
         # Make sure that the normal (not table-based) requirement is rendered.
         self.test_case.assert_element(
-            '//sdoc-node[@data-testid="node-requirement-simple"]',
+            '//sdoc-requirement[@data-testid="requirement-style-simple"]',
             by=By.XPATH,
         )
 
     def assert_requirement_style_table(self) -> None:
         # Make sure that the table-based requirement is rendered.
         self.test_case.assert_element(
-            '//sdoc-node[@data-testid="node-requirement-table"]',
+            '//sdoc-requirement[@data-testid="requirement-style-table"]',
             by=By.XPATH,
         )
 

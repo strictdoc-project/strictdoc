@@ -46,7 +46,8 @@ class Test_UC07_T10_EditTableRequirement(BaseCase):
             screen_document.assert_text("Modified UID")
             screen_document.assert_text("Modified statement.")
             screen_document.assert_text("Modified rationale.")
-            # Make sure that the table-based requirement is rendered.
+            # Make sure that after saving we return to the same display style
+            # and the table-based requirement is rendered.
             screen_document.assert_requirement_style_table()
             screen_document.assert_toc_contains_string("Modified title")
 

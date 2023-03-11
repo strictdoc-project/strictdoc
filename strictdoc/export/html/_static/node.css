@@ -90,13 +90,19 @@ sdoc-node-controls {
   bottom: 0;
   display: flex;
   flex-direction: column;
-  transition: .7s ease-out;
+  transition: .5s ease-out;
   opacity: 0;
+  /* HACK: [sdoc-node outline hack] */
+  left: calc(100% + 1px);
+  top: -2px;
+}
+
+sdoc-main-placeholder + sdoc-node-controls {
+  opacity: 1;
 }
 
 sdoc-node:hover sdoc-node-controls {
-  /* border-color: var(--color-action); */
-  opacity: .7;
+  opacity: 1;
 }
 
 sdoc-node:hover sdoc-node-controls:hover {

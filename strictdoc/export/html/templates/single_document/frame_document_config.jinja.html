@@ -10,7 +10,7 @@
 {% endif -%}
 >
   <h1>{{document.title}}</h1>
-{%- if document.config.has_meta() -%}
+  {%- if document.config.has_meta() -%}
     <table class="table_meta">
       {%- if document.config.uid -%}
       <tr>
@@ -43,18 +43,24 @@
       </tr>
       {%- endif -%}
     </table>
-{%- endif -%}
+  {%- endif -%}
+
+  {% include "_shared/document_freetext.jinja.html" %}
 
   {%- if config.is_running_on_server -%}
     {% with
       node_controls__reference = document.node_id,
       node_controls__node_type = 'document'
     %}
+    {#
+      Should be after the Abstract (former 'document_freetext').
+      If the Abstract is empty, it displays a placeholder,
+      the appearance of which affects the showing of node_controls
+      without the need to hover with the mouse.
+    #}
     {% include "_shared/node_controls.jinja.html" %}
     {% endwith %}
   {%- endif -%}
-
-  {% include "_shared/document_freetext.jinja.html" %}
 
 </sdoc-node>
 </turbo-frame>

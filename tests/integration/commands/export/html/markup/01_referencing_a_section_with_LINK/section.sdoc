@@ -3,7 +3,6 @@ TITLE: Doc with a section
 
 [SECTION]
 UID: SECTION
-TITLE: Section
+TITLE: Referenced section
 
 [/SECTION]
-

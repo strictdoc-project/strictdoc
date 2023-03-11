@@ -5,9 +5,8 @@
     </div>
   {%- endfor -%}
 {%- elif not document.section_contents -%}
-    <div
-      data-testid="document-placeholder"
-      class="document_placeholder"
-    >The document is empty. Start adding text, sections, and requirements.
-    </div>
+  <sdoc-main-placeholder data-testid="document-placeholder">
+    The document is empty.
+    <br/>Start adding text, sections, and requirements.
+  </sdoc-main-placeholder>
 {%- endif -%}

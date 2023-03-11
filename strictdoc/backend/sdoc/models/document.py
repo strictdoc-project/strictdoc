@@ -35,6 +35,19 @@ class Document:  # pylint: disable=too-many-instance-attributes
         assert isinstance(meta, DocumentMeta)
         self.meta = meta
 
+    def has_any_nodes(self) -> bool:
+        return len(self.section_contents) > 0
+
+    def has_any_requirements(self) -> bool:
+        task_list = list(self.section_contents)
+        while len(task_list) > 0:
+            section_or_requirement = task_list.pop(0)
+            if section_or_requirement.is_requirement:
+                return True
+            assert section_or_requirement.is_section, section_or_requirement
+            task_list.extend(section_or_requirement.section_contents)
+        return False
+
     @property
     def ng_resolved_custom_level(self):
         return None

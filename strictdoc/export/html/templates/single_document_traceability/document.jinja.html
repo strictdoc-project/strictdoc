@@ -47,6 +47,7 @@
 
       {% include "_shared/tags.jinja.html" %}
 
+    {%- if document.has_any_nodes() -%}
       <div class="content">
       {%- for section_or_requirement in document_iterator.all_content() %}
 
@@ -91,5 +92,11 @@
 
       {%- endfor %}
       </div>
+    {%- else -%}
+      <sdoc-main-placeholder data-testid="trace-main-placeholder">
+        This view is empty because
+        <br/>the document has no content.
+      </sdoc-main-placeholder>
+    {%- endif -%}
 
 {% endblock content %}

@@ -1,0 +1,12 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+MODIFIED by test. See the section [LINK: SDOC_UG_CONTACT].
+[/FREETEXT]
+
+[SECTION]
+UID: SDOC_UG_CONTACT
+TITLE: Referenced section
+
+[/SECTION]

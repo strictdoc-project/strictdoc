@@ -1,9 +1,13 @@
 [DOCUMENT]
 TITLE: Backlog
+UID: SDOC_BL
 
 [FREETEXT]
-**Note:** The items below are weakly sorted from top to bottom. The topmost
-items are either work-in-progress or will be implemented next.
+This document outlines the future work items for StrictDoc.
+
+The following items are listed in descending order of priority, with the topmost items either currently in progress or scheduled to be implemented next.
+
+While this backlog overlaps with StrictDoc's `GitHub issues tracker <https://github.com/strictdoc-project/strictdoc/issues>`_ by more than 50%, it includes more strategic items compared to the GitHub issues, which are primarily focused on actual implementation work.
 [/FREETEXT]
 
 [SECTION]

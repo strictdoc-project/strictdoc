@@ -1,5 +1,6 @@
 [DOCUMENT]
 TITLE: User Guide
+UID: SDOC_UG
 OPTIONS:
   REQUIREMENT_STYLE: Inline
   REQUIREMENT_IN_TOC: True
@@ -43,6 +44,7 @@ See the Backlog to get an idea of the overall project direction.
 [/FREETEXT]
 
 [SECTION]
+UID: SDOC_UG_CONTACT
 TITLE: Contact the developers
 
 [FREETEXT]

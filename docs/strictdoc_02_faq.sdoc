@@ -1,8 +1,15 @@
 [DOCUMENT]
 TITLE: F.A.Q.
+UID: SDOC_FAQ
 OPTIONS:
   REQUIREMENT_STYLE: Inline
   REQUIREMENT_IN_TOC: True
+
+[FREETEXT]
+This document is a list of questions that people ask about StrictDoc.
+
+Missing a question or an answer? Ask it here: [LINK: SDOC_UG_CONTACT].
+[/FREETEXT]
 
 [SECTION]
 TITLE: What is StrictDoc?

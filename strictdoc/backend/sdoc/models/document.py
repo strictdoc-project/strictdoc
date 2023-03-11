@@ -62,11 +62,8 @@ class Document:  # pylint: disable=too-many-instance-attributes
             0
         ].enumerate_custom_content_field_titles()
 
-    def set_freetext(self, freetext: Optional[str]):
-        if freetext is None or len(freetext) == 0:
+    def set_freetext(self, freetext: Optional[FreeText]):
+        if freetext is None:
             self.free_texts = []
             return
-        assert (
-            freetext == freetext.strip()
-        ), "Empty abstract with trailing whitespace."
-        self.free_texts = [FreeText(parent=self, parts=[freetext])]
+        self.free_texts = [freetext]

@@ -5,7 +5,6 @@ from typing import Dict, List, Optional
 
 from starlette.datastructures import FormData
 
-from strictdoc.backend.sdoc.free_text_reader import SDFreeTextReader
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.export.rst.rst_to_html_fragment_writer import (
@@ -112,7 +111,7 @@ class DocumentConfigFormObject(ErrorObject):
         document_freetext: Optional[str] = None
         if len(document.free_texts) > 0:
             freetext: FreeText = document.free_texts[0]
-            document_freetext = "".join(freetext.parts)
+            document_freetext = freetext.get_parts_as_text()
             document_freetext = html.escape(document_freetext)
 
         return DocumentConfigFormObject(
@@ -143,7 +142,5 @@ class DocumentConfigFormObject(ErrorObject):
             )
             if parsed_html is None:
                 self.add_error("FREETEXT", rst_error)
-            free_text_container = SDFreeTextReader.read(self.document_freetext)
-            self.document_freetext = "".join(free_text_container.parts)
 
         return len(self.errors) == 0

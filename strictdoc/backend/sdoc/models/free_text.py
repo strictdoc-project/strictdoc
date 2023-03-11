@@ -20,7 +20,7 @@ class FreeText:
     def is_section(self):
         return False
 
-    def get_parts_as_text(self):
+    def get_parts_as_text(self) -> str:
         # [LINK: SECTION-CUSTOM-GRAMMARS]
         text = ""
         for part in self.parts:

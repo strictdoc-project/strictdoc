@@ -32,6 +32,11 @@ TITLE: Backlog: Graphical user interface
 
   - Follow-up feature: moving nodes between documents.
 
+- TBL view:
+
+  - Column filters to show/hide columns.
+  - Completely empty columns are hidden by default.
+
 - All forms:
 
   - Contextual help about the RST markup.
@@ -64,11 +69,11 @@ TITLE: Backlog: Nice to have
 
 - Useful configuration file options:
 
-    - Project prefix?
-    - Explicit or wildcard paths to sdoc files.
-    - Paths to dirs with source files.
-    - Config options for presenting requirements.
-        - Include/exclude requirements in TOC
+  - Project prefix?
+  - Explicit or wildcard paths to sdoc files.
+  - Paths to dirs with source files.
+  - Config options for presenting requirements.
+    - Include/exclude requirements in TOC
 
 - Diff for requirements documents and documentation trees.
 

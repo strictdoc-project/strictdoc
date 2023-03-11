@@ -17,6 +17,7 @@ NODE_0 = 1
 # which is actually the first node
 # (section or requirement) on the page.
 NODE_1 = 2
+NODE_2 = 3
 
 TEXT_WITH_TRAILING_WHITESPACES = """
 Hello world!    

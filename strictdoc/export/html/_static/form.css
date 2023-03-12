@@ -308,6 +308,10 @@ sdoc-form-error + sdoc-form-field sdoc-contenteditable::before {
   width: 100%;
 }
 
+[contenteditable=true][data-field-type="multiline"] {
+  font-family: var(--code-font-family);
+}
+
 /* field_action */
 /* TODO: optimize code with .action_icon & .action_button */
 

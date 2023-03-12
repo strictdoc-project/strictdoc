@@ -1628,7 +1628,16 @@ def create_main_router(
             if len(form_object.document_classification) > 0
             else None
         )
-        document.set_freetext(form_object.document_freetext)
+
+        free_text: Optional[FreeText] = None
+        if len(form_object.document_freetext) > 0:
+            free_text_container: FreeTextContainer = SDFreeTextReader.read(
+                form_object.document_freetext
+            )
+            free_text = FreeText(
+                parent=document, parts=free_text_container.parts
+            )
+        document.set_freetext(free_text)
 
         # Re-generate the document's SDOC.
         document_content = SDWriter().write(document)

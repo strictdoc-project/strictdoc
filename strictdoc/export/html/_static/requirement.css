@@ -21,14 +21,18 @@ sdoc-requirement {
   gap: var(--requirement-inner-borders-width);
 
   position: relative;
-  min-width: 300px;
   /* border: */
   outline:
     var(--requirement-border-width, 1px)
     solid
     var(--requirement-border-color, #bfbfbf);
+  /* min-width: 300px; */
+  /* compensate outline: */
+  min-width: 298px;
   border-radius: var(--requirement-border-radius);
   overflow: hidden;
+
+  background-color: var(--color-bg-contrast);
 }
 
 sdoc-requirement-title {
@@ -45,6 +49,10 @@ sdoc-requirement-title {
   background-color: var(--requirement-bg-dark-color);
   /* border-bottom: */
   outline: 1px solid var(--requirement-border-color);
+}
+
+sdoc-node-card sdoc-requirement-title {
+  font-size: 1em;
 }
 
 sdoc-requirement-field-label {
@@ -176,6 +184,24 @@ sdoc-requirement-field-label {
   padding-bottom: 0;
 }
 
+/* section */
+
+sdoc-section,
+sdoc-section-text {
+  display: block;
+  margin: 0;
+}
+
+sdoc-section-title {
+  display: block;
+  font-weight: 700;
+}
+
+sdoc-section-title * {
+  margin: 0;
+  display: inline;
+}
+
 /* * */
 
 sdoc-anchor {
@@ -185,6 +211,7 @@ sdoc-anchor {
 }
 
 sdoc-anchor:target + sdoc-requirement sdoc-requirement-title,
+sdoc-anchor:target + sdoc-section sdoc-section-title,
 sdoc-anchor:target + .requirement__title {
   background-color: var(--color-highlight);
 }

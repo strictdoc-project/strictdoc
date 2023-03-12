@@ -54,7 +54,8 @@ _, tidylib_messages_string = tidy_document(
             "sdoc-requirement-title, "
             "sdoc-requirement-field, "
             "sdoc-requirement-field-label, "
-            "sdoc-section, sdoc-section-h, sdoc-section-text, "
+            "sdoc-section, "
+            "sdoc-section-title, sdoc-section-text, "
             "sdoc-main-placeholder, "
         ),
         "char-encoding": "utf8",

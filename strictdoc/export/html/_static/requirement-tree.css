@@ -89,6 +89,7 @@
   border-left: var(--requirement-tree-line);
   transform-origin: top left;
   transform: rotate(-45deg);
+  z-index: 2;
 }
 
 .requirement-tree_left .requirement-tree_node::before {
@@ -104,6 +105,7 @@
   border-left: var(--requirement-tree-line);
   transform-origin: top left;
   transform: rotate(-45deg);
+  z-index: 2;
 }
 
 /* corner connector to node */

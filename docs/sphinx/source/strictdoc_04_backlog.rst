@@ -1,8 +1,13 @@
+.. _SDOC_BL:
+
 Backlog
 $$$$$$$
 
-**Note:** The items below are weakly sorted from top to bottom. The topmost
-items are either work-in-progress or will be implemented next.
+This document outlines the future work items for StrictDoc.
+
+The following items are listed in descending order of priority, with the topmost items either currently in progress or scheduled to be implemented next.
+
+While this backlog overlaps with StrictDoc's `GitHub issues tracker <https://github.com/strictdoc-project/strictdoc/issues>`_ by more than 50%, it includes more strategic items compared to the GitHub issues, which are primarily focused on actual implementation work.
 
 Backlog: Graphical user interface
 =================================
@@ -28,6 +33,11 @@ Backlog: Graphical user interface
 - Moving node up/down/left/right. For example, move a node of level 2 to level 1.
 
   - Follow-up feature: moving nodes between documents.
+
+- TBL view:
+
+  - Column filters to show/hide columns.
+  - Completely empty columns are hidden by default.
 
 - All forms:
 
@@ -57,11 +67,11 @@ Backlog: Nice to have
 
 - Useful configuration file options:
 
-    - Project prefix?
-    - Explicit or wildcard paths to sdoc files.
-    - Paths to dirs with source files.
-    - Config options for presenting requirements.
-        - Include/exclude requirements in TOC
+  - Project prefix?
+  - Explicit or wildcard paths to sdoc files.
+  - Paths to dirs with source files.
+  - Config options for presenting requirements.
+    - Include/exclude requirements in TOC
 
 - Diff for requirements documents and documentation trees.
 

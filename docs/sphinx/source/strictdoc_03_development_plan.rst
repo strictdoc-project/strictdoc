@@ -99,3 +99,48 @@ to do a more advanced analysis of requirements and requirement trees:
 
 - Finding similar or relevant requirements.
 - Enforce invariants that should be hold. Example: mass or power budget.
+
+Project milestones
+==================
+
+As an open-source project, StrictDoc is developed without strict deadlines, however there are certain high-level priorities that influence the development. The work is loosely organized in quarters.
+
+See also the Backlog document for a complete list of the planned work items.
+
+.. list-table::
+   :header-rows: 1
+   :widths: 15 85
+
+   * - **Quarter**
+     - **Planned / accomplished work**
+
+   * - 2019-Q2
+     - Pre-StrictDoc development in a fork of Doorstop.
+   * - 2019-Q3
+     - StrictDoc, first prototype. Markdown-based C++ program. Custom requirements metadata in YAML.
+   * - 2020-Q1
+     - The second prototype of StrictDoc based on RST/Sphinx. Using Sphinx extensions to manage meta information. First integration tests.
+   * - 2020-Q2
+     - StrictDoc created on GitHub. The code still uses RST for parsing requirements meta information and PySide for GUI.
+   * - 2020-Q3
+     - The RST parsing is replaced with a TextX-based DSL, new StrictDoc grammar is created. The PySide is replaced with a simple export to HTML using Jinja templates. Export to Sphinx HTML/PDF is introduced.
+   * - 2020-Q4
+     - Improvements in the styles of HTML/PDF exports. First Table, Traceability, and Deep Traceability screens.
+   * - 2021-Q1
+     - Excel export. The first implementation for forward and reverse traceability between SDoc and source files.
+   * - 2021-Q2
+     - Further work on the SDoc-source traceability.
+   * - 2021-Q3
+     - Further work on the SDoc-source traceability. Tree cycles detection, validations. MathJax support.
+   * - 2021-Q4
+     - Improvements of the traceability index generation and validation. Initial implementation of ReqIF. First support of custom grammars.
+   * - 2022-Q1
+     - Further work on ReqIF and custom grammars. Document fragments feature.
+   * - 2022-Q2
+     - Excel conversion improvements. Improvements of how meta information is displayed in HTML export.
+   * - 2022-Q3
+     - No work in this quarter.
+   * - 2022-Q4
+     - Installation using PyInstaller. The first prototype of a Web-based interface. First end-to-end Web tests using SeleniumBase. Improvements of the ReqIF support.
+   * - 2023-Q1
+     - Improvements of the Web-based interface towards first release. Improvements of the ReqIF support.

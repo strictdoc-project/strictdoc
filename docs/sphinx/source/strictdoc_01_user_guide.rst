@@ -1,3 +1,5 @@
+.. _SDOC_UG:
+
 User Guide
 $$$$$$$$$$
 
@@ -36,6 +38,8 @@ Summary of StrictDoc features:
   Further performance tuning should be possible.
 
 See the Backlog to get an idea of the overall project direction.
+
+.. _SDOC_UG_CONTACT:
 
 Contact the developers
 ----------------------
@@ -1033,7 +1037,7 @@ The following command creates an HTML export:
     strictdoc export docs/ --formats=html --output-dir output-html
 
 **Example:** This documentation is exported by StrictDoc to HTML:
-`StrictDoc HTML export <https://strictdoc.readthedocs.io/en/latest/strictdoc-html>`_.
+`StrictDoc HTML export <https://strictdoc-project.github.io>`_.
 
 **Note:** The options ``--formats=html`` and ``--output-dir output-html`` can be
 skipped because HTML export is a default export option and the default output

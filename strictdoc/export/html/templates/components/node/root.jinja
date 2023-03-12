@@ -1,0 +1,31 @@
+{#
+    This is the root node of the document.
+
+    Expect sdoc_entity = document.
+#}
+
+<turbo-frame
+{%- if config.is_running_on_server %}
+  id="article-{{sdoc_entity.node_id}}"
+{% endif -%}
+>
+
+  <sdoc-node
+    {%- if config.is_running_on_server %}
+      data-editable_node="on"
+    {%- endif %}
+    node-role="root"
+    data-testid="node-root"
+  >
+
+    {# sdoc_entity #}
+    {% block sdoc_entity %}
+    {% endblock %}
+
+    {# node_controls #}
+    {%- if config.is_running_on_server -%}
+    {% include "components/node/node_controls/index.jinja" %}
+    {%- endif -%}
+
+  </sdoc-node>
+</turbo-frame>

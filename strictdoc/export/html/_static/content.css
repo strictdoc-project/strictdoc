@@ -107,7 +107,6 @@
 }
 
 [data-viewtype="table"] sdoc-node .free_text{
-  margin-top: calc(var(--base-padding)*2);
   max-width: 900px;
 }
 

@@ -191,7 +191,8 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
         assert isinstance(text, str)
         # TODO H1 -> testid
         self.test_case.assert_element(
-            f"//sdoc-node//H1[contains(., '{text}')]", by=By.XPATH
+            f"//*[@data-testid='node-root']/H1[contains(., '{text}')]",
+            by=By.XPATH
         )
 
     def assert_document_uid_contains(self, text: str) -> None:
@@ -258,9 +259,10 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
 
     def do_open_form_edit_config(self) -> Form_EditConfig:
         self.test_case.hover_and_click(
-            hover_selector=f"(//sdoc-node)[{NODE_0}]",
+            hover_selector="//*[@data-testid='node-root']",
             click_selector=(
-                f'(//sdoc-node)[{NODE_0}]//*[@data-testid="document-edit-config-action"]'  # noqa: E501
+                "//*[@data-testid='node-root']"
+                "//*[@data-testid='document-edit-config-action']"
             ),
             hover_by=By.XPATH,
             click_by=By.XPATH,
@@ -326,7 +328,7 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
         self.do_open_node_menu()
         self.test_case.click(
             selector=(
-                f"(//sdoc-node)[{NODE_0}]"
+                "//*[@data-testid='node-root']"
                 '//*[@data-testid="node-add-section-first-action"]'
             ),
             by=By.XPATH,
@@ -378,7 +380,7 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
         self.do_open_node_menu()
         self.test_case.click(
             selector=(
-                f"(//sdoc-node)[{NODE_0}]"
+                "//*[@data-testid='node-root']"
                 '//*[@data-testid="node-add-requirement-first-action"]'
             ),
             by=By.XPATH,

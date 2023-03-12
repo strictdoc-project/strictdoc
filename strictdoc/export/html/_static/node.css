@@ -84,6 +84,7 @@ sdoc-node-card.nouid {
   background-color: rgb(240, 220, 220);
 }
 
+.nouid sdoc-requirement-title,
 .nouid .requirement__title {
   color: #502222;
 }

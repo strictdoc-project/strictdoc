@@ -1,7 +1,0 @@
-{%- if section.free_texts -%}
-    {%- for free_text in section.free_texts -%}
-    <div class="free-text">
-      {{ renderer.render_free_text(document_type, free_text) }}
-    </div>
-    {%- endfor -%}
-{%- endif -%}

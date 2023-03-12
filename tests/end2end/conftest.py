@@ -1,6 +1,7 @@
 import os
 import sys
 
+import pytest
 from seleniumbase.config import settings
 
 from tests.end2end.sdoc_test_environment import SDocTestEnvironment
@@ -40,3 +41,14 @@ test_environment = SDocTestEnvironment(
     warm_up_interval_seconds=WARMUP_INTERVAL,
     download_file_timeout_seconds=DOWNLOAD_FILE_TIMEOUT,
 )
+
+
+TEST_COUNTER = 0
+
+
+@pytest.fixture(autouse=True)
+def run_around_tests():
+    global TEST_COUNTER  # pylint: disable=global-statement
+    TEST_COUNTER += 1
+    print(f"– Test #{TEST_COUNTER}")  # noqa: T201
+    yield

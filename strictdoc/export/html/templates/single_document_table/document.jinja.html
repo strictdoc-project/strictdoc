@@ -210,8 +210,8 @@
         </td>
         <td class="content-view-td content-view-td-title">
           {%- if requirement.reserved_title %}
-          {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
-          {% include "_shared/requirement_block/anchor.jinja.html" %}
+          {%- with sdoc_entity=requirement -%}
+          {% include "components/anchor/index.jinja" %}
           {%- endwith %}
           <div class="requirement__title">
             {{ requirement.reserved_title }}
@@ -252,8 +252,8 @@
         <td class="content-view-td content-view-td-meta">{# Children & Parents #}</td>
         <td class="content-view-td content-view-td-title" colspan="4">
         {%- if section.title %}
-          {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
-          {% include "_shared/requirement_block/anchor.jinja.html" %}
+          {%- with sdoc_entity=section -%}
+          {% include "components/anchor/index.jinja" %}
           {%- endwith %}
           <div class="requirement__title">
             {{ section.title }}

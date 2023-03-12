@@ -1,5 +1,9 @@
+.. _SDOC_REQ:
+
 Requirements
 $$$$$$$$$$$$
+
+This document is a collection of high-level requirements for StrictDoc as well as some of its middle-level requirements. The existing requirements set is pending a proper functional decomposition/partitioning following the creation of bidirectional traces between the requirements and StrictDoc's source code.
 
 High-level requirements
 =======================
@@ -176,11 +180,12 @@ StrictDoc's Data Model shall accommodate for maximum possible standard requireme
 Project
 -------
 
-Project as a top-level entity
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Project concept
+~~~~~~~~~~~~~~~
 
-StrictDoc shall support the "Project" concept that serves for grouping of SDoc
-documents into a single project documentation tree.
+StrictDoc shall support the "Project" concept.
+
+**Rationale:** A project is a top-level entity. The project groups SDoc documents into a single project documentation tree.
 
 Project title
 ~~~~~~~~~~~~~
@@ -195,15 +200,26 @@ config file (TOML or SDoc-like grammar).
 Document
 --------
 
-TBD
+Document
+~~~~~~~~
+
+StrictDoc Data Model shall support the "Document" concept.
 
 Section
 -------
 
-TBD
+Section concept
+~~~~~~~~~~~~~~~
 
-Requirement item
-----------------
+StrictDoc Data Model shall support the "Section" concept.
+
+Requirement
+-----------
+
+Requirement concept
+~~~~~~~~~~~~~~~~~~~
+
+StrictDoc Data Model shall support the "Requirement" concept.
 
 Statement
 ~~~~~~~~~
@@ -258,10 +274,13 @@ StrictDoc shall support customization of the default Requirement's grammar with 
 - RAIT compliance fields (Review of design, analysis, inspection, testing)
 - Automotive Safety Integrity Level level (ASIL).
 
-Composite Requirement item
---------------------------
+Composite requirement
+---------------------
 
-TBD
+Composite requirement concept
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+StrictDoc Data Model shall support the "Composite requirement" concept.
 
 Links
 -----

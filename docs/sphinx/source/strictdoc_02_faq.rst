@@ -1,5 +1,11 @@
+.. _SDOC_FAQ:
+
 F.A.Q.
 $$$$$$
+
+This document is a list of questions that people ask about StrictDoc.
+
+Missing a question or an answer? Ask it here: :ref:`SDOC_UG_CONTACT`.
 
 What is StrictDoc?
 ==================
@@ -33,8 +39,6 @@ Which web server is recommended for StrictDoc documentation?
 ============================================================
 
 Is your project public or private? If it is public, you could simply use `GitHub pages <https://pages.github.com>`_. See how one user of StrictDoc is doing it here: `nmfta-repo/vcr-experiment <https://github.com/nmfta-repo/vcr-experiment>`_ and the resulting static website: `nmfta-repo.github.io/vcr-experiment <https://nmfta-repo.github.io/vcr-experiment>`_. Explore how their GitHub CI action is configured for publishing the website: `publish.yml <https://github.com/nmfta-repo/vcr-experiment/blob/4b5272e2c1a6de1c58d436812c7cc8b634e6321b/.github/workflows/publish.yml>`_.
-
-You could also use `Read The Docs <https://readthedocs.org/>`_. StrictDoc's documentation is exported to Read the Docs here: `StrictDoc documentation <https://strictdoc.readthedocs.io/en/latest/strictdoc-html>`_. This is how StrictDoc's documentation is generated in the `tasks.py file <https://github.com/strictdoc-project/strictdoc/blob/b5d93ae64eeab0c385166a9c884effdaa8a58afc/tasks.py#L154>`_. When StrictDoc is pushed to GitHub, Read the Docs gets the repository and makes its web server read the documentation from the ``docs/`` folder.
 
 If the project is private, you could use any server that reads HTML files from a folder. For example, Python has an embedded Web Server, see `this for example <https://pythonbasics.org/webserver>`_. Also you could try any web server based on Node.JS.
 

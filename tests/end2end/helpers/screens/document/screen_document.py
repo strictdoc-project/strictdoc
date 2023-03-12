@@ -192,7 +192,7 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
         # TODO H1 -> testid
         self.test_case.assert_element(
             f"//*[@data-testid='node-root']/H1[contains(., '{text}')]",
-            by=By.XPATH
+            by=By.XPATH,
         )
 
     def assert_document_uid_contains(self, text: str) -> None:

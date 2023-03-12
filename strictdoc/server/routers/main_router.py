@@ -134,6 +134,46 @@ def create_main_router(
     def get_ping():
         return f"StrictDoc v{__version__}"
 
+    @router.get(
+        "/actions/deep_trace/show_full_requirement", response_class=Response
+    )
+    def requirement__show_full(reference_mid: str):
+        requirement: Requirement = (
+            export_action.traceability_index.get_node_by_id(reference_mid)
+        )
+        template = env.get_template(
+            "actions/"
+            "deep_trace/"
+            "show_full_requirement/"
+            "stream_show_full_requirement.jinja"
+        )
+        link_renderer = LinkRenderer(
+            root_path=requirement.document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
+        )
+        markup_renderer = MarkupRenderer.create(
+            markup="RST",
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+            context_document=requirement.document,
+        )
+        output = template.render(
+            renderer=markup_renderer,
+            requirement=requirement,
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+            document=requirement.document,
+            document_type=DocumentType.document(),
+            config=export_action.config,
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
     @router.get("/actions/document/new_section", response_class=Response)
     def get_new_section(reference_mid: str, whereto: str):
         assert isinstance(whereto, str), whereto

@@ -1,0 +1,26 @@
+{#
+    Has a header and footer with buttons to the right.
+    Useful for embedding forms.
+    See _usage_example.jinja for an example.
+#}
+<turbo-frame data-controller="modal_controller">
+  <sdoc-backdrop>
+      <sdoc-modal>
+        <sdoc-modal-header>
+          {%- block modal_form__header %}{% endblock -%}
+        </sdoc-modal-header>
+        <sdoc-modal-content>
+          {%- block modal_form__content %}{% endblock -%}
+        </sdoc-modal-content>
+        <sdoc-modal-footer>
+          {%- block modal_form__footer_extra %}{% endblock -%}
+          {%- block modal_form__footer_submit %}
+            {% include 'components/button/submit.jinja' %}
+          {% endblock -%}
+          {%- block modal_form__footer_cancel %}
+            {% include 'components/button/cancel.jinja' %}
+          {% endblock -%}
+        </sdoc-modal-footer>
+      </sdoc-modal>
+  </sdoc-backdrop>
+</turbo-frame>

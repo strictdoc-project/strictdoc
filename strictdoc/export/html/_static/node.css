@@ -19,11 +19,13 @@ sdoc-node {
 
 /* editable_node */
 
+sdoc-node-card[node-role="requirement"],
 [data-editable_node="on"] {
   box-shadow: var(--base-elevation-0);
   transition: box-shadow 1s;
 }
 
+sdoc-node-card[node-role="requirement"]:hover,
 [data-editable_node="on"]:hover {
   box-shadow: var(--base-elevation-node);
   z-index: 10;

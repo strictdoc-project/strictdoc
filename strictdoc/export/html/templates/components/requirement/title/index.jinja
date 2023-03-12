@@ -1,0 +1,11 @@
+{%- if requirement.reserved_title %}
+  <sdoc-requirement-title>
+    {%- if requirement.context.title_number_string %}
+      {{ requirement.context.title_number_string }}.&nbsp;
+    {%- endif -%}
+    {%- set title = requirement.reserved_title -%}
+    {%- if title is not none -%}
+      {{ title }}
+    {%- endif -%}
+  </sdoc-requirement-title>
+{%- endif %}

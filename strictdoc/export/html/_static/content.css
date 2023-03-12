@@ -1,6 +1,5 @@
 .content {
   min-width: calc(var(--card-width) + calc(var(--base-padding)*4));
-  min-height: 100%;
 }
 
 [data-viewtype="document"] .content {

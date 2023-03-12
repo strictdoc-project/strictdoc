@@ -51,6 +51,7 @@ _, tidylib_messages_string = tidy_document(
             "sdoc-node-card, "
             "sdoc-node-controls, "
             "sdoc-requirement, "
+            "sdoc-requirement-uid, "
             "sdoc-requirement-title, "
             "sdoc-requirement-field, "
             "sdoc-requirement-field-label, "

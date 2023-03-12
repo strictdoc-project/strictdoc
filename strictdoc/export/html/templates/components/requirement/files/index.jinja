@@ -1,0 +1,27 @@
+  {%- if config.experimental_enable_file_traceability -%}
+    {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
+    {%- if requirement_file_links %}
+      <sdoc-requirement-field-label>files:</sdoc-requirement-field-label>
+      <sdoc-requirement-field data-field-label="files">
+        <ul class="requirement__link">
+          {%- for link, opt_ranges in requirement_file_links %}
+            {%- if opt_ranges -%}
+              {%- for range in opt_ranges %}
+                <li>
+                  <a data-turbo="false" class="requirement__link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
+                    {{ link.file_entry.file_path }}, <i>lines: {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }}</i>
+                  </a>
+                </li>
+              {%- endfor -%}
+            {%- else -%}
+              <li>
+                <a data-turbo="false" class="requirement__link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}">
+                  {{ link.file_entry.file_path }}
+                </a>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </sdoc-requirement-field>
+    {%- endif %}
+  {%- endif %}

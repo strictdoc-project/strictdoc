@@ -1,6 +1,7 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.constants import RST_STRING_THAT_NEEDS_HTML_ESCAPING
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
 )
@@ -10,7 +11,7 @@ from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
 from tests.end2end.server import SDocTestServer
 
 
-class Test_UC07_T61_EscapeHTML(BaseCase):
+class Test_UC07_T62_ReescapeHTMLByValidation(BaseCase):
     def test_01(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
@@ -33,18 +34,15 @@ class Test_UC07_T61_EscapeHTML(BaseCase):
             form_edit_requirement: Form_EditRequirement = (
                 screen_document.do_open_form_edit_requirement()
             )
-
-            self.assert_text(
-                "`Link does not get corrupted "
-                "<https://github.com/strictdoc-project/"
-                "sphinx-latex-reqspec-template>`_"
+            form_edit_requirement.do_fill_in_field_statement(
+                RST_STRING_THAT_NEEDS_HTML_ESCAPING
             )
-            form_edit_requirement.do_form_submit()
-
-            screen_document.assert_text(
-                "Link does not get corrupted\n"
-                "Link does not get corrupted\n"
-                "Link does not get corrupted\n"
+            form_edit_requirement.do_form_submit_and_catch_error(
+                "RST markup syntax error on line 2: "
+                "Bullet list ends without a blank line; unexpected unindent."
+            )
+            form_edit_requirement.assert_contenteditable_contains(
+                RST_STRING_THAT_NEEDS_HTML_ESCAPING
             )
 
         assert test_setup.compare_sandbox_and_expected_output()

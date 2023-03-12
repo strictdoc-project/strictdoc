@@ -768,7 +768,7 @@ def create_main_router(
                 requirement.set_field_value(
                     field_name=form_field_name,
                     form_field_index=form_field_index,
-                    value=form_field.field_value,
+                    value=form_field.field_unescaped_value,
                 )
 
         requirement.node_id = requirement_mid
@@ -961,7 +961,7 @@ def create_main_router(
                 requirement.set_field_value(
                     field_name=form_field_name,
                     form_field_index=form_field_index,
-                    value=form_field.field_value,
+                    value=form_field.field_unescaped_value,
                 )
 
         class UpdateRequirementActionObject:
@@ -1511,7 +1511,8 @@ def create_main_router(
             field=RequirementFormField(
                 field_name="COMMENT",
                 field_type=RequirementFormFieldType.MULTILINE,
-                field_value="",
+                field_unescaped_value="",
+                field_escaped_value="",
             ),
         )
         return HTMLResponse(
@@ -1630,9 +1631,9 @@ def create_main_router(
         )
 
         free_text: Optional[FreeText] = None
-        if len(form_object.document_freetext) > 0:
+        if len(form_object.document_freetext_unescaped) > 0:
             free_text_container: FreeTextContainer = SDFreeTextReader.read(
-                form_object.document_freetext
+                form_object.document_freetext_unescaped
             )
             free_text = FreeText(
                 parent=document, parts=free_text_container.parts

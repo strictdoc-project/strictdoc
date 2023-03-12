@@ -2,7 +2,7 @@
   field_type="multiline",
   field_name=field.field_name,
   field_input_name="requirement[" ~ field.field_name ~ "]",
-  field_value=field.field_value,
+  field_value=field.field_escaped_value,
   errors=form_object.get_errors(field.field_name)
 -%}
   {% set data_controller="deletable_field" %}

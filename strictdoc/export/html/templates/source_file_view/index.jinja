@@ -32,11 +32,10 @@
 {% endblock header_content %}
 
 {% block toc_content %}
-  {# {% include "_shared/toc.jinja.html" %} #}
-  {% include "source_file_view/source_refer.jinja2" %}
+  {% include "source_file_view/aside.jinja" %}
 {% endblock toc_content %}
 
 {% block content %}
   {# <main id="mainContainer" class="source-file-view"></main> #}
-  {% include "source_file_view/source_code.jinja2" %}
+  {% include "source_file_view/main.jinja" %}
 {% endblock content %}

@@ -1,0 +1,11 @@
+# TODO: @mettta
+RUN: %strictdoc export %S --experimental-enable-file-traceability --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: TEST DOCUMENT
+
+UN: %check_exists --file "%S/Output/html/_source_files/file.py.html"
+
+UN: %cat %S/Output/html/14_user_report_larger_file/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001">
+
+UN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE: <a{{.*}}href="../14_user_report_larger_file/input.html#1-REQ-001"{{.*}}>

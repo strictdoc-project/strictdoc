@@ -409,7 +409,7 @@ window.addEventListener("load", function () {
       callback: (checked) => dom.toggleRangesVisibility(checked),
     }
   );
-  document.getElementById('sorceCodeCoverageSwitch').append(switcher.create());
+  document.getElementById('sourceCodeCoverageSwitch').append(switcher.create());
 
 });
 

@@ -1,0 +1,14 @@
+[DOCUMENT]
+TITLE: TEST DOCUMENT
+
+[REQUIREMENT]
+UID: REQ-01
+REFS:
+- TYPE: File
+  VALUE: large_file.py
+- TYPE: File
+  VALUE: small_file.py
+TITLE: Test_REQ
+STATEMENT: >>>
+Declaring a large file range tagged before a small file breaks highlighting
+<<<

@@ -42,4 +42,10 @@ class Test_UC08_T04_EditSectionEscapeHTML(BaseCase):
 
             form_edit_section.do_form_submit()
 
+            screen_document.assert_text(
+                "Link does not get corrupted\n"
+                "Link does not get corrupted\n"
+                "Link does not get corrupted\n"
+            )
+
         assert test_setup.compare_sandbox_and_expected_output()

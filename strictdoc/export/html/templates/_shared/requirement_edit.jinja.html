@@ -29,7 +29,7 @@
           field_class_name="",
           field_name=field.field_name,
           field_input_name="requirement[" ~ field.field_name ~ "]",
-          field_value=field.field_value,
+          field_value=field.field_escaped_value,
           errors=form_object.get_errors(field.field_name)
         -%}
           {% include "components/form/field/text/index.jinja" %}
@@ -63,7 +63,7 @@
           {# If comments have not yet been added,
           show only the add field button below,
           and do not display the code of the field itself: #}
-          {%- if field.field_value|length > 0 -%}
+          {%- if field.field_escaped_value|length > 0 -%}
             {% include "_shared/requirement_edit_field_comment.jinja" %}
           {%- endif -%}
         {%- else -%}
@@ -71,7 +71,7 @@
             field_type="multiline",
             field_name=field.field_name,
             field_input_name="requirement[" ~ field.field_name ~ "]",
-            field_value=field.field_value,
+            field_value=field.field_escaped_value,
             errors=form_object.get_errors(field.field_name)
           -%}
             {% include "components/form/field/text/index.jinja" %}

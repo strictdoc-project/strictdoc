@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+`Link does not get corrupted <https://github.com/strictdoc-project/sphinx-latex-reqspec-template>`_
+
+`Link does not get corrupted <https://github.com/strictdoc-project/sphinx-latex-reqspec-template>`_
+
+`Link does not get corrupted <https://github.com/strictdoc-project/sphinx-latex-reqspec-template>`_
+[/FREETEXT]

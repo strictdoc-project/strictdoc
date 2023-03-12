@@ -25,7 +25,8 @@ class DocumentConfigFormObject(ErrorObject):
         document_uid: Optional[str],
         document_version: Optional[str],
         document_classification: Optional[str],
-        document_freetext: Optional[str],
+        document_freetext_unescaped: str,
+        document_freetext_escaped: str,
     ):
         assert isinstance(document_mid, str), document_mid
         assert isinstance(document_title, str), document_title
@@ -43,9 +44,8 @@ class DocumentConfigFormObject(ErrorObject):
             if document_classification is not None
             else ""
         )
-        self.document_freetext: Optional[str] = (
-            document_freetext if document_freetext is not None else ""
-        )
+        self.document_freetext_unescaped = document_freetext_unescaped
+        self.document_freetext_escaped = document_freetext_escaped
 
     @staticmethod
     def create_from_request(
@@ -91,6 +91,7 @@ class DocumentConfigFormObject(ErrorObject):
             document_freetext = sanitize_html_form_field(
                 document_freetext, multiline=True
             )
+            document_freetext_escaped = html.escape(document_freetext)
 
         form_object = DocumentConfigFormObject(
             document_mid=document_mid,
@@ -98,7 +99,8 @@ class DocumentConfigFormObject(ErrorObject):
             document_uid=document_uid,
             document_version=document_version,
             document_classification=document_classification,
-            document_freetext=document_freetext,
+            document_freetext_unescaped=document_freetext,
+            document_freetext_escaped=document_freetext_escaped,
         )
         return form_object
 
@@ -108,11 +110,12 @@ class DocumentConfigFormObject(ErrorObject):
     ) -> "DocumentConfigFormObject":
         assert isinstance(document, Document)
 
-        document_freetext: Optional[str] = None
+        document_freetext = ""
+        document_freetext_escaped = ""
         if len(document.free_texts) > 0:
             freetext: FreeText = document.free_texts[0]
             document_freetext = freetext.get_parts_as_text()
-            document_freetext = html.escape(document_freetext)
+            document_freetext_escaped = html.escape(document_freetext)
 
         return DocumentConfigFormObject(
             document_mid=document.node_id,
@@ -120,7 +123,8 @@ class DocumentConfigFormObject(ErrorObject):
             document_uid=document.config.uid,
             document_version=document.config.version,
             document_classification=document.config.classification,
-            document_freetext=document_freetext,
+            document_freetext_unescaped=document_freetext,
+            document_freetext_escaped=document_freetext_escaped,
         )
 
     def validate(self) -> bool:
@@ -130,15 +134,12 @@ class DocumentConfigFormObject(ErrorObject):
                 "Document title must not be empty.",
             )
 
-        if (
-            self.document_freetext is not None
-            and len(self.document_freetext) > 0
-        ):
+        if len(self.document_freetext_unescaped) > 0:
             (
                 parsed_html,
                 rst_error,
             ) = RstToHtmlFragmentWriter.write_with_validation(
-                self.document_freetext
+                self.document_freetext_unescaped
             )
             if parsed_html is None:
                 self.add_error("FREETEXT", rst_error)

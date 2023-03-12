@@ -47,12 +47,15 @@ class RequirementFormField:
         self,
         field_name: str,
         field_type: RequirementFormFieldType,
-        field_value: str,
+        field_unescaped_value: str,
+        field_escaped_value: str,
     ):
-        assert isinstance(field_value, str)
+        assert isinstance(field_unescaped_value, str)
+        assert isinstance(field_escaped_value, str)
         self.field_name: str = field_name
         self.field_type = field_type
-        self.field_value: str = field_value
+        self.field_unescaped_value: str = field_unescaped_value
+        self.field_escaped_value: str = field_escaped_value
 
     def is_singleline(self):
         return self.field_type == RequirementFormFieldType.SINGLELINE
@@ -65,17 +68,27 @@ class RequirementFormField:
         *,
         grammar_field: GrammarElementField,
         multiline: bool,
-        value: str,
+        value_unescaped: str,
+        value_escaped: str,
     ):
-        assert isinstance(value, str), (grammar_field, multiline, value)
-        value = html.escape(value)
+        assert isinstance(value_unescaped, str), (
+            grammar_field,
+            multiline,
+            value_unescaped,
+        )
+        assert isinstance(value_escaped, str), (
+            grammar_field,
+            multiline,
+            value_escaped,
+        )
         if grammar_field.gef_type == RequirementFieldType.STRING:
             return RequirementFormField(
                 field_name=grammar_field.title,
                 field_type=RequirementFormFieldType.MULTILINE
                 if multiline
                 else RequirementFormFieldType.SINGLELINE,
-                field_value=value,
+                field_unescaped_value=value_unescaped,
+                field_escaped_value=value_escaped,
             )
         raise NotImplementedError(grammar_field)
 
@@ -91,14 +104,15 @@ class RequirementFormField:
                 if requirement_field.field_value_multiline is not None
                 else requirement_field.field_value
             )
-            if field_value is not None:
-                field_value = html.escape(field_value)
+            assert isinstance(field_value, str)
+            escaped_field_value = html.escape(field_value)
             return RequirementFormField(
                 field_name=grammar_field.title,
                 field_type=RequirementFormFieldType.MULTILINE
                 if multiline
                 else RequirementFormFieldType.SINGLELINE,
-                field_value=field_value,
+                field_unescaped_value=field_value,
+                field_escaped_value=escaped_field_value,
             )
         raise NotImplementedError(grammar_field)
 
@@ -178,13 +192,14 @@ class RequirementFormObject(ErrorObject):
 
             requirement_field_values = requirement_fields.get(field_name, [])
             for requirement_field_value in requirement_field_values:
-                field_value: str = sanitize_html_form_field(
+                sanitized_field_value: str = sanitize_html_form_field(
                     requirement_field_value, multiline=True
                 )
                 form_field = RequirementFormField.create_from_grammar_field(
                     grammar_field=field,
                     multiline=multiline,
-                    value=field_value,
+                    value_unescaped=sanitized_field_value,
+                    value_escaped=html.escape(sanitized_field_value),
                 )
                 form_fields.append(form_field)
 
@@ -222,7 +237,8 @@ class RequirementFormObject(ErrorObject):
             form_field = RequirementFormField.create_from_grammar_field(
                 grammar_field=field,
                 multiline=field_idx > title_field_idx,
-                value="",
+                value_unescaped="",
+                value_escaped="",
             )
             form_fields.append(form_field)
 
@@ -291,7 +307,8 @@ class RequirementFormObject(ErrorObject):
                 form_field = RequirementFormField.create_from_grammar_field(
                     grammar_field=field,
                     multiline=field_idx > title_field_idx,
-                    value="",
+                    value_unescaped="",
+                    value_escaped="",
                 )
                 form_fields.append(form_field)
         return RequirementFormObject(
@@ -324,7 +341,9 @@ class RequirementFormObject(ErrorObject):
         yield from self.reference_fields
 
     def validate(self, *, traceability_index: TraceabilityIndex):
-        requirement_statement = self.fields["STATEMENT"][0].field_value
+        requirement_statement = self.fields["STATEMENT"][
+            0
+        ].field_unescaped_value
         if requirement_statement is None or len(requirement_statement) == 0:
             self.add_error(
                 "STATEMENT",
@@ -341,7 +360,9 @@ class RequirementFormObject(ErrorObject):
                 self.add_error("STATEMENT", rst_error)
 
         requirement_uid: Optional[str] = (
-            self.fields["UID"][0].field_value if "UID" in self.fields else None
+            self.fields["UID"][0].field_unescaped_value
+            if "UID" in self.fields
+            else None
         )
         if len(self.reference_fields) > 0 and (
             requirement_uid is None or len(requirement_uid) == 0

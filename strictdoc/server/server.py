@@ -55,8 +55,9 @@ def run_strictdoc_server(
         port=server_config.port,
         reload=server_config.reload,
         reload_dirs=[
-            server_config.environment.path_to_strictdoc,
-            server_config.input_path,
+            os.path.join(
+                server_config.environment.path_to_strictdoc, "strictdoc"
+            )
         ],
         reload_includes=[
             "*.py",
@@ -65,12 +66,27 @@ def run_strictdoc_server(
             "*.css",
             "*.js",
         ],
-        # TODO: Enable or remove
-        # reload_excludes=[  # noqa: ERA001
-        #     "**/developer/sandbox/output/**/*",  # noqa: ERA001
-        #     # "*output*",  # noqa: ERA001
-        # ],
-        # root_path: str = "",  # noqa: ERA001
+        reload_excludes=[
+            # "tests",  # Doesn't work.
+            # "tests/",  # Doesn't work.
+            # "tests/*",  # Doesn't work.
+            # "tests/**",  # Makes the process hang, server doesn't start.
+            # It looks like the regex engine does not support ** globs.
+            "tests/*/*.*",
+            "tests/*/*/*.*",
+            "tests/*/*/*/*.*",
+            "tests/*/*/*/*/*.*",
+            "tests/*/*/*/*/*/*.*",
+            "tests/*/*/*/*/*/*/*.*",
+            "tests/*/*/*/*/*/*/*/*.*",
+            "tests/*/*/*/*/*/*/*/*/*.*",
+            "tests/*/*/*/*/*/*/*/*/*/*.*",
+            "tests/*/*/*/*/*/*/*/*/*/*/*.*",
+            "tests/*/*/*/*/*/*/*/*/*/*/*/*.*",
+            "tests/*/*/*/*/*/*/*/*/*/*/*/*/*.*",
+            "tests/*/*/*/*/*/*/*/*/*/*/*/*/*/*.*",
+            "tests/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*.*",
+        ],
     )
     tmp_config_file.close()
     if os.path.exists(tmp_config_file.name):

@@ -1,0 +1,6 @@
+{%- if requirement.rationale -%}
+  <sdoc-requirement-field-label>rationale:</sdoc-requirement-field-label>
+  <sdoc-requirement-field data-field-label="rationale">
+    {{ renderer.render_requirement_rationale(requirement) }}
+  </sdoc-requirement-field>
+{%- endif -%}

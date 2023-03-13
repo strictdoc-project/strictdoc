@@ -583,7 +583,7 @@ def watch(context, sdocs_path="."):
         f"""
         {strictdoc_command} &&
         watchmedo shell-command
-        --patterns="*.py;*.sdoc;*.html;*.css;*.js"
+        --patterns="*.py;*.sdoc;*.jinja;*.html;*.css;*.js"
         --recursive
         --ignore-pattern='output/;tests/integration'
         --command='{strictdoc_command}'

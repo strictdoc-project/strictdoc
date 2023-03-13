@@ -58,25 +58,25 @@
           <section class="content_section">
             <div class="content_item" data-role="current">
               {%- set section = section_or_requirement %}
-              {% include "components/section/extends_card.jinja" %}
+              {% include "components/section/tiny_extends_card.jinja" %}
             </div>
           </section>
 
         {%- elif section_or_requirement.is_requirement %}
         <section class="content_section">
           <div class="content_item" data-role="parents">
-          {%- with requirement=section_or_requirement, requirement_partial="components/requirement/extends_card.jinja" -%}
+          {%- with requirement=section_or_requirement, requirement_partial="components/requirement/tiny_extends_card.jinja" -%}
             {% include "_shared/requirement_tree_left.jinja.html" %}
           {%- endwith -%}
           </div>
 
           {%- set requirement = section_or_requirement %}
           <div class="content_item" data-role="current">
-            {% include "components/requirement/extends_card.jinja" %}
+            {% include "components/requirement/tiny_extends_card.jinja" %}
           </div>
 
           <div class="content_item" data-role="children">
-          {%- with requirement=section_or_requirement, requirement_partial="components/requirement/extends_card.jinja" -%}
+          {%- with requirement=section_or_requirement, requirement_partial="components/requirement/tiny_extends_card.jinja" -%}
             {% include "_shared/requirement_tree_right.jinja.html" %}
           {%- endwith -%}
           </div>

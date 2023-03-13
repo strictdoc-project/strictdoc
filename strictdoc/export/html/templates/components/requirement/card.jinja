@@ -3,29 +3,7 @@
   sdoc_entity = requirement
 #}
 
-<sdoc-requirement
-  requirement-view="{{ requirement_style|d(requirement.get_requirement_style_mode()) }}"
-  data-level="{{ requirement.context.title_number_string }}"
-  {%- if requirement.reserved_status %}
-    data-status='{{ requirement.reserved_status.lower() }}'
-  {%- endif %}
-  data-testid="requirement-style-{{ requirement_style|d(requirement.get_requirement_style_mode()) }}"
->
-
-  {% include "components/requirement/title/index.jinja" %}
-
-  <sdoc-requirement-uid>
-  {{ requirement.reserved_uid }}
-  </sdoc-requirement-uid>
-
-  <turbo-frame>
-    <a
-      href="/actions/deep_trace/show_full_requirement?reference_mid={{ sdoc_entity.node_id }}"
-      class="action_button"
-      data-turbo="true"
-      data-turbo-action="replace"
-      title="Show more"
-      data-testid="requirement-show-more-action"
-    >{% include "_res/svg_ico16_expand.jinja.html" %}</a>
-  </turbo-frame>
-</sdoc-requirement>
+{# TODO: card display #}
+{# Now in the cards we show all fields as in the index #}
+{%- set requirement_style = "simple" -%}
+{% include "components/requirement/index.jinja" %}

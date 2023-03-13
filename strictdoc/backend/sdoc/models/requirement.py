@@ -74,7 +74,9 @@ class RequirementField:
 
 
 @auto_described()
-class Requirement(Node):  # pylint: disable=too-many-instance-attributes
+class Requirement(
+    Node
+):  # pylint: disable=too-many-instance-attributes, too-many-public-methods  # noqa: E501
     def __init__(  # pylint: disable=too-many-arguments
         self,
         parent,

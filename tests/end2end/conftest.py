@@ -42,6 +42,15 @@ test_environment = SDocTestEnvironment(
     download_file_timeout_seconds=DOWNLOAD_FILE_TIMEOUT,
 )
 
+TESTS_TOTAL = 0
+
+
+# How to get the count of tests collected?
+# https://stackoverflow.com/a/66515819/598057
+def pytest_runtestloop(session):
+    global TESTS_TOTAL  # pylint: disable=global-statement
+    TESTS_TOTAL = len(session.items)
+
 
 TEST_COUNTER = 0
 
@@ -50,5 +59,5 @@ TEST_COUNTER = 0
 def run_around_tests():
     global TEST_COUNTER  # pylint: disable=global-statement
     TEST_COUNTER += 1
-    print(f"– Test #{TEST_COUNTER}")  # noqa: T201
+    print(f"– Test {TEST_COUNTER}/{TESTS_TOTAL}")  # noqa: T201
     yield

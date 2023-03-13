@@ -1,6 +1,6 @@
 from seleniumbase import BaseCase
 
-from tests.end2end.helpers.screens.form.form import Form
+from tests.end2end.helpers.form.form import Form
 
 
 class Form_AddDocument(Form):  # pylint: disable=invalid-name

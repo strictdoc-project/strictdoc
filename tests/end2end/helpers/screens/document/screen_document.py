@@ -57,7 +57,11 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
         )
 
     def assert_is_document_title(self, document_title: str) -> None:
-        self.test_case.assert_text(document_title)
+        self.test_case.assert_element(
+            "//*[@class='header__document_title']"
+            f"[contains(., '{document_title}')]",
+            by=By.XPATH,
+        )
 
     def assert_text(self, text: str) -> None:
         self.test_case.assert_text(text)

@@ -1,3 +1,12 @@
+{%- assert
+    requirement.__class__.__name__ == "Requirement",
+    "Expected requirement, got: "~requirement
+-%}
+{%- assert
+    link_renderer.__class__.__name__ == "LinkRenderer",
+    "Expected link renderer, got: "~link_renderer
+-%}
+
 <div id="requirement:{{ requirement.reserved_uid }}" class="source-file__requirement" data-reqid="{{ requirement.reserved_uid }}">
   <a href="{{ link_renderer.render_requirement_link_from_source_file(requirement, source_file) }}">
     {%- if requirement.reserved_uid %}
@@ -13,6 +22,11 @@
  {%- if requirement_file_links %}
   <ul class="requirement-tree_downward">
   {%- for link, opt_ranges in requirement_file_links %}
+    {%- assert link.__class__.__name__ == "FileReference", "Expected FileReference, got: "~link -%}
+
+    {%- set this_file_or_other = source_file.in_doctree_source_file_rel_path == link.get_path() -%}
+    {%- set traceability_file_type = "this_file" if this_file_or_other else "other_file" -%}
+
     {%- if opt_ranges -%}
       {%- for range in opt_ranges %}
         <li class="requirement-tree_downward_node">
@@ -21,6 +35,7 @@
             class="pointer"
             data-begin="{{ range.ng_range_line_begin }}"
             data-end="{{ range.ng_range_line_end }}"
+            data-traceability-file-type={{traceability_file_type}}
             href="{{ link_renderer.render_requirement_in_source_file_range_link(requirement, link, source_file, range) }}"
             title="lines {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }} in file {{ link.file_entry.file_path }}"
           >
@@ -30,12 +45,11 @@
         </li>
       {%- endfor -%}
     {%- else -%}
-
-      {%- if source_file.in_doctree_source_file_rel_path == link -%}
+      {%- if this_file_or_other -%}
         <li class="requirement-tree_downward_node">
           <div class="requirement-tree_downward_item">
           <span class="current_file_pseudolink">
-              {{ link }}
+              {{ link.get_path() }}
             </span>
           </div>
         </li>
@@ -45,7 +59,7 @@
       <li class="requirement-tree_downward_node">
           <div class="requirement-tree_downward_item">
           <a href="{{ link_renderer.render_requirement_in_source_file_link(requirement, link, source_file) }}" >
-          {{ link.file_entry.file_path }}
+          {{ link.get_path() }}
           </a>
           </div>
         </li>

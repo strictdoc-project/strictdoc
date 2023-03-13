@@ -182,7 +182,6 @@ class Dom {
     hashSplitter,
     strictdocCommentSelector,
     strictdocPointerSelector,
-    strictdocInlinePointerSelector,
     strictdocRequirementSelector,
     activeClass,
   }) {
@@ -195,8 +194,7 @@ class Dom {
     // STRICTDOC SPECIFIC
     this.strictdocCommentSelector = strictdocCommentSelector || 'pre span';
     this.strictdocPointerSelector = strictdocPointerSelector || '.pointer';
-    this.strictdocInlinePointerSelector = strictdocInlinePointerSelector || '.inline-pointer';
-    this.strictdocRequirementSelector = strictdocRequirementSelector || '.requirement';
+    this.strictdocRequirementSelector = strictdocRequirementSelector || '.source-file__requirement';
     this.activeClass = activeClass || 'active';
 
     // objects
@@ -246,13 +244,13 @@ class Dom {
 
   useLocationHash() {
     const [_, reqId, rangeBegin, rangeEnd] = window.location.hash.split(this.hashSplitter);
-    const rangeAlliace = rangeBegin ? this._generateRangeAlias(rangeBegin, rangeEnd) : undefined;
+    const rangeAlias = rangeBegin ? this._generateRangeAlias(rangeBegin, rangeEnd) : undefined;
 
     this.changeActive({
       requirement: this.requirements[reqId],
-      pointers: rangeAlliace ? this.ranges[rangeAlliace].pointers : null,
-      range: rangeAlliace ? this.ranges[rangeAlliace].highlighter : null,
-      labels: reqId ? this.ranges[rangeAlliace][reqId] : null,
+      pointers: rangeAlias ? this.ranges[rangeAlias].pointers : null,
+      range: rangeAlias ? this.ranges[rangeAlias].highlighter : null,
+      labels: (reqId && rangeAlias) ? this.ranges[rangeAlias][reqId] : null,
     });
 
     this.highlightRange(this.active.range);
@@ -347,6 +345,12 @@ class Dom {
 
     [...document.querySelectorAll(this.strictdocPointerSelector)]
       .map(pointer => {
+        const thisFileOrOther = pointer.dataset.traceabilityFileType;
+        console.assert(!!thisFileOrOther, "The file type shall be specified.", pointer);
+        if (thisFileOrOther !== "this_file") {
+          return;
+        }
+
         const rangeBegin = pointer.dataset.begin;
         const rangeEnd = pointer.dataset.end;
         const rangeReq = pointer.dataset.reqid;
@@ -394,11 +398,6 @@ const dom = new Dom({
 });
 
 window.addEventListener("load", function () {
-  __log(
-    'start',
-    window.location.hash
-  )
-
   dom.prepare();
   dom.useLocationHash();
 

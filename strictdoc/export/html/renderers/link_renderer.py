@@ -115,7 +115,7 @@ class LinkRenderer:
     def render_source_file_link(
         requirement: Requirement, file_reference: FileReference
     ):
-        assert isinstance(file_reference, FileReference)
+        assert isinstance(file_reference, FileReference), file_reference
 
         document_or_none: Optional[
             Document

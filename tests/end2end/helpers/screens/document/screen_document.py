@@ -14,12 +14,13 @@ from tests.end2end.helpers.screens.document.form_edit_requirement import (
 from tests.end2end.helpers.screens.document.form_edit_section import (
     Form_EditSection,
 )
+from tests.end2end.helpers.screens.screen import Screen
 
 
-class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
+class Screen_Document(Screen):  # pylint: disable=invalid-name, too-many-public-methods
     def __init__(self, test_case: BaseCase) -> None:
         assert isinstance(test_case, BaseCase)
-        self.test_case: BaseCase = test_case
+        super().__init__(test_case)
 
     def assert_on_screen(self):
         self.test_case.assert_element(
@@ -36,6 +37,8 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
         self.test_case.assert_element_not_visible(
             '//*[@data-testid="document-placeholder"]'
         )
+
+    # confirm-message
 
     def assert_confirm(self) -> None:
         self.test_case.assert_element('//*[@data-testid="confirm-message"]')
@@ -56,20 +59,7 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
             by=By.XPATH,
         )
 
-    def assert_is_document_title(self, document_title: str) -> None:
-        self.test_case.assert_element(
-            "//*[@class='header__document_title']"
-            f"[contains(., '{document_title}')]",
-            by=By.XPATH,
-        )
-
-    def assert_text(self, text: str) -> None:
-        self.test_case.assert_text(text)
-
-    def assert_no_text(self, text: str) -> None:
-        self.test_case.assert_element_not_present(
-            f"//*[contains(., '{text}')]", by=By.XPATH
-        )
+    # requirement style
 
     def assert_requirement_style_simple(self) -> None:
         # Make sure that the normal (not table-based) requirement is rendered.
@@ -99,6 +89,8 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
             by=By.XPATH,
         )
 
+    # requirement OR section?
+
     def assert_node_title_contains(
         self,
         node_title: str,
@@ -114,6 +106,8 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
             f"//*[contains(., '{prefix}{node_title}')]",
             by=By.XPATH,
         )
+
+    # requirement
 
     def assert_requirement_uid_contains(
         self,
@@ -178,15 +172,6 @@ class Screen_Document:  # pylint: disable=invalid-name, too-many-public-methods
             "/sdoc-requirement-field[@data-field-label='parent links']"
             f"[contains(., '{parent_uid}')]",
             by=By.XPATH,
-        )
-
-    # Assert fields content:
-    # Method with the 'field_name' can be used,
-    # but named methods are recommended.
-
-    def assert_xpath_contains(self, xpath: str, text: str) -> None:
-        self.test_case.assert_element(
-            f"{xpath}[contains(., '{text}')]", by=By.XPATH
         )
 
     # Assert fields content: named methods

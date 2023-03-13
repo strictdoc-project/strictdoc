@@ -24,7 +24,7 @@ class Test_UC40_T01_document_has_no_requirement(BaseCase):
             screen_document = screen_document_tree.do_click_on_first_document()
 
             screen_document.assert_on_screen()
-            screen_document.assert_is_document_title("Document title")
+            screen_document.assert_header_document_title("Document title")
             screen_document.assert_text("Hello world!")
 
         assert test_setup.compare_sandbox_and_expected_output()

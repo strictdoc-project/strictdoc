@@ -27,7 +27,7 @@ class Test_TC003_UI_viewtype_selector(BaseCase):
             screen_document = screen_document_tree.do_click_on_first_document()
 
             screen_document.assert_on_screen()
-            screen_document.assert_is_document_title("Document title")
+            screen_document.assert_header_document_title("Document title")
             screen_document.assert_text("Hello world!")
 
             viewtype_selector = ViewType_Selector(self)

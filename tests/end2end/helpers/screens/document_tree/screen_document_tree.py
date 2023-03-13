@@ -23,7 +23,7 @@ class Screen_DocumentTree:  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
-    def assert_project_title(self, project_title: str) -> None:
+    def assert_header_project_name(self, project_title: str) -> None:
         self.test_case.assert_element(
             "//*[@class='header__project_name']"
             f"[contains(., '{project_title}')]",

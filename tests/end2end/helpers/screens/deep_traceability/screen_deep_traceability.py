@@ -23,14 +23,6 @@ class Screen_Deep_Traceability:  # pylint: disable=invalid-name, too-many-public
             '//*[@data-testid="trace-deep-main-placeholder"]'
         )
 
-    def assert_is_document_title(self, document_title: str) -> None:
-        # screen shared
-        self.test_case.assert_element(
-            "//*[@class='header__document_title']"
-            f"[contains(., '{document_title}')]",
-            by=By.XPATH,
-        )
-
     def assert_text(self, text: str) -> None:
         # screen shared
         self.test_case.assert_text(text)

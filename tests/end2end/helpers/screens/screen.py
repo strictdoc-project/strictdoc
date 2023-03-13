@@ -9,7 +9,7 @@ class Screen:  # pylint: disable=invalid-name, too-many-public-methods
         assert isinstance(test_case, BaseCase)
         self.test_case: BaseCase = test_case
 
-    def assert_is_document_title(self, document_title: str) -> None:
+    def assert_header_document_title(self, document_title: str) -> None:
         self.test_case.assert_element(
             "//*[@class='header__document_title']"
             f"[contains(., '{document_title}')]",

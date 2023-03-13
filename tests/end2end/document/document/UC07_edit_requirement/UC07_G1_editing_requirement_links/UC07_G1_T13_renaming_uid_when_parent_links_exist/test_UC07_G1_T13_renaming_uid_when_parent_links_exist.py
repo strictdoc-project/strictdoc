@@ -28,7 +28,7 @@ class Test_UC07_G1_T13_RenamingUIDWhenParentLinksExist(BaseCase):
             screen_document = screen_document_tree.do_click_on_first_document()
 
             screen_document.assert_on_screen()
-            screen_document.assert_is_document_title("Document 1")
+            screen_document.assert_header_document_title("Document 1")
 
             screen_document.assert_text("Hello world!")
 

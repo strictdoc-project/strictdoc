@@ -19,4 +19,4 @@ class Test_ProjectOptions_ProjectTitle_01_OptionNotSpecified(BaseCase):
 
             screen_document_tree = Screen_DocumentTree(self)
             screen_document_tree.assert_on_screen()
-            screen_document_tree.assert_project_title("Untitled Project")
+            screen_document_tree.assert_header_project_name("Untitled Project")

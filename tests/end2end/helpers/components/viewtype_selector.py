@@ -1,11 +1,11 @@
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
+from tests.end2end.helpers.screens.deep_traceability.screen_deep_traceability import (  # noqa: E501
+    Screen_Deep_Traceability,
+)
 from tests.end2end.helpers.screens.document.screen_document import (
     Screen_Document,
-)
-from tests.end2end.helpers.screens.deep_traceability.screen_deep_traceability import (
-    Screen_Deep_Traceability,
 )
 from tests.end2end.helpers.screens.table.screen_table import (
     Screen_Table,
@@ -15,7 +15,7 @@ from tests.end2end.helpers.screens.traceability.screen_traceability import (
 )
 
 
-class ViewType_Selector:  # pylint: disable=invalid-name, too-many-public-methods
+class ViewType_Selector:  # pylint: disable=invalid-name, too-many-public-methods  # noqa: E501
     def __init__(self, test_case: BaseCase) -> None:
         assert isinstance(test_case, BaseCase)
         self.test_case: BaseCase = test_case
@@ -39,32 +39,24 @@ class ViewType_Selector:  # pylint: disable=invalid-name, too-many-public-method
         )
 
     def do_click_viewtype_handler(self) -> None:
-        self.test_case.click_xpath(
-            "//*[@id='viewtype_handler']"
-        )
+        self.test_case.click_xpath("//*[@id='viewtype_handler']")
 
     def do_go_to_document(self) -> Screen_Document:
         self.do_click_viewtype_handler()
         self.assert_viewtype_menu_opened()
-        self.test_case.click_xpath(
-            '//*[@data-viewtype_link="document"]'
-        )
+        self.test_case.click_xpath('//*[@data-viewtype_link="document"]')
         return Screen_Document(self.test_case)
 
     def do_go_to_table(self) -> Screen_Table:
         self.do_click_viewtype_handler()
         self.assert_viewtype_menu_opened()
-        self.test_case.click_xpath(
-            '//*[@data-viewtype_link="table"]'
-        )
+        self.test_case.click_xpath('//*[@data-viewtype_link="table"]')
         return Screen_Table(self.test_case)
 
     def do_go_to_traceability(self) -> Screen_Traceability:
         self.do_click_viewtype_handler()
         self.assert_viewtype_menu_opened()
-        self.test_case.click_xpath(
-            '//*[@data-viewtype_link="traceability"]'
-        )
+        self.test_case.click_xpath('//*[@data-viewtype_link="traceability"]')
         return Screen_Traceability(self.test_case)
 
     def do_go_to_deep_traceability(self) -> Screen_Deep_Traceability:

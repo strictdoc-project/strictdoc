@@ -23,7 +23,7 @@ class Test_UC40_T02_document_has_requirement(BaseCase):
 
             screen_document = screen_document_tree.do_click_on_first_document()
 
-            screen_document.assert_on_screen()
+            screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document title")
             screen_document.assert_text("Hello world!")
 

@@ -1,20 +1,11 @@
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
-from tests.end2end.helpers.constants import NBSP, NODE_0, NODE_1
-
 
 class Screen:  # pylint: disable=invalid-name, too-many-public-methods
     def __init__(self, test_case: BaseCase) -> None:
         assert isinstance(test_case, BaseCase)
         self.test_case: BaseCase = test_case
-
-    def assert_header_document_title(self, document_title: str) -> None:
-        self.test_case.assert_element(
-            "//*[@class='header__document_title']"
-            f"[contains(., '{document_title}')]",
-            by=By.XPATH,
-        )
 
     def assert_text(self, text: str) -> None:
         self.test_case.assert_text(text)
@@ -34,4 +25,37 @@ class Screen:  # pylint: disable=invalid-name, too-many-public-methods
             f"{xpath}[contains(., '{text}')]", by=By.XPATH
         )
 
+    # body
 
+    def assert_on_screen(self, viewtype: str):
+        self.test_case.assert_element(
+            f'//body[@data-viewtype="{viewtype}"]',
+            by=By.XPATH,
+        )
+
+    # Header.
+    # Document title (all views)
+
+    def assert_header_document_title(self, document_title: str) -> None:
+        self.test_case.assert_element(
+            "//*[@class='header__document_title']"
+            f"[contains(., '{document_title}')]",
+            by=By.XPATH,
+        )
+
+    # Empty pages.
+    # Valid only for 3 views:
+    # table & traceability & deep-traceability,
+    # overridden for the document view.
+
+    def assert_empty_view(
+        self, placeholder: str = "document-main-placeholder"
+    ) -> None:
+        self.test_case.assert_element(f'//*[@data-testid="{placeholder}"]')
+
+    def assert_not_empty_view(
+        self, placeholder: str = "document-main-placeholder"
+    ) -> None:
+        self.test_case.assert_element_not_visible(
+            f'//*[@data-testid="{placeholder}"]'
+        )

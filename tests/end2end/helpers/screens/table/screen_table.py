@@ -1,24 +1,16 @@
-from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
+from tests.end2end.helpers.screens.screen import Screen
 
-class Screen_Table:  # pylint: disable=invalid-name, too-many-public-methods
+
+class Screen_Table(Screen):  # pylint: disable=invalid-name
     def __init__(self, test_case: BaseCase) -> None:
         assert isinstance(test_case, BaseCase)
-        self.test_case: BaseCase = test_case
+        super().__init__(test_case)
 
-    def assert_on_screen(self):
-        self.test_case.assert_element(
-            '//body[@data-viewtype="table"]',
-            by=By.XPATH,
-        )
+    # overridden for Screen_Table
 
-    def assert_empty_document(self) -> None:
-        self.test_case.assert_element(
-            '//*[@data-testid="table-main-placeholder"]'
-        )
+    def assert_on_screen_table(self) -> None:
+        super().assert_on_screen("table")
 
-    def assert_not_empty_document(self) -> None:
-        self.test_case.assert_element_not_visible(
-            '//*[@data-testid="table-main-placeholder"]'
-        )
+    # Specific methods

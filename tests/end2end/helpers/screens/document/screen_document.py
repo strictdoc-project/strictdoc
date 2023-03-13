@@ -17,26 +17,25 @@ from tests.end2end.helpers.screens.document.form_edit_section import (
 from tests.end2end.helpers.screens.screen import Screen
 
 
-class Screen_Document(Screen):  # pylint: disable=invalid-name, too-many-public-methods
+class Screen_Document(
+    Screen
+):  # pylint: disable=invalid-name, too-many-public-methods  # noqa: E501
     def __init__(self, test_case: BaseCase) -> None:
         assert isinstance(test_case, BaseCase)
         super().__init__(test_case)
 
-    def assert_on_screen(self):
-        self.test_case.assert_element(
-            '//body[@data-viewtype="document"]',
-            by=By.XPATH,
-        )
+    # overridden for Screen_Document
+
+    def assert_on_screen_document(self) -> None:
+        super().assert_on_screen("document")
 
     def assert_empty_document(self) -> None:
-        self.test_case.assert_element(
-            '//*[@data-testid="document-placeholder"]'
-        )
+        super().assert_empty_view("document-root-placeholder")
 
     def assert_not_empty_document(self) -> None:
-        self.test_case.assert_element_not_visible(
-            '//*[@data-testid="document-placeholder"]'
-        )
+        super().assert_not_empty_view("document-root-placeholder")
+
+    # Specific methods
 
     # confirm-message
 

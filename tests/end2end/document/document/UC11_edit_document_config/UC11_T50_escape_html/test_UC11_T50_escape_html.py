@@ -26,7 +26,7 @@ class Test_UC11_T50_EscapeHTML(BaseCase):
 
             screen_document = screen_document_tree.do_click_on_first_document()
 
-            screen_document.assert_on_screen()
+            screen_document.assert_on_screen_document()
             screen_document.assert_text("Link does not get corrupted")
 
             form_config: Form_EditConfig = (

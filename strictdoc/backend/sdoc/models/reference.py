@@ -17,7 +17,11 @@ class Reference:
 class FileReference(Reference):
     def __init__(self, parent, file_entry: FileEntry):
         super().__init__(ReferenceType.FILE, parent)
+        # FIXME: rather make private and expose methods (Law of Demeter).
         self.file_entry = file_entry
+
+    def get_path(self) -> str:
+        return self.file_entry.file_path
 
 
 @auto_described

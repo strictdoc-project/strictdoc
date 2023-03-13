@@ -43,7 +43,9 @@ class AssertExtension(Extension):
             lineno=lineno,
         )
 
-    def _raise(self, condition: bool, context_or_none: Optional[Any], _):
+    def _raise(
+        self, condition: bool, context_or_none: Optional[Any], caller
+    ):  # pylint: disable=unused-argument
         if not condition:
             error_message = (
                 f"Assertion error in the Jinja template: "

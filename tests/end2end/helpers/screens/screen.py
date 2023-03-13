@@ -1,30 +1,15 @@
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
+from tests.end2end.helpers.constants import NBSP, NODE_0, NODE_1
 
-class Screen_Deep_Traceability:  # pylint: disable=invalid-name, too-many-public-methods
+
+class Screen:  # pylint: disable=invalid-name, too-many-public-methods
     def __init__(self, test_case: BaseCase) -> None:
         assert isinstance(test_case, BaseCase)
         self.test_case: BaseCase = test_case
 
-    def assert_on_screen(self):
-        self.test_case.assert_element(
-            '//body[@data-viewtype="deep_traceability"]',
-            by=By.XPATH,
-        )
-
-    def assert_empty_document(self) -> None:
-        self.test_case.assert_element(
-            '//*[@data-testid="trace-deep-main-placeholder"]'
-        )
-
-    def assert_not_empty_document(self) -> None:
-        self.test_case.assert_element_not_visible(
-            '//*[@data-testid="trace-deep-main-placeholder"]'
-        )
-
     def assert_is_document_title(self, document_title: str) -> None:
-        # screen shared
         self.test_case.assert_element(
             "//*[@class='header__document_title']"
             f"[contains(., '{document_title}')]",
@@ -32,16 +17,12 @@ class Screen_Deep_Traceability:  # pylint: disable=invalid-name, too-many-public
         )
 
     def assert_text(self, text: str) -> None:
-        # screen shared
         self.test_case.assert_text(text)
 
     def assert_no_text(self, text: str) -> None:
-        # screen shared
         self.test_case.assert_element_not_present(
             f"//*[contains(., '{text}')]", by=By.XPATH
         )
-
-
 
     # Assert fields content:
     # Method with the 'field_name' can be used,

@@ -73,6 +73,25 @@ class MarkupRenderer:
 
         return output
 
+    def render_truncated_requirement_statement(self, requirement):
+        assert isinstance(requirement, Requirement), requirement
+        assert requirement.reserved_statement is not None
+
+        statement_to_render = requirement.reserved_statement
+        if len(statement_to_render) >= 255:
+            first_line_break_index = statement_to_render.find("\n\n")
+            if first_line_break_index != -1:
+                statement_to_render = statement_to_render[
+                    0:first_line_break_index
+                ]
+            else:
+                statement_to_render = statement_to_render[0:255]
+            statement_to_render += " <...>"
+        output = self.fragment_writer.write(statement_to_render)
+        self.cache[requirement] = output
+
+        return output
+
     def render_requirement_rationale(self, requirement):
         assert isinstance(requirement, Requirement)
         if requirement in self.rationale_cache:

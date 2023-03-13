@@ -1,0 +1,35 @@
+  {%- if traceability_index.has_parent_requirements(requirement) %}
+    <sdoc-requirement-field-label>parent links:</sdoc-requirement-field-label>
+    <sdoc-requirement-field data-field-label="parent links">
+      <ul class="requirement__link">
+        {%- for requirement in traceability_index.get_parent_requirements(requirement) %}
+        <li>
+          <a data-turbo="false" class="requirement__link-parent" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
+            {%- if requirement.reserved_uid %}
+            <span class="requirement__parent-uid">{{ requirement.reserved_uid }}</span>
+            {%- endif %}
+            {{ requirement.reserved_title if requirement.reserved_title else "" }}
+          </a>
+        </li>
+        {%- endfor %}
+      </ul>
+    </sdoc-requirement-field>
+  {%- endif %}
+
+  {%- if traceability_index.has_children_requirements(requirement) %}
+    <sdoc-requirement-field-label>child links:</sdoc-requirement-field-label>
+    <sdoc-requirement-field data-field-label="child links">
+      <ul class="requirement__link">
+        {%- for requirement in traceability_index.get_children_requirements(requirement) %}
+        <li>
+          <a data-turbo="false" class="requirement__link-child" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
+            {%- if requirement.reserved_uid %}
+            <span class="requirement__child-uid">{{ requirement.reserved_uid }}</span>
+            {%- endif %}
+            {{ requirement.reserved_title if requirement.reserved_title else "" }}
+          </a>
+        </li>
+        {%- endfor %}
+      </ul>
+    </sdoc-requirement-field>
+  {%- endif %}

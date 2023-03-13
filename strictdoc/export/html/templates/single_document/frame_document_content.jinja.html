@@ -6,12 +6,11 @@
 
         {%- if section_or_requirement.is_requirement %}
           {%- set requirement = section_or_requirement %}
-          {%- set requirement_mode = requirement.get_requirement_style_mode() %}
-            {% include "components/requirement/index.jinja" %}
+          {% include "components/requirement/index_extends_node.jinja" %}
 
         {%- elif section_or_requirement.is_section %}
           {%- set section = section_or_requirement %}
-          {% include "_shared/section.jinja.html" %}
+          {% include "components/section/index_extends_node.jinja" %}
         {%- endif %}
 
         {%- endfor %}

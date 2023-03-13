@@ -1,6 +1,5 @@
 .content {
   min-width: calc(var(--card-width) + calc(var(--base-padding)*4));
-  min-height: 100%;
 }
 
 [data-viewtype="document"] .content {
@@ -107,7 +106,6 @@
 }
 
 [data-viewtype="table"] sdoc-node .free_text{
-  margin-top: calc(var(--base-padding)*2);
   max-width: 900px;
 }
 

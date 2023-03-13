@@ -1,0 +1,14 @@
+{%- if requirement.reserved_statement -%}
+  {%- if truncated_statement is true -%}
+    {# truncated in DTR tiny card #}
+    <sdoc-requirement-field data-field-label="statement">
+      {{ renderer.render_truncated_requirement_statement(requirement) }}
+    </sdoc-requirement-field>
+  {%- else -%}
+    {# default with label #}
+    <sdoc-requirement-field-label>statement:</sdoc-requirement-field-label>
+    <sdoc-requirement-field data-field-label="statement">
+      {{ renderer.render_requirement_statement(requirement) }}
+    </sdoc-requirement-field>
+  {%- endif -%}
+{%- endif -%}

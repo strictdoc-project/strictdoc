@@ -1,14 +1,8 @@
-<turbo-frame
-{%- if config.is_running_on_server %}
-  id="article-{{document.node_id}}"
-{% endif -%}
->
+{% extends "components/node/root.jinja" %}
+{%- set sdoc_entity = document -%}
+{% block sdoc_entity %}
 
-<sdoc-node
-{%- if config.is_running_on_server %}
-  data-editable_node="on"
-{% endif -%}
->
+  {# TODO #}
   <h1>{{document.title}}</h1>
   {%- if document.config.has_meta() -%}
     <table class="table_meta">
@@ -45,22 +39,6 @@
     </table>
   {%- endif -%}
 
-  {% include "_shared/document_freetext.jinja.html" %}
+  {% include "components/abstract/index.jinja" %}
 
-  {%- if config.is_running_on_server -%}
-    {% with
-      node_controls__reference = document.node_id,
-      node_controls__node_type = 'document'
-    %}
-    {#
-      Should be after the Abstract (former 'document_freetext').
-      If the Abstract is empty, it displays a placeholder,
-      the appearance of which affects the showing of node_controls
-      without the need to hover with the mouse.
-    #}
-    {% include "_shared/node_controls.jinja.html" %}
-    {% endwith %}
-  {%- endif -%}
-
-</sdoc-node>
-</turbo-frame>
+{% endblock %}

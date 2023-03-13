@@ -48,6 +48,10 @@ class Document:  # pylint: disable=too-many-instance-attributes
             task_list.extend(section_or_requirement.section_contents)
         return False
 
+    @staticmethod
+    def get_type_string() -> str:
+        return "document"
+
     @property
     def ng_resolved_custom_level(self):
         return None

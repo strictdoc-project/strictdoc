@@ -1,0 +1,43 @@
+{# needs sdoc_entity #}
+
+{#
+  This template can be included directly, and it will in turn include an entity.
+  In this case you must use it with the variable:
+      {%- with sdoc_entity = requirement -%}
+      {% include "components/node/index.jinja" %}
+      {%- endwith -%}
+
+  This template can also be used as a base template.
+  Then the {% block sdoc_entity %} block will overwrite the included entity
+  in the extending template.
+#}
+
+<turbo-frame
+{%- if config.is_running_on_server %}
+  id="article-{{sdoc_entity.node_id}}"
+{% endif -%}
+>
+
+  <sdoc-node
+    {%- if config.is_running_on_server %}
+      data-editable_node="on"
+    {%- endif %}
+    node-role="{{ sdoc_entity.get_type_string() }}"
+    data-testid="node-{{ sdoc_entity.get_type_string() }}"
+  >
+
+    {# anchor #}
+    {% include "components/anchor/index.jinja" %}
+
+    {# sdoc_entity #}
+    {% block sdoc_entity %}
+    {% include "components/"~sdoc_entity.get_type_string()~"/index.jinja" %}
+    {% endblock %}
+
+    {# node_controls #}
+    {%- if config.is_running_on_server -%}
+    {% include "components/node/node_controls/index.jinja" %}
+    {%- endif -%}
+
+  </sdoc-node>
+</turbo-frame>

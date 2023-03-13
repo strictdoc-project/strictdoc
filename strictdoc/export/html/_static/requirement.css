@@ -21,14 +21,18 @@ sdoc-requirement {
   gap: var(--requirement-inner-borders-width);
 
   position: relative;
-  min-width: 300px;
   /* border: */
   outline:
     var(--requirement-border-width, 1px)
     solid
     var(--requirement-border-color, #bfbfbf);
+  /* min-width: 300px; */
+  /* compensate outline: */
+  min-width: 298px;
   border-radius: var(--requirement-border-radius);
   overflow: hidden;
+
+  background-color: var(--color-bg-contrast);
 }
 
 sdoc-requirement-title {
@@ -47,6 +51,24 @@ sdoc-requirement-title {
   outline: 1px solid var(--requirement-border-color);
 }
 
+sdoc-node-card sdoc-requirement-title {
+  font-size: 1em;
+}
+
+sdoc-requirement-uid {
+  display: block;
+  padding-left: calc(var(--requirement-base-rhythm)*2);
+  padding-right: calc(var(--requirement-base-rhythm)*2);
+  padding-top: calc(var(--requirement-base-rhythm)*1);
+  padding-bottom: calc(var(--requirement-base-rhythm)*1);
+  font-size: var(--font-size-sm);
+  font-family: var(--code-font-family);
+  font-weight: 700;
+
+  text-transform: uppercase;
+  color: var(--requirement-label-color);
+}
+
 sdoc-requirement-field-label {
   display: flex;
   align-items:flex-start;
@@ -57,7 +79,7 @@ sdoc-requirement-field-label {
   padding-bottom: calc(var(--requirement-base-rhythm)*1);
 
   font-size: var(--font-size-sm);
-  font-family: 'Noto Sans Mono', 'Courier New', Courier, monospace;
+  font-family: var(--code-font-family);
   font-weight: 500;
   line-height: 1;
   text-transform: uppercase;
@@ -75,6 +97,8 @@ sdoc-requirement-field {
 }
 
 sdoc-requirement-field p,
+sdoc-requirement-field table,
+sdoc-requirement-field blockquote,
 sdoc-requirement-field ol,
 sdoc-requirement-field ul {
   margin-top: 0 !important;
@@ -176,6 +200,24 @@ sdoc-requirement-field-label {
   padding-bottom: 0;
 }
 
+/* section */
+
+sdoc-section,
+sdoc-section-text {
+  display: block;
+  margin: 0;
+}
+
+sdoc-section-title {
+  display: block;
+  font-weight: 700;
+}
+
+sdoc-section-title * {
+  margin: 0;
+  display: inline;
+}
+
 /* * */
 
 sdoc-anchor {
@@ -185,6 +227,7 @@ sdoc-anchor {
 }
 
 sdoc-anchor:target + sdoc-requirement sdoc-requirement-title,
+sdoc-anchor:target + sdoc-section sdoc-section-title,
 sdoc-anchor:target + .requirement__title {
   background-color: var(--color-highlight);
 }

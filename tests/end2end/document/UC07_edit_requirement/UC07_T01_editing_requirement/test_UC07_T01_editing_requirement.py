@@ -33,6 +33,8 @@ class Test_UC07_T01_EditRequirement(BaseCase):
             screen_document.assert_text("Requirement UID")
             screen_document.assert_text("Requirement statement.")
             screen_document.assert_text("Requirement rationale.")
+            # Make sure that the normal (not table-based) requirement is
+            # rendered.
             screen_document.assert_requirement_style_simple()
 
             form_edit_requirement: Form_EditRequirement = (
@@ -54,6 +56,7 @@ class Test_UC07_T01_EditRequirement(BaseCase):
             screen_document.assert_text("Modified UID")
             screen_document.assert_text("Modified statement.")
             screen_document.assert_text("Modified rationale.")
+            # Make sure that after saving we return to the same display style.
             screen_document.assert_requirement_style_simple()
             screen_document.assert_toc_contains_string("Modified title")
 

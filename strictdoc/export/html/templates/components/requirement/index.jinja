@@ -1,181 +1,32 @@
-<turbo-frame
-{%- if config.is_running_on_server %}
-  id="article-{{requirement.node_id}}"
-{% endif -%}
->
+{#
+  In this template:
+  sdoc_entity = requirement
+#}
 
-{%- set anchor=link_renderer.render_local_anchor(requirement) -%}
-{%- set requirement_style_mode=requirement.get_requirement_style_mode() -%}
+{#  sdoc-requirement:
+    attribute requirement-view can be either of: [simple, table, zebra].
+    Without this attribute sdoc-requirement will look like a 'simple' view.
+    If the container becomes smaller than the set parameter (300px default),
+    the 'columns' view degrades to 'zebra'.
+#}
 
-  <sdoc-node
-    node-role="requirement"
-    {%- if config.is_running_on_server %}
-      data-editable_node="on"
-    {%- endif %}
-    data-testid="node-requirement-{{requirement_style_mode}}"
-    {%- if requirement.reserved_status %}
+<sdoc-requirement
+  requirement-view="{{ requirement_style|d(requirement.get_requirement_style_mode()) }}"
+  data-level="{{ requirement.context.title_number_string }}"
+  {%- if requirement.reserved_status %}
     data-status='{{ requirement.reserved_status.lower() }}'
-    {%- endif %}
-  >
+  {%- endif %}
+  data-testid="requirement-style-{{ requirement_style|d(requirement.get_requirement_style_mode()) }}"
+>
+  {% set title_number = true %}
+  {% set truncated_statement = false %}
+  {% include "components/requirement/title/index.jinja" %}
+  {% include "components/requirement/meta/index.jinja" %}
+  {% include "components/requirement/links/index.jinja" %}
+  {% include "components/requirement/files/index.jinja" %}
+  {% include "components/requirement/statement/index.jinja" %}
+  {% include "components/requirement/rationale/index.jinja" %}
+  {% include "components/requirement/comments/index.jinja" %}
+  {% include "components/requirement/multiline/index.jinja" %}
 
-    {# anchor #}
-    {%- if anchor is defined -%}
-      <sdoc-anchor id="{{ anchor }}"></sdoc-anchor>
-    {%- endif -%}
-
-    {#  sdoc-requirement:
-        attribute requirement-view can be either of: [simple, table, zebra].
-        Without this attribute sdoc-requirement will look like a 'simple' view.
-        If the container becomes smaller than the set parameter (300px default),
-        the 'columns' view degrades to 'zebra'.
-    #}
-    <sdoc-requirement
-      requirement-view="{{ requirement_style_mode }}"
-      data-level="{{ requirement.context.title_number_string }}"
-    >
-
-      {# title #}
-      {%- if requirement.reserved_title %}
-        <sdoc-requirement-title>
-          {%- if requirement.context.title_number_string %}
-            {{ requirement.context.title_number_string }}.&nbsp;
-          {%- endif -%}
-          {%- set title = requirement.reserved_title -%}
-          {%- if title is not none -%}
-            {{ title }}
-          {%- endif -%}
-        </sdoc-requirement-title>
-      {%- endif %}
-
-      {# meta #}
-
-      {%- if requirement.has_meta -%}
-        {% for meta_field in requirement.enumerate_meta_fields(skip_multi_lines=True) %}
-          <sdoc-requirement-field-label>{{meta_field[0]}}:</sdoc-requirement-field-label>
-          <sdoc-requirement-field data-field-type="singleline" data-field-label="{{meta_field[0]}}">
-            {{ meta_field[1] }}
-          </sdoc-requirement-field>
-        {% endfor %}
-      {%- endif %}
-
-      {# links #}
-
-      {%- if traceability_index.has_parent_requirements(requirement) %}
-        <sdoc-requirement-field-label>parent links:</sdoc-requirement-field-label>
-        <sdoc-requirement-field data-field-label="parent links">
-          <ul class="requirement__link">
-            {%- for requirement in traceability_index.get_parent_requirements(requirement) %}
-            <li>
-              <a data-turbo="false" class="requirement__link-parent" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
-                {%- if requirement.reserved_uid %}
-                <span class="requirement__parent-uid">{{ requirement.reserved_uid }}</span>
-                {%- endif %}
-                {{ requirement.reserved_title if requirement.reserved_title else "" }}
-              </a>
-            </li>
-            {%- endfor %}
-          </ul>
-        </sdoc-requirement-field>
-      {%- endif %}
-
-      {%- if traceability_index.has_children_requirements(requirement) %}
-        <sdoc-requirement-field-label>child links:</sdoc-requirement-field-label>
-        <sdoc-requirement-field data-field-label="child links">
-          <ul class="requirement__link">
-            {%- for requirement in traceability_index.get_children_requirements(requirement) %}
-            <li>
-              <a data-turbo="false" class="requirement__link-child" href="{{ link_renderer.render_requirement_link(requirement, document, document_type) }}">
-                {%- if requirement.reserved_uid %}
-                <span class="requirement__child-uid">{{ requirement.reserved_uid }}</span>
-                {%- endif %}
-                {{ requirement.reserved_title if requirement.reserved_title else "" }}
-              </a>
-            </li>
-            {%- endfor %}
-          </ul>
-        </sdoc-requirement-field>
-      {%- endif %}
-
-      {# files #}
-
-      {%- if config.experimental_enable_file_traceability -%}
-        {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
-        {%- if requirement_file_links %}
-          <sdoc-requirement-field-label>files:</sdoc-requirement-field-label>
-          <sdoc-requirement-field data-field-label="files">
-            <ul class="requirement__link">
-              {%- for link, opt_ranges in requirement_file_links %}
-                {%- if opt_ranges -%}
-                  {%- for range in opt_ranges %}
-                    <li>
-                      <a data-turbo="false" class="requirement__link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
-                        {{ link.file_entry.file_path }}, <i>lines: {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }}</i>
-                      </a>
-                    </li>
-                  {%- endfor -%}
-                {%- else -%}
-                  <li>
-                    <a data-turbo="false" class="requirement__link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}">
-                      {{ link.file_entry.file_path }}
-                    </a>
-                  </li>
-                {%- endif -%}
-              {%- endfor -%}
-            </ul>
-          </sdoc-requirement-field>
-        {%- endif %}
-      {%- endif %}
-
-      {# statement #}
-
-      {%- if requirement.reserved_statement -%}
-        <sdoc-requirement-field-label>statement:</sdoc-requirement-field-label>
-        <sdoc-requirement-field data-field-label="statement">
-          {{ renderer.render_requirement_statement(requirement) }}
-        </sdoc-requirement-field>
-      {%- endif -%}
-
-      {# rationale #}
-
-      {%- if requirement.rationale -%}
-        <sdoc-requirement-field-label>rationale:</sdoc-requirement-field-label>
-        <sdoc-requirement-field data-field-label="rationale">
-          {{ renderer.render_requirement_rationale(requirement) }}
-        </sdoc-requirement-field>
-      {%- endif -%}
-
-      {# comments #}
-
-      {%- if requirement.comments %}
-        {%- for comment in requirement.comments %}
-          <sdoc-requirement-field-label>comment:</sdoc-requirement-field-label>
-          <sdoc-requirement-field data-field-label="comment">
-            {{ renderer.render_comment(comment) }}
-          </sdoc-requirement-field>
-        {%- endfor %}
-      {%- endif %}
-
-      {# multiline fields #}
-
-      {%- if requirement.has_meta %}
-        {% for meta_field in requirement.enumerate_meta_fields(skip_single_lines=True) %}
-          <sdoc-requirement-field-label>{{meta_field[0]}}:</sdoc-requirement-field-label>
-          <sdoc-requirement-field data-field-label="{{meta_field[0]}}">
-            {{ meta_field[1] }}
-          </sdoc-requirement-field>
-        {%- endfor %}
-      {%- endif %}
-
-    </sdoc-requirement>
-
-    {%- if config.is_running_on_server -%}
-      {% with
-        node_controls__reference = requirement.node_id,
-        node_controls__node_type = 'requirement'
-      %}
-      {% include "_shared/node_controls.jinja.html" %}
-      {% endwith %}
-    {%- endif -%}
-
-  </sdoc-node>
-</turbo-frame>
+</sdoc-requirement>

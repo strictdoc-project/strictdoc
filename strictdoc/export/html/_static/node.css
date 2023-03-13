@@ -6,24 +6,26 @@ sdoc-node,
 sdoc-node-card {
   display: block;
   position: relative;
-
-  background-color: var(--color-bg-contrast);
-  border-radius: 3px;
 }
 
 /* sdoc-node */
 
 sdoc-node {
+  background-color: var(--color-bg-contrast);
+  border-radius: 3px;
+
   padding: calc(var(--base-padding)*2) calc(var(--base-padding)*2);
 }
 
 /* editable_node */
 
+sdoc-node-card[node-role="requirement"],
 [data-editable_node="on"] {
   box-shadow: var(--base-elevation-0);
-  transition: box-shadow 1s;
+  transition: box-shadow .5s;
 }
 
+sdoc-node-card[node-role="requirement"]:hover,
 [data-editable_node="on"]:hover {
   box-shadow: var(--base-elevation-node);
   z-index: 10;
@@ -32,6 +34,14 @@ sdoc-node {
 /* sdoc-node-card */
 
 sdoc-node-card {
+  background-color: var(--color-bg-contrast);
+  border-radius: 3px;
+  /* compensate outline: */
+  padding: 1px;
+}
+
+sdoc-node-card[node-role="section"] {
+  background-color: var(--color-bg-contrast);
   padding: calc(var(--base-rhythm)) calc(var(--base-rhythm)*2);
 }
 
@@ -40,13 +50,12 @@ sdoc-node-card {
 }
 
 [data-role='current'] [node-role="requirement"] {
-  border: 1px solid var(--color-fg-contrast);
+
 }
 
 [data-role='parents'] sdoc-node-card,
 [data-role='children'] sdoc-node-card {
   background-color: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
   width: var(--card-width);
 }
 
@@ -77,6 +86,7 @@ sdoc-node-card.nouid {
   background-color: rgb(240, 220, 220);
 }
 
+.nouid sdoc-requirement-title,
 .nouid .requirement__title {
   color: #502222;
 }

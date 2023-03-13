@@ -74,7 +74,9 @@ class RequirementField:
 
 
 @auto_described()
-class Requirement(Node):  # pylint: disable=too-many-instance-attributes
+class Requirement(
+    Node
+):  # pylint: disable=too-many-instance-attributes, too-many-public-methods  # noqa: E501
     def __init__(  # pylint: disable=too-many-arguments
         self,
         parent,
@@ -141,6 +143,10 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes
 
         # Cache for accessing the reserved fields values.
         self.ng_reserved_fields_cache: Dict[str, Any] = {}
+
+    @staticmethod
+    def get_type_string() -> str:
+        return "requirement"
 
     # Reserved fields
 

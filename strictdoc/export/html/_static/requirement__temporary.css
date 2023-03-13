@@ -25,18 +25,9 @@ h6 { font-size: 1em; }
   font-weight: bold;
 }
 
-[data-viewtype="traceability"] .requirement__title,
-[data-viewtype="deep_traceability"] .requirement__title {
-  font-size: 1.1em;
-}
-
 [data-viewtype="requirements-coverage"] .requirement__title {
   margin: 0;
 }
-
-/* [data-viewtype="table"] .requirement__title {
-  font-size: 1rem;
-} */
 
 /* blockquote */
 

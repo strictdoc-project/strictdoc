@@ -1,0 +1,17 @@
+{# title // required field for section #}
+<sdoc-section-title
+  data-level="{{ section.context.title_number_string }}"
+>
+  {%  set h_level = section.ng_level + 1
+      if section.ng_level < 6
+      else 6  %}
+  <h{{ h_level }}>
+    {%- if section.context.title_number_string -%}
+      {{ section.context.title_number_string }}.&nbsp;
+    {%- endif -%}
+    {%- set title = section.reserved_title if section.is_requirement else section.title -%}
+    {%- if title is not none -%}
+      {{ title }}
+    {%- endif -%}
+  </h{{ h_level }}>
+</sdoc-section-title>

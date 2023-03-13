@@ -13,11 +13,12 @@
 
   {%- if config.is_running_on_server -%}
   <script type="module">
-    //import hotwiredTurbo from "{{link_renderer.render_static_url('turbo.js')}}";
+    import hotwiredTurbo from "{{link_renderer.render_static_url('turbo.js')}}";
     import { Application } from "{{link_renderer.render_static_url('stimulus.js')}}";
     window.Stimulus = Application.start();
   </script>
   <script type="module" src="{{link_renderer.render_static_url('controllers/collapsible_list_controller.js')}}"></script>
+  <script type="module" src="{{link_renderer.render_static_url('controllers/modal_controller.js')}}"></script>
   {%- endif -%}
 
   {%- if config.enable_mathjax -%}
@@ -57,29 +58,25 @@
           <section class="content_section">
             <div class="content_item" data-role="current">
               {%- set section = section_or_requirement %}
-              {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
-                {% include "_shared/section_card.jinja.html" %}
-              {%- endwith -%}
+              {% include "components/section/tiny_extends_card.jinja" %}
             </div>
           </section>
 
         {%- elif section_or_requirement.is_requirement %}
         <section class="content_section">
           <div class="content_item" data-role="parents">
-          {%- with requirement=section_or_requirement, requirement_partial="_shared/requirement_card.jinja.html" -%}
+          {%- with requirement=section_or_requirement, requirement_partial="components/requirement/tiny_extends_card.jinja" -%}
             {% include "_shared/requirement_tree_left.jinja.html" %}
           {%- endwith -%}
           </div>
 
           {%- set requirement = section_or_requirement %}
           <div class="content_item" data-role="current">
-            {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
-            {% include "_shared/requirement_card.jinja.html" %}
-            {%- endwith -%}
+            {% include "components/requirement/tiny_extends_card.jinja" %}
           </div>
 
           <div class="content_item" data-role="children">
-          {%- with requirement=section_or_requirement, requirement_partial="_shared/requirement_card.jinja.html" -%}
+          {%- with requirement=section_or_requirement, requirement_partial="components/requirement/tiny_extends_card.jinja" -%}
             {% include "_shared/requirement_tree_right.jinja.html" %}
           {%- endwith -%}
           </div>

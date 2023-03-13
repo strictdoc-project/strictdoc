@@ -31,9 +31,6 @@ class Test_UC07_G1_T01_AddOneLink(BaseCase):
             screen_document.assert_is_document_title("Document 1")
 
             screen_document.assert_text("Hello world!")
-            # Make sure that the normal (not table-based) requirement is
-            # rendered.
-            screen_document.assert_requirement_style_simple()
 
             # Existing Requirement 1:
             added_requirement_1_level = "1"

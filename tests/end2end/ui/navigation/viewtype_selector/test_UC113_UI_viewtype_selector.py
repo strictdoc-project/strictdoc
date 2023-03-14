@@ -10,7 +10,7 @@ from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
 from tests.end2end.server import SDocTestServer
 
 
-class Test_TC003_UI_viewtype_selector(BaseCase):
+class Test_UC113_UI_viewtype_selector(BaseCase):
     def test_01(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 

@@ -3,6 +3,8 @@ from seleniumbase import BaseCase
 
 
 class TOC:  # pylint: disable=invalid-name  # noqa: E501
+    """Table of contents"""
+
     def __init__(self, test_case: BaseCase) -> None:
         assert isinstance(test_case, BaseCase)
         self.test_case: BaseCase = test_case
@@ -15,7 +17,7 @@ class TOC:  # pylint: disable=invalid-name  # noqa: E501
             by=By.XPATH,
         )
 
-    def assert_toc_opened(self, string: str) -> None:
+    def assert_toc_opened(self) -> None:
         # body has attribute
         self.test_case.assert_element(
             '//body[@data-toc_state="open"]',
@@ -26,9 +28,6 @@ class TOC:  # pylint: disable=invalid-name  # noqa: E501
             "//*[@id='toc']",
             by=By.XPATH,
         )
-        # toc contains test string (if provided)
-        if string:
-            self.assert_toc_contains_string(string)
 
     def assert_toc_closed(self) -> None:
         # body has attribute
@@ -45,15 +44,15 @@ class TOC:  # pylint: disable=invalid-name  # noqa: E501
     def do_toggle_toc(self) -> None:
         self.test_case.click_xpath("//*[@id='toc_handler']")
 
-    # TODO: open/close TOC and state between windows
-
     def assert_toc_contains_string(self, string: str) -> None:
-        self.test_case.assert_element(
+        """The string does not need be visible (TOC may be hidden)."""
+        self.test_case.assert_element_present(
             f"//turbo-frame[@id='frame-toc']//*[contains(., '{string}')]",
             by=By.XPATH,
         )
 
     def assert_toc_contains_not(self, string: str) -> None:
+        """The string should not be contained in the TOC (it may be hidden)."""
         self.test_case.assert_element_not_present(
             f"//turbo-frame[@id='frame-toc']//*[contains(., '{string}')]",
             by=By.XPATH,

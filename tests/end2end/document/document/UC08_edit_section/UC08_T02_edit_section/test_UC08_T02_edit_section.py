@@ -40,6 +40,6 @@ class Test_UC08_T02_EditSection(BaseCase):
 
             screen_document.assert_node_title_contains("Modified title", "1")
             screen_document.assert_text("Modified statement.")
-            screen_document.assert_toc_contains_string("Modified title")
+            screen_document.assert_toc_contains("Modified title")
 
         assert test_setup.compare_sandbox_and_expected_output()

@@ -55,7 +55,7 @@ class Test_UC06_T06_CreateRequirementsInDocument(BaseCase):
                 added_requirement_1_level,
                 added_requirement_1_position,
             )
-            screen_document.assert_toc_contains_string("Requirement title #1")
+            screen_document.assert_toc_contains("Requirement title #1")
 
             # Requirement 2
             form_edit_requirement: Form_EditRequirement = (
@@ -82,7 +82,7 @@ class Test_UC06_T06_CreateRequirementsInDocument(BaseCase):
                 added_requirement_2_level,
                 added_requirement_2_position,
             )
-            screen_document.assert_toc_contains_string("Requirement title #2")
+            screen_document.assert_toc_contains("Requirement title #2")
 
             # Requirement 3
             form_edit_requirement: Form_EditRequirement = (
@@ -109,11 +109,11 @@ class Test_UC06_T06_CreateRequirementsInDocument(BaseCase):
                 added_requirement_3_level,
                 added_requirement_3_position,
             )
-            screen_document.assert_toc_contains_string("Requirement title #3")
+            screen_document.assert_toc_contains("Requirement title #3")
 
             # Check the resulting TOC.
-            screen_document.assert_toc_contains_string("Requirement title #1")
-            screen_document.assert_toc_contains_string("Requirement title #2")
-            screen_document.assert_toc_contains_string("Requirement title #3")
+            screen_document.assert_toc_contains("Requirement title #1")
+            screen_document.assert_toc_contains("Requirement title #2")
+            screen_document.assert_toc_contains("Requirement title #3")
 
         assert test_setup.compare_sandbox_and_expected_output()

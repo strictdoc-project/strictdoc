@@ -49,6 +49,6 @@ class Test_UC07_T10_EditTableRequirement(BaseCase):
             # Make sure that after saving we return to the same display style
             # and the table-based requirement is rendered.
             screen_document.assert_requirement_style_table()
-            screen_document.assert_toc_contains_string("Modified title")
+            screen_document.assert_toc_contains("Modified title")
 
         assert test_setup.compare_sandbox_and_expected_output()

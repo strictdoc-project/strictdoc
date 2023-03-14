@@ -53,7 +53,7 @@ class Test_UC03_T02_CreateBeforeSection(BaseCase):
                 "Section B", "2", existing_node_number + 1
             )
 
-            screen_document.assert_toc_contains_string("Section A")
-            screen_document.assert_toc_contains_string("Section B")
+            screen_document.assert_toc_contains("Section A")
+            screen_document.assert_toc_contains("Section B")
 
         assert test_setup.compare_sandbox_and_expected_output()

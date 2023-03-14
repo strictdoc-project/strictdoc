@@ -58,6 +58,6 @@ class Test_UC07_T01_EditRequirement(BaseCase):
             screen_document.assert_text("Modified rationale.")
             # Make sure that after saving we return to the same display style.
             screen_document.assert_requirement_style_simple()
-            screen_document.assert_toc_contains_string("Modified title")
+            screen_document.assert_toc_contains("Modified title")
 
         assert test_setup.compare_sandbox_and_expected_output()

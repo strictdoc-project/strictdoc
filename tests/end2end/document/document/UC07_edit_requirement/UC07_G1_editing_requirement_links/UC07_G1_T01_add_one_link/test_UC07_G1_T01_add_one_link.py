@@ -41,7 +41,7 @@ class Test_UC07_G1_T01_AddOneLink(BaseCase):
                 added_requirement_1_level,
                 added_requirement_1_position,
             )
-            screen_document.assert_toc_contains_string("Requirement title #1")
+            screen_document.assert_toc_contains("Requirement title #1")
 
             # Existing Requirement 2:
             added_requirement_2_level = "2"
@@ -52,7 +52,7 @@ class Test_UC07_G1_T01_AddOneLink(BaseCase):
                 added_requirement_2_level,
                 added_requirement_2_position,
             )
-            screen_document.assert_toc_contains_string("Requirement title #2")
+            screen_document.assert_toc_contains("Requirement title #2")
 
             # Edit Requirement 2: add one parent link
             form_edit_requirement: Form_EditRequirement = (

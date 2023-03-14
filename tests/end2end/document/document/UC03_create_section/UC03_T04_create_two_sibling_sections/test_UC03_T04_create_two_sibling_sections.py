@@ -48,7 +48,7 @@ class Test_UC03_T04_CreateTwoSiblingSections(BaseCase):
             screen_document.assert_node_title_contains(
                 "First title", "1", first_added_node_number
             )
-            screen_document.assert_toc_contains_string("First title")
+            screen_document.assert_toc_contains("First title")
 
             # Creating Section 2 below
             second_added_node_number = first_added_node_number + 1
@@ -67,6 +67,6 @@ class Test_UC03_T04_CreateTwoSiblingSections(BaseCase):
             screen_document.assert_node_title_contains(
                 "Second title", "2", second_added_node_number
             )
-            screen_document.assert_toc_contains_string("Second title")
+            screen_document.assert_toc_contains("Second title")
 
         assert test_setup.compare_sandbox_and_expected_output()

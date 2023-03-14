@@ -46,6 +46,6 @@ class Test_UC07_T60_SanitizingTrainingSymbols(BaseCase):
 
             screen_document.assert_text("1. Modified title")
 
-            screen_document.assert_toc_contains_string("Modified title")
+            screen_document.assert_toc_contains("Modified title")
 
         assert test_setup.compare_sandbox_and_expected_output()

@@ -15,31 +15,35 @@ from tests.end2end.helpers.screens.traceability.screen_traceability import (
 )
 
 
-class ViewType_Selector:  # pylint: disable=invalid-name, too-many-public-methods  # noqa: E501
+class ViewType_Selector:  # pylint: disable=invalid-name  # noqa: E501
     def __init__(self, test_case: BaseCase) -> None:
         assert isinstance(test_case, BaseCase)
         self.test_case: BaseCase = test_case
 
-    def assert_viewtype_handler(self):
+    # base actions
+
+    def assert_viewtype_handler(self) -> None:
         self.test_case.assert_element(
             "//*[@id='viewtype_handler']",
             by=By.XPATH,
         )
 
-    def assert_viewtype_menu_opened(self):
+    def do_click_viewtype_handler(self) -> None:
+        self.test_case.click_xpath("//*[@id='viewtype_handler']")
+
+    def assert_viewtype_menu_opened(self) -> None:
         self.test_case.assert_element_visible(
             "//*[@id='viewtype_menu']",
             by=By.XPATH,
         )
 
-    def assert_viewtype_menu_closed(self):
+    def assert_viewtype_menu_closed(self) -> None:
         self.test_case.assert_element_not_visible(
             "//*[@id='viewtype_menu']",
             by=By.XPATH,
         )
 
-    def do_click_viewtype_handler(self) -> None:
-        self.test_case.click_xpath("//*[@id='viewtype_handler']")
+    # open pages
 
     def do_go_to_document(self) -> Screen_Document:
         self.do_click_viewtype_handler()

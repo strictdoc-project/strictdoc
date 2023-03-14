@@ -62,6 +62,6 @@ class Test_UC06_T03_CreateRequirementAfterSection(BaseCase):
                 added_requirement_level,
                 added_requirement_position,
             )
-            screen_document.assert_toc_contains_string("Requirement title")
+            screen_document.assert_toc_contains("Requirement title")
 
         assert test_setup.compare_sandbox_and_expected_output()

@@ -41,6 +41,6 @@ class Test_UC03_T07_CreateSection_SanitizingTrailingSymbols(BaseCase):
             form_edit_section.do_form_submit()
 
             screen_document.assert_node_title_contains("First title", "1", 2)
-            screen_document.assert_toc_contains_string("First title")
+            screen_document.assert_toc_contains("First title")
 
         assert test_setup.compare_sandbox_and_expected_output()

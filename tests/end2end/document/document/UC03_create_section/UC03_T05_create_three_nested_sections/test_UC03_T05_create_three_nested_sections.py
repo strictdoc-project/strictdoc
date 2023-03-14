@@ -48,7 +48,7 @@ class Test_UC03_T05_CreateThreeNestedSections(BaseCase):
             screen_document.assert_node_title_contains(
                 "Section_1", added_node_1_level, added_node_1_order
             )
-            screen_document.assert_toc_contains_string("Section_1")
+            screen_document.assert_toc_contains("Section_1")
 
             # Section 1_1 as child
             added_node_2_order = added_node_1_order + 1
@@ -66,7 +66,7 @@ class Test_UC03_T05_CreateThreeNestedSections(BaseCase):
             screen_document.assert_node_title_contains(
                 "Section_1_1", added_node_2_level, added_node_2_order
             )
-            screen_document.assert_toc_contains_string("Section_1_1")
+            screen_document.assert_toc_contains("Section_1_1")
 
             # # Section 1_1_1 as child
             added_node_3_order = added_node_2_order + 1
@@ -84,6 +84,6 @@ class Test_UC03_T05_CreateThreeNestedSections(BaseCase):
             screen_document.assert_node_title_contains(
                 "Section_1_1_1", added_node_3_level, added_node_3_order
             )
-            screen_document.assert_toc_contains_string("Section_1_1_1")
+            screen_document.assert_toc_contains("Section_1_1_1")
 
         assert test_setup.compare_sandbox_and_expected_output()

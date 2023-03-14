@@ -45,6 +45,6 @@ class Test_UC08_T03_EditSectionSanitizeTrailingSymbols(BaseCase):
             # The visual output and the written .sdoc file are ok though.
             # self.assert_text("Hello world!\\n Hello world!\\n Hello world!")  # noqa: ERA001, E501
 
-            screen_document.assert_toc_contains_string("Modified title")
+            screen_document.assert_toc_contains("Modified title")
 
         assert test_setup.compare_sandbox_and_expected_output()

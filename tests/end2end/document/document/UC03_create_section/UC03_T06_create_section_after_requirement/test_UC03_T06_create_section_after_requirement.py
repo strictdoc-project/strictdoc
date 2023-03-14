@@ -47,6 +47,6 @@ class Test_UC03_T06_CreateSectionAfterRequirement(BaseCase):
             form_edit_section.do_form_submit()
 
             screen_document.assert_node_title_contains("Section title", "2", 3)
-            screen_document.assert_toc_contains_string("Section title")
+            screen_document.assert_toc_contains("Section title")
 
         assert test_setup.compare_sandbox_and_expected_output()

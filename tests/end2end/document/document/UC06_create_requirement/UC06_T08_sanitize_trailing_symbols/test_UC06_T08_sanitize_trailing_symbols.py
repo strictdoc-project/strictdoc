@@ -47,6 +47,6 @@ class Test_UC06_T08_SanitizeTrailingSymbols(BaseCase):
             screen_document.assert_node_title_contains(
                 "Requirement title #1", "1"
             )
-            screen_document.assert_toc_contains_string("Requirement title #1")
+            screen_document.assert_toc_contains("Requirement title #1")
 
         assert test_setup.compare_sandbox_and_expected_output()

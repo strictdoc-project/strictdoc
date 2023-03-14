@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
+from tests.end2end.helpers.components.toc import TOC
 
 class Screen:  # pylint: disable=invalid-name, too-many-public-methods
     def __init__(self, test_case: BaseCase) -> None:
@@ -59,3 +60,10 @@ class Screen:  # pylint: disable=invalid-name, too-many-public-methods
         self.test_case.assert_element_not_visible(
             f'//*[@data-testid="{placeholder}"]'
         )
+
+    # TOC
+    def assert_toc_contains(self, string: str) -> None:
+        TOC(self.test_case).assert_toc_contains_string(string)
+
+    def assert_toc_contains_not(self, string: str) -> None:
+        TOC(self.test_case).assert_toc_contains_not(string)

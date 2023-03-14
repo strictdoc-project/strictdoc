@@ -74,20 +74,6 @@ class Screen_Document(
             by=By.XPATH,
         )
 
-    # TOC
-
-    def assert_toc_contains_string(self, string: str) -> None:
-        self.test_case.assert_element(
-            f"//turbo-frame[@id='frame-toc']//*[contains(., '{string}')]",
-            by=By.XPATH,
-        )
-
-    def assert_toc_contains_not(self, string: str) -> None:
-        self.test_case.assert_element_not_present(
-            f"//turbo-frame[@id='frame-toc']//*[contains(., '{string}')]",
-            by=By.XPATH,
-        )
-
     # requirement OR section?
 
     def assert_node_title_contains(

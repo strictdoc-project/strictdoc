@@ -46,6 +46,6 @@ class Test_UC03_T03_CreateFirstSection(BaseCase):
             screen_document.assert_node_title_contains(
                 "First title", "1", NODE_1
             )
-            screen_document.assert_toc_contains_string("First title")
+            screen_document.assert_toc_contains("First title")
 
         assert test_setup.compare_sandbox_and_expected_output()

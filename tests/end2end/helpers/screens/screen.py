@@ -3,6 +3,7 @@ from seleniumbase import BaseCase
 
 from tests.end2end.helpers.components.toc import TOC
 
+
 class Screen:  # pylint: disable=invalid-name, too-many-public-methods
     def __init__(self, test_case: BaseCase) -> None:
         assert isinstance(test_case, BaseCase)

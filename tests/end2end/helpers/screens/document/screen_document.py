@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
+from tests.end2end.helpers.components.confirm import Confirm
 from tests.end2end.helpers.constants import NBSP, NODE_0, NODE_1
 from tests.end2end.helpers.screens.document.form_edit_config import (
     Form_EditConfig,
@@ -36,28 +37,6 @@ class Screen_Document(
         super().assert_not_empty_view("document-root-placeholder")
 
     # Specific methods
-
-    # confirm-message
-
-    def assert_confirm(self) -> None:
-        self.test_case.assert_element('//*[@data-testid="confirm-message"]')
-
-    def assert_confirm_requirement_delete(self) -> None:
-        self.test_case.assert_element('//*[@data-testid="confirm-message"]')
-        self.test_case.assert_element(
-            '//*[@data-testid="confirm-action"]'
-            '[contains(., "Delete requirement")]',
-            by=By.XPATH,
-        )
-
-    def assert_confirm_section_delete(self) -> None:
-        self.test_case.assert_element('//*[@data-testid="confirm-message"]')
-        self.test_case.assert_element(
-            '//*[@data-testid="confirm-action"]'
-            '[contains(., "Delete section")]',
-            by=By.XPATH,
-        )
-
     # requirement style
 
     def assert_requirement_style_simple(self) -> None:
@@ -286,7 +265,7 @@ class Screen_Document(
 
     # Node delete
 
-    def do_node_delete(self, field_order: int = NODE_1) -> None:
+    def do_node_delete(self, field_order: int = NODE_1) -> Confirm:
         self.do_open_node_menu(field_order)
         self.test_case.click(
             selector=(
@@ -295,6 +274,8 @@ class Screen_Document(
             ),
             by=By.XPATH,
         )
+        # Confirmation required
+        return Confirm(self.test_case)
 
     # Add section
 
@@ -399,9 +380,3 @@ class Screen_Document(
             by=By.XPATH,
         )
         return Form_EditRequirement(self.test_case)
-
-    def do_confirm_action(self) -> None:
-        self.test_case.click(
-            selector=('//*[@data-testid="confirm-action"]'),
-            by=By.XPATH,
-        )

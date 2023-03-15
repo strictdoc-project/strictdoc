@@ -22,6 +22,7 @@ from strictdoc.core.finders.source_files_finder import (
     SourceFile,
     SourceFilesFinder,
 )
+from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.core.source_tree import SourceTree
 from strictdoc.core.traceability_index import (
     FileTraceabilityIndex,
@@ -37,7 +38,10 @@ class TraceabilityIndexBuilder:
     @staticmethod
     @timing_decorator("Collect traceability information")
     def create(
-        *, config: ExportCommandConfig, parallelizer
+        *,
+        project_config: ProjectConfig,
+        config: ExportCommandConfig,
+        parallelizer,
     ) -> TraceabilityIndex:
         # TODO: It would be great to hide this code behind --development flag.
         # There is no need for this to be activated in the Pip-released builds.
@@ -124,7 +128,12 @@ class TraceabilityIndexBuilder:
                     finished.add(document)
 
         # File traceability
-        if config.experimental_enable_file_traceability:
+        if (
+            project_config.is_feature_activated(
+                ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY
+            )
+            or config.experimental_enable_file_traceability
+        ):
             source_tree: SourceTree = SourceFilesFinder.find_source_files(
                 config
             )

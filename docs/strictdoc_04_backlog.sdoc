@@ -69,12 +69,12 @@ TITLE: Backlog: Graphical user interface
 TITLE: Backlog: Nice to have
 
 [FREETEXT]
-- Configure feature toggles in the ``strictdoc.toml`` config file. ``+FEATURE`` and ``-FEATURE`` to activate/deactivate features that are used or not. Also to highlight features that are most experimental/unstable.
+- Configuration file options:
 
-- Useful configuration file options:
-
+  - CLI command to dump default config file
   - Project prefix?
   - Explicit or wildcard paths to sdoc files.
+  - Exclude folders when searching \*.sdoc.
   - Paths to dirs with source files.
   - Config options for presenting requirements.
     - Include/exclude requirements in TOC

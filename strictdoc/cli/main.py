@@ -73,7 +73,11 @@ def _main(parallelizer):
         print(  # noqa: T201
             f"Parallelization: {parallelization_value}", flush=True
         )
-        export_action = ExportAction(config=config, parallelizer=parallelizer)
+        export_action = ExportAction(
+            project_config=project_config,
+            config=config,
+            parallelizer=parallelizer,
+        )
         export_action.build_index()
         export_action.export()
 

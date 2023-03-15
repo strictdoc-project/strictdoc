@@ -1,0 +1,5 @@
+RUN: %strictdoc export %S --enable-mathjax --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%S/Output/html/_static/mathjax/tex-mml-chtml.js"
+RUN: %check_exists --file "%S/Output/html/_static/mathjax/output/chtml/fonts/tex.js"

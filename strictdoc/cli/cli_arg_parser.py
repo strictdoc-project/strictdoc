@@ -7,7 +7,7 @@ from typing import List, Optional
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.cli.argument_int_range import IntRange
 from strictdoc.core.environment import SDocRuntimeEnvironment
-from strictdoc.core.project_config import ProjectConfig
+from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.helpers.auto_described import auto_described
 
 EXPORT_FORMATS = ["html", "html-standalone", "rst", "excel", "reqif-sdoc"]
@@ -381,6 +381,12 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         if self.project_title is None:
             self.project_title = project_config.project_title
         self.dir_for_sdoc_assets = project_config.dir_for_sdoc_assets
+        self.experimental_enable_file_traceability = (
+            self.experimental_enable_file_traceability
+            or project_config.is_feature_activated(
+                ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY
+            )
+        )
 
 
 class DumpGrammarCommandConfig:

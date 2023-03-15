@@ -1,3 +1,9 @@
 [project]
 title = "StrictDoc Documentation"
 html_assets_strictdoc_dir = "assets"
+
+features = [
+  "TABLE_SCREEN",
+  "TRACEABILITY_SCREEN",
+  "DEEP_TRACEABILITY_SCREEN",
+]

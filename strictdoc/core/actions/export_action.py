@@ -7,6 +7,7 @@ from strictdoc.backend.excel.export.excel_generator import ExcelGenerator
 from strictdoc.backend.reqif.reqif_export import ReqIFExport
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.cli.cli_arg_parser import ExportCommandConfig
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from strictdoc.export.html.html_generator import HTMLGenerator
@@ -14,8 +15,14 @@ from strictdoc.export.rst.document_rst_generator import DocumentRSTGenerator
 
 
 class ExportAction:
-    def __init__(self, config: ExportCommandConfig, parallelizer):
+    def __init__(
+        self,
+        project_config: ProjectConfig,
+        config: ExportCommandConfig,
+        parallelizer,
+    ):
         assert parallelizer
+        self.project_config: ProjectConfig = project_config
         self.config: ExportCommandConfig = config
         self.parallelizer = parallelizer
         self.traceability_index: Optional[TraceabilityIndex] = None
@@ -24,7 +31,9 @@ class ExportAction:
         try:
             traceability_index: TraceabilityIndex = (
                 TraceabilityIndexBuilder.create(
-                    config=self.config, parallelizer=self.parallelizer
+                    project_config=self.project_config,
+                    config=self.config,
+                    parallelizer=self.parallelizer,
                 )
             )
         except DocumentTreeError as exc:
@@ -44,6 +53,7 @@ class ExportAction:
                 parents=True, exist_ok=True
             )
             HTMLGenerator.export_tree(
+                project_config=self.project_config,
                 config=self.config,
                 traceability_index=self.traceability_index,
                 parallelizer=self.parallelizer,

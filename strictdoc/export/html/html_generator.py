@@ -5,6 +5,7 @@ from pathlib import Path
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.cli.cli_arg_parser import ExportCommandConfig, ExportMode
 from strictdoc.core.document_meta import DocumentMeta
+from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.core.source_tree import SourceTree
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.generators.document import DocumentHTMLGenerator
@@ -40,6 +41,7 @@ class HTMLGenerator:
     @staticmethod
     def export_tree(
         *,
+        project_config: ProjectConfig,
         config: ExportCommandConfig,
         traceability_index: TraceabilityIndex,
         parallelizer,
@@ -56,7 +58,10 @@ class HTMLGenerator:
         sync_dir(config.get_static_files_path(), output_html_static_files)
 
         # Export MathJax
-        if config.enable_mathjax:
+        if (
+            project_config.is_feature_activated(ProjectFeature.MATHJAX)
+            or config.enable_mathjax
+        ):
             output_html_mathjax = os.path.join(
                 config.output_html_root, config.dir_for_sdoc_assets, "mathjax"
             )
@@ -77,6 +82,7 @@ class HTMLGenerator:
 
         export_binding = partial(
             HTMLGenerator._export_with_performance,
+            project_config,
             config,
             traceability_index=traceability_index,
         )
@@ -86,25 +92,36 @@ class HTMLGenerator:
         )
 
         # Export requirements coverage.
-        requirements_coverage_content = (
-            RequirementsCoverageHTMLGenerator.export(
-                config,
-                traceability_index,
+        if (
+            project_config.is_feature_activated(
+                ProjectFeature.REQUIREMENTS_COVERAGE_SCREEN
             )
-        )
-        output_html_requirements_coverage = os.path.join(
-            config.output_html_root, "requirements_coverage.html"
-        )
-        with open(
-            output_html_requirements_coverage, "w", encoding="utf8"
-        ) as file:
-            file.write(requirements_coverage_content)
+            or config.enable_mathjax
+        ):
+            requirements_coverage_content = (
+                RequirementsCoverageHTMLGenerator.export(
+                    config,
+                    traceability_index,
+                )
+            )
+            output_html_requirements_coverage = os.path.join(
+                config.output_html_root, "requirements_coverage.html"
+            )
+            with open(
+                output_html_requirements_coverage, "w", encoding="utf8"
+            ) as file:
+                file.write(requirements_coverage_content)
 
         # Export source coverage.
-        if config.experimental_enable_file_traceability:
+        if (
+            project_config.is_feature_activated(
+                ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY
+            )
+            or config.experimental_enable_file_traceability
+        ):
             assert isinstance(
                 traceability_index.document_tree.source_tree, SourceTree
-            )
+            ), traceability_index.document_tree.source_tree
             print("Generating source files:")  # noqa: T201
             for (
                 source_file
@@ -147,6 +164,7 @@ class HTMLGenerator:
 
     @staticmethod
     def _export_with_performance(
+        project_config: ProjectConfig,
         config: ExportCommandConfig,
         document,
         traceability_index,
@@ -156,6 +174,7 @@ class HTMLGenerator:
                 return
         with measure_performance(f"Published: {document.title}"):
             HTMLGenerator.export_single_document(
+                project_config,
                 config,
                 document,
                 traceability_index,
@@ -163,6 +182,7 @@ class HTMLGenerator:
 
     @staticmethod
     def export_single_document(
+        project_config: ProjectConfig,
         config: ExportCommandConfig,
         document: Document,
         traceability_index,
@@ -204,42 +224,53 @@ class HTMLGenerator:
                 file.write(document_content)
 
             # Single Document Table pages
-            document_content = DocumentTableHTMLGenerator.export(
-                config,
-                document,
-                traceability_index,
-                markup_renderer,
-                link_renderer,
-            )
-            document_out_file = document_meta.get_html_table_path()
-            with open(document_out_file, "w", encoding="utf8") as file:
-                file.write(document_content)
+            if project_config.is_feature_activated(ProjectFeature.TABLE_SCREEN):
+                document_content = DocumentTableHTMLGenerator.export(
+                    config,
+                    document,
+                    traceability_index,
+                    markup_renderer,
+                    link_renderer,
+                )
+                document_out_file = document_meta.get_html_table_path()
+                with open(document_out_file, "w", encoding="utf8") as file:
+                    file.write(document_content)
 
             # Single Document Traceability pages
-            document_content = DocumentTraceHTMLGenerator.export(
-                config,
-                document,
-                traceability_index,
-                markup_renderer,
-                link_renderer,
-            )
-            document_out_file = document_meta.get_html_traceability_path()
-            with open(document_out_file, "w", encoding="utf8") as file:
-                file.write(document_content)
+            if project_config.is_feature_activated(
+                ProjectFeature.TRACEABILITY_SCREEN
+            ):
+                document_content = DocumentTraceHTMLGenerator.export(
+                    config,
+                    document,
+                    traceability_index,
+                    markup_renderer,
+                    link_renderer,
+                )
+                document_out_file = document_meta.get_html_traceability_path()
+                with open(document_out_file, "w", encoding="utf8") as file:
+                    file.write(document_content)
 
             # Single Document Deep Traceability pages
-            document_content = DocumentDeepTraceHTMLGenerator.export_deep(
-                config,
-                document,
-                traceability_index,
-                markup_renderer,
-                link_renderer,
-            )
-            document_out_file = document_meta.get_html_deep_traceability_path()
-            with open(document_out_file, "w", encoding="utf8") as file:
-                file.write(document_content)
+            if project_config.is_feature_activated(
+                ProjectFeature.DEEP_TRACEABILITY_SCREEN
+            ):
+                document_content = DocumentDeepTraceHTMLGenerator.export_deep(
+                    config,
+                    document,
+                    traceability_index,
+                    markup_renderer,
+                    link_renderer,
+                )
+                document_out_file = (
+                    document_meta.get_html_deep_traceability_path()
+                )
+                with open(document_out_file, "w", encoding="utf8") as file:
+                    file.write(document_content)
 
-        if export_mode in (
+        if project_config.is_feature_activated(
+            ProjectFeature.STANDALONE_DOCUMENT_SCREEN
+        ) or export_mode in (
             ExportMode.STANDALONE,
             ExportMode.DOCTREE_AND_STANDALONE,
         ):

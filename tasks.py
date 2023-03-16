@@ -575,7 +575,7 @@ def watch(context, sdocs_path="."):
         python strictdoc/cli/main.py
             export
             {sdocs_path}
-            --output-dir {sdocs_path}/output
+            --output-dir output/
             --experimental-enable-file-traceability
     """
     run_invoke_cmd(

@@ -1,0 +1,2 @@
+RUN: %expect_exit 1 %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+CHECK: error: strictdoc.toml: unknown feature declared: 'THIS_FEATURE_DOES_NOT_EXIST'.

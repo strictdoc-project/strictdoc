@@ -119,7 +119,9 @@ def create_main_router(
     export_config.integrate_project_config(project_config)
     export_config.configure_for_server(server_port=server_config.port)
     export_action = ExportAction(
-        config=export_config, parallelizer=parallelizer
+        project_config=project_config,
+        config=export_config,
+        parallelizer=parallelizer,
     )
     export_action.build_index()
     export_action.export()
@@ -1690,6 +1692,7 @@ def create_main_router(
 
         # Re-generate the document.
         HTMLGenerator.export_single_document(
+            project_config=project_config,
             config=export_config,
             document=document,
             traceability_index=export_action.traceability_index,
@@ -1861,6 +1864,7 @@ def create_main_router(
 
         # Re-generate the document.
         HTMLGenerator.export_single_document(
+            project_config=project_config,
             config=export_config,
             document=document,
             traceability_index=export_action.traceability_index,

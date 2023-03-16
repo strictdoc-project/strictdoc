@@ -1,0 +1,5 @@
+[project]
+title = "Test Project title read from TOML file"
+features = [
+  "THIS_FEATURE_DOES_NOT_EXIST"
+]

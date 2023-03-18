@@ -19,6 +19,23 @@ class Section(Node):  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
+    def assert_section_title(
+        self,
+        node_title: str,
+        node_level: str = "",
+        node_order: int = NODE_1,
+    ) -> None:
+        super().assert_node_title_contains(
+            node_title, node_level, node_order, "/sdoc-section"
+        )
+
+    def assert_section_text(self, text: str, node_order: int = NODE_1) -> None:
+        self.test_case.assert_element(
+            f"(//sdoc-node)[{node_order}]/sdoc-section"
+            f"[contains(., '{text}')]",
+            by=By.XPATH,
+        )
+
     # forms
 
     def do_open_form_edit_section(

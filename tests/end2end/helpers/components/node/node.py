@@ -133,6 +133,7 @@ class Node:  # pylint: disable=invalid-name
         node_title: str,
         node_level: str = "",
         node_order: int = NODE_1,
+        path: str = "",
     ) -> None:
         """title pattern: "1.2.3.&nbsp:Title".
         To check in numbered nodes: sections and requirements.
@@ -146,7 +147,7 @@ class Node:  # pylint: disable=invalid-name
         prefix = "" if node_level == "" else f"{node_level}.{NBSP}"
         self.test_case.assert_element(
             # TODO: improve pattern / testid
-            f"(//sdoc-node)[{node_order}]"
+            f"(//sdoc-node)[{node_order}]{path}"
             f"//*[contains(., '{prefix}{node_title}')]",
             by=By.XPATH,
         )

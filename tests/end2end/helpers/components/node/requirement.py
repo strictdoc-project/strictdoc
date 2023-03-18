@@ -38,6 +38,18 @@ class Requirement(Node):  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
+    # requirement parts
+
+    def assert_requirement_title(
+        self,
+        node_title: str,
+        node_level: str = "",
+        node_order: int = NODE_1,
+    ) -> None:
+        super().assert_node_title_contains(
+            node_title, node_level, node_order, "/sdoc-requirement"
+        )
+
     # requirement named fields
 
     def assert_requirement_uid_contains(
@@ -49,6 +61,32 @@ class Requirement(Node):  # pylint: disable=invalid-name
         self.test_case.assert_element(
             f"(//sdoc-node)[{node_order}]/sdoc-requirement"
             "/sdoc-requirement-field[@data-field-label='UID']"
+            f"[contains(., '{uid}')]",
+            by=By.XPATH,
+        )
+
+    def assert_requirement_statement_contains(
+        self,
+        uid: str,
+        node_order: int = NODE_1,
+    ) -> None:
+        # TODO: improve pattern
+        self.test_case.assert_element(
+            f"(//sdoc-node)[{node_order}]/sdoc-requirement"
+            "/sdoc-requirement-field[@data-field-label='statement']"
+            f"[contains(., '{uid}')]",
+            by=By.XPATH,
+        )
+
+    def assert_requirement_rationale_contains(
+        self,
+        uid: str,
+        node_order: int = NODE_1,
+    ) -> None:
+        # TODO: improve pattern
+        self.test_case.assert_element(
+            f"(//sdoc-node)[{node_order}]/sdoc-requirement"
+            "/sdoc-requirement-field[@data-field-label='rationale']"
             f"[contains(., '{uid}')]",
             by=By.XPATH,
         )

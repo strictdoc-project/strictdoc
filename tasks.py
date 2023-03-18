@@ -513,16 +513,23 @@ def release(context, username=None, password=None):
 
 @task
 def release_test(context):
+    """
+    Release to test package index (TestPyPI)
+    https://test.pypi.org/project/strictdoc/0.0.34a1/
+    """
     context[VENV_FOLDER] = VenvFolderType.RELEASE_PYPI_TEST
     setup_development_deps(context)
 
+    # The token is in a core developer's .pypirc file.
+    # https://test.pypi.org/manage/account/token/
+    # https://packaging.python.org/en/latest/specifications/pypirc/#pypirc
     command = """
         rm -rfv dist/ &&
         python3 -m build &&
             twine check dist/* &&
             twine upload
-                --repository-url
-                    https://test.pypi.org/legacy/ dist/strictdoc-*.tar.gz
+                --repository strictdoc_test
+                dist/strictdoc-*.tar.gz
     """
     run_invoke_cmd(context, command)
 

@@ -15,6 +15,12 @@ class Node:  # pylint: disable=invalid-name
 
     # base actions
 
+    def assert_is_node(self, node_order: int = NODE_0) -> None:
+        self.test_case.assert_element(
+            f"(//sdoc-node)[{node_order}]",
+            by=By.XPATH,
+        )
+
     def assert_node_is_editable(
         self,
         node_order: int = NODE_1,

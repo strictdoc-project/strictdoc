@@ -12,6 +12,12 @@ class DocumentRoot(Node):  # pylint: disable=invalid-name
         assert isinstance(test_case, BaseCase)
         super().__init__(test_case)
 
+    def assert_is_root_node(self) -> None:
+        self.test_case.assert_element(
+            "//sdoc-node[@data-testid='node-root']",
+            by=By.XPATH,
+        )
+
     def assert_root_node_is_editable(self) -> None:
         """For the root node.
         Should have the attribute and the menu button (may be invisible).

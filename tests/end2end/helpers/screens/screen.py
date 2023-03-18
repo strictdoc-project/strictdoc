@@ -1,6 +1,11 @@
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
+from tests.end2end.helpers.constants import NODE_0, NODE_1
+from tests.end2end.helpers.components.node.document_root import DocumentRoot
+from tests.end2end.helpers.components.node.node import Node
+from tests.end2end.helpers.components.node.requirement import Requirement
+from tests.end2end.helpers.components.node.section import Section
 from tests.end2end.helpers.components.toc import TOC
 from tests.end2end.helpers.components.viewtype_selector import ViewType_Selector
 
@@ -63,14 +68,36 @@ class Screen:  # pylint: disable=invalid-name, too-many-public-methods
             f'//*[@data-testid="{placeholder}"]'
         )
 
+    # Get:
+
+    # Node
+    def get_node(self, node_order: int = NODE_0) -> Node:
+        Node(self.test_case).assert_is_node(node_order)
+        return Node(self.test_case)
+
+    # DocumentRoot
+    def get_root_node(self) -> DocumentRoot:
+        DocumentRoot(self.test_case).assert_is_root_node()
+        return DocumentRoot(self.test_case)
+
+    # Section
+    def get_section(self, node_order: int = NODE_1) -> Section:
+        Section(self.test_case).assert_is_section(node_order)
+        return Section(self.test_case)
+
+    # Requirement
+    def get_requirement(self, node_order: int = NODE_1) -> Requirement:
+        Requirement(self.test_case).assert_is_requirement(node_order)
+        return Requirement(self.test_case)
+
     # ViewType_Selector
     def get_viewtype_selector(self) -> ViewType_Selector:
-        ViewType_Selector(self.test_case).assert_viewtype_selector()
+        ViewType_Selector(self.test_case).assert_is_viewtype_selector()
         return ViewType_Selector(self.test_case)
 
     # TOC
     def get_toc(self) -> TOC:
-        TOC(self.test_case).assert_toc()
+        TOC(self.test_case).assert_is_toc()
         return TOC(self.test_case)
 
     def assert_toc_contains(self, string: str) -> None:

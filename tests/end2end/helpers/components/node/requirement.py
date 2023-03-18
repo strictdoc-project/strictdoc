@@ -14,6 +14,13 @@ class Requirement(Node):  # pylint: disable=invalid-name
         super().__init__(test_case)
 
     # Specific methods
+
+    def assert_is_requirement(self, node_order: int = NODE_1) -> None:
+        self.test_case.assert_element(
+            f"(//sdoc-node)[{node_order}]/sdoc-requirement",
+            by=By.XPATH,
+        )
+
     # requirement style
 
     def assert_requirement_style_simple(self) -> None:

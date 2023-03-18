@@ -11,7 +11,7 @@ class TOC:  # pylint: disable=invalid-name  # noqa: E501
 
     # base actions
 
-    def assert_toc(self) -> None:
+    def assert_is_toc(self) -> None:
         self.assert_toc_handler()
         self.assert_toc_panel()
 

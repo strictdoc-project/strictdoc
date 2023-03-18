@@ -13,6 +13,12 @@ class Section(Node):  # pylint: disable=invalid-name
         assert isinstance(test_case, BaseCase)
         super().__init__(test_case)
 
+    def assert_is_section(self, node_order: int = NODE_1) -> None:
+        self.test_case.assert_element(
+            f"(//sdoc-node)[{node_order}]/sdoc-section",
+            by=By.XPATH,
+        )
+
     # forms
 
     def do_open_form_edit_section(

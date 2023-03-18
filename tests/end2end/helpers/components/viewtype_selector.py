@@ -22,7 +22,7 @@ class ViewType_Selector:  # pylint: disable=invalid-name  # noqa: E501
 
     # base actions
 
-    def assert_viewtype_selector(self) -> None:
+    def assert_is_viewtype_selector(self) -> None:
         self.assert_viewtype_handler()
         self.assert_viewtype_menu()
 

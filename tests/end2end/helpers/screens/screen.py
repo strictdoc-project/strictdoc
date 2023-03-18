@@ -1,13 +1,12 @@
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
-from tests.end2end.helpers.constants import NODE_0, NODE_1
 from tests.end2end.helpers.components.node.document_root import DocumentRoot
 from tests.end2end.helpers.components.node.node import Node
 from tests.end2end.helpers.components.node.requirement import Requirement
 from tests.end2end.helpers.components.node.section import Section
 from tests.end2end.helpers.components.toc import TOC
-from tests.end2end.helpers.components.viewtype_selector import ViewType_Selector
+from tests.end2end.helpers.constants import NODE_0, NODE_1
 
 
 class Screen:  # pylint: disable=invalid-name, too-many-public-methods
@@ -89,11 +88,6 @@ class Screen:  # pylint: disable=invalid-name, too-many-public-methods
     def get_requirement(self, node_order: int = NODE_1) -> Requirement:
         Requirement(self.test_case).assert_is_requirement(node_order)
         return Requirement(self.test_case)
-
-    # ViewType_Selector
-    def get_viewtype_selector(self) -> ViewType_Selector:
-        ViewType_Selector(self.test_case).assert_is_viewtype_selector()
-        return ViewType_Selector(self.test_case)
 
     # TOC
     def get_toc(self) -> TOC:

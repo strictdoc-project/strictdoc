@@ -2,6 +2,7 @@ from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.helpers.components.toc import TOC
+from tests.end2end.helpers.components.viewtype_selector import ViewType_Selector
 
 
 class Screen:  # pylint: disable=invalid-name, too-many-public-methods
@@ -62,9 +63,18 @@ class Screen:  # pylint: disable=invalid-name, too-many-public-methods
             f'//*[@data-testid="{placeholder}"]'
         )
 
+    # ViewType_Selector
+    def get_viewtype_selector(self) -> ViewType_Selector:
+        ViewType_Selector(self.test_case).assert_viewtype_selector()
+        return ViewType_Selector(self.test_case)
+
     # TOC
+    def get_toc(self) -> TOC:
+        TOC(self.test_case).assert_toc()
+        return TOC(self.test_case)
+
     def assert_toc_contains(self, string: str) -> None:
-        TOC(self.test_case).assert_toc_contains_string(string)
+        TOC(self.test_case).assert_toc_contains(string)
 
     def assert_toc_contains_not(self, string: str) -> None:
         TOC(self.test_case).assert_toc_contains_not(string)

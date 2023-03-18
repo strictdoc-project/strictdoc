@@ -11,6 +11,16 @@ class TOC:  # pylint: disable=invalid-name  # noqa: E501
 
     # base actions
 
+    def assert_toc(self) -> None:
+        self.assert_toc_handler()
+        self.assert_toc_panel()
+
+    def assert_toc_panel(self) -> None:
+        self.test_case.assert_element_present(
+            "//*[@id='toc']",
+            by=By.XPATH,
+        )
+
     def assert_toc_handler(self) -> None:
         self.test_case.assert_element(
             "//*[@id='toc_handler']",
@@ -44,7 +54,7 @@ class TOC:  # pylint: disable=invalid-name  # noqa: E501
     def do_toggle_toc(self) -> None:
         self.test_case.click_xpath("//*[@id='toc_handler']")
 
-    def assert_toc_contains_string(self, string: str) -> None:
+    def assert_toc_contains(self, string: str) -> None:
         """The string does not need be visible (TOC may be hidden)."""
         self.test_case.assert_element_present(
             f"//turbo-frame[@id='frame-toc']//*[contains(., '{string}')]",

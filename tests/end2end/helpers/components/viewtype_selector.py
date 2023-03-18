@@ -22,9 +22,20 @@ class ViewType_Selector:  # pylint: disable=invalid-name  # noqa: E501
 
     # base actions
 
+    def assert_viewtype_selector(self) -> None:
+        self.assert_viewtype_handler()
+        self.assert_viewtype_menu()
+
     def assert_viewtype_handler(self) -> None:
         self.test_case.assert_element(
             "//*[@id='viewtype_handler']",
+            by=By.XPATH,
+        )
+
+    def assert_viewtype_menu(self) -> None:
+        """Can be closed"""
+        self.test_case.assert_element_present(
+            "//*[@id='viewtype_menu']",
             by=By.XPATH,
         )
 

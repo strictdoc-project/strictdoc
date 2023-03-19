@@ -3,171 +3,106 @@ from seleniumbase import BaseCase
 
 from tests.end2end.helpers.components.add_node_menu import AddNode_Menu
 from tests.end2end.helpers.components.confirm import Confirm
-from tests.end2end.helpers.constants import NBSP, NODE_0, NODE_1
+from tests.end2end.helpers.constants import NBSP
 
 
 class Node:  # pylint: disable=invalid-name
     """Base class for DocumentRoot, Section, Requirement"""
 
-    def __init__(self, test_case: BaseCase) -> None:
+    def __init__(self, test_case: BaseCase, node_xpath: str) -> None:
         assert isinstance(test_case, BaseCase)
+        assert isinstance(node_xpath, str)
         self.test_case: BaseCase = test_case
+        self.node_xpath: str = node_xpath
 
-    # base actions
+    @staticmethod
+    def create_from_node_number(test_case: BaseCase, node_order: int = 2):
+        xpath = f"(//sdoc-node)[{node_order}]"
+        return Node(test_case=test_case, node_xpath=xpath)
 
-    def assert_is_node(self, node_order: int = NODE_0) -> None:
-        self.test_case.assert_element(
-            f"(//sdoc-node)[{node_order}]",
-            by=By.XPATH,
-        )
-
-    def assert_node_is_editable(
-        self,
-        node_order: int = NODE_1,
-    ) -> None:
+    def assert_node_is_editable(self) -> None:
         """It makes sense for section & requirements nodes.
         Should have the attribute and the menu button (may be invisible).
 
         The root node has its own method from DocumentRoot(Node):
         assert_root_node_is_editable().
-
-        Args:
-            node_order (int, optional): _description_. Defaults to NODE_1.
         """
         # should have the attribute
         self.test_case.assert_attribute(
-            f"(//sdoc-node)[{node_order}]",
+            f"{self.node_xpath}",
             "data-editable_node",
             "on",
             by=By.XPATH,
         )
         # should have the menu button (may be invisible)
         self.test_case.assert_element_present(
-            f"(//sdoc-node)[{node_order}]"
-            "//*[@data-testid='node-edit-action']",
+            f"{self.node_xpath}//*[@data-testid='node-edit-action']",
             by=By.XPATH,
         )
 
-    def assert_node_is_not_editable(
-        self,
-        node_order: int = NODE_1,
-    ) -> None:
+    def assert_node_is_not_editable(self) -> None:
         """It makes sense for section & requirements nodes (due to 'testid').
         Should not have the menu button (might be invisible).
-
-        Args:
-            node_order (int, optional): _description_. Defaults to NODE_1.
         """
         self.test_case.assert_element_not_present(
-            f"(//sdoc-node)[{node_order}]"
-            "//*[@data-testid='node-edit-action']",
+            f"{self.node_xpath}//*[@data-testid='node-edit-action']",
             by=By.XPATH,
         )
 
-    def assert_node_is_deletable(
-        self,
-        node_order: int = NODE_1,
-    ) -> None:
+    def assert_node_is_deletable(self) -> None:
         """It makes sense for section & requirements nodes.
         Should have the menu delete button (may be invisible).
-
-        Args:
-            node_order (int, optional): _description_. Defaults to NODE_1.
         """
         self.test_case.assert_element_present(
-            f"(//sdoc-node)[{node_order}]"
-            "//*[@data-testid='node-delete-action']",
+            f"{self.node_xpath}//*[@data-testid='node-delete-action']",
             by=By.XPATH,
         )
 
-    def assert_node_is_not_deletable(
-        self,
-        node_order: int = NODE_0,
-    ) -> None:
+    def assert_node_is_not_deletable(self) -> None:
         """It makes sense for all nodes.
         Should not have the menu delete button (may be invisible).
-
-        Args:
-            node_order (int, optional): _description_. Defaults to NODE_0.
         """
         self.test_case.assert_element_not_present(
-            f"(//sdoc-node)[{node_order}]"
-            "//*[@data-testid='node-delete-action']",
+            f"{self.node_xpath}//*[@data-testid='node-delete-action']",
             by=By.XPATH,
         )
 
-    def assert_node_has_menu(
-        self,
-        node_order: int = NODE_0,
-    ) -> None:
+    def assert_node_has_menu(self) -> None:
         """It makes sense for all nodes.
         Should have the menu add button (may be invisible).
-
-        Args:
-            node_order (int, optional): _description_. Defaults to NODE_0.
         """
         self.test_case.assert_element_present(
-            f"(//sdoc-node)[{node_order}]"
-            "//*[@data-testid='node-menu-handler']",
+            f"{self.node_xpath}//*[@data-testid='node-menu-handler']",
             by=By.XPATH,
         )
 
-    def assert_node_has_not_menu(
-        self,
-        node_order: int = NODE_0,
-    ) -> None:
+    def assert_node_has_not_menu(self) -> None:
         """It makes sense for all nodes.
         Should not have the menu add button (may be invisible).
-
-        Args:
-            node_order (int, optional): _description_. Defaults to NODE_0.
         """
         self.test_case.assert_element_not_present(
-            f"(//sdoc-node)[{node_order}]"
-            "//*[@data-testid='node-menu-handler']",
+            f"{self.node_xpath}//*[@data-testid='node-menu-handler']",
             by=By.XPATH,
         )
 
-    def assert_node_title_contains(
-        self,
-        node_title: str,
-        node_level: str = "",
-        node_order: int = NODE_1,
-        path: str = "",
-    ) -> None:
-        """title pattern: "1.2.3.&nbsp:Title".
-        To check in numbered nodes: sections and requirements.
-
-        Args:
-            node_title (str): "Title"
-            node_level (str, optional): pattern: "1.2.3" (data_level in HTML).
-            Defaults to "": then don't check.
-            node_order (int, optional): _description_. Defaults to NODE_1.
-        """
-        prefix = "" if node_level == "" else f"{node_level}.{NBSP}"
-        self.test_case.assert_element(
-            # TODO: improve pattern / testid
-            f"(//sdoc-node)[{node_order}]{path}"
-            f"//*[contains(., '{prefix}{node_title}')]",
+    def assert_node_does_not_contain(self, text: str) -> None:
+        self.test_case.assert_element_not_present(
+            f"{self.node_xpath}//*[contains(., '{text}')]",
             by=By.XPATH,
         )
 
     # Node delete
 
-    def do_node_delete_confirm(self, node_order: int = NODE_1) -> Confirm:
+    def do_node_delete_confirm(self) -> Confirm:
         """Need to be confirmed. For full confirmed action, use do_delete_node.
-
-        Args:
-            node_order (int, optional): Can't be root node. Defaults to NODE_1.
 
         Returns:
             Confirm.
         """
         self.test_case.hover_and_click(
-            hover_selector=f"(//sdoc-node)[{node_order}]",
+            hover_selector=f"{self.node_xpath}",
             click_selector=(
-                f"(//sdoc-node)[{node_order}]"
-                "//*[@data-testid='node-delete-action']"
+                f"{self.node_xpath}//*[@data-testid='node-delete-action']"
             ),
             hover_by=By.XPATH,
             click_by=By.XPATH,
@@ -175,21 +110,38 @@ class Node:  # pylint: disable=invalid-name
         # Confirmation required
         return Confirm(self.test_case)
 
-    def do_delete_node(self, node_order: int = NODE_1) -> None:
-        confirm = self.do_node_delete_confirm(node_order)
+    def do_delete_node(self) -> None:
+        confirm = self.do_node_delete_confirm()
         confirm.assert_confirm()
         confirm.do_confirm_action()
 
     # Node actions
 
-    def do_open_node_menu(self, node_order: int = NODE_0) -> AddNode_Menu:
+    def do_open_node_menu(self) -> AddNode_Menu:
         self.test_case.hover_and_click(
-            hover_selector=f"(//sdoc-node)[{node_order}]",
+            hover_selector=f"{self.node_xpath}",
             click_selector=(
-                f"(//sdoc-node)[{node_order}]"
-                "//*[@data-testid='node-menu-handler']"
+                f"{self.node_xpath}//*[@data-testid='node-menu-handler']"
             ),
             hover_by=By.XPATH,
             click_by=By.XPATH,
         )
-        return AddNode_Menu(self.test_case, node_order)
+        return AddNode_Menu(self.test_case, self.node_xpath)
+
+    # title string pattern
+
+    def create_node_title_string(
+        self,
+        node_title: str,
+        node_level: str = "",
+    ) -> str:
+        """title pattern: "1.2.3.&nbsp:Title".
+        To check in numbered nodes: sections and requirements.
+
+        Args:
+            node_title (str): "Title"
+            node_level (str, optional): pattern: "1.2.3" (data_level in HTML).
+            Defaults to "": then don't check.
+        """
+        prefix = "" if node_level == "" else f"{node_level}.{NBSP}"
+        return f"{prefix}{node_title}"

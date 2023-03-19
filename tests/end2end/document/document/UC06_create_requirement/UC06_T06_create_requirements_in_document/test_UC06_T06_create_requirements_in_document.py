@@ -1,7 +1,6 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
-from tests.end2end.helpers.constants import NODE_1
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
 )
@@ -49,24 +48,14 @@ class Test_UC06_T06_CreateRequirementsInDocument(BaseCase):
             form_edit_requirement.do_form_submit()
 
             # Expected for Requirement 1:
-            added_requirement_1_level = "1"
-            added_requirement_1_position = NODE_1
 
-            requirement = screen_document.get_requirement(
-                added_requirement_1_position
-            )
+            requirement_1 = screen_document.get_requirement()
 
-            requirement.assert_requirement_title(
-                "Requirement title #1",
-                added_requirement_1_level,
-                added_requirement_1_position,
-            )
+            requirement_1.assert_requirement_title("Requirement title #1", "1")
             screen_document.assert_toc_contains("Requirement title #1")
 
             # Requirement 2
-            requirement_1_node_menu = requirement.do_open_node_menu(
-                added_requirement_1_position
-            )
+            requirement_1_node_menu = requirement_1.do_open_node_menu()
             form_edit_requirement: Form_EditRequirement = (
                 requirement_1_node_menu.do_node_add_requirement_below()
             )
@@ -81,23 +70,13 @@ class Test_UC06_T06_CreateRequirementsInDocument(BaseCase):
             form_edit_requirement.do_form_submit()
 
             # Expected for Requirement 2:
-            added_requirement_2_level = "2"
-            added_requirement_2_position = added_requirement_1_position + 1
 
-            requirement_2 = screen_document.get_requirement(
-                added_requirement_2_position
-            )
-            requirement_2.assert_requirement_title(
-                "Requirement title #2",
-                added_requirement_2_level,
-                added_requirement_2_position,
-            )
+            requirement_2 = screen_document.get_requirement(2)
+            requirement_2.assert_requirement_title("Requirement title #2", "2")
             screen_document.assert_toc_contains("Requirement title #2")
 
             # Requirement 3
-            requirement_2_node_menu = requirement.do_open_node_menu(
-                added_requirement_2_position
-            )
+            requirement_2_node_menu = requirement_2.do_open_node_menu()
             form_edit_requirement: Form_EditRequirement = (
                 requirement_2_node_menu.do_node_add_requirement_below()
             )
@@ -112,18 +91,10 @@ class Test_UC06_T06_CreateRequirementsInDocument(BaseCase):
             form_edit_requirement.do_form_submit()
 
             # Expected for Requirement 3:
-            added_requirement_3_level = "3"
-            added_requirement_3_position = added_requirement_2_position + 1
 
-            requirement_3 = screen_document.get_requirement(
-                added_requirement_3_position
-            )
+            requirement_3 = screen_document.get_requirement(3)
 
-            requirement_3.assert_requirement_title(
-                "Requirement title #3",
-                added_requirement_3_level,
-                added_requirement_3_position,
-            )
+            requirement_3.assert_requirement_title("Requirement title #3", "3")
             screen_document.assert_toc_contains("Requirement title #3")
 
             # Check the resulting TOC.

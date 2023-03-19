@@ -12,11 +12,11 @@ from tests.end2end.helpers.screens.document.form_edit_section import (
 class AddNode_Menu:  # pylint: disable=invalid-name  # noqa: E501
     """Drop-down list of links to add nodes."""
 
-    def __init__(self, test_case: BaseCase, node_order: int) -> None:
+    def __init__(self, test_case: BaseCase, node_xpath: str) -> None:
         assert isinstance(test_case, BaseCase)
-        assert isinstance(node_order, int)
+        assert isinstance(node_xpath, str)
         self.test_case: BaseCase = test_case
-        self.node_order: int = node_order
+        self.node_xpath: str = node_xpath
 
     # base actions
 
@@ -30,37 +30,37 @@ class AddNode_Menu:  # pylint: disable=invalid-name  # noqa: E501
 
     def assert_node_has_action_add_requirement_above(self) -> None:
         self.test_case.assert_element_present(
-            f"(//sdoc-node)[{self.node_order}]"
+            f"{self.node_xpath}"
             '//*[@data-testid="node-add-requirement-above-action"]'
         )
 
     def assert_node_has_action_add_section_above(self) -> None:
         self.test_case.assert_element_present(
-            f"(//sdoc-node)[{self.node_order}]"
+            f"{self.node_xpath}"
             '//*[@data-testid="node-add-section-above-action"]'
         )
 
     def assert_node_has_action_add_requirement_below(self) -> None:
         self.test_case.assert_element_present(
-            f"(//sdoc-node)[{self.node_order}]"
+            f"{self.node_xpath}"
             '//*[@data-testid="node-add-requirement-below-action"]'
         )
 
     def assert_node_has_action_add_section_below(self) -> None:
         self.test_case.assert_element_present(
-            f"(//sdoc-node)[{self.node_order}]"
+            f"{self.node_xpath}"
             '//*[@data-testid="node-add-section-below-action"]'
         )
 
     def assert_node_has_action_add_requirement_child(self) -> None:
         self.test_case.assert_element_present(
-            f"(//sdoc-node)[{self.node_order}]"
+            f"{self.node_xpath}"
             '//*[@data-testid="node-add-requirement-child-action"]'
         )
 
     def assert_node_has_action_add_section_child(self) -> None:
         self.test_case.assert_element_present(
-            f"(//sdoc-node)[{self.node_order}]"
+            f"{self.node_xpath}"
             '//*[@data-testid="node-add-section-child-action"]'
         )
 
@@ -81,7 +81,7 @@ class AddNode_Menu:  # pylint: disable=invalid-name  # noqa: E501
     def do_node_add_section_above(self) -> Form_EditSection:
         self.test_case.click(
             selector=(
-                f"(//sdoc-node)[{self.node_order}]"
+                f"{self.node_xpath}"
                 '//*[@data-testid="node-add-section-above-action"]'
             ),
             by=By.XPATH,
@@ -91,7 +91,7 @@ class AddNode_Menu:  # pylint: disable=invalid-name  # noqa: E501
     def do_node_add_section_below(self) -> Form_EditSection:
         self.test_case.click(
             selector=(
-                f"(//sdoc-node)[{self.node_order}]"
+                f"{self.node_xpath}"
                 '//*[@data-testid="node-add-section-below-action"]'
             ),
             by=By.XPATH,
@@ -101,7 +101,7 @@ class AddNode_Menu:  # pylint: disable=invalid-name  # noqa: E501
     def do_node_add_section_child(self) -> Form_EditSection:
         self.test_case.click(
             selector=(
-                f"(//sdoc-node)[{self.node_order}]"
+                f"{self.node_xpath}"
                 '//*[@data-testid="node-add-section-child-action"]'
             ),
             by=By.XPATH,
@@ -125,7 +125,7 @@ class AddNode_Menu:  # pylint: disable=invalid-name  # noqa: E501
     def do_node_add_requirement_above(self) -> Form_EditRequirement:
         self.test_case.click(
             selector=(
-                f"(//sdoc-node)[{self.node_order}]"
+                f"{self.node_xpath}"
                 '//*[@data-testid="node-add-requirement-above-action"]'
             ),
             by=By.XPATH,
@@ -135,7 +135,7 @@ class AddNode_Menu:  # pylint: disable=invalid-name  # noqa: E501
     def do_node_add_requirement_below(self) -> Form_EditRequirement:
         self.test_case.click(
             selector=(
-                f"(//sdoc-node)[{self.node_order}]"
+                f"{self.node_xpath}"
                 '//*[@data-testid="node-add-requirement-below-action"]'
             ),
             by=By.XPATH,
@@ -145,7 +145,7 @@ class AddNode_Menu:  # pylint: disable=invalid-name  # noqa: E501
     def do_node_add_requirement_child(self) -> Form_EditRequirement:
         self.test_case.click(
             selector=(
-                f"(//sdoc-node)[{self.node_order}]"
+                f"{self.node_xpath}"
                 '//*[@data-testid="node-add-requirement-child-action"]'
             ),
             by=By.XPATH,

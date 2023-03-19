@@ -44,7 +44,7 @@ class Test_UC03_T07_CreateSection_SanitizingTrailingSymbols(BaseCase):
 
             section = screen_document.get_section()
 
-            section.assert_section_title("First title", "1", 2)
+            section.assert_section_title("First title", "1")
             screen_document.assert_toc_contains("First title")
 
         assert test_setup.compare_sandbox_and_expected_output()

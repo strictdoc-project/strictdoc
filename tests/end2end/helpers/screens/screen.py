@@ -2,11 +2,9 @@ from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.helpers.components.node.document_root import DocumentRoot
-from tests.end2end.helpers.components.node.node import Node
 from tests.end2end.helpers.components.node.requirement import Requirement
 from tests.end2end.helpers.components.node.section import Section
 from tests.end2end.helpers.components.toc import TOC
-from tests.end2end.helpers.constants import NODE_0, NODE_1
 
 
 class Screen:  # pylint: disable=invalid-name, too-many-public-methods
@@ -69,25 +67,20 @@ class Screen:  # pylint: disable=invalid-name, too-many-public-methods
 
     # Get:
 
-    # Node
-    def get_node(self, node_order: int = NODE_0) -> Node:
-        Node(self.test_case).assert_is_node(node_order)
-        return Node(self.test_case)
-
     # DocumentRoot
     def get_root_node(self) -> DocumentRoot:
         DocumentRoot(self.test_case).assert_is_root_node()
         return DocumentRoot(self.test_case)
 
     # Section
-    def get_section(self, node_order: int = NODE_1) -> Section:
-        Section(self.test_case).assert_is_section(node_order)
-        return Section(self.test_case)
+    def get_section(self, node_order: int = 1) -> Section:
+        Section(self.test_case, node_order).assert_is_section()
+        return Section(self.test_case, node_order)
 
     # Requirement
-    def get_requirement(self, node_order: int = NODE_1) -> Requirement:
-        Requirement(self.test_case).assert_is_requirement(node_order)
-        return Requirement(self.test_case)
+    def get_requirement(self, node_order: int = 1) -> Requirement:
+        Requirement(self.test_case, node_order).assert_is_requirement()
+        return Requirement(self.test_case, node_order)
 
     # TOC
     def get_toc(self) -> TOC:

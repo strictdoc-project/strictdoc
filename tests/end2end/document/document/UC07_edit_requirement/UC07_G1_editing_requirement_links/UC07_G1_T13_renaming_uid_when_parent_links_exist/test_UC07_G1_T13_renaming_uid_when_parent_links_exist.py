@@ -1,7 +1,6 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
-from tests.end2end.helpers.constants import NODE_1
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
 )
@@ -32,12 +31,10 @@ class Test_UC07_G1_T13_RenamingUIDWhenParentLinksExist(BaseCase):
 
             screen_document.assert_text("Hello world!")
 
-            req2_order = NODE_1 + 1
-
             # Open form and add 1 fields:
-            requirement = screen_document.get_requirement()
+            requirement = screen_document.get_requirement(2)
             form_edit_requirement: Form_EditRequirement = (
-                requirement.do_open_form_edit_requirement(req2_order)
+                requirement.do_open_form_edit_requirement()
             )
             form_edit_requirement.do_fill_in_field_uid("Modified UID")
 

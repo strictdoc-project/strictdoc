@@ -19,6 +19,6 @@ class Test_ProjectOptions_ProjectTitle_02_OptionSpecified(BaseCase):
 
             screen_document_tree = Screen_DocumentTree(self)
             screen_document_tree.assert_on_screen()
-            screen_document_tree.assert_project_title(
+            screen_document_tree.assert_header_project_name(
                 "Test Project title read from TOML file"
             )

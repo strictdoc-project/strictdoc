@@ -154,19 +154,19 @@ class Node:  # pylint: disable=invalid-name
 
     # Node delete
 
-    def do_node_delete_confirm(self, field_order: int = NODE_1) -> Confirm:
+    def do_node_delete_confirm(self, node_order: int = NODE_1) -> Confirm:
         """Need to be confirmed. For full confirmed action, use do_delete_node.
 
         Args:
-            field_order (int, optional): Can't be root node. Defaults to NODE_1.
+            node_order (int, optional): Can't be root node. Defaults to NODE_1.
 
         Returns:
             Confirm.
         """
         self.test_case.hover_and_click(
-            hover_selector=f"(//sdoc-node)[{field_order}]",
+            hover_selector=f"(//sdoc-node)[{node_order}]",
             click_selector=(
-                f"(//sdoc-node)[{field_order}]"
+                f"(//sdoc-node)[{node_order}]"
                 "//*[@data-testid='node-delete-action']"
             ),
             hover_by=By.XPATH,
@@ -175,21 +175,21 @@ class Node:  # pylint: disable=invalid-name
         # Confirmation required
         return Confirm(self.test_case)
 
-    def do_delete_node(self, field_order: int = NODE_1) -> None:
-        confirm = self.do_node_delete_confirm(field_order)
+    def do_delete_node(self, node_order: int = NODE_1) -> None:
+        confirm = self.do_node_delete_confirm(node_order)
         confirm.assert_confirm()
         confirm.do_confirm_action()
 
     # Node actions
 
-    def do_open_node_menu(self, field_order: int = NODE_0) -> AddNode_Menu:
+    def do_open_node_menu(self, node_order: int = NODE_0) -> AddNode_Menu:
         self.test_case.hover_and_click(
-            hover_selector=f"(//sdoc-node)[{field_order}]",
+            hover_selector=f"(//sdoc-node)[{node_order}]",
             click_selector=(
-                f"(//sdoc-node)[{field_order}]"
+                f"(//sdoc-node)[{node_order}]"
                 "//*[@data-testid='node-menu-handler']"
             ),
             hover_by=By.XPATH,
             click_by=By.XPATH,
         )
-        return AddNode_Menu(self.test_case)
+        return AddNode_Menu(self.test_case, node_order)

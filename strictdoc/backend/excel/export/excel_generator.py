@@ -154,7 +154,7 @@ class ExcelGenerator:
                                         value += (
                                             ref.ref_type
                                             + ": "
-                                            + ref.file_entry.file_path
+                                            + ref.get_posix_path()
                                             + "\n"
                                         )
                                     elif isinstance(ref, BibReference):

@@ -214,12 +214,13 @@ class SDWriter:
                             output += "\n"
                         elif isinstance(reference, FileReference):
                             ref: FileReference = reference
-                            if ref.file_entry.file_format:
+                            file_format = ref.get_file_format()
+                            if file_format:
                                 output += "  FORMAT: "
-                                output += ref.file_entry.file_format
+                                output += file_format
                                 output += "\n"
                             output += "  VALUE: "
-                            output += ref.file_entry.file_path
+                            output += ref.get_posix_path()
                             output += "\n"
                         elif isinstance(reference, ParentReqReference):
                             ref: ParentReqReference = reference

@@ -142,7 +142,7 @@ class TraceabilityIndexBuilder:
             for source_file in source_files:
                 is_source_file_referenced = (
                     traceability_index.has_source_file_reqs(
-                        source_file.in_doctree_source_file_rel_path
+                        source_file.in_doctree_source_file_rel_path_posix
                     )
                 )
                 if not is_source_file_referenced:
@@ -154,7 +154,7 @@ class TraceabilityIndexBuilder:
                 )
                 if traceability_info:
                     traceability_index.attach_traceability_info(
-                        source_file.in_doctree_source_file_rel_path,
+                        source_file.in_doctree_source_file_rel_path_posix,
                         traceability_info,
                     )
             traceability_index.document_tree.attach_source_tree(source_tree)

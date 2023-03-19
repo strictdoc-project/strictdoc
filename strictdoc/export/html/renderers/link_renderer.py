@@ -128,18 +128,14 @@ class LinkRenderer:
             "/"
             f"_source_files"
             "/"
-            f"{file_reference.file_entry.path_forward_slashes}.html"
+            f"{file_reference.get_posix_path()}.html"
         )
         return source_file_link
 
     @staticmethod
     def render_source_file_link_from_root(file_reference: FileReference):
         assert isinstance(file_reference, FileReference)
-        source_file_link = (
-            f"_source_files/"
-            f"{file_reference.file_entry.path_forward_slashes}.html"
-        )
-        return source_file_link
+        return f"_source_files/{file_reference.get_posix_path()}.html"
 
     @staticmethod
     def render_source_file_link_from_root_2(source_file: SourceFile):
@@ -147,7 +143,7 @@ class LinkRenderer:
         source_file_link = (
             "_source_files"
             "/"
-            f"{source_file.in_doctree_source_file_rel_path}.html"
+            f"{source_file.in_doctree_source_file_rel_path_posix}.html"
         )
         return source_file_link
 
@@ -157,9 +153,6 @@ class LinkRenderer:
         source_link: FileReference,
         context_source_file: SourceFile,
     ):
-        assert isinstance(source_link, FileReference)
-        assert len(source_link.file_entry.file_path) > 0
-
         def get_root_path_prefix(level):
             if level == 0:
                 return ".."
@@ -169,7 +162,7 @@ class LinkRenderer:
         source_file_link = (
             f"{path_prefix}"
             f"/_source_files"
-            f"/{source_link.file_entry.path_forward_slashes}.html"
+            f"/{source_link.get_posix_path()}.html"
             f"#{requirement.reserved_uid}"
         )
         return source_file_link
@@ -212,7 +205,7 @@ class LinkRenderer:
         assert isinstance(context_source_file, SourceFile)
         return self.render_requirement_in_source_file_range_link_using_id(
             requirement.reserved_uid,
-            source_link.file_entry.path_forward_slashes,
+            source_link.get_posix_path(),
             context_source_file,
             source_range,
         )

@@ -25,11 +25,6 @@
 {% endblock header_content %}
 
 {% block content %}
-
-  {# {% for source_file in document_tree.source_tree.source_files %}
-    {{ source_file.in_doctree_source_file_rel_path }}
-  {% endfor %} #}
-
     <div class="std-tree">
 
       <ul class="std-tree_ul_0">
@@ -71,9 +66,9 @@
 
               <div class="std-tree_aside">
                 {%- if source_file.is_referenced -%}
-                {%- set general_reqs, range_reqs = traceability_index.get_source_file_reqs(source_file.in_doctree_source_file_rel_path) -%}
+                {%- set general_reqs, range_reqs = traceability_index.get_source_file_reqs(source_file.in_doctree_source_file_rel_path_posix) -%}
                   {%- if range_reqs -%}
-                    {%- set coverage_info = traceability_index.get_coverage_info(source_file.in_doctree_source_file_rel_path) -%}
+                    {%- set coverage_info = traceability_index.get_coverage_info(source_file.in_doctree_source_file_rel_path_posix) -%}
                     <div class="value-bar">
                       <span class="value-bar_bar" data-value={{ coverage_info.get_coverage() }}>
                         <span class="value-bar_filler" style="width:{{ coverage_info.get_coverage() }}%"></span>

@@ -58,6 +58,9 @@ class SourceFile:  # pylint: disable=too-many-instance-attributes
         self.level = level
         self.full_path = full_path
         self.in_doctree_source_file_rel_path = in_doctree_source_file_rel_path
+        self.in_doctree_source_file_rel_path_posix: str = (
+            in_doctree_source_file_rel_path.replace("\\", "/")
+        )
         self.output_dir_full_path = output_dir_full_path
         self.output_file_full_path = output_file_full_path
         self.path_depth_prefix = ("../" * (level + 1))[:-1]

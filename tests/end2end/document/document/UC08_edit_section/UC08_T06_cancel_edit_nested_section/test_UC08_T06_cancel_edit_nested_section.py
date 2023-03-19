@@ -32,8 +32,9 @@ class Test_UC08_T06_CancelEditNestedSection(BaseCase):
 
             screen_document.assert_text("Hello world!")
 
+            section = screen_document.get_section(NODE_2)
             form_edit_section: Form_EditSection = (
-                screen_document.do_open_form_edit_section(NODE_2)
+                section.do_open_form_edit_section()
             )
             form_edit_section.do_form_cancel()
 

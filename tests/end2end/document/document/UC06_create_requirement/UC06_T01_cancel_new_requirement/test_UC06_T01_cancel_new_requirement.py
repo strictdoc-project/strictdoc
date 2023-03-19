@@ -32,8 +32,10 @@ class Test_UC06_T01_CancelNewRequirement(BaseCase):
             screen_document.assert_text("Hello world!")
 
             # Requirement 1
+            root_node = screen_document.get_root_node()
+            root_node_menu = root_node.do_open_node_menu()
             form_edit_requirement: Form_EditRequirement = (
-                screen_document.do_node_add_requirement_first()
+                root_node_menu.do_node_add_requirement_first()
             )
 
             form_edit_requirement.do_form_cancel()

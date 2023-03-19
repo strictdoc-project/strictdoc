@@ -29,9 +29,8 @@ class Test_UC11_T44_FreeTextLINKToSection(BaseCase):
             screen_document.assert_on_screen_document()
             screen_document.assert_text("See the section Referenced section")
 
-            form_config: Form_EditConfig = (
-                screen_document.do_open_form_edit_config()
-            )
+            root_node = screen_document.get_root_node()
+            form_config: Form_EditConfig = root_node.do_open_form_edit_config()
 
             modified_text = (
                 "MODIFIED by test. See the section [LINK: SDOC_UG_CONTACT]."

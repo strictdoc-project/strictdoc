@@ -1,6 +1,8 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.components.add_node_menu import AddNode_Menu
+from tests.end2end.helpers.components.node.section import Section
 from tests.end2end.helpers.constants import NODE_1
 from tests.end2end.helpers.screens.document.form_edit_section import (
     Form_EditSection,
@@ -32,8 +34,11 @@ class Test_UC03_T01_CancelNewSection(BaseCase):
 
             screen_document.assert_text("Hello world!")
 
+            section: Section = screen_document.get_section()
+            section_menu: AddNode_Menu = section.do_open_node_menu(NODE_1)
+
             form_edit_section: Form_EditSection = (
-                screen_document.do_node_add_section_above(NODE_1)
+                section_menu.do_node_add_section_above()
             )
             form_edit_section.do_form_cancel()
 

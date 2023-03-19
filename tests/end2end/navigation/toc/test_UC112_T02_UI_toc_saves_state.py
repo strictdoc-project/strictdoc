@@ -28,9 +28,8 @@ class Test_UC112_T02_UI_toc_saves_state(BaseCase):
             # go to document
             screen_document = screen_document_tree.do_click_on_first_document()
             screen_toc: TOC = screen_document.get_toc()
-            viewtype_selector: ViewType_Selector = (
-                screen_document.get_viewtype_selector()
-            )
+
+            viewtype_selector = ViewType_Selector(self)
 
             # toc is on the document view, opened
             screen_document.assert_on_screen_document()

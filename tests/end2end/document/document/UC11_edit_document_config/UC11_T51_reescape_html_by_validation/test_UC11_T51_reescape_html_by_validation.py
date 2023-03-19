@@ -30,9 +30,8 @@ class Test_UC11_T51_ReescapeHTMLByValidation(BaseCase):
             screen_document.assert_on_screen_document()
             screen_document.assert_text("Link does not get corrupted")
 
-            form_config: Form_EditConfig = (
-                screen_document.do_open_form_edit_config()
-            )
+            root_node = screen_document.get_root_node()
+            form_config: Form_EditConfig = root_node.do_open_form_edit_config()
             form_config.do_fill_in_document_abstract(
                 RST_STRING_THAT_NEEDS_HTML_ESCAPING
             )

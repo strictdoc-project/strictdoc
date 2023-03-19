@@ -33,9 +33,12 @@ class Test_UC06_T08_SanitizeTrailingSymbols(BaseCase):
             screen_document.assert_text("Hello world!")
 
             # Requirement
+            root_node = screen_document.get_root_node()
+            root_node_menu = root_node.do_open_node_menu()
             form_edit_requirement: Form_EditRequirement = (
-                screen_document.do_node_add_requirement_first()
+                root_node_menu.do_node_add_requirement_first()
             )
+
             form_edit_requirement.do_fill_in_field_title("Requirement title #1")
             form_edit_requirement.do_fill_in_field_statement(
                 TEXT_WITH_TRAILING_WHITESPACES
@@ -43,10 +46,8 @@ class Test_UC06_T08_SanitizeTrailingSymbols(BaseCase):
             form_edit_requirement.do_form_submit()
 
             # Check the resulting TOC.
-
-            screen_document.assert_node_title_contains(
-                "Requirement title #1", "1"
-            )
+            requirement = screen_document.get_requirement()
+            requirement.assert_requirement_title("Requirement title #1", "1")
             screen_document.assert_toc_contains("Requirement title #1")
 
         assert test_setup.compare_sandbox_and_expected_output()

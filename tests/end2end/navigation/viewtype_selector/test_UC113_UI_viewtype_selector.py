@@ -30,9 +30,7 @@ class Test_UC113_UI_viewtype_selector(BaseCase):
             screen_document.assert_header_document_title("Document title")
             screen_document.assert_text("Hello world!")
 
-            viewtype_selector: ViewType_Selector = (
-                screen_document.get_viewtype_selector()
-            )
+            viewtype_selector = ViewType_Selector(self)
 
             # menu is on the page and closed
             viewtype_selector.assert_viewtype_handler()

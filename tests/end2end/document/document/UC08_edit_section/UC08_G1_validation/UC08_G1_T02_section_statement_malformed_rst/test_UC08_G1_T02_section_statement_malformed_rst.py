@@ -32,8 +32,9 @@ class Test_UC08_G1_T02_EditSectionStatementMalformedRST(BaseCase):
 
             screen_document.assert_text("Hello world!")
 
+            section = screen_document.get_section()
             form_edit_section: Form_EditSection = (
-                screen_document.do_open_form_edit_section()
+                section.do_open_form_edit_section()
             )
             form_edit_section.do_fill_in_text(BROKEN_RST_MARKUP)
             form_edit_section.do_form_submit_and_catch_error(

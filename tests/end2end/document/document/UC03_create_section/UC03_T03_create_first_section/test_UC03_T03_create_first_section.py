@@ -1,7 +1,6 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
-from tests.end2end.helpers.constants import NODE_1
 from tests.end2end.helpers.screens.document.form_edit_section import (
     Form_EditSection,
 )
@@ -33,8 +32,10 @@ class Test_UC03_T03_CreateFirstSection(BaseCase):
 
             screen_document.assert_text("Hello world!")
 
+            root_node = screen_document.get_root_node()
+            root_node_menu = root_node.do_open_node_menu()
             form_edit_section: Form_EditSection = (
-                screen_document.do_node_add_section_first()
+                root_node_menu.do_node_add_section_first()
             )
 
             form_edit_section.do_fill_in_title("First title")
@@ -43,9 +44,8 @@ class Test_UC03_T03_CreateFirstSection(BaseCase):
             )
             form_edit_section.do_form_submit()
 
-            screen_document.assert_node_title_contains(
-                "First title", "1", NODE_1
-            )
+            section = screen_document.get_section()
+            section.assert_section_title("First title", "1")
             screen_document.assert_toc_contains("First title")
 
         assert test_setup.compare_sandbox_and_expected_output()

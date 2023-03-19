@@ -26,11 +26,12 @@ class Test_UC07_T10_EditTableRequirement(BaseCase):
 
             screen_document = screen_document_tree.do_click_on_first_document()
 
+            requirement = screen_document.get_requirement()
             # Make sure that the table-based requirement is rendered.
-            screen_document.assert_requirement_style_table()
+            requirement.assert_requirement_style_table()
 
             form_edit_requirement: Form_EditRequirement = (
-                screen_document.do_open_form_edit_requirement()
+                requirement.do_open_form_edit_requirement()
             )
             form_edit_requirement.do_fill_in_field_uid("Modified UID")
             form_edit_requirement.do_fill_in_field_title("Modified title")
@@ -42,13 +43,17 @@ class Test_UC07_T10_EditTableRequirement(BaseCase):
             )
             form_edit_requirement.do_form_submit()
 
-            screen_document.assert_text("1. Modified title")
-            screen_document.assert_text("Modified UID")
-            screen_document.assert_text("Modified statement.")
-            screen_document.assert_text("Modified rationale.")
+            requirement.assert_requirement_title("Modified title", "1")
+            requirement.assert_requirement_uid_contains("Modified UID")
+            requirement.assert_requirement_statement_contains(
+                "Modified statement."
+            )
+            requirement.assert_requirement_rationale_contains(
+                "Modified rationale."
+            )
             # Make sure that after saving we return to the same display style
             # and the table-based requirement is rendered.
-            screen_document.assert_requirement_style_table()
+            requirement.assert_requirement_style_table()
             screen_document.assert_toc_contains("Modified title")
 
         assert test_setup.compare_sandbox_and_expected_output()

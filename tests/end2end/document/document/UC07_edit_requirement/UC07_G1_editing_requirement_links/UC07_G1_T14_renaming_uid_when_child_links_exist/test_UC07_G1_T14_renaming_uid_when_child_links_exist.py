@@ -31,8 +31,9 @@ class Test_UC07_G1_T14_RenamingUIDWhenChildLinksExist(BaseCase):
 
             screen_document.assert_text("Hello world!")
 
+            requirement = screen_document.get_requirement()
             form_edit_requirement: Form_EditRequirement = (
-                screen_document.do_open_form_edit_requirement()
+                requirement.do_open_form_edit_requirement()
             )
             form_edit_requirement.do_fill_in_field_uid("Modified UID")
 

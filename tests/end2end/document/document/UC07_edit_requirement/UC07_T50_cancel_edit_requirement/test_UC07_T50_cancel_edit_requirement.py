@@ -30,8 +30,9 @@ class Test_UC07_T50_CancelEditRequirement(BaseCase):
             screen_document.assert_header_document_title("Document 1")
             screen_document.assert_text("Hello world!")
 
+            requirement = screen_document.get_requirement()
             form_edit_requirement: Form_EditRequirement = (
-                screen_document.do_open_form_edit_requirement()
+                requirement.do_open_form_edit_requirement()
             )
 
             form_edit_requirement.do_form_cancel()

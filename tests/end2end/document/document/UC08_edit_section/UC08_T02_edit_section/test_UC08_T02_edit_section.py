@@ -31,15 +31,16 @@ class Test_UC08_T02_EditSection(BaseCase):
 
             screen_document.assert_text("Hello world!")
 
+            section = screen_document.get_section()
             form_edit_section: Form_EditSection = (
-                screen_document.do_open_form_edit_section()
+                section.do_open_form_edit_section()
             )
             form_edit_section.do_fill_in_title("Modified title")
             form_edit_section.do_fill_in_text("Modified statement.")
             form_edit_section.do_form_submit()
 
-            screen_document.assert_node_title_contains("Modified title", "1")
-            screen_document.assert_text("Modified statement.")
+            section.assert_section_title("Modified title", "1")
+            section.assert_section_text("Modified statement.")
             screen_document.assert_toc_contains("Modified title")
 
         assert test_setup.compare_sandbox_and_expected_output()

@@ -30,13 +30,12 @@ class Test_UC11_T11_EditDocumentVersion(BaseCase):
             screen_document.assert_header_document_title("Document 1")
             screen_document.assert_text("Hello world!")
 
-            form_config: Form_EditConfig = (
-                screen_document.do_open_form_edit_config()
-            )
+            root_node = screen_document.get_root_node()
+            form_config: Form_EditConfig = root_node.do_open_form_edit_config()
 
             form_config.do_fill_in_document_version("1.0.0")
             form_config.do_form_submit()
 
-            screen_document.assert_document_version_contains("1.0.0")
+            root_node.assert_document_version_contains("1.0.0")
 
         assert test_setup.compare_sandbox_and_expected_output()

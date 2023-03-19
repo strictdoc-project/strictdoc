@@ -36,16 +36,21 @@ class Test_UC03_T04_CreateTwoSiblingSections(BaseCase):
             # Creating Section 1
             first_added_node_number = NODE_1
 
+            root_node = screen_document.get_root_node()
+            root_node_menu = root_node.do_open_node_menu()
             form_edit_section: Form_EditSection = (
-                screen_document.do_node_add_section_first()
+                root_node_menu.do_node_add_section_first()
             )
+
             form_edit_section.do_fill_in_title("First title")
             form_edit_section.do_fill_in_text(
                 "This is a free text of the first section."
             )
             form_edit_section.do_form_submit()
 
-            screen_document.assert_node_title_contains(
+            section = screen_document.get_section(first_added_node_number)
+
+            section.assert_section_title(
                 "First title", "1", first_added_node_number
             )
             screen_document.assert_toc_contains("First title")
@@ -53,18 +58,22 @@ class Test_UC03_T04_CreateTwoSiblingSections(BaseCase):
             # Creating Section 2 below
             second_added_node_number = first_added_node_number + 1
 
-            form_edit_section: Form_EditSection = (
-                screen_document.do_node_add_section_below(
-                    first_added_node_number
-                )
+            section_node_menu = section.do_open_node_menu(
+                first_added_node_number
             )
-            form_edit_section.do_fill_in_title("Second title")
-            form_edit_section.do_fill_in_text(
+
+            form_edit_section2: Form_EditSection = (
+                section_node_menu.do_node_add_section_below()
+            )
+            form_edit_section2.do_fill_in_title("Second title")
+            form_edit_section2.do_fill_in_text(
                 "This is a free text of the second section."
             )
-            form_edit_section.do_form_submit()
+            form_edit_section2.do_form_submit()
 
-            screen_document.assert_node_title_contains(
+            section2 = screen_document.get_section(second_added_node_number)
+
+            section2.assert_section_title(
                 "Second title", "2", second_added_node_number
             )
             screen_document.assert_toc_contains("Second title")

@@ -33,8 +33,10 @@ class Test_UC06_T06_CreateRequirementsInDocument(BaseCase):
             screen_document.assert_text("Hello world!")
 
             # Requirement 1
+            root_node = screen_document.get_root_node()
+            root_node_menu = root_node.do_open_node_menu()
             form_edit_requirement: Form_EditRequirement = (
-                screen_document.do_node_add_requirement_first()
+                root_node_menu.do_node_add_requirement_first()
             )
             form_edit_requirement.do_fill_in_field_uid("REQ-001")
             form_edit_requirement.do_fill_in_field_title("Requirement title #1")
@@ -50,7 +52,11 @@ class Test_UC06_T06_CreateRequirementsInDocument(BaseCase):
             added_requirement_1_level = "1"
             added_requirement_1_position = NODE_1
 
-            screen_document.assert_node_title_contains(
+            requirement = screen_document.get_requirement(
+                added_requirement_1_position
+            )
+
+            requirement.assert_requirement_title(
                 "Requirement title #1",
                 added_requirement_1_level,
                 added_requirement_1_position,
@@ -58,10 +64,11 @@ class Test_UC06_T06_CreateRequirementsInDocument(BaseCase):
             screen_document.assert_toc_contains("Requirement title #1")
 
             # Requirement 2
+            requirement_1_node_menu = requirement.do_open_node_menu(
+                added_requirement_1_position
+            )
             form_edit_requirement: Form_EditRequirement = (
-                screen_document.do_node_add_requirement_below(
-                    added_requirement_1_position
-                )
+                requirement_1_node_menu.do_node_add_requirement_below()
             )
             form_edit_requirement.do_fill_in_field_uid("REQ-002")
             form_edit_requirement.do_fill_in_field_title("Requirement title #2")
@@ -77,7 +84,10 @@ class Test_UC06_T06_CreateRequirementsInDocument(BaseCase):
             added_requirement_2_level = "2"
             added_requirement_2_position = added_requirement_1_position + 1
 
-            screen_document.assert_node_title_contains(
+            requirement_2 = screen_document.get_requirement(
+                added_requirement_2_position
+            )
+            requirement_2.assert_requirement_title(
                 "Requirement title #2",
                 added_requirement_2_level,
                 added_requirement_2_position,
@@ -85,10 +95,11 @@ class Test_UC06_T06_CreateRequirementsInDocument(BaseCase):
             screen_document.assert_toc_contains("Requirement title #2")
 
             # Requirement 3
+            requirement_2_node_menu = requirement.do_open_node_menu(
+                added_requirement_2_position
+            )
             form_edit_requirement: Form_EditRequirement = (
-                screen_document.do_node_add_requirement_below(
-                    added_requirement_2_position
-                )
+                requirement_2_node_menu.do_node_add_requirement_below()
             )
             form_edit_requirement.do_fill_in_field_uid("REQ-003")
             form_edit_requirement.do_fill_in_field_title("Requirement title #3")
@@ -104,7 +115,11 @@ class Test_UC06_T06_CreateRequirementsInDocument(BaseCase):
             added_requirement_3_level = "3"
             added_requirement_3_position = added_requirement_2_position + 1
 
-            screen_document.assert_node_title_contains(
+            requirement_3 = screen_document.get_requirement(
+                added_requirement_3_position
+            )
+
+            requirement_3.assert_requirement_title(
                 "Requirement title #3",
                 added_requirement_3_level,
                 added_requirement_3_position,

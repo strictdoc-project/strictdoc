@@ -31,8 +31,10 @@ class Test_UC03_G1_T01_SectionWithEmptyName(BaseCase):
 
             screen_document.assert_text("Hello world!")
 
+            root_node = screen_document.get_root_node()
+            root_node_menu = root_node.do_open_node_menu()
             form_edit_section: Form_EditSection = (
-                screen_document.do_node_add_section_first()
+                root_node_menu.do_node_add_section_first()
             )
 
             form_edit_section.do_fill_in_title("")

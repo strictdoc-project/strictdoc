@@ -36,16 +36,20 @@ class Test_UC03_T05_CreateThreeNestedSections(BaseCase):
             added_node_1_order = NODE_1
             added_node_1_level = "1"
 
+            root_node = screen_document.get_root_node()
+            root_node_menu = root_node.do_open_node_menu()
             form_edit_section: Form_EditSection = (
-                screen_document.do_node_add_section_first()
+                root_node_menu.do_node_add_section_first()
             )
+
             form_edit_section.do_fill_in_title("Section_1")
             form_edit_section.do_fill_in_text(
                 "This is a free text of the section 1."
             )
             form_edit_section.do_form_submit()
 
-            screen_document.assert_node_title_contains(
+            section1 = screen_document.get_section(added_node_1_order)
+            section1.assert_section_title(
                 "Section_1", added_node_1_level, added_node_1_order
             )
             screen_document.assert_toc_contains("Section_1")
@@ -54,16 +58,19 @@ class Test_UC03_T05_CreateThreeNestedSections(BaseCase):
             added_node_2_order = added_node_1_order + 1
             added_node_2_level = "1.1"
 
+            section_node_menu = section1.do_open_node_menu(added_node_1_order)
             form_edit_section: Form_EditSection = (
-                screen_document.do_node_add_section_child(added_node_1_order)
+                section_node_menu.do_node_add_section_child()
             )
+
             form_edit_section.do_fill_in_title("Section_1_1")
             form_edit_section.do_fill_in_text(
                 "This is a free text of the section 1_1."
             )
             form_edit_section.do_form_submit()
 
-            screen_document.assert_node_title_contains(
+            section2 = screen_document.get_section(added_node_2_order)
+            section2.assert_section_title(
                 "Section_1_1", added_node_2_level, added_node_2_order
             )
             screen_document.assert_toc_contains("Section_1_1")
@@ -72,8 +79,9 @@ class Test_UC03_T05_CreateThreeNestedSections(BaseCase):
             added_node_3_order = added_node_2_order + 1
             added_node_3_level = "1.1.1"
 
+            section_node_menu = section2.do_open_node_menu(added_node_2_order)
             form_edit_section: Form_EditSection = (
-                screen_document.do_node_add_section_child(added_node_2_order)
+                section_node_menu.do_node_add_section_child()
             )
             form_edit_section.do_fill_in_title("Section_1_1_1")
             form_edit_section.do_fill_in_text(
@@ -81,7 +89,8 @@ class Test_UC03_T05_CreateThreeNestedSections(BaseCase):
             )
             form_edit_section.do_form_submit()
 
-            screen_document.assert_node_title_contains(
+            section3 = screen_document.get_section(added_node_2_order)
+            section3.assert_section_title(
                 "Section_1_1_1", added_node_3_level, added_node_3_order
             )
             screen_document.assert_toc_contains("Section_1_1_1")

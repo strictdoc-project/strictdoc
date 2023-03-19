@@ -31,9 +31,11 @@ class Test_UC08_T04_EditSectionEscapeHTML(BaseCase):
 
             screen_document.assert_text("Hello world!")
 
+            section = screen_document.get_section()
             form_edit_section: Form_EditSection = (
-                screen_document.do_open_form_edit_section()
+                section.do_open_form_edit_section()
             )
+
             form_edit_section.assert_contenteditable_contains(
                 "`Link does not get corrupted "
                 "<https://github.com/strictdoc-project/"

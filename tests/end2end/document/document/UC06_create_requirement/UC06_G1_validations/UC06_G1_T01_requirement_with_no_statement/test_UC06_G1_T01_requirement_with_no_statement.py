@@ -31,8 +31,10 @@ class Test_UC06_G1_T01_ValidationRequirementWithNoStatement(BaseCase):
 
             screen_document.assert_text("Hello world!")
 
+            root_node = screen_document.get_root_node()
+            root_node_menu = root_node.do_open_node_menu()
             form_edit_requirement: Form_EditRequirement = (
-                screen_document.do_node_add_requirement_first()
+                root_node_menu.do_node_add_requirement_first()
             )
 
             form_edit_requirement.do_fill_in_field_title("Requirement title")

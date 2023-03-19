@@ -1,7 +1,6 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
-from tests.end2end.helpers.components.confirm import Confirm
 from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
     Screen_DocumentTree,
 )
@@ -29,12 +28,9 @@ class Test_UC10_T01_DeleteRequirement(BaseCase):
 
             screen_document.assert_text("Hello world!")
 
-            screen_document.assert_node_title_contains("Requirement title")
-
-            confirm: Confirm = screen_document.do_node_delete()
-            confirm.assert_confirm()
-            confirm.assert_confirm_requirement_delete()
-            confirm.do_confirm_action()
+            requirement = screen_document.get_requirement()
+            requirement.assert_requirement_title("Requirement title")
+            requirement.do_delete_node()  # confirm is inside
 
             screen_document.assert_no_text("Requirement title")
             screen_document.assert_toc_contains_not("Requirement title")

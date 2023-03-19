@@ -31,8 +31,10 @@ class Test_UC08_G1_T01_EditSectionWithEmptyTitle(BaseCase):
 
             screen_document.assert_text("Hello world!")
 
+            section = screen_document.get_section()
+
             form_edit_section: Form_EditSection = (
-                screen_document.do_open_form_edit_section()
+                section.do_open_form_edit_section()
             )
 
             form_edit_section.do_clear_field("section_title")

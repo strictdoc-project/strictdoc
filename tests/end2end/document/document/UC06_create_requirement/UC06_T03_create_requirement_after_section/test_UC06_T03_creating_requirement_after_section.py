@@ -35,17 +35,18 @@ class Test_UC06_T03_CreateRequirementAfterSection(BaseCase):
             # Section exists
             existing_section_level = "1"
             existing_section_position = NODE_1
-            screen_document.assert_node_title_contains(
+
+            section = screen_document.get_section(existing_section_position)
+            section.assert_section_title(
                 "Section title",
                 existing_section_level,
                 existing_section_position,
             )
 
             # Requirement is added below
+            section_menu = section.do_open_node_menu(existing_section_position)
             form_edit_requirement: Form_EditRequirement = (
-                screen_document.do_node_add_requirement_below(
-                    existing_section_position
-                )
+                section_menu.do_node_add_requirement_below()
             )
             form_edit_requirement.do_fill_in_field_title("Requirement title")
             form_edit_requirement.do_fill_in_field_statement(
@@ -57,7 +58,10 @@ class Test_UC06_T03_CreateRequirementAfterSection(BaseCase):
             added_requirement_level = "2"
             added_requirement_position = existing_section_position + 1
 
-            screen_document.assert_node_title_contains(
+            requirement = screen_document.get_requirement(
+                added_requirement_position
+            )
+            requirement.assert_requirement_title(
                 "Requirement title",
                 added_requirement_level,
                 added_requirement_position,

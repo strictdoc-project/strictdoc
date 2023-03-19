@@ -31,8 +31,9 @@ class Test_UC07_T62_ReescapeHTMLByValidation(BaseCase):
             screen_document.assert_header_document_title("Document 1")
             screen_document.assert_text("Hello world!")
 
+            requirement = screen_document.get_requirement()
             form_edit_requirement: Form_EditRequirement = (
-                screen_document.do_open_form_edit_requirement()
+                requirement.do_open_form_edit_requirement()
             )
             form_edit_requirement.do_fill_in_field_statement(
                 RST_STRING_THAT_NEEDS_HTML_ESCAPING

@@ -1,6 +1,8 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.components.add_node_menu import AddNode_Menu
+from tests.end2end.helpers.components.node.section import Section
 from tests.end2end.helpers.constants import NODE_1
 from tests.end2end.helpers.screens.document.form_edit_section import (
     Form_EditSection,
@@ -34,22 +36,23 @@ class Test_UC03_T02_CreateBeforeSection(BaseCase):
 
             existing_node_number = NODE_1
 
-            screen_document.assert_node_title_contains(
-                "Section B", "1", existing_node_number
+            section: Section = screen_document.get_section()
+            section_menu: AddNode_Menu = section.do_open_node_menu(
+                existing_node_number
             )
 
+            section.assert_section_title("Section B", "1", existing_node_number)
+
             form_edit_section: Form_EditSection = (
-                screen_document.do_node_add_section_above(existing_node_number)
+                section_menu.do_node_add_section_above()
             )
 
             form_edit_section.do_fill_in_title("Section A")
             form_edit_section.do_fill_in_text("Section A text.")
             form_edit_section.do_form_submit()
 
-            screen_document.assert_node_title_contains(
-                "Section A", "1", existing_node_number
-            )
-            screen_document.assert_node_title_contains(
+            section.assert_section_title("Section A", "1", existing_node_number)
+            section.assert_section_title(
                 "Section B", "2", existing_node_number + 1
             )
 

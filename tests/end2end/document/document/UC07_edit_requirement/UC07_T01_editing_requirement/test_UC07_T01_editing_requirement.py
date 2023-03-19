@@ -29,16 +29,22 @@ class Test_UC07_T01_EditRequirement(BaseCase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
             screen_document.assert_text("Hello world!")
-            screen_document.assert_text("1. Requirement title")
-            screen_document.assert_text("Requirement UID")
-            screen_document.assert_text("Requirement statement.")
-            screen_document.assert_text("Requirement rationale.")
+
+            requirement = screen_document.get_requirement()
+            requirement.assert_requirement_title("Requirement title", "1")
+            requirement.assert_requirement_uid_contains("Requirement UID")
+            requirement.assert_requirement_statement_contains(
+                "Requirement statement."
+            )
+            requirement.assert_requirement_rationale_contains(
+                "Requirement rationale."
+            )
             # Make sure that the normal (not table-based) requirement is
             # rendered.
-            screen_document.assert_requirement_style_simple()
+            requirement.assert_requirement_style_simple()
 
             form_edit_requirement: Form_EditRequirement = (
-                screen_document.do_open_form_edit_requirement()
+                requirement.do_open_form_edit_requirement()
             )
 
             form_edit_requirement.assert_on_form()
@@ -52,12 +58,16 @@ class Test_UC07_T01_EditRequirement(BaseCase):
             )
             form_edit_requirement.do_form_submit()
 
-            screen_document.assert_text("1. Modified title")
-            screen_document.assert_text("Modified UID")
-            screen_document.assert_text("Modified statement.")
-            screen_document.assert_text("Modified rationale.")
+            requirement.assert_requirement_title("Modified title", "1")
+            requirement.assert_requirement_uid_contains("Modified UID")
+            requirement.assert_requirement_statement_contains(
+                "Modified statement."
+            )
+            requirement.assert_requirement_rationale_contains(
+                "Modified rationale."
+            )
             # Make sure that after saving we return to the same display style.
-            screen_document.assert_requirement_style_simple()
+            requirement.assert_requirement_style_simple()
             screen_document.assert_toc_contains("Modified title")
 
         assert test_setup.compare_sandbox_and_expected_output()

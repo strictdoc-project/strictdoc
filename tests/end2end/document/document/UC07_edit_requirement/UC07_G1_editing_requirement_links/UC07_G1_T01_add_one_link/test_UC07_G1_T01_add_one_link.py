@@ -36,7 +36,11 @@ class Test_UC07_G1_T01_AddOneLink(BaseCase):
             added_requirement_1_level = "1"
             added_requirement_1_position = NODE_1
 
-            screen_document.assert_node_title_contains(
+            requirement1 = screen_document.get_requirement(
+                added_requirement_1_position
+            )
+
+            requirement1.assert_requirement_title(
                 "Requirement title #1",
                 added_requirement_1_level,
                 added_requirement_1_position,
@@ -47,7 +51,11 @@ class Test_UC07_G1_T01_AddOneLink(BaseCase):
             added_requirement_2_level = "2"
             added_requirement_2_position = NODE_1 + 1
 
-            screen_document.assert_node_title_contains(
+            requirement2 = screen_document.get_requirement(
+                added_requirement_2_position
+            )
+
+            requirement2.assert_requirement_title(
                 "Requirement title #2",
                 added_requirement_2_level,
                 added_requirement_2_position,
@@ -56,7 +64,7 @@ class Test_UC07_G1_T01_AddOneLink(BaseCase):
 
             # Edit Requirement 2: add one parent link
             form_edit_requirement: Form_EditRequirement = (
-                screen_document.do_open_form_edit_requirement(
+                requirement2.do_open_form_edit_requirement(
                     added_requirement_2_position
                 )
             )

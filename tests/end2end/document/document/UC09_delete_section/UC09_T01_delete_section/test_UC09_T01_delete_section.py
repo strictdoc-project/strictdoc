@@ -1,7 +1,6 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
-from tests.end2end.helpers.components.confirm import Confirm
 from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
     Screen_DocumentTree,
 )
@@ -29,12 +28,9 @@ class Test_UC09_T01_DeleteSection(BaseCase):
 
             screen_document.assert_text("Hello world!")
 
-            screen_document.assert_node_title_contains("First section")
-
-            confirm: Confirm = screen_document.do_node_delete()
-            confirm.assert_confirm()
-            confirm.assert_confirm_section_delete()
-            confirm.do_confirm_action()
+            section = screen_document.get_section()
+            section.assert_section_title("First section")
+            section.do_delete_node()  # confirm is inside
 
             screen_document.assert_no_text("First section")
             screen_document.assert_toc_contains_not("First section")

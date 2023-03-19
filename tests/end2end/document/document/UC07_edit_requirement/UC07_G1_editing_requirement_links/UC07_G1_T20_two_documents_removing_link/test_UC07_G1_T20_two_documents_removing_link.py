@@ -27,7 +27,8 @@ class Test_UC07_G1_T20_TwoDocumentsRemovingLink(BaseCase):
             # requirement REQ-001 does contain a child link to REQ-002.
             screen_document1 = screen_document_tree.do_click_on_the_document(1)
             screen_document1.assert_text("Hello world!")
-            screen_document1.assert_requirement_has_child_link("REQ-002")
+            requirement1 = screen_document1.get_requirement()
+            requirement1.assert_requirement_has_child_link("REQ-002")
 
             # Go back to tree
             self.open(test_server.get_host_and_port())
@@ -36,11 +37,12 @@ class Test_UC07_G1_T20_TwoDocumentsRemovingLink(BaseCase):
             # requirement REQ-001 does contain a parent link to REQ-001,
             screen_document2 = screen_document_tree.do_click_on_the_document(2)
             screen_document2.assert_text("Hello world 2!")
-            screen_document2.assert_requirement_has_parent_link("REQ-001")
+            requirement2 = screen_document2.get_requirement()
+            requirement2.assert_requirement_has_parent_link("REQ-001")
 
             # and remove the parent link to REQ-001.
             form_edit_requirement: Form_EditRequirement = (
-                screen_document2.do_open_form_edit_requirement()
+                requirement2.do_open_form_edit_requirement()
             )
             form_edit_requirement.do_delete_parent_link()
             # Make sure that the field is removed from the form:
@@ -51,11 +53,13 @@ class Test_UC07_G1_T20_TwoDocumentsRemovingLink(BaseCase):
             self.open(test_server.get_host_and_port())
             screen_document1 = screen_document_tree.do_click_on_the_document(1)
             screen_document1.assert_text("Hello world!")
-            screen_document1.assert_requirement_has_not_child_link("REQ-002")
+            requirement1 = screen_document1.get_requirement()
+            requirement1.assert_requirement_has_not_child_link("REQ-002")
 
             self.open(test_server.get_host_and_port())
             screen_document2 = screen_document_tree.do_click_on_the_document(2)
             screen_document2.assert_text("Hello world 2!")
-            screen_document2.assert_requirement_has_not_parent_link("REQ-001")
+            requirement2 = screen_document2.get_requirement()
+            requirement2.assert_requirement_has_not_parent_link("REQ-001")
 
         assert test_setup.compare_sandbox_and_expected_output()

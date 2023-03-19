@@ -32,29 +32,30 @@ class Test_UC07_G1_T03_RemoveLink(BaseCase):
 
             screen_document.assert_text("Hello world!")
 
+            requirement = screen_document.get_requirement()
+
             requirement1_order = NODE_1
             requirement2_order = NODE_1 + 1
 
             # Make sure there is the reference to the child in Requirement 1:
-            screen_document.assert_requirement_uid_contains(
+            requirement.assert_requirement_uid_contains(
                 "REQ-001", requirement1_order
             )
-            screen_document.assert_requirement_has_child_link(
+            requirement.assert_requirement_has_child_link(
                 "REQ-002", requirement1_order
             )
             # Make sure there is the reference to the parent in Requirement 2:
-            screen_document.assert_requirement_uid_contains(
+            requirement.assert_requirement_uid_contains(
                 "REQ-002", requirement2_order
             )
-            screen_document.assert_requirement_has_parent_link(
+            requirement.assert_requirement_has_parent_link(
                 "REQ-001", requirement2_order
             )
 
             # edit the second requirement
+
             form_edit_requirement: Form_EditRequirement = (
-                screen_document.do_open_form_edit_requirement(
-                    requirement2_order
-                )
+                requirement.do_open_form_edit_requirement(requirement2_order)
             )
             form_edit_requirement.do_delete_parent_link()
             # Make sure that the field is removed from the form:
@@ -62,17 +63,17 @@ class Test_UC07_G1_T03_RemoveLink(BaseCase):
             form_edit_requirement.do_form_submit()
 
             # Make sure there is no reference to the child in Requirement 1:
-            screen_document.assert_requirement_uid_contains(
+            requirement.assert_requirement_uid_contains(
                 "REQ-001", requirement1_order
             )
-            screen_document.assert_requirement_has_not_child_link(
+            requirement.assert_requirement_has_not_child_link(
                 "REQ-002", requirement1_order
             )
             # Make sure there is no reference to the parent in Requirement 2:
-            screen_document.assert_requirement_uid_contains(
+            requirement.assert_requirement_uid_contains(
                 "REQ-002", requirement2_order
             )
-            screen_document.assert_requirement_has_not_parent_link(
+            requirement.assert_requirement_has_not_parent_link(
                 "REQ-001", requirement2_order
             )
 

@@ -35,8 +35,9 @@ class Test_UC07_G1_T13_RenamingUIDWhenParentLinksExist(BaseCase):
             req2_order = NODE_1 + 1
 
             # Open form and add 1 fields:
+            requirement = screen_document.get_requirement()
             form_edit_requirement: Form_EditRequirement = (
-                screen_document.do_open_form_edit_requirement(req2_order)
+                requirement.do_open_form_edit_requirement(req2_order)
             )
             form_edit_requirement.do_fill_in_field_uid("Modified UID")
 

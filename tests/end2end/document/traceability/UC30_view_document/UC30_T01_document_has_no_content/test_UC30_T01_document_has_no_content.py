@@ -1,6 +1,7 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.components.viewtype_selector import ViewType_Selector
 from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
     Screen_DocumentTree,
 )
@@ -26,5 +27,10 @@ class Test_UC30_T01_document_has_no_content(BaseCase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document title")
             screen_document.assert_text("Hello world!")
+
+            viewtype_selector = ViewType_Selector(self)
+            screen_traceability = viewtype_selector.do_go_to_traceability()
+            screen_traceability.assert_on_screen_traceability()
+            screen_traceability.assert_empty_view()
 
         assert test_setup.compare_sandbox_and_expected_output()

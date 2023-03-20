@@ -2,9 +2,6 @@ from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.helpers.components.node.node import Node
-from tests.end2end.helpers.screens.document.form_edit_requirement import (
-    Form_EditRequirement,
-)
 
 
 class Requirement(Node):  # pylint: disable=invalid-name
@@ -167,16 +164,3 @@ class Requirement(Node):  # pylint: disable=invalid-name
             f"[contains(., '{parent_uid}')]",
             by=By.XPATH,
         )
-
-    # forms
-
-    def do_open_form_edit_requirement(self) -> Form_EditRequirement:
-        self.test_case.hover_and_click(
-            hover_selector=f"{self.node_xpath}",
-            click_selector=(
-                f'{self.node_xpath}//*[@data-testid="node-edit-action"]'
-            ),
-            hover_by=By.XPATH,
-            click_by=By.XPATH,
-        )
-        return Form_EditRequirement(self.test_case)

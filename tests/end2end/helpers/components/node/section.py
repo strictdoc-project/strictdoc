@@ -2,9 +2,6 @@ from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.helpers.components.node.node import Node
-from tests.end2end.helpers.screens.document.form_edit_section import (
-    Form_EditSection,
-)
 
 
 class Section(Node):  # pylint: disable=invalid-name
@@ -37,16 +34,3 @@ class Section(Node):  # pylint: disable=invalid-name
             f"{self.node_xpath}//sdoc-section-text[contains(., '{text}')]",
             by=By.XPATH,
         )
-
-    # forms
-
-    def do_open_form_edit_section(self) -> Form_EditSection:
-        self.test_case.hover_and_click(
-            hover_selector=f"{self.node_xpath}",
-            click_selector=(
-                f'{self.node_xpath}//*[@data-testid="node-edit-action"]'
-            ),
-            hover_by=By.XPATH,
-            click_by=By.XPATH,
-        )
-        return Form_EditSection(self.test_case)

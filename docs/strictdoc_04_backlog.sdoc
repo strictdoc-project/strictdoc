@@ -11,10 +11,13 @@ While this backlog overlaps with StrictDoc's `GitHub issues tracker <https://git
 [/FREETEXT]
 
 [SECTION]
-TITLE: Backlog: Graphical user interface
+UID: SDOC_BL_WEB
+TITLE: Backlog: Web-based user interface
 
 [FREETEXT]
 - Uploading images via Web interface.
+
+- Deleting sections recursively. Correct clean-up of all traceability information.
 
 - Editing remaining document options: Inline/Table, Requirements in TOC, etc.
 
@@ -22,11 +25,13 @@ TITLE: Backlog: Graphical user interface
 
   - Adding/editing parent/child requirements: validation of cycles.
 
-- Integration with Git repository.
+- Integration with Git repository. Make the server commit changes to .sdoc files automatically. To a user, provide visibility to what happens under the hood.
 
 - Section form:
 
   - ``UID``
+  - Show incoming/outgoing links.
+  - Links between sections and documents.
 
 - User support - Sign In, Sign Out, Register.
 

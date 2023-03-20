@@ -28,15 +28,13 @@ class Section(Node):  # pylint: disable=invalid-name
     ) -> None:
         title = super().create_node_title_string(node_title, node_level)
         self.test_case.assert_element(
-            f"{self.node_xpath}"
-            f"//sdoc-section-title//*[contains(., '{title}')]",
+            f"{self.node_xpath}//sdoc-section-title[contains(., '{title}')]",
             by=By.XPATH,
         )
 
     def assert_section_text(self, text: str) -> None:
         self.test_case.assert_element(
-            f"{self.node_xpath}"
-            f"//sdoc-section-text//*[contains(., '{text}')]",
+            f"{self.node_xpath}//sdoc-section-text[contains(., '{text}')]",
             by=By.XPATH,
         )
 

@@ -166,9 +166,26 @@ sdoc-node:not([node-style="card"]) {
 }
 
 @supports not (container-type: inline-size) {
-  /* TODO: make a better backport */
-  sdoc-requirement {
-    display: block;
+  /* TODO test 888px */
+  @media (max-width: 888px) {
+    /* Do the same as if there was a container support */
+
+    sdoc-requirement[requirement-view="table"] {
+      /* removes columns: */
+      grid-template-columns: 1fr;
+      /* removes inner border: */
+      background-color: var(--requirement-bg-light-color);
+    }
+
+    sdoc-requirement[requirement-view="table"]
+      sdoc-requirement-title,
+    sdoc-requirement[requirement-view="table"]
+      sdoc-requirement-field-label,
+    sdoc-requirement[requirement-view="table"]
+      sdoc-requirement-field {
+        /* removes columns: */
+        grid-column: unset;
+      }
   }
 }
 

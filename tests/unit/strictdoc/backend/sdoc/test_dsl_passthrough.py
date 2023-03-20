@@ -601,10 +601,10 @@ REFS:
     references = requirement.references
     assert len(references) == 1
 
-    reference = references[0]
+    reference: FileReference = references[0]
     assert isinstance(reference, FileReference)
     assert reference.ref_type == ReferenceType.FILE
-    assert reference.file_entry.file_path == "/tmp/sample.cpp"
+    assert reference.g_file_entry.g_file_path == "/tmp/sample.cpp"
 
     writer = SDWriter()
     output = writer.write(document)
@@ -1156,15 +1156,15 @@ REFS:
     assert reference.ref_type == ReferenceType.PARENT
     assert reference.ref_uid == "ID-001"
 
-    reference = references[1]
+    reference: FileReference = references[1]
     assert reference.ref_type == ReferenceType.FILE
     assert isinstance(reference, FileReference)
-    assert reference.file_entry.file_path == "/tmp/sample1.cpp"
+    assert reference.g_file_entry.g_file_path == "/tmp/sample1.cpp"
 
     reference = references[2]
     assert reference.ref_type == ReferenceType.FILE
     assert isinstance(reference, FileReference)
-    assert reference.file_entry.file_path == "/tmp/sample2.cpp"
+    assert reference.g_file_entry.g_file_path == "/tmp/sample2.cpp"
 
     reference = references[3]
     assert reference.ref_type == ReferenceType.BIB_REF
@@ -1208,10 +1208,10 @@ REFS:
     references = ll_requirement.references
     assert len(references) == 1
 
-    reference = references[0]
+    reference: FileReference = references[0]
     assert isinstance(reference, FileReference)
     assert reference.ref_type == ReferenceType.FILE
-    assert reference.file_entry.file_path == "/tmp/sample.cpp"
+    assert reference.g_file_entry.g_file_path == "/tmp/sample.cpp"
 
     writer = SDWriter()
     output = writer.write(document)
@@ -1251,20 +1251,20 @@ REFS:
     references = ll_requirement.references
     assert len(references) == 3
 
-    reference = references[0]
+    reference: FileReference = references[0]
     assert isinstance(reference, FileReference)
     assert reference.ref_type == ReferenceType.FILE
-    assert reference.file_entry.file_path == "/tmp/sample1.cpp"
+    assert reference.g_file_entry.g_file_path == "/tmp/sample1.cpp"
 
     reference = references[1]
     assert isinstance(reference, FileReference)
     assert reference.ref_type == ReferenceType.FILE
-    assert reference.file_entry.file_path == "/tmp/sample2.cpp"
+    assert reference.g_file_entry.g_file_path == "/tmp/sample2.cpp"
 
     reference = references[2]
     assert isinstance(reference, FileReference)
     assert reference.ref_type == ReferenceType.FILE
-    assert reference.file_entry.file_path == "/tmp/sample3.cpp"
+    assert reference.g_file_entry.g_file_path == "/tmp/sample3.cpp"
 
     writer = SDWriter()
     output = writer.write(document)

@@ -3,7 +3,7 @@
 
   {# ranges #}
   {%- set source_file_general_reqs, source_file_range_reqs =
-    traceability_index.get_source_file_reqs(source_file.in_doctree_source_file_rel_path) -%}
+    traceability_index.get_source_file_reqs(source_file.in_doctree_source_file_rel_path_posix) -%}
 
   {%- if source_file_range_reqs -%}
   <div class="source-file__ranges">

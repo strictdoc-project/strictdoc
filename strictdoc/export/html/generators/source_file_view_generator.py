@@ -92,7 +92,7 @@ class SourceFileViewHTMLGenerator:
         )
 
         coverage_info = traceability_index.get_coverage_info(
-            source_file.in_doctree_source_file_rel_path
+            source_file.in_doctree_source_file_rel_path_posix
         )
         for pragma in coverage_info.pragmas:
             pragma_line = pragma.ng_source_line_begin

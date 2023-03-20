@@ -1,4 +1,3 @@
-import os
 from typing import List, Optional
 
 from pybtex.database import Entry
@@ -44,14 +43,16 @@ class GrammarReferenceType:
 
 @auto_described
 class FileEntry:
-    def __init__(self, parent, file_format: Optional[str], file_path: str):
+    def __init__(self, parent, g_file_format: Optional[str], g_file_path: str):
         self.parent = parent
-        self.file_format = file_format  # Default: FileEntryFormat.SOURCECODE
-        self.file_path = file_path
 
-        path_forward_slashes = file_path.replace("\\", "/")
-        self.path_forward_slashes = path_forward_slashes
-        self.path_normalized = os.path.normpath(path_forward_slashes)
+        # Default: FileEntryFormat.SOURCECODE  # noqa: ERA001
+        self.g_file_format: Optional[str] = g_file_format
+
+        # TODO: Might be worth to prohibit the use of Windows paths altogether.
+        self.g_file_path: str = g_file_path
+        file_path_posix = g_file_path.replace("\\", "/")
+        self.file_path_posix = file_path_posix
 
 
 class FileEntryFormat:

@@ -34,12 +34,12 @@ ParentReqReference[noskipws]:
 FileReference[noskipws]:
   // FileReference is an early, experimental feature. Do not use yet.
   '- TYPE: File' '\n'
-  file_entry = FileEntry
+  g_file_entry = FileEntry
 ;
 
 FileEntry[noskipws]:
-  ('  FORMAT: ' file_format = FileEntryFormat '\n')?
-   '  VALUE: ' file_path = /.*$/ '\n'
+  ('  FORMAT: ' g_file_format = FileEntryFormat '\n')?
+   '  VALUE: ' g_file_path = /.*$/ '\n'
 ;
 
 FileEntryFormat[noskipws]:

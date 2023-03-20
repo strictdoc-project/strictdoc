@@ -1,0 +1,30 @@
+# This test ensures that the traceability works without issues for the following
+# setup:
+# docs/ folder contains an .sdoc document.
+# src/ folder contains source files.
+# the .sdoc document references files in the src/ folder.
+
+RUN: %strictdoc export %S --experimental-enable-file-traceability --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: TEST DOCUMENT
+
+RUN: %check_exists --file "%S/Output/html/_source_files/src/file1.py.html"
+RUN: %check_exists --file "%S/Output/html/_source_files/src/file2.py.html"
+
+RUN: %cat %S/Output/html/_source_files/src/file1.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE:<a
+CHECK-SOURCE-FILE:class="pointer"
+CHECK-SOURCE-FILE:data-begin="5"
+CHECK-SOURCE-FILE:data-end="7"
+CHECK-SOURCE-FILE:data-traceability-file-type="this_file"
+CHECK-SOURCE-FILE:href="../../_source_files/src/file1.py.html#REQ-01#5#7"
+CHECK-SOURCE-FILE:title="lines 5-7 in file src/file1.py"
+CHECK-SOURCE-FILE:>
+
+CHECK-SOURCE-FILE:<a
+CHECK-SOURCE-FILE:class="pointer"
+CHECK-SOURCE-FILE:data-begin="3"
+CHECK-SOURCE-FILE:data-end="6"
+CHECK-SOURCE-FILE:data-traceability-file-type="other_file"
+CHECK-SOURCE-FILE:href="../../_source_files/src/file2.py.html#REQ-01#3#6"
+CHECK-SOURCE-FILE:title="lines 3-6 in file src/file2.py"
+CHECK-SOURCE-FILE:>

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from strictdoc.backend.sdoc.models.type_system import (
     BibEntry,
     FileEntry,
@@ -15,13 +17,15 @@ class Reference:
 
 @auto_described
 class FileReference(Reference):
-    def __init__(self, parent, file_entry: FileEntry):
+    def __init__(self, parent, g_file_entry: FileEntry):
         super().__init__(ReferenceType.FILE, parent)
-        # FIXME: rather make private and expose methods (Law of Demeter).
-        self.file_entry = file_entry
+        self.g_file_entry: FileEntry = g_file_entry
 
-    def get_path(self) -> str:
-        return self.file_entry.file_path
+    def get_posix_path(self) -> str:
+        return self.g_file_entry.file_path_posix
+
+    def get_file_format(self) -> Optional[str]:
+        return self.g_file_entry.g_file_format
 
 
 @auto_described

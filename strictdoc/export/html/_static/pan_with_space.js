@@ -11,6 +11,7 @@ window.addEventListener('load', function () {
 
   const element = document.getElementById('pan_with_space');
   console.assert(!!element, "Expected a valid element.");
+
   document.addEventListener("keydown", function (e) {
     if (e.key === ' ' || e.key === 'Spacebar') {
       // ' ' is standard, 'Spacebar' was used by IE9 and Firefox < 37
@@ -59,16 +60,16 @@ window.addEventListener('load', function () {
     }
   });
 
-  document.addEventListener("mousedown", function (e) {
+  element.addEventListener("mousedown", function (e) {
     if (!state.spacePressed) {
       return;
     }
 
-    // tell the browser we're handling this event
+    // Tell the browser we're handling this event.
     e.preventDefault();
     e.stopPropagation();
 
-    // calc the starting mouse X,Y for the drag
+    // Calc the starting mouse X,Y for the drag.
     state.startX = parseInt(e.clientX);
     state.startY = parseInt(e.clientY);
 
@@ -78,7 +79,7 @@ window.addEventListener('load', function () {
     state.isDown = true;
   });
 
-  document.addEventListener("mouseup", function (e) {
+  element.addEventListener("mouseup", function (e) {
     if (!state.spacePressed) {
       return;
     }
@@ -89,7 +90,7 @@ window.addEventListener('load', function () {
     state.isDown = false;
   });
 
-  document.addEventListener("mousemove", function (e) {
+  element.addEventListener("mousemove", function (e) {
     if (!state.isDown) {
       return;
     }
@@ -110,16 +111,35 @@ window.addEventListener('load', function () {
     state.startX = mouseX;
     state.startY = mouseY;
 
-    var speedupFactor = 2;
-    element.scrollTop = element.scrollTop - dy * speedupFactor;
-    element.scrollLeft = element.scrollLeft - dx * speedupFactor;
+    var speedupFactor = 10;
+    element.scrollTo(
+      element.scrollLeft - dx * speedupFactor, element.scrollTop - dy * speedupFactor
+    );
   });
 
-  document.addEventListener("mouseleave", function (e) {
-    // tell the browser we're handling this event
+  element.addEventListener("mouseleave", function (e) {
+    // Tell the browser we're handling this event.
     e.preventDefault();
     e.stopPropagation();
 
     state.isDown = false;
   });
+});
+
+// When a window is loaded, scroll to the central column of the DTR tree.
+// The central column is the one where the current document's requirements are
+// listed top-to-bottom.
+document.addEventListener("DOMContentLoaded", function(event) {
+  const element = document.getElementById('pan_with_space');
+  const firstNode = document.querySelector('.content_item[data-role="current"]');
+
+  const elementViewportOffset = element.getBoundingClientRect();
+  const firstNodeViewportOffset = firstNode.getBoundingClientRect();
+
+  const leftDiff = firstNodeViewportOffset.x - elementViewportOffset.x;
+
+  element.scrollTo(
+    leftDiff - window.screen.width / 2 + firstNode.offsetWidth / 2,
+    0,
+  );
 });

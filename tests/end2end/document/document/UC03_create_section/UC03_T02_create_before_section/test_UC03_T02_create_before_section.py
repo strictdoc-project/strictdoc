@@ -1,7 +1,6 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
-from tests.end2end.helpers.components.add_node_menu import AddNode_Menu
 from tests.end2end.helpers.screens.document.form_edit_section import (
     Form_EditSection,
 )
@@ -38,7 +37,7 @@ class Test_UC03_T02_CreateBeforeSection(BaseCase):
             section_old = screen_document.get_section(existing_node_number)
             section_old.assert_section_title("Section B", "1")
 
-            section_old_menu: AddNode_Menu = section_old.do_open_node_menu()
+            section_old_menu = section_old.do_open_node_menu()
 
             form_edit_section: Form_EditSection = (
                 section_old_menu.do_node_add_section_above()

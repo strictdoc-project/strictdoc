@@ -1,8 +1,8 @@
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
-from tests.end2end.helpers.components.add_node_menu import AddNode_Menu
 from tests.end2end.helpers.components.confirm import Confirm
+from tests.end2end.helpers.components.node.add_node_menu import AddNode_Menu
 from tests.end2end.helpers.constants import NBSP
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,

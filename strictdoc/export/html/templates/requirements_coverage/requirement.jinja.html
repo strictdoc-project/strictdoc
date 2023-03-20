@@ -1,4 +1,5 @@
-<sdoc-node-card
+<sdoc-node
+  node-style="card"
   node-role="requirement"
   js-requirements-coverage
   {%- if requirement.reserved_status %}
@@ -9,7 +10,7 @@
   {%- endif %}
 >
   {% include "_shared/requirement_block/uid_and_title.jinja.html" %}
-</sdoc-node-card>
+</sdoc-node>
 
 {% if config.experimental_enable_file_traceability %}
 {% include "_shared/requirement_block/files_tree.jinja.html" %}

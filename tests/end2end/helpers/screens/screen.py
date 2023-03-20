@@ -79,8 +79,27 @@ class Screen:  # pylint: disable=invalid-name, too-many-public-methods
 
     # Requirement
     def get_requirement(self, node_order: int = 1) -> Requirement:
-        Requirement(self.test_case, node_order).assert_is_requirement()
-        return Requirement(self.test_case, node_order)
+        """Based on "//sdoc-node[@data-testid='node-requirement']" """
+        requirement = Requirement.with_node(self.test_case, node_order)
+        requirement.assert_is_requirement()
+        return requirement
+
+    def get_requirement_modal(self, node_order: int = -1) -> Requirement:
+        """Based on "//sdoc-requirement". Searches for an <sdoc-requirement>
+        without taking the node <sdoc-node> into account.
+
+        Args:
+            node_order (int, optional): The requirement in the modal window
+            will always be the last one on the page.
+            Defaults to -1. But this option does not work.
+            Must specify the parameter explicitly.
+
+        Returns:
+            Requirement: Asserts for all fields are available.
+        """
+        requirement = Requirement.without_node(self.test_case, node_order)
+        requirement.assert_is_requirement()
+        return requirement
 
     # TOC
     def get_toc(self) -> TOC:

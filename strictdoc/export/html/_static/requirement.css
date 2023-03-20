@@ -51,7 +51,7 @@ sdoc-requirement-title {
   outline: 1px solid var(--requirement-border-color);
 }
 
-sdoc-node-card sdoc-requirement-title {
+[node-style="card"] sdoc-requirement-title {
   font-size: 1em;
 }
 
@@ -131,7 +131,7 @@ sdoc-requirement[requirement-view="table"]
     background-color: var(--requirement-bg-light-color);
   }
 
-sdoc-node {
+sdoc-node:not([node-style="card"]) {
   /* Making the node a container for the requirement: */
   container: node / inline-size;
   /*

@@ -2,8 +2,7 @@ turbo-frame {
   display: contents;
 }
 
-sdoc-node,
-sdoc-node-card {
+sdoc-node {
   display: block;
   position: relative;
 }
@@ -19,33 +18,33 @@ sdoc-node {
 
 /* editable_node */
 
-sdoc-node-card[node-role="requirement"],
+sdoc-node[node-style="card"][node-role="requirement"],
 [data-editable_node="on"] {
   box-shadow: var(--base-elevation-0);
   transition: box-shadow .5s;
 }
 
-sdoc-node-card[node-role="requirement"]:hover,
+sdoc-node[node-style="card"][node-role="requirement"]:hover,
 [data-editable_node="on"]:hover {
   box-shadow: var(--base-elevation-node);
   z-index: 10;
 }
 
-/* sdoc-node-card */
+/* sdoc-node[node-style="card"] */
 
-sdoc-node-card {
+sdoc-node[node-style="card"] {
   background-color: var(--color-bg-contrast);
   border-radius: 3px;
   /* compensate outline: */
   padding: 1px;
 }
 
-sdoc-node-card[node-role="section"] {
+sdoc-node[node-style="card"][node-role="section"] {
   background-color: var(--color-bg-contrast);
   padding: calc(var(--base-rhythm)) calc(var(--base-rhythm)*2);
 }
 
-[data-role='current'] sdoc-node-card {
+[data-role='current'] sdoc-node[node-style="card"] {
   background-color: var(--color-bg-contrast);
 }
 
@@ -53,26 +52,26 @@ sdoc-node-card[node-role="section"] {
 
 }
 
-[data-role='parents'] sdoc-node-card,
-[data-role='children'] sdoc-node-card {
+[data-role='parents'] sdoc-node[node-style="card"],
+[data-role='children'] sdoc-node[node-style="card"] {
   background-color: var(--color-bg-secondary);
   width: var(--card-width);
 }
 
-sdoc-node-card.highlighted {
+sdoc-node[node-style="card"].highlighted {
   background-color: var(--color-highlight);
 }
 
-[data-viewtype="traceability"] sdoc-node-card + sdoc-node-card {
+[data-viewtype="traceability"] sdoc-node[node-style="card"] + sdoc-node[node-style="card"] {
   margin-top: var(--base-padding);
 }
 
-[data-viewtype="deep_traceability"] sdoc-node-card {
+[data-viewtype="deep_traceability"] sdoc-node[node-style="card"] {
   /* width: var(--card-width); */
   /* flex-grow: 1; */
 }
 
-[data-viewtype="requirements-coverage"] sdoc-node-card {
+[data-viewtype="requirements-coverage"] sdoc-node[node-style="card"] {
   width: calc(var(--card-width)*0.75);
   /* width: auto; */
   font-size: .85em;
@@ -81,8 +80,7 @@ sdoc-node-card.highlighted {
 
 /* nouid */
 
-sdoc-node.nouid,
-sdoc-node-card.nouid {
+sdoc-node.nouid {
   background-color: rgb(240, 220, 220);
 }
 

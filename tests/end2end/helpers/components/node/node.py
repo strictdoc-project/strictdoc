@@ -4,6 +4,12 @@ from seleniumbase import BaseCase
 from tests.end2end.helpers.components.add_node_menu import AddNode_Menu
 from tests.end2end.helpers.components.confirm import Confirm
 from tests.end2end.helpers.constants import NBSP
+from tests.end2end.helpers.screens.document.form_edit_requirement import (
+    Form_EditRequirement,
+)
+from tests.end2end.helpers.screens.document.form_edit_section import (
+    Form_EditSection,
+)
 
 
 class Node:  # pylint: disable=invalid-name
@@ -93,7 +99,7 @@ class Node:  # pylint: disable=invalid-name
 
     # Node delete
 
-    def do_node_delete_confirm(self) -> Confirm:
+    def _get_node_delete_confirm(self) -> Confirm:
         """Need to be confirmed. For full confirmed action, use do_delete_node.
 
         Returns:
@@ -111,7 +117,7 @@ class Node:  # pylint: disable=invalid-name
         return Confirm(self.test_case)
 
     def do_delete_node(self) -> None:
-        confirm = self.do_node_delete_confirm()
+        confirm = self._get_node_delete_confirm()
         confirm.assert_confirm()
         confirm.do_confirm_action()
 
@@ -127,6 +133,27 @@ class Node:  # pylint: disable=invalid-name
             click_by=By.XPATH,
         )
         return AddNode_Menu(self.test_case, self.node_xpath)
+
+    # forms
+
+    def _do_node_edit(self) -> None:
+        """Just click on the edit button"""
+        self.test_case.hover_and_click(
+            hover_selector=f"{self.node_xpath}",
+            click_selector=(
+                f'{self.node_xpath}//*[@data-testid="node-edit-action"]'
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+
+    def do_open_form_edit_requirement(self) -> Form_EditRequirement:
+        self._do_node_edit()
+        return Form_EditRequirement(self.test_case)
+
+    def do_open_form_edit_section(self) -> Form_EditSection:
+        self._do_node_edit()
+        return Form_EditSection(self.test_case)
 
     # title string pattern
 

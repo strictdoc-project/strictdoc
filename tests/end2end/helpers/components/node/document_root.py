@@ -10,11 +10,12 @@ from tests.end2end.helpers.screens.document.form_edit_config import (
 class DocumentRoot(Node):  # pylint: disable=invalid-name
     def __init__(self, test_case: BaseCase) -> None:
         assert isinstance(test_case, BaseCase)
-        super().__init__(test_case)
+        xpath = "//sdoc-node[@data-testid='node-root']"
+        super().__init__(test_case, xpath)
 
     def assert_is_root_node(self) -> None:
         self.test_case.assert_element(
-            "//sdoc-node[@data-testid='node-root']",
+            f"{self.node_xpath}",
             by=By.XPATH,
         )
 
@@ -24,14 +25,14 @@ class DocumentRoot(Node):  # pylint: disable=invalid-name
         """
         # should have the attribute
         self.test_case.assert_attribute(
-            "//sdoc-node[@data-testid='node-root']",
+            f"{self.node_xpath}",
             "data-editable_node",
             "on",
             by=By.XPATH,
         )
         # should have the menu button (may be invisible)
         self.test_case.assert_element_present(
-            "//sdoc-node[@data-testid='node-root']"
+            f"{self.node_xpath}"
             "//*[@data-testid='document-edit-config-action']",
             by=By.XPATH,
         )
@@ -42,7 +43,7 @@ class DocumentRoot(Node):  # pylint: disable=invalid-name
         assert isinstance(text, str)
         # TODO H1 -> testid
         self.test_case.assert_element(
-            f"//*[@data-testid='node-root']/H1[contains(., '{text}')]",
+            f"{self.node_xpath}/H1[contains(., '{text}')]",
             by=By.XPATH,
         )
 
@@ -50,10 +51,12 @@ class DocumentRoot(Node):  # pylint: disable=invalid-name
         assert isinstance(text, str)
         # TODO table_meta -> testid
         self.test_case.assert_element(
+            f"{self.node_xpath}"
             "//table[@class='table_meta']//th[contains(., 'UID')]",
             by=By.XPATH,
         )
         self.test_case.assert_element(
+            f"{self.node_xpath}"
             f"//table[@class='table_meta']//td[contains(., '{text}')]",
             by=By.XPATH,
         )
@@ -62,10 +65,12 @@ class DocumentRoot(Node):  # pylint: disable=invalid-name
         assert isinstance(text, str)
         # TODO table_meta -> testid
         self.test_case.assert_element(
+            f"{self.node_xpath}"
             "//table[@class='table_meta']//th[contains(., 'VERSION')]",
             by=By.XPATH,
         )
         self.test_case.assert_element(
+            f"{self.node_xpath}"
             f"//table[@class='table_meta']//td[contains(., '{text}')]",
             by=By.XPATH,
         )
@@ -74,11 +79,12 @@ class DocumentRoot(Node):  # pylint: disable=invalid-name
         assert isinstance(text, str)
         # TODO table_meta -> testid
         self.test_case.assert_element(
-            "//table[@class='table_meta']//th"
-            "[contains(., 'CLASSIFICATION')]",
+            f"{self.node_xpath}"
+            "//table[@class='table_meta']//th[contains(., 'CLASSIFICATION')]",
             by=By.XPATH,
         )
         self.test_case.assert_element(
+            f"{self.node_xpath}"
             f"//table[@class='table_meta']//td[contains(., '{text}')]",
             by=By.XPATH,
         )
@@ -87,7 +93,7 @@ class DocumentRoot(Node):  # pylint: disable=invalid-name
         assert isinstance(text, str)
         # TODO table_meta -> testid
         self.test_case.assert_element(
-            f"//sdoc-node[contains(., '{text}')]", by=By.XPATH
+            f"{self.node_xpath}[contains(., '{text}')]", by=By.XPATH
         )
 
     # forms

@@ -1,7 +1,6 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
-from tests.end2end.helpers.constants import NODE_1
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
 )
@@ -32,30 +31,20 @@ class Test_UC07_G1_T03_RemoveLink(BaseCase):
 
             screen_document.assert_text("Hello world!")
 
-            requirement = screen_document.get_requirement()
-
-            requirement1_order = NODE_1
-            requirement2_order = NODE_1 + 1
+            requirement1 = screen_document.get_requirement(1)
+            requirement2 = screen_document.get_requirement(2)
 
             # Make sure there is the reference to the child in Requirement 1:
-            requirement.assert_requirement_uid_contains(
-                "REQ-001", requirement1_order
-            )
-            requirement.assert_requirement_has_child_link(
-                "REQ-002", requirement1_order
-            )
+            requirement1.assert_requirement_uid_contains("REQ-001")
+            requirement1.assert_requirement_has_child_link("REQ-002")
             # Make sure there is the reference to the parent in Requirement 2:
-            requirement.assert_requirement_uid_contains(
-                "REQ-002", requirement2_order
-            )
-            requirement.assert_requirement_has_parent_link(
-                "REQ-001", requirement2_order
-            )
+            requirement2.assert_requirement_uid_contains("REQ-002")
+            requirement2.assert_requirement_has_parent_link("REQ-001")
 
             # edit the second requirement
 
             form_edit_requirement: Form_EditRequirement = (
-                requirement.do_open_form_edit_requirement(requirement2_order)
+                requirement2.do_open_form_edit_requirement()
             )
             form_edit_requirement.do_delete_parent_link()
             # Make sure that the field is removed from the form:
@@ -63,18 +52,10 @@ class Test_UC07_G1_T03_RemoveLink(BaseCase):
             form_edit_requirement.do_form_submit()
 
             # Make sure there is no reference to the child in Requirement 1:
-            requirement.assert_requirement_uid_contains(
-                "REQ-001", requirement1_order
-            )
-            requirement.assert_requirement_has_not_child_link(
-                "REQ-002", requirement1_order
-            )
+            requirement1.assert_requirement_uid_contains("REQ-001")
+            requirement1.assert_requirement_has_not_child_link("REQ-002")
             # Make sure there is no reference to the parent in Requirement 2:
-            requirement.assert_requirement_uid_contains(
-                "REQ-002", requirement2_order
-            )
-            requirement.assert_requirement_has_not_parent_link(
-                "REQ-001", requirement2_order
-            )
+            requirement2.assert_requirement_uid_contains("REQ-002")
+            requirement2.assert_requirement_has_not_parent_link("REQ-001")
 
         assert test_setup.compare_sandbox_and_expected_output()

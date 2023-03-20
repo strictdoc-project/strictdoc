@@ -2,22 +2,24 @@ from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from tests.end2end.helpers.components.node.node import Node
-from tests.end2end.helpers.constants import NODE_1
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
 )
 
 
 class Requirement(Node):  # pylint: disable=invalid-name
-    def __init__(self, test_case: BaseCase) -> None:
+    def __init__(self, test_case: BaseCase, node_order: int = 1) -> None:
         assert isinstance(test_case, BaseCase)
-        super().__init__(test_case)
+        assert isinstance(node_order, int)
+        xpath = f"(//sdoc-node[@data-testid='node-requirement'])[{node_order}]"
+        super().__init__(test_case, xpath)
+        self.node_order: int = node_order
 
     # Specific methods
 
-    def assert_is_requirement(self, node_order: int = NODE_1) -> None:
+    def assert_is_requirement(self) -> None:
         self.test_case.assert_element(
-            f"(//sdoc-node)[{node_order}]/sdoc-requirement",
+            f"{self.node_xpath}",
             by=By.XPATH,
         )
 
@@ -38,68 +40,60 @@ class Requirement(Node):  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
-    # requirement parts
+    # requirement named fields
 
     def assert_requirement_title(
         self,
         node_title: str,
         node_level: str = "",
-        node_order: int = NODE_1,
     ) -> None:
-        super().assert_node_title_contains(
-            node_title, node_level, node_order, "/sdoc-requirement"
+        title = super().create_node_title_string(node_title, node_level)
+        self.test_case.assert_element(
+            f"{self.node_xpath}"
+            f"//sdoc-requirement-title[contains(text(), '{title}')]",
+            by=By.XPATH,
         )
-
-    # requirement named fields
 
     def assert_requirement_uid_contains(
         self,
         uid: str,
-        node_order: int = NODE_1,
     ) -> None:
-        # TODO: improve pattern
         self.test_case.assert_element(
-            f"(//sdoc-node)[{node_order}]/sdoc-requirement"
-            "/sdoc-requirement-field[@data-field-label='UID']"
-            f"[contains(., '{uid}')]",
+            f"{self.node_xpath}"
+            "//sdoc-requirement-field[@data-field-label='UID']"
+            f"[contains(text(), '{uid}')]",
             by=By.XPATH,
         )
 
     def assert_requirement_statement_contains(
         self,
-        uid: str,
-        node_order: int = NODE_1,
+        text: str,
     ) -> None:
-        # TODO: improve pattern
         self.test_case.assert_element(
-            f"(//sdoc-node)[{node_order}]/sdoc-requirement"
-            "/sdoc-requirement-field[@data-field-label='statement']"
-            f"[contains(., '{uid}')]",
+            f"{self.node_xpath}"
+            "//sdoc-requirement-field[@data-field-label='statement']"
+            f"//*[contains(text(), '{text}')]",
             by=By.XPATH,
         )
 
     def assert_requirement_rationale_contains(
         self,
-        uid: str,
-        node_order: int = NODE_1,
+        text: str,
     ) -> None:
-        # TODO: improve pattern
         self.test_case.assert_element(
-            f"(//sdoc-node)[{node_order}]/sdoc-requirement"
-            "/sdoc-requirement-field[@data-field-label='rationale']"
-            f"[contains(., '{uid}')]",
+            f"{self.node_xpath}"
+            "//sdoc-requirement-field[@data-field-label='rationale']"
+            f"//*[contains(text(), '{text}')]",
             by=By.XPATH,
         )
 
     def assert_requirement_has_child_link(
         self,
         child_uid: str,
-        node_order: int = NODE_1,
     ) -> None:
-        # TODO: improve pattern
         self.test_case.assert_element(
-            f"(//sdoc-node)[{node_order}]/sdoc-requirement"
-            "/sdoc-requirement-field[@data-field-label='child links']"
+            f"{self.node_xpath}"
+            "//sdoc-requirement-field[@data-field-label='child links']"
             f"[contains(., '{child_uid}')]",
             by=By.XPATH,
         )
@@ -107,12 +101,10 @@ class Requirement(Node):  # pylint: disable=invalid-name
     def assert_requirement_has_parent_link(
         self,
         parent_uid: str,
-        node_order: int = NODE_1,
     ) -> None:
-        # TODO: improve pattern
         self.test_case.assert_element(
-            f"(//sdoc-node)[{node_order}]/sdoc-requirement"
-            "/sdoc-requirement-field[@data-field-label='parent links']"
+            f"{self.node_xpath}"
+            "//sdoc-requirement-field[@data-field-label='parent links']"
             f"[contains(., '{parent_uid}')]",
             by=By.XPATH,
         )
@@ -120,12 +112,10 @@ class Requirement(Node):  # pylint: disable=invalid-name
     def assert_requirement_has_not_child_link(
         self,
         child_uid: str,
-        node_order: int = NODE_1,
     ) -> None:
-        # TODO: improve pattern
         self.test_case.assert_element_not_present(
-            f"(//sdoc-node)[{node_order}]/sdoc-requirement"
-            "/sdoc-requirement-field[@data-field-label='child links']"
+            f"{self.node_xpath}"
+            "//sdoc-requirement-field[@data-field-label='child links']"
             f"[contains(., '{child_uid}')]",
             by=By.XPATH,
         )
@@ -133,26 +123,21 @@ class Requirement(Node):  # pylint: disable=invalid-name
     def assert_requirement_has_not_parent_link(
         self,
         parent_uid: str,
-        node_order: int = NODE_1,
     ) -> None:
-        # TODO: improve pattern
         self.test_case.assert_element_not_present(
-            f"(//sdoc-node)[{node_order}]/sdoc-requirement"
-            "/sdoc-requirement-field[@data-field-label='parent links']"
+            f"{self.node_xpath}"
+            "//sdoc-requirement-field[@data-field-label='parent links']"
             f"[contains(., '{parent_uid}')]",
             by=By.XPATH,
         )
 
     # forms
 
-    def do_open_form_edit_requirement(
-        self, field_order: int = NODE_1
-    ) -> Form_EditRequirement:
+    def do_open_form_edit_requirement(self) -> Form_EditRequirement:
         self.test_case.hover_and_click(
-            hover_selector=f"(//sdoc-node)[{field_order}]",
+            hover_selector=f"{self.node_xpath}",
             click_selector=(
-                f"(//sdoc-node)[{field_order}]"
-                '//*[@data-testid="node-edit-action"]'
+                f'{self.node_xpath}//*[@data-testid="node-edit-action"]'
             ),
             hover_by=By.XPATH,
             click_by=By.XPATH,

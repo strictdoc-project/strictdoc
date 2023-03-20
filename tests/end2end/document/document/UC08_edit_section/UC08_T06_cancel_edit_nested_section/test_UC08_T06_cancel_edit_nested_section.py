@@ -1,7 +1,6 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
-from tests.end2end.helpers.constants import NODE_2
 from tests.end2end.helpers.screens.document.form_edit_section import (
     Form_EditSection,
 )
@@ -32,7 +31,7 @@ class Test_UC08_T06_CancelEditNestedSection(BaseCase):
 
             screen_document.assert_text("Hello world!")
 
-            section = screen_document.get_section(NODE_2)
+            section = screen_document.get_section(2)
             form_edit_section: Form_EditSection = (
                 section.do_open_form_edit_section()
             )

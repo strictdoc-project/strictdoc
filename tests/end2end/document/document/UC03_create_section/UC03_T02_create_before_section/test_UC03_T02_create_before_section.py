@@ -2,8 +2,6 @@ from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.components.add_node_menu import AddNode_Menu
-from tests.end2end.helpers.components.node.section import Section
-from tests.end2end.helpers.constants import NODE_1
 from tests.end2end.helpers.screens.document.form_edit_section import (
     Form_EditSection,
 )
@@ -34,27 +32,29 @@ class Test_UC03_T02_CreateBeforeSection(BaseCase):
 
             screen_document.assert_text("Hello world!")
 
-            existing_node_number = NODE_1
+            # In the first place now is the single section section_old
+            existing_node_number = 1
 
-            section: Section = screen_document.get_section()
-            section_menu: AddNode_Menu = section.do_open_node_menu(
-                existing_node_number
-            )
+            section_old = screen_document.get_section(existing_node_number)
+            section_old.assert_section_title("Section B", "1")
 
-            section.assert_section_title("Section B", "1", existing_node_number)
+            section_old_menu: AddNode_Menu = section_old.do_open_node_menu()
 
             form_edit_section: Form_EditSection = (
-                section_menu.do_node_add_section_above()
+                section_old_menu.do_node_add_section_above()
             )
 
             form_edit_section.do_fill_in_title("Section A")
             form_edit_section.do_fill_in_text("Section A text.")
             form_edit_section.do_form_submit()
 
-            section.assert_section_title("Section A", "1", existing_node_number)
-            section.assert_section_title(
-                "Section B", "2", existing_node_number + 1
-            )
+            # In the first place now is the new section
+            section_new = screen_document.get_section(existing_node_number)
+            section_new.assert_section_title("Section A", "1")
+
+            # The old section shifted to second place
+            section_old = screen_document.get_section(existing_node_number + 1)
+            section_old.assert_section_title("Section B", "2")
 
             screen_document.assert_toc_contains("Section A")
             screen_document.assert_toc_contains("Section B")

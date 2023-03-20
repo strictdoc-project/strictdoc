@@ -1,7 +1,6 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
-from tests.end2end.helpers.constants import NODE_1
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
 )
@@ -34,7 +33,7 @@ class Test_UC07_G1_T01_AddOneLink(BaseCase):
 
             # Existing Requirement 1:
             added_requirement_1_level = "1"
-            added_requirement_1_position = NODE_1
+            added_requirement_1_position = 1
 
             requirement1 = screen_document.get_requirement(
                 added_requirement_1_position
@@ -43,13 +42,12 @@ class Test_UC07_G1_T01_AddOneLink(BaseCase):
             requirement1.assert_requirement_title(
                 "Requirement title #1",
                 added_requirement_1_level,
-                added_requirement_1_position,
             )
             screen_document.assert_toc_contains("Requirement title #1")
 
             # Existing Requirement 2:
             added_requirement_2_level = "2"
-            added_requirement_2_position = NODE_1 + 1
+            added_requirement_2_position = 2
 
             requirement2 = screen_document.get_requirement(
                 added_requirement_2_position
@@ -58,15 +56,12 @@ class Test_UC07_G1_T01_AddOneLink(BaseCase):
             requirement2.assert_requirement_title(
                 "Requirement title #2",
                 added_requirement_2_level,
-                added_requirement_2_position,
             )
             screen_document.assert_toc_contains("Requirement title #2")
 
             # Edit Requirement 2: add one parent link
             form_edit_requirement: Form_EditRequirement = (
-                requirement2.do_open_form_edit_requirement(
-                    added_requirement_2_position
-                )
+                requirement2.do_open_form_edit_requirement()
             )
             form_edit_requirement.do_form_add_field_parent_link()
             form_edit_requirement.do_fill_in_field_parent_link("REQ-001")

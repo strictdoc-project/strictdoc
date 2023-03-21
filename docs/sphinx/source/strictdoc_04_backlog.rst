@@ -9,10 +9,14 @@ The following items are listed in descending order of priority, with the topmost
 
 While this backlog overlaps with StrictDoc's `GitHub issues tracker <https://github.com/strictdoc-project/strictdoc/issues>`_ by more than 50%, it includes more strategic items compared to the GitHub issues, which are primarily focused on actual implementation work.
 
-Backlog: Graphical user interface
+.. _SDOC_BL_WEB:
+
+Backlog: Web-based user interface
 =================================
 
 - Uploading images via Web interface.
+
+- Deleting sections recursively. Correct clean-up of all traceability information.
 
 - Editing remaining document options: Inline/Table, Requirements in TOC, etc.
 
@@ -20,11 +24,13 @@ Backlog: Graphical user interface
 
   - Adding/editing parent/child requirements: validation of cycles.
 
-- Integration with Git repository.
+- Integration with Git repository. Make the server commit changes to .sdoc files automatically. To a user, provide visibility to what happens under the hood.
 
 - Section form:
 
   - ``UID``
+  - Show incoming/outgoing links.
+  - Links between sections and documents.
 
 - User support - Sign In, Sign Out, Register.
 

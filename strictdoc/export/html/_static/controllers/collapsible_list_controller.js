@@ -138,7 +138,12 @@ function processList(selector) {
     ul => {
       const parent = ul.parentNode;
       const ulHandler = document.createElement('div');
-      ulHandler.dataset.collapsible_list__branch = '0';
+
+      // This defines how a document is opened:
+      // with a collapsed or expanded TOC.
+      // We may want to read/write this from/to a session at some point.
+      ulHandler.dataset.collapsible_list__branch = '1';
+
       parent.insertBefore(ulHandler, ul);
       // Required:
       parent.style = "position:relative";

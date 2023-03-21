@@ -6,22 +6,23 @@ $$$$$$$$$$
 Introduction
 ============
 
-StrictDoc is software for writing technical requirements and specifications.
+StrictDoc is software for technical documentation and requirements management.
 
 Summary of StrictDoc features:
 
 - The documentation files are stored as human-readable text files.
 - A simple domain-specific language DSL is used for writing the documents. The
   text format for encoding this language is called SDoc (strict-doc).
-- StrictDoc reads ``*.sdoc`` files and builds an in-memory representation of the
+- StrictDoc reads ``*.sdoc`` files and builds an in-memory representation of a
   document tree.
 - From this in-memory representation, StrictDoc can generate the documentation
   into a number of formats including HTML, RST, ReqIF, PDF, Excel.
+- StrictDoc has a Web-based user interface which allows viewing and editing the documents and requirements. The changes are written back to .sdoc files.
 - The focus of the tool is modeling requirements and specifications documents.
   Such documents consist of multiple statements like "system X shall do Y"
   called requirements.
 - The requirements can be linked together to form the relationships, such as
-  "parent-child", and from these connections, many useful features, such as
+  "parent-child". From these connections, many useful features, such as
   `Requirements Traceability <https://en.wikipedia.org/wiki/Requirements_traceability>`_
   and Documentation Coverage, can be derived.
 - Requirements to source files traceability (experimental). See
@@ -33,7 +34,7 @@ Summary of StrictDoc features:
   See :ref:`SECTION-CUSTOM-GRAMMARS`.
 - Good performance of the `textX <https://github.com/textX/textX>`_
   parser and parallelized incremental generation of documents: generation of
-  document trees with up to 2000-3000 requirements into HTML pages stays within
+  document trees with up to 2000–3000 requirements into HTML pages stays within
   a few seconds. From the second run, only changed documents are regenerated.
   Further performance tuning should be possible.
 
@@ -50,6 +51,8 @@ The author can be also contacted via `email <s.pankevich@gmail.com>`_.
 
 Examples
 ========
+
+.. _SDOC_UG_HELLO_WORLD:
 
 Hello World
 -----------
@@ -92,6 +95,20 @@ The expected output:
     Export completed. Documentation tree can be found at:
     .../output/html
 
+The HTML output produced so far has been generated statically. Now, start a StrictDoc server from the same directory:
+
+.. code-block:: bash
+
+    strictdoc server .
+
+The expected output should contain the following line:
+
+.. code-block:: text
+
+    INFO:     Uvicorn running on http://127.0.0.1:5111 (Press CTRL+C to quit)
+
+Open the URL in the browser and explore the contents of the example.
+
 StrictDoc Examples repository
 -----------------------------
 
@@ -110,8 +127,8 @@ which is written using StrictDoc:
 
 .. _SDOC_UG_GETTING_STARTED:
 
-Getting started
-===============
+Installing StrictDoc
+====================
 
 Requirements
 ------------
@@ -154,6 +171,55 @@ Installing StrictDoc as a Snap package (not maintained)
 
 This way of installing StrictDoc is not maintained anymore. If you want to
 use it, refer to the instructions located in ``developer/snap/README.md``.
+
+Running StrictDoc
+=================
+
+Static HTML export
+------------------
+
+The easiest way to see the static HTML export feature in action is to run the :ref:`SDOC_UG_HELLO_WORLD` example.
+
+The ``export`` command is the main producer of documentation. The native export format of StrictDoc is HTML. The ``export`` command supports a number of parameters, including the option for selecting export formats (HTML, RST, Excel, etc.). The options can be explored with the ``--help`` command.
+
+.. code-block:: bash
+
+    strictdoc export --help
+
+Web server
+----------
+
+StrictDoc supports a Web-based user interface. The StrictDoc web server is launched via the ``server`` command which accepts a path to a documentation tree as a parameter.
+
+.. code-block:: bash
+
+    strictdoc server .
+
+The ``server`` command accepts a number of options. To explore the options, run:
+
+.. code-block:: bash
+
+    strictdoc server --help
+
+Limitations of Web user interface
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The existing implementation of the Web user interface is alpha-quality and incomplete. The user interface and the underlying backend implementation are not yet autonomous from the command-line workflow. A user still has to access the command line to run the server and commit the documents to Git manually.
+
+The currently supported workflow for the ``server`` command must be hybrid:
+
+- In one terminal window: run server.
+- In another window: check the changes made by the server in the .sdoc files. Commit the .sdoc files to Git.
+
+The following essential features are still missing and will be worked on in the near future:
+
+- Adding images to the multiline fields like requirement's STATEMENT and section's FREETEXT.
+- Deleting a document.
+- Deleting a section recursively with a correct cleanup of all traceability information.
+- Numerous validation aspects and edge cases of content editing.
+- A separate screen for editing project settings.
+
+See the Backlog's section :ref:`SDOC_BL_WEB` for more details.
 
 SDoc syntax
 ===========
@@ -1320,8 +1386,28 @@ The command does the following:
 Options
 =======
 
+Project-level options
+---------------------
+
+StrictDoc supports reading configuration from a TOML file. The file must be called ``strictdoc.toml`` and shall be stored in the same folder which is provided as a path to the SDoc documents.
+
+For example, ``strictdoc export .`` will make StrictDoc recognize the config file, if it is stored under the current directory.
+
 Project title
--------------
+~~~~~~~~~~~~~
+
+This option specifies a project title.
+
+.. code-block:: toml
+
+    [project]
+    title = "StrictDoc Documentation"
+
+Command-line interface options
+------------------------------
+
+Project title
+~~~~~~~~~~~~~
 
 By default, StrictDoc generates a project tree with a project title
 "Untitled Project". To specify the project title use the option
@@ -1332,7 +1418,7 @@ By default, StrictDoc generates a project tree with a project title
     strictdoc export --project-title "My Project" .
 
 Parallelization
----------------
+~~~~~~~~~~~~~~~
 
 To improve performance for the large document trees (1000+ requirements),
 StrictDoc parallelizes reading and generation of the documents using

@@ -4,9 +4,8 @@ on:
   schedule:
     - cron: "00 00 * * *"
 
-  # Not yet
-  # pull_request:
-  #   branches: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
 
 jobs:
   periodic_release_test_linux:

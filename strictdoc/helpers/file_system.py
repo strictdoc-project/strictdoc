@@ -1,5 +1,8 @@
 import os
+import platform
 import shutil
+import tempfile
+from pathlib import Path
 
 
 def sync_dir(src_dir, dst_dir):
@@ -112,3 +115,9 @@ def copytree(
     if errors:
         raise shutil.Error(errors)
     return dst
+
+
+def get_portable_temp_dir():
+    return Path(
+        "/tmp" if platform.system() == "Darwin" else tempfile.gettempdir()
+    )

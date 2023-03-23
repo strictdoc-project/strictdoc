@@ -1,4 +1,4 @@
-name: "StrictDoc - End-to-end tests (macOS, Linux)"
+name: "StrictDoc - End-to-end tests"
 
 on:
   pull_request:
@@ -13,7 +13,7 @@ on:
 
 jobs:
   tests_end2end_macos:
-    name: End-to-end tests on macOS
+    name: End-to-end tests - macOS
     runs-on: macOS-latest
 
     strategy:
@@ -45,7 +45,7 @@ jobs:
         invoke test-end2end --long-timeouts
 
   tests_end2end_linux:
-    name: End-to-end tests on Linux
+    name: End-to-end tests - Linux
     runs-on: ubuntu-latest
 
     strategy:

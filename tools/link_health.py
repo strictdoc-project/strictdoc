@@ -307,6 +307,8 @@ def find_links(input_content):
     )
     links = []
     for match in matches:
+        if "http://127.0.0.1" in match[0]:
+            continue
         links.append(match[0])
     return links
 

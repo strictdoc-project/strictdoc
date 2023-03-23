@@ -1,0 +1,109 @@
+---
+name: StrictDoc - Periodic integration test
+on:
+  schedule:
+    - cron: "00 00 * * *"
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  periodic_integration_test_linux:
+    name: PIT – Linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+
+      - name: Install release task dependencies
+        run: |
+          pip install --upgrade pip setuptools invoke
+
+      - name: Build and test locally
+        run: |
+          invoke release-local
+
+  periodic_integration_test_linux_pyinstaller:
+    name: PIT – Linux with PyInstaller
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+
+      - name: Install release task dependencies
+        run: |
+          pip install --upgrade pip setuptools invoke
+
+      - name: Build and test using PyInstaller
+        run: |
+          invoke release-pyinstaller
+          invoke test-integration --strictdoc /tmp/strictdoc/strictdoc/strictdoc
+
+  periodic_integration_test_macos:
+    name: PIT – macOS
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+
+      - name: Install release task dependencies
+        run: |
+          pip install --upgrade pip setuptools invoke
+
+      - name: Build and test locally
+        run: |
+          invoke release-local
+
+  periodic_integration_test_macos_pyinstaller:
+    name: PIT – macOS with PyInstaller
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+
+      - name: Install release task dependencies
+        run: |
+          pip install --upgrade pip setuptools invoke
+
+      - name: Build and test using PyInstaller
+        run: |
+          invoke release-pyinstaller
+          invoke test-integration --strictdoc /tmp/strictdoc/strictdoc/strictdoc
+
+  check_dead_links:
+    name: PIT – Check dead links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+
+      - name: Install Invoke
+        run: |
+          pip install invoke
+
+      - name: Install Development Deps
+        run: |
+          invoke setup-development-deps
+
+      - name: Link Health check
+        run: |
+          invoke check-dead-links

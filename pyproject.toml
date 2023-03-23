@@ -44,16 +44,24 @@ dependencies = [
     # Reading project config from strictdoc.toml file.
     "toml",
 
+    # Parsing and rendering RST.
     "docutils >= 0.16, == 0.*",
-    "python-datauri >= 0.2.9, == 0.*",
+
+    # Requirements-to-source traceability. Colored syntax for source files.
     "pygments >= 2.10.0, == 2.*",
 
+    # TODO: Only used by reqif. Remove.
     "lxml >= 4.6.2, == 4.*",
+
+    # Static HTML export with embedded assets.
+    "beautifulsoup4 >= 4.12.0, == 4.*",
+    "python-datauri >= 0.2.9, == 0.*",
 
     # Excel
     "XlsxWriter >= 1.3.7, == 1.*",
     "xlrd >= 2.0.1, == 2.*",
 
+    # ReqIF
     "reqif >= 0.0.33, == 0.*",
 
     # Bibtex

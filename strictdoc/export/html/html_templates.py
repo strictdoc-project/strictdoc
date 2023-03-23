@@ -35,7 +35,7 @@ class AssertExtension(Extension):
 
         return nodes.CallBlock(
             self.call_method(
-                "_raise", [condition_node, context_node], lineno=lineno
+                "_assert", [condition_node, context_node], lineno=lineno
             ),
             [],
             [],
@@ -43,7 +43,7 @@ class AssertExtension(Extension):
             lineno=lineno,
         )
 
-    def _raise(
+    def _assert(
         self, condition: bool, context_or_none: Optional[Any], caller
     ):  # pylint: disable=unused-argument
         if not condition:

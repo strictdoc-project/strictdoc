@@ -55,6 +55,7 @@ dependencies = [
 
     # Static HTML export with embedded assets.
     "beautifulsoup4 >= 4.12.0, == 4.*",
+    "html5lib>=1.1",  # Used by beautifulsoup4 as an optional plugin.
     "python-datauri >= 0.2.9, == 0.*",
 
     # Excel
@@ -100,7 +101,6 @@ development = [
     "lit>=0.11.0.post1",
     "filecheck>=0.0.20",
     # Tests: Validating content
-    "html5lib>=1.1",
     "pytidylib>=0.3.2",
     "openpyxl>=3.0.5",
 

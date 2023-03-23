@@ -1,22 +1,23 @@
 ---
-name: Periodic Integration Test (macOS)
+name: StrictDoc - Periodic release test
 on:
   schedule:
     - cron: "00 00 * * *"
-  pull_request:
-    branches: [ "**" ]
+
+  # Not yet
+  # pull_request:
+  #   branches: [ "**" ]
 
 jobs:
-  periodic_integration_test:
-    name: Periodic integration test
-    runs-on: macOS-latest
+  periodic_release_test_linux:
+    name: PRT – Linux
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
       - name: Set up Python 3.
         uses: actions/setup-python@v2
         with:
-          # python-version: '3.x'
           python-version: '3.10'
 
       - name: Install release task dependencies
@@ -25,9 +26,8 @@ jobs:
 
       - name: Build and test locally
         run: |
-          invoke release-local
+          pip install strictdoc
 
-      - name: Build and test using PyInstaller
+      - name: Integration tests against the StrictDoc Pip package
         run: |
-          invoke release-pyinstaller
-          invoke test-integration --strictdoc /tmp/strictdoc/strictdoc/strictdoc
+          invoke test-integration --strictdoc `which strictdoc`

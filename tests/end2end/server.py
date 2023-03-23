@@ -2,7 +2,7 @@ import datetime
 import os
 import re
 
-# FIXME: select has no poll() on Windows. Find a portable implementation.
+# FIXME: select has no poll() on Windows! Find a portable implementation.
 import select
 import shutil
 import socket

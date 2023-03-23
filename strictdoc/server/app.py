@@ -39,8 +39,19 @@ def create_app(
 
 
 def strictdoc_production_app():
+    # This is a work-around to allow opening a file created with
+    # NamedTemporaryFile on Windows.
+    # See https://stackoverflow.com/a/15235559
+    def temp_opener(name, flag, mode=0o777):
+        try:
+            flag |= os.O_TEMPORARY
+        except AttributeError:
+            pass  # Only Windows has this flag
+
+        return os.open(name, flag, mode)
+
     path_to_tmp_config = os.environ[SDocServerEnvVariable.PATH_TO_CONFIG]
-    with open(path_to_tmp_config, "rb") as tmp_config_file:
+    with open(path_to_tmp_config, "rb", opener=temp_opener) as tmp_config_file:
         tmp_config_bytes = tmp_config_file.read()
 
     two_configs = pickle_load(tmp_config_bytes)

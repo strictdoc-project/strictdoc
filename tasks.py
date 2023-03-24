@@ -6,6 +6,7 @@ import platform
 import re
 from enum import Enum
 from shutil import which
+from typing import Optional
 
 if not hasattr(inspect, "getargspec"):
     inspect.getargspec = inspect.getfullargspec
@@ -64,7 +65,11 @@ class VenvFolderType(str, Enum):
 
 
 def run_invoke_cmd(
-    context, cmd, warn: bool = False, reset_path: bool = True
+    context,
+    cmd,
+    environment: Optional[dict] = None,
+    warn: bool = False,
+    reset_path: bool = True,
 ) -> invoke.runners.Result:
     postfix = (
         context[VENV_FOLDER]
@@ -109,7 +114,7 @@ def run_invoke_cmd(
 
         return context.run(
             one_line_command(cmd),
-            env=None,
+            env=environment,
             hide=False,
             warn=warn,
             pty=False,
@@ -249,35 +254,38 @@ def test_end2end(
     parallelize=False,
     long_timeouts=False,
 ):
+    environment = {}
+    parallelize_argument = ""
+
+    if long_timeouts:
+        environment["STRICTDOC_LONGER_TIMEOUTS"] = "True"
+
     if parallelize:
         print(  # noqa: T201
             "warning: "
             "Running parallelized end-2-end tests is supported "
             "but is not stable."
         )
+        environment["STRICTDOC_PARALLELIZE"] = "True"
+        parallelize_argument = "--numprocesses=2"
+
     focus_argument = f"-k {focus}" if focus is not None else ""
     exit_first_argument = "--exitfirst" if exit_first else ""
-    parallelize_argument_1 = "STRICTDOC_PARALLELIZE=True" if parallelize else ""
-    parallelize_argument_2 = "--numprocesses=2" if parallelize else ""
-    timeouts_argument = (
-        "STRICTDOC_LONGER_TIMEOUTS=True" if long_timeouts else ""
-    )
     run_invoke_cmd(
         context,
         one_line_command(
             f"""
-            {parallelize_argument_1}
-            {timeouts_argument}
             pytest
                 --failed-first
                 --capture=no
                 --reuse-session
-                {parallelize_argument_2}
+                {parallelize_argument}
                 {focus_argument}
                 {exit_first_argument}
                 tests/end2end
             """
         ),
+        environment=environment,
     )
 
 

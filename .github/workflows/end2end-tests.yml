@@ -13,7 +13,7 @@ on:
 
 jobs:
   tests_end2end_macos:
-    name: End-to-end tests - macOS
+    name: E2E - macOS
     runs-on: macOS-latest
 
     strategy:
@@ -45,8 +45,40 @@ jobs:
         invoke test-end2end --long-timeouts
 
   tests_end2end_linux:
-    name: End-to-end tests - Linux
+    name: E2E - Linux
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.7"]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Upgrade pip
+      run: |
+        python -m pip install --upgrade pip
+
+    - name: Install Invoke
+      run: |
+        pip install invoke
+
+    - name: Install dependencies
+      run: |
+        invoke setup-development-deps
+
+    - name: Run end-to-end tasks
+      run: |
+        invoke test-end2end --long-timeouts
+
+  build:
+    name: E2E - Windows
+    runs-on: windows-latest
 
     strategy:
       matrix:

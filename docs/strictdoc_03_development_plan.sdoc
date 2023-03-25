@@ -123,6 +123,8 @@ See also the Backlog document for a complete list of the planned work items.
      - Installation using PyInstaller. The first prototype of a Web-based interface. First end-to-end Web tests using SeleniumBase. Improvements of the ReqIF support.
    * - 2023-Q1
      - Improvements of the Web-based interface towards first release. Improvements of the ReqIF support.
+   * - 2023-Q2
+     - Further stabilization of the Web interface. Improvements of the ReqIF interface.
 [/FREETEXT]
 
 [/SECTION]

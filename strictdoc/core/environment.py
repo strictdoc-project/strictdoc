@@ -97,7 +97,7 @@ class SDocRuntimeEnvironment:
         return path_to_html_templates
 
     def get_path_to_export_html(self):
-        if self.is_nuitka:
+        if self.is_nuitka or self.is_py_installer:
             return self.path_to_strictdoc
         return os.path.join(
             self.path_to_strictdoc, "strictdoc", "export", "html"

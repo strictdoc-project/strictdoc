@@ -213,6 +213,8 @@ The currently supported workflow for the ``server`` command must be hybrid:
 
 The following essential features are still missing and will be worked on in the near future:
 
+- Editing of documents with non-string grammar fields is not supported yet.
+  Example: The ``SingleChoice`` type will not work in the \*.sdoc files.
 - Adding images to the multiline fields like requirement's STATEMENT and section's FREETEXT.
 - Deleting a document.
 - Deleting a section recursively with a correct cleanup of all traceability information.

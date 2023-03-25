@@ -7,6 +7,7 @@ As an open-source project, StrictDoc is based on the work of many people and org
 - StrictDoc receives contributions from other developers.
 - StrictDoc is built using other open-source software.
 - StrictDoc uses free hosting and Continuous Integration services provided for open-source software.
+- StrictDoc uses the commercial versions of JetBrains IDEs for free.
 
 This page gives due credit to everyone who made StrictDoc possible.
 [/FREETEXT]
@@ -71,6 +72,23 @@ TITLE: Hosting and Continuous Integration
 StrictDoc is hosted on `GitHub <https://github.com>`_ and uses `GitHub Actions <https://docs.github.com/en/actions>`_ to run all of its build, test and release tasks. As an open-source project, StrictDoc gets these services from GitHub for free.
 
 StrictDoc's documentation is hosted on `Read the Docs <https://readthedocs.org>`_.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Commercial IDEs by JetBrains
+
+[FREETEXT]
+The StrictDoc's core team uses the commercial versions of
+`PyCharm <https://www.jetbrains.com/pycharm/>`_
+and
+`WebStorm <https://www.jetbrains.com/webstorm/>`_
+from `JetBrains <https://www.jetbrains.com/>`_.
+
+The `Licenses for Open Source Development - Community Support <https://www.jetbrains.com/community/opensource/#support>`_ from JetBrains are provided to the core team for free, based on the precondition that StrictDoc is developed as completely free software, without any monetization mechanisms.
+
+Before the license for the commercial JetBrains was obtained in 2023, the complete StrictDoc's Python codebase had been produced using `PyCharm, the Community edition <https://www.jetbrains.com/pycharm/download>`_.
 [/FREETEXT]
 
 [/SECTION]

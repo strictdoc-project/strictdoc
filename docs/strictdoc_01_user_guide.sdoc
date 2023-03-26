@@ -281,28 +281,42 @@ UID: SDOC_UG_IDE_SUPPORT
 TITLE: IDE support
 
 [FREETEXT]
-StrictDoc language markup (SDoc) can be activated in all IDEs that support the TextMate grammars. When the StrictDoc grammar is integrated into an IDE, the SDoc syntax becomes highlighted just as any other syntax like Markdown, RST, Python, etc.
+StrictDoc language markup (SDoc) can be activated in all IDEs that support the
+TextMate grammars. When the StrictDoc grammar is integrated into an IDE, the
+SDoc syntax becomes highlighted just as any other syntax like Markdown, RST,
+Python, etc.
 
-The TextMate grammars can be defined in either JSON or PLIST formats. Due to the minor incompatibilities between these formats, the markup files for both formats are provided in two separate repositories:
-
-- `strictdoc-project/strictdoc.tmLanguage <https://github.com/strictdoc-project/strictdoc.tmLanguage>`_ – TextMate grammar files for StrictDoc (JSON)
-- `strictdoc-project/strictdoc.tmbundle <https://github.com/strictdoc-project/strictdoc.tmbundle>`_ – TextMate grammar files for StrictDoc (PLIST)
-
-It is recommended to use the TextMate JSON format, unless a given IDE is known to only support the TextMate bundle format (``.tmbundle``).
-
-The instructions for installing the StrictDoc markup can be found in both repositories.
+The TextMate grammars can be defined in either JSON or PLIST formats.
+The `Sublime Text's Syntax <https://www.sublimetext.com/docs/syntax.html>`_ is
+similar to the TextMate grammar but has more capabilities and is no longer
+backward-compatible with both TextMate's JSON and PLIST grammars.
 
 The following IDEs are known to work:
 
-- Microsoft Visual Studio Code
-- JetBrains's PyCharm and WebStorm. The other `JetBrains IDEs <https://www.jetbrains.com/products/>`_ are expected to work too.
+- Microsoft Visual Studio Code (TextMate JSON)
+- JetBrains's PyCharm and WebStorm (TextMate JSON). The other `JetBrains IDEs <https://www.jetbrains.com/products/>`_ are expected to work too.
+- Eclipse (TextMate JSON)
+- Sublime Text (Sublime Syntax)
 
-The following IDEs are known to support the TextMate grammars, so they should work too:
+Due to the incompatibilities between these formats, the markup files are provided in separate repositories:
 
-- Eclipse
-- Sublime Text
+- `strictdoc-project/strictdoc.tmLanguage <https://github.com/strictdoc-project/strictdoc.tmLanguage>`_ – TextMate grammar files for StrictDoc (JSON)
+- `strictdoc-project/strictdoc.tmbundle <https://github.com/strictdoc-project/strictdoc.tmbundle>`_ – TextMate grammar files for StrictDoc (PLIST)
+- `strictdoc-project/strictdoc.sublime-syntax <https://github.com/strictdoc-project/strictdoc.sublime-syntax>`_ –  StrictDoc markup syntax highlighting in Sublime Text.
 
-**Note:** The TextMate grammar for StrictDoc only provides syntax highlighting. More advanced features like autocompletion and deep validation of requirements can be only achieved with a dedicated Language Server Protocol (LSP) implementation for StrictDoc. The StrictDoc LSP is on StrictDoc's long-term roadmap, see `Enhancement: Language Protocol Server for SDoc text language #577 <https://github.com/strictdoc-project/strictdoc/issues/577>`_.
+The instructions for installing the StrictDoc markup can be found in all repositories.
+
+For any other IDE, when possible, it is recommended to use the TextMate JSON
+format, unless a given IDE is known to only support the TextMate bundle format
+(``.tmbundle``). The exception is Sublime Text which has its own format.
+
+**Note:** The TextMate grammar and the Sublime Syntax for StrictDoc only
+provides syntax highlighting.
+More advanced features like autocompletion and deep validation of requirements
+can be only achieved with a dedicated Language Server Protocol (LSP)
+implementation for StrictDoc. The StrictDoc LSP is on StrictDoc's long-term
+roadmap, see `Enhancement: Language Protocol Server for SDoc text language #577
+<https://github.com/strictdoc-project/strictdoc/issues/577>`_.
 [/FREETEXT]
 
 [/SECTION]

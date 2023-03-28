@@ -17,9 +17,13 @@ jobs:
       with:
         python-version: '3.10'
 
-    - name: Install release task dependencies
+    - name: Upgrade pip
       run: |
-        pip install --upgrade pip setuptools twine invoke
+        python -m pip install --upgrade pip
+
+    - name: Install Invoke and Tox
+      run: |
+        pip install invoke tox
 
     - name: Build and test locally
       run: |

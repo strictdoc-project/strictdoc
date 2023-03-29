@@ -39,6 +39,15 @@ class RequirementField:
         field_value_multiline: Optional[str],
         field_value_references: Optional[List[Reference]],
     ):
+        # FIXME: This should be strict_assert at some point.
+        assert (
+            (field_value is not None and len(field_value) > 0)
+            or field_value_multiline is not None
+            or (
+                field_value_references is not None
+                and len(field_value_references) > 0
+            )
+        ), "A requirement field must have at least one value."
         self.parent = parent
         self.field_name = field_name
 

@@ -96,13 +96,9 @@ jobs:
       run: |
         python -m pip install --upgrade pip
 
-    - name: Install Invoke
+    - name: Install Invoke and Tox
       run: |
-        pip install invoke
-
-    - name: Install dependencies
-      run: |
-        invoke setup-development-deps
+        pip install invoke tox
 
     - name: Run end-to-end tasks
       run: |

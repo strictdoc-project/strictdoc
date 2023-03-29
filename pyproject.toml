@@ -80,44 +80,7 @@ dependencies = [
 development = [
     # Development tasks
     "invoke>=1.4.1",
-    # Reload files when changed
-    "watchdog>=2.1.7",
-
-    # Packaging
-    "build",
-    "twine",
-
-    # Linters and static analysis
-    "black>=21.9b0",
-    "mypy>=0.910",
-    "pylint>=2.11.1",
-    "flake8>=3.9.2",
-    "ruff",
-
-    # Tests
-    "pytest>=6.2.2",
-    "pyfakefs>=4.5.5",
-    "coverage>=5.4",
-    "lit>=0.11.0.post1",
-    "filecheck>=0.0.20",
-    # Tests: Validating content
-    "pytidylib>=0.3.2",
-    "openpyxl>=3.0.5",
-
-    # Documentation
-    "sphinx>=3.2.1",
-    "guzzle_sphinx_theme~=0.7.11",
-
-    # Used by the dead links checker
-    "requests>=2.27.1",
-
-    # Server-related
-    "seleniumbase",
-    # httpx is needed for running server-related unit tests.
-    "httpx",
-    # psutil is needed to reap Uvicorn's zombie processes when running end2end
-    # tests. One day someone finds a better solution.
-    "psutil",
+    "tox>=4.4.8",
 ]
 nuitka = [
     # Nuitka:WARNING: Using very slow fallback for ordered sets, please install

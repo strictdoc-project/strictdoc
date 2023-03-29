@@ -2,10 +2,9 @@
 # https://github.com/pyinvoke/invoke/issues/833#issuecomment-1293148106
 import inspect
 import os
-import platform
 import re
+import sys
 from enum import Enum
-from shutil import which
 from typing import Optional
 
 if not hasattr(inspect, "getargspec"):
@@ -14,112 +13,67 @@ if not hasattr(inspect, "getargspec"):
 import invoke  # pylint: disable=wrong-import-position
 from invoke import task  # pylint: disable=wrong-import-position
 
-# A flag that stores which virtual environment is used for executing tasks.
-VENV_FOLDER = "VENV_FOLDER"
-# A flag that is used to allow checking the readiness of virtual environment
-# only once independently of which task or a sequence of tasks is executed.
-VENV_DEPS_CHECK_PASSED = "VENV_DEPS_CHECK_PASSED"
-
-COMMAND_SETUP_DEPS = "pip install .[development]"
-
-
-def one_line_command(string):
-    return re.sub("\\s+", " ", string).strip()
-
-
-def get_venv_command(venv_path: str, reset_path=True):
-    venv_command_activate = (
-        f". {venv_path}/bin/activate"
-        if platform.system() != "Windows"
-        else rf"{venv_path}\Scripts\activate"
-    )
-    venv_command = f"""
-        python3 -m venv {venv_path} &&
-            {venv_command_activate}
-    """
-    if reset_path:
-        venv_command += f'&& export PATH="{venv_path}/bin:/usr/bin:/bin"'
-
-    # TODO: Doing true & or VER>NUL & could be eliminated.
-    if platform.system() == "Windows":
-        # 1) SHELL seems to not be available in Windows shell or Powershell.
-        # 2) If SHELL is not available, this means we may be running a
-        # Windows shell or Powershell but LIT still tries to use bash if it is
-        # available. Therefore, here try to check "bash" as well.
-        # If LIT cannot find it, it prints:
-        # ...LitConfig.py: warning: Unable to find a usable version of bash.
-        if os.getenv("SHELL") is not None or which("bash") is not None:
-            venv_command = "true"
-        else:
-            venv_command = "VER>NUL"
-    return one_line_command(venv_command)
+# Specifying encoding because Windows crashes otherwise when running Invoke
+# tasks below:
+# UnicodeEncodeError: 'charmap' codec can't encode character '\ufffd'
+# in position 16: character maps to <undefined>
+# People say, it might also be possible to export PYTHONIOENCODING=utf8 but this
+# seems to work.
+# FIXME: If you are a Windows user and expert, please advise on how to do this
+# properly.
+sys.stdout = open(  # pylint: disable=consider-using-with
+    1, "w", encoding="utf-8", closefd=False, buffering=1
+)
 
 
 # To prevent all tasks from building to the same virtual environment.
-class VenvFolderType(str, Enum):
-    RELEASE_DEFAULT = "default"
+# All values correspond to the configuration in the tox.ini config file.
+class ToxEnvironment(str, Enum):
+    DEVELOPMENT = "development"
+    CHECK = "check"
+    DOCUMENTATION = "documentation"
+    RELEASE = "release"
     RELEASE_LOCAL = "release-local"
-    RELEASE_PYPI = "release-pypi"
-    RELEASE_PYPI_TEST = "release-pypi-test"
-    RELEASE_PYINSTALLER = "release-pyinstaller"
+    PYINSTALLER = "pyinstaller"
 
 
-def run_invoke_cmd(
+def run_invoke(
     context,
     cmd,
     environment: Optional[dict] = None,
     warn: bool = False,
-    reset_path: bool = True,
 ) -> invoke.runners.Result:
-    postfix = (
-        context[VENV_FOLDER]
-        if VENV_FOLDER in context
-        else VenvFolderType.RELEASE_DEFAULT
+    def one_line_command(string):
+        return re.sub("\\s+", " ", string).strip()
+
+    return context.run(
+        one_line_command(cmd),
+        env=environment,
+        hide=False,
+        warn=warn,
+        pty=False,
+        echo=True,
     )
-    venv_path = os.path.join(os.getcwd(), f".venv-{postfix}")
 
-    with context.prefix(get_venv_command(venv_path, reset_path=reset_path)):
-        # FIXME: pip3 uninstall strictdoc -y" is here because I don't know how
-        # to make pip install only the dependencies from the pyproject.toml but
-        # not the project itself.
-        if VENV_DEPS_CHECK_PASSED not in context:
-            result = context.run(
-                one_line_command(
-                    """
-                    pip3 install toml &&
-                    python3 check_environment.py &&
-                    pip3 uninstall strictdoc -y
-                    """
-                ),
-                env=None,
-                hide=False,
-                warn=True,
-                pty=False,
-                echo=True,
-            )
-            if result.exited == 11:
-                result = context.run(
-                    one_line_command(COMMAND_SETUP_DEPS),
-                    env=None,
-                    hide=False,
-                    warn=False,
-                    pty=False,
-                    echo=True,
-                )
-                if result.exited != 0:
-                    return result
-            elif result.exited != 0:
-                raise invoke.exceptions.UnexpectedExit(result)
-            context[VENV_DEPS_CHECK_PASSED] = True
 
-        return context.run(
-            one_line_command(cmd),
-            env=environment,
-            hide=False,
-            warn=warn,
-            pty=False,
-            echo=True,
-        )
+def run_invoke_with_tox(
+    context,
+    environment_type: ToxEnvironment,
+    command: str,
+    environment: Optional[dict] = None,
+) -> invoke.runners.Result:
+    assert isinstance(environment_type, ToxEnvironment)
+    assert isinstance(command, str)
+    tox_py_version = f"py{sys.version_info.major}{sys.version_info.minor}"
+    return run_invoke(
+        context,
+        f"""
+            tox
+                -e {tox_py_version}-{environment_type.value} --
+                {command}
+        """,
+        environment=environment,
+    )
 
 
 @task
@@ -128,7 +82,7 @@ def clean(context):
     clean_command = """
         rm -rfv output/ docs/sphinx/build/
     """
-    run_invoke_cmd(context, clean_command)
+    run_invoke(context, clean_command)
 
 
 @task
@@ -139,35 +93,33 @@ def clean_itest_artifacts(context):
     """
     # The command sometimes exits with 1 even if the files are deleted.
     # warn=True ensures that the execution continues.
-    run_invoke_cmd(context, find_command, warn=True)
+    run_invoke(context, find_command, warn=True)
 
 
 @task
 def server(context, input_path="."):
     assert os.path.isdir(input_path), input_path
-    run_invoke_cmd(
+    run_invoke_with_tox(
         context,
-        one_line_command(
-            f"""
-                python strictdoc/cli/main.py server {input_path} --reload
-            """
-        ),
-    )  # --reload
+        ToxEnvironment.DEVELOPMENT,
+        f"""
+            python strictdoc/cli/main.py server {input_path} --reload
+        """,
+    )
 
 
 @task
 def docs(context):
-    run_invoke_cmd(
+    run_invoke_with_tox(
         context,
-        (
-            """
+        ToxEnvironment.DOCUMENTATION,
+        """
             python3 strictdoc/cli/main.py
                 export docs/
                     --formats=html
                     --output-dir output/strictdoc_website
                     --project-title "StrictDoc"
-            """
-        ),
+        """,
     )
 
     assert os.path.isdir(
@@ -176,73 +128,73 @@ def docs(context):
     assert os.path.isdir(
         "strictdoc-project.github.io/.git/"
     ), "Expecting the documentation to be a valid Git repository."
-    run_invoke_cmd(
+    run_invoke_with_tox(
         context,
-        (
-            """
+        ToxEnvironment.DOCUMENTATION,
+        """
             cp -rv output/strictdoc_website/html/* strictdoc-project.github.io/
-            """
-        ),
+        """,
     )
 
-    run_invoke_cmd(
+    run_invoke_with_tox(
         context,
-        (
-            """
+        ToxEnvironment.DOCUMENTATION,
+        """
             python3 strictdoc/cli/main.py
                 export docs/
                     --formats=rst
                     --output-dir output/sphinx
                     --project-title "StrictDoc"
-            """
-        ),
+        """,
     )
 
-    run_invoke_cmd(
+    run_invoke_with_tox(
         context,
-        (
-            """
+        ToxEnvironment.DOCUMENTATION,
+        """
             cp -v output/sphinx/rst/strictdoc*.rst docs/sphinx/source/
-            """
-        ),
+        """,
     )
 
-    run_invoke_cmd(
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.DOCUMENTATION,
+        """
+            make --directory docs/sphinx html latexpdf
+        """,
+    )
+
+    run_invoke(
         context,
         (
             """
-            cd docs/sphinx &&
-                make html latexpdf &&
-                open build/latex/strictdoc.pdf
+                open docs/sphinx/build/latex/strictdoc.pdf
             """
         ),
-        reset_path=False,
     )
 
 
 @task
 def test_unit(context, focus=None):
     focus_argument = f"-k {focus}" if focus is not None else ""
-    run_invoke_cmd(
+    run_invoke_with_tox(
         context,
-        (
-            f"""
-                pytest tests/unit/ {focus_argument}
-            """
-        ),
+        ToxEnvironment.CHECK,
+        f"""
+            pytest tests/unit/ {focus_argument}
+        """,
     )
 
 
 @task
 def test_unit_server(context, focus=None):
     focus_argument = f"-k {focus}" if focus is not None else ""
-    run_invoke_cmd(
+    run_invoke_with_tox(
         context,
-        (
-            f"""
-                pytest tests/unit_server/ {focus_argument}
-            """
-        ),
+        ToxEnvironment.CHECK,
+        f"""
+            pytest tests/unit_server/ {focus_argument}
+        """,
     )
 
 
@@ -271,10 +223,10 @@ def test_end2end(
 
     focus_argument = f"-k {focus}" if focus is not None else ""
     exit_first_argument = "--exitfirst" if exit_first else ""
-    run_invoke_cmd(
+    run_invoke_with_tox(
         context,
-        one_line_command(
-            f"""
+        ToxEnvironment.CHECK,
+        f"""
             pytest
                 --failed-first
                 --capture=no
@@ -283,51 +235,53 @@ def test_end2end(
                 {focus_argument}
                 {exit_first_argument}
                 tests/end2end
-            """
-        ),
+        """,
         environment=environment,
     )
 
 
 @task
 def test_unit_coverage(context):
-    run_invoke_cmd(
+    run_invoke_with_tox(
         context,
-        (
-            """
-                coverage run
-                --rcfile=.coveragerc
-                --branch
-                --omit=.venv*/*
-                -m pytest
-                tests/unit/
-            """
-        ),
-    )
-    run_invoke_cmd(
-        context,
-        (
-            """
-        coverage report --sort=cover
+        ToxEnvironment.CHECK,
         """
-        ),
+            coverage run
+            --rcfile=.coveragerc
+            --branch
+            --omit=.venv*/*
+            -m pytest
+            tests/unit/
+        """,
+    )
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        """
+            coverage report --sort=cover
+        """,
     )
 
 
 @task(test_unit_coverage)
 def test_coverage_report(context):
-    run_invoke_cmd(
+    run_invoke_with_tox(
         context,
-        (
-            """
-        coverage html
+        ToxEnvironment.CHECK,
         """
-        ),
+            coverage html
+        """,
     )
 
 
 @task
-def test_integration(context, focus=None, debug=False, strictdoc=None):
+def test_integration(
+    context,
+    focus=None,
+    debug=False,
+    strictdoc=None,
+    environment=ToxEnvironment.CHECK,
+):
     clean_itest_artifacts(context)
 
     cwd = os.getcwd()
@@ -340,27 +294,41 @@ def test_integration(context, focus=None, debug=False, strictdoc=None):
     focus_or_none = f"--filter {focus}" if focus else ""
     debug_opts = "-vv --show-all" if debug else ""
 
-    command = f"""
+    itest_command = f"""
         lit
         --param STRICTDOC_EXEC="{strictdoc_exec}"
         -v
         {debug_opts}
         {focus_or_none}
         {cwd}/tests/integration
-        """
+    """
 
-    run_invoke_cmd(context, command)
+    # It looks like LIT does not open the RUN: subprocesses in the same
+    # environment from which it itself is run from. This issue has been known by
+    # us for a couple of years by now. Not using Tox on Windows for the time
+    # being.
+    if os.name == "nt":
+        run_invoke(context, itest_command)
+        return
+
+    run_invoke_with_tox(
+        context,
+        environment,
+        itest_command,
+    )
 
 
 @task
-def lint_black_diff(context):
-    command = """
-        black
+def lint_black(context):
+    result: invoke.runners.Result = run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        """
+            black
             *.py strictdoc/ tests/unit/ tests/integration/*.py tests/end2end/
             --color --line-length 80 2>&1
-        """
-    result = run_invoke_cmd(context, command)
-
+        """,
+    )
     # black always exits with 0, so we handle the output.
     if "reformatted" in result.stdout:
         print("invoke: black found issues")  # noqa: T201
@@ -370,14 +338,19 @@ def lint_black_diff(context):
 
 @task
 def lint_pylint(context):
-    command = """
-        pylint
-          --rcfile=.pylint.ini
-          --disable=c-extension-no-member
-          strictdoc/ tests/ tasks.py
-        """  # pylint: disable=line-too-long
+    # TODO: Fix --disable=import-error
     try:
-        run_invoke_cmd(context, command)
+        run_invoke_with_tox(
+            context,
+            ToxEnvironment.CHECK,
+            """
+                pylint
+                  --rcfile=.pylint.ini
+                  --disable=c-extension-no-member
+                  --disable=import-error
+                  strictdoc/ tests/ tasks.py
+            """,
+        )
     except invoke.exceptions.UnexpectedExit as exc:
         # pylink doesn't show an error message when exit code != 0, so we do.
         print(  # noqa: T201
@@ -388,49 +361,58 @@ def lint_pylint(context):
 
 @task
 def lint_flake8(context):
-    command = """
-        flake8 strictdoc/ tests/ --statistics --max-line-length 80 --show-source
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
         """
-    run_invoke_cmd(context, command)
+            flake8
+                strictdoc/ tests/
+                --statistics
+                --max-line-length 80
+                --show-source
+        """,
+    )
 
 
 @task
 def lint_ruff(context):
-    command = """
-        ruff .
-    """
-    run_invoke_cmd(context, command)
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        """
+            ruff .
+        """,
+    )
 
 
 @task
 def lint_mypy(context):
-    # Need to delete the cache every time because otherwise mypy gets
-    # stuck with 0 warnings very often.
-    run_invoke_cmd(
+    run_invoke_with_tox(
         context,
+        ToxEnvironment.CHECK,
         """
-        mypy strictdoc/
-            --show-error-codes
-            --disable-error-code=arg-type
-            --disable-error-code=attr-defined
-            --disable-error-code=import
-            --disable-error-code=misc
-            --disable-error-code=no-any-return
-            --disable-error-code=no-redef
-            --disable-error-code=no-untyped-call
-            --disable-error-code=no-untyped-def
-            --disable-error-code=operator
-            --disable-error-code=type-arg
-            --disable-error-code=var-annotated
-            --disable-error-code=union-attr
-            --strict
+            mypy strictdoc/
+                --show-error-codes
+                --disable-error-code=arg-type
+                --disable-error-code=attr-defined
+                --disable-error-code=import
+                --disable-error-code=misc
+                --disable-error-code=no-any-return
+                --disable-error-code=no-redef
+                --disable-error-code=no-untyped-call
+                --disable-error-code=no-untyped-def
+                --disable-error-code=operator
+                --disable-error-code=type-arg
+                --disable-error-code=var-annotated
+                --disable-error-code=union-attr
+                --strict
         """,
     )
 
 
 @task
 def lint(context):
-    lint_black_diff(context)
+    lint_black(context)
     lint_ruff(context)
     lint_pylint(context)
     lint_flake8(context)
@@ -460,93 +442,160 @@ def changelog(context, github_token):
         --user strictdoc-project
         --project strictdoc
         """
-    run_invoke_cmd(context, command)
+    run_invoke(context, command)
 
 
 @task
 def dump_grammar(context, output_file):
     command = f"""
-            python3 strictdoc/cli/main.py dump-grammar {output_file}
-        """
-    run_invoke_cmd(context, command)
+        python3 strictdoc/cli/main.py dump-grammar {output_file}
+    """
+    run_invoke(context, command)
 
 
 @task
 def check_dead_links(context):
-    command = """
-        python3 tools/link_health.py docs/strictdoc_01_user_guide.sdoc &&
-        python3 tools/link_health.py docs/strictdoc_02_faq.sdoc &&
-        python3 tools/link_health.py docs/strictdoc_03_development_plan.sdoc &&
-        python3 tools/link_health.py docs/strictdoc_04_backlog.sdoc &&
-        python3 tools/link_health.py docs/strictdoc_10_contributing.sdoc &&
-        python3 tools/link_health.py docs/strictdoc_20_requirements.sdoc &&
-        python3 tools/link_health.py docs/strictdoc_21_design.sdoc
-    """
-    run_invoke_cmd(context, command)
-
-
-@task
-def setup_development_deps(context):
-    run_invoke_cmd(context, COMMAND_SETUP_DEPS)
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        """
+            python3 tools/link_health.py docs/strictdoc_01_user_guide.sdoc
+        """,
+    )
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        """
+            python3 tools/link_health.py docs/strictdoc_02_faq.sdoc
+        """,
+    )
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        """
+            python3 tools/link_health.py docs/strictdoc_03_development_plan.sdoc
+        """,
+    )
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        """
+            python3 tools/link_health.py docs/strictdoc_04_backlog.sdoc
+        """,
+    )
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        """
+            python3 tools/link_health.py docs/strictdoc_10_contributing.sdoc
+        """,
+    )
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        """
+            python3 tools/link_health.py docs/strictdoc_20_requirements.sdoc
+        """,
+    )
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        """
+            python3 tools/link_health.py docs/strictdoc_21_design.sdoc
+        """,
+    )
 
 
 @task
 def release_local(context):
-    context[VENV_FOLDER] = VenvFolderType.RELEASE_LOCAL
-    command = """
-        rm -rfv dist/ build/ &&
-        pip uninstall strictdoc -y &&
-        python3 -m build &&
-        twine check dist/* &&
-        pip install dist/*.tar.gz
-    """
-    run_invoke_cmd(context, command)
-    test_integration(context, strictdoc="strictdoc")
+    run_invoke(
+        context,
+        """
+            rm -rfv dist/ build/
+        """,
+    )
+    run_invoke(
+        context,
+        """
+            pip uninstall strictdoc -y
+        """,
+    )
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.RELEASE_LOCAL,
+        """
+            python -m build
+        """,
+    )
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.RELEASE_LOCAL,
+        """
+            twine check dist/*
+        """,
+    )
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.RELEASE_LOCAL,
+        """
+            pip install dist/*.tar.gz
+        """,
+    )
+    test_integration(
+        context, strictdoc="strictdoc", environment=ToxEnvironment.RELEASE_LOCAL
+    )
 
 
 @task
-def release(context, username=None, password=None):
+def release(context, test_pypi=False, username=None, password=None):
+    """
+    A release can be made to PyPI or test package index (TestPyPI):
+    https://pypi.org/project/strictdoc/
+    https://test.pypi.org/project/strictdoc/
+    """
+    test_release_or_none = (
+        "--repository strictdoc_test"
+        if test_pypi
+        else "--repository strictdoc_release"
+    )
     user_password = f"-u{username} -p{password}" if username is not None else ""
 
-    context[VENV_FOLDER] = VenvFolderType.RELEASE_PYPI
-    command = f"""
-        rm -rfv dist/ &&
-        python3 -m build &&
-            twine check dist/* &&
-            twine upload dist/strictdoc-*.tar.gz
-                {user_password}
-    """
-    run_invoke_cmd(context, command)
-
-
-@task
-def release_test(context):
-    """
-    Release to test package index (TestPyPI)
-    https://test.pypi.org/project/strictdoc/0.0.34a1/
-    """
-    context[VENV_FOLDER] = VenvFolderType.RELEASE_PYPI_TEST
-    setup_development_deps(context)
-
+    run_invoke(
+        context,
+        """
+            rm -rfv dist/
+        """,
+    )
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.RELEASE,
+        """
+            python3 -m build
+        """,
+    )
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.RELEASE,
+        """
+            twine check dist/*
+        """,
+    )
     # The token is in a core developer's .pypirc file.
     # https://test.pypi.org/manage/account/token/
     # https://packaging.python.org/en/latest/specifications/pypirc/#pypirc
-    command = """
-        rm -rfv dist/ &&
-        python3 -m build &&
-            twine check dist/* &&
-            twine upload
-                --repository strictdoc_test
-                dist/strictdoc-*.tar.gz
-    """
-    run_invoke_cmd(context, command)
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.RELEASE,
+        f"""
+            twine upload dist/strictdoc-*.tar.gz
+                {test_release_or_none}
+                {user_password}
+        """,
+    )
 
 
 @task
 def release_pyinstaller(context):
-    context[VENV_FOLDER] = VenvFolderType.RELEASE_PYINSTALLER
-    setup_development_deps(context)
-
     path_to_pyi_dist = "/tmp/strictdoc"
 
     # The --additional-hooks-dir is a workaround against the following error
@@ -566,7 +615,8 @@ def release_pyinstaller(context):
     # This behavior is not surprising because that's how the uvicorn loads the
     # application separately from the parent process.
     command = f"""
-        pip install pyinstaller &&
+        pip install pyinstaller toml &&
+        python developer/pip_install_strictdoc_deps.py &&
         pyinstaller
             --clean
             --name strictdoc
@@ -580,12 +630,11 @@ def release_pyinstaller(context):
             --add-data strictdoc/export/html/_static_extra:_static_extra
             strictdoc/cli/main.py
     """
-    run_invoke_cmd(context, command)
+    run_invoke(context, command)
 
 
 @task
 def watch(context, sdocs_path="."):
-    paths_to_watch = "."
     strictdoc_command = f"""
         python strictdoc/cli/main.py
             export
@@ -593,34 +642,45 @@ def watch(context, sdocs_path="."):
             --output-dir output/
             --experimental-enable-file-traceability
     """
-    run_invoke_cmd(
+
+    run_invoke_with_tox(
         context,
+        ToxEnvironment.DEVELOPMENT,
         f"""
-        {strictdoc_command} &&
-        watchmedo shell-command
-        --patterns="*.py;*.sdoc;*.jinja;*.html;*.css;*.js"
-        --recursive
-        --ignore-pattern='output/;tests/integration'
-        --command='{strictdoc_command}'
-        --drop
-        {paths_to_watch}
+            {strictdoc_command}
+        """,
+    )
+
+    paths_to_watch = "."
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.DEVELOPMENT,
+        f"""
+            watchmedo shell-command
+            --patterns="*.py;*.sdoc;*.jinja;*.html;*.css;*.js"
+            --recursive
+            --ignore-pattern='output/;tests/integration'
+            --command='{strictdoc_command}'
+            --drop
+            {paths_to_watch}
         """,
     )
 
 
 @task
 def run(context, command):
-    run_invoke_cmd(
+    run_invoke_with_tox(
         context,
+        ToxEnvironment.DEVELOPMENT,
         f"""
-        {command}
+            {command}
         """,
     )
 
 
 @task
 def nuitka(context):
-    run_invoke_cmd(
+    run_invoke(
         context,
         f"""
         PYTHONPATH="{os.getcwd()}"

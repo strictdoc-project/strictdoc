@@ -18,9 +18,13 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install release task dependencies
+      - name: Upgrade pip
         run: |
-          pip install --upgrade pip setuptools invoke
+          python -m pip install --upgrade pip
+
+      - name: Install Invoke and Tox
+        run: |
+          pip install invoke tox
 
       - name: Build and test locally
         run: |
@@ -37,14 +41,18 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install release task dependencies
+      - name: Upgrade pip
         run: |
-          pip install --upgrade pip setuptools invoke
+          python -m pip install --upgrade pip
+
+      - name: Install Invoke and Tox
+        run: |
+          pip install invoke tox
 
       - name: Build and test using PyInstaller
         run: |
           invoke release-pyinstaller
-          invoke test-integration --strictdoc /tmp/strictdoc/strictdoc/strictdoc
+          invoke test-integration --strictdoc /tmp/strictdoc/strictdoc/strictdoc --environment pyinstaller
 
   periodic_integration_test_macos:
     name: PIT – macOS
@@ -57,9 +65,13 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install release task dependencies
+      - name: Upgrade pip
         run: |
-          pip install --upgrade pip setuptools invoke
+          python -m pip install --upgrade pip
+
+      - name: Install Invoke and Tox
+        run: |
+          pip install invoke tox
 
       - name: Build and test locally
         run: |
@@ -76,14 +88,18 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install release task dependencies
+      - name: Upgrade pip
         run: |
-          pip install --upgrade pip setuptools invoke
+          python -m pip install --upgrade pip
+
+      - name: Install Invoke and Tox
+        run: |
+          pip install invoke tox
 
       - name: Build and test using PyInstaller
         run: |
           invoke release-pyinstaller
-          invoke test-integration --strictdoc /tmp/strictdoc/strictdoc/strictdoc
+          invoke test-integration --strictdoc /tmp/strictdoc/strictdoc/strictdoc --environment pyinstaller
 
   check_dead_links:
     name: PIT – Check dead links
@@ -96,13 +112,9 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Invoke
+      - name: Install Invoke and Tox
         run: |
-          pip install invoke
-
-      - name: Install Development Deps
-        run: |
-          invoke setup-development-deps
+          pip install invoke tox
 
       - name: Link Health check
         run: |

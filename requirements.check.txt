@@ -1,0 +1,30 @@
+toml
+
+# Lint
+black>=21.9b0
+mypy>=0.910
+pylint>=2.11.1
+flake8>=3.9.2
+ruff
+
+# Unit tests
+pytest>=6.2.2
+pyfakefs>=4.5.5
+coverage>=5.4
+# httpx is needed for running server-related unit tests.
+httpx
+
+# Integration tests
+lit>=0.11.0.post1
+filecheck>=0.0.20
+pytidylib>=0.3.2
+openpyxl>=3.0.5
+
+# End2end tests
+seleniumbase
+# psutil is needed to reap Uvicorn's zombie processes when running end2end
+# tests. One day someone finds a better solution.
+psutil
+
+# Used by the dead links checker
+requests>=2.27.1

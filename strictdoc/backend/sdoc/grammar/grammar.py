@@ -201,7 +201,7 @@ RequirementField[noskipws]:
   (
     field_name = FieldName ':'
     (
-      ((' ' field_value = SingleLineString | field_value = '') '\n') |
+      ((' ' field_value = SingleLineString) '\n') |
       (' ' (field_value_multiline = MultiLineString) '\n')
     )
   )

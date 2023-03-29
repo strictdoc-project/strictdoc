@@ -1,6 +1,7 @@
 import re
 
 import pytest
+from textx import TextXSyntaxError
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.models.document import Document
@@ -76,46 +77,6 @@ COMMENT: Comment #1
 COMMENT: Comment #2
 COMMENT: Comment #3
 """.lstrip()
-
-    reader = SDReader()
-
-    document = reader.read(sdoc_input)
-    assert isinstance(document, Document)
-
-    writer = SDWriter()
-    output = writer.write(document)
-
-    assert sdoc_input == output
-
-
-def test_003_comments_02_single_line_empty():
-    sdoc_input = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[REQUIREMENT]
-COMMENT:
-""".lstrip()
-
-    reader = SDReader()
-
-    document = reader.read(sdoc_input)
-    assert isinstance(document, Document)
-
-    writer = SDWriter()
-    output = writer.write(document)
-
-    assert sdoc_input == output
-
-
-def test_003_comments_03_single_line_empty_and_space():
-    sdoc_input = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[REQUIREMENT]
-COMMENT: 
-""".lstrip()  # noqa: W291
 
     reader = SDReader()
 
@@ -1695,8 +1656,8 @@ TITLE: Test Doc
     assert sdoc_input == output
 
 
-# TODO: Does it make sense to disallow this case in the grammar?
-def test_211_present_but_empty():
+def test_211_present_but_empty_with_no_space_character():
+    # Note: There is no whitespace character after "UID:".
     sdoc_input = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -1707,13 +1668,50 @@ UID:
 
     reader = SDReader()
 
-    document: Document = reader.read(sdoc_input)
-    assert isinstance(document, Document)
+    with pytest.raises(Exception) as exc_info:
+        _ = reader.read(sdoc_input)
 
-    requirement: Requirement = document.section_contents[0]
-    assert requirement.reserved_uid == ""
+    assert exc_info.type is TextXSyntaxError
+    assert "Expected ' '" == exc_info.value.args[0].decode("utf-8")
 
-    writer = SDWriter()
-    output = writer.write(document)
 
-    assert sdoc_input == output
+def test_212_present_but_empty_with_space_character():
+    # Note: There is a whitespace character after "UID:".
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+UID: 
+""".lstrip()  # noqa: W291
+
+    reader = SDReader()
+
+    with pytest.raises(Exception) as exc_info:
+        _ = reader.read(sdoc_input)
+
+    assert exc_info.type is TextXSyntaxError
+    assert "Expected Not or '\\S' or '>>>'" in exc_info.value.args[0].decode(
+        "utf-8"
+    )
+
+
+def test_213_present_but_empty_with_two_space_characters():
+    # Note: There are two whitespace characters after "UID:".
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+UID:  
+""".lstrip()  # noqa: W291
+
+    reader = SDReader()
+
+    with pytest.raises(Exception) as exc_info:
+        _ = reader.read(sdoc_input)
+
+    assert exc_info.type is TextXSyntaxError
+    assert "Expected Not or '\\S' or '>>>'" in exc_info.value.args[0].decode(
+        "utf-8"
+    )

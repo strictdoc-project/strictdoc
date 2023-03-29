@@ -4,7 +4,7 @@ FieldName[noskipws]:
 ;
 
 SingleLineString:
-  (!MultiLineStringStart /./)*
+  (!MultiLineStringStart /\S/) (!MultiLineStringStart /./)*
 ;
 
 MultiLineStringStart[noskipws]:

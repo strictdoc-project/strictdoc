@@ -2,11 +2,412 @@
 
 ## [Unreleased](https://github.com/strictdoc-project/strictdoc/tree/HEAD)
 
-[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.27...HEAD)
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.37...HEAD)
+
+**Closed issues:**
+
+- tasks: improve the virtual environments infrastructure  [\#1057](https://github.com/strictdoc-project/strictdoc/issues/1057)
+
+## [0.0.37](https://github.com/strictdoc-project/strictdoc/tree/0.0.37) (2023-03-29)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.36...0.0.37)
+
+**Fixed bugs:**
+
+- Several errors with strictdoc server, possibly connected to deployment via PyInstaller [\#1068](https://github.com/strictdoc-project/strictdoc/issues/1068)
+
+**Closed issues:**
+
+- Empty statement error [\#1083](https://github.com/strictdoc-project/strictdoc/issues/1083)
+- Cannot execute strictdoc command  [\#1070](https://github.com/strictdoc-project/strictdoc/issues/1070)
+- CI: set up the end-2-end tests on Windows [\#1065](https://github.com/strictdoc-project/strictdoc/issues/1065)
+- tasks.py: invoke/venv solution has to be improved  [\#1064](https://github.com/strictdoc-project/strictdoc/issues/1064)
+- Implement the initial SDoc markup highlighting plugin for Visual Studio Code [\#1059](https://github.com/strictdoc-project/strictdoc/issues/1059)
+- Known issue: test server process leaks semaphore objects when killed by the test script [\#993](https://github.com/strictdoc-project/strictdoc/issues/993)
+- SDoc grammar: single vs multiline fields: make a decision [\#823](https://github.com/strictdoc-project/strictdoc/issues/823)
+
+**Merged pull requests:**
+
+- Bump version to 0.0.37 [\#1089](https://github.com/strictdoc-project/strictdoc/pull/1089) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc: disallow empty multiline fields completely. [\#1088](https://github.com/strictdoc-project/strictdoc/pull/1088) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc: disallow empty single fields completely. [\#1087](https://github.com/strictdoc-project/strictdoc/pull/1087) ([stanislaw](https://github.com/stanislaw))
+- CI: tests/end2end: try with Tox [\#1086](https://github.com/strictdoc-project/strictdoc/pull/1086) ([stanislaw](https://github.com/stanislaw))
+- tasks: switch all tasks to Tox [\#1085](https://github.com/strictdoc-project/strictdoc/pull/1085) ([stanislaw](https://github.com/stanislaw))
+- docs: user guide: update with Sublime Text syntax [\#1084](https://github.com/strictdoc-project/strictdoc/pull/1084) ([stanislaw](https://github.com/stanislaw))
+- docs: document the IDE support using TextMate grammars [\#1082](https://github.com/strictdoc-project/strictdoc/pull/1082) ([stanislaw](https://github.com/stanislaw))
+- docs: document the lack of non-string types support in the UI [\#1080](https://github.com/strictdoc-project/strictdoc/pull/1080) ([stanislaw](https://github.com/stanislaw))
+- server: resolve paths to assets correctly for PyInstaller [\#1078](https://github.com/strictdoc-project/strictdoc/pull/1078) ([stanislaw](https://github.com/stanislaw))
+- tests/end2end: try reducing the warmup interval from 3 to 0 [\#1075](https://github.com/strictdoc-project/strictdoc/pull/1075) ([stanislaw](https://github.com/stanislaw))
+- CI: try end-to-end tests against Windows [\#1073](https://github.com/strictdoc-project/strictdoc/pull/1073) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.36](https://github.com/strictdoc-project/strictdoc/tree/0.0.36) (2023-03-23)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.35...0.0.36)
+
+**Closed issues:**
+
+- CI: set up an integration test job for proving the quality of the latest released Pip package [\#1067](https://github.com/strictdoc-project/strictdoc/issues/1067)
+- Missing Requirements [\#1060](https://github.com/strictdoc-project/strictdoc/issues/1060)
+
+**Merged pull requests:**
+
+- Bump version to 0.0.36 [\#1072](https://github.com/strictdoc-project/strictdoc/pull/1072) ([stanislaw](https://github.com/stanislaw))
+- CI: group together periodic integration tests jobs [\#1071](https://github.com/strictdoc-project/strictdoc/pull/1071) ([stanislaw](https://github.com/stanislaw))
+- CI: group together end-to-end tests jobs [\#1069](https://github.com/strictdoc-project/strictdoc/pull/1069) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.35](https://github.com/strictdoc-project/strictdoc/tree/0.0.35) (2023-03-23)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.34...0.0.35)
+
+**Fixed bugs:**
+
+- strictdoc server temp file permission denied on Windows 10 [\#1061](https://github.com/strictdoc-project/strictdoc/issues/1061)
+
+**Closed issues:**
+
+- Web UI Backend [\#563](https://github.com/strictdoc-project/strictdoc/issues/563)
+
+**Merged pull requests:**
+
+- Bump version to 0.0.35 [\#1066](https://github.com/strictdoc-project/strictdoc/pull/1066) ([stanislaw](https://github.com/stanislaw))
+-  pyproject.toml: restore the bs4 dependency  [\#1063](https://github.com/strictdoc-project/strictdoc/pull/1063) ([stanislaw](https://github.com/stanislaw))
+- server: Do not re-open NamedTemporaryFile on Windows [\#1062](https://github.com/strictdoc-project/strictdoc/pull/1062) ([richardbarlow](https://github.com/richardbarlow))
+- .readthedocs.yaml: specify Python 3.11 using new conventions [\#1056](https://github.com/strictdoc-project/strictdoc/pull/1056) ([stanislaw](https://github.com/stanislaw))
+- docs: update Read the Docs configuration file [\#1055](https://github.com/strictdoc-project/strictdoc/pull/1055) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.34](https://github.com/strictdoc-project/strictdoc/tree/0.0.34) (2023-03-21)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.33...0.0.34)
+
+**Fixed bugs:**
+
+- Dragging the DEEP TRACE board is very slow [\#1016](https://github.com/strictdoc-project/strictdoc/issues/1016)
+- File Traceability: Highlight issues when tagging ranges outside of one of the referenced files [\#990](https://github.com/strictdoc-project/strictdoc/issues/990)
+- Saving multiple fields at once in grammar does not work. [\#954](https://github.com/strictdoc-project/strictdoc/issues/954)
+- UI: bug: After saving the document configuration, the page type menu in the header does not work [\#939](https://github.com/strictdoc-project/strictdoc/issues/939)
+- Double-check empty comment validation when editing requirement [\#895](https://github.com/strictdoc-project/strictdoc/issues/895)
+- Javascript issue: TypeError: undefined is not an object \(evaluating 'this.ranges\[rangeAlliace\]\[reqId\]'\) [\#826](https://github.com/strictdoc-project/strictdoc/issues/826)
+
+**Closed issues:**
+
+- Switch to collapsed TOC by default [\#1051](https://github.com/strictdoc-project/strictdoc/issues/1051)
+-  Introduce end-to-end tests for DTR screen [\#1033](https://github.com/strictdoc-project/strictdoc/issues/1033)
+- Requirement style Table does not always work correctly \(regresses to Simple style\) [\#1027](https://github.com/strictdoc-project/strictdoc/issues/1027)
+- UI: Switch to monospace font for all editable fields [\#1015](https://github.com/strictdoc-project/strictdoc/issues/1015)
+- Uvicorn shall not watch for changes in files in the integration test folder [\#1011](https://github.com/strictdoc-project/strictdoc/issues/1011)
+- UI: document view header: include title in turbo-frame [\#1008](https://github.com/strictdoc-project/strictdoc/issues/1008)
+- Deep-traceability: make a short view for requirement + open the full view in a modal [\#1005](https://github.com/strictdoc-project/strictdoc/issues/1005)
+- Static HTML export: remove node reactions on hovering [\#998](https://github.com/strictdoc-project/strictdoc/issues/998)
+- Create placeholder for empty views \(trace and deep-trace\) [\#995](https://github.com/strictdoc-project/strictdoc/issues/995)
+- Error when cancelling editing of a specific section [\#991](https://github.com/strictdoc-project/strictdoc/issues/991)
+- TBL: table's top border is missing [\#980](https://github.com/strictdoc-project/strictdoc/issues/980)
+- Escape/unescape in requirement field [\#977](https://github.com/strictdoc-project/strictdoc/issues/977)
+- Bug in contenteditable [\#975](https://github.com/strictdoc-project/strictdoc/issues/975)
+- Local development issue: resolving import paths when called outside strictdoc/ folder [\#968](https://github.com/strictdoc-project/strictdoc/issues/968)
+- CI: Flaky tests caused by pytest not starting the server on time [\#966](https://github.com/strictdoc-project/strictdoc/issues/966)
+- Display validation messages as a list if there is more than one message [\#952](https://github.com/strictdoc-project/strictdoc/issues/952)
+- Add confirmations for dangerous actions [\#945](https://github.com/strictdoc-project/strictdoc/issues/945)
+- Wrong behavior of UI items in the menu [\#931](https://github.com/strictdoc-project/strictdoc/issues/931)
+- Document tree: remove DOC/TBL/TR/DTR badges [\#927](https://github.com/strictdoc-project/strictdoc/issues/927)
+- End-to-end tests: create screen-based test helpers to encapsulate all lower-level XPath implementation [\#926](https://github.com/strictdoc-project/strictdoc/issues/926)
+- Solve the problem with a SDoc server not being terminated fast enough before the next test starts [\#925](https://github.com/strictdoc-project/strictdoc/issues/925)
+- Solve the problem with conflicting /tmp folders where server and end2end tests generate output [\#924](https://github.com/strictdoc-project/strictdoc/issues/924)
+- docs: document the existing capability of UI v0 [\#917](https://github.com/strictdoc-project/strictdoc/issues/917)
+- UI: finish CSS layout of all editable fields [\#915](https://github.com/strictdoc-project/strictdoc/issues/915)
+- DTR: Collapsible cards, so that only the requirement titles are browsable. [\#914](https://github.com/strictdoc-project/strictdoc/issues/914)
+- Add StrictDoc label on the generated/server HTML pages [\#909](https://github.com/strictdoc-project/strictdoc/issues/909)
+-  RST tables: align padding of normal text and padding of bullet list. [\#907](https://github.com/strictdoc-project/strictdoc/issues/907)
+- Requirement to source file links: handle validation edge case: missing closing pragmas [\#902](https://github.com/strictdoc-project/strictdoc/issues/902)
+- RST to HTML rendering by docutils: improve the styles of tables [\#888](https://github.com/strictdoc-project/strictdoc/issues/888)
+- Requirement-to-File links edge case: Pygments ignore the first empty line in a file [\#877](https://github.com/strictdoc-project/strictdoc/issues/877)
+- Finish handling of the grammar fields: moving up/down and deleting a new grammar field [\#872](https://github.com/strictdoc-project/strictdoc/issues/872)
+- Problems with pyinstaller version \(OS X\) [\#837](https://github.com/strictdoc-project/strictdoc/issues/837)
+- UI: Remaining work before first release [\#764](https://github.com/strictdoc-project/strictdoc/issues/764)
+-  Feature: HTML/DOC: Make a difference between requirement items and free text more visible [\#711](https://github.com/strictdoc-project/strictdoc/issues/711)
+
+**Merged pull requests:**
+
+-  Bump version to 0.0.34  [\#1054](https://github.com/strictdoc-project/strictdoc/pull/1054) ([stanislaw](https://github.com/stanislaw))
+- export/html, UI: Switch to collapsed TOC by default [\#1052](https://github.com/strictdoc-project/strictdoc/pull/1052) ([stanislaw](https://github.com/stanislaw))
+- export/html: improved JS for doing pan over the DTR screen [\#1049](https://github.com/strictdoc-project/strictdoc/pull/1049) ([stanislaw](https://github.com/stanislaw))
+- export/html: Update the backport to a container-type using @media [\#1048](https://github.com/strictdoc-project/strictdoc/pull/1048) ([mettta](https://github.com/mettta))
+- docs: document the existing capability of UI v0 [\#1047](https://github.com/strictdoc-project/strictdoc/pull/1047) ([stanislaw](https://github.com/stanislaw))
+- Code climate: rename /project\_index and /screens; remove wrongly committed sdoc file [\#1046](https://github.com/strictdoc-project/strictdoc/pull/1046) ([mettta](https://github.com/mettta))
+- tests/end2end: update Screens \(TR, DTR, TBL\) tests [\#1044](https://github.com/strictdoc-project/strictdoc/pull/1044) ([mettta](https://github.com/mettta))
+- Add end-to-end tests for DTR screen [\#1043](https://github.com/strictdoc-project/strictdoc/pull/1043) ([mettta](https://github.com/mettta))
+- tests/end2end: Updating the node finding method using testid [\#1041](https://github.com/strictdoc-project/strictdoc/pull/1041) ([mettta](https://github.com/mettta))
+- tests/integration: source files traceability: ensure a test with "docs/ + src/" structure [\#1040](https://github.com/strictdoc-project/strictdoc/pull/1040) ([stanislaw](https://github.com/stanislaw))
+- tests/end2end: update helpers, add init tests for all screen types [\#1039](https://github.com/strictdoc-project/strictdoc/pull/1039) ([mettta](https://github.com/mettta))
+- Bump version to 0.0.34-alpha.1 [\#1038](https://github.com/strictdoc-project/strictdoc/pull/1038) ([stanislaw](https://github.com/stanislaw))
+- strictdoc.toml: features= parameter for centralized activiation/deactivation of features [\#1036](https://github.com/strictdoc-project/strictdoc/pull/1036) ([stanislaw](https://github.com/stanislaw))
+- export/html, traceability: fix several JS issues in the source file screen [\#1035](https://github.com/strictdoc-project/strictdoc/pull/1035) ([stanislaw](https://github.com/stanislaw))
+- export/html: add Jinja extension for assertions in Jinja templates [\#1034](https://github.com/strictdoc-project/strictdoc/pull/1034) ([stanislaw](https://github.com/stanislaw))
+- tests/end2end: print current test number and how many tests are there [\#1030](https://github.com/strictdoc-project/strictdoc/pull/1030) ([stanislaw](https://github.com/stanislaw))
+- UI/components: DTR: make a short view for requirement + open the full view in a modal [\#1029](https://github.com/strictdoc-project/strictdoc/pull/1029) ([mettta](https://github.com/mettta))
+- server: do not reload when anything in tests/ is touched [\#1028](https://github.com/strictdoc-project/strictdoc/pull/1028) ([stanislaw](https://github.com/stanislaw))
+- traceability: minor cleanups and prepare an integration test [\#1025](https://github.com/strictdoc-project/strictdoc/pull/1025) ([stanislaw](https://github.com/stanislaw))
+-  docs: regenerate Read the Docs  [\#1024](https://github.com/strictdoc-project/strictdoc/pull/1024) ([stanislaw](https://github.com/stanislaw))
+- tests/end2end: print a test number when a test starts [\#1023](https://github.com/strictdoc-project/strictdoc/pull/1023) ([stanislaw](https://github.com/stanislaw))
+- server, UI: fix the escaping of RST strings in multiline fields [\#1018](https://github.com/strictdoc-project/strictdoc/pull/1018) ([stanislaw](https://github.com/stanislaw))
+- docs: update Development Plan [\#1017](https://github.com/strictdoc-project/strictdoc/pull/1017) ([stanislaw](https://github.com/stanislaw))
+- docs: update Requirements and Design [\#1014](https://github.com/strictdoc-project/strictdoc/pull/1014) ([stanislaw](https://github.com/stanislaw))
+- UI: document view header: include document title in turbo-frame [\#1010](https://github.com/strictdoc-project/strictdoc/pull/1010) ([mettta](https://github.com/mettta))
+- UI: add placeholder for empty views [\#1009](https://github.com/strictdoc-project/strictdoc/pull/1009) ([mettta](https://github.com/mettta))
+- server: handle one case of when editing section is cancelled [\#1006](https://github.com/strictdoc-project/strictdoc/pull/1006) ([stanislaw](https://github.com/stanislaw))
+- Static HTML export: remove node reactions on hovering [\#1004](https://github.com/strictdoc-project/strictdoc/pull/1004) ([mettta](https://github.com/mettta))
+- tasks.py: stop generating StrictDoc documentation alongside Sphinx HTML export [\#1003](https://github.com/strictdoc-project/strictdoc/pull/1003) ([stanislaw](https://github.com/stanislaw))
+- UI: Use Confirm when deleting sections and requirements [\#1002](https://github.com/strictdoc-project/strictdoc/pull/1002) ([mettta](https://github.com/mettta))
+- export/html: do not render unique identifiers when static export [\#1000](https://github.com/strictdoc-project/strictdoc/pull/1000) ([stanislaw](https://github.com/stanislaw))
+- tasks: copy StrictDoc documentation to GitHub pages repo as well [\#999](https://github.com/strictdoc-project/strictdoc/pull/999) ([stanislaw](https://github.com/stanislaw))
+- strictdoc.toml: introduce the html\_assets\_strictdoc\_dir parameter [\#996](https://github.com/strictdoc-project/strictdoc/pull/996) ([stanislaw](https://github.com/stanislaw))
+- tests/end2end: when exception happens, print out and err output to the console [\#994](https://github.com/strictdoc-project/strictdoc/pull/994) ([stanislaw](https://github.com/stanislaw))
+- parallelizer: catch the semaphores-related macOS edge case, document the edge case [\#992](https://github.com/strictdoc-project/strictdoc/pull/992) ([mettta](https://github.com/mettta))
+- UI: Display multiple validation messages as a list [\#989](https://github.com/strictdoc-project/strictdoc/pull/989) ([mettta](https://github.com/mettta))
+- UI: Fix field overflow if text has extra long words [\#988](https://github.com/strictdoc-project/strictdoc/pull/988) ([mettta](https://github.com/mettta))
+- tests: end2end updates [\#987](https://github.com/strictdoc-project/strictdoc/pull/987) ([mettta](https://github.com/mettta))
+- tests: update UC55/56, Screen\_DocumentTree, add Form\_ImportReqIF\(Form\) [\#986](https://github.com/strictdoc-project/strictdoc/pull/986) ([mettta](https://github.com/mettta))
+- export/html: remove unused static\_path variable from HTML templates [\#985](https://github.com/strictdoc-project/strictdoc/pull/985) ([stanislaw](https://github.com/stanislaw))
+- tests/end2end: updates [\#984](https://github.com/strictdoc-project/strictdoc/pull/984) ([mettta](https://github.com/mettta))
+- tests: end2end: add Form class and subclasses for context forms [\#983](https://github.com/strictdoc-project/strictdoc/pull/983) ([mettta](https://github.com/mettta))
+- UI: TBL view: fix top border [\#982](https://github.com/strictdoc-project/strictdoc/pull/982) ([mettta](https://github.com/mettta))
+- export/html: rename all \_\*.\* files to \*.\* [\#981](https://github.com/strictdoc-project/strictdoc/pull/981) ([stanislaw](https://github.com/stanislaw))
+- tests/end2end: more explicit configuration of all timeouts [\#979](https://github.com/strictdoc-project/strictdoc/pull/979) ([stanislaw](https://github.com/stanislaw))
+- tests/end2end: update UC11/12/20 [\#978](https://github.com/strictdoc-project/strictdoc/pull/978) ([mettta](https://github.com/mettta))
+- tests/end2end: update UC07 [\#976](https://github.com/strictdoc-project/strictdoc/pull/976) ([mettta](https://github.com/mettta))
+- pyproject.toml: remove MarkupSafe workaround version pin [\#974](https://github.com/strictdoc-project/strictdoc/pull/974) ([stanislaw](https://github.com/stanislaw))
+- pyproject.toml: remove beautifulsoup4 as obsolete [\#973](https://github.com/strictdoc-project/strictdoc/pull/973) ([stanislaw](https://github.com/stanislaw))
+- NOTICE file [\#972](https://github.com/strictdoc-project/strictdoc/pull/972) ([stanislaw](https://github.com/stanislaw))
+- LICENSE: provide an explicit copyright line [\#971](https://github.com/strictdoc-project/strictdoc/pull/971) ([stanislaw](https://github.com/stanislaw))
+- UI: forms: Update the form layout, the output of the fields and the field action buttons. [\#970](https://github.com/strictdoc-project/strictdoc/pull/970) ([mettta](https://github.com/mettta))
+- reqif/p11\_polarion: accommodate for a yet another spec object type [\#969](https://github.com/strictdoc-project/strictdoc/pull/969) ([stanislaw](https://github.com/stanislaw))
+- tests/end2end: introduce screen-based test helpers: UC07\_T01 [\#967](https://github.com/strictdoc-project/strictdoc/pull/967) ([mettta](https://github.com/mettta))
+- UI: Add requirement 'table/zebra' display modes [\#965](https://github.com/strictdoc-project/strictdoc/pull/965) ([mettta](https://github.com/mettta))
+- server, UI: finish the implementation of saving multiple grammar fields [\#963](https://github.com/strictdoc-project/strictdoc/pull/963) ([stanislaw](https://github.com/stanislaw))
+- tests/end2end: migrate tests to safe server code: UC55 and other [\#961](https://github.com/strictdoc-project/strictdoc/pull/961) ([stanislaw](https://github.com/stanislaw))
+- tests/end2end: migrate tests to safe server code: UC11 and UC12 [\#960](https://github.com/strictdoc-project/strictdoc/pull/960) ([stanislaw](https://github.com/stanislaw))
+- tests/end2end: migrate tests to safe server code: UC10 [\#959](https://github.com/strictdoc-project/strictdoc/pull/959) ([stanislaw](https://github.com/stanislaw))
+- tests/end2end: migrate tests to safe server code: UC09 [\#958](https://github.com/strictdoc-project/strictdoc/pull/958) ([stanislaw](https://github.com/stanislaw))
+- tests/end2end: migrate tests to safe server code: UC08 [\#957](https://github.com/strictdoc-project/strictdoc/pull/957) ([stanislaw](https://github.com/stanislaw))
+- tests/end2end: migrate tests to safe server code: UC07 [\#956](https://github.com/strictdoc-project/strictdoc/pull/956) ([stanislaw](https://github.com/stanislaw))
+- tests/end2end: migrate tests to safe server code: UC07\_G\[1-2\] [\#953](https://github.com/strictdoc-project/strictdoc/pull/953) ([stanislaw](https://github.com/stanislaw))
+- tests/end2: bring UC08-UC10 to latest naming conventions [\#951](https://github.com/strictdoc-project/strictdoc/pull/951) ([stanislaw](https://github.com/stanislaw))
+- tests/end2end: migrate tests to safe server code: UC06 [\#950](https://github.com/strictdoc-project/strictdoc/pull/950) ([stanislaw](https://github.com/stanislaw))
+- tests/end2end: migrate tests to latest naming conventions: UC00, UC01 [\#949](https://github.com/strictdoc-project/strictdoc/pull/949) ([stanislaw](https://github.com/stanislaw))
+- tests/end2end: migrate tests to safe server code: UC03: T01-T07 tests [\#946](https://github.com/strictdoc-project/strictdoc/pull/946) ([stanislaw](https://github.com/stanislaw))
+- UI: add turbo-template for the document title… [\#944](https://github.com/strictdoc-project/strictdoc/pull/944) ([mettta](https://github.com/mettta))
+- tests/end2end: ensure the server is stopped when any exception occurs [\#943](https://github.com/strictdoc-project/strictdoc/pull/943) ([stanislaw](https://github.com/stanislaw))
+- UI: remove unused code [\#942](https://github.com/strictdoc-project/strictdoc/pull/942) ([mettta](https://github.com/mettta))
+- UI: display document title on the table view [\#941](https://github.com/strictdoc-project/strictdoc/pull/941) ([mettta](https://github.com/mettta))
+- UI: Add StrictDoc label on the generated/server HTML pages [\#938](https://github.com/strictdoc-project/strictdoc/pull/938) ([mettta](https://github.com/mettta))
+- tests/end2end: reuse the browser session to speed up the tests [\#937](https://github.com/strictdoc-project/strictdoc/pull/937) ([stanislaw](https://github.com/stanislaw))
+- server: create the output in the temporary directory unless specified [\#936](https://github.com/strictdoc-project/strictdoc/pull/936) ([stanislaw](https://github.com/stanislaw))
+- docs: regenerate Read the Docs documentation [\#935](https://github.com/strictdoc-project/strictdoc/pull/935) ([stanislaw](https://github.com/stanislaw))
+- docs: updates to FAQ, add Credits [\#934](https://github.com/strictdoc-project/strictdoc/pull/934) ([stanislaw](https://github.com/stanislaw))
+- UI: Document tree: remove DOC/TBL/TR/DTR badges [\#933](https://github.com/strictdoc-project/strictdoc/pull/933) ([mettta](https://github.com/mettta))
+- UI: Fix wrong behavior of UI items in the menu [\#932](https://github.com/strictdoc-project/strictdoc/pull/932) ([mettta](https://github.com/mettta))
+- backend/reqif: handle the edge case with \<xhtml:object\> tag [\#930](https://github.com/strictdoc-project/strictdoc/pull/930) ([stanislaw](https://github.com/stanislaw))
+- RST tables: align padding of normal text and padding of bullet list. [\#929](https://github.com/strictdoc-project/strictdoc/pull/929) ([mettta](https://github.com/mettta))
+- UI: Fix table border in Safari [\#928](https://github.com/strictdoc-project/strictdoc/pull/928) ([mettta](https://github.com/mettta))
+- UI: forms: components/form/field [\#922](https://github.com/strictdoc-project/strictdoc/pull/922) ([mettta](https://github.com/mettta))
+- UI: forms: Requirement parent link [\#921](https://github.com/strictdoc-project/strictdoc/pull/921) ([mettta](https://github.com/mettta))
+- docs: regenerate Read the Docs documentation [\#920](https://github.com/strictdoc-project/strictdoc/pull/920) ([stanislaw](https://github.com/stanislaw))
+- docs: FAQ: document basic web server recommendations [\#919](https://github.com/strictdoc-project/strictdoc/pull/919) ([stanislaw](https://github.com/stanislaw))
+- docs: update Backlog [\#918](https://github.com/strictdoc-project/strictdoc/pull/918) ([stanislaw](https://github.com/stanislaw))
+- UI: forms: update grammar fields [\#916](https://github.com/strictdoc-project/strictdoc/pull/916) ([mettta](https://github.com/mettta))
+- UI: forms: add a default field\_name value for newly added fields  [\#906](https://github.com/strictdoc-project/strictdoc/pull/906) ([mettta](https://github.com/mettta))
+- UI:forms:  edit grammar  [\#905](https://github.com/strictdoc-project/strictdoc/pull/905) ([mettta](https://github.com/mettta))
+- Code climate: ruff: activate ERA [\#904](https://github.com/strictdoc-project/strictdoc/pull/904) ([stanislaw](https://github.com/stanislaw))
+- Code climate: ruff: activate most of UP group [\#903](https://github.com/strictdoc-project/strictdoc/pull/903) ([stanislaw](https://github.com/stanislaw))
+- Code climate: fix all T201 errors [\#901](https://github.com/strictdoc-project/strictdoc/pull/901) ([stanislaw](https://github.com/stanislaw))
+- export/html: support linking requirements with Jinja files [\#900](https://github.com/strictdoc-project/strictdoc/pull/900) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc\_source\_code: introduce the @sdoc keyword [\#899](https://github.com/strictdoc-project/strictdoc/pull/899) ([stanislaw](https://github.com/stanislaw))
+- Code climate: upgrade link\_health.py [\#898](https://github.com/strictdoc-project/strictdoc/pull/898) ([stanislaw](https://github.com/stanislaw))
+- UI: forms: comment fields [\#897](https://github.com/strictdoc-project/strictdoc/pull/897) ([mettta](https://github.com/mettta))
+- UI: update 'edit section/requirement' forms templates [\#896](https://github.com/strictdoc-project/strictdoc/pull/896) ([mettta](https://github.com/mettta))
+- server: update requirement: only regenerate the document's own SDoc file [\#894](https://github.com/strictdoc-project/strictdoc/pull/894) ([stanislaw](https://github.com/stanislaw))
+- docs: regenerate Read the Docs documentation [\#892](https://github.com/strictdoc-project/strictdoc/pull/892) ([stanislaw](https://github.com/stanislaw))
+- export/rst: fix edge case when rendering RST section titles [\#890](https://github.com/strictdoc-project/strictdoc/pull/890) ([stanislaw](https://github.com/stanislaw))
+- UI: update form/modal markup and CSS [\#889](https://github.com/strictdoc-project/strictdoc/pull/889) ([mettta](https://github.com/mettta))
+- requirements coverage: hide under the traceability flag for now [\#887](https://github.com/strictdoc-project/strictdoc/pull/887) ([stanislaw](https://github.com/stanislaw))
+- docs: User Guide: add a link to strictdoc-examples repository [\#886](https://github.com/strictdoc-project/strictdoc/pull/886) ([stanislaw](https://github.com/stanislaw))
+- server, UI: Document tree: modal forms, test updates [\#883](https://github.com/strictdoc-project/strictdoc/pull/883) ([mettta](https://github.com/mettta))
+- docs: requirements: remove composite requirements [\#881](https://github.com/strictdoc-project/strictdoc/pull/881) ([stanislaw](https://github.com/stanislaw))
+- Source file traceability: fix edge case: Pygments ignore the first empty line in a file [\#878](https://github.com/strictdoc-project/strictdoc/pull/878) ([stanislaw](https://github.com/stanislaw))
+- UI: fix line on the top of the source code page [\#876](https://github.com/strictdoc-project/strictdoc/pull/876) ([mettta](https://github.com/mettta))
+- examples: move in tests/integration/examples, strip from itest files [\#875](https://github.com/strictdoc-project/strictdoc/pull/875) ([mettta](https://github.com/mettta))
+- docs: FAQ: some numbers [\#874](https://github.com/strictdoc-project/strictdoc/pull/874) ([stanislaw](https://github.com/stanislaw))
+- Finish handling of the grammar fields: moving up/down and deleting a new grammar field [\#873](https://github.com/strictdoc-project/strictdoc/pull/873) ([stanislaw](https://github.com/stanislaw))
+- server, UI: move editing of the free text into a document config section [\#869](https://github.com/strictdoc-project/strictdoc/pull/869) ([stanislaw](https://github.com/stanislaw))
+- server: switch to port 5111 as less popular port [\#868](https://github.com/strictdoc-project/strictdoc/pull/868) ([stanislaw](https://github.com/stanislaw))
+- tests/integration/examples: add basic examples [\#867](https://github.com/strictdoc-project/strictdoc/pull/867) ([stanislaw](https://github.com/stanislaw))
+- tests/integration: reqif/profiles/p11\_polarion/02\_escaping\_symbols [\#866](https://github.com/strictdoc-project/strictdoc/pull/866) ([stanislaw](https://github.com/stanislaw))
+- reqif: p11\_polarion: strip XHTML tags from \<xhtml:...\> namespace prefixes [\#865](https://github.com/strictdoc-project/strictdoc/pull/865) ([stanislaw](https://github.com/stanislaw))
+- reqif: introduce p11\_polarion profile, parse the user-provided Polarion example [\#864](https://github.com/strictdoc-project/strictdoc/pull/864) ([stanislaw](https://github.com/stanislaw))
+- CI: bring back the PyInstaller task on macOS [\#863](https://github.com/strictdoc-project/strictdoc/pull/863) ([stanislaw](https://github.com/stanislaw))
+- reqif: improved handling of multi-value enum attributes. [\#862](https://github.com/strictdoc-project/strictdoc/pull/862) ([stanislaw](https://github.com/stanislaw))
+- Ensure that multiprocessing.freeze\_support\(\) is called in a frozen application [\#861](https://github.com/strictdoc-project/strictdoc/pull/861) ([RobertoBagnara](https://github.com/RobertoBagnara))
+- reqif: reqif-to-sdoc: remove the factory class to simplify further work [\#860](https://github.com/strictdoc-project/strictdoc/pull/860) ([stanislaw](https://github.com/stanislaw))
+- reqif: import: skip DATE spec object attributes [\#859](https://github.com/strictdoc-project/strictdoc/pull/859) ([stanislaw](https://github.com/stanislaw))
+- pyproject.toml: bump ReqIF version, change to \>= [\#858](https://github.com/strictdoc-project/strictdoc/pull/858) ([stanislaw](https://github.com/stanislaw))
+- Code climate: ruff: activate I group [\#857](https://github.com/strictdoc-project/strictdoc/pull/857) ([stanislaw](https://github.com/stanislaw))
+- Code climate: tasks: add ruff linter [\#856](https://github.com/strictdoc-project/strictdoc/pull/856) ([stanislaw](https://github.com/stanislaw))
+- server, UI: egse case when editing requirement \(no UID\) [\#855](https://github.com/strictdoc-project/strictdoc/pull/855) ([stanislaw](https://github.com/stanislaw))
+- server, UI: adding/deleting requirement's parent links [\#854](https://github.com/strictdoc-project/strictdoc/pull/854) ([stanislaw](https://github.com/stanislaw))
+- traceability\_index: method to assign/unassign a requirement parent link [\#853](https://github.com/strictdoc-project/strictdoc/pull/853) ([stanislaw](https://github.com/stanislaw))
+- traceability\_index: refactoring work towards Web-editable parent links [\#852](https://github.com/strictdoc-project/strictdoc/pull/852) ([stanislaw](https://github.com/stanislaw))
+- server, UI: editing table-based requirements [\#851](https://github.com/strictdoc-project/strictdoc/pull/851) ([stanislaw](https://github.com/stanislaw))
+- server: validation: do not allow creating documents without .sdoc extension [\#850](https://github.com/strictdoc-project/strictdoc/pull/850) ([stanislaw](https://github.com/stanislaw))
+- Code climate: tests/end2end: adjust document tree tests to latest naming conventions [\#849](https://github.com/strictdoc-project/strictdoc/pull/849) ([stanislaw](https://github.com/stanislaw))
+- Code climate: tests/end2end: remove debug screenshot lines [\#848](https://github.com/strictdoc-project/strictdoc/pull/848) ([stanislaw](https://github.com/stanislaw))
+- server, tests/end2end: run dev server and test servers on different ports [\#847](https://github.com/strictdoc-project/strictdoc/pull/847) ([stanislaw](https://github.com/stanislaw))
+- UI: update 'Empty Doc placeholder' template and related tests [\#846](https://github.com/strictdoc-project/strictdoc/pull/846) ([mettta](https://github.com/mettta))
+- Tests/end2end: delete comments [\#845](https://github.com/strictdoc-project/strictdoc/pull/845) ([mettta](https://github.com/mettta))
+- Remove Nuitka from the development dependancies [\#844](https://github.com/strictdoc-project/strictdoc/pull/844) ([mettta](https://github.com/mettta))
+- UI: add Empty Document placeholder and the corresponding test [\#843](https://github.com/strictdoc-project/strictdoc/pull/843) ([mettta](https://github.com/mettta))
+- tasks: Environment class to encapsulate all compile-time information [\#841](https://github.com/strictdoc-project/strictdoc/pull/841) ([stanislaw](https://github.com/stanislaw))
+- UI: Add dropdown menu on nodes [\#840](https://github.com/strictdoc-project/strictdoc/pull/840) ([mettta](https://github.com/mettta))
+- tests/integration: run strictdoc without any args to attest the PyInstaller bug [\#839](https://github.com/strictdoc-project/strictdoc/pull/839) ([stanislaw](https://github.com/stanislaw))
+- tasks: adapt PyInstaller to support "strictdoc server" command [\#838](https://github.com/strictdoc-project/strictdoc/pull/838) ([stanislaw](https://github.com/stanislaw))
+- tasks, packaging: allow generating a Windows release under Linux via … [\#836](https://github.com/strictdoc-project/strictdoc/pull/836) ([RobertoBagnara](https://github.com/RobertoBagnara))
+- docs: FAQ: SDoc markup and StrictDoc tutorial [\#834](https://github.com/strictdoc-project/strictdoc/pull/834) ([stanislaw](https://github.com/stanislaw))
+- server: fix editing of the grammar fields [\#833](https://github.com/strictdoc-project/strictdoc/pull/833) ([stanislaw](https://github.com/stanislaw))
+- UI: refactor CSS [\#832](https://github.com/strictdoc-project/strictdoc/pull/832) ([mettta](https://github.com/mettta))
+- export/html: remove JQuery [\#829](https://github.com/strictdoc-project/strictdoc/pull/829) ([stanislaw](https://github.com/stanislaw))
+- export/html: group JS controllers in a dedicated folder [\#828](https://github.com/strictdoc-project/strictdoc/pull/828) ([stanislaw](https://github.com/stanislaw))
+- export/html: switch to Python helper for rendering static URLs [\#827](https://github.com/strictdoc-project/strictdoc/pull/827) ([stanislaw](https://github.com/stanislaw))
+- server, UI: editing document grammar [\#825](https://github.com/strictdoc-project/strictdoc/pull/825) ([stanislaw](https://github.com/stanislaw))
+- models: requirement: remove \#tags setter [\#824](https://github.com/strictdoc-project/strictdoc/pull/824) ([stanislaw](https://github.com/stanislaw))
+- sdoc/models: requirement: remove @uid, @status, @level setters [\#822](https://github.com/strictdoc-project/strictdoc/pull/822) ([stanislaw](https://github.com/stanislaw))
+- sdoc/models: requirement: title -\> reserved\_title [\#821](https://github.com/strictdoc-project/strictdoc/pull/821) ([stanislaw](https://github.com/stanislaw))
+- sdoc/models: requirement: remove title, statement, and rationale setters [\#820](https://github.com/strictdoc-project/strictdoc/pull/820) ([stanislaw](https://github.com/stanislaw))
+- grammar, models: remove RequirementComment [\#819](https://github.com/strictdoc-project/strictdoc/pull/819) ([stanislaw](https://github.com/stanislaw))
+- server, UI: editing document config: TITLE and VERSION [\#817](https://github.com/strictdoc-project/strictdoc/pull/817) ([stanislaw](https://github.com/stanislaw))
+- UI: Dedicated controller for collapsible Table of Contents [\#816](https://github.com/strictdoc-project/strictdoc/pull/816) ([mettta](https://github.com/mettta))
+- core: project-level TOML config file [\#815](https://github.com/strictdoc-project/strictdoc/pull/815) ([stanislaw](https://github.com/stanislaw))
+- server, UI: editing multiple requirement comments [\#814](https://github.com/strictdoc-project/strictdoc/pull/814) ([stanislaw](https://github.com/stanislaw))
+- UI: Implement the new layout and behavior changes for the TOC [\#813](https://github.com/strictdoc-project/strictdoc/pull/813) ([mettta](https://github.com/mettta))
+
+## [0.0.33](https://github.com/strictdoc-project/strictdoc/tree/0.0.33) (2023-02-09)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.32...0.0.33)
+
+**Closed issues:**
+
+- Problems with pyinstaller version \(Linux\) [\#835](https://github.com/strictdoc-project/strictdoc/issues/835)
+- Automatically add the file format in the form in the project tree page [\#775](https://github.com/strictdoc-project/strictdoc/issues/775)
+- strictdoc.toml: introduce project-level config file [\#587](https://github.com/strictdoc-project/strictdoc/issues/587)
+
+## [0.0.32](https://github.com/strictdoc-project/strictdoc/tree/0.0.32) (2023-01-09)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.31...0.0.32)
+
+**Closed issues:**
+
+- Can't install 0.0.29 or 0.0.30: requirements.txt missing [\#803](https://github.com/strictdoc-project/strictdoc/issues/803)
+- DEPRECATION: strictdoc is being installed using the legacy 'setup.py install' method [\#753](https://github.com/strictdoc-project/strictdoc/issues/753)
+
+**Merged pull requests:**
+
+- Bump version to 0.0.32 [\#810](https://github.com/strictdoc-project/strictdoc/pull/810) ([stanislaw](https://github.com/stanislaw))
+- export/html: do not display "Export to ReqIF" in the static export [\#809](https://github.com/strictdoc-project/strictdoc/pull/809) ([stanislaw](https://github.com/stanislaw))
+- docs: link health: add Bugseng article to exceptions [\#808](https://github.com/strictdoc-project/strictdoc/pull/808) ([stanislaw](https://github.com/stanislaw))
+- UI: pan-with-space.js: Use \#pan-with-space instead of class [\#807](https://github.com/strictdoc-project/strictdoc/pull/807) ([mettta](https://github.com/mettta))
+- server, UI: requirement form is rendered from all grammar fields [\#806](https://github.com/strictdoc-project/strictdoc/pull/806) ([stanislaw](https://github.com/stanislaw))
+- Code climate: extend linting by flake8 and pylint to tests/\* [\#805](https://github.com/strictdoc-project/strictdoc/pull/805) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.31](https://github.com/strictdoc-project/strictdoc/tree/0.0.31) (2023-01-05)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.30...0.0.31)
+
+**Merged pull requests:**
+
+- tasks, packaging: switch to pyproject.toml, remove setup.py [\#804](https://github.com/strictdoc-project/strictdoc/pull/804) ([stanislaw](https://github.com/stanislaw))
+- server: main\_router: merge in complete main\_controller [\#802](https://github.com/strictdoc-project/strictdoc/pull/802) ([stanislaw](https://github.com/stanislaw))
+- server: clean up the main controller using the new API [\#801](https://github.com/strictdoc-project/strictdoc/pull/801) ([stanislaw](https://github.com/stanislaw))
+- server: editing requirement's UID [\#800](https://github.com/strictdoc-project/strictdoc/pull/800) ([stanislaw](https://github.com/stanislaw))
+- server: editing requirement's rationale [\#799](https://github.com/strictdoc-project/strictdoc/pull/799) ([stanislaw](https://github.com/stanislaw))
+- backend/excel/export: Support Excel Export of custom grammar fields [\#797](https://github.com/strictdoc-project/strictdoc/pull/797) ([GGBeer](https://github.com/GGBeer))
+- Code climate: introduce helpers/auto\_described to print objects [\#796](https://github.com/strictdoc-project/strictdoc/pull/796) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.30](https://github.com/strictdoc-project/strictdoc/tree/0.0.30) (2022-12-24)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.29...0.0.30)
+
+**Fixed bugs:**
+
+- server: zombie worker processes are left when Selenium timeouts [\#785](https://github.com/strictdoc-project/strictdoc/issues/785)
+- UI: problem when adding \<\> symbols to editable fields [\#782](https://github.com/strictdoc-project/strictdoc/issues/782)
+- backend/sdoc: fix the edge case when rstripping the multi-line fields [\#793](https://github.com/strictdoc-project/strictdoc/pull/793) ([stanislaw](https://github.com/stanislaw))
+
+**Closed issues:**
+
+- export/rst: doens't render the custom fields [\#779](https://github.com/strictdoc-project/strictdoc/issues/779)
+- backend/reqif: import the complete documentation tree from a ReqIF file [\#777](https://github.com/strictdoc-project/strictdoc/issues/777)
+- Partial evaluation of Jinja templates [\#453](https://github.com/strictdoc-project/strictdoc/issues/453)
+- Basic unit and integration test coverage is missing [\#139](https://github.com/strictdoc-project/strictdoc/issues/139)
+- export/html: RST-\>HTML rendering using docutils is a performance bottleneck [\#138](https://github.com/strictdoc-project/strictdoc/issues/138)
+
+**Merged pull requests:**
+
+- Bump version to 0.0.30 [\#795](https://github.com/strictdoc-project/strictdoc/pull/795) ([stanislaw](https://github.com/stanislaw))
+- backend/reqif: update to the latest API [\#794](https://github.com/strictdoc-project/strictdoc/pull/794) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc/grammar: Add REFS-BibReference [\#792](https://github.com/strictdoc-project/strictdoc/pull/792) ([GGBeer](https://github.com/GGBeer))
+- backend/sdoc/grammar: Refactoring REFS ParentReqReference, FileReference [\#791](https://github.com/strictdoc-project/strictdoc/pull/791) ([GGBeer](https://github.com/GGBeer))
+- backend, sdoc, rst: remove trailing newlines by multistring fields [\#790](https://github.com/strictdoc-project/strictdoc/pull/790) ([stanislaw](https://github.com/stanislaw))
+- export, rst: add custom grammar fields into jinja2 rendering [\#788](https://github.com/strictdoc-project/strictdoc/pull/788) ([BenGardiner](https://github.com/BenGardiner))
+- server: exporting and importing complete document tree [\#787](https://github.com/strictdoc-project/strictdoc/pull/787) ([stanislaw](https://github.com/stanislaw))
+- server: fix zombie worker processes issue when Selenium timeouts [\#786](https://github.com/strictdoc-project/strictdoc/pull/786) ([stanislaw](https://github.com/stanislaw))
+- server: escape multi-line text when rendering edit forms \(requirement, section\) [\#784](https://github.com/strictdoc-project/strictdoc/pull/784) ([stanislaw](https://github.com/stanislaw))
+- docs: Contributing: How can I help? [\#783](https://github.com/strictdoc-project/strictdoc/pull/783) ([stanislaw](https://github.com/stanislaw))
+- export/rst: switch to Jinja template for rendering requirement to RST \(take 2\) [\#781](https://github.com/strictdoc-project/strictdoc/pull/781) ([stanislaw](https://github.com/stanislaw))
+- export/rst: switch to Jinja template for rendering requirement to RST [\#780](https://github.com/strictdoc-project/strictdoc/pull/780) ([stanislaw](https://github.com/stanislaw))
+- backend/reqif: exporting document's free text [\#778](https://github.com/strictdoc-project/strictdoc/pull/778) ([stanislaw](https://github.com/stanislaw))
+-  server: basic importing and exporting ReqIF  [\#776](https://github.com/strictdoc-project/strictdoc/pull/776) ([stanislaw](https://github.com/stanislaw))
+- Code climate: Do not rely on SD working dirname in ConfTest [\#773](https://github.com/strictdoc-project/strictdoc/pull/773) ([GGBeer](https://github.com/GGBeer))
+- tests/integration: try a Windows-friendlier diff command [\#772](https://github.com/strictdoc-project/strictdoc/pull/772) ([stanislaw](https://github.com/stanislaw))
+- backend/rst: handle SEVERE errors through the friendlier interface [\#771](https://github.com/strictdoc-project/strictdoc/pull/771) ([stanislaw](https://github.com/stanislaw))
+- CI: try Selenium tests on macOS [\#770](https://github.com/strictdoc-project/strictdoc/pull/770) ([stanislaw](https://github.com/stanislaw))
+- UI:  Make form fields have monospace font [\#769](https://github.com/strictdoc-project/strictdoc/pull/769) ([mettta](https://github.com/mettta))
+- docs:strictdoc\_01\_user\_guide UGuide updates/restructuring [\#768](https://github.com/strictdoc-project/strictdoc/pull/768) ([GGBeer](https://github.com/GGBeer))
+- server: read both single- and multi-line requirement statements [\#767](https://github.com/strictdoc-project/strictdoc/pull/767) ([stanislaw](https://github.com/stanislaw))
+- docs: update contributing and development guides [\#766](https://github.com/strictdoc-project/strictdoc/pull/766) ([stanislaw](https://github.com/stanislaw))
+-  server: trim all form fields, remove trailing whitespace  [\#765](https://github.com/strictdoc-project/strictdoc/pull/765) ([stanislaw](https://github.com/stanislaw))
+-  docs: updates related to the new server work  [\#763](https://github.com/strictdoc-project/strictdoc/pull/763) ([stanislaw](https://github.com/stanislaw))
+- UI: Filtering text in single line contenteditable fields [\#762](https://github.com/strictdoc-project/strictdoc/pull/762) ([mettta](https://github.com/mettta))
+- docs: renumber the documents  [\#761](https://github.com/strictdoc-project/strictdoc/pull/761) ([stanislaw](https://github.com/stanislaw))
+- UI: give the connection status message a more solid look [\#760](https://github.com/strictdoc-project/strictdoc/pull/760) ([mettta](https://github.com/mettta))
+- backend/sdoc/grammar: Add optional DocumentConfig CLASSIFICATION field [\#759](https://github.com/strictdoc-project/strictdoc/pull/759) ([GGBeer](https://github.com/GGBeer))
+- server: initial Web-based GUI \(editing doc tree and documents\)  [\#758](https://github.com/strictdoc-project/strictdoc/pull/758) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc/grammar: Add GRAMMAR for REFS-TypeValue variant [\#754](https://github.com/strictdoc-project/strictdoc/pull/754) ([GGBeer](https://github.com/GGBeer))
+
+## [0.0.29](https://github.com/strictdoc-project/strictdoc/tree/0.0.29) (2022-12-05)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.28...0.0.29)
+
+**Fixed bugs:**
+
+- pip image for 0.0.27 missing requirements.txt [\#751](https://github.com/strictdoc-project/strictdoc/issues/751)
+
+**Merged pull requests:**
+
+- Bump version to 0.0.29 [\#757](https://github.com/strictdoc-project/strictdoc/pull/757) ([stanislaw](https://github.com/stanislaw))
+- export/rst: fix case when requirements do not have titles [\#756](https://github.com/strictdoc-project/strictdoc/pull/756) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.28](https://github.com/strictdoc-project/strictdoc/tree/0.0.28) (2022-11-30)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.27...0.0.28)
 
 **Closed issues:**
 
 - Create SDocObjectFactory to unify how the objects are created from non-grammar sources. [\#529](https://github.com/strictdoc-project/strictdoc/issues/529)
+
+**Merged pull requests:**
+
+- setup.py: fix issue with packaging requirements.txt file [\#752](https://github.com/strictdoc-project/strictdoc/pull/752) ([stanislaw](https://github.com/stanislaw))
+- docs: minor updates to the contribution guideline [\#750](https://github.com/strictdoc-project/strictdoc/pull/750) ([stanislaw](https://github.com/stanislaw))
+- Trivial refactoring of has/get\_children\_requirements and has/get\_pare… [\#749](https://github.com/strictdoc-project/strictdoc/pull/749) ([GGBeer](https://github.com/GGBeer))
+- Use constants instead of hardcoded Requirement-Fieldname strings. [\#748](https://github.com/strictdoc-project/strictdoc/pull/748) ([GGBeer](https://github.com/GGBeer))
+- Regenerate CHANGELOG [\#747](https://github.com/strictdoc-project/strictdoc/pull/747) ([stanislaw](https://github.com/stanislaw))
 
 ## [0.0.27](https://github.com/strictdoc-project/strictdoc/tree/0.0.27) (2022-11-27)
 
@@ -386,11 +787,7 @@
 
 ## [0.0.14](https://github.com/strictdoc-project/strictdoc/tree/0.0.14) (2021-08-18)
 
-[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.14a...0.0.14)
-
-## [0.0.14a](https://github.com/strictdoc-project/strictdoc/tree/0.0.14a) (2021-08-18)
-
-[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.13...0.0.14a)
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.13...0.0.14)
 
 **Merged pull requests:**
 

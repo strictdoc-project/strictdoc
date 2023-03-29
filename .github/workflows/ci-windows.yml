@@ -32,7 +32,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
 
-    - name: Install Invoke and Tox
+    - name: Install core development tools
       run: |
         pip install invoke tox toml
 

@@ -223,19 +223,32 @@ def test_end2end(
 
     focus_argument = f"-k {focus}" if focus is not None else ""
     exit_first_argument = "--exitfirst" if exit_first else ""
+
+    test_command = f"""
+        pytest
+            --failed-first
+            --capture=no
+            --reuse-session
+            {parallelize_argument}
+            {focus_argument}
+            {exit_first_argument}
+            tests/end2end
+    """
+
+    # On Windows, GitHub Actions fails with:
+    # response = {'status': 500, 'value':
+    # '{"value":{"error":"unknown error",
+    # "message":"unknown error: cannot find Chrome binary",  # noqa: ERA001
+    # This very likely has to do with PATH isolation that Tox does.
+    # FIXME: If you are a Windows expert, please fix this to run on Tox.
+    if os.name == "nt":
+        run_invoke(context, test_command)
+        return
+
     run_invoke_with_tox(
         context,
         ToxEnvironment.CHECK,
-        f"""
-            pytest
-                --failed-first
-                --capture=no
-                --reuse-session
-                {parallelize_argument}
-                {focus_argument}
-                {exit_first_argument}
-                tests/end2end
-        """,
+        test_command,
         environment=environment,
     )
 

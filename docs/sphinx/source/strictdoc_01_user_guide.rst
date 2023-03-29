@@ -326,6 +326,49 @@ written in form of requirements:
 be specified using ``[FREETEXT]`` nodes. By design, the ``[FREETEXT]`` nodes can
 be only attached to the ``[DOCUMENT]`` and ``[SECTION]`` nodes.
 
+Strict rule #3: No empty strings
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+StrictDoc's grammar does not allow empty strings. This rule is applicable to
+both single-line and multiline strings and both section fields and requirement
+fields. A field is either missing or is a non-empty string.
+
+The following patterns are all invalid for single-line fields:
+
+.. code-block::
+
+    [SECTION]
+    TITLE:
+
+    [SECTION]
+    TITLE: (any number of space characters after colons)
+
+    [REQUIREMENT]
+    STATEMENT:
+
+    [REQUIREMENT]
+    STATEMENT: (any number of space characters after colons)
+
+The following patterns are all invalid for multiline fields:
+
+.. code-block::
+
+    [REQUIREMENT]
+    COMMENT: >>>
+    <<<
+
+    [REQUIREMENT]
+    COMMENT: >>>
+    (any number of space characters)
+    <<<
+
+If you need to provide a placeholder for a field that you know has to be filled
+out soon, add a "TBD" (to be done) or a "TBC" (to be confirmed) string.
+
+One of the upcoming features of StrictDoc is a calculation of document maturity
+based on a number of TBD/TBCs found in document. This is a common practice in
+the regulared industries.
+
 Grammar elements
 ----------------
 

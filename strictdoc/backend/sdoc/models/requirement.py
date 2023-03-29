@@ -42,7 +42,10 @@ class RequirementField:
         # FIXME: This should be strict_assert at some point.
         assert (
             (field_value is not None and len(field_value) > 0)
-            or field_value_multiline is not None
+            or (
+                field_value_multiline is not None
+                and len(field_value_multiline) > 0
+            )
             or (
                 field_value_references is not None
                 and len(field_value_references) > 0

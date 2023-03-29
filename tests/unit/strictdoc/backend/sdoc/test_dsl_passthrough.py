@@ -89,49 +89,6 @@ COMMENT: Comment #3
     assert sdoc_input == output
 
 
-def test_003_comments_04_multiline_empty():
-    sdoc_input = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[REQUIREMENT]
-COMMENT: >>>
-<<<
-""".lstrip()
-
-    reader = SDReader()
-
-    document = reader.read(sdoc_input)
-    assert isinstance(document, Document)
-
-    writer = SDWriter()
-    output = writer.write(document)
-
-    assert sdoc_input == output
-
-
-def test_003_comments_05_multiline_empty_with_one_newline():
-    sdoc_input = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[REQUIREMENT]
-COMMENT: >>>
-
-<<<
-""".lstrip()
-
-    reader = SDReader()
-
-    document = reader.read(sdoc_input)
-    assert isinstance(document, Document)
-
-    writer = SDWriter()
-    output = writer.write(document)
-
-    assert sdoc_input == output
-
-
 def test_004_several_tags():
     sdoc_input = """
 [DOCUMENT]
@@ -1634,7 +1591,7 @@ REFS:
     )
 
 
-def test_210_uid_not_specified():
+def test_edge_case_01_minimal_requirement():
     sdoc_input = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -1649,6 +1606,8 @@ TITLE: Test Doc
 
     requirement: Requirement = document.section_contents[0]
     assert requirement.reserved_uid is None
+    assert requirement.reserved_title is None
+    assert requirement.reserved_statement is None
 
     writer = SDWriter()
     output = writer.write(document)
@@ -1656,7 +1615,7 @@ TITLE: Test Doc
     assert sdoc_input == output
 
 
-def test_211_present_but_empty_with_no_space_character():
+def test_edge_case_02_uid_present_but_empty_with_no_space_character():
     # Note: There is no whitespace character after "UID:".
     sdoc_input = """
 [DOCUMENT]
@@ -1675,7 +1634,7 @@ UID:
     assert "Expected ' '" == exc_info.value.args[0].decode("utf-8")
 
 
-def test_212_present_but_empty_with_space_character():
+def test_edge_case_03_uid_present_but_empty_with_space_character():
     # Note: There is a whitespace character after "UID:".
     sdoc_input = """
 [DOCUMENT]
@@ -1696,7 +1655,7 @@ UID:
     )
 
 
-def test_213_present_but_empty_with_two_space_characters():
+def test_edge_case_04_uid_present_but_empty_with_two_space_characters():
     # Note: There are two whitespace characters after "UID:".
     sdoc_input = """
 [DOCUMENT]
@@ -1715,3 +1674,106 @@ UID:
     assert "Expected Not or '\\S' or '>>>'" in exc_info.value.args[0].decode(
         "utf-8"
     )
+
+
+def test_edge_case_10_empty_multiline_field():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+COMMENT: >>>
+<<<
+""".lstrip()
+
+    reader = SDReader()
+
+    with pytest.raises(Exception) as exc_info:
+        _ = reader.read(sdoc_input)
+
+    assert exc_info.type is TextXSyntaxError
+    assert "Expected Not" in exc_info.value.args[0].decode("utf-8")
+
+
+def test_edge_case_11_empty_multiline_field_with_one_newline():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+COMMENT: >>>
+
+<<<
+""".lstrip()
+
+    reader = SDReader()
+
+    with pytest.raises(Exception) as exc_info:
+        _ = reader.read(sdoc_input)
+
+    assert exc_info.type is TextXSyntaxError
+    assert "Expected Not or '\\S'" in exc_info.value.args[0].decode("utf-8")
+
+
+def test_edge_case_20_empty_section_title():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[SECTION]
+TITLE:
+
+[/SECTION]
+""".lstrip()
+
+    reader = SDReader()
+
+    with pytest.raises(Exception) as exc_info:
+        _ = reader.read(sdoc_input)
+
+    assert exc_info.type is TextXSyntaxError
+    assert "Expected 'UID: ' or 'LEVEL: ' or 'TITLE: '" == exc_info.value.args[
+        0
+    ].decode("utf-8")
+
+
+def test_edge_case_21_section_title_with_empty_space():
+    # Empty space after TITLE:
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[SECTION]
+TITLE: 
+
+[/SECTION]
+""".lstrip()  # noqa: W291
+
+    reader = SDReader()
+
+    with pytest.raises(Exception) as exc_info:
+        _ = reader.read(sdoc_input)
+
+    assert exc_info.type is TextXSyntaxError
+    assert "Expected Not or '\\S'" == exc_info.value.args[0].decode("utf-8")
+
+
+def test_edge_case_22_section_title_with_two_empty_spaces():
+    # Two empty spaces after TITLE:
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[SECTION]
+TITLE:  
+
+[/SECTION]
+""".lstrip()  # noqa: W291
+
+    reader = SDReader()
+
+    with pytest.raises(Exception) as exc_info:
+        _ = reader.read(sdoc_input)
+
+    assert exc_info.type is TextXSyntaxError
+    assert "Expected Not or '\\S'" == exc_info.value.args[0].decode("utf-8")

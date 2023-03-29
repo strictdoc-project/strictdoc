@@ -149,9 +149,9 @@ SECTION_GRAMMAR = r"""
 Section[noskipws]:
   '[SECTION]'
   '\n'
-  ('UID: ' uid = /.+$/ '\n')?
-  ('LEVEL: ' custom_level = /.*/ '\n')?
-  'TITLE: ' title = /.*$/ '\n'
+  ('UID: ' uid = SingleLineString '\n')?
+  ('LEVEL: ' custom_level = SingleLineString '\n')?
+  'TITLE: ' title = SingleLineString '\n'
   free_texts *= SpaceThenFreeText
   section_contents *= SectionOrRequirement
   '\n'

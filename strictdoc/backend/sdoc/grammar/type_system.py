@@ -3,8 +3,11 @@ FieldName[noskipws]:
   /[A-Z]+[A-Z_]*/
 ;
 
+// According to the Strict Grammar Rule #3, both SingleLineString and
+// MultiLineString can never be empty strings.
+// Both must start with a non-space character.
 SingleLineString:
-  (!MultiLineStringStart /\S/) (!MultiLineStringStart /./)*
+  (!MultiLineStringStart /\S/) (!MultiLineStringStart /./)* /$/
 ;
 
 MultiLineStringStart[noskipws]:
@@ -17,7 +20,7 @@ MultiLineStringEnd[noskipws]:
 
 MultiLineString[noskipws]:
   MultiLineStringStart-
-  ((!MultiLineStringEnd /(?ms)./)+ | '')
+  (!MultiLineStringEnd /\S/) (!MultiLineStringEnd /(?ms)./)+
   MultiLineStringEnd-
 ;
 

@@ -32,13 +32,9 @@ jobs:
       run: |
         python -m pip install --upgrade pip
 
-    - name: Install Invoke
+    - name: Install Invoke and Tox
       run: |
-        pip install invoke
-
-    - name: Install dependencies
-      run: |
-        invoke setup-development-deps
+        pip install invoke tox
 
     - name: Run end-to-end tasks
       run: |
@@ -64,13 +60,9 @@ jobs:
       run: |
         python -m pip install --upgrade pip
 
-    - name: Install Invoke
+    - name: Install Invoke and Tox
       run: |
-        pip install invoke
-
-    - name: Install dependencies
-      run: |
-        invoke setup-development-deps
+        pip install invoke tox
 
     - name: Run end-to-end tasks
       run: |
@@ -96,10 +88,18 @@ jobs:
       run: |
         python -m pip install --upgrade pip
 
-    - name: Install Invoke and Tox
+    - name: Install core development tools
       run: |
-        pip install invoke tox
+        pip install invoke tox toml
+
+    - name: "Windows specific: Install StrictDoc's dependencies"
+      run: |
+        python developer/pip_install_strictdoc_deps.py
+
+    - name: "Windows specific: Install Check dependencies (everything for test)"
+      run: |
+        pip install -r requirements.check.txt
 
     - name: Run end-to-end tasks
       run: |
-        invoke test-end2end --long-timeouts
+        invoke test-end2end --long-timeouts --exit-first

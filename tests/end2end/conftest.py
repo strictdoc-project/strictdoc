@@ -23,7 +23,7 @@ if os.getenv("STRICTDOC_LONGER_TIMEOUTS") is not None:
     DOWNLOAD_FILE_TIMEOUT = 5
     SERVER_TERM_TIMEOUT = 5
 
-    # Selenium timeout settings
+    # Selenium timeout settings.
     settings.MINI_TIMEOUT = 5
     settings.SMALL_TIMEOUT = 10
     settings.LARGE_TIMEOUT = 15
@@ -35,7 +35,7 @@ else:
     DOWNLOAD_FILE_TIMEOUT = 2
     SERVER_TERM_TIMEOUT = 1
 
-    # Selenium timeout settings
+    # Selenium timeout settings.
     settings.MINI_TIMEOUT = 2
     settings.SMALL_TIMEOUT = 7
     settings.LARGE_TIMEOUT = 10

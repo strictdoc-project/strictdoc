@@ -566,10 +566,19 @@ def release(context, test_pypi=False, username=None, password=None):
     https://pypi.org/project/strictdoc/
     https://test.pypi.org/project/strictdoc/
     """
-    test_release_or_none = (
-        "--repository strictdoc_test"
-        if test_pypi
-        else "--repository strictdoc_release"
+
+    # When a username is provided, we also need password, and then we don't use
+    # tokens set up on a local machine.
+    assert username is None or password is not None
+
+    release_argument_or_none = (
+        None
+        if username
+        else (
+            "--repository strictdoc_test"
+            if test_pypi
+            else "--repository strictdoc_release"
+        )
     )
     user_password = f"-u{username} -p{password}" if username is not None else ""
 
@@ -601,7 +610,7 @@ def release(context, test_pypi=False, username=None, password=None):
         ToxEnvironment.RELEASE,
         f"""
             twine upload dist/strictdoc-*.tar.gz
-                {test_release_or_none}
+                {release_argument_or_none}
                 {user_password}
         """,
     )

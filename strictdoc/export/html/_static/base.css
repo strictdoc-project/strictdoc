@@ -95,17 +95,16 @@ body {
 
 /* scrollbar */
 
-::-webkit-scrollbar:horizontal,
-::-webkit-scrollbar:vertical,
-::-webkit-scrollbar {
-  background-color: var(--scrollbarBG);
-}
 * {
   scrollbar-color: var(--thumbBG) var(--scrollbarBG);
 }
+::-webkit-scrollbar:horizontal,
+::-webkit-scrollbar:vertical,
+::-webkit-scrollbar,
 ::-webkit-scrollbar-track:horizontal,
 ::-webkit-scrollbar-track:vertical,
-::-webkit-scrollbar-track {
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
   background-color: var(--scrollbarBG);
 }
 ::-webkit-scrollbar-thumb:horizontal,

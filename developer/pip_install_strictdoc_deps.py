@@ -10,7 +10,7 @@ print(  # noqa: T201
     "pip_install_strictdoc_deps.py: "
     "checking if the current Python environment has all packages installed"
     ".",
-    flush=True
+    flush=True,
 )
 
 pyproject_content = toml.load("pyproject.toml")
@@ -29,13 +29,27 @@ except pkg_resources.DistributionNotFound as exception:
         f"pip_install_strictdoc_deps.py: {exception}", flush=True
     )
     needs_installation = True
+except pkg_resources.VersionConflict as exception:
+    print(  # noqa: T201
+        (
+            f"pip_install_strictdoc_deps.py: version conflict between "
+            f"StrictDoc's requirements and the already installed packages: "
+            f"{exception}"
+        ),
+        flush=True,
+    )
+    needs_installation = True
 
 if not needs_installation:
     print(  # noqa: T201
         "pip_install_strictdoc_deps.py: all packages seem to be installed.",
-        flush=True
+        flush=True,
     )
     sys.exit(0)
+
+print(  # noqa: T201
+    ("pip_install_strictdoc_deps.py: will install packages."), flush=True
+)
 
 all_packages = "\n".join(dependencies) + "\n"
 
@@ -46,14 +60,15 @@ with tempfile.TemporaryDirectory() as tmp_dir:
         tmp_requirements_txt_file.write(all_packages)
 
     command = [
-        sys.executable, "-m", "pip", "install", "-r", tmp_requirements_txt_file.name
+        sys.executable,
+        "-m",
+        "pip",
+        "install",
+        "-r",
+        tmp_requirements_txt_file.name,
     ]
 
-    result = subprocess.run(
-        command,
-        check=True,
-        encoding="utf8"
-    )
+    result = subprocess.run(command, check=True, encoding="utf8")
     print(  # noqa: T201
         f"'pip install' command exited with: {result.returncode}", flush=True
     )

@@ -338,7 +338,12 @@ def lint_black(context):
         ToxEnvironment.CHECK,
         """
             black
-            *.py strictdoc/ tests/unit/ tests/integration/*.py tests/end2end/
+                *.py
+                developer/
+                strictdoc/
+                tests/unit/
+                tests/integration/*.py
+                tests/end2end/
             --color --line-length 80 2>&1
         """,
     )

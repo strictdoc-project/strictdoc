@@ -21,7 +21,7 @@ function switchTOC() {
 
 window.addEventListener("load",function(){
   document.body.dataset.toc_state = sessionStorage.getItem('tocState');
-  document.getElementById('toc_handler').addEventListener('click', () => {
+  document.querySelector('[js-toc-handler]').addEventListener('click', () => {
     switchTOC();
   });
 },false);

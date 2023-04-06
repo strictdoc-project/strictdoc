@@ -2,9 +2,10 @@
 
 import { Controller } from "/_static/stimulus.js";
 
-// js-collapsible_list
-const controlSelector = '[js-collapsible_list-control]';
-const listSelector = '[js-collapsible_list-list]';
+const ROOT_SELECTOR = '[js-collapsible_list]';
+const CONTROLS_SELECTOR = '[js-collapsible_list-control]';
+const LIST_SELECTOR = '[js-collapsible_list-list]';
+const CONTAINER_SELECTOR = '[js-collapsible_list-container]';
 
 const STYLE = `
 .collapsible_list {
@@ -94,56 +95,74 @@ Stimulus.register("collapsible_list", class extends Controller {
   static targets = ["name"];
 
   connect() {
-    this.registerListEvents();
-    // console.log(this.element)
+    this.render()
   }
 
-  registerListEvents(params) {
-    const style = document.createElement('style');
-    style.textContent = STYLE;
-    this.element.prepend(style);
+  render() {
+    // `this` element is the same as what we get on ROOT_SELECTOR
+    const controlsElement = document.querySelector(CONTROLS_SELECTOR);
+    const containerElement = document.querySelector(CONTAINER_SELECTOR);
+    const listElement = document.querySelector(LIST_SELECTOR);
 
-    //*
+    // Processes the list and makes it collapse, if that makes sense
+    // (if the expanded list was long and would cause scrolling).
+    // Returns the processed list.
+    const tocList = processList(
+      listElement,
+      hasScroll(containerElement)
+      );
 
-    const tocList = processList(listSelector);
-
+    // Add controls and styles, if that makes sense (if there are branches
+    // in the list that could in principle be collapsible):
     if (tocList.length > 0) {
-      const tocControl = document.querySelector(controlSelector);
-      tocControl.classList.add("collapsible_list");
-      tocControl.style = '';
-
-      const tocExpandAll = document.createElement('div');
-      tocExpandAll.dataset.collapsible_list__handler = '＋';
-      tocExpandAll.title = 'Expand all lines in TOC';
-      tocExpandAll.addEventListener('click', () => {
-        expandAllInList(tocList)
-      });
-
-      const tocCollapseAll = document.createElement('div');
-      tocCollapseAll.dataset.collapsible_list__handler = '－';
-      tocCollapseAll.title = 'Collapse all lines in TOC';
-      tocCollapseAll.addEventListener('click', () => {
-        collapseAllInList(tocList)
-      });
-
-      tocControl.append(tocExpandAll, tocCollapseAll);
+      addBulkControls(controlsElement)
+      addStyleElement(this, STYLE);
     }
   }
+
 });
 
-function processList(selector) {
+function addStyleElement(target, styleTextContent) {
+  const style = document.createElement('style');
+  style.textContent = styleTextContent;
+  target.element.prepend(style);
+}
 
-  const tocContainer = document.querySelector(selector);
-  const ulList = [...tocContainer.querySelectorAll('ul')];
+function addBulkControls(target) {
+  // Prepare container
+  target.classList.add("collapsible_list");
+
+  // Create expand all control
+  const tocExpandAll = document.createElement('div');
+  tocExpandAll.dataset.collapsible_list__handler = '＋';
+  tocExpandAll.title = 'Expand all lines in TOC';
+  tocExpandAll.addEventListener('click', () => {
+    expandAllInList(tocList)
+  });
+
+  // Create collapse all control
+  const tocCollapseAll = document.createElement('div');
+  tocCollapseAll.dataset.collapsible_list__handler = '－';
+  tocCollapseAll.title = 'Collapse all lines in TOC';
+  tocCollapseAll.addEventListener('click', () => {
+    collapseAllInList(tocList)
+  });
+
+  // Append controls
+  target.append(tocExpandAll, tocCollapseAll);
+}
+
+function hasScroll(target) {
+  // Check if a fully open list makes a scroll for its container.
+  return target.scrollHeight > target.clientHeight;
+}
+
+function processList(target, hasScroll = true) {
+  const ulList = [...target.querySelectorAll('ul')];
   const ulHandlerList = ulList.map(
     ul => {
       const parent = ul.parentNode;
       const ulHandler = document.createElement('div');
-
-      // This defines how a document is opened:
-      // with a collapsed or expanded TOC.
-      // We may want to read/write this from/to a session at some point.
-      ulHandler.dataset.collapsible_list__branch = '1';
 
       parent.insertBefore(ulHandler, ul);
       // Required:
@@ -152,6 +171,28 @@ function processList(selector) {
       ulHandler.addEventListener('click', () => {
         ulHandler.dataset.collapsible_list__branch = (ulHandler.dataset.collapsible_list__branch === '1') ? '0' : '1';
       });
+
+      // This defines how a document is opened:
+      // with a collapsed or expanded TOC.
+      // TODO: We may want to read/write this from/to a session at some point.
+
+      // If the fully open list is long enough and creates a scroll,
+      // for its container, we collapse all branches (Each one gets '1').
+      // Otherwise it is not necessary and we leave branches expanded ('0').
+
+      // This modification should be done at the end, so that the element
+      // is sure to be re-rendered and catch the styles.
+      // Otherwise, because of the strange behavior of Chrome
+      // (this is not the case in Firefox and Safari):
+      // the CSS added in addStyleElement(),
+      // which sets `height: 0;` for the collapsed branch,
+      // are present and visible in the inspector,
+      // but don't affect the display of elements in the DOM.
+      // We also call addStyleElement() in connect() after the rest
+      // of the DOM manipulation, which provides the additional ensure
+      // that the block styles will be re-rendered in Chrome
+      // with these styles enabled.
+      ulHandler.dataset.collapsible_list__branch = hasScroll ? '1' : '0';
 
       return ulHandler;
     }

@@ -2,8 +2,9 @@
 
 import { Controller } from "/_static/stimulus.js";
 
-const controlSelector = '#toc_control';
-const listSelector = '#toc';
+// js-collapsible_list
+const controlSelector = '[js-collapsible_list-control]';
+const listSelector = '[js-collapsible_list-list]';
 
 const STYLE = `
 .collapsible_list {

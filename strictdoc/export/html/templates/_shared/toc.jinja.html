@@ -11,17 +11,25 @@
   {% include "_res/svg_ico16_toc.jinja.html" %}
 </div>
 
-<turbo-frame id="frame-toc" style="display: contents" data-controller="collapsible_list">
+<turbo-frame
+  id="frame-toc"
+  style="display: contents"
+  js-collapsible_list
+  data-controller="collapsible_list"
+>
 
   <div class="toc_panel__overlay">
     <div class="toc_panel__control">
-      <div id="toc_control"></div>
+      <div js-collapsible_list-control></div>
     </div>
   </div>
 
   <div class="toc_panel__content">
 
-    <ul id="toc" class="toc">
+    <ul
+      js-collapsible_list-list
+      class="toc"
+    >
     {%- for section in document_iterator.table_of_contents() -%}
       <li>
         {%- if section.is_section -%}

@@ -5,7 +5,7 @@
 <div class="toc_panel">
 
 <div
-  js-toc-handler
+  js-toc-handler='true' {# FIXME: issue#1098 #}
   class="toc_handler nav_button"
 >
   {% include "_res/svg_ico16_toc.jinja.html" %}
@@ -14,23 +14,25 @@
 <turbo-frame
   id="frame-toc"
   style="display: contents"
-  js-collapsible_list
+  js-collapsible_list='true' {# FIXME: issue#1098 #}
   data-controller="collapsible_list"
 >
 
   <div class="toc_panel__overlay">
     <div class="toc_panel__control">
-      <div js-collapsible_list-control></div>
+      <div
+        js-collapsible_list-control='true' {# FIXME: issue#1098 #}
+      ></div>
     </div>
   </div>
 
   <div
-    js-collapsible_list-container
+    js-collapsible_list-container='true' {# FIXME: issue#1098 #}
     class="toc_panel__content"
   >
 
     <ul
-      js-collapsible_list-list
+      js-collapsible_list-list='true' {# FIXME: issue#1098 #}
       class="toc"
     >
     {%- for section in document_iterator.table_of_contents() -%}

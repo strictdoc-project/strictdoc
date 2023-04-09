@@ -17,13 +17,13 @@ class TOC:  # pylint: disable=invalid-name  # noqa: E501
 
     def assert_toc_panel(self) -> None:
         self.test_case.assert_element_present(
-            "//*[@id='toc']",
+            '//*[@data-testid="toc-list"]',
             by=By.XPATH,
         )
 
     def assert_toc_handler(self) -> None:
         self.test_case.assert_element(
-            "//*[@id='toc_handler']",
+            "//*[@data-testid='toc-handler']",
             by=By.XPATH,
         )
 
@@ -35,7 +35,7 @@ class TOC:  # pylint: disable=invalid-name  # noqa: E501
         )
         # toc is visible
         self.test_case.assert_element_visible(
-            "//*[@id='toc']",
+            '//*[@data-testid="toc-list"]',
             by=By.XPATH,
         )
 
@@ -47,12 +47,12 @@ class TOC:  # pylint: disable=invalid-name  # noqa: E501
         )
         # toc is hidden
         self.test_case.assert_element_not_visible(
-            "//*[@id='toc']",
+            '//*[@data-testid="toc-list"]',
             by=By.XPATH,
         )
 
     def do_toggle_toc(self) -> None:
-        self.test_case.click_xpath("//*[@id='toc_handler']")
+        self.test_case.click_xpath("//*[@data-testid='toc-handler']")
 
     def assert_toc_contains(self, string: str) -> None:
         """The string does not need be visible (TOC may be hidden)."""

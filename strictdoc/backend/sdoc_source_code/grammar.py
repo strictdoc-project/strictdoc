@@ -28,6 +28,6 @@ Req[noskipws]:
 ;
 
 SingleLineString[noskipws]:
-  !RangePragma /.*/ '\n'?
+  !RangePragma /.+/ '\n'?
 ;
 """

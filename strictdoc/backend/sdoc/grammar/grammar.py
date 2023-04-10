@@ -4,7 +4,7 @@ TextPart[noskipws]:
 ;
 
 NormalString[noskipws]:
-  (!SpecialKeyword !FreeTextEnd /(?ms)./)*
+  (!SpecialKeyword !FreeTextEnd /(?ms)./)+
 ;
 
 SpecialKeyword:
@@ -22,7 +22,7 @@ FreeTextEnd: /^/ '[/FREETEXT]' '\n';
 
 FREE_TEXT_PARSER_GRAMMAR = r"""
 FreeTextContainer[noskipws]:
-  parts+=TextPart
+  parts*=TextPart
 ;
 """
 
@@ -231,7 +231,7 @@ RequirementStatus[noskipws]:
 
 FreeText[noskipws]:
   '[FREETEXT]' '\n'
-  parts+=TextPart
+  parts*=TextPart
   FreeTextEnd
 ;
 """

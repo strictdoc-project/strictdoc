@@ -115,7 +115,7 @@ Stimulus.register("collapsible_list", class extends Controller {
     // Add controls and styles, if that makes sense (if there are branches
     // in the list that could in principle be collapsible):
     if (tocList.length > 0) {
-      addBulkControls(controlsElement)
+      addBulkControls(controlsElement, tocList)
       addStyleElement(this, STYLE);
     }
   }
@@ -128,7 +128,7 @@ function addStyleElement(target, styleTextContent) {
   target.element.prepend(style);
 }
 
-function addBulkControls(target) {
+function addBulkControls(target, tocList) {
   // Prepare container
   target.classList.add("collapsible_list");
 

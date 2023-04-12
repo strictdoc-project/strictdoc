@@ -204,21 +204,18 @@ def test_end2end(
     parallelize=False,
     long_timeouts=False,
 ):
-    environment = {}
-    parallelize_argument = ""
-
     long_timeouts_argument = (
         "--strictdoc-long-timeouts" if long_timeouts else ""
     )
 
+    parallelize_argument = ""
     if parallelize:
         print(  # noqa: T201
             "warning: "
             "Running parallelized end-2-end tests is supported "
             "but is not stable."
         )
-        environment["STRICTDOC_PARALLELIZE"] = "True"
-        parallelize_argument = "--numprocesses=2"
+        parallelize_argument = "--numprocesses=2 --strictdoc-parallelize"
 
     focus_argument = f"-k {focus}" if focus is not None else ""
     exit_first_argument = "--exitfirst" if exit_first else ""

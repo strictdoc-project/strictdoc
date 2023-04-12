@@ -4,7 +4,7 @@ from sys import platform
 
 from seleniumbase import BaseCase
 
-from tests.end2end.conftest import DOWNLOAD_FILE_TIMEOUT, DOWNLOADED_FILES_PATH
+from tests.end2end.conftest import DOWNLOADED_FILES_PATH, test_environment
 from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
     Screen_DocumentTree,
 )
@@ -45,5 +45,5 @@ class Test_UC20_T1_GreenCase(BaseCase):
             # FIXME: does not work on Linux CI
             if platform == "linux" or platform == "linux2":
                 return
-            self.sleep(DOWNLOAD_FILE_TIMEOUT)
+            self.sleep(test_environment.download_file_timeout_seconds)
             assert os.path.exists(path_to_expected_downloaded_file)

@@ -12,43 +12,33 @@ sys.path.append(STRICTDOC_PATH)
 
 DOWNLOADED_FILES_PATH = os.path.join(STRICTDOC_PATH, "downloaded_files")
 
+test_environment: SDocTestEnvironment = SDocTestEnvironment.create_default()
 
-# Running Selenium tests on GitHub Actions CI is considerably slower.
-# Passing the flag via env because pytest makes it hard to introduce an extra
-# command-line argument when it is not used as a test fixture.
-if os.getenv("STRICTDOC_LONGER_TIMEOUTS") is not None:
-    WAIT_TIMEOUT = 30
-    POLL_TIMEOUT = 1
-    WARMUP_INTERVAL = 0
-    DOWNLOAD_FILE_TIMEOUT = 5
-    SERVER_TERM_TIMEOUT = 5
 
-    # Selenium timeout settings.
-    settings.MINI_TIMEOUT = 5
-    settings.SMALL_TIMEOUT = 10
-    settings.LARGE_TIMEOUT = 15
-    settings.EXTREME_TIMEOUT = 30
-else:
-    WAIT_TIMEOUT = 5
-    POLL_TIMEOUT = 0.1
-    WARMUP_INTERVAL = 0
-    DOWNLOAD_FILE_TIMEOUT = 2
-    SERVER_TERM_TIMEOUT = 1
+def pytest_addoption(parser):
+    parser.addoption(
+        "--strictdoc-long-timeouts", action="store_true", default=False
+    )
 
-    # Selenium timeout settings.
-    settings.MINI_TIMEOUT = 2
-    settings.SMALL_TIMEOUT = 7
-    settings.LARGE_TIMEOUT = 10
-    settings.EXTREME_TIMEOUT = 30
 
-test_environment = SDocTestEnvironment(
-    is_parallel_execution="STRICTDOC_PARALLELIZE" in os.environ,
-    wait_timeout_seconds=WAIT_TIMEOUT,
-    poll_timeout_seconds=POLL_TIMEOUT,
-    warm_up_interval_seconds=WARMUP_INTERVAL,
-    download_file_timeout_seconds=DOWNLOAD_FILE_TIMEOUT,
-    server_term_timeout_seconds=SERVER_TERM_TIMEOUT,
-)
+def pytest_configure(config):
+    long_timeouts = config.getoption("--strictdoc-long-timeouts")
+
+    if long_timeouts:
+        # Selenium timeout settings.
+        settings.MINI_TIMEOUT = 5
+        settings.SMALL_TIMEOUT = 10
+        settings.LARGE_TIMEOUT = 15
+        settings.EXTREME_TIMEOUT = 30
+
+        test_environment.switch_to_long_timeouts()
+    else:
+        # Selenium timeout settings.
+        settings.MINI_TIMEOUT = 2
+        settings.SMALL_TIMEOUT = 7
+        settings.LARGE_TIMEOUT = 10
+        settings.EXTREME_TIMEOUT = 30
+
 
 TESTS_TOTAL = 0
 

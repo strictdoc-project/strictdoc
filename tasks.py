@@ -60,7 +60,6 @@ def run_invoke_with_tox(
     context,
     environment_type: ToxEnvironment,
     command: str,
-    environment: Optional[dict] = None,
 ) -> invoke.runners.Result:
     assert isinstance(environment_type, ToxEnvironment)
     assert isinstance(command, str)
@@ -72,7 +71,6 @@ def run_invoke_with_tox(
                 -e {tox_py_version}-{environment_type.value} --
                 {command}
         """,
-        environment=environment,
     )
 
 
@@ -209,8 +207,9 @@ def test_end2end(
     environment = {}
     parallelize_argument = ""
 
-    if long_timeouts:
-        environment["STRICTDOC_LONGER_TIMEOUTS"] = "True"
+    long_timeouts_argument = (
+        "--strictdoc-long-timeouts" if long_timeouts else ""
+    )
 
     if parallelize:
         print(  # noqa: T201
@@ -232,6 +231,7 @@ def test_end2end(
             {parallelize_argument}
             {focus_argument}
             {exit_first_argument}
+            {long_timeouts_argument}
             tests/end2end
     """
 
@@ -249,7 +249,6 @@ def test_end2end(
         context,
         ToxEnvironment.CHECK,
         test_command,
-        environment=environment,
     )
 
 

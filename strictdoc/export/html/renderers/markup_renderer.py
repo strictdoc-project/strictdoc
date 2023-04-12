@@ -15,6 +15,7 @@ from strictdoc.export.html.renderers.text_to_html_writer import TextToHtmlWriter
 from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
+from strictdoc.helpers.rst import truncated_statement_with_no_rst
 
 
 class MarkupRenderer:
@@ -77,16 +78,10 @@ class MarkupRenderer:
         assert isinstance(requirement, Requirement), requirement
         assert requirement.reserved_statement is not None
 
-        statement_to_render = requirement.reserved_statement
-        if len(statement_to_render) >= 255:
-            first_line_break_index = statement_to_render.find("\n\n")
-            if first_line_break_index != -1:
-                statement_to_render = statement_to_render[
-                    0:first_line_break_index
-                ]
-            else:
-                statement_to_render = statement_to_render[0:255]
-            statement_to_render += " <...>"
+        statement_to_render = truncated_statement_with_no_rst(
+            requirement.reserved_statement
+        )
+
         output = self.fragment_writer.write(statement_to_render)
         self.cache[requirement] = output
 

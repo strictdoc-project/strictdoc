@@ -1,0 +1,11 @@
+# This test works with a document with a statement that starts with an RST
+# directive. The expectation is that the statement is rendered as "<...>" on the
+# DTR page because we are truncating statements there, and we cannot know if
+# we truncate a statement in the middle of an RST directive or not. Incorrectly
+# truncated RST text causes the RST->HTML renderer to fail with an error.
+
+RUN: %strictdoc export %S --formats=html --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Document with an RST table
+
+RUN: %cat %S/Output/html/01_table_to_html/input-DEEP-TRACE.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-FILE
+CHECK-HTML-FILE: <p>&lt;...&gt;</p>

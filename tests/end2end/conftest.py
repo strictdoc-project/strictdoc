@@ -19,10 +19,14 @@ def pytest_addoption(parser):
     parser.addoption(
         "--strictdoc-long-timeouts", action="store_true", default=False
     )
+    parser.addoption(
+        "--strictdoc-parallelize", action="store_true", default=False
+    )
 
 
 def pytest_configure(config):
     long_timeouts = config.getoption("--strictdoc-long-timeouts")
+    parallelize = config.getoption("--strictdoc-parallelize")
 
     if long_timeouts:
         # Selenium timeout settings.
@@ -38,6 +42,9 @@ def pytest_configure(config):
         settings.SMALL_TIMEOUT = 7
         settings.LARGE_TIMEOUT = 10
         settings.EXTREME_TIMEOUT = 30
+
+    if parallelize:
+        test_environment.is_parallel_execution = True
 
 
 TESTS_TOTAL = 0

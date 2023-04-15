@@ -29,7 +29,7 @@ FreeTextContainer[noskipws]:
 DOCUMENT_GRAMMAR = r"""
 Document[noskipws]:
   '[DOCUMENT]' '\n'
-  'TITLE: ' title = /.*$/ '\n'
+  'TITLE: ' title = SingleLineString '\n'
   (config = DocumentConfig)?
   ('\n' grammar = DocumentGrammar)?
   free_texts *= SpaceThenFreeText
@@ -106,9 +106,9 @@ BooleanChoice[noskipws]:
 ;
 
 DocumentConfig[noskipws]:
-  ('UID: ' uid = /.*$/ '\n')?
-  ('VERSION: ' version = /.*$/ '\n')?
-  ('CLASSIFICATION: ' classification = /.*$/ '\n')?
+  ('UID: ' uid = SingleLineString '\n')?
+  ('VERSION: ' version = SingleLineString '\n')?
+  ('CLASSIFICATION: ' classification = SingleLineString '\n')?
 
   ('OPTIONS:' '\n'
     ('  MARKUP: ' (markup = MarkupChoice) '\n')?

@@ -42,9 +42,13 @@
       {% endblock layout_nav %}
     </nav>
 
-    <div class="layout_toc">
+    <aside class="layout_tree">
+      {% block tree_content %}{% endblock %}
+    </aside>
+
+    <aside class="layout_toc">
       {% block toc_content %}{% endblock %}
-    </div>
+    </aside>
 
     <header class="layout_header">
       {% block header_content %}{% endblock %}

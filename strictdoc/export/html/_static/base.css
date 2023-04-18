@@ -68,7 +68,7 @@
 
   --card-width: 300px;
 
-  --base-border: 1px solid rgba(0,0,0,0.1);
+  --base-border: 1px solid var(--color-border);
 
   --color-red: rgb(200, 0, 0);
   --color-blue: rgb(50, 100, 200);

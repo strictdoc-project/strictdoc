@@ -647,6 +647,87 @@ sdoc-menu-handler[aria-expanded="true"] svg {
   margin-bottom: calc(var(--base-rhythm)*2);
 }
 
+/* resizable-bar */
+
+[js-resizable-bar] {
+  width: 25vw;
+}
+
+/* scroll */
+
+[scrollable-bar='y'] {
+  height: 100%;
+  overflow: hidden;
+  overflow-y: scroll;
+  scrollbar-color: transparent var(--scrollbarBG);
+  scrollbar-width: thin;
+}
+[scrollable-bar='y']:hover {
+  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+}
+[scrollable-bar='y']::-webkit-scrollbar {
+  width: var(--base-rhythm);
+}
+[scrollable-bar='y']::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+[scrollable-bar='y']:hover::-webkit-scrollbar-thumb {
+  background-color: var(--thumbBG)
+}
+
+/* tree */
+
+.tree {
+  padding-left: calc(var(--base-rhythm)*2);
+  padding-right: calc(var(--base-rhythm)*2);
+  padding-bottom: calc(var(--base-rhythm)*8);
+  padding-top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: var(--base-rhythm);
+  margin-top: calc(var(--base-rhythm)*2);
+}
+
+a.tree_item,
+.tree_item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  column-gap: var(--base-rhythm);
+  font-size: var(--font-size-sm);
+  /* color: var(--color-fg-secondary-invert); */
+  min-width: 0;
+  line-height: 1.5;
+  width: 99%; /* To calculate cite overflow  */
+}
+
+a.tree_item:hover {
+  /* color: var(--color-bg-main);
+  fill: var(--color-bg-main); */
+}
+
+.tree_item[active] {
+  color: var(--color-fg-contrast);
+}
+
+.document_title {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  width: 99%; /* To calculate cite overflow  */
+}
+
+.document_title[data-file_name]::after {
+  content: attr(data-file_name);
+  display: block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 99%; /* To calculate cite overflow  */
+  font-weight:400;
+  opacity:0.6;
+}
+
 /* toc */
 
 .toc_panel {
@@ -654,14 +735,14 @@ sdoc-menu-handler[aria-expanded="true"] svg {
 
   position: relative;
   height: 100%;
+  overflow: hidden;
 }
 
 .toc_handler {
   cursor: pointer;
   user-select: none;
   margin-right: auto;
-
-  position: absolute;
+  position: relative;
   z-index: 10;
 }
 
@@ -677,14 +758,24 @@ sdoc-menu-handler[aria-expanded="true"] svg {
   overflow-y: scroll;
 
   min-width: 250px;
+  max-width: 25vw;
 
-  border-right: var(--base-border);
-  padding: calc(var(--base-rhythm)*8) calc(var(--base-rhythm)*2);
+  padding: 0 calc(var(--base-rhythm)*2);
+  padding-bottom: calc(var(--base-rhythm)*8);
 
   font-size: var(--font-size-sm);
 
   transition: margin-left .5s;
   scrollbar-color: transparent var(--scrollbarBG);
+}
+
+.toc_panel__content::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  border-right: var(--base-border);
 }
 
 .toc_panel__content:hover {
@@ -700,12 +791,16 @@ sdoc-menu-handler[aria-expanded="true"] svg {
 }
 
 [data-toc_state="close"] .toc_panel__content {
-  width: 250px;
-  margin-left: -333px;
+  /* margin-left: -100%; */
+  /* TODO Make the minimum and smarter margin shift */
+  margin-left: -50vw;
+}
+
+[data-toc_state="close"] .toc_panel {
+  margin-right: -48px;
 }
 
 [data-toc_state="open"] .toc_panel__content {
-  width: auto;
   margin-left: 0;
 }
 

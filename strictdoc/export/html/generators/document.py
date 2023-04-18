@@ -3,6 +3,7 @@ from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
+from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 
 
 class DocumentHTMLGenerator:
@@ -18,6 +19,10 @@ class DocumentHTMLGenerator:
         standalone: bool,
     ):
         output = ""
+
+        document_tree_iterator = DocumentTreeIterator(
+            traceability_index.document_tree
+        )
 
         template = DocumentHTMLGenerator.env.get_template(
             "single_document/document.jinja.html"
@@ -35,6 +40,8 @@ class DocumentHTMLGenerator:
             document_type=DocumentType.document(),
             document_iterator=document_iterator,
             strictdoc_version=__version__,
+            document_tree=traceability_index.document_tree,
+            document_tree_iterator=document_tree_iterator,
         )
 
         return output

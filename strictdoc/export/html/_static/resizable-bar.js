@@ -25,8 +25,6 @@ const BAR_COLOR_ACTIVE = 'var(--color-fg-accent, currentColor)';
 const BAR_COLOR_BORDER = 'var(--color-border, rgba(0,0,0,0.1))';
 
 const STYLE = `
-body {color: green}
-
 [${BAR_ATTRIBUTE}] {
   position: relative;
   height: 100%;
@@ -46,11 +44,11 @@ body {color: green}
 
 [${BAR_ATTRIBUTE}][data-position="left"] {
   border-left: none;
-  padding-right: ${BAR_HANDLER_WIDTH}px;
+  padding-right: ${BAR_HANDLER_WIDTH * 0.5}px;
 }
 [${BAR_ATTRIBUTE}][data-position="right"] {
   border-right: none;
-  padding-left: ${BAR_HANDLER_WIDTH}px;
+  padding-left: ${BAR_HANDLER_WIDTH  * 0.5}px;
 }
 
 [${BAR_ATTRIBUTE}-handler] {
@@ -60,8 +58,9 @@ body {color: green}
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: 10;
   width: ${BAR_HANDLER_WIDTH}px;
-  background: ${BAR_COLOR_BACKGROUND};
+  /* background: ${BAR_COLOR_BACKGROUND}; */
   color: ${BAR_COLOR_ACTIVE};
 }
 
@@ -301,18 +300,22 @@ class ResizableBar {
 
   _onMouseDown(e) {
     // Init resizing
-    e.preventDefault();
-    this._updateCurrents(e);
-    window.addEventListener('mousemove', this._mouseMoveHandler);
-    window.addEventListener('mouseup', this._mouseUpHandler);
+    if(e.button == 0) {
+      e.preventDefault();
+      this._updateCurrents(e);
+      window.addEventListener('mousemove', this._mouseMoveHandler);
+      window.addEventListener('mouseup', this._mouseUpHandler);
+    }
   }
 
   _toggle(e) {
-    const id = e.target.dataset.parent;
-    this.state[id].state = this.state[id].state === 'open'
-      ? 'closed'
-      : 'open';
-    this._updateBar(id);
+    if(e.button == 0) {
+      const id = e.target.dataset.parent;
+      this.state[id].state = this.state[id].state === 'open'
+        ? 'closed'
+        : 'open';
+      this._updateBar(id);
+    }
   }
 
   _open(id) {

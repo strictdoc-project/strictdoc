@@ -657,16 +657,16 @@ sdoc-menu-handler[aria-expanded="true"] svg {
 
 [scrollable-bar='y'] {
   height: 100%;
-  overflow: hidden;
   overflow-y: scroll;
+  padding: var(--base-rhythm) 0;
   scrollbar-color: transparent var(--scrollbarBG);
-  scrollbar-width: thin;
+  /* scrollbar-width: thin; */
 }
 [scrollable-bar='y']:hover {
   scrollbar-color: var(--thumbBG) var(--scrollbarBG);
 }
 [scrollable-bar='y']::-webkit-scrollbar {
-  width: var(--base-rhythm);
+  /* width: var(--base-rhythm); */
 }
 [scrollable-bar='y']::-webkit-scrollbar-thumb {
   background-color: transparent;

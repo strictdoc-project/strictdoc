@@ -14,11 +14,6 @@
     js-collapsible_list="true" {# FIXME: issue#1098 #}
     data-controller="collapsible_list"
   >
-    <div
-      scrollable-bar="y"
-      js-collapsible_list="container"
-    >
-
     <ul
       data-testid="toc-list"
       js-collapsible_list="list"
@@ -80,7 +75,5 @@
         </ul>
       {%- endif -%}
     {%- endfor %}
-
-    </div>{# /[scrollable-bar] #}
   </turbo-frame>
 </div>

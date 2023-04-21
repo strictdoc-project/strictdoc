@@ -652,33 +652,6 @@ sdoc-menu-handler[aria-expanded="true"] svg {
 [js-resizable-bar] {
   width: 25vw;
 }
-
-/* scroll */
-
-[scrollable-bar='y'] {
-  height: 100%;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  padding: calc(var(--base-rhythm)*2);
-  padding-bottom: calc(var(--base-rhythm)*8);
-  scrollbar-color: transparent var(--scrollbarBG);
-  /* scrollbar-width: thin; */
-}
-[scrollable-bar='y']:hover {
-  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
-}
-[scrollable-bar='y']::-webkit-scrollbar {
-  /* width: var(--base-rhythm); */
-}
-[scrollable-bar='y']::-webkit-scrollbar-thumb {
-  background-color: transparent;
-}
-[scrollable-bar='y']:hover::-webkit-scrollbar-thumb {
-  background-color: var(--thumbBG)
-}
-
-[data-state="closed"] [scrollable-bar] {
-  display: none;
 }
 
 /* tree */
@@ -693,7 +666,7 @@ sdoc-menu-handler[aria-expanded="true"] svg {
   justify-content: flex-start;
   align-items: flex-start;
   gap: var(--base-rhythm);
-  margin-top: calc(var(--base-rhythm)*2);
+  /* margin-top: calc(var(--base-rhythm)*2); */
 }
 
 a.tree_item,

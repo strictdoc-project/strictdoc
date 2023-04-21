@@ -168,6 +168,36 @@ const STYLE = `
 [${BAR_ATTRIBUTE}][data-state="closed"] [${BAR_ATTRIBUTE}-button]::after {
   content: '❯';
 }
+
+[${BAR_ATTRIBUTE}-scroll] {
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding: calc(var(--base-rhythm)*2);
+  padding-bottom: calc(var(--base-rhythm)*8);
+  scrollbar-color: transparent var(--scrollbarBG);
+  /* scrollbar-width: thin; */
+}
+[${BAR_ATTRIBUTE}-scroll='y'] {
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+[${BAR_ATTRIBUTE}-scroll]:hover {
+  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+}
+[${BAR_ATTRIBUTE}-scroll]::-webkit-scrollbar {
+  /* width: var(--base-rhythm); */
+}
+[${BAR_ATTRIBUTE}-scroll]::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+[${BAR_ATTRIBUTE}-scroll]:hover::-webkit-scrollbar-thumb {
+  background-color: var(--thumbBG)
+}
+
+[data-state="closed"] [${BAR_ATTRIBUTE}-scroll] {
+  display: none;
+}
 `;
 
 class ResizableBar {
@@ -259,6 +289,16 @@ class ResizableBar {
       // this._updateState({ id: id, width: 123 });
       // this._updateBar(id);
 
+      // Check if there is a scrollable element
+      let wrapper = bar.querySelector(`${this.barAttribute}-scroll`);
+      if(wrapper) {
+        console.log('wrapper is here')
+      } else {
+        wrapper = this._createScrollableWrapper(id);
+        [ ...bar.childNodes ].forEach(child => wrapper.appendChild(child));
+        bar.appendChild(wrapper);
+      }
+
       bar.append(this._createHandler(id));
     });
   }
@@ -283,6 +323,13 @@ class ResizableBar {
 
     handler.append(border, button);
     return handler;
+  }
+
+  _createScrollableWrapper(id, direction = 'y') {
+    const wrapper = document.createElement('div');
+    wrapper.setAttribute(`${this.barAttribute}-scroll`, direction);
+    wrapper.dataset.content = id;
+    return wrapper;
   }
 
   _insertStyle() {

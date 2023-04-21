@@ -6,7 +6,6 @@
     data-state="open"
     data-position="left"
   >
-    <div scrollable-bar='y'>
       <div class="tree">
         {%- for folder_or_file in document_tree_iterator.iterator(): -%}
           {%- if folder_or_file.is_folder(): %}
@@ -41,7 +40,6 @@
           {% endif %}
         {%- endfor -%}
       </div>
-    </div>
   </div>
   {%- else -%}
     <span data-testid='document-tree-empty-text'>🐛 The project has no documents yet.</span>

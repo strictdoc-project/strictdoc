@@ -657,8 +657,10 @@ sdoc-menu-handler[aria-expanded="true"] svg {
 
 [scrollable-bar='y'] {
   height: 100%;
+  overflow-x: hidden;
   overflow-y: scroll;
-  padding: var(--base-rhythm) 0;
+  padding: calc(var(--base-rhythm)*2);
+  padding-bottom: calc(var(--base-rhythm)*8);
   scrollbar-color: transparent var(--scrollbarBG);
   /* scrollbar-width: thin; */
 }
@@ -675,13 +677,17 @@ sdoc-menu-handler[aria-expanded="true"] svg {
   background-color: var(--thumbBG)
 }
 
+[data-state="closed"] [scrollable-bar] {
+  display: none;
+}
+
 /* tree */
 
 .tree {
-  padding-left: calc(var(--base-rhythm)*2);
-  padding-right: calc(var(--base-rhythm)*2);
-  padding-bottom: calc(var(--base-rhythm)*8);
-  padding-top: 0;
+  /* padding-left: calc(var(--base-rhythm)*2);
+  padding-right: calc(var(--base-rhythm)*2); */
+  /* padding-bottom: calc(var(--base-rhythm)*8);
+  padding-top: 0; */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

@@ -652,6 +652,16 @@ sdoc-menu-handler[aria-expanded="true"] svg {
 [js-resizable-bar] {
   width: 25vw;
 }
+/* preloader */
+[js-resizable-bar]::after {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  content: '...';
+  color: var(--color-fg-secondary);
+  position: absolute;
+  left: 0; right: 0; top: 0; bottom: 0;
+  background-color: var(--color-bg-main);
 }
 
 /* tree */

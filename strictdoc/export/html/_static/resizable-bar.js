@@ -22,6 +22,12 @@ const BAR_COLOR_ACTIVE = 'var(--color-fg-accent, currentColor)';
 const BAR_COLOR_BORDER = 'var(--color-border, rgba(0,0,0,0.1))';
 
 const STYLE = `
+[${BAR_ATTRIBUTE}]::after {
+  opacity: 0;
+  transition: .3s;
+  pointer-events: none;
+}
+
 [${BAR_ATTRIBUTE}] {
   position: relative;
   height: 100%;

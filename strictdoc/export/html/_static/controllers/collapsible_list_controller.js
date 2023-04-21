@@ -4,7 +4,6 @@ import { Controller } from "/_static/stimulus.js";
 
 const ROOT_SELECTOR = '[js-collapsible_list]';
 const LIST_SELECTOR = '[js-collapsible_list="list"]';
-const CONTAINER_SELECTOR = '[js-collapsible_list="container"]';
 
 const STYLE = `
 [data-collapsible_list__branch] {
@@ -57,54 +56,12 @@ const STYLE = `
 Stimulus.register("collapsible_list", class extends Controller {
   static targets = ["name"];
 
-  constructor(...args) {
-    super(...args);
-    this.firstRun = false
-  }
-
-  connect() {
-    // Stimulus watches the page for changes asynchronously using
-    // the DOM MutationObserver API.
-    // **
-    // We need to know if the target will have scrolling.
-    // The necessary calculations must be done when the DOM elements
-    // are already loaded.
-    // However, Stimulus loads too early and for our target its height
-    // is calculated incorrectly, as the styles are not yet in effect,
-    // even though the target already exists in the DOM.
-    // **
-    // There has also been a problem with lagged styles:
-    // (this is not the case in Firefox and Safari):
-    // the CSS added in addStyleElement(),
-    // which sets `height: 0;` for the collapsed branch,
-    // are present and visible in the inspector,
-    // but don't affect the display of elements in the DOM.
-    // We also call addStyleElement() in connect() after the rest
-    // of the DOM manipulation, which provides the additional ensure
-    // that the block styles will be re-rendered in Chrome
-    // with these styles enabled.
-    // **
-    // This is eliminated by a timeout of 100 milliseconds.
-    // Also by forcing a delay in triggering Stimulus before the LOAD event.
-    // ** This prevents operation in regular asynchronous mode.
-    // ** That is why there is also a hack with a flag 'firstRun'.
-
-    const renderCall = (event) => {
-      this.render();
-      this.firstRun = true;
-      window.removeEventListener("load", renderCall);
-    };
-    window.addEventListener("load", renderCall);
-
-    !this.firstRun && this.render();
-
-  }
-
-  render() {
-    // `this` element is the same as what we get on ROOT_SELECTOR
-    const containerElement = document.querySelector(CONTAINER_SELECTOR);
+  initialize() {
     const listElement = document.querySelector(LIST_SELECTOR);
+    this.render(listElement)
+  }
 
+  render(listElement) {
     // Processes the list and makes it collapse, if that makes sense
     // (if the expanded list was long and would cause scrolling).
     // Returns the processed list.
@@ -113,7 +70,7 @@ Stimulus.register("collapsible_list", class extends Controller {
     // Do it if that makes sense (if there are branches
     // in the list that could in principle be collapsible):
     if (branchList.length > 0) {
-      processList(branchList, hasScroll(containerElement));
+      processList(branchList, probablyHasScroll(listElement));
       addStyleElement(this.element, STYLE);
     }
   }
@@ -129,7 +86,21 @@ function addStyleElement(target, styleTextContent) {
 
 function hasScroll(target) {
   // Check if a fully open list makes a scroll for its container.
+  // *
+  // The calculation assumes that `target` is a wrapping element with a scroll.
+  // This element is added by another script.
+  // We cannot guarantee that this item will be ready at the time the script runs.
+  // That's why we do another function probablyHasScroll() as a temporary solution.
   return target.scrollHeight > target.clientHeight;
+}
+
+function probablyHasScroll(target) {
+  // Check if a fully open list makes a scroll for its container.
+  // Expect the target to be a content element
+  // (unlike the first function hasScroll(target)).
+  // The estimated height, which will not generate scrolling, is taken approximately.
+  const temporarySolution = document.body.clientHeight - 100;  // 48 - 32 - 16 ...
+  return target.scrollHeight > temporarySolution;
 }
 
 function prepareList(target) {

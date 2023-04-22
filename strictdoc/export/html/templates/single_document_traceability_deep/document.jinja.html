@@ -9,7 +9,7 @@
 
 {% block head_scripts %}
   <script type="text/javascript" src="{{link_renderer.render_static_url('viewtype_menu.js')}}"></script>
-  <script type="text/javascript" src="{{link_renderer.render_static_url('toc.js')}}"></script>
+  <script type="text/javascript" src="{{link_renderer.render_static_url('resizable-bar.js')}}"></script>
 
   {%- if config.is_running_on_server -%}
   <script type="module">
@@ -37,8 +37,13 @@
   {%- endif -%}
 {% endblock layout_nav %}
 
+{% block tree_content %}
+  {# TODO: 'document_tree_iterator' #}
+  {# {% include "screens/resizable_bar_with_project_tree.jinja" %} #}
+{% endblock %}
+
 {% block toc_content %}
-  {% include "_shared/toc.jinja.html" %}
+  {% include "screens/resizable_bar_with_toc.jinja" %}
 {% endblock toc_content %}
 
 {% block header_content %}

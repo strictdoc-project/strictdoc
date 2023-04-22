@@ -1,19 +1,9 @@
-
-
-{# TODO: turbo-frame & JS stimulus controller #}
-
-<div
-    {# id="toc" #}
-    js-resizable-bar="toc"
-    data-state="open"
-    data-position="left"
-  >
-  <turbo-frame
-    id="frame-toc"
-    style="display: contents"
-    js-collapsible_list="true" {# FIXME: issue#1098 #}
-    data-controller="collapsible_list"
-  >
+<turbo-frame
+  id="frame-toc"
+  style="display: contents"
+  js-collapsible_list="true" {# FIXME: issue#1098 #}
+  data-controller="collapsible_list"
+>
     <ul
       data-testid="toc-list"
       js-collapsible_list="list"
@@ -75,5 +65,4 @@
         </ul>
       {%- endif -%}
     {%- endfor %}
-  </turbo-frame>
-</div>
+</turbo-frame>

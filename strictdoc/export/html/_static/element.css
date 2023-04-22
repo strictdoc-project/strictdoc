@@ -647,13 +647,13 @@ sdoc-menu-handler[aria-expanded="true"] svg {
   margin-bottom: calc(var(--base-rhythm)*2);
 }
 
-/* resizable-bar */
+/* resizable_bar */
 
-[js-resizable-bar] {
+[js-resizable_bar] {
   width: 25vw;
 }
 /* preloader */
-[js-resizable-bar]::after {
+[js-resizable_bar]::after {
   display: flex;
   align-items: center;
   justify-content: center;

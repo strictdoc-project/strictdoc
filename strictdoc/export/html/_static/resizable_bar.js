@@ -2,14 +2,14 @@
 
 
 // Expected:
-// js-resizable-bar="tree"
+// js-resizable_bar="tree"
 // data-state="open"
 // data-position="left"
 
 // ! Right now, the code only considers one possibility for the panels
 // ! to the left of the main part.
 
-const BAR_ATTRIBUTE = 'js-resizable-bar';
+const BAR_ATTRIBUTE = 'js-resizable_bar';
 const BAR_MIN_WIDTH = 100;
 const BAR_CLOSED_WIDTH = 12;
 const BAR_MAX_VW = '25vw';
@@ -212,7 +212,7 @@ class ResizableBar {
     barStyle,
     barGravity,
   }) {
-    this.barAttribute = barAttribute || 'js-resizable-bar';
+    this.barAttribute = barAttribute || 'js-resizable_bar';
     this.barStyle = barStyle;
     this.barGravity = barGravity || 100;
 
@@ -340,8 +340,8 @@ class ResizableBar {
 
   _insertStyle() {
     const style = document.createElement('style');
-    // style.id = 'resizable-bar-style';
-    style.setAttribute("resizable-bar-style", '');
+    // style.id = 'resizable_bar-style';
+    style.setAttribute("resizable_bar-style", '');
     style.textContent = this.barStyle;
     // Add style
     document.head.append(style);

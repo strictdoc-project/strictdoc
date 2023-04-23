@@ -7,7 +7,6 @@ https://stackoverflow.com/a/68564737/598057
 """
 import datetime
 import os
-import re
 import shutil
 import socket
 import subprocess
@@ -15,7 +14,7 @@ from contextlib import ExitStack, closing
 from queue import Empty, Queue
 from threading import Thread
 from time import sleep
-from typing import Optional
+from typing import List, Optional
 
 import psutil
 from psutil import NoSuchProcess
@@ -72,6 +71,7 @@ class SDocTestServer:  # pylint: disable=too-many-instance-attributes
         test_server = SDocTestServer(
             input_path=input_path,
             output_path=None,
+            expectations=None,
         )
         return test_server
 
@@ -80,6 +80,8 @@ class SDocTestServer:  # pylint: disable=too-many-instance-attributes
         *,
         input_path: str,
         output_path: Optional[str] = None,
+        port: Optional[int] = None,
+        expectations: Optional[List] = None,
     ):
         is_parallel_execution = test_environment.is_parallel_execution
 
@@ -89,6 +91,8 @@ class SDocTestServer:  # pylint: disable=too-many-instance-attributes
         self.server_port: int = (
             SDocTestServer._get_test_server_port()
             if is_parallel_execution
+            else port
+            if port is not None
             else 5112
         )
         if SDocTestServer.check_existing_connection(
@@ -109,6 +113,12 @@ class SDocTestServer:  # pylint: disable=too-many-instance-attributes
             os.remove(self.path_to_out_log)
         if os.path.exists(self.path_to_err_log):
             os.remove(self.path_to_err_log)
+
+        self.expectations = (
+            expectations
+            if expectations is not None
+            else ["INFO:     Application startup complete."]
+        )
 
         # All of these below become initialized/used starting from run()
         self.process = None
@@ -175,7 +185,7 @@ class SDocTestServer:  # pylint: disable=too-many-instance-attributes
 
         # Capture first startup lines.
         self.capture_expected_server_stderr_response(
-            expectations=["INFO:     Application startup complete."],
+            expectations=self.expectations,
         )
 
         # Continue writing captured stderr output to the log file.
@@ -310,9 +320,7 @@ class SDocTestServer:  # pylint: disable=too-many-instance-attributes
                         line_string = line_bytes.decode("utf-8")
                         current_expectation = expectations[0]
                         received_input.append(line_string)
-                        if re.search(
-                            current_expectation, f"{line_string.rstrip()}"
-                        ):
+                        if line_string.rstrip() in current_expectation:
                             expectations.pop(0)
                 except Empty:
                     pass

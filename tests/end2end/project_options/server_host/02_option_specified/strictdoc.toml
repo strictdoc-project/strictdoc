@@ -1,0 +1,6 @@
+[project]
+title = 'Test project with a host "localhost" and a port 5000'
+
+[server]
+host = "localhost"
+port = 5000

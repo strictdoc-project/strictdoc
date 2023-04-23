@@ -36,16 +36,22 @@ class ProjectConfig:
         ProjectFeature.TRACEABILITY_SCREEN,
         ProjectFeature.DEEP_TRACEABILITY_SCREEN,
     ]
+    DEFAULT_SERVER_HOST = "127.0.0.1"
+    DEFAULT_SERVER_PORT = 5111
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         project_title: str,
         dir_for_sdoc_assets: str,
         project_features: List[str],
+        server_host: str,
+        server_port: int,
     ):
         self.project_title: str = project_title
         self.dir_for_sdoc_assets: str = dir_for_sdoc_assets
         self.project_features: List[str] = project_features
+        self.server_host: str = server_host
+        self.server_port: int = server_port
 
     @staticmethod
     def default_config():
@@ -53,6 +59,8 @@ class ProjectConfig:
             project_title=ProjectConfig.DEFAULT_PROJECT_TITLE,
             dir_for_sdoc_assets=ProjectConfig.DEFAULT_DIR_FOR_SDOC_ASSETS,
             project_features=ProjectConfig.DEFAULT_FEATURES,
+            server_host=ProjectConfig.DEFAULT_SERVER_HOST,
+            server_port=ProjectConfig.DEFAULT_SERVER_PORT,
         )
 
     def is_feature_activated(self, feature: ProjectFeature):
@@ -103,6 +111,8 @@ class ProjectConfigLoader:
         project_title = ProjectConfig.DEFAULT_PROJECT_TITLE
         dir_for_sdoc_assets = ProjectConfig.DEFAULT_DIR_FOR_SDOC_ASSETS
         project_features = ProjectConfig.DEFAULT_FEATURES
+        server_host = ProjectConfig.DEFAULT_SERVER_HOST
+        server_port = ProjectConfig.DEFAULT_SERVER_PORT
 
         if "project" in config_dict:
             project_content = config_dict["project"]
@@ -125,8 +135,20 @@ class ProjectConfigLoader:
                         f"'{feature}'."
                     )
                     sys.exit(1)
+
+        if "server" in config_dict:
+            # FIXME: Introduce at least a basic validation for the host/port.
+            server_content = config_dict["server"]
+            server_host = server_content.get("host", server_host)
+            server_port = server_content.get("port", server_port)
+            assert (
+                isinstance(server_port, int) and 1024 < server_port < 65000
+            ), server_port
+
         return ProjectConfig(
             project_title=project_title,
             dir_for_sdoc_assets=dir_for_sdoc_assets,
             project_features=project_features,
+            server_host=server_host,
+            server_port=server_port,
         )

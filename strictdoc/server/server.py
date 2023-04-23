@@ -48,9 +48,17 @@ def run_strictdoc_server(
             "strictdoc.server.app:strictdoc_production_app",
             app_dir=".",
             factory=True,
-            host="127.0.0.1",
+            host=project_config.server_host,
             log_level="info",
-            port=server_config.port,
+            # "server" command port overrides the strictdoc.toml option for now.
+            # Eventually, I am considering to remove the CLI option for the
+            # port, to simplify the maintenance of two configs: the config file
+            # and the "export" command's interface.
+            port=(
+                server_config.port
+                if server_config.port is not None
+                else project_config.server_port
+            ),
             reload=server_config.reload,
             reload_dirs=[
                 os.path.join(

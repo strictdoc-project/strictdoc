@@ -774,10 +774,3 @@ aside {
   */
   position: relative;
 }
-aside > div {
-  /* affects:
-          layout_tree [js-resizable_bar],
-          layout_toc [js-resizable_bar]
-  */
-  width: 0;
-}

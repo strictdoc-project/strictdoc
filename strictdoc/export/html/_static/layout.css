@@ -40,17 +40,6 @@
   z-index: 10;
 }
 
-aside {
-  /* for a pseudo preloader
-     [js-resizable_bar]::after
-
-      affects:
-            layout_tree,
-            layout_toc
-  */
-  position: relative;
-}
-
 .layout_tree {
   grid-area: tree;
 }

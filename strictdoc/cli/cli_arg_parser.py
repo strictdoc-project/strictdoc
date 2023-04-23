@@ -253,7 +253,7 @@ def cli_args_parser() -> argparse.ArgumentParser:
         "--no-reload", dest="reload", action="store_false"
     )
     command_parser_server.add_argument(
-        "--port", default=5111, type=IntRange(1000, 65000)
+        "--port", default=5111, type=IntRange(1024, 65000)
     )
 
     # Command – Version

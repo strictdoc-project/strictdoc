@@ -66,7 +66,9 @@ def _main(parallelizer):
                 path_to_config_dir=config.input_paths[0]
             )
         )
-        config.integrate_project_config(project_config)
+        config.integrate_configs(
+            project_config=project_config, server_config=None
+        )
         parallelization_value = (
             "Disabled" if config.no_parallelization else "Enabled"
         )

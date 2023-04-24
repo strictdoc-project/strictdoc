@@ -252,9 +252,7 @@ def cli_args_parser() -> argparse.ArgumentParser:
     command_parser_server.add_argument(
         "--no-reload", dest="reload", action="store_false"
     )
-    command_parser_server.add_argument(
-        "--port", default=5111, type=IntRange(1024, 65000)
-    )
+    command_parser_server.add_argument("--port", type=IntRange(1024, 65000))
 
     # Command – Version
     command_subparsers.add_parser(
@@ -294,16 +292,15 @@ class ServerCommandConfig:
         input_path: str,
         output_path: Optional[str],
         reload: bool,
-        port: int,
+        port: Optional[int],
     ):
         assert os.path.exists(input_path)
-        assert isinstance(port, int)
         self.environment: SDocRuntimeEnvironment = environment
         abs_input_path = os.path.abspath(input_path)
         self.input_path: str = abs_input_path
         self.output_path: Optional[str] = output_path
         self.reload: bool = reload
-        self.port = port
+        self.port: Optional[int] = port
 
 
 class ExportMode(Enum):
@@ -348,11 +345,6 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         # FIXME: This does not belong here.
         self._server_port: Optional[int] = None
 
-    def configure_for_server(self, server_port: int):
-        assert isinstance(server_port, int)
-        self.is_running_on_server = True
-        self._server_port = server_port
-
     @property
     def server_port(self) -> int:
         assert self._server_port is not None
@@ -377,7 +369,19 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
     def get_extra_static_files_path(self):
         return self.environment.get_extra_static_files_path()
 
-    def integrate_project_config(self, project_config: ProjectConfig):
+    def integrate_configs(
+        self,
+        *,
+        project_config: ProjectConfig,
+        server_config: Optional[ServerCommandConfig],
+    ):
+        server_port = project_config.server_port
+        if server_config is not None:
+            self.is_running_on_server = True
+            if server_config.port is not None:
+                server_port = server_config.port
+        self._server_port = server_port
+
         if self.project_title is None:
             self.project_title = project_config.project_title
         self.dir_for_sdoc_assets = project_config.dir_for_sdoc_assets

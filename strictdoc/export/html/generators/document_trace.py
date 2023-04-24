@@ -1,4 +1,5 @@
 from strictdoc import __version__
+from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
@@ -17,6 +18,10 @@ class DocumentTraceHTMLGenerator:
     ):
         output = ""
 
+        document_tree_iterator = DocumentTreeIterator(
+            traceability_index.document_tree
+        )
+
         template = DocumentTraceHTMLGenerator.env.get_template(
             "single_document_traceability/document.jinja.html"
         )
@@ -33,6 +38,8 @@ class DocumentTraceHTMLGenerator:
             standalone=False,
             document_iterator=document_iterator,
             strictdoc_version=__version__,
+            document_tree=traceability_index.document_tree,
+            document_tree_iterator=document_tree_iterator,
         )
 
         return output

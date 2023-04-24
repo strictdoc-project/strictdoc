@@ -1,9 +1,9 @@
 from strictdoc import __version__
 from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
-from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 
 
 class DocumentHTMLGenerator:

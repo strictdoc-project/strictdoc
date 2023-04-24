@@ -4,6 +4,7 @@ import { Controller } from "/_static/stimulus.js";
 
 const ROOT_SELECTOR = '[js-collapsible_list]';
 const LIST_SELECTOR = '[js-collapsible_list="list"]';
+const LIST_DEFAULT = 0;
 
 const STYLE = `
 [data-collapsible_list__branch] {
@@ -120,27 +121,33 @@ function prepareList(target) {
 }
 
 function processList(list, hasScroll = true) {
+  // This defines how a document is opened:
+  // with a collapsed or expanded TOC.
+  const storage = sessionStorage.getItem('collapsibleToc');
+  console.log(storage);
+
+  // If there is no information in the storage,
+  // we end up in the default case and use hasScroll.
+  // If the fully open list is long enough and creates a scroll,
+  // for its container, we collapse all branches (Each one gets '1').
+  // Otherwise it is not necessary and we leave branches expanded ('0').
+  const initState = storage || (hasScroll ? '1' : '0');
+
   list.forEach(item => {
+    item.dataset.collapsible_list__branch = initState;
+
+    // add event listeners
     item.addEventListener('click', () => {
       const state = item.dataset.collapsible_list__branch;
-      item.dataset.collapsible_list__branch = (state === '1') ? '0' : '1';
+      const next = (state === '1') ? '0' : '1';
+      item.dataset.collapsible_list__branch = next;
     });
     item.addEventListener('dblclick', () => {
       const state = item.dataset.collapsible_list__branch;
-      // TODO: ADD last bulk to local storage
-      list.forEach(
-        el => el.dataset.collapsible_list__branch = (state === '1') ? '0' : '1'
-      );
+      const next = (state === '1') ? '0' : '1';
+      // Add last bulk to local storage:
+      sessionStorage.setItem('collapsibleToc', next);
+      list.forEach(el => el.dataset.collapsible_list__branch = next);
     });
-
-      // This defines how a document is opened:
-      // with a collapsed or expanded TOC.
-      // TODO: We may want to read/write this from/to a session at some point.
-      // TODO: READ last bulk FROM local storage
-
-      // If the fully open list is long enough and creates a scroll,
-      // for its container, we collapse all branches (Each one gets '1').
-      // Otherwise it is not necessary and we leave branches expanded ('0').
-      item.dataset.collapsible_list__branch = hasScroll ? '1' : '0';
   })
 }

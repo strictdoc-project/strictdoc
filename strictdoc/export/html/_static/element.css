@@ -746,26 +746,3 @@ a.tree_item:hover {
 .toc-title-no-link {
   color: #999;
 }
-
-/* preloader on js-resizable_bar */
-[js-resizable_bar]::after {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  content: '•••';
-  color: var(--color-fg-secondary);
-  position: absolute;
-  left: 0; right: 0; top: 0; bottom: 0;
-  background-color: var(--color-bg-main);
-}
-
-aside {
-  /* for a pseudo preloader
-     [js-resizable_bar]::after
-
-      affects:
-            layout_tree,
-            layout_toc
-  */
-  position: relative;
-}

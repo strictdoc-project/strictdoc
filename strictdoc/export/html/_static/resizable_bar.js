@@ -64,15 +64,15 @@ class ResizableBar {
   }
 
   init() {
-    console.log('init()');
-    this._insertInitialStyle();
+    this._insertInitialBarStyle();
+    this._insertInitialPreloaderStyle();
 
   }
 
   render() {
-    console.log('render()');
     this._renderBars();
-    this._insertStyle();
+    this._insertBarStyle();
+    this._insertPreloaderStyle();
   }
 
   // render
@@ -271,7 +271,6 @@ class ResizableBar {
 
     const currentWidth = this.state[this.state.current.id].element.offsetWidth;
     this._updateState({ id: this.state.current.id, width: currentWidth });
-    console.log('currentWidth ', currentWidth);
     this._sessionStorageSetItem(this.state.current.id, 'width', currentWidth); // WRITE DATA TO STORAGE
     this._updateBar(this.state.current.id);
     this._updateCurrent(e);
@@ -303,9 +302,15 @@ class ResizableBar {
 
   // styles
 
-  _insertInitialStyle() {
+  _insertStyle(css, attr) {
+    const style = document.createElement('style');
+    style.setAttribute(`${this.barAttribute}-${attr}`, '');
+    style.textContent = css;
+    document.head.append(style);
+  }
+
+  _insertInitialBarStyle() {
     const storage = this._sessionStorageGet();
-    console.log(storage);
 
     let initStyle = `[${this.barAttribute}]{width:${this.barMaxWidthVW}}`;
 
@@ -315,27 +320,11 @@ class ResizableBar {
       w && (initStyle += `[${this.barAttribute}="${id}"]{width:${w}px}`);
     }
 
-    const style = document.createElement('style');
-    style.setAttribute(`${this.barAttribute}-initial-style`, '');
-    style.textContent = initStyle;
-    document.head.append(style);
+    this._insertStyle(initStyle, 'initial-style')
   }
 
-  _insertStyle() {
-    const style = document.createElement('style');
-    style.setAttribute(`${this.barAttribute}-style`, '');
-    style.textContent = this._style();
-    document.head.append(style);
-  }
-
-  _style() {
-    return `
-[${this.barAttribute}]::after {
-  opacity: 0;
-  transition: .3s;
-  pointer-events: none;
-}
-
+  _insertBarStyle() {
+    const barStyle = `
 [${this.barAttribute}] {
   position: relative;
   height: 100%;
@@ -515,7 +504,40 @@ class ResizableBar {
 [data-state="closed"] [${this.barAttribute}-scroll] {
   display: none;
 }
+`;
+    this._insertStyle(barStyle, 'style');
+  }
+
+  _insertInitialPreloaderStyle() {
+    let style = `
+    aside {
+      /* for a pseudo preloader [js-resizable_bar]::after, affects: layout_tree,layout_toc */
+      position: relative;
+    }
+    [${this.barAttribute}]::after {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        content: '⋮';
+        position: absolute;
+        left: 0; right: 0; top: 0; bottom: 0;
+        background-color: ${this.barColorBackground};
+    }
     `;
+
+    this._insertStyle(style, 'initial-preloader-style');
+  }
+
+  _insertPreloaderStyle() {
+    let style = `
+    [${this.barAttribute}]::after {
+      opacity: 0;
+      transition: .3s;
+      pointer-events: none;
+    }
+    `;
+
+    this._insertStyle(style, 'preloader-style');
   }
 }
 

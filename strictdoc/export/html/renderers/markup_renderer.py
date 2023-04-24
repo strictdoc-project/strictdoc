@@ -27,12 +27,14 @@ class MarkupRenderer:
         context_document: Optional[Document],
     ) -> "MarkupRenderer":
         html_fragment_writer: Union[
-            Type[RstToHtmlFragmentWriter],
+            RstToHtmlFragmentWriter,
             Type[HTMLFragmentWriter],
             Type[TextToHtmlWriter],
         ]
         if not markup or markup == "RST":
-            html_fragment_writer = RstToHtmlFragmentWriter
+            html_fragment_writer = RstToHtmlFragmentWriter(
+                context_document=context_document
+            )
         elif markup == "HTML":
             html_fragment_writer = HTMLFragmentWriter
         else:
@@ -67,6 +69,8 @@ class MarkupRenderer:
 
     def render_requirement_statement(self, requirement):
         assert isinstance(requirement, Requirement)
+        assert self.context_document is not None
+
         if requirement in self.cache:
             return self.cache[requirement]
         output = self.fragment_writer.write(requirement.reserved_statement)
@@ -77,6 +81,7 @@ class MarkupRenderer:
     def render_truncated_requirement_statement(self, requirement):
         assert isinstance(requirement, Requirement), requirement
         assert requirement.reserved_statement is not None
+        assert self.context_document is not None
 
         statement_to_render = truncated_statement_with_no_rst(
             requirement.reserved_statement
@@ -89,6 +94,8 @@ class MarkupRenderer:
 
     def render_requirement_rationale(self, requirement):
         assert isinstance(requirement, Requirement)
+        assert self.context_document is not None
+
         if requirement in self.rationale_cache:
             return self.rationale_cache[requirement]
         output = self.fragment_writer.write(requirement.rationale)
@@ -97,6 +104,8 @@ class MarkupRenderer:
 
     def render_comment(self, comment):
         assert isinstance(comment, str)
+        assert self.context_document is not None
+
         if comment in self.cache:
             return self.cache[comment]
         output = self.fragment_writer.write(comment)
@@ -105,6 +114,8 @@ class MarkupRenderer:
 
     def render_free_text(self, document_type, free_text):
         assert isinstance(free_text, FreeText)
+        assert self.context_document is not None
+
         if (document_type, free_text) in self.cache:
             return self.cache[free_text]
 
@@ -127,6 +138,8 @@ class MarkupRenderer:
 
     def render_meta_value(self, meta_field_value):
         assert isinstance(meta_field_value, str)
+        assert self.context_document is not None
+
         if meta_field_value in self.cache:
             return self.cache[meta_field_value]
 

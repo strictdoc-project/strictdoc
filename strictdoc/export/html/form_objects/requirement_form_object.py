@@ -340,7 +340,14 @@ class RequirementFormObject(ErrorObject):
     def enumerate_reference_fields(self):
         yield from self.reference_fields
 
-    def validate(self, *, traceability_index: TraceabilityIndex):
+    def validate(
+        self,
+        *,
+        traceability_index: TraceabilityIndex,
+        context_document: Document,
+    ):
+        assert isinstance(traceability_index, TraceabilityIndex)
+        assert isinstance(context_document, Document)
         requirement_statement = self.fields["STATEMENT"][
             0
         ].field_unescaped_value
@@ -353,9 +360,9 @@ class RequirementFormObject(ErrorObject):
             (
                 parsed_html,
                 rst_error,
-            ) = RstToHtmlFragmentWriter.write_with_validation(
-                requirement_statement
-            )
+            ) = RstToHtmlFragmentWriter(
+                context_document=context_document,
+            ).write_with_validation(requirement_statement)
             if parsed_html is None:
                 self.add_error("STATEMENT", rst_error)
 

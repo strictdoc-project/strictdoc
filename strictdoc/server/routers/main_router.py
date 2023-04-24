@@ -286,7 +286,9 @@ def create_main_router(
             (
                 parsed_html,
                 rst_error,
-            ) = RstToHtmlFragmentWriter.write_with_validation(section_content)
+            ) = RstToHtmlFragmentWriter(
+                context_document=document
+            ).write_with_validation(section_content)
             if parsed_html is None:
                 form_object.add_error("section_statement", rst_error)
 
@@ -480,6 +482,9 @@ def create_main_router(
         section_content = sanitize_html_form_field(
             section_content, multiline=True
         )
+        section: Section = export_action.traceability_index.get_node_by_id(
+            section_mid
+        )
 
         form_object = SectionFormObject(
             section_mid=section_mid,
@@ -496,13 +501,11 @@ def create_main_router(
             (
                 parsed_html,
                 rst_error,
-            ) = RstToHtmlFragmentWriter.write_with_validation(section_content)
+            ) = RstToHtmlFragmentWriter(
+                context_document=section.document
+            ).write_with_validation(section_content)
             if parsed_html is None:
                 form_object.add_error("section_statement", rst_error)
-
-        section: Section = export_action.traceability_index.get_node_by_id(
-            section_mid
-        )
 
         if form_object.any_errors():
             template = env.get_template(
@@ -764,7 +767,8 @@ def create_main_router(
             raise NotImplementedError
 
         form_object.validate(
-            traceability_index=export_action.traceability_index
+            traceability_index=export_action.traceability_index,
+            context_document=document,
         )
 
         if form_object.any_errors():
@@ -952,7 +956,8 @@ def create_main_router(
         )
 
         form_object.validate(
-            traceability_index=export_action.traceability_index
+            traceability_index=export_action.traceability_index,
+            context_document=document,
         )
 
         if form_object.any_errors():
@@ -1636,7 +1641,7 @@ def create_main_router(
                 request_form_data=request_form_data,
             )
         )
-        if not form_object.validate():
+        if not form_object.validate(context_document=document):
             template = env.get_template(
                 "actions/"
                 "document/"
@@ -2096,11 +2101,12 @@ def create_main_router(
 
     @router.get("/{full_path:path}", response_class=Response)
     def get_incoming_request(full_path: str):
-        if full_path.endswith(".html"):
+        _, file_extension = os.path.splitext(full_path)
+        if file_extension == ".html":
             return get_document(full_path)
-        if full_path.endswith(".css") or full_path.endswith(".js"):
+        if file_extension in (".css", ".js", ".svg"):
             return get_asset(full_path)
-        if full_path.endswith(".ico"):
+        if file_extension in (".ico", ".png", "gif", ".jpg", "jpeg"):
             return get_asset_binary(full_path)
 
         return HTMLResponse(content="Not Found", status_code=404)
@@ -2115,8 +2121,9 @@ def create_main_router(
         return HTMLResponse(content=content)
 
     def get_asset(url_to_asset: str):
-        static_path = environment.get_path_to_export_html()
-        static_file = os.path.join(static_path, url_to_asset)
+        project_output_path = export_config.output_html_root
+        static_file = os.path.join(project_output_path, url_to_asset)
+
         content_type, _ = guess_type(static_file)
 
         if not os.path.isfile(static_file):
@@ -2130,6 +2137,9 @@ def create_main_router(
         return Response(content, media_type=content_type)
 
     def get_asset_binary(url_to_asset: str):
+        project_output_path = export_config.output_html_root
+        static_file = os.path.join(project_output_path, url_to_asset)
+
         static_path = environment.get_path_to_export_html()
         static_file = os.path.join(static_path, url_to_asset)
         content_type, _ = guess_type(static_file)

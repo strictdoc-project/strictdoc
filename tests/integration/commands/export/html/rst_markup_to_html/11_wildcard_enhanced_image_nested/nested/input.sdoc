@@ -1,0 +1,6 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[FREETEXT]
+.. image:: _assets/picture.*
+[/FREETEXT]

@@ -127,7 +127,8 @@ class DocumentConfigFormObject(ErrorObject):
             document_freetext_escaped=document_freetext_escaped,
         )
 
-    def validate(self) -> bool:
+    def validate(self, context_document: Document) -> bool:
+        assert isinstance(context_document, Document)
         if len(self.document_title) == 0:
             self.add_error(
                 "TITLE",
@@ -138,9 +139,9 @@ class DocumentConfigFormObject(ErrorObject):
             (
                 parsed_html,
                 rst_error,
-            ) = RstToHtmlFragmentWriter.write_with_validation(
-                self.document_freetext_unescaped
-            )
+            ) = RstToHtmlFragmentWriter(
+                context_document=context_document
+            ).write_with_validation(self.document_freetext_unescaped)
             if parsed_html is None:
                 self.add_error("FREETEXT", rst_error)
 

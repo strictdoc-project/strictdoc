@@ -104,6 +104,9 @@ class ResizableBar {
 
       // Add control elements:
       bar.append(this._createHandler(id));
+
+      // Add testID:
+      this._addTestID(bar, id, 'bar');
     });
   }
 
@@ -192,6 +195,10 @@ class ResizableBar {
 
   // elements
 
+  _addTestID(element, id, attr) {
+    element.dataset.testid = `${id}-${attr}`;
+  }
+
   _updateBar(id) {
     const bar = this.state[id].element;
     const barState = this.state[id];
@@ -217,6 +224,10 @@ class ResizableBar {
     button.dataset.content = id;
     button.title = `Toggle ${id}`;
     button.addEventListener('mousedown', this._toggleHandler);
+
+    // Add testIDs:
+    this._addTestID(border, id, 'handler-border');
+    this._addTestID(button, id, 'handler-button');
 
     handler.append(border, button);
     return handler;

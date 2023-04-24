@@ -116,8 +116,9 @@ def create_main_router(
         enable_mathjax=False,
         experimental_enable_file_traceability=False,
     )
-    export_config.integrate_project_config(project_config)
-    export_config.configure_for_server(server_port=server_config.port)
+    export_config.integrate_configs(
+        project_config=project_config, server_config=server_config
+    )
     export_action = ExportAction(
         project_config=project_config,
         config=export_config,

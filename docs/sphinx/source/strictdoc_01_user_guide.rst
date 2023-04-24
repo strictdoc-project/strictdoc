@@ -1490,6 +1490,25 @@ This option specifies a project title.
     [project]
     title = "StrictDoc Documentation"
 
+Server configuration
+~~~~~~~~~~~~~~~~~~~~
+
+Host and port
+^^^^^^^^^^^^^
+
+By default, StrictDoc runs the server on ``127.0.0.1:5111``.
+
+Use the ``[server]`` section to configure the host and port as follows.
+
+.. code-block:: yaml
+
+    [project]
+    title = 'Test project with a host "localhost" and a port 5000'
+
+    [server]
+    host = "localhost"
+    port = 5000
+
 Command-line interface options
 ------------------------------
 

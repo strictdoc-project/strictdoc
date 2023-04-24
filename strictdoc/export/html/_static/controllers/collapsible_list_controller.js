@@ -117,16 +117,24 @@ function processList(list) {
 
     // add event listeners
     item.addEventListener('click', () => {
-      const state = item.dataset[BRANCH_SELECTOR];
-      const next = (state === 'closed') ? 'open' : 'closed';
-      item.dataset[BRANCH_SELECTOR] = next;
+      toggle(item);
     });
     item.addEventListener('dblclick', () => {
-      const state = item.dataset[BRANCH_SELECTOR];
-      const next = (state === 'closed') ? 'open' : 'closed';
-      // Add last bulk to local storage:
-      sessionStorage.setItem('collapsibleToc', next);
-      list.forEach(el => el.dataset[BRANCH_SELECTOR] = next);
+      bulkToggle(list, item.dataset[BRANCH_SELECTOR]);
     });
   })
+}
+
+function toggle(item) {
+  const oldState = item.dataset[BRANCH_SELECTOR];
+  const nextState = (oldState === 'closed') ? 'open' : 'closed';
+  item.dataset[BRANCH_SELECTOR] = nextState;
+}
+
+function bulkToggle(list, oldState) {
+  const nextState = (oldState === 'closed') ? 'open' : 'closed';
+  // Add last bulk to local storage:
+  sessionStorage.setItem('collapsibleToc', nextState);
+  // Update list:
+  list.forEach(el => el.dataset[BRANCH_SELECTOR] = nextState);
 }

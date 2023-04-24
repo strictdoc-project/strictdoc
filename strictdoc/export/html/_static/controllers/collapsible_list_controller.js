@@ -55,6 +55,67 @@ const STYLE = `
 [data-${BRANCH_SELECTOR}='open'] + ul {
   height: auto;
 }
+
+[${ROOT_SELECTOR}-bulk] {
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+  position: fixed;
+  margin-top: -16px;
+  margin-left: -8px;
+  pointer-events: none;
+  padding: 8px;
+  background: #F2F5F9;
+  box-shadow: #F2F5F9 0px 8px 8px 0px;
+}
+[${ROOT_SELECTOR}-bulk] + ${LIST_SELECTOR} {
+  margin-top: 32px;
+}
+[${ROOT_SELECTOR}-bulk] > div {
+  cursor: pointer;
+  user-select: none;
+  transition: .3s;
+  width: 16px;
+  height: 16px;
+  position: relative;
+  pointer-events: auto;
+}
+
+[${ROOT_SELECTOR}-bulk] > div::before {
+  content: attr(data-action);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -webkit-box-pack: center;
+  background-clip: padding-box;
+  width: 16px;
+  height: 16px;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 0;
+  border-radius: 50%;
+  background: #F2F5F9;
+  box-shadow: rgb(0 0 0 / 10%) 0 0px 0px 1px, rgb(0 0 0 / 10%) 2px 1px 1px 0px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+[${ROOT_SELECTOR}-bulk] > div:hover::before {
+  background: #FFF;
+}
+[${ROOT_SELECTOR}-bulk] > div::after {
+  content: '';
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  position: absolute;
+  box-shadow: rgb(0 0 0 / 15%) 0px 0px 0px 1px;
+  top: -2px;
+  left: 2px;
+  z-index: 1;
+}
 `;
 
 Stimulus.register("collapsible_list", class extends Controller {
@@ -76,6 +137,9 @@ Stimulus.register("collapsible_list", class extends Controller {
     if (branchList.length > 0) {
       processList(branchList);
       addStyleElement(this.element, STYLE);
+
+      // Uncomment to add buttons for bulk operations:
+      // listElement.before(createBulkHandler(branchList));
     }
   }
 
@@ -102,6 +166,27 @@ function prepareList(target) {
     }
   )
   return ulHandlerList;
+}
+
+function createBulkHandler(list) {
+  const bulk = document.createElement('div');
+  bulk.setAttribute(`${ROOT_SELECTOR}-bulk`, '');
+
+  const bulkPlus = document.createElement('div');
+  bulkPlus.dataset.action = SYMBOL_PLUS;
+  const bulkMinus = document.createElement('div');
+  bulkMinus.dataset.action = SYMBOL_MINUS;
+
+  // add event listeners
+  bulkPlus.addEventListener('click', () => {
+    bulkToggle(list, 'closed');
+  });
+  bulkMinus.addEventListener('click', () => {
+    bulkToggle(list, 'open');
+  });
+
+  bulk.append(bulkPlus, bulkMinus);
+  return bulk;
 }
 
 function processList(list) {

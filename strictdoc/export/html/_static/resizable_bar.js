@@ -15,6 +15,8 @@ class ResizableBar {
     barGravity,
     barMaxWidthVW,
     // styles
+    barPadding,
+    barPaddingBottom,
     barMinWidth,
     barClosedWidth,
     barHandlerWidth,
@@ -22,11 +24,15 @@ class ResizableBar {
     barColorBackground,
     barColorActive,
     barColorBorder,
+    barColorScrollbarTrack,
+    barColorScrollbarThumb,
   }) {
     this.barAttribute = barAttribute || 'js-resizable_bar';
     this.barMaxWidthVW = barMaxWidthVW || '25vw';
     this.barGravity = barGravity || 100;
     // styles
+    this.barPadding = barPadding || 'calc(var(--base-rhythm, 8px)*2)';
+    this.barPaddingBottom = barPaddingBottom || 'calc(var(--base-rhythm, 8px)*8)';
     this.barMinWidth = barMinWidth || 100;
     this.barClosedWidth = barClosedWidth || 12;
     this.barHandlerWidth = barHandlerWidth || 8;
@@ -34,6 +40,8 @@ class ResizableBar {
     this.barColorBackground = barColorBackground || 'var(--color-bg-main, White)';
     this.barColorActive = barColorActive || 'var(--color-fg-accent, currentColor)';
     this.barColorBorder = barColorBorder || 'var(--color-border, rgba(0,0,0,0.1))';
+    this.barColorScrollbarTrack = barColorScrollbarTrack || 'var(--scrollbarBG, transparent)';
+    this.barColorScrollbarThumb = barColorScrollbarThumb || 'var(--thumbBG, rgba(0,0,0,.05))';
 
     // state
     this.state = {
@@ -479,26 +487,29 @@ class ResizableBar {
   height: 100%;
   overflow-x: hidden;
   overflow-y: scroll;
-  padding: calc(var(--base-rhythm)*2);
-  padding-bottom: calc(var(--base-rhythm)*8);
-  scrollbar-color: transparent var(--scrollbarBG);
-  /* scrollbar-width: thin; */
+  padding: ${this.barPadding};
+  padding-bottom: ${this.barPaddingBottom};
+  scrollbar-color: ${this.barColorScrollbarTrack} ${this.barColorScrollbarTrack};
 }
 [${this.barAttribute}-scroll='y'] {
   overflow-x: hidden;
   overflow-y: scroll;
+
+  -webkit-mask-image:
+    linear-gradient(to bottom, transparent 16px, black 32px),
+    linear-gradient(to left, black 16px, transparent 16px);
+  mask-image:
+    linear-gradient(to bottom,transparent 16px,black 32px),
+    linear-gradient(to left,black 16px,transparent 16px);
 }
 [${this.barAttribute}-scroll]:hover {
-  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
-}
-[${this.barAttribute}-scroll]::-webkit-scrollbar {
-  /* width: var(--base-rhythm); */
+  scrollbar-color: ${this.barColorScrollbarThumb} ${this.barColorScrollbarTrack};
 }
 [${this.barAttribute}-scroll]::-webkit-scrollbar-thumb {
-  background-color: transparent;
+  background-color: ${this.barColorScrollbarTrack};
 }
 [${this.barAttribute}-scroll]:hover::-webkit-scrollbar-thumb {
-  background-color: var(--thumbBG)
+  background-color: ${this.barColorScrollbarThumb}
 }
 
 [data-state="closed"] [${this.barAttribute}-scroll] {

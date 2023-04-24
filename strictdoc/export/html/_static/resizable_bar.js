@@ -494,13 +494,6 @@ class ResizableBar {
 [${this.barAttribute}-scroll='y'] {
   overflow-x: hidden;
   overflow-y: scroll;
-
-  -webkit-mask-image:
-    linear-gradient(to bottom, transparent 16px, black 32px),
-    linear-gradient(to left, black 16px, transparent 16px);
-  mask-image:
-    linear-gradient(to bottom,transparent 16px,black 32px),
-    linear-gradient(to left,black 16px,transparent 16px);
 }
 [${this.barAttribute}-scroll]:hover {
   scrollbar-color: ${this.barColorScrollbarThumb} ${this.barColorScrollbarTrack};

@@ -16,6 +16,10 @@ class TOC:  # pylint: disable=invalid-name  # noqa: E501
         self.assert_toc_panel()
 
     def assert_toc_panel(self) -> None:
+        self.test_case.assert_element(
+            '//*[@data-testid="toc-bar"]',
+            by=By.XPATH,
+        )
         self.test_case.assert_element_present(
             '//*[@data-testid="toc-list"]',
             by=By.XPATH,
@@ -23,14 +27,14 @@ class TOC:  # pylint: disable=invalid-name  # noqa: E501
 
     def assert_toc_handler(self) -> None:
         self.test_case.assert_element(
-            "//*[@data-testid='toc-handler']",
+            "//*[@data-testid='toc-handler-button']",
             by=By.XPATH,
         )
 
     def assert_toc_opened(self) -> None:
-        # body has attribute
+        # toc bar has attribute
         self.test_case.assert_element(
-            '//body[@data-toc_state="open"]',
+            '//*[@data-testid="toc-bar"][@data-state="open"]',
             by=By.XPATH,
         )
         # toc is visible
@@ -40,9 +44,9 @@ class TOC:  # pylint: disable=invalid-name  # noqa: E501
         )
 
     def assert_toc_closed(self) -> None:
-        # body has attribute
+        # toc bar has attribute
         self.test_case.assert_element(
-            '//body[@data-toc_state="close"]',
+            '//*[@data-testid="toc-bar"][@data-state="closed"]',
             by=By.XPATH,
         )
         # toc is hidden
@@ -52,18 +56,18 @@ class TOC:  # pylint: disable=invalid-name  # noqa: E501
         )
 
     def do_toggle_toc(self) -> None:
-        self.test_case.click_xpath("//*[@data-testid='toc-handler']")
+        self.test_case.click_xpath("//*[@data-testid='toc-handler-button']")
 
     def assert_toc_contains(self, string: str) -> None:
         """The string does not need be visible (TOC may be hidden)."""
         self.test_case.assert_element_present(
-            f"//turbo-frame[@id='frame-toc']//*[contains(., '{string}')]",
+            f"//*[@data-testid='toc-list']//*[contains(., '{string}')]",
             by=By.XPATH,
         )
 
     def assert_toc_contains_not(self, string: str) -> None:
         """The string should not be contained in the TOC (it may be hidden)."""
         self.test_case.assert_element_not_present(
-            f"//turbo-frame[@id='frame-toc']//*[contains(., '{string}')]",
+            f"//*[@data-testid='toc-list']//*[contains(., '{string}')]",
             by=By.XPATH,
         )

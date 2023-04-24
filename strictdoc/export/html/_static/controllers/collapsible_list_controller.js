@@ -2,12 +2,15 @@
 
 import { Controller } from "/_static/stimulus.js";
 
-const ROOT_SELECTOR = '[js-collapsible_list]';
-const LIST_SELECTOR = '[js-collapsible_list="list"]';
+const ROOT_SELECTOR = 'js-collapsible_list';
+const LIST_SELECTOR = `[${ROOT_SELECTOR}="list"]`;
+const BRANCH_SELECTOR = `collapsible_list__branch`;
 const LIST_DEFAULT = 'open';
+const SYMBOL_MINUS = '－';
+const SYMBOL_PLUS = '＋';
 
 const STYLE = `
-[data-collapsible_list__branch] {
+[data-${BRANCH_SELECTOR}] {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -30,26 +33,26 @@ const STYLE = `
   left: -8px;
 }
 
-[data-collapsible_list__branch]:hover {
+[data-${BRANCH_SELECTOR}]:hover {
   border: 1px solid rgba(0, 0, 0, 0.15);
-  box-shadow: rgb(0 0 0 / 15%) 0px 2px var(--base-rhythm) 0px;
+  box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px 0px;
   color: rgba(0,0,0,1);
 }
 
-.toc [data-collapsible_list__branch='closed']::before {
-  content: '＋';
+[data-${BRANCH_SELECTOR}='closed']::before {
+  content: '${SYMBOL_PLUS}';
 }
 
-.toc [data-collapsible_list__branch='open']::before {
-  content: '－';
+[data-${BRANCH_SELECTOR}='open']::before {
+  content: '${SYMBOL_MINUS}';
 }
 
-[data-collapsible_list__branch='closed'] + ul {
+[data-${BRANCH_SELECTOR}='closed'] + ul {
   height: 0;
   overflow: hidden;
 }
 
-[data-collapsible_list__branch='open'] + ul {
+[data-${BRANCH_SELECTOR}='open'] + ul {
   height: auto;
 }
 `;
@@ -110,20 +113,20 @@ function processList(list) {
   const initState = storage || LIST_DEFAULT;
 
   list.forEach(item => {
-    item.dataset.collapsible_list__branch = initState;
+    item.dataset[BRANCH_SELECTOR] = initState;
 
     // add event listeners
     item.addEventListener('click', () => {
-      const state = item.dataset.collapsible_list__branch;
+      const state = item.dataset[BRANCH_SELECTOR];
       const next = (state === 'closed') ? 'open' : 'closed';
-      item.dataset.collapsible_list__branch = next;
+      item.dataset[BRANCH_SELECTOR] = next;
     });
     item.addEventListener('dblclick', () => {
-      const state = item.dataset.collapsible_list__branch;
+      const state = item.dataset[BRANCH_SELECTOR];
       const next = (state === 'closed') ? 'open' : 'closed';
       // Add last bulk to local storage:
       sessionStorage.setItem('collapsibleToc', next);
-      list.forEach(el => el.dataset.collapsible_list__branch = next);
+      list.forEach(el => el.dataset[BRANCH_SELECTOR] = next);
     });
   })
 }

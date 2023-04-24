@@ -695,13 +695,6 @@ a.tree_item:hover {
   opacity:0.6;
 }
 
-/* menu vs arrow icon */
-
-[data-toc_state="close"] line.arrw,
-[data-toc_state="open"] line.horz {
-  display: none;
-}
-
 /* toc */
 
 .toc,

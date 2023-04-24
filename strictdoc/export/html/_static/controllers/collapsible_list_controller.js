@@ -4,7 +4,7 @@ import { Controller } from "/_static/stimulus.js";
 
 const ROOT_SELECTOR = '[js-collapsible_list]';
 const LIST_SELECTOR = '[js-collapsible_list="list"]';
-const LIST_DEFAULT = 0;
+const LIST_DEFAULT = 'open';
 
 const STYLE = `
 [data-collapsible_list__branch] {
@@ -36,20 +36,20 @@ const STYLE = `
   color: rgba(0,0,0,1);
 }
 
-.toc [data-collapsible_list__branch='1']::before {
+.toc [data-collapsible_list__branch='closed']::before {
   content: '＋';
 }
 
-.toc [data-collapsible_list__branch='0']::before {
+.toc [data-collapsible_list__branch='open']::before {
   content: '－';
 }
 
-[data-collapsible_list__branch='1'] + ul {
+[data-collapsible_list__branch='closed'] + ul {
   height: 0;
   overflow: hidden;
 }
 
-[data-collapsible_list__branch='0'] + ul {
+[data-collapsible_list__branch='open'] + ul {
   height: auto;
 }
 `;
@@ -115,12 +115,12 @@ function processList(list) {
     // add event listeners
     item.addEventListener('click', () => {
       const state = item.dataset.collapsible_list__branch;
-      const next = (state === '1') ? '0' : '1';
+      const next = (state === 'closed') ? 'open' : 'closed';
       item.dataset.collapsible_list__branch = next;
     });
     item.addEventListener('dblclick', () => {
       const state = item.dataset.collapsible_list__branch;
-      const next = (state === '1') ? '0' : '1';
+      const next = (state === 'closed') ? 'open' : 'closed';
       // Add last bulk to local storage:
       sessionStorage.setItem('collapsibleToc', next);
       list.forEach(el => el.dataset.collapsible_list__branch = next);

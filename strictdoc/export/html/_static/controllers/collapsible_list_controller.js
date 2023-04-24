@@ -71,7 +71,7 @@ Stimulus.register("collapsible_list", class extends Controller {
     // Do it if that makes sense (if there are branches
     // in the list that could in principle be collapsible):
     if (branchList.length > 0) {
-      processList(branchList, probablyHasScroll(listElement));
+      processList(branchList);
       addStyleElement(this.element, STYLE);
     }
   }
@@ -83,25 +83,6 @@ function addStyleElement(target, styleTextContent) {
   style.setAttribute("collapsible-list-style", '');
   style.textContent = styleTextContent;
   target.prepend(style);
-}
-
-function hasScroll(target) {
-  // Check if a fully open list makes a scroll for its container.
-  // *
-  // The calculation assumes that `target` is a wrapping element with a scroll.
-  // This element is added by another script.
-  // We cannot guarantee that this item will be ready at the time the script runs.
-  // That's why we do another function probablyHasScroll() as a temporary solution.
-  return target.scrollHeight > target.clientHeight;
-}
-
-function probablyHasScroll(target) {
-  // Check if a fully open list makes a scroll for its container.
-  // Expect the target to be a content element
-  // (unlike the first function hasScroll(target)).
-  // The estimated height, which will not generate scrolling, is taken approximately.
-  const temporarySolution = document.body.clientHeight - 100;  // 48 - 32 - 16 ...
-  return target.scrollHeight > temporarySolution;
 }
 
 function prepareList(target) {
@@ -120,18 +101,13 @@ function prepareList(target) {
   return ulHandlerList;
 }
 
-function processList(list, hasScroll = true) {
+function processList(list) {
   // This defines how a document is opened:
   // with a collapsed or expanded TOC.
   const storage = sessionStorage.getItem('collapsibleToc');
-  console.log(storage);
 
-  // If there is no information in the storage,
-  // we end up in the default case and use hasScroll.
-  // If the fully open list is long enough and creates a scroll,
-  // for its container, we collapse all branches (Each one gets '1').
-  // Otherwise it is not necessary and we leave branches expanded ('0').
-  const initState = storage || (hasScroll ? '1' : '0');
+  // If there is no information in the storage, we set the default list state.
+  const initState = storage || LIST_DEFAULT;
 
   list.forEach(item => {
     item.dataset.collapsible_list__branch = initState;

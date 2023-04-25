@@ -34,7 +34,7 @@ class LinkRenderer:
         return static_url
 
     # This rarely used helper adds slashes to the import statements within
-    # <script type="module">, for example document_tree.jinja.html.
+    # <script type="module">, for example project_index/index.jinja.
     # Otherwise, scripts are not imported correctly.
     def render_static_url_with_prefix(self, url):
         static_url = "/" + self.static_path + "/" + url

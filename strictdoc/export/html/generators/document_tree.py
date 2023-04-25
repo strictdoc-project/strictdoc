@@ -19,7 +19,7 @@ class DocumentTreeHTMLGenerator:
         )
 
         template = DocumentTreeHTMLGenerator.env.get_template(
-            "project_index/index.jinja"
+            "screens/project_index/index.jinja"
         )
         link_renderer = LinkRenderer(
             root_path="", static_path=config.dir_for_sdoc_assets

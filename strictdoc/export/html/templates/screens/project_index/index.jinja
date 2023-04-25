@@ -38,7 +38,7 @@
     <div class="header__r">
       <div class="actions_group">
         {%- if config.is_running_on_server -%}
-          {% include "project_index/project_index_actions.jinja.html" %}
+          {% include "screens/project_index/project_index_actions.jinja.html" %}
         {%- endif -%}
       </div>
     </div>
@@ -46,5 +46,5 @@
 {% endblock header_content %}
 
 {% block content %}
-  {% include "project_index/frame_project_tree.jinja.html" %}
+  {% include "screens/project_index/frame_project_tree.jinja.html" %}
 {% endblock content %}

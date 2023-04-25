@@ -5,6 +5,7 @@
 [data-viewtype="document"] .content {
   display: block;
   max-width: 900px;
+  margin-bottom: 300px;
 }
 
 [data-viewtype="traceability"] .content {

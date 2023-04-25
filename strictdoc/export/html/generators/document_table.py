@@ -23,7 +23,7 @@ class DocumentTableHTMLGenerator:
         )
 
         template = DocumentTableHTMLGenerator.env.get_template(
-            "single_document_table/document.jinja.html"
+            "screens/document/table/index.jinja"
         )
 
         document_iterator = traceability_index.get_document_iterator(document)

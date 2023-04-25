@@ -5,7 +5,9 @@
 {%- endif -%}
 
 <turbo-frame id="article-{{form_object.requirement_mid}}">
-<sdoc-form>
+<sdoc-form
+  data-controller="scroll_into_view"
+>
 
 <form
   action="{{url}}"

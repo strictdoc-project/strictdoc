@@ -16,7 +16,9 @@
   {%- endif -%}
   <input type="hidden" id="section_mid" name="section_mid" value="{{form_object.section_mid}}" />
 
-  <sdoc-form>
+  <sdoc-form
+    data-controller="scroll_into_view"
+  >
 
     <sdoc-form-grid>
       {%- with

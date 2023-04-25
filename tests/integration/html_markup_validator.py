@@ -78,24 +78,26 @@ try:
 except Exception as e:
     errors.append(f"Error: {str(e)}")
 
+MESSAGE_PREFIX = "HTML markup validation COMPLETED"
+
 if len(errors) > 0 or len(warnings) > 0:
     for message in warnings + errors:
         print(message)  # noqa: T201
 
     if len(errors) > 0:
         print(  # noqa: T201
-            "Validation COMPLETED: {} errors, {} warnings".format(
-                len(errors), len(warnings)
+            "{}: {}: {} errors, {} warnings".format(
+                MESSAGE_PREFIX, input_file, len(errors), len(warnings)
             )
         )
         exit(1)
     else:
         # Warnings are ok for now.
         print(  # noqa: T201
-            "Validation COMPLETED: {} errors, {} warnings".format(
-                len(errors), len(warnings)
+            "{}: {}: {} errors, {} warnings".format(
+                MESSAGE_PREFIX, input_file, len(errors), len(warnings)
             )
         )
         exit(0)
 else:
-    print("Validation COMPLETED: 0 errors, 0 warnings")  # noqa: T201
+    print(f"{MESSAGE_PREFIX}: {input_file}: 0 errors, 0 warnings")  # noqa: T201

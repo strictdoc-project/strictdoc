@@ -1,40 +1,12 @@
-
-
-{# TODO: turbo-frame & JS stimulus controller #}
-
-<div class="toc_panel">
-
-<div
-  data-testid="toc-handler"
-  js-toc-handler='true' {# FIXME: issue#1098 #}
-  class="toc_handler nav_button"
->
-  {% include "_res/svg_ico16_toc.jinja.html" %}
-</div>
-
 <turbo-frame
   id="frame-toc"
   style="display: contents"
-  js-collapsible_list='true' {# FIXME: issue#1098 #}
+  js-collapsible_list="true" {# FIXME: issue#1098 #}
   data-controller="collapsible_list"
 >
-
-  <div class="toc_panel__overlay">
-    <div class="toc_panel__control">
-      <div
-        js-collapsible_list-control='true' {# FIXME: issue#1098 #}
-      ></div>
-    </div>
-  </div>
-
-  <div
-    js-collapsible_list-container='true' {# FIXME: issue#1098 #}
-    class="toc_panel__content"
-  >
-
     <ul
       data-testid="toc-list"
-      js-collapsible_list-list='true' {# FIXME: issue#1098 #}
+      js-collapsible_list="list"
       class="toc"
     >
     {%- for section in document_iterator.table_of_contents() -%}
@@ -93,6 +65,4 @@
         </ul>
       {%- endif -%}
     {%- endfor %}
-  </div>
 </turbo-frame>
-</div>

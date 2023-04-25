@@ -19,8 +19,7 @@
   {% endblock head_css %}
 
   {% block head_scripts %}
-  {# moved to docs templates: #}
-  {# <script type="text/javascript" src="{{link_renderer.render_static_url('_static/toc.js')}}"></script> #}
+  {# moved to docs templates #}
   {% endblock head_scripts %}
 
   <title>{% block title %}{% endblock title %}</title>
@@ -29,7 +28,6 @@
 </head>
 
 <body data-viewtype="{% block viewtype %}{% endblock %}" data-turbo="false">
-<script>document.body.dataset.toc_state = sessionStorage.getItem('tocState') || 'open';</script>
 
   {%- include "websocket.jinja.html" -%}
 
@@ -42,9 +40,13 @@
       {% endblock layout_nav %}
     </nav>
 
-    <div class="layout_toc">
+    <aside class="layout_tree">
+      {% block tree_content %}{% endblock %}
+    </aside>
+
+    <aside class="layout_toc">
       {% block toc_content %}{% endblock %}
-    </div>
+    </aside>
 
     <header class="layout_header">
       {% block header_content %}{% endblock %}

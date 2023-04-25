@@ -1,6 +1,6 @@
 [project]
-title = 'Test project with a host "localhost" and a port 5000'
+title = 'Test project with a host "localhost" and a port 51000'
 
 [server]
 host = "localhost"
-port = 5000
+port = 51000

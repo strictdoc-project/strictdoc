@@ -33,7 +33,7 @@ Stimulus.register("editablefield", class extends Controller {
       hidden.value = text;
     });
 
-    if(isSingle) {
+    if (isSingle) {
       editable.addEventListener('keydown', (event) => {
         if (event.key === 'Enter') {
           event.preventDefault();

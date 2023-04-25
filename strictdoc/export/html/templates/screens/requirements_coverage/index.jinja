@@ -23,7 +23,7 @@
 {% endblock layout_nav %}
 
 {% block toc_content %}
-  {% include "requirements_coverage/document_list.jinja.html" %}
+  {% include "screens/requirements_coverage/document_list.jinja.html" %}
 {% endblock toc_content %}
 
 {% block header_content %}
@@ -46,12 +46,12 @@
           {%- set requirement = section_or_requirement %}
           <div class="content_item" data-role="current">
             {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
-            {% include "requirements_coverage/requirement.jinja.html" %}
+            {% include "screens/requirements_coverage/requirement.jinja.html" %}
             {%- endwith -%}
           </div>
 
           <div class="content_item" data-role="children">
-          {%- with requirement=section_or_requirement, requirement_partial="requirements_coverage/requirement.jinja.html" -%}
+          {%- with requirement=section_or_requirement, requirement_partial="screens/requirements_coverage/requirement.jinja.html" -%}
             {% include "_shared/requirement_tree_right.jinja.html" %}
           {%- endwith -%}
           </div>

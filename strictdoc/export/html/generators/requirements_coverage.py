@@ -23,7 +23,7 @@ class RequirementsCoverageHTMLGenerator:
         output = ""
 
         template = RequirementsCoverageHTMLGenerator.env.get_template(
-            "requirements_coverage/requirements_coverage.jinja.html"
+            "screens/requirements_coverage/index.jinja"
         )
 
         link_renderer = LinkRenderer(

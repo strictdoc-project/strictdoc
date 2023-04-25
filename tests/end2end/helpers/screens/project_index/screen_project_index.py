@@ -4,15 +4,15 @@ from seleniumbase import BaseCase
 from tests.end2end.helpers.screens.document.screen_document import (
     Screen_Document,
 )
-from tests.end2end.helpers.screens.document_tree.form_add_document import (
+from tests.end2end.helpers.screens.project_index.form_add_document import (
     Form_AddDocument,
 )
-from tests.end2end.helpers.screens.document_tree.form_import_reqif import (
+from tests.end2end.helpers.screens.project_index.form_import_reqif import (
     Form_ImportReqIF,
 )
 
 
-class Screen_DocumentTree:  # pylint: disable=invalid-name
+class Screen_ProjectIndex:  # pylint: disable=invalid-name
     def __init__(self, test_case: BaseCase) -> None:
         assert isinstance(test_case, BaseCase)
         self.test_case: BaseCase = test_case

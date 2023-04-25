@@ -24,7 +24,6 @@ Stimulus.register("dropdown_menu", class extends Controller {
   }
 
   registerListEvents(params) {
-
     const toggle = this.element.querySelector(HANDLER_SELECTOR);
     const content = this.element.querySelector(LIST_SELECTOR);
 
@@ -43,11 +42,14 @@ Stimulus.register("dropdown_menu", class extends Controller {
       JSON.parse(toggle.getAttribute('aria-expanded')) ? hide() : show();
     })
 
+    const buttonList = [...content.querySelectorAll('a')];
+    buttonList.forEach(button => {
+      button.addEventListener('click', event => hide());
+    })
+
     const handleClosure = event => !content.contains(event.target) && hide();
 
     window.addEventListener('click', handleClosure);
     window.addEventListener('focusin', handleClosure);
-
-
   }
 });

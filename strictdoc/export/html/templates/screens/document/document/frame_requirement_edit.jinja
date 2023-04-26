@@ -42,7 +42,7 @@
     {# Parent links #}
 
     {%- for field in form_object.enumerate_reference_fields() -%}
-      {% include "_shared/requirement_edit_field_parent_link.jinja.html" %}
+      {% include "screens/document/document/frame_requirement_edit_field_parent_link.jinja" %}
     {%- endfor -%}
 
     <div id="requirement_{{form_object.requirement_mid}}__new_parent_link"></div>
@@ -66,7 +66,7 @@
           show only the add field button below,
           and do not display the code of the field itself: #}
           {%- if field.field_escaped_value|length > 0 -%}
-            {% include "_shared/requirement_edit_field_comment.jinja" %}
+            {% include "screens/document/document/frame_requirement_edit_field_comment.jinja" %}
           {%- endif -%}
         {%- else -%}
           {%- with

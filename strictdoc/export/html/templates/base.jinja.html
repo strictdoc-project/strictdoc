@@ -49,7 +49,12 @@
     </aside>
 
     <header class="layout_header">
-      {% block header_content %}{% endblock %}
+      <div class="header">
+        {% block header_content %}{% endblock %}
+        <div class="header__r">
+          {% block header_right_content %}{% endblock %}
+        </div>
+      </div>
     </header>
 
     <main class="layout_main" id="pan_with_space">
@@ -57,7 +62,6 @@
     </main>
 
     <footer class="layout_footer">
-    {# layout_footer #}
       <div class="footer">
         Built with
         <a
@@ -76,7 +80,6 @@
           {{ strictdoc_version }}
         </a>
       </div>
-    {% block footer_content %}{% endblock %}
     </footer>
 
     <aside class="layout_aside">

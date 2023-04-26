@@ -49,17 +49,15 @@
 {% endblock toc_content %}
 
 {% block header_content %}
-<div class="header">
   {% include "_shared/document_header.jinja.html" %}
-  <div class="header__r">
-    <div class="actions_group">
-    {%- if config.is_running_on_server -%}
-      {% include "screens/document/document/actions.jinja" %}
-    {%- endif -%}
-    </div>
-  </div>
-</div>
 {% endblock header_content %}
+{% block header_right_content %}
+  <div class="actions_group">
+  {%- if config.is_running_on_server -%}
+    {% include "screens/document/document/actions.jinja" %}
+  {%- endif -%}
+  </div>
+{% endblock header_right_content %}
 
 {% block content %}
   {% include "screens/document/document/frame_document_content.jinja.html" %}

@@ -52,11 +52,7 @@
   {% include "_shared/document_header.jinja.html" %}
 {% endblock header_content %}
 {% block header_right_content %}
-  <div class="actions_group">
-  {%- if config.is_running_on_server -%}
-    {% include "screens/document/document/actions.jinja" %}
-  {%- endif -%}
-  </div>
+  {% include "screens/document/document/actions.jinja" %}
 {% endblock header_right_content %}
 
 {% block content %}

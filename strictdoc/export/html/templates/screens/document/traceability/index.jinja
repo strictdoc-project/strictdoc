@@ -44,9 +44,15 @@
 {% endblock toc_content %}
 
 {% block header_content %}
-  {% include "_shared/document_header.jinja.html" %}
+  {%- with
+      header__items=[
+        "screens/document/_shared/frame_header_document_title.jinja",
+        "screens/document/_shared/viewtype_menu.jinja"
+      ]
+  -%}
+    {% include "components/header/index.jinja" %}
+  {%- endwith -%}
 {% endblock header_content %}
-{% block header_right_content %}{% endblock %}
 
 {% block content %}
 

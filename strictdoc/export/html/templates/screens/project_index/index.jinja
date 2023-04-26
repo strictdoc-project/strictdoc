@@ -33,11 +33,13 @@
 {% endblock toc_content %}
 
 {% block header_content %}
-  {% include "_shared/project_header.jinja.html" %}
+  {%- with
+      header__pagetype=true,
+      header__last="screens/project_index/actions.jinja"
+  -%}
+    {% include "components/header/index.jinja" %}
+  {%- endwith -%}
 {% endblock header_content %}
-{% block header_right_content %}
-  {% include "screens/project_index/actions.jinja" %}
-{% endblock header_right_content %}
 
 {% block content %}
   {% include "screens/project_index/frame_project_tree.jinja.html" %}

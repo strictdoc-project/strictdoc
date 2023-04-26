@@ -27,9 +27,10 @@
 {% endblock toc_content %}
 
 {% block header_content %}
-  {% include "_shared/project_header.jinja.html" %}
+  {%- with header__pagetype=true -%}
+    {% include "components/header/index.jinja" %}
+  {%- endwith -%}
 {% endblock header_content %}
-{% block header_right_content %}{% endblock %}
 
 {% block content %}
 

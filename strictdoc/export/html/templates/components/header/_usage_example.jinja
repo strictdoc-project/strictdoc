@@ -1,0 +1,15 @@
+{#
+  header__items=["template1.jinja", "template2.jinja"],
+  header__pagetype=true,
+  header__last="template.jinja"
+#}
+
+  {%- with
+      header__items=[
+        "screens/document/_shared/frame_header_document_title.jinja",
+        "screens/document/_shared/viewtype_menu.jinja"
+      ],
+      header__last="screens/document/document/actions.jinja"
+  -%}
+    {% include "components/header/index.jinja" %}
+  {%- endwith -%}

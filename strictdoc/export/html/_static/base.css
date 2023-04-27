@@ -49,9 +49,6 @@
   --base-padding: var(--base-font-size);
   --base-margin: calc(var(--base-font-size)*1.5);
 
-  --toc-width: 300px;
-  --toc-layout-transition: 0.1s;
-
   --base-elevation-0: 0 0 0 rgba(0,0,0,0);
   --base-elevation-node: 0 0 16px rgba(0,0,0,.1);
   --base-elevation-modal: 0 0 32px rgba(0,0,0,.32);

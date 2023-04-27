@@ -21,18 +21,8 @@
   place-items: stretch stretch;
   place-content: stretch stretch;
 
-  transition: margin-left var(--toc-layout-transition);
-
   overflow: hidden; /* Prevents scrolling before children's styles are triggered */
 }
-
-/* .layout:after {
-  content: '';
-  grid-area: main / main / footer / footer;
-  box-shadow: var(--main-elevation-shadow);
-  pointer-events: none;
-  z-index: 2;
-} */
 
 .layout_nav {
   grid-area: nav;

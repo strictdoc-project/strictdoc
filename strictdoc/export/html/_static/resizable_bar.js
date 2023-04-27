@@ -28,7 +28,7 @@ class ResizableBar {
     barColorScrollbarThumb,
   }) {
     this.barAttribute = barAttribute || 'js-resizable_bar';
-    this.barMaxWidthVW = barMaxWidthVW || '25vw';
+    this.barMaxWidthVW = barMaxWidthVW || '20vw';
     this.barGravity = barGravity || 100;
     // styles
     this.barPadding = barPadding || 'calc(var(--base-rhythm, 8px)*2)';

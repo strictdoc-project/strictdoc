@@ -47,6 +47,7 @@ class ResizableBar {
     this.state = {
       current: {
         id: null,
+        direction: null, // 1||-1
         pageX: null
       }
     };
@@ -81,6 +82,8 @@ class ResizableBar {
     [...document.querySelectorAll(`[${this.barAttribute}]`)]
     .forEach((bar) => {
       const id = bar.getAttribute(this.barAttribute);
+      const position = bar.dataset.position;
+      const direction = (bar.dataset.position === 'left') ? 1 : -1;;
       const state = this._sessionStorageGetItem(id, 'state') || this.initialState;
       const width = this._sessionStorageGetItem(id, 'width');
 
@@ -89,10 +92,11 @@ class ResizableBar {
       this._setState({
         id: id,
         element: bar,
-        position: bar.dataset.position,
+        position: position,
+        direction: direction,
         state: state,
-        width: width, // bar.offsetWidth,
-      })
+        width: width,
+      });
 
       // Update Bar with data from Storage:
       this._updateBar(id);
@@ -146,12 +150,14 @@ class ResizableBar {
     element,
     state,
     position,
+    direction,
     width,
   }) {
     this.state[id] = {
       element: element,
       state: state,
       position: position,
+      direction: direction,
       width: width,
     };
   }
@@ -161,6 +167,7 @@ class ResizableBar {
     element,
     state,
     position,
+    direction,
     width,
   }) {
     console.assert(id, '_updateState(): ID must be provided');
@@ -169,6 +176,7 @@ class ResizableBar {
     if (element) { this.state[id].element = element; }
     if (state) { this.state[id].state = state; }
     if (position) { this.state[id].position = position; }
+    if (direction) { this.state[id].direction = direction; }
     if (width) { this.state[id].width = width; }
   }
 
@@ -254,23 +262,35 @@ class ResizableBar {
 
   _onMouseMove(e) {
     // Resizing
+    const currentId = this.state.current.id;
+    const currentX = this.state.current.pageX;
+    const currentBar = this.state[currentId].element;
+
     requestAnimationFrame(() => {
-      if (this.state.current.id) {
-        const delta = e.pageX - this.state.current.pageX;
-        const w = this.state[this.state.current.id].width + delta;
+      // currentId exists if a resize has been initiated
+      if (currentId) {
 
-        this.state[this.state.current.id].element.style.width = w + 'px';
+        // Resize
+        // * delta: the distance traveled by the mouse, starting from the initial point
+        const delta = e.pageX - currentX;
+        // * this.state[currentId].direction = 1 || -1
+        // * w: current bar width
+        const w = this.state[currentId].width + this.state[currentId].direction * delta;
 
+        // Rendering the change in width of the bar:
+        currentBar.style.width = w + 'px';
+
+        // Close/Open
         if (w < this.barGravity) {
-          if (this.state[this.state.current.id].state == 'open') {
-            this._close(this.state.current.id);
+          if (this.state[currentId].state == 'open') {
+            console.log(w, 'w < this.barGravity')
+            this._close(currentId);
           }
         } else {
-          if (this.state[this.state.current.id].state == 'closed') {
-            this._open(this.state.current.id);
+          if (this.state[currentId].state == 'closed') {
+            this._open(currentId);
           }
         }
-
       }
     })
   }
@@ -285,7 +305,6 @@ class ResizableBar {
     this._sessionStorageSetItem(this.state.current.id, 'width', currentWidth); // WRITE DATA TO STORAGE
     this._updateBar(this.state.current.id);
     this._updateCurrent(e);
-
   }
 
   _toggle(e) {

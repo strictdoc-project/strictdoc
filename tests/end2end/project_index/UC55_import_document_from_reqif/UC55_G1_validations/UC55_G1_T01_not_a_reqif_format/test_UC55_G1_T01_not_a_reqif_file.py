@@ -2,11 +2,11 @@ import os
 
 from seleniumbase import BaseCase
 
-from tests.end2end.helpers.screens.document_tree.form_import_reqif import (
+from tests.end2end.helpers.screens.project_index.form_import_reqif import (
     Form_ImportReqIF,
 )
-from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
-    Screen_DocumentTree,
+from tests.end2end.helpers.screens.project_index.screen_project_index import (
+    Screen_ProjectIndex,
 )
 from tests.end2end.server import SDocTestServer
 
@@ -23,12 +23,12 @@ class Test_UC55_G1_T01_NotAReqIFormat(BaseCase):
         ) as test_server:
             self.open(test_server.get_host_and_port())
 
-            screen_document_tree = Screen_DocumentTree(self)
-            screen_document_tree.assert_on_screen()
-            screen_document_tree.assert_empty_tree()
+            screen_project_index = Screen_ProjectIndex(self)
+            screen_project_index.assert_on_screen()
+            screen_project_index.assert_empty_tree()
 
             form_import: Form_ImportReqIF = (
-                screen_document_tree.do_open_modal_import_reqif()
+                screen_project_index.do_open_modal_import_reqif()
             )
             form_import.do_choose_file(path_to_reqif_sample)
 

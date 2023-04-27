@@ -6,8 +6,8 @@ from seleniumbase import BaseCase
 
 from tests.end2end.conftest import DOWNLOADED_FILES_PATH, test_environment
 from tests.end2end.end2end_test_setup import End2EndTestSetup
-from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
-    Screen_DocumentTree,
+from tests.end2end.helpers.screens.project_index.screen_project_index import (
+    Screen_ProjectIndex,
 )
 from tests.end2end.server import SDocTestServer
 
@@ -27,10 +27,10 @@ class Test_UC56_T01_ExportTreeToReqIF(BaseCase):
         ) as test_server:
             self.open(test_server.get_host_and_port())
 
-            screen_document_tree = Screen_DocumentTree(self)
-            screen_document_tree.assert_on_screen()
+            screen_project_index = Screen_ProjectIndex(self)
+            screen_project_index.assert_on_screen()
 
-            screen_document_tree.do_export_reqif()
+            screen_project_index.do_export_reqif()
 
             # FIXME: does not work on Linux CI
             if platform == "linux" or platform == "linux2":

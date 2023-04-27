@@ -1,0 +1,18 @@
+{%- if config.is_running_on_server -%}
+<div class="actions_group">
+  <a
+    href="/actions/document/edit_grammar?document_mid={{document.node_id}}"
+    class="action_button"
+    data-turbo="true"
+    data-turbo-action="replace"
+    title="Edit document grammar"
+    data-testid="document-edit-grammar-action"
+  >{% include "_res/svg_ico16_gear.jinja.html" %} Edit grammar</a>
+
+  <a
+    class="action_button"
+    href="/reqif/export_document/{{document.node_id}}"
+    data-testid="document-export-reqif-action"
+  >Export to ReqIF</a>
+</div>
+{%- endif -%}

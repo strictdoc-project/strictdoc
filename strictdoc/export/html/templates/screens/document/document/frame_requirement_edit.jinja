@@ -1,0 +1,119 @@
+{%- if is_new_requirement -%}
+  {%- set url="/actions/document/create_requirement" %}
+{%- else -%}
+  {%- set url="/actions/document/update_requirement" %}
+{%- endif -%}
+
+<turbo-frame id="article-{{form_object.requirement_mid}}">
+<sdoc-form
+  data-controller="scroll_into_view"
+>
+
+<form
+  action="{{url}}"
+  method="POST"
+  data-turbo="true"
+>
+  {%- if is_new_requirement -%}
+    <input type="hidden" id="reference_mid" name="reference_mid" value="{{reference_mid}}" />
+    <input type="hidden" id="whereto" name="whereto" value="{{whereto}}" />
+  {%- endif -%}
+  <input type="hidden" id="requirement_mid" name="requirement_mid" value="{{form_object.requirement_mid}}" />
+
+  <sdoc-form-grid>
+
+    {# Single line #}
+
+    {%- for field_values in form_object.enumerate_fields(multiline=False) -%}
+      {%- for field in field_values -%}
+        {%- with
+          field_type="singleline",
+          field_class_name="",
+          field_name=field.field_name,
+          field_input_name="requirement[" ~ field.field_name ~ "]",
+          field_value=field.field_escaped_value,
+          errors=form_object.get_errors(field.field_name)
+        -%}
+          {% include "components/form/field/text/index.jinja" %}
+        {%- endwith -%}
+      {%- endfor -%}
+    {%- endfor -%}
+
+    {# Parent links #}
+
+    {%- for field in form_object.enumerate_reference_fields() -%}
+      {% include "screens/document/document/frame_requirement_edit_field_parent_link.jinja" %}
+    {%- endfor -%}
+
+    <div id="requirement_{{form_object.requirement_mid}}__new_parent_link"></div>
+    <sdoc-form-row>
+      <a
+        class="action_button"
+        href="/actions/document/new_parent_link?requirement_mid={{form_object.requirement_mid}}"
+        data-turbo-action="replace"
+        data-turbo="true"
+        data-action-type="add_field"
+        data-testid="form-add-parent-link-field-action"
+      >{% include "_res/svg_ico16_add.jinja.html" %} Add parent link</a>
+    </sdoc-form-row>
+
+    {# Multiline #}
+
+    {%- for field_values in form_object.enumerate_fields(multiline=True) -%}
+      {%- for field in field_values -%}
+        {% if field.field_name == "COMMENT" -%}
+          {# If comments have not yet been added,
+          show only the add field button below,
+          and do not display the code of the field itself: #}
+          {%- if field.field_escaped_value|length > 0 -%}
+            {% include "screens/document/document/frame_requirement_edit_field_comment.jinja" %}
+          {%- endif -%}
+        {%- else -%}
+          {%- with
+            field_type="multiline",
+            field_name=field.field_name,
+            field_input_name="requirement[" ~ field.field_name ~ "]",
+            field_value=field.field_escaped_value,
+            errors=form_object.get_errors(field.field_name)
+          -%}
+            {% include "components/form/field/text/index.jinja" %}
+          {%- endwith -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endfor -%}
+
+    {# Add new comments #}
+
+    <div id="requirement_{{form_object.requirement_mid}}__new_comment"></div>
+
+    <sdoc-form-row>
+      <a
+        class="action_button"
+        href="/actions/document/new_comment?requirement_mid={{form_object.requirement_mid}}"
+        data-turbo-action="replace"
+        data-turbo="true"
+        data-action-type="add_field"
+        data-testid="form-add-comment-field-action"
+      >{% include "_res/svg_ico16_add.jinja.html" %} Add comment field</a>
+    </sdoc-form-row>
+  </sdoc-form-grid>
+
+  {# Footer #}
+
+  <sdoc-form-footer>
+    {% include 'components/button/submit.jinja' %}
+
+    {%- if is_new_requirement -%}
+      {%- with cancel_href="/actions/document/cancel_new_requirement?requirement_mid="~form_object.requirement_mid -%}
+        {% include 'components/button/cancel.jinja' %}
+      {%- endwith -%}
+    {%- else -%}
+      {%- with cancel_href="/actions/document/cancel_edit_requirement?requirement_mid="~form_object.requirement_mid -%}
+        {% include 'components/button/cancel.jinja' %}
+      {%- endwith -%}
+    {%- endif -%}
+  </sdoc-form-footer>
+</form>
+
+</sdoc-form>
+</turbo-frame>

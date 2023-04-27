@@ -166,10 +166,10 @@ class ResizableBar {
     console.assert(id, '_updateState(): ID must be provided');
     if (!this.state[id]) { this.state[id] = {} }
 
-    if(element) { this.state[id].element = element; }
-    if(state) { this.state[id].state = state; }
-    if(position) { this.state[id].position = position; }
-    if(width) { this.state[id].width = width; }
+    if (element) { this.state[id].element = element; }
+    if (state) { this.state[id].state = state; }
+    if (position) { this.state[id].position = position; }
+    if (width) { this.state[id].width = width; }
   }
 
   // current
@@ -244,7 +244,7 @@ class ResizableBar {
 
   _onMouseDown(e) {
     // Init resizing
-    if(e.button == 0) {
+    if (e.button == 0) {
       e.preventDefault();
       this._updateCurrent(e);
       window.addEventListener('mousemove', this._mouseMoveHandler);
@@ -255,18 +255,18 @@ class ResizableBar {
   _onMouseMove(e) {
     // Resizing
     requestAnimationFrame(() => {
-      if(this.state.current.id) {
+      if (this.state.current.id) {
         const delta = e.pageX - this.state.current.pageX;
         const w = this.state[this.state.current.id].width + delta;
 
         this.state[this.state.current.id].element.style.width = w + 'px';
 
-        if(w < this.barGravity) {
-          if(this.state[this.state.current.id].state == 'open') {
+        if (w < this.barGravity) {
+          if (this.state[this.state.current.id].state == 'open') {
             this._close(this.state.current.id);
           }
         } else {
-          if(this.state[this.state.current.id].state == 'closed') {
+          if (this.state[this.state.current.id].state == 'closed') {
             this._open(this.state.current.id);
           }
         }
@@ -289,7 +289,7 @@ class ResizableBar {
   }
 
   _toggle(e) {
-    if(e.button == 0) {
+    if (e.button == 0) {
       const id = e.target.dataset.content;
       this.state[id].state = this.state[id].state === 'open'
         ? 'closed'

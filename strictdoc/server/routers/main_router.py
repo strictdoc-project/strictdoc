@@ -1408,10 +1408,10 @@ def create_main_router(
         )
 
     # Generic routes
-    @router.get("/actions/document_tree/new_document", response_class=Response)
+    @router.get("/actions/project_index/new_document", response_class=Response)
     def get_new_document():
         template = env.get_template(
-            "actions/document_tree/stream_new_document.jinja.html"
+            "actions/project_index/stream_new_document.jinja.html"
         )
         output = template.render(
             error_object=ErrorObject(),
@@ -1426,7 +1426,7 @@ def create_main_router(
         )
 
     @router.post(
-        "/actions/document_tree/create_document", response_class=Response
+        "/actions/project_index/create_document", response_class=Response
     )
     def document_tree__create_document(
         document_title: str = Form(""),
@@ -1463,7 +1463,7 @@ def create_main_router(
 
         if error_object.any_errors():
             template = env.get_template(
-                "actions/document_tree/stream_new_document.jinja.html"
+                "actions/project_index/stream_new_document.jinja.html"
             )
             output = template.render(
                 error_object=error_object,
@@ -1515,7 +1515,7 @@ def create_main_router(
         export_action.export()
 
         template = env.get_template(
-            "actions/document_tree/stream_create_document.jinja.html"
+            "actions/project_index/stream_create_document.jinja.html"
         )
         document_tree_iterator = DocumentTreeIterator(
             export_action.traceability_index.document_tree
@@ -1961,12 +1961,12 @@ def create_main_router(
         )
 
     @router.get(
-        "/actions/document_tree/import_reqif_document_form",
+        "/actions/project_index/import_reqif_document_form",
         response_class=Response,
     )
     def get_import_reqif_document_form():
         template = env.get_template(
-            "actions/document_tree/import_reqif_document/"
+            "actions/project_index/import_reqif_document/"
             "stream_form_import_reqif_document.jinja.html"
         )
         output = template.render(
@@ -1981,7 +1981,7 @@ def create_main_router(
         )
 
     @router.post(
-        "/actions/document_tree/import_document_reqif", response_class=Response
+        "/actions/project_index/import_document_reqif", response_class=Response
     )
     async def import_document_reqif(reqif_file: UploadFile):
         contents = reqif_file.file.read().decode()
@@ -2005,7 +2005,7 @@ def create_main_router(
 
         if error_object.any_errors():
             template = env.get_template(
-                "actions/document_tree/import_reqif_document/"
+                "actions/project_index/import_reqif_document/"
                 "stream_form_import_reqif_document.jinja.html"
             )
             output = template.render(
@@ -2051,7 +2051,7 @@ def create_main_router(
         export_action.export()
 
         template = env.get_template(
-            "actions/document_tree/import_reqif_document/"
+            "actions/project_index/import_reqif_document/"
             "stream_refresh_with_imported_reqif_document.jinja.html"
         )
         document_tree_iterator = DocumentTreeIterator(

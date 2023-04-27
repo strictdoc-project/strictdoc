@@ -1,0 +1,39 @@
+  <div class="nav_panel">
+  <div id="referContainer" class="source-file__refer">
+
+  {# ranges #}
+  {%- set source_file_general_reqs, source_file_range_reqs =
+    traceability_index.get_source_file_reqs(source_file.in_doctree_source_file_rel_path_posix) -%}
+
+  {%- if source_file_range_reqs -%}
+  <div class="source-file__ranges">
+
+    <details open>
+      <summary>
+        <div id="sourceCodeCoverageSwitch" class="source-file__toggle-switch"></div>
+        The following requirements refer <b>to&nbsp;the&nbsp;ranges</b> in this source&nbsp;file.
+      </summary>
+        {%- for requirement in source_file_range_reqs -%}
+          {% include "screens/source_file_view/requirement.jinja" %}
+        {%- endfor -%}
+    </details>
+
+  </div>
+  {%- endif -%}
+
+  {# requirements #}
+  {%- if source_file_general_reqs -%}
+  <div class="source-file__reqs">
+
+    <details open>
+      <summary>See requirements that refer to&nbsp;this source&nbsp;file <b>without specifying a&nbsp;range</b>.</summary>
+      {%- for requirement in source_file_general_reqs -%}
+        {% include "screens/source_file_view/requirement.jinja" %}
+      {%- endfor -%}
+    </details>
+
+  </div>
+  {%- endif -%}
+
+</div>
+</div>

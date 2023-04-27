@@ -5,8 +5,8 @@ from tests.end2end.helpers.constants import RST_STRING_THAT_NEEDS_HTML_ESCAPING
 from tests.end2end.helpers.screens.document.form_edit_config import (
     Form_EditConfig,
 )
-from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
-    Screen_DocumentTree,
+from tests.end2end.helpers.screens.project_index.screen_project_index import (
+    Screen_ProjectIndex,
 )
 from tests.end2end.server import SDocTestServer
 
@@ -20,12 +20,12 @@ class Test_UC11_T51_ReescapeHTMLByValidation(BaseCase):
         ) as test_server:
             self.open(test_server.get_host_and_port())
 
-            screen_document_tree = Screen_DocumentTree(self)
+            screen_project_index = Screen_ProjectIndex(self)
 
-            screen_document_tree.assert_on_screen()
-            screen_document_tree.assert_contains_document("Document 1")
+            screen_project_index.assert_on_screen()
+            screen_project_index.assert_contains_document("Document 1")
 
-            screen_document = screen_document_tree.do_click_on_first_document()
+            screen_document = screen_project_index.do_click_on_first_document()
 
             screen_document.assert_on_screen_document()
             screen_document.assert_text("Link does not get corrupted")

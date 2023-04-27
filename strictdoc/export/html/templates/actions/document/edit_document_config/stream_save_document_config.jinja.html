@@ -1,12 +1,12 @@
 <turbo-stream action="replace" target="article-{{document.node_id}}">
   <template>
-    {% include "single_document/frame_document_config.jinja.html" %}
+    {% include "screens/document/document/frame_document_config.jinja.html" %}
   </template>
 </turbo-stream>
-<turbo-stream action="replace" target="document_title">
+<turbo-stream action="replace" target="header_document_title">
   <template>
     {%- with standalone=False, template_type="Document" -%}
-      {% include "_shared/document_title.jinja" %}
+      {% include "screens/document/_shared/frame_header_document_title.jinja" %}
     {%- endwith -%}
   </template>
 </turbo-stream>

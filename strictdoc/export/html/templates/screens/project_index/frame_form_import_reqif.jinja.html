@@ -1,0 +1,30 @@
+{% extends "components/modal/form.jinja" %}
+{% set form = "sdoc_modal_form" %}
+{% block modal_form__header %}
+Import ReqIF document
+{% endblock %}
+{% block modal_form__content %}
+  <form
+    id="{{form}}"
+    action="/actions/project_index/import_document_reqif"
+    method="POST"
+    enctype="multipart/form-data"
+    data-turbo="true"
+  >
+    <sdoc-form-grid>
+      {%- with
+        field_class_name="",
+        field_input_name="reqif_file",
+        field_label="Click this div and select a file",
+        errors=error_object.get_errors("reqif_file")
+      -%}
+        {% include "components/form/field/file/index.jinja" %}
+      {%- endwith -%}
+    </sdoc-form-grid>
+  </form>
+{% endblock %}
+{% block modal_form__footer_submit %}
+  {%- with name="Import ReqIF" -%}
+    {% include 'components/button/submit.jinja' %}
+  {%- endwith -%}
+{% endblock %}

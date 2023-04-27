@@ -1,0 +1,39 @@
+{% extends "components/modal/form.jinja" %}
+{% set form = "sdoc_modal_form" %}
+{% block modal_form__header %}
+Add new document
+{% endblock %}
+{% block modal_form__content %}
+  <form
+    id="{{form}}"  {# defined in the parent template #}
+    action="/actions/project_index/create_document"
+    method="POST"
+    data-turbo="true"
+  >
+    <sdoc-form-grid>
+      {%- with
+        field_type="singleline",
+        field_class_name="",
+        field_name="title",
+        field_label="document title",
+        field_input_name="document_title",
+        field_value=document_title,
+        errors=error_object.get_errors("document_title")
+      -%}
+        {% include "components/form/field/text/index.jinja" %}
+      {%- endwith -%}
+
+      {%- with
+        field_type="singleline",
+        field_class_name="std-input-document_path",
+        field_name="path",
+        field_label="document path",
+        field_input_name="document_path",
+        field_value=document_title,
+        errors=error_object.get_errors("document_path")
+      -%}
+        {% include "components/form/field/text/index.jinja" %}
+      {%- endwith -%}
+    </sdoc-form-grid>
+  </form>
+{% endblock %}

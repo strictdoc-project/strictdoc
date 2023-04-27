@@ -1,0 +1,38 @@
+{% extends "components/modal/form.jinja" %}
+{% set form = "sdoc_modal_form" %}
+{% block modal_form__header %}
+Edit document grammar
+{% endblock %}
+{% block modal_form__content %}
+  <form
+    id="{{form}}"  {# defined in the parent template #}
+    method="POST"
+    data-turbo="true"
+    action="/actions/document/save_grammar"
+    >
+    <sdoc-form-descr>
+      <b>StrictDoc conventions:</b><br>
+      The requirements fields above the reserved "TITLE" field are dedicated to meta information and will be rendered as single-line. The fields below the reserved "STATEMENT" field are multiline and should be used for fields with more descriptive text.
+    </sdoc-form-descr>
+
+    <input type="hidden" id="document_mid" name="document_mid" value="{{form_object.document_mid}}"/>
+
+    <sdoc-form-grid id="document__editable_grammar_fields">
+      {%- for field in form_object.fields -%}
+        {%- include "screens/document/document/frame_document_grammar_edit_custom_field.jinja.html" -%}
+      {%- endfor -%}
+    </sdoc-form-grid>
+
+    <sdoc-form-footer>
+      <a
+        class="action_button"
+        href="/actions/document/add_grammar_field?document_mid={{form_object.document_mid}}"
+        data-turbo="true"
+        data-action-type="add_field"
+        data-testid="form-add-grammar-field-action"
+        {# TODO: https://github.com/strictdoc-project/strictdoc/issues/884 #}
+        onclick="setTimeout(()=> {this.scrollIntoView()},100)"
+      >{% include "_res/svg_ico16_add.jinja.html" %} Add grammar field</a>
+    </sdoc-form-footer>
+  </form>
+{% endblock %}

@@ -1,0 +1,30 @@
+<div class="header">
+
+  {# 0: shared by all screens #}
+  {% include "_res/svg_ico16_project.jinja.html" %}
+  <div
+    class="header__project_name"
+    title="{{config.project_title}}"
+  >{{config.project_title}}
+  </div>
+
+  {# 1: blocks in header: #}
+  {%- if header__items is defined -%}
+    {% for item in header__items %}
+      {% include "_res/svg__separator.jinja.html" %}
+      {% include item %}
+    {% endfor %}
+  {%- endif -%}
+
+  {# 2: pagetype #}
+  {%- if header__pagetype is true -%}
+    {% include "_res/svg__separator.jinja.html" %}
+    {% include "components/header/header_pagetype.jinja" %}
+  {%- endif -%}
+
+  {# 3: last block, pushed to the right #}
+  {%- if header__last is defined -%}
+    {% include header__last %}
+  {%- endif -%}
+
+</div>

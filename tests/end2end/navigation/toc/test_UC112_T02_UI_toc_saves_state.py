@@ -5,8 +5,8 @@ from tests.end2end.helpers.components.toc import TOC
 from tests.end2end.helpers.components.viewtype_selector import (
     ViewType_Selector,
 )
-from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
-    Screen_DocumentTree,
+from tests.end2end.helpers.screens.project_index.screen_project_index import (
+    Screen_ProjectIndex,
 )
 from tests.end2end.server import SDocTestServer
 
@@ -20,13 +20,13 @@ class Test_UC112_T02_UI_toc_saves_state(BaseCase):
         ) as test_server:
             self.open(test_server.get_host_and_port())
 
-            screen_document_tree = Screen_DocumentTree(self)
+            screen_project_index = Screen_ProjectIndex(self)
 
             # start: on the document tree
-            screen_document_tree.assert_on_screen()
+            screen_project_index.assert_on_screen()
 
             # go to document
-            screen_document = screen_document_tree.do_click_on_first_document()
+            screen_document = screen_project_index.do_click_on_first_document()
             screen_toc: TOC = screen_document.get_toc()
 
             viewtype_selector = ViewType_Selector(self)

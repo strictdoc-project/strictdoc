@@ -30,7 +30,7 @@ class SourceFileViewHTMLGenerator:
 
         document_type = DocumentType.document()
         template = SourceFileViewHTMLGenerator.env.get_template(
-            "source_file_view/index.jinja"
+            "screens/source_file_view/index.jinja"
         )
 
         with open(source_file.full_path, encoding="utf-8") as opened_file:

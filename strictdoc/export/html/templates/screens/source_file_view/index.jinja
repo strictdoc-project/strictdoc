@@ -1,0 +1,45 @@
+{% set template_type = 'Source file coverage' %}
+
+{% extends "base.jinja.html" %}
+
+{% block head_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{link_renderer.render_static_url('source.css')}}" />
+  <link rel="stylesheet" href="{{link_renderer.render_static_url('requirement-tree.css')}}"/>
+{% endblock head_css %}
+{% block head_scripts %}
+  <script type="text/javascript" src="{{link_renderer.render_static_url('source-code-coverage.js')}}"></script>
+  {{ super() }}
+{% endblock head_scripts %}
+
+{% block title %}{{source_file.in_doctree_source_file_rel_path_posix}} - {{ template_type }}{% endblock %}
+{% block viewtype %}source-file{% endblock viewtype %}
+
+{% block head %}
+  {{ super() }}
+
+  <style>
+    {{pygments_styles | safe}}
+  </style>
+{% endblock head %}
+
+{% block layout_nav %}
+  {% include "_shared/nav.jinja.html" %}
+{% endblock layout_nav %}
+
+{% block header_content %}
+  {%- with
+    header__items=["screens/source_file_view/header__source_file_name.jinja"],
+    header__pagetype=true
+  -%}
+    {% include "components/header/index.jinja" %}
+  {%- endwith -%}
+{% endblock header_content %}
+
+{% block toc_content %}
+  {% include "screens/source_file_view/aside.jinja" %}
+{% endblock toc_content %}
+
+{% block content %}
+  {% include "screens/source_file_view/main.jinja" %}
+{% endblock content %}

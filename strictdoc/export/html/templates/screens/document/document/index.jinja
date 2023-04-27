@@ -1,0 +1,65 @@
+{% set template_type = 'Document' %}
+
+{% extends "base.jinja.html" %}
+
+{% block head_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{link_renderer.render_static_url('tree.css')}}"/>
+{% endblock head_css %}
+
+{% block head_scripts %}
+  <script type="text/javascript" src="{{link_renderer.render_static_url('viewtype_menu.js')}}"></script>
+  <script type="text/javascript" src="{{link_renderer.render_static_url('resizable_bar.js')}}"></script>
+
+  {%- if config.is_running_on_server -%}
+  <script type="module">
+      import hotwiredTurbo from "{{link_renderer.render_static_url('turbo.js')}}";
+      import { Application } from "{{link_renderer.render_static_url('stimulus.js')}}";
+      window.Stimulus = Application.start();
+  </script>
+  <script type="module" src="{{link_renderer.render_static_url('controllers/collapsible_list_controller.js')}}"></script>
+  <script type="module" src="{{link_renderer.render_static_url('controllers/dropdown_menu_controller.js')}}"></script>
+  <script type="module" src="{{link_renderer.render_static_url('controllers/editable_field_controller.js')}}"></script>
+  <script type="module" src="{{link_renderer.render_static_url('controllers/deletable_field_controller.js')}}"></script>
+  <script type="module" src="{{link_renderer.render_static_url('controllers/movable_field_controller.js')}}"></script>
+  <script type="module" src="{{link_renderer.render_static_url('controllers/modal_controller.js')}}"></script>
+  <script type="module" src="{{link_renderer.render_static_url('controllers/scroll_into_view_controller.js')}}"></script>
+  {%- endif -%}
+
+  {%- if config.enable_mathjax -%}
+  <script id="MathJax-script" async src="{{link_renderer.render_static_url('mathjax/tex-mml-chtml.js')}}"></script>
+  {%- endif -%}
+  {{ super() }}
+{% endblock head_scripts %}
+{% block title %}{{document.title}} - {{ template_type }}{% endblock title %}
+{% block viewtype %}document{% endblock %}
+
+{% block layout_nav %}
+  {%- if not standalone -%}
+  {% include "_shared/nav.jinja.html" %}
+  {%- endif -%}
+{% endblock layout_nav %}
+
+{% block tree_content %}
+  {% include "screens/document/_shared/resizable_bar_with_project_tree.jinja" %}
+{% endblock %}
+
+{% block toc_content %}
+  {% include "screens/document/_shared/resizable_bar_with_toc.jinja" %}
+{% endblock toc_content %}
+
+{% block header_content %}
+  {%- with
+      header__items=[
+        "screens/document/_shared/frame_header_document_title.jinja",
+        "screens/document/_shared/viewtype_menu.jinja"
+      ],
+      header__last="screens/document/document/actions.jinja"
+  -%}
+    {% include "components/header/index.jinja" %}
+  {%- endwith -%}
+{% endblock header_content %}
+
+{% block content %}
+  {% include "screens/document/document/frame_document_content.jinja.html" %}
+{% endblock content %}

@@ -23,7 +23,7 @@ class DocumentDeepTraceHTMLGenerator:
         )
 
         template = DocumentDeepTraceHTMLGenerator.env.get_template(
-            "single_document_traceability_deep/document.jinja.html"
+            "screens/document/traceability_deep/index.jinja"
         )
 
         document_iterator = traceability_index.get_document_iterator(document)

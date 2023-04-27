@@ -1,0 +1,19 @@
+<turbo-frame id="frame_document_content">
+      <div class="content">
+        {% include "screens/document/document/frame_document_config.jinja.html" %}
+
+        {%- for section_or_requirement in document_iterator.all_content() %}
+
+        {%- if section_or_requirement.is_requirement %}
+          {%- set requirement = section_or_requirement %}
+          {% include "components/requirement/index_extends_node.jinja" %}
+
+        {%- elif section_or_requirement.is_section %}
+          {%- set section = section_or_requirement %}
+          {% include "components/section/index_extends_node.jinja" %}
+        {%- endif %}
+
+        {%- endfor %}
+
+      </div>
+</turbo-frame>

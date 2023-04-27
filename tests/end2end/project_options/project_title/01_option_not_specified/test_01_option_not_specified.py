@@ -2,8 +2,8 @@ import os
 
 from seleniumbase import BaseCase
 
-from tests.end2end.helpers.screens.document_tree.screen_document_tree import (
-    Screen_DocumentTree,
+from tests.end2end.helpers.screens.project_index.screen_project_index import (
+    Screen_ProjectIndex,
 )
 from tests.end2end.server import SDocTestServer
 
@@ -17,6 +17,6 @@ class Test_ProjectOptions_ProjectTitle_01_OptionNotSpecified(BaseCase):
         ) as test_server:
             self.open(test_server.get_host_and_port())
 
-            screen_document_tree = Screen_DocumentTree(self)
-            screen_document_tree.assert_on_screen()
-            screen_document_tree.assert_header_project_name("Untitled Project")
+            screen_project_index = Screen_ProjectIndex(self)
+            screen_project_index.assert_on_screen()
+            screen_project_index.assert_header_project_name("Untitled Project")

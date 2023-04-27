@@ -444,6 +444,7 @@ class ResizableBar {
   position: absolute;
   z-index: 2;
   left: 0;
+  right: 0;
   top: ${-1 * this.barHandlerWidth}px;
   box-sizing: border-box;
   width: ${2 * this.barHandlerWidth}px;
@@ -457,6 +458,15 @@ class ResizableBar {
   background: ${this.barColorBackground};
   color: ${this.barColorActive};
   transition: .3s;
+}
+
+[data-position="right"] [${this.barAttribute}-button] {
+  right: 0;
+  left: unset;
+}
+[data-position="left"] [${this.barAttribute}-button] {
+  left: 0;
+  right: unset;
 }
 
 [${this.barAttribute}-button]:hover {
@@ -476,10 +486,14 @@ class ResizableBar {
   top: ${-1 * this.barHandlerWidth}px;
   bottom: ${-1 * this.barHandlerWidth}px;
 }
-[${this.barAttribute}][data-state="open"] [${this.barAttribute}-button]::after {
+[${this.barAttribute}][data-state="open"] [${this.barAttribute}-button]::after,
+[${this.barAttribute}][data-state="open"][data-position="left"] [${this.barAttribute}-button]::after,
+[${this.barAttribute}][data-state="closed"][data-position="right"] [${this.barAttribute}-button]::after {
   content: '❮';
 }
-[${this.barAttribute}][data-state="closed"] [${this.barAttribute}-button]::after {
+[${this.barAttribute}][data-state="closed"] [${this.barAttribute}-button]::after,
+[${this.barAttribute}][data-state="closed"][data-position="left"] [${this.barAttribute}-button]::after,
+[${this.barAttribute}][data-state="open"][data-position="right"] [${this.barAttribute}-button]::after {
   content: '❯';
 }
 

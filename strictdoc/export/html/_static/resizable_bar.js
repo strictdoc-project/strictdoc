@@ -114,6 +114,12 @@ class ResizableBar {
     });
   }
 
+  _adjustMinWidth(width) {
+    return (width < this.barMinWidth)
+      ? this.barMinWidth
+      : width;
+  }
+
   // session storage
 
   _sessionStorageGet() {
@@ -300,7 +306,8 @@ class ResizableBar {
     window.removeEventListener('mousemove', this._mouseMoveHandler);
     window.removeEventListener('mouseup', this._mouseUpHandler);
 
-    const currentWidth = this.state[this.state.current.id].element.offsetWidth;
+    const currentBar = this.state[this.state.current.id].element;
+    const currentWidth = this._adjustMinWidth(currentBar.offsetWidth);
     this._updateState({ id: this.state.current.id, width: currentWidth });
     this._sessionStorageSetItem(this.state.current.id, 'width', currentWidth); // WRITE DATA TO STORAGE
     this._updateBar(this.state.current.id);

@@ -1,6 +1,9 @@
 // This code in this file is a simplified version of the StackOverflow answer
 // taken from: https://stackoverflow.com/a/33948409/598057.
 
+const MOUSEMOVE_SPEED_FACTOR = 1;
+const KEYDOWN_SPEED_FACTOR = 20;
+
 window.addEventListener('load', function () {
   var state = {
     spacePressed: false,
@@ -20,12 +23,13 @@ window.addEventListener('load', function () {
       e.stopPropagation();
       state.spacePressed = true;
       element.style.cursor = 'move';
+      element.style.scrollBehavior = 'auto';
       return;
     }
 
-    var moveFactor = 20;
+    var moveFactor = KEYDOWN_SPEED_FACTOR;
     if (e.altKey) {
-      moveFactor = 250;
+      moveFactor = KEYDOWN_SPEED_FACTOR * 10;
     }
 
     if (e.key === 'ArrowDown') {
@@ -57,6 +61,7 @@ window.addEventListener('load', function () {
       e.stopPropagation();
       state.spacePressed = false;
       element.style.cursor = 'default';
+      element.style.scrollBehavior = '';
     }
   });
 
@@ -111,7 +116,7 @@ window.addEventListener('load', function () {
     state.startX = mouseX;
     state.startY = mouseY;
 
-    var speedupFactor = 10;
+    var speedupFactor = MOUSEMOVE_SPEED_FACTOR;
     element.scrollTo(
       element.scrollLeft - dx * speedupFactor, element.scrollTop - dy * speedupFactor
     );
@@ -133,13 +138,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
   const element = document.getElementById('pan_with_space');
   const firstNode = document.querySelector('.content_item[data-role="current"]');
 
-  const elementViewportOffset = element.getBoundingClientRect();
-  const firstNodeViewportOffset = firstNode.getBoundingClientRect();
+  // If there is content:
+  if (firstNode) {
+    const elementViewportOffset = element.getBoundingClientRect();
+    const firstNodeViewportOffset = firstNode.getBoundingClientRect();
 
-  const leftDiff = firstNodeViewportOffset.x - elementViewportOffset.x;
+    const leftDiff = firstNodeViewportOffset.x - elementViewportOffset.x;
 
-  element.scrollTo(
-    leftDiff - window.screen.width / 2 + firstNode.offsetWidth / 2,
-    0,
-  );
+    element.scrollTo(
+      leftDiff - window.screen.width / 2 + firstNode.offsetWidth / 2,
+      0,
+    );
+  } // otherwise we do nothing.
+
 });

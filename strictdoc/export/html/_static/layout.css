@@ -8,31 +8,22 @@
                 fit-content(20%)
                 fit-content(20%)
                 1fr
+                fit-content(20%)
                 auto;
   grid-template-rows:
                 var(--base-gap)
                 minmax( 0, 1fr ) /* https://github.com/w3c/csswg-drafts/issues/1777 */
                 calc(var(--base-rhythm)*4);
   grid-template-areas:
-      "nav  header  header  header  aside"
-      "nav  tree    toc     main    aside"
-      "nav  footer  footer  footer  aside";
+      "nav  header   header   header   header    aside"
+      "nav  tree     bar_left main     bar_right aside"
+      "nav  footer   footer   footer   footer    aside";
 
   place-items: stretch stretch;
   place-content: stretch stretch;
 
-  transition: margin-left var(--toc-layout-transition);
-
   overflow: hidden; /* Prevents scrolling before children's styles are triggered */
 }
-
-/* .layout:after {
-  content: '';
-  grid-area: main / main / footer / footer;
-  box-shadow: var(--main-elevation-shadow);
-  pointer-events: none;
-  z-index: 2;
-} */
 
 .layout_nav {
   grid-area: nav;
@@ -44,8 +35,12 @@
   grid-area: tree;
 }
 
-.layout_toc {
-  grid-area: toc;
+.layout_toc,
+.layout_toc[data-position='left'] {
+  grid-area: bar_left;
+}
+.layout_toc[data-position='right'] {
+  grid-area: bar_right;
 }
 
 .layout_footer {

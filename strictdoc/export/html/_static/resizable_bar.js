@@ -1,23 +1,16 @@
-
-
-
-// Expected:
-// js-resizable_bar="tree"
-// data-state="open"
-// data-position="left"
-
-// ! Right now, the code only considers one possibility for the panels
-// ! to the left of the main part.
+// Expected in element:
+// js-resizable_bar="name"
+// data-state="open|closed"
+// data-position="left|right"
 
 class ResizableBar {
   constructor({
     barAttribute,
-    barGravity,
-    barMaxWidthVW,
+    barOpenMinWidth,
+    barOpenMaxWidthRatio,
     // styles
     barPadding,
     barPaddingBottom,
-    barMinWidth,
     barClosedWidth,
     barHandlerWidth,
     barColorMain,
@@ -28,12 +21,11 @@ class ResizableBar {
     barColorScrollbarThumb,
   }) {
     this.barAttribute = barAttribute || 'js-resizable_bar';
-    this.barMaxWidthVW = barMaxWidthVW || '25vw';
-    this.barGravity = barGravity || 100;
+    this.barOpenMaxWidthRatio = barOpenMaxWidthRatio || 0.2;
+    this.barOpenMinWidth = barOpenMinWidth || 77;
     // styles
     this.barPadding = barPadding || 'calc(var(--base-rhythm, 8px)*2)';
     this.barPaddingBottom = barPaddingBottom || 'calc(var(--base-rhythm, 8px)*8)';
-    this.barMinWidth = barMinWidth || 100;
     this.barClosedWidth = barClosedWidth || 12;
     this.barHandlerWidth = barHandlerWidth || 8;
     this.barColorMain = barColorMain || 'var(--color-fg-main, Black)';
@@ -47,12 +39,13 @@ class ResizableBar {
     this.state = {
       current: {
         id: null,
+        direction: null, // 1||-1
         pageX: null
       }
     };
 
     this.initialState = 'open';
-    this.initialWidth = this.barMaxWidthVW;
+    this.initialWidth = `${this.barOpenMaxWidthRatio * 100}vw`;
     this.initialStyle = ``;
 
     // subscribe
@@ -66,7 +59,6 @@ class ResizableBar {
   init() {
     this._insertInitialBarStyle();
     this._insertInitialPreloaderStyle();
-
   }
 
   render() {
@@ -81,6 +73,8 @@ class ResizableBar {
     [...document.querySelectorAll(`[${this.barAttribute}]`)]
     .forEach((bar) => {
       const id = bar.getAttribute(this.barAttribute);
+      const position = bar.dataset.position;
+      const direction = (bar.dataset.position === 'left') ? 1 : -1;;
       const state = this._sessionStorageGetItem(id, 'state') || this.initialState;
       const width = this._sessionStorageGetItem(id, 'width');
 
@@ -89,10 +83,11 @@ class ResizableBar {
       this._setState({
         id: id,
         element: bar,
-        position: bar.dataset.position,
+        position: position,
+        direction: direction,
         state: state,
-        width: width, // bar.offsetWidth,
-      })
+        width: width,
+      });
 
       // Update Bar with data from Storage:
       this._updateBar(id);
@@ -108,6 +103,18 @@ class ResizableBar {
       // Add testID:
       this._addTestID(bar, id, 'bar');
     });
+  }
+
+  _adjustWidth(width) {
+    let adjustedWidth = width;
+    const max = window.innerWidth * this.barOpenMaxWidthRatio;
+    if(width && width < this.barOpenMinWidth) {
+      adjustedWidth = this.barOpenMinWidth
+    }
+    if(width && width > max) {
+      adjustedWidth = null;
+    }
+    return adjustedWidth;
   }
 
   // session storage
@@ -146,12 +153,14 @@ class ResizableBar {
     element,
     state,
     position,
+    direction,
     width,
   }) {
     this.state[id] = {
       element: element,
       state: state,
       position: position,
+      direction: direction,
       width: width,
     };
   }
@@ -161,15 +170,16 @@ class ResizableBar {
     element,
     state,
     position,
+    direction,
     width,
   }) {
     console.assert(id, '_updateState(): ID must be provided');
     if (!this.state[id]) { this.state[id] = {} }
-
     if (element) { this.state[id].element = element; }
     if (state) { this.state[id].state = state; }
     if (position) { this.state[id].position = position; }
-    if (width) { this.state[id].width = width; }
+    if (direction) { this.state[id].direction = direction; }
+    if (width || width===null) { this.state[id].width = width; }
   }
 
   // current
@@ -179,17 +189,13 @@ class ResizableBar {
       // When we start a new resize, we update the currents:
       this.state.current.id = e.target.dataset.content;
       this.state.current.pageX = e.pageX;
-      // When we start a new resize, we take the current width of the element:
-      this.state[this.state.current.id].width = this.state[this.state.current.id].element.offsetWidth;
+      this.state.current.startWidth = this.state[this.state.current.id].element.offsetWidth;
     } else {
       // e.type == "mouseup"
       // At the end of the resize:
       this.state.current.id = null;
       this.state.current.pageX = null;
-      // We leave the last adjusted width,
-      // * this.state[this.state.current.id].width
-      // and if the panel is opened/closed with a button,
-      // this adjusted width will be used.
+      this.state.current.startWidth = null;
     }
   }
 
@@ -200,11 +206,19 @@ class ResizableBar {
   }
 
   _updateBar(id) {
-    const bar = this.state[id].element;
     const barState = this.state[id];
-    bar.style.width = barState.width + 'px';
+    const bar = this.state[id].element;
     bar.dataset.position = barState.position;
     bar.dataset.state = barState.state;
+    this._updateBarWidth(bar, barState.width);
+  }
+
+  _updateBarWidth(bar, width) {
+    // If there is no specific width, set the maximum.
+    // The style tag cannot be left empty to override the preloaded styles
+    // set for each bar with the width taken from the storage
+    // before the page is rendered.
+    bar.style.width = width ? `${width}px` : `${this.barOpenMaxWidthRatio * 100}vw`;
   }
 
   _createHandler(id) {
@@ -254,25 +268,43 @@ class ResizableBar {
 
   _onMouseMove(e) {
     // Resizing
-    requestAnimationFrame(() => {
-      if (this.state.current.id) {
-        const delta = e.pageX - this.state.current.pageX;
-        const w = this.state[this.state.current.id].width + delta;
+    const currentId = this.state.current.id;
+    const currentX = this.state.current.pageX;
+    const currentStartWidth = this.state.current.startWidth;
+    const currentBar = this.state[currentId].element;
 
-        this.state[this.state.current.id].element.style.width = w + 'px';
+    // todo: _onMouseUp() does not always stop execution of requestAnimationFrame,
+    // and after the correct width is calculated in _adjustWidth (20vw),
+    // the extreme width from this function can be set again (for ex.: 789px).
+    // requestAnimationFrame(() => {
 
-        if (w < this.barGravity) {
-          if (this.state[this.state.current.id].state == 'open') {
-            this._close(this.state.current.id);
+      // currentId exists if a resize has been initiated
+      if (currentId) {
+
+        // Resize
+        // * delta: the distance traveled by the mouse, starting from the initial point
+        const delta = e.pageX - currentX;
+        // * this.state[currentId].direction = 1 || -1
+        // * w: current bar width
+        this.state.current.width = currentStartWidth + this.state[currentId].direction * delta;
+
+        // Rendering the change in width of the bar:
+        // currentBar.style.width = w + 'px';
+        this._updateBarWidth(currentBar, this.state.current.width);
+
+        // Close/Open
+        if (this.state.current.width < this.barOpenMinWidth) {
+          if (this.state[currentId].state == 'open') {
+            this._close(currentId);
           }
         } else {
-          if (this.state[this.state.current.id].state == 'closed') {
-            this._open(this.state.current.id);
+          if (this.state[currentId].state == 'closed') {
+            this._open(currentId);
           }
         }
-
       }
-    })
+
+    // })
   }
 
   _onMouseUp(e) {
@@ -280,12 +312,11 @@ class ResizableBar {
     window.removeEventListener('mousemove', this._mouseMoveHandler);
     window.removeEventListener('mouseup', this._mouseUpHandler);
 
-    const currentWidth = this.state[this.state.current.id].element.offsetWidth;
+    const currentWidth = this._adjustWidth(this.state.current.width);
     this._updateState({ id: this.state.current.id, width: currentWidth });
     this._sessionStorageSetItem(this.state.current.id, 'width', currentWidth); // WRITE DATA TO STORAGE
     this._updateBar(this.state.current.id);
     this._updateCurrent(e);
-
   }
 
   _toggle(e) {
@@ -323,11 +354,13 @@ class ResizableBar {
   _insertInitialBarStyle() {
     const storage = this._sessionStorageGet();
 
-    let initStyle = `[${this.barAttribute}]{width:${this.barMaxWidthVW}}`;
+    let initStyle = `[${this.barAttribute}]{width:${this.barOpenMaxWidthRatio * 100}vw}`;
 
     // Add styles based on data from Storage:
     for (let id in storage) {
       const w = (storage[id].state == 'closed') ? this.barClosedWidth : storage[id].width;
+      // If w = null (this is possible if so in the storage),
+      // the base style will be in effect:
       w && (initStyle += `[${this.barAttribute}="${id}"]{width:${w}px}`);
     }
 
@@ -335,11 +368,11 @@ class ResizableBar {
   }
 
   _insertBarStyle() {
-    const barStyle = `
+    let barStyle = `
 [${this.barAttribute}] {
   position: relative;
   height: 100%;
-  max-width: ${this.barMaxWidthVW};
+  max-width: ${this.barOpenMaxWidthRatio * 100}vw;
 }
 
 [${this.barAttribute}]:hover {
@@ -347,7 +380,7 @@ class ResizableBar {
 }
 
 [${this.barAttribute}][data-state="open"] {
-  min-width: ${this.barMinWidth}px;
+  min-width: ${this.barOpenMinWidth}px;
   pointer-events: auto;
 }
 [${this.barAttribute}][data-state="closed"] {
@@ -444,6 +477,7 @@ class ResizableBar {
   position: absolute;
   z-index: 2;
   left: 0;
+  right: 0;
   top: ${-1 * this.barHandlerWidth}px;
   box-sizing: border-box;
   width: ${2 * this.barHandlerWidth}px;
@@ -457,6 +491,15 @@ class ResizableBar {
   background: ${this.barColorBackground};
   color: ${this.barColorActive};
   transition: .3s;
+}
+
+[data-position="right"] [${this.barAttribute}-button] {
+  right: 0;
+  left: unset;
+}
+[data-position="left"] [${this.barAttribute}-button] {
+  left: 0;
+  right: unset;
 }
 
 [${this.barAttribute}-button]:hover {
@@ -476,10 +519,14 @@ class ResizableBar {
   top: ${-1 * this.barHandlerWidth}px;
   bottom: ${-1 * this.barHandlerWidth}px;
 }
-[${this.barAttribute}][data-state="open"] [${this.barAttribute}-button]::after {
+[${this.barAttribute}][data-state="open"] [${this.barAttribute}-button]::after,
+[${this.barAttribute}][data-state="open"][data-position="left"] [${this.barAttribute}-button]::after,
+[${this.barAttribute}][data-state="closed"][data-position="right"] [${this.barAttribute}-button]::after {
   content: '❮';
 }
-[${this.barAttribute}][data-state="closed"] [${this.barAttribute}-button]::after {
+[${this.barAttribute}][data-state="closed"] [${this.barAttribute}-button]::after,
+[${this.barAttribute}][data-state="closed"][data-position="left"] [${this.barAttribute}-button]::after,
+[${this.barAttribute}][data-state="open"][data-position="right"] [${this.barAttribute}-button]::after {
   content: '❯';
 }
 
@@ -509,6 +556,7 @@ class ResizableBar {
   display: none;
 }
 `;
+
     this._insertStyle(barStyle, 'style');
   }
 

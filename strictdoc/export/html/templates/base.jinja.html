@@ -44,9 +44,14 @@
       {% block tree_content %}{% endblock %}
     </aside>
 
-    <aside class="layout_toc">
-      {% block toc_content %}{% endblock %}
-    </aside>
+    {%- with toc_position = "right" -%}
+      <aside
+        data-position="{{toc_position}}"
+        class="layout_toc"
+      >
+        {% block toc_content scoped %}{% endblock %}
+      </aside>
+    {%- endwith -%}
 
     <header class="layout_header">
       {% block header_content %}{% endblock %}

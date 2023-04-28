@@ -1,16 +1,30 @@
 import io
 import re
 import sys
+from typing import Optional
 
 from docutils.core import publish_parts
+from docutils.parsers.rst import directives
 from docutils.utils import SystemMessage
+
+from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.export.rst.directives.wildcard_enhanced_image import (
+    WildcardEnhancedImage,
+)
 
 
 class RstToHtmlFragmentWriter:
     cache = {}
 
-    @staticmethod
-    def write(rst_fragment):
+    directives.register_directive("image", WildcardEnhancedImage)
+
+    def __init__(self, *, context_document: Optional[Document]):
+        if context_document is not None:
+            WildcardEnhancedImage.current_reference_path = (
+                context_document.meta.output_document_dir_full_path
+            )
+
+    def write(self, rst_fragment):
         assert isinstance(rst_fragment, str), rst_fragment
         if rst_fragment in RstToHtmlFragmentWriter.cache:
             return RstToHtmlFragmentWriter.cache[rst_fragment]
@@ -42,8 +56,7 @@ class RstToHtmlFragmentWriter:
 
         return html
 
-    @staticmethod
-    def write_with_validation(rst_fragment):
+    def write_with_validation(self, rst_fragment):
         # How do I convert a docutils document tree into an HTML string?
         # https://stackoverflow.com/a/32168938/598057
         # Use a io.StringIO as the warning stream to prevent warnings from

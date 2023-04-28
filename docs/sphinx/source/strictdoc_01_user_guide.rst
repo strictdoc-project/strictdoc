@@ -1165,6 +1165,8 @@ The support of Tex and HTML is planned.
 Images
 ------
 
+To insert an image into a document, create a folder named ``_assets`` alongside your document and then place the image file into it.
+
 This is the example of how images are included using the reST syntax:
 
 .. code-block:: text
@@ -1174,6 +1176,8 @@ This is the example of how images are included using the reST syntax:
        :alt: Sandbox demo
        :class: image
     [/FREETEXT]
+
+**Note:** Currently, it is not possible to upload images via the web user interface. Therefore, you must manually place the image into the ``_assets`` folder using either the command-line or a file browser.
 
 Export formats
 ==============

@@ -22,6 +22,11 @@ class Screen_ProjectIndex:  # pylint: disable=invalid-name
             '//body[@data-viewtype="document-tree"]',
             by=By.XPATH,
         )
+        self.assert_no_js_and_404_errors()
+
+    def assert_no_js_and_404_errors(self) -> None:
+        self.test_case.assert_no_404_errors()
+        self.test_case.assert_no_js_errors()
 
     def assert_header_project_name(self, project_title: str) -> None:
         self.test_case.assert_element(

@@ -12,6 +12,10 @@ class Screen:  # pylint: disable=invalid-name, too-many-public-methods
         assert isinstance(test_case, BaseCase)
         self.test_case: BaseCase = test_case
 
+    def assert_no_js_and_404_errors(self) -> None:
+        self.test_case.assert_no_404_errors()
+        self.test_case.assert_no_js_errors()
+
     def assert_text(self, text: str) -> None:
         self.test_case.assert_text(text)
 

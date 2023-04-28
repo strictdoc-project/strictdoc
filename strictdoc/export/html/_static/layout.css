@@ -52,17 +52,6 @@
   min-width: 0;
 }
 
-/* TODO: delete document-view-type */
-.layout_header .document-view-type {
-  display: inline-block;
-  position: relative;
-  text-transform: uppercase;
-  font-size: .5em;
-  line-height: 1;
-  top: -12px;
-  color: var(--color-accent);
-}
-
 .layout_aside {
   grid-area: aside;
   min-width: 0;

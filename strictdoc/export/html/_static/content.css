@@ -6,6 +6,8 @@
   display: block;
   max-width: 900px;
   margin-bottom: 300px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 [data-viewtype="traceability"] .content {

@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   {% block head %}
   <meta charset="UTF-8"/>
+  <meta name="keywords" content="strictdoc, documentation, documentation-tool, requirements-management, requirements, documentation-generator, requirement-specifications, requirements-engineering, technical-documentation, requirements-specification"/>
+  <meta name="description" content="strictdoc. Software for technical documentation and requirements management."/>
 
-  <link rel="shortcut icon" href="{{link_renderer.render_static_url('favicon.ico')}}" type="image/x-icon"/>
+  <link rel="shortcut icon" href="{{ link_renderer.render_static_url('favicon.ico') }}" type="image/x-icon"/>
 
   {% block head_css %}
-  <link rel="stylesheet" href="{{link_renderer.render_static_url('base.css')}}"/>
-  <link rel="stylesheet" href="{{link_renderer.render_static_url('layout.css')}}"/>
-  <link rel="stylesheet" href="{{link_renderer.render_static_url('content.css')}}"/>
-  <link rel="stylesheet" href="{{link_renderer.render_static_url('node.css')}}"/>
-  <link rel="stylesheet" href="{{link_renderer.render_static_url('requirement.css')}}"/>
-  <link rel="stylesheet" href="{{link_renderer.render_static_url('requirement__temporary.css')}}"/>
-  <link rel="stylesheet" href="{{link_renderer.render_static_url('element.css')}}"/>
-  <link rel="stylesheet" href="{{link_renderer.render_static_url('form.css')}}"/>
+  <link rel="stylesheet" href="{{ link_renderer.render_static_url('base.css') }}"/>
+  <link rel="stylesheet" href="{{ link_renderer.render_static_url('layout.css') }}"/>
+  <link rel="stylesheet" href="{{ link_renderer.render_static_url('content.css') }}"/>
+  <link rel="stylesheet" href="{{ link_renderer.render_static_url('node.css') }}"/>
+  <link rel="stylesheet" href="{{ link_renderer.render_static_url('requirement.css') }}"/>
+  <link rel="stylesheet" href="{{ link_renderer.render_static_url('requirement__temporary.css') }}"/>
+  <link rel="stylesheet" href="{{ link_renderer.render_static_url('element.css') }}"/>
+  <link rel="stylesheet" href="{{ link_renderer.render_static_url('form.css') }}"/>
   {% endblock head_css %}
 
   {% block head_scripts %}
@@ -27,7 +28,7 @@
   {% endblock head %}
 </head>
 
-<body data-viewtype="{% block viewtype %}{% endblock %}" data-turbo="false">
+<body data-viewtype="{%- block viewtype -%}{%- endblock viewtype -%}" data-turbo="false">
 
   {%- include "websocket.jinja.html" -%}
 
@@ -41,24 +42,24 @@
     </nav>
 
     <aside class="layout_tree">
-      {% block tree_content %}{% endblock %}
+      {% block tree_content %}{% endblock tree_content %}
     </aside>
 
     {%- with toc_position = "right" -%}
       <aside
-        data-position="{{toc_position}}"
+        data-position="{{ toc_position }}"
         class="layout_toc"
       >
-        {% block toc_content scoped %}{% endblock %}
+        {% block toc_content scoped %}{% endblock toc_content %}
       </aside>
     {%- endwith -%}
 
     <header class="layout_header">
-      {% block header_content %}{% endblock %}
+      {% block header_content %}{% endblock header_content %}
     </header>
 
-    <main class="layout_main" id="pan_with_space">
-      {% block content %}{% endblock %}
+    <main class="layout_main">
+      {% block main_content %}{% endblock main_content %}
     </main>
 
     <footer class="layout_footer">
@@ -75,7 +76,7 @@
           target="_blank"
         >
           <svg height="16" viewBox="0 0 16 16" version="1.1" width="16" >
-            <path fill-rule="evenodd" d="M2.5 7.775V2.75a.25.25 0 01.25-.25h5.025a.25.25 0 01.177.073l6.25 6.25a.25.25 0 010 .354l-5.025 5.025a.25.25 0 01-.354 0l-6.25-6.25a.25.25 0 01-.073-.177zm-1.5 0V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 010 2.474l-5.026 5.026a1.75 1.75 0 01-2.474 0l-6.25-6.25A1.75 1.75 0 011 7.775zM6 5a1 1 0 100 2 1 1 0 000-2z"></path>
+            <path fill-rule="evenodd" d="M2.5 7.775V2.75a.25.25 0 01.25-.25h5.025a.25.25 0 01.177.073l6.25 6.25a.25.25 0 010 .354l-5.025 5.025a.25.25 0 01-.354 0l-6.25-6.25a.25.25 0 01-.073-.177zm-1.5 0V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 010 2.474l-5.026 5.026a1.75 1.75 0 01-2.474 0l-6.25-6.25A1.75 1.75 0 011 7.775zM6 5a1 1 0 100 2 1 1 0 000-2z"/>
           </svg>
           {{ strictdoc_version }}
         </a>
@@ -83,13 +84,13 @@
     </footer>
 
     <aside class="layout_aside">
-      {% block aside_content %}{% endblock %}
+      {% block aside_content %}{% endblock aside_content %}
     </aside>
 
   </div>
   {# TODO: create this wrappers with JS #}
   <div id="modal"></div>
   <div id="confirm"></div>
-  {% block scripts %}{% endblock %}
+  {% block scripts %}{% endblock scripts %}
 </body>
 </html>

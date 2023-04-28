@@ -59,20 +59,7 @@
 
 .layout_main {
   grid-area: main;
-
-  padding: var(--base-gap);
-  position: relative;
-  overflow: auto;
-  scroll-behavior: smooth;
-
-  background-color: var(--color-bg-main);
-}
-
-/* redefine main layout grid */
-
-[data-viewtype="source-file"] .layout_main {
-  padding: 0;
-  background: white;
+  min-width: 0;
 }
 
 /*  */

@@ -3,6 +3,12 @@
 
 const MOUSEMOVE_SPEED_FACTOR = 1;
 const KEYDOWN_SPEED_FACTOR = 20;
+const PWS_SELECTOR = "[js-pan_with_space]";
+
+function getPanElement() {
+  const element = document.querySelector(PWS_SELECTOR);
+  return element;
+}
 
 window.addEventListener('load', function () {
   var state = {
@@ -12,7 +18,7 @@ window.addEventListener('load', function () {
     startY: 0
   }
 
-  const element = document.getElementById('pan_with_space');
+  const element = getPanElement();
   console.assert(!!element, "Expected a valid element.");
 
   document.addEventListener("keydown", function (e) {
@@ -135,7 +141,7 @@ window.addEventListener('load', function () {
 // The central column is the one where the current document's requirements are
 // listed top-to-bottom.
 document.addEventListener("DOMContentLoaded", function(event) {
-  const element = document.getElementById('pan_with_space');
+  const element = getPanElement();
   const firstNode = document.querySelector('.content_item[data-role="current"]');
 
   // If there is content:

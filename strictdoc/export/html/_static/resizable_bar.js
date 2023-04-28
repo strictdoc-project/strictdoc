@@ -273,7 +273,11 @@ class ResizableBar {
     const currentStartWidth = this.state.current.startWidth;
     const currentBar = this.state[currentId].element;
 
-    requestAnimationFrame(() => {
+    // todo: _onMouseUp() does not always stop execution of requestAnimationFrame,
+    // and after the correct width is calculated in _adjustWidth (20vw),
+    // the extreme width from this function can be set again (for ex.: 789px).
+    // requestAnimationFrame(() => {
+
       // currentId exists if a resize has been initiated
       if (currentId) {
 
@@ -299,7 +303,8 @@ class ResizableBar {
           }
         }
       }
-    })
+
+    // })
   }
 
   _onMouseUp(e) {

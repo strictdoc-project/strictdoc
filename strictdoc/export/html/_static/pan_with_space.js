@@ -133,13 +133,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
   const element = document.getElementById('pan_with_space');
   const firstNode = document.querySelector('.content_item[data-role="current"]');
 
-  const elementViewportOffset = element.getBoundingClientRect();
-  const firstNodeViewportOffset = firstNode.getBoundingClientRect();
+  // If there is content:
+  if (firstNode) {
+    const elementViewportOffset = element.getBoundingClientRect();
+    const firstNodeViewportOffset = firstNode.getBoundingClientRect();
 
-  const leftDiff = firstNodeViewportOffset.x - elementViewportOffset.x;
+    const leftDiff = firstNodeViewportOffset.x - elementViewportOffset.x;
 
-  element.scrollTo(
-    leftDiff - window.screen.width / 2 + firstNode.offsetWidth / 2,
-    0,
-  );
+    element.scrollTo(
+      leftDiff - window.screen.width / 2 + firstNode.offsetWidth / 2,
+      0,
+    );
+  } // otherwise we do nothing.
+
 });

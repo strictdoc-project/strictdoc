@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
+from tests.end2end.helpers.components.collapsible_list import CollapsibleList
 from tests.end2end.helpers.components.node.document_root import DocumentRoot
 from tests.end2end.helpers.components.node.requirement import Requirement
 from tests.end2end.helpers.components.node.section import Section
@@ -115,3 +116,8 @@ class Screen:  # pylint: disable=invalid-name, too-many-public-methods
 
     def assert_toc_contains_not(self, string: str) -> None:
         TOC(self.test_case).assert_toc_contains_not(string)
+
+    # CollapsibleList
+    def get_collapsible_list(self) -> CollapsibleList:
+        CollapsibleList(self.test_case).assert_is_collapsible()
+        return CollapsibleList(self.test_case)

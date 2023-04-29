@@ -102,7 +102,7 @@ sdoc-requirement-field blockquote,
 sdoc-requirement-field ol,
 sdoc-requirement-field ul {
   margin-top: 0 !important;
-  margin-bottom: 0 !important;
+  margin-bottom: var(--requirement-base-rhythm) !important;
 }
 
 /* requirement-view="table" */

@@ -1,0 +1,6 @@
+[project]
+title = "DO178C Software Component Template DRL"
+
+[server]
+host = "localhost"
+port = 5178

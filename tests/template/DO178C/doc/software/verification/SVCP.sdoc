@@ -1,0 +1,29 @@
+[DOCUMENT]
+TITLE: Software Verification Case and Procedure
+
+[SECTION]
+TITLE: Review and analysis procedures
+
+[FREETEXT]
+Details the scope and depth of review and analysis procedures
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Test cases
+
+[FREETEXT]
+Details test cases environment, input, expected results, pass/fail criteria.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Test procedures
+
+[FREETEXT]
+Test envionment to run step by step instructions to run test cases. Describes how test results are evaluated.
+[/FREETEXT]
+
+[/SECTION]

@@ -1,0 +1,6 @@
+[DOCUMENT]
+TITLE: Software Verification Results
+
+[FREETEXT]
+Software verification results are produced by the software verification process. For each identified review, analysis, test procedure, it shall indicate the pass/fail status. Any discrepancies should be recorded and tracked via problem reporting.
+[/FREETEXT]

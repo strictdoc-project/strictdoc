@@ -1,0 +1,58 @@
+[DOCUMENT]
+TITLE: Plan for Software Aspect Of Certification
+
+[FREETEXT]
+This document links applicant to certification authorities
+[/FREETEXT]
+
+[SECTION]
+TITLE: System overview
+
+[FREETEXT]
+Description of the system functions, system design, allocation to hardware and software components, safety features
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Software overview
+
+[FREETEXT]
+Description of the software functions, safety, partitionning, redundancy, timing and scheduling, hardware resource allocation and sharing...
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Certification consideration
+
+[FREETEXT]
+Expose the software design assurance level, software contribution to system failure conditions
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Software lifecyle
+
+[/SECTION]
+
+[SECTION]
+TITLE: Software lifecycle data
+
+[/SECTION]
+
+[SECTION]
+TITLE: Schedule
+
+[/SECTION]
+
+[SECTION]
+TITLE: Additional consideration
+
+[/SECTION]
+
+[SECTION]
+TITLE: Supplier oversight
+
+[/SECTION]

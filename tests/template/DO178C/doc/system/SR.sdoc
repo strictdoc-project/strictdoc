@@ -1,0 +1,36 @@
+[DOCUMENT]
+TITLE: System Requirements
+
+[SECTION]
+TITLE: System Overview
+
+[FREETEXT]
+Description of the system intended function (what the system does).
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: System Requirements
+
+[REQUIREMENT]
+UID: DERIVED
+TITLE: Derived Requirement Placeholder
+STATEMENT: >>>
+All software requirements linked to this DERIVED requirement shall be analysed by safety assessment process.
+<<<
+RATIONALE: >>>
+Derived requirement placeholder
+<<<
+
+[REQUIREMENT]
+UID: SSS-MYSYS-001
+TITLE: Inertial Data
+STATEMENT: >>>
+The system MYSYS shall provide inertial aircraft attitude
+<<<
+RATIONALE: >>>
+Inertial data are required for piloting, i.e. short term aircraft control.
+<<<
+
+[/SECTION]

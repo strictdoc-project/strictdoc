@@ -1,0 +1,81 @@
+[DOCUMENT]
+TITLE: Software Configuration Management Plan
+
+[FREETEXT]
+Establishes methods used to achieve software configuration management process
+[/FREETEXT]
+
+[SECTION]
+TITLE: Environment
+
+[/SECTION]
+
+[SECTION]
+TITLE: Activities
+
+[SECTION]
+TITLE: Configuration identification
+
+[/SECTION]
+
+[SECTION]
+TITLE: Baseline and traceability
+
+[/SECTION]
+
+[SECTION]
+TITLE: Problem reporting
+
+[/SECTION]
+
+[SECTION]
+TITLE: Change control
+
+[/SECTION]
+
+[SECTION]
+TITLE: Change review
+
+[/SECTION]
+
+[SECTION]
+TITLE: Configuration status accounting
+
+[/SECTION]
+
+[SECTION]
+TITLE: Archive retrieval and release
+
+[/SECTION]
+
+[SECTION]
+TITLE: Software load control
+
+[/SECTION]
+
+[SECTION]
+TITLE: Software life cycle environment controls
+
+[/SECTION]
+
+[SECTION]
+TITLE: Software life cycle data controls
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Transition criteria
+
+[/SECTION]
+
+[SECTION]
+TITLE: Software configuration management data
+
+[/SECTION]
+
+[SECTION]
+TITLE: Supplier control
+
+[/SECTION]

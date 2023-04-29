@@ -1,0 +1,30 @@
+[DOCUMENT]
+TITLE: Software Development Plan
+
+[FREETEXT]
+Desribes the software development procedures, life cycle
+[/FREETEXT]
+
+[SECTION]
+TITLE: Standards
+
+[FREETEXT]
+Links to software requirements, design, coding standards.
+Links to previously developed software or COTS software standards.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Software life cycle
+
+[FREETEXT]
+Details the different processes and transition criteria to develop the software.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Software development environment
+
+[/SECTION]

@@ -1,0 +1,56 @@
+[DOCUMENT]
+TITLE: Software Verification Plan
+
+[FREETEXT]
+Description of the verification strategy and procedures used to satisfy verification objectives, adapted to software design assurance level.
+[/FREETEXT]
+
+[SECTION]
+TITLE: Organisation
+
+[/SECTION]
+
+[SECTION]
+TITLE: Independance
+
+[/SECTION]
+
+[SECTION]
+TITLE: Verification method
+
+[/SECTION]
+
+[SECTION]
+TITLE: Verification environment
+
+[/SECTION]
+
+[SECTION]
+TITLE: Transition criteria
+
+[/SECTION]
+
+[SECTION]
+TITLE: Partitioning consideration
+
+[/SECTION]
+
+[SECTION]
+TITLE: Compiler assumption
+
+[/SECTION]
+
+[SECTION]
+TITLE: Reverification method
+
+[/SECTION]
+
+[SECTION]
+TITLE: Previously developed software
+
+[/SECTION]
+
+[SECTION]
+TITLE: Multiple version dissimilar software
+
+[/SECTION]

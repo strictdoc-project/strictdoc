@@ -1,0 +1,44 @@
+{%- if document.has_any_nodes() -%}
+  <div class="main">
+    {% include "_shared/tags.jinja.html" %}
+      <div class="content">
+        {%- for section_or_requirement in document_iterator.all_content() %}
+          {%- if section_or_requirement.is_requirement %}
+            <section class="content_section">
+              <div class="content_item" data-role="parents">
+                {%- with requirement=section_or_requirement, requirement_partial="components/requirement/card_extends_card.jinja" -%}
+                  {% include "_shared/requirement_tree_left.jinja.html" %}
+                {%- endwith -%}
+              </div>
+              <div class="content_item" data-role="current">
+                {%- set requirement = section_or_requirement %}
+                {% include "components/requirement/card_extends_card.jinja" %}
+              </div>
+              <div class="content_item" data-role="children">
+                {%- with requirement=section_or_requirement, requirement_partial="components/requirement/card_extends_card.jinja" -%}
+                  {% include "_shared/requirement_tree_right.jinja.html" %}
+                {%- endwith -%}
+              </div>
+            </section>
+          {%- elif section_or_requirement.is_section %}
+            <section class="content_section">
+              <div class="content_item" data-role="parents"></div>
+              <div class="content_item" data-role="current">
+                {%- set section = section_or_requirement %}
+                {% include "components/section/card_extends_card.jinja" %}
+              </div>
+              <div class="content_item" data-role="children"></div>
+            </section>
+          {%- endif %}
+        {%- endfor %}
+      </div>
+  </div>
+  {# /.main #}
+{%- else -%}
+  <sdoc-main-placeholder data-testid="document-main-placeholder">
+    This view is empty because
+    <br/>
+    the document has no content.
+  </sdoc-main-placeholder>
+{%- endif -%}
+

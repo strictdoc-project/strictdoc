@@ -52,17 +52,6 @@
   min-width: 0;
 }
 
-/* TODO: delete document-view-type */
-.layout_header .document-view-type {
-  display: inline-block;
-  position: relative;
-  text-transform: uppercase;
-  font-size: .5em;
-  line-height: 1;
-  top: -12px;
-  color: var(--color-accent);
-}
-
 .layout_aside {
   grid-area: aside;
   min-width: 0;
@@ -70,20 +59,7 @@
 
 .layout_main {
   grid-area: main;
-
-  padding: var(--base-gap);
-  position: relative;
-  overflow: auto;
-  scroll-behavior: smooth;
-
-  background-color: var(--color-bg-main);
-}
-
-/* redefine main layout grid */
-
-[data-viewtype="source-file"] .layout_main {
-  padding: 0;
-  background: white;
+  min-width: 0;
 }
 
 /*  */

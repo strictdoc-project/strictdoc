@@ -1,8 +1,10 @@
+<div class="main">
+{# todo: update this template #}
 <div id="sourceContainer" class="source-file__source">
   <div id="source" class="source">
     {%- for line in source_file_content -%}
-      <div id="line-{{loop.index}}" class="source__line-number"><pre>{{loop.index}}</pre></div>
-      <div data-line={{loop.index}} class="source__line-content">
+      <div id="line-{{ loop.index }}" class="source__line-number"><pre>{{ loop.index }}</pre></div>
+      <div data-line={{ loop.index }} class="source__line-content">
         {%- if line.__class__.__name__ == "tuple" -%}
           {%- set replacement_before, replacement_after, pragma = line -%}
           {# Note: Cannot format HTML/Jinja blocks within 'pre' tags! #}
@@ -26,3 +28,4 @@
     {%- endfor -%}
   </div>
 </div>
+</div>{# /.main #}

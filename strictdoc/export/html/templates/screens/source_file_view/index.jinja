@@ -4,15 +4,15 @@
 
 {% block head_css %}
   {{ super() }}
-  <link rel="stylesheet" href="{{link_renderer.render_static_url('source.css')}}" />
-  <link rel="stylesheet" href="{{link_renderer.render_static_url('requirement-tree.css')}}"/>
+  <link rel="stylesheet" href="{{ link_renderer.render_static_url('source.css') }}" />
+  <link rel="stylesheet" href="{{ link_renderer.render_static_url('requirement-tree.css') }}"/>
 {% endblock head_css %}
 {% block head_scripts %}
-  <script type="text/javascript" src="{{link_renderer.render_static_url('source-code-coverage.js')}}"></script>
+  <script type="text/javascript" src="{{ link_renderer.render_static_url('source-code-coverage.js') }}"></script>
   {{ super() }}
 {% endblock head_scripts %}
 
-{% block title %}{{source_file.in_doctree_source_file_rel_path_posix}} - {{ template_type }}{% endblock %}
+{% block title %}{{ source_file.in_doctree_source_file_rel_path_posix }} - {{ template_type }}{% endblock title %}
 {% block viewtype %}source-file{% endblock viewtype %}
 
 {% block head %}
@@ -40,6 +40,6 @@
   {% include "screens/source_file_view/aside.jinja" %}
 {% endblock toc_content %}
 
-{% block content %}
+{% block main_content %}
   {% include "screens/source_file_view/main.jinja" %}
-{% endblock content %}
+{% endblock main_content %}

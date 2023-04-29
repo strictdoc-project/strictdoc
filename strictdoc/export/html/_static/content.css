@@ -1,3 +1,23 @@
+/* .main */
+
+.main {
+  padding: var(--base-gap);
+  position: relative;
+  overflow: auto;
+  scroll-behavior: smooth;
+  height: 100%;
+  background-color: var(--color-bg-main);
+}
+
+/* redefine main layout grid */
+
+[data-viewtype="source-file"] .main {
+  padding: 0;
+  background: white;
+}
+
+/* .content */
+
 .content {
   min-width: calc(var(--card-width) + calc(var(--base-padding)*4));
 }

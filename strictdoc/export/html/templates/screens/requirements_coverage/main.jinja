@@ -1,0 +1,29 @@
+<div
+  class="main"
+  js-pan_with_space="true"
+>
+  {%- for document in traceability_index.document_tree.document_list -%}
+    <h3 class="requirements-coverage-document-title" id="{{ loop.index }}">{{ document.title }}</h3>
+    {%- set document_iterator = traceability_index.get_document_iterator(document) -%}
+    <div class="content">
+      {%- for section_or_requirement in document_iterator.all_content() %}
+        {%- if section_or_requirement.is_requirement %}
+          <section class="content_section">
+            {%- set requirement = section_or_requirement %}
+            <div class="content_item" data-role="current">
+              {%- with anchor=link_renderer.render_local_anchor(section_or_requirement) -%}
+                {% include "screens/requirements_coverage/requirement.jinja.html" %}
+              {%- endwith -%}
+            </div>
+            <div class="content_item" data-role="children">
+              {%- with requirement=section_or_requirement, requirement_partial="screens/requirements_coverage/requirement.jinja.html" -%}
+                {% include "_shared/requirement_tree_right.jinja.html" %}
+              {%- endwith -%}
+            </div>
+          </section>
+        {%- endif %}
+      {%- endfor %}
+    </div>
+  {%- endfor %}
+</div>
+{# /.main #}

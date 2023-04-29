@@ -8,6 +8,7 @@
 
 {% block head_scripts %}
   {{ super() }}
+  <script type="text/javascript" src="{{ link_renderer.render_static_url('resizable_bar.js') }}"></script>
   <script type="text/javascript" src="{{ link_renderer.render_static_url('pan_with_space.js') }}"></script>
   <script type="text/javascript" src="{{ link_renderer.render_static_url('requirements-coverage.js') }}"></script>
 {% endblock head_scripts %}
@@ -22,9 +23,9 @@
   {% include "_shared/nav.jinja.html" %}
 {% endblock layout_nav %}
 
-{% block toc_content %}
-  {% include "screens/requirements_coverage/document_list.jinja.html" %}
-{% endblock toc_content %}
+{% block tree_content %}
+  {% include "screens/requirements_coverage/resizable_bar_with_project_tree.jinja" %}
+{% endblock tree_content %}
 
 {% block header_content %}
   {%- with header__pagetype=true -%}

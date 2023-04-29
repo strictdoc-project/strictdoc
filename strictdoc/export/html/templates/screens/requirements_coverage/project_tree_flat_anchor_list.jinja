@@ -1,0 +1,16 @@
+<div class="tree">
+  {%- for document in traceability_index.document_tree.document_list -%}
+    <a
+      href="#{{ loop.index }}"
+      class="tree_item"
+      data-testid="tree-document-anchor"
+    >
+      {% include "_res/svg_ico16_document.jinja.html" %}
+      <div
+        class="document_title"
+        title="{{ document.title }}"
+        data-file_name=""
+      >{{ document.title }}</div>
+    </a>
+  {%- endfor -%}
+</div>

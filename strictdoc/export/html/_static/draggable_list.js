@@ -74,7 +74,7 @@ function dragStart(event) {
   }, 0);
   event.dataTransfer.dropEffect = "move";
   event.dataTransfer.effectAllowed = 'move';
-  event.dataTransfer.setData('text/html', dragItem.dataset.nodeid);
+  // event.dataTransfer.setData('text/html', dragItem.dataset.nodeid);
 }
 function dragEnd(event) {
   this.dataset.dragging = false;
@@ -85,7 +85,6 @@ function dragEnd(event) {
 function dragOver(event) {
   event.preventDefault();
   event.stopImmediatePropagation();
-  console.log(event.target)
   this.parentNode.insertBefore(dropIndicator, this);
   event.dataTransfer.dropEffect = "move";
 }
@@ -100,13 +99,34 @@ function dragDrop(event) {
   const dropReference = this;
 
   if (dragItem !== dropReference) {
-    dropReference.parentNode.insertBefore(dragItem, dropReference);
-    dragItem.dataset.appended = 'true';
-    const aaa = event.dataTransfer.getData('text/html');
+    // dropReference.parentNode.insertBefore(dragItem, dropReference);
+    // dragItem.dataset.appended = 'true';
+
+    // const aaa = event.dataTransfer.getData('text/html');
     console.log('drag dropped', dropReference);
     // this.innerHTML = e.dataTransfer.getData('text/html');
     // console.log('drag dropped', aaa);
-    console.log('--- NEW PLACE ---', aaa);
+    console.log('--- NEW PLACE ---');
+
+    // Build formData object.
+    let formData = new FormData();
+    formData.append('moved_node_mid', dragItem.dataset.nodeid);
+    formData.append('target_mid', dropReference.dataset.nodeid);
+    formData.append('whereto', 'before');
+
+    fetch("/actions/document/move_node",
+    {
+        body: formData,
+        method: "post",
+        headers: {
+          "Accept": "text/vnd.turbo-stream.html",
+      },
+    }).then(r => r.text())
+    .then(html => Turbo.renderStreamMessage(html));
+
+
+
+
   }
 }
 

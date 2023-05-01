@@ -10,6 +10,18 @@ ${DL_ITEM_SELECTOR}[draggable="true"] {
 ${DL_ITEM_SELECTOR}[draggable="true"]:hover {
   background: rgba(0,0,0,0.02);
   border: 1px solid rgba(0,0,0,0.05);
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+  cursor: -o-grab;
+  cursor: -ms-grab;
+  cursor: grab;
+}
+${DL_ITEM_SELECTOR}[draggable="true"]:active {
+  cursor: -webkit-grabbing;
+  cursor: -moz-grabbing;
+  cursor: -o-grabbing;
+  cursor: -ms-grabbing;
+  cursor: grabbing;
 }
 [data-dragging="true"] {
   opacity: 0.5;
@@ -22,6 +34,11 @@ ${DL_ITEM_SELECTOR}[draggable="true"]:hover {
   display: block;
   padding: 20px 0;
   border: 3px solid red;
+}
+.dropIndicator {
+  display: block;
+  border: 2px solid blue;
+  pointer-events: none;
 }
 `;
 
@@ -42,6 +59,13 @@ addStyle (CSS, 'style');
 // }
 let dragItem = null;
 
+function createDropIndicator() {
+  const dropIndicator = document.createElement('div');
+  dropIndicator.className = 'dropIndicator';
+  return dropIndicator
+}
+const dropIndicator = createDropIndicator();
+
 function dragStart(event) {
   console.log('drag started');
   // e.preventDefault();
@@ -49,38 +73,41 @@ function dragStart(event) {
   event.stopPropagation();
   dragItem = this;
   setTimeout(() => {
-    // this.className = 'invisible';
     this.dataset.dragging = true;
     // this.style.cursor = 'move';
   }, 0);
+  document.body.classList.add('dragging');
+  event.dataTransfer.effectAllowed = "move";
+  event.dataTransfer.dropEffect = "move";
 }
 function dragEnd(event) {
   console.log('drag ended', event.target);
   this.dataset.dragging = false;
   dragItem = null;
+  dropIndicator.remove();
+  document.body.classList.remove('dragging');
 }
 
 function dragOver(event) {
   event.preventDefault();
+  event.stopPropagation();
+  this.parentNode.insertBefore(dropIndicator, this);
+  event.dataTransfer.dropEffect = "move";
 }
-function dragEnter() {
-  console.log('drag entered');
+function dragEnter(event) {
+  console.log('drag entered', this);
 }
 function dragLeave() {
   console.log('drag left');
 }
 function dragDrop(event) {
   event.preventDefault();
+  event.stopPropagation();
+  // https://stackoverflow.com/questions/62283773/drag-n-drop-events-firing-multiple-times
+  event.stopImmediatePropagation();
   console.log('drag dropped', this);
-  this.append(dragItem);
+  this.parentNode.insertBefore(dragItem, this);
   dragItem.dataset.appended = 'true';
-}
-
-function addTestContainer(element) {
-  const testContainer = document.createElement('div');
-  testContainer.className = 'test-container';
-  element.append(testContainer);
-  return testContainer
 }
 
 window.addEventListener('load', function () {
@@ -98,14 +125,13 @@ window.addEventListener('load', function () {
   draggableList.forEach((item) => {
     item.setAttribute('draggable', true);
 
-    item.addEventListener('dragstart', dragStart)
-    item.addEventListener('dragend', dragEnd)
-  })
+    item.addEventListener('dragstart', dragStart);
+    item.addEventListener('dragend', dragEnd);
 
-  const testContainer = addTestContainer(draggable);
-  testContainer.addEventListener('dragover', dragOver);
-  testContainer.addEventListener('dragenter', dragEnter);
-  testContainer.addEventListener('dragleave', dragLeave);
-  testContainer.addEventListener('drop', dragDrop);
+    item.addEventListener('dragover', dragOver);
+    item.addEventListener('dragenter', dragEnter);
+    item.addEventListener('dragleave', dragLeave);
+    item.addEventListener('drop', dragDrop);
+  })
 
 })

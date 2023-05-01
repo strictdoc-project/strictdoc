@@ -29,8 +29,8 @@ const STYLE = `
   color: rgba(0,0,0,0.5);
   box-shadow: rgb(0 0 0 / 10%) 0px 1px 2px 0px;
   position: absolute;
-  top: 0;
-  left: -8px;
+  top: 8px;
+  left: 0;
 }
 
 [data-${BRANCH_SELECTOR}]:hover {

@@ -645,7 +645,10 @@ sdoc-menu-handler[aria-expanded="true"] svg {
   justify-content: flex-start;
   align-items: flex-start;
   gap: var(--base-rhythm);
-  padding-top: var(--base-rhythm);
+  margin-top: calc(var(--base-rhythm) * 2);
+  margin-bottom: calc(var(--base-rhythm) * 8);
+  padding-left: calc(var(--base-rhythm) * 2);
+  padding-right: calc(var(--base-rhythm) * 2);
 }
 
 a.tree_item,
@@ -658,6 +661,8 @@ a.tree_item,
   min-width: 0;
   line-height: 1.5;
   width: 99%; /* To calculate cite overflow  */
+  /* padding-left: calc(var(--base-rhythm) * 2);
+  padding-right: calc(var(--base-rhythm) * 2); */
 }
 
 a.tree_item:hover {
@@ -696,15 +701,19 @@ a.tree_item:hover {
 }
 
 .toc {
-  padding-left: var(--base-rhythm);
+  /* padding-left: var(--base-rhythm); */
   font-size: var(--font-size-sm);
   line-height: 1.2;
 }
 
 .toc li {
-  padding-left: .75rem;
+  /* padding-left: .75rem; */
   margin: 0;
-  margin-top: .75rem;
+  /* margin-top: .75rem; */
+  padding-top: var(--base-rhythm);
+  padding-bottom: var(--base-rhythm);
+  padding-right: var(--base-rhythm);
+  padding-left: calc(var(--base-rhythm) * 2.5);
   position: relative;
   /* border-left: 1px solid #ccc; */
 }

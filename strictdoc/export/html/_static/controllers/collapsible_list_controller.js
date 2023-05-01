@@ -48,12 +48,11 @@ const STYLE = `
 }
 
 [data-${BRANCH_SELECTOR}='closed'] + ul {
-  height: 0;
-  overflow: hidden;
+  display: none;
 }
 
 [data-${BRANCH_SELECTOR}='open'] + ul {
-  height: auto;
+  display: unset;
 }
 
 [${ROOT_SELECTOR}-bulk] {

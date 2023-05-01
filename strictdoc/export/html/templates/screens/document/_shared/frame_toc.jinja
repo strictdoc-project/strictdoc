@@ -11,7 +11,7 @@
       class="toc"
     >
     {%- for section in document_iterator.table_of_contents() -%}
-      <li>
+      <li data-nodeid="{{ section.node_id }}">
         {%- if section.is_section -%}
         {# if section not requirement #}
           {%- if not section.ng_has_requirements and document_type.is_deeptrace -%}

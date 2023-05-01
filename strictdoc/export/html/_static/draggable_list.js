@@ -67,52 +67,51 @@ function createDropIndicator() {
 const dropIndicator = createDropIndicator();
 
 function dragStart(event) {
-  console.log('drag started');
-  // e.preventDefault();
-  // to prevent from activating on the parents:
-  event.stopPropagation();
+  event.stopImmediatePropagation();
   dragItem = this;
   setTimeout(() => {
     this.dataset.dragging = true;
-    // this.style.cursor = 'move';
   }, 0);
-  document.body.classList.add('dragging');
-  event.dataTransfer.effectAllowed = "move";
   event.dataTransfer.dropEffect = "move";
+  event.dataTransfer.effectAllowed = 'move';
+  event.dataTransfer.setData('text/html', dragItem.dataset.nodeid);
 }
 function dragEnd(event) {
-  console.log('drag ended', event.target);
   this.dataset.dragging = false;
   dragItem = null;
   dropIndicator.remove();
-  document.body.classList.remove('dragging');
 }
 
 function dragOver(event) {
   event.preventDefault();
-  event.stopPropagation();
+  event.stopImmediatePropagation();
+  console.log(event.target)
   this.parentNode.insertBefore(dropIndicator, this);
   event.dataTransfer.dropEffect = "move";
 }
-function dragEnter(event) {
-  console.log('drag entered', this);
-}
-function dragLeave() {
-  console.log('drag left');
-}
+
+function dragEnter() {}
+function dragLeave() {}
+
 function dragDrop(event) {
   event.preventDefault();
-  event.stopPropagation();
-  // https://stackoverflow.com/questions/62283773/drag-n-drop-events-firing-multiple-times
   event.stopImmediatePropagation();
-  console.log('drag dropped', this);
-  this.parentNode.insertBefore(dragItem, this);
-  dragItem.dataset.appended = 'true';
+
+  const dropReference = this;
+
+  if (dragItem !== dropReference) {
+    dropReference.parentNode.insertBefore(dragItem, dropReference);
+    dragItem.dataset.appended = 'true';
+    const aaa = event.dataTransfer.getData('text/html');
+    console.log('drag dropped', dropReference);
+    // this.innerHTML = e.dataTransfer.getData('text/html');
+    // console.log('drag dropped', aaa);
+    console.log('--- NEW PLACE ---', aaa);
+  }
 }
 
 window.addEventListener('load', function () {
   const draggable = document.querySelector(`[${DL_SELECTOR}]`);
-  console.log('draggable list is here', draggable);
 
   // Prevent drag for links inside the list
   [...draggable.querySelectorAll('a')].forEach((item) => {
@@ -120,14 +119,12 @@ window.addEventListener('load', function () {
   })
 
   const draggableList = [...draggable.querySelectorAll(DL_ITEM_SELECTOR)];
-  console.log('draggableList', draggableList);
 
   draggableList.forEach((item) => {
     item.setAttribute('draggable', true);
 
     item.addEventListener('dragstart', dragStart);
     item.addEventListener('dragend', dragEnd);
-
     item.addEventListener('dragover', dragOver);
     item.addEventListener('dragenter', dragEnter);
     item.addEventListener('dragleave', dragLeave);

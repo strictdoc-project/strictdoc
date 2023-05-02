@@ -5,6 +5,14 @@ build-backend = "hatchling.build"
 [tool.hatch.version]
 path = "strictdoc/__init__.py"
 
+[tool.hatch.build]
+exclude = [
+  "/.*",
+  "/developer",
+  "/docs",
+  "/tests",
+]
+
 #[tool.hatch.build.targets.sdist]
 #include = [
 #    "/uvicorn",

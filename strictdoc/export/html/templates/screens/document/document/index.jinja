@@ -10,7 +10,6 @@
 {% block head_scripts %}
   <script type="text/javascript" src="{{ link_renderer.render_static_url('viewtype_menu.js') }}"></script>
   <script type="text/javascript" src="{{ link_renderer.render_static_url('resizable_bar.js') }}"></script>
-  <script type="text/javascript" src="{{ link_renderer.render_static_url('draggable_list.js') }}"></script>
 
   {%- if config.is_running_on_server -%}
   <script type="module">
@@ -19,6 +18,7 @@
       window.Stimulus = Application.start();
   </script>
   <script type="module" src="{{ link_renderer.render_static_url('controllers/collapsible_list_controller.js') }}"></script>
+  <script type="module" src="{{ link_renderer.render_static_url('controllers/draggable_list_controller.js') }}"></script>
   <script type="module" src="{{ link_renderer.render_static_url('controllers/dropdown_menu_controller.js') }}"></script>
   <script type="module" src="{{ link_renderer.render_static_url('controllers/editable_field_controller.js') }}"></script>
   <script type="module" src="{{ link_renderer.render_static_url('controllers/deletable_field_controller.js') }}"></script>

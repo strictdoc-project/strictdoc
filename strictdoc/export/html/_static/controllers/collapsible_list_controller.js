@@ -121,6 +121,7 @@ Stimulus.register("collapsible_list", class extends Controller {
   static targets = ["name"];
 
   initialize() {
+    // console.log(`${ROOT_SELECTOR}`, 'initialize')
     const listElement = document.querySelector(LIST_SELECTOR);
     this.render(listElement)
   }
@@ -144,9 +145,9 @@ Stimulus.register("collapsible_list", class extends Controller {
 
 });
 
-function addStyleElement(target, styleTextContent) {
+function addStyleElement(target, styleTextContent, attr = 'style') {
   const style = document.createElement('style');
-  style.setAttribute("collapsible-list-style", '');
+  style.setAttribute(`${ROOT_SELECTOR}-${attr}`, '');
   style.textContent = styleTextContent;
   target.prepend(style);
 }

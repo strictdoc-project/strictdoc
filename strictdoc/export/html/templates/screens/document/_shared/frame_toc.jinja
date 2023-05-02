@@ -3,7 +3,10 @@
   style="display: contents"
   js-collapsible_list="true" {# FIXME: issue#1098 #}
   js-draggable_list="true" {# FIXME: issue#1098 #}
-  data-controller="collapsible_list"
+  data-controller="draggable_list collapsible_list"
+  {%- if last_moved_node_id is defined %}
+  data-last_moved_node_id="{{ last_moved_node_id }}"
+  {% endif -%}
 >
     <ul
       data-testid="toc-list"

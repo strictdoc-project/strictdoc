@@ -1497,6 +1497,7 @@ def create_main_router(
             document_iterator=iterator,
             document_type=DocumentType.document(),
             config=export_action.config,
+            traceability_index=export_action.traceability_index,
         )
         toc_template = env.get_template(
             "actions/document/_shared/stream_updated_toc.jinja.html"
@@ -1505,6 +1506,7 @@ def create_main_router(
             document_iterator=iterator,
             document_type=DocumentType.document(),
             link_renderer=link_renderer,
+            last_moved_node_id=moved_node.node_id,
         )
         return HTMLResponse(
             content=output,

@@ -343,7 +343,13 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         self.dir_for_sdoc_assets: str = ""
 
         # FIXME: This does not belong here.
+        self._server_host: Optional[str] = None
         self._server_port: Optional[int] = None
+
+    @property
+    def server_host(self) -> str:
+        assert self._server_host is not None
+        return self._server_host
 
     @property
     def server_port(self) -> int:
@@ -391,6 +397,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
                 ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY
             )
         )
+        self._server_host = project_config.server_host
 
 
 class DumpGrammarCommandConfig:

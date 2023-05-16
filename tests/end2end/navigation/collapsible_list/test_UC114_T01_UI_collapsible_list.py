@@ -8,7 +8,7 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 from tests.end2end.server import SDocTestServer
 
 
-class Test_UC112_T01_UI_toc(BaseCase):
+class Test_UC114_T01_UI_collapsible_list(BaseCase):
     def test_01(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 

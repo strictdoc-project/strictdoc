@@ -70,15 +70,12 @@ class DocumentFinder:
             map_docs_by_paths[input_doc_full_path] = document
             document_list.append(document)
 
-        for file_tree, doc_file, file_tree_mount_folder in file_tree_list:
+        for _, doc_file, file_tree_mount_folder in file_tree_list:
             input_doc_full_path = doc_file.get_full_path()
             document = map_docs_by_paths[input_doc_full_path]
             assert isinstance(document, Document)
 
-            doc_relative_path = os.path.relpath(
-                input_doc_full_path, file_tree.root_path
-            )
-            doc_relative_path_folder = os.path.dirname(doc_relative_path)
+            doc_relative_path_folder = os.path.dirname(doc_file.rel_path)
 
             output_document_dir_rel_path = (
                 f"{file_tree_mount_folder}/{doc_relative_path_folder}"

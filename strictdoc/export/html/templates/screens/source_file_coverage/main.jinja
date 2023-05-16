@@ -14,7 +14,7 @@
                 <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" />
               </svg>
             </i>
-            <div class="std-tree_name">{{ folder_or_file.get_folder_name() }}/</div>
+            <div class="std-tree_name">{{ folder_or_file.folder_name }}/</div>
           </div>
           {% else %}
           {%- set source_file = traceability_index.document_tree.source_tree.get_source_for_file(folder_or_file) -%}

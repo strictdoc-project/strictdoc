@@ -51,16 +51,19 @@ class File(FileOrFolderEntry):
         return os.path.basename(os.path.dirname(self.root_path))
 
 
-class Folder(FileOrFolderEntry):
-    def __init__(self, root_path, level):
+class Folder(FileOrFolderEntry):  # pylint: disable=too-many-instance-attributes
+    def __init__(self, root_path: str, rel_path: str, level):
         assert os.path.isdir(root_path)
         assert os.path.isabs(root_path)
+        assert isinstance(rel_path, str)
 
-        self.root_path = root_path
+        self.root_path: str = root_path
+        self.rel_path: str = rel_path if rel_path != "." else ""
+        self.folder_name: str = os.path.basename(os.path.normpath(root_path))
         self.level = level
         self.files = []
         self.subfolder_trees = []
-        self.parent_folder = None
+        self.parent_folder: Optional[Folder] = None
         self.has_sdoc_content = False
 
     def __repr__(self):
@@ -74,9 +77,6 @@ class Folder(FileOrFolderEntry):
 
     def get_level(self):
         return self.level
-
-    def get_folder_name(self):
-        return os.path.basename(os.path.normpath(self.root_path))
 
     def mount_folder(self):
         return os.path.basename(self.root_path)
@@ -153,7 +153,7 @@ class FileFinder:
 
         root_level: int = root_path.count(os.sep)
 
-        root_folder: Folder = Folder(root_path, 0)
+        root_folder: Folder = Folder(root_path, ".", 0)
         folder_map: Dict[str, Folder] = {root_path: root_folder}
 
         for current_root_path, dirs, files in os.walk(root_path, topdown=True):
@@ -173,13 +173,15 @@ class FileFinder:
             ]
             dirs.sort(key=alphanumeric_sort)
 
+            rel_path = os.path.relpath(current_root_path, start=root_path)
+
             current_root_path_level: int = (
                 current_root_path.count(os.sep) - root_level
             )
 
             current_tree = folder_map.setdefault(
                 current_root_path,
-                Folder(current_root_path, current_root_path_level),
+                Folder(current_root_path, rel_path, current_root_path_level),
             )
 
             def filter_source_files(_files):

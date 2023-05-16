@@ -41,6 +41,13 @@ class Test_UC112_T01_UI_toc(BaseCase):
             screen_toc.assert_toc_closed()
             screen_toc.assert_toc_contains("Section title")
 
+            # Suspecting that this is a reason for the flaky test:
+            # Element {//*[@data-testid="toc-bar"][@data-state="open"]} was not
+            # present after 7 seconds!
+            # https://github.com/strictdoc-project/strictdoc/issues/1155
+            # Wait for animation to complete.
+            self.sleep(1)
+
             # show the toc
             screen_toc.do_toggle_toc()
 

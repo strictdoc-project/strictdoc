@@ -20,12 +20,14 @@ class FileOrFolderEntry:
 
 
 class File(FileOrFolderEntry):
-    def __init__(self, level, full_path):
+    def __init__(self, level, full_path, rel_path: str):
         assert os.path.isfile(full_path)
         assert os.path.isabs(full_path)
+        assert isinstance(rel_path, str)
         self.level = level
         self.full_path = full_path
         self.root_path = full_path
+        self.rel_path = rel_path
         self.files = [self]
         self.subfolder_trees = []
 
@@ -84,7 +86,10 @@ class Folder(FileOrFolderEntry):  # pylint: disable=too-many-instance-attributes
     def set(self, files):
         for file in files:
             full_file_path = os.path.join(self.root_path, file)
-            self.files.append(File(self.level + 1, full_file_path))
+            rel_file_path = os.path.join(self.rel_path, file)
+            self.files.append(
+                File(self.level + 1, full_file_path, rel_file_path)
+            )
 
     def add_subfolder_tree(self, subfolder_tree):
         assert isinstance(subfolder_tree, Folder)
@@ -101,7 +106,7 @@ class FileTree:
 
     @staticmethod
     def create_single_file_tree(root_path):
-        single_file = File(0, root_path)
+        single_file = File(0, root_path, "")
         return FileTree(root_folder_or_file=single_file)
 
     def iterate(self):

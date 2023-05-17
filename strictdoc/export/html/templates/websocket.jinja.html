@@ -5,7 +5,8 @@
 
 <script>
   var clientId = Date.now();
-  var ws = new WebSocket(`ws://{{config.server_host}}:{{config.server_port}}/ws/${clientId}`);
+  var ws_protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  var ws = new WebSocket(`${ws_protocol}//${window.location.host}/ws/${clientId}`);
   ws.onmessage = function(event) {
     // Nothing just yet.
   };

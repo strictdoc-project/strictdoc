@@ -1,7 +1,6 @@
 import { Controller } from "/_static/stimulus.js";
 
 const DL_SELECTOR = 'js-draggable_list';
-const DL_LIST_SELECTOR = `[${DL_SELECTOR}="list"]`;
 const DL_ITEM_SELECTOR = 'li';
 
 const CSS = `
@@ -63,13 +62,11 @@ Stimulus.register("draggable_list", class extends Controller {
 
   initialize() {
     const last_moved_node_id = this.element.dataset.last_moved_node_id;
-    // console.log(`${DL_SELECTOR}`, 'initialize', last_moved_node_id);
 
-    const draggable = document.querySelector(`[${DL_SELECTOR}]`);
-    addStyle (draggable, CSS, 'style');
+    addStyle(this.element, CSS, 'style');
 
     // Add event listeners.
-    const draggableList = [...draggable.querySelectorAll(DL_ITEM_SELECTOR)];
+    const draggableList = [...this.element.querySelectorAll(DL_ITEM_SELECTOR)];
     draggableList.forEach((item) => {
       item.addEventListener('dragstart', dragStart);
       item.addEventListener('dragend', dragEnd);
@@ -86,7 +83,7 @@ Stimulus.register("draggable_list", class extends Controller {
     });
 
     // Prevent drag for links inside the list.
-    [...draggable.querySelectorAll('a')].forEach((item) => {
+    [...this.element.querySelectorAll('a')].forEach((item) => {
       item.setAttribute('draggable', false);
     })
   }
@@ -97,7 +94,8 @@ function addStyle (target, css, attr = 'style') {
   style.setAttribute(`${DL_SELECTOR}-${attr}`, '');
   style.textContent = css;
   // document.head.append(style);
-  target.prepend(style);
+  // target.prepend(style);
+  target.parentNode.insertBefore(style, target);
 }
 
 function createDropIndicator() {

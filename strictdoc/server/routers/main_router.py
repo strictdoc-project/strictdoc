@@ -1417,12 +1417,9 @@ def create_main_router(
         )
 
     # WIP: Move nodes
-    @router.post(
-        "/actions/document/move_node", response_class=Response
-    )
+    @router.post("/actions/document/move_node", response_class=Response)
     async def move_node(request: Request):
         request_form_data: FormData = await request.form()
-        print(request_form_data)
         request_dict: Dict[str, str] = dict(request_form_data)
         moved_node_mid: str = request_dict["moved_node_mid"]
         target_mid: str = request_dict["target_mid"]
@@ -1444,26 +1441,39 @@ def create_main_router(
             # Append to the end of child list.
             target_node.section_contents.append(moved_node)
             moved_node.parent = target_node
-            # insert_to_idx = len(parent.section_contents)
-            moved_node.ng_level = target_node.ng_level + 1
         elif whereto == NodeCreationOrder.BEFORE:
             # Disconnect the moved_node from its parent.
             current_parent_node.section_contents.remove(moved_node)
             # Append before.
-            insert_to_idx = target_node.parent.section_contents.index(target_node)
-            target_node.parent.section_contents.insert(insert_to_idx, moved_node)
+            insert_to_idx = target_node.parent.section_contents.index(
+                target_node
+            )
+            target_node.parent.section_contents.insert(
+                insert_to_idx, moved_node
+            )
             moved_node.parent = target_node.parent
-            moved_node.ng_level = target_node.ng_level
         elif whereto == NodeCreationOrder.AFTER:
             # Disconnect the moved_node from its parent.
             current_parent_node.section_contents.remove(moved_node)
             # Append after.
-            insert_to_idx = target_node.parent.section_contents.index(target_node)
-            target_node.parent.section_contents.insert(insert_to_idx + 1, moved_node)
+            insert_to_idx = target_node.parent.section_contents.index(
+                target_node
+            )
+            target_node.parent.section_contents.insert(
+                insert_to_idx + 1, moved_node
+            )
             moved_node.parent = target_node.parent
-            moved_node.ng_level = target_node.ng_level
         else:
             raise NotImplementedError
+
+        # Now we have to update all ng_levels for the moved node because they
+        # now depend on the level of the new parent node (target node).
+        iterator = export_action.traceability_index.get_document_iterator(
+            moved_node.document
+        )
+        moved_node.ng_level = moved_node.parent.ng_level + 1
+        for node in iterator.specific_node_with_normal_levels(moved_node):
+            node.ng_level = node.parent.ng_level + 1
 
         # Saving new content to .SDoc file.
         document_content = SDWriter().write(moved_node.document)
@@ -1489,9 +1499,6 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             context_document=moved_node.document,
-        )
-        iterator = export_action.traceability_index.get_document_iterator(
-            moved_node.document
         )
         output = template.render(
             renderer=markup_renderer,

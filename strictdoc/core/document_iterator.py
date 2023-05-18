@@ -91,3 +91,36 @@ class DocumentCachingIterator:
 
             elif isinstance(current, CompositeRequirement):
                 task_list.extendleft(reversed(current.requirements))
+
+    @staticmethod
+    def specific_node_with_normal_levels(node):
+        if isinstance(node, Section):
+            initial_content = node.section_contents
+        elif isinstance(node, CompositeRequirement):
+            initial_content = node.requirements
+        else:
+            return
+
+        task_list = collections.deque(initial_content)
+
+        while True:
+            if not task_list:
+                break
+
+            current = task_list.popleft()
+
+            if isinstance(
+                current, (Section, Requirement, CompositeRequirement)
+            ):
+                # We are not interested in the nodes without level in this
+                # iterator.
+                if current.ng_resolved_custom_level == "None":
+                    continue
+
+            yield current
+
+            if isinstance(current, Section):
+                task_list.extendleft(reversed(current.section_contents))
+
+            elif isinstance(current, CompositeRequirement):
+                task_list.extendleft(reversed(current.requirements))

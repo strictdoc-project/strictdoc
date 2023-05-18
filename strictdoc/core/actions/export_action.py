@@ -49,10 +49,7 @@ class ExportAction:
             "html" in self.config.formats
             or "html-standalone" in self.config.formats
         ):
-            Path(self.config.output_html_root).mkdir(
-                parents=True, exist_ok=True
-            )
-            HTMLGenerator.export_tree(
+            HTMLGenerator.export_complete_tree(
                 project_config=self.project_config,
                 config=self.config,
                 traceability_index=self.traceability_index,

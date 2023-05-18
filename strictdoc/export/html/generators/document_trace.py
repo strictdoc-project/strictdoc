@@ -1,5 +1,6 @@
 from strictdoc import __version__
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
@@ -9,8 +10,9 @@ class DocumentTraceHTMLGenerator:
     env = HTMLTemplates.jinja_environment
 
     @staticmethod
-    def export(
+    def export(  # pylint: disable=too-many-arguments
         config,
+        project_config: ProjectConfig,
         document,
         traceability_index,
         markup_renderer,
@@ -30,6 +32,7 @@ class DocumentTraceHTMLGenerator:
 
         output += template.render(
             config=config,
+            project_config=project_config,
             document=document,
             traceability_index=traceability_index,
             renderer=markup_renderer,

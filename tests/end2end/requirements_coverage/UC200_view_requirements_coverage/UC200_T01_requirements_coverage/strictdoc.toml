@@ -1,0 +1,5 @@
+[project]
+
+features = [
+  "REQUIREMENTS_COVERAGE_SCREEN"
+]

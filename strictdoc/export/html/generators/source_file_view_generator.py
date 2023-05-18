@@ -10,6 +10,7 @@ from pygments.lexers.templates import HtmlDjangoLexer
 from strictdoc import __version__
 from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.finders.source_files_finder import SourceFile
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.html_templates import HTMLTemplates
@@ -22,7 +23,9 @@ class SourceFileViewHTMLGenerator:
 
     @staticmethod
     def export(
+        *,
         config: ExportCommandConfig,
+        project_config: ProjectConfig,
         source_file: SourceFile,
         traceability_index: TraceabilityIndex,
     ):
@@ -123,6 +126,7 @@ class SourceFileViewHTMLGenerator:
         )
         output += template.render(
             config=config,
+            project_config=project_config,
             source_file=source_file,
             source_file_lines=source_file_lines,
             pygments_styles=pygments_styles,

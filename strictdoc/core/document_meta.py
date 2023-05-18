@@ -1,6 +1,8 @@
 from strictdoc.export.html.document_type import DocumentType
+from strictdoc.helpers.auto_described import auto_described
 
 
+@auto_described
 class DocumentMeta:
     def __init__(  # pylint: disable=too-many-arguments
         self,

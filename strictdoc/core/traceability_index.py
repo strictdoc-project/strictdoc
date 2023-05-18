@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Dict, List, Optional, Set
 
 from strictdoc.backend.sdoc.models.document import Document
@@ -59,6 +60,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
         self.document_tree: Optional[DocumentTree] = None
         self.asset_dirs = None
+        self.index_last_updated = datetime.today()
         self.strictdoc_last_update = None
 
     def has_requirements(self):

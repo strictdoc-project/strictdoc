@@ -8,6 +8,15 @@ class DocumentType:
         self.document_type = document_type
 
     @staticmethod
+    def all():
+        return (
+            DocumentType.DOCUMENT,
+            DocumentType.TABLE,
+            DocumentType.TRACE,
+            DocumentType.DEEPTRACE,
+        )
+
+    @staticmethod
     def document():
         return DocumentType(DocumentType.DOCUMENT)
 

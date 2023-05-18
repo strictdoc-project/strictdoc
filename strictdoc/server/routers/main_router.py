@@ -75,6 +75,7 @@ from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
+from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.parallelizer import NullParallelizer
 from strictdoc.helpers.string import (
     is_safe_alphanumeric_string,
@@ -124,7 +125,11 @@ def create_main_router(
         parallelizer=parallelizer,
     )
     export_action.build_index()
-    export_action.export()
+    HTMLGenerator.export_assets(
+        project_config=project_config,
+        config=export_config,
+        traceability_index=export_action.traceability_index,
+    )
 
     router = APIRouter()
 
@@ -1704,8 +1709,9 @@ def create_main_router(
         )
 
         # Re-generate the document tree.
-        HTMLGenerator.export_document_tree(
+        HTMLGenerator.export_project_tree_screen(
             config=export_config,
+            project_config=project_config,
             traceability_index=export_action.traceability_index,
         )
 
@@ -1876,8 +1882,9 @@ def create_main_router(
         )
 
         # Re-generate the document tree.
-        HTMLGenerator.export_document_tree(
+        HTMLGenerator.export_project_tree_screen(
             config=export_config,
+            project_config=project_config,
             traceability_index=export_action.traceability_index,
         )
 
@@ -2122,7 +2129,79 @@ def create_main_router(
         full_path_to_document = os.path.join(
             server_config.output_path, "html", url_to_document
         )
-        assert os.path.isfile(full_path_to_document), f"{full_path_to_document}"
+        must_generate_document = False
+
+        path_to_file_exists = os.path.isfile(full_path_to_document)
+        if not path_to_file_exists:
+            must_generate_document = True
+        else:
+            output_file_mtime = get_file_modification_time(
+                full_path_to_document
+            )
+            if (
+                export_action.traceability_index.index_last_updated
+                > output_file_mtime
+            ):
+                must_generate_document = True
+
+        if must_generate_document:
+            if url_to_document.startswith("_source_files"):
+                # FIXME: We could be more specific here and only generate the
+                # requested file.
+                HTMLGenerator.export_source_coverage_screen(
+                    config=export_config,
+                    project_config=project_config,
+                    traceability_index=export_action.traceability_index,
+                )
+            elif url_to_document == "index.html":
+                HTMLGenerator.export_project_tree_screen(
+                    config=export_config,
+                    project_config=project_config,
+                    traceability_index=export_action.traceability_index,
+                )
+            elif url_to_document == "requirements_coverage.html":
+                HTMLGenerator.export_requirements_coverage_screen(
+                    config=export_config,
+                    project_config=project_config,
+                    traceability_index=export_action.traceability_index,
+                )
+            elif url_to_document == "source_coverage.html":
+                HTMLGenerator.export_source_coverage_screen(
+                    config=export_config,
+                    project_config=project_config,
+                    traceability_index=export_action.traceability_index,
+                )
+            else:
+                if url_to_document.endswith("-TABLE.html"):
+                    base_document_url = url_to_document.replace("-TABLE", "")
+                    document_type_to_generate = DocumentType.TABLE
+                elif url_to_document.endswith("-DEEP-TRACE.html"):
+                    base_document_url = url_to_document.replace(
+                        "-DEEP-TRACE", ""
+                    )
+                    document_type_to_generate = DocumentType.DEEPTRACE
+                elif url_to_document.endswith("-TRACE.html"):
+                    base_document_url = url_to_document.replace("-TRACE", "")
+                    document_type_to_generate = DocumentType.TRACE
+                else:
+                    # Either this is a normal document, or the path is broken.
+                    base_document_url = url_to_document
+                    document_type_to_generate = DocumentType.DOCUMENT
+                document = export_action.traceability_index.document_tree.map_docs_by_rel_paths.get(  # noqa: E501
+                    base_document_url
+                )
+                if document is None:
+                    return HTMLResponse(
+                        content=f"Not Found: {url_to_document}", status_code=404
+                    )
+                document.ng_needs_generation = True
+                HTMLGenerator.export_single_document_with_performance(
+                    project_config=project_config,
+                    config=export_config,
+                    document=document,
+                    traceability_index=export_action.traceability_index,
+                    specific_documents=(document_type_to_generate,),
+                )
         with open(full_path_to_document, encoding="utf8") as sample_sdoc:
             content = sample_sdoc.read()
         return HTMLResponse(content=content)

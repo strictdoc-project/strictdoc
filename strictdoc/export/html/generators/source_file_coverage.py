@@ -1,5 +1,6 @@
 from strictdoc import __version__
 from strictdoc.cli.cli_arg_parser import ExportCommandConfig
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
@@ -10,7 +11,9 @@ class SourceFileCoverageHTMLGenerator:
 
     @staticmethod
     def export(
+        *,
         config: ExportCommandConfig,
+        project_config: ProjectConfig,
         traceability_index: TraceabilityIndex,
     ):
         output = ""
@@ -23,6 +26,7 @@ class SourceFileCoverageHTMLGenerator:
         )
         output += template.render(
             config=config,
+            project_config=project_config,
             traceability_index=traceability_index,
             link_renderer=link_renderer,
             strictdoc_version=__version__,

@@ -55,7 +55,7 @@ class DocumentFinder:
     @staticmethod
     def _build_document_tree(file_trees, output_root_html, parallelizer):
         assert isinstance(file_trees, list)
-        document_list, map_docs_by_paths = [], {}
+        document_list, map_docs_by_paths, map_docs_by_rel_paths = [], {}, {}
 
         file_tree_list = []
         for file_tree in file_trees:
@@ -102,9 +102,20 @@ class DocumentFinder:
 
             document.assign_meta(document_meta)
 
+            output_document_rel_path = os.path.join(
+                output_document_dir_rel_path, f"{document_filename_base}.html"
+            )
+            # This rel path will be used for lookups of URL pages that are
+            # always "/"-based, even on Windows.
+            output_document_rel_path = output_document_rel_path.replace(
+                "\\", "/"
+            )
             map_docs_by_paths[input_doc_full_path] = document
+            map_docs_by_rel_paths[output_document_rel_path] = document
 
-        return DocumentTree(file_trees, document_list, map_docs_by_paths)
+        return DocumentTree(
+            file_trees, document_list, map_docs_by_paths, map_docs_by_rel_paths
+        )
 
     @staticmethod
     def _build_file_tree(config: ExportCommandConfig):

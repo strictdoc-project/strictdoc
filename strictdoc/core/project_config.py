@@ -66,6 +66,17 @@ class ProjectConfig:
     def is_feature_activated(self, feature: ProjectFeature):
         return feature in self.project_features
 
+    def is_activated_requirements_to_source_traceability(self):
+        return (
+            ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY
+            in self.project_features
+        )
+
+    def is_activated_requirements_coverage(self):
+        return (
+            ProjectFeature.REQUIREMENTS_COVERAGE_SCREEN in self.project_features
+        )
+
     @staticmethod
     def is_reqif_feature_activated():
         return ProjectFeature.REQIF

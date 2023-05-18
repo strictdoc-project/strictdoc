@@ -161,10 +161,10 @@ class SDocTestServer:  # pylint: disable=too-many-instance-attributes
             )
 
         self.log_file_out = open(  # pylint: disable=consider-using-with
-            self.path_to_out_log, "wb"
+            self.path_to_out_log, "ab"
         )
         self.log_file_err = open(  # pylint: disable=consider-using-with
-            self.path_to_err_log, "wb"
+            self.path_to_err_log, "ab"
         )
         self.exit_stack.enter_context(self.log_file_out)
         self.exit_stack.enter_context(self.log_file_err)

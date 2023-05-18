@@ -10,6 +10,12 @@ from tests.end2end.helpers.screens.project_index.form_add_document import (
 from tests.end2end.helpers.screens.project_index.form_import_reqif import (
     Form_ImportReqIF,
 )
+from tests.end2end.helpers.screens.requirements_coverage.screen_requirements_coverage import (  # noqa: E501
+    Screen_RequirementsCoverage,
+)
+from tests.end2end.helpers.screens.source_coverage.screen_source_coverage import (  # noqa: E501
+    Screen_SourceCoverage,
+)
 
 
 class Screen_ProjectIndex:  # pylint: disable=invalid-name
@@ -49,9 +55,35 @@ class Screen_ProjectIndex:  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
+    def assert_link_to_requirements_coverage_present(self) -> None:
+        self.test_case.assert_element(
+            '//a[@data-testid="project-tree-link-requirements-coverage"]',
+            by=By.XPATH,
+        )
+
+    def assert_link_to_source_coverage_present(self) -> None:
+        self.test_case.assert_element(
+            '//a[@data-testid="project-tree-link-source-coverage"]',
+            by=By.XPATH,
+        )
+
     def do_click_on_first_document(self) -> Screen_Document:
         self.test_case.click_xpath('//*[@data-testid="tree-file-link"]')
         return Screen_Document(self.test_case)
+
+    def do_click_on_requirements_coverage_link(
+        self,
+    ) -> Screen_RequirementsCoverage:
+        self.test_case.click_xpath(
+            '//a[@data-testid="project-tree-link-requirements-coverage"]',
+        )
+        return Screen_RequirementsCoverage(self.test_case)
+
+    def do_click_on_source_coverage_link(self) -> Screen_SourceCoverage:
+        self.test_case.click_xpath(
+            '//a[@data-testid="project-tree-link-source-coverage"]',
+        )
+        return Screen_SourceCoverage(self.test_case)
 
     def do_click_on_the_document(self, doc_order: int = 1) -> Screen_Document:
         self.test_case.click_xpath(

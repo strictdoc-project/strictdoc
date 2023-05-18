@@ -5,12 +5,8 @@ const DL_ITEM_SELECTOR = 'li';
 
 const CSS = `
 ${DL_ITEM_SELECTOR}[draggable="true"] {
-  background: rgba(0,0,0,0.02);
-  border: 1px solid rgba(0,0,0,0.02);
 }
 ${DL_ITEM_SELECTOR}[draggable="true"]:hover {
-  background: rgba(0,0,0,0.02);
-  border: 1px solid rgba(0,0,0,0.05);
   cursor: -webkit-grab;
   cursor: -moz-grab;
   cursor: -o-grab;
@@ -28,6 +24,18 @@ ${DL_ITEM_SELECTOR}[draggable="true"]:active {
   display: block;
   border: 2px solid blue;
   pointer-events: none;
+}
+.dragIndicator {
+  position: absolute;
+  top: 0; right: 0;
+  transition: 0.3s;
+}
+${DL_ITEM_SELECTOR}[draggable="true"] .dragIndicator::before {
+  position: absolute;
+  width: 8px;
+  height: 24px;
+  top: 0; left: 100%;
+  content: "⋮⋮";
 }
 [data-last_moved="true"] {
   position: relative;
@@ -56,11 +64,14 @@ ${DL_ITEM_SELECTOR}[draggable="true"]:active {
 
 let dragItem = null;
 const dropIndicator = createDropIndicator();
+const dragIndicator = createDragIndicator();
 
 Stimulus.register("draggable_list", class extends Controller {
   static targets = ["name"];
 
   initialize() {
+    // this.element.style.paddingRight = '10px';
+
     const last_moved_node_id = this.element.dataset.last_moved_node_id;
 
     addStyle(this.element, CSS, 'style');
@@ -74,6 +85,9 @@ Stimulus.register("draggable_list", class extends Controller {
       item.addEventListener('dragenter', dragEnter);
       item.addEventListener('dragleave', dragLeave);
       item.addEventListener('drop', dragDrop);
+
+      item.addEventListener("mouseover", mouseOver);
+      item.addEventListener("mouseleave", mouseLeave);
 
       last_moved_node_id
       && (item.dataset.nodeid === last_moved_node_id)
@@ -102,6 +116,12 @@ function createDropIndicator() {
   const dropIndicator = document.createElement('div');
   dropIndicator.className = 'dropIndicator';
   return dropIndicator
+}
+
+function createDragIndicator() {
+  const dragIndicator = document.createElement('div');
+  dragIndicator.className = 'dragIndicator';
+  return dragIndicator
 }
 
 function dragStart(event) {
@@ -135,6 +155,21 @@ function dragDrop(event) {
   event.preventDefault();
   event.stopImmediatePropagation();
   fetchDroppedItemData(dragItem, this);
+}
+
+function mouseOver(event) {
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  if (event.target === this) {
+    event.target.append(dragIndicator);
+  }
+}
+function mouseLeave(event) {
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  if (event.target === this) {
+    dragIndicator.remove();
+  }
 }
 
 function fetchDroppedItemData(dragItem, dropReference) {

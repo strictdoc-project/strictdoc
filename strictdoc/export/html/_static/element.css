@@ -701,38 +701,42 @@ a.tree_item:hover {
 }
 
 .toc {
-  /* padding-left: var(--base-rhythm); */
+  margin-top: calc(var(--base-rhythm) * 2);
+  padding-left: calc(var(--base-rhythm) * 2);
   font-size: var(--font-size-sm);
   line-height: 1.2;
 }
 
 .toc li {
-  /* padding-left: .75rem; */
   margin: 0;
-  /* margin-top: .75rem; */
+  /* margin-left: var(--base-rhythm); */
+  padding-left: var(--base-rhythm);
+  position: relative;
+}
+
+.toc a {
+  display: block;
   padding-top: var(--base-rhythm);
   padding-bottom: var(--base-rhythm);
+  /* padding-left: var(--base-rhythm); */
   padding-right: var(--base-rhythm);
-  padding-left: calc(var(--base-rhythm) * 2.5);
-  position: relative;
-  /* border-left: 1px solid #ccc; */
 }
 
 .toc a,
 .toc a:link,
 .toc a:visited {
-  line-height: 1;
+  /* line-height: 1; */
   text-decoration: none;
   color: var(--color-fg-secondary);
 }
 .toc a:hover {
-  background-color: var(--color-bg-contrast);
+  /* background-color: var(--color-bg-contrast); */
   color: var(--color-fg-contrast);
 }
 
 .toc a:focus,
 .toc a:active {
-  background: yellow;
+  background: transparent;
 }
 
 .toc-title-no-link {

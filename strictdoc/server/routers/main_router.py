@@ -1445,6 +1445,7 @@ def create_main_router(
             target_node.section_contents.append(moved_node)
             moved_node.parent = target_node
             # insert_to_idx = len(parent.section_contents)
+            moved_node.ng_level = target_node.ng_level + 1
         elif whereto == NodeCreationOrder.BEFORE:
             # Disconnect the moved_node from its parent.
             current_parent_node.section_contents.remove(moved_node)
@@ -1452,6 +1453,7 @@ def create_main_router(
             insert_to_idx = target_node.parent.section_contents.index(target_node)
             target_node.parent.section_contents.insert(insert_to_idx, moved_node)
             moved_node.parent = target_node.parent
+            moved_node.ng_level = target_node.ng_level
         elif whereto == NodeCreationOrder.AFTER:
             # Disconnect the moved_node from its parent.
             current_parent_node.section_contents.remove(moved_node)
@@ -1459,6 +1461,7 @@ def create_main_router(
             insert_to_idx = target_node.parent.section_contents.index(target_node)
             target_node.parent.section_contents.insert(insert_to_idx + 1, moved_node)
             moved_node.parent = target_node.parent
+            moved_node.ng_level = target_node.ng_level
         else:
             raise NotImplementedError
 

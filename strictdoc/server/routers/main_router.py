@@ -15,7 +15,7 @@ from starlette.requests import Request
 from starlette.responses import HTMLResponse, Response
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
-from strictdoc import SDocRuntimeEnvironment, __version__
+from strictdoc import __version__
 from strictdoc.backend.reqif.export.sdoc_to_reqif_converter import (
     SDocToReqIFObjectConverter,
 )
@@ -103,7 +103,6 @@ def create_main_router(
     env: Environment = HTMLTemplates.jinja_environment
 
     parallelizer = NullParallelizer()
-    environment: SDocRuntimeEnvironment = server_config.environment
 
     export_config = ExportCommandConfig(
         environment=server_config.environment,
@@ -2101,13 +2100,21 @@ def create_main_router(
 
     @router.get("/{full_path:path}", response_class=Response)
     def get_incoming_request(full_path: str):
+        # FIXME: This seems to be quite un-sanitized.
         _, file_extension = os.path.splitext(full_path)
         if file_extension == ".html":
             return get_document(full_path)
-        if file_extension in (".css", ".js", ".svg"):
+        if file_extension in (
+            ".css",
+            ".js",
+            ".svg",
+            ".ico",
+            ".png",
+            ".gif",
+            ".jpg",
+            ".jpeg",
+        ):
             return get_asset(full_path)
-        if file_extension in (".ico", ".png", "gif", ".jpg", "jpeg"):
-            return get_asset_binary(full_path)
 
         return HTMLResponse(content="Not Found", status_code=404)
 
@@ -2124,24 +2131,6 @@ def create_main_router(
         project_output_path = export_config.output_html_root
         static_file = os.path.join(project_output_path, url_to_asset)
 
-        content_type, _ = guess_type(static_file)
-
-        if not os.path.isfile(static_file):
-            return Response(
-                content=f"File not found: {url_to_asset}",
-                status_code=404,
-                media_type=content_type,
-            )
-        with open(static_file, encoding="utf8") as f:
-            content = f.read()
-        return Response(content, media_type=content_type)
-
-    def get_asset_binary(url_to_asset: str):
-        project_output_path = export_config.output_html_root
-        static_file = os.path.join(project_output_path, url_to_asset)
-
-        static_path = environment.get_path_to_export_html()
-        static_file = os.path.join(static_path, url_to_asset)
         content_type, _ = guess_type(static_file)
 
         if not os.path.isfile(static_file):

@@ -10,7 +10,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test_UC01_T04_DisplayImage(BaseCase):
+class Test_UC01_T07_DisplayPNGImage(BaseCase):
     def test_01(self):
         with SDocTestServer(
             input_path=path_to_this_test_file_folder

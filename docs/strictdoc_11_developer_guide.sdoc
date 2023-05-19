@@ -9,10 +9,8 @@ StrictDoc is based on Python and maintained as any other Python package on
 GitHub: with linting, tests, and hopefully enough best practice put into the
 codebase.
 
-The instructions are conventions described below are the summary of what is
+The instructions and conventions described below are a summary of what is
 considered to be the currently preferred development style for StrictDoc.
-These rules have been relatively stable for quite a while but any rule can still
-be changed if a better development practice is found.
 
 Any feedback on this development guide is appreciated.
 [/FREETEXT]
@@ -20,6 +18,29 @@ Any feedback on this development guide is appreciated.
 [SECTION]
 UID: DEVGUIDE_GETTING_STARTED
 TITLE: Getting started
+
+[SECTION]
+TITLE: System dependencies
+
+[FREETEXT]
+StrictDoc itself mostly depends on other Python Pip packages, so there is nothing special to be installed.
+
+You may need to install ``libtidy`` if you want to run the integration tests. The HTML markup validation tests depend on libtidy.
+
+On Linux Ubuntu:
+
+.. code:: bash
+
+    sudo apt install tidy
+
+From the core Python packages, StrictDoc needs Invoke, Tox and TOML:
+
+.. code:: bash
+
+    pip install invoke tox toml
+[/FREETEXT]
+
+[/SECTION]
 
 [SECTION]
 TITLE: Installing StrictDoc from GitHub (developer mode)
@@ -31,8 +52,10 @@ in StrictDoc's source code. Otherwise, install StrictDoc as a normal Pip package
 .. code-block::
 
     git clone https://github.com/strictdoc-project/strictdoc.git && cd strictdoc
-    pip install .[development]
+    python developer/pip_install_strictdoc_deps.py
     python3 strictdoc/cli/main.py
+
+The ``pip_install_strictdoc_deps.py`` installs all dependencies of StrictDoc, but not StrictDoc itself.
 [/FREETEXT]
 
 [/SECTION]
@@ -54,6 +77,21 @@ Make sure to familiarize yourself with the available developer tasks by running:
 .. code-block:: bash
 
     invoke --list
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Main "Check" task
+
+[FREETEXT]
+Before doing anything else, run the main ``check`` command to make sure that StrictDoc passes all tests on your system:
+
+.. code:: bash
+
+    invoke check
+
+The ``check`` command runs all StrictDoc lint and test tasks with the only exception of end-to-end Web tests that are run with a separate task (see below).
 [/FREETEXT]
 
 [/SECTION]
@@ -142,6 +180,17 @@ The shortest path to run the server when the StrictDoc's source code is cloned:
 .. code-block:: bash
 
     invoke server
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Running End-to-End Web tests
+
+[FREETEXT]
+.. code:: bash
+
+    invoke test-end2end
 [/FREETEXT]
 
 [/SECTION]

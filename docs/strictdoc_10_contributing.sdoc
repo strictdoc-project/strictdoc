@@ -33,12 +33,25 @@ following steps:
 TITLE: How can I help?
 
 [SECTION]
+TITLE: Spread the word
+
+[FREETEXT]
+If you like the StrictDoc project and use it in your daily work, there are several things you could do besides contributing Pull Requests:
+
+- Star the StrictDoc repository to show your appreciation of the project.
+- Write a blog post or a tutorial about using StrictDoc to achieve some goal.
+- Write an email to s.pankevich@gmail.com and mettta@gmail.com and tell us how you are using StrictDoc and which features you are missing. We somewhat lack enough feedback from our users.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
 TITLE: ReqIF users
 
 [FREETEXT]
 The existing capability of StrictDoc to export/import SDoc to ReqIF is very basic. If you have to deal with ReqIF and you experience errors/crashes when using StrictDoc against ReqIF files, feel free to contribute the anonymized ReqIF files via StrictDoc Issues on GitHub, and we will take care of your specific case.
 
-It is straightforward to create an anonymized version of a ReqIF file. Just reduce your file to the section that causes troubles in import or export and replace all your business-specific titles/texts to some `Lorem ipsum...` boilerplate, see https://www.loremipsum.de/.
+It is straightforward to create an anonymized version of a ReqIF file. Just reduce your file to the section that causes troubles in import or export and replace all your business-specific titles/texts to some ``Lorem ipsum...`` boilerplate, see https://www.loremipsum.de/.
 [/FREETEXT]
 
 [/SECTION]

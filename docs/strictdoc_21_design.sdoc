@@ -6,7 +6,7 @@ OPTIONS:
   REQUIREMENT_IN_TOC: True
 
 [FREETEXT]
-This document describes the architecture and the implementation details of StrictDoc.
+This document describes the architecture and the implementation details of StrictDoc. Compared to the User Guide that describes how to use StrictDoc, this Design Document focuses on the "how it works" of StrictDoc.
 [/FREETEXT]
 
 [SECTION]
@@ -16,9 +16,9 @@ TITLE: Overview
 StrictDoc consists of two applications:
 
 1. StrictDoc command-line application (CLI).
-2. StrictDoc Web application.
+2. StrictDoc web application.
 
-Both applications share a significant subset of the backend and frontend logic. The backend logic is written in Python, the frontend logic is written using HTML/CSS, Jinja templates, and a combination of Turbo.js/Stimulus.js.
+Both applications share a significant subset of the backend and frontend logic. The backend logic is written in Python, the frontend logic is written using HTML/CSS, Jinja templates, and a combination of Turbo.js/Stimulus.js frontend libraries.
 [/FREETEXT]
 
 [/SECTION]
@@ -77,7 +77,7 @@ The command-line application can be seen as a Model-View-Controller application:
 [/SECTION]
 
 [SECTION]
-TITLE: StrictDoc Web application
+TITLE: StrictDoc web application
 
 [FREETEXT]
 StrictDoc Web application is based on FastAPI / Uvicorn. The end-to-end usage cycle of the web application is as follows:
@@ -96,12 +96,29 @@ StrictDoc uses the `Hotwire architecture <https://hotwired.dev>`_.
 
 The JavaScript framework used by StrictDoc is minimized to Turbo.js/Stimulus.js which helps to avoid the complexity of the larger JS frameworks such as React, Vue, Angular, etc. In accordance with the Hotwire approach, most of the StrictDoc's business logic is done on a server, while Turbo and Stimulus provide a thin layer of JS and AJAX to connect the almost static HTML with the server.
 
-The Hotwire approach helps to reduce the differences between the static HTML produced by the StrictDoc command-line application and the StrictDoc web application. In both cases, the core content of StrictDoc is a statically generated website with documents. The Web application extends the static HTML content with Turbo/Stimulus to turn it into a dynamic website.
+The Hotwire approach helps to reduce the differences between the static HTML produced by the StrictDoc command-line application and the StrictDoc web application. In both cases, the core content of StrictDoc is a statically generated website with documents. The web application extends the static HTML content with Turbo/Stimulus to turn it into a dynamic website.
 
-Currently, the Web server renders the HTML documents using the same generators that are used by the static HTML export, so the static HTML documentation and the Web application interface look identical. The Web interface adds the action buttons and other additional UI elements for editing the content.
+Currently, the web server renders the HTML documents using the same generators that are used by the static HTML export, so the static HTML documentation and the web application interface look identical. The web interface adds the action buttons and other additional UI elements for editing the content.
 [/FREETEXT]
 
 [/SECTION]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Parsing SDoc files
+
+[FREETEXT]
+StrictDoc uses `textX <https://github.com/textX/textX>`_  which is a ``meta-language for building Domain-Specific Languages (DSLs) in Python``. The textX itself is based on `Arpeggio <https://github.com/textX/Arpeggio>`_ which is a ``Parser interpreter based on PEG grammars written in Python``.
+
+StrictDoc relies on both tools to get:
+
+- Declarative grammar description
+- Automatic conversion of the parsed blocks into Python objects
+- Fast parsing of SDoc files.
+
+One important implementation detail of Arpeggio that influences StrictDoc user experience is that the parser stops immediately when it encounters an error. For a document that has several issues, the parser highlights only the first error without going any further. When the first error is resolved, the second error will be shown, etc.
+[/FREETEXT]
 
 [/SECTION]
 

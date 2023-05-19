@@ -131,6 +131,15 @@ The `strictdoc-examples <https://github.com/strictdoc-project/strictdoc-examples
 [/SECTION]
 
 [SECTION]
+TITLE: StrictDoc Templates repository
+
+[FREETEXT]
+The `strictdoc-templates <https://github.com/strictdoc-project/strictdoc-templates>`_ repository contains a growing collection of templates from the industry standards like DO-178C (aviation) and ECSS-E-ST-40C (space).
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
 TITLE: Other examples
 
 [FREETEXT]

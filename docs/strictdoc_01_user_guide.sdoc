@@ -1579,7 +1579,7 @@ Planned formats:
 [/FREETEXT]
 
 [SECTION]
-TITLE: Import flow (ReqIF -> SDoc):
+TITLE: Import flow (ReqIF -> SDoc)
 
 [FREETEXT]
 .. code-block:: text
@@ -1668,7 +1668,7 @@ Note: A roundtrip "SDoc -> Excel -> SDoc" is not yet supported.
 [/FREETEXT]
 
 [SECTION]
-TITLE: Import flow (Excel XLS -> SDoc):
+TITLE: Import flow (Excel XLS -> SDoc)
 
 [FREETEXT]
 .. code-block:: text

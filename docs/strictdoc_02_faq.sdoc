@@ -51,9 +51,35 @@ Screencasts/tutorials:
 TITLE: Which web server is recommended for StrictDoc documentation?
 
 [FREETEXT]
+This question can be answered in two ways. First of all, StrictDoc has its own web server that can be run with ``strictdoc server ...``. Refer to the User Guide for further information.
+
+The following suggestions assume that you are looking to using a web server to host the StrictDoc's static HTML export, without using StrictDoc's own web server.
+
 Is your project public or private? If it is public, you could simply use `GitHub pages <https://pages.github.com>`_. See how one user of StrictDoc is doing it here: `nmfta-repo/vcr-experiment <https://github.com/nmfta-repo/vcr-experiment>`_ and the resulting static website: `nmfta-repo.github.io/vcr-experiment <https://nmfta-repo.github.io/vcr-experiment>`_.
 
+A very good alternative to GitHub pages is `Read the Docs <https://readthedocs.org>`_.
+
 If the project is private, you could use any server that reads HTML files from a folder. For example, Python has an embedded Web Server, see `this for example <https://pythonbasics.org/webserver>`_. Also you could try any web server based on Node.JS.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Is StrictDoc compatible with Sphinx?
+
+[FREETEXT]
+StrictDoc is only partially compatible with Sphinx.
+
+StrictDoc does not have Sphinx in its dependency tree, and it does not use any of Sphinx API. Instead, StrictDoc uses Docutils for RST markup support. Using Docutils, StrictDoc can generate SDoc files to RST files.
+
+There are users of StrictDoc who use both StrictDoc and Sphinx. The following workflow is known to work:
+
+- Write some documentation in SDoc files.
+- Export an SDoc documentation tree to an RST documentation tree.
+- Connect RST documentation tree with a Sphinx setup.
+- Run Sphinx against an RST documentation tree, obtain a Sphinx documentation website or LaTex PDF.
+
+There is a GitHub issue `Unexpected restriction on specific RST directives / compatibility with Breathe Sphinx Plugin #1093 <https://github.com/strictdoc-project/strictdoc/issues/1093>`_ where a closer bridging between StrictDoc and Sphinx was discussed with no specific and actionable outcome. This comment is `especially relevant <https://github.com/strictdoc-project/strictdoc/issues/1093#issuecomment-1505108384>`_ as well as the one about `possible implementation <https://github.com/strictdoc-project/strictdoc/issues/1093#issuecomment-1545599711>`_.
 [/FREETEXT]
 
 [/SECTION]

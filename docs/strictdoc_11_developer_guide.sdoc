@@ -40,6 +40,17 @@ From the core Python packages, StrictDoc needs Invoke, Tox and TOML:
     pip install invoke tox toml
 [/FREETEXT]
 
+[SECTION]
+TITLE: Windows-specific: Long Path support
+
+[FREETEXT]
+As `reported <https://github.com/strictdoc-project/strictdoc/issues/1118>`_ by a user, Windows Long Path support has to be enabled on a Windows system.
+
+You can find information on how to enable the long paths support at https://pip.pypa.io/warnings/enable-long-paths.
+[/FREETEXT]
+
+[/SECTION]
+
 [/SECTION]
 
 [SECTION]

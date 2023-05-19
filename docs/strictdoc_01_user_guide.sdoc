@@ -173,6 +173,19 @@ TITLE: Installing StrictDoc as a Pip package (recommended way)
 [/SECTION]
 
 [SECTION]
+TITLE: Installing "nightly" StrictDoc as a Pip package
+
+[FREETEXT]
+Sometimes, it takes a while before the latest features and fixes reach the stable Pip release. In that case, installing a Pip package from the Git repository directly is possible:
+
+.. code-block::
+
+    pip install -U --pre git+https://github.com/strictdoc-project/strictdoc.git@main
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
 TITLE: Installing StrictDoc into a Docker container
 
 [FREETEXT]

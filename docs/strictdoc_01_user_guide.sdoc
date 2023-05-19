@@ -78,7 +78,7 @@ TITLE: Hello World
     TITLE: Requirements management
     STATEMENT: StrictDoc shall enable requirements management.
 
-Create a file called ``hello_world.sdoc`` somewhere on your file system and copy the above text to it.
+Create a file called ``hello_world.sdoc`` somewhere on your file system and copy the above text to it. **The file must end with a newline character**.
 
 Once you have ``strictdoc`` installed (see [LINK: SDOC_UG_GETTING_STARTED] below), run StrictDoc as follows:
 

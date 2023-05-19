@@ -3,11 +3,12 @@
 import { Controller } from "/_static/stimulus.js";
 
 const ROOT_SELECTOR = 'js-collapsible_list';
-const LIST_SELECTOR = `[${ROOT_SELECTOR}="list"]`;
+
 const BRANCH_SELECTOR = `collapsible_list__branch`;
 const LIST_DEFAULT = 'open';
 const SYMBOL_MINUS = '－';
 const SYMBOL_PLUS = '＋';
+const SYMBOL_SIZE = 16;
 
 const STYLE = `
 [data-${BRANCH_SELECTOR}] {
@@ -20,17 +21,17 @@ const STYLE = `
   cursor: pointer;
   user-select: none;
   transition: .3s;
-  width: 16px;
-  height: 16px;
-  font-size: 14px;
+  width: ${SYMBOL_SIZE}px;
+  height: ${SYMBOL_SIZE}px;
+  font-size: ${SYMBOL_SIZE * 0.875}px;
   font-weight: bold;
   line-height: 0;
   border-radius: 50%;
   color: rgba(0,0,0,0.5);
   box-shadow: rgb(0 0 0 / 10%) 0px 1px 2px 0px;
   position: absolute;
-  top: 0;
-  left: -8px;
+  top: ${SYMBOL_SIZE * 0.5}px;
+  left: -${SYMBOL_SIZE * 0.75}px;
 }
 
 [data-${BRANCH_SELECTOR}]:hover {
@@ -48,12 +49,11 @@ const STYLE = `
 }
 
 [data-${BRANCH_SELECTOR}='closed'] + ul {
-  height: 0;
-  overflow: hidden;
+  display: none;
 }
 
 [data-${BRANCH_SELECTOR}='open'] + ul {
-  height: auto;
+  display: unset;
 }
 
 [${ROOT_SELECTOR}-bulk] {
@@ -61,22 +61,19 @@ const STYLE = `
   gap: 8px;
   z-index: 2;
   position: fixed;
-  margin-top: -16px;
-  margin-left: -8px;
+  margin-left: ${SYMBOL_SIZE * 0.5}px;
   pointer-events: none;
   padding: 8px;
   background: #F2F5F9;
   box-shadow: #F2F5F9 0px 8px 8px 0px;
 }
-[${ROOT_SELECTOR}-bulk] + ${LIST_SELECTOR} {
-  margin-top: 32px;
-}
+
 [${ROOT_SELECTOR}-bulk] > div {
   cursor: pointer;
   user-select: none;
   transition: .3s;
-  width: 16px;
-  height: 16px;
+  width: ${SYMBOL_SIZE}px;
+  height: ${SYMBOL_SIZE}px;
   position: relative;
   pointer-events: auto;
 }
@@ -89,9 +86,9 @@ const STYLE = `
   -webkit-box-align: center;
   -webkit-box-pack: center;
   background-clip: padding-box;
-  width: 16px;
-  height: 16px;
-  font-size: 14px;
+  width: ${SYMBOL_SIZE}px;
+  height: ${SYMBOL_SIZE}px;
+  font-size: ${SYMBOL_SIZE * 0.875}px;
   font-weight: bold;
   line-height: 0;
   border-radius: 50%;
@@ -102,19 +99,25 @@ const STYLE = `
   left: 0;
   z-index: 2;
 }
+
 [${ROOT_SELECTOR}-bulk] > div:hover::before {
   background: #FFF;
 }
+
 [${ROOT_SELECTOR}-bulk] > div::after {
   content: '';
-  width: 16px;
-  height: 16px;
+  width: ${SYMBOL_SIZE}px;
+  height: ${SYMBOL_SIZE}px;
   border-radius: 50%;
   position: absolute;
   box-shadow: rgb(0 0 0 / 15%) 0px 0px 0px 1px;
-  top: -2px;
-  left: 2px;
+  top: -${SYMBOL_SIZE * 0.25}px;
+  left: ${SYMBOL_SIZE * 0.25}px;
   z-index: 1;
+}
+
+[${ROOT_SELECTOR}-has-bulk] {
+  margin-top: 32px;
 }
 `;
 
@@ -122,8 +125,7 @@ Stimulus.register("collapsible_list", class extends Controller {
   static targets = ["name"];
 
   initialize() {
-    const listElement = document.querySelector(LIST_SELECTOR);
-    this.render(listElement)
+    this.render(this.element)
   }
 
   render(listElement) {
@@ -139,15 +141,15 @@ Stimulus.register("collapsible_list", class extends Controller {
       addStyleElement(this.element, STYLE);
 
       // Uncomment to add buttons for bulk operations:
-      // listElement.before(createBulkHandler(branchList));
+      // addBulkHandler(listElement, createBulkHandler(branchList));
     }
   }
 
 });
 
-function addStyleElement(target, styleTextContent) {
+function addStyleElement(target, styleTextContent, attr = 'style') {
   const style = document.createElement('style');
-  style.setAttribute("collapsible-list-style", '');
+  style.setAttribute(`${ROOT_SELECTOR}-${attr}`, '');
   style.textContent = styleTextContent;
   target.prepend(style);
 }
@@ -166,6 +168,11 @@ function prepareList(target) {
     }
   )
   return ulHandlerList;
+}
+
+function addBulkHandler(target, handler) {
+  target.before(handler);
+  target.setAttribute(`${ROOT_SELECTOR}-has-bulk`, '');
 }
 
 function createBulkHandler(list) {

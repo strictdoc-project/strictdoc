@@ -1416,6 +1416,115 @@ def create_main_router(
             },
         )
 
+    # WIP: Move nodes
+    @router.post("/actions/document/move_node", response_class=Response)
+    async def move_node(request: Request):
+        request_form_data: FormData = await request.form()
+        request_dict: Dict[str, str] = dict(request_form_data)
+        moved_node_mid: str = request_dict["moved_node_mid"]
+        target_mid: str = request_dict["target_mid"]
+        whereto: str = request_dict["whereto"]
+
+        assert export_action.traceability_index is not None
+
+        moved_node = export_action.traceability_index.get_node_by_id(
+            moved_node_mid
+        )
+        target_node = export_action.traceability_index.get_node_by_id(
+            target_mid
+        )
+        current_parent_node = moved_node.parent
+
+        if whereto == NodeCreationOrder.CHILD:
+            # Disconnect the moved_node from its parent.
+            current_parent_node.section_contents.remove(moved_node)
+            # Append to the end of child list.
+            target_node.section_contents.append(moved_node)
+            moved_node.parent = target_node
+        elif whereto == NodeCreationOrder.BEFORE:
+            # Disconnect the moved_node from its parent.
+            current_parent_node.section_contents.remove(moved_node)
+            # Append before.
+            insert_to_idx = target_node.parent.section_contents.index(
+                target_node
+            )
+            target_node.parent.section_contents.insert(
+                insert_to_idx, moved_node
+            )
+            moved_node.parent = target_node.parent
+        elif whereto == NodeCreationOrder.AFTER:
+            # Disconnect the moved_node from its parent.
+            current_parent_node.section_contents.remove(moved_node)
+            # Append after.
+            insert_to_idx = target_node.parent.section_contents.index(
+                target_node
+            )
+            target_node.parent.section_contents.insert(
+                insert_to_idx + 1, moved_node
+            )
+            moved_node.parent = target_node.parent
+        else:
+            raise NotImplementedError
+
+        # Now we have to update all ng_levels for the moved node because they
+        # now depend on the level of the new parent node (target node).
+        iterator = export_action.traceability_index.get_document_iterator(
+            moved_node.document
+        )
+        moved_node.ng_level = moved_node.parent.ng_level + 1
+        for node in iterator.specific_node_with_normal_levels(moved_node):
+            node.ng_level = node.parent.ng_level + 1
+
+        # Saving new content to .SDoc file.
+        document_content = SDWriter().write(moved_node.document)
+        document_meta = moved_node.document.meta
+        with open(
+            document_meta.input_doc_full_path, "w", encoding="utf8"
+        ) as output_file:
+            output_file.write(document_content)
+
+        # Re-exporting HTML files.
+        export_action.export()
+
+        # Rendering back the Turbo template.
+        template = env.get_template(
+            "actions/document/move_node/stream_update_document_content.jinja"
+        )
+        link_renderer = LinkRenderer(
+            root_path=moved_node.document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
+        )
+        markup_renderer = MarkupRenderer.create(
+            markup="RST",
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+            context_document=moved_node.document,
+        )
+        output = template.render(
+            renderer=markup_renderer,
+            link_renderer=link_renderer,
+            document=moved_node.document,
+            document_iterator=iterator,
+            document_type=DocumentType.document(),
+            config=export_action.config,
+            traceability_index=export_action.traceability_index,
+        )
+        toc_template = env.get_template(
+            "actions/document/_shared/stream_updated_toc.jinja.html"
+        )
+        output += toc_template.render(
+            document_iterator=iterator,
+            document_type=DocumentType.document(),
+            link_renderer=link_renderer,
+            last_moved_node_id=moved_node.node_id,
+        )
+        return HTMLResponse(
+            content=output,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
     # Generic routes
     @router.get("/actions/project_index/new_document", response_class=Response)
     def get_new_document():

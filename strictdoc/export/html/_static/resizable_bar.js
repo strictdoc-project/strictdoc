@@ -534,8 +534,8 @@ class ResizableBar {
   height: 100%;
   overflow-x: hidden;
   overflow-y: scroll;
-  padding: ${this.barPadding};
-  padding-bottom: ${this.barPaddingBottom};
+  /*padding: ${this.barPadding};
+  padding-bottom: ${this.barPaddingBottom};*/
   scrollbar-color: ${this.barColorScrollbarTrack} ${this.barColorScrollbarTrack};
 }
 [${this.barAttribute}-scroll='y'] {

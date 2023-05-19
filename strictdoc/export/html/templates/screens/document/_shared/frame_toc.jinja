@@ -1,16 +1,18 @@
 <turbo-frame
   id="frame-toc"
   style="display: contents"
-  js-collapsible_list="true" {# FIXME: issue#1098 #}
-  data-controller="collapsible_list"
 >
     <ul
       data-testid="toc-list"
       js-collapsible_list="list"
       class="toc"
+      data-controller="draggable_list collapsible_list"
+      {%- if last_moved_node_id is defined %}
+      data-last_moved_node_id="{{ last_moved_node_id }}"
+      {% endif -%}
     >
     {%- for section in document_iterator.table_of_contents() -%}
-      <li>
+      <li data-nodeid="{{ section.node_id }}">
         {%- if section.is_section -%}
         {# if section not requirement #}
           {%- if not section.ng_has_requirements and document_type.is_deeptrace -%}

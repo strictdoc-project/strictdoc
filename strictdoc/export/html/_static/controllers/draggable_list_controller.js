@@ -1,5 +1,3 @@
-import { Controller } from "/_static/stimulus.js";
-
 const DL_SELECTOR = 'js-draggable_list';
 const DL_ITEM_SELECTOR = 'li';
 const DL_ZONE_CHILD = 32;

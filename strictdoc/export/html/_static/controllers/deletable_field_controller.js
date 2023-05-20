@@ -1,5 +1,3 @@
-import { Controller } from "/_static/stimulus.js";
-
 Stimulus.register("deletable_field", class extends Controller {
   connect() {
     // this.element is the DOM element to which the controller is connected to.

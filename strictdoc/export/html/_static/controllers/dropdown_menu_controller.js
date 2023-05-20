@@ -1,5 +1,3 @@
-import { Controller } from "/_static/stimulus.js";
-
 const __log = (topic, ...payload) => {
   console.log(`%c ${topic} `, 'background:yellow;color:black',
     ...payload
@@ -20,7 +18,6 @@ Stimulus.register("dropdown_menu", class extends Controller {
 
   connect() {
     this.registerListEvents();
-    // console.log(this.element)
   }
 
   registerListEvents(params) {

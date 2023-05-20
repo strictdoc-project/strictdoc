@@ -1,5 +1,3 @@
-import { Controller } from "/_static/stimulus.js";
-
 // Swap any nodes, not siblings, not adjecent siblings, no temp nodes, no cloning, no jquery... IE9+
 // https://stackoverflow.com/a/44562952/598057
 function swapNodes(n1, n2) {
@@ -42,8 +40,6 @@ Stimulus.register("movable_field", class extends Controller {
   initialize() {
     // this.element is the DOM element to which the controller is connected to.
     const thisElement = this.element;
-
-    console.log(this.element)
 
     const moveUpLinks = thisElement.querySelectorAll("[data-js-move-up-field-action]");
       moveUpLinks.forEach(link => {

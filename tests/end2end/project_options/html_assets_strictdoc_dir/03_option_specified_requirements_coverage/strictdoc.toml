@@ -1,0 +1,6 @@
+[project]
+html_assets_strictdoc_dir = "assets"
+
+features = [
+  "REQUIREMENTS_COVERAGE_SCREEN"
+]

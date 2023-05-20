@@ -1,5 +1,3 @@
-import { Controller } from "/_static/stimulus.js";
-
 Stimulus.register("editablefield", class extends Controller {
   static targets = ["name"];
 

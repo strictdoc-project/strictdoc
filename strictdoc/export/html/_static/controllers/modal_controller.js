@@ -1,5 +1,3 @@
-import { Controller } from "/_static/stimulus.js";
-
 Stimulus.register("modal_controller", class extends Controller {
   initialize() {
     // this.element is the DOM element to which the controller is connected to.
@@ -25,7 +23,6 @@ Stimulus.register("modal_controller", class extends Controller {
     // Listening to Escape:
     const listenEscape = (event) => {
       if (event.key === 'Escape') {
-        // console.log('Escape key pressed');
         removeModal();
         removeEscapeListener();
       }

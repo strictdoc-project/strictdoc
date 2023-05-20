@@ -1,7 +1,5 @@
 // To collapse and expand TOC branches
 
-import { Controller } from "/_static/stimulus.js";
-
 const ROOT_SELECTOR = 'js-collapsible_list';
 
 const BRANCH_SELECTOR = `collapsible_list__branch`;

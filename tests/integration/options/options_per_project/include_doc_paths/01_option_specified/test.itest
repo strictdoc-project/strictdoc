@@ -1,0 +1,14 @@
+RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+
+CHECK: Published: Document 1
+CHECK-NOT: Published: Document 2
+CHECK-NOT: Published: Document 3
+
+RUN: %check_exists --file          "%S/Output/html/01_option_specified/docs1/document1.html"
+RUN: %check_exists --file --invert "%S/Output/html/01_option_specified/docs2/document2.html"
+RUN: %check_exists --file --invert "%S/Output/html/01_option_specified/docs3/document3.html"
+
+RUN: %cat "%S/Output/html/index.html" | filecheck %s --dump-input=fail --check-prefix=CHECK-PROJECT-TREE
+CHECK-PROJECT-TREE: Document 1
+CHECK-PROJECT-TREE-NOT: Document 2
+CHECK-PROJECT-TREE-NOT: Document 3

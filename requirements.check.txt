@@ -9,6 +9,8 @@ ruff
 
 # Unit tests
 pytest>=6.2.2
+# Pytest fixture that provides fake file system for testing code that accesses
+# file systems.
 pyfakefs>=4.5.5
 coverage>=5.4
 # httpx is needed for running server-related unit tests.

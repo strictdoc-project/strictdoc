@@ -1,0 +1,9 @@
+[project]
+
+exclude_source_paths = [
+  "src3/**"
+]
+
+features = [
+  "REQUIREMENT_TO_SOURCE_TRACEABILITY"
+]

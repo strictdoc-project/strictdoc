@@ -1,7 +1,9 @@
 import collections
+import functools
 import os
 from typing import Dict, List, Optional
 
+from strictdoc.helpers.path_filter import PathFilter
 from strictdoc.helpers.sorting import alphanumeric_sort
 
 
@@ -28,6 +30,7 @@ class File(FileOrFolderEntry):
         self.full_path = full_path
         self.root_path = full_path
         self.rel_path = rel_path
+        self.file_name = os.path.basename(self.full_path)
         self.files = [self]
         self.subfolder_trees = []
 
@@ -44,7 +47,7 @@ class File(FileOrFolderEntry):
         return self.level
 
     def get_file_name(self) -> str:
-        return os.path.basename(self.full_path)
+        return self.file_name
 
     def get_folder_path(self) -> str:
         return os.path.dirname(self.full_path)
@@ -63,8 +66,8 @@ class Folder(FileOrFolderEntry):  # pylint: disable=too-many-instance-attributes
         self.rel_path: str = rel_path if rel_path != "." else ""
         self.folder_name: str = os.path.basename(os.path.normpath(root_path))
         self.level = level
-        self.files = []
-        self.subfolder_trees = []
+        self.files: List[File] = []
+        self.subfolder_trees: List[Folder] = []
         self.parent_folder: Optional[Folder] = None
         self.has_sdoc_content = False
 
@@ -150,12 +153,24 @@ class FileTree:
 class FileFinder:
     @staticmethod
     def find_files_with_extensions(
-        *, root_path: str, ignored_dirs: List[str], extensions: List[str]
+        *,
+        root_path: str,
+        ignored_dirs: List[str],
+        extensions: List[str],
+        include_paths: List[str],
+        exclude_paths: List[str],
     ):
         assert os.path.isdir(root_path)
         assert os.path.isabs(root_path)
         assert isinstance(extensions, list), extensions
 
+        extensions_tuple = tuple(extensions)
+        path_filter_includes = PathFilter(
+            include_paths, positive_or_negative=True
+        )
+        path_filter_excludes = PathFilter(
+            exclude_paths, positive_or_negative=False
+        )
         root_level: int = root_path.count(os.sep)
 
         root_folder: Folder = Folder(root_path, ".", 0)
@@ -169,16 +184,12 @@ class FileFinder:
             dirs[:] = [
                 d
                 for d in dirs
-                if (
-                    not d.startswith(".")
-                    and not d.startswith("_")
-                    and "tests" not in d
-                    and "integration" not in d
-                )
+                if (not d.startswith(".") and not d.startswith("_"))
             ]
             dirs.sort(key=alphanumeric_sort)
 
             rel_path = os.path.relpath(current_root_path, start=root_path)
+            rel_path = rel_path if rel_path != "." else ""
 
             current_root_path_level: int = (
                 current_root_path.count(os.sep) - root_level
@@ -189,18 +200,33 @@ class FileFinder:
                 Folder(current_root_path, rel_path, current_root_path_level),
             )
 
-            def filter_source_files(_files):
-                _source_files = []
-                for file in _files:
-                    for file_extension in extensions:
-                        if file.endswith(file_extension):
-                            _source_files.append(file)
-                return _source_files
+            for file in files:
+                if not file.endswith(extensions_tuple):
+                    continue
+                full_file_path = os.path.join(current_root_path, file)
+                rel_file_path = os.path.join(rel_path, file)
 
-            files = filter_source_files(files)
-            files.sort(key=alphanumeric_sort)
-            current_tree.set(files)
-            if len(files) > 0:
+                if path_filter_excludes.match(rel_file_path):
+                    continue
+
+                if path_filter_includes.match(rel_file_path):
+                    current_tree.files.append(
+                        File(
+                            current_tree.level + 1,
+                            full_file_path,
+                            rel_file_path,
+                        )
+                    )
+
+            def file_path_sort_key(lhs: File, rhs: File):
+                return (rhs.file_name < lhs.file_name) - (
+                    lhs.file_name < rhs.file_name
+                )
+
+            sort_key = functools.cmp_to_key(file_path_sort_key)
+            current_tree.files.sort(key=sort_key)
+
+            if len(current_tree.files) > 0:
                 current_tree.has_sdoc_content = True
 
             if current_root_path == root_path:

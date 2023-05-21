@@ -5,6 +5,7 @@ from typing import List
 
 from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.file_tree import File, FileFinder
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.source_tree import SourceTree
 from strictdoc.helpers.auto_described import auto_described
 
@@ -90,7 +91,10 @@ class SourceFile:  # pylint: disable=too-many-instance-attributes
 
 class SourceFilesFinder:
     @staticmethod
-    def find_source_files(config: ExportCommandConfig) -> SourceTree:
+    def find_source_files(
+        config: ExportCommandConfig,
+        project_config: ProjectConfig,
+    ) -> SourceTree:
         map_file_to_source = {}
         found_source_files: List[SourceFile] = []
 
@@ -107,6 +111,8 @@ class SourceFilesFinder:
             root_path=doctree_root_abs_path,
             ignored_dirs=[config.output_dir],
             extensions=SourceFileType.all(),
+            include_paths=project_config.include_source_paths,
+            exclude_paths=project_config.exclude_source_paths,
         )
         root_level = doctree_root_abs_path.count(os.sep)
 

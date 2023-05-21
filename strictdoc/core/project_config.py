@@ -28,7 +28,7 @@ class ProjectFeature(str, Enum):
 
 
 @auto_described
-class ProjectConfig:
+class ProjectConfig:  # pylint: disable=too-many-instance-attributes
     DEFAULT_PROJECT_TITLE = "Untitled Project"
     DEFAULT_DIR_FOR_SDOC_ASSETS = "_static"
     DEFAULT_FEATURES: List[str] = [
@@ -46,12 +46,20 @@ class ProjectConfig:
         project_features: List[str],
         server_host: str,
         server_port: int,
+        include_doc_paths: List[str],
+        exclude_doc_paths: List[str],
+        include_source_paths: List[str],
+        exclude_source_paths: List[str],
     ):
         self.project_title: str = project_title
         self.dir_for_sdoc_assets: str = dir_for_sdoc_assets
         self.project_features: List[str] = project_features
         self.server_host: str = server_host
         self.server_port: int = server_port
+        self.include_doc_paths: List[str] = include_doc_paths
+        self.exclude_doc_paths: List[str] = exclude_doc_paths
+        self.include_source_paths: List[str] = include_source_paths
+        self.exclude_source_paths: List[str] = exclude_source_paths
 
     @staticmethod
     def default_config():
@@ -61,6 +69,10 @@ class ProjectConfig:
             project_features=ProjectConfig.DEFAULT_FEATURES,
             server_host=ProjectConfig.DEFAULT_SERVER_HOST,
             server_port=ProjectConfig.DEFAULT_SERVER_PORT,
+            include_doc_paths=[],
+            exclude_doc_paths=[],
+            include_source_paths=[],
+            exclude_source_paths=[],
         )
 
     def is_feature_activated(self, feature: ProjectFeature):
@@ -124,6 +136,10 @@ class ProjectConfigLoader:
         project_features = ProjectConfig.DEFAULT_FEATURES
         server_host = ProjectConfig.DEFAULT_SERVER_HOST
         server_port = ProjectConfig.DEFAULT_SERVER_PORT
+        include_doc_paths = []
+        exclude_doc_paths = []
+        include_source_paths = []
+        exclude_source_paths = []
 
         if "project" in config_dict:
             project_content = config_dict["project"]
@@ -147,6 +163,23 @@ class ProjectConfigLoader:
                     )
                     sys.exit(1)
 
+            include_doc_paths = project_content.get(
+                "include_doc_paths", include_doc_paths
+            )
+            assert isinstance(include_doc_paths, list)
+            exclude_doc_paths = project_content.get(
+                "exclude_doc_paths", exclude_doc_paths
+            )
+            assert isinstance(exclude_doc_paths, list)
+            include_source_paths = project_content.get(
+                "include_source_paths", include_source_paths
+            )
+            assert isinstance(include_source_paths, list)
+            exclude_source_paths = project_content.get(
+                "exclude_source_paths", exclude_source_paths
+            )
+            assert isinstance(exclude_source_paths, list)
+
         if "server" in config_dict:
             # FIXME: Introduce at least a basic validation for the host/port.
             server_content = config_dict["server"]
@@ -162,4 +195,8 @@ class ProjectConfigLoader:
             project_features=project_features,
             server_host=server_host,
             server_port=server_port,
+            include_doc_paths=include_doc_paths,
+            exclude_doc_paths=exclude_doc_paths,
+            include_source_paths=include_source_paths,
+            exclude_source_paths=exclude_source_paths,
         )

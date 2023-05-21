@@ -17,7 +17,7 @@ Summary of StrictDoc features:
   document tree.
 - From this in-memory representation, StrictDoc can generate the documentation
   into a number of formats including HTML, RST, ReqIF, PDF, Excel.
-- StrictDoc has a Web-based user interface which allows viewing and editing the documents and requirements. The changes are written back to .sdoc files.
+- StrictDoc has a web-based user interface which allows viewing and editing the documents and requirements. The changes are written back to .sdoc files.
 - The focus of the tool is modeling requirements and specifications documents.
   Such documents consist of multiple statements like "system X shall do Y"
   called requirements.
@@ -69,7 +69,7 @@ Hello World
     TITLE: Requirements management
     STATEMENT: StrictDoc shall enable requirements management.
 
-Create a file called ``hello_world.sdoc`` somewhere on your file system and copy the above text to it.
+Create a file called ``hello_world.sdoc`` somewhere on your file system and copy the above text to it. **The file must end with a newline character**.
 
 Once you have ``strictdoc`` installed (see :ref:`SDOC_UG_GETTING_STARTED` below), run StrictDoc as follows:
 
@@ -114,6 +114,11 @@ StrictDoc Examples repository
 
 The `strictdoc-examples <https://github.com/strictdoc-project/strictdoc-examples>`_ repository contains a collection of basic examples. Visit the repository and read its README for details.
 
+StrictDoc Templates repository
+------------------------------
+
+The `strictdoc-templates <https://github.com/strictdoc-project/strictdoc-templates>`_ repository contains a growing collection of templates from the industry standards like DO-178C (aviation) and ECSS-E-ST-40C (space).
+
 Other examples
 --------------
 
@@ -142,6 +147,15 @@ Installing StrictDoc as a Pip package (recommended way)
 .. code-block:: text
 
     pip install strictdoc
+
+Installing "nightly" StrictDoc as a Pip package
+-----------------------------------------------
+
+Sometimes, it takes a while before the latest features and fixes reach the stable Pip release. In that case, installing a Pip package from the Git repository directly is possible:
+
+.. code-block::
+
+    pip install -U --pre git+https://github.com/strictdoc-project/strictdoc.git@main
 
 Installing StrictDoc into a Docker container
 --------------------------------------------
@@ -189,7 +203,7 @@ The ``export`` command is the main producer of documentation. The native export 
 Web server
 ----------
 
-StrictDoc supports a Web-based user interface. The StrictDoc web server is launched via the ``server`` command which accepts a path to a documentation tree as a parameter.
+StrictDoc supports a web-based user interface. The StrictDoc web server is launched via the ``server`` command which accepts a path to a documentation tree as a parameter.
 
 .. code-block:: bash
 
@@ -201,27 +215,37 @@ The ``server`` command accepts a number of options. To explore the options, run:
 
     strictdoc server --help
 
-Limitations of Web user interface
+Limitations of web user interface
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The existing implementation of the Web user interface is alpha-quality and incomplete. The user interface and the underlying backend implementation are not yet autonomous from the command-line workflow. A user still has to access the command line to run the server and commit the documents to Git manually.
+The existing implementation of the web user interface is alpha-quality and incomplete. The user interface and the underlying backend implementation are not yet autonomous from the command-line workflow. A user still has to access the command line to run the server and commit the documents to Git manually.
 
 The currently supported workflow for the ``server`` command must be hybrid:
 
 - In one terminal window: run server.
 - In another window: check the changes made by the server in the .sdoc files. Commit the .sdoc files to Git.
 
+Note that currently, StrictDoc server maintains in-memory state of a documentation tree, and it does not watch over the changes made in the .sdoc files. If you make a change in an ``.sdoc`` file manually, you have to restart the server in order for your changes to show up in the web user interface.
+
 The following essential features are still missing and will be worked on in the near future:
 
 - Editing of documents with non-string grammar fields is not supported yet.
   Example: The ``SingleChoice`` type will not work in the \*.sdoc files.
 - Adding images to the multiline fields like requirement's STATEMENT and section's FREETEXT.
+- Adding/editing sections with ``LEVEL: None``.
 - Deleting a document.
 - Deleting a section recursively with a correct cleanup of all traceability information.
 - Numerous validation aspects and edge cases of content editing.
 - A separate screen for editing project settings.
 
 See the Backlog's section :ref:`SDOC_BL_WEB` for more details.
+
+Concurrent use of web user interface
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+StrictDoc's web user interface does not handle concurrency. If the same requirement/section is edited by two users at the same time, the last write wins.
+
+The measures for handling concurrent use are planned but have been not implemented yet.
 
 .. _SDOC_UG_IDE_SUPPORT:
 
@@ -363,7 +387,7 @@ The following patterns are all invalid for multiline fields:
     <<<
 
 If you need to provide a placeholder for a field that you know has to be filled
-out soon, add a "TBD" (to be done) or a "TBC" (to be confirmed) string.
+out soon, add a "TBD" (to be done, by our team) or a "TBC" (to be confirmed with a customer or a supplier) string.
 
 One of the upcoming features of StrictDoc is a calculation of document maturity
 based on a number of TBD/TBCs found in document. This is a common practice in
@@ -1179,6 +1203,11 @@ This is the example of how images are included using the reST syntax:
 
 **Note:** Currently, it is not possible to upload images via the web user interface. Therefore, you must manually place the image into the ``_assets`` folder using either the command-line or a file browser.
 
+Limitations of RST support by StrictDoc
+---------------------------------------
+
+StrictDoc uses Docutils for rendering RST to HTML, not Sphinx. The implication is that no Sphinx-specific RST directives are supported. Refer to this issue for the related discussion of the limitations: `Unexpected restriction on specific RST directives / compatibility with Breathe Sphinx Plugin #1093 <https://github.com/strictdoc-project/strictdoc/issues/1093>`_.
+
 Export formats
 ==============
 
@@ -1372,8 +1401,8 @@ Planned formats:
   that attempts to harmonize the developments of ReqIF by requirements
   management tools.
 
-Import flow (ReqIF -> SDoc):
-----------------------------
+Import flow (ReqIF -> SDoc)
+---------------------------
 
 .. code-block:: text
 
@@ -1446,8 +1475,8 @@ requirement fields.
 
 Note: A roundtrip "SDoc -> Excel -> SDoc" is not yet supported.
 
-Import flow (Excel XLS -> SDoc):
---------------------------------
+Import flow (Excel XLS -> SDoc)
+-------------------------------
 
 .. code-block:: text
 

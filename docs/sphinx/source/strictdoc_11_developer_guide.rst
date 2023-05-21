@@ -8,10 +8,8 @@ StrictDoc is based on Python and maintained as any other Python package on
 GitHub: with linting, tests, and hopefully enough best practice put into the
 codebase.
 
-The instructions are conventions described below are the summary of what is
+The instructions and conventions described below are a summary of what is
 considered to be the currently preferred development style for StrictDoc.
-These rules have been relatively stable for quite a while but any rule can still
-be changed if a better development practice is found.
 
 Any feedback on this development guide is appreciated.
 
@@ -19,6 +17,32 @@ Any feedback on this development guide is appreciated.
 
 Getting started
 ===============
+
+System dependencies
+-------------------
+
+StrictDoc itself mostly depends on other Python Pip packages, so there is nothing special to be installed.
+
+You may need to install ``libtidy`` if you want to run the integration tests. The HTML markup validation tests depend on libtidy.
+
+On Linux Ubuntu:
+
+.. code:: bash
+
+    sudo apt install tidy
+
+From the core Python packages, StrictDoc needs Invoke, Tox and TOML:
+
+.. code:: bash
+
+    pip install invoke tox toml
+
+Windows-specific: Long Path support
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As `reported <https://github.com/strictdoc-project/strictdoc/issues/1118>`_ by a user, Windows Long Path support has to be enabled on a Windows system.
+
+You can find information on how to enable the long paths support at https://pip.pypa.io/warnings/enable-long-paths.
 
 Installing StrictDoc from GitHub (developer mode)
 -------------------------------------------------
@@ -29,8 +53,10 @@ in StrictDoc's source code. Otherwise, install StrictDoc as a normal Pip package
 .. code-block::
 
     git clone https://github.com/strictdoc-project/strictdoc.git && cd strictdoc
-    pip install .[development]
+    python developer/pip_install_strictdoc_deps.py
     python3 strictdoc/cli/main.py
+
+The ``pip_install_strictdoc_deps.py`` installs all dependencies of StrictDoc, but not StrictDoc itself.
 
 Invoke for development tasks
 ============================
@@ -46,6 +72,17 @@ Make sure to familiarize yourself with the available developer tasks by running:
 .. code-block:: bash
 
     invoke --list
+
+Main "Check" task
+=================
+
+Before doing anything else, run the main ``check`` command to make sure that StrictDoc passes all tests on your system:
+
+.. code:: bash
+
+    invoke check
+
+The ``check`` command runs all StrictDoc lint and test tasks with the only exception of end-to-end Web tests that are run with a separate task (see below).
 
 .. _DEVGUIDE_PYTHON_CODE:
 
@@ -124,6 +161,13 @@ The shortest path to run the server when the StrictDoc's source code is cloned:
 .. code-block:: bash
 
     invoke server
+
+Running End-to-End Web tests
+============================
+
+.. code:: bash
+
+    invoke test-end2end
 
 Running integration tests
 =========================

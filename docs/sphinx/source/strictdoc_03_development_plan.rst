@@ -146,3 +146,23 @@ See also the Backlog document for a complete list of the planned work items.
      - Improvements of the Web-based interface towards first release. Improvements of the ReqIF support.
    * - 2023-Q2
      - Further stabilization of the Web interface. Improvements of the ReqIF interface.
+
+Verification
+============
+
+StrictDoc has three groups of tests: unit, integration, end-to-end tests.
+
+The unit tests are based on Pylint.
+
+The integration tests are based on the `LLVM Integrated Tester <https://llvm.org/docs/CommandGuide/lit.html>`_ and `FileCheck.py <https://github.com/mull-project/FileCheck.py/blob/main/pyproject.toml>`_. These tools are not very common, refer to `How to test command-line programs with Python tools: LIT and FileCheck <https://stanislaw.github.io/2020-11-20-how-to-test-command-line-programs-with-python.html>`_ for a good description.
+
+The end-to-end web interface tests are based on SeleniumBase test framework.
+
+Python baseline
+===============
+
+The supported version of Python is kept to be as low as possible. As of 2023-Q2, the currently supported version is Python 3.7.
+
+Ideally, the lowest Python version should only be raised when it is consistently deprecated by the major software platforms like Ubuntu or GitHub Actions.
+
+The only other reason for an upgrade of the lowest Python version can be the emerging constraints of the projects that StrictDoc's depends on. Given the current dependency graph, this almost never happens.

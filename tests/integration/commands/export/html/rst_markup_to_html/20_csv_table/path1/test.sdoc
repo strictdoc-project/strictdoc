@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Test
+
+[REQUIREMENT]
+UID: Id1
+STATEMENT: >>>
+.. image:: _assets/img.jpg
+<<<
+
+[REQUIREMENT]
+UID: Id2
+STATEMENT: >>>
+.. csv-table::
+     :file: _assets/tab.csv
+<<<

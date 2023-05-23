@@ -1,0 +1,32 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[REQUIREMENT]
+STATEMENT: >>>
+.. csv-table::
+
+    a,b,c,d
+    e,f,g,h
+    e,f,g,h
+    a,b,c,d
+    e,f,g,h
+    e,f,g,h
+    a,b,c,d
+    e,f,g,h
+    e,f,g,h
+    a,b,c,d
+    e,f,g,h
+    e,f,g,h
+    a,b,c,d
+    e,f,g,h
+    e,f,g,h
+    a,b,c,d
+    e,f,g,h
+    e,f,g,h
+    a,b,c,d
+    e,f,g,h
+    e,f,g,h
+    a,b,c,d
+    e,f,g,h
+    e,f,g,h
+<<<

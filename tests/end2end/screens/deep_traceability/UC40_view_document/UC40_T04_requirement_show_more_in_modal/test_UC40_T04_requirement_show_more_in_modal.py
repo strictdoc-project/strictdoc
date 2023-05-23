@@ -10,7 +10,7 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 from tests.end2end.server import SDocTestServer
 
 
-class Test_UC40_T03_requirement_show_more_in_modal(BaseCase):
+class Test_UC40_T04_requirement_show_more_in_modal(BaseCase):
     def test_01(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 

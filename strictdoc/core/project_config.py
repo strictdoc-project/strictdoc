@@ -6,6 +6,7 @@ from typing import List
 import toml
 
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.path_filter import validate_mask
 
 
 class ProjectFeature(str, Enum):
@@ -167,18 +168,57 @@ class ProjectConfigLoader:
                 "include_doc_paths", include_doc_paths
             )
             assert isinstance(include_doc_paths, list)
+            for include_doc_path in include_doc_paths:
+                try:
+                    validate_mask(include_doc_path)
+                except SyntaxError as exception:
+                    print(  # noqa: T201
+                        f"error: strictdoc.toml: 'include_doc_paths': "
+                        f"{exception} Provided string: '{include_doc_path}'."
+                    )
+                    sys.exit(1)
+
             exclude_doc_paths = project_content.get(
                 "exclude_doc_paths", exclude_doc_paths
             )
             assert isinstance(exclude_doc_paths, list)
+            for exclude_doc_path in exclude_doc_paths:
+                try:
+                    validate_mask(exclude_doc_path)
+                except SyntaxError as exception:
+                    print(  # noqa: T201
+                        f"error: strictdoc.toml: 'exclude_doc_paths': "
+                        f"{exception} Provided string: '{exclude_doc_path}'."
+                    )
+                    sys.exit(1)
+
             include_source_paths = project_content.get(
                 "include_source_paths", include_source_paths
             )
             assert isinstance(include_source_paths, list)
+            for include_source_path in include_source_paths:
+                try:
+                    validate_mask(include_source_path)
+                except SyntaxError as exception:
+                    print(  # noqa: T201
+                        f"error: strictdoc.toml: 'include_source_paths': "
+                        f"{exception} Provided string: '{include_source_path}'."
+                    )
+                    sys.exit(1)
+
             exclude_source_paths = project_content.get(
                 "exclude_source_paths", exclude_source_paths
             )
             assert isinstance(exclude_source_paths, list)
+            for exclude_source_path in exclude_source_paths:
+                try:
+                    validate_mask(exclude_source_path)
+                except SyntaxError as exception:
+                    print(  # noqa: T201
+                        f"error: strictdoc.toml: 'exclude_source_paths': "
+                        f"{exception} Provided string: '{exclude_source_path}'."
+                    )
+                    sys.exit(1)
 
         if "server" in config_dict:
             # FIXME: Introduce at least a basic validation for the host/port.

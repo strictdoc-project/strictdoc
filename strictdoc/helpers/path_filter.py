@@ -52,8 +52,9 @@ class PathFilter:
         if len(self.filtered_paths) == 0:
             return self.positive_or_negative
 
+        portable_found_path = found_path.replace("\\", "/")
         for regex_mask in self.compiled_regex_masks:
-            regex_match = re.match(regex_mask, found_path)
+            regex_match = re.match(regex_mask, portable_found_path)
             if regex_match is not None:
                 return True
 

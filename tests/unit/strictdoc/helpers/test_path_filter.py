@@ -156,3 +156,11 @@ def test_case_51_negative_behaves_just_like_positive():
     assert not path_filter.match("docs/01_user_manual.sdoc")
     assert not path_filter.match("docs/.sdoc")
     assert not path_filter.match("sdoc")
+
+
+def test_case_80_windows_supported():
+    mask = "docs/*.sdoc"
+    path_filter = PathFilter([mask], positive_or_negative=False)
+
+    # POSITIVE
+    assert path_filter.match("docs\\hello.sdoc")

@@ -11,18 +11,33 @@ REGEX_DOUBLE_WILDCARD = (
     rf"(\\|\/)?({REGEX_NAME_PART})?((\\|\/){REGEX_NAME_PART})*(\\|\/)?"
 )
 
+REGEX_MASK_VALIDATION = rf"[^(\\|\/)]{REGEX_DOUBLE_WILDCARD}"
+
+MOST_COMMON_CHARACTERS = ("[", "]", "(", ")", "{", "}", "?", "+", "!")
+
 
 def validate_mask(mask: str):
-    assert not mask.startswith("/")
-    assert "***" not in mask
-    assert "//" not in mask
-    assert "\\" not in mask
-    assert "?" not in mask
-    assert "[" not in mask
-    assert "]" not in mask
-    assert "(" not in mask
-    assert ")" not in mask
-    assert "+" not in mask
+    if mask == "":
+        raise SyntaxError("Path mask must not be empty.")
+
+    if not mask[0].isalnum() and mask[0] != "*":
+        raise SyntaxError(
+            "Path mask must start with an alphanumeric character or "
+            "a wildcard symbol '*'."
+        )
+
+    if "//" in mask or "\\\\" in mask:
+        raise SyntaxError("Path mask must not contain double slashes.")
+
+    if "***" in mask:
+        raise SyntaxError("Invalid wildcard: '***'.")
+
+    for regex_symbol in MOST_COMMON_CHARACTERS:
+        if regex_symbol in mask:
+            raise SyntaxError(
+                f"Path mask must not contain any of the special characters: "
+                f"{MOST_COMMON_CHARACTERS}."
+            )
 
 
 def compile_regex_mask(path_mask: str) -> str:

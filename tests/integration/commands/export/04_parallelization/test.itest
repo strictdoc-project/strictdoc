@@ -24,6 +24,8 @@ RUN: %check_exists --file %S/Output/html/04_parallelization/input10.html
 RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: Doc 1
 CHECK-HTML: input1.sdoc
+CHECK-HTML: Doc 10
+CHECK-HTML: input10.sdoc
 CHECK-HTML: Doc 2
 CHECK-HTML: input2.sdoc
 CHECK-HTML: Doc 3
@@ -40,5 +42,3 @@ CHECK-HTML: Doc 8
 CHECK-HTML: input8.sdoc
 CHECK-HTML: Doc 9
 CHECK-HTML: input9.sdoc
-CHECK-HTML: Doc 10
-CHECK-HTML: input10.sdoc

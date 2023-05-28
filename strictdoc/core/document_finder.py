@@ -11,6 +11,7 @@ from strictdoc.core.file_tree import (
     FileTree,
     PathFinder,
 )
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.textx import drop_textx_meta
 from strictdoc.helpers.timing import measure_performance, timing_decorator
 
@@ -18,7 +19,9 @@ from strictdoc.helpers.timing import measure_performance, timing_decorator
 class DocumentFinder:
     @staticmethod
     @timing_decorator("Find and read SDoc files")
-    def find_sdoc_content(config: ExportCommandConfig, parallelizer):
+    def find_sdoc_content(
+        config: ExportCommandConfig, project_config: ProjectConfig, parallelizer
+    ):
         for paths_to_files_or_doc in config.input_paths:
             if not os.path.exists(paths_to_files_or_doc):
                 sys.stdout.flush()
@@ -30,7 +33,9 @@ class DocumentFinder:
                 print(err)  # noqa: T201
                 sys.exit(1)
 
-        file_tree, asset_dirs = DocumentFinder._build_file_tree(config)
+        file_tree, asset_dirs = DocumentFinder._build_file_tree(
+            config, project_config=project_config
+        )
         document_tree = DocumentFinder._build_document_tree(
             file_tree, config.output_html_root, parallelizer
         )
@@ -118,7 +123,9 @@ class DocumentFinder:
         )
 
     @staticmethod
-    def _build_file_tree(config: ExportCommandConfig):
+    def _build_file_tree(
+        config: ExportCommandConfig, project_config: ProjectConfig
+    ):
         asset_dirs = []
         root_trees = []
 
@@ -171,6 +178,8 @@ class DocumentFinder:
                 root_path=path_to_doc_root,
                 ignored_dirs=[config.output_dir],
                 extensions=[".sdoc"],
+                include_paths=project_config.include_doc_paths,
+                exclude_paths=project_config.exclude_doc_paths,
             )
             root_trees.append(file_tree_structure)
 

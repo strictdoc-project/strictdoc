@@ -1,0 +1,24 @@
+[project]
+title = "StrictDoc Documentation"
+html_assets_strictdoc_dir = "assets"
+
+features = [
+  "TABLE_SCREEN",
+  "TRACEABILITY_SCREEN",
+  "DEEP_TRACEABILITY_SCREEN",
+  # "REQUIREMENT_TO_SOURCE_TRACEABILITY"
+]
+
+include_doc_paths = [
+  "docs/**"
+]
+
+exclude_doc_paths = [
+  "tests/**"
+]
+
+include_source_paths = [
+  "strictdoc/**"
+]
+
+exclude_source_paths = []

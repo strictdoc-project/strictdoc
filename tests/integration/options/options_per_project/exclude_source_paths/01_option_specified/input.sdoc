@@ -1,0 +1,24 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[FREETEXT]
+**Hello world**
+[/FREETEXT]
+
+[REQUIREMENT]
+UID: REQ-001
+REFS:
+- TYPE: File
+  VALUE: src1/test1.py
+
+[REQUIREMENT]
+UID: REQ-002
+REFS:
+- TYPE: File
+  VALUE: src2/test2.py
+
+[REQUIREMENT]
+UID: REQ-003
+REFS:
+- TYPE: File
+  VALUE: src3/test3.py

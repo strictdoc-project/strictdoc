@@ -65,7 +65,7 @@ class TraceabilityIndexBuilder:
         )
 
         document_tree, asset_dirs = DocumentFinder.find_sdoc_content(
-            config, parallelizer
+            config, project_config=project_config, parallelizer=parallelizer
         )
 
         # TODO: This is rather messy but it is better than it used to be.
@@ -135,7 +135,7 @@ class TraceabilityIndexBuilder:
             or config.experimental_enable_file_traceability
         ):
             source_tree: SourceTree = SourceFilesFinder.find_source_files(
-                config
+                config, project_config=project_config
             )
             source_files = source_tree.source_files
             source_file: SourceFile
@@ -233,8 +233,8 @@ class TraceabilityIndexBuilder:
                             "error: DocumentIndex: "
                             "two nodes with the same UID "
                             "exist in two different documents: "
-                            f'{node.reserved_uid} in "{document.title}" and '
-                            f'"{other_req_doc.title}".'
+                            f'{node.reserved_uid} in "{other_req_doc.title}" '
+                            f'and "{document.title}".'
                         )
                     sys.exit(1)
                 d_02_requirements_map[

@@ -1,0 +1,7 @@
+[project]
+
+exclude_doc_paths = [
+  "docs3/**"
+]
+
+features = []

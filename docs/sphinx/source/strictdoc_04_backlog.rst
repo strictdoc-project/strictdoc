@@ -73,8 +73,6 @@ Backlog: Nice to have
 
   - CLI command to dump default config file
   - Project prefix?
-  - Explicit or wildcard paths to sdoc files.
-  - Exclude folders when searching \*.sdoc.
   - Paths to dirs with source files.
   - Config options for presenting requirements.
     - Include/exclude requirements in TOC

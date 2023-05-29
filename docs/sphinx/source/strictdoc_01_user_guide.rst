@@ -1523,6 +1523,69 @@ This option specifies a project title.
     [project]
     title = "StrictDoc Documentation"
 
+Include/exclude document paths
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Use ``include_doc_paths`` and ``exclude_doc_paths`` paths to whitelist/blacklist paths to SDoc documents.
+
+In the following example, StrictDoc will look for all files in the input project directory, except all documents in the ``tests/`` folder.
+
+.. code-block:: yaml
+
+    [project]
+
+    include_doc_paths = [
+      "**"
+    ]
+
+    exclude_doc_paths = [
+      "tests/**"
+    ]
+
+The behavior of wildcard symbols ``*`` and ``**`` is as follows:
+
+- The ``*`` expands to any combination of symbols that represent a valid file name, excluding the forward and backward slashes, which limits this wildcard to only match a single directory.
+
+- The ``**`` expands to any combination of valid file name symbols, possibly separated by any number of slashes.
+
+.. list-table:: Examples of possible filter strings
+   :widths: 20 80
+   :header-rows: 1
+
+   * - **Example**
+     - **Description**
+
+   * - ``docs/*`` or ``docs/*.sdoc``
+     - Match all documents found in the ``docs/`` folder but not in its subdirectories.
+
+   * - ``docs/**``
+     - Match all documents found in the ``docs/`` folder and all its subdirectories.
+   * - ``**/docs/**``
+     - Match all documents found in the ``docs/`` folder and all its subdirectories. The ``docs/`` folder can be a top-level folder or at any level of depth.
+
+Include/exclude source files paths
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Use ``include_source_paths`` and ``exclude_source_paths`` to whitelist/blacklist paths to source files when the traceability between requirements and source files feature is enabled.
+
+.. code-block:: yaml
+
+    [project]
+
+    features = [
+      "REQUIREMENT_TO_SOURCE_TRACEABILITY"
+    ]
+
+    include_source_paths = [
+      "src/**"
+    ]
+
+    exclude_source_paths = [
+      "src/tests/**"
+    ]
+
+The behavior of the wildcards is the same as for the ``include_doc_paths/exclude_doc_paths`` options.
+
 Server configuration
 ~~~~~~~~~~~~~~~~~~~~
 

@@ -113,7 +113,7 @@ def docs(context):
         ToxEnvironment.DOCUMENTATION,
         """
             python3 strictdoc/cli/main.py
-                export docs/
+                export .
                     --formats=html
                     --output-dir output/strictdoc_website
                     --project-title "StrictDoc"

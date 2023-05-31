@@ -47,6 +47,7 @@ class RequirementsCoverageHTMLGenerator:
             renderer=markup_renderer,
             document_type=DocumentType.deeptrace(),
             strictdoc_version=__version__,
+            standalone=False,
         )
 
         return output

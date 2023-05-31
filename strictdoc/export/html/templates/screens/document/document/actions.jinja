@@ -5,6 +5,7 @@
 #}
 <turbo-frame>
   <div class="actions_group">
+    {%- if not standalone -%}
     <a
       href="/actions/document/edit_grammar?document_mid={{ document.node_id }}"
       class="action_button"
@@ -14,11 +15,14 @@
       data-testid="document-edit-grammar-action"
     >{% include "_res/svg_ico16_gear.jinja.html" %} Edit grammar</a>
 
+    {%- if project_config.is_activated_reqif() -%}
     <a
       class="action_button"
       href="/reqif/export_document/{{ document.node_id }}"
       data-testid="document-export-reqif-action"
     >Export to ReqIF</a>
+    {%- endif -%}
+    {%- endif -%}
   </div>
 </turbo-frame>
 {%- endif -%}

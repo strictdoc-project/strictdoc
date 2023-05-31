@@ -79,6 +79,15 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
     def is_feature_activated(self, feature: ProjectFeature):
         return feature in self.project_features
 
+    def is_activated_table_screen(self):
+        return ProjectFeature.TABLE_SCREEN in self.project_features
+
+    def is_activated_trace_screen(self):
+        return ProjectFeature.TRACEABILITY_SCREEN in self.project_features
+
+    def is_activated_deep_trace_screen(self):
+        return ProjectFeature.DEEP_TRACEABILITY_SCREEN in self.project_features
+
     def is_activated_requirements_to_source_traceability(self):
         return (
             ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY
@@ -90,9 +99,13 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
             ProjectFeature.REQUIREMENTS_COVERAGE_SCREEN in self.project_features
         )
 
-    @staticmethod
-    def is_reqif_feature_activated():
-        return ProjectFeature.REQIF
+    def is_activated_standalone_document(self):
+        return (
+            ProjectFeature.STANDALONE_DOCUMENT_SCREEN in self.project_features
+        )
+
+    def is_activated_reqif(self) -> bool:
+        return ProjectFeature.REQIF in self.project_features
 
 
 class ProjectConfigLoader:

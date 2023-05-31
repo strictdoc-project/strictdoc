@@ -30,6 +30,7 @@ class SourceFileCoverageHTMLGenerator:
             traceability_index=traceability_index,
             link_renderer=link_renderer,
             strictdoc_version=__version__,
+            standalone=False,
         )
 
         return output

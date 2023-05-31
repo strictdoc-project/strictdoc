@@ -47,7 +47,10 @@ class EmbeddableTag:
         elif tag.name == "script":
             if "type" in tag.attrs:
                 type_value = tag.attrs["type"]
-                if type_value == "text/javascript":
+                if (
+                    type_value in ("text/javascript", "module")
+                    and "src" in tag.attrs
+                ):
                     return EmbeddableTag(EmbeddableTag.JS, tag.attrs["src"])
         elif tag.name == "img":
             if "src" in tag.attrs:

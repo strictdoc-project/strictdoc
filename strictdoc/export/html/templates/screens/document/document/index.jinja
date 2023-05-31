@@ -8,10 +8,12 @@
 {% endblock head_css %}
 
 {% block head_scripts %}
+  {%- if not standalone -%}
   <script type="text/javascript" src="{{ link_renderer.render_static_url('viewtype_menu.js') }}"></script>
+  {%- endif -%}
   <script type="text/javascript" src="{{ link_renderer.render_static_url('resizable_bar.js') }}"></script>
 
-  {%- if config.is_running_on_server -%}
+  {%- if config.is_running_on_server and not standalone -%}
   <script type="module">
     import hotwiredTurbo from "{{ link_renderer.render_static_url('turbo.js') }}";
     import { Application, Controller } from "{{ link_renderer.render_static_url('stimulus.js') }}";
@@ -34,7 +36,7 @@
   {{ super() }}
 {% endblock head_scripts %}
 {% block title %}{{ document.title }} - {{ template_type }}{% endblock title %}
-{% block viewtype %}document{% endblock viewtype %}
+{% block viewtype %}{{ "document" if not standalone else "standalone_document" }}{% endblock viewtype %}
 
 {% block layout_nav %}
   {%- if not standalone -%}
@@ -50,12 +52,22 @@
   {% include "screens/document/_shared/resizable_bar_with_toc.jinja" %}
 {% endblock toc_content %}
 
-{% block header_content %}
-  {%- with
-      header__items=[
+{%- if not standalone -%}
+  {%- set header_items = [
         "screens/document/_shared/frame_header_document_title.jinja",
         "screens/document/_shared/viewtype_menu.jinja"
-      ],
+      ]
+  -%}
+{%- else -%}
+  {%- set header_items = [
+        "screens/document/_shared/frame_header_document_title.jinja",
+      ]
+  -%}
+{%- endif -%}
+
+{% block header_content %}
+  {%- with
+      header__items=header_items,
       header__last="screens/document/document/actions.jinja"
   -%}
     {% include "components/header/index.jinja" %}

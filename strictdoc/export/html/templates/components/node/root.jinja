@@ -23,7 +23,7 @@
     {% endblock %}
 
     {# node_controls #}
-    {%- if config.is_running_on_server -%}
+    {%- if config.is_running_on_server and not standalone -%}
     {% include "components/node/node_controls/index.jinja" %}
     {%- endif -%}
 

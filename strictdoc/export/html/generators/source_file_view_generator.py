@@ -136,5 +136,6 @@ class SourceFileViewHTMLGenerator:
             renderer=markup_renderer,
             document_type=document_type,
             strictdoc_version=__version__,
+            standalone=False,
         )
         return output

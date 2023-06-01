@@ -41,9 +41,11 @@
       {% endblock layout_nav %}
     </nav>
 
+    {%- if not standalone -%}
     <aside class="layout_tree">
       {% block tree_content %}{% endblock tree_content %}
     </aside>
+    {%- endif -%}
 
     {%- with toc_position = "right" -%}
       <aside

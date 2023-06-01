@@ -420,6 +420,7 @@ def create_main_router(
             document_type=DocumentType.document(),
             link_renderer=link_renderer,
             config=export_action.config,
+            standalone=False,
         )
 
         toc_template = env.get_template(
@@ -535,6 +536,7 @@ def create_main_router(
                 replace_action="replace",
                 reference_mid="NOT_RELEVANT",
                 whereto="NOT_RELEVANT",
+                standalone=False,
             )
             return HTMLResponse(
                 content=output,
@@ -595,6 +597,7 @@ def create_main_router(
             section=section,
             document_type=DocumentType.document(),
             config=export_action.config,
+            standalone=False,
         )
         iterator = export_action.traceability_index.get_document_iterator(
             section.document
@@ -657,6 +660,7 @@ def create_main_router(
             document=section.document,
             document_type=DocumentType.document(),
             config=export_action.config,
+            standalone=False,
         )
         return HTMLResponse(
             content=output,
@@ -802,6 +806,7 @@ def create_main_router(
                 document_type=DocumentType.document(),
                 whereto=whereto,
                 replace_action="replace",
+                standalone=False,
             )
             return HTMLResponse(
                 content=output,
@@ -875,6 +880,7 @@ def create_main_router(
             link_renderer=link_renderer,
             traceability_index=export_action.traceability_index,
             config=export_action.config,
+            standalone=False,
         )
 
         toc_template = env.get_template(
@@ -986,6 +992,7 @@ def create_main_router(
                 renderer=markup_renderer,
                 requirement=requirement,
                 document_type=DocumentType.document(),
+                standalone=False,
                 form_object=form_object,
             )
             return HTMLResponse(
@@ -1164,6 +1171,7 @@ def create_main_router(
                 link_renderer=link_renderer,
                 traceability_index=export_action.traceability_index,
                 config=export_action.config,
+                standalone=False,
             )
 
         toc_template = env.get_template(
@@ -1313,6 +1321,7 @@ def create_main_router(
             document_type=DocumentType.document(),
             link_renderer=link_renderer,
             config=export_action.config,
+            standalone=False,
         )
         toc_template = env.get_template(
             "actions/document/_shared/stream_updated_toc.jinja.html"
@@ -1395,6 +1404,7 @@ def create_main_router(
             document_type=DocumentType.document(),
             link_renderer=link_renderer,
             config=export_action.config,
+            standalone=False,
         )
 
         toc_template = env.get_template(
@@ -1845,6 +1855,7 @@ def create_main_router(
             config=export_config,
             renderer=markup_renderer,
             document_type=DocumentType.document(),
+            standalone=False,
         )
         return HTMLResponse(
             content=output,
@@ -1880,6 +1891,7 @@ def create_main_router(
             config=export_action.config,
             renderer=markup_renderer,
             document_type=DocumentType.document(),
+            standalone=False,
         )
         return HTMLResponse(
             content=output,
@@ -2292,6 +2304,11 @@ def create_main_router(
                 elif url_to_document.endswith("-TRACE.html"):
                     base_document_url = url_to_document.replace("-TRACE", "")
                     document_type_to_generate = DocumentType.TRACE
+                elif url_to_document.endswith(".standalone.html"):
+                    base_document_url = url_to_document.replace(
+                        ".standalone", ""
+                    )
+                    document_type_to_generate = DocumentType.DOCUMENT
                 else:
                     # Either this is a normal document, or the path is broken.
                     base_document_url = url_to_document

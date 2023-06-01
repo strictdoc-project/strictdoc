@@ -1,4 +1,4 @@
-{%- if not standalone -%}
+{%- assert not standalone -%}
 <div class="viewtype">
   <div
     id="viewtype_handler"
@@ -24,6 +24,7 @@
         href="{{document.meta.get_root_path_prefix()}}/{{document.meta.get_html_doc_link()}}">
         Document</a>
     </li>
+    {%- if project_config.is_activated_table_screen() -%}
     <li>
       <a
         data-viewtype_link="table"
@@ -32,6 +33,8 @@
         href="{{document.meta.get_root_path_prefix()}}/{{document.meta.get_html_table_link()}}">
         Table</a>
     </li>
+    {%- endif -%}
+    {%- if project_config.is_activated_trace_screen() -%}
     <li>
       <a
         data-viewtype_link="traceability"
@@ -40,6 +43,8 @@
         href="{{document.meta.get_root_path_prefix()}}/{{document.meta.get_html_traceability_link()}}">
         Traceability</a>
     </li>
+    {%- endif -%}
+    {%- if project_config.is_activated_deep_trace_screen() -%}
     <li>
       <a
         data-viewtype_link="deep_traceability"
@@ -48,6 +53,16 @@
         href="{{document.meta.get_root_path_prefix()}}/{{document.meta.get_html_deep_traceability_link()}}">
       Deep traceability</a>
     </li>
+    {%- endif -%}
+    {%- if project_config.is_activated_standalone_document() -%}
+    <li>
+      <a
+        data-viewtype_link="standalone_document"
+        class="viewtype__menu_item"
+        title="Go to Standalone Document view"
+        href="{{document.meta.get_root_path_prefix()}}/{{document.meta.get_html_standalone_document_link()}}">
+      Standalone</a>
+    </li>
+    {%- endif -%}
   </menu>
 </div>
-{%- endif -%}

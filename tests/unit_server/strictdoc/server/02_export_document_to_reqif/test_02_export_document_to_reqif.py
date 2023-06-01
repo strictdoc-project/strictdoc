@@ -6,7 +6,7 @@ from fastapi.testclient import TestClient
 
 from strictdoc import environment
 from strictdoc.cli.cli_arg_parser import ServerCommandConfig
-from strictdoc.core.project_config import ProjectConfig
+from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.server.app import create_app
 
 PATH_TO_THIS_TEST_FOLDER = os.path.dirname(os.path.abspath(__file__))
@@ -23,9 +23,11 @@ def test_export_document_to_reqif():
         reload=False,
         port=8001,
     )
+    project_config: ProjectConfig = ProjectConfig.default_config()
+    project_config.project_features.append(ProjectFeature.REQIF)
     client = TestClient(
         create_app(
-            server_config=config, project_config=ProjectConfig.default_config()
+            server_config=config, project_config=project_config
         )
     )
     response = client.get("/02_export_document_to_reqif/sample.html")

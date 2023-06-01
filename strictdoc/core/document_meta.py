@@ -87,6 +87,13 @@ class DocumentMeta:
             f"{self.document_filename_base}-DEEP-TRACE.html"
         )
 
+    def get_html_standalone_document_link(self):
+        return (
+            f"{self.output_document_dir_rel_path}"
+            f"/"
+            f"{self.document_filename_base}.standalone.html"
+        )
+
     def get_html_link(self, document_type: DocumentType, other_doc_level):
         assert isinstance(document_type, DocumentType)
 

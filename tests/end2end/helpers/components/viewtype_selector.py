@@ -7,6 +7,9 @@ from tests.end2end.helpers.screens.deep_traceability.screen_deep_traceability im
 from tests.end2end.helpers.screens.document.screen_document import (
     Screen_Document,
 )
+from tests.end2end.helpers.screens.standalone_document.screen_standalone_document import (  # noqa: E501
+    Screen_StandaloneDocument,
+)
 from tests.end2end.helpers.screens.table.screen_table import (
     Screen_Table,
 )
@@ -81,3 +84,11 @@ class ViewType_Selector:  # pylint: disable=invalid-name  # noqa: E501
             '//*[@data-viewtype_link="deep_traceability"]'
         )
         return Screen_Deep_Traceability(self.test_case)
+
+    def do_go_to_standalone_document(self) -> Screen_StandaloneDocument:
+        self.do_click_viewtype_handler()
+        self.assert_viewtype_menu_opened()
+        self.test_case.click_xpath(
+            '//*[@data-viewtype_link="standalone_document"]'
+        )
+        return Screen_StandaloneDocument(self.test_case)

@@ -1,0 +1,5 @@
+[project]
+
+features = [
+  "STANDALONE_DOCUMENT_SCREEN",
+]

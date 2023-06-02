@@ -1,7 +1,6 @@
 import argparse
 import os
 import sys
-from enum import Enum
 from typing import List, Optional
 
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
@@ -10,7 +9,7 @@ from strictdoc.core.environment import SDocRuntimeEnvironment
 from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.helpers.auto_described import auto_described
 
-EXPORT_FORMATS = ["html", "html-standalone", "rst", "excel", "reqif-sdoc"]
+EXPORT_FORMATS = ["html", "rst", "excel", "reqif-sdoc"]
 EXCEL_PARSERS = ["basic"]
 
 
@@ -303,12 +302,6 @@ class ServerCommandConfig:
         self.port: Optional[int] = port
 
 
-class ExportMode(Enum):
-    DOCTREE = 1
-    STANDALONE = 2
-    DOCTREE_AND_STANDALONE = 3
-
-
 class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
     def __init__(  # pylint: disable=too-many-arguments
         self,
@@ -356,15 +349,6 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         assert self._server_port is not None
         return self._server_port
 
-    def get_export_mode(self):
-        if "html" in self.formats:
-            if "html-standalone" in self.formats:
-                return ExportMode.DOCTREE_AND_STANDALONE
-            return ExportMode.DOCTREE
-        if "html-standalone" in self.formats:
-            return ExportMode.STANDALONE
-        raise NotImplementedError
-
     @property
     def strictdoc_root_path(self):
         return self.environment.path_to_strictdoc
@@ -391,6 +375,22 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         if self.project_title is None:
             self.project_title = project_config.project_title
         self.dir_for_sdoc_assets = project_config.dir_for_sdoc_assets
+
+        if self.experimental_enable_file_traceability:
+            deprecation_message = (
+                "warning: "
+                "'--experimental-enable-file-traceability' command-line "
+                "option will be deprecated. Instead, activate the option in "
+                "the strictdoc.toml config file as follows:\n"
+                "```\n"
+                "[project]\n\n"
+                "features = [\n"
+                '  "REQUIREMENT_TO_SOURCE_TRACEABILITY"\n'
+                "]\n"
+                "```"
+            )
+            print(deprecation_message)  # noqa: T201
+
         self.experimental_enable_file_traceability = (
             self.experimental_enable_file_traceability
             or project_config.is_feature_activated(

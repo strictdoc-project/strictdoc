@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Optional, Tuple
 
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.cli.cli_arg_parser import ExportCommandConfig, ExportMode
+from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.core.source_tree import SourceTree
@@ -174,7 +174,6 @@ class HTMLGenerator:
         if specific_documents is None:
             specific_documents = DocumentType.all()
 
-        export_mode = config.get_export_mode()
         assert document.meta is not None
 
         document_meta: DocumentMeta = document.meta
@@ -193,87 +192,78 @@ class HTMLGenerator:
             document,
         )
 
-        if export_mode in (
-            ExportMode.DOCTREE,
-            ExportMode.DOCTREE_AND_STANDALONE,
+        if DocumentType.DOCUMENT in specific_documents:
+            # Single Document pages
+            document_content = DocumentHTMLGenerator.export(
+                config,
+                project_config,
+                document,
+                traceability_index,
+                markup_renderer,
+                link_renderer,
+                standalone=False,
+            )
+            document_out_file = document_meta.get_html_doc_path()
+            with open(document_out_file, "w", encoding="utf8") as file:
+                file.write(document_content)
+
+        # Single Document Table pages
+        if (
+            project_config.is_feature_activated(ProjectFeature.TABLE_SCREEN)
+            and DocumentType.TABLE in specific_documents
         ):
-            if DocumentType.DOCUMENT in specific_documents:
-                # Single Document pages
-                document_content = DocumentHTMLGenerator.export(
-                    config,
-                    project_config,
-                    document,
-                    traceability_index,
-                    markup_renderer,
-                    link_renderer,
-                    standalone=False,
-                )
-                document_out_file = document_meta.get_html_doc_path()
-                with open(document_out_file, "w", encoding="utf8") as file:
-                    file.write(document_content)
+            document_content = DocumentTableHTMLGenerator.export(
+                config,
+                project_config,
+                document,
+                traceability_index,
+                markup_renderer,
+                link_renderer,
+            )
+            document_out_file = document_meta.get_html_table_path()
+            with open(document_out_file, "w", encoding="utf8") as file:
+                file.write(document_content)
 
-            # Single Document Table pages
-            if (
-                project_config.is_feature_activated(ProjectFeature.TABLE_SCREEN)
-                and DocumentType.TABLE in specific_documents
-            ):
-                document_content = DocumentTableHTMLGenerator.export(
-                    config,
-                    project_config,
-                    document,
-                    traceability_index,
-                    markup_renderer,
-                    link_renderer,
-                )
-                document_out_file = document_meta.get_html_table_path()
-                with open(document_out_file, "w", encoding="utf8") as file:
-                    file.write(document_content)
+        # Single Document Traceability pages
+        if (
+            project_config.is_feature_activated(
+                ProjectFeature.TRACEABILITY_SCREEN
+            )
+            and DocumentType.TRACE in specific_documents
+        ):
+            document_content = DocumentTraceHTMLGenerator.export(
+                config,
+                project_config,
+                document,
+                traceability_index,
+                markup_renderer,
+                link_renderer,
+            )
+            document_out_file = document_meta.get_html_traceability_path()
+            with open(document_out_file, "w", encoding="utf8") as file:
+                file.write(document_content)
 
-            # Single Document Traceability pages
-            if (
-                project_config.is_feature_activated(
-                    ProjectFeature.TRACEABILITY_SCREEN
-                )
-                and DocumentType.TRACE in specific_documents
-            ):
-                document_content = DocumentTraceHTMLGenerator.export(
-                    config,
-                    project_config,
-                    document,
-                    traceability_index,
-                    markup_renderer,
-                    link_renderer,
-                )
-                document_out_file = document_meta.get_html_traceability_path()
-                with open(document_out_file, "w", encoding="utf8") as file:
-                    file.write(document_content)
-
-            # Single Document Deep Traceability pages
-            if (
-                project_config.is_feature_activated(
-                    ProjectFeature.DEEP_TRACEABILITY_SCREEN
-                )
-                and DocumentType.DEEPTRACE in specific_documents
-            ):
-                document_content = DocumentDeepTraceHTMLGenerator.export_deep(
-                    config,
-                    project_config,
-                    document,
-                    traceability_index,
-                    markup_renderer,
-                    link_renderer,
-                )
-                document_out_file = (
-                    document_meta.get_html_deep_traceability_path()
-                )
-                with open(document_out_file, "w", encoding="utf8") as file:
-                    file.write(document_content)
+        # Single Document Deep Traceability pages
+        if (
+            project_config.is_feature_activated(
+                ProjectFeature.DEEP_TRACEABILITY_SCREEN
+            )
+            and DocumentType.DEEPTRACE in specific_documents
+        ):
+            document_content = DocumentDeepTraceHTMLGenerator.export_deep(
+                config,
+                project_config,
+                document,
+                traceability_index,
+                markup_renderer,
+                link_renderer,
+            )
+            document_out_file = document_meta.get_html_deep_traceability_path()
+            with open(document_out_file, "w", encoding="utf8") as file:
+                file.write(document_content)
 
         if project_config.is_feature_activated(
             ProjectFeature.STANDALONE_DOCUMENT_SCREEN
-        ) or export_mode in (
-            ExportMode.STANDALONE,
-            ExportMode.DOCTREE_AND_STANDALONE,
         ):
             # Single Document pages (standalone)
             document_content = DocumentHTMLGenerator.export(

@@ -23,6 +23,8 @@ class ProjectFeature(str, Enum):
     REQUIREMENTS_COVERAGE_SCREEN = "REQUIREMENTS_COVERAGE_SCREEN"
     REQUIREMENT_TO_SOURCE_TRACEABILITY = "REQUIREMENT_TO_SOURCE_TRACEABILITY"
 
+    ALL_FEATURES = "ALL_FEATURES"
+
     @staticmethod
     def all():
         return list(map(lambda c: c.value, ProjectFeature))
@@ -176,6 +178,8 @@ class ProjectConfigLoader:
                         f"'{feature}'."
                     )
                     sys.exit(1)
+            if ProjectFeature.ALL_FEATURES in project_features:
+                project_features = ProjectFeature.all()
 
             include_doc_paths = project_content.get(
                 "include_doc_paths", include_doc_paths

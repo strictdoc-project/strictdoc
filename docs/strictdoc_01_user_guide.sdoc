@@ -1848,6 +1848,57 @@ The behavior of the wildcards is the same as for the ``include_doc_paths/exclude
 [/SECTION]
 
 [SECTION]
+TITLE: Selecting features
+
+[FREETEXT]
+StrictDoc has optional features and features that are developed with a lower priority.
+
+The feature of exporting the SDoc documents to HTML document view is a core feature and is always enabled. The option ``features`` allows selecting which additional features should be activated or not.
+
+The following is an example of the default configuration. The same features are active/inactive when the option ``features`` is not specified.
+
+.. code-block:: yaml
+
+    [project]
+    title = "StrictDoc Documentation"
+
+    features = [
+      # Stable features that are enabled by default.
+      "TABLE_SCREEN",
+      "TRACEABILITY_SCREEN",
+      "DEEP_TRACEABILITY_SCREEN",
+
+      # Stable features that are disabled by default.
+      # "MATHJAX",
+
+      # Experimental features are disabled by default.
+      # "REQIF",
+      # "STANDALONE_DOCUMENT_SCREEN",
+      # "REQUIREMENTS_COVERAGE_SCREEN",
+      # "REQUIREMENT_TO_SOURCE_TRACEABILITY"
+    ]
+[/FREETEXT]
+
+[SECTION]
+TITLE: Disable all features
+
+[FREETEXT]
+To disable all features, specify the ``features`` option but leave it empty:
+
+.. code-block:: yaml
+
+    [project]
+
+    features = [
+      # Nothing specified.
+    ]
+[/FREETEXT]
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
 TITLE: Server configuration
 
 [SECTION]

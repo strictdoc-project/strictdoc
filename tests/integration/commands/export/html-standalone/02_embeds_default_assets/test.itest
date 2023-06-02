@@ -1,0 +1,11 @@
+REQUIRES: PLATFORM_IS_NOT_WINDOWS
+
+RUN: %strictdoc export %S --formats=html --no-parallelization --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+/// Standalone file is generated
+RUN: %check_exists --file %S/Output/html/02_embeds_default_assets/input.standalone.html
+
+/// Index is generated
+RUN: %cat %S/Output/html/02_embeds_default_assets/input.standalone.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: <link href="data:image/{{(x-icon|vnd.microsoft.icon)}};base64,AAABAAEAEBAAAAEAI{{.*}}rel="shortcut icon" type="image/x-icon"/>

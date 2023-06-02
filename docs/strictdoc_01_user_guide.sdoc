@@ -1460,11 +1460,15 @@ TITLE: Standalone HTML pages (experimental)
 
 [FREETEXT]
 The following command creates a normal HTML export with all pages having their
-assets embedded into HTML using Data URI / Base64:
+assets embedded into HTML using Data URI / Base64. In the project's ``strictdoc.toml`` file, specify:
 
-.. code-block:: text
+.. code-block:: yaml
 
-    strictdoc export docs/ --formats=html-standalone --output-dir output-html
+    [project]
+
+    features = [
+      "STANDALONE_DOCUMENT_SCREEN"
+    ]
 
 The generated document are self-contained HTML pages that can be shared via
 email as single files. This option might be especially useful if you work with

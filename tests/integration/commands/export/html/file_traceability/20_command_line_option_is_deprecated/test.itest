@@ -1,0 +1,17 @@
+RUN: %strictdoc export %S --experimental-enable-file-traceability --output-dir Output | filecheck %s --dump-input=fail
+CHECK: warning: '--experimental-enable-file-traceability' command-line option will be deprecated. Instead, activate the option in the strictdoc.toml config file as follows:
+CHECK: ```
+CHECK: [project]
+CHECK:
+CHECK: features = [
+CHECK:   "REQUIREMENT_TO_SOURCE_TRACEABILITY"
+CHECK: ]
+CHECK: ```
+
+RUN: %check_exists --file "%S/Output/html/_source_files/file.py.html"
+
+RUN: %cat %S/Output/html/20_command_line_option_is_deprecated/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001">
+
+RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE: <a{{.*}}href="../20_command_line_option_is_deprecated/input.html#1-REQ-001"{{.*}}>

@@ -17,13 +17,14 @@ def test_export_document_to_reqif():
     shutil.rmtree(PATH_TO_OUTPUT_FOLDER, ignore_errors=True)
 
     config = ServerCommandConfig(
-        environment=environment,
         input_path=PATH_TO_THIS_TEST_FOLDER,
         output_path=PATH_TO_OUTPUT_FOLDER,
         reload=False,
         port=8001,
     )
-    project_config: ProjectConfig = ProjectConfig.default_config()
+    project_config: ProjectConfig = ProjectConfig.default_config(
+        environment=environment
+    )
     project_config.project_features.append(ProjectFeature.REQIF)
     client = TestClient(
         create_app(

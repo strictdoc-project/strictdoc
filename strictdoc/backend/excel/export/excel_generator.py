@@ -14,7 +14,7 @@ from strictdoc.backend.sdoc.models.reference import (
 )
 from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.sdoc.models.type_system import ReferenceType
-from strictdoc.cli.cli_arg_parser import ExportCommandConfig
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 
 EXCEL_SHEET_NAME = "Requirements"
@@ -40,7 +40,7 @@ class ExcelGenerator:
     def export_tree(
         traceability_index: TraceabilityIndex,
         output_excel_root: str,
-        config: ExportCommandConfig,
+        project_config: ProjectConfig,
     ):
         Path(output_excel_root).mkdir(parents=True, exist_ok=True)
 
@@ -54,7 +54,7 @@ class ExcelGenerator:
             )
 
             ExcelGenerator._export_single_document(
-                document, traceability_index, document_out_file, config
+                document, traceability_index, document_out_file, project_config
             )
 
     @staticmethod
@@ -62,19 +62,19 @@ class ExcelGenerator:
         document: Document,
         traceability_index,
         document_out_file,
-        config,
+        project_config: ProjectConfig,
     ):
         with xlsxwriter.Workbook(document_out_file) as workbook:
             worksheet = workbook.add_worksheet(name=EXCEL_SHEET_NAME)
             workbook.set_properties(
                 {
-                    "title": config.project_title,
+                    "title": project_config.project_title,
                     "comments": "Created with StrictDoc",
                 }
             )
 
             row = 1  # Header-Row
-            fields = config.fields
+            fields = project_config.excel_export_fields
             # TODO: Check if all fields are defined by the DocumentGrammar
             columns = ExcelGenerator._init_columns_width(fields)
 

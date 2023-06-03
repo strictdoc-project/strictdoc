@@ -3,7 +3,6 @@ from enum import Enum
 from pathlib import Path
 from typing import List
 
-from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.file_tree import File, FileFinder
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.source_tree import SourceTree
@@ -92,7 +91,6 @@ class SourceFile:  # pylint: disable=too-many-instance-attributes
 class SourceFilesFinder:
     @staticmethod
     def find_source_files(
-        config: ExportCommandConfig,
         project_config: ProjectConfig,
     ) -> SourceTree:
         map_file_to_source = {}
@@ -107,9 +105,10 @@ class SourceFilesFinder:
             else doctree_root_abs_path
         )
 
+        assert isinstance(project_config.export_output_dir, str)
         file_tree = FileFinder.find_files_with_extensions(
             root_path=doctree_root_abs_path,
-            ignored_dirs=[config.output_dir],
+            ignored_dirs=[project_config.export_output_dir],
             extensions=SourceFileType.all(),
             include_paths=project_config.include_source_paths,
             exclude_paths=project_config.exclude_source_paths,
@@ -125,7 +124,7 @@ class SourceFilesFinder:
                 file.get_folder_path(), doctree_root_abs_path
             )
             output_dir_full_path: str = os.path.join(
-                config.output_html_root,
+                project_config.export_output_html_root,
                 "_source_files",
                 last_folder_in_path,
             )

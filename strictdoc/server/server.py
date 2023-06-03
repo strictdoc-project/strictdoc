@@ -62,7 +62,7 @@ def run_strictdoc_server(
             reload=server_config.reload,
             reload_dirs=[
                 os.path.join(
-                    server_config.environment.path_to_strictdoc, "strictdoc"
+                    project_config.get_strictdoc_root_path(), "strictdoc"
                 )
             ],
             reload_includes=[

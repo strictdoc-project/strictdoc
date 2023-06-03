@@ -1,10 +1,15 @@
 import os
 import sys
 from enum import Enum
-from typing import List
+from typing import List, Optional
 
 import toml
 
+from strictdoc import SDocRuntimeEnvironment
+from strictdoc.cli.cli_arg_parser import (
+    ExportCommandConfig,
+    ServerCommandConfig,
+)
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.path_filter import validate_mask
 
@@ -44,6 +49,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
 
     def __init__(  # pylint: disable=too-many-arguments
         self,
+        environment: SDocRuntimeEnvironment,
         project_title: str,
         dir_for_sdoc_assets: str,
         project_features: List[str],
@@ -54,6 +60,10 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         include_source_paths: List[str],
         exclude_source_paths: List[str],
     ):
+        assert isinstance(environment, SDocRuntimeEnvironment)
+        self.environment: SDocRuntimeEnvironment = environment
+
+        # Settings obtained from the strictdoc.toml config file.
         self.project_title: str = project_title
         self.dir_for_sdoc_assets: str = dir_for_sdoc_assets
         self.project_features: List[str] = project_features
@@ -64,9 +74,22 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         self.include_source_paths: List[str] = include_source_paths
         self.exclude_source_paths: List[str] = exclude_source_paths
 
+        # Settings derived from the command-line parameters.
+        # Export action.
+        self.export_input_paths: Optional[List[str]] = None
+        self.export_output_dir: Optional[str] = None
+        self.export_output_html_root: Optional[str] = None
+        self.export_formats: Optional[List[str]] = None
+
+        self.excel_export_fields: Optional[List[str]] = None
+
+        self.is_running_on_server: bool = False
+
     @staticmethod
-    def default_config():
+    def default_config(environment: SDocRuntimeEnvironment):
+        assert isinstance(environment, SDocRuntimeEnvironment)
         return ProjectConfig(
+            environment=environment,
             project_title=ProjectConfig.DEFAULT_PROJECT_TITLE,
             dir_for_sdoc_assets=ProjectConfig.DEFAULT_DIR_FOR_SDOC_ASSETS,
             project_features=ProjectConfig.DEFAULT_FEATURES,
@@ -77,6 +100,50 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
             include_source_paths=[],
             exclude_source_paths=[],
         )
+
+    # Some server command settings can override the project config settings.
+    def integrate_server_config(self, server_config: ServerCommandConfig):
+        self.is_running_on_server = True
+        if server_config.port is not None:
+            server_port = server_config.port
+            self.server_port = server_port
+
+    def integrate_export_config(self, export_config: ExportCommandConfig):
+        if export_config.project_title is not None:
+            self.project_title = export_config.project_title
+        self.export_input_paths = export_config.input_paths
+        self.export_output_dir = export_config.output_dir
+        self.export_output_html_root = export_config.output_html_root
+        self.export_formats = export_config.formats
+        self.excel_export_fields = export_config.fields
+
+        if (
+            export_config.enable_mathjax
+            and ProjectFeature.MATHJAX not in self.project_features
+        ):
+            self.project_features.append(ProjectFeature.MATHJAX)
+
+        if export_config.experimental_enable_file_traceability:
+            deprecation_message = (
+                "warning: "
+                "'--experimental-enable-file-traceability' command-line "
+                "option will be deprecated. Instead, activate the option in "
+                "the strictdoc.toml config file as follows:\n"
+                "```\n"
+                "[project]\n\n"
+                "features = [\n"
+                '  "REQUIREMENT_TO_SOURCE_TRACEABILITY"\n'
+                "]\n"
+                "```"
+            )
+            print(deprecation_message)  # noqa: T201
+            if (
+                ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY
+                not in self.project_features
+            ):  # noqa: E501
+                self.project_features.append(
+                    ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY
+                )
 
     def is_feature_activated(self, feature: ProjectFeature):
         return feature in self.project_features
@@ -109,18 +176,32 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
     def is_activated_reqif(self) -> bool:
         return ProjectFeature.REQIF in self.project_features
 
+    def is_activated_mathjax(self) -> bool:
+        return ProjectFeature.MATHJAX in self.project_features
+
+    def get_strictdoc_root_path(self) -> str:
+        return self.environment.path_to_strictdoc
+
+    def get_static_files_path(self) -> str:
+        return self.environment.get_static_files_path()
+
+    def get_extra_static_files_path(self) -> str:
+        return self.environment.get_extra_static_files_path()
+
 
 class ProjectConfigLoader:
     @staticmethod
     def load_from_path_or_get_default(
-        *, path_to_config_dir: str
+        *,
+        path_to_config_dir: str,
+        environment: SDocRuntimeEnvironment,
     ) -> ProjectConfig:
         if not os.path.exists(path_to_config_dir):
-            return ProjectConfig.default_config()
+            return ProjectConfig.default_config(environment=environment)
 
         path_to_config = os.path.join(path_to_config_dir, "strictdoc.toml")
         if not os.path.isfile(path_to_config):
-            return ProjectConfig.default_config()
+            return ProjectConfig.default_config(environment=environment)
 
         try:
             config_content = toml.load(path_to_config)
@@ -132,21 +213,28 @@ class ProjectConfigLoader:
             print(  # noqa: T201
                 "warning: using default StrictDoc configuration."
             )
-            return ProjectConfig.default_config()
+            return ProjectConfig.default_config(environment=environment)
         except Exception as exception:
             raise NotImplementedError from exception
 
-        return ProjectConfigLoader._load_from_dictionary(config_content)
-
-    @staticmethod
-    def load_from_string(*, toml_string: str) -> ProjectConfig:
-        config_dict = toml.loads(toml_string)
         return ProjectConfigLoader._load_from_dictionary(
-            config_dict=config_dict
+            config_dict=config_content, environment=environment
         )
 
     @staticmethod
-    def _load_from_dictionary(config_dict: dict) -> ProjectConfig:
+    def load_from_string(
+        *, toml_string: str, environment: SDocRuntimeEnvironment
+    ) -> ProjectConfig:
+        config_dict = toml.loads(toml_string)
+        return ProjectConfigLoader._load_from_dictionary(
+            config_dict=config_dict,
+            environment=environment,
+        )
+
+    @staticmethod
+    def _load_from_dictionary(
+        *, config_dict: dict, environment: SDocRuntimeEnvironment
+    ) -> ProjectConfig:
         project_title = ProjectConfig.DEFAULT_PROJECT_TITLE
         dir_for_sdoc_assets = ProjectConfig.DEFAULT_DIR_FOR_SDOC_ASSETS
         project_features = ProjectConfig.DEFAULT_FEATURES
@@ -247,6 +335,7 @@ class ProjectConfigLoader:
             ), server_port
 
         return ProjectConfig(
+            environment=environment,
             project_title=project_title,
             dir_for_sdoc_assets=dir_for_sdoc_assets,
             project_features=project_features,

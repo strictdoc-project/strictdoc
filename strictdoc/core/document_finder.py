@@ -3,7 +3,6 @@ import sys
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.reader import SDReader
-from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_tree import (
@@ -19,10 +18,8 @@ from strictdoc.helpers.timing import measure_performance, timing_decorator
 class DocumentFinder:
     @staticmethod
     @timing_decorator("Find and read SDoc files")
-    def find_sdoc_content(
-        config: ExportCommandConfig, project_config: ProjectConfig, parallelizer
-    ):
-        for paths_to_files_or_doc in config.input_paths:
+    def find_sdoc_content(project_config: ProjectConfig, parallelizer):
+        for paths_to_files_or_doc in project_config.export_input_paths:
             if not os.path.exists(paths_to_files_or_doc):
                 sys.stdout.flush()
                 err = (
@@ -34,10 +31,10 @@ class DocumentFinder:
                 sys.exit(1)
 
         file_tree, asset_dirs = DocumentFinder._build_file_tree(
-            config, project_config=project_config
+            project_config=project_config
         )
         document_tree = DocumentFinder._build_document_tree(
-            file_tree, config.output_html_root, parallelizer
+            file_tree, project_config.export_output_html_root, parallelizer
         )
 
         return document_tree, asset_dirs
@@ -123,13 +120,14 @@ class DocumentFinder:
         )
 
     @staticmethod
-    def _build_file_tree(
-        config: ExportCommandConfig, project_config: ProjectConfig
-    ):
+    def _build_file_tree(project_config: ProjectConfig):
+        assert isinstance(project_config.export_input_paths, list)
+        assert len(project_config.export_input_paths) > 0
+
         asset_dirs = []
         root_trees = []
 
-        for path_to_doc_root_raw in config.input_paths:
+        for path_to_doc_root_raw in project_config.export_input_paths:
             if os.path.isfile(path_to_doc_root_raw):
                 path_to_doc_root = path_to_doc_root_raw
                 if not os.path.isabs(path_to_doc_root):
@@ -174,9 +172,10 @@ class DocumentFinder:
                 )
 
             # Finding SDoc files.
+            assert isinstance(project_config.export_output_dir, str)
             file_tree_structure = FileFinder.find_files_with_extensions(
                 root_path=path_to_doc_root,
-                ignored_dirs=[config.output_dir],
+                ignored_dirs=[project_config.export_output_dir],
                 extensions=[".sdoc"],
                 include_paths=project_config.include_doc_paths,
                 exclude_paths=project_config.exclude_doc_paths,

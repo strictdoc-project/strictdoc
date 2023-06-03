@@ -17,7 +17,7 @@
   {% include "components/requirement/uid/index.jinja" %}
   {% include "components/requirement/statement/index.jinja" %}
 
-  {%- if config.is_running_on_server %}
+  {%- if project_config.is_running_on_server %}
     <div style="position:absolute;right:4px;bottom:0;">
       <turbo-frame>
         <a

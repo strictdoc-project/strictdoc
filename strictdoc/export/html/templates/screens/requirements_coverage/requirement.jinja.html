@@ -12,6 +12,6 @@
   {% include "_shared/requirement_block/uid_and_title.jinja.html" %}
 </sdoc-node>
 
-{% if config.experimental_enable_file_traceability %}
+{% if project_config.is_activated_requirements_to_source_traceability() %}
 {% include "_shared/requirement_block/files_tree.jinja.html" %}
 {% endif %}

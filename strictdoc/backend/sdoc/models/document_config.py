@@ -12,6 +12,7 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
             version=None,
             uid=None,
             classification=None,
+            requirement_prefix=None,
             markup=None,
             auto_levels=None,
             requirement_style=None,
@@ -25,6 +26,7 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         version: Optional[str],
         uid: Optional[str],
         classification: Optional[str],
+        requirement_prefix: Optional[str],
         markup: Optional[str],
         auto_levels: Optional[str],
         requirement_style: Optional[str],
@@ -39,6 +41,7 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         self.uid: Optional[str] = meaningful_uid
 
         self.classification: Optional[str] = classification
+        self.requirement_prefix: Optional[str] = requirement_prefix
         self.markup = markup
         self.auto_levels: bool = auto_levels is None or auto_levels == "On"
         # Possible requirement styles:
@@ -64,6 +67,11 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         return (
             self.requirement_in_toc is None or self.requirement_in_toc == "True"
         )
+
+    def get_requirement_prefix_or_default(self) -> str:
+        if self.requirement_prefix is not None:
+            return self.requirement_prefix
+        return "REQ-"
 
     def has_meta(self):
         # TODO: When OPTIONS are not provided to a document, the self.number and

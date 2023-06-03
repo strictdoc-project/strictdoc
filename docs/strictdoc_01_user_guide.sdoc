@@ -1535,6 +1535,46 @@ is generated this way, see the Invoke task:
 [/SECTION]
 
 [SECTION]
+TITLE: Manage project tree
+
+[SECTION]
+TITLE: Automatic assignment of requirements UID
+
+[FREETEXT]
+To assign requirement UIDs automatically:
+
+.. code-block::
+
+    strictdoc manage auto-uid <path-to-project-tree>
+
+The command goes over all requirements in the project tree and assigns missing UIDs automatically. The project tree is mutated in-place.
+
+By default, the assignment happens based on the requirement mask ``REQ-``, so the requirements will get the UIDs of ``REQ-001``, ``REQ-002``, ...
+
+If a document-level or a section-level requirement mask is provided, the UIDs will be generated based on that mask.
+
+A document-level requirement mask:
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: Hello world doc
+    REQ_PREFIX: MYDOC-
+
+A section-level requirement mask:
+
+.. code-block::
+
+    [SECTION]
+    TITLE: Section 2.
+    REQ_PREFIX: LEVEL2-REQ-
+[/FREETEXT]
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
 UID: SECTION-TRACEABILITY-REQS-TO-SOURCE-CODE
 TITLE: Traceability between requirements and source code
 

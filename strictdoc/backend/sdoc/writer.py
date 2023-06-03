@@ -59,8 +59,13 @@ class SDWriter:
                 output += "\n"
 
             classification = document_config.classification
-            if classification:
+            if classification is not None:
                 output += f"CLASSIFICATION: {classification}"
+                output += "\n"
+
+            requirement_prefix = document_config.requirement_prefix
+            if requirement_prefix is not None:
+                output += f"REQ_PREFIX: {requirement_prefix}"
                 output += "\n"
 
             markup = document_config.markup
@@ -165,6 +170,11 @@ class SDWriter:
         output += "TITLE: "
         output += str(section.title)
         output += "\n"
+        if section.requirement_prefix is not None:
+            output += "REQ_PREFIX: "
+            output += section.requirement_prefix
+            output += "\n"
+
         for free_text in section.free_texts:
             output += "\n"
             output += self._print_free_text(free_text)

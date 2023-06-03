@@ -1,6 +1,6 @@
 import uuid
 from collections import OrderedDict
-from typing import Any, Dict, List, Optional, cast
+from typing import Any, Dict, List, Optional, Union, cast
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document
@@ -13,6 +13,7 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
     Reference,
 )
+from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.models.type_system import (
     RESERVED_NON_META_FIELDS,
     ReferenceType,
@@ -333,6 +334,13 @@ class Requirement(
         assert meta_field_value_or_none
         meta_field_value = meta_field_value_or_none
         return meta_field_value
+
+    def get_requirement_prefix(self) -> str:
+        parent: Union[Section, Document] = self.parent
+        while parent.requirement_prefix is None:
+            parent = parent.parent
+        assert parent.requirement_prefix is not None
+        return parent.requirement_prefix
 
     def dump_fields_as_parsed(self):
         return ", ".join(

@@ -337,6 +337,7 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
             uid=None,
             custom_level=None,
             title=section_title,
+            requirement_prefix=None,
             free_texts=free_texts,
             section_contents=[],
         )

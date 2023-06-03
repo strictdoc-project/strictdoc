@@ -1,0 +1,6 @@
+RUN: cp %S/input.sdoc %S/Output/
+
+RUN: %strictdoc manage auto-uid %S/Output/ | filecheck %s --dump-input=fail
+CHECK: warning: Skipping a requirement because its UID does not match the applicable requirement prefix 'REQ-': 'WRONG-2'.
+
+RUN: %diff %S/input.expected.sdoc %S/Output/input.sdoc

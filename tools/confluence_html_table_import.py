@@ -47,7 +47,12 @@ class ConfluenceHTMLTableImport:
         )
         for section_idx, reqs in enumerate(reqs_array_array):
             section_name = headers[section_idx].text
-            section = Section(document, None, "1", section_name, [], [])
+            section = Section(
+                document, None, "1", section_name,
+                requirement_prefix=None,
+                free_texts=[],
+                section_contents=[]
+            )
             section.ng_document_reference = DocumentReference()
             section.ng_document_reference.set_document(document)
             document.section_contents.append(section)

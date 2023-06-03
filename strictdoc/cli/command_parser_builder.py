@@ -66,6 +66,7 @@ class CommandParserBuilder:
         self.add_export_command(command_subparsers)
         self.add_import_command(command_subparsers)
         self.add_server_command(command_subparsers)
+        self.add_manage_command(command_subparsers)
         self.add_version_command(command_subparsers)
         self.add_passthrough_command(command_subparsers)
         self.add_dump_command(command_subparsers)
@@ -280,4 +281,35 @@ class CommandParserBuilder:
         )
         command_parser_dump_grammar.add_argument(
             "output_file", type=str, help="Path to the output .tx file"
+        )
+
+    @staticmethod
+    def add_manage_command(parent_command_parser):
+        manage_command_parser = parent_command_parser.add_parser(
+            "manage",
+            help="Manage StrictDoc project.",
+            description="See subcommands to manage StrictDoc project.",
+            formatter_class=formatter,
+        )
+        manage_command_subparsers = manage_command_parser.add_subparsers(
+            title="subcommand", dest="subcommand"
+        )
+        manage_command_subparsers.required = True
+
+        command_parser_import_reqif = manage_command_subparsers.add_parser(
+            "auto-uid",
+            help="Generates missing requirements UIDs automatically.",
+            description=(
+                "This command generates missing requirement UID automatically. "
+                "The UIDs are generated based on the nearest section "
+                "REQ_PREFIX (if provided) or the document's "
+                'REQ_PREFIX (if provided or "REQ-" by default).'
+            ),
+            formatter_class=formatter,
+        )
+
+        command_parser_import_reqif.add_argument(
+            "input_path",
+            type=str,
+            help="Path to the project tree.",
         )

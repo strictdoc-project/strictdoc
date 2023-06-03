@@ -610,6 +610,34 @@ REFS:
     assert input == output
 
 
+def test_073_document_config_requirement_prefix():
+    input = """
+[DOCUMENT]
+TITLE: Test Doc
+UID: SDOC-01
+VERSION: 0.0.1
+REQ_PREFIX: DOC-
+
+[REQUIREMENT]
+REFS:
+- TYPE: File
+  VALUE: /tmp/sample.cpp
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input)
+    assert isinstance(document, Document)
+
+    document: Document = reader.read(input)
+    assert document.config.requirement_prefix == "DOC-"
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input == output
+
+
 def test_090_document_config_all_fields():
     input = """
 [DOCUMENT]

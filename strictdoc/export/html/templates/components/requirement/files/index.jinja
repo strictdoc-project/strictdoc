@@ -1,4 +1,4 @@
-  {%- if config.experimental_enable_file_traceability -%}
+  {%- if project_config.is_activated_requirements_to_source_traceability() -%}
     {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
     {%- if requirement_file_links %}
       <sdoc-requirement-field-label>files:</sdoc-requirement-field-label>

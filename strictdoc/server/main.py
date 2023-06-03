@@ -33,7 +33,6 @@ if __name__ == "__main__":
     assert os.path.exists(output_path)
 
     server_command_config = ServerCommandConfig(
-        environment=environment,
         input_path=input_path,
         output_path=output_path,
         reload=args.reload,
@@ -41,7 +40,7 @@ if __name__ == "__main__":
     )
     project_config: ProjectConfig = (
         ProjectConfigLoader.load_from_path_or_get_default(
-            path_to_config_dir=input_path
+            path_to_config_dir=input_path, environment=environment
         )
     )
     run_strictdoc_server(

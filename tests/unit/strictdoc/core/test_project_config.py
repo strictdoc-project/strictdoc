@@ -1,3 +1,4 @@
+from strictdoc import environment
 from strictdoc.core.project_config import ProjectConfigLoader, ProjectFeature
 
 
@@ -7,7 +8,7 @@ def test_01_project_title():
 title = "StrictDoc Documentation"
 """
     project_config = ProjectConfigLoader.load_from_string(
-        toml_string=config_string
+        toml_string=config_string, environment=environment
     )
     assert project_config.project_title == "StrictDoc Documentation"
 
@@ -23,7 +24,7 @@ features = [
 ]
 """
     project_config = ProjectConfigLoader.load_from_string(
-        toml_string=config_string
+        toml_string=config_string, environment=environment
     )
     assert project_config.project_title == "StrictDoc Documentation"
     assert project_config.project_features == [

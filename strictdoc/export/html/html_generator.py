@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import Optional, Tuple
 
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.core.source_tree import SourceTree
@@ -44,15 +43,15 @@ class HTMLGenerator:
     def export_complete_tree(
         *,
         project_config: ProjectConfig,
-        config: ExportCommandConfig,
         traceability_index: TraceabilityIndex,
         parallelizer,
     ):  # pylint: disable=too-many-arguments,too-many-statements
-        Path(config.output_html_root).mkdir(parents=True, exist_ok=True)
+        Path(project_config.export_output_html_root).mkdir(
+            parents=True, exist_ok=True
+        )
 
         # Export document tree.
         HTMLGenerator.export_project_tree_screen(
-            config=config,
             project_config=project_config,
             traceability_index=traceability_index,
         )
@@ -60,7 +59,6 @@ class HTMLGenerator:
         # Export assets.
         HTMLGenerator.export_assets(
             project_config=project_config,
-            config=config,
             traceability_index=traceability_index,
         )
 
@@ -68,7 +66,6 @@ class HTMLGenerator:
         export_binding = partial(
             HTMLGenerator.export_single_document_with_performance,
             project_config,
-            config,
             traceability_index=traceability_index,
         )
 
@@ -81,53 +78,49 @@ class HTMLGenerator:
             ProjectFeature.REQUIREMENTS_COVERAGE_SCREEN
         ):
             HTMLGenerator.export_requirements_coverage_screen(
-                config=config,
                 project_config=project_config,
                 traceability_index=traceability_index,
             )
 
         # Export source coverage.
-        if (
-            project_config.is_feature_activated(
-                ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY
-            )
-            or config.experimental_enable_file_traceability
+        if project_config.is_feature_activated(
+            ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY
         ):
             HTMLGenerator.export_source_coverage_screen(
-                config=config,
                 project_config=project_config,
                 traceability_index=traceability_index,
             )
 
         print(  # noqa: T201
             "Export completed. Documentation tree can be found at:\n"
-            f"{config.output_html_root}"
+            f"{project_config.export_output_html_root}"
         )
 
     @staticmethod
     def export_assets(
         *,
         project_config: ProjectConfig,
-        config: ExportCommandConfig,
         traceability_index: TraceabilityIndex,
     ):
         # Export StrictDoc's own assets.
         output_html_static_files = os.path.join(
-            config.output_html_root, config.dir_for_sdoc_assets
+            project_config.export_output_html_root,
+            project_config.dir_for_sdoc_assets,
         )
-        sync_dir(config.get_static_files_path(), output_html_static_files)
+        sync_dir(
+            project_config.get_static_files_path(), output_html_static_files
+        )
 
         # Export MathJax
-        if (
-            project_config.is_feature_activated(ProjectFeature.MATHJAX)
-            or config.enable_mathjax
-        ):
+        if project_config.is_feature_activated(ProjectFeature.MATHJAX):
             output_html_mathjax = os.path.join(
-                config.output_html_root, config.dir_for_sdoc_assets, "mathjax"
+                project_config.export_output_html_root,
+                project_config.dir_for_sdoc_assets,
+                "mathjax",
             )
             Path(output_html_mathjax).mkdir(parents=True, exist_ok=True)
             mathjax_src = os.path.join(
-                config.get_extra_static_files_path(), "mathjax"
+                project_config.get_extra_static_files_path(), "mathjax"
             )
             sync_dir(mathjax_src, output_html_mathjax)
 
@@ -136,14 +129,13 @@ class HTMLGenerator:
             source_path = asset_dir["full_path"]
             output_relative_path = asset_dir["relative_path"]
             destination_path = os.path.join(
-                config.output_html_root, output_relative_path
+                project_config.export_output_html_root, output_relative_path
             )
             sync_dir(source_path, destination_path)
 
     @staticmethod
     def export_single_document_with_performance(
         project_config: ProjectConfig,
-        config: ExportCommandConfig,
         document,
         traceability_index,
         specific_documents: Optional[Tuple[DocumentType]] = None,
@@ -151,13 +143,15 @@ class HTMLGenerator:
         if specific_documents is None:
             specific_documents = DocumentType.all()
 
-        if not config.is_running_on_server and not document.ng_needs_generation:
+        if (
+            not project_config.is_running_on_server
+            and not document.ng_needs_generation
+        ):
             with measure_performance(f"Skip: {document.title}"):
                 return
         with measure_performance(f"Published: {document.title}"):
             HTMLGenerator.export_single_document(
                 project_config,
-                config,
                 document,
                 traceability_index,
                 specific_documents=specific_documents,
@@ -166,7 +160,6 @@ class HTMLGenerator:
     @staticmethod
     def export_single_document(
         project_config: ProjectConfig,
-        config: ExportCommandConfig,
         document: Document,
         traceability_index,
         specific_documents: Optional[Tuple[DocumentType]] = None,
@@ -183,7 +176,7 @@ class HTMLGenerator:
 
         root_path = document.meta.get_root_path_prefix()
         link_renderer = LinkRenderer(
-            root_path=root_path, static_path=config.dir_for_sdoc_assets
+            root_path=root_path, static_path=project_config.dir_for_sdoc_assets
         )
         markup_renderer = MarkupRenderer.create(
             document.config.markup,
@@ -195,7 +188,6 @@ class HTMLGenerator:
         if DocumentType.DOCUMENT in specific_documents:
             # Single Document pages
             document_content = DocumentHTMLGenerator.export(
-                config,
                 project_config,
                 document,
                 traceability_index,
@@ -213,7 +205,6 @@ class HTMLGenerator:
             and DocumentType.TABLE in specific_documents
         ):
             document_content = DocumentTableHTMLGenerator.export(
-                config,
                 project_config,
                 document,
                 traceability_index,
@@ -232,7 +223,6 @@ class HTMLGenerator:
             and DocumentType.TRACE in specific_documents
         ):
             document_content = DocumentTraceHTMLGenerator.export(
-                config,
                 project_config,
                 document,
                 traceability_index,
@@ -251,7 +241,6 @@ class HTMLGenerator:
             and DocumentType.DEEPTRACE in specific_documents
         ):
             document_content = DocumentDeepTraceHTMLGenerator.export_deep(
-                config,
                 project_config,
                 document,
                 traceability_index,
@@ -267,7 +256,6 @@ class HTMLGenerator:
         ):
             # Single Document pages (standalone)
             document_content = DocumentHTMLGenerator.export(
-                config,
                 project_config,
                 document,
                 traceability_index,
@@ -287,15 +275,18 @@ class HTMLGenerator:
     @staticmethod
     def export_project_tree_screen(
         *,
-        config: ExportCommandConfig,
         project_config: ProjectConfig,
         traceability_index: TraceabilityIndex,
     ):
-        Path(config.output_html_root).mkdir(parents=True, exist_ok=True)
-        output_file = os.path.join(config.output_html_root, "index.html")
+        Path(project_config.export_output_html_root).mkdir(
+            parents=True, exist_ok=True
+        )
+        output_file = os.path.join(
+            project_config.export_output_html_root, "index.html"
+        )
         writer = DocumentTreeHTMLGenerator()
         output = writer.export(
-            config, project_config, traceability_index=traceability_index
+            project_config, traceability_index=traceability_index
         )
         with open(output_file, "w", encoding="utf8") as file:
             file.write(output)
@@ -303,19 +294,17 @@ class HTMLGenerator:
     @staticmethod
     def export_requirements_coverage_screen(
         *,
-        config: ExportCommandConfig,
         project_config: ProjectConfig,
         traceability_index: TraceabilityIndex,
     ):
         requirements_coverage_content = (
             RequirementsCoverageHTMLGenerator.export(
-                config=config,
                 project_config=project_config,
                 traceability_index=traceability_index,
             )
         )
         output_html_requirements_coverage = os.path.join(
-            config.output_html_root, "requirements_coverage.html"
+            project_config.export_output_html_root, "requirements_coverage.html"
         )
         with open(
             output_html_requirements_coverage, "w", encoding="utf8"
@@ -325,7 +314,6 @@ class HTMLGenerator:
     @staticmethod
     def export_source_coverage_screen(
         *,
-        config: ExportCommandConfig,
         project_config: ProjectConfig,
         traceability_index: TraceabilityIndex,
     ):
@@ -346,7 +334,6 @@ class HTMLGenerator:
                     parents=True, exist_ok=True
                 )
                 document_content = SourceFileViewHTMLGenerator.export(
-                    config=config,
                     project_config=project_config,
                     source_file=source_file,
                     traceability_index=traceability_index,
@@ -357,12 +344,11 @@ class HTMLGenerator:
                     file.write(document_content)
 
         source_coverage_content = SourceFileCoverageHTMLGenerator.export(
-            config=config,
             project_config=project_config,
             traceability_index=traceability_index,
         )
         output_html_source_coverage = os.path.join(
-            config.output_html_root, "source_coverage.html"
+            project_config.export_output_html_root, "source_coverage.html"
         )
         with open(output_html_source_coverage, "w", encoding="utf8") as file:
             file.write(source_coverage_content)

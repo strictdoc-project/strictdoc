@@ -8,7 +8,7 @@
 {% endblock head_css %}
 
 {% block head_scripts %}
-{%- if config.is_running_on_server and not standalone -%}
+{%- if project_config.is_running_on_server and not standalone -%}
   <script type="module">
     import hotwiredTurbo from "{{ link_renderer.render_static_url_with_prefix('turbo.js') }}";
     import { Application, Controller } from "{{ link_renderer.render_static_url_with_prefix('stimulus.js') }}";
@@ -21,7 +21,7 @@
 {% endblock head_scripts %}
 
 {% block title %}
-  {{ config.project_title }} - {{ template_type }}
+  {{ project_config.project_title }} - {{ template_type }}
 {% endblock title %}
 
 {% block viewtype %}document-tree{% endblock viewtype %}

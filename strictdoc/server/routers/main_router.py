@@ -105,8 +105,7 @@ def create_main_router(
 
     parallelizer = NullParallelizer()
 
-    export_config = ExportCommandConfig(
-        environment=server_config.environment,
+    _export_config = ExportCommandConfig(
         input_paths=[server_config.input_path],
         output_dir=server_config.output_path,
         project_title=project_config.project_title,
@@ -116,18 +115,16 @@ def create_main_router(
         enable_mathjax=False,
         experimental_enable_file_traceability=False,
     )
-    export_config.integrate_configs(
-        project_config=project_config, server_config=server_config
-    )
+    project_config.integrate_export_config(_export_config)
+    project_config.is_running_on_server = True
+
     export_action = ExportAction(
         project_config=project_config,
-        config=export_config,
         parallelizer=parallelizer,
     )
     export_action.build_index()
     HTMLGenerator.export_assets(
         project_config=project_config,
-        config=export_config,
         traceability_index=export_action.traceability_index,
     )
 
@@ -171,7 +168,7 @@ def create_main_router(
             link_renderer=link_renderer,
             document=requirement.document,
             document_type=DocumentType.document(),
-            config=export_action.config,
+            project_config=project_config,
         )
         return HTMLResponse(
             content=output,
@@ -419,7 +416,7 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             document_type=DocumentType.document(),
             link_renderer=link_renderer,
-            config=export_action.config,
+            project_config=project_config,
             standalone=False,
         )
 
@@ -596,7 +593,7 @@ def create_main_router(
             link_renderer=link_renderer,
             section=section,
             document_type=DocumentType.document(),
-            config=export_action.config,
+            project_config=project_config,
             standalone=False,
         )
         iterator = export_action.traceability_index.get_document_iterator(
@@ -659,7 +656,7 @@ def create_main_router(
             section=section,
             document=section.document,
             document_type=DocumentType.document(),
-            config=export_action.config,
+            project_config=project_config,
             standalone=False,
         )
         return HTMLResponse(
@@ -879,7 +876,7 @@ def create_main_router(
             document_type=DocumentType.document(),
             link_renderer=link_renderer,
             traceability_index=export_action.traceability_index,
-            config=export_action.config,
+            project_config=project_config,
             standalone=False,
         )
 
@@ -1170,7 +1167,7 @@ def create_main_router(
                 document_type=DocumentType.document(),
                 link_renderer=link_renderer,
                 traceability_index=export_action.traceability_index,
-                config=export_action.config,
+                project_config=project_config,
                 standalone=False,
             )
 
@@ -1248,7 +1245,7 @@ def create_main_router(
             document_type=DocumentType.document(),
             link_renderer=link_renderer,
             traceability_index=export_action.traceability_index,
-            config=export_action.config,
+            project_config=project_config,
         )
         return HTMLResponse(
             content=output,
@@ -1320,7 +1317,7 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             document_type=DocumentType.document(),
             link_renderer=link_renderer,
-            config=export_action.config,
+            project_config=project_config,
             standalone=False,
         )
         toc_template = env.get_template(
@@ -1403,7 +1400,7 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             document_type=DocumentType.document(),
             link_renderer=link_renderer,
-            config=export_action.config,
+            project_config=project_config,
             standalone=False,
         )
 
@@ -1516,7 +1513,7 @@ def create_main_router(
             document=moved_node.document,
             document_iterator=iterator,
             document_type=DocumentType.document(),
-            config=export_action.config,
+            project_config=project_config,
             traceability_index=export_action.traceability_index,
         )
         toc_template = env.get_template(
@@ -1610,7 +1607,8 @@ def create_main_router(
                 },
             )
 
-        full_input_path = os.path.abspath(export_action.config.input_paths[0])
+        assert isinstance(project_config.export_input_paths, list)
+        full_input_path = os.path.abspath(project_config.export_input_paths[0])
         doc_full_path = os.path.join(full_input_path, document_path)
         doc_full_path_dir = os.path.dirname(doc_full_path)
 
@@ -1650,7 +1648,7 @@ def create_main_router(
         )
 
         output = template.render(
-            config=export_action.config,
+            project_config=project_config,
             document_tree=export_action.traceability_index.document_tree,
             document_tree_iterator=document_tree_iterator,
             traceability_index=export_action.traceability_index,
@@ -1822,14 +1820,12 @@ def create_main_router(
         # Re-generate the document.
         HTMLGenerator.export_single_document(
             project_config=project_config,
-            config=export_config,
             document=document,
             traceability_index=export_action.traceability_index,
         )
 
         # Re-generate the document tree.
         HTMLGenerator.export_project_tree_screen(
-            config=export_config,
             project_config=project_config,
             traceability_index=export_action.traceability_index,
         )
@@ -1852,10 +1848,10 @@ def create_main_router(
         )
         output = template.render(
             document=document,
-            config=export_config,
             renderer=markup_renderer,
             document_type=DocumentType.document(),
             standalone=False,
+            project_config=project_config,
         )
         return HTMLResponse(
             content=output,
@@ -1888,7 +1884,7 @@ def create_main_router(
         )
         output = template.render(
             document=document,
-            config=export_action.config,
+            project_config=project_config,
             renderer=markup_renderer,
             document_type=DocumentType.document(),
             standalone=False,
@@ -1949,7 +1945,7 @@ def create_main_router(
                 "stream_edit_document_grammar.jinja.html"
             )
             output = template.render(
-                form_object=form_object, config=export_action.config
+                form_object=form_object, project_config=project_config
             )
             return HTMLResponse(
                 content=output,
@@ -1997,14 +1993,12 @@ def create_main_router(
         # Re-generate the document.
         HTMLGenerator.export_single_document(
             project_config=project_config,
-            config=export_config,
             document=document,
             traceability_index=export_action.traceability_index,
         )
 
         # Re-generate the document tree.
         HTMLGenerator.export_project_tree_screen(
-            config=export_config,
             project_config=project_config,
             traceability_index=export_action.traceability_index,
         )
@@ -2027,7 +2021,6 @@ def create_main_router(
         )
         output = template.render(
             document=document,
-            config=export_config,
             renderer=markup_renderer,
             document_type=DocumentType.document(),
         )
@@ -2050,7 +2043,6 @@ def create_main_router(
             )
             output = template.render(
                 document=document,
-                config=export_config,
                 renderer=markup_renderer,
                 link_renderer=link_renderer,
                 document_type=DocumentType.document(),
@@ -2151,12 +2143,13 @@ def create_main_router(
                 },
             )
         assert documents is not None
+        assert isinstance(project_config.export_input_paths, list)
         for document in documents:
             document_title = re.sub(r"[^A-Za-z0-9-]", "_", document.title)
             document_path = f"{document_title}.sdoc"
 
             full_input_path = os.path.abspath(
-                export_action.config.input_paths[0]
+                project_config.export_input_paths[0]
             )
             doc_full_path = os.path.join(full_input_path, document_path)
             doc_full_path_dir = os.path.dirname(doc_full_path)
@@ -2191,7 +2184,7 @@ def create_main_router(
         )
 
         output = template.render(
-            config=export_action.config,
+            project_config=project_config,
             document_tree=export_action.traceability_index.document_tree,
             document_tree_iterator=document_tree_iterator,
             traceability_index=export_action.traceability_index,
@@ -2270,25 +2263,21 @@ def create_main_router(
                 # FIXME: We could be more specific here and only generate the
                 # requested file.
                 HTMLGenerator.export_source_coverage_screen(
-                    config=export_config,
                     project_config=project_config,
                     traceability_index=export_action.traceability_index,
                 )
             elif url_to_document == "index.html":
                 HTMLGenerator.export_project_tree_screen(
-                    config=export_config,
                     project_config=project_config,
                     traceability_index=export_action.traceability_index,
                 )
             elif url_to_document == "requirements_coverage.html":
                 HTMLGenerator.export_requirements_coverage_screen(
-                    config=export_config,
                     project_config=project_config,
                     traceability_index=export_action.traceability_index,
                 )
             elif url_to_document == "source_coverage.html":
                 HTMLGenerator.export_source_coverage_screen(
-                    config=export_config,
                     project_config=project_config,
                     traceability_index=export_action.traceability_index,
                 )
@@ -2323,7 +2312,6 @@ def create_main_router(
                 document.ng_needs_generation = True
                 HTMLGenerator.export_single_document_with_performance(
                     project_config=project_config,
-                    config=export_config,
                     document=document,
                     traceability_index=export_action.traceability_index,
                     specific_documents=(document_type_to_generate,),
@@ -2333,7 +2321,7 @@ def create_main_router(
         return HTMLResponse(content=content)
 
     def get_asset(url_to_asset: str):
-        project_output_path = export_config.output_html_root
+        project_output_path = project_config.export_output_html_root
         static_file = os.path.join(project_output_path, url_to_asset)
 
         content_type, _ = guess_type(static_file)

@@ -13,7 +13,7 @@
   {%- endif -%}
   <script type="text/javascript" src="{{ link_renderer.render_static_url('resizable_bar.js') }}"></script>
 
-  {%- if config.is_running_on_server and not standalone -%}
+  {%- if project_config.is_running_on_server and not standalone -%}
   <script type="module">
     import hotwiredTurbo from "{{ link_renderer.render_static_url('turbo.js') }}";
     import { Application, Controller } from "{{ link_renderer.render_static_url('stimulus.js') }}";
@@ -30,7 +30,7 @@
   <script type="module" src="{{ link_renderer.render_static_url('controllers/scroll_into_view_controller.js') }}"></script>
   {%- endif -%}
 
-  {%- if config.enable_mathjax -%}
+  {%- if project_config.is_activated_mathjax() -%}
   <script id="MathJax-script" async src="{{link_renderer.render_static_url('mathjax/tex-mml-chtml.js') }}"></script>
   {%- endif -%}
   {{ super() }}

@@ -8,7 +8,6 @@ from pygments.lexers.python import PythonLexer
 from pygments.lexers.templates import HtmlDjangoLexer
 
 from strictdoc import __version__
-from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.finders.source_files_finder import SourceFile
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
@@ -24,7 +23,6 @@ class SourceFileViewHTMLGenerator:
     @staticmethod
     def export(
         *,
-        config: ExportCommandConfig,
         project_config: ProjectConfig,
         source_file: SourceFile,
         traceability_index: TraceabilityIndex,
@@ -119,13 +117,12 @@ class SourceFileViewHTMLGenerator:
 
         link_renderer = LinkRenderer(
             root_path=source_file.path_depth_prefix,
-            static_path=config.dir_for_sdoc_assets,
+            static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
             "RST", traceability_index, link_renderer, None
         )
         output += template.render(
-            config=config,
             project_config=project_config,
             source_file=source_file,
             source_file_lines=source_file_lines,

@@ -1,5 +1,4 @@
 from strictdoc import __version__
-from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
@@ -15,7 +14,6 @@ class RequirementsCoverageHTMLGenerator:
     @staticmethod
     def export(
         *,
-        config: ExportCommandConfig,
         project_config: ProjectConfig,
         traceability_index: TraceabilityIndex,
     ):
@@ -30,7 +28,7 @@ class RequirementsCoverageHTMLGenerator:
         )
 
         link_renderer = LinkRenderer(
-            root_path="", static_path=config.dir_for_sdoc_assets
+            root_path="", static_path=project_config.dir_for_sdoc_assets
         )
         markup_renderer = MarkupRenderer.create(
             "RST",
@@ -39,7 +37,6 @@ class RequirementsCoverageHTMLGenerator:
             None,
         )
         output += template.render(
-            config=config,
             project_config=project_config,
             traceability_index=traceability_index,
             documents_iterator=document_tree_iterator.iterator(),

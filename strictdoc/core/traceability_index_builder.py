@@ -12,7 +12,6 @@ from strictdoc.backend.sdoc.models.type_system import ReferenceType
 from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityReader,
 )
-from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.document_finder import DocumentFinder
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_meta import DocumentMeta
@@ -40,13 +39,12 @@ class TraceabilityIndexBuilder:
     def create(
         *,
         project_config: ProjectConfig,
-        config: ExportCommandConfig,
         parallelizer,
     ) -> TraceabilityIndex:
         # TODO: It would be great to hide this code behind --development flag.
         # There is no need for this to be activated in the Pip-released builds.
         strict_own_files_unfiltered: Iterator[str] = glob.iglob(
-            f"{config.strictdoc_root_path}/strictdoc/**/*",
+            f"{project_config.get_strictdoc_root_path()}/strictdoc/**/*",
             recursive=True,
         )
         strict_own_files: List[str] = [
@@ -65,7 +63,7 @@ class TraceabilityIndexBuilder:
         )
 
         document_tree, asset_dirs = DocumentFinder.find_sdoc_content(
-            config, project_config=project_config, parallelizer=parallelizer
+            project_config=project_config, parallelizer=parallelizer
         )
 
         # TODO: This is rather messy but it is better than it used to be.
@@ -94,7 +92,7 @@ class TraceabilityIndexBuilder:
             assert document_meta_or_none is not None
             document_meta: DocumentMeta = document_meta_or_none
             full_output_path = os.path.join(
-                config.strictdoc_root_path,
+                project_config.get_strictdoc_root_path(),
                 document_meta.get_html_doc_path(),
             )
             if not os.path.isfile(full_output_path):
@@ -128,14 +126,11 @@ class TraceabilityIndexBuilder:
                     finished.add(document)
 
         # File traceability
-        if (
-            project_config.is_feature_activated(
-                ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY
-            )
-            or config.experimental_enable_file_traceability
+        if project_config.is_feature_activated(
+            ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY
         ):
             source_tree: SourceTree = SourceFilesFinder.find_source_files(
-                config, project_config=project_config
+                project_config=project_config
             )
             source_files = source_tree.source_files
             source_file: SourceFile

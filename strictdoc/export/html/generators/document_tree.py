@@ -1,5 +1,4 @@
 from strictdoc import __version__
-from strictdoc.cli.cli_arg_parser import ExportCommandConfig
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
@@ -12,7 +11,6 @@ class DocumentTreeHTMLGenerator:
 
     @staticmethod
     def export(
-        config: ExportCommandConfig,
         project_config: ProjectConfig,
         traceability_index: TraceabilityIndex,
     ):
@@ -24,11 +22,10 @@ class DocumentTreeHTMLGenerator:
             "screens/project_index/index.jinja"
         )
         link_renderer = LinkRenderer(
-            root_path="", static_path=config.dir_for_sdoc_assets
+            root_path="", static_path=project_config.dir_for_sdoc_assets
         )
 
         output = template.render(
-            config=config,
             project_config=project_config,
             document_tree=traceability_index.document_tree,
             document_tree_iterator=document_tree_iterator,

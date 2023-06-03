@@ -11,7 +11,6 @@ class DocumentDeepTraceHTMLGenerator:
 
     @staticmethod
     def export_deep(  # pylint: disable=too-many-arguments
-        config,
         project_config: ProjectConfig,
         document,
         traceability_index,
@@ -31,7 +30,6 @@ class DocumentDeepTraceHTMLGenerator:
         document_iterator = traceability_index.get_document_iterator(document)
 
         output += template.render(
-            config=config,
             project_config=project_config,
             document=document,
             traceability_index=traceability_index,

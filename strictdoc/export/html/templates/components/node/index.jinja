@@ -13,13 +13,13 @@
 #}
 
 <turbo-frame
-{%- if config.is_running_on_server %}
+{%- if project_config.is_running_on_server %}
   id="article-{{sdoc_entity.node_id}}"
 {% endif -%}
 >
 
   <sdoc-node
-    {%- if config.is_running_on_server %}
+    {%- if project_config.is_running_on_server %}
       data-editable_node="on"
     {%- endif %}
     node-role="{{ sdoc_entity.get_type_string() }}"
@@ -35,7 +35,7 @@
     {% endblock %}
 
     {# node_controls #}
-    {%- if config.is_running_on_server -%}
+    {%- if project_config.is_running_on_server -%}
     {% include "components/node/node_controls/index.jinja" %}
     {%- endif -%}
 

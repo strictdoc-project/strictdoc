@@ -58,17 +58,15 @@ def _main(parallelizer):
         passthrough_action.passthrough(config)
 
     elif parser.is_export_command:
-        config: ExportCommandConfig = parser.get_export_config(
-            environment=environment
-        )
+        config: ExportCommandConfig = parser.get_export_config()
         project_config: ProjectConfig = (
             ProjectConfigLoader.load_from_path_or_get_default(
-                path_to_config_dir=config.input_paths[0]
+                path_to_config_dir=config.input_paths[0],
+                environment=environment,
             )
         )
-        config.integrate_configs(
-            project_config=project_config, server_config=None
-        )
+        project_config.integrate_export_config(config)
+
         parallelization_value = (
             "Disabled" if config.no_parallelization else "Enabled"
         )
@@ -77,17 +75,17 @@ def _main(parallelizer):
         )
         export_action = ExportAction(
             project_config=project_config,
-            config=config,
             parallelizer=parallelizer,
         )
         export_action.build_index()
         export_action.export()
 
     elif parser.is_server_command:
-        server_config = parser.get_server_config(environment=environment)
+        server_config = parser.get_server_config()
         project_config: ProjectConfig = (
             ProjectConfigLoader.load_from_path_or_get_default(
-                path_to_config_dir=server_config.input_path
+                path_to_config_dir=server_config.input_path,
+                environment=environment,
             )
         )
         run_strictdoc_server(

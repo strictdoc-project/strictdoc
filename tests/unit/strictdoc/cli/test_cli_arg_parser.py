@@ -2,7 +2,7 @@ import os
 
 from strictdoc import environment
 from strictdoc.cli.cli_arg_parser import (
-    cli_args_parser,
+    CommandParserBuilder,
     create_sdoc_args_parser,
 )
 
@@ -10,6 +10,10 @@ FAKE_STRICTDOC_ROOT_PATH = "/tmp/strictdoc-123"
 
 
 TOTAL_EXPORT_ARGS = 9
+
+
+def cli_args_parser():
+    return CommandParserBuilder().build()
 
 
 def test_export_00_strictdoc_root_path():

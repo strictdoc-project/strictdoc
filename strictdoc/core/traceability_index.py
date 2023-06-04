@@ -195,6 +195,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         assert isinstance(node_id, str), f"{node_id}"
         return self._map_id_to_node[node_id]
 
+    def update_last_updated(self):
+        self.index_last_updated = datetime.today()
+
     def mut_add_uid_to_a_requirement_if_needed(self, requirement: Requirement):
         if requirement.reserved_uid is None:
             return

@@ -77,7 +77,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         # Settings derived from the command-line parameters.
         # Export action.
         self.export_input_paths: Optional[List[str]] = None
-        self.export_output_dir: Optional[str] = None
+        self.export_output_dir: str = "output"
         self.export_output_html_root: Optional[str] = None
         self.export_formats: Optional[List[str]] = None
 

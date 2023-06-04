@@ -12,6 +12,11 @@ class ImportReqIFCommandConfig:
         self.profile: Optional[str] = profile
 
 
+class ManageAutoUIDCommandConfig:
+    def __init__(self, *, input_path: str):
+        self.input_path: str = input_path
+
+
 class ImportExcelCommandConfig:
     def __init__(self, input_path, output_path, parser):
         self.input_path = input_path
@@ -115,6 +120,12 @@ class SDocArgsParser:
     def is_version_command(self):
         return self.args.command == "version"
 
+    @property
+    def is_manage_autouid_command(self):
+        return (
+            self.args.command == "manage" and self.args.subcommand == "auto-uid"
+        )
+
     def get_passthrough_config(self) -> PassthroughCommandConfig:
         return PassthroughCommandConfig(
             self.args.input_file, self.args.output_file
@@ -143,6 +154,9 @@ class SDocArgsParser:
         return ImportReqIFCommandConfig(
             self.args.input_path, self.args.output_path, self.args.profile
         )
+
+    def get_manage_autouid_config(self) -> ManageAutoUIDCommandConfig:
+        return ManageAutoUIDCommandConfig(input_path=self.args.input_path)
 
     def get_import_config_excel(self, _) -> ImportExcelCommandConfig:
         return ImportExcelCommandConfig(

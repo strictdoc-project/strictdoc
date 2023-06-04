@@ -59,6 +59,7 @@ class DocumentBuilder:
             version="0.0.1",
             uid="DOC-1",
             classification=None,
+            requirement_prefix=None,
             markup=None,
             auto_levels=None,
             requirement_style=None,

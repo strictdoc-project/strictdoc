@@ -109,6 +109,7 @@ DocumentConfig[noskipws]:
   ('UID: ' uid = SingleLineString '\n')?
   ('VERSION: ' version = SingleLineString '\n')?
   ('CLASSIFICATION: ' classification = SingleLineString '\n')?
+  ('REQ_PREFIX: ' requirement_prefix = SingleLineString '\n')?
 
   ('OPTIONS:' '\n'
     ('  MARKUP: ' (markup = MarkupChoice) '\n')?
@@ -152,6 +153,7 @@ Section[noskipws]:
   ('UID: ' uid = SingleLineString '\n')?
   ('LEVEL: ' custom_level = SingleLineString '\n')?
   'TITLE: ' title = SingleLineString '\n'
+  ('REQ_PREFIX: ' requirement_prefix = SingleLineString '\n')?
   free_texts *= SpaceThenFreeText
   section_contents *= SectionOrRequirement
   '\n'

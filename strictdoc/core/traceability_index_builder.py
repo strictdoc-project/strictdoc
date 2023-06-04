@@ -66,7 +66,7 @@ class TraceabilityIndexBuilder:
             project_config=project_config, parallelizer=parallelizer
         )
 
-        # TODO: This is rather messy but it is better than it used to be.
+        # TODO: This is rather messy, but it is better than it used to be.
         # Currently, the traceability index holds everything that is later used
         # by HTML generators:
         # - traceability index itself

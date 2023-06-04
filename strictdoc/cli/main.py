@@ -23,9 +23,11 @@ from strictdoc.cli.cli_arg_parser import (
     DumpGrammarCommandConfig,
     ImportExcelCommandConfig,
     ImportReqIFCommandConfig,
+    ManageAutoUIDCommandConfig,
 )
 from strictdoc.commands.about_command import AboutCommand
 from strictdoc.commands.dump_grammar_command import DumpGrammarCommand
+from strictdoc.commands.manage_autouid_command import ManageAutoUIDCommand
 from strictdoc.commands.version_command import VersionCommand
 from strictdoc.core.actions.export_action import ExportAction
 from strictdoc.core.actions.import_action import ImportAction
@@ -105,6 +107,19 @@ def _main(parallelizer):
         )
         import_action = ImportAction()
         import_action.do_import(import_config)
+
+    elif parser.is_manage_autouid_command:
+        config: ManageAutoUIDCommandConfig = parser.get_manage_autouid_config()
+        project_config: ProjectConfig = (
+            ProjectConfigLoader.load_from_path_or_get_default(
+                path_to_config_dir=config.input_path,
+                environment=environment,
+            )
+        )
+        project_config.export_input_paths = [config.input_path]
+        ManageAutoUIDCommand.execute(
+            project_config=project_config, parallelizer=parallelizer
+        )
 
     elif parser.is_dump_grammar_command:
         config: DumpGrammarCommandConfig = parser.get_dump_grammar_config()

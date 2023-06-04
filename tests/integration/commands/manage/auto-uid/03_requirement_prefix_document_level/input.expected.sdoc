@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Hello world doc
+REQ_PREFIX: DOC-
+
+[REQUIREMENT]
+UID: DOC-1
+STATEMENT: System shall do 1.
+
+[REQUIREMENT]
+UID: DOC-3
+STATEMENT: System shall do 2.
+
+[REQUIREMENT]
+UID: DOC-2
+STATEMENT: System shall do 3.

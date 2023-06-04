@@ -21,6 +21,7 @@ class Section(Node):  # pylint: disable=too-many-instance-attributes
         uid,
         custom_level: Optional[str],
         title,
+        requirement_prefix: Optional[str],
         free_texts: List[FreeText],
         section_contents: List[Node],
     ):
@@ -34,6 +35,8 @@ class Section(Node):  # pylint: disable=too-many-instance-attributes
         self.reserved_uid: Optional[str] = meaningful_uid
 
         self.title = title
+        self.requirement_prefix: Optional[str] = requirement_prefix
+
         self.free_texts: List[FreeText] = free_texts
         self.section_contents = section_contents
 

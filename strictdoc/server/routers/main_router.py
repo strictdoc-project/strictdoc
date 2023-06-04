@@ -1490,8 +1490,10 @@ def create_main_router(
         ) as output_file:
             output_file.write(document_content)
 
-        # Re-exporting HTML files.
-        export_action.export()
+        # Update the index because other documents might reference this
+        # document's sections. These documents will be regenerated on demand,
+        # when they are opened next time.
+        export_action.traceability_index.update_last_updated()
 
         # Rendering back the Turbo template.
         template = env.get_template(

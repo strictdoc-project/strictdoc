@@ -1424,7 +1424,6 @@ def create_main_router(
             },
         )
 
-    # WIP: Move nodes
     @router.post("/actions/document/move_node", response_class=Response)
     async def move_node(request: Request):
         request_form_data: FormData = await request.form()
@@ -1516,6 +1515,7 @@ def create_main_router(
             document_type=DocumentType.document(),
             project_config=project_config,
             traceability_index=export_action.traceability_index,
+            standalone=False,
         )
         toc_template = env.get_template(
             "actions/document/_shared/stream_updated_toc.jinja.html"

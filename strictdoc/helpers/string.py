@@ -53,3 +53,18 @@ def sanitize_html_form_field(field: str, multiline: bool) -> str:
 def is_safe_alphanumeric_string(string: str) -> bool:
     pattern = re.compile(r"^[\w.]+([/\\][\w.]+?)*$")
     return pattern.match(string) is not None
+
+
+def create_safe_acronym(string: str) -> str:
+    words = re.split(r"[\W+]", string)
+    acronym = ""
+    for word in words:
+        if len(word) == 0:
+            continue
+        if word[0].isalpha():
+            acronym += word[0].upper()
+    return acronym
+
+
+def create_safe_title_string(string):
+    return re.sub(r"[^\w0-9]+", "-", string).rstrip("-")

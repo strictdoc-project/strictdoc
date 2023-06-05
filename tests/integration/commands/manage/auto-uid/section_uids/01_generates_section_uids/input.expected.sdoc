@@ -1,0 +1,20 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[SECTION]
+UID: SECTION-HWD-Section-1
+TITLE: Section 1
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-HWD-Section-2
+TITLE: Section 2
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-HWD-Section-3
+TITLE: Section 3
+
+[/SECTION]

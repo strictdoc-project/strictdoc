@@ -1,4 +1,3 @@
-import re
 from typing import Optional
 
 from strictdoc.backend.sdoc.models.document import Document
@@ -7,6 +6,7 @@ from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.finders.source_files_finder import SourceFile
 from strictdoc.export.html.document_type import DocumentType
+from strictdoc.helpers.string import create_safe_title_string
 
 
 class LinkRenderer:
@@ -212,4 +212,4 @@ class LinkRenderer:
 
     @staticmethod
     def _string_to_link(string):
-        return re.sub(r"[^\w0-9]+", "-", string)
+        return create_safe_title_string(string)

@@ -1,18 +1,23 @@
 import re
 import sys
-from collections import defaultdict
+from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from typing import Dict, List
 
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.requirement import Requirement
+from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from strictdoc.helpers.parallelizer import Parallelizer
+from strictdoc.helpers.string import (
+    create_safe_acronym,
+    create_safe_title_string,
+)
 
 
 def extract_last_numeric_part(string: str) -> str:
@@ -45,8 +50,11 @@ class ManageAutoUIDCommand:
         accumulators: Dict[str, PrefixDataAccumulator] = defaultdict(
             PrefixDataAccumulator
         )
+        section_uids_so_far = Counter()
         for document in traceability_index.document_tree.document_list:
-            ManageAutoUIDCommand._process_document(document, accumulators)
+            ManageAutoUIDCommand._process_document(
+                document, accumulators, section_uids_so_far
+            )
 
         for prefix, accumulator in accumulators.items():
             next_number = (
@@ -71,11 +79,20 @@ class ManageAutoUIDCommand:
 
     @staticmethod
     def _process_document(
-        document: Document, accumulators: Dict[str, PrefixDataAccumulator]
+        document: Document,
+        accumulators: Dict[str, PrefixDataAccumulator],
+        section_uids_so_far: Dict,
     ):
+        document_acronym = create_safe_acronym(document.title)
         document_iterator = DocumentCachingIterator(document)
-
         for node in document_iterator.all_content():
+            if isinstance(node, Section):
+                ManageAutoUIDCommand._process_section(
+                    node,
+                    document_acronym=document_acronym,
+                    section_uids_so_far=section_uids_so_far,
+                )
+                continue
             if not isinstance(node, Requirement):
                 continue
             requirement: Requirement = node
@@ -112,3 +129,23 @@ class ManageAutoUIDCommand:
                 )
             else:
                 current_accumulator.requirements_without_uid.append(requirement)
+
+    @staticmethod
+    def _process_section(
+        section: Section,
+        document_acronym: str,
+        section_uids_so_far: Dict,
+    ):
+        if section.reserved_uid is not None:
+            return
+
+        section_title = create_safe_title_string(section.title)
+        auto_uid = f"SECTION-{document_acronym}-{section_title}"
+
+        count_so_far = section_uids_so_far[auto_uid]
+        section_uids_so_far[auto_uid] += 1
+        if count_so_far >= 1:
+            auto_uid += f"-{section_uids_so_far[auto_uid]}"
+
+        section.uid = auto_uid
+        section.reserved_uid = auto_uid

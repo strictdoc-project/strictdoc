@@ -3,17 +3,17 @@ CHECK: Published: Hello world doc
 
 RUN: %cat %S/Output/html/02_level_is_None_for_requirements/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 
-CHECK-HTML:<a href="#1-First-section-numbered-"{{.*}}>
-CHECK-HTML:<a href="#-Second-section-unnumbered-"{{.*}}>
+CHECK-HTML:<a href="#1-First-section-numbered"{{.*}}>
+CHECK-HTML:<a href="#-Second-section-unnumbered"{{.*}}>
 CHECK-HTML:<a href="#-REQ-001"{{.*}}>
 CHECK-HTML:<a href="#-REQ-002"{{.*}}>
-CHECK-HTML:<a href="#2-Second-section-numbered-"{{.*}}>
+CHECK-HTML:<a href="#2-Second-section-numbered"{{.*}}>
 CHECK-HTML:<a href="#2.1-REQ-003"{{.*}}>
 
 
-CHECK-HTML:<sdoc-anchor id="1-First-section-numbered-"{{.*}}></sdoc-anchor>
-CHECK-HTML:<sdoc-anchor id="-Second-section-unnumbered-"{{.*}}></sdoc-anchor>
+CHECK-HTML:<sdoc-anchor id="1-First-section-numbered"{{.*}}></sdoc-anchor>
+CHECK-HTML:<sdoc-anchor id="-Second-section-unnumbered"{{.*}}></sdoc-anchor>
 CHECK-HTML:<sdoc-anchor id="-REQ-001"{{.*}}></sdoc-anchor>
 CHECK-HTML:<sdoc-anchor id="-REQ-002"{{.*}}></sdoc-anchor>
-CHECK-HTML:<sdoc-anchor id="2-Second-section-numbered-"{{.*}}></sdoc-anchor>
+CHECK-HTML:<sdoc-anchor id="2-Second-section-numbered"{{.*}}></sdoc-anchor>
 CHECK-HTML:<sdoc-anchor id="2.1-REQ-003"{{.*}}></sdoc-anchor>

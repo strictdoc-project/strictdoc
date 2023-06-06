@@ -1,4 +1,5 @@
 import html
+from typing import List
 
 from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
@@ -8,6 +9,9 @@ from pygments.lexers.python import PythonLexer
 from pygments.lexers.templates import HtmlDjangoLexer
 
 from strictdoc import __version__
+from strictdoc.backend.sdoc_source_code.models.source_file_info import (
+    SourceFileTraceabilityInfo,
+)
 from strictdoc.core.finders.source_files_finder import SourceFile
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
@@ -36,6 +40,53 @@ class SourceFileViewHTMLGenerator:
 
         with open(source_file.full_path, encoding="utf-8") as opened_file:
             source_file_lines = opened_file.readlines()
+
+        pygmented_source_file_lines: List[str] = []
+        pygments_styles: str = ""
+
+        if len(source_file_lines) > 0:
+            coverage_info: SourceFileTraceabilityInfo = (
+                traceability_index.get_coverage_info(  # noqa: E501
+                    source_file.in_doctree_source_file_rel_path_posix
+                )
+            )
+            (
+                pygmented_source_file_lines,
+                pygments_styles,
+            ) = SourceFileViewHTMLGenerator.get_pygmented_source_lines(
+                source_file, source_file_lines, coverage_info
+            )
+        link_renderer = LinkRenderer(
+            root_path=source_file.path_depth_prefix,
+            static_path=project_config.dir_for_sdoc_assets,
+        )
+        markup_renderer = MarkupRenderer.create(
+            "RST", traceability_index, link_renderer, None
+        )
+        output += template.render(
+            project_config=project_config,
+            source_file=source_file,
+            source_file_lines=source_file_lines,
+            pygments_styles=pygments_styles,
+            pygmented_source_file_lines=pygmented_source_file_lines,
+            traceability_index=traceability_index,
+            link_renderer=link_renderer,
+            renderer=markup_renderer,
+            document_type=document_type,
+            strictdoc_version=__version__,
+            standalone=False,
+        )
+        return output
+
+    @staticmethod
+    def get_pygmented_source_lines(
+        source_file: SourceFile,
+        source_file_lines: List[str],
+        coverage_info: SourceFileTraceabilityInfo,
+    ):
+        assert isinstance(source_file, SourceFile)
+        assert isinstance(source_file_lines, list)
+        assert isinstance(coverage_info, SourceFileTraceabilityInfo)
 
         if source_file.is_python_file():
             lexer = PythonLexer()
@@ -92,9 +143,6 @@ class SourceFileViewHTMLGenerator:
             f"{len(pygmented_source_file_lines)} == {len(source_file_lines)}"
         )
 
-        coverage_info = traceability_index.get_coverage_info(
-            source_file.in_doctree_source_file_rel_path_posix
-        )
         for pragma in coverage_info.pragmas:
             pragma_line = pragma.ng_source_line_begin
             source_line = source_file_lines[pragma_line - 1]
@@ -114,25 +162,4 @@ class SourceFileViewHTMLGenerator:
                 pragma,
             )
         pygments_styles = html_formatter.get_style_defs(".highlight")
-
-        link_renderer = LinkRenderer(
-            root_path=source_file.path_depth_prefix,
-            static_path=project_config.dir_for_sdoc_assets,
-        )
-        markup_renderer = MarkupRenderer.create(
-            "RST", traceability_index, link_renderer, None
-        )
-        output += template.render(
-            project_config=project_config,
-            source_file=source_file,
-            source_file_lines=source_file_lines,
-            pygments_styles=pygments_styles,
-            source_file_content=pygmented_source_file_lines,
-            traceability_index=traceability_index,
-            link_renderer=link_renderer,
-            renderer=markup_renderer,
-            document_type=document_type,
-            strictdoc_version=__version__,
-            standalone=False,
-        )
-        return output
+        return pygmented_source_file_lines, pygments_styles

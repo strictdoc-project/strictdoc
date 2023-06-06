@@ -114,7 +114,9 @@ class FileTraceabilityIndex:
         )
         return general_requirements, range_requirements
 
-    def get_coverage_info(self, source_file_rel_path):
+    def get_coverage_info(
+        self, source_file_rel_path
+    ) -> SourceFileTraceabilityInfo:
         assert (
             source_file_rel_path
             in self.map_paths_to_source_file_traceability_info

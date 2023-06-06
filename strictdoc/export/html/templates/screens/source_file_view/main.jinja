@@ -1,8 +1,9 @@
 <div class="main">
 {# todo: update this template #}
 <div id="sourceContainer" class="source-file__source">
+  {%- if pygmented_source_file_lines|length > 0 -%}
   <div id="source" class="source">
-    {%- for line in source_file_content -%}
+    {%- for line in pygmented_source_file_lines -%}
       <div id="line-{{ loop.index }}" class="source__line-number"><pre>{{ loop.index }}</pre></div>
       <div data-line={{ loop.index }} class="source__line-content">
         {%- if line.__class__.__name__ == "tuple" -%}
@@ -27,5 +28,10 @@
       </div>
     {%- endfor -%}
   </div>
+  {%- else -%}
+  <div style="text-align: center">
+    Source file is empty.
+  </div>
+  {%- endif -%}
 </div>
 </div>{# /.main #}

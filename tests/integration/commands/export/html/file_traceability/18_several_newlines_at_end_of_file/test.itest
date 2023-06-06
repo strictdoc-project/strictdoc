@@ -8,4 +8,4 @@ CHECK-SOURCE-COVERAGE: src1
 CHECK-SOURCE-COVERAGE: test1.py
 
 RUN: %cat "%S/Output/html/_source_files/src1/test1.py.html" | filecheck %s --dump-input=fail --check-prefix=CHECK-SOURCE-FILE
-CHECK-SOURCE-FILE: Source file is empty.
+CHECK-SOURCE-FILE: &quot;I am a file with several empty newlines.&quot;

@@ -380,7 +380,7 @@ def lint_flake8(context):
         ToxEnvironment.CHECK,
         """
             flake8
-                strictdoc/ tests/
+                strictdoc/ tests/unit tests/unit_server
                 --statistics
                 --max-line-length 80
                 --show-source

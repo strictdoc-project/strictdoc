@@ -111,13 +111,13 @@ class CommandParserBuilder:
             "--formats",
             type=_check_formats,
             default=["html"],
-            help="Export fields, only used for Excel export",
+            help="Export formats",
         )
         command_parser_export.add_argument(
             "--fields",
             type=_parse_fields,
             default=["uid", "statement", "parent"],
-            help="Export formats",
+            help="Export fields, only used for Excel export",
         )
         command_parser_export.add_argument(
             "--no-parallelization",

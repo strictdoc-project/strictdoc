@@ -1,0 +1,9 @@
+[project]
+
+include_source_paths = [
+  "src1/**"
+]
+
+features = [
+  "REQUIREMENT_TO_SOURCE_TRACEABILITY"
+]

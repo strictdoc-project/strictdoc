@@ -167,7 +167,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             source_file_rel_path
         )
 
-    def get_coverage_info(self, source_file_rel_path):
+    def get_coverage_info(
+        self, source_file_rel_path
+    ) -> SourceFileTraceabilityInfo:
         return self._file_traceability_index.get_coverage_info(
             source_file_rel_path
         )

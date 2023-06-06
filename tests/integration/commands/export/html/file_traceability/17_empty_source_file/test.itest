@@ -1,0 +1,11 @@
+RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+CHECK: Hello world doc
+
+RUN: %check_exists "%S/Output/html/source_coverage.html"
+
+RUN: %cat "%S/Output/html/source_coverage.html" | filecheck %s --dump-input=fail --check-prefix=CHECK-SOURCE-COVERAGE
+CHECK-SOURCE-COVERAGE: src1
+CHECK-SOURCE-COVERAGE: test1.py
+
+RUN: %cat "%S/Output/html/_source_files/src1/test1.py.html" | filecheck %s --dump-input=fail --check-prefix=CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE: Source file is empty.

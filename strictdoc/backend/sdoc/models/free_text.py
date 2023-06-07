@@ -1,5 +1,6 @@
 from typing import List
 
+from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.helpers.auto_described import auto_described
 
@@ -30,6 +31,15 @@ class FreeText:
                 text += "[LINK: "
                 text += part.link
                 text += "]"
+            elif isinstance(part, Anchor):
+                text += "[ANCHOR: "
+                text += part.value
+                if part.has_title:
+                    text += ", "
+                    text += part.title
+                text += "]"
+            else:
+                raise NotImplementedError(part)
         return text
 
 

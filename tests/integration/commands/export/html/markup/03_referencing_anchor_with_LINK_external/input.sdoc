@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[SECTION]
+TITLE: Referencing section
+
+[FREETEXT]
+See the [LINK: AD1] for more details.
+
+See the [LINK: AD2] for more details.
+
+See the [LINK: Interface Control Document] for more details.
+[/FREETEXT]
+
+[/SECTION]

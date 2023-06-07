@@ -1,5 +1,6 @@
 from enum import Enum
 
+from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
@@ -324,6 +325,13 @@ class SDWriter:
                 output += "[LINK: "
                 output += part.link
                 output += "]"
+            elif isinstance(part, Anchor):
+                output += "[ANCHOR: "
+                output += part.value
+                if part.has_title:
+                    output += ", "
+                    output += part.title
+                output += "]"
             else:
-                raise NotImplementedError
+                raise NotImplementedError(part)
         return output

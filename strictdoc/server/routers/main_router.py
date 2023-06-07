@@ -23,10 +23,8 @@ from strictdoc.backend.reqif.import_.reqif_to_sdoc_converter import (
     ReqIFToSDocConverter,
 )
 from strictdoc.backend.sdoc.document_reference import DocumentReference
-from strictdoc.backend.sdoc.free_text_reader import SDFreeTextReader
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
-from strictdoc.backend.sdoc.models.free_text import FreeText, FreeTextContainer
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
@@ -46,6 +44,15 @@ from strictdoc.cli.cli_arg_parser import (
     ServerCommandConfig,
 )
 from strictdoc.core.actions.export_action import ExportAction
+from strictdoc.core.commands.constants import NodeCreationOrder
+from strictdoc.core.commands.section import (
+    CreateSectionCommand,
+    UpdateSectionCommand,
+)
+from strictdoc.core.commands.update_document_config import (
+    MultipleValidationError,
+    UpdateDocumentConfigCommand,
+)
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
@@ -72,9 +79,6 @@ from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
-from strictdoc.export.rst.rst_to_html_fragment_writer import (
-    RstToHtmlFragmentWriter,
-)
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.parallelizer import NullParallelizer
 from strictdoc.helpers.string import (
@@ -82,20 +86,6 @@ from strictdoc.helpers.string import (
     sanitize_html_form_field,
 )
 from strictdoc.server.error_object import ErrorObject
-
-
-class NodeCreationOrder:
-    BEFORE = "before"
-    CHILD = "child"
-    AFTER = "after"
-
-    @staticmethod
-    def is_valid(order):
-        return order in (
-            NodeCreationOrder.BEFORE,
-            NodeCreationOrder.CHILD,
-            NodeCreationOrder.AFTER,
-        )
 
 
 def create_main_router(
@@ -279,21 +269,18 @@ def create_main_router(
             section_statement=section_content,
         )
 
-        if section_title is None or len(section_title) == 0:
-            form_object.add_error(
-                "section_title", "Section title must not be empty."
+        try:
+            create_command = CreateSectionCommand(
+                form_object=form_object,
+                whereto=whereto,
+                reference_mid=reference_mid,
+                traceability_index=export_action.traceability_index,
             )
-        if section_content is not None and len(section_content) > 0:
-            (
-                parsed_html,
-                rst_error,
-            ) = RstToHtmlFragmentWriter(
-                context_document=document
-            ).write_with_validation(section_content)
-            if parsed_html is None:
-                form_object.add_error("section_statement", rst_error)
-
-        if form_object.any_errors():
+            create_command.perform()
+        except MultipleValidationError as validation_error:
+            for error_key, errors in validation_error.errors.items():
+                for error in errors:
+                    form_object.add_error(error_key, error)
             template = env.get_template(
                 "actions/document/create_section/stream_new_section.jinja.html"
             )
@@ -325,62 +312,7 @@ def create_main_router(
                 },
             )
 
-        if whereto == NodeCreationOrder.CHILD:
-            parent = reference_node
-            insert_to_idx = len(parent.section_contents)
-        elif whereto == NodeCreationOrder.BEFORE:
-            assert isinstance(reference_node, (Requirement, Section))
-            parent = reference_node.parent
-            insert_to_idx = parent.section_contents.index(reference_node)
-        elif whereto == NodeCreationOrder.AFTER:
-            assert isinstance(reference_node, (Document, Requirement, Section))
-            if isinstance(reference_node, Document):
-                parent = reference_node
-                insert_to_idx = 0
-            else:
-                parent = reference_node.parent
-                insert_to_idx = (
-                    parent.section_contents.index(reference_node) + 1
-                )
-        else:
-            raise NotImplementedError
-
-        section = Section(
-            parent=parent,
-            uid=None,
-            custom_level=None,
-            title=None,
-            requirement_prefix=None,
-            free_texts=[],
-            section_contents=[],
-        )
-        section.node_id = section_mid
-        section.ng_document_reference = DocumentReference()
-        section.ng_document_reference.set_document(document)
-        assert parent.ng_level is not None, parent
-        section.ng_level = parent.ng_level + 1
-        export_action.traceability_index._map_id_to_node[
-            section.node_id
-        ] = section
-        parent.section_contents.insert(insert_to_idx, section)
-
-        # Updating section title.
-        if section_title is not None and len(section_title) > 0:
-            section.title = section_title
-
-        # Updating section content.
-        if section_content is not None and len(section_content) > 0:
-            free_text_container: FreeTextContainer = SDFreeTextReader.read(
-                section_content
-            )
-            if len(section.free_texts) > 0:
-                free_text: FreeText = section.free_texts[0]
-                free_text.parts = free_text_container.parts
-            else:
-                free_text = FreeText(section, free_text_container.parts)
-                section.free_texts.append(free_text)
-        else:
-            section.free_texts = []
+        section: Section = create_command.get_created_section()
 
         # Saving new content to .SDoc file.
         document_content = SDWriter().write(section.document)
@@ -390,8 +322,10 @@ def create_main_router(
         ) as output_file:
             output_file.write(document_content)
 
-        # Re-exporting HTML files.
-        export_action.export()
+        # Update the index because other documents might reference this
+        # document's sections. These documents will be regenerated on demand,
+        # when they are opened next time.
+        export_action.traceability_index.update_last_updated()
 
         # Rendering back the Turbo template.
         template = env.get_template(
@@ -495,22 +429,17 @@ def create_main_router(
             section_statement=section_content,
         )
 
-        if len(section_title) == 0:
-            form_object.add_error(
-                "section_title", "Section title must not be empty."
+        try:
+            update_command = UpdateSectionCommand(
+                form_object=form_object,
+                section=section,
+                traceability_index=export_action.traceability_index,
             )
-
-        if len(section_content) > 0:
-            (
-                parsed_html,
-                rst_error,
-            ) = RstToHtmlFragmentWriter(
-                context_document=section.document
-            ).write_with_validation(section_content)
-            if parsed_html is None:
-                form_object.add_error("section_statement", rst_error)
-
-        if form_object.any_errors():
+            update_command.perform()
+        except MultipleValidationError as validation_error:
+            for error_key, errors in validation_error.errors.items():
+                for error in errors:
+                    form_object.add_error(error_key, error)
             template = env.get_template(
                 "actions/document/edit_section/stream_edit_section.jinja.html"
             )
@@ -544,26 +473,6 @@ def create_main_router(
                 },
             )
 
-        # Updating section title.
-        if section_title is not None and len(section_title) > 0:
-            section.title = section_title
-        else:
-            assert "Should not reach here", section_title
-
-        # Updating section content.
-        if section_content is not None and len(section_content) > 0:
-            free_text_container: FreeTextContainer = SDFreeTextReader.read(
-                section_content
-            )
-            if len(section.free_texts) > 0:
-                free_text: FreeText = section.free_texts[0]
-                free_text.parts = free_text_container.parts
-            else:
-                free_text = FreeText(section, free_text_container.parts)
-                section.free_texts.append(free_text)
-        else:
-            section.free_texts = []
-
         # Saving new content to .SDoc file.
         document_content = SDWriter().write(section.document)
         document_meta = section.document.meta
@@ -572,8 +481,10 @@ def create_main_router(
         ) as output_file:
             output_file.write(document_content)
 
-        # Re-exporting HTML files.
-        export_action.export()
+        # Update the index because other documents might reference this
+        # document's sections. These documents will be regenerated on demand,
+        # when they are opened next time.
+        export_action.traceability_index.update_last_updated()
 
         # Rendering back the Turbo template.
         template = env.get_template(
@@ -1765,52 +1676,34 @@ def create_main_router(
                 request_form_data=request_form_data,
             )
         )
-        if not form_object.validate(context_document=document):
+        try:
+            update_command = UpdateDocumentConfigCommand(
+                form_object=form_object,
+                document=document,
+                traceability_index=export_action.traceability_index,
+            )
+            update_command.perform()
+        except MultipleValidationError as validation_error:
+            for error_key, errors in validation_error.errors.items():
+                for error in errors:
+                    form_object.add_error(error_key, error)
             template = env.get_template(
                 "actions/"
                 "document/"
                 "edit_document_config/"
                 "stream_edit_document_config.jinja.html"
             )
-            output = template.render(
+            html_output: str = template.render(
                 form_object=form_object,
                 document=document,
             )
             return HTMLResponse(
-                content=output,
+                content=html_output,
                 status_code=422,
                 headers={
                     "Content-Type": "text/vnd.turbo-stream.html",
                 },
             )
-
-        # Update the document.
-        document.title = form_object.document_title
-        document.config.uid = (
-            form_object.document_uid
-            if len(form_object.document_uid) > 0
-            else None
-        )
-        document.config.version = (
-            form_object.document_version
-            if len(form_object.document_version) > 0
-            else None
-        )
-        document.config.classification = (
-            form_object.document_classification
-            if len(form_object.document_classification) > 0
-            else None
-        )
-
-        free_text: Optional[FreeText] = None
-        if len(form_object.document_freetext_unescaped) > 0:
-            free_text_container: FreeTextContainer = SDFreeTextReader.read(
-                form_object.document_freetext_unescaped
-            )
-            free_text = FreeText(
-                parent=document, parts=free_text_container.parts
-            )
-        document.set_freetext(free_text)
 
         # Re-generate the document's SDOC.
         document_content = SDWriter().write(document)
@@ -1820,18 +1713,10 @@ def create_main_router(
         ) as output_file:
             output_file.write(document_content)
 
-        # Re-generate the document.
-        HTMLGenerator.export_single_document(
-            project_config=project_config,
-            document=document,
-            traceability_index=export_action.traceability_index,
-        )
-
-        # Re-generate the document tree.
-        HTMLGenerator.export_project_tree_screen(
-            project_config=project_config,
-            traceability_index=export_action.traceability_index,
-        )
+        # Update the index because other documents might be referenced by this
+        # document's free text. These documents will be regenerated on demand,
+        # when they are opened next time.
+        export_action.traceability_index.update_last_updated()
 
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
@@ -1849,7 +1734,7 @@ def create_main_router(
             "edit_document_config/"
             "stream_save_document_config.jinja.html"
         )
-        output = template.render(
+        html_output = template.render(
             document=document,
             renderer=markup_renderer,
             document_type=DocumentType.document(),
@@ -1857,7 +1742,7 @@ def create_main_router(
             project_config=project_config,
         )
         return HTMLResponse(
-            content=output,
+            content=html_output,
             status_code=200,
             headers={
                 "Content-Type": "text/vnd.turbo-stream.html",

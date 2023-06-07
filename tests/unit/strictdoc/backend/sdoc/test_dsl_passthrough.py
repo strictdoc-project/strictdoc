@@ -236,6 +236,55 @@ AAA  [/FREETEXT]
     assert input == output
 
 
+def test_024_free_text_anchor():
+    input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[FREETEXT]
+String 1
+String 2 [ANCHOR: REQ-001] String 3
+String 4
+[/FREETEXT]
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input == output
+
+
+def test_025_free_text_anchor():
+    input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[FREETEXT]
+String 1
+String 2 String 3
+
+[ANCHOR: REQ-001, Requirements document]
+
+String 4
+[/FREETEXT]
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input == output
+
+
 def test_030_multiline_statement():
     input_sdoc = """
 [DOCUMENT]

@@ -1,3 +1,4 @@
+from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import (
@@ -41,6 +42,7 @@ SECTION_MODELS = [
     BibReference,
     FreeText,
     InlineLink,
+    Anchor,
     FileEntry,
     BibEntry,
 ]

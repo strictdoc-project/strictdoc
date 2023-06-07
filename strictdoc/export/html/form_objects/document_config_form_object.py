@@ -7,9 +7,6 @@ from starlette.datastructures import FormData
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.free_text import FreeText
-from strictdoc.export.rst.rst_to_html_fragment_writer import (
-    RstToHtmlFragmentWriter,
-)
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.string import sanitize_html_form_field
 from strictdoc.server.error_object import ErrorObject
@@ -126,23 +123,3 @@ class DocumentConfigFormObject(ErrorObject):
             document_freetext_unescaped=document_freetext,
             document_freetext_escaped=document_freetext_escaped,
         )
-
-    def validate(self, context_document: Document) -> bool:
-        assert isinstance(context_document, Document)
-        if len(self.document_title) == 0:
-            self.add_error(
-                "TITLE",
-                "Document title must not be empty.",
-            )
-
-        if len(self.document_freetext_unescaped) > 0:
-            (
-                parsed_html,
-                rst_error,
-            ) = RstToHtmlFragmentWriter(
-                context_document=context_document
-            ).write_with_validation(self.document_freetext_unescaped)
-            if parsed_html is None:
-                self.add_error("FREETEXT", rst_error)
-
-        return len(self.errors) == 0

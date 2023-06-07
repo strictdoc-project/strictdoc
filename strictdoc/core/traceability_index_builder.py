@@ -4,6 +4,7 @@ import sys
 from collections import defaultdict
 from typing import Dict, Iterator, List, Optional, Set, cast
 
+from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.reference import ParentReqReference
@@ -24,6 +25,7 @@ from strictdoc.core.finders.source_files_finder import (
 from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.core.source_tree import SourceTree
 from strictdoc.core.traceability_index import (
+    AnchorConnections,
     FileTraceabilityIndex,
     RequirementConnections,
     TraceabilityIndex,
@@ -166,6 +168,7 @@ class TraceabilityIndexBuilder:
         d_01_document_iterators: Dict[Document, DocumentCachingIterator] = {}
         d_02_requirements_map: Dict[str, RequirementConnections] = {}
         d_03_map_doc_titles_to_tag_lists = {}
+        d_04_anchors_map: Dict[str, AnchorConnections] = {}
         d_05_map_documents_to_parents: Dict[
             Document, Set[Document]
         ] = defaultdict(set)
@@ -209,6 +212,18 @@ class TraceabilityIndexBuilder:
                 d_03_map_doc_titles_to_tag_lists[document.title] = {}
             for node in document_iterator.all_content():
                 d_11_map_id_to_node[node.node_id] = node
+
+                if node.is_section:
+                    for free_text in node.free_texts:
+                        for part in free_text.parts:
+                            if isinstance(part, Anchor):
+                                assert part.value not in d_11_map_id_to_node
+                                d_04_anchors_map[
+                                    part.value
+                                ] = AnchorConnections(
+                                    anchor=part,
+                                    document=document,
+                                )
 
                 if not node.reserved_uid:
                     continue
@@ -280,7 +295,10 @@ class TraceabilityIndexBuilder:
                     for free_text in node.free_texts:
                         for part in free_text.parts:
                             if isinstance(part, InlineLink):
-                                if part.link not in d_02_requirements_map:
+                                if (
+                                    part.link not in d_02_requirements_map
+                                    and part.link not in d_04_anchors_map
+                                ):
                                     print(  # noqa: T201
                                         ErrorMessage.inline_link_uid_not_exist(
                                             part.link
@@ -358,6 +376,7 @@ class TraceabilityIndexBuilder:
         traceability_index = TraceabilityIndex(
             d_01_document_iterators,
             d_02_requirements_map,
+            d_04_anchors_map,
             d_03_map_doc_titles_to_tag_lists,
             d_05_map_documents_to_parents,
             d_06_map_documents_to_children,

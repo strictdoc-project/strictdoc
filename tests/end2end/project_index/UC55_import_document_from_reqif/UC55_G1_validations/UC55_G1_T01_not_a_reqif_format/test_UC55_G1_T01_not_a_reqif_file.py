@@ -17,7 +17,7 @@ path_to_reqif_sample = os.path.join(
 
 
 class Test_UC55_G1_T01_NotAReqIFormat(BaseCase):
-    def test_01(self):
+    def test(self):
         with SDocTestServer(
             input_path=path_to_this_test_file_folder
         ) as test_server:

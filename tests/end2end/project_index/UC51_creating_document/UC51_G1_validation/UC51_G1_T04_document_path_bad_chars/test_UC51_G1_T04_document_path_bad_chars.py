@@ -14,7 +14,7 @@ path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
 class Test_TC51_G1_T04_BadCharacters(BaseCase):
-    def test_01(self):
+    def test(self):
         with SDocTestServer(
             input_path=path_to_this_test_file_folder
         ) as test_server:

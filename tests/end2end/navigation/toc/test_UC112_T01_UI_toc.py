@@ -9,7 +9,7 @@ from tests.end2end.server import SDocTestServer
 
 
 class Test_UC112_T01_UI_toc(BaseCase):
-    def test_01(self):
+    def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
         with SDocTestServer(

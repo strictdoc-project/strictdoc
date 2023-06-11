@@ -11,7 +11,7 @@ path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
 class Test_ProjectOptions_ServerHostAndPort_01_OptionNotSpecified(BaseCase):
-    def test_01(self):
+    def test(self):
         # Running this test can eventually cause conflicts when running
         # tests in parallel. Hoping that testing the server_host option is the
         # only case where we have to customize ports.

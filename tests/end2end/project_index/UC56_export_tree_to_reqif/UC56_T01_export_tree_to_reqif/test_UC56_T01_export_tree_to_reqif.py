@@ -17,7 +17,7 @@ path_to_expected_downloaded_file = os.path.join(
 
 
 class Test_UC56_T01_ExportTreeToReqIF(BaseCase):
-    def test_01(self):
+    def test(self):
         shutil.rmtree(DOWNLOADED_FILES_PATH, ignore_errors=True)
 
         test_setup = End2EndTestSetup(path_to_test_file=__file__)

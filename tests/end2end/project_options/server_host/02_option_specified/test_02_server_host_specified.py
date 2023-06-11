@@ -11,7 +11,7 @@ path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
 class Test_ProjectOptions_ServerHostAndPort_02_OptionSpecified(BaseCase):
-    def test_01(self):
+    def test(self):
         custom_server_stderr_expectations = [
             "INFO:     Application startup complete.",
             "INFO:     Uvicorn running on http://localhost:51000 (Press CTRL+C to quit)",  # noqa: E501

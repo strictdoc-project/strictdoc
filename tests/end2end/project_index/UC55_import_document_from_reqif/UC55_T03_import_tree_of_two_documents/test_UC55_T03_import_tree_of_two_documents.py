@@ -18,7 +18,7 @@ path_to_reqif_sample = os.path.join(
 
 
 class Test_UC55_T03_ImportTreeOfTwoDocuments(BaseCase):
-    def test_01(self):
+    def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
         with SDocTestServer(

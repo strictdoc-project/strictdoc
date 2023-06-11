@@ -1,10 +1,16 @@
 from datetime import datetime
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Optional, Set, Union
 
+from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.requirement import Requirement
+from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityInfo,
+)
+from strictdoc.core.commands.validation_error import (
+    SingleValidationError,
 )
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
@@ -31,11 +37,23 @@ class RequirementConnections:
         self.children: List[Requirement] = children
 
 
+@auto_described
+class AnchorConnections:
+    def __init__(  # pylint: disable=too-many-arguments
+        self,
+        anchor: Anchor,
+        document: Document,
+    ):
+        self.anchor: Anchor = anchor
+        self.document: Document = document
+
+
 class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-instance-attributes  # noqa: E501
     def __init__(  # pylint: disable=too-many-arguments
         self,
         document_iterators: Dict[Document, DocumentCachingIterator],
         requirements_parents: Dict[str, RequirementConnections],
+        anchors_map: Dict[str, AnchorConnections],
         tags_map,
         document_parents_map: Dict[Document, Set[Document]],
         document_children_map: Dict[Document, Set[Document]],
@@ -48,6 +66,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         self._requirements_parents: Dict[
             str, RequirementConnections
         ] = requirements_parents
+        self.anchors_map: Dict[str, AnchorConnections] = anchors_map
         self._tags_map = tags_map
         self._document_parents_map: Dict[
             Document, Set[Document]
@@ -177,6 +196,35 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def get_node_by_uid(self, uid):
         return self._requirements_parents[uid].requirement
 
+    def get_section_by_uid_weak(self, uid):
+        if uid not in self._requirements_parents:
+            return None
+        return self._requirements_parents[uid].requirement
+
+    def get_anchor_by_uid_weak(self, uid):
+        if uid not in self.anchors_map:
+            return None
+        return self.anchors_map[uid].anchor
+
+    def find_node_with_duplicate_anchor(
+        self, anchor_uid: str
+    ) -> Union[Document, Section]:
+        for document in self.document_tree.document_list:
+            document_iterator = DocumentCachingIterator(document)
+            for node in document_iterator.all_content():
+                if not isinstance(node, (Document, Section)):
+                    continue
+                if len(node.free_texts) > 0:
+                    for part in node.free_texts[0].parts:
+                        if (
+                            isinstance(part, Anchor)
+                            and part.value == anchor_uid
+                        ):
+                            return node
+        raise NotImplementedError(
+            f"Could not find a node with an anchor by anchor UID: {anchor_uid}"
+        )
+
     def attach_traceability_info(
         self,
         source_file_rel_path: str,
@@ -305,3 +353,102 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         document.ng_needs_generation = True
         if parent_requirement_document != document:
             parent_requirement_document.ng_needs_generation = True
+
+    def validate_node_against_anchors(
+        self, *, node: Union[Document, Section, None], new_anchors: List[Anchor]
+    ):
+        assert node is None or isinstance(node, (Document, Section))
+        assert isinstance(new_anchors, list)
+
+        # Check that this node does not have duplicated anchors.
+        new_anchor_uids = set()
+        for anchor in new_anchors:
+            if anchor.value in new_anchor_uids:
+                raise SingleValidationError(
+                    "A node cannot have two anchors with "
+                    f"the same identifier: {anchor.value}."
+                )
+            new_anchor_uids.add(anchor.value)
+
+        # If the node is new, the validation is easier: we just need to make
+        # sure that there are no existing anchors with the UIDs brought
+        # by the new anchors.
+        if node is None:
+            for anchor_uid in new_anchor_uids:
+                if anchor_uid in self.anchors_map:
+                    raise SingleValidationError(
+                        "A node contains an anchor that already exists: "
+                        f"{anchor_uid}."
+                    )
+            return
+
+        # If the node is an existing node, we need to check that:
+        # 1) If some of the new anchors already exist in the project tree, we
+        #    need to ensure that they exist in the current node, otherwise we
+        #    raise a duplication validation error.
+        # 2) If the new anchors do not contain some of the existing node's
+        #    current anchors, this means these anchors are being removed. In
+        #    that case, we need to check if these anchors are used by any LINKs,
+        #    raising a validation if they do.
+        existing_node_anchor_uids = set()
+        if len(node.free_texts) > 0:
+            for part in node.free_texts[0].parts:
+                if isinstance(part, Anchor):
+                    existing_node_anchor_uids.add(part.value)
+
+        # Validation 1: Assert all UIDs either:
+        #               a) new
+        #               b) exist in this node
+        #               c) raise a duplication error.
+        for anchor_uid in new_anchor_uids:
+            if (
+                anchor_uid in self.anchors_map
+                and anchor_uid not in existing_node_anchor_uids
+            ):
+                node_with_duplicate_anchor = (
+                    self.find_node_with_duplicate_anchor(anchor_uid)
+                )
+                node_type = (
+                    "Document"
+                    if isinstance(node_with_duplicate_anchor, Document)
+                    else "Section"
+                )
+                raise SingleValidationError(
+                    "Another node contains an anchor with the same UID: "
+                    f"{anchor_uid}. Node: {node_type} with title "
+                    f"'{node_with_duplicate_anchor.title}'."
+                )
+
+        # Validation 2: Check that removed anchors do not have any incoming
+        # links.
+        to_be_removed_anchor_uids = existing_node_anchor_uids - new_anchor_uids
+        document: Document
+        for document in self.document_tree.document_list:
+            document_iterator = DocumentCachingIterator(document)
+            for node_ in document_iterator.all_content():
+                if not isinstance(node_, (Document, Section)):
+                    continue
+                if len(node_.free_texts) > 0:
+                    for part in node_.free_texts[0].parts:
+                        if (
+                            isinstance(part, InlineLink)
+                            and part.link in to_be_removed_anchor_uids
+                        ):
+                            node_with_duplicate_anchor = (
+                                self.find_node_with_duplicate_anchor(part.link)
+                            )
+                            node_type = (
+                                "Document"
+                                if isinstance(
+                                    node_with_duplicate_anchor, Document
+                                )
+                                else "Section"
+                            )
+
+                            raise SingleValidationError(
+                                f"Cannot remove anchor with UID "
+                                f"'{part.link}' because it has incoming "
+                                f"links. Containing node: "
+                                f"{node_type} with title "
+                                f"'{node_with_duplicate_anchor.title}'."
+                            )

@@ -1,0 +1,15 @@
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %cat %S/Output/html/02_referencing_anchor_with_LINK_internal/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC
+CHECK-HTML-DOC: <p>Anchors start.</p>
+CHECK-HTML-DOC: <ol {{.*}}id="ad1">
+CHECK-HTML-DOC: <li>AD1. Software user manual.</li>
+CHECK-HTML-DOC: </ol>
+CHECK-HTML-DOC: <ol {{.*}}id="software-requirements-specification" start="2">
+CHECK-HTML-DOC: <li>AD2. Software requirements specification.</li>
+CHECK-HTML-DOC: </ol>
+CHECK-HTML-DOC: <ol {{.*}}id="interface-control-document" start="3">
+CHECK-HTML-DOC: <li>AD3. Interface Control Document.</li>
+CHECK-HTML-DOC: </ol>
+CHECK-HTML-DOC: <p>Anchors end.</p>

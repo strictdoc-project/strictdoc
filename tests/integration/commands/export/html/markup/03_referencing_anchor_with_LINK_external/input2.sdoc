@@ -1,0 +1,26 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[SECTION]
+TITLE: Section with anchor
+
+[FREETEXT]
+Anchors start.
+
+[ANCHOR: AD1]
+
+1) AD1. Software user manual.
+
+[ANCHOR: AD2, Software requirements specification]
+
+2) AD2. Software requirements specification.
+
+[ANCHOR: Interface Control Document]
+
+3) AD3. Interface Control Document.
+
+Anchors end.
+
+[/FREETEXT]
+
+[/SECTION]

@@ -1,6 +1,6 @@
 TEXT_TYPES_GRAMMAR = r"""
 TextPart[noskipws]:
-  (InlineLink | NormalString)
+  (InlineLink | Anchor | NormalString)
 ;
 
 NormalString[noskipws]:
@@ -8,13 +8,19 @@ NormalString[noskipws]:
 ;
 
 SpecialKeyword:
-  InlineLinkStart // more keywords are coming later
+  InlineLinkStart | AnchorStart // more keywords are coming later
 ;
 
 InlineLinkStart: '[LINK: ';
 
 InlineLink[noskipws]:
   InlineLinkStart value = /[^\]]*/ ']'
+;
+
+AnchorStart: '[ANCHOR: ';
+
+Anchor[noskipws]:
+  AnchorStart value = /[^\],]*/ (', ' title = /\w+[\s\w+]*/)? ']'
 ;
 
 FreeTextEnd: /^/ '[/FREETEXT]' '\n';

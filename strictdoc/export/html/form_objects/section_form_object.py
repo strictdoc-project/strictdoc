@@ -21,6 +21,7 @@ class SectionFormObject(ErrorObject):
         self.section_mid: str = section_mid
         self.section_title: str = section_title
         self.section_statement: str = html.escape(section_statement)
+        self.section_statement_unescaped: str = section_statement
 
     @staticmethod
     def create_new():

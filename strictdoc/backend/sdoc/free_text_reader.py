@@ -1,6 +1,7 @@
 from textx import metamodel_from_str
 
 from strictdoc.backend.sdoc.grammar.grammar_builder import SDocGrammarBuilder
+from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.free_text import FreeTextContainer
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.processor import ParseContext
@@ -12,7 +13,7 @@ class SDFreeTextReader:
     def _read(input_string, file_path=None):
         meta_model = metamodel_from_str(
             SDocGrammarBuilder.create_free_text_grammar(),
-            classes=[FreeTextContainer, InlineLink],
+            classes=[FreeTextContainer, InlineLink, Anchor],
             use_regexp_group=True,
         )
 

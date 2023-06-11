@@ -1,5 +1,6 @@
 from typing import Optional
 
+from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.reference import FileReference
 from strictdoc.backend.sdoc.models.requirement import Requirement
@@ -43,6 +44,10 @@ class LinkRenderer:
     def render_local_anchor(self, node):
         if node in self.local_anchor_cache:
             return self.local_anchor_cache[node]
+        if isinstance(node, Anchor):
+            # RST does not like refs with non-lowercase letters.
+            return f"{self._string_to_link(node.value).lower()}"
+
         unique_prefix = node.context.title_number_string
         if isinstance(node, Section):
             local_anchor = f"{unique_prefix}-{self._string_to_link(node.title)}"
@@ -72,7 +77,7 @@ class LinkRenderer:
         context_document: Optional[Document],
         document_type: DocumentType,
     ):
-        assert isinstance(node, (Requirement, Section)), node
+        assert isinstance(node, (Requirement, Section, Anchor)), node
         assert isinstance(context_document, Document), context_document
         assert isinstance(document_type, DocumentType), document_type
         local_link = self.render_local_anchor(node)

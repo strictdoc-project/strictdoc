@@ -11,7 +11,7 @@ from tests.end2end.server import SDocTestServer
 
 
 class Test(BaseCase):
-    def test_01(self):
+    def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
         with SDocTestServer(
@@ -32,15 +32,19 @@ class Test(BaseCase):
             screen_document.assert_text("Hello world!")
 
             section = screen_document.get_section()
-
             form_edit_section: Form_EditSection = (
                 section.do_open_form_edit_section()
             )
+            form_edit_section.do_fill_in_title("Modified title")
+            form_edit_section.do_fill_in_text(
+                """
+Modified statement.
 
-            form_edit_section.do_clear_field("section_title")
-            form_edit_section.do_fill_in_text("Modified statement.")
-            form_edit_section.do_form_submit_and_catch_error(
-                "Section title must not be empty."
+[ANCHOR: AD2]
+"""
             )
-
+            form_edit_section.do_form_submit_and_catch_error(
+                "Cannot remove anchor with UID 'AD1' because it has incoming "
+                "links. Containing node: Section with title 'First section'."
+            )
         assert test_setup.compare_sandbox_and_expected_output()

@@ -11,7 +11,7 @@ from tests.end2end.server import SDocTestServer
 
 
 class Test(BaseCase):
-    def test_01(self):
+    def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
         with SDocTestServer(
@@ -32,15 +32,38 @@ class Test(BaseCase):
             screen_document.assert_text("Hello world!")
 
             section = screen_document.get_section()
-
             form_edit_section: Form_EditSection = (
                 section.do_open_form_edit_section()
             )
+            form_edit_section.do_fill_in_title("Modified title")
+            form_edit_section.do_fill_in_text(
+                """
+Modified statement.
 
-            form_edit_section.do_clear_field("section_title")
-            form_edit_section.do_fill_in_text("Modified statement.")
-            form_edit_section.do_form_submit_and_catch_error(
-                "Section title must not be empty."
+[ANCHOR: AD1]
+"""
             )
+            form_edit_section.do_form_submit()
+            section.assert_section_title("Modified title", "1")
+            section.assert_section_text("Modified statement.")
+            screen_document.assert_toc_contains("Modified title")
+
+            section = screen_document.get_section(node_order=2)
+            form_edit_section: Form_EditSection = (
+                section.do_open_form_edit_section()
+            )
+            form_edit_section.do_fill_in_title("Modified title")
+            form_edit_section.do_fill_in_text(
+                """
+Modified statement.
+
+[LINK: AD1]
+"""
+            )
+            form_edit_section.do_form_submit()
+
+            section.assert_section_title("Modified title", "2")
+            section.assert_section_text("Modified statement.")
+            screen_document.assert_toc_contains("Modified title")
 
         assert test_setup.compare_sandbox_and_expected_output()

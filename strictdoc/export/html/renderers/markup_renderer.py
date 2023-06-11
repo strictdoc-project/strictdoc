@@ -1,5 +1,6 @@
 from typing import Optional, Type, Union
 
+from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.requirement import (
@@ -124,13 +125,23 @@ class MarkupRenderer:
             if isinstance(part, str):
                 parts_output += part
             elif isinstance(part, InlineLink):
-                node = self.traceability_index.get_node_by_uid(part.link)
+                # First, we try to get a section with this name, then Anchor.
+                node = self.traceability_index.get_section_by_uid_weak(
+                    part.link
+                )
+                if node is None:
+                    node = self.traceability_index.get_anchor_by_uid_weak(
+                        part.link
+                    )
                 href = self.link_renderer.render_requirement_link(
                     node, self.context_document, document_type
                 )
                 parts_output += self.fragment_writer.write_link(
                     node.title, href
                 )
+            elif isinstance(part, Anchor):
+                parts_output += self.fragment_writer.write_anchor(part.value)
+
         output = self.fragment_writer.write(parts_output)
         self.cache[(document_type, free_text)] = output
 

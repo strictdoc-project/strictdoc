@@ -141,3 +141,7 @@ class RstToHtmlFragmentWriter:
     @staticmethod
     def write_link(title, href):
         return f"`{title} <{href}>`_"
+
+    @staticmethod
+    def write_anchor(anchor):
+        return f".. _{anchor}:"

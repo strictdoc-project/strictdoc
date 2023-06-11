@@ -1,0 +1,26 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+Hello world!
+[/FREETEXT]
+
+[SECTION]
+TITLE: First section
+
+[FREETEXT]
+This is a free text of this section.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Second section
+
+[FREETEXT]
+Because of this existing anchor, a validation will be triggered.
+
+[ANCHOR: AD1]
+[/FREETEXT]
+
+[/SECTION]

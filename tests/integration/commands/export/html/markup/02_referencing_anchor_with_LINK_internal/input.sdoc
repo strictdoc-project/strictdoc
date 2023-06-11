@@ -1,0 +1,39 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[SECTION]
+TITLE: Referencing section
+
+[FREETEXT]
+See the [LINK: AD1] for more details.
+
+See the [LINK: Software requirements specification] for more details.
+
+See the [LINK: Interface Control Document] for more details.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Section with anchor
+
+[FREETEXT]
+Anchors start.
+
+[ANCHOR: AD1]
+
+1) AD1. Software user manual.
+
+[ANCHOR: Software requirements specification]
+
+2) AD2. Software requirements specification.
+
+[ANCHOR: Interface Control Document, Interface Control Document]
+
+3) AD3. Interface Control Document.
+
+Anchors end.
+
+[/FREETEXT]
+
+[/SECTION]

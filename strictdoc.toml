@@ -19,7 +19,7 @@ features = [
 ]
 
 include_doc_paths = [
-  "docs/**"
+  "docs/**",
 ]
 
 exclude_doc_paths = [

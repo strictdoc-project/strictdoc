@@ -45,6 +45,7 @@ from strictdoc.cli.cli_arg_parser import (
 )
 from strictdoc.core.actions.export_action import ExportAction
 from strictdoc.core.commands.constants import NodeCreationOrder
+from strictdoc.core.commands.delete_section import DeleteSectionCommand
 from strictdoc.core.commands.section import (
     CreateSectionCommand,
     UpdateSectionCommand,
@@ -79,6 +80,7 @@ from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
+from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.parallelizer import NullParallelizer
 from strictdoc.helpers.string import (
@@ -1184,15 +1186,26 @@ def create_main_router(
                     "Content-Type": "text/vnd.turbo-stream.html",
                 },
             )
-
-        section: Section = export_action.traceability_index.get_node_by_id(
-            section_mid
+        section: Section = assert_cast(
+            export_action.traceability_index.get_node_by_id(section_mid),
+            Section,
         )
-
-        section_parent: Union[Section, Document] = section.parent
-        section_parent.section_contents.remove(section)
-
-        section.parent = None
+        try:
+            delete_command = DeleteSectionCommand(
+                section=section,
+                traceability_index=export_action.traceability_index,
+            )
+            delete_command.perform()
+        except MultipleValidationError:
+            # FIXME
+            output = ""
+            return HTMLResponse(
+                content=output,
+                status_code=422,
+                headers={
+                    "Content-Type": "text/vnd.turbo-stream.html",
+                },
+            )
 
         # Saving new content to .SDoc file.
         document_content = SDWriter().write(section.document)

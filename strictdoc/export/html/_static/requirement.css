@@ -243,6 +243,14 @@ sdoc-anchor {
   scroll-margin-top:      calc(var(--base-gap) + var(--base-padding));
 }
 
+sdoc-anchor[data-anchor]::before {
+  content: '⚓ ';
+}
+
+sdoc-anchor[data-anchor]::after {
+  content: attr(data-anchor);
+}
+
 sdoc-anchor:target + sdoc-requirement sdoc-requirement-title,
 sdoc-anchor:target + sdoc-section sdoc-section-title,
 sdoc-anchor:target + .requirement__title {

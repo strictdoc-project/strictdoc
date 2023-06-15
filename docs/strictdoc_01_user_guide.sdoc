@@ -11,6 +11,8 @@ TITLE: Introduction
 [FREETEXT]
 StrictDoc is software for technical documentation and requirements management.
 
+[ANCHOR: AD1]
+
 Summary of StrictDoc features:
 
 - The documentation files are stored as human-readable text files.
@@ -49,9 +51,7 @@ UID: SDOC_UG_CONTACT
 TITLE: Contact the developers
 
 [FREETEXT]
-Join us in Discord. Here is the invitation link: https://discord.gg/4BAAME9MmG
-
-The author can be also contacted via `email <s.pankevich@gmail.com>`_.
+[LINK: AD1]
 [/FREETEXT]
 
 [/SECTION]

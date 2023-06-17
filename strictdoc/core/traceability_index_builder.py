@@ -39,7 +39,6 @@ from strictdoc.helpers.timing import timing_decorator
 
 class TraceabilityIndexBuilder:
     @staticmethod
-    @timing_decorator("Collect traceability information")
     def create(
         *,
         project_config: ProjectConfig,
@@ -161,7 +160,7 @@ class TraceabilityIndexBuilder:
         return traceability_index
 
     @staticmethod
-    @timing_decorator("Collect traceability information")
+    @timing_decorator("Build traceability graph")
     def create_from_document_tree(
         document_tree: DocumentTree,
     ) -> TraceabilityIndex:

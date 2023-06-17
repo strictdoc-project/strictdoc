@@ -108,7 +108,9 @@ class HTMLGenerator:
             project_config.dir_for_sdoc_assets,
         )
         sync_dir(
-            project_config.get_static_files_path(), output_html_static_files
+            project_config.get_static_files_path(),
+            output_html_static_files,
+            message="Copying StrictDoc's assets",
         )
 
         # Export MathJax
@@ -122,7 +124,11 @@ class HTMLGenerator:
             mathjax_src = os.path.join(
                 project_config.get_extra_static_files_path(), "mathjax"
             )
-            sync_dir(mathjax_src, output_html_mathjax)
+            sync_dir(
+                mathjax_src,
+                output_html_mathjax,
+                message="Copying MathJax assets",
+            )
 
         # Export project's assets.
         for asset_dir in traceability_index.asset_dirs:
@@ -131,7 +137,11 @@ class HTMLGenerator:
             destination_path = os.path.join(
                 project_config.export_output_html_root, output_relative_path
             )
-            sync_dir(source_path, destination_path)
+            sync_dir(
+                source_path,
+                destination_path,
+                message=f'Copying project assets "{output_relative_path}"',
+            )
 
     @staticmethod
     def export_single_document_with_performance(

@@ -11,6 +11,7 @@ from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.rst.document_rst_generator import DocumentRSTGenerator
+from strictdoc.helpers.timing import timing_decorator
 
 
 class ExportAction:
@@ -24,6 +25,7 @@ class ExportAction:
         self.parallelizer = parallelizer
         self.traceability_index: Optional[TraceabilityIndex] = None
 
+    @timing_decorator("Parse SDoc project tree")
     def build_index(self):
         try:
             traceability_index: TraceabilityIndex = (
@@ -37,6 +39,7 @@ class ExportAction:
             sys.exit(1)
         self.traceability_index = traceability_index
 
+    @timing_decorator("HTML export")
     def export(self):
         assert (
             self.traceability_index is not None

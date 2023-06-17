@@ -3,118 +3,70 @@ import platform
 import shutil
 import tempfile
 from pathlib import Path
+from typing import Optional
 
 
-def sync_dir(src_dir, dst_dir):
+def sync_dir(src_dir, dst_dir, message: Optional[str]):
     assert os.path.isabs(src_dir), f"Expected {src_dir} to be an absolute path"
     assert os.path.isdir(src_dir), f"Expected {src_dir} to be a directory"
-    copytree(src_dir, dst_dir)
 
+    Path(dst_dir).mkdir(parents=True, exist_ok=True)
 
-def copytree(
-    src,
-    dst,
-    symlinks=False,
-    ignore=None,
-    copy_function=shutil.copy2,
-    ignore_dangling_symlinks=False,
-):  # pylint: disable=too-many-arguments
-    """Recursively copy a directory tree.
+    # First, collect all source files to be copied.
+    source_files = []
+    for root, _, filenames in os.walk(src_dir, topdown=True):
+        for filename in filenames:
+            full_path_to_file = os.path.join(root, filename)
+            relative_path_to_file_dir = os.path.relpath(root, start=src_dir)
+            if relative_path_to_file_dir == ".":
+                relative_path_to_file_dir = ""
+            source_files.append(
+                (
+                    filename,
+                    full_path_to_file,
+                    relative_path_to_file_dir,
+                )
+            )
 
-    The destination directory must not already exist.
-    If exception(s) occur, an Error is raised with a list of reasons.
+    if len(source_files) == 0:
+        return
 
-    If the optional symlinks flag is true, symbolic links in the
-    source tree result in symbolic links in the destination tree; if
-    it is false, the contents of the files pointed to by symbolic
-    links are copied. If the file pointed by the symlink doesn't
-    exist, an exception will be added in the list of errors raised in
-    an Error exception at the end of the copy process.
+    # Print progress message.
+    if message is not None:
+        print(f"{message}: {len(source_files)} files", end="")  # noqa: T201
 
-    You can set the optional ignore_dangling_symlinks flag to true if you
-    want to silence this exception. Notice that this has no effect on
-    platforms that don't support os.symlink.
+    # Iterate through the files to be copied and copy them one by one.
+    skipped = 0
+    for (
+        filename,
+        full_path_to_file,
+        relative_path_to_file_dir,
+    ) in source_files:
+        full_path_to_destination_dir = os.path.join(
+            dst_dir, relative_path_to_file_dir
+        )
+        Path(full_path_to_destination_dir).mkdir(parents=True, exist_ok=True)
+        full_path_to_destination_file = os.path.join(
+            full_path_to_destination_dir, filename
+        )
 
-    The optional ignore argument is a callable. If given, it
-    is called with the `src` parameter, which is the directory
-    being visited by copytree(), and `names` which is the list of
-    `src` contents, as returned by os.listdir():
+        # StrictDoc: We don't want to copy files if they are not newer.
+        if not os.path.isfile(
+            full_path_to_destination_file
+        ) or os.path.getmtime(full_path_to_file) > os.path.getmtime(
+            full_path_to_destination_file
+        ):
+            shutil.copyfile(full_path_to_file, full_path_to_destination_file)
+        else:
+            skipped += 1
 
-        callable(src, names) -> ignored_names
-
-    Since copytree() is called recursively, the callable will be
-    called once for each directory that is copied. It returns a
-    list of names relative to the `src` directory that should
-    not be copied.
-
-    The optional copy_function argument is a callable that will be used
-    to copy each file. It will be called with the source path and the
-    destination path as arguments. By default, copy2() is used, but any
-    function that supports the same signature (like copy()) can be used.
-
-    """
-    names = os.listdir(src)
-    if ignore is not None:
-        ignored_names = ignore(src, names)
-    else:
-        ignored_names = set()
-
-    if not os.path.isdir(dst):  # This one line does the trick
-        os.makedirs(dst)
-    errors = []
-    for name in names:
-        if name in ignored_names:
-            continue
-        srcname = os.path.join(src, name)
-        dstname = os.path.join(dst, name)
-        try:
-            if os.path.islink(srcname):
-                linkto = os.readlink(srcname)
-                if symlinks:
-                    # We can't just leave it to `copy_function` because legacy
-                    # code with a custom `copy_function` may rely on copytree
-                    # doing the right thing.
-                    os.symlink(linkto, dstname)
-                    shutil.copystat(
-                        srcname, dstname, follow_symlinks=not symlinks
-                    )
-                else:
-                    # ignore dangling symlink if the flag is on
-                    if not os.path.exists(linkto) and ignore_dangling_symlinks:
-                        continue
-                    # otherwise let the copy occurs. copy2 will raise an error
-                    if os.path.isdir(srcname):
-                        copytree(
-                            srcname, dstname, symlinks, ignore, copy_function
-                        )
-                    else:
-                        copy_function(srcname, dstname)
-            elif os.path.isdir(srcname):
-                copytree(srcname, dstname, symlinks, ignore, copy_function)
-            else:
-                # Will raise a SpecialFileError for unsupported file types
-                # ---
-                # StrictDoc: We don't want to copy files if they are not newer.
-                if not os.path.isfile(dstname) or os.path.getmtime(
-                    srcname
-                ) > os.path.getmtime(dstname):
-                    print(f"Copying: {srcname} -> {dstname}")  # noqa: T201
-                    copy_function(srcname, dstname)
-        # catch the Error from the recursive copytree so that we can
-        # continue with other files
-        except shutil.Error as err:
-            errors.extend(err.args[0])
-        except OSError as why:
-            errors.append((srcname, dstname, str(why)))
-    try:
-        shutil.copystat(src, dst)
-    except OSError as why:
-        # Copying file access times may fail on Windows
-        if getattr(why, "winerror", None) is None:
-            errors.append((src, dst, str(why)))
-    if errors:
-        raise shutil.Error(errors)
-    return dst
+    if message is not None:
+        if skipped > 0:
+            print(  # noqa: T201
+                f" ({skipped} files skipped as non-modified).", flush=True
+            )
+        else:
+            print(".", flush=True)  # noqa: T201
 
 
 def get_portable_temp_dir():

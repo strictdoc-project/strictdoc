@@ -48,7 +48,7 @@ class ServerCommandConfig:
         self.port: Optional[int] = port
 
 
-@auto_described()
+@auto_described
 class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
     def __init__(  # pylint: disable=too-many-arguments
         self,

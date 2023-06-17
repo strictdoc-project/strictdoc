@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+Modified free text!
+
+[ANCHOR: AD1]
+
+[ANCHOR: AD2]
+[/FREETEXT]

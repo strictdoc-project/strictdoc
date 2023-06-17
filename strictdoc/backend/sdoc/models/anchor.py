@@ -1,6 +1,10 @@
 from typing import Optional
 
+from strictdoc.core.graph_database import UUID
+from strictdoc.helpers.auto_described import auto_described
 
+
+@auto_described
 class Anchor:
     def __init__(self, parent, value: str, title: Optional[str]):
         # In the grammar, the title is optional but textX passes it as an empty
@@ -13,6 +17,8 @@ class Anchor:
         has_title = len(title) > 0
         self.title: str = title if has_title else value
         self.has_title = has_title
+
+        self.uuid: UUID = UUID.create()
 
     @property
     def document(self):

@@ -1,0 +1,14 @@
+[DOCUMENT]
+TITLE: Low-level requirements
+
+[SECTION]
+TITLE: Traceability graph database
+
+[FREETEXT]
+- Maintain arbitrary links between nodes based on configurable relations.
+- Support UUID -> Obj and UID -> Obj links.
+- Raise validation errors when something else depends on a node being deleted.
+- Read/write the graph database from/to a file.
+[/FREETEXT]
+
+[/SECTION]

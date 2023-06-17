@@ -86,7 +86,7 @@ class RequirementField:
         return value
 
 
-@auto_described()
+@auto_described
 class Requirement(
     Node
 ):  # pylint: disable=too-many-instance-attributes, too-many-public-methods  # noqa: E501

@@ -133,6 +133,7 @@ class MarkupRenderer:
                     node = self.traceability_index.get_anchor_by_uid_weak(
                         part.link
                     )
+                assert node is not None
                 href = self.link_renderer.render_requirement_link(
                     node, self.context_document, document_type
                 )

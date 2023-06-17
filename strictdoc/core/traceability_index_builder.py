@@ -22,11 +22,13 @@ from strictdoc.core.finders.source_files_finder import (
     SourceFile,
     SourceFilesFinder,
 )
+from strictdoc.core.graph.validations import RemoveNodeValidation
+from strictdoc.core.graph_database import GraphDatabase
 from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.core.source_tree import SourceTree
 from strictdoc.core.traceability_index import (
-    AnchorConnections,
     FileTraceabilityIndex,
+    GraphLinkType,
     RequirementConnections,
     TraceabilityIndex,
 )
@@ -168,7 +170,6 @@ class TraceabilityIndexBuilder:
         d_01_document_iterators: Dict[Document, DocumentCachingIterator] = {}
         d_02_requirements_map: Dict[str, RequirementConnections] = {}
         d_03_map_doc_titles_to_tag_lists = {}
-        d_04_anchors_map: Dict[str, AnchorConnections] = {}
         d_05_map_documents_to_parents: Dict[
             Document, Set[Document]
         ] = defaultdict(set)
@@ -180,6 +181,9 @@ class TraceabilityIndexBuilder:
             str, List[Requirement]
         ] = defaultdict(list)
         d_11_map_id_to_node = {}
+
+        graph_database = GraphDatabase()
+        graph_database.remove_node_validation = RemoveNodeValidation()
 
         # It seems to be impossible to accomplish everything in just one for
         # loop. One particular problem that requires two passes: it is not
@@ -202,8 +206,26 @@ class TraceabilityIndexBuilder:
         # - Re-assign children declarations
         # - Detect cycles
         # - Calculate depth of both parent and child links.
+
+        all_anchors: List[Anchor] = []
+
         document: Document
         for document in document_tree.document_list:
+            for free_text in document.free_texts:
+                for part in free_text.parts:
+                    if isinstance(part, Anchor):
+                        assert part.value not in d_11_map_id_to_node
+                        all_anchors.append(part)
+                        graph_database.add_node(
+                            uuid=part.uuid,
+                            node=part,
+                        )
+                        graph_database.add_link(
+                            link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
+                            lhs_node=part.value,
+                            rhs_node=part.uuid,
+                        )
+
             d_11_map_id_to_node[document.node_id] = document
 
             document_iterator = DocumentCachingIterator(document)
@@ -216,13 +238,22 @@ class TraceabilityIndexBuilder:
                 if node.is_section:
                     for free_text in node.free_texts:
                         for part in free_text.parts:
-                            if isinstance(part, Anchor):
+                            if isinstance(part, InlineLink):
+                                graph_database.add_node(
+                                    uuid=part.uuid,
+                                    node=part,
+                                )
+                            elif isinstance(part, Anchor):
                                 assert part.value not in d_11_map_id_to_node
-                                d_04_anchors_map[
-                                    part.value
-                                ] = AnchorConnections(
-                                    anchor=part,
-                                    document=document,
+                                all_anchors.append(part)
+                                graph_database.add_node(
+                                    uuid=part.uuid,
+                                    node=part,
+                                )
+                                graph_database.add_link(
+                                    link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
+                                    lhs_node=part.value,
+                                    rhs_node=part.uuid,
                                 )
 
                 if not node.reserved_uid:
@@ -297,7 +328,10 @@ class TraceabilityIndexBuilder:
                             if isinstance(part, InlineLink):
                                 if (
                                     part.link not in d_02_requirements_map
-                                    and part.link not in d_04_anchors_map
+                                    and not graph_database.link_exists(
+                                        link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,  # noqa: E501
+                                        lhs_node=part.link,
+                                    )
                                 ):
                                     print(  # noqa: T201
                                         ErrorMessage.inline_link_uid_not_exist(
@@ -376,11 +410,11 @@ class TraceabilityIndexBuilder:
         traceability_index = TraceabilityIndex(
             d_01_document_iterators,
             d_02_requirements_map,
-            d_04_anchors_map,
             d_03_map_doc_titles_to_tag_lists,
             d_05_map_documents_to_parents,
             d_06_map_documents_to_children,
             file_traceability_index=d_07_file_traceability_index,
             map_id_to_node=d_11_map_id_to_node,
+            graph_database=graph_database,
         )
         return traceability_index

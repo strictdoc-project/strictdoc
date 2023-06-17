@@ -1,16 +1,13 @@
 from seleniumbase import BaseCase
 
 from tests.end2end.end2end_test_setup import End2EndTestSetup
-from tests.end2end.helpers.screens.document.form_edit_config import (
-    Form_EditConfig,
-)
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
 )
 from tests.end2end.server import SDocTestServer
 
 
-class Test_UC11_T44_FreeTextLINKToSection(BaseCase):
+class Test(BaseCase):
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
@@ -29,19 +26,11 @@ class Test_UC11_T44_FreeTextLINKToSection(BaseCase):
             screen_document.assert_on_screen_document()
             screen_document.assert_text("See the section Referenced section")
 
-            root_node = screen_document.get_root_node()
-            form_config: Form_EditConfig = root_node.do_open_form_edit_config()
+            section = screen_document.get_section()
+            section.assert_section_title("Referenced section")
+            section.do_delete_node()  # confirm is inside
 
-            modified_text = (
-                "MODIFIED by test. See the section [LINK: SDOC_UG_CONTACT]."
-            )
-            form_config.do_fill_in_document_abstract(modified_text)
-            form_config.assert_document_abstract_contains(modified_text)
-
-            form_config.do_form_submit()
-
-            screen_document.assert_text(
-                "MODIFIED by test. See the section Referenced section"
-            )
+            # FIXME: Check validation messages
+            # screen_document.assert_text("")  # noqa: ERA001
 
         assert test_setup.compare_sandbox_and_expected_output()

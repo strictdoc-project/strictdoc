@@ -15,7 +15,7 @@ from strictdoc.core.commands.validation_error import (
     SingleValidationError,
 )
 from strictdoc.core.traceability_index import (
-    AnchorConnections,
+    GraphLinkType,
     TraceabilityIndex,
 )
 from strictdoc.export.html.form_objects.section_form_object import (
@@ -82,7 +82,17 @@ class UpdateSectionCommand:
                         errors["section_statement"].append(
                             anchors_validation_error.args[0]
                         )
-
+        else:
+            # If there is no free text, we need to check the anchors that may
+            # have been in the existing free text.
+            try:
+                traceability_index.validate_node_against_anchors(
+                    node=section, new_anchors=[]
+                )
+            except SingleValidationError as anchors_validation_error:
+                errors["section_statement"].append(
+                    anchors_validation_error.args[0]
+                )
         if len(errors) > 0:
             raise validation_error
 
@@ -97,6 +107,12 @@ class UpdateSectionCommand:
 
         # Updating section content.
         if free_text_container is not None:
+            existing_anchor_uids_to_remove = set()
+            if len(section.free_texts) > 0:
+                for part in section.free_texts[0].parts:
+                    if isinstance(part, Anchor):
+                        existing_anchor_uids_to_remove.add(part.value)
+
             if len(section.free_texts) > 0:
                 free_text: FreeText = section.free_texts[0]
             else:
@@ -105,29 +121,32 @@ class UpdateSectionCommand:
             free_text.parts = free_text_container.parts
             free_text.parent = section
 
-            existing_anchor_uids_to_remove = set()
-            if len(section.free_texts) > 0:
-                for part in section.free_texts[0].parts:
-                    if isinstance(part, Anchor):
-                        existing_anchor_uids_to_remove.add(part.value)
-
             for part in free_text.parts:
                 if isinstance(part, Anchor):
-                    existing_anchor_uids_to_remove.remove(part.value)
-                    # We are simply rewriting the existing anchor if it exists,
-                    # or we are creating a new one. By this time, we know that
-                    # the validations have passed just before.
-                    traceability_index.anchors_map[
-                        part.value
-                    ] = AnchorConnections(
-                        anchor=part,
-                        document=section.document,
-                    )
+                    if part.value in existing_anchor_uids_to_remove:
+                        existing_anchor_uids_to_remove.remove(part.value)
+                    # By this time, we know that the validations have passed
+                    # just before, so it is safe to update the anchor.
+                    traceability_index.update_with_anchor(part)
                     part.parent = free_text
                 elif isinstance(part, InlineLink):
                     part.parent = free_text
+
             for anchor_uid_to_be_removed in existing_anchor_uids_to_remove:
-                del traceability_index.anchors_map[anchor_uid_to_be_removed]
+                anchor_uuid = next(
+                    iter(
+                        traceability_index.graph_database.get_link_values(
+                            link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
+                            lhs_node=anchor_uid_to_be_removed,
+                        )
+                    )
+                )
+                traceability_index.graph_database.remove_link(
+                    link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
+                    lhs_node=anchor_uid_to_be_removed,
+                    rhs_node=anchor_uuid,
+                )
+                traceability_index.graph_database.remove_node(uuid=anchor_uuid)
         else:
             section.free_texts = []
 
@@ -268,12 +287,7 @@ class CreateSectionCommand:
                     # Since this is a new section, we just need to register the
                     # new anchor. By this time, we know that there is no
                     # existing anchor with this name.
-                    traceability_index.anchors_map[
-                        part.value
-                    ] = AnchorConnections(
-                        anchor=part,
-                        document=document,
-                    )
+                    traceability_index.update_with_anchor(part)
                     part.parent = free_text
                 elif isinstance(part, InlineLink):
                     part.parent = free_text

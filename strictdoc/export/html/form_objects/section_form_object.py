@@ -3,9 +3,11 @@ import uuid
 from typing import Optional
 
 from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.helpers.auto_described import auto_described
 from strictdoc.server.error_object import ErrorObject
 
 
+@auto_described
 class SectionFormObject(ErrorObject):
     def __init__(
         self,

@@ -1,4 +1,5 @@
 from datetime import datetime
+from enum import IntEnum
 from typing import Dict, List, Optional, Set, Union
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
@@ -15,8 +16,10 @@ from strictdoc.core.commands.validation_error import (
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_traceability_index import FileTraceabilityIndex
+from strictdoc.core.graph_database import UUID, GraphDatabase, LinkType
 from strictdoc.core.tree_cycle_detector import TreeCycleDetector
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.sorting import alphanumeric_sort
 
 
@@ -48,17 +51,21 @@ class AnchorConnections:
         self.document: Document = document
 
 
+class GraphLinkType(LinkType, IntEnum):
+    ANCHOR_UID_TO_ANCHOR_UUID = 1
+
+
 class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-instance-attributes  # noqa: E501
     def __init__(  # pylint: disable=too-many-arguments
         self,
         document_iterators: Dict[Document, DocumentCachingIterator],
         requirements_parents: Dict[str, RequirementConnections],
-        anchors_map: Dict[str, AnchorConnections],
         tags_map,
         document_parents_map: Dict[Document, Set[Document]],
         document_children_map: Dict[Document, Set[Document]],
         file_traceability_index: FileTraceabilityIndex,
         map_id_to_node,
+        graph_database: GraphDatabase,
     ):
         self._document_iterators: Dict[
             Document, DocumentCachingIterator
@@ -66,7 +73,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         self._requirements_parents: Dict[
             str, RequirementConnections
         ] = requirements_parents
-        self.anchors_map: Dict[str, AnchorConnections] = anchors_map
         self._tags_map = tags_map
         self._document_parents_map: Dict[
             Document, Set[Document]
@@ -77,6 +83,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         self._file_traceability_index = file_traceability_index
         self._map_id_to_node = map_id_to_node
 
+        self.graph_database: GraphDatabase = graph_database
         self.document_tree: Optional[DocumentTree] = None
         self.asset_dirs = None
         self.index_last_updated = datetime.today()
@@ -201,15 +208,25 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             return None
         return self._requirements_parents[uid].requirement
 
-    def get_anchor_by_uid_weak(self, uid):
-        if uid not in self.anchors_map:
-            return None
-        return self.anchors_map[uid].anchor
+    def get_anchor_by_uid_weak(self, uid) -> Optional[Anchor]:
+        anchor_uuid = self.graph_database.get_link_value_weak(
+            link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
+            lhs_node=uid,
+        )
+        if anchor_uuid is not None:
+            anchor = self.graph_database.get_node_weak(anchor_uuid)
+            if anchor is not None:
+                return assert_cast(anchor, Anchor)
+        return None
 
     def find_node_with_duplicate_anchor(
         self, anchor_uid: str
     ) -> Union[Document, Section]:
         for document in self.document_tree.document_list:
+            if len(document.free_texts) > 0:
+                for part in document.free_texts[0].parts:
+                    if isinstance(part, Anchor) and part.value == anchor_uid:
+                        return document
             document_iterator = DocumentCachingIterator(document)
             for node in document_iterator.all_content():
                 if not isinstance(node, (Document, Section)):
@@ -375,7 +392,10 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         # by the new anchors.
         if node is None:
             for anchor_uid in new_anchor_uids:
-                if anchor_uid in self.anchors_map:
+                if self.graph_database.link_exists(
+                    link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
+                    lhs_node=anchor_uid,
+                ):
                     raise SingleValidationError(
                         "A node contains an anchor that already exists: "
                         f"{anchor_uid}."
@@ -402,7 +422,10 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         #               c) raise a duplication error.
         for anchor_uid in new_anchor_uids:
             if (
-                anchor_uid in self.anchors_map
+                self.graph_database.link_exists(
+                    link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
+                    lhs_node=UUID(anchor_uid),
+                )
                 and anchor_uid not in existing_node_anchor_uids
             ):
                 node_with_duplicate_anchor = (
@@ -452,3 +475,29 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                                 f"{node_type} with title "
                                 f"'{node_with_duplicate_anchor.title}'."
                             )
+
+    def update_with_anchor(self, anchor: Anchor):
+        # By this time, we know that the validations have passed just before.
+        existing_anchor_uuid: Optional[
+            UUID
+        ] = self.graph_database.get_link_value_weak(
+            link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
+            lhs_node=anchor.value,
+        )
+        if existing_anchor_uuid is not None:
+            self.graph_database.remove_link(
+                link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
+                lhs_node=anchor.value,
+                rhs_node=existing_anchor_uuid,
+            )
+            self.graph_database.remove_node(existing_anchor_uuid)
+
+        self.graph_database.add_node(
+            uuid=anchor.uuid,
+            node=anchor,
+        )
+        self.graph_database.add_link(
+            link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
+            lhs_node=anchor.value,
+            rhs_node=anchor.uuid,
+        )

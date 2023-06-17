@@ -1,0 +1,29 @@
+from strictdoc.backend.sdoc.models.anchor import Anchor
+from strictdoc.core.graph_database import (
+    UUID,
+    ConstraintViolation,
+    GraphDatabase,
+)
+from strictdoc.core.traceability_index import GraphLinkType
+
+
+class RemoveNodeValidation:
+    def validate(self, database: GraphDatabase, uuid: UUID):
+        node = database.get_node(uuid)
+        if isinstance(node, Anchor):
+            self.validate_anchor(database, node)
+
+    @staticmethod
+    def validate_anchor(database: GraphDatabase, anchor: Anchor):
+        assert isinstance(anchor, Anchor)
+
+        existing_link = database.get_link_value_weak(
+            link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
+            lhs_node=anchor.value,
+        )
+
+        if existing_link is not None:
+            raise ConstraintViolation(
+                f"Cannot delete anchor {anchor} because it has incoming links: "
+                f"{anchor.value} -> {existing_link}"
+            )

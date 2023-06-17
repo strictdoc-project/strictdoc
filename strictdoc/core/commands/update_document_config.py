@@ -11,7 +11,7 @@ from strictdoc.core.commands.validation_error import (
     SingleValidationError,
 )
 from strictdoc.core.traceability_index import (
-    AnchorConnections,
+    GraphLinkType,
     TraceabilityIndex,
 )
 from strictdoc.export.html.form_objects.document_config_form_object import (
@@ -63,6 +63,12 @@ class UpdateDocumentConfigCommand:
 
         free_text: Optional[FreeText] = None
         if len(form_object.document_freetext_unescaped) > 0:
+            existing_anchor_uids_to_remove = set()
+            if len(document.free_texts) > 0:
+                for part in document.free_texts[0].parts:
+                    if isinstance(part, Anchor):
+                        existing_anchor_uids_to_remove.add(part.value)
+
             free_text_container: FreeTextContainer = SDFreeTextReader.read(
                 form_object.document_freetext_unescaped
             )
@@ -72,30 +78,32 @@ class UpdateDocumentConfigCommand:
             free_text.parts = free_text_container.parts
             free_text.parent = document
 
-            existing_anchor_uids_to_remove = set()
-            if len(document.free_texts) > 0:
-                for part in document.free_texts[0].parts:
-                    if isinstance(part, Anchor):
-                        existing_anchor_uids_to_remove.add(part.value)
-
             for part in free_text.parts:
                 if isinstance(part, Anchor):
-                    # We are simply rewriting the existing anchor if it exists,
-                    # or we are creating a new one. By this time, we know that
-                    # the validations have passed just before.
-                    traceability_index.anchors_map[
-                        part.value
-                    ] = AnchorConnections(
-                        anchor=part,
-                        document=document,
-                    )
+                    if part.value in existing_anchor_uids_to_remove:
+                        existing_anchor_uids_to_remove.remove(part.value)
+                    # By this time, we know that the validations have passed
+                    # just before, so it is safe to update the anchor.
+                    traceability_index.update_with_anchor(part)
                     part.parent = free_text
                 elif isinstance(part, InlineLink):
                     part.parent = free_text
 
             for anchor_uid_to_be_removed in existing_anchor_uids_to_remove:
-                del traceability_index.anchors_map[anchor_uid_to_be_removed]
-
+                anchor_uuid = next(
+                    iter(
+                        traceability_index.graph_database.get_link_values(
+                            link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
+                            lhs_node=anchor_uid_to_be_removed,
+                        )
+                    )
+                )
+                traceability_index.graph_database.remove_link(
+                    link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
+                    lhs_node=anchor_uid_to_be_removed,
+                    rhs_node=anchor_uuid,
+                )
+                traceability_index.graph_database.remove_node(uuid=anchor_uuid)
         document.set_freetext(free_text)
 
     @staticmethod
@@ -118,7 +126,7 @@ class UpdateDocumentConfigCommand:
             ).write_with_validation(form_object.document_freetext_unescaped)
             if parsed_html is None:
                 errors["FREETEXT"].append(rst_error)
-
+            else:
                 free_text_container = SDFreeTextReader.read(
                     form_object.document_freetext_unescaped
                 )
@@ -140,7 +148,15 @@ class UpdateDocumentConfigCommand:
                         errors["FREETEXT"].append(
                             anchors_validation_error.args[0]
                         )
-
+        else:
+            # If there is no free text, we need to check the anchors that may
+            # have been in the existing free text.
+            try:
+                traceability_index.validate_node_against_anchors(
+                    node=document, new_anchors=[]
+                )
+            except SingleValidationError as anchors_validation_error:
+                errors["FREETEXT"].append(anchors_validation_error.args[0])
         if len(errors):
             raise MultipleValidationError(
                 "Document form has not passed validation.", errors=errors

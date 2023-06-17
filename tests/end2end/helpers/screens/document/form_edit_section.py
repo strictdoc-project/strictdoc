@@ -15,4 +15,10 @@ class Form_EditSection(Form):  # pylint: disable=invalid-name
 
     def do_fill_in_text(self, field_value: str) -> None:
         assert isinstance(field_value, str)
+        assert (
+            len(field_value) > 0
+        ), "To clear a text field, use do_clear_text() instead."
         super().do_fill_in("section_content", field_value)
+
+    def do_clear_text(self) -> None:
+        super().do_clear_field("section_content")

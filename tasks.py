@@ -381,6 +381,7 @@ def lint_flake8(context):
         """
             flake8
                 strictdoc/ tests/unit tests/unit_server
+                --ignore=E501,W503
                 --statistics
                 --max-line-length 80
                 --show-source

@@ -725,3 +725,23 @@ def nuitka(context):
             strictdoc/cli/main.py
         """,
     )
+
+
+# https://github.com/jrfonseca/gprof2dot
+# pip install gprof2dot
+@task()
+def performance(context):
+    command = """
+        python -m cProfile -o output/profile.prof
+            strictdoc/cli/main.py export . --no-parallelization &&
+        gprof2dot -f pstats output/profile.prof | dot -Tpng -o output/output.png
+    """
+    run_invoke(context, command)
+
+
+@task(performance)
+def performance_snakeviz(context):
+    command = """
+        snakeviz output/profile.prof
+    """
+    run_invoke(context, command)

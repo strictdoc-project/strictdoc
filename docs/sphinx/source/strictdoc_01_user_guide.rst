@@ -1258,11 +1258,15 @@ Standalone HTML pages (experimental)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following command creates a normal HTML export with all pages having their
-assets embedded into HTML using Data URI / Base64:
+assets embedded into HTML using Data URI / Base64. In the project's ``strictdoc.toml`` file, specify:
 
-.. code-block:: text
+.. code-block:: yaml
 
-    strictdoc export docs/ --formats=html-standalone --output-dir output-html
+    [project]
+
+    features = [
+      "STANDALONE_DOCUMENT_SCREEN"
+    ]
 
 The generated document are self-contained HTML pages that can be shared via
 email as single files. This option might be especially useful if you work with
@@ -1312,6 +1316,40 @@ The created RST files can be copied to a project created using Sphinx, see
 <https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_
 is generated this way, see the Invoke task:
 `invoke sphinx <https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48>`_.
+
+Manage project tree
+===================
+
+Automatic assignment of requirements UID
+----------------------------------------
+
+To assign requirement UIDs automatically:
+
+.. code-block::
+
+    strictdoc manage auto-uid <path-to-project-tree>
+
+The command goes over all requirements in the project tree and assigns missing UIDs automatically. The project tree is mutated in-place.
+
+By default, the assignment happens based on the requirement mask ``REQ-``, so the requirements will get the UIDs of ``REQ-001``, ``REQ-002``, ...
+
+If a document-level or a section-level requirement mask is provided, the UIDs will be generated based on that mask.
+
+A document-level requirement mask:
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: Hello world doc
+    REQ_PREFIX: MYDOC-
+
+A section-level requirement mask:
+
+.. code-block::
+
+    [SECTION]
+    TITLE: Section 2.
+    REQ_PREFIX: LEVEL2-REQ-
 
 .. _SECTION-TRACEABILITY-REQS-TO-SOURCE-CODE:
 
@@ -1364,15 +1402,19 @@ The source file:
         print("hello world")
     # [/REQ-002]
 
-To activate the traceability to source files, use
-``--experimental-enable-file-traceability`` option:
+To activate the traceability to source files, configure the project config with a dedicated feature:
 
-.. code-block:: text
+.. code-block:: yaml
 
-    strictdoc export . --experimental-enable-file-traceability --output-dir output/
+    [project]
 
-Currently, StrictDoc looks for source files in a directory from which the
-``strictdoc`` command is run.
+    features = [
+      "REQUIREMENT_TO_SOURCE_TRACEABILITY"
+    ]
+
+See :ref:`SDOC_UG_OPTIONS_PROJECT_LEVEL` for more details about the project-level options.
+
+Currently, StrictDoc looks for source files in a directory from which the ``strictdoc`` command is run.
 
 The
 `strictdoc-examples <https://github.com/strictdoc-project/strictdoc-examples>`_
@@ -1506,6 +1548,8 @@ The command does the following:
 Options
 =======
 
+.. _SDOC_UG_OPTIONS_PROJECT_LEVEL:
+
 Project-level options
 ---------------------
 
@@ -1522,6 +1566,20 @@ This option specifies a project title.
 
     [project]
     title = "StrictDoc Documentation"
+
+Path to assets
+~~~~~~~~~~~~~~
+
+By default, StrictDoc copies its CSS/JS and other asset files to a folder ``_static`` in the HTML output directory.
+
+Sometimes, it is desirable to change the folder name. For example, the GitHub Pages static website engine expects the assets to be found in the ``assets`` folder.
+
+The ``html_assets_strictdoc_dir`` allows changing the assets folder name:
+
+.. code-block::
+
+    [project]
+    html_assets_strictdoc_dir = "assets"
 
 Include/exclude document paths
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1585,6 +1643,68 @@ Use ``include_source_paths`` and ``exclude_source_paths`` to whitelist/blacklist
     ]
 
 The behavior of the wildcards is the same as for the ``include_doc_paths/exclude_doc_paths`` options.
+
+Selecting features
+~~~~~~~~~~~~~~~~~~
+
+StrictDoc has optional features and features that are developed with a lower priority.
+
+The feature of exporting the SDoc documents to HTML document view is a core feature and is always enabled. The option ``features`` allows selecting which additional features should be activated or not.
+
+The following is an example of the default configuration. The same features are active/inactive when the option ``features`` is not specified.
+
+.. code-block:: yaml
+
+    [project]
+    title = "StrictDoc Documentation"
+
+    features = [
+      # Stable features that are enabled by default.
+      "TABLE_SCREEN",
+      "TRACEABILITY_SCREEN",
+      "DEEP_TRACEABILITY_SCREEN",
+
+      # Stable features that are disabled by default.
+      # "MATHJAX",
+
+      # Experimental features are disabled by default.
+      # "REQIF",
+      # "STANDALONE_DOCUMENT_SCREEN",
+      # "REQUIREMENTS_COVERAGE_SCREEN",
+      # "REQUIREMENT_TO_SOURCE_TRACEABILITY"
+    ]
+
+Enable all features
+^^^^^^^^^^^^^^^^^^^
+
+To select all available features, stable and experimental, specify ``ALL_FEATURES``.
+
+.. code-block::
+
+    [project]
+
+    features = [
+      "ALL_FEATURES"
+    ]
+
+The advantage of this option is that all feature toggles become activated, and all extra screens and buttons are generated and visible.
+
+The disadvantage is that StrictDoc spends more time rendering extra screens that might not be needed by a particular user.
+
+If ``ALL_FEATURES`` is present, all features are activated, regardless of any other features that are also specified or not.
+
+Disable all features
+^^^^^^^^^^^^^^^^^^^^
+
+To disable all features, specify the ``features`` option but leave it empty:
+
+.. code-block:: yaml
+
+    [project]
+
+    features = [
+      # Nothing specified.
+    ]
 
 Server configuration
 ~~~~~~~~~~~~~~~~~~~~

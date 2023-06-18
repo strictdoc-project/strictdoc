@@ -104,6 +104,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def tags_map(self):
         return self._tags_map
 
+    def get_file_traceability_index(self) -> FileTraceabilityIndex:
+        return self._file_traceability_index
+
     def get_document_iterator(self, document) -> DocumentCachingIterator:
         return self.document_iterators[document]
 

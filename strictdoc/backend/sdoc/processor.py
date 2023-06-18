@@ -15,6 +15,7 @@ from strictdoc.backend.sdoc.models.requirement import (
 )
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.validations.requirement import validate_requirement
+from strictdoc.helpers.exception import StrictDocException
 
 
 class ParseContext:
@@ -62,16 +63,16 @@ class SDocParsingProcessor:
                 section.ng_resolved_custom_level
                 and section.ng_resolved_custom_level != "None"
             ):
-                print(  # noqa: T201
-                    "warning: [SECTION].LEVEL field is provided. "
+                raise StrictDocException(
+                    "[SECTION].LEVEL field is provided. "
                     "This contradicts to the option "
                     "[DOCUMENT].OPTIONS.AUTO_LEVELS set to On. "
                     f"Section: {section}"
                 )
         else:
             if not section.ng_resolved_custom_level:
-                print(  # noqa: T201
-                    "warning: [SECTION].LEVEL field is not provided. "
+                raise StrictDocException(
+                    "[SECTION].LEVEL field is not provided. "
                     "This contradicts to the option "
                     "[DOCUMENT].OPTIONS.AUTO_LEVELS set to Off. "
                     f"Section: {section}"
@@ -105,19 +106,19 @@ class SDocParsingProcessor:
     ):
         if self.parse_context.document_config.auto_levels:
             if composite_requirement.ng_resolved_custom_level:
-                print(  # noqa: T201
-                    "warning: [COMPOSITE_REQUIREMENT].LEVEL field is provided. "
+                raise StrictDocException(
+                    "[COMPOSITE_REQUIREMENT].LEVEL field is provided. "
                     "This contradicts to the option "
                     "[DOCUMENT].OPTIONS.AUTO_LEVELS set to On. "
-                    f"Composite requirement: {composite_requirement}"
+                    f"Composite requirement: {composite_requirement}."
                 )
         else:
             if not composite_requirement.ng_resolved_custom_level:
-                print(  # noqa: T201
-                    "warning: [COMPOSITE_REQUIREMENT].LEVEL field is not "
+                raise StrictDocException(
+                    "[COMPOSITE_REQUIREMENT].LEVEL field is not "
                     "provided. This contradicts to the option "
                     "[DOCUMENT].OPTIONS.AUTO_LEVELS set to Off. "
-                    f"Composite requirement: {composite_requirement}"
+                    f"Composite requirement: {composite_requirement}."
                 )
 
         composite_requirement.ng_document_reference = (
@@ -166,19 +167,19 @@ class SDocParsingProcessor:
 
         if self.parse_context.document_config.auto_levels:
             if requirement.ng_resolved_custom_level:
-                print(  # noqa: T201
-                    "warning: [REQUIREMENT].LEVEL field is provided. "
+                raise StrictDocException(
+                    "[REQUIREMENT].LEVEL field is provided. "
                     "This contradicts to the option "
                     "[DOCUMENT].OPTIONS.AUTO_LEVELS set to On. "
-                    f"Requirement: {requirement}"
+                    f"Requirement: {requirement}."
                 )
         else:
             if not requirement.ng_resolved_custom_level:
-                print(  # noqa: T201
-                    "warning: [REQUIREMENT].LEVEL field is not provided. "
+                raise StrictDocException(
+                    "[REQUIREMENT].LEVEL field is not provided. "
                     "This contradicts to the option "
                     "[DOCUMENT].OPTIONS.AUTO_LEVELS set to Off. "
-                    f"Requirement: {requirement}"
+                    f"Requirement: {requirement}."
                 )
 
         requirement.ng_document_reference = (

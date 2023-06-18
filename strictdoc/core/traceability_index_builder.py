@@ -17,7 +17,6 @@ from strictdoc.core.document_finder import DocumentFinder
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
-from strictdoc.core.error_message import ErrorMessage
 from strictdoc.core.finders.source_files_finder import (
     SourceFile,
     SourceFilesFinder,
@@ -33,6 +32,7 @@ from strictdoc.core.traceability_index import (
     TraceabilityIndex,
 )
 from strictdoc.core.tree_cycle_detector import TreeCycleDetector
+from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.timing import timing_decorator
 
@@ -76,8 +76,8 @@ class TraceabilityIndexBuilder:
         # - document tree
         # - assets
         # - runtime configuration
-        traceability_index = TraceabilityIndexBuilder.create_from_document_tree(
-            document_tree
+        traceability_index: TraceabilityIndex = (
+            TraceabilityIndexBuilder.create_from_document_tree(document_tree)
         )
         traceability_index.document_tree = document_tree
         traceability_index.asset_dirs = asset_dirs
@@ -155,6 +155,7 @@ class TraceabilityIndexBuilder:
                         source_file.in_doctree_source_file_rel_path_posix,
                         traceability_info,
                     )
+            traceability_index.get_file_traceability_index().validate()
             traceability_index.document_tree.attach_source_tree(source_tree)
 
         return traceability_index
@@ -332,12 +333,13 @@ class TraceabilityIndexBuilder:
                                         lhs_node=part.link,
                                     )
                                 ):
-                                    print(  # noqa: T201
-                                        ErrorMessage.inline_link_uid_not_exist(
-                                            part.link
-                                        )
+                                    raise StrictDocException(
+                                        "DocumentIndex: "
+                                        "the inline link references an "
+                                        "object with an UID "
+                                        "that does not exist: "
+                                        f"{part.link}."
                                     )
-                                    sys.exit(1)
                 if not node.is_requirement:
                     continue
                 requirement: Requirement = node
@@ -351,19 +353,13 @@ class TraceabilityIndexBuilder:
                 ].parents_uids
                 for requirement_parent_id in requirement_parent_ids:
                     if requirement_parent_id not in d_02_requirements_map:
-                        # TODO: Strict variant of the behavior will be to stop
-                        # and raise an error message.
-                        print(  # noqa: T201
-                            f"warning: [DocumentIndex.create] "
+                        raise StrictDocException(
+                            f"[DocumentIndex.create] "
                             f"Requirement {requirement.reserved_uid} "
                             f"references "
                             f"parent requirement which doesn't exist: "
-                            f"{requirement_parent_id}"
+                            f"{requirement_parent_id}."
                         )
-                        d_08_requirements_children_map.pop(
-                            requirement_parent_id, None
-                        )
-                        continue
                     parent_requirement = d_02_requirements_map[
                         requirement_parent_id
                     ].requirement

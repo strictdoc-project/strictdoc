@@ -1,9 +1,2 @@
-RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
-CHECK: warning: could not parse the config file {{.*}}strictdoc.toml: {{.*}}
-CHECK: warning: using default StrictDoc configuration.
-CHECK: Published: Hello world doc
-
-RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
-
-# StrictDoc could not parse the project config, so it uses the default project title.
-CHECK-HTML: Untitled Project
+RUN: %expect_exit 1 %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+CHECK: error: Could not parse the config file {{.*}}/strictdoc.toml: Key group not on a line by itself. (line 1 column 1 char 0).

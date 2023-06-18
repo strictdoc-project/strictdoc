@@ -1,4 +1,3 @@
-import re
 import sys
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
@@ -13,18 +12,13 @@ from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
+from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.parallelizer import Parallelizer
 from strictdoc.helpers.string import (
     create_safe_acronym,
     create_safe_title_string,
+    extract_last_numeric_part,
 )
-
-
-def extract_last_numeric_part(string: str) -> str:
-    regex_match = re.match(".*?([0-9]+)$", string)
-    if regex_match is not None:
-        return regex_match.group(1)
-    raise ValueError(f"Cannot extract the numeric part of UID: {string}")
 
 
 @dataclass
@@ -102,27 +96,22 @@ class ManageAutoUIDCommand:
 
             if requirement.reserved_uid is not None:
                 if not requirement.reserved_uid.startswith(requirement_prefix):
-                    print(  # noqa: T201
-                        "warning: "
+                    raise StrictDocException(
                         "Skipping a requirement because its UID does not match "
                         f"the applicable requirement prefix "
                         f"'{requirement_prefix}': "
                         f"'{requirement.reserved_uid}'."
                     )
-                    continue
                 try:
                     requirement_uid_numeric_part = extract_last_numeric_part(
                         requirement.reserved_uid
                     )
                 except ValueError:
-                    print(  # noqa: T201
-                        "Not clear how to deal with an unusual identifier, "
-                        "skipping it: "
+                    raise StrictDocException(
+                        "Cannot extract a numeric part from identifier: "
                         f"{requirement.reserved_uid}."
-                    )
-                    continue
-                if len(requirement_uid_numeric_part) == 0:
-                    continue
+                    ) from None
+                assert len(requirement_uid_numeric_part) > 0
                 requirement_uid_number = int(requirement_uid_numeric_part)
                 current_accumulator.existing_requirements_uid_numbers.append(
                     requirement_uid_number

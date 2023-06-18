@@ -1,0 +1,2 @@
+RUN: %expect_exit 1 %strictdoc export %S | filecheck %s --dump-input=fail
+CHECK: error: [DocumentIndex.create] Requirement REQ-002 references parent requirement which doesn't exist: REQ-001.

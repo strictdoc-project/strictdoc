@@ -5,6 +5,7 @@ from strictdoc.backend.sdoc_source_code.models.range_pragma import RangePragma
 from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityInfo,
 )
+from strictdoc.helpers.exception import StrictDocException
 
 
 class FileTraceabilityIndex:
@@ -50,14 +51,10 @@ class FileTraceabilityIndex:
             ] = self.map_paths_to_source_file_traceability_info.get(
                 file_link.get_posix_path()
             )
-            if not source_file_traceability_info:
-                print(  # noqa: T201
-                    "warning: "
-                    f"Requirement {requirement.reserved_uid} references a file"
-                    f" that does not exist: {file_link.get_posix_path()}"
-                )
-                matching_links_with_opt_ranges.append((file_link, None))
-                continue
+            assert source_file_traceability_info is not None, (
+                f"Requirement {requirement.reserved_uid} references a file"
+                f" that does not exist: {file_link.get_posix_path()}."
+            )
             pragmas = source_file_traceability_info.ng_map_reqs_to_pragmas.get(
                 requirement.reserved_uid
             )
@@ -87,9 +84,9 @@ class FileTraceabilityIndex:
             req_uid
         ) in source_file_traceability_info.ng_map_reqs_to_pragmas.keys():
             if req_uid not in self.map_reqs_uids_to_paths:
-                print(  # noqa: T201
-                    f"warning: source file {source_file_rel_path} references "
-                    f"a requirement that does not exist: {req_uid}"
+                raise StrictDocException(
+                    f"Source file {source_file_rel_path} references "
+                    f"a requirement that does not exist: {req_uid}."
                 )
 
         if source_file_rel_path not in self.map_paths_to_reqs:
@@ -137,3 +134,17 @@ class FileTraceabilityIndex:
         self.map_paths_to_source_file_traceability_info[
             source_file_rel_path
         ] = traceability_info
+
+    def validate(self):
+        for requirement_uid, file_links in self.map_reqs_uids_to_paths.items():
+            for file_link in file_links:
+                source_file_traceability_info: Optional[
+                    SourceFileTraceabilityInfo
+                ] = self.map_paths_to_source_file_traceability_info.get(
+                    file_link.get_posix_path()
+                )
+                if source_file_traceability_info is None:
+                    raise StrictDocException(
+                        f"Requirement {requirement_uid} references a file"
+                        f" that does not exist: {file_link.get_posix_path()}."
+                    )

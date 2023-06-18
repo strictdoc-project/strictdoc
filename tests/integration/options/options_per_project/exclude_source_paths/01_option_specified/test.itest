@@ -1,19 +1,5 @@
-RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+RUN: %expect_exit 1 %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
 
-# Expecting a warning because the test3.py is filtered out by the
+# Expecting an error because the test3.py is filtered out by the
 # "exclude_source_paths" option.
-CHECK: warning: Requirement REQ-003 references a file that does not exist: src3/test3.py
-CHECK: Published: Hello world doc
-
-RUN: %check_exists --file "%S/Output/html/source_coverage.html"
-RUN: %check_exists --file          "%S/Output/html/_source_files/src1/test1.py.html"
-RUN: %check_exists --file          "%S/Output/html/_source_files/src2/test2.py.html"
-RUN: %check_exists --file --invert "%S/Output/html/_source_files/src3/test3.py.html"
-
-RUN: %cat "%S/Output/html/source_coverage.html" | filecheck %s --dump-input=fail --check-prefix=CHECK-SOURCE-COVERAGE
-CHECK-SOURCE-COVERAGE: src1
-CHECK-SOURCE-COVERAGE: test1.py
-CHECK-SOURCE-COVERAGE: src2
-CHECK-SOURCE-COVERAGE: test2.py
-CHECK-SOURCE-COVERAGE-NOT: src3
-CHECK-SOURCE-COVERAGE-NOT: test3.py
+CHECK: error: Requirement REQ-003 references a file that does not exist: src3/test3.py

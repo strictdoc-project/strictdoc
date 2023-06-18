@@ -1,0 +1,8 @@
+[DOCUMENT]
+TITLE: Hello world doc
+OPTIONS:
+  AUTO_LEVELS: On
+
+[REQUIREMENT]
+LEVEL: 7.8.9
+STATEMENT: Requirement 7.8.9

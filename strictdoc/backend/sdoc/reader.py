@@ -9,6 +9,7 @@ from strictdoc.backend.sdoc.include_reader import SDIncludeReader
 from strictdoc.backend.sdoc.models.constants import DOCUMENT_MODELS
 from strictdoc.backend.sdoc.models.fragment import Fragment
 from strictdoc.backend.sdoc.processor import ParseContext, SDocParsingProcessor
+from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.textx import drop_textx_meta
 
 
@@ -50,6 +51,9 @@ class SDReader:
         try:
             sdoc = self.read(sdoc_content, file_path=file_path)
             return sdoc
+        except StrictDocException as exception:
+            print(f"error: {exception.args[0]}")  # noqa: T201
+            sys.exit(1)
         except NotImplementedError:
             traceback.print_exc()
             sys.exit(1)

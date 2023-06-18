@@ -1,0 +1,2 @@
+class StrictDocException(Exception):
+    pass

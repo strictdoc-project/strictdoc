@@ -11,6 +11,7 @@ from strictdoc.cli.cli_arg_parser import (
     ServerCommandConfig,
 )
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.path_filter import validate_mask
 
 
@@ -206,14 +207,10 @@ class ProjectConfigLoader:
         try:
             config_content = toml.load(path_to_config)
         except toml.decoder.TomlDecodeError as exception:
-            print(  # noqa: T201
-                f"warning: could not parse the config file {path_to_config}: "
+            raise StrictDocException(  # noqa: T201
+                f"Could not parse the config file {path_to_config}: "
                 f"{exception}."
-            )
-            print(  # noqa: T201
-                "warning: using default StrictDoc configuration."
-            )
-            return ProjectConfig.default_config(environment=environment)
+            ) from None
         except Exception as exception:
             raise NotImplementedError from exception
 

@@ -32,6 +32,7 @@ from strictdoc.core.actions.export_action import ExportAction
 from strictdoc.core.actions.import_action import ImportAction
 from strictdoc.core.actions.passthrough_action import PassthroughAction
 from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
+from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.parallelizer import Parallelizer
 from strictdoc.server.server import run_strictdoc_server
 
@@ -152,6 +153,9 @@ def main():
     parallelizer = Parallelizer.create(enable_parallelization)
     try:
         _main(parallelizer)
+    except StrictDocException as exception:
+        print(f"error: {exception.args[0]}")
+        sys.exit(1)
     except Exception as exc:
         raise exc
     finally:

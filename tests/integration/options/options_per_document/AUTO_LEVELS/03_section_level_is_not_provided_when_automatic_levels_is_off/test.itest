@@ -1,2 +1,3 @@
-RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
-CHECK: warning: [SECTION].LEVEL field is not provided. This contradicts to the option [DOCUMENT].OPTIONS.AUTO_LEVELS set to Off.
+RUN: %expect_exit 1 %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+CHECK: error: [SECTION].LEVEL field is not provided. This contradicts to the option [DOCUMENT].OPTIONS.AUTO_LEVELS set to Off.
+CHECK: error: Parallelizer: One of the child processes has exited prematurely.

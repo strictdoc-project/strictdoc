@@ -138,8 +138,7 @@ class CommandParserBuilder:
             action="store_true",
             help=(
                 "Experimental feature: "
-                "enables traceability between requirements and files "
-                "(warning: implementation is not complete)."
+                "enables traceability between requirements and files."
             ),
         )
 

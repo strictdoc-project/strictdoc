@@ -68,3 +68,10 @@ def create_safe_acronym(string: str) -> str:
 
 def create_safe_title_string(string):
     return re.sub(r"[^\w0-9]+", "-", string).rstrip("-")
+
+
+def extract_last_numeric_part(string: str) -> str:
+    regex_match = re.match(".*?([0-9]+)$", string)
+    if regex_match is not None:
+        return regex_match.group(1)
+    raise ValueError(f"Cannot extract the numeric part of UID: {string}")

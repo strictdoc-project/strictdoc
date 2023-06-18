@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Hello world doc
+OPTIONS:
+  AUTO_LEVELS: On
+
+[SECTION]
+LEVEL: 1.2.3
+TITLE: Section 1.2.3
+
+[/SECTION]

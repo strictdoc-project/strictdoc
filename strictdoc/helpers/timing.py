@@ -9,12 +9,12 @@ def timing_decorator(name):
     def timing_internal(func):
         @wraps(func)
         def wrap(*args, **kw):
-            print(f"Step '{name}' start", flush=True)  # noqa: T201
+            print(f"Step '{name}' start.", flush=True)  # noqa: T201
             time_start = time()
             result = func(*args, **kw)
             time_end = time()
             print(  # noqa: T201
-                f"Step '{name}' took: {round_up(time_end - time_start, 2)} sec",
+                f"Step '{name}' took: {round_up(time_end - time_start, 2)} sec.",
                 flush=True,
             )
             return result

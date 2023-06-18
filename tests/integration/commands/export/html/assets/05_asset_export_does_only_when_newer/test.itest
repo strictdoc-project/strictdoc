@@ -1,5 +1,6 @@
 RUN: %strictdoc export %S/test_document --output-dir Output | filecheck %s --dump-input=fail --check-prefix=CHECK-FIRST-TIME
-CHECK-FIRST-TIME: Copying: {{.*}}{{.}}_assets{{.}}sandbox1.svg -> {{.*}}{{.}}Output{{.}}html{{.}}test_document{{.}}_assets{{.}}sandbox1.svg
+CHECK-FIRST-TIME: Copying StrictDoc's assets: 27 files.
+CHECK-FIRST-TIME: Copying project assets "test_document{{.*}}_assets": 1 files.
 
 RUN: %check_exists --dir %S/Output/html/test_document/_assets
 RUN: %check_exists --file %S/Output/html/test_document/_assets/sandbox1.svg
@@ -9,4 +10,5 @@ CHECK-HTML: <object class="image" data="_assets/sandbox1.svg" type="image/svg+xm
 
 /// Not only sandbox1.svg but all other assets should not be copied again.
 RUN: %strictdoc export %S/test_document --output-dir Output | filecheck %s --dump-input=fail --check-prefix=CHECK-SECOND-TIME
-CHECK-SECOND-TIME-NOT: Copying: {{.*}}
+CHECK-SECOND-TIME: Copying StrictDoc's assets: 27 files (27 files skipped as non-modified).
+CHECK-SECOND-TIME: Copying project assets "test_document{{.*}}_assets": 1 files (1 files skipped as non-modified).

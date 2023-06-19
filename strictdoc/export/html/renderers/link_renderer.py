@@ -71,7 +71,7 @@ class LinkRenderer:
         self.local_anchor_cache[node] = local_anchor
         return local_anchor
 
-    def render_requirement_link(
+    def render_node_link(
         self,
         node,
         context_document: Optional[Document],

@@ -14,7 +14,7 @@
 
 <turbo-frame
 {%- if project_config.is_running_on_server %}
-  id="article-{{sdoc_entity.node_id}}"
+  id="article-{{ sdoc_entity.node_id }}"
 {% endif -%}
 >
 
@@ -32,7 +32,7 @@
     {# sdoc_entity #}
     {% block sdoc_entity %}
     {% include "components/"~sdoc_entity.get_type_string()~"/index.jinja" %}
-    {% endblock %}
+    {% endblock sdoc_entity %}
 
     {# node_controls #}
     {%- if project_config.is_running_on_server -%}

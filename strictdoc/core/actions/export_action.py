@@ -9,6 +9,7 @@ from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
+from strictdoc.export.dot.document_dot_generator import DocumentDotGenerator
 from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.rst.document_rst_generator import DocumentRSTGenerator
 from strictdoc.helpers.timing import timing_decorator
@@ -39,7 +40,7 @@ class ExportAction:
             sys.exit(1)
         self.traceability_index = traceability_index
 
-    @timing_decorator("HTML export")
+    @timing_decorator("Export SDoc")
     def export(self):
         assert (
             self.traceability_index is not None
@@ -76,4 +77,16 @@ class ExportAction:
             ReqIFExport.export(
                 traceability_index=self.traceability_index,
                 output_reqif_root=output_reqif_root,
+            )
+
+        if "dot" in self.project_config.export_formats:
+            output_dot_root = os.path.join(
+                self.project_config.export_output_dir, "dot"
+            )
+            Path(output_dot_root).mkdir(parents=True, exist_ok=True)
+            DocumentDotGenerator("profile1").export_tree(
+                self.traceability_index, output_dot_root
+            )
+            DocumentDotGenerator("profile2").export_tree(
+                self.traceability_index, output_dot_root
             )

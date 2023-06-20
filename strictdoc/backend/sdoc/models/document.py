@@ -30,6 +30,7 @@ class Document:  # pylint: disable=too-many-instance-attributes
         self.ng_needs_generation = False
         self.meta: Optional[DocumentMeta] = None
         self.node_id = uuid.uuid4().hex
+        self.reserved_uid = "DOCUMENT"
 
     def assign_meta(self, meta):
         assert isinstance(meta, DocumentMeta)

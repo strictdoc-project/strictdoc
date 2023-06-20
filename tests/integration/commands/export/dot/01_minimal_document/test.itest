@@ -1,0 +1,15 @@
+REQUIRES: PLATFORM_IS_NOT_WINDOWS
+
+RUN: %strictdoc export %S --formats=dot --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Step 'Parse SDoc project tree' took: {{.*}} sec.
+
+RUN: %check_exists --file "%S/Output/dot/output.profile1.dot"
+RUN: %check_exists --file "%S/Output/dot/output.profile2.dot"
+RUN: %check_exists --file "%S/Output/dot/output.profile2.dot.pdf"
+RUN: %check_exists --file "%S/Output/dot/output.profile2.dot.pdf"
+
+RUN: %cat %S/Output/dot/output.profile1.dot | filecheck %s --dump-input=fail --check-prefix CHECK-DOT-P1
+CHECK-DOT-P1: label = "Hello world doc";
+
+RUN: %cat %S/Output/dot/output.profile2.dot | filecheck %s --dump-input=fail --check-prefix CHECK-DOT-P2
+CHECK-DOT-P2: label = "Hello world doc";

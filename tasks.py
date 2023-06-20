@@ -650,6 +650,7 @@ def release_pyinstaller(context):
             --hidden-import strictdoc.server.app
             --add-data strictdoc/export/html/templates:templates/html
             --add-data strictdoc/export/rst/templates:templates/rst
+            --add-data strictdoc/export/dot/templates:templates/dot
             --add-data strictdoc/export/html/_static:_static
             --add-data strictdoc/export/html/_static_extra:_static_extra
             strictdoc/cli/main.py

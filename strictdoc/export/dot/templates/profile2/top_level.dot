@@ -1,0 +1,59 @@
+digraph {
+  // layout=fdp;
+
+  // {#
+  // This is the default value, but we invested a significant amount of time experimenting
+  // before arriving at this simpler solution.
+  // #}
+  rankdir=TB;
+  node [shape=box];
+
+  // If true, allow edges between clusters
+  compound=true;
+
+  // {#
+  // The default "breadthfirst" is the simplest, but when the graph layout does
+  // not avoid edge-node overlap, this mode will sometimes have edges drawn over
+  // nodes and sometimes on top of nodes.
+  // If the mode "nodesfirst" is chosen, all nodes are drawn first, followed by
+  // the edges. This guarantees an edge-node overlap will not be mistaken for an
+  // edge ending at a node.
+  // #}
+  outputorder=nodesfirst;
+
+  // {#
+  // We are definitely not using the newrank algorithm but some other layouts
+  // are possible with it.
+  // newrank = true;
+  // #}
+
+  // {#
+  // Make the links have orthogonal shapes. The best approach so far to make the
+  // nodes be connected with the shortest edges.
+  // SO: How can I direct dot to use a shorter edge path?
+  // https://stackoverflow.com/q/24107451/598057
+  // #}
+  splines=ortho;
+
+  // Ensure some space between documents.
+  graph [ranksep=1];
+
+{% filter indent(width=2) %}
+{{project_tree_content}}
+{% endfilter %}
+
+  {% for accumulated_link in accumulated_links -%}
+    "value_{{accumulated_link[0]}}"->"value_{{accumulated_link[1]}}" [
+      style="dotted" color="#000000", penwidth = 2, constraint=false
+    ];
+  {%- endfor %}
+
+  {% for single_document_flat_requirements in document_flat_requirements -%}
+    // {# If there is only one requirement, we cannot draw a constraining positioning
+    //    link. This is not needed anyway because the node is alone.
+    // #}
+    {% if single_document_flat_requirements is not none %}
+      {{single_document_flat_requirements}} [style=invis];
+    {% endif %}
+  {%- endfor %}
+}

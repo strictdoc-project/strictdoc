@@ -234,25 +234,3 @@ sdoc-section-title * {
   margin: 0;
   display: inline;
 }
-
-/* * */
-
-sdoc-anchor {
-  /* for Fixed Headers + Section Anchors */
-  scroll-snap-margin-top: calc(var(--base-gap) + var(--base-padding));
-  scroll-margin-top:      calc(var(--base-gap) + var(--base-padding));
-}
-
-sdoc-anchor[data-anchor]::before {
-  content: '⚓ ';
-}
-
-sdoc-anchor[data-anchor]::after {
-  content: attr(data-anchor);
-}
-
-sdoc-anchor:target + sdoc-requirement sdoc-requirement-title,
-sdoc-anchor:target + sdoc-section sdoc-section-title,
-sdoc-anchor:target + .requirement__title {
-  background-color: var(--color-highlight);
-}

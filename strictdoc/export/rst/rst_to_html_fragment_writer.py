@@ -159,5 +159,5 @@ class RstToHtmlFragmentWriter:
         return f"""\
 .. raw:: html
 
-    <sdoc-anchor id="{anchor}"></sdoc-anchor>
+    <sdoc-anchor id="{anchor}" data-anchor="📋{anchor}" style="top:unset"></sdoc-anchor>
 """

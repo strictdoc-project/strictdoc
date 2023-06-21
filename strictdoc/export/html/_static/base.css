@@ -36,18 +36,20 @@
   --scrollbarBG: transparent;
   --thumbBG: rgba(0,0,0,.05);
 
-  --base-font-size: 16px;
-
   --base-rhythm: 8px;
+
+  --base-font-size: calc(var(--base-rhythm)*2);
+  --base-line-height: 1.6;
 
   --font-size: 16px;
   --font-size-sm: 0.8125rem;
   --font-size-xsm: 0.75rem;
   --font-size-xxsm: 11px;
 
-  --base-gap: calc(var(--base-font-size)*3);
-  --base-padding: var(--base-font-size);
-  --base-margin: calc(var(--base-font-size)*1.5);
+  --base-gap: calc(var(--base-rhythm)*6);
+  --base-padding: calc(var(--base-rhythm)*2);
+  --node-padding: calc(var(--base-padding)*2);
+  --base-margin: calc(var(--base-rhythm)*3); /* todo check and delete */
 
   --base-elevation-0: 0 0 0 rgba(0,0,0,0);
   --base-elevation-node: 0 0 16px rgba(0,0,0,.1);
@@ -83,7 +85,7 @@ body {
 
   font-family: var(--base-font-family);
   font-size: var(--base-font-size);
-  line-height: 1.6;
+  line-height: var(--base-line-height);
   color: var(--color-fg-main);
   background-color: var(--color-bg-main);
 }

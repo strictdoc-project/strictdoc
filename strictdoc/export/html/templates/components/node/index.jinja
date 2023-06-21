@@ -21,6 +21,7 @@
   <sdoc-node
     {%- if project_config.is_running_on_server %}
       data-editable_node="on"
+      data-controller="anchor_controller"
     {%- endif %}
     node-role="{{ sdoc_entity.get_type_string() }}"
     data-testid="node-{{ sdoc_entity.get_type_string() }}"

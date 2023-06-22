@@ -12,7 +12,7 @@ from strictdoc.helpers.auto_described import auto_described
 class SourceFileType(Enum):
     PYTHON = [".py"]
     C = [".c"]
-    CPP = [".cpp"]
+    CPP = [".cpp", ".cc"]
     TEX = [".tex"]
     # Is there an idiomatic file extension for Jinja templates?
     # https://stackoverflow.com/questions/29590931/is-there-an-idiomatic-file-extension-for-jinja-templates  # noqa: #501
@@ -25,8 +25,9 @@ class SourceFileType(Enum):
             return cls.PYTHON
         if path_to_file.endswith(".c"):
             return cls.C
-        if path_to_file.endswith(".cpp"):
-            return cls.CPP
+        for enum_value in SourceFileType.CPP.value:
+            if path_to_file.endswith(enum_value):
+                return cls.CPP
         if path_to_file.endswith(".tex"):
             return cls.TEX
         for enum_value in SourceFileType.JINJA.value:

@@ -209,7 +209,12 @@ sdoc-anchor[visible] {
   align-items: flex-start;
   justify-content: flex-start;
 
-  transition: box-shadow 0.2s;
+  transition: opacity 0.5s;
+  opacity: 0;
+}
+
+sdoc-node:hover sdoc-anchor[visible] {
+  opacity: 1;
 }
 
 sdoc-anchor[visible]:hover {
@@ -223,6 +228,7 @@ sdoc-anchor[visible] .anchor_button {
 }
 
 .anchor_button {
+  cursor: pointer;
   font-size:var(--font-size-sm);
   font-weight: 600;
   text-align: left;
@@ -231,9 +237,10 @@ sdoc-anchor[visible] .anchor_button {
   display: flex;
   align-items: center;
   justify-content: center;
+
   border-radius: 6px;
   border: 1px solid transparent;
-  cursor: pointer;
+  background-clip: padding-box;
 
   /* 1.5 column-gap is compensated by SVG negative margin */
   column-gap: calc(var(--base-rhythm)*1.5);
@@ -245,17 +252,15 @@ sdoc-anchor[visible] .anchor_button {
   /* box-shadow: rgb(0 0 0 / 10%) 0px 1px 2px 0px; */
   /* color: var(--color-action); */
 
-  border-color: rgba(0, 0, 0, 0.05);
-  background-clip: padding-box;
-
-  transition: 0.2s;
   overflow: hidden;
 
-  opacity: .8;
+  transition: opacity 0.2s;
+  opacity: .6;
 }
 
 .anchor_button:hover {
   background-color: rgb(255, 255, 255);
+  border-color: rgba(0, 0, 0, 0.05);
   box-shadow: rgb(0 0 0 / 10%) 0px 2px var(--base-rhythm) 0px;
   color: var(--color-hover);
   z-index: 6;

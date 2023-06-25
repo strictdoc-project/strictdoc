@@ -27,7 +27,8 @@ class Test(BaseCase):
             screen_document = screen_project_index.do_click_on_first_document()
 
             screen_document.assert_on_screen_document()
-            screen_document.assert_text("See the section Referenced section")
+            screen_document.assert_text("See the section")
+            screen_document.assert_text("Referenced section")
 
             root_node = screen_document.get_root_node()
             form_config: Form_EditConfig = root_node.do_open_form_edit_config()
@@ -40,8 +41,7 @@ class Test(BaseCase):
 
             form_config.do_form_submit()
 
-            screen_document.assert_text(
-                "MODIFIED by test. See the section Referenced section"
-            )
+            screen_document.assert_text("MODIFIED by test. See the section")
+            screen_document.assert_text("Referenced section")
 
         assert test_setup.compare_sandbox_and_expected_output()

@@ -134,10 +134,10 @@ class MarkupRenderer:
                         part.link
                     )
                 assert node is not None
-                href = self.link_renderer.render_requirement_link(
+                href = self.link_renderer.render_node_link(
                     node, self.context_document, document_type
                 )
-                parts_output += self.fragment_writer.write_link(
+                parts_output += self.fragment_writer.write_anchor_link(
                     node.title, href
                 )
             elif isinstance(part, Anchor):

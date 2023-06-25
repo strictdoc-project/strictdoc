@@ -13,7 +13,7 @@ sdoc-node {
   background-color: var(--color-bg-contrast);
   border-radius: 3px;
 
-  padding: calc(var(--base-padding)*2) calc(var(--base-padding)*2);
+  padding: calc(4 * var(--base-rhythm));
 }
 
 /* editable_node */

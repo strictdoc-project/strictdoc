@@ -33,5 +33,9 @@ class DocumentType:
         return DocumentType(DocumentType.DEEPTRACE)
 
     @property
+    def is_document(self):
+        return self.document_type == DocumentType.DOCUMENT
+
+    @property
     def is_deeptrace(self):
         return self.document_type == DocumentType.DEEPTRACE

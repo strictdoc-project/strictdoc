@@ -180,6 +180,114 @@ sdoc-node-controls .action_button {
   vertical-align: top;
 }
 
+/* ANCHOR */
+
+sdoc-anchor {
+  /* for Fixed Headers + Section Anchors */
+  scroll-snap-margin-top: calc(var(--base-gap) + var(--base-padding));
+  scroll-margin-top:      calc(var(--base-gap) + var(--base-padding));
+}
+
+sdoc-anchor:target + sdoc-requirement sdoc-requirement-title,
+sdoc-anchor:target + sdoc-section sdoc-section-title,
+sdoc-anchor:target + .requirement__title {
+  background-color: var(--color-highlight);
+}
+
+/*
+  This code is triggered when
+  export/html/_static/controllers/anchor_controller.js adds
+  the [visible] attribute to the sdoc-anchor:
+*/
+sdoc-anchor[visible] {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+
+  transition: box-shadow 0.2s;
+}
+
+sdoc-anchor[visible]:hover {
+  z-index: 10;
+}
+
+sdoc-anchor[visible] .anchor_button {
+  position: absolute;
+  top: 0;
+  left: calc(-4 * var(--base-rhythm) - 3px);
+}
+
+.anchor_button {
+  font-size:var(--font-size-sm);
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+
+  /* 1.5 column-gap is compensated by SVG negative margin */
+  column-gap: calc(var(--base-rhythm)*1.5);
+  padding-left: calc(var(--base-rhythm)*1.5);
+  padding-right: calc(var(--base-rhythm)*1.5);
+  min-height: calc(var(--base-rhythm)*4);
+  min-width: calc(var(--base-rhythm)*4);
+
+  /* box-shadow: rgb(0 0 0 / 10%) 0px 1px 2px 0px; */
+  /* color: var(--color-action); */
+
+  border-color: rgba(0, 0, 0, 0.05);
+  background-clip: padding-box;
+
+  transition: 0.2s;
+  overflow: hidden;
+
+  opacity: .8;
+}
+
+.anchor_button:hover {
+  background-color: rgb(255, 255, 255);
+  box-shadow: rgb(0 0 0 / 10%) 0px 2px var(--base-rhythm) 0px;
+  color: var(--color-hover);
+  z-index: 6;
+
+  opacity: 1;
+}
+
+.anchor_button svg {
+  color: var(--color-fg-secondary);
+  /*
+    action_button 1.5 column-gap
+    is compensated by SVG negative margin
+  */
+  margin-left: calc(var(--base-rhythm)*(-.5));
+  margin-right: calc(var(--base-rhythm)*(-.5));
+}
+
+.anchor_button:hover svg {
+  color: var(--color-action);
+}
+
+.anchor_button_text {
+  font-size: var(--font-size-sm);
+  font-weight: bolder;
+
+  display: none;
+}
+
+sdoc-anchor[visible]:hover .anchor_button_text {
+  display: block;
+}
+
 /* nav */
 
 .nav {
@@ -362,6 +470,21 @@ svg.svg_icon {
   flex: 0 0 auto;
   background: transparent;
   /* color: rgb(246, 153, 13); */
+}
+
+.svg_icon_hover_visible {
+  display: none;
+}
+.anchor_button:hover .svg_icon_hover_visible,
+svg:hover .svg_icon_hover_visible {
+  display: inline;
+}
+.svg_icon_not_hover_visible {
+  display: inline;
+}
+.anchor_button:hover .svg_icon_not_hover_visible,
+svg:hover .svg_icon_not_hover_visible {
+  display: none;
 }
 
 /* .header */

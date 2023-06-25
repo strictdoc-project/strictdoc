@@ -11,13 +11,14 @@
       requirement
 #}
 
+{# djlint:off H025 #}
 <sdoc-node-controls>
-
+{# djlint:on #}
   {% if sdoc_entity.get_type_string() == 'document' -%}
 
   {# META #}
   <a
-    href="/actions/document/edit_config?document_mid={{document.node_id}}"
+    href="/actions/document/edit_config?document_mid={{ document.node_id }}"
     class="action_button"
     data-turbo-action="replace"
     data-turbo="true"
@@ -58,11 +59,12 @@
   {%- if sdoc_entity.get_type_string() != 'document' or not document.section_contents -%}
 
   {# ADD NODES: dropdown menu #}
+  {# djlint:off H025 #}
   <sdoc-menu
     js-dropdown-menu
     data-controller="dropdown_menu"
   >
-
+  {# djlint:on #}
     <sdoc-menu-handler
       js-dropdown-menu-handler
       aria-expanded="false"

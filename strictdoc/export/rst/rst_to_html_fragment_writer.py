@@ -5,10 +5,11 @@ import sys
 from typing import Optional
 
 from docutils.core import publish_parts
-from docutils.parsers.rst import directives
+from docutils.parsers.rst import directives, roles
 from docutils.utils import SystemMessage
 
 from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.export.rst.directives.raw_html_role import raw_html_role
 from strictdoc.export.rst.directives.wildcard_enhanced_image import (
     WildcardEnhancedImage,
 )
@@ -18,6 +19,8 @@ class RstToHtmlFragmentWriter:
     cache = {}
 
     directives.register_directive("image", WildcardEnhancedImage)
+
+    roles.register_local_role("rawhtml", raw_html_role)
 
     def __init__(self, *, context_document: Optional[Document]):
         if context_document is not None:
@@ -139,9 +142,15 @@ class RstToHtmlFragmentWriter:
         return html, None
 
     @staticmethod
-    def write_link(title, href):
-        return f"`{title} <{href}>`_"
+    def write_anchor_link(title, href):
+        return f"""\
+:rawhtml:`<a href="{href}">🔗&nbsp;{title}</a>`\
+"""
 
     @staticmethod
     def write_anchor(anchor):
-        return f".. _{anchor}:"
+        return f"""\
+.. raw:: html
+
+    <sdoc-anchor id="{anchor}" data-anchor="📋{anchor}" style="top:unset"></sdoc-anchor>
+"""

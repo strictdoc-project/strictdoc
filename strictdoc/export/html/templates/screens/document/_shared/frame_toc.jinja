@@ -19,8 +19,7 @@
             <span class="toc-title-no-link" title="Section has no requirements">
               <span class="section-number">
                 {{ section.context.title_number_string }}
-              </span>
-              {{ section.title }}
+              </span>{{ section.title }}
             </span>
           {#
              The calculation below: "&nbsp;" * (section.ng_level * 2 - 1)
@@ -32,16 +31,19 @@
           #}
           {%- else -%}
             <a href="#{{ link_renderer.render_local_anchor(section) }}" data-turbo="false">
-              <span class="section-number">{{ section.context.title_number_string if section.context.title_number_string else "&nbsp;" * (section.ng_level * 2 - 1) }}</span>
-              {{ section.title }}
+              <span class="section-number">
+                {{ section.context.title_number_string if section.context.title_number_string else "&nbsp;" * (section.ng_level * 2 - 1) }}
+              </span>{{ section.title }}
             </a>
           {%- endif -%}
         {%- else -%}
         {# if requirement #}
         <a href="#{{ link_renderer.render_local_anchor(section) }}" data-turbo="false">
-          <span class="section-number">{{ section.context.title_number_string if section.context.title_number_string else "&nbsp;" * (section.ng_level * 2 - 1) }}</span>
+          <span class="section-number">
+            {{ section.context.title_number_string if section.context.title_number_string else "&nbsp;" * (section.ng_level * 2 - 1) }}
+          </span>
           {%- if section.reserved_title is not none -%}
-          {{ section.reserved_title }}
+            {{ section.reserved_title }}
           {%- endif -%}
         </a>
         {%- endif -%}

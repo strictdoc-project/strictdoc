@@ -3,21 +3,18 @@ const anchorIconSVG = `
   <g class="svg_icon_not_hover_visible" id="anchorIconSVG">
     <circle cx="8" cy="3" r="1"></circle>
     <line x1="8" y1="4" x2="8" y2="14.5"></line>
-    <path d="M5.5,6 C5.5,6 7,6 10.5,6 C10.5,6 5.5,6 5.5,6 Z"></path>
-    <path d="M2,11 C3,10 3.5,9.5 3.5,9.5 C3.5,12 5,13 8,13 C11,13 12.5,12 12.5,9.5 C12.5,9.5 13,10 14,11"></path>
+    <path d="M5.5,6 C5.5,6 7,6 10.5,6 C10.5,6 5.5,6 5.5,6 Z"/>
+    <path d="M2,11 C3,10 3.5,9.5 3.5,9.5 C3.5,12 5,13 8,13 C11,13 12.5,12 12.5,9.5 C12.5,9.5 13,10 14,11"/>
   </g>
   <g class="svg_icon_hover_visible" id="copyIconSVG">
-    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path>
-    <path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+    <path d="M8,2 L12,2 C13,2 14,3 14,4 L14,8 C14,9 13,10 12,10 L8,10 C7,10 6,9 6,8 L6,4 C6,3 7,2 8,2 Z"/>
+    <path d="M10,12 C10,13 9,14 8,14 L4,14 C3,14 2,13 2,12 L2,8 C2,7 3,6 4,6"/>
   </g>
   </svg>`;
 
-// TODO copyIconSVG
-// TODO checkIconSVG
-
 const checkIconSVG = `
 <svg class="svg_icon" width="16px" height="16px" viewBox="0 0 16 16">
-  <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+  <path d="M2.5,8.5 C2.5,8.5 3.5,9.5 6,12 C11,7 13.5,4.5 13.5,4.5"/>
 </svg>`;
 
 
@@ -118,6 +115,7 @@ function createIcon(iconSVG) {
     // initial opacity
     let op = 1;
     element.style.opacity = op;
+    anchorButton.style.opacity = 1;
 
     anchorIcon.style.display = 'none';
     checkIcon.style.display = 'inline';
@@ -127,6 +125,7 @@ function createIcon(iconSVG) {
             element.remove();
             anchorIcon.style.display = 'inline';
             checkIcon.style.display = 'none';
+            anchorButton.style.opacity = '';
         }
         element.style.opacity = op;
         op -= op * 0.1;

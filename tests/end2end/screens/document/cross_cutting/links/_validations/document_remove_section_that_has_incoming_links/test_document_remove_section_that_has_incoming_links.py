@@ -24,7 +24,8 @@ class Test(BaseCase):
             screen_document = screen_project_index.do_click_on_first_document()
 
             screen_document.assert_on_screen_document()
-            screen_document.assert_text("See the section Referenced section")
+            screen_document.assert_text("See the section")
+            screen_document.assert_text("Referenced section")
 
             section = screen_document.get_section()
             section.assert_section_title("Referenced section")

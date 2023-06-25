@@ -869,5 +869,10 @@ a.tree_item:hover {
 }
 
 .toc-title-no-link {
-  color: #999;
+  color: var(--color-fg-secondary);
+  opacity: .6;
+  display: block;
+  padding-top: var(--base-rhythm);
+  padding-bottom: var(--base-rhythm);
+  padding-right: var(--base-rhythm);
 }

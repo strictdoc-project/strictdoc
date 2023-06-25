@@ -1,0 +1,16 @@
+// Section node: {{section.reserved_uid}} {{section.title}}
+subgraph "cluster_{{uuid}}" {
+  margin = "24";
+  label = "{{context_title}}";
+  fontsize = {{font_size}};
+  fontname="Arial-bold";
+  penwidth=1;
+  style="rounded";
+
+  labeljust="l";
+
+{% filter indent(width=2) %}
+{{node_content}}
+{% endfilter %}
+
+}

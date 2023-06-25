@@ -1,0 +1,14 @@
+// Requirement node
+node [fontsize=16, fontname="Arial"];
+
+// {#
+// \l makes the label text be left-aligned.
+// Without fontsize=16 fontname="Arial" defined below, the font gets corrupted,
+// when a node has edges connected to it.
+// #}
+"value_{{uuid}}" [
+  label = "{{requirement.reserved_uid}} {{requirement.reserved_title}}\l"
+  width=7.0 height=1.0 fontsize=16 fontname="Arial"
+  penwidth=1
+  style="rounded"
+ ];

@@ -4,7 +4,7 @@ import sys
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.cli.argument_int_range import IntRange
 
-EXPORT_FORMATS = ["html", "rst", "excel", "reqif-sdoc"]
+EXPORT_FORMATS = ["html", "rst", "excel", "reqif-sdoc", "dot"]
 EXCEL_PARSERS = ["basic"]
 
 

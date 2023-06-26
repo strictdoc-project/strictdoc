@@ -3,7 +3,7 @@
   {% with
     confirm_title = default,
     confirm_message = "Deleting a requirement is an unrecoverable action.",
-    confirm_name = "Delete requirement",
+    confirm_button_name = "Delete requirement",
     confirm_href = "/actions/document/delete_requirement/"~requirement_mid~"?confirmed=1"
  %}
     {% include "components/confirm/index.jinja" %}

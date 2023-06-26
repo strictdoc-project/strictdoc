@@ -19,7 +19,7 @@
   {{ super() }}
 
   <style>
-    {{pygments_styles | safe}}
+    {{ pygments_styles | safe }}
   </style>
 {% endblock head %}
 
@@ -31,7 +31,7 @@
   {%- with
     header__items=["screens/source_file_view/header__source_file_name.jinja"],
     header__pagetype=true
-  -%}
+ -%}
     {% include "components/header/index.jinja" %}
   {%- endwith -%}
 {% endblock header_content %}

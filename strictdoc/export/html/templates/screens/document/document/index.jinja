@@ -32,7 +32,7 @@
   {%- endif -%}
 
   {%- if project_config.is_activated_mathjax() -%}
-  <script id="MathJax-script" async src="{{link_renderer.render_static_url('mathjax/tex-mml-chtml.js') }}"></script>
+  <script id="MathJax-script" async src="{{ link_renderer.render_static_url('mathjax/tex-mml-chtml.js') }}"></script>
   {%- endif -%}
   {{ super() }}
 {% endblock head_scripts %}
@@ -58,19 +58,19 @@
         "screens/document/_shared/frame_header_document_title.jinja",
         "screens/document/_shared/viewtype_menu.jinja"
       ]
-  -%}
+ -%}
 {%- else -%}
   {%- set header_items = [
         "screens/document/_shared/frame_header_document_title.jinja",
       ]
-  -%}
+ -%}
 {%- endif -%}
 
 {% block header_content %}
   {%- with
       header__items=header_items,
       header__last="screens/document/document/actions.jinja"
-  -%}
+ -%}
     {% include "components/header/index.jinja" %}
   {%- endwith -%}
 {% endblock header_content %}

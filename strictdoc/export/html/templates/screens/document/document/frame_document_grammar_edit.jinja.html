@@ -2,20 +2,21 @@
 {% set form = "sdoc_modal_form" %}
 {% block modal_form__header %}
 Edit document grammar
-{% endblock %}
+{% endblock modal_form__header %}
 {% block modal_form__content %}
   <form
-    id="{{form}}"  {# defined in the parent template #}
+    id="{{ form }}"  {# defined in the parent template #}
     method="POST"
     data-turbo="true"
     action="/actions/document/save_grammar"
     >
     <sdoc-form-descr>
-      <b>StrictDoc conventions:</b><br>
+      <b>StrictDoc conventions:</b>
+      <br/>
       The requirements fields above the reserved "TITLE" field are dedicated to meta information and will be rendered as single-line. The fields below the reserved "STATEMENT" field are multiline and should be used for fields with more descriptive text.
     </sdoc-form-descr>
 
-    <input type="hidden" id="document_mid" name="document_mid" value="{{form_object.document_mid}}"/>
+    <input type="hidden" id="document_mid" name="document_mid" value="{{ form_object.document_mid }}"/>
 
     <sdoc-form-grid id="document__editable_grammar_fields">
       {%- for field in form_object.fields -%}
@@ -26,7 +27,7 @@ Edit document grammar
     <sdoc-form-footer>
       <a
         class="action_button"
-        href="/actions/document/add_grammar_field?document_mid={{form_object.document_mid}}"
+        href="/actions/document/add_grammar_field?document_mid={{ form_object.document_mid }}"
         data-turbo="true"
         data-action-type="add_field"
         data-testid="form-add-grammar-field-action"
@@ -35,4 +36,4 @@ Edit document grammar
       >{% include "_res/svg_ico16_add.jinja.html" %} Add grammar field</a>
     </sdoc-form-footer>
   </form>
-{% endblock %}
+{% endblock modal_form__content %}

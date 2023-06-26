@@ -11,7 +11,7 @@
 
 <sdoc-form-row
   {% if data_controller is defined -%}
-      data-controller="{{data_controller}}"
+      data-controller="{{ data_controller }}"
   {%- endif -%}
 >
   <sdoc-form-row-main>
@@ -25,13 +25,13 @@
     {%- endif -%}
 
     <sdoc-form-field>
-        <label for="{{field_input_name}}">
+        <label for="{{ field_input_name }}">
           {{ field_label|default('Choose a file', true) }}
         </label>
         <input
           type="file"
-          name="{{field_input_name}}"
-          id="{{field_input_name}}"
+          name="{{ field_input_name }}"
+          id="{{ field_input_name }}"
           data-testid="form-{{ field_input_name }}-field"
         />
     </sdoc-form-field>

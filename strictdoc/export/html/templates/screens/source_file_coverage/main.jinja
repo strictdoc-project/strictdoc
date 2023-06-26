@@ -28,7 +28,7 @@
             </i>
             <div class="std-tree_name">
               {%- if source_file.is_referenced -%}
-              <a href="{{ link_renderer.render_source_file_link_from_root_2(source_file) }}">{{
+              <a href="{{ link_renderer.render_source_file_link_from_root_2(source_file) }}">{{ 
                 folder_or_file.get_file_name() }}</a>
               {%- else -%}
               {{ folder_or_file.get_file_name() }}
@@ -93,7 +93,9 @@
     {%- endfor -%}
     {%- endif -%}
     {%- endfor -%}
+    {# djlint:off H025 #}
     </ul>
+    {# djlint:on #}
   </div>
 </div>
 {# /.main #}

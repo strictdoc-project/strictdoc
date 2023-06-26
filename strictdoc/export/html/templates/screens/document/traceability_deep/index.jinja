@@ -13,7 +13,7 @@
 
   {%- if project_config.is_running_on_server and not standalone -%}
   <script type="module">
-    import hotwiredTurbo from "{{ link_renderer.render_static_url('turbo.js')}}";
+    import hotwiredTurbo from "{{ link_renderer.render_static_url('turbo.js') }}";
     import { Application, Controller } from "{{ link_renderer.render_static_url('stimulus.js') }}";
     window.Stimulus = Application.start();
     window.Controller = Controller;
@@ -52,7 +52,7 @@
         "screens/document/_shared/frame_header_document_title.jinja",
         "screens/document/_shared/viewtype_menu.jinja"
       ]
-  -%}
+ -%}
     {% include "components/header/index.jinja" %}
   {%- endwith -%}
 {% endblock header_content %}

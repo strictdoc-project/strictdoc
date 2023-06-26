@@ -3,8 +3,8 @@
 {% extends "base.jinja.html" %}
 
 {% block head_scripts %}
-  <script type="text/javascript" src="{{link_renderer.render_static_url('viewtype_menu.js')}}"></script>
-  <script type="text/javascript" src="{{link_renderer.render_static_url('resizable_bar.js')}}"></script>
+  <script type="text/javascript" src="{{ link_renderer.render_static_url('viewtype_menu.js') }}"></script>
+  <script type="text/javascript" src="{{ link_renderer.render_static_url('resizable_bar.js') }}"></script>
 
   {%- if project_config.is_running_on_server and not standalone -%}
   <script type="module">
@@ -12,16 +12,16 @@
     window.Stimulus = Application.start();
     window.Controller = Controller;
   </script>
-  <script type="module" src="{{link_renderer.render_static_url('controllers/collapsible_list_controller.js')}}"></script>
+  <script type="module" src="{{ link_renderer.render_static_url('controllers/collapsible_list_controller.js') }}"></script>
   {%- endif -%}
 
   {%- if project_config.is_activated_mathjax() -%}
-  <script id="MathJax-script" async src="{{link_renderer.render_static_url('mathjax/tex-mml-chtml.js')}}"></script>
+  <script id="MathJax-script" async src="{{ link_renderer.render_static_url('mathjax/tex-mml-chtml.js') }}"></script>
   {%- endif -%}
   {{ super() }}
 {% endblock head_scripts %}
-{% block title %}{{document.title}} - {{ template_type }}{% endblock %}
-{% block viewtype %}table{% endblock %}
+{% block title %}{{ document.title }} - {{ template_type }}{% endblock title %}
+{% block viewtype %}table{% endblock viewtype %}
 
 {% block layout_nav %}
   {%- if not standalone -%}
@@ -31,7 +31,7 @@
 
 {% block tree_content %}
   {% include "screens/document/_shared/resizable_bar_with_project_tree.jinja" %}
-{% endblock %}
+{% endblock tree_content %}
 
 {% block toc_content %}
   {% include "screens/document/_shared/resizable_bar_with_toc.jinja" %}
@@ -43,7 +43,7 @@
         "screens/document/_shared/frame_header_document_title.jinja",
         "screens/document/_shared/viewtype_menu.jinja"
       ]
-  -%}
+ -%}
     {% include "components/header/index.jinja" %}
   {%- endwith -%}
 {% endblock header_content %}

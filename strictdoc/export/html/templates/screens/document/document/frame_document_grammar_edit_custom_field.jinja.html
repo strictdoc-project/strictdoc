@@ -12,7 +12,7 @@
       field_value=field.field_name,
       field_editable=false,
       errors=form_object.get_errors(field.field_name)
-    -%}
+   -%}
       {% include "components/form/field/text/index.jinja" %}
     {%- endwith -%}
 
@@ -31,7 +31,7 @@
       field_value=field.field_name,
       field_editable=true,
       errors=form_object.get_errors(field.field_name)
-    -%}
+   -%}
       {% include "components/form/field/text/index.jinja" %}
     {%- endwith -%}
 

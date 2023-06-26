@@ -3,7 +3,7 @@
 {% block sdoc_entity %}
 
   {# TODO #}
-  <h1>{{document.title}}</h1>
+  <h1>{{ document.title }}</h1>
   {%- if document.config.has_meta() -%}
     <table class="table_meta">
       {%- if document.config.uid -%}
@@ -12,7 +12,7 @@
           UID:
         </th>
         <td>
-          {{document.config.uid}}
+          {{ document.config.uid }}
         </td>
       </tr>
       {%- endif -%}
@@ -22,7 +22,7 @@
           VERSION:
         </th>
         <td>
-          {{document.config.version}}
+          {{ document.config.version }}
         </td>
       </tr>
       {%- endif -%}
@@ -32,7 +32,7 @@
           CLASSIFICATION:
         </th>
         <td>
-          {{document.config.classification}}
+          {{ document.config.classification }}
         </td>
       </tr>
       {%- endif -%}
@@ -41,4 +41,4 @@
 
   {% include "components/abstract/index.jinja" %}
 
-{% endblock %}
+{% endblock sdoc_entity %}

@@ -1,4 +1,4 @@
-<turbo-frame id="article-{{document.node_id}}">
+<turbo-frame id="article-{{ document.node_id }}">
 <sdoc-form>
 
   <form
@@ -6,7 +6,7 @@
     data-turbo="true"
     action="/actions/document/save_config"
   >
-    <input type="hidden" id="document_mid" name="document_mid" value="{{form_object.document_mid}}"/>
+    <input type="hidden" id="document_mid" name="document_mid" value="{{ form_object.document_mid }}"/>
 
     <sdoc-form-grid>
       {%- with
@@ -15,7 +15,7 @@
         field_input_name="document[TITLE]",
         field_value=form_object.document_title,
         errors=form_object.get_errors("TITLE")
-      -%}
+     -%}
         {% include "components/form/field/text/index.jinja" %}
       {%- endwith -%}
 
@@ -25,7 +25,7 @@
         field_input_name="document[UID]",
         field_value=form_object.document_uid,
         errors=form_object.get_errors("UID")
-      -%}
+     -%}
         {% include "components/form/field/text/index.jinja" %}
       {%- endwith -%}
 
@@ -35,7 +35,7 @@
         field_input_name="document[VERSION]",
         field_value=form_object.document_version,
         errors=form_object.get_errors("VERSION")
-      -%}
+     -%}
         {% include "components/form/field/text/index.jinja" %}
       {%- endwith -%}
 
@@ -45,7 +45,7 @@
         field_input_name="document[CLASSIFICATION]",
         field_value=form_object.document_classification,
         errors=form_object.get_errors("CLASSIFICATION")
-      -%}
+     -%}
         {% include "components/form/field/text/index.jinja" %}
       {%- endwith -%}
 
@@ -55,15 +55,15 @@
         field_input_name="document[FREETEXT]",
         field_value=form_object.document_freetext_escaped,
         errors=form_object.get_errors("FREETEXT")
-      -%}
+     -%}
         {% include "components/form/field/text/index.jinja" %}
       {%- endwith -%}
     </sdoc-form-grid>
 
     <sdoc-form-footer>
-      {% include 'components/button/submit.jinja' %}
+      {% include "components/button/submit.jinja" %}
       {%- with cancel_href="/actions/document/cancel_edit_config?document_mid="~form_object.document_mid -%}
-        {% include 'components/button/cancel.jinja' %}
+        {% include "components/button/cancel.jinja" %}
       {%- endwith -%}
     </sdoc-form-footer>
 

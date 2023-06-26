@@ -39,7 +39,7 @@ digraph {
 
   {% for accumulated_link in accumulated_links -%}
     "value_{{accumulated_link[0]}}"->"value_{{accumulated_link[1]}}" [
-      style="dotted" color="#000000", penwidth = 2, constraint=false
+      style="dashed" color="{{random_color()}}", penwidth = 2, constraint=false
     ];
   {%- endfor %}
 

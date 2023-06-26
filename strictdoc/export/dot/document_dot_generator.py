@@ -1,4 +1,5 @@
 import os
+import random
 from pathlib import Path
 from typing import Union
 
@@ -69,11 +70,33 @@ class DocumentDotGenerator:
                 this_document_flat_requirements_str
             )
 
+        def random_color():
+            # https://graphviz.org/doc/info/colors.html
+            return random.choice(
+                [
+                    "red",
+                    "forestgreen",
+                    "green",
+                    "blue",
+                    "gray10",
+                    "turquoise",
+                    "sienna",
+                    "indigo",
+                    "lightseagreen",
+                    "olive",
+                    "teal",
+                    "webpurple",
+                    "webmaroon",
+                    "slateblue1",
+                ]
+            )
+
         dot_output = self.index_template.render(
             project_tree_content=project_tree_content,
             accumulated_links=accumulated_links,
             accumulated_section_siblings=accumulated_section_siblings,
             document_flat_requirements=document_flat_requirements,
+            random_color=random_color,
         )
 
         output_path = os.path.join(

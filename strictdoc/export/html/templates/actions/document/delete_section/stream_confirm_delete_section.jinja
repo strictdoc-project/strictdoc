@@ -4,6 +4,7 @@
     confirm_title = default,
     confirm_message = "Deleting a section is an unrecoverable action. If you delete a section, all its content will be removed, including the content of the children sections and requirements.",
     confirm_button_name = "Delete section",
+    confirm_validation_message = 'confirm_validation_message',
     confirm_href = "/actions/document/delete_section/"~section_mid~"?confirmed=1"
  %}
     {% include "components/modal/confirm.jinja" %}

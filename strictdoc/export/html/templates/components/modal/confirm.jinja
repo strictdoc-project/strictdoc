@@ -13,6 +13,11 @@
     "This is an unrecoverable action."
   ) }}
 </sdoc-modal-message>
+{% if confirm_validation_message is defined %}
+<sdoc-modal-validation-message data-testid="confirm-validation-message">
+  {{ confirm_validation_message }}
+</sdoc-modal-validation-message>
+{% endif %}
 {% endblock modal_form__content %}
 {% block modal_form__footer_submit %}
   {#
@@ -24,5 +29,11 @@
     confirm_turbo_method
     confirm_action_type
   #}
+  {% if confirm_validation_message is defined %}
+    {#
+      the confirm_validation_message means that no further action is allowed
+    #}
+    {% set confirm_href = '' %}
+  {% endif %}
   {% include "components/button/confirm.jinja" %}
 {% endblock modal_form__footer_submit %}

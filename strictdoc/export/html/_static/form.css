@@ -64,6 +64,19 @@ sdoc-modal-message {
   padding-right: calc(var(--base-rhythm)*4);
 }
 
+sdoc-modal-validation-message {
+  display: block;
+  padding-left: calc(var(--base-rhythm)*4);
+  padding-right: calc(var(--base-rhythm)*4);
+  color: var(--color-danger);
+  margin-top: calc(var(--base-rhythm)*2);
+  margin-bottom: calc(var(--base-rhythm)*2);
+}
+
+sdoc-modal-validation-message:last-child {
+  margin-bottom: 0;
+}
+
 sdoc-modal-footer {
   grid-area: modal-footer;
   display: flex;

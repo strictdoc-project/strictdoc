@@ -139,6 +139,11 @@ a.action_button:hover {
   color: var(--color-cancel) !important;
 }
 
+a.action_button[href=""],
+a.action_button[href=""]:hover {
+  cursor: not-allowed;
+}
+
 .action_icon,
 a.action_icon,
 a.action_icon:link,

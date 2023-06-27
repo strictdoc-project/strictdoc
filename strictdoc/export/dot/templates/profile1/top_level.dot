@@ -34,6 +34,10 @@ digraph {
   graph [ranksep=2];
 
 {% filter indent(width=2) %}
+{% include "profile1/legend.dot" %}
+{% endfilter %}
+
+{% filter indent(width=2) %}
 {{project_tree_content}}
 {% endfilter %}
 
@@ -51,4 +55,7 @@ digraph {
        style=invis
     ];
   {%- endfor %}
+
+  legend_invisible -> "document_anchor_0" [style="invis"];
+
 }

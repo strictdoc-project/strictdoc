@@ -1,0 +1,4 @@
+
+{% filter indent(width=2) %}
+{{document_content}}
+{% endfilter %}

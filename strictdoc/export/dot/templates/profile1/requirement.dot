@@ -7,8 +7,12 @@ node [fontsize=16, fontname="Arial"];
 // when a node has edges connected to it.
 // #}
 "value_{{uuid}}" [
-  label = "{{requirement.reserved_title}}\l"
+  label = "{{requirement.reserved_title}}{{requirement_color[3]}}"
+  //URL = "https://www.google.com"
   width=7.0 height=1.0 fontsize=16 fontname="Arial"
   penwidth=1
-  style="rounded"
- ];
+  color=black
+  fillcolor="{{requirement_color[0]}}"
+  style="{{requirement_color[1]}}"
+  shape="{{requirement_color[2]}}"
+];

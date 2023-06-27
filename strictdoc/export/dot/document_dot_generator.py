@@ -25,6 +25,9 @@ class DocumentDotGenerator:
         self.index_template = DotTemplates.jinja_environment.get_template(
             f"{profile}/top_level.dot"
         )
+        self.template_document = DotTemplates.jinja_environment.get_template(
+            f"{profile}/document.dot"
+        )
         self.template_section = DotTemplates.jinja_environment.get_template(
             f"{profile}/section.dot"
         )
@@ -43,11 +46,16 @@ class DocumentDotGenerator:
         accumulated_section_siblings = []
         document_flat_requirements = []
         document: Document
-        for document in traceability_index.document_tree.document_list:
+        for document_idx, document in enumerate(
+            traceability_index.document_tree.document_list
+        ):
             if not document.has_any_requirements():
                 continue
-            document_content = self._print_node(
-                document, accumulated_links, accumulated_section_siblings
+            document_content = self._print_document(
+                document,
+                document_idx,
+                accumulated_links,
+                accumulated_section_siblings,
             )
             project_tree_content += document_content
             project_tree_content += "\n\n"
@@ -109,6 +117,22 @@ class DocumentDotGenerator:
         # view=True makes the output PDF be opened in a default viewer program.
         dot.render(output_path, view=False)
 
+    def _print_document(
+        self,
+        document: Document,
+        document_idx,
+        accumulated_links,
+        accumulated_section_siblings,
+    ) -> str:
+        document_content = self._print_node(
+            document, accumulated_links, accumulated_section_siblings
+        )
+        return self.template_document.render(
+            document=document,
+            document_idx=document_idx,
+            document_content=document_content,
+        )
+
     def _print_node(
         self,
         node: Union[Document, Section],
@@ -161,12 +185,27 @@ class DocumentDotGenerator:
     def _print_requirement_fields(
         self, requirement: Requirement, accumulated_links
     ):
+        def get_color_from_status(requirement_: Requirement):
+            if requirement_.reserved_status is None:
+                return "#87CEEB", "filled,rounded,dashed", "box", "\\l"
+            if requirement_.reserved_status == "Draft":
+                return "gray", "filled", "diamond", ""
+            if requirement_.reserved_status == "Backlog":
+                return "lightgray", "filled,rounded,dashed", "box", "\\l"
+            if requirement_.reserved_status == "Progress":
+                return "yellow", "filled,rounded,solid", "box", "\\l"
+            if requirement_.reserved_status in ("Active", "Implemented"):
+                return "white", "filled,rounded,solid", "box", "\\l"
+            raise NotImplementedError(requirement.reserved_status)
+
         uuid = self.get_requirement_uuid(requirement)
         for parent_uid in requirement.get_parent_requirement_reference_uids():
             accumulated_links.append((uuid, parent_uid))
+
         output = self.template_requirement.render(
             requirement=requirement,
             uuid=uuid,
+            requirement_color=get_color_from_status(requirement),
         )
         return output
 

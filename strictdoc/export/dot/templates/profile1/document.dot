@@ -1,0 +1,9 @@
+subgraph "cluster_document_{{document_idx}}" {
+
+  "document_anchor_{{document_idx}}" [shape="point", width=0.1, height=0.1, style="invis"];
+
+{% filter indent(width=2) %}
+{{document_content}}
+{% endfilter %}
+
+}

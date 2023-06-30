@@ -1,0 +1,69 @@
+subgraph "cluster_legend_margin" {
+  margin=300;
+  penwidth=0;
+
+subgraph "cluster_legend" {
+  label = "Legend";
+  fontsize = 32;
+  fontname="Arial-bold";
+  penwidth=3;
+  margin=25;
+
+  node [fontsize=16, fontname="Arial"];
+
+  "legend_status_unassigned" [
+    label = "No status"
+    width=7.0 height=1.0 fontsize=16 fontname="Arial"
+    penwidth=1
+    color=black
+    fillcolor="#87CEEB"
+    style="filled,rounded,dashed"
+    shape="box"
+    pos="100,100"
+  ];
+
+  "legend_draft" [
+    label = "Draft"
+    width=7.0 height=1.0 fontsize=16 fontname="Arial"
+    penwidth=1
+    color=black
+    fillcolor="gray"
+    style="filled"
+    shape="diamond"
+    pos="100,100"
+  ];
+
+  "legend_backlog" [
+    label = "Backlog"
+    width=7.0 height=1.0 fontsize=16 fontname="Arial"
+    penwidth=1
+    color=black
+    fillcolor="lightgray"
+    style="filled,rounded,solid"
+    shape="box"
+  ];
+
+  "legend_progress" [
+    label = "Progress"
+    width=7.0 height=1.0 fontsize=16 fontname="Arial"
+    penwidth=1
+    color=black
+    fillcolor="yellow"
+    style="filled,rounded,solid"
+    shape="box"
+  ];
+
+  "legend_active" [
+    label = "Active/Implemented/All other statuses"
+    width=7.0 height=1.0 fontsize=16 fontname="Arial"
+    penwidth=1
+    color=black
+    fillcolor="white"
+    style="filled,rounded,solid"
+    shape="box"
+  ];
+
+  legend_invisible [width=0.1, height=0.1, label="TEST", shape=point, style="invis"];
+}
+
+}

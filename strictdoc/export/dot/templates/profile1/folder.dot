@@ -1,0 +1,15 @@
+subgraph "cluster_folder_{{folder_idx}}" {
+  label = "{{folder_name}}";
+  fontsize = 32;
+  fontname="Arial-bold";
+  penwidth=1;
+  style="rounded";
+
+"cluster_folder_anchor_{{folder_idx}}" [shape="point", width=1, height=1, style="invis"];
+
+{% filter indent(width=2) %}
+{{folder_documents_content}}
+{% endfilter %}
+
+}
+

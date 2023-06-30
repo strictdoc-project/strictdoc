@@ -56,6 +56,6 @@ digraph {
     ];
   {%- endfor %}
 
-  legend_invisible -> "document_anchor_0" [style="invis"];
-
+  legend_invisible -> "anchor_cluster_0_document_0" [style=invis];
+  {{folders_link_string}} [style=invis];
 }

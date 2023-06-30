@@ -1,7 +1,8 @@
 import os
 import random
+from collections import defaultdict
 from pathlib import Path
-from typing import Union
+from typing import List, Optional, Union
 
 import graphviz
 
@@ -25,6 +26,9 @@ class DocumentDotGenerator:
         self.index_template = DotTemplates.jinja_environment.get_template(
             f"{profile}/top_level.dot"
         )
+        self.template_folder = DotTemplates.jinja_environment.get_template(
+            f"{profile}/folder.dot"
+        )
         self.template_document = DotTemplates.jinja_environment.get_template(
             f"{profile}/document.dot"
         )
@@ -42,41 +46,38 @@ class DocumentDotGenerator:
 
         project_tree_content = ""
 
+        documents_by_folder = defaultdict(list)
+        for document in traceability_index.document_tree.document_list:
+            if not document.has_any_requirements():
+                continue
+            documents_by_folder[
+                document.meta.output_document_dir_rel_path
+            ].append(document)
+
         accumulated_links = []
         accumulated_section_siblings = []
         document_flat_requirements = []
         document: Document
-        for document_idx, document in enumerate(
-            traceability_index.document_tree.document_list
+        for document_folder_idx, document_folder in enumerate(
+            documents_by_folder.keys()
         ):
-            if not document.has_any_requirements():
-                continue
-            document_content = self._print_document(
-                document,
-                document_idx,
+            folder_documents = documents_by_folder[document_folder]
+            document_content = self._print_folder_documents(
+                document_folder,
+                document_folder_idx,
+                folder_documents,
                 accumulated_links,
                 accumulated_section_siblings,
+                document_flat_requirements,
             )
             project_tree_content += document_content
             project_tree_content += "\n\n"
 
-            this_document_flat_requirements = []
-
-            iterator = DocumentCachingIterator(document)
-            for node in iterator.all_content():
-                if isinstance(node, Requirement):
-                    uuid = self.get_requirement_uuid(node)
-
-                    this_document_flat_requirements.append(f'"value_{uuid}"')
-
-            this_document_flat_requirements_str = (
-                " -> ".join(this_document_flat_requirements)
-                if len(this_document_flat_requirements) > 1
-                else None
-            )
-            document_flat_requirements.append(
-                this_document_flat_requirements_str
-            )
+        folders_idx = range(len(documents_by_folder))
+        folder_cluster_ids = list(
+            map(lambda f: f'"cluster_folder_anchor_{f}"', folders_idx)
+        )
+        folders_link_string = " -> ".join(folder_cluster_ids)
 
         def random_color():
             # https://graphviz.org/doc/info/colors.html
@@ -105,6 +106,7 @@ class DocumentDotGenerator:
             accumulated_section_siblings=accumulated_section_siblings,
             document_flat_requirements=document_flat_requirements,
             random_color=random_color,
+            folders_link_string=folders_link_string,
         )
 
         output_path = os.path.join(
@@ -117,19 +119,99 @@ class DocumentDotGenerator:
         # view=True makes the output PDF be opened in a default viewer program.
         dot.render(output_path, view=False)
 
+    def _print_folder_documents(
+        self,
+        folder_name,
+        folder_idx,
+        folder_documents: List[Document],
+        accumulated_links,
+        accumulated_section_siblings,
+        document_flat_requirements,
+    ):
+        def get_bottom_most_section(document: Document) -> Optional[Section]:
+            current_node: Union[Document, Section] = document
+            candidate_section: Optional[Section] = None
+            while len(current_node.section_contents) > 0:
+                for subnode in reversed(current_node.section_contents):
+                    if isinstance(subnode, Section):
+                        candidate_section = subnode
+                        current_node = subnode
+                        break
+                else:
+                    break
+            return candidate_section
+
+        folder_documents_content = ""
+        for document_idx, document in enumerate(folder_documents):
+            assert document.has_any_requirements()
+
+            document_content = self._print_document(
+                document,
+                folder_idx,
+                document_idx,
+                accumulated_links,
+                accumulated_section_siblings,
+                document_flat_requirements,
+            )
+            folder_documents_content += document_content
+            folder_documents_content += "\n\n"
+
+            if document_idx > 0:
+                prev_document = folder_documents[document_idx - 1]
+                prev_document_last_section = get_bottom_most_section(
+                    prev_document
+                )
+                if prev_document_last_section is None:
+                    continue
+
+                lhs_node_id = document.section_contents[0].node_id
+                if not isinstance(document.section_contents[0], Section):
+                    lhs_node_id = document.node_id
+
+                rhs_node_id = prev_document_last_section.node_id
+
+                accumulated_section_siblings.append((lhs_node_id, rhs_node_id))
+
+        dot_output = self.template_folder.render(
+            folder_name=folder_name,
+            folder_idx=folder_idx,
+            folder_documents_content=folder_documents_content,
+        )
+        return dot_output
+
     def _print_document(
         self,
         document: Document,
+        folder_idx,
         document_idx,
         accumulated_links,
         accumulated_section_siblings,
+        document_flat_requirements,
     ) -> str:
         document_content = self._print_node(
             document, accumulated_links, accumulated_section_siblings
         )
+
+        this_document_flat_requirements = []
+
+        iterator = DocumentCachingIterator(document)
+        for node in iterator.all_content():
+            if isinstance(node, Requirement):
+                uuid = self.get_requirement_uuid(node)
+
+                this_document_flat_requirements.append(f'"value_{uuid}"')
+
+        this_document_flat_requirements_str = (
+            " -> ".join(this_document_flat_requirements)
+            if len(this_document_flat_requirements) > 1
+            else None
+        )
+        document_flat_requirements.append(this_document_flat_requirements_str)
+
         return self.template_document.render(
             document=document,
             document_idx=document_idx,
+            folder_idx=folder_idx,
             document_content=document_content,
         )
 

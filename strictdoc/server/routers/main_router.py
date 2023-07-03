@@ -2194,6 +2194,9 @@ def create_main_router(
                 elif url_to_document.endswith("-TRACE.html"):
                     base_document_url = url_to_document.replace("-TRACE", "")
                     document_type_to_generate = DocumentType.TRACE
+                elif url_to_document.endswith("-PDF.html"):
+                    base_document_url = url_to_document.replace("-PDF", "")
+                    document_type_to_generate = DocumentType.PDF
                 elif url_to_document.endswith(".standalone.html"):
                     base_document_url = url_to_document.replace(
                         ".standalone", ""

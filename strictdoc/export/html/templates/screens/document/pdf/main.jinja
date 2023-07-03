@@ -1,0 +1,24 @@
+<div
+  class="main"
+  id="printTHISpreloader"
+>
+      <div
+        class="content"
+        id="printTHIS"
+      >
+
+        {%- for section_or_requirement in document_iterator.all_content() %}
+
+        {%- if section_or_requirement.is_requirement %}
+          {%- set requirement = section_or_requirement %}
+          {% include "components/requirement/index.jinja" %}
+
+        {%- elif section_or_requirement.is_section %}
+          {%- set section = section_or_requirement %}
+          {% include "components/section/index.jinja" %}
+        {%- endif %}
+
+        {%- endfor %}
+
+      </div>
+</div>

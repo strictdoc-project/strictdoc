@@ -24,6 +24,7 @@ class ProjectFeature(str, Enum):
     MATHJAX = "MATHJAX"
 
     # Experimental features.
+    HTML2PDF = "HTML2PDF"
     REQIF = "REQIF"
     STANDALONE_DOCUMENT_SCREEN = "STANDALONE_DOCUMENT_SCREEN"
     REQUIREMENTS_COVERAGE_SCREEN = "REQUIREMENTS_COVERAGE_SCREEN"
@@ -173,6 +174,9 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         return (
             ProjectFeature.STANDALONE_DOCUMENT_SCREEN in self.project_features
         )
+
+    def is_activated_html2pdf(self) -> bool:
+        return ProjectFeature.HTML2PDF in self.project_features
 
     def is_activated_reqif(self) -> bool:
         return ProjectFeature.REQIF in self.project_features

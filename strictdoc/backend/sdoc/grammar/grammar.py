@@ -1,6 +1,6 @@
 TEXT_TYPES_GRAMMAR = r"""
 TextPart[noskipws]:
-  (InlineLink | Anchor | NormalString)
+  (Anchor | InlineLink | NormalString)
 ;
 
 NormalString[noskipws]:
@@ -17,10 +17,31 @@ InlineLink[noskipws]:
   InlineLinkStart value = /[^\]]*/ ']'
 ;
 
-AnchorStart: '[ANCHOR: ';
+AnchorStart[noskipws]:
+  // Make sure that an anchor cannot follow right after a text string.
+  /(?<!\S\n)^/ '[ANCHOR: '
+;
 
 Anchor[noskipws]:
   AnchorStart value = /[^\],]*/ (', ' title = /\w+[\s\w+]*/)? ']'
+  // We expect either:
+  // - An anchor has a newline character after it, if this anchor is the last
+  //   part in the free text.
+  // - An anchor has two newline symbols, if this anchor is not the last part in
+  //   the free text.
+  // Furthermore, there are two cases of parsing free text with ANCHORs:
+  // 1) The full [FREETEXT] blocks inside SDoc files.
+  // 2) The inner free text blocks when only a single section is edited in UI.
+  // The resulting regex magic has three cases:
+  // 1) The ANCHOR has two newlines after it and something else follows it.
+  // 2) The ANCHOR has one newline and nothing else after it in an inner free
+  //    text block (\Z). A variation of this case is when there is no newline,
+  //    but only the end of the string (\Z).
+  // 3) The ANCHOR has one newline and then immediately the [/FREETEXT] ending
+  // block follows. (positive lookahead towards closing [/FREETEXT])
+  // '\\n' /(\\n|\Z)/
+   /\Z|(\n(\n|\Z|(?=\[\/FREETEXT\])))/
+
 ;
 
 FreeTextEnd: /^/ '[/FREETEXT]' '\n';

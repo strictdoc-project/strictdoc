@@ -109,10 +109,6 @@ class SDocTestServer:  # pylint: disable=too-many-instance-attributes
         self.path_to_err_log = os.path.join(
             path_to_tmp_dir, f"strictdoc_server.{self.server_port}.err.log"
         )
-        if os.path.exists(self.path_to_out_log):
-            os.remove(self.path_to_out_log)
-        if os.path.exists(self.path_to_err_log):
-            os.remove(self.path_to_err_log)
 
         self.expectations = (
             expectations
@@ -161,10 +157,10 @@ class SDocTestServer:  # pylint: disable=too-many-instance-attributes
             )
 
         self.log_file_out = open(  # pylint: disable=consider-using-with
-            self.path_to_out_log, "ab"
+            self.path_to_out_log, "wb"
         )
         self.log_file_err = open(  # pylint: disable=consider-using-with
-            self.path_to_err_log, "ab"
+            self.path_to_err_log, "wb"
         )
         self.exit_stack.enter_context(self.log_file_out)
         self.exit_stack.enter_context(self.log_file_err)

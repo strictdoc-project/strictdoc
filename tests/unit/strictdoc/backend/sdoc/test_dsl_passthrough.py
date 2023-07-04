@@ -285,6 +285,30 @@ String 4
     assert input == output
 
 
+def test_026_free_text_anchor_end_of_free_text():
+    input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[FREETEXT]
+String 1
+String 2 String 3
+
+[ANCHOR: REQ-001, Requirements document]
+[/FREETEXT]
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input == output
+
+
 def test_030_multiline_statement():
     input_sdoc = """
 [DOCUMENT]

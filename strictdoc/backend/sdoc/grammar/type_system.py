@@ -5,7 +5,7 @@ FieldName[noskipws]:
 
 // According to the Strict Grammar Rule #3, both SingleLineString and
 // MultiLineString can never be empty strings.
-// Both must start with a non-space character.
+// Both must eventualy start with a non-space character.
 SingleLineString:
   (!MultiLineStringStart /\S/) (!MultiLineStringStart /./)* /$/
 ;
@@ -20,7 +20,7 @@ MultiLineStringEnd[noskipws]:
 
 MultiLineString[noskipws]:
   MultiLineStringStart-
-  (!MultiLineStringEnd /\S/) (!MultiLineStringEnd /(?ms)./)+
+  (!MultiLineStringEnd /\W*\S/) (!MultiLineStringEnd /(?ms)./)+
   MultiLineStringEnd-
 ;
 

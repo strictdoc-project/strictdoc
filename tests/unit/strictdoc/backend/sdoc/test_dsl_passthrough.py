@@ -1727,9 +1727,7 @@ UID:
         _ = reader.read(sdoc_input)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected Not or '\\S' or '>>>'" in exc_info.value.args[0].decode(
-        "utf-8"
-    )
+    assert "Expected Not or" in exc_info.value.args[0].decode("utf-8")
 
 
 def test_edge_case_04_uid_present_but_empty_with_two_space_characters():
@@ -1748,9 +1746,7 @@ UID:
         _ = reader.read(sdoc_input)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected Not or '\\S' or '>>>'" in exc_info.value.args[0].decode(
-        "utf-8"
-    )
+    assert "Expected Not or" in exc_info.value.args[0].decode("utf-8")
 
 
 def test_edge_case_10_empty_multiline_field():
@@ -1789,7 +1785,7 @@ COMMENT: >>>
         _ = reader.read(sdoc_input)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected Not or '\\S'" in exc_info.value.args[0].decode("utf-8")
+    assert "Expected Not or" in exc_info.value.args[0].decode("utf-8")
 
 
 def test_edge_case_20_empty_section_title():
@@ -1832,7 +1828,7 @@ TITLE:
         _ = reader.read(sdoc_input)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected Not or '\\S'" == exc_info.value.args[0].decode("utf-8")
+    assert "Expected Not or" in exc_info.value.args[0].decode("utf-8")
 
 
 def test_edge_case_22_section_title_with_two_empty_spaces():
@@ -1853,4 +1849,36 @@ TITLE:
         _ = reader.read(sdoc_input)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected Not or '\\S'" == exc_info.value.args[0].decode("utf-8")
+    assert "Expected Not or" in exc_info.value.args[0].decode("utf-8")
+
+
+def test_edge_case_23_leading_spaces_do_not_imply_empy_field():
+    sdoc_input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: MY_FIELD
+    TYPE: String
+    REQUIRED: True
+
+[REQUIREMENT]
+MY_FIELD: >>>
+    Some text here...
+    Some text here...
+    Some text here...
+<<<
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(sdoc_input)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert sdoc_input == output

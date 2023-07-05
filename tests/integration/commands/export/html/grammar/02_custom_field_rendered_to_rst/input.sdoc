@@ -1,0 +1,27 @@
+[DOCUMENT]
+TITLE: Test Document
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: META_TEST
+    TYPE: String
+    REQUIRED: False
+
+[REQUIREMENT]
+UID: A-1
+STATEMENT: >>>
+the foo must bar
+<<<
+META_TEST: >>>
+This custom field shall be rendered as RST:
+
+`StrictDoc <https://github.com/strictdoc-project/strictdoc>`_
+<<<

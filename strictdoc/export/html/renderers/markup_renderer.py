@@ -152,10 +152,7 @@ class MarkupRenderer:
         assert isinstance(meta_field_value, str)
         assert self.context_document is not None
 
-        if meta_field_value in self.cache:
-            return self.cache[meta_field_value]
-
+        # FIXME: Introduce and improve caching.
         output = self.fragment_writer.write(meta_field_value)
-        self.cache[meta_field_value] = output
 
         return output

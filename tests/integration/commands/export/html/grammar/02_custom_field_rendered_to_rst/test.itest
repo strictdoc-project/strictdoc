@@ -1,0 +1,7 @@
+RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+CHECK: Published: Test Document
+
+RUN: %cat %S/Output/html/02_custom_field_rendered_to_rst/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+
+CHECK-HTML:<p>This custom field shall be rendered as RST:</p>
+CHECK-HTML:<a class="reference external" href="https://github.com/strictdoc-project/strictdoc">StrictDoc</a>

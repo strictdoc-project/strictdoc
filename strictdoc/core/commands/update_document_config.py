@@ -106,7 +106,7 @@ class UpdateDocumentConfigCommand:
                     lhs_node=anchor_uid_to_be_removed,
                     rhs_node=anchor_uuid,
                 )
-                traceability_index.graph_database.remove_node(uuid=anchor_uuid)
+                traceability_index.graph_database.remove_node(mid=anchor_uuid)
         document.set_freetext(free_text)
 
     @staticmethod

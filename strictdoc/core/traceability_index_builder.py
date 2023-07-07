@@ -2,7 +2,7 @@ import glob
 import os
 import sys
 from collections import defaultdict
-from typing import Dict, Iterator, List, Optional, Set, cast
+from typing import Dict, Iterator, List, Optional, Set
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
@@ -32,6 +32,7 @@ from strictdoc.core.traceability_index import (
     TraceabilityIndex,
 )
 from strictdoc.core.tree_cycle_detector import TreeCycleDetector
+from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.timing import timing_decorator
@@ -214,42 +215,42 @@ class TraceabilityIndexBuilder:
                     if isinstance(part, Anchor):
                         assert part.value not in d_11_map_id_to_node
                         graph_database.add_node(
-                            uuid=part.uuid,
+                            mid=part.mid,
                             node=part,
                         )
                         graph_database.add_link(
                             link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
                             lhs_node=part.value,
-                            rhs_node=part.uuid,
+                            rhs_node=part.mid,
                         )
 
-            d_11_map_id_to_node[document.node_id] = document
+            d_11_map_id_to_node[document.mid] = document
 
             document_iterator = DocumentCachingIterator(document)
             d_01_document_iterators[document] = document_iterator
             if document.title not in d_03_map_doc_titles_to_tag_lists:
                 d_03_map_doc_titles_to_tag_lists[document.title] = {}
             for node in document_iterator.all_content():
-                d_11_map_id_to_node[node.node_id] = node
+                d_11_map_id_to_node[node.mid] = node
 
                 if node.is_section:
                     for free_text in node.free_texts:
                         for part in free_text.parts:
                             if isinstance(part, InlineLink):
                                 graph_database.add_node(
-                                    uuid=part.uuid,
+                                    mid=part.mid,
                                     node=part,
                                 )
                             elif isinstance(part, Anchor):
                                 assert part.value not in d_11_map_id_to_node
                                 graph_database.add_node(
-                                    uuid=part.uuid,
+                                    mid=part.mid,
                                     node=part,
                                 )
                                 graph_database.add_link(
                                     link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
                                     lhs_node=part.value,
-                                    rhs_node=part.uuid,
+                                    rhs_node=part.mid,
                                 )
 
                 if not node.reserved_uid:
@@ -298,8 +299,8 @@ class TraceabilityIndexBuilder:
                         continue
                     if reference.ref_type != ReferenceType.PARENT:
                         continue
-                    parent_reference: ParentReqReference = cast(
-                        ParentReqReference, reference
+                    parent_reference: ParentReqReference = assert_cast(
+                        reference, ParentReqReference
                     )
                     assert requirement.reserved_uid is not None  # mypy
                     d_02_requirements_map[

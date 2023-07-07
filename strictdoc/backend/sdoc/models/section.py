@@ -1,10 +1,10 @@
-import uuid
 from typing import List, Optional
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.backend.sdoc.models.node import Node
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.mid import MID
 
 
 @auto_described
@@ -48,7 +48,7 @@ class Section(Node):  # pylint: disable=too-many-instance-attributes
         self.ng_has_requirements = False
         self.ng_document_reference: Optional[DocumentReference] = None
         self.context = SectionContext()
-        self.node_id = uuid.uuid4().hex
+        self.mid: MID = MID.create()
 
     @staticmethod
     def get_type_string() -> str:

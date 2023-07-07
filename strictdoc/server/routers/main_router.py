@@ -82,6 +82,7 @@ from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.file_modification_time import get_file_modification_time
+from strictdoc.helpers.mid import MID
 from strictdoc.helpers.parallelizer import NullParallelizer
 from strictdoc.helpers.string import (
     is_safe_alphanumeric_string,
@@ -135,7 +136,7 @@ def create_main_router(
     )
     def requirement__show_full(reference_mid: str):
         requirement: Requirement = (
-            export_action.traceability_index.get_node_by_id(reference_mid)
+            export_action.traceability_index.get_node_by_mid(MID(reference_mid))
         )
         template = env.get_template(
             "actions/"
@@ -182,7 +183,7 @@ def create_main_router(
         section_form_object = SectionFormObject.create_new()
         reference_node: Union[
             Document, Section
-        ] = export_action.traceability_index.get_node_by_id(reference_mid)
+        ] = export_action.traceability_index.get_node_by_mid(MID(reference_mid))
         document = (
             reference_node
             if isinstance(reference_node, Document)
@@ -258,7 +259,7 @@ def create_main_router(
 
         reference_node: Union[
             Document, Section
-        ] = export_action.traceability_index.get_node_by_id(reference_mid)
+        ] = export_action.traceability_index.get_node_by_mid(MID(reference_mid))
         document = (
             reference_node
             if isinstance(reference_node, Document)
@@ -377,8 +378,8 @@ def create_main_router(
         "/actions/document/edit_section/{section_id}", response_class=Response
     )
     def get_edit_section(section_id: str):
-        section: Section = export_action.traceability_index.get_node_by_id(
-            section_id
+        section: Section = export_action.traceability_index.get_node_by_mid(
+            MID(section_id)
         )
         form_object = SectionFormObject.create_from_section(section=section)
         template = env.get_template(
@@ -399,7 +400,7 @@ def create_main_router(
             form_object=form_object,
             document_type=DocumentType.document(),
             is_new_section=False,
-            section_mid=section.node_id,
+            section_mid=section.mid,
         )
         return HTMLResponse(
             content=output,
@@ -421,8 +422,8 @@ def create_main_router(
         section_content = sanitize_html_form_field(
             section_content, multiline=True
         )
-        section: Section = export_action.traceability_index.get_node_by_id(
-            section_mid
+        section: Section = export_action.traceability_index.get_node_by_mid(
+            MID(section_mid)
         )
 
         form_object = SectionFormObject(
@@ -459,7 +460,7 @@ def create_main_router(
                 renderer=markup_renderer,
                 link_renderer=link_renderer,
                 form_object=form_object,
-                target_node_mid=section.node_id,
+                target_node_mid=section.mid,
                 document_type=DocumentType.document(),
                 is_new_section=False,
                 replace_action="replace",
@@ -548,8 +549,8 @@ def create_main_router(
         "/actions/document/cancel_edit_section", response_class=Response
     )
     def cancel_edit_section(section_mid: str):
-        section: Section = export_action.traceability_index.get_node_by_id(
-            section_mid
+        section: Section = export_action.traceability_index.get_node_by_mid(
+            MID(section_mid)
         )
         template = env.get_template(
             "actions/document/edit_section/stream_updated_section.jinja.html"
@@ -587,8 +588,8 @@ def create_main_router(
         assert isinstance(whereto, str), whereto
         assert NodeCreationOrder.is_valid(whereto), whereto
 
-        reference_node = export_action.traceability_index.get_node_by_id(
-            reference_mid
+        reference_node = export_action.traceability_index.get_node_by_mid(
+            MID(reference_mid)
         )
         document = (
             reference_node
@@ -655,7 +656,7 @@ def create_main_router(
 
         reference_node: Union[
             Document, Section
-        ] = export_action.traceability_index.get_node_by_id(reference_mid)
+        ] = export_action.traceability_index.get_node_by_mid(MID(reference_mid))
         document = (
             reference_node
             if isinstance(reference_node, Document)
@@ -738,12 +739,12 @@ def create_main_router(
                     value=form_field.field_unescaped_value,
                 )
 
-        requirement.node_id = requirement_mid
+        requirement.mid = MID(requirement_mid)
         requirement.ng_document_reference = DocumentReference()
         requirement.ng_document_reference.set_document(document)
         requirement.ng_level = parent.ng_level + 1
         export_action.traceability_index._map_id_to_node[
-            requirement.node_id
+            requirement.mid
         ] = requirement
 
         parent.section_contents.insert(insert_to_idx, requirement)
@@ -817,7 +818,9 @@ def create_main_router(
     )
     def get_edit_requirement(requirement_id: str):
         requirement: Requirement = (
-            export_action.traceability_index.get_node_by_id(requirement_id)
+            export_action.traceability_index.get_node_by_mid(
+                MID(requirement_id)
+            )
         )
         form_object = RequirementFormObject.create_from_requirement(
             requirement=requirement
@@ -859,7 +862,9 @@ def create_main_router(
         request_dict = dict(request_form_data)
         requirement_mid = request_dict["requirement_mid"]
         requirement: Requirement = (
-            export_action.traceability_index.get_node_by_id(requirement_mid)
+            export_action.traceability_index.get_node_by_mid(
+                MID(requirement_mid)
+            )
         )
         document = requirement.document
 
@@ -1128,8 +1133,10 @@ def create_main_router(
         assert (
             isinstance(requirement_mid, str) and len(requirement_mid) > 0
         ), f"{requirement_mid}"
-        requirement = export_action.traceability_index.get_node_by_id(
-            requirement_mid
+        requirement: Requirement = (
+            export_action.traceability_index.get_node_by_mid(
+                MID(requirement_mid)
+            )
         )
         document = requirement.document
         template = env.get_template(
@@ -1187,7 +1194,7 @@ def create_main_router(
                 },
             )
         section: Section = assert_cast(
-            export_action.traceability_index.get_node_by_id(section_mid),
+            export_action.traceability_index.get_node_by_mid(MID(section_mid)),
             Section,
         )
         try:
@@ -1281,7 +1288,9 @@ def create_main_router(
             )
 
         requirement: Requirement = (
-            export_action.traceability_index.get_node_by_id(requirement_mid)
+            export_action.traceability_index.get_node_by_mid(
+                MID(requirement_mid)
+            )
         )
 
         requirement_parent: Union[Section, Document] = requirement.parent
@@ -1358,11 +1367,11 @@ def create_main_router(
 
         assert export_action.traceability_index is not None
 
-        moved_node = export_action.traceability_index.get_node_by_id(
-            moved_node_mid
+        moved_node = export_action.traceability_index.get_node_by_mid(
+            MID(moved_node_mid)
         )
-        target_node = export_action.traceability_index.get_node_by_id(
-            target_mid
+        target_node = export_action.traceability_index.get_node_by_mid(
+            MID(target_mid)
         )
         current_parent_node = moved_node.parent
 
@@ -1450,7 +1459,7 @@ def create_main_router(
             document_iterator=iterator,
             document_type=DocumentType.document(),
             link_renderer=link_renderer,
-            last_moved_node_id=moved_node.node_id,
+            last_moved_node_id=moved_node.mid,
         )
         return HTMLResponse(
             content=output,
@@ -1650,8 +1659,8 @@ def create_main_router(
 
     @router.get("/actions/document/edit_config", response_class=Response)
     def document__edit_config(document_mid: str):
-        document: Document = export_action.traceability_index.get_node_by_id(
-            document_mid
+        document: Document = export_action.traceability_index.get_node_by_mid(
+            MID(document_mid)
         )
         form_object = DocumentConfigFormObject.create_from_document(
             document=document
@@ -1680,8 +1689,8 @@ def create_main_router(
         request_form_data: FormData = await request.form()
         request_dict: Dict[str, str] = dict(request_form_data)
         document_mid: str = request_dict["document_mid"]
-        document: Document = export_action.traceability_index.get_node_by_id(
-            document_mid
+        document: Document = export_action.traceability_index.get_node_by_mid(
+            MID(document_mid)
         )
         form_object: DocumentConfigFormObject = (
             DocumentConfigFormObject.create_from_request(
@@ -1764,8 +1773,8 @@ def create_main_router(
 
     @router.get("/actions/document/cancel_edit_config", response_class=Response)
     def document__cancel_edit_config(document_mid: str):
-        document: Document = export_action.traceability_index.get_node_by_id(
-            document_mid
+        document: Document = export_action.traceability_index.get_node_by_mid(
+            MID(document_mid)
         )
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
@@ -1800,8 +1809,8 @@ def create_main_router(
 
     @router.get("/actions/document/edit_grammar", response_class=Response)
     def document__edit_grammar(document_mid: str):
-        document: Document = export_action.traceability_index.get_node_by_id(
-            document_mid
+        document: Document = export_action.traceability_index.get_node_by_mid(
+            MID(document_mid)
         )
         form_object = DocumentGrammarFormObject.create_from_document(
             document=document
@@ -1829,8 +1838,8 @@ def create_main_router(
         request_form_data: FormData = await request.form()
         request_dict: Dict[str, str] = dict(request_form_data)
         document_mid: str = request_dict["document_mid"]
-        document: Document = export_action.traceability_index.get_node_by_id(
-            document_mid
+        document: Document = export_action.traceability_index.get_node_by_mid(
+            MID(document_mid)
         )
         form_object: DocumentGrammarFormObject = (
             DocumentGrammarFormObject.create_from_request(

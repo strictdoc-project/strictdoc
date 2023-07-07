@@ -164,11 +164,13 @@ class DocumentDotGenerator:
                 if prev_document_last_section is None:
                     continue
 
-                lhs_node_id = document.section_contents[0].node_id
+                lhs_node_id: str = document.section_contents[
+                    0
+                ].mid.get_string_value()
                 if not isinstance(document.section_contents[0], Section):
-                    lhs_node_id = document.node_id
+                    lhs_node_id = document.mid.get_string_value()
 
-                rhs_node_id = prev_document_last_section.node_id
+                rhs_node_id = prev_document_last_section.mid.get_string_value()
 
                 accumulated_section_siblings.append((lhs_node_id, rhs_node_id))
 
@@ -197,8 +199,7 @@ class DocumentDotGenerator:
         iterator = DocumentCachingIterator(document)
         for node in iterator.all_content():
             if isinstance(node, Requirement):
-                uuid = self.get_requirement_uuid(node)
-
+                uuid: str = self.get_requirement_uuid(node)
                 this_document_flat_requirements.append(f'"value_{uuid}"')
 
         this_document_flat_requirements_str = (
@@ -221,8 +222,8 @@ class DocumentDotGenerator:
         accumulated_links,
         accumulated_section_siblings,
     ) -> str:
-        def get_uuid(node_):
-            return node_.node_id
+        def get_uuid(node_) -> str:
+            return node_.mid.get_string_value()
 
         def get_upper_sibling_section(node_: Section):
             parent: Union[Document, Section] = node_.parent
@@ -280,7 +281,7 @@ class DocumentDotGenerator:
                 return "white", "filled,rounded,solid", "box", "\\l"
             raise NotImplementedError(requirement.reserved_status)
 
-        uuid = self.get_requirement_uuid(requirement)
+        uuid: str = self.get_requirement_uuid(requirement)
         for parent_uid in requirement.get_parent_requirement_reference_uids():
             accumulated_links.append((uuid, parent_uid))
 
@@ -292,10 +293,10 @@ class DocumentDotGenerator:
         return output
 
     @staticmethod
-    def get_requirement_uuid(requirement: Requirement):
+    def get_requirement_uuid(requirement: Requirement) -> str:
         assert isinstance(requirement, Requirement)
         return (
             requirement.reserved_uid
             if requirement.reserved_uid is not None
-            else requirement.node_id
+            else requirement.mid.get_string_value()
         )

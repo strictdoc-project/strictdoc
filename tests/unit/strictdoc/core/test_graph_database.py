@@ -3,10 +3,10 @@ from enum import IntEnum
 import pytest
 
 from strictdoc.core.graph_database import (
-    UUID,
     GraphDatabase,
     LinkType,
 )
+from strictdoc.helpers.mid import MID
 
 NOT_RELEVANT = "NOT_RELEVANT"
 
@@ -14,16 +14,16 @@ NOT_RELEVANT = "NOT_RELEVANT"
 def test_01():
     graph_database = GraphDatabase()
 
-    uuid: UUID = UUID.create()
+    mid: MID = MID.create()
     node = 1
 
-    graph_database.add_node(uuid=uuid, node=node)
-    assert graph_database.get_node(uuid) == 1
+    graph_database.add_node(mid=mid, node=node)
+    assert graph_database.get_node(mid) == 1
 
-    graph_database.remove_node(uuid=uuid)
+    graph_database.remove_node(mid=mid)
 
     with pytest.raises(LookupError):
-        graph_database.get_node(uuid=uuid)
+        graph_database.get_node(mid=mid)
 
 
 def test_02():
@@ -31,22 +31,22 @@ def test_02():
         INLINE_LINK_TO_ANCHOR = 1
 
     anchor = "anchor"
-    anchor_uuid = UUID.create()
+    anchor_mid = MID.create()
     inline_link = "inline_link"
-    inline_link_uuid = UUID.create()
+    inline_link_mid = MID.create()
 
     graph_database = GraphDatabase()
-    graph_database.add_node(anchor_uuid, anchor)
-    graph_database.add_node(inline_link_uuid, inline_link)
+    graph_database.add_node(anchor_mid, anchor)
+    graph_database.add_node(inline_link_mid, inline_link)
 
     graph_database.add_link(
         link_type=Relation.INLINE_LINK_TO_ANCHOR,
-        lhs_node=inline_link_uuid,
-        rhs_node=anchor_uuid,
+        lhs_node=inline_link_mid,
+        rhs_node=anchor_mid,
     )
     graph_database.remove_link(
         link_type=Relation.INLINE_LINK_TO_ANCHOR,
-        lhs_node=inline_link_uuid,
-        rhs_node=anchor_uuid,
+        lhs_node=inline_link_mid,
+        rhs_node=anchor_mid,
     )
-    graph_database.remove_node(anchor_uuid)
+    graph_database.remove_node(anchor_mid)

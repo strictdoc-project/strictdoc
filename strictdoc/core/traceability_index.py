@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import IntEnum
-from typing import Dict, List, Optional, Set, Union
+from typing import Any, Dict, List, Optional, Set, Union
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
@@ -16,10 +16,11 @@ from strictdoc.core.commands.validation_error import (
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_traceability_index import FileTraceabilityIndex
-from strictdoc.core.graph_database import UUID, GraphDatabase, LinkType
+from strictdoc.core.graph_database import GraphDatabase, LinkType
 from strictdoc.core.tree_cycle_detector import TreeCycleDetector
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.mid import MID
 from strictdoc.helpers.sorting import alphanumeric_sort
 
 
@@ -64,7 +65,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         document_parents_map: Dict[Document, Set[Document]],
         document_children_map: Dict[Document, Set[Document]],
         file_traceability_index: FileTraceabilityIndex,
-        map_id_to_node,
+        map_id_to_node: Dict[MID, Any],
         graph_database: GraphDatabase,
     ):
         self._document_iterators: Dict[
@@ -81,13 +82,17 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             Document, Set[Document]
         ] = document_children_map
         self._file_traceability_index = file_traceability_index
-        self._map_id_to_node = map_id_to_node
+        self._map_id_to_node: Dict[MID, Any] = map_id_to_node
 
         self.graph_database: GraphDatabase = graph_database
         self.document_tree: Optional[DocumentTree] = None
         self.asset_dirs = None
         self.index_last_updated = datetime.today()
         self.strictdoc_last_update = None
+
+    def get_node_by_mid(self, node_id: MID) -> Any:
+        assert isinstance(node_id, MID), node_id
+        return self._map_id_to_node[node_id]
 
     def has_requirements(self):
         return len(self.requirements_parents.keys()) > 0
@@ -261,10 +266,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def get_document_parents(self, document) -> Set[Document]:
         return self._document_parents_map[document]
 
-    def get_node_by_id(self, node_id):
-        assert isinstance(node_id, str), f"{node_id}"
-        return self._map_id_to_node[node_id]
-
     def update_last_updated(self):
         self.index_last_updated = datetime.today()
 
@@ -427,7 +428,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             if (
                 self.graph_database.link_exists(
                     link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
-                    lhs_node=UUID(anchor_uid),
+                    lhs_node=anchor_uid,
                 )
                 and anchor_uid not in existing_node_anchor_uids
             ):
@@ -482,7 +483,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def update_with_anchor(self, anchor: Anchor):
         # By this time, we know that the validations have passed just before.
         existing_anchor_uuid: Optional[
-            UUID
+            MID
         ] = self.graph_database.get_link_value_weak(
             link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
             lhs_node=anchor.value,
@@ -495,12 +496,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             )
             self.graph_database.remove_node(existing_anchor_uuid)
 
-        self.graph_database.add_node(
-            uuid=anchor.uuid,
-            node=anchor,
-        )
+        self.graph_database.add_node(mid=anchor.mid, node=anchor)
         self.graph_database.add_link(
             link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
             lhs_node=anchor.value,
-            rhs_node=anchor.uuid,
+            rhs_node=anchor.mid,
         )

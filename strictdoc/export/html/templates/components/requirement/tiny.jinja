@@ -21,7 +21,7 @@
     <div style="position:absolute;right:4px;bottom:0;">
       <turbo-frame>
         <a
-          href="/actions/deep_trace/show_full_requirement?reference_mid={{ sdoc_entity.node_id }}"
+          href="/actions/deep_trace/show_full_requirement?reference_mid={{ sdoc_entity.mid.get_string_value() }}"
           class="action_icon"
           data-turbo="true"
           data-turbo-action="replace"

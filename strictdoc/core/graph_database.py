@@ -1,18 +1,12 @@
 from collections import defaultdict
 from typing import Any, Dict, Optional, Set
 
-from strictdoc.helpers.uuid import create_uuid
+from strictdoc.helpers.mid import MID
 
 
 class ConstraintViolation(Exception):
     def __init__(self, message):
         super().__init__(message)
-
-
-class UUID(str):
-    @staticmethod
-    def create() -> "UUID":
-        return UUID(create_uuid())
 
 
 class LinkType:
@@ -25,37 +19,36 @@ def link_dict():
 
 class GraphDatabase:
     def __init__(self):
-        self.nodes: Dict[UUID, Any] = {}
-        self.links: Dict[LinkType, Dict[UUID, Set[UUID]]] = defaultdict(
-            link_dict
-        )
-        self.links_reverse: Dict[LinkType, Dict[UUID, Set[UUID]]] = defaultdict(
+        self.nodes: Dict[MID, Any] = {}
+        self.links: Dict[LinkType, Dict[MID, Set[MID]]] = defaultdict(link_dict)
+        self.links_reverse: Dict[LinkType, Dict[MID, Set[MID]]] = defaultdict(
             link_dict
         )
 
         # Attachable validation classes.
         self.remove_node_validation = None
 
-    def add_node(self, uuid: UUID, node: Any):
-        assert uuid not in self.nodes, (self.nodes, node)
-        self.nodes[uuid] = node
+    def add_node(self, mid: MID, node: Any):
+        assert isinstance(mid, MID), mid
+        assert mid not in self.nodes, (self.nodes, node)
+        self.nodes[mid] = node
 
-    def get_node(self, uuid: UUID) -> Any:
-        if uuid not in self.nodes:
+    def get_node(self, mid: MID) -> Any:
+        if mid not in self.nodes:
             raise LookupError
-        return self.nodes[uuid]
+        return self.nodes[mid]
 
-    def get_node_weak(self, uuid: UUID) -> Optional[Any]:
-        if uuid not in self.nodes:
+    def get_node_weak(self, mid: MID) -> Optional[Any]:
+        if mid not in self.nodes:
             return None
-        return self.nodes[uuid]
+        return self.nodes[mid]
 
-    def remove_node(self, uuid: UUID):
-        if uuid not in self.nodes:
+    def remove_node(self, mid: MID):
+        if mid not in self.nodes:
             raise LookupError
         if self.remove_node_validation is not None:
-            self.remove_node_validation.validate(self, uuid)
-        del self.nodes[uuid]
+            self.remove_node_validation.validate(self, mid)
+        del self.nodes[mid]
 
     def get_link_values(
         self, *, link_type: LinkType, lhs_node: Any
@@ -107,7 +100,6 @@ class GraphDatabase:
         return True
 
     def add_link(self, *, link_type: LinkType, lhs_node: Any, rhs_node: Any):
-        assert lhs_node != rhs_node
         links = self.links[link_type]
         if lhs_node in links:
             assert rhs_node not in links[lhs_node]

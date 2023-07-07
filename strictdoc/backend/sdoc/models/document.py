@@ -1,4 +1,3 @@
-import uuid
 from typing import List, Optional
 
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
@@ -6,6 +5,7 @@ from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.mid import MID
 
 
 @auto_described
@@ -29,7 +29,7 @@ class Document:  # pylint: disable=too-many-instance-attributes
         self.ng_level: int = 0
         self.ng_needs_generation = False
         self.meta: Optional[DocumentMeta] = None
-        self.node_id = uuid.uuid4().hex
+        self.mid: MID = MID.create()
         self.reserved_uid = "DOCUMENT"
 
     def assign_meta(self, meta):

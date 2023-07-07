@@ -133,7 +133,9 @@ class MarkupRenderer:
                     node = self.traceability_index.get_anchor_by_uid_weak(
                         part.link
                     )
-                assert node is not None
+                assert (
+                    node is not None
+                ), f"Could not find a section or anchor with UID: {part.link}"
                 href = self.link_renderer.render_node_link(
                     node, self.context_document, document_type
                 )

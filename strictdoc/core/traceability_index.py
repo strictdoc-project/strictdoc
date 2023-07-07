@@ -21,6 +21,7 @@ from strictdoc.core.tree_cycle_detector import TreeCycleDetector
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.mid import MID
+from strictdoc.helpers.ordered_set import OrderedSet
 from strictdoc.helpers.sorting import alphanumeric_sort
 
 
@@ -54,6 +55,7 @@ class AnchorConnections:
 
 class GraphLinkType(LinkType, IntEnum):
     ANCHOR_UID_TO_ANCHOR_UUID = 1
+    SECTIONS_TO_INCOMING_LINKS = 2
 
 
 class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-instance-attributes  # noqa: E501
@@ -227,6 +229,16 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                 return assert_cast(anchor, Anchor)
         return None
 
+    def get_linkable_node_by_uid_weak(
+        self, uid
+    ) -> Union[Section, Anchor, None]:
+        linked_to_node: Union[
+            Section, Anchor, None
+        ] = self.get_section_by_uid_weak(uid)
+        if linked_to_node is None:
+            linked_to_node = self.get_anchor_by_uid_weak(uid)
+        return linked_to_node
+
     def find_node_with_duplicate_anchor(
         self, anchor_uid: str
     ) -> Union[Document, Section]:
@@ -293,6 +305,42 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         del self.requirements_parents[old_uid]
         if requirement.reserved_uid is not None:
             self.requirements_parents[requirement.reserved_uid] = existing_entry
+
+    def create_inline_link(self, new_link: InlineLink):
+        assert isinstance(new_link, InlineLink)
+
+        # InlineLink points to a section.
+        if new_link.link in self.requirements_parents:
+            section_connections: RequirementConnections = assert_cast(
+                self.requirements_parents[new_link.link], RequirementConnections
+            )
+            self.graph_database.add_link(
+                link_type=GraphLinkType.SECTIONS_TO_INCOMING_LINKS,
+                lhs_node=section_connections.requirement,
+                rhs_node=new_link,
+            )
+        elif self.graph_database.link_exists(
+            link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,  # noqa: E501
+            lhs_node=new_link.link,
+        ):
+            anchor_uuid = next(
+                iter(
+                    self.graph_database.get_link_values(
+                        link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
+                        lhs_node=new_link.link,
+                    )
+                )
+            )
+            anchor = assert_cast(
+                self.graph_database.get_node(anchor_uuid), Anchor
+            )
+            self.graph_database.add_link(
+                link_type=GraphLinkType.SECTIONS_TO_INCOMING_LINKS,
+                lhs_node=anchor,
+                rhs_node=new_link,
+            )
+        else:
+            raise NotImplementedError
 
     def update_requirement_parent_uid(
         self, requirement: Requirement, parent_uid: str
@@ -374,6 +422,20 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         document.ng_needs_generation = True
         if parent_requirement_document != document:
             parent_requirement_document.ng_needs_generation = True
+
+    def remove_inline_link(self, inline_link: InlineLink) -> None:
+        sections_with_incoming_links = (
+            self.graph_database.get_link_values_reverse_weak(
+                link_type=GraphLinkType.SECTIONS_TO_INCOMING_LINKS,
+                rhs_node=inline_link,
+            )
+        )
+        for section_with_incoming_links in sections_with_incoming_links:
+            self.graph_database.remove_link(
+                link_type=GraphLinkType.SECTIONS_TO_INCOMING_LINKS,
+                lhs_node=section_with_incoming_links,
+                rhs_node=inline_link,
+            )
 
     def validate_node_against_anchors(
         self, *, node: Union[Document, Section, None], new_anchors: List[Anchor]
@@ -479,6 +541,77 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                                 f"{node_type} with title "
                                 f"'{node_with_duplicate_anchor.title}'."
                             )
+
+    def validate_section_can_remove_uid(self, *, section: Section):
+        section_incoming_links: Optional[
+            List[InlineLink]
+        ] = self.get_section_incoming_links(section)
+        if section_incoming_links is None or len(section_incoming_links) == 0:
+            return
+
+        unique_incoming_link_parent_nodes = []
+        for section_incoming_link in section_incoming_links:
+            unique_incoming_link_parent_nodes.append(
+                section_incoming_link.parent.parent
+            )
+        incoming_link_parent_titles = map(
+            lambda n: f"'{n.title}'", unique_incoming_link_parent_nodes
+        )
+        incoming_links_sources_string = ", ".join(incoming_link_parent_titles)
+        raise SingleValidationError(
+            f"Cannot remove a section UID "
+            f"'{section.reserved_uid}' because there are "
+            f"existing LINKs referencing this "
+            "section. The incoming links are located in these "
+            f"nodes: {incoming_links_sources_string}."
+        )
+
+    def validate_can_create_uid(self, uid: str):
+        assert isinstance(uid, str), uid
+        assert len(uid) > 0, uid
+
+        existing_node_with_uid: Union[
+            Document, Section, Requirement, None
+        ] = None
+
+        for document in self.document_tree.document_list:
+            document_iterator = DocumentCachingIterator(document)
+            for node in document_iterator.all_content():
+                if isinstance(node, Document):
+                    if node.config.uid == uid:
+                        existing_node_with_uid = node
+                        break
+                elif isinstance(node, Section):
+                    if node.reserved_uid == uid:
+                        existing_node_with_uid = node
+                        break
+                elif isinstance(node, Requirement):
+                    if node.reserved_uid == uid:
+                        existing_node_with_uid = node
+                        break
+                else:
+                    raise NotImplementedError
+            else:
+                return
+
+        raise SingleValidationError(
+            "UID uniqueness validation error: "
+            "There is already an existing node "
+            f"with this UID: {existing_node_with_uid.get_title()}."
+        )
+
+    def get_section_incoming_links(
+        self, section: Section
+    ) -> Optional[List[InlineLink]]:
+        incoming_links: Optional[
+            OrderedSet[InlineLink]
+        ] = self.graph_database.get_link_values_weak(
+            link_type=GraphLinkType.SECTIONS_TO_INCOMING_LINKS,
+            lhs_node=section,
+        )
+        if incoming_links is not None:
+            return list(incoming_links)
+        return None
 
     def update_with_anchor(self, anchor: Anchor):
         # By this time, we know that the validations have passed just before.

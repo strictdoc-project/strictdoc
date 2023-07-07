@@ -49,6 +49,9 @@ class Document:  # pylint: disable=too-many-instance-attributes
             task_list.extend(section_or_requirement.section_contents)
         return False
 
+    def get_title(self):
+        return self.title
+
     @staticmethod
     def get_type_string() -> str:
         return "document"

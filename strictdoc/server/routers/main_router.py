@@ -234,6 +234,7 @@ def create_main_router(
 
     @router.post("/actions/document/create_section", response_class=Response)
     def create_section(
+        section_uid: str = Form(""),
         section_mid: str = Form(""),
         reference_mid: str = Form(""),
         whereto: str = Form(""),
@@ -243,6 +244,7 @@ def create_main_router(
         assert isinstance(whereto, str), whereto
         assert NodeCreationOrder.is_valid(whereto), whereto
 
+        assert isinstance(section_uid, str), section_uid
         assert (
             isinstance(section_mid, str) and len(section_mid) > 0
         ), section_mid
@@ -250,6 +252,9 @@ def create_main_router(
             isinstance(reference_mid, str) and len(reference_mid) > 0
         ), reference_mid
 
+        section_uid: str = sanitize_html_form_field(
+            section_uid, multiline=False
+        )
         section_title: str = sanitize_html_form_field(
             section_title, multiline=False
         )
@@ -267,6 +272,7 @@ def create_main_router(
         )
 
         form_object = SectionFormObject(
+            section_uid=section_uid,
             section_mid=section_mid,
             section_title=section_title,
             section_statement=section_content,
@@ -412,12 +418,14 @@ def create_main_router(
 
     @router.post("/actions/document/update_section", response_class=Response)
     def put_update_section(
+        section_uid: str = Form(""),
         section_mid: str = Form(""),
         section_title: Optional[str] = Form(""),
         section_content: Optional[str] = Form(""),
     ):
         assert isinstance(section_mid, str)
 
+        section_uid = sanitize_html_form_field(section_uid, multiline=False)
         section_title = sanitize_html_form_field(section_title, multiline=False)
         section_content = sanitize_html_form_field(
             section_content, multiline=True
@@ -427,6 +435,7 @@ def create_main_router(
         )
 
         form_object = SectionFormObject(
+            section_uid=section_uid,
             section_mid=section_mid,
             section_title=section_title,
             section_statement=section_content,

@@ -1,0 +1,39 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+Hello world!
+[/FREETEXT]
+
+[SECTION]
+TITLE: First section
+
+[FREETEXT]
+This is a free text of this section.
+
+[LINK: AD1]
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Second section
+
+[FREETEXT]
+This is a free text of this section.
+
+[ANCHOR: AD1]
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Third section
+
+[FREETEXT]
+This is a free text of this section.
+
+[ANCHOR: AD2]
+[/FREETEXT]
+
+[/SECTION]

@@ -160,6 +160,9 @@ class Requirement(
     def get_type_string() -> str:
         return "requirement"
 
+    def get_title(self):
+        return self.reserved_title
+
     # Reserved fields
 
     @property

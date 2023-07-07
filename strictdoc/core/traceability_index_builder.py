@@ -207,15 +207,12 @@ class TraceabilityIndexBuilder:
         # - Detect cycles
         # - Calculate depth of both parent and child links.
 
-        all_anchors: List[Anchor] = []
-
         document: Document
         for document in document_tree.document_list:
             for free_text in document.free_texts:
                 for part in free_text.parts:
                     if isinstance(part, Anchor):
                         assert part.value not in d_11_map_id_to_node
-                        all_anchors.append(part)
                         graph_database.add_node(
                             uuid=part.uuid,
                             node=part,
@@ -245,7 +242,6 @@ class TraceabilityIndexBuilder:
                                 )
                             elif isinstance(part, Anchor):
                                 assert part.value not in d_11_map_id_to_node
-                                all_anchors.append(part)
                                 graph_database.add_node(
                                     uuid=part.uuid,
                                     node=part,

@@ -3,6 +3,10 @@ from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
+from tests.end2end.helpers.exception_handler import (
+    handle_selenium_exceptions,
+)
+
 
 class Form:  # pylint: disable=invalid-name
     def __init__(self, test_case: BaseCase) -> None:
@@ -109,21 +113,24 @@ class Form:  # pylint: disable=invalid-name
     # Save/Cancel
 
     def do_form_cancel(self) -> None:
-        self.test_case.click_xpath('//*[@data-testid="form-cancel-action"]')
-        self.test_case.assert_element_not_present(
-            '//*[@data-testid="form-cancel-action"]'
-        )
+        with handle_selenium_exceptions():
+            self.test_case.click_xpath('//*[@data-testid="form-cancel-action"]')
+            self.test_case.assert_element_not_present(
+                '//*[@data-testid="form-cancel-action"]'
+            )
 
     def do_form_submit(self) -> None:
-        self.test_case.click_xpath('//*[@data-testid="form-submit-action"]')
-        self.test_case.assert_element_not_present(
-            '//*[@data-testid="form-submit-action"]'
-        )
+        with handle_selenium_exceptions():
+            self.test_case.click_xpath('//*[@data-testid="form-submit-action"]')
+            self.test_case.assert_element_not_present(
+                '//*[@data-testid="form-submit-action"]'
+            )
 
     def do_form_submit_and_catch_error(self, message: str) -> None:
-        self.test_case.click_xpath('//*[@data-testid="form-submit-action"]')
-        self.test_case.assert_element(
-            "//sdoc-form-error",
-            by=By.XPATH,
-        )
-        self.test_case.assert_text(f"{message}")
+        with handle_selenium_exceptions():
+            self.test_case.click_xpath('//*[@data-testid="form-submit-action"]')
+            self.test_case.assert_element(
+                "//sdoc-form-error",
+                by=By.XPATH,
+            )
+            self.test_case.assert_text(f"{message}")

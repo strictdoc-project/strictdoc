@@ -318,7 +318,8 @@ class SDWriter:
     def print_free_text_content(free_text):
         assert isinstance(free_text, FreeText)
         output = ""
-        for part in free_text.parts:
+
+        for part_idx, part in enumerate(free_text.parts):
             if isinstance(part, str):
                 output += part
             elif isinstance(part, InlineLink):
@@ -332,6 +333,9 @@ class SDWriter:
                     output += ", "
                     output += part.title
                 output += "]"
+                output += "\n"
+                if part_idx != (len(free_text.parts) - 1):
+                    output += "\n"
             else:
                 raise NotImplementedError(part)
         return output

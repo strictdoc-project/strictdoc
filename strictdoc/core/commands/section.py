@@ -1,7 +1,10 @@
 from collections import defaultdict
 from typing import Dict, List, Optional, Union
 
+from textx import TextXSyntaxError
+
 from strictdoc.backend.sdoc.document_reference import DocumentReference
+from strictdoc.backend.sdoc.error_handling import get_textx_syntax_error_message
 from strictdoc.backend.sdoc.free_text_reader import SDFreeTextReader
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
@@ -58,30 +61,38 @@ class UpdateSectionCommand:
             ) = RstToHtmlFragmentWriter(
                 context_document=section.document
             ).write_with_validation(form_object.section_statement_unescaped)
+
             if parsed_html is None:
                 errors["section_statement"].append(rst_error)
             else:
-                free_text_container = SDFreeTextReader.read(
-                    form_object.section_statement_unescaped
-                )
-                anchors: List[Anchor] = []
-                for part in free_text_container.parts:
-                    if isinstance(part, InlineLink):
-                        # FIXME: Add validations.
-                        pass
-                    elif isinstance(part, Anchor):
-                        anchors.append(part)
-                    else:
-                        pass
-                if anchors is not None:
-                    try:
-                        traceability_index.validate_node_against_anchors(
-                            node=section, new_anchors=anchors
-                        )
-                    except SingleValidationError as anchors_validation_error:
-                        errors["section_statement"].append(
-                            anchors_validation_error.args[0]
-                        )
+                try:
+                    free_text_container = SDFreeTextReader.read(
+                        form_object.section_statement_unescaped
+                    )
+                    anchors: List[Anchor] = []
+                    for part in free_text_container.parts:
+                        if isinstance(part, InlineLink):
+                            # FIXME: Add validations.
+                            pass
+                        elif isinstance(part, Anchor):
+                            anchors.append(part)
+                        else:
+                            pass
+                    if anchors is not None:
+                        try:
+                            traceability_index.validate_node_against_anchors(
+                                node=section, new_anchors=anchors
+                            )
+                        except (
+                            SingleValidationError
+                        ) as anchors_validation_error:
+                            errors["section_statement"].append(
+                                anchors_validation_error.args[0]
+                            )
+                except TextXSyntaxError as exception:
+                    errors["section_statement"].append(
+                        get_textx_syntax_error_message(exception)
+                    )
         else:
             # If there is no free text, we need to check the anchors that may
             # have been in the existing free text.
@@ -93,6 +104,7 @@ class UpdateSectionCommand:
                 errors["section_statement"].append(
                     anchors_validation_error.args[0]
                 )
+
         if len(errors) > 0:
             raise validation_error
 
@@ -204,28 +216,34 @@ class CreateSectionCommand:
             if parsed_html is None:
                 errors["section_statement"].append(rst_error)
             else:
-                free_text_container = SDFreeTextReader.read(
-                    form_object.section_statement_unescaped
-                )
-                anchors: List[Anchor] = []
-                for part in free_text_container.parts:
-                    if isinstance(part, InlineLink):
-                        # FIXME: Add validations.
-                        pass
-                    elif isinstance(part, Anchor):
-                        anchors.append(part)
-                    else:
-                        pass
-                if anchors is not None:
-                    try:
-                        traceability_index.validate_node_against_anchors(
-                            node=None, new_anchors=anchors
-                        )
-                    except SingleValidationError as anchors_validation_error:
-                        errors["section_statement"].append(
-                            anchors_validation_error.args[0]
-                        )
-
+                try:
+                    free_text_container = SDFreeTextReader.read(
+                        form_object.section_statement_unescaped
+                    )
+                    anchors: List[Anchor] = []
+                    for part in free_text_container.parts:
+                        if isinstance(part, InlineLink):
+                            # FIXME: Add validations.
+                            pass
+                        elif isinstance(part, Anchor):
+                            anchors.append(part)
+                        else:
+                            pass
+                    if anchors is not None:
+                        try:
+                            traceability_index.validate_node_against_anchors(
+                                node=None, new_anchors=anchors
+                            )
+                        except (
+                            SingleValidationError
+                        ) as anchors_validation_error:
+                            errors["section_statement"].append(
+                                anchors_validation_error.args[0]
+                            )
+                except TextXSyntaxError as exception:
+                    errors["section_statement"].append(
+                        get_textx_syntax_error_message(exception)
+                    )
         if len(errors) > 0:
             raise validation_error
 

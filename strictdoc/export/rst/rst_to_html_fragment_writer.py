@@ -153,4 +153,5 @@ class RstToHtmlFragmentWriter:
 .. raw:: html
 
     <sdoc-anchor id="{anchor}" data-anchor="📋{anchor}" style="top:unset"></sdoc-anchor>
+
 """

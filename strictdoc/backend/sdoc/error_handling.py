@@ -1,3 +1,5 @@
+from textx import TextXSyntaxError
+
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElementField,
@@ -7,6 +9,10 @@ from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
     RequirementField,
 )
+
+
+def get_textx_syntax_error_message(exception: TextXSyntaxError):
+    return f"SDoc markup error: {exception.context}."
 
 
 class StrictDocSemanticError(Exception):

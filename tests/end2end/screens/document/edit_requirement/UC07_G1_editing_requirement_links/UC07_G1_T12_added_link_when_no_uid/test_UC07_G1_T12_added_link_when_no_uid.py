@@ -1,5 +1,4 @@
-from seleniumbase import BaseCase
-
+from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
@@ -10,7 +9,7 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 from tests.end2end.server import SDocTestServer
 
 
-class Test_UC07_G1_T12_AddedLinkWhenNoUID(BaseCase):
+class Test_UC07_G1_T12_AddedLinkWhenNoUID(E2ECase):
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
@@ -31,7 +30,6 @@ class Test_UC07_G1_T12_AddedLinkWhenNoUID(BaseCase):
 
             screen_document.assert_text("Hello world!")
 
-            # Open form and add 1 fields:
             requirement = screen_document.get_requirement()
             form_edit_requirement: Form_EditRequirement = (
                 requirement.do_open_form_edit_requirement()

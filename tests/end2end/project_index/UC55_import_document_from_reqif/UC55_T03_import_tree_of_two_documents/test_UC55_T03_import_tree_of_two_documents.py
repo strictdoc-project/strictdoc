@@ -1,7 +1,6 @@
 import os
 
-from seleniumbase import BaseCase
-
+from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.screens.project_index.form_import_reqif import (
     Form_ImportReqIF,
@@ -17,7 +16,7 @@ path_to_reqif_sample = os.path.join(
 )
 
 
-class Test_UC55_T03_ImportTreeOfTwoDocuments(BaseCase):
+class Test_UC55_T03_ImportTreeOfTwoDocuments(E2ECase):
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 

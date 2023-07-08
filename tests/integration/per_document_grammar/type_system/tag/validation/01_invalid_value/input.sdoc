@@ -8,6 +8,9 @@ ELEMENTS:
   - TITLE: TAG_FIELD
     TYPE: Tag
     REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
 
 [REQUIREMENT]
 TAG_FIELD: A B C

@@ -53,6 +53,12 @@ class SDocParsingProcessor:
         self.parse_context.document_config = document_config
 
     def process_document_grammar(self, document_grammar: DocumentGrammar):
+        for grammar_element in document_grammar.elements:
+            if "STATEMENT" not in grammar_element.fields_map:
+                raise StrictDocSemanticError.grammar_missing_reserved_statement(
+                    grammar_element,
+                    **get_location(document_grammar),
+                )
         self.parse_context.document_grammar = document_grammar
 
     def process_section(self, section: Section):

@@ -8,6 +8,9 @@ ELEMENTS:
   - TITLE: CHOICE_FIELD
     TYPE: MultipleChoice(A, B, C, D)
     REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
 
 [REQUIREMENT]
 CHOICE_FIELD: A, E

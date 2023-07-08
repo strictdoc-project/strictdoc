@@ -1,7 +1,7 @@
 RUN: %expect_exit 1 %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
 
-CHECK:error: could not parse file: {{.*}}input.sdoc.
-CHECK: Semantic error: Requirement field of type Reference has an unsupported Reference Type item: FileReference({{.*}})
-CHECK:Location: {{.*}}input.sdoc:18:1
-CHECK:Hint: Problematic field: REFS. Compare with the document grammar: [UID, REFS] for type: LOW_LEVEL_REQUIREMENT
-CHECK:error: Parallelizer: One of the child processes has exited prematurely.
+CHECK: error: could not parse file: {{.*}}input.sdoc.
+CHECK: Semantic error: Requirement field of type Reference has an unsupported Reference Type item: FileReference({{.*}}).
+CHECK: Location: {{.*}}input.sdoc:21:1
+CHECK: Hint: Problematic field: REFS. Compare with the document grammar: [UID, REFS, STATEMENT] for type: LOW_LEVEL_REQUIREMENT
+CHECK: error: Parallelizer: One of the child processes has exited prematurely.

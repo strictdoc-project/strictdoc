@@ -985,7 +985,7 @@ TITLE: Test Doc
 ELEMENTS:
 - TAG: LOW_LEVEL_REQUIREMENT
   FIELDS:
-  - TITLE: CUSTOM_FIELD
+  - TITLE: STATEMENT
     TYPE: String
     REQUIRED: True
 """.lstrip()
@@ -1013,6 +1013,9 @@ ELEMENTS:
   - TITLE: SINGLE_CHOICE_FIELD
     TYPE: SingleChoice(A, B, C)
     REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
 
 [LOW_LEVEL_REQUIREMENT]
 SINGLE_CHOICE_FIELD: A
@@ -1041,6 +1044,9 @@ ELEMENTS:
   - TITLE: MULTIPLE_CHOICE_FIELD
     TYPE: MultipleChoice(A, B, C)
     REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
 
 [LOW_LEVEL_REQUIREMENT]
 MULTIPLE_CHOICE_FIELD: A, C
@@ -1069,6 +1075,9 @@ ELEMENTS:
   - TITLE: TAG_FIELD
     TYPE: Tag
     REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
 
 [LOW_LEVEL_REQUIREMENT]
 TAG_FIELD: A, C
@@ -1097,6 +1106,9 @@ ELEMENTS:
   - TITLE: MY_FIELD
     TYPE: String
     REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
 
 [REQUIREMENT]
 MY_FIELD: >>>
@@ -1131,6 +1143,9 @@ ELEMENTS:
     REQUIRED: True
   - TITLE: REFS
     TYPE: Reference(ParentReqReference, FileReference, BibReference)
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
     REQUIRED: False
 
 [LOW_LEVEL_REQUIREMENT]
@@ -1211,6 +1226,9 @@ ELEMENTS:
   - TITLE: REFS
     TYPE: Reference(ParentReqReference, FileReference, BibReference)
     REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
 
 [LOW_LEVEL_REQUIREMENT]
 REFS:
@@ -1249,6 +1267,9 @@ ELEMENTS:
   FIELDS:
   - TITLE: REFS
     TYPE: Reference(ParentReqReference, FileReference, BibReference)
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
     REQUIRED: False
 
 [LOW_LEVEL_REQUIREMENT]
@@ -1306,6 +1327,9 @@ ELEMENTS:
   - TITLE: REFS
     TYPE: Reference(FileReference)
     REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
 
 [LOW_LEVEL_REQUIREMENT]
 UID: ID-001
@@ -1326,7 +1350,7 @@ REFS:
     assert exc_info.type is StrictDocSemanticError
     assert re.fullmatch(
         "Requirement field of type Reference has an unsupported Reference "
-        'Type item: ParentReqReference\\(.*ref_uid = "ID-001".*\\)',
+        'Type item: ParentReqReference\\(.*ref_uid = "ID-001".*\\).',
         exc_info.value.args[0],
     )
 
@@ -1345,6 +1369,9 @@ ELEMENTS:
     REQUIRED: True
   - TITLE: REFS
     TYPE: Reference(ParentReqReference, FileReference, BibReference)
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
     REQUIRED: False
 
 [LOW_LEVEL_REQUIREMENT]
@@ -1399,6 +1426,9 @@ ELEMENTS:
     REQUIRED: True
   - TITLE: REFS
     TYPE: Reference(ParentReqReference, FileReference, BibReference)
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
     REQUIRED: False
 
 [LOW_LEVEL_REQUIREMENT]
@@ -1456,6 +1486,9 @@ ELEMENTS:
   - TITLE: REFS
     TYPE: Reference(ParentReqReference)
     REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
 
 [LOW_LEVEL_REQUIREMENT]
 UID: ID-001
@@ -1477,7 +1510,7 @@ REFS:
 
     assert re.fullmatch(
         "Requirement field of type Reference has an unsupported Reference"
-        " Type item: FileReference\\(.*\\)",
+        " Type item: FileReference\\(.*\\).",
         exc_info.value.args[0],
     )
 
@@ -1496,6 +1529,9 @@ ELEMENTS:
     REQUIRED: True
   - TITLE: REFS
     TYPE: Reference(ParentReqReference, FileReference, BibReference)
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
     REQUIRED: False
 
 [LOW_LEVEL_REQUIREMENT]
@@ -1596,6 +1632,9 @@ ELEMENTS:
   - TITLE: REFS
     TYPE: Reference(ParentReqReference, FileReference, BibReference)
     REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
 
 [LOW_LEVEL_REQUIREMENT]
 UID: ID-000
@@ -1665,6 +1704,9 @@ ELEMENTS:
   - TITLE: REFS
     TYPE: Reference(BibReference)
     REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
 
 [LOW_LEVEL_REQUIREMENT]
 UID: ID-001
@@ -1687,7 +1729,7 @@ REFS:
 
     assert re.fullmatch(
         "Requirement field of type Reference has an unsupported Reference "
-        'Type item: ParentReqReference\\(.*ref_uid = "ID-001".*\\)',
+        'Type item: ParentReqReference\\(.*ref_uid = "ID-001".*\\).',
         exc_info.value.args[0],
     )
 
@@ -1885,6 +1927,9 @@ TITLE: Test Doc
 ELEMENTS:
 - TAG: REQUIREMENT
   FIELDS:
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
   - TITLE: MY_FIELD
     TYPE: String
     REQUIRED: True

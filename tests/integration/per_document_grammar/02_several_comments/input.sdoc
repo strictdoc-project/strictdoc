@@ -8,6 +8,9 @@ ELEMENTS:
   - TITLE: ONE
     TYPE: String
     REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
   - TITLE: COMMENT
     TYPE: String
     REQUIRED: True

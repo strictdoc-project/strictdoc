@@ -11,6 +11,9 @@ ELEMENTS:
   - TITLE: REFS
     TYPE: Reference(ParentReqReference)
     REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
 
 [LOW_LEVEL_REQUIREMENT]
 UID: ID-001

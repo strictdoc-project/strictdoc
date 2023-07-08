@@ -47,22 +47,46 @@ def pytest_configure(config):
         test_environment.is_parallel_execution = True
 
 
-TESTS_TOTAL = 0
+class GlobalTestCounter:
+    def __init__(self):
+        self.total: int = 0
+        self.total_run: int = 0
+        self.total_failed: int = 0
+
+
+test_counter = GlobalTestCounter()
 
 
 # How to get the count of tests collected?
 # https://stackoverflow.com/a/66515819/598057
 def pytest_runtestloop(session):
-    global TESTS_TOTAL  # pylint: disable=global-statement
-    TESTS_TOTAL = len(session.items)
-
-
-TEST_COUNTER = 0
+    test_counter.total = len(session.items)
 
 
 @pytest.fixture(autouse=True)
 def run_around_tests():
-    global TEST_COUNTER  # pylint: disable=global-statement
-    TEST_COUNTER += 1
-    print(f"-> Test {TEST_COUNTER}/{TESTS_TOTAL}")  # noqa: T201
+    test_counter.total_run += 1
+
+    print_line = f"-> Test {test_counter.total_run}/{test_counter.total}"
+    if test_counter.total_failed > 0:
+        print_line += f" ({test_counter.total_failed} failed)"
+
+    print(print_line)  # noqa: T201
+
     yield
+
+
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_makereport(item, call):  # pylint: disable=unused-argument
+    """
+    The actual wrapper that gets called before and after every test.
+    https://stackoverflow.com/a/61526101/598057
+    """
+
+    outcome = yield
+
+    result = outcome.get_result()
+
+    if result.when == "call":
+        if result.failed:
+            test_counter.total_failed += 1

@@ -1,5 +1,4 @@
-from seleniumbase import BaseCase
-
+from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.screens.project_index.form_add_document import (
     Form_AddDocument,
@@ -10,7 +9,7 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 from tests.end2end.server import SDocTestServer
 
 
-class Test_UC51_T01_CreatingDocument(BaseCase):
+class Test_UC51_T01_CreatingDocument(E2ECase):
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 

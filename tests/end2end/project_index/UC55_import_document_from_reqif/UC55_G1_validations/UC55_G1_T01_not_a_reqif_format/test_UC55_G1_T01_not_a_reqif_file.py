@@ -1,7 +1,6 @@
 import os
 
-from seleniumbase import BaseCase
-
+from tests.end2end.e2e_case import E2ECase
 from tests.end2end.helpers.screens.project_index.form_import_reqif import (
     Form_ImportReqIF,
 )
@@ -16,7 +15,7 @@ path_to_reqif_sample = os.path.join(
 )
 
 
-class Test_UC55_G1_T01_NotAReqIFormat(BaseCase):
+class Test_UC55_G1_T01_NotAReqIFormat(E2ECase):
     def test(self):
         with SDocTestServer(
             input_path=path_to_this_test_file_folder

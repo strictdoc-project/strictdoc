@@ -1,7 +1,6 @@
 import os
 
-from seleniumbase import BaseCase
-
+from tests.end2end.e2e_case import E2ECase
 from tests.end2end.helpers.screens.project_index.form_add_document import (
     Form_AddDocument,
 )
@@ -13,7 +12,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test_UC51_G1_T01_CreatingDocumentWithEmptyTitle(BaseCase):
+class Test_UC51_G1_T01_CreatingDocumentWithEmptyTitle(E2ECase):
     def test(self):
         with SDocTestServer(
             input_path=path_to_this_test_file_folder

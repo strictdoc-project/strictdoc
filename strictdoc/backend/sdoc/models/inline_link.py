@@ -1,4 +1,4 @@
-from strictdoc.core.graph_database import UUID
+from strictdoc.helpers.mid import MID
 
 
 class InlineLink:
@@ -6,4 +6,4 @@ class InlineLink:
         self.parent = parent
         self.link = value
 
-        self.uuid: UUID = UUID.create()
+        self.mid: MID = MID.create()

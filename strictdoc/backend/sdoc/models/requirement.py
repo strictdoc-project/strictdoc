@@ -1,6 +1,5 @@
-import uuid
 from collections import OrderedDict
-from typing import Any, Dict, List, Optional, Union, cast
+from typing import Any, Dict, List, Optional, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document
@@ -20,6 +19,8 @@ from strictdoc.backend.sdoc.models.type_system import (
     RequirementFieldName,
 )
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.mid import MID
 
 MULTILINE_WORD_THRESHOLD = 6
 
@@ -142,7 +143,7 @@ class Requirement(
         self.ng_document_reference: Optional[DocumentReference] = None
         self.context = RequirementContext()
 
-        self.node_id: str = uuid.uuid4().hex
+        self.mid: MID = MID.create()
 
         # HEF4
         self.ng_resolved_custom_level: Optional[str] = None
@@ -283,8 +284,8 @@ class Requirement(
         for reference in self.references:
             if reference.ref_type != ReferenceType.PARENT:
                 continue
-            parent_reference: ParentReqReference = cast(
-                ParentReqReference, reference
+            parent_reference: ParentReqReference = assert_cast(
+                reference, ParentReqReference
             )
             references.append(parent_reference.ref_uid)
         return references

@@ -119,7 +119,8 @@ class DocumentGrammarFormObject(ErrorObject):
             )
             grammar_form_fields.append(grammar_form_field)
         return DocumentGrammarFormObject(
-            document_mid=document.node_id, fields=grammar_form_fields
+            document_mid=document.mid.get_string_value(),
+            fields=grammar_form_fields,
         )
 
     def validate(self) -> bool:

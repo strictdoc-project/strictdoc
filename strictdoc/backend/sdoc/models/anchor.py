@@ -1,7 +1,7 @@
 from typing import Optional
 
-from strictdoc.core.graph_database import UUID
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.mid import MID
 
 
 @auto_described
@@ -18,7 +18,7 @@ class Anchor:
         self.title: str = title if has_title else value
         self.has_title = has_title
 
-        self.uuid: UUID = UUID.create()
+        self.mid: MID = MID.create()
 
     @property
     def document(self):

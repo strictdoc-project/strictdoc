@@ -1,14 +1,14 @@
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.core.graph_database import (
-    UUID,
     ConstraintViolation,
     GraphDatabase,
 )
 from strictdoc.core.traceability_index import GraphLinkType
+from strictdoc.helpers.mid import MID
 
 
 class RemoveNodeValidation:
-    def validate(self, database: GraphDatabase, uuid: UUID):
+    def validate(self, database: GraphDatabase, uuid: MID):
         node = database.get_node(uuid)
         if isinstance(node, Anchor):
             self.validate_anchor(database, node)

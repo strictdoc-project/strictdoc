@@ -4,6 +4,7 @@ from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
+from strictdoc.helpers.mid import MID
 from tests.unit.helpers.test_document_builder import DocumentBuilder
 
 
@@ -330,3 +331,25 @@ def test__adding_parent_link__04__two_requirements_remove_parent_link():
         requirement1
     )
     assert req1_child_requirements == []
+
+
+def test_get_node_by_mid():
+    document_builder = DocumentBuilder()
+    document_1 = document_builder.build()
+
+    file_tree = []
+    document_list = [document_1]
+    map_docs_by_paths = {}
+    document_tree = DocumentTree(
+        file_tree=file_tree,
+        document_list=document_list,
+        map_docs_by_paths=map_docs_by_paths,
+        map_docs_by_rel_paths={},
+    )
+    traceability_index: TraceabilityIndex = (
+        TraceabilityIndexBuilder.create_from_document_tree(document_tree)
+    )
+    assert (
+        traceability_index.get_node_by_mid(MID(document_1.mid.mid))
+        == document_1
+    )

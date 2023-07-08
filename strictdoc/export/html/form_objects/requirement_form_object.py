@@ -1,6 +1,5 @@
 import html
 import re
-import uuid
 from collections import defaultdict
 from enum import Enum
 from typing import Dict, List, Optional
@@ -32,6 +31,7 @@ from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.mid import MID
 from strictdoc.helpers.string import sanitize_html_form_field
 from strictdoc.server.error_object import ErrorObject
 
@@ -243,7 +243,7 @@ class RequirementFormObject(ErrorObject):
             form_fields.append(form_field)
 
         return RequirementFormObject(
-            requirement_mid=uuid.uuid4().hex,
+            requirement_mid=MID.create().get_string_value(),
             fields=form_fields,
             reference_fields=[],
             exiting_requirement_uid=None,
@@ -312,7 +312,7 @@ class RequirementFormObject(ErrorObject):
                 )
                 form_fields.append(form_field)
         return RequirementFormObject(
-            requirement_mid=requirement.node_id,
+            requirement_mid=requirement.mid.get_string_value(),
             fields=form_fields,
             reference_fields=form_refs_fields,
             exiting_requirement_uid=requirement.reserved_uid,

@@ -6,7 +6,7 @@
 
 <turbo-frame
 {%- if project_config.is_running_on_server %}
-  id="article-{{ sdoc_entity.node_id }}"
+  id="article-{{ sdoc_entity.mid.get_string_value() }}"
 {% endif -%}
 >
 

@@ -1,9 +1,9 @@
 import html
-import uuid
 from typing import Optional
 
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.mid import MID
 from strictdoc.server.error_object import ErrorObject
 
 
@@ -16,9 +16,9 @@ class SectionFormObject(ErrorObject):
         section_title: str,
         section_statement: str,
     ):
-        assert isinstance(section_mid, str)
-        assert isinstance(section_title, str)
-        assert isinstance(section_statement, str)
+        assert isinstance(section_mid, str), section_mid
+        assert isinstance(section_title, str), section_title
+        assert isinstance(section_statement, str), section_statement
         super().__init__()
         self.section_mid: str = section_mid
         self.section_title: str = section_title
@@ -28,7 +28,7 @@ class SectionFormObject(ErrorObject):
     @staticmethod
     def create_new():
         return SectionFormObject(
-            section_mid=uuid.uuid4().hex,
+            section_mid=MID.create().get_string_value(),
             section_title="",
             section_statement="",
         )
@@ -41,7 +41,7 @@ class SectionFormObject(ErrorObject):
             else ""
         )
         return SectionFormObject(
-            section_mid=section.node_id,
+            section_mid=section.mid.get_string_value(),
             section_title=section.title,
             section_statement=statement,
         )

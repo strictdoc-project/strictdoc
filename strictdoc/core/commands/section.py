@@ -27,6 +27,7 @@ from strictdoc.export.html.form_objects.section_form_object import (
 from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
+from strictdoc.helpers.mid import MID
 
 
 class UpdateSectionCommand:
@@ -158,7 +159,7 @@ class UpdateSectionCommand:
                     lhs_node=anchor_uid_to_be_removed,
                     rhs_node=anchor_uuid,
                 )
-                traceability_index.graph_database.remove_node(uuid=anchor_uuid)
+                traceability_index.graph_database.remove_node(mid=anchor_uuid)
         else:
             section.free_texts = []
 
@@ -195,7 +196,7 @@ class CreateSectionCommand:
 
         reference_node: Union[
             Document, Section
-        ] = traceability_index.get_node_by_id(reference_mid)
+        ] = traceability_index.get_node_by_mid(MID(reference_mid))
         document = (
             reference_node
             if isinstance(reference_node, Document)
@@ -276,12 +277,12 @@ class CreateSectionCommand:
             free_texts=[],
             section_contents=[],
         )
-        section.node_id = form_object.section_mid
+        section.mid = MID(form_object.section_mid)
         section.ng_document_reference = DocumentReference()
         section.ng_document_reference.set_document(document)
         assert parent.ng_level is not None, parent
         section.ng_level = parent.ng_level + 1
-        traceability_index._map_id_to_node[section.node_id] = section
+        traceability_index._map_id_to_node[section.mid] = section
         parent.section_contents.insert(insert_to_idx, section)
 
         # Updating section title.

@@ -4,8 +4,8 @@ CHECK: Published: Test document
 RUN: %cat %S/Output/html/02_several_comments/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML:ONE
 CHECK-HTML:One-value
-CHECK-HTML:TWO
-CHECK-HTML:Two-value
 CHECK-HTML:Comment #1
 CHECK-HTML:Comment #2
 CHECK-HTML:Comment #3
+CHECK-HTML:TWO
+CHECK-HTML:Two-value

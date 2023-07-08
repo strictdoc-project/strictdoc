@@ -22,8 +22,6 @@ from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.mid import MID
 
-MULTILINE_WORD_THRESHOLD = 6
-
 
 @auto_described
 class RequirementContext:
@@ -299,6 +297,13 @@ class Requirement(
     def enumerate_meta_fields(
         self, skip_single_lines=False, skip_multi_lines=False
     ):
+        element: GrammarElement = self.document.grammar.elements_by_type[
+            self.requirement_type
+        ]
+        grammar_field_titles = list(map(lambda f: f.title, element.fields))
+        statement_field_index = grammar_field_titles.index(
+            RequirementFieldName.STATEMENT
+        )
         for field in self.enumerate_fields():
             if field.field_name in RESERVED_NON_META_FIELDS:
                 continue
@@ -307,10 +312,11 @@ class Requirement(
                 if field.field_value
                 else field.field_value_multiline
             )
-            if (
-                len(meta_field_value.splitlines()) > 1
-                or len(meta_field_value.split(" ")) > MULTILINE_WORD_THRESHOLD
-            ):
+            field_index = grammar_field_titles.index(field.field_name)
+
+            # A field is considered singleline if it goes before the STATEMENT
+            # field and vice versa.
+            if field_index > statement_field_index:
                 is_single_line_field = False
             else:
                 is_single_line_field = True

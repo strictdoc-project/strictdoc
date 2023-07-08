@@ -1,0 +1,7 @@
+RUN: %expect_exit 1 %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+
+CHECK: error: could not parse file: {{.*}}input.sdoc.
+CHECK: Semantic error: Grammar element 'REQUIREMENT' is missing a reserved STATEMENT field declaration.
+CHECK: Location: {{.*}}input.sdoc:4:1
+CHECK: Hint: STATEMENT plays a key role in StrictDoc's HTML user interface as well as in the other export formats. It is a reserved field that any grammar must provide.
+CHECK: error: Parallelizer: One of the child processes has exited prematurely.

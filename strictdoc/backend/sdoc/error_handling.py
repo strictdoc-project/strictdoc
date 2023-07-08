@@ -2,6 +2,7 @@ from textx import TextXSyntaxError
 
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
+    GrammarElement,
     GrammarElementField,
 )
 from strictdoc.backend.sdoc.models.reference import Reference
@@ -32,7 +33,7 @@ class StrictDocSemanticError(Exception):
         requirement_type, line=None, col=None, filename=None
     ):
         return StrictDocSemanticError(
-            title=f"Invalid requirement type: {requirement_type}",
+            title=f"Invalid requirement type: {requirement_type}.",
             hint=None,
             example=None,
             line=line,
@@ -57,7 +58,7 @@ class StrictDocSemanticError(Exception):
             title=f"Invalid requirement field: {field_name}",
             hint=(
                 f"Compare with the document grammar: [{grammar_dump}] "
-                f"for type: {requirement.requirement_type}"
+                f"for type: {requirement.requirement_type}."
             ),
             example=None,
             line=line,
@@ -80,11 +81,11 @@ class StrictDocSemanticError(Exception):
         return StrictDocSemanticError(
             title=(
                 f"Requirement is missing a field that is required by "
-                f"grammar: {grammar_field.title}"
+                f"grammar: {grammar_field.title}."
             ),
             hint=(
                 f"Requirement fields: [{requirement.dump_fields_as_parsed()}], "
-                f"Grammar fields: [{grammar_fields}]"
+                f"grammar fields: [{grammar_fields}]."
             ),
             example=None,
             line=line,
@@ -111,7 +112,7 @@ class StrictDocSemanticError(Exception):
             ),
             hint=(
                 f"Requirement fields: [{requirement.dump_fields_as_parsed()}], "
-                f"Grammar fields: [{grammar_fields}]"
+                f"grammar fields: [{grammar_fields}]."
             ),
             example=None,
             line=line,
@@ -136,11 +137,11 @@ class StrictDocSemanticError(Exception):
             requirement.requirement_type
         )
         return StrictDocSemanticError(
-            title=f"Wrong field order for requirement: [{requirement_dump}]",
+            title=f"Wrong field order for requirement: [{requirement_dump}].",
             hint=(
                 f"Problematic field: {problematic_field.field_name}. "
                 f"Compare with the document grammar: [{grammar_dump}] "
-                f"for type: {requirement.requirement_type}"
+                f"for type: {requirement.requirement_type}."
             ),
             example=None,
             line=line,
@@ -160,7 +161,7 @@ class StrictDocSemanticError(Exception):
         return StrictDocSemanticError(
             title=(
                 f"Requirement field has an invalid SingleChoice value: "
-                f"{requirement_field.field_value}"
+                f"{requirement_field.field_value}."
             ),
             hint=(
                 f"Problematic field: {requirement_field.field_name}. "
@@ -168,7 +169,7 @@ class StrictDocSemanticError(Exception):
                 f"["
                 f"{document_grammar.dump_fields(requirement.requirement_type)}"
                 f"] "
-                f"for type: {requirement.requirement_type}"
+                f"for type: {requirement.requirement_type}."
             ),
             example=None,
             line=line,
@@ -188,7 +189,7 @@ class StrictDocSemanticError(Exception):
         return StrictDocSemanticError(
             title=(
                 f"Requirement field has an invalid MultipleChoice value: "
-                f"{requirement_field.field_value}"
+                f"{requirement_field.field_value}."
             ),
             hint=(
                 f"Problematic field: {requirement_field.field_name}. "
@@ -196,7 +197,7 @@ class StrictDocSemanticError(Exception):
                 f"["
                 f"{document_grammar.dump_fields(requirement.requirement_type)}"
                 f"] "
-                f"for type: {requirement.requirement_type}"
+                f"for type: {requirement.requirement_type}."
             ),
             example=None,
             line=line,
@@ -214,7 +215,7 @@ class StrictDocSemanticError(Exception):
         return StrictDocSemanticError(
             title=(
                 f"Requirement field of type MultipleChoice is invalid: "
-                f"{requirement_field.field_value}"
+                f"{requirement_field.field_value}."
             ),
             hint="MultipleChoice field requires ', '-separated values.",
             example=None,
@@ -233,7 +234,7 @@ class StrictDocSemanticError(Exception):
         return StrictDocSemanticError(
             title=(
                 f"Requirement field of type Tag is invalid: "
-                f"{requirement_field.field_value}"
+                f"{requirement_field.field_value}."
             ),
             hint="Tag field requires ', '-separated values.",
             example=None,
@@ -256,7 +257,7 @@ class StrictDocSemanticError(Exception):
             title=(
                 f"Requirement field of type Reference has an unsupported"
                 f" Reference Type item: "
-                f"{reference_item}"
+                f"{reference_item}."
             ),
             hint=(
                 f"Problematic field: {requirement_field.field_name}. "
@@ -264,7 +265,30 @@ class StrictDocSemanticError(Exception):
                 f"["
                 f"{document_grammar.dump_fields(requirement.requirement_type)}"
                 f"] "
-                f"for type: {requirement.requirement_type}"
+                f"for type: {requirement.requirement_type}."
+            ),
+            example=None,
+            line=line,
+            col=col,
+            filename=filename,
+        )
+
+    @staticmethod
+    def grammar_missing_reserved_statement(
+        grammar_element: GrammarElement,
+        line=None,
+        col=None,
+        filename=None,
+    ):
+        return StrictDocSemanticError(
+            title=(
+                f"Grammar element '{grammar_element.tag}' is missing a reserved"
+                " STATEMENT field declaration."
+            ),
+            hint=(
+                "STATEMENT plays a key role in StrictDoc's HTML user interface "
+                "as well as in the other export formats. It is a reserved field"
+                " that any grammar must provide."
             ),
             example=None,
             line=line,

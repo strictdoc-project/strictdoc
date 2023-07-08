@@ -11,6 +11,9 @@ ELEMENTS:
   - TITLE: TWO
     TYPE: String
     REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
 
 [REQUIREMENT]
 ONE: Foo

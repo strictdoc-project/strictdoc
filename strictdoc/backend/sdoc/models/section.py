@@ -54,6 +54,9 @@ class Section(Node):  # pylint: disable=too-many-instance-attributes
     def get_type_string() -> str:
         return "section"
 
+    def get_title(self):
+        return self.title
+
     @property
     def document(self):
         return self.ng_document_reference.get_document()

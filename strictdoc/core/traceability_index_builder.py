@@ -169,7 +169,6 @@ class TraceabilityIndexBuilder:
         # TODO: Too many things going on below. Would be great to simplify this
         # workflow.
         d_01_document_iterators: Dict[Document, DocumentCachingIterator] = {}
-        d_02_requirements_map: Dict[str, RequirementConnections] = {}
         d_03_map_doc_titles_to_tag_lists = {}
         d_05_map_documents_to_parents: Dict[
             Document, Set[Document]
@@ -185,6 +184,17 @@ class TraceabilityIndexBuilder:
 
         graph_database = GraphDatabase()
         graph_database.remove_node_validation = RemoveNodeValidation()
+
+        traceability_index = TraceabilityIndex(
+            d_01_document_iterators,
+            {},
+            d_03_map_doc_titles_to_tag_lists,
+            d_05_map_documents_to_parents,
+            d_06_map_documents_to_children,
+            file_traceability_index=d_07_file_traceability_index,
+            map_id_to_node=d_11_map_id_to_node,
+            graph_database=graph_database,
+        )
 
         # It seems to be impossible to accomplish everything in just one for
         # loop. One particular problem that requires two passes: it is not
@@ -255,8 +265,8 @@ class TraceabilityIndexBuilder:
 
                 if not node.reserved_uid:
                     continue
-                if node.reserved_uid in d_02_requirements_map:
-                    other_req_doc = d_02_requirements_map[
+                if node.reserved_uid in traceability_index.requirements_parents:
+                    other_req_doc = traceability_index.requirements_parents[
                         node.reserved_uid
                     ].document
                     if other_req_doc == document:
@@ -275,7 +285,7 @@ class TraceabilityIndexBuilder:
                             f'and "{document.title}".'
                         )
                     sys.exit(1)
-                d_02_requirements_map[
+                traceability_index.requirements_parents[
                     node.reserved_uid
                 ] = RequirementConnections(
                     requirement=node,
@@ -303,7 +313,7 @@ class TraceabilityIndexBuilder:
                         reference, ParentReqReference
                     )
                     assert requirement.reserved_uid is not None  # mypy
-                    d_02_requirements_map[
+                    traceability_index.requirements_parents[
                         requirement.reserved_uid
                     ].parents_uids.append(parent_reference.ref_uid)
                     d_08_requirements_children_map[
@@ -312,10 +322,35 @@ class TraceabilityIndexBuilder:
 
         # Now iterate over the requirements again to build an in-depth map of
         # parents and children.
-        parents_cycle_detector = TreeCycleDetector(d_02_requirements_map)
-        children_cycle_detector = TreeCycleDetector(d_02_requirements_map)
+        parents_cycle_detector = TreeCycleDetector(
+            traceability_index.requirements_parents
+        )
+        children_cycle_detector = TreeCycleDetector(
+            traceability_index.requirements_parents
+        )
 
         for document in document_tree.document_list:
+            if len(document.free_texts) > 0:
+                for part in document.free_texts[0].parts:
+                    if isinstance(part, InlineLink):
+                        if (
+                            part.link
+                            not in traceability_index.requirements_parents
+                            and not graph_database.link_exists(
+                                link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
+                                # noqa: E501
+                                lhs_node=part.link,
+                            )
+                        ):
+                            raise StrictDocException(
+                                "DocumentIndex: "
+                                "the inline link references an "
+                                "object with an UID "
+                                "that does not exist: "
+                                f"{part.link}."
+                            )
+                        traceability_index.create_inline_link(part)
+
             document_iterator = d_01_document_iterators[document]
 
             for node in document_iterator.all_content():
@@ -324,7 +359,8 @@ class TraceabilityIndexBuilder:
                         for part in free_text.parts:
                             if isinstance(part, InlineLink):
                                 if (
-                                    part.link not in d_02_requirements_map
+                                    part.link
+                                    not in traceability_index.requirements_parents
                                     and not graph_database.link_exists(
                                         link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,  # noqa: E501
                                         lhs_node=part.link,
@@ -337,6 +373,8 @@ class TraceabilityIndexBuilder:
                                         "that does not exist: "
                                         f"{part.link}."
                                     )
+                                traceability_index.create_inline_link(part)
+
                 if not node.is_requirement:
                     continue
                 requirement: Requirement = node
@@ -345,11 +383,16 @@ class TraceabilityIndexBuilder:
 
                 # Now it is possible to resolve parents first checking if they
                 # indeed exist.
-                requirement_parent_ids = d_02_requirements_map[
-                    requirement.reserved_uid
-                ].parents_uids
+                requirement_parent_ids = (
+                    traceability_index.requirements_parents[
+                        requirement.reserved_uid
+                    ].parents_uids
+                )
                 for requirement_parent_id in requirement_parent_ids:
-                    if requirement_parent_id not in d_02_requirements_map:
+                    if (
+                        requirement_parent_id
+                        not in traceability_index.requirements_parents
+                    ):
                         raise StrictDocException(
                             f"[DocumentIndex.create] "
                             f"Requirement {requirement.reserved_uid} "
@@ -357,14 +400,16 @@ class TraceabilityIndexBuilder:
                             f"parent requirement which doesn't exist: "
                             f"{requirement_parent_id}."
                         )
-                    parent_requirement = d_02_requirements_map[
-                        requirement_parent_id
-                    ].requirement
-                    d_02_requirements_map[
+                    parent_requirement = (
+                        traceability_index.requirements_parents[
+                            requirement_parent_id
+                        ].requirement
+                    )
+                    traceability_index.requirements_parents[
                         requirement.reserved_uid
                     ].parents.append(parent_requirement)
                     # Set document dependencies.
-                    parent_document = d_02_requirements_map[
+                    parent_document = traceability_index.requirements_parents[
                         requirement_parent_id
                     ].document
                     d_05_map_documents_to_parents[requirement.document].add(
@@ -378,7 +423,7 @@ class TraceabilityIndexBuilder:
                 # Detect cycles
                 parents_cycle_detector.check_node(
                     requirement.reserved_uid,
-                    lambda requirement_id: d_02_requirements_map[
+                    lambda requirement_id: traceability_index.requirements_parents[
                         requirement_id
                     ].parents_uids,
                 )
@@ -393,20 +438,10 @@ class TraceabilityIndexBuilder:
                 )
                 # @sdoc[/SDOC-VALIDATION-NO-CYCLES]
 
-                d_02_requirements_map[
+                traceability_index.requirements_parents[
                     requirement.reserved_uid
                 ].children = d_08_requirements_children_map[
                     requirement.reserved_uid
                 ]
 
-        traceability_index = TraceabilityIndex(
-            d_01_document_iterators,
-            d_02_requirements_map,
-            d_03_map_doc_titles_to_tag_lists,
-            d_05_map_documents_to_parents,
-            d_06_map_documents_to_children,
-            file_traceability_index=d_07_file_traceability_index,
-            map_id_to_node=d_11_map_id_to_node,
-            graph_database=graph_database,
-        )
         return traceability_index

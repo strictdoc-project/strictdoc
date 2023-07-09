@@ -32,6 +32,17 @@
         {% include "components/form/field/text/index.jinja" %}
       {%- endwith -%}
 
+      {# UNUSED: field_class_name="form__section_uid", #}
+      {%- with
+        field_type="singleline",
+        field_name="UID",
+        field_input_name="section_uid",
+        field_value=form_object.section_uid,
+        errors=form_object.get_errors("section_uid")
+      -%}
+        {% include "components/form/field/text/index.jinja" %}
+      {%- endwith -%}
+
       {%- with
         field_type="multiline",
         field_class_name="",

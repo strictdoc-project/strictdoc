@@ -1,7 +1,8 @@
 from collections import defaultdict
-from typing import Any, Dict, Optional, Set
+from typing import Any, Dict, Optional
 
 from strictdoc.helpers.mid import MID
+from strictdoc.helpers.ordered_set import OrderedSet
 
 
 class ConstraintViolation(Exception):
@@ -14,16 +15,18 @@ class LinkType:
 
 
 def link_dict():
-    return defaultdict(set)
+    return defaultdict(OrderedSet)
 
 
 class GraphDatabase:
     def __init__(self):
         self.nodes: Dict[MID, Any] = {}
-        self.links: Dict[LinkType, Dict[MID, Set[MID]]] = defaultdict(link_dict)
-        self.links_reverse: Dict[LinkType, Dict[MID, Set[MID]]] = defaultdict(
+        self.links: Dict[LinkType, Dict[MID, OrderedSet[MID]]] = defaultdict(
             link_dict
         )
+        self.links_reverse: Dict[
+            LinkType, Dict[MID, OrderedSet[MID]]
+        ] = defaultdict(link_dict)
 
         # Attachable validation classes.
         self.remove_node_validation = None
@@ -52,7 +55,7 @@ class GraphDatabase:
 
     def get_link_values(
         self, *, link_type: LinkType, lhs_node: Any
-    ) -> Set[Any]:
+    ) -> OrderedSet:
         if link_type not in self.links:
             raise LookupError
         links = self.links[link_type]
@@ -83,13 +86,36 @@ class GraphDatabase:
 
     def get_link_values_weak(
         self, *, link_type: LinkType, lhs_node: Any
-    ) -> Optional[Set[Any]]:
+    ) -> Optional[OrderedSet]:
         if link_type not in self.links:
             return None
         links = self.links[link_type]
         if lhs_node not in links:
             return None
         return self.links[link_type][lhs_node]
+
+    def get_link_values_reverse(
+        self, *, link_type: LinkType, rhs_node: Any
+    ) -> OrderedSet:
+        if link_type not in self.links:
+            raise LookupError
+        links = self.links[link_type]
+        if rhs_node not in links:
+            raise LookupError
+        link_values = self.links[link_type][rhs_node]
+        if len(link_values) == 0:
+            raise LookupError
+        return link_values
+
+    def get_link_values_reverse_weak(
+        self, *, link_type: LinkType, rhs_node: Any
+    ) -> Optional[OrderedSet]:
+        if link_type not in self.links:
+            return None
+        links = self.links_reverse[link_type]
+        if rhs_node not in links:
+            return None
+        return self.links[link_type][rhs_node]
 
     def link_exists(self, *, link_type: LinkType, lhs_node: Any) -> bool:
         if link_type not in self.links:

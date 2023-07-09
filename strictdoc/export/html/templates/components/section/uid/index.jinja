@@ -1,0 +1,12 @@
+{%- if section.reserved_uid is not none and section.reserved_uid|length > 0 -%}
+  <table class="table_meta">
+  <tr>
+    <th>
+      UID:
+    </th>
+    <td>
+      {{ section.reserved_uid }}
+    </td>
+  </tr>
+  </table>
+{%- endif %}

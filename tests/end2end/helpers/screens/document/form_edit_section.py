@@ -9,6 +9,10 @@ class Form_EditSection(Form):  # pylint: disable=invalid-name
         assert isinstance(test_case, BaseCase)
         super().__init__(test_case)
 
+    def do_fill_in_uid(self, field_value: str) -> None:
+        assert isinstance(field_value, str)
+        super().do_fill_in("section_uid", field_value)
+
     def do_fill_in_title(self, field_value: str) -> None:
         assert isinstance(field_value, str)
         super().do_fill_in("section_title", field_value)

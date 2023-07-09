@@ -13,12 +13,13 @@ from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.commands.constants import NodeCreationOrder
+from strictdoc.core.commands.update_free_text import UpdateFreeTextCommand
 from strictdoc.core.commands.validation_error import (
     MultipleValidationError,
     SingleValidationError,
 )
 from strictdoc.core.traceability_index import (
-    GraphLinkType,
+    RequirementConnections,
     TraceabilityIndex,
 )
 from strictdoc.export.html.form_objects.section_form_object import (
@@ -27,6 +28,7 @@ from strictdoc.export.html.form_objects.section_form_object import (
 from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
+from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.mid import MID
 
 
@@ -40,6 +42,12 @@ class UpdateSectionCommand:
         self.form_object: SectionFormObject = form_object
         self.section: Section = section
         self.traceability_index: TraceabilityIndex = traceability_index
+        self.update_free_text_command = UpdateFreeTextCommand(
+            node=section,
+            traceability_index=traceability_index,
+            subject_field_name="section_statement",
+            subject_field_content=form_object.section_statement_unescaped,
+        )
 
     def perform(self):
         errors: Dict[str, List[str]] = defaultdict(list)
@@ -54,57 +62,48 @@ class UpdateSectionCommand:
         if len(form_object.section_title) == 0:
             errors["section_title"].append("Section title must not be empty.")
 
-        free_text_container: Optional[FreeTextContainer] = None
-        if len(form_object.section_statement_unescaped) > 0:
-            (
-                parsed_html,
-                rst_error,
-            ) = RstToHtmlFragmentWriter(
-                context_document=section.document
-            ).write_with_validation(form_object.section_statement_unescaped)
-
-            if parsed_html is None:
-                errors["section_statement"].append(rst_error)
-            else:
+        # Validate UID
+        if section.reserved_uid is not None:
+            # This is case where an existing section UID is being removed.
+            # We have to check if this UID has incoming links to it, and if so,
+            # raise a validation error.
+            if len(form_object.section_uid) == 0:
                 try:
-                    free_text_container = SDFreeTextReader.read(
-                        form_object.section_statement_unescaped
+                    traceability_index.validate_section_can_remove_uid(
+                        section=section
                     )
-                    anchors: List[Anchor] = []
-                    for part in free_text_container.parts:
-                        if isinstance(part, InlineLink):
-                            # FIXME: Add validations.
-                            pass
-                        elif isinstance(part, Anchor):
-                            anchors.append(part)
-                        else:
-                            pass
-                    if anchors is not None:
-                        try:
-                            traceability_index.validate_node_against_anchors(
-                                node=section, new_anchors=anchors
-                            )
-                        except (
-                            SingleValidationError
-                        ) as anchors_validation_error:
-                            errors["section_statement"].append(
-                                anchors_validation_error.args[0]
-                            )
-                except TextXSyntaxError as exception:
-                    errors["section_statement"].append(
-                        get_textx_syntax_error_message(exception)
-                    )
-        else:
-            # If there is no free text, we need to check the anchors that may
-            # have been in the existing free text.
+                except SingleValidationError as validation_error_:
+                    errors["section_uid"].append(validation_error_.args[0])
+            else:
+                if section.reserved_uid != form_object.section_uid:
+                    section_incoming_links: Optional[
+                        List[InlineLink]
+                    ] = traceability_index.get_section_incoming_links(section)
+                    if (
+                        section_incoming_links is not None
+                        and len(section_incoming_links) > 0
+                    ):
+                        errors["section_uid"].append(
+                            "Renaming a section UID when a section has "
+                            "incoming links is not supported yet. "
+                            "For now, please use a command-line process to "
+                            "rename the section UID and all links that refer "
+                            "to it."
+                        )
+        if len(form_object.section_uid) > 0:
             try:
-                traceability_index.validate_node_against_anchors(
-                    node=section, new_anchors=[]
+                traceability_index.validate_can_create_uid(
+                    form_object.section_uid
                 )
-            except SingleValidationError as anchors_validation_error:
-                errors["section_statement"].append(
-                    anchors_validation_error.args[0]
-                )
+            except SingleValidationError as validation_error_:
+                errors["section_uid"].append(validation_error_.args[0])
+
+        try:
+            self.update_free_text_command.validate()
+        except SingleValidationError as free_text_validation_error:
+            errors["section_statement"].append(
+                free_text_validation_error.args[0]
+            )
 
         if len(errors) > 0:
             raise validation_error
@@ -118,50 +117,39 @@ class UpdateSectionCommand:
         else:
             assert "Should not reach here", form_object.section_title
 
-        # Updating section content.
-        if free_text_container is not None:
-            existing_anchor_uids_to_remove = set()
-            if len(section.free_texts) > 0:
-                for part in section.free_texts[0].parts:
-                    if isinstance(part, Anchor):
-                        existing_anchor_uids_to_remove.add(part.value)
+        # Updating section UID.
+        if len(form_object.section_uid) > 0:
+            # We have passed the validations if we reach this point, so we can
+            # just assume we can safely delete the previous section UID
+            # associations.
+            if section.reserved_uid is not None:
+                del traceability_index.requirements_parents[
+                    form_object.section_uid
+                ]
 
-            if len(section.free_texts) > 0:
-                free_text: FreeText = section.free_texts[0]
-            else:
-                free_text = FreeText(section, [])
-                section.free_texts.append(free_text)
-            free_text.parts = free_text_container.parts
-            free_text.parent = section
-
-            for part in free_text.parts:
-                if isinstance(part, Anchor):
-                    if part.value in existing_anchor_uids_to_remove:
-                        existing_anchor_uids_to_remove.remove(part.value)
-                    # By this time, we know that the validations have passed
-                    # just before, so it is safe to update the anchor.
-                    traceability_index.update_with_anchor(part)
-                    part.parent = free_text
-                elif isinstance(part, InlineLink):
-                    part.parent = free_text
-
-            for anchor_uid_to_be_removed in existing_anchor_uids_to_remove:
-                anchor_uuid = next(
-                    iter(
-                        traceability_index.graph_database.get_link_values(
-                            link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
-                            lhs_node=anchor_uid_to_be_removed,
-                        )
-                    )
-                )
-                traceability_index.graph_database.remove_link(
-                    link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
-                    lhs_node=anchor_uid_to_be_removed,
-                    rhs_node=anchor_uuid,
-                )
-                traceability_index.graph_database.remove_node(mid=anchor_uuid)
+            section.uid = form_object.section_uid
+            section.reserved_uid = form_object.section_uid
+            traceability_index.requirements_parents[
+                section.reserved_uid
+            ] = RequirementConnections(
+                requirement=section,
+                document=section.document,
+                parents=[],
+                parents_uids=[],
+                children=[],
+            )
         else:
-            section.free_texts = []
+            # We have passed the validations if we reach this point, so we can
+            # just assume we can safely delete the section.
+            if section.reserved_uid is not None:
+                del traceability_index.requirements_parents[
+                    section.reserved_uid
+                ]
+                section.uid = None
+                section.reserved_uid = None
+
+        # Updating section content.
+        self.update_free_text_command.perform()
 
 
 class CreateSectionCommand:
@@ -206,6 +194,26 @@ class CreateSectionCommand:
         if len(form_object.section_title) == 0:
             errors["section_title"].append("Section title must not be empty.")
 
+        if (
+            len(form_object.section_uid) > 0
+            and form_object.section_uid
+            in traceability_index.requirements_parents
+        ):
+            existing_section_connections: RequirementConnections = assert_cast(
+                traceability_index.requirements_parents[
+                    form_object.section_uid
+                ],
+                RequirementConnections,
+            )
+            existing_section = assert_cast(
+                existing_section_connections.requirement, Section
+            )
+            errors["section_uid"].append(
+                f"The chosen UID must be unique. "
+                f"There is another section '{existing_section.title}' with "
+                f"a UID '{form_object.section_uid}'."
+            )
+
         free_text_container: Optional[FreeTextContainer] = None
         if len(form_object.section_statement_unescaped) > 0:
             (
@@ -224,8 +232,14 @@ class CreateSectionCommand:
                     anchors: List[Anchor] = []
                     for part in free_text_container.parts:
                         if isinstance(part, InlineLink):
-                            # FIXME: Add validations.
-                            pass
+                            linked_to_node = traceability_index.get_linkable_node_by_uid_weak(
+                                part.link
+                            )
+                            if linked_to_node is None:
+                                errors["section_statement"].append(
+                                    "A LINK points to a node that does "
+                                    f"not exist: '{part.link}'."
+                                )
                         elif isinstance(part, Anchor):
                             anchors.append(part)
                         else:
@@ -277,7 +291,21 @@ class CreateSectionCommand:
             free_texts=[],
             section_contents=[],
         )
-        section.mid = MID(form_object.section_mid)
+
+        if len(form_object.section_uid) > 0:
+            section.uid = form_object.section_uid
+            section.reserved_uid = form_object.section_uid
+            traceability_index.requirements_parents[
+                section.reserved_uid
+            ] = RequirementConnections(
+                requirement=section,
+                document=document,
+                parents=[],
+                parents_uids=[],
+                children=[],
+            )
+
+        section.node_id = MID(form_object.section_mid)
         section.ng_document_reference = DocumentReference()
         section.ng_document_reference.set_document(document)
         assert parent.ng_level is not None, parent

@@ -656,6 +656,7 @@ a.strictdoc__version:hover {
 [data-viewtype="traceability"] [data-viewtype_link="traceability"],
 [data-viewtype="deep_traceability"] [data-viewtype_link="deep_traceability"],
 [data-viewtype="standalone_document"] [data-viewtype_link="standalone_document"],
+[data-viewtype="html2pdf"] [data-viewtype_link="html2pdf"],
 .viewtype__menu_item.active {
   background-color: var(--color-bg-accent);
   color: var(--color-fg-accent);

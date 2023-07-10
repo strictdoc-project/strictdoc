@@ -41,12 +41,16 @@ Stimulus.register("anchor_controller", class extends Controller {
       // we do the check:
       if (anchor.hasAttribute("visible")) { return };
 
+      // @mettta TODO double-check: if a section does not have a uid= parameter,
+      // we don't want to show anchors.
+      if (!anchor.hasAttribute("data-uid")) { return };
+
       // In the other case, start processing the anchor.
 
       // This attribute triggers CSS:
       anchor.setAttribute("visible", "");
 
-      const anchorText = anchor.dataset.anchor || anchor.id;
+      const anchorText = anchor.dataset.anchor || anchor.dataset.uid;
 
       // Add an always visible button:
       const anchorButton = document.createElement('div');

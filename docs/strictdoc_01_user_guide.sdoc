@@ -5,11 +5,17 @@ OPTIONS:
   REQUIREMENT_STYLE: Inline
   REQUIREMENT_IN_TOC: True
 
+[FREETEXT]
+[LINK: TEST001]
+[/FREETEXT]
+
 [SECTION]
 TITLE: Introduction
 
 [FREETEXT]
 StrictDoc is software for technical documentation and requirements management.
+
+[ANCHOR: TEST001]
 
 Summary of StrictDoc features:
 

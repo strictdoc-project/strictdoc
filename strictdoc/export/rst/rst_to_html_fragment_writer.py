@@ -8,7 +8,9 @@ from docutils.core import publish_parts
 from docutils.parsers.rst import directives, roles
 from docutils.utils import SystemMessage
 
+from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.rst.directives.raw_html_role import raw_html_role
 from strictdoc.export.rst.directives.wildcard_enhanced_image import (
     WildcardEnhancedImage,
@@ -145,13 +147,4 @@ class RstToHtmlFragmentWriter:
     def write_anchor_link(title, href):
         return f"""\
 :rawhtml:`<a href="{href}">🔗&nbsp;{title}</a>`\
-"""
-
-    @staticmethod
-    def write_anchor(anchor):
-        return f"""\
-.. raw:: html
-
-    <sdoc-anchor id="{anchor}" data-anchor="📋{anchor}" style="top:unset"></sdoc-anchor>
-
 """

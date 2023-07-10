@@ -77,6 +77,14 @@ class LinkRenderer:
         document_type: DocumentType,
         force_full_path: bool = False,
     ):
+        if isinstance(node, Document):
+            return (
+                f"{node.meta.get_root_path_prefix()}"
+                "/"
+                f"{node.meta.get_html_doc_link()}"
+                "#_TOP"
+            )
+
         assert isinstance(node, (Requirement, Section, Anchor)), node
         assert isinstance(document_type, DocumentType), document_type
         local_link = self.render_local_anchor(node)

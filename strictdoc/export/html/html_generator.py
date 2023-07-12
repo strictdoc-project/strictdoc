@@ -22,6 +22,9 @@ from strictdoc.export.html.generators.document_trace import (
 from strictdoc.export.html.generators.document_tree import (
     DocumentTreeHTMLGenerator,
 )
+from strictdoc.export.html.generators.document_pdf import (
+    DocumentHTML2PDFGenerator,
+)
 from strictdoc.export.html.generators.requirements_coverage import (
     RequirementsCoverageHTMLGenerator,
 )
@@ -258,6 +261,25 @@ class HTMLGenerator:
                 link_renderer,
             )
             document_out_file = document_meta.get_html_deep_traceability_path()
+            with open(document_out_file, "w", encoding="utf8") as file:
+                file.write(document_content)
+
+        # Single Document PDF pages
+        if (
+            project_config.is_feature_activated(
+                ProjectFeature.HTML2PDF
+            )
+            and DocumentType.PDF in specific_documents
+        ):
+            document_content = DocumentHTML2PDFGenerator.export(
+                project_config,
+                document,
+                traceability_index,
+                markup_renderer,
+                link_renderer,
+                standalone=False,
+            )
+            document_out_file = document_meta.get_html_pdf_path()
             with open(document_out_file, "w", encoding="utf8") as file:
                 file.write(document_content)
 

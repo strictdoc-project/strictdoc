@@ -16,13 +16,13 @@ sys.path.append(strictdoc_root_path)
 
 from strictdoc import environment
 from strictdoc.cli.cli_arg_parser import (
-    create_sdoc_args_parser,
-    ExportCommandConfig,
-    PassthroughCommandConfig,
     DumpGrammarCommandConfig,
+    ExportCommandConfig,
     ImportExcelCommandConfig,
     ImportReqIFCommandConfig,
     ManageAutoUIDCommandConfig,
+    PassthroughCommandConfig,
+    create_sdoc_args_parser,
 )
 from strictdoc.commands.about_command import AboutCommand
 from strictdoc.commands.dump_grammar_command import DumpGrammarCommand
@@ -154,7 +154,7 @@ def main():
     try:
         _main(parallelizer)
     except StrictDocException as exception:
-        print(f"error: {exception.args[0]}")
+        print(f"error: {exception.args[0]}")  # noqa: T201
         sys.exit(1)
     except Exception as exc:
         raise exc

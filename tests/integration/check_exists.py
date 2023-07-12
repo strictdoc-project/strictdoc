@@ -56,25 +56,19 @@ if not invert:
 else:
     if os.path.exists(args.input_path):
         print(  # noqa: T201
-            "error: expected path to not exist, but it does: {}".format(
-                args.input_path
-            ),
+            f"error: expected path to not exist, but it does: {args.input_path}",
             file=sys.stderr,
         )
         exit(1)
     if args.file and os.path.isfile(args.input_path):
         print(  # noqa: T201
-            "error: expected path to not exist, but is a file: {}".format(
-                args.input_path
-            ),
+            f"error: expected path to not exist, but is a file: {args.input_path}",
             file=sys.stderr,
         )
         exit(1)
     if args.dir and os.path.isdir(args.input_path):
         print(  # noqa: T201
-            "error: expected path to not exist, but is a directory: {}".format(
-                args.input_path
-            ),
+            f"error: expected path to not exist, but is a directory: {args.input_path}",
             file=sys.stderr,
         )
         exit(1)

@@ -32,7 +32,5 @@ def measure_performance(title):
 
     time_diff = time_end - time_start
     padded_name = f"{title} ".ljust(60, ".")
-    padded_time = " {:0.2f}".format(  # pylint: disable=consider-using-f-string
-        time_diff
-    ).rjust(6, ".")
+    padded_time = f" {time_diff:0.2f}".rjust(6, ".")
     print(f"{padded_name}{padded_time}s", flush=True)  # noqa: T201

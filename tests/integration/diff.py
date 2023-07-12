@@ -24,8 +24,6 @@ if not os.path.exists(args.rhs_file):
 
 if not filecmp.cmp(args.lhs_file, args.rhs_file):
     print(  # noqa: T201
-        "error: files {} and {} are not identical".format(
-            args.lhs_file, args.rhs_file
-        )
+        f"error: files {args.lhs_file} and {args.rhs_file} are not identical"
     )
     exit(1)

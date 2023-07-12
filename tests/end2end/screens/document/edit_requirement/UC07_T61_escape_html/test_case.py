@@ -1,7 +1,5 @@
-from seleniumbase import BaseCase
-
+from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
-from tests.end2end.helpers.constants import TEXT_WITH_TRAILING_WHITESPACES
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
 )
@@ -11,7 +9,7 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 from tests.end2end.server import SDocTestServer
 
 
-class Test_UC07_T60_SanitizingTrainingSymbols(BaseCase):
+class Test(E2ECase):
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
@@ -36,17 +34,17 @@ class Test_UC07_T60_SanitizingTrainingSymbols(BaseCase):
                 requirement.do_open_form_edit_requirement()
             )
 
-            form_edit_requirement.do_fill_in_field_title("Modified title")
-
-            # Contains trailing symbols.
-            form_edit_requirement.do_fill_in_field_statement(
-                TEXT_WITH_TRAILING_WHITESPACES
+            self.assert_text(
+                "`Link does not get corrupted "
+                "<https://github.com/strictdoc-project/"
+                "sphinx-latex-reqspec-template>`_"
             )
-
             form_edit_requirement.do_form_submit()
 
-            screen_document.assert_text("1. Modified title")
-
-            screen_document.assert_toc_contains("Modified title")
+            screen_document.assert_text(
+                "Link does not get corrupted\n"
+                "Link does not get corrupted\n"
+                "Link does not get corrupted\n"
+            )
 
         assert test_setup.compare_sandbox_and_expected_output()

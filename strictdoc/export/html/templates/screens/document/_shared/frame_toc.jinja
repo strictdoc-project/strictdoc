@@ -8,7 +8,7 @@
       class="toc"
       data-controller="draggable_list collapsible_list"
       {%- if last_moved_node_id is defined %}
-      data-last_moved_node_id="{{ last_moved_node_id }}"
+      data-last_moved_node_id="{{ last_moved_node_id.get_string_value() }}"
       {% endif -%}
     >
     {%- for section in document_iterator.table_of_contents() -%}

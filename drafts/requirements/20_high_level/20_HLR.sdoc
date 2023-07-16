@@ -192,9 +192,10 @@ REFS:
   VALUE: SDOC-RMC-3
 - TYPE: Parent
   VALUE: SDOC-RMC-39
-- TYPE: Parent
-  VALUE: DO178-10
 TITLE: Traceability matrices
+STATEMENT: >>>
+The Requirements Tool shall support generation of traceability matrices.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SSS-48
@@ -215,9 +216,22 @@ REFS:
   VALUE: SDOC-RMC-39
 - TYPE: Parent
   VALUE: SDOC-RMC-41
-- TYPE: Parent
-  VALUE: SDOC-RMC-49
 TITLE: Progress report
+STATEMENT: >>>
+The Requirements Tool shall allow generating a Progress Report document.
+
+NOTE: A progress report document shall include at least the following Key Performance Indicators.
+
+Project-level KPIs:
+
+- Total number of requirements
+- Total number of requirements without parent (excluding top-level and derived)
+- Total number of TBD/TBC
+- Total number of requirements without rationale
+- Tags breakdown
+
+Document-level KPIs: the same but per document.
+<<<
 
 [/SECTION]
 
@@ -250,16 +264,23 @@ UID: SDOC-SSS-31
 REFS:
 - TYPE: Parent
   VALUE: SDOC-RMC-36
-- TYPE: Parent
-  VALUE: DO178-6
 TITLE: Web interface
+STATEMENT: >>>
+The Requirements Tool shall provide a web interface.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SSS-32
+STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: SDOC-RMC-11
+- TYPE: Parent
+  VALUE: SDOC-RMC-49
 TITLE: Command-line interface
+STATEMENT: >>>
+The Requirements Tool shall provide a command line interface (CLI).
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SSS-33
@@ -300,10 +321,11 @@ following requirements apply.
 
 [REQUIREMENT]
 UID: SDOC-SSS-55
-REFS:
-- TYPE: Parent
-  VALUE: DO178-2
+STATUS: Active
 TITLE: Strict type-safe grammar
+STATEMENT: >>>
+The Requirements Tool shall provide type safety for its text language.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SSS-54

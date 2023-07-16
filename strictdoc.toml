@@ -12,11 +12,11 @@ features = [
   # "MATHJAX"
 
   # Experimental features are disabled when published to GitHub pages.
-  "HTML2PDF",
   # "REQIF",
   # "STANDALONE_DOCUMENT_SCREEN",
   # "REQUIREMENTS_COVERAGE_SCREEN",
-  # "REQUIREMENT_TO_SOURCE_TRACEABILITY"
+  # "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+  # "HTML2PDF",
 ]
 
 include_doc_paths = [

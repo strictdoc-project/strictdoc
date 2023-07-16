@@ -13,6 +13,9 @@ from strictdoc.export.html.generators.document import DocumentHTMLGenerator
 from strictdoc.export.html.generators.document_deep_trace import (
     DocumentDeepTraceHTMLGenerator,
 )
+from strictdoc.export.html.generators.document_pdf import (
+    DocumentHTML2PDFGenerator,
+)
 from strictdoc.export.html.generators.document_table import (
     DocumentTableHTMLGenerator,
 )
@@ -21,9 +24,6 @@ from strictdoc.export.html.generators.document_trace import (
 )
 from strictdoc.export.html.generators.document_tree import (
     DocumentTreeHTMLGenerator,
-)
-from strictdoc.export.html.generators.document_pdf import (
-    DocumentHTML2PDFGenerator,
 )
 from strictdoc.export.html.generators.requirements_coverage import (
     RequirementsCoverageHTMLGenerator,
@@ -266,9 +266,7 @@ class HTMLGenerator:
 
         # Single Document PDF pages
         if (
-            project_config.is_feature_activated(
-                ProjectFeature.HTML2PDF
-            )
+            project_config.is_feature_activated(ProjectFeature.HTML2PDF)
             and DocumentType.PDF in specific_documents
         ):
             document_content = DocumentHTML2PDFGenerator.export(

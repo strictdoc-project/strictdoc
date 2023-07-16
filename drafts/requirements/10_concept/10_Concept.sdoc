@@ -292,8 +292,14 @@ TITLE: Programming access via API (SDK)
 
 [REQUIREMENT]
 UID: SDOC-RMC-49
-STATUS: Draft
-TITLE: Programming access to requirements data
+STATUS: Active
+TITLE: Programmatic access to requirements data
+STATEMENT: >>>
+The Requirements Tool shall provide programmatic access to requirements data.
+<<<
+RATIONALE: >>>
+When the requirements data is accessible by a user directly, it is possible to exchange the data or implement additional scripting procedures.
+<<<
 
 [/SECTION]
 

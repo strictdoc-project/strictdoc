@@ -58,6 +58,13 @@ class DocumentMeta:
             f"{self.document_filename_base}-DEEP-TRACE.html"
         )
 
+    def get_html_pdf_path(self):
+        return (
+            f"{self.output_document_dir_full_path}"
+            f"/"
+            f"{self.document_filename_base}-PDF.html"
+        )
+
     # Links
     def get_html_doc_link(self):
         return (
@@ -87,6 +94,13 @@ class DocumentMeta:
             f"{self.document_filename_base}-DEEP-TRACE.html"
         )
 
+    def get_html_pdf_link(self):
+        return (
+            f"{self.output_document_dir_rel_path}"
+            f"/"
+            f"{self.document_filename_base}-PDF.html"
+        )
+
     def get_html_standalone_document_link(self):
         return (
             f"{self.output_document_dir_rel_path}"
@@ -112,6 +126,8 @@ class DocumentMeta:
             document_link = self.get_html_traceability_link()
         elif document_type_type == DocumentType.DEEPTRACE:
             document_link = self.get_html_deep_traceability_link()
+        elif document_type_type == DocumentType.PDF:
+            document_link = self.get_html_pdf_link()
         else:
             raise NotImplementedError
         if not force_full_path:

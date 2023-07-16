@@ -3,6 +3,7 @@ class DocumentType:
     TABLE = 2
     TRACE = 3
     DEEPTRACE = 4
+    PDF = 5
 
     def __init__(self, document_type):
         self.document_type = document_type
@@ -14,6 +15,7 @@ class DocumentType:
             DocumentType.TABLE,
             DocumentType.TRACE,
             DocumentType.DEEPTRACE,
+            DocumentType.PDF,
         )
 
     @staticmethod
@@ -31,6 +33,10 @@ class DocumentType:
     @staticmethod
     def deeptrace():
         return DocumentType(DocumentType.DEEPTRACE)
+
+    @staticmethod
+    def pdf():
+        return DocumentType(DocumentType.PDF)
 
     @property
     def is_document(self):

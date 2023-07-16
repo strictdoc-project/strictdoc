@@ -1,0 +1,72 @@
+{% set template_type = 'PDF' %}
+
+{% extends "base.jinja.html" %}
+
+{% block head_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ link_renderer.render_static_url('tree.css') }}"/>
+{% endblock head_css %}
+
+{% block head_scripts %}
+  <script type="text/javascript" src="{{ link_renderer.render_static_url('viewtype_menu.js') }}"></script>
+  <script type="text/javascript" src="{{ link_renderer.render_static_url('resizable_bar.js') }}"></script>
+
+  <script type="module">
+    import hotwiredTurbo from "{{ link_renderer.render_static_url('turbo.js') }}";
+    import { Application, Controller } from "{{ link_renderer.render_static_url('stimulus.js') }}";
+    window.Stimulus = Application.start();
+    window.Controller = Controller;
+  </script>
+  <script type="module" src="{{ link_renderer.render_static_url('controllers/collapsible_list_controller.js') }}"></script>
+  <script type="module" src="{{ link_renderer.render_static_url('controllers/draggable_list_controller.js') }}"></script>
+  <script type="module" src="{{ link_renderer.render_static_url('controllers/modal_controller.js') }}"></script>
+
+  {%- if project_config.is_activated_mathjax() -%}
+  <script id="MathJax-script" async src="{{ link_renderer.render_static_url('mathjax/tex-mml-chtml.js') }}"></script>
+  {%- endif -%}
+
+  {%- if project_config.is_activated_html2pdf() -%}
+  <script
+  defer
+    data-preloader='true'
+    data-preloader-target='#printTHISpreloader'
+    data-preloader-background='#F2F5F9'
+    data-can-not-be-last-selector='sdoc-section-title sdoc-requirement-field-label'
+    data-forced-page-break-selector='H2'
+  src="{{ link_renderer.render_static_url('html2pdf/bundle.js') }}"></script>
+  {%- endif -%}
+
+  {{ super() }}
+{% endblock head_scripts %}
+{% block title %}{{ document.title }} - {{ template_type }}{% endblock title %}
+{% block viewtype %}{{ "html2pdf" }}{% endblock viewtype %}
+
+{% block layout_nav %}
+  {% include "_shared/nav.jinja.html" %}
+{% endblock layout_nav %}
+
+{% block tree_content %}
+  {% include "screens/document/_shared/resizable_bar_with_project_tree.jinja" %}
+{% endblock tree_content %}
+
+{% block toc_content %}
+  {% include "screens/document/_shared/resizable_bar_with_toc.jinja" %}
+{% endblock toc_content %}
+
+{%- set header_items = [
+      "screens/document/_shared/frame_header_document_title.jinja",
+      "screens/document/_shared/viewtype_menu.jinja"
+    ]
+-%}
+
+{% block header_content %}
+  {%- with
+      header__items=header_items
+  -%}
+    {% include "components/header/index.jinja" %}
+  {%- endwith -%}
+{% endblock header_content %}
+
+{% block main_content %}
+  {% include "screens/document/pdf/main.jinja" %}
+{% endblock main_content %}

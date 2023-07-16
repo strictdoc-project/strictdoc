@@ -1384,6 +1384,14 @@ def create_main_router(
         )
         current_parent_node = moved_node.parent
 
+        # Currently UI allows a child-like drag-and-drop on a requirement node.
+        # In that case, we make it add a node **after** the target requirement
+        # node (not as its child because that's not possible).
+        if whereto == NodeCreationOrder.CHILD and isinstance(
+            target_node, Requirement
+        ):
+            whereto = NodeCreationOrder.AFTER
+
         if whereto == NodeCreationOrder.CHILD:
             # Disconnect the moved_node from its parent.
             current_parent_node.section_contents.remove(moved_node)

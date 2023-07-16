@@ -10,8 +10,12 @@ from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.document_iterator import DocumentCachingIterator
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.dot.dot_templates import DotTemplates
+from strictdoc.export.html.document_type import DocumentType
+from strictdoc.export.html.renderers.link_renderer import LinkRenderer
+from strictdoc.helpers.timing import timing_decorator
 
 
 def get_path_components(folder_path):
@@ -115,6 +119,12 @@ class DocumentDotGenerator:
         with open(output_path, "w", encoding="utf8") as file:
             file.write(dot_output)
 
+        DocumentDotGenerator.generate_graphviz(output_path)
+
+    @staticmethod
+    @timing_decorator("Generate graph representation using Graphviz")
+    def generate_graphviz(output_path):
+        assert os.path.isfile(output_path)
         dot = graphviz.Source.from_file(output_path)
         # view=True makes the output PDF be opened in a default viewer program.
         dot.render(output_path, view=False)
@@ -143,12 +153,19 @@ class DocumentDotGenerator:
 
         folder_documents_content = ""
         for document_idx, document in enumerate(folder_documents):
+            root_path = document.meta.get_root_path_prefix()
+            link_renderer = LinkRenderer(
+                root_path=root_path,
+                static_path=ProjectConfig.DEFAULT_DIR_FOR_SDOC_ASSETS,
+            )
+
             assert document.has_any_requirements()
 
             document_content = self._print_document(
                 document,
                 folder_idx,
                 document_idx,
+                link_renderer,
                 accumulated_links,
                 accumulated_section_siblings,
                 document_flat_requirements,
@@ -186,12 +203,18 @@ class DocumentDotGenerator:
         document: Document,
         folder_idx,
         document_idx,
+        link_renderer: LinkRenderer,
         accumulated_links,
         accumulated_section_siblings,
         document_flat_requirements,
     ) -> str:
+        assert isinstance(link_renderer, LinkRenderer)
+
         document_content = self._print_node(
-            document, accumulated_links, accumulated_section_siblings
+            document,
+            link_renderer,
+            accumulated_links,
+            accumulated_section_siblings,
         )
 
         this_document_flat_requirements = []
@@ -219,6 +242,7 @@ class DocumentDotGenerator:
     def _print_node(
         self,
         node: Union[Document, Section],
+        link_renderer: LinkRenderer,
         accumulated_links,
         accumulated_section_siblings,
     ) -> str:
@@ -240,7 +264,10 @@ class DocumentDotGenerator:
         for subnode in node.section_contents:
             if isinstance(subnode, Section):
                 node_content += self._print_node(
-                    subnode, accumulated_links, accumulated_section_siblings
+                    subnode,
+                    link_renderer,
+                    accumulated_links,
+                    accumulated_section_siblings,
                 )
                 node_content += "\n"
 
@@ -251,7 +278,7 @@ class DocumentDotGenerator:
                     )
             elif isinstance(subnode, Requirement):
                 node_content += self._print_requirement_fields(
-                    subnode, accumulated_links
+                    subnode, link_renderer, accumulated_links
                 )
                 node_content += "\n"
         output = self.template_section.render(
@@ -266,7 +293,10 @@ class DocumentDotGenerator:
         return output
 
     def _print_requirement_fields(
-        self, requirement: Requirement, accumulated_links
+        self,
+        requirement: Requirement,
+        link_renderer: LinkRenderer,
+        accumulated_links,
     ):
         def get_color_from_status(requirement_: Requirement):
             if requirement_.reserved_status is None:
@@ -285,8 +315,28 @@ class DocumentDotGenerator:
         for parent_uid in requirement.get_parent_requirement_reference_uids():
             accumulated_links.append((uuid, parent_uid))
 
+        requirement_title = (
+            f"[{requirement.reserved_uid}]"
+            if requirement.reserved_uid is not None
+            else "[No UID]"
+        )
+        if requirement.reserved_title is not None:
+            if len(requirement_title) > 0:
+                requirement_title += " "
+            requirement_title += requirement.reserved_title
+
+        requirement_link = link_renderer.render_node_link(
+            requirement,
+            requirement.document,
+            DocumentType.document(),
+            force_full_path=True,
+        )
+        requirement_link = "http://localhost:5111/" + requirement_link
+
         output = self.template_requirement.render(
             requirement=requirement,
+            requirement_title=requirement_title,
+            requirement_link=requirement_link,
             uuid=uuid,
             requirement_color=get_color_from_status(requirement),
         )

@@ -94,7 +94,12 @@ class DocumentMeta:
             f"{self.document_filename_base}.standalone.html"
         )
 
-    def get_html_link(self, document_type: DocumentType, other_doc_level):
+    def get_html_link(
+        self,
+        document_type: DocumentType,
+        other_doc_level,
+        force_full_path=False,
+    ):
         assert isinstance(document_type, DocumentType)
 
         document_type_type = document_type.document_type
@@ -109,7 +114,9 @@ class DocumentMeta:
             document_link = self.get_html_deep_traceability_link()
         else:
             raise NotImplementedError
-        return f"{path_prefix}/{document_link}"
+        if not force_full_path:
+            return f"{path_prefix}/{document_link}"
+        return document_link
 
     def get_root_path_prefix(self, other_doc_level=None):
         level = self.level if not other_doc_level else other_doc_level

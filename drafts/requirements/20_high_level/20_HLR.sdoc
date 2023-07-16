@@ -1,5 +1,5 @@
 [DOCUMENT]
-TITLE: Requirements Tool Specification
+TITLE: Requirements Tool specification
 REQ_PREFIX: SDOC-SSS-
 
 [SECTION]
@@ -261,6 +261,7 @@ A static HTML export capability enables:
 
 [REQUIREMENT]
 UID: SDOC-SSS-31
+STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: SDOC-RMC-36
@@ -329,10 +330,16 @@ The Requirements Tool shall provide type safety for its text language.
 
 [REQUIREMENT]
 UID: SDOC-SSS-54
+STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: ZEP-2
-TITLE: Machine-readable
+- TYPE: Parent
+  VALUE: SDOC-RMC-10
+TITLE: Machine-readable format
+STATEMENT: >>>
+The Requirement Tool's text language shall be machine-readable.
+<<<
 
 [/SECTION]
 
@@ -397,9 +404,12 @@ TITLE: Development process
 
 [REQUIREMENT]
 UID: SDOC-SSS-50
+STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: SDOC-RMC-52
+- TYPE: Parent
+  VALUE: ZEP-15
 TITLE: Self-hosted requirements
 STATEMENT: >>>
 The Requirements Tool shall be used to demonstrate its own requirements.

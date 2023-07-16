@@ -4,9 +4,10 @@ REQ_PREFIX: ZEP-
 
 [REQUIREMENT]
 UID: ZEP-1
+STATUS: Active
 TITLE: Multiple files / include mechanism
 STATEMENT: >>>
-Requirements or groups of requiremenets shall be distributable over several files and still form a full specification (document) via some kind of include mechansim.
+Requirements or groups of requirements shall be distributable over several files and still form a full specification (document) via some kind of include mechanism.
 <<<
 RATIONALE: >>>
 In a future constellation the requirements shall be written resp. update with the code in the same PR. Smallish requirements files per topic / component next to the code in the same repo allow a better workflow than one huge requirements file somewhere.
@@ -14,9 +15,10 @@ In a future constellation the requirements shall be written resp. update with th
 
 [REQUIREMENT]
 UID: ZEP-2
+STATUS: Active
 TITLE: Clear separation of requirements (machine-readable)
 STATEMENT: >>>
-Requiremements objects shall be clearly separated from each other, also when organized in the same file
+Requirements objects shall be clearly separated from each other, also when organized in the same file.
 <<<
 RATIONALE: >>>
 For exporting or machine processing, a clear separation of requirements objects is a prerequisite.
@@ -24,6 +26,7 @@ For exporting or machine processing, a clear separation of requirements objects 
 
 [REQUIREMENT]
 UID: ZEP-3
+STATUS: Active
 TITLE: Custom fields
 STATEMENT: >>>
 Requiremements objects shall be configurable to create several types with a number of custom fields.
@@ -35,6 +38,7 @@ By having typed requirements objects, linkages between requirements objects can 
 
 [REQUIREMENT]
 UID: ZEP-4
+STATUS: Active
 TITLE: Links
 STATEMENT: >>>
 Linking shall in general be supported between any requirement object of any object type in a 1:n manner.
@@ -45,6 +49,7 @@ A SAIS requirement will link to a SRS requirement via «refines» link. A SITS t
 
 [REQUIREMENT]
 UID: ZEP-5
+STATUS: Active
 TITLE: Multiple link roles
 STATEMENT: >>>
 Links shall be configurable to create multiple link roles.
@@ -55,7 +60,7 @@ Link roles and requirements object types allow to verify, that the traceability 
 
 [REQUIREMENT]
 UID: ZEP-6
-STATUS: Implemented
+STATUS: Active
 TITLE: ReqIF export
 STATEMENT: >>>
 Requirements specification shall be exportable to ReqIF.
@@ -66,6 +71,7 @@ Will/may be used to as exchange format to generate a requirements and traceabili
 
 [REQUIREMENT]
 UID: ZEP-7
+STATUS: Active
 TITLE: CSV
 STATEMENT: >>>
 Requirements specification shall be exportable to CSV.
@@ -76,9 +82,10 @@ Will/may be used to as exchange format to generate a requirements and traceabili
 
 [REQUIREMENT]
 UID: ZEP-8
-TITLE: Unique ID management.
+STATUS: Active
+TITLE: Unique ID management
 STATEMENT: >>>
-"Requirements objects shall allow unique ID management when adding new requirements on different branches.
+Requirements objects shall allow unique ID management when adding new requirements on different branches.
 
 Options could be:
 
@@ -92,6 +99,7 @@ Centralized object ID management might collide with a branching, PR, merging pro
 
 [REQUIREMENT]
 UID: ZEP-9
+STATUS: Active
 TITLE: Text formatting capabilities
 STATEMENT: >>>
 The description field shall allow for formatting such as:
@@ -108,6 +116,7 @@ In some cases a plain text requirement is not sufficiently clear and requires fo
 
 [REQUIREMENT]
 UID: ZEP-10
+STATUS: Active
 TITLE: Minimal requirement field set
 STATEMENT: >>>
 A requirements object shall at least comprise the following fields (or similar):
@@ -120,11 +129,12 @@ A requirements object shall at least comprise the following fields (or similar):
 - Inbound links (optional?)
 <<<
 RATIONALE: >>>
-tbd
+TBD
 <<<
 
 [REQUIREMENT]
 UID: ZEP-11
+STATUS: Active
 TITLE: Requirements to source code traceability
 STATEMENT: >>>
 Linking from requirements objects to code or from code to requirements objects via ID shall be supported.
@@ -135,6 +145,7 @@ For safety development and certification linking to code is required.
 
 [REQUIREMENT]
 UID: ZEP-12
+STATUS: Active
 TITLE: Non-intrusive links in source code
 STATEMENT: >>>
 Linking from code to requirements objects via ID shall be least code intrusive.
@@ -145,6 +156,7 @@ Code with lots of meta information in it via comment tags, makes the code less r
 
 [REQUIREMENT]
 UID: ZEP-13
+STATUS: Active
 TITLE: Structuring requirements in documents
 STATEMENT: >>>
 Requirements objects shall be structurable in a document like manner (with requirements ordering, and organized in chapters).
@@ -155,6 +167,7 @@ A collection of unorganized requirements as a specifications are hard to read an
 
 [REQUIREMENT]
 UID: ZEP-14
+STATUS: Active
 TITLE: Status field
 STATEMENT: >>>
 Each requirements object type shall have a configurable status workflow.
@@ -165,6 +178,7 @@ Requirements may be in different statuses such as Draft, InReview, Approved. Dep
 
 [REQUIREMENT]
 UID: ZEP-15
+STATUS: Active
 TITLE: Tool Qualifiability
 STATEMENT: >>>
 The Requirement Tool shall be qualifiable for use in safety-related and/or security-related development. At the very least, the Requirement Tool shall come with its own set of requirements, which shall be amenable to validation in compliance with the relevant standards.

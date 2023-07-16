@@ -50,72 +50,6 @@ UID: SECTION-DR-Already-implemented-features
 TITLE: Already implemented features
 
 [REQUIREMENT]
-UID: DO178-13
-STATUS: Backlog
-TITLE: Source file coverage
-STATEMENT: >>>
-StrictDoc shall support generation of source code coverage information.
-<<<
-COMMENT: >>>
-S: Source file coverage is StrictDoc's experimental feature. With a more detailed specification, we can turn it to a more advanced and clear presentation of the needed aspects.
-<<<
-
-[REQUIREMENT]
-UID: DO178-12
-COMPLIANCE: C
-STATUS: Backlog
-TITLE: Uncovered requirement report
-STATEMENT: >>>
-StrictDoc shall support generation of uncovered requirement report.
-
-Note: An uncovered requirement is one that has no children.
-<<<
-COMMENT: >>>
-S: This is easy to implement but would be nice to have it specified in terms of how exactly it should look like. The requirements coverage screen was one experimental attempt to visualize and highlight the uncovered requirements but we didn't stabilize the feature in terms of the visual clarity.
-<<<
-
-[REQUIREMENT]
-UID: DO178-11
-COMPLIANCE: C
-STATUS: Backlog
-TITLE: Impact analysis
-STATEMENT: >>>
-StrictDoc shall support generation of Impact Analysis information.
-<<<
-COMMENT: >>>
-N: Impact analysis – upon modification of a requirement: report the recursive list of impacted items.
-<<<
-COMMENT: >>>
-S: This feature is doable and a basic variant can be derived from the existing code that generates the Deep Traceability screen. A more advanced one includes a document-to-document Diff between version control revisions, including "tell me what changed between the latest commit and my changes". Based on this information, a full impact analysis package can be generated. This is less trivial to implement and requires prioritization.
-<<<
-COMMENT: >>>
-N: For impact analysis we were thinking about some design which help to satisfy these feature: upon modification of a requirement which owns some parent links, a SHA1 of each parent requirement statement is computed and set in the edited requirement.
-=> this could be captured by the GUI, and there also could exist a CLI command to perform this tagging.
-
-For overall analysis, a CLI command could parse the tree and compute the SHA1 and tel which requirement are to be updated because one of there ancestor were modified.
-This is almost the same feature called review status in doorstop.
-<<<
-COMMENT: >>>
-N: When adding parent links, the GUI could present a selection list of UID, with a completion filter, then compute the SHA1 of the selected parent req.
-Then highlight uncovered requirement, and requirements impacted by parent change.
-<<<
-
-[REQUIREMENT]
-UID: DO178-10
-COMPLIANCE: C
-STATUS: Backlog
-TITLE: Traceability matrices
-STATEMENT: >>>
-StrictDoc shall support generation of forward and backward traceability matrices.
-<<<
-COMMENT: >>>
-N: Trace matrix publishing (both ways : is covered by ... and covers ...) published in HTML/PDF.
-<<<
-COMMENT: >>>
-S: This feature, especially a very basic initial one, is very easy to implement, and it is already on the nearest roadmap, see `here <https://github.com/strictdoc-project/strictdoc/issues/964#issuecomment-1497900436>`_. We only need to agree on if we are on the same page about how the produced matrices look like.
-<<<
-
-[REQUIREMENT]
 UID: DO178-1
 COMPLIANCE: C
 STATUS: Active
@@ -147,7 +81,7 @@ N: StrictDoc is nice.
 [REQUIREMENT]
 UID: DO178-14
 STATUS: Active
-TITLE: Requirement UID autocompletion when adding/editing parent requirements
+TITLE: Requirement UID autocompletion
 STATEMENT: >>>
 StrictDoc shall provide autocompletion feature for requirement UID identifiers.
 
@@ -213,6 +147,17 @@ N: GUI for editing is NTH but it shall scale well to thousands of requirements. 
 <<<
 
 [REQUIREMENT]
+UID: DO178-8
+STATUS: Active
+TITLE: Configuration: 'Host' parameter
+STATEMENT: >>>
+StrictDoc shall provide an option to configure a host where a server is deployed.
+<<<
+COMMENT: >>>
+N: Binding to any local address (localhost) with an option would enable to edit from a smartphone bound to a Raspberry server, for instance.
+<<<
+
+[REQUIREMENT]
 UID: DO178-7
 COMPLIANCE: C
 STATUS: Active
@@ -225,6 +170,72 @@ Use of proprietary tools complicates the workflows and the interoperability betw
 <<<
 COMMENT: >>>
 S: StrictDoc is written using Python and supports the ReqIF format out of the box. All StrictDoc's dependencies are open-source software components.
+<<<
+
+[REQUIREMENT]
+UID: DO178-12
+COMPLIANCE: C
+STATUS: Backlog
+TITLE: Uncovered requirement report
+STATEMENT: >>>
+StrictDoc shall support generation of uncovered requirement report.
+
+Note: An uncovered requirement is one that has no children.
+<<<
+COMMENT: >>>
+S: This is easy to implement but would be nice to have it specified in terms of how exactly it should look like. The requirements coverage screen was one experimental attempt to visualize and highlight the uncovered requirements but we didn't stabilize the feature in terms of the visual clarity.
+<<<
+
+[REQUIREMENT]
+UID: DO178-11
+COMPLIANCE: C
+STATUS: Backlog
+TITLE: Impact analysis
+STATEMENT: >>>
+StrictDoc shall support generation of Impact Analysis information.
+<<<
+COMMENT: >>>
+N: Impact analysis – upon modification of a requirement: report the recursive list of impacted items.
+<<<
+COMMENT: >>>
+S: This feature is doable and a basic variant can be derived from the existing code that generates the Deep Traceability screen. A more advanced one includes a document-to-document Diff between version control revisions, including "tell me what changed between the latest commit and my changes". Based on this information, a full impact analysis package can be generated. This is less trivial to implement and requires prioritization.
+<<<
+COMMENT: >>>
+N: For impact analysis we were thinking about some design which help to satisfy these feature: upon modification of a requirement which owns some parent links, a SHA1 of each parent requirement statement is computed and set in the edited requirement.
+=> this could be captured by the GUI, and there also could exist a CLI command to perform this tagging.
+
+For overall analysis, a CLI command could parse the tree and compute the SHA1 and tel which requirement are to be updated because one of there ancestor were modified.
+This is almost the same feature called review status in doorstop.
+<<<
+COMMENT: >>>
+N: When adding parent links, the GUI could present a selection list of UID, with a completion filter, then compute the SHA1 of the selected parent req.
+Then highlight uncovered requirement, and requirements impacted by parent change.
+<<<
+
+[REQUIREMENT]
+UID: DO178-13
+STATUS: Backlog
+TITLE: Source file coverage
+STATEMENT: >>>
+StrictDoc shall support generation of source code coverage information.
+<<<
+COMMENT: >>>
+S: Source file coverage is StrictDoc's experimental feature. With a more detailed specification, we can turn it to a more advanced and clear presentation of the needed aspects.
+<<<
+
+[REQUIREMENT]
+UID: DO178-10
+COMPLIANCE: C
+STATUS: Backlog
+TITLE: Traceability matrices
+STATEMENT: >>>
+StrictDoc shall support generation of forward and backward traceability matrices.
+<<<
+COMMENT: >>>
+N: Trace matrix publishing (both ways : is covered by ... and covers ...) published in HTML/PDF.
+<<<
+COMMENT: >>>
+S: This feature, especially a very basic initial one, is very easy to implement, and it is already on the nearest roadmap, see `here <https://github.com/strictdoc-project/strictdoc/issues/964#issuecomment-1497900436>`_. We only need to agree on if we are on the same page about how the produced matrices look like.
 <<<
 
 [REQUIREMENT]
@@ -249,17 +260,6 @@ Note: The primary use case is calculating a diff between two Git revisions.
 <<<
 COMMENT: >>>
 N: Highlight a req diff with its previous version (Git).
-<<<
-
-[REQUIREMENT]
-UID: DO178-8
-STATUS: Active
-TITLE: Configuration: 'Host' parameter
-STATEMENT: >>>
-StrictDoc shall provide an option to configure a host where a server is deployed.
-<<<
-COMMENT: >>>
-N: Binding to any local address (localhost) with an option would enable to edit from a smartphone bound to a Raspberry server, for instance.
 <<<
 
 [/SECTION]

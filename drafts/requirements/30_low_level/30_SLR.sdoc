@@ -64,9 +64,10 @@ TITLE: Implementation constraints
 
 [REQUIREMENT]
 UID: SDOC-SRS-89
+STATUS: Active
 TITLE: Exclusive use of open source components
 STATEMENT: >>>
-StrictDoc shall be only built using open source software components.
+StrictDoc shall be built using only open source software components.
 <<<
 RATIONALE: >>>
 No commercial/proprietary dependency chain ensures that StrictDoc remain free and open for everyone.
@@ -74,6 +75,7 @@ No commercial/proprietary dependency chain ensures that StrictDoc remain free an
 
 [REQUIREMENT]
 UID: SDOC-SRS-13
+STATUS: Active
 TITLE: Real-time editing out of scope
 STATEMENT: >>>
 StrictDoc shall not implement the real-time editing capability to its web interface.
@@ -84,19 +86,43 @@ The real-time editing feature is hard to achieve with a small part-time involvem
 
 [REQUIREMENT]
 UID: SDOC-SRS-14
+STATUS: Active
 TITLE: No heavy UI frameworks
+STATEMENT: >>>
+StrictDoc shall avoid using large and demanding UI frameworks.
+
+NOTE: An example of frameworks that require a very specific architecture: React JS, AngularJS.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SRS-15
-TITLE: No use of NPM-based projects
+STATUS: Active
+TITLE: No use of NPM
+STATEMENT: >>>
+StrictDoc shall avoid extending its infrastructure with anything based on NPM-ecosystem.
+<<<
+RATIONALE: >>>
+StrictDoc already deals with the Python/Pip/Pypi ecosystem. The amount of necessary maintenance is already quite high. NPM is known for splitting its projects into very small parts, which increases the complexity of maintaining all dependencies.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SRS-16
+STATUS: Active
 TITLE: No use of JavaScript replacement languages (e.g., Typescript)
+STATEMENT: >>>
+StrictDoc shall avoid using JavaScript-based programming languages.
+<<<
+RATIONALE: >>>
+The development team does not have specific experience with any of the JS alternatives. Staying with a general subset of JavaScript is a safer choice.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SRS-87
+STATUS: Active
 TITLE: Monolithic application with no microservices
+STATEMENT: >>>
+StrictDoc shall avoid using microservices and microservice-based architectures.
+<<<
 RATIONALE: >>>
 The project is too small to scale to multi-service architecture.
 <<<
@@ -107,13 +133,16 @@ would require the use of microservices.
 
 [REQUIREMENT]
 UID: SDOC-SRS-88
+STATUS: Active
 TITLE: No reliance on containerization
+STATEMENT: >>>
+StrictDoc shall avoid using containers and containerization technologies.
+<<<
 RATIONALE: >>>
 Containers are significant extra layer of complexity. They are hard to debug.
 <<<
 COMMENT: >>>
-This constraint does not block a StrictDoc user from wrapping StrictDoc into
-their containers.
+This constraint does not block a StrictDoc user from wrapping StrictDoc into their containers.
 <<<
 
 [/SECTION]

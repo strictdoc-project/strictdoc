@@ -349,6 +349,7 @@ TITLE: Requirements exchange formats (export/import)
 
 [REQUIREMENT]
 UID: SDOC-SSS-58
+STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: SDOC-RMC-13
@@ -366,19 +367,27 @@ ReqIF is a standard for exchanging requirements. There is currently no other sta
 
 [REQUIREMENT]
 UID: SDOC-SSS-59
+STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: SDOC-RMC-13
 - TYPE: Parent
   VALUE: ZEP-7
 TITLE: CSV export/import
+STATEMENT: >>>
+The Requirements Tool shall support exporting/importing requirements content from/to CSV.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SSS-60
+STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: SDOC-RMC-13
 TITLE: Excel export/import
+STATEMENT: >>>
+The Requirements Tool shall support exporting/importing requirements content from/to Excel.
+<<<
 
 [/SECTION]
 

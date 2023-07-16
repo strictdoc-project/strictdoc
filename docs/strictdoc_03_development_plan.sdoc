@@ -124,7 +124,9 @@ See also the Backlog document for a complete list of the planned work items.
    * - 2023-Q1
      - Improvements of the Web-based interface towards first release. Improvements of the ReqIF support.
    * - 2023-Q2
-     - Further stabilization of the Web interface. Improvements of the ReqIF interface.
+     - Further stabilization of the Web interface. Graphviz export. RST markup stability improvements. Work on StrictDoc's own requirements traceability.
+   * - 2023-Q3
+     - Anchors and incoming links. Improvements of the ReqIF interface. Work on StrictDoc's own requirements traceability.
 [/FREETEXT]
 
 [/SECTION]

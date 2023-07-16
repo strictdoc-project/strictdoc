@@ -75,12 +75,16 @@ class LinkRenderer:
         node,
         context_document: Optional[Document],
         document_type: DocumentType,
+        force_full_path: bool = False,
     ):
         assert isinstance(node, (Requirement, Section, Anchor)), node
-        assert isinstance(context_document, Document), context_document
         assert isinstance(document_type, DocumentType), document_type
         local_link = self.render_local_anchor(node)
-        if context_document and node.document == context_document:
+        if (
+            context_document
+            and node.document == context_document
+            and not force_full_path
+        ):
             return f"#{local_link}"
 
         link_cache_key = (document_type, context_document.meta.level)
@@ -91,7 +95,9 @@ class LinkRenderer:
         else:
             self.req_link_cache[link_cache_key] = {}
         document_link = node.document.meta.get_html_link(
-            document_type, context_document.meta.level
+            document_type,
+            context_document.meta.level,
+            force_full_path=force_full_path,
         )
         requirement_link = f"{document_link}#{local_link}"
         self.req_link_cache[link_cache_key][node] = requirement_link

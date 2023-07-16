@@ -192,9 +192,10 @@ REFS:
   VALUE: SDOC-RMC-3
 - TYPE: Parent
   VALUE: SDOC-RMC-39
-- TYPE: Parent
-  VALUE: DO178-10
 TITLE: Traceability matrices
+STATEMENT: >>>
+The Requirements Tool shall support generation of traceability matrices.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SSS-48
@@ -263,9 +264,10 @@ UID: SDOC-SSS-31
 REFS:
 - TYPE: Parent
   VALUE: SDOC-RMC-36
-- TYPE: Parent
-  VALUE: DO178-6
 TITLE: Web interface
+STATEMENT: >>>
+The Requirements Tool shall provide a web interface.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SSS-32
@@ -319,10 +321,11 @@ following requirements apply.
 
 [REQUIREMENT]
 UID: SDOC-SSS-55
-REFS:
-- TYPE: Parent
-  VALUE: DO178-2
+STATUS: Active
 TITLE: Strict type-safe grammar
+STATEMENT: >>>
+The Requirements Tool shall provide type safety for its text language.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SSS-54

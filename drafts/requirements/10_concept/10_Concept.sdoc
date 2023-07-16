@@ -1,0 +1,402 @@
+[DOCUMENT]
+TITLE: Requirements Tool concept
+REQ_PREFIX: SDOC-RMC-
+
+[SECTION]
+UID: SECTION-RTC-Requirements-management
+TITLE: Requirements management
+
+[REQUIREMENT]
+UID: SDOC-RMC-20
+STATUS: Active
+TITLE: Manage requirements (CRUD)
+
+[REQUIREMENT]
+UID: SDOC-RMC-21
+STATUS: Active
+TITLE: Requirements and specifications (plain, non-nested vs deeply nested)
+
+[REQUIREMENT]
+UID: SDOC-RMC-32
+STATUS: Active
+TITLE: Support large requirements sets
+STATEMENT: The Tool shall support requirements sets of up to 10000+ requirements.
+
+[REQUIREMENT]
+UID: SDOC-RMC-37
+STATUS: Active
+TITLE: Requirements writing best practice
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-RTC-Documentation-management
+TITLE: Documentation management
+
+[REQUIREMENT]
+UID: SDOC-RMC-22
+STATUS: Active
+TITLE: Manage documents (CRUD)
+
+[REQUIREMENT]
+UID: SDOC-RMC-23
+STATUS: Draft
+TITLE: Support variety of document types
+STATEMENT: >>>
+The Requirements Tool shall support a variety of document types used by the industries. The variety comes from:
+
+- Supporting flexible documentation structures, e.g., non-nested vs. deeply nested.
+- Supporting custom fields used by different industries (the criticality levels in various industries, RAIT in aerospace, status/workflow fields, etc.)
+- Supporting a rich set of visualization mechanisms.
+
+NOTE: Examples of document types include:
+
+- Requirements specification
+- Design document / architecture description document
+- Interface control document / API reference
+- User manual
+- Development plan, systems engineering plan, management plan
+- Standard (e.g., ECSS or ISO26262)
+<<<
+
+[REQUIREMENT]
+UID: SDOC-RMC-31
+STATUS: Active
+TITLE: Support large project trees
+STATEMENT: The Tool shall support project trees and documentation packages of up to 100 documents.
+
+[REQUIREMENT]
+UID: SDOC-RMC-35
+STATUS: Active
+TITLE: Support documentation control (meta info and signatures)
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-RTC-Documentation-consistency
+TITLE: Documentation consistency
+
+[FREETEXT]
+- No (or less) run-away documentation
+- Reduce documentation hazards
+- Keep documents up-to-date
+[/FREETEXT]
+
+[REQUIREMENT]
+UID: SDOC-RMC-33
+STATUS: Active
+TITLE: Document versioning
+
+[REQUIREMENT]
+UID: SDOC-RMC-34
+STATUS: Active
+TITLE: Requirement versioning
+
+[REQUIREMENT]
+UID: SDOC-RMC-7
+STATUS: Active
+TITLE: Maintain consistency of requirements database
+
+[REQUIREMENT]
+UID: SDOC-RMC-38
+STATUS: Active
+TITLE: Change management
+STATEMENT: >>>
+The Requirements Tool shall provide capabilities for change management:
+
+- Visualizing changes between project tree versions.
+- Visualizing changes between document versions.
+- Visualizing the impact that a changed requirement has on a project tree.
+<<<
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-RTC-Support-engineering-activities
+TITLE: Support engineering activities
+
+[FREETEXT]
+- Assist workflows with project requirements and documentations
+- Integrate with existing workflows
+[/FREETEXT]
+
+[REQUIREMENT]
+UID: SDOC-RMC-42
+STATUS: Active
+TITLE: Document- and table-based workflow
+
+[REQUIREMENT]
+UID: SDOC-RMC-1
+STATUS: Active
+TITLE: Requirements analysis and prototyping
+
+[REQUIREMENT]
+UID: SDOC-RMC-39
+STATUS: Active
+TITLE: Requirements compliance identification
+
+[REQUIREMENT]
+UID: SDOC-RMC-2
+STATUS: Active
+TITLE: Requirements implementation
+
+[REQUIREMENT]
+UID: SDOC-RMC-3
+STATUS: Active
+TITLE: Requirements verification workflow (RAIT)
+
+[REQUIREMENT]
+UID: SDOC-RMC-56
+STATUS: Active
+TITLE: Configuration management
+STATEMENT: >>>
+The Requirements Tool shall provide capabilities for Configuration Management:
+
+- Versioning documentation releases.
+- Historical view of the documentation (e.g., travel back in time).
+<<<
+
+[REQUIREMENT]
+UID: SDOC-RMC-41
+STATUS: Active
+TITLE: Reporting
+
+[REQUIREMENT]
+UID: SDOC-RMC-12
+STATUS: Active
+TITLE: Collaborate on requirements
+
+[REQUIREMENT]
+UID: SDOC-RMC-13
+STATUS: Active
+TITLE: Exchange requirements
+
+[REQUIREMENT]
+UID: SDOC-RMC-17
+STATUS: Active
+TITLE: Formal reviews
+STATEMENT: >>>
+The Requirements Tool shall support the formal reviews activities:
+
+- Formal review of documentation
+- Walkthroughs, inspections
+- Version control of delivered documentation packages
+- Assessment of progress reports achieved.
+<<<
+
+[REQUIREMENT]
+UID: SDOC-RMC-18
+STATUS: Active
+TITLE: Interoperability with industry standards
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-RTC-Inclusive-requirements-collaboration
+TITLE: Inclusive requirements collaboration
+
+[SECTION]
+UID: SECTION-RTC-General-considerations
+TITLE: General considerations
+
+[REQUIREMENT]
+UID: SDOC-RMC-8
+STATUS: Draft
+TITLE: Accessible to everyone (engineering, management, etc)
+
+[REQUIREMENT]
+UID: SDOC-RMC-9
+STATUS: Draft
+TITLE: Easy user experience
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-RTC-Target-audience
+TITLE: Target audience
+
+[REQUIREMENT]
+UID: SDOC-RMC-36
+STATUS: Active
+TITLE: Engineering professionals
+STATEMENT: >>>
+- Graphical user interface
+<<<
+
+[REQUIREMENT]
+UID: SDOC-RMC-11
+STATUS: Active
+TITLE: Software engineers
+COMMENT: >>>
+The tool is close to software engineering workflow, i.e., it has edges to
+software version control, software IDEs, source code, etc.
+<<<
+
+[REQUIREMENT]
+UID: SDOC-RMC-43
+STATUS: Active
+TITLE: Management
+COMMENT: >>>
+- Graphical user interface
+- Project overview (1000ft)
+- Project statistics
+- Progress reports
+- Compliance and traceability
+<<<
+
+[REQUIREMENT]
+UID: SDOC-RMC-44
+STATUS: Active
+TITLE: General audience
+COMMENT: >>>
+- Graphical user interface
+<<<
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-RTC-Usability-installation-and-usage
+TITLE: Usability, installation and usage
+
+[REQUIREMENT]
+UID: SDOC-RMC-45
+STATUS: Draft
+TITLE: Individual use (home PC)
+
+[REQUIREMENT]
+UID: SDOC-RMC-14
+STATUS: Draft
+TITLE: Server-based deployments (IT-friendly setup)
+COMMENT: >>>
+Scaling from smaller setups (e.g., Raspberry PI in an office network) to
+larger in-house and cloud-base installations.
+<<<
+
+[REQUIREMENT]
+UID: SDOC-RMC-46
+STATUS: Draft
+TITLE: Requirements database
+COMMENT: Automatic storage and synchronization of requirements data.
+
+[REQUIREMENT]
+UID: SDOC-RMC-47
+STATUS: Draft
+TITLE: Programming access via API (Web)
+
+[REQUIREMENT]
+UID: SDOC-RMC-48
+STATUS: Draft
+TITLE: Programming access via API (SDK)
+
+[REQUIREMENT]
+UID: SDOC-RMC-49
+STATUS: Draft
+TITLE: Programming access to requirements data
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-RTC-Open-requirements-software
+TITLE: Open requirements software
+
+[REQUIREMENT]
+UID: SDOC-RMC-50
+STATUS: Active
+TITLE: Free software (freedom and beer, take two)
+
+[REQUIREMENT]
+UID: SDOC-RMC-10
+STATUS: Active
+TITLE: Barrier-free access to requirements data (easy in, easy out)
+
+[REQUIREMENT]
+UID: SDOC-RMC-51
+STATUS: Active
+TITLE: Direct access to the tool source code
+
+[REQUIREMENT]
+UID: SDOC-RMC-52
+STATUS: Active
+TITLE: Educational value
+COMMENT: >>>
+- Showcase requirements documents setups
+- Spread the best (better) practices
+<<<
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-RTC-Development-process
+TITLE: Development process
+
+[REQUIREMENT]
+UID: SDOC-RMC-25
+STATUS: Active
+TITLE: Requirements engineering
+
+[REQUIREMENT]
+UID: SDOC-RMC-53
+STATUS: Active
+TITLE: Self-hosted requirements
+
+[REQUIREMENT]
+UID: SDOC-RMC-26
+STATUS: Active
+TITLE: V&V
+
+[REQUIREMENT]
+UID: SDOC-RMC-24
+STATUS: Active
+TITLE: Tool qualification
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-RTC-Growth-potential
+TITLE: Growth potential
+
+[SECTION]
+UID: SECTION-RTC-General
+TITLE: General
+
+[REQUIREMENT]
+UID: SDOC-RMC-40
+STATUS: Draft
+TITLE: Automation of requirements engineering XXX
+
+[REQUIREMENT]
+UID: SDOC-RMC-54
+STATUS: Draft
+TITLE: Support projects with a large number of users
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-RTC-Formal-modeling
+TITLE: Formal modeling
+
+[REQUIREMENT]
+UID: SDOC-RMC-27
+TITLE: Integration with other systems engineering processes
+
+[REQUIREMENT]
+UID: SDOC-RMC-29
+TITLE: Integration with Capella
+
+[REQUIREMENT]
+UID: SDOC-RMC-55
+TITLE: Support STPA method
+
+[REQUIREMENT]
+UID: SDOC-RMC-28
+TITLE: Formalized statements
+
+[REQUIREMENT]
+UID: SDOC-RMC-30
+TITLE: AI Assistant
+
+[/SECTION]
+
+[/SECTION]

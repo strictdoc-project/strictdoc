@@ -35,8 +35,7 @@ sdoc-node[node-style="card"][node-role="requirement"]:hover,
 sdoc-node[node-style="card"] {
   background-color: var(--color-bg-contrast);
   border-radius: 3px;
-  /* compensate outline: */
-  padding: 1px;
+  padding: 0;
 }
 
 sdoc-node[node-style="card"][node-role="section"] {

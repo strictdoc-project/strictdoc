@@ -21,14 +21,11 @@ sdoc-requirement {
   gap: var(--requirement-inner-borders-width);
 
   position: relative;
-  /* border: */
-  outline:
+  border:
     var(--requirement-border-width, 1px)
     solid
     var(--requirement-border-color, #bfbfbf);
-  /* min-width: 300px; */
-  /* compensate outline: */
-  min-width: 298px;
+  min-width: 300px;
   border-radius: var(--requirement-border-radius);
   overflow: hidden;
 

@@ -746,3 +746,28 @@ def performance_snakeviz(context):
         snakeviz output/profile.prof
     """
     run_invoke(context, command)
+
+
+@task()
+def dot(context):
+    run_invoke(
+        context,
+        """
+            python strictdoc/cli/main.py
+                export
+                    --formats dot
+                    drafts/requirements
+        """,
+    )
+
+
+@task()
+def autouid(context):
+    run_invoke(
+        context,
+        """
+            python strictdoc/cli/main.py
+                manage auto-uid
+                drafts/requirements
+        """,
+    )

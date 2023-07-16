@@ -1,0 +1,690 @@
+[DOCUMENT]
+TITLE: StrictDoc Requirements Specification
+REQ_PREFIX: SDOC-SRS-
+
+[SECTION]
+UID: SECTION-SRS-Open-source-requirements-tool-challenges
+TITLE: Open-source requirements tool challenges
+
+[FREETEXT]
+- A very limited development time.
+- Not enough time to develop certain capabilities.
+- Not possible to scale to multi-user environment quickly.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Implementation-requirements
+TITLE: Implementation requirements
+
+[SECTION]
+UID: SECTION-SRS-Programming-languages
+TITLE: Programming languages
+
+[REQUIREMENT]
+UID: SDOC-SRS-8
+TITLE: Python language
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Cross-platform-availability
+TITLE: Cross-platform availability
+
+[REQUIREMENT]
+UID: SDOC-SRS-9
+TITLE: Linux
+
+[REQUIREMENT]
+UID: SDOC-SRS-10
+TITLE: macOS
+
+[REQUIREMENT]
+UID: SDOC-SRS-11
+TITLE: Windows
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Code-hosting
+TITLE: Code hosting
+
+[REQUIREMENT]
+UID: SDOC-SRS-12
+TITLE: GitHub
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Implementation-constraints
+TITLE: Implementation constraints
+
+[REQUIREMENT]
+UID: SDOC-SRS-89
+TITLE: Exclusive use of open source components
+STATEMENT: >>>
+StrictDoc shall be only built using open source software components.
+<<<
+RATIONALE: >>>
+No commercial/proprietary dependency chain ensures that StrictDoc remain free and open for everyone.
+<<<
+
+[REQUIREMENT]
+UID: SDOC-SRS-13
+TITLE: Real-time editing out of scope
+STATEMENT: >>>
+StrictDoc shall not implement the real-time editing capability to its web interface.
+<<<
+RATIONALE: >>>
+The real-time editing feature is hard to achieve with a small part-time involvement from the development team. This requirement can only be reconsidered, if StrictDoc would experience a significant increase in the development power.
+<<<
+
+[REQUIREMENT]
+UID: SDOC-SRS-14
+TITLE: No heavy UI frameworks
+
+[REQUIREMENT]
+UID: SDOC-SRS-15
+TITLE: No use of NPM-based projects
+
+[REQUIREMENT]
+UID: SDOC-SRS-16
+TITLE: No use of JavaScript replacement languages (e.g., Typescript)
+
+[REQUIREMENT]
+UID: SDOC-SRS-87
+TITLE: Monolithic application with no microservices
+RATIONALE: >>>
+The project is too small to scale to multi-service architecture.
+<<<
+COMMENT: >>>
+This requirement could be re-considered only if a significant technical pressure
+would require the use of microservices.
+<<<
+
+[REQUIREMENT]
+UID: SDOC-SRS-88
+TITLE: No reliance on containerization
+RATIONALE: >>>
+Containers are significant extra layer of complexity. They are hard to debug.
+<<<
+COMMENT: >>>
+This constraint does not block a StrictDoc user from wrapping StrictDoc into
+their containers.
+<<<
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-SDoc-markup
+TITLE: SDoc markup
+
+[REQUIREMENT]
+UID: SDOC-SRS-17
+TITLE: SDoc data model
+
+[REQUIREMENT]
+UID: SDOC-SRS-18
+TITLE: Data model
+
+[REQUIREMENT]
+UID: SDOC-SRS-19
+TITLE: Fixed grammar
+
+[REQUIREMENT]
+UID: SDOC-SRS-20
+TITLE: SDoc markup language
+
+[REQUIREMENT]
+UID: SDOC-SRS-21
+TITLE: Custom grammar / fields
+
+[REQUIREMENT]
+UID: SDOC-SRS-22
+TITLE: UID identifier format
+
+[REQUIREMENT]
+UID: SDOC-SRS-23
+TITLE: No indentation
+
+[REQUIREMENT]
+UID: SDOC-SRS-24
+TITLE: Support RST markup
+
+[REQUIREMENT]
+UID: SDOC-SRS-25
+TITLE: Type-safe fields
+
+[REQUIREMENT]
+UID: SDOC-SRS-26
+TITLE: Doc, Req, Sec, Comment, ...
+
+[REQUIREMENT]
+UID: SDOC-SRS-27
+TITLE: MathJAX
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Graph-database
+TITLE: Graph database
+
+[REQUIREMENT]
+UID: SDOC-SRS-28
+TITLE: Graph database
+
+[REQUIREMENT]
+UID: SDOC-SRS-29
+TITLE: Uniqueness UID in tree
+
+[REQUIREMENT]
+UID: SDOC-SRS-30
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-47
+TITLE: Detect links cycles
+
+[REQUIREMENT]
+UID: SDOC-SRS-31
+TITLE: Multiple link types (Parent, Verifies, Related, ...)
+
+[REQUIREMENT]
+UID: SDOC-SRS-32
+TITLE: Link document nodes
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Requirements-to-source-traceability
+TITLE: Requirements-to-source traceability
+
+[REQUIREMENT]
+UID: SDOC-SRS-33
+TITLE: Link requirements with source files
+
+[REQUIREMENT]
+UID: SDOC-SRS-34
+TITLE: Annotate source file
+
+[REQUIREMENT]
+UID: SDOC-SRS-35
+TITLE: Generate source coverage
+
+[REQUIREMENT]
+UID: SDOC-SRS-36
+TITLE: Generate source file traceability
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SSRS-Strict-mode-by-default
+TITLE: Strict mode by default
+
+[REQUIREMENT]
+UID: SDOC-SRS-6
+STATUS: Draft
+TITLE: Warnings are errors
+
+[REQUIREMENT]
+UID: SDOC-SRS-7
+TITLE: Type-based auto-asserts
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Configurability-requirements
+TITLE: Configurability requirements
+
+[REQUIREMENT]
+UID: SDOC-SRS-37
+TITLE: Strictdoc.toml file
+
+[REQUIREMENT]
+UID: SDOC-SRS-38
+TITLE: Edit project options (Move to SSS)
+
+[REQUIREMENT]
+UID: SDOC-SRS-39
+TITLE: Feature toggles
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SSRS-Performance
+TITLE: Performance
+
+[REQUIREMENT]
+UID: SDOC-SRS-1
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-13
+- TYPE: Parent
+  VALUE: SDOC-SSS-14
+TITLE: Process-based parallelization
+STATEMENT: >>>
+StrictDoc shall support process-based parallelization for time-critical tasks.
+<<<
+RATIONALE: >>>
+Process-based parallelization can provide a good speed-up when several large documents have to be generated.
+<<<
+
+[REQUIREMENT]
+UID: SDOC-SRS-2
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-13
+TITLE: Incremental generation of documents
+
+[REQUIREMENT]
+UID: SDOC-SRS-3
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-13
+TITLE: Caching of RST fragments
+
+[REQUIREMENT]
+UID: SDOC-SRS-4
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-13
+TITLE: On-demand loading of HTML pages
+
+[REQUIREMENT]
+UID: SDOC-SRS-5
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-13
+TITLE: Precompiled Jinja templates
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Quality-requirements
+TITLE: Quality requirements
+
+[SECTION]
+UID: SECTION-SRS-Coding-constraints
+TITLE: Coding constraints
+
+[REQUIREMENT]
+UID: SDOC-SRS-40
+TITLE: Deliberate use of asserts
+
+[REQUIREMENT]
+UID: SDOC-SRS-41
+TITLE: Extensive use of type annotations
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Linting
+TITLE: Linting
+
+[REQUIREMENT]
+UID: SDOC-SRS-42
+TITLE: Compliance with Python community practices (PEP8 etc)
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Static-analysis
+TITLE: Static analysis
+
+[REQUIREMENT]
+UID: SDOC-SRS-43
+TITLE: Static type checking
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Testing
+TITLE: Testing
+
+[REQUIREMENT]
+UID: SDOC-SRS-44
+TITLE: Unit testing
+
+[REQUIREMENT]
+UID: SDOC-SRS-45
+TITLE: CLI interface black-box integration testing
+
+[REQUIREMENT]
+UID: SDOC-SRS-46
+TITLE: Web end-to-end testing
+
+[REQUIREMENT]
+UID: SDOC-SRS-47
+TITLE: At least one integration or end-to-end test.
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Command-line-interface
+TITLE: Command-line interface
+
+[SECTION]
+UID: SECTION-SRS-Command-Manage
+TITLE: Command: Manage
+
+[SECTION]
+UID: SECTION-SRS-Command-Auto-UID
+TITLE: Command: Auto UID
+
+[REQUIREMENT]
+UID: SDOC-SRS-85
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-6
+TITLE: Auto-generate requirements UIDs
+
+[REQUIREMENT]
+UID: SDOC-SRS-86
+TITLE: Auto-generate section UIDs
+
+[/SECTION]
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-General-export-requirements
+TITLE: General export requirements
+
+[REQUIREMENT]
+UID: SDOC-SRS-48
+TITLE: Preserve generated file names
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Web-HTML-frontend
+TITLE: Web/HTML frontend
+
+[SECTION]
+UID: SECTION-SRS-General-export-requirements-2
+TITLE: General export requirements
+
+[REQUIREMENT]
+UID: SDOC-SRS-49
+TITLE: Export to static HTML website
+
+[REQUIREMENT]
+UID: SDOC-SRS-50
+TITLE: Web server
+
+[REQUIREMENT]
+UID: SDOC-SRS-51
+STATUS: Progress
+TITLE: Export to printable HTML pages (HTML2PDF)
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Screen-Project-home
+TITLE: Screen: Project home
+
+[REQUIREMENT]
+UID: SDOC-SRS-52
+STATUS: Progress
+TITLE: View project home page
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Screen-Project-tree
+TITLE: Screen: Project tree
+
+[REQUIREMENT]
+UID: SDOC-SRS-53
+TITLE: View project tree
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Screen-Document-DOC
+TITLE: Screen: Document (DOC)
+
+[REQUIREMENT]
+UID: SDOC-SRS-54
+STATUS: Implemented
+TITLE: View document
+
+[REQUIREMENT]
+UID: SDOC-SRS-55
+STATUS: Implemented
+TITLE: Edit requirement nodes
+
+[REQUIREMENT]
+UID: SDOC-SRS-56
+STATUS: Implemented
+TITLE: Edit Document grammar
+
+[REQUIREMENT]
+UID: SDOC-SRS-57
+STATUS: Implemented
+TITLE: Edit Document options
+
+[REQUIREMENT]
+UID: SDOC-SRS-58
+STATUS: Backlog
+TITLE: Attach image to requirement
+
+[REQUIREMENT]
+UID: SDOC-SRS-59
+STATUS: Backlog
+TITLE: Buttons to copy text to buffer
+
+[REQUIREMENT]
+UID: SDOC-SRS-60
+STATUS: Backlog
+TITLE: Provide contextual help about RST markup
+
+[REQUIREMENT]
+UID: SDOC-SRS-61
+STATUS: Backlog
+TITLE: Tables
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Screen-Table-TBL
+TITLE: Screen: Table (TBL)
+
+[REQUIREMENT]
+UID: SDOC-SRS-62
+TITLE: View TBL screen
+
+[REQUIREMENT]
+UID: SDOC-SRS-63
+STATUS: Draft
+TITLE: TBL: Hide/show columns
+
+[REQUIREMENT]
+UID: SDOC-SRS-64
+STATUS: Draft
+TITLE: TBL: Select/deselect tags
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Screen-Traceability-TR
+TITLE: Screen: Traceability (TR)
+
+[REQUIREMENT]
+UID: SDOC-SRS-65
+TITLE: View TR screen
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Screen-Deep-traceability-DTR
+TITLE: Screen: Deep traceability (DTR)
+
+[REQUIREMENT]
+UID: SDOC-SRS-66
+TITLE: View DTR screen
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Screen-Project-tree-document-diff
+TITLE: Screen: Project tree / document diff
+
+[REQUIREMENT]
+UID: SDOC-SRS-67
+STATUS: Draft
+TITLE: View project tree DIFF
+
+[REQUIREMENT]
+UID: SDOC-SRS-68
+STATUS: Draft
+TITLE: View document DIFF
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Screen-Impact-analysis
+TITLE: Screen: Impact analysis
+
+[REQUIREMENT]
+UID: SDOC-SRS-69
+STATUS: Draft
+TITLE: Requirement impact analysis
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Export-import-formats
+TITLE: Export/import formats
+
+[SECTION]
+UID: SECTION-SRS-RST
+TITLE: RST
+
+[REQUIREMENT]
+UID: SDOC-SRS-70
+TITLE: Export to RST
+
+[REQUIREMENT]
+UID: SDOC-SRS-71
+TITLE: Docutils
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-ReqIF
+TITLE: ReqIF
+
+[REQUIREMENT]
+UID: SDOC-SRS-72
+STATUS: Progress
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-58
+TITLE: Export/import from/to ReqIF
+STATEMENT: >>>
+StrictDoc shall support exporting/importing requirements content from/to ReqIF format.
+<<<
+
+[REQUIREMENT]
+UID: SDOC-SRS-73
+STATUS: Implemented
+TITLE: Standalone ReqIF layer
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Excel
+TITLE: Excel
+
+[REQUIREMENT]
+UID: SDOC-SRS-74
+TITLE: Export to Excel
+
+[REQUIREMENT]
+UID: SDOC-SRS-75
+STATUS: Draft
+TITLE: ReqXLS
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-LaTeX-export
+TITLE: LaTeX export
+
+[REQUIREMENT]
+UID: SDOC-SRS-76
+STATUS: Draft
+TITLE: Export to Tex
+
+[REQUIREMENT]
+UID: SDOC-SRS-90
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-56
+TITLE: Export to Graphviz/Dot
+STATEMENT: >>>
+StrictDoc shall support exporting requirements information to PDF format using Graphviz.
+<<<
+RATIONALE: >>>
+Graphviz is one of the most capable tools for visualizing graph information, which makes it a perfect tool for visualizing requirements graphs create in StrictDoc.
+<<<
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Backlog
+TITLE: Backlog
+
+[REQUIREMENT]
+UID: SDOC-SRS-77
+STATUS: Backlog
+TITLE: Focused mode: Edit a single section / requirement
+
+[REQUIREMENT]
+UID: SDOC-SRS-78
+STATUS: Backlog
+TITLE: Interoperability with Doxygen
+
+[REQUIREMENT]
+UID: SDOC-SRS-79
+STATUS: Backlog
+TITLE: Fuzzy search (the whole documentation)
+
+[REQUIREMENT]
+UID: SDOC-SRS-80
+STATUS: Backlog
+TITLE: Support Markdown markup
+
+[REQUIREMENT]
+UID: SDOC-SRS-81
+STATUS: Backlog
+TITLE: Support User accounts
+
+[REQUIREMENT]
+UID: SDOC-SRS-82
+STATUS: Backlog
+TITLE: Auto-commit to Git repository
+
+[REQUIREMENT]
+UID: SDOC-SRS-83
+STATUS: Backlog
+TITLE: Language Server Protocol (LSP)
+
+[REQUIREMENT]
+UID: SDOC-SRS-84
+STATUS: Backlog
+TITLE: UML
+
+[/SECTION]

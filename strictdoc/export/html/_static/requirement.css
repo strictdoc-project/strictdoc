@@ -229,7 +229,13 @@ sdoc-section-title {
 
 sdoc-section-title * {
   margin: 0;
-  display: inline;
+
+  /* This rule, when the element starts the page when printed,
+     creates illegal margins,
+     which breaks the rhythm of HTML2PDF4DOC
+     and generates blank pages:
+  */
+  /* display: inline; */
 }
 
 /* meta */
@@ -276,6 +282,8 @@ sdoc-meta-field {
 /* PDF */
 
 sdoc-section + sdoc-section,
-sdoc-requirement + sdoc-requirement {
+sdoc-section + sdoc-requirement,
+sdoc-requirement + sdoc-requirement,
+sdoc-requirement + sdoc-section {
   margin-top: var(--base-margin);
 }

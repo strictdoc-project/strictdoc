@@ -24,7 +24,11 @@ TITLE: Programming languages
 
 [REQUIREMENT]
 UID: SDOC-SRS-8
+STATUS: Active
 TITLE: Python language
+STATEMENT: >>>
+StrictDoc shall be written in Python.
+<<<
 
 [/SECTION]
 
@@ -161,7 +165,14 @@ TITLE: Data model
 
 [REQUIREMENT]
 UID: SDOC-SRS-19
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: DO178-2
 TITLE: Fixed grammar
+STATEMENT: >>>
+StrictDoc's markup language shall be based on a well-defined grammar.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SRS-20
@@ -427,10 +438,14 @@ TITLE: Command: Auto UID
 
 [REQUIREMENT]
 UID: SDOC-SRS-85
+STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: SDOC-SSS-6
 TITLE: Auto-generate requirements UIDs
+STATEMENT: >>>
+StrictDoc shall allow automatic generation of requirements UIDs.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SRS-86

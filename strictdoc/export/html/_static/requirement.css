@@ -232,6 +232,47 @@ sdoc-section-title * {
   display: inline;
 }
 
+/* meta */
+
+sdoc-meta {
+  display: inline-grid;
+  grid-template-columns: min-content 1fr;
+  place-items: stretch stretch;
+  place-content: stretch stretch;
+  position: relative;
+  border:
+    var(--requirement-border-width, 1px)
+    solid
+    var(--requirement-border-color, #bfbfbf);
+  border-radius: var(--requirement-border-radius);
+  overflow: hidden;
+
+  font-size: var(--font-size-sm);
+  margin: var(--requirement-base-rhythm) 0;
+  padding: calc(var(--requirement-base-rhythm)*0.5);
+}
+
+sdoc-meta-label,
+sdoc-meta-field {
+  display: flex;
+  align-items: flex-start;
+  padding: calc(var(--requirement-base-rhythm)*0.25) var(--requirement-base-rhythm);
+  background-color: var(--color-bg-contrast);
+}
+
+sdoc-meta-label {
+  grid-column: 1 / 2;
+  font-family: var(--code-font-family);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--requirement-label-color);
+  background-color: var(--color-bg-secondary);
+}
+
+sdoc-meta-field {
+  grid-column: 2 / 3;
+}
+
 /* PDF */
 
 sdoc-section + sdoc-section,

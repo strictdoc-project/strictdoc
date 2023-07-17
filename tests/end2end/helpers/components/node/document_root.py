@@ -41,59 +41,61 @@ class DocumentRoot(Node):  # pylint: disable=invalid-name
 
     def assert_document_title_contains(self, text: str) -> None:
         assert isinstance(text, str)
-        # TODO H1 -> testid
         self.test_case.assert_element(
-            f"{self.node_xpath}/H1[contains(., '{text}')]",
+            f"{self.node_xpath}/*[@data-testid='document-title']"
+            f"[contains(., '{text}')]",
             by=By.XPATH,
         )
 
     def assert_document_uid_contains(self, text: str) -> None:
         assert isinstance(text, str)
-        # TODO table_meta -> testid
         self.test_case.assert_element(
-            f"{self.node_xpath}"
-            "//table[@class='table_meta']//th[contains(., 'UID')]",
+            f"{self.node_xpath}//*[@data-testid='document-config-uid-label']"
+            "[contains(., 'UID')]",
             by=By.XPATH,
         )
         self.test_case.assert_element(
-            f"{self.node_xpath}"
-            f"//table[@class='table_meta']//td[contains(., '{text}')]",
+            f"{self.node_xpath}//*[@data-testid='document-config-uid-field']"
+            f"[contains(., '{text}')]",
             by=By.XPATH,
         )
 
     def assert_document_version_contains(self, text: str) -> None:
         assert isinstance(text, str)
-        # TODO table_meta -> testid
         self.test_case.assert_element(
             f"{self.node_xpath}"
-            "//table[@class='table_meta']//th[contains(., 'VERSION')]",
+            "//*[@data-testid='document-config-version-label']"
+            "[contains(., 'VERSION')]",
             by=By.XPATH,
         )
         self.test_case.assert_element(
             f"{self.node_xpath}"
-            f"//table[@class='table_meta']//td[contains(., '{text}')]",
+            "//*[@data-testid='document-config-version-field']"
+            f"[contains(., '{text}')]",
             by=By.XPATH,
         )
 
     def assert_document_classification_contains(self, text: str) -> None:
         assert isinstance(text, str)
-        # TODO table_meta -> testid
         self.test_case.assert_element(
             f"{self.node_xpath}"
-            "//table[@class='table_meta']//th[contains(., 'CLASSIFICATION')]",
+            "//*[@data-testid='document-config-classification-label']"
+            "[contains(., 'CLASSIFICATION')]",
             by=By.XPATH,
         )
         self.test_case.assert_element(
             f"{self.node_xpath}"
-            f"//table[@class='table_meta']//td[contains(., '{text}')]",
+            "//*[@data-testid='document-config-classification-field']"
+            f"[contains(., '{text}')]",
             by=By.XPATH,
         )
 
     def assert_document_abstract_contains(self, text: str) -> None:
         assert isinstance(text, str)
-        # TODO table_meta -> testid
         self.test_case.assert_element(
-            f"{self.node_xpath}[contains(., '{text}')]", by=By.XPATH
+            f"{self.node_xpath}/*[@data-testid='document-abstract']"
+            f"[contains(., '{text}')]",
+            by=By.XPATH,
         )
 
     # forms

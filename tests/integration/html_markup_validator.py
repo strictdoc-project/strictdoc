@@ -57,6 +57,7 @@ _, tidylib_messages_string = tidy_document(
             "sdoc-section, "
             "sdoc-section-title, sdoc-section-text, "
             "sdoc-main-placeholder, "
+            "sdoc-meta, sdoc-meta-label, sdoc-meta-field, "
         ),
         "char-encoding": "utf8",
         "input-encoding": "utf8",

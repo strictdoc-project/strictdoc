@@ -282,6 +282,8 @@ sdoc-meta-field {
 /* PDF */
 
 sdoc-section + sdoc-section,
-sdoc-requirement + sdoc-requirement {
+sdoc-section + sdoc-requirement,
+sdoc-requirement + sdoc-requirement,
+sdoc-requirement + sdoc-section {
   margin-top: var(--base-margin);
 }

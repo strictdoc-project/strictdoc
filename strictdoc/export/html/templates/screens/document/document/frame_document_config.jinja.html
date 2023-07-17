@@ -3,40 +3,23 @@
 {% block sdoc_entity %}
 
   {# TODO #}
-  <h1>{{document.title}}</h1>
+  <h1 data-testid='document-title'>{{document.title}}</h1>
+  {# TODO: META: same code at /templates/screens/document/table/main.jinja #}
   {%- if document.config.has_meta() -%}
-    <table class="table_meta">
-      {%- if document.config.uid -%}
-      <tr>
-        <th>
-          UID:
-        </th>
-        <td>
-          {{document.config.uid}}
-        </td>
-      </tr>
-      {%- endif -%}
-      {%- if document.config.version -%}
-      <tr>
-        <th>
-          VERSION:
-        </th>
-        <td>
-          {{document.config.version}}
-        </td>
-      </tr>
-      {%- endif -%}
-      {%- if document.config.classification -%}
-      <tr>
-        <th>
-          CLASSIFICATION:
-        </th>
-        <td>
-          {{document.config.classification}}
-        </td>
-      </tr>
-      {%- endif -%}
-    </table>
+  <sdoc-meta>
+    {%- if document.config.uid -%}
+    <sdoc-meta-label data-testid='document-config-uid-label'>UID:</sdoc-meta-label>
+    <sdoc-meta-field data-testid='document-config-uid-field'>{{ document.config.uid }}</sdoc-meta-field>
+    {%- endif -%}
+    {%- if document.config.version -%}
+    <sdoc-meta-label data-testid='document-config-version-label'>VERSION:</sdoc-meta-label>
+    <sdoc-meta-field data-testid='document-config-version-field'>{{ document.config.version }}</sdoc-meta-field>
+    {%- endif -%}
+    {%- if document.config.classification -%}
+    <sdoc-meta-label data-testid='document-config-classification-label'>CLASSIFICATION:</sdoc-meta-label>
+    <sdoc-meta-field data-testid='document-config-classification-field'>{{ document.config.classification }}</sdoc-meta-field>
+    {%- endif -%}
+  </sdoc-meta>
   {%- endif -%}
 
   {% include "components/abstract/index.jinja" %}

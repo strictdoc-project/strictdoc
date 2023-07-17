@@ -29,7 +29,9 @@ Stimulus.register("anchor_controller", class extends Controller {
     // the result is expected to be the same as on the content flow.
     const contentLeft = this.element.getBoundingClientRect().x;
 
-    const anchors = [...this.element.querySelectorAll('sdoc-anchor')];
+    // if a section does not have a uid= parameter,
+    // we don't want to show anchors.
+    const anchors = [...this.element.querySelectorAll('sdoc-anchor[data-uid]')];
 
     anchors.forEach(anchor => {
 
@@ -41,10 +43,6 @@ Stimulus.register("anchor_controller", class extends Controller {
       // we do the check:
       if (anchor.hasAttribute("visible")) { return };
 
-      // @mettta TODO double-check: if a section does not have a uid= parameter,
-      // we don't want to show anchors.
-      if (!anchor.hasAttribute("data-uid")) { return };
-
       // In the other case, start processing the anchor.
 
       // This attribute triggers CSS:
@@ -52,7 +50,11 @@ Stimulus.register("anchor_controller", class extends Controller {
 
       const anchorText = anchor.dataset.anchor || anchor.dataset.uid;
 
-      // Add an always visible button:
+      // Create anchor content block:
+      const anchorBlock = document.createElement('div');
+      anchorBlock.classList.add('anchor_block');
+
+      // Create the button:
       const anchorButton = document.createElement('div');
       anchorButton.classList.add('anchor_button');
       anchorButton.title = "Click to copy";
@@ -60,16 +62,43 @@ Stimulus.register("anchor_controller", class extends Controller {
       const checkIcon = createIcon(checkIconSVG);
       checkIcon.style.display = 'none';
       anchorButton.append(anchorIcon, checkIcon,);
-      anchor.append(anchorButton);
+
+      // Append button:
+      anchorBlock.append(anchorButton);
+
+      // Add anchor back links IF EXIST:
+      let template = anchor.querySelector("template");
+      if (template) {
+        // Create anchor back links block:
+        const anchorBackLinks = document.createElement('div');
+        anchorBackLinks.classList.add('anchor_back_links');
+        anchorBackLinks.append(template.content.cloneNode(true));
+
+        // Calculate back links:
+        let linksNumber = anchorBackLinks.querySelectorAll('a').length;
+        console.log(linksNumber);
+        const anchorBackLinksNumber = document.createElement('div');
+        anchorBackLinksNumber.classList.add('anchor_back_links_number');
+        anchorBackLinksNumber.innerText = linksNumber;
+
+        anchor.classList.add('anchor_has_links');
+
+        // Append links block:
+        anchorBlock.append(anchorBackLinks, anchorBackLinksNumber);
+      }
+
+      // Append anchor content block:
+      anchor.append(anchorBlock);
+
       // Now position the anchor, considering the added button:
       const translate = anchor.getBoundingClientRect().right - contentLeft;
       anchor.style.transform = `translate(-${translate}px,0)`;
 
-      // Add content block
-      const anchorContentBlock = document.createElement('span');
-      anchorContentBlock.classList.add('anchor_button_text');
-      anchorContentBlock.innerHTML = anchorText;
-      anchorButton.append(anchorContentBlock);
+      // Add button content block
+      const anchorButtonText = document.createElement('span');
+      anchorButtonText.classList.add('anchor_button_text');
+      anchorButtonText.innerHTML = anchorText;
+      anchorButton.append(anchorButtonText);
 
       // Add event listener
       anchorButton.addEventListener("click", function(event){

@@ -1,18 +1,3 @@
-{%- set section_incoming_links = traceability_index.get_section_incoming_links(section) %}
-{%- if section_incoming_links is not none and section_incoming_links|length > 0 -%}
-<ul style="border: 3px solid red;">
-  INCOMING LINKS:
-  {%- for incoming_link in section_incoming_links -%}
-    <li>
-    {%- set incoming_link_parent_node = incoming_link.parent_node() -%}
-    <a href="{{ link_renderer.render_node_link(incoming_link.parent_node(), document, document_type) }}">
-      {{ incoming_link_parent_node.get_title() }}
-    </a>
-    </li>
-  {%- endfor -%}
-</ul>
-{%- endif -%}
-
 {# TODO: change to 'text' #}
 {%- if section.free_texts -%}
   {%- for free_text in section.free_texts -%}

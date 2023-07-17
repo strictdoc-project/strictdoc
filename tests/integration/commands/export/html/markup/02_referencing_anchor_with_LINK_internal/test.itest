@@ -3,9 +3,9 @@ CHECK: Published: Hello world doc
 
 RUN: %cat %S/Output/html/02_referencing_anchor_with_LINK_internal/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC
 CHECK-HTML-DOC: <p>Anchors start.</p>
-CHECK-HTML-DOC: <sdoc-anchor id="AD1" data-anchor="{{.*}}AD1"{{.*}}
+CHECK-HTML-DOC: <sdoc-anchor id="AD1"{{.*}}
 CHECK-HTML-DOC: <li>AD1. Software user manual.</li>
-CHECK-HTML-DOC: <sdoc-anchor id="Software requirements specification" data-anchor="{{.*}}Software requirements specification"{{.*}}
+CHECK-HTML-DOC: <sdoc-anchor id="Software requirements specification"{{.*}}
 CHECK-HTML-DOC: <li>AD2. Software requirements specification.</li>
-CHECK-HTML-DOC: <sdoc-anchor id="Interface Control Document" data-anchor="{{.*}}Interface Control Document"{{.*}}
+CHECK-HTML-DOC: <sdoc-anchor id="Interface Control Document"{{.*}}
 CHECK-HTML-DOC: <li>AD3. Interface Control Document.</li>

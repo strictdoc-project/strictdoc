@@ -7,11 +7,26 @@ CHECK-HTML:<a href="#1-Section-1"{{.*}}>
 CHECK-HTML:<a href="#-Out-of-band-Section"{{.*}}>
 CHECK-HTML:<a href="#2-Section-2"{{.*}}>
 
-CHECK-HTML:<sdoc-anchor id="1-Section-1"{{.*}}></sdoc-anchor>
-CHECK-HTML:<sdoc-anchor id="-Out-of-band-Section"{{.*}}></sdoc-anchor>
-CHECK-HTML:<sdoc-anchor id="-Out-of-band-Subsection"{{.*}}></sdoc-anchor>
-CHECK-HTML:<sdoc-anchor id="-Out-of-band-Subsubsection"{{.*}}></sdoc-anchor>
-CHECK-HTML:<sdoc-anchor id="2-Section-2"{{.*}}></sdoc-anchor>
-CHECK-HTML:<sdoc-anchor id="-Out-of-band-Section"{{.*}}></sdoc-anchor>
-CHECK-HTML:<sdoc-anchor id="2.1-Section-2-1"{{.*}}></sdoc-anchor>
-CHECK-HTML:<sdoc-anchor id="2.2-Section-2-2"{{.*}}></sdoc-anchor>
+CHECK-HTML:<sdoc-anchor
+CHECK-HTML-NEXT:id="1-Section-1"
+
+CHECK-HTML:<sdoc-anchor
+CHECK-HTML-NEXT:id="-Out-of-band-Section"
+
+CHECK-HTML:<sdoc-anchor
+CHECK-HTML-NEXT:id="-Out-of-band-Subsection"
+
+CHECK-HTML:<sdoc-anchor
+CHECK-HTML-NEXT:id="-Out-of-band-Subsubsection"
+
+CHECK-HTML:<sdoc-anchor
+CHECK-HTML-NEXT:id="2-Section-2"
+
+CHECK-HTML:<sdoc-anchor
+CHECK-HTML-NEXT:id="-Out-of-band-Section"
+
+CHECK-HTML:<sdoc-anchor
+CHECK-HTML-NEXT:id="2.1-Section-2-1"
+
+CHECK-HTML:<sdoc-anchor
+CHECK-HTML-NEXT:id="2.2-Section-2-2"

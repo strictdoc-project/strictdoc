@@ -8,6 +8,8 @@ from strictdoc.backend.sdoc.models.requirement import (
 )
 from strictdoc.backend.sdoc.models.section import FreeText
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.export.html.document_type import DocumentType
+from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.html_fragment_writer import (
     HTMLFragmentWriter,
 )
@@ -20,6 +22,10 @@ from strictdoc.helpers.rst import truncated_statement_with_no_rst
 
 
 class MarkupRenderer:
+    template_anchor = HTMLTemplates.jinja_environment.get_template(
+        "rst/anchor.jinja"
+    )
+
     @staticmethod
     def create(
         markup,
@@ -143,7 +149,12 @@ class MarkupRenderer:
                     node.title, href
                 )
             elif isinstance(part, Anchor):
-                parts_output += self.fragment_writer.write_anchor(part.value)
+                parts_output += MarkupRenderer.template_anchor.render(
+                    anchor=part,
+                    traceability_index=self.traceability_index,
+                    link_renderer=self.link_renderer,
+                    document_type=DocumentType.document(),
+                )
 
         output = self.fragment_writer.write(parts_output)
         self.cache[(document_type, free_text)] = output

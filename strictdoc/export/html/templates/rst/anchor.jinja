@@ -1,0 +1,19 @@
+.. raw:: html
+
+    <sdoc-anchor id="{{ anchor.value }}" data-uid="{{ anchor.value }}" data-anchor="{{ anchor.value }}" style="top:unset">
+    {%- set incoming_links = traceability_index.get_section_incoming_links(anchor) -%}
+    {%- if incoming_links is not none and incoming_links|length > 0 -%}
+    <template>
+      incoming link{% if incoming_links|length > 1 -%}s{%- endif %} from:
+      {%- for incoming_link in incoming_links -%}
+      {%- set incoming_link_parent_node = incoming_link.parent_node() -%}
+      {%- set incoming_link_href = link_renderer.render_node_link(incoming_link.parent_node(), anchor.document, document_type) -%}
+      <a href="{{ incoming_link_href }}">
+        {{ incoming_link_parent_node.get_title() }}
+      </a>
+      {%- endfor -%}
+    </template>
+    {%- endif -%}
+    </sdoc-anchor>
+
+

@@ -519,6 +519,7 @@ def create_main_router(
             document_type=DocumentType.document(),
             project_config=project_config,
             standalone=False,
+            traceability_index=export_action.traceability_index,
         )
         iterator = export_action.traceability_index.get_document_iterator(
             section.document
@@ -582,6 +583,7 @@ def create_main_router(
             document_type=DocumentType.document(),
             project_config=project_config,
             standalone=False,
+            traceability_index=export_action.traceability_index,
         )
         return HTMLResponse(
             content=output,

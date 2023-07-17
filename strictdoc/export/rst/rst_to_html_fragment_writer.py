@@ -146,12 +146,3 @@ class RstToHtmlFragmentWriter:
         return f"""\
 :rawhtml:`<a href="{href}">🔗&nbsp;{title}</a>`\
 """
-
-    @staticmethod
-    def write_anchor(anchor):
-        return f"""\
-.. raw:: html
-
-    <sdoc-anchor id="{anchor}" data-anchor="📋{anchor}" style="top:unset"></sdoc-anchor>
-
-"""

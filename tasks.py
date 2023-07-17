@@ -196,13 +196,14 @@ def test_unit_server(context, focus=None):
     )
 
 
-@task
-def test_end2end(
+@task()
+def test_end2end(  # pylint: disable=too-many-arguments
     context,
     focus=None,
     exit_first=False,
     parallelize=False,
     long_timeouts=False,
+    headless=False,
 ):
     long_timeouts_argument = (
         "--strictdoc-long-timeouts" if long_timeouts else ""
@@ -219,6 +220,7 @@ def test_end2end(
 
     focus_argument = f"-k {focus}" if focus is not None else ""
     exit_first_argument = "--exitfirst" if exit_first else ""
+    headless_argument = "--headless" if headless else ""
 
     test_command = f"""
         pytest
@@ -229,6 +231,7 @@ def test_end2end(
             {focus_argument}
             {exit_first_argument}
             {long_timeouts_argument}
+            {headless_argument}
             tests/end2end
     """
 

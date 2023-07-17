@@ -38,6 +38,8 @@ class FreeText:
                     text += ", "
                     text += part.title
                 text += "]"
+                text += "\n"
+                text += "\n"
             else:
                 raise NotImplementedError(part)
         return text

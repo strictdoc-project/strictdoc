@@ -9,7 +9,7 @@
 {%- set incoming_links = traceability_index.get_section_incoming_links(section) %}
 {%- if incoming_links is not none and incoming_links|length > 0 -%}
 <template>
-  <i>incoming link{% if incoming_links|length > 1 -%}s{%- endif %} from:</i>
+  incoming link{% if incoming_links|length > 1 -%}s{%- endif %} from:
   {%- for incoming_link in incoming_links -%}
   {%- set incoming_link_parent_node = incoming_link.parent_node() -%}
   {%- set incoming_link_href = link_renderer.render_node_link(incoming_link.parent_node(), document, document_type) -%}

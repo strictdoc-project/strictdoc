@@ -147,6 +147,17 @@ N: GUI for editing is NTH but it shall scale well to thousands of requirements. 
 <<<
 
 [REQUIREMENT]
+UID: DO178-19
+STATUS: Active
+TITLE: WYSIWYG editing
+STATEMENT: >>>
+StrictDoc's GUI shall support a WYSIWYG test editing.
+<<<
+COMMENT: >>>
+Simplifies editing of formatted text.
+<<<
+
+[REQUIREMENT]
 UID: DO178-8
 STATUS: Active
 TITLE: Configuration: 'Host' parameter
@@ -236,17 +247,6 @@ N: Trace matrix publishing (both ways : is covered by ... and covers ...) publis
 <<<
 COMMENT: >>>
 S: This feature, especially a very basic initial one, is very easy to implement, and it is already on the nearest roadmap, see `here <https://github.com/strictdoc-project/strictdoc/issues/964#issuecomment-1497900436>`_. We only need to agree on if we are on the same page about how the produced matrices look like.
-<<<
-
-[REQUIREMENT]
-UID: DO178-19
-STATUS: Active
-TITLE: WYSIWYG editing
-STATEMENT: >>>
-StrictDoc's GUI shall support a WYSIWYG test editing.
-<<<
-COMMENT: >>>
-Simplifies editing of formatted text.
 <<<
 
 [REQUIREMENT]

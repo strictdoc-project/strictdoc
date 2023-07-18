@@ -180,10 +180,17 @@ TITLE: Existing workflows
 
 [REQUIREMENT]
 UID: SDOC-SSS-56
+STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: SDOC-RMC-1
 TITLE: 1000-feet view
+STATEMENT: >>>
+The Requirements Tool shall provide a "1000-feet view" kind of requirements visualization.
+<<<
+RATIONALE: >>>
+Compared to the other visualizations, such a visualization helps to "see the forest for the trees". Seeing requirements and their sections all at once helps to visualize groups of requirements and better understand the relationships between them.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SSS-28
@@ -285,6 +292,7 @@ The Requirements Tool shall provide a command line interface (CLI).
 
 [REQUIREMENT]
 UID: SDOC-SSS-33
+STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: SDOC-RMC-33

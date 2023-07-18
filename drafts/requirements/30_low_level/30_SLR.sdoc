@@ -69,6 +69,9 @@ TITLE: Implementation constraints
 [REQUIREMENT]
 UID: SDOC-SRS-89
 STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: DO178-7
 TITLE: Exclusive use of open source components
 STATEMENT: >>>
 StrictDoc shall be built using only open source software components.
@@ -212,7 +215,14 @@ TITLE: No indentation
 
 [REQUIREMENT]
 UID: SDOC-SRS-24
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-63
 TITLE: Support RST markup
+STATEMENT: >>>
+StrictDoc shall support the RST markup.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SRS-25
@@ -224,7 +234,14 @@ TITLE: Doc, Req, Sec, Comment, ...
 
 [REQUIREMENT]
 UID: SDOC-SRS-27
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-63
 TITLE: MathJAX
+STATEMENT: >>>
+StrictDoc's markup shall enable support integration with MathJax.
+<<<
 
 [/SECTION]
 
@@ -242,10 +259,14 @@ TITLE: Uniqueness UID in tree
 
 [REQUIREMENT]
 UID: SDOC-SRS-30
+STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: SDOC-SSS-47
 TITLE: Detect links cycles
+STATEMENT: >>>
+StrictDoc shall detect cycles between requirements.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SRS-31
@@ -477,11 +498,25 @@ TITLE: General export requirements
 
 [REQUIREMENT]
 UID: SDOC-SRS-49
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-30
 TITLE: Export to static HTML website
+STATEMENT: >>>
+StrictDoc shall support generating requirements documentation into static HTML.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SRS-50
-TITLE: Web server
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-31
+TITLE: Web interface
+STATEMENT: >>>
+StrictDoc shall provide a web interface.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SRS-51
@@ -690,8 +725,14 @@ UID: SDOC-SRS-76
 STATUS: Draft
 TITLE: Export to Tex
 
+[/SECTION]
+
+[SECTION]
+TITLE: Graphviz/Dot export
+
 [REQUIREMENT]
 UID: SDOC-SRS-90
+STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: SDOC-SSS-56

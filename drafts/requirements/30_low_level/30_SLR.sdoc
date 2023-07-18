@@ -25,9 +25,15 @@ TITLE: Programming languages
 [REQUIREMENT]
 UID: SDOC-SRS-8
 STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-69
 TITLE: Python language
 STATEMENT: >>>
 StrictDoc shall be written in Python.
+<<<
+RATIONALE: >>>
+Python has an excellent package ecosystem. It is a widely used language. It is most often the next language for C/C++ programming community when it comes to the tools development and scripting tasks.
 <<<
 
 [/SECTION]
@@ -38,15 +44,36 @@ TITLE: Cross-platform availability
 
 [REQUIREMENT]
 UID: SDOC-SRS-9
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-67
 TITLE: Linux
+STATEMENT: >>>
+StrictDoc shall support the Linux operating systems.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SRS-10
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-67
 TITLE: macOS
+STATEMENT: >>>
+StrictDoc shall support the macOS operating system.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SRS-11
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-67
 TITLE: Windows
+STATEMENT: >>>
+StrictDoc shall support the Windows operating system.
+<<<
 
 [/SECTION]
 
@@ -56,7 +83,11 @@ TITLE: Code hosting
 
 [REQUIREMENT]
 UID: SDOC-SRS-12
+STATUS: Active
 TITLE: GitHub
+STATEMENT: >>>
+StrictDoc's source code shall be hosted on GitHub.
+<<<
 
 [/SECTION]
 
@@ -385,7 +416,23 @@ TITLE: Precompiled Jinja templates
 
 [SECTION]
 UID: SECTION-SRS-Quality-requirements
-TITLE: Quality requirements
+TITLE: Development process requirements
+
+[SECTION]
+TITLE: Requirements engineering
+
+[REQUIREMENT]
+UID: SDOC-SRS-91
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-50
+TITLE: Self-hosted requirements
+STATEMENT: >>>
+StrictDoc's requirements shall be written using StrictDoc.
+<<<
+
+[/SECTION]
 
 [SECTION]
 UID: SECTION-SRS-Coding-constraints
@@ -728,6 +775,7 @@ TITLE: Export to Tex
 [/SECTION]
 
 [SECTION]
+UID: SECTION-SRS-Graphviz-Dot-export
 TITLE: Graphviz/Dot export
 
 [REQUIREMENT]

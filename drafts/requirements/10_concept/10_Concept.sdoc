@@ -262,13 +262,19 @@ TITLE: Usability, installation and usage
 
 [REQUIREMENT]
 UID: SDOC-RMC-45
-STATUS: Draft
+STATUS: Active
 TITLE: Individual use (home PC)
+STATEMENT: >>>
+The Requirements Tool shall be usable on the normal personal computers, e.g., do not require a special cloud deployment.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-RMC-14
-STATUS: Draft
+STATUS: Active
 TITLE: Server-based deployments (IT-friendly setup)
+STATEMENT: >>>
+The Requirements Tool shall be deployable to the network of computers, e.g., provide a server instance.
+<<<
 COMMENT: >>>
 Scaling from smaller setups (e.g., Raspberry PI in an office network) to
 larger in-house and cloud-base installations.
@@ -282,8 +288,14 @@ COMMENT: Automatic storage and synchronization of requirements data.
 
 [REQUIREMENT]
 UID: SDOC-RMC-47
-STATUS: Draft
+STATUS: Active
 TITLE: Programming access via API (Web)
+STATEMENT: >>>
+The Requirements Tool shall provide a Web API interface.
+<<<
+RATIONALE: >>>
+Besides a direct access to the tool's source code, accessing an API deployed to a server provides additional capabilities for getting and manipulating requirements/documentation content.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-RMC-48
@@ -339,18 +351,36 @@ TITLE: Development process
 
 [REQUIREMENT]
 UID: SDOC-RMC-25
-STATUS: Active
+STATUS: Draft
 TITLE: Requirements engineering
+STATEMENT: >>>
+TBD
+<<<
+COMMENT: >>>
+Might need to be removed from this level.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-RMC-53
-STATUS: Active
+STATUS: Draft
 TITLE: Self-hosted requirements
+STATEMENT: >>>
+TBD
+<<<
+COMMENT: >>>
+Might need to be removed from this level.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-RMC-26
-STATUS: Active
+STATUS: Draft
 TITLE: V&V
+STATEMENT: >>>
+TBD
+<<<
+COMMENT: >>>
+Might need to be removed from this level.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-RMC-24

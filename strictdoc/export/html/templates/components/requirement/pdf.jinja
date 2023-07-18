@@ -1,0 +1,33 @@
+{#
+  In this template:
+  sdoc_entity = requirement
+#}
+
+{#  sdoc-requirement:
+    attribute requirement-view can be either of: [simple, table, zebra].
+    Without this attribute sdoc-requirement will look like a 'simple' view.
+    If the container becomes smaller than the set parameter (300px default),
+    the 'columns' view degrades to 'zebra'.
+#}
+
+<sdoc-requirement
+  requirement-view="{{ requirement_style|d(requirement.get_requirement_style_mode()) }}"
+  data-level="{{ requirement.context.title_number_string }}"
+  {%- if requirement.reserved_status %}
+    data-status='{{ requirement.reserved_status.lower() }}'
+  {%- endif %}
+  data-testid="requirement-style-{{ requirement_style|d(requirement.get_requirement_style_mode()) }}"
+>
+  {% set title_number = true %}
+  {% set truncated_statement = false %}
+  {# Use title/print, it contains anchor: #}
+  {% include "components/requirement/title/pdf.jinja" %}
+  {% include "components/requirement/meta/index.jinja" %}
+  {% include "components/requirement/links/index.jinja" %}
+  {% include "components/requirement/files/index.jinja" %}
+  {% include "components/requirement/statement/index.jinja" %}
+  {% include "components/requirement/rationale/index.jinja" %}
+  {% include "components/requirement/comments/index.jinja" %}
+  {% include "components/requirement/multiline/index.jinja" %}
+
+</sdoc-requirement>

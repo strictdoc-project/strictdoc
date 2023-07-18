@@ -256,6 +256,7 @@ sdoc-meta {
   font-size: var(--font-size-sm);
   margin: var(--requirement-base-rhythm) 0;
   padding: calc(var(--requirement-base-rhythm)*0.5);
+  row-gap: 2px;
 }
 
 sdoc-meta-label,

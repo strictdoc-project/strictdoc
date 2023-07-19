@@ -194,6 +194,7 @@ Compared to the other visualizations, such a visualization helps to "see the for
 
 [REQUIREMENT]
 UID: SDOC-SSS-28
+STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: SDOC-RMC-3
@@ -272,6 +273,8 @@ STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: SDOC-RMC-36
+- TYPE: Parent
+  VALUE: SDOC-RMC-14
 TITLE: Web interface
 STATEMENT: >>>
 The Requirements Tool shall provide a web interface.
@@ -288,6 +291,17 @@ REFS:
 TITLE: Command-line interface
 STATEMENT: >>>
 The Requirements Tool shall provide a command line interface (CLI).
+<<<
+
+[REQUIREMENT]
+UID: SDOC-SSS-68
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-47
+TITLE: Web API interface
+STATEMENT: >>>
+The Requirements Tool shall provide an API interface.
 <<<
 
 [REQUIREMENT]
@@ -310,6 +324,42 @@ RATIONALE: >>>
 - Git allows precise tracking of the changes to the documentation.
 - Requirements/documentation content can be release-tagged.
 - The "Time machine" function: ability to review the older state of the documentation/requirements tree.
+<<<
+
+[REQUIREMENT]
+UID: SDOC-SSS-67
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-45
+TITLE: Support major operating systems
+STATEMENT: >>>
+The Requirements Tool shall support at least the following operating systems:
+
+- Linux
+- Windows
+- macOS.
+<<<
+
+[REQUIREMENT]
+UID: SDOC-SSS-69
+STATUS: Active
+TITLE: Conservative languages for implementation
+STATEMENT: >>>
+The Requirements Tool shall be implemented using the popular programming languages.
+
+NOTE: Examples of the most popular programming languages:
+
+- Java
+- C++
+- Python
+- JavaScript
+<<<
+RATIONALE: >>>
+Choosing a less popular programming language can limit the long-term maintainability of the tool.
+<<<
+COMMENT: >>>
+Examples of less popular programming languages, with all due respect to their powerful features: Haskell, F#, Ada, etc.
 <<<
 
 [REQUIREMENT]
@@ -427,6 +477,8 @@ REFS:
   VALUE: SDOC-RMC-52
 - TYPE: Parent
   VALUE: ZEP-15
+- TYPE: Parent
+  VALUE: SDOC-RMC-24
 TITLE: Self-hosted requirements
 STATEMENT: >>>
 The Requirements Tool shall be used to demonstrate its own requirements.

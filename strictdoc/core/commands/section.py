@@ -124,7 +124,7 @@ class UpdateSectionCommand:
             # associations.
             if section.reserved_uid is not None:
                 del traceability_index.requirements_parents[
-                    form_object.section_uid
+                    section.reserved_uid
                 ]
 
             section.uid = form_object.section_uid

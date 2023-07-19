@@ -223,6 +223,25 @@ The most commonly used Markdown format lacks the ability to store requirements m
 <<<
 
 [REQUIREMENT]
+UID: SDOC-SRS-93
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-61
+TITLE: Default grammar fields
+STATEMENT: >>>
+The StrictDoc grammar shall have at least the following fields activated by default:
+
+- UID
+- STATUS
+- LINKS (references to other requirements)
+- TITLE
+- STATEMENT
+- RATIONALE
+- COMMENT.
+<<<
+
+[REQUIREMENT]
 UID: SDOC-SRS-21
 STATUS: Active
 REFS:
@@ -419,6 +438,7 @@ UID: SECTION-SRS-Quality-requirements
 TITLE: Development process requirements
 
 [SECTION]
+UID: SECTION-SRS-Requirements-engineering
 TITLE: Requirements engineering
 
 [REQUIREMENT]
@@ -606,6 +626,34 @@ TITLE: View document
 UID: SDOC-SRS-55
 STATUS: Implemented
 TITLE: Edit requirement nodes
+
+[REQUIREMENT]
+UID: SDOC-SRS-92
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-5
+TITLE: Move requirement / section nodes within document
+STATEMENT: >>>
+StrictDoc's Document screen shall provide a capability to move the nodes within a document.
+<<<
+RATIONALE: >>>
+Moving the nodes within a document is a convenience feature that speeds up the requirements editing process significantly.
+<<<
+
+[REQUIREMENT]
+UID: SDOC-SRS-94
+STATUS: Backlog
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-70
+TITLE: Move requirement / section nodes between documents
+STATEMENT: >>>
+StrictDoc's Document screen shall provide a capability to move the nodes between documents.
+<<<
+RATIONALE: >>>
+Moving the nodes within a document is a convenience feature that speeds up the requirements editing process significantly.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SRS-56

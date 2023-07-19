@@ -24,12 +24,24 @@ The Requirements Tool shall support the CRUD operations:
 
 [REQUIREMENT]
 UID: SDOC-SSS-61
+STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: ZEP-10
 - TYPE: Parent
   VALUE: ZEP-14
 TITLE: Minimal requirement field set
+STATEMENT: >>>
+The Requirements Tool shall support at least the following requirement field set:
+
+- UID
+- STATUS
+- LINKS (references to other requirements)
+- TITLE
+- STATEMENT
+- RATIONALE
+- COMMENT.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SSS-62
@@ -61,10 +73,22 @@ TITLE: Structuring requirements in documents
 
 [REQUIREMENT]
 UID: SDOC-SSS-5
+STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: SDOC-RMC-1
-TITLE: Move document nodes within document and between documents
+TITLE: Move document nodes within document
+STATEMENT: >>>
+The Requirements Tool shall allow moving nodes (sections, requirements) within the containing document.
+<<<
+
+[REQUIREMENT]
+UID: SDOC-SSS-70
+STATUS: Active
+TITLE: Move nodes between documents
+STATEMENT: >>>
+The Requirements Tool shall allow moving nodes (sections, requirements) between documents.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SSS-6
@@ -94,7 +118,10 @@ UID: SDOC-SSS-47
 REFS:
 - TYPE: Parent
   VALUE: SDOC-RMC-7
-TITLE: Prevent cycles between nodes.
+TITLE: Prevent cycles between nodes
+STATEMENT: >>>
+The Requirements Tool shall provide a validation mechanism that prevents requirement links from forming cycles.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SSS-57

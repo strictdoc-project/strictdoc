@@ -1,8 +1,7 @@
-from seleniumbase import BaseCase
-
+from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
-from tests.end2end.helpers.screens.document.form_edit_section import (
-    Form_EditSection,
+from tests.end2end.helpers.screens.document.form_edit_grammar import (
+    Form_EditGrammar,
 )
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
@@ -10,11 +9,10 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 from tests.end2end.server import SDocTestServer
 
 
-class Test(BaseCase):
+class Test_UC12_T13_AddThreeFields(E2ECase):
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
-        # Run server.
         with SDocTestServer(
             input_path=test_setup.path_to_sandbox
         ) as test_server:
@@ -29,25 +27,25 @@ class Test(BaseCase):
 
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
-
             screen_document.assert_text("Hello world!")
 
-            root_node = screen_document.get_root_node()
-            root_node_menu = root_node.do_open_node_menu()
-            form_edit_section: Form_EditSection = (
-                root_node_menu.do_node_add_section_first()
+            screen_document.assert_text("Requirement title")
+
+            form_edit_grammar: Form_EditGrammar = (
+                screen_document.do_open_modal_form_edit_grammar()
             )
 
-            form_edit_section.do_fill_in_title("First title")
-            form_edit_section.do_fill_in_text(
-                """\
-Modified statement.
+            form_edit_grammar.assert_on_grammar()
 
-[ANCHOR: AD1]!!!GARBAGE!!!
-"""
-            )
-            form_edit_section.do_form_submit_and_catch_error(
-                "SDoc markup error: CHOR: AD1]*!!!GARBAGE"
-            )
+            form_edit_grammar.do_add_grammar_field()
+            form_edit_grammar.do_fill_in_grammar_field("", "CUSTOM_FIELD_1", 1)
+
+            form_edit_grammar.do_add_grammar_field()
+            form_edit_grammar.do_fill_in_grammar_field("", "CUSTOM_FIELD_2", 2)
+
+            form_edit_grammar.do_add_grammar_field()
+            form_edit_grammar.do_fill_in_grammar_field("", "CUSTOM_FIELD_3", 3)
+
+            form_edit_grammar.do_form_submit()
 
         assert test_setup.compare_sandbox_and_expected_output()

@@ -242,7 +242,7 @@ sdoc-section-title * {
 
 sdoc-meta {
   display: inline-grid;
-  grid-template-columns: min-content 1fr;
+  grid-template-columns: minmax(min-content, max-content) minmax(min-content, max-content);
   place-items: stretch stretch;
   place-content: stretch stretch;
   position: relative;
@@ -256,6 +256,7 @@ sdoc-meta {
   font-size: var(--font-size-sm);
   margin: var(--requirement-base-rhythm) 0;
   padding: calc(var(--requirement-base-rhythm)*0.5);
+  row-gap: 2px;
 }
 
 sdoc-meta-label,

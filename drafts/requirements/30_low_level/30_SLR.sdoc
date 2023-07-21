@@ -404,6 +404,13 @@ Process-based parallelization can provide a good speed-up when several large doc
 <<<
 
 [REQUIREMENT]
+STATUS: Active
+TITLE: Caching of parsed SDoc documents
+STATEMENT: >>>
+StrictDoc shall implement caching of parsed SDoc documents.
+<<<
+
+[REQUIREMENT]
 UID: SDOC-SRS-2
 REFS:
 - TYPE: Parent

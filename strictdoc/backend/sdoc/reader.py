@@ -1,5 +1,9 @@
+import hashlib
+import os.path
 import sys
+import tempfile
 import traceback
+from pathlib import Path
 
 from textx import metamodel_from_str
 
@@ -7,9 +11,13 @@ from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.grammar.grammar_builder import SDocGrammarBuilder
 from strictdoc.backend.sdoc.include_reader import SDIncludeReader
 from strictdoc.backend.sdoc.models.constants import DOCUMENT_MODELS
+from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.fragment import Fragment
 from strictdoc.backend.sdoc.processor import ParseContext, SDocParsingProcessor
+from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
+from strictdoc.helpers.file_modification_time import get_file_modification_time
+from strictdoc.helpers.pickle import pickle_dump, pickle_load
 from strictdoc.helpers.textx import drop_textx_meta
 
 
@@ -44,12 +52,55 @@ class SDReader:
         document, _ = SDReader._read(input_string, file_path)
         return document
 
-    def read_from_file(self, file_path):
+    def read_from_file(self, file_path: str) -> Document:
+        """
+        This function parses the provided .sdoc file and returns a Document
+        object.
+        """
+
+        path_to_tmp_dir = tempfile.gettempdir()
+
+        full_path_to_file = (
+            file_path
+            if os.path.abspath(file_path)
+            else os.path.abspath(file_path)
+        )
+
+        # File name contains an MD5 hash of its full path to ensure the
+        # uniqueness of the cached items.
+        full_path_to_file_md5 = hashlib.md5(
+            full_path_to_file.encode("utf-8")
+        ).hexdigest()
+        file_name = os.path.basename(full_path_to_file)
+        file_name += "_" + full_path_to_file_md5
+
+        path_to_cached_file = os.path.join(
+            path_to_tmp_dir,
+            "strictdoc_cache",
+            file_name,
+        )
+
+        if os.path.isfile(path_to_cached_file):
+            cached_file_mtime = get_file_modification_time(path_to_cached_file)
+            sdoc_file_mtime = get_file_modification_time(file_path)
+            if sdoc_file_mtime < cached_file_mtime:
+                with open(path_to_cached_file, "rb") as cache_file:
+                    sdoc_pickled = cache_file.read()
+                return assert_cast(pickle_load(sdoc_pickled), Document)
+
+        path_to_cached_file_dir = os.path.dirname(path_to_cached_file)
+        Path(path_to_cached_file_dir).mkdir(parents=True, exist_ok=True)
+
         with open(file_path, encoding="utf8") as file:
             sdoc_content = file.read()
 
         try:
             sdoc = self.read(sdoc_content, file_path=file_path)
+
+            sdoc_pickled = pickle_dump(sdoc)
+            with open(path_to_cached_file, "wb") as cache_file:
+                cache_file.write(sdoc_pickled)
+
             return sdoc
         except StrictDocException as exception:
             print(f"error: {exception.args[0]}")  # noqa: T201

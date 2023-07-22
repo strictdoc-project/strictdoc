@@ -65,13 +65,13 @@ def generate_unique_identifier(element_type: str) -> str:
     return f"{element_type}-{uuid.uuid4()}"
 
 
-class SDocToReqIFBuildContext:
+class P01_SDocToReqIFBuildContext:  # pylint: disable=invalid-name
     def __init__(self):
         self.map_uid_to_spec_objects = {}
         self.map_uid_to_parent_uids = {}
 
 
-class SDocToReqIFObjectConverter:
+class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
     @classmethod
     def convert_document_tree(
         cls,
@@ -85,7 +85,7 @@ class SDocToReqIFObjectConverter:
         namespace = "http://www.omg.org/spec/ReqIF/20110401/reqif.xsd"
         configuration = "https://github.com/strictdoc-project/strictdoc"
 
-        context: SDocToReqIFBuildContext = SDocToReqIFBuildContext()
+        context: P01_SDocToReqIFBuildContext = P01_SDocToReqIFBuildContext()
         spec_types: List = []
         spec_objects: List[ReqIFSpecObject] = []
         spec_relations: List[ReqIFSpecRelation] = []
@@ -224,7 +224,7 @@ class SDocToReqIFObjectConverter:
             if len(document.free_texts) > 0:
                 # fmt: off
                 document_free_text_spec_object = (
-                    SDocToReqIFObjectConverter
+                    P01_SDocToReqIFObjectConverter
                     ._convert_document_free_text_to_spec_object(
                         document,
                         document_spec_object_type=document_spec_object_type
@@ -254,7 +254,7 @@ class SDocToReqIFObjectConverter:
                 if node.is_section:
                     # fmt: off
                     spec_object = (
-                        SDocToReqIFObjectConverter
+                        P01_SDocToReqIFObjectConverter
                         ._convert_section_to_spec_object(
                             node,
                             document_spec_object_type,
@@ -473,7 +473,7 @@ class SDocToReqIFObjectConverter:
         cls,
         requirement: Requirement,
         grammar: DocumentGrammar,
-        context: SDocToReqIFBuildContext,
+        context: P01_SDocToReqIFBuildContext,
         document_spec_object_type: str,
     ) -> ReqIFSpecObject:
         requirement_identifier = generate_unique_identifier("REQUIREMENT")

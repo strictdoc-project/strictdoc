@@ -75,6 +75,7 @@ class ExportAction:
         if "reqif-sdoc" in self.project_config.export_formats:
             output_reqif_root = f"{self.project_config.export_output_dir}/reqif"
             ReqIFExport.export(
+                project_config=self.project_config,
                 traceability_index=self.traceability_index,
                 output_reqif_root=output_reqif_root,
             )

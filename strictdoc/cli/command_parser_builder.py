@@ -25,6 +25,17 @@ def _check_formats(formats):
     return formats_array
 
 
+def _check_reqif_profile(profile):
+    if profile not in ReqIFProfile.ALL:
+        # To maintain the compatibility with the previous behavior.
+        if profile == "sdoc":
+            return ReqIFProfile.P01_SDOC
+        valid_profiles = ", ".join(map(lambda f: f"'{f}'", ReqIFProfile.ALL))
+        message = f"invalid choice: '{profile}' (choose from {valid_profiles})"
+        raise argparse.ArgumentTypeError(message)
+    return profile
+
+
 def _parse_fields(fields):
     fields_array = fields.split(",")
     return fields_array
@@ -134,6 +145,12 @@ class CommandParserBuilder:
             help="Enables Mathjax support (only HTML export).",
         )
         command_parser_export.add_argument(
+            "--reqif-profile",
+            type=_check_reqif_profile,
+            default=ReqIFProfile.P01_SDOC,
+            help="Export formats",
+        )
+        command_parser_export.add_argument(
             "--experimental-enable-file-traceability",
             action="store_true",
             help=(
@@ -165,18 +182,9 @@ class CommandParserBuilder:
             )
         )
 
-        def check_reqif_parser(parser):
-            if parser not in ReqIFProfile.ALL:
-                message = (
-                    f"invalid choice: '{parser}' "
-                    f"(choose from {ReqIFProfile.ALL})"
-                )
-                raise argparse.ArgumentTypeError(message)
-            return parser
-
         command_parser_import_reqif.add_argument(
             "profile",
-            type=check_reqif_parser,
+            type=_check_reqif_profile,
             help=(
                 "An argument that selects the ReqIF import/export profile. "
                 f"Possible values: {{{', '.join(ReqIFProfile.ALL)}}}"

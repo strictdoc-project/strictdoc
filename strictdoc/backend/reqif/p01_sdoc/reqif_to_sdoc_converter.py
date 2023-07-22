@@ -37,7 +37,7 @@ from strictdoc.backend.sdoc.models.type_system import (
 from strictdoc.helpers.string import unescape
 
 
-class ReqIFToSDocConverter:
+class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
     @staticmethod
     def convert_reqif_bundle(reqif_bundle: ReqIFBundle) -> List[Document]:
         # TODO: Should we rather show an error that there are no specifications?
@@ -46,17 +46,15 @@ class ReqIFToSDocConverter:
             or reqif_bundle.core_content.req_if_content is None
             or len(reqif_bundle.core_content.req_if_content.specifications) == 0
         ):
-            return [ReqIFToSDocConverter.create_document(title=None)]
+            return [P01_ReqIFToSDocConverter.create_document(title=None)]
 
         documents: List[Document] = []
         for (
             specification
         ) in reqif_bundle.core_content.req_if_content.specifications:
-            document = (
-                ReqIFToSDocConverter._create_document_from_reqif_specification(
-                    specification=specification,
-                    reqif_bundle=reqif_bundle,
-                )
+            document = P01_ReqIFToSDocConverter._create_document_from_reqif_specification(
+                specification=specification,
+                reqif_bundle=reqif_bundle,
             )
             documents.append(document)
         return documents
@@ -92,7 +90,7 @@ class ReqIFToSDocConverter:
         specification: ReqIFSpecification,
         reqif_bundle: ReqIFBundle,
     ):
-        document = ReqIFToSDocConverter.create_document(
+        document = P01_ReqIFToSDocConverter.create_document(
             title=specification.long_name
         )
         elements: List[GrammarElement] = []
@@ -107,19 +105,17 @@ class ReqIFToSDocConverter:
                 current_hierarchy.spec_object
             )
             used_spec_object_types_ids.add(spec_object.spec_object_type)
-            if ReqIFToSDocConverter.is_spec_object_section(
+            if P01_ReqIFToSDocConverter.is_spec_object_section(
                 spec_object,
                 reqif_bundle=reqif_bundle,
             ):
-                # fmt: off
                 section = (
-                    ReqIFToSDocConverter.create_section_from_spec_object(
+                    P01_ReqIFToSDocConverter.create_section_from_spec_object(
                         spec_object,
                         current_hierarchy.level,
                         reqif_bundle=reqif_bundle,
                     )
                 )
-                # fmt: on
                 if current_hierarchy.level > current_section.ng_level:
                     current_section.section_contents.append(section)
                 elif current_hierarchy.level < current_section.ng_level:
@@ -132,18 +128,15 @@ class ReqIFToSDocConverter:
                     current_section.section_contents.append(section)
                 else:
                     raise NotImplementedError
-            elif ReqIFToSDocConverter.is_spec_object_requirement(spec_object):
-                # fmt: off
-                requirement: Requirement = (
-                    ReqIFToSDocConverter
-                    .create_requirement_from_spec_object(
-                        spec_object=spec_object,
-                        parent_section=current_section,
-                        reqif_bundle=reqif_bundle,
-                        level=current_hierarchy.level,
-                    )
+            elif P01_ReqIFToSDocConverter.is_spec_object_requirement(
+                spec_object
+            ):
+                requirement: Requirement = P01_ReqIFToSDocConverter.create_requirement_from_spec_object(
+                    spec_object=spec_object,
+                    parent_section=current_section,
+                    reqif_bundle=reqif_bundle,
+                    level=current_hierarchy.level,
                 )
-                # fmt: on
                 current_section.section_contents.append(requirement)
             else:
                 raise NotImplementedError(spec_object) from None
@@ -170,15 +163,9 @@ class ReqIFToSDocConverter:
             spec_object_type: ReqIFSpecObjectType = spec_object_type_or_none
             attributes = list(spec_object_type.attribute_map.keys())
             if attributes != DEFAULT_SDOC_GRAMMAR_FIELDS:
-                # fmt: off
-                grammar_element = (
-                    ReqIFToSDocConverter
-                    .create_grammar_element_from_spec_object_type(
-                        spec_object_type=spec_object_type,
-                        reqif_bundle=reqif_bundle
-                    )
+                grammar_element = P01_ReqIFToSDocConverter.create_grammar_element_from_spec_object_type(
+                    spec_object_type=spec_object_type, reqif_bundle=reqif_bundle
                 )
-                # fmt: on
                 elements.append(grammar_element)
         if len(elements) > 0:
             grammar = DocumentGrammar(parent=document, elements=elements)

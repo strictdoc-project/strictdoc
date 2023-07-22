@@ -59,6 +59,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         fields,
         no_parallelization,
         enable_mathjax,
+        reqif_profile: Optional[str],
         experimental_enable_file_traceability,
     ):
         assert isinstance(input_paths, list), f"{input_paths}"
@@ -69,6 +70,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         self.fields = fields
         self.no_parallelization = no_parallelization
         self.enable_mathjax = enable_mathjax
+        self.reqif_profile: Optional[str] = reqif_profile
         self.experimental_enable_file_traceability = (
             experimental_enable_file_traceability
         )
@@ -147,6 +149,7 @@ class SDocArgsParser:
             self.args.fields,
             self.args.no_parallelization,
             self.args.enable_mathjax,
+            self.args.reqif_profile,
             self.args.experimental_enable_file_traceability,
         )
 

@@ -1,8 +1,8 @@
 class ReqIFProfile:
-    P1_SDOC = "sdoc"
+    P01_SDOC = "p01_sdoc"
     P11_POLARION = "p11_polarion"
 
-    ALL = {P1_SDOC, P11_POLARION}
+    ALL = [P01_SDOC, P11_POLARION]
 
 
 SDOC_SPEC_OBJECT_TYPE_SINGLETON = "REQUIREMENT_OR_SECTION"

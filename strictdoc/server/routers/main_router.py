@@ -16,11 +16,11 @@ from starlette.responses import HTMLResponse, Response
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
 from strictdoc import __version__
-from strictdoc.backend.reqif.export.sdoc_to_reqif_converter import (
-    SDocToReqIFObjectConverter,
+from strictdoc.backend.reqif.p01_sdoc.reqif_to_sdoc_converter import (
+    P01_ReqIFToSDocConverter,
 )
-from strictdoc.backend.reqif.import_.reqif_to_sdoc_converter import (
-    ReqIFToSDocConverter,
+from strictdoc.backend.reqif.p01_sdoc.sdoc_to_reqif_converter import (
+    P01_SDocToReqIFObjectConverter,
 )
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document
@@ -98,6 +98,7 @@ def create_main_router(
 
     parallelizer = NullParallelizer()
 
+    # FIXME: Remove this unused export config.
     _export_config = ExportCommandConfig(
         input_paths=[server_config.input_path],
         output_dir=server_config.output_path,
@@ -106,6 +107,7 @@ def create_main_router(
         fields=None,
         no_parallelization=False,
         enable_mathjax=False,
+        reqif_profile=project_config.reqif_profile,
         experimental_enable_file_traceability=False,
     )
     project_config.integrate_export_config(_export_config)
@@ -2045,8 +2047,8 @@ def create_main_router(
         documents: Optional[List[Document]] = None
         try:
             reqif_bundle = ReqIFParser.parse_from_string(contents)
-            stage2_parser: ReqIFToSDocConverter = ReqIFToSDocConverter()
-            documents: List[Document] = stage2_parser.convert_reqif_bundle(
+            converter: P01_ReqIFToSDocConverter = P01_ReqIFToSDocConverter()
+            documents: List[Document] = converter.convert_reqif_bundle(
                 reqif_bundle
             )
         except ReqIFXMLParsingError as exception:
@@ -2135,7 +2137,7 @@ def create_main_router(
 
     @router.get("/reqif/export_tree", response_class=Response)
     def get_reqif_export_tree():
-        reqif_bundle = SDocToReqIFObjectConverter.convert_document_tree(
+        reqif_bundle = P01_SDocToReqIFObjectConverter.convert_document_tree(
             document_tree=export_action.traceability_index.document_tree
         )
         reqif_content: str = ReqIFUnparser.unparse(reqif_bundle)

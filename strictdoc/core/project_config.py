@@ -6,6 +6,7 @@ from typing import List, Optional
 import toml
 
 from strictdoc import SDocRuntimeEnvironment
+from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.cli.cli_arg_parser import (
     ExportCommandConfig,
     ServerCommandConfig,
@@ -61,6 +62,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         exclude_doc_paths: List[str],
         include_source_paths: List[str],
         exclude_source_paths: List[str],
+        reqif_profile: str,
     ):
         assert isinstance(environment, SDocRuntimeEnvironment)
         self.environment: SDocRuntimeEnvironment = environment
@@ -85,6 +87,8 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
 
         self.excel_export_fields: Optional[List[str]] = None
 
+        self.reqif_profile: str = reqif_profile
+
         self.is_running_on_server: bool = False
 
     @staticmethod
@@ -101,6 +105,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
             exclude_doc_paths=[],
             include_source_paths=[],
             exclude_source_paths=[],
+            reqif_profile=ReqIFProfile.P01_SDOC,
         )
 
     # Some server command settings can override the project config settings.
@@ -146,6 +151,9 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
                 self.project_features.append(
                     ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY
                 )
+
+        if export_config.reqif_profile is not None:
+            self.reqif_profile = export_config.reqif_profile
 
     def is_feature_activated(self, feature: ProjectFeature):
         return feature in self.project_features
@@ -245,6 +253,7 @@ class ProjectConfigLoader:
         exclude_doc_paths = []
         include_source_paths = []
         exclude_source_paths = []
+        reqif_profile = ReqIFProfile.P01_SDOC
 
         if "project" in config_dict:
             project_content = config_dict["project"]
@@ -346,4 +355,5 @@ class ProjectConfigLoader:
             exclude_doc_paths=exclude_doc_paths,
             include_source_paths=include_source_paths,
             exclude_source_paths=exclude_source_paths,
+            reqif_profile=reqif_profile,
         )

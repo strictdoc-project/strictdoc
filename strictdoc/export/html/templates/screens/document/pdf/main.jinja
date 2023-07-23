@@ -1,10 +1,10 @@
 <div
+  html2pdf-preloader
   class="main"
-  id="printTHISpreloader"
 >
       <div
+        html2pdf
         class="content"
-        id="printTHIS"
       >
 
         {%- for section_or_requirement in document_iterator.all_content() %}
@@ -22,3 +22,21 @@
 
       </div>
 </div>
+
+<template html2pdf-frontpage>
+  {#- add here frontpage html -#}
+</template>
+<template html2pdf-header>
+  {#- uncomment html2pdf-page-number to print page numbers: -#}
+  {#- <div html2pdf-page-number>
+    <span html2pdf-page-number-current></span>/<span html2pdf-page-number-total></span>
+  </div> -#}
+  {#- add here header html -#}
+</template>
+<template html2pdf-footer>
+  {#- uncomment html2pdf-page-number to print page numbers: -#}
+  <div html2pdf-page-number>
+    <span html2pdf-page-number-current></span>/<span html2pdf-page-number-total></span>
+  </div>
+  {#- add here footer html -#}
+</template>

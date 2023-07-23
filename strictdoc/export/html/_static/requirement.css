@@ -281,10 +281,12 @@ sdoc-meta-field {
 }
 
 /* PDF */
-
+/* There is no sdoc-node wrapper, so such neighbours and nesting is possible. */
 sdoc-section + sdoc-section,
 sdoc-section + sdoc-requirement,
+sdoc-section + sdoc-section sdoc-section-title,
 sdoc-requirement + sdoc-requirement,
-sdoc-requirement + sdoc-section {
+sdoc-requirement + sdoc-section,
+sdoc-requirement + sdoc-section sdoc-section-title {
   margin-top: var(--base-margin);
 }

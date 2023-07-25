@@ -1,14 +1,14 @@
-TEXT_TYPES_GRAMMAR = r"""
+NEGATIVE_FREETEXT_END = "(?!^\\[\\/FREETEXT\\]\n)"
+NEGATIVE_INLINE_LINK_START = r"(?!\[LINK: )"
+NEGATIVE_ANCHOR_START = "(?!(?<!\\S\n)^\\[ANCHOR: )"
+
+TEXT_TYPES_GRAMMAR = rf"""
 TextPart[noskipws]:
   (Anchor | InlineLink | NormalString)
 ;
 
 NormalString[noskipws]:
-  (!SpecialKeyword !FreeTextEnd /(?ms)./)+
-;
-
-SpecialKeyword:
-  InlineLinkStart | AnchorStart // more keywords are coming later
+  (/(?ms){NEGATIVE_FREETEXT_END}{NEGATIVE_INLINE_LINK_START}{NEGATIVE_ANCHOR_START}./)+
 ;
 
 InlineLinkStart: '[LINK: ';
@@ -17,13 +17,11 @@ InlineLink[noskipws]:
   InlineLinkStart value = /[^\]]*/ ']'
 ;
 
-AnchorStart[noskipws]:
-  // Make sure that an anchor cannot follow right after a text string.
-  /(?<!\S\n)^/ '[ANCHOR: '
-;
-
 Anchor[noskipws]:
-  AnchorStart value = /[^\],]*/ (', ' title = /\w+[\s\w+]*/)? ']'
+  // Make sure that an anchor cannot follow right after a text string.
+  /(?<!\S\n)^\[ANCHOR: /
+
+  value = /[^\],]*/ (', ' title = /\w+[\s\w+]*/)? ']'
   // We expect either:
   // - An anchor has a newline character after it, if this anchor is the last
   //   part in the free text.
@@ -43,8 +41,6 @@ Anchor[noskipws]:
    /\Z|(\n(\n|\Z|(?=\[\/FREETEXT\])))/
 
 ;
-
-FreeTextEnd: /^/ '[/FREETEXT]' '\n';
 """
 
 FREE_TEXT_PARSER_GRAMMAR = r"""
@@ -259,9 +255,9 @@ RequirementStatus[noskipws]:
   'Draft' | 'Active' | 'Deleted';
 
 FreeText[noskipws]:
-  '[FREETEXT]' '\n'
+  /\[FREETEXT\]\n/
   parts*=TextPart
-  FreeTextEnd
+  /\[\/FREETEXT\]\n/
 ;
 """
 

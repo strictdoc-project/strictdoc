@@ -4,6 +4,7 @@ import pytest
 from textx import TextXSyntaxError
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
+from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.reference import (
     BibReference,
@@ -302,7 +303,36 @@ String 2 String 3
 
     document = reader.read(input)
     assert isinstance(document, Document)
+    assert len(document.free_texts[0].parts) == 2
+    assert isinstance(document.free_texts[0].parts[0], str)
+    assert isinstance(document.free_texts[0].parts[1], Anchor)
+    assert document.free_texts[0].parts[1].value == "REQ-001"
 
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input == output
+
+
+def test_027_free_text_anchor_not_recognized_when_connected_to_text():
+    input = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[FREETEXT]
+String 1
+String 2 String 3
+[ANCHOR: REQ-001, Requirements document]
+[/FREETEXT]
+""".lstrip()
+
+    reader = SDReader()
+
+    document: Document = reader.read(input)
+    assert isinstance(document, Document)
+
+    assert len(document.free_texts[0].parts) == 1
+    assert isinstance(document.free_texts[0].parts[0], str)
     writer = SDWriter()
     output = writer.write(document)
 
@@ -1793,7 +1823,9 @@ UID:
         _ = reader.read(sdoc_input)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected Not or" in exc_info.value.args[0].decode("utf-8")
+    assert "Expected SingleLineString or '>>>\\n'" in exc_info.value.args[
+        0
+    ].decode("utf-8")
 
 
 def test_edge_case_04_uid_present_but_empty_with_two_space_characters():
@@ -1812,7 +1844,9 @@ UID:
         _ = reader.read(sdoc_input)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected Not or" in exc_info.value.args[0].decode("utf-8")
+    assert "Expected SingleLineString or '>>>\\n'" in exc_info.value.args[
+        0
+    ].decode("utf-8")
 
 
 def test_edge_case_10_empty_multiline_field():
@@ -1831,7 +1865,10 @@ COMMENT: >>>
         _ = reader.read(sdoc_input)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected Not" in exc_info.value.args[0].decode("utf-8")
+    assert (
+        "Expected '(?ms)(?!^<<<) *(?!^<<<)\\S((?!^<<<).)+'"
+        in exc_info.value.args[0].decode("utf-8")
+    )
 
 
 def test_edge_case_11_empty_multiline_field_with_one_newline():
@@ -1851,7 +1888,10 @@ COMMENT: >>>
         _ = reader.read(sdoc_input)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected Not or" in exc_info.value.args[0].decode("utf-8")
+    assert (
+        "Expected '(?ms)(?!^<<<) *(?!^<<<)\\S((?!^<<<).)+'"
+        in exc_info.value.args[0].decode("utf-8")
+    )
 
 
 def test_edge_case_20_empty_section_title():
@@ -1894,7 +1934,7 @@ TITLE:
         _ = reader.read(sdoc_input)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected Not or" in exc_info.value.args[0].decode("utf-8")
+    assert "Expected SingleLineString" in exc_info.value.args[0].decode("utf-8")
 
 
 def test_edge_case_22_section_title_with_two_empty_spaces():
@@ -1915,7 +1955,7 @@ TITLE:
         _ = reader.read(sdoc_input)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected Not or" in exc_info.value.args[0].decode("utf-8")
+    assert "Expected SingleLineString" in exc_info.value.args[0].decode("utf-8")
 
 
 def test_edge_case_23_leading_spaces_do_not_imply_empy_field():

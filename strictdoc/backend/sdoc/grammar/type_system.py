@@ -1,4 +1,7 @@
-STRICTDOC_BASIC_TYPE_SYSTEM = r"""
+NEGATIVE_MULTILINE_STRING_START = "(?!>>>\n)"
+NEGATIVE_MULTILINE_STRING_END = "(?!^<<<)"
+
+STRICTDOC_BASIC_TYPE_SYSTEM = rf"""
 FieldName[noskipws]:
   /[A-Z]+[A-Z_]*/
 ;
@@ -7,21 +10,14 @@ FieldName[noskipws]:
 // MultiLineString can never be empty strings.
 // Both must eventualy start with a non-space character.
 SingleLineString:
-  (!MultiLineStringStart /\S/) (!MultiLineStringStart /./)* /$/
+  /{NEGATIVE_MULTILINE_STRING_START}\S.*$/
 ;
 
-MultiLineStringStart[noskipws]:
-  '>>>' '\n'
-;
-
-MultiLineStringEnd[noskipws]:
-  '<<<'
-;
 
 MultiLineString[noskipws]:
-  MultiLineStringStart-
-  (!MultiLineStringEnd /\W*\S/) (!MultiLineStringEnd /(?ms)./)+
-  MultiLineStringEnd-
+  />>>\n/-
+  /(?ms){NEGATIVE_MULTILINE_STRING_END} *{NEGATIVE_MULTILINE_STRING_END}\S({NEGATIVE_MULTILINE_STRING_END}.)+/
+  /^<<</-
 ;
 
 Reference[noskipws]:

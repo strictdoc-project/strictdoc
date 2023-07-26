@@ -94,8 +94,6 @@ from strictdoc.server.error_object import ErrorObject
 def create_main_router(
     server_config: ServerCommandConfig, project_config: ProjectConfig
 ) -> APIRouter:
-    env: Environment = HTMLTemplates.jinja_environment
-
     parallelizer = NullParallelizer()
 
     # FIXME: Remove this unused export config.
@@ -118,10 +116,13 @@ def create_main_router(
         parallelizer=parallelizer,
     )
     export_action.build_index()
-    HTMLGenerator.export_assets(
-        project_config=project_config,
+    html_generator = HTMLGenerator(project_config)
+    html_generator.export_assets(
         traceability_index=export_action.traceability_index,
     )
+
+    def env() -> Environment:
+        return HTMLTemplates(project_config).jinja_environment()
 
     router = APIRouter()
 
@@ -140,7 +141,7 @@ def create_main_router(
         requirement: Requirement = (
             export_action.traceability_index.get_node_by_mid(MID(reference_mid))
         )
-        template = env.get_template(
+        template = env().get_template(
             "actions/"
             "deep_trace/"
             "show_full_requirement/"
@@ -154,6 +155,7 @@ def create_main_router(
             markup="RST",
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
             context_document=requirement.document,
         )
         output = template.render(
@@ -203,7 +205,7 @@ def create_main_router(
         else:
             raise NotImplementedError
 
-        template = env.get_template(
+        template = env().get_template(
             "actions/document/create_section/stream_new_section.jinja.html"
         )
         link_renderer = LinkRenderer(
@@ -214,6 +216,7 @@ def create_main_router(
             markup="RST",
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
             context_document=document,
         )
         output = template.render(
@@ -292,7 +295,7 @@ def create_main_router(
             for error_key, errors in validation_error.errors.items():
                 for error in errors:
                     form_object.add_error(error_key, error)
-            template = env.get_template(
+            template = env().get_template(
                 "actions/document/create_section/stream_new_section.jinja.html"
             )
             link_renderer = LinkRenderer(
@@ -303,6 +306,7 @@ def create_main_router(
                 markup="RST",
                 traceability_index=export_action.traceability_index,
                 link_renderer=link_renderer,
+                html_templates=html_generator.html_templates,
                 context_document=document,
             )
             output = template.render(
@@ -339,7 +343,7 @@ def create_main_router(
         export_action.traceability_index.update_last_updated()
 
         # Rendering back the Turbo template.
-        template = env.get_template(
+        template = env().get_template(
             "actions/document/create_section/stream_created_section.jinja.html"
         )
         link_renderer = LinkRenderer(
@@ -350,6 +354,7 @@ def create_main_router(
             markup="RST",
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
             context_document=document,
         )
         iterator = export_action.traceability_index.get_document_iterator(
@@ -366,7 +371,7 @@ def create_main_router(
             standalone=False,
         )
 
-        toc_template = env.get_template(
+        toc_template = env().get_template(
             "actions/document/_shared/stream_updated_toc.jinja.html"
         )
         output += toc_template.render(
@@ -390,7 +395,7 @@ def create_main_router(
             MID(section_id)
         )
         form_object = SectionFormObject.create_from_section(section=section)
-        template = env.get_template(
+        template = env().get_template(
             "actions/document/edit_section/stream_edit_section.jinja.html"
         )
         link_renderer = LinkRenderer(
@@ -401,6 +406,7 @@ def create_main_router(
             markup="RST",
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
             context_document=section.document,
         )
         output = template.render(
@@ -454,7 +460,7 @@ def create_main_router(
             for error_key, errors in validation_error.errors.items():
                 for error in errors:
                     form_object.add_error(error_key, error)
-            template = env.get_template(
+            template = env().get_template(
                 "actions/document/edit_section/stream_edit_section.jinja.html"
             )
             link_renderer = LinkRenderer(
@@ -465,6 +471,7 @@ def create_main_router(
                 markup="RST",
                 traceability_index=export_action.traceability_index,
                 link_renderer=link_renderer,
+                html_templates=html_generator.html_templates,
                 context_document=section.document,
             )
             output = template.render(
@@ -501,7 +508,7 @@ def create_main_router(
         export_action.traceability_index.update_last_updated()
 
         # Rendering back the Turbo template.
-        template = env.get_template(
+        template = env().get_template(
             "actions/document/edit_section/stream_updated_section.jinja.html"
         )
         link_renderer = LinkRenderer(
@@ -512,6 +519,7 @@ def create_main_router(
             markup="RST",
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
             context_document=section.document,
         )
         output = template.render(
@@ -526,7 +534,7 @@ def create_main_router(
         iterator = export_action.traceability_index.get_document_iterator(
             section.document
         )
-        toc_template = env.get_template(
+        toc_template = env().get_template(
             "actions/document/_shared/stream_updated_toc.jinja.html"
         )
         output += toc_template.render(
@@ -543,7 +551,7 @@ def create_main_router(
 
     @router.get("/actions/document/cancel_new_section", response_class=Response)
     def cancel_new_section(section_mid: str):
-        template = env.get_template(
+        template = env().get_template(
             "actions/"
             "document/"
             "create_section/"
@@ -564,7 +572,7 @@ def create_main_router(
         section: Section = export_action.traceability_index.get_node_by_mid(
             MID(section_mid)
         )
-        template = env.get_template(
+        template = env().get_template(
             "actions/document/edit_section/stream_updated_section.jinja.html"
         )
         link_renderer = LinkRenderer(
@@ -575,6 +583,7 @@ def create_main_router(
             markup="RST",
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
             context_document=section.document,
         )
         output = template.render(
@@ -622,7 +631,7 @@ def create_main_router(
         else:
             raise NotImplementedError
 
-        template = env.get_template(
+        template = env().get_template(
             "actions/"
             "document/"
             "create_requirement/"
@@ -636,6 +645,7 @@ def create_main_router(
             markup="RST",
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
             context_document=document,
         )
         output = template.render(
@@ -705,7 +715,7 @@ def create_main_router(
         )
 
         if form_object.any_errors():
-            template = env.get_template(
+            template = env().get_template(
                 "actions/"
                 "document/"
                 "create_requirement/"
@@ -719,6 +729,7 @@ def create_main_router(
                 markup="RST",
                 traceability_index=export_action.traceability_index,
                 link_renderer=link_renderer,
+                html_templates=html_generator.html_templates,
                 context_document=document,
             )
 
@@ -778,7 +789,7 @@ def create_main_router(
         export_action.export()
 
         # Rendering back the Turbo template.
-        template = env.get_template(
+        template = env().get_template(
             "actions/"
             "document/"
             "create_requirement/"
@@ -792,6 +803,7 @@ def create_main_router(
             markup="RST",
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
             context_document=document,
         )
         iterator = export_action.traceability_index.get_document_iterator(
@@ -808,7 +820,7 @@ def create_main_router(
             standalone=False,
         )
 
-        toc_template = env.get_template(
+        toc_template = env().get_template(
             "actions/document/_shared/stream_updated_toc.jinja.html"
         )
         output += toc_template.render(
@@ -839,7 +851,7 @@ def create_main_router(
             requirement=requirement
         )
         document = requirement.document
-        template = env.get_template(
+        template = env().get_template(
             "actions/"
             "document/"
             "edit_requirement/"
@@ -853,6 +865,7 @@ def create_main_router(
             markup="RST",
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
             context_document=document,
         )
         output = template.render(
@@ -900,7 +913,7 @@ def create_main_router(
         )
 
         if form_object.any_errors():
-            template = env.get_template(
+            template = env().get_template(
                 "actions/"
                 "document/"
                 "edit_requirement/"
@@ -914,6 +927,7 @@ def create_main_router(
                 markup="RST",
                 traceability_index=export_action.traceability_index,
                 link_renderer=link_renderer,
+                html_templates=html_generator.html_templates,
                 context_document=document,
             )
             output = template.render(
@@ -1082,12 +1096,13 @@ def create_main_router(
             markup="RST",
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
             context_document=document,
         )
 
         output = ""
         for requirement in action_object.this_document_requirements_to_update:
-            template = env.get_template(
+            template = env().get_template(
                 "actions/document/edit_requirement/"
                 "stream_update_requirement.jinja.html"
             )
@@ -1103,7 +1118,7 @@ def create_main_router(
                 standalone=False,
             )
 
-        toc_template = env.get_template(
+        toc_template = env().get_template(
             "actions/document/_shared/stream_updated_toc.jinja.html"
         )
         output += toc_template.render(
@@ -1124,7 +1139,7 @@ def create_main_router(
         "/actions/document/cancel_new_requirement", response_class=Response
     )
     def cancel_new_requirement(requirement_mid: str):
-        template = env.get_template(
+        template = env().get_template(
             "actions/"
             "document/"
             "create_requirement/"
@@ -1152,7 +1167,7 @@ def create_main_router(
             )
         )
         document = requirement.document
-        template = env.get_template(
+        template = env().get_template(
             "actions/"
             "document/"
             "edit_requirement/"
@@ -1166,6 +1181,7 @@ def create_main_router(
             markup="RST",
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
             context_document=document,
         )
         iterator = export_action.traceability_index.get_document_iterator(
@@ -1194,7 +1210,7 @@ def create_main_router(
     )
     def delete_section(section_mid: str, confirmed: bool = False):
         if not confirmed:
-            template = env.get_template(
+            template = env().get_template(
                 "actions/document/delete_section/"
                 "stream_confirm_delete_section.jinja"
             )
@@ -1239,7 +1255,7 @@ def create_main_router(
         export_action.export()
 
         # Rendering back the Turbo template.
-        template = env.get_template(
+        template = env().get_template(
             "actions/document/delete_section/stream_delete_section.jinja.html"
         )
         link_renderer = LinkRenderer(
@@ -1250,6 +1266,7 @@ def create_main_router(
             markup="RST",
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
             context_document=section.document,
         )
         iterator = export_action.traceability_index.get_document_iterator(
@@ -1265,7 +1282,7 @@ def create_main_router(
             project_config=project_config,
             standalone=False,
         )
-        toc_template = env.get_template(
+        toc_template = env().get_template(
             "actions/document/_shared/stream_updated_toc.jinja.html"
         )
         output += toc_template.render(
@@ -1287,7 +1304,7 @@ def create_main_router(
     )
     def delete_requirement(requirement_mid: str, confirmed: bool = False):
         if not confirmed:
-            template = env.get_template(
+            template = env().get_template(
                 "actions/document/delete_requirement/"
                 "stream_confirm_delete_requirement.jinja"
             )
@@ -1323,7 +1340,7 @@ def create_main_router(
         export_action.export()
 
         # Rendering back the Turbo template.
-        template = env.get_template(
+        template = env().get_template(
             "actions/document/delete_requirement/"
             "stream_delete_requirement.jinja.html"
         )
@@ -1335,6 +1352,7 @@ def create_main_router(
             markup="RST",
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
             context_document=requirement.document,
         )
         iterator = export_action.traceability_index.get_document_iterator(
@@ -1351,7 +1369,7 @@ def create_main_router(
             standalone=False,
         )
 
-        toc_template = env.get_template(
+        toc_template = env().get_template(
             "actions/document/_shared/stream_updated_toc.jinja.html"
         )
         iterator = export_action.traceability_index.get_document_iterator(
@@ -1450,7 +1468,7 @@ def create_main_router(
         export_action.traceability_index.update_last_updated()
 
         # Rendering back the Turbo template.
-        template = env.get_template(
+        template = env().get_template(
             "actions/document/move_node/stream_update_document_content.jinja"
         )
         link_renderer = LinkRenderer(
@@ -1461,6 +1479,7 @@ def create_main_router(
             markup="RST",
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
             context_document=moved_node.document,
         )
         output = template.render(
@@ -1473,7 +1492,7 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             standalone=False,
         )
-        toc_template = env.get_template(
+        toc_template = env().get_template(
             "actions/document/_shared/stream_updated_toc.jinja.html"
         )
         output += toc_template.render(
@@ -1492,7 +1511,7 @@ def create_main_router(
     # Generic routes
     @router.get("/actions/project_index/new_document", response_class=Response)
     def get_new_document():
-        template = env.get_template(
+        template = env().get_template(
             "actions/project_index/stream_new_document.jinja.html"
         )
         output = template.render(
@@ -1544,7 +1563,7 @@ def create_main_router(
                 )
 
         if error_object.any_errors():
-            template = env.get_template(
+            template = env().get_template(
                 "actions/project_index/stream_new_document.jinja.html"
             )
             output = template.render(
@@ -1597,7 +1616,7 @@ def create_main_router(
         export_action.build_index()
         export_action.export()
 
-        template = env.get_template(
+        template = env().get_template(
             "actions/project_index/stream_create_document.jinja.html"
         )
         document_tree_iterator = DocumentTreeIterator(
@@ -1620,7 +1639,7 @@ def create_main_router(
 
     @router.get("/actions/document/new_comment", response_class=Response)
     def document__add_comment(requirement_mid: str):
-        template = env.get_template(
+        template = env().get_template(
             "actions/"
             "document/"
             "add_requirement_comment/"
@@ -1651,7 +1670,7 @@ def create_main_router(
 
     @router.get("/actions/document/new_parent_link", response_class=Response)
     def document__add_parent_link(requirement_mid: str):
-        template = env.get_template(
+        template = env().get_template(
             "actions/"
             "document/"
             "add_requirement_parent_link/"
@@ -1687,7 +1706,7 @@ def create_main_router(
             document=document
         )
 
-        template = env.get_template(
+        template = env().get_template(
             "actions/"
             "document/"
             "edit_document_config/"
@@ -1730,7 +1749,7 @@ def create_main_router(
             for error_key, errors in validation_error.errors.items():
                 for error in errors:
                     form_object.add_error(error_key, error)
-            template = env.get_template(
+            template = env().get_template(
                 "actions/"
                 "document/"
                 "edit_document_config/"
@@ -1769,9 +1788,10 @@ def create_main_router(
             markup="RST",
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
             context_document=document,
         )
-        template = env.get_template(
+        template = env().get_template(
             "actions/"
             "document/"
             "edit_document_config/"
@@ -1805,9 +1825,10 @@ def create_main_router(
             markup="RST",
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
             context_document=document,
         )
-        template = env.get_template(
+        template = env().get_template(
             "actions/"
             "document/"
             "edit_document_config/"
@@ -1836,7 +1857,7 @@ def create_main_router(
         form_object = DocumentGrammarFormObject.create_from_document(
             document=document
         )
-        template = env.get_template(
+        template = env().get_template(
             "actions/"
             "document/"
             "edit_document_grammar/"
@@ -1869,7 +1890,7 @@ def create_main_router(
             )
         )
         if not form_object.validate():
-            template = env.get_template(
+            template = env().get_template(
                 "actions/"
                 "document/"
                 "edit_document_grammar/"
@@ -1922,15 +1943,13 @@ def create_main_router(
             output_file.write(document_content)
 
         # Re-generate the document.
-        HTMLGenerator.export_single_document(
-            project_config=project_config,
+        html_generator.export_single_document(
             document=document,
             traceability_index=export_action.traceability_index,
         )
 
         # Re-generate the document tree.
-        HTMLGenerator.export_project_tree_screen(
-            project_config=project_config,
+        html_generator.export_project_tree_screen(
             traceability_index=export_action.traceability_index,
         )
 
@@ -1942,9 +1961,10 @@ def create_main_router(
             markup="RST",
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
             context_document=document,
         )
-        template = env.get_template(
+        template = env().get_template(
             "actions/"
             "document/"
             "edit_document_grammar/"
@@ -1964,9 +1984,10 @@ def create_main_router(
                 markup="RST",
                 traceability_index=export_action.traceability_index,
                 link_renderer=link_renderer,
+                html_templates=html_generator.html_templates,
                 context_document=document,
             )
-            template = env.get_template(
+            template = env().get_template(
                 "actions/"
                 "document/"
                 "_shared/"
@@ -1990,7 +2011,7 @@ def create_main_router(
 
     @router.get("/actions/document/add_grammar_field", response_class=Response)
     def document__add_grammar_field(document_mid: str):
-        template = env.get_template(
+        template = env().get_template(
             "actions/"
             "document/"
             "edit_document_grammar/"
@@ -2020,7 +2041,7 @@ def create_main_router(
         response_class=Response,
     )
     def get_import_reqif_document_form():
-        template = env.get_template(
+        template = env().get_template(
             "actions/project_index/import_reqif_document/"
             "stream_form_import_reqif_document.jinja.html"
         )
@@ -2059,7 +2080,7 @@ def create_main_router(
             error_object.add_error("reqif_file", str(exception))
 
         if error_object.any_errors():
-            template = env.get_template(
+            template = env().get_template(
                 "actions/project_index/import_reqif_document/"
                 "stream_form_import_reqif_document.jinja.html"
             )
@@ -2106,7 +2127,7 @@ def create_main_router(
         export_action.build_index()
         export_action.export()
 
-        template = env.get_template(
+        template = env().get_template(
             "actions/project_index/import_reqif_document/"
             "stream_refresh_with_imported_reqif_document.jinja.html"
         )
@@ -2193,23 +2214,19 @@ def create_main_router(
             if url_to_document.startswith("_source_files"):
                 # FIXME: We could be more specific here and only generate the
                 # requested file.
-                HTMLGenerator.export_source_coverage_screen(
-                    project_config=project_config,
+                html_generator.export_source_coverage_screen(
                     traceability_index=export_action.traceability_index,
                 )
             elif url_to_document == "index.html":
-                HTMLGenerator.export_project_tree_screen(
-                    project_config=project_config,
+                html_generator.export_project_tree_screen(
                     traceability_index=export_action.traceability_index,
                 )
             elif url_to_document == "requirements_coverage.html":
-                HTMLGenerator.export_requirements_coverage_screen(
-                    project_config=project_config,
+                html_generator.export_requirements_coverage_screen(
                     traceability_index=export_action.traceability_index,
                 )
             elif url_to_document == "source_coverage.html":
-                HTMLGenerator.export_source_coverage_screen(
-                    project_config=project_config,
+                html_generator.export_source_coverage_screen(
                     traceability_index=export_action.traceability_index,
                 )
             else:
@@ -2244,8 +2261,7 @@ def create_main_router(
                         content=f"Not Found: {url_to_document}", status_code=404
                     )
                 document.ng_needs_generation = True
-                HTMLGenerator.export_single_document_with_performance(
-                    project_config=project_config,
+                html_generator.export_single_document_with_performance(
                     document=document,
                     traceability_index=export_action.traceability_index,
                     specific_documents=(document_type_to_generate,),

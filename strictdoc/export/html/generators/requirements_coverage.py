@@ -9,21 +9,22 @@ from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 
 
 class RequirementsCoverageHTMLGenerator:
-    env = HTMLTemplates.jinja_environment
-
     @staticmethod
     def export(
         *,
         project_config: ProjectConfig,
         traceability_index: TraceabilityIndex,
+        html_templates: HTMLTemplates,
     ):
+        assert isinstance(html_templates, HTMLTemplates)
+
         document_tree_iterator = DocumentTreeIterator(
             traceability_index.document_tree
         )
 
         output = ""
 
-        template = RequirementsCoverageHTMLGenerator.env.get_template(
+        template = html_templates.jinja_environment().get_template(
             "screens/requirements_coverage/index.jinja"
         )
 
@@ -34,6 +35,7 @@ class RequirementsCoverageHTMLGenerator:
             "RST",
             traceability_index,
             link_renderer,
+            html_templates,
             None,
         )
         output += template.render(

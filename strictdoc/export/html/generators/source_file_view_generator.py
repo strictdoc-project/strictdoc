@@ -22,19 +22,18 @@ from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 
 
 class SourceFileViewHTMLGenerator:
-    env = HTMLTemplates.jinja_environment
-
     @staticmethod
     def export(
         *,
         project_config: ProjectConfig,
         source_file: SourceFile,
         traceability_index: TraceabilityIndex,
+        html_templates: HTMLTemplates,
     ):
         output = ""
 
         document_type = DocumentType.document()
-        template = SourceFileViewHTMLGenerator.env.get_template(
+        template = html_templates.jinja_environment().get_template(
             "screens/source_file_view/index.jinja"
         )
 
@@ -61,7 +60,7 @@ class SourceFileViewHTMLGenerator:
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            "RST", traceability_index, link_renderer, None
+            "RST", traceability_index, link_renderer, html_templates, None
         )
         output += template.render(
             project_config=project_config,

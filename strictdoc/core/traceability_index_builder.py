@@ -32,6 +32,7 @@ from strictdoc.core.traceability_index import (
     TraceabilityIndex,
 )
 from strictdoc.core.tree_cycle_detector import TreeCycleDetector
+from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.file_modification_time import get_file_modification_time
@@ -64,6 +65,9 @@ class TraceabilityIndexBuilder:
 
         strictdoc_last_update = get_file_modification_time(
             latest_strictdoc_own_file
+        )
+        HTMLTemplates(project_config).reset_jinja_environment_if_outdated(
+            strictdoc_last_update
         )
 
         document_tree, asset_dirs = DocumentFinder.find_sdoc_content(

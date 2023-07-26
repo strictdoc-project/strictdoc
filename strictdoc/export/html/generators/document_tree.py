@@ -7,18 +7,19 @@ from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 
 
 class DocumentTreeHTMLGenerator:
-    env = HTMLTemplates.jinja_environment
-
     @staticmethod
     def export(
         project_config: ProjectConfig,
         traceability_index: TraceabilityIndex,
+        html_templates: HTMLTemplates,
     ):
+        assert isinstance(html_templates, HTMLTemplates)
+
         document_tree_iterator = DocumentTreeIterator(
             traceability_index.document_tree
         )
 
-        template = DocumentTreeHTMLGenerator.env.get_template(
+        template = html_templates.jinja_environment().get_template(
             "screens/project_index/index.jinja"
         )
         link_renderer = LinkRenderer(

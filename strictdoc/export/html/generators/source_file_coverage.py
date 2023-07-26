@@ -6,8 +6,6 @@ from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 
 
 class SourceFileCoverageHTMLGenerator:
-    env = HTMLTemplates.jinja_environment
-
     @staticmethod
     def export(
         *,
@@ -16,8 +14,10 @@ class SourceFileCoverageHTMLGenerator:
     ):
         output = ""
 
-        template = SourceFileCoverageHTMLGenerator.env.get_template(
-            "screens/source_file_coverage/index.jinja"
+        template = (
+            HTMLTemplates(project_config)
+            .jinja_environment()
+            .get_template("screens/source_file_coverage/index.jinja")
         )
         link_renderer = LinkRenderer(
             root_path="", static_path=project_config.dir_for_sdoc_assets

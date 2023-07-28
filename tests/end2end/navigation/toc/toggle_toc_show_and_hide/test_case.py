@@ -1,5 +1,4 @@
-from seleniumbase import BaseCase
-
+from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.components.toc import TOC
 from tests.end2end.helpers.components.viewtype_selector import (
@@ -11,7 +10,7 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 from tests.end2end.server import SDocTestServer
 
 
-class Test_UC112_T02_UI_toc_saves_state(BaseCase):
+class Test(E2ECase):
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 

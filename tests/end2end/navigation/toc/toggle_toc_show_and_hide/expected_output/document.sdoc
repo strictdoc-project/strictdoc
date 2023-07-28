@@ -1,0 +1,27 @@
+[DOCUMENT]
+TITLE: Document title
+
+[FREETEXT]
+Hello world!
+[/FREETEXT]
+
+[SECTION]
+TITLE: Section title
+
+[FREETEXT]
+This is a free text of this section.
+[/FREETEXT]
+
+[/SECTION]
+
+[REQUIREMENT]
+TITLE: Requirement 1 title
+STATEMENT: >>>
+Requirement statement.
+<<<
+
+[REQUIREMENT]
+TITLE: Requirement 2 title
+STATEMENT: >>>
+Requirement statement.
+<<<

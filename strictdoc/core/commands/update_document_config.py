@@ -7,6 +7,7 @@ from strictdoc.core.commands.validation_error import (
     MultipleValidationError,
     SingleValidationError,
 )
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import (
     TraceabilityIndex,
 )
@@ -21,6 +22,7 @@ class UpdateDocumentConfigCommand:
         form_object: DocumentConfigFormObject,
         document: Document,
         traceability_index: TraceabilityIndex,
+        config: ProjectConfig,
     ):
         self.form_object: DocumentConfigFormObject = form_object
         self.document: Document = document
@@ -28,6 +30,7 @@ class UpdateDocumentConfigCommand:
         self.update_free_text_command = UpdateFreeTextCommand(
             node=document,
             traceability_index=traceability_index,
+            config=config,
             subject_field_name="FREETEXT",
             subject_field_content=form_object.document_freetext_unescaped,
         )

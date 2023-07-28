@@ -26,9 +26,9 @@ def test_01():
      - Row 2, column 3
 """.lstrip()
 
-    html_output = RstToHtmlFragmentWriter(context_document=None).write(
-        rst_input
-    )
+    html_output = RstToHtmlFragmentWriter(
+        context_document=None, path_to_output_dir="NOT_RELEVANT"
+    ).write(rst_input)
     assert '<table border="1"' in html_output
 
 
@@ -50,7 +50,8 @@ def test_with_validation_01_tables():
 """.lstrip()
 
     html_output, _ = RstToHtmlFragmentWriter(
-        context_document=None
+        context_document=None,
+        path_to_output_dir="NOT_RELEVANT",
     ).write_with_validation(rst_input)
     assert '<table border="1"' in html_output
 
@@ -64,7 +65,8 @@ def test_with_validation_02_warning_message():
 """.lstrip()
 
     html_output, error = RstToHtmlFragmentWriter(
-        context_document=None
+        context_document=None,
+        path_to_output_dir="NOT_RELEVANT",
     ).write_with_validation(rst_input)
     assert html_output is None
     assert error == (
@@ -85,7 +87,8 @@ Hello. What nex?
 """.lstrip()
 
     html_output, error = RstToHtmlFragmentWriter(
-        context_document=None
+        context_document=None,
+        path_to_output_dir="NOT_RELEVANT",
     ).write_with_validation(rst_input)
     assert html_output is None
     assert error == (

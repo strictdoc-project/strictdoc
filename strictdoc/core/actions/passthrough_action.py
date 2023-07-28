@@ -18,7 +18,9 @@ class PassthroughAction:
             print(err)  # noqa: T201
             sys.exit(1)
 
-        document = SDReader().read_from_file(config.input_file)
+        document = SDReader(config.output_file).read_from_file(
+            config.input_file
+        )
 
         writer = SDWriter()
         output = writer.write(document)

@@ -23,6 +23,7 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementField,
     RequirementFieldType,
 )
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import (
     RequirementConnections,
     TraceabilityIndex,
@@ -345,6 +346,7 @@ class RequirementFormObject(ErrorObject):
         *,
         traceability_index: TraceabilityIndex,
         context_document: Document,
+        config: ProjectConfig,
     ):
         assert isinstance(traceability_index, TraceabilityIndex)
         assert isinstance(context_document, Document)
@@ -361,6 +363,7 @@ class RequirementFormObject(ErrorObject):
                 parsed_html,
                 rst_error,
             ) = RstToHtmlFragmentWriter(
+                path_to_output_dir=config.export_output_dir,
                 context_document=context_document,
             ).write_with_validation(requirement_statement)
             if parsed_html is None:

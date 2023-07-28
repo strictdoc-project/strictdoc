@@ -18,6 +18,7 @@ from strictdoc.core.commands.validation_error import (
     MultipleValidationError,
     SingleValidationError,
 )
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import (
     RequirementConnections,
     TraceabilityIndex,
@@ -38,6 +39,7 @@ class UpdateSectionCommand:
         form_object: SectionFormObject,
         section: Section,
         traceability_index: TraceabilityIndex,
+        config: ProjectConfig,
     ):
         self.form_object: SectionFormObject = form_object
         self.section: Section = section
@@ -45,6 +47,7 @@ class UpdateSectionCommand:
         self.update_free_text_command = UpdateFreeTextCommand(
             node=section,
             traceability_index=traceability_index,
+            config=config,
             subject_field_name="section_statement",
             subject_field_content=form_object.section_statement_unescaped,
         )
@@ -159,11 +162,13 @@ class CreateSectionCommand:
         whereto: str,
         reference_mid: str,
         traceability_index: TraceabilityIndex,
+        config: ProjectConfig,
     ):
         self.form_object: SectionFormObject = form_object
         self.whereto: str = whereto
         self.reference_mid: str = reference_mid
         self.traceability_index: TraceabilityIndex = traceability_index
+        self.config: ProjectConfig = config
 
         self._created_section: Optional[Section] = None
 
@@ -220,7 +225,8 @@ class CreateSectionCommand:
                 parsed_html,
                 rst_error,
             ) = RstToHtmlFragmentWriter(
-                context_document=document
+                path_to_output_dir=self.config.export_output_dir,
+                context_document=document,
             ).write_with_validation(form_object.section_statement_unescaped)
             if parsed_html is None:
                 errors["section_statement"].append(rst_error)

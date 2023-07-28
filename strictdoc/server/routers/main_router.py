@@ -156,6 +156,7 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
+            config=project_config,
             context_document=requirement.document,
         )
         output = template.render(
@@ -217,6 +218,7 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
+            config=project_config,
             context_document=document,
         )
         output = template.render(
@@ -289,6 +291,7 @@ def create_main_router(
                 whereto=whereto,
                 reference_mid=reference_mid,
                 traceability_index=export_action.traceability_index,
+                config=project_config,
             )
             create_command.perform()
         except MultipleValidationError as validation_error:
@@ -307,6 +310,7 @@ def create_main_router(
                 traceability_index=export_action.traceability_index,
                 link_renderer=link_renderer,
                 html_templates=html_generator.html_templates,
+                config=project_config,
                 context_document=document,
             )
             output = template.render(
@@ -355,6 +359,7 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
+            config=project_config,
             context_document=document,
         )
         iterator = export_action.traceability_index.get_document_iterator(
@@ -407,6 +412,7 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
+            config=project_config,
             context_document=section.document,
         )
         output = template.render(
@@ -454,6 +460,7 @@ def create_main_router(
                 form_object=form_object,
                 section=section,
                 traceability_index=export_action.traceability_index,
+                config=project_config,
             )
             update_command.perform()
         except MultipleValidationError as validation_error:
@@ -472,6 +479,7 @@ def create_main_router(
                 traceability_index=export_action.traceability_index,
                 link_renderer=link_renderer,
                 html_templates=html_generator.html_templates,
+                config=project_config,
                 context_document=section.document,
             )
             output = template.render(
@@ -520,6 +528,7 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
+            config=project_config,
             context_document=section.document,
         )
         output = template.render(
@@ -584,6 +593,7 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
+            config=project_config,
             context_document=section.document,
         )
         output = template.render(
@@ -646,6 +656,7 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
+            config=project_config,
             context_document=document,
         )
         output = template.render(
@@ -712,6 +723,7 @@ def create_main_router(
         form_object.validate(
             traceability_index=export_action.traceability_index,
             context_document=document,
+            config=project_config,
         )
 
         if form_object.any_errors():
@@ -730,6 +742,7 @@ def create_main_router(
                 traceability_index=export_action.traceability_index,
                 link_renderer=link_renderer,
                 html_templates=html_generator.html_templates,
+                config=project_config,
                 context_document=document,
             )
 
@@ -804,6 +817,7 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
+            config=project_config,
             context_document=document,
         )
         iterator = export_action.traceability_index.get_document_iterator(
@@ -866,6 +880,7 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
+            config=project_config,
             context_document=document,
         )
         output = template.render(
@@ -910,6 +925,7 @@ def create_main_router(
         form_object.validate(
             traceability_index=export_action.traceability_index,
             context_document=document,
+            config=project_config,
         )
 
         if form_object.any_errors():
@@ -928,6 +944,7 @@ def create_main_router(
                 traceability_index=export_action.traceability_index,
                 link_renderer=link_renderer,
                 html_templates=html_generator.html_templates,
+                config=project_config,
                 context_document=document,
             )
             output = template.render(
@@ -1097,6 +1114,7 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
+            config=project_config,
             context_document=document,
         )
 
@@ -1182,6 +1200,7 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
+            config=project_config,
             context_document=document,
         )
         iterator = export_action.traceability_index.get_document_iterator(
@@ -1267,6 +1286,7 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
+            config=project_config,
             context_document=section.document,
         )
         iterator = export_action.traceability_index.get_document_iterator(
@@ -1353,6 +1373,7 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
+            config=project_config,
             context_document=requirement.document,
         )
         iterator = export_action.traceability_index.get_document_iterator(
@@ -1480,6 +1501,7 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
+            config=project_config,
             context_document=moved_node.document,
         )
         output = template.render(
@@ -1743,6 +1765,7 @@ def create_main_router(
                 form_object=form_object,
                 document=document,
                 traceability_index=export_action.traceability_index,
+                config=project_config,
             )
             update_command.perform()
         except MultipleValidationError as validation_error:
@@ -1789,6 +1812,7 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
+            config=project_config,
             context_document=document,
         )
         template = env().get_template(
@@ -1826,6 +1850,7 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
+            config=project_config,
             context_document=document,
         )
         template = env().get_template(
@@ -1962,6 +1987,7 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
+            config=project_config,
             context_document=document,
         )
         template = env().get_template(
@@ -1985,6 +2011,7 @@ def create_main_router(
                 traceability_index=export_action.traceability_index,
                 link_renderer=link_renderer,
                 html_templates=html_generator.html_templates,
+                config=project_config,
                 context_document=document,
             )
             template = env().get_template(

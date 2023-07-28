@@ -49,8 +49,8 @@ class ExportAction:
             "html" in self.project_config.export_formats
             or "html-standalone" in self.project_config.export_formats
         ):
-            HTMLGenerator.export_complete_tree(
-                project_config=self.project_config,
+            html_generator = HTMLGenerator(self.project_config)
+            html_generator.export_complete_tree(
                 traceability_index=self.traceability_index,
                 parallelizer=self.parallelizer,
             )

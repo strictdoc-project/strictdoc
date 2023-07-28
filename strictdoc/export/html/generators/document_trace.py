@@ -7,8 +7,6 @@ from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 
 
 class DocumentTraceHTMLGenerator:
-    env = HTMLTemplates.jinja_environment
-
     @staticmethod
     def export(  # pylint: disable=too-many-arguments
         project_config: ProjectConfig,
@@ -23,8 +21,10 @@ class DocumentTraceHTMLGenerator:
             traceability_index.document_tree
         )
 
-        template = DocumentTraceHTMLGenerator.env.get_template(
-            "screens/document/traceability/index.jinja"
+        template = (
+            HTMLTemplates(project_config)
+            .jinja_environment()
+            .get_template("screens/document/traceability/index.jinja")
         )
 
         document_iterator = traceability_index.get_document_iterator(document)

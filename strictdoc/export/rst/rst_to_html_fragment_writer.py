@@ -1,7 +1,10 @@
+import hashlib
 import io
 import os
 import re
 import sys
+import tempfile
+from pathlib import Path
 from typing import Optional
 
 from docutils.core import publish_parts
@@ -16,8 +19,6 @@ from strictdoc.export.rst.directives.wildcard_enhanced_image import (
 
 
 class RstToHtmlFragmentWriter:
-    cache = {}
-
     directives.register_directive("image", WildcardEnhancedImage)
 
     roles.register_local_role("rawhtml", raw_html_role)
@@ -48,8 +49,43 @@ class RstToHtmlFragmentWriter:
 
     def write(self, rst_fragment):
         assert isinstance(rst_fragment, str), rst_fragment
-        if rst_fragment in RstToHtmlFragmentWriter.cache:
-            return RstToHtmlFragmentWriter.cache[rst_fragment]
+
+        if len(rst_fragment) < 0:
+            return self._write_no_cache(rst_fragment)
+
+        path_to_tmp_dir = tempfile.gettempdir()
+
+        path_to_rst_cache_dir = os.path.join(
+            path_to_tmp_dir, "strictdoc_cache", "rst"
+        )
+        path_to_rst_fragment_bucket_dir = os.path.join(
+            path_to_rst_cache_dir, str(len(rst_fragment))
+        )
+        fragment_md5 = hashlib.md5(rst_fragment.encode("utf-8")).hexdigest()
+        path_to_cached_fragment = os.path.join(
+            path_to_rst_fragment_bucket_dir, fragment_md5
+        )
+        if os.path.isdir(path_to_rst_fragment_bucket_dir):
+            if os.path.isfile(path_to_cached_fragment):
+                with open(
+                    path_to_cached_fragment, "rb"
+                ) as cached_fragment_file_:
+                    return cached_fragment_file_.read().decode("UTF-8")
+        else:
+            Path(path_to_rst_fragment_bucket_dir).mkdir(
+                parents=True, exist_ok=True
+            )
+
+        rendered_html: str = self._write_no_cache(rst_fragment)
+        rendered_html_bytes = rendered_html.encode("UTF-8")
+
+        with open(path_to_cached_fragment, "wb") as cached_fragment_file_:
+            cached_fragment_file_.write(rendered_html_bytes)
+
+        return rendered_html
+
+    def _write_no_cache(self, rst_fragment):
+        assert isinstance(rst_fragment, str), rst_fragment
 
         # How do I convert a docutils document tree into an HTML string?
         # https://stackoverflow.com/a/32168938/598057
@@ -92,8 +128,6 @@ class RstToHtmlFragmentWriter:
             sys.exit(1)
 
         html = output["html_body"]
-
-        RstToHtmlFragmentWriter.cache[rst_fragment] = html
 
         return html
 

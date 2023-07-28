@@ -22,17 +22,15 @@ from strictdoc.helpers.rst import truncated_statement_with_no_rst
 
 
 class MarkupRenderer:
-    template_anchor = HTMLTemplates.jinja_environment.get_template(
-        "rst/anchor.jinja"
-    )
-
     @staticmethod
     def create(
         markup,
         traceability_index: TraceabilityIndex,
         link_renderer: LinkRenderer,
+        html_templates: HTMLTemplates,
         context_document: Optional[Document],
     ) -> "MarkupRenderer":
+        assert isinstance(html_templates, HTMLTemplates)
         html_fragment_writer: Union[
             RstToHtmlFragmentWriter,
             Type[HTMLFragmentWriter],
@@ -50,14 +48,16 @@ class MarkupRenderer:
             html_fragment_writer,
             traceability_index,
             link_renderer,
+            html_templates,
             context_document,
         )
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         fragment_writer,
         traceability_index: TraceabilityIndex,
         link_renderer: LinkRenderer,
+        html_templates: HTMLTemplates,
         context_document: Optional[Document],
     ):
         assert isinstance(traceability_index, TraceabilityIndex)
@@ -65,6 +65,7 @@ class MarkupRenderer:
         assert context_document is None or isinstance(
             context_document, Document
         ), context_document
+        assert isinstance(html_templates, HTMLTemplates)
 
         self.fragment_writer = fragment_writer
         self.traceability_index = traceability_index
@@ -73,6 +74,10 @@ class MarkupRenderer:
 
         self.cache = {}
         self.rationale_cache = {}
+
+        self.template_anchor = html_templates.jinja_environment().get_template(
+            "rst/anchor.jinja"
+        )
 
     def render_requirement_statement(self, requirement):
         assert isinstance(requirement, Requirement)
@@ -149,7 +154,7 @@ class MarkupRenderer:
                     node.title, href
                 )
             elif isinstance(part, Anchor):
-                parts_output += MarkupRenderer.template_anchor.render(
+                parts_output += self.template_anchor.render(
                     anchor=part,
                     traceability_index=self.traceability_index,
                     link_renderer=self.link_renderer,

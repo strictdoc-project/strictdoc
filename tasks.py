@@ -287,10 +287,11 @@ def test_coverage_report(context):
 
 
 @task
-def test_integration(
+def test_integration(  # pylint: disable=too-many-arguments
     context,
     focus=None,
     debug=False,
+    no_parallelization=False,
     strictdoc=None,
     environment=ToxEnvironment.CHECK,
 ):
@@ -305,6 +306,7 @@ def test_integration(
 
     focus_or_none = f"--filter {focus}" if focus else ""
     debug_opts = "-vv --show-all" if debug else ""
+    parallelize_opts = "" if not no_parallelization else "--threads 1"
 
     itest_command = f"""
         lit
@@ -312,6 +314,7 @@ def test_integration(
         -v
         {debug_opts}
         {focus_or_none}
+        {parallelize_opts}
         {cwd}/tests/integration
     """
 

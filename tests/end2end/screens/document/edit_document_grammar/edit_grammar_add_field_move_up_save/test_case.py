@@ -1,5 +1,4 @@
-from seleniumbase import BaseCase
-
+from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.screens.document.form_edit_grammar import (
     Form_EditGrammar,
@@ -10,7 +9,7 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 from tests.end2end.server import SDocTestServer
 
 
-class Test_UC12_T03_MoveFieldDown(BaseCase):
+class Test(E2ECase):
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
@@ -37,7 +36,13 @@ class Test_UC12_T03_MoveFieldDown(BaseCase):
             )
             form_edit_grammar.assert_on_grammar()
 
-            form_edit_grammar.do_move_grammar_field_down("CUSTOM_FIELD")
+            form_edit_grammar.do_add_grammar_field()
+            form_edit_grammar.do_fill_in_grammar_field("", "CUSTOM_FIELD", -1)
+
+            # Move 3 times up.
+            form_edit_grammar.do_move_grammar_field_up()
+            form_edit_grammar.do_move_grammar_field_up()
+            form_edit_grammar.do_move_grammar_field_up()
 
             form_edit_grammar.do_form_submit()
 

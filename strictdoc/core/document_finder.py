@@ -1,5 +1,6 @@
 import os
 import sys
+from functools import partial
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.reader import SDReader
@@ -34,20 +35,20 @@ class DocumentFinder:
             project_config=project_config
         )
         document_tree = DocumentFinder._build_document_tree(
-            file_tree, project_config.export_output_html_root, parallelizer
+            file_tree, project_config, parallelizer
         )
 
         return document_tree, asset_dirs
 
     @staticmethod
-    def _process_worker_parse_document(document_triple):
+    def _process_worker_parse_document(document_triple, path_to_output_root):
         _, doc_file, _ = document_triple
         doc_full_path = doc_file.get_full_path()
 
         with measure_performance(
             f"Reading SDOC: {os.path.basename(doc_full_path)}"
         ):
-            reader = SDReader()
+            reader = SDReader(path_to_output_root)
             document = reader.read_from_file(doc_full_path)
             assert isinstance(document, Document)
 
@@ -55,16 +56,26 @@ class DocumentFinder:
         return doc_file, document
 
     @staticmethod
-    def _build_document_tree(file_trees, output_root_html, parallelizer):
+    def _build_document_tree(
+        file_trees, project_config: ProjectConfig, parallelizer
+    ):
         assert isinstance(file_trees, list)
+
+        output_root_html = project_config.export_output_html_root
+
         document_list, map_docs_by_paths, map_docs_by_rel_paths = [], {}, {}
 
         file_tree_list = []
         for file_tree in file_trees:
             file_tree_list.extend(list(file_tree.iterate()))
 
+        process_document_binding = partial(
+            DocumentFinder._process_worker_parse_document,
+            path_to_output_root=project_config.export_output_dir,
+        )
+
         found_documents = parallelizer.map(
-            file_tree_list, DocumentFinder._process_worker_parse_document
+            file_tree_list, process_document_binding
         )
 
         for doc_file, document in found_documents:

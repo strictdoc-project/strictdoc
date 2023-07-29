@@ -12,6 +12,7 @@ from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.commands.validation_error import (
     SingleValidationError,
 )
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import (
     GraphLinkType,
     TraceabilityIndex,
@@ -26,11 +27,13 @@ class UpdateFreeTextCommand:
         self,
         node: Union[Document, Section],
         traceability_index: TraceabilityIndex,
+        config: ProjectConfig,
         subject_field_name: str,
         subject_field_content: str,
     ):
         self.node: Union[Document, Section] = node
         self.traceability_index: TraceabilityIndex = traceability_index
+        self.config: ProjectConfig = config
         self.subject_field_name: str = subject_field_name
         self.subject_field_content: str = subject_field_content
 
@@ -49,7 +52,8 @@ class UpdateFreeTextCommand:
                 parsed_html,
                 rst_error,
             ) = RstToHtmlFragmentWriter(
-                context_document=context_document
+                path_to_output_dir=self.config.export_output_dir,
+                context_document=context_document,
             ).write_with_validation(subject_field_content)
 
             if parsed_html is None:

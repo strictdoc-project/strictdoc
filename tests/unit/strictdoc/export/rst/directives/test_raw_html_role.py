@@ -14,9 +14,9 @@ def test_01():
 :rawhtml:`<a href="foo.bar">LINK</a>`\
 """
 
-    html_output = RstToHtmlFragmentWriter(context_document=None).write(
-        rst_input
-    )
+    html_output = RstToHtmlFragmentWriter(
+        path_to_output_dir="NOT_RELEVANT", context_document=None
+    ).write(rst_input)
     assert (
         html_output
         == """\

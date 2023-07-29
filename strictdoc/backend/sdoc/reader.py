@@ -22,6 +22,9 @@ from strictdoc.helpers.textx import drop_textx_meta
 
 
 class SDReader:
+    def __init__(self, path_to_output_root: str = "NOT_RELEVANT"):
+        self.path_to_output_root = path_to_output_root
+
     @staticmethod
     def _read(input_string, file_path=None):
         meta_model = metamodel_from_str(
@@ -67,12 +70,16 @@ class SDReader:
         )
 
         # File name contains an MD5 hash of its full path to ensure the
-        # uniqueness of the cached items.
-        full_path_to_file_md5 = hashlib.md5(
-            full_path_to_file.encode("utf-8")
+        # uniqueness of the cached items. Additionally, the unique file name
+        # contains a full path to the output root to prevent collisions
+        # between StrictDoc invocations running against the same set of SDoc
+        # files in parallel.
+        unique_identifier = self.path_to_output_root + full_path_to_file
+        unique_identifier_md5 = hashlib.md5(
+            unique_identifier.encode("utf-8")
         ).hexdigest()
         file_name = os.path.basename(full_path_to_file)
-        file_name += "_" + full_path_to_file_md5
+        file_name += "_" + unique_identifier_md5
 
         path_to_cached_file = os.path.join(
             path_to_tmp_dir,

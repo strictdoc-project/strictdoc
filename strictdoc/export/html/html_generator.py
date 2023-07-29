@@ -192,6 +192,7 @@ class HTMLGenerator:
             traceability_index,
             link_renderer,
             self.html_templates,
+            self.project_config,
             document,
         )
 

@@ -23,7 +23,18 @@ class RstToHtmlFragmentWriter:
 
     roles.register_local_role("rawhtml", raw_html_role)
 
-    def __init__(self, *, context_document: Optional[Document]):
+    def __init__(
+        self, *, path_to_output_dir: str, context_document: Optional[Document]
+    ):
+        path_to_output_dir_md5: str = hashlib.md5(
+            path_to_output_dir.encode("utf-8")
+        ).hexdigest()
+
+        path_to_tmp_dir = tempfile.gettempdir()
+        self.path_to_rst_cache_dir = os.path.join(
+            path_to_tmp_dir, "strictdoc_cache", "rst", path_to_output_dir_md5
+        )
+
         if context_document is not None:
             WildcardEnhancedImage.current_reference_path = (
                 context_document.meta.output_document_dir_full_path
@@ -53,13 +64,8 @@ class RstToHtmlFragmentWriter:
         if len(rst_fragment) < 0:
             return self._write_no_cache(rst_fragment)
 
-        path_to_tmp_dir = tempfile.gettempdir()
-
-        path_to_rst_cache_dir = os.path.join(
-            path_to_tmp_dir, "strictdoc_cache", "rst"
-        )
         path_to_rst_fragment_bucket_dir = os.path.join(
-            path_to_rst_cache_dir, str(len(rst_fragment))
+            self.path_to_rst_cache_dir, str(len(rst_fragment))
         )
         fragment_md5 = hashlib.md5(rst_fragment.encode("utf-8")).hexdigest()
         path_to_cached_fragment = os.path.join(

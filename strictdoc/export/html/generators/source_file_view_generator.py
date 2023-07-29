@@ -60,7 +60,12 @@ class SourceFileViewHTMLGenerator:
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            "RST", traceability_index, link_renderer, html_templates, None
+            "RST",
+            traceability_index,
+            link_renderer,
+            html_templates,
+            project_config,
+            None,
         )
         output += template.render(
             project_config=project_config,

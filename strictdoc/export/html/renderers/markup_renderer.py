@@ -7,6 +7,7 @@ from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
 )
 from strictdoc.backend.sdoc.models.section import FreeText
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.html_templates import HTMLTemplates
@@ -28,6 +29,7 @@ class MarkupRenderer:
         traceability_index: TraceabilityIndex,
         link_renderer: LinkRenderer,
         html_templates: HTMLTemplates,
+        config: ProjectConfig,
         context_document: Optional[Document],
     ) -> "MarkupRenderer":
         assert isinstance(html_templates, HTMLTemplates)
@@ -38,7 +40,8 @@ class MarkupRenderer:
         ]
         if not markup or markup == "RST":
             html_fragment_writer = RstToHtmlFragmentWriter(
-                context_document=context_document
+                path_to_output_dir=config.export_output_dir,
+                context_document=context_document,
             )
         elif markup == "HTML":
             html_fragment_writer = HTMLFragmentWriter

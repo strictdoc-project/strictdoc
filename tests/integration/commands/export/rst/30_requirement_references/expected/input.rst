@@ -12,7 +12,9 @@ Requirement 1
 
 System shall do #1.
 
-**Comment:** Requirement 1 comment.
+**Comment:**
+
+Requirement 1 comment.
 
 **Children:**
 
@@ -33,7 +35,9 @@ Requirement 2
 
 System shall do #2.
 
-**Comment:** Requirement 2 comment.
+**Comment:**
+
+Requirement 2 comment.
 
 **Parents:**
 
@@ -57,7 +61,9 @@ Requirement 3
 
 System shall do #3.
 
-**Comment:** Requirement 3 comment.
+**Comment:**
+
+Requirement 3 comment.
 
 **Parents:**
 

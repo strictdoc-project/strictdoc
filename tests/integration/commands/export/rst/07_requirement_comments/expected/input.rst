@@ -12,7 +12,9 @@ Requirement 1
 
 System shall do #1.
 
-**Comment:** Requirement 1 comment.
+**Comment:**
+
+Requirement 1 comment.
 
 .. _REQ2:
 
@@ -28,4 +30,6 @@ Requirement 2
 
 System shall do #2.
 
-**Comment:** Requirement 2 comment.
+**Comment:**
+
+Requirement 2 comment.

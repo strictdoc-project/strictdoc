@@ -12,7 +12,9 @@ Requirement 1
 
 System shall do #1.
 
-**Rationale:** Rationale #1.
+**Rationale:**
+
+Rationale #1.
 
 .. _REQ2:
 
@@ -28,6 +30,10 @@ Requirement 2
 
 System shall do #2.
 
-**Rationale:** Rationale #2.
+**Rationale:**
 
-**Comment:** Comment #2.
+Rationale #2.
+
+**Comment:**
+
+Comment #2.

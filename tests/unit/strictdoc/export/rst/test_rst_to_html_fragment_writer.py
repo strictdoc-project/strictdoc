@@ -32,6 +32,17 @@ def test_01():
     assert '<table border="1"' in html_output
 
 
+def test_02():
+    rst_input = """\
+- First item is a bullet point.
+""".lstrip()
+
+    html_output = RstToHtmlFragmentWriter(
+        context_document=None, path_to_output_dir="NOT_RELEVANT"
+    ).write(rst_input)
+    assert "<li>First item is a bullet point.</li>" in html_output
+
+
 def test_with_validation_01_tables():
     rst_input = """
 .. list-table:: Title

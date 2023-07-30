@@ -36,12 +36,12 @@ def auto_str(obj: object) -> str:
     # breaking on the objects with recursive references:
     # Example: A -> B -> A.
     for prop, value in obj.__dict__.items():
-        if type(value) == list:  # pylint: disable=unidiomatic-typecheck
+        if isinstance(value, list):
             if len(value) == 0:
                 item = f"{prop} = []"
             else:
                 item = f"{prop} = [{len(value)} elements]"
-        elif type(value) == dict:  # pylint: disable=unidiomatic-typecheck
+        elif isinstance(value, dict):
             if len(value) == 0:
                 item = f"{prop} = {{}}"
             else:

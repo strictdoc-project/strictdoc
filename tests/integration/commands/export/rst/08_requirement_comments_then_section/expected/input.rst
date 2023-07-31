@@ -12,9 +12,13 @@ Requirement 1
 
 System shall do #1.
 
-**Comment:** Requirement 1 comment #1.
+**Comment:**
 
-**Comment:** Requirement 1 comment #2.
+Requirement 1 comment #1.
+
+**Comment:**
+
+Requirement 1 comment #2.
 
 User interfaces
 ===============

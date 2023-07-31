@@ -25,18 +25,23 @@
 {% endif -%}
 
 {%- if requirement.rationale -%}
-**Rationale:** {{ requirement.rationale }}
+**Rationale:**
+
+{{ requirement.rationale }}
 
 {% endif -%}
 
 {%- for comment in requirement.comments -%}
-**Comment:** {{comment}}
+**Comment:**
+
+{{comment}}
 
 {% endfor -%}
 
 {%- if requirement.has_meta -%}
 {%- for meta_field in requirement.enumerate_meta_fields(skip_single_lines=True) -%}
 **{{meta_field[0]}}:**
+
 {{ meta_field[1] }}
 
 {% endfor -%}

@@ -13,11 +13,16 @@
 
 the foo must bar
 
-**Rationale:** If the foo did not bar then it might instead baz, which must be avoided at all costs.
+**Rationale:**
 
-**Comment:** A bazzing foo is dangerous because of the uncontrolled range of interaction of the baz with other foos.
+If the foo did not bar then it might instead baz, which must be avoided at all costs.
+
+**Comment:**
+
+A bazzing foo is dangerous because of the uncontrolled range of interaction of the baz with other foos.
 
 **PUB_REFS:**
+
 References
 
 1
@@ -25,6 +30,7 @@ References
 2
 
 **VERIFICATION:**
+
 Very detailed verification step;
 
 With multiple paragraphs

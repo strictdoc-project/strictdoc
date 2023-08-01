@@ -1,7 +1,7 @@
 from typing import List
 
-from reqif.parser import ReqIFParser
-from reqif.reqif_bundle import ReqIFBundle
+from reqif.parser import ReqIFParser, ReqIFZParser
+from reqif.reqif_bundle import ReqIFBundle, ReqIFZBundle
 
 from strictdoc.backend.reqif.p01_sdoc.reqif_to_sdoc_converter import (
     P01_ReqIFToSDocConverter,
@@ -21,8 +21,21 @@ class ReqIFImport:
     ) -> List[Document]:
         converter = ReqIFImport.select_reqif_profile(import_config)
 
-        reqif_bundle: ReqIFBundle = ReqIFParser.parse(import_config.input_path)
-        documents: List[Document] = converter.convert_reqif_bundle(reqif_bundle)
+        if import_config.input_path.endswith(".reqifz"):
+            reqifz_bundle: ReqIFZBundle = ReqIFZParser.parse(
+                import_config.input_path
+            )
+            assert len(reqifz_bundle.reqif_bundles) > 0
+            documents: List[Document] = converter.convert_reqif_bundle(
+                next(iter(reqifz_bundle.reqif_bundles.values()))
+            )
+        else:
+            reqif_bundle: ReqIFBundle = ReqIFParser.parse(
+                import_config.input_path
+            )
+            documents: List[Document] = converter.convert_reqif_bundle(
+                reqif_bundle
+            )
         return documents
 
     @staticmethod

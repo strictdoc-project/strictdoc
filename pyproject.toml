@@ -71,7 +71,7 @@ dependencies = [
     "xlrd >= 2.0.1, == 2.*",
 
     # ReqIF
-    "reqif >= 0.0.33, == 0.*",
+    "reqif >= 0.0.39, == 0.*",
 
     # Bibtex
     "pybtex >= 0.23.0, == 0.*",

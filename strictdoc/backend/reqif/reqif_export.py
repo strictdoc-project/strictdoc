@@ -1,7 +1,8 @@
 import os
 from pathlib import Path
 
-from reqif.unparser import ReqIFUnparser
+from reqif.reqif_bundle import ReqIFZBundle
+from reqif.unparser import ReqIFUnparser, ReqIFZUnparser
 
 from strictdoc.backend.reqif.p01_sdoc.sdoc_to_reqif_converter import (
     P01_SDocToReqIFObjectConverter,
@@ -17,9 +18,9 @@ class ReqIFExport:
         project_config: ProjectConfig,
         traceability_index: TraceabilityIndex,
         output_reqif_root: str,
+        reqifz: bool,
     ):
         Path(output_reqif_root).mkdir(parents=True, exist_ok=True)
-        output_file_path: str = os.path.join(output_reqif_root, "output.reqif")
 
         if project_config.reqif_profile == ReqIFProfile.P01_SDOC:
             reqif_bundle = P01_SDocToReqIFObjectConverter.convert_document_tree(
@@ -30,7 +31,22 @@ class ReqIFExport:
                 f"Requirements profile does not implement the ReqIF export yet: "
                 f"{project_config.reqif_profile}."
             )
-        reqif_content: str = ReqIFUnparser.unparse(reqif_bundle)
 
-        with open(output_file_path, "w", encoding="utf8") as output_file:
-            output_file.write(reqif_content)
+        if not reqifz:
+            output_file_path: str = os.path.join(
+                output_reqif_root, "output.reqif"
+            )
+            reqif_content: str = ReqIFUnparser.unparse(reqif_bundle)
+            with open(output_file_path, "w", encoding="utf8") as output_file:
+                output_file.write(reqif_content)
+        else:
+            output_file_path: str = os.path.join(
+                output_reqif_root, "output.reqifz"
+            )
+            reqifz_bundle = ReqIFZBundle(
+                reqif_bundles={"document_tree.reqif": reqif_bundle},
+                attachments={},
+            )
+            reqifz_content_bytes = ReqIFZUnparser.unparse(reqifz_bundle)
+            with open(output_file_path, "wb") as output_file:
+                output_file.write(reqifz_content_bytes)

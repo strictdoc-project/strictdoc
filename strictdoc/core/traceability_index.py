@@ -1,5 +1,4 @@
 from datetime import datetime
-from enum import IntEnum
 from typing import Any, Dict, List, Optional, Set, Union
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
@@ -21,7 +20,6 @@ from strictdoc.core.tree_cycle_detector import TreeCycleDetector
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.mid import MID
-from strictdoc.helpers.ordered_set import OrderedSet
 from strictdoc.helpers.sorting import alphanumeric_sort
 
 
@@ -42,20 +40,8 @@ class RequirementConnections:
         self.children: List[Requirement] = children
 
 
-@auto_described
-class AnchorConnections:
-    def __init__(  # pylint: disable=too-many-arguments
-        self,
-        anchor: Anchor,
-        document: Document,
-    ):
-        self.anchor: Anchor = anchor
-        self.document: Document = document
-
-
-class GraphLinkType(LinkType, IntEnum):
-    ANCHOR_UID_TO_ANCHOR_UUID = 1
-    SECTIONS_TO_INCOMING_LINKS = 2
+class GraphLinkType(LinkType):
+    SECTIONS_TO_INCOMING_LINKS = 1
 
 
 class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-instance-attributes  # noqa: E501
@@ -219,14 +205,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         return self._requirements_parents[uid].requirement
 
     def get_anchor_by_uid_weak(self, uid) -> Optional[Anchor]:
-        anchor_uuid = self.graph_database.get_link_value_weak(
-            link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
-            lhs_node=uid,
-        )
-        if anchor_uuid is not None:
-            anchor = self.graph_database.get_node_weak(anchor_uuid)
-            if anchor is not None:
-                return assert_cast(anchor, Anchor)
+        anchor = self.graph_database.get_node_by_uid_weak(uid)
+        if anchor is not None:
+            return assert_cast(anchor, Anchor)
         return None
 
     def get_linkable_node_by_uid_weak(
@@ -319,20 +300,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                 lhs_node=section_connections.requirement,
                 rhs_node=new_link,
             )
-        elif self.graph_database.link_exists(
-            link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,  # noqa: E501
-            lhs_node=new_link.link,
-        ):
-            anchor_uuid = next(
-                iter(
-                    self.graph_database.get_link_values(
-                        link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
-                        lhs_node=new_link.link,
-                    )
-                )
-            )
+        elif self.graph_database.node_with_uid_exists(uid=new_link.link):
             anchor = assert_cast(
-                self.graph_database.get_node(anchor_uuid), Anchor
+                self.graph_database.get_node_by_uid(new_link.link), Anchor
             )
             self.graph_database.add_link(
                 link_type=GraphLinkType.SECTIONS_TO_INCOMING_LINKS,
@@ -435,6 +405,8 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                 link_type=GraphLinkType.SECTIONS_TO_INCOMING_LINKS,
                 lhs_node=section_with_incoming_links,
                 rhs_node=inline_link,
+                remove_lhs_node=False,
+                remove_rhs_node=True,
             )
 
     def validate_node_against_anchors(
@@ -458,10 +430,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         # by the new anchors.
         if node is None:
             for anchor_uid in new_anchor_uids:
-                if self.graph_database.link_exists(
-                    link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
-                    lhs_node=anchor_uid,
-                ):
+                if self.graph_database.node_with_uid_exists(uid=anchor_uid):
                     raise SingleValidationError(
                         "A node contains an anchor that already exists: "
                         f"{anchor_uid}."
@@ -488,10 +457,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         #               c) raise a duplication error.
         for anchor_uid in new_anchor_uids:
             if (
-                self.graph_database.link_exists(
-                    link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
-                    lhs_node=anchor_uid,
-                )
+                self.graph_database.node_with_uid_exists(uid=anchor_uid)
                 and anchor_uid not in existing_node_anchor_uids
             ):
                 node_with_duplicate_anchor = (
@@ -603,35 +569,20 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def get_section_incoming_links(
         self, section: Section
     ) -> Optional[List[InlineLink]]:
-        incoming_links: Optional[
-            OrderedSet[InlineLink]
-        ] = self.graph_database.get_link_values_weak(
+        section_incoming_links = self.graph_database.get_link_values_weak(
             link_type=GraphLinkType.SECTIONS_TO_INCOMING_LINKS,
             lhs_node=section,
         )
-        if incoming_links is not None:
-            return list(incoming_links)
-        return None
+        return section_incoming_links
 
     def update_with_anchor(self, anchor: Anchor):
         # By this time, we know that the validations have passed just before.
-        existing_anchor_uuid: Optional[
-            MID
-        ] = self.graph_database.get_link_value_weak(
-            link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
-            lhs_node=anchor.value,
-        )
-        if existing_anchor_uuid is not None:
-            self.graph_database.remove_link(
-                link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
-                lhs_node=anchor.value,
-                rhs_node=existing_anchor_uuid,
-            )
-            self.graph_database.remove_node(existing_anchor_uuid)
+        existing_anchor: Optional[
+            Anchor
+        ] = self.graph_database.get_node_by_uid_weak(uid=anchor.value)
+        if existing_anchor is not None:
+            self.graph_database.remove_node_by_mid(existing_anchor.mid)
 
-        self.graph_database.add_node(mid=anchor.mid, node=anchor)
-        self.graph_database.add_link(
-            link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
-            lhs_node=anchor.value,
-            rhs_node=anchor.mid,
+        self.graph_database.add_node_by_mid(
+            mid=anchor.mid, uid=anchor.value, node=anchor
         )

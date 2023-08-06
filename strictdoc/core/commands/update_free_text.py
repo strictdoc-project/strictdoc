@@ -14,7 +14,6 @@ from strictdoc.core.commands.validation_error import (
 )
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import (
-    GraphLinkType,
     TraceabilityIndex,
 )
 from strictdoc.export.rst.rst_to_html_fragment_writer import (
@@ -149,20 +148,10 @@ class UpdateFreeTextCommand:
                     new_links_to_add.append(part)
 
             for anchor_uid_to_be_removed in existing_anchor_uids_to_remove:
-                anchor_uuid = next(
-                    iter(
-                        traceability_index.graph_database.get_link_values(
-                            link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
-                            lhs_node=anchor_uid_to_be_removed,
-                        )
-                    )
+                anchor = traceability_index.graph_database.get_node_by_uid(
+                    anchor_uid_to_be_removed
                 )
-                traceability_index.graph_database.remove_link(
-                    link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
-                    lhs_node=anchor_uid_to_be_removed,
-                    rhs_node=anchor_uuid,
-                )
-                traceability_index.graph_database.remove_node(mid=anchor_uuid)
+                traceability_index.graph_database.remove_node_by_mid(anchor.mid)
 
             for existing_link in existing_links_to_remove:
                 traceability_index.remove_inline_link(existing_link)

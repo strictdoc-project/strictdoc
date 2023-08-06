@@ -1,5 +1,7 @@
-from tests.end2end.e2e_case import E2ECase
+from seleniumbase import BaseCase
+
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.components.node.section import Section
 from tests.end2end.helpers.screens.document.form_edit_section import (
     Form_EditSection,
 )
@@ -9,11 +11,10 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 from tests.end2end.server import SDocTestServer
 
 
-class Test(E2ECase):
+class Test(BaseCase):
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
-        # Run server.
         with SDocTestServer(
             input_path=test_setup.path_to_sandbox
         ) as test_server:
@@ -31,22 +32,14 @@ class Test(E2ECase):
 
             screen_document.assert_text("Hello world!")
 
-            root_node = screen_document.get_root_node()
-            root_node_menu = root_node.do_open_node_menu()
+            section = screen_document.get_section()
             form_edit_section: Form_EditSection = (
-                root_node_menu.do_node_add_section_first()
+                section.do_open_form_edit_section()
             )
+            form_edit_section.do_form_submit()
+            self.reload()
 
-            form_edit_section.do_fill_in_title("First title")
-            form_edit_section.do_fill_in_text(
-                """\
-Modified statement.
-
-[ANCHOR: AD1]!!!GARBAGE!!!
-"""
-            )
-            form_edit_section.do_form_submit_and_catch_error(
-                "SDoc markup error: NCHOR: AD1*]!!!GARBAG."
-            )
+            second_section: Section = screen_document.get_section(2)
+            second_section.assert_anchor_links_number(1)
 
         assert test_setup.compare_sandbox_and_expected_output()

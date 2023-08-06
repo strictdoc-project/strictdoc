@@ -350,6 +350,6 @@ def test_get_node_by_mid():
         TraceabilityIndexBuilder.create_from_document_tree(document_tree)
     )
     assert (
-        traceability_index.get_node_by_mid(MID(document_1.mid.mid))
+        traceability_index.get_node_by_mid(MID(document_1.mid.value))
         == document_1
     )

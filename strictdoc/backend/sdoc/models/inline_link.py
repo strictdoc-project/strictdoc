@@ -1,6 +1,8 @@
+from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.mid import MID
 
 
+@auto_described()
 class InlineLink:
     def __init__(self, parent, value):
         self.parent = parent

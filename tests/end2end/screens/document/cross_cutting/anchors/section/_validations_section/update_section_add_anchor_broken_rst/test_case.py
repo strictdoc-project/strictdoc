@@ -44,7 +44,7 @@ Modified statement.
 """
             )
             form_edit_section.do_form_submit_and_catch_error(
-                "SDoc markup error: CHOR: AD1]*!!!GARBAGE"
+                "SDoc markup error: NCHOR: AD1*]!!!GARBAG."
             )
 
         assert test_setup.compare_sandbox_and_expected_output()

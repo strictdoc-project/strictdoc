@@ -17,31 +17,25 @@ Modified statement.
     with pytest.raises(TextXSyntaxError) as exc_info:
         reader.read(free_text_input)
     assert """\
-None:3:14: \
-Expected '\\Z|(\\n(\\n|\\Z|(?=\\[\\/FREETEXT\\])))' => 'CHOR: AD1]*!!!GARBAGE'\
+None:3:13: Expected ', ' or '\\](\\Z|\\n)' => 'NCHOR: AD1*]!!!GARBAG'\
 """ == str(
         exc_info.value
     )
 
 
 def test_002_anchor_without_newline_before():
-    """
-    The expectation here is that the anchor does not get recognized at all.
-    """
-
     free_text_input = """
 Modified statement.
 
-!!!GARBAGE!!!
+!!!TEXT!!!
 [ANCHOR: AD1]
 """.lstrip()
 
     reader = SDFreeTextReader()
     free_text_container = reader.read(free_text_input)
-    assert (
-        free_text_container.parts[0]
-        == "Modified statement.\n\n!!!GARBAGE!!!\n[ANCHOR: AD1]\n"
-    )
+    assert len(free_text_container.parts) == 2
+    assert free_text_container.parts[0] == "Modified statement.\n\n!!!TEXT!!!\n"
+    assert isinstance(free_text_container.parts[1], Anchor)
 
 
 def test_003_anchor_with_only_one_newline():
@@ -53,22 +47,18 @@ Modified statement.
 """.lstrip()
 
     reader = SDFreeTextReader()
-    with pytest.raises(TextXSyntaxError) as exc_info:
-        reader.read(free_text_input)
-    assert (
-        str(exc_info.value)
-        == """\
-None:3:14: \
-Expected '\\Z|(\\n(\\n|\\Z|(?=\\[\\/FREETEXT\\])))' => 'CHOR: AD1]* !!!GARBAG'\
-"""
-    )
+    free_text_container = reader.read(free_text_input)
+    assert free_text_container.parts[0] == "Modified statement.\n\n"
+    assert isinstance(free_text_container.parts[1], Anchor)
+    assert isinstance(free_text_container.parts[2], str)
+    assert free_text_container.parts[2] == "!!!GARBAGE!!!\n"
 
 
 def test_010_normal_anchor_end_of_line():
     free_text_input = """
 Section free text.
 
-[ANCHOR: AD1]\
+[ANCHOR: AD1]
 """.lstrip()
 
     reader = SDFreeTextReader()
@@ -90,7 +80,7 @@ Modified statement.
     free_text_container = reader.read(free_text_input)
     assert free_text_container.parts[0] == "Modified statement.\n\n"
     assert isinstance(free_text_container.parts[1], Anchor)
-    assert free_text_container.parts[2] == "!!!TEXT!!!\n"
+    assert free_text_container.parts[2] == "\n!!!TEXT!!!\n"
 
 
 def test_012_normal_anchor_end_of_line():

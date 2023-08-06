@@ -1,0 +1,27 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+Hello world!
+[/FREETEXT]
+
+[SECTION]
+TITLE: First section
+
+[FREETEXT]
+This is a free text of this section.
+
+[LINK: Section-2]
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+UID: Section-2
+TITLE: Second section
+
+[FREETEXT]
+This is a free text of this section.
+[/FREETEXT]
+
+[/SECTION]

@@ -27,7 +27,6 @@ from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.core.source_tree import SourceTree
 from strictdoc.core.traceability_index import (
     FileTraceabilityIndex,
-    GraphLinkType,
     RequirementConnections,
     TraceabilityIndex,
 )
@@ -228,14 +227,10 @@ class TraceabilityIndexBuilder:
                 for part in free_text.parts:
                     if isinstance(part, Anchor):
                         assert part.value not in d_11_map_id_to_node
-                        graph_database.add_node(
+                        graph_database.add_node_by_mid(
                             mid=part.mid,
+                            uid=part.value,
                             node=part,
-                        )
-                        graph_database.add_link(
-                            link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
-                            lhs_node=part.value,
-                            rhs_node=part.mid,
                         )
 
             d_11_map_id_to_node[document.mid] = document
@@ -251,20 +246,17 @@ class TraceabilityIndexBuilder:
                     for free_text in node.free_texts:
                         for part in free_text.parts:
                             if isinstance(part, InlineLink):
-                                graph_database.add_node(
+                                graph_database.add_node_by_mid(
                                     mid=part.mid,
+                                    uid=None,
                                     node=part,
                                 )
                             elif isinstance(part, Anchor):
                                 assert part.value not in d_11_map_id_to_node
-                                graph_database.add_node(
+                                graph_database.add_node_by_mid(
                                     mid=part.mid,
+                                    uid=part.value,
                                     node=part,
-                                )
-                                graph_database.add_link(
-                                    link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
-                                    lhs_node=part.value,
-                                    rhs_node=part.mid,
                                 )
 
                 if not node.reserved_uid:
@@ -340,10 +332,8 @@ class TraceabilityIndexBuilder:
                         if (
                             part.link
                             not in traceability_index.requirements_parents
-                            and not graph_database.link_exists(
-                                link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
-                                # noqa: E501
-                                lhs_node=part.link,
+                            and not graph_database.node_with_uid_exists(
+                                uid=part.link,
                             )
                         ):
                             raise StrictDocException(
@@ -365,9 +355,8 @@ class TraceabilityIndexBuilder:
                                 if (
                                     part.link
                                     not in traceability_index.requirements_parents
-                                    and not graph_database.link_exists(
-                                        link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,  # noqa: E501
-                                        lhs_node=part.link,
+                                    and not graph_database.node_with_uid_exists(
+                                        uid=part.link,
                                     )
                                 ):
                                     raise StrictDocException(

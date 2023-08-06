@@ -79,6 +79,7 @@ Stimulus.register("anchor_controller", class extends Controller {
         console.log(linksNumber);
         const anchorBackLinksNumber = document.createElement('div');
         anchorBackLinksNumber.classList.add('anchor_back_links_number');
+        anchorBackLinksNumber.setAttribute('data-testid', 'anchor_links_number');
         anchorBackLinksNumber.innerText = linksNumber;
 
         anchor.classList.add('anchor_has_links');

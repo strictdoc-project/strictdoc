@@ -4,7 +4,7 @@ import uuid
 class MID:
     def __init__(self, mid: str):
         assert isinstance(mid, str), mid
-        self.mid: str = mid
+        self.value: str = mid
 
     @staticmethod
     def create() -> "MID":
@@ -17,11 +17,11 @@ class MID:
         assert 0, "Must not be used"
 
     def __hash__(self):
-        return self.mid.__hash__()
+        return self.value.__hash__()
 
     def __eq__(self, other):
-        assert isinstance(other, MID), other
-        return self.mid == other.mid
+        assert isinstance(other, MID), f"{other} ({type(other)})"
+        return self.value == other.value
 
     def get_string_value(self):
-        return self.mid
+        return self.value

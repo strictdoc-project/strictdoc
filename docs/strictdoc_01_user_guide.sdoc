@@ -1355,6 +1355,57 @@ table of contents and document structure:
 
 [/SECTION]
 
+[SECTION]
+UID: SDOC_UG_LINKS_AND_ANCHORS
+TITLE: Links
+
+[FREETEXT]
+StrictDoc supports creating inline links to document sections and anchors.
+[/FREETEXT]
+
+[SECTION]
+TITLE: Section links
+
+[FREETEXT]
+When a section has an UID, it is possible to reference this section from any other section's text using a ``[LINK: <Section UID>]`` tag.
+
+Example:
+
+The following link references a section: [LINK: SDOC_UG_LINKS_AND_ANCHORS].
+
+**Note:** Adding a ``LINK`` tag will only work from the section text. In the requirement fields, the LINK tag will not be recognized.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Anchors
+
+[FREETEXT]
+The ``[ANCHOR: ...]`` tag creates an anchor that can be referenced from other pages using ``[LINK <Anchor UID>]``.
+
+Example:
+
+This is a link to anchor: [LINK: ANCHOR-EXAMPLE].
+
+Note: ``ANCHOR`` is a block-level tag. It has to be placed in the beginning of a line with a newline break after the tag.
+[/FREETEXT]
+
+[SECTION]
+TITLE: Anchor example
+
+[FREETEXT]
+[ANCHOR: ANCHOR-EXAMPLE]
+
+This section contains an anchor.
+[/FREETEXT]
+
+[/SECTION]
+
+[/SECTION]
+
+[/SECTION]
+
 [/SECTION]
 
 [SECTION]

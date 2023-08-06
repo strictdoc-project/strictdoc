@@ -9,7 +9,7 @@ from strictdoc.helpers.mid import MID
 
 class RemoveNodeValidation:
     def validate(self, database: GraphDatabase, uuid: MID):
-        node = database.get_node(uuid)
+        node = database.get_node_by_mid(uuid)
         if isinstance(node, Anchor):
             self.validate_anchor(database, node)
 
@@ -18,7 +18,7 @@ class RemoveNodeValidation:
         assert isinstance(anchor, Anchor)
 
         existing_link = database.get_link_value_weak(
-            link_type=GraphLinkType.ANCHOR_UID_TO_ANCHOR_UUID,
+            link_type=GraphLinkType.SECTIONS_TO_INCOMING_LINKS,
             lhs_node=anchor.value,
         )
 

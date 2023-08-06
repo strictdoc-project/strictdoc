@@ -7,9 +7,9 @@ TITLE: Referencing section
 [FREETEXT]
 See the [LINK: AD1] for more details.
 
-See the [LINK: Software requirements specification] for more details.
+See the [LINK: Software_requirements_specification] for more details.
 
-See the [LINK: Interface Control Document] for more details.
+See the [LINK: Interface_Control_Document] for more details.
 [/FREETEXT]
 
 [/SECTION]
@@ -24,11 +24,11 @@ Anchors start.
 
 1) AD1. Software user manual.
 
-[ANCHOR: Software requirements specification]
+[ANCHOR: Software_requirements_specification]
 
 2) AD2. Software requirements specification.
 
-[ANCHOR: Interface Control Document, Interface Control Document]
+[ANCHOR: Interface_Control_Document, Interface Control Document]
 
 3) AD3. Interface Control Document.
 

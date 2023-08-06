@@ -34,3 +34,9 @@ class Section(Node):  # pylint: disable=invalid-name
             f"{self.node_xpath}//sdoc-section-text[contains(., '{text}')]",
             by=By.XPATH,
         )
+
+    def assert_anchor_links_number(self, links: int) -> None:
+        self.test_case.assert_element(
+            f"{self.node_xpath}//div[@data-testid='anchor_links_number' and contains(., '{links}')]",
+            by=By.XPATH,
+        )

@@ -508,7 +508,7 @@ REFS:
   VALUE: SDOC-RMC-24
 TITLE: Self-hosted requirements
 STATEMENT: >>>
-The Requirements Tool shall be used to demonstrate its own requirements.
+The Requirements Tool's requirements shall be developed and stored using the Requirements Tool itself.
 <<<
 
 [/SECTION]

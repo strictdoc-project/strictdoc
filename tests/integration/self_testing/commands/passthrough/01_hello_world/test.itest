@@ -7,9 +7,6 @@ RUN: %diff "%strictdoc_root/docs/strictdoc_02_faq.sdoc" "%S/Output/strictdoc_02_
 RUN: %strictdoc passthrough "%strictdoc_root/docs/strictdoc_03_development_plan.sdoc" --output-file="%S/Output/strictdoc_03_development_plan.sdoc"
 RUN: %diff "%strictdoc_root/docs/strictdoc_03_development_plan.sdoc" "%S/Output/strictdoc_03_development_plan.sdoc"
 
-RUN: %strictdoc passthrough "%strictdoc_root/docs/strictdoc_04_backlog.sdoc" --output-file="%S/Output/strictdoc_04_backlog.sdoc"
-RUN: %diff "%strictdoc_root/docs/strictdoc_04_backlog.sdoc" "%S/Output/strictdoc_04_backlog.sdoc"
-
 RUN: %strictdoc passthrough "%strictdoc_root/docs/strictdoc_20_requirements.sdoc" --output-file="%S/Output/strictdoc_20_requirements.sdoc"
 RUN: %diff "%strictdoc_root/docs/strictdoc_20_requirements.sdoc" "%S/Output/strictdoc_20_requirements.sdoc"
 

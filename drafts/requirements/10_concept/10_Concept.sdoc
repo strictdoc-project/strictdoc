@@ -40,7 +40,7 @@ TITLE: Manage documents (CRUD)
 
 [REQUIREMENT]
 UID: SDOC-RMC-23
-STATUS: Draft
+STATUS: Active
 TITLE: Support variety of document types
 STATEMENT: >>>
 The Requirements Tool shall support a variety of document types used by the industries. The variety comes from:
@@ -56,7 +56,7 @@ NOTE: Examples of document types include:
 - Interface control document / API reference
 - User manual
 - Development plan, systems engineering plan, management plan
-- Standard (e.g., ECSS or ISO26262)
+- Standard (e.g., ECSS or ISO 26262).
 <<<
 
 [REQUIREMENT]
@@ -403,35 +403,39 @@ TITLE: Development process
 
 [REQUIREMENT]
 UID: SDOC-RMC-25
-STATUS: Draft
+STATUS: Active
 TITLE: Requirements engineering
 STATEMENT: >>>
-TBD
+The Requirements Tool's development process shall include the Requirements Tool's own requirements engineering.
 <<<
-COMMENT: >>>
-Might need to be removed from this level.
+RATIONALE: >>>
+A requirements tool is not a trivial project. A clear set of requirements for the developed tool helps to structure the development and communicate the functions of the tool to the developers and the users of the tool.
 <<<
 
 [REQUIREMENT]
 UID: SDOC-RMC-53
-STATUS: Draft
+STATUS: Active
 TITLE: Self-hosted requirements
 STATEMENT: >>>
-TBD
+The Requirements Tool's requirements shall be developed using the Requirements Tool.
 <<<
-COMMENT: >>>
-Might need to be removed from this level.
+RATIONALE: >>>
+While not strictly necessary, developing the requirements for the tool using the tool itself aids developers in test-driving its functionality during the requirement development phase. Moreover, having the tool host its own requirements provides a tangible and dynamic illustration of how the tool can be employed for crafting requirements documentation.
 <<<
 
 [REQUIREMENT]
 UID: SDOC-RMC-26
-STATUS: Draft
-TITLE: V&V
+STATUS: Active
+TITLE: Test coverage
 STATEMENT: >>>
-TBD
+The Requirements Tool's development process shall ensure:
+
+- A testability of the tool
+- The highest possible coverage of the tool's code by test
+- Usage of modern testing methods to ensure adequate coverage of the tool's functions (e.g., command-line interface, web interface, smallest units of code, etc.).
 <<<
-COMMENT: >>>
-Might need to be removed from this level.
+RATIONALE: >>>
+The presence of tests, the adequate selection of test methods and a high test coverage are preconditions for a high quality of the requirements tool.
 <<<
 
 [REQUIREMENT]

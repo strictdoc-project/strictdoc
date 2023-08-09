@@ -13,11 +13,6 @@ RUN: %check_exists --file "%S/Output/html/docs/strictdoc_03_development_plan-TAB
 RUN: %check_exists --file "%S/Output/html/docs/strictdoc_03_development_plan-TRACE.html"
 RUN: %check_exists --file "%S/Output/html/docs/strictdoc_03_development_plan-DEEP-TRACE.html"
 
-RUN: %check_exists --file %S/Output/html/docs/strictdoc_04_backlog.html
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_04_backlog-TABLE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_04_backlog-TRACE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_04_backlog-DEEP-TRACE.html"
-
 RUN: %check_exists --file %S/Output/html/docs/strictdoc_20_requirements.html
 RUN: %check_exists --file "%S/Output/html/docs/strictdoc_20_requirements-TABLE.html"
 RUN: %check_exists --file "%S/Output/html/docs/strictdoc_20_requirements-TRACE.html"

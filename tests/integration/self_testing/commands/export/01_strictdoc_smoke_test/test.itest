@@ -16,11 +16,6 @@ RUN: %check_exists --file "%S/Output/html/docs/strictdoc_03_development_plan-TAB
 RUN: %check_exists --file "%S/Output/html/docs/strictdoc_03_development_plan-TRACE.html"
 RUN: %check_exists --file "%S/Output/html/docs/strictdoc_03_development_plan-DEEP-TRACE.html"
 
-RUN: %check_exists --file %S/Output/html/docs/strictdoc_04_backlog.html
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_04_backlog-TABLE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_04_backlog-TRACE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_04_backlog-DEEP-TRACE.html"
-
 RUN: %check_exists --file %S/Output/html/docs/strictdoc_10_contributing.html
 RUN: %check_exists --file "%S/Output/html/docs/strictdoc_10_contributing-TABLE.html"
 RUN: %check_exists --file "%S/Output/html/docs/strictdoc_10_contributing-TRACE.html"

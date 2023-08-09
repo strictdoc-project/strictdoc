@@ -84,8 +84,6 @@ TITLE: Project milestones
 [FREETEXT]
 As an open-source project, StrictDoc is developed without strict deadlines, however there are certain high-level priorities that influence the development. The work is loosely organized in quarters.
 
-See also the Backlog document for a complete list of the planned work items.
-
 .. list-table::
    :header-rows: 1
    :widths: 15 85

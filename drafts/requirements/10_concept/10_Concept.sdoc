@@ -40,7 +40,7 @@ TITLE: Manage documents (CRUD)
 
 [REQUIREMENT]
 UID: SDOC-RMC-23
-STATUS: Draft
+STATUS: Active
 TITLE: Support variety of document types
 STATEMENT: >>>
 The Requirements Tool shall support a variety of document types used by the industries. The variety comes from:
@@ -56,7 +56,7 @@ NOTE: Examples of document types include:
 - Interface control document / API reference
 - User manual
 - Development plan, systems engineering plan, management plan
-- Standard (e.g., ECSS or ISO26262)
+- Standard (e.g., ECSS or ISO 26262).
 <<<
 
 [REQUIREMENT]
@@ -403,35 +403,39 @@ TITLE: Development process
 
 [REQUIREMENT]
 UID: SDOC-RMC-25
-STATUS: Draft
+STATUS: Active
 TITLE: Requirements engineering
 STATEMENT: >>>
-TBD
+The Requirements Tool's development process shall include the Requirements Tool's own requirements engineering.
 <<<
-COMMENT: >>>
-Might need to be removed from this level.
+RATIONALE: >>>
+A requirements tool is not a trivial project. A clear set of requirements for the developed tool helps to structure the development and communicate the functions of the tool to the developers and the users of the tool.
 <<<
 
 [REQUIREMENT]
 UID: SDOC-RMC-53
-STATUS: Draft
+STATUS: Active
 TITLE: Self-hosted requirements
 STATEMENT: >>>
-TBD
+The Requirements Tool's requirements shall be developed using the Requirements Tool.
 <<<
-COMMENT: >>>
-Might need to be removed from this level.
+RATIONALE: >>>
+While not strictly necessary, developing the requirements for the tool using the tool itself aids developers in test-driving its functionality during the requirement development phase. Moreover, having the tool host its own requirements provides a tangible and dynamic illustration of how the tool can be employed for crafting requirements documentation.
 <<<
 
 [REQUIREMENT]
 UID: SDOC-RMC-26
-STATUS: Draft
-TITLE: V&V
+STATUS: Active
+TITLE: Test coverage
 STATEMENT: >>>
-TBD
+The Requirements Tool's development process shall ensure:
+
+- A testability of the tool
+- The highest possible coverage of the tool's code by test
+- Usage of modern testing methods to ensure adequate coverage of the tool's functions (e.g., command-line interface, web interface, smallest units of code, etc.).
 <<<
-COMMENT: >>>
-Might need to be removed from this level.
+RATIONALE: >>>
+The presence of tests, the adequate selection of test methods and a high test coverage are preconditions for a high quality of the requirements tool.
 <<<
 
 [REQUIREMENT]
@@ -507,5 +511,52 @@ The Requirements Tool shall provide integration with AI tools (e.g., ChatGPT).
 <<<
 
 [/SECTION]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Appendix A: Document archetypes
+
+[FREETEXT]
+StrictDoc shall support the following document archetypes: **requirements document**
+and **specification** document. For both archetypes, StrictDoc shall further
+support the following options.
+
+.. list-table:: Table: Requirements and specification document
+   :widths: 20 40 40
+   :header-rows: 1
+
+   * -
+     - Requirements document
+     - Specification document
+   * - Examples
+     - Most typical: requirements lists split by categories (e.g., Functional
+       Requirements, Interface Requirements, Performance Requirements, etc.)
+     - Often: a standard document
+   * - Structure
+     - Not nested or not too deeply nested
+     - Nested
+   * - Visual presentation
+     - Requirements are often presented as table cells. Cells can be standalone
+       or the whole section or document can be a long table with cells.
+     - Requirements are rather presented as header + text
+   * - Unique requirement identifiers (UID)
+     - Most always
+     - - Present or not
+       - **NOT SUPPORTED YET:** Can be missing, the chapter headers are used instead.
+         The combination "Number + Title" becomes a reference-able identifier.
+         A possible intermediate solution when modeling such a document is to
+         make the UIDs map to the section number.
+   * - Requirement titles
+     - - Often
+       - **NOT SUPPORTED YET:** But maybe absent (ex: NASA cFS SCH). If absent,
+         the grouping is provided by sections.
+     - Requirement titles are most often section titles
+   * - Real-world examples
+     - - NASA cFE Functional Requirements
+       - MISRA C coding guidelines,
+       - NASA Software Engineering Requirements NPR 7150.2
+     - - ECSS Software ECSS-E-ST-40C
+[/FREETEXT]
 
 [/SECTION]

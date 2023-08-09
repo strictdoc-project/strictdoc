@@ -1,6 +1,6 @@
 [DOCUMENT]
-TITLE: Backlog
-UID: SDOC_BL
+TITLE: StrictDoc Backlog
+REQ_PREFIX: SDOC-BACKLOG-
 
 [FREETEXT]
 This document outlines the future work items for StrictDoc.
@@ -11,7 +11,43 @@ While this backlog overlaps with StrictDoc's `GitHub issues tracker <https://git
 [/FREETEXT]
 
 [SECTION]
-UID: SDOC_BL_WEB
+TITLE: Backlog
+
+[REQUIREMENT]
+STATUS: Backlog
+TITLE: Focused mode: Edit a single section / requirement
+
+[REQUIREMENT]
+STATUS: Backlog
+TITLE: Interoperability with Doxygen
+
+[REQUIREMENT]
+STATUS: Backlog
+TITLE: Fuzzy search (the whole documentation)
+
+[REQUIREMENT]
+STATUS: Backlog
+TITLE: Support Markdown markup
+
+[REQUIREMENT]
+STATUS: Backlog
+TITLE: Support User accounts
+
+[REQUIREMENT]
+STATUS: Backlog
+TITLE: Auto-commit to Git repository
+
+[REQUIREMENT]
+STATUS: Backlog
+TITLE: Language Server Protocol (LSP)
+
+[REQUIREMENT]
+STATUS: Backlog
+TITLE: UML
+
+[/SECTION]
+
+[SECTION]
 TITLE: Backlog: Web-based user interface
 
 [FREETEXT]
@@ -144,70 +180,7 @@ TITLE: Backlog: Known issues
 
 [/FREETEXT]
 
-[SECTION]
-TITLE: HTML rendering using docutils is a performance bottleneck
-
-[FREETEXT]
-The overall generation process is still fast enough but in case some improvements were to be made:
-
-- It could be measured what takes more time: parsing RST tree or actually rendering HTML
-- Simplified RST parser and rendered can be written and their performance can be compared with that of docutils API.
-
-.. code-block:: bash
-
-    python -m cProfile -s cumulative strictdoc/cli/main.py export --no-parallelization docs/ > report.txt
-
-See also: https://docs.python.org/3/library/profile.html#instant-user-s-manual
-[/FREETEXT]
-
 [/SECTION]
-
-[/SECTION]
-
-[REQUIREMENT]
-TITLE: Document archetypes
-STATEMENT: >>>
-StrictDoc shall support the following document archetypes: **requirements document**
-and **specification** document. For both archetypes, StrictDoc shall further
-support the following options.
-
-.. list-table:: Table: Requirements and specification document
-   :widths: 20 40 40
-   :header-rows: 1
-
-   * -
-     - Requirements document
-     - Specification document
-   * - Examples
-     - Most typical: requirements lists split by categories (e.g., Functional
-       Requirements, Interface Requirements, Performance Requirements, etc.)
-     - Often: a standard document
-   * - Structure
-     - Not nested or not too deeply nested
-     - Nested
-   * - Visual presentation
-     - Requirements are often presented as table cells. Cells can be standalone
-       or the whole section or document can be a long table with cells.
-     - Requirements are rather presented as header + text
-   * - Unique requirement identifiers (UID)
-     - Most always
-     - - Present or not
-       - **NOT SUPPORTED YET:** Can be missing, the chapter headers are used instead.
-         The combination "Number + Title" becomes a reference-able identifier.
-         A possible intermediate solution when modeling such a document is to
-         make the UIDs map to the section number.
-   * - Requirement titles
-     - - Often
-       - **NOT SUPPORTED YET:** But maybe absent (ex: NASA cFS SCH). If absent,
-         the grouping is provided by sections.
-     - Requirement titles are most often section titles
-   * - Real-world examples
-     - - NASA cFE Functional Requirements
-       - MISRA C coding guidelines,
-       - NASA Software Engineering Requirements NPR 7150.2
-     - - ECSS Software ECSS-E-ST-40C
-<<<
-COMMENT: This draft requirement is the first attempt to organize this information.
 
 [SECTION]
 TITLE: Open questions

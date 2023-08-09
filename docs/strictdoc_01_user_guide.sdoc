@@ -40,8 +40,6 @@ Summary of StrictDoc features:
   document trees with up to 2000–3000 requirements into HTML pages stays within
   a few seconds. From the second run, only changed documents are regenerated.
   Further performance tuning should be possible.
-
-See the Backlog to get an idea of the overall project direction.
 [/FREETEXT]
 
 [SECTION]
@@ -291,8 +289,6 @@ The following essential features are still missing and will be worked on in the 
 - Deleting a section recursively with a correct cleanup of all traceability information.
 - Numerous validation aspects and edge cases of content editing.
 - A separate screen for editing project settings.
-
-See the Backlog's section [LINK: SDOC_BL_WEB] for more details.
 [/FREETEXT]
 
 [SECTION]

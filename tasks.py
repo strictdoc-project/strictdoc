@@ -501,13 +501,6 @@ def check_dead_links(context):
         context,
         ToxEnvironment.CHECK,
         """
-            python3 tools/link_health.py docs/strictdoc_04_backlog.sdoc
-        """,
-    )
-    run_invoke_with_tox(
-        context,
-        ToxEnvironment.CHECK,
-        """
             python3 tools/link_health.py docs/strictdoc_10_contributing.sdoc
         """,
     )

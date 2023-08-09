@@ -11,43 +11,53 @@ While this backlog overlaps with StrictDoc's `GitHub issues tracker <https://git
 [/FREETEXT]
 
 [SECTION]
+UID: SECTION-SB-Backlog
 TITLE: Backlog
 
 [REQUIREMENT]
+UID: SDOC-BACKLOG-1
 STATUS: Backlog
 TITLE: Focused mode: Edit a single section / requirement
 
 [REQUIREMENT]
+UID: SDOC-BACKLOG-2
 STATUS: Backlog
 TITLE: Interoperability with Doxygen
 
 [REQUIREMENT]
+UID: SDOC-BACKLOG-3
 STATUS: Backlog
 TITLE: Fuzzy search (the whole documentation)
 
 [REQUIREMENT]
+UID: SDOC-BACKLOG-4
 STATUS: Backlog
 TITLE: Support Markdown markup
 
 [REQUIREMENT]
+UID: SDOC-BACKLOG-5
 STATUS: Backlog
 TITLE: Support User accounts
 
 [REQUIREMENT]
+UID: SDOC-BACKLOG-6
 STATUS: Backlog
 TITLE: Auto-commit to Git repository
 
 [REQUIREMENT]
+UID: SDOC-BACKLOG-7
 STATUS: Backlog
 TITLE: Language Server Protocol (LSP)
 
 [REQUIREMENT]
+UID: SDOC-BACKLOG-8
 STATUS: Backlog
 TITLE: UML
 
 [/SECTION]
 
 [SECTION]
+UID: SECTION-SB-Backlog-Web-based-user-interface
 TITLE: Backlog: Web-based user interface
 
 [FREETEXT]
@@ -107,6 +117,7 @@ TITLE: Backlog: Web-based user interface
 [/SECTION]
 
 [SECTION]
+UID: SECTION-SB-Backlog-Nice-to-have
 TITLE: Backlog: Nice to have
 
 [FREETEXT]
@@ -162,6 +173,7 @@ TITLE: Backlog: Nice to have
 [/SECTION]
 
 [SECTION]
+UID: SECTION-SB-Backlog-Technical-debt
 TITLE: Backlog: Technical debt
 
 [FREETEXT]
@@ -174,6 +186,7 @@ TITLE: Backlog: Technical debt
 [/SECTION]
 
 [SECTION]
+UID: SECTION-SB-Backlog-Known-issues
 TITLE: Backlog: Known issues
 
 [FREETEXT]
@@ -183,9 +196,11 @@ TITLE: Backlog: Known issues
 [/SECTION]
 
 [SECTION]
+UID: SECTION-SB-Open-questions
 TITLE: Open questions
 
 [SECTION]
+UID: SECTION-SB-One-or-many-input-sdoc-trees
 TITLE: One or many input sdoc trees
 
 [FREETEXT]

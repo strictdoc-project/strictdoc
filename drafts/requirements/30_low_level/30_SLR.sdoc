@@ -1,5 +1,5 @@
 [DOCUMENT]
-TITLE: StrictDoc Requirements Specification
+TITLE: [L3] StrictDoc Requirements Specification
 REQ_PREFIX: SDOC-SRS-
 
 [SECTION]
@@ -334,19 +334,52 @@ TITLE: Requirements-to-source traceability
 
 [REQUIREMENT]
 UID: SDOC-SRS-33
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-72
 TITLE: Link requirements with source files
+STATEMENT: >>>
+StrictDoc shall support bi-directional linking requirements with source files.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SRS-34
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-72
 TITLE: Annotate source file
+STATEMENT: >>>
+StrictDoc shall support a dedicated markup language for annotating source code with links referencing the requirements.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SRS-35
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-72
 TITLE: Generate source coverage
+STATEMENT: >>>
+StrictDoc shall generate project source code coverage information.
+
+NOTE: Source code information can be visualized using both web or CLI interfaces.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SRS-36
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-72
 TITLE: Generate source file traceability
+STATEMENT: >>>
+StrictDoc shall generate single file traceability information.
+<<<
+RATIONALE: >>>
+With this capability in place, it is possible to focus on a single implementation file's links to requirements which helps in the code reviews and inspections.
+<<<
 
 [/SECTION]
 
@@ -672,6 +705,17 @@ TITLE: Edit Document grammar
 UID: SDOC-SRS-57
 STATUS: Implemented
 TITLE: Edit Document options
+
+[REQUIREMENT]
+UID: SDOC-SRS-96
+STATUS: Progress
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-6
+TITLE: Auto-generate requirements UIDs
+STATEMENT: >>>
+StrictDoc's Document screen shall provide controls for automatic generation of requirements UIDs.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SRS-58

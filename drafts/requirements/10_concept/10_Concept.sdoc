@@ -1,5 +1,5 @@
 [DOCUMENT]
-TITLE: Requirements Tool concept
+TITLE: [L1] Requirements Tool concept
 REQ_PREFIX: SDOC-RMC-
 
 [SECTION]
@@ -134,11 +134,23 @@ TITLE: Requirements analysis and prototyping
 UID: SDOC-RMC-39
 STATUS: Active
 TITLE: Requirements compliance identification
+STATEMENT: >>>
+The Requirements Tool shall provide capabilities for Compliance management, traceability and justification.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-RMC-2
 STATUS: Active
 TITLE: Requirements implementation
+STATEMENT: >>>
+The Requirements Tool shall provide capabilities for software development according to requirements.
+
+NOTE: A contribution of a requirements tool to software engineering can be:
+
+- Assisting software engineers in implementing requirements in source code.
+- Making links between requirements and source code implementation units, e.g., files, functions, code fragments.
+- Linking source code implementation units to requirements using special markers left in source code.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-RMC-3

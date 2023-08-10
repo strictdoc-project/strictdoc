@@ -114,6 +114,17 @@ REFS:
 TITLE: Multiple link roles
 
 [REQUIREMENT]
+UID: SDOC-SSS-71
+STATUS: Backlog
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-57
+TITLE: Reverse parent links
+STATEMENT: >>>
+The Requirements Tool shall support the Reverse Parent relationship.
+<<<
+
+[REQUIREMENT]
 UID: SDOC-SSS-47
 REFS:
 - TYPE: Parent
@@ -187,7 +198,7 @@ STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: SDOC-RMC-32
-TITLE: Performance upto 10000+ requirements
+TITLE: Handling at least 10000+ requirements
 STATEMENT: >>>
 The Requirements Tool shall support requirement trees with at least 10000 requirements.
 <<<

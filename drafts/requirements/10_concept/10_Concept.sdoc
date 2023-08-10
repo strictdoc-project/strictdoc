@@ -189,6 +189,18 @@ UID: SDOC-RMC-18
 STATUS: Active
 TITLE: Interoperability with industry standards
 
+[REQUIREMENT]
+UID: SDOC-RMC-57
+STATUS: Active
+TITLE: Integration between distinct projects requirements trees
+STATEMENT: >>>
+The Requirements Tool shall provide capabilities for integrating project requirements trees with each other.
+
+NOTE: Examples of integration:
+
+- An embedded software project has its own requirements. The developers want to integrate a requirements subtree of another product that is integrated to the parent project as an off-the-shelf solution.
+<<<
+
 [/SECTION]
 
 [SECTION]
@@ -515,6 +527,7 @@ The Requirements Tool shall provide integration with AI tools (e.g., ChatGPT).
 [/SECTION]
 
 [SECTION]
+UID: SECTION-RTC-Appendix-A-Document-archetypes
 TITLE: Appendix A: Document archetypes
 
 [FREETEXT]

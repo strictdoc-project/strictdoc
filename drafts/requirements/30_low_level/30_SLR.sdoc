@@ -404,6 +404,7 @@ Process-based parallelization can provide a good speed-up when several large doc
 <<<
 
 [REQUIREMENT]
+UID: SDOC-SRS-95
 STATUS: Active
 TITLE: Caching of parsed SDoc documents
 STATEMENT: >>>

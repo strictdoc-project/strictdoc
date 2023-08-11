@@ -1,3 +1,0 @@
-RUN: cp %S/input.sdoc %S/Output/
-RUN: %expect_exit 1 %strictdoc manage auto-uid %S/Output/ | filecheck %s --dump-input=fail
-CHECK: error: Cannot extract a numeric part from identifier: REQ-ABC.

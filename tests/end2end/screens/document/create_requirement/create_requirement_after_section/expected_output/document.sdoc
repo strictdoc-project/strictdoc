@@ -6,16 +6,17 @@ Hello world!
 [/FREETEXT]
 
 [SECTION]
-TITLE: First title
+TITLE: Section title
 
 [FREETEXT]
-This is a free text of this section.
+Section text.
 [/FREETEXT]
 
+[/SECTION]
+
 [REQUIREMENT]
+UID: REQ-1
 TITLE: Requirement title
 STATEMENT: >>>
 Requirement statement.
 <<<
-
-[/SECTION]

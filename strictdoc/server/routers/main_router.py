@@ -44,6 +44,8 @@ from strictdoc.cli.cli_arg_parser import (
     ServerCommandConfig,
 )
 from strictdoc.core.actions.export_action import ExportAction
+from strictdoc.core.analyzers.document_stats import DocumentStats
+from strictdoc.core.analyzers.document_uid_analyzer import DocumentUIDAnalyzer
 from strictdoc.core.commands.constants import NodeCreationOrder
 from strictdoc.core.commands.delete_section import DeleteSectionCommand
 from strictdoc.core.commands.section import (
@@ -630,7 +632,16 @@ def create_main_router(
             else reference_node.document
         )
 
-        form_object = RequirementFormObject.create_new(document=document)
+        document_stats: DocumentStats = DocumentUIDAnalyzer.analyze_document(
+            document
+        )
+        next_uid: str = document_stats.get_next_requirement_uid(
+            reference_node.get_requirement_prefix()
+        )
+        form_object = RequirementFormObject.create_new(
+            document=document, next_uid=next_uid
+        )
+
         target_node_mid = reference_mid
 
         if whereto == NodeCreationOrder.CHILD:

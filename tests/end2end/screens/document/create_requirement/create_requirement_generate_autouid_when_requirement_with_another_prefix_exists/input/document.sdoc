@@ -6,11 +6,11 @@ Hello world!
 [/FREETEXT]
 
 [REQUIREMENT]
+UID: SOME-OTHER-PREFIX-1
 TITLE: Requirement title #1
 STATEMENT: >>>
-Hello world!
-
-Hello world!
-
-Hello world!
+Requirement statement #1.
+<<<
+RATIONALE: >>>
+Requirement rationale #1.
 <<<

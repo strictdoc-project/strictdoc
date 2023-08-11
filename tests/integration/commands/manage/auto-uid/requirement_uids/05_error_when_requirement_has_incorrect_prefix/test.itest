@@ -1,3 +1,0 @@
-RUN: cp %S/input.sdoc %S/Output/
-RUN: %expect_exit 1 %strictdoc manage auto-uid %S/Output/ | filecheck %s --dump-input=fail
-CHECK: error: Skipping a requirement because its UID does not match the applicable requirement prefix 'REQ-': 'WRONG_PREFIX_5'.

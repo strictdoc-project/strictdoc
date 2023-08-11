@@ -1,6 +1,7 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
+from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.backend.sdoc.models.node import Node
 from strictdoc.helpers.auto_described import auto_described
@@ -72,3 +73,9 @@ class Section(Node):  # pylint: disable=too-many-instance-attributes
     @property
     def is_section(self):
         return True
+
+    def get_requirement_prefix(self) -> str:
+        if self.requirement_prefix is not None:
+            return self.requirement_prefix
+        parent: Union[Section, Document] = self.parent
+        return parent.get_requirement_prefix()

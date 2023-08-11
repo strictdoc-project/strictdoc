@@ -68,6 +68,13 @@ class Document:  # pylint: disable=too-many-instance-attributes
             else "REQ-"
         )
 
+    def get_requirement_prefix(self) -> str:
+        return (
+            self.config.requirement_prefix
+            if self.config.requirement_prefix is not None
+            else "REQ-"
+        )
+
     def enumerate_meta_field_titles(self):
         # TODO: currently only enumerating a single element ([0])
         yield from self.grammar.elements[0].enumerate_meta_field_titles()

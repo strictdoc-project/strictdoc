@@ -10,7 +10,7 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 from tests.end2end.server import SDocTestServer
 
 
-class Test_UC06_T04_CreateRequirementInSection(BaseCase):
+class Test(BaseCase):
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
@@ -34,12 +34,12 @@ class Test_UC06_T04_CreateRequirementInSection(BaseCase):
             # Section exists
 
             section = screen_document.get_section()
-            section.assert_section_title("First title", "1")
+            section.assert_section_title("Section title", "1")
 
-            # Requirement is added as a child of the Section
+            # Requirement is added below
             section_menu = section.do_open_node_menu()
             form_edit_requirement: Form_EditRequirement = (
-                section_menu.do_node_add_requirement_child()
+                section_menu.do_node_add_requirement_below()
             )
             form_edit_requirement.do_fill_in_field_title("Requirement title")
             form_edit_requirement.do_fill_in_field_statement(
@@ -50,8 +50,7 @@ class Test_UC06_T04_CreateRequirementInSection(BaseCase):
             # Expected for Requirement:
 
             requirement = screen_document.get_requirement()
-
-            requirement.assert_requirement_title("Requirement title", "1.1")
+            requirement.assert_requirement_title("Requirement title", "2")
             screen_document.assert_toc_contains("Requirement title")
 
         assert test_setup.compare_sandbox_and_expected_output()

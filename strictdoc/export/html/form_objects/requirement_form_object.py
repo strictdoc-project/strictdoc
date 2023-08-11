@@ -221,7 +221,9 @@ class RequirementFormObject(ErrorObject):
         return form_object
 
     @staticmethod
-    def create_new(*, document: Document) -> "RequirementFormObject":
+    def create_new(
+        *, document: Document, next_uid: str
+    ) -> "RequirementFormObject":
         assert document.grammar is not None
         grammar: DocumentGrammar = document.grammar
         element: GrammarElement = grammar.elements_by_type["REQUIREMENT"]
@@ -235,13 +237,18 @@ class RequirementFormObject(ErrorObject):
                 continue
 
             field = element.fields_map[field_name]
-            form_field = RequirementFormField.create_from_grammar_field(
-                grammar_field=field,
-                multiline=field_idx > title_field_idx,
-                value_unescaped="",
-                value_escaped="",
+            form_field: RequirementFormField = (
+                RequirementFormField.create_from_grammar_field(
+                    grammar_field=field,
+                    multiline=field_idx > title_field_idx,
+                    value_unescaped="",
+                    value_escaped="",
+                )
             )
             form_fields.append(form_field)
+            if form_field.field_name == "UID":
+                form_field.field_unescaped_value = next_uid
+                form_field.field_escaped_value = next_uid
 
         return RequirementFormObject(
             requirement_mid=MID.create().get_string_value(),
@@ -340,6 +347,16 @@ class RequirementFormObject(ErrorObject):
 
     def enumerate_reference_fields(self):
         yield from self.reference_fields
+
+    def get_uid_field(self) -> RequirementFormField:
+        for _, field in self.fields.items():
+            requirement_field: RequirementFormField = field[0]
+            if requirement_field.field_name == "UID":
+                return requirement_field
+        else:
+            raise LookupError(
+                "Could not find a form field for requirement's UID."
+            )
 
     def validate(
         self,

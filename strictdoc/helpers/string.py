@@ -1,4 +1,5 @@
 import re
+from typing import Optional
 
 REGEX_TRAILING_WHITESPACE_SINGLELINE = re.compile(r"\s{2,}")
 REGEX_TRAILING_WHITESPACE_MULTILINE = re.compile(r" +\n")
@@ -75,3 +76,10 @@ def extract_last_numeric_part(string: str) -> str:
     if regex_match is not None:
         return regex_match.group(1)
     raise ValueError(f"Cannot extract the numeric part of UID: {string}")
+
+
+def extract_numeric_uid_prefix_part(string: str) -> Optional[str]:
+    regex_match = re.match(r"^([A-Za-z].*?\D)[0-9]+$", string)
+    if regex_match is not None:
+        return regex_match.group(1)
+    return None

@@ -1,5 +1,5 @@
 [DOCUMENT]
-TITLE: Requirements Tool specification
+TITLE: [L2] Requirements Tool specification
 REQ_PREFIX: SDOC-SSS-
 
 [SECTION]
@@ -92,12 +92,19 @@ The Requirements Tool shall allow moving nodes (sections, requirements) between 
 
 [REQUIREMENT]
 UID: SDOC-SSS-6
+STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: ZEP-8
 - TYPE: Parent
   VALUE: SDOC-RMC-1
 TITLE: Auto-provision of Requirement UIDs
+STATEMENT: >>>
+The Requirements Tool shall provide controls for automatic generation of requirements UIDs.
+<<<
+RATIONALE: >>>
+When a document is large, it becomes harder to manage the assignment of the new requirements identifiers by manually exploring which requirement UID has not been assigned yet. The provision of automatically generated UIDs is a convenience feature that improves the user experience significantly.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SSS-7
@@ -245,10 +252,16 @@ The Requirements Tool shall support generation of traceability matrices.
 
 [REQUIREMENT]
 UID: SDOC-SSS-48
+STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: SDOC-RMC-39
+- TYPE: Parent
+  VALUE: SDOC-RMC-57
 TITLE: Compliance matrices
+STATEMENT: >>>
+The Requirements Tool shall allow generating a Compliance Matrix document.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SSS-29
@@ -435,6 +448,25 @@ REFS:
 TITLE: Machine-readable format
 STATEMENT: >>>
 The Requirement Tool's text language shall be machine-readable.
+<<<
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-RTS-Requirements-and-source-code
+TITLE: Requirements and source code
+
+[REQUIREMENT]
+UID: SDOC-SSS-72
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-2
+TITLE: Traceability between requirements and source code
+STATEMENT: >>>
+The Requirements Tool shall support bi-directional tracing between requirements content and implementation source code.
+
+NOTE: The Requirements Tool does not necessarily have to implement the complete tracing process. It may delegate parts of the traceability task to other tools, e.g., Doxygen, Lobster.
 <<<
 
 [/SECTION]

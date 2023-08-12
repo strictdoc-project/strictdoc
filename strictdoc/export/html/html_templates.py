@@ -92,12 +92,22 @@ class HTMLTemplates:
         # TODO: Check if this line is still needed (might be some older workaround).
         jinja_environment.globals.update(isinstance=isinstance)
         with measure_performance("Compile Jinja templates"):
+
+            def filter_function_(name) -> bool:
+                # On macOS, the .DS_Store files make Jinja templates compiler
+                # to crash.
+                # https://github.com/strictdoc-project/strictdoc/issues/1266
+                if name == ".DS_Store":
+                    return False
+                return True
+
             Path(self.path_to_jinja_cache_bucket_dir).mkdir(
                 parents=True, exist_ok=True
             )
             jinja_environment.compile_templates(
                 self.path_to_jinja_cache_bucket_dir,
                 zip=None,
+                filter_func=filter_function_,
                 ignore_errors=False,
             )
 

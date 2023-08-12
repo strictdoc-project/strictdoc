@@ -1,0 +1,11 @@
+# On macOS, the .DS_Store files make Jinja templates compiler to crash.
+# https://github.com/strictdoc-project/strictdoc/issues/1266
+# This test setup has a .DS_Store file in the test folder, and the test ensures
+# that the .DS_Store is ignored.
+
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: Hello world doc
+CHECK-HTML: input.sdoc

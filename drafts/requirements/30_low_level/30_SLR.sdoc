@@ -189,8 +189,7 @@ This constraint does not block a StrictDoc user from wrapping StrictDoc into the
 UID: SECTION-SRS-SDoc-markup
 TITLE: SDoc markup
 
-[REQUIREMENT]
-UID: SDOC-SRS-17
+[SECTION]
 TITLE: SDoc data model
 
 [REQUIREMENT]
@@ -198,15 +197,13 @@ UID: SDOC-SRS-18
 TITLE: Data model
 
 [REQUIREMENT]
-UID: SDOC-SRS-19
-STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: DO178-2
-TITLE: Fixed grammar
-STATEMENT: >>>
-StrictDoc's markup language shall be based on a well-defined grammar.
-<<<
+UID: SDOC-SRS-26
+TITLE: Doc, Req, Sec, Comment, ...
+
+[/SECTION]
+
+[SECTION]
+TITLE: SDoc text format
 
 [REQUIREMENT]
 UID: SDOC-SRS-20
@@ -220,6 +217,17 @@ StrictDoc shall implement its own markup language called S-Doc (strict-doc).
 <<<
 RATIONALE: >>>
 The most commonly used Markdown format lacks the ability to store requirements metadata. While the RST syntax does allow for customization with directives to implement metadata extensions, its visual appearance contradicts other requirements of StrictDoc, such as the type-safety of the grammar and visual readability. Therefore, a markup language tailored specifically to the needs of the requirements tool provides direct control over the capabilities implemented in both the markup and the user interface.
+<<<
+
+[REQUIREMENT]
+UID: SDOC-SRS-19
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: DO178-2
+TITLE: Fixed grammar
+STATEMENT: >>>
+StrictDoc's markup language shall be based on a well-defined grammar.
 <<<
 
 [REQUIREMENT]
@@ -260,10 +268,6 @@ UID: SDOC-SRS-22
 TITLE: UID identifier format
 
 [REQUIREMENT]
-UID: SDOC-SRS-23
-TITLE: No indentation
-
-[REQUIREMENT]
 UID: SDOC-SRS-24
 STATUS: Active
 REFS:
@@ -275,14 +279,6 @@ StrictDoc shall support the RST markup.
 <<<
 
 [REQUIREMENT]
-UID: SDOC-SRS-25
-TITLE: Type-safe fields
-
-[REQUIREMENT]
-UID: SDOC-SRS-26
-TITLE: Doc, Req, Sec, Comment, ...
-
-[REQUIREMENT]
 UID: SDOC-SRS-27
 STATUS: Active
 REFS:
@@ -292,6 +288,16 @@ TITLE: MathJAX
 STATEMENT: >>>
 StrictDoc's markup shall enable support integration with MathJax.
 <<<
+
+[REQUIREMENT]
+UID: SDOC-SRS-23
+TITLE: No indentation
+
+[REQUIREMENT]
+UID: SDOC-SRS-25
+TITLE: Type-safe fields
+
+[/SECTION]
 
 [/SECTION]
 

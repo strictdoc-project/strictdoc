@@ -224,6 +224,19 @@ UID: SECTION-SSSS-Existing-workflows
 TITLE: Existing workflows
 
 [REQUIREMENT]
+UID: SDOC-SSS-73
+STATUS: Active
+TITLE: Excel-like viewing and editing of requirements
+STATEMENT: >>>
+The Requirements Tool shall provide an Excel-like user interface for viewing and editing requirements.
+
+NOTE: This interface does not have to be the only or a default interface.
+<<<
+RATIONALE: >>>
+As recognized by the parent requirement, some requirements-based workflows are naturally easier when the requirements content is presented in a form of a table, as opposed to a document with a nested chapter structure.
+<<<
+
+[REQUIREMENT]
 UID: SDOC-SSS-56
 STATUS: Active
 REFS:

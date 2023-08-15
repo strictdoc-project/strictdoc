@@ -777,7 +777,14 @@ TITLE: Screen: Table (TBL)
 
 [REQUIREMENT]
 UID: SDOC-SRS-62
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-73
 TITLE: View TBL screen
+STATEMENT: >>>
+StrictDoc's Table screen shall allow reading documents in a table-like manner.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SRS-63

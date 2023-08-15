@@ -115,10 +115,19 @@ TITLE: Link requirements together
 
 [REQUIREMENT]
 UID: SDOC-SSS-8
+STATUS: Backlog
 REFS:
 - TYPE: Parent
   VALUE: ZEP-5
 TITLE: Multiple link roles
+STATEMENT: >>>
+The Requirements Tool shall support the link roles.
+
+Example of roles for a child-to-parent link: "verifies", "implements", "satisfies", etc.
+<<<
+RATIONALE: >>>
+Different industries maintain custom conventions for naming the relations between requirements and other nodes such as tests or other artefacts.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SSS-71
@@ -133,6 +142,7 @@ The Requirements Tool shall support the Reverse Parent relationship.
 
 [REQUIREMENT]
 UID: SDOC-SSS-47
+STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: SDOC-RMC-7

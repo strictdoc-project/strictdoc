@@ -666,13 +666,25 @@ TITLE: Screen: Document (DOC)
 
 [REQUIREMENT]
 UID: SDOC-SRS-54
-STATUS: Implemented
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-3
 TITLE: View document
+STATEMENT: >>>
+StrictDoc's Document screen shall allow reading documents.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SRS-55
 STATUS: Implemented
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-4
 TITLE: Edit requirement nodes
+STATEMENT: >>>
+StrictDoc's Document screen shall allow editing requirements.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SRS-92
@@ -704,8 +716,17 @@ Moving the nodes within a document is a convenience feature that speeds up the r
 
 [REQUIREMENT]
 UID: SDOC-SRS-56
-STATUS: Implemented
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-62
 TITLE: Edit Document grammar
+STATEMENT: >>>
+StrictDoc's screen shall allow editing a document's grammar.
+<<<
+RATIONALE: >>>
+Editing document grammar allows a user to customize the requirements fields.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SRS-57

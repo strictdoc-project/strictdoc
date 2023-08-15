@@ -84,6 +84,9 @@ TITLE: Code hosting
 [REQUIREMENT]
 UID: SDOC-SRS-12
 STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-38
 TITLE: GitHub
 STATEMENT: >>>
 StrictDoc's source code shall be hosted on GitHub.

@@ -562,7 +562,14 @@ TITLE: Licensing and distribution
 
 [REQUIREMENT]
 UID: SDOC-SSS-38
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-51
 TITLE: Open source
+STATEMENT: >>>
+The Requirements Tool's source code shall be publicly available, e.g., hosted on a code hosting platform such as GitHub or GitLab.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SSS-39

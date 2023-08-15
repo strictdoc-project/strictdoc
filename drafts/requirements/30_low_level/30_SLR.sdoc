@@ -106,6 +106,8 @@ STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: DO178-7
+- TYPE: Parent
+  VALUE: SDOC-SSS-39
 TITLE: Exclusive use of open source components
 STATEMENT: >>>
 StrictDoc shall be built using only open source software components.

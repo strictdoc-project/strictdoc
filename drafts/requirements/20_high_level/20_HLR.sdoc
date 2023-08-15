@@ -573,7 +573,11 @@ The Requirements Tool's source code shall be publicly available, e.g., hosted on
 
 [REQUIREMENT]
 UID: SDOC-SSS-39
+STATUS: Active
 TITLE: Only open source dependencies
+STATEMENT: >>>
+The Requirement Tool's source code shall be based on open source software components.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SSS-40

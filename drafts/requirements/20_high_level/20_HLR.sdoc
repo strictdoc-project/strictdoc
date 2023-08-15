@@ -212,10 +212,14 @@ The Requirements Tool shall support requirement trees with at least 10000 requir
 
 [REQUIREMENT]
 UID: SDOC-SSS-14
+STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: SDOC-RMC-31
-TITLE: Generate documentation package of 100 documents
+TITLE: Handling documentation packages of at least 100 documents
+STATEMENT: >>>
+The Requirements Tool shall be able to handle documentation packages of at least 100 documents without significant performance degradation.
+<<<
 
 [/SECTION]
 

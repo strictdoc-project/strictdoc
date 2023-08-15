@@ -115,10 +115,19 @@ TITLE: Link requirements together
 
 [REQUIREMENT]
 UID: SDOC-SSS-8
+STATUS: Backlog
 REFS:
 - TYPE: Parent
   VALUE: ZEP-5
 TITLE: Multiple link roles
+STATEMENT: >>>
+The Requirements Tool shall support the link roles.
+
+Example of roles for a child-to-parent link: "verifies", "implements", "satisfies", etc.
+<<<
+RATIONALE: >>>
+Different industries maintain custom conventions for naming the relations between requirements and other nodes such as tests or other artefacts.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SSS-71
@@ -133,6 +142,7 @@ The Requirements Tool shall support the Reverse Parent relationship.
 
 [REQUIREMENT]
 UID: SDOC-SSS-47
+STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: SDOC-RMC-7
@@ -212,16 +222,33 @@ The Requirements Tool shall support requirement trees with at least 10000 requir
 
 [REQUIREMENT]
 UID: SDOC-SSS-14
+STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: SDOC-RMC-31
-TITLE: Generate documentation package of 100 documents
+TITLE: Handling documentation packages of at least 100 documents
+STATEMENT: >>>
+The Requirements Tool shall be able to handle documentation packages of at least 100 documents without significant performance degradation.
+<<<
 
 [/SECTION]
 
 [SECTION]
 UID: SECTION-SSSS-Existing-workflows
 TITLE: Existing workflows
+
+[REQUIREMENT]
+UID: SDOC-SSS-73
+STATUS: Active
+TITLE: Excel-like viewing and editing of requirements
+STATEMENT: >>>
+The Requirements Tool shall provide an Excel-like user interface for viewing and editing requirements.
+
+NOTE: This interface does not have to be the only or a default interface.
+<<<
+RATIONALE: >>>
+As recognized by the parent requirement, some requirements-based workflows are naturally easier when the requirements content is presented in a form of a table, as opposed to a document with a nested chapter structure.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SSS-56
@@ -562,11 +589,22 @@ TITLE: Licensing and distribution
 
 [REQUIREMENT]
 UID: SDOC-SSS-38
+STATUS: Active
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-51
 TITLE: Open source
+STATEMENT: >>>
+The Requirements Tool's source code shall be publicly available, e.g., hosted on a code hosting platform such as GitHub or GitLab.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SSS-39
+STATUS: Active
 TITLE: Only open source dependencies
+STATEMENT: >>>
+The Requirement Tool's source code shall be based on open source software components.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SSS-40

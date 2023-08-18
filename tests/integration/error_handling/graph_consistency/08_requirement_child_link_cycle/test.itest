@@ -1,0 +1,4 @@
+RUN: %expect_exit 1 %strictdoc export %S | filecheck %s --dump-input=fail
+CHECK: error: document tree: a cycle detected: requirements in the document tree must not reference each other.
+CHECK: Problematic UID: REQ-001
+CHECK: Cycle: REQ-001, REQ-002

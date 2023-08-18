@@ -37,6 +37,7 @@ class RequirementFieldType:
 
 class GrammarReferenceType:
     PARENT_REQ_REFERENCE = "ParentReqReference"
+    CHILD_REQ_REFERENCE = "ChildReqReference"
     FILE_REFERENCE = "FileReference"
     BIB_REFERENCE = "BibReference"
 
@@ -121,11 +122,13 @@ class BibEntry:
 
 class ReferenceType:
     PARENT = "Parent"
+    CHILD = "Child"
     FILE = "File"
     BIB_REF = "BibRef"
 
     GRAMMAR_REFERENCE_TYPE_MAP = {
         PARENT: GrammarReferenceType.PARENT_REQ_REFERENCE,
+        CHILD: GrammarReferenceType.CHILD_REQ_REFERENCE,
         FILE: GrammarReferenceType.FILE_REFERENCE,
         BIB_REF: GrammarReferenceType.BIB_REFERENCE,
     }

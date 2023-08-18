@@ -2,12 +2,15 @@ import glob
 import os
 import sys
 from collections import defaultdict
-from typing import Dict, Iterator, List, Optional, Set
+from typing import Dict, Iterator, List, Optional, Set, Tuple
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
-from strictdoc.backend.sdoc.models.reference import ParentReqReference
+from strictdoc.backend.sdoc.models.reference import (
+    ChildReqReference,
+    ParentReqReference,
+)
 from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.sdoc.models.type_system import ReferenceType
 from strictdoc.backend.sdoc_source_code.reader import (
@@ -183,6 +186,7 @@ class TraceabilityIndexBuilder:
         d_08_requirements_children_map: Dict[
             str, List[Requirement]
         ] = defaultdict(list)
+        d_09_reverse_parents: List[Tuple[Requirement, str]] = []
         d_11_map_id_to_node = {}
 
         graph_database = GraphDatabase()
@@ -201,8 +205,8 @@ class TraceabilityIndexBuilder:
 
         # It seems to be impossible to accomplish everything in just one for
         # loop. One particular problem that requires two passes: it is not
-        # possible to know after one iteration if any of the requirements
-        # reference parents that do not exist.
+        # possible to know after one iteration which of the requirements
+        # parents do not exist for each given requirement.
         #
         # Step #1:
         # - Collect a dictionary of all requirements in the document tree:
@@ -303,18 +307,55 @@ class TraceabilityIndexBuilder:
                     if reference.ref_type == ReferenceType.FILE:
                         d_07_file_traceability_index.register(requirement)
                         continue
-                    if reference.ref_type != ReferenceType.PARENT:
+
+                    if reference.ref_type == ReferenceType.PARENT:
+                        parent_reference: ParentReqReference = assert_cast(
+                            reference, ParentReqReference
+                        )
+                        assert requirement.reserved_uid is not None  # mypy
+                        traceability_index.requirements_parents[
+                            requirement.reserved_uid
+                        ].parents_uids.append(parent_reference.ref_uid)
+                        d_08_requirements_children_map[
+                            parent_reference.ref_uid
+                        ].append(requirement)
                         continue
-                    parent_reference: ParentReqReference = assert_cast(
-                        reference, ParentReqReference
-                    )
-                    assert requirement.reserved_uid is not None  # mypy
-                    traceability_index.requirements_parents[
-                        requirement.reserved_uid
-                    ].parents_uids.append(parent_reference.ref_uid)
-                    d_08_requirements_children_map[
-                        parent_reference.ref_uid
-                    ].append(requirement)
+
+                    if reference.ref_type == ReferenceType.CHILD:
+                        child_reference: ChildReqReference = assert_cast(
+                            reference, ChildReqReference
+                        )
+                        assert requirement.reserved_uid is not None  # mypy
+                        d_09_reverse_parents.append(
+                            (node, child_reference.ref_uid)
+                        )
+                        continue
+
+        for requirement_, child_requirement_uid_ in d_09_reverse_parents:
+            if (
+                child_requirement_uid_
+                not in traceability_index.requirements_parents
+            ):
+                raise StrictDocException(
+                    f"[DocumentIndex.create] "
+                    f"Requirement {requirement_.reserved_uid} "
+                    f"references a "
+                    f"child requirement that doesn't exist: "
+                    f"{child_requirement_uid_}."
+                )
+
+            child_requirement: Requirement = (
+                traceability_index.requirements_parents[
+                    child_requirement_uid_
+                ].requirement
+            )
+            requirement_uid: str = assert_cast(requirement_.reserved_uid, str)
+            traceability_index.requirements_parents[
+                child_requirement_uid_
+            ].parents_uids.append(requirement_uid)
+            d_08_requirements_children_map[requirement_uid].append(
+                child_requirement
+            )
 
         # Now iterate over the requirements again to build an in-depth map of
         # parents and children.

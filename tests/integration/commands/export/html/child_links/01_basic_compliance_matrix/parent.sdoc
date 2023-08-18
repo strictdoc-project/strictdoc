@@ -1,0 +1,17 @@
+[DOCUMENT]
+TITLE: Parent doc
+
+[REQUIREMENT]
+UID: REQ-PARENT-1
+TITLE: Parent Req 1
+STATEMENT: Parent Req Statement 1
+
+[REQUIREMENT]
+UID: REQ-PARENT-2
+TITLE: Parent Req 2
+STATEMENT: Parent Req Statement 2
+
+[REQUIREMENT]
+UID: REQ-PARENT-3
+TITLE: Parent Req 3
+STATEMENT: Parent Req Statement 3

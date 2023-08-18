@@ -92,6 +92,7 @@ class DocumentGrammar:
                 title=RequirementFieldName.REFS,
                 types=[
                     GrammarReferenceType.PARENT_REQ_REFERENCE,
+                    GrammarReferenceType.CHILD_REQ_REFERENCE,
                     GrammarReferenceType.FILE_REFERENCE,
                     GrammarReferenceType.BIB_REFERENCE,
                 ],

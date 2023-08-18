@@ -1,0 +1,2 @@
+RUN: %expect_exit 1 %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail --check-prefix=CHECK
+CHECK: error: [DocumentIndex.create] Requirement REQ-1 references a child requirement that doesn't exist: REQ-CHILD-1.

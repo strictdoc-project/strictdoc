@@ -1,0 +1,13 @@
+# NOTE: Precompilation of Jinja templates is enabled when a document tree is
+# large enough. This test SDoc file contains 10+ requirements to become a large
+# enough tree.
+
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Compile Jinja templates {{.*}}s
+CHECK: Published: Hello world doc
+
+RUN: rm -rf Output/
+
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail --check-prefix=CHECK-SECOND
+CHECK-SECOND-NOT: Compile Jinja templates {{.*}}s
+CHECK-SECOND: Published: Hello world doc

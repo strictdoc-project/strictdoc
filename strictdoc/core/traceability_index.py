@@ -78,6 +78,23 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         self.index_last_updated = datetime.today()
         self.strictdoc_last_update = None
 
+    def is_small_project(self):
+        """
+        This method helps to decide if StrictDoc will precompile Jinja templates
+        to Python files or not. Precompilation may take half a second time, so
+        it is only worth doing it when a project is relatively large.
+
+        Below, making some assumptions about what makes a small or larger
+        project.
+        """
+
+        if len(self.document_tree.document_list) >= 3:
+            return False
+        for document_ in self.document_tree.document_list:
+            if len(document_.section_contents) > 5:
+                return False
+        return len(self._requirements_parents) <= 10
+
     def get_node_by_mid(self, node_id: MID) -> Any:
         assert isinstance(node_id, MID), node_id
         return self._map_id_to_node[node_id]

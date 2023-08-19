@@ -43,10 +43,11 @@ from strictdoc.helpers.timing import measure_performance
 
 
 class HTMLGenerator:
-    def __init__(self, project_config: ProjectConfig):
+    def __init__(
+        self, project_config: ProjectConfig, html_templates: HTMLTemplates
+    ):
         self.project_config: ProjectConfig = project_config
-        self.html_templates = HTMLTemplates(project_config)
-        self.html_templates.compile_jinja_templates()
+        self.html_templates = html_templates
 
     def export_complete_tree(
         self,
@@ -205,6 +206,7 @@ class HTMLGenerator:
                 markup_renderer,
                 link_renderer,
                 standalone=False,
+                html_templates=self.html_templates,
             )
             document_out_file = document_meta.get_html_doc_path()
             with open(document_out_file, "w", encoding="utf8") as file:
@@ -223,6 +225,7 @@ class HTMLGenerator:
                 traceability_index,
                 markup_renderer,
                 link_renderer,
+                self.html_templates,
             )
             document_out_file = document_meta.get_html_table_path()
             with open(document_out_file, "w", encoding="utf8") as file:
@@ -241,6 +244,7 @@ class HTMLGenerator:
                 traceability_index,
                 markup_renderer,
                 link_renderer,
+                self.html_templates,
             )
             document_out_file = document_meta.get_html_traceability_path()
             with open(document_out_file, "w", encoding="utf8") as file:
@@ -259,6 +263,7 @@ class HTMLGenerator:
                 traceability_index,
                 markup_renderer,
                 link_renderer,
+                self.html_templates,
             )
             document_out_file = document_meta.get_html_deep_traceability_path()
             with open(document_out_file, "w", encoding="utf8") as file:
@@ -276,6 +281,7 @@ class HTMLGenerator:
                 markup_renderer,
                 link_renderer,
                 standalone=False,
+                html_templates=self.html_templates,
             )
             document_out_file = document_meta.get_html_pdf_path()
             with open(document_out_file, "w", encoding="utf8") as file:
@@ -292,6 +298,7 @@ class HTMLGenerator:
                 markup_renderer,
                 link_renderer,
                 standalone=True,
+                html_templates=self.html_templates,
             )
             document_out_file = document_meta.get_html_doc_standalone_path()
             document_content_with_embedded_assets = HTMLEmbedder.embed_assets(
@@ -378,6 +385,7 @@ class HTMLGenerator:
         source_coverage_content = SourceFileCoverageHTMLGenerator.export(
             project_config=self.project_config,
             traceability_index=traceability_index,
+            html_templates=self.html_templates,
         )
         output_html_source_coverage = os.path.join(
             self.project_config.export_output_html_root, "source_coverage.html"

@@ -14,6 +14,7 @@ class DocumentTraceHTMLGenerator:
         traceability_index,
         markup_renderer,
         link_renderer: LinkRenderer,
+        html_templates: HTMLTemplates,
     ):
         output = ""
 
@@ -21,10 +22,8 @@ class DocumentTraceHTMLGenerator:
             traceability_index.document_tree
         )
 
-        template = (
-            HTMLTemplates(project_config)
-            .jinja_environment()
-            .get_template("screens/document/traceability/index.jinja")
+        template = html_templates.jinja_environment().get_template(
+            "screens/document/traceability/index.jinja"
         )
 
         document_iterator = traceability_index.get_document_iterator(document)

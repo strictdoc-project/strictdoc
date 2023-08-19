@@ -11,6 +11,7 @@ from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from strictdoc.export.dot.document_dot_generator import DocumentDotGenerator
 from strictdoc.export.html.html_generator import HTMLGenerator
+from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.rst.document_rst_generator import DocumentRSTGenerator
 from strictdoc.helpers.timing import timing_decorator
 
@@ -49,7 +50,15 @@ class ExportAction:
             "html" in self.project_config.export_formats
             or "html-standalone" in self.project_config.export_formats
         ):
-            html_generator = HTMLGenerator(self.project_config)
+            is_small_project = self.traceability_index.is_small_project()
+
+            html_templates = HTMLTemplates.create(
+                project_config=self.project_config,
+                enable_caching=not is_small_project,
+                strictdoc_last_update=self.traceability_index.strictdoc_last_update,
+            )
+
+            html_generator = HTMLGenerator(self.project_config, html_templates)
             html_generator.export_complete_tree(
                 traceability_index=self.traceability_index,
                 parallelizer=self.parallelizer,

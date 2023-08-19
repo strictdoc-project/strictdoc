@@ -118,13 +118,21 @@ def create_main_router(
         parallelizer=parallelizer,
     )
     export_action.build_index()
-    html_generator = HTMLGenerator(project_config)
+
+    is_small_project = export_action.traceability_index.is_small_project()
+    html_templates = HTMLTemplates.create(
+        project_config=project_config,
+        enable_caching=not is_small_project,
+        strictdoc_last_update=export_action.traceability_index.strictdoc_last_update,
+    )
+
+    html_generator = HTMLGenerator(project_config, html_templates)
     html_generator.export_assets(
         traceability_index=export_action.traceability_index,
     )
 
     def env() -> Environment:
-        return HTMLTemplates(project_config).jinja_environment()
+        return html_templates.jinja_environment()
 
     router = APIRouter()
 

@@ -1,3 +1,4 @@
+import datetime
 import glob
 import hashlib
 import os.path
@@ -68,6 +69,51 @@ class AssertExtension(Extension):
 
 
 class HTMLTemplates:
+    @staticmethod
+    def create(
+        project_config: ProjectConfig,
+        enable_caching: bool,
+        strictdoc_last_update: datetime.datetime,
+    ):
+        assert isinstance(strictdoc_last_update, datetime.datetime)
+        if enable_caching:
+            cacheable_templates = CompiledHTMLTemplates(project_config)
+            cacheable_templates.reset_jinja_environment_if_outdated(
+                strictdoc_last_update
+            )
+            cacheable_templates.compile_jinja_templates()
+            return CompiledHTMLTemplates(project_config)
+
+        return NormalHTMLTemplates()
+
+    def jinja_environment(self) -> Environment:
+        raise NotImplementedError
+
+    def reset_jinja_environment_if_outdated(
+        self, strictdoc_last_update
+    ) -> None:
+        raise NotImplementedError
+
+
+class NormalHTMLTemplates(HTMLTemplates):
+    def __init__(self):
+        self._jinja_environment: Environment = Environment(
+            loader=FileSystemLoader(environment.get_path_to_html_templates()),
+            undefined=StrictUndefined,
+            extensions=[AssertExtension],
+        )
+
+    def jinja_environment(self) -> Environment:
+        return self._jinja_environment
+
+    def reset_jinja_environment_if_outdated(
+        self, strictdoc_last_update
+    ) -> None:
+        # There is nothing to do for the non-cachable template implementation.
+        pass
+
+
+class CompiledHTMLTemplates(HTMLTemplates):
     PATH_TO_JINJA_CACHE_DIR = os.path.join(
         tempfile.gettempdir(), "strictdoc_cache", "jinja"
     )
@@ -77,7 +123,8 @@ class HTMLTemplates:
             project_config.export_output_dir.encode("utf-8")
         ).hexdigest()
         self.path_to_jinja_cache_bucket_dir = os.path.join(
-            HTMLTemplates.PATH_TO_JINJA_CACHE_DIR, path_to_output_dir_hash
+            CompiledHTMLTemplates.PATH_TO_JINJA_CACHE_DIR,
+            path_to_output_dir_hash,
         )
         self._jinja_environment: Optional[Environment] = None
 
@@ -123,8 +170,10 @@ class HTMLTemplates:
         return self._jinja_environment
 
     def reset_jinja_environment_if_outdated(
-        self, strictdoc_last_update
+        self, strictdoc_last_update: datetime.datetime
     ) -> None:
+        assert isinstance(strictdoc_last_update, datetime.datetime)
+
         if os.path.isdir(self.path_to_jinja_cache_bucket_dir):
             jinja_cache_files: List[str] = list(
                 glob.iglob(

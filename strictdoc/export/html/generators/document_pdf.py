@@ -16,6 +16,7 @@ class DocumentHTML2PDFGenerator:
         markup_renderer,
         link_renderer: LinkRenderer,
         standalone: bool,
+        html_templates: HTMLTemplates,
     ):
         output = ""
 
@@ -23,10 +24,8 @@ class DocumentHTML2PDFGenerator:
             traceability_index.document_tree
         )
 
-        template = (
-            HTMLTemplates(project_config)
-            .jinja_environment()
-            .get_template("screens/document/pdf/index.jinja")
+        template = html_templates.jinja_environment().get_template(
+            "screens/document/pdf/index.jinja"
         )
 
         document_iterator = traceability_index.get_document_iterator(document)

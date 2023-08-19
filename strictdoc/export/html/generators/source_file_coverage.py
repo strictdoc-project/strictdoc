@@ -11,13 +11,12 @@ class SourceFileCoverageHTMLGenerator:
         *,
         project_config: ProjectConfig,
         traceability_index: TraceabilityIndex,
+        html_templates: HTMLTemplates,
     ):
         output = ""
 
-        template = (
-            HTMLTemplates(project_config)
-            .jinja_environment()
-            .get_template("screens/source_file_coverage/index.jinja")
+        template = html_templates.jinja_environment().get_template(
+            "screens/source_file_coverage/index.jinja"
         )
         link_renderer = LinkRenderer(
             root_path="", static_path=project_config.dir_for_sdoc_assets

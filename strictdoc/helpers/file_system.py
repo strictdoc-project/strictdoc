@@ -1,6 +1,8 @@
+import hashlib
 import os
 import platform
 import shutil
+import stat
 import tempfile
 from pathlib import Path
 from typing import Optional
@@ -73,3 +75,23 @@ def get_portable_temp_dir():
     return Path(
         "/tmp" if platform.system() == "Darwin" else tempfile.gettempdir()
     )
+
+
+def get_etag(file_path):
+    """
+    This implementation is taken from StackOverflow. The implementation itself
+    is taken from Starlette.
+    https://stackoverflow.com/a/76263874/598057
+
+    NOTE: The Starlette's version is async and uses anyio.
+    """
+    assert os.path.isfile(file_path)
+    stat_result = os.stat(file_path)
+    mode = stat_result.st_mode
+    if not stat.S_ISREG(mode):
+        raise RuntimeError(f"File at path {file_path} is not a file.")
+
+    # calculate the etag based on file size and last modification time
+    etag_base = str(stat_result.st_mtime) + "-" + str(stat_result.st_size)
+    etag = hashlib.md5(etag_base.encode()).hexdigest()
+    return etag

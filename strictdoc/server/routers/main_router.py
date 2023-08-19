@@ -12,7 +12,7 @@ from reqif.parser import ReqIFParser
 from reqif.unparser import ReqIFUnparser
 from starlette.datastructures import FormData
 from starlette.requests import Request
-from starlette.responses import HTMLResponse, Response
+from starlette.responses import FileResponse, HTMLResponse, Response
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
 from strictdoc import __version__
@@ -84,6 +84,7 @@ from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.file_modification_time import get_file_modification_time
+from strictdoc.helpers.file_system import get_etag
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.parallelizer import NullParallelizer
 from strictdoc.helpers.string import (
@@ -129,8 +130,8 @@ def create_main_router(
     router = APIRouter()
 
     @router.get("/")
-    def get_root():
-        return get_incoming_request("index.html")
+    def get_root(request: Request):
+        return get_incoming_request(request, "index.html")
 
     @router.get("/ping")
     def get_ping():
@@ -2211,7 +2212,7 @@ def create_main_router(
         )
 
     @router.get("/{full_path:path}", response_class=Response)
-    def get_incoming_request(full_path: str):
+    def get_incoming_request(request: Request, full_path: str):
         # FIXME: This seems to be quite un-sanitized.
         _, file_extension = os.path.splitext(full_path)
         if file_extension == ".html":
@@ -2226,7 +2227,7 @@ def create_main_router(
             ".jpg",
             ".jpeg",
         ):
-            return get_asset(full_path)
+            return get_asset(request, full_path)
 
         return HTMLResponse(content="Not Found", status_code=404)
 
@@ -2309,10 +2310,10 @@ def create_main_router(
             content = sample_sdoc.read()
         return HTMLResponse(content=content)
 
-    def get_asset(url_to_asset: str):
+    def get_asset(request: Request, url_to_asset: str):
         project_output_path = project_config.export_output_html_root
-        static_file = os.path.join(project_output_path, url_to_asset)
 
+        static_file = os.path.join(project_output_path, url_to_asset)
         content_type, _ = guess_type(static_file)
 
         if not os.path.isfile(static_file):
@@ -2322,9 +2323,19 @@ def create_main_router(
                 media_type=content_type,
             )
 
-        with open(static_file, "rb") as f:
-            content = f.read()
-        return Response(content, media_type=content_type)
+        if "if-none-match" in request.headers:
+            header_etag = request.headers["if-none-match"]
+            # FIXME: We have copied the Etag calculation procedure from
+            # Starlette's server code. One day this copy may diverge if
+            # Starlette decides to implement something else.
+            # In that case, the risk is that the 200/304 caching will stop
+            # working but such a risk seems acceptable.
+            file_etag = get_etag(static_file)
+            if header_etag == file_etag:
+                return Response(status_code=304)
+
+        response = FileResponse(static_file, media_type=content_type)
+        return response
 
     # Websockets solution based on:
     # https://fastapi.tiangolo.com/advanced/websockets/

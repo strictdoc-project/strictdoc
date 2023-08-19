@@ -22,13 +22,19 @@ MultiLineString[noskipws]:
 
 Reference[noskipws]:
   // FileReference is an early, experimental feature. Do not use yet.
-  ParentReqReference | FileReference | BibReference
+  ParentReqReference | ChildReqReference | FileReference | BibReference
 ;
 
 ParentReqReference[noskipws]:
   '- TYPE: Parent' '\n'
   '  VALUE: ' ref_uid = /.*$/ '\n'
 ;
+
+ChildReqReference[noskipws]:
+  '- TYPE: Child' '\n'
+  '  VALUE: ' ref_uid = /.*$/ '\n'
+;
+
 
 FileReference[noskipws]:
   // FileReference is an early, experimental feature. Do not use yet.

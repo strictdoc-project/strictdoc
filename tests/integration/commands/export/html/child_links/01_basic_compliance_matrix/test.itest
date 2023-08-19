@@ -1,0 +1,14 @@
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail --check-prefix=CHECK
+CHECK: Published: Compliance matrix
+
+# The most important assertion of this test is that the supplier document is
+# rendered with all its requirements having the parent links, even though
+# these parent links do not exist in the supplier.sdoc file but are derived
+# from the child links from the compliance_matrix.sdoc to this document
+RUN: cat %S/Output/html/01_basic_compliance_matrix/supplier.html | filecheck %s --dump-input=fail --check-prefix=CHECK-SUPPLIER
+CHECK-SUPPLIER: <span class="requirement__parent-uid">REQ-COMPL-1</span>
+CHECK-SUPPLIER: Compliance to REQ-PARENT-1
+CHECK-SUPPLIER: <span class="requirement__parent-uid">REQ-COMPL-2</span>
+CHECK-SUPPLIER: Compliance to REQ-PARENT-2
+CHECK-SUPPLIER: <span class="requirement__parent-uid">REQ-COMPL-3</span>
+CHECK-SUPPLIER: Compliance to REQ-PARENT-3

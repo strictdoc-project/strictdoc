@@ -1,0 +1,61 @@
+[DOCUMENT]
+TITLE: Compliance matrix
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: COMPLIANCE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: REFS
+    TYPE: Reference(ParentReqReference, ChildReqReference)
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: RATIONALE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: False
+
+[REQUIREMENT]
+UID: REQ-COMPL-1
+COMPLIANCE: C
+REFS:
+- TYPE: Parent
+  VALUE: REQ-PARENT-1
+- TYPE: Child
+  VALUE: REQ-SUPPLIER-1
+TITLE: Compliance to REQ-PARENT-1
+STATEMENT: Compliance statement.
+
+[REQUIREMENT]
+UID: REQ-COMPL-2
+COMPLIANCE: C
+REFS:
+- TYPE: Parent
+  VALUE: REQ-PARENT-2
+- TYPE: Child
+  VALUE: REQ-SUPPLIER-2
+TITLE: Compliance to REQ-PARENT-2
+STATEMENT: Compliance statement.
+
+[REQUIREMENT]
+UID: REQ-COMPL-3
+COMPLIANCE: C
+REFS:
+- TYPE: Parent
+  VALUE: REQ-PARENT-3
+- TYPE: Child
+  VALUE: REQ-SUPPLIER-3
+TITLE: Compliance to REQ-PARENT-3
+STATEMENT: Compliance statement.

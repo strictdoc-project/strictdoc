@@ -10,6 +10,7 @@ from strictdoc.backend.sdoc.models.fragment_from_file import FragmentFromFile
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.reference import (
     BibReference,
+    ChildReqReference,
     FileReference,
     ParentReqReference,
     Reference,
@@ -38,6 +39,7 @@ SECTION_MODELS = [
     CompositeRequirement,
     Reference,
     ParentReqReference,
+    ChildReqReference,
     FileReference,
     BibReference,
     FreeText,

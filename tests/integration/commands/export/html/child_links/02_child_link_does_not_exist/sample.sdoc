@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Sample doc
+
+[REQUIREMENT]
+UID: REQ-1
+REFS:
+- TYPE: Child
+  VALUE: REQ-CHILD-1
+TITLE: Sample title
+STATEMENT: Sample statement.

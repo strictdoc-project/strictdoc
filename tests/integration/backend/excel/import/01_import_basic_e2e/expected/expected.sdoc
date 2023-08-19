@@ -18,7 +18,7 @@ ELEMENTS:
     TYPE: String
     REQUIRED: False
   - TITLE: REFS
-    TYPE: Reference(ParentReqReference, FileReference, BibReference)
+    TYPE: Reference(ParentReqReference, ChildReqReference, FileReference, BibReference)
     REQUIRED: False
   - TITLE: TITLE
     TYPE: String

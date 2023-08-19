@@ -1,0 +1,17 @@
+[DOCUMENT]
+TITLE: Supplier doc
+
+[REQUIREMENT]
+UID: REQ-SUPPLIER-1
+TITLE: Supplier Req 1
+STATEMENT: Supplier Req Statement 1
+
+[REQUIREMENT]
+UID: REQ-SUPPLIER-2
+TITLE: Supplier Req 2
+STATEMENT: Supplier Req Statement 2
+
+[REQUIREMENT]
+UID: REQ-SUPPLIER-3
+TITLE: Supplier Req 3
+STATEMENT: Supplier Req Statement 3

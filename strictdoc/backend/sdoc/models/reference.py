@@ -36,6 +36,13 @@ class ParentReqReference(Reference):
 
 
 @auto_described
+class ChildReqReference(Reference):
+    def __init__(self, parent, ref_uid):
+        super().__init__(ReferenceType.CHILD, parent)
+        self.ref_uid = ref_uid
+
+
+@auto_described
 class BibReference(Reference):
     def __init__(self, parent, bib_entry: BibEntry):
         super().__init__(ReferenceType.BIB_REF, parent)

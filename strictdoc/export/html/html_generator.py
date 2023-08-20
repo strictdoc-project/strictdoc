@@ -131,6 +131,23 @@ class HTMLGenerator:
                 message="Copying MathJax assets",
             )
 
+        # Export Mermaid
+        if self.project_config.is_feature_activated(ProjectFeature.MERMAID):
+            output_html_mathjax = os.path.join(
+                self.project_config.export_output_html_root,
+                self.project_config.dir_for_sdoc_assets,
+                "mermaid",
+            )
+            Path(output_html_mathjax).mkdir(parents=True, exist_ok=True)
+            mermaid_src = os.path.join(
+                self.project_config.get_extra_static_files_path(), "mermaid"
+            )
+            sync_dir(
+                mermaid_src,
+                output_html_mathjax,
+                message="Copying Mermaid assets",
+            )
+
         # Export project's assets.
         for asset_dir in traceability_index.asset_dirs:
             source_path = asset_dir["full_path"]

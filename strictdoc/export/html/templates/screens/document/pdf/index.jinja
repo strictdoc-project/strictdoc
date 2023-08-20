@@ -24,7 +24,12 @@
   {%- if project_config.is_activated_mathjax() -%}
   <script id="MathJax-script" async src="{{ link_renderer.render_static_url('mathjax/tex-mml-chtml.js') }}"></script>
   {%- endif -%}
-
+  {%- if project_config.is_activated_mermaid() -%}
+    <script src="{{ link_renderer.render_static_url('mermaid/mermaid.min.js') }}"></script>
+    <script type="module">
+      mermaid.initialize({ startOnLoad: true });
+    </script>
+  {%- endif -%}
   {%- if project_config.is_activated_html2pdf() -%}
   <script
   defer

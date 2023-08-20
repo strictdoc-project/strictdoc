@@ -1,0 +1,11 @@
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%S/Output/html/_static/mermaid/mermaid.min.js"
+
+RUN: cat %S/Output/html/01_enabled/input.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
+RUN: cat %S/Output/html/01_enabled/input.standalone.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
+RUN: cat %S/Output/html/01_enabled/input-TABLE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
+RUN: cat %S/Output/html/01_enabled/input-TRACE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
+RUN: cat %S/Output/html/01_enabled/input-DEEP-TRACE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
+CHECK-HTML: mermaid.initialize({ startOnLoad: true });

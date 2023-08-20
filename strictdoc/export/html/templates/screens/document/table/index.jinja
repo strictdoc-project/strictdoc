@@ -8,7 +8,7 @@
 
   {%- if project_config.is_running_on_server and not standalone -%}
   <script type="module">
-    import { Application, Controller } from "{{ link_renderer.render_static_url('stimulus.js') }}";
+    import { Application, Controller } from "{{ link_renderer.render_static_url('stimulus.min.js') }}";
     window.Stimulus = Application.start();
     window.Controller = Controller;
   </script>

@@ -1,7 +1,9 @@
 import os
+import time
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.requests import Request
 
 from strictdoc.cli.cli_arg_parser import ServerCommandConfig
 from strictdoc.core.project_config import ProjectConfig
@@ -20,6 +22,19 @@ def create_app(
         "http://localhost:8081",
         "http://localhost:3000",
     ]
+
+    # Uncomment this to enable performance measurements.
+    # @app.middleware("http")
+    async def add_process_time_header(  # pylint: disable=unused-variable
+        request: Request, call_next
+    ):
+        start_time = time.time()
+        response = await call_next(request)
+        time_passed = round(time.time() - start_time, 3)
+        print(  # noqa: T201
+            f"PERF: {request.method} {request.url} {time_passed}s"
+        )
+        return response
 
     app.add_middleware(
         CORSMiddleware,

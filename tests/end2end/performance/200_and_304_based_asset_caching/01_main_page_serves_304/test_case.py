@@ -14,10 +14,29 @@ class Test(E2ECase):
         with SDocTestServer(
             input_path=path_to_this_test_file_folder
         ) as test_server:
+            with open(test_server.path_to_out_log) as out_log_file:
+                logs = out_log_file.read()
+            assert '"GET / HTTP/1.1" 200 OK' not in logs
+            assert '"GET / HTTP/1.1" 304 Not Modified' not in logs
+            assert '"GET /_static/turbo.js HTTP/1.1" 200 OK' not in logs
+            assert (
+                '"GET /_static/turbo.js HTTP/1.1" 304 Not Modified' not in logs
+            )
+
             self.open(test_server.get_host_and_port())
 
             screen_project_index = Screen_ProjectIndex(self)
             screen_project_index.assert_on_screen()
+
+            with open(test_server.path_to_out_log) as out_log_file:
+                logs = out_log_file.read()
+
+            assert '"GET / HTTP/1.1" 200 OK' in logs
+            assert '"GET / HTTP/1.1" 304 Not Modified' not in logs
+            assert '"GET /_static/turbo.js HTTP/1.1" 200 OK' in logs
+            assert (
+                '"GET /_static/turbo.js HTTP/1.1" 304 Not Modified' not in logs
+            )
 
             # Opening for the second time should result in 304 records in the log.
             self.open(test_server.get_host_and_port())
@@ -25,4 +44,8 @@ class Test(E2ECase):
             with open(test_server.path_to_out_log) as out_log_file:
                 logs = out_log_file.read()
 
-            assert "304 Not Modified" in logs
+            # The HTML pages as well as the assets get cached.
+            assert '"GET / HTTP/1.1" 200 OK' in logs
+            assert '"GET / HTTP/1.1" 304 Not Modified' in logs
+            assert '"GET /_static/turbo.js HTTP/1.1" 200 OK' in logs
+            assert '"GET /_static/turbo.js HTTP/1.1" 304 Not Modified' in logs

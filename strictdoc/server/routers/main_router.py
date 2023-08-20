@@ -2330,7 +2330,20 @@ def create_main_router(
                     traceability_index=export_action.traceability_index,
                     specific_documents=(document_type_to_generate,),
                 )
-        return FileResponse(full_path_to_document, media_type="text/html")
+        return FileResponse(
+            full_path_to_document,
+            media_type="text/html",
+            headers={
+                # We don't want the documents to be cached on the server without
+                # revalidation.
+                # The no-cache request directive asks caches to validate the
+                # response with the origin server before reuse.
+                # no-cache allows clients to request the most up-to-date
+                # response even if the cache has a fresh response.
+                # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
+                "Cache-Control": "no-cache"
+            },
+        )
 
     def get_asset(request: Request, url_to_asset: str):
         project_output_path = project_config.export_output_html_root

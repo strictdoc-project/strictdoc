@@ -13,8 +13,8 @@
 
   {%- if project_config.is_running_on_server and not standalone -%}
   <script type="module">
-    import hotwiredTurbo from "{{ link_renderer.render_static_url('turbo.js')}}";
-    import { Application, Controller } from "{{ link_renderer.render_static_url('stimulus.js') }}";
+    import hotwiredTurbo from "{{ link_renderer.render_static_url('turbo.min.js')}}";
+    import { Application, Controller } from "{{ link_renderer.render_static_url('stimulus.min.js') }}";
     window.Stimulus = Application.start();
     window.Controller = Controller;
   </script>

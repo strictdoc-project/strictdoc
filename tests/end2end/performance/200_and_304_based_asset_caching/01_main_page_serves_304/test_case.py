@@ -33,9 +33,10 @@ class Test(E2ECase):
 
             assert '"GET / HTTP/1.1" 200 OK' in logs
             assert '"GET / HTTP/1.1" 304 Not Modified' not in logs
-            assert '"GET /_static/turbo.js HTTP/1.1" 200 OK' in logs
+            assert '"GET /_static/turbo.min.js HTTP/1.1" 200 OK' in logs
             assert (
-                '"GET /_static/turbo.js HTTP/1.1" 304 Not Modified' not in logs
+                '"GET /_static/turbo.min.js HTTP/1.1" 304 Not Modified'
+                not in logs
             )
 
             # Opening for the second time should result in 304 records in the log.
@@ -47,5 +48,7 @@ class Test(E2ECase):
             # The HTML pages as well as the assets get cached.
             assert '"GET / HTTP/1.1" 200 OK' in logs
             assert '"GET / HTTP/1.1" 304 Not Modified' in logs
-            assert '"GET /_static/turbo.js HTTP/1.1" 200 OK' in logs
-            assert '"GET /_static/turbo.js HTTP/1.1" 304 Not Modified' in logs
+            assert '"GET /_static/turbo.min.js HTTP/1.1" 200 OK' in logs
+            assert (
+                '"GET /_static/turbo.min.js HTTP/1.1" 304 Not Modified' in logs
+            )

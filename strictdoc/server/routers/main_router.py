@@ -2224,7 +2224,7 @@ def create_main_router(
         # FIXME: This seems to be quite un-sanitized.
         _, file_extension = os.path.splitext(full_path)
         if file_extension == ".html":
-            return get_document(full_path)
+            return get_document(request, full_path)
         if file_extension in (
             ".css",
             ".js",
@@ -2239,7 +2239,7 @@ def create_main_router(
 
         return HTMLResponse(content="Not Found", status_code=404)
 
-    def get_document(url_to_document: str):
+    def get_document(request: Request, url_to_document: str):
         full_path_to_document = os.path.join(
             server_config.output_path, "html", url_to_document
         )
@@ -2258,7 +2258,23 @@ def create_main_router(
             ):
                 must_generate_document = True
 
-        if must_generate_document:
+        if not must_generate_document:
+            if "if-none-match" in request.headers:
+                header_etag = request.headers["if-none-match"]
+                # FIXME: We have copied the Etag calculation procedure from
+                # Starlette's server code. One day this copy may diverge if
+                # Starlette decides to implement something else.
+                # In that case, the risk is that the 200/304 caching will stop
+                # working but such a risk seems acceptable.
+                # FIXME: Known issue: Safari does not send If-Modified-Since,
+                # so we never reach this branch with Safari. Googling reveals
+                # that Safari's behavior is special, and none of the suggested
+                # fixes worked and/or seemed portable.
+                file_etag = get_etag(full_path_to_document)
+                if header_etag == file_etag:
+                    return Response(status_code=304)
+
+        else:
             if url_to_document.startswith("_source_files"):
                 # FIXME: We could be more specific here and only generate the
                 # requested file.
@@ -2314,9 +2330,7 @@ def create_main_router(
                     traceability_index=export_action.traceability_index,
                     specific_documents=(document_type_to_generate,),
                 )
-        with open(full_path_to_document, encoding="utf8") as sample_sdoc:
-            content = sample_sdoc.read()
-        return HTMLResponse(content=content)
+        return FileResponse(full_path_to_document, media_type="text/html")
 
     def get_asset(request: Request, url_to_asset: str):
         project_output_path = project_config.export_output_html_root

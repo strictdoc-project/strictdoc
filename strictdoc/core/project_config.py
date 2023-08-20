@@ -31,6 +31,8 @@ class ProjectFeature(str, Enum):
     REQUIREMENTS_COVERAGE_SCREEN = "REQUIREMENTS_COVERAGE_SCREEN"
     REQUIREMENT_TO_SOURCE_TRACEABILITY = "REQUIREMENT_TO_SOURCE_TRACEABILITY"
 
+    MERMAID = "MERMAID"
+
     ALL_FEATURES = "ALL_FEATURES"
 
     @staticmethod
@@ -191,6 +193,9 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
 
     def is_activated_mathjax(self) -> bool:
         return ProjectFeature.MATHJAX in self.project_features
+
+    def is_activated_mermaid(self) -> bool:
+        return ProjectFeature.MERMAID in self.project_features
 
     def get_strictdoc_root_path(self) -> str:
         return self.environment.path_to_strictdoc

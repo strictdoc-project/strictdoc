@@ -1,0 +1,33 @@
+{% set template_type = 'Project statistics' %}
+{% set standalone = false %}
+
+{% extends "base.jinja.html" %}
+
+{% block head_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ link_renderer.render_static_url('tree.css') }}"/>
+{% endblock head_css %}
+
+{% block head_scripts %}
+  {{ super() }}
+{% endblock head_scripts %}
+
+{% block title %}Project statistics{% endblock title %}
+
+{% block viewtype %}project-statistics{% endblock viewtype %}
+
+{% block layout_nav %}
+  {% include "_shared/nav.jinja.html" %}
+{% endblock layout_nav %}
+
+{% block header_content %}
+  {%- with
+      header__pagetype=true
+  -%}
+    {% include "components/header/index.jinja" %}
+  {%- endwith -%}
+{% endblock header_content %}
+
+{% block main_content %}
+  {% include "screens/project_statistics/main.jinja" %}
+{% endblock main_content %}

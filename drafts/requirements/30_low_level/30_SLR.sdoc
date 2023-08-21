@@ -819,6 +819,30 @@ TITLE: View DTR screen
 [/SECTION]
 
 [SECTION]
+TITLE: Screen: Project statistics
+
+[REQUIREMENT]
+UID: SDOC-SRS-97
+STATUS: Active
+TITLE: Display project statistics
+STATEMENT: >>>
+StrictDoc shall provide a Project Statistics screen that displays the following project information:
+
+- Project title
+- Date of generation
+- Git revision
+- Total documents
+- Total requirements
+- Requirements status breakdown
+- Total number of TBD/TBC found in documents.
+<<<
+RATIONALE: >>>
+TBD
+<<<
+
+[/SECTION]
+
+[SECTION]
 UID: SECTION-SRS-Screen-Project-tree-document-diff
 TITLE: Screen: Project tree / document diff
 

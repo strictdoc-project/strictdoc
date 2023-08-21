@@ -1,0 +1,17 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[REQUIREMENT]
+UID: REQ001
+TITLE: Hello
+STATEMENT: The System shall do 1.
+
+[REQUIREMENT]
+UID: REQ002
+TITLE: Hello
+STATEMENT: The System shall do 1.
+
+[REQUIREMENT]
+UID: REQ003
+TITLE: Hello
+STATEMENT: The System shall do 1.

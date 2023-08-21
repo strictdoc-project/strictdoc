@@ -1,0 +1,81 @@
+<div class="main">
+  <style>
+    .progress {
+      border-collapse: collapse;
+    }
+    .progress td {
+      border: 1px solid gray;
+      padding: 10px 20px;
+    }
+  </style>
+  <table class="progress">
+    <td colspan="2"><b>General information</b></td>
+    <tr>
+      <td>Project name</td>
+      <td>{{ project_config.project_title }}</td>
+    </tr>
+    <tr>
+      <td>Generation date</td>
+      <td>{{ traceability_index.strictdoc_last_update.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+    </tr>
+    <tr>
+      <td>Git commit/release</td>
+      <td>{{ document_tree_stats.git_commit_hash }}</td>
+    </tr>
+    <tr>
+      <td>Total documents</td>
+      <td>{{ document_tree_stats.total_documents }}</td>
+    </tr>
+    <td colspan="2"><b>Requirements</b></td>
+    <tr>
+      <td>Total requirements</td>
+      <td>{{ document_tree_stats.total_requirements }}</td>
+    </tr>
+    <tr>
+      <td>Requirements with no UID</td>
+      <td>{{ document_tree_stats.requirements_no_uid }}</td>
+    </tr>
+    <tr>
+      <td>Requirements with no Parent/Child links</td>
+      <td>{{ document_tree_stats.requirements_no_links }}</td>
+    </tr>
+    <tr>
+      <td>Requirements with no RATIONALE</td>
+      <td>{{ document_tree_stats.requirements_no_rationale }}</td>
+    </tr>
+    <tr>
+    <td colspan="2"><b>Requirements status</b></td>
+    </tr>
+    <tr>
+      <td>Requirements with no Status</td>
+      <td>{{ document_tree_stats.requirements_status_none }}</td>
+    </tr>
+    <tr>
+      <td>Requirements with status Active</td>
+      <td>{{ document_tree_stats.requirements_status_active }}</td>
+    </tr>
+    <tr>
+      <td>Requirements with status Draft</td>
+      <td>{{ document_tree_stats.requirements_status_draft }}</td>
+    </tr>
+    <tr>
+      <td>Requirements with status Backlog</td>
+      <td>{{ document_tree_stats.requirements_status_backlog }}</td>
+    </tr>
+    <tr>
+      <td>Requirements with all other statuses</td>
+      <td>{{ document_tree_stats.requirements_status_other }}</td>
+    </tr>
+    <tr>
+    <td colspan="2"><b>TBD/TBC</b></td>
+    </tr>
+    <tr>
+      <td>Total TBD</td>
+      <td>{{ document_tree_stats.total_tbd }}</td>
+    </tr>
+    <tr>
+      <td>Total TBC</td>
+      <td>{{ document_tree_stats.total_tbc }}</td>
+    </tr>
+  </table>
+</div>

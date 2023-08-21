@@ -2109,3 +2109,30 @@ all export options and is disabled with this option as well.
 [/SECTION]
 
 [/SECTION]
+
+[SECTION]
+TITLE: Experimental features
+
+[SECTION]
+TITLE: Project statistics screen
+
+[FREETEXT]
+The project statistics screen displays useful information about a documentation project as well as some requirements-based statistics.
+
+To activate the project statistics screen, add/edit the ``strictdoc.toml`` config file to the root of your repository with documentation content.
+
+.. code:: toml
+
+    [project]
+    title = "My project
+
+    features = [
+      "PROJECT_STATISTICS_SCREEN"
+    ]
+
+This feature is not enabled by default because it has not undergone sufficient testing by users. The particular aspect requiring extensive testing is related to StrictDoc's interaction with Git to retrieve git commit information. There remain certain unexamined edge cases and portability concerns, e.g., testing on Windows, testing projects that have no Git version control, calling StrictDoc outside of a project's root folder.
+[/FREETEXT]
+
+[/SECTION]
+
+[/SECTION]

@@ -10,6 +10,18 @@
     {% include "_res/svg_ico16_index.jinja.html" %}
   </a>
 
+{%- if project_config.is_activated_project_statistics() -%}
+  <a
+    data-link="project_information"
+    class="nav_button"
+    href="{{link_renderer.render_url('project_statistics.html')}}"
+    title="Project statistics"
+    data-testid="project-tree-link-project-statistics"
+  >
+    {% include "_res/svg_ico16_stat.jinja" %}
+  </a>
+{%- endif -%}
+
 {%- if project_config.is_activated_requirements_coverage() -%}
   <a
     data-link="requirements_coverage"

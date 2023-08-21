@@ -27,6 +27,7 @@ class ProjectFeature(str, Enum):
     # Experimental features.
     HTML2PDF = "HTML2PDF"
     REQIF = "REQIF"
+    PROJECT_STATISTICS_SCREEN = "PROJECT_STATISTICS_SCREEN"
     STANDALONE_DOCUMENT_SCREEN = "STANDALONE_DOCUMENT_SCREEN"
     REQUIREMENTS_COVERAGE_SCREEN = "REQUIREMENTS_COVERAGE_SCREEN"
     REQUIREMENT_TO_SOURCE_TRACEABILITY = "REQUIREMENT_TO_SOURCE_TRACEABILITY"
@@ -168,6 +169,9 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
 
     def is_activated_deep_trace_screen(self):
         return ProjectFeature.DEEP_TRACEABILITY_SCREEN in self.project_features
+
+    def is_activated_project_statistics(self):
+        return ProjectFeature.PROJECT_STATISTICS_SCREEN in self.project_features
 
     def is_activated_requirements_to_source_traceability(self):
         return (

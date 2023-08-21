@@ -2293,6 +2293,10 @@ def create_main_router(
                 html_generator.export_source_coverage_screen(
                     traceability_index=export_action.traceability_index,
                 )
+            elif url_to_document == "project_statistics.html":
+                html_generator.export_project_statistics(
+                    traceability_index=export_action.traceability_index,
+                )
             else:
                 if url_to_document.endswith("-TABLE.html"):
                     base_document_url = url_to_document.replace("-TABLE", "")

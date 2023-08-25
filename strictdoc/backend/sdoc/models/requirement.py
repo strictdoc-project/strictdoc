@@ -293,9 +293,8 @@ class Requirement(
 
     def enumerate_fields(self):
         requirement_fields = self.ordered_fields_lookup.values()
-        for requirement_field in requirement_fields:
-            for single_field in requirement_field:
-                yield single_field
+        for requirement_field_list in requirement_fields:
+            yield from requirement_field_list
 
     def enumerate_meta_fields(
         self, skip_single_lines=False, skip_multi_lines=False

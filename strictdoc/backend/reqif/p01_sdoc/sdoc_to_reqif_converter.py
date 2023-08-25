@@ -136,9 +136,7 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
                             values=values,
                         )
                         data_types.append(data_type)
-                        data_types_lookup[
-                            StrictDocReqIFTypes.SINGLE_CHOICE.value
-                        ] = data_type.identifier
+                        data_types_lookup[field.title] = data_type.identifier
                     elif isinstance(field, GrammarElementFieldMultipleChoice):
                         values = []
                         values_map = {}
@@ -161,9 +159,7 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
                             values=values,
                         )
                         data_types.append(data_type)
-                        data_types_lookup[
-                            StrictDocReqIFTypes.MULTI_CHOICE.value
-                        ] = data_type.identifier
+                        data_types_lookup[field.title] = data_type.identifier
                     elif isinstance(field, GrammarElementFieldReference):
                         # TODO: implement correct reqIF Encoding for
                         #  GrammarElementFieldReference. Treat as
@@ -295,6 +291,8 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
                         grammar=document.grammar,
                         context=context,
                         document_spec_object_type=document_spec_object_type,
+                        data_types=data_types,
+                        data_types_lookup=data_types_lookup,
                     )
                     spec_objects.append(spec_object)
                     hierarchy = ReqIFSpecHierarchy(
@@ -474,6 +472,8 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
         requirement: Requirement,
         grammar: DocumentGrammar,
         context: P01_SDocToReqIFBuildContext,
+        data_types: List,
+        data_types_lookup: Dict[str, str],
         document_spec_object_type: str,
     ) -> ReqIFSpecObject:
         requirement_identifier = generate_unique_identifier("REQUIREMENT")
@@ -493,20 +493,47 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
                 continue
             grammar_field = grammar_element.fields_map[field.field_name]
             if isinstance(grammar_field, GrammarElementFieldSingleChoice):
+                data_type_ref = data_types_lookup[field.field_name]
+
+                enum_ref_value = None
+                for data_type in data_types:
+                    if data_type_ref == data_type.identifier:
+                        for data_type_value in data_type.values:
+                            if data_type_value.key == field.field_value:
+                                enum_ref_value = data_type_value.identifier
+                                break
+
+                assert enum_ref_value is not None
+
                 attribute = SpecObjectAttribute(
                     xml_node=None,
                     attribute_type=SpecObjectAttributeType.ENUMERATION,
                     definition_ref=field.field_name,
-                    value=[field.field_value],
+                    value=[enum_ref_value],
                 )
             elif isinstance(grammar_field, GrammarElementFieldMultipleChoice):
                 field_values: List[str] = field.field_value.split(",")
                 field_values = list(map(lambda v: v.strip(), field_values))
+
+                data_type_ref = data_types_lookup[field.field_name]
+
+                data_type_lookup = {}
+                for data_type in data_types:
+                    if data_type_ref == data_type.identifier:
+                        for data_type_value in data_type.values:
+                            data_type_lookup[
+                                data_type_value.key
+                            ] = data_type_value.identifier
+
+                field_values_refs = []
+                for field_value in field_values:
+                    field_values_refs.append(data_type_lookup[field_value])
+
                 attribute = SpecObjectAttribute(
                     xml_node=None,
                     attribute_type=SpecObjectAttributeType.ENUMERATION,
                     definition_ref=field.field_name,
-                    value=field_values,
+                    value=field_values_refs,
                 )
             elif isinstance(grammar_field, GrammarElementFieldString):
                 field_value = escape(
@@ -569,11 +596,7 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
                     attribute = SpecAttributeDefinition.create(
                         attribute_type=SpecObjectAttributeType.ENUMERATION,
                         identifier=field.title,
-                        datatype_definition=(
-                            data_types_lookup[
-                                StrictDocReqIFTypes.SINGLE_CHOICE.value
-                            ]
-                        ),
+                        datatype_definition=data_types_lookup[field.title],
                         long_name=field.title,
                         multi_valued=False,
                     )
@@ -581,11 +604,7 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
                     attribute = SpecAttributeDefinition.create(
                         attribute_type=SpecObjectAttributeType.ENUMERATION,
                         identifier=field.title,
-                        datatype_definition=(
-                            data_types_lookup[
-                                StrictDocReqIFTypes.MULTI_CHOICE.value
-                            ]
-                        ),
+                        datatype_definition=data_types_lookup[field.title],
                         long_name=field.title,
                         multi_valued=True,
                     )

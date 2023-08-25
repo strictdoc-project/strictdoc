@@ -60,6 +60,10 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         return documents
 
     @staticmethod
+    def is_spec_object_requirement(_):
+        return True
+
+    @staticmethod
     def is_spec_object_section(
         spec_object: ReqIFSpecObject, reqif_bundle: ReqIFBundle
     ):
@@ -81,8 +85,10 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         return False
 
     @staticmethod
-    def is_spec_object_requirement(_):
-        return True
+    def convert_requirement_field_from_reqif(field_name: str) -> str:
+        if field_name in ReqIFRequirementReservedField.SET:
+            return REQIF_MAP_TO_SDOC_FIELD_MAP[field_name]
+        return field_name
 
     @staticmethod
     def _create_document_from_reqif_specification(
@@ -164,7 +170,8 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
             attributes = list(spec_object_type.attribute_map.keys())
             if attributes != DEFAULT_SDOC_GRAMMAR_FIELDS:
                 grammar_element = P01_ReqIFToSDocConverter.create_grammar_element_from_spec_object_type(
-                    spec_object_type=spec_object_type, reqif_bundle=reqif_bundle
+                    spec_object_type=spec_object_type,
+                    reqif_bundle=reqif_bundle,
                 )
                 elements.append(grammar_element)
         if len(elements) > 0:
@@ -184,10 +191,11 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
     ):
         fields = []
         for attribute in spec_object_type.attribute_definitions:
-            field_name = REQIF_MAP_TO_SDOC_FIELD_MAP.get(
-                attribute.long_name, attribute.long_name
+            field_name = (
+                P01_ReqIFToSDocConverter.convert_requirement_field_from_reqif(
+                    attribute.long_name
+                )
             )
-
             # Chapter name is a reserved field for sections.
             if field_name == ReqIFChapterField.CHAPTER_NAME:
                 continue
@@ -332,17 +340,42 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                 raise NotImplementedError
             field_name: str = long_name_or_none
             if attribute.attribute_type == SpecObjectAttributeType.ENUMERATION:
-                assert isinstance(attribute.value, list)
-                enum_values_list = list(attribute.value)
-                for enum_value_idx, _ in enumerate(enum_values_list):
-                    enum_values_list[enum_value_idx] = enum_values_list[
-                        enum_value_idx
-                    ].strip()
-                enum_values = ", ".join(enum_values_list)
+                sdoc_field_name = P01_ReqIFToSDocConverter.convert_requirement_field_from_reqif(
+                    field_name,
+                )
+                enum_values_resolved = []
+                for (
+                    attribute_definition_
+                ) in spec_object_type.attribute_definitions:
+                    if (
+                        attribute.definition_ref
+                        == attribute_definition_.identifier
+                    ):
+                        datatype_definition = (
+                            attribute_definition_.datatype_definition
+                        )
+
+                        datatype: ReqIFDataTypeDefinitionEnumeration = (
+                            reqif_bundle.lookup.get_data_type_by_ref(
+                                datatype_definition
+                            )
+                        )
+
+                        enum_values_list = list(attribute.value)
+                        for enum_value in enum_values_list:
+                            enum_values_resolved.append(
+                                datatype.values_map[enum_value].key
+                            )
+
+                        break
+                else:
+                    raise NotImplementedError
+
+                enum_values = ", ".join(enum_values_resolved)
                 fields.append(
                     RequirementField(
                         parent=None,
-                        field_name=field_name,
+                        field_name=sdoc_field_name,
                         field_value=enum_values,
                         field_value_multiline=None,
                         field_value_references=None,
@@ -362,12 +395,15 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                 attribute_multiline_value = attribute_value.lstrip()
                 attribute_value = None
 
-            if field_name in ReqIFRequirementReservedField.SET:
-                field_name = REQIF_MAP_TO_SDOC_FIELD_MAP[field_name]
+            sdoc_field_name = (
+                P01_ReqIFToSDocConverter.convert_requirement_field_from_reqif(
+                    field_name,
+                )
+            )
             fields.append(
                 RequirementField(
                     parent=None,
-                    field_name=field_name,
+                    field_name=sdoc_field_name,
                     field_value=attribute_value,
                     field_value_multiline=attribute_multiline_value,
                     field_value_references=None,

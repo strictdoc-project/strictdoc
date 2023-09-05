@@ -25,6 +25,9 @@ from strictdoc.export.html.generators.document_trace import (
 from strictdoc.export.html.generators.document_tree import (
     DocumentTreeHTMLGenerator,
 )
+from strictdoc.export.html.generators.project_statistics import (
+    ProgressStatisticsGenerator,
+)
 from strictdoc.export.html.generators.requirements_coverage import (
     RequirementsCoverageHTMLGenerator,
 )
@@ -80,6 +83,12 @@ class HTMLGenerator:
         # well with the multiprocessing's processed-based parallelization.
         # _pickle.PicklingError: Can't pickle <function sync_do_first at 0x1077bdf80>: it's not the same object as jinja2.filters.sync_do_first
         self.export_project_tree_screen(traceability_index=traceability_index)
+
+        # Export project statistics.
+        if self.project_config.is_feature_activated(
+            ProjectFeature.PROJECT_STATISTICS_SCREEN
+        ):
+            self.export_project_statistics(traceability_index)
 
         # Export requirements coverage.
         if self.project_config.is_feature_activated(
@@ -409,3 +418,24 @@ class HTMLGenerator:
         )
         with open(output_html_source_coverage, "w", encoding="utf8") as file:
             file.write(source_coverage_content)
+
+    def export_project_statistics(
+        self,
+        traceability_index: TraceabilityIndex,
+    ):
+        link_renderer = LinkRenderer(
+            root_path="",
+            static_path=self.project_config.dir_for_sdoc_assets,
+        )
+        document_content = ProgressStatisticsGenerator.export(
+            self.project_config,
+            traceability_index,
+            link_renderer,
+            html_templates=self.html_templates,
+        )
+        output_html_source_coverage = os.path.join(
+            self.project_config.export_output_html_root,
+            "project_statistics.html",
+        )
+        with open(output_html_source_coverage, "w", encoding="utf8") as file:
+            file.write(document_content)

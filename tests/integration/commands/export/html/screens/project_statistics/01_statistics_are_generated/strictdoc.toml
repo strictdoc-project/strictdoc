@@ -1,0 +1,6 @@
+[project]
+title = "Test project"
+
+features = [
+  "PROJECT_STATISTICS_SCREEN",
+]

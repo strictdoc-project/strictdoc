@@ -21,7 +21,7 @@ class RSTWriter:
     def __init__(self, index: TraceabilityIndex):
         self.index = index
 
-    def write(self, document: Document, single_document):
+    def write(self, document: Document, single_document: bool) -> str:
         document_iterator = DocumentCachingIterator(document)
         output = ""
 
@@ -125,9 +125,23 @@ class RSTWriter:
             if isinstance(part, str):
                 output += part
             elif isinstance(part, InlineLink):
-                output += f":ref:`{part.link}`"
+                anchor_or_none = self.index.get_anchor_by_uid_weak(part.link)
+
+                # Labels that aren’t placed before a section title can still be
+                # referenced, but you must give the link an explicit title,
+                # using this syntax: :ref:`Link title <label-name>`.
+                # https://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html
+                if anchor_or_none:
+                    anchor_text = (
+                        anchor_or_none.title
+                        if anchor_or_none.title is not None
+                        else anchor_or_none.value
+                    )
+                    output += f":ref:`{anchor_text} <{part.link}>`"
+                else:
+                    output += f":ref:`{part.link}`"
             elif isinstance(part, Anchor):
-                output += f".. {part.value}:\n"
+                output += f".. _{part.value}:\n"
             else:
                 raise NotImplementedError
         output += "\n"

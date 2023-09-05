@@ -38,8 +38,6 @@ Summary of StrictDoc features:
   a few seconds. From the second run, only changed documents are regenerated.
   Further performance tuning should be possible.
 
-See the Backlog to get an idea of the overall project direction.
-
 .. _SDOC_UG_CONTACT:
 
 Contact the developers
@@ -237,8 +235,6 @@ The following essential features are still missing and will be worked on in the 
 - Deleting a section recursively with a correct cleanup of all traceability information.
 - Numerous validation aspects and edge cases of content editing.
 - A separate screen for editing project settings.
-
-See the Backlog's section :ref:`SDOC_BL_WEB` for more details.
 
 Concurrent use of web user interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1174,6 +1170,42 @@ table of contents and document structure:
      - The rationale for a requirement. Visually presented in the same way as a
        comment.
 
+.. _SDOC_UG_LINKS_AND_ANCHORS:
+
+Links
+-----
+
+StrictDoc supports creating inline links to document sections and anchors.
+
+Section links
+~~~~~~~~~~~~~
+
+When a section has an UID, it is possible to reference this section from any other section's text using a ``[LINK: <Section UID>]`` tag.
+
+Example:
+
+The following link references a section: :ref:`SDOC_UG_LINKS_AND_ANCHORS`.
+
+**Note:** Adding a ``LINK`` tag will only work from the section text. In the requirement fields, the LINK tag will not be recognized.
+
+Anchors
+~~~~~~~
+
+The ``[ANCHOR: ...]`` tag creates an anchor that can be referenced from other pages using ``[LINK <Anchor UID>]``.
+
+Example:
+
+This is a link to anchor: :ref:`ANCHOR-EXAMPLE`.
+
+Note: ``ANCHOR`` is a block-level tag. It has to be placed in the beginning of a line with a newline break after the tag.
+
+Anchor example
+^^^^^^^^^^^^^^
+
+.. ANCHOR-EXAMPLE:
+
+This section contains an anchor.
+
 Markup
 ======
 
@@ -1562,7 +1594,7 @@ Project title
 
 This option specifies a project title.
 
-.. code-block:: toml
+.. code-block::
 
     [project]
     title = "StrictDoc Documentation"
@@ -1760,3 +1792,24 @@ To disable parallelization use the ``--no-parallelization`` option:
 this option will only have effect on the HTML export. All other export options
 are run from the main thread. Reading of the SDoc documents is parallelized for
 all export options and is disabled with this option as well.
+
+Experimental features
+=====================
+
+Project statistics screen
+-------------------------
+
+The project statistics screen displays useful information about a documentation project as well as some requirements-based statistics.
+
+To activate the project statistics screen, add/edit the ``strictdoc.toml`` config file to the root of your repository with documentation content.
+
+.. code::
+
+    [project]
+    title = "My project
+
+    features = [
+      "PROJECT_STATISTICS_SCREEN"
+    ]
+
+This feature is not enabled by default because it has not undergone sufficient testing by users. The particular aspect requiring extensive testing is related to StrictDoc's interaction with Git to retrieve git commit information. There remain certain unexamined edge cases and portability concerns, e.g., testing on Windows, testing projects that have no Git version control, calling StrictDoc outside of a project's root folder.

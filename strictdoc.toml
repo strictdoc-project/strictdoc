@@ -7,12 +7,12 @@ features = [
   "TABLE_SCREEN",
   "TRACEABILITY_SCREEN",
   "DEEP_TRACEABILITY_SCREEN",
-  "PROJECT_STATISTICS_SCREEN",
 
   # Stable features but not used by StrictDoc.
   # "MATHJAX"
 
-  # Experimental features are disabled when published to GitHub pages.
+  # Experimental features.
+  "PROJECT_STATISTICS_SCREEN",
   # "REQIF",
   # "STANDALONE_DOCUMENT_SCREEN",
   # "REQUIREMENTS_COVERAGE_SCREEN",

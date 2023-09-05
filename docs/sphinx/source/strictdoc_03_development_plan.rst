@@ -25,7 +25,9 @@ Software support for writing requirements and specifications documents
 There shall exist free and lightweight yet capable software for writing
 requirements and specifications documents
 
-**Comment:** Technical documentation is hard, it can be an extremely laborious process.
+**Comment:**
+
+Technical documentation is hard, it can be an extremely laborious process.
 Software shall support engineers in their work with documentation.
 
 **Children:**
@@ -47,7 +49,9 @@ Reduce documentation hazards
 There shall exist no (or less) opportunity for writing incorrect or inconsistent
 documentation.
 
-**Comment:** Every serious engineering activity, such as safety engineering or systems
+**Comment:**
+
+Every serious engineering activity, such as safety engineering or systems
 engineering, starts with requirements. The more critical is a product the higher
 the importance of good documentation.
 
@@ -72,7 +76,9 @@ No (or less) run-away documentation
 
 Software shall support engineers in keeping documentation up-to-date.
 
-**Comment:** Technical documentation easily becomes outdated. Many existing tools for
+**Comment:**
+
+Technical documentation easily becomes outdated. Many existing tools for
 documentation do not provide any measures for ensuring overall consistency of
 documents and documentation trees.
 
@@ -90,11 +96,15 @@ Change management
 
 Software shall provide capabilities for change management and impact assessment.
 
-**Comment:** Change management is difficult. The bigger the project is, the harder it is to
+**Comment:**
+
+Change management is difficult. The bigger the project is, the harder it is to
 maintain its documentation. If a change is introduced to a project, it usually
 requires a full revision of its requirements.
 
-**Comment:** When the basic capabilities of StrictDoc are in place, it should be possible
+**Comment:**
+
+When the basic capabilities of StrictDoc are in place, it should be possible
 to do a more advanced analysis of requirements and requirement trees:
 
 - Finding similar or relevant requirements.
@@ -104,8 +114,6 @@ Project milestones
 ==================
 
 As an open-source project, StrictDoc is developed without strict deadlines, however there are certain high-level priorities that influence the development. The work is loosely organized in quarters.
-
-See also the Backlog document for a complete list of the planned work items.
 
 .. list-table::
    :header-rows: 1
@@ -145,7 +153,9 @@ See also the Backlog document for a complete list of the planned work items.
    * - 2023-Q1
      - Improvements of the Web-based interface towards first release. Improvements of the ReqIF support.
    * - 2023-Q2
-     - Further stabilization of the Web interface. Improvements of the ReqIF interface.
+     - Further stabilization of the Web interface. Graphviz export. RST markup stability improvements. Work on StrictDoc's own requirements traceability.
+   * - 2023-Q3
+     - Anchors and incoming links. Improvements of the ReqIF interface. Work on StrictDoc's own requirements traceability.
 
 Verification
 ============

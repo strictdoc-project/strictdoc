@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import Optional
 
+from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.requirement import Requirement
@@ -125,6 +126,8 @@ class RSTWriter:
                 output += part
             elif isinstance(part, InlineLink):
                 output += f":ref:`{part.link}`"
+            elif isinstance(part, Anchor):
+                output += f".. {part.value}:\n"
             else:
                 raise NotImplementedError
         output += "\n"

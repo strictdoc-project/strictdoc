@@ -1,0 +1,24 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[SECTION]
+TITLE: Chapter 1
+
+[FREETEXT]
+Here's the chapter 1 with anchor:
+
+[ANCHOR: ANCHOR_1]
+
+Some other text.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Chapter 2
+
+[FREETEXT]
+See [LINK: ANCHOR_1] for more details.
+[/FREETEXT]
+
+[/SECTION]

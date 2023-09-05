@@ -158,7 +158,7 @@ def docs(context):
         context,
         ToxEnvironment.DOCUMENTATION,
         """
-            make --directory docs/sphinx html latexpdf
+            make --directory docs/sphinx html latexpdf SPHINXOPTS="-W --keep-going"
         """,
     )
 

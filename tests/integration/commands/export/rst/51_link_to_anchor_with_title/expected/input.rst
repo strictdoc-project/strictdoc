@@ -10,4 +10,4 @@ Some other text.
 Chapter 2
 =========
 
-See :ref:`ANCHOR_1 <ANCHOR_1>` for more details.
+See :ref:`Anchor ABC <ANCHOR_1>` for more details.

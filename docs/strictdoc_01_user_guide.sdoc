@@ -1378,7 +1378,7 @@ The following link references a section: [LINK: SDOC_UG_LINKS_AND_ANCHORS].
 TITLE: Anchors
 
 [FREETEXT]
-The ``[ANCHOR: ...]`` tag creates an anchor that can be referenced from other pages using ``[LINK <Anchor UID>]``.
+The ``[ANCHOR: <anchor uid>, <optional anchor title>]`` tag creates an anchor that can be referenced from other pages using ``[LINK <Anchor UID>]``.
 
 Example:
 
@@ -1391,9 +1391,9 @@ Note: ``ANCHOR`` is a block-level tag. It has to be placed in the beginning of a
 TITLE: Anchor example
 
 [FREETEXT]
-[ANCHOR: ANCHOR-EXAMPLE]
+This section contains an anchor named ``Anchor ABC``.
 
-This section contains an anchor.
+[ANCHOR: ANCHOR-EXAMPLE, Anchor ABC]
 [/FREETEXT]
 
 [/SECTION]
@@ -1864,7 +1864,7 @@ TITLE: Project title
 [FREETEXT]
 This option specifies a project title.
 
-.. code-block:: toml
+.. code-block::
 
     [project]
     title = "StrictDoc Documentation"
@@ -2121,7 +2121,7 @@ The project statistics screen displays useful information about a documentation 
 
 To activate the project statistics screen, add/edit the ``strictdoc.toml`` config file to the root of your repository with documentation content.
 
-.. code:: toml
+.. code::
 
     [project]
     title = "My project

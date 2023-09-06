@@ -12,7 +12,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test_UC200_T01_ViewRequirementsCoverage(E2ECase):
+class Test(E2ECase):
     def test(self):
         with SDocTestServer(
             input_path=path_to_this_test_file_folder

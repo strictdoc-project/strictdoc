@@ -264,45 +264,9 @@ The ``server`` command accepts a number of options. To explore the options, run:
 .. code-block:: bash
 
     strictdoc server --help
+
+**Note:** The implementation of the web interface is work-in-progress. See [LINK: SDOC_LIMIT_WEB] for an overview of the existing limitations.
 [/FREETEXT]
-
-[SECTION]
-TITLE: Limitations of web user interface
-
-[FREETEXT]
-The existing implementation of the web user interface is alpha-quality and incomplete. The user interface and the underlying backend implementation are not yet autonomous from the command-line workflow. A user still has to access the command line to run the server and commit the documents to Git manually.
-
-The currently supported workflow for the ``server`` command must be hybrid:
-
-- In one terminal window: run server.
-- In another window: check the changes made by the server in the .sdoc files. Commit the .sdoc files to Git.
-
-Note that currently, StrictDoc server maintains in-memory state of a documentation tree, and it does not watch over the changes made in the .sdoc files. If you make a change in an ``.sdoc`` file manually, you have to restart the server in order for your changes to show up in the web user interface.
-
-The following essential features are still missing and will be worked on in the near future:
-
-- Editing of documents with non-string grammar fields is not supported yet.
-  Example: The ``SingleChoice`` type will not work in the \*.sdoc files.
-- Adding images to the multiline fields like requirement's STATEMENT and section's FREETEXT.
-- Adding/editing sections with ``LEVEL: None``.
-- Deleting a document.
-- Deleting a section recursively with a correct cleanup of all traceability information.
-- Numerous validation aspects and edge cases of content editing.
-- A separate screen for editing project settings.
-[/FREETEXT]
-
-[SECTION]
-TITLE: Concurrent use of web user interface
-
-[FREETEXT]
-StrictDoc's web user interface does not handle concurrency. If the same requirement/section is edited by two users at the same time, the last write wins.
-
-The measures for handling concurrent use are planned but have been not implemented yet.
-[/FREETEXT]
-
-[/SECTION]
-
-[/SECTION]
 
 [/SECTION]
 
@@ -1475,15 +1439,6 @@ See [LINK: SDOC_UG_CONFIG_FEATURES] for the description of other features.
 
 [/SECTION]
 
-[SECTION]
-TITLE: Limitations of RST support by StrictDoc
-
-[FREETEXT]
-StrictDoc uses Docutils for rendering RST to HTML, not Sphinx. The implication is that no Sphinx-specific RST directives are supported. Refer to this issue for the related discussion of the limitations: `Unexpected restriction on specific RST directives / compatibility with Breathe Sphinx Plugin #1093 <https://github.com/strictdoc-project/strictdoc/issues/1093>`_.
-[/FREETEXT]
-
-[/SECTION]
-
 [/SECTION]
 
 [SECTION]
@@ -2229,6 +2184,59 @@ The testing of these experimental features is typically done by developers or by
 
 If you happen to stumble upon such a hidden feature, we encourage you to use it and provide bug reports or share your experiences with it. However, please be prepared to encounter various unknown or undefined behaviors in the process.
 [/FREETEXT]
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
+TITLE: StrictDoc's limitations
+
+[SECTION]
+TITLE: Limitations of RST support by StrictDoc
+
+[FREETEXT]
+StrictDoc uses Docutils for rendering RST to HTML, not Sphinx. The implication is that no Sphinx-specific RST directives are supported. Refer to this issue for the related discussion of the limitations: `Unexpected restriction on specific RST directives / compatibility with Breathe Sphinx Plugin #1093 <https://github.com/strictdoc-project/strictdoc/issues/1093>`_.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+UID: SDOC_LIMIT_WEB
+TITLE: Limitations of web user interface
+
+[FREETEXT]
+The existing implementation of the web user interface is alpha-quality and incomplete. The user interface and the underlying backend implementation are not yet autonomous from the command-line workflow. A user still has to access the command line to run the server and commit the documents to Git manually.
+
+The currently supported workflow for the ``server`` command must be hybrid:
+
+- In one terminal window: run server.
+- In another window: check the changes made by the server in the .sdoc files. Commit the .sdoc files to Git.
+
+Note that currently, StrictDoc server maintains in-memory state of a documentation tree, and it does not watch over the changes made in the .sdoc files. If you make a change in an ``.sdoc`` file manually, you have to restart the server in order for your changes to show up in the web user interface.
+
+The following essential features are still missing and will be worked on in the near future:
+
+- Editing of documents with non-string grammar fields is not supported yet.
+  Example: The ``SingleChoice`` type will not work in the \*.sdoc files.
+- Adding images to the multiline fields like requirement's STATEMENT and section's FREETEXT.
+- Adding/editing sections with ``LEVEL: None``.
+- Deleting a document.
+- Deleting a section recursively with a correct cleanup of all traceability information.
+- Numerous validation aspects and edge cases of content editing.
+- A separate screen for editing project settings.
+[/FREETEXT]
+
+[SECTION]
+TITLE: Concurrent use of web user interface
+
+[FREETEXT]
+StrictDoc's web user interface does not handle concurrency. If the same requirement/section is edited by two users at the same time, the last write wins.
+
+The measures for handling concurrent use are planned but have been not implemented yet.
+[/FREETEXT]
+
+[/SECTION]
 
 [/SECTION]
 

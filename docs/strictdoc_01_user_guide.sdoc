@@ -40,6 +40,8 @@ Summary of StrictDoc features:
   document trees with up to 2000–3000 requirements into HTML pages stays within
   a few seconds. From the second run, only changed documents are regenerated.
   Further performance tuning should be possible.
+
+See also summary of StrictDoc's existing limitations: [LINK: SDOC_UG_LIMIT].
 [/FREETEXT]
 
 [SECTION]
@@ -76,9 +78,17 @@ TITLE: Hello World
     TITLE: Requirements management
     STATEMENT: StrictDoc shall enable requirements management.
 
-Create a file called ``hello_world.sdoc`` somewhere on your file system and copy the above text to it. **The file must end with a newline character**.
+Create a file called ``hello_world.sdoc`` somewhere on your file system and copy the above "Hello World" example text to it. **The file must end with a newline character**.
 
-Once you have ``strictdoc`` installed (see [LINK: SDOC_UG_GETTING_STARTED] below), run StrictDoc as follows:
+Open a command-line terminal program supported on your system.
+
+Once you have ``strictdoc`` installed (see [LINK: SDOC_UG_GETTING_STARTED] below), switch to the directory with the ``hello_world.sdoc`` file. For example, assuming that the file is now in the ``workspace/hello_world`` directory in your user folder:
+
+.. code-block:: text
+
+    cd <your user home directory>/workspace/hello_world
+
+Run StrictDoc as follows:
 
 .. code-block:: text
 
@@ -162,8 +172,17 @@ TITLE: Installing StrictDoc
 TITLE: Requirements
 
 [FREETEXT]
-- Python 3.6+
+- Python 3.7+
 - macOS, Linux or Windows
+- Command-line terminal program
+
+Depending on an operating system, a terminal program can be, for example:
+
+- ``Terminal`` or ``iTerm2`` on macOS
+- ``Gnome Terminal`` or ``konsole`` on Linux
+- ``Terminal`` or ``PowerShell`` on Windows.
+
+A terminal program is required to input all the commands outlined in this user guide.
 [/FREETEXT]
 
 [/SECTION]
@@ -265,7 +284,7 @@ The ``server`` command accepts a number of options. To explore the options, run:
 
     strictdoc server --help
 
-**Note:** The implementation of the web interface is work-in-progress. See [LINK: SDOC_LIMIT_WEB] for an overview of the existing limitations.
+**Note:** The implementation of the web interface is work-in-progress. See [LINK: SDOC_UG_LIMIT_WEB] for an overview of the existing limitations.
 [/FREETEXT]
 
 [/SECTION]
@@ -1379,6 +1398,8 @@ such as ``[FREETEXT]``, ``STATEMENT``, ``COMMENT``, ``RATIONALE``.
 See the `reST syntax documentation <https://docutils.sourceforge.io/rst.html>`_
 for a full reference.
 
+Note: StrictDoc supports a Docutils-subset of RST, not a Sphinx-subset. See [LINK: SDOC_UG_LIMIT_RST].
+
 The support of Tex and HTML is planned.
 [/FREETEXT]
 
@@ -2190,9 +2211,11 @@ If you happen to stumble upon such a hidden feature, we encourage you to use it 
 [/SECTION]
 
 [SECTION]
+UID: SDOC_UG_LIMIT
 TITLE: StrictDoc's limitations
 
 [SECTION]
+UID: SDOC_UG_LIMIT_RST
 TITLE: Limitations of RST support by StrictDoc
 
 [FREETEXT]
@@ -2202,7 +2225,7 @@ StrictDoc uses Docutils for rendering RST to HTML, not Sphinx. The implication i
 [/SECTION]
 
 [SECTION]
-UID: SDOC_LIMIT_WEB
+UID: SDOC_UG_LIMIT_WEB
 TITLE: Limitations of web user interface
 
 [FREETEXT]

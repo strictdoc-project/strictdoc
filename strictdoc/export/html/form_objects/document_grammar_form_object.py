@@ -1,6 +1,5 @@
 import re
-from collections import defaultdict
-from typing import Dict, List
+from typing import List, Optional, Set
 
 from starlette.datastructures import FormData
 
@@ -34,10 +33,12 @@ class GrammarFormField:
     def __init__(
         self,
         field_name: str,
+        previous_name: Optional[str],
         field_required: bool,
         reserved: bool,
     ):
         self.field_name: str = field_name
+        self.previous_name: Optional[str] = previous_name
         self.field_required: bool = field_required
         self.reserved: bool = reserved
 
@@ -46,6 +47,7 @@ class GrammarFormField:
         reserved = is_reserved_field(grammar_field.title)
         return GrammarFormField(
             field_name=grammar_field.title,
+            previous_name=grammar_field.title,
             field_required=grammar_field.required,
             reserved=reserved,
         )
@@ -72,29 +74,27 @@ class DocumentGrammarFormObject(ErrorObject):
     def create_from_request(
         *, document_mid: str, request_form_data: FormData
     ) -> "DocumentGrammarFormObject":
-        grammar_fields: Dict[str, List[str]] = defaultdict(list)
-
         # For now, the convention is that the new fields have empty
         # brackets, e.g., ('document_grammar[]', 'CUSTOM_FIELD_1').
         # The existing fields are:
         # ('document_grammar[RATIONALE]', 'RATIONALE')  # noqa: ERA001
         # This structure will be changed when not just field names, but also
         # their options will be passed to this parser.
+        form_object_fields = []
+
         for field_name, field_value in request_form_data.multi_items():
-            assert isinstance(field_value, str)
             result = re.search(r"^document_grammar\[(.*)]$", field_name)
             if result is not None:
-                grammar_fields[field_value].append(field_value)
-
-        form_object_fields = []
-        for grammar_field_name in grammar_fields:
-            grammar_field = grammar_fields[grammar_field_name]
-            form_object_field = GrammarFormField(
-                field_name=grammar_field[0],
-                field_required=False,
-                reserved=is_reserved_field(grammar_field_name),
-            )
-            form_object_fields.append(form_object_field)
+                previous_name: Optional[str] = None
+                if len(result.group(1)) > 0:
+                    previous_name = result.group(1)
+                form_object_field = GrammarFormField(
+                    field_name=field_value,
+                    previous_name=previous_name,
+                    field_required=False,
+                    reserved=is_reserved_field(field_value),
+                )
+                form_object_fields.append(form_object_field)
 
         form_object = DocumentGrammarFormObject(
             document_mid=document_mid,
@@ -124,12 +124,22 @@ class DocumentGrammarFormObject(ErrorObject):
         )
 
     def validate(self) -> bool:
+        fields_so_far: Set[str] = set()
         for field in self.fields:
             if len(field.field_name) == 0:
                 self.add_error(
                     field.field_name,
                     f"Grammar field {field.field_name} must not be empty.",
                 )
+                continue
+
+            if field.field_name in fields_so_far:
+                self.add_error(
+                    field.field_name,
+                    f"Grammar field {field.field_name} is not unique.",
+                )
+            else:
+                fields_so_far.add(field.field_name)
         return len(self.errors) == 0
 
     def convert_to_document_grammar(self) -> DocumentGrammar:

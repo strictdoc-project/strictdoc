@@ -216,6 +216,25 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def get_node_by_uid(self, uid):
         return self._requirements_parents[uid].requirement
 
+    def find_node_by_uid_weak(
+        self, uid
+    ) -> Union[Document, Section, Requirement, None]:
+        for document in self.document_tree.document_list:
+            document_iterator = DocumentCachingIterator(document)
+            for node in document_iterator.all_content():
+                if isinstance(node, Document):
+                    if node.config.uid == uid:
+                        return node
+                elif isinstance(node, Section):
+                    if node.reserved_uid == uid:
+                        return node
+                elif isinstance(node, Requirement):
+                    if node.reserved_uid == uid:
+                        return node
+                else:
+                    raise NotImplementedError
+        return None
+
     def get_section_by_uid_weak(self, uid):
         if uid not in self._requirements_parents:
             return None
@@ -555,27 +574,10 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
         existing_node_with_uid: Union[
             Document, Section, Requirement, None
-        ] = None
+        ] = self.find_node_by_uid_weak(uid)
 
-        for document in self.document_tree.document_list:
-            document_iterator = DocumentCachingIterator(document)
-            for node in document_iterator.all_content():
-                if isinstance(node, Document):
-                    if node.config.uid == uid:
-                        existing_node_with_uid = node
-                        break
-                elif isinstance(node, Section):
-                    if node.reserved_uid == uid:
-                        existing_node_with_uid = node
-                        break
-                elif isinstance(node, Requirement):
-                    if node.reserved_uid == uid:
-                        existing_node_with_uid = node
-                        break
-                else:
-                    raise NotImplementedError
-            else:
-                return
+        if existing_node_with_uid is None:
+            return
 
         raise SingleValidationError(
             "UID uniqueness validation error: "

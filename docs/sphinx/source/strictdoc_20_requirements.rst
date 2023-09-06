@@ -59,7 +59,9 @@ Graphical user interface
 
 StrictDoc shall provide a Graphical User Interface (GUI).
 
-**Comment:** Several trade-offs to consider:
+**Comment:**
+
+Several trade-offs to consider:
 
 - Desktop vs Web. Rather web-based, i.e. Python backend and JS frontend, but which technology?
 - Still keep the current behavior of a statically generated website?
@@ -163,7 +165,9 @@ Modeling capability
 
 StrictDoc's Data Model shall accommodate for maximum possible standard requirement document formats.
 
-**Comment:** Examples of standard requirements documents include but are not limited to:
+**Comment:**
+
+Examples of standard requirements documents include but are not limited to:
 
 - Non-nested requirement lists split by categories
   (e.g., Functional Requirements, Interface Requirements, Performance Requirements, etc.)
@@ -185,14 +189,18 @@ Project concept
 
 StrictDoc shall support the "Project" concept.
 
-**Rationale:** A project is a top-level entity. The project groups SDoc documents into a single project documentation tree.
+**Rationale:**
+
+A project is a top-level entity. The project groups SDoc documents into a single project documentation tree.
 
 Project title
 ~~~~~~~~~~~~~
 
 Project shall have a "Title" property.
 
-**Comment:** Currently, the project title aspect is not part of the SDoc grammar. It is
+**Comment:**
+
+Currently, the project title aspect is not part of the SDoc grammar. It is
 simply specified via the ``--project-title`` command-line option. This might
 change when the project title will be configured as part of the project-level
 config file (TOML or SDoc-like grammar).
@@ -239,7 +247,9 @@ UID identifier format
 
 StrictDoc shall not impose any restrictions on the UID field format.
 
-**Comment:** Conventions used for requirement UIDs can be very different. And there seems to
+**Comment:**
+
+Conventions used for requirement UIDs can be very different. And there seems to
 be no way to define a single rule.
 
 Some examples:
@@ -269,7 +279,9 @@ Special fields
 
 StrictDoc shall support customization of the default Requirement's grammar with special fields.
 
-**Comment:** Examples:
+**Comment:**
+
+Examples:
 
 - RAIT compliance fields (Review of design, analysis, inspection, testing)
 - Automotive Safety Integrity Level level (ASIL).
@@ -342,7 +354,9 @@ No indentation
 
 The SDoc grammar's building blocks shall not allow any indentation.
 
-**Comment:** Rationale: Adding indentation to any of the fields does not scale well when the
+**Comment:**
+
+Rationale: Adding indentation to any of the fields does not scale well when the
 documents have deeply nested section structure as well as when the size of the
 paragraphs becomes sufficiently large. Keeping every keyword like [REQUIREMENT]
 or [COMMENT] with no indentation ensures that one does not have to think about
@@ -445,7 +459,9 @@ Uniqueness of UID identifiers in a document tree
 
 StrictDoc shall ensure that each UID used in a document tree is unique.
 
-**Comment:** This is implemented but the error message shall be made more readable.
+**Comment:**
+
+This is implemented but the error message shall be made more readable.
 
 **Parents:**
 
@@ -483,7 +499,9 @@ Valid HTML markup
 
 StrictDoc's HTML export tests shall validate the generated HTML markup.
 
-**Comment:** First candidate: Table of contents and its nested ``<ul>/<li>`` items.
+**Comment:**
+
+First candidate: Table of contents and its nested ``<ul>/<li>`` items.
 
 **Parents:**
 
@@ -514,14 +532,18 @@ Requirements coverage
 
 StrictDoc shall generate requirements coverage information.
 
-**Comment:** Requirements coverage screen shows how requirements are linked with source files.
+**Comment:**
+
+Requirements coverage screen shows how requirements are linked with source files.
 
 Source coverage
 ---------------
 
 StrictDoc shall generate source coverage information.
 
-**Comment:** Source coverage screen shows how source files are linked with requirements.
+**Comment:**
+
+Source coverage screen shows how source files are linked with requirements.
 
 Web frontend requirements
 =========================
@@ -559,5 +581,7 @@ Incremental generation
 
 StrictDoc shall enable incremental generation of the documents.
 
-**Comment:** When exporting documentation tree, StrictDoc shall regenerate only changed
+**Comment:**
+
+When exporting documentation tree, StrictDoc shall regenerate only changed
 documents and files.

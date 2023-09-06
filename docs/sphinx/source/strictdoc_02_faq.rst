@@ -25,10 +25,6 @@ Blog posts:
   <https://www.bugseng.com/blog/requirement-traceability-all-substance-and-no-fuss>`_
   by BUGSENG.
 
-- `Text-Based Requirement Management with StrictDoc
-  <https://python.plainenglish.io/text-based-requirement-management-with-strictdoc-b03c1098a3c9>`_
-  by Florian Kromer.
-
 Screencasts/tutorials:
 
 - `Automotive SPICE in opensource StrictDoc tool, with System Architecure ideas
@@ -146,7 +142,7 @@ The support of multiline strings is arranged by a custom solution which helps to
 
 **Discarded options**
 
-Taking TOML or YAML as-is didn't seem like a good option because these formats are designed to be used for configuration files or data serialization and not for large documents with hundreds of requirements. The most obvious problems for reusing either of TOML or YAML directly would have been with encoding the deeply nested documents and supporting readable and non-nested multiline strings (see also about the multiline strings below).
+Taking TOML or YAML as-is didn't seem like a good option because these formats are designed to be used for configuration files or data serialization and not for large documents with hundreds of requirements. The most obvious problems for reusing either of TOML or YAML directly would have been with encoding the deeply nested documents and supporting readable and non-nested multiline strings.
 
 How StrictDoc compares to other tools?
 ======================================

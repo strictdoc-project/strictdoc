@@ -1,5 +1,6 @@
 import os
 import re
+from collections import OrderedDict
 from copy import copy
 from mimetypes import guess_type
 from pathlib import Path
@@ -1953,32 +1954,113 @@ def create_main_router(
                 },
             )
 
-        # Update the document.
+        # Prepare fields that could have been renamed by the user has just saved the form.
+        renamed_fields_lookup = {}
+        for field in form_object.fields:
+            if (
+                field.previous_name is not None
+                and len(field.previous_name) > 0
+                and field.previous_name != field.field_name
+            ):
+                renamed_fields_lookup[field.field_name] = field.previous_name
+
+        # Create new grammar.
         document_grammar: DocumentGrammar = (
             form_object.convert_to_document_grammar()
         )
+
+        # Compare if anything was changed in the new grammar.
+        document_grammar_field_names = document_grammar.fields_order_by_type[
+            "REQUIREMENT"
+        ]
+        existing_document_grammar_field_names = (
+            document.grammar.fields_order_by_type["REQUIREMENT"]
+        )
+        grammar_changed = (
+            document_grammar_field_names
+            != existing_document_grammar_field_names
+        )
+
+        # If the grammar has not changed, do nothing and save the edit form.
+        if not grammar_changed:
+            link_renderer = LinkRenderer(
+                root_path=document.meta.get_root_path_prefix(),
+                static_path=project_config.dir_for_sdoc_assets,
+            )
+            markup_renderer = MarkupRenderer.create(
+                markup="RST",
+                traceability_index=export_action.traceability_index,
+                link_renderer=link_renderer,
+                html_templates=html_generator.html_templates,
+                config=project_config,
+                context_document=document,
+            )
+            template = env().get_template(
+                "actions/"
+                "document/"
+                "edit_document_grammar/"
+                "stream_save_document_grammar.jinja.html"
+            )
+            output = template.render(
+                document=document,
+                renderer=markup_renderer,
+                document_type=DocumentType.document(),
+            )
+            return HTMLResponse(
+                content=output,
+                status_code=200,
+                headers={
+                    "Content-Type": "text/vnd.turbo-stream.html",
+                },
+            )
+
+        # Update the document with new grammar.
         document_grammar.parent = document
         document.grammar = document_grammar
-        document_grammar_field_names = document_grammar.elements_by_type[
-            "REQUIREMENT"
-        ].fields_map.keys()
-        # TODO: Update all requirements
-        massive_update = False
+
         document_iterator = export_action.traceability_index.document_iterators[
             document
         ]
+
         for node in document_iterator.all_content():
             if not node.is_requirement:
                 continue
-            requirement: Requirement = node
+
+            requirement: Requirement = assert_cast(node, Requirement)
             requirement_field_names = list(
                 requirement.ordered_fields_lookup.keys()
             )
-            for requirement_field_name in requirement_field_names:
-                if requirement_field_name in document_grammar_field_names:
+
+            # Rewrite requirement fields because some fields could have been
+            # renamed.
+            new_ordered_fields_lookup: OrderedDict[
+                str, List[RequirementField]
+            ] = OrderedDict()
+
+            for document_grammar_field_name in document_grammar_field_names:
+                # We need to find a previous field name in case the field was
+                # renamed.
+                previous_field_name = renamed_fields_lookup.get(
+                    document_grammar_field_name, document_grammar_field_name
+                )
+
+                # If the field does not exist in the grammar fields anymore,
+                # delete the requirement field.
+                if previous_field_name not in requirement_field_names:
                     continue
-                massive_update = True
-                del requirement.ordered_fields_lookup[requirement_field_name]
+
+                previous_fields: List[
+                    RequirementField
+                ] = requirement.ordered_fields_lookup[previous_field_name]
+                for previous_field in previous_fields:
+                    previous_field.field_name = document_grammar_field_name
+
+                new_ordered_fields_lookup[
+                    document_grammar_field_name
+                ] = previous_fields
+
+            requirement.ordered_fields_lookup = new_ordered_fields_lookup
+            requirement.ng_reserved_fields_cache.clear()
 
         # Re-generate the document's SDOC.
         document_content = SDWriter().write(document)
@@ -1999,6 +2081,29 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
         )
 
+        template = env().get_template(
+            "actions/"
+            "document/"
+            "edit_document_grammar/"
+            "stream_save_document_grammar.jinja.html"
+        )
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
+        )
+        markup_renderer = MarkupRenderer.create(
+            markup="RST",
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
+            config=project_config,
+            context_document=document,
+        )
+        output = template.render(
+            document=document,
+            renderer=markup_renderer,
+            document_type=DocumentType.document(),
+        )
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -2014,41 +2119,19 @@ def create_main_router(
         template = env().get_template(
             "actions/"
             "document/"
-            "edit_document_grammar/"
-            "stream_save_document_grammar.jinja.html"
+            "_shared/"
+            "stream_refresh_document.jinja.html"
         )
-        output = template.render(
+        output += template.render(
             document=document,
             renderer=markup_renderer,
+            link_renderer=link_renderer,
             document_type=DocumentType.document(),
+            document_iterator=document_iterator,
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+            standalone=False,
         )
-        if massive_update:
-            link_renderer = LinkRenderer(
-                root_path=document.meta.get_root_path_prefix(),
-                static_path=project_config.dir_for_sdoc_assets,
-            )
-            markup_renderer = MarkupRenderer.create(
-                markup="RST",
-                traceability_index=export_action.traceability_index,
-                link_renderer=link_renderer,
-                html_templates=html_generator.html_templates,
-                config=project_config,
-                context_document=document,
-            )
-            template = env().get_template(
-                "actions/"
-                "document/"
-                "_shared/"
-                "stream_refresh_document.jinja.html"
-            )
-            output = template.render(
-                document=document,
-                renderer=markup_renderer,
-                link_renderer=link_renderer,
-                document_type=DocumentType.document(),
-                document_iterator=document_iterator,
-                traceability_index=export_action.traceability_index,
-            )
         return HTMLResponse(
             content=output,
             status_code=200,
@@ -2072,6 +2155,7 @@ def create_main_router(
             ),
             field=GrammarFormField(
                 field_name="",
+                previous_name="",
                 field_required=False,
                 reserved=False,
             ),

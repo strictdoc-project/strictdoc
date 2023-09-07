@@ -54,17 +54,17 @@ class DocumentGrammar:
 
         registered_elements: Set[str] = set()
         elements_by_type: Dict[str, GrammarElement] = {}
-        fields_by_type: Dict[str, Set[str]] = defaultdict(set)
+        fields_by_type: Dict[str, List[str]] = defaultdict(list)
 
         for element in elements:
             registered_elements.add(element.tag)
             elements_by_type[element.tag] = element
             for element_field in element.fields:
-                fields_by_type[element.tag].add(element_field.title)
+                fields_by_type[element.tag].append(element_field.title)
 
         self.registered_elements: Set[str] = registered_elements
         self.elements_by_type: Dict[str, GrammarElement] = elements_by_type
-        self.fields_order_by_type: Dict[str, Set[str]] = fields_by_type
+        self.fields_order_by_type: Dict[str, List[str]] = fields_by_type
 
         self.is_default = False
 

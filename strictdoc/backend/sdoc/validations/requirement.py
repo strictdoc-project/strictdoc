@@ -33,9 +33,9 @@ def multi_choice_regex_match(value):
 def validate_requirement(
     requirement: Requirement, document_grammar: DocumentGrammar
 ):
-    registered_fields: Set[str] = document_grammar.fields_order_by_type[
-        requirement.requirement_type
-    ]
+    registered_fields: Set[str] = set(
+        document_grammar.fields_order_by_type[requirement.requirement_type]
+    )
     for field_name in requirement.ordered_fields_lookup:
         if field_name not in registered_fields:
             raise StrictDocSemanticError.unregistered_field(

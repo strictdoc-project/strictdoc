@@ -61,9 +61,17 @@ def _main(parallelizer):
 
     elif parser.is_export_command:
         config: ExportCommandConfig = parser.get_export_config()
+        path_to_input_dir = config.input_paths[0]
+        if os.path.isfile(path_to_input_dir):
+            path_to_input_dir = os.path.dirname(path_to_input_dir)
+        path_to_config = (
+            config.config_path
+            if config.config_path is not None
+            else path_to_input_dir
+        )
         project_config: ProjectConfig = (
             ProjectConfigLoader.load_from_path_or_get_default(
-                path_to_config_dir=config.input_paths[0],
+                path_to_config=path_to_config,
                 environment=environment,
             )
         )
@@ -84,9 +92,14 @@ def _main(parallelizer):
 
     elif parser.is_server_command:
         server_config = parser.get_server_config()
+        path_to_config = (
+            server_config.config_path
+            if server_config.config_path is not None
+            else server_config.input_path
+        )
         project_config: ProjectConfig = (
             ProjectConfigLoader.load_from_path_or_get_default(
-                path_to_config_dir=server_config.input_path,
+                path_to_config=path_to_config,
                 environment=environment,
             )
         )
@@ -110,12 +123,23 @@ def _main(parallelizer):
 
     elif parser.is_manage_autouid_command:
         config: ManageAutoUIDCommandConfig = parser.get_manage_autouid_config()
+        path_to_input_dir = (
+            config.input_path
+            if not os.path.isfile(config.input_path)
+            else os.path.dirname(config.input_path)
+        )
+        path_to_config = (
+            config.config_path
+            if config.config_path is not None
+            else path_to_input_dir
+        )
         project_config: ProjectConfig = (
             ProjectConfigLoader.load_from_path_or_get_default(
-                path_to_config_dir=config.input_path,
+                path_to_config=path_to_config,
                 environment=environment,
             )
         )
+        # FIXME: This must be improved.
         project_config.export_input_paths = [config.input_path]
         ManageAutoUIDCommand.execute(
             project_config=project_config, parallelizer=parallelizer

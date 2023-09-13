@@ -104,6 +104,7 @@ def create_main_router(
     _export_config = ExportCommandConfig(
         input_paths=[server_config.input_path],
         output_dir=server_config.output_path,
+        config_path=None,
         project_title=project_config.project_title,
         formats=["html"],
         fields=None,

@@ -215,13 +215,13 @@ class ProjectConfigLoader:
     @staticmethod
     def load_from_path_or_get_default(
         *,
-        path_to_config_dir: str,
+        path_to_config: str,
         environment: SDocRuntimeEnvironment,
     ) -> ProjectConfig:
-        if not os.path.exists(path_to_config_dir):
+        if not os.path.exists(path_to_config):
             return ProjectConfig.default_config(environment=environment)
-
-        path_to_config = os.path.join(path_to_config_dir, "strictdoc.toml")
+        if os.path.isdir(path_to_config):
+            path_to_config = os.path.join(path_to_config, "strictdoc.toml")
         if not os.path.isfile(path_to_config):
             return ProjectConfig.default_config(environment=environment)
 

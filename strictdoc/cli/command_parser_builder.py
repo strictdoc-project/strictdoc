@@ -41,6 +41,14 @@ def _parse_fields(fields):
     return fields_array
 
 
+def add_config_argument(parser):
+    parser.add_argument(
+        "--config",
+        type=str,
+        help="Path to the StrictDoc TOML config file.",
+    )
+
+
 class SDocArgumentParser(argparse.ArgumentParser):
     def error(self, message: str):
         self.print_usage(sys.stderr)
@@ -68,6 +76,7 @@ class CommandParserBuilder:
                 """
             ),
         )
+
         command_subparsers = main_parser.add_subparsers(
             title="command", dest="command"
         )
@@ -75,9 +84,9 @@ class CommandParserBuilder:
 
         self.add_about_command(command_subparsers)
         self.add_export_command(command_subparsers)
-        self.add_import_command(command_subparsers)
         self.add_server_command(command_subparsers)
         self.add_manage_command(command_subparsers)
+        self.add_import_command(command_subparsers)
         self.add_version_command(command_subparsers)
         self.add_passthrough_command(command_subparsers)
         self.add_dump_command(command_subparsers)
@@ -86,7 +95,7 @@ class CommandParserBuilder:
 
     @staticmethod
     def add_about_command(parent_command_parser):
-        _ = parent_command_parser.add_parser(
+        parent_command_parser.add_parser(
             "about",
             help="About StrictDoc.",
             description="About StrictDoc.",
@@ -158,6 +167,7 @@ class CommandParserBuilder:
                 "enables traceability between requirements and files."
             ),
         )
+        add_config_argument(command_parser_export)
 
     @staticmethod
     def add_import_command(parent_command_parser):
@@ -255,6 +265,7 @@ class CommandParserBuilder:
             "--no-reload", dest="reload", action="store_false"
         )
         command_parser_server.add_argument("--port", type=IntRange(1024, 65000))
+        add_config_argument(command_parser_server)
 
     @staticmethod
     def add_version_command(parent_command_parser):
@@ -274,7 +285,6 @@ class CommandParserBuilder:
         command_parser_passthrough.add_argument(
             "input_file", type=str, help="Path to the input SDoc file"
         )
-
         command_parser_passthrough.add_argument(
             "--output-file", type=str, help="Path to the output SDoc file"
         )
@@ -303,7 +313,7 @@ class CommandParserBuilder:
         )
         manage_command_subparsers.required = True
 
-        command_parser_import_reqif = manage_command_subparsers.add_parser(
+        command_parser_auto_uid = manage_command_subparsers.add_parser(
             "auto-uid",
             help="Generates missing requirements UIDs automatically.",
             description=(
@@ -315,8 +325,9 @@ class CommandParserBuilder:
             formatter_class=formatter,
         )
 
-        command_parser_import_reqif.add_argument(
+        command_parser_auto_uid.add_argument(
             "input_path",
             type=str,
             help="Path to the project tree.",
         )
+        add_config_argument(command_parser_auto_uid)

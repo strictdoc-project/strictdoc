@@ -19,6 +19,7 @@ def test_export_document_to_reqif():
     config = ServerCommandConfig(
         input_path=PATH_TO_THIS_TEST_FOLDER,
         output_path=PATH_TO_OUTPUT_FOLDER,
+        config_path=None,
         reload=False,
         port=8001,
     )

@@ -14,6 +14,7 @@ def test_get_document():
     config = ServerCommandConfig(
         input_path=PATH_TO_THIS_TEST_FOLDER,
         output_path=os.path.join(PATH_TO_THIS_TEST_FOLDER, "output"),
+        config_path=None,
         reload=False,
         port=8001,
     )

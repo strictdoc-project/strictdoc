@@ -8,7 +8,7 @@ from strictdoc.cli.cli_arg_parser import (
 FAKE_STRICTDOC_ROOT_PATH = "/tmp/strictdoc-123"
 
 
-TOTAL_EXPORT_ARGS = 10
+TOTAL_EXPORT_ARGS = 11
 
 
 def cli_args_parser():
@@ -34,6 +34,7 @@ def test_export_01_minimal():
     assert export_config.fields == args.fields
     assert export_config.formats == args.formats
     assert export_config.input_paths == args.input_paths
+    assert export_config.config_path is None
     assert export_config.no_parallelization == args.no_parallelization
     assert export_config.output_dir == os.path.join(os.getcwd(), "output")
 
@@ -181,6 +182,20 @@ def test_export_08_project_title():
     config_parser = create_sdoc_args_parser(args)
     export_config = config_parser.get_export_config()
     assert export_config.project_title == args.project_title
+
+
+def test_export_09_config():
+    parser = cli_args_parser()
+
+    args = parser.parse_args(
+        ["export", "docs", "--config", "/path/to/strictdoc.toml"]
+    )
+
+    assert len(args._get_kwargs()) == TOTAL_EXPORT_ARGS
+
+    config_parser = create_sdoc_args_parser(args)
+    export_config = config_parser.get_export_config()
+    assert export_config.config_path == "/path/to/strictdoc.toml"
 
 
 def test_passthrough_01_minimal():

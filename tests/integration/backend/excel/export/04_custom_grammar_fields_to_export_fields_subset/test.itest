@@ -1,4 +1,4 @@
-; Export only a subset of the fields
+# Export only a subset of the fields
 RUN: %strictdoc export --formats=excel --fields=uid,owner --output-dir=Output "%S/input.sdoc"
 
 RUN: %check_exists --file "%S/Output/excel/input.xlsx"

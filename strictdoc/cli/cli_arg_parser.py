@@ -13,8 +13,9 @@ class ImportReqIFCommandConfig:
 
 
 class ManageAutoUIDCommandConfig:
-    def __init__(self, *, input_path: str):
+    def __init__(self, *, input_path: str, config_path: Optional[str]):
         self.input_path: str = input_path
+        self.config_path: Optional[str] = config_path
 
 
 class ImportExcelCommandConfig:
@@ -37,6 +38,7 @@ class ServerCommandConfig:
         *,
         input_path: str,
         output_path: Optional[str],
+        config_path: Optional[str],
         reload: bool,
         port: Optional[int],
     ):
@@ -44,6 +46,7 @@ class ServerCommandConfig:
         abs_input_path = os.path.abspath(input_path)
         self.input_path: str = abs_input_path
         self.output_path: Optional[str] = output_path
+        self.config_path: Optional[str] = config_path
         self.reload: bool = reload
         self.port: Optional[int] = port
 
@@ -54,6 +57,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         self,
         input_paths,
         output_dir: str,
+        config_path: Optional[str],
         project_title: Optional[str],
         formats,
         fields,
@@ -65,6 +69,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         assert isinstance(input_paths, list), f"{input_paths}"
         self.input_paths: List[str] = input_paths
         self.output_dir: str = output_dir
+        self.config_path: Optional[str] = config_path
         self.project_title: Optional[str] = project_title
         self.formats = formats
         self.fields = fields
@@ -144,6 +149,7 @@ class SDocArgsParser:
         return ExportCommandConfig(
             self.args.input_paths,
             output_dir,
+            self.args.config,
             project_title,
             self.args.formats,
             self.args.fields,
@@ -159,7 +165,10 @@ class SDocArgsParser:
         )
 
     def get_manage_autouid_config(self) -> ManageAutoUIDCommandConfig:
-        return ManageAutoUIDCommandConfig(input_path=self.args.input_path)
+        return ManageAutoUIDCommandConfig(
+            input_path=self.args.input_path,
+            config_path=self.args.config,
+        )
 
     def get_import_config_excel(self, _) -> ImportExcelCommandConfig:
         return ImportExcelCommandConfig(
@@ -170,6 +179,7 @@ class SDocArgsParser:
         return ServerCommandConfig(
             input_path=self.args.input_path,
             output_path=self.args.output_path,
+            config_path=self.args.config,
             reload=self.args.reload,
             port=self.args.port,
         )

@@ -1,0 +1,4 @@
+RUN: %strictdoc export %S --config %S/custom/folder/strictdoc.toml --output-dir Output | filecheck %s --dump-input=fail
+RUN: %check_exists --file "%S/Output/html/project_statistics.html"
+
+CHECK: Published: Hello world doc

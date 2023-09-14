@@ -35,12 +35,13 @@ if __name__ == "__main__":
     server_command_config = ServerCommandConfig(
         input_path=input_path,
         output_path=output_path,
+        config_path=None,
         reload=args.reload,
         port=5111,
     )
     project_config: ProjectConfig = (
         ProjectConfigLoader.load_from_path_or_get_default(
-            path_to_config_dir=input_path, environment=environment
+            path_to_config=input_path, environment=environment
         )
     )
     run_strictdoc_server(

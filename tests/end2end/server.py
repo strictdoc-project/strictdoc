@@ -80,14 +80,18 @@ class SDocTestServer:  # pylint: disable=too-many-instance-attributes
         *,
         input_path: str,
         output_path: Optional[str] = None,
+        config_path: Optional[str] = None,
         port: Optional[int] = None,
         expectations: Optional[List] = None,
     ):
         is_parallel_execution = test_environment.is_parallel_execution
 
         assert os.path.isdir(input_path)
+        if config_path is not None:
+            assert os.path.exists(config_path)
         self.path_to_tdoc_folder = input_path
         self.output_path: Optional[str] = output_path
+        self.config_path: Optional[str] = config_path
         self.server_port: int = (
             SDocTestServer._get_test_server_port()
             if is_parallel_execution
@@ -148,6 +152,8 @@ class SDocTestServer:  # pylint: disable=too-many-instance-attributes
             str(self.server_port),
             self.path_to_tdoc_folder,
         ]
+        if self.config_path:
+            args.extend(["--config", self.config_path])
         if self.output_path is not None:
             args.extend(
                 [

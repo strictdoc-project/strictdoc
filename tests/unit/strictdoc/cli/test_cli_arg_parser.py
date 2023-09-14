@@ -34,7 +34,9 @@ def test_export_01_minimal():
     assert export_config.fields == args.fields
     assert export_config.formats == args.formats
     assert export_config.input_paths == args.input_paths
-    assert export_config.config_path is None
+    # When no explicit --config path provided, the path to config defaults to
+    # the input path.
+    assert export_config.get_path_to_config() == "docs"
     assert export_config.no_parallelization == args.no_parallelization
     assert export_config.output_dir == os.path.join(os.getcwd(), "output")
 
@@ -195,7 +197,7 @@ def test_export_09_config():
 
     config_parser = create_sdoc_args_parser(args)
     export_config = config_parser.get_export_config()
-    assert export_config.config_path == "/path/to/strictdoc.toml"
+    assert export_config.get_path_to_config() == "/path/to/strictdoc.toml"
 
 
 def test_passthrough_01_minimal():

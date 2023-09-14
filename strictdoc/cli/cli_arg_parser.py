@@ -5,6 +5,10 @@ from strictdoc.cli.command_parser_builder import CommandParserBuilder
 from strictdoc.helpers.auto_described import auto_described
 
 
+class CLIValidationError(Exception):
+    pass
+
+
 class ImportReqIFCommandConfig:
     def __init__(self, input_path: str, output_path: str, profile):
         self.input_path: str = input_path
@@ -15,7 +19,27 @@ class ImportReqIFCommandConfig:
 class ManageAutoUIDCommandConfig:
     def __init__(self, *, input_path: str, config_path: Optional[str]):
         self.input_path: str = input_path
-        self.config_path: Optional[str] = config_path
+        self._config_path: Optional[str] = config_path
+
+    def get_path_to_config(self) -> Optional[str]:
+        path_to_input_dir = self.input_path
+        if os.path.isfile(path_to_input_dir):
+            path_to_input_dir = os.path.dirname(path_to_input_dir)
+        path_to_config = (
+            self._config_path
+            if self._config_path is not None
+            else path_to_input_dir
+        )
+        return path_to_config
+
+    def validate(self):
+        if self._config_path is not None and not os.path.exists(
+            self._config_path
+        ):
+            raise CLIValidationError(
+                "Provided path to a configuration file does not exist: "
+                f"{self._config_path}"
+            )
 
 
 class ImportExcelCommandConfig:
@@ -42,13 +66,35 @@ class ServerCommandConfig:
         reload: bool,
         port: Optional[int],
     ):
-        assert os.path.exists(input_path)
-        abs_input_path = os.path.abspath(input_path)
-        self.input_path: str = abs_input_path
+        self._input_path: str = input_path
         self.output_path: Optional[str] = output_path
-        self.config_path: Optional[str] = config_path
+        self._config_path: Optional[str] = config_path
         self.reload: bool = reload
         self.port: Optional[int] = port
+
+    def get_full_input_path(self):
+        return os.path.abspath(self._input_path)
+
+    def get_path_to_config(self):
+        return (
+            self._config_path
+            if self._config_path is not None
+            else self._input_path
+        )
+
+    def validate(self):
+        if not os.path.exists(self._input_path):
+            raise CLIValidationError(
+                f"Provided input path does not exist: {self._input_path}"
+            )
+
+        if self._config_path is not None and not os.path.exists(
+            self._config_path
+        ):
+            raise CLIValidationError(
+                "Provided path to a configuration file does not exist: "
+                f"{self._config_path}"
+            )
 
 
 @auto_described
@@ -69,7 +115,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         assert isinstance(input_paths, list), f"{input_paths}"
         self.input_paths: List[str] = input_paths
         self.output_dir: str = output_dir
-        self.config_path: Optional[str] = config_path
+        self._config_path: Optional[str] = config_path
         self.project_title: Optional[str] = project_title
         self.formats = formats
         self.fields = fields
@@ -80,6 +126,30 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
             experimental_enable_file_traceability
         )
         self.output_html_root: str = os.path.join(output_dir, "html")
+
+    def get_path_to_config(self) -> Optional[str]:
+        path_to_input_dir = self.input_paths[0]
+        if os.path.isfile(path_to_input_dir):
+            path_to_input_dir = os.path.dirname(path_to_input_dir)
+        path_to_config = (
+            self._config_path
+            if self._config_path is not None
+            else path_to_input_dir
+        )
+        return path_to_config
+
+    def validate(self):
+        for input_path_ in self.input_paths:
+            if not os.path.exists(input_path_):
+                raise CLIValidationError(
+                    f"Provided input path does not exist: {input_path_}"
+                )
+        if self._config_path is not None:
+            if not os.path.exists(self._config_path):
+                raise CLIValidationError(
+                    "Provided path to a configuration file does not exist: "
+                    f"{self._config_path}"
+                )
 
 
 class DumpGrammarCommandConfig:

@@ -1,3 +1,4 @@
+import datetime
 import os
 import sys
 from enum import Enum
@@ -13,6 +14,7 @@ from strictdoc.cli.cli_arg_parser import (
 )
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.exception import StrictDocException
+from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.path_filter import validate_mask
 
 
@@ -66,6 +68,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         include_source_paths: List[str],
         exclude_source_paths: List[str],
         reqif_profile: str,
+        config_last_update: Optional[datetime.datetime],
     ):
         assert isinstance(environment, SDocRuntimeEnvironment)
         self.environment: SDocRuntimeEnvironment = environment
@@ -92,6 +95,9 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
 
         self.reqif_profile: str = reqif_profile
 
+        self.config_last_update: Optional[
+            datetime.datetime
+        ] = config_last_update
         self.is_running_on_server: bool = False
 
     @staticmethod
@@ -109,6 +115,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
             include_source_paths=[],
             exclude_source_paths=[],
             reqif_profile=ReqIFProfile.P01_SDOC,
+            config_last_update=None,
         )
 
     # Some server command settings can override the project config settings.
@@ -235,8 +242,12 @@ class ProjectConfigLoader:
         except Exception as exception:
             raise NotImplementedError from exception
 
+        config_last_update = get_file_modification_time(path_to_config)
+
         return ProjectConfigLoader._load_from_dictionary(
-            config_dict=config_content, environment=environment
+            config_dict=config_content,
+            environment=environment,
+            config_last_update=config_last_update,
         )
 
     @staticmethod
@@ -247,11 +258,15 @@ class ProjectConfigLoader:
         return ProjectConfigLoader._load_from_dictionary(
             config_dict=config_dict,
             environment=environment,
+            config_last_update=None,
         )
 
     @staticmethod
     def _load_from_dictionary(
-        *, config_dict: dict, environment: SDocRuntimeEnvironment
+        *,
+        config_dict: dict,
+        environment: SDocRuntimeEnvironment,
+        config_last_update: Optional[datetime.datetime],
     ) -> ProjectConfig:
         project_title = ProjectConfig.DEFAULT_PROJECT_TITLE
         dir_for_sdoc_assets = ProjectConfig.DEFAULT_DIR_FOR_SDOC_ASSETS
@@ -365,4 +380,5 @@ class ProjectConfigLoader:
             include_source_paths=include_source_paths,
             exclude_source_paths=exclude_source_paths,
             reqif_profile=reqif_profile,
+            config_last_update=config_last_update,
         )

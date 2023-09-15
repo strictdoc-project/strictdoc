@@ -67,6 +67,11 @@ class TraceabilityIndexBuilder:
         strictdoc_last_update = get_file_modification_time(
             latest_strictdoc_own_file
         )
+        if (
+            project_config.config_last_update is not None
+            and project_config.config_last_update > strictdoc_last_update
+        ):
+            strictdoc_last_update = project_config.config_last_update
 
         document_tree, asset_dirs = DocumentFinder.find_sdoc_content(
             project_config=project_config, parallelizer=parallelizer

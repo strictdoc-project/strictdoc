@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Grandchild doc
+
+[REQUIREMENT]
+UID: REQ-GRANDCHILD
+REFS:
+- TYPE: Parent
+  VALUE: REQ-CHILD
+TITLE: Grandchild Req
+STATEMENT: Grandchild Req Statement

@@ -1,0 +1,16 @@
+RUN: %strictdoc export %S --no-parallelization --config %S/strictdoc.toml --output-dir Output | filecheck %s --dump-input=fail --check-prefix=CHECK-FIRST
+CHECK-FIRST: Published: Parent doc
+CHECK-FIRST: Published: Child doc
+CHECK-FIRST: Published: Grandchild doc
+
+RUN: %strictdoc export %S --no-parallelization --config %S/strictdoc.toml --output-dir Output | filecheck %s --dump-input=fail --check-prefix=CHECK-SECOND
+RUN: %strictdoc export %S --no-parallelization --config %S/strictdoc.toml --output-dir Output | filecheck %s --dump-input=fail --check-prefix=CHECK-SECOND
+CHECK-SECOND: Skip: Parent doc
+CHECK-SECOND: Skip: Child doc
+CHECK-SECOND: Skip: Grandchild doc
+
+RUN: %touch %S/strictdoc.toml
+RUN: %strictdoc export %S --no-parallelization --config %S/strictdoc.toml --output-dir Output | filecheck %s --dump-input=fail --check-prefix=CHECK-THIRD
+CHECK-THIRD: Published: Parent doc
+CHECK-THIRD: Published: Child doc
+CHECK-THIRD: Published: Grandchild doc

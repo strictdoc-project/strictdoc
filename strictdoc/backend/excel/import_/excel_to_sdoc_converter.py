@@ -177,7 +177,9 @@ class ExcelToSDocConverter:
             comments=comments,
         )
         if parent_uid is not None:
-            reference = ParentReqReference(template_requirement, parent_uid)
+            reference = ParentReqReference(
+                template_requirement, parent_uid, relation_uid=None
+            )
 
             requirement_field = RequirementField(
                 parent=template_requirement,

@@ -1035,7 +1035,9 @@ def create_main_router(
         for reference_field in form_object.reference_fields:
             ref_uid = reference_field.field_value
             references.append(
-                ParentReqReference(parent=requirement, ref_uid=ref_uid)
+                ParentReqReference(
+                    parent=requirement, ref_uid=ref_uid, relation_uid=None
+                )
             )
         if len(references) > 0:
             requirement.ordered_fields_lookup[RequirementFieldName.REFS] = [

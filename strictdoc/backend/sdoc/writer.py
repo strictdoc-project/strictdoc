@@ -238,6 +238,10 @@ class SDWriter:
                             output += "  VALUE: "
                             output += ref.ref_uid
                             output += "\n"
+                            if reference.relation_uid is not None:
+                                output += "  RELATION: "
+                                output += ref.relation_uid
+                                output += "\n"
 
                 elif field.field_value is not None:
                     if len(field.field_value) > 0:

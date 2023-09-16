@@ -46,7 +46,9 @@ class DocumentBuilder:
         )
         assert requirement
 
-        reference = ParentReqReference(requirement, parent_req_id)
+        reference = ParentReqReference(
+            requirement, parent_req_id, relation_uid=None
+        )
         requirement.references.append(reference)
 
     def build(self):

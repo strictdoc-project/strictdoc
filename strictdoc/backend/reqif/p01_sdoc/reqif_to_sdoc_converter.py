@@ -432,6 +432,7 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                         parent_spec_object_parent.attribute_map[
                             foreign_key_id_or_none
                         ].value,
+                        relation_uid=None,
                     )
                 )
             if len(parent_refs) > 0:

@@ -151,6 +151,32 @@ This is a statement 3
     assert input_sdoc == output
 
 
+def test_020_parent_ref_with_relation():
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+REFS:
+- TYPE: Parent
+  VALUE: ID-001
+  RELATION: Refines
+STATEMENT: >>>
+This is a statement.
+<<<
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input_sdoc)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input_sdoc == output
+
+
 def test_030_multiline_statement():
     input_sdoc = """
 [DOCUMENT]

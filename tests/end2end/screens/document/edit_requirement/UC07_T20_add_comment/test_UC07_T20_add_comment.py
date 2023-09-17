@@ -1,5 +1,4 @@
-from seleniumbase import BaseCase
-
+from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
@@ -10,7 +9,7 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 from tests.end2end.server import SDocTestServer
 
 
-class Test_UC07_T20_AddComment(BaseCase):
+class Test_UC07_T20_AddComment(E2ECase):
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
@@ -39,14 +38,20 @@ class Test_UC07_T20_AddComment(BaseCase):
             # button.
             form_edit_requirement.assert_form_has_no_comments()
 
-            form_edit_requirement.do_form_add_field_comment()
-            form_edit_requirement.do_fill_in_field_comment("Comment #1")
+            comment1_mid = form_edit_requirement.do_form_add_field_comment()
+            form_edit_requirement.do_fill_in_field_comment(
+                comment1_mid, "Comment #1"
+            )
 
-            form_edit_requirement.do_form_add_field_comment()
-            form_edit_requirement.do_fill_in_field_comment("Comment #2", 2)
+            comment2_mid = form_edit_requirement.do_form_add_field_comment()
+            form_edit_requirement.do_fill_in_field_comment(
+                comment2_mid, "Comment #2"
+            )
 
-            form_edit_requirement.do_form_add_field_comment()
-            form_edit_requirement.do_fill_in_field_comment("Comment #3", 3)
+            comment3_mid = form_edit_requirement.do_form_add_field_comment()
+            form_edit_requirement.do_fill_in_field_comment(
+                comment3_mid, "Comment #3"
+            )
 
             form_edit_requirement.do_form_submit()
 

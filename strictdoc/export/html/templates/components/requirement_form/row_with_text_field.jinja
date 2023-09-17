@@ -8,26 +8,40 @@
 {% assert text_field_row_context.field_type in ("singleline", "multiline"), "row_with_text: field_type must be singleline or multiline." %}
 
 {%- set row_context = text_field_row_context -%}
-{%- set row_context.field_actions = none -%}
 
 {% block row_form_attributes %}
 {# Explicitly no attributes. #}
 {% endblock row_form_attributes %}
+
+{% block row_left %}
+  {# Explicitly nothing. #}
+{% endblock row_left %}
 
 {% block row_content scoped %}
 
   {%- set placeholder_name = text_field_row_context.field.field_name %}
 
   {%- with
+    mid = text_field_row_context.field.field_mid,
     field_class_name = none,
     field_input_name = text_field_row_context.field.get_input_field_name(),
     field_label = text_field_row_context.field.field_name,
-    field_name = text_field_row_context.field.field_name,
     field_placeholder = "Enter "~placeholder_name~" here...",
     field_type = text_field_row_context.field_type,
-    field_value = text_field_row_context.field.field_escaped_value
+    field_value = text_field_row_context.field.field_escaped_value,
+    testid_postfix = "requirement-field-"~text_field_row_context.field.field_name
   %}
   {%- include "components/form/new_field/index.jinja" %}
   {%- endwith -%}
 
+  <input
+    type="hidden"
+    name="{{ text_field_row_context.field.get_input_field_type_name() }}"
+    value="{{ text_field_row_context.field.field_name }}"
+  />
+
 {% endblock row_content %}
+
+{% block row_right %}
+  {# Explicitly nothing. #}
+{% endblock row_right %}

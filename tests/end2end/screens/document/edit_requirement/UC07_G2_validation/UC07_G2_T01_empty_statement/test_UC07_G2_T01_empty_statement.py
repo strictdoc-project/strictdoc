@@ -1,5 +1,4 @@
-from seleniumbase import BaseCase
-
+from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
@@ -10,7 +9,7 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 from tests.end2end.server import SDocTestServer
 
 
-class Test_UC07_G2_T01_EmptyStatement(BaseCase):
+class Test(E2ECase):
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
@@ -36,7 +35,7 @@ class Test_UC07_G2_T01_EmptyStatement(BaseCase):
                 requirement.do_open_form_edit_requirement()
             )
             form_edit_requirement.do_fill_in_field_title("Modified title")
-            form_edit_requirement.do_clear_field("requirement[STATEMENT]")
+            form_edit_requirement.do_clear_field("requirement-field-STATEMENT")
             form_edit_requirement.do_form_submit_and_catch_error(
                 "Requirement statement must not be empty."
             )

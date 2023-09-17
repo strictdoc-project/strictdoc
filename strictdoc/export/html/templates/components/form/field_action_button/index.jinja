@@ -1,40 +1,44 @@
 {%- assert action_button_context is defined %}
 {%- assert action_button_context.field_actions is defined %}
-{%- assert action_button_context.field_input_name is defined %}
 {%- assert action_button_context.field_name is defined %}
+{%- assert action_button_context.mid is defined, "mid is not defined" -%}
+{%- assert action_button_context.testid_postfix is defined, "testid_postfix is not defined" -%}
 
 {% if action_button_context.field_actions.move_up is defined and action_button_context.field_actions.move_up is sameas true -%}
   <button
     class="field_action"
+    mid="{{ action_button_context.mid }}"
     title="Move this {{ action_button_context.field_name|default('FIELD', true) }} up"
     data-action-type="move_up"
     data-js-move-up-field-action
     data-turbo-action="replace"
     data-turbo="false"
-    data-testid="form-move-up-{{ action_button_context.field_input_name|default('FIELD', true) }}-field-action"
+    data-testid="form-move-up-field-action-{{ action_button_context.testid_postfix }}"
   >{% include "_res/svg_ico16_move_up.jinja.html" %}</button>
 {%- endif -%}
 
 {% if action_button_context.field_actions.move_down is defined and action_button_context.field_actions.move_down is sameas true -%}
   <button
     class="field_action"
+    mid="{{ action_button_context.mid }}"
     title="Move this {{ action_button_context.field_name|default('FIELD', true) }} down"
     data-action-type="move_down"
     data-js-move-down-field-action
     data-turbo-action="replace"
     data-turbo="false"
-    data-testid="form-move-down-{{ action_button_context.field_input_name|default('FIELD', true) }}-field-action"
+    data-testid="form-move-down-field-action-{{ action_button_context.testid_postfix }}"
   >{% include "_res/svg_ico16_move_down.jinja.html" %}</button>
 {%- endif -%}
 
 {% if action_button_context.field_actions.delete is defined and action_button_context.field_actions.delete is sameas true -%}
   <button
     class="field_action"
+    mid="{{ action_button_context.mid }}"
     title="Delete this {{ action_button_context.field_name|default('FIELD', true) }}"
     data-action-type="delete"
     data-js-delete-field-action
     data-turbo-action="replace"
     data-turbo="false"
-    data-testid="form-delete-{{ action_button_context.field_input_name|default('FIELD', true) }}-field-action"
+    data-testid="form-delete-field-action-{{ action_button_context.testid_postfix }}"
   >{% include "_res/svg_ico16_delete.jinja.html" %}</button>
 {%- endif -%}

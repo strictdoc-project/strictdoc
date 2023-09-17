@@ -4,9 +4,9 @@ html_assets_strictdoc_dir = "assets"
 
 features = [
   # Stable features.
-  "TABLE_SCREEN",
-  "TRACEABILITY_SCREEN",
-  "DEEP_TRACEABILITY_SCREEN",
+  "ALL_FEATURES",
+#  "TRACEABILITY_SCREEN",
+#  "DEEP_TRACEABILITY_SCREEN",
 
   # Stable features but not used by StrictDoc.
   # "MATHJAX"

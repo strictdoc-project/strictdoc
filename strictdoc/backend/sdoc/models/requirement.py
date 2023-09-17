@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document
@@ -278,17 +278,19 @@ class Requirement(
             references.append(reference)
         return references
 
-    def get_parent_requirement_reference_uids(self) -> List[str]:
+    def get_parent_requirement_reference_uids(
+        self,
+    ) -> List[Tuple[str, Optional[str]]]:
         if not self.references or len(self.references) == 0:
             return []
-        references: List[str] = []
+        references: List[Tuple[str, Optional[str]]] = []
         for reference in self.references:
             if reference.ref_type != ReferenceType.PARENT:
                 continue
             parent_reference: ParentReqReference = assert_cast(
                 reference, ParentReqReference
             )
-            references.append(parent_reference.ref_uid)
+            references.append((parent_reference.ref_uid, parent_reference.role))
         return references
 
     def enumerate_fields(self):

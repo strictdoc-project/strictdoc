@@ -126,26 +126,25 @@ class UpdateSectionCommand:
             # just assume we can safely delete the previous section UID
             # associations.
             if section.reserved_uid is not None:
-                del traceability_index.requirements_parents[
+                del traceability_index.requirements_connections[
                     section.reserved_uid
                 ]
 
             section.uid = form_object.section_uid
             section.reserved_uid = form_object.section_uid
-            traceability_index.requirements_parents[
+            traceability_index.requirements_connections[
                 section.reserved_uid
             ] = RequirementConnections(
                 requirement=section,
                 document=section.document,
                 parents=[],
-                parents_uids=[],
                 children=[],
             )
         else:
             # We have passed the validations if we reach this point, so we can
             # just assume we can safely delete the section.
             if section.reserved_uid is not None:
-                del traceability_index.requirements_parents[
+                del traceability_index.requirements_connections[
                     section.reserved_uid
                 ]
                 section.uid = None
@@ -202,10 +201,10 @@ class CreateSectionCommand:
         if (
             len(form_object.section_uid) > 0
             and form_object.section_uid
-            in traceability_index.requirements_parents
+            in traceability_index.requirements_connections
         ):
             existing_section_connections: RequirementConnections = assert_cast(
-                traceability_index.requirements_parents[
+                traceability_index.requirements_connections[
                     form_object.section_uid
                 ],
                 RequirementConnections,
@@ -301,13 +300,12 @@ class CreateSectionCommand:
         if len(form_object.section_uid) > 0:
             section.uid = form_object.section_uid
             section.reserved_uid = form_object.section_uid
-            traceability_index.requirements_parents[
+            traceability_index.requirements_connections[
                 section.reserved_uid
             ] = RequirementConnections(
                 requirement=section,
                 document=document,
                 parents=[],
-                parents_uids=[],
                 children=[],
             )
 

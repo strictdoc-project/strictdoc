@@ -4,7 +4,7 @@ from collections import OrderedDict
 from copy import copy
 from mimetypes import guess_type
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Union
+from typing import Dict, List, Optional, Set, Tuple, Union
 
 from fastapi import APIRouter, Form, UploadFile
 from jinja2 import Environment
@@ -25,9 +25,13 @@ from strictdoc.backend.reqif.p01_sdoc.sdoc_to_reqif_converter import (
 )
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.document_grammar import (
+    DocumentGrammar,
+    GrammarElement,
+)
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 from strictdoc.backend.sdoc.models.reference import (
+    ChildReqReference,
     ParentReqReference,
     Reference,
 )
@@ -69,6 +73,7 @@ from strictdoc.export.html.form_objects.document_config_form_object import (
 from strictdoc.export.html.form_objects.document_grammar_form_object import (
     DocumentGrammarFormObject,
     GrammarFormField,
+    GrammarFormRelation,
 )
 from strictdoc.export.html.form_objects.requirement_form_object import (
     RequirementFormField,
@@ -1008,8 +1013,12 @@ def create_main_router(
 
         class UpdateRequirementActionObject:
             def __init__(self):
-                self.existing_references_uids: Set[str] = set()
-                self.reference_ids_to_remove: Set[str] = set()
+                self.existing_references_uids: Set[
+                    Tuple[str, Optional[str]]
+                ] = set()
+                self.reference_ids_to_remove: Set[
+                    Tuple[str, Optional[str]]
+                ] = set()
                 self.removed_uid_parent_documents_to_update: Set[
                     Document
                 ] = set()
@@ -1034,11 +1043,22 @@ def create_main_router(
         reference_field: RequirementReferenceFormField
         for reference_field in form_object.reference_fields:
             ref_uid = reference_field.field_value
-            references.append(
-                ParentReqReference(
-                    parent=requirement, ref_uid=ref_uid, role=None
+            ref_type = reference_field.field_type
+            ref_role = reference_field.field_role
+            if ref_type == RequirementReferenceFormField.FieldType.PARENT:
+                references.append(
+                    ParentReqReference(
+                        parent=requirement, ref_uid=ref_uid, role=ref_role
+                    )
                 )
-            )
+            elif ref_type == RequirementReferenceFormField.FieldType.CHILD:
+                references.append(
+                    ChildReqReference(
+                        parent=requirement, ref_uid=ref_uid, role=ref_role
+                    )
+                )
+            else:
+                raise NotImplementedError(ref_type)
         if len(references) > 0:
             requirement.ordered_fields_lookup[RequirementFieldName.REFS] = [
                 RequirementField(
@@ -1063,16 +1083,25 @@ def create_main_router(
         # Updating Traceability Index: Links
         for reference_field in form_object.reference_fields:
             ref_uid = reference_field.field_value
+            ref_role: Optional[str] = (
+                reference_field.field_role
+                if reference_field.field_role is not None
+                and len(reference_field.field_role) > 0
+                else None
+            )
             # If a link is in the form, we don't want to remove it.
-            if ref_uid in action_object.reference_ids_to_remove:
-                action_object.reference_ids_to_remove.remove(ref_uid)
+            if (ref_uid, ref_role) in action_object.reference_ids_to_remove:
+                action_object.reference_ids_to_remove.remove(
+                    (ref_uid, ref_role)
+                )
             # If a link is already in the requirement and traceability index,
             # there is nothing to do.
-            if ref_uid in action_object.existing_references_uids:
+            if (ref_uid, ref_role) in action_object.existing_references_uids:
                 continue
             export_action.traceability_index.update_requirement_parent_uid(
                 requirement=requirement,
                 parent_uid=ref_uid,
+                role=reference_field.field_role,
             )
 
         # Updating Traceability Index: UID
@@ -1081,9 +1110,9 @@ def create_main_router(
         )
 
         # Calculate which documents and requirements have to be regenerated.
-        for reference_id_to_remove in action_object.reference_ids_to_remove:
+        for reference_id_to_remove, _ in action_object.reference_ids_to_remove:
             removed_uid_parent_requirement = (
-                export_action.traceability_index.requirements_parents[
+                export_action.traceability_index.requirements_connections[
                     reference_id_to_remove
                 ]
             )
@@ -1097,10 +1126,14 @@ def create_main_router(
                     removed_uid_parent_requirement.requirement
                 )
 
-        for reference_id_to_remove in action_object.reference_ids_to_remove:
+        for (
+            reference_id_to_remove,
+            reference_id_to_remove_role,
+        ) in action_object.reference_ids_to_remove:
             export_action.traceability_index.remove_requirement_parent_uid(
                 requirement=requirement,
                 parent_uid=reference_id_to_remove,
+                role=reference_id_to_remove_role,
             )
 
         # Saving new content to .SDoc files.
@@ -1120,7 +1153,9 @@ def create_main_router(
         for reference_field in form_object.reference_fields:
             ref_uid = reference_field.field_value
             requirement_connections: RequirementConnections = (
-                export_action.traceability_index.requirements_parents[ref_uid]
+                export_action.traceability_index.requirements_connections[
+                    ref_uid
+                ]
             )
             if requirement_connections.document == document:
                 action_object.this_document_requirements_to_update.add(
@@ -1686,6 +1721,14 @@ def create_main_router(
 
     @router.get("/actions/document/new_comment", response_class=Response)
     def document__add_comment(requirement_mid: str):
+        requirement: Requirement = (
+            export_action.traceability_index.get_node_by_mid(
+                MID(requirement_mid)
+            )
+        )
+        document: Document = requirement.document
+        assert document.grammar is not None
+        grammar: DocumentGrammar = document.grammar
         template = env().get_template(
             "actions/"
             "document/"
@@ -1699,8 +1742,11 @@ def create_main_router(
                 fields=[],
                 reference_fields=[],
                 exiting_requirement_uid=None,
+                grammar=grammar,
+                relation_types=[],
             ),
             field=RequirementFormField(
+                field_mid=MID.create().get_string_value(),
                 field_name="COMMENT",
                 field_type=RequirementFormFieldType.MULTILINE,
                 field_unescaped_value="",
@@ -1717,6 +1763,18 @@ def create_main_router(
 
     @router.get("/actions/document/new_parent_link", response_class=Response)
     def document__add_parent_link(requirement_mid: str):
+        requirement: Requirement = (
+            export_action.traceability_index.get_node_by_mid(
+                MID(requirement_mid)
+            )
+        )
+        document: Document = requirement.document
+        assert document.grammar is not None
+        grammar: DocumentGrammar = document.grammar
+        element: GrammarElement = grammar.elements_by_type["REQUIREMENT"]
+
+        grammar_element_relations = element.get_relation_types()
+
         template = env().get_template(
             "actions/"
             "document/"
@@ -1730,12 +1788,16 @@ def create_main_router(
                 fields=[],
                 reference_fields=[],
                 exiting_requirement_uid=None,
+                grammar=grammar,
+                relation_types=grammar_element_relations,
             ),
             field=RequirementReferenceFormField(
-                field_mid=MID.create().get_string_value(),
+                field_mid=MID.create().value,
                 field_type=RequirementReferenceFormField.FieldType.PARENT,
                 field_value="",
+                field_role="",
             ),
+            relation_types=grammar_element_relations,
         )
         return HTMLResponse(
             content=output,
@@ -1958,15 +2020,18 @@ def create_main_router(
                 },
             )
 
+        grammar_fields = {}
+        for grammar_field in document.grammar.elements[0].fields:
+            grammar_fields[grammar_field.mid.value] = grammar_field
+
         # Prepare fields that could have been renamed by the user has just saved the form.
         renamed_fields_lookup = {}
         for field in form_object.fields:
-            if (
-                field.previous_name is not None
-                and len(field.previous_name) > 0
-                and field.previous_name != field.field_name
-            ):
-                renamed_fields_lookup[field.field_name] = field.previous_name
+            if field.field_mid not in grammar_fields:
+                continue
+            existing_field = grammar_fields[field.field_mid]
+            if field.field_name != existing_field.title:
+                renamed_fields_lookup[field.field_name] = existing_field.title
 
         # Create new grammar.
         document_grammar: DocumentGrammar = (
@@ -1983,6 +2048,17 @@ def create_main_router(
         grammar_changed = (
             document_grammar_field_names
             != existing_document_grammar_field_names
+        )
+        existing_requirement_element = document.grammar.elements_by_type[
+            "REQUIREMENT"
+        ]
+        new_requirement_element = document_grammar.elements_by_type[
+            "REQUIREMENT"
+        ]
+        grammar_changed = (
+            grammar_changed
+            or existing_requirement_element.relations
+            != new_requirement_element.relations
         )
 
         # If the grammar has not changed, do nothing and save the edit form.
@@ -2062,6 +2138,27 @@ def create_main_router(
                 new_ordered_fields_lookup[
                     document_grammar_field_name
                 ] = previous_fields
+
+            registered_relation_types: Set[Tuple[str, Optional[str]]] = set()
+            for relation in existing_requirement_element.relations:
+                registered_relation_types.add(
+                    (relation.relation_type, relation.relation_role)
+                )
+            if "REFS" in requirement.ordered_fields_lookup:
+                for requirement_field in requirement.ordered_fields_lookup[
+                    "REFS"
+                ]:
+                    new_ordered_fields_lookup["REFS"] = []
+                    for (
+                        requirement_relation
+                    ) in requirement_field.field_value_references:
+                        if (
+                            requirement_relation.ref_type,
+                            requirement_relation.role,
+                        ) in registered_relation_types:
+                            new_ordered_fields_lookup["REFS"].append(
+                                requirement_field
+                            )
 
             requirement.ordered_fields_lookup = new_ordered_fields_lookup
             requirement.ng_reserved_fields_cache.clear()
@@ -2156,12 +2253,43 @@ def create_main_router(
             form_object=DocumentGrammarFormObject(
                 document_mid=document_mid,
                 fields=[],  # Not used in this limited partial template.
+                relations=[],  # Not used in this limited partial template.
             ),
             field=GrammarFormField(
+                field_mid=MID.create().value,
                 field_name="",
-                previous_name="",
                 field_required=False,
                 reserved=False,
+            ),
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @router.get(
+        "/actions/document/add_grammar_relation", response_class=Response
+    )
+    def document__add_grammar_relation(document_mid: str):
+        template = env().get_template(
+            "actions/"
+            "document/"
+            "edit_document_grammar/"
+            "stream_add_grammar_relation.jinja.html"
+        )
+        output = template.render(
+            form_object=DocumentGrammarFormObject(
+                document_mid=document_mid,
+                fields=[],  # Not used in this limited partial template.
+                relations=[],  # Not used in this limited partial template.
+            ),
+            relation=GrammarFormRelation(
+                relation_mid=MID.create().value,
+                relation_type="Parent",
+                relation_role="",
             ),
         )
         return HTMLResponse(

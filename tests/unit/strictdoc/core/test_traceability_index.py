@@ -77,6 +77,28 @@ def test_valid_02_one_document_with_1req():
     assert requirement4_parents == [requirement3]
 
 
+def test_invalid_01_2_reqs_cycled():
+    document_builder = DocumentBuilder()
+    document_builder.add_requirement("REQ-001")
+    document_builder.add_requirement("REQ-002")
+    document_builder.add_requirement_parent("REQ-002", "REQ-001")
+    document_builder.add_requirement_parent("REQ-001", "REQ-002")
+
+    document_1 = document_builder.build()
+
+    file_tree = []
+    document_list = [document_1]
+    map_docs_by_paths = {}
+    document_tree = DocumentTree(
+        file_tree=file_tree,
+        document_list=document_list,
+        map_docs_by_paths=map_docs_by_paths,
+        map_docs_by_rel_paths={},
+    )
+    with pytest.raises(DocumentTreeError):
+        _ = TraceabilityIndexBuilder.create_from_document_tree(document_tree)
+
+
 def test_invalid_02_4_reqs_cycled():
     document_builder = DocumentBuilder()
     _ = document_builder.add_requirement("REQ-001")
@@ -207,7 +229,9 @@ def test__adding_parent_link__01__two_requirements_in_one_document():
     traceability_index: TraceabilityIndex = (
         TraceabilityIndexBuilder.create_from_document_tree(document_tree)
     )
-    traceability_index.update_requirement_parent_uid(requirement2, "REQ-001")
+    traceability_index.update_requirement_parent_uid(
+        requirement2, "REQ-001", None
+    )
 
     # REQ2 has REQ1 as its parent.
     req2_parent_requirements = traceability_index.get_parent_requirements(
@@ -243,7 +267,9 @@ def test__adding_parent_link__02__two_requirements_in_two_documents():
     traceability_index: TraceabilityIndex = (
         TraceabilityIndexBuilder.create_from_document_tree(document_tree)
     )
-    traceability_index.update_requirement_parent_uid(requirement2, "REQ-001")
+    traceability_index.update_requirement_parent_uid(
+        requirement2, "REQ-001", None
+    )
 
     # REQ2 has REQ1 as its parent.
     req2_parent_requirements = traceability_index.get_parent_requirements(
@@ -288,10 +314,12 @@ def test__adding_parent_link__03__two_requirements_disallow_cycle():
     traceability_index: TraceabilityIndex = (
         TraceabilityIndexBuilder.create_from_document_tree(document_tree)
     )
-    traceability_index.update_requirement_parent_uid(requirement2, "REQ-001")
+    traceability_index.update_requirement_parent_uid(
+        requirement2, "REQ-001", None
+    )
     with pytest.raises(DocumentTreeError) as exc_info:
         traceability_index.update_requirement_parent_uid(
-            requirement1, "REQ-002"
+            requirement1, "REQ-002", role=None
         )
     assert (
         "a cycle detected: "
@@ -320,7 +348,9 @@ def test__adding_parent_link__04__two_requirements_remove_parent_link():
     traceability_index: TraceabilityIndex = (
         TraceabilityIndexBuilder.create_from_document_tree(document_tree)
     )
-    traceability_index.remove_requirement_parent_uid(requirement2, "REQ-001")
+    traceability_index.remove_requirement_parent_uid(
+        requirement2, "REQ-001", role=None
+    )
 
     req2_parent_requirements = traceability_index.get_parent_requirements(
         requirement2

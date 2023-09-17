@@ -1,5 +1,4 @@
 import html
-import re
 from collections import defaultdict
 from enum import Enum
 from typing import Dict, List, Optional
@@ -12,6 +11,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     GrammarElement,
 )
 from strictdoc.backend.sdoc.models.reference import (
+    ChildReqReference,
     ParentReqReference,
     Reference,
 )
@@ -32,6 +32,8 @@ from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.form_data import parse_form_data
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.string import sanitize_html_form_field
 from strictdoc.server.error_object import ErrorObject
@@ -46,6 +48,7 @@ class RequirementFormFieldType(str, Enum):
 class RequirementFormField:
     def __init__(
         self,
+        field_mid: str,
         field_name: str,
         field_type: RequirementFormFieldType,
         field_unescaped_value: str,
@@ -53,6 +56,7 @@ class RequirementFormField:
     ):
         assert isinstance(field_unescaped_value, str)
         assert isinstance(field_escaped_value, str)
+        self.field_mid: str = field_mid
         self.field_name: str = field_name
         self.field_type = field_type
         self.field_unescaped_value: str = field_unescaped_value
@@ -65,7 +69,10 @@ class RequirementFormField:
         return self.field_type == RequirementFormFieldType.MULTILINE
 
     def get_input_field_name(self):
-        return f"requirement[{self.field_name}]"
+        return f"requirement[fields][{self.field_mid}][value]"
+
+    def get_input_field_type_name(self):
+        return f"requirement[fields][{self.field_mid}][name]"
 
     @staticmethod
     def create_from_grammar_field(
@@ -87,6 +94,7 @@ class RequirementFormField:
         )
         if grammar_field.gef_type == RequirementFieldType.STRING:
             return RequirementFormField(
+                field_mid=MID.create().get_string_value(),
                 field_name=grammar_field.title,
                 field_type=RequirementFormFieldType.MULTILINE
                 if multiline
@@ -111,6 +119,7 @@ class RequirementFormField:
             assert isinstance(field_value, str)
             escaped_field_value = html.escape(field_value)
             return RequirementFormField(
+                field_mid=MID.create().get_string_value(),
                 field_name=grammar_field.title,
                 field_type=RequirementFormFieldType.MULTILINE
                 if multiline
@@ -124,23 +133,34 @@ class RequirementFormField:
 @auto_described
 class RequirementReferenceFormField:
     class FieldType(str, Enum):
-        PARENT = "PARENT"
+        PARENT = "Parent"
+        CHILD = "Child"
 
     def __init__(
         self,
         field_mid: str,
         field_type: FieldType,
         field_value: str,
+        field_role: Optional[str],
     ):
         assert isinstance(field_mid, str), field_mid
         assert isinstance(field_value, str), field_value
         self.field_mid: str = field_mid
         self.field_type = field_type
         self.field_value: str = field_value
+        self.field_role: str = (
+            field_role if field_role is not None and len(field_role) > 0 else ""
+        )
         self.validation_messages: List[str] = []
 
     def get_input_field_name(self):
-        return "requirement[REFS_PARENT][]"
+        return "requirement_relation"
+
+    def get_value_field_name(self):
+        return f"requirement[relations][{self.field_mid}][value]"
+
+    def get_type_field_name(self):
+        return f"requirement[relations][{self.field_mid}][typerole]"
 
 
 @auto_described
@@ -152,6 +172,9 @@ class RequirementFormObject(ErrorObject):
         fields: List[RequirementFormField],
         reference_fields: List[RequirementReferenceFormField],
         exiting_requirement_uid: Optional[str],
+        grammar: DocumentGrammar,
+        # FIXME: Better name
+        relation_types: List[str],
     ):
         super().__init__()
         self.requirement_mid: Optional[str] = requirement_mid
@@ -163,6 +186,8 @@ class RequirementFormObject(ErrorObject):
             RequirementReferenceFormField
         ] = reference_fields
         self.exiting_requirement_uid: Optional[str] = exiting_requirement_uid
+        self.grammar: DocumentGrammar = grammar
+        self.relation_types: List[str] = relation_types
 
     @staticmethod
     def create_from_request(
@@ -172,16 +197,54 @@ class RequirementFormObject(ErrorObject):
         document: Document,
         exiting_requirement_uid: Optional[str],
     ) -> "RequirementFormObject":
-        requirement_fields = defaultdict(list)
-        parent_refs: List[str] = []
-        for field_name, field_value in request_form_data.multi_items():
-            if field_name == "requirement[REFS_PARENT][]":
-                parent_refs.append(field_value)
-                continue
+        request_form_data_as_list = [
+            (field_name, field_value)
+            for field_name, field_value in request_form_data.multi_items()
+        ]
+        request_form_dict: Dict = assert_cast(
+            parse_form_data(request_form_data_as_list), dict
+        )
 
-            result = re.search(r"^requirement\[(.*)]$", field_name)
-            if result is not None:
-                requirement_fields[result.group(1)].append(field_value)
+        requirement_fields = defaultdict(list)
+        form_ref_fields: List[RequirementReferenceFormField] = []
+
+        requirement_dict = request_form_dict["requirement"]
+        requirement_fields_dict = requirement_dict["fields"]
+        for _, field_dict in requirement_fields_dict.items():
+            field_name = field_dict["name"]
+            field_value = field_dict["value"]
+            requirement_fields[field_name].append(field_value)
+
+        # FIXME: defaulting to {}
+        requirement_relations_dict = requirement_dict.get("relations", {})
+        for relation_mid, relation_dict in requirement_relations_dict.items():
+            relation_typerole = relation_dict["typerole"]
+            relation_typerole_parts = relation_typerole.split(",")
+            if len(relation_typerole_parts) == 2:
+                relation_type = relation_typerole_parts[0]
+                relation_role = relation_typerole_parts[1]
+            elif len(relation_typerole_parts) == 1:
+                relation_type = relation_typerole_parts[0]
+                relation_role = None
+            else:
+                raise AssertionError("Must not reach here")
+            field_type = (
+                RequirementReferenceFormField.FieldType.PARENT
+                if relation_type == "Parent"
+                else RequirementReferenceFormField.FieldType.CHILD
+                if relation_type == "Child"
+                else ""
+            )
+            relation_value = relation_dict["value"]
+
+            form_ref_fields.append(
+                RequirementReferenceFormField(
+                    field_mid=relation_mid,
+                    field_type=field_type,
+                    field_value=relation_value,
+                    field_role=relation_role,
+                )
+            )
 
         assert document.grammar is not None
         grammar: DocumentGrammar = document.grammar
@@ -213,20 +276,13 @@ class RequirementFormObject(ErrorObject):
                 )
                 form_fields.append(form_field)
 
-        form_ref_fields: List[RequirementReferenceFormField] = []
-        for parent_ref in parent_refs:
-            form_ref_fields.append(
-                RequirementReferenceFormField(
-                    field_mid=MID.create().get_string_value(),
-                    field_type=RequirementReferenceFormField.FieldType.PARENT,
-                    field_value=parent_ref,
-                )
-            )
         form_object = RequirementFormObject(
             requirement_mid=requirement_mid,
             fields=form_fields,
             reference_fields=form_ref_fields,
             exiting_requirement_uid=exiting_requirement_uid,
+            grammar=grammar,
+            relation_types=element.get_relation_types(),
         )
         return form_object
 
@@ -265,6 +321,8 @@ class RequirementFormObject(ErrorObject):
             fields=form_fields,
             reference_fields=[],
             exiting_requirement_uid=None,
+            grammar=grammar,
+            relation_types=element.get_relation_types(),
         )
 
     @staticmethod
@@ -276,6 +334,9 @@ class RequirementFormObject(ErrorObject):
         assert document.grammar is not None
         grammar: DocumentGrammar = document.grammar
         element: GrammarElement = grammar.elements_by_type["REQUIREMENT"]
+
+        grammar_element_relations = element.get_relation_types()
+
         form_fields: List[RequirementFormField] = []
         form_refs_fields: List[RequirementReferenceFormField] = []
 
@@ -315,23 +376,36 @@ class RequirementFormObject(ErrorObject):
             for requirement_field in requirement.ordered_fields_lookup["REFS"]:
                 reference_value: Reference
                 for reference_value in requirement_field.field_value_references:
-                    if not isinstance(reference_value, ParentReqReference):
-                        continue
-                    parent_reference: ParentReqReference = reference_value
-                    form_ref_field = RequirementReferenceFormField(
-                        field_mid=parent_reference.mid.get_string_value(),
-                        field_type=(
-                            RequirementReferenceFormField.FieldType.PARENT
-                        ),
-                        field_value=parent_reference.ref_uid,
-                    )
-                    form_refs_fields.append(form_ref_field)
+                    if isinstance(reference_value, ParentReqReference):
+                        parent_reference: ParentReqReference = reference_value
+                        form_ref_field = RequirementReferenceFormField(
+                            field_mid=parent_reference.mid.get_string_value(),
+                            field_type=(
+                                RequirementReferenceFormField.FieldType.PARENT
+                            ),
+                            field_value=parent_reference.ref_uid,
+                            field_role=parent_reference.role,
+                        )
+                        form_refs_fields.append(form_ref_field)
+                    elif isinstance(reference_value, ChildReqReference):
+                        child_reference: ChildReqReference = reference_value
+                        form_ref_field = RequirementReferenceFormField(
+                            field_mid=child_reference.mid.get_string_value(),
+                            field_type=(
+                                RequirementReferenceFormField.FieldType.CHILD
+                            ),
+                            field_value=child_reference.ref_uid,
+                            field_role=child_reference.role,
+                        )
+                        form_refs_fields.append(form_ref_field)
 
         return RequirementFormObject(
             requirement_mid=requirement.mid.get_string_value(),
             fields=form_fields,
             reference_fields=form_refs_fields,
             exiting_requirement_uid=requirement.reserved_uid,
+            grammar=grammar,
+            relation_types=grammar_element_relations,
         )
 
     def any_errors(self):
@@ -356,15 +430,16 @@ class RequirementFormObject(ErrorObject):
     def enumerate_reference_fields(self):
         yield from self.reference_fields
 
-    def get_uid_field(self) -> RequirementFormField:
-        for _, field in self.fields.items():
-            requirement_field: RequirementFormField = field[0]
-            if requirement_field.field_name == "UID":
-                return requirement_field
-        else:
-            raise LookupError(
-                "Could not find a form field for requirement's UID."
+    def enumerate_relation_roles(
+        self, relation_field: RequirementReferenceFormField
+    ):
+        requirement_element = self.grammar.elements_by_type["REQUIREMENT"]
+        for relation in requirement_element.relations:
+            is_current = (
+                relation_field.field_type == relation.relation_type
+                and relation_field.field_role == relation.relation_role
             )
+            yield relation.relation_type, relation.relation_role, is_current
 
     def validate(
         self,
@@ -422,7 +497,7 @@ class RequirementFormObject(ErrorObject):
                     "links, rename the UID, recreate the links.",
                 )
             requirement_connections: RequirementConnections = (
-                traceability_index.requirements_parents[
+                traceability_index.requirements_connections[
                     self.exiting_requirement_uid
                 ]
             )
@@ -440,7 +515,7 @@ class RequirementFormObject(ErrorObject):
                 reference_field.validation_messages.append(
                     "Requirement parent link UID must not be empty."
                 )
-            elif link_uid not in traceability_index.requirements_parents:
+            elif link_uid not in traceability_index.requirements_connections:
                 reference_field.validation_messages.append(
                     f'Parent requirement with an UID "{link_uid}" '
                     f"does not exist."

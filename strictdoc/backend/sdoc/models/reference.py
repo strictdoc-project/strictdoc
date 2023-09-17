@@ -21,6 +21,7 @@ class FileReference(Reference):
     def __init__(self, parent, g_file_entry: FileEntry):
         super().__init__(ReferenceType.FILE, parent)
         self.g_file_entry: FileEntry = g_file_entry
+        self.role: Optional[str] = None
         self.mid = MID.create()
 
     def get_posix_path(self) -> str:
@@ -49,7 +50,12 @@ class ChildReqReference(Reference):
     def __init__(self, parent, ref_uid, role: str):
         super().__init__(ReferenceType.CHILD, parent)
         self.ref_uid = ref_uid
-        self.role = role
+        # When ROLE: field is not provided for a child reference, the
+        # textX still passes relation_uid as an empty string (instead of None
+        # as one could expect).
+        self.role: Optional[str] = (
+            role if role is not None and len(role) > 0 else None
+        )
         self.mid = MID.create()
 
 

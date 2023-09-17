@@ -35,8 +35,13 @@ class Test(E2ECase):
             form_edit_requirement: Form_EditRequirement = (
                 requirement.do_open_form_edit_requirement()
             )
-            form_edit_requirement.do_form_add_field_parent_link()
-            form_edit_requirement.do_fill_in_field_parent_link("FOO-BAR")
+
+            new_relation_mid = (
+                form_edit_requirement.do_form_add_field_parent_link()
+            )
+            form_edit_requirement.do_fill_in_field_parent_link(
+                new_relation_mid, "FOO-BAR"
+            )
 
             form_edit_requirement.do_form_submit_and_catch_error(
                 'Parent requirement with an UID "FOO-BAR" does not exist.'

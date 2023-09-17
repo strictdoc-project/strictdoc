@@ -37,11 +37,15 @@ class Test(E2ECase):
 
             form_edit_grammar.assert_on_grammar()
 
-            form_edit_grammar.do_add_grammar_field()
-            form_edit_grammar.do_fill_in_grammar_field("", "SAME_FIELD", 1)
+            grammar_field_mid1 = form_edit_grammar.do_add_grammar_field()
+            form_edit_grammar.do_fill_in_grammar_field_mid(
+                grammar_field_mid1, "SAME_FIELD"
+            )
 
-            form_edit_grammar.do_add_grammar_field()
-            form_edit_grammar.do_fill_in_grammar_field("", "SAME_FIELD", 2)
+            grammar_field_mid2 = form_edit_grammar.do_add_grammar_field()
+            form_edit_grammar.do_fill_in_grammar_field_mid(
+                grammar_field_mid2, "SAME_FIELD"
+            )
 
             form_edit_grammar.do_form_submit_and_catch_error(
                 "Grammar field SAME_FIELD is not unique."

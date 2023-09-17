@@ -7,10 +7,8 @@ AFTER = 2
 
 
 class TreeCycleDetector:
-    def __init__(self, whitelisted_nodes):
-        assert isinstance(whitelisted_nodes, object)
+    def __init__(self):
         self.checked = set()
-        self.whitelisted_nodes = whitelisted_nodes
 
     def check_node(self, node, links_function):
         if node in self.checked:
@@ -20,9 +18,6 @@ class TreeCycleDetector:
         visited = set()
         while stack:
             current_node, token = stack[-1]
-            if current_node not in self.whitelisted_nodes:
-                stack.pop()
-                continue
             if token == BEFORE:
                 visited.add(current_node)
                 stack[-1] = (current_node, AFTER)

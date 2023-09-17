@@ -401,7 +401,7 @@ def lint_ruff(context):
         context,
         ToxEnvironment.CHECK,
         """
-            ruff .
+            ruff . --fix
         """,
     )
 

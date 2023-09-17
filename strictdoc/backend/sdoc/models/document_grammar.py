@@ -10,6 +10,7 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarReferenceType,
     RequirementFieldName,
 )
+from strictdoc.helpers.auto_described import auto_described
 
 
 def create_default_relations(parent) -> List[GrammarElementRelationParent]:
@@ -22,6 +23,7 @@ def create_default_relations(parent) -> List[GrammarElementRelationParent]:
     ]
 
 
+@auto_described()
 class GrammarElement:
     def __init__(
         self,
@@ -42,6 +44,11 @@ class GrammarElement:
         for field in fields:
             fields_map[field.title] = field
         self.fields_map = fields_map
+
+    def get_relation_types(self) -> List[str]:
+        return list(
+            map(lambda relation_: relation_.relation_type, self.relations)
+        )
 
     def enumerate_meta_field_titles(self):
         for field in self.fields:

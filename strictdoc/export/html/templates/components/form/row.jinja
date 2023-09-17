@@ -1,51 +1,15 @@
-{# Variables in this template:
-
-    data_controller="one two three" | optional
-
-    field_type = singleline | multiline | parent
-
-    field_editable=true/false | optional
-
-    field_class_name | optional
-    field_input_name
-    field_name
-    field_label | optional
-    field_value
-    errors
-
-    field_actions={
-      'delete':true,
-      'move_up':true,
-      'move_down':true,
-    } | optional
-
-#}
-
 {%- assert row_context is defined -%}
-{%- assert row_context.field is defined -%}
-{%- assert row_context.field_actions is defined -%}
 {%- assert row_context.errors is defined -%}
 
 <sdoc-form-row
-  {% block row_form_attributes required %}{% endblock row_form_attributes %}
+  {% block row_form_attributes %}
+    {% assert 0, "Must not reach here!" %}
+  {% endblock row_form_attributes %}
 >
   <sdoc-form-row-aside>
-    {%- if row_context.field_actions is defined -%}
-      {%- if row_context.field_actions.move_down is defined and row_context.field_actions.move_down is sameas true -%}
-        {%- set action_button_context = namespace() %}
-        {%- set action_button_context.field_actions = {"move_down": true} %}
-        {%- set action_button_context.field_name = row_context.field.field_name %}
-        {%- set action_button_context.field_input_name = row_context.field.get_input_field_name() %}
-        {%- include "components/form/field_action_button/index.jinja" -%}
-      {%- endif -%}
-      {% if row_context.field_actions.move_up is defined and row_context.field_actions.move_up is sameas true -%}
-        {%- set action_button_context = namespace() %}
-        {%- set action_button_context.field_actions = {"move_up": true} %}
-        {%- set action_button_context.field_name = row_context.field.field_name %}
-        {%- set action_button_context.field_input_name = row_context.field.get_input_field_name() %}
-        {%- include "components/form/field_action_button/index.jinja" -%}
-      {%- endif -%}
-    {%- endif -%}
+    {% block row_left %}
+      {% assert 0, "Must not reach here!" %}
+    {% endblock row_left %}
   </sdoc-form-row-aside>
 
   <sdoc-form-row-main>
@@ -64,14 +28,8 @@
   </sdoc-form-row-main>
 
   <sdoc-form-row-aside>
-    {%- if row_context.field_actions is defined -%}
-      {% if row_context.field_actions.delete is defined and row_context.field_actions.delete is sameas true -%}
-        {%- set action_button_context = namespace() %}
-        {%- set action_button_context.field_actions = {"delete": true} %}
-        {%- set action_button_context.field_name = "parent link" %}
-        {%- set action_button_context.field_input_name = row_context.field.get_input_field_name() %}
-        {%- include "components/form/field_action_button/index.jinja" -%}
-      {%- endif -%}
-    {%- endif -%}
+    {% block row_right %}
+      {% assert 0, "Must not reach here!" %}
+    {% endblock row_right %}
   </sdoc-form-row-aside>
 </sdoc-form-row>

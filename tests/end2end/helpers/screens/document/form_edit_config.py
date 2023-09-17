@@ -17,7 +17,7 @@ class Form_EditConfig(Form):  # pylint: disable=invalid-name
     def assert_document_abstract_contains(self, text: str) -> None:
         assert isinstance(text, str)
         super().assert_testid_contains(
-            "data-testid='form-document[FREETEXT]-field'", text
+            "data-testid='form-field-document[FREETEXT]'", text
         )
 
     # Fill in:

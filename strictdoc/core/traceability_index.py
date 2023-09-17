@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Set, Union
+from typing import Any, Dict, List, Optional, Set, Tuple, Union
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
@@ -29,15 +29,35 @@ class RequirementConnections:
         self,
         requirement: Requirement,
         document: Document,
-        parents: List[Requirement],
-        parents_uids: List[str],
-        children: List[Requirement],
+        parents: List[Tuple[Requirement, Optional[str]]],
+        children: List[Tuple[Requirement, Optional[str]]],
     ):
         self.requirement: Requirement = requirement
         self.document: Document = document
-        self.parents: List[Requirement] = parents
-        self.parents_uids: List[str] = parents_uids
-        self.children: List[Requirement] = children
+        self.parents: List[Tuple[Requirement, Optional[str]]] = parents
+        self.children: List[Tuple[Requirement, Optional[str]]] = children
+
+    def contains_uid(self, uid: str) -> bool:
+        for parent_, _ in self.parents:
+            if parent_.reserved_uid == uid:
+                return True
+        return False
+
+    def get_parent_uids(self) -> List[str]:
+        return list(
+            map(
+                lambda pair_: assert_cast(pair_[0].reserved_uid, str),
+                self.parents,
+            )
+        )
+
+    def get_child_uids(self) -> List[str]:
+        return list(
+            map(
+                lambda pair_: assert_cast(pair_[0].reserved_uid, str),
+                self.children,
+            )
+        )
 
 
 class GraphLinkType(LinkType):
@@ -87,7 +107,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         Below, making some assumptions about what makes a small or larger
         project.
         """
-
         if len(self.document_tree.document_list) >= 3:
             return False
         for document_ in self.document_tree.document_list:
@@ -100,14 +119,14 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         return self._map_id_to_node[node_id]
 
     def has_requirements(self):
-        return len(self.requirements_parents.keys()) > 0
+        return len(self.requirements_connections.keys()) > 0
 
     @property
     def document_iterators(self):
         return self._document_iterators
 
     @property
-    def requirements_parents(self) -> Dict[str, RequirementConnections]:
+    def requirements_connections(self) -> Dict[str, RequirementConnections]:
         return self._requirements_parents
 
     @property
@@ -120,7 +139,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def get_document_iterator(self, document) -> DocumentCachingIterator:
         return self.document_iterators[document]
 
-    def get_parent_requirements(self, requirement: Requirement):
+    def get_parent_requirements(
+        self, requirement: Requirement
+    ) -> List[Requirement]:
         assert isinstance(requirement, Requirement)
         if not isinstance(requirement.reserved_uid, str):
             return []
@@ -128,10 +149,33 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         if len(requirement.reserved_uid) == 0:
             return []
 
-        parent_requirements = self.requirements_parents[
+        parent_requirements = self.requirements_connections[
             requirement.reserved_uid
         ].parents
-        return parent_requirements
+        return list(map(lambda pair_: pair_[0], parent_requirements))
+
+    def get_parent_relations_with_roles(self, requirement: Requirement):
+        assert isinstance(requirement, Requirement)
+        if (
+            requirement.reserved_uid is None
+            or len(requirement.reserved_uid) == 0
+        ):
+            return
+
+        yield from self.requirements_connections[
+            requirement.reserved_uid
+        ].parents
+
+    def get_child_relations_with_roles(self, requirement: Requirement):
+        assert isinstance(requirement, Requirement)
+        if (
+            requirement.reserved_uid is None
+            or len(requirement.reserved_uid) == 0
+        ):
+            return
+        yield from self.requirements_connections[
+            requirement.reserved_uid
+        ].children
 
     def has_parent_requirements(self, requirement: Requirement):
         assert isinstance(requirement, Requirement)
@@ -141,7 +185,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         if len(requirement.reserved_uid) == 0:
             return False
 
-        parent_requirements = self.requirements_parents[
+        parent_requirements = self.requirements_connections[
             requirement.reserved_uid
         ].parents
         return len(parent_requirements) > 0
@@ -154,7 +198,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         if len(requirement.reserved_uid) == 0:
             return False
 
-        children_requirements = self.requirements_parents[
+        children_requirements = self.requirements_connections[
             requirement.reserved_uid
         ].children
         return len(children_requirements) > 0
@@ -169,10 +213,10 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         if len(requirement.reserved_uid) == 0:
             return []
 
-        children_requirements = self.requirements_parents[
+        children_requirements = self.requirements_connections[
             requirement.reserved_uid
         ].children
-        return children_requirements
+        return list(map(lambda pair_: pair_[0], children_requirements))
 
     def has_tags(self, document):
         if document.title not in self.tags_map:
@@ -301,13 +345,12 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def mut_add_uid_to_a_requirement_if_needed(self, requirement: Requirement):
         if requirement.reserved_uid is None:
             return
-        self.requirements_parents[
+        self.requirements_connections[
             requirement.reserved_uid
         ] = RequirementConnections(
             requirement=requirement,
             document=requirement.document,
             parents=[],
-            parents_uids=[],
             children=[],
         )
 
@@ -318,18 +361,21 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             self.mut_add_uid_to_a_requirement_if_needed(requirement)
             return
 
-        existing_entry = self.requirements_parents[old_uid]
-        del self.requirements_parents[old_uid]
+        existing_entry = self.requirements_connections[old_uid]
+        del self.requirements_connections[old_uid]
         if requirement.reserved_uid is not None:
-            self.requirements_parents[requirement.reserved_uid] = existing_entry
+            self.requirements_connections[
+                requirement.reserved_uid
+            ] = existing_entry
 
     def create_inline_link(self, new_link: InlineLink):
         assert isinstance(new_link, InlineLink)
 
         # InlineLink points to a section.
-        if new_link.link in self.requirements_parents:
+        if new_link.link in self.requirements_connections:
             section_connections: RequirementConnections = assert_cast(
-                self.requirements_parents[new_link.link], RequirementConnections
+                self.requirements_connections[new_link.link],
+                RequirementConnections,
             )
             self.graph_database.add_link(
                 link_type=GraphLinkType.SECTIONS_TO_INCOMING_LINKS,
@@ -349,7 +395,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             raise NotImplementedError
 
     def update_requirement_parent_uid(
-        self, requirement: Requirement, parent_uid: str
+        self, requirement: Requirement, parent_uid: str, role: Optional[str]
     ) -> None:
         assert requirement.reserved_uid is not None
         assert isinstance(parent_uid, str), parent_uid
@@ -357,7 +403,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             self._requirements_parents[requirement.reserved_uid]
         )
         # If the parent uid already exists, there is nothing to do.
-        if parent_uid in requirement_connections.parents_uids:
+        if requirement_connections.contains_uid(parent_uid):
             return
         parent_requirement_connections: RequirementConnections = (
             self._requirements_parents[parent_uid]
@@ -367,17 +413,16 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         document = requirement.document
         parent_requirement_document = parent_requirement.document
 
-        requirement_connections.parents_uids.append(parent_uid)
-        requirement_connections.parents.append(parent_requirement)
-        parent_requirement_connections.children.append(requirement)
+        requirement_connections.parents.append((parent_requirement, role))
+        parent_requirement_connections.children.append((requirement, role))
         self._document_parents_map[document].add(parent_requirement_document)
         self._document_children_map[parent_requirement_document].add(document)
-        cycle_detector = TreeCycleDetector(self.requirements_parents)
+        cycle_detector = TreeCycleDetector()
         cycle_detector.check_node(
             requirement.reserved_uid,
-            lambda requirement_id: self.requirements_parents[
+            lambda requirement_id: self.requirements_connections[
                 requirement_id
-            ].parents_uids,
+            ].get_parent_uids(),
         )
 
         # Mark document and parent document (if different) for re-generation.
@@ -386,7 +431,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             parent_requirement_document.ng_needs_generation = True
 
     def remove_requirement_parent_uid(
-        self, requirement: Requirement, parent_uid: str
+        self, requirement: Requirement, parent_uid: str, role: Optional[str]
     ) -> None:
         assert requirement.reserved_uid is not None
         assert isinstance(parent_uid, str), parent_uid
@@ -401,9 +446,8 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         document = requirement.document
         parent_requirement_document = parent_requirement.document
 
-        requirement_connections.parents_uids.remove(parent_uid)
-        requirement_connections.parents.remove(parent_requirement)
-        parent_requirement_connections.children.remove(requirement)
+        requirement_connections.parents.remove((parent_requirement, role))
+        parent_requirement_connections.children.remove((requirement, role))
 
         # If there are no requirements linking with the parent document,
         # remove the link.
@@ -412,7 +456,10 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             if not node.is_requirement:
                 continue
             requirement_node: Requirement = node
-            if requirement_node in parent_requirement_connections.children:
+            if requirement_node in map(
+                lambda child_pair_: child_pair_[0],
+                parent_requirement_connections.children,
+            ):
                 should_disconnect_documents = False
                 break
 

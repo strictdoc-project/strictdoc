@@ -36,8 +36,12 @@ class Test(E2ECase):
             )
             form_edit_grammar.assert_on_grammar()
 
-            form_edit_grammar.do_fill_in_grammar_field(
-                "CUSTOM_FIELD", "CUSTOM_FIELD_2", -1
+            custom_field_mid = form_edit_grammar.get_existing_mid_by_field_name(
+                "CUSTOM_FIELD"
+            )
+
+            form_edit_grammar.do_fill_in_grammar_field_mid(
+                custom_field_mid, "CUSTOM_FIELD_2"
             )
 
             form_edit_grammar.do_form_submit()

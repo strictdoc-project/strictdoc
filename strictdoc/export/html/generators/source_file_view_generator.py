@@ -107,7 +107,7 @@ class SourceFileViewHTMLGenerator:
 
         # HACK:
         # Otherwise, Pygments will skip the first line as if it does not exist.
-        # This behavior surprisingly affects on the first line if its empty.
+        # This behavior surprisingly has an effect on the first line if its empty.
         hack_first_line: bool = False
         if source_file_lines[0] == "\n":
             source_file_lines[0] = " \n"
@@ -152,12 +152,14 @@ class SourceFileViewHTMLGenerator:
         ), "Expected marker to be in place."
         # Pop ###, pop "\n"
         pygmented_source_file_lines.pop()
-        pygmented_source_file_lines.pop()
+        if pygmented_source_file_lines[-1] == "":
+            pygmented_source_file_lines.pop()
 
         assert len(pygmented_source_file_lines) == len(source_file_lines), (
             f"Something went wrong when running Pygments against "
             f"the source file: "
-            f"{len(pygmented_source_file_lines)} == {len(source_file_lines)}"
+            f"{len(pygmented_source_file_lines)} == {len(source_file_lines)}, "
+            f"{pygmented_source_file_lines} == {source_file_lines}."
         )
 
         for pragma in coverage_info.pragmas:

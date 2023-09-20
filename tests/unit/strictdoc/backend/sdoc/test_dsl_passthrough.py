@@ -1,14 +1,9 @@
-import re
-
 import pytest
 from textx import TextXSyntaxError
 
-from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.reference import (
-    BibReference,
     FileReference,
-    ParentReqReference,
 )
 from strictdoc.backend.sdoc.models.requirement import (
     CompositeRequirement,
@@ -16,7 +11,6 @@ from strictdoc.backend.sdoc.models.requirement import (
 )
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.models.type_system import (
-    BibEntryFormat,
     ReferenceType,
 )
 from strictdoc.backend.sdoc.reader import SDReader
@@ -24,7 +18,7 @@ from strictdoc.backend.sdoc.writer import SDWriter
 
 
 def test_001_minimal_doc():
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -37,17 +31,17 @@ TITLE: Test Doc
 
     reader = SDReader()
 
-    document = reader.read(sdoc_input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert sdoc_input == output
+    assert input_sdoc == output
 
 
 def test_002_minimal_req():
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -57,17 +51,17 @@ TITLE: Hello
 
     reader = SDReader()
 
-    document = reader.read(sdoc_input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert sdoc_input == output
+    assert input_sdoc == output
 
 
 def test_003_comments_01_several_comments():
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -80,17 +74,17 @@ COMMENT: Comment #3
 
     reader = SDReader()
 
-    document = reader.read(sdoc_input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert sdoc_input == output
+    assert input_sdoc == output
 
 
 def test_004_several_tags():
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -101,13 +95,13 @@ TITLE: Hello
 
     reader = SDReader()
 
-    document = reader.read(sdoc_input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert sdoc_input == output
+    assert input_sdoc == output
 
 
 def test_010_multiple_sections():
@@ -138,32 +132,6 @@ This is a statement 3
 <<<
 
 [/SECTION]
-""".lstrip()
-
-    reader = SDReader()
-
-    document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
-
-    writer = SDWriter()
-    output = writer.write(document)
-
-    assert input_sdoc == output
-
-
-def test_020_parent_ref_with_relation():
-    input_sdoc = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[REQUIREMENT]
-REFS:
-- TYPE: Parent
-  VALUE: ID-001
-  RELATION: Refines
-STATEMENT: >>>
-This is a statement.
-<<<
 """.lstrip()
 
     reader = SDReader()
@@ -417,7 +385,7 @@ body 1.1.1.1
 # This test is needed to make sure that the grammar details related
 # to the difference of parting single vs multiline strings are covered.
 def test_050_requirement_single_line_statement_one_symbol():
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -427,17 +395,17 @@ STATEMENT: 1
 
     reader = SDReader()
 
-    document = reader.read(sdoc_input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
-    document: Document = reader.read(sdoc_input)
+    document: Document = reader.read(input_sdoc)
     requirement = document.section_contents[0]
     assert requirement.reserved_statement == "1"
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert sdoc_input == output
+    assert input_sdoc == output
 
 
 def test_060_file_ref():
@@ -472,7 +440,7 @@ REFS:
 
 
 def test_070_document_config_version():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 VERSION: 0.0.1
@@ -485,20 +453,20 @@ REFS:
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
-    document: Document = reader.read(input)
+    document: Document = reader.read(input_sdoc)
     assert document.config.version == "0.0.1"
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
 
 def test_071_document_config_number():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 UID: SDOC-01
@@ -511,20 +479,20 @@ REFS:
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
-    document: Document = reader.read(input)
+    document: Document = reader.read(input_sdoc)
     assert document.config.uid == "SDOC-01"
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
 
 def test_072_document_config_classification():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 UID: SDOC-01
@@ -539,20 +507,20 @@ REFS:
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
-    document: Document = reader.read(input)
+    document: Document = reader.read(input_sdoc)
     assert document.config.classification == "Restricted"
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
 
 def test_073_document_config_requirement_prefix():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 UID: SDOC-01
@@ -567,20 +535,20 @@ REFS:
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
-    document: Document = reader.read(input)
+    document: Document = reader.read(input_sdoc)
     assert document.config.requirement_prefix == "DOC-"
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
 
 def test_090_document_config_all_fields():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 UID: SDOC-01
@@ -605,10 +573,10 @@ STATEMENT: ABC
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
-    document: Document = reader.read(input)
+    document: Document = reader.read(input_sdoc)
     assert document.title == "Test Doc"
     assert document.config.version == "0.0.1"
     assert document.config.uid == "SDOC-01"
@@ -629,7 +597,7 @@ STATEMENT: ABC
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
 
 def test_100_basic_test():
@@ -642,6 +610,8 @@ TITLE: Test Section
 
 [REQUIREMENT]
 TAGS: Tag 1, Tag 2, Tag 3
+STATEMENT: System shall do X
+COMMENT: This requirement is very important
 REFS:
 - TYPE: File
   VALUE: /usr/local/bin/hexe
@@ -649,8 +619,6 @@ REFS:
   VALUE: /usr/local/bin/hexe
 - TYPE: File
   VALUE: /usr/local/bin/hexe
-STATEMENT: System shall do X
-COMMENT: This requirement is very important
 
 [REQUIREMENT]
 UID: REQ-001
@@ -682,7 +650,7 @@ COMMENT: This requirement is very important
 
 
 def test_081_document_config_markup_not_specified():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 VERSION: 0.0.1
@@ -695,21 +663,21 @@ REFS:
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
-    document: Document = reader.read(input)
+    document: Document = reader.read(input_sdoc)
     assert document.config.version == "0.0.1"
     assert document.config.markup is None
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
 
 def test_081_document_config_markup_specified():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 VERSION: 0.0.1
@@ -724,20 +692,20 @@ REFS:
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
-    document: Document = reader.read(input)
+    document: Document = reader.read(input_sdoc)
     assert document.config.version == "0.0.1"
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
 
 def test_082_document_config_auto_levels_specified_to_false():
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 VERSION: 0.0.1
@@ -747,20 +715,20 @@ OPTIONS:
 
     reader = SDReader()
 
-    document = reader.read(sdoc_input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
-    document: Document = reader.read(sdoc_input)
+    document: Document = reader.read(input_sdoc)
     assert document.config.auto_levels is False
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert sdoc_input == output
+    assert input_sdoc == output
 
 
 def test_083_requirement_level():
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 VERSION: 0.0.1
@@ -780,10 +748,10 @@ STATEMENT: ABC
 
     reader = SDReader()
 
-    document = reader.read(sdoc_input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
-    document: Document = reader.read(sdoc_input)
+    document: Document = reader.read(input_sdoc)
     assert document.config.auto_levels is False
     section: Section = document.section_contents[0]
     assert section.custom_level == "123"
@@ -795,11 +763,11 @@ STATEMENT: ABC
     writer = SDWriter()
     output = writer.write(document)
 
-    assert sdoc_input == output
+    assert input_sdoc == output
 
 
 def test_085_options_requirement_style():
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 VERSION: 0.0.1
@@ -809,20 +777,20 @@ OPTIONS:
 
     reader = SDReader()
 
-    document = reader.read(sdoc_input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
-    document: Document = reader.read(sdoc_input)
+    document: Document = reader.read(input_sdoc)
     assert document.config.requirement_style == "Table"
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert sdoc_input == output
+    assert input_sdoc == output
 
 
 def test_087_options_requirement_in_toc():
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 VERSION: 0.0.1
@@ -832,778 +800,20 @@ OPTIONS:
 
     reader = SDReader()
 
-    document = reader.read(sdoc_input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
-    document: Document = reader.read(sdoc_input)
+    document: Document = reader.read(input_sdoc)
     assert document.config.requirement_in_toc == "True"
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert sdoc_input == output
-
-
-def test_150_grammar_minimal_doc():
-    sdoc_input = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[GRAMMAR]
-ELEMENTS:
-- TAG: LOW_LEVEL_REQUIREMENT
-  FIELDS:
-  - TITLE: STATEMENT
-    TYPE: String
-    REQUIRED: True
-""".lstrip()
-
-    reader = SDReader()
-
-    document = reader.read(sdoc_input)
-    assert isinstance(document, Document)
-
-    writer = SDWriter()
-    output = writer.write(document)
-
-    assert sdoc_input == output
-
-
-def test_151_grammar_single_choice():
-    sdoc_input = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[GRAMMAR]
-ELEMENTS:
-- TAG: LOW_LEVEL_REQUIREMENT
-  FIELDS:
-  - TITLE: SINGLE_CHOICE_FIELD
-    TYPE: SingleChoice(A, B, C)
-    REQUIRED: True
-  - TITLE: STATEMENT
-    TYPE: String
-    REQUIRED: False
-
-[LOW_LEVEL_REQUIREMENT]
-SINGLE_CHOICE_FIELD: A
-""".lstrip()
-
-    reader = SDReader()
-
-    document = reader.read(sdoc_input)
-    assert isinstance(document, Document)
-
-    writer = SDWriter()
-    output = writer.write(document)
-
-    assert sdoc_input == output
-
-
-def test_152_grammar_multiple_choice():
-    sdoc_input = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[GRAMMAR]
-ELEMENTS:
-- TAG: LOW_LEVEL_REQUIREMENT
-  FIELDS:
-  - TITLE: MULTIPLE_CHOICE_FIELD
-    TYPE: MultipleChoice(A, B, C)
-    REQUIRED: True
-  - TITLE: STATEMENT
-    TYPE: String
-    REQUIRED: False
-
-[LOW_LEVEL_REQUIREMENT]
-MULTIPLE_CHOICE_FIELD: A, C
-""".lstrip()
-
-    reader = SDReader()
-
-    document = reader.read(sdoc_input)
-    assert isinstance(document, Document)
-
-    writer = SDWriter()
-    output = writer.write(document)
-
-    assert sdoc_input == output
-
-
-def test_153_grammar_tag():
-    sdoc_input = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[GRAMMAR]
-ELEMENTS:
-- TAG: LOW_LEVEL_REQUIREMENT
-  FIELDS:
-  - TITLE: TAG_FIELD
-    TYPE: Tag
-    REQUIRED: True
-  - TITLE: STATEMENT
-    TYPE: String
-    REQUIRED: False
-
-[LOW_LEVEL_REQUIREMENT]
-TAG_FIELD: A, C
-""".lstrip()
-
-    reader = SDReader()
-
-    document = reader.read(sdoc_input)
-    assert isinstance(document, Document)
-
-    writer = SDWriter()
-    output = writer.write(document)
-
-    assert sdoc_input == output
-
-
-def test_154_grammar_multiline_custom_field():
-    sdoc_input = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[GRAMMAR]
-ELEMENTS:
-- TAG: REQUIREMENT
-  FIELDS:
-  - TITLE: MY_FIELD
-    TYPE: String
-    REQUIRED: True
-  - TITLE: STATEMENT
-    TYPE: String
-    REQUIRED: False
-
-[REQUIREMENT]
-MY_FIELD: >>>
-Some text here...
-Some text here...
-Some text here...
-<<<
-""".lstrip()
-
-    reader = SDReader()
-
-    document = reader.read(sdoc_input)
-    assert isinstance(document, Document)
-
-    writer = SDWriter()
-    output = writer.write(document)
-
-    assert sdoc_input == output
-
-
-def test_160_grammar_refs():
-    sdoc_input = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[GRAMMAR]
-ELEMENTS:
-- TAG: LOW_LEVEL_REQUIREMENT
-  FIELDS:
-  - TITLE: UID
-    TYPE: String
-    REQUIRED: True
-  - TITLE: REFS
-    TYPE: Reference(ParentReqReference, FileReference, BibReference)
-    REQUIRED: False
-  - TITLE: STATEMENT
-    TYPE: String
-    REQUIRED: False
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-000
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-001
-REFS:
-- TYPE: File
-  VALUE: /tmp/sample0.cpp
-- TYPE: Parent
-  VALUE: ID-000
-- TYPE: BibRef
-  FORMAT: BibTex
-  VALUE: @book{hawking1989brief, title={A Brief History of Time: From the Big Bang to Black Holes}, author={Hawking, Stephen}, isbn={9780553176988}, year={1989}, publisher={Bantam Books} }
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-002
-REFS:
-- TYPE: Parent
-  VALUE: ID-001
-- TYPE: File
-  VALUE: /tmp/sample1.cpp
-- TYPE: File
-  VALUE: /tmp/sample2.cpp
-- TYPE: BibRef
-  FORMAT: String
-  VALUE: SampleCiteKeyStringRef-1, "The sample BibReference String-Format"
-""".lstrip()  # noqa: E501
-
-    reader = SDReader()
-
-    document = reader.read(sdoc_input)
-    assert isinstance(document, Document)
-
-    ll_requirement = document.section_contents[2]
-    references = ll_requirement.references
-    assert len(references) == 4
-
-    reference = references[0]
-    assert isinstance(reference, ParentReqReference)
-    assert reference.ref_type == ReferenceType.PARENT
-    assert reference.ref_uid == "ID-001"
-
-    reference: FileReference = references[1]
-    assert reference.ref_type == ReferenceType.FILE
-    assert isinstance(reference, FileReference)
-    assert reference.g_file_entry.g_file_path == "/tmp/sample1.cpp"
-
-    reference = references[2]
-    assert reference.ref_type == ReferenceType.FILE
-    assert isinstance(reference, FileReference)
-    assert reference.g_file_entry.g_file_path == "/tmp/sample2.cpp"
-
-    reference = references[3]
-    assert reference.ref_type == ReferenceType.BIB_REF
-    assert isinstance(reference, BibReference)
-    assert (
-        reference.bib_entry.bib_value == "SampleCiteKeyStringRef-1, "
-        '"The sample BibReference String-Format"'
-    )
-
-    writer = SDWriter()
-    output = writer.write(document)
-
-    assert sdoc_input == output
-
-
-def test_161_grammar_refs_file():
-    sdoc_input = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[GRAMMAR]
-ELEMENTS:
-- TAG: LOW_LEVEL_REQUIREMENT
-  FIELDS:
-  - TITLE: REFS
-    TYPE: Reference(ParentReqReference, FileReference, BibReference)
-    REQUIRED: False
-  - TITLE: STATEMENT
-    TYPE: String
-    REQUIRED: False
-
-[LOW_LEVEL_REQUIREMENT]
-REFS:
-- TYPE: File
-  VALUE: /tmp/sample.cpp
-""".lstrip()
-
-    reader = SDReader()
-
-    document = reader.read(sdoc_input)
-    assert isinstance(document, Document)
-
-    ll_requirement = document.section_contents[0]
-    references = ll_requirement.references
-    assert len(references) == 1
-
-    reference: FileReference = references[0]
-    assert isinstance(reference, FileReference)
-    assert reference.ref_type == ReferenceType.FILE
-    assert reference.g_file_entry.g_file_path == "/tmp/sample.cpp"
-
-    writer = SDWriter()
-    output = writer.write(document)
-
-    assert sdoc_input == output
-
-
-def test_162_grammar_refs_file_multi():
-    sdoc_input = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[GRAMMAR]
-ELEMENTS:
-- TAG: LOW_LEVEL_REQUIREMENT
-  FIELDS:
-  - TITLE: REFS
-    TYPE: Reference(ParentReqReference, FileReference, BibReference)
-    REQUIRED: False
-  - TITLE: STATEMENT
-    TYPE: String
-    REQUIRED: False
-
-[LOW_LEVEL_REQUIREMENT]
-REFS:
-- TYPE: File
-  VALUE: /tmp/sample1.cpp
-- TYPE: File
-  VALUE: /tmp/sample2.cpp
-- TYPE: File
-  VALUE: /tmp/sample3.cpp
-""".lstrip()
-
-    reader = SDReader()
-
-    document = reader.read(sdoc_input)
-    assert isinstance(document, Document)
-
-    ll_requirement = document.section_contents[0]
-    references = ll_requirement.references
-    assert len(references) == 3
-
-    reference: FileReference = references[0]
-    assert isinstance(reference, FileReference)
-    assert reference.ref_type == ReferenceType.FILE
-    assert reference.g_file_entry.g_file_path == "/tmp/sample1.cpp"
-
-    reference = references[1]
-    assert isinstance(reference, FileReference)
-    assert reference.ref_type == ReferenceType.FILE
-    assert reference.g_file_entry.g_file_path == "/tmp/sample2.cpp"
-
-    reference = references[2]
-    assert isinstance(reference, FileReference)
-    assert reference.ref_type == ReferenceType.FILE
-    assert reference.g_file_entry.g_file_path == "/tmp/sample3.cpp"
-
-    writer = SDWriter()
-    output = writer.write(document)
-
-    assert sdoc_input == output
-
-
-def test_163_grammar_refs_file_only():
-    sdoc_input = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[GRAMMAR]
-ELEMENTS:
-- TAG: LOW_LEVEL_REQUIREMENT
-  FIELDS:
-  - TITLE: UID
-    TYPE: String
-    REQUIRED: True
-  - TITLE: REFS
-    TYPE: Reference(FileReference)
-    REQUIRED: False
-  - TITLE: STATEMENT
-    TYPE: String
-    REQUIRED: False
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-001
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-002
-REFS:
-- TYPE: Parent
-  VALUE: ID-001
-- TYPE: File
-  VALUE: /tmp/sample1.cpp
-""".lstrip()
-
-    reader = SDReader()
-    with pytest.raises(Exception) as exc_info:
-        _ = reader.read(sdoc_input)
-
-    assert exc_info.type is StrictDocSemanticError
-    assert re.fullmatch(
-        "Requirement field of type Reference has an unsupported Reference "
-        'Type item: ParentReqReference\\(.*ref_uid = "ID-001".*\\).',
-        exc_info.value.args[0],
-    )
-
-
-def test_164_grammar_refs_parent():
-    sdoc_input = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[GRAMMAR]
-ELEMENTS:
-- TAG: LOW_LEVEL_REQUIREMENT
-  FIELDS:
-  - TITLE: UID
-    TYPE: String
-    REQUIRED: True
-  - TITLE: REFS
-    TYPE: Reference(ParentReqReference, FileReference, BibReference)
-    REQUIRED: False
-  - TITLE: STATEMENT
-    TYPE: String
-    REQUIRED: False
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-000
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-001
-REFS:
-- TYPE: File
-  VALUE: /tmp/sample0.cpp
-- TYPE: Parent
-  VALUE: ID-000
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-002
-REFS:
-- TYPE: Parent
-  VALUE: ID-001
-""".lstrip()
-
-    reader = SDReader()
-
-    document = reader.read(sdoc_input)
-    assert isinstance(document, Document)
-
-    ll_requirement = document.section_contents[2]
-    references = ll_requirement.references
-    assert len(references) == 1
-
-    reference = references[0]
-    assert isinstance(reference, ParentReqReference)
-    assert reference.ref_type == ReferenceType.PARENT
-    assert reference.ref_uid == "ID-001"
-
-    writer = SDWriter()
-    output = writer.write(document)
-
-    assert sdoc_input == output
-
-
-def test_165_grammar_refs_parent_multi():
-    sdoc_input = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[GRAMMAR]
-ELEMENTS:
-- TAG: LOW_LEVEL_REQUIREMENT
-  FIELDS:
-  - TITLE: UID
-    TYPE: String
-    REQUIRED: True
-  - TITLE: REFS
-    TYPE: Reference(ParentReqReference, FileReference, BibReference)
-    REQUIRED: False
-  - TITLE: STATEMENT
-    TYPE: String
-    REQUIRED: False
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-000
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-001
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-002
-REFS:
-- TYPE: Parent
-  VALUE: ID-000
-- TYPE: Parent
-  VALUE: ID-001
-""".lstrip()
-
-    reader = SDReader()
-
-    document = reader.read(sdoc_input)
-    assert isinstance(document, Document)
-
-    ll_requirement = document.section_contents[2]
-    references = ll_requirement.references
-    assert len(references) == 2
-
-    reference = references[0]
-    assert isinstance(reference, ParentReqReference)
-    assert reference.ref_type == ReferenceType.PARENT
-    assert reference.ref_uid == "ID-000"
-
-    reference = references[1]
-    assert isinstance(reference, ParentReqReference)
-    assert reference.ref_type == ReferenceType.PARENT
-    assert reference.ref_uid == "ID-001"
-
-    writer = SDWriter()
-    output = writer.write(document)
-
-    assert sdoc_input == output
-
-
-def test_166_grammar_refs_parent_only():
-    sdoc_input = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[GRAMMAR]
-ELEMENTS:
-- TAG: LOW_LEVEL_REQUIREMENT
-  FIELDS:
-  - TITLE: UID
-    TYPE: String
-    REQUIRED: True
-  - TITLE: REFS
-    TYPE: Reference(ParentReqReference)
-    REQUIRED: False
-  - TITLE: STATEMENT
-    TYPE: String
-    REQUIRED: False
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-001
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-002
-REFS:
-- TYPE: Parent
-  VALUE: ID-001
-- TYPE: File
-  VALUE: /tmp/sample1.cpp
-""".lstrip()
-
-    reader = SDReader()
-    with pytest.raises(Exception) as exc_info:
-        _ = reader.read(sdoc_input)
-
-    assert exc_info.type is StrictDocSemanticError
-
-    assert re.fullmatch(
-        "Requirement field of type Reference has an unsupported Reference"
-        " Type item: FileReference\\(.*\\).",
-        exc_info.value.args[0],
-    )
-
-
-def test_167_grammar_refs_bib():
-    sdoc_input = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[GRAMMAR]
-ELEMENTS:
-- TAG: LOW_LEVEL_REQUIREMENT
-  FIELDS:
-  - TITLE: UID
-    TYPE: String
-    REQUIRED: True
-  - TITLE: REFS
-    TYPE: Reference(ParentReqReference, FileReference, BibReference)
-    REQUIRED: False
-  - TITLE: STATEMENT
-    TYPE: String
-    REQUIRED: False
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-000
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-001
-REFS:
-- TYPE: File
-  VALUE: /tmp/sample0.cpp
-- TYPE: Parent
-  VALUE: ID-000
-- TYPE: BibRef
-  FORMAT: BibTex
-  VALUE: @book{hawking1989brief, title={A Brief History of Time: From the Big Bang to Black Holes}, author={Hawking, Stephen}, isbn={9780553176988}, year={1989}, publisher={Bantam Books} }
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-002
-REFS:
-- TYPE: Parent
-  VALUE: ID-001
-- TYPE: BibRef
-  FORMAT: String
-  VALUE: SampleCiteKeyStringRef-1, "The sample BibReference String-Format"
-- TYPE: BibRef
-  FORMAT: String
-  VALUE: SampleCiteKeyStringRef-2
-- TYPE: BibRef
-  FORMAT: Citation
-  VALUE: hawking1989brief, section 2.1
-""".lstrip()  # noqa: E501
-
-    reader = SDReader()
-
-    document = reader.read(sdoc_input)
-    assert isinstance(document, Document)
-
-    ll_requirement = document.section_contents[2]
-    references = ll_requirement.references
-    assert len(references) == 4
-
-    reference = references[1]
-    assert isinstance(reference, BibReference)
-    assert reference.ref_type == ReferenceType.BIB_REF
-    assert reference.bib_entry.bib_format == BibEntryFormat.STRING
-    assert (
-        reference.bib_entry.bib_value == "SampleCiteKeyStringRef-1,"
-        ' "The sample BibReference'
-        ' String-Format"'
-    )
-    assert reference.bib_entry.ref_cite == "SampleCiteKeyStringRef-1"
-    assert (
-        reference.bib_entry.ref_detail
-        == '"The sample BibReference String-Format"'
-    )
-    assert reference.bib_entry.bibtex_entry.type == "misc"
-    assert (
-        reference.bib_entry.bibtex_entry.fields["note"]
-        == '"The sample BibReference String-Format"'
-    )
-
-    reference = references[2]
-    assert isinstance(reference, BibReference)
-    assert reference.ref_type == ReferenceType.BIB_REF
-    assert reference.bib_entry.bib_format == BibEntryFormat.STRING
-    assert reference.bib_entry.bib_value == "SampleCiteKeyStringRef-2"
-    assert reference.bib_entry.ref_cite == "SampleCiteKeyStringRef-2"
-    assert reference.bib_entry.ref_detail is None
-    assert reference.bib_entry.bibtex_entry is None
-
-    reference = references[3]
-    assert isinstance(reference, BibReference)
-    assert reference.ref_type == ReferenceType.BIB_REF
-    assert reference.bib_entry.bib_format == BibEntryFormat.CITATION
-    assert reference.bib_entry.bib_value == "hawking1989brief, section 2.1"
-    assert reference.bib_entry.ref_cite == "hawking1989brief"
-    assert reference.bib_entry.ref_detail == "section 2.1"
-    assert reference.bib_entry.bibtex_entry is None
-
-    writer = SDWriter()
-    output = writer.write(document)
-
-    assert sdoc_input == output
-
-
-def test_168_grammar_refs_bib_multi():
-    sdoc_input = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[GRAMMAR]
-ELEMENTS:
-- TAG: LOW_LEVEL_REQUIREMENT
-  FIELDS:
-  - TITLE: UID
-    TYPE: String
-    REQUIRED: True
-  - TITLE: REFS
-    TYPE: Reference(ParentReqReference, FileReference, BibReference)
-    REQUIRED: False
-  - TITLE: STATEMENT
-    TYPE: String
-    REQUIRED: False
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-000
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-001
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-002
-REFS:
-- TYPE: BibRef
-  FORMAT: String
-  VALUE: SampleCiteKeyStringRef-1, "The sample BibReference String-Format"
-- TYPE: BibRef
-  FORMAT: BibTex
-  VALUE: @book{hawking1989brief, title={A Brief History of Time: From the Big Bang to Black Holes}, author={Hawking, Stephen}, isbn={9780553176988}, year={1989}, publisher={Bantam Books} }
-""".lstrip()  # noqa: E501
-
-    reader = SDReader()
-
-    document = reader.read(sdoc_input)
-    assert isinstance(document, Document)
-
-    ll_requirement = document.section_contents[2]
-    references = ll_requirement.references
-    assert len(references) == 2
-
-    reference = references[0]
-    assert isinstance(reference, BibReference)
-    assert reference.ref_type == ReferenceType.BIB_REF
-    assert (
-        reference.bib_entry.bib_value == "SampleCiteKeyStringRef-1, "
-        '"The sample BibReference String-Format"'
-    )
-
-    reference = references[1]
-    assert isinstance(reference, BibReference)
-    assert reference.ref_type == ReferenceType.BIB_REF
-    assert reference.bib_entry.bib_value == (
-        "@book{hawking1989brief, "
-        "title={A Brief History of Time: From the Big Bang to Black Holes}, "
-        "author={Hawking, Stephen}, "
-        "isbn={9780553176988}, "
-        "year={1989}, "
-        "publisher={Bantam Books} "
-        "}"
-    )  # noqa: E501
-
-    writer = SDWriter()
-    output = writer.write(document)
-
-    assert sdoc_input == output
-
-
-def test_169_grammar_refs_bib_only():
-    sdoc_input = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[GRAMMAR]
-ELEMENTS:
-- TAG: LOW_LEVEL_REQUIREMENT
-  FIELDS:
-  - TITLE: UID
-    TYPE: String
-    REQUIRED: True
-  - TITLE: REFS
-    TYPE: Reference(BibReference)
-    REQUIRED: False
-  - TITLE: STATEMENT
-    TYPE: String
-    REQUIRED: False
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-001
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-002
-REFS:
-- TYPE: Parent
-  VALUE: ID-001
-- TYPE: BibRef
-  FORMAT: BibTex
-  VALUE: @book{hawking1989brief, title={A Brief History of Time: From the Big Bang to Black Holes}, author={Hawking, Stephen}, isbn={9780553176988}, year={1989}, publisher={Bantam Books} }
-""".lstrip()  # noqa: E501
-
-    reader = SDReader()
-    with pytest.raises(Exception) as exc_info:
-        _ = reader.read(sdoc_input)
-
-    assert exc_info.type is StrictDocSemanticError
-
-    assert re.fullmatch(
-        "Requirement field of type Reference has an unsupported Reference "
-        'Type item: ParentReqReference\\(.*ref_uid = "ID-001".*\\).',
-        exc_info.value.args[0],
-    )
+    assert input_sdoc == output
 
 
 def test_edge_case_01_minimal_requirement():
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -1612,7 +822,7 @@ TITLE: Test Doc
 
     reader = SDReader()
 
-    document: Document = reader.read(sdoc_input)
+    document: Document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     requirement: Requirement = document.section_contents[0]
@@ -1623,12 +833,12 @@ TITLE: Test Doc
     writer = SDWriter()
     output = writer.write(document)
 
-    assert sdoc_input == output
+    assert input_sdoc == output
 
 
 def test_edge_case_02_uid_present_but_empty_with_no_space_character():
     # Note: There is no whitespace character after "UID:".
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -1639,7 +849,7 @@ UID:
     reader = SDReader()
 
     with pytest.raises(Exception) as exc_info:
-        _ = reader.read(sdoc_input)
+        _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
     assert "Expected ' '" == exc_info.value.args[0].decode("utf-8")
@@ -1647,7 +857,7 @@ UID:
 
 def test_edge_case_03_uid_present_but_empty_with_space_character():
     # Note: There is a whitespace character after "UID:".
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -1658,7 +868,7 @@ UID:
     reader = SDReader()
 
     with pytest.raises(Exception) as exc_info:
-        _ = reader.read(sdoc_input)
+        _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
     assert "Expected SingleLineString or '>>>\\n'" in exc_info.value.args[
@@ -1668,7 +878,7 @@ UID:
 
 def test_edge_case_04_uid_present_but_empty_with_two_space_characters():
     # Note: There are two whitespace characters after "UID:".
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -1679,7 +889,7 @@ UID:
     reader = SDReader()
 
     with pytest.raises(Exception) as exc_info:
-        _ = reader.read(sdoc_input)
+        _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
     assert "Expected SingleLineString or '>>>\\n'" in exc_info.value.args[
@@ -1688,7 +898,7 @@ UID:
 
 
 def test_edge_case_10_empty_multiline_field():
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -1700,7 +910,7 @@ COMMENT: >>>
     reader = SDReader()
 
     with pytest.raises(Exception) as exc_info:
-        _ = reader.read(sdoc_input)
+        _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
     assert (
@@ -1710,7 +920,7 @@ COMMENT: >>>
 
 
 def test_edge_case_11_empty_multiline_field_with_one_newline():
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -1723,7 +933,7 @@ COMMENT: >>>
     reader = SDReader()
 
     with pytest.raises(Exception) as exc_info:
-        _ = reader.read(sdoc_input)
+        _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
     assert (
@@ -1733,7 +943,7 @@ COMMENT: >>>
 
 
 def test_edge_case_20_empty_section_title():
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -1746,7 +956,7 @@ TITLE:
     reader = SDReader()
 
     with pytest.raises(Exception) as exc_info:
-        _ = reader.read(sdoc_input)
+        _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
     assert "Expected 'UID: ' or 'LEVEL: ' or 'TITLE: '" == exc_info.value.args[
@@ -1756,7 +966,7 @@ TITLE:
 
 def test_edge_case_21_section_title_with_empty_space():
     # Empty space after TITLE:
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -1769,7 +979,7 @@ TITLE:
     reader = SDReader()
 
     with pytest.raises(Exception) as exc_info:
-        _ = reader.read(sdoc_input)
+        _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
     assert "Expected SingleLineString" in exc_info.value.args[0].decode("utf-8")
@@ -1777,7 +987,7 @@ TITLE:
 
 def test_edge_case_22_section_title_with_two_empty_spaces():
     # Two empty spaces after TITLE:
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -1790,14 +1000,14 @@ TITLE:
     reader = SDReader()
 
     with pytest.raises(Exception) as exc_info:
-        _ = reader.read(sdoc_input)
+        _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
     assert "Expected SingleLineString" in exc_info.value.args[0].decode("utf-8")
 
 
 def test_edge_case_23_leading_spaces_do_not_imply_empy_field():
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -1811,6 +1021,34 @@ ELEMENTS:
   - TITLE: MY_FIELD
     TYPE: String
     REQUIRED: True
+  - TITLE: REFS
+    TYPE: Reference(ParentReqReference)
+    REQUIRED: False
+
+[REQUIREMENT]
+MY_FIELD: >>>
+    Some text here...
+    Some text here...
+    Some text here...
+<<<
+""".lstrip()
+
+    expected_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: MY_FIELD
+    TYPE: String
+    REQUIRED: True
+  RELATIONS:
+  - TYPE: Parent
 
 [REQUIREMENT]
 MY_FIELD: >>>
@@ -1822,10 +1060,9 @@ MY_FIELD: >>>
 
     reader = SDReader()
 
-    document = reader.read(sdoc_input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     writer = SDWriter()
     output = writer.write(document)
-
-    assert sdoc_input == output
+    assert expected_sdoc == output

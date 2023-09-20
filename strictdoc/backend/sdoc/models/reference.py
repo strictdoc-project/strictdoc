@@ -30,16 +30,14 @@ class FileReference(Reference):
 
 @auto_described
 class ParentReqReference(Reference):
-    def __init__(self, parent, ref_uid: str, relation_uid: Optional[str]):
+    def __init__(self, parent, ref_uid: str, role_uid: Optional[str]):
         super().__init__(ReferenceType.PARENT, parent)
         self.ref_uid: str = ref_uid
-        # When RELATION: field is not provided for a parent reference, the
+        # When ROLE: field is not provided for a parent reference, the
         # textX still passes relation_uid as an empty string (instead of None
         # as one could expect).
-        self.relation_uid: Optional[str] = (
-            relation_uid
-            if relation_uid is not None and len(relation_uid) > 0
-            else None
+        self.role_uid: Optional[str] = (
+            role_uid if role_uid is not None and len(role_uid) > 0 else None
         )
 
 

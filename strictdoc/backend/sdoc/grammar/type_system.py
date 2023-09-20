@@ -28,7 +28,7 @@ Reference[noskipws]:
 ParentReqReference[noskipws]:
   '- TYPE: Parent' '\n'
   '  VALUE: ' ref_uid = /.*$/ '\n'
-  ('  RELATION: ' relation_uid = /.+$/ '\n')?
+  ('  ROLE: ' role_uid = /.+$/ '\n')?
 ;
 
 ChildReqReference[noskipws]:

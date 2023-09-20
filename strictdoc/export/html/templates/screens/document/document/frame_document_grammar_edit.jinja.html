@@ -19,7 +19,9 @@ Edit document grammar
 
     <sdoc-form-grid id="document__editable_grammar_fields">
       {%- for field in form_object.fields -%}
+        {%- if field.field_name != "REFS" -%}
         {%- include "screens/document/document/frame_document_grammar_edit_custom_field.jinja.html" -%}
+        {%- endif -%}
       {%- endfor -%}
     </sdoc-form-grid>
 

@@ -11,9 +11,6 @@ ELEMENTS:
   - TITLE: UID
     TYPE: String
     REQUIRED: False
-  - TITLE: REFS
-    TYPE: String
-    REQUIRED: False
   - TITLE: TITLE
     TYPE: String
     REQUIRED: True
@@ -26,6 +23,9 @@ ELEMENTS:
   - TITLE: COMMENT
     TYPE: String
     REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
 
 [FREETEXT]
 This document is a collection of high-level requirements for StrictDoc as well as some of its middle-level requirements. The existing requirements set is pending a proper functional decomposition/partitioning following the creation of bidirectional traces between the requirements and StrictDoc's source code.
@@ -36,13 +36,13 @@ TITLE: High-level requirements
 
 [REQUIREMENT]
 UID: SDOC-HIGH-REQS-MANAGEMENT
-REFS:
-- TYPE: Parent
-  VALUE: GOAL-1-TOOL-SUPPORT
 TITLE: Requirements management
 STATEMENT: >>>
 StrictDoc shall enable requirements management.
 <<<
+REFS:
+- TYPE: Parent
+  VALUE: GOAL-1-TOOL-SUPPORT
 
 [REQUIREMENT]
 UID: SDOC-HIGH-DATA-MODEL
@@ -127,11 +127,6 @@ TITLE: Data model
 
 [REQUIREMENT]
 UID: SDOC-DM-MODEL
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-HIGH-REQS-MANAGEMENT
-- TYPE: Parent
-  VALUE: SDOC-HIGH-DATA-MODEL
 TITLE: Modeling capability
 STATEMENT: StrictDoc's Data Model shall accommodate for maximum possible standard requirement document formats.
 COMMENT: >>>
@@ -140,6 +135,11 @@ Examples of standard requirements documents include but are not limited to:
 - Non-nested requirement lists split by categories
   (e.g., Functional Requirements, Interface Requirements, Performance Requirements, etc.)
 <<<
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-HIGH-REQS-MANAGEMENT
+- TYPE: Parent
+  VALUE: SDOC-HIGH-DATA-MODEL
 
 [SECTION]
 TITLE: Project
@@ -281,24 +281,24 @@ TITLE: SDoc file format
 
 [REQUIREMENT]
 UID: SDOC-FMT-PRIMARY
+TITLE: Primary text implementation
+STATEMENT: The SDoc format shall support encoding the Strict Doc Data Model in a plain-text human readable form.
 REFS:
 - TYPE: Parent
   VALUE: SDOC-DM-MODEL
-TITLE: Primary text implementation
-STATEMENT: The SDoc format shall support encoding the Strict Doc Data Model in a plain-text human readable form.
 
 [SECTION]
 TITLE: Grammar
 
 [REQUIREMENT]
 UID: SDOC-FMT-GRAMMAR
+TITLE: Grammar
+STATEMENT: The SDoc format shall be based on a fixed grammar.
 REFS:
 - TYPE: Parent
   VALUE: SDOC-HIGH-DATA-MODEL
 - TYPE: File
   VALUE: strictdoc/backend/sdoc/grammar/grammar.py
-TITLE: Grammar
-STATEMENT: The SDoc format shall be based on a fixed grammar.
 
 [REQUIREMENT]
 TITLE: No indentation
@@ -346,18 +346,18 @@ TITLE: Single document: Tabular form
 STATEMENT: StrictDoc shall export single document pages in a tabular form.
 
 [REQUIREMENT]
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-HIGH-REQS-TRACEABILITY
 TITLE: Single document: 1-level traceability
 STATEMENT: StrictDoc shall export 1-level traceability document.
-
-[REQUIREMENT]
 REFS:
 - TYPE: Parent
   VALUE: SDOC-HIGH-REQS-TRACEABILITY
+
+[REQUIREMENT]
 TITLE: Single document: Deep traceability
 STATEMENT: StrictDoc shall export deep traceability document.
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-HIGH-REQS-TRACEABILITY
 
 [REQUIREMENT]
 TITLE: Left panel: Table of contents
@@ -376,11 +376,11 @@ STATEMENT: StrictDoc shall support exporting documents to Sphinx/RST format.
 
 [REQUIREMENT]
 UID: SDOC-GEN-EXCEL-EXPORT
+TITLE: Excel Export
+STATEMENT: StrictDoc shall support exporting documents to Excel format.
 REFS:
 - TYPE: File
   VALUE: strictdoc/backend/excel/export/excel_generator.py
-TITLE: Excel Export
-STATEMENT: StrictDoc shall support exporting documents to Excel format.
 
 [REQUIREMENT]
 TITLE: ReqIF import/export
@@ -393,15 +393,19 @@ TITLE: Validation
 
 [REQUIREMENT]
 UID: SDOC-VALIDATION-UNIQUE-UID
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-HIGH-VALIDATION
 TITLE: Uniqueness of UID identifiers in a document tree
 STATEMENT: StrictDoc shall ensure that each UID used in a document tree is unique.
 COMMENT: This is implemented but the error message shall be made more readable.
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-HIGH-VALIDATION
 
 [REQUIREMENT]
 UID: SDOC-VALIDATION-NO-CYCLES
+TITLE: No cycles in a document tree
+STATEMENT: >>>
+StrictDoc shall ensure that no requirements in document tree reference each other.
+<<<
 REFS:
 - TYPE: Parent
   VALUE: SDOC-HIGH-VALIDATION
@@ -409,19 +413,15 @@ REFS:
   VALUE: strictdoc/core/tree_cycle_detector.py
 - TYPE: File
   VALUE: strictdoc/core/traceability_index_builder.py
-TITLE: No cycles in a document tree
-STATEMENT: >>>
-StrictDoc shall ensure that no requirements in document tree reference each other.
-<<<
 
 [REQUIREMENT]
 UID: SDOC-VALIDATION-VALID-HTML
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-HIGH-VALIDATION
 TITLE: Valid HTML markup
 STATEMENT: StrictDoc's HTML export tests shall validate the generated HTML markup.
 COMMENT: First candidate: Table of contents and its nested ``<ul>/<li>`` items.
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-HIGH-VALIDATION
 
 [/SECTION]
 
@@ -476,11 +476,11 @@ TITLE: Implementation requirements
 
 [REQUIREMENT]
 UID: SDOC-IMPL-PARAL
+TITLE: Parallelization
+STATEMENT: StrictDoc shall enable parallelization of the time-consuming parts of the code.
 REFS:
 - TYPE: File
   VALUE: strictdoc/helpers/parallelizer.py
-TITLE: Parallelization
-STATEMENT: StrictDoc shall enable parallelization of the time-consuming parts of the code.
 
 [REQUIREMENT]
 UID: SDOC-IMPL-INCREMENTAL

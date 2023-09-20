@@ -279,7 +279,7 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
             else:
                 raise NotImplementedError(attribute) from None
         requirement_element = GrammarElement(
-            parent=None, tag="REQUIREMENT", fields=fields
+            parent=None, tag="REQUIREMENT", fields=fields, relations=[]
         )
         return requirement_element
 
@@ -442,7 +442,7 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                         parent_spec_object_parent.attribute_map[
                             foreign_key_id_or_none
                         ].value,
-                        relation_uid=None,
+                        role_uid=None,
                     )
                 )
             if len(parent_refs) > 0:

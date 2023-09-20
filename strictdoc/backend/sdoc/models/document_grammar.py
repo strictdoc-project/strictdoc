@@ -1,21 +1,43 @@
 from collections import OrderedDict, defaultdict
-from typing import Dict, List, Set
+from typing import Dict, List, Set, Union
 
 from strictdoc.backend.sdoc.models.type_system import (
     RESERVED_NON_META_FIELDS,
     GrammarElementField,
     GrammarElementFieldReference,
     GrammarElementFieldString,
+    GrammarElementRelationParent,
     GrammarReferenceType,
     RequirementFieldName,
 )
 
 
+def create_default_relations(parent) -> List[GrammarElementRelationParent]:
+    return [
+        GrammarElementRelationParent(
+            parent=parent,
+            relation_type="Parent",
+            relation_role=None,
+        )
+    ]
+
+
 class GrammarElement:
-    def __init__(self, parent, tag: str, fields: List[GrammarElementField]):
+    def __init__(
+        self,
+        parent,
+        tag: str,
+        fields: List[GrammarElementField],
+        relations: List,
+    ):
         self.parent = parent
         self.tag: str = tag
         self.fields: List[GrammarElementField] = fields
+        self.relations: List[Union[GrammarElementRelationParent]] = (
+            relations
+            if relations is not None and len(relations) > 0
+            else create_default_relations(self)
+        )
         fields_map: OrderedDict = OrderedDict()
         for field in fields:
             fields_map[field.title] = field
@@ -87,17 +109,6 @@ class DocumentGrammar:
             GrammarElementFieldString(
                 parent=None, title=RequirementFieldName.TAGS, required="False"
             ),
-            GrammarElementFieldReference(
-                parent=None,
-                title=RequirementFieldName.REFS,
-                types=[
-                    GrammarReferenceType.PARENT_REQ_REFERENCE,
-                    GrammarReferenceType.CHILD_REQ_REFERENCE,
-                    GrammarReferenceType.FILE_REFERENCE,
-                    GrammarReferenceType.BIB_REFERENCE,
-                ],
-                required="False",
-            ),
             GrammarElementFieldString(
                 parent=None,
                 title=RequirementFieldName.TITLE,
@@ -118,10 +129,24 @@ class DocumentGrammar:
                 title=RequirementFieldName.COMMENT,
                 required="False",
             ),
+            GrammarElementFieldReference(
+                parent=None,
+                title=RequirementFieldName.REFS,
+                types=[
+                    GrammarReferenceType.PARENT_REQ_REFERENCE,
+                    GrammarReferenceType.CHILD_REQ_REFERENCE,
+                    GrammarReferenceType.FILE_REFERENCE,
+                ],
+                required="False",
+            ),
         ]
         requirement_element = GrammarElement(
-            parent=None, tag="REQUIREMENT", fields=fields
+            parent=None, tag="REQUIREMENT", fields=fields, relations=[]
         )
+        requirement_element.relations = create_default_relations(
+            requirement_element
+        )
+
         elements: List[GrammarElement] = [requirement_element]
         grammar = DocumentGrammar(parent=parent, elements=elements)
         grammar.is_default = True

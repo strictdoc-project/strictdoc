@@ -7,10 +7,10 @@ Hello world 2!
 
 [REQUIREMENT]
 UID: REQ-002
-REFS:
-- TYPE: Parent
-  VALUE: REQ-001
 TITLE: Requirement title #2
 STATEMENT: >>>
 Requirement statement #2.
 <<<
+REFS:
+- TYPE: Parent
+  VALUE: REQ-001

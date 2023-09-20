@@ -7,6 +7,10 @@ Hello world!
 
 [REQUIREMENT]
 UID: REQ-001
+TITLE: Requirement title #1
+STATEMENT: >>>
+Requirement statement #1.
+<<<
 REFS:
 - TYPE: Parent
   VALUE: REQ-002
@@ -14,10 +18,6 @@ REFS:
   VALUE: REQ-003
 - TYPE: Parent
   VALUE: REQ-004
-TITLE: Requirement title #1
-STATEMENT: >>>
-Requirement statement #1.
-<<<
 
 [REQUIREMENT]
 UID: REQ-002

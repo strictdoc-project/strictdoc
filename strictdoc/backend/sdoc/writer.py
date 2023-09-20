@@ -1,8 +1,10 @@
 from enum import Enum
+from typing import List, Optional
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
+from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.reference import (
     BibReference,
@@ -24,6 +26,7 @@ from strictdoc.backend.sdoc.models.type_system import (
     RequirementFieldType,
 )
 from strictdoc.core.document_iterator import DocumentCachingIterator
+from strictdoc.helpers.cast import assert_cast
 
 
 class TAG(Enum):
@@ -103,7 +106,7 @@ class SDWriter:
                     output += requirement_in_toc
                     output += "\n"
 
-        document_grammar = document.grammar
+        document_grammar: DocumentGrammar = document.grammar
         if not document_grammar.is_default:
             output += "\n[GRAMMAR]\n"
             output += "ELEMENTS:\n"
@@ -111,8 +114,32 @@ class SDWriter:
                 output += "- TAG: "
                 output += element.tag
                 output += "\n  FIELDS:\n"
+                refs_field: Optional[GrammarElementFieldReference] = None
                 for grammar_field in element.fields:
+                    if grammar_field.title == "REFS":
+                        refs_field = assert_cast(
+                            grammar_field, GrammarElementFieldReference
+                        )
+                        continue
                     output += SDWriter._print_grammar_field_type(grammar_field)
+
+                relations: List = element.relations
+                assert len(relations) > 0, relations
+
+                # For backward compatibility, we print RELATIONS from REFS
+                # grammar field if it exists.
+                if not document_grammar.is_default and refs_field is not None:
+                    relations = refs_field.convert_to_relations()
+                output += "  RELATIONS:\n"
+
+                assert len(relations) > 0, relations
+                for element_relation in relations:
+                    output += f"  - TYPE: {element_relation.relation_type}\n"
+                    if element_relation.relation_role is not None:
+                        output += (
+                            f"    ROLE: {element_relation.relation_role}\n"
+                        )
+
         for free_text in document.free_texts:
             output += "\n"
             output += self._print_free_text(free_text)
@@ -190,6 +217,8 @@ class SDWriter:
         element = document.grammar.elements_by_type[
             section_content.requirement_type
         ]
+
+        refs_already_printed = False
         for element_field in element.fields:
             field_name = element_field.title
             if field_name not in section_content.ordered_fields_lookup:
@@ -206,43 +235,8 @@ class SDWriter:
                     output += "<<<"
                     output += "\n"
                 elif field.field_value_references:
-                    output += "REFS:"
-                    output += "\n"
-
-                    reference: Reference
-                    for reference in field.field_value_references:
-                        output += "- TYPE: "
-                        output += reference.ref_type
-                        output += "\n"
-
-                        if isinstance(reference, BibReference):
-                            ref: BibReference = reference
-                            output += "  FORMAT: "
-                            output += ref.bib_entry.bib_format
-                            output += "\n"
-                            output += "  VALUE: "
-                            output += ref.bib_entry.bib_value
-                            output += "\n"
-                        elif isinstance(reference, FileReference):
-                            ref: FileReference = reference
-                            file_format = ref.get_file_format()
-                            if file_format:
-                                output += "  FORMAT: "
-                                output += file_format
-                                output += "\n"
-                            output += "  VALUE: "
-                            output += ref.get_posix_path()
-                            output += "\n"
-                        elif isinstance(reference, ParentReqReference):
-                            ref: ParentReqReference = reference
-                            output += "  VALUE: "
-                            output += ref.ref_uid
-                            output += "\n"
-                            if reference.relation_uid is not None:
-                                output += "  RELATION: "
-                                output += ref.relation_uid
-                                output += "\n"
-
+                    output += SDWriter._print_requirement_refs(field)
+                    refs_already_printed = True
                 elif field.field_value is not None:
                     if len(field.field_value) > 0:
                         output += f"{field_name}: "
@@ -253,6 +247,17 @@ class SDWriter:
                 else:
                     output += f"{field_name}: "
                     output += "\n"
+
+        if (
+            not refs_already_printed
+            and "REFS" in section_content.ordered_fields_lookup
+        ):
+            requirement_refs_fields = section_content.ordered_fields_lookup[
+                "REFS"
+            ]
+            output += SDWriter._print_requirement_refs(
+                requirement_refs_fields[0]
+            )
 
         return output
 
@@ -340,4 +345,45 @@ class SDWriter:
                 output += "\n"
             else:
                 raise NotImplementedError(part)
+        return output
+
+    @classmethod
+    def _print_requirement_refs(cls, field):
+        output = ""
+        output += "REFS:"
+        output += "\n"
+
+        reference: Reference
+        for reference in field.field_value_references:
+            output += "- TYPE: "
+            output += reference.ref_type
+            output += "\n"
+
+            if isinstance(reference, BibReference):
+                ref: BibReference = reference
+                output += "  FORMAT: "
+                output += ref.bib_entry.bib_format
+                output += "\n"
+                output += "  VALUE: "
+                output += ref.bib_entry.bib_value
+                output += "\n"
+            elif isinstance(reference, FileReference):
+                ref: FileReference = reference
+                file_format = ref.get_file_format()
+                if file_format:
+                    output += "  FORMAT: "
+                    output += file_format
+                    output += "\n"
+                output += "  VALUE: "
+                output += ref.get_posix_path()
+                output += "\n"
+            elif isinstance(reference, ParentReqReference):
+                parent_reference: ParentReqReference = reference
+                output += "  VALUE: "
+                output += parent_reference.ref_uid
+                output += "\n"
+                if parent_reference.role_uid is not None:
+                    output += "  ROLE: "
+                    output += parent_reference.role_uid
+                    output += "\n"
         return output

@@ -53,6 +53,28 @@ GrammarElement[noskipws]:
   '- TAG: ' tag = RequirementType '\n'
   '  FIELDS:' '\n'
   fields += GrammarElementField
+  (
+    '  RELATIONS:' '\n'
+    relations += GrammarElementRelation
+  )?
+;
+
+GrammarElementRelation[noskipws]:
+  (GrammarElementRelationParent | GrammarElementRelationChild | GrammarElementRelationFile)
+;
+
+GrammarElementRelationParent[noskipws]:
+  '  - TYPE: ' relation_type='Parent' '\n'
+  ('    ROLE: ' relation_role=/.+/ '\n')?
+;
+
+GrammarElementRelationChild[noskipws]:
+  '  - TYPE: ' relation_type='Child' '\n'
+  ('    ROLE: ' relation_role=/.+/ '\n')?
+;
+
+GrammarElementRelationFile[noskipws]:
+  '  - TYPE: ' relation_type='File' '\n'
 ;
 
 GrammarElementField[noskipws]:

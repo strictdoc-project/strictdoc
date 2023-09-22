@@ -152,7 +152,7 @@ class DocumentGrammarFormObject(ErrorObject):
             )
             grammar_fields.append(grammar_field)
         requirement_element = GrammarElement(
-            parent=None, tag="REQUIREMENT", fields=grammar_fields
+            parent=None, tag="REQUIREMENT", fields=grammar_fields, relations=[]
         )
         elements: List[GrammarElement] = [requirement_element]
         grammar = DocumentGrammar(parent=None, elements=elements)

@@ -7,7 +7,7 @@ TITLE: Requirement #1
 
 [REQUIREMENT]
 UID: REQ-002
+TITLE: Requirement #2
 REFS:
 - TYPE: Parent
   VALUE: REQ-001
-TITLE: Requirement #2

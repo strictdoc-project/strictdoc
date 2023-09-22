@@ -17,6 +17,8 @@ ELEMENTS:
   - TITLE: CUSTOM_FIELD_2
     TYPE: String
     REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
 
 [FREETEXT]
 Hello world!

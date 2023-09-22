@@ -29,6 +29,9 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
     GrammarElementFieldTag,
+    GrammarElementRelationChild,
+    GrammarElementRelationFile,
+    GrammarElementRelationParent,
 )
 
 SECTION_MODELS = [
@@ -59,6 +62,9 @@ DOCUMENT_MODELS = [
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldTag,
     GrammarElementFieldReference,
+    GrammarElementRelationParent,
+    GrammarElementRelationChild,
+    GrammarElementRelationFile,
 ]
 DOCUMENT_MODELS.extend(SECTION_MODELS)
 

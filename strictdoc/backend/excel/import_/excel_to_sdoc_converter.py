@@ -122,7 +122,11 @@ class ExcelToSDocConverter:
         document_title = title if title else "<No title>"
         document = Document(document_title, document_config, None, [], [])
 
-        fields = DocumentGrammar.create_default(document).elements[0].fields
+        fields = list(
+            DocumentGrammar.create_default(document).elements[0].fields
+        )
+        refs_index = len(fields) - 1
+
         for _, name in extra_header_pairs:
             fields.extend(
                 [
@@ -132,8 +136,14 @@ class ExcelToSDocConverter:
                 ]
             )
 
+        # Here, we want to make sure that the REFS grammar field still shows up
+        # in the grammar **after** all fields, including the custom fields.
+        # FIXME: The REFS field configuration will become a standalone entity
+        # in the grammar, it will not longer be kept inside the grammar fields.
+        fields.insert(len(fields) - 1, fields.pop(refs_index))
+
         requirements_element = GrammarElement(
-            parent=None, tag="REQUIREMENT", fields=fields
+            parent=None, tag="REQUIREMENT", fields=fields, relations=[]
         )
         elements = [requirements_element]
         grammar = DocumentGrammar(parent=document, elements=elements)
@@ -176,22 +186,6 @@ class ExcelToSDocConverter:
             tags=None,
             comments=comments,
         )
-        if parent_uid is not None:
-            reference = ParentReqReference(
-                template_requirement, parent_uid, relation_uid=None
-            )
-
-            requirement_field = RequirementField(
-                parent=template_requirement,
-                field_name="REFS",
-                field_value=None,
-                field_value_multiline=None,
-                field_value_references=[reference],
-            )
-            template_requirement.ordered_fields_lookup["REFS"] = [
-                requirement_field
-            ]
-
         for i, name in columns.extra_header_pairs:
             value = row_values[i].strip()
             if value != "":
@@ -204,7 +198,21 @@ class ExcelToSDocConverter:
                         field_value_references=None,
                     )
                 ]
+        if parent_uid is not None:
+            reference = ParentReqReference(
+                template_requirement, parent_uid, role_uid=None
+            )
 
+            requirement_field = RequirementField(
+                parent=template_requirement,
+                field_name="REFS",
+                field_value=None,
+                field_value_multiline=None,
+                field_value_references=[reference],
+            )
+            template_requirement.ordered_fields_lookup["REFS"] = [
+                requirement_field
+            ]
         requirement = Requirement(
             parent=template_requirement.parent,
             requirement_type=template_requirement.requirement_type,

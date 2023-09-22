@@ -17,9 +17,6 @@ ELEMENTS:
   - TITLE: TAGS
     TYPE: String
     REQUIRED: False
-  - TITLE: REFS
-    TYPE: String
-    REQUIRED: False
   - TITLE: TITLE
     TYPE: String
     REQUIRED: False
@@ -35,6 +32,8 @@ ELEMENTS:
   - TITLE: CUSTOM_FIELD
     TYPE: String
     REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
 
 [FREETEXT]
 Hello world!

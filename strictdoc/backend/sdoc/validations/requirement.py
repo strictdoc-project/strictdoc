@@ -15,7 +15,6 @@ from strictdoc.backend.sdoc.models.requirement import (
 )
 from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldMultipleChoice,
-    GrammarElementFieldReference,
     GrammarElementFieldSingleChoice,
     GrammarElementFieldTag,
     ReferenceType,
@@ -37,7 +36,7 @@ def validate_requirement(
         document_grammar.fields_order_by_type[requirement.requirement_type]
     )
     for field_name in requirement.ordered_fields_lookup:
-        if field_name not in registered_fields:
+        if field_name not in registered_fields and field_name != "REFS":
             raise StrictDocSemanticError.unregistered_field(
                 field_name=field_name,
                 requirement=requirement,
@@ -62,7 +61,18 @@ def validate_requirement(
         grammar_fields_iterator, None
     )
 
+    refs_requirement_field = None
+    refs_grammar_field = None
     while True:
+        if (
+            requirement_field is not None
+            and requirement_field.field_name == "REFS"
+        ):
+            refs_requirement_field = requirement_field
+            requirement_field = next(requirement_field_iterator, None)
+        if grammar_field is not None and grammar_field.title == "REFS":
+            refs_grammar_field = grammar_field
+            grammar_field = next(grammar_fields_iterator, None)
         try:
             valid_or_not_required_field = validate_requirement_field(
                 requirement,
@@ -82,6 +92,27 @@ def validate_requirement(
         else:
             assert not grammar_field.required
             grammar_field = next(grammar_fields_iterator, None)
+
+    # REFS validation.
+
+    if refs_requirement_field is not None and refs_grammar_field is not None:
+        requirement_field_value_references = (
+            refs_requirement_field.field_value_references
+        )
+        for reference in requirement_field_value_references:
+            if (
+                reference.ref_type in ReferenceType.GRAMMAR_REFERENCE_TYPE_MAP
+                and ReferenceType.GRAMMAR_REFERENCE_TYPE_MAP[reference.ref_type]
+                in refs_grammar_field.types
+            ):
+                continue
+            raise StrictDocSemanticError.invalid_reference_type_item(
+                requirement=requirement,
+                document_grammar=document_grammar,
+                requirement_field=refs_requirement_field,
+                reference_item=reference,
+                **get_location(requirement),
+            )
 
 
 def validate_requirement_field(
@@ -159,25 +190,6 @@ def validate_requirement_field(
         if not multi_choice_regex_match(requirement_field_value):
             raise StrictDocSemanticError.not_comma_separated_tag_field(
                 requirement_field=requirement_field,
-                **get_location(requirement),
-            )
-
-    elif isinstance(grammar_field, GrammarElementFieldReference):
-        requirement_field_value_references = (
-            requirement_field.field_value_references
-        )
-        for reference in requirement_field_value_references:
-            if (
-                reference.ref_type in ReferenceType.GRAMMAR_REFERENCE_TYPE_MAP
-                and ReferenceType.GRAMMAR_REFERENCE_TYPE_MAP[reference.ref_type]
-                in grammar_field.types
-            ):
-                continue
-            raise StrictDocSemanticError.invalid_reference_type_item(
-                requirement=requirement,
-                document_grammar=document_grammar,
-                requirement_field=requirement_field,
-                reference_item=reference,
                 **get_location(requirement),
             )
 

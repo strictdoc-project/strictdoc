@@ -17,9 +17,6 @@ ELEMENTS:
   - TITLE: TAGS
     TYPE: String
     REQUIRED: False
-  - TITLE: REFS
-    TYPE: Reference(ParentReqReference, ChildReqReference, FileReference, BibReference)
-    REQUIRED: False
   - TITLE: TITLE
     TYPE: String
     REQUIRED: False
@@ -47,6 +44,10 @@ ELEMENTS:
   - TITLE: CRITICALITY
     TYPE: String
     REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: Child
+  - TYPE: File
 
 [REQUIREMENT]
 UID: A-1

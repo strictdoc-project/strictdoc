@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from pybtex.database import Entry
 
@@ -185,6 +185,54 @@ class GrammarElementFieldTag(GrammarElementField):
 
 
 @auto_described
+class GrammarElementRelationParent:
+    def __init__(
+        self, parent, relation_type: str, relation_role: Optional[str]
+    ):
+        assert relation_type == "Parent"
+        self.parent = parent
+        self.relation_type = relation_type
+        self.relation_role: Optional[str] = (
+            relation_role
+            if relation_role is not None and len(relation_role) > 0
+            else None
+        )
+
+
+@auto_described
+class GrammarElementRelationChild:
+    def __init__(
+        self, parent, relation_type: str, relation_role: Optional[str]
+    ):
+        assert relation_type == "Child"
+        self.parent = parent
+        self.relation_type = relation_type
+        self.relation_role: Optional[str] = (
+            relation_role
+            if relation_role is not None and len(relation_role) > 0
+            else None
+        )
+
+
+@auto_described
+class GrammarElementRelationFile:
+    def __init__(self, parent, relation_type: str):
+        assert relation_type == "File"
+        self.parent = parent
+        self.relation_type = relation_type
+        self.relation_role: Optional[str] = None
+
+
+@auto_described
+class GrammarElementRelationBibtex:
+    def __init__(self, parent, relation_type: str):
+        assert relation_type == "Bibtex"
+        self.parent = parent
+        self.relation_type = relation_type
+        self.relation_role: Optional[str] = None
+
+
+@auto_described
 class GrammarElementFieldReference(GrammarElementField):
     def __init__(self, parent, title: str, types: List[str], required: str):
         super().__init__()
@@ -193,3 +241,50 @@ class GrammarElementFieldReference(GrammarElementField):
         self.title: str = title
         self.types: List[str] = types
         self.required: bool = required == "True"
+
+    def convert_to_relations(
+        self,
+    ) -> List[
+        Union[
+            GrammarElementRelationParent,
+            GrammarElementRelationChild,
+            GrammarElementRelationFile,
+            GrammarElementRelationBibtex,
+        ]
+    ]:
+        relation_types: List[
+            Union[
+                GrammarElementRelationParent,
+                GrammarElementRelationChild,
+                GrammarElementRelationFile,
+                GrammarElementRelationBibtex,
+            ]
+        ] = []
+
+        for ref_type in self.types:
+            if ref_type == "ParentReqReference":
+                relation_types.append(
+                    GrammarElementRelationParent(
+                        self.parent, "Parent", relation_role=None
+                    )
+                )
+                continue
+            if ref_type == "ChildReqReference":
+                relation_types.append(
+                    GrammarElementRelationChild(
+                        self.parent, "Child", relation_role=None
+                    )
+                )
+                continue
+            if ref_type == "FileReference":
+                relation_types.append(
+                    GrammarElementRelationFile(self.parent, "File")
+                )
+                continue
+            if ref_type == "BibReference":
+                relation_types.append(
+                    GrammarElementRelationBibtex(self.parent, "Bibtex")
+                )
+                continue
+            raise NotImplementedError(ref_type)
+        return relation_types

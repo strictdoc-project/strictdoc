@@ -18,7 +18,7 @@
                 data-traceability-file-type="this_file"
                 href="{{ link_renderer.render_requirement_in_source_file_range_link_using_id(req.uid, source_file.in_doctree_source_file_rel_path_posix, source_file, pragma) }}"
                 >{%- if pragma.is_end() -%}/{%- endif -%}{{ req.uid }}</a>{%- if not loop.last -%}, {% endif -%}
-            {%- endfor -%}{{replacement_after}}</pre>
+            {%- endfor -%}{{ replacement_after }}</pre>
       {%- elif line != "" -%}
         {# <!-- Pygments --> #}
         <pre class="highlight">{{ line }}</pre>

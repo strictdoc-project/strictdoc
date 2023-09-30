@@ -2,10 +2,10 @@
 {% set form = "sdoc_modal_form" %}
 {% block modal_form__header %}
 Add new document
-{% endblock %}
+{% endblock modal_form__header %}
 {% block modal_form__content %}
   <form
-    id="{{form}}"  {# defined in the parent template #}
+    id="{{ form }}"  {# defined in the parent template #}
     action="/actions/project_index/create_document"
     method="POST"
     data-turbo="true"
@@ -36,4 +36,4 @@ Add new document
       {%- endwith -%}
     </sdoc-form-grid>
   </form>
-{% endblock %}
+{% endblock modal_form__content %}

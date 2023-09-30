@@ -4,17 +4,17 @@
   {%- set url="/actions/document/update_section" %}
 {%- endif -%}
 
-<turbo-frame id="article-{{form_object.section_mid}}">
+<turbo-frame id="article-{{ form_object.section_mid }}">
 <form
-  action="{{url}}"
+  action="{{ url }}"
   method="POST"
   data-turbo="true"
 >
   {%- if is_new_section -%}
-    <input type="hidden" id="reference_mid" name="reference_mid" value="{{reference_mid}}" />
-    <input type="hidden" id="whereto" name="whereto" value="{{whereto}}" />
+    <input type="hidden" id="reference_mid" name="reference_mid" value="{{ reference_mid }}" />
+    <input type="hidden" id="whereto" name="whereto" value="{{ whereto }}" />
   {%- endif -%}
-  <input type="hidden" id="section_mid" name="section_mid" value="{{form_object.section_mid}}" />
+  <input type="hidden" id="section_mid" name="section_mid" value="{{ form_object.section_mid }}" />
 
   <sdoc-form
     data-controller="scroll_into_view"
@@ -56,15 +56,15 @@
     </sdoc-form-grid>
 
     <sdoc-form-footer>
-      {% include 'components/button/submit.jinja' %}
+      {% include "components/button/submit.jinja" %}
 
       {%- if is_new_section -%}
         {%- with cancel_href="/actions/document/cancel_new_section?section_mid="~form_object.section_mid -%}
-          {% include 'components/button/cancel.jinja' %}
+          {% include "components/button/cancel.jinja" %}
         {%- endwith -%}
       {%- else -%}
         {%- with cancel_href="/actions/document/cancel_edit_section?section_mid="~form_object.section_mid -%}
-          {% include 'components/button/cancel.jinja' %}
+          {% include "components/button/cancel.jinja" %}
         {%- endwith -%}
       {%- endif -%}
     </sdoc-form-footer>

@@ -1,0 +1,33 @@
+{%- extends "components/form/row.jinja" %}
+
+{% assert custom_field_row_context is defined, "row_with_custom_field: custom_field_row_context must be defined." %}
+
+{% assert custom_field_row_context.errors is defined, "row_with_custom_field: errors must be defined." %}
+{% assert custom_field_row_context.field is defined, "row_with_custom_field: field must be defined." %}
+
+{%- set row_context = custom_field_row_context -%}
+{%- set row_context.errors = custom_field_row_context.errors -%}
+{%- set row_context.field_actions = { 'delete':true, 'move_up':true, 'move_down':true } -%}
+
+{% block row_form_attributes %}
+  data-controller="deletable_field movable_field"
+{% endblock row_form_attributes %}
+
+{% block row_content scoped %}
+
+  {%- set placeholder_name = custom_field_row_context.field.field_name|default('custom field name', true) %}
+
+  {%- with
+    field_class_name = "monospace",
+    field_editable = true,
+    field_input_name = custom_field_row_context.field.get_input_field_name(),
+    field_label = "Custom field",
+    field_name = custom_field_row_context.field.field_name,
+    field_placeholder = "Enter "~placeholder_name~" here...",
+    field_type = "singleline",
+    field_value = custom_field_row_context.field.field_name
+  %}
+  {%- include "components/form/new_field/index.jinja" %}
+  {%- endwith -%}
+
+{% endblock row_content %}

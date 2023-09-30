@@ -1,0 +1,29 @@
+{% assert relation_row_context is defined, "row_with_relation: relation_row_context must be defined." %}
+
+{% assert relation_row_context.errors is defined, "row_with_relation: errors must be defined." %}
+{% assert relation_row_context.field is defined, "row_with_relation: field must be defined." %}
+
+{# FIXME: Recreate context #}
+{%- set row_context = relation_row_context -%}
+{%- set row_context.field_actions = { "delete": true } -%}
+
+{%- extends "components/form/row.jinja" %}
+
+{% block row_form_attributes %}
+  data-controller="deletable_field"
+{% endblock row_form_attributes %}
+
+{% block row_content scoped %}
+  {%- with
+    field_class_name = none,
+    field_label = "Requirement parent link",
+    field_input_name = relation_row_context.field.get_input_field_name(),
+    field_name = "requirement parent link UID",
+    field_placeholder = "Enter requirement parent link UID here...",
+    field_type = "singleline",
+    field_value = relation_row_context.field.field_value
+  %}
+  {%- include "components/form/new_field/index.jinja" %}
+  {%- endwith -%}
+
+{% endblock row_content %}

@@ -1,0 +1,96 @@
+{% extends "components/form/index.jinja" %}
+
+{%- set frame_id="article-"~form_object.requirement_mid %}
+{%- if is_new_requirement -%}
+  {%- set submit_url="/actions/document/create_requirement" %}
+  {%- set cancel_url="/actions/document/cancel_new_requirement?requirement_mid="~form_object.requirement_mid -%}
+{%- else -%}
+  {%- set submit_url="/actions/document/update_requirement" %}
+  {%- set cancel_url="/actions/document/cancel_edit_requirement?requirement_mid="~form_object.requirement_mid -%}
+{%- endif -%}
+
+{% block form_content %}
+
+  {# Core identification query parameters. #}
+
+  {%- if is_new_requirement -%}
+    <input type="hidden" id="reference_mid" name="reference_mid" value="{{ reference_mid }}" />
+    <input type="hidden" id="whereto" name="whereto" value="{{ whereto }}" />
+  {%- endif -%}
+  <input type="hidden" id="requirement_mid" name="requirement_mid" value="{{ form_object.requirement_mid }}" />
+
+  {# Single-line fields #}
+
+  {% set text_field_row_context = namespace() %}
+
+  {%- for field_values_ in form_object.enumerate_fields(multiline=False) -%}
+    {%- for field_ in field_values_ -%}
+      {% set text_field_row_context.errors=form_object.get_errors(field_.field_name) %}
+      {% set text_field_row_context.field = field_ %}
+      {% set text_field_row_context.field_type = "singleline" %}
+      {% include "components/requirement_form/row_with_text_field.jinja" %}
+    {%- endfor -%}
+  {%- endfor -%}
+
+  {# Relations #}
+
+  {% set relation_row_context = namespace() %}
+
+  {%- for field_ in form_object.enumerate_reference_fields() -%}
+    {% set relation_row_context.field = field_ %}
+    {% set relation_row_context.errors = field_.validation_messages %}
+    {% include "components/requirement_form/row_with_relation.jinja" %}
+  {%- endfor -%}
+
+  <div id="requirement_{{ form_object.requirement_mid }}__new_parent_link"></div>
+  <sdoc-form-row>
+    <a
+      class="action_button"
+      href="/actions/document/new_parent_link?requirement_mid={{ form_object.requirement_mid }}"
+      data-turbo-action="replace"
+      data-turbo="true"
+      data-action-type="add_field"
+      data-testid="form-add-parent-link-field-action"
+    >{% include "_res/svg_ico16_add.jinja.html" %} Add parent link</a>
+  </sdoc-form-row>
+
+  {# Multiline #}
+
+  {% set comment_field_row_context = namespace() %}
+
+  {%- for field_values in form_object.enumerate_fields(multiline=True) -%}
+    {%- for field_ in field_values -%}
+      {% if field_.field_name == "COMMENT" -%}
+        {# If comments have not yet been added,
+        show only the add field button below,
+        and do not display the code of the field itself: #}
+        {%- if field_.field_escaped_value|length > 0 -%}
+          {% set comment_field_row_context.field = field_ %}
+          {% set comment_field_row_context.errors = form_object.get_errors(field_.field_name) %}
+          {% include "components/requirement_form/row_with_comment.jinja" %}
+        {%- endif -%}
+      {%- else -%}
+        {% set text_field_row_context.errors=form_object.get_errors(field_.field_name) %}
+        {% set text_field_row_context.field = field_ %}
+        {% set text_field_row_context.field_type = "multiline" %}
+        {% include "components/requirement_form/row_with_text_field.jinja" %}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endfor -%}
+
+  {# Add new comments #}
+
+  <div id="requirement_{{ form_object.requirement_mid }}__new_comment"></div>
+
+  <sdoc-form-row>
+    <a
+      class="action_button"
+      href="/actions/document/new_comment?requirement_mid={{ form_object.requirement_mid }}"
+      data-turbo-action="replace"
+      data-turbo="true"
+      data-action-type="add_field"
+      data-testid="form-add-comment-field-action"
+    >{% include "_res/svg_ico16_add.jinja.html" %} Add comment field</a>
+  </sdoc-form-row>
+
+{% endblock form_content %}

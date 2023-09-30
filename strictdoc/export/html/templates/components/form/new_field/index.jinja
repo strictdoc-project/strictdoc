@@ -1,0 +1,47 @@
+{%- assert field_class_name is defined, "field_class_name is defined" -%}
+{%- assert field_input_name is defined, "field_input_name is defined" -%}
+{%- assert field_label is defined, "field_label is defined" -%}
+{%- assert field_label is not none, "field_label is not none" -%}
+{%- assert field_name is defined, "field_name is defined" -%}
+{%- assert field_name is not none, "field_name is not none" -%}
+{%- assert field_placeholder is defined, "field_placeholder is defined" -%}
+{%- assert field_placeholder is not none, "field_placeholder is not none" -%}
+{%- assert field_value is defined, "field_value is defined" -%}
+
+<sdoc-form-field>
+
+  <sdoc-contenteditable
+    data-controller="editablefield"
+    role="textbox"
+    data-field-type="{{ field_type }}"
+    {%- if field_editable is defined and not field_editable -%}
+      contenteditable="false"
+    {%- else -%}
+      contenteditable="true"
+    {%- endif -%}
+    id="{{ field_input_name }}"
+    placeholder="{{ field_placeholder }}"
+    data-field-label="{{ field_label }}"
+    {%- if field_class_name is not none -%}
+      class="{{ field_class_name }}"
+    {%- endif -%}
+    data-testid="form-{{ field_input_name }}-field"
+  >
+    {%- if true -%}
+      {{ field_value }}
+    {%- endif -%}
+  </sdoc-contenteditable>
+
+  {%- if field_type == "singleline" -%}
+    <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}"/>
+  {%- endif -%}
+
+  {%- if field_type == "multiline" -%}
+    <textarea hidden name="{{ field_input_name }}">
+      {%- if true -%}
+      {{ field_value }}
+      {%- endif -%}
+    </textarea>
+  {%- endif -%}
+
+</sdoc-form-field>

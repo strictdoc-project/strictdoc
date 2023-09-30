@@ -1,0 +1,35 @@
+{% assert submit_url is defined, "submit_url must be defined." %}
+{% assert cancel_url is defined, "cancel_url must be defined." %}
+{% assert frame_id is defined, "frame_id must be defined." %}
+
+<turbo-frame id="{{ frame_id }}">
+
+<sdoc-form
+  data-controller="scroll_into_view"
+>
+
+<form
+  action="{{ submit_url }}"
+  method="POST"
+  data-turbo="true"
+>
+
+  <sdoc-form-grid>
+
+    {% block form_content %}
+      {% assert 0, "Must not reach here!" %}
+    {% endblock form_content %}
+
+  </sdoc-form-grid>
+
+  <sdoc-form-footer>
+    {% include "components/button/submit.jinja" %}
+
+    {%- with cancel_href=cancel_url -%}
+      {% include "components/button/cancel.jinja" %}
+    {%- endwith -%}
+  </sdoc-form-footer>
+</form>
+
+</sdoc-form>
+</turbo-frame>

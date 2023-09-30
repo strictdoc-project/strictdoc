@@ -52,8 +52,7 @@ class GrammarFormField:
             reserved=reserved,
         )
 
-    @property
-    def field_input_name(self):
+    def get_input_field_name(self):
         return f"document_grammar[{self.field_name}]"
 
 

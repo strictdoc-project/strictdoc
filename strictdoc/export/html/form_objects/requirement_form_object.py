@@ -64,6 +64,9 @@ class RequirementFormField:
     def is_multiline(self):
         return self.field_type == RequirementFormFieldType.MULTILINE
 
+    def get_input_field_name(self):
+        return f"requirement[{self.field_name}]"
+
     @staticmethod
     def create_from_grammar_field(
         *,
@@ -125,13 +128,19 @@ class RequirementReferenceFormField:
 
     def __init__(
         self,
+        field_mid: str,
         field_type: FieldType,
         field_value: str,
     ):
+        assert isinstance(field_mid, str), field_mid
         assert isinstance(field_value, str), field_value
+        self.field_mid: str = field_mid
         self.field_type = field_type
         self.field_value: str = field_value
         self.validation_messages: List[str] = []
+
+    def get_input_field_name(self):
+        return "requirement[REFS_PARENT][]"
 
 
 @auto_described
@@ -208,7 +217,8 @@ class RequirementFormObject(ErrorObject):
         for parent_ref in parent_refs:
             form_ref_fields.append(
                 RequirementReferenceFormField(
-                    field_type=(RequirementReferenceFormField.FieldType.PARENT),
+                    field_mid=MID.create().get_string_value(),
+                    field_type=RequirementReferenceFormField.FieldType.PARENT,
                     field_value=parent_ref,
                 )
             )
@@ -275,25 +285,6 @@ class RequirementFormObject(ErrorObject):
         for field_idx, field_name in enumerate(fields_names):
             # First handle REFS fields in a special way.
             if field_name == "REFS":
-                if field_name not in requirement.ordered_fields_lookup:
-                    continue
-                for requirement_field in requirement.ordered_fields_lookup[
-                    "REFS"
-                ]:
-                    reference_value: Reference
-                    for (
-                        reference_value
-                    ) in requirement_field.field_value_references:
-                        if not isinstance(reference_value, ParentReqReference):
-                            continue
-                        parent_reference: ParentReqReference = reference_value
-                        form_ref_field = RequirementReferenceFormField(
-                            field_type=(
-                                RequirementReferenceFormField.FieldType.PARENT
-                            ),
-                            field_value=parent_reference.ref_uid,
-                        )
-                        form_refs_fields.append(form_ref_field)
                 continue
 
             # Handle all other fields in a general way.
@@ -319,6 +310,23 @@ class RequirementFormObject(ErrorObject):
                     value_escaped="",
                 )
                 form_fields.append(form_field)
+
+        if "REFS" in requirement.ordered_fields_lookup:
+            for requirement_field in requirement.ordered_fields_lookup["REFS"]:
+                reference_value: Reference
+                for reference_value in requirement_field.field_value_references:
+                    if not isinstance(reference_value, ParentReqReference):
+                        continue
+                    parent_reference: ParentReqReference = reference_value
+                    form_ref_field = RequirementReferenceFormField(
+                        field_mid=parent_reference.mid.get_string_value(),
+                        field_type=(
+                            RequirementReferenceFormField.FieldType.PARENT
+                        ),
+                        field_value=parent_reference.ref_uid,
+                    )
+                    form_refs_fields.append(form_ref_field)
+
         return RequirementFormObject(
             requirement_mid=requirement.mid.get_string_value(),
             fields=form_fields,

@@ -17,10 +17,21 @@ Edit document grammar
 
     <input type="hidden" id="document_mid" name="document_mid" value="{{ form_object.document_mid }}"/>
 
+    {% set reserved_field_row_context = namespace() %}
+    {% set custom_field_row_context = namespace() %}
+
     <sdoc-form-grid id="document__editable_grammar_fields">
-      {%- for field in form_object.fields -%}
-        {%- if field.field_name != "REFS" -%}
-        {%- include "screens/document/document/frame_document_grammar_edit_custom_field.jinja.html" -%}
+      {%- for field_ in form_object.fields -%}
+        {%- if field_.field_name != "REFS" -%}
+          {%- if field_.reserved -%}
+            {% set reserved_field_row_context.errors = form_object.get_errors(field_.field_name) %}
+            {% set reserved_field_row_context.field = field_ %}
+            {%- include "components/grammar_form/row_with_reserved_field.jinja" -%}
+          {%- else -%}
+            {% set custom_field_row_context.errors = form_object.get_errors(field_.field_name) %}
+            {% set custom_field_row_context.field = field_ %}
+            {%- include "components/grammar_form/row_with_custom_field.jinja" -%}
+          {%- endif -%}
         {%- endif -%}
       {%- endfor -%}
     </sdoc-form-grid>

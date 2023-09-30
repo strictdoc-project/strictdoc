@@ -1,4 +1,4 @@
-<turbo-frame id="article-{{document.mid.get_string_value()}}">
+<turbo-frame id="article-{{ document.mid.get_string_value() }}">
 <sdoc-form>
 
   <form
@@ -6,7 +6,7 @@
     data-turbo="true"
     action="/actions/document/save_config"
   >
-    <input type="hidden" id="document_mid" name="document_mid" value="{{form_object.document_mid}}"/>
+    <input type="hidden" id="document_mid" name="document_mid" value="{{ form_object.document_mid }}"/>
 
     <sdoc-form-grid>
       {%- with
@@ -61,9 +61,9 @@
     </sdoc-form-grid>
 
     <sdoc-form-footer>
-      {% include 'components/button/submit.jinja' %}
+      {% include "components/button/submit.jinja" %}
       {%- with cancel_href="/actions/document/cancel_edit_config?document_mid="~form_object.document_mid -%}
-        {% include 'components/button/cancel.jinja' %}
+        {% include "components/button/cancel.jinja" %}
       {%- endwith -%}
     </sdoc-form-footer>
 

@@ -5,15 +5,15 @@
     confirm_message
   #}
 {% block modal_form__header %}
-  {{confirm_title|default("Are you sure?")}}
-{% endblock %}
+  {{ confirm_title|default("Are you sure?") }}
+{% endblock modal_form__header %}
 {% block modal_form__content %}
 <sdoc-modal-message data-testid="confirm-message">
-  {{confirm_message|default(
+  {{ confirm_message|default(
     "This is an unrecoverable action."
-  )}}
+  ) }}
 </sdoc-modal-message>
-{% endblock %}
+{% endblock modal_form__content %}
 {% block modal_form__footer_submit %}
   {#
     Must be defined by calling the Confirm:
@@ -24,5 +24,5 @@
     confirm_turbo_method
     confirm_action_type
   #}
-  {% include 'components/button/confirm.jinja' %}
-{% endblock %}
+  {% include "components/button/confirm.jinja" %}
+{% endblock modal_form__footer_submit %}

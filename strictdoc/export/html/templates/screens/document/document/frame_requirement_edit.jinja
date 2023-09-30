@@ -4,21 +4,21 @@
   {%- set url="/actions/document/update_requirement" %}
 {%- endif -%}
 
-<turbo-frame id="article-{{form_object.requirement_mid}}">
+<turbo-frame id="article-{{ form_object.requirement_mid }}">
 <sdoc-form
   data-controller="scroll_into_view"
 >
 
 <form
-  action="{{url}}"
+  action="{{ url }}"
   method="POST"
   data-turbo="true"
 >
   {%- if is_new_requirement -%}
-    <input type="hidden" id="reference_mid" name="reference_mid" value="{{reference_mid}}" />
-    <input type="hidden" id="whereto" name="whereto" value="{{whereto}}" />
+    <input type="hidden" id="reference_mid" name="reference_mid" value="{{ reference_mid }}" />
+    <input type="hidden" id="whereto" name="whereto" value="{{ whereto }}" />
   {%- endif -%}
-  <input type="hidden" id="requirement_mid" name="requirement_mid" value="{{form_object.requirement_mid}}" />
+  <input type="hidden" id="requirement_mid" name="requirement_mid" value="{{ form_object.requirement_mid }}" />
 
   <sdoc-form-grid>
 
@@ -45,11 +45,11 @@
       {% include "screens/document/document/frame_requirement_edit_field_parent_link.jinja" %}
     {%- endfor -%}
 
-    <div id="requirement_{{form_object.requirement_mid}}__new_parent_link"></div>
+    <div id="requirement_{{ form_object.requirement_mid }}__new_parent_link"></div>
     <sdoc-form-row>
       <a
         class="action_button"
-        href="/actions/document/new_parent_link?requirement_mid={{form_object.requirement_mid}}"
+        href="/actions/document/new_parent_link?requirement_mid={{ form_object.requirement_mid }}"
         data-turbo-action="replace"
         data-turbo="true"
         data-action-type="add_field"
@@ -84,12 +84,12 @@
 
     {# Add new comments #}
 
-    <div id="requirement_{{form_object.requirement_mid}}__new_comment"></div>
+    <div id="requirement_{{ form_object.requirement_mid }}__new_comment"></div>
 
     <sdoc-form-row>
       <a
         class="action_button"
-        href="/actions/document/new_comment?requirement_mid={{form_object.requirement_mid}}"
+        href="/actions/document/new_comment?requirement_mid={{ form_object.requirement_mid }}"
         data-turbo-action="replace"
         data-turbo="true"
         data-action-type="add_field"
@@ -101,15 +101,15 @@
   {# Footer #}
 
   <sdoc-form-footer>
-    {% include 'components/button/submit.jinja' %}
+    {% include "components/button/submit.jinja" %}
 
     {%- if is_new_requirement -%}
       {%- with cancel_href="/actions/document/cancel_new_requirement?requirement_mid="~form_object.requirement_mid -%}
-        {% include 'components/button/cancel.jinja' %}
+        {% include "components/button/cancel.jinja" %}
       {%- endwith -%}
     {%- else -%}
       {%- with cancel_href="/actions/document/cancel_edit_requirement?requirement_mid="~form_object.requirement_mid -%}
-        {% include 'components/button/cancel.jinja' %}
+        {% include "components/button/cancel.jinja" %}
       {%- endwith -%}
     {%- endif -%}
   </sdoc-form-footer>

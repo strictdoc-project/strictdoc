@@ -1,5 +1,4 @@
-from seleniumbase import BaseCase
-
+from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
@@ -10,7 +9,7 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 from tests.end2end.server import SDocTestServer
 
 
-class Test_UC07_G1_T10_EditRequirementRefs(BaseCase):
+class Test(E2ECase):
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
@@ -31,15 +30,16 @@ class Test_UC07_G1_T10_EditRequirementRefs(BaseCase):
 
             screen_document.assert_text("Hello world!")
 
-            # Open form and add 1 fields:
+            # Open form and add 1 field:
             requirement = screen_document.get_requirement()
             form_edit_requirement: Form_EditRequirement = (
                 requirement.do_open_form_edit_requirement()
             )
             form_edit_requirement.do_form_add_field_parent_link()
+            form_edit_requirement.do_fill_in_field_parent_link("FOO-BAR")
 
             form_edit_requirement.do_form_submit_and_catch_error(
-                "Requirement parent link UID must not be empty."
+                'Parent requirement with an UID "FOO-BAR" does not exist.'
             )
 
         assert test_setup.compare_sandbox_and_expected_output()

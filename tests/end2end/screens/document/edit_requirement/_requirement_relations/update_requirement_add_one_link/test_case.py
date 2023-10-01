@@ -9,7 +9,7 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 from tests.end2end.server import SDocTestServer
 
 
-class Test_UC07_G1_T12_AddedLinkWhenNoUID(E2ECase):
+class Test(E2ECase):
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
@@ -30,17 +30,40 @@ class Test_UC07_G1_T12_AddedLinkWhenNoUID(E2ECase):
 
             screen_document.assert_text("Hello world!")
 
-            requirement = screen_document.get_requirement()
+            # Existing Requirement 1:
+            added_requirement_1_level = "1"
+            added_requirement_1_position = 1
+
+            requirement1 = screen_document.get_requirement(
+                added_requirement_1_position
+            )
+
+            requirement1.assert_requirement_title(
+                "Requirement title #1",
+                added_requirement_1_level,
+            )
+            screen_document.assert_toc_contains("Requirement title #1")
+
+            # Existing Requirement 2:
+            added_requirement_2_level = "2"
+            added_requirement_2_position = 2
+
+            requirement2 = screen_document.get_requirement(
+                added_requirement_2_position
+            )
+
+            requirement2.assert_requirement_title(
+                "Requirement title #2",
+                added_requirement_2_level,
+            )
+            screen_document.assert_toc_contains("Requirement title #2")
+
+            # Edit Requirement 2: add one parent link
             form_edit_requirement: Form_EditRequirement = (
-                requirement.do_open_form_edit_requirement()
+                requirement2.do_open_form_edit_requirement()
             )
             form_edit_requirement.do_form_add_field_parent_link()
-            form_edit_requirement.do_fill_in_field_parent_link("REQ-002")
-
-            form_edit_requirement.do_form_submit_and_catch_error(
-                "Requirement with parent links must have an UID. "
-                "Either provide a parent UID, or "
-                "delete the parent requirement links."
-            )
+            form_edit_requirement.do_fill_in_field_parent_link("REQ-001")
+            form_edit_requirement.do_form_submit()
 
         assert test_setup.compare_sandbox_and_expected_output()

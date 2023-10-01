@@ -1732,6 +1732,7 @@ def create_main_router(
                 exiting_requirement_uid=None,
             ),
             field=RequirementReferenceFormField(
+                field_mid=MID.create().get_string_value(),
                 field_type=RequirementReferenceFormField.FieldType.PARENT,
                 field_value="",
             ),

@@ -6,6 +6,7 @@ from strictdoc.backend.sdoc.models.type_system import (
     ReferenceType,
 )
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.mid import MID
 
 
 @auto_described
@@ -39,6 +40,7 @@ class ParentReqReference(Reference):
         self.role_uid: Optional[str] = (
             role_uid if role_uid is not None and len(role_uid) > 0 else None
         )
+        self.mid = MID.create()
 
 
 @auto_described

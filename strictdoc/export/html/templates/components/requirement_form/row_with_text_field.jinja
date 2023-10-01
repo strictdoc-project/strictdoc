@@ -1,0 +1,33 @@
+{%- extends "components/form/row.jinja" %}
+
+{% assert text_field_row_context is defined, "row_with_text: row_context must be defined." %}
+
+{% assert text_field_row_context.errors is defined, "row_with_text: errors must be defined." %}
+{% assert text_field_row_context.field is defined, "row_with_text: field must be defined." %}
+{% assert text_field_row_context.field_type is defined, "row_with_text: field_type must be defined." %}
+{% assert text_field_row_context.field_type in ("singleline", "multiline"), "row_with_text: field_type must be singleline or multiline." %}
+
+{%- set row_context = text_field_row_context -%}
+{%- set row_context.field_actions = none -%}
+
+{% block row_form_attributes %}
+{# Explicitly no attributes. #}
+{% endblock row_form_attributes %}
+
+{% block row_content scoped %}
+
+  {%- set placeholder_name = text_field_row_context.field.field_name %}
+
+  {%- with
+    field_class_name = none,
+    field_input_name = text_field_row_context.field.get_input_field_name(),
+    field_label = text_field_row_context.field.field_name,
+    field_name = text_field_row_context.field.field_name,
+    field_placeholder = "Enter "~placeholder_name~" here...",
+    field_type = text_field_row_context.field_type,
+    field_value = text_field_row_context.field.field_escaped_value
+  %}
+  {%- include "components/form/new_field/index.jinja" %}
+  {%- endwith -%}
+
+{% endblock row_content %}

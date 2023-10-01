@@ -1,0 +1,29 @@
+{%- extends "components/form/row.jinja" %}
+
+{% assert comment_field_row_context is defined, "row_with_comment: row_context must be defined." %}
+
+{% assert comment_field_row_context.errors is defined, "row_with_comment: errors must be defined." %}
+{% assert comment_field_row_context.field is defined, "row_with_comment: field must be defined." %}
+
+{%- set row_context = comment_field_row_context -%}
+{%- set row_context.field_actions = { 'delete':true } -%}
+
+{% block row_form_attributes %}
+data-controller="deletable_field"
+{% endblock row_form_attributes %}
+
+{% block row_content scoped %}
+
+  {%- with
+    field_class_name = none,
+    field_input_name = comment_field_row_context.field.get_input_field_name(),
+    field_label = comment_field_row_context.field.field_name,
+    field_name = comment_field_row_context.field.field_name,
+    field_placeholder = "Enter comment here...",
+    field_type = "multiline",
+    field_value = comment_field_row_context.field.field_escaped_value
+  %}
+  {%- include "components/form/new_field/index.jinja" %}
+  {%- endwith -%}
+
+{% endblock row_content %}

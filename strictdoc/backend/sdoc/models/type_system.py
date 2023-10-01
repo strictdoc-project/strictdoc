@@ -3,6 +3,7 @@ from typing import List, Optional, Union
 from pybtex.database import Entry
 
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.mid import MID
 
 
 class RequirementFieldName:
@@ -140,6 +141,7 @@ class GrammarElementField:
         self.title: str = ""
         self.gef_type: str = ""
         self.required: bool = False
+        self.mid: MID = MID.create()
 
 
 @auto_described
@@ -150,6 +152,7 @@ class GrammarElementFieldString(GrammarElementField):
         self.title: str = title
         self.gef_type = RequirementFieldType.STRING
         self.required: bool = required == "True"
+        self.mid: MID = MID.create()
 
 
 @auto_described
@@ -161,6 +164,7 @@ class GrammarElementFieldSingleChoice(GrammarElementField):
         self.gef_type = RequirementFieldType.SINGLE_CHOICE
         self.options: List[str] = options
         self.required: bool = required == "True"
+        self.mid: MID = MID.create()
 
 
 @auto_described
@@ -172,6 +176,7 @@ class GrammarElementFieldMultipleChoice(GrammarElementField):
         self.gef_type = RequirementFieldType.MULTIPLE_CHOICE
         self.options: List[str] = options
         self.required: bool = required == "True"
+        self.mid: MID = MID.create()
 
 
 @auto_described
@@ -182,6 +187,7 @@ class GrammarElementFieldTag(GrammarElementField):
         self.title: str = title
         self.gef_type = RequirementFieldType.TAG
         self.required: bool = required == "True"
+        self.mid: MID = MID.create()
 
 
 @auto_described
@@ -196,6 +202,16 @@ class GrammarElementRelationParent:
             relation_role
             if relation_role is not None and len(relation_role) > 0
             else None
+        )
+        self.mid: MID = MID.create()
+
+    def __eq__(self, other):
+        if not isinstance(other, GrammarElementRelationParent):
+            raise NotImplementedError(self, other)
+        return (
+            self.mid == other.mid
+            and self.relation_type == other.relation_type
+            and self.relation_role == other.relation_role
         )
 
 
@@ -212,6 +228,7 @@ class GrammarElementRelationChild:
             if relation_role is not None and len(relation_role) > 0
             else None
         )
+        self.mid: MID = MID.create()
 
 
 @auto_described
@@ -221,6 +238,7 @@ class GrammarElementRelationFile:
         self.parent = parent
         self.relation_type = relation_type
         self.relation_role: Optional[str] = None
+        self.mid: MID = MID.create()
 
 
 @auto_described
@@ -230,6 +248,7 @@ class GrammarElementRelationBibtex:
         self.parent = parent
         self.relation_type = relation_type
         self.relation_role: Optional[str] = None
+        self.mid: MID = MID.create()
 
 
 @auto_described

@@ -1036,7 +1036,7 @@ def create_main_router(
             ref_uid = reference_field.field_value
             references.append(
                 ParentReqReference(
-                    parent=requirement, ref_uid=ref_uid, role_uid=None
+                    parent=requirement, ref_uid=ref_uid, role=None
                 )
             )
         if len(references) > 0:

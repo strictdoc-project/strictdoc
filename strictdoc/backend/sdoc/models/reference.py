@@ -21,6 +21,7 @@ class FileReference(Reference):
     def __init__(self, parent, g_file_entry: FileEntry):
         super().__init__(ReferenceType.FILE, parent)
         self.g_file_entry: FileEntry = g_file_entry
+        self.mid = MID.create()
 
     def get_posix_path(self) -> str:
         return self.g_file_entry.file_path_posix
@@ -31,23 +32,25 @@ class FileReference(Reference):
 
 @auto_described
 class ParentReqReference(Reference):
-    def __init__(self, parent, ref_uid: str, role_uid: Optional[str]):
+    def __init__(self, parent, ref_uid: str, role: Optional[str]):
         super().__init__(ReferenceType.PARENT, parent)
         self.ref_uid: str = ref_uid
         # When ROLE: field is not provided for a parent reference, the
         # textX still passes relation_uid as an empty string (instead of None
         # as one could expect).
-        self.role_uid: Optional[str] = (
-            role_uid if role_uid is not None and len(role_uid) > 0 else None
+        self.role: Optional[str] = (
+            role if role is not None and len(role) > 0 else None
         )
         self.mid = MID.create()
 
 
 @auto_described
 class ChildReqReference(Reference):
-    def __init__(self, parent, ref_uid):
+    def __init__(self, parent, ref_uid, role: str):
         super().__init__(ReferenceType.CHILD, parent)
         self.ref_uid = ref_uid
+        self.role = role
+        self.mid = MID.create()
 
 
 @auto_described
@@ -56,3 +59,4 @@ class BibReference(Reference):
         super().__init__(ReferenceType.BIB_REF, parent)
         self.bib_entry = bib_entry
         # TODO Add bib_entry into Parent-Root Document.Bibliography
+        self.mid = MID.create()

@@ -28,12 +28,13 @@ Reference[noskipws]:
 ParentReqReference[noskipws]:
   '- TYPE: Parent' '\n'
   '  VALUE: ' ref_uid = /.*$/ '\n'
-  ('  ROLE: ' role_uid = /.+$/ '\n')?
+  ('  ROLE: ' role = /.+$/ '\n')?
 ;
 
 ChildReqReference[noskipws]:
   '- TYPE: Child' '\n'
   '  VALUE: ' ref_uid = /.*$/ '\n'
+  ('  ROLE: ' role = /.+$/ '\n')?
 ;
 
 

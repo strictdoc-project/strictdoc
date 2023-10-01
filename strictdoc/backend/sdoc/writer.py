@@ -382,8 +382,8 @@ class SDWriter:
                 output += "  VALUE: "
                 output += parent_reference.ref_uid
                 output += "\n"
-                if parent_reference.role_uid is not None:
+                if parent_reference.role is not None:
                     output += "  ROLE: "
-                    output += parent_reference.role_uid
+                    output += parent_reference.role
                     output += "\n"
         return output

@@ -200,7 +200,7 @@ class ExcelToSDocConverter:
                 ]
         if parent_uid is not None:
             reference = ParentReqReference(
-                template_requirement, parent_uid, role_uid=None
+                template_requirement, parent_uid, role=None
             )
 
             requirement_field = RequirementField(

@@ -406,13 +406,17 @@ class Requirement(
 
         # If a field value is being removed, there is not much to do.
         if value is None or len(value) == 0:
-            # See FIXME: [1].
+            # Comment is a special because there can be multiple comments.
+            # Empty comments are simply ignored and do not show up in the
+            # updated requirement.
             if field_name == RequirementFieldName.COMMENT:
                 return
 
             if field_name in self.ordered_fields_lookup:
                 del self.ordered_fields_lookup[field_name]
             return
+
+        # If a field value is being added or updated.
 
         document: Document = self.document
         grammar_or_none: Optional[DocumentGrammar] = document.grammar

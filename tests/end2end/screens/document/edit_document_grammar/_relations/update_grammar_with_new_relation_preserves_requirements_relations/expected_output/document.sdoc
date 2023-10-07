@@ -25,7 +25,6 @@ ELEMENTS:
     REQUIRED: False
   RELATIONS:
   - TYPE: Parent
-  - TYPE: File
   - TYPE: Parent
     ROLE: Refines
 

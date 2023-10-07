@@ -33,7 +33,8 @@
           class="sdoc-form-select"
           name="{{ relation_row_context.relation.relation_type_input_name() }}"
           id="relation_type_{{ relation_row_context.relation.relation_mid }}"
-          data-testid="select_relation_type_{{ relation_row_context.relation.relation_mid }}"
+          mid="{{ relation_row_context.relation.relation_mid }}"
+          data-testid="select-relation-type"
         >
           <option
             value="Parent"

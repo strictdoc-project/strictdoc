@@ -547,6 +547,7 @@ class RequirementFormObject(ErrorObject):
                     reference_field.validation_messages.append(
                         "Requirement parent link UID must not be empty."
                     )
+                    continue
                 elif (
                     link_uid not in traceability_index.requirements_connections
                 ):
@@ -554,6 +555,7 @@ class RequirementFormObject(ErrorObject):
                         f'Parent requirement with an UID "{link_uid}" '
                         f"does not exist."
                     )
+                    continue
 
                 ref_uid = reference_field.field_value
 
@@ -585,7 +587,6 @@ class RequirementFormObject(ErrorObject):
                             ref_uid,
                             relations_lambda,
                         )
-                        raise AssertionError("Must not reach here.")
                     except DocumentTreeError as error_:
                         reference_field.validation_messages.append(
                             error_.to_validation_message()

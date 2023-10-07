@@ -13,6 +13,7 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementRelationFile,
     GrammarElementRelationParent,
     RequirementFieldName,
+    GrammarElementRelationChild,
 )
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
@@ -163,6 +164,9 @@ class DocumentGrammarFormObject(ErrorObject):
 
         grammar_form_relations: List[GrammarFormRelation] = []
         for grammar_relation in element.relations:
+            # FIXME: One day enable this.
+            if grammar_relation.relation_type == "File":
+                continue
             grammar_form_relation = GrammarFormRelation(
                 relation_mid=grammar_relation.mid.value,
                 relation_type=grammar_relation.relation_type,
@@ -253,13 +257,25 @@ class DocumentGrammarFormObject(ErrorObject):
             )
             grammar_fields.append(grammar_field)
         relation_fields: List[
-            Union[GrammarElementRelationParent, GrammarElementRelationFile]
+            Union[
+                GrammarElementRelationParent,
+                GrammarElementRelationChild,
+                GrammarElementRelationFile
+            ]
         ] = []
 
         for relation in self.relations:
             if relation.relation_type == "Parent":
                 relation_fields.append(
                     GrammarElementRelationParent(
+                        parent=None,
+                        relation_type=relation.relation_type,
+                        relation_role=relation.relation_role,
+                    )
+                )
+            elif relation.relation_type == "Child":
+                relation_fields.append(
+                    GrammarElementRelationChild(
                         parent=None,
                         relation_type=relation.relation_type,
                         relation_role=relation.relation_role,

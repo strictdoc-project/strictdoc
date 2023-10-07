@@ -19,7 +19,14 @@ from strictdoc.helpers.cast import assert_cast
 
 def create_default_relations(
     parent,
-) -> List[Union[GrammarElementRelationParent, GrammarElementRelationFile]]:
+) -> List[
+    Union[
+        GrammarElementRelationParent,
+        GrammarElementRelationChild,
+        GrammarElementRelationFile,
+        GrammarElementRelationBibtex,
+    ]
+]:
     return [
         GrammarElementRelationParent(
             parent=parent,

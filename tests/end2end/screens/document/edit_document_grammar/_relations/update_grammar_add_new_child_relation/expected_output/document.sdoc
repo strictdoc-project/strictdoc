@@ -26,12 +26,13 @@ ELEMENTS:
   - TITLE: RATIONALE
     TYPE: String
     REQUIRED: False
-  - TITLE: CUSTOM_FIELD
-    TYPE: String
-    REQUIRED: False
   - TITLE: COMMENT
     TYPE: String
     REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: Child
+    ROLE: IsRefinedBy
 
 [FREETEXT]
 Hello world!

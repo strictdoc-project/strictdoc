@@ -1,5 +1,5 @@
 [DOCUMENT]
-TITLE: Doc 1
+TITLE: Sample doc
 
 [GRAMMAR]
 ELEMENTS:
@@ -15,15 +15,8 @@ ELEMENTS:
   - TYPE: Child
 
 [REQUIREMENT]
-UID: REQ-001
+UID: REQ-1
 REFS:
 - TYPE: Child
-  VALUE: REQ-002
-STATEMENT: Hello world 1
-
-[REQUIREMENT]
-UID: REQ-002
-REFS:
-- TYPE: Child
-  VALUE: REQ-001
-STATEMENT: Hello world 2
+  VALUE: REQ-CHILD-1
+STATEMENT: Sample statement.

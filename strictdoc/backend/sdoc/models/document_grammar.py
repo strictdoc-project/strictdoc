@@ -1,25 +1,35 @@
 from collections import OrderedDict, defaultdict
-from typing import Dict, List, Set, Union
+from typing import Dict, List, Optional, Set, Union
 
 from strictdoc.backend.sdoc.models.type_system import (
     RESERVED_NON_META_FIELDS,
     GrammarElementField,
     GrammarElementFieldReference,
     GrammarElementFieldString,
+    GrammarElementRelationBibtex,
+    GrammarElementRelationChild,
+    GrammarElementRelationFile,
     GrammarElementRelationParent,
     GrammarReferenceType,
     RequirementFieldName,
 )
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.cast import assert_cast
 
 
-def create_default_relations(parent) -> List[GrammarElementRelationParent]:
+def create_default_relations(
+    parent,
+) -> List[Union[GrammarElementRelationParent, GrammarElementRelationFile]]:
     return [
         GrammarElementRelationParent(
             parent=parent,
             relation_type="Parent",
             relation_role=None,
-        )
+        ),
+        GrammarElementRelationFile(
+            parent=parent,
+            relation_type="File",
+        ),
     ]
 
 
@@ -35,7 +45,14 @@ class GrammarElement:
         self.parent = parent
         self.tag: str = tag
         self.fields: List[GrammarElementField] = fields
-        self.relations: List[Union[GrammarElementRelationParent]] = (
+        self.relations: List[
+            Union[
+                GrammarElementRelationParent,
+                GrammarElementRelationChild,
+                GrammarElementRelationFile,
+                GrammarElementRelationBibtex,
+            ]
+        ] = (
             relations
             if relations is not None and len(relations) > 0
             else create_default_relations(self)
@@ -45,10 +62,29 @@ class GrammarElement:
             fields_map[field.title] = field
         self.fields_map = fields_map
 
+        if "REFS" in fields_map:
+            refs_field: GrammarElementFieldReference = assert_cast(
+                fields_map["REFS"], GrammarElementFieldReference
+            )
+            self.relations = refs_field.convert_to_relations()
+            del fields_map["REFS"]
+            self.fields.remove(refs_field)
+
     def get_relation_types(self) -> List[str]:
         return list(
             map(lambda relation_: relation_.relation_type, self.relations)
         )
+
+    def has_relation_type_role(
+        self, relation_type: str, relation_role: Optional[str]
+    ):
+        for relation_ in self.relations:
+            if (
+                relation_.relation_type == relation_type
+                and relation_.relation_role == relation_role
+            ):
+                return True
+        return False
 
     def enumerate_meta_field_titles(self):
         for field in self.fields:
@@ -84,7 +120,6 @@ class DocumentGrammar:
         registered_elements: Set[str] = set()
         elements_by_type: Dict[str, GrammarElement] = {}
         fields_by_type: Dict[str, List[str]] = defaultdict(list)
-
         for element in elements:
             registered_elements.add(element.tag)
             elements_by_type[element.tag] = element
@@ -141,7 +176,6 @@ class DocumentGrammar:
                 title=RequirementFieldName.REFS,
                 types=[
                     GrammarReferenceType.PARENT_REQ_REFERENCE,
-                    GrammarReferenceType.CHILD_REQ_REFERENCE,
                     GrammarReferenceType.FILE_REFERENCE,
                 ],
                 required="False",

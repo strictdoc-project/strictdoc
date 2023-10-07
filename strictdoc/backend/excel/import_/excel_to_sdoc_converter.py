@@ -125,7 +125,6 @@ class ExcelToSDocConverter:
         fields = list(
             DocumentGrammar.create_default(document).elements[0].fields
         )
-        refs_index = len(fields) - 1
 
         for _, name in extra_header_pairs:
             fields.extend(
@@ -135,12 +134,6 @@ class ExcelToSDocConverter:
                     ),
                 ]
             )
-
-        # Here, we want to make sure that the REFS grammar field still shows up
-        # in the grammar **after** all fields, including the custom fields.
-        # FIXME: The REFS field configuration will become a standalone entity
-        # in the grammar, it will not longer be kept inside the grammar fields.
-        fields.insert(len(fields) - 1, fields.pop(refs_index))
 
         requirements_element = GrammarElement(
             parent=None, tag="REQUIREMENT", fields=fields, relations=[]
@@ -173,6 +166,9 @@ class ExcelToSDocConverter:
         parent_uid = None
         if columns.parent_column is not None:
             parent_uid = row_values[columns.parent_column].strip()
+            if len(parent_uid) == 0:
+                parent_uid = None
+
         template_requirement = SDocObjectFactory.create_requirement(
             document,
             requirement_type="REQUIREMENT",

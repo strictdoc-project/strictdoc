@@ -17,7 +17,6 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldSingleChoice,
     GrammarElementFieldTag,
-    ReferenceType,
     RequirementFieldName,
 )
 
@@ -62,7 +61,6 @@ def validate_requirement(
     )
 
     refs_requirement_field = None
-    refs_grammar_field = None
     while True:
         if (
             requirement_field is not None
@@ -71,7 +69,6 @@ def validate_requirement(
             refs_requirement_field = requirement_field
             requirement_field = next(requirement_field_iterator, None)
         if grammar_field is not None and grammar_field.title == "REFS":
-            refs_grammar_field = grammar_field
             grammar_field = next(grammar_fields_iterator, None)
         try:
             valid_or_not_required_field = validate_requirement_field(
@@ -95,24 +92,20 @@ def validate_requirement(
 
     # REFS validation.
 
-    if refs_requirement_field is not None and refs_grammar_field is not None:
+    if refs_requirement_field is not None:
         requirement_field_value_references = (
             refs_requirement_field.field_value_references
         )
+
         for reference in requirement_field_value_references:
-            if (
-                reference.ref_type in ReferenceType.GRAMMAR_REFERENCE_TYPE_MAP
-                and ReferenceType.GRAMMAR_REFERENCE_TYPE_MAP[reference.ref_type]
-                in refs_grammar_field.types
+            if not grammar_element.has_relation_type_role(
+                relation_type=reference.ref_type, relation_role=reference.role
             ):
-                continue
-            raise StrictDocSemanticError.invalid_reference_type_item(
-                requirement=requirement,
-                document_grammar=document_grammar,
-                requirement_field=refs_requirement_field,
-                reference_item=reference,
-                **get_location(requirement),
-            )
+                raise StrictDocSemanticError.invalid_reference_type_item(
+                    requirement=requirement,
+                    reference_item=reference,
+                    **get_location(refs_requirement_field),
+                )
 
 
 def validate_requirement_field(

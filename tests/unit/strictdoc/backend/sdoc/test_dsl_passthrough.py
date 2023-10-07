@@ -446,9 +446,6 @@ TITLE: Test Doc
 VERSION: 0.0.1
 
 [REQUIREMENT]
-REFS:
-- TYPE: File
-  VALUE: /tmp/sample.cpp
 """.lstrip()
 
     reader = SDReader()
@@ -472,9 +469,6 @@ TITLE: Test Doc
 UID: SDOC-01
 
 [REQUIREMENT]
-REFS:
-- TYPE: File
-  VALUE: /tmp/sample.cpp
 """.lstrip()
 
     reader = SDReader()
@@ -500,9 +494,6 @@ VERSION: 0.0.1
 CLASSIFICATION: Restricted
 
 [REQUIREMENT]
-REFS:
-- TYPE: File
-  VALUE: /tmp/sample.cpp
 """.lstrip()
 
     reader = SDReader()
@@ -528,9 +519,6 @@ VERSION: 0.0.1
 REQ_PREFIX: DOC-
 
 [REQUIREMENT]
-REFS:
-- TYPE: File
-  VALUE: /tmp/sample.cpp
 """.lstrip()
 
     reader = SDReader()
@@ -656,9 +644,6 @@ TITLE: Test Doc
 VERSION: 0.0.1
 
 [REQUIREMENT]
-REFS:
-- TYPE: File
-  VALUE: /tmp/sample.cpp
 """.lstrip()
 
     reader = SDReader()
@@ -685,9 +670,6 @@ OPTIONS:
   MARKUP: Text
 
 [REQUIREMENT]
-REFS:
-- TYPE: File
-  VALUE: /tmp/sample.cpp
 """.lstrip()
 
     reader = SDReader()

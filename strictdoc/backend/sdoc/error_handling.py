@@ -246,27 +246,22 @@ class StrictDocSemanticError(Exception):
     @staticmethod
     def invalid_reference_type_item(  # pylint: disable=too-many-arguments
         requirement: Requirement,
-        document_grammar: DocumentGrammar,
-        requirement_field: RequirementField,
         reference_item: Reference,
         line=None,
         col=None,
         filename=None,
     ):
+        role_and_type = (
+            f"{reference_item.ref_type} / {reference_item.role}"
+            if reference_item.role is not None
+            else reference_item.ref_type
+        )
         return StrictDocSemanticError(
             title=(
-                f"Requirement field of type Reference has an unsupported"
-                f" Reference Type item: "
-                f"{reference_item}."
+                f"Requirement relation type/role is not registered: "
+                f"{role_and_type}."
             ),
-            hint=(
-                f"Problematic field: {requirement_field.field_name}. "
-                f"Compare with the document grammar: "
-                f"["
-                f"{document_grammar.dump_fields(requirement.requirement_type)}"
-                f"] "
-                f"for type: {requirement.requirement_type}."
-            ),
+            hint=(f"Problematic requirement: {requirement.reserved_uid}."),
             example=None,
             line=line,
             col=col,

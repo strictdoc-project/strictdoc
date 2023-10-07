@@ -5,6 +5,7 @@ from typing import Dict, List, Optional
 
 from starlette.datastructures import FormData
 
+from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
@@ -27,6 +28,9 @@ from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import (
     RequirementConnections,
     TraceabilityIndex,
+)
+from strictdoc.core.tree_cycle_detector import (
+    SingleShotTreeCycleDetector,
 )
 from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
@@ -534,14 +538,55 @@ class RequirementFormObject(ErrorObject):
                     "child requirement links. For now, manually delete the "
                     "links, rename the UID, recreate the links.",
                 )
-        for reference_field in self.reference_fields:
-            link_uid = reference_field.field_value
-            if len(link_uid) == 0:
-                reference_field.validation_messages.append(
-                    "Requirement parent link UID must not be empty."
-                )
-            elif link_uid not in traceability_index.requirements_connections:
-                reference_field.validation_messages.append(
-                    f'Parent requirement with an UID "{link_uid}" '
-                    f"does not exist."
-                )
+                return
+
+        if requirement_uid is not None:
+            for reference_field in self.reference_fields:
+                link_uid = reference_field.field_value
+                if len(link_uid) == 0:
+                    reference_field.validation_messages.append(
+                        "Requirement parent link UID must not be empty."
+                    )
+                elif (
+                    link_uid not in traceability_index.requirements_connections
+                ):
+                    reference_field.validation_messages.append(
+                        f'Parent requirement with an UID "{link_uid}" '
+                        f"does not exist."
+                    )
+
+                ref_uid = reference_field.field_value
+
+                if (
+                    reference_field.field_type == "Parent"
+                    or reference_field.field_type == "Child"
+                ):
+
+                    def parent_lambda(requirement_id_) -> List[str]:
+                        return traceability_index.requirements_connections[
+                            requirement_id_
+                        ].get_parent_uids()
+
+                    def child_lambda(requirement_id_) -> List[str]:
+                        return traceability_index.requirements_connections[
+                            requirement_id_
+                        ].get_child_uids()
+
+                    relations_lambda = (
+                        parent_lambda
+                        if reference_field.field_type == "Parent"
+                        else child_lambda
+                    )
+
+                    cycle_detector = SingleShotTreeCycleDetector()
+                    try:
+                        cycle_detector.check_node(
+                            requirement_uid,
+                            ref_uid,
+                            relations_lambda,
+                        )
+                        raise AssertionError("Must not reach here.")
+                    except DocumentTreeError as error_:
+                        reference_field.validation_messages.append(
+                            error_.to_validation_message()
+                        )

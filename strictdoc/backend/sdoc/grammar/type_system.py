@@ -54,7 +54,7 @@ FileEntryFormat[noskipws]:
 ;
 
 BibReference[noskipws]:
-  '- TYPE: BibRef' '\n'
+  '- TYPE: BibTex' '\n'
   bib_entry = BibEntry
 ;
 

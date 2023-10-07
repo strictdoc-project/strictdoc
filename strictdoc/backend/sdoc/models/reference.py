@@ -14,6 +14,7 @@ class Reference:
     def __init__(self, ref_type, parent):
         self.parent = parent
         self.ref_type = ref_type
+        self.role: Optional[str] = None
 
 
 @auto_described

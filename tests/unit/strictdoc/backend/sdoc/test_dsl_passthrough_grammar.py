@@ -1,5 +1,3 @@
-import re
-
 import pytest
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
@@ -44,6 +42,7 @@ ELEMENTS:
     REQUIRED: True
   RELATIONS:
   - TYPE: Parent
+  - TYPE: File
 """.lstrip()
     reader = SDReader()
 
@@ -92,6 +91,7 @@ ELEMENTS:
     REQUIRED: False
   RELATIONS:
   - TYPE: Parent
+  - TYPE: File
 
 [LOW_LEVEL_REQUIREMENT]
 SINGLE_CHOICE_FIELD: A
@@ -144,6 +144,7 @@ ELEMENTS:
     REQUIRED: False
   RELATIONS:
   - TYPE: Parent
+  - TYPE: File
 
 [LOW_LEVEL_REQUIREMENT]
 MULTIPLE_CHOICE_FIELD: A, C
@@ -196,6 +197,7 @@ ELEMENTS:
     REQUIRED: False
   RELATIONS:
   - TYPE: Parent
+  - TYPE: File
 
 [LOW_LEVEL_REQUIREMENT]
 TAG_FIELD: A, C
@@ -252,6 +254,7 @@ ELEMENTS:
     REQUIRED: False
   RELATIONS:
   - TYPE: Parent
+  - TYPE: File
 
 [REQUIREMENT]
 MY_FIELD: >>>
@@ -301,7 +304,7 @@ REFS:
   VALUE: /tmp/sample0.cpp
 - TYPE: Parent
   VALUE: ID-000
-- TYPE: BibRef
+- TYPE: BibTex
   FORMAT: BibTex
   VALUE: @book{hawking1989brief, title={A Brief History of Time: From the Big Bang to Black Holes}, author={Hawking, Stephen}, isbn={9780553176988}, year={1989}, publisher={Bantam Books} }
 
@@ -314,7 +317,7 @@ REFS:
   VALUE: /tmp/sample1.cpp
 - TYPE: File
   VALUE: /tmp/sample2.cpp
-- TYPE: BibRef
+- TYPE: BibTex
   FORMAT: String
   VALUE: SampleCiteKeyStringRef-1, "The sample BibReference String-Format"
 """.lstrip()  # noqa: E501
@@ -336,7 +339,7 @@ ELEMENTS:
   RELATIONS:
   - TYPE: Parent
   - TYPE: File
-  - TYPE: Bibtex
+  - TYPE: BibTex
 
 [LOW_LEVEL_REQUIREMENT]
 UID: ID-000
@@ -348,7 +351,7 @@ REFS:
   VALUE: /tmp/sample0.cpp
 - TYPE: Parent
   VALUE: ID-000
-- TYPE: BibRef
+- TYPE: BibTex
   FORMAT: BibTex
   VALUE: @book{hawking1989brief, title={A Brief History of Time: From the Big Bang to Black Holes}, author={Hawking, Stephen}, isbn={9780553176988}, year={1989}, publisher={Bantam Books} }
 
@@ -361,7 +364,7 @@ REFS:
   VALUE: /tmp/sample1.cpp
 - TYPE: File
   VALUE: /tmp/sample2.cpp
-- TYPE: BibRef
+- TYPE: BibTex
   FORMAT: String
   VALUE: SampleCiteKeyStringRef-1, "The sample BibReference String-Format"
 """.lstrip()  # noqa: E501
@@ -440,7 +443,7 @@ ELEMENTS:
   RELATIONS:
   - TYPE: Parent
   - TYPE: File
-  - TYPE: Bibtex
+  - TYPE: BibTex
 
 [LOW_LEVEL_REQUIREMENT]
 REFS:
@@ -508,7 +511,7 @@ ELEMENTS:
   RELATIONS:
   - TYPE: Parent
   - TYPE: File
-  - TYPE: Bibtex
+  - TYPE: BibTex
 
 [LOW_LEVEL_REQUIREMENT]
 REFS:
@@ -586,11 +589,11 @@ REFS:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is StrictDocSemanticError
-    assert re.fullmatch(
-        "Requirement field of type Reference has an unsupported Reference "
-        'Type item: ParentReqReference\\(.*ref_uid = "ID-001".*\\).',
-        exc_info.value.args[0],
+    exception: StrictDocSemanticError = exc_info.value
+    assert exception.title == (
+        "Requirement relation type/role is not registered: Parent."
     )
+    assert exception.hint == "Problematic requirement: ID-002."
 
 
 def test_164_grammar_refs_parent():
@@ -647,7 +650,7 @@ ELEMENTS:
   RELATIONS:
   - TYPE: Parent
   - TYPE: File
-  - TYPE: Bibtex
+  - TYPE: BibTex
 
 [LOW_LEVEL_REQUIREMENT]
 UID: ID-000
@@ -738,7 +741,7 @@ ELEMENTS:
   RELATIONS:
   - TYPE: Parent
   - TYPE: File
-  - TYPE: Bibtex
+  - TYPE: BibTex
 
 [LOW_LEVEL_REQUIREMENT]
 UID: ID-000
@@ -780,7 +783,7 @@ REFS:
     assert expected_sdoc == output
 
 
-def test_166_grammar_refs_parent_only():
+def test_166_grammar_refs_validate_not_registered_file_relation():
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -816,11 +819,9 @@ REFS:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is StrictDocSemanticError
-
-    assert re.fullmatch(
-        "Requirement field of type Reference has an unsupported Reference"
-        " Type item: FileReference\\(.*\\).",
-        exc_info.value.args[0],
+    exception: StrictDocSemanticError = exc_info.value
+    assert exception.title == (
+        "Requirement relation type/role is not registered: File."
     )
 
 
@@ -853,7 +854,7 @@ REFS:
   VALUE: /tmp/sample0.cpp
 - TYPE: Parent
   VALUE: ID-000
-- TYPE: BibRef
+- TYPE: BibTex
   FORMAT: BibTex
   VALUE: @book{hawking1989brief, title={A Brief History of Time: From the Big Bang to Black Holes}, author={Hawking, Stephen}, isbn={9780553176988}, year={1989}, publisher={Bantam Books} }
 
@@ -862,13 +863,13 @@ UID: ID-002
 REFS:
 - TYPE: Parent
   VALUE: ID-001
-- TYPE: BibRef
+- TYPE: BibTex
   FORMAT: String
   VALUE: SampleCiteKeyStringRef-1, "The sample BibReference String-Format"
-- TYPE: BibRef
+- TYPE: BibTex
   FORMAT: String
   VALUE: SampleCiteKeyStringRef-2
-- TYPE: BibRef
+- TYPE: BibTex
   FORMAT: Citation
   VALUE: hawking1989brief, section 2.1
 """.lstrip()  # noqa: E501
@@ -890,7 +891,7 @@ ELEMENTS:
   RELATIONS:
   - TYPE: Parent
   - TYPE: File
-  - TYPE: Bibtex
+  - TYPE: BibTex
 
 [LOW_LEVEL_REQUIREMENT]
 UID: ID-000
@@ -902,7 +903,7 @@ REFS:
   VALUE: /tmp/sample0.cpp
 - TYPE: Parent
   VALUE: ID-000
-- TYPE: BibRef
+- TYPE: BibTex
   FORMAT: BibTex
   VALUE: @book{hawking1989brief, title={A Brief History of Time: From the Big Bang to Black Holes}, author={Hawking, Stephen}, isbn={9780553176988}, year={1989}, publisher={Bantam Books} }
 
@@ -911,13 +912,13 @@ UID: ID-002
 REFS:
 - TYPE: Parent
   VALUE: ID-001
-- TYPE: BibRef
+- TYPE: BibTex
   FORMAT: String
   VALUE: SampleCiteKeyStringRef-1, "The sample BibReference String-Format"
-- TYPE: BibRef
+- TYPE: BibTex
   FORMAT: String
   VALUE: SampleCiteKeyStringRef-2
-- TYPE: BibRef
+- TYPE: BibTex
   FORMAT: Citation
   VALUE: hawking1989brief, section 2.1
 """.lstrip()  # noqa: E501
@@ -1003,10 +1004,10 @@ UID: ID-001
 [LOW_LEVEL_REQUIREMENT]
 UID: ID-002
 REFS:
-- TYPE: BibRef
+- TYPE: BibTex
   FORMAT: String
   VALUE: SampleCiteKeyStringRef-1, "The sample BibReference String-Format"
-- TYPE: BibRef
+- TYPE: BibTex
   FORMAT: BibTex
   VALUE: @book{hawking1989brief, title={A Brief History of Time: From the Big Bang to Black Holes}, author={Hawking, Stephen}, isbn={9780553176988}, year={1989}, publisher={Bantam Books} }
 """.lstrip()  # noqa: E501
@@ -1028,7 +1029,7 @@ ELEMENTS:
   RELATIONS:
   - TYPE: Parent
   - TYPE: File
-  - TYPE: Bibtex
+  - TYPE: BibTex
 
 [LOW_LEVEL_REQUIREMENT]
 UID: ID-000
@@ -1039,10 +1040,10 @@ UID: ID-001
 [LOW_LEVEL_REQUIREMENT]
 UID: ID-002
 REFS:
-- TYPE: BibRef
+- TYPE: BibTex
   FORMAT: String
   VALUE: SampleCiteKeyStringRef-1, "The sample BibReference String-Format"
-- TYPE: BibRef
+- TYPE: BibTex
   FORMAT: BibTex
   VALUE: @book{hawking1989brief, title={A Brief History of Time: From the Big Bang to Black Holes}, author={Hawking, Stephen}, isbn={9780553176988}, year={1989}, publisher={Bantam Books} }
 """.lstrip()  # noqa: E501
@@ -1083,7 +1084,7 @@ REFS:
     assert expected_sdoc == output
 
 
-def test_169_grammar_refs_bib_only():
+def test_169_grammar_refs_validate_not_registered_parent_relation():
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -1110,7 +1111,7 @@ UID: ID-002
 REFS:
 - TYPE: Parent
   VALUE: ID-001
-- TYPE: BibRef
+- TYPE: BibTex
   FORMAT: BibTex
   VALUE: @book{hawking1989brief, title={A Brief History of Time: From the Big Bang to Black Holes}, author={Hawking, Stephen}, isbn={9780553176988}, year={1989}, publisher={Bantam Books} }
 """.lstrip()  # noqa: E501
@@ -1120,11 +1121,9 @@ REFS:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is StrictDocSemanticError
-
-    assert re.fullmatch(
-        "Requirement field of type Reference has an unsupported Reference "
-        'Type item: ParentReqReference\\(.*ref_uid = "ID-001".*\\).',
-        exc_info.value.args[0],
+    exception: StrictDocSemanticError = exc_info.value
+    assert exception.title == (
+        "Requirement relation type/role is not registered: Parent."
     )
 
 

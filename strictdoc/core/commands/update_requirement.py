@@ -1,12 +1,10 @@
 from copy import copy
 from dataclasses import dataclass
-from typing import Optional, Set, Tuple, List
+from typing import List, Optional, Set, Tuple
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.reference import (
     Reference,
-    ParentReqReference,
-    ChildReqReference,
 )
 from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
@@ -15,12 +13,11 @@ from strictdoc.backend.sdoc.models.requirement import (
 from strictdoc.backend.sdoc.models.type_system import RequirementFieldName
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import (
-    TraceabilityIndex,
     RequirementConnections,
+    TraceabilityIndex,
 )
 from strictdoc.export.html.form_objects.requirement_form_object import (
     RequirementFormObject,
-    RequirementReferenceFormField,
 )
 
 

@@ -168,12 +168,14 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
             ), "Expect the spec object type to be present."
             spec_object_type: ReqIFSpecObjectType = spec_object_type_or_none
             attributes = list(spec_object_type.attribute_map.keys())
+
             if attributes != DEFAULT_SDOC_GRAMMAR_FIELDS:
                 grammar_element = P01_ReqIFToSDocConverter.create_grammar_element_from_spec_object_type(
                     spec_object_type=spec_object_type,
                     reqif_bundle=reqif_bundle,
                 )
                 elements.append(grammar_element)
+
         if len(elements) > 0:
             grammar = DocumentGrammar(parent=document, elements=elements)
             grammar.is_default = False

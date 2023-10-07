@@ -20,9 +20,6 @@ ELEMENTS:
   - TITLE: STATUS
     TYPE: String
     REQUIRED: False
-  - TITLE: REFS
-    TYPE: String
-    REQUIRED: False
   - TITLE: TITLE
     TYPE: String
     REQUIRED: False

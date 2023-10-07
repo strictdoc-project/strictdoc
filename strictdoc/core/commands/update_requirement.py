@@ -8,12 +8,16 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
     ChildReqReference,
 )
-from strictdoc.backend.sdoc.models.requirement import Requirement, \
-    RequirementField
+from strictdoc.backend.sdoc.models.requirement import (
+    Requirement,
+    RequirementField,
+)
 from strictdoc.backend.sdoc.models.type_system import RequirementFieldName
 from strictdoc.core.project_config import ProjectConfig
-from strictdoc.core.traceability_index import TraceabilityIndex, \
-    RequirementConnections
+from strictdoc.core.traceability_index import (
+    TraceabilityIndex,
+    RequirementConnections,
+)
 from strictdoc.export.html.form_objects.requirement_form_object import (
     RequirementFormObject,
     RequirementReferenceFormField,
@@ -80,26 +84,10 @@ class UpdateRequirementCommand:
         )
         action_object.this_document_requirements_to_update = {requirement}
 
-        references: List[Reference] = []
-        reference_field: RequirementReferenceFormField
-        for reference_field in form_object.reference_fields:
-            ref_uid = reference_field.field_value
-            ref_type = reference_field.field_type
-            ref_role = reference_field.field_role
-            if ref_type == RequirementReferenceFormField.FieldType.PARENT:
-                references.append(
-                    ParentReqReference(
-                        parent=requirement, ref_uid=ref_uid, role=ref_role
-                    )
-                )
-            elif ref_type == RequirementReferenceFormField.FieldType.CHILD:
-                references.append(
-                    ChildReqReference(
-                        parent=requirement, ref_uid=ref_uid, role=ref_role
-                    )
-                )
-            else:
-                raise NotImplementedError(ref_type)
+        references: List[Reference] = form_object.get_requirement_relations(
+            requirement
+        )
+
         if len(references) > 0:
             requirement.ordered_fields_lookup[RequirementFieldName.REFS] = [
                 RequirementField(
@@ -116,9 +104,7 @@ class UpdateRequirementCommand:
                 del requirement.ordered_fields_lookup[RequirementFieldName.REFS]
             requirement.references = []
 
-        for (
-            document_
-        ) in traceability_index.document_tree.document_list:
+        for document_ in traceability_index.document_tree.document_list:
             document_.ng_needs_generation = False
 
         # Updating Traceability Index: Links
@@ -181,9 +167,7 @@ class UpdateRequirementCommand:
         for reference_field in form_object.reference_fields:
             ref_uid = reference_field.field_value
             requirement_connections: RequirementConnections = (
-                traceability_index.requirements_connections[
-                    ref_uid
-                ]
+                traceability_index.requirements_connections[ref_uid]
             )
             if requirement_connections.document == document:
                 action_object.this_document_requirements_to_update.add(

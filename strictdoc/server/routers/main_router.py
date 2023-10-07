@@ -52,8 +52,10 @@ from strictdoc.core.commands.update_document_config import (
     MultipleValidationError,
     UpdateDocumentConfigCommand,
 )
-from strictdoc.core.commands.update_requirement import UpdateRequirementCommand, \
-    UpdateRequirementResult
+from strictdoc.core.commands.update_requirement import (
+    UpdateRequirementCommand,
+    UpdateRequirementResult,
+)
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator

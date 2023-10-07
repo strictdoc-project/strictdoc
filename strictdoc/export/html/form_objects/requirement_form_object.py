@@ -416,6 +416,31 @@ class RequirementFormObject(ErrorObject):
                 return True
         return False
 
+    def get_requirement_relations(
+        self, requirement: Requirement
+    ) -> List[Reference]:
+        references: List[Reference] = []
+        reference_field: RequirementReferenceFormField
+        for reference_field in self.reference_fields:
+            ref_uid = reference_field.field_value
+            ref_type = reference_field.field_type
+            ref_role = reference_field.field_role
+            if ref_type == RequirementReferenceFormField.FieldType.PARENT:
+                references.append(
+                    ParentReqReference(
+                        parent=requirement, ref_uid=ref_uid, role=ref_role
+                    )
+                )
+            elif ref_type == RequirementReferenceFormField.FieldType.CHILD:
+                references.append(
+                    ChildReqReference(
+                        parent=requirement, ref_uid=ref_uid, role=ref_role
+                    )
+                )
+            else:
+                raise NotImplementedError(ref_type)
+        return references
+
     def enumerate_fields(self, multiline: bool):
         for _, field in self.fields.items():
             requirement_field: RequirementFormField = field[0]

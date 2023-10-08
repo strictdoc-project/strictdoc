@@ -10,6 +10,7 @@
             {%- endif %}
             {{ requirement.reserved_title if requirement.reserved_title else "" }}
             {% if relation_role_ is not none %}
+              {# FIXME #}
               <b style="color: red;">({{ relation_role_ }})</b>
             {% endif %}
           </a>
@@ -31,6 +32,7 @@
             {%- endif %}
             {{ requirement.reserved_title if requirement.reserved_title else "" }}
             {% if relation_role_ is not none %}
+              {# FIXME #}
               <b style="color: red;">({{ relation_role_ }})</b>
             {% endif %}
           </a>

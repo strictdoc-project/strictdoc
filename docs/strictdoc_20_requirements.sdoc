@@ -25,10 +25,6 @@ ELEMENTS:
     REQUIRED: False
   RELATIONS:
   - TYPE: Parent
-  - TYPE: Parent
-    ROLE: Refines
-  - TYPE: Parent
-    ROLE: Implements
   - TYPE: File
 
 [FREETEXT]
@@ -47,7 +43,6 @@ StrictDoc shall enable requirements management.
 REFS:
 - TYPE: Parent
   VALUE: GOAL-1-TOOL-SUPPORT
-  ROLE: Refines
 
 [REQUIREMENT]
 UID: SDOC-HIGH-DATA-MODEL

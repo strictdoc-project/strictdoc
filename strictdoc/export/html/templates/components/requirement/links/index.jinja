@@ -10,7 +10,7 @@
             {%- endif %}
             {{ requirement.reserved_title if requirement.reserved_title else "" }}
             {% if relation_role_ is not none %}
-              <b style="color: red;">({{ relation_role_ }})</b>
+              <span class="requirement__type-tag">({{ relation_role_ }})</span>
             {% endif %}
           </a>
         </li>
@@ -31,7 +31,7 @@
             {%- endif %}
             {{ requirement.reserved_title if requirement.reserved_title else "" }}
             {% if relation_role_ is not none %}
-              <b style="color: red;">({{ relation_role_ }})</b>
+              <span class="requirement__type-tag">({{ relation_role_ }})</span>
             {% endif %}
           </a>
         </li>

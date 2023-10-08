@@ -290,3 +290,15 @@ sdoc-requirement + sdoc-section,
 sdoc-requirement + sdoc-section sdoc-section-title {
   margin-top: var(--base-margin);
 }
+
+/* requirement type tag */
+
+.requirement__type-tag {
+  /* font-size: var(--font-size-sm);
+  font-family: var(--code-font-family);
+  font-weight: 500;
+  line-height: 1;
+  text-transform: uppercase; */
+  color: var(--requirement-label-color);
+  white-space: nowrap;
+}

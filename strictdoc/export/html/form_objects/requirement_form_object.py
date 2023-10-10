@@ -462,12 +462,19 @@ class RequirementFormObject(ErrorObject):
         self, relation_field: RequirementReferenceFormField
     ):
         requirement_element = self.grammar.elements_by_type["REQUIREMENT"]
-        for relation in requirement_element.relations:
+        for relation_ in requirement_element.relations:
             is_current = (
-                relation_field.field_type == relation.relation_type
-                and relation_field.field_role == relation.relation_role
+                relation_field.field_type == relation_.relation_type
+                and (
+                    relation_field.field_role == relation_.relation_role or
+                    (
+                        relation_field.field_role == ""
+                        and
+                        relation_.relation_role is None
+                    )
+                )
             )
-            yield relation.relation_type, relation.relation_role, is_current
+            yield relation_.relation_type, relation_.relation_role, is_current
 
     def validate(
         self,

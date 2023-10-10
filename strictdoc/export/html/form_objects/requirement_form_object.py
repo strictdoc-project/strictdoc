@@ -13,6 +13,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 )
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
+    FileReference,
     ParentReqReference,
     Reference,
 )
@@ -21,6 +22,8 @@ from strictdoc.backend.sdoc.models.requirement import (
     RequirementField,
 )
 from strictdoc.backend.sdoc.models.type_system import (
+    FileEntry,
+    FileEntryFormat,
     GrammarElementField,
     RequirementFieldType,
 )
@@ -139,6 +142,7 @@ class RequirementReferenceFormField:
     class FieldType(str, Enum):
         PARENT = "Parent"
         CHILD = "Child"
+        FILE = "File"
 
     def __init__(
         self,
@@ -236,7 +240,14 @@ class RequirementFormObject(ErrorObject):
                 if relation_type == "Parent"
                 else RequirementReferenceFormField.FieldType.CHILD
                 if relation_type == "Child"
+                else RequirementReferenceFormField.FieldType.FILE
+                if relation_type == "File"
                 else ""
+            )
+            assert field_type in (
+                RequirementReferenceFormField.FieldType.PARENT,
+                RequirementReferenceFormField.FieldType.CHILD,
+                RequirementReferenceFormField.FieldType.FILE,
             )
             relation_value = relation_dict["value"]
 
@@ -401,7 +412,17 @@ class RequirementFormObject(ErrorObject):
                             field_role=child_reference.role,
                         )
                         form_refs_fields.append(form_ref_field)
-
+                    elif isinstance(reference_value, FileReference):
+                        child_reference: FileReference = reference_value
+                        form_ref_field = RequirementReferenceFormField(
+                            field_mid=child_reference.mid.get_string_value(),
+                            field_type=(
+                                RequirementReferenceFormField.FieldType.FILE
+                            ),
+                            field_value=child_reference.get_posix_path(),
+                            field_role=child_reference.role,
+                        )
+                        form_refs_fields.append(form_ref_field)
         return RequirementFormObject(
             requirement_mid=requirement.mid.get_string_value(),
             fields=form_fields,
@@ -440,6 +461,18 @@ class RequirementFormObject(ErrorObject):
                         parent=requirement, ref_uid=ref_uid, role=ref_role
                     )
                 )
+            elif ref_type == RequirementReferenceFormField.FieldType.FILE:
+                file_entry = FileEntry(
+                    parent=requirement,
+                    g_file_format=FileEntryFormat.SOURCECODE,
+                    g_file_path=reference_field.field_value,
+                )
+                references.append(
+                    FileReference(
+                        parent=requirement,
+                        g_file_entry=file_entry,
+                    )
+                )
             else:
                 raise NotImplementedError(ref_type)
         return references
@@ -466,11 +499,10 @@ class RequirementFormObject(ErrorObject):
             is_current = (
                 relation_field.field_type == relation_.relation_type
                 and (
-                    relation_field.field_role == relation_.relation_role or
-                    (
+                    relation_field.field_role == relation_.relation_role
+                    or (
                         relation_field.field_role == ""
-                        and
-                        relation_.relation_role is None
+                        and relation_.relation_role is None
                     )
                 )
             )
@@ -548,27 +580,24 @@ class RequirementFormObject(ErrorObject):
 
         if requirement_uid is not None:
             for reference_field in self.reference_fields:
-                link_uid = reference_field.field_value
-                if len(link_uid) == 0:
-                    reference_field.validation_messages.append(
-                        "Requirement parent link UID must not be empty."
-                    )
-                    continue
-                elif (
-                    link_uid not in traceability_index.requirements_connections
-                ):
-                    reference_field.validation_messages.append(
-                        f'Parent requirement with an UID "{link_uid}" '
-                        f"does not exist."
-                    )
-                    continue
+                if reference_field.field_type in ("Parent", "Child"):
+                    link_uid = reference_field.field_value
+                    if len(link_uid) == 0:
+                        reference_field.validation_messages.append(
+                            "Requirement parent link UID must not be empty."
+                        )
+                        continue
+                    elif (
+                        link_uid
+                        not in traceability_index.requirements_connections
+                    ):
+                        reference_field.validation_messages.append(
+                            f'Parent requirement with an UID "{link_uid}" '
+                            f"does not exist."
+                        )
+                        continue
 
-                ref_uid = reference_field.field_value
-
-                if (
-                    reference_field.field_type == "Parent"
-                    or reference_field.field_type == "Child"
-                ):
+                    ref_uid = reference_field.field_value
 
                     def parent_lambda(requirement_id_) -> List[str]:
                         return traceability_index.requirements_connections[

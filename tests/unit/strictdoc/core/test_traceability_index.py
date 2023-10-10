@@ -38,7 +38,7 @@ def test_valid_02_one_document_with_1req():
         relation_type="Parent",
         source_requirement_id="REQ-002",
         target_requirement_id="REQ-001",
-        role=None
+        role=None,
     )
     document_builder.add_requirement_relation(
         relation_type="Parent",
@@ -50,13 +50,13 @@ def test_valid_02_one_document_with_1req():
         relation_type="Parent",
         source_requirement_id="REQ-003",
         target_requirement_id="REQ-002",
-        role=None
+        role=None,
     )
     document_builder.add_requirement_relation(
         relation_type="Parent",
         source_requirement_id="REQ-004",
         target_requirement_id="REQ-003",
-        role=None
+        role=None,
     )
 
     document_1 = document_builder.build()
@@ -185,7 +185,9 @@ def test__adding_parent_link__04__two_requirements_remove_parent_link():
     requirement2 = document_builder.add_requirement("REQ-002")
     document_builder.add_requirement_relation(
         relation_type="Parent",
-        source_requirement_id="REQ-002", target_requirement_id="REQ-001", role=None
+        source_requirement_id="REQ-002",
+        target_requirement_id="REQ-001",
+        role=None,
     )
     document_1 = document_builder.build()
 

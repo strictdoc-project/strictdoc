@@ -245,12 +245,8 @@ def test_26_two_documents_remove_child_relation():
 
     assert traceability_index.get_document_children(document_1) == set()
     assert traceability_index.get_document_parents(document_2) == set()
-    assert traceability_index.get_document_parents(document_1) == {
-        document_2
-    }
-    assert traceability_index.get_document_children(document_2) == {
-        document_1
-    }
+    assert traceability_index.get_document_parents(document_1) == {document_2}
+    assert traceability_index.get_document_children(document_2) == {document_1}
 
     requirement2_children = list(
         traceability_index.get_child_relations_with_roles(requirement2)

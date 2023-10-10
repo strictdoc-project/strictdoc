@@ -144,6 +144,8 @@ class UpdateRequirementCommand:
                     child_uid=ref_uid,
                     role=reference_field.field_role,
                 )
+            elif reference_field.field_type == "File":
+                pass
             else:
                 raise AssertionError(f"Must not reach here: {reference_field}")
 
@@ -193,6 +195,8 @@ class UpdateRequirementCommand:
 
         # Rendering back the Turbo template for each changed requirement.
         for reference_field in form_object.reference_fields:
+            if reference_field.field_type not in ("Parent", "Child"):
+                continue
             ref_uid = reference_field.field_value
             requirement_connections: RequirementConnections = (
                 traceability_index.requirements_connections[ref_uid]

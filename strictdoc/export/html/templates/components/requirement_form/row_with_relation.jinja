@@ -21,10 +21,19 @@
 {% endblock row_left %}
 
 {% block row_content scoped %}
+
 <sdoc-form-field-group data-field-label="Relation:">
+  {# FIXME: #}
+  {% if relation_row_context.field.field_type == "File" %}
+    <div style="color: orange; margin-top: calc(var(--base-rhythm) * (-3)); font-size: 0.75em;">
+      <b>Warning: Editing file relations is not supported yet.</b>
+    </div>
+  {% endif %}
+
   {%- with
     field_class_name = none,
-    field_label = "Relation UID",
+    field_editable = true if relation_row_context.field.field_type != "File" else false,
+    field_label = "Relation UID" if relation_row_context.field.field_type != "File" else "Path to file",
     field_input_name = relation_row_context.field.get_value_field_name(),
     field_placeholder = "Enter relation UID...",
     field_type = "singleline",
@@ -42,6 +51,9 @@
       name="{{ relation_row_context.field.get_type_field_name() }}"
       id="relation_typerole_{{ relation_row_context.field.field_mid }}"
       mid="{{ relation_row_context.field.field_mid }}"
+      {% if relation_row_context.field.field_type == "File" %}
+        disabled
+      {% endif %}
     >
       {% for relation_type_, relation_role_, is_current_relation_ in relation_row_context.form_object.enumerate_relation_roles(relation_row_context.field) %}
         {%- if relation_role_ is not none %}

@@ -11,11 +11,20 @@ def test_invalid_01_2_reqs_cycled():
     document_builder = DocumentBuilder()
     document_builder.add_requirement("REQ-001")
     document_builder.add_requirement("REQ-002")
-    document_builder.add_requirement_parent("REQ-002", "REQ-001")
-    document_builder.add_requirement_parent("REQ-001", "REQ-002")
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-002",
+        target_requirement_id="REQ-001",
+        role=None,
+    )
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-001",
+        target_requirement_id="REQ-002",
+        role=None,
+    )
 
     document_1 = document_builder.build()
-
     file_tree = []
     document_list = [document_1]
     map_docs_by_paths = {}
@@ -35,10 +44,30 @@ def test_invalid_02_4_reqs_cycled():
     _ = document_builder.add_requirement("REQ-002")
     _ = document_builder.add_requirement("REQ-003")
     _ = document_builder.add_requirement("REQ-004")
-    document_builder.add_requirement_parent("REQ-004", "REQ-003")
-    document_builder.add_requirement_parent("REQ-003", "REQ-002")
-    document_builder.add_requirement_parent("REQ-002", "REQ-001")
-    document_builder.add_requirement_parent("REQ-001", "REQ-004")
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-004",
+        target_requirement_id="REQ-003",
+        role=None,
+    )
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-003",
+        target_requirement_id="REQ-002",
+        role=None,
+    )
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-002",
+        target_requirement_id="REQ-001",
+        role=None,
+    )
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-001",
+        target_requirement_id="REQ-004",
+        role=None,
+    )
 
     document_1 = document_builder.build()
 
@@ -60,9 +89,24 @@ def test_invalid_03_3_reqs_cycled():
     _ = document_builder.add_requirement("REQ-001")
     _ = document_builder.add_requirement("REQ-002")
     _ = document_builder.add_requirement("REQ-003")
-    document_builder.add_requirement_parent("REQ-003", "REQ-001")
-    document_builder.add_requirement_parent("REQ-003", "REQ-002")
-    document_builder.add_requirement_parent("REQ-002", "REQ-003")
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-003",
+        target_requirement_id="REQ-001",
+        role=None,
+    )
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-003",
+        target_requirement_id="REQ-002",
+        role=None,
+    )
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-002",
+        target_requirement_id="REQ-003",
+        role=None,
+    )
 
     document_1 = document_builder.build()
 
@@ -86,11 +130,36 @@ def test_invalid_04_5_reqs_cycled():
     _ = document_builder.add_requirement("REQ-003")
     _ = document_builder.add_requirement("REQ-004")
     _ = document_builder.add_requirement("REQ-005")
-    document_builder.add_requirement_parent("REQ-002", "REQ-001")
-    document_builder.add_requirement_parent("REQ-003", "REQ-002")
-    document_builder.add_requirement_parent("REQ-004", "REQ-003")
-    document_builder.add_requirement_parent("REQ-005", "REQ-004")
-    document_builder.add_requirement_parent("REQ-003", "REQ-005")
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-002",
+        target_requirement_id="REQ-001",
+        role=None,
+    )
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-003",
+        target_requirement_id="REQ-002",
+        role=None,
+    )
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-004",
+        target_requirement_id="REQ-003",
+        role=None,
+    )
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-005",
+        target_requirement_id="REQ-004",
+        role=None,
+    )
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-003",
+        target_requirement_id="REQ-005",
+        role=None,
+    )
 
     document_1 = document_builder.build()
 
@@ -124,17 +193,47 @@ def test_invalid_05_4_reqs_good_then_3_cycled():
     _ = document_builder.add_requirement("REQ-003")
     _ = document_builder.add_requirement("REQ-004")
 
-    document_builder.add_requirement_parent("REQ-004", "REQ-003")
-    document_builder.add_requirement_parent("REQ-003", "REQ-002")
-    document_builder.add_requirement_parent("REQ-002", "REQ-001")
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-004",
+        target_requirement_id="REQ-003",
+        role=None,
+    )
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-003",
+        target_requirement_id="REQ-002",
+        role=None,
+    )
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-002",
+        target_requirement_id="REQ-001",
+        role=None,
+    )
 
     _ = document_builder.add_requirement("REQ-005")
     _ = document_builder.add_requirement("REQ-006")
     _ = document_builder.add_requirement("REQ-007")
 
-    document_builder.add_requirement_parent("REQ-006", "REQ-005")
-    document_builder.add_requirement_parent("REQ-007", "REQ-006")
-    document_builder.add_requirement_parent("REQ-005", "REQ-007")
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-006",
+        target_requirement_id="REQ-005",
+        role=None,
+    )
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-007",
+        target_requirement_id="REQ-006",
+        role=None,
+    )
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-005",
+        target_requirement_id="REQ-007",
+        role=None,
+    )
 
     document_1 = document_builder.build()
 

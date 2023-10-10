@@ -989,7 +989,6 @@ def create_main_router(
             form_object=form_object,
             requirement=requirement,
             traceability_index=export_action.traceability_index,
-            config=project_config,
         )
         result: UpdateRequirementResult = update_command.perform()
 

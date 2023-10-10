@@ -34,10 +34,30 @@ def test_valid_02_one_document_with_1req():
     requirement2 = document_builder.add_requirement("REQ-002")
     requirement3 = document_builder.add_requirement("REQ-003")
     requirement4 = document_builder.add_requirement("REQ-004")
-    document_builder.add_requirement_parent("REQ-002", "REQ-001")
-    document_builder.add_requirement_parent("REQ-003", "REQ-001")
-    document_builder.add_requirement_parent("REQ-003", "REQ-002")
-    document_builder.add_requirement_parent("REQ-004", "REQ-003")
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-002",
+        target_requirement_id="REQ-001",
+        role=None
+    )
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-003",
+        target_requirement_id="REQ-001",
+        role=None,
+    )
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-003",
+        target_requirement_id="REQ-002",
+        role=None
+    )
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-004",
+        target_requirement_id="REQ-003",
+        role=None
+    )
 
     document_1 = document_builder.build()
 
@@ -163,8 +183,9 @@ def test__adding_parent_link__04__two_requirements_remove_parent_link():
     document_builder = DocumentBuilder()
     requirement1 = document_builder.add_requirement("REQ-001")
     requirement2 = document_builder.add_requirement("REQ-002")
-    document_builder.add_requirement_parent(
-        req_id="REQ-002", parent_req_id="REQ-001"
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-002", target_requirement_id="REQ-001", role=None
     )
     document_1 = document_builder.build()
 

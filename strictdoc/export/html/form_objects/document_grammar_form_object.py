@@ -10,10 +10,10 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementField,
     GrammarElementFieldString,
+    GrammarElementRelationChild,
     GrammarElementRelationFile,
     GrammarElementRelationParent,
     RequirementFieldName,
-    GrammarElementRelationChild,
 )
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
@@ -260,7 +260,7 @@ class DocumentGrammarFormObject(ErrorObject):
             Union[
                 GrammarElementRelationParent,
                 GrammarElementRelationChild,
-                GrammarElementRelationFile
+                GrammarElementRelationFile,
             ]
         ] = []
 

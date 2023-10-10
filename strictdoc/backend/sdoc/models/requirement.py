@@ -9,6 +9,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 )
 from strictdoc.backend.sdoc.models.node import Node
 from strictdoc.backend.sdoc.models.reference import (
+    ChildReqReference,
     ParentReqReference,
     Reference,
 )
@@ -278,6 +279,37 @@ class Requirement(
             references.append(reference)
         return references
 
+    def get_requirement_reference_uids(
+        self,
+    ) -> List[Tuple[str, str, Optional[str]]]:
+        if not self.references or len(self.references) == 0:
+            return []
+        references: List[Tuple[str, str, Optional[str]]] = []
+        for reference in self.references:
+            if reference.ref_type == ReferenceType.PARENT:
+                parent_reference: ParentReqReference = assert_cast(
+                    reference, ParentReqReference
+                )
+                references.append(
+                    (
+                        parent_reference.ref_type,
+                        parent_reference.ref_uid,
+                        parent_reference.role,
+                    )
+                )
+            elif reference.ref_type == ReferenceType.CHILD:
+                child_reference: ChildReqReference = assert_cast(
+                    reference, ChildReqReference
+                )
+                references.append(
+                    (
+                        child_reference.ref_type,
+                        child_reference.ref_uid,
+                        child_reference.role,
+                    )
+                )
+        return references
+
     def get_parent_requirement_reference_uids(
         self,
     ) -> List[Tuple[str, Optional[str]]]:
@@ -291,6 +323,21 @@ class Requirement(
                 reference, ParentReqReference
             )
             references.append((parent_reference.ref_uid, parent_reference.role))
+        return references
+
+    def get_child_requirement_reference_uids(
+        self,
+    ) -> List[Tuple[str, Optional[str]]]:
+        if not self.references or len(self.references) == 0:
+            return []
+        references: List[Tuple[str, Optional[str]]] = []
+        for reference in self.references:
+            if reference.ref_type != ReferenceType.CHILD:
+                continue
+            child_reference: ChildReqReference = assert_cast(
+                reference, ChildReqReference
+            )
+            references.append((child_reference.ref_uid, child_reference.role))
         return references
 
     def enumerate_fields(self):

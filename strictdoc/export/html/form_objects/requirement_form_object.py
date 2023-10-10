@@ -208,7 +208,6 @@ class RequirementFormObject(ErrorObject):
         request_form_dict: Dict = assert_cast(
             parse_form_data(request_form_data_as_list), dict
         )
-
         requirement_fields = defaultdict(list)
         form_ref_fields: List[RequirementReferenceFormField] = []
 

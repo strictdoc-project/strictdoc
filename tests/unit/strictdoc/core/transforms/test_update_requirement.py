@@ -1,0 +1,148 @@
+﻿from strictdoc.core.commands.update_requirement import UpdateRequirementCommand
+from strictdoc.core.document_tree import DocumentTree
+from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
+from strictdoc.export.html.form_objects.requirement_form_object import (
+    RequirementFormObject,
+    RequirementReferenceFormField,
+)
+from strictdoc.helpers.mid import MID
+from tests.unit.helpers.test_document_builder import DocumentBuilder
+
+
+def test_01_adding_a_second_parent_relation_with_role():
+    document_builder = DocumentBuilder()
+    requirement1 = document_builder.add_requirement("REQ-001")
+    requirement2 = document_builder.add_requirement("REQ-002")
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-002",
+        target_requirement_id="REQ-001",
+        role="Refines",
+    )
+    assert len(requirement2.references) == 1
+
+    document_1 = document_builder.build()
+
+    file_tree = []
+    document_list = [document_1]
+    map_docs_by_paths = {}
+    document_tree = DocumentTree(
+        file_tree=file_tree,
+        document_list=document_list,
+        map_docs_by_paths=map_docs_by_paths,
+        map_docs_by_rel_paths={},
+    )
+    traceability_index: TraceabilityIndex = (
+        TraceabilityIndexBuilder.create_from_document_tree(document_tree)
+    )
+    traceability_index.document_tree = document_tree
+    assert traceability_index.get_parent_requirements(requirement1) == []
+
+    requirement2_parents = list(
+        traceability_index.get_parent_relations_with_roles(requirement2)
+    )
+    assert requirement2_parents == [(requirement1, "Refines")]
+
+    form_object: RequirementFormObject = (
+        RequirementFormObject.create_from_requirement(requirement=requirement2)
+    )
+    update_command = UpdateRequirementCommand(
+        form_object=form_object,
+        requirement=requirement2,
+        traceability_index=traceability_index,
+    )
+    update_command.perform()
+    assert len(requirement2.references) == 1
+
+    form_object.reference_fields.append(
+        RequirementReferenceFormField(
+            field_mid=MID.create().get_string_value(),
+            field_type=RequirementReferenceFormField.FieldType.PARENT,
+            field_value="REQ-001",
+            field_role="Implements",
+        )
+    )
+    update_command.perform()
+
+    assert len(requirement2.references) == 2
+    requirement2_parents = list(
+        traceability_index.get_parent_relations_with_roles(requirement2)
+    )
+    assert requirement2_parents == [
+        (requirement1, "Refines"),
+        (requirement1, "Implements"),
+    ]
+
+
+def test_20_adding_a_second_child_relation_with_role():
+    document_builder = DocumentBuilder()
+    requirement1 = document_builder.add_requirement("REQ-001")
+    requirement2 = document_builder.add_requirement("REQ-002")
+    document_builder.add_requirement_relation(
+        relation_type="Child",
+        source_requirement_id="REQ-002",
+        target_requirement_id="REQ-001",
+        role="IsRefinedBy",
+    )
+
+    assert len(requirement2.references) == 1
+
+    document_1 = document_builder.build()
+
+    file_tree = []
+    document_list = [document_1]
+    map_docs_by_paths = {}
+    document_tree = DocumentTree(
+        file_tree=file_tree,
+        document_list=document_list,
+        map_docs_by_paths=map_docs_by_paths,
+        map_docs_by_rel_paths={},
+    )
+    traceability_index: TraceabilityIndex = (
+        TraceabilityIndexBuilder.create_from_document_tree(document_tree)
+    )
+    traceability_index.document_tree = document_tree
+    requirement1_parents = list(
+        traceability_index.get_parent_relations_with_roles(requirement1)
+    )
+    assert requirement1_parents == [(requirement2, "IsRefinedBy")]
+
+    requirement2_children = list(
+        traceability_index.get_child_relations_with_roles(requirement2)
+    )
+    assert requirement2_children == [(requirement1, "IsRefinedBy")]
+
+    form_object: RequirementFormObject = (
+        RequirementFormObject.create_from_requirement(requirement=requirement2)
+    )
+    form_object.reference_fields.append(
+        RequirementReferenceFormField(
+            field_mid=MID.create().get_string_value(),
+            field_type=RequirementReferenceFormField.FieldType.CHILD,
+            field_value="REQ-001",
+            field_role="IsImplementedBy",
+        )
+    )
+    update_command = UpdateRequirementCommand(
+        form_object=form_object,
+        requirement=requirement2,
+        traceability_index=traceability_index,
+    )
+    update_command.perform()
+
+    requirement1_parents = list(
+        traceability_index.get_parent_relations_with_roles(requirement1)
+    )
+    assert requirement1_parents == [
+        (requirement2, "IsRefinedBy"),
+        (requirement2, "IsImplementedBy"),
+    ]
+
+    requirement2_children = list(
+        traceability_index.get_child_relations_with_roles(requirement2)
+    )
+    assert requirement2_children == [
+        (requirement1, "IsRefinedBy"),
+        (requirement1, "IsImplementedBy"),
+    ]

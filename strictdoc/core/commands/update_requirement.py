@@ -11,7 +11,6 @@ from strictdoc.backend.sdoc.models.requirement import (
     RequirementField,
 )
 from strictdoc.backend.sdoc.models.type_system import RequirementFieldName
-from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import (
     RequirementConnections,
     TraceabilityIndex,
@@ -23,8 +22,12 @@ from strictdoc.export.html.form_objects.requirement_form_object import (
 
 class UpdateRequirementActionObject:
     def __init__(self):
-        self.existing_references_uids: Set[Tuple[str, Optional[str]]] = set()
-        self.reference_ids_to_remove: Set[Tuple[str, Optional[str]]] = set()
+        self.existing_references_uids: Set[
+            Tuple[str, str, Optional[str]]
+        ] = set()
+        self.reference_ids_to_remove: Set[
+            Tuple[str, str, Optional[str]]
+        ] = set()
         self.removed_uid_parent_documents_to_update: Set[Document] = set()
         # All requirements that have to be updated. This set includes
         # the requirement itself, all links it was linking to
@@ -45,7 +48,6 @@ class UpdateRequirementCommand:
         form_object: RequirementFormObject,
         requirement: Requirement,
         traceability_index: TraceabilityIndex,
-        config: ProjectConfig,
     ):
         self.form_object: RequirementFormObject = form_object
         self.requirement: Requirement = requirement
@@ -74,7 +76,7 @@ class UpdateRequirementCommand:
 
         action_object = UpdateRequirementActionObject()
         action_object.existing_references_uids.update(
-            requirement.get_parent_requirement_reference_uids()
+            requirement.get_requirement_reference_uids()
         )
         action_object.reference_ids_to_remove = copy(
             action_object.existing_references_uids
@@ -114,19 +116,36 @@ class UpdateRequirementCommand:
                 else None
             )
             # If a link is in the form, we don't want to remove it.
-            if (ref_uid, ref_role) in action_object.reference_ids_to_remove:
+            if (
+                reference_field.field_type,
+                ref_uid,
+                ref_role,
+            ) in action_object.reference_ids_to_remove:
                 action_object.reference_ids_to_remove.remove(
-                    (ref_uid, ref_role)
+                    (reference_field.field_type, ref_uid, ref_role)
                 )
             # If a link is already in the requirement and traceability index,
             # there is nothing to do.
-            if (ref_uid, ref_role) in action_object.existing_references_uids:
+            if (
+                reference_field.field_type,
+                ref_uid,
+                ref_role,
+            ) in action_object.existing_references_uids:
                 continue
-            traceability_index.update_requirement_parent_uid(
-                requirement=requirement,
-                parent_uid=ref_uid,
-                role=reference_field.field_role,
-            )
+            if reference_field.field_type == "Parent":
+                traceability_index.update_requirement_parent_uid(
+                    requirement=requirement,
+                    parent_uid=ref_uid,
+                    role=reference_field.field_role,
+                )
+            elif reference_field.field_type == "Child":
+                traceability_index.update_requirement_child_uid(
+                    requirement=requirement,
+                    child_uid=ref_uid,
+                    role=reference_field.field_role,
+                )
+            else:
+                raise AssertionError(f"Must not reach here: {reference_field}")
 
         # Updating Traceability Index: UID
         traceability_index.mut_rename_uid_to_a_requirement(
@@ -134,7 +153,11 @@ class UpdateRequirementCommand:
         )
 
         # Calculate which documents and requirements have to be regenerated.
-        for reference_id_to_remove, _ in action_object.reference_ids_to_remove:
+        for (
+            _,
+            reference_id_to_remove,
+            _,
+        ) in action_object.reference_ids_to_remove:
             removed_uid_parent_requirement = (
                 traceability_index.requirements_connections[
                     reference_id_to_remove
@@ -151,14 +174,22 @@ class UpdateRequirementCommand:
                 )
 
         for (
+            relation_type_,
             reference_id_to_remove,
             reference_id_to_remove_role,
         ) in action_object.reference_ids_to_remove:
-            traceability_index.remove_requirement_parent_uid(
-                requirement=requirement,
-                parent_uid=reference_id_to_remove,
-                role=reference_id_to_remove_role,
-            )
+            if relation_type_ == "Parent":
+                traceability_index.remove_requirement_parent_uid(
+                    requirement=requirement,
+                    parent_uid=reference_id_to_remove,
+                    role=reference_id_to_remove_role,
+                )
+            elif relation_type_ == "Child":
+                traceability_index.remove_requirement_child_uid(
+                    requirement=requirement,
+                    child_uid=reference_id_to_remove,
+                    role=reference_id_to_remove_role,
+                )
 
         # Rendering back the Turbo template for each changed requirement.
         for reference_field in form_object.reference_fields:

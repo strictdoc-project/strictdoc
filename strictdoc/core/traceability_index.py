@@ -37,9 +37,9 @@ class RequirementConnections:
         self.parents: List[Tuple[Requirement, Optional[str]]] = parents
         self.children: List[Tuple[Requirement, Optional[str]]] = children
 
-    def contains_uid(self, uid: str) -> bool:
-        for parent_, _ in self.parents:
-            if parent_.reserved_uid == uid:
+    def contains_uid(self, uid: str, role: Optional[str]) -> bool:
+        for parent_, role_ in self.parents:
+            if parent_.reserved_uid == uid and role_ == role:
                 return True
         return False
 
@@ -402,8 +402,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         requirement_connections: RequirementConnections = (
             self._requirements_parents[requirement.reserved_uid]
         )
-        # If the parent uid already exists, there is nothing to do.
-        if requirement_connections.contains_uid(parent_uid):
+        # If a relation to the parent uid through a given role already exists,
+        # there is nothing to do.
+        if requirement_connections.contains_uid(parent_uid, role):
             return
         parent_requirement_connections: RequirementConnections = (
             self._requirements_parents[parent_uid]
@@ -430,6 +431,43 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         if parent_requirement_document != document:
             parent_requirement_document.ng_needs_generation = True
 
+    def update_requirement_child_uid(
+        self, requirement: Requirement, child_uid: str, role: Optional[str]
+    ) -> None:
+        assert requirement.reserved_uid is not None
+        assert isinstance(child_uid, str), child_uid
+        requirement_connections: RequirementConnections = (
+            self._requirements_parents[requirement.reserved_uid]
+        )
+        # If a relation to the parent uid through a given role already exists,
+        # there is nothing to do.
+        if requirement_connections.contains_uid(child_uid, role):
+            return
+        child_requirement_connections: RequirementConnections = (
+            self._requirements_parents[child_uid]
+        )
+
+        child_requirement = child_requirement_connections.requirement
+        document = requirement.document
+        child_requirement_document = child_requirement.document
+
+        requirement_connections.children.append((child_requirement, role))
+        child_requirement_connections.parents.append((requirement, role))
+        self._document_parents_map[document].add(child_requirement_document)
+        self._document_children_map[child_requirement_document].add(document)
+        cycle_detector = TreeCycleDetector()
+        cycle_detector.check_node(
+            requirement.reserved_uid,
+            lambda requirement_id: self.requirements_connections[
+                requirement_id
+            ].get_child_uids(),
+        )
+
+        # Mark document and parent document (if different) for re-generation.
+        document.ng_needs_generation = True
+        if child_requirement_document != document:
+            child_requirement_document.ng_needs_generation = True
+
     def remove_requirement_parent_uid(
         self, requirement: Requirement, parent_uid: str, role: Optional[str]
     ) -> None:
@@ -449,32 +487,45 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         requirement_connections.parents.remove((parent_requirement, role))
         parent_requirement_connections.children.remove((requirement, role))
 
-        # If there are no requirements linking with the parent document,
+        # If there are no requirements linking between the documents,
         # remove the link.
-        should_disconnect_documents = True
-        for node in self.document_iterators[document].all_content():
-            if not node.is_requirement:
-                continue
-            requirement_node: Requirement = node
-            if requirement_node in map(
-                lambda child_pair_: child_pair_[0],
-                parent_requirement_connections.children,
-            ):
-                should_disconnect_documents = False
-                break
-
-        if should_disconnect_documents:
-            self._document_parents_map[document].remove(
-                parent_requirement_document
-            )
-            self._document_children_map[parent_requirement_document].remove(
-                document
-            )
+        self.disconnect_two_documents_if_no_links_left(
+            document, parent_requirement_document
+        )
 
         # Mark document and parent document (if different) for re-generation.
         document.ng_needs_generation = True
         if parent_requirement_document != document:
             parent_requirement_document.ng_needs_generation = True
+
+    def remove_requirement_child_uid(
+        self, requirement: Requirement, child_uid: str, role: Optional[str]
+    ) -> None:
+        assert requirement.reserved_uid is not None
+        assert isinstance(child_uid, str), child_uid
+        requirement_connections: RequirementConnections = (
+            self._requirements_parents[requirement.reserved_uid]
+        )
+        child_requirement_connections: RequirementConnections = (
+            self._requirements_parents[child_uid]
+        )
+        child_requirement = child_requirement_connections.requirement
+        document = requirement.document
+        child_requirement_document = child_requirement.document
+
+        requirement_connections.children.remove((child_requirement, role))
+        child_requirement_connections.parents.remove((requirement, role))
+
+        # If there are no requirements linking between the documents,
+        # remove the link.
+        self.disconnect_two_documents_if_no_links_left(
+            document, child_requirement_document
+        )
+
+        # Mark document and parent document (if different) for re-generation.
+        document.ng_needs_generation = True
+        if child_requirement_document != document:
+            child_requirement_document.ng_needs_generation = True
 
     def remove_inline_link(self, inline_link: InlineLink) -> None:
         sections_with_incoming_links = (
@@ -652,3 +703,30 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         self.graph_database.add_node_by_mid(
             mid=anchor.mid, uid=anchor.value, node=anchor
         )
+
+    def disconnect_two_documents_if_no_links_left(
+        self, document, other_document
+    ):
+        for node in self.document_iterators[document].all_content():
+            if not node.is_requirement:
+                continue
+            requirement_node: Requirement = node
+            assert requirement_node.reserved_uid is not None
+            requirement_connections = self._requirements_parents[
+                requirement_node.reserved_uid
+            ]
+
+            # If at least one parent or child relation points to the other
+            # document, terminate, not deleting the link between documents.
+            for parent_requirement_, _ in requirement_connections.parents:
+                if parent_requirement_.document == other_document:
+                    return
+
+            for child_requirement_, _ in requirement_connections.children:
+                if child_requirement_.document == other_document:
+                    return
+
+        self._document_parents_map[document].discard(other_document)
+        self._document_parents_map[other_document].discard(document)
+        self._document_children_map[document].discard(other_document)
+        self._document_children_map[other_document].discard(document)

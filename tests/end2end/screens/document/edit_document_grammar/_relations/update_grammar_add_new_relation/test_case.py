@@ -42,5 +42,6 @@ class Test(E2ECase):
             )
 
             form_edit_grammar.do_form_submit()
+            screen_document.assert_text("1. Requirement title")
 
         assert test_setup.compare_sandbox_and_expected_output()

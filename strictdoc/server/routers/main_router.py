@@ -1,9 +1,8 @@
 import os
 import re
-from collections import OrderedDict
 from mimetypes import guess_type
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple, Union
+from typing import Dict, List, Optional, Union
 
 from fastapi import APIRouter, Form, UploadFile
 from jinja2 import Environment
@@ -31,7 +30,6 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
-    RequirementField,
 )
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.writer import SDWriter
@@ -52,6 +50,7 @@ from strictdoc.core.commands.update_document_config import (
     MultipleValidationError,
     UpdateDocumentConfigCommand,
 )
+from strictdoc.core.commands.update_grammar import UpdateGrammarCommand
 from strictdoc.core.commands.update_requirement import (
     UpdateRequirementCommand,
     UpdateRequirementResult,
@@ -883,8 +882,10 @@ def create_main_router(
                 MID(requirement_id)
             )
         )
-        form_object = RequirementFormObject.create_from_requirement(
-            requirement=requirement
+        form_object: RequirementFormObject = (
+            RequirementFormObject.create_from_requirement(
+                requirement=requirement
+            )
         )
         document = requirement.document
         template = env().get_template(
@@ -1863,46 +1864,13 @@ def create_main_router(
                 },
             )
 
-        grammar_fields = {}
-        for grammar_field in document.grammar.elements[0].fields:
-            grammar_fields[grammar_field.mid.value] = grammar_field
-
-        # Prepare fields that could have been renamed by the user has just saved the form.
-        renamed_fields_lookup = {}
-        for field in form_object.fields:
-            if field.field_mid not in grammar_fields:
-                continue
-            existing_field = grammar_fields[field.field_mid]
-            if field.field_name != existing_field.title:
-                renamed_fields_lookup[field.field_name] = existing_field.title
-
-        # Create new grammar.
-        document_grammar: DocumentGrammar = (
-            form_object.convert_to_document_grammar()
+        # Update the document with new grammar.
+        update_grammar_action = UpdateGrammarCommand(
+            form_object=form_object,
+            document=document,
+            traceability_index=export_action.traceability_index,
         )
-
-        # Compare if anything was changed in the new grammar.
-        document_grammar_field_names = document_grammar.fields_order_by_type[
-            "REQUIREMENT"
-        ]
-        existing_document_grammar_field_names = (
-            document.grammar.fields_order_by_type["REQUIREMENT"]
-        )
-        grammar_changed = (
-            document_grammar_field_names
-            != existing_document_grammar_field_names
-        )
-        existing_requirement_element = document.grammar.elements_by_type[
-            "REQUIREMENT"
-        ]
-        new_requirement_element = document_grammar.elements_by_type[
-            "REQUIREMENT"
-        ]
-        grammar_changed = (
-            grammar_changed
-            or existing_requirement_element.relations
-            != new_requirement_element.relations
-        )
+        grammar_changed = update_grammar_action.perform()
 
         # If the grammar has not changed, do nothing and save the edit form.
         if not grammar_changed:
@@ -1936,75 +1904,6 @@ def create_main_router(
                     "Content-Type": "text/vnd.turbo-stream.html",
                 },
             )
-
-        # Update the document with new grammar.
-        document_grammar.parent = document
-        document.grammar = document_grammar
-
-        document_iterator = export_action.traceability_index.document_iterators[
-            document
-        ]
-
-        for node in document_iterator.all_content():
-            if not node.is_requirement:
-                continue
-
-            requirement: Requirement = assert_cast(node, Requirement)
-            requirement_field_names = list(
-                requirement.ordered_fields_lookup.keys()
-            )
-
-            # Rewrite requirement fields because some fields could have been
-            # renamed.
-            new_ordered_fields_lookup: OrderedDict[
-                str, List[RequirementField]
-            ] = OrderedDict()
-
-            for document_grammar_field_name in document_grammar_field_names:
-                # We need to find a previous field name in case the field was
-                # renamed.
-                previous_field_name = renamed_fields_lookup.get(
-                    document_grammar_field_name, document_grammar_field_name
-                )
-
-                # If the field does not exist in the grammar fields anymore,
-                # delete the requirement field.
-                if previous_field_name not in requirement_field_names:
-                    continue
-
-                previous_fields: List[
-                    RequirementField
-                ] = requirement.ordered_fields_lookup[previous_field_name]
-                for previous_field in previous_fields:
-                    previous_field.field_name = document_grammar_field_name
-
-                new_ordered_fields_lookup[
-                    document_grammar_field_name
-                ] = previous_fields
-
-            registered_relation_types: Set[Tuple[str, Optional[str]]] = set()
-            for relation in existing_requirement_element.relations:
-                registered_relation_types.add(
-                    (relation.relation_type, relation.relation_role)
-                )
-            if "REFS" in requirement.ordered_fields_lookup:
-                for requirement_field in requirement.ordered_fields_lookup[
-                    "REFS"
-                ]:
-                    new_ordered_fields_lookup["REFS"] = []
-                    for (
-                        requirement_relation
-                    ) in requirement_field.field_value_references:
-                        if (
-                            requirement_relation.ref_type,
-                            requirement_relation.role,
-                        ) in registered_relation_types:
-                            new_ordered_fields_lookup["REFS"].append(
-                                requirement_field
-                            )
-
-            requirement.ordered_fields_lookup = new_ordered_fields_lookup
-            requirement.ng_reserved_fields_cache.clear()
 
         # Re-generate the document's SDOC.
         document_content = SDWriter().write(document)
@@ -2048,6 +1947,9 @@ def create_main_router(
             renderer=markup_renderer,
             document_type=DocumentType.document(),
         )
+        document_iterator = export_action.traceability_index.document_iterators[
+            document
+        ]
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,

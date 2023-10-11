@@ -3,6 +3,8 @@ from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
+from strictdoc.helpers.mid import MID
+
 
 class Form:  # pylint: disable=invalid-name
     def __init__(self, test_case: BaseCase) -> None:
@@ -56,16 +58,18 @@ class Form:  # pylint: disable=invalid-name
     def do_delete_field(self, field_name: str, field_order: int = 1) -> None:
         assert isinstance(field_name, str)
         self.test_case.click_xpath(
-            f"(//*[@data-testid='form-delete-{field_name}-field-action'])"
+            f"(//*[@data-testid='form-delete-field-action-{field_name}'])"
             f"[{field_order}]"
         )
 
     # MOVE fields
 
-    def do_move_field_up(self, field_name: str = "") -> None:
-        assert isinstance(field_name, str)
+    def do_move_field_up(self, mid: MID, test_id: str) -> None:
+        assert isinstance(mid, MID)
         self.test_case.click_xpath(
-            f"(//*[@data-testid='form-move-up-{field_name}-field-action'])"
+            f"(//*[@mid='{mid.get_string_value()}' "
+            "and "
+            f"@data-testid='{test_id}'])"
         )
 
     def do_move_field_down(self, field_name: str = "") -> None:
@@ -86,8 +90,21 @@ class Form:  # pylint: disable=invalid-name
 
         self.test_case.type(
             (
-                f"(//*[@data-testid='form-{field_name}-field'])"
+                f"(//*[@data-testid='form-field-{field_name}'])"
                 f"[{field_order_str}]"
+            ),
+            f"{field_value}",
+            by=By.XPATH,
+        )
+
+    def do_fill_in_mid(self, mid: MID, test_id: str, field_value: str) -> None:
+        assert isinstance(mid, MID)
+        assert isinstance(test_id, str)
+        assert isinstance(field_value, str)
+
+        self.test_case.type(
+            (
+                f"(//*[@mid='{mid.get_string_value()}' and @data-testid='{test_id}'])"
             ),
             f"{field_value}",
             by=By.XPATH,
@@ -97,12 +114,12 @@ class Form:  # pylint: disable=invalid-name
         assert isinstance(field_name, str)
         # HACK: The only way the field is actually cleared.
         self.test_case.type(
-            f"(//*[@data-testid='form-{field_name}-field'])[{field_order}]",
+            f"(//*[@data-testid='form-field-{field_name}'])[{field_order}]",
             "1",
             by=By.XPATH,
         )
         this_field = self.test_case.find_visible_elements(
-            f"//*[@data-testid='form-{field_name}-field']"
+            f"//*[@data-testid='form-field-{field_name}']"
         )[0]
         this_field.send_keys(Keys.BACKSPACE)
 

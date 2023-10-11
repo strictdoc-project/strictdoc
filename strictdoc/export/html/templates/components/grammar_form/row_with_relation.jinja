@@ -1,0 +1,79 @@
+{%- extends "components/form/row.jinja" %}
+
+{% assert relation_row_context is defined, "relation_row_context: relation_row_context must be defined." %}
+
+{% assert relation_row_context.errors is defined, "relation_row_context: errors must be defined." %}
+{% assert relation_row_context.relation is defined, "relation_row_context: relation must be defined." %}
+
+{%- set row_context = relation_row_context -%}
+{%- set row_context.errors = relation_row_context.errors -%}
+
+{% block row_form_attributes %}
+  data-controller="deletable_field movable_field"
+  mid="{{ relation_row_context.relation.relation_mid }}"
+  data-testid="grammar-form-relation-row"
+{% endblock row_form_attributes %}
+
+{% block row_left %}
+{# Explicitly nothing. #}
+{% endblock row_left %}
+
+{% block row_content scoped %}
+  <sdoc-form-field-group data-field-label="Relation:">
+  {% if
+    relation_row_context.relation.relation_type == "Parent"
+    or
+    relation_row_context.relation.relation_type == "Child"
+    or
+    relation_row_context.relation.relation_type == "File"
+  -%}
+    <sdoc-form-field field-type="select">
+      <label for="relation_type_{{ relation_row_context.relation.relation_mid }}">Relation type</label>
+        <select
+          class="sdoc-form-select"
+          name="{{ relation_row_context.relation.relation_type_input_name() }}"
+          id="relation_type_{{ relation_row_context.relation.relation_mid }}"
+          mid="{{ relation_row_context.relation.relation_mid }}"
+          data-testid="select-relation-type"
+        >
+          <option
+            value="Parent"
+            {{ "selected" if relation_row_context.relation.relation_type == "Parent" else "" }}
+          >Parent</option>
+          <option
+            value="Child"
+            {{ "selected" if relation_row_context.relation.relation_type == "Child" else "" }}
+          >Child</option>
+          <option
+            value="File"
+            {{ "selected" if relation_row_context.relation.relation_type == "File" else "" }}
+          >File</option>
+        </select>
+    </sdoc-form-field>
+
+    {%- with
+      field_class_name = "monospace",
+      field_editable = true,
+      field_input_name = relation_row_context.relation.relation_role_input_name(),
+      field_label = "Relation role:",
+      field_placeholder = "Enter relation role here...",
+      field_type = "singleline",
+      field_value = relation_row_context.relation.relation_role,
+      mid = relation_row_context.relation.relation_mid,
+      testid_postfix = "relation-role"
+    %}
+      {%- include "components/form/new_field/index.jinja" %}
+    {%- endwith -%}
+
+  {% endif %}
+  </sdoc-form-field-group>
+{% endblock row_content %}
+
+{% block row_right %}
+  {%- set action_button_context = namespace() %}
+  {%- set action_button_context.field_actions = {"delete": true} %}
+  {%- set action_button_context.field_name = "parent link" %}
+  {%- set action_button_context.mid = relation_row_context.relation.relation_mid %}
+  {%- set action_button_context.testid_postfix = "relation" %}
+  {%- include "components/form/field_action_button/index.jinja" -%}
+{% endblock row_right %}

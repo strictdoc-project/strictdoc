@@ -46,7 +46,6 @@ ELEMENTS:
     REQUIRED: False
   RELATIONS:
   - TYPE: Parent
-  - TYPE: Child
   - TYPE: File
 
 [REQUIREMENT]
@@ -72,3 +71,30 @@ setup the DUT in jig A-1 and confimr the statement is true under all conditions
 CRITICALITY: >>>
 high
 <<<
+
+[REQUIREMENT]
+UID: A-2
+STATEMENT: >>>
+a statement
+<<<
+COMMENT: >>>
+a comment
+<<<
+APPLICABLE_COMPONENT_CATEGORIES: >>>
+all
+<<<
+CATEGORY: >>>
+something
+<<<
+PUBLIC_REQUIREMENTS_REFERENCES_OR_DESCRIPTIONS: >>>
+NIST 800-53 AC501
+<<<
+VERIFICATION_INSPECTION__DEMONSTRATION__TEST__OR_ANALYSIS: >>>
+setup the DUT in jig A-1 and confimr the statement is true under all conditions
+<<<
+CRITICALITY: >>>
+high
+<<<
+REFS:
+- TYPE: Parent
+  VALUE: A-1

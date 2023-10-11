@@ -59,7 +59,6 @@ DEFAULT_SDOC_GRAMMAR_FIELDS = [
     "ReqIF.Text",
     "RATIONALE",
     "NOTES",
-    "REFS",
     "ReqIF.ChapterName",
 ]
 

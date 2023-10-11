@@ -77,6 +77,10 @@ GrammarElementRelationFile[noskipws]:
   '  - TYPE: ' relation_type='File' '\n'
 ;
 
+GrammarElementRelationBibtex[noskipws]:
+  '  - TYPE: ' relation_type='BibTex' '\n'
+;
+
 GrammarElementField[noskipws]:
   GrammarElementFieldString |
   GrammarElementFieldSingleChoice |

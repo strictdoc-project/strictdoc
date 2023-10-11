@@ -33,7 +33,6 @@ class Test_UC55_T01_ImportDocumentFromReqIF(E2ECase):
                 screen_project_index.do_open_modal_import_reqif()
             )
             form_import.do_choose_file(path_to_reqif_sample)
-
             form_import.do_form_submit()
 
         assert test_setup.compare_sandbox_and_expected_output()

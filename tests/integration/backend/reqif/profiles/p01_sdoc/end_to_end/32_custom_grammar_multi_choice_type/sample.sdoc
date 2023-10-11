@@ -13,6 +13,7 @@ ELEMENTS:
     REQUIRED: False
   RELATIONS:
   - TYPE: Parent
+  - TYPE: File
 
 [REQUIREMENT]
 CHOICE_FIELD: A, B

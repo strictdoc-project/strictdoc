@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document
@@ -9,6 +9,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 )
 from strictdoc.backend.sdoc.models.node import Node
 from strictdoc.backend.sdoc.models.reference import (
+    ChildReqReference,
     ParentReqReference,
     Reference,
 )
@@ -278,17 +279,65 @@ class Requirement(
             references.append(reference)
         return references
 
-    def get_parent_requirement_reference_uids(self) -> List[str]:
+    def get_requirement_reference_uids(
+        self,
+    ) -> List[Tuple[str, str, Optional[str]]]:
         if not self.references or len(self.references) == 0:
             return []
-        references: List[str] = []
+        references: List[Tuple[str, str, Optional[str]]] = []
+        for reference in self.references:
+            if reference.ref_type == ReferenceType.PARENT:
+                parent_reference: ParentReqReference = assert_cast(
+                    reference, ParentReqReference
+                )
+                references.append(
+                    (
+                        parent_reference.ref_type,
+                        parent_reference.ref_uid,
+                        parent_reference.role,
+                    )
+                )
+            elif reference.ref_type == ReferenceType.CHILD:
+                child_reference: ChildReqReference = assert_cast(
+                    reference, ChildReqReference
+                )
+                references.append(
+                    (
+                        child_reference.ref_type,
+                        child_reference.ref_uid,
+                        child_reference.role,
+                    )
+                )
+        return references
+
+    def get_parent_requirement_reference_uids(
+        self,
+    ) -> List[Tuple[str, Optional[str]]]:
+        if not self.references or len(self.references) == 0:
+            return []
+        references: List[Tuple[str, Optional[str]]] = []
         for reference in self.references:
             if reference.ref_type != ReferenceType.PARENT:
                 continue
             parent_reference: ParentReqReference = assert_cast(
                 reference, ParentReqReference
             )
-            references.append(parent_reference.ref_uid)
+            references.append((parent_reference.ref_uid, parent_reference.role))
+        return references
+
+    def get_child_requirement_reference_uids(
+        self,
+    ) -> List[Tuple[str, Optional[str]]]:
+        if not self.references or len(self.references) == 0:
+            return []
+        references: List[Tuple[str, Optional[str]]] = []
+        for reference in self.references:
+            if reference.ref_type != ReferenceType.CHILD:
+                continue
+            child_reference: ChildReqReference = assert_cast(
+                reference, ChildReqReference
+            )
+            references.append((child_reference.ref_uid, child_reference.role))
         return references
 
     def enumerate_fields(self):
@@ -404,13 +453,17 @@ class Requirement(
 
         # If a field value is being removed, there is not much to do.
         if value is None or len(value) == 0:
-            # See FIXME: [1].
+            # Comment is a special because there can be multiple comments.
+            # Empty comments are simply ignored and do not show up in the
+            # updated requirement.
             if field_name == RequirementFieldName.COMMENT:
                 return
 
             if field_name in self.ordered_fields_lookup:
                 del self.ordered_fields_lookup[field_name]
             return
+
+        # If a field value is being added or updated.
 
         document: Document = self.document
         grammar_or_none: Optional[DocumentGrammar] = document.grammar

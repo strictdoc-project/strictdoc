@@ -1,3 +1,4 @@
+from strictdoc.helpers.mid import MID
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.screens.document.form_edit_grammar import (
@@ -36,7 +37,10 @@ class Test(E2ECase):
             )
             form_edit_grammar.assert_on_grammar()
 
-            form_edit_grammar.do_delete_grammar_field("LEVEL")
+            level_grammar_field: MID = (
+                form_edit_grammar.get_existing_mid_by_field_name("LEVEL")
+            )
+            form_edit_grammar.do_delete_grammar_field(level_grammar_field)
 
             form_edit_grammar.do_form_submit()
 

@@ -1,0 +1,22 @@
+[DOCUMENT]
+TITLE: Sample doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  RELATIONS:
+  - TYPE: Child
+
+[REQUIREMENT]
+UID: REQ-1
+REFS:
+- TYPE: Child
+  VALUE: REQ-CHILD-1
+STATEMENT: Sample statement.

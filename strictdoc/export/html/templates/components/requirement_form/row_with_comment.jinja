@@ -9,21 +9,44 @@
 {%- set row_context.field_actions = { 'delete':true } -%}
 
 {% block row_form_attributes %}
-data-controller="deletable_field"
+  data-controller="deletable_field"
+  data-testid="requirement-form-comment-row"
+  mid="{{ comment_field_row_context.field.field_mid }}"
 {% endblock row_form_attributes %}
 
-{% block row_content scoped %}
+{% block row_left %}
+  {# Explicitly nothing. #}
+{% endblock row_left %}
 
+{% block row_content scoped %}
   {%- with
     field_class_name = none,
     field_input_name = comment_field_row_context.field.get_input_field_name(),
     field_label = comment_field_row_context.field.field_name,
-    field_name = comment_field_row_context.field.field_name,
     field_placeholder = "Enter comment here...",
     field_type = "multiline",
-    field_value = comment_field_row_context.field.field_escaped_value
+    field_value = comment_field_row_context.field.field_escaped_value,
+    mid = comment_field_row_context.field.field_mid,
+    testid_postfix = "requirement-field-COMMENT"
   %}
   {%- include "components/form/new_field/index.jinja" %}
   {%- endwith -%}
 
+  <input
+    type="hidden"
+    name="{{ comment_field_row_context.field.get_input_field_type_name() }}"
+    value="{{ comment_field_row_context.field.field_name }}"
+  />
+
 {% endblock row_content %}
+
+{% block row_right %}
+
+  {%- set action_button_context = namespace() %}
+  {%- set action_button_context.field_actions = {"delete": true} %}
+  {%- set action_button_context.field_name = "requirement comment" %}
+  {%- set action_button_context.mid = comment_field_row_context.field.field_mid %}
+  {%- set action_button_context.testid_postfix = "requirement-comment" %}
+  {%- include "components/form/field_action_button/index.jinja" -%}
+
+{% endblock row_right %}

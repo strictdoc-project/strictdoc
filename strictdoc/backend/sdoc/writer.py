@@ -8,6 +8,7 @@ from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.reference import (
     BibReference,
+    ChildReqReference,
     FileReference,
     ParentReqReference,
     Reference,
@@ -386,4 +387,15 @@ class SDWriter:
                     output += "  ROLE: "
                     output += parent_reference.role
                     output += "\n"
+            elif isinstance(reference, ChildReqReference):
+                child_reference: ChildReqReference = reference
+                output += "  VALUE: "
+                output += child_reference.ref_uid
+                output += "\n"
+                if child_reference.role is not None:
+                    output += "  ROLE: "
+                    output += child_reference.role
+                    output += "\n"
+            else:
+                raise AssertionError("Must not reach here.")
         return output

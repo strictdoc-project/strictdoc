@@ -62,8 +62,16 @@ class Test(E2ECase):
             form_edit_requirement: Form_EditRequirement = (
                 requirement2.do_open_form_edit_requirement()
             )
-            form_edit_requirement.do_form_add_field_parent_link()
-            form_edit_requirement.do_fill_in_field_parent_link("REQ-001")
+            new_relation_mid = (
+                form_edit_requirement.do_form_add_field_parent_link()
+            )
+            form_edit_requirement.do_fill_in_field_parent_link(
+                new_relation_mid, "REQ-001"
+            )
+            form_edit_requirement.do_select_relation_role(
+                new_relation_mid, "Parent"
+            )
+
             form_edit_requirement.do_form_submit()
 
         assert test_setup.compare_sandbox_and_expected_output()

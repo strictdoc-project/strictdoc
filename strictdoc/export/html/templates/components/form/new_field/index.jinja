@@ -2,11 +2,13 @@
 {%- assert field_input_name is defined, "field_input_name is defined" -%}
 {%- assert field_label is defined, "field_label is defined" -%}
 {%- assert field_label is not none, "field_label is not none" -%}
-{%- assert field_name is defined, "field_name is defined" -%}
-{%- assert field_name is not none, "field_name is not none" -%}
+{# FIXME: Remove #}
+{%- assert field_name is not defined, "field_name is not defined" -%}
 {%- assert field_placeholder is defined, "field_placeholder is defined" -%}
 {%- assert field_placeholder is not none, "field_placeholder is not none" -%}
 {%- assert field_value is defined, "field_value is defined" -%}
+{%- assert mid is defined, "mid is defined" -%}
+{%- assert testid_postfix is defined, "testid_postfix is defined" -%}
 
 <sdoc-form-field>
 
@@ -20,12 +22,13 @@
       contenteditable="true"
     {%- endif -%}
     id="{{ field_input_name }}"
+    mid="{{ mid }}"
     placeholder="{{ field_placeholder }}"
     data-field-label="{{ field_label }}"
     {%- if field_class_name is not none -%}
       class="{{ field_class_name }}"
     {%- endif -%}
-    data-testid="form-{{ field_input_name }}-field"
+    data-testid="form-field-{{ testid_postfix }}"
   >
     {%- if true -%}
       {{ field_value }}

@@ -126,6 +126,7 @@ sdoc-form-field {
   padding-right: calc(var(--base-rhythm)*4);
   margin-top: calc(var(--base-rhythm)*4);
   margin-bottom: calc(var(--base-rhythm)*4);
+  min-width: 200px;
 }
 
 sdoc-form-row-main {
@@ -233,6 +234,42 @@ sdoc-form-grid
     grid-column: 3 / 4; /* right */
   }
 
+/* sdoc-form-field-group */
+
+sdoc-form-field-group {
+  /* display: grid;
+  place-items: stretch stretch;
+  place-content: stretch stretch; */
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  gap: calc(var(--base-rhythm)*3); /* label (2) + 1 */
+  padding-top: calc(var(--base-rhythm)*3); /* related to column gap */
+  padding-bottom: calc(var(--base-rhythm)*1);
+
+  position: relative;
+}
+
+sdoc-form-field-group::before {
+  /* TODO move to other label */
+  content: attr(data-field-label);
+  position: absolute;
+  font-family: var(--code-font-family);
+  font-size: var(--font-size-xsm);
+  font-weight: 500;
+  color: var(--color-placeholder);
+  text-transform: uppercase;
+  top: calc(var(--base-rhythm)*(-2.25));
+  left: 0;
+  transition: color .2s ease;
+}
+
+sdoc-form-field-group:focus-within::before {
+  color: var(--color-fg-accent);
+}
+
 /**
  * sdoc-contenteditable
  */
@@ -257,8 +294,13 @@ sdoc-contenteditable[contenteditable="false"] {
 
 /* field name // before */
 
+/* todo: Join sdoc-contenteditable with sdoc-form-field */
+
+sdoc-form-field label,
 sdoc-contenteditable::before {
+  /* for contenteditable */
   content: attr(data-field-label);
+  /* for all */
   position: absolute;
   font-family: var(--code-font-family);
   font-size: var(--font-size-xsm);
@@ -267,14 +309,51 @@ sdoc-contenteditable::before {
   text-transform: uppercase;
   top: calc(var(--base-rhythm)*(-2.25));
   transition: color .2s ease;
+
+  white-space: nowrap;
 }
 
+sdoc-form-field:focus-within label,
 sdoc-contenteditable:focus::before {
   color: var(--color-fg-accent);
 }
 
+sdoc-form-error + sdoc-form-field label,
 sdoc-form-error + sdoc-form-field sdoc-contenteditable::before {
   color: var(--color-danger);
+}
+
+/* sdoc-form-field select */
+sdoc-form-field select {
+  /* A reset of styles, including removing the default dropdown arrow */
+  /* appearance: none; */
+  background-color: transparent;
+  /* border: none; */
+  border: 1px solid var(--color-placeholder);
+  border-radius: 6px;
+
+  padding: 0 1em 0 .5em;
+  margin: 0;
+  width: 100%;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: inherit;
+  line-height: inherit;
+  /* Stack above custom arrow */
+  z-index: 1;
+  /* Remove focus outline, will add on alternate element */
+  outline: none;
+}
+
+sdoc-form-field select:focus {
+  border: 1px solid var(--color-fg-accent);
+}
+
+/* Remove dropdown arrow in IE10 & IE11
+   @link https://www.filamentgroup.com/lab/select-css.html
+*/
+sdoc-form-field select::-ms-expand {
+  display: none;
 }
 
 /* placeholder // after */

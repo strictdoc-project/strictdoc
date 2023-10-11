@@ -1,0 +1,46 @@
+[DOCUMENT]
+TITLE: Requirements
+UID: SDOC_REQ
+OPTIONS:
+  REQUIREMENT_STYLE: Inline
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: RATIONALE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: Parent
+    ROLE: Refines
+
+[REQUIREMENT]
+UID: SDOC-FMT-GRAMMAR
+TITLE: Grammar
+STATEMENT: The SDoc format shall be based on a fixed grammar.
+REFS:
+- TYPE: Parent
+  VALUE: SDOC-HIGH-REQS-MANAGEMENT
+- TYPE: File
+  VALUE: strictdoc/backend/sdoc/grammar/grammar.py
+
+[REQUIREMENT]
+UID: SDOC-HIGH-REQS-MANAGEMENT
+TITLE: Requirements management
+STATEMENT: >>>
+StrictDoc shall enable requirements management.
+<<<

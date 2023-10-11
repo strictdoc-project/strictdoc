@@ -37,14 +37,20 @@ class Test(E2ECase):
 
             form_edit_grammar.assert_on_grammar()
 
-            form_edit_grammar.do_add_grammar_field()
-            form_edit_grammar.do_fill_in_grammar_field("", "CUSTOM_FIELD_1", 1)
+            grammar_field_mid = form_edit_grammar.do_add_grammar_field()
+            form_edit_grammar.do_fill_in_grammar_field_mid(
+                grammar_field_mid, "CUSTOM_FIELD_1"
+            )
 
-            form_edit_grammar.do_add_grammar_field()
-            form_edit_grammar.do_fill_in_grammar_field("", "CUSTOM_FIELD_2", 2)
+            grammar_field_mid = form_edit_grammar.do_add_grammar_field()
+            form_edit_grammar.do_fill_in_grammar_field_mid(
+                grammar_field_mid, "CUSTOM_FIELD_2"
+            )
 
-            form_edit_grammar.do_add_grammar_field()
-            form_edit_grammar.do_fill_in_grammar_field("", "CUSTOM_FIELD_3", 3)
+            grammar_field_mid = form_edit_grammar.do_add_grammar_field()
+            form_edit_grammar.do_fill_in_grammar_field_mid(
+                grammar_field_mid, "CUSTOM_FIELD_3"
+            )
 
             form_edit_grammar.do_form_submit()
 

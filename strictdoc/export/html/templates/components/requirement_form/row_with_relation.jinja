@@ -2,28 +2,90 @@
 
 {% assert relation_row_context.errors is defined, "row_with_relation: errors must be defined." %}
 {% assert relation_row_context.field is defined, "row_with_relation: field must be defined." %}
+{% assert relation_row_context.relation_types is defined, "row_with_relation: relation_types must be defined." %}
+{% assert relation_row_context.form_object is defined, "row_with_relation: form_object must be defined." %}
 
 {# FIXME: Recreate context #}
 {%- set row_context = relation_row_context -%}
-{%- set row_context.field_actions = { "delete": true } -%}
 
 {%- extends "components/form/row.jinja" %}
 
 {% block row_form_attributes %}
   data-controller="deletable_field"
+  data-testid="requirement-form-relation-row"
+  mid="{{ relation_row_context.field.field_mid }}"
 {% endblock row_form_attributes %}
 
+{% block row_left %}
+  {# Explicitly nothing. #}
+{% endblock row_left %}
+
 {% block row_content scoped %}
+
+<sdoc-form-field-group data-field-label="Relation:">
+  {# FIXME: #}
+  {% if relation_row_context.field.field_type == "File" %}
+    <div style="color: orange; margin-top: calc(var(--base-rhythm) * (-3)); font-size: 0.75em;">
+      <b>Warning: Editing file relations is not supported yet.</b>
+    </div>
+  {% endif %}
+
   {%- with
     field_class_name = none,
-    field_label = "Requirement parent link",
-    field_input_name = relation_row_context.field.get_input_field_name(),
-    field_name = "requirement parent link UID",
-    field_placeholder = "Enter requirement parent link UID here...",
+    field_editable = true if relation_row_context.field.field_type != "File" else false,
+    field_label = "Relation UID" if relation_row_context.field.field_type != "File" else "Path to file",
+    field_input_name = relation_row_context.field.get_value_field_name(),
+    field_placeholder = "Enter relation UID...",
     field_type = "singleline",
-    field_value = relation_row_context.field.field_value
+    field_value = relation_row_context.field.field_value,
+    mid = relation_row_context.field.field_mid,
+    testid_postfix = "requirement-relation-uid"
   %}
   {%- include "components/form/new_field/index.jinja" %}
   {%- endwith -%}
 
+  <sdoc-form-field field-type="select">
+    <label for="relation_typerole_{{ relation_row_context.field.field_mid }}">Relation type</label>
+    <select
+      data-testid="select-relation-typerole"
+      name="{{ relation_row_context.field.get_type_field_name() }}"
+      id="relation_typerole_{{ relation_row_context.field.field_mid }}"
+      mid="{{ relation_row_context.field.field_mid }}"
+      {% if relation_row_context.field.field_type == "File" %}
+        disabled
+      {% endif %}
+    >
+      {% for relation_type_, relation_role_, is_current_relation_ in relation_row_context.form_object.enumerate_relation_roles(relation_row_context.field) %}
+        {%- if relation_role_ is not none %}
+          <option
+            value="{{ relation_type_ }},{{ relation_role_ }}"
+            {% if is_current_relation_ %}
+              selected
+            {% endif %}
+          >{{ relation_type_ }} ({{ relation_role_ }})
+          </option>
+        {%- else -%}
+          <option
+            value="{{ relation_type_ }}"
+            {% if is_current_relation_ %}
+              selected
+            {% endif %}
+          >{{ relation_type_ }}
+          </option>
+        {%- endif -%}
+      {% endfor %}
+    </select>
+  </sdoc-form-field>
+</sdoc-form-field-group>
 {% endblock row_content %}
+
+{% block row_right %}
+
+  {%- set action_button_context = namespace() %}
+  {%- set action_button_context.field_actions = {"delete": true} %}
+  {%- set action_button_context.field_name = "requirement relation" %}
+  {%- set action_button_context.mid = relation_row_context.field.field_mid %}
+  {%- set action_button_context.testid_postfix = "requirement-relation" %}
+  {%- include "components/form/field_action_button/index.jinja" -%}
+
+{% endblock row_right %}

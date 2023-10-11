@@ -39,6 +39,8 @@
   {%- for field_ in form_object.enumerate_reference_fields() -%}
     {% set relation_row_context.field = field_ %}
     {% set relation_row_context.errors = field_.validation_messages %}
+    {% set relation_row_context.relation_types = form_object.relation_types %}
+    {% set relation_row_context.form_object = form_object %}
     {% include "components/requirement_form/row_with_relation.jinja" %}
   {%- endfor -%}
 
@@ -50,7 +52,7 @@
       data-turbo-action="replace"
       data-turbo="true"
       data-action-type="add_field"
-      data-testid="form-add-parent-link-field-action"
+      data-testid="form-action-add-parent-link"
     >{% include "_res/svg_ico16_add.jinja.html" %} Add parent link</a>
   </sdoc-form-row>
 
@@ -89,7 +91,7 @@
       data-turbo-action="replace"
       data-turbo="true"
       data-action-type="add_field"
-      data-testid="form-add-comment-field-action"
+      data-testid="form-action-add-comment"
     >{% include "_res/svg_ico16_add.jinja.html" %} Add comment field</a>
   </sdoc-form-row>
 

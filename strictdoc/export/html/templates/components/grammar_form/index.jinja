@@ -20,20 +20,42 @@ Edit document grammar
     {% set reserved_field_row_context = namespace() %}
     {% set custom_field_row_context = namespace() %}
 
-    <sdoc-form-grid id="document__editable_grammar_fields">
-      {%- for field_ in form_object.fields -%}
-        {%- if field_.field_name != "REFS" -%}
-          {%- if field_.reserved -%}
-            {% set reserved_field_row_context.errors = form_object.get_errors(field_.field_name) %}
-            {% set reserved_field_row_context.field = field_ %}
-            {%- include "components/grammar_form/row_with_reserved_field.jinja" -%}
-          {%- else -%}
-            {% set custom_field_row_context.errors = form_object.get_errors(field_.field_name) %}
-            {% set custom_field_row_context.field = field_ %}
-            {%- include "components/grammar_form/row_with_custom_field.jinja" -%}
+    <sdoc-form-grid>
+      <div style="display: contents;" id="document__editable_grammar_fields">
+        {%- for field_ in form_object.fields -%}
+          {%- if field_.field_name != "REFS" -%}
+            {%- if field_.reserved -%}
+              {% set reserved_field_row_context.errors = form_object.get_errors(field_.field_name) %}
+              {% set reserved_field_row_context.field = field_ %}
+              {%- include "components/grammar_form/row_with_reserved_field.jinja" -%}
+            {%- else -%}
+              {% set custom_field_row_context.errors = form_object.get_errors(field_.field_name) %}
+              {% set custom_field_row_context.field = field_ %}
+              {%- include "components/grammar_form/row_with_custom_field.jinja" -%}
+            {%- endif -%}
           {%- endif -%}
-        {%- endif -%}
-      {%- endfor -%}
+        {%- endfor -%}
+      </div>
+
+      <div style="display: contents;" id="document__editable_grammar_relations">
+          {%- set errors_ = form_object.get_errors("Relations_Row") %}
+          {%- if errors_|length > 0 -%}
+            {%- for error_ in errors_ -%}
+            <sdoc-form-error>
+              {{ error_ }}
+            </sdoc-form-error>
+            {%- endfor -%}
+          {%- endif -%}
+
+        <!-- FIXME: @mettta -->
+        {% set relation_row_context = namespace() %}
+        {%- for relation_ in form_object.relations -%}
+          {% set relation_row_context.errors = form_object.get_errors(relation_.relation_mid) %}
+          {% set relation_row_context.relation = relation_ %}
+          {%- include "components/grammar_form/row_with_relation.jinja" -%}
+        {%- endfor -%}
+      </div>
+
     </sdoc-form-grid>
 
     <sdoc-form-footer>
@@ -42,10 +64,20 @@ Edit document grammar
         href="/actions/document/add_grammar_field?document_mid={{ form_object.document_mid }}"
         data-turbo="true"
         data-action-type="add_field"
-        data-testid="form-add-grammar-field-action"
+        data-testid="form-action-add-grammar-field"
         {# TODO: https://github.com/strictdoc-project/strictdoc/issues/884 #}
-        onclick="setTimeout(()=> {this.scrollIntoView()},100)"
+        onclick="setTimeout(()=> {this.scrollIntoView()}, 100)"
       >{% include "_res/svg_ico16_add.jinja.html" %} Add grammar field</a>
+
+      <a
+        class="action_button"
+        href="/actions/document/add_grammar_relation?document_mid={{form_object.document_mid}}"
+        data-turbo="true"
+        data-action-type="add_relation"
+        data-testid="form-action-add-grammar-relation"
+        {# TODO: https://github.com/strictdoc-project/strictdoc/issues/884 #}
+        onclick="setTimeout(()=> {this.scrollIntoView()}, 100)"
+      >{% include "_res/svg_ico16_add.jinja.html" %} Add grammar relation</a>
     </sdoc-form-footer>
   </form>
 {% endblock modal_form__content %}

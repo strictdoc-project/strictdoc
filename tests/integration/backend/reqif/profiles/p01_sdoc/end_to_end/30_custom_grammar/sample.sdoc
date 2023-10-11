@@ -22,6 +22,7 @@ ELEMENTS:
     REQUIRED: False
   RELATIONS:
   - TYPE: Parent
+  - TYPE: File
 
 [REQUIREMENT]
 UID: ABC-123

@@ -36,8 +36,10 @@ class Test(E2ECase):
             )
             form_edit_grammar.assert_on_grammar()
 
-            form_edit_grammar.do_add_grammar_field()
-            form_edit_grammar.do_fill_in_grammar_field("", "", -1)
+            grammar_field_mid = form_edit_grammar.do_add_grammar_field()
+            form_edit_grammar.do_fill_in_grammar_field_mid(
+                grammar_field_mid, ""
+            )
 
             form_edit_grammar.do_form_submit_and_catch_error(
                 "Grammar field must not be empty."

@@ -125,7 +125,7 @@ class ReferenceType:
     PARENT = "Parent"
     CHILD = "Child"
     FILE = "File"
-    BIB_REF = "BibRef"
+    BIB_REF = "BibTex"
 
     GRAMMAR_REFERENCE_TYPE_MAP = {
         PARENT: GrammarReferenceType.PARENT_REQ_REFERENCE,
@@ -244,7 +244,7 @@ class GrammarElementRelationFile:
 @auto_described
 class GrammarElementRelationBibtex:
     def __init__(self, parent, relation_type: str):
-        assert relation_type == "Bibtex"
+        assert relation_type == "BibTex"
         self.parent = parent
         self.relation_type = relation_type
         self.relation_role: Optional[str] = None
@@ -302,7 +302,7 @@ class GrammarElementFieldReference(GrammarElementField):
                 continue
             if ref_type == "BibReference":
                 relation_types.append(
-                    GrammarElementRelationBibtex(self.parent, "Bibtex")
+                    GrammarElementRelationBibtex(self.parent, "BibTex")
                 )
                 continue
             raise NotImplementedError(ref_type)

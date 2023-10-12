@@ -399,6 +399,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     ) -> None:
         assert requirement.reserved_uid is not None
         assert isinstance(parent_uid, str), parent_uid
+        assert role is None or len(role) > 0, role
         requirement_connections: RequirementConnections = (
             self._requirements_parents[requirement.reserved_uid]
         )
@@ -436,6 +437,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     ) -> None:
         assert requirement.reserved_uid is not None
         assert isinstance(child_uid, str), child_uid
+        assert role is None or len(role) > 0, role
         requirement_connections: RequirementConnections = (
             self._requirements_parents[requirement.reserved_uid]
         )
@@ -473,6 +475,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     ) -> None:
         assert requirement.reserved_uid is not None
         assert isinstance(parent_uid, str), parent_uid
+        assert role is None or len(role) > 0, role
         requirement_connections: RequirementConnections = (
             self._requirements_parents[requirement.reserved_uid]
         )
@@ -503,6 +506,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     ) -> None:
         assert requirement.reserved_uid is not None
         assert isinstance(child_uid, str), child_uid
+        assert role is None or len(role) > 0, role
         requirement_connections: RequirementConnections = (
             self._requirements_parents[requirement.reserved_uid]
         )

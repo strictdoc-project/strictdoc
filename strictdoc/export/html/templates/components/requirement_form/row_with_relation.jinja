@@ -56,7 +56,9 @@
       {% endif %}
     >
       {% for relation_type_, relation_role_, is_current_relation_ in relation_row_context.form_object.enumerate_relation_roles(relation_row_context.field) %}
-        {%- if relation_role_ is not none %}
+        {%- if relation_row_context.field.field_type != "File" and relation_type_ == "File" -%}
+          {# FIXME: Not implemented yet. #}
+        {%- elif relation_role_ is not none %}
           <option
             value="{{ relation_type_ }},{{ relation_role_ }}"
             {% if is_current_relation_ %}

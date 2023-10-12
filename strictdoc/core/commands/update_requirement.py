@@ -136,13 +136,17 @@ class UpdateRequirementCommand:
                 traceability_index.update_requirement_parent_uid(
                     requirement=requirement,
                     parent_uid=ref_uid,
-                    role=reference_field.field_role,
+                    role=reference_field.field_role
+                    if len(reference_field.field_role) > 0
+                    else None,
                 )
             elif reference_field.field_type == "Child":
                 traceability_index.update_requirement_child_uid(
                     requirement=requirement,
                     child_uid=ref_uid,
-                    role=reference_field.field_role,
+                    role=reference_field.field_role
+                    if len(reference_field.field_role) > 0
+                    else None,
                 )
             elif reference_field.field_type == "File":
                 pass

@@ -10,7 +10,62 @@ from strictdoc.helpers.mid import MID
 from tests.unit.helpers.test_document_builder import DocumentBuilder
 
 
-def test_01_single_document_add_second_parent_relation_with_role():
+def test_01_single_document_add_first_parent_relation_with_no_role():
+    document_builder = DocumentBuilder()
+    requirement1 = document_builder.add_requirement("REQ-001")
+    requirement2 = document_builder.add_requirement("REQ-002")
+    assert len(requirement2.references) == 0
+
+    document_1 = document_builder.build()
+
+    file_tree = []
+    document_list = [document_1]
+    map_docs_by_paths = {}
+    document_tree = DocumentTree(
+        file_tree=file_tree,
+        document_list=document_list,
+        map_docs_by_paths=map_docs_by_paths,
+        map_docs_by_rel_paths={},
+    )
+    traceability_index: TraceabilityIndex = (
+        TraceabilityIndexBuilder.create_from_document_tree(document_tree)
+    )
+    traceability_index.document_tree = document_tree
+    assert traceability_index.get_parent_requirements(requirement1) == []
+
+    requirement2_parents = list(
+        traceability_index.get_parent_relations_with_roles(requirement2)
+    )
+    assert requirement2_parents == []
+
+    form_object: RequirementFormObject = (
+        RequirementFormObject.create_from_requirement(requirement=requirement2)
+    )
+    form_object.reference_fields.append(
+        RequirementReferenceFormField(
+            field_mid=MID.create().get_string_value(),
+            field_type=RequirementReferenceFormField.FieldType.PARENT,
+            field_value="REQ-001",
+            field_role=None,
+        )
+    )
+    update_command = UpdateRequirementCommand(
+        form_object=form_object,
+        requirement=requirement2,
+        traceability_index=traceability_index,
+    )
+    update_command.perform()
+
+    assert len(requirement2.references) == 1
+    requirement2_parents = list(
+        traceability_index.get_parent_relations_with_roles(requirement2)
+    )
+    assert requirement2_parents == [
+        (requirement1, None),
+    ]
+
+
+def test_02_single_document_add_second_parent_relation_with_role():
     document_builder = DocumentBuilder()
     requirement1 = document_builder.add_requirement("REQ-001")
     requirement2 = document_builder.add_requirement("REQ-002")

@@ -225,7 +225,8 @@ class RequirementFormObject(ErrorObject):
         # FIXME: defaulting to {}
         requirement_relations_dict = requirement_dict.get("relations", {})
         for relation_mid, relation_dict in requirement_relations_dict.items():
-            relation_typerole = relation_dict["typerole"]
+            # FIXME: Editing files is not supported. Fix this hack ASAP.
+            relation_typerole = relation_dict.get("typerole", "File")
             relation_typerole_parts = relation_typerole.split(",")
             if len(relation_typerole_parts) == 2:
                 relation_type = relation_typerole_parts[0]

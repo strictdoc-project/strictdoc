@@ -38,18 +38,17 @@ class Test_UC07_G1_T02_AddThreeLinks(E2ECase):
             requirement1_mid = (
                 form_edit_requirement.do_form_add_field_parent_link()
             )
-            requirement2_mid = (
-                form_edit_requirement.do_form_add_field_parent_link()
-            )
-            requirement3_mid = (
-                form_edit_requirement.do_form_add_field_parent_link()
-            )
-            # Fill in 3 fields.
             form_edit_requirement.do_fill_in_field_parent_link(
                 requirement1_mid, "REQ-002"
             )
+            requirement2_mid = (
+                form_edit_requirement.do_form_add_field_parent_link()
+            )
             form_edit_requirement.do_fill_in_field_parent_link(
                 requirement2_mid, "REQ-003"
+            )
+            requirement3_mid = (
+                form_edit_requirement.do_form_add_field_parent_link()
             )
             form_edit_requirement.do_fill_in_field_parent_link(
                 requirement3_mid, "REQ-004"

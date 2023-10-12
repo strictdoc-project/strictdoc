@@ -17,6 +17,7 @@ class SourceFileType(Enum):
     # Is there an idiomatic file extension for Jinja templates?
     # https://stackoverflow.com/questions/29590931/is-there-an-idiomatic-file-extension-for-jinja-templates  # noqa: #501
     JINJA = [".jinja", ".jinja2", ".j2", ".html.jinja"]
+    YAML = [".yaml", ".yml"]
 
     @classmethod
     def create_from_path(cls, path_to_file: str) -> "SourceFileType":
@@ -33,6 +34,9 @@ class SourceFileType(Enum):
         for enum_value in SourceFileType.JINJA.value:
             if path_to_file.endswith(enum_value):
                 return cls.JINJA
+        for enum_value in SourceFileType.YAML.value:
+            if path_to_file.endswith(enum_value):
+                return cls.YAML
         raise NotImplementedError(path_to_file)
 
     @staticmethod
@@ -87,6 +91,9 @@ class SourceFile:  # pylint: disable=too-many-instance-attributes
 
     def is_jinja_file(self):
         return self.file_type == SourceFileType.JINJA
+
+    def is_yaml_file(self):
+        return self.file_type == SourceFileType.YAML
 
 
 class SourceFilesFinder:

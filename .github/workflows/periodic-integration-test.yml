@@ -42,7 +42,7 @@ jobs:
       - name: Set up Python 3.
         uses: actions/setup-python@v2
         with:
-          python-version: '3.7'
+          python-version: '3.10'
 
       - name: Install APT packages
         run: sudo apt install -y graphviz
@@ -95,7 +95,7 @@ jobs:
       - name: Set up Python 3.
         uses: actions/setup-python@v2
         with:
-          python-version: '3.7'
+          python-version: '3.10'
 
       - name: Install Brew packages
         run: brew install graphviz

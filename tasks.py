@@ -638,8 +638,6 @@ def release_pyinstaller(context):
     # This behavior is not surprising because that's how the uvicorn loads the
     # application separately from the parent process.
     command = f"""
-        pip install pyinstaller toml &&
-        python developer/pip_install_strictdoc_deps.py &&
         pyinstaller
             --clean
             --name strictdoc
@@ -654,7 +652,16 @@ def release_pyinstaller(context):
             --add-data strictdoc/export/html/_static_extra:_static_extra
             strictdoc/cli/main.py
     """
-    run_invoke(context, command)
+
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.PYINSTALLER,
+        """
+    pyinstaller --version
+    """,
+    )
+
+    run_invoke_with_tox(context, ToxEnvironment.PYINSTALLER, command)
 
 
 @task

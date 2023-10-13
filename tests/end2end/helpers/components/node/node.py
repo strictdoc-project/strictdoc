@@ -149,6 +149,10 @@ class Node:  # pylint: disable=invalid-name
 
     def do_open_form_edit_requirement(self) -> Form_EditRequirement:
         self._do_node_edit()
+        self.test_case.assert_element(
+            "//sdoc-form",
+            by=By.XPATH,
+        )
         return Form_EditRequirement(self.test_case)
 
     def do_open_form_edit_section(self) -> Form_EditSection:

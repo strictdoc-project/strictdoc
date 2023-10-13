@@ -1,7 +1,6 @@
 import os
 
-from seleniumbase import BaseCase
-
+from tests.end2end.e2e_case import E2ECase
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
 )
@@ -10,7 +9,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test_ProjectOptions_ServerHostAndPort_01_OptionNotSpecified(BaseCase):
+class Test_ProjectOptions_ServerHostAndPort_01_OptionNotSpecified(E2ECase):
     def test(self):
         # Running this test can eventually cause conflicts when running
         # tests in parallel. Hoping that testing the server_host option is the

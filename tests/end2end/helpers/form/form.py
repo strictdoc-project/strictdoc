@@ -1,4 +1,5 @@
 # pylint: disable=invalid-name
+
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
@@ -102,13 +103,17 @@ class Form:  # pylint: disable=invalid-name
         assert isinstance(test_id, str)
         assert isinstance(field_value, str)
 
-        self.test_case.type(
-            (
-                f"(//*[@mid='{mid.get_string_value()}' and @data-testid='{test_id}'])"
-            ),
-            f"{field_value}",
-            by=By.XPATH,
-        )
+        field_xpath = f"(//*[@mid='{mid.get_string_value()}' and @data-testid='{test_id}'])"
+        for _ in range(3):
+            self.test_case.type(field_xpath, f"{field_value}", by=By.XPATH)
+            element = self.test_case.find_element(field_xpath)
+            if element.text == field_value:
+                break
+        else:
+            raise AssertionError(
+                f"The text field could not be filled with the value: "
+                f"'{field_value}'."
+            )
 
     def do_clear_field(self, field_name: str, field_order: int = 1) -> None:
         assert isinstance(field_name, str)

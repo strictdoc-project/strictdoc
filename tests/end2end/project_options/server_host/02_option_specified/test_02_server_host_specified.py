@@ -1,7 +1,6 @@
 import os
 
-from seleniumbase import BaseCase
-
+from tests.end2end.e2e_case import E2ECase
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
 )
@@ -10,7 +9,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test_ProjectOptions_ServerHostAndPort_02_OptionSpecified(BaseCase):
+class Test_ProjectOptions_ServerHostAndPort_02_OptionSpecified(E2ECase):
     def test(self):
         custom_server_stderr_expectations = [
             "INFO:     Application startup complete.",

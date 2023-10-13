@@ -34,19 +34,36 @@ class Form_EditGrammar(Form):  # pylint: disable=invalid-name
         return MID(element_mid)
 
     def do_add_grammar_field(self) -> MID:
+        any_grammar_field_xpath = "//*[@data-testid='form-field-custom-field']"
+        grammar_fields_number = len(
+            self.test_case.find_elements(any_grammar_field_xpath, by=By.XPATH)
+        )
+        new_grammar_field_ordinal_number = grammar_fields_number + 1
+
         self.test_case.click_xpath(
             "//*[@data-testid='form-action-add-grammar-field']"
         )
-        xpath = "(//*[@data-testid='form-field-custom-field'])[last()]"
-        element = self.test_case.find_element(xpath)
+
+        new_grammar_field_xpath = (
+            f"({any_grammar_field_xpath})[{new_grammar_field_ordinal_number}]"
+        )
+
+        element = self.test_case.find_element(new_grammar_field_xpath)
         element_mid = element.get_attribute("mid")
         return MID(element_mid)
 
     def do_add_grammar_relation(self) -> MID:
+        any_relation_xpath = "//*[@data-testid='grammar-form-relation-row']"
+        relations_number = len(
+            self.test_case.find_elements(any_relation_xpath, by=By.XPATH)
+        )
+        new_relation_ordinal_number = relations_number + 1
+
         self.test_case.click_xpath(
             "//*[@data-testid='form-action-add-grammar-relation']"
         )
-        xpath = "(//*[@data-testid='grammar-form-relation-row'])[last()]"
+
+        xpath = f"({any_relation_xpath})[{new_relation_ordinal_number}]"
         element = self.test_case.find_element(xpath)
         element_mid = element.get_attribute("mid")
         return MID(element_mid)

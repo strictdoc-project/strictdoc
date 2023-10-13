@@ -1,5 +1,4 @@
-from seleniumbase import BaseCase
-
+from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.components.collapsible_list import CollapsibleList
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
@@ -8,7 +7,7 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 from tests.end2end.server import SDocTestServer
 
 
-class Test_UC114_T01_UI_collapsible_list(BaseCase):
+class Test_UC114_T01_UI_collapsible_list(E2ECase):
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 

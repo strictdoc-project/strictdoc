@@ -1847,6 +1847,7 @@ def create_main_router(
             )
         )
         if not form_object.validate():
+            print(form_object.fields)  # noqa: T201
             template = env().get_template(
                 "actions/"
                 "document/"

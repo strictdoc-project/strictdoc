@@ -1,4 +1,5 @@
 # pylint: disable=invalid-name
+from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 from strictdoc.helpers.mid import MID
@@ -18,10 +19,17 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
         )
 
     def do_form_add_field_comment(self) -> MID:
+        any_comment_xpath = "//*[@data-testid='requirement-form-comment-row']"
+        comments_number = len(
+            self.test_case.find_elements(any_comment_xpath, by=By.XPATH)
+        )
+        new_comment_ordinal_number = comments_number + 1
+
         self.test_case.click_xpath(
             "//*[@data-testid='form-action-add-comment']"
         )
-        xpath = "(//*[@data-testid='requirement-form-comment-row'])[last()]"
+
+        xpath = f"({any_comment_xpath})[{new_comment_ordinal_number}]"
         element = self.test_case.find_element(xpath)
         element_mid = element.get_attribute("mid")
         assert element_mid is not None
@@ -46,10 +54,17 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
         )
 
     def do_form_add_field_parent_link(self) -> MID:
+        any_relation_xpath = "//*[@data-testid='requirement-form-relation-row']"
+        relations_number = len(
+            self.test_case.find_elements(any_relation_xpath, by=By.XPATH)
+        )
+        new_relation_ordinal_number = relations_number + 1
+
         self.test_case.click_xpath(
             "//*[@data-testid='form-action-add-parent-link']"
         )
-        xpath = "(//*[@data-testid='requirement-form-relation-row'])[last()]"
+
+        xpath = f"({any_relation_xpath})[{new_relation_ordinal_number}]"
         element = self.test_case.find_element(xpath)
         element_mid = element.get_attribute("mid")
         return MID(element_mid)

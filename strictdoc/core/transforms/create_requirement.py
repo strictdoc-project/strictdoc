@@ -4,6 +4,10 @@ from typing import List, Optional, Set, Tuple, Union
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
+from strictdoc.backend.sdoc.models.reference import (
+    ChildReqReference,
+    ParentReqReference,
+)
 from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
     RequirementField,
@@ -88,6 +92,10 @@ class CreateRequirementTransform:
         else:
             raise NotImplementedError
 
+        # Reset the 'needs generation' flag on all documents.
+        for document_ in traceability_index.document_tree.document_list:
+            document_.ng_needs_generation = False
+
         requirement = SDocObjectFactory.create_requirement(parent=parent)
 
         # FIXME: Leave only one method based on set_field_value().
@@ -123,3 +131,16 @@ class CreateRequirementTransform:
                     field_value_references=relations,
                 )
             ]
+
+        for relation_ in relations:
+            if isinstance(relation_, ParentReqReference):
+                traceability_index.update_requirement_parent_uid(
+                    requirement, relation_.ref_uid, relation_.role
+                )
+            elif isinstance(relation_, ChildReqReference):
+                traceability_index.update_requirement_child_uid(
+                    requirement, relation_.ref_uid, relation_.role
+                )
+            else:
+                # FIXME
+                pass

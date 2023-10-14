@@ -46,8 +46,8 @@ class Test(E2ECase):
                 requirement2.do_open_form_edit_requirement()
             )
 
+            form_edit_requirement.assert_form_has_relations()
             form_edit_requirement.do_delete_parent_link()
-
             # Make sure that the field is removed from the form:
             form_edit_requirement.assert_form_has_no_parents()
             form_edit_requirement.do_form_submit()

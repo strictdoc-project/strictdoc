@@ -22,17 +22,18 @@ class Test(E2ECase):
 
             screen_project_index.assert_on_screen()
             screen_project_index.assert_contains_document("Document 1")
+            screen_project_index.assert_contains_document("Document 2")
 
-            screen_document = screen_project_index.do_click_on_first_document()
+            screen_document = screen_project_index.do_click_on_the_document(2)
 
             screen_document.assert_on_screen_document()
-            screen_document.assert_header_document_title("Document 1")
+            screen_document.assert_header_document_title("Document 2")
 
             # Requirement 1
-            node_requirement1 = screen_document.get_requirement(1)
-            node_menu_requirement1 = node_requirement1.do_open_node_menu()
+            node_root = screen_document.get_root_node()
+            node_menu_root = node_root.do_open_node_menu()
             form_edit_requirement: Form_EditRequirement = (
-                node_menu_requirement1.do_node_add_requirement_below()
+                node_menu_root.do_node_add_requirement_first()
             )
 
             form_edit_requirement.do_fill_in_field_uid("REQ-002")
@@ -52,7 +53,10 @@ class Test(E2ECase):
             form_edit_requirement.do_select_relation_role(
                 requirement_parent_mid, "Parent,Refines"
             )
-            form_edit_requirement.do_form_submit()
-            screen_document.assert_text("Refines")
+
+            form_edit_requirement.do_form_submit_and_catch_error(
+                "Relation target requirement's document does not have this "
+                'relation registered: type: "Parent" role: "Refines".'
+            )
 
         assert test_setup.compare_sandbox_and_expected_output()

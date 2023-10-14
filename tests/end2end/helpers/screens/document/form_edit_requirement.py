@@ -7,6 +7,9 @@ from tests.end2end.helpers.form.form import Form
 
 
 class Form_EditRequirement(Form):  # pylint: disable=invalid-name
+    class XPATH:
+        RELATION_ROW = "(//*[@data-testid='requirement-form-relation-row'])"
+
     def __init__(self, test_case: BaseCase) -> None:
         assert isinstance(test_case, BaseCase)
         super().__init__(test_case)
@@ -48,9 +51,12 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
 
     # parent-link actions
 
+    def assert_form_has_relations(self) -> None:
+        self.test_case.assert_element(Form_EditRequirement.XPATH.RELATION_ROW)
+
     def assert_form_has_no_parents(self) -> None:
         self.test_case.assert_element_not_present(
-            "(//*[@data-testid='form-requirement[REFS_PARENT][]-field'])"
+            Form_EditRequirement.XPATH.RELATION_ROW
         )
 
     def do_form_add_field_parent_link(self) -> MID:

@@ -18,6 +18,7 @@
     <input type="hidden" id="whereto" name="whereto" value="{{ whereto }}" />
   {%- endif -%}
   <input type="hidden" id="requirement_mid" name="requirement_mid" value="{{ form_object.requirement_mid }}" />
+  <input type="hidden" id="document_mid" name="document_mid" value="{{ form_object.document_mid }}" />
 
   {# Single-line fields #}
 
@@ -48,7 +49,7 @@
   <sdoc-form-row>
     <a
       class="action_button"
-      href="/actions/document/new_parent_link?requirement_mid={{ form_object.requirement_mid }}"
+      href="/actions/document/new_parent_link?requirement_mid={{ form_object.requirement_mid }}&document_mid={{ form_object.document_mid }}"
       data-turbo-action="replace"
       data-turbo="true"
       data-action-type="add_field"

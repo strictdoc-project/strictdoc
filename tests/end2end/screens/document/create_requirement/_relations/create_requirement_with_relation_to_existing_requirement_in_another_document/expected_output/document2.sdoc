@@ -1,0 +1,30 @@
+[DOCUMENT]
+TITLE: Document 2
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+    ROLE: Refines
+
+[REQUIREMENT]
+UID: REQ-002
+TITLE: Requirement #2 title
+STATEMENT: >>>
+Requirement #2 statement.
+<<<
+REFS:
+- TYPE: Parent
+  VALUE: REQ-001
+  ROLE: Refines

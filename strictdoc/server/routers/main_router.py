@@ -21,13 +21,11 @@ from strictdoc.backend.reqif.p01_sdoc.reqif_to_sdoc_converter import (
 from strictdoc.backend.reqif.p01_sdoc.sdoc_to_reqif_converter import (
     P01_SDocToReqIFObjectConverter,
 )
-from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
 )
-from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
 )
@@ -45,6 +43,9 @@ from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.transforms.constants import NodeCreationOrder
+from strictdoc.core.transforms.create_requirement import (
+    CreateRequirementTransform,
+)
 from strictdoc.core.transforms.delete_section import DeleteSectionCommand
 from strictdoc.core.transforms.section import (
     CreateSectionCommand,
@@ -706,16 +707,12 @@ def create_main_router(
         request_form_data: FormData = await request.form()
         request_dict: Dict[str, str] = dict(request_form_data)
         requirement_mid: str = request_dict["requirement_mid"]
+        document_mid: str = request_dict["document_mid"]
         reference_mid: str = request_dict["reference_mid"]
         whereto: str = request_dict["whereto"]
 
-        reference_node: Union[
-            Document, Section
-        ] = export_action.traceability_index.get_node_by_mid(MID(reference_mid))
-        document = (
-            reference_node
-            if isinstance(reference_node, Document)
-            else reference_node.document
+        document: Document = export_action.traceability_index.get_node_by_mid(
+            MID(document_mid)
         )
         form_object = RequirementFormObject.create_from_request(
             requirement_mid=requirement_mid,
@@ -723,23 +720,6 @@ def create_main_router(
             document=document,
             exiting_requirement_uid=None,
         )
-        if whereto == NodeCreationOrder.CHILD:
-            parent = reference_node
-            insert_to_idx = len(parent.section_contents)
-        elif whereto == NodeCreationOrder.BEFORE:
-            parent = reference_node.parent
-            insert_to_idx = parent.section_contents.index(reference_node)
-        elif whereto == NodeCreationOrder.AFTER:
-            if isinstance(reference_node, Document):
-                parent = reference_node
-                insert_to_idx = 0
-            else:
-                parent = reference_node.parent
-                insert_to_idx = (
-                    parent.section_contents.index(reference_node) + 1
-                )
-        else:
-            raise NotImplementedError
 
         form_object.validate(
             traceability_index=export_action.traceability_index,
@@ -786,30 +766,14 @@ def create_main_router(
                 },
             )
 
-        requirement = SDocObjectFactory.create_requirement(parent=parent)
-
-        # FIXME: Leave only one method based on set_field_value().
-        for form_field_name, form_fields in form_object.fields.items():
-            for form_field_index, form_field in enumerate(form_fields):
-                requirement.set_field_value(
-                    field_name=form_field_name,
-                    form_field_index=form_field_index,
-                    value=form_field.field_unescaped_value,
-                )
-
-        requirement.mid = MID(requirement_mid)
-        requirement.ng_document_reference = DocumentReference()
-        requirement.ng_document_reference.set_document(document)
-        requirement.ng_level = parent.ng_level + 1
-        export_action.traceability_index._map_id_to_node[
-            requirement.mid
-        ] = requirement
-
-        parent.section_contents.insert(insert_to_idx, requirement)
-
-        export_action.traceability_index.mut_add_uid_to_a_requirement_if_needed(
-            requirement=requirement
+        transform = CreateRequirementTransform(
+            form_object=form_object,
+            whereto=whereto,
+            requirement_mid=requirement_mid,
+            reference_mid=reference_mid,
+            traceability_index=export_action.traceability_index,
         )
+        transform.perform()
 
         # Saving new content to .SDoc file.
         document_content = SDWriter().write(document)
@@ -1583,6 +1547,7 @@ def create_main_router(
             requirement_mid=requirement_mid,
             form_object=RequirementFormObject(
                 requirement_mid=requirement_mid,
+                document_mid=document.mid.get_string_value(),
                 fields=[],
                 reference_fields=[],
                 exiting_requirement_uid=None,
@@ -1606,13 +1571,10 @@ def create_main_router(
         )
 
     @router.get("/actions/document/new_parent_link", response_class=Response)
-    def document__add_parent_link(requirement_mid: str):
-        requirement: Requirement = (
-            export_action.traceability_index.get_node_by_mid(
-                MID(requirement_mid)
-            )
+    def document__add_parent_link(requirement_mid: str, document_mid: str):
+        document: Document = export_action.traceability_index.get_node_by_mid(
+            MID(document_mid)
         )
-        document: Document = requirement.document
         assert document.grammar is not None
         grammar: DocumentGrammar = document.grammar
         element: GrammarElement = grammar.elements_by_type["REQUIREMENT"]
@@ -1629,6 +1591,7 @@ def create_main_router(
             requirement_mid=requirement_mid,
             form_object=RequirementFormObject(
                 requirement_mid=requirement_mid,
+                document_mid=document_mid,
                 fields=[],
                 reference_fields=[],
                 exiting_requirement_uid=None,

@@ -85,6 +85,7 @@ class GrammarElement:
     def has_relation_type_role(
         self, relation_type: str, relation_role: Optional[str]
     ):
+        assert relation_role is None or len(relation_role) > 0
         for relation_ in self.relations:
             if (
                 relation_.relation_type == relation_type

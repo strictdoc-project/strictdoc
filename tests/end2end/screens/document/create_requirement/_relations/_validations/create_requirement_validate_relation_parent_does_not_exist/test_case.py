@@ -47,12 +47,12 @@ class Test(E2ECase):
                 form_edit_requirement.do_form_add_field_parent_link()
             )
             form_edit_requirement.do_fill_in_field_parent_link(
-                requirement_parent_mid, "REQ-001"
+                requirement_parent_mid, "REQ-DOES-NOT-EXIST"
             )
-            form_edit_requirement.do_select_relation_role(
-                requirement_parent_mid, "Parent,Refines"
+
+            form_edit_requirement.do_form_submit_and_catch_error(
+                'Parent requirement with an UID "REQ-DOES-NOT-EXIST" '
+                "does not exist."
             )
-            form_edit_requirement.do_form_submit()
-            screen_document.assert_text("Refines")
 
         assert test_setup.compare_sandbox_and_expected_output()

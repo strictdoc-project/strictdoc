@@ -177,6 +177,7 @@ class RequirementFormObject(ErrorObject):
         self,
         *,
         requirement_mid: Optional[str],
+        document_mid: str,
         fields: List[RequirementFormField],
         reference_fields: List[RequirementReferenceFormField],
         exiting_requirement_uid: Optional[str],
@@ -186,6 +187,7 @@ class RequirementFormObject(ErrorObject):
     ):
         super().__init__()
         self.requirement_mid: Optional[str] = requirement_mid
+        self.document_mid: str = document_mid
         fields_dict: dict = defaultdict(list)
         for field in fields:
             fields_dict[field.field_name].append(field)
@@ -293,6 +295,7 @@ class RequirementFormObject(ErrorObject):
 
         form_object = RequirementFormObject(
             requirement_mid=requirement_mid,
+            document_mid=document.mid.get_string_value(),
             fields=form_fields,
             reference_fields=form_ref_fields,
             exiting_requirement_uid=exiting_requirement_uid,
@@ -333,6 +336,7 @@ class RequirementFormObject(ErrorObject):
 
         return RequirementFormObject(
             requirement_mid=MID.create().get_string_value(),
+            document_mid=document.mid.get_string_value(),
             fields=form_fields,
             reference_fields=[],
             exiting_requirement_uid=None,
@@ -426,6 +430,7 @@ class RequirementFormObject(ErrorObject):
                         form_refs_fields.append(form_ref_field)
         return RequirementFormObject(
             requirement_mid=requirement.mid.get_string_value(),
+            document_mid=document.mid.get_string_value(),
             fields=form_fields,
             reference_fields=form_refs_fields,
             exiting_requirement_uid=requirement.reserved_uid,

@@ -9,12 +9,12 @@ from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.free_text import FreeText, FreeTextContainer
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.section import Section
-from strictdoc.core.commands.validation_error import (
-    SingleValidationError,
-)
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import (
     TraceabilityIndex,
+)
+from strictdoc.core.transforms.validation_error import (
+    SingleValidationError,
 )
 from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,

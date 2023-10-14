@@ -40,25 +40,25 @@ from strictdoc.cli.cli_arg_parser import (
 from strictdoc.core.actions.export_action import ExportAction
 from strictdoc.core.analyzers.document_stats import DocumentStats
 from strictdoc.core.analyzers.document_uid_analyzer import DocumentUIDAnalyzer
-from strictdoc.core.commands.constants import NodeCreationOrder
-from strictdoc.core.commands.delete_section import DeleteSectionCommand
-from strictdoc.core.commands.section import (
-    CreateSectionCommand,
-    UpdateSectionCommand,
-)
-from strictdoc.core.commands.update_document_config import (
-    MultipleValidationError,
-    UpdateDocumentConfigCommand,
-)
-from strictdoc.core.commands.update_grammar import UpdateGrammarCommand
-from strictdoc.core.commands.update_requirement import (
-    UpdateRequirementCommand,
-    UpdateRequirementResult,
-)
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
+from strictdoc.core.transforms.constants import NodeCreationOrder
+from strictdoc.core.transforms.delete_section import DeleteSectionCommand
+from strictdoc.core.transforms.section import (
+    CreateSectionCommand,
+    UpdateSectionCommand,
+)
+from strictdoc.core.transforms.update_document_config import (
+    MultipleValidationError,
+    UpdateDocumentConfigTransform,
+)
+from strictdoc.core.transforms.update_grammar import UpdateGrammarCommand
+from strictdoc.core.transforms.update_requirement import (
+    UpdateRequirementResult,
+    UpdateRequirementTransform,
+)
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.form_objects.document_config_form_object import (
     DocumentConfigFormObject,
@@ -986,7 +986,7 @@ def create_main_router(
                 },
             )
 
-        update_command = UpdateRequirementCommand(
+        update_command = UpdateRequirementTransform(
             form_object=form_object,
             requirement=requirement,
             traceability_index=export_action.traceability_index,
@@ -1693,7 +1693,7 @@ def create_main_router(
             )
         )
         try:
-            update_command = UpdateDocumentConfigCommand(
+            update_command = UpdateDocumentConfigTransform(
                 form_object=form_object,
                 document=document,
                 traceability_index=export_action.traceability_index,

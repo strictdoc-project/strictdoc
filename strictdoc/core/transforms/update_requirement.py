@@ -41,7 +41,7 @@ class UpdateRequirementResult:
     this_document_requirements_to_update: Set[Requirement]
 
 
-class UpdateRequirementCommand:
+class UpdateRequirementTransform:
     def __init__(
         self,
         *,

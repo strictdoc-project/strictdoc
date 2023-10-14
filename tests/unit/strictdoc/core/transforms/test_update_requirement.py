@@ -1,7 +1,9 @@
-﻿from strictdoc.core.commands.update_requirement import UpdateRequirementCommand
-from strictdoc.core.document_tree import DocumentTree
+﻿from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
+from strictdoc.core.transforms.update_requirement import (
+    UpdateRequirementTransform,
+)
 from strictdoc.export.html.form_objects.requirement_form_object import (
     RequirementFormObject,
     RequirementReferenceFormField,
@@ -49,7 +51,7 @@ def test_01_single_document_add_first_parent_relation_with_no_role():
             field_role=None,
         )
     )
-    update_command = UpdateRequirementCommand(
+    update_command = UpdateRequirementTransform(
         form_object=form_object,
         requirement=requirement2,
         traceability_index=traceability_index,
@@ -102,7 +104,7 @@ def test_02_single_document_add_second_parent_relation_with_role():
     form_object: RequirementFormObject = (
         RequirementFormObject.create_from_requirement(requirement=requirement2)
     )
-    update_command = UpdateRequirementCommand(
+    update_command = UpdateRequirementTransform(
         form_object=form_object,
         requirement=requirement2,
         traceability_index=traceability_index,
@@ -179,7 +181,7 @@ def test_20_single_document_add_second_child_relation_with_role():
             field_role="IsImplementedBy",
         )
     )
-    update_command = UpdateRequirementCommand(
+    update_command = UpdateRequirementTransform(
         form_object=form_object,
         requirement=requirement2,
         traceability_index=traceability_index,
@@ -248,7 +250,7 @@ def test_25_single_document_remove_child_relation():
     # Form object has no relations.
     form_object.reference_fields.clear()
 
-    update_command = UpdateRequirementCommand(
+    update_command = UpdateRequirementTransform(
         form_object=form_object,
         requirement=requirement2,
         traceability_index=traceability_index,
@@ -315,7 +317,7 @@ def test_26_two_documents_remove_child_relation():
     # Form object has no relations.
     form_object.reference_fields.clear()
 
-    update_command = UpdateRequirementCommand(
+    update_command = UpdateRequirementTransform(
         form_object=form_object,
         requirement=requirement2,
         traceability_index=traceability_index,

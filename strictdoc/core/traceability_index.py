@@ -9,13 +9,13 @@ from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityInfo,
 )
-from strictdoc.core.commands.validation_error import (
-    SingleValidationError,
-)
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_traceability_index import FileTraceabilityIndex
 from strictdoc.core.graph_database import GraphDatabase, LinkType
+from strictdoc.core.transforms.validation_error import (
+    SingleValidationError,
+)
 from strictdoc.core.tree_cycle_detector import TreeCycleDetector
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast

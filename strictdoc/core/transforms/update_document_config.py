@@ -2,21 +2,21 @@ from collections import defaultdict
 from typing import Dict, List
 
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.core.commands.update_free_text import UpdateFreeTextCommand
-from strictdoc.core.commands.validation_error import (
-    MultipleValidationError,
-    SingleValidationError,
-)
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import (
     TraceabilityIndex,
+)
+from strictdoc.core.transforms.update_free_text import UpdateFreeTextCommand
+from strictdoc.core.transforms.validation_error import (
+    MultipleValidationError,
+    SingleValidationError,
 )
 from strictdoc.export.html.form_objects.document_config_form_object import (
     DocumentConfigFormObject,
 )
 
 
-class UpdateDocumentConfigCommand:
+class UpdateDocumentConfigTransform:
     def __init__(
         self,
         form_object: DocumentConfigFormObject,

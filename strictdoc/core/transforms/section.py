@@ -12,16 +12,16 @@ from strictdoc.backend.sdoc.models.free_text import FreeText, FreeTextContainer
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.sdoc.models.section import Section
-from strictdoc.core.commands.constants import NodeCreationOrder
-from strictdoc.core.commands.update_free_text import UpdateFreeTextCommand
-from strictdoc.core.commands.validation_error import (
-    MultipleValidationError,
-    SingleValidationError,
-)
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import (
     RequirementConnections,
     TraceabilityIndex,
+)
+from strictdoc.core.transforms.constants import NodeCreationOrder
+from strictdoc.core.transforms.update_free_text import UpdateFreeTextCommand
+from strictdoc.core.transforms.validation_error import (
+    MultipleValidationError,
+    SingleValidationError,
 )
 from strictdoc.export.html.form_objects.section_form_object import (
     SectionFormObject,

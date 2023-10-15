@@ -30,44 +30,17 @@ class Test(E2ECase):
 
             screen_document.assert_text("Hello world!")
 
-            # Existing Requirement 1:
-            added_requirement_1_level = "1"
-            added_requirement_1_position = 1
+            requirement3 = screen_document.get_requirement(3)
 
-            requirement1 = screen_document.get_requirement(
-                added_requirement_1_position
-            )
-
-            requirement1.assert_requirement_title(
-                "Requirement title #1",
-                added_requirement_1_level,
-            )
-            screen_document.assert_toc_contains("Requirement title #1")
-
-            # Existing Requirement 2:
-            added_requirement_2_level = "2"
-            added_requirement_2_position = 2
-
-            requirement2 = screen_document.get_requirement(
-                added_requirement_2_position
-            )
-
-            requirement2.assert_requirement_title(
-                "Requirement title #2",
-                added_requirement_2_level,
-            )
-            screen_document.assert_toc_contains("Requirement title #2")
-
-            # Edit Requirement 2: add one parent link
             form_edit_requirement: Form_EditRequirement = (
-                requirement2.do_open_form_edit_requirement()
+                requirement3.do_open_form_edit_requirement()
             )
 
             new_relation_mid = (
                 form_edit_requirement.do_form_add_field_parent_link()
             )
             form_edit_requirement.do_fill_in_field_parent_link(
-                new_relation_mid, "REQ-001"
+                new_relation_mid, "REQ-002"
             )
             form_edit_requirement.do_select_relation_role(
                 new_relation_mid, "Child,Implements"

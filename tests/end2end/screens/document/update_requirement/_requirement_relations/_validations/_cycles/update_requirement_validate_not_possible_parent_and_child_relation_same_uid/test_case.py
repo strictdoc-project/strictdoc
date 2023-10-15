@@ -58,11 +58,9 @@ class Test(E2ECase):
             )
             screen_document.assert_toc_contains("Requirement title #2")
 
-            # Edit Requirement 2: add one parent link
             form_edit_requirement: Form_EditRequirement = (
                 requirement2.do_open_form_edit_requirement()
             )
-
             new_relation_mid = (
                 form_edit_requirement.do_form_add_field_parent_link()
             )
@@ -70,12 +68,12 @@ class Test(E2ECase):
                 new_relation_mid, "REQ-001"
             )
             form_edit_requirement.do_select_relation_role(
-                new_relation_mid, "Parent,Implements"
+                new_relation_mid, "Parent"
             )
-
-            form_edit_requirement.do_form_submit()
-
-            screen_document.assert_text("Refines")
-            screen_document.assert_text("Implements")
+            form_edit_requirement.do_form_submit_and_catch_error(
+                'A target requirement with a UID "REQ-001" is referenced '
+                "more than once. Multiple relations to the same target "
+                "requirement are not allowed."
+            )
 
         assert test_setup.compare_sandbox_and_expected_output()

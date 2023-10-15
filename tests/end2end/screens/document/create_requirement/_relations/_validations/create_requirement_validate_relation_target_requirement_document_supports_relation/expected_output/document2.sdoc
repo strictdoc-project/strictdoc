@@ -1,5 +1,5 @@
 [DOCUMENT]
-TITLE: Document 1
+TITLE: Document 2
 
 [GRAMMAR]
 ELEMENTS:
@@ -16,9 +16,4 @@ ELEMENTS:
     REQUIRED: False
   RELATIONS:
   - TYPE: Parent
-    ROLE: Refines
-
-[REQUIREMENT]
-UID: REQ-001
-TITLE: Requirement #1 title
-STATEMENT: Requirement #1 statement.
+  - TYPE: Child

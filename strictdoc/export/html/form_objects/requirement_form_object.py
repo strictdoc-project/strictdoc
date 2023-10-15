@@ -1,7 +1,7 @@
 import html
 from collections import defaultdict
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Set
 
 from starlette.datastructures import FormData
 
@@ -585,6 +585,7 @@ class RequirementFormObject(ErrorObject):
                 return
 
         if requirement_uid is not None:
+            relation_target_uids_so_far: Set[str] = set()
             for reference_field in self.reference_fields:
                 if reference_field.field_type in ("Parent", "Child"):
                     link_uid = reference_field.field_value
@@ -603,6 +604,43 @@ class RequirementFormObject(ErrorObject):
                         )
                         continue
 
+                    # Validate that every UID can be only referenced once.
+                    if link_uid in relation_target_uids_so_far:
+                        reference_field.validation_messages.append(
+                            f'A target requirement with a UID "{link_uid}" '
+                            "is referenced more than once. Multiple relations "
+                            "to the same target requirement are not allowed."
+                        )
+                        continue
+                    relation_target_uids_so_far.add(link_uid)
+
+                    # Check if the target document supports a given relation.
+                    target_requirement: Requirement = (
+                        traceability_index.get_node_by_uid(link_uid)
+                    )
+                    target_grammar_element: GrammarElement = (
+                        target_requirement.document.grammar.elements_by_type[
+                            "REQUIREMENT"
+                        ]
+                    )
+                    field_role_or_none = (
+                        reference_field.field_role
+                        if reference_field.field_role is not None
+                        and len(reference_field.field_role) > 0
+                        else None
+                    )
+                    if not target_grammar_element.has_relation_type_role(
+                        reference_field.field_type, field_role_or_none
+                    ):
+                        reference_field.validation_messages.append(
+                            f"Relation target requirement's document "
+                            "does not have this relation registered: "
+                            f'type: "{reference_field.field_type}" '
+                            f'role: "{reference_field.field_role}".'
+                        )
+                        continue
+
+                    # Check if the relation forms a cycle.
                     ref_uid = reference_field.field_value
 
                     def parent_lambda(requirement_id_) -> List[str]:

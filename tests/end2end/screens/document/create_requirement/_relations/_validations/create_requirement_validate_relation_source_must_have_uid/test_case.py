@@ -35,11 +35,8 @@ class Test(E2ECase):
                 node_menu_requirement1.do_node_add_requirement_below()
             )
 
-            form_edit_requirement.do_fill_in_field_uid("REQ-002")
+            form_edit_requirement.do_clear_field("requirement-field-UID")
             form_edit_requirement.do_fill_in_field_title("Requirement #2 title")
-            form_edit_requirement.do_fill_in_field_statement(
-                "Requirement #2 statement."
-            )
             form_edit_requirement.do_fill_in_field_statement(
                 "Requirement #2 statement."
             )
@@ -49,10 +46,11 @@ class Test(E2ECase):
             form_edit_requirement.do_fill_in_field_parent_link(
                 requirement_parent_mid, "REQ-001"
             )
-            form_edit_requirement.do_select_relation_role(
-                requirement_parent_mid, "Parent,Refines"
+
+            form_edit_requirement.do_form_submit_and_catch_error(
+                "Requirement with parent links must have an UID. "
+                "Either provide a parent UID, or delete the parent requirement "
+                "links."
             )
-            form_edit_requirement.do_form_submit()
-            screen_document.assert_text("Refines")
 
         assert test_setup.compare_sandbox_and_expected_output()

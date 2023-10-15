@@ -37,10 +37,17 @@ TITLE: Requirement title #2
 STATEMENT: >>>
 Requirement statement #2.
 <<<
+
+[REQUIREMENT]
+UID: REQ-003
+TITLE: Requirement title #3
+STATEMENT: >>>
+Requirement statement #3.
+<<<
 REFS:
 - TYPE: Parent
   VALUE: REQ-001
   ROLE: Refines
 - TYPE: Parent
-  VALUE: REQ-001
+  VALUE: REQ-002
   ROLE: Implements

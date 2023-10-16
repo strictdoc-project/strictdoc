@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Hello world doc 2
+REQ_PREFIX: ZEP-
+
+[REQUIREMENT]
+UID: ZEP-4
+STATEMENT: System 2 shall do 1.
+
+[REQUIREMENT]
+UID: ZEP-5
+STATEMENT: System 2 shall do 2.
+
+[REQUIREMENT]
+UID: ZEP-6
+STATEMENT: System 2 shall do 3.

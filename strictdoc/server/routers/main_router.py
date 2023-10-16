@@ -36,7 +36,7 @@ from strictdoc.cli.cli_arg_parser import (
     ServerCommandConfig,
 )
 from strictdoc.core.actions.export_action import ExportAction
-from strictdoc.core.analyzers.document_stats import DocumentStats
+from strictdoc.core.analyzers.document_stats import DocumentTreeStats
 from strictdoc.core.analyzers.document_uid_analyzer import DocumentUIDAnalyzer
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_meta import DocumentMeta
@@ -642,10 +642,12 @@ def create_main_router(
             else reference_node.document
         )
 
-        document_stats: DocumentStats = DocumentUIDAnalyzer.analyze_document(
-            document
+        document_tree_stats: DocumentTreeStats = (
+            DocumentUIDAnalyzer.analyze_document_tree(
+                export_action.traceability_index
+            )
         )
-        next_uid: str = document_stats.get_next_requirement_uid(
+        next_uid: str = document_tree_stats.get_next_requirement_uid(
             reference_node.get_requirement_prefix()
         )
         form_object = RequirementFormObject.create_new(

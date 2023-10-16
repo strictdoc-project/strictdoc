@@ -1,4 +1,4 @@
-from typing import List
+from typing import Dict, List
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.requirement import Requirement
@@ -19,15 +19,34 @@ from strictdoc.helpers.string import (
 class DocumentUIDAnalyzer:
     @staticmethod
     def analyze_document_tree(traceability_index: TraceabilityIndex):
+        global_requirements_per_prefix: Dict[str, SinglePrefixRequirements] = {}
         document_tree_stats: List[DocumentStats] = []
 
         for document in traceability_index.document_tree.document_list:
             document_stats: DocumentStats = (
                 DocumentUIDAnalyzer.analyze_document(document)
             )
+            for (
+                requirement_prefix_,
+                prefix_requirements_,
+            ) in document_stats.requirements_per_prefix.items():
+                global_prefix_requirements = (
+                    global_requirements_per_prefix.setdefault(
+                        requirement_prefix_, SinglePrefixRequirements()
+                    )
+                )
+                global_prefix_requirements.requirements_no_uid.extend(
+                    prefix_requirements_.requirements_no_uid
+                )
+                global_prefix_requirements.requirements_uid_numbers.extend(
+                    prefix_requirements_.requirements_uid_numbers
+                )
             document_tree_stats.append(document_stats)
 
-        return DocumentTreeStats(single_document_stats=document_tree_stats)
+        return DocumentTreeStats(
+            single_document_stats=document_tree_stats,
+            requirements_per_prefix=global_requirements_per_prefix,
+        )
 
     @staticmethod
     def analyze_document(

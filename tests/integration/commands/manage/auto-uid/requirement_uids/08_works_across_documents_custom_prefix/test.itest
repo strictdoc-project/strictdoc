@@ -1,0 +1,7 @@
+RUN: cp %S/input1.sdoc %S/Output/
+RUN: cp %S/input2.sdoc %S/Output/
+RUN: cp %S/input3.sdoc %S/Output/
+RUN: %strictdoc manage auto-uid %S/Output/
+RUN: %diff %S/input1.expected.sdoc %S/Output/input1.sdoc
+RUN: %diff %S/input2.expected.sdoc %S/Output/input2.sdoc
+RUN: %diff %S/input3.expected.sdoc %S/Output/input3.sdoc

@@ -95,6 +95,8 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
 
         self.reqif_profile: str = reqif_profile
 
+        self.autouuid_include_sections: bool = False
+
         self.config_last_update: Optional[
             datetime.datetime
         ] = config_last_update

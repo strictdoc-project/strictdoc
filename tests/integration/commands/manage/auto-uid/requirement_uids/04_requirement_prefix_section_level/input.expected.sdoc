@@ -3,7 +3,6 @@ TITLE: Hello world doc
 REQ_PREFIX: DOC-
 
 [SECTION]
-UID: SECTION-HWD-Section-1
 TITLE: Section 1
 REQ_PREFIX: LEVEL1-REQ-
 
@@ -18,7 +17,6 @@ STATEMENT: System shall do L1-1.
 [/SECTION]
 
 [SECTION]
-UID: SECTION-HWD-Section-2
 TITLE: Section 2
 REQ_PREFIX: LEVEL2-REQ-
 

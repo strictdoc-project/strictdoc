@@ -31,9 +31,27 @@ class Test(E2ECase):
             screen_document.assert_text("Hello world!")
 
             # Requirement 1
-            requirement_1 = screen_document.get_requirement(1)
-            assert requirement_1 is not None
-            requirement_1.assert_requirement_uid_contains("SOME-OTHER-PREFIX-1")
+            root_node = screen_document.get_root_node()
+            root_node_menu = root_node.do_open_node_menu()
+            form_edit_requirement: Form_EditRequirement = (
+                root_node_menu.do_node_add_requirement_first()
+            )
+
+            form_edit_requirement.do_fill_in_field_title("Requirement title #1")
+            form_edit_requirement.do_fill_in_field_statement(
+                "Requirement statement #1."
+            )
+            form_edit_requirement.do_fill_in_field_rationale(
+                "Requirement rationale #1."
+            )
+            form_edit_requirement.do_form_submit()
+
+            # Expected for Requirement 1:
+
+            requirement_1 = screen_document.get_requirement()
+
+            requirement_1.assert_requirement_title("Requirement title #1", "1")
+            screen_document.assert_toc_contains("Requirement title #1")
 
             # Requirement 2
             requirement_1_node_menu = requirement_1.do_open_node_menu()
@@ -50,31 +68,9 @@ class Test(E2ECase):
             form_edit_requirement.do_form_submit()
 
             # Expected for Requirement 2:
-            screen_document.assert_toc_contains("Requirement title #2")
 
             requirement_2 = screen_document.get_requirement(2)
             requirement_2.assert_requirement_title("Requirement title #2", "2")
-            requirement_2.assert_requirement_uid_contains("REQ-1")
-
-            # Requirement 3
-            requirement_2_node_menu = requirement_2.do_open_node_menu()
-            form_edit_requirement: Form_EditRequirement = (
-                requirement_2_node_menu.do_node_add_requirement_below()
-            )
-            form_edit_requirement.do_fill_in_field_title("Requirement title #3")
-            form_edit_requirement.do_fill_in_field_statement(
-                "Requirement statement #3."
-            )
-            form_edit_requirement.do_fill_in_field_rationale(
-                "Requirement rationale #3."
-            )
-            form_edit_requirement.do_form_submit()
-
-            # Expected for Requirement 3:
-
-            requirement_3 = screen_document.get_requirement(3)
-            requirement_3.assert_requirement_title("Requirement title #3", "3")
-            requirement_3.assert_requirement_uid_contains("REQ-2")
-            screen_document.assert_toc_contains("Requirement title #3")
+            screen_document.assert_toc_contains("Requirement title #2")
 
         assert test_setup.compare_sandbox_and_expected_output()

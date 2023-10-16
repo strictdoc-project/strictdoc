@@ -1,16 +1,17 @@
 [DOCUMENT]
 TITLE: Document 1
+REQ_PREFIX: ZEP-
 
 [FREETEXT]
 Hello world!
 [/FREETEXT]
 
 [REQUIREMENT]
-UID: SOME-OTHER-PREFIX-1
-TITLE: Requirement title #1
+UID: ZEP-1
+TITLE: Requirement title #1.1
 STATEMENT: >>>
-Requirement statement #1.
+Requirement statement #1.1.
 <<<
 RATIONALE: >>>
-Requirement rationale #1.
+Requirement rationale #1.1.
 <<<

@@ -330,4 +330,13 @@ class CommandParserBuilder:
             type=str,
             help="Path to the project tree.",
         )
+        command_parser_auto_uid.add_argument(
+            "--include-sections",
+            action="store_true",
+            help=(
+                "By default, the command only generates the UID for "
+                "requirements. This option enables the generation of UID for "
+                "sections."
+            ),
+        )
         add_config_argument(command_parser_auto_uid)

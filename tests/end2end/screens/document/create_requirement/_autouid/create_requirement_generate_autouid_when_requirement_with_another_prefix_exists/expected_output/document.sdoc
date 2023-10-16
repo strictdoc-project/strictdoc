@@ -1,0 +1,27 @@
+[DOCUMENT]
+TITLE: Document 1
+REQ_PREFIX: ZEP-
+
+[FREETEXT]
+Hello world!
+[/FREETEXT]
+
+[REQUIREMENT]
+UID: ZEP-1
+TITLE: Requirement title #1.1
+STATEMENT: >>>
+Requirement statement #1.1.
+<<<
+RATIONALE: >>>
+Requirement rationale #1.1.
+<<<
+
+[REQUIREMENT]
+UID: ZEP-3
+TITLE: Requirement title #1.2
+STATEMENT: >>>
+Requirement statement #1.2.
+<<<
+RATIONALE: >>>
+Requirement rationale #1.2.
+<<<

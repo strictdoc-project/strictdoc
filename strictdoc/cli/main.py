@@ -134,6 +134,9 @@ def _main(parallelizer):
         )
         # FIXME: This must be improved.
         project_config.export_input_paths = [config.input_path]
+        # FIXME: This must be improved.
+        project_config.autouuid_include_sections = config.include_sections
+
         ManageAutoUIDCommand.execute(
             project_config=project_config, parallelizer=parallelizer
         )

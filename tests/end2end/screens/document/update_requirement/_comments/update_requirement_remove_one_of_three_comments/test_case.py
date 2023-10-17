@@ -9,7 +9,7 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 from tests.end2end.server import SDocTestServer
 
 
-class Test_UC07_T22_RemoveOneOfThreeComments(E2ECase):
+class Test(E2ECase):
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
@@ -34,6 +34,7 @@ class Test_UC07_T22_RemoveOneOfThreeComments(E2ECase):
                 requirement.do_open_form_edit_requirement()
             )
 
+            form_edit_requirement.do_open_tab("Comments")
             form_edit_requirement.do_delete_comment(2)
             form_edit_requirement.do_form_submit()
 

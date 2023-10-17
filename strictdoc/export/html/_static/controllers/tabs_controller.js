@@ -29,6 +29,7 @@ Stimulus.register("tabs", class extends Controller {
         tabs[key].handler.setAttribute('active', '');
       });
       sdocTabs.append(sdocTab);
+      sdocTab.setAttribute('data-testid', `form-tab-${key}`);
       state && sdocTab.setAttribute('active', '');
 
       // update accumulator (form state):

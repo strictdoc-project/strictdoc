@@ -9,7 +9,7 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 from tests.end2end.server import SDocTestServer
 
 
-class Test_UC07_T20_AddComment(E2ECase):
+class Test(E2ECase):
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
@@ -36,6 +36,8 @@ class Test_UC07_T20_AddComment(E2ECase):
 
             # There should be no open comment fields, only an add comment
             # button.
+            form_edit_requirement.do_open_tab("Comments")
+
             form_edit_requirement.assert_form_has_no_comments()
 
             comment1_mid = form_edit_requirement.do_form_add_field_comment()

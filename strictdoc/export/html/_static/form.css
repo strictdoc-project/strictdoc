@@ -478,7 +478,7 @@ sdoc-tabs {
 }
 
 sdoc-tab {
-  font-size:var(--font-size-xsm);
+  font-size: var(--font-size-xsm);
   font-weight: 600;
   text-align: left;
   text-decoration: none;
@@ -491,6 +491,8 @@ sdoc-tab {
   -webkit-box-align: center;
   -webkit-box-pack: center;
 
+  border: 1px solid transparent;
+  border-bottom: none;
   border-radius: 4px 4px 0 0;
 
   user-select: none;
@@ -498,7 +500,8 @@ sdoc-tab {
   appearance: none;
 
   /* 1.5 column-gap is compensated by SVG negative margin */
-  column-gap: calc(var(--base-rhythm)*1.5);
+  /* column-gap: calc(var(--base-rhythm)*1.5); */
+
   min-height: calc(var(--base-rhythm)*4);
   padding-left: calc(var(--base-rhythm)*1.5);
   padding-right: calc(var(--base-rhythm)*1.5);
@@ -518,4 +521,27 @@ sdoc-tab[active] {
   color: var(--color-hover);
   background-color: rgba(255, 255, 255, 1);
   cursor: default;
+}
+
+sdoc-tab[data-errors] {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+sdoc-tab[data-errors]::after {
+  content: attr(data-errors);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-danger);
+  color: var(--color-bg-contrast);
+  font-size: var(--font-size-xsm);
+  height: calc(var(--font-size-xsm)*1.75);
+  width: calc(var(--font-size-xsm)*1.75);
+  aspect-ratio: 1;
+  border-radius: 50%;
+
+  /* parent column-gap == 0 */
+  position: relative;
+  right: calc(var(--base-rhythm)*(-1));
 }

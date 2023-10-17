@@ -28,6 +28,8 @@ class Document:  # pylint: disable=too-many-instance-attributes
 
         self.ng_level: int = 0
         self.ng_needs_generation = False
+        self.ng_uses_new_relations_field: bool = False
+
         self.meta: Optional[DocumentMeta] = None
         self.mid: MID = MID.create()
         self.reserved_uid = "DOCUMENT"

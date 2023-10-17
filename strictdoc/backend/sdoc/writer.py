@@ -236,7 +236,9 @@ class SDWriter:
                     output += "<<<"
                     output += "\n"
                 elif field.field_value_references:
-                    output += SDWriter._print_requirement_refs(field)
+                    output += SDWriter._print_requirement_refs(
+                        section_content, field
+                    )
                     refs_already_printed = True
                 elif field.field_value is not None:
                     if len(field.field_value) > 0:
@@ -257,7 +259,7 @@ class SDWriter:
                 "REFS"
             ]
             output += SDWriter._print_requirement_refs(
-                requirement_refs_fields[0]
+                section_content, requirement_refs_fields[0]
             )
 
         return output
@@ -349,9 +351,12 @@ class SDWriter:
         return output
 
     @classmethod
-    def _print_requirement_refs(cls, field):
+    def _print_requirement_refs(cls, requirement: Requirement, field):
         output = ""
-        output += "REFS:"
+        if requirement.uses_new_relations_field:
+            output += "RELATIONS:"
+        else:
+            output += "REFS:"
         output += "\n"
 
         reference: Reference

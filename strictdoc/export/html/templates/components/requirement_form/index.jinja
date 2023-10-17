@@ -20,10 +20,11 @@
   <input type="hidden" id="requirement_mid" name="requirement_mid" value="{{ form_object.requirement_mid }}" />
   <input type="hidden" id="document_mid" name="document_mid" value="{{ form_object.document_mid }}" />
 
-  {# Single-line fields #}
-
+{# Fields #}
+<sdoc-tab-content id="Fields" active>
   {% set text_field_row_context = namespace() %}
 
+  {# Single-line #}
   {%- for field_values_ in form_object.enumerate_fields(multiline=False) -%}
     {%- for field_ in field_values_ -%}
       {% set text_field_row_context.errors=form_object.get_errors(field_.field_name) %}
@@ -33,8 +34,21 @@
     {%- endfor -%}
   {%- endfor -%}
 
-  {# Relations #}
+  {# Multiline, not comment #}
+  {%- for field_values_ in form_object.enumerate_fields(multiline=True) -%}
+    {%- for field_ in field_values_ -%}
+      {% if field_.field_name != "COMMENT" -%}
+        {% set text_field_row_context.errors=form_object.get_errors(field_.field_name) %}
+        {% set text_field_row_context.field = field_ %}
+        {% set text_field_row_context.field_type = "multiline" %}
+        {% include "components/requirement_form/row_with_text_field.jinja" %}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endfor -%}
+</sdoc-tab-content>
 
+{# Relations #}
+<sdoc-tab-content id="Relations">
   {% set relation_row_context = namespace() %}
 
   {%- for field_ in form_object.enumerate_reference_fields() -%}
@@ -54,11 +68,12 @@
       data-turbo="true"
       data-action-type="add_field"
       data-testid="form-action-add-parent-link"
-    >{% include "_res/svg_ico16_add.jinja.html" %} Add parent link</a>
+    >{% include "_res/svg_ico16_add.jinja.html" %} Add relation</a>
   </sdoc-form-row>
+</sdoc-tab-content>
 
-  {# Multiline #}
-
+{# Comments #}
+<sdoc-tab-content id="Comments">
   {% set comment_field_row_context = namespace() %}
 
   {%- for field_values in form_object.enumerate_fields(multiline=True) -%}
@@ -72,19 +87,12 @@
           {% set comment_field_row_context.errors = form_object.get_errors(field_.field_name) %}
           {% include "components/requirement_form/row_with_comment.jinja" %}
         {%- endif -%}
-      {%- else -%}
-        {% set text_field_row_context.errors=form_object.get_errors(field_.field_name) %}
-        {% set text_field_row_context.field = field_ %}
-        {% set text_field_row_context.field_type = "multiline" %}
-        {% include "components/requirement_form/row_with_text_field.jinja" %}
       {%- endif -%}
     {%- endfor -%}
   {%- endfor -%}
 
   {# Add new comments #}
-
   <div id="requirement_{{ form_object.requirement_mid }}__new_comment"></div>
-
   <sdoc-form-row>
     <a
       class="action_button"
@@ -93,7 +101,8 @@
       data-turbo="true"
       data-action-type="add_field"
       data-testid="form-action-add-comment"
-    >{% include "_res/svg_ico16_add.jinja.html" %} Add comment field</a>
+    >{% include "_res/svg_ico16_add.jinja.html" %} Add comment</a>
   </sdoc-form-row>
+</sdoc-tab-content>
 
 {% endblock form_content %}

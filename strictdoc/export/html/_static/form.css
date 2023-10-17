@@ -80,7 +80,6 @@ sdoc-modal-footer {
 sdoc-form {
   display: block;
   position: relative;
-  padding-top: var(--base-rhythm);
   padding-bottom: calc(var(--base-rhythm)*2);
   background-color: var(--color-bg-contrast);
   border-radius: 4px;
@@ -454,4 +453,69 @@ a.field_action:hover {
 
 .field_action:hover::before {
   background: currentcolor;
+}
+
+/* tabs */
+
+sdoc-tab-content {
+  display: none;
+}
+sdoc-tab-content[active] {
+  display: contents;
+}
+
+sdoc-tabs {
+  grid-column: 1 / -1;
+
+  /* compensate top padding for sdoc-form-grid: */
+  /* margin-top: calc(var(--base-rhythm)*(-4)); */
+  padding: calc(var(--base-rhythm)*(1)) calc(var(--base-rhythm)*(2)) 0;
+
+  background-color: var(--color-bg-main);
+  border-radius: 4px;
+
+  display: flex;
+}
+
+sdoc-tab {
+  font-size:var(--font-size-xsm);
+  font-weight: 600;
+  text-align: left;
+  text-decoration: none;
+  white-space: nowrap;
+  position: relative;
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -webkit-box-pack: center;
+
+  border-radius: 4px 4px 0 0;
+
+  user-select: none;
+  cursor: pointer;
+  appearance: none;
+
+  /* 1.5 column-gap is compensated by SVG negative margin */
+  column-gap: calc(var(--base-rhythm)*1.5);
+  min-height: calc(var(--base-rhythm)*4);
+  padding-left: calc(var(--base-rhythm)*1.5);
+  padding-right: calc(var(--base-rhythm)*1.5);
+
+  color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(255, 255, 255, 0);
+  background-clip: padding-box;
+
+  transition: 0.2s;
+}
+
+sdoc-tab:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+sdoc-tab[active] {
+  color: var(--color-hover);
+  background-color: rgba(255, 255, 255, 1);
+  cursor: default;
 }

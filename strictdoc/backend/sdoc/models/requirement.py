@@ -110,9 +110,15 @@ class Requirement(
         ] = OrderedDict()
 
         has_meta: bool = False
+        uses_new_relations_field: bool = False
         for field in fields:
             if field.field_name not in RESERVED_NON_META_FIELDS:
                 has_meta = True
+            if field.field_name == "RELATIONS":
+                field.field_name = "REFS"
+                ordered_fields_lookup.setdefault("REFS", []).append(field)
+                uses_new_relations_field = True
+                continue
             ordered_fields_lookup.setdefault(field.field_name, []).append(field)
 
         if RequirementFieldName.REFS in ordered_fields_lookup:
@@ -130,6 +136,7 @@ class Requirement(
         # TODO: Is it worth to move this to dedicated Presenter* classes to
         # keep this class textx-only?
         self.has_meta: bool = has_meta
+        self.uses_new_relations_field: bool = uses_new_relations_field
 
         # This property is only used for validating fields against grammar
         # during TextX parsing and processing.

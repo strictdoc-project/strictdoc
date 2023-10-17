@@ -226,7 +226,7 @@ RequirementType[noskipws]:
 
 RequirementField[noskipws]:
   (
-    field_name = 'REFS' ':' '\n'
+    (field_name = 'REFS' | field_name = 'RELATIONS') ':' '\n'
     (field_value_references += Reference)
   ) |
   (

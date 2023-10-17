@@ -36,42 +36,43 @@ class ManageAutoUIDCommand:
             DocumentUIDAnalyzer.analyze_document_tree(traceability_index)
         )
 
-        document_stats: DocumentStats
-        for document_stats in document_tree_stats.single_document_stats:
-            document_acronym = create_safe_acronym(
-                document_stats.document.title
-            )
-            section_uids_so_far = Counter()
-            for section in document_stats.sections_without_uid:
-                section_title = create_safe_title_string(section.title)
-                auto_uid = f"SECTION-{document_acronym}-{section_title}"
-
-                count_so_far = section_uids_so_far[auto_uid]
-                section_uids_so_far[auto_uid] += 1
-
-                if count_so_far >= 1:
-                    auto_uid += f"-{section_uids_so_far[auto_uid]}"
-
-                section.uid = auto_uid
-                section.reserved_uid = auto_uid
-
-            for (
-                prefix,
-                prefix_requirements,
-            ) in document_stats.requirements_per_prefix.items():
-                next_number = document_stats.get_next_requirement_uid_number(
-                    prefix
+        if project_config.autouuid_include_sections:
+            document_stats_: DocumentStats
+            for document_stats_ in document_tree_stats.single_document_stats:
+                document_acronym = create_safe_acronym(
+                    document_stats_.document.title
                 )
+                section_uids_so_far = Counter()
+                for section in document_stats_.sections_without_uid:
+                    section_title = create_safe_title_string(section.title)
+                    auto_uid = f"SECTION-{document_acronym}-{section_title}"
 
-                for requirement in prefix_requirements.requirements_no_uid:
-                    requirement_prefix = requirement.get_requirement_prefix()
-                    requirement_uid = f"{requirement_prefix}{next_number}"
-                    requirement.set_field_value(
-                        field_name="UID",
-                        form_field_index=0,
-                        value=requirement_uid,
-                    )
-                    next_number += 1
+                    count_so_far = section_uids_so_far[auto_uid]
+                    section_uids_so_far[auto_uid] += 1
+
+                    if count_so_far >= 1:
+                        auto_uid += f"-{section_uids_so_far[auto_uid]}"
+
+                    section.uid = auto_uid
+                    section.reserved_uid = auto_uid
+
+        for (
+            prefix,
+            prefix_requirements,
+        ) in document_tree_stats.requirements_per_prefix.items():
+            next_number = document_tree_stats.get_next_requirement_uid_number(
+                prefix
+            )
+
+            for requirement in prefix_requirements.requirements_no_uid:
+                requirement_prefix = requirement.get_requirement_prefix()
+                requirement_uid = f"{requirement_prefix}{next_number}"
+                requirement.set_field_value(
+                    field_name="UID",
+                    form_field_index=0,
+                    value=requirement_uid,
+                )
+                next_number += 1
 
         for document in traceability_index.document_tree.document_list:
             document_content = SDWriter().write(document)

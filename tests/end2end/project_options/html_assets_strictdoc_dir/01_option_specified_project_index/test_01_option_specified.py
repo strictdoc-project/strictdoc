@@ -1,7 +1,6 @@
 import os
 
-from seleniumbase import BaseCase
-
+from tests.end2end.e2e_case import E2ECase
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
 )
@@ -11,7 +10,7 @@ path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
 class Test_ProjectOptions_HTMLAssetsStrictDocDir_01_OptionSpecified_ProjectIndex(  # noqa: E501
-    BaseCase
+    E2ECase
 ):
     def test(self):
         with SDocTestServer(

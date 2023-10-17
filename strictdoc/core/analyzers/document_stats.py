@@ -20,6 +20,15 @@ class DocumentStats:
     )
     sections_without_uid: List[Section] = field(default_factory=list)
 
+
+@dataclass
+class DocumentTreeStats:
+    single_document_stats: List[DocumentStats] = field(default_factory=list)
+
+    requirements_per_prefix: Dict[str, SinglePrefixRequirements] = field(
+        default_factory=dict
+    )
+
     def get_next_requirement_uid(self, prefix) -> str:
         next_number = self.get_next_requirement_uid_number(prefix)
         return f"{prefix}{next_number}"
@@ -39,8 +48,3 @@ class DocumentStats:
             else 1
         )
         return next_number
-
-
-@dataclass
-class DocumentTreeStats:
-    single_document_stats: List[DocumentStats] = field(default_factory=list)

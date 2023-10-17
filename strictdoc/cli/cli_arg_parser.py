@@ -17,9 +17,16 @@ class ImportReqIFCommandConfig:
 
 
 class ManageAutoUIDCommandConfig:
-    def __init__(self, *, input_path: str, config_path: Optional[str]):
+    def __init__(
+        self,
+        *,
+        input_path: str,
+        config_path: Optional[str],
+        include_sections: bool,
+    ):
         self.input_path: str = input_path
         self._config_path: Optional[str] = config_path
+        self.include_sections: bool = include_sections
 
     def get_path_to_config(self) -> Optional[str]:
         path_to_input_dir = self.input_path
@@ -238,6 +245,7 @@ class SDocArgsParser:
         return ManageAutoUIDCommandConfig(
             input_path=self.args.input_path,
             config_path=self.args.config,
+            include_sections=self.args.include_sections,
         )
 
     def get_import_config_excel(self, _) -> ImportExcelCommandConfig:

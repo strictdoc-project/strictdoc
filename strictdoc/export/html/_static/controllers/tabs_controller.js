@@ -1,20 +1,15 @@
 Stimulus.register("tabs", class extends Controller {
   initialize() {
 
-    const errors =[...this.element.querySelectorAll('sdoc-form-error')];
-    if(errors.length) {
-      // errors[0]
-    }
-
     // ** Tab buttons like this:
     // <sdoc-tabs>
     //  <sdoc-tab style="order: 0;" active>Id1</sdoc-tab>
     //  <sdoc-tab style="order: 1;">Id2</sdoc-tab>
     // </sdoc-tab>
     const sdocTabs = document.createElement('sdoc-tabs');
-
-    const tabsData =[...this.element.querySelectorAll('sdoc-tab-content')]
-    .reduce((accumulator, currentSdocTabContentElement, currentIndex) => {
+    const sdocTabContent = [...this.element.querySelectorAll('sdoc-tab-content')];
+    const tabsData = sdocTabContent.reduce(
+      (accumulator, currentSdocTabContentElement, currentIndex) => {
       // get data from the contents of the tab element in the DOM:
       const key = currentSdocTabContentElement.id;
       const state = currentSdocTabContentElement.hasAttribute('active');
@@ -52,7 +47,7 @@ Stimulus.register("tabs", class extends Controller {
     });
 
     // put tab handlers to the DOM
-    this.element.prepend(sdocTabs);
+    sdocTabContent.length && this.element.prepend(sdocTabs);
 
     // activate first tab with errors
     tabsData.errors.length && this._activateTab(tabsData.tabs, tabsData.errors[0]);

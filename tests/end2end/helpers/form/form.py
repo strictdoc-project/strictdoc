@@ -52,9 +52,7 @@ class Form:  # pylint: disable=invalid-name
 
     def do_open_tab(self, tab_name: str = "") -> None:
         assert isinstance(tab_name, str)
-        self.test_case.click_xpath(
-            f"//*[@data-testid='form-tab-{tab_name}']"
-        )
+        self.test_case.click_xpath(f"//*[@data-testid='form-tab-{tab_name}']")
         # should have the attribute
         self.test_case.assert_attribute(
             f"//*[@data-testid='form-tab-{tab_name}']",

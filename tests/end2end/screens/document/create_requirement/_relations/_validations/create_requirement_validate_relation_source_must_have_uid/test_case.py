@@ -35,11 +35,14 @@ class Test(E2ECase):
                 node_menu_requirement1.do_node_add_requirement_below()
             )
 
+            form_edit_requirement.assert_tab_is_open("Fields")
             form_edit_requirement.do_clear_field("requirement-field-UID")
             form_edit_requirement.do_fill_in_field_title("Requirement #2 title")
             form_edit_requirement.do_fill_in_field_statement(
                 "Requirement #2 statement."
             )
+
+            form_edit_requirement.do_open_tab("Relations")
             requirement_parent_mid = (
                 form_edit_requirement.do_form_add_field_parent_link()
             )

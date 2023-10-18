@@ -34,6 +34,7 @@ class Test(E2ECase):
                 requirement.do_open_form_edit_requirement()
             )
 
+            form_edit_requirement.do_open_tab("Comments")
             form_edit_requirement.do_form_add_field_comment()
 
             form_edit_requirement.do_form_submit()

@@ -48,14 +48,32 @@ class Form:  # pylint: disable=invalid-name
             f"//*[@{testid}][contains(., '{text}')]", by=By.XPATH
         )
 
-    # Work with fields containers
+    # Open TAB
 
-    def do_add_field(self, field_name: str = "") -> None:
-        assert isinstance(field_name, str)
-        self.test_case.click_xpath(
-            f"//*[@data-testid='form-add-{field_name}-field-action']"
+    def do_open_tab(self, tab_name: str = "") -> None:
+        assert isinstance(tab_name, str)
+        self.test_case.click_xpath(f"//*[@data-testid='form-tab-{tab_name}']")
+        # should have the attribute
+        self.test_case.assert_attribute(
+            f"//*[@data-testid='form-tab-{tab_name}']",
+            "active",
+            "",
+            by=By.XPATH,
         )
 
+    def assert_tab_is_open(self, tab_name: str = "") -> None:
+        assert isinstance(tab_name, str)
+        # should have the attribute
+        self.test_case.assert_attribute(
+            f"//*[@data-testid='form-tab-{tab_name}']",
+            "active",
+            "",
+            by=By.XPATH,
+        )
+
+    # Work with fields containers
+
+    # TODO: update with mid
     def do_delete_field(self, field_name: str, field_order: int = 1) -> None:
         assert isinstance(field_name, str)
         self.test_case.click_xpath(

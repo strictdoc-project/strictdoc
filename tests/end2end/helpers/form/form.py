@@ -73,12 +73,7 @@ class Form:  # pylint: disable=invalid-name
 
     # Work with fields containers
 
-    def do_add_field(self, field_name: str = "") -> None:
-        assert isinstance(field_name, str)
-        self.test_case.click_xpath(
-            f"//*[@data-testid='form-add-{field_name}-field-action']"
-        )
-
+    # TODO: update with mid
     def do_delete_field(self, field_name: str, field_order: int = 1) -> None:
         assert isinstance(field_name, str)
         self.test_case.click_xpath(

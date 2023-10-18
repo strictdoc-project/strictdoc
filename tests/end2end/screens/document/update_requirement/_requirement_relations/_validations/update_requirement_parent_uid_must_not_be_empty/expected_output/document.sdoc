@@ -6,6 +6,7 @@ Hello world!
 [/FREETEXT]
 
 [REQUIREMENT]
+UID: REQ-001
 TITLE: Requirement title
 STATEMENT: >>>
 Requirement statement.

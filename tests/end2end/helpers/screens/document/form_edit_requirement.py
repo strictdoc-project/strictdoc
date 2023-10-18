@@ -40,6 +40,7 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
         return MID(element_mid)
 
     def do_delete_comment(self, field_order: int = 1) -> None:
+        # TODO: update with mid
         super().do_delete_field("requirement-comment", field_order)
 
     def do_fill_in_field_comment(self, mid: MID, field_value: str) -> None:
@@ -76,6 +77,7 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
         return MID(element_mid)
 
     def do_delete_parent_link(self, field_order: int = 1) -> None:
+        # TODO: update with mid
         super().do_delete_field("requirement-relation", field_order)
 
     def do_fill_in_field_parent_link(self, mid: MID, field_value: str) -> None:

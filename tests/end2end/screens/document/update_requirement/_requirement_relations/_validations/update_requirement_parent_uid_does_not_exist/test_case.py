@@ -35,7 +35,7 @@ class Test(E2ECase):
             form_edit_requirement: Form_EditRequirement = (
                 requirement.do_open_form_edit_requirement()
             )
-
+            form_edit_requirement.do_open_tab("Relations")
             new_relation_mid = (
                 form_edit_requirement.do_form_add_field_parent_link()
             )

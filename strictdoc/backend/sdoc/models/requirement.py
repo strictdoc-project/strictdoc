@@ -136,7 +136,8 @@ class Requirement(
         # TODO: Is it worth to move this to dedicated Presenter* classes to
         # keep this class textx-only?
         self.has_meta: bool = has_meta
-        self.uses_new_relations_field: bool = uses_new_relations_field
+
+        self.ng_uses_new_relations_field: bool = uses_new_relations_field
 
         # This property is only used for validating fields against grammar
         # during TextX parsing and processing.

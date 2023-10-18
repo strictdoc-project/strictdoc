@@ -39,8 +39,13 @@ class SDReader:
         )
         meta_model.register_obj_processors(processor.get_default_processors())
 
-        document = meta_model.model_from_str(input_string, file_name=file_path)
+        document: Document = meta_model.model_from_str(
+            input_string, file_name=file_path
+        )
         parse_context.document_reference.set_document(document)
+        document.ng_uses_new_relations_field = (
+            parse_context.uses_new_relations_field
+        )
 
         # HACK:
         # ProcessPoolExecutor doesn't work because of non-picklable parts

@@ -37,21 +37,21 @@ class Test_UC07_G1_T02_AddThreeLinks(E2ECase):
             )
             form_edit_requirement.do_open_tab("Relations")
             requirement1_mid = (
-                form_edit_requirement.do_form_add_field_parent_link()
+                form_edit_requirement.do_form_add_field_relation()
             )
-            form_edit_requirement.do_fill_in_field_parent_link(
+            form_edit_requirement.do_fill_in_field_relation(
                 requirement1_mid, "REQ-002"
             )
             requirement2_mid = (
-                form_edit_requirement.do_form_add_field_parent_link()
+                form_edit_requirement.do_form_add_field_relation()
             )
-            form_edit_requirement.do_fill_in_field_parent_link(
+            form_edit_requirement.do_fill_in_field_relation(
                 requirement2_mid, "REQ-003"
             )
             requirement3_mid = (
-                form_edit_requirement.do_form_add_field_parent_link()
+                form_edit_requirement.do_form_add_field_relation()
             )
-            form_edit_requirement.do_fill_in_field_parent_link(
+            form_edit_requirement.do_fill_in_field_relation(
                 requirement3_mid, "REQ-004"
             )
             form_edit_requirement.do_form_submit()

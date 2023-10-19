@@ -27,7 +27,7 @@ class Test(E2ECase):
             screen_document1 = screen_project_index.do_click_on_the_document(1)
             screen_document1.assert_text("Hello world!")
             requirement1 = screen_document1.get_requirement()
-            requirement1.assert_requirement_has_child_link("REQ-002")
+            requirement1.assert_requirement_has_child_relation("REQ-002")
 
             # Go back to tree
             self.open(test_server.get_host_and_port())
@@ -37,7 +37,7 @@ class Test(E2ECase):
             screen_document2 = screen_project_index.do_click_on_the_document(2)
             screen_document2.assert_text("Hello world 2!")
             requirement2 = screen_document2.get_requirement()
-            requirement2.assert_requirement_has_parent_link("REQ-001")
+            requirement2.assert_requirement_has_parent_relation("REQ-001")
 
             # and remove the parent link to REQ-001.
             form_edit_requirement: Form_EditRequirement = (
@@ -55,12 +55,12 @@ class Test(E2ECase):
             screen_document1 = screen_project_index.do_click_on_the_document(1)
             screen_document1.assert_text("Hello world!")
             requirement1 = screen_document1.get_requirement()
-            requirement1.assert_requirement_has_not_child_link("REQ-002")
+            requirement1.assert_requirement_has_not_child_relation("REQ-002")
 
             self.open(test_server.get_host_and_port())
             screen_document2 = screen_project_index.do_click_on_the_document(2)
             screen_document2.assert_text("Hello world 2!")
             requirement2 = screen_document2.get_requirement()
-            requirement2.assert_requirement_has_not_parent_link("REQ-001")
+            requirement2.assert_requirement_has_not_parent_relation("REQ-001")
 
         assert test_setup.compare_sandbox_and_expected_output()

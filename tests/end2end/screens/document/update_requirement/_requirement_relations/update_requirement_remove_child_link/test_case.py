@@ -35,10 +35,10 @@ class Test(E2ECase):
 
             # Make sure there is the reference to the child in Requirement 1:
             requirement1.assert_requirement_uid_contains("REQ-001")
-            requirement1.assert_requirement_has_parent_link("REQ-002")
+            requirement1.assert_requirement_has_parent_relation("REQ-002")
             # Make sure there is the reference to the parent in Requirement 2:
             requirement2.assert_requirement_uid_contains("REQ-002")
-            requirement2.assert_requirement_has_child_link("REQ-001")
+            requirement2.assert_requirement_has_child_relation("REQ-001")
 
             # edit the second requirement
 
@@ -54,9 +54,9 @@ class Test(E2ECase):
 
             # Make sure there is no reference to the child in Requirement 1:
             requirement1.assert_requirement_uid_contains("REQ-001")
-            requirement1.assert_requirement_has_not_child_link("REQ-002")
+            requirement1.assert_requirement_has_not_child_relation("REQ-002")
             # Make sure there is no reference to the parent in Requirement 2:
             requirement2.assert_requirement_uid_contains("REQ-002")
-            requirement2.assert_requirement_has_not_parent_link("REQ-001")
+            requirement2.assert_requirement_has_not_parent_relation("REQ-001")
 
         assert test_setup.compare_sandbox_and_expected_output()

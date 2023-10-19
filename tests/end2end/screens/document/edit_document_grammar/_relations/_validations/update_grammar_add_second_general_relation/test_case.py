@@ -36,6 +36,7 @@ class Test(E2ECase):
             )
             form_edit_grammar.assert_on_grammar()
 
+            form_edit_grammar.do_open_tab("Relations")
             form_edit_grammar.do_add_grammar_relation()
             form_edit_grammar.do_form_submit_and_catch_error(
                 "A duplicated general relation: Parent. "

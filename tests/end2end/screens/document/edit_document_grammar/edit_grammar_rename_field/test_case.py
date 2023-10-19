@@ -36,6 +36,8 @@ class Test(E2ECase):
             )
             form_edit_grammar.assert_on_grammar()
 
+            form_edit_grammar.assert_tab_is_open("Fields")
+
             custom_field_mid = form_edit_grammar.get_existing_mid_by_field_name(
                 "CUSTOM_FIELD"
             )

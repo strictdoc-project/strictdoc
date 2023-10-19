@@ -26,7 +26,8 @@ class ParseContext:
             None
         )
         self.current_include_parent = None
-        self.uses_new_relations_field: bool = False
+        self.uses_old_refs_field: bool = False
+        self.at_least_one_relations_field: bool = False
 
 
 class SDocParsingProcessor:
@@ -160,10 +161,10 @@ class SDocParsingProcessor:
             composite_requirement.ng_resolved_custom_level = "None"
 
     def process_requirement(self, requirement: Requirement):
-        if requirement.ng_uses_new_relations_field:
-            self.parse_context.uses_new_relations_field = (
-                requirement.ng_uses_new_relations_field
-            )
+        if requirement.ng_uses_old_refs_field:
+            self.parse_context.uses_old_refs_field = True
+        elif "REFS" in requirement.ordered_fields_lookup:
+            self.parse_context.at_least_one_relations_field = True
 
         document_grammar = self.parse_context.document_grammar
         if (

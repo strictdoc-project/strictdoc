@@ -1,3 +1,4 @@
+import sys
 from collections import OrderedDict
 from typing import Any, Dict, List, Optional, Tuple, Union
 
@@ -110,15 +111,34 @@ class Requirement(
         ] = OrderedDict()
 
         has_meta: bool = False
-        uses_new_relations_field: bool = False
+        uses_old_refs_field: bool = False
         for field in fields:
             if field.field_name not in RESERVED_NON_META_FIELDS:
                 has_meta = True
-            if field.field_name == "RELATIONS":
+
+            if field.field_name == "REFS":
+                uses_old_refs_field = True
+            elif field.field_name == "RELATIONS":
                 field.field_name = "REFS"
                 ordered_fields_lookup.setdefault("REFS", []).append(field)
-                uses_new_relations_field = True
+                uses_old_refs_field = False
                 continue
+
+            if field.field_name in ("REFS", "RELATIONS"):
+                if (
+                    field.field_value_references is None
+                    or len(field.field_value_references) == 0
+                ):
+                    print(  # noqa: T201
+                        "error: REFS requirement field can only be of "
+                        "Reference type. Furthermore: 1) The REFS field is "
+                        "deprecated and must be renamed to RELATIONS. "
+                        "2) The requirement RELATIONS field shall "
+                        "be the last field, after all other fields. "
+                        'See the section "Relations" in the user guide for '
+                        "more details."
+                    )
+                    sys.exit(1)
             ordered_fields_lookup.setdefault(field.field_name, []).append(field)
 
         if RequirementFieldName.REFS in ordered_fields_lookup:
@@ -137,7 +157,7 @@ class Requirement(
         # keep this class textx-only?
         self.has_meta: bool = has_meta
 
-        self.ng_uses_new_relations_field: bool = uses_new_relations_field
+        self.ng_uses_old_refs_field: bool = uses_old_refs_field
 
         # This property is only used for validating fields against grammar
         # during TextX parsing and processing.

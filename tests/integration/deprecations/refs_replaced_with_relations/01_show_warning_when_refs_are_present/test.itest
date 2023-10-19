@@ -1,0 +1,8 @@
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+
+CHECK: warning: the Document "Hello world doc" has requirements with a REFS field. The REFS field is deprecated and must be renamed to RELATIONS. Additionally, the requirement's RELATIONS field shall be the last field after all other fields.
+CHECK: Published: Hello world doc
+
+RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: Hello world doc
+CHECK-HTML: input.sdoc

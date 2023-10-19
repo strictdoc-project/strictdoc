@@ -43,9 +43,27 @@ class SDReader:
             input_string, file_name=file_path
         )
         parse_context.document_reference.set_document(document)
-        document.ng_uses_new_relations_field = (
-            parse_context.uses_new_relations_field
+        document.ng_uses_old_refs_field = parse_context.uses_old_refs_field
+        document.ng_at_least_one_relations_field = (
+            parse_context.at_least_one_relations_field
         )
+
+        if document.ng_uses_old_refs_field:
+            print(  # noqa: T201
+                "warning: "
+                f'the Document "{document.title}" has requirements with a '
+                "REFS field. The REFS field is deprecated and must be renamed "
+                "to RELATIONS. "
+                "Additionally, the requirement's RELATIONS field shall be the "
+                "last field after all other fields.\n"
+                "Correct requirement example:\n"
+                "[REQUIREMENT]\n"
+                "UID: REQ-2\n"
+                "STATEMENT: When Z, the system X shall do Y.\n"
+                "RELATIONS:\n"
+                "- TYPE: Parent\n"
+                "  VALUE: REQ-1"
+            )
 
         # HACK:
         # ProcessPoolExecutor doesn't work because of non-picklable parts

@@ -45,9 +45,9 @@ class Test(E2ECase):
             )
             form_edit_requirement.do_open_tab("Relations")
             form_edit_requirement.assert_form_has_relations()
-            form_edit_requirement.do_delete_parent_link()
+            form_edit_requirement.do_delete_relation()
             # Make sure that the field is removed from the form:
-            form_edit_requirement.assert_form_has_no_parents()
+            form_edit_requirement.assert_form_has_no_relations()
             form_edit_requirement.do_form_submit()
 
             # Now check that the documents do not have the link anymore.

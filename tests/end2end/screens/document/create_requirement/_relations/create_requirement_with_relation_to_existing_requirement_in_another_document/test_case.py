@@ -48,9 +48,9 @@ class Test(E2ECase):
 
             form_edit_requirement.do_open_tab("Relations")
             requirement_parent_mid = (
-                form_edit_requirement.do_form_add_field_parent_link()
+                form_edit_requirement.do_form_add_field_relation()
             )
-            form_edit_requirement.do_fill_in_field_parent_link(
+            form_edit_requirement.do_fill_in_field_relation(
                 requirement_parent_mid, "REQ-001"
             )
             form_edit_requirement.do_select_relation_role(

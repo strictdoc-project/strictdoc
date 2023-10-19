@@ -4,14 +4,13 @@
 
 <turbo-frame id="{{ frame_id }}">
 
-<sdoc-form
-  data-controller="scroll_into_view tabs"
->
+<sdoc-form>
 
 <form
   action="{{ submit_url }}"
   method="POST"
   data-turbo="true"
+  data-controller="scroll_into_view tabs"
 >
 
   <sdoc-form-grid>

@@ -3,7 +3,7 @@
 #}
 <turbo-frame data-controller="modal_controller">
   <sdoc-backdrop>
-      <sdoc-modal>
+      <sdoc-modal context="{%- block modal__context -%}{%- endblock -%}">
         <sdoc-modal-container>
         {%- block modal_container %}{% endblock -%}
         </sdoc-modal-container>

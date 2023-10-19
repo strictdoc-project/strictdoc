@@ -4,6 +4,7 @@
     confirm_title
     confirm_message
   #}
+{% block modal__context %}confirm{% endblock modal__context %}
 {% block modal_form__header %}
   {{ confirm_title|default("Are you sure?") }}
 {% endblock modal_form__header %}

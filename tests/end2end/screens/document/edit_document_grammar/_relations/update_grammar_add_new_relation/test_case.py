@@ -36,6 +36,7 @@ class Test(E2ECase):
             )
             form_edit_grammar.assert_on_grammar()
 
+            form_edit_grammar.do_open_tab("Relations")
             grammar_relation_mid = form_edit_grammar.do_add_grammar_relation()
             form_edit_grammar.do_fill_in_grammar_relation_role(
                 grammar_relation_mid, "Refines"

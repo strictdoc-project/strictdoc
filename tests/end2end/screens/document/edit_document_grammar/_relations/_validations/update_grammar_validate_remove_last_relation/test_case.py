@@ -36,6 +36,7 @@ class Test(E2ECase):
             )
             form_edit_grammar.assert_on_grammar()
 
+            form_edit_grammar.do_open_tab("Relations")
             relation_mid = form_edit_grammar.get_existing_relation_mid(-1)
             form_edit_grammar.do_delete_grammar_relation(relation_mid)
 

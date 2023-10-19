@@ -68,7 +68,7 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
         new_relation_ordinal_number = relations_number + 1
 
         self.test_case.click_xpath(
-            "//*[@data-testid='form-action-add-parent-link']"
+            "//*[@data-testid='form-action-add-relation']"
         )
 
         xpath = f"({any_relation_xpath})[{new_relation_ordinal_number}]"

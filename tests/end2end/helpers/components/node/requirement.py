@@ -122,7 +122,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
-    def assert_requirement_has_child_link(
+    def assert_requirement_has_child_relation(
         self,
         child_uid: str,
     ) -> None:
@@ -133,7 +133,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
-    def assert_requirement_has_parent_link(
+    def assert_requirement_has_parent_relation(
         self,
         parent_uid: str,
     ) -> None:
@@ -144,7 +144,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
-    def assert_requirement_has_not_child_link(
+    def assert_requirement_has_not_child_relation(
         self,
         child_uid: str,
     ) -> None:
@@ -155,7 +155,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
-    def assert_requirement_has_not_parent_link(
+    def assert_requirement_has_not_parent_relation(
         self,
         parent_uid: str,
     ) -> None:

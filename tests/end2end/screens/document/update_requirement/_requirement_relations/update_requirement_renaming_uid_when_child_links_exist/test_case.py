@@ -39,8 +39,8 @@ class Test(E2ECase):
             form_edit_requirement.do_form_submit_and_catch_error(
                 "Not supported yet: "
                 "Renaming a requirement UID when the requirement has child "
-                "requirement links. For now, manually delete the links, rename "
-                "the UID, recreate the links.",
+                "requirement relations. For now, manually delete the relations,"
+                " rename the UID, recreate the relations.",
             )
 
         assert test_setup.compare_sandbox_and_expected_output()

@@ -1,3 +1,4 @@
+import sys
 from collections import OrderedDict, defaultdict
 from typing import Dict, List, Optional, Set, Union
 
@@ -70,6 +71,16 @@ class GrammarElement:
         self.fields_map = fields_map
 
         if "REFS" in fields_map:
+            field = fields_map["REFS"]
+            if not isinstance(field, GrammarElementFieldReference):
+                print(  # noqa: T201
+                    "error: REFS grammar field can only be of Reference type. "
+                    "Furthermore, the REFS field is deprecated in favor of "
+                    'the new RELATIONS field. See the section "Custom grammars" '
+                    "in the user guide."
+                )
+                sys.exit(1)
+
             refs_field: GrammarElementFieldReference = assert_cast(
                 fields_map["REFS"], GrammarElementFieldReference
             )

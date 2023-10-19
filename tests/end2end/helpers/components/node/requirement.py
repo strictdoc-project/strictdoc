@@ -128,7 +128,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
     ) -> None:
         self.test_case.assert_element(
             f"{self.node_xpath}"
-            "//sdoc-requirement-field[@data-field-label='child links']"
+            "//sdoc-requirement-field[@data-field-label='child relations']"
             f"[contains(., '{child_uid}')]",
             by=By.XPATH,
         )
@@ -139,7 +139,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
     ) -> None:
         self.test_case.assert_element(
             f"{self.node_xpath}"
-            "//sdoc-requirement-field[@data-field-label='parent links']"
+            "//sdoc-requirement-field[@data-field-label='parent relations']"
             f"[contains(., '{parent_uid}')]",
             by=By.XPATH,
         )
@@ -150,7 +150,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
     ) -> None:
         self.test_case.assert_element_not_present(
             f"{self.node_xpath}"
-            "//sdoc-requirement-field[@data-field-label='child links']"
+            "//sdoc-requirement-field[@data-field-label='child relations']"
             f"[contains(., '{child_uid}')]",
             by=By.XPATH,
         )
@@ -161,7 +161,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
     ) -> None:
         self.test_case.assert_element_not_present(
             f"{self.node_xpath}"
-            "//sdoc-requirement-field[@data-field-label='parent links']"
+            "//sdoc-requirement-field[@data-field-label='parent relations']"
             f"[contains(., '{parent_uid}')]",
             by=By.XPATH,
         )

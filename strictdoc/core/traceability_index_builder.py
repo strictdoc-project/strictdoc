@@ -216,11 +216,11 @@ class TraceabilityIndexBuilder:
         # step.
         #
         # Step #2:
-        # - Check if each requirement's has valid parent links.
+        # - Check if each requirement's has valid parent relations.
         # - Resolve parent forward declarations
         # - Re-assign children declarations
         # - Detect cycles
-        # - Calculate depth of both parent and child links.
+        # - Calculate depth of both parent and child relations.
 
         document: Document
         for document in document_tree.document_list:

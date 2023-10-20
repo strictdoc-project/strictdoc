@@ -39,7 +39,7 @@ class Test(E2ECase):
             form_edit_requirement.do_form_add_field_relation()
 
             form_edit_requirement.do_form_submit_and_catch_error(
-                "Requirement parent link UID must not be empty."
+                "Requirement relation UID must not be empty."
             )
 
         assert test_setup.compare_sandbox_and_expected_output()

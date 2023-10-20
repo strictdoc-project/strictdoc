@@ -1586,8 +1586,8 @@ def create_main_router(
         template = env().get_template(
             "actions/"
             "document/"
-            "add_requirement_parent_link/"
-            "stream_add_requirement_parent_link.jinja.html"
+            "add_requirement_relation/"
+            "stream_add_requirement_relation.jinja.html"
         )
         output = template.render(
             requirement_mid=requirement_mid,

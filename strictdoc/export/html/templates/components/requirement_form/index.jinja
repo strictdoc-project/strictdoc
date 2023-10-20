@@ -59,15 +59,15 @@
     {% include "components/requirement_form/row_with_relation.jinja" %}
   {%- endfor -%}
 
-  <div id="requirement_{{ form_object.requirement_mid }}__new_parent_link"></div>
+  <div id="requirement_{{ form_object.requirement_mid }}__new_relation"></div>
   <sdoc-form-row>
     <a
       class="action_button"
-      href="/actions/document/new_parent_link?requirement_mid={{ form_object.requirement_mid }}&document_mid={{ form_object.document_mid }}"
+      href="/actions/document/new_relation?requirement_mid={{ form_object.requirement_mid }}&document_mid={{ form_object.document_mid }}"
       data-turbo-action="replace"
       data-turbo="true"
       data-action-type="add_field"
-      data-testid="form-action-add-parent-link"
+      data-testid="form-action-add-relation"
     >{% include "_res/svg_ico16_add.jinja.html" %} Add relation</a>
   </sdoc-form-row>
 </sdoc-tab-content>

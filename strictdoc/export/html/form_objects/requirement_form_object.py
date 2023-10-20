@@ -552,9 +552,9 @@ class RequirementFormObject(ErrorObject):
         ):
             self.add_error(
                 "UID",
-                "Requirement with parent links must have an UID. "
+                "Requirement with parent relations must have an UID. "
                 "Either provide a parent UID, or "
-                "delete the parent requirement links.",
+                "delete the parent requirement relations.",
             )
 
         if (
@@ -566,8 +566,8 @@ class RequirementFormObject(ErrorObject):
                     "UID",
                     "Not supported yet: "
                     "Renaming a requirement UID when the requirement has "
-                    "parent requirement links. For now, manually delete the "
-                    "links, rename the UID, recreate the links.",
+                    "parent requirement relations. For now, manually delete the "
+                    "relations, rename the UID, recreate the relations.",
                 )
             requirement_connections: RequirementConnections = (
                 traceability_index.requirements_connections[
@@ -579,8 +579,8 @@ class RequirementFormObject(ErrorObject):
                     "UID",
                     "Not supported yet: "
                     "Renaming a requirement UID when the requirement has "
-                    "child requirement links. For now, manually delete the "
-                    "links, rename the UID, recreate the links.",
+                    "child requirement relations. For now, manually delete the "
+                    "relations, rename the UID, recreate the relations.",
                 )
                 return
 
@@ -591,7 +591,7 @@ class RequirementFormObject(ErrorObject):
                     link_uid = reference_field.field_value
                     if len(link_uid) == 0:
                         reference_field.validation_messages.append(
-                            "Requirement parent link UID must not be empty."
+                            "Requirement relation UID must not be empty."
                         )
                         continue
                     elif (

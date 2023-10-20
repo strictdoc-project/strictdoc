@@ -122,46 +122,46 @@ class Requirement(Node):  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
-    def assert_requirement_has_child_link(
+    def assert_requirement_has_child_relation(
         self,
         child_uid: str,
     ) -> None:
         self.test_case.assert_element(
             f"{self.node_xpath}"
-            "//sdoc-requirement-field[@data-field-label='child links']"
+            "//sdoc-requirement-field[@data-field-label='child relations']"
             f"[contains(., '{child_uid}')]",
             by=By.XPATH,
         )
 
-    def assert_requirement_has_parent_link(
+    def assert_requirement_has_parent_relation(
         self,
         parent_uid: str,
     ) -> None:
         self.test_case.assert_element(
             f"{self.node_xpath}"
-            "//sdoc-requirement-field[@data-field-label='parent links']"
+            "//sdoc-requirement-field[@data-field-label='parent relations']"
             f"[contains(., '{parent_uid}')]",
             by=By.XPATH,
         )
 
-    def assert_requirement_has_not_child_link(
+    def assert_requirement_has_not_child_relation(
         self,
         child_uid: str,
     ) -> None:
         self.test_case.assert_element_not_present(
             f"{self.node_xpath}"
-            "//sdoc-requirement-field[@data-field-label='child links']"
+            "//sdoc-requirement-field[@data-field-label='child relations']"
             f"[contains(., '{child_uid}')]",
             by=By.XPATH,
         )
 
-    def assert_requirement_has_not_parent_link(
+    def assert_requirement_has_not_parent_relation(
         self,
         parent_uid: str,
     ) -> None:
         self.test_case.assert_element_not_present(
             f"{self.node_xpath}"
-            "//sdoc-requirement-field[@data-field-label='parent links']"
+            "//sdoc-requirement-field[@data-field-label='parent relations']"
             f"[contains(., '{parent_uid}')]",
             by=By.XPATH,
         )

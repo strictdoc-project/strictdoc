@@ -35,10 +35,10 @@ class Test(E2ECase):
 
             # Make sure there is the reference to the child in Requirement 1:
             requirement1.assert_requirement_uid_contains("REQ-001")
-            requirement1.assert_requirement_has_parent_link("REQ-002")
+            requirement1.assert_requirement_has_parent_relation("REQ-002")
             # Make sure there is the reference to the parent in Requirement 2:
             requirement2.assert_requirement_uid_contains("REQ-002")
-            requirement2.assert_requirement_has_child_link("REQ-001")
+            requirement2.assert_requirement_has_child_relation("REQ-001")
 
             # edit the second requirement
 
@@ -47,16 +47,16 @@ class Test(E2ECase):
             )
             form_edit_requirement.do_open_tab("Relations")
             form_edit_requirement.assert_form_has_relations()
-            form_edit_requirement.do_delete_parent_link()
+            form_edit_requirement.do_delete_relation()
             # Make sure that the field is removed from the form:
-            form_edit_requirement.assert_form_has_no_parents()
+            form_edit_requirement.assert_form_has_no_relations()
             form_edit_requirement.do_form_submit()
 
             # Make sure there is no reference to the child in Requirement 1:
             requirement1.assert_requirement_uid_contains("REQ-001")
-            requirement1.assert_requirement_has_not_child_link("REQ-002")
+            requirement1.assert_requirement_has_not_child_relation("REQ-002")
             # Make sure there is no reference to the parent in Requirement 2:
             requirement2.assert_requirement_uid_contains("REQ-002")
-            requirement2.assert_requirement_has_not_parent_link("REQ-001")
+            requirement2.assert_requirement_has_not_parent_relation("REQ-001")
 
         assert test_setup.compare_sandbox_and_expected_output()

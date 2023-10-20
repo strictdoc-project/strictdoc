@@ -36,16 +36,16 @@ class Test(E2ECase):
             )
             form_edit_requirement.do_open_tab("Relations")
             new_relation_mid = (
-                form_edit_requirement.do_form_add_field_parent_link()
+                form_edit_requirement.do_form_add_field_relation()
             )
-            form_edit_requirement.do_fill_in_field_parent_link(
+            form_edit_requirement.do_fill_in_field_relation(
                 new_relation_mid, "REQ-002"
             )
 
             form_edit_requirement.do_form_submit_and_catch_error(
-                "Requirement with parent links must have an UID. "
+                "Requirement with parent relations must have an UID. "
                 "Either provide a parent UID, or "
-                "delete the parent requirement links."
+                "delete the parent requirement relations."
             )
 
         assert test_setup.compare_sandbox_and_expected_output()

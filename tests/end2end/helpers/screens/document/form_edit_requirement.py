@@ -50,17 +50,17 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
             mid, "form-field-requirement-field-COMMENT", field_value
         )
 
-    # parent-link actions
+    # RELATION actions
 
     def assert_form_has_relations(self) -> None:
         self.test_case.assert_element(Form_EditRequirement.XPATH.RELATION_ROW)
 
-    def assert_form_has_no_parents(self) -> None:
+    def assert_form_has_no_relations(self) -> None:
         self.test_case.assert_element_not_present(
             Form_EditRequirement.XPATH.RELATION_ROW
         )
 
-    def do_form_add_field_parent_link(self) -> MID:
+    def do_form_add_field_relation(self) -> MID:
         any_relation_xpath = "//*[@data-testid='requirement-form-relation-row']"
         relations_number = len(
             self.test_case.find_elements(any_relation_xpath, by=By.XPATH)
@@ -68,7 +68,7 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
         new_relation_ordinal_number = relations_number + 1
 
         self.test_case.click_xpath(
-            "//*[@data-testid='form-action-add-parent-link']"
+            "//*[@data-testid='form-action-add-relation']"
         )
 
         xpath = f"({any_relation_xpath})[{new_relation_ordinal_number}]"
@@ -76,11 +76,11 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
         element_mid = element.get_attribute("mid")
         return MID(element_mid)
 
-    def do_delete_parent_link(self, field_order: int = 1) -> None:
+    def do_delete_relation(self, field_order: int = 1) -> None:
         # TODO: update with mid
         super().do_delete_field("requirement-relation", field_order)
 
-    def do_fill_in_field_parent_link(self, mid: MID, field_value: str) -> None:
+    def do_fill_in_field_relation(self, mid: MID, field_value: str) -> None:
         assert isinstance(mid, MID)
         assert isinstance(field_value, str)
         super().do_fill_in_mid(

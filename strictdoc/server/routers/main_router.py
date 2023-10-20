@@ -1572,8 +1572,8 @@ def create_main_router(
             },
         )
 
-    @router.get("/actions/document/new_parent_link", response_class=Response)
-    def document__add_parent_link(requirement_mid: str, document_mid: str):
+    @router.get("/actions/document/new_relation", response_class=Response)
+    def document__add_relation(requirement_mid: str, document_mid: str):
         document: Document = export_action.traceability_index.get_node_by_mid(
             MID(document_mid)
         )
@@ -1586,8 +1586,8 @@ def create_main_router(
         template = env().get_template(
             "actions/"
             "document/"
-            "add_requirement_parent_link/"
-            "stream_add_requirement_parent_link.jinja.html"
+            "add_requirement_relation/"
+            "stream_add_requirement_relation.jinja.html"
         )
         output = template.render(
             requirement_mid=requirement_mid,

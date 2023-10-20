@@ -33,15 +33,15 @@ class Test(E2ECase):
             requirement3 = screen_document.get_requirement(3)
             screen_document.assert_toc_contains("Requirement title #3")
 
-            # Edit Requirement 2: add one parent link
+            # Edit Requirement 2: add one relation
             form_edit_requirement: Form_EditRequirement = (
                 requirement3.do_open_form_edit_requirement()
             )
             form_edit_requirement.do_open_tab("Relations")
             new_relation_mid = (
-                form_edit_requirement.do_form_add_field_parent_link()
+                form_edit_requirement.do_form_add_field_relation()
             )
-            form_edit_requirement.do_fill_in_field_parent_link(
+            form_edit_requirement.do_fill_in_field_relation(
                 new_relation_mid, "REQ-002"
             )
             form_edit_requirement.do_select_relation_role(

@@ -72,7 +72,7 @@
 {% block row_right %}
   {%- set action_button_context = namespace() %}
   {%- set action_button_context.field_actions = {"delete": true} %}
-  {%- set action_button_context.field_name = "parent link" %}
+  {%- set action_button_context.field_name = "relation" %}
   {%- set action_button_context.mid = relation_row_context.relation.relation_mid %}
   {%- set action_button_context.testid_postfix = "relation" %}
   {%- include "components/form/field_action_button/index.jinja" -%}

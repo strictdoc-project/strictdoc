@@ -58,7 +58,7 @@ class Test(E2ECase):
             )
             screen_document.assert_toc_contains("Requirement title #2")
 
-            # Edit Requirement 2: add one parent link
+            # Edit Requirement 2: add one relation
             form_edit_requirement: Form_EditRequirement = (
                 requirement2.do_open_form_edit_requirement()
             )

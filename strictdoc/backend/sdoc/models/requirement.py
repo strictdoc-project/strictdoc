@@ -142,6 +142,24 @@ class Requirement(
             ordered_fields_lookup.setdefault(field.field_name, []).append(field)
 
         if RequirementFieldName.REFS in ordered_fields_lookup:
+            refs_field: RequirementField = ordered_fields_lookup[
+                RequirementFieldName.REFS
+            ][0]
+            if fields.index(refs_field) != (len(fields) - 1):
+                print(  # noqa: T201
+                    "warning: RELATIONS (previously REFS) requirement field "
+                    "should be the last field, after all other fields. "
+                    'See the section "Relations" in the user guide for '
+                    "more details. "
+                    "Correct requirement example:\n"
+                    "[REQUIREMENT]\n"
+                    "UID: REQ-2\n"
+                    "STATEMENT: When Z, the system X shall do Y.\n"
+                    "RELATIONS:\n"
+                    "- TYPE: Parent\n"
+                    "  VALUE: REQ-1"
+                )
+
             references_opt: Optional[List[Reference]] = ordered_fields_lookup[
                 RequirementFieldName.REFS
             ][0].field_value_references

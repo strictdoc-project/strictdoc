@@ -591,7 +591,7 @@ class RequirementFormObject(ErrorObject):
                     link_uid = reference_field.field_value
                     if len(link_uid) == 0:
                         reference_field.validation_messages.append(
-                            "Requirement parent relation UID must not be empty."
+                            "Requirement relation UID must not be empty."
                         )
                         continue
                     elif (

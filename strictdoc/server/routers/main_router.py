@@ -1573,7 +1573,7 @@ def create_main_router(
         )
 
     @router.get("/actions/document/new_relation", response_class=Response)
-    def document__add_parent_link(requirement_mid: str, document_mid: str):
+    def document__add_relation(requirement_mid: str, document_mid: str):
         document: Document = export_action.traceability_index.get_node_by_mid(
             MID(document_mid)
         )

@@ -23,7 +23,7 @@ class Test(E2ECase):
             screen_project_index.assert_contains_document("Document 1")
 
             # First, go to first document and check that the first document's
-            # requirement REQ-001 does contain a child link to REQ-002.
+            # requirement REQ-001 does contain a child relation to REQ-002.
             screen_document1 = screen_project_index.do_click_on_the_document(1)
             screen_document1.assert_text("Hello world!")
             requirement1 = screen_document1.get_requirement()
@@ -33,13 +33,13 @@ class Test(E2ECase):
             self.open(test_server.get_host_and_port())
 
             # Go to second document and check that the first document's
-            # requirement REQ-001 does contain a parent link to REQ-001,
+            # requirement REQ-001 does contain a parent relation to REQ-001,
             screen_document2 = screen_project_index.do_click_on_the_document(2)
             screen_document2.assert_text("Hello world 2!")
             requirement2 = screen_document2.get_requirement()
             requirement2.assert_requirement_has_parent_relation("REQ-001")
 
-            # and remove the parent link to REQ-001.
+            # and remove the parent relation to REQ-001.
             form_edit_requirement: Form_EditRequirement = (
                 requirement2.do_open_form_edit_requirement()
             )

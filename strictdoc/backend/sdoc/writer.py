@@ -353,10 +353,10 @@ class SDWriter:
     @classmethod
     def _print_requirement_refs(cls, requirement: Requirement, field):
         output = ""
-        if requirement.ng_uses_new_relations_field or (
+        if (
             requirement.ng_document_reference is not None
-            and requirement.document.ng_uses_new_relations_field
-        ):
+            and requirement.document.ng_at_least_one_relations_field
+        ) or not requirement.ng_uses_old_refs_field:
             output += "RELATIONS:"
         else:
             output += "REFS:"

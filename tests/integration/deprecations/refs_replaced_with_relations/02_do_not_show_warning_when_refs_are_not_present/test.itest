@@ -1,0 +1,8 @@
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+
+CHECK-NOT: warning: {{.*}}REFS{{.*}}
+CHECK: Published: Hello world doc
+
+RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: Hello world doc
+CHECK-HTML: input.sdoc

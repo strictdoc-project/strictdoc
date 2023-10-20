@@ -1,0 +1,13 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[REQUIREMENT]
+UID: REQ-1
+STATEMENT: Shall do 1.
+
+[REQUIREMENT]
+UID: REQ-2
+REFS:
+- TYPE: Parent
+  VALUE: REQ-1
+STATEMENT: Shall do 1.

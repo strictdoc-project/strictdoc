@@ -1,0 +1,21 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: REFS
+    TYPE: Reference(ParentReqReference, FileReference, BibReference)
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+
+[REQUIREMENT]
+UID: REQ-1
+STATEMENT: Shall do 1.
+REFS: Invalid.

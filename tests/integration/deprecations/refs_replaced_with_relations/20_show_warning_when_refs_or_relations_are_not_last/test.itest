@@ -1,0 +1,8 @@
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+
+CHECK: warning: RELATIONS (previously REFS) requirement field should be the last field, after all other fields. See the section "Relations" in the user guide for more details. Correct requirement example:
+CHECK: Published: Hello world doc
+
+RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: Hello world doc
+CHECK-HTML: input.sdoc

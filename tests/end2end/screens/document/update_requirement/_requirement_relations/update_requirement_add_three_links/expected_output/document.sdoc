@@ -11,7 +11,7 @@ TITLE: Requirement title #1
 STATEMENT: >>>
 Requirement statement #1.
 <<<
-REFS:
+RELATIONS:
 - TYPE: Parent
   VALUE: REQ-002
 - TYPE: Parent

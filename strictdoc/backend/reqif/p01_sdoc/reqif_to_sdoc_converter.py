@@ -260,6 +260,8 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         document_title = title if title else "<No title>"
         document = Document(document_title, document_config, None, [], [])
         document.grammar = DocumentGrammar.create_default(document)
+        # FIXME: One day this will go away.
+        document.ng_at_least_one_relations_field = False
         return document
 
     @staticmethod
@@ -413,6 +415,8 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
             parent=parent_section, requirement_type="REQUIREMENT", fields=fields
         )
         requirement.ng_level = level
+        # FIXME: One day this will go away.
+        requirement.ng_uses_old_refs_field = True
 
         if foreign_key_id_or_none is not None:
             spec_object_parents = reqif_bundle.get_spec_object_parents(

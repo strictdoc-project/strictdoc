@@ -1,0 +1,3 @@
+RUN: %expect_exit 1 %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+
+CHECK: error: REFS requirement field can only be of Reference type. Furthermore: 1) The REFS field is deprecated and must be renamed to RELATIONS. 2) The requirement RELATIONS field shall be the last field, after all other fields. See the section "Relations" in the user guide for more details.

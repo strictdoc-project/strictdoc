@@ -1,6 +1,6 @@
 {%- if section.reserved_uid is not none and section.reserved_uid|length > 0 -%}
 <sdoc-meta>
   <sdoc-meta-label>UID:</sdoc-meta-label>
-  <sdoc-meta-field>{{ section.reserved_uid }}</sdoc-meta-field>
+  <sdoc-meta-field data-controller="copy_to_clipboard_button">{{ section.reserved_uid }}</sdoc-meta-field>
 </sdoc-meta>
 {%- endif %}

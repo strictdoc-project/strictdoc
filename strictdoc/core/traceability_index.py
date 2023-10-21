@@ -670,7 +670,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             f"nodes: {incoming_links_sources_string}."
         )
 
-    def validate_can_create_uid(self, uid: str):
+    def validate_can_create_uid(
+        self, uid: str, existing_node_mid: Optional[MID]
+    ):
         assert isinstance(uid, str), uid
         assert len(uid) > 0, uid
 
@@ -680,6 +682,10 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
         if existing_node_with_uid is None:
             return
+
+        if existing_node_mid is not None:
+            if existing_node_with_uid.mid == existing_node_mid:
+                return
 
         raise SingleValidationError(
             "UID uniqueness validation error: "

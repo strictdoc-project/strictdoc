@@ -180,6 +180,18 @@ sdoc-node-controls .action_button {
   vertical-align: top;
 }
 
+/* used by copy_to_clipboard controller */
+
+/* TODO improve class name .with_faded_button */
+.with_faded_button > .action_button {
+  transition: .5s ease-out;
+  opacity: 0;
+}
+
+.with_faded_button:hover > .action_button {
+  opacity: 1;
+}
+
 /* ANCHOR */
 
 sdoc-anchor {

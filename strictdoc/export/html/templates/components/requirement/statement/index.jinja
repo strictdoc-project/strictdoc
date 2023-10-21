@@ -7,7 +7,10 @@
   {%- else -%}
     {# default with label #}
     <sdoc-requirement-field-label>statement:</sdoc-requirement-field-label>
-    <sdoc-requirement-field data-field-label="statement">
+    <sdoc-requirement-field
+      data-field-label="statement"
+      data-controller="copy_to_clipboard_button"
+    >
       {{ renderer.render_requirement_statement(requirement) }}
     </sdoc-requirement-field>
   {%- endif -%}

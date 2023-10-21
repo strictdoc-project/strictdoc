@@ -3,7 +3,10 @@
 {%- if requirement.comments %}
   {%- for comment in requirement.comments %}
     <sdoc-requirement-field-label>comment:</sdoc-requirement-field-label>
-    <sdoc-requirement-field data-field-label="comment">
+    <sdoc-requirement-field
+      data-field-label="comment"
+      data-controller="copy_to_clipboard_button"
+    >
       {{ renderer.render_comment(comment) }}
     </sdoc-requirement-field>
   {%- endfor %}

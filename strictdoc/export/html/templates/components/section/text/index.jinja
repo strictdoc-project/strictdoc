@@ -1,7 +1,7 @@
 {# TODO: change to 'text' #}
 {%- if section.free_texts -%}
   {%- for free_text in section.free_texts -%}
-  <sdoc-section-text>
+  <sdoc-section-text data-controller="copy_to_clipboard_button">
     {{ renderer.render_free_text(document_type, free_text) }}
   </sdoc-section-text>
   {%- endfor -%}

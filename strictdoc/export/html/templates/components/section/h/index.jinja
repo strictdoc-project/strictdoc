@@ -1,6 +1,7 @@
 {# title // required field for section #}
 <sdoc-section-title
   data-level="{{ section.context.title_number_string }}"
+  data-controller="copy_to_clipboard_button"
 >
   {%  set h_level = section.ng_level + 1
       if section.ng_level < 6

@@ -1,6 +1,7 @@
 {# title // required field for section #}
 <sdoc-section-title
   data-level="{{ section.context.title_number_string }}"
+  data-controller="copy_to_clipboard_button"
 >
     {%- if section.context.title_number_string -%}
       {{ section.context.title_number_string }}.&nbsp;

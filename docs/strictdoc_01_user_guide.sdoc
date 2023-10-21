@@ -1303,9 +1303,10 @@ Example:
       - TITLE: COMMENT
         TYPE: String
         REQUIRED: True
-      - TITLE: REFS
-        TYPE: Reference(ParentReqReference, FileReference)
         REQUIRED: True
+      RELATIONS:
+      - Type: Parent
+      - Type: File
 
     [FREETEXT]
     This document is an example of a simple SDoc custom grammar.
@@ -1319,7 +1320,7 @@ Example:
     TITLE: Function B
     STATEMENT: System A shall do B.
     COMMENT: Test comment.
-    REFS:
+    RELATIONS:
     - TYPE: Parent
       VALUE: REQ-001
     - TYPE: File
@@ -1394,7 +1395,7 @@ The custom grammar configuration includes the optional ``RELATION:`` section whi
     STATEMENT: >>>
     This is a statement.
     <<<
-    REFS:
+    RELATIONS:
     - TYPE: Parent
       VALUE: ID-001
 
@@ -1458,7 +1459,7 @@ Somewhere in another child document:
     STATEMENT: >>>
     ...
     <<<
-    REFS:
+    RELATIONS:
     - TYPE: Parent
       VALUE: PARENT-001
 
@@ -1786,7 +1787,7 @@ links are supported:
 
     [REQUIREMENT]
     UID: REQ-001
-    REFS:
+    RELATIONS:
     - TYPE: File
       VALUE: file.py
     TITLE: File reference
@@ -1802,7 +1803,7 @@ The requirement declaration contains a reference of the type ``File``:
 
     [REQUIREMENT]
     UID: REQ-001
-    REFS:
+    RELATIONS:
     - TYPE: File
       VALUE: file.py
     TITLE: Whole file reference

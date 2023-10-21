@@ -23,9 +23,6 @@ ELEMENTS:
   - TITLE: TAGS
     TYPE: String
     REQUIRED: False
-  - TITLE: REFS
-    TYPE: String
-    REQUIRED: False
   - TITLE: TITLE
     TYPE: String
     REQUIRED: False
@@ -38,6 +35,8 @@ ELEMENTS:
   - TITLE: COMMENT
     TYPE: String
     REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
 
 [FREETEXT]
 This document outlines a set of high-level requirements for StrictDoc, a text-based requirements management system. While StrictDoc already meets many of these requirements, further discussion is needed to clarify any remaining questions. For the outstanding requirements, we can establish a practical implementation plan within the upcoming 2023-2024 StrictDoc roadmap.

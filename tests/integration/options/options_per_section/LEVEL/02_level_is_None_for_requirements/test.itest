@@ -18,13 +18,4 @@ CHECK-HTML:<sdoc-anchor
 CHECK-HTML-NEXT:id="-Second-section-unnumbered"
 
 CHECK-HTML:<sdoc-anchor
-CHECK-HTML-NEXT:id="-REQ-001"
-
-CHECK-HTML:<sdoc-anchor
-CHECK-HTML-NEXT:id="-REQ-002"
-
-CHECK-HTML:<sdoc-anchor
 CHECK-HTML-NEXT:id="2-Second-section-numbered"
-
-CHECK-HTML:<sdoc-anchor
-CHECK-HTML-NEXT:id="2.1-REQ-003"

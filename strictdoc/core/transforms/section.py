@@ -96,7 +96,7 @@ class UpdateSectionCommand:
         if len(form_object.section_uid) > 0:
             try:
                 traceability_index.validate_can_create_uid(
-                    form_object.section_uid
+                    form_object.section_uid, section.mid
                 )
             except SingleValidationError as validation_error_:
                 errors["section_uid"].append(validation_error_.args[0])

@@ -21,14 +21,18 @@
   <sdoc-node
     {%- if project_config.is_running_on_server %}
       data-editable_node="on"
+      {%- if sdoc_entity.is_section %}
       data-controller="anchor_controller"
+      {%- endif %}
     {%- endif %}
     node-role="{{ sdoc_entity.get_type_string() }}"
     data-testid="node-{{ sdoc_entity.get_type_string() }}"
   >
 
+    {%- if sdoc_entity.is_section %}
     {# anchor #}
     {% include "components/anchor/index.jinja" %}
+    {%- endif %}
 
     {# sdoc_entity #}
     {% block sdoc_entity %}

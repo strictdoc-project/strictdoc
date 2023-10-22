@@ -438,6 +438,20 @@ class RequirementFormObject(ErrorObject):
             relation_types=grammar_element_relations,
         )
 
+    @staticmethod
+    def clone_from_requirement(
+        *, requirement: Requirement, clone_uid: str
+    ) -> "RequirementFormObject":
+        form_object: RequirementFormObject = RequirementFormObject.create_from_requirement(requirement=requirement)
+        for field_name, fields_ in form_object.fields.items():
+            if field_name == "UID":
+                field: RequirementFormField = fields_[0]
+                field.field_unescaped_value = clone_uid
+                field.field_escaped_value = clone_uid
+        form_object.requirement_mid = MID.create().get_string_value()
+
+        return form_object
+
     def any_errors(self):
         if super().any_errors():
             return True

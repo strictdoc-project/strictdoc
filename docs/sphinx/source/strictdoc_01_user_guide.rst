@@ -556,9 +556,6 @@ The following ``REQUIREMENT`` fields are supported:
    * - ``TAGS``
      - Tags of the requirement (comma separated AlphaNum words)
 
-   * - ``REFS``
-     - List of Parent and File references
-
    * - ``TITLE``
      - Title of the requirement
 
@@ -572,6 +569,9 @@ The following ``REQUIREMENT`` fields are supported:
      -  Comments to the rationale. The field can be single-line or multiline.
         Note: Multiple comment fields are possible.
 
+   * - ``RELATIONS``
+     - List of requirement relations. Note: Before StrictDoc v0.0.45, this field was called ``REFS``.
+
 Currently, all ``[REQUIREMENT]``'s fields are optional but most of the time at
 least the ``STATEMENT`` field as well as the ``TITLE`` field should be
 present.
@@ -584,7 +584,6 @@ present.
     [REQUIREMENT]
     TITLE: Requirements management
     STATEMENT: StrictDoc shall enable requirements management.
-
 
 UID
 ^^^
@@ -633,10 +632,12 @@ Allows to add tags to a ``[REQUIREMENT]``. Tags are a comma separated list of
 single words. Only Alphanumeric tags (a-z, A-Z, 0-9 and underscore) are
 supported.
 
-References (REFS)
-^^^^^^^^^^^^^^^^^
+.. _SDOC_UG_REQUIREMENT_RELATIONS:
 
-The ``REFS`` field is used to connect requirements to each other:
+Relations (previously REFS)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The ``RELATIONS`` field is used to connect requirements to each other:
 
 .. code-block:: text
 
@@ -649,27 +650,30 @@ The ``REFS`` field is used to connect requirements to each other:
 
     [REQUIREMENT]
     UID: REQ-002
-    REFS:
+    TITLE: Requirement #2's title
+    STATEMENT: Requirement #2 statement
+    RELATIONS:
     - TYPE: Parent
       VALUE: REQ-001
     - TYPE: File
       VALUE: /full/path/file.py
-    TITLE: Requirement #2's title
-    STATEMENT: Requirement #2 statement
 
-The ``TYPE: Parent``-``VALUE`` attribute contains a parent's requirement
-``UID``. A requirement may reference multiple parent requirements by
-adding multiple ``TYPE: Parent``-``VALUE`` items. The opposite direction i.e.
-"Child" References are traced automatically by strictdoc. Defining circular
-references e.g. ``Req-A`` ⇒ ``Req-B`` ⇒ ``Reg-C`` ⇒ ``Req-A`` must be avoided.
+The supported relation types are: ``Parent``, ``Child``, and ``File``. To be used in a requirement, the relations must be first registered in the document grammar. The default grammar defines ``Parent`` and ``File`` relation. See :ref:`SDOC_UG_GRAMMAR_RELATIONS` for more details.
+
+The ``RELATIONS`` must be the last field of a requirement. For ``TYPE: Parent`` and ``TYPE: Child`` relations, the ``VALUE`` attribute contains a parent/child's requirement
+``UID``. A requirement may reference multiple parent or child requirements by
+adding multiple ``TYPE``/``VALUE`` items. Defining circular
+references e.g. ``Req-A`` ⇒ ``Req-B`` ⇒ ``Reg-C`` ⇒ ``Req-A`` results in validation errors and must be avoided.
 
 The ``TYPE: File``-``VALUE`` attribute contains a filename referencing the
 implementation of (parts of) this requirement. A requirement may add multiple
 file references requirements by adding multiple ``TYPE: File``-``VALUE`` items.
 
-**Note:** The ``TYPE: Parent`` is currently the only fully supported type of
+**Note:** The ``TYPE: Parent`` and ``TYPE: Child`` are currently the only fully supported types of
 connection. Linking requirements to files is still experimental (see also
 :ref:`SECTION-TRACEABILITY-REQS-TO-SOURCE-CODE`).
+
+**Note:** In most requirements projects, only the Parent relations should be used, possibly with roles. The Child relation should be used only in specific cases. See :ref:`SDOC_UG_GRAMMAR_RELATIONS_PARENT_VS_CHILD` for more details.
 
 **Note:** In the near future, adding information about external references (e.g.
 company policy documents, technical specifications, regulatory requirements,
@@ -677,6 +681,36 @@ etc.) is planned.
 
 **Note:** By design, StrictDoc will only show parent or child links if both
 requirements connected with a reference have ``UID`` defined.
+
+Requirement relation roles
+""""""""""""""""""""""""""
+
+A requirement relation can be specialized with a role. The role must be registered in the document grammar, see :ref:`SDOC_UG_GRAMMAR_RELATIONS`.
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: Example
+
+    [GRAMMAR]
+    ELEMENTS:
+    - TAG: REQUIREMENT
+      FIELDS:
+      ...
+      RELATIONS:
+      - TYPE: Parent
+        ROLE: Refines
+
+    [REQUIREMENT]
+    UID: REQ-2
+    TITLE: Requirement title
+    STATEMENT: >>>
+    Requirement statement.
+    <<<
+    RELATIONS:
+    - TYPE: Parent
+      VALUE: REQ-1
+      ROLE: Refines
 
 Title
 ^^^^^
@@ -1068,7 +1102,7 @@ The supported field types are:
      - comma-separated list of tags/key words. Only Alphanumeric tags (a-z, A-Z, 0-9 and underscore) are supported.
 
    * - ``Reference``
-     - comma-separated list with allowed reference types: ``ParentReqReference``, ``FileReference``
+     - **DEPRECATED:** comma-separated list with allowed reference types: ``ParentReqReference``, ``FileReference``. In the newer versions of StrictDoc (0.0.45+), a separate ``RELATIONS:`` section is used to configure the available relations.
 
 Example:
 
@@ -1102,9 +1136,10 @@ Example:
       - TITLE: COMMENT
         TYPE: String
         REQUIRED: True
-      - TITLE: REFS
-        TYPE: Reference(ParentReqReference, FileReference)
         REQUIRED: True
+      RELATIONS:
+      - Type: Parent
+      - Type: File
 
     [FREETEXT]
     This document is an example of a simple SDoc custom grammar.
@@ -1118,19 +1153,17 @@ Example:
     TITLE: Function B
     STATEMENT: System A shall do B.
     COMMENT: Test comment.
-    REFS:
+    RELATIONS:
     - TYPE: Parent
       VALUE: REQ-001
     - TYPE: File
       VALUE: /full/path/file.py
 
-
 Reserved fields
 ~~~~~~~~~~~~~~~
 
 While it is possible to declare a grammar with completely custom fields, there
-is a fixed set of reserved fields that StrictDoc uses for the presentation of
-table of contents and document structure:
+is a fixed set of reserved fields that StrictDoc uses for the presentation of the table of contents and the document structure:
 
 .. list-table:: Reserved fields in SDoc's grammar
    :widths: 20 80
@@ -1142,9 +1175,10 @@ table of contents and document structure:
    * - UID
      - Requirement's UID.
 
-   * - REFS
-     - StrictDoc relies on this field to link requirements
-       together and build traceability information.
+   * - RELATIONS (previously REFS)
+     - StrictDoc relies on this field to link requirements together and build traceability information.
+
+       Note: The ``REFS`` field is deprecated and replaced with ``RELATIONS``.
 
    * - TITLE
      - Requirement's title. StrictDoc relies on this field to create
@@ -1160,6 +1194,126 @@ table of contents and document structure:
    * - RATIONALE
      - The rationale for a requirement. Visually presented in the same way as a
        comment.
+
+.. _SDOC_UG_GRAMMAR_RELATIONS:
+
+Relations
+~~~~~~~~~
+
+The custom grammar configuration includes the optional ``RELATION:`` section which specifies the relations a given document supports.
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: Test Doc
+
+    [GRAMMAR]
+    ELEMENTS:
+    - TAG: REQUIREMENT
+      FIELDS:
+      - TITLE: STATEMENT
+        TYPE: String
+        REQUIRED: True
+      RELATIONS:
+      - TYPE: Parent
+
+    [REQUIREMENT]
+    STATEMENT: >>>
+    This is a statement.
+    <<<
+    RELATIONS:
+    - TYPE: Parent
+      VALUE: ID-001
+
+The supported relation types are ``Parent``, ``Child``, ``File``. The Parent/Child relations are valid between requirements, the File relation connects a requirement with a file.
+
+The default grammar relations, when a custom grammar is not specified, are ``Parent`` and ``File``.
+
+Relation roles
+^^^^^^^^^^^^^^
+
+StrictDoc's custom grammar support the configuration of relation roles. The Parent and Child relations can be further specialized with roles, such as Refines, Implements, Verifies, etc.
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: Test Doc
+
+    [GRAMMAR]
+    ELEMENTS:
+    - TAG: REQUIREMENT
+      FIELDS:
+      ...
+      RELATIONS:
+      - TYPE: Parent
+        ROLE: Refines
+
+With this grammar, StrictDoc will only allow creating requirements that have Parent relations with the ``ROLE: Refines`` specified. Any other relations will trigger validation errors.
+
+.. _SDOC_UG_GRAMMAR_RELATIONS_PARENT_VS_CHILD:
+
+Parent vs Child relations
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**TL;DR** If there is no compelling reason to use the Child relations, avoid using them.
+
+Most of the technical requirements documents can be modeled with just a Parent relation type. A typical traceability graph for a requirements project is typically child-to-parent, where the higher-level parent requirements are referred to as "Parents" by their child requirements.
+
+For example, in one (parent) document:
+
+.. code-block::
+
+    [REQUIREMENT]
+    UID: PARENT-1
+    TITLE: Parent requirement
+    STATEMENT: >>>
+    ...
+    <<<
+
+Somewhere in another child document:
+
+.. code-block::
+
+    [REQUIREMENT]
+    UID: CHILD-1
+    TITLE: Child requirement
+    STATEMENT: >>>
+    ...
+    <<<
+    RELATIONS:
+    - TYPE: Parent
+      VALUE: PARENT-001
+
+In some very special cases, it may be desired to also use the Child relations. For example, creating a so-called Compliance Matrix between a standard and a project requirement can use the Child relation to connect both the upper-level standard requirement with a project-level technical requirement:
+
+.. code-block:
+
+    [DOCUMENT]
+    TITLE: Standard X Compliance Matrix
+
+    [GRAMMAR]
+    ELEMENTS:
+    ...
+    RELATIONS:
+    - TYPE: Parent
+    - TYPE: Child
+
+    [REQUIREMENT]
+    COMPLIANCE: Compliant.
+    STATEMENT: >>>
+    This is a compliance statement regarding the Standard X's STANDARD-001 requirement...
+    <<<
+    REFS:
+    - TYPE: Parent
+      VALUE: STANDARD-001
+    - TYPE: Child
+      VALUE: PROJECT-001
+
+With such a setup, StrictDoc generates the correct traceability graph that will link together the requirements of the PROJECT with the requirements of the STANDARD through the requirements of the compliance matrix.
+
+Another example can be adapting the requirements of the Off-the-Shelf (OTS) project to the higher-level requirements of the user project. An intermediate requirements document can be created that connects the parent requirements of the user project with the immutable child requirements of the OTS project. This intermediate document can link the user requirement with the Parent and the OTS project with a Child link.
+
+Both examples above involve activity called Tailoring when an intermediate document (Compliance Matrix) serves as an interface between two layers of documents.
 
 .. _SDOC_UG_LINKS_AND_ANCHORS:
 
@@ -1394,7 +1548,7 @@ links are supported:
 
     [REQUIREMENT]
     UID: REQ-001
-    REFS:
+    RELATIONS:
     - TYPE: File
       VALUE: file.py
     TITLE: File reference
@@ -1410,7 +1564,7 @@ The requirement declaration contains a reference of the type ``File``:
 
     [REQUIREMENT]
     UID: REQ-001
-    REFS:
+    RELATIONS:
     - TYPE: File
       VALUE: file.py
     TITLE: Whole file reference
@@ -1466,7 +1620,7 @@ Supported formats:
 Planned formats:
 
 - The format recommended by the
-  `ReqIF Implementation Guide <https://www.prostep.org/fileadmin/downloads/PSI_ImplementationGuide_ReqIF_V1-7.pdf>`_
+  `ReqIF Implementation Guide <https://www.ps-ent-2023.de/fileadmin/prod-download/PSI_ImplementationGuide_ReqIF_V1-7.pdf>`_
   that attempts to harmonize the developments of ReqIF by requirements
   management tools.
 
@@ -1911,7 +2065,7 @@ The currently supported workflow for the ``server`` command must be hybrid:
 - In one terminal window: run server.
 - In another window: check the changes made by the server in the .sdoc files. Commit the .sdoc files to Git.
 
-Note that currently, StrictDoc server maintains in-memory state of a documentation tree, and it does not watch over the changes made in the .sdoc files. If you make a change in an ``.sdoc`` file manually, you have to restart the server in order for your changes to show up in the web user interface.
+Note that currently, StrictDoc server maintains an in-memory state of a documentation tree, and it does not watch over the changes made in the .sdoc files. If you make a change in an ``.sdoc`` file manually, you have to restart the server in order for your changes to show up in the web user interface.
 
 The following essential features are still missing and will be worked on in the near future:
 
@@ -1923,6 +2077,7 @@ The following essential features are still missing and will be worked on in the 
 - Deleting a section recursively with a correct cleanup of all traceability information.
 - Numerous validation aspects and edge cases of content editing.
 - A separate screen for editing project settings.
+- Editing File-based relations.
 
 Concurrent use of web user interface
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

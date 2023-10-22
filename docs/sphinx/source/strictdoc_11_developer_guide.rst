@@ -101,8 +101,18 @@ Python code
   when the ``invoke check`` command is run.
 
   - If a string literal gets too long, it should be split into a multiline
-    literal with each line being a meaningful word or subsentence.
+    literal with each line being a meaningful word or a subsentence.
 
+- For "element is non-None" checks, a full form shall be used, for example: ``if foo is not None`` instead of ``if foo``. This helps to avoid any confusion with all sorts of strings (empty or non-empty ``str``, ``Optional[str]``) that are used extensively in StrictDoc's codebase. The non-None and non-empty string check shall therefore be as follows: ``if foo is not None and len(foo) > 0``. The explicit check also applies to any other kinds of objects besides strings: ``if foo is not None`` instead of ``if foo``. Rationale: ``if foo`` makes it unclear whether the intention is to check `is not None` or also ``len(foo) > 0``.
+- For lambdas and short for loops, the recent convention is to add ``_`` to the variables of a for loop or a lambda to visually highlight their temporary use within the current scope which is done to counter the fact that these variables can leak and be used outside of the scope of the loop. Example:
+
+.. code-block:: python
+
+    for a_, b_ in foo:
+        # use a_, b_ within the loop.
+
+- The function arguments with the default values shall be avoided. This convention improves the visibility of the function interfaces at the coast of increased verbosity which is the price that StrictDoc development is willing to pay, maintaining the software long-term. The all-explicit function parameters indication is especially useful when the large code refactorings are made.
+- StrictDoc has been making a gradual shift towards a stronger type system. Although type annotations haven't been added everywhere in the codebase, it is preferred to include them for all new code that is written.
 - If a contribution includes changes in StrictDoc's code, at least the
   integration-level tests should be added to the ``tests/integration``. If the
   contributed code needs a fine-grained control over the added behavior, adding
@@ -184,6 +194,7 @@ The ``--focus`` parameter can be used to run only selected tests that match a gi
 
     invoke test-integration --focus <keyword>
 
+See `How to test command-line programs with Python tools: LIT and FileCheck <https://stanislaw.github.io/2020-11-20-how-to-test-command-line-programs-with-python.html>`_ to learn more about LIT and FileCheck, which enable the StrictDoc integration tests.
 
 Documentation
 =============

@@ -133,11 +133,13 @@ As an open-source project, StrictDoc is developed without strict deadlines, howe
 TITLE: The roadmap diagram
 
 [FREETEXT]
-The following diagram contains the work items at the epic and single task levels. This SVG file is exported from a draw.io diagram, where the master version of the roadmap is maintained.
+The following diagram contains the work items at the epic and single task levels. This PNG file is exported from a draw.io diagram, where the master version of the roadmap is maintained.
 
-.. image:: _assets/StrictDoc_Roadmap.drawio.svg
+.. image:: _assets/StrictDoc_Roadmap.drawio.png
    :alt: Development plan diagram
    :class: image
+   :width: 100%
+
 [/FREETEXT]
 
 [/SECTION]

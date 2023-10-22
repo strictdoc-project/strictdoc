@@ -150,7 +150,9 @@ def docs(context):
         context,
         ToxEnvironment.DOCUMENTATION,
         """
-            cp -v output/sphinx/rst/strictdoc*.rst docs/sphinx/source/
+            cp -v output/sphinx/rst/strictdoc*.rst docs/sphinx/source/ &&
+            mkdir -p docs/sphinx/source/_static/_assets &&
+            cp -v docs/_assets/StrictDoc_Roadmap.drawio.png docs/sphinx/source/_assets/
         """,
     )
 

@@ -442,7 +442,11 @@ class RequirementFormObject(ErrorObject):
     def clone_from_requirement(
         *, requirement: Requirement, clone_uid: str
     ) -> "RequirementFormObject":
-        form_object: RequirementFormObject = RequirementFormObject.create_from_requirement(requirement=requirement)
+        form_object: RequirementFormObject = (
+            RequirementFormObject.create_from_requirement(
+                requirement=requirement
+            )
+        )
         for field_name, fields_ in form_object.fields.items():
             if field_name == "UID":
                 field: RequirementFormField = fields_[0]

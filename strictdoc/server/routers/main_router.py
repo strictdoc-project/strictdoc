@@ -709,7 +709,9 @@ def create_main_router(
         reference_node = export_action.traceability_index.get_node_by_mid(
             MID(reference_mid)
         )
-        reference_requirement: Requirement = assert_cast(reference_node, Requirement)
+        reference_requirement: Requirement = assert_cast(
+            reference_node, Requirement
+        )
         document = (
             reference_node
             if isinstance(reference_node, Document)
@@ -723,13 +725,9 @@ def create_main_router(
         next_uid: str = document_tree_stats.get_next_requirement_uid(
             reference_node.get_requirement_prefix()
         )
-        # form_object = RequirementFormObject.create_new(
-        #     document=document, next_uid=next_uid
-        # )
         form_object: RequirementFormObject = (
             RequirementFormObject.clone_from_requirement(
-                requirement=reference_requirement,
-                clone_uid=next_uid
+                requirement=reference_requirement, clone_uid=next_uid
             )
         )
 

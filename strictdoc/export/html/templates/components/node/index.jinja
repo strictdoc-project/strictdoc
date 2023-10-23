@@ -29,10 +29,8 @@
     data-testid="node-{{ sdoc_entity.get_type_string() }}"
   >
 
-    {%- if sdoc_entity.is_section %}
     {# anchor #}
     {% include "components/anchor/index.jinja" %}
-    {%- endif %}
 
     {# sdoc_entity #}
     {% block sdoc_entity %}

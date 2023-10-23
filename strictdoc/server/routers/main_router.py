@@ -702,6 +702,77 @@ def create_main_router(
             },
         )
 
+    @router.get("/actions/document/clone_requirement", response_class=Response)
+    def get_clone_requirement(reference_mid: str):
+        assert isinstance(reference_mid, str), reference_mid
+
+        reference_node = export_action.traceability_index.get_node_by_mid(
+            MID(reference_mid)
+        )
+        reference_requirement: Requirement = assert_cast(
+            reference_node, Requirement
+        )
+        document = (
+            reference_node
+            if isinstance(reference_node, Document)
+            else reference_node.document
+        )
+        document_tree_stats: DocumentTreeStats = (
+            DocumentUIDAnalyzer.analyze_document_tree(
+                export_action.traceability_index
+            )
+        )
+        next_uid: str = document_tree_stats.get_next_requirement_uid(
+            reference_node.get_requirement_prefix()
+        )
+        form_object: RequirementFormObject = (
+            RequirementFormObject.clone_from_requirement(
+                requirement=reference_requirement, clone_uid=next_uid
+            )
+        )
+
+        target_node_mid = reference_mid
+
+        whereto = NodeCreationOrder.AFTER
+        replace_action = "after"
+
+        template = env().get_template(
+            "actions/"
+            "document/"
+            "create_requirement/"
+            "stream_new_requirement.jinja.html"
+        )
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
+        )
+        markup_renderer = MarkupRenderer.create(
+            markup="RST",
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
+            config=project_config,
+            context_document=document,
+        )
+        output = template.render(
+            is_new_requirement=True,
+            renderer=markup_renderer,
+            form_object=form_object,
+            reference_mid=reference_mid,
+            target_node_mid=target_node_mid,
+            document_type=DocumentType.document(),
+            whereto=whereto,
+            replace_action=replace_action,
+        )
+
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
     @router.post(
         "/actions/document/create_requirement", response_class=Response
     )

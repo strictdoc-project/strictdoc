@@ -95,13 +95,17 @@ def clean_itest_artifacts(context):
 
 
 @task
-def server(context, input_path="."):
+def server(context, input_path=".", config=None):
     assert os.path.isdir(input_path), input_path
+    if config is not None:
+        assert os.path.isfile(config), config
+    config_argument = f"--config {config}" if config is not None else ""
     run_invoke_with_tox(
         context,
         ToxEnvironment.DEVELOPMENT,
         f"""
-            python strictdoc/cli/main.py server {input_path} --reload
+            python strictdoc/cli/main.py
+                server {input_path} {config_argument} --reload
         """,
     )
 

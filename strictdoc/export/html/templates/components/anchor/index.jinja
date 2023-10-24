@@ -1,5 +1,6 @@
 <sdoc-anchor
   id="{{ link_renderer.render_local_anchor(sdoc_entity) }}"
+  node-role="{{ sdoc_entity.get_type_string() }}"
   {% if sdoc_entity.reserved_uid is not none -%}
   data-uid="{{ sdoc_entity.reserved_uid }}"
   {%- endif -%}

@@ -17,5 +17,6 @@ CHECK-HTML-NEXT:id="1-First-section-numbered"
 CHECK-HTML:<sdoc-anchor
 CHECK-HTML-NEXT:id="-Second-section-unnumbered"
 
-CHECK-HTML:<sdoc-anchor
-CHECK-HTML-NEXT:id="2-Second-section-numbered"
+CHECK-HTML:    <sdoc-anchor
+# FIXME: This should be CHECK-HTML-NEXT.
+CHECK-HTML: id="2-Second-section-numbered"

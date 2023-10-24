@@ -29,9 +29,10 @@ Stimulus.register("anchor_controller", class extends Controller {
     // the result is expected to be the same as on the content flow.
     const contentLeft = this.element.getBoundingClientRect().x;
 
-    // if a section does not have a uid= parameter,
-    // we don't want to show anchors.
-    const anchors = [...this.element.querySelectorAll('sdoc-anchor[data-uid]')];
+    // ** 1) if a section does not have [data-uid] parameter,
+    // ** we don't want to show anchors;
+    // ** 2) show anchors only for sections: has [node-role="section"]:
+    const anchors = [...this.element.querySelectorAll('sdoc-anchor[data-uid][node-role="section"]')];
 
     anchors.forEach(anchor => {
 

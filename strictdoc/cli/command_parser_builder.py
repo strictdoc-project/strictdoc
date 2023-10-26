@@ -1,6 +1,7 @@
 import argparse
 import sys
 
+from strictdoc import __version__
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.cli.argument_int_range import IntRange
 
@@ -75,6 +76,13 @@ class CommandParserBuilder:
                 Further help: https://strictdoc.readthedocs.io/en/stable/
                 """
             ),
+        )
+
+        # The -v/--version has a special behavior that it still works when all
+        # commands are required == True.
+        # https://stackoverflow.com/a/12123598/598057
+        main_parser.add_argument(
+            "-v", "--version", action="version", version=__version__
         )
 
         command_subparsers = main_parser.add_subparsers(

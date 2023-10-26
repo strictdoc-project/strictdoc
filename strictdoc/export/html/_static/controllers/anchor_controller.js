@@ -101,6 +101,7 @@ Stimulus.register("anchor_controller", class extends Controller {
       anchorButtonText.classList.add('anchor_button_text');
       anchorButtonText.innerHTML = anchorText;
       anchorButton.append(anchorButtonText);
+      anchorButton.setAttribute('data-testid', 'section-anchor-button');
 
       // Add event listener
       anchorButton.addEventListener("click", function(event){

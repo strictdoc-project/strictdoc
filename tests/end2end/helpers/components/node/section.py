@@ -40,3 +40,13 @@ class Section(Node):  # pylint: disable=invalid-name
             f"{self.node_xpath}//div[@data-testid='anchor_links_number' and contains(., '{links}')]",
             by=By.XPATH,
         )
+
+    def do_copy_anchor_to_buffer(self) -> None:
+        self.test_case.hover_and_click(
+            hover_selector=f"{self.node_xpath}",
+            click_selector=(
+                f'{self.node_xpath}//*[@data-testid="section-anchor-button"]'
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )

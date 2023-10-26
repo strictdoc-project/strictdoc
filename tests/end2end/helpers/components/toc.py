@@ -71,3 +71,15 @@ class TOC:  # pylint: disable=invalid-name  # noqa: E501
             f"//*[@data-testid='toc-list']//*[contains(., '{string}')]",
             by=By.XPATH,
         )
+
+    # TOC links/anchors
+
+    def do_toc_go_to_anchor(self, anchor) -> None:
+        self.test_case.click_xpath(
+            f"//*[@data-testid='toc-list']//a[@href='#{anchor}']"
+        )
+
+        # check if the link was successfully clicked
+        # and that the target is highlighted
+        targeted_anchor = f"sdoc-anchor[id='{anchor}']:target"
+        self.test_case.assert_element_present(targeted_anchor)

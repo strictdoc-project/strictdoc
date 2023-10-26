@@ -59,3 +59,10 @@ class E2ECase(BaseCase):
     @selenium_connection_error_retry_handler(3)
     def assert_element(self, selector, by="css selector", timeout=None):
         super().assert_element(selector, by, timeout)
+
+    def paste_text(self) -> str:
+        self.driver.set_permissions("clipboard-read", "granted")
+        pasted_text = self.execute_script(
+            "const text = await navigator.clipboard.readText(); return text;"
+        )
+        return pasted_text

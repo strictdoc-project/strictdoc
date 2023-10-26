@@ -3,6 +3,9 @@ from seleniumbase import BaseCase
 
 from tests.end2end.helpers.components.modal import Modal
 from tests.end2end.helpers.components.node.node import Node
+from tests.end2end.helpers.screens.document.form_edit_requirement import (
+    Form_EditRequirement,
+)
 
 
 class Requirement(Node):  # pylint: disable=invalid-name
@@ -181,3 +184,16 @@ class Requirement(Node):  # pylint: disable=invalid-name
         modal.assert_modal()
         modal.assert_in_modal("//sdoc-requirement")
         return modal
+
+    # clone
+
+    def do_clone_requirement(self) -> Form_EditRequirement:
+        self.test_case.hover_and_click(
+            hover_selector=f"{self.node_xpath}",
+            click_selector=(
+                f"{self.node_xpath}//*[@data-testid='node-clone-action']"
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+        return Form_EditRequirement(self.test_case)

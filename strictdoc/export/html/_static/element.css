@@ -939,3 +939,40 @@ a.tree_item:hover {
   padding-bottom: var(--base-rhythm);
   padding-right: var(--base-rhythm);
 }
+
+/* table in content */
+
+div.document table {
+  border-collapse: collapse;
+  margin: var(--base-margin) 0;
+  font-size: 1rem;
+
+  /*** add scroll for wide tables */
+  /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
+  /* border: 1px solid #ccc; */
+  border: none;
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+div.document table caption {
+  font-weight: bold;
+  padding-bottom: 1rem;
+}
+
+div.document table th {
+  background-color: #eee;
+}
+
+div.document table th,
+div.document table td {
+  padding: calc(var(--base-margin)/2);
+  vertical-align: top;
+  text-align: left;
+  border: 1px solid #ccc;
+
+  /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
+  /*** add scroll for wide tables (unset) */
+  white-space: initial;
+}

@@ -3,6 +3,8 @@
 sdoc-autogen {
   display: contents;
   /* hyphens: auto; */
+
+  --autogen-v-rhythm: calc(var(--base-rhythm, 8px) * 2);
 }
 
 /* automatically added by RST */
@@ -20,7 +22,7 @@ sdoc-autogen div.document {
 
 sdoc-autogen table {
   border-collapse: collapse;
-  margin: var(--base-margin) 0;
+  margin: var(--base-padding) 0;
   font-size: 1rem;
 
   /*** add scroll for wide tables */
@@ -43,7 +45,7 @@ sdoc-autogen table th {
 
 sdoc-autogen table th,
 sdoc-autogen table td {
-  padding: calc(var(--base-margin)/2);
+  padding: var(--base-rhythm) calc(var(--base-rhythm) * 1.5);
   vertical-align: top;
   text-align: left;
   border: 1px solid #ccc;
@@ -56,7 +58,7 @@ sdoc-autogen table td {
 /* Typography */
 
 sdoc-autogen p {
-  margin: var(--base-margin) 0;
+  margin: var(--autogen-v-rhythm, 16px) 0;
 }
 
 /* blockquote */
@@ -65,6 +67,7 @@ sdoc-autogen blockquote {
   color: #666;
   padding: .25em 0 0.25em 1rem;
   border-left: 4px solid #ccc;
+  margin: var(--autogen-v-rhythm, 16px) 0;
 }
 
 /* pre.code */
@@ -107,8 +110,10 @@ sdoc-autogen tt.literal {
 sdoc-autogen ul,
 sdoc-autogen ol {
   padding-left: 1.6em;
+  margin: var(--autogen-v-rhythm, 16px) 0;
 }
 
+/* list in table */
 sdoc-autogen td ul,
 sdoc-autogen dt ol {
   margin: 0;
@@ -123,3 +128,16 @@ sdoc-autogen object {
   padding: 1em;
   background: var(--color-bg-contrast);
 }
+
+/* block margins */
+
+sdoc-autogen .document > *:first-child, /* RST */
+sdoc-autogen > *:first-child {
+  margin-top: 0 !important;
+}
+
+sdoc-autogen .document > *:last-child, /* RST */
+sdoc-autogen > *:last-child {
+  margin-bottom: 0 !important;
+}
+

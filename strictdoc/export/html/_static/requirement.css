@@ -93,13 +93,14 @@ sdoc-requirement-field {
   padding-bottom: calc(var(--requirement-base-rhythm)*1);
 }
 
-sdoc-requirement-field p,
-sdoc-requirement-field table,
-sdoc-requirement-field blockquote,
-sdoc-requirement-field ol,
-sdoc-requirement-field ul {
-  margin-top: 0 !important;
-  margin-bottom: var(--requirement-base-rhythm) !important;
+/* for relations in requirement */
+sdoc-requirement-field > ol:first-child,
+sdoc-requirement-field > ul:first-child {
+  margin-top: 0;
+}
+sdoc-requirement-field > ol:last-child,
+sdoc-requirement-field > ul:last-child {
+  margin-bottom: 0;
 }
 
 /* requirement-view="table" */
@@ -217,13 +218,17 @@ sdoc-requirement-field-label {
 /* section */
 
 sdoc-section,
-sdoc-section-text {
+sdoc-section-text,
+sdoc-section-title {
   display: block;
   margin: 0;
 }
 
+sdoc-section-text {
+  margin-top: var(--base-padding);
+}
+
 sdoc-section-title {
-  display: block;
   font-weight: 700;
 }
 
@@ -241,7 +246,8 @@ sdoc-section-title * {
 /* meta */
 
 sdoc-meta {
-  display: inline-grid;
+  display: grid;
+  width: fit-content;
   grid-template-columns: minmax(min-content, max-content) minmax(min-content, max-content);
   place-items: stretch stretch;
   place-content: stretch stretch;
@@ -254,7 +260,7 @@ sdoc-meta {
   overflow: hidden;
 
   font-size: var(--font-size-sm);
-  margin: var(--requirement-base-rhythm) 0;
+  margin: var(--base-padding) 0;
   padding: calc(var(--requirement-base-rhythm)*0.5);
   row-gap: 2px;
 }
@@ -288,7 +294,7 @@ sdoc-section + sdoc-section sdoc-section-title,
 sdoc-requirement + sdoc-requirement,
 sdoc-requirement + sdoc-section,
 sdoc-requirement + sdoc-section sdoc-section-title {
-  margin-top: var(--base-margin);
+  margin-top: calc(var(--base-rhythm)*3);
 }
 
 /* requirement type tag */

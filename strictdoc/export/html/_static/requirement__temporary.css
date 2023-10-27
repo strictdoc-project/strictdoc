@@ -261,32 +261,6 @@ a.requirement__link-child::before {
   font-size: .85em;
 }
 
-/* table */
-
-div.document table {
-  border-collapse: collapse;
-  margin: var(--base-margin) 0;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-}
-
-div.document table caption {
-  font-weight: bold;
-  padding-bottom: 1rem;
-}
-
-div.document table th {
-  background-color: #eee;
-}
-
-div.document table th,
-div.document table td {
-  padding: calc(var(--base-margin)/2);
-  vertical-align: top;
-  text-align: left;
-  border: 1px solid #ccc;
-}
-
 /* switch */
 
 .std-switch {

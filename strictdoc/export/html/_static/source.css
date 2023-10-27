@@ -125,7 +125,9 @@
 
 .source {
   display: grid;
-  grid-template-columns: minmax(min-content, max-content) 1fr;
+  grid-template-columns:
+    minmax(min-content, max-content)
+    minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
   gap: 0 0;
   place-items: stretch stretch;
   transition: transform 0.3s ease-in;

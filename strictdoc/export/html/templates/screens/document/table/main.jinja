@@ -3,7 +3,7 @@
     {% include "_shared/tags.jinja.html" %}
       <div class="content">
         <sdoc-node>
-        <h1 data-testid='document-title'>{{ document.title }}</h1>
+        <h1 data-testid="document-title">{{ document.title }}</h1>
         {# TODO: META: same code at templates/screens/document/document/frame_document_config.jinja.html #}
         {%- if document.config.has_meta() -%}
         <sdoc-meta>
@@ -23,7 +23,9 @@
         {%- endif -%}
         {%- if document.free_texts -%}
           {%- for free_text in document.free_texts %}
-            <div class="free_text">{{ renderer.render_free_text(document_type, free_text) }}</div>
+            <div class="free_text">
+              <sdoc-autogen>{{ renderer.render_free_text(document_type, free_text) }}</sdoc-autogen>
+            </div>
           {%- endfor -%}
         {%- endif -%}
         </sdoc-node>
@@ -151,18 +153,20 @@
                 </td>
                 <td class="content-view-td content-view-td-content">
                   {%- if requirement.reserved_statement -%}
-                    {{ renderer.render_requirement_statement(requirement) }}
+                    <sdoc-autogen>{{ renderer.render_requirement_statement(requirement) }}</sdoc-autogen>
                   {%- endif -%}
                 </td>
                 <td class="content-view-td content-view-td-content">
                   {%- if requirement.rationale -%}
-                    {{ renderer.render_requirement_rationale(requirement) }}
+                    <sdoc-autogen>{{ renderer.render_requirement_rationale(requirement) }}</sdoc-autogen>
                   {%- endif -%}
                 </td>
                 <td class="content-view-td content-view-td-content">
-                  {%- if requirement.comments %}
-                    {%- for comment in requirement.comments %}{{ renderer.render_comment(comment) }}{%- endfor %}
-                  {%- endif %}
+                  {%- if requirement.comments -%}
+                    {%- for comment in requirement.comments -%}
+                    <sdoc-autogen>{{ renderer.render_comment(comment) }}</sdoc-autogen>
+                    {%- endfor -%}
+                  {%- endif -%}
                 </td>
                 {%- for meta_field_title in document.enumerate_custom_content_field_titles() -%}
                   {%- set field_value = requirement.get_meta_field_value_by_title(meta_field_title) %}
@@ -214,7 +218,7 @@
                       {# Children & Parents #}
                     </td>
                     <td class="content-view-td" colspan="50">
-                      {{ renderer.render_free_text(document_type, free_text) }}
+                      <sdoc-autogen>{{ renderer.render_free_text(document_type, free_text) }}</sdoc-autogen>
                     </td>
                   </tr>
                 {%- endfor -%}

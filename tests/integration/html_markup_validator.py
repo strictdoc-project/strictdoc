@@ -45,6 +45,7 @@ _, tidylib_messages_string = tidy_document(
             # SVG
             "svg, path, line, circle, polyline, "
             # StrictDoc
+            "sdoc-autogen, "
             "sdoc-anchor, "
             "sdoc-menu, sdoc-menu-handler, sdoc-menu-list, "
             "sdoc-node, "

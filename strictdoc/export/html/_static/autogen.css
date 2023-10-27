@@ -20,7 +20,7 @@ sdoc-autogen div.document {
 
 sdoc-autogen table {
   border-collapse: collapse;
-  margin: var(--base-margin) 0;
+  margin: var(--base-padding) 0;
   font-size: 1rem;
 
   /*** add scroll for wide tables */
@@ -43,7 +43,7 @@ sdoc-autogen table th {
 
 sdoc-autogen table th,
 sdoc-autogen table td {
-  padding: calc(var(--base-margin)/2);
+  padding: var(--base-rhythm) calc(var(--base-rhythm) * 1.5);
   vertical-align: top;
   text-align: left;
   border: 1px solid #ccc;
@@ -56,7 +56,7 @@ sdoc-autogen table td {
 /* Typography */
 
 sdoc-autogen p {
-  margin: var(--base-margin) 0;
+  margin: var(--autogen-v-rhythm, 16px) 0;
 }
 
 /* blockquote */

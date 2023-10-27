@@ -1516,14 +1516,14 @@ def create_main_router(
                         "and underscore symbols."
                     ),
                 )
-            if not document_path.endswith(".sdoc"):
-                error_object.add_error(
-                    "document_path",
-                    (
-                        "Document path must end with a file name. "
-                        "The file name must have the .sdoc extension."
-                    ),
-                )
+            # if not document_path.endswith(".sdoc"):
+            #     error_object.add_error(
+            #         "document_path",
+            #         (
+            #             "Document path must end with a file name. "
+            #             "The file name must have the .sdoc extension."
+            #         ),
+            #     )
 
         if error_object.any_errors():
             template = env().get_template(
@@ -1545,6 +1545,9 @@ def create_main_router(
                     "Content-Type": "text/vnd.turbo-stream.html",
                 },
             )
+
+        if not document_path.endswith(".sdoc"):
+            document_path = document_path + ".sdoc"
 
         assert isinstance(project_config.export_input_paths, list)
         full_input_path = os.path.abspath(project_config.export_input_paths[0])

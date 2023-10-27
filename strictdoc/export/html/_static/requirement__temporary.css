@@ -1,21 +1,4 @@
-
-/*  */
-
-div.document {
-  display: contents;
-  /* hyphens: auto; */
-}
-
-div.document p {
-  margin: var(--base-margin) 0;
-}
-
-h1 { font-size: 2em; }
-h2 { font-size: 1.6em; }
-h3 { font-size: 1.4em; }
-h4 { font-size: 1.2em; }
-h5 { font-size: 1em; }
-h6 { font-size: 1em; }
+/* TODO: should be revised and then moved to a permanent location or removed */
 
 /* requirement__title */
 
@@ -27,71 +10,6 @@ h6 { font-size: 1em; }
 
 [data-viewtype="requirements-coverage"] .requirement__title {
   margin: 0;
-}
-
-/* blockquote */
-
-blockquote {
-  color: #666;
-  padding: .25em 0 0.25em 1rem;
-  border-left: 4px solid #ccc;
-}
-
-/* pre.code */
-
-pre.code {
-  font-family: var(--code-font-family);
-
-  font-size: var(--code-font-size);
-  line-height: 1.8;
-  margin:   var(--code-font-size) 0;
-  padding:  calc(var(--code-font-size)*1.2)
-            calc(var(--code-font-size)*1.2)
-            calc(var(--code-font-size)*1.2)
-            calc(var(--code-font-size)*2);
-
-  overflow: auto;
-  background-color: var(--color-bg-main);
-  border: 1px solid var(--color-border);
-}
-
-/* ``some text`` is generated into: <tt class="docutils literal"> by docutils. */
-tt.literal {
-  position: relative;
-  padding: 2px 6px;
-  font-style: normal;
-  font-family: var(--code-font-family);
-  font-size: var(--code-font-size);
-  background-color: var(--color-bg-main);
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
-}
-
-/* ul */
-
-div.document ul,
-div.document ol {
-  padding-left: 1.6em;
-}
-
-div.document td ul,
-div.document dt ol {
-  margin: 0;
-  padding-left: 1em;
-}
-
-/* object */
-
-div.document img,
-div.document object {
-  width: 100%;
-  padding: 1em;
-  background: var(--color-bg-contrast);
 }
 
 /* meta table */

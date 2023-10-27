@@ -2,7 +2,7 @@
   {%- if truncated_statement is true -%}
     {# truncated in DTR tiny card #}
     <sdoc-requirement-field data-field-label="statement">
-      {{ renderer.render_truncated_requirement_statement(requirement) }}
+      <sdoc-autogen>{{ renderer.render_truncated_requirement_statement(requirement) }}</sdoc-autogen>
     </sdoc-requirement-field>
   {%- else -%}
     {# default with label #}
@@ -11,7 +11,7 @@
       data-field-label="statement"
       data-controller="copy_to_clipboard_button"
     >
-      {{ renderer.render_requirement_statement(requirement) }}
+      <sdoc-autogen>{{ renderer.render_requirement_statement(requirement) }}</sdoc-autogen>
     </sdoc-requirement-field>
   {%- endif -%}
 {%- endif -%}

@@ -31,7 +31,7 @@ Add new document
         field_name="path",
         field_label="document path and filename",
         field_input_name="document_path",
-        field_value=document_title,
+        field_value=document_path,
         errors=error_object.get_errors("document_path")
       -%}
         {% include "components/form/field/text/index.jinja" %}

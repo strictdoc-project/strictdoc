@@ -15,7 +15,7 @@
 
 sdoc-requirement {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
   place-items: stretch stretch;
   place-content: stretch stretch;
   gap: var(--requirement-inner-borders-width);
@@ -106,7 +106,7 @@ sdoc-requirement-field ul {
 
 sdoc-requirement[requirement-view="table"] {
   /* grid: */
-  grid-template-columns: minmax(80px, min-content) 1fr;
+  grid-template-columns: minmax(80px, min-content) minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
   /* border: */
   background-color: var(--requirement-border-color);
 }
@@ -146,7 +146,7 @@ sdoc-node:not([node-style="card"]) {
 @container node (width < 400px) {
   sdoc-requirement[requirement-view="table"] {
     /* removes columns: */
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
     /* removes inner border: */
     background-color: var(--requirement-bg-light-color);
   }
@@ -169,7 +169,7 @@ sdoc-node:not([node-style="card"]) {
 
     sdoc-requirement[requirement-view="table"] {
       /* removes columns: */
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
       /* removes inner border: */
       background-color: var(--requirement-bg-light-color);
     }
@@ -189,7 +189,7 @@ sdoc-node:not([node-style="card"]) {
 /* requirement-view="zebra" */
 
 sdoc-requirement[requirement-view="zebra"] {
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
 }
 
 sdoc-requirement[requirement-view="zebra"]
@@ -205,7 +205,7 @@ sdoc-requirement[requirement-view="zebra"]
 /* requirement-view="simple" */
 
 sdoc-requirement[requirement-view="simple"] {
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
 }
 
 sdoc-requirement[requirement-view="simple"]

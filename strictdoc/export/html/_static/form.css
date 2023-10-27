@@ -15,8 +15,8 @@ sdoc-backdrop {
 
 sdoc-modal {
   display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: min-content 1fr min-content;
+  grid-template-columns: minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
+  grid-template-rows: min-content minmax(0, 1fr) min-content;
   grid-template-areas:
     "modal-header"
     "modal-content"
@@ -211,7 +211,7 @@ sdoc-form-grid {
   place-items: stretch stretch;
   place-content: stretch stretch;
   grid-template-columns:  minmax(0, min-content)
-                          1fr
+                          minmax(0, 1fr) /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
                           minmax(0, min-content);
   gap:
           calc(var(--base-rhythm)*4)

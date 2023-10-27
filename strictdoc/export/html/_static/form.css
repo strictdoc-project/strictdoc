@@ -565,3 +565,8 @@ sdoc-tab[data-errors]::after {
   position: relative;
   right: calc(var(--base-rhythm)*(-1));
 }
+
+form[data-controller~="scroll_into_view"] {
+    scroll-snap-margin-top: var(--base-margin);
+    scroll-margin-top:      var(--base-margin);
+}

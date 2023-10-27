@@ -7,7 +7,7 @@
                 fit-content(var(--base-gap))
                 fit-content(20%)
                 fit-content(20%)
-                1fr
+                minmax( 0, 1fr ) /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
                 fit-content(20%)
                 auto;
   grid-template-rows:

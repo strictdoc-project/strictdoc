@@ -48,8 +48,6 @@
 
   --base-gap: calc(var(--base-rhythm)*6);
   --base-padding: calc(var(--base-rhythm)*2);
-  --node-padding: calc(var(--base-padding)*2);
-  --base-margin: calc(var(--base-rhythm)*3); /* todo check and delete */
 
   --base-elevation-0: 0 0 0 rgba(0,0,0,0);
   --base-elevation-node: 0 0 16px rgba(0,0,0,.1);

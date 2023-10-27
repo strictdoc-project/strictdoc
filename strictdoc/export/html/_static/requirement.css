@@ -288,7 +288,7 @@ sdoc-section + sdoc-section sdoc-section-title,
 sdoc-requirement + sdoc-requirement,
 sdoc-requirement + sdoc-section,
 sdoc-requirement + sdoc-section sdoc-section-title {
-  margin-top: var(--base-margin);
+  margin-top: calc(var(--base-rhythm)*3);
 }
 
 /* requirement type tag */

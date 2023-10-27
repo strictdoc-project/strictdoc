@@ -389,6 +389,14 @@ sdoc-form-field select::-ms-expand {
   color: rgba(242, 100, 42,.2);
 }
 
+sdoc-contenteditable[data-field-suffix]:not(:empty)::after {
+  content: attr(data-field-suffix);
+  color: var(--color-fg-accent);
+  margin-left: 4px;
+}
+
+/* data-field-suffix */
+
 [contenteditable=true] {
   white-space: pre-wrap;
   word-break: break-word;

@@ -4,6 +4,8 @@
 
     field_type = singleline | multiline | parent
 
+    singleline_suffix
+
     field_editable=true/false | optional
 
     field_class_name | optional
@@ -76,6 +78,9 @@
         id="{{ field_input_name }}"
         placeholder="Enter {{ field_name|default('FIELD_NAME', true) }} here..."
         data-field-label="{{ field_label if field_label is defined else field_name }}"
+        {%- if field_type == "singleline" and singleline_suffix is defined -%}
+          data-field-suffix="{{ singleline_suffix }}"
+        {%- endif -%}
         {%- if field_class_name is defined -%}
           class="{{ field_class_name }}"
         {%- endif -%}

@@ -1516,14 +1516,6 @@ def create_main_router(
                         "and underscore symbols."
                     ),
                 )
-            # if not document_path.endswith(".sdoc"):
-            #     error_object.add_error(
-            #         "document_path",
-            #         (
-            #             "Document path must end with a file name. "
-            #             "The file name must have the .sdoc extension."
-            #         ),
-            #     )
 
         if error_object.any_errors():
             template = env().get_template(

@@ -26,9 +26,10 @@ Add new document
 
       {%- with
         field_type="singleline",
+        singleline_suffix='.sdoc',
         field_class_name="std-input-document_path",
         field_name="path",
-        field_label="document path",
+        field_label="document path and filename",
         field_input_name="document_path",
         field_value=document_title,
         errors=error_object.get_errors("document_path")

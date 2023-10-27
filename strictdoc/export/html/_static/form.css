@@ -567,6 +567,7 @@ sdoc-tab[data-errors]::after {
 }
 
 form[data-controller~="scroll_into_view"] {
-    scroll-snap-margin-top: var(--base-margin);
-    scroll-margin-top:      var(--base-margin);
+  /* fix on 1px border and smth unruly */
+    scroll-snap-margin-top: calc(var(--base-padding) + 1px);
+    scroll-margin-top:      calc(var(--base-padding) + 1px);
 }

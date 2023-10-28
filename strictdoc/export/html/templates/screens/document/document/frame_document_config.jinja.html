@@ -9,15 +9,21 @@
   <sdoc-meta>
     {%- if document.config.uid -%}
     <sdoc-meta-label data-testid="document-config-uid-label">UID:</sdoc-meta-label>
-    <sdoc-meta-field data-testid="document-config-uid-field">{{ document.config.uid }}</sdoc-meta-field>
+    <sdoc-meta-field data-testid="document-config-uid-field"
+                     data-controller="copy_to_clipboard_button"
+    >{{ document.config.uid }}</sdoc-meta-field>
     {%- endif -%}
     {%- if document.config.version -%}
     <sdoc-meta-label data-testid="document-config-version-label">VERSION:</sdoc-meta-label>
-    <sdoc-meta-field data-testid="document-config-version-field">{{ document.config.version }}</sdoc-meta-field>
+    <sdoc-meta-field data-testid="document-config-version-field"
+                     data-controller="copy_to_clipboard_button"
+    >{{ document.config.version }}</sdoc-meta-field>
     {%- endif -%}
     {%- if document.config.classification -%}
     <sdoc-meta-label data-testid="document-config-classification-label">CLASSIFICATION:</sdoc-meta-label>
-    <sdoc-meta-field data-testid="document-config-classification-field">{{ document.config.classification }}</sdoc-meta-field>
+    <sdoc-meta-field data-testid="document-config-classification-field"
+                     data-controller="copy_to_clipboard_button"
+    >{{ document.config.classification }}</sdoc-meta-field>
     {%- endif -%}
   </sdoc-meta>
   {%- endif -%}

@@ -131,6 +131,270 @@ TITLE: Open-source requirements tool challenges
 [/SECTION]
 
 [SECTION]
+UID: SECTION-SRS-Web-HTML-frontend
+TITLE: Web/HTML frontend
+
+[SECTION]
+UID: SECTION-SRS-General-export-requirements-2
+TITLE: General export requirements
+
+[REQUIREMENT]
+UID: SDOC-SRS-49
+STATUS: Active
+TITLE: Export to static HTML website
+STATEMENT: >>>
+StrictDoc shall support generating requirements documentation into static HTML.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-30
+
+[REQUIREMENT]
+UID: SDOC-SRS-50
+STATUS: Active
+TITLE: Web interface
+STATEMENT: >>>
+StrictDoc shall provide a web interface.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-31
+
+[REQUIREMENT]
+UID: SDOC-SRS-51
+STATUS: Progress
+TITLE: Export to printable HTML pages (HTML2PDF)
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Screen-Project-home
+TITLE: Screen: Project home
+
+[REQUIREMENT]
+UID: SDOC-SRS-52
+STATUS: Progress
+TITLE: View project home page
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Screen-Project-tree
+TITLE: Screen: Project tree
+
+[REQUIREMENT]
+UID: SDOC-SRS-53
+TITLE: View project tree
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Screen-Document-DOC
+TITLE: Screen: Document (DOC)
+
+[REQUIREMENT]
+UID: SDOC-SRS-54
+STATUS: Active
+TITLE: View document
+STATEMENT: >>>
+StrictDoc's Document screen shall allow reading documents.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-3
+
+[REQUIREMENT]
+UID: SDOC-SRS-55
+STATUS: Active
+TITLE: Edit requirement nodes
+STATEMENT: >>>
+StrictDoc's Document screen shall allow editing requirements.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-4
+
+[REQUIREMENT]
+UID: SDOC-SRS-92
+STATUS: Active
+TITLE: Move requirement / section nodes within document
+STATEMENT: >>>
+StrictDoc's Document screen shall provide a capability to move the nodes within a document.
+<<<
+RATIONALE: >>>
+Moving the nodes within a document is a convenience feature that speeds up the requirements editing process significantly.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-5
+
+[REQUIREMENT]
+UID: SDOC-SRS-94
+STATUS: Backlog
+TITLE: Move requirement / section nodes between documents
+STATEMENT: >>>
+StrictDoc's Document screen shall provide a capability to move the nodes between documents.
+<<<
+RATIONALE: >>>
+Moving the nodes within a document is a convenience feature that speeds up the requirements editing process significantly.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-70
+
+[REQUIREMENT]
+UID: SDOC-SRS-56
+STATUS: Active
+TITLE: Edit Document grammar
+STATEMENT: >>>
+StrictDoc's screen shall allow editing a document's grammar.
+<<<
+RATIONALE: >>>
+Editing document grammar allows a user to customize the requirements fields.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-62
+
+[REQUIREMENT]
+UID: SDOC-SRS-57
+STATUS: Active
+TITLE: Edit Document options
+
+[REQUIREMENT]
+UID: SDOC-SRS-96
+STATUS: Progress
+TITLE: Auto-generate requirements UIDs
+STATEMENT: >>>
+StrictDoc's Document screen shall provide controls for automatic generation of requirements UIDs.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-6
+
+[REQUIREMENT]
+UID: SDOC-SRS-58
+STATUS: Backlog
+TITLE: Attach image to requirement
+
+[REQUIREMENT]
+UID: SDOC-SRS-59
+STATUS: Backlog
+TITLE: Buttons to copy text to buffer
+
+[REQUIREMENT]
+UID: SDOC-SRS-60
+STATUS: Backlog
+TITLE: Provide contextual help about RST markup
+
+[REQUIREMENT]
+UID: SDOC-SRS-61
+STATUS: Backlog
+TITLE: Tables
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Screen-Table-TBL
+TITLE: Screen: Table (TBL)
+
+[REQUIREMENT]
+UID: SDOC-SRS-62
+STATUS: Active
+TITLE: View TBL screen
+STATEMENT: >>>
+StrictDoc's Table screen shall allow reading documents in a table-like manner.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-73
+
+[REQUIREMENT]
+UID: SDOC-SRS-63
+STATUS: Draft
+TITLE: TBL: Hide/show columns
+
+[REQUIREMENT]
+UID: SDOC-SRS-64
+STATUS: Draft
+TITLE: TBL: Select/deselect tags
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Screen-Traceability-TR
+TITLE: Screen: Traceability (TR)
+
+[REQUIREMENT]
+UID: SDOC-SRS-65
+TITLE: View TR screen
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Screen-Deep-traceability-DTR
+TITLE: Screen: Deep traceability (DTR)
+
+[REQUIREMENT]
+UID: SDOC-SRS-66
+TITLE: View DTR screen
+
+[/SECTION]
+
+[SECTION]
+TITLE: Screen: Project statistics
+
+[REQUIREMENT]
+UID: SDOC-SRS-97
+STATUS: Active
+TITLE: Display project statistics
+STATEMENT: >>>
+StrictDoc shall provide a Project Statistics screen that displays the following project information:
+
+- Project title
+- Date of generation
+- Git revision
+- Total documents
+- Total requirements
+- Requirements status breakdown
+- Total number of TBD/TBC found in documents.
+<<<
+RATIONALE: >>>
+TBD
+<<<
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Screen-Project-tree-document-diff
+TITLE: Screen: Project tree / document diff
+
+[REQUIREMENT]
+UID: SDOC-SRS-67
+STATUS: Draft
+TITLE: View project tree DIFF
+
+[REQUIREMENT]
+UID: SDOC-SRS-68
+STATUS: Draft
+TITLE: View document DIFF
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Screen-Impact-analysis
+TITLE: Screen: Impact analysis
+
+[REQUIREMENT]
+UID: SDOC-SRS-69
+STATUS: Draft
+TITLE: Requirement impact analysis
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
 UID: SECTION-SRS-Implementation-requirements
 TITLE: Implementation requirements
 
@@ -604,270 +868,6 @@ TITLE: General export requirements
 [REQUIREMENT]
 UID: SDOC-SRS-48
 TITLE: Preserve generated file names
-
-[/SECTION]
-
-[SECTION]
-UID: SECTION-SRS-Web-HTML-frontend
-TITLE: Web/HTML frontend
-
-[SECTION]
-UID: SECTION-SRS-General-export-requirements-2
-TITLE: General export requirements
-
-[REQUIREMENT]
-UID: SDOC-SRS-49
-STATUS: Active
-TITLE: Export to static HTML website
-STATEMENT: >>>
-StrictDoc shall support generating requirements documentation into static HTML.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-30
-
-[REQUIREMENT]
-UID: SDOC-SRS-50
-STATUS: Active
-TITLE: Web interface
-STATEMENT: >>>
-StrictDoc shall provide a web interface.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-31
-
-[REQUIREMENT]
-UID: SDOC-SRS-51
-STATUS: Progress
-TITLE: Export to printable HTML pages (HTML2PDF)
-
-[/SECTION]
-
-[SECTION]
-UID: SECTION-SRS-Screen-Project-home
-TITLE: Screen: Project home
-
-[REQUIREMENT]
-UID: SDOC-SRS-52
-STATUS: Progress
-TITLE: View project home page
-
-[/SECTION]
-
-[SECTION]
-UID: SECTION-SRS-Screen-Project-tree
-TITLE: Screen: Project tree
-
-[REQUIREMENT]
-UID: SDOC-SRS-53
-TITLE: View project tree
-
-[/SECTION]
-
-[SECTION]
-UID: SECTION-SRS-Screen-Document-DOC
-TITLE: Screen: Document (DOC)
-
-[REQUIREMENT]
-UID: SDOC-SRS-54
-STATUS: Active
-TITLE: View document
-STATEMENT: >>>
-StrictDoc's Document screen shall allow reading documents.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-3
-
-[REQUIREMENT]
-UID: SDOC-SRS-55
-STATUS: Active
-TITLE: Edit requirement nodes
-STATEMENT: >>>
-StrictDoc's Document screen shall allow editing requirements.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-4
-
-[REQUIREMENT]
-UID: SDOC-SRS-92
-STATUS: Active
-TITLE: Move requirement / section nodes within document
-STATEMENT: >>>
-StrictDoc's Document screen shall provide a capability to move the nodes within a document.
-<<<
-RATIONALE: >>>
-Moving the nodes within a document is a convenience feature that speeds up the requirements editing process significantly.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-5
-
-[REQUIREMENT]
-UID: SDOC-SRS-94
-STATUS: Backlog
-TITLE: Move requirement / section nodes between documents
-STATEMENT: >>>
-StrictDoc's Document screen shall provide a capability to move the nodes between documents.
-<<<
-RATIONALE: >>>
-Moving the nodes within a document is a convenience feature that speeds up the requirements editing process significantly.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-70
-
-[REQUIREMENT]
-UID: SDOC-SRS-56
-STATUS: Active
-TITLE: Edit Document grammar
-STATEMENT: >>>
-StrictDoc's screen shall allow editing a document's grammar.
-<<<
-RATIONALE: >>>
-Editing document grammar allows a user to customize the requirements fields.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-62
-
-[REQUIREMENT]
-UID: SDOC-SRS-57
-STATUS: Active
-TITLE: Edit Document options
-
-[REQUIREMENT]
-UID: SDOC-SRS-96
-STATUS: Progress
-TITLE: Auto-generate requirements UIDs
-STATEMENT: >>>
-StrictDoc's Document screen shall provide controls for automatic generation of requirements UIDs.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-6
-
-[REQUIREMENT]
-UID: SDOC-SRS-58
-STATUS: Backlog
-TITLE: Attach image to requirement
-
-[REQUIREMENT]
-UID: SDOC-SRS-59
-STATUS: Backlog
-TITLE: Buttons to copy text to buffer
-
-[REQUIREMENT]
-UID: SDOC-SRS-60
-STATUS: Backlog
-TITLE: Provide contextual help about RST markup
-
-[REQUIREMENT]
-UID: SDOC-SRS-61
-STATUS: Backlog
-TITLE: Tables
-
-[/SECTION]
-
-[SECTION]
-UID: SECTION-SRS-Screen-Table-TBL
-TITLE: Screen: Table (TBL)
-
-[REQUIREMENT]
-UID: SDOC-SRS-62
-STATUS: Active
-TITLE: View TBL screen
-STATEMENT: >>>
-StrictDoc's Table screen shall allow reading documents in a table-like manner.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-73
-
-[REQUIREMENT]
-UID: SDOC-SRS-63
-STATUS: Draft
-TITLE: TBL: Hide/show columns
-
-[REQUIREMENT]
-UID: SDOC-SRS-64
-STATUS: Draft
-TITLE: TBL: Select/deselect tags
-
-[/SECTION]
-
-[SECTION]
-UID: SECTION-SRS-Screen-Traceability-TR
-TITLE: Screen: Traceability (TR)
-
-[REQUIREMENT]
-UID: SDOC-SRS-65
-TITLE: View TR screen
-
-[/SECTION]
-
-[SECTION]
-UID: SECTION-SRS-Screen-Deep-traceability-DTR
-TITLE: Screen: Deep traceability (DTR)
-
-[REQUIREMENT]
-UID: SDOC-SRS-66
-TITLE: View DTR screen
-
-[/SECTION]
-
-[SECTION]
-TITLE: Screen: Project statistics
-
-[REQUIREMENT]
-UID: SDOC-SRS-97
-STATUS: Active
-TITLE: Display project statistics
-STATEMENT: >>>
-StrictDoc shall provide a Project Statistics screen that displays the following project information:
-
-- Project title
-- Date of generation
-- Git revision
-- Total documents
-- Total requirements
-- Requirements status breakdown
-- Total number of TBD/TBC found in documents.
-<<<
-RATIONALE: >>>
-TBD
-<<<
-
-[/SECTION]
-
-[SECTION]
-UID: SECTION-SRS-Screen-Project-tree-document-diff
-TITLE: Screen: Project tree / document diff
-
-[REQUIREMENT]
-UID: SDOC-SRS-67
-STATUS: Draft
-TITLE: View project tree DIFF
-
-[REQUIREMENT]
-UID: SDOC-SRS-68
-STATUS: Draft
-TITLE: View document DIFF
-
-[/SECTION]
-
-[SECTION]
-UID: SECTION-SRS-Screen-Impact-analysis
-TITLE: Screen: Impact analysis
-
-[REQUIREMENT]
-UID: SDOC-SRS-69
-STATUS: Draft
-TITLE: Requirement impact analysis
-
-[/SECTION]
 
 [/SECTION]
 

@@ -2,7 +2,9 @@
 
 {%- if document.free_texts -%}
   {%- for free_text in document.free_texts %}
-    <div class="free_text" data-testid="document-abstract">
+    <div class="free_text"
+         data-controller="copy_to_clipboard_button"
+         data-testid="document-abstract">
       <sdoc-autogen>{{ renderer.render_free_text(document_type, free_text) }}</sdoc-autogen>
     </div>
   {%- endfor -%}

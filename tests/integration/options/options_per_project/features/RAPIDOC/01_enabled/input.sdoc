@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[FREETEXT]
+.. raw:: html
+
+    <pre class="rapi-doc-mini">
+    style= "min-width:600px;border: 1px solid #eee; border-top-width:0"
+    spec-url = "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v2.0/json/uber.json"
+    theme = "light"
+    layout = "column"
+    paths-expanded = "false"
+    match-paths = "get /products"
+    </pre>
+[/FREETEXT]

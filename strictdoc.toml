@@ -8,6 +8,8 @@ features = [
   "TRACEABILITY_SCREEN",
   "DEEP_TRACEABILITY_SCREEN",
 
+  "RAPIDOC",
+
   # Stable features but not used by StrictDoc.
   # "MATHJAX"
 

@@ -1,0 +1,8 @@
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: cat %S/Output/html/02_disabled/input.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
+RUN: cat %S/Output/html/02_disabled/input.standalone.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
+RUN: cat %S/Output/html/02_disabled/input-TABLE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
+RUN: cat %S/Output/html/02_disabled/input-TRACE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
+RUN: cat %S/Output/html/02_disabled/input-DEEP-TRACE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML

@@ -191,13 +191,50 @@ sdoc-node-controls .action_button {
 
 /* used by copy_to_clipboard controller */
 
-/* TODO improve class name .with_faded_button */
-.with_faded_button > .action_button {
+.copy_to_clipboard-field {
+  position: relative;
+}
+
+.copy_to_clipboard-cover {
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+
+  border-top-right-radius: 6px; /* TODO 4 + in button*/
+  background-color: rgba(242, 100, 42, 0);
+  transition: .5s ease-out;
+}
+
+.copy_to_clipboard-cover:hover {
+  background-color: rgba(242, 100, 42, 0.05);
+  transition: .5s ease-out;
+}
+
+.copy_to_clipboard-cover > .action_button {
+  height: calc(var(--base-rhythm)*3);
+  width: calc(var(--base-rhythm)*3);
+  min-height: unset;
+  padding: var(--base-rhythm);
+  position: absolute;
+  right: 0;
+  pointer-events: auto;
+}
+
+.copy_to_clipboard-cover > .action_button:hover {
+  /* box-shadow: none;
+  border: none; */
+}
+
+.copy_to_clipboard-field > .copy_to_clipboard-cover .action_button {
   transition: .5s ease-out;
   opacity: 0;
 }
 
-.with_faded_button:hover > .action_button {
+.copy_to_clipboard-field:hover > .copy_to_clipboard-cover .action_button {
   opacity: 1;
 }
 

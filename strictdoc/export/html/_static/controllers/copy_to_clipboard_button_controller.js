@@ -1,40 +1,36 @@
 Stimulus.register("copy_to_clipboard_button", class extends Controller {
   connect() {
-    this.element.className = 'with_faded_button';
+    this.element.className = 'copy_to_clipboard-field';
 
     const clip = this.element.innerText.trim();
 
     const copyIcon = this._createIcon(this._copyIconSVG());
     const doneIcon = this._createIcon(this._doneIconSVG());
     const button = this._createButton(copyIcon, doneIcon);
-
-    this.element.style.position = 'relative';
-    this.element.prepend(button);
+    const cover = this._createCover();
+    cover.prepend(button);
+    this.element.append(cover);
 
     // Add event listener
     button.addEventListener("click", function(event){
       event.preventDefault();
-      _updateClipboard(clip, _confirmIcon(button, copyIcon, doneIcon))
+      _updateClipboard(clip, _confirm(button, copyIcon, doneIcon, cover))
     });
+  }
+
+  _createCover() {
+    const cover = document.createElement("div");
+    cover.className = 'copy_to_clipboard-cover';
+    return cover;
   }
 
   _createButton(copyIcon, doneIcon) {
     const button = document.createElement("div");
     button.title = "Click to copy";
     button.className = 'action_button';
-    button.style.cssText += this._buttonCSS();
     doneIcon.style.display = 'none';
     button.append(copyIcon, doneIcon,);
     return button
-  }
-
-  _buttonCSS() {
-    return `
-      position: absolute;
-      right: 4px;
-      top: 4px;
-      /* line-height: 0; */
-    `;
   }
 
   _createIcon(iconSVG) {
@@ -71,19 +67,35 @@ function _updateClipboard(newClip, callback) {
   });
 }
 
-function _confirmIcon(button, copyIcon, doneIcon) {
+function _confirm(button, copyIcon, doneIcon, cover) {
   // initial opacity
   let op = 1;
+
+  // make button visible
   button.style.opacity = 1;
 
+  // initial cover
+  cover.style.background = `rgba(242, 100, 42, ${op})`;
+
+  // make DONE icon visible (instead of default COPY)
   copyIcon.style.display = 'none';
   doneIcon.style.display = 'contents';
+
   const fadeTimer = setInterval(() => {
+      // update cover
+      cover.style.background = `rgba(242, 100, 42, ${op})`;
       if (op <= 0.1){
           clearInterval(fadeTimer);
+
+          // make button invisible
+          button.style.opacity = '';
+
+          // reset cover
+          cover.style.background = `rgba(242, 100, 42, 0)`;
+
+          // make COPY icon visible back
           copyIcon.style.display = 'contents';
           doneIcon.style.display = 'none';
-          button.style.opacity = '';
       }
       op -= op * 0.1;
   }, 30);

@@ -682,7 +682,7 @@ StrictDoc's Document screen shall allow reading documents.
 
 [REQUIREMENT]
 UID: SDOC-SRS-55
-STATUS: Implemented
+STATUS: Active
 REFS:
 - TYPE: Parent
   VALUE: SDOC-SSS-4
@@ -735,7 +735,7 @@ Editing document grammar allows a user to customize the requirements fields.
 
 [REQUIREMENT]
 UID: SDOC-SRS-57
-STATUS: Implemented
+STATUS: Active
 TITLE: Edit Document options
 
 [REQUIREMENT]
@@ -906,7 +906,7 @@ StrictDoc shall support exporting/importing requirements content from/to ReqIF f
 
 [REQUIREMENT]
 UID: SDOC-SRS-73
-STATUS: Implemented
+STATUS: Active
 TITLE: Standalone ReqIF layer
 
 [/SECTION]

@@ -9,9 +9,6 @@ TITLE: Requirements management
 [REQUIREMENT]
 UID: SDOC-SSS-4
 STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-RMC-20
 TITLE: Requirements CRUD
 STATEMENT: >>>
 The Requirements Tool shall support the CRUD operations:
@@ -21,15 +18,13 @@ The Requirements Tool shall support the CRUD operations:
 - Updating a requirement.
 - Deleting a requirement.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-20
 
 [REQUIREMENT]
 UID: SDOC-SSS-61
 STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: ZEP-10
-- TYPE: Parent
-  VALUE: ZEP-14
 TITLE: Minimal requirement field set
 STATEMENT: >>>
 The Requirements Tool shall support at least the following requirement field set:
@@ -42,15 +37,15 @@ The Requirements Tool shall support at least the following requirement field set
 - RATIONALE
 - COMMENT.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: ZEP-10
+- TYPE: Parent
+  VALUE: ZEP-14
 
 [REQUIREMENT]
 UID: SDOC-SSS-62
 STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: ZEP-3
-- TYPE: Parent
-  VALUE: SDOC-RMC-23
 TITLE: Custom fields
 STATEMENT: >>>
 The requirements tool shall support configuring a requirement item with an arbitrary set of fields.
@@ -60,27 +55,32 @@ NOTE: Examples of typical fields include: UID, Title, Statement, Rationale, Comm
 RATIONALE: >>>
 The tool shall not constrain a user in which fields they are able to use for their projects.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: ZEP-3
+- TYPE: Parent
+  VALUE: SDOC-RMC-23
 
 [REQUIREMENT]
 UID: SDOC-SSS-64
 STATUS: Active
-REFS:
+TITLE: Structuring requirements in documents
+RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-RMC-21
 - TYPE: Parent
   VALUE: ZEP-13
-TITLE: Structuring requirements in documents
 
 [REQUIREMENT]
 UID: SDOC-SSS-5
 STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-RMC-1
 TITLE: Move document nodes within document
 STATEMENT: >>>
 The Requirements Tool shall allow moving nodes (sections, requirements) within the containing document.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-1
 
 [REQUIREMENT]
 UID: SDOC-SSS-70
@@ -93,11 +93,6 @@ The Requirements Tool shall allow moving nodes (sections, requirements) between 
 [REQUIREMENT]
 UID: SDOC-SSS-6
 STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: ZEP-8
-- TYPE: Parent
-  VALUE: SDOC-RMC-1
 TITLE: Auto-provision of Requirement UIDs
 STATEMENT: >>>
 The Requirements Tool shall provide controls for automatic generation of requirements UIDs.
@@ -105,20 +100,22 @@ The Requirements Tool shall provide controls for automatic generation of require
 RATIONALE: >>>
 When a document is large, it becomes harder to manage the assignment of the new requirements identifiers by manually exploring which requirement UID has not been assigned yet. The provision of automatically generated UIDs is a convenience feature that improves the user experience significantly.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: ZEP-8
+- TYPE: Parent
+  VALUE: SDOC-RMC-1
 
 [REQUIREMENT]
 UID: SDOC-SSS-7
-REFS:
+TITLE: Link requirements together
+RELATIONS:
 - TYPE: Parent
   VALUE: ZEP-4
-TITLE: Link requirements together
 
 [REQUIREMENT]
 UID: SDOC-SSS-8
 STATUS: Backlog
-REFS:
-- TYPE: Parent
-  VALUE: ZEP-5
 TITLE: Multiple link roles
 STATEMENT: >>>
 The Requirements Tool shall support the link roles.
@@ -128,35 +125,38 @@ Example of roles for a child-to-parent link: "verifies", "implements", "satisfie
 RATIONALE: >>>
 Different industries maintain custom conventions for naming the relations between requirements and other nodes such as tests or other artefacts.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: ZEP-5
 
 [REQUIREMENT]
 UID: SDOC-SSS-71
 STATUS: Backlog
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-RMC-57
 TITLE: Reverse parent links
 STATEMENT: >>>
 The Requirements Tool shall support the Reverse Parent relationship.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-57
 
 [REQUIREMENT]
 UID: SDOC-SSS-47
 STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-RMC-7
 TITLE: Prevent cycles between nodes
 STATEMENT: >>>
 The Requirements Tool shall provide a validation mechanism that prevents requirement links from forming cycles.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-7
 
 [REQUIREMENT]
 UID: SDOC-SSS-57
-REFS:
+TITLE: Requirement syntax validation (e.g. EARS)
+RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-RMC-37
-TITLE: Requirement syntax validation (e.g. EARS)
 
 [/SECTION]
 
@@ -167,41 +167,41 @@ TITLE: Documentation management
 [REQUIREMENT]
 UID: SDOC-SSS-3
 STATUS: Active
-REFS:
+TITLE: Documents CRUD
+RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-RMC-22
-TITLE: Documents CRUD
 
 [REQUIREMENT]
 UID: SDOC-SSS-51
-REFS:
+TITLE: Documents with nested sections/chapters structure
+RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-RMC-21
-TITLE: Documents with nested sections/chapters structure
 
 [REQUIREMENT]
 UID: SDOC-SSS-52
-REFS:
+TITLE: Assembling documents from fragments
+RELATIONS:
 - TYPE: Parent
   VALUE: ZEP-1
-TITLE: Assembling documents from fragments
 
 [REQUIREMENT]
 UID: SDOC-SSS-53
 STATUS: Active
-REFS:
+TITLE: Document meta information (UID, version, authors, signatures, etc)
+RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-RMC-33
 - TYPE: Parent
   VALUE: SDOC-RMC-35
-TITLE: Document meta information (UID, version, authors, signatures, etc)
 
 [REQUIREMENT]
 UID: SDOC-SSS-63
-REFS:
+TITLE: Text formatting capabilities
+RELATIONS:
 - TYPE: Parent
   VALUE: ZEP-9
-TITLE: Text formatting capabilities
 
 [/SECTION]
 
@@ -212,24 +212,24 @@ TITLE: Performance
 [REQUIREMENT]
 UID: SDOC-SSS-13
 STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-RMC-32
 TITLE: Handling at least 10000+ requirements
 STATEMENT: >>>
 The Requirements Tool shall support requirement trees with at least 10000 requirements.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-32
 
 [REQUIREMENT]
 UID: SDOC-SSS-14
 STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-RMC-31
 TITLE: Handling documentation packages of at least 100 documents
 STATEMENT: >>>
 The Requirements Tool shall be able to handle documentation packages of at least 100 documents without significant performance degradation.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-31
 
 [/SECTION]
 
@@ -253,9 +253,6 @@ As recognized by the parent requirement, some requirements-based workflows are n
 [REQUIREMENT]
 UID: SDOC-SSS-56
 STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-RMC-1
 TITLE: 1000-feet view
 STATEMENT: >>>
 The Requirements Tool shall provide a "1000-feet view" kind of requirements visualization.
@@ -263,32 +260,35 @@ The Requirements Tool shall provide a "1000-feet view" kind of requirements visu
 RATIONALE: >>>
 Compared to the other visualizations, such a visualization helps to "see the forest for the trees". Seeing requirements and their sections all at once helps to visualize groups of requirements and better understand the relationships between them.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-1
 
 [REQUIREMENT]
 UID: SDOC-SSS-28
 STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-RMC-3
-- TYPE: Parent
-  VALUE: SDOC-RMC-39
 TITLE: Traceability matrices
 STATEMENT: >>>
 The Requirements Tool shall support generation of traceability matrices.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-3
+- TYPE: Parent
+  VALUE: SDOC-RMC-39
 
 [REQUIREMENT]
 UID: SDOC-SSS-48
 STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-RMC-39
-- TYPE: Parent
-  VALUE: SDOC-RMC-57
 TITLE: Compliance matrices
 STATEMENT: >>>
 The Requirements Tool shall allow generating a Compliance Matrix document.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-39
+- TYPE: Parent
+  VALUE: SDOC-RMC-57
 
 [REQUIREMENT]
 UID: SDOC-SSS-29
@@ -297,11 +297,6 @@ TITLE: Requirements coverage
 [REQUIREMENT]
 UID: SDOC-SSS-49
 STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-RMC-39
-- TYPE: Parent
-  VALUE: SDOC-RMC-41
 TITLE: Progress report
 STATEMENT: >>>
 The Requirements Tool shall allow generating a Progress Report document.
@@ -318,6 +313,11 @@ Project-level KPIs:
 
 Document-level KPIs: the same but per document.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-39
+- TYPE: Parent
+  VALUE: SDOC-RMC-41
 
 [/SECTION]
 
@@ -328,11 +328,6 @@ TITLE: Implementation suggestions
 [REQUIREMENT]
 UID: SDOC-SSS-30
 STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-RMC-10
-- TYPE: Parent
-  VALUE: SDOC-RMC-11
 TITLE: Static HTML export
 STATEMENT: >>>
 The Requirements Tool shall support generation of documentation to static HTML.
@@ -344,56 +339,52 @@ A static HTML export capability enables:
 - Exchanging HTML content as zip between users.
 - Publishing HTML content via static website hosting providers (GitHub and GitLab Pages, Read the Docs, Heroku, etc.).
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-10
+- TYPE: Parent
+  VALUE: SDOC-RMC-11
 
 [REQUIREMENT]
 UID: SDOC-SSS-31
 STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-RMC-36
-- TYPE: Parent
-  VALUE: SDOC-RMC-14
 TITLE: Web interface
 STATEMENT: >>>
 The Requirements Tool shall provide a web interface.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-36
+- TYPE: Parent
+  VALUE: SDOC-RMC-14
 
 [REQUIREMENT]
 UID: SDOC-SSS-32
 STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-RMC-11
-- TYPE: Parent
-  VALUE: SDOC-RMC-49
 TITLE: Command-line interface
 STATEMENT: >>>
 The Requirements Tool shall provide a command line interface (CLI).
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-11
+- TYPE: Parent
+  VALUE: SDOC-RMC-49
 
 [REQUIREMENT]
 UID: SDOC-SSS-68
 STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-RMC-47
 TITLE: Web API interface
 STATEMENT: >>>
 The Requirements Tool shall provide an API interface.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-47
 
 [REQUIREMENT]
 UID: SDOC-SSS-33
 STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-RMC-33
-- TYPE: Parent
-  VALUE: SDOC-RMC-34
-- TYPE: Parent
-  VALUE: SDOC-RMC-17
-- TYPE: Parent
-  VALUE: SDOC-RMC-56
 TITLE: Version control (Git)
 STATEMENT: >>>
 The Requirements Tool shall support the software version control systems (e.g., Git).
@@ -403,13 +394,19 @@ RATIONALE: >>>
 - Requirements/documentation content can be release-tagged.
 - The "Time machine" function: ability to review the older state of the documentation/requirements tree.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-33
+- TYPE: Parent
+  VALUE: SDOC-RMC-34
+- TYPE: Parent
+  VALUE: SDOC-RMC-17
+- TYPE: Parent
+  VALUE: SDOC-RMC-56
 
 [REQUIREMENT]
 UID: SDOC-SSS-67
 STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-RMC-45
 TITLE: Support major operating systems
 STATEMENT: >>>
 The Requirements Tool shall support at least the following operating systems:
@@ -418,6 +415,9 @@ The Requirements Tool shall support at least the following operating systems:
 - Windows
 - macOS.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-45
 
 [REQUIREMENT]
 UID: SDOC-SSS-69
@@ -467,15 +467,15 @@ The Requirements Tool shall provide type safety for its text language.
 [REQUIREMENT]
 UID: SDOC-SSS-54
 STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: ZEP-2
-- TYPE: Parent
-  VALUE: SDOC-RMC-10
 TITLE: Machine-readable format
 STATEMENT: >>>
 The Requirement Tool's text language shall be machine-readable.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: ZEP-2
+- TYPE: Parent
+  VALUE: SDOC-RMC-10
 
 [/SECTION]
 
@@ -486,15 +486,15 @@ TITLE: Requirements and source code
 [REQUIREMENT]
 UID: SDOC-SSS-72
 STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-RMC-2
 TITLE: Traceability between requirements and source code
 STATEMENT: >>>
 The Requirements Tool shall support bi-directional tracing between requirements content and implementation source code.
 
 NOTE: The Requirements Tool does not necessarily have to implement the complete tracing process. It may delegate parts of the traceability task to other tools, e.g., Doxygen, Lobster.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-2
 
 [/SECTION]
 
@@ -505,13 +505,6 @@ TITLE: Requirements exchange formats (export/import)
 [REQUIREMENT]
 UID: SDOC-SSS-58
 STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-RMC-13
-- TYPE: Parent
-  VALUE: ZEP-6
-- TYPE: Parent
-  VALUE: SDOC-RMC-10
 TITLE: ReqIF export/import
 STATEMENT: >>>
 The Requirements Tool shall support exporting/importing requirements content from/to ReqIF format.
@@ -519,30 +512,37 @@ The Requirements Tool shall support exporting/importing requirements content fro
 RATIONALE: >>>
 ReqIF is a standard for exchanging requirements. There is currently no other standard of a higher maturity.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-13
+- TYPE: Parent
+  VALUE: ZEP-6
+- TYPE: Parent
+  VALUE: SDOC-RMC-10
 
 [REQUIREMENT]
 UID: SDOC-SSS-59
 STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-RMC-13
-- TYPE: Parent
-  VALUE: ZEP-7
 TITLE: CSV export/import
 STATEMENT: >>>
 The Requirements Tool shall support exporting/importing requirements content from/to CSV.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-13
+- TYPE: Parent
+  VALUE: ZEP-7
 
 [REQUIREMENT]
 UID: SDOC-SSS-60
 STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-RMC-13
 TITLE: Excel export/import
 STATEMENT: >>>
 The Requirements Tool shall support exporting/importing requirements content from/to Excel.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-13
 
 [/SECTION]
 
@@ -569,17 +569,17 @@ TITLE: Development process
 [REQUIREMENT]
 UID: SDOC-SSS-50
 STATUS: Active
-REFS:
+TITLE: Self-hosted requirements
+STATEMENT: >>>
+The Requirements Tool's requirements shall be developed and stored using the Requirements Tool itself.
+<<<
+RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-RMC-52
 - TYPE: Parent
   VALUE: ZEP-15
 - TYPE: Parent
   VALUE: SDOC-RMC-24
-TITLE: Self-hosted requirements
-STATEMENT: >>>
-The Requirements Tool's requirements shall be developed and stored using the Requirements Tool itself.
-<<<
 
 [/SECTION]
 
@@ -590,13 +590,13 @@ TITLE: Licensing and distribution
 [REQUIREMENT]
 UID: SDOC-SSS-38
 STATUS: Active
-REFS:
-- TYPE: Parent
-  VALUE: SDOC-RMC-51
 TITLE: Open source
 STATEMENT: >>>
 The Requirements Tool's source code shall be publicly available, e.g., hosted on a code hosting platform such as GitHub or GitLab.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-RMC-51
 
 [REQUIREMENT]
 UID: SDOC-SSS-39

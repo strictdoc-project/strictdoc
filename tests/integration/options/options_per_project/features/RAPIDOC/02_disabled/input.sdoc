@@ -1,0 +1,37 @@
+[DOCUMENT]
+TITLE: Rapidoc Openapi test
+
+[FREETEXT]
+Expanded Rapidoc view in Freetext
+
+.. raw:: html
+    
+    <rapi-doc-mini
+    style= "min-width:300px; border-radius: 4px;"
+    spec-url = "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v2.0/json/uber.json"
+    theme = "light"
+    bg-color = "#F2F5F9"
+    layout = "column"
+    paths-expanded = "true"
+    match-paths = "get /products"
+    > </rapi-doc-mini>
+[/FREETEXT]
+
+[REQUIREMENT]
+TITLE: Rapidoc in requirement for Table/Traceability view 
+STATEMENT: >>>
+Collapsed Rapidoc view in requirement. 
+
+Note: Rapidoc isn't displayed in Deep-traceability view.
+
+.. raw:: html
+
+    <rapi-doc-mini
+    style= "min-width:1px; border-radius: 4px;"
+    spec-url = "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v2.0/json/uber.json"
+    theme = "light"
+    bg-color = "#F2F5F9"
+    layout = "column"
+    paths-expanded = "false"
+    > </rapi-doc-mini>
+<<<

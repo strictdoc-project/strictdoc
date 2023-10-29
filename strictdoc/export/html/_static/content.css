@@ -187,6 +187,7 @@
 }
 
 .content-view-table div.document {
+  /* TODO */
   display: block;
   max-width: 900px;
 }

@@ -16,6 +16,7 @@ div.document {
 
 sdoc-autogen div.document {
   display: contents;
+  border: none;
 }
 
 /* Table */

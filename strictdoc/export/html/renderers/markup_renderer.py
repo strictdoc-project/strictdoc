@@ -75,6 +75,9 @@ class MarkupRenderer:
         self.link_renderer: LinkRenderer = link_renderer
         self.context_document: Optional[Document] = context_document
 
+        # FIXME: Now that the underlying RST fragment caching is in place,
+        # This caching could be removed. It is unlikely that it adds any serious
+        # performance improvement.
         self.cache = {}
         self.rationale_cache = {}
 
@@ -102,8 +105,11 @@ class MarkupRenderer:
             requirement.reserved_statement
         )
 
+        # One day we may want to start caching the truncated statements. Now
+        # it doesn't make sense because the deep traceability screen is the only
+        # one that uses truncated statements. There is no need to cache
+        # something which is used only once.
         output = self.fragment_writer.write(statement_to_render)
-        self.cache[requirement] = output
 
         return output
 

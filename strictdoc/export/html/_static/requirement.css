@@ -25,10 +25,15 @@ sdoc-requirement {
     var(--requirement-border-width, 1px)
     solid
     var(--requirement-border-color, #bfbfbf);
-  min-width: 300px;
-  border-radius: var(--requirement-border-radius);
 
+  border-radius: var(--requirement-border-radius);
   background-color: var(--color-bg-contrast);
+
+  min-width: 300px;
+
+  /* and use overflow-wrap: break-word; in the field */
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 sdoc-requirement-title {
@@ -48,6 +53,9 @@ sdoc-requirement-title {
   background-color: var(--requirement-bg-dark-color);
   /* border-bottom: */
   outline: 1px solid var(--requirement-border-color);
+
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 [node-style="card"] sdoc-requirement-title {
@@ -66,6 +74,9 @@ sdoc-requirement-uid {
 
   text-transform: uppercase;
   color: var(--requirement-label-color);
+
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 sdoc-requirement-field-label {
@@ -83,6 +94,9 @@ sdoc-requirement-field-label {
   line-height: 1;
   text-transform: uppercase;
   color: var(--requirement-label-color);
+
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 sdoc-requirement-field {
@@ -93,6 +107,9 @@ sdoc-requirement-field {
   padding-right: calc(var(--requirement-base-rhythm)*2);
   padding-top: calc(var(--requirement-base-rhythm)*1);
   padding-bottom: calc(var(--requirement-base-rhythm)*1);
+
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 /* for relations in requirement */
@@ -249,8 +266,7 @@ sdoc-section-title * {
 
 sdoc-meta {
   display: grid;
-  width: fit-content;
-  grid-template-columns: minmax(min-content, max-content) minmax(min-content, max-content);
+  grid-template-columns: minmax(min-content, max-content) minmax(min-content, 1fr);
   place-items: stretch stretch;
   place-content: stretch stretch;
   position: relative;
@@ -264,6 +280,10 @@ sdoc-meta {
   margin: var(--base-padding) 0;
   padding: calc(var(--requirement-base-rhythm)*0.5);
   row-gap: 2px;
+
+  width: fit-content;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 sdoc-meta-label,

@@ -159,18 +159,18 @@ class HTMLGenerator:
 
         # Export Rapidoc
         if self.project_config.is_feature_activated(ProjectFeature.RAPIDOC):
-            output_html_mathjax = os.path.join(
+            output_html_rapidoc = os.path.join(
                 self.project_config.export_output_html_root,
                 self.project_config.dir_for_sdoc_assets,
                 "rapidoc",
             )
-            Path(output_html_mathjax).mkdir(parents=True, exist_ok=True)
+            Path(output_html_rapidoc).mkdir(parents=True, exist_ok=True)
             rapidoc_src = os.path.join(
                 self.project_config.get_extra_static_files_path(), "rapidoc"
             )
             sync_dir(
                 rapidoc_src,
-                output_html_mathjax,
+                output_html_rapidoc,
                 message="Copying Rapidoc assets",
             )
 

@@ -185,7 +185,7 @@ def test_unit(context, focus=None):
         context,
         ToxEnvironment.CHECK,
         f"""
-            pytest tests/unit/ {focus_argument}
+            pytest tests/unit/ {focus_argument} -o cache_dir=build/pytest_unit
         """,
     )
 
@@ -197,7 +197,7 @@ def test_unit_server(context, focus=None):
         context,
         ToxEnvironment.CHECK,
         f"""
-            pytest tests/unit_server/ {focus_argument}
+            pytest tests/unit_server/ {focus_argument} -o cache_dir=build/pytest_unit_server
         """,
     )
 
@@ -238,6 +238,7 @@ def test_end2end(  # pylint: disable=too-many-arguments
             {exit_first_argument}
             {long_timeouts_argument}
             {headless_argument}
+            -o cache_dir=build/pytest_end2end
             tests/end2end
     """
 
@@ -269,6 +270,7 @@ def test_unit_coverage(context):
             --branch
             --omit=.venv*/*
             -m pytest
+            -o cache_dir=build/pytest_unit_with_coverage
             tests/unit/
         """,
     )
@@ -407,7 +409,7 @@ def lint_ruff(context):
         context,
         ToxEnvironment.CHECK,
         """
-            ruff . --fix
+            ruff . --fix --cache-dir build/ruff
         """,
     )
 
@@ -432,6 +434,7 @@ def lint_mypy(context):
                 --disable-error-code=type-arg
                 --disable-error-code=var-annotated
                 --disable-error-code=union-attr
+                --cache-dir=build/mypy
                 --strict
         """,
     )

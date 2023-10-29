@@ -1,8 +1,4 @@
 RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
-CHECK: Published: Hello world doc
+CHECK: Published: Rapidoc Openapi test
 
-RUN: cat %S/Output/html/02_disabled/input.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
-RUN: cat %S/Output/html/02_disabled/input.standalone.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
-RUN: cat %S/Output/html/02_disabled/input-TABLE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
-RUN: cat %S/Output/html/02_disabled/input-TRACE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
-RUN: cat %S/Output/html/02_disabled/input-DEEP-TRACE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
+RUN: %check_exists --invert --file "%S/Output/html/_static/rapidoc/rapidoc-min.js"

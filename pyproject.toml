@@ -105,3 +105,9 @@ Changelog = "https://github.com/strictdoc-project/strictdoc/blob/main/CHANGELOG.
 # Funding = "https://..."
 Homepage = "https://strictdoc.readthedocs.io/en/stable/"
 Source = "https://github.com/strictdoc-project/strictdoc"
+
+[tool.pytest.ini_options]
+addopts = "--import-mode=importlib"
+pythonpath = [
+  "."
+]

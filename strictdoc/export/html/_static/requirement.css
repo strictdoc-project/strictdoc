@@ -27,7 +27,6 @@ sdoc-requirement {
     var(--requirement-border-color, #bfbfbf);
   min-width: 300px;
   border-radius: var(--requirement-border-radius);
-  overflow: hidden;
 
   background-color: var(--color-bg-contrast);
 }
@@ -42,6 +41,9 @@ sdoc-requirement-title {
   padding-right: calc(var(--requirement-base-rhythm)*2);
   padding-top: calc(var(--requirement-base-rhythm)*1);
   padding-bottom: calc(var(--requirement-base-rhythm)*1);
+
+  border-top-right-radius: var(--requirement-border-radius);
+  border-top-left-radius: var(--requirement-border-radius);
 
   background-color: var(--requirement-bg-dark-color);
   /* border-bottom: */
@@ -257,7 +259,6 @@ sdoc-meta {
     solid
     var(--requirement-border-color, #bfbfbf);
   border-radius: var(--requirement-border-radius);
-  overflow: hidden;
 
   font-size: var(--font-size-sm);
   margin: var(--base-padding) 0;

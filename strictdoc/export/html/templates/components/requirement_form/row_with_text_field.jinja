@@ -31,7 +31,7 @@
     field_value = text_field_row_context.field.field_escaped_value,
     testid_postfix = "requirement-field-"~text_field_row_context.field.field_name
   %}
-  {%- include "components/form/new_field/index.jinja" %}
+  {%- include "components/form/field/contenteditable/index.jinja" %}
   {%- endwith -%}
 
   <input

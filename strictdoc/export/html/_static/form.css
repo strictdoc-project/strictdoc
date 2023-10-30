@@ -34,6 +34,7 @@ sdoc-modal {
 
   box-shadow: var(--base-elevation-modal);
   overflow: hidden;
+  overflow-y: auto;
 }
 
 sdoc-modal[context="confirm"] {

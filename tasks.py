@@ -436,6 +436,7 @@ def lint_mypy(context):
                 --disable-error-code=union-attr
                 --cache-dir=build/mypy
                 --strict
+                --python-version=3.7
         """,
     )
 

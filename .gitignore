@@ -16,6 +16,9 @@ output.zip
 .vscode
 .tox/
 
+### StrictDoc's local config file
+*.local.toml
+
 ### StrictDoc's default export path
 output/**
 developer/**/output/**

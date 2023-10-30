@@ -9,7 +9,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test_ProjectOptions_ProjectTitle_01_OptionNotSpecified(E2ECase):
+class Test(E2ECase):
     def test(self):
         with SDocTestServer(
             input_path=path_to_this_test_file_folder
@@ -18,4 +18,6 @@ class Test_ProjectOptions_ProjectTitle_01_OptionNotSpecified(E2ECase):
 
             screen_project_index = Screen_ProjectIndex(self)
             screen_project_index.assert_on_screen()
-            screen_project_index.assert_header_project_name("Untitled Project")
+            screen_project_index.assert_header_project_name(
+                "Test Project title read from TOML file"
+            )

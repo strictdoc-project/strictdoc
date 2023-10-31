@@ -12,10 +12,46 @@ TITLE: SDoc data model
 [REQUIREMENT]
 UID: SDOC-SRS-18
 TITLE: Data model
+STATEMENT: >>>
+StrictDoc shall be based on a data model.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SRS-26
-TITLE: Doc, Req, Sec, Comment, ...
+TITLE: Requirement model
+STATEMENT: >>>
+StrictDoc's data model shall support a "Requirement" model.
+<<<
+
+[REQUIREMENT]
+UID: SDOC-SRS-100
+TITLE: Requirement model fields
+STATEMENT: >>>
+StrictDoc's "Requirement" model shall support configurable fields system.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-62
+
+[REQUIREMENT]
+UID: SDOC-SRS-98
+TITLE: Document model
+STATEMENT: >>>
+StrictDoc's data model shall support a "Document" model.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-64
+
+[REQUIREMENT]
+UID: SDOC-SRS-99
+TITLE: Section model
+STATEMENT: >>>
+StrictDoc's data model shall support a "Section" model.
+<<<
+RATIONALE: >>>
+"Section" corresponds to a chapter or a section in a document and helps to organize a document by grouping text nodes, requirements and other sections.
+<<<
 
 [/SECTION]
 

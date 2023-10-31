@@ -13,10 +13,10 @@ TITLE: Requirements CRUD
 STATEMENT: >>>
 The Requirements Tool shall support the CRUD operations:
 
-- Creating a requirement.
-- Reading (viewing) a requirement.
-- Updating a requirement.
-- Deleting a requirement.
+- Create a requirement
+- Read (view) a requirement
+- Update a requirement
+- Delete a requirement.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -31,11 +31,17 @@ The Requirements Tool shall support at least the following requirement field set
 
 - UID
 - STATUS
-- LINKS (references to other requirements)
 - TITLE
 - STATEMENT
 - RATIONALE
-- COMMENT.
+- COMMENT
+- RELATIONS (connections with other requirements).
+<<<
+RATIONALE: >>>
+The selection of the minimal set is based on what is common in the industries (e.g., automotive, space, etc).
+<<<
+COMMENT: >>>
+The other fields common to each industry can be customized with custom fields handled by other requirements.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -65,6 +71,12 @@ RELATIONS:
 UID: SDOC-SSS-64
 STATUS: Active
 TITLE: Structuring requirements in documents
+STATEMENT: >>>
+The Requirements Tool shall support structuring requirements in documents.
+<<<
+RATIONALE: >>>
+The industry works with requirements documents. The documents have sections/chapters and requirements.
+<<<
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-RMC-21

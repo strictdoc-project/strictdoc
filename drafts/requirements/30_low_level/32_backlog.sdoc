@@ -26,6 +26,44 @@ TITLE: Open-source requirements tool challenges
 UID: SECTION-SB-Backlog
 TITLE: Backlog
 
+[SECTION]
+UID: SECTION-SRS-Screen-Project-tree-document-diff
+TITLE: Screen: Project tree / document diff
+
+[REQUIREMENT]
+UID: SDOC-SRS-67
+STATUS: Backlog
+TITLE: View project tree DIFF
+
+[REQUIREMENT]
+UID: SDOC-SRS-68
+STATUS: Backlog
+TITLE: View document DIFF
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-Screen-Impact-analysis
+TITLE: Screen: Impact analysis
+
+[REQUIREMENT]
+UID: SDOC-SRS-69
+STATUS: Backlog
+TITLE: Requirement impact analysis
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-SRS-LaTeX-export
+TITLE: LaTeX export
+
+[REQUIREMENT]
+UID: SDOC-SRS-76
+STATUS: Backlog
+TITLE: Export to Tex
+
+[/SECTION]
+
 [REQUIREMENT]
 UID: SDOC-BACKLOG-1
 STATUS: Backlog

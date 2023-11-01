@@ -3,10 +3,6 @@ TITLE: [L3] StrictDoc Requirements Specification
 REQ_PREFIX: SDOC-SRS-
 
 [SECTION]
-UID: SECTION-SRS-SDoc-markup
-TITLE: SDoc markup
-
-[SECTION]
 TITLE: SDoc data model
 
 [REQUIREMENT]
@@ -47,16 +43,41 @@ RELATIONS:
 UID: SDOC-SRS-99
 TITLE: Section model
 STATEMENT: >>>
-StrictDoc's data model shall support a "Section" model.
+StrictDoc's data model shall support a "Section" that nests other Sections, Requirements, Texts.
 <<<
 RATIONALE: >>>
 "Section" corresponds to a chapter or a section in a document and helps to organize a document by grouping text nodes, requirements and other sections.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-51
+
+[REQUIREMENT]
+UID: SDOC-SRS-31
+TITLE: Requirement relations
+STATEMENT: >>>
+The StrictDoc data model shall support connecting requirements using Parent and Child relations.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-7
+
+[REQUIREMENT]
+UID: SDOC-SRS-101
+TITLE: Requirement relation roles
+STATEMENT: >>>
+Each SDoc relation shall be optionally configurable with a relation role.
+
+NOTE: A relation role is a string value. Typical examples: "refines", "verifies", "implements".
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-8
 
 [/SECTION]
 
 [SECTION]
-TITLE: SDoc text format
+TITLE: SDoc text markup
 
 [REQUIREMENT]
 UID: SDOC-SRS-20
@@ -71,6 +92,26 @@ The most commonly used Markdown format lacks the ability to store requirements m
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-33
+
+[REQUIREMENT]
+UID: SDOC-SRS-104
+TITLE: SDoc file extension
+STATEMENT: >>>
+The SDoc markup content shall be stored in files with .sdoc extension.
+<<<
+
+[REQUIREMENT]
+UID: SDOC-SRS-105
+TITLE: One document per one SDoc file
+STATEMENT: >>>
+StrictDoc's SDoc file shall represent content of a single document.
+<<<
+COMMENT: >>>
+A "Document" corresponds to a "Document" of the SDoc data model.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-64
 
 [REQUIREMENT]
 UID: SDOC-SRS-19
@@ -152,8 +193,6 @@ TITLE: Type-safe fields
 
 [/SECTION]
 
-[/SECTION]
-
 [SECTION]
 UID: SECTION-SRS-Graph-database
 TITLE: Graph database
@@ -178,12 +217,32 @@ RELATIONS:
   VALUE: SDOC-SSS-47
 
 [REQUIREMENT]
-UID: SDOC-SRS-31
-TITLE: Multiple link types (Parent, Verifies, Related, ...)
-
-[REQUIREMENT]
 UID: SDOC-SRS-32
 TITLE: Link document nodes
+
+[REQUIREMENT]
+UID: SDOC-SRS-102
+TITLE: Automatic resolution of reverse relations
+STATEMENT: >>>
+The StrictDoc's graph database shall maintain the requirement relations and their reverse relations as follows:
+
+- For a Parent relation, the database shall calculate the reverse Child relation.
+- For a Child relation, the database shall calculate the reverse Parent relation.
+<<<
+RATIONALE: >>>
+The calculation of the reverse relations allows the user interface code to get and display both requirement's parent and child relations.
+<<<
+COMMENT: >>>
+Example: If a child requirement REQ-002 has a parent requirement REQ-001, the graph database first reads the link ``REQ-002 -Parent> REQ-001``, then it creates a corresponding ``REQ-001 -Child> REQ-002`` on the go. Both relations can be queried as follows, in pseudocode:
+
+.. code-block::
+
+    get_parent_requirements(REQ-002) == [REQ-001]
+    get_children_requirements(REQ-001) == [REQ-002]
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-71
 
 [/SECTION]
 
@@ -423,33 +482,9 @@ StrictDoc shall provide a Project Statistics screen that displays the following 
 RATIONALE: >>>
 TBD
 <<<
-
-[/SECTION]
-
-[SECTION]
-UID: SECTION-SRS-Screen-Project-tree-document-diff
-TITLE: Screen: Project tree / document diff
-
-[REQUIREMENT]
-UID: SDOC-SRS-67
-STATUS: Draft
-TITLE: View project tree DIFF
-
-[REQUIREMENT]
-UID: SDOC-SRS-68
-STATUS: Draft
-TITLE: View document DIFF
-
-[/SECTION]
-
-[SECTION]
-UID: SECTION-SRS-Screen-Impact-analysis
-TITLE: Screen: Impact analysis
-
-[REQUIREMENT]
-UID: SDOC-SRS-69
-STATUS: Draft
-TITLE: Requirement impact analysis
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-49
 
 [/SECTION]
 
@@ -566,17 +601,6 @@ TITLE: ReqXLS
 [/SECTION]
 
 [SECTION]
-UID: SECTION-SRS-LaTeX-export
-TITLE: LaTeX export
-
-[REQUIREMENT]
-UID: SDOC-SRS-76
-STATUS: Draft
-TITLE: Export to Tex
-
-[/SECTION]
-
-[SECTION]
 UID: SECTION-SRS-Graphviz-Dot-export
 TITLE: Graphviz/Dot export
 
@@ -601,6 +625,21 @@ RELATIONS:
 [SECTION]
 UID: SECTION-SRS-Command-line-interface
 TITLE: Command-line interface
+
+[SECTION]
+TITLE: General CLI requirements
+
+[REQUIREMENT]
+UID: SDOC-SRS-103
+TITLE: Command-line interface
+STATEMENT: >>>
+StrictDoc shall provide a command-line interface.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-32
+
+[/SECTION]
 
 [SECTION]
 UID: SECTION-SRS-Command-Manage
@@ -692,34 +731,70 @@ TITLE: Caching of parsed SDoc documents
 STATEMENT: >>>
 StrictDoc shall implement caching of parsed SDoc documents.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-13
+- TYPE: Parent
+  VALUE: SDOC-SSS-14
 
 [REQUIREMENT]
 UID: SDOC-SRS-2
 TITLE: Incremental generation of documents
+STATEMENT: >>>
+StrictDoc shall support incremental generation of documents.
+
+NOTE: "Incremental" means that only the modified documents are regenerated when StrictDoc is run repeatedly against the same project tree.
+<<<
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-13
+- TYPE: Parent
+  VALUE: SDOC-SSS-14
 
 [REQUIREMENT]
 UID: SDOC-SRS-3
 TITLE: Caching of RST fragments
+STATEMENT: >>>
+StrictDoc shall cache the RST fragments rendered to HTML.
+<<<
+RATIONALE: >>>
+Conversion of RST markup to HTML is a time consuming process. Caching the rendered HTML of each fragment helps to save time when rendering the HTML content.
+<<<
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-13
+- TYPE: Parent
+  VALUE: SDOC-SSS-14
 
 [REQUIREMENT]
 UID: SDOC-SRS-4
 TITLE: On-demand loading of HTML pages
+STATEMENT: >>>
+StrictDoc's web interface shall generate the HTML content only when it is directly requested by a user.
+<<<
+RATIONALE: >>>
+Generating a whole documentation tree for a user project can be time consuming. The on-demand loading ensures the "do less work" approach when it comes to rendering the HTML pages.
+<<<
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-13
+- TYPE: Parent
+  VALUE: SDOC-SSS-14
 
 [REQUIREMENT]
 UID: SDOC-SRS-5
 TITLE: Precompiled Jinja templates
+STATEMENT: >>>
+StrictDoc shall support a precompilation of HTML templates.
+<<<
+RATIONALE: >>>
+The StrictDoc-exported HTML content visible to a user is assembled from numerous small HTML fragments. Precompiling the HTML templates from which the content gets rendered improves the performance of the HTML rendering.
+<<<
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-13
+- TYPE: Parent
+  VALUE: SDOC-SSS-14
 
 [/SECTION]
 

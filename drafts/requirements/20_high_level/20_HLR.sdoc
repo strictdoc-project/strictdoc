@@ -211,6 +211,15 @@ RELATIONS:
 [REQUIREMENT]
 UID: SDOC-SSS-63
 TITLE: Text formatting capabilities
+STATEMENT: >>>
+The Requirements Tool shall provide "rich text" formatting capabilities which includes but not limited to:
+
+- Headings
+- Lists
+- Tables
+- UML diagrams
+- etc.
+<<<
 RELATIONS:
 - TYPE: Parent
   VALUE: ZEP-9
@@ -362,7 +371,7 @@ UID: SDOC-SSS-31
 STATUS: Active
 TITLE: Web interface
 STATEMENT: >>>
-The Requirements Tool shall provide a web interface.
+The Requirements Tool shall provide a graphical user interface.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -452,11 +461,6 @@ COMMENT: >>>
 Examples of less popular programming languages, with all due respect to their powerful features: Haskell, F#, Ada, etc.
 <<<
 
-[REQUIREMENT]
-UID: SDOC-SSS-34
-STATUS: Draft
-TITLE: Multiple repositories
-
 [/SECTION]
 
 [SECTION]
@@ -488,6 +492,16 @@ RELATIONS:
   VALUE: ZEP-2
 - TYPE: Parent
   VALUE: SDOC-RMC-10
+
+[REQUIREMENT]
+UID: SDOC-SSS-34
+STATUS: Active
+TITLE: Requirements data from multiple repositories
+STATEMENT: >>>
+The Requirement Tool shall allow reading requirements files from multiple folders or repositories.
+
+NOTE: The folders/repositories can be arbitrarily nested.
+<<<
 
 [/SECTION]
 

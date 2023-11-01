@@ -46,3 +46,5 @@ downloaded_files/
 ### StrictDoc's documentation ###
 strictdoc-project.github.io/
 
+### StrictDoc's developer test ###
+__*.sdoc

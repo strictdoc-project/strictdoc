@@ -11,6 +11,18 @@ While this backlog overlaps with StrictDoc's `GitHub issues tracker <https://git
 [/FREETEXT]
 
 [SECTION]
+UID: SECTION-SB-Open-source-requirements-tool-challenges
+TITLE: Open-source requirements tool challenges
+
+[FREETEXT]
+- Very limited development time
+- Not enough time to develop certain capabilities
+- Not possible to scale to multi-user environment quickly.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
 UID: SECTION-SB-Backlog
 TITLE: Backlog
 

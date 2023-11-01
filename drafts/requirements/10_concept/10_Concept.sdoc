@@ -10,6 +10,17 @@ TITLE: Requirements management
 UID: SDOC-RMC-20
 STATUS: Active
 TITLE: Manage requirements (CRUD)
+STATEMENT: >>>
+The Requirements Tool shall enable the main requirements management operations:
+
+- Create a requirement
+- Read / view / browse a requirement
+- Update / edit a requirement
+- Delete a requirement.
+<<<
+RATIONALE: >>>
+The CRUD operations are at the core of the requirements management.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-RMC-21

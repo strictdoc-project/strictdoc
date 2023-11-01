@@ -2,7 +2,7 @@ import os
 import random
 from collections import defaultdict
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Tuple
 
 import graphviz
 
@@ -58,7 +58,7 @@ class DocumentDotGenerator:
                 document.meta.output_document_dir_rel_path
             ].append(document)
 
-        accumulated_links = []
+        accumulated_links: List[Tuple[str, str]] = []
         accumulated_section_siblings = []
         document_flat_requirements = []
         document: Document
@@ -134,7 +134,7 @@ class DocumentDotGenerator:
         folder_name,
         folder_idx,
         folder_documents: List[Document],
-        accumulated_links,
+        accumulated_links: List[Tuple[str, str]],
         accumulated_section_siblings,
         document_flat_requirements,
     ):
@@ -204,7 +204,7 @@ class DocumentDotGenerator:
         folder_idx,
         document_idx,
         link_renderer: LinkRenderer,
-        accumulated_links,
+        accumulated_links: List[Tuple[str, str]],
         accumulated_section_siblings,
         document_flat_requirements,
     ) -> str:
@@ -243,7 +243,7 @@ class DocumentDotGenerator:
         self,
         node: Union[Document, Section],
         link_renderer: LinkRenderer,
-        accumulated_links,
+        accumulated_links: List[Tuple[str, str]],
         accumulated_section_siblings,
     ) -> str:
         def get_uuid(node_) -> str:
@@ -296,7 +296,7 @@ class DocumentDotGenerator:
         self,
         requirement: Requirement,
         link_renderer: LinkRenderer,
-        accumulated_links,
+        accumulated_links: List[Tuple[str, str]],
     ):
         def get_color_from_status(requirement_: Requirement):
             if requirement_.reserved_status is None:
@@ -312,7 +312,10 @@ class DocumentDotGenerator:
             raise NotImplementedError(requirement.reserved_status)
 
         uuid: str = self.get_requirement_uuid(requirement)
-        for parent_uid in requirement.get_parent_requirement_reference_uids():
+        for (
+            parent_uid,
+            _,
+        ) in requirement.get_parent_requirement_reference_uids():
             accumulated_links.append((uuid, parent_uid))
 
         requirement_title = (

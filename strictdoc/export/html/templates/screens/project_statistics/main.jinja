@@ -15,7 +15,11 @@
       <td>{{ project_config.project_title }}</td>
     </tr>
     <tr>
-      <td>Generation date</td>
+      <td>Statistics generation date</td>
+      <td>{{ date_now.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+    </tr>
+    <tr>
+      <td>Last modification of project data</td>
       <td>{{ traceability_index.strictdoc_last_update.strftime("%Y-%m-%d %H:%M:%S") }}</td>
     </tr>
     <tr>

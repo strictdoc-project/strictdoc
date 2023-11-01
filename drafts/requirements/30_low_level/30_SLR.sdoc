@@ -3,10 +3,6 @@ TITLE: [L3] StrictDoc Requirements Specification
 REQ_PREFIX: SDOC-SRS-
 
 [SECTION]
-UID: SECTION-SRS-SDoc-markup
-TITLE: SDoc markup
-
-[SECTION]
 TITLE: SDoc data model
 
 [REQUIREMENT]
@@ -81,7 +77,7 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
-TITLE: SDoc text format
+TITLE: SDoc text markup
 
 [REQUIREMENT]
 UID: SDOC-SRS-20
@@ -194,8 +190,6 @@ TITLE: No indentation
 [REQUIREMENT]
 UID: SDOC-SRS-25
 TITLE: Type-safe fields
-
-[/SECTION]
 
 [/SECTION]
 
@@ -494,33 +488,6 @@ RELATIONS:
 
 [/SECTION]
 
-[SECTION]
-UID: SECTION-SRS-Screen-Project-tree-document-diff
-TITLE: Screen: Project tree / document diff
-
-[REQUIREMENT]
-UID: SDOC-SRS-67
-STATUS: Draft
-TITLE: View project tree DIFF
-
-[REQUIREMENT]
-UID: SDOC-SRS-68
-STATUS: Draft
-TITLE: View document DIFF
-
-[/SECTION]
-
-[SECTION]
-UID: SECTION-SRS-Screen-Impact-analysis
-TITLE: Screen: Impact analysis
-
-[REQUIREMENT]
-UID: SDOC-SRS-69
-STATUS: Draft
-TITLE: Requirement impact analysis
-
-[/SECTION]
-
 [/SECTION]
 
 [SECTION]
@@ -630,17 +597,6 @@ TITLE: Export to Excel
 UID: SDOC-SRS-75
 STATUS: Draft
 TITLE: ReqXLS
-
-[/SECTION]
-
-[SECTION]
-UID: SECTION-SRS-LaTeX-export
-TITLE: LaTeX export
-
-[REQUIREMENT]
-UID: SDOC-SRS-76
-STATUS: Draft
-TITLE: Export to Tex
 
 [/SECTION]
 

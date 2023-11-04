@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from datetime import datetime
 from typing import List, Optional
 
 from strictdoc import __version__
@@ -132,6 +133,7 @@ class ProgressStatisticsGenerator:
             strictdoc_version=__version__,
             document_tree=traceability_index.document_tree,
             document_tree_iterator=document_tree_iterator,
+            date_now=datetime.today(),
         )
 
         return output

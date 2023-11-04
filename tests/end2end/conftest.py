@@ -4,6 +4,7 @@ import sys
 import pytest
 from seleniumbase.config import settings
 
+from strictdoc.helpers.shard import get_shard
 from tests.end2end.sdoc_test_environment import SDocTestEnvironment
 
 STRICTDOC_PATH = os.path.abspath(os.path.join(__file__, "../../.."))
@@ -15,6 +16,30 @@ DOWNLOADED_FILES_PATH = os.path.join(STRICTDOC_PATH, "downloaded_files")
 test_environment: SDocTestEnvironment = SDocTestEnvironment.create_default()
 
 
+def pytest_collection_modifyitems(
+    session, config, items  # pylint: disable=unused-argument
+):
+    """called after collection has been performed, may filter or re-order
+    the items in-place."""
+
+    shard = config.getoption("--strictdoc-shard")
+    if shard is None:
+        return
+
+    shard_number, shard_total = map(int, shard.split("/"))
+    shard_size = len(items) // shard_total
+
+    left, right = get_shard(len(items), shard_total, shard_number)
+
+    shard_items = items[left:right]
+    items[:] = shard_items
+    print(  # noqa: T201
+        f"pytest: strictdoc: Shard argument provided: {shard}. "
+        f"Shard size: {shard_size}. "
+        f"Running tests in the range of: [{left}, {right})."
+    )
+
+
 def pytest_addoption(parser):
     parser.addoption(
         "--strictdoc-long-timeouts", action="store_true", default=False
@@ -22,6 +47,7 @@ def pytest_addoption(parser):
     parser.addoption(
         "--strictdoc-parallelize", action="store_true", default=False
     )
+    parser.addoption("--strictdoc-shard", type=str, default=None)
 
 
 def pytest_configure(config):

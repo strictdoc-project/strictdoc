@@ -210,6 +210,7 @@ def test_end2end(  # pylint: disable=too-many-arguments
     parallelize=False,
     long_timeouts=False,
     headless=False,
+    shard=None,
 ):
     long_timeouts_argument = (
         "--strictdoc-long-timeouts" if long_timeouts else ""
@@ -224,6 +225,11 @@ def test_end2end(  # pylint: disable=too-many-arguments
         )
         parallelize_argument = "--numprocesses=2 --strictdoc-parallelize"
 
+    assert shard is None or re.match(
+        r"[1-9][0-9]*/[1-9][0-9]*", shard
+    ), f"--shard argument has an incorrect format: {shard}."
+    shard_argument = f"--strictdoc-shard={shard}" if shard else ""
+
     focus_argument = f"-k {focus}" if focus is not None else ""
     exit_first_argument = "--exitfirst" if exit_first else ""
     headless_argument = "--headless" if headless else ""
@@ -234,6 +240,7 @@ def test_end2end(  # pylint: disable=too-many-arguments
             --capture=no
             --reuse-session
             {parallelize_argument}
+            {shard_argument}
             {focus_argument}
             {exit_first_argument}
             {long_timeouts_argument}

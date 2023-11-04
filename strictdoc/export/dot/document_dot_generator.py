@@ -2,7 +2,7 @@ import os
 import random
 from collections import defaultdict
 from pathlib import Path
-from typing import List, Optional, Union, Tuple
+from typing import List, Optional, Tuple, Union
 
 import graphviz
 

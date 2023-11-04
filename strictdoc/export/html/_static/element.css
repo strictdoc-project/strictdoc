@@ -229,13 +229,28 @@ sdoc-node-controls .action_button {
   border: none; */
 }
 
+sdoc-field .action_button,
 .copy_to_clipboard-field > .copy_to_clipboard-cover .action_button {
   transition: .5s ease-out;
   opacity: 0;
 }
 
+sdoc-field:hover .action_button,
 .copy_to_clipboard-field:hover > .copy_to_clipboard-cover .action_button {
   opacity: 1;
+}
+
+sdoc-field {
+  position: relative;
+  display: flex;
+}
+
+sdoc-field-content {
+  flex-grow: 1;
+}
+
+sdoc-field-service {
+  /* display: block; */
 }
 
 /* ANCHOR */

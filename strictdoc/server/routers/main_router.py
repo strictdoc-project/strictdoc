@@ -1596,13 +1596,10 @@ def create_main_router(
         )
 
     @router.get("/actions/document/new_comment", response_class=Response)
-    def document__add_comment(requirement_mid: str):
-        requirement: Requirement = (
-            export_action.traceability_index.get_node_by_mid(
-                MID(requirement_mid)
-            )
+    def document__add_comment(requirement_mid: str, document_mid: str):
+        document: Document = export_action.traceability_index.get_node_by_mid(
+            MID(document_mid)
         )
-        document: Document = requirement.document
         assert document.grammar is not None
         grammar: DocumentGrammar = document.grammar
         template = env().get_template(

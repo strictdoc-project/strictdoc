@@ -252,7 +252,7 @@ class RequirementFormObject(ErrorObject):
                 RequirementReferenceFormField.FieldType.CHILD,
                 RequirementReferenceFormField.FieldType.FILE,
             )
-            relation_value = relation_dict["value"]
+            relation_value = relation_dict["value"].strip()
 
             form_ref_fields.append(
                 RequirementReferenceFormField(

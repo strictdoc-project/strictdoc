@@ -12,7 +12,7 @@
 
     {%- if section.context.title_number_string -%}
       {#- add title 'number' part to the accumulator -#}
-      {%- set field_content_ = field_content_ + section.context.title_number_string + ".&nbsp" -%}
+      {%- set field_content_ = field_content_ + section.context.title_number_string + ".&nbsp;" -%}
     {%- endif -%}
 
     {%- set title = section.reserved_title if section.is_requirement else section.title -%}

@@ -7,7 +7,7 @@
     {%- if title_number is true -%}
       {%- if requirement.context.title_number_string %}
         {#- add title 'number' part to the accumulator -#}
-        {%- set field_content_ = field_content_ + requirement.context.title_number_string + ".&nbsp" -%}
+        {%- set field_content_ = field_content_ + requirement.context.title_number_string + ".&nbsp;" -%}
       {%- endif -%}
     {%- endif -%}
 

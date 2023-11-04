@@ -2,8 +2,9 @@
   <sdoc-requirement-field-label>rationale:</sdoc-requirement-field-label>
   <sdoc-requirement-field
     data-field-label="rationale"
-    data-controller="copy_to_clipboard_button"
   >
-    <sdoc-autogen>{{ renderer.render_requirement_rationale(requirement) }}</sdoc-autogen>
+    {%- with field_content = renderer.render_requirement_rationale(requirement) %}
+      {%- include "components/field/index.jinja" -%}
+    {%- endwith -%}
   </sdoc-requirement-field>
 {%- endif -%}

@@ -4,9 +4,9 @@
   {%- for free_text in document.free_texts %}
     <div class="free_text"
          data-testid="document-abstract">
-      {% with field_content = renderer.render_free_text(document_type, free_text) %}
-        {% include "components/field/index.jinja" %}
-      {% endwith %}
+      {%- with field_content = renderer.render_free_text(document_type, free_text) -%}
+        {%- include "components/field/index.jinja" -%}
+      {%- endwith -%}
     </div>
   {%- endfor -%}
 {%- elif not document.section_contents -%}

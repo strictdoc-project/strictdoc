@@ -73,7 +73,7 @@ class HTMLGenerator:
             traceability_index=traceability_index,
         )
 
-        parallelizer.map(
+        parallelizer.run_parallel(
             traceability_index.document_tree.document_list, export_binding
         )
 

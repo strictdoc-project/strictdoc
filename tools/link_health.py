@@ -71,7 +71,7 @@ class Parallelizer:
             return Parallelizer()
         return NullParallelizer()
 
-    def map(self, contents, processing_func):
+    def run_parallel(self, contents, processing_func):
         size = 0
         for content_idx, content in enumerate(contents):
             self.input_queue.put((content_idx, content, processing_func))
@@ -104,7 +104,7 @@ class Parallelizer:
 
 class NullParallelizer:
     @staticmethod
-    def map(contents, processing_func):
+    def run_parallel(contents, processing_func):
         results = []
         for content in contents:
             results.append(processing_func(content))
@@ -140,7 +140,7 @@ class Status(str, Enum):
     READ_TIMEOUT = "READ_TIMEOUT"
 
     @staticmethod
-    def all():
+    def all():  # noqa: A003
         return list(map(lambda c: c.value, Status))
 
 
@@ -353,7 +353,7 @@ def main():
     parallelizer = Parallelizer()
 
     link_list = map(lambda el: (el, exceptions), links)
-    responses = list(parallelizer.map(link_list, check_link))
+    responses = list(parallelizer.run_parallel(link_list, check_link))
 
     expected_failed_responses: List[ResponseData] = list(
         filter(lambda r: not r.is_success() and r.expected, responses)

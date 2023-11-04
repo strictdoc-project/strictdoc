@@ -86,14 +86,6 @@ class Folder(FileOrFolderEntry):  # pylint: disable=too-many-instance-attributes
     def mount_folder(self):
         return os.path.basename(self.root_path)
 
-    def set(self, files):
-        for file in files:
-            full_file_path = os.path.join(self.root_path, file)
-            rel_file_path = os.path.join(self.rel_path, file)
-            self.files.append(
-                File(self.level + 1, full_file_path, rel_file_path)
-            )
-
     def add_subfolder_tree(self, subfolder_tree):
         assert isinstance(subfolder_tree, Folder)
         self.subfolder_trees.append(subfolder_tree)

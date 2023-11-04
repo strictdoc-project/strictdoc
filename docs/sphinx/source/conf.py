@@ -45,7 +45,7 @@ STRICTDOC_VERSION = strictdoc.__version__
 # -- Project information -----------------------------------------------------
 
 project = "StrictDoc"
-copyright = "2020-2023 Stanislav Pankevich and Maryna Balioura"
+copyright = "2020-2023 Stanislav Pankevich and Maryna Balioura"  # noqa: A001
 author = "Stanislav Pankevich and Maryna Balioura"
 
 # The full version, including alpha/beta/rc tags

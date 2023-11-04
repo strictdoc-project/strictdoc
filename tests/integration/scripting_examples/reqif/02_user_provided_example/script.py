@@ -138,8 +138,7 @@ class AUREON_ReqIFSchemaHelper:
                     return AUREON_NodeType.DEFINITION
                 if data_type_ref == self.datatype_requirement.identifier:
                     return AUREON_NodeType.REQUIREMENT
-        else:
-            raise NotImplementedError("Must not reach here.")
+        raise NotImplementedError("Must not reach here.")
 
 
 class AUREON_ReqIFToSDocConverter:  # pylint: disable=invalid-name

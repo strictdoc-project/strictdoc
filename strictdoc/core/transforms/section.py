@@ -118,7 +118,9 @@ class UpdateSectionCommand:
         ):
             section.title = form_object.section_title
         else:
-            assert "Should not reach here", form_object.section_title
+            raise AssertionError(
+                f"Should not reach here: {form_object.section_title}"
+            )
 
         # Updating section UID.
         if len(form_object.section_uid) > 0:

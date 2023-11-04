@@ -200,9 +200,8 @@ class ResponseData:
         )
 
     def is_success(self):
-        return (
-            self.status == Status.SUCCESS
-            or self.status == Status.SUCCESS_READ_TIMEOUT_EXPECTED
+        return self.status in (
+             Status.SUCCESS, Status.SUCCESS_READ_TIMEOUT_EXPECTED
         )
 
     def is_ssl_error(self):

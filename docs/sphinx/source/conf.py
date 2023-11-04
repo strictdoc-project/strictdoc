@@ -8,7 +8,7 @@ import os
 import string
 import sys
 
-import guzzle_sphinx_theme as guzzle_sphinx_theme
+import guzzle_sphinx_theme
 
 # -- Path setup --------------------------------------------------------------
 # If extensions (or modules to document with autodoc) are in another directory,

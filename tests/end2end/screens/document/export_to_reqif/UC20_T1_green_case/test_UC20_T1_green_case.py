@@ -1,6 +1,6 @@
 import os
 import shutil
-from sys import platform
+import sys
 
 from tests.end2end.conftest import DOWNLOADED_FILES_PATH, test_environment
 from tests.end2end.e2e_case import E2ECase
@@ -15,7 +15,7 @@ path_to_expected_downloaded_file = os.path.join(
 )
 
 
-class Test_UC20_T1_GreenCase(E2ECase):
+class Test(E2ECase):
     def test(self):
         shutil.rmtree(DOWNLOADED_FILES_PATH, ignore_errors=True)
 
@@ -42,7 +42,7 @@ class Test_UC20_T1_GreenCase(E2ECase):
             screen_document.do_export_reqif()
 
             # FIXME: does not work on Linux CI
-            if platform == "linux" or platform == "linux2":
+            if sys.platform.startswith("linux"):
                 return
             self.sleep(test_environment.download_file_timeout_seconds)
             assert os.path.exists(path_to_expected_downloaded_file)

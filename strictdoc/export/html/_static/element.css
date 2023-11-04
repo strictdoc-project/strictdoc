@@ -189,10 +189,22 @@ sdoc-node-controls .action_button {
   vertical-align: top;
 }
 
-/* used by copy_to_clipboard controller */
+/* ***
+  USED BY copy_to_clipboard controller
+  */
 
-.copy_to_clipboard-field {
+sdoc-field {
+  display: flex;
+  /* it is assumed that it will automatically stretch, as a block element,
+     to the entire field space, and the elements in the service area will be
+     positioned relative to it:
+  */
   position: relative;
+}
+
+sdoc-field-content {
+  flex-grow: 1;
+  width: 100%; /* holds within the width of the parent */
 }
 
 .copy_to_clipboard-cover {
@@ -214,7 +226,8 @@ sdoc-node-controls .action_button {
   transition: .5s ease-out;
 }
 
-.copy_to_clipboard-cover > .action_button {
+/* button overrides */
+.copy_to_clipboard-button.action_button {
   height: calc(var(--base-rhythm)*3);
   width: calc(var(--base-rhythm)*3);
   min-height: unset;
@@ -222,35 +235,18 @@ sdoc-node-controls .action_button {
   position: absolute;
   right: 0;
   pointer-events: auto;
+
+  max-height: 100%; /* for meta row: to keep the copy button from expanding out of the content line */
 }
 
-.copy_to_clipboard-cover > .action_button:hover {
-  /* box-shadow: none;
-  border: none; */
-}
-
-sdoc-field .action_button,
-.copy_to_clipboard-field > .copy_to_clipboard-cover .action_button {
+/* button behavior */
+sdoc-field .copy_to_clipboard-button {
   transition: .5s ease-out;
   opacity: 0;
 }
 
-sdoc-field:hover .action_button,
-.copy_to_clipboard-field:hover > .copy_to_clipboard-cover .action_button {
+sdoc-field:hover .copy_to_clipboard-button {
   opacity: 1;
-}
-
-sdoc-field {
-  position: relative;
-  display: flex;
-}
-
-sdoc-field-content {
-  flex-grow: 1;
-}
-
-sdoc-field-service {
-  /* display: block; */
 }
 
 /* ANCHOR */

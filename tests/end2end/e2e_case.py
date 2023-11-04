@@ -27,7 +27,6 @@ def selenium_connection_error_retry_handler(times):
                         f"to run {func}, "
                         f"attempt {attempt} of {times}."
                     )
-                    attempt += 1
                     final_exception = exception
 
                     # If this is the notorious ERR_CONNECTION_REFUSED exception,

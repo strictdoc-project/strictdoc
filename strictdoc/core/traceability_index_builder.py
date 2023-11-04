@@ -122,19 +122,19 @@ class TraceabilityIndexBuilder:
                 todo_list = [document]
                 finished = set()
                 while todo_list:
-                    document = todo_list.pop()
-                    if document in finished:
+                    document_ = todo_list.pop()
+                    if document_ in finished:
                         continue
-                    document.ng_needs_generation = True
+                    document_.ng_needs_generation = True
                     document_parents = traceability_index.get_document_parents(
-                        document
+                        document_
                     )
                     document_children = (
-                        traceability_index.get_document_children(document)
+                        traceability_index.get_document_children(document_)
                     )
                     todo_list.extend(document_parents)
                     todo_list.extend(document_children)
-                    finished.add(document)
+                    finished.add(document_)
 
         # File traceability
         if project_config.is_feature_activated(

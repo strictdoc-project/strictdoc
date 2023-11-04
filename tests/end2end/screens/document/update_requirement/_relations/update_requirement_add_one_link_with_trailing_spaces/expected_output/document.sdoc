@@ -1,0 +1,23 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+Hello world!
+[/FREETEXT]
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: Requirement title #1
+STATEMENT: >>>
+Requirement statement #1.
+<<<
+
+[REQUIREMENT]
+UID: REQ-002
+TITLE: Requirement title #2
+STATEMENT: >>>
+Requirement statement #2.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-001

@@ -1,5 +1,7 @@
 {%- if requirement.reserved_uid %}
-  <sdoc-requirement-uid data-controller="copy_to_clipboard_button">
-  {{ requirement.reserved_uid }}
+  <sdoc-requirement-uid>
+    {%- with field_content = requirement.reserved_uid %}
+      {%- include "components/field/index.jinja" -%}
+    {%- endwith -%}
   </sdoc-requirement-uid>
 {%- endif -%}

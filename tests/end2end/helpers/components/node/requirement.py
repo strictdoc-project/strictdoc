@@ -77,7 +77,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
         title = super().create_node_title_string(node_title, node_level)
         self.test_case.assert_element(
             f"{self.node_xpath}"
-            f"//sdoc-requirement-title[contains(text(), '{title}')]",
+            f"//sdoc-requirement-title//*[contains(text(), '{title}')]",
             by=By.XPATH,
         )
 
@@ -89,7 +89,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
         self.test_case.assert_element(
             f"{self.node_xpath}"
             "//sdoc-requirement-field[@data-field-label='UID']"
-            f"[contains(text(), '{uid}')]",
+            f"//*[contains(text(), '{uid}')]",
             by=By.XPATH,
         )
 
@@ -99,7 +99,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
     ) -> None:
         """Use it on card. <sdoc-requirement-uid>"""
         self.test_case.assert_element(
-            f"{self.node_xpath}//sdoc-requirement-uid[contains(., '{uid}')]",
+            f"{self.node_xpath}//sdoc-requirement-uid//*[contains(., '{uid}')]",
             by=By.XPATH,
         )
 
@@ -110,7 +110,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
         self.test_case.assert_element(
             f"{self.node_xpath}"
             "//sdoc-requirement-field[@data-field-label='statement']"
-            f"[contains(., '{text}')]",
+            f"//*[contains(., '{text}')]",
             by=By.XPATH,
         )
 
@@ -121,7 +121,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
         self.test_case.assert_element(
             f"{self.node_xpath}"
             "//sdoc-requirement-field[@data-field-label='rationale']"
-            f"[contains(., '{text}')]",
+            f"//*[contains(., '{text}')]",
             by=By.XPATH,
         )
 

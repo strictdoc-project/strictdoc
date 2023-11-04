@@ -277,6 +277,7 @@ sdoc-meta {
   border-radius: var(--requirement-border-radius);
 
   font-size: var(--font-size-sm);
+  line-height: 24px; /* to keep the copy button from expanding out of the content line */
   margin: var(--base-padding) 0;
   padding: calc(var(--requirement-base-rhythm)*0.5);
   row-gap: 2px;

@@ -5,9 +5,10 @@
     <sdoc-requirement-field-label>comment:</sdoc-requirement-field-label>
     <sdoc-requirement-field
       data-field-label="comment"
-      data-controller="copy_to_clipboard_button"
     >
-      <sdoc-autogen>{{ renderer.render_comment(comment) }}</sdoc-autogen>
+      {%- with field_content = renderer.render_comment(comment) -%}
+        {%- include "components/field/index.jinja" -%}
+      {%- endwith -%}
     </sdoc-requirement-field>
   {%- endfor %}
 {%- endif %}

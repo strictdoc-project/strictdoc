@@ -56,7 +56,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
     DEFAULT_SERVER_HOST = "127.0.0.1"
     DEFAULT_SERVER_PORT = 5111
 
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(
         self,
         environment: SDocRuntimeEnvironment,
         project_title: str,

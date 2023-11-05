@@ -1,4 +1,4 @@
-﻿from strictdoc.core.document_tree import DocumentTree
+from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from strictdoc.core.transforms.update_requirement import (

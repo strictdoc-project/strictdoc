@@ -6,7 +6,7 @@ from strictdoc.helpers.auto_described import auto_described
 
 @auto_described
 class Fragment:  # pylint: disable=too-many-instance-attributes
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(
         self,
         section_contents: List[Node],
     ):

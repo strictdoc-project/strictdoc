@@ -9,7 +9,7 @@ from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 
 class DocumentHTMLGenerator:
     @staticmethod
-    def export(  # pylint: disable=too-many-arguments
+    def export(
         project_config: ProjectConfig,
         document: Document,
         traceability_index,

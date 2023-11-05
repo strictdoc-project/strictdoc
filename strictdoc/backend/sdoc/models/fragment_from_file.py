@@ -5,7 +5,7 @@ from strictdoc.helpers.auto_described import auto_described
 
 @auto_described
 class FragmentFromFile(Node):  # pylint: disable=too-many-instance-attributes
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(
         self,
         parent,
         file,

@@ -57,7 +57,7 @@ class HTMLGenerator:
         *,
         traceability_index: TraceabilityIndex,
         parallelizer,
-    ):  # pylint: disable=too-many-arguments,too-many-statements
+    ):
         Path(self.project_config.export_output_html_root).mkdir(
             parents=True, exist_ok=True
         )

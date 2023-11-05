@@ -49,7 +49,7 @@ class SourceFileType(Enum):
 
 @auto_described
 class SourceFile:  # pylint: disable=too-many-instance-attributes
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(
         self,
         level,
         full_path,

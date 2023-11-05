@@ -1,4 +1,5 @@
 target-version = "py37"
+line-length = 80
 
 select = [
   "A",
@@ -54,6 +55,10 @@ ignore = [
     "C901",
 
     "E501",  # (line length violations).
+
+    # A warning by ruff format:
+    # warning: The following rules may cause conflicts when used with the formatter: `ISC001`.
+    "ISC001",
 
     # Too many branches
     "PLR0912",

@@ -25,7 +25,7 @@ from strictdoc.helpers.sorting import alphanumeric_sort
 
 @auto_described
 class RequirementConnections:
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(
         self,
         requirement: Requirement,
         document: Document,
@@ -65,7 +65,7 @@ class GraphLinkType(LinkType):
 
 
 class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-instance-attributes  # noqa: E501
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(
         self,
         document_iterators: Dict[Document, DocumentCachingIterator],
         requirements_parents: Dict[str, RequirementConnections],

@@ -8,7 +8,7 @@ from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 
 class DocumentDeepTraceHTMLGenerator:
     @staticmethod
-    def export_deep(  # pylint: disable=too-many-arguments
+    def export_deep(
         project_config: ProjectConfig,
         document,
         traceability_index,

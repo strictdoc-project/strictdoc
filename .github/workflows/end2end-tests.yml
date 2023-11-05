@@ -18,15 +18,18 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.7"]
+        shard: [
+          "1/4", "2/4",
+          "3/4", "4/4",
+        ]
 
     steps:
     - uses: actions/checkout@v3
 
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python 3.7
       uses: actions/setup-python@v1
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.7
 
     - name: Upgrade pip
       run: |
@@ -38,7 +41,7 @@ jobs:
 
     - name: Run end-to-end tasks
       run: |
-        invoke test-end2end --long-timeouts
+        invoke test-end2end --long-timeouts --shard=${{ matrix.shard }}
 
   tests_end2end_linux:
     name: E2E - Linux

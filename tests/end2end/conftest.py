@@ -20,7 +20,7 @@ test_environment: SDocTestEnvironment = SDocTestEnvironment.create_default()
 def pytest_collection_modifyitems(
     session,
     config,
-    items,  # pylint: disable=unused-argument
+    items,
 ):
     """called after collection has been performed, may filter or re-order
     the items in-place."""

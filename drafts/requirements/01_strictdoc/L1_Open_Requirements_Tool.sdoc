@@ -1,6 +1,7 @@
 [DOCUMENT]
 TITLE: [L1] Requirements Tool specification
 REQ_PREFIX: SDOC-SSS-
+ROOT: True
 
 [SECTION]
 TITLE: Overview

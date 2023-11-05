@@ -1,6 +1,7 @@
 [DOCUMENT]
 TITLE: Zephyr Requirements Tool requirements
 REQ_PREFIX: ZEP-
+ROOT: True
 
 [REQUIREMENT]
 UID: ZEP-1

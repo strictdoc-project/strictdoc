@@ -139,7 +139,7 @@ DocumentConfig[noskipws]:
   ('VERSION: ' version = SingleLineString '\n')?
   ('CLASSIFICATION: ' classification = SingleLineString '\n')?
   ('REQ_PREFIX: ' requirement_prefix = SingleLineString '\n')?
-
+  ('ROOT: ' (root = BooleanChoice) '\n')?
   ('OPTIONS:' '\n'
     ('  MARKUP: ' (markup = MarkupChoice) '\n')?
     ('  AUTO_LEVELS: ' (auto_levels = AutoLevelsChoice) '\n')?

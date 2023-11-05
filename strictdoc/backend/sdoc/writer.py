@@ -73,6 +73,12 @@ class SDWriter:
                 output += f"REQ_PREFIX: {requirement_prefix}"
                 output += "\n"
 
+            root = document_config.root
+            if root is not None:
+                output += "ROOT: "
+                output += "True" if root else "False"
+                output += "\n"
+
             markup = document_config.markup
             auto_levels_specified = document_config.ng_auto_levels_specified
             requirement_style = document_config.requirement_style

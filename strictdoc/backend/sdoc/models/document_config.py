@@ -13,6 +13,7 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
             uid=None,
             classification=None,
             requirement_prefix=None,
+            root=None,
             markup=None,
             auto_levels=None,
             requirement_style=None,
@@ -27,6 +28,7 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         uid: Optional[str],
         classification: Optional[str],
         requirement_prefix: Optional[str],
+        root: Optional[str],
         markup: Optional[str],
         auto_levels: Optional[str],
         requirement_style: Optional[str],
@@ -42,6 +44,10 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
 
         self.classification: Optional[str] = classification
         self.requirement_prefix: Optional[str] = requirement_prefix
+
+        self.root: Optional[bool] = (
+            True if root == "True" else (False if root == "False" else None)
+        )
         self.markup = markup
         self.auto_levels: bool = auto_levels is None or auto_levels == "On"
         # Possible requirement styles:

@@ -3,7 +3,7 @@ select = [
   # "ARG",
   "B",
   # "BLE",
-  # "C",
+  "C",
   # "C4",
   # "C90"  mccabe
   # "COM",
@@ -40,6 +40,14 @@ select = [
 
 
 ignore = [
+    # TBD: Unnecessary `list` comprehension (rewrite using `list()`)
+    "C416",
+    # TBD: Unnecessary `map` usage (rewrite using a `list` comprehension)
+    "C417",
+
+    # X is too complex
+    "C901",
+
     "E501",  # (line length violations).
 
     # Too many branches

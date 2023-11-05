@@ -62,7 +62,7 @@ class ExcelToSDocConverter:
             raise NotImplementedError
 
         header_row = xlrd_sheet.row_values(header_row_idx)
-        safe_header_row = list(safe_name(x) for x in header_row)
+        safe_header_row = [safe_name(x) for x in header_row]
 
         statement_column = None
         uid_column = None

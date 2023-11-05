@@ -21,7 +21,7 @@ TITLE: Test Doc
 
 
 def test_002_level_2_req():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -35,7 +35,7 @@ TITLE: Section 1
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     section = document.section_contents[0]

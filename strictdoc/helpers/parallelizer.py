@@ -51,7 +51,7 @@ class Parallelizer:
             return Parallelizer()
         return NullParallelizer()
 
-    def map(self, contents, processing_func):
+    def run_parallel(self, contents, processing_func):
         size = 0
         for content_idx, content in enumerate(contents):
             self.input_queue.put((content_idx, content, processing_func))
@@ -91,7 +91,7 @@ class Parallelizer:
 
 class NullParallelizer:
     @staticmethod
-    def map(contents, processing_func):
+    def run_parallel(contents, processing_func):
         results = []
         for content in contents:
             results.append(processing_func(content))

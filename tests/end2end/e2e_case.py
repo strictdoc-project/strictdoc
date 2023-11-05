@@ -52,7 +52,7 @@ def selenium_connection_error_retry_handler(times):
 
 class E2ECase(BaseCase):
     @selenium_connection_error_retry_handler(3)
-    def open(self, url):
+    def open(self, url):  # noqa: A003
         super().open(url)
 
     @selenium_connection_error_retry_handler(3)

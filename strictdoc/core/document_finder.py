@@ -74,7 +74,7 @@ class DocumentFinder:
             path_to_output_root=project_config.export_output_dir,
         )
 
-        found_documents = parallelizer.map(
+        found_documents = parallelizer.run_parallel(
             file_tree_list, process_document_binding
         )
 

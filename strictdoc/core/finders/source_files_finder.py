@@ -15,7 +15,7 @@ class SourceFileType(Enum):
     CPP = [".cpp", ".cc"]
     TEX = [".tex"]
     # Is there an idiomatic file extension for Jinja templates?
-    # https://stackoverflow.com/questions/29590931/is-there-an-idiomatic-file-extension-for-jinja-templates  # noqa: #501
+    # https://stackoverflow.com/questions/29590931/is-there-an-idiomatic-file-extension-for-jinja-templates
     JINJA = [".jinja", ".jinja2", ".j2", ".html.jinja"]
     YAML = [".yaml", ".yml"]
 
@@ -40,7 +40,7 @@ class SourceFileType(Enum):
         raise NotImplementedError(path_to_file)
 
     @staticmethod
-    def all() -> List[str]:
+    def all() -> List[str]:  # noqa: A003
         all_extensions = []
         for enum_value in SourceFileType:
             all_extensions += enum_value.value

@@ -9,7 +9,7 @@ class DocumentType:
         self.document_type = document_type
 
     @staticmethod
-    def all():
+    def all():  # noqa: A003
         return (
             DocumentType.DOCUMENT,
             DocumentType.TABLE,

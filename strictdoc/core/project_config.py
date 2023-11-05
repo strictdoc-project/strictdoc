@@ -40,7 +40,7 @@ class ProjectFeature(str, Enum):
     ALL_FEATURES = "ALL_FEATURES"
 
     @staticmethod
-    def all():
+    def all():  # noqa: A003
         return list(map(lambda c: c.value, ProjectFeature))
 
 

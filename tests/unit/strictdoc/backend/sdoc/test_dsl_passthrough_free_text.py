@@ -5,7 +5,7 @@ from strictdoc.backend.sdoc.writer import SDWriter
 
 
 def test_001_free_text():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -16,17 +16,17 @@ Hello world
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
 
 def test_002_freetext_empty():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -36,17 +36,17 @@ TITLE: Test Doc
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
 
 def test_003_free_text_ending_free_text_not_recognized():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -57,17 +57,17 @@ AAA  [/FREETEXT]
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
 
 def test_020_free_text_inline_link():
-    input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -80,17 +80,17 @@ String 4
 
     reader = SDReader()
 
-    document = reader.read(input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     writer = SDWriter()
     output = writer.write(document)
 
-    assert input == output
+    assert input_sdoc == output
 
 
 def test_040_free_text_anchor_between_empty_lines():
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -106,7 +106,7 @@ String 4
 
     reader = SDReader()
 
-    document = reader.read(sdoc_input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
     assert len(document.free_texts[0].parts) == 3
     assert isinstance(document.free_texts[0].parts[1], Anchor)
@@ -118,11 +118,11 @@ String 4
     writer = SDWriter()
     output = writer.write(document)
 
-    assert sdoc_input == output
+    assert input_sdoc == output
 
 
 def test_041_free_text_anchor_start_of_free_text():
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -135,7 +135,7 @@ Test
 
     reader = SDReader()
 
-    document = reader.read(sdoc_input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
     assert len(document.free_texts[0].parts) == 2
     assert isinstance(document.free_texts[0].parts[0], Anchor)
@@ -145,11 +145,11 @@ Test
     writer = SDWriter()
     output = writer.write(document)
 
-    assert sdoc_input == output
+    assert input_sdoc == output
 
 
 def test_042_free_text_anchor_end_of_free_text():
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -163,7 +163,7 @@ String 2 String 3
 
     reader = SDReader()
 
-    document = reader.read(sdoc_input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
     assert len(document.free_texts[0].parts) == 2
     assert isinstance(document.free_texts[0].parts[0], str)
@@ -173,11 +173,11 @@ String 2 String 3
     writer = SDWriter()
     output = writer.write(document)
 
-    assert sdoc_input == output
+    assert input_sdoc == output
 
 
 def test_043_free_text_anchor_between_lines():
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -192,7 +192,7 @@ String 5
 
     reader = SDReader()
 
-    document = reader.read(sdoc_input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
     assert len(document.free_texts[0].parts) == 3
     assert isinstance(document.free_texts[0].parts[0], str)
@@ -202,11 +202,11 @@ String 5
     writer = SDWriter()
     output = writer.write(document)
 
-    assert sdoc_input == output
+    assert input_sdoc == output
 
 
 def test_050_free_text_anchor_inline_not_recognized():
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -219,7 +219,7 @@ String 4
 
     reader = SDReader()
 
-    document = reader.read(sdoc_input)
+    document = reader.read(input_sdoc)
     assert isinstance(document, Document)
     assert len(document.free_texts[0].parts) == 1
     assert isinstance(document.free_texts[0].parts[0], str)
@@ -227,11 +227,11 @@ String 4
     writer = SDWriter()
     output = writer.write(document)
 
-    assert sdoc_input == output
+    assert input_sdoc == output
 
 
 def test_052_free_text_anchor_not_recognized_when_connected_to_text():
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -244,7 +244,7 @@ String 2 String 3
 
     reader = SDReader()
 
-    document: Document = reader.read(sdoc_input)
+    document: Document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     assert len(document.free_texts[0].parts) == 2
@@ -253,11 +253,11 @@ String 2 String 3
     writer = SDWriter()
     output = writer.write(document)
 
-    assert sdoc_input == output
+    assert input_sdoc == output
 
 
 def test_053_free_text_anchor_not_recognized_when_connected_to_text_newline_after():
-    sdoc_input = """
+    input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -272,7 +272,7 @@ TEST
 
     reader = SDReader()
 
-    document: Document = reader.read(sdoc_input)
+    document: Document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
     assert len(document.free_texts[0].parts) == 3
@@ -282,4 +282,4 @@ TEST
     writer = SDWriter()
     output = writer.write(document)
 
-    assert sdoc_input == output
+    assert input_sdoc == output

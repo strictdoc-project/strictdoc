@@ -31,6 +31,7 @@ class DocumentTreeStats:  # pylint: disable=too-many-instance-attributes
     # UID
     requirements_no_uid: int = 0
     requirements_no_links: int = 0
+    requirements_root_no_links: int = 0
     requirements_no_rationale: int = 0
 
     # STATUS
@@ -77,8 +78,27 @@ class ProgressStatisticsGenerator:
                     if requirement.reserved_uid is None:
                         document_tree_stats.requirements_no_uid += 1
 
-                    if len(requirement.references) == 0:
-                        document_tree_stats.requirements_no_links += 1
+                    if requirement.reserved_status != "Backlog":
+                        if document.config.root:
+                            if (
+                                len(
+                                    traceability_index.get_children_requirements(
+                                        requirement
+                                    )
+                                )
+                                == 0
+                            ):
+                                document_tree_stats.requirements_root_no_links += 1
+                        else:
+                            if (
+                                len(
+                                    traceability_index.get_parent_requirements(
+                                        requirement
+                                    )
+                                )
+                                == 0
+                            ):
+                                document_tree_stats.requirements_no_links += 1
 
                     # RATIONALE
                     if (

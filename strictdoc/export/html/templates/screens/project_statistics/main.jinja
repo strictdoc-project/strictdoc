@@ -40,7 +40,11 @@
       <td>{{ document_tree_stats.requirements_no_uid }}</td>
     </tr>
     <tr>
-      <td>Requirements with no Parent/Child relations</td>
+      <td>Root-level requirements not connected to by any requirement</td>
+      <td>{{ document_tree_stats.requirements_root_no_links }}</td>
+    </tr>
+    <tr>
+      <td>Non-root-level requirements not connected to any parent requirement</td>
       <td>{{ document_tree_stats.requirements_no_links }}</td>
     </tr>
     <tr>

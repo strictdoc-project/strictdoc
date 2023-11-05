@@ -542,6 +542,7 @@ TITLE: Test Doc
 UID: SDOC-01
 VERSION: 0.0.1
 CLASSIFICATION: Restricted
+ROOT: True
 OPTIONS:
   MARKUP: Text
   AUTO_LEVELS: Off
@@ -569,6 +570,7 @@ STATEMENT: ABC
     assert document.config.version == "0.0.1"
     assert document.config.uid == "SDOC-01"
     assert document.config.classification == "Restricted"
+    assert document.config.root is True
     assert document.config.markup == "Text"
     assert document.config.auto_levels is False
     assert document.config.requirement_style == "Table"

@@ -178,17 +178,19 @@ class AUREON_ReqIFToSDocConverter:  # pylint: disable=invalid-name
     @staticmethod
     def is_spec_object_section(
         spec_object: ReqIFSpecObject,
-        reqif_bundle: ReqIFBundle,
+        reqif_bundle: ReqIFBundle,  # noqa: ARG004
         helper: AUREON_ReqIFSchemaHelper
     ):
         return helper.get_spec_object_type(spec_object) == AUREON_NodeType.HEADING
 
     @staticmethod
-    def is_spec_object_requirement(spec_object, reqif_bundle, helper: AUREON_ReqIFSchemaHelper):
+    def is_spec_object_requirement(
+        spec_object, reqif_bundle, helper: AUREON_ReqIFSchemaHelper  # noqa: ARG004
+    ):
         return helper.get_spec_object_type(spec_object) == AUREON_NodeType.REQUIREMENT
 
     @staticmethod
-    def is_spec_object_definition(spec_object, reqif_bundle, helper):
+    def is_spec_object_definition(spec_object, reqif_bundle, helper):  # noqa: ARG004
         return helper.get_spec_object_type(spec_object) == AUREON_NodeType.DEFINITION
 
     @staticmethod

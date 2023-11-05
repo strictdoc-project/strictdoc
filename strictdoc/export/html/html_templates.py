@@ -55,7 +55,10 @@ class AssertExtension(Extension):
         )
 
     def _assert(
-        self, condition: bool, context_or_none: Optional[Any], caller
+        self,
+        condition: bool,
+        context_or_none: Optional[Any],
+        caller,  # noqa: ARG002
     ):  # pylint: disable=unused-argument
         if not condition:
             error_message = (

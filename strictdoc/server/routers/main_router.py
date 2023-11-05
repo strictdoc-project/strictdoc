@@ -2190,7 +2190,7 @@ def create_main_router(
     @router.get(
         "/reqif/export_document/{document_mid}", response_class=Response
     )
-    def get_reqif_export_document(document_mid: str):
+    def get_reqif_export_document(document_mid: str):  # noqa: ARG001
         # TODO: Export single document, not the whole tree.
         return get_reqif_export_tree()
 

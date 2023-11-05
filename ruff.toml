@@ -1,12 +1,17 @@
+target-version = "py37"
+
 select = [
   "A",
-  # "ARG",
+  "ARG",
   "B",
   # "BLE",
   "C",
-  # "C4",
+  "C4",
   # "C90"  mccabe
+
+  # Not clear if this check is useful. Too many commas everywhere.
   # "COM",
+
   # "D",
   # "DTZ",
   # "E",
@@ -68,8 +73,6 @@ ignore = [
     # Use `elif` instead of `else` then `if`, to reduce indentation
     "PLR5501",
 
-    "UP006", # Use `list` instead of `List` for type annotations
-    "UP007", # Use `X | Y` for type annotations
     "UP035", # [*] Import from `collections.abc` instead: `Iterator`
     "UP038", # [*] Use `X | Y` in `isinstance` call instead of `(X, Y)` (conflict with Pylint)
 ]

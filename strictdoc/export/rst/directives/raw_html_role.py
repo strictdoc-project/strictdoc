@@ -1,3 +1,4 @@
+# ruff: noqa: ARG001
 # pylint: disable-all
 from docutils import nodes
 

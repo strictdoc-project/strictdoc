@@ -36,10 +36,10 @@
   grid-template-columns:  minmax(min-content, max-content)
                           minmax(var(--card-width), calc(2*var(--card-width)))
                           minmax(min-content, max-content);
-  gap: var(--traceability-arrow) 0;
+  gap: var(--requirement-tree-margin) 0;
   width: -moz-fit-content;
   width: fit-content;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 [data-viewtype="requirements-coverage"] .content,
@@ -49,10 +49,12 @@
   grid-template-columns:  minmax(min-content, max-content)
                           max-content
                           minmax(min-content, max-content);
-  gap: var(--traceability-arrow) 0;
+  gap: var(--requirement-tree-margin) 0;
   width: -moz-fit-content;
   width: fit-content;
-  overflow: hidden;
+
+  /* fon node-controls: */
+  /* overflow: hidden; */
 }
 
 [data-viewtype="table"] .content {
@@ -103,13 +105,19 @@
 
 [data-viewtype="deep_traceability"] .content_item[data-role="current"]::before,
 [data-viewtype="traceability"] .content_item[data-role="current"]::before {
-  /* for vertical line in 'current' culumn */
+  /* for vertical line in 'current' column */
   content: '';
   position: absolute;
   top: 0;
-  bottom: calc(var(--traceability-arrow)*(-1));
+  bottom: calc(var(--requirement-tree-margin)*(-1));
   left: 50%;
   border-left: 1px dotted #000;
+}
+
+[data-viewtype="deep_traceability"] section:last-child .content_item[data-role="current"]::before,
+[data-viewtype="traceability"] section:last-child .content_item[data-role="current"]::before {
+  /* the last section doesn't need a vertical connector under the middle node */
+  content: none;
 }
 
 /* meta info */

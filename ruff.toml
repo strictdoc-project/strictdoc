@@ -6,9 +6,12 @@ select = [
   "B",
   # "BLE",
   "C",
-  # "C4",
+  "C4",
   # "C90"  mccabe
+
+  # Not clear if this check is useful. Too many commas everywhere.
   # "COM",
+
   # "D",
   # "DTZ",
   # "E",

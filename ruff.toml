@@ -2,7 +2,7 @@ target-version = "py37"
 
 select = [
   "A",
-  # "ARG",
+  "ARG",
   "B",
   # "BLE",
   "C",

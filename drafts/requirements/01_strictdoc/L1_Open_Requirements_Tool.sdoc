@@ -454,7 +454,6 @@ UID: SECTION-RTC-Usability-installation-and-usage
 TITLE: Usability, installation and usage
 
 [REQUIREMENT]
-UID: SDOC-RMC-8
 STATUS: Active
 TITLE: General usability
 STATEMENT: >>>
@@ -473,7 +472,6 @@ A tool that can be used by a large number of people simplifies its adoption and 
 <<<
 
 [REQUIREMENT]
-UID: SDOC-RMC-9
 STATUS: Active
 TITLE: Easy user experience
 STATEMENT: >>>
@@ -483,7 +481,6 @@ NOTE: Documentation and requirements management are composite activities that co
 <<<
 
 [REQUIREMENT]
-UID: SDOC-RMC-54
 STATUS: Active
 TITLE: Support projects with a large number of users
 STATEMENT: >>>
@@ -494,7 +491,6 @@ Many documentation and requirements projects involve large groups of people. The
 <<<
 
 [REQUIREMENT]
-UID: SDOC-RMC-45
 STATUS: Active
 TITLE: Individual use (home PC)
 STATEMENT: >>>
@@ -502,7 +498,6 @@ The Requirements Tool shall be usable on the normal personal computers, e.g., do
 <<<
 
 [REQUIREMENT]
-UID: SDOC-RMC-14
 STATUS: Active
 TITLE: Server-based deployments (IT-friendly setup)
 STATEMENT: >>>
@@ -514,7 +509,6 @@ larger in-house and cloud-base installations.
 <<<
 
 [REQUIREMENT]
-UID: SDOC-RMC-46
 STATUS: Active
 TITLE: Requirements database
 STATEMENT: >>>
@@ -530,7 +524,6 @@ A database allows:
 <<<
 
 [REQUIREMENT]
-UID: SDOC-RMC-47
 STATUS: Active
 TITLE: Programming access via API (Web)
 STATEMENT: >>>
@@ -541,7 +534,6 @@ Besides a direct access to the tool's source code, accessing an API deployed to 
 <<<
 
 [REQUIREMENT]
-UID: SDOC-RMC-48
 STATUS: Active
 TITLE: Programming access via API (SDK)
 STATEMENT: >>>
@@ -558,7 +550,6 @@ A SDK allows a software engineer to extend the Requirements Tool capabilities.
 <<<
 
 [REQUIREMENT]
-UID: SDOC-RMC-49
 STATUS: Active
 TITLE: Programmatic access to requirements data
 STATEMENT: >>>

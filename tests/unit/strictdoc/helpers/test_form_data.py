@@ -179,9 +179,7 @@ def test_20():
 The ordering [0], [1], ... is broken in this form data: \
 {'document_mid': []} ['document_mid', 1, 'name'] \
 b7dc9679bd77416cb8205c6b8f73d66f.\
-""" == str(
-        exc_info.value
-    )
+""" == str(exc_info.value)
 
 
 def test_21():
@@ -194,9 +192,7 @@ def test_21():
 The ordering [0], [1], ... is broken in this form data: \
 {'document_mid': []} ['document_mid', 2, 'name'] \
 b7dc9679bd77416cb8205c6b8f73d66f.\
-""" == str(
-        exc_info.value
-    )
+""" == str(exc_info.value)
 
 
 def test_22():
@@ -210,9 +206,7 @@ def test_22():
 The ordering [0], [1], ... is broken in this form data: \
 {'document_mid': [{'name': 'ABC'}]} \
 ['document_mid', 2, 'name'] XYZ.\
-""" == str(
-        exc_info.value
-    )
+""" == str(exc_info.value)
 
 
 def test_30():

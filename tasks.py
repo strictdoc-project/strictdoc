@@ -203,7 +203,7 @@ def test_unit_server(context, focus=None):
 
 
 @task()
-def test_end2end(  # pylint: disable=too-many-arguments
+def test_end2end(
     context,
     focus=None,
     exit_first=False,
@@ -302,7 +302,7 @@ def test_coverage_report(context):
 
 
 @task
-def test_integration(  # pylint: disable=too-many-arguments
+def test_integration(
     context,
     focus=None,
     debug=False,
@@ -367,6 +367,29 @@ def lint_black(context):
     # black always exits with 0, so we handle the output.
     if "reformatted" in result.stdout:
         print("invoke: black found issues")  # noqa: T201
+        result.exited = 1
+        raise invoke.exceptions.UnexpectedExit(result)
+
+
+@task
+def lint_ruff_format(context):
+    result: invoke.runners.Result = run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        """
+            ruff
+                format
+                *.py
+                developer/
+                strictdoc/
+                tests/unit/
+                tests/integration/*.py
+                tests/end2end/
+        """,
+    )
+    # Ruff always exits with 0, so we handle the output.
+    if "reformatted" in result.stdout:
+        print("invoke: ruff format found issues")  # noqa: T201
         result.exited = 1
         raise invoke.exceptions.UnexpectedExit(result)
 
@@ -450,10 +473,11 @@ def lint_mypy(context):
 
 @task
 def lint(context):
-    lint_black(context)
+    lint_ruff_format(context)
     lint_ruff(context)
-    lint_pylint(context)
-    lint_flake8(context)
+    # It looks like Ruff does the job, but keeping this for a while.
+    # lint_pylint(context)  # noqa: ERA001
+    # lint_flake8(context)  # noqa: ERA001
     lint_mypy(context)
 
 

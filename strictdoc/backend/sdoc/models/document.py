@@ -10,7 +10,7 @@ from strictdoc.helpers.mid import MID
 
 @auto_described
 class Document:  # pylint: disable=too-many-instance-attributes
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(
         self,
         title: str,
         config: Optional[DocumentConfig],

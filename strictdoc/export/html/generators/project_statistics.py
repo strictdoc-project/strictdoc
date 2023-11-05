@@ -48,7 +48,7 @@ class DocumentTreeStats:  # pylint: disable=too-many-instance-attributes
 
 class ProgressStatisticsGenerator:
     @staticmethod
-    def export(  # pylint: disable=too-many-arguments
+    def export(
         project_config: ProjectConfig,
         traceability_index: TraceabilityIndex,
         link_renderer: LinkRenderer,

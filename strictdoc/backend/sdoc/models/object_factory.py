@@ -21,7 +21,7 @@ class SDocObjectFactory:
         )
 
     @staticmethod
-    def create_requirement(  # pylint: disable=too-many-arguments
+    def create_requirement(
         parent,
         requirement_type: Optional[str] = "REQUIREMENT",
         uid: Optional[str] = None,

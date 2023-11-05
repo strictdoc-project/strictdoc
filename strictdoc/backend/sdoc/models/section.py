@@ -16,7 +16,7 @@ class SectionContext:
 
 @auto_described
 class Section(Node):  # pylint: disable=too-many-instance-attributes
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(
         self,
         parent,
         uid,

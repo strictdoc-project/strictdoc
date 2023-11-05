@@ -19,7 +19,7 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
             requirement_in_toc=None,
         )
 
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(
         self,
         *,
         parent,

@@ -17,7 +17,7 @@ def get_textx_syntax_error_message(exception: TextXSyntaxError):
 
 
 class StrictDocSemanticError(Exception):
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(
         self, title, hint, example, line=None, col=None, filename=None
     ):
         super().__init__(title, hint, line, col, filename)
@@ -67,7 +67,7 @@ class StrictDocSemanticError(Exception):
         )
 
     @staticmethod
-    def missing_required_field(  # pylint: disable=too-many-arguments
+    def missing_required_field(
         requirement: Requirement,
         grammar_field: GrammarElementField,
         document_grammar: DocumentGrammar,
@@ -94,7 +94,7 @@ class StrictDocSemanticError(Exception):
         )
 
     @staticmethod
-    def unexpected_field_outside_grammar(  # pylint: disable=too-many-arguments
+    def unexpected_field_outside_grammar(
         requirement: Requirement,
         requirement_field: RequirementField,
         document_grammar: DocumentGrammar,
@@ -121,7 +121,7 @@ class StrictDocSemanticError(Exception):
         )
 
     @staticmethod
-    def wrong_field_order(  # pylint: disable=too-many-arguments
+    def wrong_field_order(
         requirement: Requirement,
         document_grammar: DocumentGrammar,
         problematic_field: RequirementField,
@@ -150,7 +150,7 @@ class StrictDocSemanticError(Exception):
         )
 
     @staticmethod
-    def invalid_choice_field(  # pylint: disable=too-many-arguments
+    def invalid_choice_field(
         requirement: Requirement,
         document_grammar: DocumentGrammar,
         requirement_field: RequirementField,
@@ -178,7 +178,7 @@ class StrictDocSemanticError(Exception):
         )
 
     @staticmethod
-    def invalid_multiple_choice_field(  # pylint: disable=too-many-arguments
+    def invalid_multiple_choice_field(
         requirement: Requirement,
         document_grammar: DocumentGrammar,
         requirement_field: RequirementField,
@@ -206,7 +206,7 @@ class StrictDocSemanticError(Exception):
         )
 
     @staticmethod
-    def not_comma_separated_choices(  # pylint: disable=too-many-arguments
+    def not_comma_separated_choices(
         requirement_field: RequirementField,
         line=None,
         col=None,
@@ -225,7 +225,7 @@ class StrictDocSemanticError(Exception):
         )
 
     @staticmethod
-    def not_comma_separated_tag_field(  # pylint: disable=too-many-arguments
+    def not_comma_separated_tag_field(
         requirement_field: RequirementField,
         line=None,
         col=None,
@@ -244,7 +244,7 @@ class StrictDocSemanticError(Exception):
         )
 
     @staticmethod
-    def invalid_reference_type_item(  # pylint: disable=too-many-arguments
+    def invalid_reference_type_item(
         requirement: Requirement,
         reference_item: Reference,
         line=None,

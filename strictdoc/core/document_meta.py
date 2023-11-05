@@ -4,7 +4,7 @@ from strictdoc.helpers.auto_described import auto_described
 
 @auto_described
 class DocumentMeta:
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(
         self,
         level,
         file_tree_mount_folder,

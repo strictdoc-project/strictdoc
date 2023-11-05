@@ -18,9 +18,7 @@ Modified statement.
         reader.read(free_text_input)
     assert """\
 None:3:13: Expected ', ' or '\\](\\Z|\\n)' => 'NCHOR: AD1*]!!!GARBAG'\
-""" == str(
-        exc_info.value
-    )
+""" == str(exc_info.value)
 
 
 def test_002_anchor_without_newline_before():

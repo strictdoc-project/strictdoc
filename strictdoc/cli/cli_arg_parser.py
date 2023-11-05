@@ -106,7 +106,7 @@ class ServerCommandConfig:
 
 @auto_described
 class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(
         self,
         input_paths,
         output_dir: str,

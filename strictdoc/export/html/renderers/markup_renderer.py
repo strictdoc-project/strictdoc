@@ -55,7 +55,7 @@ class MarkupRenderer:
             context_document,
         )
 
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(
         self,
         fragment_writer,
         traceability_index: TraceabilityIndex,

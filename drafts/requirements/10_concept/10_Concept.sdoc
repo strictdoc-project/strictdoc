@@ -487,69 +487,6 @@ Many project developments require a qualification of the tools used during the d
 [/SECTION]
 
 [SECTION]
-UID: SECTION-RTC-Growth-potential
-TITLE: Growth potential
-
-[SECTION]
-UID: SECTION-RTC-Formal-modeling
-TITLE: Formal modeling
-
-[REQUIREMENT]
-UID: SDOC-RMC-27
-STATUS: Backlog
-TITLE: Integration with other systems engineering processes
-STATEMENT: >>>
-The Requirements Tool shall provide capabilities for integration with other systems engineering tools.
-<<<
-
-[REQUIREMENT]
-UID: SDOC-RMC-29
-STATUS: Backlog
-TITLE: Integration with Capella
-STATEMENT: >>>
-The Requirements Tool shall provide integration with Capella MBSE tool.
-<<<
-RATIONALE: >>>
-Eclipse Capella is a capable open-source tool for Model-Based Systems Engineering, https://www.eclipse.org/capella/. It should be beneficial for the requirements tool to interface with the Capella engineering community.
-<<<
-COMMENT: >>>
-At the very least, the integration can happen through the ReqIF interface that Capella is known to support.
-<<<
-
-[REQUIREMENT]
-UID: SDOC-RMC-55
-STATUS: Backlog
-TITLE: Support STPA method
-STATEMENT: >>>
-The Requirements Tool shall provide support for the STPA method.
-<<<
-
-[REQUIREMENT]
-UID: SDOC-RMC-28
-STATUS: Backlog
-TITLE: Formalized statements
-STATEMENT: >>>
-The Requirements Tool shall provide capabilities for hardening requirements content with formal semantics.
-<<<
-COMMENT: >>>
-The directions to explore:
-- NASA FRET
-- bmw-software-engineering/trlc
-<<<
-
-[REQUIREMENT]
-UID: SDOC-RMC-30
-STATUS: Backlog
-TITLE: AI Assistant
-STATEMENT: >>>
-The Requirements Tool shall provide integration with AI tools (e.g., ChatGPT).
-<<<
-
-[/SECTION]
-
-[/SECTION]
-
-[SECTION]
 UID: SECTION-RTC-Appendix-A-Document-archetypes
 TITLE: Appendix A: Document archetypes
 

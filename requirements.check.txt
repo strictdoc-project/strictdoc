@@ -1,10 +1,7 @@
 toml
 
 # Lint
-black>=21.9b0
 mypy>=0.910
-pylint>=2.11.1
-flake8>=3.9.2
 ruff
 
 # Unit tests

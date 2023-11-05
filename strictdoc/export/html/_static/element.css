@@ -183,9 +183,18 @@ a.action_icon:hover {
 
 /* TODO */
 sdoc-node-controls .action_button {
+  /* depends on sdoc-node-controls: */
+  /*
   width: calc(var(--base-rhythm)*4);
   height: calc(var(--base-rhythm)*4);
-  padding: 0;
+  */
+  padding: 0 !important;
+  width: unset;
+  height: unset;
+  min-height: calc(var(--base-rhythm)*3) !important;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 1;
   vertical-align: top;
 }
 

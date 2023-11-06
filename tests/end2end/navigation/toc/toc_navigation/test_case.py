@@ -57,7 +57,14 @@ class Test(E2ECase):
             toc_requirement_with_title_anchor = "3-REQ_02"
 
             screen_toc.do_toc_go_to_anchor(toc_section_without_uid_anchor)
+            screen_document.assert_target_by_anchor(
+                toc_section_without_uid_anchor
+            )
             screen_toc.do_toc_go_to_anchor(toc_section_with_uid_anchor)
+            screen_document.assert_target_by_anchor(toc_section_with_uid_anchor)
             screen_toc.do_toc_go_to_anchor(toc_requirement_with_title_anchor)
+            screen_document.assert_target_by_anchor(
+                toc_requirement_with_title_anchor
+            )
 
         assert test_setup.compare_sandbox_and_expected_output()

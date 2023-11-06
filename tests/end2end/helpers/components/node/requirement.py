@@ -169,22 +169,6 @@ class Requirement(Node):  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
-    # modal
-
-    def _click_to_open_modal_requirement(self) -> None:
-        self.test_case.click_xpath(
-            f"{self.node_xpath}"
-            "//*[@data-testid='requirement-show-more-action']"
-        )
-
-    def do_open_modal_requirement(self) -> Modal:
-        modal = Modal(self.test_case)
-        modal.assert_not_modal()
-        self._click_to_open_modal_requirement()
-        modal.assert_modal()
-        modal.assert_in_modal("//sdoc-requirement")
-        return modal
-
     # clone
 
     def do_clone_requirement(self) -> Form_EditRequirement:
@@ -197,3 +181,42 @@ class Requirement(Node):  # pylint: disable=invalid-name
             click_by=By.XPATH,
         )
         return Form_EditRequirement(self.test_case)
+
+    # in CARD view:
+
+    # modal
+
+    def _hover_and_click_to_open_modal_requirement(self) -> None:
+        self.test_case.hover_and_click(
+            hover_selector=f"{self.node_xpath}",
+            click_selector=(
+                f"{self.node_xpath}"
+                "//*[@data-testid='requirement-show-more-action']"
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+
+    def do_open_modal_requirement(self) -> Modal:
+        modal = Modal(self.test_case)
+        modal.assert_not_modal()
+        self._hover_and_click_to_open_modal_requirement()
+        modal.assert_modal()
+        modal.assert_in_modal("//sdoc-requirement")
+        return modal
+
+    def do_go_to_this_requirement_in_document_view(self):
+        self.test_case.hover_and_click(
+            hover_selector=f"{self.node_xpath}",
+            click_selector=(
+                f"{self.node_xpath}"
+                "//*[@data-testid='requirement-find-in-document']"
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+        from tests.end2end.helpers.screens.document.screen_document import (
+            Screen_Document,
+        )
+
+        return Screen_Document(self.test_case)

@@ -23,6 +23,12 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
     def assert_not_empty_document(self) -> None:
         super().assert_not_empty_view("document-root-placeholder")
 
+    def assert_target_by_anchor(self, anchor) -> None:
+        # check if the link was successfully clicked
+        # and that the target is highlighted
+        targeted_anchor = f"sdoc-anchor[id='{anchor}']:target"
+        self.test_case.assert_element_present(targeted_anchor)
+
     # Actions on the page
 
     def do_export_reqif(self) -> None:

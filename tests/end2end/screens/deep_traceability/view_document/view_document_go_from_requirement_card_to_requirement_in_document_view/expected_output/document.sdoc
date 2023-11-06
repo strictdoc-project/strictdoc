@@ -1,0 +1,9 @@
+[DOCUMENT]
+TITLE: Document #1 title
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: Requirement title
+STATEMENT: >>>
+Requirement statement.
+<<<

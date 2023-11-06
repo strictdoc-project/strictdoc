@@ -76,7 +76,14 @@ class LinkRenderer:
         context_document: Optional[Document],
         document_type: DocumentType,
         force_full_path: bool = False,
+        allow_local: bool = True,
     ):
+        """
+        force_full_path: used by the Dot generator where relative paths
+                         are used directly, without being prepended with "../*"
+        allow_local:     used on the DTR screen where we want to ensure that only
+                         full paths are used when jumping to the DOC screen.
+        """
         if isinstance(node, Document):
             return (
                 f"{node.meta.get_root_path_prefix()}"
@@ -89,7 +96,8 @@ class LinkRenderer:
         assert isinstance(document_type, DocumentType), document_type
         local_link = self.render_local_anchor(node)
         if (
-            context_document
+            allow_local
+            and context_document is not None
             and node.document == context_document
             and not force_full_path
         ):

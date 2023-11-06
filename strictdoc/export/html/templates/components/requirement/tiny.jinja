@@ -6,7 +6,7 @@
 {%- if project_config.is_running_on_server %}
   <sdoc-node-controls data-direction="row">
     <a
-      href="{{ document.meta.get_root_path_prefix()}}/{{ document.meta.get_html_doc_link() }}#{{ link_renderer.render_local_anchor(sdoc_entity) }}"
+      href="{{ link_renderer.render_node_link(requirement, document, link_document_type, allow_local=False) }}"
       class="action_button"
       title="Find it in the document view"
       data-testid="requirement-find-in-document"

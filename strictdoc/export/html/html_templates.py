@@ -143,11 +143,11 @@ class CompiledHTMLTemplates(HTMLTemplates):
         jinja_environment.globals.update(isinstance=isinstance)
         with measure_performance("Compile Jinja templates"):
 
-            def filter_function_(name) -> bool:
+            def filter_function_(name: str) -> bool:
                 # On macOS, the .DS_Store files make Jinja templates compiler
                 # to crash.
                 # https://github.com/strictdoc-project/strictdoc/issues/1266
-                if name == ".DS_Store":
+                if name.endswith(".DS_Store"):
                     return False
                 return True
 

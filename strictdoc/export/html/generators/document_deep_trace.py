@@ -35,6 +35,7 @@ class DocumentDeepTraceHTMLGenerator:
             renderer=markup_renderer,
             link_renderer=link_renderer,
             document_type=DocumentType.deeptrace(),
+            link_document_type=DocumentType.document(),
             standalone=False,
             document_iterator=document_iterator,
             strictdoc_version=__version__,

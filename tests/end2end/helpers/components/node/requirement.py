@@ -204,3 +204,18 @@ class Requirement(Node):  # pylint: disable=invalid-name
         modal.assert_modal()
         modal.assert_in_modal("//sdoc-requirement")
         return modal
+
+    def do_go_to_this_requirement_in_document_view(self):
+        self.test_case.hover_and_click(
+            hover_selector=f"{self.node_xpath}",
+            click_selector=(
+                f"{self.node_xpath}"
+                "//*[@data-testid='requirement-find-in-document']"
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+        from tests.end2end.helpers.screens.document.screen_document import (
+            Screen_Document,
+        )
+        return Screen_Document(self.test_case)

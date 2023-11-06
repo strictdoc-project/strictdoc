@@ -1,0 +1,28 @@
+[DOCUMENT]
+TITLE: Document title
+OPTIONS:
+  REQUIREMENT_STYLE: Table
+
+[FREETEXT]
+Hello world!
+[/FREETEXT]
+
+[SECTION]
+UID: SEC_UID
+TITLE: Section title
+
+[FREETEXT]
+Section text
+[/FREETEXT]
+
+[REQUIREMENT]
+UID: REC_UID
+TITLE: Requirement title
+STATEMENT: >>>
+Requirement statement.
+<<<
+RATIONALE: >>>
+Requirement rationale.
+<<<
+
+[/SECTION]

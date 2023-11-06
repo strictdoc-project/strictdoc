@@ -218,4 +218,5 @@ class Requirement(Node):  # pylint: disable=invalid-name
         from tests.end2end.helpers.screens.document.screen_document import (
             Screen_Document,
         )
+
         return Screen_Document(self.test_case)

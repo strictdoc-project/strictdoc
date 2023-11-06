@@ -42,7 +42,9 @@ class Test(E2ECase):
             # therefore its number is 1.1:
             requirement_anchor = "1.1-REC_UID"
 
-            screen_document_ = requirement.do_go_to_this_requirement_in_document_view()
+            screen_document_ = (
+                requirement.do_go_to_this_requirement_in_document_view()
+            )
             screen_document_.assert_on_screen_document()
             screen_document_.assert_target_by_anchor(requirement_anchor)
 

@@ -10,6 +10,10 @@ from pygments.lexers.python import PythonLexer
 from pygments.lexers.templates import HtmlDjangoLexer
 
 from strictdoc import __version__
+from strictdoc.backend.sdoc_source_code.models.range_marker import (
+    LineMarker,
+    RangeMarker,
+)
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
 )
@@ -172,7 +176,14 @@ class SourceFileViewHTMLGenerator:
             before_line = source_line[
                 : pragma.reqs_objs[0].ng_source_column - 1
             ].rstrip("/")
-            closing_bracket_index = source_line.index("]")
+            closing_bracket_index = (
+                source_line.index("]")
+                if isinstance(pragma, RangeMarker)
+                else source_line.index(")")
+                if isinstance(pragma, LineMarker)
+                else None
+            )
+            assert closing_bracket_index is not None
             after_line = source_line[closing_bracket_index:].rstrip()
 
             before_line = html.escape(before_line)

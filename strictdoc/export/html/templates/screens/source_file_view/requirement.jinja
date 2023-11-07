@@ -39,7 +39,11 @@
             href="{{ link_renderer.render_requirement_in_source_file_range_link(requirement, link, source_file, range) }}"
             title="lines {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }} in file {{ link.get_posix_path() }}"
           >
+            {% if range.is_range_marker() %}
             <b>[ {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }} ]</b> {{ link.get_posix_path() }}
+            {% elif range.is_line_marker() %}
+            <b>[ {{ range.ng_range_line_begin }} ]</b> {{ link.get_posix_path() }}
+            {% endif %}
           </a>
           </div>
         </li>

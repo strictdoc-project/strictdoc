@@ -7,7 +7,10 @@ from textx import get_location, metamodel_from_str
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc_source_code.grammar import SOURCE_FILE_GRAMMAR
-from strictdoc.backend.sdoc_source_code.models.range_pragma import RangePragma
+from strictdoc.backend.sdoc_source_code.models.range_marker import (
+    LineMarker,
+    RangeMarker,
+)
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
 )
@@ -28,7 +31,7 @@ class ParseContext:
     def __init__(self, lines_total):
         self.lines_total = lines_total
         self.pragmas = []
-        self.pragma_stack: List[RangePragma] = []
+        self.pragma_stack: List[RangeMarker] = []
         self.map_lines_to_pragmas = {}
         self.map_reqs_to_pragmas = {}
 
@@ -55,7 +58,7 @@ def source_file_traceability_info_processor(
     # Finding how many lines are covered by the requirements in the file.
     # Quick and dirty: https://stackoverflow.com/a/15273749/598057
     merged_ranges = []
-    pragma: RangePragma
+    pragma: RangeMarker
     for pragma in source_file_traceability_info.pragmas:
         if pragma.ng_is_nodoc:
             continue
@@ -120,7 +123,7 @@ Content...
     )
 
 
-def create_unmatch_range_error(unmatched_ranges: List[RangePragma]):
+def create_unmatch_range_error(unmatched_ranges: List[RangeMarker]):
     assert isinstance(unmatched_ranges, list)
     assert len(unmatched_ranges) > 0
     range_locations: List = []
@@ -152,7 +155,7 @@ def create_unmatch_range_error(unmatched_ranges: List[RangePragma]):
 
 
 def range_start_pragma_processor(
-    pragma: RangePragma, parse_context: ParseContext
+    pragma: RangeMarker, parse_context: ParseContext
 ):
     location = get_location(pragma)
     line = location["line"]
@@ -162,7 +165,7 @@ def range_start_pragma_processor(
             parse_context.pragma_stack.append(pragma)
         elif pragma.is_end():
             try:
-                current_top_pragma: RangePragma = (
+                current_top_pragma: RangeMarker = (
                     parse_context.pragma_stack.pop()
                 )
                 if (
@@ -197,7 +200,7 @@ def range_start_pragma_processor(
 
     elif pragma.is_end():
         try:
-            current_top_pragma: RangePragma = parse_context.pragma_stack.pop()
+            current_top_pragma: RangeMarker = parse_context.pragma_stack.pop()
             if pragma.reqs != current_top_pragma.reqs:
                 raise create_begin_end_range_reqs_mismatch_error(
                     location, current_top_pragma.reqs, pragma.reqs
@@ -213,8 +216,36 @@ def range_start_pragma_processor(
         raise NotImplementedError
 
 
+def line_marker_processor(line_marker: LineMarker, parse_context: ParseContext):
+    location = get_location(line_marker)
+    line = location["line"]
+
+    if (
+        len(parse_context.pragma_stack) > 0
+        and parse_context.pragma_stack[-1].ng_is_nodoc
+    ):
+        # This pragma is within a "nosdoc" block, so we ignore it.
+        return
+
+    parse_context.pragmas.append(line_marker)
+    line_marker.ng_source_line_begin = line
+    line_marker.ng_range_line_begin = line
+    line_marker.ng_range_line_end = line
+
+    parse_context.map_lines_to_pragmas[line] = line_marker
+
+    for req in line_marker.reqs:
+        pragmas = parse_context.map_reqs_to_pragmas.setdefault(req, [])
+        pragmas.append(line_marker)
+
+
 class SourceFileTraceabilityReader:
-    SOURCE_FILE_MODELS = [Req, SourceFileTraceabilityInfo, RangePragma]
+    SOURCE_FILE_MODELS = [
+        Req,
+        LineMarker,
+        SourceFileTraceabilityInfo,
+        RangeMarker,
+    ]
 
     def __init__(self):
         self.meta_model = metamodel_from_str(
@@ -240,11 +271,15 @@ class SourceFileTraceabilityReader:
         parse_range_start_pragma_processor = partial(
             range_start_pragma_processor, parse_context=parse_context
         )
+        parse_line_marker_processor = partial(
+            line_marker_processor, parse_context=parse_context
+        )
 
         obj_processors = {
+            "LineMarker": parse_line_marker_processor,
+            "RangeMarker": parse_range_start_pragma_processor,
             "Req": parse_req_processor,
             "SourceFileTraceabilityInfo": parse_source_traceability_processor,
-            "RangePragma": parse_range_start_pragma_processor,
         }
 
         self.meta_model.register_obj_processors(obj_processors)

@@ -4,7 +4,7 @@ import pytest
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc_source_code.reader import (
-    RangePragma,
+    RangeMarker,
     SourceFileTraceabilityReader,
 )
 
@@ -287,7 +287,7 @@ CONTENT 3
 
     document = reader.read(source_input)
 
-    pragmas: List[RangePragma] = document.pragmas
+    pragmas: List[RangeMarker] = document.pragmas
     assert pragmas[0].reqs == ["REQ-001"]
     assert pragmas[0].begin_or_end == "["
     assert pragmas[0].ng_source_line_begin == 4
@@ -333,6 +333,38 @@ CONTENT 3
     assert document.ng_lines_total == 5
     assert document.ng_lines_covered == 5
     assert document.get_coverage() == 100
+
+
+def test_050_line_pragma():
+    source_input = """
+# @sdoc(REQ-001)
+CONTENT 1
+# @sdoc(REQ-002)
+CONTENT 2
+# @sdoc(REQ-003)
+CONTENT 3
+""".lstrip()
+
+    reader = SourceFileTraceabilityReader()
+
+    document = reader.read(source_input)
+    pragmas = document.pragmas
+    assert pragmas[0].reqs == ["REQ-001"]
+    assert pragmas[0].ng_source_line_begin == 1
+    assert pragmas[0].ng_range_line_begin == 1
+    assert pragmas[0].ng_range_line_end == 1
+    assert pragmas[1].reqs == ["REQ-002"]
+    assert pragmas[1].ng_source_line_begin == 3
+    assert pragmas[1].ng_range_line_begin == 3
+    assert pragmas[1].ng_range_line_end == 3
+    assert pragmas[2].reqs == ["REQ-003"]
+    assert pragmas[2].ng_source_line_begin == 5
+    assert pragmas[2].ng_range_line_begin == 5
+    assert pragmas[2].ng_range_line_end == 5
+
+    assert document.ng_lines_total == 6
+    assert document.ng_lines_covered == 3
+    assert document.get_coverage() == 50.0
 
 
 def test_validation_01_one_range_pragma_begin_req_not_equal_to_end_req():

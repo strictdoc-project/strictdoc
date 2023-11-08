@@ -2,7 +2,7 @@ from strictdoc.helpers.auto_described import auto_described
 
 
 @auto_described
-class RangePragma:  # pylint: disable=too-many-instance-attributes
+class RangeMarker:
     def __init__(self, parent, begin_or_end, reqs_objs):
         assert isinstance(reqs_objs, list)
         self.parent = parent
@@ -31,3 +31,38 @@ class RangePragma:  # pylint: disable=too-many-instance-attributes
 
     def is_end(self):
         return self.begin_or_end == "[/"
+
+    def is_range_marker(self):
+        return True
+
+    def is_line_marker(self):
+        return False
+
+
+@auto_described
+class LineMarker:
+    def __init__(self, parent, reqs_objs):
+        assert isinstance(reqs_objs, list)
+        self.parent = parent
+        self.reqs_objs = reqs_objs
+        self.reqs = list(map(lambda req: req.uid, reqs_objs))
+
+        # Line number of the pragma in the source code.
+        self.ng_source_line_begin = None
+
+        self.ng_range_line_begin = None
+        self.ng_range_line_end = None
+
+        self.ng_is_nodoc = "nosdoc" in self.reqs
+
+    def is_begin(self):
+        return True
+
+    def is_end(self):
+        return False
+
+    def is_range_marker(self):
+        return False
+
+    def is_line_marker(self):
+        return True

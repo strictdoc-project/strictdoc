@@ -1,7 +1,7 @@
 from typing import Dict, List, Optional, Tuple
 
 from strictdoc.backend.sdoc.models.reference import FileReference, Reference
-from strictdoc.backend.sdoc_source_code.models.range_pragma import RangePragma
+from strictdoc.backend.sdoc_source_code.models.range_marker import RangeMarker
 from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityInfo,
 )
@@ -40,7 +40,7 @@ class FileTraceabilityIndex:
             return []
 
         matching_links_with_opt_ranges: List[
-            Tuple[FileReference, Optional[List[RangePragma]]]
+            Tuple[FileReference, Optional[List[RangeMarker]]]
         ] = []
         file_links: List[FileReference] = self.map_reqs_uids_to_paths[
             requirement.reserved_uid

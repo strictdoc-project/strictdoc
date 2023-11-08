@@ -1,6 +1,6 @@
 from typing import List
 
-from strictdoc.backend.sdoc_source_code.models.range_pragma import RangePragma
+from strictdoc.backend.sdoc_source_code.models.range_marker import RangeMarker
 from strictdoc.helpers.auto_described import auto_described
 
 
@@ -14,7 +14,7 @@ class SourceFileTraceabilityInfo:
         self.ng_lines_total = 0
         self.ng_lines_covered = 0
         self._coverage = 0
-        self.pragmas: List[RangePragma] = []
+        self.pragmas: List[RangeMarker] = []
 
     def get_coverage(self):
         return self._coverage

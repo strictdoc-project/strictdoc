@@ -31,7 +31,7 @@ jobs:
 
     - name: Install Invoke and Tox
       run: |
-        pip install invoke tox
+        pip install invoke tox setuptools
 
     - name: Run Lint tasks
       run: |

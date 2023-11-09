@@ -3,8 +3,37 @@ import subprocess
 import sys
 import tempfile
 
-import pkg_resources
+from packaging.requirements import Requirement
+
+try:
+    # For Python 3.8 and later
+    import importlib.metadata as importlib_metadata
+except ImportError:
+    # For Python 3.7 and earlier
+    import importlib_metadata
+
 import toml
+
+
+class PackageNotFound(Exception):
+    pass
+
+
+class PackageVersionConflict(Exception):
+    pass
+
+
+# A simplified version inspired by:
+# https://github.com/HansBug/hbutils/blob/37879186c489bced2791309c43d131f1703b7bd4/hbutils/system/python/package.py#L171
+def check_if_package_installed(package_name: str):
+    requirement: Requirement = Requirement(package_name)
+    try:
+        version = importlib_metadata.distribution(requirement.name).version
+    except importlib_metadata.PackageNotFoundError:
+        raise PackageNotFound(requirement) from None
+    if not requirement.specifier.contains(version):
+        raise PackageVersionConflict(version)
+
 
 print(  # noqa: T201
     "pip_install_strictdoc_deps.py: "
@@ -15,30 +44,35 @@ print(  # noqa: T201
 
 pyproject_content = toml.load("pyproject.toml")
 
+
 # The development dependencies are ignored, because they are managed in tox.ini.
 dependencies = pyproject_content["project"]["dependencies"]
 
 needs_installation = False
-try:
-    # Quicker way of checking if an environment has all packages installed.
-    # It is faster than running pip install ... every time.
-    # https://stackoverflow.com/a/65606063/598057
-    pkg_resources.require(dependencies)
-except pkg_resources.DistributionNotFound as exception:
-    print(  # noqa: T201
-        f"pip_install_strictdoc_deps.py: {exception}", flush=True
-    )
-    needs_installation = True
-except pkg_resources.VersionConflict as exception:
-    print(  # noqa: T201
-        (
-            f"pip_install_strictdoc_deps.py: version conflict between "
-            f"StrictDoc's requirements and the already installed packages: "
-            f"{exception}"
-        ),
-        flush=True,
-    )
-    needs_installation = True
+
+for dependency in dependencies:
+    try:
+        check_if_package_installed(dependency)
+    except PackageNotFound:
+        print(  # noqa: T201
+            f"pip_install_strictdoc_deps.py: "
+            f"Package is not installed: '{dependency}'.",
+            flush=True,
+        )
+        needs_installation = True
+        break
+    except PackageVersionConflict as exception_:
+        print(  # noqa: T201
+            (
+                f"pip_install_strictdoc_deps.py: version conflict between "
+                f"StrictDoc's requirement '{dependency}' "
+                f"and the already installed package: "
+                f"{exception_.args[0]}."
+            ),
+            flush=True,
+        )
+        needs_installation = True
+        break
 
 if not needs_installation:
     print(  # noqa: T201
@@ -48,7 +82,7 @@ if not needs_installation:
     sys.exit(0)
 
 print(  # noqa: T201
-    ("pip_install_strictdoc_deps.py: will install packages."), flush=True
+    "pip_install_strictdoc_deps.py: will install packages.", flush=True
 )
 
 all_packages = "\n".join(dependencies) + "\n"

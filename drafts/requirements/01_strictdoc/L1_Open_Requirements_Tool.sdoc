@@ -91,6 +91,100 @@ TITLE: Target audience
 [/SECTION]
 
 [SECTION]
+UID: SECTION-RTS-Documentation-management
+TITLE: Documentation management
+
+[FREETEXT]
+TBD: Requirements and specifications (plain, non-nested vs deeply nested)
+
+The Requirements Tool shall support a variety of document types used by the industries. The variety comes from:
+
+Supporting flexible documentation structures, e.g., non-nested vs. deeply nested.
+Supporting custom fields used by different industries (the criticality levels in various industries, RAIT in aerospace, status/workflow fields, etc.)
+Supporting a rich set of visualization mechanisms.
+
+Examples of document types include:
+
+Requirements specification
+Design document / architecture description document
+Interface control document / API reference
+User manual
+Development plan, systems engineering plan, management plan
+Standard (e.g., ECSS or ISO 26262).
+
+Consistency TBD:
+
+- No (or less) run-away documentation
+- Reduce documentation hazards
+- Keep documents up-to-date
+[/FREETEXT]
+
+[REQUIREMENT]
+UID: SDOC-SSS-3
+STATUS: Active
+TITLE: Documents (CRUD)
+STATEMENT: >>>
+The Requirements Tool shall provide the CRUD operations for document management:
+
+- Create document
+- Read document
+- Update document
+- Delete document.
+<<<
+RATIONALE: >>>
+The CRUD operations are essential operations of document management. They are at the core of a documentation management tool.
+<<<
+
+[REQUIREMENT]
+UID: SDOC-SSS-51
+STATUS: Active
+TITLE: Documents with nested sections/chapters structure
+STATEMENT: >>>
+The Requirements Tool shall allow management of documents with nested sections/chapters structure.
+<<<
+
+[REQUIREMENT]
+UID: SDOC-SSS-52
+TITLE: Assembling documents from fragments
+RELATIONS:
+- TYPE: Parent
+  VALUE: ZEP-1
+
+[REQUIREMENT]
+UID: SDOC-SSS-53
+STATUS: Active
+TITLE: Document meta information (UID, version, authors, signatures, etc)
+STATEMENT: >>>
+The Requirements Tool shall support management of document meta information.
+<<<
+
+[REQUIREMENT]
+UID: SDOC-SSS-75
+STATUS: Active
+TITLE: Document versioning
+STATEMENT: >>>
+The Requirements Tool shall provide capabilities for document versioning.
+<<<
+
+[REQUIREMENT]
+UID: SDOC-SSS-63
+TITLE: Text formatting capabilities
+STATEMENT: >>>
+The Requirements Tool shall provide "rich text" formatting capabilities which includes but not limited to:
+
+- Headings
+- Lists
+- Tables
+- UML diagrams
+- etc.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: ZEP-9
+
+[/SECTION]
+
+[SECTION]
 UID: SECTION-RTS-Requirements-management
 TITLE: Requirements management
 
@@ -250,100 +344,6 @@ TITLE: Requirement syntax validation (e.g. EARS)
 STATEMENT: >>>
 The Requirements Tool shall provide capabilities for validating requirements according to the EARS syntax.
 <<<
-
-[/SECTION]
-
-[SECTION]
-UID: SECTION-RTS-Documentation-management
-TITLE: Documentation management
-
-[FREETEXT]
-TBD: Requirements and specifications (plain, non-nested vs deeply nested)
-
-The Requirements Tool shall support a variety of document types used by the industries. The variety comes from:
-
-Supporting flexible documentation structures, e.g., non-nested vs. deeply nested.
-Supporting custom fields used by different industries (the criticality levels in various industries, RAIT in aerospace, status/workflow fields, etc.)
-Supporting a rich set of visualization mechanisms.
-
-Examples of document types include:
-
-Requirements specification
-Design document / architecture description document
-Interface control document / API reference
-User manual
-Development plan, systems engineering plan, management plan
-Standard (e.g., ECSS or ISO 26262).
-
-Consistency TBD:
-
-- No (or less) run-away documentation
-- Reduce documentation hazards
-- Keep documents up-to-date
-[/FREETEXT]
-
-[REQUIREMENT]
-UID: SDOC-SSS-3
-STATUS: Active
-TITLE: Documents (CRUD)
-STATEMENT: >>>
-The Requirements Tool shall provide the CRUD operations for document management:
-
-- Create document
-- Read document
-- Update document
-- Delete document.
-<<<
-RATIONALE: >>>
-The CRUD operations are essential operations of document management. They are at the core of a documentation management tool.
-<<<
-
-[REQUIREMENT]
-UID: SDOC-SSS-51
-STATUS: Active
-TITLE: Documents with nested sections/chapters structure
-STATEMENT: >>>
-The Requirements Tool shall allow management of documents with nested sections/chapters structure.
-<<<
-
-[REQUIREMENT]
-UID: SDOC-SSS-52
-TITLE: Assembling documents from fragments
-RELATIONS:
-- TYPE: Parent
-  VALUE: ZEP-1
-
-[REQUIREMENT]
-UID: SDOC-SSS-53
-STATUS: Active
-TITLE: Document meta information (UID, version, authors, signatures, etc)
-STATEMENT: >>>
-The Requirements Tool shall support management of document meta information.
-<<<
-
-[REQUIREMENT]
-UID: SDOC-SSS-75
-STATUS: Active
-TITLE: Document versioning
-STATEMENT: >>>
-The Requirements Tool shall provide capabilities for document versioning.
-<<<
-
-[REQUIREMENT]
-UID: SDOC-SSS-63
-TITLE: Text formatting capabilities
-STATEMENT: >>>
-The Requirements Tool shall provide "rich text" formatting capabilities which includes but not limited to:
-
-- Headings
-- Lists
-- Tables
-- UML diagrams
-- etc.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: ZEP-9
 
 [/SECTION]
 

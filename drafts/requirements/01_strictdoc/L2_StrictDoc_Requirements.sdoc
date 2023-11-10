@@ -40,6 +40,23 @@ RELATIONS:
   VALUE: SDOC-SSS-64
 
 [REQUIREMENT]
+UID: SDOC-SRS-110
+TITLE: Document metadata
+STATEMENT: >>>
+StrictDoc's data model shall support a Document metadata model including at least:
+
+- UID
+- Document version
+- Document classification
+- Document authors.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-53
+- TYPE: Parent
+  VALUE: SDOC-SSS-75
+
+[REQUIREMENT]
 UID: SDOC-SRS-99
 TITLE: Section model
 STATEMENT: >>>
@@ -53,14 +70,41 @@ RELATIONS:
   VALUE: SDOC-SSS-51
 
 [REQUIREMENT]
+UID: SDOC-SRS-109
+STATUS: Active
+TITLE: Fragment model
+STATEMENT: >>>
+StrictDoc's data model shall support a "Fragment" that is capable of containing:
+
+- Sections
+- Requirements
+- Texts.
+<<<
+RATIONALE: >>>
+Fragments allow assembling documents from multiple fragments.
+<<<
+COMMENT: >>>
+The corresponding UI capability for Fragments CRUD is TBD.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-52
+
+[REQUIREMENT]
 UID: SDOC-SRS-31
+STATUS: Active
 TITLE: Requirement relations
 STATEMENT: >>>
 The StrictDoc data model shall support connecting requirements using Parent and Child relations.
 <<<
+RATIONALE: >>>
+Support of both Parent and Child relations allows to build typical requirements relations such as child-to-parent and less common relations when one document can have parent links to a parent document and child links to a child document (e.g., the so-called "compliance" or "tailoring matrix" documents may use this structure).
+<<<
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-7
+- TYPE: Parent
+  VALUE: SDOC-SSS-48
 
 [REQUIREMENT]
 UID: SDOC-SRS-101
@@ -74,6 +118,17 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-8
 
+[REQUIREMENT]
+UID: SDOC-SRS-116
+STATUS: Backlog
+TITLE: Requirement validation according to EARS syntax
+STATEMENT: >>>
+The SDoc model shall provide validation of requirements according to the EARS syntax.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-57
+
 [/SECTION]
 
 [SECTION]
@@ -84,7 +139,7 @@ UID: SDOC-SRS-20
 STATUS: Active
 TITLE: SDoc markup language
 STATEMENT: >>>
-StrictDoc shall implement its own markup language called S-Doc (strict-doc).
+StrictDoc shall implement its own text markup language called S-Doc (strict-doc).
 <<<
 RATIONALE: >>>
 The most commonly used Markdown format lacks the ability to store requirements metadata. While the RST syntax does allow for customization with directives to implement metadata extensions, its visual appearance contradicts other requirements of StrictDoc, such as the type-safety of the grammar and visual readability. Therefore, a markup language tailored specifically to the needs of the requirements tool provides direct control over the capabilities implemented in both the markup and the user interface.
@@ -112,6 +167,8 @@ A "Document" corresponds to a "Document" of the SDoc data model.
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-64
+- TYPE: Parent
+  VALUE: DO178-1
 
 [REQUIREMENT]
 UID: SDOC-SRS-19
@@ -123,6 +180,10 @@ StrictDoc's markup language shall be based on a well-defined grammar.
 RELATIONS:
 - TYPE: Parent
   VALUE: DO178-2
+- TYPE: Parent
+  VALUE: SDOC-SSS-55
+- TYPE: Parent
+  VALUE: SDOC-SSS-54
 
 [REQUIREMENT]
 UID: SDOC-SRS-93
@@ -185,11 +246,29 @@ RELATIONS:
 
 [REQUIREMENT]
 UID: SDOC-SRS-23
+STATUS: Active
 TITLE: No indentation
+STATEMENT: >>>
+SDoc text markup blocks shall all start from column 1, i.e., the nesting of the blocks is not allowed.
+<<<
+RATIONALE: >>>
+Nesting large text blocks of free text and requirements compromises readability.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-55
 
 [REQUIREMENT]
 UID: SDOC-SRS-25
 TITLE: Type-safe fields
+STATEMENT: >>>
+SDoc markup shall provide "type safety" for all fields.
+
+NOTE: "Type safety" means that each field has a type and a corresponding set of validation checks.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-55
 
 [/SECTION]
 
@@ -243,6 +322,27 @@ Example: If a child requirement REQ-002 has a parent requirement REQ-001, the gr
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-71
+- TYPE: Parent
+  VALUE: SDOC-SSS-48
+
+[/SECTION]
+
+[SECTION]
+TITLE: Documentation tree
+
+[REQUIREMENT]
+UID: SDOC-SRS-115
+STATUS: Active
+TITLE: Finding documents recursively
+STATEMENT: >>>
+StrictDoc shall discover SDoc documents recursively based on a specified input path.
+<<<
+RATIONALE: >>>
+Recursive search allows working with documents located in multiple folders, potentially spanning over several Git repositories.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-34
 
 [/SECTION]
 
@@ -306,6 +406,28 @@ TITLE: Screen: Project tree
 UID: SDOC-SRS-53
 TITLE: View project tree
 
+[REQUIREMENT]
+UID: SDOC-SRS-107
+STATUS: Active
+TITLE: Create document
+STATEMENT: >>>
+StrictDoc's Project Tree screen shall allow creating documents.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-3
+
+[REQUIREMENT]
+UID: SDOC-SRS-108
+STATUS: Active
+TITLE: Delete document
+STATEMENT: >>>
+StrictDoc's Project Tree screen shall allow deleting documents.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-3
+
 [/SECTION]
 
 [SECTION]
@@ -315,9 +437,20 @@ TITLE: Screen: Document (DOC)
 [REQUIREMENT]
 UID: SDOC-SRS-54
 STATUS: Active
-TITLE: View document
+TITLE: Read document
 STATEMENT: >>>
 StrictDoc's Document screen shall allow reading documents.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-3
+
+[REQUIREMENT]
+UID: SDOC-SRS-106
+STATUS: Active
+TITLE: Update document
+STATEMENT: >>>
+StrictDoc's Document screen shall allow updating documents.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -488,6 +621,80 @@ RELATIONS:
 
 [/SECTION]
 
+[SECTION]
+TITLE: Screen: Traceability matrix
+
+[REQUIREMENT]
+UID: SDOC-SRS-112
+STATUS: Backlog
+TITLE: Traceability matrix
+STATEMENT: >>>
+StrictDoc shall provide a traceability matrix screen.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-28
+
+[/SECTION]
+
+[SECTION]
+TITLE: Screen: Project tree diff
+
+[REQUIREMENT]
+UID: SDOC-SRS-111
+STATUS: Backlog
+TITLE: Project tree diff
+STATEMENT: >>>
+StrictDoc shall provide a project tree diff screen.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-75
+- TYPE: Parent
+  VALUE: SDOC-SSS-74
+
+[/SECTION]
+
+[SECTION]
+TITLE: Screen: Impact analysis
+
+[REQUIREMENT]
+UID: SDOC-SRS-117
+STATUS: Backlog
+TITLE: Impact analysis
+STATEMENT: >>>
+StrictDoc shall provide the Impact Analysis screen.
+
+NOTE: The Impact Analysis screen helps to get information about the impact that a given change to a requirement has on the other requirements in the project tree.
+<<<
+RATIONALE: >>>
+The impact analysis is one of the core functions of a requirements management tool. Analyzing the impact that a requirement has on other requirements and an overall project's technical definition helps to perform effective change management.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-74
+
+[/SECTION]
+
+[SECTION]
+TITLE: Screen: Traceability navigator
+
+[REQUIREMENT]
+UID: SDOC-SRS-113
+STATUS: Backlog
+TITLE: Traceability navigator
+STATEMENT: >>>
+StrictDoc shall provide a traceability navigator screen.
+<<<
+RATIONALE: >>>
+Provide an interactive 1000-ft view of a requirements project.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-56
+
+[/SECTION]
+
 [/SECTION]
 
 [SECTION]
@@ -592,6 +799,12 @@ TITLE: Excel
 [REQUIREMENT]
 UID: SDOC-SRS-74
 TITLE: Export to Excel
+STATEMENT: >>>
+StrictDoc shall allow exporting SDoc content to Excel.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-60
 
 [REQUIREMENT]
 UID: SDOC-SRS-75
@@ -667,6 +880,25 @@ TITLE: Auto-generate section UIDs
 [/SECTION]
 
 [/SECTION]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Web API
+
+[REQUIREMENT]
+UID: SDOC-SRS-114
+STATUS: Backlog
+TITLE: Web API
+STATEMENT: >>>
+StrictDoc shall provide a web API.
+<<<
+RATIONALE: >>>
+A web API allows integration with tools and workflows external to StrictDoc itself.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-68
 
 [/SECTION]
 
@@ -882,23 +1114,6 @@ RELATIONS:
 
 [/SECTION]
 
-[SECTION]
-UID: SECTION-SRS-Code-hosting
-TITLE: Code hosting
-
-[REQUIREMENT]
-UID: SDOC-SRS-12
-STATUS: Active
-TITLE: GitHub
-STATEMENT: >>>
-StrictDoc's source code shall be hosted on GitHub.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-38
-
-[/SECTION]
-
 [/SECTION]
 
 [SECTION]
@@ -1054,5 +1269,38 @@ UID: SDOC-SRS-47
 TITLE: At least one integration or end-to-end test.
 
 [/SECTION]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Code hosting and distribution
+
+[SECTION]
+UID: SECTION-SRS-Code-hosting
+TITLE: Code hosting
+
+[REQUIREMENT]
+UID: SDOC-SRS-12
+STATUS: Active
+TITLE: GitHub
+STATEMENT: >>>
+StrictDoc's source code shall be hosted on GitHub.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-38
+
+[/SECTION]
+
+[REQUIREMENT]
+UID: SDOC-SRS-118
+STATUS: Active
+TITLE: StrictDoc license
+STATEMENT: >>>
+All StrictDoc software shall be licensed under the Apache 2 license.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-40
 
 [/SECTION]

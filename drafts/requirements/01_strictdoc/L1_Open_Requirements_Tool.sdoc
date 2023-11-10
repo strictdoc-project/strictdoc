@@ -202,10 +202,10 @@ TITLE: Requirements CRUD
 STATEMENT: >>>
 The Requirements Tool shall enable the main requirements management operations:
 
-Create a requirement
-Read / view / browse a requirement
-Update / edit a requirement
-Delete a requirement.
+- Create a requirement
+- Read / view / browse a requirement
+- Update / edit a requirement
+- Delete a requirement.
 <<<
 RATIONALE: >>>
 The CRUD operations are at the core of the requirements management.
@@ -665,9 +665,9 @@ following requirements apply.
 [REQUIREMENT]
 UID: SDOC-SSS-55
 STATUS: Active
-TITLE: Strict type-safe grammar
+TITLE: Strict text language syntax
 STATEMENT: >>>
-The Requirements Tool shall provide type safety for its text language.
+The Requirements Tool shall provide a strict syntax for its text language.
 <<<
 
 [REQUIREMENT]
@@ -850,7 +850,16 @@ The Requirement Tool's source code shall be based on open source software compon
 
 [REQUIREMENT]
 UID: SDOC-SSS-40
+STATUS: Active
 TITLE: Free
+STATEMENT: >>>
+The Requirements Tool shall be licensed under a permissive license, ensuring no/minimal constraints on the utilization and dissemination of the project.
+
+NOTE: Example of a permissive license: MIT, Apache 2.
+<<<
+RATIONALE: >>>
+This requirement captures the essence of an open and free requirements management tool.
+<<<
 
 [/SECTION]
 

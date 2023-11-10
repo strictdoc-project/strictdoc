@@ -58,8 +58,15 @@ class FileEntry:
 
 
 class FileEntryFormat:
+    BIBTEX = "BibTex"
     SOURCECODE = "Sourcecode"
     PYTHON = "Python"
+
+
+@auto_described
+class BibFileEntry(FileEntry):
+    def __init__(self, parent, file_path: str):
+        super().__init__(parent, FileEntryFormat.BIBTEX, file_path)
 
 
 class BibEntryFormat:

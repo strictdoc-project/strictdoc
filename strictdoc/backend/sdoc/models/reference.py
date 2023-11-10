@@ -62,8 +62,8 @@ class ChildReqReference(Reference):
 
 @auto_described
 class BibReference(Reference):
-    def __init__(self, parent, bib_entry: BibEntry):
+    def __init__(self, parent, bib_format: Optional[str], bib_value: str):
         super().__init__(ReferenceType.BIB_REF, parent)
-        self.bib_entry = bib_entry
+        self.bib_entry = BibEntry(self, bib_format, bib_value)
         # TODO Add bib_entry into Parent-Root Document.Bibliography
         self.mid = MID.create()

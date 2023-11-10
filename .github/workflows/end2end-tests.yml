@@ -35,9 +35,9 @@ jobs:
       run: |
         python -m pip install --upgrade pip
 
-    - name: Install Invoke and Tox
+    - name: Install minimal Python packages
       run: |
-        pip install invoke tox
+        pip install -r requirements.bootstrap.txt
 
     - name: Run end-to-end tasks
       run: |
@@ -63,9 +63,9 @@ jobs:
       run: |
         python -m pip install --upgrade pip
 
-    - name: Install Invoke and Tox
+    - name: Install minimal Python packages
       run: |
-        pip install invoke tox
+        pip install -r requirements.bootstrap.txt
 
     - name: Run end-to-end tasks
       run: |
@@ -94,9 +94,9 @@ jobs:
       run: |
         python -m pip install --upgrade pip
 
-    - name: Install core development tools
+    - name: Install minimal Python packages
       run: |
-        pip install invoke tox toml
+        pip install -r requirements.bootstrap.txt
 
     - name: "Windows specific: Install StrictDoc's dependencies"
       run: |

@@ -455,6 +455,7 @@ UID: SECTION-RTC-Usability-installation-and-usage
 TITLE: Usability, installation and usage
 
 [REQUIREMENT]
+UID: SDOC-SSS-79
 STATUS: Active
 TITLE: General usability
 STATEMENT: >>>
@@ -473,6 +474,7 @@ A tool that can be used by a large number of people simplifies its adoption and 
 <<<
 
 [REQUIREMENT]
+UID: SDOC-SSS-80
 STATUS: Active
 TITLE: Easy user experience
 STATEMENT: >>>
@@ -482,6 +484,7 @@ NOTE: Documentation and requirements management are composite activities that co
 <<<
 
 [REQUIREMENT]
+UID: SDOC-SSS-81
 STATUS: Active
 TITLE: Support projects with a large number of users
 STATEMENT: >>>
@@ -492,6 +495,7 @@ Many documentation and requirements projects involve large groups of people. The
 <<<
 
 [REQUIREMENT]
+UID: SDOC-SSS-82
 STATUS: Active
 TITLE: Individual use (home PC)
 STATEMENT: >>>
@@ -499,6 +503,7 @@ The Requirements Tool shall be usable on the normal personal computers, e.g., do
 <<<
 
 [REQUIREMENT]
+UID: SDOC-SSS-83
 STATUS: Active
 TITLE: Server-based deployments (IT-friendly setup)
 STATEMENT: >>>
@@ -510,6 +515,7 @@ larger in-house and cloud-base installations.
 <<<
 
 [REQUIREMENT]
+UID: SDOC-SSS-84
 STATUS: Active
 TITLE: Requirements database
 STATEMENT: >>>
@@ -525,6 +531,7 @@ A database allows:
 <<<
 
 [REQUIREMENT]
+UID: SDOC-SSS-85
 STATUS: Active
 TITLE: Programming access via API (Web)
 STATEMENT: >>>
@@ -535,6 +542,7 @@ Besides a direct access to the tool's source code, accessing an API deployed to 
 <<<
 
 [REQUIREMENT]
+UID: SDOC-SSS-86
 STATUS: Active
 TITLE: Programming access via API (SDK)
 STATEMENT: >>>
@@ -551,6 +559,7 @@ A SDK allows a software engineer to extend the Requirements Tool capabilities.
 <<<
 
 [REQUIREMENT]
+UID: SDOC-SSS-87
 STATUS: Active
 TITLE: Programmatic access to requirements data
 STATEMENT: >>>
@@ -661,6 +670,14 @@ TITLE: Text-based requirements language (optional)
 Note: Not all requirements tools must be text-based. But when they are, the
 following requirements apply.
 [/FREETEXT]
+
+[REQUIREMENT]
+UID: SDOC-SSS-88
+STATUS: Active
+TITLE: Text files for storing documentation and requirements
+STATEMENT: >>>
+The Requirements Tool shall allow storage of documentation and requirements content using text files.
+<<<
 
 [REQUIREMENT]
 UID: SDOC-SSS-55

@@ -89,6 +89,8 @@ The corresponding UI capability for Fragments CRUD is TBD.
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-52
+- TYPE: Parent
+  VALUE: DO178-4
 
 [REQUIREMENT]
 UID: SDOC-SRS-31
@@ -146,7 +148,22 @@ The most commonly used Markdown format lacks the ability to store requirements m
 <<<
 RELATIONS:
 - TYPE: Parent
+  VALUE: SDOC-SSS-88
+
+[REQUIREMENT]
+UID: SDOC-SRS-127
+STATUS: Active
+TITLE: SDoc and Git storage
+STATEMENT: >>>
+StrictDoc shall assume and implement capabilities for storage of SDoc files using Git version control system.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-87
+- TYPE: Parent
   VALUE: SDOC-SSS-33
+- TYPE: Parent
+  VALUE: SDOC-SSS-84
 
 [REQUIREMENT]
 UID: SDOC-SRS-104
@@ -184,6 +201,23 @@ RELATIONS:
   VALUE: SDOC-SSS-55
 - TYPE: Parent
   VALUE: SDOC-SSS-54
+
+[REQUIREMENT]
+UID: SDOC-SRS-122
+STATUS: Backlog
+TITLE: Project-level grammar
+STATEMENT: >>>
+StrictDoc shall support creation of a project-level grammar.
+<<<
+RATIONALE: >>>
+A single grammar defined for a project (same grammar for several documents) helps to standardize the structure of all documents in a documentation tree and reduces the effort needed to create identical grammars all the time.
+<<<
+COMMENT: >>>
+The implementation is easy model-wise but the user interface details need to be elaborated.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: DO178-9
 
 [REQUIREMENT]
 UID: SDOC-SRS-93
@@ -343,6 +377,8 @@ Recursive search allows working with documents located in multiple folders, pote
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-34
+- TYPE: Parent
+  VALUE: DO178-3
 
 [/SECTION]
 
@@ -375,15 +411,50 @@ StrictDoc shall provide a web interface.
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-31
+- TYPE: Parent
+  VALUE: DO178-6
+- TYPE: Parent
+  VALUE: SDOC-SSS-79
+- TYPE: Parent
+  VALUE: SDOC-SSS-80
 
 [REQUIREMENT]
 UID: SDOC-SRS-51
-STATUS: Progress
+STATUS: Active
 TITLE: Export to printable HTML pages (HTML2PDF)
+STATEMENT: >>>
+StrictDoc shall provide export to printable HTML pages.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: DO178-5
+
+[REQUIREMENT]
+UID: SDOC-SRS-121
+STATUS: Backlog
+TITLE: WYSIWYG editing
+STATEMENT: >>>
+StrictDoc shall provide WYSIWYG kind of editing for all multiline text input fields.
+<<<
+RATIONALE: >>>
+WYSIWYG improves the user experience, especially for non-programmer users.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: DO178-19
+- TYPE: Parent
+  VALUE: SDOC-SSS-80
 
 [REQUIREMENT]
 UID: SDOC-SRS-48
+STATUS: Active
 TITLE: Preserve generated file names
+STATEMENT: >>>
+For all export operations, StrictDoc shall maintain the original filenames of the documents when producing output files.
+<<<
+RATIONALE: >>>
+Name preservation helps to visually identify which input file an output file corresponds to.
+<<<
 
 [/SECTION]
 
@@ -524,6 +595,26 @@ StrictDoc's Document screen shall provide controls for automatic generation of r
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-6
+- TYPE: Parent
+  VALUE: SDOC-SSS-80
+
+[REQUIREMENT]
+UID: SDOC-SRS-120
+STATUS: Backlog
+TITLE: Auto-completion for requirements UIDs
+STATEMENT: >>>
+StrictDoc's Document screen shall provide controls for automatic completion of requirements UIDs.
+<<<
+COMMENT: >>>
+The automatic completion can be especially useful when a user has to fill in a parent relation UID.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-6
+- TYPE: Parent
+  VALUE: DO178-14
+- TYPE: Parent
+  VALUE: SDOC-SSS-80
 
 [REQUIREMENT]
 UID: SDOC-SRS-58
@@ -534,6 +625,12 @@ TITLE: Attach image to requirement
 UID: SDOC-SRS-59
 STATUS: Backlog
 TITLE: Buttons to copy text to buffer
+STATEMENT: >>>
+StrictDoc shall provide a "copy text to buffer" button for all requirement's text fields.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-80
 
 [REQUIREMENT]
 UID: SDOC-SRS-60
@@ -590,7 +687,14 @@ TITLE: Screen: Deep traceability (DTR)
 
 [REQUIREMENT]
 UID: SDOC-SRS-66
+STATUS: Active
 TITLE: View DTR screen
+STATEMENT: >>>
+StrictDoc shall provide a deep traceability screen.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: DO178-12
 
 [/SECTION]
 
@@ -618,6 +722,10 @@ TBD
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-49
+- TYPE: Parent
+  VALUE: DO178-12
+- TYPE: Parent
+  VALUE: SDOC-SSS-29
 
 [/SECTION]
 
@@ -634,6 +742,10 @@ StrictDoc shall provide a traceability matrix screen.
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-28
+- TYPE: Parent
+  VALUE: DO178-10
+- TYPE: Parent
+  VALUE: DO178-12
 
 [/SECTION]
 
@@ -652,6 +764,8 @@ RELATIONS:
   VALUE: SDOC-SSS-75
 - TYPE: Parent
   VALUE: SDOC-SSS-74
+- TYPE: Parent
+  VALUE: DO178-15
 
 [/SECTION]
 
@@ -673,6 +787,8 @@ The impact analysis is one of the core functions of a requirements management to
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-74
+- TYPE: Parent
+  VALUE: DO178-11
 
 [/SECTION]
 
@@ -711,6 +827,8 @@ StrictDoc shall support bi-directional linking requirements with source files.
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-72
+- TYPE: Parent
+  VALUE: ZEP-11
 
 [REQUIREMENT]
 UID: SDOC-SRS-34
@@ -724,6 +842,22 @@ RELATIONS:
   VALUE: SDOC-SSS-72
 
 [REQUIREMENT]
+UID: SDOC-SRS-124
+STATUS: Active
+TITLE: Single-line code marker
+STATEMENT: >>>
+StrictDoc's source file marker syntax shall support single-line markers.
+
+NOTE: A single-line marker points to a single line in a source file.
+<<<
+RATIONALE: >>>
+The advantage of a single-line marker compared to a range marker is that a single-line marker is not intrusive and does not clutter source code. Such a single-marker can be kept in a comment to a function (e.g., Doxygen), not in the function body.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: ZEP-12
+
+[REQUIREMENT]
 UID: SDOC-SRS-35
 STATUS: Active
 TITLE: Generate source coverage
@@ -735,6 +869,8 @@ NOTE: Source code information can be visualized using both web or CLI interfaces
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-72
+- TYPE: Parent
+  VALUE: DO178-13
 
 [REQUIREMENT]
 UID: SDOC-SRS-36
@@ -763,10 +899,39 @@ TITLE: RST
 [REQUIREMENT]
 UID: SDOC-SRS-70
 TITLE: Export to RST
+STATEMENT: >>>
+StrictDoc shall allow exporting SDoc content to the RST format.
+<<<
+RATIONALE: >>>
+Exporting SDoc content to RST enables:
+
+1) Generating RST to Sphinx HTML documentation.
+2) Generating RST to PDF using Sphinx/LaTeX.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: DO178-5
+- TYPE: Parent
+  VALUE: DO178-16
 
 [REQUIREMENT]
 UID: SDOC-SRS-71
+STATUS: Active
 TITLE: Docutils
+STATEMENT: >>>
+StrictDoc shall generate RST markup to HTML using Docutils.
+<<<
+RATIONALE: >>>
+Docutils is the most mature RST-to-HTML converter.
+<<<
+COMMENT: >>>
+TBD: Move this to design decisions.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: DO178-5
+- TYPE: Parent
+  VALUE: DO178-16
 
 [/SECTION]
 
@@ -794,7 +959,7 @@ TITLE: Standalone ReqIF layer
 
 [SECTION]
 UID: SECTION-SRS-Excel
-TITLE: Excel
+TITLE: Excel and CSV
 
 [REQUIREMENT]
 UID: SDOC-SRS-74
@@ -805,6 +970,17 @@ StrictDoc shall allow exporting SDoc content to Excel.
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-60
+
+[REQUIREMENT]
+UID: SDOC-SRS-129
+STATUS: Backlog
+TITLE: Export/import to CSV
+STATEMENT: >>>
+StrictDoc shall allow exporting/import SDoc content to/from CSV.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-59
 
 [REQUIREMENT]
 UID: SDOC-SRS-75
@@ -884,7 +1060,46 @@ TITLE: Auto-generate section UIDs
 [/SECTION]
 
 [SECTION]
-TITLE: Web API
+TITLE: Python API
+
+[REQUIREMENT]
+UID: SDOC-SRS-125
+STATUS: Active
+TITLE: StrictDoc Python API
+STATEMENT: >>>
+StrictDoc shall provide a Python API for its core functions:
+
+- Reading SDoc files
+- Creating traceability graph
+- Generating HTML exports
+- Converting SDoc to other formats.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-79
+- TYPE: Parent
+  VALUE: SDOC-SSS-86
+- TYPE: Parent
+  VALUE: SDOC-SSS-87
+
+[/SECTION]
+
+[SECTION]
+TITLE: Web server
+
+[REQUIREMENT]
+UID: SDOC-SRS-126
+STATUS: Backlog
+TITLE: Web server
+STATEMENT: >>>
+StrictDoc shall provide a web server.
+<<<
+RATIONALE: >>>
+A web server is a precondition for StrictDoc's web interface. A web server can be available to a single user on their local machine or it can be deployed to a network and be made accessible by several computers.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-83
 
 [REQUIREMENT]
 UID: SDOC-SRS-114
@@ -899,6 +1114,52 @@ A web API allows integration with tools and workflows external to StrictDoc itse
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-68
+- TYPE: Parent
+  VALUE: SDOC-SSS-79
+- TYPE: Parent
+  VALUE: SDOC-SSS-85
+
+[/SECTION]
+
+[SECTION]
+TITLE: Multi-user workflow
+
+[REQUIREMENT]
+UID: SDOC-SRS-123
+STATUS: Backlog
+TITLE: Multi-user editing of documents
+STATEMENT: >>>
+StrictDoc shall support concurrent use and editing of a single StrictDoc web server instance by multiple users.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: DO178-17
+- TYPE: Parent
+  VALUE: SDOC-SSS-81
+
+[REQUIREMENT]
+UID: SDOC-SRS-130
+STATUS: Backlog
+TITLE: User accounts
+STATEMENT: >>>
+StrictDoc shall support user accounts.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-65
+
+[REQUIREMENT]
+UID: SDOC-SRS-131
+STATUS: Backlog
+TITLE: User accounts
+STATEMENT: >>>
+StrictDoc shall support notifying a user (users) about updated requirements.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-66
+- TYPE: Parent
+  VALUE: SDOC-SSS-74
 
 [/SECTION]
 
@@ -933,6 +1194,16 @@ TITLE: Edit project options (Move to SSS)
 [REQUIREMENT]
 UID: SDOC-SRS-39
 TITLE: Feature toggles
+
+[REQUIREMENT]
+UID: SDOC-SRS-119
+TITLE: 'Host' parameter
+STATEMENT: >>>
+StrictDoc shall configuring a host/port on which the StrictDoc web server is run.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: DO178-8
 
 [/SECTION]
 
@@ -1039,6 +1310,19 @@ UID: SECTION-SRS-Requirements-engineering
 TITLE: Requirements engineering
 
 [REQUIREMENT]
+UID: SDOC-SRS-128
+STATUS: Active
+TITLE: Requirements-based development
+STATEMENT: >>>
+StrictDoc's development shall be requirements-based.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-78
+- TYPE: Parent
+  VALUE: SDOC-SSS-76
+
+[REQUIREMENT]
 UID: SDOC-SRS-91
 STATUS: Active
 TITLE: Self-hosted requirements
@@ -1048,6 +1332,8 @@ StrictDoc's requirements shall be written using StrictDoc.
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-50
+- TYPE: Parent
+  VALUE: SDOC-SSS-78
 
 [/SECTION]
 
@@ -1193,6 +1479,9 @@ COMMENT: >>>
 This requirement could be re-considered only if a significant technical pressure
 would require the use of microservices.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-82
 
 [REQUIREMENT]
 UID: SDOC-SRS-88
@@ -1207,6 +1496,9 @@ Containers are significant extra layer of complexity. They are hard to debug.
 COMMENT: >>>
 This constraint does not block a StrictDoc user from wrapping StrictDoc into their containers.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-82
 
 [/SECTION]
 
@@ -1244,7 +1536,14 @@ TITLE: Static analysis
 
 [REQUIREMENT]
 UID: SDOC-SRS-43
+STATUS: Active
 TITLE: Static type checking
+STATEMENT: >>>
+StrictDoc's development shall include a continuous static analysis of StrictDoc's codebase.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-78
 
 [/SECTION]
 
@@ -1254,19 +1553,63 @@ TITLE: Testing
 
 [REQUIREMENT]
 UID: SDOC-SRS-44
+STATUS: Active
 TITLE: Unit testing
+STATEMENT: >>>
+StrictDoc's development shall provide unit testing of its codebase.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-77
+- TYPE: Parent
+  VALUE: SDOC-SSS-78
 
 [REQUIREMENT]
 UID: SDOC-SRS-45
 TITLE: CLI interface black-box integration testing
+STATEMENT: >>>
+StrictDoc's development shall provide complete black-box integration testing of its command-line interface.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-77
+- TYPE: Parent
+  VALUE: SDOC-SSS-78
 
 [REQUIREMENT]
 UID: SDOC-SRS-46
+STATUS: Active
 TITLE: Web end-to-end testing
+STATEMENT: >>>
+StrictDoc's development shall provide complete end-to-end testing of the web interface.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-77
+- TYPE: Parent
+  VALUE: SDOC-SSS-78
 
 [REQUIREMENT]
 UID: SDOC-SRS-47
-TITLE: At least one integration or end-to-end test.
+STATUS: Active
+TITLE: At least one integration or end-to-end test
+STATEMENT: >>>
+Every update to the StrictDoc codebase shall be complemented with a corresponding provision of at least one test as follows:
+
+- For web interface: at least one end-to-end test.
+- For command-line interface: at least one black-box integration test.
+- For internal Python functions: at least one unit test.
+
+NOTE: This requirement implies that no modifications to StrictDoc's functionality can be merged unless accompanied by at least one test.
+<<<
+RATIONALE: >>>
+This requirement ensures that every new feature or a chance in the codebase is covered/stressed by at least one test, according to the change type.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-77
+- TYPE: Parent
+  VALUE: SDOC-SSS-78
 
 [/SECTION]
 
@@ -1289,6 +1632,8 @@ StrictDoc's source code shall be hosted on GitHub.
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-38
+- TYPE: Parent
+  VALUE: SDOC-SSS-82
 
 [/SECTION]
 

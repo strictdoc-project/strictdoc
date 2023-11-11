@@ -137,6 +137,17 @@ STATUS: Backlog
 TITLE: Fuzzy search (the whole documentation)
 
 [REQUIREMENT]
+UID: SDOC-BACKLOG-9
+STATUS: Backlog
+TITLE: Derived requirements
+STATEMENT: >>>
+StrictDoc shall provide first-class support for Derived requirements.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: DO178-18
+
+[REQUIREMENT]
 UID: SDOC-BACKLOG-4
 STATUS: Backlog
 TITLE: Support Markdown markup

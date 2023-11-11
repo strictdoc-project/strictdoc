@@ -1151,7 +1151,7 @@ RELATIONS:
 [REQUIREMENT]
 UID: SDOC-SRS-131
 STATUS: Backlog
-TITLE: User accounts
+TITLE: Update notifications
 STATEMENT: >>>
 StrictDoc shall support notifying a user (users) about updated requirements.
 <<<

@@ -84,33 +84,6 @@ The Requirements Tool shall provide integration with AI tools (e.g., ChatGPT).
 [/SECTION]
 
 [SECTION]
-UID: SECTION-SRS-Screen-Project-tree-document-diff
-TITLE: Screen: Project tree / document diff
-
-[REQUIREMENT]
-UID: SDOC-SRS-67
-STATUS: Backlog
-TITLE: View project tree DIFF
-
-[REQUIREMENT]
-UID: SDOC-SRS-68
-STATUS: Backlog
-TITLE: View document DIFF
-
-[/SECTION]
-
-[SECTION]
-UID: SECTION-SRS-Screen-Impact-analysis
-TITLE: Screen: Impact analysis
-
-[REQUIREMENT]
-UID: SDOC-SRS-69
-STATUS: Backlog
-TITLE: Requirement impact analysis
-
-[/SECTION]
-
-[SECTION]
 UID: SECTION-SRS-LaTeX-export
 TITLE: LaTeX export
 
@@ -151,11 +124,6 @@ RELATIONS:
 UID: SDOC-BACKLOG-4
 STATUS: Backlog
 TITLE: Support Markdown markup
-
-[REQUIREMENT]
-UID: SDOC-BACKLOG-5
-STATUS: Backlog
-TITLE: Support User accounts
 
 [REQUIREMENT]
 UID: SDOC-BACKLOG-6

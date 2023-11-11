@@ -147,17 +147,6 @@ N: GUI for editing is NTH but it shall scale well to thousands of requirements. 
 <<<
 
 [REQUIREMENT]
-UID: DO178-19
-STATUS: Active
-TITLE: WYSIWYG editing
-STATEMENT: >>>
-StrictDoc's GUI shall support a WYSIWYG test editing.
-<<<
-COMMENT: >>>
-Simplifies editing of formatted text.
-<<<
-
-[REQUIREMENT]
 UID: DO178-8
 STATUS: Active
 TITLE: Configuration: 'Host' parameter
@@ -184,17 +173,59 @@ S: StrictDoc is written using Python and supports the ReqIF format out of the bo
 <<<
 
 [REQUIREMENT]
-UID: DO178-12
-COMPLIANCE: C
+UID: DO178-13
 STATUS: Backlog
-TITLE: Uncovered requirement report
+TITLE: Source file coverage
 STATEMENT: >>>
-StrictDoc shall support generation of uncovered requirement report.
-
-Note: An uncovered requirement is one that has no children.
+StrictDoc shall support generation of source code coverage information.
 <<<
 COMMENT: >>>
-S: This is easy to implement but would be nice to have it specified in terms of how exactly it should look like. The requirements coverage screen was one experimental attempt to visualize and highlight the uncovered requirements but we didn't stabilize the feature in terms of the visual clarity.
+S: Source file coverage is StrictDoc's experimental feature. With a more detailed specification, we can turn it to a more advanced and clear presentation of the needed aspects.
+<<<
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-DR-Needs-discussion
+TITLE: Needs discussion
+
+[REQUIREMENT]
+UID: DO178-19
+STATUS: Active
+TITLE: WYSIWYG editing
+STATEMENT: >>>
+StrictDoc's GUI shall support a WYSIWYG test editing.
+<<<
+COMMENT: >>>
+Simplifies editing of formatted text.
+<<<
+
+[REQUIREMENT]
+UID: DO178-15
+STATUS: Backlog
+TITLE: Diff between document trees
+STATEMENT: >>>
+StrictDoc shall allow calculating Diff between two document trees.
+
+Note: The primary use case is calculating a diff between two Git revisions.
+<<<
+COMMENT: >>>
+N: Highlight a req diff with its previous version (Git).
+<<<
+
+[REQUIREMENT]
+UID: DO178-10
+COMPLIANCE: C
+STATUS: Backlog
+TITLE: Traceability matrices
+STATEMENT: >>>
+StrictDoc shall support generation of forward and backward traceability matrices.
+<<<
+COMMENT: >>>
+N: Trace matrix publishing (both ways : is covered by ... and covers ...) published in HTML/PDF.
+<<<
+COMMENT: >>>
+S: This feature, especially a very basic initial one, is very easy to implement, and it is already on the nearest roadmap, see `here <https://github.com/strictdoc-project/strictdoc/issues/964#issuecomment-1497900436>`_. We only need to agree on if we are on the same page about how the produced matrices look like.
 <<<
 
 [REQUIREMENT]
@@ -224,49 +255,18 @@ Then highlight uncovered requirement, and requirements impacted by parent change
 <<<
 
 [REQUIREMENT]
-UID: DO178-13
-STATUS: Backlog
-TITLE: Source file coverage
-STATEMENT: >>>
-StrictDoc shall support generation of source code coverage information.
-<<<
-COMMENT: >>>
-S: Source file coverage is StrictDoc's experimental feature. With a more detailed specification, we can turn it to a more advanced and clear presentation of the needed aspects.
-<<<
-
-[REQUIREMENT]
-UID: DO178-10
+UID: DO178-12
 COMPLIANCE: C
 STATUS: Backlog
-TITLE: Traceability matrices
+TITLE: Uncovered requirement report
 STATEMENT: >>>
-StrictDoc shall support generation of forward and backward traceability matrices.
+StrictDoc shall support generation of uncovered requirement report.
+
+Note: An uncovered requirement is one that has no children.
 <<<
 COMMENT: >>>
-N: Trace matrix publishing (both ways : is covered by ... and covers ...) published in HTML/PDF.
+S: This is easy to implement but would be nice to have it specified in terms of how exactly it should look like. The requirements coverage screen was one experimental attempt to visualize and highlight the uncovered requirements but we didn't stabilize the feature in terms of the visual clarity.
 <<<
-COMMENT: >>>
-S: This feature, especially a very basic initial one, is very easy to implement, and it is already on the nearest roadmap, see `here <https://github.com/strictdoc-project/strictdoc/issues/964#issuecomment-1497900436>`_. We only need to agree on if we are on the same page about how the produced matrices look like.
-<<<
-
-[REQUIREMENT]
-UID: DO178-15
-STATUS: Backlog
-TITLE: Diff between document trees
-STATEMENT: >>>
-StrictDoc shall allow calculating Diff between two document trees.
-
-Note: The primary use case is calculating a diff between two Git revisions.
-<<<
-COMMENT: >>>
-N: Highlight a req diff with its previous version (Git).
-<<<
-
-[/SECTION]
-
-[SECTION]
-UID: SECTION-DR-Needs-discussion
-TITLE: Needs discussion
 
 [REQUIREMENT]
 UID: DO178-9

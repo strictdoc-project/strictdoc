@@ -486,6 +486,7 @@ sdoc-anchor[visible]:hover .anchor_back_links_number {
 
 /* should be like .nav .nav_button:hover */
 [data-viewtype="document-tree"] [data-link="index"],
+[data-viewtype="search"] [data-link="search"],
 [data-viewtype="requirements-coverage"] [data-link="requirements_coverage"],
 [data-viewtype="coverage-tree"] [data-link="source_coverage"] {
   color: var(--color-bg-contrast);

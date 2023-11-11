@@ -1,3 +1,4 @@
+import html
 from typing import Optional
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
@@ -26,6 +27,7 @@ class LinkRenderer:
         self.req_link_cache = {}
 
     def render_url(self, url):
+        url = html.escape(url)
         if len(self.root_path) == 0:
             return url
         return self.root_path + "/" + url

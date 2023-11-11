@@ -208,6 +208,10 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes, too-ma
     def get_title(self):
         return self.reserved_title
 
+    @property
+    def is_root(self) -> bool:
+        return self.document.config.root is True
+
     # Reserved fields
 
     @property

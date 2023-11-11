@@ -194,7 +194,7 @@ UID: DO178-19
 STATUS: Active
 TITLE: WYSIWYG editing
 STATEMENT: >>>
-StrictDoc's GUI shall support a WYSIWYG test editing.
+StrictDoc's GUI shall support a WYSIWYG text editing.
 <<<
 COMMENT: >>>
 Simplifies editing of formatted text.
@@ -231,7 +231,7 @@ S: This feature, especially a very basic initial one, is very easy to implement,
 [REQUIREMENT]
 UID: DO178-11
 COMPLIANCE: C
-STATUS: Backlog
+STATUS: Active
 TITLE: Impact analysis
 STATEMENT: >>>
 StrictDoc shall support generation of Impact Analysis information.

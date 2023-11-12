@@ -114,9 +114,10 @@ class QueryObject:
                     return True
             return False
         if isinstance(expression, InExpression):
-            return self._evaluate_value(
-                node, expression.lhs_expr
-            ) in self._evaluate_value(node, expression.rhs_expr)
+            rhs_value = self._evaluate_value(node, expression.rhs_expr)
+            if rhs_value is None:
+                return False
+            return self._evaluate_value(node, expression.lhs_expr) in rhs_value
         assert 0, expression
 
     def _evaluate_equal(self, node, expression: EqualExpression) -> bool:

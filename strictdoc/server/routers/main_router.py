@@ -1,3 +1,4 @@
+import html
 import os
 import re
 from mimetypes import guess_type
@@ -42,6 +43,7 @@ from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
+from strictdoc.core.query_object import QueryObject
 from strictdoc.core.transforms.constants import NodeCreationOrder
 from strictdoc.core.transforms.create_requirement import (
     CreateRequirementTransform,
@@ -2208,6 +2210,83 @@ def create_main_router(
             headers={
                 "Content-Disposition": 'attachment; filename="export.reqif"',
             },
+        )
+
+    @router.get("/search", response_class=Response)
+    def get_search(q: Optional[str] = None):
+        search_results = []
+        error = None
+        if q is not None and len(q) > 0:
+            node_query = QueryObject(export_action.traceability_index)
+
+            q_sanitized = q
+
+            # IMPORTANT: eval must only see the node itself and no surrounding
+            # environment.
+            restricted_globals = {}
+            restricted_locals = {}
+            query_lambda = eval(  # noqa: PGH001
+                f"lambda node: {q_sanitized}",
+                restricted_globals,
+                restricted_locals,
+            )
+
+            result = []
+            try:
+                for document in (
+                    export_action.traceability_index.document_tree.document_list
+                ):
+                    document_iterator = (
+                        export_action.traceability_index.get_document_iterator(
+                            document
+                        )
+                    )
+
+                    for node in document_iterator.all_content():
+                        node_query.current_node = node
+
+                        evaled = query_lambda(node_query)
+                        if evaled:
+                            result.append(node)
+                search_results = result
+            except (AttributeError, NameError, TypeError) as attribute_error_:
+                error = attribute_error_.args[0]
+
+        template = html_templates.jinja_environment().get_template(
+            "screens/search/index.jinja"
+        )
+
+        link_renderer = LinkRenderer(
+            root_path="", static_path=project_config.dir_for_sdoc_assets
+        )
+        markup_renderer = MarkupRenderer.create(
+            "RST",
+            export_action.traceability_index,
+            link_renderer,
+            html_templates,
+            project_config,
+            None,
+        )
+        document_tree_iterator = DocumentTreeIterator(
+            export_action.traceability_index.document_tree
+        )
+        search_value = html.escape(q) if q is not None else ""
+        output = template.render(
+            project_config=project_config,
+            error=error,
+            traceability_index=export_action.traceability_index,
+            documents_iterator=document_tree_iterator.iterator(),
+            link_renderer=link_renderer,
+            renderer=markup_renderer,
+            document_type=DocumentType.deeptrace(),
+            strictdoc_version=__version__,
+            standalone=False,
+            search_results=search_results,
+            search_value=search_value,
+        )
+        return Response(
+            content=output,
+            status_code=200,
         )
 
     @router.get("/{full_path:path}", response_class=Response)

@@ -27,10 +27,12 @@ def multireplace(string, replacements):
     return pattern.sub(lambda match: replacements[match.group(0)], string)
 
 
+# WIP: Check if this is used.
 def escape(string: str) -> str:
     return string.encode("unicode_escape").decode("utf-8")
 
 
+# WIP: Check if this is used.
 def unescape(string: str) -> str:
     return string.encode("utf-8").decode("unicode_escape")
 

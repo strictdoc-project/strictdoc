@@ -1,0 +1,35 @@
+{% extends "base.jinja.html" %}
+{% set template_type = "Search" %}
+
+{% block head_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ link_renderer.render_static_url('requirement-tree.css') }}"/>
+{% endblock head_css %}
+
+{% block head_scripts %}
+  {{ super() }}
+{% endblock head_scripts %}
+
+{% block title %}
+  {{ project_config.project_title }} - {{ template_type }}
+{% endblock title %}
+
+{% block viewtype %}search{% endblock viewtype %}
+
+{% block layout_nav %}
+  {% include "_shared/nav.jinja.html" %}
+{% endblock layout_nav %}
+
+{% block tree_content %}
+   {# NOTHING #}
+{% endblock tree_content %}
+
+{% block header_content %}
+  {%- with header__pagetype=true -%}
+    {% include "components/header/index.jinja" %}
+  {%- endwith -%}
+{% endblock header_content %}
+
+{% block main_content %}
+  {% include "screens/search/main.jinja" %}
+{% endblock main_content %}

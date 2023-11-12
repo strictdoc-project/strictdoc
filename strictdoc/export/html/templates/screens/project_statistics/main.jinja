@@ -44,7 +44,17 @@
       <td>{{ document_tree_stats.requirements_root_no_links }}</td>
     </tr>
     <tr>
+      {% if project_config.is_activated_search() %}
+      <td>
+        <a
+          href="{{ link_renderer.render_url('search?q=node.is_requirement and not node.is_root and node["STATUS"] != "Backlog" and not node.has_parent_requirements') }}"
+        >
+          Non-root-level requirements not connected to any parent requirement
+        </a>
+      </td>
+      {% else %}
       <td>Non-root-level requirements not connected to any parent requirement</td>
+      {% endif %}
       <td>{{ document_tree_stats.requirements_no_links }}</td>
     </tr>
     <tr>

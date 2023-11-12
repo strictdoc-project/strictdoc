@@ -87,7 +87,6 @@ class MarkupRenderer:
 
     def render_requirement_statement(self, requirement):
         assert isinstance(requirement, Requirement)
-        assert self.context_document is not None
 
         if requirement in self.cache:
             return self.cache[requirement]
@@ -99,7 +98,6 @@ class MarkupRenderer:
     def render_truncated_requirement_statement(self, requirement):
         assert isinstance(requirement, Requirement), requirement
         assert requirement.reserved_statement is not None
-        assert self.context_document is not None
 
         statement_to_render = truncated_statement_with_no_rst(
             requirement.reserved_statement
@@ -115,7 +113,6 @@ class MarkupRenderer:
 
     def render_requirement_rationale(self, requirement):
         assert isinstance(requirement, Requirement)
-        assert self.context_document is not None
 
         if requirement in self.rationale_cache:
             return self.rationale_cache[requirement]
@@ -125,7 +122,6 @@ class MarkupRenderer:
 
     def render_comment(self, comment):
         assert isinstance(comment, str)
-        assert self.context_document is not None
 
         if comment in self.cache:
             return self.cache[comment]
@@ -177,7 +173,6 @@ class MarkupRenderer:
 
     def render_meta_value(self, meta_field_value):
         assert isinstance(meta_field_value, str)
-        assert self.context_document is not None
 
         # FIXME: Introduce and improve caching.
         output = self.fragment_writer.write(meta_field_value)

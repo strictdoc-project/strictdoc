@@ -236,6 +236,10 @@ sdoc-requirement-field-label {
 
 /* section */
 
+sdoc-section {
+  position: relative;
+}
+
 sdoc-section,
 sdoc-section-text,
 sdoc-section-title {

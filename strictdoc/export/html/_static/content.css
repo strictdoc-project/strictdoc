@@ -64,6 +64,15 @@
   width: fit-content;
 }
 
+[data-viewtype="search"] .content {
+  display: grid;
+  place-items: stretch stretch;
+  grid-template-columns: 1fr;
+  gap: var(--requirement-tree-margin) 0;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
 /* TODO */
 /* used in TR, DTR, requirements_coverage: */
 .content_section {

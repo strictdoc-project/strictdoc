@@ -43,7 +43,8 @@ from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
-from strictdoc.core.query_object import QueryObject
+from strictdoc.core.query_engine.query_object import Query, QueryObject
+from strictdoc.core.query_engine.query_reader import QueryReader
 from strictdoc.core.transforms.constants import NodeCreationOrder
 from strictdoc.core.transforms.create_requirement import (
     CreateRequirementTransform,
@@ -2216,21 +2217,18 @@ def create_main_router(
     def get_search(q: Optional[str] = None):
         search_results = []
         error = None
+        node_query = None
+
         if q is not None and len(q) > 0:
-            node_query = QueryObject(export_action.traceability_index)
+            try:
+                query: Query = QueryReader.read(q)
+                node_query = QueryObject(
+                    query, export_action.traceability_index
+                )
+            except:
+                error = "error: Cannot parse query."
 
-            q_sanitized = q
-
-            # IMPORTANT: eval must only see the node itself and no surrounding
-            # environment.
-            restricted_globals = {}
-            restricted_locals = {}
-            query_lambda = eval(  # noqa: PGH001
-                f"lambda node: {q_sanitized}",
-                restricted_globals,
-                restricted_locals,
-            )
-
+        if node_query is not None:
             result = []
             try:
                 for document in (
@@ -2241,12 +2239,8 @@ def create_main_router(
                             document
                         )
                     )
-
                     for node in document_iterator.all_content():
-                        node_query.current_node = node
-
-                        evaled = query_lambda(node_query)
-                        if evaled:
+                        if node_query.evaluate(node):
                             result.append(node)
                 search_results = result
             except (AttributeError, NameError, TypeError) as attribute_error_:

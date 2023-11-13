@@ -150,7 +150,7 @@ def create_main_router(
         return f"StrictDoc v{__version__}"
 
     @router.get(
-        "/actions/deep_trace/show_full_requirement", response_class=Response
+        "/actions/show_full_requirement", response_class=Response
     )
     def requirement__show_full(reference_mid: str):
         requirement: Requirement = (
@@ -158,8 +158,8 @@ def create_main_router(
         )
         template = env().get_template(
             "actions/"
-            "deep_trace/"
-            "show_full_requirement/"
+            "node/"
+            "show_full_node/"
             "stream_show_full_requirement.jinja"
         )
         link_renderer = LinkRenderer(
@@ -192,7 +192,7 @@ def create_main_router(
         )
 
     @router.get(
-        "/actions/deep_trace/show_full_section", response_class=Response
+        "/actions/show_full_section", response_class=Response
     )
     def section__show_full(reference_mid: str):
         section: Section = (
@@ -200,7 +200,7 @@ def create_main_router(
         )
         template = env().get_template(
             "actions/"
-            "deep_trace/"
+            "node/"
             "show_full_node/"
             "stream_show_full_section.jinja"
         )

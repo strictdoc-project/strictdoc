@@ -68,7 +68,7 @@
   display: grid;
   place-items: stretch stretch;
   grid-template-columns: 1fr;
-  gap: var(--requirement-tree-margin) 0;
+  gap: var(--tree-gap) 0;
   width: -moz-fit-content;
   width: fit-content;
 }

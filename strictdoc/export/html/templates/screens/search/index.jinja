@@ -3,11 +3,20 @@
 
 {% block head_css %}
   {{ super() }}
-  <link rel="stylesheet" href="{{ link_renderer.render_static_url('requirement-tree.css') }}"/>
 {% endblock head_css %}
 
 {% block head_scripts %}
   {{ super() }}
+
+  {%- if project_config.is_running_on_server and not standalone -%}
+  <script type="module">
+    import hotwiredTurbo from "{{ link_renderer.render_static_url_with_prefix('turbo.min.js') }}";
+    import { Application, Controller } from "{{ link_renderer.render_static_url_with_prefix('stimulus.min.js') }}";
+    window.Stimulus = Application.start();
+    window.Controller = Controller;
+  </script>
+  <script type="module" src="{{ link_renderer.render_static_url('controllers/modal_controller.js') }}"></script>
+  {%- endif -%}
 {% endblock head_scripts %}
 
 {% block title %}

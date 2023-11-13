@@ -149,9 +149,7 @@ def create_main_router(
     def get_ping():
         return f"StrictDoc v{__version__}"
 
-    @router.get(
-        "/actions/show_full_requirement", response_class=Response
-    )
+    @router.get("/actions/show_full_requirement", response_class=Response)
     def requirement__show_full(reference_mid: str):
         requirement: Requirement = (
             export_action.traceability_index.get_node_by_mid(MID(reference_mid))
@@ -191,12 +189,10 @@ def create_main_router(
             },
         )
 
-    @router.get(
-        "/actions/show_full_section", response_class=Response
-    )
+    @router.get("/actions/show_full_section", response_class=Response)
     def section__show_full(reference_mid: str):
-        section: Section = (
-            export_action.traceability_index.get_node_by_mid(MID(reference_mid))
+        section: Section = export_action.traceability_index.get_node_by_mid(
+            MID(reference_mid)
         )
         template = env().get_template(
             "actions/"

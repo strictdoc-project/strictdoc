@@ -1,0 +1,20 @@
+<sdoc-search>
+
+  <form
+    action="/search"
+    method="GET"
+  >
+    <sdoc-search-grid>
+      <input
+        type="text"
+        value="{{ search_value }}"
+        style="width: 100%;"
+        placeholder="Enter search query here"
+        id="q"
+        name="q"
+      />
+      {% include "components/button/search.jinja" %}
+    </sdoc-search-grid>
+  </form>
+
+</sdoc-search>

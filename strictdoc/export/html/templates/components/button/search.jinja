@@ -1,0 +1,15 @@
+{#
+  {{ form }}
+  Defined in the parent modal/form template.
+#}
+<button
+  {% if form is defined %}
+    form="{{ form }}"
+  {% endif %}
+  data-turbo="true"
+  class="action_icon"
+  type="submit"
+  data-action-type="submit"
+  data-testid="form-submit-action"
+>{% include "_res/svg_ico16_search.jinja" %}</button>
+{# {{ submit_name|default('Search') }} #}

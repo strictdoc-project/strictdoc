@@ -91,6 +91,45 @@ sdoc-modal-footer {
   column-gap: var(--base-rhythm);
 }
 
+/* sdoc-search */
+
+sdoc-search {
+  display: block;
+  position: relative;
+  background-color: var(--color-bg-contrast);
+  border-radius: 4px;
+  z-index: 11;
+  border: 1px solid var(--color-border);
+}
+
+sdoc-search-grid {
+  display: grid;
+  place-items: stretch stretch;
+  place-content: stretch stretch;
+  grid-template-columns:  minmax(0, 1fr) /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
+                          minmax(0, min-content);
+  gap:
+           calc(var(--base-rhythm)*2)
+           var(--base-rhythm);
+
+  padding: var(--base-rhythm);
+}
+
+sdoc-search input[type="text"] {
+  padding: var(--base-rhythm);
+  font-size: var(--font-size);
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  outline: transparent;
+  width: 100%;
+  transition: border-color calc(var(--transition, 0.2) * 1s) ease;
+}
+
+sdoc-search input[type="text"]:focus {
+  border-color: var(--color-action);
+  color: var(--color-action);
+}
+
 /* sdoc-form  */
 
 sdoc-form {

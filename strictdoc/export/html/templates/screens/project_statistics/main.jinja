@@ -180,11 +180,31 @@
     <td colspan="2"><b>TBD/TBC</b></td>
     </tr>
     <tr>
-      <td>Total TBD</td>
+      {% if project_config.is_activated_search() %}
+      <td>
+        <a
+          href="{{ link_renderer.render_url('search?q=node.contains("TBD")') }}"
+        >
+          Total TBD
+        </a>
+      </td>
+      {% else %}
+        <td>Total TBD</td>
+      {% endif %}
       <td>{{ document_tree_stats.total_tbd }}</td>
     </tr>
     <tr>
-      <td>Total TBC</td>
+      {% if project_config.is_activated_search() %}
+      <td>
+        <a
+          href="{{ link_renderer.render_url('search?q=node.contains("TBC")') }}"
+        >
+          Total TBC
+        </a>
+      </td>
+      {% else %}
+        <td>Total TBC</td>
+      {% endif %}
       <td>{{ document_tree_stats.total_tbc }}</td>
     </tr>
   </table>

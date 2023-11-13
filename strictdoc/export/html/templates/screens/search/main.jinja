@@ -16,5 +16,39 @@
       {% endif %}
     {% endfor %}
     </div>
+  {%- else -%}
+
+<sdoc-main-placeholder
+  style="height: unset;"
+  data-testid="search-main-placeholder"
+>
+<pre>
+Query examples:
+~~~~~~~~~~~~~~
+
+
+
+StringExpression:
+  '"' string = /[^"]+/ '"'
+;
+
+NodeFieldExpression:
+  'node["' field_name = /[A-Za-z0-9]+/ '"]'
+;
+
+NodeHasParentRequirementsExpression:
+  _ = 'node.has_parent_requirements'
+;
+
+NodeIsRequirementExpression:
+  _ = 'node.is_requirement'
+;
+
+NodeIsSectionExpression:
+  _ = 'node.is_section'
+;
+</pre>
+</sdoc-main-placeholder>
+
   {%- endif -%}
 </div> {# /.main #}

@@ -47,6 +47,7 @@
   --font-size-xxsm: 11px;
 
   --base-gap: calc(var(--base-rhythm)*6);
+  --tree-gap: calc(var(--base-rhythm)*4);
   --base-padding: calc(var(--base-rhythm)*2);
 
   --base-elevation-0: 0 0 0 rgba(0,0,0,0);

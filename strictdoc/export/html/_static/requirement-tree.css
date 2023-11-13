@@ -1,7 +1,7 @@
 :root {
   --requirement-tree-line-width: 1px;
   --requirement-tree-line-color: var(--color-border);
-  --requirement-tree-margin: 2rem;
+  --requirement-tree-margin: var(--tree-gap);
   --requirement-tree-downward-margin: calc(var(--requirement-tree-margin)*.5);
   --requirement-tree-downward-string-margin: calc(var(--requirement-tree-downward-margin)*0.25);
   --requirement-tree-line: var(--requirement-tree-line-width) solid;

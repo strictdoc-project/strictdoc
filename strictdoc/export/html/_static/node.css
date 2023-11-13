@@ -138,11 +138,6 @@ sdoc-node-controls[data-direction~="row"] {
   width: unset;
 }
 
-sdoc-node-controls + sdoc-requirement {
-  /* so that the buttons, even when hovered over, are always under the card */
-  z-index: 9;
-}
-
 sdoc-main-placeholder + sdoc-node-controls {
   opacity: 1;
 }

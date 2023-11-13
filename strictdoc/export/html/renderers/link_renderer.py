@@ -105,7 +105,15 @@ class LinkRenderer:
         ):
             return f"#{local_link}"
 
-        link_cache_key = (document_type, context_document.meta.level)
+        # Now two cases:
+        # - Context document exists and we want to take into account this
+        # document's depth.
+        # - Context document does not exist, such as when we are on a Search
+        # screen. In this case, the level is simply zero.
+        level: int = (
+            context_document.meta.level if context_document is not None else 0
+        )  # FIXME 0 or 1?
+        link_cache_key = (document_type, level)
         if link_cache_key in self.req_link_cache:
             document_type_cache = self.req_link_cache[link_cache_key]
             if node in document_type_cache:
@@ -114,7 +122,7 @@ class LinkRenderer:
             self.req_link_cache[link_cache_key] = {}
         document_link = node.document.meta.get_html_link(
             document_type,
-            context_document.meta.level,
+            level,
             force_full_path=force_full_path,
         )
         requirement_link = f"{document_link}#{local_link}"

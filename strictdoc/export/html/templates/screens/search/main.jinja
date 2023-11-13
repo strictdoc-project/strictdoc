@@ -1,33 +1,20 @@
 <div
   class="main"
 >
-  {% include "screens/search/search_form.jinja" %}
-
-  <br/>
-
-  {%- if error is none -%}
-    {%- if search_results|length > 0 -%}
-      Found {{ search_results|length }} results.
-      <br/>
-      {% for node in search_results %}
-        <div>
-        {% if node.is_requirement %}
-          UID: {{ node.reserved_uid }}
-          <br/>
-          STATUS: {{ node.reserved_status }}
-          <br/>
-          TITLE: {{ node.reserved_title }}
-          <br/>
-        {% elif node.is_section %}
-          UID: {{ node.reserved_uid }}
-          <br/>
-          TITLE: {{ node.title }}
-          <br/>
-        {% endif %}
-        </div>
-      {% endfor %}
-    {%- endif -%}
-  {%- else -%}
-    {{ error }}
+  {%- include "components/form/search.jinja" -%}
+  {%- if search_results|length > 0 -%}
+    <div class="content">
+    {% for node in search_results %}
+      {% if node.is_requirement %}
+        {% with requirement=node, document=node.document, node_controls=True %}
+          {%- include "components/requirement/tiny_extends_card.jinja" -%}
+        {% endwith %}
+      {% elif node.is_section %}
+        {% with section=node, document=node.document, node_controls=True %}
+          {%- include "components/section/tiny_extends_card.jinja" -%}
+        {% endwith %}
+      {% endif %}
+    {% endfor %}
+    </div>
   {%- endif -%}
 </div> {# /.main #}

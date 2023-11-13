@@ -149,17 +149,15 @@ def create_main_router(
     def get_ping():
         return f"StrictDoc v{__version__}"
 
-    @router.get(
-        "/actions/deep_trace/show_full_requirement", response_class=Response
-    )
+    @router.get("/actions/show_full_requirement", response_class=Response)
     def requirement__show_full(reference_mid: str):
         requirement: Requirement = (
             export_action.traceability_index.get_node_by_mid(MID(reference_mid))
         )
         template = env().get_template(
             "actions/"
-            "deep_trace/"
-            "show_full_requirement/"
+            "node/"
+            "show_full_node/"
             "stream_show_full_requirement.jinja"
         )
         link_renderer = LinkRenderer(
@@ -180,6 +178,46 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             document=requirement.document,
+            document_type=DocumentType.document(),
+            project_config=project_config,
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @router.get("/actions/show_full_section", response_class=Response)
+    def section__show_full(reference_mid: str):
+        section: Section = export_action.traceability_index.get_node_by_mid(
+            MID(reference_mid)
+        )
+        template = env().get_template(
+            "actions/"
+            "node/"
+            "show_full_node/"
+            "stream_show_full_section.jinja"
+        )
+        link_renderer = LinkRenderer(
+            root_path=section.document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
+        )
+        markup_renderer = MarkupRenderer.create(
+            markup="RST",
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
+            config=project_config,
+            context_document=section.document,
+        )
+        output = template.render(
+            renderer=markup_renderer,
+            section=section,
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+            document=section.document,
             document_type=DocumentType.document(),
             project_config=project_config,
         )
@@ -2272,7 +2310,8 @@ def create_main_router(
             documents_iterator=document_tree_iterator.iterator(),
             link_renderer=link_renderer,
             renderer=markup_renderer,
-            document_type=DocumentType.deeptrace(),
+            document_type=DocumentType.document(),
+            link_document_type=DocumentType.document(),
             strictdoc_version=__version__,
             standalone=False,
             search_results=search_results,

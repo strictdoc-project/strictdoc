@@ -1,4 +1,18 @@
 {# field_content #}
+
+{#
+  Before including a block with content,
+  it needs to be declared:
+
+  {% set copy_to_clipboard = True %}
+
+  so that the fields have a complex layout that includes markup
+  for the option to copy the contents of the field to the clipboard.
+
+  ! Enabling this option for PDF is highly not recommended.
+ #}
+
+{%- if copy_to_clipboard is defined -%}
 <sdoc-field data-controller="copy_to_clipboard">
   <sdoc-field-content>
     <sdoc-autogen>{{ field_content }}</sdoc-autogen>
@@ -20,3 +34,6 @@
 
   </sdoc-field-service>
 </sdoc-field>
+{%- else -%}
+<sdoc-autogen>{{ field_content }}</sdoc-autogen>
+{%- endif -%}

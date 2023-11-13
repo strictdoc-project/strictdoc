@@ -1,0 +1,29 @@
+<sdoc-search
+ {% if (error is none) and (search_results|length > 0) %}success{% endif %}
+>
+
+  <form
+    action="/search"
+    method="GET"
+  >
+    <sdoc-search-grid>
+      <input
+        type="text"
+        value="{{ search_value }}"
+        style="width: 100%;"
+        placeholder="Enter search query here"
+        id="q"
+        name="q"
+      />
+      {% include "components/button/search.jinja" %}
+    </sdoc-search-grid>
+  </form>
+
+  {%- if error is none -%}
+    {%- if search_results|length > 0 -%}
+      <div class="sdoc-search-success">Found <b>{{ search_results|length }}</b> results:</div>
+    {%- endif -%}
+  {%- else -%}
+      <div class="sdoc-search-error">{{ error }}</div>
+  {%- endif -%}
+</sdoc-search>

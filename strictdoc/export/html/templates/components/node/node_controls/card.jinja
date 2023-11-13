@@ -1,0 +1,32 @@
+{#
+  In this template:
+  sdoc_entity = requirement || section
+  document from _extends_
+  node_controls=True
+#}
+
+{#
+  Example:
+  {% with requirement=node, document=node.document, node_controls=True %}
+    {%- include "components/requirement/tiny_extends_card.jinja" -%}
+  {% endwith %}
+#}
+
+<sdoc-node-controls data-direction="row">
+  <a
+    href="{{ link_renderer.render_node_link(sdoc_entity, document, link_document_type, allow_local=False) }}"
+    class="action_button"
+    title="Find it in the document view"
+    data-testid="{{ sdoc_entity.get_type_string() }}-find-in-document"
+  >{% include "_res/svg_ico16_go_to_doc.jinja" %}</a>
+  <turbo-frame>
+    <a
+      href="/actions/show_full_{{ sdoc_entity.get_type_string() }}?reference_mid={{ sdoc_entity.mid.get_string_value() }}"
+      class="action_button"
+      data-turbo="true"
+      data-turbo-action="replace"
+      title="Show in full in modal"
+      data-testid="{{ sdoc_entity.get_type_string() }}-show-more-action"
+    >{% include "_res/svg_ico16_maximize.jinja" %}</a>
+  </turbo-frame>
+</sdoc-node-controls>

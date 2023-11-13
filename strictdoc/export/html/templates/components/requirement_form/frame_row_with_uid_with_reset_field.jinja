@@ -1,0 +1,55 @@
+{%- extends "components/form/row.jinja" %}
+
+{% assert text_field_row_context is defined, "row_with_text: row_context must be defined." %}
+
+{% assert text_field_row_context.errors is defined, "row_with_text: errors must be defined." %}
+{% assert text_field_row_context.field is defined, "row_with_text: field must be defined." %}
+{% assert text_field_row_context.field_type is defined, "row_with_text: field_type must be defined." %}
+{% assert text_field_row_context.field_type in ("singleline", "multiline"), "row_with_text: field_type must be singleline or multiline." %}
+{% assert text_field_row_context.reference_mid is defined, "row_with_text: reference_mid must be defined." %}
+
+{%- set row_context = text_field_row_context -%}
+
+{% block row_form_attributes %}
+{# Explicitly no attributes. #}
+{% endblock row_form_attributes %}
+
+{% block row_left %}
+  {# Explicitly nothing. #}
+{% endblock row_left %}
+
+{% block row_content scoped %}
+  {%- set placeholder_name = text_field_row_context.field.field_name %}
+
+  {%- with
+    mid = text_field_row_context.field.field_mid,
+    field_class_name = none,
+    field_input_name = text_field_row_context.field.get_input_field_name(),
+    field_label = text_field_row_context.field.field_name,
+    field_placeholder = "Enter "~placeholder_name~" here...",
+    field_type = text_field_row_context.field_type,
+    field_value = text_field_row_context.field.field_escaped_value,
+    testid_postfix = "requirement-field-"~text_field_row_context.field.field_name
+  %}
+    {%- include "components/form/field/contenteditable/index.jinja" %}
+  {%- endwith -%}
+
+  <input
+    type="hidden"
+    name="{{ text_field_row_context.field.get_input_field_type_name() }}"
+    value="{{ text_field_row_context.field.field_name }}"
+  />
+{% endblock row_content %}
+
+{% block row_right scoped %}
+    <a
+      class="field_action"
+      href="/reset_uid?reference_mid={{ text_field_row_context.reference_mid }}"
+      mid="{{ text_field_row_context.field.field_mid }}"
+      title="Reset UID to default"
+      data-action-type="reset"
+      data-turbo-action="replace"
+      data-turbo="true"
+      data-testid="reset-uid-field-action"
+    >{% include "_res/svg_ico16_reset.jinja" %}</a>
+{% endblock row_right %}

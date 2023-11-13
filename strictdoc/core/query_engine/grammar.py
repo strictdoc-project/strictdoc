@@ -37,6 +37,8 @@ BooleanExpression:
   |
   NotInExpression
   |
+  NodeContainsExpression
+  |
   NodeIsRequirementExpression
   |
   NodeIsSectionExpression
@@ -58,6 +60,10 @@ NoneExpression:
 
 NodeFieldExpression:
   'node["' field_name = /[A-Za-z0-9]+/ '"]'
+;
+
+NodeContainsExpression:
+  'node.contains("' string = /[A-Za-z0-9]+/ '")'
 ;
 
 NodeHasParentRequirementsExpression:

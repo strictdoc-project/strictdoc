@@ -1,7 +1,10 @@
 from typing import List, Optional
 
 from strictdoc.backend.sdoc.models.document_grammar import GrammarElement
-from strictdoc.backend.sdoc.models.requirement import Requirement
+from strictdoc.backend.sdoc.models.requirement import (
+    Requirement,
+    RequirementField,
+)
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.helpers.cast import assert_cast
@@ -26,6 +29,12 @@ class NodeFieldExpression:
     def __init__(self, parent, field_name: str):
         self.parent = parent
         self.field_name = field_name
+
+
+class NodeContainsExpression:
+    def __init__(self, parent, string: str):
+        self.parent = parent
+        self.string: str = string
 
 
 class NodeHasParentRequirementsExpression:
@@ -117,6 +126,8 @@ class QueryObject:
             return self._evaluate_equal(node, expression)
         if isinstance(expression, NotEqualExpression):
             return self._evaluate_not_equal(node, expression)
+        if isinstance(expression, NodeContainsExpression):
+            return self._evaluate_node_contains(node, expression)
         if isinstance(expression, NodeHasParentRequirementsExpression):
             return self._evaluate_node_has_parent_requirements(node)
         if isinstance(expression, NodeHasChildRequirementsExpression):
@@ -217,3 +228,27 @@ class QueryObject:
                 f"the error, prepend your query with node.is_requirement."
             )
         return self.traceability_index.has_children_requirements(node)
+
+    def _evaluate_node_contains(
+        self, node, expression: NodeContainsExpression
+    ) -> bool:
+        if isinstance(node, Requirement):
+            requirement = assert_cast(node, Requirement)
+            requirement_field_: RequirementField
+            for requirement_field_ in requirement.enumerate_fields():
+                if requirement_field_.field_value is not None:
+                    if expression.string in requirement_field_.field_value:
+                        return True
+                elif requirement_field_.field_value_multiline is not None:
+                    if (
+                        expression.string
+                        in requirement_field_.field_value_multiline
+                    ):
+                        return True
+            return False
+        if isinstance(node, Section):
+            section = assert_cast(node, Section)
+            if expression.string in section.title:
+                return True
+            return False
+        raise NotImplementedError

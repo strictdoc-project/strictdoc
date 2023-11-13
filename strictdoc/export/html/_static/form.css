@@ -95,11 +95,27 @@ sdoc-modal-footer {
 
 sdoc-search {
   display: block;
-  position: relative;
-  background-color: var(--color-bg-contrast);
-  border-radius: 4px;
+  position: sticky;
+  top: 0;
   z-index: 11;
-  border: 1px solid var(--color-border);
+
+  margin-bottom: calc(var(--base-rhythm)*4);
+  background-color: var(--color-bg-main);
+}
+
+sdoc-search[success] {
+  box-shadow: 0 0 1rem 0.5rem var(--thumbBG);
+}
+
+sdoc-search::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  top: -60px;
+  left: -40px;
+  right: -40px;
+  background-color: var(--color-bg-main);
+  z-index: 0;
 }
 
 sdoc-search-grid {
@@ -112,7 +128,11 @@ sdoc-search-grid {
            calc(var(--base-rhythm)*2)
            var(--base-rhythm);
 
+  position: relative;
   padding: var(--base-rhythm);
+  background-color: var(--color-bg-contrast);
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
 }
 
 sdoc-search input[type="text"] {
@@ -131,17 +151,17 @@ sdoc-search input[type="text"]:focus {
 }
 
 .sdoc-search-error,
-.sdoc-search-descr {
+.sdoc-search-success {
   display: block;
   padding: var(--base-rhythm) calc(var(--base-rhythm)*2);
-  padding-bottom: calc(var(--base-rhythm) * 4);
+  position: relative;
 }
 
 .sdoc-search-error {
   color: var(--color-danger);
 }
 
-.sdoc-search-descr {
+.sdoc-search-success {
   color: var(--color-action);
 }
 

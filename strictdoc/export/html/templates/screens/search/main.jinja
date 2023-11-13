@@ -1,25 +1,20 @@
 <div
   class="main"
 >
-  {% include "components/form/search.jinja" %}
-  {%- if error is none -%}
-    {%- if search_results|length > 0 -%}
-      <div class="sdoc-search-descr">Found <b>{{ search_results|length }}</b> results:</div>
-      <div class="content">
-      {% for node in search_results %}
-        {% if node.is_requirement %}
-          {% with requirement=node, document=node.document, node_controls=True %}
-            {%- include "components/requirement/tiny_extends_card.jinja" -%}
-          {% endwith %}
-        {% elif node.is_section %}
-          {% with section=node, document=node.document, node_controls=True %}
-            {%- include "components/section/tiny_extends_card.jinja" -%}
-          {% endwith %}
-        {% endif %}
-      {% endfor %}
-      </div>
-    {%- endif -%}
-  {%- else -%}
-    <div class="sdoc-search-error">{{ error }}</div>
+  {%- include "components/form/search.jinja" -%}
+  {%- if search_results|length > 0 -%}
+    <div class="content">
+    {% for node in search_results %}
+      {% if node.is_requirement %}
+        {% with requirement=node, document=node.document, node_controls=True %}
+          {%- include "components/requirement/tiny_extends_card.jinja" -%}
+        {% endwith %}
+      {% elif node.is_section %}
+        {% with section=node, document=node.document, node_controls=True %}
+          {%- include "components/section/tiny_extends_card.jinja" -%}
+        {% endwith %}
+      {% endif %}
+    {% endfor %}
+    </div>
   {%- endif -%}
 </div> {# /.main #}

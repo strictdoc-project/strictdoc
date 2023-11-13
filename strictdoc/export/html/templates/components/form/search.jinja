@@ -21,7 +21,7 @@
 
   {%- if error is none -%}
     {%- if search_results|length > 0 -%}
-      <div class="sdoc-search-success">Found <b>{{ search_results|length }}</b> results:</div>
+      <div class="sdoc-search-success">Found <b>{{ search_results|length }}</b> results.</div>
     {%- endif -%}
   {%- else -%}
       <div class="sdoc-search-error">{{ error }}</div>

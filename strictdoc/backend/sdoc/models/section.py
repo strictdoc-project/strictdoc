@@ -74,6 +74,10 @@ class Section(Node):  # pylint: disable=too-many-instance-attributes
     def is_section(self):
         return True
 
+    @property
+    def is_root(self) -> bool:
+        return self.document.config.root is True
+
     def get_requirement_prefix(self) -> str:
         if self.requirement_prefix is not None:
             return self.requirement_prefix

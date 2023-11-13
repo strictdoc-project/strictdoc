@@ -30,24 +30,56 @@
       <td>Total documents</td>
       <td>{{ document_tree_stats.total_documents }}</td>
     </tr>
-    <td colspan="2"><b>Requirements</b></td>
     <tr>
-      <td>Total requirements</td>
+      <td colspan="2"><b>Requirements</b></td>
+    </tr>
+    <tr>
+      {% if project_config.is_activated_search() %}
+      <td>
+        <a
+          href="{{ link_renderer.render_url('search?q=node.is_requirement') }}"
+        >
+          Total requirements
+        </a>
+      </td>
+      {% else %}
+        <td>Total requirements</td>
+      {% endif %}
       <td>{{ document_tree_stats.total_requirements }}</td>
     </tr>
     <tr>
-      <td>Requirements with no UID</td>
+      {% if project_config.is_activated_search() %}
+      <td>
+        <a
+          href="{{ link_renderer.render_url('search?q=(node.is_requirement and node["UID"] == None)') }}"
+        >
+          Requirements with no UID
+        </a>
+      </td>
+      {% else %}
+        <td>Requirements with no UID</td>
+      {% endif %}
       <td>{{ document_tree_stats.requirements_no_uid }}</td>
     </tr>
     <tr>
+      {% if project_config.is_activated_search() %}
+      <td>
+        <a
+          href="{{ link_renderer.render_url('search?q=(node.is_requirement and node.is_root and node["STATUS"] != "Backlog" and not node.has_child_requirements)') }}"
+        >
+          Root-level requirements not connected to by any requirement
+        </a>
+      </td>
+      {% else %}
       <td>Root-level requirements not connected to by any requirement</td>
+      {% endif %}
       <td>{{ document_tree_stats.requirements_root_no_links }}</td>
     </tr>
     <tr>
       {% if project_config.is_activated_search() %}
       <td>
         <a
-          href="{{ link_renderer.render_url('search?q=node.is_requirement and not node.is_root and node["STATUS"] != "Backlog" and not node.has_parent_requirements') }}"
+          href="{{ link_renderer.render_url('search?q=(node.is_requirement and not node.is_root and node["STATUS"] != "Backlog" and not node.has_parent_requirements)') }}"
         >
           Non-root-level requirements not connected to any parent requirement
         </a>
@@ -58,30 +90,90 @@
       <td>{{ document_tree_stats.requirements_no_links }}</td>
     </tr>
     <tr>
+      {% if project_config.is_activated_search() %}
+      <td>
+        <a
+          href="{{ link_renderer.render_url('search?q=(node.is_requirement and node["RATIONALE"] == None)') }}"
+        >
+          Requirements with no RATIONALE
+        </a>
+      </td>
+      {% else %}
       <td>Requirements with no RATIONALE</td>
+      {% endif %}
       <td>{{ document_tree_stats.requirements_no_rationale }}</td>
     </tr>
     <tr>
     <td colspan="2"><b>Requirements status</b></td>
     </tr>
     <tr>
+      {% if project_config.is_activated_search() %}
+      <td>
+        <a
+          href="{{ link_renderer.render_url('search?q=(node.is_requirement and node["STATUS"] == None)') }}"
+        >
+          Requirements with no Status
+        </a>
+      </td>
+      {% else %}
       <td>Requirements with no Status</td>
+      {% endif %}
       <td>{{ document_tree_stats.requirements_status_none }}</td>
     </tr>
     <tr>
-      <td>Requirements with status Active</td>
+      {% if project_config.is_activated_search() %}
+      <td>
+        <a
+          href="{{ link_renderer.render_url('search?q=(node.is_requirement and node["STATUS"] == "Active")') }}"
+        >
+          Requirements with status Active
+        </a>
+      </td>
+      {% else %}
+        <td>Requirements with status Active</td>
+      {% endif %}
       <td>{{ document_tree_stats.requirements_status_active }}</td>
     </tr>
     <tr>
-      <td>Requirements with status Draft</td>
+      {% if project_config.is_activated_search() %}
+      <td>
+        <a
+          href="{{ link_renderer.render_url('search?q=(node.is_requirement and node["STATUS"] == "Draft")') }}"
+        >
+          Requirements with status Draft
+        </a>
+      </td>
+      {% else %}
+        <td>Requirements with status Draft</td>
+      {% endif %}
       <td>{{ document_tree_stats.requirements_status_draft }}</td>
     </tr>
     <tr>
-      <td>Requirements with status Backlog</td>
+      {% if project_config.is_activated_search() %}
+      <td>
+        <a
+          href="{{ link_renderer.render_url('search?q=(node.is_requirement and node["STATUS"] == "Backlog")') }}"
+        >
+          Requirements with status Backlog
+        </a>
+      </td>
+      {% else %}
+        <td>Requirements with status Backlog</td>
+      {% endif %}
       <td>{{ document_tree_stats.requirements_status_backlog }}</td>
     </tr>
     <tr>
-      <td>Requirements with all other statuses</td>
+      {% if project_config.is_activated_search() %}
+      <td>
+        <a
+          href="{{ link_renderer.render_url('search?q=(node.is_requirement and node["STATUS"] != None and node["STATUS"] != "Backlog" and node["STATUS"] != "Active" and node["STATUS"] != "Draft")') }}"
+        >
+          Requirements with all other statuses
+        </a>
+      </td>
+      {% else %}
+        <td>Requirements with all other statuses</td>
+      {% endif %}
       <td>{{ document_tree_stats.requirements_status_other }}</td>
     </tr>
     <tr>

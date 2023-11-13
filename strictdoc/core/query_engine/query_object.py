@@ -17,6 +17,11 @@ class StringExpression:
         self.string: str = string
 
 
+class NoneExpression:
+    def __init__(self, parent, _: str):
+        self.parent = parent
+
+
 class NodeFieldExpression:
     def __init__(self, parent, field_name: str):
         self.parent = parent
@@ -28,12 +33,22 @@ class NodeHasParentRequirementsExpression:
         self.parent = parent
 
 
+class NodeHasChildRequirementsExpression:
+    def __init__(self, parent, _):
+        self.parent = parent
+
+
 class NodeIsRequirementExpression:
     def __init__(self, parent, _):
         self.parent = parent
 
 
 class NodeIsSectionExpression:
+    def __init__(self, parent, _):
+        self.parent = parent
+
+
+class NodeIsRootExpression:
     def __init__(self, parent, _):
         self.parent = parent
 
@@ -77,6 +92,13 @@ class InExpression:
         self.rhs_expr: Expression = rhs_expr
 
 
+class NotInExpression:
+    def __init__(self, parent, lhs_expr: Expression, rhs_expr: Expression):
+        self.parent = parent
+        self.lhs_expr: Expression = lhs_expr
+        self.rhs_expr: Expression = rhs_expr
+
+
 class Query:
     def __init__(self, root_expression):
         self.root_expression = root_expression
@@ -97,10 +119,14 @@ class QueryObject:
             return self._evaluate_not_equal(node, expression)
         if isinstance(expression, NodeHasParentRequirementsExpression):
             return self._evaluate_node_has_parent_requirements(node)
+        if isinstance(expression, NodeHasChildRequirementsExpression):
+            return self._evaluate_node_has_child_requirements(node)
         if isinstance(expression, NodeIsRequirementExpression):
             return isinstance(node, Requirement)
         if isinstance(expression, NodeIsSectionExpression):
             return isinstance(node, Section)
+        if isinstance(expression, NodeIsRootExpression):
+            return node.is_root
         if isinstance(expression, NotExpression):
             return not self._evaluate(node, expression.expression)
         if isinstance(expression, AndExpression):
@@ -118,6 +144,13 @@ class QueryObject:
             if rhs_value is None:
                 return False
             return self._evaluate_value(node, expression.lhs_expr) in rhs_value
+        if isinstance(expression, NotInExpression):
+            rhs_value = self._evaluate_value(node, expression.rhs_expr)
+            if rhs_value is None:
+                return False
+            return (
+                self._evaluate_value(node, expression.lhs_expr) not in rhs_value
+            )
         assert 0, expression
 
     def _evaluate_equal(self, node, expression: EqualExpression) -> bool:
@@ -135,6 +168,8 @@ class QueryObject:
             return self._evaluate_node_field_expression(node, expression)
         if isinstance(expression, StringExpression):
             return expression.string
+        if isinstance(expression, NoneExpression):
+            return None
         assert 0, expression
 
     def _evaluate_node_field_expression(
@@ -151,9 +186,7 @@ class QueryObject:
             grammar_field_titles = list(map(lambda f: f.title, element.fields))
             if field_name not in grammar_field_titles:
                 raise AttributeError(f"No such requirement field: {field_name}")
-            field_value = requirement._get_cached_field(
-                field_name, singleline_only=True
-            )
+            field_value = requirement._get_cached_field(field_name, False)
             if field_value is not None:
                 return field_value
             return None
@@ -175,3 +208,12 @@ class QueryObject:
                 f"the error, prepend your query with node.is_requirement."
             )
         return self.traceability_index.has_parent_requirements(node)
+
+    def _evaluate_node_has_child_requirements(self, node):
+        if not isinstance(node, Requirement):
+            raise TypeError(
+                f"node.has_child_requirements can be only called on "
+                f"Requirement objects, got: {node.__class__.__name__}. To fix "
+                f"the error, prepend your query with node.is_requirement."
+            )
+        return self.traceability_index.has_children_requirements(node)

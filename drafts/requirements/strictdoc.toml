@@ -9,7 +9,7 @@ features = [
   "DEEP_TRACEABILITY_SCREEN",
   "PROJECT_STATISTICS_SCREEN",
 
-  # "SEARCH",
+  "SEARCH",
   # Stable features but not used by StrictDoc.
   # "MATHJAX"
 

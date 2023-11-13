@@ -14,6 +14,10 @@ from strictdoc.core.query_engine.query_object import (
     OrExpression,
     Query,
     StringExpression,
+    NodeIsRootExpression,
+    NotInExpression,
+    NoneExpression,
+    NodeHasChildRequirementsExpression,
 )
 
 QUERY_MODELS = [
@@ -21,11 +25,15 @@ QUERY_MODELS = [
     EqualExpression,
     InExpression,
     NodeFieldExpression,
+    NodeHasChildRequirementsExpression,
     NodeHasParentRequirementsExpression,
     NodeIsRequirementExpression,
+    NodeIsRootExpression,
     NodeIsSectionExpression,
+    NoneExpression,
     NotEqualExpression,
     NotExpression,
+    NotInExpression,
     OrExpression,
     Query,
     StringExpression,

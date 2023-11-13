@@ -1,12 +1,10 @@
 <div
   class="main"
 >
-  {% include "screens/search/search_form.jinja" %}
-
+  {% include "components/form/search.jinja" %}
   {%- if error is none -%}
     {%- if search_results|length > 0 -%}
-      <p>Found {{ search_results|length }} results.</p>
-
+      <div class="sdoc-search-descr">Found <b>{{ search_results|length }}</b> results:</div>
       <div class="content">
       {% for node in search_results %}
         {% if node.is_requirement %}
@@ -20,9 +18,8 @@
         {% endif %}
       {% endfor %}
       </div>
-
     {%- endif -%}
   {%- else -%}
-    {{ error }}
+    <div class="sdoc-search-error">{{ error }}</div>
   {%- endif -%}
 </div> {# /.main #}

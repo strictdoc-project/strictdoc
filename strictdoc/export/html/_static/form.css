@@ -130,6 +130,21 @@ sdoc-search input[type="text"]:focus {
   color: var(--color-action);
 }
 
+.sdoc-search-error,
+.sdoc-search-descr {
+  display: block;
+  padding: var(--base-rhythm) calc(var(--base-rhythm)*2);
+  padding-bottom: calc(var(--base-rhythm) * 4);
+}
+
+.sdoc-search-error {
+  color: var(--color-danger);
+}
+
+.sdoc-search-descr {
+  color: var(--color-action);
+}
+
 /* sdoc-form  */
 
 sdoc-form {

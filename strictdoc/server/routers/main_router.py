@@ -999,15 +999,16 @@ def create_main_router(
         )
 
     @router.get(
-        "/reset_uid", response_class=Response,
+        "/reset_uid",
+        response_class=Response,
     )
     def reset_uid(reference_mid: str):
         reference_node = export_action.traceability_index.get_node_by_mid(
             MID(reference_mid)
         )
 
-        assert isinstance(reference_node, Requirement)  # FIXME: it might as well be a section?
-        requirement: Requirement = reference_node
+        assert isinstance(reference_node, Requirement)
+        # FIXME: it might as well be a section?
 
         document_tree_stats: DocumentTreeStats = (
             DocumentUIDAnalyzer.analyze_document_tree(

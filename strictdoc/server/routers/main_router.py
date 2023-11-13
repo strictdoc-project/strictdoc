@@ -191,6 +191,48 @@ def create_main_router(
             },
         )
 
+    @router.get(
+        "/actions/deep_trace/show_full_section", response_class=Response
+    )
+    def section__show_full(reference_mid: str):
+        section: Section = (
+            export_action.traceability_index.get_node_by_mid(MID(reference_mid))
+        )
+        template = env().get_template(
+            "actions/"
+            "deep_trace/"
+            "show_full_node/"
+            "stream_show_full_section.jinja"
+        )
+        link_renderer = LinkRenderer(
+            root_path=section.document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
+        )
+        markup_renderer = MarkupRenderer.create(
+            markup="RST",
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
+            config=project_config,
+            context_document=section.document,
+        )
+        output = template.render(
+            renderer=markup_renderer,
+            section=section,
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+            document=section.document,
+            document_type=DocumentType.document(),
+            project_config=project_config,
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
     @router.get("/actions/document/new_section", response_class=Response)
     def get_new_section(reference_mid: str, whereto: str):
         assert isinstance(whereto, str), whereto

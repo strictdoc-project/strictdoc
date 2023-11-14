@@ -1,0 +1,18 @@
+{# table_key_value #}
+
+<div class="sdoc-table_key_value">
+{% for obj in table_key_value %}
+
+  {% if obj["Section"] is defined %}
+    <div class="sdoc-table_key_value-section">{{ obj["Section"] }}</div>
+  {% else %}
+    {% if project_config.is_activated_search() and obj["Link"] is defined %}
+      <a class="sdoc-table_key_value-key" href="{{ obj["Link"] }}">{{ obj["Key"] }}</a>
+    {% else %}
+      <div class="sdoc-table_key_value-key">{{ obj["Key"] }}</div>
+    {% endif %}
+    <div class="sdoc-table_key_value-value">{{ obj["Value"] }}</div>
+  {% endif %}
+
+{% endfor %}
+</div>

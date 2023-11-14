@@ -1,211 +1,90 @@
 <div class="main">
-  <style>
-    .progress {
-      border-collapse: collapse;
-    }
-    .progress td {
-      border: 1px solid gray;
-      padding: 10px 20px;
-    }
-  </style>
-  <table class="progress">
-    <td colspan="2"><b>General information</b></td>
-    <tr>
-      <td>Project name</td>
-      <td>{{ project_config.project_title }}</td>
-    </tr>
-    <tr>
-      <td>Statistics generation date</td>
-      <td>{{ date_now.strftime("%Y-%m-%d %H:%M:%S") }}</td>
-    </tr>
-    <tr>
-      <td>Last modification of project data</td>
-      <td>{{ traceability_index.strictdoc_last_update.strftime("%Y-%m-%d %H:%M:%S") }}</td>
-    </tr>
-    <tr>
-      <td>Git commit/release</td>
-      <td>{{ document_tree_stats.git_commit_hash }}</td>
-    </tr>
-    <tr>
-      <td>Total documents</td>
-      <td>{{ document_tree_stats.total_documents }}</td>
-    </tr>
-    <tr>
-      <td colspan="2"><b>Requirements</b></td>
-    </tr>
-    <tr>
-      {% if project_config.is_activated_search() %}
-      <td>
-        <a
-          href="{{ link_renderer.render_url('search?q=node.is_requirement') }}"
-        >
-          Total requirements
-        </a>
-      </td>
-      {% else %}
-        <td>Total requirements</td>
-      {% endif %}
-      <td>{{ document_tree_stats.total_requirements }}</td>
-    </tr>
-    <tr>
-      {% if project_config.is_activated_search() %}
-      <td>
-        <a
-          href="{{ link_renderer.render_url('search?q=(node.is_requirement and node["UID"] == None)') }}"
-        >
-          Requirements with no UID
-        </a>
-      </td>
-      {% else %}
-        <td>Requirements with no UID</td>
-      {% endif %}
-      <td>{{ document_tree_stats.requirements_no_uid }}</td>
-    </tr>
-    <tr>
-      {% if project_config.is_activated_search() %}
-      <td>
-        <a
-          href="{{ link_renderer.render_url('search?q=(node.is_requirement and node.is_root and node["STATUS"] != "Backlog" and not node.has_child_requirements)') }}"
-        >
-          Root-level requirements not connected to by any requirement
-        </a>
-      </td>
-      {% else %}
-      <td>Root-level requirements not connected to by any requirement</td>
-      {% endif %}
-      <td>{{ document_tree_stats.requirements_root_no_links }}</td>
-    </tr>
-    <tr>
-      {% if project_config.is_activated_search() %}
-      <td>
-        <a
-          href="{{ link_renderer.render_url('search?q=(node.is_requirement and not node.is_root and node["STATUS"] != "Backlog" and not node.has_parent_requirements)') }}"
-        >
-          Non-root-level requirements not connected to any parent requirement
-        </a>
-      </td>
-      {% else %}
-      <td>Non-root-level requirements not connected to any parent requirement</td>
-      {% endif %}
-      <td>{{ document_tree_stats.requirements_no_links }}</td>
-    </tr>
-    <tr>
-      {% if project_config.is_activated_search() %}
-      <td>
-        <a
-          href="{{ link_renderer.render_url('search?q=(node.is_requirement and node["RATIONALE"] == None)') }}"
-        >
-          Requirements with no RATIONALE
-        </a>
-      </td>
-      {% else %}
-      <td>Requirements with no RATIONALE</td>
-      {% endif %}
-      <td>{{ document_tree_stats.requirements_no_rationale }}</td>
-    </tr>
-    <tr>
-    <td colspan="2"><b>Requirements status</b></td>
-    </tr>
-    <tr>
-      {% if project_config.is_activated_search() %}
-      <td>
-        <a
-          href="{{ link_renderer.render_url('search?q=(node.is_requirement and node["STATUS"] == None)') }}"
-        >
-          Requirements with no Status
-        </a>
-      </td>
-      {% else %}
-      <td>Requirements with no Status</td>
-      {% endif %}
-      <td>{{ document_tree_stats.requirements_status_none }}</td>
-    </tr>
-    <tr>
-      {% if project_config.is_activated_search() %}
-      <td>
-        <a
-          href="{{ link_renderer.render_url('search?q=(node.is_requirement and node["STATUS"] == "Active")') }}"
-        >
-          Requirements with status Active
-        </a>
-      </td>
-      {% else %}
-        <td>Requirements with status Active</td>
-      {% endif %}
-      <td>{{ document_tree_stats.requirements_status_active }}</td>
-    </tr>
-    <tr>
-      {% if project_config.is_activated_search() %}
-      <td>
-        <a
-          href="{{ link_renderer.render_url('search?q=(node.is_requirement and node["STATUS"] == "Draft")') }}"
-        >
-          Requirements with status Draft
-        </a>
-      </td>
-      {% else %}
-        <td>Requirements with status Draft</td>
-      {% endif %}
-      <td>{{ document_tree_stats.requirements_status_draft }}</td>
-    </tr>
-    <tr>
-      {% if project_config.is_activated_search() %}
-      <td>
-        <a
-          href="{{ link_renderer.render_url('search?q=(node.is_requirement and node["STATUS"] == "Backlog")') }}"
-        >
-          Requirements with status Backlog
-        </a>
-      </td>
-      {% else %}
-        <td>Requirements with status Backlog</td>
-      {% endif %}
-      <td>{{ document_tree_stats.requirements_status_backlog }}</td>
-    </tr>
-    <tr>
-      {% if project_config.is_activated_search() %}
-      <td>
-        <a
-          href="{{ link_renderer.render_url('search?q=(node.is_requirement and node["STATUS"] != None and node["STATUS"] != "Backlog" and node["STATUS"] != "Active" and node["STATUS"] != "Draft")') }}"
-        >
-          Requirements with all other statuses
-        </a>
-      </td>
-      {% else %}
-        <td>Requirements with all other statuses</td>
-      {% endif %}
-      <td>{{ document_tree_stats.requirements_status_other }}</td>
-    </tr>
-    <tr>
-    <td colspan="2"><b>TBD/TBC</b></td>
-    </tr>
-    <tr>
-      {% if project_config.is_activated_search() %}
-      <td>
-        <a
-          href="{{ link_renderer.render_url('search?q=node.contains("TBD")') }}"
-        >
-          Total TBD
-        </a>
-      </td>
-      {% else %}
-        <td>Total TBD</td>
-      {% endif %}
-      <td>{{ document_tree_stats.total_tbd }}</td>
-    </tr>
-    <tr>
-      {% if project_config.is_activated_search() %}
-      <td>
-        <a
-          href="{{ link_renderer.render_url('search?q=node.contains("TBC")') }}"
-        >
-          Total TBC
-        </a>
-      </td>
-      {% else %}
-        <td>Total TBC</td>
-      {% endif %}
-      <td>{{ document_tree_stats.total_tbc }}</td>
-    </tr>
-  </table>
-</div>
+{% with table_key_value = [
+  {"Section":"General information"},
+  {
+    "Key":"Project name",
+    "Value": project_config.project_title,
+  },
+  {
+    "Key":"Statistics generation date",
+    "Value": date_now.strftime("%Y-%m-%d %H:%M:%S"),
+  },
+  {
+    "Key":"Last modification of project data",
+    "Value": traceability_index.strictdoc_last_update.strftime("%Y-%m-%d %H:%M:%S"),
+  },
+  {
+    "Key":"Git commit/release",
+    "Value": document_tree_stats.git_commit_hash,
+  },
+  {
+    "Key":"Total documents",
+    "Value": document_tree_stats.total_documents,
+  },
+  {"Section":"Requirements"},
+  {
+    "Key":"Total requirements",
+    "Link": link_renderer.render_url('search?q=node.is_requirement'),
+    "Value": document_tree_stats.total_requirements,
+  },
+  {
+    "Key":"Requirements with no UID",
+    "Link": link_renderer.render_url('search?q=(node.is_requirement and node["UID"] == None)'),
+    "Value": document_tree_stats.requirements_no_uid,
+  },
+  {
+    "Key":"Root-level requirements not connected to by any requirement",
+    "Link": link_renderer.render_url('search?q=(node.is_requirement and node.is_root and node["STATUS"] != "Backlog" and not node.has_child_requirements)'),
+    "Value": document_tree_stats.requirements_root_no_links,
+  },
+  {
+    "Key":"Non-root-level requirements not connected to any parent requirement",
+    "Link": link_renderer.render_url('search?q=(node.is_requirement and not node.is_root and node["STATUS"] != "Backlog" and not node.has_parent_requirements)'),
+    "Value": document_tree_stats.requirements_no_links,
+  },
+  {
+    "Key":"Requirements with no RATIONALE",
+    "Link": link_renderer.render_url('search?q=(node.is_requirement and node["RATIONALE"] == None)'),
+    "Value": document_tree_stats.requirements_no_rationale,
+  },
+  {"Section":"Requirements status"},
+  {
+    "Key":"Requirements with no Status",
+    "Link": link_renderer.render_url('search?q=(node.is_requirement and node["STATUS"] == None)'),
+    "Value": document_tree_stats.requirements_status_none,
+  },
+  {
+    "Key":"Requirements with status Active",
+    "Link": link_renderer.render_url('search?q=(node.is_requirement and node["STATUS"] == "Active")'),
+    "Value": document_tree_stats.requirements_status_active,
+  },
+  {
+    "Key":"Requirements with status Draft",
+    "Link": link_renderer.render_url('search?q=(node.is_requirement and node["STATUS"] == "Draft")'),
+    "Value": document_tree_stats.requirements_status_draft,
+  },
+  {
+    "Key":"Requirements with status Backlog",
+    "Link": link_renderer.render_url('search?q=(node.is_requirement and node["STATUS"] == "Backlog")'),
+    "Value": document_tree_stats.requirements_status_backlog,
+  },
+  {
+    "Key":"Requirements with all other statuses",
+    "Link": link_renderer.render_url('search?q=(node.is_requirement and node["STATUS"] != None and node["STATUS"] != "Backlog" and node["STATUS"] != "Active" and node["STATUS"] != "Draft")'),
+    "Value": document_tree_stats.requirements_status_other,
+  },
+  {"Section":"TBD/TBC"},
+  {
+    "Key":"Total TBD",
+    "Link": link_renderer.render_url('search?q=node.contains("TBD")'),
+    "Value": document_tree_stats.total_tbd,
+  },
+  {
+    "Key":"Total TBC",
+    "Link": link_renderer.render_url('search?q=node.contains("TBC")'),
+    "Value": document_tree_stats.total_tbc,
+  },
+]	%}
+  {% include "components/table_key_value/index.jinja" %}
+{% endwith %}
+</div>{# / .main #}

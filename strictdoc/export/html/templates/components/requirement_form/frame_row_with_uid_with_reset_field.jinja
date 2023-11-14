@@ -29,7 +29,7 @@
     field_placeholder = "Enter "~placeholder_name~" here...",
     field_type = text_field_row_context.field_type,
     field_value = text_field_row_context.field.field_escaped_value,
-    testid_postfix = "requirement-field-"~text_field_row_context.field.field_name
+    testid_postfix = text_field_row_context.field.field_name
   %}
     {%- include "components/form/field/contenteditable/index.jinja" %}
   {%- endwith -%}

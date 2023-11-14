@@ -120,14 +120,14 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
 
     def assert_uid_field_contains(self, string: str) -> None:
         self.test_case.assert_element_present(
-            "//*[@data-testid='form-field-requirement-field-UID']"
+            "//*[@data-testid='form-field-UID']"
             f"[contains(., '{string}')]",
             by=By.XPATH,
         )
 
     def assert_uid_field_does_not_contain(self, string: str) -> None:
         self.test_case.assert_element_not_present(
-            "//*[@data-testid='form-field-requirement-field-UID']"
+            "//*[@data-testid='form-field-UID']"
             f"[contains(., '{string}')]",
             by=By.XPATH,
         )

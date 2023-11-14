@@ -20,7 +20,7 @@
   </form>
 
   {%- if error is none -%}
-    {%- if search_results|length == 0 -%}
+    {%- if search_results|length == 0 and search_value|length > 0 -%}
       <div class="sdoc-search-success">Nothing matching the query was found.</div>
     {%- elif search_results|length > 0 -%}
       <div class="sdoc-search-success">Found <b>{{ search_results|length }}</b> results.</div>

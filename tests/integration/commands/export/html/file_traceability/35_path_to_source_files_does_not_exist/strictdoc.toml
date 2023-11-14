@@ -1,0 +1,7 @@
+[project]
+
+features = [
+  "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+]
+
+source_root_path = "DOES_NOT_EXIST/"

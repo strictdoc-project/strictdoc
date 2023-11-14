@@ -196,6 +196,10 @@ class QueryObject:
             )
             grammar_field_titles = list(map(lambda f: f.title, element.fields))
             if field_name not in grammar_field_titles:
+                # These fields are used on the statistics screen but a user
+                # may have them disabled in the grammar.
+                if field_name in ("UID", "STATUS", "RATIONALE"):
+                    return None
                 raise AttributeError(f"No such requirement field: {field_name}")
             field_value = requirement._get_cached_field(field_name, False)
             if field_value is not None:

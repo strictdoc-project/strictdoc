@@ -1,0 +1,5 @@
+RUN: %expect_exit 1 %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+
+# Expecting a error because the test2.py is filtered out by the
+# "include_source_paths" option.
+CHECK: error: Requirement REQ-002 references a file that does not exist: src2/test2.py

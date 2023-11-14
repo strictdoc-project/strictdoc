@@ -1,0 +1,11 @@
+RUN: %strictdoc export %S --experimental-enable-file-traceability --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%S/Output/html/_source_files/file.py.html"
+
+RUN: %cat %S/Output/html/30_path_to_source_files_option/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001">
+
+RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE: <a{{.*}}href="../30_path_to_source_files_option/input.html#1-REQ-001"{{.*}}>
+CHECK-SOURCE-FILE: <span class="c1"># noqa: T201</span></pre>

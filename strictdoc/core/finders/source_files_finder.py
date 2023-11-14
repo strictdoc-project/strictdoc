@@ -21,7 +21,6 @@ class SourceFileType(Enum):
 
     @classmethod
     def create_from_path(cls, path_to_file: str) -> "SourceFileType":
-        assert os.path.isfile(path_to_file), path_to_file
         if path_to_file.endswith(".py"):
             return cls.PYTHON
         if path_to_file.endswith(".c"):
@@ -105,8 +104,7 @@ class SourceFilesFinder:
         found_source_files: List[SourceFile] = []
 
         # TODO: Unify this on the FileTree class level.
-        # Introduce #mount_directory method?
-        doctree_root_abs_path = os.getcwd()
+        doctree_root_abs_path = project_config.source_root_path
         doctree_root_abs_path = (
             os.path.dirname(doctree_root_abs_path)
             if os.path.isfile(doctree_root_abs_path)

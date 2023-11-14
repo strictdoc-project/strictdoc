@@ -1,0 +1,11 @@
+[project]
+
+include_source_paths = [
+  "src1/**"
+]
+
+features = [
+  "REQUIREMENT_TO_SOURCE_TRACEABILITY"
+]
+
+source_root_path = "source_root/"

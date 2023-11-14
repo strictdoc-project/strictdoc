@@ -2,6 +2,11 @@
 
 {% extends "base.jinja.html" %}
 
+{% block head_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ link_renderer.render_static_url('table_vew.css') }}"/>
+{% endblock head_css %}
+
 {% block head_scripts %}
   <script type="text/javascript" src="{{ link_renderer.render_static_url('viewtype_menu.js') }}"></script>
   <script type="text/javascript" src="{{ link_renderer.render_static_url('resizable_bar.js') }}"></script>

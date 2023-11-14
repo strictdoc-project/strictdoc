@@ -1009,9 +1009,9 @@ a.tree_item:hover {
   padding-right: var(--base-rhythm);
 }
 
-/* meta */
+/* table_key_value component */
 
-.sdoc-table {
+.sdoc-table_key_value {
   display: grid;
   grid-template-columns: minmax(min-content, max-content) minmax(min-content, 1fr);
   place-items: stretch stretch;
@@ -1030,15 +1030,15 @@ a.tree_item:hover {
   overflow-x: auto;
 }
 
-.sdoc-table-section,
-.sdoc-table-key,
-.sdoc-table-value {
+.sdoc-table_key_value-section,
+.sdoc-table_key_value-key,
+.sdoc-table_key_value-value {
   display: flex;
   padding: var(--base-rhythm) calc(var(--base-rhythm)*2);
   background-color: var(--color-bg-secondary);
 }
 
-.sdoc-table-key {
+.sdoc-table_key_value-key {
   grid-column: 1 / 2;
   color: var(--color-fg-main);
   /* background-color: var(--color-bg-contrast); */
@@ -1051,18 +1051,18 @@ a.tree_item:hover {
   transition: 0.3s all;
 }
 
-a.sdoc-table-key {
+a.sdoc-table_key_value-key {
   background-color: rgba(255,255,255,0.5);
   color: var(--color-fg-contrast);
   padding-right: calc(var(--base-rhythm)*5);
 }
 
-a.sdoc-table-key:hover {
+a.sdoc-table_key_value-key:hover {
   background-color: rgba(255,255,255,1);
   color: var(--color-fg-accent);
 }
 
-a.sdoc-table-key::after {
+a.sdoc-table_key_value-key::after {
   content: "▸";
   position: absolute;
   right: calc(var(--base-rhythm)*2);
@@ -1070,11 +1070,11 @@ a.sdoc-table-key::after {
   font-size: var(--font-size-sm);
 }
 
-.sdoc-table-value {
+.sdoc-table_key_value-value {
   grid-column: 2 / 3;
 }
 
-.sdoc-table-section {
+.sdoc-table_key_value-section {
   grid-column: 1 / -1;
 
   padding: calc(var(--base-rhythm)*2);

@@ -1,0 +1,33 @@
+{% assert uid_form_field is defined %}
+
+{% set text_field_row_context = namespace() %}
+{% set row_context = text_field_row_context %}
+
+{#
+  When called in the template:
+  "strictdoc/export/html/templates/components/requirement_form/index.jinja",
+
+  the following parameters are passed:
+
+      {% set text_field_row_context.errors=form_object.get_errors(field_.field_name) %}
+      {% set text_field_row_context.field = field_ %}
+      {% set text_field_row_context.field_type = "singleline" %}
+      {% set text_field_row_context.reference_mid = form_object.requirement_mid %}
+
+  There's no form_object here in Stream.
+  And we also create a field in the router "/reset_uid",
+  which we will pass here (instead of the field from the form_object, as in a normal form).
+
+#}
+{# So we redefine the parameters like this: #}
+{% set text_field_row_context.errors=[] %}
+{% set text_field_row_context.field = uid_form_field %}
+{% set text_field_row_context.field_type = "singleline" %}
+{% set text_field_row_context.reference_mid = uid_form_field.field_mid %}
+
+<turbo-stream action="replace" target="uid_with_reset-{{ reference_mid }}">
+  {# this template is turbo-frame and has a button to reset to the default value: #}
+  <template>
+    {%- include "components/requirement_form/frame_row_with_uid_with_reset_field.jinja" %}
+  </template>
+</turbo-stream>

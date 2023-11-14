@@ -998,6 +998,52 @@ def create_main_router(
             },
         )
 
+    @router.get(
+        "/reset_uid",
+        response_class=Response,
+    )
+    def reset_uid(reference_mid: str):
+        reference_node = export_action.traceability_index.get_node_by_mid(
+            MID(reference_mid)
+        )
+
+        assert isinstance(reference_node, Requirement)
+        # FIXME: it might as well be a section?
+
+        document_tree_stats: DocumentTreeStats = (
+            DocumentUIDAnalyzer.analyze_document_tree(
+                export_action.traceability_index
+            )
+        )
+        next_uid: str = document_tree_stats.get_next_requirement_uid(
+            reference_node.get_requirement_prefix()
+        )
+
+        uid_form_field: RequirementFormField = RequirementFormField(
+            field_mid=MID.create().get_string_value(),
+            field_name="UID",
+            field_type=RequirementFormFieldType.SINGLELINE,
+            field_unescaped_value=next_uid,
+            field_escaped_value=next_uid,
+        )
+        template = env().get_template(
+            "components/"
+            "requirement_form/"
+            "stream_row_with_uid_with_reset_field.jinja"
+        )
+        output = template.render(
+            next_uid=next_uid,
+            reference_mid=reference_mid,
+            uid_form_field=uid_form_field,
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
     @router.post("/actions/document/update_requirement")
     async def document__update_requirement(request: Request):
         request_form_data: FormData = await request.form()

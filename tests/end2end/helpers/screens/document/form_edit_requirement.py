@@ -115,3 +115,35 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
     def do_fill_in_field_rationale(self, field_value: str) -> None:
         assert isinstance(field_value, str)
         super().do_fill_in("requirement-field-RATIONALE", field_value)
+
+    # Reset UID button
+
+    def assert_uid_field_contains(self, string: str) -> None:
+        self.test_case.assert_element_present(
+            "//*[@data-testid='form-field-requirement-field-UID']"
+            f"[contains(., '{string}')]",
+            by=By.XPATH,
+        )
+
+    def assert_uid_field_does_not_contain(self, string: str) -> None:
+        self.test_case.assert_element_not_present(
+            "//*[@data-testid='form-field-requirement-field-UID']"
+            f"[contains(., '{string}')]",
+            by=By.XPATH,
+        )
+
+    def assert_uid_field_has_reset_button(self) -> None:
+        self.test_case.assert_element_present(
+            "//*[@data-testid='reset-uid-field-action']",
+            by=By.XPATH,
+        )
+
+    def assert_uid_field_has_not_reset_button(self) -> None:
+        self.test_case.assert_element_not_present(
+            "//*[@data-testid='reset-uid-field-action']",
+            by=By.XPATH,
+        )
+
+    def do_reset_uid_field(self, field_name: str = "") -> None:
+        assert isinstance(field_name, str)
+        self.test_case.click_xpath("//*[@data-testid='reset-uid-field-action']")

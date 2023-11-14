@@ -27,7 +27,7 @@
     field_type = "multiline",
     field_value = comment_field_row_context.field.field_escaped_value,
     mid = comment_field_row_context.field.field_mid,
-    testid_postfix = "requirement-field-COMMENT"
+    testid_postfix = "COMMENT"
   %}
   {%- include "components/form/field/contenteditable/index.jinja" %}
   {%- endwith -%}
@@ -44,9 +44,10 @@
 
   {%- set action_button_context = namespace() %}
   {%- set action_button_context.field_actions = {"delete": true} %}
+  {# TODO ? field_name = "requirement comment" #}
   {%- set action_button_context.field_name = "requirement comment" %}
   {%- set action_button_context.mid = comment_field_row_context.field.field_mid %}
-  {%- set action_button_context.testid_postfix = "requirement-comment" %}
+  {%- set action_button_context.testid_postfix = "comment" %}
   {%- include "components/form/field_action_button/index.jinja" -%}
 
 {% endblock row_right %}

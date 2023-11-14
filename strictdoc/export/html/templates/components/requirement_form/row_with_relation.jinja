@@ -39,7 +39,7 @@
     field_type = "singleline",
     field_value = relation_row_context.field.field_value,
     mid = relation_row_context.field.field_mid,
-    testid_postfix = "requirement-relation-uid"
+    testid_postfix = "relation-uid"
   %}
   {%- include "components/form/field/contenteditable/index.jinja" %}
   {%- endwith -%}
@@ -87,7 +87,7 @@
   {%- set action_button_context.field_actions = {"delete": true} %}
   {%- set action_button_context.field_name = "requirement relation" %}
   {%- set action_button_context.mid = relation_row_context.field.field_mid %}
-  {%- set action_button_context.testid_postfix = "requirement-relation" %}
+  {%- set action_button_context.testid_postfix = "form-field-relation" %}
   {%- include "components/form/field_action_button/index.jinja" -%}
 
 {% endblock row_right %}

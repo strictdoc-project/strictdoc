@@ -1030,8 +1030,9 @@ def create_main_router(
         )
         template = env().get_template(
             "components/"
-            "requirement_form/"
-            "stream_row_with_uid_with_reset_field.jinja"
+            "form/"
+            "row_uid_with_reset/"
+            "stream.jinja"
         )
         output = template.render(
             next_uid=next_uid,

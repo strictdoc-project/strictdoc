@@ -34,7 +34,7 @@
       {%- if field_.field_name == "UID" and field_.field_escaped_value == "" -%}
         <turbo-frame id="uid_with_reset-{{ text_field_row_context.reference_mid }}">
           {# this template is turbo-frame and has a button to reset to the default value: #}
-          {% include "components/requirement_form/frame_row_with_uid_with_reset_field.jinja" %}
+          {% include "components/form/row_uid_with_reset/frame.jinja" %}
         </turbo-frame>
       {%- else -%}
         {% include "components/requirement_form/row_with_text_field.jinja" %}

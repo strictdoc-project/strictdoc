@@ -4,8 +4,7 @@
 {% set row_context = text_field_row_context %}
 
 {#
-  When called in the template:
-  "strictdoc/export/html/templates/components/requirement_form/index.jinja",
+  When called in the template, f.E. "...requirement_form/index.jinja",
 
   the following parameters are passed:
 
@@ -28,6 +27,6 @@
 <turbo-stream action="replace" target="uid_with_reset-{{ reference_mid }}">
   {# this template is turbo-frame and has a button to reset to the default value: #}
   <template>
-    {%- include "components/requirement_form/frame_row_with_uid_with_reset_field.jinja" %}
+    {%- include "components/form/row_uid_with_reset/frame.jinja" %}
   </template>
 </turbo-stream>

@@ -1031,6 +1031,7 @@ def create_main_router(
         template = env().get_template(
             "components/"
             "form/"
+            "row/"
             "row_uid_with_reset/"
             "stream.jinja"
         )

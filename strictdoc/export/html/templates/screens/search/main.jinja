@@ -22,32 +22,69 @@
   style="height: unset;"
   data-testid="search-main-placeholder"
 >
-<pre>
-Query examples:
-~~~~~~~~~~~~~~
 
+<div>
+<p>
+The search query syntax is inspired by Python and is based on a fixed grammar.
+</p>
+<p>
+Important rules:
 
+<ul>
+<li>
+Every query component shall start with <code>node.</code>".
+</li>
+<li>
+<code>and</code> and <code>or</code> expressions must be grouped using round brackets.
+</li>
+<li>
+Only double quotes are accepted for strings.
+</li>
+</ul>
+</p>
 
-StringExpression:
-  '"' string = /[^"]+/ '"'
-;
+<p>
+Examples:
+</p>
 
-NodeFieldExpression:
-  'node["' field_name = /[A-Za-z0-9]+/ '"]'
-;
+<table>
+<tr>
+<td>
+  <a href="{{ link_renderer.render_url('search?q=node.is_requirement') }}">node.is_requirement</a>
+</td>
+<td>Find all requirements.</td>
+</tr>
+<tr>
+<td>
+  <a href="{{ link_renderer.render_url('search?q=node.is_section') }}">node.is_section</a>
+</td>
+<td>Find all sections.</td>
+</tr>
+<tr>
+<td>
+  <a href="{{ link_renderer.render_url('search?q=(node.is_requirement and "System" in node["TITLE"])') }}">(node.is_requirement and "System" in node["TITLE"])</a>
+</td>
+<td>Find all requirements with a TITLE that equals to "System".</td>
+</tr>
+<tr>
+<td>
+  <a href="{{ link_renderer.render_url('search?q=(node.is_requirement and node.is_root)') }}">(node.is_requirement and node.is_root)</a>
+</td>
+<td>Find all root requirements.</td>
+</tr>
+<tr>
+<td>
+  <a href="{{ link_renderer.render_url('search?q=(node.is_requirement and node.has_parent_requirements)') }}">(node.is_requirement and node.has_parent_requirements)</a>
+</td>
+<td>Find all requirements which have parent requirements.</td>
+</tr>
+</table>
 
-NodeHasParentRequirementsExpression:
-  _ = 'node.has_parent_requirements'
-;
+<p>
+  See the User Guide's section "Query engine" for more details.
+</p>
+</div>
 
-NodeIsRequirementExpression:
-  _ = 'node.is_requirement'
-;
-
-NodeIsSectionExpression:
-  _ = 'node.is_section'
-;
-</pre>
 </sdoc-main-placeholder>
 
   {%- endif -%}

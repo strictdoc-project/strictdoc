@@ -48,6 +48,24 @@ a[aria-disabled="true"] {
   pointer-events: none;
 }
 
+/* misc */
+
+code {
+  position: relative;
+  padding: 2px 6px;
+  font-style: normal;
+  font-family: var(--code-font-family);
+  font-size: var(--code-font-size);
+  background-color: var(--color-bg-main);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
 /* .document from tool */
 .document a,
 .document a:link,

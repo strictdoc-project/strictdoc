@@ -151,7 +151,8 @@ sdoc-search input[type="text"]:focus {
 }
 
 .sdoc-search-error,
-.sdoc-search-success {
+.sdoc-search-success,
+.sdoc-search-reset {
   display: block;
   padding: var(--base-rhythm) calc(var(--base-rhythm)*2);
   position: relative;
@@ -163,6 +164,12 @@ sdoc-search input[type="text"]:focus {
 
 .sdoc-search-success {
   color: var(--color-action);
+}
+
+.sdoc-search-reset {
+  position: absolute;
+  right: 0;
+  bottom: 0;
 }
 
 /* sdoc-form  */

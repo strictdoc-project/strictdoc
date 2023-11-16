@@ -144,3 +144,11 @@ sdoc-main-placeholder {
   font-weight: 700;
   font-family: var(--code-font-family);
 }
+
+sdoc-main-placeholder.page-tips {
+  height: unset;
+  font-family: unset;
+  font-weight:unset;
+  color: unset;
+  opacity: 0.5;
+}

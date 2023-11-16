@@ -19,7 +19,7 @@
   {%- else -%}
 
 <sdoc-main-placeholder
-  style="height: unset;"
+  class="page-tips"
   data-testid="search-main-placeholder"
 >
 
@@ -32,7 +32,7 @@ Important rules:
 
 <ul>
 <li>
-Every query component shall start with <code>node.</code>".
+Every query component shall start with <code>node.</code>*.
 </li>
 <li>
 <code>and</code> and <code>or</code> expressions must be grouped using round brackets.
@@ -47,42 +47,23 @@ Only double quotes are accepted for strings.
 Examples:
 </p>
 
-<table>
-<tr>
-<td>
-  <a href="{{ link_renderer.render_url('search?q=node.is_requirement') }}">node.is_requirement</a>
-</td>
-<td>Find all requirements.</td>
-</tr>
-<tr>
-<td>
-  <a href="{{ link_renderer.render_url('search?q=node.is_section') }}">node.is_section</a>
-</td>
-<td>Find all sections.</td>
-</tr>
-<tr>
-<td>
-  <a href="{{ link_renderer.render_url('search?q=(node.is_requirement and "System" in node["TITLE"])') }}">(node.is_requirement and "System" in node["TITLE"])</a>
-</td>
-<td>Find all requirements with a TITLE that equals to "System".</td>
-</tr>
-<tr>
-<td>
-  <a href="{{ link_renderer.render_url('search?q=(node.is_requirement and node.is_root)') }}">(node.is_requirement and node.is_root)</a>
-</td>
-<td>Find all root requirements.</td>
-</tr>
-<tr>
-<td>
-  <a href="{{ link_renderer.render_url('search?q=(node.is_requirement and node.has_parent_requirements)') }}">(node.is_requirement and node.has_parent_requirements)</a>
-</td>
-<td>Find all requirements which have parent requirements.</td>
-</tr>
-</table>
+<div class="sdoc-table_key_value">
+  <a class="sdoc-table_key_value-key" href="{{ link_renderer.render_url('search?q=node.is_requirement') }}"><code>node.is_requirement</code></a>
+  <div class="sdoc-table_key_value-value">Find all requirements.</div>
+  <a class="sdoc-table_key_value-key" href="{{ link_renderer.render_url('search?q=node.is_section') }}"><code>node.is_section</code></a>
+  <div class="sdoc-table_key_value-value">Find all sections.</div>
+  <a class="sdoc-table_key_value-key" href="{{ link_renderer.render_url('search?q=(node.is_requirement and "System" in node["TITLE"])') }}"><code>(node.is_requirement and "System" in node["TITLE"])</code></a>
+  <div class="sdoc-table_key_value-value">Find all requirements with a TITLE that equals to "System".</div>
+  <a class="sdoc-table_key_value-key" href="{{ link_renderer.render_url('search?q=(node.is_requirement and node.is_root)') }}"><code>(node.is_requirement and node.is_root)</code></a>
+  <div class="sdoc-table_key_value-value">Find all root requirements.</div>
+  <a class="sdoc-table_key_value-key" href="{{ link_renderer.render_url('search?q=(node.is_requirement and node.has_parent_requirements)') }}"><code>(node.is_requirement and node.has_parent_requirements)</code></a>
+  <div class="sdoc-table_key_value-value">Find all requirements which have parent requirements.</div>
+</div>
 
 <p>
   See the User Guide's section "Query engine" for more details.
 </p>
+
 </div>
 
 </sdoc-main-placeholder>

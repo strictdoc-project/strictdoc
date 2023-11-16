@@ -7,5 +7,5 @@ RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-pre
 CHECK-HTML: Hello world doc
 CHECK-HTML: input.sdoc
 
-RUN: %strictdoc passthrough %S/input.sdoc --output-file Output/output.sdoc
-RUN: %diff %S/input.sdoc Output/output.sdoc
+RUN: %strictdoc passthrough %S/input.sdoc --output-dir Output/
+RUN: %diff %S/input.sdoc Output/input.sdoc

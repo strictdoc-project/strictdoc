@@ -1,0 +1,12 @@
+RUN: %strictdoc export %S --output-dir Output --filter-requirements='("2" in node["TITLE"] or "4" in node["TITLE"])' | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: Hello world doc
+CHECK-HTML: input.sdoc
+
+RUN: %cat %S/Output/html/01_basic_filter/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC
+CHECK-HTML-DOC-NOT: Title #1
+CHECK-HTML-DOC: Title #2
+CHECK-HTML-DOC-NOT: Title #3
+CHECK-HTML-DOC: Title #4

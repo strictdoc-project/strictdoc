@@ -1,0 +1,15 @@
+RUN: %strictdoc export %S --output-dir Output --filter-requirements='("1" in node["TITLE"] or "2" in node["TITLE"] or "5" in node["TITLE"])' | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: Hello world doc
+CHECK-HTML: input.sdoc
+
+RUN: %cat %S/Output/html/04_all_parent_sections_MUST_NOT_be_filtered_when_not_all_its_requirements_are_filtered/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC
+CHECK-HTML-DOC: Title #1
+CHECK-HTML-DOC: Title #2
+CHECK-HTML-DOC: Title #5
+CHECK-HTML-DOC: MUST_NOT_BE_FILTERED_1
+CHECK-HTML-DOC-NOT: Title #3
+CHECK-HTML-DOC-NOT: Title #4
+CHECK-HTML-DOC-NOT: MUST_BE_FILTERED_2

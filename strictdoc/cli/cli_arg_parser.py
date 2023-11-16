@@ -57,9 +57,17 @@ class ImportExcelCommandConfig:
 
 
 class PassthroughCommandConfig:
-    def __init__(self, input_file, output_file):
+    def __init__(
+        self,
+        input_file,
+        output_dir: Optional[str],
+        filter_requirements: Optional[str],
+        filter_sections: Optional[str],
+    ):
         self.input_file = input_file
-        self.output_file = output_file
+        self.output_dir: Optional[str] = output_dir
+        self.filter_requirements: Optional[str] = filter_requirements
+        self.filter_sections: Optional[str] = filter_sections
 
 
 @auto_described
@@ -116,6 +124,8 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         fields,
         no_parallelization,
         enable_mathjax,
+        filter_requirements: Optional[str],
+        filter_sections: Optional[str],
         reqif_profile: Optional[str],
         experimental_enable_file_traceability,
     ):
@@ -128,6 +138,8 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         self.fields = fields
         self.no_parallelization = no_parallelization
         self.enable_mathjax = enable_mathjax
+        self.filter_requirements: Optional[str] = filter_requirements
+        self.filter_sections: Optional[str] = filter_sections
         self.reqif_profile: Optional[str] = reqif_profile
         self.experimental_enable_file_traceability = (
             experimental_enable_file_traceability
@@ -212,7 +224,10 @@ class SDocArgsParser:
 
     def get_passthrough_config(self) -> PassthroughCommandConfig:
         return PassthroughCommandConfig(
-            self.args.input_file, self.args.output_file
+            self.args.input_file,
+            self.args.output_dir,
+            filter_requirements=self.args.filter_requirements,
+            filter_sections=self.args.filter_sections,
         )
 
     def get_export_config(self) -> ExportCommandConfig:
@@ -232,6 +247,8 @@ class SDocArgsParser:
             self.args.fields,
             self.args.no_parallelization,
             self.args.enable_mathjax,
+            self.args.filter_requirements,
+            self.args.filter_sections,
             self.args.reqif_profile,
             self.args.experimental_enable_file_traceability,
         )

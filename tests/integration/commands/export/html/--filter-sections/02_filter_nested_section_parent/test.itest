@@ -1,0 +1,14 @@
+RUN: %strictdoc export %S --output-dir Output --filter-sections='"MUST_BE_FILTERED 2" not in node["TITLE"]' | filecheck %s --dump-input=fail
+RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %S/Output/html/02_filter_nested_section_parent/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC
+
+CHECK: Published: Hello world doc
+
+CHECK-HTML: Hello world doc
+CHECK-HTML: input.sdoc
+
+CHECK-HTML-DOC-NOT: MUST_BE_FILTERED
+CHECK-HTML-DOC-NOT: Title #1
+CHECK-HTML-DOC-NOT: Title #2
+CHECK-HTML-DOC-NOT: Title #3
+CHECK-HTML-DOC-NOT: Title #4

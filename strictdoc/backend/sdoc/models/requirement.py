@@ -198,6 +198,9 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes, too-ma
             self.ng_resolved_custom_level = level
             self.custom_level = level
 
+        # This is always true, unless the node is filtered out with --filter-requirements.
+        self.ng_whitelisted = True
+
         # Cache for accessing the reserved fields values.
         self.ng_reserved_fields_cache: Dict[str, Any] = {}
 

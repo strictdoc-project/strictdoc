@@ -175,6 +175,16 @@ class CommandParserBuilder:
                 "enables traceability between requirements and files."
             ),
         )
+        command_parser_export.add_argument(
+            "--filter-requirements",
+            type=str,
+            help="Filter which requirements will be exported.",
+        )
+        command_parser_export.add_argument(
+            "--filter-sections",
+            type=str,
+            help="Filter which sections will be exported.",
+        )
         add_config_argument(command_parser_export)
 
     @staticmethod
@@ -291,10 +301,22 @@ class CommandParserBuilder:
             formatter_class=formatter,
         )
         command_parser_passthrough.add_argument(
-            "input_file", type=str, help="Path to the input SDoc file"
+            "input_file", type=str, help="Path to the input SDoc file."
         )
         command_parser_passthrough.add_argument(
-            "--output-file", type=str, help="Path to the output SDoc file"
+            "--output-dir",
+            type=str,
+            help="A directory where to output the SDoc files to.",
+        )
+        command_parser_passthrough.add_argument(
+            "--filter-requirements",
+            type=str,
+            help="Filter which requirements will be exported.",
+        )
+        command_parser_passthrough.add_argument(
+            "--filter-sections",
+            type=str,
+            help="Filter which sections will be exported.",
         )
 
     @staticmethod

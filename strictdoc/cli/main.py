@@ -44,21 +44,22 @@ def _main(parallelizer):
     if parser.is_passthrough_command:
         config: PassthroughCommandConfig = parser.get_passthrough_config()
         input_file = config.input_file
-        if not os.path.isfile(input_file):
+        if not os.path.exists(input_file):
             sys.stdout.flush()
-            message = "error: passthrough command's input file does not exist"
+            message = "error: passthrough command's input path is neither a folder or a file."
             print(f"{message}: {input_file}")  # noqa: T201
             sys.exit(1)
 
-        output_file = config.output_file
-        if output_file:
-            output_dir = os.path.dirname(output_file)
-            if not os.path.isdir(output_dir):
-                print(f"not a directory: {output_file}")  # noqa: T201
-                sys.exit(1)
+        project_config: ProjectConfig = (
+            ProjectConfigLoader.load_from_path_or_get_default(
+                path_to_config=os.getcwd(),
+                environment=environment,
+            )
+        )
+        project_config.integrate_passthrough_config(config)
 
         passthrough_action = PassthroughAction()
-        passthrough_action.passthrough(config)
+        passthrough_action.passthrough(project_config)
 
     elif parser.is_export_command:
         config: ExportCommandConfig = parser.get_export_config()

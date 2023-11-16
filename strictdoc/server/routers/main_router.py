@@ -112,6 +112,8 @@ def create_main_router(
         fields=None,
         no_parallelization=False,
         enable_mathjax=False,
+        filter_requirements=None,
+        filter_sections=None,
         reqif_profile=project_config.reqif_profile,
         experimental_enable_file_traceability=False,
     )

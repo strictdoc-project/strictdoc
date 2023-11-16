@@ -10,6 +10,7 @@ from strictdoc import SDocRuntimeEnvironment
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.cli.cli_arg_parser import (
     ExportCommandConfig,
+    PassthroughCommandConfig,
     ServerCommandConfig,
 )
 from strictdoc.helpers.auto_described import auto_described
@@ -98,6 +99,11 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         self.export_output_dir: str = "output"
         self.export_output_html_root: Optional[str] = None
         self.export_formats: Optional[List[str]] = None
+        self.filter_requirements: Optional[str] = None
+        self.filter_sections: Optional[str] = None
+
+        self.passthrough_input_path: Optional[str] = None
+        self.passthrough_output_dir: Optional[str] = None
 
         self.excel_export_fields: Optional[List[str]] = None
 
@@ -143,6 +149,8 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         self.export_output_dir = export_config.output_dir
         self.export_output_html_root = export_config.output_html_root
         self.export_formats = export_config.formats
+        self.filter_requirements = export_config.filter_requirements
+        self.filter_sections = export_config.filter_sections
         self.excel_export_fields = export_config.fields
 
         if (
@@ -175,6 +183,15 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
 
         if export_config.reqif_profile is not None:
             self.reqif_profile = export_config.reqif_profile
+
+    def integrate_passthrough_config(self, config: PassthroughCommandConfig):
+        self.passthrough_input_path = config.input_file
+        self.passthrough_output_dir = config.output_dir
+        self.filter_requirements = config.filter_requirements
+        self.filter_sections = config.filter_sections
+
+        # FIXME: Traceability Index is coupled with HTML output.
+        self.export_output_html_root = "NOT_RELEVANT"
 
     def is_feature_activated(self, feature: ProjectFeature):
         return feature in self.project_features

@@ -21,6 +21,9 @@ from strictdoc.helpers.string import (
 class ManageAutoUIDCommand:
     @staticmethod
     def execute(*, project_config: ProjectConfig, parallelizer: Parallelizer):
+        # FIXME: Traceability Index is coupled with HTML output.
+        project_config.export_output_html_root = "NOT_RELEVANT"
+
         try:
             traceability_index: TraceabilityIndex = (
                 TraceabilityIndexBuilder.create(

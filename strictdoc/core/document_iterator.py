@@ -58,6 +58,12 @@ class DocumentCachingIterator:
 
             current = task_list.popleft()
 
+            # If node is not whitelisted, we ignore it. Also, note that due to
+            # this early return, all child nodes of this node are ignored
+            # as well because they are not added to the iteration queue.
+            if not current.ng_whitelisted:
+                continue
+
             if isinstance(
                 current, (Section, Requirement, CompositeRequirement)
             ):

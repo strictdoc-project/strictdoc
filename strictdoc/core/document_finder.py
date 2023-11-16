@@ -62,6 +62,7 @@ class DocumentFinder:
         assert isinstance(file_trees, list)
 
         output_root_html = project_config.export_output_html_root
+        assert output_root_html is not None
 
         document_list, map_docs_by_paths, map_docs_by_rel_paths = [], {}, {}
 

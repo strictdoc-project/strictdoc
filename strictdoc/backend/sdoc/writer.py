@@ -168,6 +168,9 @@ class SDWriter:
 
             output += "\n"
 
+            if not content_node.ng_whitelisted:
+                continue
+
             if isinstance(content_node, Section):
                 output += self._print_section(content_node)
                 closing_tags.append((TAG.SECTION, content_node.ng_level))

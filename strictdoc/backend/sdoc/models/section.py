@@ -50,6 +50,8 @@ class Section(Node):  # pylint: disable=too-many-instance-attributes
         self.ng_document_reference: Optional[DocumentReference] = None
         self.context = SectionContext()
         self.mid: MID = MID.create()
+        # This is always true, unless the node is filtered out with --filter-requirements.
+        self.ng_whitelisted = True
 
     @staticmethod
     def get_type_string() -> str:
@@ -83,3 +85,15 @@ class Section(Node):  # pylint: disable=too-many-instance-attributes
             return self.requirement_prefix
         parent: Union[Section, Document] = self.parent
         return parent.get_requirement_prefix()
+
+    def blacklist_if_needed(self):
+        for node_ in self.section_contents:
+            if node_.ng_whitelisted:
+                return
+
+        self.ng_whitelisted = False
+
+        # If it turns out that all child nodes are blacklisted,
+        # go up and blacklist the parent node if needed.
+        if isinstance(self.parent, Section) and self.parent.ng_whitelisted:
+            self.parent.blacklist_if_needed()

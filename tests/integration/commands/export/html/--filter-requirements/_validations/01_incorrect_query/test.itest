@@ -1,0 +1,2 @@
+RUN: %expect_exit 1 %strictdoc export %S --output-dir Output --filter-requirements='BROKEN QUERY' | filecheck %s --dump-input=fail
+CHECK: error: Cannot parse filter query.

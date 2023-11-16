@@ -2,7 +2,9 @@ import glob
 import os
 import sys
 from collections import defaultdict
-from typing import Dict, Iterator, List, Optional, Set
+from typing import Dict, Iterator, List, Optional, Set, Union
+
+from textx import TextXSyntaxError
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
@@ -12,6 +14,7 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
 )
 from strictdoc.backend.sdoc.models.requirement import Requirement
+from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.models.type_system import ReferenceType
 from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityReader,
@@ -27,6 +30,11 @@ from strictdoc.core.finders.source_files_finder import (
 from strictdoc.core.graph.validations import RemoveNodeValidation
 from strictdoc.core.graph_database import GraphDatabase
 from strictdoc.core.project_config import ProjectConfig, ProjectFeature
+from strictdoc.core.query_engine.query_object import (
+    QueryNullObject,
+    QueryObject,
+)
+from strictdoc.core.query_engine.query_reader import QueryReader
 from strictdoc.core.source_tree import SourceTree
 from strictdoc.core.traceability_index import (
     FileTraceabilityIndex,
@@ -90,6 +98,10 @@ class TraceabilityIndexBuilder:
         traceability_index.document_tree = document_tree
         traceability_index.asset_dirs = asset_dirs
         traceability_index.strictdoc_last_update = strictdoc_last_update
+
+        TraceabilityIndexBuilder._filter_nodes(
+            project_config=project_config, traceability_index=traceability_index
+        )
 
         # Incremental re-generation of documents
         document: Document
@@ -477,3 +489,83 @@ class TraceabilityIndexBuilder:
                 # @sdoc[/SDOC-VALIDATION-NO-CYCLES]
 
         return traceability_index
+
+    @staticmethod
+    def _filter_nodes(
+        project_config: ProjectConfig, traceability_index: TraceabilityIndex
+    ):
+        if (
+            project_config.filter_requirements is not None
+            or project_config.filter_sections is not None
+        ):
+            query_reader = QueryReader()
+            requirements_query_object: Union[QueryObject, QueryNullObject]
+            sections_query_object: Union[QueryObject, QueryNullObject]
+            try:
+                if project_config.filter_requirements is not None:
+                    requirements_query = query_reader.read(
+                        project_config.filter_requirements
+                    )
+                    requirements_query_object = QueryObject(
+                        requirements_query, traceability_index
+                    )
+                else:
+                    requirements_query_object = QueryNullObject()
+                if project_config.filter_sections is not None:
+                    sections_query = query_reader.read(
+                        project_config.filter_sections
+                    )
+                    sections_query_object = QueryObject(
+                        sections_query, traceability_index
+                    )
+                else:
+                    sections_query_object = QueryNullObject()
+            except TextXSyntaxError:
+                print("error: Cannot parse filter query.")  # noqa: T201
+                sys.exit(1)
+            try:
+                for document in traceability_index.document_tree.document_list:
+                    document_iterator = (
+                        traceability_index.get_document_iterator(document)
+                    )
+                    for node in document_iterator.all_content():
+                        if (
+                            node.is_section
+                            and not sections_query_object.evaluate(node)
+                        ):
+                            node.ng_whitelisted = False
+                            # If the node is the last one, we check if all other
+                            # nodes are filtered out and if so, mark the parent
+                            # section node as not whitelisted as well.
+                            if (
+                                node.parent.section_contents[
+                                    len(node.parent.section_contents) - 1
+                                ]
+                                == node
+                            ):
+                                if isinstance(node.parent, Section):
+                                    node.parent.blacklist_if_needed()
+
+                        elif (
+                            node.is_requirement
+                            and not requirements_query_object.evaluate(node)
+                        ):
+                            node.ng_whitelisted = False
+                            # If the node is the last one, we check if all other
+                            # nodes are filtered out and if so, mark the parent
+                            # section node as not whitelisted as well.
+                            if (
+                                node.parent.section_contents[
+                                    len(node.parent.section_contents) - 1
+                                ]
+                                == node
+                            ):
+                                if node.parent.is_section:
+                                    node.parent.blacklist_if_needed()
+
+            except (AttributeError, NameError, TypeError) as attribute_error_:
+                print(  # noqa: T201
+                    "error: cannot apply a filter query to a node: "
+                    f"{attribute_error_}"
+                )
+                sys.exit(1)

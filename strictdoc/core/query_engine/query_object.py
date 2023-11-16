@@ -113,6 +113,11 @@ class Query:
         self.root_expression = root_expression
 
 
+class QueryNullObject:
+    def evaluate(self, _) -> bool:
+        return True
+
+
 class QueryObject:
     def __init__(self, query: Query, traceability_index: TraceabilityIndex):
         self.query: Query = query

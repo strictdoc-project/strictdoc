@@ -8,7 +8,7 @@ from strictdoc.cli.cli_arg_parser import (
 FAKE_STRICTDOC_ROOT_PATH = "/tmp/strictdoc-123"
 
 
-TOTAL_EXPORT_ARGS = 11
+TOTAL_EXPORT_ARGS = 13
 
 
 def cli_args_parser():
@@ -205,10 +205,12 @@ def test_passthrough_01_minimal():
 
     args = parser.parse_args(["passthrough", "input.sdoc"])
 
-    assert args._get_kwargs() == [
+    assert sorted(args._get_kwargs()) == [
         ("command", "passthrough"),
+        ("filter_requirements", None),
+        ("filter_sections", None),
         ("input_file", "input.sdoc"),
-        ("output_file", None),
+        ("output_dir", None),
     ]
 
 
@@ -216,11 +218,13 @@ def test_passthrough_02_minimal():
     parser = cli_args_parser()
 
     args = parser.parse_args(
-        ["passthrough", "input.sdoc", "--output-file", "output.sdoc"]
+        ["passthrough", "input.sdoc", "--output-dir", "SANDBOX/"]
     )
 
-    assert args._get_kwargs() == [
+    assert sorted(args._get_kwargs()) == [
         ("command", "passthrough"),
+        ("filter_requirements", None),
+        ("filter_sections", None),
         ("input_file", "input.sdoc"),
-        ("output_file", "output.sdoc"),
+        ("output_dir", "SANDBOX/"),
     ]

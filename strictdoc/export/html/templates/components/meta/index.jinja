@@ -1,0 +1,28 @@
+{%- if document.config.has_meta() -%}
+  <sdoc-meta>
+    {%- if document.config.uid -%}
+    <sdoc-meta-label data-testid="document-config-uid-label">UID:</sdoc-meta-label>
+    <sdoc-meta-field data-testid="document-config-uid-field">
+      {%- with field_content = document.config.uid %}
+        {%- include "components/field/index.jinja" -%}
+      {%- endwith -%}
+    </sdoc-meta-field>
+    {%- endif -%}
+    {%- if document.config.version -%}
+    <sdoc-meta-label data-testid="document-config-version-label">VERSION:</sdoc-meta-label>
+    <sdoc-meta-field data-testid="document-config-version-field">
+      {%- with field_content = document.config.version %}
+        {%- include "components/field/index.jinja" -%}
+      {%- endwith -%}
+    </sdoc-meta-field>
+    {%- endif -%}
+    {%- if document.config.classification -%}
+    <sdoc-meta-label data-testid="document-config-classification-label">CLASSIFICATION:</sdoc-meta-label>
+    <sdoc-meta-field data-testid="document-config-classification-field">
+      {%- with field_content = document.config.classification %}
+        {%- include "components/field/index.jinja" -%}
+      {%- endwith -%}
+    </sdoc-meta-field>
+    {%- endif -%}
+  </sdoc-meta>
+{%- endif -%}

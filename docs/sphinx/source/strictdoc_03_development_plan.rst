@@ -157,12 +157,12 @@ As an open-source project, StrictDoc is developed without strict deadlines, howe
    * - 2023-Q3
      - Anchors and incoming links. Improvements of the ReqIF interface. Work on StrictDoc's own requirements traceability. Mermaid diagramming tool. Reverse parent / child links. Project statistics screen. Performance improvements.
    * - 2023-Q4
-     - Requirements relations and roles. UI improvements. Further ReqIF work.
+     - Requirements relations and roles. UI improvements and stabilization. Further ReqIF work. Search engine and requirements filters.
 
 The roadmap diagram
 -------------------
 
-The following diagram contains the work items at the epic and single task levels. This SVG file is exported from a draw.io diagram, where the master version of the roadmap is maintained.
+The following diagram contains the work items at the epic and single task levels. This PNG file is exported from a draw.io diagram, where the master version of the roadmap is maintained.
 
 .. image:: _assets/StrictDoc_Roadmap.drawio.png
    :alt: Development plan diagram

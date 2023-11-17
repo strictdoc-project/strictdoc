@@ -1,0 +1,20 @@
+Changelog
+$$$$$$$$$
+
+This document maintains a record of all changes to StrictDoc since November 2023. It serves as a user-friendly version of the changelog, complementing the automatically generated, commit-by-commit changelog available here: `StrictDoc Changelog <https://github.com/strictdoc-project/strictdoc/blob/main/CHANGELOG.md>`_.
+
+Unreleased work
+===============
+
+A **query search engine** is introduced which allows filtering a documentation tree by queries like ``(node.is_requirement and "System" in node["TITLE"])``.
+Building on the search engine capability, the "Search" screen is introduced in the web interface. Additionally, it is now possible to specify ``--filter-requirements <query>`` and ``filter-sections <query>`` when running ``export`` and ``passthrough`` commands. The visual design of the project statistics was improved as well as the new design for the search screen has already landed.
+
+The **document option** ``ROOT: True/False`` was introduced to indicate the root documents in the traceability graph. Currently, this option is only used when printing requirement statistics, where the root nodes are skipped when the metric "requirements without parents" is calculated. The root-level requirements by definition have no parent requirements, they can only be parents to other requirements.
+
+The **stability and the execution time of the CI end-2-end tests for the web interface has been increased**. The sharding of the end-2-end tests was introduced for all systems: macOS, Linux, and Windows. At the same time, the number of Python version that are tested by each platform's jobs was reduced to maintain a reasonable total number of build jobs.
+
+The requirement-to-source traceability feature was extended with the so-called **single-line markers**. Now it is possible to reference just a single line in a file by using the ``@sdoc(REQ-001)`` marker.
+
+Python 3.12 support has been added to the GitHub CI jobs.
+
+StrictDoc's requirements of the new generation received many updates and the new requirements set will be incorporated to the main documentation very soon (estimated time is until the end of 2023). These requirements are maintained in the ``drafts/requirements`` folder.

@@ -498,10 +498,12 @@ def check(context):
 # gem install github_changelog_generator
 @task
 def changelog(context, github_token):
+    # The alpha release tags are excluded from the changelog.
     command = f"""
         github_changelog_generator
         --token {github_token}
         --user strictdoc-project
+        --exclude-tags-regex ".*a\\d+"
         --project strictdoc
         """
     run_invoke(context, command)

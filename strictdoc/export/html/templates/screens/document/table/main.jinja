@@ -5,14 +5,8 @@
         <sdoc-node>
         {% include "components/document_title/index.jinja" %}
         {% include "components/meta/index.jinja" %}
+        {% include "components/abstract/index.jinja" %}
 
-        {%- if document.free_texts -%}
-          {%- for free_text in document.free_texts %}
-            <div class="free_text">
-              <sdoc-autogen>{{ renderer.render_free_text(document_type, free_text) }}</sdoc-autogen>
-            </div>
-          {%- endfor -%}
-        {%- endif -%}
         </sdoc-node>
         <table class="content-view-table">
           <thead>

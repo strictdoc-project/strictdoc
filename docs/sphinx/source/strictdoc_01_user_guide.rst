@@ -1286,7 +1286,7 @@ Somewhere in another child document:
 
 In some very special cases, it may be desired to also use the Child relations. For example, creating a so-called Compliance Matrix between a standard and a project requirement can use the Child relation to connect both the upper-level standard requirement with a project-level technical requirement:
 
-.. code-block:
+.. code-block::
 
     [DOCUMENT]
     TITLE: Standard X Compliance Matrix

@@ -1027,6 +1027,45 @@ a.tree_item:hover {
   padding-right: var(--base-rhythm);
 }
 
+/* pdf-toc */
+
+.pdf-toc {
+  display: table;
+  width: 100%;
+}
+.pdf-toc-row {
+  display: table-row;
+}
+.pdf-toc-cell {
+  display: table-cell;
+  padding-top: var(--base-rhythm);
+  padding-right: var(--base-rhythm);
+  font-size: 1em;
+  line-height: 1.5;
+}
+.pdf-toc-cell[page-number] {
+  vertical-align: bottom;
+  padding-right: 0;
+}
+.pdf-toc-cell[dotted] {
+  position: relative;
+  width: 100%; /* to get max */
+}
+.pdf-toc-cell[dotted] > * {
+  background-color: white;
+  display: inline;
+  padding-right: 8px;
+  position: relative;
+}
+.pdf-toc-cell[dotted]::before {
+  content: '';
+  position: absolute;
+  border-bottom: dotted 2px rgba(0,0,0,.4);
+  bottom: .4em;
+  left: .8em;
+  right: .8em;
+}
+
 /* table_key_value component */
 
 .sdoc-table_key_value {

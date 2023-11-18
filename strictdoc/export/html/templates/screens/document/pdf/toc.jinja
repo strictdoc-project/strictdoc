@@ -3,22 +3,6 @@
 
       <div class="pdf-toc-row" data-nodeid="{{ item.mid.get_string_value() }}">
 
-        {%- if item.is_section -%}
-        {# if section not requirement #}
-
-          <span class="pdf-toc-cell">
-            {{ item.context.title_number_string if item.context.title_number_string else "&nbsp;" * (item.ng_level * 2 - 1) }}
-          </span>
-          <span dotted class="pdf-toc-cell">
-            <a href="#{{ link_renderer.render_local_anchor(item) }}" data-turbo="false">
-              {{ item.title }}
-            </a>
-          </span>
-          <span class="pdf-toc-cell" page-number>(••)</span>
-
-        {%- else -%}
-        {# if requirement #}
-
           <span class="pdf-toc-cell">
             {{ item.context.title_number_string if item.context.title_number_string else "&nbsp;" * (item.ng_level * 2 - 1) }}
           </span>
@@ -30,8 +14,6 @@
             </a>
           </span>
           <span page-number class="pdf-toc-cell">(••)</span>
-
-        {%- endif -%}
 
       </div>{# /.pdf-toc-row #}
 

@@ -1009,7 +1009,7 @@ def create_main_router(
             MID(reference_mid)
         )
 
-        assert isinstance(reference_node, Requirement)
+        # assert isinstance(reference_node, Requirement)
         # FIXME: it might as well be a section?
 
         document_tree_stats: DocumentTreeStats = (

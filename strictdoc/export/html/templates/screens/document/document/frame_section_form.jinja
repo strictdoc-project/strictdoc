@@ -20,7 +20,12 @@
     data-controller="scroll_into_view"
   >
 
+    {%- if form_object.section_uid=="" -%}
+      {%- set reset_uid = {"reset": true} -%}
+    {%- endif -%}
+
     <sdoc-form-grid>
+
       {%- with
         field_type="singleline",
         field_class_name="form__requirement_title",
@@ -32,8 +37,12 @@
         {% include "components/form/field/text/index.jinja" %}
       {%- endwith -%}
 
-      {# UNUSED: field_class_name="form__section_uid", #}
+      {# RESETTED UID #}
+      {# FIXME: field_mid #}
       {%- with
+        field_actions=reset_uid,
+        field_mid="",
+        reference_mid=form_object.section_mid,
         field_type="singleline",
         field_name="UID",
         field_input_name="section_uid",

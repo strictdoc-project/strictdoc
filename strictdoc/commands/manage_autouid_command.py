@@ -1,5 +1,4 @@
 import sys
-from collections import Counter
 
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.writer import SDWriter
@@ -14,7 +13,6 @@ from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from strictdoc.helpers.parallelizer import Parallelizer
 from strictdoc.helpers.string import (
     create_safe_acronym,
-    create_safe_title_string,
 )
 
 
@@ -45,17 +43,10 @@ class ManageAutoUIDCommand:
                 document_acronym = create_safe_acronym(
                     document_stats_.document.title
                 )
-                section_uids_so_far = Counter()
                 for section in document_stats_.sections_without_uid:
-                    section_title = create_safe_title_string(section.title)
-                    auto_uid = f"SECTION-{document_acronym}-{section_title}"
-
-                    count_so_far = section_uids_so_far[auto_uid]
-                    section_uids_so_far[auto_uid] += 1
-
-                    if count_so_far >= 1:
-                        auto_uid += f"-{section_uids_so_far[auto_uid]}"
-
+                    auto_uid = document_tree_stats.get_auto_section_uid(
+                        document_acronym, section
+                    )
                     section.uid = auto_uid
                     section.reserved_uid = auto_uid
 

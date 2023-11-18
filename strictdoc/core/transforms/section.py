@@ -132,10 +132,11 @@ class UpdateSectionCommand:
                     section.reserved_uid
                 ]
 
-            section.uid = form_object.section_uid
-            section.reserved_uid = form_object.section_uid
+            section_uid = assert_cast(form_object.section_uid, str)
+            section.uid = section_uid
+            section.reserved_uid = section_uid
             traceability_index.requirements_connections[
-                section.reserved_uid
+                section_uid
             ] = RequirementConnections(
                 requirement=section,
                 document=section.document,
@@ -300,10 +301,11 @@ class CreateSectionCommand:
         )
 
         if len(form_object.section_uid) > 0:
-            section.uid = form_object.section_uid
-            section.reserved_uid = form_object.section_uid
+            section_uid = assert_cast(form_object.section_uid, str)
+            section.uid = section_uid
+            section.reserved_uid = section_uid
             traceability_index.requirements_connections[
-                section.reserved_uid
+                section_uid
             ] = RequirementConnections(
                 requirement=section,
                 document=document,

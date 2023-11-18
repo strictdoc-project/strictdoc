@@ -34,7 +34,7 @@ class Test(E2ECase):
             form_edit_section: Form_EditSection = (
                 section.do_open_form_edit_section()
             )
-            form_edit_section.do_clear_field("section_uid")
+            form_edit_section.do_clear_field("UID")
             form_edit_section.do_form_submit_and_catch_error(
                 "Cannot remove a section UID 'Section-UID' because there are "
                 "existing LINKs referencing this section. The incoming links "

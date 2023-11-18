@@ -91,8 +91,8 @@ from strictdoc.helpers.file_system import get_etag
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.parallelizer import NullParallelizer
 from strictdoc.helpers.string import (
+    create_safe_acronym,
     is_safe_alphanumeric_string,
-    sanitize_html_form_field,
 )
 from strictdoc.server.error_object import ErrorObject
 
@@ -126,7 +126,9 @@ def create_main_router(
     )
     export_action.build_index()
 
-    is_small_project = export_action.traceability_index.is_small_project()
+    is_small_project = (
+        True  # export_action.traceability_index.is_small_project()
+    )
     html_templates = HTMLTemplates.create(
         project_config=project_config,
         enable_caching=not is_small_project,
@@ -295,33 +297,23 @@ def create_main_router(
         )
 
     @router.post("/actions/document/create_section", response_class=Response)
-    def create_section(
-        section_uid: str = Form(""),
-        section_mid: str = Form(""),
-        reference_mid: str = Form(""),
-        whereto: str = Form(""),
-        section_title: str = Form(""),
-        section_content: str = Form(""),
-    ):
+    async def create_section(request: Request):
+        request_form_data: FormData = await request.form()
+        request_dict: Dict[str, str] = dict(request_form_data)
+        section_mid: str = request_dict["section_mid"]
+        reference_mid: str = request_dict["reference_mid"]
+        whereto: str = request_dict["whereto"]
+
+        reference_node = export_action.traceability_index.get_node_by_mid(
+            MID(reference_mid)
+        )
+
         assert isinstance(whereto, str), whereto
         assert NodeCreationOrder.is_valid(whereto), whereto
 
-        assert isinstance(section_uid, str), section_uid
-        assert (
-            isinstance(section_mid, str) and len(section_mid) > 0
-        ), section_mid
-        assert (
-            isinstance(reference_mid, str) and len(reference_mid) > 0
-        ), reference_mid
-
-        section_uid: str = sanitize_html_form_field(
-            section_uid, multiline=False
-        )
-        section_title: str = sanitize_html_form_field(
-            section_title, multiline=False
-        )
-        section_content: str = sanitize_html_form_field(
-            section_content, multiline=True
+        form_object: SectionFormObject = SectionFormObject.create_from_request(
+            section_mid=section_mid,
+            request_form_data=request_form_data,
         )
 
         reference_node: Union[
@@ -331,13 +323,6 @@ def create_main_router(
             reference_node
             if isinstance(reference_node, Document)
             else reference_node.document
-        )
-
-        form_object = SectionFormObject(
-            section_uid=section_uid,
-            section_mid=section_mid,
-            section_title=section_title,
-            section_statement=section_content,
         )
 
         try:
@@ -486,29 +471,23 @@ def create_main_router(
         )
 
     @router.post("/actions/document/update_section", response_class=Response)
-    def put_update_section(
-        section_uid: str = Form(""),
-        section_mid: str = Form(""),
-        section_title: Optional[str] = Form(""),
-        section_content: Optional[str] = Form(""),
-    ):
-        assert isinstance(section_mid, str)
-
-        section_uid = sanitize_html_form_field(section_uid, multiline=False)
-        section_title = sanitize_html_form_field(section_title, multiline=False)
-        section_content = sanitize_html_form_field(
-            section_content, multiline=True
-        )
+    async def put_update_section(request: Request):
+        request_form_data: FormData = await request.form()
+        request_dict = dict(request_form_data)
+        section_mid = request_dict["section_mid"]
         section: Section = export_action.traceability_index.get_node_by_mid(
             MID(section_mid)
         )
 
-        form_object = SectionFormObject(
-            section_uid=section_uid,
+        assert (
+            isinstance(section_mid, str) and len(section_mid) > 0
+        ), f"{section_mid}"
+
+        form_object: SectionFormObject = SectionFormObject.create_from_request(
             section_mid=section_mid,
-            section_title=section_title,
-            section_statement=section_content,
+            request_form_data=request_form_data,
         )
+        assert isinstance(section_mid, str)
 
         try:
             update_command = UpdateSectionCommand(
@@ -1005,21 +984,29 @@ def create_main_router(
         response_class=Response,
     )
     def reset_uid(reference_mid: str):
-        reference_node = export_action.traceability_index.get_node_by_mid(
-            MID(reference_mid)
-        )
-
-        # assert isinstance(reference_node, Requirement)
-        # FIXME: it might as well be a section?
-
         document_tree_stats: DocumentTreeStats = (
             DocumentUIDAnalyzer.analyze_document_tree(
                 export_action.traceability_index
             )
         )
-        next_uid: str = document_tree_stats.get_next_requirement_uid(
-            reference_node.get_requirement_prefix()
+        reference_node = export_action.traceability_index.get_node_by_mid_weak(
+            MID(reference_mid)
         )
+        if isinstance(reference_node, Requirement):
+            next_uid: str = document_tree_stats.get_next_requirement_uid(
+                reference_node.get_requirement_prefix()
+            )
+        elif isinstance(reference_node, Section):
+            document_acronym = create_safe_acronym(
+                reference_node.document.title
+            )
+            next_uid: str = document_tree_stats.get_auto_section_uid(
+                document_acronym, reference_node
+            )
+        elif reference_node is None:
+            raise NotImplementedError(reference_node)
+        else:
+            raise NotImplementedError
 
         uid_form_field: RequirementFormField = RequirementFormField(
             field_mid=MID.create().get_string_value(),
@@ -1029,11 +1016,7 @@ def create_main_router(
             field_escaped_value=next_uid,
         )
         template = env().get_template(
-            "components/"
-            "form/"
-            "row/"
-            "row_uid_with_reset/"
-            "stream.jinja"
+            "components/form/row/row_uid_with_reset/stream.jinja"
         )
         output = template.render(
             next_uid=next_uid,

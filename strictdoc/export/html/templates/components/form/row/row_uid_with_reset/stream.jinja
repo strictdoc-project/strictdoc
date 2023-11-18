@@ -1,4 +1,5 @@
 {% assert uid_form_field is defined %}
+{% assert reference_mid is defined %}
 
 {% set text_field_row_context = namespace() %}
 {% set row_context = text_field_row_context %}
@@ -22,11 +23,13 @@
 {% set text_field_row_context.errors=[] %}
 {% set text_field_row_context.field = uid_form_field %}
 {% set text_field_row_context.field_type = "singleline" %}
-{% set text_field_row_context.reference_mid = uid_form_field.field_mid %}
+{% set text_field_row_context.reference_mid = reference_mid %}
 
 <turbo-stream action="replace" target="uid_with_reset-{{ reference_mid }}">
   {# this template is turbo-frame and has a button to reset to the default value: #}
   <template>
-    {%- include "components/form/row/row_uid_with_reset/frame.jinja" %}
+    <turbo-frame id="uid_with_reset-{{ reference_mid }}">
+      {% include "components/form/row/row_uid_with_reset/frame.jinja" %}
+    </turbo-frame>
   </template>
 </turbo-stream>

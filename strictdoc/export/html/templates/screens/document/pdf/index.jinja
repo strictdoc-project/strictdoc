@@ -39,9 +39,9 @@
     data-preloader='true'
     data-preloader-target='[html2pdf-preloader]'
     data-preloader-background='#F2F5F9'
-    data-no-hanging-selector='sdoc-section-title sdoc-requirement-field-label'
     data-forced-page-break-selector='H2'
-    data-no-break-selector='sdoc-meta'
+    data-no-break-selector='sdoc-meta sdoc-section-title'
+    data-no-hanging-selector='sdoc-section-title sdoc-requirement-field-label'
   src="{{ link_renderer.render_static_url('html2pdf/bundle.js') }}"></script>
   {%- endif -%}
 

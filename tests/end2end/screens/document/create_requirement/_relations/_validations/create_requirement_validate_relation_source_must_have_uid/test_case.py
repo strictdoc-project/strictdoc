@@ -36,7 +36,7 @@ class Test(E2ECase):
             )
 
             form_edit_requirement.assert_tab_is_open("Fields")
-            form_edit_requirement.do_clear_field("requirement-field-UID")
+            form_edit_requirement.do_clear_field("UID")
             form_edit_requirement.do_fill_in_field_title("Requirement #2 title")
             form_edit_requirement.do_fill_in_field_statement(
                 "Requirement #2 statement."

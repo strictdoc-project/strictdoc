@@ -118,6 +118,12 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         assert isinstance(node_id, MID), node_id
         return self._map_id_to_node[node_id]
 
+    def get_node_by_mid_weak(self, node_id: MID) -> Optional[Any]:
+        assert isinstance(node_id, MID), node_id
+        if node_id not in self._map_id_to_node:
+            return None
+        return self._map_id_to_node[node_id]
+
     def has_requirements(self):
         return len(self.requirements_connections.keys()) > 0
 

@@ -1,0 +1,19 @@
+  {% set text_field_row_context = namespace() %}
+
+  {# Single-line #}
+  {%- for field_values_ in form_object.enumerate_fields(multiline=False) -%}
+    {%- for field_ in field_values_ -%}
+      {% set text_field_row_context.errors=form_object.get_errors(field_.field_name) %}
+      {% set text_field_row_context.field = field_ %}
+      {% set text_field_row_context.field_type = "singleline" %}
+      {% set text_field_row_context.reference_mid = form_object.requirement_mid %}
+      {%- if field_.field_name == "UID" and field_.field_escaped_value == "" -%}
+        <turbo-frame id="uid_with_reset-{{ text_field_row_context.reference_mid }}">
+          {# this template is turbo-frame and has a button to reset to the default value: #}
+          {% include "components/form/row/row_uid_with_reset/frame.jinja" %}
+        </turbo-frame>
+      {%- else -%}
+        {% include "components/form/row/row_with_text_field.jinja" %}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endfor -%}

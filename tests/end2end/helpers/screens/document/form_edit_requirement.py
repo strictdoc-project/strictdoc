@@ -41,14 +41,12 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
 
     def do_delete_comment(self, field_order: int = 1) -> None:
         # TODO: update with mid
-        super().do_delete_field("requirement-comment", field_order)
+        super().do_delete_field("comment", field_order)
 
     def do_fill_in_field_comment(self, mid: MID, field_value: str) -> None:
         assert isinstance(mid, MID)
         assert isinstance(field_value, str)
-        super().do_fill_in_mid(
-            mid, "form-field-requirement-field-COMMENT", field_value
-        )
+        super().do_fill_in_mid(mid, "form-field-COMMENT", field_value)
 
     # RELATION actions
 
@@ -78,14 +76,12 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
 
     def do_delete_relation(self, field_order: int = 1) -> None:
         # TODO: update with mid
-        super().do_delete_field("requirement-relation", field_order)
+        super().do_delete_field("form-field-relation", field_order)
 
     def do_fill_in_field_relation(self, mid: MID, field_value: str) -> None:
         assert isinstance(mid, MID)
         assert isinstance(field_value, str)
-        super().do_fill_in_mid(
-            mid, "form-field-requirement-relation-uid", field_value
-        )
+        super().do_fill_in_mid(mid, "form-field-relation-uid", field_value)
 
     def do_select_relation_role(self, mid: MID, field_value: str) -> None:
         assert isinstance(mid, MID)
@@ -102,33 +98,31 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
 
     def do_fill_in_field_uid(self, field_value: str) -> None:
         assert isinstance(field_value, str)
-        super().do_fill_in("requirement-field-UID", field_value)
+        super().do_fill_in("UID", field_value)
 
     def do_fill_in_field_title(self, field_value: str) -> None:
         assert isinstance(field_value, str)
-        super().do_fill_in("requirement-field-TITLE", field_value)
+        super().do_fill_in("TITLE", field_value)
 
     def do_fill_in_field_statement(self, field_value: str) -> None:
         assert isinstance(field_value, str)
-        super().do_fill_in("requirement-field-STATEMENT", field_value)
+        super().do_fill_in("STATEMENT", field_value)
 
     def do_fill_in_field_rationale(self, field_value: str) -> None:
         assert isinstance(field_value, str)
-        super().do_fill_in("requirement-field-RATIONALE", field_value)
+        super().do_fill_in("RATIONALE", field_value)
 
     # Reset UID button
 
     def assert_uid_field_contains(self, string: str) -> None:
         self.test_case.assert_element_present(
-            "//*[@data-testid='form-field-requirement-field-UID']"
-            f"[contains(., '{string}')]",
+            "//*[@data-testid='form-field-UID']" f"[contains(., '{string}')]",
             by=By.XPATH,
         )
 
     def assert_uid_field_does_not_contain(self, string: str) -> None:
         self.test_case.assert_element_not_present(
-            "//*[@data-testid='form-field-requirement-field-UID']"
-            f"[contains(., '{string}')]",
+            "//*[@data-testid='form-field-UID']" f"[contains(., '{string}')]",
             by=By.XPATH,
         )
 

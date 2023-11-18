@@ -36,7 +36,7 @@ class Test(E2ECase):
                 section.do_open_form_edit_section()
             )
 
-            form_edit_section.do_clear_field("section_title")
+            form_edit_section.do_clear_field("TITLE")
             form_edit_section.do_fill_in_text("Modified statement.")
             form_edit_section.do_form_submit_and_catch_error(
                 "Section title must not be empty."

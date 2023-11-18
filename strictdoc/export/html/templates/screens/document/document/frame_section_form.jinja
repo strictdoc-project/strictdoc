@@ -1,0 +1,53 @@
+{% extends "components/form/index.jinja" %}
+
+{%- set frame_id="article-"~form_object.section_mid %}
+{%- if is_new_section -%}
+  {%- set submit_url="/actions/document/create_section" %}
+  {%- set cancel_url="/actions/document/cancel_new_section?section_mid="~form_object.section_mid -%}
+{%- else -%}
+  {%- set submit_url="/actions/document/update_section" %}
+  {%- set cancel_url="/actions/document/cancel_edit_section?section_mid="~form_object.section_mid -%}
+{%- endif -%}
+
+{% block form_content %}
+
+  {# Core identification query parameters. #}
+
+  {%- if is_new_section -%}
+    <input type="hidden" id="reference_mid" name="reference_mid" value="{{ reference_mid }}" />
+    <input type="hidden" id="whereto" name="whereto" value="{{ whereto }}" />
+  {%- endif -%}
+  <input type="hidden" id="section_mid" name="section_mid" value="{{ form_object.section_mid }}" />
+  {# <input type="hidden" id="document_mid" name="document_mid" value="{{ form_object.document_mid }}" /> #}
+
+  {% set text_field_row_context = namespace() %}
+
+  {# TITLE #}
+
+  {% set text_field_row_context.errors=form_object.get_errors("section_title") %}
+  {% set text_field_row_context.field=form_object.section_title_field %}
+  {% set text_field_row_context.field_type = "singleline" %}
+  {% include "components/form/row/row_with_text_field.jinja" %}
+
+  {# UID #}
+
+  {% set text_field_row_context.errors=form_object.get_errors("section_uid") %}
+  {% set text_field_row_context.field=form_object.section_uid_field %}
+  {% set text_field_row_context.field_type = "singleline" %}
+  {% set text_field_row_context.reference_mid = form_object.section_mid %}
+  {%- if not is_new_section and form_object.section_uid_field.field_escaped_value == "" -%}
+    <turbo-frame id="uid_with_reset-{{ form_object.section_mid }}">
+      {# this template is turbo-frame and has a button to reset to the default value: #}
+      {% include "components/form/row/row_uid_with_reset/frame.jinja" %}
+    </turbo-frame>
+  {% else %}
+    {% include "components/form/row/row_with_text_field.jinja" %}
+  {% endif %}
+  {# STATEMENT #}
+
+  {% set text_field_row_context.errors=form_object.get_errors("section_statement") %}
+  {% set text_field_row_context.field=form_object.section_statement_field %}
+  {% set text_field_row_context.field_type = "multiline" %}
+  {% include "components/form/row/row_with_text_field.jinja" %}
+
+{% endblock form_content %}

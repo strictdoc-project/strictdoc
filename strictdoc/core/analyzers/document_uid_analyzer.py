@@ -1,3 +1,4 @@
+from collections import Counter
 from typing import Dict, List
 
 from strictdoc.backend.sdoc.models.document import Document
@@ -21,7 +22,7 @@ class DocumentUIDAnalyzer:
     def analyze_document_tree(traceability_index: TraceabilityIndex):
         global_requirements_per_prefix: Dict[str, SinglePrefixRequirements] = {}
         document_tree_stats: List[DocumentStats] = []
-
+        section_uids_so_far = Counter()
         for document in traceability_index.document_tree.document_list:
             document_stats: DocumentStats = (
                 DocumentUIDAnalyzer.analyze_document(document)
@@ -42,10 +43,12 @@ class DocumentUIDAnalyzer:
                     prefix_requirements_.requirements_uid_numbers
                 )
             document_tree_stats.append(document_stats)
-
+            for section_uid_ in document_stats.section_uids_so_far:
+                section_uids_so_far[section_uid_] += 1
         return DocumentTreeStats(
             single_document_stats=document_tree_stats,
             requirements_per_prefix=global_requirements_per_prefix,
+            section_uids_so_far=section_uids_so_far,
         )
 
     @staticmethod
@@ -56,7 +59,11 @@ class DocumentUIDAnalyzer:
         document_iterator = DocumentCachingIterator(document)
         for node in document_iterator.all_content():
             if isinstance(node, Section):
-                if node.reserved_uid is None:
+                if node.reserved_uid is not None:
+                    this_document_stats.section_uids_so_far[
+                        node.reserved_uid
+                    ] += 1
+                else:
                     this_document_stats.sections_without_uid.append(node)
                 continue
             if not isinstance(node, Requirement):

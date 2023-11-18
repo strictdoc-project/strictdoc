@@ -1043,10 +1043,6 @@ a.tree_item:hover {
   font-size: 1em;
   line-height: 1.5;
 }
-.pdf-toc-cell[page-number] {
-  vertical-align: bottom;
-  padding-right: 0;
-}
 .pdf-toc-cell[dotted] {
   position: relative;
   width: 100%; /* to get max */
@@ -1064,6 +1060,11 @@ a.tree_item:hover {
   bottom: .4em;
   left: .8em;
   right: .8em;
+}
+.pdf-toc-cell:last-child { /* page number */
+  vertical-align: bottom;
+  padding-right: 0;
+  text-align: right;
 }
 
 /* table_key_value component */

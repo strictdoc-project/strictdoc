@@ -1,0 +1,36 @@
+<style html2pdf-header-style>
+html2pdf-header {
+  padding-top: 0;
+}
+.html2pdf-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  column-gap: 32px;
+  font-size: small;
+  line-height: 1;
+  color: rgba(0,0,0,0.5);
+  border-bottom: 1px solid rgba(0,0,0,0.25);
+  padding-bottom: 8px;
+}
+.html2pdf-header-left {
+  text-align: left;
+  flex-shrink: 0;
+}
+.html2pdf-header-right {
+  text-align: right;
+  font-weight: bold;
+}
+</style>
+<template html2pdf-header>
+  {#- uncomment html2pdf-page-number to print page numbers: -#}
+  {#- <div html2pdf-page-number>
+    <span html2pdf-page-number-current></span>/<span html2pdf-page-number-total></span>
+  </div> -#}
+
+  {#- add here header html: -#}
+  <div class="html2pdf-header">
+    <div class="html2pdf-header-left">{{ project_config.project_title }}</div>
+    <div class="html2pdf-header-right">{{ document.title }}</div>
+  </div>
+</template>

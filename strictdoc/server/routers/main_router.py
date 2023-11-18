@@ -126,9 +126,7 @@ def create_main_router(
     )
     export_action.build_index()
 
-    is_small_project = (
-        True  # export_action.traceability_index.is_small_project()
-    )
+    is_small_project = export_action.traceability_index.is_small_project()
     html_templates = HTMLTemplates.create(
         project_config=project_config,
         enable_caching=not is_small_project,

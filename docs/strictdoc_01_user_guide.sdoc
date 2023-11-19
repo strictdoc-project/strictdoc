@@ -1832,9 +1832,9 @@ To activate the traceability to source files, configure the project config with 
       "REQUIREMENT_TO_SOURCE_TRACEABILITY"
     ]
 
-See [LINK: SDOC_UG_OPTIONS_PROJECT_LEVEL] for more details about the project-level options.
+By default, StrictDoc looks for source files in a directory from which the ``strictdoc`` command is run. This can be changed by using the ``source_root_path`` project-level option.
 
-Currently, StrictDoc looks for source files in a directory from which the ``strictdoc`` command is run.
+See [LINK: SDOC_UG_OPTIONS_PROJECT_LEVEL] for more details about the project-level options.
 
 The
 `strictdoc-examples <https://github.com/strictdoc-project/strictdoc-examples>`_
@@ -2036,6 +2036,27 @@ The ``html_assets_strictdoc_dir`` allows changing the assets folder name:
 
     [project]
     html_assets_strictdoc_dir = "assets"
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Path to source root
+
+[FREETEXT]
+When the ``REQUIREMENT_TO_SOURCE_TRACEABILITY`` feature is activated, StrictDoc looks for source files in the directory from which the ``strictdoc`` program is run. This can be changed with the ``source_root_path`` option.
+
+.. code-block::
+
+    [project]
+
+    features = [
+      "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+    ]
+
+    source_root_path = "source_root/"
+
+The ``source_root_path`` option supports relative paths, e.g. ``../source_root/``.
 [/FREETEXT]
 
 [/SECTION]

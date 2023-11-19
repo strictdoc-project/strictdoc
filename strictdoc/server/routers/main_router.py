@@ -2284,6 +2284,11 @@ def create_main_router(
 
     @router.get("/search", response_class=Response)
     def get_search(q: Optional[str] = None):
+        if not project_config.is_activated_search():
+            return Response(
+                content="Search feature is not activated in the project config.",
+                status_code=412,
+            )
         search_results = []
         error = None
         node_query = None

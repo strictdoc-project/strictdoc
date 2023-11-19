@@ -1,0 +1,8 @@
+{%- if document.free_texts -%}
+  {%- for free_text in document.free_texts %}
+    <div class="free_text"
+         data-testid="{{ document_type.get_string() }}-abstract"
+    ><sdoc-autogen>{{ renderer.render_free_text(document_type, free_text) }}</sdoc-autogen>
+    </div>
+  {%- endfor -%}
+{%- endif -%}

@@ -36,6 +36,7 @@ class Section(Node):  # pylint: disable=too-many-instance-attributes
         self.reserved_uid: Optional[str] = meaningful_uid
 
         self.title = title
+        self.reserved_title = title
         self.requirement_prefix: Optional[str] = requirement_prefix
 
         self.free_texts: List[FreeText] = free_texts

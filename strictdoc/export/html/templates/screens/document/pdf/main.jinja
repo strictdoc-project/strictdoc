@@ -6,6 +6,21 @@
         html2pdf
         class="content"
       >
+        {#-
+          These go to the Front page templates:
+          {% include "components/document_title/index.jinja" %}
+          {% include "components/meta/index.jinja" %}
+        -#}
+
+        {% include "components/abstract/pdf.jinja" %}
+        {% include "screens/document/pdf/toc.jinja" %}
+
+        {#-
+          To make the abstract and TOC appear on different pages,
+          it should be set in the config like this:
+
+          data-forced-page-break-selector='.free_text .pdf-toc'
+        -#}
 
         {%- for section_or_requirement in document_iterator.all_content() %}
 
@@ -23,20 +38,6 @@
       </div>
 </div>
 
-<template html2pdf-frontpage>
-  {#- add here frontpage html -#}
-</template>
-<template html2pdf-header>
-  {#- uncomment html2pdf-page-number to print page numbers: -#}
-  {#- <div html2pdf-page-number>
-    <span html2pdf-page-number-current></span>/<span html2pdf-page-number-total></span>
-  </div> -#}
-  {#- add here header html -#}
-</template>
-<template html2pdf-footer>
-  {#- uncomment html2pdf-page-number to print page numbers: -#}
-  <div html2pdf-page-number>
-    <span html2pdf-page-number-current></span>/<span html2pdf-page-number-total></span>
-  </div>
-  {#- add here footer html -#}
-</template>
+{%- include "screens/document/pdf/template/frontpage.jinja" -%}
+{%- include "screens/document/pdf/template/header.jinja" -%}
+{%- include "screens/document/pdf/template/footer.jinja" -%}

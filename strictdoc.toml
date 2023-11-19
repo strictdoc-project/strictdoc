@@ -18,7 +18,7 @@ features = [
   # "STANDALONE_DOCUMENT_SCREEN",
   # "REQUIREMENTS_COVERAGE_SCREEN",
   # "REQUIREMENT_TO_SOURCE_TRACEABILITY",
-  # "HTML2PDF",
+  "HTML2PDF",
 ]
 
 include_doc_paths = [

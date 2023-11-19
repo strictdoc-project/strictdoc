@@ -1,5 +1,3 @@
-{% set template_type = 'PDF' %}
-
 {% extends "base.jinja.html" %}
 
 {% block head_css %}
@@ -39,15 +37,15 @@
     data-preloader='true'
     data-preloader-target='[html2pdf-preloader]'
     data-preloader-background='#F2F5F9'
+    data-forced-page-break-selector='.free_text .pdf-toc H2'
+    data-no-break-selector='sdoc-meta sdoc-section-title .pdf-toc-row'
     data-no-hanging-selector='sdoc-section-title sdoc-requirement-field-label'
-    data-forced-page-break-selector='H2'
-    data-no-break-selector='sdoc-meta'
   src="{{ link_renderer.render_static_url('html2pdf/bundle.js') }}"></script>
   {%- endif -%}
 
   {{ super() }}
 {% endblock head_scripts %}
-{% block title %}{{ document.title }} - {{ template_type }}{% endblock title %}
+{% block title %}{{ document.title }} - {{ document_type.get_page_title() }}{% endblock title %}
 {% block viewtype %}{{ "html2pdf" }}{% endblock viewtype %}
 
 {% block layout_nav %}

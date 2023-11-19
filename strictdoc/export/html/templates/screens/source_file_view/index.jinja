@@ -12,7 +12,10 @@
   {{ super() }}
 {% endblock head_scripts %}
 
-{% block title %}{{ source_file.in_doctree_source_file_rel_path_posix }} - {{ template_type }}{% endblock title %}
+{% block title %}
+  {{ source_file.in_doctree_source_file_rel_path_posix }} - {{ template_type }}
+{% endblock title %}
+
 {% block viewtype %}source-file{% endblock viewtype %}
 
 {% block head %}

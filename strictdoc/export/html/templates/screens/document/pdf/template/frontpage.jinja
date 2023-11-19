@@ -1,0 +1,29 @@
+<style html2pdf-frontpage-style>
+.html2pdf-frontpage-grid {
+  display: grid;
+  height: 100%;
+}
+.html2pdf-frontpage-grid-middle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.html2pdf-frontpage-grid-bottom {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+</style>
+<template html2pdf-frontpage>
+  {#- add here frontpage html -#}
+  <div class="html2pdf-frontpage-grid">
+  <div class="html2pdf-frontpage-grid-top"></div>
+  <div class="html2pdf-frontpage-grid-middle">
+    {% include "components/document_title/index.jinja" %}
+  </div>
+  <div class="html2pdf-frontpage-grid-bottom">
+    {% include "components/meta/index.jinja" %}
+  </div>
+  </div>
+</template>

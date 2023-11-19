@@ -112,6 +112,10 @@ sdoc-requirement-field {
   overflow-wrap: break-word;
 }
 
+[data-viewtype="html2pdf"] sdoc-requirement-field-label {
+  word-break: normal;
+}
+
 /* for relations in requirement */
 sdoc-requirement-field > ol:first-child,
 sdoc-requirement-field > ul:first-child {

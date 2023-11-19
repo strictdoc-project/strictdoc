@@ -1,0 +1,40 @@
+<style html2pdf-footer-style>
+html2pdf-footer {
+  padding-bottom: 0;
+}
+.html2pdf-footer {
+  display: flex;
+  justify-content: space-between;
+  column-gap: 16px;
+  font-size: small;
+  line-height: 1;
+  color: rgba(0,0,0,0.5);
+  border-top: 1px solid rgba(0,0,0,0.25);
+  padding-top: 8px;
+}
+.html2pdf-footer-left {
+  text-align: left;
+}
+.html2pdf-footer-right {
+  text-align: right;
+}
+.html2pdf-header-page_placeholder {
+  width: 54px; /* max for pattern 888/888 */
+  flex-shrink: 0;
+  text-indent: -10000px;
+}
+</style>
+<template html2pdf-footer>
+  {#- uncomment html2pdf-page-number to print page numbers: -#}
+  <div html2pdf-page-number>
+    <span html2pdf-page-number-current></span>/<span html2pdf-page-number-total></span>
+  </div>
+  {# TODO: improve page number system #}
+
+  {#- add here footer html -#}
+  <div class="html2pdf-footer">
+    <div class="html2pdf-footer-left">printing date/time</div>
+    <div class="html2pdf-footer-right"></div>
+    <div class="html2pdf-header-page_placeholder">{#- must be left empty! -#}</div>
+  </div>
+</template>

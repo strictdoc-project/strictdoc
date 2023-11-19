@@ -1,5 +1,3 @@
-{% set template_type = 'Table' %}
-
 {% extends "base.jinja.html" %}
 
 {% block head_css %}
@@ -34,7 +32,7 @@
   {%- endif -%}
   {{ super() }}
 {% endblock head_scripts %}
-{% block title %}{{ document.title }} - {{ template_type }}{% endblock title %}
+{% block title %}{{ document.title }} - {{ document_type.get_page_title() }}{% endblock title %}
 {% block viewtype %}table{% endblock viewtype %}
 
 {% block layout_nav %}

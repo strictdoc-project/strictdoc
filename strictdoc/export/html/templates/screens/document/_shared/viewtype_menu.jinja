@@ -6,7 +6,7 @@
     aria-expanded="false"
     aria-controls="viewtype_menu"
   >
-    <span>{{ template_type }}</span>
+    <span>{{ document_type.get_page_title() }}</span>
     {% include "_res/svg_ico16_expand.jinja.html" %}
   </div>
   <menu
@@ -22,7 +22,7 @@
         class="viewtype__menu_item"
         title="Go to Document view"
         href="{{ document.meta.get_root_path_prefix()}}/{{ document.meta.get_html_doc_link() }}">
-        Document</a>
+      Document</a>
     </li>
     {%- if project_config.is_activated_table_screen() -%}
     <li>
@@ -31,7 +31,7 @@
         class="viewtype__menu_item"
         title="Go to Table view"
         href="{{ document.meta.get_root_path_prefix()}}/{{ document.meta.get_html_table_link() }}">
-        Table</a>
+      Table</a>
     </li>
     {%- endif -%}
     {%- if project_config.is_activated_trace_screen() -%}
@@ -41,7 +41,7 @@
         class="viewtype__menu_item"
         title="Go to Traceability view"
         href="{{ document.meta.get_root_path_prefix()}}/{{ document.meta.get_html_traceability_link() }}">
-        Traceability</a>
+      Traceability</a>
     </li>
     {%- endif -%}
     {%- if project_config.is_activated_deep_trace_screen() -%}
@@ -51,7 +51,7 @@
         class="viewtype__menu_item"
         title="Go to Deep Traceability view"
         href="{{ document.meta.get_root_path_prefix()}}/{{ document.meta.get_html_deep_traceability_link() }}">
-      Deep traceability</a>
+      Deep Traceability</a>
     </li>
     {%- endif -%}
     {%- if project_config.is_activated_standalone_document() -%}

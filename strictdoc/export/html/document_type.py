@@ -1,9 +1,9 @@
 class DocumentType:
-    DOCUMENT = 1
-    TABLE = 2
-    TRACE = 3
-    DEEPTRACE = 4
-    PDF = 5
+    DOCUMENT = "document"
+    TABLE = "table"
+    TRACE = "trace"
+    DEEPTRACE = "deeptrace"
+    PDF = "pdf"
 
     def __init__(self, document_type):
         self.document_type = document_type
@@ -45,3 +45,19 @@ class DocumentType:
     @property
     def is_deeptrace(self):
         return self.document_type == DocumentType.DEEPTRACE
+
+    def get_string(self) -> str:
+        return self.document_type
+
+    def get_page_title(self) -> str:
+        if self.document_type == DocumentType.DOCUMENT:
+            return "Document"
+        if self.document_type == DocumentType.TABLE:
+            return "Table"
+        if self.document_type == DocumentType.TRACE:
+            return "Traceability"
+        if self.document_type == DocumentType.DEEPTRACE:
+            return "Deep Traceability"
+        if self.document_type == DocumentType.PDF:
+            return "PDF"
+        raise NotImplementedError

@@ -12,7 +12,9 @@
   {{ super() }}
 {% endblock head_scripts %}
 
-{% block title %}Project statistics{% endblock title %}
+{% block title %}
+  {{ project_config.project_title }} - {{ template_type }}
+{% endblock title %}
 
 {% block viewtype %}project-statistics{% endblock viewtype %}
 

@@ -225,7 +225,10 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         )
 
     def is_activated_search(self):
-        return ProjectFeature.SEARCH in self.project_features
+        return (
+            self.is_running_on_server
+            and ProjectFeature.SEARCH in self.project_features
+        )
 
     def is_activated_html2pdf(self) -> bool:
         return ProjectFeature.HTML2PDF in self.project_features

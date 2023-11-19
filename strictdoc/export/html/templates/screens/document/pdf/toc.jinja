@@ -1,4 +1,9 @@
 <div class="pdf-toc" data-testid="pdf-toc-list">
+    <div class="pdf-toc-row">
+    <span class="pdf-toc-cell"></span>
+    <span class="pdf-toc-cell" style="text-align: center;font-weight: bold;">Table of Contents</span>
+    <span class="pdf-toc-cell"></span>
+    </div>
     {%- for item in document_iterator.table_of_contents() -%}
 
       <div class="pdf-toc-row" data-nodeid="{{ item.reserved_mid }}">

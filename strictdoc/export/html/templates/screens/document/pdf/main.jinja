@@ -14,14 +14,14 @@
           {% include "components/meta/index.jinja" %}
         -#}
 
-        {% include "components/abstract/pdf.jinja" %}
         {% include "screens/document/pdf/toc.jinja" %}
+        {% include "components/abstract/pdf.jinja" %}
 
         {#-
           To make the abstract and TOC appear on different pages,
           it should be set in the config like this:
 
-          data-forced-page-break-selector='.free_text .pdf-toc'
+          data-forced-page-break-selector='.free_text'
         -#}
 
         {%- for section_or_requirement in document_iterator.all_content() %}

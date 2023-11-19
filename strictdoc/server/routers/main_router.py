@@ -96,6 +96,8 @@ from strictdoc.helpers.string import (
 )
 from strictdoc.server.error_object import ErrorObject
 
+HTTP_STATUS_PRECONDITION_FAILED = 412
+
 
 def create_main_router(
     server_config: ServerCommandConfig, project_config: ProjectConfig
@@ -2286,8 +2288,8 @@ def create_main_router(
     def get_search(q: Optional[str] = None):
         if not project_config.is_activated_search():
             return Response(
-                content="Search feature is not activated in the project config.",
-                status_code=412,
+                content="The Search feature is not activated in the project config.",
+                status_code=HTTP_STATUS_PRECONDITION_FAILED,
             )
         search_results = []
         error = None
@@ -2425,14 +2427,29 @@ def create_main_router(
                     traceability_index=export_action.traceability_index,
                 )
             elif url_to_document == "requirements_coverage.html":
+                if not project_config.is_activated_requirements_coverage():
+                    return Response(
+                        content="The Requirements Coverage feature is not activated in the project config.",
+                        status_code=HTTP_STATUS_PRECONDITION_FAILED,
+                    )
                 html_generator.export_requirements_coverage_screen(
                     traceability_index=export_action.traceability_index,
                 )
             elif url_to_document == "source_coverage.html":
+                if not project_config.is_activated_requirements_to_source_traceability():
+                    return Response(
+                        content="The Requirements to Source Files feature is not activated in the project config.",
+                        status_code=HTTP_STATUS_PRECONDITION_FAILED,
+                    )
                 html_generator.export_source_coverage_screen(
                     traceability_index=export_action.traceability_index,
                 )
             elif url_to_document == "project_statistics.html":
+                if not project_config.is_activated_project_statistics():
+                    return Response(
+                        content="The Project Statistics feature is not activated in the project config.",
+                        status_code=HTTP_STATUS_PRECONDITION_FAILED,
+                    )
                 html_generator.export_project_statistics(
                     traceability_index=export_action.traceability_index,
                 )
@@ -2449,9 +2466,19 @@ def create_main_router(
                     base_document_url = url_to_document.replace("-TRACE", "")
                     document_type_to_generate = DocumentType.TRACE
                 elif url_to_document.endswith("-PDF.html"):
+                    if not project_config.is_activated_html2pdf():
+                        return Response(
+                            content="The HTML2PDF feature is not activated in the project config.",
+                            status_code=HTTP_STATUS_PRECONDITION_FAILED,
+                        )
                     base_document_url = url_to_document.replace("-PDF", "")
                     document_type_to_generate = DocumentType.PDF
                 elif url_to_document.endswith(".standalone.html"):
+                    if not project_config.is_activated_standalone_document():
+                        return Response(
+                            content="The Standalone Document feature is not activated in the project config.",
+                            status_code=HTTP_STATUS_PRECONDITION_FAILED,
+                        )
                     base_document_url = url_to_document.replace(
                         ".standalone", ""
                     )

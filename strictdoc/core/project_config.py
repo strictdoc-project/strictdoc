@@ -54,6 +54,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         ProjectFeature.TABLE_SCREEN,
         ProjectFeature.TRACEABILITY_SCREEN,
         ProjectFeature.DEEP_TRACEABILITY_SCREEN,
+        ProjectFeature.SEARCH,
     ]
     DEFAULT_SERVER_HOST = "127.0.0.1"
     DEFAULT_SERVER_PORT = 5111

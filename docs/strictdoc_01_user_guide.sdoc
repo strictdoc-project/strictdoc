@@ -449,9 +449,7 @@ The following patterns are all invalid for multiline fields:
 If you need to provide a placeholder for a field that you know has to be filled
 out soon, add a "TBD" (to be done, by our team) or a "TBC" (to be confirmed with a customer or a supplier) string.
 
-One of the upcoming features of StrictDoc is a calculation of document maturity
-based on a number of TBD/TBCs found in document. This is a common practice in
-the regulared industries.
+The Project Statistics screen provides metrics for counting the number of TBDs (To Be Determined) and TBCs (To Be Confirmed) in a document, assisting in evaluating the document's maturity. This is a common practice in the regulared industries. See [LINK: SECTION-UG-Project-statistics-screen] for more details.
 [/FREETEXT]
 
 [/SECTION]
@@ -462,7 +460,7 @@ the regulared industries.
 TITLE: Grammar elements
 
 [SECTION]
-UID: ELEMENT_DOCUMENT
+UID: SECTION-UG-Document
 TITLE: Document
 
 [FREETEXT]
@@ -1557,6 +1555,74 @@ This section contains an anchor named ``Anchor ABC``.
 [/SECTION]
 
 [SECTION]
+TITLE: Search and filtering
+
+[FREETEXT]
+StrictDoc supports the search and filtering of document content.
+
+The web interface includes the Search screen, designed for conducting queries against a document tree. The command-line interface supports filtering of requirements and sections through the ``export`` and ``passthrough`` commands.
+[/FREETEXT]
+
+[SECTION]
+TITLE: Query engine
+
+[FREETEXT]
+The syntax of the search query is inspired by Python, utilizing a fixed grammar that converts search queries into corresponding Python expressions.
+
+Important rules:
+
+- Every query component shall start with ``node.``.
+- ``and`` and ``or`` expressions must be grouped using round brackets.
+- Only double quotes are accepted for strings.
+
+.. list-table:: Query examples
+   :widths: 50 50
+   :header-rows: 1
+
+   * - **Query**
+     - **Description**
+
+   * - ``node.is_requirement``
+     - Find all requirements.
+
+   * - ``node.is_section``
+     - Find all sections.
+
+   * - ``node.is_root``
+     - Find all requirements or sections from documents with ``ROOT: True``. See [LINK: SECTION-UG-Document] for the description of the ``ROOT`` option.
+
+   * - ``(node.is_requirement and "System" in node["TITLE"])``
+     - Find all requirements with a TITLE that equals to "System".
+
+   * - ``(node.is_requirement and node.has_parent_requirements)``
+     - Find all requirements which have parent requirements.
+
+   * - ``(node.is_requirement and node.has_child_requirements)``
+     - Find all requirements which have child requirements.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Filtering content
+
+[FREETEXT]
+Both ``export`` and ``passthrough`` command-line interface commands support filtering documentation content with ``--filter-requirements`` and ``--filter-sections`` options.
+
+Both options are based on the Query Engine, so the same rules that are valid for Search also apply for filtering. When a filter is applied, only the whitelisted requirements/sections will be exported.
+
+Example:
+
+.. code-block::
+
+    strictdoc export . --filter-requirements '"System" in node["TITLE"]'
+[/FREETEXT]
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
 TITLE: Markup
 
 [FREETEXT]
@@ -2301,6 +2367,7 @@ See also [LINK: SDOC_UG_CONFIG_FEATURES] for general instructions.
 [/FREETEXT]
 
 [SECTION]
+UID: SECTION-UG-Project-statistics-screen
 TITLE: Project statistics screen
 
 [FREETEXT]

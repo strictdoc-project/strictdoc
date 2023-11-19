@@ -71,6 +71,7 @@ def run_strictdoc_server(
                 "*.jinja",
                 "*.css",
                 "*.js",
+                "*.toml",
             ],
             reload_excludes=[
                 # "tests",  # Doesn't work.

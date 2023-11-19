@@ -35,7 +35,7 @@
 
 {% block header_content %}
   {%- with
-      header__pagetype=true,
+      header__pagetype=template_type,
       header__last="screens/project_index/actions.jinja"
   -%}
     {% include "components/header/index.jinja" %}

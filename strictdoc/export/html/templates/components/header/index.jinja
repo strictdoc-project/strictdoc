@@ -17,7 +17,7 @@
   {%- endif -%}
 
   {# 2: pagetype #}
-  {%- if header__pagetype is true and template_type is defined -%}
+  {%- if header__pagetype is defined -%}
     {% include "_res/svg__separator.jinja.html" %}
     {% include "components/header/header_pagetype.jinja" %}
   {%- endif -%}

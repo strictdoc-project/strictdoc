@@ -33,7 +33,7 @@
 {% block header_content %}
   {%- with
     header__items=["screens/source_file_view/header__source_file_name.jinja"],
-    header__pagetype=true
+    header__pagetype=template_type
   -%}
     {% include "components/header/index.jinja" %}
   {%- endwith -%}

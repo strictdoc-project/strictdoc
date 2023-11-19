@@ -34,7 +34,7 @@
 {% endblock tree_content %}
 
 {% block header_content %}
-  {%- with header__pagetype=true -%}
+  {%- with header__pagetype=template_type -%}
     {% include "components/header/index.jinja" %}
   {%- endwith -%}
 {% endblock header_content %}

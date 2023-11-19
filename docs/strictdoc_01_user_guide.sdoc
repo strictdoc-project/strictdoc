@@ -497,6 +497,9 @@ The following ``DOCUMENT`` fields are allowed:
      - Security classification of the document, e.g. Public, Internal,
        Restricted, Confidential
 
+   * - ``ROOT``
+     - Defines whether a document is a root object in a traceability graph. A root document is assumed to not have any parent requirements. The project statistics calculation will skip all root document's requirements when calculating the metric ``Non-root-level requirements not connected to any parent requirement``.
+
    * - ``OPTIONS``
      -  Document configuration options
 
@@ -517,7 +520,6 @@ Finally an optional ``[FREETEXT]`` block can be included.
     [FREETEXT]
     StrictDoc is software for writing technical requirements and specifications.
     [/FREETEXT]
-
 [/FREETEXT]
 
 [SECTION]

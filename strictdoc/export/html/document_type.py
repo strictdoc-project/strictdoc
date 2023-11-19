@@ -48,3 +48,16 @@ class DocumentType:
 
     def get_string(self) -> str:
         return self.document_type
+
+    def get_page_title(self) -> str:
+        if self.document_type == DocumentType.DOCUMENT:
+            return "Document"
+        if self.document_type == DocumentType.TABLE:
+            return "Table"
+        if self.document_type == DocumentType.TRACE:
+            return "Traceability"
+        if self.document_type == DocumentType.DEEPTRACE:
+            return "Deep Traceability"
+        if self.document_type == DocumentType.PDF:
+            return "PDF"
+        raise NotImplementedError

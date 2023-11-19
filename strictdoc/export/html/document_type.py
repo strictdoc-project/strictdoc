@@ -1,9 +1,9 @@
 class DocumentType:
-    DOCUMENT = 1
-    TABLE = 2
-    TRACE = 3
-    DEEPTRACE = 4
-    PDF = 5
+    DOCUMENT = "document"
+    TABLE = "table"
+    TRACE = "trace"
+    DEEPTRACE = "deeptrace"
+    PDF = "pdf"
 
     def __init__(self, document_type):
         self.document_type = document_type
@@ -45,3 +45,6 @@ class DocumentType:
     @property
     def is_deeptrace(self):
         return self.document_type == DocumentType.DEEPTRACE
+
+    def get_string(self) -> str:
+        return self.document_type

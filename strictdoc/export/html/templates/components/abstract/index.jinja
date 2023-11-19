@@ -3,14 +3,14 @@
 {%- if document.free_texts -%}
   {%- for free_text in document.free_texts %}
     <div class="free_text"
-         data-testid="{{ template_type.lower() }}-abstract">
+         data-testid="{{ document_type.get_string() }}-abstract">
       {%- with field_content = renderer.render_free_text(document_type, free_text) -%}
         {%- include "components/field/index.jinja" -%}
       {%- endwith -%}
     </div>
   {%- endfor -%}
-{%- elif not document.section_contents and template_type == "Document" -%}
-  <sdoc-main-placeholder data-testid="{{ template_type.lower() }}-root-placeholder">
+{%- elif not document.section_contents and document_type.is_document -%}
+  <sdoc-main-placeholder data-testid="document-root-placeholder">
     The document is empty.
     <br/>Start adding text, sections, and requirements.
   </sdoc-main-placeholder>

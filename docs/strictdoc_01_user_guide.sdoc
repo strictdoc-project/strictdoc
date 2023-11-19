@@ -289,6 +289,32 @@ The ``server`` command accepts a number of options. To explore the options, run:
 
 [/SECTION]
 
+[SECTION]
+TITLE: Security considerations
+
+[FREETEXT]
+**TL;DR** StrictDoc's web server is not yet hardened against unsafe use. Making StrictDoc safe for deployment in public networks is an ongoing effort.
+
+Using StrictDoc's command-line and web interfaces should be safe as long as the web server is not deployed on a public network.
+
+----
+
+Due to existing limitations (see [LINK: SDOC_UG_LIMIT_WEB]), StrictDoc requires running a server via the command line in one window and committing changes made to documents with Git in another window. These limitations inherently secure StrictDoc, as deploying it on a shared web server is neither practical nor possible; manual commits to SDoc files via a server's command line using Git are still required.
+
+What makes StrictDoc's web server unsafe:
+
+- The web interface is not fully hardened against unsafe inputs, such as malformed strings or files. The web server does not perform comprehensive sanity checks on the size and validity of inputs across all its HTTP endpoints.
+- StrictDoc uses the `pickle <https://docs.python.org/3/library/pickle.html>`_ module to cache SDoc files, significantly improving performance. However, the pickle module is not secure. The pickled files are currently stored in the /tmp folder, which poses risks under certain circumstances.
+- Several uses of regular expressions may be unsafe, some of which have been identified by GitHub's CodeQL analyzer.
+- The security aspects of StrictDoc's dependencies have not yet been analyzed.
+
+Known security-related issues are tracked on GitHub, under the `"Security" label <https://github.com/strictdoc-project/strictdoc/issues?q=is%3Aissue+is%3Aopen+security+label%3ASecurity>`_. As StrictDoc becomes usable without command-line access, all known issues will need to be addressed or acknowledged as known limitations.
+
+We are committed to continuously enhancing the functionality and security of StrictDoc and welcome user feedback and contributions in this area.
+[/FREETEXT]
+
+[/SECTION]
+
 [/SECTION]
 
 [SECTION]

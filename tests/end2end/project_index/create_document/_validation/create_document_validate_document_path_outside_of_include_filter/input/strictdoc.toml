@@ -1,0 +1,9 @@
+[project]
+
+features = [
+
+]
+
+include_doc_paths = [
+  "docs/**",
+]

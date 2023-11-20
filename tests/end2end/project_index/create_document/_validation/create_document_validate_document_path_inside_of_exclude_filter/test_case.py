@@ -1,6 +1,5 @@
-import os
-
 from tests.end2end.e2e_case import E2ECase
+from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.screens.project_index.form_add_document import (
     Form_AddDocument,
 )
@@ -9,13 +8,13 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 )
 from tests.end2end.server import SDocTestServer
 
-path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
-
 
 class Test(E2ECase):
     def test(self):
+        test_setup = End2EndTestSetup(path_to_test_file=__file__)
+
         with SDocTestServer(
-            input_path=path_to_this_test_file_folder
+            input_path=test_setup.path_to_sandbox
         ) as test_server:
             self.open(test_server.get_host_and_port())
 
@@ -26,16 +25,19 @@ class Test(E2ECase):
             form_add_document: Form_AddDocument = (
                 screen_project_index.do_open_modal_form_add_document()
             )
-            form_add_document.do_fill_in_title("Document 1")  # Empty document
-            form_add_document.do_fill_in_path("docs/doc!#ument.sdoc")
+            form_add_document.do_fill_in_title("Document 1")
+
+            # First, fill in an invalid path.
+            form_add_document.do_fill_in_path("tests/document")
             form_add_document.do_form_submit_and_catch_error(
-                "Document path must be relative and only contain slashes, "
-                "alphanumeric characters, and underscore symbols."
+                "Document path is not a valid path according to the project "
+                "config's setting 'exclude_doc_paths': ['tests/**']."
             )
 
-            form_add_document.do_fill_in_path("/test1.sdoc")
-            form_add_document.do_form_submit_and_catch_error(
-                "Document path must be relative and only contain slashes, "
-                "alphanumeric characters, and underscore symbols."
-            )
-            self.assert_text("/test1.sdoc")
+            # Then, fill in a valid path.
+            form_add_document.do_fill_in_path("docs/document")
+            form_add_document.do_form_submit()
+
+            screen_project_index.assert_contains_document("Document 1")
+
+        assert test_setup.compare_sandbox_and_expected_output()

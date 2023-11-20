@@ -90,6 +90,7 @@ from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.file_system import get_etag
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.parallelizer import NullParallelizer
+from strictdoc.helpers.path_filter import PathFilter
 from strictdoc.helpers.string import (
     create_safe_acronym,
     is_safe_alphanumeric_string,
@@ -1588,6 +1589,33 @@ def create_main_router(
                         "Document path must be relative and only contain "
                         "slashes, alphanumeric characters, "
                         "and underscore symbols."
+                    ),
+                )
+
+        if project_config.include_doc_paths is not None:
+            path_filter_includes = PathFilter(
+                project_config.include_doc_paths, positive_or_negative=True
+            )
+            if not path_filter_includes.match(document_path):
+                error_object.add_error(
+                    "document_path",
+                    (
+                        "Document path is not a valid path according to "
+                        "the project config's setting 'include_doc_paths': "
+                        f"{project_config.include_doc_paths}."
+                    ),
+                )
+        if project_config.exclude_doc_paths is not None:
+            path_filter_excludes = PathFilter(
+                project_config.exclude_doc_paths, positive_or_negative=False
+            )
+            if path_filter_excludes.match(document_path):
+                error_object.add_error(
+                    "document_path",
+                    (
+                        "Document path is not a valid path according to "
+                        "the project config's setting 'exclude_doc_paths': "
+                        f"{project_config.exclude_doc_paths}."
                     ),
                 )
 

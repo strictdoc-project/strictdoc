@@ -5,7 +5,7 @@ from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers.c_cpp import CLexer, CppLexer
 from pygments.lexers.data import YamlLexer
-from pygments.lexers.markup import TexLexer, RstLexer
+from pygments.lexers.markup import RstLexer, TexLexer
 from pygments.lexers.python import PythonLexer
 from pygments.lexers.templates import HtmlDjangoLexer
 

@@ -1,6 +1,6 @@
 from strictdoc.core.environment import SDocRuntimeEnvironment
 
-__version__ = "0.0.47a6"
+__version__ = "0.0.47"
 
 
 environment = SDocRuntimeEnvironment(__file__)

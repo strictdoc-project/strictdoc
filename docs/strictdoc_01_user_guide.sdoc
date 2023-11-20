@@ -41,7 +41,7 @@ Summary of StrictDoc features:
   a few seconds. From the second run, only changed documents are regenerated.
   Further performance tuning should be possible.
 
-See also summary of StrictDoc's existing limitations: [LINK: SDOC_UG_LIMIT].
+See also a summary of StrictDoc's existing limitations: [LINK: SDOC_UG_LIMIT].
 [/FREETEXT]
 
 [SECTION]

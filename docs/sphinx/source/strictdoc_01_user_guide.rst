@@ -38,7 +38,7 @@ Summary of StrictDoc features:
   a few seconds. From the second run, only changed documents are regenerated.
   Further performance tuning should be possible.
 
-See also summary of StrictDoc's existing limitations: :ref:`SDOC_UG_LIMIT`.
+See also a summary of StrictDoc's existing limitations: :ref:`SDOC_UG_LIMIT`.
 
 .. _SDOC_UG_CONTACT:
 
@@ -234,6 +234,28 @@ The ``server`` command accepts a number of options. To explore the options, run:
 
 **Note:** The implementation of the web interface is work-in-progress. See :ref:`SDOC_UG_LIMIT_WEB` for an overview of the existing limitations.
 
+Security considerations
+-----------------------
+
+**TL;DR** StrictDoc's web server is not yet hardened against unsafe use. Making StrictDoc safe for deployment in public networks is an ongoing effort.
+
+Using StrictDoc's command-line and web interfaces should be safe as long as the web server is not deployed on a public network.
+
+----
+
+Due to existing limitations (see :ref:`SDOC_UG_LIMIT_WEB`), StrictDoc requires running a server via the command line in one window and committing changes made to documents with Git in another window. These limitations inherently secure StrictDoc, as deploying it on a shared web server is neither practical nor possible; manual commits to SDoc files via a server's command line using Git are still required.
+
+What makes StrictDoc's web server unsafe:
+
+- The web interface is not fully hardened against unsafe inputs, such as malformed strings or files. The web server does not perform comprehensive sanity checks on the size and validity of inputs across all its HTTP endpoints.
+- StrictDoc uses the `pickle <https://docs.python.org/3/library/pickle.html>`_ module to cache SDoc files, significantly improving performance. However, the pickle module is not secure. The pickled files are currently stored in the /tmp folder, which poses risks under certain circumstances.
+- Several uses of regular expressions may be unsafe, some of which have been identified by GitHub's CodeQL analyzer.
+- The security aspects of StrictDoc's dependencies have not yet been analyzed.
+
+Known security-related issues are tracked on GitHub, under the `"Security" label <https://github.com/strictdoc-project/strictdoc/issues?q=is%3Aissue+is%3Aopen+security+label%3ASecurity>`_. As StrictDoc becomes usable without command-line access, all known issues will need to be addressed or acknowledged as known limitations.
+
+We are committed to continuously enhancing the functionality and security of StrictDoc and welcome user feedback and contributions in this area.
+
 .. _SDOC_UG_IDE_SUPPORT:
 
 IDE support
@@ -376,14 +398,12 @@ The following patterns are all invalid for multiline fields:
 If you need to provide a placeholder for a field that you know has to be filled
 out soon, add a "TBD" (to be done, by our team) or a "TBC" (to be confirmed with a customer or a supplier) string.
 
-One of the upcoming features of StrictDoc is a calculation of document maturity
-based on a number of TBD/TBCs found in document. This is a common practice in
-the regulared industries.
+The Project Statistics screen provides metrics for counting the number of TBDs (To Be Determined) and TBCs (To Be Confirmed) in a document, assisting in evaluating the document's maturity. This is a common practice in the regulared industries. See :ref:`SECTION-UG-Project-statistics-screen` for more details.
 
 Grammar elements
 ----------------
 
-.. _ELEMENT_DOCUMENT:
+.. _SECTION-UG-Document:
 
 Document
 ~~~~~~~~
@@ -419,6 +439,9 @@ The following ``DOCUMENT`` fields are allowed:
      - Security classification of the document, e.g. Public, Internal,
        Restricted, Confidential
 
+   * - ``ROOT``
+     - Defines whether a document is a root object in a traceability graph. A root document is assumed to not have any parent requirements. The project statistics calculation will skip all root document's requirements when calculating the metric ``Non-root-level requirements not connected to any parent requirement``.
+
    * - ``OPTIONS``
      -  Document configuration options
 
@@ -439,7 +462,6 @@ Finally an optional ``[FREETEXT]`` block can be included.
     [FREETEXT]
     StrictDoc is software for writing technical requirements and specifications.
     [/FREETEXT]
-
 
 .. _DOCUMENT_FIELD_OPTIONS:
 
@@ -1351,6 +1373,62 @@ This section contains an anchor named ``Anchor ABC``.
 
 .. _ANCHOR-EXAMPLE:
 
+Search and filtering
+====================
+
+StrictDoc supports the search and filtering of document content.
+
+The web interface includes the Search screen, designed for conducting queries against a document tree. The command-line interface supports filtering of requirements and sections through the ``export`` and ``passthrough`` commands.
+
+Query engine
+------------
+
+The syntax of the search query is inspired by Python, utilizing a fixed grammar that converts search queries into corresponding Python expressions.
+
+Important rules:
+
+- Every query component shall start with ``node.``.
+- ``and`` and ``or`` expressions must be grouped using round brackets.
+- Only double quotes are accepted for strings.
+
+.. list-table:: Query examples
+   :widths: 50 50
+   :header-rows: 1
+
+   * - **Query**
+     - **Description**
+
+   * - ``node.is_requirement``
+     - Find all requirements.
+
+   * - ``node.is_section``
+     - Find all sections.
+
+   * - ``node.is_root``
+     - Find all requirements or sections from documents with ``ROOT: True``. See :ref:`SECTION-UG-Document` for the description of the ``ROOT`` option.
+
+   * - ``(node.is_requirement and "System" in node["TITLE"])``
+     - Find all requirements with a TITLE that equals to "System".
+
+   * - ``(node.is_requirement and node.has_parent_requirements)``
+     - Find all requirements which have parent requirements.
+
+   * - ``(node.is_requirement and node.has_child_requirements)``
+     - Find all requirements which have child requirements.
+
+Filtering content
+-----------------
+
+Both ``export`` and ``passthrough`` command-line interface commands support filtering documentation content with ``--filter-requirements`` and ``--filter-sections`` options.
+
+Both options are based on the Query Engine, so the same rules that are valid for Search also apply for filtering. When a filter is applied, only the whitelisted requirements/sections will be exported.
+
+Example:
+
+.. code-block::
+
+    strictdoc export . --filter-requirements '"System" in node["TITLE"]'
+
 Markup
 ======
 
@@ -1593,9 +1671,9 @@ To activate the traceability to source files, configure the project config with 
       "REQUIREMENT_TO_SOURCE_TRACEABILITY"
     ]
 
-See :ref:`SDOC_UG_OPTIONS_PROJECT_LEVEL` for more details about the project-level options.
+By default, StrictDoc looks for source files in a directory from which the ``strictdoc`` command is run. This can be changed by using the ``source_root_path`` project-level option.
 
-Currently, StrictDoc looks for source files in a directory from which the ``strictdoc`` command is run.
+See :ref:`SDOC_UG_OPTIONS_PROJECT_LEVEL` for more details about the project-level options.
 
 The
 `strictdoc-examples <https://github.com/strictdoc-project/strictdoc-examples>`_
@@ -1761,6 +1839,23 @@ The ``html_assets_strictdoc_dir`` allows changing the assets folder name:
 
     [project]
     html_assets_strictdoc_dir = "assets"
+
+Path to source root
+~~~~~~~~~~~~~~~~~~~
+
+When the ``REQUIREMENT_TO_SOURCE_TRACEABILITY`` feature is activated, StrictDoc looks for source files in the directory from which the ``strictdoc`` program is run. This can be changed with the ``source_root_path`` option.
+
+.. code-block::
+
+    [project]
+
+    features = [
+      "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+    ]
+
+    source_root_path = "source_root/"
+
+The ``source_root_path`` option supports relative paths, e.g. ``../source_root/``.
 
 Include/exclude document paths
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1958,6 +2053,8 @@ At any point in time, StrictDoc supports features that are still experimental. T
 A feature is considered stable when all its known edge cases have been covered and enough users report that they have used and tested this feature.
 
 See also :ref:`SDOC_UG_CONFIG_FEATURES` for general instructions.
+
+.. _SECTION-UG-Project-statistics-screen:
 
 Project statistics screen
 -------------------------

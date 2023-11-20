@@ -2,12 +2,24 @@
 
 ## [Unreleased](https://github.com/strictdoc-project/strictdoc/tree/HEAD)
 
-[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.46...HEAD)
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.47...HEAD)
+
+**Merged pull requests:**
+
+- Bump version to 0.0.47 [\#1477](https://github.com/strictdoc-project/strictdoc/pull/1477) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.47](https://github.com/strictdoc-project/strictdoc/tree/0.0.47) (2023-11-20)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.46...0.0.47)
 
 **Fixed bugs:**
 
 - Fix Jinja crashing on .DS\_Store from newer versions of Jinja \(somewhere Python \>3.7\) [\#1433](https://github.com/strictdoc-project/strictdoc/pull/1433) ([stanislaw](https://github.com/stanislaw))
 - UI: DTR screen: fix link: go to DOC view [\#1432](https://github.com/strictdoc-project/strictdoc/pull/1432) ([stanislaw](https://github.com/stanislaw))
+
+**Security fixes:**
+
+- docs: document "Security considerations" [\#1475](https://github.com/strictdoc-project/strictdoc/pull/1475) ([stanislaw](https://github.com/stanislaw))
 
 **Closed issues:**
 
@@ -21,9 +33,18 @@
 - Deep traceability: zoom view: add vertical scrolling [\#1392](https://github.com/strictdoc-project/strictdoc/issues/1392)
 - Requirement-to-source traceability: single-line @sdoc markers [\#1359](https://github.com/strictdoc-project/strictdoc/issues/1359)
 - Double-check the issue with Jinja crashing on .DS\_Store files [\#1356](https://github.com/strictdoc-project/strictdoc/issues/1356)
+- UID autogeneration: Further improvements [\#1271](https://github.com/strictdoc-project/strictdoc/issues/1271)
 
 **Merged pull requests:**
 
+- export/html: update Header component [\#1476](https://github.com/strictdoc-project/strictdoc/pull/1476) ([mettta](https://github.com/mettta))
+- docs: document Search, ROOT, source\_root\_path [\#1474](https://github.com/strictdoc-project/strictdoc/pull/1474) ([stanislaw](https://github.com/stanislaw))
+- UI: return Precondition Failed for all optional features when not activated [\#1473](https://github.com/strictdoc-project/strictdoc/pull/1473) ([stanislaw](https://github.com/stanislaw))
+- project\_config, UI: ensure that Search is only available in the web interface [\#1471](https://github.com/strictdoc-project/strictdoc/pull/1471) ([stanislaw](https://github.com/stanislaw))
+- CI: --exit-first on macOS and Linux tests [\#1470](https://github.com/strictdoc-project/strictdoc/pull/1470) ([stanislaw](https://github.com/stanislaw))
+- html2pdf: implement TOC page numbers generator [\#1469](https://github.com/strictdoc-project/strictdoc/pull/1469) ([mettta](https://github.com/mettta))
+- UI: add UID autogeneration button to section form [\#1467](https://github.com/strictdoc-project/strictdoc/pull/1467) ([mettta](https://github.com/mettta))
+- docs: introduce the Changelog document [\#1466](https://github.com/strictdoc-project/strictdoc/pull/1466) ([stanislaw](https://github.com/stanislaw))
 - Bump version to 0.0.47a6 [\#1465](https://github.com/strictdoc-project/strictdoc/pull/1465) ([stanislaw](https://github.com/stanislaw))
 - export/html: search: improve page-tips [\#1464](https://github.com/strictdoc-project/strictdoc/pull/1464) ([mettta](https://github.com/mettta))
 - Bump version to 0.0.47a5 [\#1463](https://github.com/strictdoc-project/strictdoc/pull/1463) ([stanislaw](https://github.com/stanislaw))

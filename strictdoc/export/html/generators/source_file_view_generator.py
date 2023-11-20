@@ -5,7 +5,7 @@ from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers.c_cpp import CLexer, CppLexer
 from pygments.lexers.data import YamlLexer
-from pygments.lexers.markup import TexLexer
+from pygments.lexers.markup import TexLexer, RstLexer
 from pygments.lexers.python import PythonLexer
 from pygments.lexers.templates import HtmlDjangoLexer
 
@@ -109,6 +109,8 @@ class SourceFileViewHTMLGenerator:
             lexer = HtmlDjangoLexer()
         elif source_file.is_yaml_file():
             lexer = YamlLexer()
+        elif source_file.is_rst_file():
+            lexer = RstLexer()
         else:
             raise NotImplementedError(source_file)
 

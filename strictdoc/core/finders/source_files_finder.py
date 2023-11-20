@@ -18,6 +18,7 @@ class SourceFileType(Enum):
     # https://stackoverflow.com/questions/29590931/is-there-an-idiomatic-file-extension-for-jinja-templates
     JINJA = [".jinja", ".jinja2", ".j2", ".html.jinja"]
     YAML = [".yaml", ".yml"]
+    RST = [".rst"]
 
     @classmethod
     def create_from_path(cls, path_to_file: str) -> "SourceFileType":
@@ -36,6 +37,9 @@ class SourceFileType(Enum):
         for enum_value in SourceFileType.YAML.value:
             if path_to_file.endswith(enum_value):
                 return cls.YAML
+        for enum_value in SourceFileType.RST.value:
+            if path_to_file.endswith(enum_value):
+                return cls.RST
         raise NotImplementedError(path_to_file)
 
     @staticmethod
@@ -93,6 +97,9 @@ class SourceFile:  # pylint: disable=too-many-instance-attributes
 
     def is_yaml_file(self):
         return self.file_type == SourceFileType.YAML
+
+    def is_rst_file(self):
+        return self.file_type == SourceFileType.RST
 
 
 class SourceFilesFinder:

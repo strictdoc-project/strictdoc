@@ -72,6 +72,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         source_root_path: str,
         include_source_paths: List[str],
         exclude_source_paths: List[str],
+        html2pdf_template: Optional[str],
         reqif_profile: str,
         config_last_update: Optional[datetime.datetime],
     ):
@@ -108,6 +109,8 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
 
         self.excel_export_fields: Optional[List[str]] = None
 
+        self.html2pdf_template: Optional[str] = html2pdf_template
+
         self.reqif_profile: str = reqif_profile
 
         self.autouuid_include_sections: bool = False
@@ -132,6 +135,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
             source_root_path=os.getcwd(),
             include_source_paths=[],
             exclude_source_paths=[],
+            html2pdf_template=None,
             reqif_profile=ReqIFProfile.P01_SDOC,
             config_last_update=None,
         )
@@ -286,6 +290,7 @@ class ProjectConfigLoader:
             config_dict=config_content,
             environment=environment,
             config_last_update=config_last_update,
+            path_to_config=path_to_config,
         )
 
     @staticmethod
@@ -297,6 +302,7 @@ class ProjectConfigLoader:
             config_dict=config_dict,
             environment=environment,
             config_last_update=None,
+            path_to_config=None,
         )
 
     @staticmethod
@@ -305,7 +311,11 @@ class ProjectConfigLoader:
         config_dict: dict,
         environment: SDocRuntimeEnvironment,
         config_last_update: Optional[datetime.datetime],
+        path_to_config: Optional[str],
     ) -> ProjectConfig:
+        if path_to_config is not None:
+            assert os.path.isfile(path_to_config)
+
         project_title = ProjectConfig.DEFAULT_PROJECT_TITLE
         dir_for_sdoc_assets = ProjectConfig.DEFAULT_DIR_FOR_SDOC_ASSETS
         project_features = ProjectConfig.DEFAULT_FEATURES
@@ -316,6 +326,7 @@ class ProjectConfigLoader:
         source_root_path = os.getcwd()
         include_source_paths = []
         exclude_source_paths = []
+        html2pdf_template: Optional[str] = None
         reqif_profile = ReqIFProfile.P01_SDOC
 
         if "project" in config_dict:
@@ -410,6 +421,23 @@ class ProjectConfigLoader:
                     )
                     sys.exit(1)
 
+            html2pdf_template = project_content.get(
+                "html2pdf_template", html2pdf_template
+            )
+            if html2pdf_template is not None:
+                assert not os.path.isabs(html2pdf_template)
+                if path_to_config is not None:
+                    path_to_config_dir = os.path.dirname(path_to_config)
+                    html2pdf_template = os.path.join(
+                        path_to_config_dir, html2pdf_template
+                    )
+                if not os.path.isfile(html2pdf_template):
+                    print(  # noqa: T201
+                        "error: strictdoc.toml: 'html2pdf_template': "
+                        f"invalid path to a template file: {html2pdf_template}'."
+                    )
+                    sys.exit(1)
+
         if "server" in config_dict:
             # FIXME: Introduce at least a basic validation for the host/port.
             server_content = config_dict["server"]
@@ -431,6 +459,7 @@ class ProjectConfigLoader:
             source_root_path=source_root_path,
             include_source_paths=include_source_paths,
             exclude_source_paths=exclude_source_paths,
+            html2pdf_template=html2pdf_template,
             reqif_profile=reqif_profile,
             config_last_update=config_last_update,
         )

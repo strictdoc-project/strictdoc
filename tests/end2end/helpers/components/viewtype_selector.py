@@ -7,6 +7,7 @@ from tests.end2end.helpers.screens.deep_traceability.screen_deep_traceability im
 from tests.end2end.helpers.screens.document.screen_document import (
     Screen_Document,
 )
+from tests.end2end.helpers.screens.pdf.screen_pdf import Screen_PDFDocument
 from tests.end2end.helpers.screens.standalone_document.screen_standalone_document import (  # noqa: E501
     Screen_StandaloneDocument,
 )
@@ -92,3 +93,9 @@ class ViewType_Selector:  # pylint: disable=invalid-name  # noqa: E501
             '//*[@data-viewtype_link="standalone_document"]'
         )
         return Screen_StandaloneDocument(self.test_case)
+
+    def do_go_to_pdf_document(self) -> Screen_PDFDocument:
+        self.do_click_viewtype_handler()
+        self.assert_viewtype_menu_opened()
+        self.test_case.click_xpath('//*[@data-viewtype_link="html2pdf"]')
+        return Screen_PDFDocument(self.test_case)

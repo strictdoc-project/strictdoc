@@ -239,16 +239,17 @@ Security considerations
 
 **TL;DR** StrictDoc's web server is not yet hardened against unsafe use. Making StrictDoc safe for deployment in public networks is an ongoing effort.
 
-Using StrictDoc's command-line and web interfaces should be safe as long as the web server is not deployed on a public network.
+Using StrictDoc's command-line and web interfaces should be more secure if the web server is not deployed on a public network.
 
 ----
 
-Due to existing limitations (see :ref:`SDOC_UG_LIMIT_WEB`), StrictDoc requires running a server via the command line in one window and committing changes made to documents with Git in another window. These limitations inherently secure StrictDoc, as deploying it on a shared web server is neither practical nor possible; manual commits to SDoc files via a server's command line using Git are still required.
+Due to current constraints (refer to :ref:`SDOC_UG_LIMIT_WEB`), StrictDoc requires running a server through a command line interface in one window or OS process, and separately committing changes to documents using Git in another window or OS process. Deploying StrictDoc as a shared web server is impractical, as it still requires manual commits to SDoc files via the server's command line using Git. The future development plan for StrictDoc aims to enable its use as a standalone server application, which includes resolving the following security-related issues.
 
 What makes StrictDoc's web server unsafe:
 
 - The web interface is not fully hardened against unsafe inputs, such as malformed strings or files. The web server does not perform comprehensive sanity checks on the size and validity of inputs across all its HTTP endpoints.
 - StrictDoc uses the `pickle <https://docs.python.org/3/library/pickle.html>`_ module to cache SDoc files, significantly improving performance. However, the pickle module is not secure. The pickled files are currently stored in the /tmp folder, which poses risks under certain circumstances.
+- The security-related properties of the textX/Arpeggio parser are not understood yet. We have opened a request to track this upstream: `textX -  Security considerations (#422) <https://github.com/textX/textX/discussions/422>`_.
 - Several uses of regular expressions may be unsafe, some of which have been identified by GitHub's CodeQL analyzer.
 - The security aspects of StrictDoc's dependencies have not yet been analyzed.
 

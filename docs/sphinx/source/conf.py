@@ -240,14 +240,13 @@ latex_elements = {
                     \hline
                     \textbf{{Project goals:}} &
                     \makecell[l]{
-                        Technical requirements and specifications management
+                        Technical documentation and requirements management
                     }
                     \\ \hline
-                    \textbf{{Supported documents:}} & \tablecell {Requirements document/specification, technical manual} \\ \hline
                     \textbf{{Documents storage:}} & \tablecell {Plain text files} \\ \hline
-                    \textbf{{Export formats:}} & \tablecell {RST/Sphinx, HTML, PDF, Excel} \\ \hline
+                    \textbf{{Export formats:}} & \tablecell {HTML, RST/Sphinx, ReqIF, PDF, Excel} \\ \hline
                     \textbf{{License model:}} & \tablecell {Open source software, Apache 2 license} \\ \hline
-                    \textbf{{Project page:}} & \tablecell {https://github.com/stanislaw/strictdoc} \\ \hline
+                    \textbf{{Project page:}} & \tablecell {https://github.com/strictdoc-project/strictdoc} \\ \hline
                     \textbf{{Release date:}} & \tablecell {\MonthYearFormat\today} \\ \hline
                     \textbf{{Version:}} & \tablecell #{STRICTDOC_VERSION} \\ \hline
                     \end{tabular}

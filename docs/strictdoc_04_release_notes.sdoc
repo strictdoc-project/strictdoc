@@ -9,7 +9,9 @@ This document maintains a record of all changes to StrictDoc since November 2023
 TITLE: Unreleased work
 
 [FREETEXT]
-None.
+The requirement-to-source traceability feature was extended to support linking requirements to the RST files.
+
+One more input scenario was handled for the Create Document workflow. When a project config has ``include_doc_paths`` or ``exclude_doc_paths`` search path filters specified, and an input document path contradicts to the provided filters, a validation message is shown.
 [/FREETEXT]
 
 [/SECTION]

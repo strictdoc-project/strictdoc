@@ -1,3 +1,7 @@
+from typing import Optional
+
+from jinja2 import Template
+
 from strictdoc import __version__
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
@@ -24,6 +28,11 @@ class DocumentHTML2PDFGenerator:
             traceability_index.document_tree
         )
 
+        custom_html2pdf_template: Optional[Template] = None
+        if project_config.html2pdf_template is not None:
+            with open(project_config.html2pdf_template) as f:
+                custom_html2pdf_template = Template(f.read())
+
         template = html_templates.jinja_environment().get_template(
             "screens/document/pdf/index.jinja"
         )
@@ -42,6 +51,7 @@ class DocumentHTML2PDFGenerator:
             strictdoc_version=__version__,
             document_tree=traceability_index.document_tree,
             document_tree_iterator=document_tree_iterator,
+            custom_html2pdf_template=custom_html2pdf_template,
         )
 
         return output

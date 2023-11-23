@@ -1,0 +1,44 @@
+
+{%- if not document_tree_iterator.is_empty_tree() -%}
+  <div class="tree">
+    {%- for folder_or_file in document_tree_iterator.iterator_files_first(): -%}
+      {%- if folder_or_file.is_folder(): %}
+        {%- if folder_or_file.files|length > 0 %}
+          <div
+            class="tree_item"
+            data-level="{{ folder_or_file.level }}"
+            data-testid="tree-folder-item"
+          >{% include "_res/svg__separator.jinja.html" %}{{ folder_or_file.rel_path }}</div>
+        {% endif %}
+      {% else %}
+        {%- set document_ = document_tree.get_document_by_path(folder_or_file.get_full_path()) %}
+
+        {% set document_md5 = self_stats.get_md5_by_node(document_) %}
+        {% set document_modified = not other_stats.contains_document_md5(document_md5) %}
+
+        <details
+          {% if document_modified %}
+            open
+          {% endif %}
+        >
+          <summary>
+            <span
+              {% if document_modified %}
+              style="background-color: #E4F1C9;"
+              {% endif %}
+            >
+            {{ document_.title }}
+            </span>
+          </summary>
+          {% with node=document_ %}
+            {% include "screens/git/node.jinja" %}
+          {% endwith %}
+        </details>
+
+      {% endif %}
+    {%- endfor -%}
+  </div>
+{%- else -%}
+  <span data-testid="document-tree-empty-text">🐛 The project has no documents yet.</span>
+{%- endif -%}
+

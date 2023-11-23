@@ -1,0 +1,68 @@
+{% extends "base.jinja.html" %}
+{% set template_type = "Git" %}
+
+{% block head_css %}
+  {{ super() }}
+
+  <style>
+    .container {
+        display: flex;
+    }
+    .column {
+        flex: 1; /* This ensures each column takes equal width */
+        padding: 10px; /* Optional, for some internal spacing */
+    }
+
+    main .main ul {
+        list-style-type: none;
+    }
+
+    main .main summary {list-style: none}
+    main .main summary::-webkit-details-marker {display: none; }
+    main .main details > summary::before {
+      content:"+";
+      padding-right: 0.5em;
+    }
+    main .main details[open] > summary::before {
+      content:"–";
+    }
+    </style>
+{% endblock head_css %}
+
+{% block head_scripts %}
+  {{ super() }}
+
+  {%- if project_config.is_running_on_server and not standalone -%}
+  <script type="module">
+    import hotwiredTurbo from "{{ link_renderer.render_static_url_with_prefix('turbo.min.js') }}";
+    import { Application, Controller } from "{{ link_renderer.render_static_url_with_prefix('stimulus.min.js') }}";
+    window.Stimulus = Application.start();
+    window.Controller = Controller;
+  </script>
+  <script type="module" src="{{ link_renderer.render_static_url('controllers/modal_controller.js') }}"></script>
+  {%- endif -%}
+{% endblock head_scripts %}
+
+{% block title %}
+  {{ project_config.project_title }} - {{ template_type }}
+{% endblock title %}
+
+{% block viewtype %}diff{% endblock viewtype %}
+
+{% block layout_nav %}
+  {% include "_shared/nav.jinja.html" %}
+{% endblock layout_nav %}
+
+{% block tree_content %}
+   {# NOTHING #}
+{% endblock tree_content %}
+
+{% block header_content %}
+  {%- with header__pagetype=template_type -%}
+    {% include "components/header/index.jinja" %}
+  {%- endwith -%}
+{% endblock header_content %}
+
+{% block main_content %}
+  {% include "screens/git/main.jinja" %}
+{% endblock main_content %}

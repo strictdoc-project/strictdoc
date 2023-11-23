@@ -1,0 +1,33 @@
+
+  <form
+    action="/diff"
+    method="GET"
+  >
+      <input
+        type="text"
+        {% if left_revision is not none %}
+        value={{ left_revision }}
+        {% else %}
+        value="73dd8f411f864382349e951c51d3c4ce1b90fd28"
+        {% endif %}
+        style="width: 50%;"
+        placeholder="Enter the LHS revision here"
+        id="left_revision"
+        name="left_revision"
+      />
+
+      <input
+        type="text"
+        {% if right_revision is not none %}
+        value={{ right_revision }}
+        {% else %}
+        value="HEAD+"
+        {% endif %}
+        style="width: 50%;"
+        placeholder="Enter the RHS revision here"
+        id="right_revision"
+        name="right_revision"
+      />
+
+      <input type="submit">
+  </form>

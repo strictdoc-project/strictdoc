@@ -58,4 +58,16 @@
   </a>
 {%- endif -%}
 
+  {%- if project_config.is_activated_diff() -%}
+  <a
+    data-link="diff"
+    class="nav_button"
+    href="{{ link_renderer.render_url('diff') }}"
+    title="Diff"
+    data-testid="project-tree-link-diff"
+  >
+    DIFF
+  </a>
+{%- endif -%}
+
 </div>

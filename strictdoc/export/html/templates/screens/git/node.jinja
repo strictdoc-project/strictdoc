@@ -1,0 +1,94 @@
+<ul>
+  {% if node.free_texts|length > 0 %}
+  <li>
+  {% set free_text = node.free_texts[0] %}
+  {% set free_text_md5 = self_stats.get_md5_by_node(free_text) %}
+  {% set free_text_modified = not other_stats.contains_free_text_md5(free_text_md5) %}
+
+  <details
+    {% if free_text_modified %}
+      open
+    {% endif %}
+  >
+    <summary>
+      <span
+        {% if free_text_modified %}
+          style="background-color: #E4F1C9;"
+        {% endif %}
+      >
+        ...
+      </span>
+    </summary>
+
+    <span
+      {% if free_text_modified %}
+        style="background-color: #E4F1C9;"
+      {% endif %}
+    >
+      {{ free_text.get_parts_as_text() }}
+    </span>
+  </details>
+  </li>
+  {% endif %}
+
+  {%- for node_ in node.section_contents -%}
+    <li>
+      {%- if node_.is_section -%}
+      {% set section = node_ %}
+      {% set section_md5 = self_stats.get_md5_by_node(section) %}
+      {% set section_modified = not other_stats.contains_section_md5(section_md5) %}
+
+      <details
+        {% if section_modified %}
+          open
+        {% endif %}
+      >
+        <summary>
+          <span
+            {% if section_modified %}
+              style="background-color: #E4F1C9;"
+            {% endif %}
+          >
+            <span class="section-number">
+              {{ section.context.title_number_string if section.context.title_number_string else "&nbsp;" * (section.ng_level * 2 - 1) }}
+            </span>{{ section.title }}
+          </span>
+        </summary>
+        {% with node=section %}
+        {% include "screens/git/node.jinja" %}
+        {% endwith %}
+      </details>
+
+      {%- else -%}{# if requirement #}
+      {% set section = node_ %}
+      {% set requirement_md5 = self_stats.get_md5_by_node(section) %}
+      {% set requirement_modified = not other_stats.contains_requirement_md5(requirement_md5) %}
+
+      <details
+        {% if requirement_modified %}
+          open
+        {% endif %}
+      >
+        <summary>
+        <span
+          {% if requirement_modified %}
+            style="background-color: #E4F1C9"
+          {% endif %}
+        >
+          <span class="section-number">
+            {{ section.context.title_number_string if section.context.title_number_string else "&nbsp;" * (section.ng_level * 2 - 1) }}
+          </span>
+          {%- if section.reserved_title is not none -%}
+            {{ section.reserved_title }}
+
+          {%- endif -%}
+        </span>
+        </summary>
+        {% with requirement=section, requirement_modified=requirement_modified %}
+          {% include "screens/git/requirement.jinja" %}
+        {% endwith %}
+      </details>
+      {%- endif -%}
+    </li>
+  {% endfor %}
+</ul>

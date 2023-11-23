@@ -1,0 +1,30 @@
+<div class="main">
+  {% include "screens/git/form.jinja" %}
+
+  {% if results %}
+  <div class="container">
+    <div class="column">
+      {% with
+        document_tree=document_tree_lhs,
+        document_tree_iterator=documents_iterator_lhs,
+        traceability_index=traceability_index_lhs,
+        self_stats=lhs_stats,
+        other_stats=rhs_stats
+      %}
+        {% include "screens/git/frame_project_tree.jinja" %}
+      {% endwith %}
+    </div>
+    <div class="column">
+      {% with
+        document_tree=document_tree_rhs,
+        document_tree_iterator=documents_iterator_rhs,
+        traceability_index=traceability_index_rhs,
+        self_stats=rhs_stats,
+        other_stats=lhs_stats
+      %}
+        {% include "screens/git/frame_project_tree.jinja" %}
+      {% endwith %}
+    </div>
+  </div>
+  {% endif %}
+</div>

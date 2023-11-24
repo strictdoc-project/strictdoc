@@ -871,7 +871,13 @@ def create_main_router(
         )
         transform.perform()
 
-        # Saving new content to .SDoc file.
+        # Update the index because other documents might reference this
+        # document's sections. These documents will be regenerated on demand,
+        # when they are opened next time.
+        export_action.traceability_index.update_last_updated()
+
+        # Saving new content to .SDoc files.
+        document.ng_needs_generation = True
         document_content = SDWriter().write(document)
         document_meta = document.meta
         with open(
@@ -879,8 +885,14 @@ def create_main_router(
         ) as output_file:
             output_file.write(document_content)
 
-        # Re-exporting HTML files.
-        export_action.export()
+        # Exporting the updated document to HTML. Note that this happens after
+        # the traceability index last update marker has been updated. This way
+        # the generated HTML file is newer than the traceability index.
+        html_generator.export_single_document_with_performance(
+            document=document,
+            traceability_index=export_action.traceability_index,
+            specific_documents=(DocumentType.DOCUMENT,),
+        )
 
         # Rendering back the Turbo template.
         template = env().get_template(
@@ -1105,6 +1117,11 @@ def create_main_router(
         )
         result: UpdateRequirementResult = update_command.perform()
 
+        # Update the index because other documents might reference this
+        # document's sections. These documents will be regenerated on demand,
+        # when they are opened next time.
+        export_action.traceability_index.update_last_updated()
+
         # Saving new content to .SDoc files.
         document.ng_needs_generation = True
         document_content = SDWriter().write(document)
@@ -1114,9 +1131,14 @@ def create_main_router(
         ) as output_file:
             output_file.write(document_content)
 
-        # Re-exporting HTML files.
-        # Those with @ng_needs_generation == True will be regenerated.
-        export_action.export()
+        # Exporting the updated document to HTML. Note that this happens after
+        # the traceability index last update marker has been updated. This way
+        # the generated HTML file is newer than the traceability index.
+        html_generator.export_single_document_with_performance(
+            document=document,
+            traceability_index=export_action.traceability_index,
+            specific_documents=(DocumentType.DOCUMENT,),
+        )
 
         iterator: DocumentCachingIterator = (
             export_action.traceability_index.get_document_iterator(document)

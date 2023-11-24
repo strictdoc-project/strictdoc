@@ -1,3 +1,5 @@
+{% assert custom_html2pdf_template is defined %}
+
 <div
   html2pdf-preloader
   class="main"
@@ -38,7 +40,7 @@
       </div>
 </div>
 
-{% if custom_html2pdf_template is not defined %}
+{% if custom_html2pdf_template is none %}
 {%- include "screens/document/pdf/template/frontpage.jinja" -%}
 {%- include "screens/document/pdf/template/header.jinja" -%}
 {%- include "screens/document/pdf/template/footer.jinja" -%}

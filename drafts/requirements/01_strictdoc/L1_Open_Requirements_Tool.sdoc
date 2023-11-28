@@ -3,20 +3,48 @@ TITLE: [L1] Requirements Tool specification
 REQ_PREFIX: SDOC-SSS-
 ROOT: True
 
+[FREETEXT]
+The StrictDoc project is structured around two distinct requirement documents that guide its development:
+
+1. The "Requirements Tool Specification" (this document), which is a higher-level document.
+2. The "StrictDoc Requirements Specification," a more detailed and lower-level document, separate from this one.
+
+This document, the Requirements Tool Specification, delineates the general requirements for an open-source Requirements Tool, with a focus that remains agnostic of the specific implementation details of StrictDoc. Its primary goal is to provide a comprehensive, implementation-neutral overview of what capabilities a Requirements Tool should possess, emphasizing the 'WHAT' aspect.
+
+In contrast, the StrictDoc Requirements Specification, the second document, delves deeply into the 'HOW' aspect of StrictDoc’s implementation. It builds upon the high-level requirements set out in this document, treating them as parent requirements to guide its detailed development approach.
+[/FREETEXT]
+
 [SECTION]
-TITLE: Overview
+TITLE: Summary of user needs
+
+[FREETEXT]
+This section offers an overview of the necessary capabilities of a requirements and documentation management tool.
+[/FREETEXT]
+
+[SECTION]
+TITLE: Free and open source tool
+
+[FREETEXT]
+The primary user need and entry point for this Requirements Tool specification is the availability of free, lightweight, yet capable software for creating requirements specifications and other technical documentation. The tool should facilitate the creation of requirements specifications and technical documents, effectively lowering the entry barrier for requirements engineering and technical documentation writing.
+
+It is assumed throughout this document that the requirements tool will be developed as open-source software available at no cost. However, with minor adjustments, these requirements could also apply to commercial requirements tools. See [LINK: SECTION-SSSS-Licensing-and-distribution].
+[/FREETEXT]
+
+[/SECTION]
 
 [SECTION]
 TITLE: Document types
 
 [FREETEXT]
-A variety of document types used by the industries. The variety comes from:
+A requirements tool is very often also a documentation writing and management tool, so, besides the requirements editing functionality, the tool shall be able to accommodate for the variety of documents and templates used in different industries.
 
-- Supporting flexible documentation structures, e.g., non-nested vs. deeply nested.
-- Supporting custom fields used by different industries (the criticality levels in various industries, RAIT in aerospace, status/workflow fields, etc.)
-- Supporting a rich set of visualization mechanisms.
+The variety comes from:
 
-Examples of document types include:
+- Supporting arbitrary documentation structures, e.g., non-nested vs. deeply nested documents.
+- Supporting a rich set of visualization mechanisms. Supporting images, diagrams, tables, text markup, etc.
+- Supporting custom fields/attributes used by different industries (the criticality levels in various industries, RAIT verification activities in aerospace, status/workflow fields, etc.).
+
+Examples of typical document types include:
 
 - Requirements specification
 - Design document / architecture description document
@@ -25,48 +53,76 @@ Examples of document types include:
 - Development plan
 - Systems engineering plan, management plan
 - Standard (e.g., ECSS or ISO 26262).
+
+The documentation/requirements management requirements for a Requirements Tool are specified in the sections [LINK: SECTION-RTS-Documentation-management] and [LINK: SECTION-RTS-Requirements-management].
+[/FREETEXT]
+
+[SECTION]
+UID: SECTION-RTC-Appendix-A-Document-archetypes
+TITLE: Document structure differences
+
+[FREETEXT]
+The table below summarizes various differences observed across industry documents.
+
+.. list-table:: Table: Requirements and specification document
+   :widths: 20 80
+   :header-rows: 1
+
+   * - Criteria
+     - Comments
+
+   * - Structure
+     - Non-nested, nested, deeply nested. A structure of a deeply nested specification document can reach 8-10 levels (e.g., Section 1.2.3.4.5.6.7.8 "ABC").
+   * - Requirements visual presentation
+     - Requirements are often presented as table cells. The cells can be standalone or a whole section or a document can be a structured as a long table with cells. Alternatively, requirements are rather presented as a section header + text.
+   * - Unique requirement identifiers (UID)
+     - Some documents provide UIDs for all requirements, some do not. Where the UIDs are missing, the section header numbers are used instead for unique identification. Often, a combination "Number + Title" becomes a reference-able identifier.
+   * - Requirement titles
+     - Not all documents provide requirement titles. When the requirement titles are missing, the grouping is may be provided by sections/chapters. When the titles are present, the requirement titles can also be section titles.
 [/FREETEXT]
 
 [/SECTION]
 
+[/SECTION]
+
 [SECTION]
+UID: SECTION-LRTS-Workflows
 TITLE: Workflows
 
 [FREETEXT]
-TBD
+Besides supporting a variety of document types, a Requirements Tool shall also support and integrate well with multiple documentation and requirements management workflows.
 
-Assist workflows with project requirements and documentations. Integrate with existing workflows
+At least the following workflows have been identified to be relevant:
 
+.. list-table::
+   :header-rows: 1
+   :widths: 25 75
 
+   * - **Workflow**
+     - **Description**
 
-- Document- and table-based workflow
-- Requirements analysis and prototyping
-- Requirements compliance, traceability and justification
+   * - Requirements analysis and prototyping
+     - Early phases of the project. Requirements are drafted out quickly. The higher-level picture and coverage of all topics may be more important than specific details.
+   * - Requirements compliance, traceability and justification
+     - Demonstrating the correctness of specification, also for contractual purposes. Every aspect shall be traceable.
+   * - Requirements implementation
+     - Assisting software engineers in implementing requirements in source code. Making links between requirements and source code implementation units, e.g., files, functions, code fragments. Linking source code implementation units to requirements using special markers left in source code.
+   * - Requirements validation/verification workflow (RAIT)
+     - Verifying the correctness of requirements themselves and the validity of the information they communicate.
+   * - Configuration management, change management
+     - Time machine and Diff functions. Maintaining requirements baselines (v1, v1.1, v2, etc.).
+   * - Reporting
+     - Progress reports, statistics, metrication.
+   * - Collaboration on requirements
+     - Supporting multiple users to collaborate on a documentation tree.
+   * - Requirements exchange
+     - Integration between distinct projects requirements trees. Example: An embedded software project has its own requirements. The developers want to integrate a requirements subtree of another product that is integrated to the parent project as an off-the-shelf solution.
+   * - Formal reviews
+     - Formal review of documentation. Walkthroughs, inspections. Version control of delivered documentation packages. Assessment of progress reports achieved.
+   * - Interoperability with industry standards.
+     - Supporting seamless integration between a project documentation tree and applicable standards.
 
-- Requirements implementation:
-
-  - Assisting software engineers in implementing requirements in source code.
-  - Making links between requirements and source code implementation units, e.g., files, functions, code fragments.
-  - Linking source code implementation units to requirements using special markers left in source code.
-
-- Requirements verification workflow (RAIT)
-- Configuration management
-- Reporting
-- Collaboration on requirements
-- Requirements exchange
-
-- Formal reviews:
-
-  - Formal review of documentation
-  - Walkthroughs, inspections
-  - Version control of delivered documentation packages
-  - Assessment of progress reports achieved.
-
-- Interoperability with industry standards
-
-- Integration between distinct projects requirements trees.
-
-  - Examples of integration: An embedded software project has its own requirements. The developers want to integrate a requirements subtree of another product that is integrated to the parent project as an off-the-shelf solution.
+The section [LINK: SECTION-SSSS-Existing-workflows] contains the workflow-related requirements for a Requirements Tool.
 [/FREETEXT]
 
 [/SECTION]
@@ -75,15 +131,37 @@ Assist workflows with project requirements and documentations. Integrate with ex
 TITLE: Target audience
 
 [FREETEXT]
-- Engineering professionals
+A Requirements Tool may have different users, each with a different role, experience and background which necessitates the requirements towards usability, installation, and user experience.
 
-- Software engineers
+The following user groups are preliminarily identified as especially relevant:
 
-  - The tool is close to software engineering workflow, i.e., it has edges to software version control, software IDEs, source code, etc.
+**Engineering professionals**
 
+This group includes:
 
-- Management
-- General audience
+- Systems engineers
+- Requirements engineers
+- Assurance experts in quality, safety/security, verification/validation
+
+For these professionals, the Requirements Tool should offer robust functionality that is adequate for complex system design and detailed requirements tracking, ensuring that all aspects of system integrity and compliance are met efficiently.
+
+**Management**
+
+The focus of this group is more on the progress and compliance aspects. They require high-level overviews and reporting capabilities in the tool, to track project milestones, manage risks, and ensure that the development is adhering to the predefined requirements and industry standards.
+
+**Software engineers**
+
+For software engineers, the Requirements Tool shall be closely integrated with their software engineering workflow, e.g., it has interfaces with software version control systems, software IDEs, and source code repositories. This integration ensures a seamless transition between requirement specification and software development tasks.
+
+**IT/DevOps**
+
+This group of users may not work with a Requirements Tool directly but is still an important stakeholder. The Tool shall be easy to install and deploy. It shall be easy to maintain and upgrade the tool, with support for automated updates and compatibility with various IT infrastructures.
+
+**General audience**
+
+Not all users of a requirements tool must have an engineering background. In fact, there are many projects where non-technical people have to maintain requirements. The Requirements Tool shall be usable without any technical training required, featuring an intuitive user interface and simplified processes for entering and managing requirements.
+
+The requirement sets in the sections [LINK: SECTION-RTC-Usability-installation-and-usage] and [LINK: SECTION-SSSS-Implementation-suggestions] aim to equip the Requirements Tool with sufficient capabilities to support all of the user groups described above.
 [/FREETEXT]
 
 [/SECTION]
@@ -95,28 +173,13 @@ UID: SECTION-RTS-Documentation-management
 TITLE: Documentation management
 
 [FREETEXT]
-TBD: Requirements and specifications (plain, non-nested vs deeply nested)
+This section outlines the requirements towards a Requirements Tool as a documentation tool.
 
-The Requirements Tool shall support a variety of document types used by the industries. The variety comes from:
+The requirements of this group are dedicated to the core tasks of documentation management:
 
-Supporting flexible documentation structures, e.g., non-nested vs. deeply nested.
-Supporting custom fields used by different industries (the criticality levels in various industries, RAIT in aerospace, status/workflow fields, etc.)
-Supporting a rich set of visualization mechanisms.
-
-Examples of document types include:
-
-Requirements specification
-Design document / architecture description document
-Interface control document / API reference
-User manual
-Development plan, systems engineering plan, management plan
-Standard (e.g., ECSS or ISO 26262).
-
-Consistency TBD:
-
-- No (or less) run-away documentation
-- Reduce documentation hazards
-- Keep documents up-to-date
+- Writing, structuring and managing documents
+- Complementing documents with meta information
+- Versioning documents.
 [/FREETEXT]
 
 [REQUIREMENT]
@@ -189,10 +252,14 @@ UID: SECTION-RTS-Requirements-management
 TITLE: Requirements management
 
 [FREETEXT]
-TBD:
+This section outlines the requirements towards a Requirements Tool as a requirements management tool.
 
-- Maintain consistency of requirements database
-- Requirements writing best practice
+The following core aspects of the requirements management are covered:
+
+- Writing and structuring requirements
+- Linking requirements with other requirements
+- Managing requirement unique identifiers (UID)
+- Requirement verification.
 [/FREETEXT]
 
 [REQUIREMENT]
@@ -351,6 +418,10 @@ The Requirements Tool shall provide capabilities for validating requirements acc
 UID: SECTION-SSSS-Performance
 TITLE: Performance
 
+[FREETEXT]
+This section captures the performance requirements towards a Requirements Tool.
+[/FREETEXT]
+
 [REQUIREMENT]
 UID: SDOC-SSS-13
 STATUS: Active
@@ -372,6 +443,10 @@ The Requirements Tool shall be able to handle documentation packages of at least
 [SECTION]
 UID: SECTION-SSSS-Existing-workflows
 TITLE: Existing workflows
+
+[FREETEXT]
+This section captures the requirements towards specific workflows that a Requirements Tool should support as outlined in [LINK: SECTION-LRTS-Workflows].
+[/FREETEXT]
 
 [REQUIREMENT]
 UID: SDOC-SSS-73
@@ -593,7 +668,7 @@ A static HTML export capability enables:
 [REQUIREMENT]
 UID: SDOC-SSS-31
 STATUS: Active
-TITLE: Web interface
+TITLE: Graphical user interface (GUI)
 STATEMENT: >>>
 The Requirements Tool shall provide a graphical user interface.
 <<<
@@ -731,7 +806,9 @@ UID: SECTION-RTS-Requirements-exchange-formats-export-import
 TITLE: Requirements exchange formats (export/import)
 
 [FREETEXT]
-TBD Barrier-free access to requirements data (easy in, easy out)
+This section captures the requirements related to "Requirements exchange" as outlined in the section [LINK: SECTION-LRTS-Workflows].
+
+The Requirements Tool should fundamentally support the exchange of documentation and requirements with other tools. Importing data into this tool and exporting data from it to other tools should be straightforward. The key focus of this section's requirements is on enabling seamless access to requirements and documentation data.
 [/FREETEXT]
 
 [REQUIREMENT]
@@ -846,7 +923,7 @@ UID: SECTION-SSSS-Licensing-and-distribution
 TITLE: Licensing and distribution
 
 [FREETEXT]
-- TBD Direct access to the tool source code
+This section outlines the requirements for the "free and open source" aspect of the Requirements Tool.
 [/FREETEXT]
 
 [REQUIREMENT]
@@ -877,53 +954,5 @@ NOTE: Example of a permissive license: MIT, Apache 2.
 RATIONALE: >>>
 This requirement captures the essence of an open and free requirements management tool.
 <<<
-
-[/SECTION]
-
-[SECTION]
-UID: SECTION-RTC-Appendix-A-Document-archetypes
-TITLE: Appendix A: Document archetypes
-
-[FREETEXT]
-StrictDoc shall support the following document archetypes: **requirements document**
-and **specification** document. For both archetypes, StrictDoc shall further
-support the following options.
-
-.. list-table:: Table: Requirements and specification document
-   :widths: 20 40 40
-   :header-rows: 1
-
-   * -
-     - Requirements document
-     - Specification document
-   * - Examples
-     - Most typical: requirements lists split by categories (e.g., Functional
-       Requirements, Interface Requirements, Performance Requirements, etc.)
-     - Often: a standard document
-   * - Structure
-     - Not nested or not too deeply nested
-     - Nested
-   * - Visual presentation
-     - Requirements are often presented as table cells. Cells can be standalone
-       or the whole section or document can be a long table with cells.
-     - Requirements are rather presented as header + text
-   * - Unique requirement identifiers (UID)
-     - Most always
-     - - Present or not
-       - **NOT SUPPORTED YET:** Can be missing, the chapter headers are used instead.
-         The combination "Number + Title" becomes a reference-able identifier.
-         A possible intermediate solution when modeling such a document is to
-         make the UIDs map to the section number.
-   * - Requirement titles
-     - - Often
-       - **NOT SUPPORTED YET:** But maybe absent (ex: NASA cFS SCH). If absent,
-         the grouping is provided by sections.
-     - Requirement titles are most often section titles
-   * - Real-world examples
-     - - NASA cFE Functional Requirements
-       - MISRA C coding guidelines,
-       - NASA Software Engineering Requirements NPR 7150.2
-     - - ECSS Software ECSS-E-ST-40C
-[/FREETEXT]
 
 [/SECTION]

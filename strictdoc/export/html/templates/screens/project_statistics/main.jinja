@@ -23,6 +23,11 @@
   },
   {"Section":"Sections"},
   {
+    "Key":"Total sections",
+    "Link": link_renderer.render_url('search?q=node.is_section'),
+    "Value": document_tree_stats.total_sections,
+  },
+  {
     "Key":"Sections without any text",
     "Link": link_renderer.render_url('search?q=(node.is_section and not node.contains_any_text)'),
     "Value": document_tree_stats.sections_without_free_text,

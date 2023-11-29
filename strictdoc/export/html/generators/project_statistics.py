@@ -25,6 +25,7 @@ class DocumentStats:
 class DocumentTreeStats:  # pylint: disable=too-many-instance-attributes
     total_documents: int = 0
     total_requirements: int = 0
+    total_sections: int = 0
     total_tbd: int = 0
     total_tbc: int = 0
     git_commit_hash: Optional[str] = None
@@ -77,6 +78,7 @@ class ProgressStatisticsGenerator:
             document_iterator = DocumentCachingIterator(document)
             for node in document_iterator.all_content():
                 if isinstance(node, Section):
+                    document_tree_stats.total_sections += 1
                     if len(node.free_texts) == 0:
                         document_tree_stats.sections_without_free_text += 1
 

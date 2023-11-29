@@ -21,6 +21,12 @@
     "Key":"Total documents",
     "Value": document_tree_stats.total_documents,
   },
+  {"Section":"Sections"},
+  {
+    "Key":"Sections without any text",
+    "Link": link_renderer.render_url('search?q=(node.is_section and not node.contains_any_text)'),
+    "Value": document_tree_stats.sections_without_free_text,
+  },
   {"Section":"Requirements"},
   {
     "Key":"Total requirements",

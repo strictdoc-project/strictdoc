@@ -42,6 +42,11 @@ class NodeHasParentRequirementsExpression:
         self.parent = parent
 
 
+class NodeContainsAnyFreeTextExpression:
+    def __init__(self, parent, _):
+        self.parent = parent
+
+
 class NodeHasChildRequirementsExpression:
     def __init__(self, parent, _):
         self.parent = parent
@@ -133,6 +138,8 @@ class QueryObject:
             return self._evaluate_not_equal(node, expression)
         if isinstance(expression, NodeContainsExpression):
             return self._evaluate_node_contains(node, expression)
+        if isinstance(expression, NodeContainsAnyFreeTextExpression):
+            return self._evaluate_node_contains_any_text(node)
         if isinstance(expression, NodeHasParentRequirementsExpression):
             return self._evaluate_node_has_parent_requirements(node)
         if isinstance(expression, NodeHasChildRequirementsExpression):
@@ -261,3 +268,12 @@ class QueryObject:
                 return True
             return False
         raise NotImplementedError
+
+    def _evaluate_node_contains_any_text(self, node):
+        if not isinstance(node, Section):
+            raise TypeError(
+                f"node.contains_any_text can be only called on "
+                f"Section objects, got: {node.__class__.__name__}. To fix "
+                f"the error, prepend your query with node.is_section."
+            )
+        return len(node.free_texts) > 0

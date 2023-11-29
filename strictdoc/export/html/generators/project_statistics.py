@@ -4,6 +4,7 @@ from typing import List, Optional
 
 from strictdoc import __version__
 from strictdoc.backend.sdoc.models.requirement import Requirement
+from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
@@ -27,6 +28,9 @@ class DocumentTreeStats:  # pylint: disable=too-many-instance-attributes
     total_tbd: int = 0
     total_tbc: int = 0
     git_commit_hash: Optional[str] = None
+
+    # Section
+    sections_without_free_text: int = 0
 
     # UID
     requirements_no_uid: int = 0
@@ -72,6 +76,10 @@ class ProgressStatisticsGenerator:
         for document in traceability_index.document_tree.document_list:
             document_iterator = DocumentCachingIterator(document)
             for node in document_iterator.all_content():
+                if isinstance(node, Section):
+                    if len(node.free_texts) == 0:
+                        document_tree_stats.sections_without_free_text += 1
+
                 if isinstance(node, Requirement):
                     requirement: Requirement = assert_cast(node, Requirement)
                     document_tree_stats.total_requirements += 1

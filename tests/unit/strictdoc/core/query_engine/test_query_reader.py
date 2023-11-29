@@ -1,6 +1,7 @@
 from strictdoc.core.query_engine.query_object import (
     EqualExpression,
     InExpression,
+    NodeContainsAnyFreeTextExpression,
     NodeFieldExpression,
     NodeHasParentRequirementsExpression,
     NodeIsRequirementExpression,
@@ -175,3 +176,14 @@ not node["TITLE"] == "FOO"\
     assert isinstance(query_object, Query)
     assert isinstance(query_object.root_expression, NotExpression)
     assert isinstance(query_object.root_expression.expression, EqualExpression)
+
+
+def test_95_contains_any_free_text():
+    query = """\
+node.contains_any_text\
+"""
+    query_object = QueryReader.read(query)
+    assert isinstance(query_object, Query)
+    assert isinstance(
+        query_object.root_expression, NodeContainsAnyFreeTextExpression
+    )

@@ -39,6 +39,8 @@ BooleanExpression:
   |
   NodeContainsExpression
   |
+  NodeContainsAnyFreeTextExpression
+  |
   NodeIsRequirementExpression
   |
   NodeIsSectionExpression
@@ -64,6 +66,10 @@ NodeFieldExpression:
 
 NodeContainsExpression:
   'node.contains("' string = /[A-Za-z0-9]+/ '")'
+;
+
+NodeContainsAnyFreeTextExpression:
+  _ = 'node.contains_any_text'
 ;
 
 NodeHasParentRequirementsExpression:

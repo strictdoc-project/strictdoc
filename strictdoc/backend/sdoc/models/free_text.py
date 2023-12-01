@@ -1,3 +1,4 @@
+import html
 from typing import List
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
@@ -42,7 +43,7 @@ class FreeText:
                 text += "\n"
             else:
                 raise NotImplementedError(part)
-        return text
+        return html.escape(text)
 
 
 class FreeTextContainer(FreeText):

@@ -1,6 +1,6 @@
-<ul>
+
   {% if node.free_texts|length > 0 %}
-  <li>
+
   {% set free_text = node.free_texts[0] %}
   {% set free_text_md5 = self_stats.get_md5_by_node(free_text) %}
   {% set free_text_modified = not other_stats.contains_free_text_md5(free_text_md5) %}
@@ -28,11 +28,11 @@
       {{ free_text.get_parts_as_text_escaped() }}
     </span>
   </details>
-  </li>
+
   {% endif %}
 
   {%- for node_ in node.section_contents -%}
-    <li>
+
       {%- if node_.is_section -%}
       {% set section = node_ %}
       {% set section_md5 = self_stats.get_md5_by_node(section) %}
@@ -89,6 +89,6 @@
         {% endwith %}
       </details>
       {%- endif -%}
-    </li>
+
   {% endfor %}
-</ul>
+

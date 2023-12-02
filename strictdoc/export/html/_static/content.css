@@ -11,6 +11,25 @@
 
 /* redefine main layout grid */
 
+[data-viewtype="diff"] .main {
+  padding: var(--base-gap);
+  padding-bottom: 0;
+  position: relative;
+  overflow: hidden;
+  scroll-behavior: smooth;
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-bg-main);
+
+  display: grid;
+  place-items: stretch stretch;
+  place-content: stretch stretch;
+  grid-template-columns:  minmax(0, 1fr) /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
+                          minmax(0, 1fr);
+  grid-template-rows: minmax(0, max-content) minmax(0, 1fr);
+  gap: var(--base-rhythm);
+}
+
 [data-viewtype="source-file"] .main {
   padding: 0;
   background: white;
@@ -151,4 +170,87 @@ sdoc-main-placeholder.page-tips {
   font-weight:unset;
   color: unset;
   opacity: 0.5;
+}
+
+/* diff */
+
+.diff {
+  overflow: auto;
+  overflow-y: scroll;
+  overflow-wrap: break-word;
+  /* border: 1px solid var(--thumbBG); */
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+}
+
+.diff[left] {
+  direction:rtl;
+}
+
+.diff[right] {
+  direction:ltr;
+}
+
+.diff_inner {
+  direction: initial;
+}
+
+.diff_content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--base-rhythm);
+  padding: var(--base-rhythm);
+}
+
+.diff_folder {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  column-gap: calc(var(--base-rhythm)/2);
+  font-size: var(--font-size-sm);
+  min-width: 0;
+  line-height: 1.5;
+  padding-top: var(--base-rhythm);
+}
+
+.diff_document {
+  background-color: white;
+  border-radius: 4px;
+  padding: var(--base-rhythm);
+}
+
+.diff_document > summary {
+  line-height: 1.2;
+}
+
+.diff_document > summary:hover {
+  color: var(--color-fg-accent);
+}
+
+.diff details.diff_document > summary::before,
+.diff details.diff_document[open] > summary::before {
+  content: none;
+}
+
+.diff details {
+  width: 100%;
+}
+
+.diff summary {
+  list-style: none;
+  display: flex;
+  gap: var(--base-rhythm);
+  cursor: pointer;
+}
+
+.diff summary::-webkit-details-marker {
+  display: none;
+}
+
+.diff details > summary::before {
+  content:"+";
+}
+
+.diff details[open] > summary::before {
+  content:"–";
 }

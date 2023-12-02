@@ -2,8 +2,9 @@
   {% include "screens/git/form.jinja" %}
 
   {% if results %}
-  <div class="container">
-    <div class="column">
+
+    <div class="diff" left>
+      <div class="diff_inner">
       {% with
         document_tree=document_tree_lhs,
         document_tree_iterator=documents_iterator_lhs,
@@ -14,8 +15,10 @@
       %}
         {% include "screens/git/frame_project_tree.jinja" %}
       {% endwith %}
+      </div>
     </div>
-    <div class="column">
+    <div class="diff" right>
+      <div class="diff_inner">
       {% with
         document_tree=document_tree_rhs,
         document_tree_iterator=documents_iterator_rhs,
@@ -26,7 +29,7 @@
       %}
         {% include "screens/git/frame_project_tree.jinja" %}
       {% endwith %}
+      </div>
     </div>
-  </div>
   {% endif %}
 </div>

@@ -3,30 +3,6 @@
 
 {% block head_css %}
   {{ super() }}
-
-  <style>
-    .container {
-        display: flex;
-    }
-    .column {
-        flex: 1; /* This ensures each column takes equal width */
-        padding: 10px; /* Optional, for some internal spacing */
-    }
-
-    main .main ul {
-        list-style-type: none;
-    }
-
-    main .main summary {list-style: none}
-    main .main summary::-webkit-details-marker {display: none; }
-    main .main details > summary::before {
-      content:"+";
-      padding-right: 0.5em;
-    }
-    main .main details[open] > summary::before {
-      content:"–";
-    }
-    </style>
 {% endblock head_css %}
 
 {% block head_scripts %}

@@ -43,7 +43,10 @@ class FreeText:
                 text += "\n"
             else:
                 raise NotImplementedError(part)
-        return html.escape(text)
+        return text
+
+    def get_parts_as_text_escaped(self) -> str:
+        return html.escape(self.get_parts_as_text())
 
 
 class FreeTextContainer(FreeText):

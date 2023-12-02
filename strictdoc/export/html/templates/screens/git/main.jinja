@@ -9,7 +9,8 @@
         document_tree_iterator=documents_iterator_lhs,
         traceability_index=traceability_index_lhs,
         self_stats=lhs_stats,
-        other_stats=rhs_stats
+        other_stats=rhs_stats,
+        side="left"
       %}
         {% include "screens/git/frame_project_tree.jinja" %}
       {% endwith %}
@@ -20,7 +21,8 @@
         document_tree_iterator=documents_iterator_rhs,
         traceability_index=traceability_index_rhs,
         self_stats=rhs_stats,
-        other_stats=lhs_stats
+        other_stats=lhs_stats,
+        side="right"
       %}
         {% include "screens/git/frame_project_tree.jinja" %}
       {% endwith %}

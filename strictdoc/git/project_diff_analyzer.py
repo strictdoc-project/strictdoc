@@ -1,7 +1,6 @@
 import hashlib
 import statistics
 from dataclasses import dataclass, field
-from difflib import SequenceMatcher
 from typing import Any, Dict, List, Optional, Set
 
 from strictdoc.backend.sdoc.models.document import Document
@@ -16,11 +15,8 @@ from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.diff import get_colored_diff_string, similar
 from strictdoc.helpers.md5 import get_md5
-
-
-def similar(a, b):
-    return SequenceMatcher(None, a, b).ratio()
 
 
 def calculate_similarity(lhs: Requirement, rhs: Requirement) -> float:
@@ -105,6 +101,50 @@ class ProjectTreeDiffStats:
             if field_.field_value_multiline == field_value:
                 return True
         return False
+
+    def get_diffed_requirement_field(
+        self,
+        requirement: Requirement,
+        field_name: str,
+        field_value: str,
+        side: str,
+    ):
+        assert isinstance(field_value, str)
+        assert side in ("left", "right")
+
+        other_requirement: Optional[Requirement] = self._find_requirement(
+            requirement
+        )
+        if (
+            other_requirement is None
+            or field_name not in other_requirement.ordered_fields_lookup
+        ):
+            return field_name + ": " + field_value
+
+        other_requirement_fields = other_requirement.ordered_fields_lookup[
+            field_name
+        ]
+
+        other_field_value = None
+        for field_ in other_requirement_fields:
+            if field_.field_value is not None:
+                other_field_value = field_.field_value
+                break
+            if field_.field_value_multiline is not None:
+                other_field_value = field_.field_value_multiline
+                break
+        assert other_field_value is not None
+
+        if side == "left":
+            colored_field_value = get_colored_diff_string(
+                field_value, other_field_value, side
+            )
+            return field_name + ": " + colored_field_value
+        else:
+            colored_field_value = get_colored_diff_string(
+                other_field_value, field_value, side
+            )
+            return field_name + ": " + colored_field_value
 
     def contains_requirement_relations(
         self,

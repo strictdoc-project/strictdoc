@@ -7,10 +7,10 @@ def similar(a, b):
 
 
 red = (
-    lambda text: f'<span style="background-color: rgb(255, 193, 192);">{text}</span>'
+    lambda text: f'<span class="lambda_red">{text}</span>'
 )
 green = (
-    lambda text: f'<span style="background-color: rgb(166, 235, 183);">{text}</span>'
+    lambda text: f'<span class="lambda_green">{text}</span>'
 )
 white = lambda text: f"<span>{text}</span>"
 

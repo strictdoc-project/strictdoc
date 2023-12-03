@@ -1,4 +1,19 @@
 /* diff */
+:root {
+  --pre-stripe: 20px;
+  --pre-stripe-color: rgba(0,0,0,0.02);
+  --pre-block-bg-color: rgba(0,0,0,0.01);
+
+  --diff-block-color-left: rgba(255, 55, 55, .05);
+  --diff-word-color-left: rgba(255, 55, 55, .2);
+  --diff-icon-color-left: rgba(255, 55, 55, .75);
+  --diff-document-color-left: rgba(255, 55, 55, 1);
+
+  --diff-block-color-right: rgba(20, 120, 20, .05);
+  --diff-word-color-right: rgba(20, 120, 20, .2);
+  --diff-icon-color-right: rgba(20, 120, 20, .75);
+  --diff-document-color-right: rgba(20, 120, 20, 1);
+}
 
 /* columns */
 .diff {
@@ -8,6 +23,9 @@
   /* border: 1px solid var(--thumbBG); */
   border-radius: 4px;
   border: 1px solid var(--color-border);
+
+  /* for position:sticky*/
+  position: relative;
 }
 
 .diff[left] {
@@ -33,15 +51,6 @@
 
 .diff details {
   width: 100%;
-
-  padding: calc(var(--base-rhythm)/2);
-  padding-right: 0;
-  /* border: 1px solid transparent; */
-  border-left: 4px solid transparent;
-}
-
-.diff details[modified] {
-  border-color: var(--color-fg-accent);
 }
 
 .diff summary {
@@ -54,6 +63,14 @@
 
 .diff details[modified] > summary {
   color: var(--color-fg-accent);
+}
+
+.diff details[modified="left"] > summary {
+  color: var(--diff-document-color-left);
+}
+
+.diff details[modified="right"] > summary {
+  color: var(--diff-document-color-right);
 }
 
 .diff summary:hover,
@@ -76,24 +93,61 @@
 /* document / details */
 
 details.diff_document {
-  background-color: white;
+  background-color: var(--color-bg-contrast);
+  border: 1px solid transparent;
   border-radius: 4px;
   padding: 0 var(--base-rhythm);
-  border: 1px solid transparent;
-  border-left: 4px solid transparent;
 }
 
-.diff_document[modified] {
+details.diff_document[modified] {
   border-color: var(--color-fg-accent);
+}
+
+details.diff_document[modified="left"] {
+  border-color: var(--diff-document-color-left, rgba(255, 55, 55, 1));
+}
+
+details.diff_document[modified="right"] {
+  border-color: var(--diff-document-color-right, rgba(20, 120, 20, 1));
 }
 
 .diff_document > summary {
   line-height: 1.2;
   padding: var(--base-rhythm) 0;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.diff_document[modified][open] > summary {
+.diff_document[open] > summary {
+  /*
+  When the details are closed up, the summary sometimes covers the bottom border.
+  That's why we only add the background for cases where the card is open
+  and sticking makes sense.
+  */
+  background: var(--color-bg-contrast);
+  position: sticky;
+  top: 0;
+}
+
+.diff_document > summary .document_title {
+  flex-grow: 1;
+}
+
+.diff_document[open] > summary {
   border-bottom: 1px dotted;
+}
+
+.diff_document > summary::before,
+.diff_document[open] > summary::before {
+  content: none !important;
+}
+
+.diff_document > summary::after {
+  content:"+";
+}
+
+.diff_document[open] > summary::after {
+  content:"–";
 }
 
 /* folder */
@@ -109,6 +163,40 @@ details.diff_document {
   padding-top: var(--base-rhythm);
 }
 
+/* node content */
+
+.diff_node {
+  margin: var(--base-rhythm) 0;
+}
+
+.diff_node_fields {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--base-rhythm);
+
+  /* in node and in doc as Abstract: */
+  padding-top: var(--base-rhythm);
+}
+
+.diff_node > .diff_node_fields {
+  /* in node only: */
+  margin-bottom: calc(var(--base-rhythm)*2);
+  padding-left: calc(var(--base-rhythm)*2);
+
+  /* padding-left: calc(var(--base-rhythm)*1.5);
+  border-left: 1px dotted; */
+
+  /* border-left: var(--base-rhythm) solid rgba(0,0,0,0.01);
+  padding-left: calc(var(--base-rhythm)*1); */
+}
+
+.diff_node_field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--base-rhythm);
+}
+
 /* text_icon */
 
 .text_icon::before {
@@ -120,3 +208,51 @@ details.diff_document {
   font-weight: 600;
   text-transform: uppercase;
 }
+
+/* in summary: */
+[modified="left"] > summary .text_icon::before,
+/* in field: */
+[modified="left"] > .text_icon::before {
+  color: white;
+  background-color: var(--diff-icon-color-left);
+  border-color: var(--diff-icon-color-left);
+}
+
+/* in summary: */
+[modified="right"] > summary .text_icon::before,
+/* in field: */
+[modified="right"] > .text_icon::before {
+  color: white;
+  background-color: var(--diff-icon-color-right);
+  border-color: var(--diff-icon-color-right);
+}
+
+/* pre */
+
+.sdoc_pre_content {
+  flex-grow: 1;
+  white-space: pre-wrap;
+  font-family: monospace;
+  font-size: 0.85em;
+  line-height: var(--pre-stripe);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--pre-stripe-color),
+    var(--pre-stripe-color) var(--pre-stripe),
+    transparent var(--pre-stripe),
+    transparent calc(var(--pre-stripe)*2)
+  );
+  background-color: var(--pre-block-bg-color);
+}
+
+[modified="left"] > .sdoc_pre_content {
+  background-color: var(--diff-block-color-left);
+}
+.lambda_red {background-color: var(--diff-word-color-left);}
+
+[modified="right"] > .sdoc_pre_content {
+  background-color: var(--diff-block-color-right);
+}
+.lambda_green {background-color: var(--diff-word-color-right);}
+
+

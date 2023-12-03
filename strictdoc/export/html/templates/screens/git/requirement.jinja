@@ -1,48 +1,25 @@
-<div>
-  {% for meta_field in requirement.enumerate_all_fields() %}
-    {% set field_modified = requirement_modified and not other_stats.contains_requirement_field(requirement, meta_field[0], meta_field[1]) %}
-    <div
-      {% if field_modified %}
-      {% if side == "left" %}
-      style="background-color: rgb(255, 235, 233)"
-      {% else %}
-      style="background-color: rgb(230, 255, 235);"
-      {% endif %}
-      {% endif %}
-    >
-    {% if field_modified %}
-      {{ other_stats.get_diffed_requirement_field(requirement, meta_field[0], meta_field[1], side) }}
-    {% else %}
-    {{ meta_field[0] }}: {{ meta_field[1] }}
-    {% endif %}
-    </div>
-  {% endfor %}
+{% set requirement_md5 = self_stats.get_md5_by_node(requirement) %}
+{% set requirement_modified = not other_stats.contains_requirement_md5(requirement_md5) %}
 
-  {%- if traceability_index.has_parent_requirements(requirement) %}
-    <div>Parent relations:</div>
-    <div>
-      <ul class="">
-        {%- for parent_requirement_, relation_role_ in traceability_index.get_parent_relations_with_roles(requirement) %}
-        <li
-        {% if requirement_modified and not other_stats.contains_requirement_relations(requirement, parent_requirement_.reserved_uid, relation_role_) %}
-          {% if side == "left" %}
-          style="background-color: rgb(255, 235, 233)"
-          {% else %}
-          style="background-color: rgb(230, 255, 235);"
-          {% endif %}
-        {% endif %}
-        >
-          <a data-turbo="false" class="" href="#">
-            <span class="requirement__parent-uid">{{ parent_requirement_.reserved_uid }}</span>
-            {{ parent_requirement_.reserved_title if parent_requirement_.reserved_title else "" }}
-            {% if relation_role_ is not none %}
-              <span class="requirement__type-tag">({{ relation_role_ }})</span>
-            {% endif %}
-          </a>
-        </li>
-        {%- endfor %}
-      </ul>
-    </div>
-  {%- endif %}
+<details
+  class="diff_node"
+  {% if requirement_modified %}
+    modified="{{ side }}"
+    open
+  {% endif %}
+>
+  <summary>
+    <span class="text_icon" text="R"></span>
+    <span>
+      {{ requirement.context.title_number_string if requirement.context.title_number_string else "&nbsp;" * (requirement.ng_level * 2 - 1) }}
+    </span>
+    {%- if requirement.reserved_title is not none -%}
+      <span>
+        {{ requirement.reserved_title }}
+      </span>
+    {%- endif -%}
+  </summary>
 
-</div>
+  {% include "screens/git/fields.jinja" %}
+
+</details>

@@ -221,7 +221,7 @@ class ProjectTreeDiffStats:
             other_requirement is None
             or field_name not in other_requirement.ordered_fields_lookup
         ):
-            return field_name + ": " + field_value
+            return field_value
 
         other_requirement_fields = other_requirement.ordered_fields_lookup[
             field_name
@@ -241,12 +241,12 @@ class ProjectTreeDiffStats:
             colored_field_value = get_colored_diff_string(
                 field_value, other_field_value, side
             )
-            return field_name + ": " + colored_field_value
+            return colored_field_value
         else:
             colored_field_value = get_colored_diff_string(
                 other_field_value, field_value, side
             )
-            return field_name + ": " + colored_field_value
+            return colored_field_value
 
     def contains_requirement_relations(
         self,
@@ -437,7 +437,14 @@ class ProjectDiffAnalyzer:
                     map_nodes_to_hashers[node].update(node_md5)
             return map_nodes_to_hashers[node].hexdigest().encode("utf-8")
 
-        recurse(document)
+        # recurse(document)
+        for node_ in document_iterator.all_content():
+            node_md5 = (
+                map_nodes_to_hashers[node_]
+                .hexdigest()
+                .encode("utf-8")
+            )
+            map_nodes_to_hashers[document].update(node_md5)
 
         for node_, node_hasher_ in map_nodes_to_hashers.items():
             node_md5 = node_hasher_.hexdigest()

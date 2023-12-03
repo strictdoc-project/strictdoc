@@ -1,0 +1,22 @@
+{% set section_md5 = self_stats.get_md5_by_node(section) %}
+{% set section_modified = not other_stats.contains_section_md5(section_md5) %}
+
+<details
+  class="diff_node"
+  {% if section_modified %}
+    modified="{{ side }}"
+  {% endif %}
+>
+  <summary>
+    <span class="text_icon" text="S"></span>
+    <span>
+      {{ section.context.title_number_string if section.context.title_number_string else "&nbsp;" * (section.ng_level * 2 - 1) }}
+    </span>
+    <span>{{ section.title }}</span>
+  </summary>
+
+  {% with text_icon="free text", node=section %}
+    {% include "screens/git/free_text.jinja" %}
+  {% endwith %}
+
+</details>

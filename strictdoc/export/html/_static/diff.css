@@ -219,9 +219,9 @@ details.diff_document[modified="right"] {
   column-gap: var(--base-rhythm);
 }
 
-/* text_icon */
+/* badge */
 
-.text_icon::before {
+.badge::before {
   content: attr(text);
   padding: 0 calc(var(--base-rhythm)/2);
   border: 1px solid;
@@ -232,18 +232,18 @@ details.diff_document[modified="right"] {
 }
 
 /* in summary: */
-[modified="left"] > summary .text_icon::before,
+[modified="left"] > summary .badge::before,
 /* in field: */
-[modified="left"] > .text_icon::before {
+[modified="left"] > .badge::before {
   color: white;
   background-color: var(--diff-icon-color-left);
   border-color: var(--diff-icon-color-left);
 }
 
 /* in summary: */
-[modified="right"] > summary .text_icon::before,
+[modified="right"] > summary .badge::before,
 /* in field: */
-[modified="right"] > .text_icon::before {
+[modified="right"] > .badge::before {
   color: white;
   background-color: var(--diff-icon-color-right);
   border-color: var(--diff-icon-color-right);

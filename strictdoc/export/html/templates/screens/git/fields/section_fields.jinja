@@ -2,7 +2,9 @@
   {# UID #}
   {%- if section.reserved_uid is not none and section.reserved_uid|length > 0 -%}
     <div class="diff_node_field">
-      <span class="text_icon" text="UID"></span>
+      {%- with badge_text = "UID" -%}
+        {%- include "components/badge/index.jinja" -%}
+      {%- endwith -%}
       <div class="sdoc_pre_content">{{ section.reserved_uid }}</div>
     </div>
   {%- endif %}
@@ -18,7 +20,9 @@
         modified="{{ side }}"
       {% endif %}
     >
-      <span class="text_icon" text="free text"></span>
+      {%- with badge_text = "free text" -%}
+        {%- include "components/badge/index.jinja" -%}
+      {%- endwith -%}
       <div class="sdoc_pre_content">
         {%- set colored_diff = other_stats.get_diffed_free_text(section, side) -%}
         {%- if colored_diff is not none -%}

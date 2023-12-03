@@ -30,17 +30,17 @@
             <span class="document_title">{{ document.title }}</span>
           </summary>
 
-            {% include "screens/git/document_abstract.jinja" %}
+            {% include "screens/git/fields/document_abstract.jinja" %}
 
             {%- set document_iterator = traceability_index.get_document_iterator(document) -%}
             {%- for section_or_requirement in document_iterator.all_content() %}
               {%- if section_or_requirement.is_requirement %}
                 {%- set requirement = section_or_requirement %}
-                {% include "screens/git/requirement.jinja" %}
+                {% include "screens/git/node/requirement.jinja" %}
 
               {%- elif section_or_requirement.is_section %}
                 {%- set section = section_or_requirement %}
-                {% include "screens/git/section.jinja" %}
+                {% include "screens/git/node/section.jinja" %}
               {%- endif %}
             {%- endfor -%}
         </details>
@@ -49,6 +49,6 @@
     {%- endfor -%}
   </div>
 {%- else -%}
-  <span data-testid="document-tree-empty-text">🐛 The project has no documents yet.</span>
+  <span data-testid="document-tree-empty-text">🌚 The project has no documents yet.</span>
 {%- endif -%}
 

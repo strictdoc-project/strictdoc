@@ -1,7 +1,7 @@
 import hashlib
 import statistics
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional, Set, Union
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.reference import (
@@ -59,6 +59,7 @@ class ProjectTreeDiffStats:
     map_uid_to_nodes: Dict[str, Any] = field(default_factory=dict)
     map_titles_to_nodes: Dict[str, List] = field(default_factory=dict)
     map_statements_to_nodes: Dict[str, Any] = field(default_factory=dict)
+    map_rel_paths_to_docs: Dict[str, Document] = field(default_factory=dict)
 
     cache_requirement_to_requirement: Dict[Requirement, Requirement] = field(
         default_factory=dict
@@ -101,6 +102,107 @@ class ProjectTreeDiffStats:
             if field_.field_value_multiline == field_value:
                 return True
         return False
+
+    def get_diffed_free_text(self, node: Union[Section, Document], side: str):
+        assert isinstance(node, (Section, Document))
+        assert side in ("left", "right")
+
+        if isinstance(node, Document):
+            document: Document = assert_cast(node, Document)
+
+            other_document_or_none: Optional[
+                Document
+            ] = self.map_rel_paths_to_docs.get(
+                document.meta.input_doc_full_path
+            )
+            if other_document_or_none is None:
+                return None
+            other_document: Document = assert_cast(
+                other_document_or_none, Document
+            )
+            if len(other_document.free_texts) == 0:
+                return None
+            document_free_text = document.free_texts[0]
+            other_document_free_text = other_document.free_texts[0]
+            document_free_text_parts = (
+                document_free_text.get_parts_as_text_escaped()
+            )
+            other_document_free_text_parts = (
+                other_document_free_text.get_parts_as_text_escaped()
+            )
+            if side == "left":
+                return get_colored_diff_string(
+                    document_free_text_parts,
+                    other_document_free_text_parts,
+                    side,
+                )
+            else:
+                return get_colored_diff_string(
+                    other_document_free_text_parts,
+                    document_free_text_parts,
+                    side,
+                )
+
+        if isinstance(node, Section):
+            section: Section = assert_cast(node, Section)
+            section_free_text = section.free_texts[0]
+            section_free_text_parts = (
+                section_free_text.get_parts_as_text_escaped()
+            )
+
+            if section.reserved_uid is not None:
+                other_section_or_none: Optional[
+                    Section
+                ] = self.map_uid_to_nodes.get(section.reserved_uid)
+                if other_section_or_none is not None:
+                    other_section: Section = assert_cast(
+                        other_section_or_none, Section
+                    )
+
+                    if len(other_section.free_texts) > 0:
+                        other_section_free_text = other_section.free_texts[0]
+                        other_section_free_text_parts = (
+                            other_section_free_text.get_parts_as_text_escaped()
+                        )
+
+                        if side == "left":
+                            return get_colored_diff_string(
+                                section_free_text_parts,
+                                other_section_free_text_parts,
+                                side,
+                            )
+                        else:
+                            return get_colored_diff_string(
+                                other_section_free_text_parts,
+                                section_free_text_parts,
+                                side,
+                            )
+                    else:
+                        if side == "left":
+                            return get_colored_diff_string(
+                                section_free_text_parts, "", side
+                            )
+                        else:
+                            return get_colored_diff_string(
+                                "", section_free_text_parts, side
+                            )
+                else:
+                    if side == "left":
+                        return get_colored_diff_string(
+                            section_free_text_parts, "", side
+                        )
+                    else:
+                        return get_colored_diff_string(
+                            "", section_free_text_parts, side
+                        )
+
+            # Section does not have a UID. We can still try to find a section
+            # with the same title if it still exists in the same parent
+            # section/document scope.
+            else:
+                pass
+
+        return None
 
     def get_diffed_requirement_field(
         self,
@@ -242,6 +344,10 @@ class ProjectDiffAnalyzer:
 
         map_nodes_to_hashers: Dict[Any, Any] = {document: hashlib.md5()}
 
+        document_tree_stats.map_rel_paths_to_docs[
+            document.meta.input_doc_full_path
+        ] = document
+
         # Document's top level free text.
         if len(document.free_texts) > 0:
             free_text = document.free_texts[0]
@@ -252,6 +358,10 @@ class ProjectDiffAnalyzer:
 
         for node in document_iterator.all_content():
             if isinstance(node, Section):
+                if node.reserved_uid is not None:
+                    document_tree_stats.map_uid_to_nodes[
+                        node.reserved_uid
+                    ] = node
                 hasher = hashlib.md5()
                 hasher.update(node.title.encode("utf-8"))
                 if len(node.free_texts) > 0:

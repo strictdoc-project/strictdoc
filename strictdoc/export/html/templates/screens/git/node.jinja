@@ -14,8 +14,21 @@
       <span class="text_icon" text="free text"></span>
     </summary>
 
-    <span>
-      {{ free_text.get_parts_as_text_escaped() }}
+    <span
+      {% if free_text_modified %}
+        {% if side == "left" %}
+        style="background-color: rgb(255, 235, 233)"
+        {% else %}
+        style="background-color: rgb(230, 255, 235);"
+        {% endif %}
+      {% endif %}
+    >
+      {% set colored_diff = other_stats.get_diffed_free_text(node, side) %}
+      {% if colored_diff is not none %}
+        {{ colored_diff }}
+      {% else %}
+        {{ free_text.get_parts_as_text_escaped() }}
+      {% endif %}
     </span>
   </details>
 

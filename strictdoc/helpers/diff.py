@@ -6,10 +6,13 @@ def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
 
-red = lambda text: f'<span style="color: red;">{text}</span>'
-green = lambda text: f'<span style="color: green;">{text}</span>'
-blue = lambda text: f'<span style="color: blue;">{text}</span>'
-white = lambda text: f'<span style="color: black;">{text}</span>'
+red = (
+    lambda text: f'<span style="background-color: rgb(255, 193, 192);">{text}</span>'
+)
+green = (
+    lambda text: f'<span style="background-color: rgb(166, 235, 183);">{text}</span>'
+)
+white = lambda text: f"<span>{text}</span>"
 
 
 def get_colored_diff_string(old, new, flag: str):

@@ -254,6 +254,7 @@ details.diff_document[modified="right"] {
 .sdoc_pre_content {
   flex-grow: 1;
   white-space: pre-wrap;
+  overflow-x: clip;
   font-family: monospace;
   font-size: 0.85em;
   line-height: var(--pre-stripe);

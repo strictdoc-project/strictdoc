@@ -92,6 +92,10 @@ details.diff_document {
   padding: var(--base-rhythm) 0;
 }
 
+.diff_document[modified][open] > summary {
+  border-bottom: 1px dotted;
+}
+
 /* folder */
 
 .diff_folder {

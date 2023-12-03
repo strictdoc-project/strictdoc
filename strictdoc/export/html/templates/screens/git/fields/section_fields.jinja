@@ -1,0 +1,33 @@
+<div class="diff_node_fields">
+  {# UID #}
+  {%- if section.reserved_uid is not none and section.reserved_uid|length > 0 -%}
+    <div class="diff_node_field">
+      <span class="text_icon" text="UID"></span>
+      <div class="sdoc_pre_content">{{ section.reserved_uid }}</div>
+    </div>
+  {%- endif %}
+
+  {# free text #}
+  {% if section.free_texts|length > 0 %}
+  {% set free_text = section.free_texts[0] %}
+  {% set free_text_md5 = self_stats.get_md5_by_node(free_text) %}
+  {% set free_text_modified = not other_stats.contains_free_text_md5(free_text_md5) %}
+    <div
+      class="diff_node_field"
+      {% if free_text_modified %}
+        modified="{{ side }}"
+      {% endif %}
+    >
+      <span class="text_icon" text="free text"></span>
+      <div class="sdoc_pre_content">
+        {%- set colored_diff = other_stats.get_diffed_free_text(section, side) -%}
+        {%- if colored_diff is not none -%}
+          {{ colored_diff }}
+        {%- else -%}
+          {{ free_text.get_parts_as_text_escaped() }}
+        {%- endif -%}
+      </div>
+    </div>
+
+  {% endif %}
+</div>

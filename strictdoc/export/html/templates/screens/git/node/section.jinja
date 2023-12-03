@@ -15,8 +15,6 @@
     <span>{{ section.title }}</span>
   </summary>
 
-  {% with text_icon="free text", node=section %}
-    {% include "screens/git/fields/free_text.jinja" %}
-  {% endwith %}
+  {% include "screens/git/fields/section_fields.jinja" %}
 
 </details>

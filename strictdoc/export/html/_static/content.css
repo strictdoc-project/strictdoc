@@ -26,7 +26,7 @@
   place-content: stretch stretch;
   grid-template-columns:  minmax(0, 1fr) /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
                           minmax(0, 1fr);
-  grid-template-rows: minmax(0, max-content) minmax(0, 1fr);
+  grid-template-rows: minmax(0, max-content) minmax(0, max-content);
   gap: var(--base-rhythm);
 }
 

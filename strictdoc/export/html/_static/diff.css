@@ -15,6 +15,28 @@
   --diff-document-color-right: rgba(20, 120, 20, 1);
 }
 
+.diff_controls {
+  text-align: center;
+}
+
+#diff_left_open {
+  color: var(--diff-document-color-left);
+}
+
+#diff_right_open {
+  color: var(--diff-document-color-right);
+}
+
+#diff_left_close,
+#diff_right_close {
+  color: var(--color-link);
+}
+
+#diff_left_open:hover,
+#diff_right_open:hover {
+  color: var(--color-hover);
+}
+
 /* columns */
 .diff {
   overflow: auto;

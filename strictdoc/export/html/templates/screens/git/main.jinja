@@ -1,5 +1,13 @@
-<div class="main">
+<div class="main" data-controller="diff">
   {% include "screens/git/form.jinja" %}
+  <div class="diff_controls" left>
+    <a id="diff_left_open" class="action_button"><span>+</span>open all modified</a>
+    <a id="diff_left_close" class="action_button"><span>–</span>close all</a>
+  </div>
+  <div class="diff_controls" right>
+    <a id="diff_right_open" class="action_button"><span>+</span>open all modified</a>
+    <a id="diff_right_close" class="action_button"><span>–</span>close all</a>
+  </div>
 
   {% if results %}
 

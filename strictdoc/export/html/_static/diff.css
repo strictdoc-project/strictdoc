@@ -194,7 +194,7 @@ details.diff_document[modified="right"] {
 .diff_node_fields {
   display: flex;
   flex-direction: column;
-  row-gap: var(--base-rhythm);
+  /* row-gap: var(--base-rhythm); */
 
   /* in node and in doc as Abstract: */
   padding-top: var(--base-rhythm);

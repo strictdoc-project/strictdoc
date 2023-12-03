@@ -1,5 +1,4 @@
 import os
-import subprocess
 from copy import deepcopy
 from datetime import datetime
 from typing import Optional
@@ -20,8 +19,7 @@ from strictdoc.git.project_diff_analyzer import (
     ProjectDiffAnalyzer,
     ProjectTreeDiffStats,
 )
-from strictdoc.helpers.parallelizer import NullParallelizer
-from strictdoc.helpers.timing import measure_performance
+from strictdoc.helpers.parallelizer import Parallelizer
 from strictdoc.server.routers.main_router import HTTP_STATUS_PRECONDITION_FAILED
 
 
@@ -100,63 +98,46 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
         assert left_revision_resolved is not None
         assert right_revision_resolved is not None
 
-        path_to_cwd = os.getcwd()
-        path_to_sandbox_dir = "/tmp/sandbox"
+        git_client_lhs = GitClient.create_repo_from_local_copy(
+            left_revision_resolved
+        )
 
-        with measure_performance("RSYNC"):
-            result = subprocess.run(
-                [
-                    "rsync",
-                    # "-vvraP",
-                    "-r",
-                    "--partial",
-                    "--delete",
-                    "--exclude=build/",
-                    "--exclude=__pycache__/",
-                    "--exclude=.ruff_cache/",
-                    "--exclude=output/",
-                    "--exclude=strictdoc-project.github.io/",
-                    ".",
-                    path_to_sandbox_dir,
-                ],
-                cwd=path_to_cwd,
-                capture_output=False,
-                text=True,
-                check=True,
-            )
-            assert result.returncode == 0, result
+        parallelizer = Parallelizer()
 
-        git_client = GitClient(path_to_sandbox_dir)
-        if right_revision_resolved != "HEAD+":
-            git_client.hard_reset(revision=right_revision_resolved)
-            git_client.clean()
-
-        parallelizer = NullParallelizer()
-
-        project_config_copy: ProjectConfig = deepcopy(project_config)
-        assert project_config_copy.export_input_paths is not None
+        project_config_copy_lhs: ProjectConfig = deepcopy(project_config)
+        assert project_config_copy_lhs.export_input_paths is not None
         export_input_rel_path = os.path.relpath(
-            project_config_copy.export_input_paths[0], os.getcwd()
+            project_config_copy_lhs.export_input_paths[0], os.getcwd()
         )
         export_input_abs_path = os.path.join(
-            path_to_sandbox_dir, export_input_rel_path
+            git_client_lhs.path_to_git_root, export_input_rel_path
         )
-        project_config_copy.export_input_paths = [export_input_abs_path]
+        project_config_copy_lhs.export_input_paths = [export_input_abs_path]
 
         traceability_index_rhs: TraceabilityIndex = (
             TraceabilityIndexBuilder.create(
-                project_config=project_config_copy,
+                project_config=project_config_copy_lhs,
                 parallelizer=parallelizer,
             )
         )
 
-        if left_revision_resolved != "HEAD+":
-            git_client.hard_reset(revision=left_revision_resolved)
-            git_client.clean()
+        git_client_rhs = GitClient.create_repo_from_local_copy(
+            right_revision_resolved
+        )
+
+        project_config_copy_rhs: ProjectConfig = deepcopy(project_config)
+        assert project_config_copy_rhs.export_input_paths is not None
+        export_input_rel_path = os.path.relpath(
+            project_config_copy_rhs.export_input_paths[0], os.getcwd()
+        )
+        export_input_abs_path = os.path.join(
+            git_client_rhs.path_to_git_root, export_input_rel_path
+        )
+        project_config_copy_rhs.export_input_paths = [export_input_abs_path]
 
         traceability_index_lhs: TraceabilityIndex = (
             TraceabilityIndexBuilder.create(
-                project_config=project_config_copy,
+                project_config=project_config_copy_rhs,
                 parallelizer=parallelizer,
             )
         )

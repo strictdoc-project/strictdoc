@@ -6,12 +6,8 @@ def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
 
-red = (
-    lambda text: f'<span class="lambda_red">{text}</span>'
-)
-green = (
-    lambda text: f'<span class="lambda_green">{text}</span>'
-)
+red = lambda text: f'<span class="lambda_red">{text}</span>'
+green = lambda text: f'<span class="lambda_green">{text}</span>'
 white = lambda text: f"<span>{text}</span>"
 
 

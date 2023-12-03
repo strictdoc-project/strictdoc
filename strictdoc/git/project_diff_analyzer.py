@@ -437,13 +437,14 @@ class ProjectDiffAnalyzer:
                     map_nodes_to_hashers[node].update(node_md5)
             return map_nodes_to_hashers[node].hexdigest().encode("utf-8")
 
-        # recurse(document)
+        # Keeping this code in case we will need to include child node hashes
+        # to parent node hashes recursively. This was the original
+        # implementation which we discarded. Now, each node's hash is
+        # self-contained.
+        # recurse(document)  # noqa: ERA001
+
         for node_ in document_iterator.all_content():
-            node_md5 = (
-                map_nodes_to_hashers[node_]
-                .hexdigest()
-                .encode("utf-8")
-            )
+            node_md5 = map_nodes_to_hashers[node_].hexdigest().encode("utf-8")
             map_nodes_to_hashers[document].update(node_md5)
 
         for node_, node_hasher_ in map_nodes_to_hashers.items():

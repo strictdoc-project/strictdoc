@@ -7,24 +7,14 @@
 
   <details
     {% if free_text_modified %}
-      open
+      modified open
     {% endif %}
   >
     <summary>
-      <span
-        {% if free_text_modified %}
-          style="background-color: #E4F1C9;"
-        {% endif %}
-      >
-        ...
-      </span>
+      <span class="text_icon" text="free text"></span>
     </summary>
 
-    <span
-      {% if free_text_modified %}
-        style="background-color: #E4F1C9;"
-      {% endif %}
-    >
+    <span>
       {{ free_text.get_parts_as_text_escaped() }}
     </span>
   </details>
@@ -40,19 +30,15 @@
 
       <details
         {% if section_modified %}
-          open
+          modified open
         {% endif %}
       >
         <summary>
-          <span
-            {% if section_modified %}
-              style="background-color: orange;"
-            {% endif %}
-          >
-            <span class="section-number">
+            <span class="text_icon" text="S"></span>
+            <span>
               {{ section.context.title_number_string if section.context.title_number_string else "&nbsp;" * (section.ng_level * 2 - 1) }}
-            </span>{{ section.title }}
-          </span>
+            </span>
+            <span>{{ section.title }}</span>
         </summary>
         {% with node=section %}
         {% include "screens/git/node.jinja" %}
@@ -66,23 +52,19 @@
 
       <details
         {% if requirement_modified %}
-          open
+          modified open
         {% endif %}
       >
         <summary>
-        <span
-          {% if requirement_modified %}
-            style="background-color: orange;"
-          {% endif %}
-        >
-          <span class="section-number">
+          <span class="text_icon" text="R"></span>
+          <span>
             {{ section.context.title_number_string if section.context.title_number_string else "&nbsp;" * (section.ng_level * 2 - 1) }}
           </span>
           {%- if section.reserved_title is not none -%}
+          <span>
             {{ section.reserved_title }}
-
+          </span>
           {%- endif -%}
-        </span>
         </summary>
         {% with requirement=section, requirement_modified=requirement_modified %}
           {% include "screens/git/requirement.jinja" %}

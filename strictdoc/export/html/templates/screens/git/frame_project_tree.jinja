@@ -18,19 +18,16 @@
 
         <details
           class="diff_document"
+          {% if document_modified %}
+            modified
+          {% endif %}
         >
           {% if document_modified %}
             {# open #}
           {% endif %}
           <summary>
             {% include "_res/svg_ico16_document.jinja.html" %}
-            <span
-              {% if document_modified %}
-              style="background-color: orange;"
-              {% endif %}
-            >
-            {{ document_.title }}
-            </span>
+            <span>{{ document_.title }}</span>
           </summary>
           {% with node=document_ %}
             {% include "screens/git/node.jinja" %}

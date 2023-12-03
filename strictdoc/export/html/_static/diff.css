@@ -1,0 +1,118 @@
+/* diff */
+
+/* columns */
+.diff {
+  overflow: auto;
+  overflow-y: scroll;
+  overflow-wrap: break-word;
+  /* border: 1px solid var(--thumbBG); */
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+}
+
+.diff[left] {
+  direction:rtl;
+}
+
+.diff[right] {
+  direction:ltr;
+}
+
+.diff_inner {
+  direction: initial;
+}
+
+.diff_content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--base-rhythm);
+  padding: var(--base-rhythm);
+}
+
+/* details with summary */
+
+.diff details {
+  width: 100%;
+
+  padding: calc(var(--base-rhythm)/2);
+  padding-right: 0;
+  /* border: 1px solid transparent; */
+  border-left: 4px solid transparent;
+}
+
+.diff details[modified] {
+  border-color: var(--color-fg-accent);
+}
+
+.diff summary {
+  list-style: none;
+  display: flex;
+  gap: var(--base-rhythm);
+  cursor: pointer;
+  color: var(--color-link);
+}
+
+.diff details[modified] > summary {
+  color: var(--color-fg-accent);
+}
+
+.diff summary:hover,
+.diff details[modified] > summary:hover {
+  color: var(--color-hover);
+}
+
+.diff summary::-webkit-details-marker {
+  display: none;
+}
+
+.diff details > summary::before {
+  content:"+";
+}
+
+.diff details[open] > summary::before {
+  content:"–";
+}
+
+/* document / details */
+
+details.diff_document {
+  background-color: white;
+  border-radius: 4px;
+  padding: 0 var(--base-rhythm);
+  border: 1px solid transparent;
+  border-left: 4px solid transparent;
+}
+
+.diff_document[modified] {
+  border-color: var(--color-fg-accent);
+}
+
+.diff_document > summary {
+  line-height: 1.2;
+  padding: var(--base-rhythm) 0;
+}
+
+/* folder */
+
+.diff_folder {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  column-gap: calc(var(--base-rhythm)/2);
+  font-size: var(--font-size-sm);
+  min-width: 0;
+  line-height: 1.5;
+  padding-top: var(--base-rhythm);
+}
+
+/* text_icon */
+
+.text_icon::before {
+  content: attr(text);
+  padding: 0 calc(var(--base-rhythm)/2);
+  border: 1px solid;
+  border-radius: calc(var(--base-rhythm)/2);
+  font-size: var(--font-size-xxsm);
+  font-weight: 600;
+  text-transform: uppercase;
+}

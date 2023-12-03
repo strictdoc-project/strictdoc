@@ -3,6 +3,7 @@
 
 {% block head_css %}
   {{ super() }}
+  <link rel="stylesheet" href="{{ link_renderer.render_static_url('diff.css') }}"/>
 {% endblock head_css %}
 
 {% block head_scripts %}

@@ -1,0 +1,44 @@
+<div class="diff_node_fields">
+  {%- for meta_field in requirement.enumerate_all_fields() -%}
+    {%- set field_modified = requirement_modified and not other_stats.contains_requirement_field(requirement, meta_field[0], meta_field[1]) -%}
+    <div
+      class="diff_node_field"
+      {% if field_modified %}
+        modified="{{ side }}"
+      {% endif %}
+    >
+      <span class="text_icon" text="{{ meta_field[0] }}"></span>
+      <span class="sdoc_pre_content">
+      {%- if field_modified -%}
+        {{ other_stats.get_diffed_requirement_field(requirement, meta_field[0], meta_field[1], side) }}
+      {%- else -%}
+        {{ meta_field[1] }}
+      {%- endif -%}
+      </span>
+    </div>
+  {%- endfor -%}
+
+  {%- if traceability_index.has_parent_requirements(requirement) %}
+    {%- for parent_requirement_, relation_role_ in traceability_index.get_parent_relations_with_roles(requirement) %}
+      {# Relations are rendered one field at a time with its own label, not a group of fields: #}
+      <div
+        class="diff_node_field"
+        {% if requirement_modified and not other_stats.contains_requirement_relations(requirement, parent_requirement_.reserved_uid, relation_role_) %}
+          modified="{{ side }}"
+        {% endif %}
+      >
+        <span class="text_icon" text="relation"></span>
+        <div class="sdoc_pre_content">
+          {%- if true -%}
+<b>{{ parent_requirement_.reserved_uid }}</b>{# Warning, we're inside a PRE and the line break here is significant: #}
+{{ parent_requirement_.reserved_title if parent_requirement_.reserved_title else "" }}
+          {%- endif -%}
+          {%- if relation_role_ is not none -%}
+            <span class="requirement__type-tag">({{ relation_role_ }})</span>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  {%- endif -%}
+
+</div>{# //.diff_node_fields #}

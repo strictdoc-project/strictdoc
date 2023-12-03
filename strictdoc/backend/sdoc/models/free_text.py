@@ -1,3 +1,4 @@
+import html
 from typing import List
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
@@ -43,6 +44,9 @@ class FreeText:
             else:
                 raise NotImplementedError(part)
         return text
+
+    def get_parts_as_text_escaped(self) -> str:
+        return html.escape(self.get_parts_as_text())
 
 
 class FreeTextContainer(FreeText):

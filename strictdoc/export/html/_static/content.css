@@ -11,6 +11,25 @@
 
 /* redefine main layout grid */
 
+[data-viewtype="diff"] .main {
+  padding: var(--base-gap);
+  padding-bottom: 0;
+  position: relative;
+  overflow: hidden;
+  scroll-behavior: smooth;
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-bg-main);
+
+  display: grid;
+  place-items: stretch stretch;
+  place-content: stretch stretch;
+  grid-template-columns:  minmax(0, 1fr) /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
+                          minmax(0, 1fr);
+  grid-template-rows: minmax(0, max-content) minmax(0, max-content);
+  gap: var(--base-rhythm);
+}
+
 [data-viewtype="source-file"] .main {
   padding: 0;
   background: white;

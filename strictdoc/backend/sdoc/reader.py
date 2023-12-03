@@ -16,7 +16,7 @@ from strictdoc.backend.sdoc.models.fragment import Fragment
 from strictdoc.backend.sdoc.processor import ParseContext, SDocParsingProcessor
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
-from strictdoc.helpers.file_modification_time import get_file_modification_time
+from strictdoc.helpers.md5 import get_file_md5
 from strictdoc.helpers.pickle import pickle_dump, pickle_load
 from strictdoc.helpers.textx import drop_textx_meta
 
@@ -92,6 +92,8 @@ class SDReader:
             else os.path.abspath(file_path)
         )
 
+        file_md5 = get_file_md5(file_path)
+
         # File name contains an MD5 hash of its full path to ensure the
         # uniqueness of the cached items. Additionally, the unique file name
         # contains a full path to the output root to prevent collisions
@@ -102,7 +104,7 @@ class SDReader:
             unique_identifier.encode("utf-8")
         ).hexdigest()
         file_name = os.path.basename(full_path_to_file)
-        file_name += "_" + unique_identifier_md5
+        file_name += "_" + unique_identifier_md5 + "_" + file_md5
 
         path_to_cached_file = os.path.join(
             path_to_tmp_dir,
@@ -111,12 +113,9 @@ class SDReader:
         )
 
         if os.path.isfile(path_to_cached_file):
-            cached_file_mtime = get_file_modification_time(path_to_cached_file)
-            sdoc_file_mtime = get_file_modification_time(file_path)
-            if sdoc_file_mtime < cached_file_mtime:
-                with open(path_to_cached_file, "rb") as cache_file:
-                    sdoc_pickled = cache_file.read()
-                return assert_cast(pickle_load(sdoc_pickled), Document)
+            with open(path_to_cached_file, "rb") as cache_file:
+                sdoc_pickled = cache_file.read()
+            return assert_cast(pickle_load(sdoc_pickled), Document)
 
         path_to_cached_file_dir = os.path.dirname(path_to_cached_file)
         Path(path_to_cached_file_dir).mkdir(parents=True, exist_ok=True)

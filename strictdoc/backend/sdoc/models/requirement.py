@@ -396,6 +396,17 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes, too-ma
         for requirement_field_list in requirement_fields:
             yield from requirement_field_list
 
+    def enumerate_all_fields(self):
+        for field in self.enumerate_fields():
+            if field.field_name == "REFS":
+                continue
+            meta_field_value = (
+                field.field_value
+                if field.field_value
+                else field.field_value_multiline
+            )
+            yield field.field_name, meta_field_value
+
     def enumerate_meta_fields(
         self, skip_single_lines=False, skip_multi_lines=False
     ):

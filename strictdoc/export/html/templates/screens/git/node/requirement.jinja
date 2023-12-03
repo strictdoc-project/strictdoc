@@ -1,0 +1,25 @@
+{% set requirement_md5 = self_stats.get_md5_by_node(requirement) %}
+{% set requirement_modified = not other_stats.contains_requirement_md5(requirement_md5) %}
+
+<details
+  class="diff_node"
+  {% if requirement_modified %}
+    modified="{{ side }}"
+    open
+  {% endif %}
+>
+  <summary>
+    <span class="text_icon" text="R"></span>
+    <span>
+      {{ requirement.context.title_number_string if requirement.context.title_number_string else "&nbsp;" * (requirement.ng_level * 2 - 1) }}
+    </span>
+    {%- if requirement.reserved_title is not none -%}
+      <span>
+        {{ requirement.reserved_title }}
+      </span>
+    {%- endif -%}
+  </summary>
+
+  {% include "screens/git/fields/fields.jinja" %}
+
+</details>

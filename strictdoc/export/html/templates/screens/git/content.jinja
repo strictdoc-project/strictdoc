@@ -1,0 +1,54 @@
+
+{%- if not document_tree_iterator.is_empty_tree() -%}
+  <div class="diff_content">
+    {%- for folder_or_file in document_tree_iterator.iterator_files_first(): -%}
+      {%- if folder_or_file.is_folder(): %}
+        {%- if folder_or_file.files|length > 0 %}
+          <div
+            class="diff_folder"
+            data-level="{{ folder_or_file.level }}"
+            data-testid="tree-folder-item"
+          >{% include "_res/svg__separator.jinja.html" %}{{ folder_or_file.rel_path }}</div>
+        {% endif %}
+      {% else %}
+        {%- set document = document_tree.get_document_by_path(folder_or_file.get_full_path()) %}
+
+        {% set document_md5 = self_stats.get_md5_by_node(document) %}
+        {% set document_modified = not other_stats.contains_document_md5(document_md5) %}
+
+        <details
+          class="diff_document"
+          {% if document_modified %}
+            modified="{{ side }}"
+          {% endif %}
+        >
+          {% if document_modified %}
+            {# open #}
+          {% endif %}
+          <summary>
+            {% include "_res/svg_ico16_document.jinja.html" %}
+            <span class="document_title">{{ document.title }}</span>
+          </summary>
+
+            {% include "screens/git/fields/document_abstract.jinja" %}
+
+            {%- set document_iterator = traceability_index.get_document_iterator(document) -%}
+            {%- for section_or_requirement in document_iterator.all_content() %}
+              {%- if section_or_requirement.is_requirement %}
+                {%- set requirement = section_or_requirement %}
+                {% include "screens/git/node/requirement.jinja" %}
+
+              {%- elif section_or_requirement.is_section %}
+                {%- set section = section_or_requirement %}
+                {% include "screens/git/node/section.jinja" %}
+              {%- endif %}
+            {%- endfor -%}
+        </details>
+
+      {% endif %}
+    {%- endfor -%}
+  </div>
+{%- else -%}
+  <span data-testid="document-tree-empty-text">🌚 The project has no documents yet.</span>
+{%- endif -%}
+

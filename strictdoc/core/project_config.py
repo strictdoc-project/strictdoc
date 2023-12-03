@@ -31,6 +31,7 @@ class ProjectFeature(str, Enum):
     SEARCH = "SEARCH"
     HTML2PDF = "HTML2PDF"
     REQIF = "REQIF"
+    DIFF = "DIFF"
     PROJECT_STATISTICS_SCREEN = "PROJECT_STATISTICS_SCREEN"
     STANDALONE_DOCUMENT_SCREEN = "STANDALONE_DOCUMENT_SCREEN"
     REQUIREMENTS_COVERAGE_SCREEN = "REQUIREMENTS_COVERAGE_SCREEN"
@@ -237,6 +238,12 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
 
     def is_activated_html2pdf(self) -> bool:
         return ProjectFeature.HTML2PDF in self.project_features
+
+    def is_activated_diff(self) -> bool:
+        return (
+            self.is_running_on_server
+            and ProjectFeature.DIFF in self.project_features
+        )
 
     def is_activated_reqif(self) -> bool:
         return ProjectFeature.REQIF in self.project_features

@@ -19,7 +19,7 @@ from strictdoc.git.project_diff_analyzer import (
     ProjectDiffAnalyzer,
     ProjectTreeDiffStats,
 )
-from strictdoc.helpers.parallelizer import Parallelizer
+from strictdoc.helpers.parallelizer import NullParallelizer
 from strictdoc.server.routers.main_router import HTTP_STATUS_PRECONDITION_FAILED
 
 
@@ -102,7 +102,7 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             left_revision_resolved
         )
 
-        parallelizer = Parallelizer()
+        parallelizer = NullParallelizer()
 
         project_config_copy_lhs: ProjectConfig = deepcopy(project_config)
         assert project_config_copy_lhs.export_input_paths is not None

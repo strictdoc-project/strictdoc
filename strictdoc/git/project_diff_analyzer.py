@@ -17,6 +17,7 @@ from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.diff import get_colored_diff_string, similar
 from strictdoc.helpers.md5 import get_md5
+from strictdoc.helpers.mid import MID
 
 
 def calculate_similarity(lhs: Requirement, rhs: Requirement) -> float:
@@ -84,7 +85,7 @@ class ProjectTreeDiffStats:
         self, requirement: Requirement, field_name: str, field_value: str
     ):
         assert isinstance(field_value, str)
-        other_requirement: Optional[Requirement] = self._find_requirement(
+        other_requirement: Optional[Requirement] = self.find_requirement(
             requirement
         )
         if other_requirement is None:
@@ -214,7 +215,7 @@ class ProjectTreeDiffStats:
         assert isinstance(field_value, str)
         assert side in ("left", "right")
 
-        other_requirement: Optional[Requirement] = self._find_requirement(
+        other_requirement: Optional[Requirement] = self.find_requirement(
             requirement
         )
         if (
@@ -254,7 +255,7 @@ class ProjectTreeDiffStats:
         relation_uid: str,
         relation_role: Optional[str],
     ):
-        other_requirement: Optional[Requirement] = self._find_requirement(
+        other_requirement: Optional[Requirement] = self.find_requirement(
             requirement
         )
         if other_requirement is None:
@@ -271,7 +272,7 @@ class ProjectTreeDiffStats:
                     return True
         return False
 
-    def _find_requirement(
+    def find_requirement(
         self, requirement: Requirement
     ) -> Optional[Requirement]:
         if requirement in self.cache_requirement_to_requirement:
@@ -321,6 +322,65 @@ class ProjectTreeDiffStats:
             requirement.reserved_uid
         ]
         return other_requirement
+
+
+@dataclass
+class ChangeStats:
+    map_requirements_to_tokens: Dict[Requirement, str] = field(
+        default_factory=dict
+    )
+
+    def find_requirement_token(self, requirement: Requirement) -> Optional[str]:
+        return self.map_requirements_to_tokens.get(requirement)
+
+    @staticmethod
+    def create_from_two_indexes(
+        lhs_index: TraceabilityIndex,
+        rhs_index: TraceabilityIndex,
+        lhs_stats: ProjectTreeDiffStats,
+        rhs_stats: ProjectTreeDiffStats,
+    ):
+        stats = ChangeStats()
+
+        ChangeStats._iterate_one_index(lhs_index, rhs_stats, stats)
+        ChangeStats._iterate_one_index(rhs_index, lhs_stats, stats)
+
+        return stats
+
+    @staticmethod
+    def _iterate_one_index(
+        index: TraceabilityIndex,
+        stats: ProjectTreeDiffStats,
+        change_stats: "ChangeStats",
+    ):
+        for document in index.document_tree.document_list:
+            document_iterator = DocumentCachingIterator(document)
+
+            for node in document_iterator.all_content():
+                if isinstance(node, Requirement):
+                    # FIXME: Is this 100% valid?
+                    if node in change_stats.map_requirements_to_tokens:
+                        continue
+
+                    requirement: Requirement = assert_cast(node, Requirement)
+                    other_requirement_or_none: Optional[
+                        Requirement
+                    ] = stats.find_requirement(requirement)
+                    if other_requirement_or_none is None:
+                        continue
+
+                    other_requirement: Requirement = other_requirement_or_none
+
+                    requirement_token: str = MID.create().get_string_value()
+
+                    change_stats.map_requirements_to_tokens[
+                        requirement
+                    ] = requirement_token
+                    change_stats.map_requirements_to_tokens[
+                        other_requirement
+                    ] = requirement_token
+
+        return stats
 
 
 class ProjectDiffAnalyzer:

@@ -16,6 +16,7 @@ from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.git.git_client import GitClient
 from strictdoc.git.project_diff_analyzer import (
+    ChangeStats,
     ProjectDiffAnalyzer,
     ProjectTreeDiffStats,
 )
@@ -149,6 +150,9 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
         rhs_stats: ProjectTreeDiffStats = (
             ProjectDiffAnalyzer.analyze_document_tree(traceability_index_rhs)
         )
+        change_stats: ChangeStats = ChangeStats.create_from_two_indexes(
+            traceability_index_lhs, traceability_index_rhs, lhs_stats, rhs_stats
+        )
 
         documents_iterator_lhs = DocumentTreeIterator(
             traceability_index_lhs.document_tree
@@ -166,6 +170,7 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             right_revision=right_revision,
             lhs_stats=lhs_stats,
             rhs_stats=rhs_stats,
+            change_stats=change_stats,
             traceability_index_lhs=traceability_index_lhs,
             traceability_index_rhs=traceability_index_rhs,
             link_renderer=link_renderer,

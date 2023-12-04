@@ -123,7 +123,7 @@ class GitClient:
         )
         if result.returncode == 0:
             return result.stdout.strip()
-        raise LookupError(f"Non-existing revision: {revision}")
+        raise LookupError(f"Non-existing revision: {revision}.")
 
     def commit_all(self, message: str):
         result = subprocess.run(

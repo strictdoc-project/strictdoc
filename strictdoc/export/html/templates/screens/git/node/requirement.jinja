@@ -19,10 +19,13 @@
         {{ requirement.reserved_title }}
       </span>
     {%- endif -%}
-    {% if requirement_modified and requirement.reserved_uid is not none and requirement.reserved_uid|length > 0 %}
-      {%- with uid=requirement.reserved_uid -%}
-        {%- include "screens/git/sync/button.jinja" -%}
-      {%- endwith -%}
+    {% if requirement_modified %}
+      {% set requirement_token = change_stats.find_requirement_token(requirement) %}
+      {% if requirement_token is not none %}
+        {%- with uid=requirement_token -%}
+          {%- include "screens/git/sync/button.jinja" -%}
+        {%- endwith -%}
+      {%- endif -%}
     {% endif %}
   </summary>
 

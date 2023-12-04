@@ -16,6 +16,7 @@ from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.git.git_client import GitClient
 from strictdoc.git.project_diff_analyzer import (
+    ChangeStats,
     ProjectDiffAnalyzer,
     ProjectTreeDiffStats,
 )
@@ -44,11 +45,16 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             )
         left_revision_resolved = None
         right_revision_resolved = None
+
         results = False
+        error_message: Optional[str] = None
 
-        if left_revision is not None:
-            assert right_revision is not None
-
+        if (
+            left_revision is not None
+            and len(left_revision) > 0
+            and right_revision is not None
+            and len(right_revision) > 0
+        ):
             git_client = GitClient(".")
             try:
                 if left_revision != "HEAD+":
@@ -56,23 +62,29 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
                         left_revision
                     )
                 else:
-                    return HTMLResponse(
-                        content=(
-                            "Left revision argument 'HEAD+' is not supported. "
-                            "'HEAD+' can only be used as a right revision argument."
-                        ),
-                        status_code=412,
+                    raise LookupError(
+                        "Left revision argument 'HEAD+' is not supported. "
+                        "'HEAD+' can only be used as a right revision argument."
                     )
 
-                if right_revision != "HEAD+":
+                if right_revision == "HEAD+":
+                    right_revision_resolved = "HEAD+"
+                else:
                     right_revision_resolved = git_client.check_revision(
                         right_revision
                     )
-                else:
-                    right_revision_resolved = "HEAD+"
+
+                results = True
             except LookupError as exception_:
-                return HTMLResponse(content=exception_.args[0], status_code=404)
-            results = True
+                error_message = exception_.args[0]
+        elif (left_revision is not None and len(left_revision) > 0) or (
+            right_revision is not None and len(right_revision) > 0
+        ):
+            error_message = "Valid Git revisions must be provided."
+        else:
+            # In the case when both revisions are empty, we load the starting
+            # diff page.
+            pass
 
         template = html_templates.jinja_environment().get_template(
             "screens/git/index.jinja"
@@ -81,6 +93,7 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
         link_renderer = LinkRenderer(
             root_path="", static_path=project_config.dir_for_sdoc_assets
         )
+
         if not results:
             output = template.render(
                 project_config=project_config,
@@ -90,10 +103,12 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
                 strictdoc_version=__version__,
                 link_renderer=link_renderer,
                 results=False,
-                left_revision=None,
-                right_revision=None,
+                left_revision=left_revision,
+                right_revision=right_revision,
+                error_message=error_message,
             )
-            return HTMLResponse(content=output, status_code=200)
+            status_code = 200 if error_message is None else 422
+            return HTMLResponse(content=output, status_code=status_code)
 
         assert left_revision_resolved is not None
         assert right_revision_resolved is not None
@@ -149,6 +164,9 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
         rhs_stats: ProjectTreeDiffStats = (
             ProjectDiffAnalyzer.analyze_document_tree(traceability_index_rhs)
         )
+        change_stats: ChangeStats = ChangeStats.create_from_two_indexes(
+            traceability_index_lhs, traceability_index_rhs, lhs_stats, rhs_stats
+        )
 
         documents_iterator_lhs = DocumentTreeIterator(
             traceability_index_lhs.document_tree
@@ -166,6 +184,7 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             right_revision=right_revision,
             lhs_stats=lhs_stats,
             rhs_stats=rhs_stats,
+            change_stats=change_stats,
             traceability_index_lhs=traceability_index_lhs,
             traceability_index_rhs=traceability_index_rhs,
             link_renderer=link_renderer,
@@ -174,6 +193,7 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             standalone=False,
             strictdoc_version=__version__,
             results=True,
+            error_message=None,
         )
         return HTMLResponse(
             content=output,

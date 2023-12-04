@@ -15,6 +15,11 @@
       {{ section.context.title_number_string if section.context.title_number_string else "&nbsp;" * (section.ng_level * 2 - 1) }}
     </span>
     <span>{{ section.title }}</span>
+    {% if section_modified and section.reserved_uid is not none and section.reserved_uid|length > 0 %}
+      {%- with uid=section.reserved_uid -%}
+        {%- include "screens/git/sync/button.jinja" -%}
+      {%- endwith -%}
+    {% endif %}
   </summary>
 
   {% include "screens/git/fields/section_fields.jinja" %}

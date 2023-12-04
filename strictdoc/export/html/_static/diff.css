@@ -67,6 +67,7 @@
   flex-direction: column;
   gap: var(--base-rhythm);
   padding: var(--base-rhythm);
+  margin-bottom: 100%; /* to balance the scrolling freely */
 }
 
 /* details with summary */
@@ -277,5 +278,3 @@ details.diff_document[modified="right"] {
   background-color: var(--diff-block-color-right);
 }
 .lambda_green {background-color: var(--diff-word-color-right);}
-
-

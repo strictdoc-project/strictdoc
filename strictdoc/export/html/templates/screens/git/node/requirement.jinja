@@ -19,6 +19,11 @@
         {{ requirement.reserved_title }}
       </span>
     {%- endif -%}
+    {% if requirement_modified and requirement.reserved_uid is not none and requirement.reserved_uid|length > 0 %}
+      {%- with uid=requirement.reserved_uid -%}
+        {%- include "screens/git/sync/button.jinja" -%}
+      {%- endwith -%}
+    {% endif %}
   </summary>
 
   {% include "screens/git/fields/requirement_fields.jinja" %}

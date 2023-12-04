@@ -657,29 +657,29 @@ sdoc-form[search]::before {
   z-index: 0;
 }
 
-.sdoc-search-error,
-.sdoc-search-success,
-.sdoc-search-reset {
+.sdoc-form-error,
+.sdoc-form-success,
+.sdoc-form-reset {
   display: block;
   padding: var(--base-rhythm) calc(var(--base-rhythm)*2);
   position: relative;
 }
 
-.sdoc-search-error {
+.sdoc-form-error {
   color: var(--color-danger);
 }
 
-.sdoc-search-success {
+.sdoc-form-success {
   color: var(--color-action);
 }
 
-.sdoc-search-reset {
+.sdoc-form-reset {
   position: absolute;
   right: 0;
   bottom: 0;
 }
 
-.sdoc-search-error,
-.sdoc-search-success {
-  padding-right: 120px; /* == sdoc-search-reset width */
+.sdoc-form-error,
+.sdoc-form-success {
+  padding-right: 120px; /* == sdoc-form-reset width */
 }

@@ -106,6 +106,9 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
 
         project_config_copy_lhs: ProjectConfig = deepcopy(project_config)
         assert project_config_copy_lhs.export_input_paths is not None
+        project_config_copy_rhs: ProjectConfig = deepcopy(project_config)
+        assert project_config_copy_rhs.export_input_paths is not None
+
         export_input_rel_path = os.path.relpath(
             project_config_copy_lhs.export_input_paths[0], os.getcwd()
         )
@@ -114,7 +117,7 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
         )
         project_config_copy_lhs.export_input_paths = [export_input_abs_path]
 
-        traceability_index_rhs: TraceabilityIndex = (
+        traceability_index_lhs: TraceabilityIndex = (
             TraceabilityIndexBuilder.create(
                 project_config=project_config_copy_lhs,
                 parallelizer=parallelizer,
@@ -125,8 +128,6 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             right_revision_resolved
         )
 
-        project_config_copy_rhs: ProjectConfig = deepcopy(project_config)
-        assert project_config_copy_rhs.export_input_paths is not None
         export_input_rel_path = os.path.relpath(
             project_config_copy_rhs.export_input_paths[0], os.getcwd()
         )
@@ -135,7 +136,7 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
         )
         project_config_copy_rhs.export_input_paths = [export_input_abs_path]
 
-        traceability_index_lhs: TraceabilityIndex = (
+        traceability_index_rhs: TraceabilityIndex = (
             TraceabilityIndexBuilder.create(
                 project_config=project_config_copy_rhs,
                 parallelizer=parallelizer,

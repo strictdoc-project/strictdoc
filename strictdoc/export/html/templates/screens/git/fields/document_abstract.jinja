@@ -1,4 +1,4 @@
-{% set text_icon = "abstract" %}
+
 {% set node = document %}
 
 {% if node.free_texts|length > 0 %}
@@ -12,7 +12,9 @@
   {% endif %}
 >
   <summary>
-    <span class="text_icon" text="{{ text_icon|default('free text') }}"></span>
+  {%- with badge_text = "abstract" -%}
+    {%- include "components/badge/index.jinja" -%}
+  {%- endwith -%}
   </summary>
 
   <div

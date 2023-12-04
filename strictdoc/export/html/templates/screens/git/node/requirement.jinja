@@ -5,11 +5,12 @@
   class="diff_node"
   {% if requirement_modified %}
     modified="{{ side }}"
-    open
   {% endif %}
 >
   <summary>
-    <span class="text_icon" text="R"></span>
+    {%- with badge_text = "R" -%}
+      {%- include "components/badge/index.jinja" -%}
+    {%- endwith -%}
     <span>
       {{ requirement.context.title_number_string if requirement.context.title_number_string else "&nbsp;" * (requirement.ng_level * 2 - 1) }}
     </span>
@@ -18,8 +19,13 @@
         {{ requirement.reserved_title }}
       </span>
     {%- endif -%}
+    {% if requirement_modified and requirement.reserved_uid is not none and requirement.reserved_uid|length > 0 %}
+      {%- with uid=requirement.reserved_uid -%}
+        {%- include "screens/git/sync/button.jinja" -%}
+      {%- endwith -%}
+    {% endif %}
   </summary>
 
-  {% include "screens/git/fields/fields.jinja" %}
+  {% include "screens/git/fields/requirement_fields.jinja" %}
 
 </details>

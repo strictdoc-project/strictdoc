@@ -608,6 +608,7 @@ ol.upperroman {
 svg.svg_icon polyline,
 svg.svg_icon line,
 svg.svg_icon circle,
+svg.svg_icon rect,
 svg.svg_icon path {
   fill: none;
   fill-rule: evenodd;

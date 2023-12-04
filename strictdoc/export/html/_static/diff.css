@@ -67,6 +67,7 @@
   flex-direction: column;
   gap: var(--base-rhythm);
   padding: var(--base-rhythm);
+  margin-bottom: 100%; /* to balance the scrolling freely */
 }
 
 /* details with summary */
@@ -194,7 +195,7 @@ details.diff_document[modified="right"] {
 .diff_node_fields {
   display: flex;
   flex-direction: column;
-  row-gap: var(--base-rhythm);
+  /* row-gap: var(--base-rhythm); */
 
   /* in node and in doc as Abstract: */
   padding-top: var(--base-rhythm);
@@ -219,9 +220,9 @@ details.diff_document[modified="right"] {
   column-gap: var(--base-rhythm);
 }
 
-/* text_icon */
+/* badge */
 
-.text_icon::before {
+.badge::before {
   content: attr(text);
   padding: 0 calc(var(--base-rhythm)/2);
   border: 1px solid;
@@ -232,18 +233,18 @@ details.diff_document[modified="right"] {
 }
 
 /* in summary: */
-[modified="left"] > summary .text_icon::before,
+[modified="left"] > summary .badge::before,
 /* in field: */
-[modified="left"] > .text_icon::before {
+[modified="left"] > .badge::before {
   color: white;
   background-color: var(--diff-icon-color-left);
   border-color: var(--diff-icon-color-left);
 }
 
 /* in summary: */
-[modified="right"] > summary .text_icon::before,
+[modified="right"] > summary .badge::before,
 /* in field: */
-[modified="right"] > .text_icon::before {
+[modified="right"] > .badge::before {
   color: white;
   background-color: var(--diff-icon-color-right);
   border-color: var(--diff-icon-color-right);
@@ -277,5 +278,3 @@ details.diff_document[modified="right"] {
   background-color: var(--diff-block-color-right);
 }
 .lambda_green {background-color: var(--diff-word-color-right);}
-
-

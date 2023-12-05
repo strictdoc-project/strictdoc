@@ -3,8 +3,8 @@ Stimulus.register("diff", class extends Controller {
 
     // * fragment collapse control
 
-    const leftColumn = this.element.querySelector('.diff[left]');
-    const rightColumn = this.element.querySelector('.diff[right]');
+    const leftColumn = this.element.querySelector('.diff_column[left]');
+    const rightColumn = this.element.querySelector('.diff_column[right]');
 
     const leftOpenBtn = document.getElementById('diff_left_open');
     const leftCloseBtn = document.getElementById('diff_left_close');

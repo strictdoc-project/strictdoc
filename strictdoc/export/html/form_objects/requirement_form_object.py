@@ -346,7 +346,8 @@ class RequirementFormObject(ErrorObject):
 
     @staticmethod
     def create_from_requirement(
-        *, requirement: Requirement
+        *,
+        requirement: Requirement,
     ) -> "RequirementFormObject":
         assert isinstance(requirement, Requirement)
         document: Document = requirement.document

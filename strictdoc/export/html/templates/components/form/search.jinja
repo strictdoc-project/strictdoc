@@ -19,13 +19,13 @@
 {%- if search_value|length > 0 -%}
   {%- if error is none -%}
     {%- if search_results|length == 0 -%}
-      <div class="sdoc-search-success">Nothing matching the query was found.</div>
+      <div class="sdoc-form-success">Nothing matching the query was found.</div>
     {%- elif search_results|length > 0 -%}
-      <div class="sdoc-search-success">Found <b>{{ search_results|length }}</b> results.</div>
+      <div class="sdoc-form-success">Found <b>{{ search_results|length }}</b> results.</div>
     {%- endif -%}
   {%- else -%}
-      <div class="sdoc-search-error">{{ error }}</div>
+      <div class="sdoc-form-error">{{ error }}</div>
   {%- endif -%}
-  <a class="sdoc-search-reset" href="{{ link_renderer.render_url('search') }}">Clear query</a>
+  <a class="sdoc-form-reset" href="{{ link_renderer.render_url('search') }}">Clear query</a>
 {%- endif -%}
 </sdoc-form>

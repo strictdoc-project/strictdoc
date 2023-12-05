@@ -15,6 +15,23 @@
   --diff-document-color-right: rgba(20, 120, 20, 1);
 }
 
+.diff {
+  scroll-behavior: smooth;
+  background-color: var(--color-bg-main);
+
+  display: grid;
+  place-items: stretch stretch;
+  place-content: stretch stretch;
+  grid-template-columns:  minmax(0, 1fr) /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
+                          minmax(0, 1fr);
+  grid-template-rows: minmax(0, max-content) minmax(0, max-content);
+
+  gap: var(--base-rhythm);
+  /* height: calc(100% - var(--base-rhythm) - var(--base-rhythm)); */
+}
+
+/* controls */
+
 .diff_controls {
   text-align: center;
 }
@@ -38,7 +55,7 @@
 }
 
 /* columns */
-.diff {
+.diff_column {
   overflow: auto;
   overflow-y: scroll;
   overflow-wrap: break-word;
@@ -50,11 +67,11 @@
   position: relative;
 }
 
-.diff[left] {
+.diff_column[left] {
   direction:rtl;
 }
 
-.diff[right] {
+.diff_column[right] {
   direction:ltr;
 }
 

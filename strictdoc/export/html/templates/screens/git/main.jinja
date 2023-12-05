@@ -1,43 +1,4 @@
-<div class="main" data-controller="diff">
+<div class="main">
   {% include "screens/git/form.jinja" %}
-  <div class="diff_controls" left>
-    <a id="diff_left_open" class="action_button"><span>+</span>open all modified</a>
-    <a id="diff_left_close" class="action_button"><span>–</span>close all</a>
-  </div>
-  <div class="diff_controls" right>
-    <a id="diff_right_open" class="action_button"><span>+</span>open all modified</a>
-    <a id="diff_right_close" class="action_button"><span>–</span>close all</a>
-  </div>
-
-  {% if results %}
-
-    <div class="diff" left>
-      <div class="diff_inner">
-      {% with
-        document_tree=document_tree_lhs,
-        document_tree_iterator=documents_iterator_lhs,
-        traceability_index=traceability_index_lhs,
-        self_stats=lhs_stats,
-        other_stats=rhs_stats,
-        side="left"
-      %}
-        {% include "screens/git/content.jinja" %}
-      {% endwith %}
-      </div>
-    </div>
-    <div class="diff" right>
-      <div class="diff_inner">
-      {% with
-        document_tree=document_tree_rhs,
-        document_tree_iterator=documents_iterator_rhs,
-        traceability_index=traceability_index_rhs,
-        self_stats=rhs_stats,
-        other_stats=lhs_stats,
-        side="right"
-      %}
-        {% include "screens/git/content.jinja" %}
-      {% endwith %}
-      </div>
-    </div>
-  {% endif %}
+  {% include "screens/git/frame_content.jinja" %}
 </div>

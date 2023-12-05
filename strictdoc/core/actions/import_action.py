@@ -16,7 +16,9 @@ class ImportAction:
     @staticmethod
     @timing_decorator("Import")
     def do_import(
-        import_config: Union[ImportReqIFCommandConfig, ImportExcelCommandConfig]
+        import_config: Union[
+            ImportReqIFCommandConfig, ImportExcelCommandConfig
+        ],
     ) -> None:
         if isinstance(import_config, ImportReqIFCommandConfig):
             document = ReqIFImport.import_from_file(import_config)[0]

@@ -386,7 +386,7 @@ class ChangeStats:
 class ProjectDiffAnalyzer:
     @staticmethod
     def analyze_document_tree(
-        traceability_index: TraceabilityIndex
+        traceability_index: TraceabilityIndex,
     ) -> ProjectTreeDiffStats:
         document_tree_stats: ProjectTreeDiffStats = ProjectTreeDiffStats()
 

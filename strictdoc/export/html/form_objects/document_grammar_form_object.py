@@ -145,7 +145,8 @@ class DocumentGrammarFormObject(ErrorObject):
 
     @staticmethod
     def create_from_document(
-        *, document: Document
+        *,
+        document: Document,
     ) -> "DocumentGrammarFormObject":
         assert isinstance(document, Document)
         assert isinstance(document.grammar, DocumentGrammar)

@@ -103,7 +103,8 @@ class DocumentConfigFormObject(ErrorObject):
 
     @staticmethod
     def create_from_document(
-        *, document: Document
+        *,
+        document: Document,
     ) -> "DocumentConfigFormObject":
         assert isinstance(document, Document)
 

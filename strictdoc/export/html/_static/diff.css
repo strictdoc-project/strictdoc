@@ -295,3 +295,43 @@ details.diff_document[modified="right"] {
   background-color: var(--diff-block-color-right);
 }
 .lambda_green {background-color: var(--diff-word-color-right);}
+
+/* skeleton */
+
+.skeleton.diff {
+  margin-top:40px;
+  border-color:white"
+}
+
+.skeleton.diff .diff_column {
+  border-color:white
+}
+
+.skeleton.diff .item_ {
+  width: 200px;
+  padding:16px; margin:8px; border-radius: 4px;
+}
+
+.skeleton.diff .item {
+  padding:16px;
+  margin:8px;
+  border-radius: 4px;
+  background-color: rgba(255,255,255,1);
+  /* animation-name: change-color; */
+  /* animation-duration: 1s; */
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes change-color {
+  from {background-color: rgba(255,255,255,0.8);}
+  to {background-color: rgba(255,255,255,0.3);}
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: .5;
+  }
+  50% {
+    opacity: 1;
+  }
+}

@@ -1,4 +1,5 @@
 import os
+import urllib
 from copy import deepcopy
 from datetime import datetime
 from typing import Optional
@@ -35,6 +36,84 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
 
     @router.get("/diff")
     def get_git_diff(
+        left_revision: Optional[str] = None,
+        right_revision: Optional[str] = None,
+    ):
+        if not project_config.is_activated_diff():
+            return Response(
+                content="The DIFF feature is not activated in the project config.",
+                status_code=HTTP_STATUS_PRECONDITION_FAILED,
+            )
+
+        error_message: Optional[str] = None
+
+        if (
+            left_revision is not None
+            and len(left_revision) > 0
+            and right_revision is not None
+            and len(right_revision) > 0
+        ):
+            git_client = GitClient(".")
+            try:
+                if left_revision != "HEAD+":
+                    git_client.check_revision(left_revision)
+                else:
+                    raise LookupError(
+                        "Left revision argument 'HEAD+' is not supported. "
+                        "'HEAD+' can only be used as a right revision argument."
+                    )
+
+                if right_revision != "HEAD+":
+                    git_client.check_revision(right_revision)
+            except LookupError as exception_:
+                error_message = exception_.args[0]
+        elif (left_revision is not None and len(left_revision) > 0) or (
+            right_revision is not None and len(right_revision) > 0
+        ):
+            error_message = "Valid Git revisions must be provided."
+        else:
+            # In the case when both revisions are empty, we load the starting
+            # diff page.
+            pass
+
+        template = html_templates.jinja_environment().get_template(
+            "screens/git/index.jinja"
+        )
+
+        link_renderer = LinkRenderer(
+            root_path="", static_path=project_config.dir_for_sdoc_assets
+        )
+
+        left_revision_urlencoded = (
+            urllib.parse.quote(left_revision)
+            if left_revision is not None
+            else ""
+        )
+        right_revision_urlencoded = (
+            urllib.parse.quote(right_revision)
+            if right_revision is not None
+            else ""
+        )
+
+        output = template.render(
+            project_config=project_config,
+            document_type=DocumentType.document(),
+            link_document_type=DocumentType.document(),
+            standalone=False,
+            strictdoc_version=__version__,
+            link_renderer=link_renderer,
+            results=False,
+            left_revision=left_revision,
+            left_revision_urlencoded=left_revision_urlencoded,
+            right_revision=right_revision,
+            right_revision_urlencoded=right_revision_urlencoded,
+            error_message=error_message,
+        )
+        status_code = 200 if error_message is None else 422
+        return HTMLResponse(content=output, status_code=status_code)
+
+    @router.get("/diff_result")
+    def get_git_diff_result(
         left_revision: Optional[str] = None,
         right_revision: Optional[str] = None,
     ):
@@ -87,7 +166,7 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             pass
 
         template = html_templates.jinja_environment().get_template(
-            "screens/git/index.jinja"
+            "screens/git/frame_content.jinja"
         )
 
         link_renderer = LinkRenderer(
@@ -104,7 +183,9 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
                 link_renderer=link_renderer,
                 results=False,
                 left_revision=left_revision,
+                left_revision_urlencoded=urllib.parse.quote(left_revision),
                 right_revision=right_revision,
+                right_revision_urlencoded=urllib.parse.quote(right_revision),
                 error_message=error_message,
             )
             status_code = 200 if error_message is None else 422
@@ -181,7 +262,9 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             documents_iterator_lhs=documents_iterator_lhs,
             documents_iterator_rhs=documents_iterator_rhs,
             left_revision=left_revision,
+            left_revision_urlencoded=urllib.parse.quote(left_revision),
             right_revision=right_revision,
+            right_revision_urlencoded=urllib.parse.quote(right_revision),
             lhs_stats=lhs_stats,
             rhs_stats=rhs_stats,
             change_stats=change_stats,

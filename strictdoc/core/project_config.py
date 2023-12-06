@@ -151,6 +151,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
     def integrate_export_config(self, export_config: ExportCommandConfig):
         if export_config.project_title is not None:
             self.project_title = export_config.project_title
+        assert 0, export_config.input_paths
         self.export_input_paths = export_config.input_paths
         self.export_output_dir = export_config.output_dir
         self.export_output_html_root = export_config.output_html_root

@@ -131,6 +131,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
     ):
         assert isinstance(input_paths, list), f"{input_paths}"
         self.input_paths: List[str] = input_paths
+        assert 0, input_paths
         self.output_dir: str = output_dir
         self._config_path: Optional[str] = config_path
         self.project_title: Optional[str] = project_title

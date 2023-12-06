@@ -47,13 +47,22 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
 
         error_message: Optional[str] = None
 
+        path_to_input = project_config.export_input_paths[0]
+        assert 0, path_to_input
+        path_to_git = path_to_input if os.path.abspath(path_to_input) else os.getcwd()
+        git_client = GitClient(path_to_git)
+        if not git_client.is_git_repo():
+            error_message = (
+                "The DIFF feature requires a Git repository "
+                "to be initialized in the input path folder: "
+                f"{path_to_input}"
+            )
         if (
             left_revision is not None
             and len(left_revision) > 0
             and right_revision is not None
             and len(right_revision) > 0
         ):
-            git_client = GitClient(".")
             try:
                 if left_revision != "HEAD+":
                     git_client.check_revision(left_revision)
@@ -207,7 +216,8 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
 
         export_input_rel_path = os.path.relpath(
             project_config_copy_lhs.export_input_paths[0], os.getcwd()
-        )
+        ) if not os.path.isabs(project_config_copy_lhs.export_input_paths[0]) else "."
+
         export_input_abs_path = os.path.join(
             git_client_lhs.path_to_git_root, export_input_rel_path
         )

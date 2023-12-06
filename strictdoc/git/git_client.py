@@ -66,6 +66,19 @@ class GitClient:
 
             return git_client
 
+    def is_git_repo(self):
+        """
+        https://stackoverflow.com/a/16925062/598057
+        """
+        result = subprocess.run(
+            ["git", "rev-parse", "--is-inside-work-tree"],
+            cwd=self.path_to_git_root,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        return result.stdout == "true"
+
     def is_clean_branch(self):
         """
         https://unix.stackexchange.com/a/155077/77389

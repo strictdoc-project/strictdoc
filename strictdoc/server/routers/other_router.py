@@ -84,6 +84,17 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             root_path="", static_path=project_config.dir_for_sdoc_assets
         )
 
+        left_revision_urlencoded = (
+            urllib.parse.quote(left_revision)
+            if left_revision is not None
+            else ""
+        )
+        right_revision_urlencoded = (
+            urllib.parse.quote(right_revision)
+            if right_revision is not None
+            else ""
+        )
+
         output = template.render(
             project_config=project_config,
             document_type=DocumentType.document(),
@@ -93,9 +104,9 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             link_renderer=link_renderer,
             results=False,
             left_revision=left_revision,
-            left_revision_urlencoded=urllib.parse.quote(left_revision),
+            left_revision_urlencoded=left_revision_urlencoded,
             right_revision=right_revision,
-            right_revision_urlencoded=urllib.parse.quote(right_revision),
+            right_revision_urlencoded=right_revision_urlencoded,
             error_message=error_message,
         )
         status_code = 200 if error_message is None else 422

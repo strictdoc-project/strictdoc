@@ -166,7 +166,7 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             pass
 
         template = html_templates.jinja_environment().get_template(
-            "screens/git/frame_content.jinja"
+            "screens/git/frame_result.jinja"
         )
 
         link_renderer = LinkRenderer(

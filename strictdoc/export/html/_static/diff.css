@@ -296,25 +296,69 @@ details.diff_document[modified="right"] {
 }
 .lambda_green {background-color: var(--diff-word-color-right);}
 
+/* preloaded */
+/*
+  The element has been pre-loaded
+  and a smooth appearance effect is added to it.
+  The element will retain the computed values set by the last keyframe.
+ */
+.preloaded {
+  position: relative;
+  animation: fadeInPreloaded 1s ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeInPreloaded {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* skeleton */
 
+.diff_skeleton_spinner_container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  grid-column: 1/3;
+  grid-row: 2/3;
+  z-index: 11;
+}
+
 .skeleton.diff {
-  margin-top:40px;
-  border-color:white"
+  position: relative;
+  color: var(--color-fg-accent);
+}
+
+.skeleton.diff .diff_2columns {
+  grid-column: 1 / -1;
+  height: 32px;
+  text-align: center;
 }
 
 .skeleton.diff .diff_column {
-  border-color:white
+  border-color: white;
 }
 
 .skeleton.diff .item_ {
   width: 200px;
-  padding:16px; margin:8px; border-radius: 4px;
+  padding: 16px;
+  margin: 8px;
+  border-radius: 4px;
 }
 
 .skeleton.diff .item {
-  padding:16px;
-  margin:8px;
+  padding: 16px;
+  margin: 8px;
   border-radius: 4px;
   background-color: rgba(255,255,255,1);
   /* animation-name: change-color; */
@@ -333,5 +377,69 @@ details.diff_document[modified="right"] {
   }
   50% {
     opacity: 1;
+  }
+}
+
+.skeleton_spinner {
+  position: relative;
+  text-indent: -9999em;
+  animation: mulShdSpin 1.3s infinite linear;
+  transform: translateZ(0);
+  /* size */
+  font-size: 8px;
+  margin: 36px;
+  /* dot */
+  color: var(--color-fg-accent);
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+}
+
+@keyframes mulShdSpin {
+  0%,
+  100% {
+    box-shadow: 0 -3em 0 0.2em,
+    2em -2em 0 0em, 3em 0 0 -1em,
+    2em 2em 0 -1em, 0 3em 0 -1em,
+    -2em 2em 0 -1em, -3em 0 0 -1em,
+    -2em -2em 0 0;
+  }
+  12.5% {
+    box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em,
+    3em 0 0 0, 2em 2em 0 -1em, 0 3em 0 -1em,
+    -2em 2em 0 -1em, -3em 0 0 -1em,
+    -2em -2em 0 -1em;
+  }
+  25% {
+    box-shadow: 0 -3em 0 -0.5em,
+    2em -2em 0 0, 3em 0 0 0.2em,
+    2em 2em 0 0, 0 3em 0 -1em,
+    -2em 2em 0 -1em, -3em 0 0 -1em,
+    -2em -2em 0 -1em;
+  }
+  37.5% {
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
+     3em 0em 0 0, 2em 2em 0 0.2em, 0 3em 0 0em,
+     -2em 2em 0 -1em, -3em 0em 0 -1em, -2em -2em 0 -1em;
+  }
+  50% {
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
+     3em 0 0 -1em, 2em 2em 0 0em, 0 3em 0 0.2em,
+     -2em 2em 0 0, -3em 0em 0 -1em, -2em -2em 0 -1em;
+  }
+  62.5% {
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
+     3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 0,
+     -2em 2em 0 0.2em, -3em 0 0 0, -2em -2em 0 -1em;
+  }
+  75% {
+    box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em,
+    3em 0em 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em,
+    -2em 2em 0 0, -3em 0em 0 0.2em, -2em -2em 0 0;
+  }
+  87.5% {
+    box-shadow: 0em -3em 0 0, 2em -2em 0 -1em,
+    3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em,
+    -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
   }
 }

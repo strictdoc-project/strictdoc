@@ -1,60 +1,9 @@
 <div class="main">
   {% include "screens/git/form.jinja" %}
-  {# {% include "screens/git/frame_content.jinja" %} #}
 
   {% if error_message is none and left_revision is not none and right_revision is not none and left_revision|length > 0 and right_revision|length > 0 %}
     <turbo-frame id="diff_result" src="/diff_result?left_revision={{ left_revision_urlencoded }}&right_revision={{ right_revision_urlencoded }}">
-      {# Content will be replaced when /feed has been loaded. #}
-
-      <div class="diff skeleton">
-        <div class="diff_column" left>
-          <div class="diff_inner" left>
-            <div class="item_"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-
-            <div class="item_"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-
-            <div class="item_"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-
-            <div class="item_"></div>
-          </div>
-        </div>
-        <div class="diff_column" right>
-          <div class="diff_inner" right>
-            <div class="item_"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-
-            <div class="item_"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-
-            <div class="item_"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-
-            <div class="item_"></div>
-          </div>
-        </div>
-      </div>
-
+    {% include "screens/git/skeleton.jinja" %}
     </turbo-frame>
   {% endif %}
 

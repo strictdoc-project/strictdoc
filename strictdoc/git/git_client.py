@@ -75,7 +75,7 @@ class GitClient:
             cwd=self.path_to_git_root,
             capture_output=True,
             text=True,
-            check=True,
+            check=False,
         )
         if result.returncode != 0:
             return False

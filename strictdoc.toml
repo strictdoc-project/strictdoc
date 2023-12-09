@@ -8,7 +8,6 @@ features = [
   "TRACEABILITY_SCREEN",
   "DEEP_TRACEABILITY_SCREEN",
   "SEARCH",
-  "DIFF",
 
   # Stable features but not used by StrictDoc.
   # "MATHJAX"
@@ -20,6 +19,8 @@ features = [
   # "REQUIREMENTS_COVERAGE_SCREEN",
   # "REQUIREMENT_TO_SOURCE_TRACEABILITY",
   # "HTML2PDF",
+  # FIXME:
+  "DIFF",
 ]
 
 include_doc_paths = [

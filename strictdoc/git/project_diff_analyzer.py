@@ -15,7 +15,9 @@ from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.git.change import (
+    ChangeType,
     ChangeUnionType,
+    DocumentChange,
     RequirementChange,
     RequirementFieldChange,
     SectionChange,
@@ -142,9 +144,7 @@ class ProjectTreeDiffStats:
 
             other_document_or_none: Optional[
                 Document
-            ] = self.map_rel_paths_to_docs.get(
-                document.meta.input_doc_full_path
-            )
+            ] = self.map_rel_paths_to_docs.get(document.meta.input_doc_rel_path)
             if other_document_or_none is None:
                 return None
             other_document: Document = assert_cast(
@@ -351,16 +351,89 @@ class ChangeStats:
     map_requirements_to_tokens: Dict[Requirement, str] = field(
         default_factory=dict
     )
-    changes: List[ChangeUnionType] = field(default_factory=list)
+    _changes: List[ChangeUnionType] = field(default_factory=list)
+    _change_counters: Dict[ChangeType, int] = field(default_factory=dict)
     map_nodes_to_changes: Dict[Any, ChangeUnionType] = field(
         default_factory=dict
     )
 
+    @property
+    def changes(self):
+        return self._changes
+
     def find_change(self, node: Any):
         return self.map_nodes_to_changes.get(node)
 
+    def get_total_changes(self) -> int:
+        return len(self._changes)
+
+    def get_changes_requirements_changed(self) -> Optional[int]:
+        return self._change_counters.get(ChangeType.REQUIREMENT)
+
+    def get_changes_sections_stats_string(self) -> str:
+        """
+        Example: 2 removed, 1 modified, 2 added
+        """
+        change_components = []
+        removed = self._change_counters.get(ChangeType.SECTION_REMOVED)
+        if removed is not None:
+            change_components.append(f"{removed} removed")
+        modified = self._change_counters.get(ChangeType.SECTION_MODIFIED)
+        if modified is not None:
+            change_components.append(f"{modified} modified")
+        added = self._change_counters.get(ChangeType.SECTION_ADDED)
+        if added is not None:
+            change_components.append(f"{added} added")
+        assert len(change_components) > 0
+        return ", ".join(change_components)
+
+    def get_changes_requirements_stats_string(self) -> str:
+        """
+        Example: 2 removed, 1 modified, 2 added
+        """
+        change_components = []
+        removed = self._change_counters.get(ChangeType.REQUIREMENT_REMOVED)
+        if removed is not None:
+            change_components.append(f"{removed} removed")
+        modified = self._change_counters.get(ChangeType.REQUIREMENT_MODIFIED)
+        if modified is not None:
+            change_components.append(f"{modified} modified")
+        added = self._change_counters.get(ChangeType.REQUIREMENT_ADDED)
+        if added is not None:
+            change_components.append(f"{added} added")
+        assert len(change_components) > 0
+        return ", ".join(change_components)
+
+    def get_changes_documents_modified(self) -> Optional[int]:
+        return self._change_counters.get(ChangeType.DOCUMENT)
+
+    def get_changes_sections_modified(self) -> Optional[int]:
+        return self._change_counters.get(ChangeType.SECTION)
+
     def find_requirement_token(self, requirement: Requirement) -> Optional[str]:
         return self.map_requirements_to_tokens.get(requirement)
+
+    def add_change(self, change: ChangeUnionType):
+        self._changes.append(change)
+        self._change_counters.setdefault(change.change_type, 0)
+        self._change_counters[change.change_type] += 1
+        if change.change_type in (
+            ChangeType.REQUIREMENT_REMOVED,
+            ChangeType.REQUIREMENT_MODIFIED,
+            ChangeType.REQUIREMENT_ADDED,
+        ):
+            self._change_counters.setdefault(ChangeType.REQUIREMENT, 0)
+            self._change_counters[ChangeType.REQUIREMENT] += 1
+        elif change.change_type in (
+            ChangeType.SECTION_REMOVED,
+            ChangeType.SECTION_MODIFIED,
+            ChangeType.SECTION_ADDED,
+        ):
+            self._change_counters.setdefault(ChangeType.SECTION, 0)
+            self._change_counters[ChangeType.SECTION] += 1
+        elif change.change_type in (ChangeType.DOCUMENT_MODIFIED,):
+            self._change_counters.setdefault(ChangeType.DOCUMENT, 0)
+            self._change_counters[ChangeType.DOCUMENT] += 1
 
     @staticmethod
     def create_from_two_indexes(
@@ -391,25 +464,97 @@ class ChangeStats:
         assert side in ("left", "right")
 
         for document in index.document_tree.document_list:
+            """
+            First, take care of the document node itself. Check if the document
+            root-level free text (abstract) has changed.
+            """
+            if document not in change_stats.map_nodes_to_changes:
+                other_document_or_none: Optional[
+                    Document
+                ] = other_stats.map_rel_paths_to_docs.get(
+                    document.meta.input_doc_rel_path
+                )
+
+                free_text_modified: bool = False
+                lhs_colored_free_text_diff: Optional[str] = None
+                rhs_colored_free_text_diff: Optional[str] = None
+
+                if len(document.free_texts) > 0:
+                    free_text = document.free_texts[0]
+                    free_text_md5 = self_stats.get_md5_by_node(free_text)
+                    free_text_modified = not other_stats.contains_free_text_md5(
+                        free_text_md5
+                    )
+                    if (
+                        free_text_modified
+                        and other_document_or_none is not None
+                        and len(other_document_or_none.free_texts) > 0
+                    ):
+                        lhs_colored_free_text_diff = (
+                            other_stats.get_diffed_free_text(document, "left")
+                        )
+                        rhs_colored_free_text_diff = (
+                            self_stats.get_diffed_free_text(
+                                other_document_or_none, "right"
+                            )
+                        )
+                if free_text_modified:
+                    lhs_document: Optional[Document] = None
+                    rhs_document: Optional[Document] = None
+                    if side == "left":
+                        lhs_document = document
+                        rhs_document = other_document_or_none
+                    else:
+                        lhs_document = other_document_or_none
+                        rhs_document = document
+
+                    document_change: DocumentChange = DocumentChange(
+                        matched_uid=None,
+                        lhs_document=lhs_document,
+                        rhs_document=rhs_document,
+                        free_text_modified=free_text_modified,
+                        lhs_colored_free_text_diff=lhs_colored_free_text_diff,
+                        rhs_colored_free_text_diff=rhs_colored_free_text_diff,
+                    )
+                    change_stats.map_nodes_to_changes[
+                        document
+                    ] = document_change
+                    if other_document_or_none is not None:
+                        change_stats.map_nodes_to_changes[
+                            other_document_or_none
+                        ] = document_change
+                    change_stats.add_change(document_change)
+
             document_iterator = DocumentCachingIterator(document)
 
+            """
+            Now iterate over all nodes and collect the diff information.
+            """
             for node in document_iterator.all_content():
                 if isinstance(node, Section):
+                    if node in change_stats.map_nodes_to_changes:
+                        continue
+
                     section_md5 = self_stats.get_md5_by_node(node)
                     section_modified = not other_stats.contains_section_md5(
                         section_md5
                     )
                     if section_modified:
                         matched_uid: Optional[str] = None
+                        other_section_or_none: Optional[Section] = None
                         if node.reserved_uid is not None:
                             assert len(node.reserved_uid) > 0
                             if other_stats.map_uid_to_nodes.get(
                                 node.reserved_uid
                             ):
                                 matched_uid = node.reserved_uid
-
+                                other_section_or_none = (
+                                    other_stats.map_uid_to_nodes[matched_uid]
+                                )
                         free_text_modified = False
-                        colored_free_text_diff: Optional[str] = None
+                        lhs_colored_free_text_diff: Optional[str] = None
+                        rhs_colored_free_text_diff: Optional[str] = None
+
                         if len(node.free_texts) > 0:
                             free_text = node.free_texts[0]
                             free_text_md5 = self_stats.get_md5_by_node(
@@ -420,17 +565,43 @@ class ChangeStats:
                                     free_text_md5
                                 )
                             )
-                            colored_free_text_diff = (
-                                other_stats.get_diffed_free_text(node, side)
-                            )
+                            if other_section_or_none is not None:
+                                if len(other_section_or_none.free_texts) > 0:
+                                    lhs_colored_free_text_diff = (
+                                        other_stats.get_diffed_free_text(
+                                            node, "left"
+                                        )
+                                    )
+
+                                    rhs_colored_free_text_diff = (
+                                        self_stats.get_diffed_free_text(
+                                            other_section_or_none, "right"
+                                        )
+                                    )
+
+                        lhs_section: Optional[Section] = None
+                        rhs_section: Optional[Section] = None
+                        if side == "left":
+                            lhs_section = node
+                            rhs_section = other_section_or_none
+                        else:
+                            lhs_section = other_section_or_none
+                            rhs_section = node
 
                         section_change: SectionChange = SectionChange(
                             matched_uid=matched_uid,
+                            lhs_section=lhs_section,
+                            rhs_section=rhs_section,
                             free_text_modified=free_text_modified,
-                            colored_free_text_diff=colored_free_text_diff,
+                            lhs_colored_free_text_diff=lhs_colored_free_text_diff,
+                            rhs_colored_free_text_diff=rhs_colored_free_text_diff,
                         )
                         change_stats.map_nodes_to_changes[node] = section_change
-                        change_stats.changes.append(section_change)
+                        if other_section_or_none is not None:
+                            change_stats.map_nodes_to_changes[
+                                other_section_or_none
+                            ] = section_change
+                        change_stats.add_change(section_change)
 
                 if isinstance(node, Requirement):
                     """
@@ -464,16 +635,25 @@ class ChangeStats:
                     # we simply record this as a trivial change where everything
                     # is tracked as "deleted" or "new".
                     if other_requirement_or_none is None:
+                        if side == "left":
+                            lhs_requirement = requirement
+                            rhs_requirement = None
+                        else:
+                            lhs_requirement = None
+                            rhs_requirement = requirement
+
                         requirement_change: RequirementChange = (
                             RequirementChange(
                                 requirement_token=None,
                                 field_changes=[],
+                                lhs_requirement=lhs_requirement,
+                                rhs_requirement=rhs_requirement,
                             )
                         )
                         change_stats.map_nodes_to_changes[
                             node
                         ] = requirement_change
-                        change_stats.changes.append(requirement_change)
+                        change_stats.add_change(requirement_change)
                         continue
 
                     """
@@ -600,16 +780,26 @@ class ChangeStats:
                         ):
                             break
 
+                    if side == "left":
+                        lhs_requirement = requirement
+                        rhs_requirement = other_requirement
+                    else:
+                        lhs_requirement = other_requirement
+                        rhs_requirement = requirement
+
                     requirement_change: RequirementChange = RequirementChange(
                         requirement_token=requirement_token,
                         field_changes=field_changes,
+                        lhs_requirement=lhs_requirement,
+                        rhs_requirement=rhs_requirement,
                     )
+
                     change_stats.map_nodes_to_changes[node] = requirement_change
                     if other_requirement_or_none is not None:
                         change_stats.map_nodes_to_changes[
                             other_requirement_or_none
                         ] = requirement_change
-                    change_stats.changes.append(requirement_change)
+                    change_stats.add_change(requirement_change)
 
     @staticmethod
     def create_field_change(
@@ -674,7 +864,7 @@ class ProjectDiffAnalyzer:
         map_nodes_to_hashers: Dict[Any, Any] = {document: hashlib.md5()}
 
         document_tree_stats.map_rel_paths_to_docs[
-            document.meta.input_doc_full_path
+            document.meta.input_doc_rel_path
         ] = document
 
         # Document's top level free text.
@@ -748,18 +938,25 @@ class ProjectDiffAnalyzer:
                     else:
                         # WIP
                         continue
+
+                for reference_ in node.references:
+                    if isinstance(reference_, ParentReqReference):
+                        hasher.update(reference_.ref_uid.encode("utf-8"))
+                        if reference_.role is not None:
+                            hasher.update(reference_.role.encode("utf-8"))
+
                 map_nodes_to_hashers[node] = hasher
             else:
                 raise AssertionError
 
         def recurse(node):
             assert isinstance(node, (Section, Document))
-            for subnode in node.section_contents:
-                if isinstance(subnode, Section):
-                    map_nodes_to_hashers[node].update(recurse(subnode))
-                elif isinstance(subnode, Requirement):
+            for sub_node_ in node.section_contents:
+                if isinstance(sub_node_, Section):
+                    map_nodes_to_hashers[node].update(recurse(sub_node_))
+                elif isinstance(sub_node_, Requirement):
                     node_md5 = (
-                        map_nodes_to_hashers[subnode]
+                        map_nodes_to_hashers[sub_node_]
                         .hexdigest()
                         .encode("utf-8")
                     )

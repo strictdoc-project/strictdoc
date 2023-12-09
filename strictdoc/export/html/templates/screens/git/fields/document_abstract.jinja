@@ -1,5 +1,6 @@
 
 {% set node = document %}
+{% set document_change = change_stats.find_change(document) %}
 
 {% if node.free_texts|length > 0 %}
 {% set free_text = node.free_texts[0] %}
@@ -20,11 +21,15 @@
   <div
     class="sdoc_pre_content"
   >
-    {%- set colored_diff = other_stats.get_diffed_free_text(node, side) -%}
-    {%- if colored_diff is not none -%}
-      {{ colored_diff }}
+    {%- if document_change is not none -%}
+      {%- set colored_diff = document_change.get_colored_free_text_diff(side) -%}
+      {%- if colored_diff is not none -%}
+        {{ colored_diff }}
+      {%- else -%}
+        {{ free_text.get_parts_as_text_escaped() }}
+      {%- endif -%}
     {%- else -%}
-      {{ free_text.get_parts_as_text_escaped() }}
+        {{ free_text.get_parts_as_text_escaped() }}
     {%- endif -%}
   </div>
 </details>

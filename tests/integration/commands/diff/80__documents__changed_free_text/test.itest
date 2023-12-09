@@ -1,0 +1,11 @@
+RUN: %strictdoc diff %S/lhs %S/rhs
+
+RUN: cat %S/Output/changelog.html | filecheck %s --dump-input=fail --check-prefix=CHECK-CHANGELOG
+
+CHECK-CHANGELOG:1 nodes modified:
+CHECK-CHANGELOG:1 documents.
+CHECK-CHANGELOG:No sections were modified.
+CHECK-CHANGELOG:No requirements were modified.
+NOTE: This ensures that red-green diff is explained correctly.
+CHECK-CHANGELOG:<span class="lambda_red">This</span><span> is a</span><span> free text.
+CHECK-CHANGELOG-NEXT:</span></div>

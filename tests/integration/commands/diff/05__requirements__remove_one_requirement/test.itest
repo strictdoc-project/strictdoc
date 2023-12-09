@@ -1,0 +1,1 @@
+RUN: %strictdoc diff %S/lhs %S/rhs

@@ -1,0 +1,8 @@
+RUN: %strictdoc diff %S/lhs %S/rhs
+
+RUN: cat %S/Output/changelog.html | filecheck %s --dump-input=fail --check-prefix=CHECK-CHANGELOG
+
+CHECK-CHANGELOG:1 nodes modified:
+CHECK-CHANGELOG:No sections were modified.
+CHECK-CHANGELOG:1 requirements
+CHECK-CHANGELOG:(1 added).

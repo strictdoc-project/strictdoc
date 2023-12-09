@@ -58,7 +58,7 @@
   </a>
 {%- endif -%}
 
-  {%- if project_config.is_activated_diff() -%}
+{%- if project_config.is_running_on_server and project_config.is_activated_diff() -%}
   <a
     data-link="diff"
     class="nav_button"

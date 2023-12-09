@@ -30,12 +30,21 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
     def get_git_diff(
         left_revision: Optional[str] = None,
         right_revision: Optional[str] = None,
+        tab: Optional[str] = None,
     ):
         if not project_config.is_activated_diff():
             return Response(
                 content="The DIFF feature is not activated in the project config.",
                 status_code=HTTP_STATUS_PRECONDITION_FAILED,
             )
+        if tab is not None:
+            if tab not in ("diff", "changelog"):
+                return Response(
+                    content="The tab= parameter must be either 'diff' or 'changelog'.",
+                    status_code=HTTP_STATUS_PRECONDITION_FAILED,
+                )
+        else:
+            tab = "diff"
 
         error_message: Optional[str] = None
 
@@ -100,6 +109,7 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             right_revision=right_revision,
             right_revision_urlencoded=right_revision_urlencoded,
             error_message=error_message,
+            tab=tab,
         )
         status_code = 200 if error_message is None else 422
         return HTMLResponse(content=output, status_code=status_code)
@@ -108,12 +118,19 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
     def get_git_diff_result(
         left_revision: Optional[str] = None,
         right_revision: Optional[str] = None,
+        tab: Optional[str] = None,
     ):
         if not project_config.is_activated_diff():
             return Response(
                 content="The DIFF feature is not activated in the project config.",
                 status_code=HTTP_STATUS_PRECONDITION_FAILED,
             )
+        if tab is not None and tab not in ("diff", "changelog"):
+            return Response(
+                content="The tab= parameter must be either 'diff' or 'changelog'.",
+                status_code=HTTP_STATUS_PRECONDITION_FAILED,
+            )
+
         left_revision_resolved = None
         right_revision_resolved = None
 
@@ -157,8 +174,13 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             # diff page.
             pass
 
+        path_to_template = (
+            "screens/git/frame_changelog_result.jinja"
+            if tab == "changelog"
+            else "screens/git/frame_result.jinja"
+        )
         template = html_templates.jinja_environment().get_template(
-            "screens/git/frame_result.jinja"
+            path_to_template
         )
 
         link_renderer = LinkRenderer(
@@ -222,6 +244,7 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
 
         output = template.render(
             project_config=project_config,
+            change_container=change_container,
             document_tree_lhs=change_container.traceability_index_lhs.document_tree,
             document_tree_rhs=change_container.traceability_index_rhs.document_tree,
             documents_iterator_lhs=change_container.documents_iterator_lhs,

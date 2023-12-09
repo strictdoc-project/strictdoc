@@ -28,7 +28,7 @@
       {%- endwith -%}
       <div class="sdoc_pre_content">
         {%- if section_change is not none -%}
-          {%- set colored_diff = section_change.colored_free_text_diff -%}
+          {%- set colored_diff = section_change.get_colored_free_text_diff(side) -%}
           {%- if colored_diff is not none -%}
             {{ colored_diff }}
           {%- else -%}

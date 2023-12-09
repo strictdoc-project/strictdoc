@@ -3,7 +3,11 @@
 <div class="diff_node_fields">
   {%- for requirement_field_triple_ in requirement.enumerate_all_fields() -%}
     {% if requirement_change is not none -%}
-    {%- set field_change = requirement_change.get_field_change(requirement_field_triple_[0]) -%}
+      {% if requirement_change.requirement_token is not none -%}
+        {%- set field_change = requirement_change.get_field_change(requirement_field_triple_[0]) -%}
+      {% else %}
+        {%- set field_change = true -%}
+      {% endif %}
     {% else %}
     {%- set field_change = none -%}
     {% endif %}

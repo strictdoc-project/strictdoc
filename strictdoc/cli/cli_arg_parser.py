@@ -176,6 +176,12 @@ class DumpGrammarCommandConfig:
         self.output_file = output_file
 
 
+class DiffCommandConfig:
+    def __init__(self, path_to_lhs_tree: str, path_to_rhs_tree: str):
+        self.path_to_lhs_tree: str = path_to_lhs_tree
+        self.path_to_rhs_tree: str = path_to_rhs_tree
+
+
 class SDocArgsParser:
     def __init__(self, args):
         self.args = args
@@ -215,6 +221,10 @@ class SDocArgsParser:
     @property
     def is_version_command(self):
         return self.args.command == "version"
+
+    @property
+    def is_diff_command(self):
+        return self.args.command == "diff"
 
     @property
     def is_manage_autouid_command(self):
@@ -281,6 +291,12 @@ class SDocArgsParser:
 
     def get_dump_grammar_config(self) -> DumpGrammarCommandConfig:
         return DumpGrammarCommandConfig(output_file=self.args.output_file)
+
+    def get_diff_config(self) -> DiffCommandConfig:
+        return DiffCommandConfig(
+            path_to_lhs_tree=self.args.path_to_lhs_tree,
+            path_to_rhs_tree=self.args.path_to_rhs_tree,
+        )
 
 
 def create_sdoc_args_parser(testing_args=None) -> SDocArgsParser:

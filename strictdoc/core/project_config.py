@@ -240,10 +240,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         return ProjectFeature.HTML2PDF in self.project_features
 
     def is_activated_diff(self) -> bool:
-        return (
-            self.is_running_on_server
-            and ProjectFeature.DIFF in self.project_features
-        )
+        return ProjectFeature.DIFF in self.project_features
 
     def is_activated_reqif(self) -> bool:
         return ProjectFeature.REQIF in self.project_features

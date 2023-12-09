@@ -14,7 +14,12 @@ from strictdoc.backend.sdoc.models.requirement import (
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
-from strictdoc.git.change import SectionChange
+from strictdoc.git.change import (
+    ChangeUnionType,
+    RequirementChange,
+    RequirementFieldChange,
+    SectionChange,
+)
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.diff import get_colored_diff_string, similar
 from strictdoc.helpers.md5 import get_md5
@@ -104,6 +109,29 @@ class ProjectTreeDiffStats:
             if field_.field_value_multiline == field_value:
                 return True
         return False
+
+    def get_identical_requirement_field(
+        self, requirement: Requirement, field_name: str, field_value: str
+    ) -> Optional[RequirementField]:
+        assert isinstance(field_value, str)
+        other_requirement: Optional[Requirement] = self.find_requirement(
+            requirement
+        )
+        if other_requirement is None:
+            return None
+
+        if field_name not in other_requirement.ordered_fields_lookup:
+            return None
+
+        other_requirement_fields = other_requirement.ordered_fields_lookup[
+            field_name
+        ]
+        for field_ in other_requirement_fields:
+            if field_.field_value == field_value:
+                return field_
+            if field_.field_value_multiline == field_value:
+                return field_
+        return None
 
     def get_diffed_free_text(self, node: Union[Section, Document], side: str):
         assert isinstance(node, (Section, Document))
@@ -323,8 +351,8 @@ class ChangeStats:
     map_requirements_to_tokens: Dict[Requirement, str] = field(
         default_factory=dict
     )
-    changes: List[Union[SectionChange]] = field(default_factory=list)
-    map_nodes_to_changes: Dict[Any, Union[SectionChange]] = field(
+    changes: List[ChangeUnionType] = field(default_factory=list)
+    map_nodes_to_changes: Dict[Any, ChangeUnionType] = field(
         default_factory=dict
     )
 
@@ -405,27 +433,223 @@ class ChangeStats:
                         change_stats.changes.append(section_change)
 
                 if isinstance(node, Requirement):
+                    """
+                    Step: We check if a requirement was modified at all, or if
+                    it has already been checked before. Skipping the requirement
+                    if there is nothing to do.
+                    """
                     # FIXME: Is this 100% valid?
+
+                    if node in change_stats.map_nodes_to_changes:
+                        continue
+
                     if node in change_stats.map_requirements_to_tokens:
                         continue
 
                     requirement: Requirement = assert_cast(node, Requirement)
+                    requirement_md5 = self_stats.get_md5_by_node(requirement)
+                    requirement_modified = (
+                        not other_stats.contains_requirement_md5(
+                            requirement_md5
+                        )
+                    )
+                    if not requirement_modified:
+                        continue
+
                     other_requirement_or_none: Optional[
                         Requirement
                     ] = other_stats.find_requirement(requirement)
+
+                    # If there is no other requirement to compare with,
+                    # we simply record this as a trivial change where everything
+                    # is tracked as "deleted" or "new".
                     if other_requirement_or_none is None:
+                        requirement_change: RequirementChange = (
+                            RequirementChange(
+                                requirement_token=None,
+                                field_changes=[],
+                            )
+                        )
+                        change_stats.map_nodes_to_changes[
+                            node
+                        ] = requirement_change
+                        change_stats.changes.append(requirement_change)
                         continue
 
+                    """
+                    Step: Starting from here, we will be looking at the
+                    difference between this and the other requirement.
+                    """
                     other_requirement: Requirement = other_requirement_or_none
 
-                    requirement_token: str = MID.create().get_string_value()
+                    field_changes: List[RequirementFieldChange] = []
 
+                    """
+                    Step: Create a requirement token that is used by JS to match
+                    the LHS nodes with RHS nodes.
+                    """
+                    requirement_token: str = MID.create().get_string_value()
                     change_stats.map_requirements_to_tokens[
                         requirement
                     ] = requirement_token
                     change_stats.map_requirements_to_tokens[
                         other_requirement
                     ] = requirement_token
+
+                    """
+                    Iterate over requirement fields.
+                    """
+                    requirement_fields_iter = iter(
+                        requirement.enumerate_all_fields()
+                    )
+                    other_requirement_fields_iter = iter(
+                        other_requirement.enumerate_all_fields()
+                    )
+
+                    field_checked_so_far: Set[RequirementField] = set()
+                    while True:
+                        requirement_field_tripple = next(
+                            requirement_fields_iter, None
+                        )
+                        if (
+                            requirement_field_tripple is not None
+                            and requirement_field_tripple[0]
+                            not in field_checked_so_far
+                        ):
+                            requirement_field_change = ChangeStats.create_field_change(
+                                self_stats=self_stats,
+                                other_stats=other_stats,
+                                requirement=requirement,
+                                requirement_field=requirement_field_tripple[0],
+                                other_requirement=other_requirement,
+                                requirement_field_name=requirement_field_tripple[
+                                    1
+                                ],
+                                requirement_field_value=requirement_field_tripple[
+                                    2
+                                ],
+                            )
+                            if requirement_field_change is not None:
+                                field_changes.append(requirement_field_change)
+                                if (
+                                    requirement_field_change.lhs_field
+                                    is not None
+                                ):
+                                    field_checked_so_far.add(
+                                        requirement_field_change.lhs_field
+                                    )
+                                if (
+                                    requirement_field_change.rhs_field
+                                    is not None
+                                ):
+                                    field_checked_so_far.add(
+                                        requirement_field_change.rhs_field
+                                    )
+                            else:
+                                field_checked_so_far.add(
+                                    requirement_field_tripple[0]
+                                )
+
+                        other_requirement_field_tripple = next(
+                            other_requirement_fields_iter, None
+                        )
+                        if (
+                            other_requirement_field_tripple is not None
+                            and other_requirement_field_tripple[0]
+                            not in field_checked_so_far
+                        ):
+                            requirement_field_change = ChangeStats.create_field_change(
+                                self_stats=other_stats,
+                                other_stats=self_stats,
+                                requirement=other_requirement,
+                                requirement_field=other_requirement_field_tripple[
+                                    0
+                                ],
+                                other_requirement=requirement,
+                                requirement_field_name=other_requirement_field_tripple[
+                                    1
+                                ],
+                                requirement_field_value=other_requirement_field_tripple[
+                                    2
+                                ],
+                            )
+                            if requirement_field_change is not None:
+                                field_changes.append(requirement_field_change)
+                                if (
+                                    requirement_field_change.lhs_field
+                                    is not None
+                                ):
+                                    field_checked_so_far.add(
+                                        requirement_field_change.lhs_field
+                                    )
+                                if (
+                                    requirement_field_change.rhs_field
+                                    is not None
+                                ):
+                                    field_checked_so_far.add(
+                                        requirement_field_change.rhs_field
+                                    )
+                            else:
+                                field_checked_so_far.add(
+                                    other_requirement_field_tripple[0]
+                                )
+
+                        if (
+                            requirement_field_tripple is None
+                            and other_requirement_field_tripple is None
+                        ):
+                            break
+
+                    requirement_change: RequirementChange = RequirementChange(
+                        requirement_token=requirement_token,
+                        field_changes=field_changes,
+                    )
+                    change_stats.map_nodes_to_changes[node] = requirement_change
+                    if other_requirement_or_none is not None:
+                        change_stats.map_nodes_to_changes[
+                            other_requirement_or_none
+                        ] = requirement_change
+                    change_stats.changes.append(requirement_change)
+
+    @staticmethod
+    def create_field_change(
+        *,
+        self_stats: ProjectTreeDiffStats,
+        other_stats: ProjectTreeDiffStats,
+        requirement: Requirement,
+        requirement_field: RequirementField,
+        other_requirement: Requirement,
+        requirement_field_name: str,
+        requirement_field_value: str,
+    ) -> Optional[RequirementFieldChange]:
+        assert isinstance(requirement, Requirement)
+        assert isinstance(requirement_field, RequirementField)
+        assert isinstance(other_requirement, Requirement)
+
+        other_requirement_field = other_stats.get_identical_requirement_field(
+            requirement, requirement_field_name, requirement_field_value
+        )
+        # If there is an identical field, it means the field
+        # is not modified. Nothing to do.
+        if other_requirement_field is not None:
+            return None
+
+        left_diff = other_stats.get_diffed_requirement_field(
+            requirement, requirement_field_name, requirement_field_value, "left"
+        )
+        right_diff = self_stats.get_diffed_requirement_field(
+            other_requirement,
+            requirement_field_name,
+            requirement_field_value,
+            "right",
+        )
+        return RequirementFieldChange(
+            field_name=requirement_field_name,
+            lhs_field=requirement_field,
+            rhs_field=other_requirement_field,
+            left_diff=left_diff,
+            right_diff=right_diff,
+        )
 
 
 class ProjectDiffAnalyzer:

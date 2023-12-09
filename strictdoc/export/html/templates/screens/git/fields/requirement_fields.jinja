@@ -1,20 +1,26 @@
+{% assert requirement_change is defined %}
+
 <div class="diff_node_fields">
-  {%- for meta_field in requirement.enumerate_all_fields() -%}
-    {%- set field_modified = requirement_modified and not other_stats.contains_requirement_field(requirement, meta_field[0], meta_field[1]) -%}
+  {%- for requirement_field_triple_ in requirement.enumerate_all_fields() -%}
+    {% if requirement_change is not none -%}
+    {%- set field_change = requirement_change.get_field_change(requirement_field_triple_[0]) -%}
+    {% else %}
+    {%- set field_change = none -%}
+    {% endif %}
     <div
       class="diff_node_field"
-      {% if field_modified %}
+      {% if field_change is not none %}
         modified="{{ side }}"
       {% endif %}
     >
-      {%- with badge_text = meta_field[0] -%}
+      {%- with badge_text = requirement_field_triple_[1] -%}
         {%- include "components/badge/index.jinja" -%}
       {%- endwith -%}
       <span class="sdoc_pre_content">
-      {%- if field_modified -%}
-        {{ other_stats.get_diffed_requirement_field(requirement, meta_field[0], meta_field[1], side) }}
+      {%- if field_change is not none -%}
+        {{ other_stats.get_diffed_requirement_field(requirement, requirement_field_triple_[1], requirement_field_triple_[2], side) }}
       {%- else -%}
-        {{ meta_field[1] }}
+        {{ requirement_field_triple_[2] }}
       {%- endif -%}
       </span>
     </div>
@@ -25,7 +31,7 @@
       {# Relations are rendered one field at a time with its own label, not a group of fields: #}
       <div
         class="diff_node_field"
-        {% if requirement_modified and not other_stats.contains_requirement_relations(requirement, parent_requirement_.reserved_uid, relation_role_) %}
+        {% if requirement_change is not none and not other_stats.contains_requirement_relations(requirement, parent_requirement_.reserved_uid, relation_role_) %}
           modified="{{ side }}"
         {% endif %}
       >

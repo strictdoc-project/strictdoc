@@ -1,9 +1,8 @@
-{% set requirement_md5 = self_stats.get_md5_by_node(requirement) %}
-{% set requirement_modified = not other_stats.contains_requirement_md5(requirement_md5) %}
+{% set requirement_change = change_stats.find_change(requirement) %}
 
 <details
   class="diff_node"
-  {% if requirement_modified %}
+  {% if requirement_change is not none %}
     modified="{{ side }}"
   {% endif %}
 >
@@ -19,8 +18,8 @@
         {{ requirement.reserved_title }}
       </span>
     {%- endif -%}
-    {% if requirement_modified %}
-      {% set requirement_token = change_stats.find_requirement_token(requirement) %}
+    {% if requirement_change is not none %}
+      {% set requirement_token = requirement_change.requirement_token %}
       {% if requirement_token is not none %}
         {%- with uid=requirement_token -%}
           {%- include "screens/git/sync/button.jinja" -%}

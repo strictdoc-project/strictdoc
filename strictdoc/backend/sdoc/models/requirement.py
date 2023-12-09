@@ -405,7 +405,7 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes, too-ma
                 if field.field_value
                 else field.field_value_multiline
             )
-            yield field.field_name, meta_field_value
+            yield field, field.field_name, meta_field_value
 
     def enumerate_meta_fields(
         self, skip_single_lines=False, skip_multi_lines=False

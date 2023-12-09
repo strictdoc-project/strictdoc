@@ -14,6 +14,7 @@ from strictdoc.backend.sdoc.models.requirement import (
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.git.change import SectionChange
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.diff import get_colored_diff_string, similar
 from strictdoc.helpers.md5 import get_md5
@@ -188,14 +189,7 @@ class ProjectTreeDiffStats:
                                 "", section_free_text_parts, side
                             )
                 else:
-                    if side == "left":
-                        return get_colored_diff_string(
-                            section_free_text_parts, "", side
-                        )
-                    else:
-                        return get_colored_diff_string(
-                            "", section_free_text_parts, side
-                        )
+                    return None
 
             # Section does not have a UID. We can still try to find a section
             # with the same title if it still exists in the same parent
@@ -329,6 +323,13 @@ class ChangeStats:
     map_requirements_to_tokens: Dict[Requirement, str] = field(
         default_factory=dict
     )
+    changes: List[Union[SectionChange]] = field(default_factory=list)
+    map_nodes_to_changes: Dict[Any, Union[SectionChange]] = field(
+        default_factory=dict
+    )
+
+    def find_change(self, node: Any):
+        return self.map_nodes_to_changes.get(node)
 
     def find_requirement_token(self, requirement: Requirement) -> Optional[str]:
         return self.map_requirements_to_tokens.get(requirement)
@@ -342,21 +343,67 @@ class ChangeStats:
     ):
         stats = ChangeStats()
 
-        ChangeStats._iterate_one_index(lhs_index, rhs_stats, stats)
-        ChangeStats._iterate_one_index(rhs_index, lhs_stats, stats)
+        ChangeStats._iterate_one_index(
+            lhs_index, lhs_stats, rhs_stats, stats, "left"
+        )
+        ChangeStats._iterate_one_index(
+            rhs_index, rhs_stats, lhs_stats, stats, "right"
+        )
 
         return stats
 
     @staticmethod
     def _iterate_one_index(
         index: TraceabilityIndex,
-        stats: ProjectTreeDiffStats,
+        self_stats: ProjectTreeDiffStats,
+        other_stats: ProjectTreeDiffStats,
         change_stats: "ChangeStats",
+        side: str,
     ):
+        assert side in ("left", "right")
+
         for document in index.document_tree.document_list:
             document_iterator = DocumentCachingIterator(document)
 
             for node in document_iterator.all_content():
+                if isinstance(node, Section):
+                    section_md5 = self_stats.get_md5_by_node(node)
+                    section_modified = not other_stats.contains_section_md5(
+                        section_md5
+                    )
+                    if section_modified:
+                        matched_uid: Optional[str] = None
+                        if node.reserved_uid is not None:
+                            assert len(node.reserved_uid) > 0
+                            if other_stats.map_uid_to_nodes.get(
+                                node.reserved_uid
+                            ):
+                                matched_uid = node.reserved_uid
+
+                        free_text_modified = False
+                        colored_free_text_diff: Optional[str] = None
+                        if len(node.free_texts) > 0:
+                            free_text = node.free_texts[0]
+                            free_text_md5 = self_stats.get_md5_by_node(
+                                free_text
+                            )
+                            free_text_modified = (
+                                not other_stats.contains_free_text_md5(
+                                    free_text_md5
+                                )
+                            )
+                            colored_free_text_diff = (
+                                other_stats.get_diffed_free_text(node, side)
+                            )
+
+                        section_change: SectionChange = SectionChange(
+                            matched_uid=matched_uid,
+                            free_text_modified=free_text_modified,
+                            colored_free_text_diff=colored_free_text_diff,
+                        )
+                        change_stats.map_nodes_to_changes[node] = section_change
+                        change_stats.changes.append(section_change)
+
                 if isinstance(node, Requirement):
                     # FIXME: Is this 100% valid?
                     if node in change_stats.map_requirements_to_tokens:
@@ -365,7 +412,7 @@ class ChangeStats:
                     requirement: Requirement = assert_cast(node, Requirement)
                     other_requirement_or_none: Optional[
                         Requirement
-                    ] = stats.find_requirement(requirement)
+                    ] = other_stats.find_requirement(requirement)
                     if other_requirement_or_none is None:
                         continue
 
@@ -379,8 +426,6 @@ class ChangeStats:
                     change_stats.map_requirements_to_tokens[
                         other_requirement
                     ] = requirement_token
-
-        return stats
 
 
 class ProjectDiffAnalyzer:

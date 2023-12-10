@@ -39,7 +39,7 @@ class PassthroughAction:
             output = writer.write(document)
 
             path_to_output_file_dir = os.path.join(
-                output_dir, document.meta.input_doc_rel_path
+                output_dir, document.meta.input_doc_dir_rel_path
             )
             Path(path_to_output_file_dir).mkdir(parents=True, exist_ok=True)
             path_to_output_file = os.path.join(

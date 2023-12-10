@@ -7,6 +7,7 @@ from strictdoc.backend.sdoc.reader import SDReader
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_tree import (
+    File,
     FileFinder,
     FileTree,
     PathFinder,
@@ -84,20 +85,20 @@ class DocumentFinder:
             map_docs_by_paths[input_doc_full_path] = document
             document_list.append(document)
 
+        doc_file: File
         for _, doc_file, file_tree_mount_folder in file_tree_list:
             input_doc_full_path = doc_file.get_full_path()
             document = map_docs_by_paths[input_doc_full_path]
             assert isinstance(document, Document)
 
             doc_relative_path_folder = os.path.dirname(doc_file.rel_path)
-
             output_document_dir_rel_path = (
-                f"{file_tree_mount_folder}/{doc_relative_path_folder}"
+                os.path.join(file_tree_mount_folder, doc_relative_path_folder)
                 if doc_relative_path_folder
                 else file_tree_mount_folder
             )
 
-            document_filename = os.path.basename(input_doc_full_path)
+            document_filename = doc_file.file_name
             document_filename_base = os.path.splitext(document_filename)[0]
 
             output_document_dir_full_path = (
@@ -107,13 +108,14 @@ class DocumentFinder:
             document_meta = DocumentMeta(
                 doc_file.level,
                 file_tree_mount_folder,
+                document_filename,
                 document_filename_base,
                 input_doc_full_path,
+                doc_file.rel_path,
                 doc_relative_path_folder,
                 output_document_dir_full_path,
                 output_document_dir_rel_path,
             )
-
             document.assign_meta(document_meta)
 
             output_document_rel_path = os.path.join(

@@ -1669,6 +1669,8 @@ def create_main_router(
         full_input_path = os.path.abspath(project_config.export_input_paths[0])
         doc_full_path = os.path.join(full_input_path, document_path)
         doc_full_path_dir = os.path.dirname(doc_full_path)
+        document_file_name = os.path.basename(doc_full_path)
+        input_doc_dir_rel_path = os.path.dirname(document_path)
 
         Path(doc_full_path_dir).mkdir(parents=True, exist_ok=True)
         document = Document(
@@ -1679,12 +1681,15 @@ def create_main_router(
             free_texts=[],
             section_contents=[],
         )
+        # FIXME: Fill in the document meta correctly.
         document.meta = DocumentMeta(
             level=0,
             file_tree_mount_folder=None,
+            document_filename=document_file_name,
             document_filename_base=None,
             input_doc_full_path=doc_full_path,
-            input_doc_dir_rel_path=document_path,
+            input_doc_rel_path=document_path,
+            input_doc_dir_rel_path=input_doc_dir_rel_path,
             output_document_dir_full_path=None,
             output_document_dir_rel_path=None,
         )
@@ -2270,12 +2275,15 @@ def create_main_router(
             doc_full_path_dir = os.path.dirname(doc_full_path)
             Path(doc_full_path_dir).mkdir(parents=True, exist_ok=True)
 
+            # FIXME: Fill in the meta information correctly.
             document.meta = DocumentMeta(
                 level=0,
                 file_tree_mount_folder=None,
+                document_filename=document_path,
                 document_filename_base=None,
                 input_doc_full_path=doc_full_path,
-                input_doc_dir_rel_path=document_path,
+                input_doc_rel_path=document_path,
+                input_doc_dir_rel_path=os.path.dirname(document_path),
                 output_document_dir_full_path=None,
                 output_document_dir_rel_path=None,
             )

@@ -8,17 +8,36 @@ class DocumentMeta:
         self,
         level,
         file_tree_mount_folder,
+        document_filename: str,
         document_filename_base,
         input_doc_full_path,
+        input_doc_rel_path: str,
         input_doc_dir_rel_path,
         output_document_dir_full_path,
         output_document_dir_rel_path,
     ):
+        """
+        Example explaining meta data stored by this class:
+
+        DocumentMeta(
+            level = 1,
+            file_tree_mount_folder = "doc_project",
+            document_filename = "sample.sdoc",
+            document_filename_base = "sample",
+            input_doc_full_path = "/tmp/doc_project/child.sdoc",
+            input_doc_rel_path = "child.sdoc",
+            input_doc_dir_rel_path = "",
+            output_document_dir_full_path = "/tmp/doc_project/output/html/doc_project",
+            output_document_dir_rel_path = "doc_project"
+        )
+        """
         self.level = level
         self.file_tree_mount_folder = file_tree_mount_folder
+        self.document_filename: str = document_filename
         self.document_filename_base = document_filename_base
         self.input_doc_full_path = input_doc_full_path
-        self.input_doc_rel_path = input_doc_dir_rel_path
+        self.input_doc_rel_path: str = input_doc_rel_path
+        self.input_doc_dir_rel_path = input_doc_dir_rel_path
         self.output_document_dir_full_path = output_document_dir_full_path
         self.output_document_dir_rel_path = output_document_dir_rel_path
 

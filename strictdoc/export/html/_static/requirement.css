@@ -95,7 +95,10 @@ sdoc-requirement-field-label {
   text-transform: uppercase;
   color: var(--requirement-label-color);
 
-  word-break: break-word;
+  /* @mettta and @stanislaw are commenting this out because the REQUIREMENT's field names
+     were split apart, even though there was enough screen width
+    word-break: break-word;
+  */
   overflow-wrap: break-word;
 }
 

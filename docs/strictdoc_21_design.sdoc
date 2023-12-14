@@ -155,6 +155,12 @@ The fragment of the crash:
 
     sl = self._semlock = _multiprocessing.SemLock(
     OSError: [Errno 28] No space left on device
+
+The existing workaround for this problem is to increase a number of semaphores in the macOS config:
+
+.. code-block:: text
+
+    sudo sysctl -w kern.posix.sem.max=20000
 <<<
 REFS:
 - TYPE: File

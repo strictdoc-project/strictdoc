@@ -111,7 +111,6 @@ class SDReader:
             "strictdoc_cache",
             file_name,
         )
-
         if os.path.isfile(path_to_cached_file):
             with open(path_to_cached_file, "rb") as cache_file:
                 sdoc_pickled = cache_file.read()

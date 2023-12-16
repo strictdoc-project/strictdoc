@@ -2,7 +2,7 @@ import glob
 import os
 import sys
 from collections import defaultdict
-from typing import Dict, Iterator, List, Optional, Set, Union
+from typing import Any, Dict, Iterator, List, Optional, Set, Union
 
 from textx import TextXSyntaxError
 
@@ -45,6 +45,7 @@ from strictdoc.core.tree_cycle_detector import TreeCycleDetector
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.file_modification_time import get_file_modification_time
+from strictdoc.helpers.mid import MID
 from strictdoc.helpers.timing import timing_decorator
 
 
@@ -196,7 +197,7 @@ class TraceabilityIndexBuilder:
             Document, Set[Document]
         ] = defaultdict(set)
         d_07_file_traceability_index = FileTraceabilityIndex()
-        d_11_map_id_to_node = {}
+        d_11_map_id_to_node: Dict[MID, Any] = {}
 
         graph_database = GraphDatabase()
         graph_database.remove_node_validation = RemoveNodeValidation()
@@ -246,14 +247,29 @@ class TraceabilityIndexBuilder:
                             node=part,
                         )
 
-            d_11_map_id_to_node[document.mid] = document
+            if document.reserved_mid in d_11_map_id_to_node:
+                raise StrictDocException(
+                    "TraceabilityIndex: "
+                    "the document MID is not unique: "
+                    f"{document.reserved_mid.get_string_value()}. "
+                    "All machine identifiers (MID) must be unique values."
+                )
+
+            d_11_map_id_to_node[document.reserved_mid] = document
 
             document_iterator = DocumentCachingIterator(document)
             d_01_document_iterators[document] = document_iterator
             if document.title not in d_03_map_doc_titles_to_tag_lists:
                 d_03_map_doc_titles_to_tag_lists[document.title] = {}
             for node in document_iterator.all_content():
-                d_11_map_id_to_node[node.mid] = node
+                if node.reserved_mid in d_11_map_id_to_node:
+                    raise StrictDocException(
+                        "TraceabilityIndex: "
+                        "the node MID is not unique: "
+                        f"{node.reserved_mid.get_string_value()}. "
+                        f"All machine identifiers (MID) must be unique values."
+                    )
+                d_11_map_id_to_node[node.reserved_mid] = node
 
                 if node.is_section:
                     for free_text in node.free_texts:

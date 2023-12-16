@@ -96,7 +96,7 @@ class SectionFormObject(ErrorObject):
         )
         statement_escaped_field_value = html.escape(statement_field_value)
         return SectionFormObject(
-            section_mid=section.mid.get_string_value(),
+            section_mid=section.reserved_mid.get_string_value(),
             section_uid_field=RequirementFormField(
                 field_mid=MID.create().get_string_value(),
                 field_name="UID",

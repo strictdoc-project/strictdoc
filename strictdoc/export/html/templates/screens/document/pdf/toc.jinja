@@ -1,7 +1,7 @@
 <div class="pdf-toc" data-testid="pdf-toc-list">
     {%- for item in document_iterator.table_of_contents() -%}
 
-      <div class="pdf-toc-row" data-nodeid="{{ item.mid.get_string_value() }}">
+      <div class="pdf-toc-row" data-nodeid="{{ item.reserved_mid.get_string_value() }}">
 
           <span class="pdf-toc-cell">
             {{ item.context.title_number_string if item.context.title_number_string else "&nbsp;" * (item.ng_level * 2 - 1) }}

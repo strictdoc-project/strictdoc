@@ -18,7 +18,9 @@ class Anchor:
         self.title: str = title if has_title else value
         self.has_title = has_title
 
+        # FIXME: Remove either mid or reserved_mid.
         self.mid: MID = MID.create()
+        self.reserved_mid: MID = self.mid
 
     @property
     def document(self):

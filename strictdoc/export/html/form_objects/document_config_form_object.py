@@ -116,7 +116,7 @@ class DocumentConfigFormObject(ErrorObject):
             document_freetext_escaped = html.escape(document_freetext)
 
         return DocumentConfigFormObject(
-            document_mid=document.mid.get_string_value(),
+            document_mid=document.reserved_mid.get_string_value(),
             document_title=document.title,
             document_uid=document.config.uid,
             document_version=document.config.version,

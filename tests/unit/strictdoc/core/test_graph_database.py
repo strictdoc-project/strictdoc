@@ -31,14 +31,14 @@ def test_02():
     class Node:
         def __init__(self, title):
             self.title = title
-            self.mid = MID.create()
+            self.reserved_mid = MID.create()
 
     anchor = Node("anchor")
     inline_link = Node("inline_link")
 
     graph_database = GraphDatabase()
-    graph_database.add_node_by_mid(anchor.mid, None, anchor)
-    graph_database.add_node_by_mid(inline_link.mid, None, inline_link)
+    graph_database.add_node_by_mid(anchor.reserved_mid, None, anchor)
+    graph_database.add_node_by_mid(inline_link.reserved_mid, None, inline_link)
 
     graph_database.add_link(
         link_type=Relation.INLINE_LINK_TO_ANCHOR,
@@ -52,4 +52,4 @@ def test_02():
         remove_lhs_node=False,
         remove_rhs_node=False,
     )
-    graph_database.remove_node_by_mid(anchor.mid)
+    graph_database.remove_node_by_mid(anchor.reserved_mid)

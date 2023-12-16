@@ -690,7 +690,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             return
 
         if existing_node_mid is not None:
-            if existing_node_with_uid.mid == existing_node_mid:
+            if existing_node_with_uid.reserved_mid == existing_node_mid:
                 return
 
         raise SingleValidationError(

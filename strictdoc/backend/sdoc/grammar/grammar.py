@@ -32,6 +32,7 @@ FreeTextContainer[noskipws]:
 DOCUMENT_GRAMMAR = rf"""
 Document[noskipws]:
   '[DOCUMENT]' '\n'
+  ('MID: ' mid = SingleLineString '\n')?
   'TITLE: ' title = SingleLineString '\n'
   (config = DocumentConfig)?
   ('\n' grammar = DocumentGrammar)?
@@ -150,6 +151,7 @@ DocumentConfig[noskipws]:
   ('REQ_PREFIX: ' requirement_prefix = SingleLineString '\n')?
   ('ROOT: ' (root = BooleanChoice) '\n')?
   ('OPTIONS:' '\n'
+    ('  ENABLE_MID: ' (enable_mid = BooleanChoice) '\n')?
     ('  MARKUP: ' (markup = MarkupChoice) '\n')?
     ('  AUTO_LEVELS: ' (auto_levels = AutoLevelsChoice) '\n')?
     ('  REQUIREMENT_STYLE: ' (requirement_style = RequirementStyleChoice) '\n')?
@@ -188,6 +190,7 @@ SECTION_GRAMMAR = rf"""
 Section[noskipws]:
   '[SECTION]'
   '\n'
+  ('MID: ' mid = SingleLineString '\n')?
   ('UID: ' uid = /{REGEX_UID}/ '\n')?
   ('LEVEL: ' custom_level = SingleLineString '\n')?
   'TITLE: ' title = SingleLineString '\n'
@@ -222,6 +225,7 @@ ReservedKeyword[noskipws]:
 
 Requirement[noskipws]:
   '[' !CompositeRequirementTagName requirement_type = RequirementType ']' '\n'
+  ('MID: ' mid = SingleLineString '\n')?
   fields *= RequirementField
 ;
 
@@ -249,6 +253,8 @@ RequirementField[noskipws]:
 
 CompositeRequirement[noskipws]:
   '[COMPOSITE_' requirement_type = RequirementType ']' '\n'
+
+  ('MID: ' mid = SingleLineString '\n')?
 
   fields *= RequirementField
 

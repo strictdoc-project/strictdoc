@@ -183,11 +183,13 @@ class DocumentDotGenerator:
 
                 lhs_node_id: str = document.section_contents[
                     0
-                ].mid.get_string_value()
+                ].reserved_mid.get_string_value()
                 if not isinstance(document.section_contents[0], Section):
-                    lhs_node_id = document.mid.get_string_value()
+                    lhs_node_id = document.reserved_mid.get_string_value()
 
-                rhs_node_id = prev_document_last_section.mid.get_string_value()
+                rhs_node_id = (
+                    prev_document_last_section.reserved_mid.get_string_value()
+                )
 
                 accumulated_section_siblings.append((lhs_node_id, rhs_node_id))
 
@@ -247,7 +249,7 @@ class DocumentDotGenerator:
         accumulated_section_siblings,
     ) -> str:
         def get_uuid(node_) -> str:
-            return node_.mid.get_string_value()
+            return node_.reserved_mid.get_string_value()
 
         def get_upper_sibling_section(node_: Section):
             parent: Union[Document, Section] = node_.parent
@@ -351,5 +353,5 @@ class DocumentDotGenerator:
         return (
             requirement.reserved_uid
             if requirement.reserved_uid is not None
-            else requirement.mid.get_string_value()
+            else requirement.reserved_mid.get_string_value()
         )

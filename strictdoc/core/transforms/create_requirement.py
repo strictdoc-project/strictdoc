@@ -107,11 +107,13 @@ class CreateRequirementTransform:
                     value=form_field.field_unescaped_value,
                 )
 
-        requirement.mid = MID(requirement_mid)
+        requirement.reserved_mid = MID(requirement_mid)
         requirement.ng_document_reference = DocumentReference()
         requirement.ng_document_reference.set_document(document)
         requirement.ng_level = parent.ng_level + 1
-        traceability_index._map_id_to_node[requirement.mid] = requirement
+        traceability_index._map_id_to_node[
+            requirement.reserved_mid
+        ] = requirement
 
         parent.section_contents.insert(insert_to_idx, requirement)
 

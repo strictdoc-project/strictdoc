@@ -12,7 +12,7 @@
       {% endif -%}
     >
     {%- for section in document_iterator.table_of_contents() -%}
-      <li data-nodeid="{{ section.mid.get_string_value() }}">
+      <li data-nodeid="{{ section.reserved_mid.get_string_value() }}">
         {%- if section.is_section -%}
         {# if section not requirement #}
           {%- if not section.ng_has_requirements and document_type.is_deeptrace -%}

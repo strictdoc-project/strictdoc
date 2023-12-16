@@ -1,9 +1,12 @@
 [DOCUMENT]
+MID: b3727ea826c24d42a84e88983e7c1e24
 TITLE: DO-178C requirements
 VERSION: v0.1
 CLASSIFICATION: Draft
 REQ_PREFIX: DO178-
 ROOT: True
+OPTIONS:
+  ENABLE_MID: True
 
 [GRAMMAR]
 ELEMENTS:
@@ -46,10 +49,12 @@ These requirements are recommended by engineers who adhere to the DO-178B and DO
 [/FREETEXT]
 
 [SECTION]
+MID: 6be4dbe02b4346df9849eaa6fe077e0e
 UID: SECTION-DR-Already-implemented-features
 TITLE: Already implemented features
 
 [REQUIREMENT]
+MID: af14393406e64ab6b2911eefa4358f33
 UID: DO178-1
 COMPLIANCE: C
 STATUS: Active
@@ -64,6 +69,7 @@ An alternative implementation of "1 file per 1 requirement" can be very restrict
 <<<
 
 [REQUIREMENT]
+MID: 0a19cae3756a4d2f9f0be9e57c44a8fa
 UID: DO178-2
 COMPLIANCE: C
 STATUS: Active
@@ -79,6 +85,7 @@ N: StrictDoc is nice.
 <<<
 
 [REQUIREMENT]
+MID: dd075d6cd4fb4ad2b731a9b8068efade
 UID: DO178-14
 STATUS: Active
 TITLE: Requirement UID autocompletion
@@ -96,6 +103,7 @@ and would be the ultimate argument to NOT text edit.
 <<<
 
 [REQUIREMENT]
+MID: 03346e43cd0b43529cc3b958a00d8d35
 UID: DO178-3
 COMPLIANCE: C
 STATUS: Active
@@ -108,6 +116,7 @@ N: StrictDoc is compliant.
 <<<
 
 [REQUIREMENT]
+MID: 4f0809d49292413eb621a47a8b405bc7
 UID: DO178-4
 COMPLIANCE: C
 STATUS: Active
@@ -120,6 +129,7 @@ S: StrictDoc supports document fragments. A document fragment corresponds to a s
 <<<
 
 [REQUIREMENT]
+MID: c74bba92cec34bf7b1046689c2dfc54c
 UID: DO178-5
 COMPLIANCE: C
 STATUS: Active
@@ -132,6 +142,7 @@ N: Sphinx is nice for release.
 <<<
 
 [REQUIREMENT]
+MID: 8b73ce9efcc840b2be272d5aaef08e70
 UID: DO178-6
 COMPLIANCE: C
 STATUS: Active
@@ -147,6 +158,7 @@ N: GUI for editing is NTH but it shall scale well to thousands of requirements. 
 <<<
 
 [REQUIREMENT]
+MID: 8c654ff659a94cceb0c7a52bc8ae4073
 UID: DO178-8
 STATUS: Active
 TITLE: Configuration: 'Host' parameter
@@ -158,6 +170,7 @@ N: Binding to any local address (localhost) with an option would enable to edit 
 <<<
 
 [REQUIREMENT]
+MID: cfdb3867a4a64b3eb9405e998c11ae72
 UID: DO178-7
 COMPLIANCE: C
 STATUS: Active
@@ -173,6 +186,7 @@ S: StrictDoc is written using Python and supports the ReqIF format out of the bo
 <<<
 
 [REQUIREMENT]
+MID: 40d4a56263d0420691dbde5d7889895a
 UID: DO178-13
 STATUS: Backlog
 TITLE: Source file coverage
@@ -186,10 +200,12 @@ S: Source file coverage is StrictDoc's experimental feature. With a more detaile
 [/SECTION]
 
 [SECTION]
+MID: 09f3e3faa1b84aafb19f26e22ab06c95
 UID: SECTION-DR-Needs-discussion
 TITLE: Needs discussion
 
 [REQUIREMENT]
+MID: db4336a8f119443cae6a70d74a0601da
 UID: DO178-19
 STATUS: Active
 TITLE: WYSIWYG editing
@@ -201,6 +217,7 @@ Simplifies editing of formatted text.
 <<<
 
 [REQUIREMENT]
+MID: 7d18b7674050495c935dc4669dfb260e
 UID: DO178-15
 STATUS: Backlog
 TITLE: Diff between document trees
@@ -214,6 +231,7 @@ N: Highlight a req diff with its previous version (Git).
 <<<
 
 [REQUIREMENT]
+MID: b0c13e71074242ab91d6344514b82657
 UID: DO178-10
 COMPLIANCE: C
 STATUS: Backlog
@@ -229,6 +247,7 @@ S: This feature, especially a very basic initial one, is very easy to implement,
 <<<
 
 [REQUIREMENT]
+MID: 7e8a475859084e9d95eda3f2c1381ae7
 UID: DO178-11
 COMPLIANCE: C
 STATUS: Active
@@ -255,6 +274,7 @@ Then highlight uncovered requirement, and requirements impacted by parent change
 <<<
 
 [REQUIREMENT]
+MID: 23c11790799c4457804bcb9d6288931e
 UID: DO178-12
 COMPLIANCE: C
 STATUS: Backlog
@@ -269,6 +289,7 @@ S: This is easy to implement but would be nice to have it specified in terms of 
 <<<
 
 [REQUIREMENT]
+MID: 8bd26640450f448c8228464223c21373
 UID: DO178-9
 COMPLIANCE: C
 STATUS: Backlog
@@ -284,6 +305,7 @@ S: This feature is easy to implement. The easiest implementation path is to incl
 <<<
 
 [REQUIREMENT]
+MID: a1fb2f7cd7cd4c8eb33c3407a791fd88
 UID: DO178-16
 COMPLIANCE: PC
 STATUS: Backlog
@@ -306,6 +328,7 @@ breathe is required for the Software Design Description document which defines s
 <<<
 
 [REQUIREMENT]
+MID: 756503f4934a4aed81dfe090b2538e2a
 UID: DO178-17
 COMPLIANCE: NC
 STATUS: Backlog
@@ -318,6 +341,7 @@ N: .sdoc file lock?
 <<<
 
 [REQUIREMENT]
+MID: 8120b4f6be4e4ecd83c0b69a3424e0be
 UID: DO178-18
 STATUS: Backlog
 TITLE: Support for Derived requirements

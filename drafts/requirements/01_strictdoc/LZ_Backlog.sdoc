@@ -1,6 +1,9 @@
 [DOCUMENT]
+MID: cabef7629dda4f2fb34255d01fea8d5f
 TITLE: [L2] StrictDoc Backlog
 REQ_PREFIX: SDOC-BACKLOG-
+OPTIONS:
+  ENABLE_MID: True
 
 [FREETEXT]
 This document outlines the future work items for StrictDoc.
@@ -11,6 +14,7 @@ While this backlog overlaps with StrictDoc's `GitHub issues tracker <https://git
 [/FREETEXT]
 
 [SECTION]
+MID: d1e697dea73144c48a4b88d0d784a517
 UID: SECTION-SB-Open-source-requirements-tool-challenges
 TITLE: Open-source requirements tool challenges
 
@@ -23,14 +27,17 @@ TITLE: Open-source requirements tool challenges
 [/SECTION]
 
 [SECTION]
+MID: 7614a9f4f7bd4b1c9899995ac3d1e6ad
 UID: SECTION-SB-Backlog
 TITLE: Backlog
 
 [SECTION]
+MID: 2654d541d5ce4cb6ad9fcfe2eaa9abb4
 UID: SECTION-SB-Formal-modeling
 TITLE: Formal modeling
 
 [REQUIREMENT]
+MID: 5958a5c0aad8486b84ad31bc014d4ad3
 UID: SDOC-RMC-27
 STATUS: Backlog
 TITLE: Integration with other systems engineering processes
@@ -39,6 +46,7 @@ The Requirements Tool shall provide capabilities for integration with other syst
 <<<
 
 [REQUIREMENT]
+MID: 99e84f704c074cf28de51ce6fb183a66
 UID: SDOC-RMC-29
 STATUS: Backlog
 TITLE: Integration with Capella
@@ -53,6 +61,7 @@ At the very least, the integration can happen through the ReqIF interface that C
 <<<
 
 [REQUIREMENT]
+MID: 44b30591f6674ede821324fe527babd9
 UID: SDOC-RMC-55
 STATUS: Backlog
 TITLE: Support STPA method
@@ -61,6 +70,7 @@ The Requirements Tool shall provide support for the STPA method.
 <<<
 
 [REQUIREMENT]
+MID: 045aee37b0a24b3cb62cabd8b614aaf7
 UID: SDOC-RMC-28
 STATUS: Backlog
 TITLE: Formalized statements
@@ -75,6 +85,7 @@ The directions to explore:
 <<<
 
 [REQUIREMENT]
+MID: 7e0fd5af118b4f5d8ecbf0d8ef3841e6
 UID: SDOC-RMC-30
 STATUS: Backlog
 TITLE: AI Assistant
@@ -85,10 +96,12 @@ The Requirements Tool shall provide integration with AI tools (e.g., ChatGPT).
 [/SECTION]
 
 [SECTION]
+MID: 061392f275b04c93b664faad9ed4f483
 UID: SECTION-SRS-LaTeX-export
 TITLE: LaTeX export
 
 [REQUIREMENT]
+MID: 9ec7f471ccb243ea9d86cf2756403b8f
 UID: SDOC-SRS-76
 STATUS: Backlog
 TITLE: Export to Tex
@@ -96,21 +109,25 @@ TITLE: Export to Tex
 [/SECTION]
 
 [REQUIREMENT]
+MID: 5a0304abcd8a44dab5d032dce6625a5d
 UID: SDOC-BACKLOG-1
 STATUS: Backlog
 TITLE: Focused mode: Edit a single section / requirement
 
 [REQUIREMENT]
+MID: 162a3da4d9d74c15b5078c9859657ce3
 UID: SDOC-BACKLOG-2
 STATUS: Backlog
 TITLE: Interoperability with Doxygen
 
 [REQUIREMENT]
+MID: 06f16ede826749a389c8d7de9828e0eb
 UID: SDOC-BACKLOG-3
 STATUS: Backlog
 TITLE: Fuzzy search (the whole documentation)
 
 [REQUIREMENT]
+MID: 0e69828e1d914e20852aef7cfc4e87c4
 UID: SDOC-BACKLOG-9
 STATUS: Backlog
 TITLE: Derived requirements
@@ -122,21 +139,25 @@ RELATIONS:
   VALUE: DO178-18
 
 [REQUIREMENT]
+MID: 34246811634c493dbc771ae4c8bc3b14
 UID: SDOC-BACKLOG-4
 STATUS: Backlog
 TITLE: Support Markdown markup
 
 [REQUIREMENT]
+MID: e61e7224e27d41ceacad9bf6051bd6f0
 UID: SDOC-BACKLOG-6
 STATUS: Backlog
 TITLE: Auto-commit to Git repository
 
 [REQUIREMENT]
+MID: 3f50a97bc70842dbabeea911f653ef90
 UID: SDOC-BACKLOG-7
 STATUS: Backlog
 TITLE: Language Server Protocol (LSP)
 
 [REQUIREMENT]
+MID: 72285f9b09de48a29fef8f85431e4a94
 UID: SDOC-BACKLOG-8
 STATUS: Backlog
 TITLE: UML
@@ -144,6 +165,7 @@ TITLE: UML
 [/SECTION]
 
 [SECTION]
+MID: 4a49c79a1bdd4d4aae5f62bc1d2a56d0
 UID: SECTION-SB-Backlog-Web-based-user-interface
 TITLE: Backlog: Web-based user interface
 
@@ -180,6 +202,7 @@ TITLE: Backlog: Web-based user interface
 [/SECTION]
 
 [SECTION]
+MID: 866a55f2e47b477ebcd52ea57da4f037
 UID: SECTION-SB-Backlog-Nice-to-have
 TITLE: Backlog: Nice to have
 
@@ -217,6 +240,7 @@ TITLE: Backlog: Nice to have
 [/SECTION]
 
 [SECTION]
+MID: eb1fab2bbea541c8b00f70780326c9fc
 UID: SECTION-SB-Backlog-Technical-debt
 TITLE: Backlog: Technical debt
 
@@ -230,10 +254,12 @@ TITLE: Backlog: Technical debt
 [/SECTION]
 
 [SECTION]
+MID: 6ef8c2ad683d46af948674727c7a52b4
 UID: SECTION-SB-Open-questions
 TITLE: Open questions
 
 [SECTION]
+MID: 717df91623014fb98ba34ab8173b94ab
 UID: SECTION-SB-One-or-many-input-sdoc-trees
 TITLE: One or many input sdoc trees
 

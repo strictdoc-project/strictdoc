@@ -13,6 +13,7 @@ class SDocObjectFactory:
     @staticmethod
     def create_document(title: Optional[str]):
         return Document(
+            mid=None,
             title=title if title else "NONAME",
             config=None,
             grammar=None,
@@ -136,7 +137,10 @@ class SDocObjectFactory:
                     )
                 )
         requirement = Requirement(
-            parent=parent, requirement_type=requirement_type, fields=fields
+            parent=parent,
+            requirement_type=requirement_type,
+            mid=None,
+            fields=fields,
         )
         requirement.ng_document_reference = DocumentReference()
         if isinstance(parent, Document):

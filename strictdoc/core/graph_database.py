@@ -103,9 +103,9 @@ class GraphDatabase:
         if link_type not in self._links:
             raise LookupError
         links: Dict[MID, OrderedSet[MID]] = self._links[link_type]
-        if lhs_node.mid not in links:
+        if lhs_node.reserved_mid not in links:
             raise LookupError
-        rhs_mids = self._links[link_type][lhs_node.mid]
+        rhs_mids = self._links[link_type][lhs_node.reserved_mid]
         if len(rhs_mids) == 0:
             raise LookupError
         rhs_nodes = []
@@ -130,10 +130,10 @@ class GraphDatabase:
         if link_type not in self._links:
             return None
         links = self._links[link_type]
-        if lhs_node.mid not in links:
+        if lhs_node.reserved_mid not in links:
             return None
         rhs_nodes = []
-        for rhs_mid in links[lhs_node.mid]:
+        for rhs_mid in links[lhs_node.reserved_mid]:
             rhs_nodes.append(self.get_node_by_mid(rhs_mid))
         return rhs_nodes
 
@@ -143,10 +143,10 @@ class GraphDatabase:
         if link_type not in self._links_reverse:
             return None
         reverse_links = self._links_reverse[link_type]
-        if rhs_node.mid not in reverse_links:
+        if rhs_node.reserved_mid not in reverse_links:
             return None
         lhs_nodes = []
-        for lhs_mid_ in reverse_links[rhs_node.mid]:
+        for lhs_mid_ in reverse_links[rhs_node.reserved_mid]:
             lhs_nodes.append(self.get_node_by_mid(lhs_mid_))
         return lhs_nodes
 
@@ -154,7 +154,7 @@ class GraphDatabase:
         if link_type not in self._links:
             return False
         links = self._links[link_type]
-        if lhs_node.mid not in links:
+        if lhs_node.reserved_mid not in links:
             return False
         return True
 
@@ -163,29 +163,34 @@ class GraphDatabase:
 
     def add_link(self, *, link_type: LinkType, lhs_node: Any, rhs_node: Any):
         assert lhs_node != rhs_node, (lhs_node, rhs_node)
-        assert lhs_node.mid != rhs_node.mid, (lhs_node, rhs_node)
+        assert lhs_node.reserved_mid != rhs_node.reserved_mid, (
+            lhs_node,
+            rhs_node,
+        )
         assert not isinstance(lhs_node, MID)
         assert not isinstance(rhs_node, MID)
-        assert isinstance(lhs_node.mid, MID)
-        assert isinstance(rhs_node.mid, MID)
+        assert isinstance(lhs_node.reserved_mid, MID)
+        assert isinstance(rhs_node.reserved_mid, MID)
 
-        self._map_mid_to_node[lhs_node.mid] = lhs_node
-        self._map_mid_to_node[rhs_node.mid] = rhs_node
+        self._map_mid_to_node[lhs_node.reserved_mid] = lhs_node
+        self._map_mid_to_node[rhs_node.reserved_mid] = rhs_node
 
         links = self._links[link_type]
-        if lhs_node.mid in links:
-            assert rhs_node.mid not in links[lhs_node.mid]
+        if lhs_node.reserved_mid in links:
+            assert rhs_node.reserved_mid not in links[lhs_node.reserved_mid]
         reverse_links = self._links_reverse[link_type]
 
-        if lhs_node.mid not in links:
-            links[lhs_node.mid] = OrderedSet([rhs_node.mid])
+        if lhs_node.reserved_mid not in links:
+            links[lhs_node.reserved_mid] = OrderedSet([rhs_node.reserved_mid])
         else:
-            links[lhs_node.mid].add(rhs_node.mid)
+            links[lhs_node.reserved_mid].add(rhs_node.reserved_mid)
 
-        if rhs_node.mid not in reverse_links:
-            reverse_links[rhs_node.mid] = OrderedSet([lhs_node.mid])
+        if rhs_node.reserved_mid not in reverse_links:
+            reverse_links[rhs_node.reserved_mid] = OrderedSet(
+                [lhs_node.reserved_mid]
+            )
         else:
-            reverse_links[rhs_node.mid].add(lhs_node.mid)
+            reverse_links[rhs_node.reserved_mid].add(lhs_node.reserved_mid)
 
     def remove_link(
         self,
@@ -197,12 +202,16 @@ class GraphDatabase:
         remove_rhs_node: bool,
     ):
         assert link_type in self._links
-        assert isinstance(lhs_node.mid, MID), lhs_node
-        assert isinstance(rhs_node.mid, MID), rhs_node
-        assert lhs_node.mid in self._links[link_type]
-        self._links[link_type][lhs_node.mid].remove(rhs_node.mid)
-        self._links_reverse[link_type][rhs_node.mid].remove(lhs_node.mid)
+        assert isinstance(lhs_node.reserved_mid, MID), lhs_node
+        assert isinstance(rhs_node.reserved_mid, MID), rhs_node
+        assert lhs_node.reserved_mid in self._links[link_type]
+        self._links[link_type][lhs_node.reserved_mid].remove(
+            rhs_node.reserved_mid
+        )
+        self._links_reverse[link_type][rhs_node.reserved_mid].remove(
+            lhs_node.reserved_mid
+        )
         if remove_lhs_node:
-            self.remove_node_by_mid(lhs_node.mid)
+            self.remove_node_by_mid(lhs_node.reserved_mid)
         if remove_rhs_node:
-            self.remove_node_by_mid(rhs_node.mid)
+            self.remove_node_by_mid(rhs_node.reserved_mid)

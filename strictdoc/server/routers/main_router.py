@@ -461,7 +461,7 @@ def create_main_router(
             form_object=form_object,
             document_type=DocumentType.document(),
             is_new_section=False,
-            section_mid=section.mid,
+            section_mid=section.reserved_mid,
         )
         return HTMLResponse(
             content=output,
@@ -521,7 +521,7 @@ def create_main_router(
                 renderer=markup_renderer,
                 link_renderer=link_renderer,
                 form_object=form_object,
-                target_node_mid=section.mid,
+                target_node_mid=section.reserved_mid,
                 document_type=DocumentType.document(),
                 is_new_section=False,
                 replace_action="replace",
@@ -1674,6 +1674,7 @@ def create_main_router(
 
         Path(doc_full_path_dir).mkdir(parents=True, exist_ok=True)
         document = Document(
+            mid=None,
             title=document_title,
             config=None,
             grammar=DocumentGrammar.create_default(parent=None),
@@ -1742,7 +1743,7 @@ def create_main_router(
             requirement_mid=requirement_mid,
             form_object=RequirementFormObject(
                 requirement_mid=requirement_mid,
-                document_mid=document.mid.get_string_value(),
+                document_mid=document.reserved_mid.get_string_value(),
                 fields=[],
                 reference_fields=[],
                 exiting_requirement_uid=None,

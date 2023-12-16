@@ -176,7 +176,7 @@ class DocumentGrammarFormObject(ErrorObject):
             grammar_form_relations.append(grammar_form_relation)
 
         return DocumentGrammarFormObject(
-            document_mid=document.mid.get_string_value(),
+            document_mid=document.reserved_mid.get_string_value(),
             fields=grammar_form_fields,
             relations=grammar_form_relations,
         )

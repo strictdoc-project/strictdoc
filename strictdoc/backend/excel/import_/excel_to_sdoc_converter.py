@@ -120,7 +120,9 @@ class ExcelToSDocConverter:
     def create_document(title: Optional[str], extra_header_pairs) -> Document:
         document_config = DocumentConfig.default_config(None)
         document_title = title if title else "<No title>"
-        document = Document(document_title, document_config, None, None, [], [])
+        document = Document(
+            None, document_title, document_config, None, None, [], []
+        )
 
         fields = list(
             DocumentGrammar.create_default(document).elements[0].fields
@@ -212,6 +214,7 @@ class ExcelToSDocConverter:
         requirement = Requirement(
             parent=template_requirement.parent,
             requirement_type=template_requirement.requirement_type,
+            mid=None,
             fields=list(template_requirement.enumerate_fields()),
         )
         requirement.ng_level = 1

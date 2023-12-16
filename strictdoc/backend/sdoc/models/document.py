@@ -15,6 +15,7 @@ from strictdoc.helpers.mid import MID
 class Document:  # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
+        mid: Optional[str],
         title: str,
         config: Optional[DocumentConfig],
         grammar: Optional[DocumentGrammar],
@@ -25,7 +26,11 @@ class Document:  # pylint: disable=too-many-instance-attributes
         assert isinstance(free_texts, list)
 
         self.title: str = title
-        self.config = config if config else DocumentConfig.default_config(self)
+        self.config: DocumentConfig = (
+            config
+            if config is not None
+            else DocumentConfig.default_config(self)
+        )
         self.grammar: Optional[DocumentGrammar] = grammar
         self.bibliography: Optional[DocumentBibliography] = bibliography
         self.free_texts: List[FreeText] = free_texts
@@ -37,7 +42,10 @@ class Document:  # pylint: disable=too-many-instance-attributes
         self.ng_at_least_one_relations_field: bool = False
 
         self.meta: Optional[DocumentMeta] = None
-        self.mid: MID = MID.create()
+
+        self.reserved_mid: MID = MID(mid) if mid is not None else MID.create()
+        self.mid_permanent: bool = mid is not None
+
         self.reserved_uid = "DOCUMENT"
 
     def assign_meta(self, meta):

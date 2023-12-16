@@ -39,6 +39,7 @@ class ConfluenceHTMLTableImport:
             reqs_array_array.append(reqs)
 
         document = Document(
+            mid=None,
             title="Imported Doc",
             config=None,
             grammar=None,
@@ -49,7 +50,7 @@ class ConfluenceHTMLTableImport:
         for section_idx, reqs in enumerate(reqs_array_array):
             section_name = headers[section_idx].text
             section = Section(
-                document, None, "1", section_name,
+                document, None,None, "1", section_name,
                 requirement_prefix=None,
                 free_texts=[],
                 section_contents=[]

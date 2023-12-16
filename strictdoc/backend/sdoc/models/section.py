@@ -19,6 +19,7 @@ class Section(Node):  # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
         parent,
+        mid: Optional[str],
         uid,
         custom_level: Optional[str],
         title,
@@ -50,7 +51,10 @@ class Section(Node):  # pylint: disable=too-many-instance-attributes
         self.ng_has_requirements = False
         self.ng_document_reference: Optional[DocumentReference] = None
         self.context = SectionContext()
-        self.mid: MID = MID.create()
+
+        self.reserved_mid: MID = MID(mid) if mid is not None else MID.create()
+        self.mid_permanent: bool = mid is not None
+
         # This is always true, unless the node is filtered out with --filter-requirements.
         self.ng_whitelisted = True
 

@@ -96,7 +96,7 @@ class UpdateSectionCommand:
         if len(form_object.section_uid) > 0:
             try:
                 traceability_index.validate_can_create_uid(
-                    form_object.section_uid, section.mid
+                    form_object.section_uid, section.reserved_mid
                 )
             except SingleValidationError as validation_error_:
                 errors["section_uid"].append(validation_error_.args[0])
@@ -292,6 +292,7 @@ class CreateSectionCommand:
 
         section = Section(
             parent=parent,
+            mid=None,
             uid=None,
             custom_level=None,
             title=None,
@@ -318,7 +319,7 @@ class CreateSectionCommand:
         section.ng_document_reference.set_document(document)
         assert parent.ng_level is not None, parent
         section.ng_level = parent.ng_level + 1
-        traceability_index._map_id_to_node[section.mid] = section
+        traceability_index._map_id_to_node[section.reserved_mid] = section
         parent.section_contents.insert(insert_to_idx, section)
 
         # Updating section title.

@@ -14,7 +14,9 @@
 [data-viewtype="diff"] .main {
   overflow: hidden;
   display: grid;
-  grid-template-rows: minmax(0, max-content) minmax(0, 1fr);
+  grid-template-rows: minmax(0, max-content) /* form */
+                      minmax(0, max-content) /* tabs */
+                      minmax(0, 1fr); /* content */
   gap: var(--base-rhythm);
   padding-bottom: 0;
 }

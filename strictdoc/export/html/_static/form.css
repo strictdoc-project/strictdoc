@@ -493,6 +493,7 @@ sdoc-tab-content[active] {
   display: contents;
 }
 
+.sdoc-tabs,
 sdoc-tabs {
   grid-column: 1 / -1;
 
@@ -506,6 +507,7 @@ sdoc-tabs {
   display: flex;
 }
 
+.sdoc-tab,
 sdoc-tab {
   font-size: var(--font-size-xsm);
   font-weight: 600;
@@ -542,10 +544,12 @@ sdoc-tab {
   transition: 0.2s;
 }
 
+.sdoc-tab:hover,
 sdoc-tab:hover {
   background-color: rgba(255, 255, 255, 0.5);
 }
 
+.sdoc-tab[active],
 sdoc-tab[active] {
   color: var(--color-hover);
   background-color: rgba(255, 255, 255, 1);

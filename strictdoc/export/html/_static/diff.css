@@ -443,3 +443,13 @@ details.diff_document[modified="right"] {
     -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
   }
 }
+
+/* tabs */
+
+.sdoc-tabs {
+  padding: 0;
+  margin-bottom: calc(var(--base-rhythm)*2);
+  border-bottom: 1px solid white;
+  box-shadow: 0 2px 0 var(--thumbBG);
+  /* box-shadow: 0 0 1rem 0.5rem var(--thumbBG); */
+}

@@ -3,6 +3,17 @@
 <div class="main">
   {% include "screens/git/form.jinja" %}
 
+  <div class="sdoc-tabs">
+    <a class="sdoc-tab"
+      {% if tab == "diff" %}active{% endif %}
+      href="/diff?tab=diff&left_revision={{ left_revision_urlencoded }}&right_revision={{ right_revision_urlencoded }}"
+    >Diff</a>
+    <a class="sdoc-tab"
+      {% if tab == "changelog" %}active{% endif %}
+      href="/diff?tab=changelog&left_revision={{ left_revision_urlencoded }}&right_revision={{ right_revision_urlencoded }}"
+    >Changelog</a>
+  </div>
+
   {% if project_config.is_running_on_server %}
   {% if error_message is none and left_revision is not none and right_revision is not none and left_revision|length > 0 and right_revision|length > 0 %}
     <turbo-frame id="diff_result" src="/diff_result?tab={{ tab }}&left_revision={{ left_revision_urlencoded }}&right_revision={{ right_revision_urlencoded }}">

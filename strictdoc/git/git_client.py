@@ -41,10 +41,13 @@ class GitClient:
                 if git_client.is_clean_branch():
                     return git_client
 
-            if os.path.exists(PATH_TO_SANDBOX_DIR):
-                shutil.rmtree(PATH_TO_SANDBOX_DIR)
-
             Path(PATH_TO_SANDBOX_DIR).mkdir(parents=True, exist_ok=True)
+
+            # Running git worktree add ... below results with "path already
+            # exists" error if the destination folder already exists, even if
+            # empty.
+            if os.path.exists(path_to_sandbox_git_repo):
+                shutil.rmtree(path_to_sandbox_git_repo)
 
             result = subprocess.run(
                 [

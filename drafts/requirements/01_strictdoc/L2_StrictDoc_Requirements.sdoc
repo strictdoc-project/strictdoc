@@ -1,11 +1,16 @@
 [DOCUMENT]
+MID: 8a87daf19a7c487f89f396406a974509
 TITLE: [L2] StrictDoc Requirements Specification
 REQ_PREFIX: SDOC-SRS-
+OPTIONS:
+  ENABLE_MID: True
 
 [SECTION]
+MID: bd8a7931c1e04df9bf08d291488c67aa
 TITLE: SDoc data model
 
 [REQUIREMENT]
+MID: e8d5b55055254144b96d1ffeb587ec72
 UID: SDOC-SRS-18
 TITLE: Data model
 STATEMENT: >>>
@@ -13,6 +18,7 @@ StrictDoc shall be based on a data model.
 <<<
 
 [REQUIREMENT]
+MID: 3b31cad22529476db01aca41caf39750
 UID: SDOC-SRS-26
 TITLE: Requirement model
 STATEMENT: >>>
@@ -20,6 +26,7 @@ StrictDoc's data model shall support a "Requirement" model.
 <<<
 
 [REQUIREMENT]
+MID: 8e2ffffd33af4a969d5bb7ca40cb49a4
 UID: SDOC-SRS-100
 TITLE: Requirement model fields
 STATEMENT: >>>
@@ -30,6 +37,7 @@ RELATIONS:
   VALUE: SDOC-SSS-62
 
 [REQUIREMENT]
+MID: f94419a390f2403daa3c4cd0e96f6cb6
 UID: SDOC-SRS-98
 TITLE: Document model
 STATEMENT: >>>
@@ -40,6 +48,7 @@ RELATIONS:
   VALUE: SDOC-SSS-64
 
 [REQUIREMENT]
+MID: 435f856197d743c1b9b1dcbe91a22863
 UID: SDOC-SRS-110
 TITLE: Document metadata
 STATEMENT: >>>
@@ -57,6 +66,7 @@ RELATIONS:
   VALUE: SDOC-SSS-75
 
 [REQUIREMENT]
+MID: 63821c507d584cf985f05904710b9779
 UID: SDOC-SRS-99
 TITLE: Section model
 STATEMENT: >>>
@@ -70,6 +80,7 @@ RELATIONS:
   VALUE: SDOC-SSS-51
 
 [REQUIREMENT]
+MID: 983653fc26214f46977dc792d65ae65f
 UID: SDOC-SRS-109
 STATUS: Active
 TITLE: Fragment model
@@ -93,6 +104,7 @@ RELATIONS:
   VALUE: DO178-4
 
 [REQUIREMENT]
+MID: fad4cf5dcf4d40518c7c9826fd6bd18a
 UID: SDOC-SRS-31
 STATUS: Active
 TITLE: Requirement relations
@@ -109,6 +121,7 @@ RELATIONS:
   VALUE: SDOC-SSS-48
 
 [REQUIREMENT]
+MID: 9930894b08c44f5eba996c0a255e9e3f
 UID: SDOC-SRS-101
 TITLE: Requirement relation roles
 STATEMENT: >>>
@@ -121,6 +134,7 @@ RELATIONS:
   VALUE: SDOC-SSS-8
 
 [REQUIREMENT]
+MID: caecd704ed634d718deff07ba0db7fa6
 UID: SDOC-SRS-116
 STATUS: Backlog
 TITLE: Requirement validation according to EARS syntax
@@ -134,9 +148,11 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: cbc7f72c6e0b4c858817bf17357105a5
 TITLE: SDoc text markup
 
 [REQUIREMENT]
+MID: 27a6da48c65445539e536ee034921fb5
 UID: SDOC-SRS-20
 STATUS: Active
 TITLE: SDoc markup language
@@ -151,6 +167,7 @@ RELATIONS:
   VALUE: SDOC-SSS-88
 
 [REQUIREMENT]
+MID: f48a57c0cd764951a667127ce92fdb12
 UID: SDOC-SRS-127
 STATUS: Active
 TITLE: SDoc and Git storage
@@ -166,6 +183,7 @@ RELATIONS:
   VALUE: SDOC-SSS-84
 
 [REQUIREMENT]
+MID: 9df34a7ab79842d99ee68303f334d4eb
 UID: SDOC-SRS-104
 TITLE: SDoc file extension
 STATEMENT: >>>
@@ -173,6 +191,7 @@ The SDoc markup content shall be stored in files with .sdoc extension.
 <<<
 
 [REQUIREMENT]
+MID: 8dd6dd3979484dadbe71ac91aab50608
 UID: SDOC-SRS-105
 TITLE: One document per one SDoc file
 STATEMENT: >>>
@@ -188,6 +207,7 @@ RELATIONS:
   VALUE: DO178-1
 
 [REQUIREMENT]
+MID: e5e3033c13f24fa083423230da7994f7
 UID: SDOC-SRS-19
 STATUS: Active
 TITLE: Fixed grammar
@@ -203,6 +223,7 @@ RELATIONS:
   VALUE: SDOC-SSS-54
 
 [REQUIREMENT]
+MID: 10d23bfbf4504c2e8c995ae89c500be4
 UID: SDOC-SRS-122
 STATUS: Backlog
 TITLE: Project-level grammar
@@ -220,6 +241,7 @@ RELATIONS:
   VALUE: DO178-9
 
 [REQUIREMENT]
+MID: b97418ceccff438cb0457ed4bdf1be47
 UID: SDOC-SRS-93
 STATUS: Active
 TITLE: Default grammar fields
@@ -239,6 +261,7 @@ RELATIONS:
   VALUE: SDOC-SSS-61
 
 [REQUIREMENT]
+MID: 8924c29136944f65ac5efc8b6b90a07b
 UID: SDOC-SRS-21
 STATUS: Active
 TITLE: Custom grammar / fields
@@ -253,10 +276,12 @@ RELATIONS:
   VALUE: SDOC-SSS-62
 
 [REQUIREMENT]
+MID: 5405c74a9eba4e9193007f01ea98bc85
 UID: SDOC-SRS-22
 TITLE: UID identifier format
 
 [REQUIREMENT]
+MID: f871dfc381354daf820cc1e2b94fdb05
 UID: SDOC-SRS-24
 STATUS: Active
 TITLE: Support RST markup
@@ -268,6 +293,7 @@ RELATIONS:
   VALUE: SDOC-SSS-63
 
 [REQUIREMENT]
+MID: b1b4f03d4e404a14be481626803fcfc2
 UID: SDOC-SRS-27
 STATUS: Active
 TITLE: MathJAX
@@ -279,6 +305,7 @@ RELATIONS:
   VALUE: SDOC-SSS-63
 
 [REQUIREMENT]
+MID: 39f117b79cfa4a8485c458280b3d36ce
 UID: SDOC-SRS-23
 STATUS: Active
 TITLE: No indentation
@@ -293,6 +320,7 @@ RELATIONS:
   VALUE: SDOC-SSS-55
 
 [REQUIREMENT]
+MID: 98628e1db3ca4f52b7632674b69dd657
 UID: SDOC-SRS-25
 TITLE: Type-safe fields
 STATEMENT: >>>
@@ -307,18 +335,22 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: 34b4abc6bb4649de9e56af31c229b0d1
 UID: SECTION-SRS-Graph-database
 TITLE: Graph database
 
 [REQUIREMENT]
+MID: 2c8d7940a23c443f81a7eb373340894e
 UID: SDOC-SRS-28
 TITLE: Graph database
 
 [REQUIREMENT]
+MID: 272b8933276d4cd48a78fcfa11899573
 UID: SDOC-SRS-29
 TITLE: Uniqueness UID in tree
 
 [REQUIREMENT]
+MID: 8330d61fd5b1438fa90f127f88903a0d
 UID: SDOC-SRS-30
 STATUS: Active
 TITLE: Detect links cycles
@@ -330,10 +362,12 @@ RELATIONS:
   VALUE: SDOC-SSS-47
 
 [REQUIREMENT]
+MID: 07a1e7bef11d4fcca86cd31ee5245d8d
 UID: SDOC-SRS-32
 TITLE: Link document nodes
 
 [REQUIREMENT]
+MID: 2dad5f293bc442eaa98859c4b5eac0d5
 UID: SDOC-SRS-102
 TITLE: Automatic resolution of reverse relations
 STATEMENT: >>>
@@ -362,9 +396,11 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: 4dce611287954289b1c2a6a15c413611
 TITLE: Documentation tree
 
 [REQUIREMENT]
+MID: 50b2d5d6eb1140f0a2b980203468a5f7
 UID: SDOC-SRS-115
 STATUS: Active
 TITLE: Finding documents recursively
@@ -383,14 +419,17 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: fcbf717009ce4cb2a8def7eb7b377654
 UID: SECTION-SRS-Web-HTML-frontend
 TITLE: Web/HTML frontend
 
 [SECTION]
+MID: a3603184d571449792f5cd752c978686
 UID: SECTION-SRS-General-export-requirements-2
 TITLE: General export requirements
 
 [REQUIREMENT]
+MID: 37f17fdd57ff47e9b7f4147adaeabde1
 UID: SDOC-SRS-49
 STATUS: Active
 TITLE: Export to static HTML website
@@ -402,6 +441,7 @@ RELATIONS:
   VALUE: SDOC-SSS-30
 
 [REQUIREMENT]
+MID: 37399be2a8ac46889e3437209f9dffa9
 UID: SDOC-SRS-50
 STATUS: Active
 TITLE: Web interface
@@ -419,6 +459,7 @@ RELATIONS:
   VALUE: SDOC-SSS-80
 
 [REQUIREMENT]
+MID: f2fd90ad8a2946e7b085233a9c7a8a75
 UID: SDOC-SRS-51
 STATUS: Active
 TITLE: Export to printable HTML pages (HTML2PDF)
@@ -430,6 +471,7 @@ RELATIONS:
   VALUE: DO178-5
 
 [REQUIREMENT]
+MID: b74a7a3209d247f6b357513b0cce5000
 UID: SDOC-SRS-121
 STATUS: Backlog
 TITLE: WYSIWYG editing
@@ -446,6 +488,7 @@ RELATIONS:
   VALUE: SDOC-SSS-80
 
 [REQUIREMENT]
+MID: 8811f0ef33de4365bc66a602a8c184f6
 UID: SDOC-SRS-48
 STATUS: Active
 TITLE: Preserve generated file names
@@ -459,10 +502,12 @@ Name preservation helps to visually identify which input file an output file cor
 [/SECTION]
 
 [SECTION]
+MID: 0425151bf3944e0ebc1c5acabcb35905
 UID: SECTION-SRS-Screen-Project-home
 TITLE: Screen: Project home
 
 [REQUIREMENT]
+MID: 0a158ddac310483489ef08f618ba8741
 UID: SDOC-SRS-52
 STATUS: Progress
 TITLE: View project home page
@@ -470,14 +515,17 @@ TITLE: View project home page
 [/SECTION]
 
 [SECTION]
+MID: b99ebebdadb94fec968785429cef9002
 UID: SECTION-SRS-Screen-Project-tree
 TITLE: Screen: Project tree
 
 [REQUIREMENT]
+MID: 100fa410f4b443e69c48738899cfb5bd
 UID: SDOC-SRS-53
 TITLE: View project tree
 
 [REQUIREMENT]
+MID: eb04abcfd64146f3b7be509afd1693f9
 UID: SDOC-SRS-107
 STATUS: Active
 TITLE: Create document
@@ -489,6 +537,7 @@ RELATIONS:
   VALUE: SDOC-SSS-3
 
 [REQUIREMENT]
+MID: de7cda1156e043d7999933a2df630a30
 UID: SDOC-SRS-108
 STATUS: Active
 TITLE: Delete document
@@ -502,10 +551,12 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: 185cfc2d1ed4429ebaf0689f70a8cb0a
 UID: SECTION-SRS-Screen-Document-DOC
 TITLE: Screen: Document (DOC)
 
 [REQUIREMENT]
+MID: 9c962637ef7f45b6af6c83964b0a06d9
 UID: SDOC-SRS-54
 STATUS: Active
 TITLE: Read document
@@ -517,6 +568,7 @@ RELATIONS:
   VALUE: SDOC-SSS-3
 
 [REQUIREMENT]
+MID: 201187122be14ea48d69106d396c6790
 UID: SDOC-SRS-106
 STATUS: Active
 TITLE: Update document
@@ -528,6 +580,7 @@ RELATIONS:
   VALUE: SDOC-SSS-3
 
 [REQUIREMENT]
+MID: 13968ae160744e10ba8979eaee2f4f54
 UID: SDOC-SRS-55
 STATUS: Active
 TITLE: Edit requirement nodes
@@ -539,6 +592,7 @@ RELATIONS:
   VALUE: SDOC-SSS-4
 
 [REQUIREMENT]
+MID: edc02a3a97704007b70b93102c76b278
 UID: SDOC-SRS-92
 STATUS: Active
 TITLE: Move requirement / section nodes within document
@@ -553,6 +607,7 @@ RELATIONS:
   VALUE: SDOC-SSS-5
 
 [REQUIREMENT]
+MID: 7a06d1433e4c4b0eaf55ede14507eac9
 UID: SDOC-SRS-94
 STATUS: Backlog
 TITLE: Move requirement / section nodes between documents
@@ -567,6 +622,7 @@ RELATIONS:
   VALUE: SDOC-SSS-70
 
 [REQUIREMENT]
+MID: 197e00dd3b1d42309250c89de23ea51b
 UID: SDOC-SRS-56
 STATUS: Active
 TITLE: Edit Document grammar
@@ -581,11 +637,13 @@ RELATIONS:
   VALUE: SDOC-SSS-62
 
 [REQUIREMENT]
+MID: 2706ac7ccb8148edb7b200a1b78c25d6
 UID: SDOC-SRS-57
 STATUS: Active
 TITLE: Edit Document options
 
 [REQUIREMENT]
+MID: d64f7a0f6ba54672a62634304c54e2d4
 UID: SDOC-SRS-96
 STATUS: Progress
 TITLE: Auto-generate requirements UIDs
@@ -599,6 +657,7 @@ RELATIONS:
   VALUE: SDOC-SSS-80
 
 [REQUIREMENT]
+MID: 956371b6a7824d0b91caa5603faeeae2
 UID: SDOC-SRS-120
 STATUS: Backlog
 TITLE: Auto-completion for requirements UIDs
@@ -617,11 +676,13 @@ RELATIONS:
   VALUE: SDOC-SSS-80
 
 [REQUIREMENT]
+MID: 45b8513623744776899abfbf99c95286
 UID: SDOC-SRS-58
 STATUS: Backlog
 TITLE: Attach image to requirement
 
 [REQUIREMENT]
+MID: 738b63b7f55b43eb99f5600bd65f5ba7
 UID: SDOC-SRS-59
 STATUS: Backlog
 TITLE: Buttons to copy text to buffer
@@ -633,11 +694,13 @@ RELATIONS:
   VALUE: SDOC-SSS-80
 
 [REQUIREMENT]
+MID: c02a65f2716f4a86b8f83e3a7b4cd31c
 UID: SDOC-SRS-60
 STATUS: Backlog
 TITLE: Provide contextual help about RST markup
 
 [REQUIREMENT]
+MID: fa7fd8fd3a694d8e93953fd60e19fdde
 UID: SDOC-SRS-61
 STATUS: Backlog
 TITLE: Tables
@@ -645,10 +708,12 @@ TITLE: Tables
 [/SECTION]
 
 [SECTION]
+MID: 2b5d74dafd6d43f4bab4c05ed4da6f0d
 UID: SECTION-SRS-Screen-Table-TBL
 TITLE: Screen: Table (TBL)
 
 [REQUIREMENT]
+MID: e12b4c5b4f13444d99279ab445df5bcc
 UID: SDOC-SRS-62
 STATUS: Active
 TITLE: View TBL screen
@@ -660,11 +725,13 @@ RELATIONS:
   VALUE: SDOC-SSS-73
 
 [REQUIREMENT]
+MID: 7aa5316dd056465e97044e221412290b
 UID: SDOC-SRS-63
 STATUS: Draft
 TITLE: TBL: Hide/show columns
 
 [REQUIREMENT]
+MID: 229378602d1847cb83c61ab3e97bb22b
 UID: SDOC-SRS-64
 STATUS: Draft
 TITLE: TBL: Select/deselect tags
@@ -672,20 +739,24 @@ TITLE: TBL: Select/deselect tags
 [/SECTION]
 
 [SECTION]
+MID: 3c589969eb6a41c19b1dd246dabadbc8
 UID: SECTION-SRS-Screen-Traceability-TR
 TITLE: Screen: Traceability (TR)
 
 [REQUIREMENT]
+MID: 35d4c1dd30814c2a80918a90081a88b7
 UID: SDOC-SRS-65
 TITLE: View TR screen
 
 [/SECTION]
 
 [SECTION]
+MID: 9d337068b6a940b7a98d40697ea200a8
 UID: SECTION-SRS-Screen-Deep-traceability-DTR
 TITLE: Screen: Deep traceability (DTR)
 
 [REQUIREMENT]
+MID: 48bc17d898c94605b17d0267480f57ee
 UID: SDOC-SRS-66
 STATUS: Active
 TITLE: View DTR screen
@@ -699,9 +770,11 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: ddf15b3113a54107979752ec192e2ded
 TITLE: Screen: Project statistics
 
 [REQUIREMENT]
+MID: 19f7c2d35237423e950584a4a7aa95a7
 UID: SDOC-SRS-97
 STATUS: Active
 TITLE: Display project statistics
@@ -730,9 +803,11 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: 14ad600308434e6baaeef02d3e90b720
 TITLE: Screen: Traceability matrix
 
 [REQUIREMENT]
+MID: 167f6fe66d7247a6bf628ed6c1949275
 UID: SDOC-SRS-112
 STATUS: Backlog
 TITLE: Traceability matrix
@@ -750,9 +825,11 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: 544f8ffed8604e63a269a3f953681163
 TITLE: Screen: Project tree diff
 
 [REQUIREMENT]
+MID: aef80cc1a3144564bf23bf3c2a1cfd7f
 UID: SDOC-SRS-111
 STATUS: Backlog
 TITLE: Project tree diff
@@ -770,9 +847,11 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: b3472533d57145bc9790724efe56075c
 TITLE: Screen: Impact analysis
 
 [REQUIREMENT]
+MID: f5feb38777064d9db939279d32f79130
 UID: SDOC-SRS-117
 STATUS: Backlog
 TITLE: Impact analysis
@@ -793,9 +872,11 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: 1d8a2c3cf8c24e1b92fe212ab7efacf2
 TITLE: Screen: Traceability navigator
 
 [REQUIREMENT]
+MID: dbfe92e9ec3b44e9a3e1c9e89a0e9ef5
 UID: SDOC-SRS-113
 STATUS: Backlog
 TITLE: Traceability navigator
@@ -814,10 +895,12 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: 2d4dc6fc901f4b28aaf414fcfbdfabca
 UID: SECTION-SRS-Requirements-to-source-traceability
 TITLE: Requirements-to-source traceability
 
 [REQUIREMENT]
+MID: 221b544dab2e4b96be124e1caf84a7c2
 UID: SDOC-SRS-33
 STATUS: Active
 TITLE: Link requirements with source files
@@ -831,6 +914,7 @@ RELATIONS:
   VALUE: ZEP-11
 
 [REQUIREMENT]
+MID: b9144222a7f3454da2989f494cd9647c
 UID: SDOC-SRS-34
 STATUS: Active
 TITLE: Annotate source file
@@ -842,6 +926,7 @@ RELATIONS:
   VALUE: SDOC-SSS-72
 
 [REQUIREMENT]
+MID: 61c25cab106e4283b2c6d64bf1db96b2
 UID: SDOC-SRS-124
 STATUS: Active
 TITLE: Single-line code marker
@@ -858,6 +943,7 @@ RELATIONS:
   VALUE: ZEP-12
 
 [REQUIREMENT]
+MID: 3aeb1eea0dba4041a9161a1a8d291999
 UID: SDOC-SRS-35
 STATUS: Active
 TITLE: Generate source coverage
@@ -873,6 +959,7 @@ RELATIONS:
   VALUE: DO178-13
 
 [REQUIREMENT]
+MID: 56ecfb19152e45b09c0e55de2d1d5f05
 UID: SDOC-SRS-36
 STATUS: Active
 TITLE: Generate source file traceability
@@ -889,14 +976,17 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: 1acdd6ddf9d24dbaa320230402152226
 UID: SECTION-SRS-Export-import-formats
 TITLE: Export/import formats
 
 [SECTION]
+MID: ce1d174a4d794250931a5ba519583be6
 UID: SECTION-SRS-RST
 TITLE: RST
 
 [REQUIREMENT]
+MID: 2aa615b9cf264e7aad826f4ff466e514
 UID: SDOC-SRS-70
 TITLE: Export to RST
 STATEMENT: >>>
@@ -915,6 +1005,7 @@ RELATIONS:
   VALUE: DO178-16
 
 [REQUIREMENT]
+MID: 6faffbd1d4cc47ea88c08ef38966e5ec
 UID: SDOC-SRS-71
 STATUS: Active
 TITLE: Docutils
@@ -936,10 +1027,12 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: a906dfb776334b8985f778f0fe1b79e4
 UID: SECTION-SRS-ReqIF
 TITLE: ReqIF
 
 [REQUIREMENT]
+MID: 2bf94015818e4770b2b1947b5fdbb969
 UID: SDOC-SRS-72
 STATUS: Progress
 TITLE: Export/import from/to ReqIF
@@ -951,6 +1044,7 @@ RELATIONS:
   VALUE: SDOC-SSS-58
 
 [REQUIREMENT]
+MID: bb52b698d7a544aca420d606e4e51356
 UID: SDOC-SRS-73
 STATUS: Active
 TITLE: Standalone ReqIF layer
@@ -958,10 +1052,12 @@ TITLE: Standalone ReqIF layer
 [/SECTION]
 
 [SECTION]
+MID: 0ffda51372b641f6ba460bf5ac8b3627
 UID: SECTION-SRS-Excel
 TITLE: Excel and CSV
 
 [REQUIREMENT]
+MID: f7b587f66dda402dbd58768e2740742f
 UID: SDOC-SRS-74
 TITLE: Export to Excel
 STATEMENT: >>>
@@ -972,6 +1068,7 @@ RELATIONS:
   VALUE: SDOC-SSS-60
 
 [REQUIREMENT]
+MID: 452fbd74d01843fe949d3bd804df203e
 UID: SDOC-SRS-129
 STATUS: Backlog
 TITLE: Export/import to CSV
@@ -983,6 +1080,7 @@ RELATIONS:
   VALUE: SDOC-SSS-59
 
 [REQUIREMENT]
+MID: a7c504087df04cedb5541d83ed988e9b
 UID: SDOC-SRS-75
 STATUS: Draft
 TITLE: ReqXLS
@@ -990,10 +1088,12 @@ TITLE: ReqXLS
 [/SECTION]
 
 [SECTION]
+MID: 5cefe175d19b4ef58b8398410d3de341
 UID: SECTION-SRS-Graphviz-Dot-export
 TITLE: Graphviz/Dot export
 
 [REQUIREMENT]
+MID: 0b68ccfc786f40a1b73bd5f853ddb350
 UID: SDOC-SRS-90
 STATUS: Active
 TITLE: Export to Graphviz/Dot
@@ -1012,13 +1112,16 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: 53cfa6296eec45479544e6c5165d7fb9
 UID: SECTION-SRS-Command-line-interface
 TITLE: Command-line interface
 
 [SECTION]
+MID: 63373c3875404f1c820add84ea057c73
 TITLE: General CLI requirements
 
 [REQUIREMENT]
+MID: 598647eed3a446fe93e2c54b197f830e
 UID: SDOC-SRS-103
 TITLE: Command-line interface
 STATEMENT: >>>
@@ -1031,14 +1134,17 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: 7c6a0efe76b84dcd842ef371796e787e
 UID: SECTION-SRS-Command-Manage
 TITLE: Command: Manage
 
 [SECTION]
+MID: bea76afe9bf241eaaf5984b54e00ff76
 UID: SECTION-SRS-Command-Auto-UID
 TITLE: Command: Auto UID
 
 [REQUIREMENT]
+MID: 7daa1310876a421f8e39f8ac25b99c1d
 UID: SDOC-SRS-85
 STATUS: Active
 TITLE: Auto-generate requirements UIDs
@@ -1050,6 +1156,7 @@ RELATIONS:
   VALUE: SDOC-SSS-6
 
 [REQUIREMENT]
+MID: 07a9636655314912a996ecf5692ae3d5
 UID: SDOC-SRS-86
 TITLE: Auto-generate section UIDs
 
@@ -1060,9 +1167,11 @@ TITLE: Auto-generate section UIDs
 [/SECTION]
 
 [SECTION]
+MID: a0ed7cdd06ec4f0ab6d3ba56cced8c7e
 TITLE: Python API
 
 [REQUIREMENT]
+MID: a20c5b6a021f4dd5a5a5dda2880c1b87
 UID: SDOC-SRS-125
 STATUS: Active
 TITLE: StrictDoc Python API
@@ -1085,9 +1194,11 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: 590121ded2074757aa1720b4d8013426
 TITLE: Web server
 
 [REQUIREMENT]
+MID: 409f462f1f4645c8ad24980727a72521
 UID: SDOC-SRS-126
 STATUS: Backlog
 TITLE: Web server
@@ -1102,6 +1213,7 @@ RELATIONS:
   VALUE: SDOC-SSS-83
 
 [REQUIREMENT]
+MID: bdedcdd91c7f4efb8787b5a82cfec49b
 UID: SDOC-SRS-114
 STATUS: Backlog
 TITLE: Web API
@@ -1122,9 +1234,11 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: 478c38d2cca94107b18fe3dc5b8bfefd
 TITLE: Multi-user workflow
 
 [REQUIREMENT]
+MID: f97dc050ddab4a08bf1689200118faaa
 UID: SDOC-SRS-123
 STATUS: Backlog
 TITLE: Multi-user editing of documents
@@ -1138,6 +1252,7 @@ RELATIONS:
   VALUE: SDOC-SSS-81
 
 [REQUIREMENT]
+MID: e5b2aff0c1db4b11a8c75c278813300b
 UID: SDOC-SRS-130
 STATUS: Backlog
 TITLE: User accounts
@@ -1149,6 +1264,7 @@ RELATIONS:
   VALUE: SDOC-SSS-65
 
 [REQUIREMENT]
+MID: 440f0bc311b84421a7e8bea9dfd2448b
 UID: SDOC-SRS-131
 STATUS: Backlog
 TITLE: Update notifications
@@ -1164,13 +1280,16 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: 44eb09d0e5b542d5984d234167e6f337
 TITLE: User experience
 
 [SECTION]
+MID: 821c01118a9643a188a4ecc5b0cec6a5
 UID: SECTION-SSRS-Strict-mode-by-default
 TITLE: Strict mode by default
 
 [REQUIREMENT]
+MID: c4e9dce647654deeab8471d04573f8cb
 UID: SDOC-SRS-6
 STATUS: Draft
 TITLE: Warnings are errors
@@ -1180,22 +1299,27 @@ TITLE: Warnings are errors
 [/SECTION]
 
 [SECTION]
+MID: 40e7bd8aabdf4cb889e9d7b01b8729e6
 UID: SECTION-SRS-Configurability
 TITLE: Configurability
 
 [REQUIREMENT]
+MID: da446e6d3c6d4b13badd4a47bdbcc5a3
 UID: SDOC-SRS-37
 TITLE: Strictdoc.toml file
 
 [REQUIREMENT]
+MID: 68f35ae8923c4aae82b43147182145e3
 UID: SDOC-SRS-38
 TITLE: Edit project options (Move to SSS)
 
 [REQUIREMENT]
+MID: a6e70c0619204a26b135d1e5fca45dd7
 UID: SDOC-SRS-39
 TITLE: Feature toggles
 
 [REQUIREMENT]
+MID: a8a17295d3e24601891c7d19d5ca67d9
 UID: SDOC-SRS-119
 TITLE: 'Host' parameter
 STATEMENT: >>>
@@ -1208,10 +1332,12 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: bb14fb2c46f34cf1a82b417b57e95853
 UID: SECTION-SSRS-Performance
 TITLE: Performance
 
 [REQUIREMENT]
+MID: acd97ca6b9d2451da53168917d96705e
 UID: SDOC-SRS-1
 STATUS: Active
 TITLE: Process-based parallelization
@@ -1228,6 +1354,7 @@ RELATIONS:
   VALUE: SDOC-SSS-14
 
 [REQUIREMENT]
+MID: 54602f6d120548c8bbd70d1d25113d53
 UID: SDOC-SRS-95
 STATUS: Active
 TITLE: Caching of parsed SDoc documents
@@ -1241,6 +1368,7 @@ RELATIONS:
   VALUE: SDOC-SSS-14
 
 [REQUIREMENT]
+MID: 6fec2f8c0baa4ddba95bee05ad03a785
 UID: SDOC-SRS-2
 TITLE: Incremental generation of documents
 STATEMENT: >>>
@@ -1255,6 +1383,7 @@ RELATIONS:
   VALUE: SDOC-SSS-14
 
 [REQUIREMENT]
+MID: 5f2df631605543d18d57e09bc3791003
 UID: SDOC-SRS-3
 TITLE: Caching of RST fragments
 STATEMENT: >>>
@@ -1270,6 +1399,7 @@ RELATIONS:
   VALUE: SDOC-SSS-14
 
 [REQUIREMENT]
+MID: d0c4828ed8434613aae844481bbef1ca
 UID: SDOC-SRS-4
 TITLE: On-demand loading of HTML pages
 STATEMENT: >>>
@@ -1285,6 +1415,7 @@ RELATIONS:
   VALUE: SDOC-SSS-14
 
 [REQUIREMENT]
+MID: 4e014d3291ce460c993a0ff334eff4a7
 UID: SDOC-SRS-5
 TITLE: Precompiled Jinja templates
 STATEMENT: >>>
@@ -1302,14 +1433,17 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: de3a4de44f474784bf233ea7610eac6c
 UID: SECTION-SRS-Quality-requirements
 TITLE: Development process requirements
 
 [SECTION]
+MID: 47cec130eb3d4583825355f2635e7011
 UID: SECTION-SRS-Requirements-engineering
 TITLE: Requirements engineering
 
 [REQUIREMENT]
+MID: d0ab977bbb494cbf818c92a1cab1bef0
 UID: SDOC-SRS-128
 STATUS: Active
 TITLE: Requirements-based development
@@ -1323,6 +1457,7 @@ RELATIONS:
   VALUE: SDOC-SSS-76
 
 [REQUIREMENT]
+MID: b3fff332c2e342ec9dd372ebd49cb64d
 UID: SDOC-SRS-91
 STATUS: Active
 TITLE: Self-hosted requirements
@@ -1338,14 +1473,17 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: dfbaabc0529f4cc987358ae0563910e9
 UID: SECTION-SRS-Implementation-requirements
 TITLE: Implementation requirements
 
 [SECTION]
+MID: 5eb734a4b8944531aa75f0b71ef22d52
 UID: SECTION-SRS-Programming-languages
 TITLE: Programming languages
 
 [REQUIREMENT]
+MID: 4053ea6c8f6c4c29b89fea0e39912861
 UID: SDOC-SRS-8
 STATUS: Active
 TITLE: Python language
@@ -1362,10 +1500,12 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: 131af6457a9f43299306e6dc9fce65a7
 UID: SECTION-SRS-Cross-platform-availability
 TITLE: Cross-platform availability
 
 [REQUIREMENT]
+MID: ceee07bdc9bd42fc9a4d0e9b4bfc312f
 UID: SDOC-SRS-9
 STATUS: Active
 TITLE: Linux
@@ -1377,6 +1517,7 @@ RELATIONS:
   VALUE: SDOC-SSS-67
 
 [REQUIREMENT]
+MID: f8c7586e1b324480ac0bd153e068350d
 UID: SDOC-SRS-10
 STATUS: Active
 TITLE: macOS
@@ -1388,6 +1529,7 @@ RELATIONS:
   VALUE: SDOC-SSS-67
 
 [REQUIREMENT]
+MID: 6af3dbb1e05244579622d3d2a26b5413
 UID: SDOC-SRS-11
 STATUS: Active
 TITLE: Windows
@@ -1403,10 +1545,12 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: 852396c217184ba98a0d26b92f36fd04
 UID: SECTION-SRS-Implementation-constraints
 TITLE: Implementation constraints
 
 [REQUIREMENT]
+MID: 83d5c896004948b48c3597d58267dafa
 UID: SDOC-SRS-89
 STATUS: Active
 TITLE: Exclusive use of open source components
@@ -1423,6 +1567,7 @@ RELATIONS:
   VALUE: SDOC-SSS-39
 
 [REQUIREMENT]
+MID: fc76b207c152433888a86a166f58a425
 UID: SDOC-SRS-13
 STATUS: Active
 TITLE: Real-time editing out of scope
@@ -1434,6 +1579,7 @@ The real-time editing feature is hard to achieve with a small part-time involvem
 <<<
 
 [REQUIREMENT]
+MID: b22bf982e73246a79a5ba4ae653d21e5
 UID: SDOC-SRS-14
 STATUS: Active
 TITLE: No heavy UI frameworks
@@ -1444,6 +1590,7 @@ NOTE: An example of frameworks that require a very specific architecture: React 
 <<<
 
 [REQUIREMENT]
+MID: 309e4108c1fa47e99d4331af642f3b81
 UID: SDOC-SRS-15
 STATUS: Active
 TITLE: No use of NPM
@@ -1455,6 +1602,7 @@ StrictDoc already deals with the Python/Pip/Pypi ecosystem. The amount of necess
 <<<
 
 [REQUIREMENT]
+MID: b9cacb97a045418385c7f870b23ac063
 UID: SDOC-SRS-16
 STATUS: Active
 TITLE: No use of JavaScript replacement languages (e.g., Typescript)
@@ -1466,6 +1614,7 @@ The development team does not have specific experience with any of the JS altern
 <<<
 
 [REQUIREMENT]
+MID: 70f05a744a0546909dc5b69de88ad41f
 UID: SDOC-SRS-87
 STATUS: Active
 TITLE: Monolithic application with no microservices
@@ -1484,6 +1633,7 @@ RELATIONS:
   VALUE: SDOC-SSS-82
 
 [REQUIREMENT]
+MID: 7d68821750a54cb5833b608cfc278f47
 UID: SDOC-SRS-88
 STATUS: Active
 TITLE: No reliance on containerization
@@ -1503,38 +1653,46 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: e4e5b9934e074cdb9567fa197db20a4a
 UID: SECTION-SRS-Coding-constraints
 TITLE: Coding constraints
 
 [REQUIREMENT]
+MID: 61d96cd1d03e40c48187ee67ac0b65f6
 UID: SDOC-SRS-40
 TITLE: Deliberate use of asserts
 
 [REQUIREMENT]
+MID: 72b5b0c925cf4ef49749b7e466675df1
 UID: SDOC-SRS-41
 TITLE: Extensive use of type annotations
 
 [REQUIREMENT]
+MID: de887bc2fb434488925ccfcf2ab9deb5
 UID: SDOC-SRS-7
 TITLE: Type-based auto-asserts
 
 [/SECTION]
 
 [SECTION]
+MID: 61e87567580045378d970b327d218cac
 UID: SECTION-SRS-Linting
 TITLE: Linting
 
 [REQUIREMENT]
+MID: 6c0163c56ade49faa353ec06cbd676cd
 UID: SDOC-SRS-42
 TITLE: Compliance with Python community practices (PEP8 etc)
 
 [/SECTION]
 
 [SECTION]
+MID: 3029f97a1276499dbbd5d7c71691908e
 UID: SECTION-SRS-Static-analysis
 TITLE: Static analysis
 
 [REQUIREMENT]
+MID: 2cc9b494ca6248058b6bf63b6e2c1cfa
 UID: SDOC-SRS-43
 STATUS: Active
 TITLE: Static type checking
@@ -1548,10 +1706,12 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: 3aba8ca86d404ba9a063ce125489f35b
 UID: SECTION-SRS-Testing
 TITLE: Testing
 
 [REQUIREMENT]
+MID: 2731c64ab32146eeb4b8167df4a34540
 UID: SDOC-SRS-44
 STATUS: Active
 TITLE: Unit testing
@@ -1565,6 +1725,7 @@ RELATIONS:
   VALUE: SDOC-SSS-78
 
 [REQUIREMENT]
+MID: 70ef3986cfc4437bbb10288d3b55958c
 UID: SDOC-SRS-45
 TITLE: CLI interface black-box integration testing
 STATEMENT: >>>
@@ -1577,6 +1738,7 @@ RELATIONS:
   VALUE: SDOC-SSS-78
 
 [REQUIREMENT]
+MID: a42c65f1a53b4c9bb50bc2a1ecb855cb
 UID: SDOC-SRS-46
 STATUS: Active
 TITLE: Web end-to-end testing
@@ -1590,6 +1752,7 @@ RELATIONS:
   VALUE: SDOC-SSS-78
 
 [REQUIREMENT]
+MID: c90f35ab9a7f4c29a418557151878b9f
 UID: SDOC-SRS-47
 STATUS: Active
 TITLE: At least one integration or end-to-end test
@@ -1616,13 +1779,16 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: 83bdb9731e78431cb48d584d279443b4
 TITLE: Code hosting and distribution
 
 [SECTION]
+MID: dbd186fae9624fd6af8aeb55edfaa43b
 UID: SECTION-SRS-Code-hosting
 TITLE: Code hosting
 
 [REQUIREMENT]
+MID: b112c60bc2f34114ab1f3361a1a10a00
 UID: SDOC-SRS-12
 STATUS: Active
 TITLE: GitHub
@@ -1638,6 +1804,7 @@ RELATIONS:
 [/SECTION]
 
 [REQUIREMENT]
+MID: bd949cbbe07c4cb29492ea0c8e5c1eec
 UID: SDOC-SRS-118
 STATUS: Active
 TITLE: StrictDoc license

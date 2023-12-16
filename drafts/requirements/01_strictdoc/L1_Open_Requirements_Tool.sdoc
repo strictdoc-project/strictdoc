@@ -1,7 +1,10 @@
 [DOCUMENT]
+MID: b7bcca934cd148c3855beb4c85723bc5
 TITLE: [L1] Requirements Tool specification
 REQ_PREFIX: SDOC-SSS-
 ROOT: True
+OPTIONS:
+  ENABLE_MID: True
 
 [FREETEXT]
 The StrictDoc project is structured around two distinct requirement documents that guide its development:
@@ -15,6 +18,7 @@ In contrast, the StrictDoc Requirements Specification, the second document, delv
 [/FREETEXT]
 
 [SECTION]
+MID: 668d18a7489043b38dd435933319e8e7
 TITLE: Summary of user needs
 
 [FREETEXT]
@@ -22,6 +26,7 @@ This section offers an overview of the necessary capabilities of a requirements 
 [/FREETEXT]
 
 [SECTION]
+MID: 1cbe275272994922a942fd088fa969d8
 TITLE: Free and open source tool
 
 [FREETEXT]
@@ -33,6 +38,7 @@ It is assumed throughout this document that the requirements tool will be develo
 [/SECTION]
 
 [SECTION]
+MID: 18136bcb9a5b4226a7a95d27dae49805
 TITLE: Document types
 
 [FREETEXT]
@@ -58,6 +64,7 @@ The documentation/requirements management requirements for a Requirements Tool a
 [/FREETEXT]
 
 [SECTION]
+MID: 973b586b8a89411ab4f083fd4c262cf5
 UID: SECTION-RTC-Appendix-A-Document-archetypes
 TITLE: Document structure differences
 
@@ -86,6 +93,7 @@ The table below summarizes various differences observed across industry document
 [/SECTION]
 
 [SECTION]
+MID: 52b6175f03d7495a9fa8dbffa36aeff4
 UID: SECTION-LRTS-Workflows
 TITLE: Workflows
 
@@ -128,6 +136,7 @@ The section [LINK: SECTION-SSSS-Existing-workflows] contains the workflow-relate
 [/SECTION]
 
 [SECTION]
+MID: 08d547a3b04d485ca1f5a3a94a664ee1
 TITLE: Target audience
 
 [FREETEXT]
@@ -169,6 +178,7 @@ The requirement sets in the sections [LINK: SECTION-RTC-Usability-installation-a
 [/SECTION]
 
 [SECTION]
+MID: f1ffdc7f78134d4b98f3c90e9be40cc7
 UID: SECTION-RTS-Documentation-management
 TITLE: Documentation management
 
@@ -183,6 +193,7 @@ The requirements of this group are dedicated to the core tasks of documentation 
 [/FREETEXT]
 
 [REQUIREMENT]
+MID: 72d0dd23dedd4907b4a8924debe7343b
 UID: SDOC-SSS-3
 STATUS: Active
 TITLE: Documents (CRUD)
@@ -199,6 +210,7 @@ The CRUD operations are essential operations of document management. They are at
 <<<
 
 [REQUIREMENT]
+MID: c4de5f1f46f343b6b4e8dc2a6121b0a2
 UID: SDOC-SSS-51
 STATUS: Active
 TITLE: Documents with nested sections/chapters structure
@@ -207,6 +219,7 @@ The Requirements Tool shall allow management of documents with nested sections/c
 <<<
 
 [REQUIREMENT]
+MID: 5236f36f278140539e347bacea921118
 UID: SDOC-SSS-52
 TITLE: Assembling documents from fragments
 RELATIONS:
@@ -214,6 +227,7 @@ RELATIONS:
   VALUE: ZEP-1
 
 [REQUIREMENT]
+MID: 8aeecdfa139341588d6ab8c0c3606a9b
 UID: SDOC-SSS-53
 STATUS: Active
 TITLE: Document meta information (UID, version, authors, signatures, etc)
@@ -222,6 +236,7 @@ The Requirements Tool shall support management of document meta information.
 <<<
 
 [REQUIREMENT]
+MID: d1883b65e17442c0a22987d4ad415cb6
 UID: SDOC-SSS-75
 STATUS: Active
 TITLE: Document versioning
@@ -230,6 +245,7 @@ The Requirements Tool shall provide capabilities for document versioning.
 <<<
 
 [REQUIREMENT]
+MID: b8d7b22fd8a6478a9a21ecaa60cf0028
 UID: SDOC-SSS-63
 TITLE: Text formatting capabilities
 STATEMENT: >>>
@@ -248,6 +264,7 @@ RELATIONS:
 [/SECTION]
 
 [SECTION]
+MID: fd227b9cfdc54d7db3134cdb925bde87
 UID: SECTION-RTS-Requirements-management
 TITLE: Requirements management
 
@@ -263,6 +280,7 @@ The following core aspects of the requirements management are covered:
 [/FREETEXT]
 
 [REQUIREMENT]
+MID: 6e6f1464c47f4ced8e14c4153f40618b
 UID: SDOC-SSS-4
 STATUS: Active
 TITLE: Requirements CRUD
@@ -279,6 +297,7 @@ The CRUD operations are at the core of the requirements management.
 <<<
 
 [REQUIREMENT]
+MID: db42ad4b504e48e0bf51b4d82529a888
 UID: SDOC-SSS-61
 STATUS: Active
 TITLE: Minimal requirement field set
@@ -306,6 +325,7 @@ RELATIONS:
   VALUE: ZEP-14
 
 [REQUIREMENT]
+MID: a69bae43b3224dfc8439a88451a98395
 UID: SDOC-SSS-62
 STATUS: Active
 TITLE: Custom fields
@@ -322,6 +342,7 @@ RELATIONS:
   VALUE: ZEP-3
 
 [REQUIREMENT]
+MID: 5f89bdaa6cb74e2a8b9b030b6237b7ef
 UID: SDOC-SSS-64
 STATUS: Active
 TITLE: Structuring requirements in documents
@@ -336,6 +357,7 @@ RELATIONS:
   VALUE: ZEP-13
 
 [REQUIREMENT]
+MID: 65575cc8a87e4d4480ccdf89d1fb6d67
 UID: SDOC-SSS-5
 STATUS: Active
 TITLE: Move requirement nodes within document
@@ -344,6 +366,7 @@ The Requirements Tool shall allow moving nodes (sections, requirements) within t
 <<<
 
 [REQUIREMENT]
+MID: 06ab121d3c0f4d8c94652323b8f735c6
 UID: SDOC-SSS-70
 STATUS: Active
 TITLE: Move nodes between documents
@@ -352,6 +375,7 @@ The Requirements Tool shall allow moving nodes (sections, requirements) between 
 <<<
 
 [REQUIREMENT]
+MID: 637c129a91804d8cbe2280c1af14836d
 UID: SDOC-SSS-6
 STATUS: Active
 TITLE: Auto-provision of Requirement UIDs
@@ -366,6 +390,7 @@ RELATIONS:
   VALUE: ZEP-8
 
 [REQUIREMENT]
+MID: 1ce495a5194044d4a7a3dd030f766c9f
 UID: SDOC-SSS-7
 TITLE: Link requirements together
 RELATIONS:
@@ -373,6 +398,7 @@ RELATIONS:
   VALUE: ZEP-4
 
 [REQUIREMENT]
+MID: 44b9d75e50c84d6c8424cfb8a42a0771
 UID: SDOC-SSS-8
 STATUS: Backlog
 TITLE: Multiple link roles
@@ -389,6 +415,7 @@ RELATIONS:
   VALUE: ZEP-5
 
 [REQUIREMENT]
+MID: 387bd5ff0e4a4a97962661e9d7451f19
 UID: SDOC-SSS-71
 STATUS: Backlog
 TITLE: Reverse parent links
@@ -397,6 +424,7 @@ The Requirements Tool shall support the Reverse Parent relationship.
 <<<
 
 [REQUIREMENT]
+MID: 3850f0b8c8294455bf7be9e2acddbd40
 UID: SDOC-SSS-47
 STATUS: Active
 TITLE: Prevent cycles between nodes
@@ -405,6 +433,7 @@ The Requirements Tool shall provide a validation mechanism that prevents require
 <<<
 
 [REQUIREMENT]
+MID: 1216cb617c0f495a9c96471ef72bf80f
 UID: SDOC-SSS-57
 STATUS: Active
 TITLE: Requirement syntax validation (e.g. EARS)
@@ -415,6 +444,7 @@ The Requirements Tool shall provide capabilities for validating requirements acc
 [/SECTION]
 
 [SECTION]
+MID: 56dabce670be4691b35434bda6d6bb36
 UID: SECTION-SSSS-Performance
 TITLE: Performance
 
@@ -423,6 +453,7 @@ This section captures the performance requirements towards a Requirements Tool.
 [/FREETEXT]
 
 [REQUIREMENT]
+MID: a0a95079e3c0438bb3ea9e5af7ddddc9
 UID: SDOC-SSS-13
 STATUS: Active
 TITLE: Support large requirements sets
@@ -431,6 +462,7 @@ The Requirements Tool shall support requirement trees with at least 10000 requir
 <<<
 
 [REQUIREMENT]
+MID: 64b982c9299a4c8eb7031495e940a3f8
 UID: SDOC-SSS-14
 STATUS: Active
 TITLE: Support large project trees
@@ -441,6 +473,7 @@ The Requirements Tool shall be able to handle documentation packages of at least
 [/SECTION]
 
 [SECTION]
+MID: ec52fa5cc1714b07863eb7da9432be1d
 UID: SECTION-SSSS-Existing-workflows
 TITLE: Existing workflows
 
@@ -449,6 +482,7 @@ This section captures the requirements towards specific workflows that a Require
 [/FREETEXT]
 
 [REQUIREMENT]
+MID: 831debedfa0e4e4c8434021569f96bad
 UID: SDOC-SSS-73
 STATUS: Active
 TITLE: Excel-like viewing and editing of requirements
@@ -462,6 +496,7 @@ As recognized by the parent requirement, some requirements-based workflows are n
 <<<
 
 [REQUIREMENT]
+MID: 5d412989005e4bc3b5dcfd94675615dc
 UID: SDOC-SSS-56
 STATUS: Active
 TITLE: 1000-feet view
@@ -473,6 +508,7 @@ Compared to the other visualizations, such a visualization helps to "see the for
 <<<
 
 [REQUIREMENT]
+MID: 5eb553abd3944bffbd003e37b3d1c5a5
 UID: SDOC-SSS-28
 STATUS: Active
 TITLE: Traceability matrices
@@ -481,6 +517,7 @@ The Requirements Tool shall support generation of traceability matrices.
 <<<
 
 [REQUIREMENT]
+MID: 06f0bb40f76142f4ba59d037aaedc9de
 UID: SDOC-SSS-48
 STATUS: Active
 TITLE: Compliance matrices
@@ -489,10 +526,12 @@ The Requirements Tool shall allow generating a Compliance Matrix document.
 <<<
 
 [REQUIREMENT]
+MID: 74ffae6279bc4e4095c03d6a247c3599
 UID: SDOC-SSS-29
 TITLE: Requirements coverage
 
 [REQUIREMENT]
+MID: e0e6d1f883764719919238e4974dccef
 UID: SDOC-SSS-49
 STATUS: Active
 TITLE: Progress report
@@ -513,6 +552,7 @@ Document-level KPIs: the same but per document.
 <<<
 
 [REQUIREMENT]
+MID: ed4bd232bed84eda977263fa03e75b80
 UID: SDOC-SSS-74
 TITLE: Change management
 STATEMENT: >>>
@@ -526,10 +566,12 @@ The Requirements Tool shall provide capabilities for change management:
 [/SECTION]
 
 [SECTION]
+MID: 85d2f75b2f074f98ace5ceb5288c09b9
 UID: SECTION-RTC-Usability-installation-and-usage
 TITLE: Usability, installation and usage
 
 [REQUIREMENT]
+MID: 7e33387f373d427d9e1af522f1e5bbc5
 UID: SDOC-SSS-79
 STATUS: Active
 TITLE: General usability
@@ -549,6 +591,7 @@ A tool that can be used by a large number of people simplifies its adoption and 
 <<<
 
 [REQUIREMENT]
+MID: 57b01915e4624634909dbb40f5d56697
 UID: SDOC-SSS-80
 STATUS: Active
 TITLE: Easy user experience
@@ -559,6 +602,7 @@ NOTE: Documentation and requirements management are composite activities that co
 <<<
 
 [REQUIREMENT]
+MID: d3e66072363d4e7ea2e2f9691c094bb2
 UID: SDOC-SSS-81
 STATUS: Active
 TITLE: Support projects with a large number of users
@@ -570,6 +614,7 @@ Many documentation and requirements projects involve large groups of people. The
 <<<
 
 [REQUIREMENT]
+MID: db495bc2f11f4f96ace60cdb0bef4d66
 UID: SDOC-SSS-82
 STATUS: Active
 TITLE: Individual use (home PC)
@@ -578,6 +623,7 @@ The Requirements Tool shall be usable on the normal personal computers, e.g., do
 <<<
 
 [REQUIREMENT]
+MID: 90562d92b9a7468ba42567bc72cb6ebf
 UID: SDOC-SSS-83
 STATUS: Active
 TITLE: Server-based deployments (IT-friendly setup)
@@ -590,6 +636,7 @@ larger in-house and cloud-base installations.
 <<<
 
 [REQUIREMENT]
+MID: 4312ed066d19487eba18ec677430e60f
 UID: SDOC-SSS-84
 STATUS: Active
 TITLE: Requirements database
@@ -606,6 +653,7 @@ A database allows:
 <<<
 
 [REQUIREMENT]
+MID: 81858dda65844dcd9640fdd74badecee
 UID: SDOC-SSS-85
 STATUS: Active
 TITLE: Programming access via API (Web)
@@ -617,6 +665,7 @@ Besides a direct access to the tool's source code, accessing an API deployed to 
 <<<
 
 [REQUIREMENT]
+MID: ee96cc5f18e14f6894e2775c546240d8
 UID: SDOC-SSS-86
 STATUS: Active
 TITLE: Programming access via API (SDK)
@@ -634,6 +683,7 @@ A SDK allows a software engineer to extend the Requirements Tool capabilities.
 <<<
 
 [REQUIREMENT]
+MID: f4b122c5081f4b218aa93a119e372a34
 UID: SDOC-SSS-87
 STATUS: Active
 TITLE: Programmatic access to requirements data
@@ -647,10 +697,12 @@ When the requirements data is accessible by a user directly, it is possible to e
 [/SECTION]
 
 [SECTION]
+MID: 29fa83c59e714d0da8b36a9dc65b0c72
 UID: SECTION-SSSS-Implementation-suggestions
 TITLE: Implementation suggestions
 
 [REQUIREMENT]
+MID: 3db06eb066b4441290e06b08405da0a9
 UID: SDOC-SSS-30
 STATUS: Active
 TITLE: Static HTML export
@@ -666,6 +718,7 @@ A static HTML export capability enables:
 <<<
 
 [REQUIREMENT]
+MID: e718af582b0345c2b0ddb6e405cb6d9a
 UID: SDOC-SSS-31
 STATUS: Active
 TITLE: Graphical user interface (GUI)
@@ -674,6 +727,7 @@ The Requirements Tool shall provide a graphical user interface.
 <<<
 
 [REQUIREMENT]
+MID: cd20e9613a65441a8862143ba6407f61
 UID: SDOC-SSS-32
 STATUS: Active
 TITLE: Command-line interface
@@ -682,6 +736,7 @@ The Requirements Tool shall provide a command line interface (CLI).
 <<<
 
 [REQUIREMENT]
+MID: 4475857729e5476cbbb409cc844048fd
 UID: SDOC-SSS-68
 STATUS: Active
 TITLE: Web API interface
@@ -690,6 +745,7 @@ The Requirements Tool shall provide an API interface.
 <<<
 
 [REQUIREMENT]
+MID: 5ac2f3010db84466bff854fc323e944c
 UID: SDOC-SSS-33
 STATUS: Active
 TITLE: Version control (Git)
@@ -703,6 +759,7 @@ RATIONALE: >>>
 <<<
 
 [REQUIREMENT]
+MID: b76fb774542849a182e2cdd89fdaab3c
 UID: SDOC-SSS-67
 STATUS: Active
 TITLE: Support major operating systems
@@ -715,6 +772,7 @@ The Requirements Tool shall support at least the following operating systems:
 <<<
 
 [REQUIREMENT]
+MID: 871a7a66eb50436997fde692e90e93eb
 UID: SDOC-SSS-69
 STATUS: Active
 TITLE: Conservative languages for implementation
@@ -738,6 +796,7 @@ Examples of less popular programming languages, with all due respect to their po
 [/SECTION]
 
 [SECTION]
+MID: 7bdea1a7cb9e4f6fbcf8497670f87278
 UID: SECTION-RTS-Text-based-requirements-language
 TITLE: Text-based requirements language (optional)
 
@@ -747,6 +806,7 @@ following requirements apply.
 [/FREETEXT]
 
 [REQUIREMENT]
+MID: f472e85f3398413795234a9298d4af3c
 UID: SDOC-SSS-88
 STATUS: Active
 TITLE: Text files for storing documentation and requirements
@@ -755,6 +815,7 @@ The Requirements Tool shall allow storage of documentation and requirements cont
 <<<
 
 [REQUIREMENT]
+MID: b13bc3dfa7324f238bc06a88baf5edb6
 UID: SDOC-SSS-55
 STATUS: Active
 TITLE: Strict text language syntax
@@ -763,6 +824,7 @@ The Requirements Tool shall provide a strict syntax for its text language.
 <<<
 
 [REQUIREMENT]
+MID: 0b47da74f9ec45e6a77573185b95f327
 UID: SDOC-SSS-54
 STATUS: Active
 TITLE: Machine-readable format
@@ -774,6 +836,7 @@ RELATIONS:
   VALUE: ZEP-2
 
 [REQUIREMENT]
+MID: 13f3e7765b494237893c1585a7c9dfd0
 UID: SDOC-SSS-34
 STATUS: Active
 TITLE: Requirements data from multiple repositories
@@ -786,10 +849,12 @@ NOTE: The folders/repositories can be arbitrarily nested.
 [/SECTION]
 
 [SECTION]
+MID: 8b1da9907bc847c989dc807b7dff2a05
 UID: SECTION-RTS-Requirements-and-source-code
 TITLE: Requirements and source code
 
 [REQUIREMENT]
+MID: 4692362c77974fb8bcbeefdc248d0e89
 UID: SDOC-SSS-72
 STATUS: Active
 TITLE: Traceability between requirements and source code
@@ -802,6 +867,7 @@ NOTE: The Requirements Tool does not necessarily have to implement the complete 
 [/SECTION]
 
 [SECTION]
+MID: cd9e353e07ae4d50b1aa08999854aa02
 UID: SECTION-RTS-Requirements-exchange-formats-export-import
 TITLE: Requirements exchange formats (export/import)
 
@@ -812,6 +878,7 @@ The Requirements Tool should fundamentally support the exchange of documentation
 [/FREETEXT]
 
 [REQUIREMENT]
+MID: 73e70548c2cf415f94adbf1066d5fe4b
 UID: SDOC-SSS-58
 STATUS: Active
 TITLE: ReqIF export/import
@@ -826,6 +893,7 @@ RELATIONS:
   VALUE: ZEP-6
 
 [REQUIREMENT]
+MID: c94de32c2c2e454d81c77724a4f29283
 UID: SDOC-SSS-59
 STATUS: Active
 TITLE: CSV export/import
@@ -837,6 +905,7 @@ RELATIONS:
   VALUE: ZEP-7
 
 [REQUIREMENT]
+MID: f7a600a238e34075ac6b65852492cc2f
 UID: SDOC-SSS-60
 STATUS: Active
 TITLE: Excel export/import
@@ -847,15 +916,18 @@ The Requirements Tool shall support exporting/importing requirements content fro
 [/SECTION]
 
 [SECTION]
+MID: efaa3e91045c4d49a70232f09a85ad35
 UID: SECTION-RTS-Requirements-collaboration
 TITLE: Requirements collaboration
 
 [REQUIREMENT]
+MID: f9d65df46ff24b0da6cb2bf011f0fc70
 UID: SDOC-SSS-65
 STATUS: Draft
 TITLE: Support user accounts
 
 [REQUIREMENT]
+MID: 29d0374556494f38977ec3c928aa894d
 UID: SDOC-SSS-66
 STATUS: Draft
 TITLE: Send notifications about updated requirements
@@ -863,10 +935,12 @@ TITLE: Send notifications about updated requirements
 [/SECTION]
 
 [SECTION]
+MID: f80a4b7ff03042849c3814c6cd5e5ca4
 UID: SECTION-SSSS-Development-process
 TITLE: Development process
 
 [REQUIREMENT]
+MID: f16ea50f686e412f9c21d8096055bb47
 UID: SDOC-SSS-76
 STATUS: Active
 TITLE: Requirements engineering
@@ -878,6 +952,7 @@ A requirements tool is not a trivial project. A clear set of requirements for th
 <<<
 
 [REQUIREMENT]
+MID: 0bebdf77108a499c87e5c0838204c39c
 UID: SDOC-SSS-50
 STATUS: Active
 TITLE: Self-hosted requirements
@@ -892,6 +967,7 @@ RELATIONS:
   VALUE: ZEP-15
 
 [REQUIREMENT]
+MID: 1a39a758930040029db320d8466806c1
 UID: SDOC-SSS-77
 TITLE: Test coverage
 STATEMENT: >>>
@@ -906,6 +982,7 @@ The presence of tests, the adequate selection of test methods and a high test co
 <<<
 
 [REQUIREMENT]
+MID: 8cb5ac6812924f4c8f4afd156b2f021c
 UID: SDOC-SSS-78
 STATUS: Active
 TITLE: Tool qualification
@@ -919,6 +996,7 @@ Many project developments require a qualification of the tools used during the d
 [/SECTION]
 
 [SECTION]
+MID: e4cd429e9ec04deabfd1fb1381c39e38
 UID: SECTION-SSSS-Licensing-and-distribution
 TITLE: Licensing and distribution
 
@@ -927,6 +1005,7 @@ This section outlines the requirements for the "free and open source" aspect of 
 [/FREETEXT]
 
 [REQUIREMENT]
+MID: 2f30b94fdc074c8fa5858dfccc6202e8
 UID: SDOC-SSS-38
 STATUS: Active
 TITLE: Open source
@@ -935,6 +1014,7 @@ The Requirements Tool's source code shall be publicly available, e.g., hosted on
 <<<
 
 [REQUIREMENT]
+MID: 27b640de8cae44a680b23429c981bee9
 UID: SDOC-SSS-39
 STATUS: Active
 TITLE: Only open source dependencies
@@ -943,6 +1023,7 @@ The Requirement Tool's source code shall be based on open source software compon
 <<<
 
 [REQUIREMENT]
+MID: 1338faad11204073a97212fa0fd11317
 UID: SDOC-SSS-40
 STATUS: Active
 TITLE: Free

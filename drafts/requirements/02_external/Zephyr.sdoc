@@ -1,9 +1,13 @@
 [DOCUMENT]
+MID: 2e7deb9808bb42879e7463b1d7ac9bba
 TITLE: Zephyr Requirements Tool requirements
 REQ_PREFIX: ZEP-
 ROOT: True
+OPTIONS:
+  ENABLE_MID: True
 
 [REQUIREMENT]
+MID: 68e87901205c4b0dbb6a0071479330b5
 UID: ZEP-1
 STATUS: Active
 TITLE: Multiple files / include mechanism
@@ -15,6 +19,7 @@ In a future constellation the requirements shall be written resp. update with th
 <<<
 
 [REQUIREMENT]
+MID: 36415af620f645388af4dc51c2a19b97
 UID: ZEP-2
 STATUS: Active
 TITLE: Clear separation of requirements (machine-readable)
@@ -26,6 +31,7 @@ For exporting or machine processing, a clear separation of requirements objects 
 <<<
 
 [REQUIREMENT]
+MID: 7a9e26240f5c4fe29143cf3348ac3d3b
 UID: ZEP-3
 STATUS: Active
 TITLE: Custom fields
@@ -38,6 +44,7 @@ By having typed requirements objects, linkages between requirements objects can 
 <<<
 
 [REQUIREMENT]
+MID: a5928d6204a84d02a3c367d6dbc54092
 UID: ZEP-4
 STATUS: Active
 TITLE: Links
@@ -49,6 +56,7 @@ A SAIS requirement will link to a SRS requirement via «refines» link. A SITS t
 <<<
 
 [REQUIREMENT]
+MID: 55bbe693d12d4e00956d41a837ef15ef
 UID: ZEP-5
 STATUS: Active
 TITLE: Multiple link roles
@@ -60,6 +68,7 @@ Link roles and requirements object types allow to verify, that the traceability 
 <<<
 
 [REQUIREMENT]
+MID: b58c387f3a2d4cf6a540e279dbe49e47
 UID: ZEP-6
 STATUS: Active
 TITLE: ReqIF export
@@ -71,6 +80,7 @@ Will/may be used to as exchange format to generate a requirements and traceabili
 <<<
 
 [REQUIREMENT]
+MID: 17a141add32f4d7696b5a74b6507b9aa
 UID: ZEP-7
 STATUS: Active
 TITLE: CSV
@@ -82,6 +92,7 @@ Will/may be used to as exchange format to generate a requirements and traceabili
 <<<
 
 [REQUIREMENT]
+MID: d0d258d8640443578c7ec508c014b50d
 UID: ZEP-8
 STATUS: Active
 TITLE: Unique ID management
@@ -99,6 +110,7 @@ Centralized object ID management might collide with a branching, PR, merging pro
 <<<
 
 [REQUIREMENT]
+MID: 611546bf2409417e8844f93854d54268
 UID: ZEP-9
 STATUS: Active
 TITLE: Text formatting capabilities
@@ -116,6 +128,7 @@ In some cases a plain text requirement is not sufficiently clear and requires fo
 <<<
 
 [REQUIREMENT]
+MID: f1f6da87da5c49d1b8c3441b14863975
 UID: ZEP-10
 STATUS: Active
 TITLE: Minimal requirement field set
@@ -134,6 +147,7 @@ TBD
 <<<
 
 [REQUIREMENT]
+MID: 55cbd9b658164414adb0c13b0446e3f7
 UID: ZEP-11
 STATUS: Active
 TITLE: Requirements to source code traceability
@@ -145,6 +159,7 @@ For safety development and certification linking to code is required.
 <<<
 
 [REQUIREMENT]
+MID: a2930225168147808e6554a4da49aeb4
 UID: ZEP-12
 STATUS: Active
 TITLE: Non-intrusive links in source code
@@ -156,6 +171,7 @@ Code with lots of meta information in it via comment tags, makes the code less r
 <<<
 
 [REQUIREMENT]
+MID: 2614d6673a594da995df672e8943839e
 UID: ZEP-13
 STATUS: Active
 TITLE: Structuring requirements in documents
@@ -167,6 +183,7 @@ A collection of unorganized requirements as a specifications are hard to read an
 <<<
 
 [REQUIREMENT]
+MID: a92a28ce3bcb4b3590f36e778a604ccb
 UID: ZEP-14
 STATUS: Active
 TITLE: Status field
@@ -178,6 +195,7 @@ Requirements may be in different statuses such as Draft, InReview, Approved. Dep
 <<<
 
 [REQUIREMENT]
+MID: b74919612283422a9e139418a20926c6
 UID: ZEP-15
 STATUS: Active
 TITLE: Tool Qualifiability

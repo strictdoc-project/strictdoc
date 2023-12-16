@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Hello world doc
+OPTIONS:
+  ENABLE_MID: True
+
+[SECTION]
+TITLE: Section 1
+
+[REQUIREMENT]
+TITLE: Req-1
+
+[REQUIREMENT]
+TITLE: Req-2
+
+[/SECTION]

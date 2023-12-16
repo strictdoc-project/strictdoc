@@ -288,7 +288,9 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         document_config: DocumentConfig = DocumentConfig.default_config(None)
         document_config.markup = "HTML"
         document_title = title if title else "<No title>"
-        document = Document(document_title, document_config, None, None, [], [])
+        document = Document(
+            None, document_title, document_config, None, None, [], []
+        )
         document.grammar = DocumentGrammar.create_default(document)
         return document
 
@@ -336,6 +338,7 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         section_title = section_title.strip().replace("\n", " ")
         section = Section(
             parent=None,
+            mid=None,
             uid=None,
             custom_level=None,
             title=section_title,
@@ -420,7 +423,10 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                 )
             )
         requirement = Requirement(
-            parent=parent_section, requirement_type="REQUIREMENT", fields=fields
+            parent=parent_section,
+            requirement_type="REQUIREMENT",
+            mid=None,
+            fields=fields,
         )
         requirement.ng_level = level
 

@@ -93,6 +93,7 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes, too-ma
         self,
         parent,
         requirement_type: str,
+        mid: Optional[str],
         fields: List[RequirementField],
         requirements=None,
     ):
@@ -186,7 +187,8 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes, too-ma
         self.ng_document_reference: Optional[DocumentReference] = None
         self.context = RequirementContext()
 
-        self.mid: MID = MID.create()
+        self.reserved_mid: MID = MID(mid) if mid is not None else MID.create()
+        self.mid_permanent: bool = mid is not None
 
         # HEF4
         self.ng_resolved_custom_level: Optional[str] = None

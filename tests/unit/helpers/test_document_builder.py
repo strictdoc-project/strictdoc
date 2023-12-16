@@ -105,6 +105,7 @@ class DocumentBuilder:
             classification=None,
             requirement_prefix=None,
             root=None,
+            enable_mid=None,
             markup=None,
             auto_levels=None,
             requirement_style=None,
@@ -113,7 +114,13 @@ class DocumentBuilder:
         free_texts = []
         section_contents = []
         document = Document(
-            "Test Document", config, None, None, free_texts, section_contents
+            None,
+            "Test Document",
+            config,
+            None,
+            None,
+            free_texts,
+            section_contents,
         )
         document.grammar = DocumentGrammar.create_default(document)
         return document

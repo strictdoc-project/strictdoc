@@ -45,12 +45,17 @@ class SDWriter:
     def __init__(self):
         pass
 
-    def write(self, document):
+    def write(self, document: Document):
         document_iterator = DocumentCachingIterator(document)
         output = ""
 
         output += "[DOCUMENT]"
         output += "\n"
+
+        if document.mid_permanent or document.config.enable_mid:
+            output += "MID: "
+            output += document.reserved_mid.get_string_value()
+            output += "\n"
 
         output += "TITLE: "
         output += document.title
@@ -84,19 +89,26 @@ class SDWriter:
                 output += "True" if root else "False"
                 output += "\n"
 
+            enable_mid = document_config.enable_mid
             markup = document_config.markup
             auto_levels_specified = document_config.ng_auto_levels_specified
             requirement_style = document_config.requirement_style
             requirement_in_toc = document_config.requirement_in_toc
 
             if (
-                markup is not None
+                enable_mid is not None
+                or markup is not None
                 or auto_levels_specified
                 or requirement_style is not None
                 or requirement_in_toc is not None
             ):
                 output += "OPTIONS:"
                 output += "\n"
+
+                if enable_mid is not None:
+                    output += "  ENABLE_MID: "
+                    output += "True" if enable_mid else "False"
+                    output += "\n"
 
                 if markup is not None:
                     output += "  MARKUP: "
@@ -118,6 +130,7 @@ class SDWriter:
                     output += requirement_in_toc
                     output += "\n"
 
+        assert document.grammar is not None
         document_grammar: DocumentGrammar = document.grammar
         if not document_grammar.is_default:
             output += "\n[GRAMMAR]\n"
@@ -172,7 +185,7 @@ class SDWriter:
                 continue
 
             if isinstance(content_node, Section):
-                output += self._print_section(content_node)
+                output += self._print_section(content_node, document)
                 closing_tags.append((TAG.SECTION, content_node.ng_level))
             elif isinstance(content_node, Requirement):
                 if isinstance(content_node, CompositeRequirement):
@@ -196,11 +209,16 @@ class SDWriter:
 
         return output
 
-    def _print_section(self, section: Section):
+    def _print_section(self, section: Section, document: Document):
         assert isinstance(section, Section)
         output = ""
         output += "[SECTION]"
         output += "\n"
+
+        if section.mid_permanent or document.config.enable_mid:
+            output += "MID: "
+            output += section.reserved_mid.get_string_value()
+            output += "\n"
 
         if section.uid:
             output += "UID: "
@@ -230,6 +248,11 @@ class SDWriter:
         section_content: Requirement, document: Document
     ):
         output = ""
+
+        if section_content.mid_permanent or document.config.enable_mid:
+            output += "MID: "
+            output += section_content.reserved_mid.get_string_value()
+            output += "\n"
 
         element = document.grammar.elements_by_type[
             section_content.requirement_type

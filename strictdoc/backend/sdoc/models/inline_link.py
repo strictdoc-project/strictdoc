@@ -8,7 +8,9 @@ class InlineLink:
         self.parent = parent
         self.link = value
 
+        # FIXME: Remove either mid or reserved_mid.
         self.mid: MID = MID.create()
+        self.reserved_mid: MID = self.mid
 
     def parent_node(self):
         return self.parent.parent

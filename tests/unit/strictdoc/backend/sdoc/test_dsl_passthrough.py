@@ -145,6 +145,55 @@ This is a statement 3
     assert input_sdoc == output
 
 
+def test_020_requirement_mid():
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+MID: abcdef123456
+STATEMENT: >>>
+This is a statement 1
+This is a statement 2
+This is a statement 3
+<<<
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input_sdoc)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input_sdoc == output
+
+
+def test_021_section_and_document_mid():
+    input_sdoc = """
+[DOCUMENT]
+MID: xyz09876
+TITLE: Test Doc
+
+[SECTION]
+MID: abcdef123456
+TITLE: Test Section
+
+[/SECTION]
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input_sdoc)
+    assert isinstance(document, Document)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input_sdoc == output
+
+
 def test_030_multiline_statement():
     input_sdoc = """
 [DOCUMENT]
@@ -796,6 +845,29 @@ OPTIONS:
     assert input_sdoc == output
 
 
+def test_089_document_config_use_mid():
+    input_sdoc = """
+[DOCUMENT]
+MID: foobar
+TITLE: Test Doc
+OPTIONS:
+  ENABLE_MID: True
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input_sdoc)
+    assert isinstance(document, Document)
+
+    document: Document = reader.read(input_sdoc)
+    assert document.config.enable_mid is True
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input_sdoc == output
+
+
 def test_edge_case_01_minimal_requirement():
     input_sdoc = """
 [DOCUMENT]
@@ -943,9 +1015,10 @@ TITLE:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected 'UID: ' or 'LEVEL: ' or 'TITLE: '" == exc_info.value.args[
-        0
-    ].decode("utf-8")
+    assert (
+        "Expected 'MID: ' or 'UID: ' or 'LEVEL: ' or 'TITLE: '"
+        == exc_info.value.args[0].decode("utf-8")
+    )
 
 
 def test_edge_case_21_section_title_with_empty_space():

@@ -306,7 +306,10 @@ class ProjectTreeDiffStats:
             if isinstance(parent_, ParentReqReference):
                 requirement_parent_uids.add(parent_.ref_uid)
 
-        if requirement.mid_permanent and requirement.reserved_mid in self.map_mid_to_nodes:
+        if (
+            requirement.mid_permanent
+            and requirement.reserved_mid in self.map_mid_to_nodes
+        ):
             return self.map_mid_to_nodes[requirement.reserved_mid]
         elif (
             requirement.reserved_uid is None
@@ -472,17 +475,22 @@ class ChangeStats:
             root-level free text (abstract) has changed.
             """
             if document not in change_stats.map_nodes_to_changes:
-                other_document_or_none: Optional[
-                    Document
-                ] = None
+                other_document_or_none: Optional[Document] = None
 
                 # First, the MID-based match is tried. If no MID is available,
                 # try to find a document under the same path.
-                if document.mid_permanent and document.reserved_mid in other_stats.map_mid_to_nodes:
-                    other_document_or_none = other_stats.map_mid_to_nodes[document.reserved_mid]
+                if (
+                    document.mid_permanent
+                    and document.reserved_mid in other_stats.map_mid_to_nodes
+                ):
+                    other_document_or_none = other_stats.map_mid_to_nodes[
+                        document.reserved_mid
+                    ]
                 else:
-                    other_document_or_none = other_stats.map_rel_paths_to_docs.get(
-                        document.meta.input_doc_rel_path
+                    other_document_or_none = (
+                        other_stats.map_rel_paths_to_docs.get(
+                            document.meta.input_doc_rel_path
+                        )
                     )
 
                 title_modified: bool = False
@@ -490,7 +498,10 @@ class ChangeStats:
                 lhs_colored_free_text_diff: Optional[str] = None
                 rhs_colored_free_text_diff: Optional[str] = None
 
-                if other_document_or_none is not None and document.title != other_document_or_none.title:
+                if (
+                    other_document_or_none is not None
+                    and document.title != other_document_or_none.title
+                ):
                     title_modified = True
 
                 if len(document.free_texts) > 0:
@@ -558,8 +569,14 @@ class ChangeStats:
                         matched_uid: Optional[str] = None
                         other_section_or_none: Optional[Section] = None
 
-                        if node.mid_permanent and node.reserved_mid in other_stats.map_mid_to_nodes:
-                            other_section_or_none = other_stats.map_mid_to_nodes[node.reserved_mid]
+                        if (
+                            node.mid_permanent
+                            and node.reserved_mid
+                            in other_stats.map_mid_to_nodes
+                        ):
+                            other_section_or_none = (
+                                other_stats.map_mid_to_nodes[node.reserved_mid]
+                            )
                         elif node.reserved_uid is not None:
                             assert len(node.reserved_uid) > 0
                             if other_stats.map_uid_to_nodes.get(
@@ -900,9 +917,7 @@ class ProjectDiffAnalyzer:
 
         for node in document_iterator.all_content():
             if node.mid_permanent:
-                document_tree_stats.map_mid_to_nodes[
-                    node.reserved_mid
-                ] = node
+                document_tree_stats.map_mid_to_nodes[node.reserved_mid] = node
 
             if isinstance(node, Section):
                 if node.reserved_uid is not None:

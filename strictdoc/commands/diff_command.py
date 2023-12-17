@@ -88,7 +88,7 @@ class DiffCommand:
             standalone=False,
             strictdoc_version=__version__,
             results=True,
-            tab="changelog",
+            tab="diff",
             error_message=None,
         )
 
@@ -100,7 +100,7 @@ class DiffCommand:
 
         # Diff summary generator...
         template = html_templates.jinja_environment().get_template(
-            "screens/git/_static_changelog/index.jinja"
+            "screens/git/index.jinja"
         )
 
         output = template.render(
@@ -108,10 +108,15 @@ class DiffCommand:
             change_stats=change_container.change_stats,
             link_renderer=link_renderer,
             left_revision=lhs_export_input_abs_path,
+            left_revision_urlencoded=lhs_export_input_abs_path,
             right_revision=rhs_export_input_abs_path,
+            right_revision_urlencoded=rhs_export_input_abs_path,
             project_config=project_config,
             standalone=False,
             strictdoc_version=__version__,
+            error_message=None,
+            results=True,
+            tab="changelog",
         )
 
         path_to_output_file = os.path.join(

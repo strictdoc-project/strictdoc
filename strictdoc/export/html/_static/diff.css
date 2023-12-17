@@ -452,3 +452,7 @@ details.diff_document[modified="right"] {
   padding-inline: 0;
   box-shadow: 0 1px 0 white, 0 2px 0 var(--thumbBG);
 }
+
+a.sdoc-tab {
+  color: var(--color-fg-contrast);
+}

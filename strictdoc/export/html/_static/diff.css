@@ -84,7 +84,7 @@
   flex-direction: column;
   gap: var(--base-rhythm);
   padding: var(--base-rhythm);
-  margin-bottom: 100%; /* to balance the scrolling freely */
+  margin-bottom: 200%; /* to balance the scrolling freely */
 }
 
 /* details with summary */
@@ -447,9 +447,6 @@ details.diff_document[modified="right"] {
 /* tabs */
 
 .sdoc-tabs {
-  padding: 0;
-  margin-bottom: calc(var(--base-rhythm)*2);
-  border-bottom: 1px solid white;
-  box-shadow: 0 2px 0 var(--thumbBG);
-  /* box-shadow: 0 0 1rem 0.5rem var(--thumbBG); */
+  padding-inline: 0;
+  box-shadow: 0 1px 0 white, 0 2px 0 var(--thumbBG);
 }

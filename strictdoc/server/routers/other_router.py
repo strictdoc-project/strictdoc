@@ -177,7 +177,7 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
         path_to_template = (
             "screens/git/frame_changelog_result.jinja"
             if tab == "changelog"
-            else "screens/git/frame_result.jinja"
+            else "screens/git/frame_diff_result.jinja"
         )
         template = html_templates.jinja_environment().get_template(
             path_to_template

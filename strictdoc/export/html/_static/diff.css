@@ -89,6 +89,28 @@
   margin-bottom: 200%; /* to balance the scrolling freely */
 }
 
+.changelog_content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--base-rhythm);
+  padding: var(--base-rhythm);
+  margin-bottom: calc(4 * var(--base-rhythm));
+}
+
+/* changelog */
+
+.changelog {
+  display: flex;
+}
+
+table.changelog_table {
+  border-collapse: collapse;
+}
+table.changelog_table td {
+  border: 1px solid gray;
+  padding: 8px;
+}
+
 /* details with summary */
 
 .diff details {

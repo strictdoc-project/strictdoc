@@ -100,7 +100,7 @@ class DiffCommand:
 
         # Diff summary generator...
         template = html_templates.jinja_environment().get_template(
-            "screens/git/changelog/index.jinja"
+            "screens/git/_static_changelog/index.jinja"
         )
 
         output = template.render(

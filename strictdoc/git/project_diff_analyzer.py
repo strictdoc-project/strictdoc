@@ -65,6 +65,7 @@ class ProjectTreeDiffStats:
     section_md5_hashes: Set[str] = field(default_factory=set)
     free_text_md5_hashes: Set[str] = field(default_factory=set)
     map_nodes_to_hashes: Dict[Any, str] = field(default_factory=dict)
+    map_mid_to_nodes: Dict[MID, Any] = field(default_factory=dict)
     map_uid_to_nodes: Dict[str, Any] = field(default_factory=dict)
     map_titles_to_nodes: Dict[str, List] = field(default_factory=dict)
     map_statements_to_nodes: Dict[str, Any] = field(default_factory=dict)
@@ -305,7 +306,9 @@ class ProjectTreeDiffStats:
             if isinstance(parent_, ParentReqReference):
                 requirement_parent_uids.add(parent_.ref_uid)
 
-        if (
+        if requirement.mid_permanent and requirement.reserved_mid in self.map_mid_to_nodes:
+            return self.map_mid_to_nodes[requirement.reserved_mid]
+        elif (
             requirement.reserved_uid is None
             or requirement.reserved_uid not in self.map_uid_to_nodes
         ):
@@ -471,13 +474,24 @@ class ChangeStats:
             if document not in change_stats.map_nodes_to_changes:
                 other_document_or_none: Optional[
                     Document
-                ] = other_stats.map_rel_paths_to_docs.get(
-                    document.meta.input_doc_rel_path
-                )
+                ] = None
 
+                # First, the MID-based match is tried. If no MID is available,
+                # try to find a document under the same path.
+                if document.mid_permanent and document.reserved_mid in other_stats.map_mid_to_nodes:
+                    other_document_or_none = other_stats.map_mid_to_nodes[document.reserved_mid]
+                else:
+                    other_document_or_none = other_stats.map_rel_paths_to_docs.get(
+                        document.meta.input_doc_rel_path
+                    )
+
+                title_modified: bool = False
                 free_text_modified: bool = False
                 lhs_colored_free_text_diff: Optional[str] = None
                 rhs_colored_free_text_diff: Optional[str] = None
+
+                if other_document_or_none is not None and document.title != other_document_or_none.title:
+                    title_modified = True
 
                 if len(document.free_texts) > 0:
                     free_text = document.free_texts[0]
@@ -498,7 +512,7 @@ class ChangeStats:
                                 other_document_or_none, "right"
                             )
                         )
-                if free_text_modified:
+                if title_modified or free_text_modified:
                     lhs_document: Optional[Document] = None
                     rhs_document: Optional[Document] = None
                     if side == "left":
@@ -512,6 +526,7 @@ class ChangeStats:
                         matched_uid=None,
                         lhs_document=lhs_document,
                         rhs_document=rhs_document,
+                        title_modified=title_modified,
                         free_text_modified=free_text_modified,
                         lhs_colored_free_text_diff=lhs_colored_free_text_diff,
                         rhs_colored_free_text_diff=rhs_colored_free_text_diff,
@@ -542,7 +557,10 @@ class ChangeStats:
                     if section_modified:
                         matched_uid: Optional[str] = None
                         other_section_or_none: Optional[Section] = None
-                        if node.reserved_uid is not None:
+
+                        if node.mid_permanent and node.reserved_mid in other_stats.map_mid_to_nodes:
+                            other_section_or_none = other_stats.map_mid_to_nodes[node.reserved_mid]
+                        elif node.reserved_uid is not None:
                             assert len(node.reserved_uid) > 0
                             if other_stats.map_uid_to_nodes.get(
                                 node.reserved_uid
@@ -863,6 +881,11 @@ class ProjectDiffAnalyzer:
 
         map_nodes_to_hashers: Dict[Any, Any] = {document: hashlib.md5()}
 
+        if document.mid_permanent:
+            document_tree_stats.map_mid_to_nodes[
+                document.reserved_mid
+            ] = document
+
         document_tree_stats.map_rel_paths_to_docs[
             document.meta.input_doc_rel_path
         ] = document
@@ -876,6 +899,11 @@ class ProjectDiffAnalyzer:
             document_tree_stats.map_nodes_to_hashes[free_text] = free_text_md5
 
         for node in document_iterator.all_content():
+            if node.mid_permanent:
+                document_tree_stats.map_mid_to_nodes[
+                    node.reserved_mid
+                ] = node
+
             if isinstance(node, Section):
                 if node.reserved_uid is not None:
                     document_tree_stats.map_uid_to_nodes[

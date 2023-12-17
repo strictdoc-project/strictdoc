@@ -2,12 +2,24 @@
 {% if results %}
   <div class="diff preloaded" data-controller="diff">
     <div class="diff_controls" left>
-      <a id="diff_left_open" class="action_button"><span>+</span>open all modified</a>
-      <a id="diff_left_close" class="action_button"><span>–</span>close all</a>
+      <a id="diff_left_open" class="action_button compact">
+        <span>＋</span>
+        <span class="action_button_compact__arising">open all modified</span>
+      </a>
+      <a id="diff_left_close" class="action_button compact">
+        <span>－</span>
+        <span class="action_button_compact__arising">close all</span>
+      </a>
     </div>
     <div class="diff_controls" right>
-      <a id="diff_right_open" class="action_button"><span>+</span>open all modified</a>
-      <a id="diff_right_close" class="action_button"><span>–</span>close all</a>
+      <a id="diff_right_open" class="action_button compact">
+        <span>＋</span>
+        <span class="action_button_compact__arising">open all modified</span>
+      </a>
+      <a id="diff_right_close" class="action_button compact">
+        <span>－</span>
+        <span class="action_button_compact__arising">close all</span>
+      </a>
     </div>
 
     <div class="diff_column" left>

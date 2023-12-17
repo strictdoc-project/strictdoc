@@ -6,3 +6,9 @@ CHECK-CHANGELOG:1 nodes modified:
 CHECK-CHANGELOG:1 documents.
 CHECK-CHANGELOG:No sections were modified.
 CHECK-CHANGELOG:No requirements were modified.
+
+CHECK-CHANGELOG:<span class="lambda_red">H</span><span>e</span><span class="lambda_red">llo worl</span><span>d </span><span class="lambda_red">doc</span>
+CHECK-CHANGELOG:<span class="lambda_red">T</span><span>ext.
+
+CHECK-CHANGELOG:<span class="lambda_green">Modifi</span><span>e</span><span>d </span><span class="lambda_green">title</span></div>
+CHECK-CHANGELOG:<span class="lambda_green">Modified t</span><span>ext.

@@ -143,9 +143,19 @@ class ProjectTreeDiffStats:
         if isinstance(node, Document):
             document: Document = assert_cast(node, Document)
 
-            other_document_or_none: Optional[
-                Document
-            ] = self.map_rel_paths_to_docs.get(document.meta.input_doc_rel_path)
+            other_document_or_none: Optional[Document] = None
+
+            if (
+                document.mid_permanent
+                and document.reserved_mid in self.map_mid_to_nodes
+            ):
+                other_document_or_none = self.map_mid_to_nodes[
+                    document.reserved_mid
+                ]
+            else:
+                other_document_or_none = self.map_rel_paths_to_docs.get(
+                    document.meta.input_doc_rel_path
+                )
             if other_document_or_none is None:
                 return None
             other_document: Document = assert_cast(
@@ -494,6 +504,8 @@ class ChangeStats:
                     )
 
                 title_modified: bool = False
+                lhs_colored_title_diff: Optional[str] = None
+                rhs_colored_title_diff: Optional[str] = None
                 free_text_modified: bool = False
                 lhs_colored_free_text_diff: Optional[str] = None
                 rhs_colored_free_text_diff: Optional[str] = None
@@ -503,6 +515,16 @@ class ChangeStats:
                     and document.title != other_document_or_none.title
                 ):
                     title_modified = True
+                    lhs_colored_title_diff = get_colored_diff_string(
+                        document.title,
+                        other_document_or_none.title,
+                        "left",
+                    )
+                    rhs_colored_title_diff = get_colored_diff_string(
+                        document.title,
+                        other_document_or_none.title,
+                        "right",
+                    )
 
                 if len(document.free_texts) > 0:
                     free_text = document.free_texts[0]
@@ -539,6 +561,8 @@ class ChangeStats:
                         rhs_document=rhs_document,
                         title_modified=title_modified,
                         free_text_modified=free_text_modified,
+                        lhs_colored_title_diff=lhs_colored_title_diff,
+                        rhs_colored_title_diff=rhs_colored_title_diff,
                         lhs_colored_free_text_diff=lhs_colored_free_text_diff,
                         rhs_colored_free_text_diff=rhs_colored_free_text_diff,
                     )
@@ -566,6 +590,7 @@ class ChangeStats:
                         section_md5
                     )
                     if section_modified:
+                        matched_mid: Optional[MID] = None
                         matched_uid: Optional[str] = None
                         other_section_or_none: Optional[Section] = None
 
@@ -577,6 +602,7 @@ class ChangeStats:
                             other_section_or_none = (
                                 other_stats.map_mid_to_nodes[node.reserved_mid]
                             )
+                            matched_mid = node.reserved_mid
                         elif node.reserved_uid is not None:
                             assert len(node.reserved_uid) > 0
                             if other_stats.map_uid_to_nodes.get(
@@ -586,9 +612,29 @@ class ChangeStats:
                                 other_section_or_none = (
                                     other_stats.map_uid_to_nodes[matched_uid]
                                 )
-                        free_text_modified = False
+
+                        title_modified: bool = False
+                        lhs_colored_title_diff: Optional[str] = None
+                        rhs_colored_title_diff: Optional[str] = None
+                        free_text_modified: bool = False
                         lhs_colored_free_text_diff: Optional[str] = None
                         rhs_colored_free_text_diff: Optional[str] = None
+
+                        if (
+                            other_section_or_none is not None
+                            and node.title != other_section_or_none.title
+                        ):
+                            title_modified = True
+                            lhs_colored_title_diff = get_colored_diff_string(
+                                node.title,
+                                other_section_or_none.title,
+                                "left",
+                            )
+                            rhs_colored_title_diff = get_colored_diff_string(
+                                node.title,
+                                other_section_or_none.title,
+                                "right",
+                            )
 
                         if len(node.free_texts) > 0:
                             free_text = node.free_texts[0]
@@ -624,10 +670,14 @@ class ChangeStats:
                             rhs_section = node
 
                         section_change: SectionChange = SectionChange(
+                            matched_mid=matched_mid,
                             matched_uid=matched_uid,
                             lhs_section=lhs_section,
                             rhs_section=rhs_section,
+                            title_modified=title_modified,
                             free_text_modified=free_text_modified,
+                            lhs_colored_title_diff=lhs_colored_title_diff,
+                            rhs_colored_title_diff=rhs_colored_title_diff,
                             lhs_colored_free_text_diff=lhs_colored_free_text_diff,
                             rhs_colored_free_text_diff=rhs_colored_free_text_diff,
                         )
@@ -907,9 +957,7 @@ class ProjectDiffAnalyzer:
             document.meta.input_doc_rel_path
         ] = document
 
-        map_nodes_to_hashers[document].update(
-            document.title.encode("utf-8")
-        )
+        map_nodes_to_hashers[document].update(document.title.encode("utf-8"))
 
         # Document's top level free text.
         if len(document.free_texts) > 0:

@@ -8,6 +8,7 @@ from strictdoc.backend.sdoc.models.requirement import (
 )
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.mid import MID
 
 
 class ChangeType(str, Enum):
@@ -35,6 +36,8 @@ class DocumentChange:
         rhs_document: Optional[Document],
         title_modified: bool,
         free_text_modified: bool,
+        lhs_colored_title_diff: Optional[str],
+        rhs_colored_title_diff: Optional[str],
         lhs_colored_free_text_diff: Optional[str],
         rhs_colored_free_text_diff: Optional[str],
     ):
@@ -44,6 +47,8 @@ class DocumentChange:
         self.matched_uid: Optional[str] = matched_uid
         self.title_modified: bool = title_modified
         self.free_text_modified: bool = free_text_modified
+        self.lhs_colored_title_diff: Optional[str] = lhs_colored_title_diff
+        self.rhs_colored_title_diff: Optional[str] = rhs_colored_title_diff
         self.lhs_colored_free_text_diff: Optional[
             str
         ] = lhs_colored_free_text_diff
@@ -55,6 +60,14 @@ class DocumentChange:
         self.rhs_document: Optional[Document] = rhs_document
 
         self.change_type: ChangeType = ChangeType.DOCUMENT_MODIFIED
+
+    def get_colored_title_diff(self, side: str) -> Optional[str]:
+        assert self.title_modified
+        if side == "left":
+            return self.lhs_colored_title_diff
+        if side == "right":
+            return self.rhs_colored_title_diff
+        raise AssertionError(f"Must not reach here: {side}")
 
     def get_colored_free_text_diff(self, side: str) -> Optional[str]:
         if not self.free_text_modified:
@@ -71,18 +84,26 @@ class SectionChange:
     def __init__(
         self,
         *,
+        matched_mid: Optional[MID],
         matched_uid: Optional[str],
         lhs_section: Optional[Section],
         rhs_section: Optional[Section],
+        title_modified: bool,
         free_text_modified: bool,
+        lhs_colored_title_diff: Optional[str],
+        rhs_colored_title_diff: Optional[str],
         lhs_colored_free_text_diff: Optional[str],
         rhs_colored_free_text_diff: Optional[str],
     ):
         assert lhs_section is not None or rhs_section is not None
         if matched_uid is not None:
             assert len(matched_uid) > 0
+        self.matched_mid: Optional[MID] = matched_mid
         self.matched_uid: Optional[str] = matched_uid
+        self.title_modified: bool = title_modified
         self.free_text_modified: bool = free_text_modified
+        self.lhs_colored_title_diff: Optional[str] = lhs_colored_title_diff
+        self.rhs_colored_title_diff: Optional[str] = rhs_colored_title_diff
         self.lhs_colored_free_text_diff: Optional[
             str
         ] = lhs_colored_free_text_diff
@@ -93,7 +114,7 @@ class SectionChange:
         self.lhs_section: Optional[Section] = lhs_section
         self.rhs_section: Optional[Section] = rhs_section
 
-        if matched_uid is not None:
+        if matched_mid is not None or matched_uid is not None:
             change_type = ChangeType.SECTION_MODIFIED
         elif lhs_section is not None:
             change_type = ChangeType.SECTION_REMOVED
@@ -102,6 +123,14 @@ class SectionChange:
         else:
             raise AssertionError("Must not reach here.")
         self.change_type = change_type
+
+    def get_colored_title_diff(self, side: str) -> Optional[str]:
+        assert self.title_modified
+        if side == "left":
+            return self.lhs_colored_title_diff
+        if side == "right":
+            return self.rhs_colored_title_diff
+        raise AssertionError(f"Must not reach here: {side}")
 
     def get_colored_free_text_diff(self, side: str) -> Optional[str]:
         if side == "left":

@@ -907,11 +907,18 @@ class ProjectDiffAnalyzer:
             document.meta.input_doc_rel_path
         ] = document
 
+        map_nodes_to_hashers[document].update(
+            document.title.encode("utf-8")
+        )
+
         # Document's top level free text.
         if len(document.free_texts) > 0:
             free_text = document.free_texts[0]
             free_text_text = document.free_texts[0].get_parts_as_text()
             free_text_md5 = get_md5(free_text_text)
+            map_nodes_to_hashers[document].update(
+                free_text_text.encode("utf-8")
+            )
             document_tree_stats.free_text_md5_hashes.add(free_text_md5)
             document_tree_stats.map_nodes_to_hashes[free_text] = free_text_md5
 

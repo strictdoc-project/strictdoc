@@ -3,6 +3,7 @@ RUN: %strictdoc diff %S/lhs %S/rhs
 RUN: cat %S/Output/changelog.html | filecheck %s --check-prefix=CHECK-CHANGELOG
 
 CHECK-CHANGELOG:1 nodes modified:
-HECK-CHANGELOG:No sections were modified.
-HECK-CHANGELOG:1 requirements
-HECK-CHANGELOG:(1 added).
+CHECK-CHANGELOG:No documents were modified.
+CHECK-CHANGELOG:1 sections
+CHECK-CHANGELOG:(1 removed).
+CHECK-CHANGELOG:No requirements were modified.

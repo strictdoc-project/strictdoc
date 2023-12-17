@@ -1,27 +1,7 @@
 <turbo-frame id="diff_result">
 {% if results %}
   <div class="diff preloaded" data-controller="diff">
-    <div class="diff_controls" left>
-      <a id="diff_left_open" class="action_button compact">
-        <span>＋</span>
-        <span class="action_button_compact__arising">open all modified</span>
-      </a>
-      <a id="diff_left_close" class="action_button compact">
-        <span>－</span>
-        <span class="action_button_compact__arising">close all</span>
-      </a>
-    </div>
-    <div class="diff_controls" right>
-      <a id="diff_right_open" class="action_button compact">
-        <span>＋</span>
-        <span class="action_button_compact__arising">open all modified</span>
-      </a>
-      <a id="diff_right_close" class="action_button compact">
-        <span>－</span>
-        <span class="action_button_compact__arising">close all</span>
-      </a>
-    </div>
-
+    {% include "screens/git/diff_controls.jinja" %}
     <div class="diff_column" left>
       <div class="diff_inner">
       {% with
@@ -32,7 +12,7 @@
         other_stats=rhs_stats,
         side="left"
       %}
-        {% include "screens/git/diff_column_content.jinja" %}
+        {% include "screens/git/diff_content.jinja" %}
       {% endwith %}
       </div>
     </div>
@@ -46,7 +26,7 @@
         other_stats=lhs_stats,
         side="right"
       %}
-        {% include "screens/git/diff_column_content.jinja" %}
+        {% include "screens/git/diff_content.jinja" %}
       {% endwith %}
       </div>
     </div>

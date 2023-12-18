@@ -17,8 +17,8 @@
     window.Controller = Controller;
   </script>
   <script type="module" src="{{ link_renderer.render_static_url('controllers/modal_controller.js') }}"></script>
-  <script type="module" src="{{ link_renderer.render_static_url('controllers/diff_controller.js') }}"></script>
   {%- endif -%}
+  <script type="text/javascript" src="{{ link_renderer.render_static_url('diff.js') }}"></script>
 {% endblock head_scripts %}
 
 {% block title %}

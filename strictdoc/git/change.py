@@ -86,6 +86,7 @@ class SectionChange:
         *,
         matched_mid: Optional[MID],
         matched_uid: Optional[str],
+        section_token: Optional[str],
         lhs_section: Optional[Section],
         rhs_section: Optional[Section],
         uid_modified: bool,
@@ -101,6 +102,7 @@ class SectionChange:
             assert len(matched_uid) > 0
         self.matched_mid: Optional[MID] = matched_mid
         self.matched_uid: Optional[str] = matched_uid
+        self.section_token: Optional[str] = section_token
         self.uid_modified: bool = uid_modified
         self.title_modified: bool = title_modified
         self.free_text_modified: bool = free_text_modified

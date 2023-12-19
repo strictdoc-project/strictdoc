@@ -364,9 +364,6 @@ class ProjectTreeDiffStats:
 
 @dataclass
 class ChangeStats:
-    map_requirements_to_tokens: Dict[Requirement, str] = field(
-        default_factory=dict
-    )
     _changes: List[ChangeUnionType] = field(default_factory=list)
     _change_counters: Dict[ChangeType, int] = field(default_factory=dict)
     map_nodes_to_changes: Dict[Any, ChangeUnionType] = field(
@@ -425,9 +422,6 @@ class ChangeStats:
 
     def get_changes_sections_modified(self) -> Optional[int]:
         return self._change_counters.get(ChangeType.SECTION)
-
-    def find_requirement_token(self, requirement: Requirement) -> Optional[str]:
-        return self.map_requirements_to_tokens.get(requirement)
 
     def add_change(self, change: ChangeUnionType):
         self._changes.append(change)
@@ -603,7 +597,7 @@ class ChangeStats:
                                 other_stats.map_mid_to_nodes[node.reserved_mid]
                             )
                             matched_mid = node.reserved_mid
-                        elif node.reserved_uid is not None:
+                        if node.reserved_uid is not None:
                             assert len(node.reserved_uid) > 0
                             if other_stats.map_uid_to_nodes.get(
                                 node.reserved_uid
@@ -674,6 +668,14 @@ class ChangeStats:
                                         )
                                     )
 
+                        """
+                        Step: Create a section token that is used by JS to match
+                        the LHS nodes with RHS nodes.
+                        """
+                        section_token: Optional[str] = None
+                        if other_section_or_none is not None:
+                            section_token = MID.create().get_string_value()
+
                         lhs_section: Optional[Section] = None
                         rhs_section: Optional[Section] = None
                         if side == "left":
@@ -686,6 +688,7 @@ class ChangeStats:
                         section_change: SectionChange = SectionChange(
                             matched_mid=matched_mid,
                             matched_uid=matched_uid,
+                            section_token=section_token,
                             lhs_section=lhs_section,
                             rhs_section=rhs_section,
                             uid_modified=uid_modified,
@@ -712,9 +715,6 @@ class ChangeStats:
                     # FIXME: Is this 100% valid?
 
                     if node in change_stats.map_nodes_to_changes:
-                        continue
-
-                    if node in change_stats.map_requirements_to_tokens:
                         continue
 
                     requirement: Requirement = assert_cast(node, Requirement)
@@ -769,12 +769,6 @@ class ChangeStats:
                     the LHS nodes with RHS nodes.
                     """
                     requirement_token: str = MID.create().get_string_value()
-                    change_stats.map_requirements_to_tokens[
-                        requirement
-                    ] = requirement_token
-                    change_stats.map_requirements_to_tokens[
-                        other_requirement
-                    ] = requirement_token
 
                     """
                     Iterate over requirement fields.

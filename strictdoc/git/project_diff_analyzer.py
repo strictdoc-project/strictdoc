@@ -613,12 +613,26 @@ class ChangeStats:
                                     other_stats.map_uid_to_nodes[matched_uid]
                                 )
 
+                        uid_modified: bool = False
                         title_modified: bool = False
                         lhs_colored_title_diff: Optional[str] = None
                         rhs_colored_title_diff: Optional[str] = None
                         free_text_modified: bool = False
                         lhs_colored_free_text_diff: Optional[str] = None
                         rhs_colored_free_text_diff: Optional[str] = None
+
+                        # If there is another section and the UIDs are not the
+                        # same, consider the UID modified.
+                        # If there is no other section, consider the UID
+                        # modified.
+                        if other_section_or_none is not None:
+                            if (
+                                node.reserved_uid
+                                != other_section_or_none.reserved_uid
+                            ):
+                                uid_modified = True
+                        else:
+                            uid_modified = True
 
                         if (
                             other_section_or_none is not None
@@ -674,6 +688,7 @@ class ChangeStats:
                             matched_uid=matched_uid,
                             lhs_section=lhs_section,
                             rhs_section=rhs_section,
+                            uid_modified=uid_modified,
                             title_modified=title_modified,
                             free_text_modified=free_text_modified,
                             lhs_colored_title_diff=lhs_colored_title_diff,

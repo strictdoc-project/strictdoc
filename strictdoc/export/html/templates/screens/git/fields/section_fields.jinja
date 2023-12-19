@@ -3,7 +3,7 @@
   {%- if section.reserved_uid is not none and section.reserved_uid|length > 0 -%}
     <div
       class="diff_node_field"
-      {% if section_change is not none %}
+      {% if section_change is not none and section_change.uid_modified %}
         modified="{{ side }}"
       {% endif %}
     >

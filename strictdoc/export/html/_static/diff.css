@@ -101,6 +101,7 @@
 
 .changelog {
   display: flex;
+  flex-direction: column;
 }
 
 table.changelog_table {

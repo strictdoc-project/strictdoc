@@ -5,30 +5,32 @@
 
     <div class="diff_column" left>
       <div class="diff_inner">
-      {% with
+      {%- with
         document_tree=document_tree_lhs,
         document_tree_iterator=documents_iterator_lhs,
         traceability_index=traceability_index_lhs,
         self_stats=lhs_stats,
         other_stats=rhs_stats,
+        tab="diff",
         side="left"
-      %}
+      -%}
         {% include "screens/git/diff_content.jinja" %}
-      {% endwith %}
+      {%- endwith -%}
       </div>
     </div>
     <div class="diff_column" right>
       <div class="diff_inner">
-      {% with
+      {%- with
         document_tree=document_tree_rhs,
         document_tree_iterator=documents_iterator_rhs,
         traceability_index=traceability_index_rhs,
         self_stats=rhs_stats,
         other_stats=lhs_stats,
+        tab="diff",
         side="right"
-      %}
+      -%}
         {% include "screens/git/diff_content.jinja" %}
-      {% endwith %}
+      {%- endwith -%}
       </div>
     </div>
   </div>

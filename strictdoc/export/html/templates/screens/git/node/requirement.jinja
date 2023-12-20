@@ -18,14 +18,16 @@
         {{ requirement.reserved_title }}
       </span>
     {%- endif -%}
-    {% if requirement_change is not none %}
-      {% set requirement_token = requirement_change.requirement_token %}
-      {% if requirement_token is not none %}
-        {%- with uid=requirement_token -%}
-          {%- include "screens/git/sync/button.jinja" -%}
-        {%- endwith -%}
+    {%- if tab == "diff" -%}
+      {%- if requirement_change is not none -%}
+        {%- set requirement_token = requirement_change.requirement_token -%}
+        {%- if requirement_token is not none -%}
+          {%- with uid=requirement_token -%}
+            {%- include "screens/git/sync/button.jinja" -%}
+          {%- endwith -%}
+        {%- endif -%}
       {%- endif -%}
-    {% endif %}
+    {%- endif -%}
   </summary>
 
   {% include "screens/git/fields/requirement_fields.jinja" %}

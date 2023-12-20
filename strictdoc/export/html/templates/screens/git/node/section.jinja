@@ -14,13 +14,15 @@
       {{ section.context.title_number_string if section.context.title_number_string else "&nbsp;" * (section.ng_level * 2 - 1) }}
     </span>
     <span>{{ section.title }}</span>
-    {% if section_change is not none  %}
-      {% if section_change.section_token is not none  %}
-      {%- with uid=section_change.section_token -%}
-        {%- include "screens/git/sync/button.jinja" -%}
-      {%- endwith -%}
-      {% endif %}
-    {% endif %}
+    {%- if tab == "diff" -%}
+      {%- if section_change is not none -%}
+        {%- if section_change.section_token is not none -%}
+          {%- with uid=section_change.section_token -%}
+            {%- include "screens/git/sync/button.jinja" -%}
+          {%- endwith -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endif -%}
   </summary>
 
   {% include "screens/git/fields/section_fields.jinja" %}

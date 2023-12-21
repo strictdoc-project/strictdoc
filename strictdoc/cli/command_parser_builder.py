@@ -372,7 +372,8 @@ class CommandParserBuilder:
         )
         add_config_argument(command_parser_auto_uid)
 
-    def add_diff_command(self, command_subparsers):
+    @staticmethod
+    def add_diff_command(command_subparsers):
         diff_command_parser = command_subparsers.add_parser(
             "diff",
             help="Generate Diff between two SDoc project trees.",
@@ -387,4 +388,9 @@ class CommandParserBuilder:
             "path_to_rhs_tree",
             type=str,
             help="Path to the right-hand side project tree.",
+        )
+        diff_command_parser.add_argument(
+            "--output-dir",
+            type=str,
+            help="A directory where to output the files to.",
         )

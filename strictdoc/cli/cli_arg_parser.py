@@ -177,9 +177,15 @@ class DumpGrammarCommandConfig:
 
 
 class DiffCommandConfig:
-    def __init__(self, path_to_lhs_tree: str, path_to_rhs_tree: str):
+    def __init__(
+        self,
+        path_to_lhs_tree: str,
+        path_to_rhs_tree: str,
+        output_dir: Optional[str],
+    ):
         self.path_to_lhs_tree: str = path_to_lhs_tree
         self.path_to_rhs_tree: str = path_to_rhs_tree
+        self.output_dir: Optional[str] = output_dir
 
 
 class SDocArgsParser:
@@ -296,6 +302,7 @@ class SDocArgsParser:
         return DiffCommandConfig(
             path_to_lhs_tree=self.args.path_to_lhs_tree,
             path_to_rhs_tree=self.args.path_to_rhs_tree,
+            output_dir=self.args.output_dir,
         )
 
 

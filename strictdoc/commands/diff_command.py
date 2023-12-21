@@ -17,13 +17,19 @@ class DiffCommand:
     def execute(
         *, project_config: ProjectConfig, diff_config: DiffCommandConfig
     ):
-        project_config.export_output_html_root = os.path.join(
-            os.getcwd(), "output"
-        )
-
         if not project_config.is_activated_diff():
             raise RuntimeError(
                 "The DIFF feature is not activated in the project config."
+            )
+
+        # FIXME: Handle merging of Diff config data into project config more
+        # gracefully.
+        if diff_config.output_dir is not None:
+            assert os.path.isdir(diff_config.output_dir)
+            project_config.export_output_html_root = diff_config.output_dir
+        else:
+            project_config.export_output_html_root = os.path.join(
+                os.getcwd(), "output"
             )
 
         assert os.path.isdir(diff_config.path_to_lhs_tree)

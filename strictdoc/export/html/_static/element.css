@@ -199,6 +199,35 @@ a.action_icon:hover {
   z-index: 6;
 }
 
+.action_button.compact {
+  column-gap: 0;
+  padding-left: calc(var(--base-rhythm)* 0.75);
+  padding-right: calc(var(--base-rhythm)* 0.75);
+  min-height: calc(var(--base-rhythm)*3);
+}
+
+.action_button.compact .action_button_compact__arising {
+  overflow: hidden;
+
+  max-width: 0;
+  margin-left: 0;
+
+  transition-property: max-width, margin;
+  transition-duration: .5s;
+  transition-timing-function: ease-in-out;
+  transition-delay: 1s;
+}
+
+.action_button.compact:hover > .action_button_compact__arising {
+  max-width: 200px;
+  margin-left: var(--base-rhythm);
+
+  transition-property: max-width, margin;
+  transition-duration: .5s;
+  transition-timing-function: ease-in-out;
+  transition-delay: 0;
+}
+
 /* TODO */
 sdoc-node-controls .action_button {
   /* depends on sdoc-node-controls: */

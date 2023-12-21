@@ -1,0 +1,11 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[SECTION]
+TITLE: New section
+
+[FREETEXT]
+Hello world!
+[/FREETEXT]
+
+[/SECTION]

@@ -1,0 +1,11 @@
+RUN: %strictdoc diff %S/lhs %S/rhs --output-dir Output
+
+RUN: cat %S/Output/changelog.html | filecheck %s --check-prefix=CHECK-CHANGELOG
+
+CHECK-CHANGELOG:1 nodes modified:
+CHECK-CHANGELOG:No documents were modified.
+CHECK-CHANGELOG:No sections were modified.
+CHECK-CHANGELOG:(1 modified).
+
+CHECK-CHANGELOG:<span class="sdoc_pre_content"><span class="lambda_red">R</span><span>e</span><span class="lambda_red">qu</span><span>i</span><span class="lambda_red">r</span><span>e</span><span class="lambda_red">ment #1</span></span>
+CHECK-CHANGELOG:<span class="sdoc_pre_content"><span class="lambda_red">Sy</span><span>s</span><span>tem</span><span class="lambda_red"> shall do 1</span><span>.</span></span>

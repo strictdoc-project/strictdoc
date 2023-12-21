@@ -1,11 +1,34 @@
-
 {% set node = document %}
+{% set document_change = change_stats.find_change(document) %}
+
+<div class="diff_node_fields">
+
+{% if document_change is not none and document_change.title_modified %}
+<details
+  modified="{{ side }}"
+>
+  <summary>
+  {%- with badge_text = "title" -%}
+    {%- include "components/badge/index.jinja" -%}
+  {%- endwith -%}
+  </summary>
+
+  <div
+    class="sdoc_pre_content"
+  >
+    {%- set colored_diff = document_change.get_colored_title_diff(side) -%}
+    {# Using a dummy if block to get right of leading and trailing whitespaces #}
+    {%- if true -%}
+      {{ colored_diff }}
+    {%- endif -%}
+  </div>
+</details>
+
+{% endif %}
 
 {% if node.free_texts|length > 0 %}
 {% set free_text = node.free_texts[0] %}
-{% set free_text_md5 = self_stats.get_md5_by_node(free_text) %}
-{% set free_text_modified = not other_stats.contains_free_text_md5(free_text_md5) %}
-<div class="diff_node_fields">
+{% set free_text_modified = document_change is not none and document_change.free_text_modified %}
 <details
   {% if free_text_modified %}
     modified="{{ side }}"
@@ -20,13 +43,19 @@
   <div
     class="sdoc_pre_content"
   >
-    {%- set colored_diff = other_stats.get_diffed_free_text(node, side) -%}
-    {%- if colored_diff is not none -%}
-      {{ colored_diff }}
+    {%- if document_change is not none -%}
+      {%- set colored_diff = document_change.get_colored_free_text_diff(side) -%}
+      {%- if colored_diff is not none -%}
+        {{ colored_diff }}
+      {%- else -%}
+        {{ free_text.get_parts_as_text_escaped() }}
+      {%- endif -%}
     {%- else -%}
-      {{ free_text.get_parts_as_text_escaped() }}
+        {{ free_text.get_parts_as_text_escaped() }}
     {%- endif -%}
   </div>
 </details>
-</div>
+
 {% endif %}
+
+</div>

@@ -1,4 +1,5 @@
 import os.path
+import shutil
 import subprocess
 import tempfile
 from pathlib import Path
@@ -21,6 +22,11 @@ class GitClient:
     def create_repo_from_local_copy(revision: str):
         with measure_performance(f"Copy Git repo: {revision}"):
             path_to_cwd = os.getcwd()
+            if revision == "HEAD+":
+                path_to_project_git_dir = os.path.join(path_to_cwd, ".git")
+                assert os.path.isdir(path_to_project_git_dir)
+                return GitClient(path_to_cwd)
+
             path_to_sandbox_git_repo = os.path.join(
                 PATH_TO_SANDBOX_DIR, revision
             )
@@ -37,19 +43,20 @@ class GitClient:
 
             Path(PATH_TO_SANDBOX_DIR).mkdir(parents=True, exist_ok=True)
 
+            # Running git worktree add ... below results with "path already
+            # exists" error if the destination folder already exists, even if
+            # empty.
+            if os.path.exists(path_to_sandbox_git_repo):
+                shutil.rmtree(path_to_sandbox_git_repo)
+
             result = subprocess.run(
                 [
-                    "rsync",
-                    "-ra",
-                    "--delete",
-                    "--exclude=.idea/",
-                    "--exclude=.ruff_cache/",
-                    "--exclude=__pycache__/",
-                    "--exclude=build/",
-                    "--exclude=output/",
-                    "--exclude=strictdoc-project.github.io/",
-                    ".",
+                    "git",
+                    "worktree",
+                    "add",
+                    "--force",
                     path_to_sandbox_git_repo,
+                    revision,
                 ],
                 cwd=path_to_cwd,
                 capture_output=True,

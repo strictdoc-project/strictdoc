@@ -3,6 +3,7 @@
     <div class="skeleton_spinner"></div>
     {# <p>It may take a while the first time!</p> #}
   </div>
+  {% if tab == "diff" %}
   <div class="diff_2columns">{# button panel simulation #}</div>
   <div class="diff_column" left>
     <div class="diff_inner" left>
@@ -38,4 +39,5 @@
       <div class="item_"></div>
     </div>
   </div>
+  {% endif %}
 </div>

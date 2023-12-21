@@ -8,20 +8,12 @@ from fastapi import APIRouter
 from starlette.responses import HTMLResponse, Response
 
 from strictdoc import __version__
-from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
-from strictdoc.core.traceability_index import TraceabilityIndex
-from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
+from strictdoc.git.change_generator import ChangeContainer, ChangeGenerator
 from strictdoc.git.git_client import GitClient
-from strictdoc.git.project_diff_analyzer import (
-    ChangeStats,
-    ProjectDiffAnalyzer,
-    ProjectTreeDiffStats,
-)
-from strictdoc.helpers.parallelizer import NullParallelizer
 from strictdoc.server.routers.main_router import HTTP_STATUS_PRECONDITION_FAILED
 
 
@@ -38,12 +30,21 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
     def get_git_diff(
         left_revision: Optional[str] = None,
         right_revision: Optional[str] = None,
+        tab: Optional[str] = None,
     ):
         if not project_config.is_activated_diff():
             return Response(
                 content="The DIFF feature is not activated in the project config.",
                 status_code=HTTP_STATUS_PRECONDITION_FAILED,
             )
+        if tab is not None:
+            if tab not in ("diff", "changelog"):
+                return Response(
+                    content="The tab= parameter must be either 'diff' or 'changelog'.",
+                    status_code=HTTP_STATUS_PRECONDITION_FAILED,
+                )
+        else:
+            tab = "diff"
 
         error_message: Optional[str] = None
 
@@ -108,6 +109,7 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             right_revision=right_revision,
             right_revision_urlencoded=right_revision_urlencoded,
             error_message=error_message,
+            tab=tab,
         )
         status_code = 200 if error_message is None else 422
         return HTMLResponse(content=output, status_code=status_code)
@@ -116,12 +118,19 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
     def get_git_diff_result(
         left_revision: Optional[str] = None,
         right_revision: Optional[str] = None,
+        tab: Optional[str] = None,
     ):
         if not project_config.is_activated_diff():
             return Response(
                 content="The DIFF feature is not activated in the project config.",
                 status_code=HTTP_STATUS_PRECONDITION_FAILED,
             )
+        if tab is not None and tab not in ("diff", "changelog"):
+            return Response(
+                content="The tab= parameter must be either 'diff' or 'changelog'.",
+                status_code=HTTP_STATUS_PRECONDITION_FAILED,
+            )
+
         left_revision_resolved = None
         right_revision_resolved = None
 
@@ -165,8 +174,13 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             # diff page.
             pass
 
+        path_to_template = (
+            "screens/git/frame_changelog_result.jinja"
+            if tab == "changelog"
+            else "screens/git/frame_diff_result.jinja"
+        )
         template = html_templates.jinja_environment().get_template(
-            "screens/git/frame_result.jinja"
+            path_to_template
         )
 
         link_renderer = LinkRenderer(
@@ -198,8 +212,6 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             left_revision_resolved
         )
 
-        parallelizer = NullParallelizer()
-
         project_config_copy_lhs: ProjectConfig = deepcopy(project_config)
         assert project_config_copy_lhs.export_input_paths is not None
         project_config_copy_rhs: ProjectConfig = deepcopy(project_config)
@@ -213,13 +225,6 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
         )
         project_config_copy_lhs.export_input_paths = [export_input_abs_path]
 
-        traceability_index_lhs: TraceabilityIndex = (
-            TraceabilityIndexBuilder.create(
-                project_config=project_config_copy_lhs,
-                parallelizer=parallelizer,
-            )
-        )
-
         git_client_rhs = GitClient.create_repo_from_local_copy(
             right_revision_resolved
         )
@@ -232,44 +237,27 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
         )
         project_config_copy_rhs.export_input_paths = [export_input_abs_path]
 
-        traceability_index_rhs: TraceabilityIndex = (
-            TraceabilityIndexBuilder.create(
-                project_config=project_config_copy_rhs,
-                parallelizer=parallelizer,
-            )
+        change_container: ChangeContainer = ChangeGenerator.generate(
+            lhs_project_config=project_config_copy_lhs,
+            rhs_project_config=project_config_copy_rhs,
         )
 
-        lhs_stats: ProjectTreeDiffStats = (
-            ProjectDiffAnalyzer.analyze_document_tree(traceability_index_lhs)
-        )
-        rhs_stats: ProjectTreeDiffStats = (
-            ProjectDiffAnalyzer.analyze_document_tree(traceability_index_rhs)
-        )
-        change_stats: ChangeStats = ChangeStats.create_from_two_indexes(
-            traceability_index_lhs, traceability_index_rhs, lhs_stats, rhs_stats
-        )
-
-        documents_iterator_lhs = DocumentTreeIterator(
-            traceability_index_lhs.document_tree
-        )
-        documents_iterator_rhs = DocumentTreeIterator(
-            traceability_index_rhs.document_tree
-        )
         output = template.render(
             project_config=project_config,
-            document_tree_lhs=traceability_index_lhs.document_tree,
-            document_tree_rhs=traceability_index_rhs.document_tree,
-            documents_iterator_lhs=documents_iterator_lhs,
-            documents_iterator_rhs=documents_iterator_rhs,
+            change_container=change_container,
+            document_tree_lhs=change_container.traceability_index_lhs.document_tree,
+            document_tree_rhs=change_container.traceability_index_rhs.document_tree,
+            documents_iterator_lhs=change_container.documents_iterator_lhs,
+            documents_iterator_rhs=change_container.documents_iterator_rhs,
             left_revision=left_revision,
             left_revision_urlencoded=urllib.parse.quote(left_revision),
             right_revision=right_revision,
             right_revision_urlencoded=urllib.parse.quote(right_revision),
-            lhs_stats=lhs_stats,
-            rhs_stats=rhs_stats,
-            change_stats=change_stats,
-            traceability_index_lhs=traceability_index_lhs,
-            traceability_index_rhs=traceability_index_rhs,
+            lhs_stats=change_container.lhs_stats,
+            rhs_stats=change_container.rhs_stats,
+            change_stats=change_container.change_stats,
+            traceability_index_lhs=change_container.traceability_index_lhs,
+            traceability_index_rhs=change_container.traceability_index_rhs,
             link_renderer=link_renderer,
             document_type=DocumentType.document(),
             link_document_type=DocumentType.document(),

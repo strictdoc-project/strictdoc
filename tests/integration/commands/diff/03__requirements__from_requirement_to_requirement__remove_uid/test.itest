@@ -1,0 +1,2 @@
+RUN: %strictdoc diff %S/lhs %S/rhs --output-dir Output
+

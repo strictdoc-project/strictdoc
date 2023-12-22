@@ -20,6 +20,8 @@
       <turbo-frame id="diff_result" src="/diff_result?tab={{ tab }}&left_revision={{ left_revision_urlencoded }}&right_revision={{ right_revision_urlencoded }}">
       {% include "screens/git/skeleton.jinja" %}
       </turbo-frame>
+    {% else %}
+      {% include "screens/git/legend.jinja" %}
     {% endif %}
   {% else %}
     {% include "screens/git/frame_"~tab~"_result.jinja" %}

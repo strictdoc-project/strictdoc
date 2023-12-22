@@ -176,7 +176,14 @@ class FileFinder:
             dirs[:] = [
                 d
                 for d in dirs
-                if (not d.startswith(".") and not d.startswith("_"))
+                if (
+                    not d.startswith(".")
+                    and not d.startswith("_")
+                    and d != "build"
+                    and d != "output"
+                    and d != "Output"
+                    and d != "tests"
+                )
             ]
             dirs.sort(key=alphanumeric_sort)
 
@@ -259,6 +266,8 @@ class PathFinder:
                 d
                 for d in dirs
                 if not d.startswith(".")
+                and not d.startswith("__")
+                and d != "build"
                 and d != "output"
                 and d != "Output"
                 and d != "tests"

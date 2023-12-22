@@ -1,133 +1,116 @@
 <div class="changelog_content">
-  <h3>Changelog</h3>
-  <div class="changelog_summary">
-    <h4>Compared revisions</h4>
-    <p>Left: {{ left_revision }}</p>
-    <p>Right: {{ right_revision }}</p>
+  {% set documents_modified = change_container.change_stats.get_changes_documents_modified() %}
+  {% if documents_modified is not none %}
+    {% set _documents_modified = documents_modified %}
+  {% else %}
+    {% set _documents_modified = "No documents were modified." %}
+  {% endif %}
 
-    <h4>Summary of the changes</h4>
-    <p>{{ change_container.change_stats.get_total_changes() }} nodes modified:</p>
-    <ul>
-      {% set documents_modified = change_container.change_stats.get_changes_documents_modified() %}
-      <li>
-        {% if documents_modified is not none %}
-          {{ documents_modified }} documents.
-        {% else %}
-          No documents were modified.
-        {% endif %}
-      </li>
+  {% set sections_modified = change_container.change_stats.get_changes_sections_modified() %}
+  {% if sections_modified is not none %}
+    {% set _sections_modified = sections_modified~" ("~change_container.change_stats.get_changes_sections_stats_string()~")" %}
+  {% else %}
+    {% set _sections_modified = "No sections were modified." %}
+  {% endif %}
 
-      {% set sections_modified = change_container.change_stats.get_changes_sections_modified() %}
-      <li>
-        {% if sections_modified is not none %}
-          {{ sections_modified }} sections
-          ({{ change_container.change_stats.get_changes_sections_stats_string() }}).
-        {% else %}
-          No sections were modified.
-        {% endif %}
-      </li>
+  {% set requirements_modified = change_container.change_stats.get_changes_requirements_changed() %}
+  {% if requirements_modified is not none %}
+    {% set _requirements_modified = requirements_modified~" ("~change_container.change_stats.get_changes_requirements_stats_string()~")" %}
+  {% else %}
+    {% set _requirements_modified = "No requirements were modified." %}
+  {% endif %}
 
-      {% set requirements_modified = change_container.change_stats.get_changes_requirements_changed() %}
-      <li>
-        {% if requirements_modified is not none %}
-          {{ requirements_modified }} requirements
-          ({{ change_container.change_stats.get_changes_requirements_stats_string() }}).
-        {% else %}
-          No requirements were modified.
-        {% endif %}
-      </li>
-    </ul>
-  </div>
+  {%- with table_key_value = [
+    {"Section":"Compared revisions"},
+    {
+      "Key":"Left",
+      "Value": left_revision,
+    },
+    {
+      "Key":"Right",
+      "Value": right_revision,
+    },
+    {"Section":"Summary of the changes"},
+    {
+      "Key":"Nodes modified",
+      "Value": change_container.change_stats.get_total_changes(),
+    },
+    {
+      "Key":"Documents modified",
+      "Value": _documents_modified,
+    },
+    {
+      "Key":"Section modified",
+      "Value": _sections_modified,
+    },
+    {
+      "Key":"Requirements modified",
+      "Value": _requirements_modified,
+    },
+  ]	-%}
+    {% include "components/table_key_value/index.jinja" %}
+  {%- endwith -%}
 
-  <h3>Changes</h3>
-  <table class="changelog_table">
-
-  {% for change in change_container.change_stats.changes %}
-    <tr>
-      <td>Change #{{ loop.index }}</td>
-
-      <td>{{ change.change_type.value }}</td>
-
-      {% if change.change_type == "Requirement added" %}
-        <td>
-          –
-        </td>
-
-        <td>
-          {% with requirement=change.rhs_requirement, side="right", self_stats=change_container.rhs_stats, other_stats=change_container.lhs_stats, traceability_index=change_container.traceability_index_rhs %}
-          {% include "screens/git/node/requirement.jinja" %}
-          {% endwith %}
-        </td>
-      {% elif change.change_type == "Requirement removed" %}
-        <td>
+  <div class="changelog_changes">
+    {% for change in change_container.change_stats.changes %}
+    <div class="changelog_change">
+      <div class="changelog_change_meta">
+        <span class="changelog_change_num"># {{ loop.index }}</span>
+        {% set _change_type = change.change_type.value.split(' ') %}
+        {# <span class="changelog_change_type {{ _change_type[1] }}">{{ _change_type[1] }}</span> #}
+        <span class="changelog_change_type {{ _change_type[1] }}">{{ change.change_type.value }}</span>
+      </div>
+      <div class="changelog_change_node">
+        {% if change.change_type == "Requirement added" or change.change_type == "Section added" %}
+          <div class="changelog_node_null">{{ change.change_type.value }}</div>
+        {% elif change.change_type == "Requirement removed" or change.change_type == "Requirement modified" %}
           {% with requirement=change.lhs_requirement, side="left", self_stats=change_container.lhs_stats, other_stats=change_container.rhs_stats, traceability_index=change_container.traceability_index_lhs %}
-             {% include "screens/git/node/requirement.jinja" %}
+            {% set requirement_change = change_stats.find_change(requirement) %}
+            {% include "screens/git/fields/requirement_fields.jinja" %}
           {% endwith %}
-        </td>
-
-        <td>
-          –
-        </td>
-      {% elif change.change_type == "Requirement modified" %}
-        <td>
-          {% with requirement=change.lhs_requirement, side="left", self_stats=change_container.lhs_stats, other_stats=change_container.rhs_stats, traceability_index=change_container.traceability_index_lhs %}
-          {% include "screens/git/node/requirement.jinja" %}
-          {% endwith %}
-        </td>
-        <td>
-          {% with requirement=change.rhs_requirement, side="right", self_stats=change_container.rhs_stats, other_stats=change_container.lhs_stats, traceability_index=change_container.traceability_index_rhs %}
-          {% include "screens/git/node/requirement.jinja" %}
-          {% endwith %}
-        </td>
-      {% elif change.change_type == "Section removed" %}
-        <td>
+        {% elif change.change_type == "Section removed" or change.change_type == "Section modified" %}
           {% with section=change.lhs_section, side="left", self_stats=change_container.lhs_stats, other_stats=change_container.rhs_stats, traceability_index=change_container.traceability_index_lhs %}
-          {% include "screens/git/node/section.jinja" %}
+            {% set section_change = change_stats.find_change(section) %}
+            {% include "screens/git/fields/section_fields.jinja" %}
           {% endwith %}
-        </td>
-        <td>–</td>
-      {% elif change.change_type == "Section modified" %}
-        <td>
-          {% with section=change.lhs_section, side="left", self_stats=change_container.lhs_stats, other_stats=change_container.rhs_stats, traceability_index=change_container.traceability_index_lhs %}
-          {% include "screens/git/node/section.jinja" %}
-          {% endwith %}
-        </td>
-        <td>
-          {% with section=change.rhs_section, side="right", self_stats=change_container.rhs_stats, other_stats=change_container.lhs_stats, traceability_index=change_container.traceability_index_rhs %}
-          {% include "screens/git/node/section.jinja" %}
-          {% endwith %}
-        </td>
-      {% elif change.change_type == "Section added" %}
-        <td>–</td>
-        <td>
-          {% with section=change.rhs_section, side="right", self_stats=change_container.rhs_stats, other_stats=change_container.lhs_stats, traceability_index=change_container.traceability_index_rhs %}
-          {% include "screens/git/node/section.jinja" %}
-          {% endwith %}
-        </td>
-      {% elif change.change_type == "Document modified" %}
-        <td>
+        {% elif change.change_type == "Document modified" %}
           {% if change.lhs_document is not none %}
             {% with document=change.lhs_document, side="left", self_stats=change_container.lhs_stats, other_stats=change_container.rhs_stats, traceability_index=change_container.traceability_index_lhs %}
               {% include "screens/git/fields/document_abstract.jinja" %}
             {% endwith %}
           {% else %}
-            –
+            <div class="changelog_node_null"></div>
           {% endif %}
-        </td>
-        <td>
+        {% else %}
+          {% assert 0, "Must not reach here." %}
+        {% endif %}
+      </div>
+      <div class="changelog_change_node">
+        {% if change.change_type == "Requirement removed" or change.change_type == "Section removed" %}
+          <div class="changelog_node_null">{{ change.change_type.value }}</div>
+        {% elif change.change_type == "Requirement added" or change.change_type == "Requirement modified" %}
+          {% with requirement=change.rhs_requirement, side="right", self_stats=change_container.rhs_stats, other_stats=change_container.lhs_stats, traceability_index=change_container.traceability_index_rhs %}
+            {% set requirement_change = change_stats.find_change(requirement) %}
+            {% include "screens/git/fields/requirement_fields.jinja" %}
+          {% endwith %}
+        {% elif change.change_type == "Section added" or change.change_type == "Section modified" %}
+          {% with section=change.rhs_section, side="right", self_stats=change_container.rhs_stats, other_stats=change_container.lhs_stats, traceability_index=change_container.traceability_index_rhs %}
+            {% set section_change = change_stats.find_change(section) %}
+            {% include "screens/git/fields/section_fields.jinja" %}
+          {% endwith %}
+        {% elif change.change_type == "Document modified" %}
           {% if change.rhs_document is not none %}
             {% with document=change.rhs_document, side="right", self_stats=change_container.rhs_stats, other_stats=change_container.lhs_stats, traceability_index=change_container.traceability_index_rhs %}
               {% include "screens/git/fields/document_abstract.jinja" %}
             {% endwith %}
           {% else %}
-            –
+            <div class="changelog_node_null"></div>
           {% endif %}
-        </td>
-      {% else %}
-        {% assert 0, "Must not reach here." %}
-      {% endif %}
-    </tr>
-  {% endfor %}
-
-  </table>
-</div>
+        {% else %}
+          {% assert 0, "Must not reach here." %}
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>{# // changelog_changes #}
+</div>{# // changelog_content #}

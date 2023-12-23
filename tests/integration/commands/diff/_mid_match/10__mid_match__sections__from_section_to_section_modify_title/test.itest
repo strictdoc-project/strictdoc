@@ -2,11 +2,17 @@ RUN: %strictdoc diff %S/lhs %S/rhs --output-dir Output
 
 RUN: cat %S/Output/changelog.html | filecheck %s --check-prefix=CHECK-CHANGELOG
 
-CHECK-CHANGELOG:1 nodes modified:
-CHECK-CHANGELOG:No documents were modified.
-CHECK-CHANGELOG:1 sections
-CHECK-CHANGELOG:(1 modified).
-CHECK-CHANGELOG:No requirements were modified.
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Nodes modified</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">1</div>
+
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Documents modified</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">No documents were modified.</div>
+
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Section modified</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">1 (1 modified)</div>
+
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Requirements modified</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">No requirements were modified.</div>
 
 NOTE: Ensure that the colored diff is shown for the modified title.
 CHECK-CHANGELOG:<div class="sdoc_pre_content"><span class="lambda_red">S</span><span>e</span><span class="lambda_red">ction</span><span> title</span></div>

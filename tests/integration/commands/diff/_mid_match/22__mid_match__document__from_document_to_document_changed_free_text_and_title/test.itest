@@ -2,10 +2,21 @@ RUN: %strictdoc diff %S/lhs %S/rhs --output-dir Output
 
 RUN: cat %S/Output/changelog.html | filecheck %s --check-prefix=CHECK-CHANGELOG
 
-CHECK-CHANGELOG:1 nodes modified:
-CHECK-CHANGELOG:1 documents.
-CHECK-CHANGELOG:No sections were modified.
-CHECK-CHANGELOG:No requirements were modified.
+RUN: cat %S/Output/changelog.html | filecheck %s --check-prefix=CHECK-CHANGELOG
+
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-section">Summary of the changes</div>
+
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Nodes modified</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">1</div>
+
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Documents modified</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">1</div>
+
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Section modified</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">No sections were modified.</div>
+
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Requirements modified</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">No requirements were modified.</div>
 
 CHECK-CHANGELOG:<span class="lambda_red">H</span><span>e</span><span class="lambda_red">llo worl</span><span>d </span><span class="lambda_red">doc</span>
 CHECK-CHANGELOG:<span class="lambda_red">T</span><span>ext.

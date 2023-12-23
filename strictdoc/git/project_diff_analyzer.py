@@ -506,19 +506,21 @@ class ChangeStats:
 
                 if (
                     other_document_or_none is not None
-                    and document.title != other_document_or_none.title
                 ):
+                    if document.title != other_document_or_none.title:
+                        title_modified = True
+                        lhs_colored_title_diff = get_colored_diff_string(
+                            document.title,
+                            other_document_or_none.title,
+                            "left",
+                        )
+                        rhs_colored_title_diff = get_colored_diff_string(
+                            document.title,
+                            other_document_or_none.title,
+                            "right",
+                        )
+                else:
                     title_modified = True
-                    lhs_colored_title_diff = get_colored_diff_string(
-                        document.title,
-                        other_document_or_none.title,
-                        "left",
-                    )
-                    rhs_colored_title_diff = get_colored_diff_string(
-                        document.title,
-                        other_document_or_none.title,
-                        "right",
-                    )
 
                 if len(document.free_texts) > 0:
                     free_text = document.free_texts[0]
@@ -630,19 +632,21 @@ class ChangeStats:
 
                         if (
                             other_section_or_none is not None
-                            and node.title != other_section_or_none.title
                         ):
+                            if node.title != other_section_or_none.title:
+                                title_modified = True
+                                lhs_colored_title_diff = get_colored_diff_string(
+                                    node.title,
+                                    other_section_or_none.title,
+                                    "left",
+                                )
+                                rhs_colored_title_diff = get_colored_diff_string(
+                                    node.title,
+                                    other_section_or_none.title,
+                                    "right",
+                                )
+                        else:
                             title_modified = True
-                            lhs_colored_title_diff = get_colored_diff_string(
-                                node.title,
-                                other_section_or_none.title,
-                                "left",
-                            )
-                            rhs_colored_title_diff = get_colored_diff_string(
-                                node.title,
-                                other_section_or_none.title,
-                                "right",
-                            )
 
                         if len(node.free_texts) > 0:
                             free_text = node.free_texts[0]

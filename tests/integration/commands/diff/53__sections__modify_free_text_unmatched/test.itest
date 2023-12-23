@@ -5,4 +5,16 @@ RUN: cat %S/Output/changelog.html | filecheck %s --dump-input=fail --check-prefi
 NOTE: The LHS and RHS Sections do not have a UID, so StrictDoc cannot match that
       it is just one node that is being changed. The expectation is that there
       will be two nodes modified: one removed and one added.
-CHECK-CHANGELOG:2 nodes modified
+
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Nodes modified</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">2</div>
+
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Documents modified</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">No documents were modified.</div>
+
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Sections modified</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">2 (1 removed, 1 added)</div>
+
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Requirements modified</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">No requirements were modified.</div>
+

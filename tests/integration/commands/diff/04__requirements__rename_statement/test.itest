@@ -9,9 +9,19 @@ RUN: cat %S/Output/changelog.html | filecheck %s --dump-input=fail --check-prefi
 NOTE: This ensures that the output HTML indeed contains a green diff line
       produced from comparing the old and the modified requirement statement.
 
-CHECK-CHANGELOG:1 nodes modified
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Nodes modified</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">1</div>
 
-CHECK-CHANGELOG:Change #1
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Documents modified</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">No documents were modified.</div>
+
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Sections modified</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">No sections were modified.</div>
+
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Requirements modified</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">1 (1 modified)</div>
+
+CHECK-CHANGELOG:# 1
 CHECK-CHANGELOG:Requirement modified
 CHECK-CHANGELOG:<span class="lambda_red"> shall do 1</span>
 CHECK-CHANGELOG:<span class="lambda_green">Modified </span>

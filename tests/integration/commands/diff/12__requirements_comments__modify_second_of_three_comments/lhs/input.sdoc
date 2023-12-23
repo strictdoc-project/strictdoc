@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Requirement #1
+STATEMENT: System shall do 1.
+COMMENT: This is a comment #1.
+COMMENT: This is a comment #2.
+COMMENT: This is a comment #3.

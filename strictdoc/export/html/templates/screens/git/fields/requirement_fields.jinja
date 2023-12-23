@@ -3,17 +3,13 @@
 <div class="diff_node_fields">
   {%- for requirement_field_triple_ in requirement.enumerate_all_fields() -%}
     {% if requirement_change is not none -%}
-      {% if requirement_change.requirement_token is not none -%}
-        {%- set field_change = requirement_change.get_field_change(requirement_field_triple_[0]) -%}
-      {% else %}
-        {%- set field_change = true -%}
-      {% endif %}
+      {%- set field_change = requirement_change.get_field_change(requirement_field_triple_[0]) -%}
     {% else %}
-    {%- set field_change = none -%}
+      {%- set field_change = none -%}
     {% endif %}
     <div
       class="diff_node_field"
-      {% if field_change is not none %}
+      {% if field_change is not none or (requirement_change is not none and requirement_change.is_unpaired_change()) %}
         modified="{{ side }}"
       {% endif %}
     >
@@ -22,7 +18,12 @@
       {%- endwith -%}
       <span class="sdoc_pre_content">
       {%- if field_change is not none -%}
-        {{ other_stats.get_diffed_requirement_field(requirement, requirement_field_triple_[1], requirement_field_triple_[2], side) }}
+        {%- set colored_diff = field_change.get_colored_free_text_diff(side) -%}
+        {%- if colored_diff is not none -%}
+          {{ field_change.get_colored_free_text_diff(side) }}
+        {%- else -%}
+          {{ requirement_field_triple_[2] }}
+        {%- endif -%}
       {%- else -%}
         {{ requirement_field_triple_[2] }}
       {%- endif -%}

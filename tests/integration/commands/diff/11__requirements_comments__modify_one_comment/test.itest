@@ -1,8 +1,6 @@
 RUN: %strictdoc diff %S/lhs %S/rhs --output-dir Output
 
-RUN: cat %S/Output/changelog.html | filecheck %s --dump-input=fail --check-prefix=CHECK-CHANGELOG
-NOTE: This ensures that the output HTML indeed contains a green diff line
-      produced from comparing the old and the modified requirement statement.
+RUN: cat %S/Output/changelog.html | filecheck %s --check-prefix=CHECK-CHANGELOG
 
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Nodes modified</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">1</div>
@@ -18,5 +16,13 @@ CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">1 (1 modified)</div>
 
 CHECK-CHANGELOG:# 1
 CHECK-CHANGELOG:Requirement modified
-CHECK-CHANGELOG:<span>System </span><span class="lambda_red">A</span><span> shall do </span><span class="lambda_red">1</span><span>.</span>
-CHECK-CHANGELOG:<span>System </span><span class="lambda_green">B</span><span> shall do </span><span class="lambda_green">2</span><span>.</span>
+
+CHECK-CHANGELOG:REQ-1
+CHECK-CHANGELOG:Requirement #1
+CHECK-CHANGELOG:System shall do 1.
+CHECK-CHANGELOG:<span>This is a</span><span class="lambda_red">n</span><span> </span><span>o</span><span class="lambda_red">l</span><span>d comment #1.</span>
+
+CHECK-CHANGELOG:REQ-1
+CHECK-CHANGELOG:Requirement #1
+CHECK-CHANGELOG:System shall do 1.
+CHECK-CHANGELOG:<span>This is a</span><span> </span><span class="lambda_green">m</span><span>o</span><span class="lambda_green">difie</span><span>d comment #1.</span>

@@ -13,3 +13,11 @@ CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">No sections were modifie
 
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Requirements modified</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">No requirements were modified.</div>
+
+NOTE: There was a regression / unfinished implementation: the Document title
+      was rendered as None. This ensures that the titles and the free texts
+      for the left and right documents are rendered.
+CHECK-CHANGELOG:Hello world doc
+CHECK-CHANGELOG:This is a free text.
+CHECK-CHANGELOG:Renamed hello world doc
+CHECK-CHANGELOG:This is a MODIFIED free text.

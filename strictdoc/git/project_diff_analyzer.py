@@ -504,9 +504,7 @@ class ChangeStats:
                 lhs_colored_free_text_diff: Optional[str] = None
                 rhs_colored_free_text_diff: Optional[str] = None
 
-                if (
-                    other_document_or_none is not None
-                ):
+                if other_document_or_none is not None:
                     if document.title != other_document_or_none.title:
                         title_modified = True
                         lhs_colored_title_diff = get_colored_diff_string(
@@ -630,20 +628,22 @@ class ChangeStats:
                         else:
                             uid_modified = True
 
-                        if (
-                            other_section_or_none is not None
-                        ):
+                        if other_section_or_none is not None:
                             if node.title != other_section_or_none.title:
                                 title_modified = True
-                                lhs_colored_title_diff = get_colored_diff_string(
-                                    node.title,
-                                    other_section_or_none.title,
-                                    "left",
+                                lhs_colored_title_diff = (
+                                    get_colored_diff_string(
+                                        node.title,
+                                        other_section_or_none.title,
+                                        "left",
+                                    )
                                 )
-                                rhs_colored_title_diff = get_colored_diff_string(
-                                    node.title,
-                                    other_section_or_none.title,
-                                    "right",
+                                rhs_colored_title_diff = (
+                                    get_colored_diff_string(
+                                        node.title,
+                                        other_section_or_none.title,
+                                        "right",
+                                    )
                                 )
                         else:
                             title_modified = True

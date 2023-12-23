@@ -18,8 +18,10 @@
   >
     {%- set colored_diff = document_change.get_colored_title_diff(side) -%}
     {# Using a dummy if block to get right of leading and trailing whitespaces #}
-    {%- if true -%}
+    {%- if colored_diff is not none -%}
       {{ colored_diff }}
+    {%- else -%}
+      {{ document.title }}
     {%- endif -%}
   </div>
 </details>

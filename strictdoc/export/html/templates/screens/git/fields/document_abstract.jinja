@@ -3,9 +3,29 @@
 
 <div class="diff_node_fields">
 
-{% if document_change is not none and document_change.title_modified %}
+{% if document.reserved_uid is not none and document_change is not none and document_change.uid_modified %}
 <details
   modified="{{ side }}"
+>
+  <summary>
+  {%- with badge_text = "uid" -%}
+    {%- include "components/badge/index.jinja" -%}
+  {%- endwith -%}
+  </summary>
+
+  {% assert document.reserved_uid is not none %}
+  <div
+    class="sdoc_pre_content"
+  >{{ document.reserved_uid }}</div>
+</details>
+
+{% endif %}
+
+{% set title_modified = document_change is not none and document_change.title_modified %}
+<details
+  {% if title_modified %}
+  modified="{{ side }}"
+  {% endif %}
 >
   <summary>
   {%- with badge_text = "title" -%}
@@ -16,17 +36,19 @@
   <div
     class="sdoc_pre_content"
   >
-    {%- set colored_diff = document_change.get_colored_title_diff(side) -%}
-    {# Using a dummy if block to get right of leading and trailing whitespaces #}
-    {%- if colored_diff is not none -%}
-      {{ colored_diff }}
+    {%- if title_modified -%}
+      {%- set colored_diff = document_change.get_colored_title_diff(side) -%}
+      {# Using a dummy if block to get right of leading and trailing whitespaces #}
+      {%- if colored_diff is not none -%}
+        {{ colored_diff }}
+      {%- else -%}
+        {{ document.title }}
+      {%- endif -%}
     {%- else -%}
       {{ document.title }}
     {%- endif -%}
   </div>
 </details>
-
-{% endif %}
 
 {% if node.free_texts|length > 0 %}
 {% set free_text = node.free_texts[0] %}

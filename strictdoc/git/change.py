@@ -34,6 +34,7 @@ class DocumentChange:
         matched_uid: Optional[str],
         lhs_document: Optional[Document],
         rhs_document: Optional[Document],
+        uid_modified: bool,
         title_modified: bool,
         free_text_modified: bool,
         lhs_colored_title_diff: Optional[str],
@@ -45,6 +46,7 @@ class DocumentChange:
         if matched_uid is not None:
             assert len(matched_uid) > 0
         self.matched_uid: Optional[str] = matched_uid
+        self.uid_modified: bool = uid_modified
         self.title_modified: bool = title_modified
         self.free_text_modified: bool = free_text_modified
         self.lhs_colored_title_diff: Optional[str] = lhs_colored_title_diff

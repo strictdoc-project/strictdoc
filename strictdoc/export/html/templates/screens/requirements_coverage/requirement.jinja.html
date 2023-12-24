@@ -1,3 +1,5 @@
+{% assert requirement is defined and requirement is not none %}
+
 <sdoc-node
   node-style="card"
   node-role="requirement"
@@ -11,7 +13,3 @@
 >
   {% include "_shared/requirement_block/uid_and_title.jinja.html" %}
 </sdoc-node>
-
-{% if project_config.is_activated_requirements_to_source_traceability() %}
-{% include "_shared/requirement_block/files_tree.jinja.html" %}
-{% endif %}

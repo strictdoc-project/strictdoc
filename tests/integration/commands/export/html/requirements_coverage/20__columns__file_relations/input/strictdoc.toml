@@ -1,0 +1,6 @@
+[project]
+
+features = [
+  "REQUIREMENTS_COVERAGE_SCREEN",
+  "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+]

@@ -172,6 +172,22 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             requirement.reserved_uid
         ].parents
 
+    def get_parent_relations_with_role(
+        self, requirement: Requirement, role: Optional[str]
+    ):
+        assert isinstance(requirement, Requirement)
+        if (
+            requirement.reserved_uid is None
+            or len(requirement.reserved_uid) == 0
+        ):
+            return
+
+        for parent_requirement_, role_ in self.requirements_connections[
+            requirement.reserved_uid
+        ].parents:
+            if role_ == role:
+                yield parent_requirement_, role_
+
     def get_child_relations_with_roles(self, requirement: Requirement):
         assert isinstance(requirement, Requirement)
         if (
@@ -182,6 +198,22 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         yield from self.requirements_connections[
             requirement.reserved_uid
         ].children
+
+    def get_child_relations_with_role(
+        self, requirement: Requirement, role: Optional[str]
+    ):
+        assert isinstance(requirement, Requirement)
+        if (
+            requirement.reserved_uid is None
+            or len(requirement.reserved_uid) == 0
+        ):
+            return
+
+        for child_requirement_, role_ in self.requirements_connections[
+            requirement.reserved_uid
+        ].children:
+            if role_ == role:
+                yield child_requirement_, role_
 
     def has_parent_requirements(self, requirement: Requirement):
         assert isinstance(requirement, Requirement)

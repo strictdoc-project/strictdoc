@@ -1,0 +1,34 @@
+[DOCUMENT]
+TITLE: Hello world doc #3
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  RELATIONS:
+  - TYPE: Parent
+    ROLE: Refines
+
+[REQUIREMENT]
+UID: REQ3-001
+TITLE: Requirement Title #1
+STATEMENT: Requirement Statement #1
+
+[REQUIREMENT]
+UID: REQ3-002
+TITLE: Requirement Title #2
+STATEMENT: Requirement Statement #2
+
+[REQUIREMENT]
+UID: REQ3-003
+TITLE: Requirement Title #3
+STATEMENT: Requirement Statement #3

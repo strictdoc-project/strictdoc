@@ -1,8 +1,9 @@
 import datetime
 import os
+import re
 import sys
 from enum import Enum
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 import toml
 
@@ -17,6 +18,15 @@ from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.path_filter import validate_mask
+
+
+def parse_relation_tuple(column_name: str) -> Optional[Tuple]:
+    match_result = re.search(
+        r"^((Parent|Child|File)?)(\[(.{1,32})])?$", column_name
+    )
+    if match_result is None:
+        return None
+    return match_result.group(1), match_result.group(4)
 
 
 class ProjectFeature(str, Enum):
@@ -74,6 +84,9 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         include_source_paths: List[str],
         exclude_source_paths: List[str],
         html2pdf_template: Optional[str],
+        traceability_matrix_relation_columns: Optional[
+            List[Tuple[str, Optional[str]]]
+        ],
         reqif_profile: str,
         config_last_update: Optional[datetime.datetime],
     ):
@@ -112,6 +125,9 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
 
         self.html2pdf_template: Optional[str] = html2pdf_template
 
+        self.traceability_matrix_relation_columns: Optional[
+            List[Tuple[str, Optional[str]]]
+        ] = traceability_matrix_relation_columns
         self.reqif_profile: str = reqif_profile
 
         self.autouuid_include_sections: bool = False
@@ -137,6 +153,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
             include_source_paths=[],
             exclude_source_paths=[],
             html2pdf_template=None,
+            traceability_matrix_relation_columns=None,
             reqif_profile=ReqIFProfile.P01_SDOC,
             config_last_update=None,
         )
@@ -331,6 +348,7 @@ class ProjectConfigLoader:
         include_source_paths = []
         exclude_source_paths = []
         html2pdf_template: Optional[str] = None
+        traceability_matrix_relation_columns: Optional[List[Tuple]] = None
         reqif_profile = ReqIFProfile.P01_SDOC
 
         if "project" in config_dict:
@@ -442,6 +460,25 @@ class ProjectConfigLoader:
                     )
                     sys.exit(1)
 
+            traceability_matrix_relation_columns_config: Optional[
+                List
+            ] = project_content.get(
+                "traceability_matrix_relation_columns", None
+            )
+            if traceability_matrix_relation_columns_config is not None:
+                assert isinstance(
+                    traceability_matrix_relation_columns_config, list
+                )
+                traceability_matrix_relation_columns = []
+                for (
+                    relation_column_string_
+                ) in traceability_matrix_relation_columns_config:
+                    relation_tuple = parse_relation_tuple(
+                        relation_column_string_
+                    )
+                    assert relation_tuple is not None
+                    traceability_matrix_relation_columns.append(relation_tuple)
+
         if "server" in config_dict:
             # FIXME: Introduce at least a basic validation for the host/port.
             server_content = config_dict["server"]
@@ -464,6 +501,7 @@ class ProjectConfigLoader:
             include_source_paths=include_source_paths,
             exclude_source_paths=exclude_source_paths,
             html2pdf_template=html2pdf_template,
+            traceability_matrix_relation_columns=traceability_matrix_relation_columns,
             reqif_profile=reqif_profile,
             config_last_update=config_last_update,
         )

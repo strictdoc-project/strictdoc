@@ -1,0 +1,48 @@
+[DOCUMENT]
+TITLE: Hello world doc #2
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: Parent
+    ROLE: Refines
+  - TYPE: Parent
+    ROLE: REQUIREMENT_FOR
+
+[REQUIREMENT]
+UID: LLREQ-001
+TITLE: LLRequirement Title #1
+STATEMENT: Requirement Statement #1
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-001
+
+[REQUIREMENT]
+UID: LLREQ-002
+TITLE: LLRequirement Title #2
+STATEMENT: Requirement Statement #2
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-002
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: LLREQ-003
+TITLE: LLRequirement Title #3
+STATEMENT: Requirement Statement #3
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-003
+  ROLE: REQUIREMENT_FOR

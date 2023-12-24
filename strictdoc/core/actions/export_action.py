@@ -13,6 +13,7 @@ from strictdoc.export.dot.document_dot_generator import DocumentDotGenerator
 from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.rst.document_rst_generator import DocumentRSTGenerator
+from strictdoc.export.spdx.spdx_generator import SPDXGenerator
 from strictdoc.helpers.timing import timing_decorator
 
 
@@ -97,6 +98,15 @@ class ExportAction:
                 traceability_index=self.traceability_index,
                 output_reqif_root=output_reqif_root,
                 reqifz=True,
+            )
+
+        if "spdx" in self.project_config.export_formats:
+            output_dot_root = os.path.join(
+                self.project_config.export_output_dir, "spdx"
+            )
+            Path(output_dot_root).mkdir(parents=True, exist_ok=True)
+            SPDXGenerator().export_tree(
+                self.project_config, self.traceability_index, output_dot_root
             )
 
         if "dot" in self.project_config.export_formats:

@@ -75,6 +75,9 @@ dependencies = [
     # ReqIF
     "reqif >= 0.0.39, == 0.*",
 
+    # SPDX
+    "spdx-tools",
+
     # Bibtex
     "pybtex >= 0.23.0, == 0.*",
     # Bibtex fails with:

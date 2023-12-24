@@ -1,0 +1,28 @@
+[DOCUMENT]
+TITLE: Dummy Software Requirements Specification #2
+OPTIONS:
+  ENABLE_MID: False
+
+[REQUIREMENT]
+UID: LREQ-1
+TITLE: Dummy low-level requirement #1
+STATEMENT: System ABC shall do 1.
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-1
+
+[REQUIREMENT]
+UID: LREQ-2
+TITLE: Dummy low-level requirement #2
+STATEMENT: System ABC shall do 2.
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-2
+
+[REQUIREMENT]
+UID: LREQ-3
+TITLE: Dummy low-level requirement #3
+STATEMENT: System ABC shall do 3.
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-3

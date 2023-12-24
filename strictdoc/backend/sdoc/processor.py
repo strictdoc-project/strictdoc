@@ -1,6 +1,6 @@
 from typing import Optional
 
-from textx import get_location
+from textx import get_location, get_model
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
@@ -226,6 +226,21 @@ class SDocParsingProcessor:
             or not self.parse_context.document_config.is_requirement_in_toc()
         ) and self.parse_context.document_config.auto_levels:
             requirement.ng_resolved_custom_level = "None"
+
+        """
+        Saving the source location information in the requirement object.
+        """
+        the_model = get_model(requirement)
+        line_start, _ = the_model._tx_parser.pos_to_linecol(
+            requirement._tx_position
+        )
+        line_end, _ = the_model._tx_parser.pos_to_linecol(
+            requirement._tx_position_end
+        )
+        requirement.ng_line_start = line_start
+        requirement.ng_line_end = line_end
+        requirement.ng_byte_start = requirement._tx_position
+        requirement.ng_byte_end = requirement._tx_position_end
 
     def process_free_text(self, free_text):
         if isinstance(free_text.parent, Section):

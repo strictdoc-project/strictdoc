@@ -1,0 +1,28 @@
+[DOCUMENT]
+TITLE: Dummy Software Requirements Specification #1
+OPTIONS:
+  ENABLE_MID: False
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Dummy high-level requirement #1
+STATEMENT: System ABC shall do 1.
+RELATIONS:
+- TYPE: File
+  VALUE: file.py
+
+[REQUIREMENT]
+UID: REQ-2
+TITLE: Dummy high-level requirement #2
+STATEMENT: System ABC shall do 2.
+RELATIONS:
+- TYPE: File
+  VALUE: file.py
+
+[REQUIREMENT]
+UID: REQ-3
+TITLE: Dummy high-level requirement #3
+STATEMENT: System ABC shall do 3.
+RELATIONS:
+- TYPE: File
+  VALUE: file.py

@@ -185,6 +185,10 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes, too-ma
         ] = ordered_fields_lookup
         self.ng_level: Optional[int] = None
         self.ng_document_reference: Optional[DocumentReference] = None
+        self.ng_line_start: Optional[int] = None
+        self.ng_line_end: Optional[int] = None
+        self.ng_byte_start: Optional[int] = None
+        self.ng_byte_end: Optional[int] = None
         self.context = RequirementContext()
 
         self.reserved_mid: MID = MID(mid) if mid is not None else MID.create()

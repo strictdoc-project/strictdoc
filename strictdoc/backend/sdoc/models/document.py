@@ -26,6 +26,7 @@ class Document:  # pylint: disable=too-many-instance-attributes
         assert isinstance(free_texts, list)
 
         self.title: str = title
+        self.reserved_title: str = title
         self.config: DocumentConfig = (
             config
             if config is not None

@@ -34,6 +34,7 @@ class DocumentChange:
         matched_uid: Optional[str],
         lhs_document: Optional[Document],
         rhs_document: Optional[Document],
+        uid_modified: bool,
         title_modified: bool,
         free_text_modified: bool,
         lhs_colored_title_diff: Optional[str],
@@ -45,6 +46,7 @@ class DocumentChange:
         if matched_uid is not None:
             assert len(matched_uid) > 0
         self.matched_uid: Optional[str] = matched_uid
+        self.uid_modified: bool = uid_modified
         self.title_modified: bool = title_modified
         self.free_text_modified: bool = free_text_modified
         self.lhs_colored_title_diff: Optional[str] = lhs_colored_title_diff
@@ -127,6 +129,9 @@ class SectionChange:
         else:
             raise AssertionError("Must not reach here.")
         self.change_type = change_type
+
+    def is_paired_change(self) -> bool:
+        return self.lhs_section is not None and self.rhs_section is not None
 
     def get_colored_title_diff(self, side: str) -> Optional[str]:
         assert self.title_modified
@@ -216,8 +221,11 @@ class RequirementChange:
             raise AssertionError("Must not reach here.")
         self.change_type = change_type
 
-    def is_unpaired_change(self) -> bool:
-        return self.lhs_requirement is None or self.rhs_requirement is None
+    def is_paired_change(self) -> bool:
+        return (
+            self.lhs_requirement is not None
+            and self.rhs_requirement is not None
+        )
 
     def get_field_change(
         self, requirement_field: RequirementField

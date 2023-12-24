@@ -453,12 +453,26 @@ class ChangeStats:
                         )
                     )
 
+                uid_modified: bool = False
                 title_modified: bool = False
                 lhs_colored_title_diff: Optional[str] = None
                 rhs_colored_title_diff: Optional[str] = None
                 free_text_modified: bool = False
                 lhs_colored_free_text_diff: Optional[str] = None
                 rhs_colored_free_text_diff: Optional[str] = None
+
+                # If there is another section and the UIDs are not the
+                # same, consider the UID modified.
+                # If there is no other section, consider the UID
+                # modified.
+                if other_document_or_none is not None:
+                    if (
+                        document.reserved_uid
+                        != other_document_or_none.reserved_uid
+                    ):
+                        uid_modified = True
+                else:
+                    uid_modified = True
 
                 if other_document_or_none is not None:
                     if document.title != other_document_or_none.title:
@@ -495,7 +509,7 @@ class ChangeStats:
                                 other_document_or_none, "right"
                             )
                         )
-                if title_modified or free_text_modified:
+                if uid_modified or title_modified or free_text_modified:
                     lhs_document: Optional[Document] = None
                     rhs_document: Optional[Document] = None
                     if side == "left":
@@ -509,6 +523,7 @@ class ChangeStats:
                         matched_uid=None,
                         lhs_document=lhs_document,
                         rhs_document=rhs_document,
+                        uid_modified=uid_modified,
                         title_modified=title_modified,
                         free_text_modified=free_text_modified,
                         lhs_colored_title_diff=lhs_colored_title_diff,
@@ -627,6 +642,10 @@ class ChangeStats:
                                             other_section_or_none, "right"
                                         )
                                     )
+                        else:
+                            if other_section_or_none is not None:
+                                if len(other_section_or_none.free_texts) > 0:
+                                    free_text_modified = True
 
                         """
                         Step: Create a section token that is used by JS to match

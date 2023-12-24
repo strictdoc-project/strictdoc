@@ -46,7 +46,9 @@ class Document:  # pylint: disable=too-many-instance-attributes
         self.reserved_mid: MID = MID(mid) if mid is not None else MID.create()
         self.mid_permanent: bool = mid is not None
 
-        self.reserved_uid = "DOCUMENT"
+    @property
+    def reserved_uid(self) -> Optional[str]:
+        return self.config.uid
 
     def assign_meta(self, meta):
         assert isinstance(meta, DocumentMeta)

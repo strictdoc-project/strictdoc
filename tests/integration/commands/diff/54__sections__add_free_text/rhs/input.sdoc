@@ -1,0 +1,12 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[SECTION]
+UID: SECT-1
+TITLE: New section
+
+[FREETEXT]
+Free text!
+[/FREETEXT]
+
+[/SECTION]

@@ -627,6 +627,10 @@ class ChangeStats:
                                             other_section_or_none, "right"
                                         )
                                     )
+                        else:
+                            if other_section_or_none is not None:
+                                if len(other_section_or_none.free_texts) > 0:
+                                    free_text_modified = True
 
                         """
                         Step: Create a section token that is used by JS to match

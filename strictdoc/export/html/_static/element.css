@@ -18,6 +18,15 @@ h4 { font-size: 1.2em; }
 h5 { font-size: 1em; }
 h6 { font-size: 1em; }
 
+h1:first-child,
+h2:first-child,
+h3:first-child,
+h4:first-child,
+h5:first-child,
+h6:first-child {
+  margin-top: 0;
+}
+
 /* a */
 
 a {
@@ -540,6 +549,52 @@ sdoc-anchor[visible]:hover .anchor_back_links_number {
   color: var(--color-bg-contrast);
   border-color: var(--color-bg-contrast);
   cursor: default;
+}
+
+/* sdoc tabs (page nav) */
+
+.sdoc-tabs {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.sdoc-tab-list {
+  display: flex;
+  overflow: auto;
+  margin-bottom: -1px;
+}
+
+.sdoc-tab {
+  padding: var(--base-rhythm) calc(2 * var(--base-rhythm));
+  font-size: var(--font-size-xsm);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--color-link);
+  text-decoration: none;
+  background-color: transparent;
+  border-width: 1px 1px 0px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-left-style: solid;
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-left-color: transparent;
+  border-image: initial;
+  border-bottom-style: initial;
+  border-bottom-color: initial;
+
+  color: var(--color-fg-contrast);
+}
+
+.sdoc-tab:hover {
+  color: var(--color-hover);
+}
+
+.sdoc-tab[active] {
+  color: var(--color-fg-contrast);
+  border-color: var(--color-border);
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+  background-color: var(--color-bg-main);
 }
 
 /* tags */

@@ -25,7 +25,8 @@
   {{ project_config.project_title }} - {{ template_type }}
 {% endblock title %}
 
-{% block viewtype %}diff{% endblock viewtype %}
+{% assert tab in ("diff", "changelog") %}
+{% block viewtype %}{{ tab }}{% endblock viewtype %}
 
 {% block layout_nav %}
   {% include "_shared/nav.jinja.html" %}

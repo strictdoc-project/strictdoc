@@ -31,7 +31,8 @@
   grid-template-rows: minmax(0, max-content) minmax(0, max-content);
 
   gap: var(--base-rhythm);
-  /* height: calc(100% - var(--base-rhythm) - var(--base-rhythm)); */
+
+  min-height: 0; /* to prevent from overflowing the parent flex container */
 }
 
 /* controls */
@@ -64,13 +65,14 @@
 .diff_column {
   overflow: auto;
   overflow-y: scroll;
+  padding-bottom: 100%; /* to balance the scrolling freely */
+
   overflow-wrap: break-word;
-  /* border: 1px solid var(--thumbBG); */
+
   border-radius: 4px;
   border: 1px solid var(--color-border);
 
-  /* for position:sticky*/
-  position: relative;
+  position: relative; /* for position:sticky */
 }
 
 .diff_column[left] {
@@ -90,7 +92,6 @@
   flex-direction: column;
   gap: var(--base-rhythm);
   padding: var(--base-rhythm);
-  margin-bottom: 200%; /* to balance the scrolling freely */
 }
 
 /* details with summary */
@@ -560,15 +561,4 @@
     3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em,
     -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
   }
-}
-
-/* tabs */
-
-.sdoc-tabs {
-  padding-inline: 0;
-  box-shadow: 0 1px 0 white, 0 2px 0 var(--thumbBG);
-}
-
-a.sdoc-tab {
-  color: var(--color-fg-contrast);
 }

@@ -1,0 +1,12 @@
+<nav class="sdoc-tabs">
+  <div class="sdoc-tab-list">
+    <a class="sdoc-tab"
+      {% if tab == "diff" %}active{% endif %}
+      href="/diff?tab=diff&left_revision={{ left_revision_urlencoded }}&right_revision={{ right_revision_urlencoded }}"
+    >Diff</a>
+    <a class="sdoc-tab"
+      {% if tab == "changelog" %}active{% endif %}
+      href="/diff?tab=changelog&left_revision={{ left_revision_urlencoded }}&right_revision={{ right_revision_urlencoded }}"
+    >Changelog</a>
+  </div>
+</nav>

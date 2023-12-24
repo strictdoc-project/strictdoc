@@ -130,6 +130,9 @@ class SectionChange:
             raise AssertionError("Must not reach here.")
         self.change_type = change_type
 
+    def is_paired_change(self) -> bool:
+        return self.lhs_section is not None and self.rhs_section is not None
+
     def get_colored_title_diff(self, side: str) -> Optional[str]:
         assert self.title_modified
         if side == "left":
@@ -218,8 +221,11 @@ class RequirementChange:
             raise AssertionError("Must not reach here.")
         self.change_type = change_type
 
-    def is_unpaired_change(self) -> bool:
-        return self.lhs_requirement is None or self.rhs_requirement is None
+    def is_paired_change(self) -> bool:
+        return (
+            self.lhs_requirement is not None
+            and self.rhs_requirement is not None
+        )
 
     def get_field_change(
         self, requirement_field: RequirementField

@@ -11,16 +11,16 @@ CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Documents modified</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">No documents were modified.</div>
 
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Sections modified</div>
-CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">1 (1 modified)</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">1 (1 removed)</div>
 
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Requirements modified</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">No requirements were modified.</div>
 
 NOTE: This ensures that red-green diff is explained correctly.
 
+CHECK-CHANGELOG:modified="left"
 CHECK-CHANGELOG:UID{{.*}}SECT-1
-CHECK-CHANGELOG:TITLE{{.*}}<span class="lambda_red">N</span><span>e</span><span class="lambda_red">w</span><span> </span><span class="lambda_red">sec</span><span>ti</span><span class="lambda_red">on</span>
+CHECK-CHANGELOG:modified="left"
+CHECK-CHANGELOG:TITLE{{.*}}To be removed section
 
-CHECK-CHANGELOG:UID{{.*}}SECT-1
-CHECK-CHANGELOG:modified="right"
-CHECK-CHANGELOG:TITLE{{.*}}<span class="lambda_green">Modifi</span><span>e</span><span class="lambda_green">d</span><span> </span><span>ti</span><span class="lambda_green">tle</span>
+CHECK-CHANGELOG:Section removed

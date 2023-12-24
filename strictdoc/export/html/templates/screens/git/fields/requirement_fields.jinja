@@ -9,7 +9,7 @@
     {% endif %}
     <div
       class="diff_node_field"
-      {% if field_change is not none or (requirement_change is not none and requirement_change.is_unpaired_change()) %}
+      {% if field_change is not none or (requirement_change is not none and not requirement_change.is_paired_change()) %}
         modified="{{ side }}"
       {% endif %}
     >

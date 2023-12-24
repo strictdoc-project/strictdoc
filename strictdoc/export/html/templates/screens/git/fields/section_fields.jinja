@@ -25,7 +25,11 @@
       {%- include "components/badge/index.jinja" -%}
     {%- endwith -%}
     {% if section_change is not none and section_change.title_modified %}
-      <div class="sdoc_pre_content">{{ section_change.get_colored_title_diff(side) }}</div>
+      {%- if section_change.is_paired_change() -%}
+        <div class="sdoc_pre_content">{{ section_change.get_colored_title_diff(side) }}</div>
+      {%- else -%}
+        <div class="sdoc_pre_content">{{ section.title }}</div>
+      {%- endif -%}
     {% else %}
     <div class="sdoc_pre_content">{{ section.title }}</div>
     {% endif %}

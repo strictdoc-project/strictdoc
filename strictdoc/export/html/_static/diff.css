@@ -220,22 +220,11 @@
 .diff_node_fields {
   display: flex;
   flex-direction: column;
-  /* row-gap: var(--base-rhythm); */
-
-  /* in node and in doc as Abstract: */
-  padding-top: var(--base-rhythm);
+  margin: var(--base-rhythm) 0;
 }
 
 .diff_node > .diff_node_fields {
-  /* in node only: */
-  margin-bottom: calc(var(--base-rhythm)*2);
   padding-left: calc(var(--base-rhythm)*2);
-
-  /* padding-left: calc(var(--base-rhythm)*1.5);
-  border-left: 1px dotted; */
-
-  /* border-left: var(--base-rhythm) solid rgba(0,0,0,0.01);
-  padding-left: calc(var(--base-rhythm)*1); */
 }
 
 .diff_node_field {

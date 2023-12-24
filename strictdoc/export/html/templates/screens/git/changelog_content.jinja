@@ -76,7 +76,7 @@
         {% elif change.change_type == "Document modified" %}
           {% if change.lhs_document is not none %}
             {% with document=change.lhs_document, side="left", self_stats=change_container.lhs_stats, other_stats=change_container.rhs_stats, traceability_index=change_container.traceability_index_lhs %}
-              {% include "screens/git/fields/document_abstract.jinja" %}
+              {% include "screens/git/fields/document_fields.jinja" %}
             {% endwith %}
           {% else %}
             <div class="changelog_node_null"></div>
@@ -101,7 +101,7 @@
         {% elif change.change_type == "Document modified" %}
           {% if change.rhs_document is not none %}
             {% with document=change.rhs_document, side="right", self_stats=change_container.rhs_stats, other_stats=change_container.lhs_stats, traceability_index=change_container.traceability_index_rhs %}
-              {% include "screens/git/fields/document_abstract.jinja" %}
+              {% include "screens/git/fields/document_fields.jinja" %}
             {% endwith %}
           {% else %}
             <div class="changelog_node_null"></div>

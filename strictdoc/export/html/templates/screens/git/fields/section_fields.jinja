@@ -1,9 +1,10 @@
 <div class="diff_node_fields">
   {# UID #}
   {%- if section.reserved_uid is not none and section.reserved_uid|length > 0 -%}
+  {% set uid_modified = section_change is not none and section_change.uid_modified %}
     <div
       class="diff_node_field"
-      {% if section_change is not none and section_change.uid_modified %}
+      {% if uid_modified %}
         modified="{{ side }}"
       {% endif %}
     >
@@ -15,16 +16,17 @@
   {%- endif %}
 
   {# TITLE #}
+  {% set title_modified = section_change is not none and section_change.title_modified %}
   <div
     class="diff_node_field"
-    {% if section_change is not none and section_change.title_modified %}
+    {% if title_modified %}
       modified="{{ side }}"
     {% endif %}
   >
     {%- with badge_text = "TITLE" -%}
       {%- include "components/badge/index.jinja" -%}
     {%- endwith -%}
-    {% if section_change is not none and section_change.title_modified %}
+    {% if title_modified %}
       {%- if section_change.is_paired_change() -%}
         <div class="sdoc_pre_content">{{ section_change.get_colored_title_diff(side) }}</div>
       {%- else -%}
@@ -38,9 +40,10 @@
   {# Free text #}
   {% if section.free_texts|length > 0 %}
   {% set free_text = section.free_texts[0] %}
+  {% set free_text_modified = section_change is none or section_change.free_text_modified %}
     <div
       class="diff_node_field"
-      {% if section_change is none or section_change.free_text_modified %}
+      {% if free_text_modified %}
         modified="{{ side }}"
       {% endif %}
     >

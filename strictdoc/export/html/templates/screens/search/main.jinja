@@ -1,7 +1,10 @@
 <div
   class="main"
 >
-  {%- include "components/form/search.jinja" -%}
+  <div class="main_sticky_header">
+    {%- include "components/form/search.jinja" -%}
+  </div>
+
   {%- if search_results|length > 0 -%}
     <div class="content">
     {% for node in search_results %}

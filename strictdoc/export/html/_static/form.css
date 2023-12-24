@@ -493,7 +493,6 @@ sdoc-tab-content[active] {
   display: contents;
 }
 
-.sdoc-tabs,
 sdoc-tabs {
   grid-column: 1 / -1;
 
@@ -507,7 +506,6 @@ sdoc-tabs {
   display: flex;
 }
 
-.sdoc-tab,
 sdoc-tab {
   font-size: var(--font-size-xsm);
   font-weight: 600;
@@ -544,12 +542,10 @@ sdoc-tab {
   transition: 0.2s;
 }
 
-.sdoc-tab:hover,
 sdoc-tab:hover {
   background-color: rgba(255, 255, 255, 0.5);
 }
 
-.sdoc-tab[active],
 sdoc-tab[active] {
   color: var(--color-hover);
   background-color: rgba(255, 255, 255, 1);
@@ -626,14 +622,9 @@ sdoc-form[diff] form {
 
 sdoc-form[search] {
   display: block;
-  position: sticky;
-  top: 0;
-  left: 0;
-  z-index: 11;
-
-  margin-bottom: calc(var(--base-rhythm)*4);
   background-color: transparent;
   border: none;
+  border-radius: 0;
 }
 
 sdoc-form[search] form {
@@ -647,18 +638,7 @@ sdoc-form[search] form {
 }
 
 sdoc-form[search][success] {
-  box-shadow: 0 0 1rem 0.5rem var(--thumbBG);
-}
-
-sdoc-form[search]::before {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  top: -60px;
-  left: -60px;
-  right: -60px;
-  background-color: var(--color-bg-main);
-  z-index: 0;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .sdoc-form-error,

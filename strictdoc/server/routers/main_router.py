@@ -1253,6 +1253,7 @@ def create_main_router(
             link_renderer=link_renderer,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
+            standalone=False,
         )
         return HTMLResponse(
             content=output,

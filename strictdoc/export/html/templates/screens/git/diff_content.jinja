@@ -30,7 +30,7 @@
             <span class="document_title">{{ document.title }}</span>
           </summary>
 
-            {% include "screens/git/fields/document_abstract.jinja" %}
+            {% include "screens/git/fields/document_fields.jinja" %}
 
             {%- set document_iterator = traceability_index.get_document_iterator(document) -%}
             {%- for section_or_requirement in document_iterator.all_content() %}

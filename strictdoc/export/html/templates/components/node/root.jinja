@@ -4,14 +4,16 @@
     Expect sdoc_entity = document.
 #}
 
+{% set is_not_standalone = project_config.is_running_on_server and not standalone %}
+
 <turbo-frame
-{%- if project_config.is_running_on_server %}
+{%- if is_not_standalone %}
   id="article-{{ sdoc_entity.reserved_mid.get_string_value() }}"
 {% endif -%}
 >
 
   <sdoc-node
-    {%- if project_config.is_running_on_server %}
+    {%- if is_not_standalone %}
       data-editable_node="on"
     {%- endif %}
     node-role="root"
@@ -23,7 +25,7 @@
     {% endblock sdoc_entity %}
 
     {# node_controls #}
-    {%- if project_config.is_running_on_server and not standalone -%}
+    {%- if is_not_standalone -%}
     {% include "components/node/node_controls/index.jinja" %}
     {%- endif -%}
 

@@ -3,35 +3,36 @@
 
 <div class="diff_node_fields">
 
-{% if document.reserved_uid is not none and document_change is not none and document_change.uid_modified %}
-<details
+{% if document.reserved_uid is not none %}
+{% set uid_modified = document.reserved_uid is not none and document_change is not none and document_change.uid_modified %}
+<div
+  class="diff_node_field"
+  {% if uid_modified %}
   modified="{{ side }}"
+  {% endif %}
 >
-  <summary>
   {%- with badge_text = "uid" -%}
     {%- include "components/badge/index.jinja" -%}
   {%- endwith -%}
-  </summary>
 
   {% assert document.reserved_uid is not none %}
   <div
     class="sdoc_pre_content"
   >{{ document.reserved_uid }}</div>
-</details>
+</div>
 
 {% endif %}
 
 {% set title_modified = document_change is not none and document_change.title_modified %}
-<details
+<div
+  class="diff_node_field"
   {% if title_modified %}
   modified="{{ side }}"
   {% endif %}
 >
-  <summary>
   {%- with badge_text = "title" -%}
     {%- include "components/badge/index.jinja" -%}
   {%- endwith -%}
-  </summary>
 
   <div
     class="sdoc_pre_content"
@@ -48,21 +49,20 @@
       {{ document.title }}
     {%- endif -%}
   </div>
-</details>
+</div>
 
 {% if node.free_texts|length > 0 %}
 {% set free_text = node.free_texts[0] %}
 {% set free_text_modified = document_change is not none and document_change.free_text_modified %}
-<details
+<div
+  class="diff_node_field"
   {% if free_text_modified %}
     modified="{{ side }}"
   {% endif %}
 >
-  <summary>
-  {%- with badge_text = "abstract" -%}
+  {%- with badge_text = "free text" -%}
     {%- include "components/badge/index.jinja" -%}
   {%- endwith -%}
-  </summary>
 
   <div
     class="sdoc_pre_content"
@@ -78,7 +78,7 @@
         {{ free_text.get_parts_as_text_escaped() }}
     {%- endif -%}
   </div>
-</details>
+</div>
 
 {% endif %}
 

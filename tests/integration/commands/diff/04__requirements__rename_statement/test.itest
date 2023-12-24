@@ -1,10 +1,5 @@
 RUN: %strictdoc diff %S/lhs %S/rhs --output-dir Output
 
-RUN: cat %S/Output/diff.html | filecheck %s --dump-input=fail --check-prefix=CHECK-DIFF
-NOTE: This ensures that the output HTML indeed contains a green diff line
-      produced from comparing the old and the modified requirement statement.
-CHECK-DIFF:<span class="sdoc_pre_content"><span class="lambda_green">Modified </span><span>s</span><span class="lambda_green">ta</span><span>tem</span><span class="lambda_green">ent</span><span>.</span></span>
-
 RUN: cat %S/Output/changelog.html | filecheck %s --dump-input=fail --check-prefix=CHECK-CHANGELOG
 NOTE: This ensures that the output HTML indeed contains a green diff line
       produced from comparing the old and the modified requirement statement.
@@ -23,5 +18,5 @@ CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">1 (1 modified)</div>
 
 CHECK-CHANGELOG:# 1
 CHECK-CHANGELOG:Requirement modified
-CHECK-CHANGELOG:<span class="lambda_red"> shall do 1</span>
-CHECK-CHANGELOG:<span class="lambda_green">Modified </span>
+CHECK-CHANGELOG:<span>System </span><span class="lambda_red">A</span><span> shall do </span><span class="lambda_red">1</span><span>.</span>
+CHECK-CHANGELOG:<span>System </span><span class="lambda_green">B</span><span> shall do </span><span class="lambda_green">2</span><span>.</span>

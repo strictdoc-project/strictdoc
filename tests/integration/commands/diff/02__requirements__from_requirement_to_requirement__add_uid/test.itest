@@ -19,6 +19,6 @@ CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">1 (1 modified)</div>
 # UID
 CHECK-CHANGELOG:class="diff_node_field"
 CHECK-CHANGELOG:modified="right"
+CHECK-CHANGELOG: REQ-1
 
 CHECK-CHANGELOG-NOT:modified="right"
-

@@ -11,7 +11,9 @@ green = lambda text: f'<span class="lambda_green">{text}</span>'
 white = lambda text: f"<span>{text}</span>"
 
 
-def get_colored_diff_string(old, new, flag: str):
+def get_colored_diff_string(old: str, new: str, flag: str):
+    assert old is not None
+    assert new is not None
     assert flag in ("left", "right")
 
     result = ""

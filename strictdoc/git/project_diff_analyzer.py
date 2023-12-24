@@ -1,7 +1,7 @@
 import hashlib
 import statistics
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Set, Union
+from typing import Any, Dict, List, Optional, Set, Tuple, Union
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.reference import (
@@ -237,50 +237,6 @@ class ProjectTreeDiffStats:
                 pass
 
         return None
-
-    def get_diffed_requirement_field(
-        self,
-        requirement: Requirement,
-        field_name: str,
-        field_value: str,
-        side: str,
-    ):
-        assert isinstance(field_value, str)
-        assert side in ("left", "right")
-
-        other_requirement: Optional[Requirement] = self.find_requirement(
-            requirement
-        )
-        if (
-            other_requirement is None
-            or field_name not in other_requirement.ordered_fields_lookup
-        ):
-            return field_value
-
-        other_requirement_fields = other_requirement.ordered_fields_lookup[
-            field_name
-        ]
-
-        other_field_value = None
-        for field_ in other_requirement_fields:
-            if field_.field_value is not None:
-                other_field_value = field_.field_value
-                break
-            if field_.field_value_multiline is not None:
-                other_field_value = field_.field_value_multiline
-                break
-        assert other_field_value is not None
-
-        if side == "left":
-            colored_field_value = get_colored_diff_string(
-                field_value, other_field_value, side
-            )
-            return colored_field_value
-        else:
-            colored_field_value = get_colored_diff_string(
-                other_field_value, field_value, side
-            )
-            return colored_field_value
 
     def contains_requirement_relations(
         self,
@@ -791,11 +747,11 @@ class ChangeStats:
                         )
                         if (
                             requirement_field_tripple is not None
+                            and requirement_field_tripple[1] != "COMMENT"
                             and requirement_field_tripple[0]
                             not in field_checked_so_far
                         ):
                             requirement_field_change = ChangeStats.create_field_change(
-                                self_stats=self_stats,
                                 other_stats=other_stats,
                                 requirement=requirement,
                                 requirement_field=requirement_field_tripple[0],
@@ -833,11 +789,11 @@ class ChangeStats:
                         )
                         if (
                             other_requirement_field_tripple is not None
+                            and other_requirement_field_tripple[1] != "COMMENT"
                             and other_requirement_field_tripple[0]
                             not in field_checked_so_far
                         ):
                             requirement_field_change = ChangeStats.create_field_change(
-                                self_stats=other_stats,
                                 other_stats=self_stats,
                                 requirement=other_requirement,
                                 requirement_field=other_requirement_field_tripple[
@@ -878,6 +834,14 @@ class ChangeStats:
                         ):
                             break
 
+                    # COMMENT can appear in requirement several times, so
+                    # it is handled separately.
+                    comments_changes = ChangeStats.create_comment_field_changes(
+                        requirement=requirement,
+                        other_requirement=other_requirement,
+                    )
+                    field_changes.extend(comments_changes)
+
                     if side == "left":
                         lhs_requirement = requirement
                         rhs_requirement = other_requirement
@@ -902,7 +866,6 @@ class ChangeStats:
     @staticmethod
     def create_field_change(
         *,
-        self_stats: ProjectTreeDiffStats,
         other_stats: ProjectTreeDiffStats,
         requirement: Requirement,
         requirement_field: RequirementField,
@@ -922,15 +885,31 @@ class ChangeStats:
         if other_requirement_field is not None:
             return None
 
-        left_diff = other_stats.get_diffed_requirement_field(
-            requirement, requirement_field_name, requirement_field_value, "left"
+        left_diff = None
+        right_diff = None
+        other_requirement_fields = other_requirement.ordered_fields_lookup.get(
+            requirement_field_name, []
         )
-        right_diff = self_stats.get_diffed_requirement_field(
-            other_requirement,
-            requirement_field_name,
-            requirement_field_value,
-            "right",
+        other_requirement_field = (
+            other_requirement_fields[0]
+            if len(other_requirement_fields) > 0
+            else None
         )
+
+        if other_requirement_field is not None:
+            other_requirement_field_value = (
+                other_requirement_field.field_value
+                if other_requirement_field.field_value is not None
+                else other_requirement_field.field_value_multiline
+            )
+            assert other_requirement_field_value is not None
+            left_diff = get_colored_diff_string(
+                requirement_field_value, other_requirement_field_value, "left"
+            )
+            right_diff = get_colored_diff_string(
+                requirement_field_value, other_requirement_field_value, "right"
+            )
+
         return RequirementFieldChange(
             field_name=requirement_field_name,
             lhs_field=requirement_field,
@@ -938,6 +917,144 @@ class ChangeStats:
             left_diff=left_diff,
             right_diff=right_diff,
         )
+
+    @staticmethod
+    def create_comment_field_changes(
+        *,
+        requirement: Requirement,
+        other_requirement: Requirement,
+    ) -> Optional[List[RequirementFieldChange]]:
+        assert isinstance(requirement, Requirement)
+        assert isinstance(other_requirement, Requirement)
+
+        changes = []
+
+        changed_fields: Dict = dict.fromkeys(
+            requirement.ordered_fields_lookup.get("COMMENT", []), 1
+        )
+        changed_other_fields: Dict = dict.fromkeys(
+            other_requirement.ordered_fields_lookup.get("COMMENT", []), 1
+        )
+
+        if len(changed_fields) == 0 or len(changed_other_fields) == 0:
+            for changed_field_ in changed_fields:
+                changes.append(
+                    RequirementFieldChange(
+                        field_name="COMMENT",
+                        lhs_field=changed_field_,
+                        rhs_field=None,
+                        left_diff=None,
+                        right_diff=None,
+                    )
+                )
+            for changed_other_field_ in changed_other_fields:
+                changes.append(
+                    RequirementFieldChange(
+                        field_name="COMMENT",
+                        lhs_field=None,
+                        rhs_field=changed_other_field_,
+                        left_diff=None,
+                        right_diff=None,
+                    )
+                )
+            return changes
+
+        similarities: List[
+            Tuple[float, RequirementField, RequirementField]
+        ] = []
+        for changed_field_ in list(changed_fields.keys()):
+            comment_value = (
+                changed_field_.field_value
+                if changed_field_.field_value is not None
+                else changed_field_.field_value_multiline
+            )
+            assert comment_value is not None
+            for changed_other_field_ in list(changed_other_fields.keys()):
+                comment_other_value = (
+                    changed_other_field_.field_value
+                    if changed_other_field_.field_value is not None
+                    else changed_other_field_.field_value_multiline
+                )
+                assert comment_other_value is not None
+
+                similarity = similar(comment_value, comment_other_value)
+                if similarity == 1:
+                    del changed_fields[changed_field_]
+                    del changed_other_fields[changed_other_field_]
+                    break
+
+                similarities.append(
+                    (similarity, changed_field_, changed_other_field_)
+                )
+
+        similarities.sort(key=lambda student: student[0], reverse=True)
+
+        for _, changed_field_, changed_other_field_ in similarities:
+            if (
+                changed_field_ not in changed_fields
+                or changed_other_field_ not in changed_other_fields
+            ):
+                continue
+
+            # This is the best change.
+            comment_value = (
+                changed_field_.field_value
+                if changed_field_.field_value is not None
+                else changed_field_.field_value_multiline
+            )
+            assert comment_value is not None
+            comment_other_value = (
+                changed_other_field_.field_value
+                if changed_other_field_.field_value is not None
+                else changed_other_field_.field_value_multiline
+            )
+            assert comment_other_value is not None
+
+            left_diff = get_colored_diff_string(
+                comment_value,
+                comment_other_value,
+                "left",
+            )
+            right_diff = get_colored_diff_string(
+                comment_value,
+                comment_other_value,
+                "right",
+            )
+            changes.append(
+                RequirementFieldChange(
+                    field_name="COMMENT",
+                    lhs_field=changed_field_,
+                    rhs_field=changed_other_field_,
+                    left_diff=left_diff,
+                    right_diff=right_diff,
+                )
+            )
+            del changed_fields[changed_field_]
+            del changed_other_fields[changed_other_field_]
+
+        # Iterate over remaining fields.
+        for changed_field_ in changed_fields:
+            changes.append(
+                RequirementFieldChange(
+                    field_name="COMMENT",
+                    lhs_field=changed_field_,
+                    rhs_field=None,
+                    left_diff=None,
+                    right_diff=None,
+                )
+            )
+        for changed_other_field_ in changed_other_fields:
+            changes.append(
+                RequirementFieldChange(
+                    field_name="COMMENT",
+                    lhs_field=None,
+                    rhs_field=changed_other_field_,
+                    left_diff=None,
+                    right_diff=None,
+                )
+            )
+
+        return changes
 
 
 class ProjectDiffAnalyzer:
@@ -1049,6 +1166,26 @@ class ProjectDiffAnalyzer:
                     else:
                         # WIP
                         continue
+
+                    # If this field appears once, there is nothing else to do.
+                    if len(field_values_) == 1:
+                        continue
+
+                    # At this point, we are dealing with COMMENT because it is
+                    # the only field that can appear several times.
+                    for comment_field_ in field_values_[1:]:
+                        if comment_field_.field_value is not None:
+                            hasher.update(
+                                comment_field_.field_value.encode("utf-8")
+                            )
+                        elif comment_field_.field_value_multiline is not None:
+                            hasher.update(
+                                comment_field_.field_value_multiline.encode(
+                                    "utf-8"
+                                )
+                            )
+                        else:
+                            raise AssertionError("Must not reach here.")
 
                 for reference_ in node.references:
                     if isinstance(reference_, ParentReqReference):

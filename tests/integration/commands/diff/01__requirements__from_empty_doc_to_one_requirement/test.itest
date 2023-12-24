@@ -19,13 +19,14 @@ CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">1 (1 added)</div>
 # UID
 CHECK-CHANGELOG:class="diff_node_field"
 CHECK-CHANGELOG:modified="right"
+CHECK-CHANGELOG:UID{{.*}}<span class="sdoc_pre_content">REQ-1</span>
 
 # TITLE
 CHECK-CHANGELOG:class="diff_node_field"
 CHECK-CHANGELOG:modified="right"
+CHECK-CHANGELOG:TITLE{{.*}}<span class="sdoc_pre_content">Requirement #1</span>
 
 # STATEMENT
 CHECK-CHANGELOG:class="diff_node_field"
 CHECK-CHANGELOG:modified="right"
-
-CHECK-CHANGELOG-NOT:modified="right"
+CHECK-CHANGELOG:STATEMENT{{.*}}<span class="sdoc_pre_content">System shall do 1.</span>

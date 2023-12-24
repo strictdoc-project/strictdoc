@@ -167,6 +167,13 @@ class RequirementFieldChange:
         self.left_diff: Optional[str] = left_diff
         self.right_diff: Optional[str] = right_diff
 
+    def get_colored_free_text_diff(self, side: str) -> Optional[str]:
+        if side == "left":
+            return self.left_diff
+        if side == "right":
+            return self.right_diff
+        raise AssertionError(f"Must not reach here: {side}")
+
 
 @auto_described
 class RequirementChange:
@@ -208,6 +215,9 @@ class RequirementChange:
         else:
             raise AssertionError("Must not reach here.")
         self.change_type = change_type
+
+    def is_unpaired_change(self) -> bool:
+        return self.lhs_requirement is None or self.rhs_requirement is None
 
     def get_field_change(
         self, requirement_field: RequirementField

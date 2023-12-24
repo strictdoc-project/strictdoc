@@ -18,9 +18,15 @@ CHECK-CHANGELOG:# 1
 CHECK-CHANGELOG:Requirement modified
 
 CHECK-CHANGELOG:REQ-1
-CHECK-CHANGELOG:<span class="lambda_red">#1</span>
-CHECK-CHANGELOG:<span class="lambda_red">Syst</span>
+CHECK-CHANGELOG:Requirement #1
+CHECK-CHANGELOG:System shall do 1.
+CHECK-CHANGELOG:<span>This is a comment </span><span class="lambda_red">#</span><span>1.</span>
+CHECK-CHANGELOG:This is a comment #2.
 
 CHECK-CHANGELOG:REQ-1
-CHECK-CHANGELOG:<span class="lambda_green">TITLE CHANGED</span>
-CHECK-CHANGELOG:<span class="lambda_green">Requir</span>
+CHECK-CHANGELOG:Requirement #1
+CHECK-CHANGELOG:System shall do 1.
+CHECK-CHANGELOG:This is a comment 1111.
+CHECK-CHANGELOG:This is a comment 111.
+CHECK-CHANGELOG:<span>This is a comment </span><span class="lambda_green">1</span><span>1.</span>
+CHECK-CHANGELOG:This is a comment #2.

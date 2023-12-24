@@ -1,1 +1,28 @@
 RUN: %strictdoc diff %S/lhs %S/rhs --output-dir Output
+
+RUN: cat %S/Output/changelog.html | filecheck %s --check-prefix=CHECK-CHANGELOG
+
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Nodes modified</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">1</div>
+
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Documents modified</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">No documents were modified.</div>
+
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Sections modified</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">No sections were modified.</div>
+
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Requirements modified</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">1 (1 modified)</div>
+
+CHECK-CHANGELOG:# 1
+CHECK-CHANGELOG:Requirement modified
+
+CHECK-CHANGELOG:REQ-2
+CHECK-CHANGELOG:Requirement #2
+CHECK-CHANGELOG:System shall do 2.
+
+CHECK-CHANGELOG:REQ-2
+CHECK-CHANGELOG:Requirement #2
+CHECK-CHANGELOG:System shall do 2.
+CHECK-CHANGELOG:text="relation"{{.*}}REQ-1
+CHECK-CHANGELOG:Requirement #1

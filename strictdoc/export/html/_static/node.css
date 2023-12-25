@@ -80,7 +80,7 @@ sdoc-node[node-style="card"].highlighted {
 /* nouid */
 
 sdoc-node.nouid {
-  background-color: rgb(240, 220, 220);
+  /* background-color: rgb(240, 220, 220); */
 }
 
 .nouid sdoc-requirement-title,

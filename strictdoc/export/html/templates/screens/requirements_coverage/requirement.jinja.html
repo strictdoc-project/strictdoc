@@ -11,5 +11,20 @@
   data-uid='{{ requirement.reserved_uid }}'
   {%- endif %}
 >
-  {% include "_shared/requirement_block/uid_and_title.jinja.html" %}
+  <div
+    class="traceability_matrix__requirement"
+    {% if relation_type is defined %}
+    with_relation="{{ relation_type }}"
+    {% endif %}
+    data-level="{{ requirement.context.title_number_string }}"
+  >
+    <small><b {% if requirement.reserved_uid is none %}style="color:red"{% endif %}>{{ requirement.reserved_uid if requirement.reserved_uid else '[no UID]' }}</b></small>
+    <br/>
+    {%- if requirement.reserved_title -%}
+      {%- if requirement.context.title_number_string %}
+        {{ requirement.context.title_number_string }}.&nbsp;
+      {%- endif -%}
+      {{ requirement.reserved_title }}
+    {%- endif %}
+  </div>
 </sdoc-node>

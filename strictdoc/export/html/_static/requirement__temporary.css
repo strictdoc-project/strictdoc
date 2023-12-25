@@ -8,10 +8,6 @@
   font-weight: bold;
 }
 
-[data-viewtype="requirements-coverage"] .requirement__title {
-  margin: 0;
-}
-
 /* requirement: parent / child / file */
 
 ul.requirement__link {
@@ -139,17 +135,4 @@ input:checked + .std-switch_slider:before {
   -webkit-transform: translateX(18px);
   -ms-transform: translateX(18px);
   transform: translateX(18px);
-}
-
-/* requirements-coverage */
-
-.requirements-coverage-document-title {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin: 1rem 0;
-  padding-top: 1rem;
-}
-
-.requirements-coverage-document-title:first-child {
-  margin-top: -1rem;
 }

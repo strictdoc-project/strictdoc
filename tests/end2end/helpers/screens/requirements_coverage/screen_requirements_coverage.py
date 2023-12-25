@@ -9,7 +9,7 @@ class Screen_RequirementsCoverage:  # pylint: disable=invalid-name
 
     def assert_on_screen(self) -> None:
         self.test_case.assert_element(
-            '//body[@data-viewtype="requirements-coverage"]',
+            '//body[@data-viewtype="traceability-matrix"]',
             by=By.XPATH,
         )
         self.assert_no_js_and_404_errors()

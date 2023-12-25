@@ -1,0 +1,11 @@
+RUN: %strictdoc export %S/input --output-dir Output | filecheck %s
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%S/Output/html/requirements_coverage.html"
+
+RUN: %cat "%S/Output/html/requirements_coverage.html" | filecheck %s --check-prefix CHECK-HTML
+
+CHECK-HTML:Hello world doc
+CHECK-HTML:file1.py
+CHECK-HTML:file2.py
+CHECK-HTML:file3.py

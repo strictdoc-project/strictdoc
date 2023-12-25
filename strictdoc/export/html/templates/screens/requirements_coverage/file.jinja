@@ -1,0 +1,27 @@
+{#
+  render_source_file_link --- works in documents
+  render_source_file_link_from_root --- works in files
+#}
+
+{%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
+{%- if requirement_file_links %}
+
+  {%- for link, opt_ranges in requirement_file_links %}
+    {%- if opt_ranges -%}
+      {%- for range in opt_ranges %}
+          <div class="traceability_matrix__file" with_relation="file">
+            <a data-turbo="false" class="" href="{{ link_renderer.render_source_file_link_from_root(link) }}#{{ requirement.reserved_uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
+              <b>[ {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }} ]</b> {{ link.get_posix_path() }}
+            </a>
+          </div>
+      {%- endfor -%}
+    {%- else -%}
+        <div class="traceability_matrix__file" with_relation="file">
+          <a data-turbo="false" href="{{ link_renderer.render_source_file_link_from_root(link) }}#{{ requirement.reserved_uid }}">
+            {{ link.get_posix_path() }}
+          </a>
+        </div>
+    {%- endif -%}
+  {%- endfor -%}
+
+{%- endif %}

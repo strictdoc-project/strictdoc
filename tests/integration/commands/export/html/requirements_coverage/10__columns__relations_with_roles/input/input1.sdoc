@@ -1,0 +1,17 @@
+[DOCUMENT]
+TITLE: Hello world doc #1
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: Requirement Title #1
+STATEMENT: Requirement Statement #1
+
+[REQUIREMENT]
+UID: REQ-002
+TITLE: Requirement Title #2
+STATEMENT: Requirement Statement #2
+
+[REQUIREMENT]
+UID: REQ-003
+TITLE: Requirement Title #3
+STATEMENT: Requirement Statement #3

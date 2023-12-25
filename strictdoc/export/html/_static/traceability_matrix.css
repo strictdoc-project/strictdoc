@@ -1,0 +1,133 @@
+.traceability_matrix {
+  --traceability_matrix-thead-height: calc(4 * var(--base-rhythm));
+
+
+  display: table;
+  border-collapse: collapse;
+}
+
+.traceability_matrix__anchor {
+  /* for Fixed Headers + Section Anchors */
+  scroll-snap-margin-top: var(--base-gap);
+  scroll-margin-top:      var(--base-gap);
+}
+
+.traceability_matrix .traceability_matrix__thead {
+  position: sticky;
+  top: calc(-1 * var(--traceability_matrix-thead-height));
+  z-index: 2;
+  background-color: var(--color-bg-main);
+}
+
+.traceability_matrix .traceability_matrix__thead::before {
+  content: '';
+  position: absolute;
+  top: calc(-1 * var(--base-gap));
+  left: calc(-1 * var(--base-gap));
+  right: calc(-1 * var(--base-gap));
+  bottom: 0;
+  z-index: 0;
+  background-color: var(--color-bg-main);
+}
+
+.traceability_matrix__thead th {
+  height: var(--traceability_matrix-thead-height);
+  text-align: left;
+  vertical-align: middle;
+  line-height: 1;
+  position: relative;
+  background-color: var(--color-bg-secondary-invert);
+  padding-left: var(--base-rhythm);
+  border: 1px solid var(--color-border);
+}
+
+.traceability_matrix td {
+  /* padding: var(--base-rhythm); */
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-contrast);
+  vertical-align: top;
+}
+
+td.traceability_matrix__document {
+  background-color: var(--color-bg-main);
+  position: sticky;
+  padding: 0;
+  top: 0;
+  z-index: 1;
+}
+
+.traceability_matrix__document_line {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  column-gap: var(--base-rhythm);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  line-height: 1.5;
+  width: 100%;
+  background-color: var(--color-bg-main);
+  padding-top: calc(3 * var(--base-rhythm));
+  padding-left: var(--base-rhythm);
+  border-bottom: 2px solid var(--color-border);
+}
+
+.traceability_matrix__requirement {
+  display: block;
+  position: relative;
+  font-size: var(--font-size-sm);
+  line-height: 1.2;
+  padding: var(--base-rhythm);
+}
+
+.traceability_matrix__file {
+  position: relative;
+  font-size: var(--font-size-sm);
+  line-height: 1.2;
+  margin-top: var(--base-rhythm);
+  margin-bottom: var(--base-rhythm);
+  padding-right: var(--base-rhythm);
+}
+
+.traceability_matrix__file a {
+  /* overflow-wrap: break-word; */
+  overflow-wrap: anywhere;
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+.traceability_matrix__file a:hover {
+  color: var(--color-hover);
+}
+
+[with_relation] {
+  padding-left: calc(4 * var(--base-rhythm));
+}
+
+[with_relation]::before {
+  content: '';
+  font-size: var(--font-size);
+  line-height: 1;
+  position: absolute;
+  left: var(--base-rhythm);
+}
+
+.traceability_matrix__requirement[with_relation]::before {
+  top: var(--base-rhythm);
+}
+
+.traceability_matrix__file[with_relation]::before {
+  top: 0
+}
+
+/* ← → */
+[with_relation="parent"]::before {
+  content: '→';
+}
+
+[with_relation="child"]::before {
+  content: '←';
+}
+
+[with_relation="file"]::before {
+  content: '→';
+}

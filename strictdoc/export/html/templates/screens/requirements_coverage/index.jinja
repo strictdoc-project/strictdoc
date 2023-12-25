@@ -1,9 +1,10 @@
 {% extends "base.jinja.html" %}
-{% set template_type = "Requirements coverage" %}
+{% set template_type = "Traceability matrix" %}
 
 {% block head_css %}
   {{ super() }}
   <link rel="stylesheet" href="{{ link_renderer.render_static_url('requirement-tree.css') }}"/>
+  <link rel="stylesheet" href="{{ link_renderer.render_static_url('traceability_matrix.css') }}"/>
 {% endblock head_css %}
 
 {% block head_scripts %}
@@ -17,7 +18,7 @@
   {{ project_config.project_title }} - {{ template_type }}
 {% endblock title %}
 
-{% block viewtype %}requirements-coverage{% endblock viewtype %}
+{% block viewtype %}traceability-matrix{% endblock viewtype %}
 
 {% block layout_nav %}
   {% include "_shared/nav.jinja.html" %}

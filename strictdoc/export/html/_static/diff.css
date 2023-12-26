@@ -28,7 +28,8 @@
   place-content: stretch stretch;
   grid-template-columns:  minmax(0, 1fr) /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
                           minmax(0, 1fr);
-  grid-template-rows: minmax(0, max-content) minmax(0, max-content);
+  grid-template-rows: minmax(0, max-content)
+                      minmax(0, 1fr);
 
   gap: var(--base-rhythm);
 
@@ -65,7 +66,6 @@
 .diff_column {
   overflow: auto;
   overflow-y: scroll;
-  padding-bottom: 100%; /* to balance the scrolling freely */
 
   overflow-wrap: break-word;
 
@@ -85,6 +85,7 @@
 
 .diff_inner {
   direction: initial;
+  padding-bottom: 100%; /* to balance the scrolling freely */
 }
 
 .diff_content {

@@ -1172,7 +1172,7 @@ a.tree_item:hover {
 
   width: fit-content;
   max-width: 100%;
-  overflow-x: auto;
+  /* overflow-x: auto; */
 }
 
 .sdoc-table_key_value-section,

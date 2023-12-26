@@ -2,6 +2,8 @@
 
 <div class="diff_node_fields">
   {%- for requirement_field_triple_ in requirement.enumerate_all_fields() -%}
+    {%- set is_multiline = requirement_field_triple_[0].field_value_multiline is not none -%}
+
     {% if requirement_change is not none -%}
       {%- set field_change = requirement_change.get_field_change(requirement_field_triple_[0]) -%}
     {% else %}
@@ -9,6 +11,9 @@
     {% endif %}
     <div
       class="diff_node_field"
+      {% if is_multiline %}
+        multiline
+      {% endif %}
       {% if field_change is not none or (requirement_change is not none and not requirement_change.is_paired_change()) %}
         modified="{{ side }}"
       {% endif %}

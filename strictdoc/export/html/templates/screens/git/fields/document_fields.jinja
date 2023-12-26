@@ -56,6 +56,7 @@
 {% set free_text_modified = document_change is not none and document_change.free_text_modified %}
 <div
   class="diff_node_field"
+  multiline
   {% if free_text_modified %}
     modified="{{ side }}"
   {% endif %}

@@ -1,11 +1,15 @@
 window.addEventListener("load",function(){
 
-    const root = document.querySelector('#diff_result');
+    const mutatingFrame = document.querySelector('#diff_result');
 
     var observer = new MutationObserver(function (mutationsList, observer) {
 
-      prepareBulkButtons(root);
-      syncDiff(root);
+      const diffTabRoot = mutatingFrame.querySelector('.diff');
+      if (diffTabRoot) {
+        // triggers on the diff tab
+        prepareBulkButtons(diffTabRoot);
+        syncDiff(diffTabRoot);
+      }
 
       // Disable the observer after the first trigger
       // because the functions modify the elements inside the #diff_result.
@@ -13,7 +17,7 @@ window.addEventListener("load",function(){
     });
 
     observer.observe(
-      root,
+      mutatingFrame,
       {
         childList: true,
         subtree: true
@@ -24,13 +28,13 @@ window.addEventListener("load",function(){
 
 function prepareBulkButtons(root) {
 
-  const leftColumn = document.querySelector('.diff_column[left]');
-  const rightColumn = document.querySelector('.diff_column[right]');
+  const leftColumn = root.querySelector('.diff_column[left]');
+  const rightColumn = root.querySelector('.diff_column[right]');
 
-  const leftOpenBtn = document.getElementById('diff_left_open');
-  const leftCloseBtn = document.getElementById('diff_left_close');
-  const rightOpenBtn = document.getElementById('diff_right_open');
-  const rightCloseBtn = document.getElementById('diff_right_close');
+  const leftOpenBtn = root.querySelector('#diff_left_open');
+  const leftCloseBtn = root.querySelector('#diff_left_close');
+  const rightOpenBtn = root.querySelector('#diff_right_open');
+  const rightCloseBtn = root.querySelector('#diff_right_close');
 
   const detailsLeftAll = [...leftColumn.querySelectorAll('details')];
   const detailsRightAll = [...rightColumn.querySelectorAll('details')];

@@ -1,16 +1,50 @@
 <sdoc-main-placeholder
-  class="page-tips"
   data-testid="changelog-main-placeholder"
 >
-  <div>
-    <p>The Diff/Changelog feature only works when StrictDoc is run against a directory which is a Git repository.</p>
+  <div class="page-tips">
+    <p>The Diff/Changelog feature only works when StrictDoc is run against a directory which is a Git repository.</p>
     <p>The left-hand-side (LHS) and the right-hand-side (RHS) revisions must be valid Git revisions.</p>
-    <p>A valid revision can be a Git branch, a Git commit or a Git tag. Examples: `main`, `origin/main`, `63fd784`, `v1.0.0`.</p>
-    <p>The StrictDoc's custom revision `HEAD+` can be used to indicate "the current branch + all uncommitted changes".</p>
-    <p>The Diff/Changelog query is shareable via a URL. Example: {# djlint:off H022 #}<a href="http://127.0.0.1:5111/diff?left_revision=HEAD%5E&right_revision=HEAD&tab=diff">This link</a>{# djlint:on #} opens a diff between the last commit and the last but one commit.</p>
+    <p>A valid revision can be a Git branch, a Git commit or a Git tag.</p>
+    <p>Examples:</p>
+
+    <div class="sdoc-table_key_value">
+      <div class="sdoc-table_key_value-key">Git branch</div>
+      <div class="sdoc-table_key_value-value">
+        `main`
+        <br>
+        `origin/main`
+      </div>
+      <div class="sdoc-table_key_value-key">Git commit</div>
+      <div class="sdoc-table_key_value-value">
+        `63fd78411f864382349e951c51d3c4ce1b90fd28`
+        <br>
+        `63fd784`
+      </div>
+      <div class="sdoc-table_key_value-key">Git tag</div>
+      <div class="sdoc-table_key_value-value">
+        `v1.0.0`
+      </div>
+      <div class="sdoc-table_key_value-key">custom</div>
+      <div class="sdoc-table_key_value-value">
+        `HEAD+`
+        <br>
+        <small>The StrictDoc's custom revision `HEAD+` can be used to indicate "the current branch + all uncommitted changes".</small>
+      </div>
+    </div>
+
+    <p>The Diff/Changelog query is shareable via a URL.</p>
+    <p>Example:</p>
+    <div class="sdoc-table_key_value">
+      {# djlint:off H022 #}
+      <a href="http://127.0.0.1:5111/diff?left_revision=HEAD%5E&right_revision=HEAD&tab=diff"
+         class="sdoc-table_key_value-key">HEAD^ vs. HEAD</a>
+      {# djlint:on #}
+        <div class="sdoc-table_key_value-value">
+        This link opens a diff between the last commit and the last but one commit.
+      </div>
+    </div>
 
     <p>The StrictDoc diff algorithm compares documentation trees (left-hand side, LHS, and right-hand side, RHS) based on these principles:</p>
-
     <ul>
       <li>
         Optimal comparison of document contents is achieved using automatically-generated Machine Identifiers (MID). This ensures the best match.

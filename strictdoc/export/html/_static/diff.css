@@ -222,6 +222,7 @@
   display: flex;
   flex-direction: column;
   margin: var(--base-rhythm) 0;
+  row-gap: calc(var(--base-rhythm) / 2);
 }
 
 .diff_node > .diff_node_fields {
@@ -232,7 +233,11 @@
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  column-gap: var(--base-rhythm);
+  column-gap: calc(var(--base-rhythm) / 2);
+}
+
+.diff_node_field > .badge {
+  line-height: var(--pre-stripe);
 }
 
 /*
@@ -392,6 +397,10 @@
     transparent calc(var(--pre-stripe)*2)
   );
   background-color: var(--pre-block-bg-color);
+}
+
+[multiline] .sdoc_pre_content {
+  flex-basis: 100%;
 }
 
 [modified="left"] > .sdoc_pre_content {

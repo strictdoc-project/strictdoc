@@ -1178,7 +1178,6 @@ a.tree_item:hover {
 .sdoc-table_key_value-section,
 .sdoc-table_key_value-key,
 .sdoc-table_key_value-value {
-  display: flex;
   padding: var(--base-rhythm) calc(var(--base-rhythm)*2);
   background-color: var(--color-bg-secondary);
 }
@@ -1189,8 +1188,9 @@ a.tree_item:hover {
   /* background-color: var(--color-bg-contrast); */
 
   display: flex;
+  flex-direction: row;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
 
   position: relative;
   transition: 0.3s all;
@@ -1200,6 +1200,7 @@ a.sdoc-table_key_value-key {
   background-color: rgba(255,255,255,0.5);
   color: var(--color-fg-contrast);
   padding-right: calc(var(--base-rhythm)*5);
+  align-items: center;
 }
 
 a.sdoc-table_key_value-key:hover {

@@ -1,0 +1,33 @@
+<sdoc-main-placeholder
+  data-testid="search-main-placeholder"
+>
+  <div class="page-tips">
+    <p>The search query syntax is inspired by Python and is based on a fixed grammar.</p>
+    <p>Important rules:</p>
+    <ul>
+      <li>
+        Every query component shall start with <code>node.</code>.
+      </li>
+      <li>
+        <code>and</code> and <code>or</code> expressions must be grouped using round brackets.
+      </li>
+      <li>
+        Only double quotes are accepted for strings.
+      </li>
+    </ul>
+    <p>Examples:</p>
+    <div class="sdoc-table_key_value">
+      <a class="sdoc-table_key_value-key" href="{{ link_renderer.render_url('search?q=node.is_requirement') }}"><code>node.is_requirement</code></a>
+      <div class="sdoc-table_key_value-value">Find all requirements.</div>
+      <a class="sdoc-table_key_value-key" href="{{ link_renderer.render_url('search?q=node.is_section') }}"><code>node.is_section</code></a>
+      <div class="sdoc-table_key_value-value">Find all sections.</div>
+      <a class="sdoc-table_key_value-key" href="{{ link_renderer.render_url('search?q=(node.is_requirement and "System" in node["TITLE"])') }}"><code>(node.is_requirement and "System" in node["TITLE"])</code></a>
+      <div class="sdoc-table_key_value-value">Find all requirements with a TITLE that equals to "System".</div>
+      <a class="sdoc-table_key_value-key" href="{{ link_renderer.render_url('search?q=(node.is_requirement and node.is_root)') }}"><code>(node.is_requirement and node.is_root)</code></a>
+      <div class="sdoc-table_key_value-value">Find all root requirements.</div>
+      <a class="sdoc-table_key_value-key" href="{{ link_renderer.render_url('search?q=(node.is_requirement and node.has_parent_requirements)') }}"><code>(node.is_requirement and node.has_parent_requirements)</code></a>
+      <div class="sdoc-table_key_value-value">Find all requirements which have parent requirements.</div>
+    </div>
+    <p>See the User Guide's section "Query engine" for more details.</p>
+  </div>
+</sdoc-main-placeholder>

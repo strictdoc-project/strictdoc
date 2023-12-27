@@ -1,10 +1,8 @@
 window.addEventListener("load",function(){
 
     const root = document.querySelector('#diff_result');
-    console.log([root]);
 
     var observer = new MutationObserver(function (mutationsList, observer) {
-      console.log([root], 'updated');
 
       prepareBulkButtons(root);
       syncDiff(root);
@@ -25,7 +23,6 @@ window.addEventListener("load",function(){
 },false);
 
 function prepareBulkButtons(root) {
-  console.log('prepareBulkButtons');
 
   const leftColumn = document.querySelector('.diff_column[left]');
   const rightColumn = document.querySelector('.diff_column[right]');
@@ -47,6 +44,7 @@ function prepareBulkButtons(root) {
   leftCloseBtn.addEventListener("click", (event) => {
     event.preventDefault();
     _closeAll(detailsLeftAll);
+    leftColumn.scrollTo(0, 0);
   });
   rightOpenBtn.addEventListener("click", (event) => {
     event.preventDefault();
@@ -55,11 +53,11 @@ function prepareBulkButtons(root) {
   rightCloseBtn.addEventListener("click", (event) => {
     event.preventDefault();
     _closeAll(detailsRightAll);
+    rightColumn.scrollTo(0, 0);
   });
 }
 
 function syncDiff(root) {
-  console.log('syncDiff');
 
   const sync = [...root.querySelectorAll('button[uid]')]
   .reduce((acc, curr) => {

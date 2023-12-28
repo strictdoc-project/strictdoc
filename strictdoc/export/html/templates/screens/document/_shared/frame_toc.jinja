@@ -30,7 +30,11 @@
              levels: 1.2.3 is (6-1) symbols, 1.2.3.4 is (8-1) symbols, etc.
           #}
           {%- else -%}
-            <a href="#{{ link_renderer.render_local_anchor(section) }}" data-turbo="false">
+            <a
+              href="#{{ link_renderer.render_local_anchor(section) }}"
+              anchor="{{ link_renderer.render_local_anchor(section) }}"
+              data-turbo="false"
+            >
               <span class="section-number">
                 {{ section.context.title_number_string if section.context.title_number_string else "&nbsp;" * (section.ng_level * 2 - 1) }}
               </span>{{ section.title }}
@@ -38,7 +42,11 @@
           {%- endif -%}
         {%- else -%}
         {# if requirement #}
-        <a href="#{{ link_renderer.render_local_anchor(section) }}" data-turbo="false">
+        <a
+          href="#{{ link_renderer.render_local_anchor(section) }}"
+          anchor="{{ link_renderer.render_local_anchor(section) }}"
+          data-turbo="false"
+        >
           <span class="section-number">
             {{ section.context.title_number_string if section.context.title_number_string else "&nbsp;" * (section.ng_level * 2 - 1) }}
           </span>

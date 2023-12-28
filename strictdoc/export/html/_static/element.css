@@ -1082,6 +1082,7 @@ a.tree_item:hover {
 
 .toc a {
   display: block;
+  position: relative;
   padding-top: var(--base-rhythm);
   padding-bottom: var(--base-rhythm);
   /* padding-left: var(--base-rhythm); */
@@ -1096,7 +1097,6 @@ a.tree_item:hover {
   color: var(--color-fg-secondary);
 }
 .toc a:hover {
-  /* background-color: var(--color-bg-contrast); */
   color: var(--color-fg-contrast);
 }
 
@@ -1112,6 +1112,28 @@ a.tree_item:hover {
   padding-top: var(--base-rhythm);
   padding-bottom: var(--base-rhythm);
   padding-right: var(--base-rhythm);
+}
+
+.toc a[intersected]::after {
+  position: absolute;
+  z-index: -1;
+  content: '';
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 8px;
+  background-color: var(--color-highlight);
+}
+
+.toc a[targeted]::before  {
+  position: absolute;
+  z-index: -1;
+  content: '';
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: -200px; /* parent has overflow */
+  background-color: var(--color-highlight);
 }
 
 /* pdf-toc */

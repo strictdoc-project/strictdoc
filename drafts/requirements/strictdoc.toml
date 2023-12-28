@@ -16,7 +16,7 @@ features = [
   # Experimental features are disabled when published to GitHub pages.
   # "REQIF",
   # "STANDALONE_DOCUMENT_SCREEN",
-   "REQUIREMENTS_COVERAGE_SCREEN",
+  "REQUIREMENTS_COVERAGE_SCREEN",
   # "REQUIREMENT_TO_SOURCE_TRACEABILITY",
   "HTML2PDF",
   "DIFF",

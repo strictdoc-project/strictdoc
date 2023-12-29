@@ -14,5 +14,8 @@ CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">No sections were modifie
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Requirements modified</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">No requirements were modified.</div>
 
+CHECK-CHANGELOG:ABCD0123
 CHECK-CHANGELOG:span class="lambda_red">H</span><span>e</span><span class="lambda_red">llo worl</span><span>d doc</span>
+
+CHECK-CHANGELOG:ABCD0123
 CHECK-CHANGELOG:<span class="lambda_green">Modifi</span><span>e</span><span>d doc</span><span class="lambda_green">ument title</span>

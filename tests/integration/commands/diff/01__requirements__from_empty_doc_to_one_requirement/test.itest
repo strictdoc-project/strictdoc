@@ -2,6 +2,12 @@ RUN: %strictdoc diff %S/lhs %S/rhs --output-dir Output
 
 RUN: cat %S/Output/changelog.html | filecheck %s --check-prefix=CHECK-CHANGELOG
 
+NOTE: This ensures that the links are printed for static HTML export, not the web server links.
+CHECK-CHANGELOG:href="diff.html"
+CHECK-CHANGELOG:href="changelog.html"
+
+NOTE: Checking all the changes below.
+
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-section">Summary of the changes</div>
 
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Nodes modified</div>

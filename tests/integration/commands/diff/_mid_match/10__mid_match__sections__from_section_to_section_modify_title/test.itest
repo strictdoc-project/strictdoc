@@ -15,5 +15,9 @@ CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Requirements modified</div
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">No requirements were modified.</div>
 
 NOTE: Ensure that the colored diff is shown for the modified title.
+
+CHECK-CHANGELOG:ABCD0123
 CHECK-CHANGELOG:<div class="sdoc_pre_content"><span class="lambda_red">S</span><span>e</span><span class="lambda_red">ction</span><span> title</span></div>
+
+CHECK-CHANGELOG:ABCD0123
 CHECK-CHANGELOG:<div class="sdoc_pre_content"><span class="lambda_green">Modifi</span><span>e</span><span class="lambda_green">d</span><span> title</span></div>

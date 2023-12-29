@@ -1,0 +1,20 @@
+[DOCUMENT]
+MID: e10ef0ce26994897a0bae05eaf80b298
+TITLE: Document 1
+OPTIONS:
+  ENABLE_MID: True
+
+[FREETEXT]
+Hello world!
+[/FREETEXT]
+
+[REQUIREMENT]
+MID: ec0c9dfe29554bfda007fe072120c2c4
+UID: REQ-1
+TITLE: Requirement title #1
+STATEMENT: >>>
+Requirement statement #1.
+<<<
+RATIONALE: >>>
+Requirement rationale #1.
+<<<

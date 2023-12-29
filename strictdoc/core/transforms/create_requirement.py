@@ -64,7 +64,6 @@ class CreateRequirementTransform:
     def perform(self):
         form_object: RequirementFormObject = self.form_object
         whereto: str = self.whereto
-        requirement_mid: str = self.requirement_mid
         reference_mid: str = self.reference_mid
         traceability_index: TraceabilityIndex = self.traceability_index
         document: Document = traceability_index.get_node_by_mid(
@@ -107,7 +106,10 @@ class CreateRequirementTransform:
                     value=form_field.field_unescaped_value,
                 )
 
-        requirement.reserved_mid = MID(requirement_mid)
+        requirement.reserved_mid = MID(form_object.requirement_mid)
+        if document.config.enable_mid:
+            requirement.mid_permanent = True
+
         requirement.ng_document_reference = DocumentReference()
         requirement.ng_document_reference.set_document(document)
         requirement.ng_level = parent.ng_level + 1

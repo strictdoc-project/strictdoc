@@ -178,6 +178,7 @@ class RequirementFormObject(ErrorObject):
         *,
         requirement_mid: Optional[str],
         document_mid: str,
+        mid_field: Optional[RequirementFormField],
         fields: List[RequirementFormField],
         reference_fields: List[RequirementReferenceFormField],
         exiting_requirement_uid: Optional[str],
@@ -188,6 +189,7 @@ class RequirementFormObject(ErrorObject):
         super().__init__()
         self.requirement_mid: Optional[str] = requirement_mid
         self.document_mid: str = document_mid
+        self.mid_field: Optional[RequirementFormField] = mid_field
         fields_dict: dict = defaultdict(list)
         for field in fields:
             fields_dict[field.field_name].append(field)
@@ -218,6 +220,7 @@ class RequirementFormObject(ErrorObject):
         form_ref_fields: List[RequirementReferenceFormField] = []
 
         requirement_dict = request_form_dict["requirement"]
+
         requirement_fields_dict = requirement_dict["fields"]
         for _, field_dict in requirement_fields_dict.items():
             field_name = field_dict["name"]
@@ -263,6 +266,28 @@ class RequirementFormObject(ErrorObject):
                 )
             )
 
+        # MID field is handled separately from other fields because it not part
+        # of any grammar, default or user-provided.
+        mid_field: Optional[RequirementFormField] = None
+        if "MID" in requirement_fields:
+            requirement_field_values = requirement_fields.get("MID", [])
+            for requirement_field_value in requirement_field_values:
+                sanitized_field_value: str = sanitize_html_form_field(
+                    requirement_field_value, multiline=False
+                )
+                mid_field = RequirementFormField(
+                    field_mid=MID.create().get_string_value(),
+                    field_name="MID",
+                    field_type=RequirementFormFieldType.SINGLELINE,
+                    field_unescaped_value=sanitized_field_value,
+                    field_escaped_value=html.escape(sanitized_field_value),
+                )
+
+                # This is where the original requirement MID auto-generated
+                # for a new requirement by StrictDoc can change because
+                # a user has provided a new one in the input form.
+                requirement_mid = sanitized_field_value
+
         assert document.grammar is not None
         grammar: DocumentGrammar = document.grammar
         element: GrammarElement = grammar.elements_by_type["REQUIREMENT"]
@@ -274,6 +299,7 @@ class RequirementFormObject(ErrorObject):
         for field_idx, field_name in enumerate(fields_names):
             if field_name == "REFS":
                 continue
+
             multiline = field_idx > title_field_idx
             field = element.fields_map[field_name]
 
@@ -283,7 +309,7 @@ class RequirementFormObject(ErrorObject):
             requirement_field_values = requirement_fields.get(field_name, [])
             for requirement_field_value in requirement_field_values:
                 sanitized_field_value: str = sanitize_html_form_field(
-                    requirement_field_value, multiline=True
+                    requirement_field_value, multiline=multiline
                 )
                 form_field = RequirementFormField.create_from_grammar_field(
                     grammar_field=field,
@@ -296,6 +322,7 @@ class RequirementFormObject(ErrorObject):
         form_object = RequirementFormObject(
             requirement_mid=requirement_mid,
             document_mid=document.reserved_mid.get_string_value(),
+            mid_field=mid_field,
             fields=form_fields,
             reference_fields=form_ref_fields,
             exiting_requirement_uid=exiting_requirement_uid,
@@ -309,8 +336,21 @@ class RequirementFormObject(ErrorObject):
         *, document: Document, next_uid: str
     ) -> "RequirementFormObject":
         assert document.grammar is not None
+
+        new_requirement_mid: MID = MID.create()
+
         grammar: DocumentGrammar = document.grammar
         element: GrammarElement = grammar.elements_by_type["REQUIREMENT"]
+
+        mid_field: Optional[RequirementFormField] = None
+        if document.config.enable_mid:
+            mid_field = RequirementFormField(
+                field_mid=MID.create().get_string_value(),
+                field_name="MID",
+                field_type=RequirementFormFieldType.SINGLELINE,
+                field_unescaped_value=new_requirement_mid.get_string_value(),
+                field_escaped_value=new_requirement_mid.get_string_value(),
+            )
         form_fields: List[RequirementFormField] = []
 
         fields_names = list(element.fields_map.keys())
@@ -335,8 +375,9 @@ class RequirementFormObject(ErrorObject):
                 form_field.field_escaped_value = next_uid
 
         return RequirementFormObject(
-            requirement_mid=MID.create().get_string_value(),
+            requirement_mid=new_requirement_mid.get_string_value(),
             document_mid=document.reserved_mid.get_string_value(),
+            mid_field=mid_field,
             fields=form_fields,
             reference_fields=[],
             exiting_requirement_uid=None,
@@ -354,6 +395,16 @@ class RequirementFormObject(ErrorObject):
         assert document.grammar is not None
         grammar: DocumentGrammar = document.grammar
         element: GrammarElement = grammar.elements_by_type["REQUIREMENT"]
+
+        mid_field: Optional[RequirementFormField] = None
+        if document.config.enable_mid:
+            mid_field = RequirementFormField(
+                field_mid=MID.create().get_string_value(),
+                field_name="MID",
+                field_type=RequirementFormFieldType.SINGLELINE,
+                field_unescaped_value=requirement.reserved_mid.get_string_value(),
+                field_escaped_value=requirement.reserved_mid.get_string_value(),
+            )
 
         grammar_element_relations = element.get_relation_types()
 
@@ -432,6 +483,7 @@ class RequirementFormObject(ErrorObject):
         return RequirementFormObject(
             requirement_mid=requirement.reserved_mid.get_string_value(),
             document_mid=document.reserved_mid.get_string_value(),
+            mid_field=mid_field,
             fields=form_fields,
             reference_fields=form_refs_fields,
             exiting_requirement_uid=requirement.reserved_uid,
@@ -542,6 +594,23 @@ class RequirementFormObject(ErrorObject):
     ):
         assert isinstance(traceability_index, TraceabilityIndex)
         assert isinstance(context_document, Document)
+
+        if self.mid_field is not None:
+            existing_node_with_this_mid = (
+                traceability_index.get_node_by_mid_weak(
+                    MID(self.mid_field.field_unescaped_value)
+                )
+            )
+            if existing_node_with_this_mid is not None:
+                self.add_error(
+                    "MID",
+                    (
+                        f"A node with this MID already exists, "
+                        "please select another MID: "
+                        f"{self.mid_field.field_unescaped_value}.",
+                    ),
+                )
+
         requirement_statement = self.fields["STATEMENT"][
             0
         ].field_unescaped_value

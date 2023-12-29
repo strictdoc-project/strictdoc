@@ -1746,6 +1746,7 @@ def create_main_router(
             form_object=RequirementFormObject(
                 requirement_mid=requirement_mid,
                 document_mid=document.reserved_mid.get_string_value(),
+                mid_field=None,
                 fields=[],
                 reference_fields=[],
                 exiting_requirement_uid=None,
@@ -1790,6 +1791,7 @@ def create_main_router(
             form_object=RequirementFormObject(
                 requirement_mid=requirement_mid,
                 document_mid=document_mid,
+                mid_field=None,
                 fields=[],
                 reference_fields=[],
                 exiting_requirement_uid=None,

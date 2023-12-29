@@ -1,0 +1,42 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+Hello world!
+[/FREETEXT]
+
+[SECTION]
+TITLE: Section title #2
+
+[FREETEXT]
+NOT_RELEVANT
+[/FREETEXT]
+
+[SECTION]
+TITLE: Section title #1
+
+[FREETEXT]
+NOT_RELEVANT
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Section title #2.1
+
+[FREETEXT]
+NOT_RELEVANT
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Section title #2.2
+
+[FREETEXT]
+NOT_RELEVANT
+[/FREETEXT]
+
+[/SECTION]
+
+[/SECTION]

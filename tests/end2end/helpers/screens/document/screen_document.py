@@ -48,3 +48,8 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             by=By.XPATH,
         )
         return Form_EditGrammar(self.test_case)
+
+    def do_drag_first_toc_node_to_the_second(self) -> None:
+        first_toc_node = '(//li[@draggable="true"])[1]'
+        second_toc_node = '(//li[@draggable="true"])[2]'
+        self.test_case.drag_and_drop(first_toc_node, second_toc_node)

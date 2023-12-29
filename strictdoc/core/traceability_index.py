@@ -98,6 +98,18 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         self.index_last_updated = datetime.today()
         self.strictdoc_last_update = None
 
+    @property
+    def document_iterators(self):
+        return self._document_iterators
+
+    @property
+    def requirements_connections(self) -> Dict[str, RequirementConnections]:
+        return self._requirements_parents
+
+    @property
+    def tags_map(self):
+        return self._tags_map
+
     def is_small_project(self):
         """
         This method helps to decide if StrictDoc will precompile Jinja templates
@@ -114,6 +126,46 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                 return False
         return len(self._requirements_parents) <= 10
 
+    def has_requirements(self):
+        return len(self.requirements_connections.keys()) > 0
+
+    def has_parent_requirements(self, requirement: Requirement):
+        assert isinstance(requirement, Requirement)
+        if not isinstance(requirement.reserved_uid, str):
+            return False
+
+        if len(requirement.reserved_uid) == 0:
+            return False
+
+        parent_requirements = self.requirements_connections[
+            requirement.reserved_uid
+        ].parents
+        return len(parent_requirements) > 0
+
+    def has_children_requirements(self, requirement: Requirement):
+        assert isinstance(requirement, Requirement)
+        if not isinstance(requirement.reserved_uid, str):
+            return False
+
+        if len(requirement.reserved_uid) == 0:
+            return False
+
+        children_requirements = self.requirements_connections[
+            requirement.reserved_uid
+        ].children
+        return len(children_requirements) > 0
+
+    def has_tags(self, document):
+        if document.title not in self.tags_map:
+            return False
+        tags_bag = self.tags_map[document.title]
+        return len(tags_bag.keys())
+
+    def has_source_file_reqs(self, source_file_rel_path):
+        return self._file_traceability_index.has_source_file_reqs(
+            source_file_rel_path
+        )
+
     def get_node_by_mid(self, node_id: MID) -> Any:
         assert isinstance(node_id, MID), node_id
         return self._map_id_to_node[node_id]
@@ -123,21 +175,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         if node_id not in self._map_id_to_node:
             return None
         return self._map_id_to_node[node_id]
-
-    def has_requirements(self):
-        return len(self.requirements_connections.keys()) > 0
-
-    @property
-    def document_iterators(self):
-        return self._document_iterators
-
-    @property
-    def requirements_connections(self) -> Dict[str, RequirementConnections]:
-        return self._requirements_parents
-
-    @property
-    def tags_map(self):
-        return self._tags_map
 
     def get_file_traceability_index(self) -> FileTraceabilityIndex:
         return self._file_traceability_index
@@ -215,32 +252,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             if role_ == role:
                 yield child_requirement_, role_
 
-    def has_parent_requirements(self, requirement: Requirement):
-        assert isinstance(requirement, Requirement)
-        if not isinstance(requirement.reserved_uid, str):
-            return False
-
-        if len(requirement.reserved_uid) == 0:
-            return False
-
-        parent_requirements = self.requirements_connections[
-            requirement.reserved_uid
-        ].parents
-        return len(parent_requirements) > 0
-
-    def has_children_requirements(self, requirement: Requirement):
-        assert isinstance(requirement, Requirement)
-        if not isinstance(requirement.reserved_uid, str):
-            return False
-
-        if len(requirement.reserved_uid) == 0:
-            return False
-
-        children_requirements = self.requirements_connections[
-            requirement.reserved_uid
-        ].children
-        return len(children_requirements) > 0
-
     def get_children_requirements(
         self, requirement: Requirement
     ) -> List[Requirement]:
@@ -256,12 +267,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         ].children
         return list(map(lambda pair_: pair_[0], children_requirements))
 
-    def has_tags(self, document):
-        if document.title not in self.tags_map:
-            return False
-        tags_bag = self.tags_map[document.title]
-        return len(tags_bag.keys())
-
     def get_tags(self, document):
         assert document.title in self.tags_map
         tags_bag = self.tags_map[document.title]
@@ -276,11 +281,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def get_requirement_file_links(self, requirement):
         return self._file_traceability_index.get_requirement_file_links(
             requirement
-        )
-
-    def has_source_file_reqs(self, source_file_rel_path):
-        return self._file_traceability_index.has_source_file_reqs(
-            source_file_rel_path
         )
 
     def get_source_file_reqs(self, source_file_rel_path):

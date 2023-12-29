@@ -376,20 +376,22 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def get_document_parents(self, document) -> Set[Document]:
         return self._document_parents_map[document]
 
-    def update_add_traceability_info(
+    def create_traceability_info(
         self,
         source_file_rel_path: str,
         traceability_info: SourceFileTraceabilityInfo,
     ):
         assert isinstance(traceability_info, SourceFileTraceabilityInfo)
-        self._file_traceability_index.update_add_traceability_info(
+        self._file_traceability_index.create_traceability_info(
             source_file_rel_path, traceability_info
         )
 
     def update_last_updated(self):
         self.index_last_updated = datetime.today()
 
-    def mut_add_uid_to_a_requirement_if_needed(self, requirement: Requirement):
+    def update_add_uid_to_a_requirement_if_needed(
+        self, requirement: Requirement
+    ):
         if requirement.reserved_uid is None:
             return
         self.requirements_connections[
@@ -405,7 +407,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         self, requirement: Requirement, old_uid: Optional[str]
     ) -> None:
         if old_uid is None:
-            self.mut_add_uid_to_a_requirement_if_needed(requirement)
+            self.update_add_uid_to_a_requirement_if_needed(requirement)
             return
 
         existing_entry = self.requirements_connections[old_uid]

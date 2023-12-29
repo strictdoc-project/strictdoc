@@ -119,7 +119,7 @@ class CreateRequirementTransform:
 
         parent.section_contents.insert(insert_to_idx, requirement)
 
-        traceability_index.mut_add_uid_to_a_requirement_if_needed(
+        traceability_index.update_add_uid_to_a_requirement_if_needed(
             requirement=requirement
         )
 

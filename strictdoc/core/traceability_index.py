@@ -298,7 +298,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def get_node_by_uid(self, uid):
         return self._requirements_parents[uid].requirement
 
-    def find_node_by_uid_weak(
+    def get_node_by_uid_weak(
         self, uid
     ) -> Union[Document, Section, Requirement, None]:
         for document in self.document_tree.document_list:
@@ -716,7 +716,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
         existing_node_with_uid: Union[
             Document, Section, Requirement, None
-        ] = self.find_node_by_uid_weak(uid)
+        ] = self.get_node_by_uid_weak(uid)
 
         if existing_node_with_uid is None:
             return

@@ -2,11 +2,19 @@
   <div class="sdoc-tab-list">
     <a class="sdoc-tab"
       {% if tab == "diff" %}active{% endif %}
+      {% if project_config.is_running_on_server %}
       href="/diff?tab=diff&left_revision={{ left_revision_urlencoded }}&right_revision={{ right_revision_urlencoded }}"
+      {% else %}
+      href="diff.html"
+      {% endif %}
     >Diff</a>
     <a class="sdoc-tab"
       {% if tab == "changelog" %}active{% endif %}
+      {% if project_config.is_running_on_server %}
       href="/diff?tab=changelog&left_revision={{ left_revision_urlencoded }}&right_revision={{ right_revision_urlencoded }}"
+      {% else %}
+      href="changelog.html"
+      {% endif %}
     >Changelog</a>
   </div>
 </nav>

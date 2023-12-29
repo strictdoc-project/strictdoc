@@ -1,4 +1,16 @@
 <div class="diff_node_fields">
+  {# MID field, if permanent, is always printed as-is. It is never marked as modified. #}
+  {% if section.mid_permanent %}
+    <div
+      class="diff_node_field"
+    >
+      {%- with badge_text = "MID" -%}
+        {%- include "components/badge/index.jinja" -%}
+      {%- endwith -%}
+      <span class="sdoc_pre_content">{{ section.reserved_mid }}</span>
+    </div>
+  {% endif %}
+
   {# UID #}
   {%- if section.reserved_uid is not none and section.reserved_uid|length > 0 -%}
   {% set uid_modified = section_change is not none and section_change.uid_modified %}

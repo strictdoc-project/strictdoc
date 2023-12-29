@@ -54,7 +54,7 @@ class SDWriter:
 
         if document.mid_permanent or document.config.enable_mid:
             output += "MID: "
-            output += document.reserved_mid.get_string_value()
+            output += document.reserved_mid
             output += "\n"
 
         output += "TITLE: "
@@ -217,7 +217,7 @@ class SDWriter:
 
         if section.mid_permanent or document.config.enable_mid:
             output += "MID: "
-            output += section.reserved_mid.get_string_value()
+            output += section.reserved_mid
             output += "\n"
 
         if section.uid:
@@ -251,7 +251,7 @@ class SDWriter:
 
         if section_content.mid_permanent or document.config.enable_mid:
             output += "MID: "
-            output += section_content.reserved_mid.get_string_value()
+            output += section_content.reserved_mid
             output += "\n"
 
         element = document.grammar.elements_by_type[

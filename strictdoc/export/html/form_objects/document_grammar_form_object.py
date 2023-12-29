@@ -50,7 +50,7 @@ class GrammarFormField:
     def create_from_grammar_field(*, grammar_field: GrammarElementField):
         reserved = is_reserved_field(grammar_field.title)
         return GrammarFormField(
-            field_mid=grammar_field.mid.value,
+            field_mid=grammar_field.mid,
             field_name=grammar_field.title,
             field_required=grammar_field.required,
             reserved=reserved,
@@ -169,14 +169,14 @@ class DocumentGrammarFormObject(ErrorObject):
             if grammar_relation.relation_type == "File":
                 continue
             grammar_form_relation = GrammarFormRelation(
-                relation_mid=grammar_relation.mid.value,
+                relation_mid=grammar_relation.mid,
                 relation_type=grammar_relation.relation_type,
                 relation_role=grammar_relation.relation_role,
             )
             grammar_form_relations.append(grammar_form_relation)
 
         return DocumentGrammarFormObject(
-            document_mid=document.reserved_mid.get_string_value(),
+            document_mid=document.reserved_mid,
             fields=grammar_form_fields,
             relations=grammar_form_relations,
         )

@@ -55,23 +55,23 @@ class SectionFormObject(ErrorObject):
     @staticmethod
     def create_new():
         return SectionFormObject(
-            section_mid=MID.create().get_string_value(),
+            section_mid=MID.create(),
             section_uid_field=RequirementFormField(
-                field_mid=MID.create().get_string_value(),
+                field_mid=MID.create(),
                 field_name="UID",
                 field_type=RequirementFormFieldType.SINGLELINE,
                 field_unescaped_value="",
                 field_escaped_value="",
             ),
             section_title_field=RequirementFormField(
-                field_mid=MID.create().get_string_value(),
+                field_mid=MID.create(),
                 field_name="TITLE",
                 field_type=RequirementFormFieldType.SINGLELINE,
                 field_unescaped_value="",
                 field_escaped_value="",
             ),
             section_statement_field=RequirementFormField(
-                field_mid=MID.create().get_string_value(),
+                field_mid=MID.create(),
                 field_name="STATEMENT",
                 field_type=RequirementFormFieldType.MULTILINE,
                 field_unescaped_value="",
@@ -96,23 +96,23 @@ class SectionFormObject(ErrorObject):
         )
         statement_escaped_field_value = html.escape(statement_field_value)
         return SectionFormObject(
-            section_mid=section.reserved_mid.get_string_value(),
+            section_mid=section.reserved_mid,
             section_uid_field=RequirementFormField(
-                field_mid=MID.create().get_string_value(),
+                field_mid=MID.create(),
                 field_name="UID",
                 field_type=RequirementFormFieldType.SINGLELINE,
                 field_unescaped_value=uid_field_value,
                 field_escaped_value=uid_escaped_field_value,
             ),
             section_title_field=RequirementFormField(
-                field_mid=MID.create().get_string_value(),
+                field_mid=MID.create(),
                 field_name="TITLE",
                 field_type=RequirementFormFieldType.SINGLELINE,
                 field_unescaped_value=title_field_value,
                 field_escaped_value=title_escaped_field_value,
             ),
             section_statement_field=RequirementFormField(
-                field_mid=MID.create().get_string_value(),
+                field_mid=MID.create(),
                 field_name="STATEMENT",
                 field_type=RequirementFormFieldType.MULTILINE,
                 field_unescaped_value=statement_field_value,
@@ -147,7 +147,7 @@ class SectionFormObject(ErrorObject):
             uid_field_value, multiline=False
         )
         section_uid_field = RequirementFormField(
-            field_mid=MID.create().get_string_value(),
+            field_mid=MID.create(),
             field_name="UID",
             field_type=RequirementFormFieldType.SINGLELINE,
             field_unescaped_value=sanitized_uid_field_value,
@@ -159,7 +159,7 @@ class SectionFormObject(ErrorObject):
             title_field_value, multiline=False
         )
         section_title_field = RequirementFormField(
-            field_mid=MID.create().get_string_value(),
+            field_mid=MID.create(),
             field_name="TITLE",
             field_type=RequirementFormFieldType.SINGLELINE,
             field_unescaped_value=sanitized_title_field_value,
@@ -171,7 +171,7 @@ class SectionFormObject(ErrorObject):
             statement_field_value, multiline=True
         )
         section_statement_field = RequirementFormField(
-            field_mid=MID.create().get_string_value(),
+            field_mid=MID.create(),
             field_name="STATEMENT",
             field_type=RequirementFormFieldType.MULTILINE,
             field_unescaped_value=sanitized_statement_field_value,

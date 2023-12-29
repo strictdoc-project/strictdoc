@@ -4,7 +4,7 @@
     data-field-type="singleline"
     data-field-label="MID"
   >
-    {%- with field_content = requirement.reserved_mid.get_string_value() %}
+    {%- with field_content = requirement.reserved_mid %}
       {%- include "components/field/index.jinja" -%}
     {%- endwith -%}
   </sdoc-requirement-field>

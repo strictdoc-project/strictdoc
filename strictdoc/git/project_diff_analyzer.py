@@ -653,7 +653,7 @@ class ChangeStats:
                         """
                         section_token: Optional[str] = None
                         if other_section_or_none is not None:
-                            section_token = MID.create().get_string_value()
+                            section_token = MID.create()
 
                         lhs_section: Optional[Section] = None
                         rhs_section: Optional[Section] = None
@@ -747,7 +747,7 @@ class ChangeStats:
                     Step: Create a requirement token that is used by JS to match
                     the LHS nodes with RHS nodes.
                     """
-                    requirement_token: str = MID.create().get_string_value()
+                    requirement_token: str = MID.create()
 
                     """
                     Iterate over requirement fields.

@@ -88,7 +88,7 @@ class RequirementFormField:
         multiline: bool,
         value_unescaped: str,
         value_escaped: str,
-    ):
+    ) -> "RequirementFormField":
         assert isinstance(value_unescaped, str), (
             grammar_field,
             multiline,
@@ -116,7 +116,7 @@ class RequirementFormField:
         grammar_field: GrammarElementField,
         multiline: bool,
         requirement_field: RequirementField,
-    ):
+    ) -> "RequirementFormField":
         if grammar_field.gef_type == RequirementFieldType.STRING:
             field_value = (
                 requirement_field.field_value_multiline
@@ -135,6 +135,16 @@ class RequirementFormField:
                 field_escaped_value=escaped_field_value,
             )
         raise NotImplementedError(grammar_field)
+
+    @staticmethod
+    def create_mid_field(mid: MID) -> "RequirementFormField":
+        return RequirementFormField(
+            field_mid=MID.create().get_string_value(),
+            field_name="MID",
+            field_type=RequirementFormFieldType.SINGLELINE,
+            field_unescaped_value=mid.get_string_value(),
+            field_escaped_value=html.escape(mid.get_string_value()),
+        )
 
 
 @auto_described
@@ -176,6 +186,7 @@ class RequirementFormObject(ErrorObject):
     def __init__(
         self,
         *,
+        is_new: bool,
         requirement_mid: Optional[str],
         document_mid: str,
         mid_field: Optional[RequirementFormField],
@@ -187,6 +198,7 @@ class RequirementFormObject(ErrorObject):
         relation_types: List[str],
     ):
         super().__init__()
+        self.is_new: bool = is_new
         self.requirement_mid: Optional[str] = requirement_mid
         self.document_mid: str = document_mid
         self.mid_field: Optional[RequirementFormField] = mid_field
@@ -204,6 +216,7 @@ class RequirementFormObject(ErrorObject):
     @staticmethod
     def create_from_request(
         *,
+        is_new: bool,
         requirement_mid: str,
         request_form_data: FormData,
         document: Document,
@@ -275,12 +288,10 @@ class RequirementFormObject(ErrorObject):
                 sanitized_field_value: str = sanitize_html_form_field(
                     requirement_field_value, multiline=False
                 )
-                mid_field = RequirementFormField(
-                    field_mid=MID.create().get_string_value(),
-                    field_name="MID",
-                    field_type=RequirementFormFieldType.SINGLELINE,
-                    field_unescaped_value=sanitized_field_value,
-                    field_escaped_value=html.escape(sanitized_field_value),
+                mid_field: RequirementFormField = (
+                    RequirementFormField.create_mid_field(
+                        MID(sanitized_field_value)
+                    )
                 )
 
                 # This is where the original requirement MID auto-generated
@@ -320,6 +331,7 @@ class RequirementFormObject(ErrorObject):
                 form_fields.append(form_field)
 
         form_object = RequirementFormObject(
+            is_new=is_new,
             requirement_mid=requirement_mid,
             document_mid=document.reserved_mid.get_string_value(),
             mid_field=mid_field,
@@ -344,12 +356,8 @@ class RequirementFormObject(ErrorObject):
 
         mid_field: Optional[RequirementFormField] = None
         if document.config.enable_mid:
-            mid_field = RequirementFormField(
-                field_mid=MID.create().get_string_value(),
-                field_name="MID",
-                field_type=RequirementFormFieldType.SINGLELINE,
-                field_unescaped_value=new_requirement_mid.get_string_value(),
-                field_escaped_value=new_requirement_mid.get_string_value(),
+            mid_field: RequirementFormField = (
+                RequirementFormField.create_mid_field(new_requirement_mid)
             )
         form_fields: List[RequirementFormField] = []
 
@@ -375,6 +383,7 @@ class RequirementFormObject(ErrorObject):
                 form_field.field_escaped_value = next_uid
 
         return RequirementFormObject(
+            is_new=True,
             requirement_mid=new_requirement_mid.get_string_value(),
             document_mid=document.reserved_mid.get_string_value(),
             mid_field=mid_field,
@@ -398,12 +407,8 @@ class RequirementFormObject(ErrorObject):
 
         mid_field: Optional[RequirementFormField] = None
         if document.config.enable_mid:
-            mid_field = RequirementFormField(
-                field_mid=MID.create().get_string_value(),
-                field_name="MID",
-                field_type=RequirementFormFieldType.SINGLELINE,
-                field_unescaped_value=requirement.reserved_mid.get_string_value(),
-                field_escaped_value=requirement.reserved_mid.get_string_value(),
+            mid_field: RequirementFormField = (
+                RequirementFormField.create_mid_field(requirement.reserved_mid)
             )
 
         grammar_element_relations = element.get_relation_types()
@@ -481,6 +486,7 @@ class RequirementFormObject(ErrorObject):
                         )
                         form_refs_fields.append(form_ref_field)
         return RequirementFormObject(
+            is_new=False,
             requirement_mid=requirement.reserved_mid.get_string_value(),
             document_mid=document.reserved_mid.get_string_value(),
             mid_field=mid_field,
@@ -595,7 +601,7 @@ class RequirementFormObject(ErrorObject):
         assert isinstance(traceability_index, TraceabilityIndex)
         assert isinstance(context_document, Document)
 
-        if self.mid_field is not None:
+        if self.is_new and self.mid_field is not None:
             existing_node_with_this_mid = (
                 traceability_index.get_node_by_mid_weak(
                     MID(self.mid_field.field_unescaped_value)
@@ -607,7 +613,7 @@ class RequirementFormObject(ErrorObject):
                     (
                         f"A node with this MID already exists, "
                         "please select another MID: "
-                        f"{self.mid_field.field_unescaped_value}.",
+                        f"{self.mid_field.field_unescaped_value}."
                     ),
                 )
 

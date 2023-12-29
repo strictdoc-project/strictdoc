@@ -77,11 +77,7 @@ class Form_EditGrammar(Form):  # pylint: disable=invalid-name
         assert isinstance(mid, MID)
         assert isinstance(relation_type, str)
 
-        xpath = (
-            f"(//*[@mid='{mid.get_string_value()}' "
-            "and "
-            "@data-testid='select-relation-type'])"
-        )
+        xpath = f"(//*[@mid='{mid}' and @data-testid='select-relation-type'])"
 
         self.test_case.select_option_by_value(xpath, relation_type)
 
@@ -93,7 +89,7 @@ class Form_EditGrammar(Form):  # pylint: disable=invalid-name
     def do_move_grammar_field_up(self, mid: MID) -> None:
         assert isinstance(mid, MID)
         self.test_case.click_xpath(
-            f"(//*[@mid='{mid.get_string_value()}' "
+            f"(//*[@mid='{mid}' "
             "and "
             "@data-testid='form-move-up-field-action-custom-field'])"
         )
@@ -101,7 +97,7 @@ class Form_EditGrammar(Form):  # pylint: disable=invalid-name
     def do_move_grammar_field_down(self, mid: MID) -> None:
         assert isinstance(mid, MID)
         self.test_case.click_xpath(
-            f"(//*[@mid='{mid.get_string_value()}' "
+            f"(//*[@mid='{mid}' "
             "and "
             "@data-testid='form-move-down-field-action-custom-field'])"
         )
@@ -109,7 +105,7 @@ class Form_EditGrammar(Form):  # pylint: disable=invalid-name
     def do_delete_grammar_field(self, mid: MID) -> None:
         assert isinstance(mid, MID)
         self.test_case.click_xpath(
-            f"(//*[@mid='{mid.get_string_value()}' "
+            f"(//*[@mid='{mid}' "
             "and "
             "@data-testid='form-delete-field-action-custom-field'])"
         )
@@ -117,7 +113,7 @@ class Form_EditGrammar(Form):  # pylint: disable=invalid-name
     def do_delete_grammar_relation(self, mid: MID):
         assert isinstance(mid, MID)
         self.test_case.click_xpath(
-            f"(//*[@mid='{mid.get_string_value()}' "
+            f"(//*[@mid='{mid}' "
             "and "
             "@data-testid='form-delete-field-action-relation'])"
         )

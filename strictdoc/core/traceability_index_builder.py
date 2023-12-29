@@ -251,7 +251,7 @@ class TraceabilityIndexBuilder:
                 raise StrictDocException(
                     "TraceabilityIndex: "
                     "the document MID is not unique: "
-                    f"{document.reserved_mid.get_string_value()}. "
+                    f"{document.reserved_mid}. "
                     "All machine identifiers (MID) must be unique values."
                 )
 
@@ -266,7 +266,7 @@ class TraceabilityIndexBuilder:
                     raise StrictDocException(
                         "TraceabilityIndex: "
                         "the node MID is not unique: "
-                        f"{node.reserved_mid.get_string_value()}. "
+                        f"{node.reserved_mid}. "
                         f"All machine identifiers (MID) must be unique values."
                     )
                 d_11_map_id_to_node[node.reserved_mid] = node

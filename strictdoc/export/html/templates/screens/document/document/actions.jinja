@@ -7,7 +7,7 @@
   <div class="actions_group">
     {%- if not standalone -%}
     <a
-      href="/actions/document/edit_grammar?document_mid={{ document.reserved_mid.get_string_value() }}"
+      href="/actions/document/edit_grammar?document_mid={{ document.reserved_mid }}"
       class="action_button"
       data-turbo="true"
       data-turbo-action="replace"
@@ -18,7 +18,7 @@
     {%- if project_config.is_activated_reqif() -%}
     <a
       class="action_button"
-      href="/reqif/export_document/{{ document.reserved_mid.get_string_value() }}"
+      href="/reqif/export_document/{{ document.reserved_mid }}"
       data-testid="document-export-reqif-action"
     >Export to ReqIF</a>
     {%- endif -%}

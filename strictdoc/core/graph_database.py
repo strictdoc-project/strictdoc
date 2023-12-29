@@ -39,16 +39,16 @@ class GraphDatabase:
         for link_type, links in self._links.items():
             result += f"Link type: {link_type.name}\n"
             for lhs_mid, rhs_mids in links.items():
-                result += f"LHS MID: {lhs_mid.get_string_value()}\n"
+                result += f"LHS MID: {lhs_mid}\n"
                 for rhs_mid in rhs_mids:
-                    result += f"- RHS MID: {rhs_mid.get_string_value()}\n"
+                    result += f"- RHS MID: {rhs_mid}\n"
         result += "Reverse links:\n"
         for link_type, links in self._links_reverse.items():
             result += f"Reverse link type: {link_type.name}\n"
             for lhs_mid, rhs_mids in links.items():
-                result += f"LHS MID: {lhs_mid.get_string_value()}\n"
+                result += f"LHS MID: {lhs_mid}\n"
                 for rhs_mid in rhs_mids:
-                    result += f"- RHS MID: {rhs_mid.get_string_value()}\n"
+                    result += f"- RHS MID: {rhs_mid}\n"
         return result
 
     def add_node_by_mid(self, mid: MID, uid: Optional[str], node: Any):

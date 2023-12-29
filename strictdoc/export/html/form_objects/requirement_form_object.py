@@ -101,7 +101,7 @@ class RequirementFormField:
         )
         if grammar_field.gef_type == RequirementFieldType.STRING:
             return RequirementFormField(
-                field_mid=MID.create().get_string_value(),
+                field_mid=MID.create(),
                 field_name=grammar_field.title,
                 field_type=RequirementFormFieldType.MULTILINE
                 if multiline
@@ -126,7 +126,7 @@ class RequirementFormField:
             assert isinstance(field_value, str)
             escaped_field_value = html.escape(field_value)
             return RequirementFormField(
-                field_mid=MID.create().get_string_value(),
+                field_mid=MID.create(),
                 field_name=grammar_field.title,
                 field_type=RequirementFormFieldType.MULTILINE
                 if multiline
@@ -139,11 +139,11 @@ class RequirementFormField:
     @staticmethod
     def create_mid_field(mid: MID) -> "RequirementFormField":
         return RequirementFormField(
-            field_mid=MID.create().get_string_value(),
+            field_mid=MID.create(),
             field_name="MID",
             field_type=RequirementFormFieldType.SINGLELINE,
-            field_unescaped_value=mid.get_string_value(),
-            field_escaped_value=html.escape(mid.get_string_value()),
+            field_unescaped_value=mid,
+            field_escaped_value=html.escape(mid),
         )
 
 
@@ -333,7 +333,7 @@ class RequirementFormObject(ErrorObject):
         form_object = RequirementFormObject(
             is_new=is_new,
             requirement_mid=requirement_mid,
-            document_mid=document.reserved_mid.get_string_value(),
+            document_mid=document.reserved_mid,
             mid_field=mid_field,
             fields=form_fields,
             reference_fields=form_ref_fields,
@@ -384,8 +384,8 @@ class RequirementFormObject(ErrorObject):
 
         return RequirementFormObject(
             is_new=True,
-            requirement_mid=new_requirement_mid.get_string_value(),
-            document_mid=document.reserved_mid.get_string_value(),
+            requirement_mid=new_requirement_mid,
+            document_mid=document.reserved_mid,
             mid_field=mid_field,
             fields=form_fields,
             reference_fields=[],
@@ -455,7 +455,7 @@ class RequirementFormObject(ErrorObject):
                     if isinstance(reference_value, ParentReqReference):
                         parent_reference: ParentReqReference = reference_value
                         form_ref_field = RequirementReferenceFormField(
-                            field_mid=parent_reference.mid.get_string_value(),
+                            field_mid=parent_reference.mid,
                             field_type=(
                                 RequirementReferenceFormField.FieldType.PARENT
                             ),
@@ -466,7 +466,7 @@ class RequirementFormObject(ErrorObject):
                     elif isinstance(reference_value, ChildReqReference):
                         child_reference: ChildReqReference = reference_value
                         form_ref_field = RequirementReferenceFormField(
-                            field_mid=child_reference.mid.get_string_value(),
+                            field_mid=child_reference.mid,
                             field_type=(
                                 RequirementReferenceFormField.FieldType.CHILD
                             ),
@@ -477,7 +477,7 @@ class RequirementFormObject(ErrorObject):
                     elif isinstance(reference_value, FileReference):
                         child_reference: FileReference = reference_value
                         form_ref_field = RequirementReferenceFormField(
-                            field_mid=child_reference.mid.get_string_value(),
+                            field_mid=child_reference.mid,
                             field_type=(
                                 RequirementReferenceFormField.FieldType.FILE
                             ),
@@ -487,8 +487,8 @@ class RequirementFormObject(ErrorObject):
                         form_refs_fields.append(form_ref_field)
         return RequirementFormObject(
             is_new=False,
-            requirement_mid=requirement.reserved_mid.get_string_value(),
-            document_mid=document.reserved_mid.get_string_value(),
+            requirement_mid=requirement.reserved_mid,
+            document_mid=document.reserved_mid,
             mid_field=mid_field,
             fields=form_fields,
             reference_fields=form_refs_fields,
@@ -511,7 +511,7 @@ class RequirementFormObject(ErrorObject):
                 field: RequirementFormField = fields_[0]
                 field.field_unescaped_value = clone_uid
                 field.field_escaped_value = clone_uid
-        form_object.requirement_mid = MID.create().get_string_value()
+        form_object.requirement_mid = MID.create()
 
         return form_object
 

@@ -1023,7 +1023,7 @@ def create_main_router(
             raise NotImplementedError
 
         uid_form_field: RequirementFormField = RequirementFormField(
-            field_mid=MID.create().get_string_value(),
+            field_mid=MID.create(),
             field_name="UID",
             field_type=RequirementFormFieldType.SINGLELINE,
             field_unescaped_value=next_uid,
@@ -1750,7 +1750,7 @@ def create_main_router(
             form_object=RequirementFormObject(
                 is_new=False,
                 requirement_mid=requirement_mid,
-                document_mid=document.reserved_mid.get_string_value(),
+                document_mid=document.reserved_mid,
                 mid_field=None,
                 fields=[],
                 reference_fields=[],
@@ -1759,7 +1759,7 @@ def create_main_router(
                 relation_types=[],
             ),
             field=RequirementFormField(
-                field_mid=MID.create().get_string_value(),
+                field_mid=MID.create(),
                 field_name="COMMENT",
                 field_type=RequirementFormFieldType.MULTILINE,
                 field_unescaped_value="",
@@ -1807,7 +1807,7 @@ def create_main_router(
                 relation_types=grammar_element_relations,
             ),
             field=RequirementReferenceFormField(
-                field_mid=MID.create().value,
+                field_mid=MID.create(),
                 field_type=RequirementReferenceFormField.FieldType.PARENT,
                 field_value="",
                 field_role="",
@@ -2173,7 +2173,7 @@ def create_main_router(
                 relations=[],  # Not used in this limited partial template.
             ),
             field=GrammarFormField(
-                field_mid=MID.create().value,
+                field_mid=MID.create(),
                 field_name="",
                 field_required=False,
                 reserved=False,
@@ -2204,7 +2204,7 @@ def create_main_router(
                 relations=[],  # Not used in this limited partial template.
             ),
             relation=GrammarFormRelation(
-                relation_mid=MID.create().value,
+                relation_mid=MID.create(),
                 relation_type="Parent",
                 relation_role="",
             ),

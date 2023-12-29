@@ -88,7 +88,7 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
         assert isinstance(field_value, str)
 
         xpath = (
-            f"(//*[@mid='{mid.get_string_value()}' "
+            f"(//*[@mid='{mid}' "
             "and "
             "@data-testid='select-relation-typerole'])"
         )

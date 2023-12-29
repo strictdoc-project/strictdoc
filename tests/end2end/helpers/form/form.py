@@ -86,9 +86,7 @@ class Form:  # pylint: disable=invalid-name
     def do_move_field_up(self, mid: MID, test_id: str) -> None:
         assert isinstance(mid, MID)
         self.test_case.click_xpath(
-            f"(//*[@mid='{mid.get_string_value()}' "
-            "and "
-            f"@data-testid='{test_id}'])"
+            f"(//*[@mid='{mid}' and @data-testid='{test_id}'])"
         )
 
     def do_move_field_down(self, field_name: str = "") -> None:
@@ -121,7 +119,7 @@ class Form:  # pylint: disable=invalid-name
         assert isinstance(test_id, str)
         assert isinstance(field_value, str)
 
-        field_xpath = f"(//*[@mid='{mid.get_string_value()}' and @data-testid='{test_id}'])"
+        field_xpath = f"(//*[@mid='{mid}' and @data-testid='{test_id}'])"
         for _ in range(3):
             self.test_case.type(field_xpath, f"{field_value}", by=By.XPATH)
             element = self.test_case.find_element(field_xpath)

@@ -1,6 +1,6 @@
 from collections import OrderedDict
 from dataclasses import dataclass
-from typing import List, Optional, Set, Tuple
+from typing import Dict, List, Optional, Set, Tuple
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
@@ -8,6 +8,7 @@ from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
     RequirementField,
 )
+from strictdoc.backend.sdoc.models.type_system import GrammarElementField
 from strictdoc.core.traceability_index import (
     TraceabilityIndex,
 )
@@ -38,9 +39,9 @@ class UpdateGrammarCommand:
         form_object: DocumentGrammarFormObject = self.form_object
         document: Document = self.document
 
-        grammar_fields = {}
+        grammar_fields: Dict[str, GrammarElementField] = {}
         for grammar_field in document.grammar.elements[0].fields:
-            grammar_fields[grammar_field.mid.value] = grammar_field
+            grammar_fields[grammar_field.mid] = grammar_field
 
         # Prepare fields that could have been renamed by the user has just saved the form.
         renamed_fields_lookup = {}

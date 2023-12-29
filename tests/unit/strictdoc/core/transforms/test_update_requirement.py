@@ -45,7 +45,7 @@ def test_01_single_document_add_first_parent_relation_with_no_role():
     )
     form_object.reference_fields.append(
         RequirementReferenceFormField(
-            field_mid=MID.create().get_string_value(),
+            field_mid=MID.create(),
             field_type=RequirementReferenceFormField.FieldType.PARENT,
             field_value="REQ-001",
             field_role=None,
@@ -114,7 +114,7 @@ def test_02_single_document_add_second_parent_relation_with_role():
 
     form_object.reference_fields.append(
         RequirementReferenceFormField(
-            field_mid=MID.create().get_string_value(),
+            field_mid=MID.create(),
             field_type=RequirementReferenceFormField.FieldType.PARENT,
             field_value="REQ-001",
             field_role="Implements",
@@ -175,7 +175,7 @@ def test_20_single_document_add_second_child_relation_with_role():
     )
     form_object.reference_fields.append(
         RequirementReferenceFormField(
-            field_mid=MID.create().get_string_value(),
+            field_mid=MID.create(),
             field_type=RequirementReferenceFormField.FieldType.CHILD,
             field_value="REQ-001",
             field_role="IsImplementedBy",

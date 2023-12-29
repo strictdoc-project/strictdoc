@@ -18,7 +18,7 @@
 
   {# META #}
   <a
-    href="/actions/document/edit_config?document_mid={{ document.reserved_mid.get_string_value() }}"
+    href="/actions/document/edit_config?document_mid={{ document.reserved_mid }}"
     class="action_button"
     data-turbo-action="replace"
     data-turbo="true"
@@ -34,7 +34,7 @@
   #}
 {%- if sdoc_entity.get_type_string() != 'document' -%}
   <a
-    href="/actions/document/edit_{{ sdoc_entity.get_type_string() }}/{{ sdoc_entity.reserved_mid.get_string_value() }}"
+    href="/actions/document/edit_{{ sdoc_entity.get_type_string() }}/{{ sdoc_entity.reserved_mid }}"
     class="action_button"
     data-turbo-action="replace"
     data-turbo="true"
@@ -42,7 +42,7 @@
     data-testid="node-edit-action"
   >{% include "_res/svg_ico16_edit.jinja.html" %}</a>
   <a
-    href="/actions/document/delete_{{ sdoc_entity.get_type_string() }}/{{ sdoc_entity.reserved_mid.get_string_value() }}"
+    href="/actions/document/delete_{{ sdoc_entity.get_type_string() }}/{{ sdoc_entity.reserved_mid }}"
     class="action_button"
     data-turbo-method="delete"
     data-turbo="true"
@@ -58,7 +58,7 @@
   #}
 {%- if sdoc_entity.get_type_string() == 'requirement' -%}
   <a
-    href="/actions/document/clone_requirement?reference_mid={{ sdoc_entity.reserved_mid.get_string_value() }}"
+    href="/actions/document/clone_requirement?reference_mid={{ sdoc_entity.reserved_mid }}"
     class="action_button"
     {# data-turbo-action="replace" #}
     {# data-turbo-method="delete" #}
@@ -105,7 +105,7 @@
         {%- if sdoc_entity.get_type_string() == 'document' -%}
         <li>
           <a
-            href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid.get_string_value() }}&whereto=after"
+            href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after"
             data-turbo-action="replace"
             data-turbo="true"
             title="Add child Section"
@@ -122,7 +122,7 @@
         {%- if sdoc_entity.get_type_string() != 'document' -%}
         <li>
           <a
-            href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid.get_string_value() }}&whereto=before"
+            href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before"
             data-turbo-action="replace"
             data-turbo="true"
             title="Add Section above"
@@ -140,7 +140,7 @@
         {%- if sdoc_entity.get_type_string() != 'requirement' and sdoc_entity.get_type_string() != 'document' -%}
         <li>
           <a
-            href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid.get_string_value() }}&whereto=child"
+            href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=child"
             data-turbo-action="replace"
             data-turbo="true"
             title="Add child Section"
@@ -157,7 +157,7 @@
         {%- if sdoc_entity.get_type_string() != 'document' -%}
         <li>
           <a
-            href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid.get_string_value() }}&whereto=after"
+            href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after"
             data-turbo-action="replace"
             data-turbo="true"
             title="Add Section below"
@@ -172,7 +172,7 @@
         {%- if sdoc_entity.get_type_string() == 'document' -%}
         <li>
           <a
-              href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid.get_string_value() }}&whereto=after"
+              href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after"
               data-turbo-action="replace"
               data-turbo="true"
               title="Add child Requirement"
@@ -189,7 +189,7 @@
         {%- if sdoc_entity.get_type_string() != 'document' -%}
         <li>
           <a
-            href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid.get_string_value() }}&whereto=before"
+            href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before"
             data-turbo-action="replace"
             data-turbo="true"
             title="Add Requirement above"
@@ -207,7 +207,7 @@
         {%- if sdoc_entity.get_type_string() != 'requirement' and sdoc_entity.get_type_string() != 'document' -%}
         <li>
           <a
-              href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid.get_string_value() }}&whereto=child"
+              href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=child"
               data-turbo-action="replace"
               data-turbo="true"
               title="Add child Requirement"
@@ -224,7 +224,7 @@
         {%- if sdoc_entity.get_type_string() != 'document' -%}
         <li>
           <a
-            href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid.get_string_value() }}&whereto=after"
+            href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after"
             data-turbo-action="replace"
             data-turbo="true"
             title="Add Requirement below"

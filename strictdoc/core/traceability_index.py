@@ -338,7 +338,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             linked_to_node = self.get_anchor_by_uid_weak(uid)
         return linked_to_node
 
-    def find_node_with_duplicate_anchor(
+    def get_node_with_duplicate_anchor(
         self, anchor_uid: str
     ) -> Union[Document, Section]:
         for document in self.document_tree.document_list:
@@ -637,7 +637,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                 and anchor_uid not in existing_node_anchor_uids
             ):
                 node_with_duplicate_anchor = (
-                    self.find_node_with_duplicate_anchor(anchor_uid)
+                    self.get_node_with_duplicate_anchor(anchor_uid)
                 )
                 node_type = (
                     "Document"
@@ -666,7 +666,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                             and part.link in to_be_removed_anchor_uids
                         ):
                             node_with_duplicate_anchor = (
-                                self.find_node_with_duplicate_anchor(part.link)
+                                self.get_node_with_duplicate_anchor(part.link)
                             )
                             node_type = (
                                 "Document"

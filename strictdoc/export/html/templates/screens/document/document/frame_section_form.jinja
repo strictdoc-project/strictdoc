@@ -26,6 +26,7 @@
 
   {% set text_field_row_context.errors=form_object.get_errors("section_title") %}
   {% set text_field_row_context.field=form_object.section_title_field %}
+  {% set text_field_row_context.field_editable = true %}
   {% set text_field_row_context.field_type = "singleline" %}
   {% include "components/form/row/row_with_text_field.jinja" %}
 
@@ -33,6 +34,7 @@
 
   {% set text_field_row_context.errors=form_object.get_errors("section_uid") %}
   {% set text_field_row_context.field=form_object.section_uid_field %}
+  {% set text_field_row_context.field_editable = true %}
   {% set text_field_row_context.field_type = "singleline" %}
   {% set text_field_row_context.reference_mid = form_object.section_mid %}
   {%- if not is_new_section and form_object.section_uid_field.field_escaped_value == "" -%}
@@ -47,6 +49,7 @@
 
   {% set text_field_row_context.errors=form_object.get_errors("section_statement") %}
   {% set text_field_row_context.field=form_object.section_statement_field %}
+  {% set text_field_row_context.field_editable = true %}
   {% set text_field_row_context.field_type = "multiline" %}
   {% include "components/form/row/row_with_text_field.jinja" %}
 

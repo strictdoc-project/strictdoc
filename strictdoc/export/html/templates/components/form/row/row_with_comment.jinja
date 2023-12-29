@@ -21,6 +21,7 @@
 {% block row_content scoped %}
   {%- with
     field_class_name = none,
+    field_editable = comment_field_row_context.field_editable,
     field_input_name = comment_field_row_context.field.get_input_field_name(),
     field_label = comment_field_row_context.field.field_name,
     field_placeholder = "Enter comment here...",

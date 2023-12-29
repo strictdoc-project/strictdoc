@@ -361,6 +361,21 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             f"Could not find a node with an anchor by anchor UID: {anchor_uid}"
         )
 
+    def get_section_incoming_links(
+        self, section: Section
+    ) -> Optional[List[InlineLink]]:
+        section_incoming_links = self.graph_database.get_link_values_weak(
+            link_type=GraphLinkType.SECTIONS_TO_INCOMING_LINKS,
+            lhs_node=section,
+        )
+        return section_incoming_links
+
+    def get_document_children(self, document) -> Set[Document]:
+        return self._document_children_map[document]
+
+    def get_document_parents(self, document) -> Set[Document]:
+        return self._document_parents_map[document]
+
     def attach_traceability_info(
         self,
         source_file_rel_path: str,
@@ -370,12 +385,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         self._file_traceability_index.attach_traceability_info(
             source_file_rel_path, traceability_info
         )
-
-    def get_document_children(self, document) -> Set[Document]:
-        return self._document_children_map[document]
-
-    def get_document_parents(self, document) -> Set[Document]:
-        return self._document_parents_map[document]
 
     def update_last_updated(self):
         self.index_last_updated = datetime.today()
@@ -730,15 +739,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             "There is already an existing node "
             f"with this UID: {existing_node_with_uid.get_title()}."
         )
-
-    def get_section_incoming_links(
-        self, section: Section
-    ) -> Optional[List[InlineLink]]:
-        section_incoming_links = self.graph_database.get_link_values_weak(
-            link_type=GraphLinkType.SECTIONS_TO_INCOMING_LINKS,
-            lhs_node=section,
-        )
-        return section_incoming_links
 
     def update_with_anchor(self, anchor: Anchor):
         # By this time, we know that the validations have passed just before.

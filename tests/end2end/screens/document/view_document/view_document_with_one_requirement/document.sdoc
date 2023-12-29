@@ -2,6 +2,7 @@
 TITLE: Document 1
 
 [REQUIREMENT]
+MID: abcdef123456
 TITLE: Requirement title
 STATEMENT: >>>
 Requirement statement.

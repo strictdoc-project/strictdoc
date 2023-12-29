@@ -1,0 +1,75 @@
+    <ul
+      data-testid="toc-list"
+      js-collapsible_list="list"
+      class="toc"
+      data-controller="draggable_list collapsible_list"
+      {%- if last_moved_node_id is defined %}
+      data-last_moved_node_id="{{ last_moved_node_id.get_string_value() }}"
+      {% endif -%}
+    >
+    {%- for section in document_iterator.table_of_contents() -%}
+      <li data-nodeid="{{ section.reserved_mid.get_string_value() }}">
+        {%- if section.is_section -%}
+        {# if section not requirement #}
+          {%- if not section.ng_has_requirements and document_type.is_deeptrace -%}
+            <span class="toc-title-no-link" title="Section has no requirements">
+              <span class="section-number">
+                {{ section.context.title_number_string }}
+              </span>{{ section.title }}
+            </span>
+          {#
+             The calculation below: "&nbsp;" * (section.ng_level * 2 - 1)
+             is needed to accommodate for the case when a section or a
+             requirement don't have a numeric level set (LEVEL: None).
+             Empty spaces &nbsp; ensure the lines in the TOC are still aligned
+             on the left side. The (*2 - 1) takes into account the dots of the
+             levels: 1.2.3 is (6-1) symbols, 1.2.3.4 is (8-1) symbols, etc.
+          #}
+          {%- else -%}
+            <a
+              href="#{{ link_renderer.render_local_anchor(section) }}"
+              anchor="{{ link_renderer.render_local_anchor(section) }}"
+              data-turbo="false"
+            >
+              <span class="section-number">
+                {{ section.context.title_number_string if section.context.title_number_string else "&nbsp;" * (section.ng_level * 2 - 1) }}
+              </span>{{ section.title }}
+            </a>
+          {%- endif -%}
+        {%- else -%}
+        {# if requirement #}
+        <a
+          href="#{{ link_renderer.render_local_anchor(section) }}"
+          anchor="{{ link_renderer.render_local_anchor(section) }}"
+          data-turbo="false"
+        >
+          <span class="section-number">
+            {{ section.context.title_number_string if section.context.title_number_string else "&nbsp;" * (section.ng_level * 2 - 1) }}
+          </span>
+          {%- if section.reserved_title is not none -%}
+            {{ section.reserved_title }}
+          {%- endif -%}
+        </a>
+        {%- endif -%}
+
+      {%- if not loop.last -%}
+        {%- if loop.nextitem.ng_level > section.ng_level -%}
+          <ul>
+        {%- elif loop.nextitem.ng_level < section.ng_level -%}
+            </li>
+          {%- for x in range(0, section.ng_level - loop.nextitem.ng_level) -%}
+            </ul>
+            </li>
+          {%- endfor -%}
+        {%- else -%}
+          </li>
+        {%- endif -%}
+      {%- else -%}
+        </li>
+        {%- for x in range(0, section.ng_level - 1) -%}
+            </ul>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    {%- endfor %}

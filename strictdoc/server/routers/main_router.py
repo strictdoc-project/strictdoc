@@ -2497,7 +2497,7 @@ def create_main_router(
                 html_generator.export_project_tree_screen(
                     traceability_index=export_action.traceability_index,
                 )
-            elif url_to_document == "requirements_coverage.html":
+            elif url_to_document == "traceability_matrix.html":
                 if not project_config.is_activated_requirements_coverage():
                     return Response(
                         content="The Requirements Coverage feature is not activated in the project config.",

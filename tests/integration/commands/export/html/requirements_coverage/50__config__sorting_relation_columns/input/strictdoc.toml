@@ -1,7 +1,7 @@
 [project]
 
 features = [
-  "REQUIREMENTS_COVERAGE_SCREEN",
+  "TRACEABILITY_MATRIX_SCREEN",
 ]
 
 traceability_matrix_relation_columns = [

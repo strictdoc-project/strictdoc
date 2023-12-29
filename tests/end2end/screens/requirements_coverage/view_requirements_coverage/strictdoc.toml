@@ -1,5 +1,5 @@
 [project]
 
 features = [
-  "REQUIREMENTS_COVERAGE_SCREEN"
+  "TRACEABILITY_MATRIX_SCREEN"
 ]

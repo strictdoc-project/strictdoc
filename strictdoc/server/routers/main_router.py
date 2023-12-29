@@ -1556,11 +1556,12 @@ def create_main_router(
         toc_template = env().get_template(
             "actions/document/_shared/stream_updated_toc.jinja.html"
         )
+
         output += toc_template.render(
             document_iterator=iterator,
             document_type=DocumentType.document(),
             link_renderer=link_renderer,
-            last_moved_node_id=moved_node.mid,
+            last_moved_node_id=moved_node.reserved_mid,
         )
         return HTMLResponse(
             content=output,

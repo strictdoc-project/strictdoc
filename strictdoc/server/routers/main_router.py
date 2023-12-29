@@ -811,6 +811,7 @@ def create_main_router(
             MID(document_mid)
         )
         form_object = RequirementFormObject.create_from_request(
+            is_new=True,
             requirement_mid=requirement_mid,
             request_form_data=request_form_data,
             document=document,
@@ -1062,6 +1063,7 @@ def create_main_router(
 
         form_object: RequirementFormObject = (
             RequirementFormObject.create_from_request(
+                is_new=False,
                 requirement_mid=requirement_mid,
                 request_form_data=request_form_data,
                 document=document,
@@ -1741,9 +1743,12 @@ def create_main_router(
             "add_requirement_comment/"
             "stream_add_requirement_comment.jinja.html"
         )
+        # The data of the form object is ignored. What matters is the comment
+        # form data.
         output = template.render(
             requirement_mid=requirement_mid,
             form_object=RequirementFormObject(
+                is_new=False,
                 requirement_mid=requirement_mid,
                 document_mid=document.reserved_mid.get_string_value(),
                 mid_field=None,
@@ -1786,9 +1791,12 @@ def create_main_router(
             "add_requirement_relation/"
             "stream_add_requirement_relation.jinja.html"
         )
+        # The data of the form object is ignored. What matters is the relation
+        # form data.
         output = template.render(
             requirement_mid=requirement_mid,
             form_object=RequirementFormObject(
+                is_new=False,
                 requirement_mid=requirement_mid,
                 document_mid=document_mid,
                 mid_field=None,

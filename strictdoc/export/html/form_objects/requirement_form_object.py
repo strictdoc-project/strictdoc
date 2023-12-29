@@ -186,6 +186,7 @@ class RequirementFormObject(ErrorObject):
     def __init__(
         self,
         *,
+        is_new: bool,
         requirement_mid: Optional[str],
         document_mid: str,
         mid_field: Optional[RequirementFormField],
@@ -197,6 +198,7 @@ class RequirementFormObject(ErrorObject):
         relation_types: List[str],
     ):
         super().__init__()
+        self.is_new: bool = is_new
         self.requirement_mid: Optional[str] = requirement_mid
         self.document_mid: str = document_mid
         self.mid_field: Optional[RequirementFormField] = mid_field
@@ -214,6 +216,7 @@ class RequirementFormObject(ErrorObject):
     @staticmethod
     def create_from_request(
         *,
+        is_new: bool,
         requirement_mid: str,
         request_form_data: FormData,
         document: Document,
@@ -328,6 +331,7 @@ class RequirementFormObject(ErrorObject):
                 form_fields.append(form_field)
 
         form_object = RequirementFormObject(
+            is_new=is_new,
             requirement_mid=requirement_mid,
             document_mid=document.reserved_mid.get_string_value(),
             mid_field=mid_field,
@@ -379,6 +383,7 @@ class RequirementFormObject(ErrorObject):
                 form_field.field_escaped_value = next_uid
 
         return RequirementFormObject(
+            is_new=True,
             requirement_mid=new_requirement_mid.get_string_value(),
             document_mid=document.reserved_mid.get_string_value(),
             mid_field=mid_field,
@@ -481,6 +486,7 @@ class RequirementFormObject(ErrorObject):
                         )
                         form_refs_fields.append(form_ref_field)
         return RequirementFormObject(
+            is_new=False,
             requirement_mid=requirement.reserved_mid.get_string_value(),
             document_mid=document.reserved_mid.get_string_value(),
             mid_field=mid_field,
@@ -595,7 +601,7 @@ class RequirementFormObject(ErrorObject):
         assert isinstance(traceability_index, TraceabilityIndex)
         assert isinstance(context_document, Document)
 
-        if self.mid_field is not None:
+        if self.is_new and self.mid_field is not None:
             existing_node_with_this_mid = (
                 traceability_index.get_node_by_mid_weak(
                     MID(self.mid_field.field_unescaped_value)

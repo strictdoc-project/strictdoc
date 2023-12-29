@@ -1951,7 +1951,7 @@ The following is an example of the default configuration. The same features are 
       # "HTML2PDF",
       # "PROJECT_STATISTICS_SCREEN",
       # "STANDALONE_DOCUMENT_SCREEN",
-      # "REQUIREMENTS_COVERAGE_SCREEN",
+      # "TRACEABILITY_MATRIX_SCREEN",
       # "REQUIREMENT_TO_SOURCE_TRACEABILITY"
     ]
 

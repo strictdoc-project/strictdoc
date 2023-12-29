@@ -1,9 +1,9 @@
 RUN: %strictdoc export %S/input --output-dir Output | filecheck %s
 CHECK: Published: Hello world doc
 
-RUN: %check_exists --file "%S/Output/html/requirements_coverage.html"
+RUN: %check_exists --file "%S/Output/html/traceability_matrix.html"
 
-RUN: %cat "%S/Output/html/requirements_coverage.html" | filecheck %s --check-prefix CHECK-HTML
+RUN: %cat "%S/Output/html/traceability_matrix.html" | filecheck %s --check-prefix CHECK-HTML
 CHECK-HTML: Node
 CHECK-HTML: Parent
 CHECK-HTML: Parent

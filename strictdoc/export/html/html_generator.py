@@ -92,7 +92,7 @@ class HTMLGenerator:
 
         # Export requirements coverage.
         if self.project_config.is_feature_activated(
-            ProjectFeature.REQUIREMENTS_COVERAGE_SCREEN
+            ProjectFeature.TRACEABILITY_MATRIX_SCREEN
         ):
             self.export_requirements_coverage_screen(
                 traceability_index=traceability_index,
@@ -386,7 +386,7 @@ class HTMLGenerator:
         )
         output_html_requirements_coverage = os.path.join(
             self.project_config.export_output_html_root,
-            "requirements_coverage.html",
+            "traceability_matrix.html",
         )
         with open(
             output_html_requirements_coverage, "w", encoding="utf8"

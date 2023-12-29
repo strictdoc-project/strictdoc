@@ -44,7 +44,7 @@ class ProjectFeature(str, Enum):
     DIFF = "DIFF"
     PROJECT_STATISTICS_SCREEN = "PROJECT_STATISTICS_SCREEN"
     STANDALONE_DOCUMENT_SCREEN = "STANDALONE_DOCUMENT_SCREEN"
-    REQUIREMENTS_COVERAGE_SCREEN = "REQUIREMENTS_COVERAGE_SCREEN"
+    TRACEABILITY_MATRIX_SCREEN = "TRACEABILITY_MATRIX_SCREEN"
     REQUIREMENT_TO_SOURCE_TRACEABILITY = "REQUIREMENT_TO_SOURCE_TRACEABILITY"
 
     MERMAID = "MERMAID"
@@ -239,7 +239,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
 
     def is_activated_requirements_coverage(self):
         return (
-            ProjectFeature.REQUIREMENTS_COVERAGE_SCREEN in self.project_features
+            ProjectFeature.TRACEABILITY_MATRIX_SCREEN in self.project_features
         )
 
     def is_activated_standalone_document(self):

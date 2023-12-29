@@ -1,8 +1,5 @@
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
-from tests.end2end.helpers.screens.document.form_edit_requirement import (
-    Form_EditRequirement,
-)
 from tests.end2end.helpers.screens.document.screen_document import (
     Screen_Document,
 )

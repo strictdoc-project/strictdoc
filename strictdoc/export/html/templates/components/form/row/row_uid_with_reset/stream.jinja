@@ -22,6 +22,7 @@
 {# So we redefine the parameters like this: #}
 {% set text_field_row_context.errors=[] %}
 {% set text_field_row_context.field = uid_form_field %}
+{% set text_field_row_context.field_editable = true %}
 {% set text_field_row_context.field_type = "singleline" %}
 {% set text_field_row_context.reference_mid = reference_mid %}
 

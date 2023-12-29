@@ -27,6 +27,7 @@
   {% if form_object.mid_field is not none %}
       {% set text_field_row_context.errors=form_object.get_errors("MID") %}
       {% set text_field_row_context.field = form_object.mid_field %}
+      {% set text_field_row_context.field_editable = form_object.is_new %}
       {% set text_field_row_context.field_type = "singleline" %}
       {% set text_field_row_context.reference_mid = form_object.requirement_mid %}
       {% include "components/form/row/row_with_text_field.jinja" %}
@@ -37,6 +38,7 @@
     {%- for field_ in field_values_ -%}
       {% set text_field_row_context.errors=form_object.get_errors(field_.field_name) %}
       {% set text_field_row_context.field = field_ %}
+      {% set text_field_row_context.field_editable = true %}
       {% set text_field_row_context.field_type = "singleline" %}
       {% set text_field_row_context.reference_mid = form_object.requirement_mid %}
       {%- if field_.field_name == "UID" and field_.field_escaped_value == "" -%}
@@ -56,6 +58,7 @@
       {% if field_.field_name != "COMMENT" -%}
         {% set text_field_row_context.errors=form_object.get_errors(field_.field_name) %}
         {% set text_field_row_context.field = field_ %}
+        {% set text_field_row_context.field_editable = true %}
         {% set text_field_row_context.field_type = "multiline" %}
         {% include "components/form/row/row_with_text_field.jinja" %}
       {%- endif -%}
@@ -100,6 +103,7 @@
         and do not display the code of the field itself: #}
         {%- if field_.field_escaped_value|length > 0 -%}
           {% set comment_field_row_context.field = field_ %}
+          {% set comment_field_row_context.field_editable = true %}
           {% set comment_field_row_context.errors = form_object.get_errors(field_.field_name) %}
           {% include "components/form/row/row_with_comment.jinja" %}
         {%- endif -%}

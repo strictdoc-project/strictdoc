@@ -376,13 +376,13 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def get_document_parents(self, document) -> Set[Document]:
         return self._document_parents_map[document]
 
-    def attach_traceability_info(
+    def update_add_traceability_info(
         self,
         source_file_rel_path: str,
         traceability_info: SourceFileTraceabilityInfo,
     ):
         assert isinstance(traceability_info, SourceFileTraceabilityInfo)
-        self._file_traceability_index.attach_traceability_info(
+        self._file_traceability_index.update_add_traceability_info(
             source_file_rel_path, traceability_info
         )
 

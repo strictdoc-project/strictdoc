@@ -125,7 +125,7 @@ class FileTraceabilityIndex:
         )
         return source_file_tr_info
 
-    def attach_traceability_info(
+    def update_add_traceability_info(
         self,
         source_file_rel_path: str,
         traceability_info: SourceFileTraceabilityInfo,

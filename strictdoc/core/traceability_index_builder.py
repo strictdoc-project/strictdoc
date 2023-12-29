@@ -172,7 +172,7 @@ class TraceabilityIndexBuilder:
                     source_file.full_path
                 )
                 if traceability_info:
-                    traceability_index.attach_traceability_info(
+                    traceability_index.update_add_traceability_info(
                         source_file.in_doctree_source_file_rel_path_posix,
                         traceability_info,
                     )

@@ -561,19 +561,30 @@ The ``OPTIONS`` field may have the following attribute fields:
    * - **Field**
      - **Attribute values**
 
+   * - ``ENABLE_MID``
+     - ``False`` (default), ``True``
+
    * - ``MARKUP``
-     - ``RST``, ``HTML``, ``Text``
+     - ``RST`` (default), ``HTML``, ``Text``
 
    * - ``AUTO_LEVELS``
-     - ``On``, ``Off``
+     - ``On`` (default), ``Off``
 
    * - ``REQUIREMENT_STYLE``
-     - ``Inline``, ``Table``
+     - ``Inline`` (default), ``Table``, ``Zebra``
 
    * - ``REQUIREMENT_IN_TOC``
-     - ``True``, ``False``
-
+     - ``True`` (default), ``False``
 [/FREETEXT]
+
+[SECTION]
+TITLE: ENABLE_MID
+
+[FREETEXT]
+See [LINK: SECTION-UG-Machine-identifiers-MID].
+[/FREETEXT]
+
+[/SECTION]
 
 [SECTION]
 TITLE: MARKUP
@@ -608,15 +619,20 @@ TITLE: REQUIREMENT_STYLE
 
 [FREETEXT]
 The ``REQUIREMENT_STYLE`` option controls whether requirement's elements are
-displayed inline or as table blocks. The available options are: ``Inline`` /
-``Table``. Default is ``Inline``.
+displayed inline or as table blocks. The available options are:
+
+- ``Inline``
+- ``Table``
+- ``Zebra``
+
+Default is ``Inline``.
 
 .. code-block:: text
 
     [DOCUMENT]
     TITLE: Hello world
     OPTIONS:
-      REQUIREMENT_STYLE: Table
+      REQUIREMENT_STYLE: Inline
 [/FREETEXT]
 
 [/SECTION]
@@ -1206,6 +1222,48 @@ Which will resolve to the following document after inclusion:
 [/FREETEXT]
 
 [/SECTION]
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-UG-Machine-identifiers-MID
+TITLE: Machine identifiers (MID)
+
+[FREETEXT]
+StrictDoc supports the automatic generation of machine identifiers (MIDs). This optional feature can be enabled individually for each document through the document-level ``ENABLE_MID`` config option:
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: Hello World!
+    OPTIONS:
+      ENABLE_MID: True
+
+When the ``ENABLE_MID`` option is enabled, StrictDoc automatically generates MID fields whenever the document is written back to the file system. On the web server, MIDs are generated automatically when a document, section, or requirement is saved. In the command-line interface, the generation of ``MID`` can be initiated with a ``passthrough`` command. Executing ``strictdoc passthrough`` on a document with ``ENABLE_MID: True`` results in all nodes having auto-generated MIDs. Implementing the ENABLE_MID option on a per-document basis allows for the integration of MID-enabled documents alongside third-party documents where the MID feature may not be necessary or desired.
+
+Machine identifiers (MIDs) differ from and do not replace unique identifiers (UIDs). A requirement, section, or document node may have both ``MID`` and ``UID`` fields defined. For example:
+
+.. code-block::
+
+    [REQUIREMENT]
+    MID: 06ab121d3c0f4d8c94652323b8f735c6
+    UID: SDOC-SSS-70
+    STATUS: Active
+    TITLE: Move nodes between documents
+    STATEMENT: >>>
+    The Requirements Tool shall allow moving nodes (sections, requirements) between documents.
+    <<<
+
+Advantages of using machine identifiers:
+
+1. Machine identifiers provide a robust means of identifying documents, sections, requirements, or custom nodes. An MID can uniquely identify a given node, independent of other fields like UID or TITLE.
+
+2. The unique identification of nodes via MIDs enhances the effectiveness of StrictDoc's Diff/Changelog functionality. It allows the algorithm to accurately match requirements, sections, or document nodes, even if they are moved, renamed, or undergo metadata changes.
+
+3. MIDs increase the portability of requirements data. Even when UID naming conventions change or nodes are relocated, the MID continues to uniquely identify the original node.
+
+For larger projects, particularly those with extended maintenance cycles, we strongly recommend activating machine identifiers early in the project lifecycle. This proactive approach ensures robust tracking and management of documentation throughout the project's duration.
+[/FREETEXT]
 
 [/SECTION]
 

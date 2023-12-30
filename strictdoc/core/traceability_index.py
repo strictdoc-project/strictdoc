@@ -531,6 +531,33 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             mid=anchor.mid, uid=anchor.value, node=anchor
         )
 
+    def update_disconnect_two_documents_if_no_links_left(
+        self, document, other_document
+    ):
+        for node in self.document_iterators[document].all_content():
+            if not node.is_requirement:
+                continue
+            requirement_node: Requirement = node
+            assert requirement_node.reserved_uid is not None
+            requirement_connections = self._requirements_parents[
+                requirement_node.reserved_uid
+            ]
+
+            # If at least one parent or child relation points to the other
+            # document, terminate, not deleting the link between documents.
+            for parent_requirement_, _ in requirement_connections.parents:
+                if parent_requirement_.document == other_document:
+                    return
+
+            for child_requirement_, _ in requirement_connections.children:
+                if child_requirement_.document == other_document:
+                    return
+
+        self._document_parents_map[document].discard(other_document)
+        self._document_parents_map[other_document].discard(document)
+        self._document_children_map[document].discard(other_document)
+        self._document_children_map[other_document].discard(document)
+
     def remove_requirement_parent_uid(
         self, requirement: Requirement, parent_uid: str, role: Optional[str]
     ) -> None:
@@ -553,7 +580,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
         # If there are no requirements linking between the documents,
         # remove the link.
-        self.disconnect_two_documents_if_no_links_left(
+        self.update_disconnect_two_documents_if_no_links_left(
             document, parent_requirement_document
         )
 
@@ -583,7 +610,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
         # If there are no requirements linking between the documents,
         # remove the link.
-        self.disconnect_two_documents_if_no_links_left(
+        self.update_disconnect_two_documents_if_no_links_left(
             document, child_requirement_document
         )
 
@@ -753,30 +780,3 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             "There is already an existing node "
             f"with this UID: {existing_node_with_uid.get_title()}."
         )
-
-    def disconnect_two_documents_if_no_links_left(
-        self, document, other_document
-    ):
-        for node in self.document_iterators[document].all_content():
-            if not node.is_requirement:
-                continue
-            requirement_node: Requirement = node
-            assert requirement_node.reserved_uid is not None
-            requirement_connections = self._requirements_parents[
-                requirement_node.reserved_uid
-            ]
-
-            # If at least one parent or child relation points to the other
-            # document, terminate, not deleting the link between documents.
-            for parent_requirement_, _ in requirement_connections.parents:
-                if parent_requirement_.document == other_document:
-                    return
-
-            for child_requirement_, _ in requirement_connections.children:
-                if child_requirement_.document == other_document:
-                    return
-
-        self._document_parents_map[document].discard(other_document)
-        self._document_parents_map[other_document].discard(document)
-        self._document_children_map[document].discard(other_document)
-        self._document_children_map[other_document].discard(document)

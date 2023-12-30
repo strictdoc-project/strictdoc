@@ -90,7 +90,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             Document, Set[Document]
         ] = document_children_map
         self._file_traceability_index = file_traceability_index
-        self._map_id_to_node: Dict[MID, Any] = map_id_to_node
+        self._map_mid_to_node: Dict[MID, Any] = map_id_to_node
 
         self.graph_database: GraphDatabase = graph_database
         self.document_tree: Optional[DocumentTree] = None
@@ -166,15 +166,15 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             source_file_rel_path
         )
 
-    def get_node_by_mid(self, node_id: MID) -> Any:
-        assert isinstance(node_id, MID), node_id
-        return self._map_id_to_node[node_id]
+    def get_node_by_mid(self, node_mid: MID) -> Any:
+        assert isinstance(node_mid, MID), node_mid
+        return self._map_mid_to_node[node_mid]
 
-    def get_node_by_mid_weak(self, node_id: MID) -> Optional[Any]:
-        assert isinstance(node_id, MID), node_id
-        if node_id not in self._map_id_to_node:
+    def get_node_by_mid_weak(self, node_mid: MID) -> Optional[Any]:
+        assert isinstance(node_mid, MID), node_mid
+        if node_mid not in self._map_mid_to_node:
             return None
-        return self._map_id_to_node[node_id]
+        return self._map_mid_to_node[node_mid]
 
     def get_file_traceability_index(self) -> FileTraceabilityIndex:
         return self._file_traceability_index

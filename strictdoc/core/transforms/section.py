@@ -319,7 +319,7 @@ class CreateSectionCommand:
         section.ng_document_reference.set_document(document)
         assert parent.ng_level is not None, parent
         section.ng_level = parent.ng_level + 1
-        traceability_index._map_id_to_node[section.reserved_mid] = section
+        traceability_index._map_mid_to_node[section.reserved_mid] = section
         parent.section_contents.insert(insert_to_idx, section)
 
         # Updating section title.

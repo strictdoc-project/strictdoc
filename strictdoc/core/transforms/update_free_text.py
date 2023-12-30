@@ -11,6 +11,7 @@ from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import (
+    GraphLinkType,
     TraceabilityIndex,
 )
 from strictdoc.core.transforms.validation_error import (
@@ -148,10 +149,19 @@ class UpdateFreeTextCommand:
                     new_links_to_add.append(part)
 
             for anchor_uid_to_be_removed in existing_anchor_uids_to_remove:
-                anchor = traceability_index.graph_database.get_node_by_uid(
-                    anchor_uid_to_be_removed
+                anchor = traceability_index.graph_database.get_link_value(
+                    link_type=GraphLinkType.UID_TO_NODE,
+                    lhs_node=anchor_uid_to_be_removed,
+                    weak=False,
                 )
-                traceability_index.graph_database.remove_node_by_mid(anchor.mid)
+                traceability_index.graph_database.delete_all_links(
+                    link_type=GraphLinkType.MID_TO_NODE,
+                    lhs_node=anchor.mid,
+                )
+                traceability_index.graph_database.delete_all_links(
+                    link_type=GraphLinkType.UID_TO_NODE,
+                    lhs_node=anchor_uid_to_be_removed,
+                )
 
             for existing_link in existing_links_to_remove:
                 traceability_index.remove_inline_link(existing_link)

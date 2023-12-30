@@ -154,7 +154,7 @@ class UpdateRequirementTransform:
                 raise AssertionError(f"Must not reach here: {reference_field}")
 
         # Updating Traceability Index: UID
-        traceability_index.mut_rename_uid_to_a_requirement(
+        traceability_index.update_requirement_uid(
             requirement=requirement, old_uid=existing_uid
         )
 

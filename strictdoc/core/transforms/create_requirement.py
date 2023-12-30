@@ -113,13 +113,13 @@ class CreateRequirementTransform:
         requirement.ng_document_reference = DocumentReference()
         requirement.ng_document_reference.set_document(document)
         requirement.ng_level = parent.ng_level + 1
-        traceability_index._map_id_to_node[
+        traceability_index._map_mid_to_node[
             requirement.reserved_mid
         ] = requirement
 
         parent.section_contents.insert(insert_to_idx, requirement)
 
-        traceability_index.mut_add_uid_to_a_requirement_if_needed(
+        traceability_index.update_add_uid_to_a_requirement_if_needed(
             requirement=requirement
         )
 

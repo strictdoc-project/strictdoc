@@ -519,6 +519,18 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         if child_requirement_document != document:
             child_requirement_document.ng_needs_generation = True
 
+    def update_with_anchor(self, anchor: Anchor):
+        # By this time, we know that the validations have passed just before.
+        existing_anchor: Optional[
+            Anchor
+        ] = self.graph_database.get_node_by_uid_weak(uid=anchor.value)
+        if existing_anchor is not None:
+            self.graph_database.remove_node_by_mid(existing_anchor.mid)
+
+        self.graph_database.add_node_by_mid(
+            mid=anchor.mid, uid=anchor.value, node=anchor
+        )
+
     def remove_requirement_parent_uid(
         self, requirement: Requirement, parent_uid: str, role: Optional[str]
     ) -> None:
@@ -740,18 +752,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             "UID uniqueness validation error: "
             "There is already an existing node "
             f"with this UID: {existing_node_with_uid.get_title()}."
-        )
-
-    def update_with_anchor(self, anchor: Anchor):
-        # By this time, we know that the validations have passed just before.
-        existing_anchor: Optional[
-            Anchor
-        ] = self.graph_database.get_node_by_uid_weak(uid=anchor.value)
-        if existing_anchor is not None:
-            self.graph_database.remove_node_by_mid(existing_anchor.mid)
-
-        self.graph_database.add_node_by_mid(
-            mid=anchor.mid, uid=anchor.value, node=anchor
         )
 
     def disconnect_two_documents_if_no_links_left(

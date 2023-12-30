@@ -429,7 +429,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             children=[],
         )
 
-    def mut_rename_uid_to_a_requirement(
+    def update_requirement_uid(
         self, requirement: Requirement, old_uid: Optional[str]
     ) -> None:
         if old_uid is None:

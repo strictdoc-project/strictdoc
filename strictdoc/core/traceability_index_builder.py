@@ -38,6 +38,7 @@ from strictdoc.core.query_engine.query_reader import QueryReader
 from strictdoc.core.source_tree import SourceTree
 from strictdoc.core.traceability_index import (
     FileTraceabilityIndex,
+    GraphLinkType,
     RequirementConnections,
     TraceabilityIndex,
 )
@@ -241,10 +242,15 @@ class TraceabilityIndexBuilder:
                 for part in free_text.parts:
                     if isinstance(part, Anchor):
                         assert part.value not in d_11_map_id_to_node
-                        graph_database.add_node_by_mid(
-                            mid=part.mid,
-                            uid=part.value,
-                            node=part,
+                        graph_database.create_link(
+                            link_type=GraphLinkType.MID_TO_NODE,
+                            lhs_node=part.mid,
+                            rhs_node=part,
+                        )
+                        graph_database.create_link(
+                            link_type=GraphLinkType.UID_TO_NODE,
+                            lhs_node=part.value,
+                            rhs_node=part,
                         )
 
             if document.reserved_mid in d_11_map_id_to_node:
@@ -275,17 +281,23 @@ class TraceabilityIndexBuilder:
                     for free_text in node.free_texts:
                         for part in free_text.parts:
                             if isinstance(part, InlineLink):
-                                graph_database.add_node_by_mid(
-                                    mid=part.mid,
-                                    uid=None,
-                                    node=part,
-                                )
+                                # The inline links are handled at the next big
+                                # for loop pass because the information about
+                                # all Sections and Anchors has not been
+                                # collected yet at this point.
+                                # see create_inline_link below.
+                                pass
                             elif isinstance(part, Anchor):
                                 assert part.value not in d_11_map_id_to_node
-                                graph_database.add_node_by_mid(
-                                    mid=part.mid,
-                                    uid=part.value,
-                                    node=part,
+                                graph_database.create_link(
+                                    link_type=GraphLinkType.MID_TO_NODE,
+                                    lhs_node=part.mid,
+                                    rhs_node=part,
+                                )
+                                graph_database.create_link(
+                                    link_type=GraphLinkType.UID_TO_NODE,
+                                    lhs_node=part.value,
+                                    rhs_node=part,
                                 )
 
                 if not node.reserved_uid:
@@ -340,8 +352,9 @@ class TraceabilityIndexBuilder:
                         if (
                             part.link
                             not in traceability_index.requirements_connections
-                            and not graph_database.node_with_uid_exists(
-                                uid=part.link,
+                            and not graph_database.has_link(
+                                link_type=GraphLinkType.UID_TO_NODE,
+                                lhs_node=part.link,
                             )
                         ):
                             raise StrictDocException(
@@ -363,8 +376,9 @@ class TraceabilityIndexBuilder:
                                 if (
                                     part.link
                                     not in traceability_index.requirements_connections
-                                    and not graph_database.node_with_uid_exists(
-                                        uid=part.link,
+                                    and not graph_database.has_link(
+                                        link_type=GraphLinkType.UID_TO_NODE,
+                                        lhs_node=part.link,
                                     )
                                 ):
                                     raise StrictDocException(

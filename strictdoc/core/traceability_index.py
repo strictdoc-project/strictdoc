@@ -61,7 +61,9 @@ class RequirementConnections:
 
 
 class GraphLinkType(LinkType):
-    SECTIONS_TO_INCOMING_LINKS = 1
+    MID_TO_NODE = (1, "ONE_TO_ONE", MID, (InlineLink, Anchor))
+    UID_TO_NODE = (2, "ONE_TO_ONE", str, (Anchor))
+    NODE_TO_INCOMING_LINKS = (3, "ONE_TO_MANY", MID, InlineLink)
 
 
 class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-instance-attributes  # noqa: E501
@@ -322,8 +324,10 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             return None
         return self._requirements_parents[uid].requirement
 
-    def get_anchor_by_uid_weak(self, uid) -> Optional[Anchor]:
-        anchor = self.graph_database.get_node_by_uid_weak(uid)
+    def get_anchor_by_uid_weak(self, uid: str) -> Optional[Anchor]:
+        anchor = self.graph_database.get_link_value(
+            link_type=GraphLinkType.UID_TO_NODE, lhs_node=uid, weak=True
+        )
         if anchor is not None:
             return assert_cast(anchor, Anchor)
         return None
@@ -364,11 +368,15 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def get_section_incoming_links(
         self, section: Section
     ) -> Optional[List[InlineLink]]:
-        section_incoming_links = self.graph_database.get_link_values_weak(
-            link_type=GraphLinkType.SECTIONS_TO_INCOMING_LINKS,
-            lhs_node=section,
+        section_incoming_links = self.graph_database.get_link_values(
+            link_type=GraphLinkType.NODE_TO_INCOMING_LINKS,
+            lhs_node=section.reserved_mid,
+            weak=True,
         )
-        return section_incoming_links
+        if section_incoming_links is None:
+            return None
+        # FIXME: Should the graph database return OrderedSet or a copied list()?
+        return list(section_incoming_links)
 
     def get_document_children(self, document) -> Set[Document]:
         return self._document_children_map[document]
@@ -395,18 +403,35 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                 self.requirements_connections[new_link.link],
                 RequirementConnections,
             )
-            self.graph_database.add_link(
-                link_type=GraphLinkType.SECTIONS_TO_INCOMING_LINKS,
-                lhs_node=section_connections.requirement,
+            self.graph_database.create_link(
+                link_type=GraphLinkType.NODE_TO_INCOMING_LINKS,
+                lhs_node=section_connections.requirement.reserved_mid,
                 rhs_node=new_link,
             )
-        elif self.graph_database.node_with_uid_exists(uid=new_link.link):
-            anchor = assert_cast(
-                self.graph_database.get_node_by_uid(new_link.link), Anchor
+            self.graph_database.create_link(
+                link_type=GraphLinkType.MID_TO_NODE,
+                lhs_node=new_link.reserved_mid,
+                rhs_node=new_link,
             )
-            self.graph_database.add_link(
-                link_type=GraphLinkType.SECTIONS_TO_INCOMING_LINKS,
-                lhs_node=anchor,
+        elif self.graph_database.has_link(
+            link_type=GraphLinkType.UID_TO_NODE, lhs_node=new_link.link
+        ):
+            anchor = assert_cast(
+                self.graph_database.get_link_value(
+                    link_type=GraphLinkType.UID_TO_NODE,
+                    lhs_node=new_link.link,
+                    weak=False,
+                ),
+                Anchor,
+            )
+            self.graph_database.create_link(
+                link_type=GraphLinkType.NODE_TO_INCOMING_LINKS,
+                lhs_node=anchor.mid,
+                rhs_node=new_link,
+            )
+            self.graph_database.create_link(
+                link_type=GraphLinkType.MID_TO_NODE,
+                lhs_node=new_link.reserved_mid,
                 rhs_node=new_link,
             )
         else:
@@ -521,14 +546,30 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def update_with_anchor(self, anchor: Anchor):
         # By this time, we know that the validations have passed just before.
-        existing_anchor: Optional[
-            Anchor
-        ] = self.graph_database.get_node_by_uid_weak(uid=anchor.value)
+        existing_anchor: Optional[Anchor] = self.graph_database.get_link_value(
+            link_type=GraphLinkType.UID_TO_NODE,
+            lhs_node=anchor.value,
+            weak=True,
+        )
         if existing_anchor is not None:
-            self.graph_database.remove_node_by_mid(existing_anchor.mid)
+            self.graph_database.delete_all_links(
+                link_type=GraphLinkType.MID_TO_NODE,
+                lhs_node=existing_anchor.mid,
+            )
+            self.graph_database.delete_all_links(
+                link_type=GraphLinkType.UID_TO_NODE,
+                lhs_node=existing_anchor.value,
+            )
 
-        self.graph_database.add_node_by_mid(
-            mid=anchor.mid, uid=anchor.value, node=anchor
+        self.graph_database.create_link(
+            link_type=GraphLinkType.MID_TO_NODE,
+            lhs_node=anchor.mid,
+            rhs_node=anchor,
+        )
+        self.graph_database.create_link(
+            link_type=GraphLinkType.UID_TO_NODE,
+            lhs_node=anchor.value,
+            rhs_node=anchor,
         )
 
     def update_disconnect_two_documents_if_no_links_left(
@@ -621,19 +662,24 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def remove_inline_link(self, inline_link: InlineLink) -> None:
         sections_with_incoming_links = (
-            self.graph_database.get_link_values_reverse_weak(
-                link_type=GraphLinkType.SECTIONS_TO_INCOMING_LINKS,
+            self.graph_database.get_link_values_reverse(
+                link_type=GraphLinkType.NODE_TO_INCOMING_LINKS,
                 rhs_node=inline_link,
+                weak=False,
             )
         )
-        for section_with_incoming_links in sections_with_incoming_links:
-            self.graph_database.remove_link(
-                link_type=GraphLinkType.SECTIONS_TO_INCOMING_LINKS,
-                lhs_node=section_with_incoming_links,
+
+        for node_with_incoming_links in list(sections_with_incoming_links):
+            self.graph_database.delete_link(
+                link_type=GraphLinkType.NODE_TO_INCOMING_LINKS,
+                lhs_node=node_with_incoming_links,
                 rhs_node=inline_link,
-                remove_lhs_node=False,
-                remove_rhs_node=True,
             )
+
+        self.graph_database.delete_all_links(
+            link_type=GraphLinkType.MID_TO_NODE,
+            lhs_node=inline_link.reserved_mid,
+        )
 
     def validate_node_against_anchors(
         self, *, node: Union[Document, Section, None], new_anchors: List[Anchor]
@@ -656,7 +702,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         # by the new anchors.
         if node is None:
             for anchor_uid in new_anchor_uids:
-                if self.graph_database.node_with_uid_exists(uid=anchor_uid):
+                if self.graph_database.has_link(
+                    link_type=GraphLinkType.UID_TO_NODE, lhs_node=anchor_uid
+                ):
                     raise SingleValidationError(
                         "A node contains an anchor that already exists: "
                         f"{anchor_uid}."
@@ -683,7 +731,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         #               c) raise a duplication error.
         for anchor_uid in new_anchor_uids:
             if (
-                self.graph_database.node_with_uid_exists(uid=anchor_uid)
+                self.graph_database.has_link(
+                    link_type=GraphLinkType.UID_TO_NODE, lhs_node=anchor_uid
+                )
                 and anchor_uid not in existing_node_anchor_uids
             ):
                 node_with_duplicate_anchor = (

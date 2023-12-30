@@ -1287,6 +1287,8 @@ def create_main_router(
             Section,
         )
         try:
+            # FIXME: Perform all necessary validations.
+            # https://github.com/strictdoc-project/strictdoc/issues/1556
             delete_command = DeleteSectionCommand(
                 section=section,
                 traceability_index=export_action.traceability_index,

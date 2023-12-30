@@ -386,6 +386,32 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             source_file_rel_path, traceability_info
         )
 
+    def create_inline_link(self, new_link: InlineLink):
+        assert isinstance(new_link, InlineLink)
+
+        # InlineLink points to a section.
+        if new_link.link in self.requirements_connections:
+            section_connections: RequirementConnections = assert_cast(
+                self.requirements_connections[new_link.link],
+                RequirementConnections,
+            )
+            self.graph_database.add_link(
+                link_type=GraphLinkType.SECTIONS_TO_INCOMING_LINKS,
+                lhs_node=section_connections.requirement,
+                rhs_node=new_link,
+            )
+        elif self.graph_database.node_with_uid_exists(uid=new_link.link):
+            anchor = assert_cast(
+                self.graph_database.get_node_by_uid(new_link.link), Anchor
+            )
+            self.graph_database.add_link(
+                link_type=GraphLinkType.SECTIONS_TO_INCOMING_LINKS,
+                lhs_node=anchor,
+                rhs_node=new_link,
+            )
+        else:
+            raise NotImplementedError
+
     def update_last_updated(self):
         self.index_last_updated = datetime.today()
 
@@ -416,32 +442,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             self.requirements_connections[
                 requirement.reserved_uid
             ] = existing_entry
-
-    def create_inline_link(self, new_link: InlineLink):
-        assert isinstance(new_link, InlineLink)
-
-        # InlineLink points to a section.
-        if new_link.link in self.requirements_connections:
-            section_connections: RequirementConnections = assert_cast(
-                self.requirements_connections[new_link.link],
-                RequirementConnections,
-            )
-            self.graph_database.add_link(
-                link_type=GraphLinkType.SECTIONS_TO_INCOMING_LINKS,
-                lhs_node=section_connections.requirement,
-                rhs_node=new_link,
-            )
-        elif self.graph_database.node_with_uid_exists(uid=new_link.link):
-            anchor = assert_cast(
-                self.graph_database.get_node_by_uid(new_link.link), Anchor
-            )
-            self.graph_database.add_link(
-                link_type=GraphLinkType.SECTIONS_TO_INCOMING_LINKS,
-                lhs_node=anchor,
-                rhs_node=new_link,
-            )
-        else:
-            raise NotImplementedError
 
     def update_requirement_parent_uid(
         self, requirement: Requirement, parent_uid: str, role: Optional[str]

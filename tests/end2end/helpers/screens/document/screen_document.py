@@ -1,3 +1,6 @@
+from datetime import datetime
+
+from selenium.common import StaleElementReferenceException
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
@@ -50,6 +53,43 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
         return Form_EditGrammar(self.test_case)
 
     def do_drag_first_toc_node_to_the_second(self) -> None:
-        first_toc_node = '(//li[@draggable="true"])[1]'
-        second_toc_node = '(//li[@draggable="true"])[2]'
-        self.test_case.drag_and_drop(first_toc_node, second_toc_node)
+        xpath_first_toc_node = '(//li[@draggable="true"])[1]'
+        xpath_second_toc_node = '(//li[@draggable="true"])[2]'
+
+        first_toc_node = self.test_case.find_element(xpath_first_toc_node)
+        first_toc_node_mid = first_toc_node.get_attribute("data-nodeid")
+
+        second_toc_node = self.test_case.find_element(xpath_second_toc_node)
+        second_toc_node_mid = second_toc_node.get_attribute("data-nodeid")
+
+        self.test_case.drag_and_drop(
+            xpath_first_toc_node, xpath_second_toc_node
+        )
+
+        """
+        Drag and drop action takes some time before server/Turbo sends
+        an updated AJAX HTML template back. Sometimes a
+        StaleElementReferenceException is thrown by Selenium because it still
+        finds an old element as it is being moved. To solve this, set a timeout
+        to wait some time until the new TOC is rendered.
+        """
+        start_time = datetime.now()
+        while True:
+            new_root_node = self.test_case.find_element(
+                f'(//li[@data-nodeid="{second_toc_node_mid}"])[1]'
+            )
+            moved_node = self.test_case.find_element(
+                f'(//li[@data-nodeid="{first_toc_node_mid}"])[1]'
+            )
+
+            try:
+                if new_root_node.location["y"] < moved_node.location["y"]:
+                    break
+            except StaleElementReferenceException:
+                # The element is the one from an old TOC. Keep waiting.
+                self.test_case.sleep(0.1)
+
+            if (datetime.now() - start_time).total_seconds() > 10:
+                raise TimeoutError(
+                    "StrictDoc custom timeout: Moving element in the TOC"
+                )

@@ -23,7 +23,6 @@ class RemoveNodeValidation:
             node = database.get_link_value(
                 link_type=GraphLinkType.MID_TO_NODE,
                 lhs_node=lhs_node,
-                weak=False,
             )
             if isinstance(node, Anchor):
                 self.validate_anchor(database, node)
@@ -32,10 +31,9 @@ class RemoveNodeValidation:
     def validate_anchor(database: GraphDatabase, anchor: Anchor):
         assert isinstance(anchor, Anchor)
 
-        existing_links = database.get_link_values(
+        existing_links = database.get_link_values_weak(
             link_type=GraphLinkType.NODE_TO_INCOMING_LINKS,
             lhs_node=anchor.reserved_mid,
-            weak=True,
         )
 
         if existing_links is not None:

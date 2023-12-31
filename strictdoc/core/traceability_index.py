@@ -61,9 +61,16 @@ class RequirementConnections:
 
 
 class GraphLinkType(LinkType):
-    MID_TO_NODE = (1, "ONE_TO_ONE", MID, (InlineLink, Anchor))
+    MID_TO_NODE = (
+        1,
+        "ONE_TO_ONE",
+        MID,
+        (Document, Requirement, Section, InlineLink, Anchor),
+    )
     UID_TO_NODE = (2, "ONE_TO_ONE", str, (Anchor))
     NODE_TO_INCOMING_LINKS = (3, "ONE_TO_MANY", MID, InlineLink)
+    DOCUMENT_TO_PARENT_DOCUMENTS = (4, "ONE_TO_MANY", MID, MID)
+    DOCUMENT_TO_CHILD_DOCUMENTS = (5, "ONE_TO_MANY", MID, MID)
 
 
 class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-instance-attributes  # noqa: E501
@@ -72,10 +79,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         document_iterators: Dict[Document, DocumentCachingIterator],
         requirements_parents: Dict[str, RequirementConnections],
         tags_map,
-        document_parents_map: Dict[Document, Set[Document]],
-        document_children_map: Dict[Document, Set[Document]],
         file_traceability_index: FileTraceabilityIndex,
-        map_id_to_node: Dict[MID, Any],
         graph_database: GraphDatabase,
     ):
         self._document_iterators: Dict[
@@ -85,14 +89,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             str, RequirementConnections
         ] = requirements_parents
         self._tags_map = tags_map
-        self._document_parents_map: Dict[
-            Document, Set[Document]
-        ] = document_parents_map
-        self._document_children_map: Dict[
-            Document, Set[Document]
-        ] = document_children_map
         self._file_traceability_index = file_traceability_index
-        self._map_mid_to_node: Dict[MID, Any] = map_id_to_node
 
         self.graph_database: GraphDatabase = graph_database
         self.document_tree: Optional[DocumentTree] = None
@@ -170,13 +167,15 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def get_node_by_mid(self, node_mid: MID) -> Any:
         assert isinstance(node_mid, MID), node_mid
-        return self._map_mid_to_node[node_mid]
+        return self.graph_database.get_link_value(
+            link_type=GraphLinkType.MID_TO_NODE, lhs_node=node_mid
+        )
 
     def get_node_by_mid_weak(self, node_mid: MID) -> Optional[Any]:
         assert isinstance(node_mid, MID), node_mid
-        if node_mid not in self._map_mid_to_node:
-            return None
-        return self._map_mid_to_node[node_mid]
+        return self.graph_database.get_link_value_weak(
+            link_type=GraphLinkType.MID_TO_NODE, lhs_node=node_mid
+        )
 
     def get_file_traceability_index(self) -> FileTraceabilityIndex:
         return self._file_traceability_index
@@ -325,8 +324,8 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         return self._requirements_parents[uid].requirement
 
     def get_anchor_by_uid_weak(self, uid: str) -> Optional[Anchor]:
-        anchor = self.graph_database.get_link_value(
-            link_type=GraphLinkType.UID_TO_NODE, lhs_node=uid, weak=True
+        anchor = self.graph_database.get_link_value_weak(
+            link_type=GraphLinkType.UID_TO_NODE, lhs_node=uid
         )
         if anchor is not None:
             return assert_cast(anchor, Anchor)
@@ -368,10 +367,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def get_section_incoming_links(
         self, section: Section
     ) -> Optional[List[InlineLink]]:
-        section_incoming_links = self.graph_database.get_link_values(
+        section_incoming_links = self.graph_database.get_link_values_weak(
             link_type=GraphLinkType.NODE_TO_INCOMING_LINKS,
             lhs_node=section.reserved_mid,
-            weak=True,
         )
         if section_incoming_links is None:
             return None
@@ -379,10 +377,38 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         return list(section_incoming_links)
 
     def get_document_children(self, document) -> Set[Document]:
-        return self._document_children_map[document]
+        child_documents_mids = self.graph_database.get_link_values_weak(
+            link_type=GraphLinkType.DOCUMENT_TO_CHILD_DOCUMENTS,
+            lhs_node=document.reserved_mid,
+        )
+        if child_documents_mids is None:
+            return set()
+        return set(
+            map(
+                lambda document_mid_: self.graph_database.get_link_value(
+                    link_type=GraphLinkType.MID_TO_NODE,
+                    lhs_node=document_mid_,
+                ),
+                child_documents_mids,
+            )
+        )
 
     def get_document_parents(self, document) -> Set[Document]:
-        return self._document_parents_map[document]
+        parent_documents_mids = self.graph_database.get_link_values_weak(
+            link_type=GraphLinkType.DOCUMENT_TO_PARENT_DOCUMENTS,
+            lhs_node=document.reserved_mid,
+        )
+        if parent_documents_mids is None:
+            return set()
+        return set(
+            map(
+                lambda document_mid_: self.graph_database.get_link_value(
+                    link_type=GraphLinkType.MID_TO_NODE,
+                    lhs_node=document_mid_,
+                ),
+                parent_documents_mids,
+            )
+        )
 
     def create_traceability_info(
         self,
@@ -420,7 +446,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                 self.graph_database.get_link_value(
                     link_type=GraphLinkType.UID_TO_NODE,
                     lhs_node=new_link.link,
-                    weak=False,
                 ),
                 Anchor,
             )
@@ -491,8 +516,19 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
         requirement_connections.parents.append((parent_requirement, role))
         parent_requirement_connections.children.append((requirement, role))
-        self._document_parents_map[document].add(parent_requirement_document)
-        self._document_children_map[parent_requirement_document].add(document)
+
+        if document != parent_requirement_document:
+            self.graph_database.create_link(
+                link_type=GraphLinkType.DOCUMENT_TO_PARENT_DOCUMENTS,
+                lhs_node=document.reserved_mid,
+                rhs_node=parent_requirement_document.reserved_mid,
+            )
+            self.graph_database.create_link(
+                link_type=GraphLinkType.DOCUMENT_TO_CHILD_DOCUMENTS,
+                lhs_node=parent_requirement_document.reserved_mid,
+                rhs_node=document.reserved_mid,
+            )
+
         cycle_detector = TreeCycleDetector()
         cycle_detector.check_node(
             requirement.reserved_uid,
@@ -529,8 +565,19 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
         requirement_connections.children.append((child_requirement, role))
         child_requirement_connections.parents.append((requirement, role))
-        self._document_parents_map[document].add(child_requirement_document)
-        self._document_children_map[child_requirement_document].add(document)
+
+        if document != child_requirement_document:
+            self.graph_database.create_link(
+                link_type=GraphLinkType.DOCUMENT_TO_PARENT_DOCUMENTS,
+                lhs_node=child_requirement_document.reserved_mid,
+                rhs_node=document.reserved_mid,
+            )
+            self.graph_database.create_link(
+                link_type=GraphLinkType.DOCUMENT_TO_CHILD_DOCUMENTS,
+                lhs_node=document.reserved_mid,
+                rhs_node=child_requirement_document.reserved_mid,
+            )
+
         cycle_detector = TreeCycleDetector()
         cycle_detector.check_node(
             requirement.reserved_uid,
@@ -546,10 +593,11 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def update_with_anchor(self, anchor: Anchor):
         # By this time, we know that the validations have passed just before.
-        existing_anchor: Optional[Anchor] = self.graph_database.get_link_value(
+        existing_anchor: Optional[
+            Anchor
+        ] = self.graph_database.get_link_value_weak(
             link_type=GraphLinkType.UID_TO_NODE,
             lhs_node=anchor.value,
-            weak=True,
         )
         if existing_anchor is not None:
             self.graph_database.delete_all_links(
@@ -575,6 +623,8 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def update_disconnect_two_documents_if_no_links_left(
         self, document, other_document
     ):
+        assert document != other_document
+
         for node in self.document_iterators[document].all_content():
             if not node.is_requirement:
                 continue
@@ -594,10 +644,26 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                 if child_requirement_.document == other_document:
                     return
 
-        self._document_parents_map[document].discard(other_document)
-        self._document_parents_map[other_document].discard(document)
-        self._document_children_map[document].discard(other_document)
-        self._document_children_map[other_document].discard(document)
+        self.graph_database.delete_link_weak(
+            link_type=GraphLinkType.DOCUMENT_TO_PARENT_DOCUMENTS,
+            lhs_node=document.reserved_mid,
+            rhs_node=other_document.reserved_mid,
+        )
+        self.graph_database.delete_link_weak(
+            link_type=GraphLinkType.DOCUMENT_TO_PARENT_DOCUMENTS,
+            lhs_node=other_document.reserved_mid,
+            rhs_node=document.reserved_mid,
+        )
+        self.graph_database.delete_link_weak(
+            link_type=GraphLinkType.DOCUMENT_TO_CHILD_DOCUMENTS,
+            lhs_node=document.reserved_mid,
+            rhs_node=other_document.reserved_mid,
+        )
+        self.graph_database.delete_link_weak(
+            link_type=GraphLinkType.DOCUMENT_TO_CHILD_DOCUMENTS,
+            lhs_node=other_document.reserved_mid,
+            rhs_node=document.reserved_mid,
+        )
 
     def remove_requirement_parent_uid(
         self, requirement: Requirement, parent_uid: str, role: Optional[str]
@@ -621,9 +687,10 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
         # If there are no requirements linking between the documents,
         # remove the link.
-        self.update_disconnect_two_documents_if_no_links_left(
-            document, parent_requirement_document
-        )
+        if document != parent_requirement_document:
+            self.update_disconnect_two_documents_if_no_links_left(
+                document, parent_requirement_document
+            )
 
         # Mark document and parent document (if different) for re-generation.
         document.ng_needs_generation = True
@@ -651,9 +718,10 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
         # If there are no requirements linking between the documents,
         # remove the link.
-        self.update_disconnect_two_documents_if_no_links_left(
-            document, child_requirement_document
-        )
+        if document != child_requirement_document:
+            self.update_disconnect_two_documents_if_no_links_left(
+                document, child_requirement_document
+            )
 
         # Mark document and parent document (if different) for re-generation.
         document.ng_needs_generation = True
@@ -665,7 +733,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             self.graph_database.get_link_values_reverse(
                 link_type=GraphLinkType.NODE_TO_INCOMING_LINKS,
                 rhs_node=inline_link,
-                weak=False,
             )
         )
 

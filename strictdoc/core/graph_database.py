@@ -65,51 +65,74 @@ class GraphDatabase:
             return False
         return True
 
-    def get_link_value(
-        self, *, link_type: LinkType, lhs_node: Any, weak: bool
+    def get_link_value_weak(
+        self, *, link_type: LinkType, lhs_node: Any
     ) -> Optional[Any]:
-        link_values = self.get_link_values(
-            link_type=link_type, lhs_node=lhs_node, weak=True
+        link_values = self.get_link_values_weak(
+            link_type=link_type, lhs_node=lhs_node
         )
         if link_values is not None and len(link_values) > 0:
             assert len(link_values) == 1
             return next(iter(link_values))
-        if weak:
-            return None
+        return None
+
+    def get_link_value(self, *, link_type: LinkType, lhs_node: Any) -> Any:
+        link_value = self.get_link_value_weak(
+            link_type=link_type, lhs_node=lhs_node
+        )
+        if link_value is not None:
+            return link_value
         raise LookupError
 
-    def get_link_values(
-        self, *, link_type: LinkType, lhs_node: Any, weak: bool
+    def get_link_values_weak(
+        self, *, link_type: LinkType, lhs_node: Any
     ) -> Optional[OrderedSet]:
         if link_type not in self._links:
-            if weak:
-                return None
-            raise LookupError
+            return None
         links = self._links[link_type]
         if lhs_node not in links:
             return None
         return links[lhs_node]
 
-    def get_link_values_reverse(
-        self, *, link_type: LinkType, rhs_node: Any, weak: bool
+    def get_link_values(
+        self, *, link_type: LinkType, lhs_node: Any
+    ) -> OrderedSet:
+        link_values = self.get_link_values_weak(
+            link_type=link_type, lhs_node=lhs_node
+        )
+        if link_values is not None:
+            return link_values
+        raise LookupError
+
+    def get_link_values_reverse_weak(
+        self, *, link_type: LinkType, rhs_node: Any
     ) -> Optional[OrderedSet]:
         if link_type not in self._links_reverse:
-            if weak:
-                return None
-            raise LookupError
+            return None
         reverse_links = self._links_reverse[link_type]
         if rhs_node not in reverse_links:
-            if weak:
-                return None
-            raise LookupError
+            return None
         return reverse_links[rhs_node]
+
+    def get_link_values_reverse(
+        self, *, link_type: LinkType, rhs_node: Any
+    ) -> OrderedSet:
+        link_values_reverse = self.get_link_values_reverse_weak(
+            link_type=link_type, rhs_node=rhs_node
+        )
+        if link_values_reverse is not None:
+            return link_values_reverse
+        raise LookupError
 
     def create_link(self, *, link_type: LinkType, lhs_node: Any, rhs_node: Any):
         if not isinstance(lhs_node, link_type.lhs_type):
             raise TypeError(
-                f"Type mismatch: {type(lhs_node)} {link_type.lhs_type}"
+                f"LHS type mismatch: {type(lhs_node)} {link_type.lhs_type}"
             )
-
+        if not isinstance(rhs_node, link_type.rhs_type):
+            raise TypeError(
+                f"RHS type mismatch: {type(rhs_node)} {link_type.rhs_type}"
+            )
         assert lhs_node != rhs_node, (lhs_node, rhs_node)
 
         links = self._links[link_type]
@@ -147,6 +170,24 @@ class GraphDatabase:
 
         self._links[link_type][lhs_node].remove(rhs_node)
         self._links_reverse[link_type][rhs_node].remove(lhs_node)
+
+    def delete_link_weak(
+        self,
+        *,
+        link_type: LinkType,
+        lhs_node: Any,
+        rhs_node: Any,
+    ):
+        assert link_type in self._links
+        if lhs_node not in self._links[link_type]:
+            return
+        assert rhs_node in self._links_reverse[link_type]
+
+        if self.remove_node_validation is not None:
+            self.remove_node_validation.validate(self, link_type, lhs_node)
+
+        self._links[link_type][lhs_node].discard(rhs_node)
+        self._links_reverse[link_type][rhs_node].discard(lhs_node)
 
     def delete_all_links(
         self,

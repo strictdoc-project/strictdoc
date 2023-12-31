@@ -28,7 +28,6 @@ def test_01_basic():
         graph_database.get_link_value(
             link_type=Relation.INLINE_LINK_TO_ANCHOR,
             lhs_node=inline_link,
-            weak=False,
         )
         == anchor
     )
@@ -36,14 +35,12 @@ def test_01_basic():
         graph_database.get_link_values(
             link_type=Relation.INLINE_LINK_TO_ANCHOR,
             lhs_node=inline_link,
-            weak=False,
         )
     ) == [anchor]
     assert list(
         graph_database.get_link_values_reverse(
             link_type=Relation.INLINE_LINK_TO_ANCHOR,
             rhs_node=anchor,
-            weak=False,
         )
     ) == [inline_link]
     graph_database.delete_link(
@@ -53,10 +50,9 @@ def test_01_basic():
     )
 
     assert (
-        graph_database.get_link_value(
+        graph_database.get_link_value_weak(
             link_type=Relation.INLINE_LINK_TO_ANCHOR,
             lhs_node=inline_link,
-            weak=True,
         )
         is None
     )

@@ -285,6 +285,7 @@ def test_26_two_documents_remove_child_relation():
     )
     assert len(requirement2.references) == 1
     document_2 = document_builder.build()
+    assert requirement1.document != requirement2.document
 
     file_tree = []
     document_list = [document_1, document_2]

@@ -152,7 +152,6 @@ class UpdateFreeTextCommand:
                 anchor = traceability_index.graph_database.get_link_value(
                     link_type=GraphLinkType.UID_TO_NODE,
                     lhs_node=anchor_uid_to_be_removed,
-                    weak=False,
                 )
                 traceability_index.graph_database.delete_all_links(
                     link_type=GraphLinkType.MID_TO_NODE,

@@ -14,6 +14,7 @@ from strictdoc.backend.sdoc.models.requirement import (
 )
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.traceability_index import (
+    GraphLinkType,
     TraceabilityIndex,
 )
 from strictdoc.core.transforms.constants import NodeCreationOrder
@@ -113,9 +114,11 @@ class CreateRequirementTransform:
         requirement.ng_document_reference = DocumentReference()
         requirement.ng_document_reference.set_document(document)
         requirement.ng_level = parent.ng_level + 1
-        traceability_index._map_mid_to_node[
-            requirement.reserved_mid
-        ] = requirement
+        traceability_index.graph_database.create_link(
+            link_type=GraphLinkType.MID_TO_NODE,
+            lhs_node=requirement.reserved_mid,
+            rhs_node=requirement,
+        )
 
         parent.section_contents.insert(insert_to_idx, requirement)
 

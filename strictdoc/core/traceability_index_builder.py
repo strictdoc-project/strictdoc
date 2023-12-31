@@ -1,8 +1,7 @@
 import glob
 import os
 import sys
-from collections import defaultdict
-from typing import Any, Dict, Iterator, List, Optional, Set, Union
+from typing import Dict, Iterator, List, Optional, Union
 
 from textx import TextXSyntaxError
 
@@ -46,7 +45,6 @@ from strictdoc.core.tree_cycle_detector import TreeCycleDetector
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.file_modification_time import get_file_modification_time
-from strictdoc.helpers.mid import MID
 from strictdoc.helpers.timing import timing_decorator
 
 
@@ -191,14 +189,7 @@ class TraceabilityIndexBuilder:
         # workflow.
         d_01_document_iterators: Dict[Document, DocumentCachingIterator] = {}
         d_03_map_doc_titles_to_tag_lists = {}
-        d_05_map_documents_to_parents: Dict[
-            Document, Set[Document]
-        ] = defaultdict(set)
-        d_06_map_documents_to_children: Dict[
-            Document, Set[Document]
-        ] = defaultdict(set)
         d_07_file_traceability_index = FileTraceabilityIndex()
-        d_11_map_id_to_node: Dict[MID, Any] = {}
 
         graph_database = GraphDatabase()
         graph_database.remove_node_validation = RemoveNodeValidation()
@@ -207,10 +198,7 @@ class TraceabilityIndexBuilder:
             d_01_document_iterators,
             {},
             d_03_map_doc_titles_to_tag_lists,
-            d_05_map_documents_to_parents,
-            d_06_map_documents_to_children,
             file_traceability_index=d_07_file_traceability_index,
-            map_id_to_node=d_11_map_id_to_node,
             graph_database=graph_database,
         )
 
@@ -241,7 +229,6 @@ class TraceabilityIndexBuilder:
             for free_text in document.free_texts:
                 for part in free_text.parts:
                     if isinstance(part, Anchor):
-                        assert part.value not in d_11_map_id_to_node
                         graph_database.create_link(
                             link_type=GraphLinkType.MID_TO_NODE,
                             lhs_node=part.mid,
@@ -253,7 +240,10 @@ class TraceabilityIndexBuilder:
                             rhs_node=part,
                         )
 
-            if document.reserved_mid in d_11_map_id_to_node:
+            if graph_database.has_link(
+                link_type=GraphLinkType.MID_TO_NODE,
+                lhs_node=document.reserved_mid,
+            ):
                 raise StrictDocException(
                     "TraceabilityIndex: "
                     "the document MID is not unique: "
@@ -261,21 +251,32 @@ class TraceabilityIndexBuilder:
                     "All machine identifiers (MID) must be unique values."
                 )
 
-            d_11_map_id_to_node[document.reserved_mid] = document
+            graph_database.create_link(
+                link_type=GraphLinkType.MID_TO_NODE,
+                lhs_node=document.reserved_mid,
+                rhs_node=document,
+            )
 
             document_iterator = DocumentCachingIterator(document)
             d_01_document_iterators[document] = document_iterator
             if document.title not in d_03_map_doc_titles_to_tag_lists:
                 d_03_map_doc_titles_to_tag_lists[document.title] = {}
             for node in document_iterator.all_content():
-                if node.reserved_mid in d_11_map_id_to_node:
+                if graph_database.has_link(
+                    link_type=GraphLinkType.MID_TO_NODE,
+                    lhs_node=node.reserved_mid,
+                ):
                     raise StrictDocException(
                         "TraceabilityIndex: "
                         "the node MID is not unique: "
                         f"{node.reserved_mid}. "
                         f"All machine identifiers (MID) must be unique values."
                     )
-                d_11_map_id_to_node[node.reserved_mid] = node
+                graph_database.create_link(
+                    link_type=GraphLinkType.MID_TO_NODE,
+                    lhs_node=node.reserved_mid,
+                    rhs_node=node,
+                )
 
                 if node.is_section:
                     for free_text in node.free_texts:
@@ -288,7 +289,6 @@ class TraceabilityIndexBuilder:
                                 # see create_inline_link below.
                                 pass
                             elif isinstance(part, Anchor):
-                                assert part.value not in d_11_map_id_to_node
                                 graph_database.create_link(
                                     link_type=GraphLinkType.MID_TO_NODE,
                                     lhs_node=part.mid,
@@ -436,12 +436,17 @@ class TraceabilityIndexBuilder:
                                 parent_reference.ref_uid
                             ].document
                         )
-                        d_05_map_documents_to_parents[requirement.document].add(
-                            parent_document
-                        )
-                        d_06_map_documents_to_children[parent_document].add(
-                            requirement.document
-                        )
+                        if document != parent_document:
+                            graph_database.create_link(
+                                link_type=GraphLinkType.DOCUMENT_TO_PARENT_DOCUMENTS,
+                                lhs_node=requirement.document.reserved_mid,
+                                rhs_node=parent_document.reserved_mid,
+                            )
+                            graph_database.create_link(
+                                link_type=GraphLinkType.DOCUMENT_TO_CHILD_DOCUMENTS,
+                                lhs_node=parent_document.reserved_mid,
+                                rhs_node=requirement.document.reserved_mid,
+                            )
                     elif reference.ref_type == ReferenceType.CHILD:
                         child_reference: ChildReqReference = assert_cast(
                             reference, ChildReqReference
@@ -471,17 +476,17 @@ class TraceabilityIndexBuilder:
                             assert_cast(child_requirement.reserved_uid, str)
                         ].parents.append((requirement, child_reference.role))
                         # Set document dependencies.
-                        parent_document = (
-                            traceability_index.requirements_connections[
-                                requirement.reserved_uid
-                            ].document
-                        )
-                        d_05_map_documents_to_parents[
-                            child_requirement.document
-                        ].add(parent_document)
-                        d_06_map_documents_to_children[parent_document].add(
-                            child_requirement.document
-                        )
+                        if document != child_requirement.document:
+                            graph_database.create_link(
+                                link_type=GraphLinkType.DOCUMENT_TO_PARENT_DOCUMENTS,
+                                lhs_node=child_requirement.document.reserved_mid,
+                                rhs_node=document.reserved_mid,
+                            )
+                            graph_database.create_link(
+                                link_type=GraphLinkType.DOCUMENT_TO_CHILD_DOCUMENTS,
+                                lhs_node=document.reserved_mid,
+                                rhs_node=child_requirement.document.reserved_mid,
+                            )
                     elif reference.ref_type == ReferenceType.BIB_REF:
                         # Explicitly nothing.
                         pass

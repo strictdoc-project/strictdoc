@@ -14,6 +14,7 @@ from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import (
+    GraphLinkType,
     RequirementConnections,
     TraceabilityIndex,
 )
@@ -319,7 +320,11 @@ class CreateSectionCommand:
         section.ng_document_reference.set_document(document)
         assert parent.ng_level is not None, parent
         section.ng_level = parent.ng_level + 1
-        traceability_index._map_mid_to_node[section.reserved_mid] = section
+        traceability_index.graph_database.create_link(
+            link_type=GraphLinkType.MID_TO_NODE,
+            lhs_node=section.reserved_mid,
+            rhs_node=section,
+        )
         parent.section_contents.insert(insert_to_idx, section)
 
         # Updating section title.

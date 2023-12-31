@@ -11,7 +11,10 @@ from tests.end2end.test_helpers import available_systems
 
 
 class Test(E2ECase):
-    # This drag and drop test does not work reliably on Linux.
+    """
+    FIXME: This drag and drop test does not work reliably on Linux.
+    """
+
     @available_systems(["macos", "windows"])
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)

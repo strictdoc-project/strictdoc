@@ -12,6 +12,7 @@ from strictdoc.backend.sdoc.models.requirement import (
 )
 from strictdoc.backend.sdoc.models.type_system import RequirementFieldName
 from strictdoc.core.traceability_index import (
+    GraphLinkType,
     RequirementConnections,
     TraceabilityIndex,
 )
@@ -165,9 +166,10 @@ class UpdateRequirementTransform:
             _,
         ) in action_object.reference_ids_to_remove:
             removed_uid_parent_requirement = (
-                traceability_index.requirements_connections[
-                    reference_id_to_remove
-                ]
+                traceability_index.graph_database.get_link_value(
+                    link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+                    lhs_node=reference_id_to_remove,
+                )
             )
             action_object.removed_uid_parent_documents_to_update.add(
                 removed_uid_parent_requirement.document
@@ -203,8 +205,12 @@ class UpdateRequirementTransform:
                 continue
             ref_uid = reference_field.field_value
             requirement_connections: RequirementConnections = (
-                traceability_index.requirements_connections[ref_uid]
+                traceability_index.graph_database.get_link_value(
+                    link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+                    lhs_node=ref_uid,
+                )
             )
+
             if requirement_connections.document == document:
                 action_object.this_document_requirements_to_update.add(
                     requirement_connections.requirement

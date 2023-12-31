@@ -65,6 +65,9 @@ class GraphDatabase:
             return False
         return True
 
+    def get_count(self, *, link_type: LinkType) -> Any:
+        return len(self._links[link_type])
+
     def get_link_value_weak(
         self, *, link_type: LinkType, lhs_node: Any
     ) -> Optional[Any]:

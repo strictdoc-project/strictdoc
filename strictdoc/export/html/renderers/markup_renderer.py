@@ -6,7 +6,7 @@ from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
 )
-from strictdoc.backend.sdoc.models.section import FreeText
+from strictdoc.backend.sdoc.models.section import FreeText, Section
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
@@ -142,9 +142,9 @@ class MarkupRenderer:
                 parts_output += part
             elif isinstance(part, InlineLink):
                 # First, we try to get a section with this name, then Anchor.
-                node = self.traceability_index.get_section_by_uid_weak(
-                    part.link
-                )
+                node: Optional[
+                    Union[Section, Anchor]
+                ] = self.traceability_index.get_section_by_uid_weak(part.link)
                 if node is None:
                     node = self.traceability_index.get_anchor_by_uid_weak(
                         part.link

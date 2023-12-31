@@ -1386,9 +1386,10 @@ def create_main_router(
             )
         )
 
+        export_action.traceability_index.delete_requirement(requirement)
+
         requirement_parent: Union[Section, Document] = requirement.parent
         requirement_parent.section_contents.remove(requirement)
-
         requirement.parent = None
 
         # Saving new content to .SDoc file.

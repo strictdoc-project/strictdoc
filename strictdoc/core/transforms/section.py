@@ -14,8 +14,6 @@ from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import (
-    GraphLinkType,
-    RequirementConnections,
     TraceabilityIndex,
 )
 from strictdoc.core.transforms.constants import NodeCreationOrder
@@ -123,33 +121,21 @@ class UpdateSectionCommand:
                 f"Should not reach here: {form_object.section_title}"
             )
 
+        # We have passed the validations if we reach this point, so we can
+        # just assume we can safely delete the previous section UID
+        # associations.
+        traceability_index.delete_section(section)
+
         # Updating section UID.
         if len(form_object.section_uid) > 0:
-            # We have passed the validations if we reach this point, so we can
-            # just assume we can safely delete the previous section UID
-            # associations.
-            if section.reserved_uid is not None:
-                traceability_index.delete_node_connections(section.reserved_uid)
-
             section_uid = assert_cast(form_object.section_uid, str)
             section.uid = section_uid
             section.reserved_uid = section_uid
-            traceability_index.create_node_connections(
-                section_uid,
-                RequirementConnections(
-                    requirement=section,
-                    document=section.document,
-                    parents=[],
-                    children=[],
-                ),
-            )
         else:
-            # We have passed the validations if we reach this point, so we can
-            # just assume we can safely delete the section.
-            if section.reserved_uid is not None:
-                traceability_index.delete_node_connections(section.reserved_uid)
-                section.uid = None
-                section.reserved_uid = None
+            section.uid = None
+            section.reserved_uid = None
+
+        traceability_index.create_section(section)
 
         # Updating section content.
         self.update_free_text_command.perform()
@@ -204,14 +190,9 @@ class CreateSectionCommand:
         ) > 0 and traceability_index.has_node_connections(
             form_object.section_uid
         ):
-            existing_section_connections: RequirementConnections = assert_cast(
-                traceability_index.get_node_connections(
-                    form_object.section_uid
-                ),
-                RequirementConnections,
-            )
             existing_section = assert_cast(
-                existing_section_connections.requirement, Section
+                traceability_index.get_node_by_uid(form_object.section_uid),
+                Section,
             )
             errors["section_uid"].append(
                 f"The chosen UID must be unique. "
@@ -303,27 +284,15 @@ class CreateSectionCommand:
             section_uid = assert_cast(form_object.section_uid, str)
             section.uid = section_uid
             section.reserved_uid = section_uid
-            traceability_index.create_node_connections(
-                section_uid,
-                RequirementConnections(
-                    requirement=section,
-                    document=document,
-                    parents=[],
-                    children=[],
-                ),
-            )
 
         section.node_id = MID(form_object.section_mid)
         section.ng_document_reference = DocumentReference()
         section.ng_document_reference.set_document(document)
         assert parent.ng_level is not None, parent
         section.ng_level = parent.ng_level + 1
-        traceability_index.graph_database.create_link(
-            link_type=GraphLinkType.MID_TO_NODE,
-            lhs_node=section.reserved_mid,
-            rhs_node=section,
-        )
         parent.section_contents.insert(insert_to_idx, section)
+
+        traceability_index.create_section(section)
 
         # Updating section title.
         if (

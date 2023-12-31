@@ -8,4 +8,4 @@ Here's the chapter 1.
 Chapter 2
 =========
 
-See :ref:`CHAPTER_1` for more details.
+See :ref:`Chapter 1 <CHAPTER_1>` for more details.

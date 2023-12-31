@@ -19,6 +19,7 @@ from strictdoc.export.html.renderers.text_to_html_writer import TextToHtmlWriter
 from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
+from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.rst import truncated_statement_with_no_rst
 
 
@@ -141,17 +142,10 @@ class MarkupRenderer:
             if isinstance(part, str):
                 parts_output += part
             elif isinstance(part, InlineLink):
-                # First, we try to get a section with this name, then Anchor.
-                node: Optional[
-                    Union[Section, Anchor]
-                ] = self.traceability_index.get_section_by_uid_weak(part.link)
-                if node is None:
-                    node = self.traceability_index.get_anchor_by_uid_weak(
-                        part.link
-                    )
-                assert (
-                    node is not None
-                ), f"Could not find a section or anchor with UID: {part.link}"
+                node: Union[Section, Anchor] = assert_cast(
+                    self.traceability_index.get_node_by_uid(part.link),
+                    (Section, Anchor),
+                )
                 href = self.link_renderer.render_node_link(
                     node, self.context_document, document_type
                 )

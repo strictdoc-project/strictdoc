@@ -36,6 +36,7 @@ class Test(E2ECase):
                 section.do_open_form_edit_section()
             )
             form_edit_section.do_form_submit()
+
             self.reload()
 
             second_section: Section = screen_document.get_section(2)

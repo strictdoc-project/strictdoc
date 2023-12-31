@@ -664,9 +664,9 @@ class RequirementFormObject(ErrorObject):
                     "relations, rename the UID, recreate the relations.",
                 )
             requirement_connections: RequirementConnections = (
-                traceability_index.requirements_connections[
+                traceability_index.get_node_connections(
                     self.exiting_requirement_uid
-                ]
+                )
             )
             if len(requirement_connections.children):
                 self.add_error(
@@ -688,10 +688,7 @@ class RequirementFormObject(ErrorObject):
                             "Requirement relation UID must not be empty."
                         )
                         continue
-                    elif (
-                        link_uid
-                        not in traceability_index.requirements_connections
-                    ):
+                    elif not traceability_index.has_node_connections(link_uid):
                         reference_field.validation_messages.append(
                             f'Parent requirement with an UID "{link_uid}" '
                             f"does not exist."
@@ -738,14 +735,14 @@ class RequirementFormObject(ErrorObject):
                     ref_uid = reference_field.field_value
 
                     def parent_lambda(requirement_id_) -> List[str]:
-                        return traceability_index.requirements_connections[
+                        return traceability_index.get_node_connections(
                             requirement_id_
-                        ].get_parent_uids()
+                        ).get_parent_uids()
 
                     def child_lambda(requirement_id_) -> List[str]:
-                        return traceability_index.requirements_connections[
+                        return traceability_index.get_node_connections(
                             requirement_id_
-                        ].get_child_uids()
+                        ).get_child_uids()
 
                     relations_lambda = (
                         parent_lambda

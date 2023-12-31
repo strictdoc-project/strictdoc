@@ -129,28 +129,25 @@ class UpdateSectionCommand:
             # just assume we can safely delete the previous section UID
             # associations.
             if section.reserved_uid is not None:
-                del traceability_index.requirements_connections[
-                    section.reserved_uid
-                ]
+                traceability_index.delete_node_connections(section.reserved_uid)
 
             section_uid = assert_cast(form_object.section_uid, str)
             section.uid = section_uid
             section.reserved_uid = section_uid
-            traceability_index.requirements_connections[
-                section_uid
-            ] = RequirementConnections(
-                requirement=section,
-                document=section.document,
-                parents=[],
-                children=[],
+            traceability_index.create_node_connections(
+                section_uid,
+                RequirementConnections(
+                    requirement=section,
+                    document=section.document,
+                    parents=[],
+                    children=[],
+                ),
             )
         else:
             # We have passed the validations if we reach this point, so we can
             # just assume we can safely delete the section.
             if section.reserved_uid is not None:
-                del traceability_index.requirements_connections[
-                    section.reserved_uid
-                ]
+                traceability_index.delete_node_connections(section.reserved_uid)
                 section.uid = None
                 section.reserved_uid = None
 
@@ -202,15 +199,15 @@ class CreateSectionCommand:
         if len(form_object.section_title) == 0:
             errors["section_title"].append("Section title must not be empty.")
 
-        if (
-            len(form_object.section_uid) > 0
-            and form_object.section_uid
-            in traceability_index.requirements_connections
+        if len(
+            form_object.section_uid
+        ) > 0 and traceability_index.has_node_connections(
+            form_object.section_uid
         ):
             existing_section_connections: RequirementConnections = assert_cast(
-                traceability_index.requirements_connections[
+                traceability_index.get_node_connections(
                     form_object.section_uid
-                ],
+                ),
                 RequirementConnections,
             )
             existing_section = assert_cast(
@@ -306,13 +303,14 @@ class CreateSectionCommand:
             section_uid = assert_cast(form_object.section_uid, str)
             section.uid = section_uid
             section.reserved_uid = section_uid
-            traceability_index.requirements_connections[
-                section_uid
-            ] = RequirementConnections(
-                requirement=section,
-                document=document,
-                parents=[],
-                children=[],
+            traceability_index.create_node_connections(
+                section_uid,
+                RequirementConnections(
+                    requirement=section,
+                    document=document,
+                    parents=[],
+                    children=[],
+                ),
             )
 
         section.node_id = MID(form_object.section_mid)

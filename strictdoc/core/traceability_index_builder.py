@@ -196,7 +196,6 @@ class TraceabilityIndexBuilder:
 
         traceability_index = TraceabilityIndex(
             d_01_document_iterators,
-            {},
             d_03_map_doc_titles_to_tag_lists,
             file_traceability_index=d_07_file_traceability_index,
             graph_database=graph_database,
@@ -302,13 +301,16 @@ class TraceabilityIndexBuilder:
 
                 if not node.reserved_uid:
                     continue
-                if (
-                    node.reserved_uid
-                    in traceability_index.requirements_connections
+
+                if traceability_index.graph_database.has_link(
+                    link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+                    lhs_node=node.reserved_uid,
                 ):
-                    other_req_doc = traceability_index.requirements_connections[
-                        node.reserved_uid
-                    ].document
+                    other_requirement_connections: RequirementConnections = traceability_index.graph_database.get_link_value(
+                        link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+                        lhs_node=node.reserved_uid,
+                    )
+                    other_req_doc = other_requirement_connections.document
                     if other_req_doc == document:
                         print(  # noqa: T201
                             "error: DocumentIndex: "
@@ -325,13 +327,15 @@ class TraceabilityIndexBuilder:
                             f'and "{document.title}".'
                         )
                     sys.exit(1)
-                traceability_index.requirements_connections[
-                    node.reserved_uid
-                ] = RequirementConnections(
-                    requirement=node,
-                    document=document,
-                    parents=[],
-                    children=[],
+                traceability_index.graph_database.create_link(
+                    link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+                    lhs_node=node.reserved_uid,
+                    rhs_node=RequirementConnections(
+                        requirement=node,
+                        document=document,
+                        parents=[],
+                        children=[],
+                    ),
                 )
                 if not node.is_requirement:
                     continue
@@ -349,13 +353,14 @@ class TraceabilityIndexBuilder:
             if len(document.free_texts) > 0:
                 for part in document.free_texts[0].parts:
                     if isinstance(part, InlineLink):
-                        if (
-                            part.link
-                            not in traceability_index.requirements_connections
-                            and not graph_database.has_link(
-                                link_type=GraphLinkType.UID_TO_NODE,
-                                lhs_node=part.link,
-                            )
+                        # FIXME: Ensure that the section UIDs are written to UID_TO_NODE,
+                        # remove the second check of UID_TO_REQUIREMENT_CONNECTIONS.
+                        if not traceability_index.graph_database.has_link(
+                            link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+                            lhs_node=part.link,
+                        ) and not graph_database.has_link(
+                            link_type=GraphLinkType.UID_TO_NODE,
+                            lhs_node=part.link,
                         ):
                             raise StrictDocException(
                                 "DocumentIndex: "
@@ -373,9 +378,13 @@ class TraceabilityIndexBuilder:
                     for free_text in node.free_texts:
                         for part in free_text.parts:
                             if isinstance(part, InlineLink):
+                                # FIXME: Ensure that the section UIDs are written to UID_TO_NODE,
+                                # remove the second check of UID_TO_REQUIREMENT_CONNECTIONS.
                                 if (
-                                    part.link
-                                    not in traceability_index.requirements_connections
+                                    not traceability_index.graph_database.has_link(
+                                        link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+                                        lhs_node=part.link,
+                                    )
                                     and not graph_database.has_link(
                                         link_type=GraphLinkType.UID_TO_NODE,
                                         lhs_node=part.link,
@@ -406,9 +415,9 @@ class TraceabilityIndexBuilder:
                         parent_reference: ParentReqReference = assert_cast(
                             reference, ParentReqReference
                         )
-                        if (
-                            parent_reference.ref_uid
-                            not in traceability_index.requirements_connections
+                        if not traceability_index.graph_database.has_link(
+                            link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+                            lhs_node=parent_reference.ref_uid,
                         ):
                             raise StrictDocException(
                                 f"[DocumentIndex.create] "
@@ -417,24 +426,26 @@ class TraceabilityIndexBuilder:
                                 f"parent requirement which doesn't exist: "
                                 f"{parent_reference.ref_uid}."
                             )
-                        parent_requirement = (
-                            traceability_index.requirements_connections[
-                                parent_reference.ref_uid
-                            ].requirement
+                        parent_requirement_connections: RequirementConnections = traceability_index.graph_database.get_link_value(
+                            link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+                            lhs_node=parent_reference.ref_uid,
                         )
-                        traceability_index.requirements_connections[
-                            requirement.reserved_uid
-                        ].parents.append(
+                        parent_requirement = (
+                            parent_requirement_connections.requirement
+                        )
+                        requirement_connections: RequirementConnections = traceability_index.graph_database.get_link_value(
+                            link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+                            lhs_node=requirement.reserved_uid,
+                        )
+                        requirement_connections.parents.append(
                             (parent_requirement, parent_reference.role)
                         )
-                        traceability_index.requirements_connections[
-                            assert_cast(parent_requirement.reserved_uid, str)
-                        ].children.append((requirement, parent_reference.role))
+                        parent_requirement_connections.children.append(
+                            (requirement, parent_reference.role)
+                        )
                         # Set document dependencies.
                         parent_document = (
-                            traceability_index.requirements_connections[
-                                parent_reference.ref_uid
-                            ].document
+                            parent_requirement_connections.document
                         )
                         if document != parent_document:
                             graph_database.create_link(
@@ -451,9 +462,9 @@ class TraceabilityIndexBuilder:
                         child_reference: ChildReqReference = assert_cast(
                             reference, ChildReqReference
                         )
-                        if (
-                            child_reference.ref_uid
-                            not in traceability_index.requirements_connections
+                        if not traceability_index.graph_database.has_link(
+                            link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+                            lhs_node=child_reference.ref_uid,
                         ):
                             raise StrictDocException(
                                 f"[DocumentIndex.create] "
@@ -462,19 +473,25 @@ class TraceabilityIndexBuilder:
                                 f"child requirement that doesn't exist: "
                                 f"{child_reference.ref_uid}."
                             )
-                        child_requirement = (
-                            traceability_index.requirements_connections[
-                                child_reference.ref_uid
-                            ].requirement
+                        child_requirement_connections: RequirementConnections = traceability_index.graph_database.get_link_value(
+                            link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+                            lhs_node=child_reference.ref_uid,
                         )
-                        traceability_index.requirements_connections[
-                            requirement.reserved_uid
-                        ].children.append(
+                        child_requirement = (
+                            child_requirement_connections.requirement
+                        )
+
+                        requirement_connections: RequirementConnections = traceability_index.graph_database.get_link_value(
+                            link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+                            lhs_node=requirement.reserved_uid,
+                        )
+                        requirement_connections.children.append(
                             (child_requirement, child_reference.role)
                         )
-                        traceability_index.requirements_connections[
-                            assert_cast(child_requirement.reserved_uid, str)
-                        ].parents.append((requirement, child_reference.role))
+                        child_requirement_connections.parents.append(
+                            (requirement, child_reference.role)
+                        )
+
                         # Set document dependencies.
                         if document != child_requirement.document:
                             graph_database.create_link(
@@ -511,15 +528,17 @@ class TraceabilityIndexBuilder:
                 # Detect cycles
                 parents_cycle_detector.check_node(
                     requirement.reserved_uid,
-                    lambda requirement_id_: traceability_index.requirements_connections[
-                        requirement_id_
-                    ].get_parent_uids(),
+                    lambda requirement_id_: traceability_index.graph_database.get_link_value(
+                        link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+                        lhs_node=requirement_id_,
+                    ).get_parent_uids(),
                 )
                 children_cycle_detector.check_node(
                     requirement.reserved_uid,
-                    lambda requirement_id_: traceability_index.requirements_connections[
-                        requirement_id_
-                    ].get_child_uids(),
+                    lambda requirement_id_: traceability_index.graph_database.get_link_value(
+                        link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+                        lhs_node=requirement_id_,
+                    ).get_child_uids(),
                 )
                 # @sdoc[/SDOC-VALIDATION-NO-CYCLES]
 

@@ -144,7 +144,7 @@ class GraphDatabase:
         if lhs_node not in links:
             links[lhs_node] = OrderedSet([rhs_node])
         else:
-            if link_type.is_one_to_one():
+            if link_type.is_one_to_one() and len(links[lhs_node]) > 0:
                 raise TypeError(
                     "The LHS node already exists for this one-to-one relation. "
                     "Cannot insert another one. "

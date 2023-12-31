@@ -125,13 +125,15 @@ class RSTWriter:
             if isinstance(part, str):
                 output += part
             elif isinstance(part, InlineLink):
-                anchor_or_none = self.index.get_anchor_by_uid_weak(part.link)
+                anchor_or_none = self.index.get_linkable_node_by_uid_weak(
+                    part.link
+                )
 
                 # Labels that aren’t placed before a section title can still be
                 # referenced, but you must give the link an explicit title,
                 # using this syntax: :ref:`Link title <label-name>`.
                 # https://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html
-                if anchor_or_none:
+                if anchor_or_none is not None:
                     anchor_text = (
                         anchor_or_none.title
                         if anchor_or_none.title is not None

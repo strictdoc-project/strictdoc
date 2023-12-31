@@ -18,7 +18,7 @@ from strictdoc.core.transforms.validation_error import (
 )
 from strictdoc.core.tree_cycle_detector import TreeCycleDetector
 from strictdoc.helpers.auto_described import auto_described
-from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.cast import assert_cast, assert_optional_cast
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.sorting import alphanumeric_sort
 
@@ -36,6 +36,7 @@ class RequirementConnections:
         parents: List[Tuple[Requirement, Optional[str]]],
         children: List[Tuple[Requirement, Optional[str]]],
     ):
+        assert isinstance(requirement, Requirement), requirement
         self.requirement: Requirement = requirement
         self.document: Document = document
         self.parents: List[Tuple[Requirement, Optional[str]]] = parents
@@ -71,7 +72,7 @@ class GraphLinkType(LinkType):
         MID,
         (Document, Requirement, Section, InlineLink, Anchor),
     )
-    UID_TO_NODE = (2, "ONE_TO_ONE", str, (Anchor))
+    UID_TO_NODE = (2, "ONE_TO_ONE", str, (Section, Requirement, Anchor))
     UID_TO_REQUIREMENT_CONNECTIONS = (
         3,
         "ONE_TO_ONE",
@@ -184,7 +185,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def has_node_connections(self, node_uid: str) -> bool:
         assert isinstance(node_uid, str), node_uid
         return self.graph_database.has_link(
-            link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+            link_type=GraphLinkType.UID_TO_NODE,
             lhs_node=node_uid,
         )
 
@@ -342,10 +343,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def get_node_by_uid(self, uid: str):
         assert isinstance(uid, str) and len(uid) > 0, uid
-        requirement_connections = self.graph_database.get_link_value(
-            link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS, lhs_node=uid
+        return self.graph_database.get_link_value(
+            link_type=GraphLinkType.UID_TO_NODE, lhs_node=uid
         )
-        return requirement_connections.requirement
 
     def get_node_by_uid_weak(
         self, uid
@@ -366,31 +366,15 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                     raise NotImplementedError
         return None
 
-    def get_section_by_uid_weak(self, uid) -> Optional[Section]:
-        requirement_connections = self.graph_database.get_link_value_weak(
-            link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS, lhs_node=uid
-        )
-        if requirement_connections is None:
-            return None
-        return requirement_connections.requirement
-
-    def get_anchor_by_uid_weak(self, uid: str) -> Optional[Anchor]:
-        anchor = self.graph_database.get_link_value_weak(
-            link_type=GraphLinkType.UID_TO_NODE, lhs_node=uid
-        )
-        if anchor is not None:
-            return assert_cast(anchor, Anchor)
-        return None
-
     def get_linkable_node_by_uid_weak(
         self, uid
     ) -> Union[Section, Anchor, None]:
-        linked_to_node: Union[
-            Section, Anchor, None
-        ] = self.get_section_by_uid_weak(uid)
-        if linked_to_node is None:
-            linked_to_node = self.get_anchor_by_uid_weak(uid)
-        return linked_to_node
+        return assert_optional_cast(
+            self.graph_database.get_link_value_weak(
+                link_type=GraphLinkType.UID_TO_NODE, lhs_node=uid
+            ),
+            (Section, Anchor),
+        )
 
     def get_node_with_duplicate_anchor(
         self, anchor_uid: str
@@ -471,53 +455,37 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             source_file_rel_path, traceability_info
         )
 
-    def create_node_connections(
-        self, node_uid: str, connections: RequirementConnections
-    ) -> None:
+    def create_section(self, section: Section) -> None:
+        assert isinstance(section, Section)
+        if section.reserved_uid is not None:
+            self.graph_database.create_link(
+                link_type=GraphLinkType.UID_TO_NODE,
+                lhs_node=section.reserved_uid,
+                rhs_node=section,
+            )
         self.graph_database.create_link(
-            link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
-            lhs_node=node_uid,
-            rhs_node=connections,
+            link_type=GraphLinkType.MID_TO_NODE,
+            lhs_node=section.reserved_mid,
+            rhs_node=section,
         )
 
     def create_inline_link(self, new_link: InlineLink):
         assert isinstance(new_link, InlineLink)
 
-        # InlineLink points to a section.
+        # InlineLink points to a section or to anchor.
         if self.graph_database.has_link(
-            link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
-            lhs_node=new_link.link,
-        ):
-            section_connections: RequirementConnections = assert_cast(
-                self.graph_database.get_link_value(
-                    link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
-                    lhs_node=new_link.link,
-                ),
-                RequirementConnections,
-            )
-            self.graph_database.create_link(
-                link_type=GraphLinkType.NODE_TO_INCOMING_LINKS,
-                lhs_node=section_connections.requirement.reserved_mid,
-                rhs_node=new_link,
-            )
-            self.graph_database.create_link(
-                link_type=GraphLinkType.MID_TO_NODE,
-                lhs_node=new_link.reserved_mid,
-                rhs_node=new_link,
-            )
-        elif self.graph_database.has_link(
             link_type=GraphLinkType.UID_TO_NODE, lhs_node=new_link.link
         ):
-            anchor = assert_cast(
+            section_or_anchor: Union[Section, Anchor] = assert_cast(
                 self.graph_database.get_link_value(
                     link_type=GraphLinkType.UID_TO_NODE,
                     lhs_node=new_link.link,
                 ),
-                Anchor,
+                (Section, Anchor),
             )
             self.graph_database.create_link(
                 link_type=GraphLinkType.NODE_TO_INCOMING_LINKS,
-                lhs_node=anchor.mid,
+                lhs_node=section_or_anchor.reserved_mid,
                 rhs_node=new_link,
             )
             self.graph_database.create_link(
@@ -757,12 +725,40 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             rhs_node=document.reserved_mid,
         )
 
-    def delete_node_connections(self, node_uid: str) -> None:
-        assert isinstance(node_uid, str), node_uid
-        return self.graph_database.delete_all_links(
-            link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
-            lhs_node=node_uid,
+    def delete_section(self, section: Section) -> None:
+        assert isinstance(section, Section), section
+
+        self.graph_database.delete_link(
+            link_type=GraphLinkType.MID_TO_NODE,
+            lhs_node=section.reserved_mid,
+            rhs_node=section,
         )
+        if section.reserved_uid is not None:
+            self.graph_database.delete_link(
+                link_type=GraphLinkType.UID_TO_NODE,
+                lhs_node=section.reserved_uid,
+                rhs_node=section,
+            )
+
+    def delete_requirement(self, requirement: Requirement) -> None:
+        assert isinstance(requirement, Requirement), Requirement
+
+        self.graph_database.delete_link(
+            link_type=GraphLinkType.MID_TO_NODE,
+            lhs_node=requirement.reserved_mid,
+            rhs_node=requirement,
+        )
+        if requirement.reserved_uid is not None:
+            self.graph_database.delete_link(
+                link_type=GraphLinkType.UID_TO_NODE,
+                lhs_node=requirement.reserved_uid,
+                rhs_node=requirement,
+            )
+            self.graph_database.delete_link(
+                link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+                lhs_node=requirement.reserved_uid,
+                rhs_node=requirement,
+            )
 
     def remove_requirement_parent_uid(
         self, requirement: Requirement, parent_uid: str, role: Optional[str]

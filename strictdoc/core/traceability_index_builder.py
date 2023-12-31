@@ -255,6 +255,7 @@ class TraceabilityIndexBuilder:
                 lhs_node=document.reserved_mid,
                 rhs_node=document,
             )
+            # FIXME: Register Document with UID_TO_NODE
 
             document_iterator = DocumentCachingIterator(document)
             d_01_document_iterators[document] = document_iterator
@@ -299,18 +300,20 @@ class TraceabilityIndexBuilder:
                                     rhs_node=part,
                                 )
 
-                if not node.reserved_uid:
+                if node.reserved_uid is None:
                     continue
 
                 if traceability_index.graph_database.has_link(
-                    link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+                    link_type=GraphLinkType.UID_TO_NODE,
                     lhs_node=node.reserved_uid,
                 ):
-                    other_requirement_connections: RequirementConnections = traceability_index.graph_database.get_link_value(
-                        link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
-                        lhs_node=node.reserved_uid,
+                    already_existing_node = (
+                        traceability_index.graph_database.get_link_value(
+                            link_type=GraphLinkType.UID_TO_NODE,
+                            lhs_node=node.reserved_uid,
+                        )
                     )
-                    other_req_doc = other_requirement_connections.document
+                    other_req_doc = already_existing_node.document
                     if other_req_doc == document:
                         print(  # noqa: T201
                             "error: DocumentIndex: "
@@ -327,6 +330,16 @@ class TraceabilityIndexBuilder:
                             f'and "{document.title}".'
                         )
                     sys.exit(1)
+
+                traceability_index.graph_database.create_link(
+                    link_type=GraphLinkType.UID_TO_NODE,
+                    lhs_node=node.reserved_uid,
+                    rhs_node=node,
+                )
+
+                if not node.is_requirement:
+                    continue
+
                 traceability_index.graph_database.create_link(
                     link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
                     lhs_node=node.reserved_uid,
@@ -337,8 +350,6 @@ class TraceabilityIndexBuilder:
                         children=[],
                     ),
                 )
-                if not node.is_requirement:
-                    continue
                 requirement: Requirement = node
                 document_tags = d_03_map_doc_titles_to_tag_lists[document.title]
                 if requirement.reserved_tags is not None:

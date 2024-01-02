@@ -26,6 +26,8 @@ from strictdoc.core.finders.source_files_finder import (
     SourceFile,
     SourceFilesFinder,
 )
+from strictdoc.core.graph.many_to_many_set import ManyToManySet
+from strictdoc.core.graph.one_to_one_dictionary import OneToOneDictionary
 from strictdoc.core.graph.validations import RemoveNodeValidation
 from strictdoc.core.graph_database import GraphDatabase
 from strictdoc.core.project_config import ProjectConfig, ProjectFeature
@@ -45,6 +47,7 @@ from strictdoc.core.tree_cycle_detector import TreeCycleDetector
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.file_modification_time import get_file_modification_time
+from strictdoc.helpers.mid import MID
 from strictdoc.helpers.timing import timing_decorator
 
 
@@ -191,7 +194,37 @@ class TraceabilityIndexBuilder:
         d_03_map_doc_titles_to_tag_lists = {}
         d_07_file_traceability_index = FileTraceabilityIndex()
 
-        graph_database = GraphDatabase()
+        graph_database = GraphDatabase(
+            [
+                (
+                    GraphLinkType.MID_TO_NODE,
+                    OneToOneDictionary(
+                        MID,
+                        (Requirement, Section, Document, InlineLink, Anchor),
+                    ),
+                ),
+                (
+                    GraphLinkType.UID_TO_NODE,
+                    OneToOneDictionary(str, (Requirement, Section, Anchor)),
+                ),
+                (
+                    GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+                    OneToOneDictionary(str, RequirementConnections),
+                ),
+                (
+                    GraphLinkType.NODE_TO_INCOMING_LINKS,
+                    ManyToManySet(MID, InlineLink),
+                ),
+                (
+                    GraphLinkType.DOCUMENT_TO_PARENT_DOCUMENTS,
+                    ManyToManySet(MID, MID),
+                ),
+                (
+                    GraphLinkType.DOCUMENT_TO_CHILD_DOCUMENTS,
+                    ManyToManySet(MID, MID),
+                ),
+            ]
+        )
         graph_database.remove_node_validation = RemoveNodeValidation()
 
         traceability_index = TraceabilityIndex(
@@ -459,12 +492,12 @@ class TraceabilityIndexBuilder:
                             parent_requirement_connections.document
                         )
                         if document != parent_document:
-                            graph_database.create_link(
+                            graph_database.create_link_weak(
                                 link_type=GraphLinkType.DOCUMENT_TO_PARENT_DOCUMENTS,
                                 lhs_node=requirement.document.reserved_mid,
                                 rhs_node=parent_document.reserved_mid,
                             )
-                            graph_database.create_link(
+                            graph_database.create_link_weak(
                                 link_type=GraphLinkType.DOCUMENT_TO_CHILD_DOCUMENTS,
                                 lhs_node=parent_document.reserved_mid,
                                 rhs_node=requirement.document.reserved_mid,
@@ -505,12 +538,12 @@ class TraceabilityIndexBuilder:
 
                         # Set document dependencies.
                         if document != child_requirement.document:
-                            graph_database.create_link(
+                            graph_database.create_link_weak(
                                 link_type=GraphLinkType.DOCUMENT_TO_PARENT_DOCUMENTS,
                                 lhs_node=child_requirement.document.reserved_mid,
                                 rhs_node=document.reserved_mid,
                             )
-                            graph_database.create_link(
+                            graph_database.create_link_weak(
                                 link_type=GraphLinkType.DOCUMENT_TO_CHILD_DOCUMENTS,
                                 lhs_node=document.reserved_mid,
                                 rhs_node=child_requirement.document.reserved_mid,

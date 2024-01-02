@@ -1,4 +1,5 @@
 from datetime import datetime
+from enum import IntEnum
 from typing import Any, Dict, List, Optional, Set, Tuple, Union
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
@@ -12,7 +13,7 @@ from strictdoc.backend.sdoc_source_code.reader import (
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_traceability_index import FileTraceabilityIndex
-from strictdoc.core.graph_database import GraphDatabase, LinkType
+from strictdoc.core.graph_database import GraphDatabase
 from strictdoc.core.transforms.validation_error import (
     SingleValidationError,
 )
@@ -65,23 +66,13 @@ class RequirementConnections:
         )
 
 
-class GraphLinkType(LinkType):
-    MID_TO_NODE = (
-        1,
-        "ONE_TO_ONE",
-        MID,
-        (Document, Requirement, Section, InlineLink, Anchor),
-    )
-    UID_TO_NODE = (2, "ONE_TO_ONE", str, (Section, Requirement, Anchor))
-    UID_TO_REQUIREMENT_CONNECTIONS = (
-        3,
-        "ONE_TO_ONE",
-        str,
-        RequirementConnections,
-    )
-    NODE_TO_INCOMING_LINKS = (4, "ONE_TO_MANY", MID, InlineLink)
-    DOCUMENT_TO_PARENT_DOCUMENTS = (5, "ONE_TO_MANY", MID, MID)
-    DOCUMENT_TO_CHILD_DOCUMENTS = (6, "ONE_TO_MANY", MID, MID)
+class GraphLinkType(IntEnum):
+    MID_TO_NODE = 1
+    UID_TO_NODE = 2
+    UID_TO_REQUIREMENT_CONNECTIONS = 3
+    NODE_TO_INCOMING_LINKS = 4
+    DOCUMENT_TO_PARENT_DOCUMENTS = 5
+    DOCUMENT_TO_CHILD_DOCUMENTS = 6
 
 
 class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-instance-attributes  # noqa: E501
@@ -526,9 +517,10 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
             lhs_node=old_uid,
         )
-        self.graph_database.delete_all_links(
+        self.graph_database.delete_link(
             link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
             lhs_node=old_uid,
+            rhs_node=existing_entry,
         )
 
         if requirement.reserved_uid is not None:
@@ -659,13 +651,15 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             lhs_node=anchor.value,
         )
         if existing_anchor is not None:
-            self.graph_database.delete_all_links(
+            self.graph_database.delete_link(
                 link_type=GraphLinkType.MID_TO_NODE,
                 lhs_node=existing_anchor.mid,
+                rhs_node=existing_anchor,
             )
-            self.graph_database.delete_all_links(
+            self.graph_database.delete_link(
                 link_type=GraphLinkType.UID_TO_NODE,
                 lhs_node=existing_anchor.value,
+                rhs_node=existing_anchor,
             )
 
         self.graph_database.create_link(
@@ -850,9 +844,10 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                 rhs_node=inline_link,
             )
 
-        self.graph_database.delete_all_links(
+        self.graph_database.delete_link(
             link_type=GraphLinkType.MID_TO_NODE,
             lhs_node=inline_link.reserved_mid,
+            rhs_node=inline_link,
         )
 
     def validate_node_against_anchors(

@@ -126,7 +126,6 @@ class UpdateFreeTextCommand:
                         existing_anchor_uids_to_remove.add(part.value)
                     elif isinstance(part, InlineLink):
                         existing_links_to_remove.append(part)
-
             if len(node.free_texts) > 0:
                 free_text: FreeText = node.free_texts[0]
             else:
@@ -153,13 +152,15 @@ class UpdateFreeTextCommand:
                     link_type=GraphLinkType.UID_TO_NODE,
                     lhs_node=anchor_uid_to_be_removed,
                 )
-                traceability_index.graph_database.delete_all_links(
+                traceability_index.graph_database.delete_link(
                     link_type=GraphLinkType.MID_TO_NODE,
                     lhs_node=anchor.mid,
+                    rhs_node=anchor,
                 )
-                traceability_index.graph_database.delete_all_links(
+                traceability_index.graph_database.delete_link(
                     link_type=GraphLinkType.UID_TO_NODE,
                     lhs_node=anchor_uid_to_be_removed,
+                    rhs_node=anchor,
                 )
 
             for existing_link in existing_links_to_remove:

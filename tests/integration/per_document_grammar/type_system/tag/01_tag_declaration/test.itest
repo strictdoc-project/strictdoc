@@ -2,5 +2,10 @@ RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
 CHECK: Published: Test document
 
 RUN: %cat %S/Output/html/01_tag_declaration/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
-CHECK-HTML:TAG_FIELD
+CHECK-HTML:TAGS
 CHECK-HTML:TAG1, TAG2, TAG3
+
+RUN: %cat %S/Output/html/01_tag_declaration/input-TABLE.html | filecheck %s --check-prefix CHECK-HTML-TABLE
+CHECK-HTML-TABLE:TAG1<span class="tag_badge">1</span>
+CHECK-HTML-TABLE:TAG2<span class="tag_badge">1</span>
+CHECK-HTML-TABLE:TAG3<span class="tag_badge">1</span>

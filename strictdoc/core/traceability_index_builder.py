@@ -191,7 +191,6 @@ class TraceabilityIndexBuilder:
         # FIXME: Too many things going on below. Would be great to simplify this
         # workflow.
         d_01_document_iterators: Dict[Document, DocumentCachingIterator] = {}
-        d_03_map_doc_titles_to_tag_lists = {}
         d_07_file_traceability_index = FileTraceabilityIndex()
 
         graph_database = GraphDatabase(
@@ -223,13 +222,16 @@ class TraceabilityIndexBuilder:
                     GraphLinkType.DOCUMENT_TO_CHILD_DOCUMENTS,
                     ManyToManySet(MID, MID),
                 ),
+                (
+                    GraphLinkType.DOCUMENT_TO_TAGS,
+                    OneToOneDictionary(MID, dict),
+                ),
             ]
         )
         graph_database.remove_node_validation = RemoveNodeValidation()
 
         traceability_index = TraceabilityIndex(
             d_01_document_iterators,
-            d_03_map_doc_titles_to_tag_lists,
             file_traceability_index=d_07_file_traceability_index,
             graph_database=graph_database,
         )
@@ -258,20 +260,6 @@ class TraceabilityIndexBuilder:
 
         document: Document
         for document in document_tree.document_list:
-            for free_text in document.free_texts:
-                for part in free_text.parts:
-                    if isinstance(part, Anchor):
-                        graph_database.create_link(
-                            link_type=GraphLinkType.MID_TO_NODE,
-                            lhs_node=part.mid,
-                            rhs_node=part,
-                        )
-                        graph_database.create_link(
-                            link_type=GraphLinkType.UID_TO_NODE,
-                            lhs_node=part.value,
-                            rhs_node=part,
-                        )
-
             if graph_database.has_link(
                 link_type=GraphLinkType.MID_TO_NODE,
                 lhs_node=document.reserved_mid,
@@ -290,10 +278,30 @@ class TraceabilityIndexBuilder:
             )
             # FIXME: Register Document with UID_TO_NODE
 
+            document_tags: Dict[str, int] = {}
+            graph_database.create_link(
+                link_type=GraphLinkType.DOCUMENT_TO_TAGS,
+                lhs_node=document.reserved_mid,
+                rhs_node=document_tags,
+            )
+
+            for free_text in document.free_texts:
+                for part in free_text.parts:
+                    if isinstance(part, Anchor):
+                        graph_database.create_link(
+                            link_type=GraphLinkType.MID_TO_NODE,
+                            lhs_node=part.mid,
+                            rhs_node=part,
+                        )
+                        graph_database.create_link(
+                            link_type=GraphLinkType.UID_TO_NODE,
+                            lhs_node=part.value,
+                            rhs_node=part,
+                        )
+
             document_iterator = DocumentCachingIterator(document)
             d_01_document_iterators[document] = document_iterator
-            if document.title not in d_03_map_doc_titles_to_tag_lists:
-                d_03_map_doc_titles_to_tag_lists[document.title] = {}
+
             for node in document_iterator.all_content():
                 if graph_database.has_link(
                     link_type=GraphLinkType.MID_TO_NODE,
@@ -333,63 +341,59 @@ class TraceabilityIndexBuilder:
                                     rhs_node=part,
                                 )
 
-                if node.reserved_uid is None:
-                    continue
-
-                if traceability_index.graph_database.has_link(
-                    link_type=GraphLinkType.UID_TO_NODE,
-                    lhs_node=node.reserved_uid,
-                ):
-                    already_existing_node = (
-                        traceability_index.graph_database.get_link_value(
-                            link_type=GraphLinkType.UID_TO_NODE,
-                            lhs_node=node.reserved_uid,
+                if node.reserved_uid is not None:
+                    if traceability_index.graph_database.has_link(
+                        link_type=GraphLinkType.UID_TO_NODE,
+                        lhs_node=node.reserved_uid,
+                    ):
+                        already_existing_node = (
+                            traceability_index.graph_database.get_link_value(
+                                link_type=GraphLinkType.UID_TO_NODE,
+                                lhs_node=node.reserved_uid,
+                            )
                         )
+                        other_req_doc = already_existing_node.document
+                        if other_req_doc == document:
+                            print(  # noqa: T201
+                                "error: DocumentIndex: "
+                                "two nodes with the same UID "
+                                "exist in the same document: "
+                                f'{node.reserved_uid} in "{document.title}".'
+                            )
+                        else:
+                            print(  # noqa: T201
+                                "error: DocumentIndex: "
+                                "two nodes with the same UID "
+                                "exist in two different documents: "
+                                f'{node.reserved_uid} in "{other_req_doc.title}" '
+                                f'and "{document.title}".'
+                            )
+                        sys.exit(1)
+
+                    traceability_index.graph_database.create_link(
+                        link_type=GraphLinkType.UID_TO_NODE,
+                        lhs_node=node.reserved_uid,
+                        rhs_node=node,
                     )
-                    other_req_doc = already_existing_node.document
-                    if other_req_doc == document:
-                        print(  # noqa: T201
-                            "error: DocumentIndex: "
-                            "two nodes with the same UID "
-                            "exist in the same document: "
-                            f'{node.reserved_uid} in "{document.title}".'
+
+                    if node.is_requirement:
+                        traceability_index.graph_database.create_link(
+                            link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+                            lhs_node=node.reserved_uid,
+                            rhs_node=RequirementConnections(
+                                requirement=node,
+                                document=document,
+                                parents=[],
+                                children=[],
+                            ),
                         )
-                    else:
-                        print(  # noqa: T201
-                            "error: DocumentIndex: "
-                            "two nodes with the same UID "
-                            "exist in two different documents: "
-                            f'{node.reserved_uid} in "{other_req_doc.title}" '
-                            f'and "{document.title}".'
-                        )
-                    sys.exit(1)
 
-                traceability_index.graph_database.create_link(
-                    link_type=GraphLinkType.UID_TO_NODE,
-                    lhs_node=node.reserved_uid,
-                    rhs_node=node,
-                )
-
-                if not node.is_requirement:
-                    continue
-
-                traceability_index.graph_database.create_link(
-                    link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
-                    lhs_node=node.reserved_uid,
-                    rhs_node=RequirementConnections(
-                        requirement=node,
-                        document=document,
-                        parents=[],
-                        children=[],
-                    ),
-                )
-                requirement: Requirement = node
-                document_tags = d_03_map_doc_titles_to_tag_lists[document.title]
-                if requirement.reserved_tags is not None:
-                    for tag in requirement.reserved_tags:
-                        if tag not in document_tags:
-                            document_tags[tag] = 0
-                        document_tags[tag] += 1
+                if node.is_requirement:
+                    requirement: Requirement = node
+                    if requirement.reserved_tags is not None:
+                        for tag in requirement.reserved_tags:
+                            document_tags.setdefault(tag, 0)
+                            document_tags[tag] += 1
 
         # Now iterate over the requirements again to build an in-depth map of
         # parents and children.

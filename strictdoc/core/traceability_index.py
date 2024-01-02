@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import IntEnum
-from typing import Any, Dict, List, Optional, Set, Tuple, Union
+from typing import Any, Dict, Generator, List, Optional, Set, Tuple, Union
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
@@ -73,20 +73,19 @@ class GraphLinkType(IntEnum):
     NODE_TO_INCOMING_LINKS = 4
     DOCUMENT_TO_PARENT_DOCUMENTS = 5
     DOCUMENT_TO_CHILD_DOCUMENTS = 6
+    DOCUMENT_TO_TAGS = 7
 
 
 class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-instance-attributes  # noqa: E501
     def __init__(
         self,
         document_iterators: Dict[Document, DocumentCachingIterator],
-        tags_map,
         file_traceability_index: FileTraceabilityIndex,
         graph_database: GraphDatabase,
     ):
         self._document_iterators: Dict[
             Document, DocumentCachingIterator
         ] = document_iterators
-        self._tags_map = tags_map
         self._file_traceability_index = file_traceability_index
 
         self.graph_database: GraphDatabase = graph_database
@@ -98,10 +97,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     @property
     def document_iterators(self):
         return self._document_iterators
-
-    @property
-    def tags_map(self):
-        return self._tags_map
 
     def is_small_project(self):
         """
@@ -161,12 +156,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         )
         children_requirements = requirement_connections.children
         return len(children_requirements) > 0
-
-    def has_tags(self, document):
-        if document.title not in self.tags_map:
-            return False
-        tags_bag = self.tags_map[document.title]
-        return len(tags_bag.keys())
 
     def has_source_file_reqs(self, source_file_rel_path):
         return self._file_traceability_index.has_source_file_reqs(
@@ -304,16 +293,26 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         children_requirements = requirement_connections.children
         return list(map(lambda pair_: pair_[0], children_requirements))
 
-    def get_tags(self, document):
-        assert document.title in self.tags_map
-        tags_bag = self.tags_map[document.title]
-        if not tags_bag:
-            yield []
-            return
+    def has_tags(self, document: Document) -> bool:
+        return self.graph_database.has_link(
+            link_type=GraphLinkType.DOCUMENT_TO_TAGS,
+            lhs_node=document.reserved_mid,
+        )
 
-        tags = sorted(tags_bag.keys(), key=alphanumeric_sort)
+    def get_counted_tags(
+        self, document: Document
+    ) -> Generator[Tuple[str, int], None, None]:
+        document_tags_or_none = self.graph_database.get_link_value(
+            link_type=GraphLinkType.DOCUMENT_TO_TAGS,
+            lhs_node=document.reserved_mid,
+        )
+        if document_tags_or_none is None:
+            return
+        document_tags: Dict = assert_cast(document_tags_or_none, dict)
+
+        tags = sorted(document_tags.keys(), key=alphanumeric_sort)
         for tag in tags:
-            yield tag, tags_bag[tag]
+            yield tag, document_tags[tag]
 
     def get_requirement_file_links(self, requirement):
         return self._file_traceability_index.get_requirement_file_links(

@@ -10,7 +10,7 @@ class OneToOneDictionary(AbstractBucket):
         self._rhs_type: Union[Type, Tuple] = rhs_type
 
     def has_link(self, *, lhs_node: Any) -> bool:
-        assert isinstance(lhs_node, self._lhs_type)
+        assert isinstance(lhs_node, self._lhs_type), (lhs_node, self._lhs_type)
         return lhs_node in self._dict
 
     def get_count(self) -> Any:

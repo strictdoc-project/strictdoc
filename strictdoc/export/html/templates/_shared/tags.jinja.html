@@ -1,8 +1,8 @@
-{%- if traceability_index.has_tags(document) -%}
+{% if traceability_index.has_tags(document) %}
 <div class="tags">
-{%- for tag in traceability_index.get_tags(document) %}
+{%- for tag_name_, tag_count_ in traceability_index.get_counted_tags(document) %}
   <span class="tag">
-    {{ tag[0] }}<span class="tag_badge">{{ tag[1] }}</span>
+    {{ tag_name_ }}<span class="tag_badge">{{ tag_count_ }}</span>
   </span>
 {%- endfor %}
 </div>

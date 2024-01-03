@@ -320,8 +320,24 @@ sdoc-field:hover .copy_to_clipboard-button {
 
 sdoc-anchor {
   /* for Fixed Headers + Section Anchors */
-  scroll-snap-margin-top: calc(var(--base-gap) + var(--base-padding));
-  scroll-margin-top:      calc(var(--base-gap) + var(--base-padding));
+  /* calc(var(--base-gap) + var(--base-padding)); */
+  scroll-snap-margin-top: var(--base-gap);
+  scroll-margin-top:      var(--base-gap);
+}
+
+sdoc-node > sdoc-anchor {
+  scroll-snap-margin-top: unset; /** top: 0; */
+  scroll-margin-top:      unset; /** top: 0; */
+
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 0;
+
+  /* for test: */
+  /* width: 10px;
+  background: red; */
 }
 
 sdoc-anchor:target + sdoc-requirement sdoc-requirement-title,
@@ -1056,7 +1072,7 @@ a.tree_item:hover {
   opacity:0.6;
 }
 
-/* toc */
+/** TOC **/
 
 .toc,
 .toc ul,
@@ -1114,6 +1130,30 @@ a.tree_item:hover {
   padding-right: var(--base-rhythm);
 }
 
+/* TOC targeted */
+.toc a[targeted]::before  {
+  position: absolute;
+  z-index: -1;
+  content: '';
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: -200px; /* parent has overflow */
+  background-color: var(--color-highlight);
+}
+
+/* TOC intersected */
+.toc a::after {
+  position: absolute;
+  z-index: -1;
+  content: '';
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 8px;
+  background-color: var(--color-bg-main);
+}
+
 .toc a[intersected]::after {
   position: absolute;
   z-index: -1;
@@ -1125,14 +1165,9 @@ a.tree_item:hover {
   background-color: var(--color-highlight);
 }
 
-.toc a[targeted]::before  {
-  position: absolute;
-  z-index: -1;
-  content: '';
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: -200px; /* parent has overflow */
+/* TOC parented */
+/* behavior depends on collapsible_list_controller.js */
+.toc [data-collapsible_list__branch="closed"] ~ a[parented]::after {
   background-color: var(--color-highlight);
 }
 

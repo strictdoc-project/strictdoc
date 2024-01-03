@@ -1,13 +1,26 @@
+const TOC_HIGHLIGHT_DEBUG = true;
+
 const TOC_FRAME_SELECTOR = 'turbo-frame#frame-toc';
 const TOC_ELEMENT_SELECTOR = 'a';
-const CONTENT_FRAME_SELECTOR = 'main';
+const CONTENT_FRAME_SELECTOR = 'turbo-frame#frame_document_content';
 const CONTENT_ELEMENT_SELECTOR = 'sdoc-anchor';
 
 let tocHighlightingState = {
   data: {},
   links: null,
   anchors: null,
+  contentFrameTop: undefined,
+  closerForFolder: {},
+  folderSet: new Set(),
 };
+
+function resetState() {
+  tocHighlightingState.data = {};
+  tocHighlightingState.links = null;
+  tocHighlightingState.anchors = null;
+  tocHighlightingState.closerForFolder = {};
+  tocHighlightingState.folderSet = new Set();
+}
 
 window.addEventListener("hashchange", handleHashChange);
 window.addEventListener("load",function(){
@@ -16,8 +29,10 @@ window.addEventListener("load",function(){
   const tocFrame = document.querySelector(TOC_FRAME_SELECTOR);
   const contentFrame = document.querySelector(CONTENT_FRAME_SELECTOR);
 
-  // * Call for the first time.
-  highlightTOC(tocFrame, contentFrame);
+  // ! depends on TOC markup
+  tocHighlightingState.contentFrameTop = contentFrame.offsetParent
+                        ? contentFrame.offsetTop
+                        : contentFrame.parentNode.offsetTop;
 
   // * Then we will refresh when the TOC tree is updated&
   // * The content in the tocFrame frame will mutate:
@@ -41,17 +56,19 @@ window.addEventListener("load",function(){
     }
   );
 
+  // * Call for the first time.
+  highlightTOC(tocFrame, contentFrame);
+
 },false);
 
 function highlightTOC(tocFrame, contentFrame) {
-  tocHighlightingState = {
-    data: {},
-    links: null,
-    anchors: null,
-  };
+
+  resetState();
   processLinkList(tocFrame);
   processAnchorList(contentFrame);
   handleHashChange();
+
+  TOC_HIGHLIGHT_DEBUG && console.log(tocHighlightingState);
 }
 
 function processLinkList(tocFrame) {
@@ -64,8 +81,29 @@ function processLinkList(tocFrame) {
       'link': link,
       ...tocHighlightingState.data[id]
     }
+
+    // ! depends on TOC markup
+    // is link in collapsible node and precedes the UL
+    // ! expected UL or null
+    const ul = link.nextSibling;
+
+    if (ul && ul.nodeName === 'UL') {
+      // register folder
+      tocHighlightingState.folderSet.add(id);
+
+      // register closer
+      const lastLink = findDeepestLastChild(ul);
+      const lastAnchor = lastLink.getAttribute('anchor');
+
+
+      if (!tocHighlightingState.closerForFolder[lastAnchor]) {
+        tocHighlightingState.closerForFolder[lastAnchor] = [];
+      }
+      tocHighlightingState.closerForFolder[lastAnchor].push(id);
+    }
   });
 }
+
 function processAnchorList(contentFrame) {
   // * Collects all anchors in the document
   tocHighlightingState.anchors = null;
@@ -87,7 +125,7 @@ function handleHashChange() {
   const fragment = match ? match[1] : null;
 
   tocHighlightingState.links.forEach(link => {
-    link.removeAttribute('targeted');
+    targetItem(link, false)
   });
   // * When updating the hash
   // * and there's a fragment,
@@ -95,7 +133,7 @@ function handleHashChange() {
     // * and the corresponding link-anchor pair is registered,
     && tocHighlightingState.data[fragment]
     // * highlight the corresponding link.
-    && tocHighlightingState.data[fragment].link.setAttribute('targeted', '');
+    && targetItem(tocHighlightingState.data[fragment].link)
 }
 
 function createIntersectObserver(observedElement) {
@@ -113,15 +151,113 @@ function createIntersectObserver(observedElement) {
 }
 
 function handleIntersect(entries, observer) {
+
   entries.forEach((entry) => {
     const anchor = entry.target.id;
     // * For anchors that go into the viewport,
-    if (entry.intersectionRatio > 0) {
-      // * finds the corresponding links in the TOC and highlights them,
-      tocHighlightingState.data[anchor].link.setAttribute('intersected', '');
+    // * finds the corresponding links
+    const link = tocHighlightingState.data[anchor].link;
+
+    if (entry.isIntersecting) { //! entry.intersectionRatio > 0 -- it happens to be equal to zero at the intersection!
+
+      TOC_HIGHLIGHT_DEBUG && console.group('🔶', entry.isIntersecting, entry.intersectionRatio, anchor, entry.intersectionRect.height);
+      // * and highlights them in the TOC,
+      fireItem(link)
+
+      // * semi-highlights folder in the TOC,
+      if (tocHighlightingState.folderSet.has(anchor)) {
+        TOC_HIGHLIGHT_DEBUG && console.log('🔴', anchor, '(visible folder)', );
+        fireFolder(link)
+      }
+
+      // * semi-highlights closer`s parent folder in the TOC,
+      if (tocHighlightingState.closerForFolder[anchor]) {
+        tocHighlightingState.closerForFolder[anchor].forEach(id => {
+          TOC_HIGHLIGHT_DEBUG && console.log(`🔴`, id, `(from ${anchor})`);
+          fireFolder(tocHighlightingState.data[id].link)
+        })
+      }
+      TOC_HIGHLIGHT_DEBUG && console.groupEnd();
+
     } else {
-      // * and cancels highlighting for the rest of the links.
-      tocHighlightingState.data[anchor].link.removeAttribute('intersected');
+
+      TOC_HIGHLIGHT_DEBUG && console.group('🔹', entry.isIntersecting, entry.intersectionRatio, anchor);
+      // * or cancels highlighting for the rest of the links.
+      fireItem(link, false)
+
+      if(
+        // * If the node goes down ⬇️ off the screen
+        entry.boundingClientRect.bottom >= entry.rootBounds.bottom
+        // *  and it's a folder
+        && tocHighlightingState.folderSet.has(anchor)
+      ) {
+        // ** remove highlights from folder in the TOC
+        TOC_HIGHLIGHT_DEBUG && console.log(`⚫ ⬇️`, anchor);
+        fireFolder(link, false)
+      }
+
+      if(
+        // * If the node goes up ⬆️ off the screen
+        entry.boundingClientRect.y < tocHighlightingState.contentFrameTop
+        // * and this is the last child of the section
+        && tocHighlightingState.closerForFolder[anchor]
+      ) {
+        // * When the LAST CHILD of the section disappears
+        // * over the upper boundary ( < tocHighlightingState.contentFrameTop),
+        // * strictly speaking, this occurs when the lower bound disappears:
+        // * entry.boundingClientRect.bottom.
+        // * But we will use the upper bound, entry.boundingClientRect.y
+        // * which will be less than or equal to the lower bound.
+
+        // ** remove highlights from closer`s parent folder in the TOC
+        tocHighlightingState.closerForFolder[anchor].forEach(id => {
+          TOC_HIGHLIGHT_DEBUG && console.log(`⚫ ⬆️`, id,);
+          fireFolder(tocHighlightingState.data[id].link, false)
+        });
+      }
+
+      TOC_HIGHLIGHT_DEBUG && console.groupEnd();
     }
   });
+
+}
+
+function findDeepestLastChild(element) {
+  // ! depends on TOC markup
+  // ul > li > div + a + ul > ...
+  // ul > li > a
+  //    > li > a <---------------***
+  if (element.nodeName === 'A') {
+    return element;
+  }
+  const children = element.children;
+  if (children && children.length > 0) {
+    return findDeepestLastChild([...children].at(-1))
+  } else {
+    return element;
+  }
+}
+
+function targetItem(element, on = true) {
+  if(on) {
+    element.setAttribute('targeted', '');
+  } else {
+    element.removeAttribute('targeted');
+  }
+}
+
+function fireItem(element, on = true) {
+  if(on) {
+    element.setAttribute('intersected', '');
+  } else {
+    element.removeAttribute('intersected');
+  }
+}
+
+function fireFolder(element, on = true) {
+  if(on) {
+    element.setAttribute('parented', '');
+  } else {
+    element.removeAttribute('parented');
+  }
 }

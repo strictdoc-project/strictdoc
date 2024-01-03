@@ -3,9 +3,9 @@ CHECK: Published: Hello world doc
 
 RUN: %cat %S/Output/html/01_level_is_None/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 
-CHECK-HTML:<a href="#1-Section-1"{{.*}}>
-CHECK-HTML:<a href="#-Out-of-band-Section"{{.*}}>
-CHECK-HTML:<a href="#2-Section-2"{{.*}}>
+CHECK-HTML:href="#1-Section-1"
+CHECK-HTML:href="#-Out-of-band-Section"
+CHECK-HTML:href="#2-Section-2"
 
 CHECK-HTML:<sdoc-anchor
 CHECK-HTML-NEXT:id="1-Section-1"

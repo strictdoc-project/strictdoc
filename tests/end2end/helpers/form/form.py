@@ -142,9 +142,15 @@ class Form:  # pylint: disable=invalid-name
         this_field = self.test_case.find_visible_elements(
             f"//*[@data-testid='form-field-{field_name}']"
         )[0]
+        # FIXME:
+        # https://github.com/strictdoc-project/strictdoc/actions/runs/7402267894/job/20139782839?pr=1567
+        this_field.send_keys(Keys.BACKSPACE)
+        this_field.send_keys(Keys.BACKSPACE)
         this_field.send_keys(Keys.BACKSPACE)
 
-    # Save/Cancel
+    """
+    Save/Cancel
+    """
 
     def do_form_cancel(self) -> None:
         self.test_case.click_xpath('//*[@data-testid="form-cancel-action"]')

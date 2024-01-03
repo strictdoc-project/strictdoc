@@ -1,8 +1,8 @@
-const TOC_HIGHLIGHT_DEBUG = true;
+const TOC_HIGHLIGHT_DEBUG = false;
 
-const TOC_FRAME_SELECTOR = 'turbo-frame#frame-toc';
+const TOC_FRAME_SELECTOR = 'turbo-frame#frame-toc'; // updating
 const TOC_ELEMENT_SELECTOR = 'a';
-const CONTENT_FRAME_SELECTOR = 'turbo-frame#frame_document_content';
+const CONTENT_FRAME_SELECTOR = 'turbo-frame#frame_document_content'; // replacing => parentNode is needed
 const CONTENT_ELEMENT_SELECTOR = 'sdoc-anchor';
 
 let tocHighlightingState = {
@@ -27,12 +27,19 @@ window.addEventListener("load",function(){
 
   // * Frames are stable and we define them once.
   const tocFrame = document.querySelector(TOC_FRAME_SELECTOR);
-  const contentFrame = document.querySelector(CONTENT_FRAME_SELECTOR);
+  const contentFrame = document.querySelector(CONTENT_FRAME_SELECTOR).parentNode;
 
   // ! depends on TOC markup
   tocHighlightingState.contentFrameTop = contentFrame.offsetParent
                         ? contentFrame.offsetTop
                         : contentFrame.parentNode.offsetTop;
+
+  const anchorObserver = new IntersectionObserver(
+    handleIntersect,
+    {
+      root: null,
+      rootMargin: "0px",
+    });
 
   // * Then we will refresh when the TOC tree is updated&
   // * The content in the tocFrame frame will mutate:
@@ -42,7 +49,7 @@ window.addEventListener("load",function(){
     // * at the end of the event queue and to ensure
     // * the code runs after all DOM changes have been applied.
     requestAnimationFrame(() => {
-      highlightTOC(tocFrame, contentFrame);
+      highlightTOC(tocFrame, contentFrame, anchorObserver);
     })
   }).observe(
     mutatingFrame,
@@ -57,18 +64,35 @@ window.addEventListener("load",function(){
   );
 
   // * Call for the first time.
-  highlightTOC(tocFrame, contentFrame);
+  highlightTOC(tocFrame, contentFrame, anchorObserver);
 
 },false);
 
-function highlightTOC(tocFrame, contentFrame) {
+function highlightTOC(tocFrame, contentFrame, anchorObserver) {
 
   resetState();
   processLinkList(tocFrame);
-  processAnchorList(contentFrame);
+  processAnchorList(contentFrame, anchorObserver);
   handleHashChange();
 
   TOC_HIGHLIGHT_DEBUG && console.log(tocHighlightingState);
+}
+
+function handleHashChange() {
+  const hash = window.location.hash;
+  const match = hash.match(/#(.*)/);
+  const fragment = match ? match[1] : null;
+
+  tocHighlightingState.links.forEach(link => {
+    targetItem(link, false)
+  });
+  // * When updating the hash
+  // * and there's a fragment,
+  fragment
+    // * and the corresponding link-anchor pair is registered,
+    && tocHighlightingState.data[fragment]
+    // * highlight the corresponding link.
+    && targetItem(tocHighlightingState.data[fragment].link)
 }
 
 function processLinkList(tocFrame) {
@@ -104,7 +128,9 @@ function processLinkList(tocFrame) {
   });
 }
 
-function processAnchorList(contentFrame) {
+function processAnchorList(contentFrame, anchorObserver) {
+  anchorObserver.disconnect(); // FIXME don`t work: have to hack at #rootBounds_null
+
   // * Collects all anchors in the document
   tocHighlightingState.anchors = null;
   tocHighlightingState.anchors = contentFrame.querySelectorAll(CONTENT_ELEMENT_SELECTOR);
@@ -115,44 +141,22 @@ function processAnchorList(contentFrame) {
       ...tocHighlightingState.data[id]
     };
     // * Adds an observer for the position of the anchor
-    createIntersectObserver(anchor);
+    anchorObserver.observe(anchor);
   });
-}
 
-function handleHashChange() {
-  const hash = window.location.hash;
-  const match = hash.match(/#(.*)/);
-  const fragment = match ? match[1] : null;
-
-  tocHighlightingState.links.forEach(link => {
-    targetItem(link, false)
-  });
-  // * When updating the hash
-  // * and there's a fragment,
-  fragment
-    // * and the corresponding link-anchor pair is registered,
-    && tocHighlightingState.data[fragment]
-    // * highlight the corresponding link.
-    && targetItem(tocHighlightingState.data[fragment].link)
-}
-
-function createIntersectObserver(observedElement) {
-  // * Adds an observer for the position of the anchor
-  // * relative to the viewport
-  let observer;
-
-  let options = {
-    root: null,
-    rootMargin: "0px",
-  };
-
-  observer = new IntersectionObserver(handleIntersect, options);
-  observer.observe(observedElement);
 }
 
 function handleIntersect(entries, observer) {
 
   entries.forEach((entry) => {
+
+    // #rootBounds_null
+    // rootBounds: null
+    // after frame reload and before init
+    if(!entry.rootBounds) {
+      return
+    }
+
     const anchor = entry.target.id;
     // * For anchors that go into the viewport,
     // * finds the corresponding links
@@ -183,7 +187,7 @@ function handleIntersect(entries, observer) {
 
       TOC_HIGHLIGHT_DEBUG && console.group('🔹', entry.isIntersecting, entry.intersectionRatio, anchor);
       // * or cancels highlighting for the rest of the links.
-      fireItem(link, false)
+      fireItem(link, false);
 
       if(
         // * If the node goes down ⬇️ off the screen

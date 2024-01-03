@@ -77,7 +77,7 @@ Stimulus.register("anchor_controller", class extends Controller {
 
         // Calculate back links:
         let linksNumber = anchorBackLinks.querySelectorAll('a').length;
-        console.log(linksNumber);
+
         const anchorBackLinksNumber = document.createElement('div');
         anchorBackLinksNumber.classList.add('anchor_back_links_number');
         anchorBackLinksNumber.setAttribute('data-testid', 'anchor_links_number');

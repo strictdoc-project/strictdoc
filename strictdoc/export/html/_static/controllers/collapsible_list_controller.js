@@ -46,11 +46,11 @@ const STYLE = `
   content: '${SYMBOL_MINUS}';
 }
 
-[data-${BRANCH_SELECTOR}='closed'] + ul {
+[data-${BRANCH_SELECTOR}='closed'] ~ ul { /* Subsequent-sibling */
   display: none;
 }
 
-[data-${BRANCH_SELECTOR}='open'] + ul {
+[data-${BRANCH_SELECTOR}='open'] ~ ul { /* Subsequent-sibling */
   display: unset;
 }
 
@@ -159,7 +159,9 @@ function prepareList(target) {
       const parent = ul.parentNode;
       const ulHandler = document.createElement('div');
 
-      parent.insertBefore(ulHandler, ul);
+      // parent.insertBefore(ulHandler, ul);
+      // * I need the button to come before the link as well
+      parent.prepend(ulHandler);
       // Required:
       parent.style = "position:relative";
       return ulHandler;

@@ -104,7 +104,9 @@ sdoc-toast:not(:empty) {
   padding: .75rem 2rem;
 }
 
-sdoc-toast a:link {
+sdoc-toast a,
+sdoc-toast a:link,
+sdoc-toast a:visited {
   color: var(--color-bg-contrast);
 }
 

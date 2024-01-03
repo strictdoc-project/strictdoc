@@ -27,7 +27,9 @@ window.addEventListener("load",function(){
 
   // * Frames are stable and we define them once.
   const tocFrame = document.querySelector(TOC_FRAME_SELECTOR);
-  const contentFrame = document.querySelector(CONTENT_FRAME_SELECTOR).parentNode;
+  const contentFrame = document.querySelector(CONTENT_FRAME_SELECTOR)?.parentNode;
+
+  if(!tocFrame || !contentFrame) { return }
 
   // ! depends on TOC markup
   tocHighlightingState.contentFrameTop = contentFrame.offsetParent
@@ -99,7 +101,8 @@ function processLinkList(tocFrame) {
   // * Collects all links in the TOC
   tocHighlightingState.links = null;
   tocHighlightingState.links = tocFrame.querySelectorAll(TOC_ELEMENT_SELECTOR);
-  tocHighlightingState.links.forEach(link => {
+  tocHighlightingState.links.length
+    && tocHighlightingState.links.forEach(link => {
     const id = link.getAttribute('anchor');
     tocHighlightingState.data[id] = {
       'link': link,
@@ -134,7 +137,8 @@ function processAnchorList(contentFrame, anchorObserver) {
   // * Collects all anchors in the document
   tocHighlightingState.anchors = null;
   tocHighlightingState.anchors = contentFrame.querySelectorAll(CONTENT_ELEMENT_SELECTOR);
-  tocHighlightingState.anchors.forEach(anchor => {
+  tocHighlightingState.anchors.length
+    && tocHighlightingState.anchors.forEach(anchor => {
     const id = anchor.id;
     tocHighlightingState.data[id] = {
       'anchor': anchor,
@@ -143,7 +147,6 @@ function processAnchorList(contentFrame, anchorObserver) {
     // * Adds an observer for the position of the anchor
     anchorObserver.observe(anchor);
   });
-
 }
 
 function handleIntersect(entries, observer) {
@@ -161,6 +164,11 @@ function handleIntersect(entries, observer) {
     // * For anchors that go into the viewport,
     // * finds the corresponding links
     const link = tocHighlightingState.data[anchor].link;
+
+    // * if there is no menu item for the section in the TOC
+    if(!link) {
+      return
+    }
 
     if (entry.isIntersecting) { //! entry.intersectionRatio > 0 -- it happens to be equal to zero at the intersection!
 

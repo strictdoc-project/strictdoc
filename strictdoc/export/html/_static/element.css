@@ -1234,3 +1234,19 @@ a.sdoc-table_key_value-key::after {
   color: var(--color-fg-secondary);
   background-color: var(--color-bg-main);
 }
+
+/* badge */
+
+.badge {
+  white-space: nowrap;
+}
+
+.badge::before {
+  content: attr(text);
+  padding: 0 calc(var(--base-rhythm)/2);
+  border: 1px solid;
+  border-radius: calc(var(--base-rhythm)/2);
+  font-size: var(--font-size-xxsm);
+  font-weight: 600;
+  text-transform: uppercase;
+}

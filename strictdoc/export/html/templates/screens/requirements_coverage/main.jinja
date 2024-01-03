@@ -25,7 +25,13 @@
     {%- for document in traceability_index.document_tree.document_list -%}
       <tr class="traceability_matrix__anchor" id="{{ loop.index }}">
         <td class="traceability_matrix__document" colspan="100">
-          <div class="traceability_matrix__document_line">{% include "_res/svg_ico16_document.jinja.html" %}{{ document.title }}</div>
+          <div class="traceability_matrix__document_line">
+          {% include "_res/svg_ico16_document.jinja.html" %}
+            {{ document.title }}
+            <div class="traceability_matrix__document_stat">
+              {# <span class="badge" text="88%"></span> #}
+            </div>
+          </div>
         </td>
       </tr>
 
@@ -76,6 +82,17 @@
           </tr>
         {%- endif %}
       {%- endfor %}
+
+      {%- if not document.has_any_requirements() %}
+        <tr>
+          <td colspan="100"><div class="traceability_matrix__placeholder">No traceable content.</div></td>
+        </tr>
+      {%- endif %}
+
+      <tr>
+        <td class="traceability_matrix__null" colspan="100"></td>
+      </tr>
+
     {%- endfor %}
     </tbody>
   </table>

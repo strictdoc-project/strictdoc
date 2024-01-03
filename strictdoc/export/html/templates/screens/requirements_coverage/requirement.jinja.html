@@ -18,7 +18,7 @@
     {% endif %}
     data-level="{{ requirement.context.title_number_string }}"
   >
-    <small><b {% if requirement.reserved_uid is none %}style="color:red"{% endif %}>{{ requirement.reserved_uid if requirement.reserved_uid else '[no UID]' }}</b></small>
+    <small><b {% if requirement.reserved_uid is none %}style="color:red"{% endif %}>{{ requirement.reserved_uid if requirement.reserved_uid else '[No UID]' }}</b></small>
     <br/>
     {%- if requirement.reserved_title -%}
       {%- if requirement.context.title_number_string %}

@@ -42,33 +42,48 @@
 }
 
 .traceability_matrix td {
-  /* padding: var(--base-rhythm); */
   border: 1px solid var(--color-border);
   background-color: var(--color-bg-contrast);
   vertical-align: top;
 }
 
 td.traceability_matrix__document {
-  background-color: var(--color-bg-main);
   position: sticky;
   padding: 0;
   top: 0;
   z-index: 1;
 }
 
+.traceability_matrix__placeholder {
+  padding: var(--base-rhythm);
+  text-align: center;
+  font-size: var(--font-size-sm);
+}
+
+td.traceability_matrix__null {
+  height: calc(4 * var(--base-rhythm));
+  background-color: var(--color-bg-main);
+  border: none;
+}
+
 .traceability_matrix__document_line {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: flex-start;
-  column-gap: var(--base-rhythm);
-  font-size: var(--font-size-sm);
+  column-gap: calc(2 * var(--base-rhythm));
+  font-size: var(--font-size-l);
   font-weight: 600;
-  line-height: 1.5;
+  line-height: 1.2;
   width: 100%;
-  background-color: var(--color-bg-main);
-  padding-top: calc(3 * var(--base-rhythm));
-  padding-left: var(--base-rhythm);
-  border-bottom: 2px solid var(--color-border);
+
+  padding: var(--base-rhythm);
+  padding-top: calc(1.5 * var(--base-rhythm));
+
+  border-bottom: 1px solid var(--color-border);
+}
+
+.traceability_matrix__document_stat {
+  margin-left: auto;
 }
 
 .traceability_matrix__requirement {

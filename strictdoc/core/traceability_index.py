@@ -492,8 +492,15 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def update_add_uid_to_a_requirement_if_needed(
         self, requirement: Requirement
     ):
+        assert isinstance(requirement, Requirement)
+
         if requirement.reserved_uid is None:
             return
+        self.graph_database.create_link(
+            link_type=GraphLinkType.UID_TO_NODE,
+            lhs_node=requirement.reserved_uid,
+            rhs_node=requirement,
+        )
         self.graph_database.create_link(
             link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
             lhs_node=requirement.reserved_uid,
@@ -747,10 +754,16 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                 lhs_node=requirement.reserved_uid,
                 rhs_node=requirement,
             )
+            requirement_connections: RequirementConnections = (
+                self.graph_database.get_link_value(
+                    link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+                    lhs_node=requirement.reserved_uid,
+                )
+            )
             self.graph_database.delete_link(
                 link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
                 lhs_node=requirement.reserved_uid,
-                rhs_node=requirement,
+                rhs_node=requirement_connections,
             )
 
     def remove_requirement_parent_uid(

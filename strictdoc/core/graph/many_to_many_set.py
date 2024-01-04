@@ -1,13 +1,14 @@
 from copy import copy
-from typing import Any, Dict, Optional, Set
+from typing import Any, Dict, Optional
 
 from strictdoc.core.graph.abstract_bucket import AbstractBucket
+from strictdoc.helpers.ordered_set import OrderedSet
 
 
 class ManyToManySet(AbstractBucket):
     def __init__(self, lhs_type: type, rhs_type: type):
-        self._links: Dict[Any, Set[Any]] = {}
-        self._links_reverse: Dict[Any, Set[Any]] = {}
+        self._links: Dict[Any, OrderedSet[Any]] = {}
+        self._links_reverse: Dict[Any, OrderedSet[Any]] = {}
         self._lhs_type: type = lhs_type
         self._rhs_type: type = rhs_type
 
@@ -35,11 +36,13 @@ class ManyToManySet(AbstractBucket):
         assert isinstance(lhs_node, self._lhs_type), lhs_node
         return self._links[lhs_node]
 
-    def get_link_values_reverse_weak(self, *, rhs_node: Any) -> Optional[Set]:
+    def get_link_values_reverse_weak(
+        self, *, rhs_node: Any
+    ) -> Optional[OrderedSet]:
         assert isinstance(rhs_node, self._rhs_type), rhs_node
         return self._links_reverse.get(rhs_node, None)
 
-    def get_link_values_reverse(self, *, rhs_node: Any) -> Set:
+    def get_link_values_reverse(self, *, rhs_node: Any) -> OrderedSet:
         assert isinstance(rhs_node, self._rhs_type), rhs_node
         return self._links_reverse[rhs_node]
 
@@ -54,11 +57,11 @@ class ManyToManySet(AbstractBucket):
             )
         assert lhs_node != rhs_node, (lhs_node, rhs_node)
 
-        lhs_node_links = self._links.setdefault(lhs_node, set())
+        lhs_node_links = self._links.setdefault(lhs_node, OrderedSet())
         assert rhs_node not in lhs_node_links
         lhs_node_links.add(rhs_node)
 
-        rhs_node_links = self._links_reverse.setdefault(rhs_node, set())
+        rhs_node_links = self._links_reverse.setdefault(rhs_node, OrderedSet())
         assert lhs_node not in rhs_node_links
         rhs_node_links.add(lhs_node)
 
@@ -73,10 +76,10 @@ class ManyToManySet(AbstractBucket):
             )
         assert lhs_node != rhs_node, (lhs_node, rhs_node)
 
-        lhs_node_links = self._links.setdefault(lhs_node, set())
+        lhs_node_links = self._links.setdefault(lhs_node, OrderedSet())
         lhs_node_links.add(rhs_node)
 
-        rhs_node_links = self._links_reverse.setdefault(rhs_node, set())
+        rhs_node_links = self._links_reverse.setdefault(rhs_node, OrderedSet())
         rhs_node_links.add(lhs_node)
 
     def delete_link(

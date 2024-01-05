@@ -61,6 +61,20 @@ StrictDoc is based on the following open-source libraries and tools:
 [/SECTION]
 
 [SECTION]
+TITLE: High-level architecture
+
+[FREETEXT]
+The following diagram captures the high-level architecture of StrictDoc.
+
+.. image:: _assets/StrictDoc_Architecture.drawio.png
+   :alt: StrictDoc's architecture diagram
+   :class: image
+   :width: 100%
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
 TITLE: StrictDoc command-line application
 
 [FREETEXT]

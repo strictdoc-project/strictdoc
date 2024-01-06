@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 
 from jinja2 import Template
@@ -24,6 +25,7 @@ class DocumentHTML2PDFGenerator:
     ):
         output = ""
 
+        date_today = datetime.today().strftime("%Y-%m-%d")
         document_tree_iterator = DocumentTreeIterator(
             traceability_index.document_tree
         )
@@ -52,6 +54,7 @@ class DocumentHTML2PDFGenerator:
             document_tree=traceability_index.document_tree,
             document_tree_iterator=document_tree_iterator,
             custom_html2pdf_template=custom_html2pdf_template,
+            date_today=date_today,
         )
 
         return output

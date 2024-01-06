@@ -13,17 +13,18 @@ features = [
   # "MATHJAX"
 
   # Experimental features.
-  # "PROJECT_STATISTICS_SCREEN",
+  "PROJECT_STATISTICS_SCREEN",
   # "REQIF",
   # "STANDALONE_DOCUMENT_SCREEN",
-  # "TRACEABILITY_MATRIX_SCREEN",
-  # "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+  "TRACEABILITY_MATRIX_SCREEN",
+  "REQUIREMENT_TO_SOURCE_TRACEABILITY",
   # "HTML2PDF",
-  # "DIFF",
+  "DIFF",
 ]
 
 include_doc_paths = [
   "docs/**",
+  "docs_extra/**",
 ]
 
 exclude_doc_paths = [

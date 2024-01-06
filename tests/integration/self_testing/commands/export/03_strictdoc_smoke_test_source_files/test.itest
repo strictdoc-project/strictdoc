@@ -1,35 +1,30 @@
 REQUIRES: PLATFORM_IS_NOT_WINDOWS
 
-RUN: cd %strictdoc_root && %strictdoc export "%strictdoc_root/docs" --output-dir="%S/Output" --experimental-enable-file-traceability
+RUN: cd %strictdoc_root && %strictdoc export "%strictdoc_root/" --output-dir="%S/Output" --experimental-enable-file-traceability
 
 RUN: %check_exists --file "%S/Output/html/index.html"
-RUN: %check_exists --file %S/Output/html/docs/strictdoc_01_user_guide.html
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_01_user_guide-TABLE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_01_user_guide-TRACE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_01_user_guide-DEEP-TRACE.html"
+RUN: %check_exists --file %S/Output/html/strictdoc/docs/strictdoc_01_user_guide.html
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide-DEEP-TRACE.html"
 
-RUN: %check_exists --file %S/Output/html/docs/strictdoc_03_development_plan.html
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_03_development_plan-TABLE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_03_development_plan-TRACE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_03_development_plan-DEEP-TRACE.html"
+RUN: %check_exists --file %S/Output/html/strictdoc/docs/strictdoc_03_development_plan.html
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_03_development_plan-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_03_development_plan-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_03_development_plan-DEEP-TRACE.html"
 
-RUN: %check_exists --file %S/Output/html/docs/strictdoc_20_requirements.html
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_20_requirements-TABLE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_20_requirements-TRACE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_20_requirements-DEEP-TRACE.html"
-
-RUN: %check_exists --file %S/Output/html/docs/strictdoc_21_design.html
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_21_design-TABLE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_21_design-TRACE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_21_design-DEEP-TRACE.html"
+RUN: %check_exists --file %S/Output/html/strictdoc/docs/strictdoc_21_L2_StrictDoc_Requirements.html
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_21_L2_StrictDoc_Requirements-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_21_L2_StrictDoc_Requirements-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_21_L2_StrictDoc_Requirements-DEEP-TRACE.html"
 
 RUN: %check_exists --file "%S/Output/html/_source_files/strictdoc/core/tree_cycle_detector.py.html"
 RUN: %check_exists --file "%S/Output/html/_source_files/strictdoc/core/traceability_index_builder.py.html"
 
-RUN: %cat %S/Output/html/docs/strictdoc_20_requirements.html | filecheck %s --dump-input=fail --check-prefix CHECK-3-REQUIREMENTS
-CHECK-3-REQUIREMENTS: href="../_source_files/strictdoc/core/tree_cycle_detector.py.html#SDOC-VALIDATION-NO-CYCLES"
-CHECK-3-REQUIREMENTS: href="../_source_files/strictdoc/core/traceability_index_builder.py.html#SDOC-VALIDATION-NO-CYCLES
+RUN: %cat %S/Output/html/strictdoc/docs/strictdoc_21_L2_StrictDoc_Requirements.html | filecheck %s --check-prefix CHECK-3-REQUIREMENTS
+CHECK-3-REQUIREMENTS: href="../../_source_files/strictdoc/core/traceability_index_builder.py.html#SDOC-SRS-30#{{.*}}#{{.*}}"
+CHECK-3-REQUIREMENTS: href="../../_source_files/strictdoc/core/tree_cycle_detector.py.html#SDOC-SRS-30"
 
-RUN: %cat "%S/Output/html/_source_files/strictdoc/core/tree_cycle_detector.py.html" | filecheck %s --dump-input=fail --check-prefix CHECK-TREE-CYCLE-DETECTOR
-CHECK-TREE-CYCLE-DETECTOR: href="../../../docs/strictdoc_20_requirements.html#5.2-SDOC-VALIDATION-NO-CYCLES"
-CHECK-TREE-CYCLE-DETECTOR: href="../../../_source_files/strictdoc/core/traceability_index_builder.py.html#SDOC-VALIDATION-NO-CYCLES
+RUN: %cat "%S/Output/html/_source_files/strictdoc/core/tree_cycle_detector.py.html" | filecheck %s --check-prefix CHECK-TREE-CYCLE-DETECTOR
+CHECK-TREE-CYCLE-DETECTOR: href="../../../strictdoc/docs/strictdoc_21_L2_StrictDoc_Requirements.html#{{.*}}-SDOC-SRS-30"
+CHECK-TREE-CYCLE-DETECTOR: href="../../../_source_files/strictdoc/core/traceability_index_builder.py.html#SDOC-SRS-30

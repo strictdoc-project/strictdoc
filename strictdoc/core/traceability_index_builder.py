@@ -572,7 +572,7 @@ class TraceabilityIndexBuilder:
                 if requirement.reserved_uid is None:
                     continue
 
-                # @sdoc[SDOC-VALIDATION-NO-CYCLES]  # noqa: ERA001
+                # @sdoc[SDOC-SRS-30]  # noqa: ERA001
                 # Detect cycles
                 parents_cycle_detector.check_node(
                     requirement.reserved_uid,
@@ -588,7 +588,7 @@ class TraceabilityIndexBuilder:
                         lhs_node=requirement_id_,
                     ).get_child_uids(),
                 )
-                # @sdoc[/SDOC-VALIDATION-NO-CYCLES]
+                # @sdoc[/SDOC-SRS-30]
 
         return traceability_index
 

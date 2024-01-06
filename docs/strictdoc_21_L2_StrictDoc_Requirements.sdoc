@@ -1,6 +1,6 @@
 [DOCUMENT]
 MID: 8a87daf19a7c487f89f396406a974509
-TITLE: [L2] StrictDoc Requirements Specification
+TITLE: StrictDoc Requirements Specification (L2)
 REQ_PREFIX: SDOC-SRS-
 OPTIONS:
   ENABLE_MID: True
@@ -390,6 +390,10 @@ StrictDoc shall detect cycles between requirements.
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-47
+- TYPE: File
+  VALUE: strictdoc/core/traceability_index_builder.py
+- TYPE: File
+  VALUE: strictdoc/core/tree_cycle_detector.py
 
 [REQUIREMENT]
 MID: 07a1e7bef11d4fcca86cd31ee5245d8d

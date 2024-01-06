@@ -567,12 +567,12 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         parent_requirement_connections.children.append((requirement, role))
 
         if document != parent_requirement_document:
-            self.graph_database.create_link(
+            self.graph_database.create_link_weak(
                 link_type=GraphLinkType.DOCUMENT_TO_PARENT_DOCUMENTS,
                 lhs_node=document.reserved_mid,
                 rhs_node=parent_requirement_document.reserved_mid,
             )
-            self.graph_database.create_link(
+            self.graph_database.create_link_weak(
                 link_type=GraphLinkType.DOCUMENT_TO_CHILD_DOCUMENTS,
                 lhs_node=parent_requirement_document.reserved_mid,
                 rhs_node=document.reserved_mid,
@@ -623,12 +623,12 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         child_requirement_connections.parents.append((requirement, role))
 
         if document != child_requirement_document:
-            self.graph_database.create_link(
+            self.graph_database.create_link_weak(
                 link_type=GraphLinkType.DOCUMENT_TO_PARENT_DOCUMENTS,
                 lhs_node=child_requirement_document.reserved_mid,
                 rhs_node=document.reserved_mid,
             )
-            self.graph_database.create_link(
+            self.graph_database.create_link_weak(
                 link_type=GraphLinkType.DOCUMENT_TO_CHILD_DOCUMENTS,
                 lhs_node=document.reserved_mid,
                 rhs_node=child_requirement_document.reserved_mid,

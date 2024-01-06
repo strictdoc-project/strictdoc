@@ -32,6 +32,9 @@ TITLE: Requirement model
 STATEMENT: >>>
 StrictDoc's data model shall support a "Requirement" model.
 <<<
+RELATIONS:
+- TYPE: File
+  VALUE: strictdoc/backend/sdoc/models/requirement.py
 
 [REQUIREMENT]
 MID: 8e2ffffd33af4a969d5bb7ca40cb49a4
@@ -108,6 +111,8 @@ RATIONALE: >>>
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-51
+- TYPE: File
+  VALUE: strictdoc/backend/sdoc/models/section.py
 
 [REQUIREMENT]
 MID: 983653fc26214f46977dc792d65ae65f
@@ -132,6 +137,8 @@ RELATIONS:
   VALUE: SDOC-SSS-52
 - TYPE: Parent
   VALUE: DO178-4
+- TYPE: File
+  VALUE: strictdoc/backend/sdoc/models/fragment.py
 
 [REQUIREMENT]
 MID: fad4cf5dcf4d40518c7c9826fd6bd18a
@@ -195,6 +202,8 @@ The most commonly used Markdown format lacks the ability to store requirements m
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-88
+- TYPE: File
+  VALUE: strictdoc/backend/sdoc/grammar/grammar.py
 
 [REQUIREMENT]
 MID: f48a57c0cd764951a667127ce92fdb12
@@ -833,6 +842,8 @@ RELATIONS:
   VALUE: DO178-12
 - TYPE: Parent
   VALUE: SDOC-SSS-29
+- TYPE: File
+  VALUE: strictdoc/export/html/generators/project_statistics.py
 
 [/SECTION]
 

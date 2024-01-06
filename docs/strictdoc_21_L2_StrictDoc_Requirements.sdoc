@@ -204,6 +204,12 @@ RELATIONS:
   VALUE: SDOC-SSS-88
 - TYPE: File
   VALUE: strictdoc/backend/sdoc/grammar/grammar.py
+- TYPE: File
+  VALUE: strictdoc/backend/sdoc/reader.py
+- TYPE: File
+  VALUE: strictdoc/backend/sdoc/writer.py
+- TYPE: File
+  VALUE: strictdoc/backend/sdoc/processor.py
 
 [REQUIREMENT]
 MID: f48a57c0cd764951a667127ce92fdb12
@@ -330,6 +336,8 @@ StrictDoc shall support the RST markup.
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-63
+- TYPE: File
+  VALUE: strictdoc/export/rst/rst_to_html_fragment_writer.py
 
 [REQUIREMENT]
 MID: b1b4f03d4e404a14be481626803fcfc2
@@ -370,6 +378,8 @@ NOTE: "Type safety" means that each field has a type and a corresponding set of 
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-55
+- TYPE: File
+  VALUE: strictdoc/backend/sdoc/grammar/type_system.py
 
 [/SECTION]
 
@@ -458,6 +468,8 @@ RELATIONS:
   VALUE: SDOC-SSS-34
 - TYPE: Parent
   VALUE: DO178-3
+- TYPE: File
+  VALUE: strictdoc/core/document_finder.py
 
 [/SECTION]
 
@@ -482,6 +494,10 @@ StrictDoc shall support generating requirements documentation into static HTML.
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-30
+- TYPE: File
+  VALUE: strictdoc/export/html/html_generator.py
+- TYPE: File
+  VALUE: strictdoc/core/actions/export_action.py
 
 [REQUIREMENT]
 MID: 37399be2a8ac46889e3437209f9dffa9
@@ -500,6 +516,12 @@ RELATIONS:
   VALUE: SDOC-SSS-79
 - TYPE: Parent
   VALUE: SDOC-SSS-80
+- TYPE: File
+  VALUE: strictdoc/server/main.py
+- TYPE: File
+  VALUE: strictdoc/server/app.py
+- TYPE: File
+  VALUE: strictdoc/server/routers/main_router.py
 
 [REQUIREMENT]
 MID: f2fd90ad8a2946e7b085233a9c7a8a75
@@ -512,6 +534,8 @@ StrictDoc shall provide export to printable HTML pages.
 RELATIONS:
 - TYPE: Parent
   VALUE: DO178-5
+- TYPE: File
+  VALUE: strictdoc/export/html2pdf/html2pdf.py
 
 [REQUIREMENT]
 MID: b74a7a3209d247f6b357513b0cce5000
@@ -552,7 +576,7 @@ TITLE: Screen: Project home
 [REQUIREMENT]
 MID: 0a158ddac310483489ef08f618ba8741
 UID: SDOC-SRS-52
-STATUS: Progress
+STATUS: Backlog
 TITLE: View project home page
 
 [/SECTION]
@@ -566,6 +590,9 @@ TITLE: Screen: Project tree
 MID: 100fa410f4b443e69c48738899cfb5bd
 UID: SDOC-SRS-53
 TITLE: View project tree
+RELATIONS:
+- TYPE: File
+  VALUE: strictdoc/export/html/generators/document_tree.py
 
 [REQUIREMENT]
 MID: eb04abcfd64146f3b7be509afd1693f9
@@ -698,6 +725,10 @@ RELATIONS:
   VALUE: SDOC-SSS-6
 - TYPE: Parent
   VALUE: SDOC-SSS-80
+- TYPE: File
+  VALUE: strictdoc/core/analyzers/document_uid_analyzer.py
+- TYPE: File
+  VALUE: strictdoc/commands/manage_autouid_command.py
 
 [REQUIREMENT]
 MID: 956371b6a7824d0b91caa5603faeeae2
@@ -766,6 +797,8 @@ StrictDoc's Table screen shall allow reading documents in a table-like manner.
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-73
+- TYPE: File
+  VALUE: strictdoc/export/html/generators/document_table.py
 
 [REQUIREMENT]
 MID: 7aa5316dd056465e97044e221412290b
@@ -866,6 +899,8 @@ RELATIONS:
   VALUE: DO178-10
 - TYPE: Parent
   VALUE: DO178-12
+- TYPE: File
+  VALUE: strictdoc/export/html/generators/traceability_matrix.py
 
 [/SECTION]
 
@@ -888,6 +923,10 @@ RELATIONS:
   VALUE: SDOC-SSS-74
 - TYPE: Parent
   VALUE: DO178-15
+- TYPE: File
+  VALUE: strictdoc/git/change_generator.py
+- TYPE: File
+  VALUE: strictdoc/git/project_diff_analyzer.py
 
 [/SECTION]
 
@@ -1002,6 +1041,8 @@ RELATIONS:
   VALUE: SDOC-SSS-72
 - TYPE: Parent
   VALUE: DO178-13
+- TYPE: File
+  VALUE: strictdoc/export/html/generators/source_file_coverage.py
 
 [REQUIREMENT]
 MID: 56ecfb19152e45b09c0e55de2d1d5f05
@@ -1017,6 +1058,8 @@ With this capability in place, it is possible to focus on a single implementatio
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-72
+- TYPE: File
+  VALUE: strictdoc/export/html/generators/source_file_view_generator.py
 
 [/SECTION]
 
@@ -1048,6 +1091,14 @@ RELATIONS:
   VALUE: DO178-5
 - TYPE: Parent
   VALUE: DO178-16
+- TYPE: File
+  VALUE: strictdoc/export/rst/document_rst_generator.py
+- TYPE: File
+  VALUE: strictdoc/export/rst/writer.py
+- TYPE: File
+  VALUE: strictdoc/export/rst/rst_templates.py
+- TYPE: File
+  VALUE: strictdoc/export/rst/templates/requirement.jinja.rst
 
 [REQUIREMENT]
 MID: 6faffbd1d4cc47ea88c08ef38966e5ec
@@ -1068,6 +1119,8 @@ RELATIONS:
   VALUE: DO178-5
 - TYPE: Parent
   VALUE: DO178-16
+- TYPE: File
+  VALUE: strictdoc/export/rst/rst_to_html_fragment_writer.py
 
 [/SECTION]
 
@@ -1087,6 +1140,12 @@ StrictDoc shall support exporting/importing requirements content from/to ReqIF f
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-58
+- TYPE: File
+  VALUE: strictdoc/backend/reqif/reqif_export.py
+- TYPE: File
+  VALUE: strictdoc/backend/reqif/reqif_import.py
+- TYPE: File
+  VALUE: strictdoc/backend/reqif/sdoc_reqif_fields.py
 
 [REQUIREMENT]
 MID: bb52b698d7a544aca420d606e4e51356

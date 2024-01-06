@@ -28,8 +28,8 @@ from strictdoc.export.html.generators.document_tree import (
 from strictdoc.export.html.generators.project_statistics import (
     ProgressStatisticsGenerator,
 )
-from strictdoc.export.html.generators.requirements_coverage import (
-    RequirementsCoverageHTMLGenerator,
+from strictdoc.export.html.generators.traceability_matrix import (
+    TraceabilityMatrixHTMLGenerator,
 )
 from strictdoc.export.html.generators.source_file_coverage import (
     SourceFileCoverageHTMLGenerator,
@@ -377,12 +377,10 @@ class HTMLGenerator:
         *,
         traceability_index: TraceabilityIndex,
     ):
-        requirements_coverage_content = (
-            RequirementsCoverageHTMLGenerator.export(
-                project_config=self.project_config,
-                traceability_index=traceability_index,
-                html_templates=self.html_templates,
-            )
+        requirements_coverage_content = TraceabilityMatrixHTMLGenerator.export(
+            project_config=self.project_config,
+            traceability_index=traceability_index,
+            html_templates=self.html_templates,
         )
         output_html_requirements_coverage = os.path.join(
             self.project_config.export_output_html_root,

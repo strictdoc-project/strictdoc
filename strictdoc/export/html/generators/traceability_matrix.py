@@ -12,7 +12,7 @@ from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 
 
-class RequirementsCoverageHTMLGenerator:
+class TraceabilityMatrixHTMLGenerator:
     @staticmethod
     def export(
         *,

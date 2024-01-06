@@ -1,175 +1,268 @@
-[DOCUMENT]
-MID: cabef7629dda4f2fb34255d01fea8d5f
-TITLE: [L2] StrictDoc Backlog
-REQ_PREFIX: SDOC-BACKLOG-
-OPTIONS:
-  ENABLE_MID: True
+StrictDoc Backlog
+$$$$$$$$$$$$$$$$$
 
-[FREETEXT]
 This document outlines the future work items for StrictDoc.
 
 The following items are listed in descending order of priority, with the topmost items either currently in progress or scheduled to be implemented next.
 
 While this backlog overlaps with StrictDoc's `GitHub issues tracker <https://github.com/strictdoc-project/strictdoc/issues>`_ by more than 50%, it includes more strategic items compared to the GitHub issues, which are primarily focused on actual implementation work.
-[/FREETEXT]
 
-[SECTION]
-MID: d1e697dea73144c48a4b88d0d784a517
-UID: SECTION-SB-Open-source-requirements-tool-challenges
-TITLE: Open-source requirements tool challenges
+.. _SECTION-SB-Open-source-requirements-tool-challenges:
 
-[FREETEXT]
+Open-source requirements tool challenges
+========================================
+
 - Very limited development time
 - Not enough time to develop certain capabilities
 - Not possible to scale to multi-user environment quickly.
-[/FREETEXT]
 
-[/SECTION]
+.. _SECTION-SB-Backlog:
 
-[SECTION]
-MID: 7614a9f4f7bd4b1c9899995ac3d1e6ad
-UID: SECTION-SB-Backlog
-TITLE: Backlog
+Backlog
+=======
 
-[SECTION]
-MID: 2654d541d5ce4cb6ad9fcfe2eaa9abb4
-UID: SECTION-SB-Formal-modeling
-TITLE: Formal modeling
+.. _SECTION-SB-Formal-modeling:
 
-[REQUIREMENT]
-MID: 5958a5c0aad8486b84ad31bc014d4ad3
-UID: SDOC-RMC-27
-STATUS: Backlog
-TITLE: Integration with other systems engineering processes
-STATEMENT: >>>
+Formal modeling
+---------------
+
+.. _SDOC-RMC-27:
+
+Integration with other systems engineering processes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-RMC-27
+    * - **STATUS:**
+      - Backlog
+
 The Requirements Tool shall provide capabilities for integration with other systems engineering tools.
-<<<
 
-[REQUIREMENT]
-MID: 99e84f704c074cf28de51ce6fb183a66
-UID: SDOC-RMC-29
-STATUS: Backlog
-TITLE: Integration with Capella
-STATEMENT: >>>
+.. _SDOC-RMC-29:
+
+Integration with Capella
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-RMC-29
+    * - **STATUS:**
+      - Backlog
+
 The Requirements Tool shall provide integration with Capella MBSE tool.
-<<<
-RATIONALE: >>>
+
+**Rationale:**
+
 Eclipse Capella is a capable open-source tool for Model-Based Systems Engineering, https://www.eclipse.org/capella/. It should be beneficial for the requirements tool to interface with the Capella engineering community.
-<<<
-COMMENT: >>>
+
+**Comment:**
+
 At the very least, the integration can happen through the ReqIF interface that Capella is known to support.
-<<<
 
-[REQUIREMENT]
-MID: 44b30591f6674ede821324fe527babd9
-UID: SDOC-RMC-55
-STATUS: Backlog
-TITLE: Support STPA method
-STATEMENT: >>>
+.. _SDOC-RMC-55:
+
+Support STPA method
+~~~~~~~~~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-RMC-55
+    * - **STATUS:**
+      - Backlog
+
 The Requirements Tool shall provide support for the STPA method.
-<<<
 
-[REQUIREMENT]
-MID: 045aee37b0a24b3cb62cabd8b614aaf7
-UID: SDOC-RMC-28
-STATUS: Backlog
-TITLE: Formalized statements
-STATEMENT: >>>
+.. _SDOC-RMC-28:
+
+Formalized statements
+~~~~~~~~~~~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-RMC-28
+    * - **STATUS:**
+      - Backlog
+
 The Requirements Tool shall provide capabilities for hardening requirements content with formal semantics.
-<<<
-COMMENT: >>>
+
+**Comment:**
+
 The directions to explore:
 
 - NASA FRET
 - bmw-software-engineering/trlc
-<<<
 
-[REQUIREMENT]
-MID: 7e0fd5af118b4f5d8ecbf0d8ef3841e6
-UID: SDOC-RMC-30
-STATUS: Backlog
-TITLE: AI Assistant
-STATEMENT: >>>
+.. _SDOC-RMC-30:
+
+AI Assistant
+~~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-RMC-30
+    * - **STATUS:**
+      - Backlog
+
 The Requirements Tool shall provide integration with AI tools (e.g., ChatGPT).
-<<<
 
-[/SECTION]
+.. _SECTION-SRS-LaTeX-export:
 
-[SECTION]
-MID: 061392f275b04c93b664faad9ed4f483
-UID: SECTION-SRS-LaTeX-export
-TITLE: LaTeX export
+LaTeX export
+------------
 
-[REQUIREMENT]
-MID: 9ec7f471ccb243ea9d86cf2756403b8f
-UID: SDOC-SRS-76
-STATUS: Backlog
-TITLE: Export to Tex
+.. _SDOC-SRS-76:
 
-[/SECTION]
+Export to Tex
+~~~~~~~~~~~~~
 
-[REQUIREMENT]
-MID: 5a0304abcd8a44dab5d032dce6625a5d
-UID: SDOC-BACKLOG-1
-STATUS: Backlog
-TITLE: Focused mode: Edit a single section / requirement
+.. list-table::
+    :align: left
+    :header-rows: 0
 
-[REQUIREMENT]
-MID: 162a3da4d9d74c15b5078c9859657ce3
-UID: SDOC-BACKLOG-2
-STATUS: Backlog
-TITLE: Interoperability with Doxygen
+    * - **UID:**
+      - SDOC-SRS-76
+    * - **STATUS:**
+      - Backlog
 
-[REQUIREMENT]
-MID: 06f16ede826749a389c8d7de9828e0eb
-UID: SDOC-BACKLOG-3
-STATUS: Backlog
-TITLE: Fuzzy search (the whole documentation)
+.. _SDOC-BACKLOG-1:
 
-[REQUIREMENT]
-MID: 0e69828e1d914e20852aef7cfc4e87c4
-UID: SDOC-BACKLOG-9
-STATUS: Backlog
-TITLE: Derived requirements
-STATEMENT: >>>
+Focused mode: Edit a single section / requirement
+-------------------------------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-BACKLOG-1
+    * - **STATUS:**
+      - Backlog
+
+.. _SDOC-BACKLOG-2:
+
+Interoperability with Doxygen
+-----------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-BACKLOG-2
+    * - **STATUS:**
+      - Backlog
+
+.. _SDOC-BACKLOG-3:
+
+Fuzzy search (the whole documentation)
+--------------------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-BACKLOG-3
+    * - **STATUS:**
+      - Backlog
+
+.. _SDOC-BACKLOG-9:
+
+Derived requirements
+--------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-BACKLOG-9
+    * - **STATUS:**
+      - Backlog
+
 StrictDoc shall provide first-class support for Derived requirements.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: DO178-18
 
-[REQUIREMENT]
-MID: 34246811634c493dbc771ae4c8bc3b14
-UID: SDOC-BACKLOG-4
-STATUS: Backlog
-TITLE: Support Markdown markup
+**Parents:**
 
-[REQUIREMENT]
-MID: e61e7224e27d41ceacad9bf6051bd6f0
-UID: SDOC-BACKLOG-6
-STATUS: Backlog
-TITLE: Auto-commit to Git repository
+- ``[DO178-18]`` :ref:`DO178-18`
 
-[REQUIREMENT]
-MID: 3f50a97bc70842dbabeea911f653ef90
-UID: SDOC-BACKLOG-7
-STATUS: Backlog
-TITLE: Language Server Protocol (LSP)
+.. _SDOC-BACKLOG-4:
 
-[REQUIREMENT]
-MID: 72285f9b09de48a29fef8f85431e4a94
-UID: SDOC-BACKLOG-8
-STATUS: Backlog
-TITLE: UML
+Support Markdown markup
+-----------------------
 
-[/SECTION]
+.. list-table::
+    :align: left
+    :header-rows: 0
 
-[SECTION]
-MID: 4a49c79a1bdd4d4aae5f62bc1d2a56d0
-UID: SECTION-SB-Backlog-Web-based-user-interface
-TITLE: Backlog: Web-based user interface
+    * - **UID:**
+      - SDOC-BACKLOG-4
+    * - **STATUS:**
+      - Backlog
 
-[FREETEXT]
+.. _SDOC-BACKLOG-6:
+
+Auto-commit to Git repository
+-----------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-BACKLOG-6
+    * - **STATUS:**
+      - Backlog
+
+.. _SDOC-BACKLOG-7:
+
+Language Server Protocol (LSP)
+------------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-BACKLOG-7
+    * - **STATUS:**
+      - Backlog
+
+.. _SDOC-BACKLOG-8:
+
+UML
+---
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-BACKLOG-8
+    * - **STATUS:**
+      - Backlog
+
+.. _SECTION-SB-Backlog-Web-based-user-interface:
+
+Backlog: Web-based user interface
+=================================
+
 - Uploading images via Web interface.
 
 - Deleting sections recursively. Correct clean-up of all traceability information.
@@ -197,16 +290,12 @@ TITLE: Backlog: Web-based user interface
 
 - ReqIF: Export complete documentation tree or a single document.
 - ReqIF: Import complete documentation tree or a single document.
-[/FREETEXT]
 
-[/SECTION]
+.. _SECTION-SB-Backlog-Nice-to-have:
 
-[SECTION]
-MID: 866a55f2e47b477ebcd52ea57da4f037
-UID: SECTION-SB-Backlog-Nice-to-have
-TITLE: Backlog: Nice to have
+Backlog: Nice to have
+=====================
 
-[FREETEXT]
 - Configuration file options:
 
   - CLI command to dump default config file
@@ -235,35 +324,27 @@ TITLE: Backlog: Nice to have
 - **Partial evaluation of Jinja templates.** Many of the template variables could be made to be evaluated once, for example, config object's variables.
 
 - UI version for mobile devices (at least some basic tweaks).
-[/FREETEXT]
 
-[/SECTION]
+.. _SECTION-SB-Backlog-Technical-debt:
 
-[SECTION]
-MID: eb1fab2bbea541c8b00f70780326c9fc
-UID: SECTION-SB-Backlog-Technical-debt
-TITLE: Backlog: Technical debt
+Backlog: Technical debt
+=======================
 
-[FREETEXT]
 - When a document is added, the whole documentation is rebuilt from the file system from scratch. A more fine-grained re-indexing of documentation tree can be implemented. The current idea is to introduce a layer of pickled cached data: preserve the whole in-memory traceability graph in a cache, and then use the cached data for making decisions about what should be regenerated.
 - The "no framework" approach with FastAPI and Turbo/Stimulus allows writing almost zero Javascript, however some proto-framework conventions are still needed. Currently, all code is written in the ``main_controller`` which combines all responsibilities, such as parsing HTTP request fields, accessing traceability graph, validations, rendering back the updated AJAX templates. A lack of abstraction is better than a poor abstraction, but some solution has to be found.
 - Request form object vs Response form object. The workflow of form validations is not optimal.
 - For Web development, the responsibilities of the ``TraceabilityIndex`` class compared to the ``ExportAction``, ``MarkupRenderer``, ``LinkRenderer`` classes are unstable. A more ecological composition of classes has to be found. ``Traceability`` index is rightfully a "god object" because it contains all information about the in-memory documentation graph.
-[/FREETEXT]
 
-[/SECTION]
+.. _SECTION-SB-Open-questions:
 
-[SECTION]
-MID: 6ef8c2ad683d46af948674727c7a52b4
-UID: SECTION-SB-Open-questions
-TITLE: Open questions
+Open questions
+==============
 
-[SECTION]
-MID: 717df91623014fb98ba34ab8173b94ab
-UID: SECTION-SB-One-or-many-input-sdoc-trees
-TITLE: One or many input sdoc trees
+.. _SECTION-SB-One-or-many-input-sdoc-trees:
 
-[FREETEXT]
+One or many input sdoc trees
+----------------------------
+
 StrictDoc supports this for HTML already but not for RST.
 
 When passed
@@ -285,8 +366,3 @@ space with cross-linking possible.
 
 The question is if it is worth supporting this case further or StrictDoc should
 only work with one input folder with a single doc tree.
-[/FREETEXT]
-
-[/SECTION]
-
-[/SECTION]

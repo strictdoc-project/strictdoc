@@ -1,6 +1,6 @@
 [DOCUMENT]
 MID: b3727ea826c24d42a84e88983e7c1e24
-TITLE: DO-178C requirements
+TITLE: Technical Note: DO-178C requirements tool requirements
 VERSION: v0.1
 CLASSIFICATION: Draft
 REQ_PREFIX: DO178-
@@ -243,7 +243,7 @@ COMMENT: >>>
 N: Trace matrix publishing (both ways : is covered by ... and covers ...) published in HTML/PDF.
 <<<
 COMMENT: >>>
-S: This feature, especially a very basic initial one, is very easy to implement, and it is already on the nearest roadmap, see `here <https://github.com/strictdoc-project/strictdoc/issues/964#issuecomment-1497900436>`_. We only need to agree on if we are on the same page about how the produced matrices look like.
+S: This feature, especially a very basic initial one, is very easy to implement, and it is already on the nearest roadmap, see https://github.com/strictdoc-project/strictdoc/issues/964#issuecomment-1497900436>. We only need to agree on if we are on the same page about how the produced matrices look like.
 <<<
 
 [REQUIREMENT]

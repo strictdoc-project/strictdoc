@@ -30,10 +30,6 @@ requirements and specifications documents
 Technical documentation is hard, it can be an extremely laborious process.
 Software shall support engineers in their work with documentation.
 
-**Children:**
-
-- ``[SDOC-HIGH-REQS-MANAGEMENT]`` :ref:`SDOC-HIGH-REQS-MANAGEMENT`
-
 .. _GOAL-2-REDUCE-DOCUMENTATION-HAZARDS:
 
 Reduce documentation hazards
@@ -157,7 +153,9 @@ As an open-source project, StrictDoc is developed without strict deadlines, howe
    * - 2023-Q3
      - Anchors and incoming links. Improvements of the ReqIF interface. Work on StrictDoc's own requirements traceability. Mermaid diagramming tool. Reverse parent / child links. Project statistics screen. Performance improvements.
    * - 2023-Q4
-     - Requirements relations and roles. UI improvements and stabilization. Further ReqIF work. Search engine and requirements filters.
+     - Requirements relations and roles. UI improvements and stabilization. Further ReqIF work. Search engine and requirements filters. Project tree Diff/Changelog screens. Basic Git operations.
+   * - 2024-Q1
+     - TBD
 
 The roadmap diagram
 -------------------
@@ -184,8 +182,8 @@ The end-to-end web interface tests are based on SeleniumBase test framework.
 Python baseline
 ===============
 
-The supported version of Python is kept to be as low as possible. As of 2023-Q2, the currently supported version is Python 3.7.
+The supported version of Python is kept to be as low as possible. As of 2023-Q4, the currently supported version is Python 3.7.
 
 Ideally, the lowest Python version should only be raised when it is consistently deprecated by the major software platforms like Ubuntu or GitHub Actions.
 
-The only other reason for an upgrade of the lowest Python version can be the emerging constraints of the projects that StrictDoc's depends on. Given the current dependency graph, this almost never happens.
+Another reason for upgrading the minimum Python version is due to the upstream dependencies. As these dependencies stop supporting the older versions of Python, StrictDoc must be upgraded to maintain compatibility. With the existing dependency graph, this happens rather infrequently as most dependencies also maintain the compatibility with the older Python versions.

@@ -10,6 +10,10 @@ Welcome to StrictDoc's documentation!
    strictdoc_04_release_notes
    strictdoc_10_contributing
    strictdoc_11_developer_guide
-   strictdoc_20_requirements
-   strictdoc_21_design
+   strictdoc_20_L1_Open_Requirements_Tool
+   strictdoc_21_L2_StrictDoc_Requirements
+   strictdoc_25_design
+   strictdoc_28_Backlog
    strictdoc_30_credits
+   DO178_requirements
+   Zephyr_requirements

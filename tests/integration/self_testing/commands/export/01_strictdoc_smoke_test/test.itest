@@ -1,46 +1,46 @@
-RUN: %strictdoc export "%strictdoc_root/docs" --output-dir="%S/Output"
+RUN: cd "%strictdoc_root/" && %strictdoc export "%strictdoc_root/" --output-dir="%S/Output"
 
 RUN: %check_exists --file "%S/Output/html/index.html"
-RUN: %check_exists --file %S/Output/html/docs/strictdoc_01_user_guide.html
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_01_user_guide-TABLE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_01_user_guide-TRACE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_01_user_guide-DEEP-TRACE.html"
+RUN: %check_exists --file %S/Output/html/strictdoc/docs/strictdoc_01_user_guide.html
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide-DEEP-TRACE.html"
 
-RUN: %check_exists --file %S/Output/html/docs/strictdoc_02_faq.html
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_02_faq-TABLE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_02_faq-TRACE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_02_faq-DEEP-TRACE.html"
+RUN: %check_exists --file %S/Output/html/strictdoc/docs/strictdoc_02_faq.html
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_02_faq-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_02_faq-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_02_faq-DEEP-TRACE.html"
 
-RUN: %check_exists --file %S/Output/html/docs/strictdoc_03_development_plan.html
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_03_development_plan-TABLE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_03_development_plan-TRACE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_03_development_plan-DEEP-TRACE.html"
+RUN: %check_exists --file %S/Output/html/strictdoc/docs/strictdoc_03_development_plan.html
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_03_development_plan-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_03_development_plan-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_03_development_plan-DEEP-TRACE.html"
 
-RUN: %check_exists --file %S/Output/html/docs/strictdoc_10_contributing.html
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_10_contributing-TABLE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_10_contributing-TRACE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_10_contributing-DEEP-TRACE.html"
+RUN: %check_exists --file %S/Output/html/strictdoc/docs/strictdoc_10_contributing.html
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_10_contributing-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_10_contributing-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_10_contributing-DEEP-TRACE.html"
 
-RUN: %check_exists --file %S/Output/html/docs/strictdoc_20_requirements.html
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_20_requirements-TABLE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_20_requirements-TRACE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_20_requirements-DEEP-TRACE.html"
+RUN: %check_exists --file %S/Output/html/strictdoc/docs/strictdoc_20_L1_Open_Requirements_Tool.html
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_20_L1_Open_Requirements_Tool-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_20_L1_Open_Requirements_Tool-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_20_L1_Open_Requirements_Tool-DEEP-TRACE.html"
 
-RUN: %check_exists --file %S/Output/html/docs/strictdoc_21_design.html
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_21_design-TABLE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_21_design-TRACE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_21_design-DEEP-TRACE.html"
+RUN: %check_exists --file %S/Output/html/strictdoc/docs/strictdoc_25_design.html
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_25_design-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_25_design-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_25_design-DEEP-TRACE.html"
 
-RUN: %check_exists --file %S/Output/html/docs/strictdoc_30_credits.html
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_30_credits-TABLE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_30_credits-TRACE.html"
-RUN: %check_exists --file "%S/Output/html/docs/strictdoc_30_credits-DEEP-TRACE.html"
+RUN: %check_exists --file %S/Output/html/strictdoc/docs/strictdoc_30_credits.html
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_30_credits-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_30_credits-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_30_credits-DEEP-TRACE.html"
 
 # Naive way to check that the server-related links are not enabled in the static export.
 RUN: %cat "%S/Output/html/index.html" | filecheck %s --check-prefix=CHECK-TREE
 CHECK-TREE-NOT: ReqIF
 
-RUN: %cat "%S/Output/html/docs/strictdoc_01_user_guide.html" | filecheck %s --check-prefix=CHECK-DOCUMENT
+RUN: %cat "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide.html" | filecheck %s --check-prefix=CHECK-DOCUMENT
 # When there is no positive check, filecheck will check all not-CHECKs.
 CHECK-DOCUMENT-NOT: Export to ReqIF
 CHECK-DOCUMENT-NOT: turbo.js

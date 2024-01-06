@@ -1,0 +1,292 @@
+[DOCUMENT]
+MID: cabef7629dda4f2fb34255d01fea8d5f
+TITLE: StrictDoc Backlog
+REQ_PREFIX: SDOC-BACKLOG-
+OPTIONS:
+  ENABLE_MID: True
+
+[FREETEXT]
+This document outlines the future work items for StrictDoc.
+
+The following items are listed in descending order of priority, with the topmost items either currently in progress or scheduled to be implemented next.
+
+While this backlog overlaps with StrictDoc's `GitHub issues tracker <https://github.com/strictdoc-project/strictdoc/issues>`_ by more than 50%, it includes more strategic items compared to the GitHub issues, which are primarily focused on actual implementation work.
+[/FREETEXT]
+
+[SECTION]
+MID: d1e697dea73144c48a4b88d0d784a517
+UID: SECTION-SB-Open-source-requirements-tool-challenges
+TITLE: Open-source requirements tool challenges
+
+[FREETEXT]
+- Very limited development time
+- Not enough time to develop certain capabilities
+- Not possible to scale to multi-user environment quickly.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+MID: 7614a9f4f7bd4b1c9899995ac3d1e6ad
+UID: SECTION-SB-Backlog
+TITLE: Backlog
+
+[SECTION]
+MID: 2654d541d5ce4cb6ad9fcfe2eaa9abb4
+UID: SECTION-SB-Formal-modeling
+TITLE: Formal modeling
+
+[REQUIREMENT]
+MID: 5958a5c0aad8486b84ad31bc014d4ad3
+UID: SDOC-RMC-27
+STATUS: Backlog
+TITLE: Integration with other systems engineering processes
+STATEMENT: >>>
+The Requirements Tool shall provide capabilities for integration with other systems engineering tools.
+<<<
+
+[REQUIREMENT]
+MID: 99e84f704c074cf28de51ce6fb183a66
+UID: SDOC-RMC-29
+STATUS: Backlog
+TITLE: Integration with Capella
+STATEMENT: >>>
+The Requirements Tool shall provide integration with Capella MBSE tool.
+<<<
+RATIONALE: >>>
+Eclipse Capella is a capable open-source tool for Model-Based Systems Engineering, https://www.eclipse.org/capella/. It should be beneficial for the requirements tool to interface with the Capella engineering community.
+<<<
+COMMENT: >>>
+At the very least, the integration can happen through the ReqIF interface that Capella is known to support.
+<<<
+
+[REQUIREMENT]
+MID: 44b30591f6674ede821324fe527babd9
+UID: SDOC-RMC-55
+STATUS: Backlog
+TITLE: Support STPA method
+STATEMENT: >>>
+The Requirements Tool shall provide support for the STPA method.
+<<<
+
+[REQUIREMENT]
+MID: 045aee37b0a24b3cb62cabd8b614aaf7
+UID: SDOC-RMC-28
+STATUS: Backlog
+TITLE: Formalized statements
+STATEMENT: >>>
+The Requirements Tool shall provide capabilities for hardening requirements content with formal semantics.
+<<<
+COMMENT: >>>
+The directions to explore:
+
+- NASA FRET
+- bmw-software-engineering/trlc
+<<<
+
+[REQUIREMENT]
+MID: 7e0fd5af118b4f5d8ecbf0d8ef3841e6
+UID: SDOC-RMC-30
+STATUS: Backlog
+TITLE: AI Assistant
+STATEMENT: >>>
+The Requirements Tool shall provide integration with AI tools (e.g., ChatGPT).
+<<<
+
+[/SECTION]
+
+[SECTION]
+MID: 061392f275b04c93b664faad9ed4f483
+UID: SECTION-SRS-LaTeX-export
+TITLE: LaTeX export
+
+[REQUIREMENT]
+MID: 9ec7f471ccb243ea9d86cf2756403b8f
+UID: SDOC-SRS-76
+STATUS: Backlog
+TITLE: Export to Tex
+
+[/SECTION]
+
+[REQUIREMENT]
+MID: 5a0304abcd8a44dab5d032dce6625a5d
+UID: SDOC-BACKLOG-1
+STATUS: Backlog
+TITLE: Focused mode: Edit a single section / requirement
+
+[REQUIREMENT]
+MID: 162a3da4d9d74c15b5078c9859657ce3
+UID: SDOC-BACKLOG-2
+STATUS: Backlog
+TITLE: Interoperability with Doxygen
+
+[REQUIREMENT]
+MID: 06f16ede826749a389c8d7de9828e0eb
+UID: SDOC-BACKLOG-3
+STATUS: Backlog
+TITLE: Fuzzy search (the whole documentation)
+
+[REQUIREMENT]
+MID: 0e69828e1d914e20852aef7cfc4e87c4
+UID: SDOC-BACKLOG-9
+STATUS: Backlog
+TITLE: Derived requirements
+STATEMENT: >>>
+StrictDoc shall provide first-class support for Derived requirements.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: DO178-18
+
+[REQUIREMENT]
+MID: 34246811634c493dbc771ae4c8bc3b14
+UID: SDOC-BACKLOG-4
+STATUS: Backlog
+TITLE: Support Markdown markup
+
+[REQUIREMENT]
+MID: e61e7224e27d41ceacad9bf6051bd6f0
+UID: SDOC-BACKLOG-6
+STATUS: Backlog
+TITLE: Auto-commit to Git repository
+
+[REQUIREMENT]
+MID: 3f50a97bc70842dbabeea911f653ef90
+UID: SDOC-BACKLOG-7
+STATUS: Backlog
+TITLE: Language Server Protocol (LSP)
+
+[REQUIREMENT]
+MID: 72285f9b09de48a29fef8f85431e4a94
+UID: SDOC-BACKLOG-8
+STATUS: Backlog
+TITLE: UML
+
+[/SECTION]
+
+[SECTION]
+MID: 4a49c79a1bdd4d4aae5f62bc1d2a56d0
+UID: SECTION-SB-Backlog-Web-based-user-interface
+TITLE: Backlog: Web-based user interface
+
+[FREETEXT]
+- Uploading images via Web interface.
+
+- Deleting sections recursively. Correct clean-up of all traceability information.
+
+- Editing remaining document options: Inline/Table, Requirements in TOC, etc.
+
+- **Integration with Git repository.** Make the server commit changes to .sdoc files automatically. To a user, provide visibility to what happens under the hood.
+
+- ``LINK`` between sections and documents.
+
+- Option to keep all multi-line text fields to 80 symbols width.
+
+- Moving nodes between documents.
+
+- TBL view: Column filters to show/hide columns.
+
+- TBL view: Completely empty columns are hidden by default.
+
+- Contextual help about the RST markup.
+- How to edit tables conveniently?
+
+- What to do with web content going out of sync with the server/file system state?
+
+- Issue when adding a child section from a nested section. The child section appears right after the nested section, not after its farthest descendant child.
+
+- ReqIF: Export complete documentation tree or a single document.
+- ReqIF: Import complete documentation tree or a single document.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+MID: 866a55f2e47b477ebcd52ea57da4f037
+UID: SECTION-SB-Backlog-Nice-to-have
+TITLE: Backlog: Nice to have
+
+[FREETEXT]
+- Configuration file options:
+
+  - CLI command to dump default config file
+  - Project prefix?
+  - Config options for presenting requirements.
+    - Include/exclude requirements in TOC
+
+- **StrictDoc as a Python library**. Such a use allows a more fine-grained access to the StrictDoc's modules, such as Grammar, Import, Export classes, etc.
+
+- **Data exchange with Capella tool.** The current idea would be to implement this using ReqIF export/import features.
+
+- **Language Server Protocol.** The LSP can enable editing of SDoc files in IDEs like Eclipse, Visual Studio, PyCharm. A smart LSP can enable features like syntax highlighting, autocompletion and easy navigation through requirements. The promising base for the implementation: https://github.com/openlawlibrary/pygls.
+
+- StrictDoc shall support rendering text/code blocks into Markdown syntax.
+
+- **Fuzzy requirements search.** This feature can be implemented in the CLI as well as in the future GUI. A fuzzy requirements search can help to find existing requirements and also identify relevant requirements when creating new requirements.
+
+- Support creation of FMEA/FMECA safety analysis documents.
+
+- Calculation of checksums for requirements. This feature is relatively easy to implement, but the implementation is postponed until the linking between requirements and files is implemented.
+
+- Filtering of requirements by tags.
+
+- Import/export: Excel, CSV, PlantUML, Confluence, Tex, Doorstop.
+
+- **Partial evaluation of Jinja templates.** Many of the template variables could be made to be evaluated once, for example, config object's variables.
+
+- UI version for mobile devices (at least some basic tweaks).
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+MID: eb1fab2bbea541c8b00f70780326c9fc
+UID: SECTION-SB-Backlog-Technical-debt
+TITLE: Backlog: Technical debt
+
+[FREETEXT]
+- When a document is added, the whole documentation is rebuilt from the file system from scratch. A more fine-grained re-indexing of documentation tree can be implemented. The current idea is to introduce a layer of pickled cached data: preserve the whole in-memory traceability graph in a cache, and then use the cached data for making decisions about what should be regenerated.
+- The "no framework" approach with FastAPI and Turbo/Stimulus allows writing almost zero Javascript, however some proto-framework conventions are still needed. Currently, all code is written in the ``main_controller`` which combines all responsibilities, such as parsing HTTP request fields, accessing traceability graph, validations, rendering back the updated AJAX templates. A lack of abstraction is better than a poor abstraction, but some solution has to be found.
+- Request form object vs Response form object. The workflow of form validations is not optimal.
+- For Web development, the responsibilities of the ``TraceabilityIndex`` class compared to the ``ExportAction``, ``MarkupRenderer``, ``LinkRenderer`` classes are unstable. A more ecological composition of classes has to be found. ``Traceability`` index is rightfully a "god object" because it contains all information about the in-memory documentation graph.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+MID: 6ef8c2ad683d46af948674727c7a52b4
+UID: SECTION-SB-Open-questions
+TITLE: Open questions
+
+[SECTION]
+MID: 717df91623014fb98ba34ab8173b94ab
+UID: SECTION-SB-One-or-many-input-sdoc-trees
+TITLE: One or many input sdoc trees
+
+[FREETEXT]
+StrictDoc supports this for HTML already but not for RST.
+
+When passed
+``strictdoc export ... /path/to/doctree1, /path/to/doctree2, /path/to/doctree3``,
+the following is generated:
+
+.. code-block:: text
+
+    output folder:
+    - doctree1/
+      - contents
+    - doctree2/
+      - contents
+    - doctree3/
+      - contents
+
+and all three doctrees' requirements are merged into a single documentation
+space with cross-linking possible.
+
+The question is if it is worth supporting this case further or StrictDoc should
+only work with one input folder with a single doc tree.
+[/FREETEXT]
+
+[/SECTION]
+
+[/SECTION]

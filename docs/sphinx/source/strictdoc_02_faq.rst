@@ -5,7 +5,7 @@ $$$$$$
 
 This document is a list of questions that people ask about StrictDoc.
 
-Missing a question or an answer? Ask it here: :ref:`SDOC_UG_CONTACT`.
+Missing a question or an answer? Ask it here: :ref:`Contact the developers <SDOC_UG_CONTACT>`.
 
 What is StrictDoc?
 ==================

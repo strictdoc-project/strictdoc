@@ -143,7 +143,7 @@ def docs(context):
         ToxEnvironment.DOCUMENTATION,
         """
             python3 strictdoc/cli/main.py
-                export docs/
+                export ./
                     --formats=rst
                     --output-dir output/sphinx
                     --project-title "StrictDoc"
@@ -154,9 +154,10 @@ def docs(context):
         context,
         ToxEnvironment.DOCUMENTATION,
         """
-            cp -v output/sphinx/rst/strictdoc*.rst docs/sphinx/source/ &&
-            mkdir -p docs/sphinx/source/_static/_assets &&
-            cp -v docs/_assets/StrictDoc_Roadmap.drawio.png docs/sphinx/source/_assets/
+            cp -r output/sphinx/rst/docs/* docs/sphinx/source/ &&
+            cp -r output/sphinx/rst/docs_extra/* docs/sphinx/source/ &&
+            mkdir -p docs/sphinx/source/_assets/ &&
+            cp -v docs/_assets/* docs/sphinx/source/_assets/
         """,
     )
 
@@ -551,14 +552,21 @@ def check_dead_links(context):
         context,
         ToxEnvironment.CHECK,
         """
-            python3 tools/link_health.py docs/strictdoc_20_requirements.sdoc
+            python3 tools/link_health.py docs/strictdoc_20_L1_Open_Requirements_Tool.sdoc
         """,
     )
     run_invoke_with_tox(
         context,
         ToxEnvironment.CHECK,
         """
-            python3 tools/link_health.py docs/strictdoc_21_design.sdoc
+            python3 tools/link_health.py docs/strictdoc_21_L2_StrictDoc_Requirements.sdoc
+        """,
+    )
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        """
+            python3 tools/link_health.py docs/strictdoc_25_design.sdoc
         """,
     )
 

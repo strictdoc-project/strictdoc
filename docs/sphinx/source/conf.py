@@ -45,7 +45,7 @@ STRICTDOC_VERSION = strictdoc.__version__
 # -- Project information -----------------------------------------------------
 
 project = "StrictDoc"
-copyright = "2020-2023 Stanislav Pankevich and Maryna Balioura"  # noqa: A001
+copyright = "2020-2024 Stanislav Pankevich and Maryna Balioura"  # noqa: A001
 author = "Stanislav Pankevich and Maryna Balioura"
 
 # The full version, including alpha/beta/rc tags
@@ -257,7 +257,7 @@ latex_elements = {
             \vfill
 
             \begin{center}
-                \Large{© 2020-2023 StrictDoc Project}
+                \Large{© 2020-2024 StrictDoc Project}
             \end{center}
 
         \end{titlepage}

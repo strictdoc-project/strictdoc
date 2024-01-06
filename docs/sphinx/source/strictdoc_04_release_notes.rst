@@ -6,7 +6,13 @@ This document maintains a record of all changes to StrictDoc since November 2023
 Unreleased work
 ===============
 
-None.
+The requirement-to-source traceability feature was extended to support linking requirements to the RST files.
+
+One more input scenario was handled for the Create Document workflow. When a project config has ``include_doc_paths`` or ``exclude_doc_paths`` search path filters specified, and an input document path contradicts to the provided filters, a validation message is shown.
+
+The Project Statistics screen was extended with the "Sections without any text" metric. Now it is possible to visualize which sections are still missing any introduction or description (free text).
+
+The new Machine Identifier (MID) field has been added to StrictDoc's grammar. The automatic generation of MIDs can be activated per-document using the ``ENABLE_MID: True`` document-level config option. The main driver for this feature is the need of accurate Diff/Changelog results. The new section of the User Guide explains the rationale and the configuration details: :ref:`Machine identifiers (MID) <SECTION-UG-Machine-identifiers-MID>`.
 
 0.0.47 (2023-11-20)
 ===================

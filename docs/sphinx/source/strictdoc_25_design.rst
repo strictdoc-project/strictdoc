@@ -48,6 +48,16 @@ StrictDoc is based on the following open-source libraries and tools:
    * - Selenium and SeleniumBase
      - Used for end-to-end testing of StrictDoc's Web-based user interface.
 
+High-level architecture
+=======================
+
+The following diagram captures the high-level architecture of StrictDoc.
+
+.. image:: _assets/StrictDoc_Architecture.drawio.png
+   :alt: StrictDoc's architecture diagram
+   :class: image
+   :width: 100%
+
 StrictDoc command-line application
 ==================================
 
@@ -129,3 +139,9 @@ The fragment of the crash:
 
     sl = self._semlock = _multiprocessing.SemLock(
     OSError: [Errno 28] No space left on device
+
+The existing workaround for this problem is to increase a number of semaphores in the macOS config:
+
+.. code-block:: text
+
+    sudo sysctl -w kern.posix.sem.max=20000

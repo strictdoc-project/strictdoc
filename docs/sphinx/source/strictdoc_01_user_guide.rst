@@ -26,19 +26,19 @@ Summary of StrictDoc features:
   `Requirements Traceability <https://en.wikipedia.org/wiki/Requirements_traceability>`_
   and Documentation Coverage, can be derived.
 - Requirements to source files traceability (experimental). See
-  :ref:`SECTION-TRACEABILITY-REQS-TO-SOURCE-CODE`.
+  :ref:`Traceability between requirements and source code <SECTION-TRACEABILITY-REQS-TO-SOURCE-CODE>`.
 - Custom grammar and custom fields support. The StrictDoc's grammar can be
   extended to support arbitrary special fields, such as ``PRIORITY``, ``OWNER``,
   or even more specialized fields, such as
   ``Automotive Safety Integrity Level (ASIL)`` or ``Verification method``.
-  See :ref:`SECTION-CUSTOM-GRAMMARS`.
+  See :ref:`Custom grammars <SECTION-CUSTOM-GRAMMARS>`.
 - Good performance of the `textX <https://github.com/textX/textX>`_
   parser and parallelized incremental generation of documents: generation of
   document trees with up to 2000–3000 requirements into HTML pages stays within
   a few seconds. From the second run, only changed documents are regenerated.
   Further performance tuning should be possible.
 
-See also a summary of StrictDoc's existing limitations: :ref:`SDOC_UG_LIMIT`.
+See also a summary of StrictDoc's existing limitations: :ref:`StrictDoc's limitations <SDOC_UG_LIMIT>`.
 
 .. _SDOC_UG_CONTACT:
 
@@ -73,7 +73,7 @@ Create a file called ``hello_world.sdoc`` somewhere on your file system and copy
 
 Open a command-line terminal program supported on your system.
 
-Once you have ``strictdoc`` installed (see :ref:`SDOC_UG_GETTING_STARTED` below), switch to the directory with the ``hello_world.sdoc`` file. For example, assuming that the file is now in the ``workspace/hello_world`` directory in your user folder:
+Once you have ``strictdoc`` installed (see :ref:`Installing StrictDoc <SDOC_UG_GETTING_STARTED>` below), switch to the directory with the ``hello_world.sdoc`` file. For example, assuming that the file is now in the ``workspace/hello_world`` directory in your user folder:
 
 .. code-block:: text
 
@@ -209,7 +209,7 @@ Running StrictDoc
 Static HTML export
 ------------------
 
-The easiest way to see the static HTML export feature in action is to run the :ref:`SDOC_UG_HELLO_WORLD` example.
+The easiest way to see the static HTML export feature in action is to run the :ref:`Hello World <SDOC_UG_HELLO_WORLD>` example.
 
 The ``export`` command is the main producer of documentation. The native export format of StrictDoc is HTML. The ``export`` command supports a number of parameters, including the option for selecting export formats (HTML, RST, Excel, etc.). The options can be explored with the ``--help`` command.
 
@@ -232,7 +232,7 @@ The ``server`` command accepts a number of options. To explore the options, run:
 
     strictdoc server --help
 
-**Note:** The implementation of the web interface is work-in-progress. See :ref:`SDOC_UG_LIMIT_WEB` for an overview of the existing limitations.
+**Note:** The implementation of the web interface is work-in-progress. See :ref:`Limitations of web user interface <SDOC_UG_LIMIT_WEB>` for an overview of the existing limitations.
 
 Security considerations
 -----------------------
@@ -243,7 +243,7 @@ Using StrictDoc's command-line and web interfaces should be more secure if the w
 
 ----
 
-Due to current constraints (refer to :ref:`SDOC_UG_LIMIT_WEB`), StrictDoc requires running a server through a command line interface in one window or OS process, and separately committing changes to documents using Git in another window or OS process. Deploying StrictDoc as a shared web server is impractical, as it still requires manual commits to SDoc files via the server's command line using Git. The future development plan for StrictDoc aims to enable its use as a standalone server application, which includes resolving the following security-related issues.
+Due to current constraints (refer to :ref:`Limitations of web user interface <SDOC_UG_LIMIT_WEB>`), StrictDoc requires running a server through a command line interface in one window or OS process, and separately committing changes to documents using Git in another window or OS process. Deploying StrictDoc as a shared web server is impractical, as it still requires manual commits to SDoc files via the server's command line using Git. The future development plan for StrictDoc aims to enable its use as a standalone server application, which includes resolving the following security-related issues.
 
 What makes StrictDoc's web server unsafe:
 
@@ -399,7 +399,7 @@ The following patterns are all invalid for multiline fields:
 If you need to provide a placeholder for a field that you know has to be filled
 out soon, add a "TBD" (to be done, by our team) or a "TBC" (to be confirmed with a customer or a supplier) string.
 
-The Project Statistics screen provides metrics for counting the number of TBDs (To Be Determined) and TBCs (To Be Confirmed) in a document, assisting in evaluating the document's maturity. This is a common practice in the regulared industries. See :ref:`SECTION-UG-Project-statistics-screen` for more details.
+The Project Statistics screen provides metrics for counting the number of TBDs (To Be Determined) and TBCs (To Be Confirmed) in a document, assisting in evaluating the document's maturity. This is a common practice in the regulared industries. See :ref:`Project statistics screen <SECTION-UG-Project-statistics-screen>` for more details.
 
 Grammar elements
 ----------------
@@ -478,18 +478,25 @@ The ``OPTIONS`` field may have the following attribute fields:
    * - **Field**
      - **Attribute values**
 
+   * - ``ENABLE_MID``
+     - ``False`` (default), ``True``
+
    * - ``MARKUP``
-     - ``RST``, ``HTML``, ``Text``
+     - ``RST`` (default), ``HTML``, ``Text``
 
    * - ``AUTO_LEVELS``
-     - ``On``, ``Off``
+     - ``On`` (default), ``Off``
 
    * - ``REQUIREMENT_STYLE``
-     - ``Inline``, ``Table``
+     - ``Inline`` (default), ``Table``, ``Zebra``
 
    * - ``REQUIREMENT_IN_TOC``
-     - ``True``, ``False``
+     - ``True`` (default), ``False``
 
+ENABLE_MID
+""""""""""
+
+See :ref:`Machine identifiers (MID) <SECTION-UG-Machine-identifiers-MID>`.
 
 MARKUP
 """"""
@@ -507,7 +514,7 @@ The available options are: ``On`` /  ``Off``. Default is ``On``.
 
 In case of ``On``, the ``[SECTION].LEVEL`` fields must be absent or may only
 contain ``None`` to exclude that section from StrictDoc's automatic section
-numbering. See also :ref:`SECTION_WITHOUT_A_LEVEL`.
+numbering. See also :ref:`Section without a level <SECTION_WITHOUT_A_LEVEL>`.
 
 In case of ``Off``, all ``[SECTION].LEVEL`` fields must be populated.
 
@@ -515,15 +522,20 @@ REQUIREMENT_STYLE
 """""""""""""""""
 
 The ``REQUIREMENT_STYLE`` option controls whether requirement's elements are
-displayed inline or as table blocks. The available options are: ``Inline`` /
-``Table``. Default is ``Inline``.
+displayed inline or as table blocks. The available options are:
+
+- ``Inline``
+- ``Table``
+- ``Zebra``
+
+Default is ``Inline``.
 
 .. code-block:: text
 
     [DOCUMENT]
     TITLE: Hello world
     OPTIONS:
-      REQUIREMENT_STYLE: Table
+      REQUIREMENT_STYLE: Inline
 
 REQUIREMENT_IN_TOC
 """"""""""""""""""
@@ -681,7 +693,7 @@ The ``RELATIONS`` field is used to connect requirements to each other:
     - TYPE: File
       VALUE: /full/path/file.py
 
-The supported relation types are: ``Parent``, ``Child``, and ``File``. To be used in a requirement, the relations must be first registered in the document grammar. The default grammar defines ``Parent`` and ``File`` relation. See :ref:`SDOC_UG_GRAMMAR_RELATIONS` for more details.
+The supported relation types are: ``Parent``, ``Child``, and ``File``. To be used in a requirement, the relations must be first registered in the document grammar. The default grammar defines ``Parent`` and ``File`` relation. See :ref:`Relations <SDOC_UG_GRAMMAR_RELATIONS>` for more details.
 
 The ``RELATIONS`` must be the last field of a requirement. For ``TYPE: Parent`` and ``TYPE: Child`` relations, the ``VALUE`` attribute contains a parent/child's requirement
 ``UID``. A requirement may reference multiple parent or child requirements by
@@ -694,9 +706,9 @@ file references requirements by adding multiple ``TYPE: File``-``VALUE`` items.
 
 **Note:** The ``TYPE: Parent`` and ``TYPE: Child`` are currently the only fully supported types of
 connection. Linking requirements to files is still experimental (see also
-:ref:`SECTION-TRACEABILITY-REQS-TO-SOURCE-CODE`).
+:ref:`Traceability between requirements and source code <SECTION-TRACEABILITY-REQS-TO-SOURCE-CODE>`).
 
-**Note:** In most requirements projects, only the Parent relations should be used, possibly with roles. The Child relation should be used only in specific cases. See :ref:`SDOC_UG_GRAMMAR_RELATIONS_PARENT_VS_CHILD` for more details.
+**Note:** In most requirements projects, only the Parent relations should be used, possibly with roles. The Child relation should be used only in specific cases. See :ref:`Parent vs Child relations <SDOC_UG_GRAMMAR_RELATIONS_PARENT_VS_CHILD>` for more details.
 
 **Note:** In the near future, adding information about external references (e.g.
 company policy documents, technical specifications, regulatory requirements,
@@ -708,7 +720,7 @@ requirements connected with a reference have ``UID`` defined.
 Requirement relation roles
 """"""""""""""""""""""""""
 
-A requirement relation can be specialized with a role. The role must be registered in the document grammar, see :ref:`SDOC_UG_GRAMMAR_RELATIONS`.
+A requirement relation can be specialized with a role. The role must be registered in the document grammar, see :ref:`Relations <SDOC_UG_GRAMMAR_RELATIONS>`.
 
 .. code-block::
 
@@ -1040,6 +1052,45 @@ Which will resolve to the following document after inclusion:
     [REQUIREMENT]
 
 
+.. _SECTION-UG-Machine-identifiers-MID:
+
+Machine identifiers (MID)
+-------------------------
+
+StrictDoc supports the automatic generation of machine identifiers (MIDs). This optional feature can be enabled individually for each document through the document-level ``ENABLE_MID`` config option:
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: Hello World!
+    OPTIONS:
+      ENABLE_MID: True
+
+When the ``ENABLE_MID`` option is enabled, StrictDoc automatically generates MID fields whenever the document is written back to the file system. On the web server, MIDs are generated automatically when a document, section, or requirement is saved. In the command-line interface, the generation of ``MID`` can be initiated with a ``passthrough`` command. Executing ``strictdoc passthrough`` on a document with ``ENABLE_MID: True`` results in all nodes having auto-generated MIDs. Implementing the ENABLE_MID option on a per-document basis allows for the integration of MID-enabled documents alongside third-party documents where the MID feature may not be necessary or desired.
+
+Machine identifiers (MIDs) differ from and do not replace unique identifiers (UIDs). A requirement, section, or document node may have both ``MID`` and ``UID`` fields defined. For example:
+
+.. code-block::
+
+    [REQUIREMENT]
+    MID: 06ab121d3c0f4d8c94652323b8f735c6
+    UID: SDOC-SSS-70
+    STATUS: Active
+    TITLE: Move nodes between documents
+    STATEMENT: >>>
+    The Requirements Tool shall allow moving nodes (sections, requirements) between documents.
+    <<<
+
+Advantages of using machine identifiers:
+
+1. Machine identifiers provide a robust means of identifying documents, sections, requirements, or custom nodes. An MID can uniquely identify a given node, independent of other fields like UID or TITLE.
+
+2. The unique identification of nodes via MIDs enhances the effectiveness of StrictDoc's Diff/Changelog functionality. It allows the algorithm to accurately match requirements, sections, or document nodes, even if they are moved, renamed, or undergo metadata changes.
+
+3. MIDs increase the portability of requirements data. Even when UID naming conventions change or nodes are relocated, the MID continues to uniquely identify the original node.
+
+For larger projects, particularly those with extended maintenance cycles, we strongly recommend activating machine identifiers early in the project lifecycle. This proactive approach ensures robust tracking and management of documentation throughout the project's duration.
+
 .. _SECTION-CUSTOM-GRAMMARS:
 
 Custom grammars
@@ -1352,7 +1403,7 @@ When a section has an UID, it is possible to reference this section from any oth
 
 Example:
 
-The following link references a section: :ref:`SDOC_UG_LINKS_AND_ANCHORS`.
+The following link references a section: :ref:`Links <SDOC_UG_LINKS_AND_ANCHORS>`.
 
 **Note:** Adding a ``LINK`` tag will only work from the section text. In the requirement fields, the LINK tag will not be recognized.
 
@@ -1406,7 +1457,7 @@ Important rules:
      - Find all sections.
 
    * - ``node.is_root``
-     - Find all requirements or sections from documents with ``ROOT: True``. See :ref:`SECTION-UG-Document` for the description of the ``ROOT`` option.
+     - Find all requirements or sections from documents with ``ROOT: True``. See :ref:`Document <SECTION-UG-Document>` for the description of the ``ROOT`` option.
 
    * - ``(node.is_requirement and "System" in node["TITLE"])``
      - Find all requirements with a TITLE that equals to "System".
@@ -1440,7 +1491,7 @@ such as ``[FREETEXT]``, ``STATEMENT``, ``COMMENT``, ``RATIONALE``.
 See the `reST syntax documentation <https://docutils.sourceforge.io/rst.html>`_
 for a full reference.
 
-Note: StrictDoc supports a Docutils-subset of RST, not a Sphinx-subset. See :ref:`SDOC_UG_LIMIT_RST`.
+Note: StrictDoc supports a Docutils-subset of RST, not a Sphinx-subset. See :ref:`Limitations of RST support by StrictDoc <SDOC_UG_LIMIT_RST>`.
 
 The support of Tex and HTML is planned.
 
@@ -1491,7 +1542,7 @@ Example of using MathJax:
 
     [/FREETEXT]
 
-See :ref:`SDOC_UG_CONFIG_FEATURES` for the description of other features.
+See :ref:`Selecting features <SDOC_UG_CONFIG_FEATURES>` for the description of other features.
 
 Export formats
 ==============
@@ -1674,7 +1725,7 @@ To activate the traceability to source files, configure the project config with 
 
 By default, StrictDoc looks for source files in a directory from which the ``strictdoc`` command is run. This can be changed by using the ``source_root_path`` project-level option.
 
-See :ref:`SDOC_UG_OPTIONS_PROJECT_LEVEL` for more details about the project-level options.
+See :ref:`Project-level options <SDOC_UG_OPTIONS_PROJECT_LEVEL>` for more details about the project-level options.
 
 The
 `strictdoc-examples <https://github.com/strictdoc-project/strictdoc-examples>`_
@@ -1690,7 +1741,7 @@ format.
 **Note:** It is not possible to implement a single export/import procedure that
 works well for all ReqIF XML files produced by various requirements management
 tools. The export/import workflow is therefore tool-specific. See
-:ref:`SECTION-REQIF-DETAILS` for more details.
+:ref:`ReqIF implementation details <SECTION-REQIF-DETAILS>` for more details.
 
 Supported formats:
 
@@ -1955,7 +2006,7 @@ The following is an example of the default configuration. The same features are 
       # "REQUIREMENT_TO_SOURCE_TRACEABILITY"
     ]
 
-See :ref:`SDOC_UG_EXPERIMENTAL_FEATURES` where the experimental features are outlined.
+See :ref:`Experimental features <SDOC_UG_EXPERIMENTAL_FEATURES>` where the experimental features are outlined.
 
 Enable all features
 ^^^^^^^^^^^^^^^^^^^
@@ -2053,7 +2104,7 @@ At any point in time, StrictDoc supports features that are still experimental. T
 
 A feature is considered stable when all its known edge cases have been covered and enough users report that they have used and tested this feature.
 
-See also :ref:`SDOC_UG_CONFIG_FEATURES` for general instructions.
+See also :ref:`Selecting features <SDOC_UG_CONFIG_FEATURES>` for general instructions.
 
 .. _SECTION-UG-Project-statistics-screen:
 

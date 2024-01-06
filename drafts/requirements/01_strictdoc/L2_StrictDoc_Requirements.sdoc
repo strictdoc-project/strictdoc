@@ -16,6 +16,14 @@ TITLE: Data model
 STATEMENT: >>>
 StrictDoc shall be based on a data model.
 <<<
+COMMENT: >>>
+Verification: data model diagram TBD.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-88
+- TYPE: Parent
+  VALUE: SDOC-SSS-58
 
 [REQUIREMENT]
 MID: 3b31cad22529476db01aca41caf39750
@@ -35,6 +43,28 @@ StrictDoc's "Requirement" model shall support configurable fields system.
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-62
+
+[REQUIREMENT]
+MID: 2d4020ba06d74571aef7aafe8604215b
+UID: SDOC-SRS-132
+TITLE: Requirement model default fields
+STATEMENT: >>>
+By default, the Requirement shall support the following fields:
+
+- MID
+- UID
+- STATUS
+- TITLE
+- STATEMENT
+- RATIONALE
+- COMMENT.
+<<<
+RATIONALE: >>>
+These fields are the most typical fields found in requirement documents.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-61
 
 [REQUIREMENT]
 MID: f94419a390f2403daa3c4cd0e96f6cb6

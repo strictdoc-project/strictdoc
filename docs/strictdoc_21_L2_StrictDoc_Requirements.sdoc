@@ -417,6 +417,22 @@ RELATIONS:
 MID: 07a1e7bef11d4fcca86cd31ee5245d8d
 UID: SDOC-SRS-32
 TITLE: Link document nodes
+STATEMENT: >>>
+The Traceability Index shall recognize and maintain the relations between all documents of a project tree.
+<<<
+RATIONALE: >>>
+The relations between all documents are a summary of all relations between these documents' requirements. This information is useful for:
+
+1) Structural analysis of a requirements/documents graph.
+2) Incremental regeneration of only those documents whose content was modified.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-47
+- TYPE: Parent
+  VALUE: SDOC-SSS-13
+- TYPE: Parent
+  VALUE: SDOC-SSS-14
 
 [REQUIREMENT]
 MID: 2dad5f293bc442eaa98859c4b5eac0d5
@@ -673,6 +689,12 @@ MID: 2706ac7ccb8148edb7b200a1b78c25d6
 UID: SDOC-SRS-57
 STATUS: Active
 TITLE: Edit Document options
+STATEMENT: >>>
+StrictDoc's Document screen shall provide controls for configuring the document-specific options.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-93
 
 [REQUIREMENT]
 MID: d64f7a0f6ba54672a62634304c54e2d4
@@ -1213,19 +1235,26 @@ TITLE: Configurability
 MID: da446e6d3c6d4b13badd4a47bdbcc5a3
 UID: SDOC-SRS-37
 TITLE: strictdoc.toml file
+STATEMENT: >>>
+StrictDoc shall support a configuration of project-level options through a TOML file named ``strictdoc.toml``.
+<<<
 RELATIONS:
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/core/project_config.py
-
-[REQUIREMENT]
-MID: 68f35ae8923c4aae82b43147182145e3
-UID: SDOC-SRS-38
-TITLE: Edit project options (Move to SSS)
+- TYPE: Parent
+  VALUE: SDOC-SSS-92
 
 [REQUIREMENT]
 MID: a6e70c0619204a26b135d1e5fca45dd7
 UID: SDOC-SRS-39
 TITLE: Feature toggles
+STATEMENT: >>>
+StrictDoc shall allow a user to select a subset of StrictDoc's available features by listing them in the ``strictdoc.toml`` file.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-92
 
 [REQUIREMENT]
 MID: a8a17295d3e24601891c7d19d5ca67d9

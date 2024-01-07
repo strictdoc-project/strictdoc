@@ -443,9 +443,15 @@ The Requirements Tool shall provide means for unique identification of every req
 MID: 3850f0b8c8294455bf7be9e2acddbd40
 UID: SDOC-SSS-47
 STATUS: Active
-TITLE: Prevent cycles between nodes
+TITLE: Requirements database consistency checks
 STATEMENT: >>>
-The Requirements Tool shall provide a validation mechanism that prevents requirement links from forming cycles.
+The Requirements Tool shall provide a validation mechanism that ensures the integrity of requirements and connections between them.
+
+NOTE: Examples of integrity checks:
+
+- Requirements have correct fields.
+- Requirements do not form cycles.
+- Requirements only link to other requirements as specified in a project configuration.
 <<<
 
 [REQUIREMENT]
@@ -455,6 +461,39 @@ STATUS: Active
 TITLE: Requirement syntax validation (e.g. EARS)
 STATEMENT: >>>
 The Requirements Tool shall provide capabilities for validating requirements according to the EARS syntax.
+<<<
+
+[/SECTION]
+
+[SECTION]
+MID: 7c112f3a5885477084396fd26387a864
+TITLE: Tool configurability
+
+[REQUIREMENT]
+MID: 4550038552894ef69b85b281cff60c60
+UID: SDOC-SSS-92
+TITLE: Project-level configuration
+STATEMENT: >>>
+The Requirements Tool shall provide a solution for configuring the project-level options.
+
+NOTE: Examples of project-level options:
+
+- Project title.
+- Global settings for the Requirements Tool itself.
+<<<
+
+[REQUIREMENT]
+MID: 4550b38552894ef69b85b281cff60360
+UID: SDOC-SSS-93
+TITLE: Document-level configuration
+STATEMENT: >>>
+The Requirements Tool shall provide a solution for configuring the document-level options.
+
+NOTE: Examples of document-level options:
+
+- Document title
+- Requirement prefix.
+- Other options local to the content and the presentation of a given document.
 <<<
 
 [/SECTION]

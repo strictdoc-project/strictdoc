@@ -172,18 +172,6 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-8
 
-[REQUIREMENT]
-MID: caecd704ed634d718deff07ba0db7fa6
-UID: SDOC-SRS-116
-STATUS: Backlog
-TITLE: Requirement validation according to EARS syntax
-STATEMENT: >>>
-The SDoc model shall provide validation of requirements according to the EARS syntax.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-57
-
 [/SECTION]
 
 [SECTION]
@@ -271,24 +259,6 @@ RELATIONS:
   VALUE: SDOC-SSS-55
 - TYPE: Parent
   VALUE: SDOC-SSS-54
-
-[REQUIREMENT]
-MID: 10d23bfbf4504c2e8c995ae89c500be4
-UID: SDOC-SRS-122
-STATUS: Backlog
-TITLE: Project-level grammar
-STATEMENT: >>>
-StrictDoc shall support creation of a project-level grammar.
-<<<
-RATIONALE: >>>
-A single grammar defined for a project (same grammar for several documents) helps to standardize the structure of all documents in a documentation tree and reduces the effort needed to create identical grammars all the time.
-<<<
-COMMENT: >>>
-The implementation is easy model-wise but the user interface details need to be elaborated.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: DO178-9
 
 [REQUIREMENT]
 MID: b97418ceccff438cb0457ed4bdf1be47
@@ -567,23 +537,6 @@ RELATIONS:
   VALUE: strictdoc/export/html2pdf/html2pdf.py
 
 [REQUIREMENT]
-MID: b74a7a3209d247f6b357513b0cce5000
-UID: SDOC-SRS-121
-STATUS: Backlog
-TITLE: WYSIWYG editing
-STATEMENT: >>>
-StrictDoc shall provide WYSIWYG kind of editing for all multiline text input fields.
-<<<
-RATIONALE: >>>
-WYSIWYG improves the user experience, especially for non-programmer users.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: DO178-19
-- TYPE: Parent
-  VALUE: SDOC-SSS-80
-
-[REQUIREMENT]
 MID: 8811f0ef33de4365bc66a602a8c184f6
 UID: SDOC-SRS-48
 STATUS: Active
@@ -597,19 +550,6 @@ Name preservation helps to visually identify which input file an output file cor
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-80
-
-[/SECTION]
-
-[SECTION]
-MID: 0425151bf3944e0ebc1c5acabcb35905
-UID: SECTION-SRS-Screen-Project-home
-TITLE: Screen: Project home
-
-[REQUIREMENT]
-MID: 0a158ddac310483489ef08f618ba8741
-UID: SDOC-SRS-52
-STATUS: Backlog
-TITLE: View project home page
 
 [/SECTION]
 
@@ -714,21 +654,6 @@ RELATIONS:
   VALUE: SDOC-SSS-5
 
 [REQUIREMENT]
-MID: 7a06d1433e4c4b0eaf55ede14507eac9
-UID: SDOC-SRS-94
-STATUS: Backlog
-TITLE: Move requirement / section nodes between documents
-STATEMENT: >>>
-StrictDoc's Document screen shall provide a capability to move the nodes between documents.
-<<<
-RATIONALE: >>>
-Moving the nodes within a document is a convenience feature that speeds up the requirements editing process significantly.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-70
-
-[REQUIREMENT]
 MID: 197e00dd3b1d42309250c89de23ea51b
 UID: SDOC-SRS-56
 STATUS: Active
@@ -768,34 +693,9 @@ RELATIONS:
   VALUE: strictdoc/commands/manage_autouid_command.py
 
 [REQUIREMENT]
-MID: 956371b6a7824d0b91caa5603faeeae2
-UID: SDOC-SRS-120
-STATUS: Backlog
-TITLE: Auto-completion for requirements UIDs
-STATEMENT: >>>
-StrictDoc's Document screen shall provide controls for automatic completion of requirements UIDs.
-<<<
-COMMENT: >>>
-The automatic completion can be especially useful when a user has to fill in a parent relation UID.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-6
-- TYPE: Parent
-  VALUE: DO178-14
-- TYPE: Parent
-  VALUE: SDOC-SSS-80
-
-[REQUIREMENT]
-MID: 45b8513623744776899abfbf99c95286
-UID: SDOC-SRS-58
-STATUS: Backlog
-TITLE: Attach image to requirement
-
-[REQUIREMENT]
 MID: 738b63b7f55b43eb99f5600bd65f5ba7
 UID: SDOC-SRS-59
-STATUS: Backlog
+STATUS: Active
 TITLE: Buttons to copy text to buffer
 STATEMENT: >>>
 StrictDoc shall provide a "copy text to buffer" button for all requirement's text fields.
@@ -803,18 +703,6 @@ StrictDoc shall provide a "copy text to buffer" button for all requirement's tex
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-80
-
-[REQUIREMENT]
-MID: c02a65f2716f4a86b8f83e3a7b4cd31c
-UID: SDOC-SRS-60
-STATUS: Backlog
-TITLE: Provide contextual help about RST markup
-
-[REQUIREMENT]
-MID: fa7fd8fd3a694d8e93953fd60e19fdde
-UID: SDOC-SRS-61
-STATUS: Backlog
-TITLE: Tables
 
 [/SECTION]
 
@@ -836,24 +724,6 @@ RELATIONS:
   VALUE: SDOC-SSS-73
 - TYPE: File
   VALUE: strictdoc/export/html/generators/document_table.py
-
-[REQUIREMENT]
-MID: 7aa5316dd056465e97044e221412290b
-UID: SDOC-SRS-63
-STATUS: Backlog
-TITLE: TBL: Hide/show columns
-STATEMENT: >>>
-StrictDoc's Table screen shall allow hiding/showing columns.
-<<<
-
-[REQUIREMENT]
-MID: 229378602d1847cb83c61ab3e97bb22b
-UID: SDOC-SRS-64
-STATUS: Backlog
-TITLE: TBL: Select/deselect tags
-STATEMENT: >>>
-StrictDoc's Table screen shall allow filtering content based on the selection/deselection of available tags.
-<<<
 
 [/SECTION]
 
@@ -978,52 +848,6 @@ RELATIONS:
   VALUE: strictdoc/git/change_generator.py
 - TYPE: File
   VALUE: strictdoc/git/project_diff_analyzer.py
-
-[/SECTION]
-
-[SECTION]
-MID: b3472533d57145bc9790724efe56075c
-TITLE: Screen: Impact analysis
-
-[REQUIREMENT]
-MID: f5feb38777064d9db939279d32f79130
-UID: SDOC-SRS-117
-STATUS: Backlog
-TITLE: Impact analysis
-STATEMENT: >>>
-StrictDoc shall provide the Impact Analysis screen.
-
-NOTE: The Impact Analysis screen helps to get information about the impact that a given change to a requirement has on the other requirements in the project tree.
-<<<
-RATIONALE: >>>
-The impact analysis is one of the core functions of a requirements management tool. Analyzing the impact that a requirement has on other requirements and an overall project's technical definition helps to perform effective change management.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-74
-- TYPE: Parent
-  VALUE: DO178-11
-
-[/SECTION]
-
-[SECTION]
-MID: 1d8a2c3cf8c24e1b92fe212ab7efacf2
-TITLE: Screen: Traceability navigator
-
-[REQUIREMENT]
-MID: dbfe92e9ec3b44e9a3e1c9e89a0e9ef5
-UID: SDOC-SRS-113
-STATUS: Backlog
-TITLE: Traceability navigator
-STATEMENT: >>>
-StrictDoc shall provide a traceability navigator screen.
-<<<
-RATIONALE: >>>
-Provide an interactive 1000-ft view of a requirements project.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-56
 
 [/SECTION]
 
@@ -1231,24 +1055,6 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-60
 
-[REQUIREMENT]
-MID: 452fbd74d01843fe949d3bd804df203e
-UID: SDOC-SRS-129
-STATUS: Backlog
-TITLE: Export/import to CSV
-STATEMENT: >>>
-StrictDoc shall allow exporting/import SDoc content to/from CSV.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-59
-
-[REQUIREMENT]
-MID: a7c504087df04cedb5541d83ed988e9b
-UID: SDOC-SRS-75
-STATUS: Draft
-TITLE: ReqXLS
-
 [/SECTION]
 
 [SECTION]
@@ -1319,15 +1125,6 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-6
 
-[REQUIREMENT]
-MID: 07a9636655314912a996ecf5692ae3d5
-UID: SDOC-SRS-86
-STATUS: Backlog
-TITLE: Auto-generate section UIDs
-STATEMENT: >>>
-TBD
-<<<
-
 [/SECTION]
 
 [/SECTION]
@@ -1380,71 +1177,6 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-83
 
-[REQUIREMENT]
-MID: bdedcdd91c7f4efb8787b5a82cfec49b
-UID: SDOC-SRS-114
-STATUS: Backlog
-TITLE: Web API
-STATEMENT: >>>
-StrictDoc shall provide a web API.
-<<<
-RATIONALE: >>>
-A web API allows integration with tools and workflows external to StrictDoc itself.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-68
-- TYPE: Parent
-  VALUE: SDOC-SSS-79
-- TYPE: Parent
-  VALUE: SDOC-SSS-85
-
-[/SECTION]
-
-[SECTION]
-MID: 478c38d2cca94107b18fe3dc5b8bfefd
-TITLE: Multi-user workflow
-
-[REQUIREMENT]
-MID: f97dc050ddab4a08bf1689200118faaa
-UID: SDOC-SRS-123
-STATUS: Backlog
-TITLE: Multi-user editing of documents
-STATEMENT: >>>
-StrictDoc shall support concurrent use and editing of a single StrictDoc web server instance by multiple users.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: DO178-17
-- TYPE: Parent
-  VALUE: SDOC-SSS-81
-
-[REQUIREMENT]
-MID: e5b2aff0c1db4b11a8c75c278813300b
-UID: SDOC-SRS-130
-STATUS: Backlog
-TITLE: User accounts
-STATEMENT: >>>
-StrictDoc shall support user accounts.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-65
-
-[REQUIREMENT]
-MID: 440f0bc311b84421a7e8bea9dfd2448b
-UID: SDOC-SRS-131
-STATUS: Backlog
-TITLE: Update notifications
-STATEMENT: >>>
-StrictDoc shall support notifying a user (users) about updated requirements.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-66
-- TYPE: Parent
-  VALUE: SDOC-SSS-74
-
 [/SECTION]
 
 [SECTION]
@@ -1459,7 +1191,7 @@ TITLE: Strict mode by default
 [REQUIREMENT]
 MID: c4e9dce647654deeab8471d04573f8cb
 UID: SDOC-SRS-6
-STATUS: Draft
+STATUS: Active
 TITLE: Warnings are errors
 STATEMENT: >>>
 StrictDoc's default mode of operation shall treat all warnings as errors.

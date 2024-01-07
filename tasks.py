@@ -445,6 +445,7 @@ def lint_ruff(context):
     )
 
 
+# @sdoc[SDOC-SRS-43]
 @task
 def lint_mypy(context):
     run_invoke_with_tox(
@@ -470,6 +471,9 @@ def lint_mypy(context):
                 --python-version=3.7
         """,
     )
+
+
+# # @sdoc[/SDOC-SRS-43]
 
 
 @task

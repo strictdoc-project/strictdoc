@@ -16,6 +16,7 @@ class SourceFileType(Enum):
     TEX = [".tex"]
     # Is there an idiomatic file extension for Jinja templates?
     # https://stackoverflow.com/questions/29590931/is-there-an-idiomatic-file-extension-for-jinja-templates
+    TOML = [".toml"]
     JINJA = [".jinja", ".jinja2", ".j2", ".html.jinja"]
     JAVASCRIPT = [".js"]
     YAML = [".yaml", ".yml"]
@@ -32,6 +33,8 @@ class SourceFileType(Enum):
                 return cls.CPP
         if path_to_file.endswith(".tex"):
             return cls.TEX
+        if path_to_file.endswith(".toml"):
+            return cls.TOML
         for enum_value in SourceFileType.JINJA.value:
             if path_to_file.endswith(enum_value):
                 return cls.JINJA
@@ -94,6 +97,9 @@ class SourceFile:  # pylint: disable=too-many-instance-attributes
 
     def is_tex_file(self):
         return self.file_type == SourceFileType.TEX
+
+    def is_toml_file(self):
+        return self.file_type == SourceFileType.TOML
 
     def is_jinja_file(self):
         return self.file_type == SourceFileType.JINJA

@@ -5,8 +5,10 @@ from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers.c_cpp import CLexer, CppLexer
 from pygments.lexers.data import YamlLexer
+from pygments.lexers.javascript import JavascriptLexer
 from pygments.lexers.markup import RstLexer, TexLexer
 from pygments.lexers.python import PythonLexer
+from pygments.lexers.special import TextLexer
 from pygments.lexers.templates import HtmlDjangoLexer
 
 from strictdoc import __version__
@@ -107,12 +109,14 @@ class SourceFileViewHTMLGenerator:
             lexer = TexLexer()
         elif source_file.is_jinja_file():
             lexer = HtmlDjangoLexer()
+        elif source_file.is_javascript_file():
+            lexer = JavascriptLexer()
         elif source_file.is_yaml_file():
             lexer = YamlLexer()
         elif source_file.is_rst_file():
             lexer = RstLexer()
         else:
-            raise NotImplementedError(source_file)
+            lexer = TextLexer()
 
         # HACK:
         # Otherwise, Pygments will skip the first line as if it does not exist.

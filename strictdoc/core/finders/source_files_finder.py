@@ -17,6 +17,7 @@ class SourceFileType(Enum):
     # Is there an idiomatic file extension for Jinja templates?
     # https://stackoverflow.com/questions/29590931/is-there-an-idiomatic-file-extension-for-jinja-templates
     JINJA = [".jinja", ".jinja2", ".j2", ".html.jinja"]
+    JAVASCRIPT = [".js"]
     YAML = [".yaml", ".yml"]
     RST = [".rst"]
 
@@ -34,6 +35,8 @@ class SourceFileType(Enum):
         for enum_value in SourceFileType.JINJA.value:
             if path_to_file.endswith(enum_value):
                 return cls.JINJA
+        if path_to_file.endswith(".js"):
+            return cls.JAVASCRIPT
         for enum_value in SourceFileType.YAML.value:
             if path_to_file.endswith(enum_value):
                 return cls.YAML
@@ -94,6 +97,9 @@ class SourceFile:  # pylint: disable=too-many-instance-attributes
 
     def is_jinja_file(self):
         return self.file_type == SourceFileType.JINJA
+
+    def is_javascript_file(self):
+        return self.file_type == SourceFileType.JAVASCRIPT
 
     def is_yaml_file(self):
         return self.file_type == SourceFileType.YAML

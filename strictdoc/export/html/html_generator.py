@@ -28,14 +28,14 @@ from strictdoc.export.html.generators.document_tree import (
 from strictdoc.export.html.generators.project_statistics import (
     ProgressStatisticsGenerator,
 )
-from strictdoc.export.html.generators.traceability_matrix import (
-    TraceabilityMatrixHTMLGenerator,
-)
 from strictdoc.export.html.generators.source_file_coverage import (
     SourceFileCoverageHTMLGenerator,
 )
 from strictdoc.export.html.generators.source_file_view_generator import (
     SourceFileViewHTMLGenerator,
+)
+from strictdoc.export.html.generators.traceability_matrix import (
+    TraceabilityMatrixHTMLGenerator,
 )
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer

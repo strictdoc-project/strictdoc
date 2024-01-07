@@ -1,0 +1,10 @@
+RUN: %strictdoc export %S --experimental-enable-file-traceability --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Example: Traceability between requirements and source files
+
+RUN: %check_exists --file "%S/Output/html/_source_files/file.js.html"
+
+RUN: %cat %S/Output/html/50_js/example.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: <a{{.*}}href="../_source_files/file.js.html#REQ-001">
+
+RUN: %cat %S/Output/html/_source_files/file.js.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE: <a{{.*}}href="../50_js/example.html#1-REQ-001"{{.*}}>

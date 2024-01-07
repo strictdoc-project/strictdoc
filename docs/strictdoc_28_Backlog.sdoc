@@ -24,12 +24,73 @@ TITLE: Open-source requirements tool challenges
 - Not possible to scale to multi-user environment quickly.
 [/FREETEXT]
 
+[REQUIREMENT]
+MID: fc76b207c152433888a86a166f58a425
+UID: SDOC-SRS-13
+STATUS: Backlog
+TITLE: Real-time editing out of scope
+STATEMENT: >>>
+StrictDoc shall not implement the real-time editing capability to its web interface.
+<<<
+RATIONALE: >>>
+The real-time editing feature is hard to achieve with a small part-time involvement from the development team. This requirement can only be reconsidered, if StrictDoc would experience a significant increase in the development power.
+<<<
+
 [/SECTION]
 
 [SECTION]
 MID: 7614a9f4f7bd4b1c9899995ac3d1e6ad
 UID: SECTION-SB-Backlog
 TITLE: Backlog
+
+[REQUIREMENT]
+MID: e61e7224e27d41ceacad9bf6051bd6f0
+UID: SDOC-BACKLOG-6
+STATUS: Backlog
+TITLE: Auto-commit to Git repository
+
+[REQUIREMENT]
+MID: 07a9636655314912a996ecf5692ae3d5
+UID: SDOC-SRS-86
+STATUS: Backlog
+TITLE: Auto-generate section UIDs
+STATEMENT: >>>
+TBD
+<<<
+
+[SECTION]
+MID: 0425151bf3944e0ebc1c5acabcb35905
+UID: SECTION-SRS-Screen-Project-home
+TITLE: Screen: Project home
+
+[REQUIREMENT]
+MID: 0a158ddac310483489ef08f618ba8741
+UID: SDOC-SRS-52
+STATUS: Backlog
+TITLE: View project home page
+
+[/SECTION]
+
+[SECTION]
+MID: 1d8a2c3cf8c24e1b92fe212ab7efacf2
+TITLE: Screen: Traceability navigator
+
+[REQUIREMENT]
+MID: dbfe92e9ec3b44e9a3e1c9e89a0e9ef5
+UID: SDOC-SRS-113
+STATUS: Backlog
+TITLE: Traceability navigator
+STATEMENT: >>>
+StrictDoc shall provide a traceability navigator screen.
+<<<
+RATIONALE: >>>
+Provide an interactive 1000-ft view of a requirements project.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-56
+
+[/SECTION]
 
 [SECTION]
 MID: 2654d541d5ce4cb6ad9fcfe2eaa9abb4
@@ -145,12 +206,6 @@ STATUS: Backlog
 TITLE: Support Markdown markup
 
 [REQUIREMENT]
-MID: e61e7224e27d41ceacad9bf6051bd6f0
-UID: SDOC-BACKLOG-6
-STATUS: Backlog
-TITLE: Auto-commit to Git repository
-
-[REQUIREMENT]
 MID: 3f50a97bc70842dbabeea911f653ef90
 UID: SDOC-BACKLOG-7
 STATUS: Backlog
@@ -173,15 +228,6 @@ StrictDoc shall allow exporting/import SDoc content to/from CSV.
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-59
-
-[REQUIREMENT]
-MID: 07a9636655314912a996ecf5692ae3d5
-UID: SDOC-SRS-86
-STATUS: Backlog
-TITLE: Auto-generate section UIDs
-STATEMENT: >>>
-TBD
-<<<
 
 [REQUIREMENT]
 MID: bdedcdd91c7f4efb8787b5a82cfec49b
@@ -295,18 +341,14 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-80
 
-[SECTION]
-MID: 0425151bf3944e0ebc1c5acabcb35905
-UID: SECTION-SRS-Screen-Project-home
-TITLE: Screen: Project home
-
 [REQUIREMENT]
-MID: 0a158ddac310483489ef08f618ba8741
-UID: SDOC-SRS-52
+MID: fa7fd8fd3a694d8e93953fd60e19fdde
+UID: SDOC-SRS-61
 STATUS: Backlog
-TITLE: View project home page
-
-[/SECTION]
+TITLE: Tables HTML editor
+STATEMENT: >>>
+StrictDoc shall provide a solution for editing tables in its web interface.
+<<<
 
 [REQUIREMENT]
 MID: 7a06d1433e4c4b0eaf55ede14507eac9
@@ -355,12 +397,6 @@ STATUS: Backlog
 TITLE: Provide contextual help about RST markup
 
 [REQUIREMENT]
-MID: fa7fd8fd3a694d8e93953fd60e19fdde
-UID: SDOC-SRS-61
-STATUS: Backlog
-TITLE: Tables
-
-[REQUIREMENT]
 MID: 7aa5316dd056465e97044e221412290b
 UID: SDOC-SRS-63
 STATUS: Backlog
@@ -400,27 +436,6 @@ RELATIONS:
   VALUE: SDOC-SSS-74
 - TYPE: Parent
   VALUE: DO178-11
-
-[/SECTION]
-
-[SECTION]
-MID: 1d8a2c3cf8c24e1b92fe212ab7efacf2
-TITLE: Screen: Traceability navigator
-
-[REQUIREMENT]
-MID: dbfe92e9ec3b44e9a3e1c9e89a0e9ef5
-UID: SDOC-SRS-113
-STATUS: Backlog
-TITLE: Traceability navigator
-STATEMENT: >>>
-StrictDoc shall provide a traceability navigator screen.
-<<<
-RATIONALE: >>>
-Provide an interactive 1000-ft view of a requirements project.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-56
 
 [/SECTION]
 

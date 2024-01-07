@@ -22,7 +22,7 @@ from strictdoc.git.change import (
     RequirementFieldChange,
     SectionChange,
 )
-from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.cast import assert_cast, assert_optional_cast
 from strictdoc.helpers.diff import get_colored_diff_string, similar
 from strictdoc.helpers.md5 import get_md5
 from strictdoc.helpers.mid import MID
@@ -315,6 +315,11 @@ class ProjectTreeDiffStats:
         other_requirement: Requirement = self.map_uid_to_nodes[
             requirement.reserved_uid
         ]
+        # FIXME: This is an interesting case when a Requirement can be promoted
+        # or unpromoted to a Section with the same UID preserved. Ignore this
+        # case for now.
+        if not isinstance(other_requirement, Requirement):
+            return None
         return other_requirement
 
 
@@ -577,6 +582,14 @@ class ChangeStats:
                                 other_section_or_none = (
                                     other_stats.map_uid_to_nodes[matched_uid]
                                 )
+                        # FIXME: This is when a Requirement becomes
+                        # a Section with the same UID preserved.
+                        if other_section_or_none is not None and not isinstance(
+                            other_section_or_none, Section
+                        ):
+                            other_section_or_none = None
+                            matched_uid = None
+                            matched_mid = None
 
                         uid_modified: bool = False
                         title_modified: bool = False
@@ -678,6 +691,7 @@ class ChangeStats:
                             lhs_colored_free_text_diff=lhs_colored_free_text_diff,
                             rhs_colored_free_text_diff=rhs_colored_free_text_diff,
                         )
+
                         change_stats.map_nodes_to_changes[node] = section_change
                         if other_section_or_none is not None:
                             change_stats.map_nodes_to_changes[
@@ -708,7 +722,9 @@ class ChangeStats:
 
                     other_requirement_or_none: Optional[
                         Requirement
-                    ] = other_stats.find_requirement(requirement)
+                    ] = assert_optional_cast(
+                        other_stats.find_requirement(requirement), Requirement
+                    )
 
                     # If there is no other requirement to compare with,
                     # we simply record this as a trivial change where everything

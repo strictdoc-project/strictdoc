@@ -122,9 +122,13 @@ class SectionChange:
 
         if matched_mid is not None or matched_uid is not None:
             change_type = ChangeType.SECTION_MODIFIED
+            assert isinstance(lhs_section, Section), lhs_section
+            assert isinstance(rhs_section, Section), rhs_section
         elif lhs_section is not None:
+            assert rhs_section is None, rhs_section
             change_type = ChangeType.SECTION_REMOVED
         elif rhs_section is not None:
+            assert lhs_section is None, lhs_section
             change_type = ChangeType.SECTION_ADDED
         else:
             raise AssertionError("Must not reach here.")

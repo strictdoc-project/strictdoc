@@ -69,6 +69,7 @@
             {% include "screens/git/fields/requirement_fields.jinja" %}
           {% endwith %}
         {% elif change.change_type == "Section removed" or change.change_type == "Section modified" %}
+          {% assert change.lhs_section is not none, change %}
           {% with section=change.lhs_section, side="left", self_stats=change_container.lhs_stats, other_stats=change_container.rhs_stats, traceability_index=change_container.traceability_index_lhs %}
             {% set section_change = change_stats.find_change(section) %}
             {% include "screens/git/fields/section_fields.jinja" %}

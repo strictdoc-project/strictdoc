@@ -1495,7 +1495,7 @@ TITLE: Implementation constraints
 MID: 83d5c896004948b48c3597d58267dafa
 UID: SDOC-SRS-89
 STATUS: Active
-TITLE: Exclusive use of open source components
+TITLE: Use of open source components
 STATEMENT: >>>
 StrictDoc shall be built using only open source software components.
 <<<
@@ -1507,18 +1507,6 @@ RELATIONS:
   VALUE: DO178-7
 - TYPE: Parent
   VALUE: SDOC-SSS-39
-
-[REQUIREMENT]
-MID: fc76b207c152433888a86a166f58a425
-UID: SDOC-SRS-13
-STATUS: Active
-TITLE: Real-time editing out of scope
-STATEMENT: >>>
-StrictDoc shall not implement the real-time editing capability to its web interface.
-<<<
-RATIONALE: >>>
-The real-time editing feature is hard to achieve with a small part-time involvement from the development team. This requirement can only be reconsidered, if StrictDoc would experience a significant increase in the development power.
-<<<
 
 [REQUIREMENT]
 MID: b22bf982e73246a79a5ba4ae653d21e5

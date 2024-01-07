@@ -210,6 +210,14 @@ The CRUD operations are essential operations of document management. They are at
 <<<
 
 [REQUIREMENT]
+MID: 9841bc9a56d740dd9e7988e52339618c
+UID: SDOC-SSS-91
+TITLE: Browsing documentation tree
+STATEMENT: >>>
+The Requirements Tool shall provide browsing of the documentation tree.
+<<<
+
+[REQUIREMENT]
 MID: c4de5f1f46f343b6b4e8dc2a6121b0a2
 UID: SDOC-SSS-51
 STATUS: Active
@@ -400,7 +408,7 @@ RELATIONS:
 [REQUIREMENT]
 MID: 44b9d75e50c84d6c8424cfb8a42a0771
 UID: SDOC-SSS-8
-STATUS: Backlog
+STATUS: Active
 TITLE: Multiple link roles
 STATEMENT: >>>
 The Requirements Tool shall support the link roles.
@@ -417,10 +425,18 @@ RELATIONS:
 [REQUIREMENT]
 MID: 387bd5ff0e4a4a97962661e9d7451f19
 UID: SDOC-SSS-71
-STATUS: Backlog
+STATUS: Active
 TITLE: Reverse parent links
 STATEMENT: >>>
 The Requirements Tool shall support the Reverse Parent relationship.
+<<<
+
+[REQUIREMENT]
+MID: 3348caaed8d44be0928cc6f3c7414094
+UID: SDOC-SSS-89
+TITLE: Unique identification of requirements
+STATEMENT: >>>
+The Requirements Tool shall provide means for unique identification of every requirement.
 <<<
 
 [REQUIREMENT]
@@ -793,6 +809,20 @@ COMMENT: >>>
 Examples of less popular programming languages, with all due respect to their powerful features: Haskell, F#, Ada, etc.
 <<<
 
+[REQUIREMENT]
+MID: 0556a0b2773d4ee0b44b22773455a600
+UID: SDOC-SSS-90
+TITLE: Long-term maintainability of a tool
+STATEMENT: >>>
+The Requirements Tool shall be designed for long-term maintenance.
+
+NOTE: Long-term maintenance aspects to consider:
+
+- Careful selection of the technologies used, e.g., avoid building on too many unrelated technologies at the same time.
+- Take into account the existing experience of the development team. Consider the availability of qualified developers in the future.
+- Take into account maintainability by the development team as well as the users, e.g., IT/DevOps department.
+<<<
+
 [/SECTION]
 
 [SECTION]
@@ -990,7 +1020,7 @@ STATEMENT: >>>
 The Requirements Tool's development process shall ensure that the tool can be qualified for the use in critical product developments as required by the rigorous technical standards (e.g., EN IEC 61508).
 <<<
 RATIONALE: >>>
-Many project developments require a qualification of the tools used during the development. A requirements tool is one of the critical tools that affect the project development. If a requirement tool is developed to higher standards of quality, it simplifies the argument of bringing the tool forward and using it in a particular project.
+Many project developments require a qualification of the tools used during the development. A requirements tool is one of the critical tools that affect the project development. If a requirement tool is developed to the higher standards of quality, it simplifies the argument of bringing the tool forward and using it in a particular project.
 <<<
 
 [/SECTION]

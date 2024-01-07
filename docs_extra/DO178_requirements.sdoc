@@ -188,7 +188,7 @@ S: StrictDoc is written using Python and supports the ReqIF format out of the bo
 [REQUIREMENT]
 MID: 40d4a56263d0420691dbde5d7889895a
 UID: DO178-13
-STATUS: Backlog
+STATUS: Active
 TITLE: Source file coverage
 STATEMENT: >>>
 StrictDoc shall support generation of source code coverage information.
@@ -219,7 +219,7 @@ Simplifies editing of formatted text.
 [REQUIREMENT]
 MID: 7d18b7674050495c935dc4669dfb260e
 UID: DO178-15
-STATUS: Backlog
+STATUS: Active
 TITLE: Diff between document trees
 STATEMENT: >>>
 StrictDoc shall allow calculating Diff between two document trees.
@@ -234,7 +234,7 @@ N: Highlight a req diff with its previous version (Git).
 MID: b0c13e71074242ab91d6344514b82657
 UID: DO178-10
 COMPLIANCE: C
-STATUS: Backlog
+STATUS: Active
 TITLE: Traceability matrices
 STATEMENT: >>>
 StrictDoc shall support generation of forward and backward traceability matrices.
@@ -277,7 +277,7 @@ Then highlight uncovered requirement, and requirements impacted by parent change
 MID: 23c11790799c4457804bcb9d6288931e
 UID: DO178-12
 COMPLIANCE: C
-STATUS: Backlog
+STATUS: Active
 TITLE: Uncovered requirement report
 STATEMENT: >>>
 StrictDoc shall support generation of uncovered requirement report.

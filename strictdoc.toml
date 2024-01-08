@@ -32,7 +32,13 @@ exclude_doc_paths = [
 ]
 
 include_source_paths = [
+  "pyproject.toml",
+  "tasks.py",
   "strictdoc/**"
 ]
 
-exclude_source_paths = []
+exclude_source_paths = [
+  # StrictDoc (almost never) uses __init__ files.
+  # The used files will be whitelisted include_source_paths.
+  "**__init__.py"
+]

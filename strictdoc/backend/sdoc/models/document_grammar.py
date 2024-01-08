@@ -153,6 +153,7 @@ class DocumentGrammar:
 
     @staticmethod
     def create_default(parent):
+        # @sdoc[SDOC-SRS-132]
         fields = [
             GrammarElementFieldString(
                 parent=None, title=RequirementFieldName.UID, required="False"
@@ -203,6 +204,8 @@ class DocumentGrammar:
         requirement_element = GrammarElement(
             parent=None, tag="REQUIREMENT", fields=fields, relations=[]
         )
+        # @sdoc[/SDOC-SRS-132]
+
         requirement_element.relations = create_default_relations(
             requirement_element
         )

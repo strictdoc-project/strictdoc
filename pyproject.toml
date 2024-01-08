@@ -45,6 +45,8 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: PyPy",
     # "Topic :: Internet :: WWW/HTTP",
 ]
+
+# @sdoc[SDOC-SRS-89]
 dependencies = [
     "textx >= 3.0.0, == 3.*",
     "jinja2 >= 2.11.2",
@@ -89,6 +91,7 @@ dependencies = [
     "uvicorn[standard] >= 0.14.0",
     "WebSockets",
 ]
+# @sdoc[/SDOC-SRS-89]
 
 [project.optional-dependencies]
 development = [

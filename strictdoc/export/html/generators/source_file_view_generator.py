@@ -4,6 +4,7 @@ from typing import List
 from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers.c_cpp import CLexer, CppLexer
+from pygments.lexers.configs import TOMLLexer
 from pygments.lexers.data import YamlLexer
 from pygments.lexers.javascript import JavascriptLexer
 from pygments.lexers.markup import RstLexer, TexLexer
@@ -107,6 +108,8 @@ class SourceFileViewHTMLGenerator:
             lexer = CppLexer()
         elif source_file.is_tex_file():
             lexer = TexLexer()
+        elif source_file.is_toml_file():
+            lexer = TOMLLexer()
         elif source_file.is_jinja_file():
             lexer = HtmlDjangoLexer()
         elif source_file.is_javascript_file():

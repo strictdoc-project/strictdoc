@@ -70,6 +70,8 @@ These fields are the most typical fields found in requirement documents.
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-61
+- TYPE: File
+  VALUE: strictdoc/backend/sdoc/models/document_grammar.py
 
 [REQUIREMENT]
 MID: f94419a390f2403daa3c4cd0e96f6cb6
@@ -551,6 +553,8 @@ RELATIONS:
   VALUE: DO178-5
 - TYPE: File
   VALUE: strictdoc/export/html2pdf/html2pdf.py
+- TYPE: File
+  VALUE: strictdoc/export/html/_static/html2pdf/bundle.js
 
 [REQUIREMENT]
 MID: 8811f0ef33de4365bc66a602a8c184f6
@@ -725,6 +729,8 @@ StrictDoc shall provide a "copy text to buffer" button for all requirement's tex
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-80
+- TYPE: File
+  VALUE: strictdoc/export/html/_static/controllers/copy_to_clipboard_controller.js
 
 [/SECTION]
 
@@ -905,6 +911,14 @@ StrictDoc shall support a dedicated markup language for annotating source code w
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-72
+- TYPE: File
+  VALUE: strictdoc/backend/sdoc_source_code/grammar.py
+- TYPE: File
+  VALUE: strictdoc/backend/sdoc_source_code/reader.py
+- TYPE: File
+  VALUE: strictdoc/backend/sdoc_source_code/models/range_marker.py
+- TYPE: File
+  VALUE: strictdoc/backend/sdoc_source_code/models/source_file_info.py
 
 [REQUIREMENT]
 MID: 61c25cab106e4283b2c6d64bf1db96b2
@@ -1122,6 +1136,12 @@ StrictDoc shall provide a command-line interface.
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-32
+- TYPE: File
+  VALUE: strictdoc/cli/main.py
+- TYPE: File
+  VALUE: strictdoc/cli/command_parser_builder.py
+- TYPE: File
+  VALUE: strictdoc/cli/cli_arg_parser.py
 
 [/SECTION]
 
@@ -1507,6 +1527,8 @@ RELATIONS:
   VALUE: DO178-7
 - TYPE: Parent
   VALUE: SDOC-SSS-39
+- TYPE: File
+  VALUE: pyproject.toml
 
 [REQUIREMENT]
 MID: b22bf982e73246a79a5ba4ae653d21e5
@@ -1651,11 +1673,13 @@ UID: SDOC-SRS-43
 STATUS: Active
 TITLE: Static type checking
 STATEMENT: >>>
-StrictDoc's development shall include a continuous static analysis of StrictDoc's codebase.
+StrictDoc's development shall include a continuous type checking of StrictDoc's codebase.
 <<<
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-78
+- TYPE: File
+  VALUE: tasks.py
 
 [/SECTION]
 

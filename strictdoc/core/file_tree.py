@@ -178,7 +178,7 @@ class FileFinder:
                 for d in dirs
                 if (
                     not d.startswith(".")
-                    and not d.startswith("_")
+                    and (d == "_static" or not d.startswith("_"))
                     and d != "build"
                     and d != "output"
                     and d != "Output"

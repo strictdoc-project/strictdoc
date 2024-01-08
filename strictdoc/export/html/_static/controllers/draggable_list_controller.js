@@ -300,6 +300,7 @@ function mouseLeave(event) {
 }
 
 function fetchDroppedItemData(dragItem, dropReference, whereto) {
+  console.assert(['before', 'after', 'child'].includes(whereto), 'whereto is', whereto)
   if (dragItem !== dropReference) {
     // Build formData object.
     let formData = new FormData();

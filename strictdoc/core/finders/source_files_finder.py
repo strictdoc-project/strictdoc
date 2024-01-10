@@ -21,6 +21,7 @@ class SourceFileType(Enum):
     JAVASCRIPT = [".js"]
     YAML = [".yaml", ".yml"]
     RST = [".rst"]
+    SDOC = [".sdoc"]
 
     @classmethod
     def create_from_path(cls, path_to_file: str) -> "SourceFileType":
@@ -46,6 +47,9 @@ class SourceFileType(Enum):
         for enum_value in SourceFileType.RST.value:
             if path_to_file.endswith(enum_value):
                 return cls.RST
+        if path_to_file.endswith(".sdoc"):
+            return cls.SDOC
+
         raise NotImplementedError(path_to_file)
 
     @staticmethod
@@ -112,6 +116,9 @@ class SourceFile:  # pylint: disable=too-many-instance-attributes
 
     def is_rst_file(self):
         return self.file_type == SourceFileType.RST
+
+    def is_sdoc_file(self):
+        return self.file_type == SourceFileType.SDOC
 
 
 class SourceFilesFinder:

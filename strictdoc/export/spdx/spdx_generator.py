@@ -1,9 +1,8 @@
 import os.path
 import re
-from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Union
+from typing import Dict, Optional, Union
 
 from semantic_version import Version
 from spdx_tools.spdx3.model import (
@@ -43,9 +42,12 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
 )
 from strictdoc.backend.sdoc.models.requirement import Requirement
+from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.export.spdx.spdx_sdoc_container import SPDXSDocContainer
+from strictdoc.export.spdx.spdx_to_sdoc_converter import SPDXToSDocConverter
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.sha256 import get_sha256
 
@@ -182,13 +184,6 @@ class SDocToSPDXConverter:
         )
 
 
-@dataclass
-class SPDXSDocContainer:
-    files: List[File] = field(default_factory=list)
-    snippets: List[Snippet] = field(default_factory=list)
-    relationships: List[Relationship] = field(default_factory=list)
-
-
 class SPDXGenerator:
     @staticmethod
     def export_tree(
@@ -205,7 +200,10 @@ class SPDXGenerator:
         SPDX Document and SPDX Package
         """
         spdx_document = sdoc_spdx_converter.create_document(project_config)
+        spdx_container.document = spdx_document
         spdx_package = sdoc_spdx_converter.create_package(project_config)
+        spdx_container.package = spdx_package
+
         spdx_container.relationships.append(
             Relationship(
                 spdx_id=RELATION_ID_HOW_TO,
@@ -224,6 +222,7 @@ class SPDXGenerator:
         )
 
         lookup_uid_to_requirement_snippet: Dict[str, Snippet] = {}
+        lookup_file_name_to_spdx_file: Dict[str, File] = {}
 
         for document_ in traceability_index.document_tree.document_list:
             with open(document_.meta.input_doc_full_path, "rb") as file_:
@@ -249,6 +248,9 @@ class SPDXGenerator:
                     ),
                 )
             )
+            spdx_container.map_spdx_ref_to_objects[
+                spdx_file.spdx_id
+            ] = spdx_file
 
             document_iterator: DocumentCachingIterator = (
                 traceability_index.get_document_iterator(document_)
@@ -275,6 +277,10 @@ class SPDXGenerator:
                         node.reserved_uid
                     ] = spdx_snippet
                     spdx_container.snippets.append(spdx_snippet)
+                    spdx_container.map_spdx_ref_to_objects[
+                        spdx_snippet.spdx_id
+                    ] = spdx_snippet
+
                     spdx_container.relationships.append(
                         Relationship(
                             spdx_id=RELATION_ID_HOW_TO,
@@ -298,12 +304,20 @@ class SPDXGenerator:
                     file_relation_: FileReference
                     for file_relation_, _ in file_relations:
                         path_to_file = file_relation_.get_native_path()
+                        if path_to_file in lookup_file_name_to_spdx_file:
+                            continue
+
                         with open(path_to_file, "rb") as file_:
                             file_bytes = file_.read()
 
                         spdx_file = sdoc_spdx_converter.convert_file_to_file(
                             file_relation_, file_bytes
                         )
+                        lookup_file_name_to_spdx_file[path_to_file] = spdx_file
+                        spdx_container.map_spdx_ref_to_objects[
+                            spdx_file.spdx_id
+                        ] = spdx_file
+
                         spdx_container.files.append(spdx_file)
                         spdx_container.relationships.append(
                             Relationship(
@@ -386,3 +400,12 @@ class SPDXGenerator:
             for relationship_ in spdx_container.relationships:
                 write_relationship(relationship_, text_output=file)
                 file.write("\n")
+
+        if True:
+            sdoc_document = SPDXToSDocConverter.convert(spdx_container)
+
+            sdoc_output = SDWriter().write(sdoc_document)
+
+            sdoc_output_path = os.path.join(output_spdx_root, "output.sdoc")
+            with open(sdoc_output_path, "w", encoding="utf8") as file_:
+                file_.write(sdoc_output)

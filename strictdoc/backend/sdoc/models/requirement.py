@@ -538,7 +538,9 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes, too-ma
         assert grammar_or_none is not None
         grammar: DocumentGrammar = grammar_or_none
 
-        element: GrammarElement = grammar.elements_by_type["REQUIREMENT"]
+        element: GrammarElement = grammar.elements_by_type[
+            self.requirement_type
+        ]
         grammar_field_titles = list(map(lambda f: f.title, element.fields))
         field_index = grammar_field_titles.index(field_name)
         title_field_index = grammar_field_titles.index(

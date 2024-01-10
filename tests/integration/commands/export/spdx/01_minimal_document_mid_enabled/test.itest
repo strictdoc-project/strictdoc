@@ -8,3 +8,10 @@ CHECK-SPDX: ## SPDX Document
 CHECK-SPDX: Untitled Project
 CHECK-SPDX: Dummy high-level requirement #1
 CHECK-SPDX: Dummy low-level requirement #1
+
+RUN: cp %S/strictdoc.toml %S/Output/spdx/
+RUN: cp %S/input1.sdoc %S/Output/spdx/
+RUN: cp %S/input2.sdoc %S/Output/spdx/
+RUN: cp %S/file.py %S/Output/spdx/
+RUN: cd %S/Output/spdx/
+RUN: %strictdoc export %S/Output/spdx/output.sdoc --formats=html --output-dir Output

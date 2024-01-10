@@ -1,5 +1,8 @@
 [project]
+title = "Untitled Project"
 
 features = [
   "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+  "TRACEABILITY_MATRIX_SCREEN",
+  "HTML2PDF",
 ]

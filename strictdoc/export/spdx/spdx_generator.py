@@ -97,8 +97,8 @@ class SDocToSPDXConverter:
             root_element=["DUMMY_ROOT_ELEMENT(what is this for?)"],
             creation_info=creation_info,
             summary=f"SPDX Document for project {project_config.project_title}",
-            description="TBD",
-            comment="TBD",
+            description=None,
+            comment=None,
         )
         return spdx_document
 
@@ -108,15 +108,15 @@ class SDocToSPDXConverter:
             spdx_id="SPDXRef-PACKAGE",
             name="Requirements package",
             summary=f"SPDX Package for project {project_config.project_title}",
-            description="TBD",
-            comment="TBD",
+            description=None,
+            comment=None,
             verified_using=[
                 Hash(
                     algorithm=HashAlgorithm.SHA256,
                     hash_value="TBD: What to calculate for a package?",
                 )
             ],
-            homepage="TBD",
+            homepage=None,
         )
 
     @staticmethod
@@ -125,8 +125,8 @@ class SDocToSPDXConverter:
             spdx_id=f"SPDXRef-File-{get_spdx_ref(document)}",
             name=document.meta.document_filename,
             summary=f"SDPX File for document {document.title}",
-            description=document.title,
-            comment="TBD",
+            description=None,
+            comment=None,
             verified_using=[
                 Hash(
                     algorithm=HashAlgorithm.SHA256,
@@ -142,8 +142,8 @@ class SDocToSPDXConverter:
             spdx_id=f"SPDXRef-File-{get_spdx_ref(file)}",
             name=file.get_native_path(),
             summary=f"SPDX File for source file {file.get_native_path()}",
-            description="TBD",
-            comment="TBD",
+            description=None,
+            comment=None,
             verified_using=[
                 Hash(
                     algorithm=HashAlgorithm.SHA256,
@@ -163,10 +163,10 @@ class SDocToSPDXConverter:
         return Snippet(
             spdx_id=f"SPDXRef-Snippet-{get_spdx_ref(requirement)}",
             primary_purpose=SoftwarePurpose.DOCUMENTATION,
-            name=f"Requirement: {requirement.reserved_title}",
+            name=f"Requirement '{requirement.reserved_title}'",
             summary=f"SPDX Snippet for requirement {requirement.reserved_uid}",
-            description="TBD",
-            comment="TBD",
+            description=None,
+            comment=None,
             verified_using=[
                 Hash(
                     algorithm=HashAlgorithm.SHA256,
@@ -212,14 +212,14 @@ class SPDXGenerator:
                 from_element=spdx_document.spdx_id,
                 relationship_type=RelationshipType.CONTAINS,
                 to=[spdx_package.spdx_id],
-                name="TBD",
+                name=None,
                 summary=create_relationship_summary(
                     spdx_document,
                     spdx_package,
                     "CONTAINS",
                 ),
-                description="TBD",
-                comment="TBD",
+                description=None,
+                comment=None,
             )
         )
 
@@ -259,6 +259,10 @@ class SPDXGenerator:
                     if node.reserved_uid is None:
                         continue
 
+                    assert (
+                        node.reserved_title is not None
+                    ), "The current implementation only supports requirements with a title."
+
                     """
                     Create SPDX Snippet from SDoc Requirement.
                     """
@@ -277,14 +281,14 @@ class SPDXGenerator:
                             from_element=spdx_file.spdx_id,
                             relationship_type=RelationshipType.CONTAINS,
                             to=[spdx_snippet.spdx_id],
-                            name="TBD",
+                            name=None,
                             summary=create_relationship_summary(
                                 spdx_file,
                                 spdx_snippet,
                                 "CONTAINS",
                             ),
-                            description="TBD",
-                            comment="TBD",
+                            description=None,
+                            comment=None,
                         )
                     )
 
@@ -307,14 +311,14 @@ class SPDXGenerator:
                                 from_element=spdx_snippet.spdx_id,
                                 relationship_type=RelationshipType.REQUIREMENT_FOR,
                                 to=[spdx_file.spdx_id],
-                                name="TBD",
+                                name=None,
                                 summary=create_relationship_summary(
                                     spdx_snippet,
                                     spdx_file,
                                     "REQUIREMENT_FOR",
                                 ),
-                                description="TBD",
-                                comment="TBD",
+                                description=None,
+                                comment=None,
                             )
                         )
 
@@ -350,14 +354,14 @@ class SPDXGenerator:
                                 from_element=requirement_snippet.spdx_id,
                                 relationship_type=RelationshipType.REQUIREMENT_FOR,
                                 to=[parent_requirement_snippet.spdx_id],
-                                name="TBD",
+                                name=None,
                                 summary=create_relationship_summary(
                                     requirement_snippet,
                                     parent_requirement_snippet,
                                     "REQUIREMENT_FOR",
                                 ),
-                                description="TBD",
-                                comment="TBD",
+                                description=None,
+                                comment=None,
                             )
                         )
 

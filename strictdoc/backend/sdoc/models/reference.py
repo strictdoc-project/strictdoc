@@ -28,6 +28,9 @@ class FileReference(Reference):
     def get_posix_path(self) -> str:
         return self.g_file_entry.file_path_posix
 
+    def get_native_path(self) -> str:
+        return self.g_file_entry.g_file_path
+
     def get_file_format(self) -> Optional[str]:
         return self.g_file_entry.g_file_format
 

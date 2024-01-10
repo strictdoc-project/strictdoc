@@ -5,7 +5,15 @@ from strictdoc import __version__
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.cli.argument_int_range import IntRange
 
-EXPORT_FORMATS = ["html", "rst", "excel", "reqif-sdoc", "reqifz-sdoc", "dot"]
+EXPORT_FORMATS = [
+    "html",
+    "rst",
+    "excel",
+    "reqif-sdoc",
+    "reqifz-sdoc",
+    "spdx",
+    "dot",
+]
 EXCEL_PARSERS = ["basic"]
 
 

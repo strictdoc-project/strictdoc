@@ -1,0 +1,213 @@
+[DOCUMENT]
+TITLE: Hazards
+
+[FREETEXT]
+There are three basic criteria for defining system-level hazards:
+
+* Hazards are system states or conditions (not component-level causes or environmental states)
+
+* Hazards will lead to a loss in some worst-case environment
+
+* Hazards must describe states or conditions to be prevented
+[/FREETEXT]
+
+[REQUIREMENT]
+UID: STPA-HAZARD-1
+TITLE: Hazard of Providing Inaccurate or Outdated Documentation
+STATEMENT: >>>
+StrictDoc Fails to Provide Accurate and Up-to-Date Documentation
+<<<
+RATIONALE: >>>
+Hazard related to the dissemination of incorrect or outdated information impacting development and strategic planning.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: STPA-LOSS-1
+- TYPE: Parent
+  VALUE: STPA-LOSS-2
+
+[REQUIREMENT]
+UID: STPA-HAZARD-2
+TITLE: Hazard of Frequent System Downtimes
+STATEMENT: >>>
+StrictDoc Experiences Frequent Downtimes
+<<<
+RATIONALE: >>>
+Hazard concerning periods when StrictDoc is unavailable, impacting project timelines and workflows.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: STPA-LOSS-3
+
+[REQUIREMENT]
+UID: STPA-HAZARD-3
+TITLE: Hazard of Compromising Confidential Data
+STATEMENT: >>>
+StrictDoc Compromises Confidential Data
+<<<
+RATIONALE: >>>
+Hazard associated with unauthorized access to or disclosure of sensitive information.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: STPA-LOSS-4
+
+[REQUIREMENT]
+UID: STPA-HAZARD-4
+TITLE: Hazard of Non-Compliance with Regulatory Standards
+STATEMENT: >>>
+StrictDoc Fails to Comply with Regulatory Standards
+<<<
+RATIONALE: >>>
+Hazard due to non-adherence to industry-specific regulations and standards.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: STPA-LOSS-5
+
+[REQUIREMENT]
+UID: STPA-HAZARD-5
+TITLE: Hazard of Negatively Impacting Organizational Reputation
+STATEMENT: >>>
+StrictDoc Negatively Impacts Organizational Reputation
+<<<
+RATIONALE: >>>
+Hazard related to poor public perception and loss of stakeholder trust due to documentation issues.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: STPA-LOSS-6
+
+[REQUIREMENT]
+UID: STPA-HAZARD-6
+TITLE: Hazard of Reducing User Confidence and Satisfaction
+STATEMENT: >>>
+StrictDoc Leads to Reduced User Confidence and Satisfaction
+<<<
+RATIONALE: >>>
+Hazard due to user dissatisfaction and eroded trust in the tool's effectiveness.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: STPA-LOSS-7
+
+[REQUIREMENT]
+UID: STPA-HAZARD-7
+TITLE: Hazard of Causing Inefficiencies in the Documentation Process
+STATEMENT: >>>
+StrictDoc Causes Inefficiencies in the Documentation Process
+<<<
+RATIONALE: >>>
+Hazard related to delays and inefficiencies in managing and producing documentation.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: STPA-LOSS-8
+
+[REQUIREMENT]
+UID: STPA-HAZARD-8
+TITLE: Hazard of Failing to Maintain Requirement Traceability
+STATEMENT: >>>
+StrictDoc Fails to Maintain Requirement Traceability
+<<<
+RATIONALE: >>>
+Hazard associated with the inability to trace documentation back to specific requirements.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: STPA-LOSS-9
+
+[REQUIREMENT]
+UID: STPA-HAZARD-9
+TITLE: Hazard of Lacking Effective Integration with Development Tools
+STATEMENT: >>>
+StrictDoc Lacks Effective Integration with Development Tools
+<<<
+RATIONALE: >>>
+Hazard due to poor integration capabilities with other tools in the development ecosystem.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: STPA-LOSS-10
+
+[REQUIREMENT]
+UID: STPA-HAZARD-10
+TITLE: Hazard of Struggling to Scale with Project Demands
+STATEMENT: >>>
+StrictDoc Struggles to Scale with Project Demands
+<<<
+RATIONALE: >>>
+Hazard related to the tool’s inability to handle increased demands or complexity.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: STPA-LOSS-11
+
+[REQUIREMENT]
+UID: STPA-HAZARD-11
+TITLE: Hazard of Mismanaging Version Control
+STATEMENT: >>>
+StrictDoc Mismanages Version Control
+<<<
+RATIONALE: >>>
+Hazard associated with errors in version control and change tracking.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: STPA-LOSS-12
+
+[REQUIREMENT]
+UID: STPA-HAZARD-12
+TITLE: Hazard of Failing in Cross-Tool Interoperability
+STATEMENT: >>>
+StrictDoc Fails in Cross-Tool Interoperability
+<<<
+RATIONALE: >>>
+Hazard due to inability to work seamlessly with various systems and environments.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: STPA-LOSS-13
+
+[REQUIREMENT]
+UID: STPA-HAZARD-13
+TITLE: Hazard of Lacking Customization Flexibility
+STATEMENT: >>>
+StrictDoc Lacks Customization Flexibility
+<<<
+RATIONALE: >>>
+Hazard related to the absence of adequate customization options for user interface, data structure, and tool functionality.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: STPA-LOSS-14
+- TYPE: Parent
+  VALUE: STPA-LOSS-15
+- TYPE: Parent
+  VALUE: STPA-LOSS-16
+
+[REQUIREMENT]
+UID: STPA-HAZARD-14
+TITLE: Hazard of Imposing Restrictive Licensing Constraints
+STATEMENT: >>>
+StrictDoc Imposes Restrictive Licensing Constraints
+<<<
+RATIONALE: >>>
+Hazard due to licensing terms that limit the tool’s use in various contexts.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: STPA-LOSS-17
+
+[REQUIREMENT]
+UID: STPA-HAZARD-15
+TITLE: Hazard of Lacking Necessary Certifications for Safety-Critical Industries
+STATEMENT: >>>
+StrictDoc Lacks Necessary Certifications for Safety-Critical Industries
+<<<
+RATIONALE: >>>
+Hazard associated with the absence of industry-specific certifications for regulated sectors.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: STPA-LOSS-18

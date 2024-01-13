@@ -617,6 +617,21 @@ class RequirementFormObject(ErrorObject):
                     ),
                 )
 
+        if self.is_new and "UID" in self.fields:
+            requirement_uid = self.fields["UID"][0].field_unescaped_value
+            existing_node_with_this_uid = (
+                traceability_index.get_node_by_uid_weak(requirement_uid)
+            )
+            if existing_node_with_this_uid is not None:
+                self.add_error(
+                    "UID",
+                    (
+                        "The chosen UID must be unique. "
+                        "Another requirement with this UID already exists: "
+                        f"'{requirement_uid}'."
+                    ),
+                )
+
         requirement_statement = self.fields["STATEMENT"][
             0
         ].field_unescaped_value

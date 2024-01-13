@@ -338,8 +338,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         )
 
     def get_node_by_uid_weak(
-        self, uid
+        self, uid: str
     ) -> Union[Document, Section, Requirement, None]:
+        assert isinstance(uid, str), uid
         for document in self.document_tree.document_list:
             document_iterator = DocumentCachingIterator(document)
             for node in document_iterator.all_content():
@@ -489,34 +490,51 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def update_last_updated(self):
         self.index_last_updated = datetime.today()
 
-    def update_add_uid_to_a_requirement_if_needed(
-        self, requirement: Requirement
-    ):
+    def create_requirement(self, requirement: Requirement):
         assert isinstance(requirement, Requirement)
 
-        if requirement.reserved_uid is None:
-            return
         self.graph_database.create_link(
-            link_type=GraphLinkType.UID_TO_NODE,
-            lhs_node=requirement.reserved_uid,
+            link_type=GraphLinkType.MID_TO_NODE,
+            lhs_node=requirement.reserved_mid,
             rhs_node=requirement,
         )
-        self.graph_database.create_link(
-            link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
-            lhs_node=requirement.reserved_uid,
-            rhs_node=RequirementConnections(
-                requirement=requirement,
-                document=requirement.document,
-                parents=[],
-                children=[],
-            ),
-        )
+        if requirement.reserved_uid is not None:
+            self.graph_database.create_link(
+                link_type=GraphLinkType.UID_TO_NODE,
+                lhs_node=requirement.reserved_uid,
+                rhs_node=requirement,
+            )
+            self.graph_database.create_link(
+                link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+                lhs_node=requirement.reserved_uid,
+                rhs_node=RequirementConnections(
+                    requirement=requirement,
+                    document=requirement.document,
+                    parents=[],
+                    children=[],
+                ),
+            )
 
     def update_requirement_uid(
         self, requirement: Requirement, old_uid: Optional[str]
     ) -> None:
         if old_uid is None:
-            self.update_add_uid_to_a_requirement_if_needed(requirement)
+            if requirement.reserved_uid:
+                self.graph_database.create_link(
+                    link_type=GraphLinkType.UID_TO_NODE,
+                    lhs_node=requirement.reserved_uid,
+                    rhs_node=requirement,
+                )
+                self.graph_database.create_link(
+                    link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+                    lhs_node=requirement.reserved_uid,
+                    rhs_node=RequirementConnections(
+                        requirement=requirement,
+                        document=requirement.document,
+                        parents=[],
+                        children=[],
+                    ),
+                )
             return
 
         existing_entry = self.graph_database.get_link_value(
@@ -528,12 +546,22 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             lhs_node=old_uid,
             rhs_node=existing_entry,
         )
+        self.graph_database.delete_link(
+            link_type=GraphLinkType.UID_TO_NODE,
+            lhs_node=old_uid,
+            rhs_node=requirement,
+        )
 
         if requirement.reserved_uid is not None:
             self.graph_database.create_link(
                 link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
                 lhs_node=requirement.reserved_uid,
                 rhs_node=existing_entry,
+            )
+            self.graph_database.create_link(
+                link_type=GraphLinkType.UID_TO_NODE,
+                lhs_node=requirement.reserved_uid,
+                rhs_node=requirement,
             )
 
     def update_requirement_parent_uid(

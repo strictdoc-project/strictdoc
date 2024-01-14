@@ -7,6 +7,7 @@ from strictdoc.cli.argument_int_range import IntRange
 
 EXPORT_FORMATS = [
     "html",
+    "html2pdf",
     "rst",
     "excel",
     "reqif-sdoc",

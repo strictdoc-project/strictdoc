@@ -93,6 +93,10 @@ dependencies = [
     "python-multipart",
     "uvicorn[standard] >= 0.14.0",
     "WebSockets",
+
+    # HTML2PDF dependencies
+    "selenium",
+    "webdriver-manager",
 ]
 # @sdoc[/SDOC-SRS-89]
 

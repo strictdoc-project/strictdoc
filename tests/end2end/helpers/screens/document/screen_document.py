@@ -39,6 +39,11 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             '(//*[@data-testid="document-export-reqif-action"])'
         )
 
+    def do_export_pdf(self) -> None:
+        self.test_case.click_xpath(
+            '(//*[@data-testid="document-export-html2pdf-action"])'
+        )
+
     # Open forms
 
     def do_open_modal_form_edit_grammar(self) -> Form_EditGrammar:

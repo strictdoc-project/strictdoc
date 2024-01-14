@@ -12,6 +12,7 @@ from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from strictdoc.export.dot.document_dot_generator import DocumentDotGenerator
 from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.html.html_templates import HTMLTemplates
+from strictdoc.export.html2pdf.html2pdf_generator import HTML2PDFGenerator
 from strictdoc.export.rst.document_rst_generator import DocumentRSTGenerator
 from strictdoc.export.spdx.spdx_generator import SPDXGenerator
 from strictdoc.helpers.timing import timing_decorator
@@ -50,6 +51,7 @@ class ExportAction:
         if (
             "html" in self.project_config.export_formats
             or "html-standalone" in self.project_config.export_formats
+            or "html2pdf" in self.project_config.export_formats
         ):
             is_small_project = self.traceability_index.is_small_project()
 
@@ -59,11 +61,29 @@ class ExportAction:
                 strictdoc_last_update=self.traceability_index.strictdoc_last_update,
             )
 
-            html_generator = HTMLGenerator(self.project_config, html_templates)
-            html_generator.export_complete_tree(
-                traceability_index=self.traceability_index,
-                parallelizer=self.parallelizer,
-            )
+            if (
+                "html" in self.project_config.export_formats
+                or "html-standalone" in self.project_config.export_formats
+            ):
+                html_generator = HTMLGenerator(
+                    self.project_config, html_templates
+                )
+                html_generator.export_complete_tree(
+                    traceability_index=self.traceability_index,
+                    parallelizer=self.parallelizer,
+                )
+
+            if "html2pdf" in self.project_config.export_formats:
+                output_html2pdf_root = os.path.join(
+                    self.project_config.export_output_dir, "html2pdf"
+                )
+                Path(output_html2pdf_root).mkdir(parents=True, exist_ok=True)
+                HTML2PDFGenerator.export_tree(
+                    self.project_config,
+                    self.traceability_index,
+                    html_templates,
+                    output_html2pdf_root,
+                )
 
         if "rst" in self.project_config.export_formats:
             output_rst_root = os.path.join(

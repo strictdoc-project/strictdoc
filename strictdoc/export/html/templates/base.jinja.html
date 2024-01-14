@@ -32,7 +32,9 @@
 <body data-viewtype="{%- block viewtype -%}{%- endblock viewtype -%}" data-turbo="false">
 
 <div class="mars">
-  {%- include "websocket.jinja.html" -%}
+  {% if project_config.is_running_on_server %}
+  {% include "websocket.jinja.html" %}
+  {% endif %}
 </div>
 
   <div class="layout" id="layout">

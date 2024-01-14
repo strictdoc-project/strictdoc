@@ -10,16 +10,6 @@
   <script type="text/javascript" src="{{ link_renderer.render_static_url('resizable_bar.js') }}"></script>
   <script type="text/javascript" src="{{ link_renderer.render_static_url('toc_highlighting.js') }}"></script>
 
-  <script type="module">
-    import hotwiredTurbo from "{{ link_renderer.render_static_url('turbo.min.js') }}";
-    import { Application, Controller } from "{{ link_renderer.render_static_url('stimulus.min.js') }}";
-    window.Stimulus = Application.start();
-    window.Controller = Controller;
-  </script>
-  <script type="module" src="{{ link_renderer.render_static_url('controllers/collapsible_list_controller.js') }}"></script>
-  <script type="module" src="{{ link_renderer.render_static_url('controllers/draggable_list_controller.js') }}"></script>
-  <script type="module" src="{{ link_renderer.render_static_url('controllers/modal_controller.js') }}"></script>
-
   {%- if project_config.is_activated_mathjax() -%}
   <script id="MathJax-script" async src="{{ link_renderer.render_static_url('mathjax/tex-mml-chtml.js') }}"></script>
   {%- endif -%}
@@ -35,6 +25,7 @@
   {%- if project_config.is_activated_html2pdf() -%}
   <script
   defer
+    {# data-debug-mode='false' #}
     data-preloader='true'
     data-preloader-target='[html2pdf-preloader]'
     data-preloader-background='#F2F5F9'

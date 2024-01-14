@@ -118,3 +118,14 @@ class SDocRuntimeEnvironment:
         return os.path.join(
             self.path_to_strictdoc, "strictdoc", "export", "html"
         )
+
+    def get_path_to_html2pdf(self):
+        if self.is_binary_dist:
+            return os.path.join(self.path_to_strictdoc, "html2pdf.py")
+        return os.path.join(
+            self.path_to_strictdoc,
+            "strictdoc",
+            "export",
+            "html2pdf",
+            "html2pdf.py",
+        )

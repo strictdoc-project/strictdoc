@@ -15,6 +15,14 @@
       data-testid="document-edit-grammar-action"
     >{% include "_res/svg_ico16_gear.jinja.html" %} Edit grammar</a>
 
+    {%- if project_config.is_activated_html2pdf() -%}
+    <a
+      class="action_button"
+      href="/export_html2pdf/{{ document.reserved_mid }}"
+      data-testid="document-export-html2pdf-action"
+    >Export to PDF</a>
+    {%- endif -%}
+
     {%- if project_config.is_activated_reqif() -%}
     <a
       class="action_button"

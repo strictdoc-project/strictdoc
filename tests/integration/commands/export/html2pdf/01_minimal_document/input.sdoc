@@ -1,0 +1,32 @@
+[DOCUMENT]
+MID: 82becec5ace54321b135ed27d5a73c76
+TITLE: Dummy Software Requirements Specification #1
+OPTIONS:
+  ENABLE_MID: True
+
+[REQUIREMENT]
+MID: c165cc52af20417e9199e30a4e17f138
+UID: REQ-1
+TITLE: Dummy high-level requirement #1
+STATEMENT: System ABC shall do 1.
+RELATIONS:
+- TYPE: File
+  VALUE: file.py
+
+[REQUIREMENT]
+MID: 74dddc4c55ac44ae83dc0f73ef8ed2aa
+UID: REQ-2
+TITLE: Dummy high-level requirement #2
+STATEMENT: System ABC shall do 2.
+RELATIONS:
+- TYPE: File
+  VALUE: file.py
+
+[REQUIREMENT]
+MID: fcbce0c486ac4d3189a7aa1dd646399e
+UID: REQ-3
+TITLE: Dummy high-level requirement #3
+STATEMENT: System ABC shall do 3.
+RELATIONS:
+- TYPE: File
+  VALUE: file.py

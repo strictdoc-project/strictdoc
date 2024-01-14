@@ -104,7 +104,7 @@ def server(context, input_path=".", config=None):
         context,
         ToxEnvironment.DEVELOPMENT,
         f"""
-            python strictdoc/cli/main.py
+            python -m strictdoc.cli.main
                 server {input_path} {config_argument} --reload
         """,
     )
@@ -700,6 +700,7 @@ def release_pyinstaller(context):
             --additional-hooks-dir developer/pyinstaller_hooks
             --distpath {path_to_pyi_dist}
             --hidden-import strictdoc.server.app
+            --add-data strictdoc/export/html2pdf/html2pdf.py:.
             --add-data strictdoc/export/html/templates:templates/html
             --add-data strictdoc/export/rst/templates:templates/rst
             --add-data strictdoc/export/dot/templates:templates/dot

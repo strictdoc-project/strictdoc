@@ -1,3 +1,4 @@
+import copy
 import html
 import os
 import re
@@ -81,10 +82,14 @@ from strictdoc.export.html.form_objects.requirement_form_object import (
 from strictdoc.export.html.form_objects.section_form_object import (
     SectionFormObject,
 )
+from strictdoc.export.html.generators.document_pdf import (
+    DocumentHTML2PDFGenerator,
+)
 from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
+from strictdoc.export.html2pdf.pdf_print_driver import PDFPrintDriver
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.file_system import get_etag
@@ -95,9 +100,11 @@ from strictdoc.helpers.string import (
     create_safe_acronym,
     is_safe_alphanumeric_string,
 )
+from strictdoc.helpers.timing import measure_performance
 from strictdoc.server.error_object import ErrorObject
 
 HTTP_STATUS_PRECONDITION_FAILED = 412
+HTTP_STATUS_GATEWAY_TIMEOUT = 504
 
 
 def create_main_router(
@@ -2335,6 +2342,73 @@ def create_main_router(
                 "Content-Type": "text/vnd.turbo-stream.html",
             },
         )
+
+    @router.get("/export_html2pdf/{document_mid}", response_class=Response)
+    def get_export_html2pdf(document_mid: str):  # noqa: ARG001
+        if not project_config.is_activated_html2pdf():
+            return Response(
+                content="The HTML2PDF feature is not activated in the project config.",
+                status_code=HTTP_STATUS_PRECONDITION_FAILED,
+            )
+
+        document = export_action.traceability_index.get_node_by_mid(
+            MID(document_mid)
+        )
+
+        link_renderer = LinkRenderer(
+            root_path="", static_path=project_config.dir_for_sdoc_assets
+        )
+        markup_renderer = MarkupRenderer.create(
+            "RST",
+            export_action.traceability_index,
+            link_renderer,
+            html_templates,
+            project_config,
+            document,
+        )
+
+        pdf_project_config = copy.deepcopy(project_config)
+        pdf_project_config.is_running_on_server = False
+
+        with measure_performance("Generating printable HTML document"):
+            document_content = DocumentHTML2PDFGenerator.export(
+                pdf_project_config,
+                document,
+                export_action.traceability_index,
+                markup_renderer,
+                link_renderer,
+                standalone=False,
+                html_templates=html_templates,
+            )
+
+        path_to_output_html = os.path.join(
+            server_config.output_path, "html", "_temp.html"
+        )
+        path_to_output_pdf = os.path.join(
+            server_config.output_path, "html", "_temp.pdf"
+        )
+        pdf_print_driver = PDFPrintDriver()
+        with open(path_to_output_html, mode="w") as temp_file_:
+            temp_file_.write(document_content)
+
+            try:
+                pdf_print_driver.get_pdf_from_html(
+                    path_to_output_html, path_to_output_pdf
+                )
+            except TimeoutError:
+                return Response(
+                    content="HTML2PDF timeout error.",
+                    status_code=HTTP_STATUS_GATEWAY_TIMEOUT,
+                )
+
+            return FileResponse(
+                path=path_to_output_pdf,
+                status_code=200,
+                headers={
+                    "Content-Disposition": 'attachment; filename="document.pdf"',
+                },
+                media_type="application/octet-stream",
+            )
 
     @router.get(
         "/reqif/export_document/{document_mid}", response_class=Response

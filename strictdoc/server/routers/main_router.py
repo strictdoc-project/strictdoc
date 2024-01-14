@@ -2393,7 +2393,7 @@ def create_main_router(
 
             try:
                 pdf_print_driver.get_pdf_from_html(
-                    path_to_output_html, path_to_output_pdf
+                    f"{path_to_output_html},{path_to_output_pdf}"
                 )
             except TimeoutError:
                 return Response(

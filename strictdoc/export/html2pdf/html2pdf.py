@@ -97,18 +97,12 @@ def create_webdriver():
 
 def main():
     parser = argparse.ArgumentParser(description="HTML2PDF printer script.")
-    parser.add_argument("input_file", help="Path to input HTML file.")
-    parser.add_argument("output_file", help="Path to output PDF file.")
+    parser.add_argument("paths", help="Paths to input HTML file.")
     args = parser.parse_args()
 
-    input_file = args.input_file
-    assert os.path.isfile(input_file)
+    paths = args.paths
 
-    output_file = args.output_file
-    output_file_dir = os.path.dirname(output_file)
-    pathlib.Path(output_file_dir).mkdir(parents=True, exist_ok=True)
-
-    url = pathlib.Path(os.path.abspath(input_file)).as_uri()
+    separate_path_pairs = paths.split(";")
 
     driver = create_webdriver()
 
@@ -117,9 +111,18 @@ def main():
         print("HTML2PDF: exit handler: quitting the Chrome Driver.")  # noqa: T201
         driver.quit()
 
-    pdf_bytes = get_pdf_from_html(driver, url)
-    with open(output_file, "wb") as f:
-        f.write(pdf_bytes)
+    for separate_path_pair_ in separate_path_pairs:
+        path_to_input_html, path_to_output_pdf = separate_path_pair_.split(",")
+        assert os.path.isfile(path_to_input_html), path_to_input_html
+
+        path_to_output_pdf_dir = os.path.dirname(path_to_output_pdf)
+        pathlib.Path(path_to_output_pdf_dir).mkdir(parents=True, exist_ok=True)
+
+        url = pathlib.Path(os.path.abspath(path_to_input_html)).as_uri()
+
+        pdf_bytes = get_pdf_from_html(driver, url)
+        with open(path_to_output_pdf, "wb") as f:
+            f.write(pdf_bytes)
 
 
 if __name__ == "__main__":

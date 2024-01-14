@@ -28,3 +28,6 @@ psutil
 
 # Used by the dead links checker
 requests>=2.27.1
+
+# Test HTML2PDF-produced artifacts in the integration tests.
+pypdf

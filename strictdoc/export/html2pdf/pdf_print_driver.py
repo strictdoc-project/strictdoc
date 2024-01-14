@@ -6,7 +6,8 @@ from strictdoc.helpers.timing import measure_performance
 
 class PDFPrintDriver:
     @staticmethod
-    def get_pdf_from_html(path_to_input_html, path_to_output_pdf):
+    def get_pdf_from_html(paths_to_print: str):
+        assert isinstance(paths_to_print, str)
         with measure_performance(
             "PDFPrintDriver: printing HTML to PDF using HTML2PDF and Chrome Driver"
         ):
@@ -15,8 +16,7 @@ class PDFPrintDriver:
                     [
                         "python",
                         environment.get_path_to_html2pdf(),
-                        path_to_input_html,
-                        path_to_output_pdf,
+                        paths_to_print,
                     ],
                     capture_output=False,
                     timeout=15,

@@ -1,5 +1,6 @@
 import os
-import tempfile
+from pathlib import Path
+from typing import List, Tuple
 
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
@@ -22,9 +23,20 @@ class HTML2PDFGenerator:
         html_templates: HTMLTemplates,
         output_html2pdf_root: str,
     ):
+        sync_dir(
+            project_config.get_static_files_path(),
+            os.path.join(output_html2pdf_root, "_static"),
+            message="Copying StrictDoc's assets for HTML2PDF",
+        )
+
+        paths_to_print: List[Tuple[str, str]] = []
+
         for document_ in traceability_index.document_tree.document_list:
+            root_path = document_.meta.get_root_path_prefix()
+
             link_renderer = LinkRenderer(
-                root_path="", static_path=project_config.dir_for_sdoc_assets
+                root_path=root_path,
+                static_path=project_config.dir_for_sdoc_assets,
             )
             markup_renderer = MarkupRenderer.create(
                 "RST",
@@ -46,30 +58,49 @@ class HTML2PDFGenerator:
                     html_templates=html_templates,
                 )
 
-            with tempfile.NamedTemporaryFile(
-                "w",
-                suffix=".html",
-            ) as temp_output_html_file_:
-                temp_output_html_dir_ = os.path.dirname(
-                    temp_output_html_file_.name
-                )
-                sync_dir(
-                    project_config.get_static_files_path(),
-                    os.path.join(temp_output_html_dir_, "_static"),
-                    message="Copying StrictDoc's assets for HTML2PDF",
-                )
+            path_to_output_pdf_html_dir = os.path.join(
+                output_html2pdf_root, "html"
+            )
+            path_to_output_pdf_pdf_dir = os.path.join(
+                output_html2pdf_root, "pdf"
+            )
 
-                temp_output_html_file_.write(document_content)
+            path_to_output_html_doc_dir = os.path.join(
+                path_to_output_pdf_html_dir,
+                document_.meta.input_doc_dir_rel_path,
+            )
+            Path(path_to_output_html_doc_dir).mkdir(parents=True, exist_ok=True)
+            Path(path_to_output_pdf_pdf_dir).mkdir(parents=True, exist_ok=True)
 
-                path_to_output_pdf = os.path.join(
-                    output_html2pdf_root,
-                    document_.meta.input_doc_dir_rel_path,
-                    document_.meta.document_filename_base + ".pdf",
-                )
-                pdf_print_driver = PDFPrintDriver()
-                try:
-                    pdf_print_driver.get_pdf_from_html(
-                        temp_output_html_file_.name, path_to_output_pdf
-                    )
-                except TimeoutError:
-                    print("error: HTML2PDF: timeout error.")  # noqa: T201
+            path_to_output_html_doc = os.path.join(
+                path_to_output_html_doc_dir,
+                document_.meta.document_filename_base + ".html",
+            )
+
+            with open(path_to_output_html_doc, "w+") as output_html_doc_file_:
+                output_html_doc_file_.write(document_content)
+
+            path_to_output_pdf_dir = os.path.join(
+                path_to_output_pdf_pdf_dir,
+                document_.meta.input_doc_dir_rel_path,
+            )
+            Path(path_to_output_pdf_dir).mkdir(parents=True, exist_ok=True)
+
+            path_to_output_pdf = os.path.join(
+                path_to_output_pdf_dir,
+                document_.meta.document_filename_base + ".pdf",
+            )
+
+            paths_to_print.append((path_to_output_html_doc, path_to_output_pdf))
+
+        paths_to_print_argument = ";".join(
+            map(
+                lambda in_out_path_pair_: f"{in_out_path_pair_[0]},{in_out_path_pair_[1]}",
+                paths_to_print,
+            )
+        )
+        pdf_print_driver = PDFPrintDriver()
+        try:
+            pdf_print_driver.get_pdf_from_html(paths_to_print_argument)
+        except TimeoutError:
+            print("error: HTML2PDF: timeout error.")  # noqa: T201

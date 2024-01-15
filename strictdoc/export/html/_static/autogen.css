@@ -84,16 +84,27 @@ sdoc-autogen pre.code {
   font-family: var(--code-font-family);
 
   font-size: var(--code-font-size);
-  line-height: 1.8;
+  line-height: 2;
   margin:   var(--code-font-size) 0;
-  padding:  calc(var(--code-font-size)*1.2)
-            calc(var(--code-font-size)*1.2)
-            calc(var(--code-font-size)*1.2)
+  padding:  calc(var(--code-font-size)*1)
+            calc(var(--code-font-size)*1)
+            calc(var(--code-font-size)*1)
             calc(var(--code-font-size)*2);
 
   overflow: auto;
   background-color: var(--color-bg-main);
   border: 1px solid var(--color-border);
+}
+
+/*  We have to override this for the print version because the printer
+    interprets scroll-bars differently in different environments,
+    which breaks HTML2PDF.
+    Also, we need to show the whole code in its entirety.
+ */
+[html2pdf] sdoc-autogen pre.code {
+  overflow: unset;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
 }
 
 /* ``some text`` is generated into: <tt class="docutils literal"> by docutils. */

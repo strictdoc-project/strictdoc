@@ -29,9 +29,9 @@
     data-preloader='true'
     data-preloader-target='[html2pdf-preloader]'
     data-preloader-background='#F2F5F9'
-    data-forced-page-break-selector='.free_text .pdf-toc H2'
-    data-no-break-selector='sdoc-meta sdoc-section-title .pdf-toc-row'
-    data-no-hanging-selector='sdoc-section-title sdoc-requirement-field-label'
+    data-forced-page-break-selectors='.free_text .pdf-toc H2'
+    data-no-break-selectors='sdoc-section-title sdoc-meta .pdf-toc-row'
+    data-no-hanging-selectors='sdoc-section-title sdoc-meta sdoc-requirement-field-label'
   src="{{ link_renderer.render_static_url('html2pdf/bundle.js') }}"></script>
   {%- endif -%}
 

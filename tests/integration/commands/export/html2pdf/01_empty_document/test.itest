@@ -1,0 +1,11 @@
+# FIXME: Getting timeouts on Windows CI all the time. Needs to be checked or tested by users.
+REQUIRES: PLATFORM_IS_NOT_WINDOWS
+
+RUN: %strictdoc export %S --formats=html2pdf --output-dir Output | filecheck %s --dump-input=fail
+CHECK: HTML2PDF: JS logs from the print session
+
+RUN: %check_exists --file %S/Output/html2pdf/pdf/input.pdf
+
+RUN: %check_exists --file %S/Output/html2pdf/html/input.html
+
+RUN: python %S/test_pdf.py

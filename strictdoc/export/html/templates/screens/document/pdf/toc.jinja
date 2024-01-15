@@ -1,14 +1,8 @@
-{# TODO: hide when toc is empty #}
-{%- set _table_of_contents = {'exists': false} -%}
-{%- for item in document_iterator.table_of_contents() -%}
-  {%- if _table_of_contents.update({'exists': true}) -%}{% endif %}
-{%- endfor %}
-
-{%- if _table_of_contents.exists -%}
+{%- if document.has_any_toc_nodes() -%}
 <div class="pdf-toc" data-testid="pdf-toc-list">
     <div class="pdf-toc-row">
     <span class="pdf-toc-cell"></span>
-    <span class="pdf-toc-cell" style="text-align: center;font-weight: bold;">Table of Contents</span>
+    <span class="pdf-toc-cell" style="text-align: center;font-weight: bold;">Table of contents</span>
     <span class="pdf-toc-cell"></span>
     </div>
     {%- for item in document_iterator.table_of_contents() -%}

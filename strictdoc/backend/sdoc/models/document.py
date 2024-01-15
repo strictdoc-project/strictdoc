@@ -58,6 +58,16 @@ class Document:  # pylint: disable=too-many-instance-attributes
     def has_any_nodes(self) -> bool:
         return len(self.section_contents) > 0
 
+    def has_any_toc_nodes(self) -> bool:
+        for node_ in self.section_contents:
+            if node_.is_section:
+                if node_.ng_resolved_custom_level != "None":
+                    return True
+                # Skip nodes without a TOC level.
+                continue
+            return True
+        return False
+
     def has_any_requirements(self) -> bool:
         task_list = list(self.section_contents)
         while len(task_list) > 0:

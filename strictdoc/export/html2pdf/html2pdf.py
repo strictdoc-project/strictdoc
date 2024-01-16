@@ -4,11 +4,42 @@ import base64
 import json
 import os.path
 import pathlib
+from typing import Optional
 
+import requests
+from requests import Response
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.core.download_manager import WDMDownloadManager
+from webdriver_manager.core.http import HttpClient
+
+
+class HTML2PDF_HTTPClient(HttpClient):
+    def get(self, url, params=None, **kwargs) -> Response:
+        """
+        Add you own logic here like session or proxy etc.
+        """
+        last_error: Optional[Exception] = None
+        for attempt in range(1, 3):
+            print(  # noqa: T201
+                f"HTML2PDF_HTTPClient: sending GET request attempt {attempt}: {url}"
+            )
+            try:
+                return requests.get(url, params, timeout=(5, 5), **kwargs)
+            except requests.exceptions.ConnectTimeout as connect_timeout_:
+                last_error = connect_timeout_
+            except requests.exceptions.ReadTimeout as read_timeout_:
+                last_error = read_timeout_
+            except Exception as exception_:
+                raise AssertionError(
+                    "HTML2PDF_HTTPClient: unknown exception", exception_
+                ) from None
+        print(  # noqa: T201
+            f"HTML2PDF_HTTPClient: "
+            f"failed to get response for URL: {url} with error: {last_error}"
+        )
 
 
 def get_inches_from_millimeters(mm: float) -> float:
@@ -68,7 +99,13 @@ def get_pdf_from_html(driver, url) -> bytes:
 
 def create_webdriver():
     print("HTML2PDF: creating Chrome Driver service.", flush=True)  # noqa: T201
-    path_to_chrome = ChromeDriverManager().install()
+
+    http_client = HTML2PDF_HTTPClient()
+    download_manager = WDMDownloadManager(http_client)
+    path_to_chrome = ChromeDriverManager(
+        download_manager=download_manager
+    ).install()
+    print(f"HTML2PDF: Chrome Driver available at path: {path_to_chrome}")  # noqa: T201
 
     service = Service(path_to_chrome)
 
@@ -96,6 +133,10 @@ def create_webdriver():
 
 
 def main():
+    # By default, all driver binaries are saved to user.home/.wdm folder.
+    # You can override this setting and save binaries to project.root/.wdm.
+    os.environ["WDM_LOCAL"] = "1"
+
     parser = argparse.ArgumentParser(description="HTML2PDF printer script.")
     parser.add_argument("paths", help="Paths to input HTML file.")
     args = parser.parse_args()

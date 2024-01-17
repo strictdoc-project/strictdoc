@@ -19,7 +19,6 @@ class PDFPrintDriver:
                         paths_to_print,
                     ],
                     capture_output=False,
-                    timeout=15,
                     check=False,
                 )
             except TimeoutExpired:

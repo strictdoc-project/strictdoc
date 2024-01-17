@@ -8,8 +8,8 @@ RUN: %check_exists --file %S/Output/html2pdf/pdf/input.pdf
 RUN: %check_exists --file %S/Output/html2pdf/pdf/nested/input2.pdf
 RUN: %check_exists --file %S/Output/html2pdf/pdf/nested/subnested/input3.pdf
 
-RUN: %check_exists --file %S/Output/html2pdf/html/input.html
-RUN: %check_exists --file %S/Output/html2pdf/html/nested/input2.html
-RUN: %check_exists --file %S/Output/html2pdf/html/nested/subnested/input3.html
+RUN: %check_exists --file %S/Output/html2pdf/html/02_three_top_level_requirements/input.html
+RUN: %check_exists --file %S/Output/html2pdf/html/02_three_top_level_requirements/nested/input2.html
+RUN: %check_exists --file %S/Output/html2pdf/html/02_three_top_level_requirements/nested/subnested/input3.html
 
 RUN: python %S/test_pdf.py

@@ -1,0 +1,9 @@
+[DOCUMENT]
+TITLE: Dummy Software Requirements Specification #3
+
+[FREETEXT]
+.. image:: _assets/file.svg
+   :alt: Test image
+   :class: image
+   :width: 100%
+[/FREETEXT]

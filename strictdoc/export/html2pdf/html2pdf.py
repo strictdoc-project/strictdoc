@@ -129,6 +129,8 @@ def create_webdriver():
         options=webdriver_options,
         service=service,
     )
+    driver.set_page_load_timeout(15)
+
     return driver
 
 

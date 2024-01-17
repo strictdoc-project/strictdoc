@@ -6,6 +6,6 @@ CHECK: HTML2PDF: JS logs from the print session
 
 RUN: %check_exists --file %S/Output/html2pdf/pdf/input.pdf
 
-RUN: %check_exists --file %S/Output/html2pdf/html/input.html
+RUN: %check_exists --file %S/Output/html2pdf/html/01_empty_document/input.html
 
 RUN: python %S/test_pdf.py

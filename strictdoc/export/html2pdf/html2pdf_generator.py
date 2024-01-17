@@ -23,11 +23,31 @@ class HTML2PDFGenerator:
         html_templates: HTMLTemplates,
         output_html2pdf_root: str,
     ):
+        path_to_output_pdf_html_dir = os.path.join(output_html2pdf_root, "html")
+        path_to_output_pdf_pdf_dir = os.path.join(output_html2pdf_root, "pdf")
+
+        # Export StrictDoc's own assets.
         sync_dir(
             project_config.get_static_files_path(),
-            os.path.join(output_html2pdf_root, "_static"),
+            os.path.join(
+                path_to_output_pdf_html_dir, project_config.dir_for_sdoc_assets
+            ),
             message="Copying StrictDoc's assets for HTML2PDF",
         )
+
+        # Export project assets.
+        for asset_dir in traceability_index.asset_dirs:
+            source_path = asset_dir["full_path"]
+            output_relative_path = asset_dir["relative_path"]
+            destination_path = os.path.join(
+                path_to_output_pdf_html_dir,
+                output_relative_path,
+            )
+            sync_dir(
+                source_path,
+                destination_path,
+                message=f'Copying project assets "{output_relative_path}"',
+            )
 
         paths_to_print: List[Tuple[str, str]] = []
 
@@ -58,16 +78,9 @@ class HTML2PDFGenerator:
                     html_templates=html_templates,
                 )
 
-            path_to_output_pdf_html_dir = os.path.join(
-                output_html2pdf_root, "html"
-            )
-            path_to_output_pdf_pdf_dir = os.path.join(
-                output_html2pdf_root, "pdf"
-            )
-
             path_to_output_html_doc_dir = os.path.join(
                 path_to_output_pdf_html_dir,
-                document_.meta.input_doc_dir_rel_path,
+                document_.meta.output_document_dir_rel_path,
             )
             Path(path_to_output_html_doc_dir).mkdir(parents=True, exist_ok=True)
             Path(path_to_output_pdf_pdf_dir).mkdir(parents=True, exist_ok=True)

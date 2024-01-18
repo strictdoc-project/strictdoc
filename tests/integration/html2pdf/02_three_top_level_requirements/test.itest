@@ -1,3 +1,5 @@
+REQUIRES: TEST_HTML2PDF
+
 # FIXME: Getting timeouts on Windows CI all the time. Needs to be checked or tested by users.
 REQUIRES: PLATFORM_IS_NOT_WINDOWS
 

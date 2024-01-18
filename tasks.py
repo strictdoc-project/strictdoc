@@ -309,6 +309,7 @@ def test_integration(
     debug=False,
     no_parallelization=False,
     strictdoc=None,
+    html2pdf=False,
     environment=ToxEnvironment.CHECK,
 ):
     clean_itest_artifacts(context)
@@ -320,18 +321,31 @@ def test_integration(
     else:
         strictdoc_exec = strictdoc
 
-    focus_or_none = f"--filter {focus}" if focus else ""
     debug_opts = "-vv --show-all" if debug else ""
-    parallelize_opts = "" if not no_parallelization else "--threads 1"
+    focus_or_none = f"--filter {focus}" if focus else ""
+
+    # HTML2PDF tests are running Chrome Driver which does not seem to be
+    # parallelizable, or at least not in the way StrictDoc uses it.
+    # If HTML2PDF option is provided, do not parallelize and only run the
+    # HTML2PDF-specific tests.
+    if not html2pdf:
+        parallelize_opts = "" if not no_parallelization else "--threads 1"
+        html2pdf_param = ""
+        test_folder = f"{cwd}/tests/integration"
+    else:
+        parallelize_opts = "--threads 1"
+        html2pdf_param = "--param TEST_HTML2PDF=1"
+        test_folder = f"{cwd}/tests/integration/html2pdf"
 
     itest_command = f"""
         lit
         --param STRICTDOC_EXEC="{strictdoc_exec}"
+        {html2pdf_param}
         -v
         {debug_opts}
         {focus_or_none}
         {parallelize_opts}
-        {cwd}/tests/integration
+        {test_folder}
     """
 
     # It looks like LIT does not open the RUN: subprocesses in the same
@@ -491,6 +505,7 @@ def test(context):
     test_unit_coverage(context)
     test_unit_server(context)
     test_integration(context)
+    test_integration(context, html2pdf=True)
 
 
 @task

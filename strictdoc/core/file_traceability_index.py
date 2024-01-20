@@ -1,8 +1,12 @@
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from strictdoc.backend.sdoc.models.reference import FileReference, Reference
 from strictdoc.backend.sdoc.models.requirement import Requirement
-from strictdoc.backend.sdoc_source_code.models.range_marker import RangeMarker
+from strictdoc.backend.sdoc_source_code.models.range_marker import (
+    ForwardRangeMarker,
+    RangeMarker,
+)
+from strictdoc.backend.sdoc_source_code.models.requirement_marker import Req
 from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityInfo,
 )
@@ -21,6 +25,8 @@ class FileTraceabilityIndex:
         self.map_paths_to_source_file_traceability_info: Dict[
             str, SourceFileTraceabilityInfo
         ] = {}
+
+        self.map_reqs_uids_to_line_range_file_refs: Dict[str, List[Any]] = {}
 
         # "file.py" -> (
         #   general_requirements: [Requirement],  # noqa: ERA001
@@ -60,6 +66,7 @@ class FileTraceabilityIndex:
                 matching_links_with_opt_ranges.append((file_link, None))
                 continue
             matching_links_with_opt_ranges.append((file_link, pragmas))
+
         return matching_links_with_opt_ranges
 
     def get_source_file_reqs(
@@ -97,11 +104,13 @@ class FileTraceabilityIndex:
         for requirement in requirements:
             if (
                 requirement.reserved_uid
-                not in source_file_traceability_info.ng_map_reqs_to_pragmas
+                in source_file_traceability_info.ng_map_reqs_to_pragmas
+                or requirement.reserved_uid
+                in self.map_reqs_uids_to_line_range_file_refs
             ):
-                general_requirements.append(requirement)
-            else:
                 range_requirements.append(requirement)
+            else:
+                general_requirements.append(requirement)
         self.source_file_reqs_cache[source_file_rel_path] = (
             general_requirements,
             range_requirements,
@@ -136,6 +145,45 @@ class FileTraceabilityIndex:
                         f" that does not exist: {file_link.get_posix_path()}."
                     )
 
+        for (
+            requirement_uid_,
+            file_range_pairs_,
+        ) in self.map_reqs_uids_to_line_range_file_refs.items():
+            for file_range_pair_ in file_range_pairs_:
+                path_to_file = file_range_pair_[0]
+                file_range = file_range_pair_[1]
+
+                source_file_info = (
+                    self.map_paths_to_source_file_traceability_info[
+                        path_to_file
+                    ]
+                )
+
+                start_marker = ForwardRangeMarker(
+                    start_or_end=True,
+                    reqs_objs=[Req(parent=None, uid=requirement_uid_)],
+                )
+                start_marker.ng_range_line_begin = file_range[0]
+                start_marker.ng_source_line_begin = file_range[0]
+                start_marker.ng_range_line_end = file_range[1]
+
+                end_marker = ForwardRangeMarker(
+                    start_or_end=False,
+                    reqs_objs=[Req(parent=None, uid=requirement_uid_)],
+                )
+                end_marker.ng_source_line_begin = file_range[1]
+                end_marker.ng_range_line_begin = file_range[0]
+                end_marker.ng_range_line_end = file_range[1]
+
+                source_file_info.ng_map_reqs_to_pragmas.setdefault(
+                    requirement_uid_, []
+                ).append(start_marker)
+
+                source_file_info.pragmas.append(start_marker)
+                source_file_info.pragmas.append(end_marker)
+
+        # assert 0, self.map_reqs_uids_to_line_range_file_refs
+
     def create_requirement(self, requirement: Requirement) -> None:
         # A requirement can have multiple File references, and this function is
         # called for every File reference.
@@ -155,6 +203,19 @@ class FileTraceabilityIndex:
                     requirement.reserved_uid, []
                 )
                 paths.append(ref)
+
+                if file_reference.g_file_entry.line_range is not None:
+                    requirements = (
+                        self.map_reqs_uids_to_line_range_file_refs.setdefault(
+                            requirement.reserved_uid, []
+                        )
+                    )
+                    requirements.append(
+                        (
+                            file_reference.get_posix_path(),
+                            file_reference.g_file_entry.line_range,
+                        )
+                    )
 
     def create_traceability_info(
         self,

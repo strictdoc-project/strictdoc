@@ -1,30 +1,24 @@
 import sys
 import traceback
 from functools import partial
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from textx import get_location, metamodel_from_str
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc_source_code.grammar import SOURCE_FILE_GRAMMAR
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
+    ForwardRangeMarker,
     LineMarker,
     RangeMarker,
 )
+from strictdoc.backend.sdoc_source_code.models.requirement_marker import Req
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
 )
+from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.string import get_lines_count
 from strictdoc.helpers.textx import drop_textx_meta
-
-
-class Req:
-    def __init__(self, parent, uid):
-        self.parent = parent
-        self.uid = uid
-
-        self.ng_source_line = None
-        self.ng_source_column = None
 
 
 class ParseContext:
@@ -58,13 +52,19 @@ def source_file_traceability_info_processor(
     # Finding how many lines are covered by the requirements in the file.
     # Quick and dirty: https://stackoverflow.com/a/15273749/598057
     merged_ranges = []
-    pragma: RangeMarker
+    pragma: Union[LineMarker, RangeMarker, ForwardRangeMarker]
     for pragma in source_file_traceability_info.pragmas:
+        # At this point, we don't have any ForwardRangeMarkers because they
+        # come from Requirements, not from source code.
+        assert isinstance(pragma, (RangeMarker, LineMarker)), pragma
         if pragma.ng_is_nodoc:
             continue
         if not pragma.is_begin():
             continue
-        begin, end = pragma.ng_range_line_begin, pragma.ng_range_line_end
+        begin, end = (
+            assert_cast(pragma.ng_range_line_begin, int),
+            assert_cast(pragma.ng_range_line_end, int),
+        )
         if merged_ranges and merged_ranges[-1][1] >= (begin - 1):
             merged_ranges[-1][1] = max(merged_ranges[-1][1], end)
         else:

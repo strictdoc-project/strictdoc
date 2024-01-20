@@ -1,6 +1,7 @@
 from typing import Dict, List, Optional, Tuple
 
 from strictdoc.backend.sdoc.models.reference import FileReference, Reference
+from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.sdoc_source_code.models.range_marker import RangeMarker
 from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityInfo,
@@ -10,11 +11,21 @@ from strictdoc.helpers.exception import StrictDocException
 
 class FileTraceabilityIndex:
     def __init__(self):
-        self.map_paths_to_reqs = {}
+        # "file.py" -> List[Requirement]
+        self.map_paths_to_reqs: Dict[str, List[Requirement]] = {}
+
+        # "REQ-001" -> List[FileReference]
         self.map_reqs_uids_to_paths: Dict[str, List[FileReference]] = {}
+
+        # "file.py" -> SourceFileTraceabilityInfo
         self.map_paths_to_source_file_traceability_info: Dict[
             str, SourceFileTraceabilityInfo
         ] = {}
+
+        # "file.py" -> (
+        #   general_requirements: [Requirement],  # noqa: ERA001
+        #   range_requirements: [Requirement]  # noqa: ERA001
+        # )  # noqa: ERA001
         self.source_file_reqs_cache = {}
 
     def register(self, requirement):
@@ -35,7 +46,7 @@ class FileTraceabilityIndex:
                 )
                 paths.append(ref)
 
-    def get_requirement_file_links(self, requirement):
+    def get_requirement_file_links(self, requirement: Requirement):
         if requirement.reserved_uid not in self.map_reqs_uids_to_paths:
             return []
 
@@ -64,10 +75,10 @@ class FileTraceabilityIndex:
             matching_links_with_opt_ranges.append((file_link, pragmas))
         return matching_links_with_opt_ranges
 
-    def has_source_file_reqs(self, source_file_rel_path):
+    def has_source_file_reqs(self, source_file_rel_path: str):
         return self.map_paths_to_reqs.get(source_file_rel_path) is not None
 
-    def get_source_file_reqs(self, source_file_rel_path):
+    def get_source_file_reqs(self, source_file_rel_path: str):
         assert (
             source_file_rel_path
             in self.map_paths_to_source_file_traceability_info
@@ -112,7 +123,7 @@ class FileTraceabilityIndex:
         return general_requirements, range_requirements
 
     def get_coverage_info(
-        self, source_file_rel_path
+        self, source_file_rel_path: str
     ) -> SourceFileTraceabilityInfo:
         assert (
             source_file_rel_path

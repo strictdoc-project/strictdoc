@@ -12,6 +12,8 @@ STATEMENT: System ABC shall do 1.
 RELATIONS:
 - TYPE: Parent
   VALUE: REQ-1
+- TYPE: File
+  VALUE: file.py
 
 [REQUIREMENT]
 MID: 70c97ad5b2e543b7b9a1015265cd9445
@@ -21,6 +23,8 @@ STATEMENT: System ABC shall do 2.
 RELATIONS:
 - TYPE: Parent
   VALUE: REQ-2
+- TYPE: File
+  VALUE: file.py
 
 [REQUIREMENT]
 MID: 44720087baf5489cb88c32cd284585e2
@@ -30,3 +34,5 @@ STATEMENT: System ABC shall do 3.
 RELATIONS:
 - TYPE: Parent
   VALUE: REQ-3
+- TYPE: File
+  VALUE: file.py

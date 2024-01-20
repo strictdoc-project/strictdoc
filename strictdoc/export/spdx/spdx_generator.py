@@ -162,8 +162,9 @@ class SDocToSPDXConverter:
         snippet_sha256 = get_sha256(
             document_bytes[requirement.ng_byte_start : requirement.ng_byte_end]
         )
+        assert requirement.reserved_uid is not None
         return Snippet(
-            spdx_id=f"SPDXRef-Snippet-{get_spdx_ref(requirement)}",
+            spdx_id=requirement.reserved_uid,
             primary_purpose=SoftwarePurpose.DOCUMENTATION,
             name=f"Requirement '{requirement.reserved_title}'",
             summary=f"SPDX Snippet for requirement {requirement.reserved_uid}",
@@ -280,6 +281,9 @@ class SPDXGenerator:
                     spdx_container.map_spdx_ref_to_objects[
                         spdx_snippet.spdx_id
                     ] = spdx_snippet
+                    spdx_container.map_spdx_snippets_to_files[
+                        spdx_snippet.spdx_id
+                    ] = spdx_file.spdx_id
 
                     spdx_container.relationships.append(
                         Relationship(
@@ -310,25 +314,29 @@ class SPDXGenerator:
                         with open(path_to_file, "rb") as file_:
                             file_bytes = file_.read()
 
-                        spdx_file = sdoc_spdx_converter.convert_file_to_file(
-                            file_relation_, file_bytes
+                        source_spdx_file = (
+                            sdoc_spdx_converter.convert_file_to_file(
+                                file_relation_, file_bytes
+                            )
                         )
-                        lookup_file_name_to_spdx_file[path_to_file] = spdx_file
+                        lookup_file_name_to_spdx_file[
+                            path_to_file
+                        ] = source_spdx_file
                         spdx_container.map_spdx_ref_to_objects[
-                            spdx_file.spdx_id
-                        ] = spdx_file
+                            source_spdx_file.spdx_id
+                        ] = source_spdx_file
 
-                        spdx_container.files.append(spdx_file)
+                        spdx_container.files.append(source_spdx_file)
                         spdx_container.relationships.append(
                             Relationship(
                                 spdx_id=RELATION_ID_HOW_TO,
                                 from_element=spdx_snippet.spdx_id,
                                 relationship_type=RelationshipType.REQUIREMENT_FOR,
-                                to=[spdx_file.spdx_id],
+                                to=[source_spdx_file.spdx_id],
                                 name=None,
                                 summary=create_relationship_summary(
                                     spdx_snippet,
-                                    spdx_file,
+                                    source_spdx_file,
                                     "REQUIREMENT_FOR",
                                 ),
                                 description=None,

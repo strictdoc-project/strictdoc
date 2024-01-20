@@ -12,6 +12,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     FileReference,
+    ParentReqReference,
 )
 from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
@@ -23,6 +24,7 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldString,
     GrammarElementRelationChild,
     GrammarElementRelationFile,
+    GrammarElementRelationParent,
 )
 from strictdoc.export.spdx.spdx_sdoc_container import SPDXSDocContainer
 
@@ -90,7 +92,7 @@ class SPDXToSDocConverter:
 
         for snippet_ in spdx_container.snippets:
             requirement = SPDXToSDocConverter._convert_snippet(
-                snippet_, document, file_section
+                snippet_, document, file_section, spdx_container
             )
 
             snippets_section.section_contents.append(requirement)
@@ -134,7 +136,42 @@ class SPDXToSDocConverter:
                             field_value_references=from_element_sdoc.references,
                         )
                     ]
+                if (
+                    relationship_.relationship_type
+                    == RelationshipType.REQUIREMENT_FOR
+                ):
+                    from_element = spdx_container.map_spdx_ref_to_objects[
+                        relationship_.from_element
+                    ]
+                    to_element = spdx_container.map_spdx_ref_to_objects[
+                        relationship_.to[0]
+                    ]
 
+                    from_element_sdoc = map_spdxref_to_sdoc[
+                        from_element.spdx_id
+                    ]
+                    to_element_sdoc = map_spdxref_to_sdoc[to_element.spdx_id]
+
+                    assert (
+                        to_element_sdoc.reserved_uid is not None
+                    ), to_element_sdoc
+
+                    from_element_sdoc.references.append(
+                        ParentReqReference(
+                            parent=from_element_sdoc,
+                            ref_uid=to_element_sdoc.reserved_uid,
+                            role="REQUIREMENT_FOR",
+                        )
+                    )
+                    from_element_sdoc.ordered_fields_lookup["REFS"] = [
+                        RequirementField(
+                            parent=from_element_sdoc,
+                            field_name="REFS",
+                            field_value=None,
+                            field_value_multiline=None,
+                            field_value_references=from_element_sdoc.references,
+                        )
+                    ]
         return document
 
     @staticmethod
@@ -201,6 +238,7 @@ class SPDXToSDocConverter:
         snippet: Snippet,
         sdoc_document: Document,
         sdoc_parent: Union[Section, Document],
+        spdx_container: SPDXSDocContainer,
     ) -> Requirement:
         fields = []
         requirement = Requirement(
@@ -225,6 +263,33 @@ class SPDXToSDocConverter:
         requirement.set_field_value(
             field_name="TITLE", form_field_index=0, value=snippet.name
         )
+
+        spdx_file_id = spdx_container.map_spdx_snippets_to_files[
+            snippet.spdx_id
+        ]
+        spdx_file = spdx_container.map_spdx_ref_to_objects[spdx_file_id]
+
+        requirement.references = [
+            FileReference(
+                parent=requirement,
+                g_file_entry=FileEntry(
+                    parent=None,
+                    g_file_format=None,
+                    g_file_path=spdx_file.name,
+                    g_line_range=f"{snippet.line_range.begin}, {snippet.line_range.end - 1}",
+                ),
+            )
+        ]
+        requirement.ordered_fields_lookup["REFS"] = [
+            RequirementField(
+                parent=requirement,
+                field_name="REFS",
+                field_value=None,
+                field_value_multiline=None,
+                field_value_references=requirement.references,
+            )
+        ]
+
         requirement.ng_level = sdoc_parent.ng_level + 1
         return requirement
 
@@ -335,7 +400,17 @@ class SPDXToSDocConverter:
                 parent=None,
                 tag="SPDX_SNIPPET",
                 fields=fields,
-                relations=[],
+                relations=[
+                    GrammarElementRelationParent(
+                        parent=None,
+                        relation_type="Parent",
+                        relation_role="REQUIREMENT_FOR",
+                    ),
+                    GrammarElementRelationFile(
+                        parent=None,
+                        relation_type="File",
+                    ),
+                ],
             )
         )
 

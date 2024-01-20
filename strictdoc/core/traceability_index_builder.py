@@ -457,7 +457,9 @@ class TraceabilityIndexBuilder:
                 # indeed exist.
                 for reference in requirement.references:
                     if reference.ref_type == ReferenceType.FILE:
-                        d_07_file_traceability_index.register(requirement)
+                        d_07_file_traceability_index.create_requirement(
+                            requirement
+                        )
                     elif reference.ref_type == ReferenceType.PARENT:
                         parent_reference: ParentReqReference = assert_cast(
                             reference, ParentReqReference

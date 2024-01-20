@@ -28,25 +28,12 @@ class FileTraceabilityIndex:
         # )  # noqa: ERA001
         self.source_file_reqs_cache = {}
 
-    def register(self, requirement):
-        if requirement.reserved_uid in self.map_reqs_uids_to_paths:
-            return
+    def has_source_file_reqs(self, source_file_rel_path: str) -> bool:
+        return self.map_paths_to_reqs.get(source_file_rel_path) is not None
 
-        ref: Reference
-        for ref in requirement.references:
-            if isinstance(ref, FileReference):
-                file_reference: FileReference = ref
-                requirements = self.map_paths_to_reqs.setdefault(
-                    file_reference.get_posix_path(), []
-                )
-                requirements.append(requirement)
-
-                paths = self.map_reqs_uids_to_paths.setdefault(
-                    requirement.reserved_uid, []
-                )
-                paths.append(ref)
-
-    def get_requirement_file_links(self, requirement: Requirement):
+    def get_requirement_file_links(
+        self, requirement: Requirement
+    ) -> List[Tuple[FileReference, Optional[List[RangeMarker]]]]:
         if requirement.reserved_uid not in self.map_reqs_uids_to_paths:
             return []
 
@@ -75,10 +62,9 @@ class FileTraceabilityIndex:
             matching_links_with_opt_ranges.append((file_link, pragmas))
         return matching_links_with_opt_ranges
 
-    def has_source_file_reqs(self, source_file_rel_path: str):
-        return self.map_paths_to_reqs.get(source_file_rel_path) is not None
-
-    def get_source_file_reqs(self, source_file_rel_path: str):
+    def get_source_file_reqs(
+        self, source_file_rel_path: str
+    ) -> Tuple[Optional[List[Requirement]], Optional[List[Requirement]]]:
         assert (
             source_file_rel_path
             in self.map_paths_to_source_file_traceability_info
@@ -136,16 +122,6 @@ class FileTraceabilityIndex:
         )
         return source_file_tr_info
 
-    def create_traceability_info(
-        self,
-        source_file_rel_path: str,
-        traceability_info: SourceFileTraceabilityInfo,
-    ):
-        assert isinstance(traceability_info, SourceFileTraceabilityInfo)
-        self.map_paths_to_source_file_traceability_info[
-            source_file_rel_path
-        ] = traceability_info
-
     def validate(self):
         for requirement_uid, file_links in self.map_reqs_uids_to_paths.items():
             for file_link in file_links:
@@ -159,3 +135,33 @@ class FileTraceabilityIndex:
                         f"Requirement {requirement_uid} references a file"
                         f" that does not exist: {file_link.get_posix_path()}."
                     )
+
+    def create_requirement(self, requirement: Requirement) -> None:
+        # A requirement can have multiple File references, and this function is
+        # called for every File reference.
+        if requirement.reserved_uid in self.map_reqs_uids_to_paths:
+            return
+
+        ref: Reference
+        for ref in requirement.references:
+            if isinstance(ref, FileReference):
+                file_reference: FileReference = ref
+                requirements = self.map_paths_to_reqs.setdefault(
+                    file_reference.get_posix_path(), []
+                )
+                requirements.append(requirement)
+
+                paths = self.map_reqs_uids_to_paths.setdefault(
+                    requirement.reserved_uid, []
+                )
+                paths.append(ref)
+
+    def create_traceability_info(
+        self,
+        source_file_rel_path: str,
+        traceability_info: SourceFileTraceabilityInfo,
+    ) -> None:
+        assert isinstance(traceability_info, SourceFileTraceabilityInfo)
+        self.map_paths_to_source_file_traceability_info[
+            source_file_rel_path
+        ] = traceability_info

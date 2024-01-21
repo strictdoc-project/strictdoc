@@ -1,4 +1,4 @@
-RUN: %strictdoc passthrough "%strictdoc_root/" --output-dir="%S/Output/"
+RUN: cd "%strictdoc_root/" && %strictdoc passthrough "%strictdoc_root/" --output-dir="%S/Output/"
 
 RUN: %diff "%strictdoc_root/docs/strictdoc_01_user_guide.sdoc" "%S/Output/docs/strictdoc_01_user_guide.sdoc"
 RUN: %diff "%strictdoc_root/docs/strictdoc_02_faq.sdoc" "%S/Output/docs/strictdoc_02_faq.sdoc"

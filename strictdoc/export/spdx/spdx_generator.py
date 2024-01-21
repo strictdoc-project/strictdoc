@@ -118,6 +118,7 @@ class SDocToSPDXConverter:
                     hash_value="TBD: What to calculate for a package?",
                 )
             ],
+            primary_purpose=SoftwarePurpose.BOM,
             homepage=None,
         )
 

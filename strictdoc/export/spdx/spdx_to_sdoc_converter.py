@@ -1,7 +1,7 @@
 from typing import Union
 
 from spdx_tools.spdx3.model import RelationshipType
-from spdx_tools.spdx3.model.software import File, Snippet
+from spdx_tools.spdx3.model.software import File, Snippet, Package
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document
@@ -30,6 +30,7 @@ from strictdoc.export.spdx.spdx_sdoc_container import SPDXSDocContainer
 
 
 class SPDXToSDocConverter:
+    @staticmethod
     def convert(spdx_container: SPDXSDocContainer) -> Document:
         map_spdxref_to_sdoc = {}
 
@@ -47,6 +48,17 @@ class SPDXToSDocConverter:
 
         document.grammar = SPDXToSDocConverter.create_grammar_for_spdx()
         document.grammar.parent = document
+
+        """
+        Package
+        """
+        package_requirement = SPDXToSDocConverter._convert_package(
+            spdx_container.package,
+            sdoc_document=document,
+            sdoc_parent=document,
+        )
+        package_requirement.ng_level = document.ng_level + 1
+        document.section_contents.append(package_requirement)
 
         """
         Files.
@@ -175,6 +187,46 @@ class SPDXToSDocConverter:
         return document
 
     @staticmethod
+    def _convert_package(
+        package: Package,
+        sdoc_document: Document,
+        sdoc_parent: Union[Section, Document],
+    ) -> Requirement:
+        requirement = Requirement(
+            parent=sdoc_parent,
+            requirement_type="SPDX_PACKAGE",
+            mid=None,
+            fields=[],
+            requirements=None,
+        )
+        requirement.ng_document_reference = DocumentReference()
+        requirement.ng_document_reference.set_document(sdoc_document)
+
+        requirement.set_field_value(
+            field_name="UID", form_field_index=0, value=package.spdx_id
+        )
+        requirement.set_field_value(
+            field_name="SPDXID", form_field_index=0, value=package.spdx_id
+        )
+        requirement.set_field_value(
+            field_name="PRIMARY_PURPOSE",
+            form_field_index=0,
+            value=package.primary_purpose.name,
+        )
+        requirement.set_field_value(
+            field_name="TITLE", form_field_index=0, value=package.name
+        )
+        requirement.set_field_value(
+            field_name="STATEMENT", form_field_index=0, value=package.summary
+        )
+        if package.summary is not None:
+            requirement.set_field_value(
+                field_name="SUMMARY", form_field_index=0, value=package.summary
+            )
+        requirement.ng_level = sdoc_parent.ng_level + 1
+        return requirement
+
+    @staticmethod
     def _convert_file(
         file: File,
         sdoc_document: Document,
@@ -258,7 +310,9 @@ class SPDXToSDocConverter:
             field_name="SPDXID", form_field_index=0, value=snippet.spdx_id
         )
         requirement.set_field_value(
-            field_name="PRIMARY_PURPOSE", form_field_index=0, value=snippet.primary_purpose.name
+            field_name="PRIMARY_PURPOSE",
+            form_field_index=0,
+            value=snippet.primary_purpose.name,
         )
         requirement.set_field_value(
             field_name="SUMMARY", form_field_index=0, value=snippet.summary
@@ -301,17 +355,54 @@ class SPDXToSDocConverter:
         elements = []
 
         """
-        SPDX Document
+        SPDX Package
         """
-        fields = []
-
-        fields.append(
+        fields = [
+            GrammarElementFieldString(
+                parent=None,
+                title="UID",
+                required="True",
+            ),
             GrammarElementFieldString(
                 parent=None,
                 title="SPDXID",
                 required="True",
-            )
+            ),
+            GrammarElementFieldString(
+                parent=None,
+                title="PRIMARY_PURPOSE",
+                required="False",
+            ),
+            GrammarElementFieldString(
+                parent=None,
+                title="TITLE",
+                required="False",
+            ),
+            GrammarElementFieldString(
+                parent=None,
+                title="STATEMENT",
+                required="False",
+            ),
+            GrammarElementFieldString(
+                parent=None,
+                title="SUMMARY",
+                required="False",
+            ),
+        ]
+
+        package_element = GrammarElement(
+            parent=None,
+            tag="SPDX_PACKAGE",
+            fields=fields,
+            relations=[
+                GrammarElementRelationChild(
+                    parent=None,
+                    relation_type="Child",
+                    relation_role="CONTAINS",
+                ),
+            ],
         )
+        elements.append(package_element)
 
         """
         SPDX File

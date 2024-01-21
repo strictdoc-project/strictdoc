@@ -1,0 +1,23 @@
+NOTE: The first link is created from a forward marker, the second from a backward markers.
+      Ensure that both links are identical from the UI perspective.
+
+RUN: %strictdoc export . --experimental-enable-file-traceability --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%S/Output/html/_source_files/file.py.html"
+
+RUN: %cat %S/Output/html/60_file_range_with_line_range/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: <link rel="stylesheet" href="../_static/base.css"/>
+
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001#2#4">
+CHECK-HTML: <a{{.*}}href="../_source_files/file2.py.html#REQ-001#2#4">
+
+RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+
+CHECK-SOURCE-FILE: <a{{.*}}href="../60_file_range_with_line_range/input.html#1-REQ-001">
+
+CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-001#2#4"
+CHECK-SOURCE-FILE: <b>[ 2-4 ]</b> file.py
+
+CHECK-SOURCE-FILE: href="../_source_files/file2.py.html#REQ-001#2#4"
+CHECK-SOURCE-FILE: <b>[ 2-4 ]</b> file2.py

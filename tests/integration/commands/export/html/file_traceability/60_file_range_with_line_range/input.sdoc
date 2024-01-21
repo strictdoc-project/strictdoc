@@ -1,0 +1,13 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[REQUIREMENT]
+UID: REQ-001
+REFS:
+- TYPE: File
+  VALUE: file.py
+  LINE_RANGE: 2, 4
+- TYPE: File
+  VALUE: file2.py
+TITLE: Requirement Title
+STATEMENT: Requirement Statement

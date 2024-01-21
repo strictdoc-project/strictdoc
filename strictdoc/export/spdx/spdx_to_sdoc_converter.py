@@ -177,7 +177,10 @@ class SPDXToSDocConverter:
             FileReference(
                 parent=requirement,
                 g_file_entry=FileEntry(
-                    parent=None, g_file_format=None, g_file_path=file.name
+                    parent=None,
+                    g_file_format=None,
+                    g_file_path=file.name,
+                    g_line_range=None,
                 ),
             )
         ]

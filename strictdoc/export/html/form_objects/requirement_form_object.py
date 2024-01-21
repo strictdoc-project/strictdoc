@@ -549,6 +549,7 @@ class RequirementFormObject(ErrorObject):
                     parent=requirement,
                     g_file_format=FileEntryFormat.SOURCECODE,
                     g_file_path=reference_field.field_value,
+                    g_line_range="",
                 )
                 references.append(
                     FileReference(

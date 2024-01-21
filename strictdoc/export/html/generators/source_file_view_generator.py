@@ -14,6 +14,7 @@ from pygments.lexers.templates import HtmlDjangoLexer
 
 from strictdoc import __version__
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
+    ForwardRangeMarker,
     LineMarker,
     RangeMarker,
 )
@@ -180,7 +181,17 @@ class SourceFileViewHTMLGenerator:
 
         for pragma in coverage_info.pragmas:
             pragma_line = pragma.ng_source_line_begin
+            if isinstance(pragma, ForwardRangeMarker):
+                pygmented_source_file_lines[pragma_line - 1] = (
+                    pygmented_source_file_lines[pragma_line - 1].rstrip("\n")
+                    + " ",
+                    "\n",
+                    pragma,
+                )
+                continue
+
             source_line = source_file_lines[pragma_line - 1]
+
             assert len(pragma.reqs_objs) > 0
             before_line = source_line[
                 : pragma.reqs_objs[0].ng_source_column - 1

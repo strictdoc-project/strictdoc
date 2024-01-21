@@ -1,4 +1,4 @@
-from typing import List, Optional, Union
+from typing import List, Optional, Tuple, Union
 
 from pybtex.database import Entry
 
@@ -45,7 +45,13 @@ class GrammarReferenceType:
 
 @auto_described
 class FileEntry:
-    def __init__(self, parent, g_file_format: Optional[str], g_file_path: str):
+    def __init__(
+        self,
+        parent,
+        g_file_format: Optional[str],
+        g_file_path: str,
+        g_line_range: Optional[str],
+    ):
         self.parent = parent
 
         # Default: FileEntryFormat.SOURCECODE  # noqa: ERA001
@@ -55,6 +61,24 @@ class FileEntry:
         self.g_file_path: str = g_file_path
         file_path_posix = g_file_path.replace("\\", "/")
         self.file_path_posix = file_path_posix
+
+        # textX passes an empty string even if there is no LINE_RANGE provided
+        # in the SDoc source.
+        g_line_range = (
+            g_line_range
+            if g_line_range is not None and len(g_line_range) > 0
+            else None
+        )
+
+        self.g_line_range: Optional[str] = g_line_range
+        self.line_range: Optional[Tuple[int, int]] = None
+        if g_line_range is not None:
+            range_components_str = g_line_range.split(", ")
+            assert len(range_components_str) == 2, range_components_str
+            self.line_range: Tuple[int, int] = (
+                int(range_components_str[0]),
+                int(range_components_str[1]),
+            )
 
 
 class FileEntryFormat:
@@ -66,7 +90,9 @@ class FileEntryFormat:
 @auto_described
 class BibFileEntry(FileEntry):
     def __init__(self, parent, file_path: str):
-        super().__init__(parent, FileEntryFormat.BIBTEX, file_path)
+        super().__init__(
+            parent, FileEntryFormat.BIBTEX, file_path, g_line_range=None
+        )
 
 
 class BibEntryFormat:

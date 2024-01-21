@@ -52,6 +52,7 @@ BibFileEntry[noskipws]:
 FileEntry[noskipws]:
   ('  FORMAT: ' g_file_format = FileEntryFormat '\n')?
    '  VALUE: ' g_file_path = /.*$/ '\n'
+  ('  LINE_RANGE: ' g_line_range = /.*$/ '\n')?
 ;
 
 FileEntryFormat[noskipws]:

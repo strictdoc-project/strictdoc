@@ -152,12 +152,12 @@ class SDocToSPDXConverter:
                     hash_value=get_sha256(file_bytes),
                 )
             ],
-            primary_purpose=SoftwarePurpose.DOCUMENTATION,
+            primary_purpose=SoftwarePurpose.SOURCE,
         )
 
     @staticmethod
     def convert_requirement_to_snippet(
-        requirement: Requirement, document_bytes: bytes
+        requirement: Requirement, document_bytes: bytes, spdx_file: File
     ) -> Snippet:
         snippet_sha256 = get_sha256(
             document_bytes[requirement.ng_byte_start : requirement.ng_byte_end]
@@ -168,8 +168,11 @@ class SDocToSPDXConverter:
             primary_purpose=SoftwarePurpose.DOCUMENTATION,
             name=f"Requirement '{requirement.reserved_title}'",
             summary=f"SPDX Snippet for requirement {requirement.reserved_uid}",
-            description=None,
-            comment=None,
+            description=requirement.reserved_statement.partition("\n")[0],
+            comment=(
+                "This snippet has been generated from a requirement "
+                f"defined in a StrictDoc file: {spdx_file.name}."
+            ),
             verified_using=[
                 Hash(
                     algorithm=HashAlgorithm.SHA256,
@@ -274,7 +277,7 @@ class SPDXGenerator:
                     """
                     spdx_snippet: Snippet = (
                         sdoc_spdx_converter.convert_requirement_to_snippet(
-                            node, document_bytes
+                            node, document_bytes, spdx_file
                         )
                     )
                     lookup_uid_to_requirement_snippet[

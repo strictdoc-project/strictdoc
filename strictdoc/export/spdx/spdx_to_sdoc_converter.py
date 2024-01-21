@@ -43,7 +43,7 @@ class SPDXToSDocConverter:
             section_contents=[],
         )
 
-        document.config.requirement_style = "Table"
+        document.config.requirement_style = "Inline"
 
         document.grammar = SPDXToSDocConverter.create_grammar_for_spdx()
         document.grammar.parent = document
@@ -258,6 +258,9 @@ class SPDXToSDocConverter:
             field_name="SPDXID", form_field_index=0, value=snippet.spdx_id
         )
         requirement.set_field_value(
+            field_name="PRIMARY_PURPOSE", form_field_index=0, value=snippet.primary_purpose.name
+        )
+        requirement.set_field_value(
             field_name="SUMMARY", form_field_index=0, value=snippet.summary
         )
         requirement.set_field_value(
@@ -377,6 +380,11 @@ class SPDXToSDocConverter:
                 parent=None,
                 title="SPDXID",
                 required="True",
+            ),
+            GrammarElementFieldString(
+                parent=None,
+                title="PRIMARY_PURPOSE",
+                required="False",
             ),
             GrammarElementFieldString(
                 parent=None,

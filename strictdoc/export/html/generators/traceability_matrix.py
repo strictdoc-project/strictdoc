@@ -27,9 +27,9 @@ class TraceabilityMatrixHTMLGenerator:
         )
 
         known_relations: Dict[str, Dict[Optional[str], bool]] = {
-            "Parent": {None: True},
-            "Child": {None: True},
-            "File": {None: True},
+            "Parent": {},
+            "Child": {},
+            "File": {},
         }
 
         discovered_relation_types = set()
@@ -83,7 +83,6 @@ class TraceabilityMatrixHTMLGenerator:
                 relation_tuple = (relation_type_, relation_role_)
                 if relation_tuple not in known_relations_list:
                     known_relations_list.append(relation_tuple)
-
         output = ""
 
         template = html_templates.jinja_environment().get_template(

@@ -17,3 +17,4 @@ class SPDXSDocContainer:
     snippets: List[Snippet] = field(default_factory=list)
     relationships: List[Relationship] = field(default_factory=list)
     map_spdx_ref_to_objects: Dict[str, Element] = field(default_factory=dict)
+    map_spdx_snippets_to_files: Dict[str, str] = field(default_factory=dict)

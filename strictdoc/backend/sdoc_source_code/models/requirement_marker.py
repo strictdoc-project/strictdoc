@@ -1,3 +1,7 @@
+from strictdoc.helpers.auto_described import auto_described
+
+
+@auto_described
 class Req:
     def __init__(self, parent, uid: str):
         assert isinstance(uid, str)

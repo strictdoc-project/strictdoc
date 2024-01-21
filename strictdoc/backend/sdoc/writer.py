@@ -484,6 +484,13 @@ class SDWriter:
                 output += "  VALUE: "
                 output += ref.get_posix_path()
                 output += "\n"
+                if ref.g_file_entry.line_range is not None:
+                    output += "  LINE_RANGE: "
+                    output += str(ref.g_file_entry.line_range[0])
+                    output += ", "
+                    output += str(ref.g_file_entry.line_range[1])
+                    output += "\n"
+
             elif isinstance(reference, ParentReqReference):
                 parent_reference: ParentReqReference = reference
                 output += "  VALUE: "

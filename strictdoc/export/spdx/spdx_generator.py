@@ -82,21 +82,21 @@ def get_spdx_ref(node: Union[Document, Requirement, FileReference]) -> str:
 class SDocToSPDXConverter:
     @staticmethod
     def create_document(project_config: ProjectConfig) -> SpdxDocument:
-        spec_version = Version("1.2.3")
+        spec_version = Version("3.0.0")
         creation_info = CreationInfo(
             spec_version=spec_version,
             created=datetime.today(),
             created_by=[],
             profile=[ProfileIdentifierType.SOFTWARE],
-            data_license="TBD License",
+            data_license="CC0 1.0",
             created_using=["SPDXRef-StrictDoc"],
             comment=f"SPDX 3.0 SBOM for {project_config.project_title}'s requirements.",
         )
         spdx_document = SpdxDocument(
             spdx_id="SPDXRef-DOCUMENT",
             name=f"Requirements for {project_config.project_title}",
-            element=["DUMMY_ELEMENT(what is this for?)"],
-            root_element=["DUMMY_ROOT_ELEMENT(what is this for?)"],
+            element=[],
+            root_element=[],
             creation_info=creation_info,
             summary=f"SPDX Document for project {project_config.project_title}",
             description=None,
@@ -202,8 +202,11 @@ class SPDXGenerator:
         """
         spdx_document = sdoc_spdx_converter.create_document(project_config)
         spdx_container.document = spdx_document
+
         spdx_package = sdoc_spdx_converter.create_package(project_config)
         spdx_container.package = spdx_package
+
+        spdx_document.root_element = [spdx_package.spdx_id]
 
         spdx_container.relationships.append(
             Relationship(

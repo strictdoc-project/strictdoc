@@ -14,4 +14,4 @@ RUN: cp %S/input1.sdoc %S/Output/spdx/
 RUN: cp %S/input2.sdoc %S/Output/spdx/
 RUN: cp %S/file.py %S/Output/spdx/
 RUN: cd %S/Output/spdx/
-RUN: %strictdoc export %S/Output/spdx/output.sdoc --formats=html --output-dir Output
+RUN: %strictdoc export %S/Output/spdx/output.spdx.sdoc --formats=html --output-dir Output

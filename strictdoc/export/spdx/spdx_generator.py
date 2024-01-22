@@ -22,6 +22,7 @@ from spdx_tools.spdx3.model.software import (
     SoftwarePurpose,
 )
 from spdx_tools.spdx3.model.spdx_document import CreationInfo
+from spdx_tools.spdx3.payload import Payload
 from spdx_tools.spdx3.writer.console.relationship_writer import (
     write_relationship,
 )
@@ -35,6 +36,7 @@ from spdx_tools.spdx3.writer.console.software.snippet_writer import (
 from spdx_tools.spdx3.writer.console.spdx_document_writer import (
     write_spdx_document,
 )
+from spdx_tools.spdx3.writer.json_ld.json_ld_writer import write_payload
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.reference import (
@@ -417,10 +419,28 @@ class SPDXGenerator:
                 file.write("\n")
 
         if True:
+            payload: Payload = Payload()
+
+            payload.add_element(spdx_document)
+            payload.add_element(spdx_package)
+            for spdx_file_ in spdx_container.files:
+                payload.add_element(spdx_file_)
+            for spdx_snippet_ in spdx_container.snippets:
+                payload.add_element(spdx_snippet_)
+
+            path_to_output_spdx_json = os.path.join(
+                output_spdx_root, "output.spdx"
+            )
+
+            write_payload(payload, path_to_output_spdx_json)
+
+        if True:
             sdoc_document = SPDXToSDocConverter.convert(spdx_container)
 
             sdoc_output = SDWriter().write(sdoc_document)
 
-            sdoc_output_path = os.path.join(output_spdx_root, "output.sdoc")
+            sdoc_output_path = os.path.join(
+                output_spdx_root, "output.spdx.sdoc"
+            )
             with open(sdoc_output_path, "w", encoding="utf8") as file_:
                 file_.write(sdoc_output)

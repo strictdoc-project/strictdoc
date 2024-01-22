@@ -34,7 +34,8 @@ exclude_doc_paths = [
 include_source_paths = [
   "pyproject.toml",
   "tasks.py",
-  "strictdoc/**"
+  "strictdoc/**",
+  "tests/**"
 ]
 
 exclude_source_paths = [

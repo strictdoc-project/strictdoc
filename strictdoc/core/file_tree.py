@@ -182,7 +182,6 @@ class FileFinder:
                     and d != "build"
                     and d != "output"
                     and d != "Output"
-                    and d != "tests"
                 )
             ]
             dirs.sort(key=alphanumeric_sort)

@@ -86,7 +86,7 @@ class TraceabilityMatrixHTMLGenerator:
         output = ""
 
         template = html_templates.jinja_environment().get_template(
-            "screens/requirements_coverage/index.jinja"
+            "screens/traceability_matrix/index.jinja"
         )
 
         link_renderer = LinkRenderer(

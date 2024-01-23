@@ -45,7 +45,7 @@
               {%- with
                 anchor=link_renderer.render_local_anchor(section_or_requirement)
               -%}
-                {% include "screens/requirements_coverage/requirement.jinja.html" %}
+                {% include "screens/traceability_matrix/requirement.jinja.html" %}
               {%- endwith -%}
             </td>
 
@@ -58,7 +58,7 @@
                     anchor=link_renderer.render_local_anchor(parent_requirement_),
                     requirement=parent_requirement_
                   -%}
-                    {% include "screens/requirements_coverage/requirement.jinja.html" %}
+                    {% include "screens/traceability_matrix/requirement.jinja.html" %}
                   {%- endwith -%}
                 {% endfor %}
 
@@ -68,12 +68,12 @@
                     anchor=link_renderer.render_local_anchor(child_requirement_),
                     requirement=child_requirement_
                   -%}
-                    {% include "screens/requirements_coverage/requirement.jinja.html" %}
+                    {% include "screens/traceability_matrix/requirement.jinja.html" %}
                   {%- endwith -%}
                 {% endfor %}
               {% elif known_relation_[0] == "File" %}
                 {% if project_config.is_activated_requirements_to_source_traceability() %}
-                  {% include "screens/requirements_coverage/file.jinja" %}
+                  {% include "screens/traceability_matrix/file.jinja" %}
                 {% endif %}
               {% endif %}
               </td>

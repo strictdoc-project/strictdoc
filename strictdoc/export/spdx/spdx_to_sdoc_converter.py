@@ -1,7 +1,7 @@
 from typing import Union
 
 from spdx_tools.spdx3.model import RelationshipType, SpdxDocument
-from spdx_tools.spdx3.model.software import File, Snippet, Package
+from spdx_tools.spdx3.model.software import File, Package, Snippet
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document

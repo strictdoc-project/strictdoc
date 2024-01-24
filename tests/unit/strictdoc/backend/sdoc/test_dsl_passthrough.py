@@ -868,6 +868,48 @@ OPTIONS:
     assert input_sdoc == output
 
 
+def test_090_document_config_custom_views():
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+OPTIONS:
+  REQUIREMENT_STYLE: Inline
+  DEFAULT_VIEW: PRINT_VIEW
+VIEWS:
+- ID: PRINT_VIEW
+  NAME: Print view
+  TAGS:
+  - OBJECT_TYPE: OBJ_TYPE
+    VISIBLE_FIELDS:
+    - NAME: UID
+      PLACEMENT: XYZ
+    - NAME: STATEMENT
+    - NAME: RATIONALE
+- ID: SECOND_VIEW
+  TAGS:
+  - OBJECT_TYPE: SECOND_OBJ
+    VISIBLE_FIELDS:
+    - NAME: TITLE
+      PLACEMENT: ABC
+    - NAME: STATEMENT
+    - NAME: RATIONALE
+  HIDDEN_TAGS:
+  - SECOND_OBJ
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input_sdoc)
+    assert isinstance(document, Document)
+
+    document: Document = reader.read(input_sdoc)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input_sdoc == output
+
+
 def test_edge_case_01_minimal_requirement():
     input_sdoc = """
 [DOCUMENT]

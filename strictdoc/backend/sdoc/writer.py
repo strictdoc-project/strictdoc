@@ -94,6 +94,7 @@ class SDWriter:
             auto_levels_specified = document_config.ng_auto_levels_specified
             requirement_style = document_config.requirement_style
             requirement_in_toc = document_config.requirement_in_toc
+            default_view = document_config.default_view
 
             if (
                 enable_mid is not None
@@ -101,6 +102,7 @@ class SDWriter:
                 or auto_levels_specified
                 or requirement_style is not None
                 or requirement_in_toc is not None
+                or default_view is not None
             ):
                 output += "OPTIONS:"
                 output += "\n"
@@ -129,6 +131,37 @@ class SDWriter:
                     output += "  REQUIREMENT_IN_TOC: "
                     output += requirement_in_toc
                     output += "\n"
+
+                if default_view is not None:
+                    output += "  DEFAULT_VIEW: "
+                    output += default_view
+                    output += "\n"
+
+        document_view = document.view
+        if document_view is not None:
+            views = document_view.views
+            assert len(views) > 0
+            output += "VIEWS:"
+            output += "\n"
+            for view in views:
+                output += f"- ID: {view.view_id}\n"
+                if view.name is not None:
+                    output += f"  NAME: {view.name}\n"
+                assert len(view.tags) > 0
+                output += "  TAGS:\n"
+                for tag in view.tags:
+                    output += f"  - OBJECT_TYPE: {tag.object_type}\n"
+                    output += "    VISIBLE_FIELDS:\n"
+                    for field in tag.visible_fields:
+                        output += f"    - NAME: {field.name}\n"
+                        placement = field.placement
+                        if placement:
+                            output += f"      PLACEMENT: {placement}\n"
+                hidden_tags = view.hidden_tags
+                if hidden_tags is not None and len(hidden_tags) > 0:
+                    output += "  HIDDEN_TAGS:\n"
+                    for hidden_tag in hidden_tags:
+                        output += f"  - {hidden_tag.hidden_tag}\n"
 
         assert document.grammar is not None
         document_grammar: DocumentGrammar = document.grammar

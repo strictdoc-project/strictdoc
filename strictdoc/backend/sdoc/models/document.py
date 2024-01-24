@@ -5,6 +5,7 @@ from strictdoc.backend.sdoc.models.document_bibliography import (
 )
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.document_view import DocumentView
 from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.helpers.auto_described import auto_described
@@ -18,6 +19,7 @@ class Document:  # pylint: disable=too-many-instance-attributes
         mid: Optional[str],
         title: str,
         config: Optional[DocumentConfig],
+        view: Optional[DocumentView],
         grammar: Optional[DocumentGrammar],
         bibliography: Optional[DocumentBibliography],
         free_texts,
@@ -32,6 +34,7 @@ class Document:  # pylint: disable=too-many-instance-attributes
             if config is not None
             else DocumentConfig.default_config(self)
         )
+        self.view: Optional[DocumentView] = view
         self.grammar: Optional[DocumentGrammar] = grammar
         self.bibliography: Optional[DocumentBibliography] = bibliography
         self.free_texts: List[FreeText] = free_texts

@@ -1691,6 +1691,7 @@ def create_main_router(
             mid=None,
             title=document_title,
             config=None,
+            view=None,
             grammar=DocumentGrammar.create_default(parent=None),
             bibliography=None,
             free_texts=[],

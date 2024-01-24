@@ -16,6 +16,7 @@ class SDocObjectFactory:
             mid=None,
             title=title if title else "NONAME",
             config=None,
+            view=None,
             grammar=None,
             bibliography=None,
             free_texts=[],

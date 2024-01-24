@@ -19,6 +19,7 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
             auto_levels=None,
             requirement_style=None,
             requirement_in_toc=None,
+            default_view=None,
         )
 
     def __init__(
@@ -35,6 +36,7 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         auto_levels: Optional[str],
         requirement_style: Optional[str],
         requirement_in_toc: Optional[str],
+        default_view: Optional[str],
     ):
         self.parent = parent
         self.version: Optional[str] = version
@@ -62,6 +64,7 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         # Simple, Table, Rows
         self.requirement_style: Optional[str] = requirement_style
         self.requirement_in_toc: Optional[str] = requirement_in_toc
+        self.default_view: Optional[str] = default_view
         self.ng_auto_levels_specified = auto_levels is not None
 
     def get_requirement_style_mode(self):

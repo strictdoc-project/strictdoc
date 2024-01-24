@@ -121,7 +121,7 @@ class ExcelToSDocConverter:
         document_config = DocumentConfig.default_config(None)
         document_title = title if title else "<No title>"
         document = Document(
-            None, document_title, document_config, None, None, [], []
+            None, document_title, document_config, None, None, None, [], []
         )
 
         fields = list(

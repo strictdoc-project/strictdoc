@@ -35,6 +35,7 @@ Document[noskipws]:
   ('MID: ' mid = SingleLineString '\n')?
   'TITLE: ' title = SingleLineString '\n'
   (config = DocumentConfig)?
+  (view = DocumentView)?
   ('\n' grammar = DocumentGrammar)?
   ('\n' bibliography = DocumentBibliography)?
   free_texts *= SpaceThenFreeText
@@ -158,7 +159,37 @@ DocumentConfig[noskipws]:
     ('  REQUIREMENT_IN_TOC: '
         (requirement_in_toc = RequirementHasTitleChoice) '\n'
     )?
+    ('  DEFAULT_VIEW: ' default_view = SingleLineString '\n')?
   )?
+;
+
+DocumentView[noskipws]:
+  'VIEWS:' '\n'
+  views += ViewElement
+;
+
+ViewElement[noskipws]:
+  '- ID: ' view_id = /{REGEX_UID}/ '\n'
+  ('  NAME: ' name = SingleLineString '\n')?
+  '  TAGS:' '\n'
+  tags += ViewElementTags
+  ('  HIDDEN_TAGS:' '\n'
+  hidden_tags += ViewElementHiddenTag)?
+;
+
+ViewElementTags[noskipws]:
+  '  - OBJECT_TYPE: ' object_type = SingleLineString '\n'
+  '    VISIBLE_FIELDS:' '\n'
+  visible_fields += ViewElementField
+;
+
+ViewElementField[noskipws]:
+  '    - NAME: ' name = SingleLineString '\n'
+  ('      PLACEMENT: ' placement = SingleLineString '\n')?
+;
+
+ViewElementHiddenTag[noskipws]:
+  '  - ' hidden_tag = SingleLineString '\n'
 ;
 
 MarkupChoice[noskipws]:

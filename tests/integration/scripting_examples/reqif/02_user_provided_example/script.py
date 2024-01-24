@@ -360,7 +360,7 @@ class AUREON_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         document_config = DocumentConfig.default_config(None)
         document_title = title if title else "<No title>"
         document = Document(
-            None, document_title, document_config, None, None, [], []
+            None, document_title, document_config, None, None, None, [], []
         )
         document.grammar = DocumentGrammar.create_default(document)
         return document

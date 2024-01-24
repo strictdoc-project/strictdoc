@@ -110,6 +110,7 @@ class DocumentBuilder:
             auto_levels=None,
             requirement_style=None,
             requirement_in_toc=None,
+            default_view=None,
         )
         free_texts = []
         section_contents = []
@@ -117,6 +118,7 @@ class DocumentBuilder:
             None,
             "Test Document",
             config,
+            None,
             None,
             None,
             free_texts,

@@ -340,3 +340,25 @@ class GrammarElementFieldReference(GrammarElementField):
                 continue
             raise NotImplementedError(ref_type)
         return relation_types
+
+
+@auto_described
+class ViewElementField:
+    def __init__(self, name: str, placement: Optional[str]):
+        self.name: str = name
+        self.placement: Optional[str] = placement
+
+
+@auto_described
+class ViewElementTags:
+    def __init__(
+        self, object_type: str, visibile_fields: List[ViewElementField]
+    ):
+        self.object_type: str = object_type
+        self.visible_fields: List[ViewElementField] = visibile_fields
+
+
+@auto_described
+class ViewElementHiddenTag:
+    def __init__(self, hidden_tag: str):
+        self.hidden_tag: str = hidden_tag

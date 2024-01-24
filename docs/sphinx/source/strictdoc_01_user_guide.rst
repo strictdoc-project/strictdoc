@@ -2095,6 +2095,23 @@ this option will only have effect on the HTML export. All other export options
 are run from the main thread. Reading of the SDoc documents is parallelized for
 all export options and is disabled with this option as well.
 
+Python API
+==========
+
+At present, StrictDoc lacks a documented public Python API. Nevertheless, users can leverage StrictDoc's internal API to enhance existing functions or create custom import, export, and analysis tools. The architecture of StrictDoc is highly modular, so for each functional block there shall always be a dedicated Python class with a public interface, see :ref:`High-level architecture <SECTION-DD-High-level-architecture>`.
+
+One good example is the ``SDWriter`` class, which exercises the complete export of the Python data objects to the SDoc format. Since, the SDoc format is the primary data format of StrictDoc, the SDWriter is quite feature-rich in what it does and covers. The ``RSTWriter`` is less powerful because it does not reflect the full data model, but is probably worth a look as well.
+
+The ``strictdoc/backend/reqif`` folder contains exporter/importer routines for the ReqIF format. There, the core classes from the Python data model, e.g. Requirement, Section, Document, Grammar, etc. are created or read from and to the ReqIF format.
+
+The ``ManageAutoUIDCommand`` class features a good use of all APIs that one may need to read/update/write back a SDoc document tree:
+
+- The ``TraceabilityIndex`` is created from a project config. The traceability index is the main class for storing the whole traceability graph in Python objects. It has plenty of methods for reading and writing things from the graph.
+- The ``DocumentUIDAnalyzer`` is an example of how the objects are manipulated in memory.
+- And finally the final sequence writes the mutated traceability graph back to files using ``SDWriter``.
+
+For any custom Python API request, for example, a need to do a more advanced data analysis on SDoc data, open a GitHub issue and your specific issue will be handled.
+
 .. _SDOC_UG_EXPERIMENTAL_FEATURES:
 
 Experimental features
@@ -2129,7 +2146,7 @@ This feature is not enabled by default because it has not undergone sufficient t
 HTML2PDF printable document generator
 -------------------------------------
 
-The HTML2PDF screen displays a browser-printable version of a document. Printing from a browser results in a well-formatted PDF document or a well-formatted document printed on paper.
+The HTML2PDF screen displays a browser-printable version of a document. Printing from a browser results in a well-formatted PDF document or a well-formatted document printed on paper. The best printing experience is achieved with the Chrome browser which in contrast to Firefox and Safari, preserves the internal hyperlinks in the output PDF.
 
 To activate the HTML2PDF screen, add/edit the ``strictdoc.toml`` config file in the root of your repository with documentation content.
 
@@ -2142,7 +2159,7 @@ To activate the HTML2PDF screen, add/edit the ``strictdoc.toml`` config file in 
       "HTML2PDF"
     ]
 
-This feature is not enabled by default because the implementation has not been completed yet. The underlying JavaScript library is being improved with respect to our HTML content is split between pages, in particular the splitting of HTML ``<table>`` tags is being worked on. One feature that is still missing is the ability to generate user-specific front pages with custom meta information. Another feature to be added is the "Export document to PDF" button.
+This feature is not enabled by default because the implementation has not been completed yet. The underlying JavaScript library is being improved with respect to our HTML content is split between pages, in particular the splitting of HTML ``<table>`` tags is being worked on. One feature that is still missing is the ability to generate user-specific front pages with custom meta information.
 
 Mermaid diagramming and charting tool
 -------------------------------------
@@ -2234,3 +2251,40 @@ Concurrent use of web user interface
 StrictDoc's web user interface does not handle concurrency. If the same requirement/section is edited by two users at the same time, the last write wins.
 
 The measures for handling concurrent use are planned but have been not implemented yet.
+
+Known issues
+============
+
+This section documents some known issues and non-obvious implementation details.
+
+.. _SDOC_IMPL_1:
+
+Exporting document free text to ReqIF and vice versa
+----------------------------------------------------
+
+ReqIF format does not seem to provide a dedicated convention for a text node to be distinguished from a requirement or a section. StrictDoc implements a workaround: the document's free text is converted to a section with a ``ChapterName`` field that equals "Abstract". And the other way round: when a ReqIF-to-SDoc converter encounters the first section of a document to be "Abstract", it is converted to a free text.
+
+.. _SDOC_IMPL_2:
+
+Running out of semaphores on macOS
+----------------------------------
+
+This an edge case on macOS: Python crashes in the Parallelizer class when
+creating an output queue:
+
+.. code-block:: py
+
+    self.output_queue = multiprocessing.Queue()
+
+The fragment of the crash:
+
+.. code-block:: text
+
+    sl = self._semlock = _multiprocessing.SemLock(
+    OSError: [Errno 28] No space left on device
+
+The existing workaround for this problem is to increase a number of semaphores in the macOS config:
+
+.. code-block:: text
+
+    sudo sysctl -w kern.posix.sem.max=20000

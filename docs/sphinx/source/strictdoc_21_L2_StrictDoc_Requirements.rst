@@ -41,6 +41,10 @@ Requirement model
 
 StrictDoc's data model shall support a "Requirement" model.
 
+**Parents:**
+
+- ``[SDOC-SSS-4]`` :ref:`SDOC-SSS-4`
+
 .. _SDOC-SRS-100:
 
 Requirement model fields
@@ -231,26 +235,6 @@ NOTE: A relation role is a string value. Typical examples: "refines", "verifies"
 
 - ``[SDOC-SSS-8]`` :ref:`SDOC-SSS-8`
 
-.. _SDOC-SRS-116:
-
-Requirement validation according to EARS syntax
------------------------------------------------
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-116
-    * - **STATUS:**
-      - Backlog
-
-The SDoc model shall provide validation of requirements according to the EARS syntax.
-
-**Parents:**
-
-- ``[SDOC-SSS-57]`` :ref:`SDOC-SSS-57`
-
 SDoc text markup
 ================
 
@@ -314,6 +298,10 @@ SDoc file extension
 
 The SDoc markup content shall be stored in files with .sdoc extension.
 
+**Parents:**
+
+- ``[SDOC-SSS-80]`` :ref:`SDOC-SSS-80`
+
 .. _SDOC-SRS-105:
 
 One document per one SDoc file
@@ -358,34 +346,6 @@ StrictDoc's markup language shall be based on a well-defined grammar.
 - ``[DO178-2]`` :ref:`DO178-2`
 - ``[SDOC-SSS-55]`` :ref:`SDOC-SSS-55`
 - ``[SDOC-SSS-54]`` :ref:`SDOC-SSS-54`
-
-.. _SDOC-SRS-122:
-
-Project-level grammar
----------------------
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-122
-    * - **STATUS:**
-      - Backlog
-
-StrictDoc shall support creation of a project-level grammar.
-
-**Rationale:**
-
-A single grammar defined for a project (same grammar for several documents) helps to standardize the structure of all documents in a documentation tree and reduces the effort needed to create identical grammars all the time.
-
-**Comment:**
-
-The implementation is easy model-wise but the user interface details need to be elaborated.
-
-**Parents:**
-
-- ``[DO178-9]`` :ref:`DO178-9`
 
 .. _SDOC-SRS-93:
 
@@ -450,6 +410,20 @@ UID identifier format
 
     * - **UID:**
       - SDOC-SRS-22
+
+The SDoc markup shall only accept UID identifiers that consist of alphanumeric characters separated by "_" and "-" characters.
+
+**Rationale:**
+
+A standardized UID format supports the parent requirement of unique identification of requirements. It is easier to visually identify UIDs that look similar and common to a given industry.
+
+**Comment:**
+
+This requirement may need a revision to accommodate for more UID formats.
+
+**Parents:**
+
+- ``[SDOC-SSS-89]`` :ref:`SDOC-SSS-89`
 
 .. _SDOC-SRS-24:
 
@@ -542,8 +516,8 @@ Graph database
 
 .. _SDOC-SRS-28:
 
-Graph database
---------------
+Traceability index
+------------------
 
 .. list-table::
     :align: left
@@ -551,6 +525,12 @@ Graph database
 
     * - **UID:**
       - SDOC-SRS-28
+
+StrictDoc shall maintain a complete Traceability Index of all documentation- and requirements-related information available in a project tree.
+
+**Parents:**
+
+- ``[SDOC-SSS-7]`` :ref:`SDOC-SSS-7`
 
 .. _SDOC-SRS-29:
 
@@ -563,6 +543,12 @@ Uniqueness UID in tree
 
     * - **UID:**
       - SDOC-SRS-29
+
+For each requirement node, the Traceability Index shall ensure its uniqueness throughout the node's lifecycle.
+
+**Parents:**
+
+- ``[SDOC-SSS-89]`` :ref:`SDOC-SSS-89`
 
 .. _SDOC-SRS-30:
 
@@ -578,7 +564,7 @@ Detect links cycles
     * - **STATUS:**
       - Active
 
-StrictDoc shall detect cycles between requirements.
+The Traceability Index shall detect cycles between requirements.
 
 **Parents:**
 
@@ -595,6 +581,21 @@ Link document nodes
 
     * - **UID:**
       - SDOC-SRS-32
+
+The Traceability Index shall recognize and maintain the relations between all documents of a project tree.
+
+**Rationale:**
+
+The relations between all documents are a summary of all relations between these documents' requirements. This information is useful for:
+
+1) Structural analysis of a requirements/documents graph.
+2) Incremental regeneration of only those documents whose content was modified.
+
+**Parents:**
+
+- ``[SDOC-SSS-47]`` :ref:`SDOC-SSS-47`
+- ``[SDOC-SSS-13]`` :ref:`SDOC-SSS-13`
+- ``[SDOC-SSS-14]`` :ref:`SDOC-SSS-14`
 
 .. _SDOC-SRS-102:
 
@@ -732,31 +733,6 @@ StrictDoc shall provide export to printable HTML pages.
 
 - ``[DO178-5]`` :ref:`DO178-5`
 
-.. _SDOC-SRS-121:
-
-WYSIWYG editing
-~~~~~~~~~~~~~~~
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-121
-    * - **STATUS:**
-      - Backlog
-
-StrictDoc shall provide WYSIWYG kind of editing for all multiline text input fields.
-
-**Rationale:**
-
-WYSIWYG improves the user experience, especially for non-programmer users.
-
-**Parents:**
-
-- ``[DO178-19]`` :ref:`DO178-19`
-- ``[SDOC-SSS-80]`` :ref:`SDOC-SSS-80`
-
 .. _SDOC-SRS-48:
 
 Preserve generated file names
@@ -777,24 +753,9 @@ For all export operations, StrictDoc shall maintain the original filenames of th
 
 Name preservation helps to visually identify which input file an output file corresponds to.
 
-.. _SECTION-SRS-Screen-Project-home:
+**Parents:**
 
-Screen: Project home
---------------------
-
-.. _SDOC-SRS-52:
-
-View project home page
-~~~~~~~~~~~~~~~~~~~~~~
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-52
-    * - **STATUS:**
-      - Progress
+- ``[SDOC-SSS-80]`` :ref:`SDOC-SSS-80`
 
 .. _SECTION-SRS-Screen-Project-tree:
 
@@ -812,6 +773,12 @@ View project tree
 
     * - **UID:**
       - SDOC-SRS-53
+
+StrictDoc's "Project tree" screen shall provide browsing of a documentation project tree.
+
+**Parents:**
+
+- ``[SDOC-SSS-91]`` :ref:`SDOC-SSS-91`
 
 .. _SDOC-SRS-107:
 
@@ -942,30 +909,6 @@ Moving the nodes within a document is a convenience feature that speeds up the r
 
 - ``[SDOC-SSS-5]`` :ref:`SDOC-SSS-5`
 
-.. _SDOC-SRS-94:
-
-Move requirement / section nodes between documents
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-94
-    * - **STATUS:**
-      - Backlog
-
-StrictDoc's Document screen shall provide a capability to move the nodes between documents.
-
-**Rationale:**
-
-Moving the nodes within a document is a convenience feature that speeds up the requirements editing process significantly.
-
-**Parents:**
-
-- ``[SDOC-SSS-70]`` :ref:`SDOC-SSS-70`
-
 .. _SDOC-SRS-56:
 
 Edit Document grammar
@@ -1004,6 +947,12 @@ Edit Document options
     * - **STATUS:**
       - Active
 
+StrictDoc's Document screen shall provide controls for configuring the document-specific options.
+
+**Parents:**
+
+- ``[SDOC-SSS-93]`` :ref:`SDOC-SSS-93`
+
 .. _SDOC-SRS-96:
 
 Auto-generate requirements UIDs
@@ -1025,46 +974,6 @@ StrictDoc's Document screen shall provide controls for automatic generation of r
 - ``[SDOC-SSS-6]`` :ref:`SDOC-SSS-6`
 - ``[SDOC-SSS-80]`` :ref:`SDOC-SSS-80`
 
-.. _SDOC-SRS-120:
-
-Auto-completion for requirements UIDs
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-120
-    * - **STATUS:**
-      - Backlog
-
-StrictDoc's Document screen shall provide controls for automatic completion of requirements UIDs.
-
-**Comment:**
-
-The automatic completion can be especially useful when a user has to fill in a parent relation UID.
-
-**Parents:**
-
-- ``[SDOC-SSS-6]`` :ref:`SDOC-SSS-6`
-- ``[DO178-14]`` :ref:`DO178-14`
-- ``[SDOC-SSS-80]`` :ref:`SDOC-SSS-80`
-
-.. _SDOC-SRS-58:
-
-Attach image to requirement
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-58
-    * - **STATUS:**
-      - Backlog
-
 .. _SDOC-SRS-59:
 
 Buttons to copy text to buffer
@@ -1077,41 +986,13 @@ Buttons to copy text to buffer
     * - **UID:**
       - SDOC-SRS-59
     * - **STATUS:**
-      - Backlog
+      - Active
 
 StrictDoc shall provide a "copy text to buffer" button for all requirement's text fields.
 
 **Parents:**
 
 - ``[SDOC-SSS-80]`` :ref:`SDOC-SSS-80`
-
-.. _SDOC-SRS-60:
-
-Provide contextual help about RST markup
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-60
-    * - **STATUS:**
-      - Backlog
-
-.. _SDOC-SRS-61:
-
-Tables
-~~~~~~
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-61
-    * - **STATUS:**
-      - Backlog
 
 .. _SECTION-SRS-Screen-Table-TBL:
 
@@ -1138,34 +1019,6 @@ StrictDoc's Table screen shall allow reading documents in a table-like manner.
 
 - ``[SDOC-SSS-73]`` :ref:`SDOC-SSS-73`
 
-.. _SDOC-SRS-63:
-
-TBL: Hide/show columns
-~~~~~~~~~~~~~~~~~~~~~~
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-63
-    * - **STATUS:**
-      - Draft
-
-.. _SDOC-SRS-64:
-
-TBL: Select/deselect tags
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-64
-    * - **STATUS:**
-      - Draft
-
 .. _SECTION-SRS-Screen-Traceability-TR:
 
 Screen: Traceability (TR)
@@ -1182,6 +1035,14 @@ View TR screen
 
     * - **UID:**
       - SDOC-SRS-65
+
+StrictDoc shall provide a single document-level traceability screen.
+
+NOTE: This screen helps to read a document like a normal document while the traceability to this document's parent and child elements is visible at the same time.
+
+**Parents:**
+
+- ``[SDOC-SSS-28]`` :ref:`SDOC-SSS-28`
 
 .. _SECTION-SRS-Screen-Deep-traceability-DTR:
 
@@ -1260,7 +1121,7 @@ Traceability matrix
     * - **UID:**
       - SDOC-SRS-112
     * - **STATUS:**
-      - Backlog
+      - Active
 
 StrictDoc shall provide a traceability matrix screen.
 
@@ -1285,7 +1146,7 @@ Project tree diff
     * - **UID:**
       - SDOC-SRS-111
     * - **STATUS:**
-      - Backlog
+      - Active
 
 StrictDoc shall provide a project tree diff screen.
 
@@ -1294,63 +1155,6 @@ StrictDoc shall provide a project tree diff screen.
 - ``[SDOC-SSS-75]`` :ref:`SDOC-SSS-75`
 - ``[SDOC-SSS-74]`` :ref:`SDOC-SSS-74`
 - ``[DO178-15]`` :ref:`DO178-15`
-
-Screen: Impact analysis
------------------------
-
-.. _SDOC-SRS-117:
-
-Impact analysis
-~~~~~~~~~~~~~~~
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-117
-    * - **STATUS:**
-      - Backlog
-
-StrictDoc shall provide the Impact Analysis screen.
-
-NOTE: The Impact Analysis screen helps to get information about the impact that a given change to a requirement has on the other requirements in the project tree.
-
-**Rationale:**
-
-The impact analysis is one of the core functions of a requirements management tool. Analyzing the impact that a requirement has on other requirements and an overall project's technical definition helps to perform effective change management.
-
-**Parents:**
-
-- ``[SDOC-SSS-74]`` :ref:`SDOC-SSS-74`
-- ``[DO178-11]`` :ref:`DO178-11`
-
-Screen: Traceability navigator
-------------------------------
-
-.. _SDOC-SRS-113:
-
-Traceability navigator
-~~~~~~~~~~~~~~~~~~~~~~
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-113
-    * - **STATUS:**
-      - Backlog
-
-StrictDoc shall provide a traceability navigator screen.
-
-**Rationale:**
-
-Provide an interactive 1000-ft view of a requirements project.
-
-**Parents:**
-
-- ``[SDOC-SSS-56]`` :ref:`SDOC-SSS-56`
 
 .. _SECTION-SRS-Requirements-to-source-traceability:
 
@@ -1575,6 +1379,16 @@ Standalone ReqIF layer
     * - **STATUS:**
       - Active
 
+StrictDoc shall maintain the core ReqIF implementation as a separate software component.
+
+**Rationale:**
+
+ReqIF is a well-defined standard which exists independently of StrictDoc's development. It is reasonable to maintain the ReqIF codebase as a separate software component to allow independent development and easier maintainability.
+
+**Parents:**
+
+- ``[SDOC-SSS-90]`` :ref:`SDOC-SSS-90`
+
 .. _SECTION-SRS-Excel:
 
 Excel and CSV
@@ -1597,40 +1411,6 @@ StrictDoc shall allow exporting SDoc content to Excel.
 **Parents:**
 
 - ``[SDOC-SSS-60]`` :ref:`SDOC-SSS-60`
-
-.. _SDOC-SRS-129:
-
-Export/import to CSV
-~~~~~~~~~~~~~~~~~~~~
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-129
-    * - **STATUS:**
-      - Backlog
-
-StrictDoc shall allow exporting/import SDoc content to/from CSV.
-
-**Parents:**
-
-- ``[SDOC-SSS-59]`` :ref:`SDOC-SSS-59`
-
-.. _SDOC-SRS-75:
-
-ReqXLS
-~~~~~~
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-75
-    * - **STATUS:**
-      - Draft
 
 .. _SECTION-SRS-Graphviz-Dot-export:
 
@@ -1717,18 +1497,6 @@ StrictDoc shall allow automatic generation of requirements UIDs.
 
 - ``[SDOC-SSS-6]`` :ref:`SDOC-SSS-6`
 
-.. _SDOC-SRS-86:
-
-Auto-generate section UIDs
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-86
-
 Python API
 ==========
 
@@ -1774,7 +1542,7 @@ Web server
     * - **UID:**
       - SDOC-SRS-126
     * - **STATUS:**
-      - Backlog
+      - Active
 
 StrictDoc shall provide a web server.
 
@@ -1785,97 +1553,6 @@ A web server is a precondition for StrictDoc's web interface. A web server can b
 **Parents:**
 
 - ``[SDOC-SSS-83]`` :ref:`SDOC-SSS-83`
-
-.. _SDOC-SRS-114:
-
-Web API
--------
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-114
-    * - **STATUS:**
-      - Backlog
-
-StrictDoc shall provide a web API.
-
-**Rationale:**
-
-A web API allows integration with tools and workflows external to StrictDoc itself.
-
-**Parents:**
-
-- ``[SDOC-SSS-68]`` :ref:`SDOC-SSS-68`
-- ``[SDOC-SSS-79]`` :ref:`SDOC-SSS-79`
-- ``[SDOC-SSS-85]`` :ref:`SDOC-SSS-85`
-
-Multi-user workflow
-===================
-
-.. _SDOC-SRS-123:
-
-Multi-user editing of documents
--------------------------------
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-123
-    * - **STATUS:**
-      - Backlog
-
-StrictDoc shall support concurrent use and editing of a single StrictDoc web server instance by multiple users.
-
-**Parents:**
-
-- ``[DO178-17]`` :ref:`DO178-17`
-- ``[SDOC-SSS-81]`` :ref:`SDOC-SSS-81`
-
-.. _SDOC-SRS-130:
-
-User accounts
--------------
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-130
-    * - **STATUS:**
-      - Backlog
-
-StrictDoc shall support user accounts.
-
-**Parents:**
-
-- ``[SDOC-SSS-65]`` :ref:`SDOC-SSS-65`
-
-.. _SDOC-SRS-131:
-
-Update notifications
---------------------
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-131
-    * - **STATUS:**
-      - Backlog
-
-StrictDoc shall support notifying a user (users) about updated requirements.
-
-**Parents:**
-
-- ``[SDOC-SSS-66]`` :ref:`SDOC-SSS-66`
-- ``[SDOC-SSS-74]`` :ref:`SDOC-SSS-74`
 
 User experience
 ===============
@@ -1897,7 +1574,13 @@ Warnings are errors
     * - **UID:**
       - SDOC-SRS-6
     * - **STATUS:**
-      - Draft
+      - Active
+
+StrictDoc's default mode of operation shall treat all warnings as errors.
+
+**Parents:**
+
+- ``[SDOC-SSS-78]`` :ref:`SDOC-SSS-78`
 
 .. _SECTION-SRS-Configurability:
 
@@ -1906,7 +1589,7 @@ Configurability
 
 .. _SDOC-SRS-37:
 
-Strictdoc.toml file
+strictdoc.toml file
 -------------------
 
 .. list-table::
@@ -1916,17 +1599,11 @@ Strictdoc.toml file
     * - **UID:**
       - SDOC-SRS-37
 
-.. _SDOC-SRS-38:
+StrictDoc shall support a configuration of project-level options through a TOML file named ``strictdoc.toml``.
 
-Edit project options (Move to SSS)
-----------------------------------
+**Parents:**
 
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-38
+- ``[SDOC-SSS-92]`` :ref:`SDOC-SSS-92`
 
 .. _SDOC-SRS-39:
 
@@ -1940,6 +1617,12 @@ Feature toggles
     * - **UID:**
       - SDOC-SRS-39
 
+StrictDoc shall allow a user to select a subset of StrictDoc's available features by listing them in the ``strictdoc.toml`` file.
+
+**Parents:**
+
+- ``[SDOC-SSS-92]`` :ref:`SDOC-SSS-92`
+
 .. _SDOC-SRS-119:
 
 'Host' parameter
@@ -1952,7 +1635,7 @@ Feature toggles
     * - **UID:**
       - SDOC-SRS-119
 
-StrictDoc shall configuring a host/port on which the StrictDoc web server is run.
+StrictDoc shall support configuring a host/port on which the StrictDoc web server is run.
 
 **Parents:**
 
@@ -2103,6 +1786,31 @@ The StrictDoc-exported HTML content visible to a user is assembled from numerous
 
 Development process requirements
 ================================
+
+General process
+---------------
+
+.. _SDOC-SRS-133:
+
+Priority handling of critical issues in StrictDoc
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-SRS-133
+
+All critical issues reported in relation to StrictDoc shall be addressed with utmost priority.
+
+**Rationale:**
+
+Prioritizing major issues ensures StrictDoc remains stable and reliable, preventing serious problems that could compromise its performance and integrity.
+
+**Parents:**
+
+- ``[SDOC-SSS-78]`` :ref:`SDOC-SSS-78`
 
 .. _SECTION-SRS-Requirements-engineering:
 
@@ -2257,8 +1965,8 @@ Implementation constraints
 
 .. _SDOC-SRS-89:
 
-Exclusive use of open source components
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Use of open source components
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
     :align: left
@@ -2280,26 +1988,6 @@ No commercial/proprietary dependency chain ensures that StrictDoc remain free an
 - ``[DO178-7]`` :ref:`DO178-7`
 - ``[SDOC-SSS-39]`` :ref:`SDOC-SSS-39`
 
-.. _SDOC-SRS-13:
-
-Real-time editing out of scope
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-13
-    * - **STATUS:**
-      - Active
-
-StrictDoc shall not implement the real-time editing capability to its web interface.
-
-**Rationale:**
-
-The real-time editing feature is hard to achieve with a small part-time involvement from the development team. This requirement can only be reconsidered, if StrictDoc would experience a significant increase in the development power.
-
 .. _SDOC-SRS-14:
 
 No heavy UI frameworks
@@ -2317,6 +2005,10 @@ No heavy UI frameworks
 StrictDoc shall avoid using large and demanding UI frameworks.
 
 NOTE: An example of frameworks that require a very specific architecture: React JS, AngularJS.
+
+**Parents:**
+
+- ``[SDOC-SSS-90]`` :ref:`SDOC-SSS-90`
 
 .. _SDOC-SRS-15:
 
@@ -2338,6 +2030,10 @@ StrictDoc shall avoid extending its infrastructure with anything based on NPM-ec
 
 StrictDoc already deals with the Python/Pip/Pypi ecosystem. The amount of necessary maintenance is already quite high. NPM is known for splitting its projects into very small parts, which increases the complexity of maintaining all dependencies.
 
+**Parents:**
+
+- ``[SDOC-SSS-90]`` :ref:`SDOC-SSS-90`
+
 .. _SDOC-SRS-16:
 
 No use of JavaScript replacement languages (e.g., Typescript)
@@ -2358,6 +2054,10 @@ StrictDoc shall avoid using JavaScript-based programming languages.
 
 The development team does not have specific experience with any of the JS alternatives. Staying with a general subset of JavaScript is a safer choice.
 
+**Parents:**
+
+- ``[SDOC-SSS-90]`` :ref:`SDOC-SSS-90`
+
 .. _SDOC-SRS-87:
 
 Monolithic application with no microservices
@@ -2376,7 +2076,7 @@ StrictDoc shall avoid using microservices and microservice-based architectures.
 
 **Rationale:**
 
-The project is too small to scale to multi-service architecture.
+The project is too small to scale to a multi-service architecture.
 
 **Comment:**
 
@@ -2422,8 +2122,8 @@ Coding constraints
 
 .. _SDOC-SRS-40:
 
-Deliberate use of asserts
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Use of asserts
+~~~~~~~~~~~~~~
 
 .. list-table::
     :align: left
@@ -2432,10 +2132,18 @@ Deliberate use of asserts
     * - **UID:**
       - SDOC-SRS-40
 
+StrictDoc's development shall ensure a use of assertions throughout the project codebase.
+
+NOTE: At a minimum, the function input parameters must be checked for validity.
+
+**Parents:**
+
+- ``[SDOC-SSS-78]`` :ref:`SDOC-SSS-78`
+
 .. _SDOC-SRS-41:
 
-Extensive use of type annotations
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Use of type annotations in Python code
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
     :align: left
@@ -2444,17 +2152,11 @@ Extensive use of type annotations
     * - **UID:**
       - SDOC-SRS-41
 
-.. _SDOC-SRS-7:
+StrictDoc's development shall ensure a use of type annotations throughout the project's Python codebase.
 
-Type-based auto-asserts
-~~~~~~~~~~~~~~~~~~~~~~~
+**Parents:**
 
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-7
+- ``[SDOC-SSS-78]`` :ref:`SDOC-SSS-78`
 
 .. _SECTION-SRS-Linting:
 
@@ -2472,6 +2174,12 @@ Compliance with Python community practices (PEP8 etc)
 
     * - **UID:**
       - SDOC-SRS-42
+
+StrictDoc's development shall ensure that the project's codebase is compliant with the modern Python community's practices.
+
+**Parents:**
+
+- ``[SDOC-SSS-90]`` :ref:`SDOC-SSS-90`
 
 .. _SECTION-SRS-Static-analysis:
 
@@ -2492,7 +2200,7 @@ Static type checking
     * - **STATUS:**
       - Active
 
-StrictDoc's development shall include a continuous static analysis of StrictDoc's codebase.
+StrictDoc's development shall include a continuous type checking of StrictDoc's codebase.
 
 **Parents:**
 

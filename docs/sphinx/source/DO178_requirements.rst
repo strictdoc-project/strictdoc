@@ -1,7 +1,7 @@
-DO-178C requirements tool requirements
-$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+Technical Note: DO-178C requirements tool requirements
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
-This document outlines a set of high-level requirements for StrictDoc, a text-based requirements management system. While StrictDoc already meets many of these requirements, further discussion is needed to clarify any remaining questions. For the outstanding requirements, we can establish a practical implementation plan within the upcoming 2023-2024 StrictDoc roadmap.
+This document outlines a set of high-level requirements for StrictDoc, a text-based requirements management system. While StrictDoc already meets many of these requirements, a further discussion is needed to clarify any remaining questions. For the outstanding requirements, we can establish a practical implementation plan within the upcoming 2023-2024 StrictDoc roadmap.
 
 These requirements are recommended by engineers who adhere to the DO-178B and DO-178C standards of the aviation industry. For a visual summary of the DO-178 standard, please refer to this link: https://upload.wikimedia.org/wikipedia/commons/4/4f/DO-178B_Process_Visual_Summary_Rev_A.pdf.
 
@@ -275,7 +275,7 @@ Source file coverage
     * - **UID:**
       - DO178-13
     * - **STATUS:**
-      - Backlog
+      - Active
 
 StrictDoc shall support generation of source code coverage information.
 
@@ -328,7 +328,7 @@ Diff between document trees
     * - **UID:**
       - DO178-15
     * - **STATUS:**
-      - Backlog
+      - Active
 
 StrictDoc shall allow calculating Diff between two document trees.
 
@@ -356,7 +356,7 @@ Traceability matrices
     * - **COMPLIANCE:**
       - C
     * - **STATUS:**
-      - Backlog
+      - Active
 
 StrictDoc shall support generation of forward and backward traceability matrices.
 
@@ -429,7 +429,7 @@ Uncovered requirement report
     * - **COMPLIANCE:**
       - C
     * - **STATUS:**
-      - Backlog
+      - Active
 
 StrictDoc shall support generation of uncovered requirement report.
 

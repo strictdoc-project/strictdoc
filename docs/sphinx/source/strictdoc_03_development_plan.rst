@@ -7,104 +7,27 @@ project is developed.
 Project goals
 =============
 
-StrictDoc is an attempt to create an open source tool for writing
-technical requirements specifications.
+StrictDoc is an open-source tool for writing technical documentation and requirements management. The long-term goal of the project is to provide a capable, open-source platform for creating and managing technical documentation.
 
-.. _GOAL-1-TOOL-SUPPORT:
+**Requirements automation**
 
-Software support for writing requirements and specifications documents
-----------------------------------------------------------------------
+The tool aims to automate the requirements documentation process at various levels.
 
-.. list-table::
-    :align: left
-    :header-rows: 0
+**Target groups**
 
-    * - **UID:**
-      - GOAL-1-TOOL-SUPPORT
+The project targets different user groups including those in software, hardware, systems (systems engineering, electrical, thermal), as well as quality assurance, safety, management, and non-technical areas.
 
-There shall exist free and lightweight yet capable software for writing
-requirements and specifications documents
+**Use on individual computers and cloud**
 
-**Comment:**
+The project is already usable on individual personal computer, the long-term goal is to enable its use on cloud.
 
-Technical documentation is hard, it can be an extremely laborious process.
-Software shall support engineers in their work with documentation.
+**Open data**
 
-.. _GOAL-2-REDUCE-DOCUMENTATION-HAZARDS:
+An important feature of StrictDoc is its focus on open data, ensuring ease of data transfer both into and out of the system.
 
-Reduce documentation hazards
-----------------------------
+**Synergies with other tools**
 
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - GOAL-2-REDUCE-DOCUMENTATION-HAZARDS
-
-There shall exist no (or less) opportunity for writing incorrect or inconsistent
-documentation.
-
-**Comment:**
-
-Every serious engineering activity, such as safety engineering or systems
-engineering, starts with requirements. The more critical is a product the higher
-the importance of good documentation.
-
-Technical documentation can be and often becomes a source of hazards.
-It is recognized that many failures stem from inadequate requirements
-engineering. While it is not possible to fix the problem of inadequate
-requirements engineering in general, it is definitely possible to improve
-software that supports engineers in activities such as requirements engineering
-and writing technical documentation.
-
-.. _GOAL-3-NO-RUNAWAY-DOCUMENTATION:
-
-No (or less) run-away documentation
------------------------------------
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - GOAL-3-NO-RUNAWAY-DOCUMENTATION
-
-Software shall support engineers in keeping documentation up-to-date.
-
-**Comment:**
-
-Technical documentation easily becomes outdated. Many existing tools for
-documentation do not provide any measures for ensuring overall consistency of
-documents and documentation trees.
-
-.. _GOAL-4-CHANGE-MANAGEMENT:
-
-Change management
------------------
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - GOAL-4-CHANGE-MANAGEMENT
-
-Software shall provide capabilities for change management and impact assessment.
-
-**Comment:**
-
-Change management is difficult. The bigger the project is, the harder it is to
-maintain its documentation. If a change is introduced to a project, it usually
-requires a full revision of its requirements.
-
-**Comment:**
-
-When the basic capabilities of StrictDoc are in place, it should be possible
-to do a more advanced analysis of requirements and requirement trees:
-
-- Finding similar or relevant requirements.
-- Enforce invariants that should be hold. Example: mass or power budget.
+StrictDoc shall be compatible with other software and engineering tools. This includes at least the compatibility with the Python ecosystem, the model-based systems engineering tools, such as Capella, and the formats providing Software Bill of Materials, such as SPDX.
 
 Project milestones
 ==================

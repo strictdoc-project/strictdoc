@@ -187,6 +187,24 @@ The CRUD operations are essential operations of document management. They are at
 - ``[SDOC-SRS-54]`` :ref:`SDOC-SRS-54`
 - ``[SDOC-SRS-106]`` :ref:`SDOC-SRS-106`
 
+.. _SDOC-SSS-91:
+
+Browsing documentation tree
+---------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-SSS-91
+
+The Requirements Tool shall provide browsing of the documentation tree.
+
+**Children:**
+
+- ``[SDOC-SRS-53]`` :ref:`SDOC-SRS-53`
+
 .. _SDOC-SSS-51:
 
 Documents with nested sections/chapters structure
@@ -338,6 +356,7 @@ The CRUD operations are at the core of the requirements management.
 
 **Children:**
 
+- ``[SDOC-SRS-26]`` :ref:`SDOC-SRS-26`
 - ``[SDOC-SRS-55]`` :ref:`SDOC-SRS-55`
 
 .. _SDOC-SSS-61:
@@ -510,8 +529,8 @@ When a document is large, it becomes harder to manage the assignment of the new 
 **Children:**
 
 - ``[SDOC-SRS-96]`` :ref:`SDOC-SRS-96`
-- ``[SDOC-SRS-120]`` :ref:`SDOC-SRS-120`
 - ``[SDOC-SRS-85]`` :ref:`SDOC-SRS-85`
+- ``[SDOC-SRS-120]`` :ref:`SDOC-SRS-120`
 
 .. _SDOC-SSS-7:
 
@@ -532,6 +551,7 @@ Link requirements together
 **Children:**
 
 - ``[SDOC-SRS-31]`` :ref:`SDOC-SRS-31`
+- ``[SDOC-SRS-28]`` :ref:`SDOC-SRS-28`
 
 .. _SDOC-SSS-8:
 
@@ -545,7 +565,7 @@ Multiple link roles
     * - **UID:**
       - SDOC-SSS-8
     * - **STATUS:**
-      - Backlog
+      - Active
 
 The Requirements Tool shall support the link roles.
 
@@ -575,7 +595,7 @@ Reverse parent links
     * - **UID:**
       - SDOC-SSS-71
     * - **STATUS:**
-      - Backlog
+      - Active
 
 The Requirements Tool shall support the Reverse Parent relationship.
 
@@ -583,10 +603,29 @@ The Requirements Tool shall support the Reverse Parent relationship.
 
 - ``[SDOC-SRS-102]`` :ref:`SDOC-SRS-102`
 
+.. _SDOC-SSS-89:
+
+Unique identification of requirements
+-------------------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-SSS-89
+
+The Requirements Tool shall provide means for unique identification of every requirement.
+
+**Children:**
+
+- ``[SDOC-SRS-22]`` :ref:`SDOC-SRS-22`
+- ``[SDOC-SRS-29]`` :ref:`SDOC-SRS-29`
+
 .. _SDOC-SSS-47:
 
-Prevent cycles between nodes
-----------------------------
+Requirements database consistency checks
+----------------------------------------
 
 .. list-table::
     :align: left
@@ -597,11 +636,18 @@ Prevent cycles between nodes
     * - **STATUS:**
       - Active
 
-The Requirements Tool shall provide a validation mechanism that prevents requirement links from forming cycles.
+The Requirements Tool shall provide a validation mechanism that ensures the integrity of requirements and connections between them.
+
+NOTE: Examples of integrity checks:
+
+- Requirements have correct fields.
+- Requirements do not form cycles.
+- Requirements only link to other requirements as specified in a project configuration.
 
 **Children:**
 
 - ``[SDOC-SRS-30]`` :ref:`SDOC-SRS-30`
+- ``[SDOC-SRS-32]`` :ref:`SDOC-SRS-32`
 
 .. _SDOC-SSS-57:
 
@@ -622,6 +668,57 @@ The Requirements Tool shall provide capabilities for validating requirements acc
 **Children:**
 
 - ``[SDOC-SRS-116]`` :ref:`SDOC-SRS-116`
+
+Tool configurability
+====================
+
+.. _SDOC-SSS-92:
+
+Project-level configuration
+---------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-SSS-92
+
+The Requirements Tool shall provide a solution for configuring the project-level options.
+
+NOTE: Examples of project-level options:
+
+- Project title.
+- Global settings for the Requirements Tool itself.
+
+**Children:**
+
+- ``[SDOC-SRS-37]`` :ref:`SDOC-SRS-37`
+- ``[SDOC-SRS-39]`` :ref:`SDOC-SRS-39`
+
+.. _SDOC-SSS-93:
+
+Document-level configuration
+----------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-SSS-93
+
+The Requirements Tool shall provide a solution for configuring the document-level options.
+
+NOTE: Examples of document-level options:
+
+- Document title
+- Requirement prefix.
+- Other options local to the content and the presentation of a given document.
+
+**Children:**
+
+- ``[SDOC-SRS-57]`` :ref:`SDOC-SRS-57`
 
 .. _SECTION-SSSS-Performance:
 
@@ -648,6 +745,7 @@ The Requirements Tool shall support requirement trees with at least 10000 requir
 
 **Children:**
 
+- ``[SDOC-SRS-32]`` :ref:`SDOC-SRS-32`
 - ``[SDOC-SRS-1]`` :ref:`SDOC-SRS-1`
 - ``[SDOC-SRS-95]`` :ref:`SDOC-SRS-95`
 - ``[SDOC-SRS-2]`` :ref:`SDOC-SRS-2`
@@ -673,6 +771,7 @@ The Requirements Tool shall be able to handle documentation packages of at least
 
 **Children:**
 
+- ``[SDOC-SRS-32]`` :ref:`SDOC-SRS-32`
 - ``[SDOC-SRS-1]`` :ref:`SDOC-SRS-1`
 - ``[SDOC-SRS-95]`` :ref:`SDOC-SRS-95`
 - ``[SDOC-SRS-2]`` :ref:`SDOC-SRS-2`
@@ -735,8 +834,8 @@ Compared to the other visualizations, such a visualization helps to "see the for
 
 **Children:**
 
-- ``[SDOC-SRS-113]`` :ref:`SDOC-SRS-113`
 - ``[SDOC-SRS-90]`` :ref:`SDOC-SRS-90`
+- ``[SDOC-SRS-113]`` :ref:`SDOC-SRS-113`
 
 .. _SDOC-SSS-28:
 
@@ -756,6 +855,7 @@ The Requirements Tool shall support generation of traceability matrices.
 
 **Children:**
 
+- ``[SDOC-SRS-65]`` :ref:`SDOC-SRS-65`
 - ``[SDOC-SRS-112]`` :ref:`SDOC-SRS-112`
 
 .. _SDOC-SSS-48:
@@ -848,8 +948,8 @@ The Requirements Tool shall provide capabilities for change management:
 **Children:**
 
 - ``[SDOC-SRS-111]`` :ref:`SDOC-SRS-111`
-- ``[SDOC-SRS-117]`` :ref:`SDOC-SRS-117`
 - ``[SDOC-SRS-131]`` :ref:`SDOC-SRS-131`
+- ``[SDOC-SRS-117]`` :ref:`SDOC-SRS-117`
 
 .. _SECTION-RTC-Usability-installation-and-usage:
 
@@ -910,11 +1010,13 @@ NOTE: Documentation and requirements management are composite activities that co
 
 **Children:**
 
+- ``[SDOC-SRS-104]`` :ref:`SDOC-SRS-104`
 - ``[SDOC-SRS-50]`` :ref:`SDOC-SRS-50`
-- ``[SDOC-SRS-121]`` :ref:`SDOC-SRS-121`
+- ``[SDOC-SRS-48]`` :ref:`SDOC-SRS-48`
 - ``[SDOC-SRS-96]`` :ref:`SDOC-SRS-96`
-- ``[SDOC-SRS-120]`` :ref:`SDOC-SRS-120`
 - ``[SDOC-SRS-59]`` :ref:`SDOC-SRS-59`
+- ``[SDOC-SRS-121]`` :ref:`SDOC-SRS-121`
+- ``[SDOC-SRS-120]`` :ref:`SDOC-SRS-120`
 
 .. _SDOC-SSS-81:
 
@@ -1275,6 +1377,34 @@ Examples of less popular programming languages, with all due respect to their po
 
 - ``[SDOC-SRS-8]`` :ref:`SDOC-SRS-8`
 
+.. _SDOC-SSS-90:
+
+Long-term maintainability of a tool
+-----------------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-SSS-90
+
+The Requirements Tool shall be designed for long-term maintenance.
+
+NOTE: Long-term maintenance aspects to consider:
+
+- Careful selection of the technologies used, e.g., avoid building on too many unrelated technologies at the same time.
+- Take into account the existing experience of the development team. Consider the availability of qualified developers in the future.
+- Take into account maintainability by the development team as well as the users, e.g., IT/DevOps department.
+
+**Children:**
+
+- ``[SDOC-SRS-73]`` :ref:`SDOC-SRS-73`
+- ``[SDOC-SRS-14]`` :ref:`SDOC-SRS-14`
+- ``[SDOC-SRS-15]`` :ref:`SDOC-SRS-15`
+- ``[SDOC-SRS-16]`` :ref:`SDOC-SRS-16`
+- ``[SDOC-SRS-42]`` :ref:`SDOC-SRS-42`
+
 .. _SECTION-RTS-Text-based-requirements-language:
 
 Text-based requirements language (optional)
@@ -1629,12 +1759,16 @@ The Requirements Tool's development process shall ensure that the tool can be qu
 
 **Rationale:**
 
-Many project developments require a qualification of the tools used during the development. A requirements tool is one of the critical tools that affect the project development. If a requirement tool is developed to higher standards of quality, it simplifies the argument of bringing the tool forward and using it in a particular project.
+Many project developments require a qualification of the tools used during the development. A requirements tool is one of the critical tools that affect the project development. If a requirement tool is developed to the higher standards of quality, it simplifies the argument of bringing the tool forward and using it in a particular project.
 
 **Children:**
 
+- ``[SDOC-SRS-6]`` :ref:`SDOC-SRS-6`
+- ``[SDOC-SRS-133]`` :ref:`SDOC-SRS-133`
 - ``[SDOC-SRS-128]`` :ref:`SDOC-SRS-128`
 - ``[SDOC-SRS-91]`` :ref:`SDOC-SRS-91`
+- ``[SDOC-SRS-40]`` :ref:`SDOC-SRS-40`
+- ``[SDOC-SRS-41]`` :ref:`SDOC-SRS-41`
 - ``[SDOC-SRS-43]`` :ref:`SDOC-SRS-43`
 - ``[SDOC-SRS-44]`` :ref:`SDOC-SRS-44`
 - ``[SDOC-SRS-45]`` :ref:`SDOC-SRS-45`

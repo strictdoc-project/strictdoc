@@ -2440,6 +2440,27 @@ all export options and is disabled with this option as well.
 [/SECTION]
 
 [SECTION]
+TITLE: Python API
+
+[FREETEXT]
+At present, StrictDoc lacks a documented public Python API. Nevertheless, users can leverage StrictDoc's internal API to enhance existing functions or create custom import, export, and analysis tools. The architecture of StrictDoc is highly modular, so for each functional block there shall always be a dedicated Python class with a public interface, see [LINK: SECTION-DD-High-level-architecture].
+
+One good example is the ``SDWriter`` class, which exercises the complete export of the Python data objects to the SDoc format. Since, the SDoc format is the primary data format of StrictDoc, the SDWriter is quite feature-rich in what it does and covers. The ``RSTWriter`` is less powerful because it does not reflect the full data model, but is probably worth a look as well.
+
+The ``strictdoc/backend/reqif`` folder contains exporter/importer routines for the ReqIF format. There, the core classes from the Python data model, e.g. Requirement, Section, Document, Grammar, etc. are created or read from and to the ReqIF format.
+
+The ``ManageAutoUIDCommand`` class features a good use of all APIs that one may need to read/update/write back a SDoc document tree:
+
+- The ``TraceabilityIndex`` is created from a project config. The traceability index is the main class for storing the whole traceability graph in Python objects. It has plenty of methods for reading and writing things from the graph.
+- The ``DocumentUIDAnalyzer`` is an example of how the objects are manipulated in memory.
+- And finally the final sequence writes the mutated traceability graph back to files using ``SDWriter``.
+
+For any custom Python API request, for example, a need to do a more advanced data analysis on SDoc data, open a GitHub issue and your specific issue will be handled.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
 UID: SDOC_UG_EXPERIMENTAL_FEATURES
 TITLE: Experimental features
 
@@ -2480,7 +2501,7 @@ TITLE: HTML2PDF printable document generator
 [FREETEXT]
 The HTML2PDF screen displays a browser-printable version of a document. Printing from a browser results in a well-formatted PDF document or a well-formatted document printed on paper. The best printing experience is achieved with the Chrome browser which in contrast to Firefox and Safari, preserves the internal hyperlinks in the output PDF.
 
-To activate the HTML2PDF screen, add/edit the ``strictdoc.toml`` config file in the root of your repository with a documentation content.
+To activate the HTML2PDF screen, add/edit the ``strictdoc.toml`` config file in the root of your repository with documentation content.
 
 .. code::
 

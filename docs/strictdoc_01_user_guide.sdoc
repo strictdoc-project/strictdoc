@@ -2478,9 +2478,9 @@ This feature is not enabled by default because it has not undergone sufficient t
 TITLE: HTML2PDF printable document generator
 
 [FREETEXT]
-The HTML2PDF screen displays a browser-printable version of a document. Printing from a browser results in a well-formatted PDF document or a well-formatted document printed on paper.
+The HTML2PDF screen displays a browser-printable version of a document. Printing from a browser results in a well-formatted PDF document or a well-formatted document printed on paper. The best printing experience is achieved with the Chrome browser which in contrast to Firefox and Safari, preserves the internal hyperlinks in the output PDF.
 
-To activate the HTML2PDF screen, add/edit the ``strictdoc.toml`` config file in the root of your repository with documentation content.
+To activate the HTML2PDF screen, add/edit the ``strictdoc.toml`` config file in the root of your repository with a documentation content.
 
 .. code::
 
@@ -2491,7 +2491,7 @@ To activate the HTML2PDF screen, add/edit the ``strictdoc.toml`` config file in 
       "HTML2PDF"
     ]
 
-This feature is not enabled by default because the implementation has not been completed yet. The underlying JavaScript library is being improved with respect to our HTML content is split between pages, in particular the splitting of HTML ``<table>`` tags is being worked on. One feature that is still missing is the ability to generate user-specific front pages with custom meta information. Another feature to be added is the "Export document to PDF" button.
+This feature is not enabled by default because the implementation has not been completed yet. The underlying JavaScript library is being improved with respect to our HTML content is split between pages, in particular the splitting of HTML ``<table>`` tags is being worked on. One feature that is still missing is the ability to generate user-specific front pages with custom meta information.
 [/FREETEXT]
 
 [/SECTION]

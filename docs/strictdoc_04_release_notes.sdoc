@@ -11,11 +11,17 @@ TITLE: Unreleased work
 [FREETEXT]
 The requirement-to-source traceability feature was extended to support linking requirements to the RST files.
 
-One more input scenario was handled for the Create Document workflow. When a project config has ``include_doc_paths`` or ``exclude_doc_paths`` search path filters specified, and an input document path contradicts to the provided filters, a validation message is shown.
+One more input scenario was handled for the Create Document workflow. When a project config has ``include_doc_paths`` or ``exclude_doc_paths`` filters specified, and an input document path contradicts to the provided filters, a validation message is shown.
 
-The Project Statistics screen was extended with the "Sections without any text" metric. Now it is possible to visualize which sections are still missing any introduction or description (free text).
+The Project Statistics screen was extended with the **"Sections without any text" metric**. Now it is possible to visualize which sections are still missing any introduction or description (free text).
 
-The new Machine Identifier (MID) field has been added to StrictDoc's grammar. The automatic generation of MIDs can be activated per-document using the ``ENABLE_MID: True`` document-level config option. The main driver for this feature is the need of accurate Diff/Changelog results. The new section of the User Guide explains the rationale and the configuration details: [LINK: SECTION-UG-Machine-identifiers-MID].
+**The new Machine Identifier (MID)** field has been added to StrictDoc's grammar. The automatic generation of MIDs can be activated per-document using the ``ENABLE_MID: True`` document-level config option. The main driver for this feature is the need of accurate Diff/Changelog results. The new section of the User Guide explains the rationale and the configuration details: [LINK: SECTION-UG-Machine-identifiers-MID].
+
+**The Diff and Changelog screens** have been introduced to facilitate a historical comparison of documentation trees. The Diff screen aids in focusing on which document nodes have been altered, while the Changelog functions as a sequential table where changes are displayed as table cells and each cell emphasizes specific details of a particular change.
+
+The Requirements Coverage has been transformed into **the Traceability Matrix** screen. This matrix screen lists all nodes of a documentation graph, along with all their interrelations. The currently generated screen is entirely static. However, future enhancements are planned to include filtering capabilities for the content. The Traceability Matrix feature is disabled by default and has to be activated as ``TRACEABILITY_MATRIX_SCREEN`` in the strictdoc.toml project config file.
+
+**The HTML2PDF feature** has now entered the alpha testing phase. This feature enables printing of documents directly from a browser, which can be done either through the "PDF" screen view or by utilizing the "Export to PDF" button. By default, the HTML2PDF feature is disabled. To activate it, you need to indicate the ``HTML2PDF`` feature in the strictdoc.toml project configuration file.
 [/FREETEXT]
 
 [/SECTION]

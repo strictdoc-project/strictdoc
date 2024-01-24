@@ -1400,6 +1400,26 @@ UID: SECTION-SRS-Quality-requirements
 TITLE: Development process requirements
 
 [SECTION]
+MID: cbee3d3e8a9d440abaa58387c342602c
+TITLE: General process
+
+[REQUIREMENT]
+MID: 27319e3866b8423099774d8770950acd
+UID: SDOC-SRS-133
+TITLE: Priority handling of critical issues in StrictDoc
+STATEMENT: >>>
+All critical issues reported in relation to StrictDoc shall be addressed with utmost priority.
+<<<
+RATIONALE: >>>
+Prioritizing major issues ensures StrictDoc remains stable and reliable, preventing serious problems that could compromise its performance and integrity.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-78
+
+[/SECTION]
+
+[SECTION]
 MID: 47cec130eb3d4583825355f2635e7011
 UID: SECTION-SRS-Requirements-engineering
 TITLE: Requirements engineering

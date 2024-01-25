@@ -55,17 +55,6 @@ class SDocParsingProcessor:
         }
 
     def process_document_config(self, document_config: DocumentConfig):
-        if document_config.default_view is not None:
-            view_names = list(
-                map(
-                    lambda obj: obj.name, self.parse_context.document_view.views
-                )
-            )
-            if document_config.default_view not in view_names:
-                raise StrictDocSemanticError.default_view_doesnt_exist(
-                    document_config.default_view,
-                    **get_location(document_config),
-                )
         self.parse_context.document_config = document_config
 
     def process_document_grammar(self, document_grammar: DocumentGrammar):

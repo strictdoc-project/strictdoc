@@ -1,7 +1,7 @@
 RUN: %expect_exit 1 %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
 
 CHECK: error: could not parse file: {{.*}}input.sdoc.
-CHECK: Semantic error: Default view 'BOGUS_VIEW' does not exist in the document.
-CHECK: Location: {{.*}}input.sdoc:6:1
-CHECK: Hint: Make sure the default view is created in the views.
+CHECK: Semantic error: Default view 'VIEW_THAT_DOES_NOT_EXIST' does not exist in the document.
+CHECK: Location: {{.*}}input.sdoc:3:1
+CHECK: Hint: Make sure that the specified default view is created in the VIEWS configuration.
 CHECK: error: Parallelizer: One of the child processes has exited prematurely.

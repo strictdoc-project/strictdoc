@@ -302,12 +302,12 @@ class StrictDocSemanticError(Exception):
     ):
         return StrictDocSemanticError(
             title=(
-                f"View element '{view_element.view_id}' references a nonexisting"
+                f"View element '{view_element.view_id}' references a non-existing"
                 f" grammar element '{object_type}'."
             ),
             hint=(
-                "Make sure each View element you create references an existing"
-                " object in the grammar or the default REQUIREMENT object."
+                "Make sure that each View element references an existing "
+                "object in the grammar or the default REQUIREMENT object."
             ),
             example=None,
             line=line,
@@ -326,12 +326,12 @@ class StrictDocSemanticError(Exception):
     ):
         return StrictDocSemanticError(
             title=(
-                f"View element '{view_element.view_id}' references a nonexisting"
+                f"View element '{view_element.view_id}' references a non-existing"
                 f" field '{field_name}' for grammar element '{object_type}'."
             ),
             hint=(
-                "Make sure each View element you create references an existing"
-                " field in the grammar for the given grammar element."
+                "Make sure that each View element references an existing "
+                "field in the grammar for the given grammar element."
             ),
             example=None,
             line=line,
@@ -347,7 +347,10 @@ class StrictDocSemanticError(Exception):
             title=(
                 f"Default view '{default_view}' does not exist in the document."
             ),
-            hint=("Make sure the default view is created in the views."),
+            hint=(
+                "Make sure that the specified default view is created in the "
+                "VIEWS configuration."
+            ),
             example=None,
             line=line,
             col=col,

@@ -7,6 +7,7 @@ from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.document_view import DocumentView
 from strictdoc.backend.sdoc.models.fragment import Fragment
 from strictdoc.backend.sdoc.models.fragment_from_file import FragmentFromFile
 from strictdoc.backend.sdoc.models.requirement import (
@@ -25,6 +26,7 @@ class ParseContext:
         self.document_grammar: DocumentGrammar = DocumentGrammar.create_default(
             None
         )
+        self.document_view: Optional[DocumentView] = None
         self.current_include_parent = None
         self.uses_old_refs_field: bool = False
         self.at_least_one_relations_field: bool = False
@@ -43,6 +45,7 @@ class SDocParsingProcessor:
             "Document": self.process_document,
             "DocumentConfig": self.process_document_config,
             "DocumentGrammar": self.process_document_grammar,
+            "DocumentView": self.process_document_view,
             "Section": self.process_section,
             "FragmentFromFile": self.process_include,
             "CompositeRequirement": self.process_composite_requirement,
@@ -52,6 +55,17 @@ class SDocParsingProcessor:
         }
 
     def process_document_config(self, document_config: DocumentConfig):
+        if document_config.default_view is not None:
+            view_names = list(
+                map(
+                    lambda obj: obj.name, self.parse_context.document_view.views
+                )
+            )
+            if document_config.default_view not in view_names:
+                raise StrictDocSemanticError.default_view_doesnt_exist(
+                    document_config.default_view,
+                    **get_location(document_config),
+                )
         self.parse_context.document_config = document_config
 
     def process_document_grammar(self, document_grammar: DocumentGrammar):
@@ -62,6 +76,32 @@ class SDocParsingProcessor:
                     **get_location(document_grammar),
                 )
         self.parse_context.document_grammar = document_grammar
+
+    def process_document_view(self, document_view: DocumentView):
+        for view in document_view.views:
+            for tag in view.tags:
+                if (
+                    tag.object_type
+                    not in self.parse_context.document_grammar.registered_elements
+                ):
+                    raise StrictDocSemanticError.view_references_nonexisting_grammar_element(
+                        view,
+                        tag.object_type,
+                        **get_location(document_view),
+                    )
+                for field in tag.visible_fields:
+                    for (
+                        grammar_element
+                    ) in self.parse_context.document_grammar.elements:
+                        if field.name not in grammar_element.fields_map:
+                            raise StrictDocSemanticError.view_references_nonexisting_field(
+                                view,
+                                tag.object_type,
+                                field.name,
+                                **get_location(document_view),
+                            )
+
+        self.parse_context.document_view = document_view
 
     def process_section(self, section: Section):
         section.ng_document_reference = self.parse_context.document_reference

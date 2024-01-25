@@ -5,6 +5,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     GrammarElement,
     GrammarElementField,
 )
+from strictdoc.backend.sdoc.models.document_view import ViewElement
 from strictdoc.backend.sdoc.models.reference import Reference
 from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
@@ -285,6 +286,68 @@ class StrictDocSemanticError(Exception):
                 "as well as in the other export formats. It is a reserved field"
                 " that any grammar must provide."
             ),
+            example=None,
+            line=line,
+            col=col,
+            filename=filename,
+        )
+
+    @staticmethod
+    def view_references_nonexisting_grammar_element(
+        view_element: ViewElement,
+        object_type: str,
+        line=None,
+        col=None,
+        filename=None,
+    ):
+        return StrictDocSemanticError(
+            title=(
+                f"View element '{view_element.view_id}' references a nonexisting"
+                f" grammar element '{object_type}'."
+            ),
+            hint=(
+                "Make sure each View element you create references an existing"
+                " object in the grammar or the default REQUIREMENT object."
+            ),
+            example=None,
+            line=line,
+            col=col,
+            filename=filename,
+        )
+
+    @staticmethod
+    def view_references_nonexisting_field(
+        view_element: ViewElement,
+        object_type: str,
+        field_name: str,
+        line=None,
+        col=None,
+        filename=None,
+    ):
+        return StrictDocSemanticError(
+            title=(
+                f"View element '{view_element.view_id}' references a nonexisting"
+                f" field '{field_name}' for grammar element '{object_type}'."
+            ),
+            hint=(
+                "Make sure each View element you create references an existing"
+                " field in the grammar for the given grammar element."
+            ),
+            example=None,
+            line=line,
+            col=col,
+            filename=filename,
+        )
+
+    @staticmethod
+    def default_view_doesnt_exist(
+        default_view: str, line=None, col=None, filename=None
+    ):
+        return StrictDocSemanticError(
+            title=(
+                f"Default view '{default_view}' does not exist in the document."
+            ),
+            hint=("Make sure the default view is created in the views."),
             example=None,
             line=line,
             col=col,

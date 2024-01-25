@@ -344,7 +344,8 @@ class GrammarElementFieldReference(GrammarElementField):
 
 @auto_described
 class ViewElementField:
-    def __init__(self, name: str, placement: Optional[str]):
+    def __init__(self, parent, name: str, placement: Optional[str]):
+        self.parent = parent
         self.name: str = name
         self.placement: Optional[str] = placement
 
@@ -352,13 +353,15 @@ class ViewElementField:
 @auto_described
 class ViewElementTags:
     def __init__(
-        self, object_type: str, visibile_fields: List[ViewElementField]
+        self, parent, object_type: str, visible_fields: List[ViewElementField]
     ):
+        self.parent = parent
         self.object_type: str = object_type
-        self.visible_fields: List[ViewElementField] = visibile_fields
+        self.visible_fields: List[ViewElementField] = visible_fields
 
 
 @auto_described
 class ViewElementHiddenTag:
-    def __init__(self, hidden_tag: str):
+    def __init__(self, parent, hidden_tag: str):
+        self.parent = parent
         self.hidden_tag: str = hidden_tag

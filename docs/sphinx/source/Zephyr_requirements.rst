@@ -1,5 +1,5 @@
-Zephyr requirements tool requirements
-$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+Technical Note: Zephyr requirements tool requirements
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 .. _ZEP-1:
 

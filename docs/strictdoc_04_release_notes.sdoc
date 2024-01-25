@@ -6,7 +6,7 @@ This document maintains a record of all changes to StrictDoc since November 2023
 [/FREETEXT]
 
 [SECTION]
-TITLE: Unreleased work
+TITLE: 0.0.48 (2024-01-24)
 
 [FREETEXT]
 The requirement-to-source traceability feature was extended to support linking requirements to the RST files.

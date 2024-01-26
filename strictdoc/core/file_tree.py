@@ -148,15 +148,15 @@ class FileFinder:
         *,
         root_path: str,
         ignored_dirs: List[str],
-        extensions: List[str],
+        extensions: Optional[List[str]],
         include_paths: List[str],
         exclude_paths: List[str],
     ):
         assert os.path.isdir(root_path)
         assert os.path.isabs(root_path)
-        assert isinstance(extensions, list), extensions
 
-        extensions_tuple = tuple(extensions)
+        extensions_tuple = tuple(extensions) if extensions is not None else ()
+
         path_filter_includes = PathFilter(
             include_paths, positive_or_negative=True
         )
@@ -199,8 +199,11 @@ class FileFinder:
             )
 
             for file in files:
-                if not file.endswith(extensions_tuple):
+                if len(extensions_tuple) > 0 and not file.endswith(
+                    extensions_tuple
+                ):
                     continue
+
                 full_file_path = os.path.join(current_root_path, file)
                 rel_file_path = os.path.join(rel_path, file)
 

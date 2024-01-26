@@ -3,6 +3,7 @@ from typing import List
 
 from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
+from pygments.lexers import get_lexer_for_filename
 from pygments.lexers.c_cpp import CLexer, CppLexer
 from pygments.lexers.configs import TOMLLexer
 from pygments.lexers.data import YamlLexer
@@ -11,6 +12,7 @@ from pygments.lexers.markup import RstLexer, TexLexer
 from pygments.lexers.python import PythonLexer
 from pygments.lexers.special import TextLexer
 from pygments.lexers.templates import HtmlDjangoLexer
+from pygments.util import ClassNotFound
 
 from strictdoc import __version__
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
@@ -120,7 +122,10 @@ class SourceFileViewHTMLGenerator:
         elif source_file.is_rst_file():
             lexer = RstLexer()
         else:
-            lexer = TextLexer()
+            try:
+                lexer = get_lexer_for_filename(source_file.file_name)
+            except ClassNotFound:
+                lexer = TextLexer()
 
         # HACK:
         # Otherwise, Pygments will skip the first line as if it does not exist.
@@ -214,5 +219,9 @@ class SourceFileViewHTMLGenerator:
                 after_line,
                 pragma,
             )
-        pygments_styles = html_formatter.get_style_defs(".highlight")
+        pygments_styles = (
+            f"/* Lexer: {lexer.name} */\n"
+            + html_formatter.get_style_defs(".highlight")
+        )
+
         return pygmented_source_file_lines, pygments_styles

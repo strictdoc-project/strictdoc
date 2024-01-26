@@ -23,6 +23,8 @@ class SourceFileType(Enum):
     RST = [".rst"]
     SDOC = [".sdoc"]
 
+    UNKNOWN = []
+
     @classmethod
     def create_from_path(cls, path_to_file: str) -> "SourceFileType":
         if path_to_file.endswith(".py"):
@@ -50,7 +52,7 @@ class SourceFileType(Enum):
         if path_to_file.endswith(".sdoc"):
             return cls.SDOC
 
-        raise NotImplementedError(path_to_file)
+        return cls.UNKNOWN
 
     @staticmethod
     def all() -> List[str]:  # noqa: A003
@@ -75,6 +77,7 @@ class SourceFile:  # pylint: disable=too-many-instance-attributes
 
         self.level = level
         self.full_path = full_path
+        self.file_name = os.path.basename(full_path)
         self.in_doctree_source_file_rel_path = in_doctree_source_file_rel_path
         self.in_doctree_source_file_rel_path_posix: str = (
             in_doctree_source_file_rel_path.replace("\\", "/")
@@ -138,10 +141,11 @@ class SourceFilesFinder:
         )
 
         assert isinstance(project_config.export_output_dir, str)
+
         file_tree = FileFinder.find_files_with_extensions(
             root_path=doctree_root_abs_path,
             ignored_dirs=[project_config.export_output_dir],
-            extensions=SourceFileType.all(),
+            extensions=None,
             include_paths=project_config.include_source_paths,
             exclude_paths=project_config.exclude_source_paths,
         )

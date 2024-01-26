@@ -1,0 +1,21 @@
+RUN: %strictdoc export . --output-dir Output | filecheck %s
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%S/Output/html/_source_files/file.unknown_extension.html"
+
+RUN: %cat %S/Output/html/70_unregistered_file_extensions/input.html | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: <link rel="stylesheet" href="../_static/base.css"/>
+
+CHECK-HTML: <a{{.*}}href="../_source_files/file.unknown_extension.html#REQ-001#2#4"
+
+RUN: %cat %S/Output/html/_source_files/file.unknown_extension.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
+
+CHECK-SOURCE-FILE: <a{{.*}}href="../70_unregistered_file_extensions/input.html#1-REQ-001">
+
+CHECK-SOURCE-FILE: href="../_source_files/file.unknown_extension.html#REQ-001#2#4"
+CHECK-SOURCE-FILE: <b>[ 2-4 ]</b> file.unknown_extension
+
+RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
+CHECK-SOURCE-COVERAGE: file.unknown_extension
+CHECK-SOURCE-COVERAGE: strictdoc.toml
+CHECK-SOURCE-COVERAGE: test.itest

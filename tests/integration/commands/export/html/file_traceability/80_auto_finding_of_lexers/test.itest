@@ -1,0 +1,23 @@
+RUN: %strictdoc export . --output-dir Output | filecheck %s
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%S/Output/html/_source_files/file.ml.html"
+
+RUN: %cat %S/Output/html/80_auto_finding_of_lexers/input.html | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: <link rel="stylesheet" href="../_static/base.css"/>
+
+CHECK-HTML: <a{{.*}}href="../_source_files/file.ml.html#REQ-001#3#5"
+
+RUN: %cat %S/Output/html/_source_files/file.ml.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
+
+NOTE: Ensure that the lexer is recognized correctly.
+CHECK-SOURCE-FILE: OCaml
+
+CHECK-SOURCE-FILE: <a{{.*}}href="../80_auto_finding_of_lexers/input.html#1-REQ-001">
+CHECK-SOURCE-FILE: href="../_source_files/file.ml.html#REQ-001#3#5"
+CHECK-SOURCE-FILE: <b>[ 3-5 ]</b> file.ml
+
+RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
+CHECK-SOURCE-COVERAGE: file.ml
+CHECK-SOURCE-COVERAGE: strictdoc.toml
+CHECK-SOURCE-COVERAGE: test.itest

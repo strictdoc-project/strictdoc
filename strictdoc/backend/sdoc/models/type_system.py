@@ -172,17 +172,26 @@ class ReferenceType:
 class GrammarElementField:
     def __init__(self):
         self.title: str = ""
+        self.human_title: Optional[str] = None
         self.gef_type: str = ""
         self.required: bool = False
         self.mid: MID = MID.create()
 
+    def get_field_human_name(self) -> str:
+        if self.human_title is not None:
+            return self.human_title
+        return self.title
+
 
 @auto_described
 class GrammarElementFieldString(GrammarElementField):
-    def __init__(self, parent, title: str, required: str):
+    def __init__(
+        self, parent, title: str, human_title: Optional[str], required: str
+    ):
         super().__init__()
         self.parent = parent
         self.title: str = title
+        self.human_title: Optional[str] = human_title
         self.gef_type = RequirementFieldType.STRING
         self.required: bool = required == "True"
         self.mid: MID = MID.create()
@@ -190,10 +199,18 @@ class GrammarElementFieldString(GrammarElementField):
 
 @auto_described
 class GrammarElementFieldSingleChoice(GrammarElementField):
-    def __init__(self, parent, title: str, options: List[str], required: str):
+    def __init__(
+        self,
+        parent,
+        title: str,
+        human_title: Optional[str],
+        options: List[str],
+        required: str,
+    ):
         super().__init__()
         self.parent = parent
         self.title: str = title
+        self.human_title: Optional[str] = human_title
         self.gef_type = RequirementFieldType.SINGLE_CHOICE
         self.options: List[str] = options
         self.required: bool = required == "True"
@@ -202,10 +219,18 @@ class GrammarElementFieldSingleChoice(GrammarElementField):
 
 @auto_described
 class GrammarElementFieldMultipleChoice(GrammarElementField):
-    def __init__(self, parent, title: str, options: List[str], required: str):
+    def __init__(
+        self,
+        parent,
+        title: str,
+        human_title: Optional[str],
+        options: List[str],
+        required: str,
+    ):
         super().__init__()
         self.parent = parent
         self.title: str = title
+        self.human_title: Optional[str] = human_title
         self.gef_type = RequirementFieldType.MULTIPLE_CHOICE
         self.options: List[str] = options
         self.required: bool = required == "True"
@@ -214,10 +239,13 @@ class GrammarElementFieldMultipleChoice(GrammarElementField):
 
 @auto_described
 class GrammarElementFieldTag(GrammarElementField):
-    def __init__(self, parent, title: str, required: str):
+    def __init__(
+        self, parent, title: str, human_title: Optional[str], required: str
+    ):
         super().__init__()
         self.parent = parent
         self.title: str = title
+        self.human_title: Optional[str] = human_title
         self.gef_type = RequirementFieldType.TAG
         self.required: bool = required == "True"
         self.mid: MID = MID.create()

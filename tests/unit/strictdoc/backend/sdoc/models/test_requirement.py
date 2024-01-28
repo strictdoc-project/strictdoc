@@ -64,11 +64,14 @@ def test_04_meta_multilines_not_nones():
     )
     grammar: DocumentGrammar = DocumentGrammar.create_default(document)
 
-    grammar.elements[0].fields.append(
-        GrammarElementFieldString(
-            parent=None, title="META_TEST_FIELD", required="False"
-        ),
+    meta_test_field = GrammarElementFieldString(
+        parent=None,
+        title="META_TEST_FIELD",
+        human_title=None,
+        required="False",
     )
+    grammar.elements[0].fields.append(meta_test_field)
+    grammar.elements[0].fields_map["META_TEST_FIELD"] = meta_test_field
     document.grammar = grammar
 
     requirement = SDocObjectFactory.create_requirement(

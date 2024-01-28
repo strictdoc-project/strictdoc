@@ -12,7 +12,7 @@ Requirement 1
 
 System shall do #1.
 
-**Rationale:**
+**RATIONALE:**
 
 Rationale #1.
 
@@ -30,10 +30,10 @@ Requirement 2
 
 System shall do #2.
 
-**Rationale:**
+**RATIONALE:**
 
 Rationale #2.
 
-**Comment:**
+**COMMENT:**
 
 Comment #2.

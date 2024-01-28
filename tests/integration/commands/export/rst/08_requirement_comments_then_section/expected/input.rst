@@ -12,11 +12,11 @@ Requirement 1
 
 System shall do #1.
 
-**Comment:**
+**COMMENT:**
 
 Requirement 1 comment #1.
 
-**Comment:**
+**COMMENT:**
 
 Requirement 1 comment #2.
 

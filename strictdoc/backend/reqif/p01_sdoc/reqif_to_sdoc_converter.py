@@ -204,6 +204,7 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                     GrammarElementFieldString(
                         parent=None,
                         title=field_name,
+                        human_title=None,
                         required="False",
                     )
                 )
@@ -212,6 +213,7 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                     GrammarElementFieldString(
                         parent=None,
                         title=field_name,
+                        human_title=None,
                         required="False",
                     )
                 )
@@ -229,6 +231,7 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                         GrammarElementFieldMultipleChoice(
                             parent=None,
                             title=field_name,
+                            human_title=None,
                             options=options,
                             required="False",
                         )
@@ -238,6 +241,7 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                         GrammarElementFieldSingleChoice(
                             parent=None,
                             title=field_name,
+                            human_title=None,
                             options=options,
                             required="False",
                         )

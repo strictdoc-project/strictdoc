@@ -402,21 +402,25 @@ class SPDXToSDocConverter:
             GrammarElementFieldString(
                 parent=None,
                 title="UID",
+                human_title=None,
                 required="True",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="SPDXID",
+                human_title=None,
                 required="True",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="TITLE",
+                human_title=None,
                 required="False",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="STATEMENT",
+                human_title=None,
                 required="False",
             ),
         ]
@@ -442,31 +446,37 @@ class SPDXToSDocConverter:
             GrammarElementFieldString(
                 parent=None,
                 title="UID",
+                human_title=None,
                 required="True",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="SPDXID",
+                human_title=None,
                 required="True",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="PRIMARY_PURPOSE",
+                human_title=None,
                 required="False",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="TITLE",
+                human_title=None,
                 required="False",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="STATEMENT",
+                human_title=None,
                 required="False",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="SUMMARY",
+                human_title=None,
                 required="False",
             ),
         ]
@@ -492,31 +502,37 @@ class SPDXToSDocConverter:
             GrammarElementFieldString(
                 parent=None,
                 title="UID",
+                human_title=None,
                 required="True",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="SPDXID",
+                human_title=None,
                 required="True",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="PRIMARY_PURPOSE",
+                human_title=None,
                 required="False",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="SUMMARY",
+                human_title=None,
                 required="False",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="TITLE",
+                human_title=None,
                 required="False",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="STATEMENT",
+                human_title=None,
                 required="False",
             ),
         ]
@@ -546,31 +562,37 @@ class SPDXToSDocConverter:
             GrammarElementFieldString(
                 parent=None,
                 title="UID",
+                human_title=None,
                 required="True",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="SPDXID",
+                human_title=None,
                 required="True",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="PRIMARY_PURPOSE",
+                human_title=None,
                 required="False",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="SUMMARY",
+                human_title=None,
                 required="False",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="TITLE",
+                human_title=None,
                 required="False",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title="STATEMENT",
+                human_title=None,
                 required="False",
             ),
         ]

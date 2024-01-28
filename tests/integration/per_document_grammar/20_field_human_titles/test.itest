@@ -1,0 +1,17 @@
+RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+CHECK: Published: Test document
+
+RUN: %cat %S/Output/html/20_field_human_titles/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+
+CHECK-HTML:Identifier
+CHECK-HTML:ABC-123
+CHECK-HTML:Requirement status
+CHECK-HTML:Active
+CHECK-HTML:Requirement statement
+CHECK-HTML:System A shall do B.
+CHECK-HTML:Rationale for requirement
+CHECK-HTML:System A must have this.
+CHECK-HTML:Text comment
+CHECK-HTML:Test comment.
+CHECK-HTML:Custom multiline field
+CHECK-HTML:Some content here.

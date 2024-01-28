@@ -13,11 +13,11 @@
 
 the foo must bar
 
-**Rationale:**
+**RATIONALE:**
 
 If the foo did not bar then it might instead baz, which must be avoided at all costs.
 
-**Comment:**
+**COMMENT:**
 
 A bazzing foo is dangerous because of the uncontrolled range of interaction of the baz with other foos.
 

@@ -132,7 +132,10 @@ class ExcelToSDocConverter:
             fields.extend(
                 [
                     GrammarElementFieldString(
-                        parent=None, title=name, required="False"
+                        parent=None,
+                        title=name,
+                        human_title=None,
+                        required="False",
                     ),
                 ]
             )

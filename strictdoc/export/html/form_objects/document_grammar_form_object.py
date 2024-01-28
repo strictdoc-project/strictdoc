@@ -254,6 +254,7 @@ class DocumentGrammarFormObject(ErrorObject):
             grammar_field = GrammarElementFieldString(
                 parent=None,
                 title=field.field_name,
+                human_title=None,
                 required="True" if field.field_required else "False",
             )
             grammar_fields.append(grammar_field)

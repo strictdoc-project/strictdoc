@@ -102,12 +102,14 @@ GrammarElementField[noskipws]:
 
 GrammarElementFieldString[noskipws]:
   '  - TITLE: ' title=FieldName '\n'
+  ('    HUMAN_TITLE: ' human_title=SingleLineString '\n')?
   '    TYPE: String' '\n'
   '    REQUIRED: ' (required = BooleanChoice) '\n'
 ;
 
 GrammarElementFieldSingleChoice[noskipws]:
   '  - TITLE: ' title=FieldName '\n'
+  ('    HUMAN_TITLE: ' human_title=SingleLineString '\n')?
   '    TYPE: SingleChoice'
     '(' ((options = ChoiceOption) (options *= ChoiceOptionXs)) ')' '\n'
   '    REQUIRED: ' (required = BooleanChoice) '\n'
@@ -115,6 +117,7 @@ GrammarElementFieldSingleChoice[noskipws]:
 
 GrammarElementFieldMultipleChoice[noskipws]:
   '  - TITLE: ' title=FieldName '\n'
+  ('    HUMAN_TITLE: ' human_title=SingleLineString '\n')?
   '    TYPE: MultipleChoice'
     '(' ((options = ChoiceOption) (options *= ChoiceOptionXs)) ')' '\n'
   '    REQUIRED: ' (required = BooleanChoice) '\n'
@@ -122,6 +125,7 @@ GrammarElementFieldMultipleChoice[noskipws]:
 
 GrammarElementFieldTag[noskipws]:
   '  - TITLE: ' title=FieldName '\n'
+  ('    HUMAN_TITLE: ' human_title=SingleLineString '\n')?
   '    TYPE: Tag' '\n'
   '    REQUIRED: ' (required = BooleanChoice) '\n'
 ;

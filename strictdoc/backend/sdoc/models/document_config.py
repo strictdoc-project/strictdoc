@@ -85,7 +85,7 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
             self.requirement_in_toc is None or self.requirement_in_toc == "True"
         )
 
-    def get_requirement_prefix_or_default(self) -> str:
+    def get_requirement_prefix(self) -> str:
         if self.requirement_prefix is not None:
             return self.requirement_prefix
         return "REQ-"

@@ -92,20 +92,8 @@ class Document:  # pylint: disable=too-many-instance-attributes
     def ng_resolved_custom_level(self):
         return None
 
-    @property
-    def requirement_prefix(self) -> str:
-        return (
-            self.config.requirement_prefix
-            if self.config.requirement_prefix is not None
-            else "REQ-"
-        )
-
     def get_requirement_prefix(self) -> str:
-        return (
-            self.config.requirement_prefix
-            if self.config.requirement_prefix is not None
-            else "REQ-"
-        )
+        return self.config.get_requirement_prefix()
 
     def enumerate_meta_field_titles(self):
         # TODO: currently only enumerating a single element ([0])

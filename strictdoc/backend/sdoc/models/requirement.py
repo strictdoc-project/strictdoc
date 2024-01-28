@@ -462,11 +462,10 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes, too-ma
         return meta_field_value
 
     def get_requirement_prefix(self) -> str:
-        parent: Union[Section, Document] = self.parent
-        while parent.requirement_prefix is None:
-            parent = parent.parent
-        assert parent.requirement_prefix is not None
-        return parent.requirement_prefix
+        parent: Union[Section, Document] = assert_cast(
+            self.parent, (Section, Document, CompositeRequirement)
+        )
+        return parent.get_requirement_prefix()
 
     def dump_fields_as_parsed(self):
         return ", ".join(
@@ -625,3 +624,6 @@ class CompositeRequirement(Requirement):
     @property
     def document(self):
         return self.ng_document_reference.get_document()
+
+    def get_requirement_prefix(self) -> str:
+        return self.parent.get_requirement_prefix()

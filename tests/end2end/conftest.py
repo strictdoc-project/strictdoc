@@ -22,7 +22,7 @@ def pytest_collection_modifyitems(
     config,
     items,
 ):
-    """called after collection has been performed, may filter or re-order
+    """Called after collection has been performed, may filter or re-order
     the items in-place."""
 
     shard = config.getoption("--strictdoc-shard")

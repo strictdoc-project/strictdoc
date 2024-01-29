@@ -1,0 +1,7 @@
+RUN: %expect_exit 1 %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+
+CHECK: error: could not parse file: {{.*}}input.sdoc.
+CHECK: Semantic error: View element 'FIELD_VIEW' references a non-existing field 'NONEXISTING_FIELD' for grammar element 'REQUIREMENT'.
+CHECK: Location: {{.*}}input.sdoc:6:1
+CHECK: Hint: Make sure that each View element references an existing field in the grammar for the given grammar element.
+CHECK: error: Parallelizer: One of the child processes has exited prematurely.

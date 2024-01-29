@@ -14,6 +14,7 @@ from strictdoc.backend.sdoc.models.constants import DOCUMENT_MODELS
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.fragment import Fragment
 from strictdoc.backend.sdoc.processor import ParseContext, SDocParsingProcessor
+from strictdoc.backend.sdoc.validations.sdoc_validator import SDocValidator
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.md5 import get_file_md5
@@ -65,17 +66,19 @@ class SDReader:
                 "  VALUE: REQ-1"
             )
 
+        return document, parse_context
+
+    @staticmethod
+    def read(input_string, file_path=None):
+        document, _ = SDReader._read(input_string, file_path)
+        SDocValidator.validate_document(document)
+
         # HACK:
         # ProcessPoolExecutor doesn't work because of non-picklable parts
         # of textx. The offending fields are stripped down because they
         # are not used anyway.
         drop_textx_meta(document)
 
-        return document, parse_context
-
-    @staticmethod
-    def read(input_string, file_path=None):
-        document, _ = SDReader._read(input_string, file_path)
         return document
 
     def read_from_file(self, file_path: str) -> Document:

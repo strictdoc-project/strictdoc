@@ -11,11 +11,13 @@ from strictdoc.helpers.auto_described import auto_described
 class ViewElement:
     def __init__(
         self,
+        parent,
         view_id: str,
         tags: List[ViewElementTags],
         hidden_tags: Optional[List[ViewElementHiddenTag]],
         name: Optional[str],
     ):
+        self.parent = parent
         self.view_id: str = view_id
         self.tags: List[ViewElementTags] = tags
         self.hidden_tags: Optional[List[ViewElementHiddenTag]] = hidden_tags
@@ -23,5 +25,6 @@ class ViewElement:
 
 
 class DocumentView:
-    def __init__(self, views: List[ViewElement]):
+    def __init__(self, parent, views: List[ViewElement]):
+        self.parent = parent
         self.views: List[ViewElement] = views

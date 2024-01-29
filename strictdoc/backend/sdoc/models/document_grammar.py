@@ -68,7 +68,7 @@ class GrammarElement:
         fields_map: OrderedDict = OrderedDict()
         for field in fields:
             fields_map[field.title] = field
-        self.fields_map = fields_map
+        self.fields_map: Dict[str, GrammarElementField] = fields_map
 
         if "REFS" in fields_map:
             field = fields_map["REFS"]
@@ -156,39 +156,51 @@ class DocumentGrammar:
         # @sdoc[SDOC-SRS-132]
         fields = [
             GrammarElementFieldString(
-                parent=None, title=RequirementFieldName.UID, required="False"
+                parent=None,
+                title=RequirementFieldName.UID,
+                human_title=None,
+                required="False",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title=RequirementFieldName.LEVEL,
+                human_title=None,
                 required="False",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title=RequirementFieldName.STATUS,
+                human_title=None,
                 required="False",
             ),
             GrammarElementFieldString(
-                parent=None, title=RequirementFieldName.TAGS, required="False"
+                parent=None,
+                title=RequirementFieldName.TAGS,
+                human_title=None,
+                required="False",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title=RequirementFieldName.TITLE,
+                human_title=None,
                 required="False",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title=RequirementFieldName.STATEMENT,
+                human_title=None,
                 required="False",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title=RequirementFieldName.RATIONALE,
+                human_title=None,
                 required="False",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title=RequirementFieldName.COMMENT,
+                human_title=None,
                 required="False",
             ),
             GrammarElementFieldReference(

@@ -12,7 +12,7 @@ Requirement 1
 
 System shall do #1.
 
-**Comment:**
+**COMMENT:**
 
 Requirement 1 comment.
 
@@ -30,6 +30,6 @@ Requirement 2
 
 System shall do #2.
 
-**Comment:**
+**COMMENT:**
 
 Requirement 2 comment.

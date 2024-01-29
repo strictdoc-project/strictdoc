@@ -25,14 +25,14 @@
 {% endif -%}
 
 {%- if requirement.rationale -%}
-**Rationale:**
+**{{ requirement.get_field_human_title("RATIONALE") }}:**
 
 {{ requirement.rationale }}
 
 {% endif -%}
 
 {%- for comment in requirement.comments -%}
-**Comment:**
+**{{ requirement.get_field_human_title("COMMENT") }}:**
 
 {{comment}}
 

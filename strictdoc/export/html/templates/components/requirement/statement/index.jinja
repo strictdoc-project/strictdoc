@@ -6,7 +6,7 @@
     </sdoc-requirement-field>
   {%- else -%}
     {# default with label #}
-    <sdoc-requirement-field-label>statement:</sdoc-requirement-field-label>
+    <sdoc-requirement-field-label>{{ requirement.get_field_human_title("STATEMENT") }}:</sdoc-requirement-field-label>
     <sdoc-requirement-field
       data-field-label="statement"
     >

@@ -445,7 +445,8 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes, too-ma
             if (not is_single_line_field) and skip_multi_lines:
                 continue
 
-            yield field.field_name, meta_field_value
+            field_human_title = element.fields_map[field.field_name]
+            yield field_human_title.get_field_human_name(), meta_field_value
 
     def get_meta_field_value_by_title(self, field_title: str) -> Optional[str]:
         assert isinstance(field_title, str)
@@ -460,6 +461,13 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes, too-ma
         assert meta_field_value_or_none
         meta_field_value = meta_field_value_or_none
         return meta_field_value
+
+    def get_field_human_title(self, field_name: str) -> str:
+        element: GrammarElement = self.document.grammar.elements_by_type[
+            self.requirement_type
+        ]
+        field_human_title = element.fields_map[field_name]
+        return field_human_title.get_field_human_name()
 
     def get_requirement_prefix(self) -> str:
         parent: Union[Section, Document] = assert_cast(

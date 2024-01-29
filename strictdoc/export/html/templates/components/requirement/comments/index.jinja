@@ -2,7 +2,7 @@
 
 {%- if requirement.comments %}
   {%- for comment in requirement.comments %}
-    <sdoc-requirement-field-label>comment:</sdoc-requirement-field-label>
+    <sdoc-requirement-field-label>{{ requirement.get_field_human_title("COMMENT") }}:</sdoc-requirement-field-label>
     <sdoc-requirement-field
       data-field-label="comment"
     >

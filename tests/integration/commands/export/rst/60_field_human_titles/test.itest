@@ -1,0 +1,18 @@
+RUN: %strictdoc export --formats=rst --output-dir Output "%S/input.sdoc"
+
+RUN: %check_exists --file "%S/Output/rst/input.rst"
+
+RUN: %diff "%S/Output/rst/input.rst" "%S/expected/input.rst"
+
+CHECK-HTML:Identifier
+CHECK-HTML:ABC-123
+CHECK-HTML:Requirement status
+CHECK-HTML:Active
+CHECK-HTML:Requirement statement
+CHECK-HTML:System A shall do B.
+CHECK-HTML:Rationale for requirement
+CHECK-HTML:System A must have this.
+CHECK-HTML:Text comment
+CHECK-HTML:Test comment.
+CHECK-HTML:Custom multiline field
+CHECK-HTML:Some content here.

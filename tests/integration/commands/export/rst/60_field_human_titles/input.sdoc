@@ -1,0 +1,39 @@
+[DOCUMENT]
+TITLE: Test document
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    HUMAN_TITLE: Identifier
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATUS
+    HUMAN_TITLE: Requirement status
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    HUMAN_TITLE: Requirement statement
+    TYPE: String
+    REQUIRED: True
+  - TITLE: RATIONALE
+    HUMAN_TITLE: Rationale for requirement
+    TYPE: String
+    REQUIRED: True
+  - TITLE: COMMENT
+    HUMAN_TITLE: Text comment
+    TYPE: String
+    REQUIRED: True
+  - TITLE: CUSTOM_MULTILINE_FIELD
+    HUMAN_TITLE: Custom multiline field
+    TYPE: String
+    REQUIRED: True
+
+[REQUIREMENT]
+UID: ABC-123
+STATUS: Active
+STATEMENT: System A shall do B.
+RATIONALE: System A must have this.
+COMMENT: Test comment.
+CUSTOM_MULTILINE_FIELD: Some content here.

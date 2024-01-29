@@ -23,7 +23,10 @@ class SDocValidator:
         document_config: DocumentConfig = document.config
         if document_config.default_view is not None:
             if document.view is None:
-                raise NotImplementedError()
+                raise StrictDocSemanticError.default_view_doesnt_exist(
+                    document_config.default_view,
+                    **get_location(document_config),
+                )
             else:
                 view_names = map(
                     lambda view_: view_.view_id, document.view.views

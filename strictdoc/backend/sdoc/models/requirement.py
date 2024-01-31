@@ -549,6 +549,9 @@ class Requirement(Node):  # pylint: disable=too-many-instance-attributes, too-ma
             self.requirement_type
         ]
         grammar_field_titles = list(map(lambda f: f.title, element.fields))
+        # FIXME: This will go away very soon when the RELATIONS become a
+        #        separate field in SDoc REQUIREMENT's grammar.
+        grammar_field_titles.append("REFS")
         field_index = grammar_field_titles.index(field_name)
         title_field_index = grammar_field_titles.index(
             RequirementFieldName.TITLE

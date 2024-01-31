@@ -1,0 +1,91 @@
+[DOCUMENT]
+MID: a93dc5926d5b4e3bb1022d38cdfae467
+TITLE: myproj
+UID: MYDOC
+VERSION: 0.1
+OPTIONS:
+  ENABLE_MID: True
+  MARKUP: RST
+  AUTO_LEVELS: On
+  REQUIREMENT_STYLE: Table
+  REQUIREMENT_IN_TOC: True
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATUS
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TAGS
+    TYPE: Tag
+    REQUIRED: False
+  - TITLE: DISCTYPE
+    TYPE: MultipleChoice(UNKNOWN, All, BDV, HFPA, BDROM, DVDV, DVDA, DVDROM, CDDA, CDROM)
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: RATIONALE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
+
+[SECTION]
+MID: bba9883c030e416e8bec2678d12ea248
+TITLE: Section 1
+REQ_PREFIX: SECT-
+
+[FREETEXT]
+Examples
+[/FREETEXT]
+
+[REQUIREMENT]
+MID: c172051f771d4825be48f229d792b16f
+UID: SECT-1
+STATUS: Backlog
+TAGS: func
+DISCTYPE: All
+TITLE: Vitae congue eu consequat
+STATEMENT: Eget nullam non nisi est sit amet facilisis.
+RATIONALE: Facilisis leo vel fringilla est ullamcorper eget nulla facilisi etiam.
+
+[REQUIREMENT]
+MID: 93b93f194f0e4ae0967ac80c77427e67
+UID: SECT-2
+STATUS: Active
+TAGS: action
+DISCTYPE: All
+TITLE: Ut enim ad minim veniam
+STATEMENT: Porttitor rhoncus dolor purus non.
+RATIONALE: Netus et malesuada fames ac turpis egestas.
+COMMENT: >>>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SECT-1
+
+[REQUIREMENT]
+STATUS: Active
+TAGS: func
+DISCTYPE: All
+TITLE: Vel pharetra vel turpis nunc
+STATEMENT: Semper feugiat nibh sed pulvinar proin gravida hendrerit lectus.
+RATIONALE: Quis auctor elit sed vulputate mi sit amet.
+RELATIONS:
+- TYPE: Parent
+  VALUE: SECT-1
+
+[/SECTION]

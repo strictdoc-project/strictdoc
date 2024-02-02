@@ -128,6 +128,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         filter_sections: Optional[str],
         reqif_profile: Optional[str],
         experimental_enable_file_traceability,
+        view: Optional[str],
     ):
         assert isinstance(input_paths, list), f"{input_paths}"
         self.input_paths: List[str] = input_paths
@@ -144,6 +145,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         self.experimental_enable_file_traceability = (
             experimental_enable_file_traceability
         )
+        self.view: Optional[str] = view
         self.output_html_root: str = os.path.join(output_dir, "html")
 
     def get_path_to_config(self) -> Optional[str]:
@@ -267,6 +269,7 @@ class SDocArgsParser:
             self.args.filter_sections,
             self.args.reqif_profile,
             self.args.experimental_enable_file_traceability,
+            self.args.view,
         )
 
     def get_import_config_reqif(self, _) -> ImportReqIFCommandConfig:

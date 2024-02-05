@@ -5,6 +5,7 @@ from jinja2 import Template
 
 from strictdoc import __version__
 from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document_view import ViewElement
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.export.html.document_type import DocumentType
@@ -23,6 +24,10 @@ class DocumentHTML2PDFGenerator:
         standalone: bool,
         html_templates: HTMLTemplates,
     ):
+        current_view: ViewElement = document.view.get_current_view(
+            project_config.view
+        )
+
         output = ""
 
         date_today = datetime.today().strftime("%Y-%m-%d")
@@ -55,6 +60,7 @@ class DocumentHTML2PDFGenerator:
             document_tree_iterator=document_tree_iterator,
             custom_html2pdf_template=custom_html2pdf_template,
             date_today=date_today,
+            current_view=current_view,
         )
 
         return output

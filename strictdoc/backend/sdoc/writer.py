@@ -8,6 +8,7 @@ from strictdoc.backend.sdoc.models.document_bibliography import (
 )
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.document_view import DefaultViewElement
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.reference import (
     BibReference,
@@ -138,9 +139,9 @@ class SDWriter:
                     output += "\n"
 
         document_view = document.view
-        if document_view is not None:
+        assert len(document_view.views) > 0
+        if not isinstance(document_view.views[0], DefaultViewElement):
             views = document_view.views
-            assert len(views) > 0
             output += "VIEWS:"
             output += "\n"
             for view in views:

@@ -1,4 +1,4 @@
-{%- if requirement.reserved_statement -%}
+{%- if requirement.reserved_statement and current_view.includes_field(requirement.requirement_type, "STATEMENT") -%}
   {%- if truncated_statement is true -%}
     {# truncated in DTR tiny card #}
     <sdoc-requirement-field data-field-label="statement">

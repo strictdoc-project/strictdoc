@@ -1,4 +1,5 @@
 from strictdoc import __version__
+from strictdoc.backend.sdoc.models.document_view import ViewElement
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.export.html.document_type import DocumentType
@@ -16,6 +17,10 @@ class DocumentTraceHTMLGenerator:
         link_renderer: LinkRenderer,
         html_templates: HTMLTemplates,
     ):
+        current_view: ViewElement = document.view.get_current_view(
+            project_config.view
+        )
+
         output = ""
 
         document_tree_iterator = DocumentTreeIterator(
@@ -40,6 +45,7 @@ class DocumentTraceHTMLGenerator:
             strictdoc_version=__version__,
             document_tree=traceability_index.document_tree,
             document_tree_iterator=document_tree_iterator,
+            current_view=current_view,
         )
 
         return output

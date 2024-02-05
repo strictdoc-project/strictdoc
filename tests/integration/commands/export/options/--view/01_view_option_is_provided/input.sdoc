@@ -1,0 +1,17 @@
+[DOCUMENT]
+TITLE: Test Document
+OPTIONS:
+  DEFAULT_VIEW: PRINT_VIEW
+VIEWS:
+- ID: PRINT_VIEW
+  NAME: Print view
+  TAGS:
+  - OBJECT_TYPE: REQUIREMENT
+    VISIBLE_FIELDS:
+    - NAME: UID
+    - NAME: STATEMENT
+
+[REQUIREMENT]
+UID: REQ-1
+STATEMENT: Requirement statement.
+RATIONALE: Requirement rationale.

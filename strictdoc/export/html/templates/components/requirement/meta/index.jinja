@@ -11,7 +11,7 @@
 {% endif %}
 
 {%- if requirement.has_meta -%}
-  {% for meta_field in requirement.enumerate_meta_fields(skip_multi_lines=True) %}
+  {% for meta_field in requirement.enumerate_meta_fields(skip_multi_lines=True) if current_view.includes_field(requirement.requirement_type, meta_field[0]) %}
     <sdoc-requirement-field-label>{{ meta_field[0] }}:</sdoc-requirement-field-label>
     <sdoc-requirement-field
       data-field-type="singleline"

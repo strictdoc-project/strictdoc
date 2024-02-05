@@ -28,6 +28,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
 )
+from strictdoc.backend.sdoc.models.document_view import ViewElement
 from strictdoc.backend.sdoc.models.requirement import (
     Requirement,
 )
@@ -126,6 +127,7 @@ def create_main_router(
         filter_sections=None,
         reqif_profile=project_config.reqif_profile,
         experimental_enable_file_traceability=False,
+        view=None,
     )
     project_config.integrate_export_config(_export_config)
     project_config.is_running_on_server = True
@@ -184,6 +186,9 @@ def create_main_router(
             config=project_config,
             context_document=requirement.document,
         )
+        current_view: ViewElement = requirement.document.view.get_current_view(
+            project_config.view
+        )
         output = template.render(
             renderer=markup_renderer,
             requirement=requirement,
@@ -192,6 +197,7 @@ def create_main_router(
             document=requirement.document,
             document_type=DocumentType.document(),
             project_config=project_config,
+            current_view=current_view,
         )
         return HTMLResponse(
             content=output,
@@ -224,6 +230,9 @@ def create_main_router(
             config=project_config,
             context_document=section.document,
         )
+        current_view: ViewElement = section.document.view.get_current_view(
+            project_config.view
+        )
         output = template.render(
             renderer=markup_renderer,
             section=section,
@@ -232,6 +241,7 @@ def create_main_router(
             document=section.document,
             document_type=DocumentType.document(),
             project_config=project_config,
+            current_view=current_view,
         )
         return HTMLResponse(
             content=output,
@@ -413,6 +423,9 @@ def create_main_router(
         iterator = export_action.traceability_index.get_document_iterator(
             document
         )
+        current_view: ViewElement = document.view.get_current_view(
+            project_config.view
+        )
         output = template.render(
             renderer=markup_renderer,
             document=document,
@@ -422,6 +435,7 @@ def create_main_router(
             link_renderer=link_renderer,
             project_config=project_config,
             standalone=False,
+            current_view=current_view,
         )
 
         toc_template = env().get_template(
@@ -924,6 +938,9 @@ def create_main_router(
         iterator = export_action.traceability_index.get_document_iterator(
             document
         )
+        current_view: ViewElement = document.view.get_current_view(
+            project_config.view
+        )
         output = template.render(
             renderer=markup_renderer,
             document=document,
@@ -933,6 +950,7 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             project_config=project_config,
             standalone=False,
+            current_view=current_view,
         )
 
         toc_template = env().get_template(
@@ -1164,6 +1182,9 @@ def create_main_router(
             config=project_config,
             context_document=document,
         )
+        current_view: ViewElement = document.view.get_current_view(
+            project_config.view
+        )
 
         output = ""
         for requirement in result.this_document_requirements_to_update:
@@ -1181,6 +1202,7 @@ def create_main_router(
                 traceability_index=export_action.traceability_index,
                 project_config=project_config,
                 standalone=False,
+                current_view=current_view,
             )
 
         toc_template = env().get_template(
@@ -1253,6 +1275,9 @@ def create_main_router(
         iterator = export_action.traceability_index.get_document_iterator(
             document
         )
+        current_view: ViewElement = document.view.get_current_view(
+            project_config.view
+        )
         output = template.render(
             requirement=requirement,
             renderer=markup_renderer,
@@ -1263,6 +1288,7 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             project_config=project_config,
             standalone=False,
+            current_view=current_view,
         )
         return HTMLResponse(
             content=output,
@@ -2151,6 +2177,9 @@ def create_main_router(
             "_shared/"
             "stream_refresh_document.jinja.html"
         )
+        current_view: ViewElement = document.view.get_current_view(
+            project_config.view
+        )
         output += template.render(
             document=document,
             renderer=markup_renderer,
@@ -2160,6 +2189,7 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             project_config=project_config,
             standalone=False,
+            current_view=current_view,
         )
         return HTMLResponse(
             content=output,

@@ -1,0 +1,6 @@
+RUN: %strictdoc export %S --view PRINT_VIEW --output-dir Output/
+RUN: %cat %S/Output/html/01_view_option_is_provided/input.html | filecheck %s --check-prefix=CHECK-HTML
+
+CHECK-HTML: REQ-1
+CHECK-HTML: Requirement statement.
+CHECK-HTML-NOT: Requirement rationale.

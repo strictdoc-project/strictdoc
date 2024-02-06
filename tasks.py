@@ -335,7 +335,7 @@ def test_integration(
     else:
         parallelize_opts = "--threads 1"
         html2pdf_param = "--param TEST_HTML2PDF=1"
-        test_folder = f"{cwd}/tests/integration/html2pdf"
+        test_folder = f"{cwd}/tests/integration/features/html2pdf"
 
     itest_command = f"""
         lit

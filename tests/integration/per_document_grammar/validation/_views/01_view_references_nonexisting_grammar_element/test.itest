@@ -1,7 +1,7 @@
 RUN: %expect_exit 1 %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
 
 CHECK: error: could not parse file: {{.*}}input.sdoc.
-CHECK: Semantic error: View element 'BOGUS_VIEW' references a non-existing grammar element 'BOGUS_OBJECT'.
+CHECK: Semantic error: View element 'PRINT_VIEW' references a non-existing grammar element 'NON_EXISTING_OBJECT'.
 CHECK: Location: {{.*}}input.sdoc:6:1
 CHECK: Hint: Make sure that each View element references an existing object in the grammar or the default REQUIREMENT object.
 CHECK: error: Parallelizer: One of the child processes has exited prematurely.

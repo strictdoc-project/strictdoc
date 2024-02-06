@@ -67,29 +67,6 @@ class SDocParsingProcessor:
         self.parse_context.document_grammar = document_grammar
 
     def process_document_view(self, document_view: DocumentView):
-        for view in document_view.views:
-            for tag in view.tags:
-                if (
-                    tag.object_type
-                    not in self.parse_context.document_grammar.registered_elements
-                ):
-                    raise StrictDocSemanticError.view_references_nonexisting_grammar_element(
-                        view,
-                        tag.object_type,
-                        **get_location(document_view),
-                    )
-                for field in tag.visible_fields:
-                    for (
-                        grammar_element
-                    ) in self.parse_context.document_grammar.elements:
-                        if field.name not in grammar_element.fields_map:
-                            raise StrictDocSemanticError.view_references_nonexisting_field(
-                                view,
-                                tag.object_type,
-                                field.name,
-                                **get_location(document_view),
-                            )
-
         self.parse_context.document_view = document_view
 
     def process_section(self, section: Section):

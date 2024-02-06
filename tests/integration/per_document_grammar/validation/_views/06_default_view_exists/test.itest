@@ -1,0 +1,4 @@
+RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+
+CHECK: Export completed. Documentation tree can be found at:
+CHECK: Step 'Export SDoc' took:

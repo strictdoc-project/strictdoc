@@ -32,8 +32,8 @@
     data-forced-page-break-selectors=''
     data-page-break-after-selectors='.pdf-toc .free_text'
     data-page-break-before-selectors='H2'
-    data-no-break-selectors='sdoc-section-title sdoc-meta .pdf-toc-row'
-    data-no-hanging-selectors='sdoc-section-title sdoc-meta sdoc-requirement-field-label'
+    data-no-break-selectors='sdoc-section-title sdoc-meta sdoc-requirement-title .pdf-toc-row'
+    data-no-hanging-selectors='sdoc-section-title sdoc-meta sdoc-requirement-title sdoc-requirement-field-label strong:only-child'
   src="{{ link_renderer.render_static_url('html2pdf/bundle.js') }}"></script>
   {%- endif -%}
 

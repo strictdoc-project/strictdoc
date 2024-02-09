@@ -1,6 +1,6 @@
 {# comments #}
 
-{%- if requirement.comments and current_view.includes_field(requirement.requirement_type, "COMMENTS") %}
+{%- if requirement.comments and current_view.includes_field(requirement.requirement_type, "COMMENT") %}
   {%- for comment in requirement.comments %}
     <sdoc-requirement-field-label>{{ requirement.get_field_human_title("COMMENT") }}:</sdoc-requirement-field-label>
     <sdoc-requirement-field

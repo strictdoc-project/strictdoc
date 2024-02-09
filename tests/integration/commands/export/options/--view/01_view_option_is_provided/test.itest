@@ -4,3 +4,6 @@ RUN: %cat %S/Output/html/01_view_option_is_provided/input.html | filecheck %s --
 CHECK-HTML: REQ-1
 CHECK-HTML: Requirement statement.
 CHECK-HTML-NOT: Requirement rationale.
+CHECK-HTML-NOT: Requirement comment.
+CHECK-HTML-NOT: Requirement first extra field.
+CHECK-HTML: Requirement second extra field.

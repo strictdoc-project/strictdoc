@@ -136,6 +136,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
             datetime.datetime
         ] = config_last_update
         self.is_running_on_server: bool = False
+        self.view: Optional[str] = None
 
     @staticmethod
     def default_config(environment: SDocRuntimeEnvironment):
@@ -175,6 +176,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         self.filter_requirements = export_config.filter_requirements
         self.filter_sections = export_config.filter_sections
         self.excel_export_fields = export_config.fields
+        self.view = export_config.view
 
         if (
             export_config.enable_mathjax

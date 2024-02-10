@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 from strictdoc.backend.sdoc.models.type_system import (
+    ViewElementField,
     ViewElementHiddenTag,
     ViewElementTags,
 )
@@ -23,8 +24,56 @@ class ViewElement:
         self.hidden_tags: Optional[List[ViewElementHiddenTag]] = hidden_tags
         self.name: Optional[str] = name
 
+    def includes_field(self, requirement_type: str, field_name: str) -> bool:
+        for tag_ in self.tags:
+            if tag_.object_type == requirement_type:
+                field_: ViewElementField
+                for field_ in tag_.visible_fields:
+                    if field_.name == field_name:
+                        return True
+                break
+        return False
 
+
+@auto_described()
+class DefaultViewElement(ViewElement):
+    """
+    FIXME: It is not great to provide a default implementation this way but it
+           works fine for now.
+    """
+
+    def includes_field(self, requirement_type: str, field_name: str) -> bool:  # noqa: ARG002
+        return True
+
+
+@auto_described()
 class DocumentView:
     def __init__(self, parent, views: List[ViewElement]):
         self.parent = parent
         self.views: List[ViewElement] = views
+
+    @staticmethod
+    def create_default(parent) -> "DocumentView":
+        return DocumentView(
+            parent,
+            [
+                DefaultViewElement(
+                    parent=parent,
+                    view_id="NOT_RELEVANT",
+                    tags=[],
+                    hidden_tags=[],
+                    name=None,
+                )
+            ],
+        )
+
+    def get_default_view(self) -> ViewElement:
+        return self.views[0]
+
+    def get_current_view(self, view_id: Optional[str]) -> ViewElement:
+        if view_id is None:
+            return self.get_default_view()
+        for view_element_ in self.views:
+            if view_element_.view_id == view_id:
+                return view_element_
+        raise NotImplementedError

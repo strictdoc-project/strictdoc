@@ -34,7 +34,9 @@ class Document:  # pylint: disable=too-many-instance-attributes
             if config is not None
             else DocumentConfig.default_config(self)
         )
-        self.view: Optional[DocumentView] = view
+        self.view: DocumentView = (
+            view if view is not None else DocumentView.create_default(self)
+        )
         self.grammar: Optional[DocumentGrammar] = grammar
         self.bibliography: Optional[DocumentBibliography] = bibliography
         self.free_texts: List[FreeText] = free_texts

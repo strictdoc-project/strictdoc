@@ -195,6 +195,11 @@ class CommandParserBuilder:
             type=str,
             help="Filter which sections will be exported.",
         )
+        command_parser_export.add_argument(
+            "--view",
+            type=str,
+            help="Choose which view will be exported.",
+        )
         add_config_argument(command_parser_export)
 
     @staticmethod

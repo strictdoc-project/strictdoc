@@ -1,4 +1,4 @@
-{%- if requirement.rationale -%}
+{%- if requirement.rationale is not none and current_view.includes_field(requirement.requirement_type, "RATIONALE") -%}
   <sdoc-requirement-field-label>{{ requirement.get_field_human_title("RATIONALE") }}:</sdoc-requirement-field-label>
   <sdoc-requirement-field
     data-field-label="rationale"

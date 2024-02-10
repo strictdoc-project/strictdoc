@@ -4,6 +4,7 @@ import inspect
 import os
 import re
 import sys
+import tempfile
 from enum import Enum
 from typing import Optional
 
@@ -337,9 +338,12 @@ def test_integration(
         html2pdf_param = "--param TEST_HTML2PDF=1"
         test_folder = f"{cwd}/tests/integration/features/html2pdf"
 
+    strictdoc_cache_dir = os.path.join(tempfile.gettempdir(), "strictdoc_cache")
+
     itest_command = f"""
         lit
         --param STRICTDOC_EXEC="{strictdoc_exec}"
+        --param STRICTDOC_CACHE_DIR="{strictdoc_cache_dir}"
         {html2pdf_param}
         -v
         {debug_opts}

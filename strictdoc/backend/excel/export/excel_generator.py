@@ -69,7 +69,7 @@ class ExcelGenerator:
             workbook.set_properties(
                 {
                     "title": project_config.project_title,
-                    "comments": "Created with StrictDoc",
+                    "comments": "Created with StrictDoc.",
                 }
             )
 
@@ -108,16 +108,19 @@ class ExcelGenerator:
                                     columns[field][MAX_WIDTH_KEY] = len(
                                         ref.ref_uid
                                     )
-                                worksheet.write_url(
-                                    row,
-                                    idx,
-                                    (
-                                        "internal:"
-                                        f"'{EXCEL_SHEET_NAME}'"
-                                        f"!A{req_uid_rows[ref.ref_uid]}"
-                                    ),
-                                    string=ref.ref_uid,
-                                )
+                                if ref.ref_uid in req_uid_rows:
+                                    worksheet.write_url(
+                                        row,
+                                        idx,
+                                        (
+                                            "internal:"
+                                            f"'{EXCEL_SHEET_NAME}'"
+                                            f"!A{req_uid_rows[ref.ref_uid]}"
+                                        ),
+                                        string=ref.ref_uid,
+                                    )
+                                else:
+                                    worksheet.write(row, idx, ref.ref_uid)
                         elif field_uc in ("COMMENT", "COMMENTS"):
                             # Using a transition marker to separate multiple
                             # comments

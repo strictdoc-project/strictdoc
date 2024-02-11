@@ -10,6 +10,8 @@ TITLE: Unreleased work
 
 [FREETEXT]
 The source file identification mechanism of the requirement-to-source traceability feature has been expanded to locate all source files present in a given source input directory. Previously, it was limited to finding files with specific extensions such as .c, .py, .sdoc, .rst, among others. This restriction, originally implemented for historical reasons, has now been removed. Moreover, StrictDoc has now integrated the get_lexer_by_name() function to automatically identify a lexer based on a source file's extension. This enhancement enables StrictDoc to offer syntax highlighting tailored specifically to the format of each source file. Previously, StrictDoc's code directly hardcoded only a limited selection of Pygments' lexers. Thanks to @KlfJoat for helping us to prioritize and fix this issue sooner.
+
+The Excel export algorithm was extended to support generating multiple Excel files for documentation tree with requirements that link to each other across documents. The issue manifested itself as ``KeyError``. Thanks to @Dynteq for reporting this.
 [/FREETEXT]
 
 [/SECTION]

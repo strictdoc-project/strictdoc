@@ -2141,7 +2141,21 @@ The command does the following:
 1. The SDoc file is parsed to an SDoc in-memory model.
 
 2. The SDoc in-memory model is converted to an Excel XLSX file using
-   the ``XlsWriter`` library
+   the ``XlsWriter`` library.
+
+For exporting only selected fields:
+
+.. code-block:: text
+
+    strictdoc export --formats=excel --fields=UID,STATUS --output-dir=Output input.sdoc
+
+For exporting a folder with multiple SDoc files, specify a path to a folder or ``.`` for a current directory:
+
+.. code-block:: text
+
+    strictdoc export --formats=excel .
+
+If the ``output-dir`` option is not provided, the ``output/`` folder is the default value.
 [/FREETEXT]
 
 [/SECTION]

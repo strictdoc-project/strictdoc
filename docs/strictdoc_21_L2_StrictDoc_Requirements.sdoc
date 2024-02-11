@@ -1085,11 +1085,31 @@ MID: f7b587f66dda402dbd58768e2740742f
 UID: SDOC-SRS-74
 TITLE: Export to Excel
 STATEMENT: >>>
-StrictDoc shall allow exporting SDoc content to Excel.
+StrictDoc shall allow exporting SDoc documents to Excel, one Excel file per document.
 <<<
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-60
+- TYPE: File
+  VALUE: strictdoc/backend/excel/export/excel_generator.py
+- TYPE: File
+  VALUE: tests/integration/backend/excel/export/20_excel_export_multiple_docs/test.itest
+
+[REQUIREMENT]
+MID: 5aa75848972249d5bec8a40812b99d86
+UID: SDOC-SRS-134
+STATUS: Active
+TITLE: Selected fields export
+STATEMENT: >>>
+StrictDoc Excel export shall allow exporting SDoc documents to Excel with only selected fields.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-60
+- TYPE: File
+  VALUE: strictdoc/backend/excel/export/excel_generator.py
+- TYPE: File
+  VALUE: tests/integration/backend/excel/export/03_custom_fields_to_export/test.itest
 
 [/SECTION]
 

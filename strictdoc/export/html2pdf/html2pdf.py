@@ -3,7 +3,9 @@ import atexit
 import base64
 import json
 import os.path
-import pathlib
+import tempfile
+from pathlib import Path
+from shutil import copy
 from typing import Optional
 
 import requests
@@ -13,7 +15,20 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.core.download_manager import WDMDownloadManager
+from webdriver_manager.core.driver import Driver
+from webdriver_manager.core.driver_cache import DriverCacheManager
+from webdriver_manager.core.file_manager import FileManager
 from webdriver_manager.core.http import HttpClient
+from webdriver_manager.core.os_manager import OperationSystemManager
+
+STRICTDOC_CACHE_DIR = os.getenv("STRICTDOC_CACHE_DIR")
+if STRICTDOC_CACHE_DIR is not None:
+    PATH_TO_CACHE_DIR = STRICTDOC_CACHE_DIR
+else:
+    PATH_TO_CACHE_DIR = os.path.join(
+        tempfile.gettempdir(), "strictdoc_cache", "chromedriver"
+    )
+PATH_TO_CHROMEDRIVER_DIR = os.path.join(PATH_TO_CACHE_DIR, "chromedriver")
 
 
 class HTML2PDF_HTTPClient(HttpClient):
@@ -40,6 +55,46 @@ class HTML2PDF_HTTPClient(HttpClient):
             f"HTML2PDF_HTTPClient: "
             f"failed to get response for URL: {url} with error: {last_error}"
         )
+
+
+class HTML2PDF_CacheManager(DriverCacheManager):
+    def find_driver(self, driver: Driver):
+        os_type = self.get_os_type()
+        browser_type = driver.get_browser_type()
+        browser_version = self._os_system_manager.get_browser_version_from_os(
+            browser_type
+        )
+
+        path_to_cached_chrome_driver_dir = os.path.join(
+            PATH_TO_CHROMEDRIVER_DIR, browser_version, os_type
+        )
+        path_to_cached_chrome_driver = os.path.join(
+            path_to_cached_chrome_driver_dir, "chromedriver"
+        )
+        if os.path.isfile(path_to_cached_chrome_driver):
+            print(  # noqa: T201
+                f"HTML2PDF_CacheManager: chromedriver exists in StrictDoc's local cache: "
+                f"{path_to_cached_chrome_driver}"
+            )
+            return path_to_cached_chrome_driver
+        print(  # noqa: T201
+            f"HTML2PDF_CacheManager: chromedriver does not exist in StrictDoc's local cache: "
+            f"{path_to_cached_chrome_driver}"
+        )
+        path_to_downloaded_chrome_driver = super().find_driver(driver)
+        if path_to_downloaded_chrome_driver is None:
+            return None
+
+        print(  # noqa: T201
+            f"HTML2PDF_CacheManager: saving chromedriver to StrictDoc's local cache: "
+            f"{path_to_downloaded_chrome_driver} -> {path_to_cached_chrome_driver}"
+        )
+        Path(path_to_cached_chrome_driver_dir).mkdir(
+            parents=True, exist_ok=True
+        )
+        copy(path_to_downloaded_chrome_driver, path_to_cached_chrome_driver)
+
+        return path_to_cached_chrome_driver
 
 
 def get_inches_from_millimeters(mm: float) -> float:
@@ -100,10 +155,14 @@ def get_pdf_from_html(driver, url) -> bytes:
 def create_webdriver():
     print("HTML2PDF: creating Chrome Driver service.", flush=True)  # noqa: T201
 
+    cache_manager = HTML2PDF_CacheManager(
+        file_manager=FileManager(os_system_manager=OperationSystemManager())
+    )
+
     http_client = HTML2PDF_HTTPClient()
     download_manager = WDMDownloadManager(http_client)
     path_to_chrome = ChromeDriverManager(
-        download_manager=download_manager
+        download_manager=download_manager, cache_manager=cache_manager
     ).install()
     print(f"HTML2PDF: Chrome Driver available at path: {path_to_chrome}")  # noqa: T201
 
@@ -159,9 +218,9 @@ def main():
         assert os.path.isfile(path_to_input_html), path_to_input_html
 
         path_to_output_pdf_dir = os.path.dirname(path_to_output_pdf)
-        pathlib.Path(path_to_output_pdf_dir).mkdir(parents=True, exist_ok=True)
+        Path(path_to_output_pdf_dir).mkdir(parents=True, exist_ok=True)
 
-        url = pathlib.Path(os.path.abspath(path_to_input_html)).as_uri()
+        url = Path(os.path.abspath(path_to_input_html)).as_uri()
 
         pdf_bytes = get_pdf_from_html(driver, url)
         with open(path_to_output_pdf, "wb") as f:

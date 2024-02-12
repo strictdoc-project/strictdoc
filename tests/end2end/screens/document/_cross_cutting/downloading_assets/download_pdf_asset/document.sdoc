@@ -1,0 +1,6 @@
+[DOCUMENT]
+TITLE: Document with a link to CSV
+
+[FREETEXT]
+`Test link <_assets/foo.csv>`_
+[/FREETEXT]

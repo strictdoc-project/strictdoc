@@ -2545,19 +2545,8 @@ def create_main_router(
         _, file_extension = os.path.splitext(full_path)
         if file_extension == ".html":
             return get_document(request, full_path)
-        if file_extension in (
-            ".css",
-            ".js",
-            ".svg",
-            ".ico",
-            ".png",
-            ".gif",
-            ".jpg",
-            ".jpeg",
-        ):
+        else:
             return get_asset(request, full_path)
-
-        return HTMLResponse(content="Not Found", status_code=404)
 
     def get_document(request: Request, url_to_document: str):
         full_path_to_document = os.path.join(

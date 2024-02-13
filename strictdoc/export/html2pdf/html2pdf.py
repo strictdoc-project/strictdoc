@@ -3,6 +3,7 @@ import atexit
 import base64
 import json
 import os.path
+import sys
 import tempfile
 from pathlib import Path
 from shutil import copy
@@ -29,6 +30,13 @@ else:
         tempfile.gettempdir(), "strictdoc_cache", "chromedriver"
     )
 PATH_TO_CHROMEDRIVER_DIR = os.path.join(PATH_TO_CACHE_DIR, "chromedriver")
+
+# HTML2PDF.js prints unicode symbols to console. The following makes it work on
+# Windows which otherwise complains:
+# UnicodeEncodeError: 'charmap' codec can't encode characters in position 129-130: character maps to <undefined>
+# How to make python 3 print() utf8
+# https://stackoverflow.com/questions/3597480/how-to-make-python-3-print-utf8
+sys.stdout = open(sys.stdout.fileno(), mode="w", encoding="utf8", closefd=False)
 
 
 class HTML2PDF_HTTPClient(HttpClient):

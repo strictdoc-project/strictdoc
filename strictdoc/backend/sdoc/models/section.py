@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.free_text import FreeText
-from strictdoc.backend.sdoc.models.node import Node
+from strictdoc.backend.sdoc.models.sdoc_object import SDocObject
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.mid import MID
 
@@ -15,7 +15,7 @@ class SectionContext:
 
 
 @auto_described
-class Section(Node):  # pylint: disable=too-many-instance-attributes
+class Section(SDocObject):  # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
         parent,
@@ -25,7 +25,7 @@ class Section(Node):  # pylint: disable=too-many-instance-attributes
         title,
         requirement_prefix: Optional[str],
         free_texts: List[FreeText],
-        section_contents: List[Node],
+        section_contents: List[SDocObject],
     ):
         self.parent = parent
 

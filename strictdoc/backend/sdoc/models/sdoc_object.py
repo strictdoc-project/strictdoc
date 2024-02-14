@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class Node(ABC):
+class SDocObject(ABC):
     @property
     @abstractmethod
     def is_requirement(self):

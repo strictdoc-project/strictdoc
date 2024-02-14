@@ -8,12 +8,12 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
 )
-from strictdoc.backend.sdoc.models.node import Node
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     ParentReqReference,
     Reference,
 )
+from strictdoc.backend.sdoc.models.sdoc_object import SDocObject
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.models.type_system import (
     RESERVED_NON_META_FIELDS,
@@ -88,7 +88,7 @@ class RequirementField:
 
 
 @auto_described
-class Requirement(Node):  # pylint: disable=too-many-instance-attributes, too-many-public-methods  # noqa: E501
+class Requirement(SDocObject):  # pylint: disable=too-many-instance-attributes, too-many-public-methods  # noqa: E501
     def __init__(
         self,
         parent,

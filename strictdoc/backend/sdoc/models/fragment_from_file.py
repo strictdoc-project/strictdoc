@@ -1,10 +1,10 @@
-from strictdoc.backend.sdoc.models.node import Node
+from strictdoc.backend.sdoc.models.sdoc_object import SDocObject
 from strictdoc.backend.sdoc.models.section import SectionContext
 from strictdoc.helpers.auto_described import auto_described
 
 
 @auto_described
-class FragmentFromFile(Node):  # pylint: disable=too-many-instance-attributes
+class FragmentFromFile(SDocObject):  # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
         parent,

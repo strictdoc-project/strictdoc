@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import List, Optional
 
 from strictdoc import __version__
-from strictdoc.backend.sdoc.models.requirement import Requirement
+from strictdoc.backend.sdoc.models.node import Requirement
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator

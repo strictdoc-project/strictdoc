@@ -15,17 +15,17 @@ from strictdoc.backend.sdoc.models.document_view import (
 from strictdoc.backend.sdoc.models.fragment import Fragment
 from strictdoc.backend.sdoc.models.fragment_from_file import FragmentFromFile
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
+from strictdoc.backend.sdoc.models.node import (
+    CompositeRequirement,
+    Requirement,
+    RequirementField,
+)
 from strictdoc.backend.sdoc.models.reference import (
     BibReference,
     ChildReqReference,
     FileReference,
     ParentReqReference,
     Reference,
-)
-from strictdoc.backend.sdoc.models.requirement import (
-    CompositeRequirement,
-    Requirement,
-    RequirementField,
 )
 from strictdoc.backend.sdoc.models.section import FreeText, Section
 from strictdoc.backend.sdoc.models.type_system import (

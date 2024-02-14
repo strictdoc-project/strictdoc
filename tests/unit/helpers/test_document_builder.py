@@ -4,14 +4,14 @@ from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.node import (
+    Requirement,
+    RequirementField,
+)
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     ParentReqReference,
-)
-from strictdoc.backend.sdoc.models.requirement import (
-    Requirement,
-    RequirementField,
 )
 
 

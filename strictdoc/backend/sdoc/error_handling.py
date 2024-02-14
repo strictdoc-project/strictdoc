@@ -6,11 +6,11 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     GrammarElementField,
 )
 from strictdoc.backend.sdoc.models.document_view import ViewElement
-from strictdoc.backend.sdoc.models.reference import Reference
-from strictdoc.backend.sdoc.models.requirement import (
+from strictdoc.backend.sdoc.models.node import (
     Requirement,
     RequirementField,
 )
+from strictdoc.backend.sdoc.models.reference import Reference
 
 
 def get_textx_syntax_error_message(exception: TextXSyntaxError):

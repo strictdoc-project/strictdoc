@@ -13,7 +13,7 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
     Reference,
 )
-from strictdoc.backend.sdoc.models.sdoc_object import SDocObject
+from strictdoc.backend.sdoc.models.object import SDocObject
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.models.type_system import (
     RESERVED_NON_META_FIELDS,

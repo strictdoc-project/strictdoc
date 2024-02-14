@@ -1,7 +1,7 @@
 import pytest
 
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.requirement import (
+from strictdoc.backend.sdoc.models.node import (
     CompositeRequirement,
     Requirement,
 )

@@ -4,7 +4,7 @@ from typing import Dict, List, Optional, Set, Tuple
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
-from strictdoc.backend.sdoc.models.requirement import (
+from strictdoc.backend.sdoc.models.node import (
     Requirement,
     RequirementField,
 )

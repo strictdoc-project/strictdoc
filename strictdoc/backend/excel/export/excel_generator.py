@@ -7,12 +7,12 @@ from xlsxwriter.workbook import Workbook
 from xlsxwriter.worksheet import Worksheet
 
 from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.node import Requirement
 from strictdoc.backend.sdoc.models.reference import (
     BibReference,
     FileReference,
     ParentReqReference,
 )
-from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.sdoc.models.type_system import ReferenceType
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex

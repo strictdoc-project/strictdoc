@@ -1,7 +1,7 @@
 from typing import Any, Dict, List, Optional, Tuple
 
+from strictdoc.backend.sdoc.models.node import Requirement
 from strictdoc.backend.sdoc.models.reference import FileReference, Reference
-from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
     ForwardRangeMarker,
     RangeMarker,

@@ -25,11 +25,11 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     GrammarElement,
 )
 from strictdoc.backend.sdoc.models.free_text import FreeText
-from strictdoc.backend.sdoc.models.reference import ParentReqReference
-from strictdoc.backend.sdoc.models.requirement import (
+from strictdoc.backend.sdoc.models.node import (
     Requirement,
     RequirementField,
 )
+from strictdoc.backend.sdoc.models.reference import ParentReqReference
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldMultipleChoice,

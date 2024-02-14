@@ -1,6 +1,6 @@
 from typing import List
 
-from strictdoc.backend.sdoc.models.sdoc_object import SDocObject
+from strictdoc.backend.sdoc.models.object import SDocObject
 from strictdoc.helpers.auto_described import auto_described
 
 

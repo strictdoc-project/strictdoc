@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.free_text import FreeText
-from strictdoc.backend.sdoc.models.sdoc_object import SDocObject
+from strictdoc.backend.sdoc.models.object import SDocObject
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.mid import MID
 

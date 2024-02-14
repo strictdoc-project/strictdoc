@@ -3,14 +3,14 @@ from typing import List, Optional, Set, Tuple, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.node import (
+    Requirement,
+    RequirementField,
+)
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     ParentReqReference,
-)
-from strictdoc.backend.sdoc.models.requirement import (
-    Requirement,
-    RequirementField,
 )
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.traceability_index import (

@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Dict, List, Optional, Union
 
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.requirement import (
+from strictdoc.backend.sdoc.models.node import (
     Requirement,
     RequirementField,
 )

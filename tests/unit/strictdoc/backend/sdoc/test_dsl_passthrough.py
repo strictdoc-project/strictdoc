@@ -2,12 +2,12 @@ import pytest
 from textx import TextXSyntaxError
 
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.reference import (
-    FileReference,
-)
-from strictdoc.backend.sdoc.models.requirement import (
+from strictdoc.backend.sdoc.models.node import (
     CompositeRequirement,
     Requirement,
+)
+from strictdoc.backend.sdoc.models.reference import (
+    FileReference,
 )
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.models.type_system import (

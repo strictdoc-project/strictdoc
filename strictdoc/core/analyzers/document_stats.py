@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from typing import Dict, List
 
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.requirement import Requirement
+from strictdoc.backend.sdoc.models.node import Requirement
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.helpers.string import create_safe_title_string
 

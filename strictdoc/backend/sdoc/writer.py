@@ -10,16 +10,16 @@ from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.document_view import DefaultViewElement
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
+from strictdoc.backend.sdoc.models.node import (
+    CompositeRequirement,
+    Requirement,
+)
 from strictdoc.backend.sdoc.models.reference import (
     BibReference,
     ChildReqReference,
     FileReference,
     ParentReqReference,
     Reference,
-)
-from strictdoc.backend.sdoc.models.requirement import (
-    CompositeRequirement,
-    Requirement,
 )
 from strictdoc.backend.sdoc.models.section import FreeText, Section
 from strictdoc.backend.sdoc.models.type_system import (

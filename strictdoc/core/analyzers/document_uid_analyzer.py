@@ -2,7 +2,7 @@ from collections import Counter
 from typing import Dict, List
 
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.requirement import Requirement
+from strictdoc.backend.sdoc.models.node import Requirement
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.analyzers.document_stats import (
     DocumentStats,

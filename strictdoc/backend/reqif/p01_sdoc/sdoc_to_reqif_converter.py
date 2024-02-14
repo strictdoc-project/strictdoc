@@ -35,7 +35,7 @@ from strictdoc.backend.reqif.sdoc_reqif_fields import (
 )
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
-from strictdoc.backend.sdoc.models.requirement import (
+from strictdoc.backend.sdoc.models.node import (
     Requirement,
 )
 from strictdoc.backend.sdoc.models.section import Section

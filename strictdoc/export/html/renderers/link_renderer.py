@@ -3,8 +3,8 @@ from typing import Optional
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.node import Requirement
 from strictdoc.backend.sdoc.models.reference import FileReference
-from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.finders.source_files_finder import SourceFile
 from strictdoc.export.html.document_type import DocumentType

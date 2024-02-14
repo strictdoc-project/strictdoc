@@ -5,7 +5,7 @@ from typing import Any, Dict, Generator, List, Optional, Set, Tuple, Union
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
-from strictdoc.backend.sdoc.models.requirement import Requirement
+from strictdoc.backend.sdoc.models.node import Requirement
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityInfo,

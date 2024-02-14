@@ -4,12 +4,12 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Set, Tuple, Union
 
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.reference import (
-    ParentReqReference,
-)
-from strictdoc.backend.sdoc.models.requirement import (
+from strictdoc.backend.sdoc.models.node import (
     Requirement,
     RequirementField,
+)
+from strictdoc.backend.sdoc.models.reference import (
+    ParentReqReference,
 )
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.document_iterator import DocumentCachingIterator

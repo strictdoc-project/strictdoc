@@ -3,12 +3,12 @@ from dataclasses import dataclass
 from typing import List, Optional, Set, Tuple
 
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.reference import (
-    Reference,
-)
-from strictdoc.backend.sdoc.models.requirement import (
+from strictdoc.backend.sdoc.models.node import (
     Requirement,
     RequirementField,
+)
+from strictdoc.backend.sdoc.models.reference import (
+    Reference,
 )
 from strictdoc.backend.sdoc.models.type_system import RequirementFieldName
 from strictdoc.core.traceability_index import (

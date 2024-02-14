@@ -39,11 +39,11 @@ from spdx_tools.spdx3.writer.console.spdx_document_writer import (
 from spdx_tools.spdx3.writer.json_ld.json_ld_writer import write_payload
 
 from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.node import Requirement
 from strictdoc.backend.sdoc.models.reference import (
     FileReference,
     ParentReqReference,
 )
-from strictdoc.backend.sdoc.models.requirement import Requirement
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.project_config import ProjectConfig

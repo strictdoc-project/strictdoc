@@ -9,7 +9,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     GrammarElement,
     GrammarElementField,
 )
-from strictdoc.backend.sdoc.models.requirement import (
+from strictdoc.backend.sdoc.models.node import (
     Requirement,
     RequirementField,
 )

@@ -9,14 +9,14 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
 )
+from strictdoc.backend.sdoc.models.node import (
+    Requirement,
+    RequirementField,
+)
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     FileReference,
     ParentReqReference,
-)
-from strictdoc.backend.sdoc.models.requirement import (
-    Requirement,
-    RequirementField,
 )
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.models.type_system import (

@@ -34,7 +34,7 @@ StrictDoc's data model shall support a "Requirement" model.
 <<<
 RELATIONS:
 - TYPE: File
-  VALUE: strictdoc/backend/sdoc/models/requirement.py
+  VALUE: strictdoc/backend/sdoc/models/node.py
 - TYPE: Parent
   VALUE: SDOC-SSS-4
 
